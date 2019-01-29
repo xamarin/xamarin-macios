@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using Xamarin.Linker;
 using Xamarin.Utils;
 
 using ObjCRuntime;
@@ -87,6 +88,12 @@ namespace Xamarin.Bundler {
 			Cache = new Cache (arguments);
 		}
 
+		public bool DynamicRegistrationSupported {
+			get {
+				return Optimizations.RemoveDynamicRegistrar != true;
+			}
+		}
+
 		// This is just a name for this app to show in log/error messages, etc.
 		public string Name {
 			get { return Path.GetFileNameWithoutExtension (AppDirectory); }
@@ -121,33 +128,10 @@ namespace Xamarin.Bundler {
 				}
 			}
 		}
-
-		public static bool IsUptodate (string source, string target, bool check_contents = false)
+		
+		public static bool IsUptodate (string source, string target, bool check_contents = false, bool check_stamp = true)
 		{
-			if (Driver.Force)
-				return false;
-
-			var tfi = new FileInfo (target);
-			
-			if (!tfi.Exists) {
-				Driver.Log (3, "Target '{0}' does not exist.", target);
-				return false;
-			}
-
-			var sfi = new FileInfo (source);
-
-			if (sfi.LastWriteTimeUtc <= tfi.LastWriteTimeUtc) {
-				Driver.Log (3, "Prerequisite '{0}' is older than the target '{1}'.", source, target);
-				return true;
-			}
-
-			if (check_contents && Cache.CompareFiles (source, target)) {
-				Driver.Log (3, "Prerequisite '{0}' is newer than the target '{1}', but the contents are identical.", source, target);
-				return true;
-			}
-
-			Driver.Log (3, "Prerequisite '{0}' is newer than the target '{1}'.", source, target);
-			return false;
+			return FileCopier.IsUptodate (source, target, check_contents, check_stamp);
 		}
 
 		public static void RemoveResource (ModuleDefinition module, string name)
@@ -210,106 +194,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		enum CopyFileFlags : uint {
-			ACL = 1 << 0,
-			Stat = 1 << 1,
-			Xattr = 1 << 2,
-			Data = 1 << 3,
-			Security = Stat | ACL,
-			Metadata = Security | Xattr,
-			All = Metadata | Data,
-
-			Recursive = 1 << 15,
-			NoFollow_Src = 1 << 18,
-			NoFollow_Dst = 1 << 19,
-			Unlink = 1 << 21,
-			Nofollow = NoFollow_Src | NoFollow_Dst,
-		}
-
-		enum CopyFileState : uint {
-			StatusCB = 6,
-		}
-
-		enum CopyFileStep {
-			Start = 1,
-			Finish = 2,
-			Err = 3,
-			Progress = 4,
-		}
-
-		enum CopyFileResult {
-			Continue = 0,
-			Skip = 1,
-			Quit = 2,
-		}
-
-		enum CopyFileWhat {
-			Error = 0,
-			File = 1,
-			Dir = 2,
-			DirCleanup = 3,
-			CopyData = 4,
-			CopyXattr = 5,
-		}
-
-		[DllImport (Constants.libSystemLibrary)]
-		static extern IntPtr copyfile_state_alloc ();
-
-		[DllImport (Constants.libSystemLibrary)]
-		static extern int copyfile_state_free (IntPtr state);
-
-		[DllImport (Constants.libSystemLibrary)]
-		static extern int copyfile_state_set (IntPtr state, CopyFileState flag, IntPtr value);
-
-		delegate CopyFileResult CopyFileCallbackDelegate (CopyFileWhat what, CopyFileStep stage, IntPtr state, string src, string dst, IntPtr ctx);
-
-		[DllImport (Constants.libSystemLibrary, SetLastError = true)]
-		static extern int copyfile (string @from, string @to, IntPtr state, CopyFileFlags flags);
-
-		public static void UpdateDirectory (string source, string target)
-		{
-			if (!Directory.Exists (target))
-				Directory.CreateDirectory (target);
-
-			// Mono's File.Copy can't handle symlinks (the symlinks are followed instead of copied),
-			// so we need to use native functions directly. Luckily OSX provides exactly what we need.
-			IntPtr state = copyfile_state_alloc ();
-			try {
-				CopyFileCallbackDelegate del = CopyFileCallback;
-				copyfile_state_set (state, CopyFileState.StatusCB, Marshal.GetFunctionPointerForDelegate (del));
-				int rv = copyfile (source, target, state, CopyFileFlags.Data | CopyFileFlags.Recursive | CopyFileFlags.Nofollow);
-				if (rv != 0)
-					throw ErrorHelper.CreateError (1022, "Could not copy the directory '{0}' to '{1}': {2}", source, target, Target.strerror (Marshal.GetLastWin32Error ()));
-			} finally {
-				copyfile_state_free (state);
-			}
-		}
-
-		static CopyFileResult CopyFileCallback (CopyFileWhat what, CopyFileStep stage, IntPtr state, string source, string target, IntPtr ctx)
-		{
-//			Console.WriteLine ("CopyFileCallback ({0}, {1}, 0x{2}, {3}, {4}, 0x{5})", what, stage, state.ToString ("x"), source, target, ctx.ToString ("x"));
-			switch (what) {
-			case CopyFileWhat.File:
-				if (!IsUptodate (source, target)) {
-					if (stage == CopyFileStep.Finish)
-						Driver.Log (1, "Copied {0} to {1}", source, target);
-					return CopyFileResult.Continue;
-				} else {
-					Driver.Log (3, "Target '{0}' is up-to-date", target);
-					return CopyFileResult.Skip;
-				}
-			case CopyFileWhat.Dir:
-			case CopyFileWhat.DirCleanup:
-			case CopyFileWhat.CopyData:
-			case CopyFileWhat.CopyXattr:
-				return CopyFileResult.Continue;
-			case CopyFileWhat.Error:
-				throw ErrorHelper.CreateError (1021, "Could not copy the file '{0}' to '{1}': {2}", source, target, Target.strerror (Marshal.GetLastWin32Error ()));
-			default:
-				return CopyFileResult.Continue;
-			}
-		}
-
 		public static void UpdateFile (string source, string target, bool check_contents = false)
 		{
 			if (!Application.IsUptodate (source, target, check_contents))
@@ -319,7 +203,10 @@ namespace Xamarin.Bundler {
 		}
 
 		// Checks if any of the source files have a time stamp later than any of the target files.
-		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets)
+		//
+		// If check_stamp is true, the function will use the timestamp of a "target".stamp file
+		// if it's later than the timestamp of the "target" file itself.
+		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, bool check_stamp = true)
 		{
 			if (Driver.Force)
 				return false;
@@ -328,7 +215,7 @@ namespace Xamarin.Bundler {
 			string max_s = null;
 
 			if (sources.Count () == 0 || targets.Count () == 0)
-				ErrorHelper.Error (1013, "Dependency tracking error: no files to compare. Please file a bug report at http://bugzilla.xamarin.com with a test case.");
+				ErrorHelper.Error (1013, "Dependency tracking error: no files to compare. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.");
 
 			foreach (var s in sources) {
 				var sfi = new FileInfo (s);
@@ -352,6 +239,14 @@ namespace Xamarin.Bundler {
 					return false;
 				}
 
+				if (check_stamp) {
+					var tfi_stamp = new FileInfo (t + ".stamp");
+					if (tfi_stamp.Exists && tfi_stamp.LastWriteTimeUtc > tfi.LastWriteTimeUtc) {
+						Driver.Log (3, "Target '{0}' has a stamp file with newer timestamp ({1} > {2}), using the stamp file's timestamp", t, tfi_stamp.LastWriteTimeUtc, tfi.LastWriteTimeUtc);
+						tfi = tfi_stamp;
+					}
+				}
+
 				var lwt = tfi.LastWriteTimeUtc;
 				if (max_source > lwt) {
 					Driver.Log (3, "Prerequisite '{0}' is newer than target '{1}' ({2} vs {3}).", max_s, t, max_source, lwt);
@@ -362,6 +257,11 @@ namespace Xamarin.Bundler {
 			Driver.Log (3, "Prerequisite(s) '{0}' are all older than the target(s) '{1}'.", string.Join ("', '", sources.ToArray ()), string.Join ("', '", targets.ToArray ()));
 
 			return true;
+		}
+		
+		public static void UpdateDirectory (string source, string target)
+		{
+			FileCopier.UpdateDirectory (source, target);
 		}
 
 		[DllImport (Constants.libSystemLibrary)]
@@ -404,6 +304,7 @@ namespace Xamarin.Bundler {
 
 		public void InitializeCommon ()
 		{
+			Namespaces.Initialize ();
 			SelectRegistrar ();
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
@@ -495,10 +396,10 @@ namespace Xamarin.Bundler {
 			var resolver = new PlatformResolver () {
 				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
-			};
 #if MMP
-			resolver.RecursiveSearchDirectories.AddRange (Driver.RecursiveSearchDirectories);
+				CommandLineAssemblies = RootAssemblies,
 #endif
+			};
 
 			if (Platform == ApplePlatform.iOS || Platform == ApplePlatform.MacOSX) {
 				if (Is32Build) {

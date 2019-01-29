@@ -25,14 +25,14 @@ clean-local::
 
 build/%/$(TESTDLL): $(MAC_SOURCES) build/GuiUnit.exe Makefile $(BASE_DLLS)
 	@mkdir -p $(dir $@)
-	$(Q_MCS) $(SYSTEM_MCS) -out:$@ -t:library -debug -d:MONOMAC -d:XAMCORE_2_0 \
+	$(Q_CSC) $(SYSTEM_CSC) -out:$@ -t:library -debug -d:MONOMAC -d:XAMCORE_2_0 \
 		-r:build/GuiUnit.exe \
 		-r:$(TOP)/src/build/mac/$*/Xamarin.Mac.dll \
 		$(MAC_SOURCES)
 
 build/compat/$(TESTDLL): $(MAC_SOURCES) build/GuiUnit.exe Makefile $(BASE_DLLS)
 	@mkdir -p $(dir $@)
-	$(Q_MCS) $(SYSTEM_MCS) -out:$@ -t:library -debug -d:MONOMAC \
+	$(Q_CSC) $(SYSTEM_CSC) -out:$@ -t:library -debug -d:MONOMAC \
 		-r:build/GuiUnit.exe \
 		-r:System.Drawing \
 		-r:$(TOP)/src/build/mac/compat/XamMac.dll \
@@ -72,5 +72,5 @@ run run-test run-tests: build/compat.app build/mobile-32.app build/mobile-64.app
 
 build/GuiUnit.exe: $(shell find $(GUI_UNIT_PATH)/src/framework -name \*.cs -or -name \*.csproj)
 	@mkdir -p build
-	@$(SYSTEM_XBUILD) $(GUI_UNIT_PATH)/src/framework/GuiUnit_NET_4_5.csproj
+	@$(SYSTEM_XIBUILD) -- $(GUI_UNIT_PATH)/src/framework/GuiUnit_NET_4_5.csproj
 	@cp $(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe $@

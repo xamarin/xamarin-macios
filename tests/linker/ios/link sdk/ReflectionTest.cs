@@ -29,15 +29,21 @@ namespace Linker.Shared.Reflection {
 
 			var mi = this.GetType ().GetMethod ("MethodWithParameters");
 			var p = mi.GetParameters ();
-#if DEBUG || !LINKALL
-			// this optimization is only applied for release builds (not debug ones)
-			// link sdk won't touch this assembly (user code) so the parameters will be available
-			Assert.That (p [0].ToString (), Is.EqualTo ("System.String firstParameter"), "1");
-			Assert.That (p [1].ToString (), Is.EqualTo ("Int32 secondParameter"), "2");
+#if DEBUG
+			var optimized = false;
 #else
-			Assert.That (p [0].ToString (), Is.EqualTo ("System.String "), "1");
-			Assert.That (p [1].ToString (), Is.EqualTo ("Int32 "), "2");
+			var optimized = TestRuntime.IsLinkAll;
 #endif
+
+			if (!optimized) {
+				// this optimization is only applied for release builds (not debug ones)
+				// link sdk won't touch this assembly (user code) so the parameters will be available
+				Assert.That (p [0].ToString (), Is.EqualTo ("System.String firstParameter"), "1");
+				Assert.That (p [1].ToString (), Is.EqualTo ("Int32 secondParameter"), "2");
+			} else {
+				Assert.That (p [0].ToString (), Is.EqualTo ("System.String "), "1");
+				Assert.That (p [1].ToString (), Is.EqualTo ("Int32 "), "2");
+			}
 		}
 	}
 }

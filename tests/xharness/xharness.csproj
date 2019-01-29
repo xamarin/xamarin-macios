@@ -38,12 +38,35 @@
     <StartAction>Project</StartAction>
     <StartArguments>--verbose --jenkins --autoconf --rootdir ..</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Run Jenkins (internal) tests' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>--verbose --jenkins --autoconf --rootdir .. --label run-all-tests,skip-ios-device-tests,skip-mac-32-tests --markdown-summary=../TestSummary.md</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Run device tests' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>--verbose --jenkins --autoconf --rootdir .. --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-ios-extensions-tests --markdown-summary=../TestSummary.md  --label=run-watchos-tests,skip-bcl-tests</StartArguments>
+    <EnvironmentVariables>
+      <Variable name="MONO_ENV_OPTIONS" value="--trace=E:all" />
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Makefile.inc' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>--configure --autoconf --rootdir ..</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Makefile-mac.inc' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>--configure --autoconf --rootdir .. --mac </StartArguments>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Web" />
     <Reference Include="Mono.Posix" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -53,7 +76,9 @@
     </Compile>
     <Compile Include="Harness.cs" />
     <Compile Include="ProjectFileExtensions.cs" />
-    <Compile Include="PListExtensions.cs" />
+    <Compile Include="..\..\tools\common\PListExtensions.cs">
+      <Link>PListExtensions.cs</Link>
+    </Compile>
     <Compile Include="WatchOSTarget.cs" />
     <Compile Include="TVOSTarget.cs" />
     <Compile Include="Target.cs" />
@@ -88,6 +113,42 @@
     </Compile>
     <Compile Include="SimpleFileListener.cs" />
     <Compile Include="iOSTarget.cs" />
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestAssemblyDefinition.cs">
+      <Link>BCLTestImporter\BCLTestAssemblyDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestProjectDefinition.cs">
+      <Link>BCLTestImporter\BCLTestProjectDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestProjectGenerator.cs">
+      <Link>BCLTestImporter\BCLTestProjectGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\Platform.cs">
+      <Link>BCLTestImporter\Platform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\RegisterTypeGenerator.cs">
+      <Link>BCLTestImporter\RegisterTypeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="BCLTestImporter\BCLTestImportTargetFactory.cs" />
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestInfoPlistGenerator.cs">
+      <Link>BCLTestImporter\BCLTestInfoPlistGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestProjectDefinitionWorkaround.cs">
+      <Link>BCLTestImporter\BCLTestProjectDefinitionWorkaround.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BCLTestImporter\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="xharness.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xharness.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

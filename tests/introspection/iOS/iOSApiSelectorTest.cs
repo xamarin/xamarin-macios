@@ -62,7 +62,10 @@ namespace Introspection {
 					return true;
 				break;
 			// Xcode 9
-			case "CoreNFC":
+			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
+				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
+					return true;
+				break;
 			case "DeviceCheck":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
@@ -138,6 +141,13 @@ namespace Introspection {
 			case "INPaymentStatusResolutionResult":
 			case "INPaymentAccountResolutionResult":
 				return true;
+			case "CMMovementDisorderManager":
+				// From Xcode 10 beta 2:
+				// This requires a special entitlement:
+				//     Usage of CMMovementDisorderManager requires a special entitlement.  Please see for more information https://developer.apple.com/documentation/coremotion/cmmovementdisordermanager
+				// but that web page doesn't explain anything (it's mostly empty, so this is probably just lagging documentation)
+				// I also tried enabling every entitlement in Xcode, but it still didn't work.
+				return true;
 #endif
 
 			default:
@@ -153,6 +163,15 @@ namespace Introspection {
 			var declaredType = method.DeclaringType;
 
 			switch (declaredType.Name) {
+			case "NSNull":
+				switch (name) {
+				// conformance to CAAction started with iOS8
+				case "runActionForKey:object:arguments:":
+					if (!TestRuntime.CheckXcodeVersion (8,0))
+						return true;
+					break;
+				}
+				break;
 			case "NSUrlSession":
 				switch (name) {
 				case "delegateQueue":
@@ -287,6 +306,16 @@ namespace Introspection {
 					if (Runtime.Arch == Arch.SIMULATOR)
 						return true;
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
+			case "PKSuicaPassProperties":
+				switch (name) {
+				// Selectors do not respond anymore in Xcode 9.3. Radar https://trello.com/c/B31EMqSg.
+				case "isGreenCarTicketUsed":
+				case "isInShinkansenStation":
+					if (TestRuntime.CheckXcodeVersion (9, 3))
 						return true;
 					break;
 				}
@@ -701,6 +730,11 @@ namespace Introspection {
 				case "MPSKernel":
 				case "MPSCnnConvolutionDescriptor":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
+				// Protocol conformance removed in Xcode 9.3
+				case "HKSeriesBuilder":
+					if (TestRuntime.CheckXcodeVersion (9, 3))
+						return true;
+					break;
 #if __TVOS__
 				case "SKAttribute":
 				case "SKAttributeValue":

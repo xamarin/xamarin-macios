@@ -56,7 +56,6 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
-	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	public enum GKSendDataMode {
 		Reliable,
@@ -65,7 +64,6 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
-	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	public enum GKSessionMode {
 	    Server, 
@@ -75,7 +73,6 @@ namespace GameKit {
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
-	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	public enum GKPeerConnectionState {
 		Available,
@@ -153,8 +150,17 @@ namespace GameKit {
 		Reliable,
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10,14)]
+	[Deprecated (PlatformName.TvOS, 12,0)]
+	[Deprecated (PlatformName.iOS, 12,0)]
 	[Native]
+#if WATCH && !XAMCORE_4_0
+	// removed in Xcode 10 but a breaking change (for us) to remove
+	[Obsolete ("Not used in watchOS.")]
+#else
+	[Unavailable (PlatformName.WatchOS)]
 	[ErrorDomain ("GKGameSessionErrorDomain")]
+#endif
 	public enum GKGameSessionErrorCode : long {
 		Unknown = 1,
 		NotAuthenticated = 2,
@@ -176,7 +182,6 @@ namespace GameKit {
 
 	// NSInteger -> GKMatch.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
-	[Mac (10, 8)]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	[Native]
 	public enum GKMatchSendDataMode : long {
@@ -284,5 +289,13 @@ namespace GameKit {
 		Incompatible = 3,
 		UnableToConnect = 4,
 		NoAnswer = 5,
+	}
+
+	[Mac (10,13,4), TV (11,3), iOS (11,3)]
+	[Native]
+	public enum GKAuthenticationType : ulong {
+		WithoutUI = 0,
+		GreenBuddyUI = 1,
+		AuthKitInvocation = 2,
 	}
 }

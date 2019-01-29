@@ -25,7 +25,7 @@ namespace xharness
 
 		public abstract string FullPath { get; }
 
-		protected virtual void WriteImpl (string value)
+		internal protected virtual void WriteImpl (string value)
 		{
 			Write (Encoding.UTF8.GetBytes (value));
 		}
@@ -43,6 +43,11 @@ namespace xharness
 		public virtual StreamReader GetReader ()
 		{
 			throw new NotSupportedException ();
+		}
+
+		public override void Write (char value)
+		{
+			WriteImpl (value.ToString ());
 		}
 
 		public override void Write (string value)
@@ -95,7 +100,7 @@ namespace xharness
 
 			public override string FullPath => throw new NotImplementedException ();
 
-			protected override void WriteImpl (string value)
+			internal protected override void WriteImpl (string value)
 			{
 				foreach (var log in logs)
 					log.WriteImpl (value);
@@ -146,6 +151,14 @@ namespace xharness
 				Console.WriteLine ($"Failed to write to the file {Path}: {e.Message}.");
 				return;
 			}
+		}
+
+		public override void Flush()
+		{
+			base.Flush();
+
+			if (writer != null && !disposed)
+				writer.Flush ();
 		}
 
 		public override string FullPath {
@@ -245,7 +258,7 @@ namespace xharness
 		{
 		}
 
-		protected override void WriteImpl (string value)
+		internal protected override void WriteImpl (string value)
 		{
 			captured.Append (value);
 			Console.Write (value);
@@ -312,7 +325,12 @@ namespace xharness
 		{
 			if (startPosition == 0 || entire_file)
 				return;
-			
+
+			if (!File.Exists (CapturePath)) {
+				File.WriteAllText (Path, $"Could not capture the file '{CapturePath}' because it does not exist.");
+				return;
+			}
+
 			var currentEndPosition = endPosition;
 			if (currentEndPosition == 0)
 				currentEndPosition = new FileInfo (CapturePath).Length;
@@ -320,6 +338,11 @@ namespace xharness
 			var length = (int) (currentEndPosition - startPosition);
 			var currentLength = new FileInfo (CapturePath).Length;
 			var capturedLength = 0L;
+
+			if (length < 0) {
+				// The file shrank?
+				return;
+			}
 
 			if (File.Exists (Path))
 				capturedLength = new FileInfo (Path).Length;
@@ -353,6 +376,15 @@ namespace xharness
 			}
 		}
 
+		public override StreamReader GetReader ()
+		{
+			if (File.Exists (CapturePath)) {
+				return new StreamReader (new FileStream (CapturePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+			} else {
+				return new StreamReader (new MemoryStream ());
+			}
+		}
+
 		public override void Flush ()
 		{
 			base.Flush ();
@@ -360,7 +392,7 @@ namespace xharness
 			Capture ();
 		}
 
-		protected override void WriteImpl (string value)
+		internal protected override void WriteImpl (string value)
 		{
 			throw new InvalidOperationException ();
 		}
@@ -385,7 +417,7 @@ namespace xharness
 
 		public override string FullPath => throw new NotImplementedException ();
 
-		protected override void WriteImpl (string value)
+		internal protected override void WriteImpl (string value)
 		{
 			OnWrite (value);
 		}

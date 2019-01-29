@@ -31,8 +31,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		[Test]
 		public void EvaluateScript ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var c = new JSContext ())
 			using (JSValue r = c.EvaluateScript ("function FourthyTwo () { return 42; }; FourthyTwo ()")) {
@@ -43,8 +42,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		[Test]
 		public void EvaluateScript_Param ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var context = new JSContext ())
 			using (JSValue script = context.EvaluateScript ("var square = function (x) { return x * x; }")) 
@@ -58,8 +56,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 		[Test]
 		public void EvaluateScript_Context ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var context = new JSContext ())
 			using (JSValue value = context.EvaluateScript ("a = 3")) 

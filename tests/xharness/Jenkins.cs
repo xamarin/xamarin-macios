@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text;
+using Xamarin;
 using Xamarin.Utils;
 
 namespace xharness
@@ -16,11 +18,14 @@ namespace xharness
 		bool populating = true;
 
 		public Harness Harness;
+		public bool IncludeAll;
 		public bool IncludeClassicMac = true;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
+		public bool IncludeMac32 = true;
 		public bool IncludeiOS = true;
 		public bool IncludeiOSExtensions;
+		public bool ForceExtensionBuildOnly;
 		public bool IncludetvOS = true;
 		public bool IncludewatchOS = true;
 		public bool IncludeMmpTest;
@@ -31,14 +36,21 @@ namespace xharness
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
 		public bool IncludeXtro;
+		public bool IncludeDocs;
 
 		public Log MainLog;
 		public Log SimulatorLoadLog;
 		public Log DeviceLoadLog;
 
+		string log_directory;
 		public string LogDirectory {
 			get {
-				return Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
+				if (string.IsNullOrEmpty (log_directory)) {
+					log_directory = Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
+					if (IsServerMode)
+						log_directory = Path.Combine (log_directory, Harness.Timestamp);
+				}
+				return log_directory;
 			}
 		}
 
@@ -53,6 +65,7 @@ namespace xharness
 		public Devices Devices = new Devices ();
 
 		List<TestTask> Tasks = new List<TestTask> ();
+		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
 		internal static Resource DesktopResource = new Resource ("Desktop", Environment.ProcessorCount);
 
@@ -78,25 +91,29 @@ namespace xharness
 			Devices.Harness = Harness;
 
 			if (SimulatorLoadLog == null)
-				SimulatorLoadLog = Logs.Create ("simulator-list.log", "Simulator Listing");
+				SimulatorLoadLog = Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator Listing (in progress)");
 
 			var simulatorLoadTask = Task.Run (async () => {
 				try {
 					await Simulators.LoadAsync (SimulatorLoadLog);
+					SimulatorLoadLog.Description = "Simulator Listing (ok)";
 				} catch (Exception e) {
 					SimulatorLoadLog.WriteLine ("Failed to load simulators:");
 					SimulatorLoadLog.WriteLine (e);
+					SimulatorLoadLog.Description = $"Simulator Listing ({e.Message})";
 				}
 			});
 
 			if (DeviceLoadLog == null)
-				DeviceLoadLog = Logs.Create ("device-list.log", "Device Listing");
+				DeviceLoadLog = Logs.Create ($"device-list-{Harness.Timestamp}.log", "Device Listing (in progress)");
 			var deviceLoadTask = Task.Run (async () => {
 				try {
 					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
+					DeviceLoadLog.Description = "Device Listing (ok)";
 				} catch (Exception e) {
 					DeviceLoadLog.WriteLine ("Failed to load devices:");
 					DeviceLoadLog.WriteLine (e);
+					DeviceLoadLog.Description = $"Device Listing ({e.Message})";
 				}
 			});
 
@@ -156,6 +173,8 @@ namespace xharness
 			public bool Profiling;
 			public string LinkMode;
 			public string Defines;
+			public string Undefines;
+			public bool Ignored;
 		}
 
 		IEnumerable<TestData> GetTestData (RunTestTask test)
@@ -176,7 +195,21 @@ namespace xharness
 
 				switch (test.TestName) {
 				case "monotouch-test":
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, };
+					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, };
+					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, };
+					break;
+				case "mscorlib":
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					break;
+				case "mini":
+					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false , Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					break;
 				}
 				break;
@@ -185,7 +218,8 @@ namespace xharness
 				case "monotouch-test":
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false };
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full" };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL" };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !IncludeAll };
 					break;
 				}
 				break;
@@ -193,8 +227,14 @@ namespace xharness
 			case "x86":
 				switch (test.TestName) {
 				case "xammac tests":
-					if (test.ProjectConfiguration == "Release")
-						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "LINKALL" };
+					switch (test.ProjectConfiguration) {
+					case "Release":
+						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "OPTIMIZEALL"};
+						break;
+					case "Debug":
+						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !IncludeAll };
+						break;
+					}
 					break;
 				}
 				break;
@@ -221,19 +261,14 @@ namespace xharness
 					var profiling = test_data.Profiling;
 					var link_mode = test_data.LinkMode;
 					var defines = test_data.Defines;
+					var undefines = test_data.Undefines;
+					var ignored = test_data.Ignored;
 
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
 						await task.BuildTask.InitialTask; // this is the project cloning above
 						await clone.CreateCopyAsync (task);
-						if (!string.IsNullOrEmpty (mtouch_extra_args))
-							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (bundling_extra_args))
-							clone.Xml.AddMonoBundlingExtraArgs (bundling_extra_args, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (link_mode))
-							clone.Xml.SetNode ("LinkMode", link_mode, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (defines))
-							clone.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
+
 						var isMac = false;
 						switch (task.Platform) {
 						case TestPlatform.Mac:
@@ -242,8 +277,34 @@ namespace xharness
 						case TestPlatform.Mac_Unified32:
 						case TestPlatform.Mac_UnifiedXM45:
 						case TestPlatform.Mac_UnifiedXM45_32:
+						case TestPlatform.Mac_UnifiedSystem:
 							isMac = true;
 							break;
+						}
+
+						if (!string.IsNullOrEmpty (mtouch_extra_args))
+							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
+						if (!string.IsNullOrEmpty (bundling_extra_args))
+							clone.Xml.AddMonoBundlingExtraArgs (bundling_extra_args, task.ProjectPlatform, configuration);
+						if (!string.IsNullOrEmpty (link_mode))
+							clone.Xml.SetNode (isMac ? "LinkMode" : "MtouchLink", link_mode, task.ProjectPlatform, configuration);
+						if (!string.IsNullOrEmpty (defines)) {
+							clone.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
+							if (clone.ProjectReferences != null) {
+								foreach (var pr in clone.ProjectReferences) {
+									pr.Xml.AddAdditionalDefines (defines, task.ProjectPlatform, configuration);
+									pr.Xml.Save (pr.Path);
+								}
+							}
+						}
+						if (!string.IsNullOrEmpty (undefines)) {
+							clone.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
+							if (clone.ProjectReferences != null) {
+								foreach (var pr in clone.ProjectReferences) {
+									pr.Xml.RemoveDefines (undefines, task.ProjectPlatform, configuration);
+									pr.Xml.Save (pr.Path);
+								}
+							}
 						}
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
 
@@ -263,7 +324,7 @@ namespace xharness
 					};
 					T newVariation = creator (build, task);
 					newVariation.Variation = variation;
-					newVariation.Ignored = task.Ignored;
+					newVariation.Ignored = task.Ignored || ignored;
 					rv.Add (newVariation);
 				}
 			}
@@ -303,6 +364,7 @@ namespace xharness
 							Platform = pair.Item2,
 							Ignored = pair.Item3,
 							TestName = project.Name,
+							Dependency = project.Dependency,
 						};
 						derived.CloneTestProject (pair.Item1);
 						var simTasks = CreateRunSimulatorTaskAsync (derived);
@@ -346,7 +408,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build64, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOS });
+					rv.Add (new RunDeviceTask (build64, Devices.Connected64BitIOS) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
@@ -356,7 +418,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build32, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports32Bit)) { Ignored = ignored || !IncludeiOS });
+					rv.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
@@ -367,7 +429,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildToday.CloneTestProject (todayProject);
-					rv.Add (new RunDeviceTask (buildToday, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.iOS && dev.Supports64Bit)) { Ignored = ignored || !IncludeiOSExtensions });
+					rv.Add (new RunDeviceTask (buildToday, Devices.Connected64BitIOS) { Ignored = ignored || !IncludeiOSExtensions, BuildOnly = project.BuildOnly || ForceExtensionBuildOnly });
 				}
 
 				if (!project.SkiptvOSVariation) {
@@ -380,7 +442,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildTV.CloneTestProject (tvOSProject);
-					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.tvOS)) { Ignored = ignored || !IncludetvOS });
+					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedTV) { Ignored = ignored || !IncludetvOS, BuildOnly = project.BuildOnly });
 				}
 
 				if (!project.SkipwatchOSVariation) {
@@ -393,7 +455,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildWatch.CloneTestProject (watchOSProject);
-					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedDevices.Where ((dev) => dev.DevicePlatform == DevicePlatform.watchOS)) { Ignored = ignored || !IncludewatchOS });
+					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedWatch) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
 				}
 			}
 
@@ -421,6 +483,8 @@ namespace xharness
 			// whatever we did automatically.
 			SelectTestsByLabel (pull_request);
 
+			DisableKnownFailingDeviceTests ();
+
 			if (!Harness.INCLUDE_IOS) {
 				MainLog.WriteLine ("The iOS build is diabled, so any iOS tests will be disabled as well.");
 				IncludeiOS = false;
@@ -440,6 +504,16 @@ namespace xharness
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
 				IncludeMac = false;
 			}
+		}
+
+		void DisableKnownFailingDeviceTests ()
+		{
+			// https://github.com/xamarin/maccore/issues/1008
+			ForceExtensionBuildOnly = true;
+
+			// https://github.com/xamarin/maccore/issues/1011
+			foreach (var mono in Harness.IOSTestProjects.Where (x => x.Name == "mini"))
+				mono.BuildOnly = true;
 		}
 
 		void SelectTestsByModifiedFiles (int pull_request)
@@ -495,6 +569,7 @@ namespace xharness
 			var xtro_prefixes = new string [] {
 				"tests/xtro-sharpie",
 				"src",
+				"Make.config",
 			};
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
@@ -524,7 +599,9 @@ namespace xharness
 			labels.UnionWith (Harness.Labels);
 			if (pull_request > 0)
 				labels.UnionWith (GitHub.GetLabels (Harness, pull_request));
-
+			var env_labels = Environment.GetEnvironmentVariable ("XHARNESS_LABELS");
+			if (!string.IsNullOrEmpty (env_labels))
+				labels.UnionWith (env_labels.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
 
 			// disabled by default
@@ -536,6 +613,8 @@ namespace xharness
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
 			SetEnabled (labels, "ios-device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
+			SetEnabled (labels, "mac-32", ref IncludeMac32);
+			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
@@ -548,24 +627,54 @@ namespace xharness
 			bool inc_permission_tests = Harness.IncludeSystemPermissionTests;
 			SetEnabled (labels, "system-permission", ref inc_permission_tests);
 			Harness.IncludeSystemPermissionTests = inc_permission_tests;
+
+			// docs is a bit special:
+			// - can only be executed if the Xamarin-specific parts of the build is enabled
+			// - enabled by default if the current branch is master (or, for a pull request, if the target branch is master)
+			var changed = SetEnabled (labels, "docs", ref IncludeDocs);
+			if (Harness.ENABLE_XAMARIN) {
+				if (!changed) { // don't override any value set using labels
+					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
+					if (!string.IsNullOrEmpty (branchName)) {
+						IncludeDocs = branchName == "master";
+						if (IncludeDocs)
+							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'master'.");
+					} else if (pull_request > 0) {
+						IncludeDocs = GitHub.GetPullRequestTargetBranch (Harness, pull_request) == "master";
+						if (IncludeDocs)
+							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'master'.");
+					}
+				}
+			} else {
+				if (IncludeDocs) {
+					IncludeDocs = false; // could have been enabled by 'run-all-tests', so disable it if we can't run it.
+					MainLog.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
+				}
+			}
 		}
 
-		void SetEnabled (HashSet<string> labels, string testname, ref bool value)
+		// Returns true if the value was changed.
+		bool SetEnabled (HashSet<string> labels, string testname, ref bool value)
 		{
 			if (labels.Contains ("skip-" + testname + "-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
 				value = false;
+				return true;
 			} else if (labels.Contains ("run-" + testname + "-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
 				value = true;
+				return true;
 			} else if (labels.Contains ("skip-all-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-all-tests' is set.", testname);
 				value = false;
+				return true;
 			} else if (labels.Contains ("run-all-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-all-tests' is set.", testname);
 				value = true;
+				return true;
 			}
 			// respect any default value
+			return false;
 		}
 
 		async Task PopulateTasksAsync ()
@@ -619,11 +728,13 @@ namespace xharness
 				TestName = "Install Sources tests",
 				Mode = "iOS",
 				Timeout = TimeSpan.FromMinutes (60),
+				Ignored = !IncludeMac && !IncludeSimulator,
 			};
 			Tasks.Add (nunitExecutionInstallSource);
 
 			foreach (var project in Harness.MacTestProjects) {
 				bool ignored = !IncludeMac;
+				bool ignored32 = !IncludeMac || !IncludeMac32;
 				if (!IncludeMmpTest && project.Path.Contains ("mmptest"))
 					ignored = true;
 
@@ -650,28 +761,35 @@ namespace xharness
 					build.ProjectPlatform = project.Platform;
 					build.SpecifyPlatform = false;
 					build.SpecifyConfiguration = build.ProjectConfiguration != "Debug";
+					build.Dependency = project.Dependency;
 					RunTestTask exec;
 					IEnumerable<RunTestTask> execs;
+					var ignored_main = ignored;
+					if ((ignored32 || !IncludeClassicMac) && project.GenerateVariations) {
+						ignored_main = true; // Only if generating variations is the main project is an XM Classic app
+						build.RequiresXcode94 = true;
+					}
 					if (project.IsNUnitProject) {
 						var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
 						exec = new NUnitExecuteTask (build) {
-							Ignored = ignored || !IncludeClassicMac,
+							Ignored = ignored_main,
 							TestLibrary = dll,
 							TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
 							WorkingDirectory = Path.GetDirectoryName (dll),
 							Platform = build.Platform,
 							TestName = project.Name,
 							Timeout = TimeSpan.FromMinutes (120),
+							Mode = "macOS",
 						};
 						execs = new [] { exec };
 					} else {
 						exec = new MacExecuteTask (build) {
-							Ignored = ignored || !IncludeClassicMac,
+							Ignored = ignored_main,
 							BCLTest = project.IsBclTest,
 							TestName = project.Name,
 							IsUnitTest = true,
 						};
-						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask));
+						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
 					}
 					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
 
@@ -679,11 +797,13 @@ namespace xharness
 					foreach (var e in execs) {
 						if (project.GenerateVariations) {
 							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified, "-unified", ignored));
-							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified-32", ignored));
+							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified-32", ignored32, true));
 							if (project.GenerateFull) {
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored));
+								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored32, true));
 							}
+							if (project.GenerateSystem)
+								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedSystem, "-system", ignored));
 						}
 					}
 				}
@@ -708,6 +828,7 @@ namespace xharness
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (120),
 				Ignored = !IncludeMtouch,
+				InProcess = true,
 			};
 			Tasks.Add (nunitExecutionMTouch);
 
@@ -736,12 +857,17 @@ namespace xharness
 				Jenkins = this,
 				Platform = TestPlatform.Mac,
 				TestName = "MMP Regression Tests",
-				Target = "all -j" + Environment.ProcessorCount,
+				Target = "all", // -j" + Environment.ProcessorCount,
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
 				Ignored = !IncludeMmpTest || !IncludeMac,
 				Timeout = TimeSpan.FromMinutes (30),
 				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"
 			};
+			run_mmp.CompletedTask = new Task (() =>
+			{
+				foreach (var log in Directory.GetFiles (Path.GetFullPath (run_mmp.WorkingDirectory), "*.log", SearchOption.AllDirectories))
+					run_mmp.Logs.AddFile (log, log.Substring (run_mmp.WorkingDirectory.Length + 1));
+			});
 			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
 			Tasks.Add (run_mmp);
 
@@ -753,6 +879,7 @@ namespace xharness
 				Target = "all",
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
 				Ignored = !IncludeMacBindingProject || !IncludeMac,
+				Timeout = TimeSpan.FromMinutes (15),
 			};
 			Tasks.Add (runMacBindingProject);
 
@@ -774,10 +901,21 @@ namespace xharness
 			};
 			Tasks.Add (runXtroReporter);
 
+			var runDocsTests = new MakeTask {
+				Jenkins = this,
+				Platform = TestPlatform.All,
+				TestName = "Documentation",
+				Target = "wrench-docs",
+				WorkingDirectory = Harness.RootDirectory,
+				Ignored = !IncludeDocs,
+				Timeout = TimeSpan.FromMinutes (45),
+			};
+			Tasks.Add (runDocsTests);
+
 			Tasks.AddRange (CreateRunDeviceTasks ());
 		}
 
-		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore)
+		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore, bool requiresXcode94 = false)
 		{
 			var build = new XBuildTask ()
 			{
@@ -790,6 +928,7 @@ namespace xharness
 			};
 			var tp = new TestProject (Path.ChangeExtension (AddSuffixToPath (original_project.Path, suffix), "csproj"));
 			build.CloneTestProject (tp);
+			build.RequiresXcode94 = requiresXcode94;
 
 			var macExec = task as MacExecuteTask;
 			if (macExec != null) {
@@ -841,7 +980,7 @@ namespace xharness
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				Log log = Logs.Create ("Harness.log", "Harness log");
+				Log log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
 				if (Harness.InWrench)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
@@ -872,6 +1011,7 @@ namespace xharness
 					populating = false;
 				}).Wait ();
 				GenerateReport ();
+				BuildTestLibraries ();
 				if (!IsServerMode) {
 					foreach (var task in Tasks)
 						tasks.Add (task.RunAsync ());
@@ -888,6 +1028,11 @@ namespace xharness
 
 		public bool IsServerMode {
 			get { return Harness.JenkinsConfiguration == "server"; }
+		}
+
+		void BuildTestLibraries ()
+		{
+			ProcessHelper.ExecuteCommandAsync ("make", $"all -j{Environment.ProcessorCount} -C {StringUtils.Quote (Path.Combine (Harness.RootDirectory, "test-libraries"))}", MainLog, TimeSpan.FromMinutes (10)).Wait ();
 		}
 
 		Task RunTestServer ()
@@ -931,6 +1076,7 @@ namespace xharness
 							rv.Add (v);
 							return rv;
 						});
+						string serveFile = null;
 						switch (request.Url.LocalPath) {
 						case "/":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
@@ -999,6 +1145,7 @@ namespace xharness
 										case TestPlatform.Mac_Unified32:
 										case TestPlatform.Mac_UnifiedXM45:
 										case TestPlatform.Mac_UnifiedXM45_32:
+										case TestPlatform.Mac_UnifiedSystem:
 											is_match = true;
 											break;
 										default:
@@ -1073,33 +1220,59 @@ namespace xharness
 								}
 							}
 							break;
+						case "/stoptest":
 						case "/runtest":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
-							using (var writer = new StreamWriter (response.OutputStream)) {
-								int id;
-								var id_inputs = arguments ["id"].Split (',');
-
-								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
-								// then for another, since that would not take advantage of running tests on several devices in parallel.
-								var rnd = new Random ((int) DateTime.Now.Ticks);
-								id_inputs = id_inputs.OrderBy (v => rnd.Next ()).ToArray ();
-
+							IEnumerable<TestTask> find_tasks (StreamWriter writer, string ids)
+							{
+								var id_inputs = ids.Split (',');
 								foreach (var id_input in id_inputs) {
-									if (int.TryParse (id_input, out id)) {
+									if (int.TryParse (id_input, out var id)) {
 										var task = Tasks.FirstOrDefault ((t) => t.ID == id);
 										if (task == null)
 											task = Tasks.Where ((v) => v is AggregatedRunSimulatorTask).Cast<AggregatedRunSimulatorTask> ().SelectMany ((v) => v.Tasks).FirstOrDefault ((t) => t.ID == id);
 										if (task == null) {
 											writer.WriteLine ($"Could not find test {id}");
-										} else if (task.InProgress || task.Waiting) {
+										} else {
+											yield return task;
+										}
+									} else {
+										writer.WriteLine ($"Could not parse {arguments ["id"]}");
+									}
+								}
+
+							}
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								var id_inputs = arguments ["id"].Split (',');
+
+								var tasks = find_tasks (writer, arguments ["id"]);
+
+								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
+								// then for another, since that would not take advantage of running tests on several devices in parallel.
+								var rnd = new Random ((int) DateTime.Now.Ticks);
+								tasks = tasks.OrderBy ((v) => rnd.Next ());
+
+								foreach (var task in tasks) {
+									switch (request.Url.LocalPath) {
+									case "/stoptest":
+										if (!task.Waiting) {
+											writer.WriteLine ($"Test '{task.TestName}' is not in a waiting state.");
+										} else {
+											task.Reset ();
+											writer.WriteLine ($"OK: {task.ID}");
+										}
+										break;
+									case "/runtest":
+										if (task.InProgress || task.Waiting) {
 											writer.WriteLine ($"Test '{task.TestName}' is already executing.");
 										} else {
 											task.Reset ();
 											task.RunAsync ();
-											writer.WriteLine ("OK");
+											writer.WriteLine ($"OK: {task.ID}");
 										}
-									} else {
-										writer.WriteLine ($"Could not parse {arguments ["id"]}");
+										break;
+									default:
+										throw new NotImplementedException ();
 									}
 								}
 							}
@@ -1124,14 +1297,33 @@ namespace xharness
 							response.OutputStream.Write (favicon, 0, favicon.Length);
 							response.OutputStream.Close ();
 							break;
+						case "/xharness.css":
+						case "/xharness.js":
+							serveFile = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), request.Url.LocalPath.Substring (1));
+							goto default;
 						default:
-							var path = Path.Combine (LogDirectory, request.Url.LocalPath.Substring (1));
+							if (serveFile == null)
+								serveFile = Path.Combine (LogDirectory, request.Url.LocalPath.Substring (1));
+							var path = serveFile;
 							if (File.Exists (path)) {
 								var buffer = new byte [4096];
 								using (var fs = new FileStream (path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
 									int read;
 									response.ContentLength64 = fs.Length;
-									response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+									switch (Path.GetExtension (path).ToLowerInvariant ()) {
+									case ".html":
+										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
+										break;
+									case ".css":
+										response.ContentType = "text/css";
+										break;
+									case ".js":
+										response.ContentType = "text/javascript";
+										break;
+									default:
+										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+										break;
+									}
 									while ((read = fs.Read (buffer, 0, buffer.Length)) > 0)
 										response.OutputStream.Write (buffer, 0, read);
 								}
@@ -1226,32 +1418,29 @@ namespace xharness
 		}
 
 		object report_lock = new object ();
-		public void GenerateReport (bool only_if_ci = false)
+		public void GenerateReport ()
 		{
-			if (only_if_ci && IsServerMode)
-				return;
-			
 			try {
 				lock (report_lock) {
 					var report = Path.Combine (LogDirectory, "index.html");
-					using (var stream = new MemoryStream ()) {
-						MemoryStream markdown_summary = null;
-						StreamWriter markdown_writer = null;
-						if (!string.IsNullOrEmpty (Harness.MarkdownSummaryPath)) {
-							markdown_summary = new MemoryStream ();
-							markdown_writer = new StreamWriter (markdown_summary);
+					var tmpreport = Path.Combine (LogDirectory, $"index-{Harness.Timestamp}.tmp.html");
+					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Harness.Timestamp}.tmp");
+					using (var stream = new FileStream (tmpreport, FileMode.CreateNew, FileAccess.ReadWrite)) {
+						using (var markdown_writer = (string.IsNullOrEmpty (tmpmarkdown) ? null : new StreamWriter (tmpmarkdown))) {
+							GenerateReportImpl (stream, markdown_writer);
 						}
-						GenerateReportImpl (stream, markdown_writer);
-						if (File.Exists (report))
-							File.Delete (report);
-						File.WriteAllBytes (report, stream.ToArray ());
-						if (!string.IsNullOrEmpty (Harness.MarkdownSummaryPath)) {
-							markdown_writer.Flush ();
-							if (File.Exists (Harness.MarkdownSummaryPath))
-								File.Delete (Harness.MarkdownSummaryPath);
-							File.WriteAllBytes (Harness.MarkdownSummaryPath, markdown_summary.ToArray ());
-							markdown_writer.Close ();
-						}
+					}
+					if (File.Exists (report))
+						File.Delete (report);
+					File.Move (tmpreport, report);
+					if (!string.IsNullOrEmpty (tmpmarkdown)) {
+						if (File.Exists (Harness.MarkdownSummaryPath))
+							File.Delete (Harness.MarkdownSummaryPath);
+						File.Move (tmpmarkdown, Harness.MarkdownSummaryPath);
+					}
+					var dependentFileLocation = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
+					foreach (var file in new string [] { "xharness.js", "xharness.css" }) {
+						File.Copy (Path.Combine (dependentFileLocation, file), Path.Combine (LogDirectory, file), true);
 					}
 				}
 			} catch (Exception e) {
@@ -1311,7 +1500,8 @@ namespace xharness
 				allTasks.AddRange (allDeviceTasks);
 			}
 
-			var failedTests = allTasks.Where ((v) => v.Failed || v.Skipped);
+			var failedTests = allTasks.Where ((v) => v.Failed);
+			var skippedTests = allTasks.Where ((v) => v.Skipped);
 			var unfinishedTests = allTasks.Where ((v) => !v.Finished);
 			var passedTests = allTasks.Where ((v) => v.Succeeded);
 			var runningTests = allTasks.Where ((v) => v.Running && !v.Waiting);
@@ -1322,8 +1512,13 @@ namespace xharness
 			if (markdown_summary != null) {
 				markdown_summary.WriteLine ("# Test results");
 				markdown_summary.WriteLine ();
+				var details = failedTests.Any ();
+				if (details) {
+					markdown_summary.WriteLine ("<details>");
+					markdown_summary.Write ("<summary>");
+				}
 				if (allTasks.Count == 0) {
-					markdown_summary.WriteLine ($"Loading tests...");
+					markdown_summary.Write ($"Loading tests...");
 				} else if (unfinishedTests.Any ()) {
 					var list = new List<string> ();
 					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
@@ -1331,14 +1526,18 @@ namespace xharness
 						list.Add ($"{@group.Key.ToString ()}: {@group.Count ()}");
 					markdown_summary.Write ($"# Test run in progress: ");
 					markdown_summary.Write (string.Join (", ", list));
-					markdown_summary.WriteLine ();
 				} else if (failedTests.Any ()) {
-					markdown_summary.WriteLine ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					markdown_summary.Write ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
+				} else if (skippedTests.Any ()) {
+					markdown_summary.Write ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
-					markdown_summary.WriteLine ($"# All {passedTests.Count ()} tests passed");
+					markdown_summary.Write ($"# All {passedTests.Count ()} tests passed");
 				} else {
-					markdown_summary.WriteLine ($"# No tests selected.");
+					markdown_summary.Write ($"# No tests selected.");
 				}
+				if (details)
+					markdown_summary.Write ("</summary>");
+				markdown_summary.WriteLine ();
 				markdown_summary.WriteLine ();
 				if (failedTests.Any ()) {
 					markdown_summary.WriteLine ("## Failed tests");
@@ -1355,6 +1554,8 @@ namespace xharness
 						markdown_summary.WriteLine ();
 					}
 				}
+				if (details)
+					markdown_summary.WriteLine ("</details>");
 			}
 
 			using (var writer = new StreamWriter (stream)) {
@@ -1362,255 +1563,15 @@ namespace xharness
 				writer.WriteLine ("<html onkeypress='keyhandler(event)' lang='en'>");
 				if (IsServerMode && populating)
 					writer.WriteLine ("<meta http-equiv=\"refresh\" content=\"1\">");
-				writer.WriteLine (@"<head>
-<style>
-.pdiv { display: table; padding-top: 10px; }
-.p1 { }
-.p2 { }
-.p3 { }
-.expander { display: table-cell; height: 100%; padding-right: 6px; text-align: center; vertical-align: middle; min-width: 10px; }
-.runall { font-size: 75%; margin-left: 3px; }
-.logs { padding-bottom: 10px; padding-top: 10px; padding-left: 30px; }
-
-#nav {
-	display: inline-block;
-	width: 350px;
-}
-
-#nav > * {
-	display: inline;
-	width: 300px;
-}
-
-#nav ul {
-	background: #ffffff;
-	list-style: none;
-	position: absolute;
-	left: -9999px;
-	padding: 10px;
-	z-index: 2;
-	width: 200px;
-	border-style: ridge;
-	border-width: thin;
-}
-
-#nav li {
-	margin-right: 10px;
-	position: relative;
-}
-#nav a {
-	display: block;
-	padding: 5px;
-	text-decoration: none;
-}
-#nav a:hover {
-	text-decoration: underline;
-}
-#nav ul li {
-	padding-top: 0;
-	padding-bottom: 0;
-	padding-left: 0;
-}
-#nav ul a {
-	white-space: nowrap;
-}
-#nav li:hover ul { 
-	left: 0;
-}
-#nav li:hover a {
-	text-decoration: underline;
-}
-#nav li:hover ul a { 
-	text-decoration:none;
-}
-#nav li:hover ul li a:hover {
-	text-decoration: underline;
-}
-
-</style>");
+				writer.WriteLine ("<head>");
+				writer.WriteLine ("<link rel='stylesheet' href='xharness.css'>");
 				writer.WriteLine ("<title>Test results</title>");
-				writer.WriteLine (@"<script type='text/javascript'>
-var ajax_log = null;
-function addlog (msg)
-{
-	if (ajax_log == null)
-		ajax_log = document.getElementById ('ajax-log');
-	if (ajax_log == null)
-		return;
-	var newText = msg + ""\n"" + ajax_log.innerText;
-	if (newText.length > 1024)
-		newText = newText.substring (0, 1024);
-	ajax_log.innerText = newText;
-}
-
-function toggleLogVisibility (logName)
-{
-	var button = document.getElementById ('button_' + logName);
-	var logs = document.getElementById ('logs_' + logName);
-	if (logs.style.display == 'none' && logs.innerText.trim () != '') {
-		logs.style.display = 'block';
-		button.innerText = '-';
-	} else {
-		logs.style.display = 'none';
-		button.innerText = '+';
-	}
-}
-function toggleContainerVisibility2 (containerName)
-{
-	var button = document.getElementById ('button_container2_' + containerName);
-	var div = document.getElementById ('test_container2_' + containerName);
-	if (div.style.display == 'none') {
-		div.style.display = 'block';
-		button.innerText = '-';
-	} else {
-		div.style.display = 'none';
-		button.innerText = '+';
-	}
-}
-function quit ()
-{
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-	    if (this.readyState == 4 && this.status == 200) {
-	       window.close ();
-	    }
-	};
-	xhttp.open(""GET"", ""quit"", true);
-	xhttp.send();
-}
-function toggleAjaxLogVisibility()
-{
-	if (ajax_log == null)
-		ajax_log = document.getElementById ('ajax-log');
-	var button = document.getElementById ('ajax-log-button');
-	if (ajax_log.style.display == 'none') {
-		ajax_log.style.display = 'block';
-		button.innerText = 'Hide log';
-	} else {
-		ajax_log.style.display = 'none';
-		button.innerText = 'Show log';
-	}
-}
-function toggleVisibility (css_class)
-{
-	var objs = document.getElementsByClassName (css_class);
-	
-	for (var i = 0; i < objs.length; i++) {
-		var obj = objs [i];
-		
-		var pname = 'original-' + css_class + '-display';
-		if (obj.hasOwnProperty (pname)) {
-			obj.style.display = obj [pname];
-			delete obj [pname];
-		} else {
-			obj [pname] = obj.style.display;
-			obj.style.display = 'none';
-		}
-	}
-}
-function keyhandler(event)
-{
-	switch (String.fromCharCode (event.keyCode)) {
-	case ""q"":
-	case ""Q"":
-		quit ();
-		break;
-	}
-}
-function runalltests()
-{
-	sendrequest (""runalltests"");
-}
-function runtest(id)
-{
-	sendrequest (""runtest?id="" + id);
-}
-function sendrequest(url, callback)
-{
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4) {
-			addlog (""Loaded url: "" + url + "" with status code: "" + this.status + ""\nResponse: "" + this.responseText);
-			if (callback)
-				callback (this.responseText);
-		}
-	};
-	xhttp.open(""GET"", url, true);
-	xhttp.send();
-	addlog (""Loading url: "" + url);
-}
-function autorefresh()
-{
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-	    if (this.readyState == 4) {
-			addlog (""Reloaded."");
-			var parser = new DOMParser ();
-			var r = parser.parseFromString (this.responseText, 'text/html');
-			var ar_objs = document.getElementsByClassName (""autorefreshable"");
-
-			for (var i = 0; i < ar_objs.length; i++) {
-				var ar_obj = ar_objs [i];
-				if (!ar_obj.id || ar_obj.id.length == 0) {
-					console.log (""Found object without id"");
-					continue;
+				writer.WriteLine (@"<script type='text/javascript' src='xharness.js'></script>");
+				if (IsServerMode) {
+					writer.WriteLine ("<script type='text/javascript'>");
+					writer.WriteLine ("setTimeout (autorefresh, 1000);");
+					writer.WriteLine ("</script>");
 				}
-				
-				var new_obj = r.getElementById (ar_obj.id);
-				if (new_obj) {
-					if (ar_obj.innerHTML != new_obj.innerHTML)
-						ar_obj.innerHTML = new_obj.innerHTML;
-					if (ar_obj.style.cssText != new_obj.style.cssText) {
-						ar_obj.style = new_obj.style;
-					}
-					
-					var evt = ar_obj.getAttribute ('data-onautorefresh');
-					if (evt != '') {
-						autoshowdetailsmessage (evt);
-					}
-				} else {
-					console.log (""Could not find id "" + ar_obj.id + "" in updated page."");
-				}
-			}
-	    }
-	};
-	xhttp.open(""GET"", window.location.href, true);
-	xhttp.send();
-}
-
-function autoshowdetailsmessage (id)
-{
-	var input_id = 'logs_' + id;
-	var message_id = 'button_' + id;
-	var input_div = document.getElementById (input_id);
-	if (input_div == null)
-		return;
-	var message_div = document.getElementById (message_id);
-	var txt = input_div.innerText.trim ();
-	if (txt == '') {
-		message_div.style.opacity = 0;
-	} else {
-		message_div.style.opacity = 1;
-		if (input_div.style.display == 'block') {
-			message_div.innerText = '-';
-		} else {
-			message_div.innerText = '+';
-		}
-	}
-}
-
-function oninitialload ()
-{
-	var autorefreshable = document.getElementsByClassName (""autorefreshable"");
-	for (var i = 0; i < autorefreshable.length; i++) {
-		var evt = autorefreshable [i].getAttribute (""data-onautorefresh"");
-		if (evt != '')
-			autoshowdetailsmessage (evt);
-	}
-}");
-				if (IsServerMode)
-					writer.WriteLine ("setInterval (autorefresh, 1000);");
-				writer.WriteLine ("</script>");
 				writer.WriteLine ("</head>");
 				writer.WriteLine ("<body onload='oninitialload ();'>");
 
@@ -1622,13 +1583,15 @@ function oninitialload ()
 				writer.WriteLine ("<h1>Test results</h1>");
 
 				foreach (var log in Logs)
-					writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description);
+					writer.WriteLine ("<span id='x{2}' class='autorefreshable'> <a href='{0}' type='text/plain'>{1}</a></span><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description, id_counter++);
 
 				var headerColor = "black";
 				if (unfinishedTests.Any ()) {
 					; // default
 				} else if (failedTests.Any ()) {
 					headerColor = "red";
+				} else if (skippedTests.Any ()) {
+					headerColor = "orange";
 				} else if (passedTests.Any ()) {
 					headerColor = "green";
 				} else {
@@ -1648,7 +1611,9 @@ function oninitialload ()
 					writer.Write (string.Join (", ", list));
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
-					writer.Write ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					writer.Write ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed");
+				} else if (skippedTests.Any ()) {
+					writer.Write ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed");
 				} else if (passedTests.Any ()) {
 					writer.Write ($"All {passedTests.Count ()} tests passed");
 				} else {
@@ -1656,9 +1621,10 @@ function oninitialload ()
 				}
 				writer.WriteLine ("</span>");
 				writer.WriteLine ("</h2>");
-				if (IsServerMode && allTasks.Count > 0) {
-					writer.WriteLine (@"
-<ul id='nav'>
+				if (allTasks.Count > 0) {
+					writer.WriteLine ($"<ul id='nav'>");
+					if (IsServerMode) {
+						writer.WriteLine (@"
 	<li>Select
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""select?all"");'>All tests</a></li>
@@ -1687,19 +1653,26 @@ function oninitialload ()
 			<li class=""adminitem""><a href='javascript:sendrequest (""runselected"");'>All selected tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""runfailed"");'>All failed tests</a></li>
 		</ul>
-	</li>
+	</li>");
+					}
+					writer.WriteLine (@"
 	<li>Toggle visibility
 		<ul>
-			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Ignored tests</a></li>
+			<li class=""adminitem""><a href='javascript:toggleAll (true);'>Expand all</a></li>
+			<li class=""adminitem""><a href='javascript:toggleAll (false);'>Collapse all</a></li>
+			<li class=""adminitem""><a href='javascript:toggleVisibility (""toggleable-ignored"");'>Hide/Show ignored tests</a></li>
 		</ul>
-	</li>
+	</li>");
+					if (IsServerMode) {
+						writer.WriteLine (@"
 	<li>Reload
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""reload-devices"");'>Devices</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""reload-simulators"");'>Simulators</a></li>
 		</ul>
-	</li>
-</ul>");
+	</li>");
+					}
+					writer.WriteLine ("</ul>");
 				}
 
 				writer.WriteLine ("<div id='test-table' style='width: 100%'>");
@@ -1796,7 +1769,7 @@ function oninitialload ()
 						if (IsServerMode)
 							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", group.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 						writer.WriteLine ("</div>");
-						writer.WriteLine ($"<div id='test_container2_{groupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
+						writer.WriteLine ($"<div id='test_container2_{groupId}' class='togglable' style='display: {defaultDisplay}; margin-left: 20px;'>");
 					}
 
 					// Test data
@@ -1816,7 +1789,7 @@ function oninitialload ()
 								writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 							writer.WriteLine ("</div>");
 
-							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
+							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' class='togglable' style='display: {defaultDisplay}; margin-left: 20px;'>");
 						}
 						foreach (var test in modeGroup.OrderBy ((v) => v.Variation, StringComparer.OrdinalIgnoreCase)) {
 							var runTest = test as RunTestTask;
@@ -1841,17 +1814,27 @@ function oninitialload ()
 							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>) </span>");
-							if (IsServerMode && !test.InProgress && !test.Waiting)
-								writer.Write ($" <span><a class='runall' href='javascript:runtest ({test.ID})'>Run</a></span> ");
+							if (IsServerMode) {
+								writer.Write ($" <span id='x{id_counter++}' class='autorefreshable'>");
+								if (test.Waiting) {
+									writer.Write ($" <a class='runall' href='javascript:stoptest ({test.ID})'>Stop</a> ");
+								} else if (test.InProgress) {
+									// Stopping is not implemented for tasks that are already executing
+								} else {
+									writer.Write ($" <a class='runall' href='javascript:runtest ({test.ID})'>Run</a> ");
+								}
+								writer.Write ("</span> ");
+							}
 							writer.WriteLine ("</div>");
-							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
+							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs togglable' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
 								var msg = System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />");
+								var prefix = test.Ignored ? "Ignored" : "Failure";
 								if (test.FailureMessage.Contains ('\n')) {
-									writer.WriteLine ($"Failure:<br /> <div style='margin-left: 20px;'>{msg}</div>");
+									writer.WriteLine ($"{prefix}:<br /> <div style='margin-left: 20px;'>{msg}</div>");
 								} else {
-									writer.WriteLine ($"Failure: {msg} <br />");
+									writer.WriteLine ($"{prefix}: {msg} <br />");
 								}
 							}
 							var progressMessage = test.ProgressMessage;
@@ -1897,7 +1880,7 @@ function oninitialload ()
 										break;
 									}
 									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-									if (log.Description == "Test log" || log.Description == "Execution log") {
+									if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
 										string summary;
 										List<string> fails;
 										try {
@@ -1972,21 +1955,25 @@ function oninitialload ()
 												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
 												if (failures.Length > 0) {
 													writer.WriteLine ("<div style='padding-left: 15px;'>");
+													writer.WriteLine ("<ul>");
 													foreach (var failure in failures) {
+														writer.WriteLine ("<li>");
 														var test_name = failure.Attributes ["name"]?.Value;
 														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
 														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
 														if (!string.IsNullOrEmpty (message)) {
 															writer.Write (": ");
-															writer.Write (System.Web.HttpUtility.HtmlEncode (message));
+															writer.Write (HtmlFormat (message));
 														}
 														writer.WriteLine ("<br />");
+														writer.WriteLine ("</li>");
 													}
+													writer.WriteLine ("</ul>");
 													writer.WriteLine ("</div>");
 												}
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {System.Web.HttpUtility.HtmlEncode (ex.Message)}</span><br />");
+											writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {HtmlFormat (ex.Message)}</span><br />");
 										}
 									}
 								}
@@ -2006,6 +1993,12 @@ function oninitialload ()
 			}
 		}
 		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
+
+		static string HtmlFormat (string value)
+		{
+			var rv = System.Web.HttpUtility.HtmlEncode (value);
+			return rv.Replace ("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").Replace ("\n", "<br/>\n");
+		}
 
 		static string LinkEncode (string path)
 		{
@@ -2050,7 +2043,35 @@ function oninitialload ()
 		public string ProjectPlatform;
 		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 
+		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
+		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
+
+		public bool RequiresXcode94;
+
+		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
+		// Typically used to fail tasks that don't have an available device, or if there's not enough disk space.
+		public virtual Task VerifyRunAsync ()
+		{
+			return VerifyDiskSpaceAsync ();
+		}
+
+		static DriveInfo RootDrive;
+		protected Task VerifyDiskSpaceAsync ()
+		{
+			if (Finished)
+				return Task.CompletedTask;
+
+			if (RootDrive == null)
+				RootDrive = new DriveInfo ("/");
+			var afs = RootDrive.AvailableFreeSpace;
+			const long minSpaceRequirement = 1024 * 1024 * 1024; /* 1 GB */
+			if (afs < minSpaceRequirement) {
+				FailureMessage = $"Not enough space on the root drive '{RootDrive.Name}': {afs / (1024.0 * 1024):#.##} MB left of {minSpaceRequirement / (1024.0 * 1024):#.##} MB required";
+				ExecutionResult = TestExecutingResult.Failed;
+			}
+			return Task.CompletedTask;
+		}
 
 		public void CloneTestProject (TestProject project)
 		{
@@ -2085,7 +2106,7 @@ function oninitialload ()
 		string failure_message;
 		public string FailureMessage {
 			get { return failure_message; }
-			protected set {
+			set {
 				failure_message = value;
 				MainLog.WriteLine (failure_message);
 			}
@@ -2155,6 +2176,8 @@ function oninitialload ()
 					return rv.Substring (0, rv.Length - "-unifiedXM45".Length);
 				case TestPlatform.Mac_UnifiedXM45_32:
 					return rv.Substring (0, rv.Length - "-unifiedXM45-32".Length);
+				case TestPlatform.Mac_UnifiedSystem:
+					return rv.Substring (0, rv.Length - "-unifiedSystem".Length);
 				default:
 					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 8);
@@ -2195,7 +2218,7 @@ function oninitialload ()
 
 		public string LogDirectory {
 			get {
-				var rv = Path.Combine (Jenkins.LogDirectory, $"{TestName}_{ID}");
+				var rv = Path.Combine (Jenkins.LogDirectory, TestName, ID.ToString ());
 				Directory.CreateDirectory (rv);
 				return rv;
 			}
@@ -2217,13 +2240,26 @@ function oninitialload ()
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.InProgress;
 
 			try {
+				if (Dependency != null)
+ 					await Dependency ();
+
 				if (InitialTask != null)
 					await InitialTask;
+				
+				await VerifyRunAsync ();
+				if (Finished)
+					return;
 
 				duration.Start ();
 
 				execute_task = ExecuteAsync ();
 				await execute_task;
+
+				if (CompletedTask != null) {
+					if (CompletedTask.Status == TaskStatus.Created)
+						CompletedTask.Start ();
+					await CompletedTask;
+				}
 
 				ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.Finished;
 				if ((ExecutionResult & ~TestExecutingResult.StateMask) == 0)
@@ -2234,12 +2270,17 @@ function oninitialload ()
 					FailureMessage = $"Harness exception for '{TestName}': {e}";
 					log.WriteLine (FailureMessage);
 				}
+				PropagateResults ();
 			} finally {
 				logs?.Dispose ();
 				duration.Stop ();
 			}
 
-			Jenkins.GenerateReport (true);
+			Jenkins.GenerateReport ();
+		}
+
+		protected virtual void PropagateResults ()
+		{
 		}
 
 		public virtual void Reset ()
@@ -2268,6 +2309,8 @@ function oninitialload ()
 
 		protected void SetEnvironmentVariables (Process process)
 		{
+			var xcodeRoot = RequiresXcode94 ? Harness.Xcode94Root : Harness.XcodeRoot;
+			
 			switch (Platform) {
 			case TestPlatform.iOS:
 			case TestPlatform.iOS_Unified:
@@ -2276,10 +2319,10 @@ function oninitialload ()
 			case TestPlatform.iOS_TodayExtension64:
 			case TestPlatform.tvOS:
 			case TestPlatform.watchOS:
-				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
+				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
-				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
-				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
+				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 				break;
 			case TestPlatform.Mac:
 			case TestPlatform.Mac_Classic:
@@ -2287,19 +2330,20 @@ function oninitialload ()
 			case TestPlatform.Mac_Unified32:
 			case TestPlatform.Mac_UnifiedXM45:
 			case TestPlatform.Mac_UnifiedXM45_32:
-				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
-				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
-				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
+			case TestPlatform.Mac_UnifiedSystem:
+				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
+				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				break;
 			case TestPlatform.All:
 				// Don't set:
 				//     MSBuildExtensionsPath 
-				//     XBUILD_FRAMEWORK_FOLDERS_PATH
+				//     TargetFrameworkFallbackSearchPaths
 				// because these values used by both XM and XI and we can't set it to two different values at the same time.
 				// Any test that depends on these values should not be using 'TestPlatform.All'
-				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
+				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
@@ -2336,13 +2380,10 @@ function oninitialload ()
 			}
 		}
 
-		protected void LogProcessExecution (Log log, Process process, string text, params object[] args)
+		protected void LogEvent (Log log, string text, params object[] args)
 		{
 			Jenkins.MainLog.WriteLine (text, args);
 			log.WriteLine (text, args);
-			foreach (string key in process.StartInfo.EnvironmentVariables.Keys)
-				log.WriteLine ("{0}={1}", key, process.StartInfo.EnvironmentVariables [key]);
-			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 		}
 
 		public string GuessFailureReason (Log log)
@@ -2459,7 +2500,7 @@ function oninitialload ()
 				args.Append (StringUtils.Quote (SolutionPath));
 				nuget.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (nuget);
-				LogProcessExecution (log, nuget, "Restoring nugets for {0} ({1})", TestName, Mode);
+				LogEvent (log, "Restoring nugets for {0} ({1})", TestName, Mode);
 
 				var timeout = TimeSpan.FromMinutes (15);
 				var result = await nuget.RunAsync (log, true, timeout);
@@ -2491,7 +2532,7 @@ function oninitialload ()
 					args.Append (StringUtils.Quote (File.Exists (sln) ? sln : ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (xbuild);
-					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
+					LogEvent (log, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						var timeout = TimeSpan.FromMinutes (5);
 						var result = await xbuild.RunAsync (log, true, timeout);
@@ -2527,7 +2568,7 @@ function oninitialload ()
 					SetEnvironmentVariables (make);
 					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", "Build log");
 					log.Timestamp = true;
-					LogProcessExecution (log, make, "Making {0} in {1}", Target, WorkingDirectory);
+					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
 						var result = await make.RunAsync (log, true, timeout);
@@ -2560,8 +2601,9 @@ function oninitialload ()
 				await RestoreNugetsAsync (log, resource);
 
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = UseMSBuild ? "msbuild" : "xbuild";
+					xbuild.StartInfo.FileName = Harness.XIBuildPath;
 					var args = new StringBuilder ();
+					args.Append ("-- ");
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)
 						args.Append ($"/p:Platform={ProjectPlatform} ");
@@ -2572,9 +2614,9 @@ function oninitialload ()
 					SetEnvironmentVariables (xbuild);
 					if (UseMSBuild)
 						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
-					LogProcessExecution (log, xbuild, "Building {0} ({1})", TestName, Mode);
+					LogEvent (log, "Building {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
-						var timeout = TimeSpan.FromMinutes (15);
+						var timeout = TimeSpan.FromMinutes (60);
 						var result = await xbuild.RunAsync (log, true, timeout);
 						if (result.TimedOut) {
 							ExecutionResult = TestExecutingResult.TimedOut;
@@ -2596,8 +2638,9 @@ function oninitialload ()
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = "xbuild";
+				xbuild.StartInfo.FileName = Harness.XIBuildPath;
 				var args = new StringBuilder ();
+				args.Append ("-- ");
 				args.Append ("/verbosity:diagnostic ");
 				if (project_platform != null)
 					args.Append ($"/p:Platform={project_platform} ");
@@ -2607,7 +2650,7 @@ function oninitialload ()
 				args.Append ("/t:Clean ");
 				xbuild.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (xbuild);
-				LogProcessExecution (log, xbuild, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
+				LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
 				await xbuild.RunAsync (log, true, timeout);
 				log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
@@ -2636,6 +2679,7 @@ function oninitialload ()
 		public string TestExecutable;
 		public string WorkingDirectory;
 		public bool ProduceHtmlReport = true;
+		public bool InProcess;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 
 		public NUnitExecuteTask (BuildToolTask build_task)
@@ -2672,25 +2716,30 @@ function oninitialload ()
 				using (var proc = new Process ()) {
 
 					proc.StartInfo.WorkingDirectory = WorkingDirectory;
-					proc.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Commands/mono";
+					proc.StartInfo.FileName = Harness.XIBuildPath;
 					var args = new StringBuilder ();
+					args.Append ("-t -- ");
 					args.Append (StringUtils.Quote (Path.GetFullPath (TestExecutable))).Append (' ');
 					args.Append (StringUtils.Quote (Path.GetFullPath (TestLibrary))).Append (' ');
 					if (IsNUnit3) {
 						args.Append ("-result=").Append (StringUtils.Quote (xmlLog)).Append (";format=nunit2 ");
 						args.Append ("--labels=All ");
+						if (InProcess)
+							args.Append ("--inprocess ");
 					} else {
 						args.Append ("-xml=" + StringUtils.Quote (xmlLog)).Append (' ');
 						args.Append ("-labels ");
 					}
 					proc.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (proc);
+					foreach (DictionaryEntry de in proc.StartInfo.EnvironmentVariables)
+						log.WriteLine ($"export {de.Key}={de.Value}");
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 						var result = await proc.RunAsync (log, true, Timeout);
 						if (result.TimedOut) {
-							FailureMessage = $"Execution timed out after {Timeout.Minutes} minutes.";
+							FailureMessage = $"Execution timed out after {Timeout.TotalMinutes} minutes.";
 							log.WriteLine (FailureMessage);
 							ExecutionResult = TestExecutingResult.TimedOut;
 						} else if (result.Succeeded) {
@@ -2756,8 +2805,10 @@ function oninitialload ()
 					return "Mac Unified XM45";
 				case TestPlatform.Mac_UnifiedXM45_32:
 					return "Mac Unified XM45 32-bit";
+				case TestPlatform.Mac_UnifiedSystem:
+					return "Mac Unified System";
 				default:
-					throw new NotImplementedException ();
+					throw new NotImplementedException (Platform.ToString ());
 				}
 			}
 			set {
@@ -2823,6 +2874,9 @@ function oninitialload ()
 			case TestPlatform.Mac_UnifiedXM45_32:
 				suffix = "-unifiedXM45-32";
 				break;
+			case TestPlatform.Mac_UnifiedSystem:
+				suffix = "-unifiedSystem";
+				break;
 			}
 			if (ProjectFile.EndsWith (".sln", StringComparison.Ordinal)) {
 				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
@@ -2845,7 +2899,6 @@ function oninitialload ()
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
 					log.Timestamp = true;
-					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
@@ -2895,7 +2948,7 @@ function oninitialload ()
 				using (var proc = new Process ()) {
 					proc.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Commands/mono";
 					var reporter = System.IO.Path.Combine (WorkingDirectory, "xtro-report/bin/Debug/xtro-report.exe");
-					var results = System.IO.Path.GetFullPath (System.IO.Path.Combine (Jenkins.LogDirectory, "..", "xtro"));
+					var results = System.IO.Path.Combine (Logs.Directory, $"xtro-{Timestamp}");
 					proc.StartInfo.Arguments = $"--debug {reporter} {WorkingDirectory} {results}";
 
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
@@ -2928,9 +2981,7 @@ function oninitialload ()
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
 
-					var output = Logs.Create ($"Report-{Timestamp}.html", "HTML Report");
-					var report = System.IO.Path.GetFullPath (System.IO.Path.Combine (results, "index.html"));
-					output.WriteLine ($"<html><head><meta http-equiv=\"refresh\" content=\"0; url={report}\" /></head></html>");
+					Logs.AddFile (System.IO.Path.Combine (results, "index.html"), "HTML Report");
 				}
 			}
 		}
@@ -2939,6 +2990,7 @@ function oninitialload ()
 	abstract class RunTestTask : TestTask
 	{
 		public readonly BuildToolTask BuildTask;
+		public bool BuildOnly;
 
 		public RunTestTask (BuildToolTask build_task)
 		{
@@ -2979,6 +3031,10 @@ function oninitialload ()
 			if (Finished)
 				return true;
 			
+			await VerifyBuildAsync ();
+			if (Finished)
+				return BuildTask.Succeeded;
+
 			ExecutionResult = TestExecutingResult.Building;
 			await BuildTask.RunAsync ();
 			if (!BuildTask.Succeeded) {
@@ -2999,12 +3055,17 @@ function oninitialload ()
 			if (Finished)
 				return;
 
-			VerifyRun ();
+			await VerifyRunAsync ();
 			if (Finished)
 				return;
 
 			if (!await BuildAsync ())
 				return;
+
+			if (BuildOnly) {
+				ExecutionResult = TestExecutingResult.Succeeded;
+				return;
+			}
 
 			ExecutionResult = TestExecutingResult.Running;
 			duration.Restart (); // don't count the build time.
@@ -3012,7 +3073,12 @@ function oninitialload ()
 		}
 
 		protected abstract Task RunTestAsync ();
-		protected virtual void VerifyRun () { }
+		// VerifyBuild is called in BuildAsync to verify that the task can be built.
+		// Typically used to fail tasks if there's not enough disk space.
+		public virtual Task VerifyBuildAsync ()
+		{
+			return VerifyDiskSpaceAsync ();
+		}
 
 		public override void Reset ()
 		{
@@ -3086,11 +3152,17 @@ function oninitialload ()
 			set { throw new NotImplementedException (); }
 		}
 
-		protected override void VerifyRun ()
+		public override async Task VerifyRunAsync ()
 		{
-			base.VerifyRun ();
+			await base.VerifyRunAsync ();
+			if (Finished)
+				return;
 
-			if (!candidates.Any ()) {
+			var enumerable = candidates;
+			var asyncEnumerable = enumerable as IAsyncEnumerable;
+			if (asyncEnumerable != null)
+				await asyncEnumerable.ReadyTask;
+			if (!enumerable.Any ()) {
 				ExecutionResult = TestExecutingResult.Skipped;
 				FailureMessage = "No applicable devices found.";
 			}
@@ -3358,8 +3430,7 @@ function oninitialload ()
 			Jenkins.MainLog.WriteLine ("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
 
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.InProgressMask) | TestExecutingResult.Running;
-			if (BuildTask.NotStarted)
-				await BuildTask.RunAsync ();
+			await BuildTask.RunAsync ();
 			if (!BuildTask.Succeeded) {
 				ExecutionResult = TestExecutingResult.BuildFailure;
 				return;
@@ -3398,13 +3469,32 @@ function oninitialload ()
 			this.Tasks = tasks;
 		}
 
+		protected override void PropagateResults ()
+		{
+			foreach (var task in Tasks) {
+				task.ExecutionResult = ExecutionResult;
+				task.FailureMessage = FailureMessage;
+			}
+		}
+
 		protected override async Task ExecuteAsync ()
 		{
+			if (Tasks.All ((v) => v.Ignored)) {
+				ExecutionResult = TestExecutingResult.Ignored;
+				return;
+			}
+
 			// First build everything. This is required for the run simulator
 			// task to properly configure the simulator.
 			build_timer.Start ();
 			await Task.WhenAll (Tasks.Select ((v) => v.BuildAsync ()).Distinct ());
 			build_timer.Stop ();
+
+			var executingTasks = Tasks.Where ((v) => !v.Ignored && !v.Failed);
+			if (!executingTasks.Any ()) {
+				ExecutionResult = TestExecutingResult.Failed;
+				return;
+			}
 
 			using (var desktop = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireExclusiveAsync ())) {
 				run_timer.Start ();
@@ -3412,7 +3502,6 @@ function oninitialload ()
 				// We need to set the dialog permissions for all the apps
 				// before launching the simulator, because once launched
 				// the simulator caches the values in-memory.
-				var executingTasks = Tasks.Where ((v) => !v.Ignored && !v.Failed);
 				foreach (var task in executingTasks)
 					await task.SelectSimulatorAsync ();
 
@@ -3605,6 +3694,7 @@ function oninitialload ()
 		Mac_UnifiedXM45,
 		Mac_Unified32,
 		Mac_UnifiedXM45_32,
+		Mac_UnifiedSystem,
 	}
 
 	[Flags]

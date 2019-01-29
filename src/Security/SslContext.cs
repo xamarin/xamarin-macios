@@ -19,13 +19,11 @@ using Foundation;
 using ObjCRuntime;
 
 namespace Security {
-	[Mac (10,8)] // SSLCreateContext is 10.8, only constructor
 	public class SslContext : INativeObject, IDisposable {
 
 		SslConnection connection;
 		SslStatus result;
 
-		[Mac (10,8)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* SSLContextRef */ IntPtr SSLCreateContext (/* CFAllocatorRef */ IntPtr alloc, SslProtocolSide protocolSide, SslConnectionType connectionType);
 
@@ -81,11 +79,9 @@ namespace Security {
 			return result;
 		}
 
-		[Mac (10,8)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* OSStatus */ SslStatus SSLGetProtocolVersionMax (/* SSLContextRef */ IntPtr context, out SslProtocol maxVersion);
 
-		[Mac (10,8)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* OSStatus */ SslStatus SSLSetProtocolVersionMax (/* SSLContextRef */ IntPtr context, SslProtocol maxVersion);
 
@@ -100,11 +96,9 @@ namespace Security {
 			}
 		}
 
-		[Mac (10,8)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* OSStatus */ SslStatus SSLGetProtocolVersionMin (/* SSLContextRef */ IntPtr context, out SslProtocol minVersion);
 
-		[Mac (10,8)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* OSStatus */ SslStatus SSLSetProtocolVersionMin (/* SSLContextRef */ IntPtr context, SslProtocol minVersion);
 
@@ -356,7 +350,6 @@ namespace Security {
 			}
 		}
 
-		[Mac (10,8)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLGetDatagramWriteSize (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint bufSize);
 
@@ -368,11 +361,9 @@ namespace Security {
 			}
 		}
 
-		[Mac (10,8)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLGetMaxDatagramRecordSize (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint maxSize);
 
-		[Mac (10,8)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetMaxDatagramRecordSize (/* SSLContextRef */ IntPtr context, /* size_t */ nint maxSize);
 
@@ -387,7 +378,6 @@ namespace Security {
 			}
 		}
 
-		[Mac (10,8)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetDatagramHelloCookie (/* SSLContextRef */ IntPtr context, /* const void* */ byte *cookie, nint cookieLength);
 
@@ -529,11 +519,9 @@ namespace Security {
 			}
 		}
 
-		[Mac (10,8)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* CFType */ IntPtr SSLContextGetTypeID ();
 
-		[Mac (10,8)]
 		public static IntPtr GetTypeId ()
 		{
 			return SSLContextGetTypeID ();
@@ -646,23 +634,26 @@ namespace Security {
 			return SSLSetOCSPResponse (Handle, response.Handle);
 		}
 
-#if !MONOMAC
-		[iOS (11,0)][TV (11,0)][Watch (4,0)] //[Mac (10,13)] Apple forgot to export SSLSetALPNProtocols. https://bugs.swift.org/browse/SR-6131
+		[iOS (11,0)][TV (11,0)][Watch (4,0)]
+		[Mac (10,13,4)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetALPNProtocols (IntPtr /* SSLContextRef */ context, IntPtr /* CFArrayRef */ protocols);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)] //[Mac (10,13)]  Apple forgot to export SSLSetALPNProtocols. https://bugs.swift.org/browse/SR-6131
+		[iOS (11,0)][TV (11,0)][Watch (4,0)]
+		[Mac (10,13,4)]
 		public int SetAlpnProtocols (string[] protocols)
 		{
 			using (var array = NSArray.FromStrings (protocols))
 				return SSLSetALPNProtocols (Handle, array.Handle);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)] //[Mac (10,13)] Apple forgot to export SSLCopyALPNProtocols.
+		[iOS (11,0)][TV (11,0)][Watch (4,0)]
+		[Mac (10,13,4)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLCopyALPNProtocols (IntPtr /* SSLContextRef */ context, ref IntPtr /* CFArrayRef* */ protocols);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)] //[Mac (10,13)] Apple forgot to export the SSLCopyALPNProtocols.
+		[iOS (11,0)][TV (11,0)][Watch (4,0)]
+		[Mac (10,13,4)]
 		public string[] GetAlpnProtocols (out int error)
 		{
 			IntPtr protocols = IntPtr.Zero; // must be null, CFArray allocated by SSLCopyALPNProtocols
@@ -674,12 +665,12 @@ namespace Security {
 			return result;
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)] //[Mac (10,13)] Apple forgot to export the SSLCopyALPNProtocols.
+		[iOS (11,0)][TV (11,0)][Watch (4,0)]
+		[Mac (10,13,4)]
 		public string[] GetAlpnProtocols ()
 		{
 			int error;
 			return GetAlpnProtocols (out error);
 		}
-#endif
 	}
 }

@@ -11,6 +11,27 @@ using Xamarin.Bundler;
 
 namespace Xamarin
 {
+	[Flags]
+	public enum Abi {
+		None   =   0,
+		i386   =   1,
+		ARMv6  =   2,
+		ARMv7  =   4,
+		ARMv7s =   8,
+		ARM64 =   16,
+		x86_64 =  32,
+		Thumb  =  64,
+		LLVM   = 128,
+		ARMv7k = 256,
+		ARM64e = 512,
+		ARM64_32 = 1024,
+		SimulatorArchMask = i386 | x86_64,
+		DeviceArchMask = ARMv6 | ARMv7 | ARMv7s | ARMv7k | ARM64 | ARM64e | ARM64_32,
+		ArchMask = SimulatorArchMask | DeviceArchMask,
+		Arch64Mask = x86_64 | ARM64 | ARM64e,
+		Arch32Mask = i386 | ARMv6 | ARMv7 | ARMv7s | ARMv7k | ARM64_32 /* This is a 32-bit arch for our purposes */,
+	}
+
 	public class MachO
 	{
 		/* definitions from: /usr/include/mach-o/loader.h */
@@ -28,6 +49,7 @@ namespace Xamarin
 
 		internal const uint MH_DYLIB = 0x6; /* dynamically bound shared library */
 
+		// Values here match the corresponding values in the Abi enum.
 		public enum Architectures {
 			None   =   0,
 			i386   =   1,
@@ -36,6 +58,9 @@ namespace Xamarin
 			ARMv7s =   8,
 			ARM64 =   16,
 			x86_64 =  32,
+			ARMv7k = 256,
+			ARM64e = 512,
+			ARM64_32 = 1024,
 		}
 
 		internal enum LoadCommands : uint
@@ -305,7 +330,6 @@ namespace Xamarin
 			return result;
 		}
 
-#if MTOUCH
 		public static List<Abi> GetArchitectures (string file)
 		{
 			var result = new List<Abi> ();
@@ -364,7 +388,7 @@ namespace Xamarin
 			return rv;
 		}
 
-		static Abi GetArch (int cputype, int cpusubtype)
+		public static Abi GetArch (int cputype, int cpusubtype)
 		{
 			switch (cputype) {
 			case 12: // arm
@@ -381,7 +405,20 @@ namespace Xamarin
 					return Abi.None;
 				}
 			case 12 | 0x01000000:
-				return Abi.ARM64;
+				switch (cpusubtype) {
+				case 2:
+					return Abi.ARM64e;
+				case 0:
+				default:
+					return Abi.ARM64;
+				}
+			case 12 | 0x02000000: // CPU_TYPE_ARM | CPU_ARCH_ABI64_32 (64-bit hardware with 32-bit types; LP32)
+				switch (cpusubtype) {
+				case 1: // CPU_SUBTYPE_ARM64_32_V8
+					return Abi.ARM64_32;
+				default:
+					return Abi.None;
+				}
 			case 7: // x86
 				return Abi.i386;
 			case 7 | 0x01000000: // x64
@@ -409,7 +446,6 @@ namespace Xamarin
 			
 			return true;
 		}
-#endif
 	}
 
 	public class StaticLibrary
@@ -618,27 +654,7 @@ namespace Xamarin
 
 		public MachO.Architectures Architecture {
 			get {
-				switch (cputype) {
-				case 12: // arm
-					switch (cpusubtype) {
-					case 6:
-						return MachO.Architectures.ARMv6;
-					case 9:
-						return MachO.Architectures.ARMv7;
-					case 11:
-						return MachO.Architectures.ARMv7s;
-					default:
-						return MachO.Architectures.None;
-					}
-				case 12 | 0x01000000:
-					return MachO.Architectures.ARM64;
-				case 7: // x86
-					return MachO.Architectures.i386;
-				case 7 | 0x01000000: // x64
-					return MachO.Architectures.x86_64;
-				}
-
-				return MachO.Architectures.None;
+				return (MachO.Architectures) MachO.GetArch (cputype, cpusubtype);
 			}
 		}
 

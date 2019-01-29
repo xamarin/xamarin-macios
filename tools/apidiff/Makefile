@@ -12,10 +12,9 @@ endif
 
 APIDIFF_DIR=.
 
-MONO_API_HTML_DIR = $(MONO_PATH)/mcs/tools/mono-api-html
-MONO_API_INFO_DIR = $(MONO_PATH)/mcs/tools/corcompare
-MONO_API_INFO = $(MONO_API_INFO_DIR)/bin/Debug/mono-api-info.exe
-MONO_API_HTML = $(MONO_API_HTML_DIR)/bin/Debug/mono-api-html.exe
+MONO_API_INFO = $(MONO_PATH)/mcs/class/lib/build/mono-api-info.exe
+MONO_API_HTML = $(MONO_PATH)/mcs/class/lib/build/mono-api-html.exe
+MONO_BUILD = MONO_PATH=$(MONO_PATH)/mcs/class/lib/build $(TOP)/builds/tools64/mono/mini/mono
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
@@ -50,21 +49,21 @@ MAC_ARCH_ASSEMBLIES = native-32/Xamarin.Mac native-64/Xamarin.Mac
 # create api info. Directory hierarchy is based on installed hierarchy
 # (XM goes into temp/xm, and XI goes into temp/xi)
 
-$(APIDIFF_DIR)/temp/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/temp/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/temp/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/temp/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $< -o $@
 
-$(APIDIFF_DIR)/temp/native-%/Xamarin.Mac.xml: $(TOP)/src/build/mac/mobile-%/Xamarin.Mac.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/temp/native-%/Xamarin.Mac.xml: $(TOP)/src/build/mac/mobile-%/Xamarin.Mac.dll
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $< -o $@
 
-$(APIDIFF_DIR)/temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xamarin.iOS.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xamarin.iOS.dll
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
 
 # create diff from api info and reference info
 # note that we create an empty file (the 'touch' command)
@@ -72,24 +71,16 @@ $(APIDIFF_DIR)/temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xama
 # to run mono-api-html every time even if none of the
 # dependencies changed)
 
-$(APIDIFF_DIR)/diff/%.html: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
+$(APIDIFF_DIR)/diff/%.html: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml -i 'INSObjectProtocol' $@
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml -i 'INSObjectProtocol' $@
 	$(Q) touch $@
 
 # this is a hack to show the difference between iOS and tvOS
 $(APIDIFF_DIR)/diff/ios-to-tvos.html: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml
 	$(Q) mkdir -p $(dir $@)
 	$(Q) sed -e 's_<assembly name="Xamarin.TVOS" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml > $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml
-	$(QF_GEN) mono --debug $(MONO_API_HTML) $< $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml $@
-
-# our api-info and api-html binaries
-
-$(MONO_API_HTML): $(wildcard $(MONO_API_HTML_DIR)/*.*)
-	$(Q_GEN) cd $(MONO_API_HTML_DIR) && $(SYSTEM_MSBUILD) mono-api-html.csproj $(MSBUILD_VERBOSITY)
-
-$(MONO_API_INFO): $(wildcard $(MONO_API_INFO_DIR)/*.*)
-	$(Q_GEN) cd $(MONO_API_INFO_DIR) && $(SYSTEM_MSBUILD) mono-api-info.csproj $(MSBUILD_VERBOSITY)
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $< $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml $@
 
 # create diff files for all the assemblies per platform
 
@@ -135,20 +126,20 @@ endif
 $(APIDIFF_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
 	$(QF_GEN) echo "<h1>API diffs</h1>" > $@
 ifdef INCLUDE_IOS
-	$(Q) if [[ "x0" != "x`stat -L -f %z $(APIDIFF_DIR)/ios-api-diff.html`" ]]; then  \
+	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/ios-api-diff.html >/dev/null 2>&1; then  \
 		echo "<h2><a href='ios-api-diff.html'>Xamarin.iOS API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.iOS API diff is empty</h2>" >> $@; \
 	fi;
 ifdef INCLUDE_TVOS
-	$(Q) if [[ "x0" != "x`stat -L -f %z $(APIDIFF_DIR)/tvos-api-diff.html`" ]]; then  \
+	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/tvos-api-diff.html >/dev/null 2>&1; then  \
 		echo "<h2><a href='tvos-api-diff.html'>Xamarin.TVOS API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.TVOS API diff is empty</h2>" >> $@; \
 	fi;
 endif
 ifdef INCLUDE_WATCH
-	$(Q) if [[ "x0" != "x`stat -L -f %z $(APIDIFF_DIR)/watchos-api-diff.html`" ]]; then  \
+	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/watchos-api-diff.html >/dev/null 2>&1; then  \
 		echo "<h2><a href='watchos-api-diff.html'>Xamarin.WatchOS API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.WatchOS API diff is empty</h2>" >> $@; \
@@ -156,7 +147,7 @@ ifdef INCLUDE_WATCH
 endif
 endif
 ifdef INCLUDE_MAC
-	$(Q) if [[ "x0" != "x`stat -L -f %z $(APIDIFF_DIR)/mac-api-diff.html`" ]]; then  \
+	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/mac-api-diff.html >/dev/null 2>&1; then  \
 		echo "<h2><a href='mac-api-diff.html'>Xamarin.Mac API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.Mac API diff is empty</h2>" >> $@; \
@@ -205,6 +196,7 @@ verify-reference-assemblies-mac: $(APIDIFF_DIR)/temp/native-32/Xamarin.Mac.xml $
 clean-local::
 	rm -rf temp updated-references diff *.exe* api-diff.html
 	rm -rf *.dll*
+	rm -rf ios-*.md tvos-*.md watchos-*.md macos-*.md
 
 DIRS += $(APIDIFF_DIR)/temp $(APIDIFF_DIR)/diff
 
@@ -218,6 +210,40 @@ $(DIRS):
 .SECONDARY: $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/temp/xm/$(file).xml)
 .SECONDARY: $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
 .SECONDARY: $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
+
+merger.exe: merger.cs
+	$(Q) $(SYSTEM_CSC) -debug $< -out:$@
+
+ifdef INCLUDE_IOS
+ios-markdown: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(CURDIR)/diff/xi/Xamarin.iOS/ ios
+else
+ios-markdown: ; @true
+endif
+
+ifdef INCLUDE_TVOS
+tvos-markdown: merger.exe $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(CURDIR)/diff/xi/Xamarin.TVOS/ tvos
+else
+tvos-markdown: ; @true
+endif
+
+ifdef INCLUDE_WATCH
+watchos-markdown: merger.exe $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.WatchOS $(CURDIR)/diff/xi/Xamarin.WatchOS/ watchos
+else
+watchos-markdown: ; @true
+endif
+
+ifdef INCLUDE_MAC
+macos-markdown: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(CURDIR)/diff/xm/Xamarin.Mac/ macos
+else
+macos-markdown: ; @true
+endif
+
+$(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml -i 'INSObjectProtocol' --md $@
 
 wrench-api-diff:
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.iOS"
@@ -240,7 +266,8 @@ ifdef INCLUDE_TVOS
 endif
 endif
 	$(Q) $(MAKE) all -j8
-	$(Q) cp api-diff.html index.html
+	$(Q) $(MAKE) -j8 ios-markdown tvos-markdown watchos-markdown macos-markdown
+	$(Q) $(CP) api-diff.html index.html
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/index.html"
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"
 	@# remove empty files so they're not uploaded
@@ -255,5 +282,6 @@ endif
 jenkins-api-diff:
 	-$(MAKE) wrench-api-diff
 	$(Q) mkdir -p $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) cp *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) cp -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) $(CP) *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) $(CP) *.md $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) $(CP) -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff

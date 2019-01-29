@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 #if XAMCORE_2_0 || __UNIFIED__
 using AppKit;
 using Foundation;
@@ -25,6 +26,12 @@ namespace Xamarin.Mac.Tests
 #if !NO_GUI_TESTING
 			NSApplication.Init();
 #endif
+#if MOBILE
+			// there is no machine.config supplied in the modern profile
+			// even if one is provided it would not be linker friendly
+			if (CryptoConfig.CreateFromName ("MD2") == null)
+				CryptoConfig.AddAlgorithm (typeof (Mono.Security.Cryptography.MD2Managed), "MD2");
+#endif
 			RunTests (args);
 		}
 
@@ -38,7 +45,7 @@ namespace Xamarin.Mac.Tests
 				args.Add ($"-test={testName}");
 
 #if ADD_BCL_EXCLUSIONS
-			args.Add ("-exclude=MacNotWorking,MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter");
+			args.Add ("-exclude=MacNotWorking,MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter");
 #endif
 
 			// Skip arguments added by VSfM/macOS when running from the IDE
@@ -109,6 +116,11 @@ namespace Xamarin.Mac.Tests
 
 #if XAMCORE_2_0
 partial class TestRuntime {
+	public static bool RunAsync (TimeSpan timeout, Action action, Func<bool> check_completed)
+	{
+		return RunAsync (DateTime.Now.Add (timeout), action, check_completed);
+	}
+
 	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed)
 	{
 		NSTimer.CreateScheduledTimer (0.01, (v) => action ());

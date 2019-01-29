@@ -22,6 +22,7 @@ using System.Text;
 
 using Foundation;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 #if MTOUCH || MMP
 using TAssembly=Mono.Cecil.AssemblyDefinition;
@@ -192,7 +193,7 @@ namespace Registrar {
 
 			// This list is duplicated in tests/mtouch/RegistrarTest.cs.
 			// Update that list whenever this list is updated.
-			static char[] invalidSelectorCharacters = new char[] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n' };
+			static readonly char[] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
 			void VerifySelector (ObjCMethod method, ref List<Exception> exceptions)
 			{
 				if (method.Method == null)
@@ -232,6 +233,31 @@ namespace Registrar {
 					ch = method.Selector [idx];
 					Registrar.AddException (ref exceptions, Registrar.CreateException (4160, method, "Invalid character '{0}' (0x{1}) found in selector '{2}' for '{3}.{4}'",
 						ch, ((int) ch).ToString ("x"), method.Selector, Registrar.GetTypeFullName (Type), Registrar.GetDescriptiveMethodName (method.Method)));
+				}
+			}
+
+			public void VerifyAdoptedProtocolsNames (ref List<Exception> exceptions)
+			{
+				if (AdoptedProtocols == null)
+					return;
+
+				foreach (var adoptedProtocol in AdoptedProtocols) {
+					// Tested all of the current 'invalidSelectorCharacters' for protocol names and all of them are invalid.
+					char ch;
+					var idx = adoptedProtocol.IndexOfAny (invalidSelectorCharacters);
+					var ap = adoptedProtocol;
+					if (idx != -1) {
+						ch = adoptedProtocol [idx];
+						var str = ch.ToString ();
+						if (ch == '{') {
+							str = "{{";
+							ap = ap.Insert (idx, "{");
+						} else if (ch == '}') {
+							str = "}}";
+							ap = ap.Insert (idx, "}");
+						}
+						AddException (ref exceptions, new ProductException (4177, true, $"The 'ProtocolType' parameter of the 'Adopts' attribute used in class '{Registrar.GetTypeFullName (Type)}' contains an invalid character. Value used: '{ap}' Invalid Char: '{str}'"));
+					}
 				}
 			}
 
@@ -389,7 +415,7 @@ namespace Registrar {
 						throw new InvalidOperationException ();
 					var attrib = CategoryAttribute;
 					var name = attrib.Name ?? Registrar.GetTypeFullName (Type);
-					return Registrar.SanitizeName (name);
+					return StringUtils.SanitizeObjectiveCName (name);
 				}
 			}
 
@@ -399,7 +425,7 @@ namespace Registrar {
 						throw new InvalidOperationException ();
 					var attrib = Registrar.GetProtocolAttribute (Type);
 					var name = attrib.Name ?? Registrar.GetTypeFullName (Type);
-					return Registrar.SanitizeName (name);
+					return StringUtils.SanitizeObjectiveCName (name);
 				}
 			}
 
@@ -575,7 +601,7 @@ namespace Registrar {
 
 				var bindas_count = Marshal.ReadInt32 (desc + IntPtr.Size + 4);
 				if (bindas_count < 1 + Parameters.Length)
-					throw ErrorHelper.CreateError (8018, $"Internal consistency error: BindAs array is not big enough (expected at least {1 + parameters.Length} elements, got {bindas_count} elements) for {method_base.DeclaringType.FullName + "." + method_base.Name}. Please file a bug report at https://bugzilla.xamarin.com.");
+					throw ErrorHelper.CreateError (8018, $"Internal consistency error: BindAs array is not big enough (expected at least {1 + parameters.Length} elements, got {bindas_count} elements) for {method_base.DeclaringType.FullName + "." + method_base.Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
 				Marshal.WriteIntPtr (desc, ObjectWrapper.Convert (method_base));
 				Marshal.WriteInt32 (desc + IntPtr.Size, (int) semantic);
@@ -791,7 +817,7 @@ namespace Registrar {
 						return trampoline;
 
 #if MTOUCH || MMP
-					throw ErrorHelper.CreateError (8018, "Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.");
+					throw ErrorHelper.CreateError (8018, "Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 #else
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
@@ -1235,7 +1261,7 @@ namespace Registrar {
 				case Xamarin.Utils.ApplePlatform.TVOS:
 					return "Xamarin.TVOS";
 				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
 				}
 			}
 		}
@@ -1897,6 +1923,7 @@ namespace Registrar {
 			};
 			objcType.VerifyRegisterAttribute (ref exceptions);
 			objcType.AdoptedProtocols = GetAdoptedProtocols (objcType);
+			objcType.VerifyAdoptedProtocolsNames (ref exceptions);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
 			objcType.Protocols = GetProtocols (objcType, ref exceptions);
 #if MMP || MTOUCH
@@ -2060,7 +2087,11 @@ namespace Registrar {
 							objcType.Add (objcProperty, ref exceptions);
 						}
 					} else {
-						var objcMethod = new ObjCMethod (this, objcType, null) {
+						TMethod method = null;
+#if MTOUCH || MMP
+						method = attrib.Method;
+#endif
+						var objcMethod = new ObjCMethod (this, objcType, method) {
 							Name = attrib.Name,
 							Selector = attrib.Selector,
 							ArgumentSemantic = attrib.ArgumentSemantic,
@@ -2480,39 +2511,6 @@ namespace Registrar {
 			throw ErrorHelper.CreateError (4101, "The registrar cannot build a signature for type `{0}`.", GetTypeFullName (type));
 		}
 
-		public static string SanitizeName (string name)
-		{
-			StringBuilder sb = null;
-
-			for (int i = 0; i < name.Length; i++) {
-				var ch = name [i];
-				switch (ch) {
-				case '.':
-				case '+':
-				case '/':
-				case '`':
-				case '@':
-				case '<':
-				case '>':
-				case '$':
-				case '-':
-					if (sb == null)
-						sb = new StringBuilder (name, 0, i, name.Length);
-					sb.Append ('_');
-					break;
-				default:
-					if (sb != null)
-						sb.Append (ch);
-					break;
-				}
-			}
-
-			if (sb != null)
-				return sb.ToString ();
-			
-			return name;
-		}
-
 		public string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
 		{
 			string name = null;
@@ -2523,7 +2521,7 @@ namespace Registrar {
 			}
 			if (name == null)
 				name = GetTypeFullName (type);
-			return SanitizeName (name);
+			return StringUtils.SanitizeObjectiveCName (name);
 		}
 
 		protected string GetExportedTypeName (TType type)

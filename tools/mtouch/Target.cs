@@ -55,8 +55,25 @@ namespace Xamarin.Bundler
 		// If the assemblies were symlinked.
 		public bool Symlinked;
 
-		public bool Is32Build { get { return Application.IsArchEnabled (Abis, Abi.Arch32Mask); } } // If we're targetting a 32 bit arch for this target.
-		public bool Is64Build { get { return Application.IsArchEnabled (Abis, Abi.Arch64Mask); } } // If we're targetting a 64 bit arch for this target.
+		// If we're targetting a 32 bit arch for this target.
+		bool? is32bits;
+		public bool Is32Build {
+			get {
+				if (!is32bits.HasValue)
+					is32bits = Application.IsArchEnabled (Abis, Abi.Arch32Mask);
+				return is32bits.Value;
+			}
+		}
+
+		// If we're targetting a 64 bit arch for this target.
+		bool? is64bits;
+		public bool Is64Build {
+			get {
+				if (!is64bits.HasValue)
+					is64bits = Application.IsArchEnabled (Abis, Abi.Arch64Mask);
+				return is64bits.Value;
+			}
+		}
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
 		public bool CachedExecutable {
@@ -65,6 +82,14 @@ namespace Xamarin.Bundler
 					return false;
 				
 				return !link_task.Rebuilt;
+			}
+		}
+
+		// If this is an app extension, this returns the equivalent (32/64bit) target for the container app.
+		// This may be null (it's possible to build an extension for 32+64bit, and the main app only for 64-bit, for instance.
+		public Target ContainerTarget {
+			get {
+				return App.ContainerApp.Targets.FirstOrDefault ((v) => v.Is32Build == Is32Build);
 			}
 		}
 
@@ -95,7 +120,7 @@ namespace Xamarin.Bundler
 			case AssemblyBuildTarget.Framework:
 				return AllArchitectures;
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", build_target);
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
 			}
 		}
 
@@ -116,7 +141,7 @@ namespace Xamarin.Bundler
 				BundleFiles [bundle_path] = info = new BundleFileInfo () { DylibToFramework = dylib_to_framework_conversion };
 
 			if (info.DylibToFramework != dylib_to_framework_conversion)
-				throw ErrorHelper.CreateError (99, "Internal error: 'invalid value for framework conversion'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, "Internal error: 'invalid value for framework conversion'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			
 			info.Sources.Add (source);
 		}
@@ -138,7 +163,7 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (link_task);
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", build_target);
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
 			}
 		}
 
@@ -258,6 +283,29 @@ namespace Xamarin.Bundler
 			}
 
 			linker_flags = new CompilerFlags (this);
+
+			// Verify that there are no entries in our list of intepreted assemblies that doesn't match
+			// any of the assemblies we know about.
+			if (App.UseInterpreter) {
+				var exceptions = new List<Exception> ();
+				foreach (var entry in App.InterpretedAssemblies) {
+					var assembly = entry;
+					if (string.IsNullOrEmpty (assembly))
+						continue;
+
+					if (assembly [0] == '-')
+						assembly = assembly.Substring (1);
+
+					if (assembly == "all")
+						continue;
+
+					if (Assemblies.ContainsKey (assembly))
+						continue;
+
+					exceptions.Add (ErrorHelper.CreateWarning (138, $"Cannot find the assembly '{assembly}', passed as an argument to --interpreter."));
+				}
+				ErrorHelper.ThrowIfErrors (exceptions);
+			}
 		}
 
 		// This is to load the symbols for all assemblies, so that we can give better error messages
@@ -368,6 +416,10 @@ namespace Xamarin.Bundler
 				}
 
 				var reference_assembly = ManifestResolver.Resolve (reference);
+				if (reference_assembly == null) {
+					ErrorHelper.Warning (136, "Cannot find the assembly '{0}' referenced from '{1}'.", reference.FullName, main.FileName);
+					continue;
+				}
 				ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
 			}
 
@@ -377,39 +429,36 @@ namespace Xamarin.Bundler
 			// Custom Attribute metadata can include references to other assemblies, e.g. [X (typeof (Y)], 
 			// but it is not reflected in AssemblyReferences :-( ref: #37611
 			// so we must scan every custom attribute to look for System.Type
-			GetCustomAttributeReferences (assembly, assemblies, exceptions);
-			GetCustomAttributeReferences (main, assemblies, exceptions);
-			if (main.HasTypes) {
-				foreach (var ca in main.GetCustomAttributes ())
-					GetCustomAttributeReferences (ca, assemblies, exceptions);
-			}
+			GetCustomAttributeReferences (main, main, assemblies, exceptions);
+			foreach (var ca in main.GetCustomAttributes ())
+				GetCustomAttributeReferences (main, ca, assemblies, exceptions);
 		}
 
-		void GetCustomAttributeReferences (ICustomAttributeProvider cap, HashSet<string> assemblies, List<Exception> exceptions)
+		void GetCustomAttributeReferences (ModuleDefinition main, ICustomAttributeProvider cap, HashSet<string> assemblies, List<Exception> exceptions)
 		{
 			if (!cap.HasCustomAttributes)
 				return;
 			foreach (var ca in cap.CustomAttributes)
-				GetCustomAttributeReferences (ca, assemblies, exceptions);
+				GetCustomAttributeReferences (main, ca, assemblies, exceptions);
 		}
 
-		void GetCustomAttributeReferences (CustomAttribute ca, HashSet<string> assemblies, List<Exception> exceptions)
+		void GetCustomAttributeReferences (ModuleDefinition main, CustomAttribute ca, HashSet<string> assemblies, List<Exception> exceptions)
 		{
 			if (ca.HasConstructorArguments) {
 				foreach (var arg in ca.ConstructorArguments)
-					GetCustomAttributeArgumentReference (arg, assemblies, exceptions);
+					GetCustomAttributeArgumentReference (main, ca, arg, assemblies, exceptions);
 			}
 			if (ca.HasFields) {
 				foreach (var arg in ca.Fields)
-					GetCustomAttributeArgumentReference (arg.Argument, assemblies, exceptions);
+					GetCustomAttributeArgumentReference (main, ca, arg.Argument, assemblies, exceptions);
 			}
 			if (ca.HasProperties) {
 				foreach (var arg in ca.Properties)
-					GetCustomAttributeArgumentReference (arg.Argument, assemblies, exceptions);
+					GetCustomAttributeArgumentReference (main, ca, arg.Argument, assemblies, exceptions);
 			}
 		}
 
-		void GetCustomAttributeArgumentReference (CustomAttributeArgument arg, HashSet<string> assemblies, List<Exception> exceptions)
+		void GetCustomAttributeArgumentReference (ModuleDefinition main, CustomAttribute ca, CustomAttributeArgument arg, HashSet<string> assemblies, List<Exception> exceptions)
 		{
 			if (!arg.Type.Is ("System", "Type"))
 				return;
@@ -417,6 +466,10 @@ namespace Xamarin.Bundler
 			if (ar == null)
 				return;
 			var reference_assembly = ManifestResolver.Resolve (ar);
+			if (reference_assembly == null) {
+				ErrorHelper.Warning (137, "Cannot find the assembly '{0}', referenced by a {2} attribute in '{1}'.", ar.FullName, main.Name, ca.AttributeType.FullName);
+				return;
+			}
 			ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
 		}
 
@@ -537,17 +590,40 @@ namespace Xamarin.Bundler
 			if (!Driver.Force) {
 				if (File.Exists (cache_path)) {
 					using (var reader = new StreamReader (cache_path)) {
-						string line;
+						string line = null;
+
 						while ((line = reader.ReadLine ()) != null) {
 							var colon = line.IndexOf (':');
 							if (colon == -1)
 								continue;
-							var appex = line.Substring (0, colon);
-							var asm = line.Substring (colon + 1);
-							List<string> asms;
-							if (!cached_output.TryGetValue (appex, out asms))
-								cached_output [appex] = asms = new List<string> ();
-							asms.Add (asm);
+							var key = line.Substring (0, colon);
+							var value = line.Substring (colon + 1);
+							switch (key) {
+							case "RemoveDynamicRegistrar":
+								switch (value) {
+								case "true":
+									App.Optimizations.RemoveDynamicRegistrar = true;
+									break;
+								case "false":
+									App.Optimizations.RemoveDynamicRegistrar = false;
+									break;
+								default:
+									App.Optimizations.RemoveDynamicRegistrar = null;
+									break;
+								}
+								foreach (var t in sharingTargets)
+									t.App.Optimizations.RemoveDynamicRegistrar = App.Optimizations.RemoveDynamicRegistrar;
+								Driver.Log (1, $"Optimization dynamic registrar removal loaded from cached results: {(App.Optimizations.RemoveDynamicRegistrar.HasValue ? (App.Optimizations.RemoveUIThreadChecks.Value ? "enabled" : "disabled") : "not set")}");
+								break;
+							default:
+								// key: app(ex)
+								// value: assembly
+								List<string> asms;
+								if (!cached_output.TryGetValue (key, out asms))
+									cached_output [key] = asms = new List<string> ();
+								asms.Add (value);
+								break;
+							}
 						}
 					}
 
@@ -612,13 +688,14 @@ namespace Xamarin.Bundler
 					a.LoadAssembly (a.FullPath);
 				
 				// Link!
+				Driver.Watch ("Managed Link Preparation", 1);
 				LinkAssemblies (out output_assemblies, PreBuildDirectory, sharingTargets);
 			}
 
 			// Verify that we don't get multiple identical assemblies from the linker.
 			foreach (var group in output_assemblies.GroupBy ((v) => v.Name.Name)) {
 				if (group.Count () != 1)
-					throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).", 
+					throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", 
 					                               $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join ("\n\t", group.Select ((v) => v.MainModule.FileName).ToArray ())}");
 			}
 
@@ -666,7 +743,7 @@ namespace Xamarin.Bundler
 
 						var ad = output_assemblies.SingleOrDefault ((AssemblyDefinition v) => v.Name.Name == next);
 						if (ad == null)
-							throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).", $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker.");
+							throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker.");
 						if (ad.MainModule.HasAssemblyReferences) {
 							foreach (var ar in ad.MainModule.AssemblyReferences) {
 								if (!collectedNames.Contains (ar.Name) && !queue.Contains (ar.Name))
@@ -682,6 +759,20 @@ namespace Xamarin.Bundler
 					foreach (var asm in t.Assemblies)
 						t.Resolver.Add (asm.AssemblyDefinition);
 				}
+
+				// Find assemblies that are in more than 1 appex, but not in the container app.
+				// These assemblies will be bundled once into the container .app instead of in each appex.
+				var grouped = sharingTargets.SelectMany ((v) => v.Assemblies).
+							    GroupBy ((v) => Assembly.GetIdentity (v.AssemblyDefinition)).
+							    Where ((v) => !Assemblies.ContainsKey (v.Key)).
+							    Where ((v) => v.Count () > 1);
+				foreach (var gr in grouped) {
+					var asm = gr.First ();
+					Assemblies.Add (asm);
+					Resolver.Add (asm.AssemblyDefinition);
+					gr.All ((v) => v.BundleInContainerApp = true);
+				}
+				                                                                       
 
 				// If any of the appex'es build to a grouped SDK framework, then we must ensure that all SDK assemblies
 				// in that appex are also in the container app.
@@ -699,6 +790,8 @@ namespace Xamarin.Bundler
 
 			// Write the input files to the cache
 			using (var writer = new StreamWriter (cache_path, false)) {
+				var opt = App.Optimizations.RemoveDynamicRegistrar;
+				writer.WriteLine ($"RemoveDynamicRegistrar:{(opt.HasValue ? (opt.Value ? "true" : "false") : string.Empty)}");
 				foreach (var target in allTargets) {
 					foreach (var asm in target.Assemblies) {
 						writer.WriteLine ($"{target.App.AppDirectory}:{asm.FullPath}");
@@ -799,15 +892,15 @@ namespace Xamarin.Bundler
 			//   its GUID).
 			// 
 
-			LinkDirectory = Path.Combine (ArchDirectory, "Link");
+			LinkDirectory = Path.Combine (ArchDirectory, "1-Link");
 			if (!Directory.Exists (LinkDirectory))
 				Directory.CreateDirectory (LinkDirectory);
 
-			PreBuildDirectory = Path.Combine (ArchDirectory, "PreBuild");
+			PreBuildDirectory = Path.Combine (ArchDirectory, "2-PreBuild");
 			if (!Directory.Exists (PreBuildDirectory))
 				Directory.CreateDirectory (PreBuildDirectory);
 			
-			BuildDirectory = Path.Combine (ArchDirectory, "Build");
+			BuildDirectory = Path.Combine (ArchDirectory, "3-Build");
 			if (!Directory.Exists (BuildDirectory))
 				Directory.CreateDirectory (BuildDirectory);
 
@@ -880,7 +973,7 @@ namespace Xamarin.Bundler
 					App.CreateFrameworkInfoPList (plist_path, fw_name, App.BundleId + ".frameworks." + fw_name, fw_name);
 					break;
 				default:
-					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", mode);
+					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", mode);
 				}
 
 				var pinvoke_task = new PinvokesTask
@@ -892,6 +985,7 @@ namespace Xamarin.Bundler
 					SharedLibrary = mode != AssemblyBuildTarget.StaticObject,
 					Language = "objective-c++",
 				};
+				pinvoke_task.CompilerFlags.AddStandardCppLibrary ();
 				if (pinvoke_task.SharedLibrary) {
 					if (mode == AssemblyBuildTarget.Framework) {
 						var name = Path.GetFileNameWithoutExtension (ifile);
@@ -930,7 +1024,7 @@ namespace Xamarin.Bundler
 					compiler_flags.ReferenceSymbols (symbols);
 					break;
 				default:
-					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				}
 			}
 		}
@@ -942,6 +1036,9 @@ namespace Xamarin.Bundler
 
 			// Here we create the tasks to run the AOT compiler.
 			foreach (var a in Assemblies) {
+				if (!a.IsAOTCompiled)
+					continue;
+
 				foreach (var abi in GetArchitectures (a.BuildTarget)) {
 					a.CreateAOTTask (abi);
 				}
@@ -952,6 +1049,9 @@ namespace Xamarin.Bundler
 			foreach (var @group in grouped) {
 				var name = @group.Key;
 				var assemblies = @group.AsEnumerable ().ToArray ();
+				if (assemblies.Length <= 0)
+					continue;
+
 				// We ensure elsewhere that all assemblies in a group have the same build target.
 				var build_target = assemblies [0].BuildTarget;
 
@@ -962,15 +1062,17 @@ namespace Xamarin.Bundler
 					string compiler_output;
 					var compiler_flags = new CompilerFlags (this);
 					var link_dependencies = new List<CompileTask> ();
-					var infos = assemblies.Select ((asm) => asm.AotInfos [abi]).ToList ();
+					var infos = assemblies.Where ((asm) => asm.AotInfos.ContainsKey (abi)).Select ((asm) => asm.AotInfos [abi]).ToList ();
 					var aottasks = infos.Select ((info) => info.Task);
+					if (aottasks == null)
+						continue;
 
 					var existingLinkTask = infos.Where ((v) => v.LinkTask != null).Select ((v) => v.LinkTask).ToList ();
 					if (existingLinkTask.Count > 0) {
 						if (existingLinkTask.Count != infos.Count)
-							throw ErrorHelper.CreateError (99, "Internal error: {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).", $"Not all assemblies for {name} have link tasks");
+							throw ErrorHelper.CreateError (99, "Internal error: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", $"Not all assemblies for {name} have link tasks");
 						if (!existingLinkTask.All ((v) => v == existingLinkTask [0]))
-							throw ErrorHelper.CreateError (99, "Internal error: {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).", $"Link tasks for {name} aren't all the same");
+							throw ErrorHelper.CreateError (99, "Internal error: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", $"Link tasks for {name} aren't all the same");
 
 						LinkWithBuildTarget (build_target, name, existingLinkTask [0], assemblies);
 						continue;
@@ -1032,7 +1134,7 @@ namespace Xamarin.Bundler
 						compiler_output = Path.Combine (App.Cache.Location, arch, name);
 						break;
 					default:
-						throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", build_target);
+						throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
 					}
 
 					CompileTask pinvoke_task;
@@ -1122,6 +1224,11 @@ namespace Xamarin.Bundler
 						info.LinkTask = link_task;
 				}
 			}
+
+			if (App.UseInterpreter)
+				/* TODO: not sure? we might have to continue here, depending on
+				 * the set of assemblies are AOT'd? */
+				return;
 
 			// Code in one assembly (either in a P/Invoke or a third-party library) can depend on a third-party library in another assembly.
 			// This means that we must always build assemblies only when all their dependent assemblies have been built, so that 
@@ -1266,9 +1373,15 @@ namespace Xamarin.Bundler
 					// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
 					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
 
+					// clang sometimes detects missing [super ...] calls, but clang doesn't know about
+					// calling super through managed code, so ignore those warnings.
+					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-objc-missing-super-calls");
+
 					if (Driver.XcodeVersion >= new Version (9, 0))
 						registrar_task.CompilerFlags.AddOtherFlag ("-Wno-unguarded-availability-new");
 
+					registrar_task.CompilerFlags.AddStandardCppLibrary ();
+						                                          
 					LinkWithTaskOutput (registrar_task);
 				}
 
@@ -1292,7 +1405,7 @@ namespace Xamarin.Bundler
 					library = "Xamarin.TVOS.registrar.a";
 					break;
 				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
 				}
 
 				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
@@ -1326,6 +1439,7 @@ namespace Xamarin.Bundler
 				};
 				main_task.AddDependency (generate_main_task);
 				main_task.CompilerFlags.AddDefine ("MONOTOUCH");
+				main_task.CompilerFlags.AddStandardCppLibrary ();
 				LinkWithTaskOutput (main_task);
 			}
 
@@ -1425,7 +1539,7 @@ namespace Xamarin.Bundler
 				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
 				break;
 			default:
-				throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
@@ -1463,8 +1577,17 @@ namespace Xamarin.Bundler
 					break;
 				case AssemblyBuildTarget.Framework: // We don't ship the profiler as a framework, so this should be impossible.
 				default:
-					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", App.LibProfilerLinkMode);
+					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", App.LibProfilerLinkMode);
 				}
+			}
+
+			if (App.UseInterpreter) {
+				string libinterp = Path.Combine (libdir, "libmono-ee-interp.a");
+				linker_flags.AddLinkWith (libinterp);
+				string libicalltable = Path.Combine (libdir, "libmono-icall-table.a");
+				linker_flags.AddLinkWith (libicalltable);
+				string libilgen = Path.Combine (libdir, "libmono-ilgen.a");
+				linker_flags.AddLinkWith (libilgen);
 			}
 
 			if (!string.IsNullOrEmpty (App.UserGccFlags))

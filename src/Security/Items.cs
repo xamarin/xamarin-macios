@@ -111,9 +111,9 @@ namespace Security {
 			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
 				SetLimit (copy, 1);
 				if (wantPersistentReference)
-					copy.LowlevelSetObject (CFBoolean.True.Handle, SecItem.ReturnPersistentRef);
+					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnPersistentRef);
 				else
-					copy.LowlevelSetObject (CFBoolean.True.Handle, SecItem.ReturnData);
+					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 				
 				IntPtr ptr;
 				status = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
@@ -131,9 +131,9 @@ namespace Security {
 			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
 				var n = SetLimit (copy, max);
 				if (wantPersistentReference)
-					copy.LowlevelSetObject (CFBoolean.True.Handle, SecItem.ReturnPersistentRef);
+					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnPersistentRef);
 				else
-					copy.LowlevelSetObject (CFBoolean.True.Handle, SecItem.ReturnData);
+					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 
 				IntPtr ptr;
 				status = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
@@ -171,8 +171,8 @@ namespace Security {
 			
 			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
 				SetLimit (copy, 1);
-				copy.LowlevelSetObject (CFBoolean.True.Handle, SecItem.ReturnAttributes);
-				copy.LowlevelSetObject (CFBoolean.True.Handle, SecItem.ReturnData);
+				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnAttributes);
+				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 				IntPtr ptr;
 				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
 				if (result == SecStatusCode.Success)
@@ -187,8 +187,8 @@ namespace Security {
 				throw new ArgumentNullException ("query");
 			
 			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
-				copy.LowlevelSetObject (CFBoolean.True.Handle, SecItem.ReturnAttributes);
-				copy.LowlevelSetObject (CFBoolean.True.Handle, SecItem.ReturnData);
+				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnAttributes);
+				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 				var n = SetLimit (copy, max);
 				
 				IntPtr ptr;
@@ -213,7 +213,7 @@ namespace Security {
 			}
 
 			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
-				copy.LowlevelSetObject (CFBoolean.True.Handle, SecItem.ReturnRef);
+				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnRef);
 				SetLimit (copy, max);
 
 				IntPtr ptr;
@@ -507,7 +507,7 @@ namespace Security {
 			}
 			
 			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
-				copy.LowlevelSetObject (CFBoolean.True.Handle, SecItem.ReturnRef);
+				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnRef);
 				SetLimit (copy, 1);
 				
 				IntPtr ptr;
@@ -813,11 +813,11 @@ namespace Security {
 		[iOS (9,0)]
 		public SecTokenID TokenID {
 			get {
-				return SecTokenIDExtensions.GetValue (Fetch<NSString> (SecAttributeKey.TokenID));
+				return SecTokenIDExtensions.GetValue (Fetch<NSString> (SecKeyGenerationAttributeKeys.TokenIDKey.GetHandle ()));
 			}
 			set {
 				// choose wisely to avoid NSString -> string -> NSString conversion
-				SetValue ((NSObject) value.GetConstant (), SecAttributeKey.TokenID);
+				SetValue ((NSObject) value.GetConstant (), SecKeyGenerationAttributeKeys.TokenIDKey.GetHandle ());
 			}
 		}
 #endif
@@ -898,21 +898,21 @@ namespace Security {
 
 		public bool Invisible {
 			get {
-				return Fetch (SecAttributeKey.IsInvisible) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKey.IsInvisible) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.IsInvisible);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKey.IsInvisible);
 			}
 		}
 
 		public bool IsNegative {
 			get {
-				return Fetch (SecAttributeKey.IsNegative) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKey.IsNegative) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.IsNegative);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKey.IsNegative);
 			}
 		}
 
@@ -950,10 +950,10 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use AuthenticationUI property")]
 		public bool UseNoAuthenticationUI {
 			get {
-				return Fetch (SecItem.UseNoAuthenticationUI) == CFBoolean.True.Handle;
+				return Fetch (SecItem.UseNoAuthenticationUI) == CFBoolean.TrueHandle;
 			}
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecItem.UseNoAuthenticationUI);
+				SetValue (CFBoolean.ToHandle (value), SecItem.UseNoAuthenticationUI);
 			}
 		}
 #endif
@@ -993,7 +993,7 @@ namespace Security {
 				if (value == null)
 					throw new ArgumentNullException ("value");
 				_secAccessControl = value;
-				SetValue (value.Handle, SecAttributeKey.AccessControl);
+				SetValue (value.Handle, SecAttributeKeys.AccessControlKey.Handle);
 			}
 		}
 
@@ -1150,31 +1150,31 @@ namespace Security {
 
 		public bool IsPermanent {
 			get {
-				return Fetch (SecAttributeKeys.IsPermanentKey.Handle) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.IsPermanentKey.Handle) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.IsPermanentKey.Handle);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.IsPermanentKey.Handle);
 			}
 		}
 
 		public bool IsSensitive {
 			get {
-				return Fetch (SecAttributeKey.IsSensitive) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKey.IsSensitive) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.IsSensitive);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKey.IsSensitive);
 			}
 		}
 
 		public bool IsExtractable {
 			get {
-				return Fetch (SecAttributeKey.IsExtractable) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKey.IsExtractable) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.IsExtractable);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKey.IsExtractable);
 			}
 		}
 
@@ -1192,7 +1192,7 @@ namespace Security {
 
 		public SecKeyType KeyType {
 			get {
-				var k = Fetch (SecAttributeKey.KeyType);
+				var k = Fetch (SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
 				if (k == IntPtr.Zero)
 					return SecKeyType.Invalid;
 				using (var s = new NSString (k))
@@ -1203,17 +1203,17 @@ namespace Security {
 				var k = value.GetConstant ();
 				if (k == null)
 					throw new ArgumentException ("Unknown value");
-				SetValue ((NSObject) k, SecAttributeKey.KeyType);
+				SetValue ((NSObject) k, SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
 			}
 		}
 
 		public int KeySizeInBits {
 			get {
-				return FetchInt (SecAttributeKey.KeySizeInBits);
+				return FetchInt (SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 			}
 					
 			set {
-				SetValue (new NSNumber (value), SecAttributeKey.KeySizeInBits);
+				SetValue (new NSNumber (value), SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 			}
 		}
 
@@ -1229,71 +1229,71 @@ namespace Security {
 
 		public bool CanEncrypt {
 			get {
-				return Fetch (SecAttributeKeys.CanEncryptKey.Handle) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanEncryptKey.Handle) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanEncryptKey.Handle);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanEncryptKey.Handle);
 			}
 		}
 
 		public bool CanDecrypt {
 			get {
-				return Fetch (SecAttributeKeys.CanDecryptKey.Handle) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanDecryptKey.Handle) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanDecryptKey.Handle);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanDecryptKey.Handle);
 			}
 		}
 
 		public bool CanDerive {
 			get {
-				return Fetch (SecAttributeKeys.CanDeriveKey.Handle) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanDeriveKey.Handle) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanDeriveKey.Handle);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanDeriveKey.Handle);
 			}
 		}
 
 		public bool CanSign {
 			get {
-				return Fetch (SecAttributeKeys.CanSignKey.Handle) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanSignKey.Handle) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanSignKey.Handle);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanSignKey.Handle);
 			}
 		}
 
 		public bool CanVerify {
 			get {
-				return Fetch (SecAttributeKeys.CanVerifyKey.Handle) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanVerifyKey.Handle) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanVerifyKey.Handle);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanVerifyKey.Handle);
 			}
 		}
 
 		public bool CanWrap {
 			get {
-				return Fetch (SecAttributeKey.CanWrap) == CFBoolean.True.Handle;
+				return Fetch (SecKeyGenerationAttributeKeys.CanWrapKey.Handle) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.CanWrap);
+				SetValue (CFBoolean.ToHandle (value), SecKeyGenerationAttributeKeys.CanWrapKey.Handle);
 			}
 		}
 
 		public bool CanUnwrap {
 			get {
-				return Fetch (SecAttributeKeys.CanUnwrapKey.Handle) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKeys.CanUnwrapKey.Handle) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKeys.CanUnwrapKey.Handle);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKeys.CanUnwrapKey.Handle);
 			}
 		}
 
@@ -1310,10 +1310,10 @@ namespace Security {
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		public bool PersistentReference {
 			get {
-				return Fetch (SecAttributeKey.PersistentReference) == CFBoolean.True.Handle;
+				return Fetch (SecAttributeKey.PersistentReference) == CFBoolean.TrueHandle;
 			}
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecAttributeKey.PersistentReference);
+				SetValue (CFBoolean.ToHandle (value), SecAttributeKey.PersistentReference);
 			}
 		}
 
@@ -1395,21 +1395,21 @@ namespace Security {
 
 		public bool MatchCaseInsensitive {
 			get {
-				return Fetch (SecItem.MatchCaseInsensitive) == CFBoolean.True.Handle;
+				return Fetch (SecItem.MatchCaseInsensitive) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecItem.MatchCaseInsensitive);
+				SetValue (CFBoolean.ToHandle (value), SecItem.MatchCaseInsensitive);
 			}
 		}
 
 		public bool MatchTrustedOnly {
 			get {
-				return Fetch (SecItem.MatchTrustedOnly) == CFBoolean.True.Handle;
+				return Fetch (SecItem.MatchTrustedOnly) == CFBoolean.TrueHandle;
 			}
 			
 			set {
-				SetValue (CFBoolean.FromBoolean (value).Handle, SecItem.MatchTrustedOnly);
+				SetValue (CFBoolean.ToHandle (value), SecItem.MatchTrustedOnly);
 			}
 		}
 
@@ -1731,6 +1731,70 @@ namespace Security {
 		
 		public SecurityException (SecStatusCode code) : base (ToMessage (code))
 		{
+		}
+	}
+
+	public partial class SecKeyParameters : DictionaryContainer {
+		// For caching, as we can't reverse it easily.
+		SecAccessControl _secAccessControl;
+
+		[iOS (8, 0), Mac (10, 10)]
+		public SecAccessControl AccessControl {
+			get {
+				return _secAccessControl;
+			}
+			set {
+				if (value == null)
+					throw new ArgumentNullException (nameof (value));
+				_secAccessControl = value;
+				SetNativeValue (SecAttributeKeys.AccessControlKey, value);
+			}
+		}
+	}
+
+	public partial class SecKeyGenerationParameters : DictionaryContainer {
+		public SecKeyType KeyType {
+			get {
+				var type = GetNSStringValue (SecKeyGenerationAttributeKeys.KeyTypeKey);
+				if (type == null)
+					return SecKeyType.Invalid;
+				return SecKeyTypeExtensions.GetValue (type);
+			}
+
+			set {
+				var k = value.GetConstant ();
+				if (k == null)
+					throw new ArgumentException ("Unknown value for KeyType.");
+				SetStringValue (SecKeyGenerationAttributeKeys.KeyTypeKey, k);
+			}
+		}
+
+		// For caching, as we can't reverse it easily.
+		SecAccessControl _secAccessControl;
+
+		[iOS (8, 0), Mac (10, 10)]
+		public SecAccessControl AccessControl {
+			get {
+				return _secAccessControl;
+			}
+
+			set {
+				if (value == null)
+					throw new ArgumentNullException (nameof (value));
+				_secAccessControl = value;
+				SetNativeValue (SecAttributeKeys.AccessControlKey, value);
+			}
+		}
+
+		[iOS (9, 0), Mac (10, 12)]
+		public SecTokenID TokenID {
+			get {
+				return SecTokenIDExtensions.GetValue (GetNSStringValue (SecKeyGenerationAttributeKeys.TokenIDKey));
+			}
+
+			set {
+				SetStringValue (SecKeyGenerationAttributeKeys.TokenIDKey, value.GetConstant ());
+			}
 		}
 	}
 }

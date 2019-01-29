@@ -196,10 +196,6 @@
 
 		#region metadata/profiler.h
 
-		new Export ("void", "mono_profiler_set_events",
-			"MonoProfileFlags", "events"
-		),
-
 		new Export ("void", "mono_profiler_install",
 			"MonoProfiler *", "prof",
 			"MonoProfileFunc", "shutdown_callback"
@@ -239,11 +235,12 @@
 
 		#region metadata/object-internals.h
 
-		new Export (true, "void", "mono_set_pending_exception",
-			"MonoException *", "exc"
+		new Export (true, "void", "mono_runtime_set_pending_exception",
+			"MonoException *", "exc",
+			"mono_bool", "overwrite"
 		)
 		{
-			AlternativeEntryPoint = "mono_raise_exception",
+			AlternativeExpression = "return mono_raise_exception (exc);",
 		},
 
 		#endregion
@@ -306,6 +303,11 @@
 		#region metadata/loader.h
 
 		new Export ("void", "mono_add_internal_call",
+			"const char *", "name",
+			"const void *", "method"
+		),
+
+		new Export (true, "void", "mono_dangerous_add_raw_internal_call",
 			"const char *", "name",
 			"const void *", "method"
 		),
@@ -536,10 +538,6 @@
 			"char**", "argv"
 		),
 
-		new Export ("void", "mono_jit_set_aot_only",
-			"mono_bool", "aot_only"
-		),
-
 		new Export ("void", "mono_jit_set_aot_mode",
 			"MonoAotMode", "mode"
 		),
@@ -674,7 +672,7 @@
 	{
 		public string ReturnType;
 		public string EntryPoint;
-		public string AlternativeEntryPoint;
+		public string AlternativeExpression;
 		public List<Arg> Arguments;
 		public bool Optional;
 

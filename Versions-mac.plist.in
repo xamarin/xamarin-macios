@@ -4,17 +4,18 @@
 <dict>
 	<key>MonoVersion</key>
 	<string>@MONO_VERSION@</string>
+	<key>MinimumSystemMono</key>
+	<string>@MIN_XM_MONO_VERSION@</string>
 	<key>KnownVersions</key>
 	<dict>
 		<key>macOS</key>
 		<array>
-			<string>10.7</string>
-			<string>10.8</string>
 			<string>10.9</string>
 			<string>10.10</string>
 			<string>10.11</string>
 			<string>10.12</string>
 			<string>10.13</string>
+			<string>10.14</string>
 		</array>
 	</dict>
 	<key>RecommendedXcodeVersion</key>

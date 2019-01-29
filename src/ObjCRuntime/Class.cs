@@ -23,19 +23,27 @@ namespace ObjCRuntime {
 #if !COREBUILD
 		public static bool ThrowOnInitFailure = true;
 
+		// We use the last significant bit of the IntPtr to store if this is a custom class or not.
 		static Dictionary<Type, IntPtr> type_to_class; // accessed from multiple threads, locking required.
+		static Type[] class_to_type;
 
 		internal IntPtr handle;
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal unsafe static void Initialize (Runtime.InitializationOptions* options)
 		{
-			var map = options->RegistrationMap;
-
 			type_to_class = new Dictionary<Type, IntPtr> (Runtime.TypeEqualityComparer);
 
+			var map = options->RegistrationMap;
 			if (map == null)
 				return;
 
+			class_to_type = new Type [map->map_count];
+
+			if (!Runtime.DynamicRegistrationSupported)
+				return; // Only the dynamic registrar needs the list of registered assemblies.
+
+			
 			for (int i = 0; i < map->assembly_count; i++) {
 				var ptr = Marshal.ReadIntPtr (map->assembly, i * IntPtr.Size);
 				Runtime.Registrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (ptr));
@@ -57,6 +65,13 @@ namespace ObjCRuntime {
 
 		public Class (IntPtr handle)
 		{
+			this.handle = handle;
+		}
+
+		[Preserve (Conditional = true)]
+		public Class (IntPtr handle, bool owns)
+		{
+			// Class(es) can't be freed, so we ignore the 'owns' parameter.
 			this.handle = handle;
 		}
 
@@ -98,9 +113,15 @@ namespace ObjCRuntime {
 			return GetClassHandle (type);
 		}
 
-		static IntPtr GetClassHandle (Type type)
+		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
+		static IntPtr GetClassHandle (Type type, bool throw_if_failure, out bool is_custom_type)
 		{
 			IntPtr @class = IntPtr.Zero;
+
+			if (type.IsByRef || type.IsPointer || type.IsArray) {
+				is_custom_type = false;
+				return IntPtr.Zero;
+			}
 
 			// We cache results in a dictionary (type_to_class) - we put failures (when @class = IntPtr.Zero) in the dictionary as well.
 			// We do as little as possible with the lock held (only fetch/add to the dictionary, nothing else)
@@ -110,18 +131,33 @@ namespace ObjCRuntime {
 				found = type_to_class.TryGetValue (type, out @class);
 
 			if (!found) {
-				@class = FindClass (type, out var is_custom_type);
+				@class = FindClass (type, out is_custom_type);
 				lock (type_to_class)
-					type_to_class [type] = @class;
+					type_to_class [type] = @class + (is_custom_type ? 1 : 0);
+			} else {
+				is_custom_type = (@class.ToInt64 () & 1) == 1;
+				if (is_custom_type)
+					@class -= 1;
 			}
 
 			if (@class == IntPtr.Zero) {
+				if (!Runtime.DynamicRegistrationSupported) {
+					if (throw_if_failure)
+						throw ErrorHelper.CreateError (8026, $"Can't register the class {type.FullName} when the dynamic registrar has been linked away.");
+					return IntPtr.Zero;
+				}
 				@class = Register (type);
+				is_custom_type = Runtime.Registrar.IsCustomType (type);
 				lock (type_to_class)
-					type_to_class [type] = @class;
+					type_to_class [type] = @class + (is_custom_type ? 1 : 0);
 			}
 
 			return @class;
+		}
+
+		static IntPtr GetClassHandle (Type type)
+		{
+			return GetClassHandle (type, true, out var is_custom_type);
 		}
 
 		internal static IntPtr GetClassForObject (IntPtr obj)
@@ -143,12 +179,36 @@ namespace ObjCRuntime {
 
 		internal static Type Lookup (IntPtr klass)
 		{
-			return Lookup (klass, true);
+			return LookupClass (klass, true);
 		}
 
 		internal static Type Lookup (IntPtr klass, bool throw_on_error)
 		{
-			return Runtime.Registrar.Lookup (klass, throw_on_error);
+			return LookupClass (klass, throw_on_error);
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
+		static Type LookupClass (IntPtr klass, bool throw_on_error)
+		{
+			bool is_custom_type;
+			var find_class = klass;
+			do {
+				var tp = FindType (find_class, out is_custom_type);
+				if (tp != null)
+					return tp;
+				if (Runtime.DynamicRegistrationSupported)
+					break; // We can't continue looking up the hierarchy if we have the dynamic registrar, because we might be supposed to register this class.
+				find_class = class_getSuperclass (find_class);
+			} while (find_class != IntPtr.Zero);
+
+			// The linker will remove this condition (and the subsequent method call) if possible
+			if (Runtime.DynamicRegistrationSupported)
+				return Runtime.Registrar.Lookup (klass, throw_on_error);
+
+			if (throw_on_error)
+				throw ErrorHelper.CreateError (8026, $"Can't lookup the Objective-C class 0x{klass.ToString ("x")} ({class_getName (klass)}) when the dynamic registrar has been linked away.");
+
+			return null;
 		}
 
 		internal static IntPtr Register (Type type)
@@ -181,7 +241,7 @@ namespace ObjCRuntime {
 					continue;
 
 				var rv = map->map [i].handle;
-				is_custom_type = i >= (map->map_count - map->custom_type_count);
+				is_custom_type = (map->map [i].flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
 #if LOG_TYPELOAD
 				Console.WriteLine ($"FindClass ({type.FullName}, {is_custom_type}): 0x{rv.ToString ("x")} = {class_getName (rv)}.");
 #endif
@@ -195,10 +255,13 @@ namespace ObjCRuntime {
 				if (!CompareTokenReference (asm_name, mod_token, type_token, token_reference))
 					continue;
 
-				// This is a skipped type, we now got the index into the normal table.
-				var idx = map->skipped_map [i].index;
-				is_custom_type = idx >= (map->map_count - map->custom_type_count);
-				return map->map [idx].handle;
+				// This is a skipped type, we now got the actual type reference of the type we're looking for,
+				// so go look for it in the type map.
+				var actual_reference = map->skipped_map [i].actual_reference;  
+				for (int k = 0; k < map->map_count; k++) {
+					if (map->map [k].type_reference == actual_reference)
+						return map->map [k].handle;
+				}
 			}
 
 			return IntPtr.Zero;
@@ -237,10 +300,26 @@ namespace ObjCRuntime {
 			return Runtime.StringEquals (assembly_name, asm_name);
 		}
 
+		static unsafe int FindMapIndex (Runtime.MTClassMap *array, int lo, int hi, IntPtr @class)
+		{
+			if (hi >= lo) {
+				int mid = lo + (hi - lo) / 2;
+
+				if (array [mid].handle == @class)
+					return mid;
+
+				if (array [mid].handle.ToInt64 () > @class.ToInt64 ())
+					return FindMapIndex (array, lo, mid - 1, @class);
+
+				return FindMapIndex (array, mid + 1, hi, @class);
+			}
+
+			return -1;
+		}
+
 		internal unsafe static Type FindType (IntPtr @class, out bool is_custom_type)
 		{
 			var map = Runtime.options->RegistrationMap;
-			Runtime.MTClassMap? entry = null;
 
 			is_custom_type = false;
 
@@ -252,35 +331,33 @@ namespace ObjCRuntime {
 			}
 
 			// Find the ObjC class pointer in our map
-			// Potential improvement: order the type handles after loading them, which means we could do a binary search here.
-			// A binary search will likely be faster than a dictionary for any real-world scenario (and if slower, not much slower),
-			// but it would need a lot less memory (very little when sorting, could probably use stack memory, and then nothing at all afterwards).
-			for (int i = 0; i < map->map_count; i++) {
-				if (map->map [i].handle != @class)
-					continue;
-
-				entry = map->map [i];
-				is_custom_type = i >= (map->map_count - map->custom_type_count);
-				break;
-			}
-
-			if (!entry.HasValue) {
+			var mapIndex = FindMapIndex (map->map, 0, map->map_count - 1, @class);
+			if (mapIndex == -1) {
 #if LOG_TYPELOAD
 				Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found no type.");
 #endif
 				return null;
 			}
 
+			is_custom_type = (map->map [mapIndex].flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
+
+			Type type = class_to_type [mapIndex];
+			if (type != null)
+				return type;
+
 			// Resolve the map entry we found to a managed type
-			var member = ResolveTokenReference (entry.Value.type_reference, 0x02000000);
-			var type = member as Type;
+			var type_reference = map->map [mapIndex].type_reference;
+			var member = ResolveTokenReference (type_reference, 0x02000000);
+			type = member as Type;
 
 			if (type == null && member != null)
-				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{entry.Value.type_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{type_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
 #if LOG_TYPELOAD
-			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type.FullName}; is custom: {is_custom_type} (token reference: 0x{entry.Value.type_reference:X}).");
+			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
 #endif
+
+			class_to_type [mapIndex] = type;
 
 			return type;
 		}
@@ -373,10 +450,10 @@ namespace ObjCRuntime {
 				return asm;
 			}
 
-			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {assembly_name} in the loaded assemblies.");
+			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {Marshal.PtrToStringAuto (assembly_name)} in the loaded assemblies.");
 		}
 
-		internal unsafe static uint GetTokenReference (Type type)
+		internal unsafe static uint GetTokenReference (Type type, bool throw_exception = true)
 		{
 			if (type.IsGenericType)
 				type = type.GetGenericTypeDefinition ();
@@ -389,8 +466,11 @@ namespace ObjCRuntime {
 				return token;
 
 			// If type.Module.MetadataToken != 1, then the token must be a full token, which is not the case because we've already checked, so throw an exception.
-			if (type.Module.MetadataToken != 1)
+			if (type.Module.MetadataToken != 1) {
+				if (!throw_exception)
+					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because its module's metadata token is {type.Module.MetadataToken} when expected 1.");
+			}
 			
 			var map = Runtime.options->RegistrationMap;
 
@@ -404,11 +484,17 @@ namespace ObjCRuntime {
 				}
 			}
 			// If the assembly isn't registered, then the token must be a full token (which it isn't, because we've already checked).
-			if (assembly_index == -1)
+			if (assembly_index == -1) {
+				if (!throw_exception)
+					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because the assembly couldn't be found in the list of registered assemblies.");
+			}
 
-			if (assembly_index > 127)
+			if (assembly_index > 127) {
+				if (!throw_exception)
+					return Runtime.INVALID_TOKEN_REF;
 				throw ErrorHelper.CreateError (8025, $"Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because the assembly index {assembly_index} is not valid (must be <= 127).");
+			}
 
 			return (uint) ((type.MetadataToken << 8) + (assembly_index << 1));
 			
@@ -439,6 +525,7 @@ namespace ObjCRuntime {
 		/*
 		Type must have been previously registered.
 		*/
+		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
 #if !XAMCORE_2_0 && !MONOTOUCH // Accidently exposed this to public, can't break API
 		public
 #else
@@ -446,7 +533,15 @@ namespace ObjCRuntime {
 #endif
 		static bool IsCustomType (Type type)
 		{
-			return Runtime.Registrar.IsCustomType (type);
+			bool is_custom_type;
+			var @class = GetClassHandle (type, false, out is_custom_type);
+			if (@class != IntPtr.Zero)
+				return is_custom_type;
+			
+			if (Runtime.DynamicRegistrationSupported)
+				return Runtime.Registrar.IsCustomType (type);
+
+			throw ErrorHelper.CreateError (8026, $"Can't determine if {type.FullName} is a custom type when the dynamic registrar has been linked away.");
 		}
 
 		[DllImport ("/usr/lib/libobjc.dylib")]

@@ -1,7 +1,10 @@
-## NS_SWIFT_UNAVAILABLE("Use run(_:options:) instead")
-!missing-selector! ARSession::runWithConfiguration: not bound
+## No need for a Marshal Directive on those, they were bound manually
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARFaceGeometry::GetRawTextureCoordinates(): simd type: simd_float2
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARFaceGeometry::GetRawVertices(): simd type: simd_float3
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawBoundaryVertices(): simd type: simd_float3
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawTextureCoordinates(): simd type: simd_float2
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawVertices(): simd type: simd_float3
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: simd_float3
 
-## Those methods are manually bound
-!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: vector_float3
-!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARFaceGeometry::GetRawTextureCoordinates(): simd type: vector_float2
-!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARFaceGeometry::GetRawVertices(): simd type: vector_float3
+# only exposed in subclasses (it's static but also abstract) - see https://github.com/xamarin/xamarin-macios/issues/5347
+!missing-selector! +ARConfiguration::supportedVideoFormats not bound

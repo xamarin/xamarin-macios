@@ -679,5 +679,19 @@ namespace BI1063Tests {
 				bgen.AssertNoWarnings ();
 			}
 		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.macOSFull)]
+		[TestCase (Profile.macOSMobile)]
+		public void MissingExportOnProperty (Profile profile)
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.Defines = BGenTool.GetDefaultDefines (profile);
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "missing-export-property.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1018, "No [Export] attribute on property Test.NSTextInputClient.SelectedRange");
+		}
 	}
 }

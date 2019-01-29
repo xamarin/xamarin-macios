@@ -1296,11 +1296,9 @@ namespace AudioToolbox {
 		                                                  out flags, out parentNumberOfFrames, (IntPtr) data);
 		}
 
-		[Mac (10,8)]
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioQueueStatus AudioQueueProcessingTapGetQueueTime (IntPtr inAQTap, out double outQueueSampleTime, out uint outQueueFrameCount);
 
-		[Mac (10,8)]
 		public AudioQueueStatus GetQueueTime (out double sampleTime, out uint frameCount)
 		{
 			return AudioQueueProcessingTapGetQueueTime (TapHandle, out sampleTime, out frameCount);

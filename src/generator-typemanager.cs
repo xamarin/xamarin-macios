@@ -80,6 +80,7 @@ public static class TypeManager {
 	public static Type CVPixelBuffer;
 	public static Type CVPixelBufferPool;
 	public static Type DispatchQueue;
+	public static Type DispatchData;
 	public static Type MidiEndpoint;
 	public static Type MKCoordinateSpan;
 	public static Type MTAudioProcessingTap;
@@ -95,6 +96,10 @@ public static class TypeManager {
 	public static Type SecAccessControl;
 	public static Type SecIdentity;
 	public static Type SecTrust;
+	public static Type SecProtocolMetadata;
+	public static Type SecProtocolOptions;
+	public static Type SecTrust2;
+	public static Type SecIdentity2;
 	public static Type UIEdgeInsets;
 	public static Type UIOffset;
 	public static Type NSDirectionalEdgeInsets;
@@ -145,7 +150,7 @@ public static class TypeManager {
 
 		var rv = assembly.GetType (fullname);
 		if (rv == null && !inexistentOK)
-			throw new BindingException (1052, true, "Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", fullname, assembly);
+			throw new BindingException (1052, true, "Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", fullname, assembly);
 		return rv;
 	}
 
@@ -285,6 +290,7 @@ public static class TypeManager {
 			CVPixelBufferPool = Lookup (platform_assembly, "CoreVideo", "CVPixelBufferPool");
 		}
 		DispatchQueue = Lookup (platform_assembly, "CoreFoundation", "DispatchQueue");
+		DispatchData = Lookup (platform_assembly, "CoreFoundation", "DispatchData");
 		if (Frameworks.HaveCoreMidi)
 			MidiEndpoint = Lookup (platform_assembly, "CoreMidi", "MidiEndpoint");
 		if (Frameworks.HaveMapKit)
@@ -302,6 +308,10 @@ public static class TypeManager {
 		SecAccessControl = Lookup (platform_assembly, "Security", "SecAccessControl");
 		SecIdentity = Lookup (platform_assembly, "Security", "SecIdentity");
 		SecTrust = Lookup (platform_assembly, "Security", "SecTrust");
+		SecProtocolOptions = Lookup (platform_assembly, "Security", "SecProtocolOptions");
+		SecProtocolMetadata = Lookup (platform_assembly, "Security", "SecProtocolMetadata");
+		SecTrust2 = Lookup (platform_assembly, "Security", "SecTrust2");
+		SecIdentity2 = Lookup (platform_assembly, "Security", "SecIdentity2");
 		if (Frameworks.HaveUIKit) {
 			UIOffset = Lookup (platform_assembly, "UIKit", "UIOffset");
 			UIEdgeInsets = Lookup (platform_assembly, "UIKit", "UIEdgeInsets");

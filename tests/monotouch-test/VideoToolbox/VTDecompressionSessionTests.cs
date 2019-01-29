@@ -18,6 +18,7 @@ using VideoToolbox;
 using CoreMedia;
 using AVFoundation;
 using CoreFoundation;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.VideoToolbox;
@@ -37,8 +38,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void DecompressionSessionCreateTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 2, throwIfOtherPlatform: false);
 
 			using (var asset = AVAsset.FromUrl (NSBundle.MainBundle.GetUrlForResource ("xamvideotest", "mp4"))) 
 			using (var session = CreateSession (asset)){
@@ -49,8 +51,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void DecompressionSessionSetDecompressionPropertiesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 2, throwIfOtherPlatform: false);
 
 			using (var asset = AVAsset.FromUrl (NSBundle.MainBundle.GetUrlForResource ("xamvideotest", "mp4"))) 
 			using (var session = CreateSession (asset)){
@@ -60,15 +63,16 @@ namespace MonoTouchFixtures.VideoToolbox {
 					OnlyTheseFrames = VTOnlyTheseFrames.AllFrames
 				});
 
-				Assert.That (result == VTStatus.Ok, "SetDecompressionProperties");
+				Assert.AreEqual (VTStatus.Ok, result, "SetDecompressionProperties");
 			}
 		}
 
 		[Test]
 		public void DecompressionSessionSetPropertiesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 2, throwIfOtherPlatform: false);
 
 			using (var asset = AVAsset.FromUrl (NSBundle.MainBundle.GetUrlForResource ("xamvideotest", "mp4"))) 
 			using (var session = CreateSession (asset)){
@@ -78,21 +82,22 @@ namespace MonoTouchFixtures.VideoToolbox {
 					ShouldBeSerialized = true
 				});
 
-				Assert.That (result == VTStatus.Ok, "SetProperties");
+				Assert.AreEqual (VTStatus.Ok, result, "SetProperties");
 			}
 		}
 
 		[Test]
 		public void DecompressionSessionGetSupportedPropertiesTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 2, throwIfOtherPlatform: false);
 
 			using (var asset = AVAsset.FromUrl (NSBundle.MainBundle.GetUrlForResource ("xamvideotest", "mp4")))
 			using (var session = CreateSession (asset)) {
 				var supportedProps = session.GetSupportedProperties ();
 				Assert.NotNull (supportedProps, "GetSupportedProperties");
-				Assert.That (supportedProps.Count > 0, "GetSupportedProperties should be more than zero");
+				Assert.That (supportedProps.Count, Is.GreaterThan (0), "GetSupportedProperties should be more than zero");
 			}
 		}
 

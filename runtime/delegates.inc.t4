@@ -27,10 +27,24 @@ struct Delegates {
 
 static struct Delegates delegates = { 0 };
 
+static guint32
+create_linked_away_exception (const char *func)
+{
+	char *msg = xamarin_strdup_printf ("The runtime function %s has been linked away.", func);
+	guint32 gchandle = xamarin_create_product_exception (8028, msg);
+	xamarin_free (msg);
+	return gchandle;
+}
+
 <# foreach (var d in delegates) { #>
 <#= d.CReturnType #>
 <#= d.EntryPoint #> (<#= d.CArgumentSignature #>)
 {
+	<#if (d.ExceptionHandling && d.OnlyDynamicUsage) {#>if (delegates.<#= d.EntryPoint.Substring ("xamarin_".Length) #> == NULL) {
+		*exception_gchandle = create_linked_away_exception ("<#= d.EntryPoint.Substring ("xamarin_".Length) #>");
+		return<# if (d.CReturnType != "void") { #> (<#= d.CReturnType #>) 0<# } #>;
+	}
+<#}#>
 	<# if (d.CReturnType != "void") { #>return <# } #>delegates.<#= d.EntryPoint.Substring ("xamarin_".Length) #> (<#= d.CArgumentNames #>);
 }
 

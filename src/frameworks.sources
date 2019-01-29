@@ -108,19 +108,17 @@ APPKIT_SOURCES = \
 	AppKit/NSGraphicsContext.cs \
 	AppKit/NSImage.cs \
 	AppKit/NSLayoutManager.cs \
+	UIKit/NSLayoutManager.cs \
 	AppKit/NSLevelIndicator.cs \
 	AppKit/NSMatrix.cs \
-	AppKit/NSMenu.cs \
 	AppKit/NSMenuItem.cs \
 	AppKit/NSOpenGLContext.cs \
 	AppKit/NSOpenGLPixelFormat.cs \
-	AppKit/NSPageLayout.cs \
 	AppKit/NSPathControlItem.cs \
 	AppKit/NSPopUpButton.cs \
 	AppKit/NSPopUpButtonCell.cs \
 	AppKit/NSPredicateEditorRowTemplate.cs \
 	AppKit/NSPrintInfo.cs \
-	AppKit/NSPrintPanel.cs \
 	AppKit/NSResponder.cs \
 	AppKit/NSScreen.cs \
 	AppKit/NSSegmentedControl.cs \
@@ -139,10 +137,7 @@ APPKIT_SOURCES = \
 	AppKit/NSToolbarItem.cs \
 	AppKit/NSTouch.cs \
 	AppKit/NSTreeController.cs \
-	AppKit/NSView.cs \
 	AppKit/NSWindow.cs \
-	AppKit/NSOpenPanel.cs \
-	AppKit/NSSavePanel.cs \
 	AppKit/NSWorkspace.cs \
 	AppKit/NSCollectionView.cs \
 	AppKit/NSCollectionViewDelegate.cs \
@@ -157,6 +152,7 @@ APPKIT_SOURCES = \
 ARKIT_SOURCES = \
 	ARKit/ARCompat.cs \
 	ARKit/ARFaceGeometry.cs \
+	ARKit/ARPlaneGeometry.cs \
 	ARKit/ARPointCloud.cs \
 
 # AssetsLibrary
@@ -280,10 +276,28 @@ AVKIT_API_SOURCES = \
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
 
+# BusinessChat
+
+BUSINESSCHAT_API_SOURCES = \
+	BusinessChat/Enums.cs \
+
+BUSINESSCHAT_SOURCES = \
+	BusinessChat/BCChatAction.cs \
+
 # CallKit
 
 CALLKIT_SOURCES = \
 	CallKit/CXProvider.cs \
+
+# CarPlay
+
+CARPLAY_SOURCES = \
+	CarPlay/CPNavigationAlert.cs \
+
+# ClassKit
+
+CLASSKIT_SOURCES = \
+	ClassKit/CLSContext.cs \
 
 # ClockKit
 
@@ -309,6 +323,15 @@ CFNETWORK_SOURCES = \
 	CFNetwork/CFHTTPMessage.cs \
 	CFNetwork/CFHTTPStream.cs \
 	CFNetwork/CFHost.cs \
+
+# Compression
+
+COMPRESSION_SOURCES = \
+	Compression/Compression.cs \
+	Compression/CompressionStreamStruct.cs \
+	Compression/Deflater.cs \
+	Compression/Enums.cs \
+	Compression/Inflater.cs \
 
 # Contacts
 
@@ -371,8 +394,10 @@ COREDATA_SOURCES = \
 COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/CFIndex.cs \
 	CoreFoundation/CFRunLoop.cs \
-    CoreFoundation/CFString.cs \
-    CoreFoundation/Dispatch.cs \
+	CoreFoundation/CFString.cs \
+	CoreFoundation/Dispatch.cs \
+	CoreFoundation/DispatchData.cs \
+	CoreFoundation/NativeObject.cs \
 
 COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFAllocator.cs \
@@ -397,6 +422,7 @@ COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFUrl.cs \
 	CoreFoundation/CFWriteStream.cs \
 	CoreFoundation/DispatchBlock.cs \
+	CoreFoundation/DispatchIO.cs \
 	CoreFoundation/DispatchQueueSynchronizationContext.cs \
 	CoreFoundation/DispatchSource.cs \
 
@@ -408,6 +434,7 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGColorSpace.cs \
 	CoreGraphics/CGContext.cs \
 	CoreGraphics/CGDisplay.cs \
+	CoreGraphics/CGEnums.cs \
 	CoreGraphics/CGGeometry.cs \
 	CoreGraphics/CGGradient.cs \
 	CoreGraphics/CGImage.cs \
@@ -459,6 +486,9 @@ COREIMAGE_SOURCES = \
 	CoreImage/CISampler.cs \
 	CoreImage/CIVector.cs \
 
+COREIMAGE_API_SOURCES = \
+	CoreMedia/Enums.cs \
+
 # CoreLocation
 
 CORELOCATION_CORE_SOURCES = \
@@ -493,6 +523,7 @@ COREMEDIA_SOURCES = \
 # CoreMidi
 
 COREMIDI_CORE_SOURCES = \
+	CoreMidi/MidiCIDeviceIdentification.cs \
 	CoreMidi/MidiServices.cs \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
@@ -559,6 +590,7 @@ CORETEXT_SOURCES = \
 	CoreText/CTStringAttributes.cs \
 	CoreText/CTTextTab.cs \
 	CoreText/CTTypesetter.cs \
+	CoreText/CTTypesetterOptionKeyCompat.cs \
 	CoreText/ConstructorError.cs \
 
 # CoreTelephony
@@ -716,6 +748,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSMutableUrlRequest.cs \
 	Foundation/NSNetService.cs \
 	Foundation/NSNotificationCenter.cs \
+	Foundation/NSNull.cs \
 	Foundation/NSOrderedSet.cs \
 	Foundation/NSOrderedSet_1.cs \
 	Foundation/NSOutputStream.cs \
@@ -808,10 +841,11 @@ GLKIT_SOURCES = \
 
 # HealthKit
 
-HEALTHKIT_CORE_SOURCES = \
+HEALTHKIT_API_SOURCES = \
 	HealthKit/Enums.cs \
 
 HEALTHKIT_SOURCES = \
+	HealthKit/EnumsCompat.cs \
 	HealthKit/HKAnchoredObjectQuery.cs \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
@@ -840,6 +874,13 @@ HOMEKIT_SOURCES = \
 
 IAD_API_SOURCES = \
 	iAd/iAd.cs \
+
+IAD_SOURCES = \
+	iAd/ADBannerView.cs \
+
+# ImageCaptureKit
+IMAGECAPTURECORE_API_SOURCES = \
+	ImageCaptureCore/Defs.cs
 
 # ImageIO
 
@@ -883,6 +924,7 @@ INTENTS_SOURCES = \
 	Intents/INRelativeReferenceResolutionResult.cs \
 	Intents/INRelativeSettingResolutionResult.cs \
 	Intents/INRideOption.cs \
+	Intents/INPlayMediaIntentResponse.cs \
 	Intents/INSaveProfileInCarIntent.cs \
 	Intents/INSearchCallHistoryIntent.cs \
 	Intents/INSetCarLockStatusIntent.cs \
@@ -894,13 +936,27 @@ INTENTS_SOURCES = \
 	Intents/INStartWorkoutIntent.cs \
 	Intents/INWorkoutGoalUnitTypeResolutionResult.cs \
 	Intents/INWorkoutLocationTypeResolutionResult.cs \
+	Intents/INCarAirCirculationModeResolutionResult.watchOS.cs \
+	Intents/INCarAudioSourceResolutionResult.watchOS.cs \
+	Intents/INCarDefrosterResolutionResult.watchOS.cs \
+	Intents/INCarSeatResolutionResult.watchOS.cs \
+	Intents/INRadioTypeResolutionResult.watchOS.cs \
+	Intents/INRelativeReferenceResolutionResult.watchOS.cs \
+	Intents/INRelativeSettingResolutionResult.watchOS.cs \
 
 # IOSurface
 IOSURFACE_CORE_SOURCES = \
 	IOSurface/IODefs.cs
 
 IOSURFACE_SOURCES = \
-	IOSurface/IOSurface.cs
+	IOSurface/IOSurface.cs \
+	IOSurface/IOSurfacePropertyKey.cs \
+
+# itunesLibrary
+
+ITUNESLIBRARY_API_SOURCES = \
+	iTunesLibrary/Enums.cs \
+	
 
 # JavaScriptCore
 
@@ -923,6 +979,7 @@ MAPKIT_CORE_SOURCES = \
 
 MAPKIT_SOURCES = \
 	MapKit/MKCircle.cs \
+	MapKit/MKCompat.cs \
 	MapKit/MKDirections.cs \
 	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
@@ -1045,6 +1102,32 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 	MultipeerConnectivity/Compat.cs \
 	MultipeerConnectivity/MCSession.cs \
 
+# Natural Language
+
+NATURALLANGUAGE_API_SOURCES = \
+	NaturalLanguage/Enums.cs \
+
+NATURALLANGUAGE_SOURCES = \
+	NaturalLanguage/NLLanguageRecognizer.cs \
+
+# Network
+
+NETWORK_SOURCES = \
+	Network/NWAdvertiseDescriptor.cs	\
+	Network/NWConnection.cs			\
+	Network/NWContentContext.cs		\
+	Network/NWEndpoint.cs			\
+	Network/NWError.cs			\
+	Network/NWInterface.cs			\
+	Network/NWListener.cs			\
+	Network/NWParameters.cs			\
+	Network/NWPath.cs			\
+	Network/NWPathMonitor.cs		\
+	Network/NWProtocolDefinition.cs		\
+	Network/NWProtocolMetadata.cs		\
+	Network/NWProtocolOptions.cs		\
+	Network/NWProtocolStack.cs			\
+	
 # NetworkExtension
 
 NETWORKEXTENSION_API_SOURCES = \
@@ -1160,7 +1243,7 @@ PHOTOS_SOURCES = \
 
 # PhotosUI
 
-PHOTOSUI_CORE_SOURCES = \
+PHOTOSUI_API_SOURCES = \
 	PhotosUI/PHEnums.cs \
 
 # PrintCode
@@ -1261,16 +1344,22 @@ SECURITY_CORE_SOURCES = \
 	Security/Certificate.cs \
 	Security/SecAccessControl.cs \
 	Security/SecureTransport.cs \
+	Security/SecProtocolMetadata.cs \
+	Security/SecProtocolOptions.cs \
 	Security/Trust.cs \
+	Security/SecTrust2.cs \
+	Security/SecIdentity2.cs \
 
 SECURITY_SOURCES = \
 	Security/Authorization.cs \
 	Security/ImportExport.cs \
 	Security/Items.cs \
 	Security/Policy.cs \
+	Security/SecCertificate2.cs \
 	Security/SecIdentity.cs \
 	Security/SecPolicy.cs \
 	Security/SecSharedCredential.cs \
+	Security/SecStatusCodeExtensions.cs \
 	Security/SecTrust.cs \
 	Security/SslConnection.cs \
 	Security/SslContext.cs \
@@ -1312,6 +1401,7 @@ STOREKIT_CORE_SOURCES = \
 
 STOREKIT_SOURCES = \
 	StoreKit/NativeMethods.cs \
+	StoreKit/SKAdNetworkCompat.cs \
 	StoreKit/SKCloudServiceSetupOptions.cs \
 	StoreKit/SKPayment.cs \
 	StoreKit/SKPaymentTransactionObserver.cs \
@@ -1362,6 +1452,7 @@ UIKIT_SOURCES = \
 	UIKit/Compat.cs \
 	UIKit/NSLayoutConstraint.cs \
 	UIKit/NSLayoutManager.cs \
+	AppKit/NSLayoutManager.cs \
 	UIKit/UIAccessibility.cs \
 	UIKit/UIAccessibilityCustomAction.cs \
 	UIKit/UIActionSheet.cs \
@@ -1383,6 +1474,7 @@ UIKIT_SOURCES = \
 	UIKit/UIContentSizeCategory.cs \
 	UIKit/UIControl.cs \
 	UIKit/UIDevice.cs \
+	UIKit/UIDocumentBrowserViewController.cs \
 	UIKit/UIDocumentInteractionController.cs \
 	UIKit/UIDocumentMenuViewController.cs \
 	UIKit/UIDocumentPickerViewController.cs \
@@ -1470,6 +1562,7 @@ VISION_SOURCES = \
 	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
 	Vision/VNRequest.cs \
+	Vision/VNRequestRevision.cs \
 	Vision/VNUtils.cs \
 
 # WatchConnectivity
@@ -1555,6 +1648,7 @@ SHARED_CORE_SOURCES = \
 
 SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \
+	../tools/common/StringUtils.cs \
 	MonoNativeFunctionWrapperAttribute.cs \
 	NativeTypes/NMath.cs \
 	ObjCRuntime/AdoptsAttribute.cs \
@@ -1610,6 +1704,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	CoreML                  \
 	CoreVideo               \
+	Compression             \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \
@@ -1618,10 +1713,12 @@ COMMON_FRAMEWORKS =         \
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
 	Accounts                \
-	AppKit                  \
+	AdSupport               \
+	AppKit XKit             \
 	AudioToolbox            \
 	AudioUnit               \
 	AVKit                   \
+	BusinessChat            \
 	CFNetwork               \
 	CloudKit                \
 	Contacts                \
@@ -1645,9 +1742,11 @@ MAC_FRAMEWORKS =            \
 	GameplayKit             \
 	GLKit                   \
 	ImageIO                 \
+	ImageCaptureCore	\
 	ImageKit                \
 	Intents                 \
 	IOSurface 		\
+	iTunesLibrary           \
 	JavaScriptCore          \
 	LocalAuthentication     \
 	MapKit                  \
@@ -1661,6 +1760,8 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
+	Network			\
+	NaturalLanguage         \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
@@ -1679,6 +1780,8 @@ MAC_FRAMEWORKS =            \
 	Social                  \
 	StoreKit                \
 	SystemConfiguration     \
+	UserNotifications       \
+	VideoSubscriberAccount  \
 	VideoToolbox            \
 	Vision                  \
 	WebKit                  \
@@ -1695,8 +1798,12 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	AuthenticationServices \
+	BusinessChat \
 	CallKit \
+	CarPlay \
 	CFNetwork \
+	ClassKit \
 	CloudKit \
 	Contacts \
 	ContactsUI \
@@ -1726,6 +1833,7 @@ IOS_FRAMEWORKS =         \
 	HealthKitUI \
 	HomeKit \
 	IdentityLookup \
+	IdentityLookupUI \
 	ImageIO \
 	Intents \
 	IntentsUI \
@@ -1744,6 +1852,8 @@ IOS_FRAMEWORKS =         \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
+	NaturalLanguage \
+	Network \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1762,7 +1872,7 @@ IOS_FRAMEWORKS =         \
 	StoreKit \
 	SystemConfiguration \
 	Twitter \
-	UIKit \
+	UIKit XKit \
 	UserNotifications \
 	UserNotificationsUI \
 	VideoToolbox \
@@ -1789,10 +1899,12 @@ WATCHOS_FRAMEWORKS =        \
 	ImageIO                 \
 	Intents                 \
 	MapKit                  \
+	MediaPlayer             \
 	MobileCoreServices      \
+	NaturalLanguage         \
 	PassKit                 \
 	Security                \
-	UIKit                   \
+	UIKit XKit              \
 	UserNotifications       \
 	WatchConnectivity       \
 	WatchKit                \
@@ -1832,6 +1944,8 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
+	NaturalLanguage         \
+	Network			\
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \
@@ -1840,8 +1954,9 @@ TVOS_FRAMEWORKS =           \
 	StoreKit                \
 	SystemConfiguration     \
 	TVMLKit                 \
+	TVUIKit					\
 	TVServices				\
-	UIKit                   \
+	UIKit XKit              \
 	UserNotifications       \
 	VideoSubscriberAccount  \
 	VideoToolbox            \

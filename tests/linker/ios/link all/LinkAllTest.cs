@@ -40,7 +40,7 @@ using NUnit.Framework;
 namespace LinkAll {
 	
 	// we DO NOT want the code to be "fully" available
-	public partial class NotPreserved {
+	public class NotPreserved {
 		
 		public byte One {
 			get; set;
@@ -85,6 +85,9 @@ namespace LinkAll {
 	#error Unknown platform
 #endif
 
+		Type not_preserved_type = typeof (NotPreserved);
+
+
 		class TypeAttribute : Attribute {
 			public TypeAttribute (Type type) {}
 		}
@@ -103,7 +106,8 @@ namespace LinkAll {
 			// which means the property will be available for MEF_3862
 			NotPreserved np = new NotPreserved ();
 			Assert.That (np.Two, Is.EqualTo (0), "Two==0");
-			PropertyInfo pi = typeof (NotPreserved).GetProperty ("Two");
+
+			PropertyInfo pi = not_preserved_type.GetProperty ("Two");
 			// check the *unused* setter absence from the application
 			Assert.NotNull (pi.GetGetMethod (), "getter");
 			Assert.Null (pi.GetSetMethod (), "setter");
@@ -115,7 +119,8 @@ namespace LinkAll {
 			// that ensure the setter is not linked away, 
 			NotPreserved np = new NotPreserved ();
 			np.One = 1;
-			PropertyInfo pi = typeof (NotPreserved).GetProperty ("One");
+
+			PropertyInfo pi = not_preserved_type.GetProperty ("One");
 			// check the *unused* setter absence from the application
 			Assert.Null (pi.GetGetMethod (), "getter");
 			Assert.NotNull (pi.GetSetMethod (), "setter");
@@ -126,7 +131,7 @@ namespace LinkAll {
 		{
 			// note: avoiding using "typeof(DefaultValueAttribute)" in the code
 			// so the linker does not keep it just because of it
-			PropertyInfo pi = typeof (NotPreserved).GetProperty ("Two");
+			PropertyInfo pi = not_preserved_type.GetProperty ("Two");
 			object [] attrs = pi.GetCustomAttributes (false);
 			bool default_value = false;
 			foreach (var ca in attrs) {
@@ -187,10 +192,10 @@ namespace LinkAll {
 		{
 #if !__WATCHOS__
 			// for (future) nunit[lite] platform detection - if this test fails then platform detection won't work
-			Assert.NotNull (Type.GetType (NamespacePrefix + "UIKit.UIApplicationDelegate, " + AssemblyName), "UIApplicationDelegate");
+			Assert.NotNull (Helper.GetType (NamespacePrefix + "UIKit.UIApplicationDelegate, " + AssemblyName), "UIApplicationDelegate");
 #endif
 			// and you can trust the old trick with the linker
-			Assert.NotNull (Type.GetType ("Mono.Runtime"), "Mono.Runtime");
+			Assert.NotNull (Helper.GetType ("Mono.Runtime"), "Mono.Runtime");
 		}
 
 		[Test]
@@ -215,16 +220,16 @@ namespace LinkAll {
 
 			// since we're linking the attributes will NOT be available - even if they are used
 #if !XAMCORE_3_0
-			Assert.Null (Type.GetType (prefix + "ObjCRuntime.AvailabilityAttribute, " + suffix), "AvailabilityAttribute");
-			Assert.Null (Type.GetType (prefix + "ObjCRuntime.iOSAttribute, " + suffix), "AvailabilityAttribute");
-			Assert.Null (Type.GetType (prefix + "ObjCRuntime.AvailabilityAttribute, " + suffix), "AvailabilityAttribute");
-			Assert.Null (Type.GetType (prefix + "ObjCRuntime.SinceAttribute, " + suffix), "SinceAttribute");
+			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.AvailabilityAttribute, " + suffix), "AvailabilityAttribute");
+			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.iOSAttribute, " + suffix), "AvailabilityAttribute");
+			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.AvailabilityAttribute, " + suffix), "AvailabilityAttribute");
+			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.SinceAttribute, " + suffix), "SinceAttribute");
 #endif
-			Assert.Null (Type.GetType (prefix + "ObjCRuntime.IntroducedAttribute, " + suffix), "IntroducedAttribute");
-			Assert.Null (Type.GetType (prefix + "ObjCRuntime.DeprecatedAttribute, " + suffix), "DeprecatedAttribute");
-			Assert.Null (Type.GetType (prefix + "ObjCRuntime.ObsoletedAttribute, " + suffix), "ObsoletedAttribute");
-			Assert.Null (Type.GetType (prefix + "ObjCRuntime.UnavailableAttribute, " + suffix), "UnavailableAttribute");
-			Assert.Null (Type.GetType (prefix + "ObjCRuntime.ThreadSafeAttribute, " + suffix), "ThreadSafeAttribute");
+			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.IntroducedAttribute, " + suffix), "IntroducedAttribute");
+			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.DeprecatedAttribute, " + suffix), "DeprecatedAttribute");
+			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.ObsoletedAttribute, " + suffix), "ObsoletedAttribute");
+			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.UnavailableAttribute, " + suffix), "UnavailableAttribute");
+			Assert.Null (Helper.GetType (prefix + "ObjCRuntime.ThreadSafeAttribute, " + suffix), "ThreadSafeAttribute");
 		}
 
 		[Test]
@@ -265,7 +270,7 @@ namespace LinkAll {
 		public void Assembly_LoadFile ()
 		{
 			string filename = FindAssemblyPath ();
-			Assert.NotNull (Assembly.LoadFile (filename), "1");
+			Assert.NotNull (Assembly.LoadFile (Path.GetFullPath (filename)), "1");
 		}
 
 		[Test]
@@ -414,14 +419,14 @@ namespace LinkAll {
 			// Compiler optimization (roslyn release) can remove the variable, which removes OpenTK-1.dll from the app and fail the test
 			Assert.That (state, Is.EqualTo (OpenTK.WindowState.Normal), "normal");
 
-			var gl = Type.GetType ("OpenTK.Graphics.ES11.GL, OpenTK-1.0", false);
+			var gl = Helper.GetType ("OpenTK.Graphics.ES11.GL, OpenTK-1.0", false);
 			Assert.NotNull (gl, "ES11/GL");
-			var core = Type.GetType ("OpenTK.Graphics.ES11.GL/Core, OpenTK-1.0", false);
+			var core = Helper.GetType ("OpenTK.Graphics.ES11.GL/Core, OpenTK-1.0", false);
 			Assert.NotNull (core, "ES11/Core");
 
-			gl = Type.GetType ("OpenTK.Graphics.ES20.GL, OpenTK-1.0", false);
+			gl = Helper.GetType ("OpenTK.Graphics.ES20.GL, OpenTK-1.0", false);
 			Assert.NotNull (gl, "ES20/GL");
-			core = Type.GetType ("OpenTK.Graphics.ES20.GL/Core, OpenTK-1.0", false);
+			core = Helper.GetType ("OpenTK.Graphics.ES20.GL/Core, OpenTK-1.0", false);
 			Assert.NotNull (core, "ES20/Core");
 		}
 #endif // !__WATCHOS__
@@ -430,7 +435,7 @@ namespace LinkAll {
 		public void NestedNSObject ()
 		{
 			// Parent type is not used - but it's not linked out
-			var p = Type.GetType ("LinkAll.Parent");
+			var p = Helper.GetType ("LinkAll.Parent");
 			Assert.NotNull (p, "Parent");
 			// because a nested type is a subclass of NSObject (and not part of monotouch.dll)
 			var n = p.GetNestedType ("Derived");
@@ -534,7 +539,7 @@ namespace LinkAll {
 		{
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
-			Assert.Null (Type.GetType (fqn), "Should NOT be included (no SslStream or Socket support)");
+			Assert.Null (Helper.GetType (fqn), "Should NOT be included (no SslStream or Socket support)");
 		}
 
 		[Test]
@@ -543,16 +548,17 @@ namespace LinkAll {
 		{
 			// this test works only because "Link all" does not use WebKit
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Foundation.NSProxy");
-			Assert.Null (Type.GetType (fqn), fqn);
+			Assert.Null (Helper.GetType (fqn), fqn);
 		}
+
+		static Type type_Task = typeof (Task);
 
 		[Test]
 		public void Bug59015 ()
 		{
 			CheckAsyncTaskMethodBuilder (typeof (AsyncTaskMethodBuilder));
 			CheckAsyncTaskMethodBuilder (typeof (AsyncTaskMethodBuilder<int>));
-			var t = typeof (Task);
-			var snfwc = t.GetMethod ("SetNotificationForWaitCompletion", BindingFlags.Instance | BindingFlags.NonPublic);
+			var snfwc = type_Task.GetMethod ("NotifyDebuggerOfWaitCompletion", BindingFlags.Instance | BindingFlags.NonPublic);
 #if DEBUG
 			Assert.NotNull (snfwc, "Task.NotifyDebuggerOfWaitCompletion");
 #else
@@ -573,6 +579,38 @@ namespace LinkAll {
 			Assert.Null (snfwc, atmb.FullName + ".SetNotificationForWaitCompletion");
 			Assert.Null (oifd,  atmb.FullName + ".ObjectIdForDebugger");
 #endif
+		}
+
+		[Test]
+		public void LinkedAwayGenericTypeAsOptionalMemberInProtocol ()
+		{
+			// https://github.com/xamarin/xamarin-macios/issues/3523
+			// This test will fail at build time if it regresses (usually these types of build tests go into monotouch-test, but monotouch-test uses NSSet<T> elsewhere, which this test requires to be linked away).
+			Assert.IsNull (typeof (NSObject).Assembly.GetType (NamespacePrefix + "Foundation.NSSet`1"), "NSSet<T> must be linked away, otherwise this test is useless");
+		}
+
+		[Protocol (Name = "ProtocolWithGenericsInOptionalMember", WrapperType = typeof (ProtocolWithGenericsInOptionalMemberWrapper))]
+		[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = "ConfigureView", Selector = "configureViewForParameters:", ParameterType = new Type [] { typeof (global::Foundation.NSSet<global::Foundation.NSString>) }, ParameterByRef = new bool [] { false })]
+		public interface IProtocolWithGenericsInOptionalMember : INativeObject, IDisposable { }
+
+		internal sealed class ProtocolWithGenericsInOptionalMemberWrapper : BaseWrapper, IProtocolWithGenericsInOptionalMember
+		{
+			public ProtocolWithGenericsInOptionalMemberWrapper (IntPtr handle, bool owns) : base (handle, owns) { }
+		}
+
+		[Test]
+		public void NoFatCorlib ()
+		{
+			var corlib = typeof (int).Assembly.Location;
+			// special location when we build a shared (app and extensions) framework for mono
+			if (corlib.EndsWith ("/Frameworks/Xamarin.Sdk.framework/MonoBundle/mscorlib.dll", StringComparison.Ordinal))
+				Assert.Pass (corlib);
+#if __WATCHOS__
+			var suffix = "link all.appex/mscorlib.dll";
+#else
+			var suffix = "link all.app/mscorlib.dll";
+#endif
+			Assert.That (corlib, Is.StringEnding (suffix), corlib);
 		}
 	}
 

@@ -7,13 +7,12 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreText;
 using CoreGraphics;
+using ObjCRuntime;
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.CoreText;
@@ -40,7 +39,19 @@ namespace MonoTouchFixtures.CoreText {
 				}
 			}
 		}
+
+		[Test]
+		public void CTTypesetterCreateTest ()
+		{
+			TestRuntime.AssertXcodeVersion (10, 0);
+			using (var framesetter = new CTFramesetter (new NSAttributedString ("Testing, testing, 1, 2, 3...")))
+			using (var type = framesetter.GetTypesetter ())
+			using (var newFrame = CTFramesetter.Create (type)) {
+				Assert.NotNull (type, "Create");
+				var type2 = newFrame.GetTypesetter ();
+				Assert.NotNull (type, "type2");
+				Assert.AreEqual (type.Handle, type2.Handle, "Same typesetter");
+			}
+		}
 	}
 }
-
-#endif // !__WATCHOS__

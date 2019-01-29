@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A737EFCC-4348-4EB1-9C14-4FDC0975388D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AssemblyName>mtouch</AssemblyName>
@@ -13,24 +11,25 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>MONOTOUCH;MTOUCH;DEV</DefineConstants>
+    <DefineConstants>MONOTOUCH;MTOUCH;XAMARIN_APPLETLS;DEV</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <NoWarn>436</NoWarn>
+    <Deterministic>True</Deterministic>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
+    <DefineConstants>MONOTOUCH;MTOUCH;XAMARIN_APPLETLS</DefineConstants>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <DefineConstants>MONOTOUCH;MTOUCH;DEV</DefineConstants>
+    <Deterministic>True</Deterministic>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -49,6 +48,9 @@
     </Compile>
     <Compile Include="..\..\src\build\ios\Constants.cs">
       <Link>external\Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\common\PListExtensions.cs">
+      <Link>external\PListExtensions.cs</Link>
     </Compile>
     <Compile Include="..\common\cache.cs">
       <Link>external\cache.cs</Link>
@@ -369,8 +371,17 @@
     <Compile Include="..\common\Optimizations.cs">
       <Link>external\Optimizations.cs</Link>
     </Compile>
+    <Compile Include="..\common\FileCopier.cs">
+      <Link>external\FileCopier.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\BindingImplAttribute.cs">
       <Link>external\maccore\BindingImplAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\AssemblyUtilities.cs">
+      <Link>Linker\AssemblyUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeNameParser.cs">
+      <Link>Linker\TypeNameParser.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -406,13 +417,4 @@
       <Name>Mono.Cecil.Mdb</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\linker\Descriptors\mscorlib.xml">
-      <Link>mscorlib.xml</Link>
-      <LogicalName>mscorlib.xml</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
-  <Target Name="AfterBuild">
-    <Exec Command="make mtouch" />
-  </Target>
 </Project>

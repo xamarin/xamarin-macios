@@ -152,6 +152,7 @@ namespace SafariServices {
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
+	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ASWebAuthenticationSession' instead.")]
 	interface SFAuthenticationSession {
 		[Export ("initWithURL:callbackURLScheme:completionHandler:")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] string callbackUrlScheme, SFAuthenticationCompletionHandler completionHandler);
@@ -246,6 +247,10 @@ namespace SafariServices {
 		[Mac (10, 12, 4)]
 		[Export ("messageReceivedFromContainingAppWithName:userInfo:")]
 		void MessageReceivedFromContainingApp (string messageName, [NullAllowed] NSDictionary<NSString, NSObject> userInfo);
+
+		[Mac (10,13,4, onlyOn64: true)]
+		[Export ("additionalRequestHeadersForURL:completionHandler:")]
+		void AdditionalRequestHeaders (NSUrl url, Action<NSDictionary<NSString, NSString>> completionHandler);
 	}
 
 	[Mac (10,12, onlyOn64: true)]

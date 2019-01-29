@@ -13,6 +13,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #else
@@ -44,6 +45,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void ConstructorTest ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			var bytes = Marshal.AllocHGlobal (1);
 			var deallocated = false;
@@ -83,9 +85,8 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Assert.Null (NSData.FromFile ("does not exists"), "unexisting");
 #if MONOMAC // Info.Plist isn't there to load from the same location on mac
-#if !LINKALL
-			Assert.NotNull (NSData.FromFile (NSBundle.MainBundle.PathForResource ("runtime-options", "plist")), "runtime-options.plist");
-#endif
+			if (!TestRuntime.IsLinkAll)
+				Assert.NotNull (NSData.FromFile (NSBundle.MainBundle.PathForResource ("runtime-options", "plist")), "runtime-options.plist");
 #else
 			Assert.NotNull (NSData.FromFile ("Info.plist"), "Info.plist");
 #endif
@@ -125,6 +126,15 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+		public void ToEmptyArray ()
+		{
+			using (var data = NSData.FromArray (new byte[0])) {
+				var arr = data.ToArray ();
+				Assert.AreEqual (0, arr.Length, "Length");
+			}
+		}
+
+		[Test]
 		public void BytesLength ()
 		{
 			// suggested alternative for http://stackoverflow.com/q/10623162/220643
@@ -145,7 +155,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Ignore ("NSData.FromUrl doesn't seem to work in watchOS");
 			}
 #endif
-			using (var url = new NSUrl ("https://blog.xamarin.com/robots.txt"))
+			using (var url = new NSUrl ("https://www.microsoft.com/robots.txt"))
 			using (var x = NSData.FromUrl (url)) {
 				Assert.That ((x != null) && (x.Length > 0));
 			}
@@ -155,6 +165,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64_Short ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var data = NSData.FromArray (new byte [1] { 42 })) {
 				string s1 = data.GetBase64EncodedString (NSDataBase64EncodingOptions.EndLineWithCarriageReturn);
@@ -175,6 +186,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64_Long ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			byte[] array = new byte [60];
 			using (var data = NSData.FromArray (array)) {
@@ -325,6 +337,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64String ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var d = new NSData ("WGFtYXJpbg==", NSDataBase64DecodingOptions.IgnoreUnknownCharacters)) {
 				Assert.That (d.ToString (), Is.EqualTo ("Xamarin"));
@@ -335,6 +348,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64Data ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var b = NSData.FromString ("WGFtYXJpbg=="))
 			using (var d = new NSData (b, NSDataBase64DecodingOptions.IgnoreUnknownCharacters)) {

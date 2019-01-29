@@ -18,17 +18,17 @@ run:: tests.dll $(NUGET_CONSOLE)
 	$(Q_NUNIT) mono --runtime=v4.0 $(NUGET_CONSOLE) -noshadow -nologo tests.dll
 
 mmp.exe: ../mmp.exe
-	$(Q) cp ../mmp.exe mmp.exe
+	$(Q) $(CP) ../mmp.exe mmp.exe
  
 nunit.framework.dll nunit-console.exe:
 	/Library/Frameworks/Mono.framework/Commands/nuget restore packages.config
-	cp $(NUGET_LIB) nunit.framework.dll
+	$(CP) $(NUGET_LIB) nunit.framework.dll
 
 Mono.Cecil.dll:
-	cp $(CECIL_LIB) Mono.Cecil.dll
+	$(CP) $(CECIL_LIB) Mono.Cecil.dll
 
 tests.dll: $(test_sources) mmp.exe nunit.framework.dll Mono.Cecil.dll
-	$(Q_MCS) $(SYSTEM_MCS) $(test_sources) -r:mmp.exe -t:library -out:tests.dll -r:nunit.framework.dll -r:Mono.Cecil.dll -debug
+	$(Q_CSC) $(SYSTEM_CSC) $(test_sources) -r:mmp.exe -t:library -out:tests.dll -r:nunit.framework.dll -r:Mono.Cecil.dll -debug
 
 clean-local::
 	rm -f tests.dll

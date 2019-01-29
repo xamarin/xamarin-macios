@@ -267,15 +267,22 @@ namespace Foundation {
 			get {
 				if (key == null)
 					throw new ArgumentNullException ("key");
-				using (var nss = new NSString (key)){
-					return ObjectForKey (nss);
+				var nss = NSString.CreateNative (key, false);
+				try {
+					return Runtime.GetNSObject (LowlevelObjectForKey (nss));
+				} finally {
+					NSString.ReleaseNative (nss);
 				}
 			}
 			set {
 				if (key == null)
 					throw new ArgumentNullException ("key");
-				using (var nss = new NSString (key))
-					SetObject (value, nss);
+				var nss = NSString.CreateNative (key, false);
+				try {
+					LowlevelSetObject (value, nss);
+				} finally {
+					NSString.ReleaseNative (nss);
+				}
 			}
 		}
 

@@ -63,7 +63,7 @@ namespace GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (GKComponent))]
-	interface GKAgent : NSCoding {
+	interface GKAgent : NSSecureCoding {
 		
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		IGKAgentDelegate Delegate { get; set; }
@@ -90,7 +90,7 @@ namespace GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (GKAgent))]
-	interface GKAgent2D : NSCoding {
+	interface GKAgent2D : NSSecureCoding {
 		
 		[Export ("position", ArgumentSemantic.Assign)]
 		Vector2 Position { 
@@ -216,7 +216,7 @@ namespace GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
-	interface GKComponent : NSCopying, NSCoding {
+	interface GKComponent : NSCopying, NSSecureCoding {
 
 		[NullAllowed]
 		[Export ("entity", ArgumentSemantic.Weak)]
@@ -377,7 +377,7 @@ namespace GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
-	interface GKEntity : NSCopying, NSCoding {
+	interface GKEntity : NSCopying, NSSecureCoding {
 
 		[DesignatedInitializer]
 		[Export ("init")]
@@ -538,7 +538,7 @@ namespace GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKGraph : NSCopying, NSCoding {
+	interface GKGraph : NSCopying, NSSecureCoding {
 		
 		[NullAllowed]
 		[Export ("nodes")]
@@ -776,7 +776,7 @@ namespace GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKGraphNode : NSCoding {
+	interface GKGraphNode : NSSecureCoding {
 		
 		[Export ("connectedNodes")]
 		GKGraphNode [] ConnectedNodes { get; }
@@ -924,7 +924,7 @@ namespace GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (GKObstacle))]
-	interface GKPolygonObstacle : NSCoding {
+	interface GKPolygonObstacle : NSSecureCoding {
 
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }
@@ -1385,7 +1385,7 @@ namespace GameplayKit {
 		IGKRandom RandomSource { get; set; }
 
 		[Abstract]
-		[NullAllowed, Export ("bestMoveForActivePlayer")]
+		[Export ("bestMoveForActivePlayer")]
 		IGKGameModelUpdate GetBestMoveForActivePlayer ();
 	}
 
@@ -1482,7 +1482,13 @@ namespace GameplayKit {
 		void RaiseToPower (GKNoise noise);
 
 		[Export ("displaceXWithNoise:yWithNoise:zWithNoise:")]
+		void Displace (GKNoise xDisplacementNoise, GKNoise yDisplacementNoise, GKNoise zDisplacementNoise);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GKNoise.Displace' instead.")]
+		[Wrap ("Displace (xDisplacementNoise, yDisplacementNoise, zDisplacementNoise)", isVirtual: true)]
 		void DisplaceX (GKNoise xDisplacementNoise, GKNoise yDisplacementNoise, GKNoise zDisplacementNoise);
+#endif
 	}
 
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
@@ -1811,7 +1817,7 @@ namespace GameplayKit {
 
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	interface GKScene : NSCopying, NSCoding {
+	interface GKScene : NSCopying, NSSecureCoding {
 
 		[Static]
 		[Export ("sceneWithFileNamed:")]

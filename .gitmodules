@@ -1,22 +1,14 @@
-[submodule "external/fsharp"]
-    path = external/fsharp
-    url = ../../fsharp/fsharp.git
-    branch = master
 [submodule "external/guiunit"]
     path = external/guiunit
     url = ../../mono/guiunit.git
-[submodule "external/llvm"]
-    path = external/llvm
-    url = ../../mono/llvm.git
+[submodule "external/macios-binaries"]
+    path = external/macios-binaries
+    url = ../../xamarin/macios-binaries
     branch = master
 [submodule "external/mono"]
     path = external/mono
     url = ../../mono/mono.git
-    branch = 2017-12
-[submodule "external/MonoTouch.Dialog"]
-    path = external/MonoTouch.Dialog
-    url = ../../migueldeicaza/MonoTouch.Dialog.git
-    branch = master
+    branch = 2018-08
 [submodule "external/opentk"]
     path = external/opentk
     url = ../../mono/opentk.git
@@ -28,8 +20,4 @@
 [submodule "external/Xamarin.MacDev"]
     path = external/Xamarin.MacDev
     url = ../../xamarin/Xamarin.MacDev
-    branch = master
-[submodule "external/macios-binaries"]
-    path = external/macios-binaries
-    url = ../../xamarin/macios-binaries
     branch = master

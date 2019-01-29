@@ -41,18 +41,7 @@
 #include "runtime-internal.h"
 //#define DEBUG_REF_COUNTING
 
-static pthread_mutex_t refcount_mutex;
-static void
-x_init_mutex () __attribute__ ((constructor));
-
-static void
-x_init_mutex ()
-{
-	pthread_mutexattr_t attr;
-	pthread_mutexattr_init (&attr);
-	pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
-	pthread_mutex_init (&refcount_mutex, &attr);
-}
+static pthread_mutex_t refcount_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
 void *
 xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
@@ -71,7 +60,7 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 		case _C_PTR: {
 			MonoClass *klass = mono_class_from_mono_type (mtype);
 			if (mono_class_is_delegate (klass)) {
-				return xamarin_get_block_for_delegate (method, retval, NULL, exception_gchandle);
+				return xamarin_get_block_for_delegate (method, retval, NULL, INVALID_TOKEN_REF, exception_gchandle);
 			} else {
 				return *(void **) mono_object_unbox (retval);
 			}
@@ -144,7 +133,7 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 			} else if (xamarin_is_class_inativeobject (r_klass)) {
 				return xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
 			} else {
-				xamarin_assertion_message ("Don't know how to marshal a return value of type '%s.%s'. Please file a bug with a test case at http://bugzilla.xamarin.com\n", mono_class_get_namespace (r_klass), mono_class_get_name (r_klass)); 
+				xamarin_assertion_message ("Don't know how to marshal a return value of type '%s.%s'. Please file a bug with a test case at https://github.com/xamarin/xamarin-macios/issues/new\n", mono_class_get_namespace (r_klass), mono_class_get_name (r_klass)); 
 			}
 		}
 		case _C_CHARPTR:
@@ -1133,7 +1122,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, gui
 		managed_method = xamarin_get_managed_method_for_token (context /* token ref */, exception_gchandle);
 		if (*exception_gchandle != 0) return NULL;
 
-		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), exception_gchandle);
+		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), NULL, NULL, exception_gchandle);
 		if (*exception_gchandle != 0) return NULL;
 
 		obj = mono_runtime_invoke (managed_method, NULL, arg_ptrs, &exception);
@@ -1263,7 +1252,7 @@ xamarin_create_bindas_exception (MonoType *inputType, MonoType *outputType, Mono
 		goto exception_handling;
 
 	method_full_name = mono_method_full_name (method, TRUE);
-	msg = xamarin_strdup_printf ("Internal error: can't convert from '%s' to '%s' in %s. Please file a bug report with a test case (https://bugzilla.xamarin.com).",
+	msg = xamarin_strdup_printf ("Internal error: can't convert from '%s' to '%s' in %s. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).",
 										from_name, to_name, method_full_name);
 	exception_gchandle = mono_gchandle_new ((MonoObject *) xamarin_create_exception (msg), false);
 

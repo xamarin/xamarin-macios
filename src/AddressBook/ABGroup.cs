@@ -51,15 +51,7 @@ namespace AddressBook {
 
 		internal static void Init ()
 		{
-			var handle = Dlfcn.dlopen (Constants.AddressBookLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Name = Dlfcn.GetInt32 (handle, "kABGroupNameProperty");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			Name = Dlfcn.GetInt32 (Libraries.AddressBook.Handle, "kABGroupNameProperty");
 		}
 	}
 

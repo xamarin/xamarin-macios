@@ -16,7 +16,7 @@ using CoreFoundation;
 
 namespace ImageIO {
 
-	[iOS (7,0), Mac (10,8)]
+	[iOS (7,0)]
 	public partial class CGImageMetadataEnumerateOptions {
 
 		public bool Recursive { get; set; }
@@ -26,7 +26,7 @@ namespace ImageIO {
 			var dict = new NSMutableDictionary ();
 
 			if (Recursive)
-				dict.LowlevelSetObject (CFBoolean.True.Handle, kCGImageMetadataEnumerateRecursively);
+				dict.LowlevelSetObject (CFBoolean.TrueHandle, kCGImageMetadataEnumerateRecursively);
 
 			return dict;
 		}
@@ -35,7 +35,7 @@ namespace ImageIO {
 	public delegate bool CGImageMetadataTagBlock (NSString path, CGImageMetadataTag tag);
 
 	// CGImageMetadata.h
-	[iOS (7,0), Mac (10,8)]
+	[iOS (7,0)]
 	public partial class CGImageMetadata : INativeObject, IDisposable {
 
 		public CGImageMetadata (IntPtr handle)

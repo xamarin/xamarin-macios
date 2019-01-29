@@ -110,17 +110,17 @@ while ! test -z $1; do
 done
 
 # reporting functions
+COLOR_RED=$(tput setaf 1 2>/dev/null || true)
+COLOR_ORANGE=$(tput setaf 3 2>/dev/null || true)
+COLOR_MAGENTA=$(tput setaf 5 2>/dev/null || true)
+COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
 function fail () {
-	tput setaf 1 2>/dev/null || true
-	echo "    $1"
-	tput sgr0 2>/dev/null || true
+	echo "    ${COLOR_RED}$1${COLOR_CLEAR}"
 	FAIL=1
 }
 
 function warn () {
-	tput setaf 3 2>/dev/null || true
-	echo "    $1"
-	tput sgr0 2>/dev/null || true
+	echo "    ${COLOR_ORANGE}$1${COLOR_CLEAR}"
 }
 
 function ok () {
@@ -231,10 +231,50 @@ function install_visual_studio () {
 	rm -f $VS_DMG
 }
 
+function run_xcode_first_launch ()
+{
+	local XCODE_VERSION="$1"
+	local XCODE_DEVELOPER_ROOT="$2"
+
+	# xcodebuild -runFirstLaunch seems to have been introduced in Xcode 9
+	if ! is_at_least_version "$XCODE_VERSION" 9.0; then
+		return
+	fi
+
+	# Delete any cached files by xcodebuild, because other branches'
+	# system-dependencies.sh keep installing earlier versions of these
+	# packages manually, which means subsequent first launch checks will
+	# succeed because we've successfully run the first launch tasks once
+	# (and this is cached), while someone else (we!) overwrote with
+	# earlier versions (bypassing the cache).
+	#
+	# Removing the cache will make xcodebuild realize older packages are installed,
+	# and (re-)install any newer packages.
+	#
+	# We'll be able to remove this logic one day, when all branches in use are
+	# using 'xcodebuild -runFirstLaunch' instead of manually installing
+	# packages.
+	find /var/folders -name '*com.apple.dt.Xcode.InstallCheckCache*' -print -delete 2>/dev/null | sed 's/^\(.*\)$/        Deleted Xcode cache file: \1 (this is normal)/' || true
+	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -checkFirstLaunchStatus; then
+		if ! test -z "$PROVISION_XCODE"; then
+			# Remove sudo's cache as well, otherwise nothing will happen.
+			$SUDO find /var/folders -name '*com.apple.dt.Xcode.InstallCheckCache*' -print -delete 2>/dev/null | sed 's/^\(.*\)$/        Deleted Xcode cache file: \1 (this is normal)/' || true
+			# Run the first launch tasks
+			log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
+			log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+		else
+			fail "Xcode has pending first launch tasks. Execute '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch' to execute those tasks."
+			return
+		fi
+	fi
+}
+
 function install_specific_xcode () {
 	local XCODE_URL=`grep XCODE$1_URL= Make.config | sed 's/.*=//'`
 	local XCODE_VERSION=`grep XCODE$1_VERSION= Make.config | sed 's/.*=//'`
-	local XCODE_ROOT=$(dirname `dirname $XCODE_DEVELOPER_ROOT`)
+	local XCODE_DEVELOPER_ROOT="$2"
+	local XCODE_ROOT="$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")"
 
 	if test -z $XCODE_URL; then
 		fail "No XCODE$1_URL set in Make.config, cannot provision"
@@ -248,9 +288,9 @@ function install_specific_xcode () {
 
 	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
 	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
-	if test -f "~/Downloads/$XCODE_NAME"; then
-		log "Found XCode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
-		cp "~/Downloads/$XCODE_NAME" "$XCODE_DMG"
+	if test -f "$HOME/Downloads/$XCODE_NAME"; then
+		log "Found Xcode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
+		cp "$HOME/Downloads/$XCODE_NAME" "$XCODE_DMG"
 	else
 		curl -L $XCODE_URL > $XCODE_DMG
 	fi
@@ -289,7 +329,9 @@ function install_specific_xcode () {
 		$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 	fi
 
-	if is_at_least_version $XCODE_VERSION 8.0; then
+	if is_at_least_version "$XCODE_VERSION" 9.0; then
+		run_xcode_first_launch "$XCODE_VERSION" "$XCODE_DEVELOPER_ROOT"
+	elif is_at_least_version $XCODE_VERSION 8.0; then
 		PKGS="MobileDevice.pkg MobileDeviceDevelopment.pkg XcodeSystemResources.pkg"
 		for pkg in $PKGS; do
 			if test -f "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg"; then
@@ -319,7 +361,7 @@ function check_specific_xcode () {
 	if ! test -d $XCODE_DEVELOPER_ROOT; then
 		if ! test -z $PROVISION_XCODE; then
 			if ! test -z $ENABLE_XAMARIN; then
-				install_specific_xcode $1
+				install_specific_xcode "$1" "$XCODE_DEVELOPER_ROOT"
 			else
 				fail "Automatic provisioning of Xcode is only supported for provisioning internal build bots."
 				fail "Please download and install Xcode $XCODE_VERSION here: https://developer.apple.com/downloads/index.action?name=Xcode"
@@ -335,10 +377,12 @@ function check_specific_xcode () {
 					$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 				else
 					fail "The license for Xcode $XCODE_VERSION has not been accepted. Execute '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild' to review the license and accept it."
+					return
 				fi
-				return
 			fi
 		fi
+
+		run_xcode_first_launch "$XCODE_VERSION" "$XCODE_DEVELOPER_ROOT"
 	fi
 
 	local XCODE_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$XCODE_DEVELOPER_ROOT/../version.plist"`
@@ -348,15 +392,17 @@ function check_specific_xcode () {
 		return
 	fi
 
-	local XCODE_SELECT=$(xcode-select -p)
-	if [[ "x$XCODE_SELECT" != "x$XCODE_DEVELOPER_ROOT" ]]; then
-		if ! test -z $PROVISION_XCODE; then
-			log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
-			$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
-			log "Clearing xcrun cache..."
-			xcrun -k
-		else
-			fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
+	if test -z "$1"; then
+		local XCODE_SELECT=$(xcode-select -p)
+		if [[ "x$XCODE_SELECT" != "x$XCODE_DEVELOPER_ROOT" ]]; then
+			if ! test -z $PROVISION_XCODE; then
+				log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
+				$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
+				log "Clearing xcrun cache..."
+				xcrun -k
+			else
+				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
+			fi
 		fi
 	fi
 
@@ -368,6 +414,7 @@ function check_xcode () {
 
 	# must have latest Xcode in /Applications/Xcode<version>.app
 	check_specific_xcode
+	check_specific_xcode "94"
 
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	local IOS_SDK_VERSION=`grep ^IOS_SDK_VERSION= Make.config | sed 's/.*=//'`
@@ -399,7 +446,7 @@ function check_xcode () {
 function check_mono () {
 	if ! test -z $IGNORE_MONO; then return; fi
 
-	PKG_CONFIG_PATH=/Library/Frameworks/Mono.framework/Versions/Current/bin/pkg-config
+	MONO_VERSION_FILE=/Library/Frameworks/Mono.framework/Versions/Current/VERSION
 	if ! /Library/Frameworks/Mono.framework/Commands/mono --version 2>/dev/null >/dev/null; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
@@ -407,11 +454,11 @@ function check_mono () {
 			fail "You must install the Mono MDK (http://www.mono-project.com/download/)"
 			return
 		fi
-	elif ! test -e $PKG_CONFIG_PATH; then
+	elif ! test -e $MONO_VERSION_FILE; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
 		else
-			fail "Could not find pkg-config, you must install the Mono MDK (http://www.mono-project.com/download/)"
+			fail "Could not find VERSION file, you must install the Mono MDK (http://www.mono-project.com/download/)"
 			return
 		fi
 	fi
@@ -419,11 +466,11 @@ function check_mono () {
 	MIN_MONO_VERSION=`grep MIN_MONO_VERSION= Make.config | sed 's/.*=//'`
 	MAX_MONO_VERSION=`grep MAX_MONO_VERSION= Make.config | sed 's/.*=//'`
 
-	ACTUAL_MONO_VERSION=`$PKG_CONFIG_PATH --modversion mono`.`cat /Library/Frameworks/Mono.framework/Home/updateinfo | cut -d' ' -f2 | cut -c6- | awk '{print(int($0))}'`
+	ACTUAL_MONO_VERSION=`cat $MONO_VERSION_FILE`
 	if ! is_at_least_version $ACTUAL_MONO_VERSION $MIN_MONO_VERSION; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
-			ACTUAL_MONO_VERSION=`$PKG_CONFIG_PATH --modversion mono`
+			ACTUAL_MONO_VERSION=`cat $MONO_VERSION_FILE`
 		else
 			fail "You must have at least Mono $MIN_MONO_VERSION, found $ACTUAL_MONO_VERSION"
 			return
@@ -433,12 +480,13 @@ function check_mono () {
 	elif is_at_least_version $ACTUAL_MONO_VERSION $MAX_MONO_VERSION; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
-			ACTUAL_MONO_VERSION=`$PKG_CONFIG_PATH --modversion mono`.`cat /Library/Frameworks/Mono.framework/Home/updateinfo | cut -d' ' -f2 | cut -c6- | awk '{print(int($0))}'`
+			ACTUAL_MONO_VERSION=`cat $MONO_VERSION_FILE`
 		else
 			fail "Your mono version is too new, max version is $MAX_MONO_VERSION, found $ACTUAL_MONO_VERSION."
 			fail "You may edit Make.config and change MAX_MONO_VERSION to your actual version to continue the"
 			fail "build (unless you're on a release branch). Once the build completes successfully, please"
 			fail "commit the new MAX_MONO_VERSION value."
+			fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_MONO=1${COLOR_RED} to skip this check."
 			return
 		fi
 	fi
@@ -551,7 +599,9 @@ function check_visual_studio () {
 			fail "You may edit Make.config and change MAX_VISUAL_STUDIO_VERSION to your actual version to continue the"
 			fail "build (unless you're on a release branch). Once the build completes successfully, please"
 			fail "commit the new MAX_VISUAL_STUDIO_VERSION value."
-			fail "Alternatively you can download an older version from $VS_URL."
+			fail "Alternatively you can download an older version from:"
+			fail "    $VS_URL,"
+			fail "or you can ${COLOR_MAGENTA}export IGNORE_VISUAL_STUDIO=1${COLOR_RED} to skip this check."
 		fi
 		return
 	fi
@@ -661,6 +711,7 @@ function check_objective_sharpie () {
 		else
 			if test -z $OPTIONAL_SHARPIE; then
 				fail "You must install Objective Sharpie, at least $MIN_SHARPIE_VERSION (no Objective Sharpie found). You can download it from $SHARPIE_URL"
+				fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_SHARPIE=1${COLOR_RED} to skip this check."
 			else
 				warn "You do not have Objective Sharpie installed (should be at least $MIN_SHARPIE_VERSION). You can download it from $SHARPIE_URL"
 			fi
@@ -675,6 +726,7 @@ function check_objective_sharpie () {
 			else
 				if test -z $OPTIONAL_SHARPIE; then
 					fail "You must have at least Objective Sharpie $MIN_SHARPIE_VERSION, found $ACTUAL_SHARPIE_VERSION. You can download it from $SHARPIE_URL"
+					fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_SHARPIE=1${COLOR_RED} to skip this check."
 				else
 					warn "You do not have have at least Objective Sharpie $MIN_SHARPIE_VERSION (found $ACTUAL_SHARPIE_VERSION). You can download it from $SHARPIE_URL"
 				fi
@@ -689,6 +741,7 @@ function check_objective_sharpie () {
 			else
 				if test -z $OPTIONAL_SHARPIE; then
 					fail "Your Objective Sharpie version is too new, max version is $MAX_SHARPIE_VERSION, found $ACTUAL_SHARPIE_VERSION. We recommend you download $SHARPIE_URL"
+					fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_SHARPIE=1${COLOR_RED} to skip this check."
 				else
 					warn "You do not have have at most Objective Sharpie $MAX_SHARPIE_VERSION (found $ACTUAL_SHARPIE_VERSION). We recommend you download $SHARPIE_URL"
 				fi

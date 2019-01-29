@@ -24,3 +24,6 @@
 ## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 !missing-protocol-conformance! MDLAsset should conform to NSFastEnumeration
 !missing-protocol-conformance! MDLMaterial should conform to NSFastEnumeration
+
+## deprecated in xcode9 (default one, i.e. `init`, should be identical)
+!missing-selector! MDLTransform::initWithIdentity not bound

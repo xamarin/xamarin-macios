@@ -52,6 +52,7 @@ using System.ComponentModel;
 
 using ObjCRuntime;
 using Foundation;
+using Xamarin.Utils;
 
 public static class GeneratorExtensions
 {
@@ -707,6 +708,7 @@ public class NamespaceManager
 		ImplicitNamespaces.Add (Get ("Foundation"));
 		ImplicitNamespaces.Add (Get ("ObjCRuntime"));
 		ImplicitNamespaces.Add (Get ("CoreGraphics"));
+		ImplicitNamespaces.Add (Get ("CoreML"));
 		ImplicitNamespaces.Add (Get ("SceneKit"));
 
 		if (Frameworks.HaveAudioUnit)
@@ -819,7 +821,7 @@ public partial class Frameworks {
 				frameworks = macosframeworks;
 				break;
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://bugzilla.xamarin.com) with a test case.", Generator.CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", Generator.CurrentPlatform);
 			}
 		}
 
@@ -865,7 +867,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "NSApplication";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
 			}
 		}
 	}
@@ -971,7 +973,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "Quartz";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
 			}
 		}
 	}
@@ -986,7 +988,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "CoreServices";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
 			}
 		}
 	}
@@ -999,7 +1001,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "Quartz";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
 			}
 		}
 	}
@@ -2187,6 +2189,7 @@ public partial class Generator : IMemberGatherer {
 		marshal_types.Add (TypeManager.Class);
 		marshal_types.Add (TypeManager.CFRunLoop);
 		marshal_types.Add (TypeManager.CGColorSpace);
+		marshal_types.Add (TypeManager.DispatchData);
 		marshal_types.Add (TypeManager.DispatchQueue);
 		marshal_types.Add (TypeManager.Protocol);
 		if (Frameworks.HaveCoreMidi)
@@ -2230,7 +2233,11 @@ public partial class Generator : IMemberGatherer {
 		if (Frameworks.HaveAudioUnit)
 			marshal_types.Add (TypeManager.AudioUnit);
 		marshal_types.Add (TypeManager.SecIdentity);
+		marshal_types.Add (TypeManager.SecIdentity2);
 		marshal_types.Add (TypeManager.SecTrust);
+		marshal_types.Add (TypeManager.SecTrust2);
+		marshal_types.Add (TypeManager.SecProtocolOptions);
+		marshal_types.Add (TypeManager.SecProtocolMetadata);
 		marshal_types.Add (TypeManager.SecAccessControl);
 		marshal_types.Add (TypeManager.AudioBuffers);
 		if (Frameworks.HaveAudioUnit) {
@@ -2293,7 +2300,12 @@ public partial class Generator : IMemberGatherer {
 					if (AttributeManager.HasAttribute<CoreImageFilterPropertyAttribute> (pi))
 						continue;
 
-					if (AttributeManager.HasAttribute<WrapAttribute> (pi.GetGetMethod ()) || AttributeManager.HasAttribute<WrapAttribute> (pi.GetSetMethod ()))
+					// Ensure there's a [Wrap] on either (or both) the getter and setter - since we already know there's no [Export]
+					var getMethod = pi.GetGetMethod ();
+					var hasWrapGet = getMethod != null && AttributeManager.HasAttribute<WrapAttribute> (getMethod);
+					var setMethod = pi.GetSetMethod ();
+					var hasWrapSet = setMethod != null && AttributeManager.HasAttribute<WrapAttribute> (setMethod);
+					if (hasWrapGet || hasWrapSet)
 						continue;
 
 					throw new BindingException (1018, true, "No [Export] attribute on property {0}.{1}", t.FullName, pi.Name);
@@ -2378,6 +2390,8 @@ public partial class Generator : IMemberGatherer {
 					else if (attr is AvailabilityBaseAttribute)
 						continue;
 					else if (attr is RequiresSuperAttribute)
+						continue;
+					else if (attr is NoMethodAttribute)
 						continue;
 					else {
 						switch (attr.GetType ().Name) {
@@ -2513,9 +2527,6 @@ public partial class Generator : IMemberGatherer {
 		print ("");
 		print ("[DllImport (\"/usr/lib/libobjc.dylib\")]");
 		print ("static extern IntPtr _Block_copy (IntPtr ptr);");
-		print ("");
-		print ("[DllImport (\"/usr/lib/libobjc.dylib\")]");
-		print ("static extern void _Block_release (IntPtr ptr);");
 
 		while (trampolines.Count > 0){
 			var queue = trampolines.Values.ToArray ();
@@ -2603,7 +2614,7 @@ public partial class Generator : IMemberGatherer {
 			print_generated_code ();
 			print ("~{0} ()", ti.NativeInvokerName);
 			print ("{"); indent++;
-			print ("_Block_release (blockPtr);", ns.CoreObjCRuntime);
+			print ("Runtime.ReleaseBlockOnMainThread (blockPtr);", ns.CoreObjCRuntime);
 			indent--; print ("}");
 			print ("");
 			print ("[Preserve (Conditional=true)]");
@@ -2854,6 +2865,9 @@ public partial class Generator : IMemberGatherer {
 							setter = "SetNativeValue ({0}, value.Dictionary)";
 						} else if (IsWrappedType (pi.PropertyType)){
 							getter = "Dictionary [{0}] as " + pi.PropertyType;
+							setter = "SetNativeValue ({0}, value)";
+						} else if (pi.PropertyType.Name == "CGColorSpace") {
+							getter = "GetNativeValue<" + pi.PropertyType +"> ({0})";
 							setter = "SetNativeValue ({0}, value)";
 						} else {
 							throw new BindingException (1031, true,
@@ -3928,6 +3942,22 @@ public partial class Generator : IMemberGatherer {
 		return mi.GetAvailability (AvailabilityKind.Introduced) ?? pi.GetAvailability (AvailabilityKind.Introduced);
 	}
 
+	bool Is64BitiOSOnly (ICustomAttributeProvider provider)
+	{
+		if (BindThirdPartyLibrary)
+			return false;
+		if (BindingTouch.CurrentPlatform != PlatformName.iOS)
+			return false;
+		var attrib = provider.GetAvailability (AvailabilityKind.Introduced);
+		if (attrib == null) {
+			var minfo = provider as MemberInfo;
+			if (minfo != null && minfo.DeclaringType != null)
+				return Is64BitiOSOnly (minfo.DeclaringType);
+			return false;
+		}
+		return attrib.Version.Major >= 11; 
+	}
+
 	//
 	// Generates the code necessary to lower the MonoTouch-APIs to something suitable
 	// to be passed to Objective-C.
@@ -4066,6 +4096,9 @@ public partial class Generator : IMemberGatherer {
 		if (null_allowed_override)
 			return;
 
+		if (AttributeManager.HasAttribute<NullAllowedAttribute> (mi))
+			ErrorHelper.Show (new BindingException (1118, false, $"[NullAllowed] should not be used on methods, like '{mi}', but only on properties, parameters and return values."));
+
 		foreach (var pi in mi.GetParameters ()) {
 			var needs_null_check = ParameterNeedsNullCheck (pi, mi, propInfo);
 			if (!needs_null_check)
@@ -4110,7 +4143,7 @@ public partial class Generator : IMemberGatherer {
 				print ("global::{0}.NSApplication.EnsureUIThread ();", ns.Get ("AppKit"));
 				break;
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
 		}
 	}
 
@@ -4184,7 +4217,7 @@ public partial class Generator : IMemberGatherer {
 			sane &= by_ref_processing2 [0].ToString () == by_ref_processing2 [1].ToString ();
 			sane &= by_ref_init2 [0].ToString () == by_ref_init2 [1].ToString ();
 			if (!sane)
-				throw new BindingException (1028, "Internal sanity check failed, please file a bug report (http://bugzilla.xamarin.com) with a test case.");
+				throw new BindingException (1028, "Internal sanity check failed, please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.");
 		}
 
 		var convs = convs2 [0];
@@ -4496,7 +4529,7 @@ public partial class Generator : IMemberGatherer {
 	
 	bool DoesPropertyNeedDirtyCheck (PropertyInfo pi, ExportAttribute ea) 
 	{
-		switch (ea.ArgumentSemantic) {
+		switch (ea?.ArgumentSemantic) {
 		case ArgumentSemantic.Copy:
 		case ArgumentSemantic.Retain: // same as Strong
 		case ArgumentSemantic.None:
@@ -4603,7 +4636,9 @@ public partial class Generator : IMemberGatherer {
 				print ("set {");
 				indent++;
 
-				if (minfo.protocolize){
+				var is_protocol_wrapper = UnifiedAPI && IsProtocolInterface (pi.PropertyType, false);
+
+				if (minfo.protocolize || is_protocol_wrapper){
 					print ("var rvalue = value as NSObject;");
 					print ("if (value != null && rvalue == null)");
 					print ("\tthrow new ArgumentException (\"The object passed of type \" + value.GetType () + \" does not derive from NSObject\");");
@@ -4615,7 +4650,7 @@ public partial class Generator : IMemberGatherer {
 					if (IsArrayOfWrappedType (pi.PropertyType))
 						print ("{0} = NSArray.FromNSObjects (value);", wrap);
 					else 
-						print ("{0} = {1}value;", wrap, minfo.protocolize ? "r" : "");
+						print ("{0} = {1}value;", wrap, minfo.protocolize || is_protocol_wrapper ? "r" : "");
 				}
 				indent--;
 				print ("}");
@@ -4738,6 +4773,12 @@ public partial class Generator : IMemberGatherer {
 				print ("get; ");
 			} else {
 				print ("get {");
+				var is32BitNotSupported = Is64BitiOSOnly (pi);
+				if (is32BitNotSupported) {
+					print ("#if ARCH_32");
+					print ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+					print ("#else");
+				}
 				if (debug)
 					print ("Console.WriteLine (\"In {0}\");", pi.GetGetMethod ());
 				if (is_model)
@@ -4762,13 +4803,18 @@ public partial class Generator : IMemberGatherer {
 						indent--;
 					}
 				}
+				if (is32BitNotSupported)
+					print ("#endif");
 				print ("}\n");
 			}
 		}
 		if (pi.CanWrite){
 			var setter = pi.GetSetMethod ();
 			var ba = GetBindAttribute (setter);
-			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pi) || AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
+			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
+			if (null_allowed)
+				ErrorHelper.Show (new BindingException (1118, false, $"[NullAllowed] should not be used on methods, like '{setter}', but only on properties, parameters and return values."));
+			null_allowed |= AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 			var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 			string sel;
 
@@ -4778,6 +4824,7 @@ public partial class Generator : IMemberGatherer {
 				sel = ba.Selector;
 			}
 
+			PrintBlockProxy (pi.PropertyType);
 			PrintAttributes (pi, platform:true);
 
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
@@ -4788,6 +4835,12 @@ public partial class Generator : IMemberGatherer {
 				print ("set; ");
 			} else {
 				print ("set {");
+				var is32BitNotSupported = Is64BitiOSOnly (pi);
+				if (is32BitNotSupported) {
+					print ("#if ARCH_32");
+					print ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+					print ("#else");
+				}
 				if (debug)
 					print ("Console.WriteLine (\"In {0}\");", pi.GetSetMethod ());
 
@@ -4813,6 +4866,8 @@ public partial class Generator : IMemberGatherer {
 						}
 					}
 				}
+				if (is32BitNotSupported)
+					print ("#endif");
 				print ("}");
 			}
 		}
@@ -5101,6 +5156,15 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	void PrintBlockProxy (Type type)
+	{
+		type = GetCorrectGenericType (type);
+		if (type.IsSubclassOf (TypeManager.System_Delegate)) {
+			var ti = MakeTrampoline (type);
+			print ("[param: BlockProxy (typeof ({0}.Trampolines.{1}))]", ns.CoreObjCRuntime, ti.NativeInvokerName);
+		}
+	}
+
 	void PrintExport (MemberInformation minfo)
 	{
 		if (minfo.is_export)
@@ -5155,6 +5219,13 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		PrintDelegateProxy (minfo);
+
+		if (AttributeManager.HasAttribute<NoMethodAttribute>(minfo.mi)){
+			// Call for side effect
+			MakeSignature (minfo);
+			return;
+		}
+		
 		PrintExport (minfo);
 
 		if (!minfo.is_interface_impl) {
@@ -5180,6 +5251,13 @@ public partial class Generator : IMemberGatherer {
 			}
 
 			print ("{");
+
+			var is32BitNotSupported = Is64BitiOSOnly ((ICustomAttributeProvider) minfo.method ?? minfo.property);
+			if (is32BitNotSupported) {
+				print ("#if ARCH_32");
+				print ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+				print ("#else");
+			}
 			if (debug)
 				print ("\tConsole.WriteLine (\"In {0}\");", mi);
 					
@@ -5198,12 +5276,24 @@ public partial class Generator : IMemberGatherer {
 					indent++;
 					print ("using (var autorelease_pool = new NSAutoreleasePool ()) {");
 				}
-				GenerateMethodBody (minfo, minfo.method, minfo.selector, false, null, BodyOption.None, null);
+				PropertyInfo pinfo = null;
+				MethodInfo method = minfo.method;
+				bool null_allowed = false;
+				if (method.IsSpecialName) {
+					// could be a property setter where [NullAllowed] is _allowed_
+					// we do not need the information if it's a getter (it won't change generated code)
+					pinfo = GetProperty (method, getter: false, setter: true);
+					if (pinfo != null)
+						null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pinfo);
+				}
+				GenerateMethodBody (minfo, minfo.method, minfo.selector, null_allowed, null, BodyOption.None, null);
 				if (minfo.is_autorelease) {
 					print ("}");
 					indent--;
 				}
 			}
+			if (is32BitNotSupported)
+				print ("#endif");
 			print ("}\n");
 		}
 
@@ -5222,7 +5312,16 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 	}
-	
+
+	static PropertyInfo GetProperty (MethodInfo method, bool getter = true, bool setter = true)
+	{
+		var props = method.DeclaringType.GetProperties ();
+		if (method.GetParameters ().Length == 0)
+			return !getter ? null : props.FirstOrDefault (prop => prop.GetGetMethod () == method);
+		else
+			return !setter ? null : props.FirstOrDefault (prop => prop.GetSetMethod () == method);
+	}
+
 	public string GetGeneratedTypeName (Type type)
 	{
 		var bindOnType = AttributeManager.GetCustomAttributes<BindAttribute> (type);
@@ -5418,8 +5517,14 @@ public partial class Generator : IMemberGatherer {
 			sb.Append (", IsStatic = ").Append (AttributeManager.HasAttribute<StaticAttribute> (mi) ? "true" : "false");
 			sb.Append (", Name = \"").Append (mi.Name).Append ("\"");
 			sb.Append (", Selector = \"").Append (attrib.Selector).Append ("\"");
-			if (mi.ReturnType != TypeManager.System_Void)
-				sb.Append (", ReturnType = typeof (").Append (RenderType (GetCorrectGenericType (mi.ReturnType))).Append(")");
+			if (mi.ReturnType != TypeManager.System_Void) {
+				var retType = GetCorrectGenericType (mi.ReturnType);
+				sb.Append (", ReturnType = typeof (").Append (RenderType (retType)).Append (")");
+				if (retType.IsSubclassOf (TypeManager.System_Delegate)) {
+					var ti = MakeTrampoline (retType);
+					sb.Append ($", ReturnTypeDelegateProxy = typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.StaticName})");
+				}
+			}
 			var parameters = mi.GetParameters ();
 			if (parameters != null && parameters.Length > 0) {
 				sb.Append (", ParameterType = new Type [] { ");
@@ -5441,6 +5546,27 @@ public partial class Generator : IMemberGatherer {
 					sb.Append (parameters [i].ParameterType.IsByRef ? "true" : "false");
 				}
 				sb.Append (" }");
+
+				var blockProxies = new string [parameters.Length];
+				var anyblockProxy = false;
+				for (int i = 0; i < parameters.Length; i++) {
+					var parType = GetCorrectGenericType (parameters [i].ParameterType);
+					if (parType.IsSubclassOf (TypeManager.System_Delegate)) {
+						var ti = MakeTrampoline (parType);
+						blockProxies [i] = $"typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.NativeInvokerName})";
+						anyblockProxy = true;
+					}
+				}
+				if (anyblockProxy) {
+					sb.Append (", ParameterBlockProxy = new Type [] { ");
+					for (int i = 0; i < blockProxies.Length; i++) {
+						if (i > 0)
+							sb.Append (", ");
+						sb.Append (blockProxies [i] == null ? "null" : blockProxies [i]);
+					}
+					sb.Append (" }");
+				}
+
 				if (attrib.IsVariadic)
 					sb.Append (", IsVariadic = true");
 			}
@@ -5468,6 +5594,15 @@ public partial class Generator : IMemberGatherer {
 				sb.Append (", SetterSelector = \"").Append (ba != null ? ba.Selector : ea.Selector).Append ("\"");
 			}
 			sb.Append (", ArgumentSemantic = ArgumentSemantic.").Append (attrib.ArgumentSemantic);
+			// Check for block/delegate proxies
+			var propType = GetCorrectGenericType (pi.PropertyType);
+			if (propType.IsSubclassOf (TypeManager.System_Delegate)) {
+				var ti = MakeTrampoline (propType);
+				if (pi.SetMethod != null)
+					sb.Append ($", ParameterBlockProxy = new Type [] {{ typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.NativeInvokerName}) }}");
+				if (pi.GetMethod != null)
+					sb.Append ($", ReturnTypeDelegateProxy = typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.StaticName})");
+			}
 			sb.Append (")]");
 			print (sb.ToString ());
 		}
@@ -5544,6 +5679,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			if (pi.CanWrite) {
 				var setMethod = pi.GetSetMethod ();
+				PrintBlockProxy (pi.PropertyType);
 				PrintAttributes (setMethod, notImplemented:true);
 				if (!AttributeManager.HasAttribute<NotImplementedAttribute> (setMethod))
 					PrintExport (minfo, GetSetterExportAttribute (pi));
@@ -5794,7 +5930,11 @@ public partial class Generator : IMemberGatherer {
 				// it is a path to a library, so we save the path and change library name
 				// to a valid identifier if needed
 				library_path = library_name;
-				library_name = Path.GetFileName (library_name);
+				if (BindThirdPartyLibrary /* without extension makes more sense, but we can't change it since it breaks compat */) {
+					library_name = Path.GetFileName (library_name);
+				} else {
+					library_name = Path.GetFileNameWithoutExtension (library_name);
+				}
 				if (library_name.Contains ("."))
 					library_name = library_name.Replace (".", string.Empty);
 			}
@@ -5833,6 +5973,13 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	static string GetAssemblyName ()
+	{
+		if (BindThirdPartyLibrary)
+			return Path.GetFileNameWithoutExtension (BindingTouch.outfile);
+		return BindingTouch.TargetFramework.Identifier;
+	}
+
 	public void Generate (Type type)
 	{
 		if (!Compat && ZeroCopyStrings) {
@@ -5864,7 +6011,8 @@ public partial class Generator : IMemberGatherer {
 			bool is_category_class = AttributeManager.HasAttribute<CategoryAttribute> (type);
 			bool is_static_class = AttributeManager.HasAttribute<StaticAttribute> (type) || is_category_class;
 			bool is_partial = AttributeManager.HasAttribute<PartialAttribute> (type);
-			bool is_model = AttributeManager.HasAttribute<ModelAttribute> (type);
+			var model = AttributeManager.GetCustomAttribute<ModelAttribute> (type);
+			bool is_model = model != null;
 			var protocol = AttributeManager.GetCustomAttribute<ProtocolAttribute> (type);
 			bool is_protocol = protocol != null;
 			bool is_abstract = AttributeManager.HasAttribute<AbstractAttribute> (type);
@@ -5875,6 +6023,15 @@ public partial class Generator : IMemberGatherer {
 			BaseTypeAttribute bta = ReflectionExtensions.GetBaseTypeAttribute(type);
 			Type base_type = bta != null ?  bta.BaseType : TypeManager.System_Object;
 			string objc_type_name = bta != null ? (bta.Name != null ? bta.Name : TypeName) : TypeName;
+			string register_name = objc_type_name;
+
+			if (is_model) {
+				if (!string.IsNullOrEmpty (model.Name)) {
+					register_name = model.Name;
+				} else if (model.AutoGeneratedName) {
+					register_name = StringUtils.SanitizeObjectiveCName (GetAssemblyName () + "__" + type.FullName);
+				}
+			}
 			Header (sw);
 			
 			if (is_protocol) {
@@ -5916,7 +6073,7 @@ public partial class Generator : IMemberGatherer {
 						is_direct_binding = false;
 						is_direct_binding_value = "false";
 					}
-					print ("[Register(\"{0}\", {1})]", objc_type_name, is_direct_binding == false ? "false" : "true");
+					print ("[Register(\"{0}\", {1})]", register_name, is_direct_binding == false ? "false" : "true");
 				}
 				if (is_abstract || need_abstract.ContainsKey (type))
 					class_mod = "abstract ";
@@ -6086,6 +6243,7 @@ public partial class Generator : IMemberGatherer {
 					var initSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"init\")" : "Selector.Init";
 					var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"initWithCoder:\")" : "Selector.InitWithCoder";
 					string v = UnifiedAPI && class_mod == "abstract " ? "protected" : ctor_visibility;
+					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
@@ -6097,12 +6255,19 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
+							if (is32BitNotSupported) {
+								sw.WriteLine ("\t\t#if ARCH_32");
+								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+								sw.WriteLine ("\t\t#else");
+							}
 							if (is_direct_binding_value != null)
 								sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 							if (debug)
 								sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor ()\");", TypeName);
 							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime);
 							sw.WriteLine ("\t\t\t");
+							if (is32BitNotSupported)
+								sw.WriteLine ("\t\t#endif");
 							sw.WriteLine ("\t\t}");
 						}
 					} else {
@@ -6116,12 +6281,19 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
+							if (is32BitNotSupported) {
+								sw.WriteLine ("\t\t#if ARCH_32");
+								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+								sw.WriteLine ("\t\t#else");
+							}
 							var indentation = 3;
 							WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
 							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime),
 							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime));
 
 							WriteMarkDirtyIfDerived (sw, type);
+							if (is32BitNotSupported)
+								sw.WriteLine ("\t\t#endif");
 							sw.WriteLine ("\t\t}");
 							sw.WriteLine ();
 						}
@@ -6138,6 +6310,11 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t[Export (\"initWithCoder:\")]");
 							sw.WriteLine ("\t\t{0} {1} (NSCoder coder) : base (NSObjectFlag.Empty)", UnifiedAPI ? v : "public", TypeName);
 							sw.WriteLine ("\t\t{");
+							if (is32BitNotSupported) {
+								sw.WriteLine ("\t\t#if ARCH_32");
+								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+								sw.WriteLine ("\t\t#else");
+							}
 							if (nscoding) {
 								if (debug)
 									sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor (NSCoder)\");", TypeName);
@@ -6150,6 +6327,8 @@ public partial class Generator : IMemberGatherer {
 							} else {
 								sw.WriteLine ("\t\t\tthrow new InvalidOperationException (\"Type does not conform to NSCoding\");");
 							}
+							if (is32BitNotSupported)
+								sw.WriteLine ("\t\t#endif");
 							sw.WriteLine ("\t\t}");
 							sw.WriteLine ();
 						}
@@ -6159,9 +6338,16 @@ public partial class Generator : IMemberGatherer {
 						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 						sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
 						sw.WriteLine ("\t\t{");
+						if (is32BitNotSupported) {
+							sw.WriteLine ("\t\t#if ARCH_32");
+							sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+							sw.WriteLine ("\t\t#else");
+						}
 						if (is_direct_binding_value != null)
 							sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 						WriteMarkDirtyIfDerived (sw, type);
+						if (is32BitNotSupported)
+							sw.WriteLine ("\t\t#endif");
 						sw.WriteLine ("\t\t}");
 						sw.WriteLine ();
 					}
@@ -6169,8 +6355,15 @@ public partial class Generator : IMemberGatherer {
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					sw.WriteLine ("\t\t{0} {1} (IntPtr handle) : base (handle)", UnifiedAPI ? "protected internal" : "public", TypeName);
 					sw.WriteLine ("\t\t{");
+					if (is32BitNotSupported) {
+						sw.WriteLine ("\t\t#if ARCH_32");
+						sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+						sw.WriteLine ("\t\t#else");
+					}
 					if (is_direct_binding_value != null)
 						sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
+					if (is32BitNotSupported)
+						sw.WriteLine ("\t\t#endif");
 					WriteMarkDirtyIfDerived (sw, type);
 					sw.WriteLine ("\t\t}");
 					sw.WriteLine ();

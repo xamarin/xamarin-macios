@@ -897,6 +897,7 @@
             </attributes>
             <interfaces>
               <interface name="Foundation.INSCoding" />
+              <interface name="Foundation.INSExtensionRequestHandling" />
               <interface name="Foundation.INSObjectProtocol" />
               <interface name="ObjCRuntime.INativeObject" />
               <interface name="System.Collections.IEnumerable" />
@@ -910,6 +911,7 @@
               <interface name="UIKit.IUITableViewDataSource" />
               <interface name="UIKit.IUITableViewDelegate" />
               <interface name="UIKit.IUITraitEnvironment" />
+              <interface name="UIKit.IUIUserActivityRestoring" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(MonoTouch.Dialog.RootElement)" attrib="6278">

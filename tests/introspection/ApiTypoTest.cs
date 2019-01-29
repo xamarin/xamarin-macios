@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -36,6 +37,7 @@ using UIKit;
 using Foundation;
 #else
 #if MONOMAC
+using MonoMac;
 using MonoMac.AppKit;
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
@@ -62,6 +64,10 @@ namespace Introspection
 			return SkipAllowed (methodName.DeclaringType.Name, methodName.Name, typo);
 		}
 
+		readonly HashSet<string> allowedRule3 = new HashSet<string> {
+			"IARAnchorCopying", // We're showing a code snippet in the 'Advice' message and that shouldn't end with a dot.
+		};
+
 		HashSet<string> allowedMemberRule4 = new HashSet<string> {
 			"Platform",
 			"PlatformHelper",
@@ -79,6 +85,7 @@ namespace Introspection
 			"Actionname",
 			"Activitiy",
 			"Addin",
+			"Addl",
 			"Addr",
 			"Adjustmentfor",
 			"Aifc",
@@ -89,9 +96,9 @@ namespace Introspection
 			"Amete",
 			"Amr",
 			"Anglet",
+			"Aps",
 			"Arraycollation",
 			"Argb",
-			"Asal",
 			"Asin",
 			"Atan",
 			"Ats",	// App Transport Security
@@ -105,6 +112,7 @@ namespace Introspection
 			"Autospace",
 			"Autostarts",
 			"Avci", // file type
+			"Avb", // acronym: Audio Video Bridging
 			"Aliasable",
 			"Arcball",
 			"Avg",
@@ -123,6 +131,7 @@ namespace Introspection
 			"Bggr", // acronym for Blue, Green, Green, Red 
 			"Bsln",
 			"Bssid",
+			"Btle", // Bluetooth Low Energy
 			"Bzip",
 			"Cabac",
 			"Caf", // acronym: Core Audio Format
@@ -130,11 +139,13 @@ namespace Introspection
 			"Cartes", // french
 			"Cavlc",
 			"Cda", // acronym: Clinical Document Architecture
+			"Cfa", // acronym: Color Filter Array
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
 			"Chapv",
 			"Cholesky",
 			"Chromaticities",
+			"Ciexyz",
 			"Ciff",
 			"Cinepak",
 			"Clearcoat",
@@ -150,6 +161,7 @@ namespace Introspection
 			"Craete",
 			"Crosstraining",
 			"Cubemap",
+			"Cmy", // acronym: Cyan, magenta, yellow
 			"Cmyk", // acronym: Cyan, magenta, yellow and key
 			"Daap",
 			"Dav",
@@ -175,6 +187,7 @@ namespace Introspection
 			"Dns",
 			"Dont",
 			"Dop",
+			"Dopesheet",
 			"Downsample",
 			"Downmix", // Sound terminology that means making a stereo mix from a 5.1 surround mix.
 			"Dpa",
@@ -189,16 +202,24 @@ namespace Introspection
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
+			"Ecn",   // Explicit Congestion Notification
+			"Ect",   // ECN Capable Transport
 			"Editability", 
 			"Eof", // acronym End-Of-File
 			"Elu",
 			"Emagic",
 			"Emaili",
+			"Embd",
+			"Enc",
 			"Eppc",
+			"Eftpos", // Electronic funds transfer at point of sale
 			"Exhange",
 			"Exp",
+			"Expr",
+			"Exr",
 			"Felica", // Japanese contactless RFID smart card system
 			"Femtowatts",
+			"Fhir",
 			"Flipside",
 			"Formati",
 			"Fov",
@@ -212,11 +233,13 @@ namespace Introspection
 			"Gbrg",	// acronym for Green-Blue-Reg-Green
 			"Geocoder",
 			"Gigapascals",
+			"Gop", // acronym for Group Of Pictures
 			"Gpp",
 			"Gps",
 			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
 			"Greeking",
+			"Gtin",
 			"Hardlink",
 			"Hdmi",
 			"Hdr",
@@ -234,6 +257,7 @@ namespace Introspection
 			"Hvxc", // MPEG4ObjectID
 			"Ies",
 			"Icq",
+			"Ident",
 			"Identd",
 			"Imageblock",
 			"Imagefor",
@@ -241,6 +265,7 @@ namespace Introspection
 			"Imaps",
 			"Img",
 			"Impl", // BindingImplAttribute
+			"Inv",
 			"Indoorrun",
 			"Indoorcycle",
 			"Inklist",
@@ -248,6 +273,7 @@ namespace Introspection
 			"Indoorwalk",
 			"Inode",
 			"Inser",
+			"Instamatic",
 			"Interac",
 			"Interframe",
 			"Interitem",
@@ -258,10 +284,12 @@ namespace Introspection
 			"Ipp",
 			"Iptc",
 			"Ircs",
+			"Iso",
 			"Itf",
 			"Itu",
 			"Jcb", // Japanese credit card company
 			"Jfif",
+			"Jis",
 			"Json",
 			"Keyerror",
 			"Keyi",
@@ -279,11 +307,15 @@ namespace Introspection
 			"Lerp",
 			"Linecap",
 			"Lingustic",
+			"libcompression",
+			"libdispatch",
 			"Lod",
 			"Lopass",
 			"Lowlevel",
 			"Lun",
 			"Luma",
+			"Lzfse", // acronym
+			"Lzma", // acronym
 			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",
@@ -337,11 +369,10 @@ namespace Introspection
 			"Ocsp", // Online Certificate Status Protocol
 			"Octree",
 			"Oid",
-			"Olus",
 			"Oneup", // TVElementKeyOneupTemplate
+			"Organisation", // kCGImagePropertyIPTCExtRegistryOrganisationID in Xcode9.3-b1
 			"Orthographyrange",
 			"Orth",
-			"Ostprandial",
 			"ove",
 			"Paeth", // PNG filter
 			"Parms", // short for Parameters
@@ -371,7 +402,10 @@ namespace Introspection
 			"Propogate",
 			"Psec",
 			"Psm", // Protocol/Service Multiplexer
+			"Psk",
+			"Ptp",
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
+			"Qos",
 			"Quaterniond",
 			"Quadding",
 			"Qura",
@@ -380,6 +414,7 @@ namespace Introspection
 			"Reinvitation",
 			"Reinvite",
 			"Rel",
+			"Relocalization",
 			"Reprandial",
 			"Replayable",
 			"Requestwith",
@@ -398,6 +433,7 @@ namespace Introspection
 			"Rtl",
 			"Rtsp",
 			"Saml", // acronym
+			"Sdof",
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision
@@ -430,6 +466,7 @@ namespace Introspection
 			"Subentities",
 			"Subheadline",
 			"Sublocality",
+			"Sublocation",
 			"Submesh",
 			"Submeshes",
 			"Subpixel",
@@ -460,12 +497,14 @@ namespace Introspection
 			"Trc",
 			"Truncantion",
 			"Tweening",
+			"Twips",
 			"tx",
 			"ty",
 			"Udi",
 			"Udp",
 			"Unconfigured",
 			"Undecodable",
+			"Unemphasized",
 			"Underrun",
 			"Unflagged",
 			"Unfocusing",
@@ -501,10 +540,13 @@ namespace Introspection
 			"Yzx",
 			"Zxy",
 			"Zyx",
+			"Yuv",
+			"Yuvk",
 			"yuvs",
 			"yx",
 			"yy",
 			"Yyy",
+			"Zlib",
 #if !XAMCORE_2_0
 			// classic only mistakes - that should not change anymore
 			"Timetime",
@@ -539,6 +581,7 @@ namespace Introspection
 #if MONOMAC
 			"Abbr",
 			"Accum",
+			"Ack", // TcpSetDisableAckStretching
 			"Addin",
 			"Addons",
 			"Appactive",
@@ -562,7 +605,9 @@ namespace Introspection
 			"Descriptorfor",
 			"Dimensionsfor",
 			"Dissapearing",
+			"Distinguised", // ITLibPlaylistPropertyDistinguisedKind
 			"Dirs",
+			"Drm", // MediaItemProperty.IsDrmProtected 
 			"Editability",
 			"Eisu",
 			"Entryat",
@@ -761,13 +806,17 @@ namespace Introspection
 #endif
 #if !XAMCORE_4_0
 			"Actionfrom",
+			"Asal", // Typo, should be 'Basal', fixed in 'HKInsulinDeliveryReason'
 			"Attributefor",
 			"Attributest",
 			"Failwith",
 			"Imageimage",
 			"Musthold",
+			"Olus", // Typo, should be 'Bolus', fixed in 'HKInsulinDeliveryReason'
+			"Ostprandial", // Typo, should be 'Postprandial', fixed in 'HKBloodGlucoseMealTime'
 			"Pathpath",
 			"Rangefor",
+			"Reprandial", // Typo, should be 'Preprandial', fixed in 'HKBloodGlucoseMealTime'
 			"Failwith",
 			"Tearm",
 			"Theevent",
@@ -801,7 +850,7 @@ namespace Introspection
 		}
 
 		[Test]
-		public void TypoTest ()
+		public virtual void TypoTest ()
 		{
 			var types = Assembly.GetTypes ();
 			int totalErrors = 0;
@@ -813,7 +862,7 @@ namespace Introspection
 						continue;
 
 					string txt = NameCleaner (t.Name);
-					var typo = GetTypo (txt);
+					var typo = GetCachedTypo (txt);
 					if (typo.Length > 0 ) {
 						if (!Skip (t, typo)) {
 							ReportError ("Typo in TYPE: {0} - {1} ", t.Name, typo);
@@ -832,7 +881,7 @@ namespace Introspection
 							continue;
 						
 						txt = NameCleaner (f.Name);
-						typo = GetTypo (txt);
+						typo = GetCachedTypo (txt);
 						if (typo.Length > 0) {
 							if (!Skip (f, typo)) {
 								ReportError ("Typo in FIELD name: {0} - {1}, Type: {2}", f.Name, typo, t.Name);
@@ -852,7 +901,7 @@ namespace Introspection
 							continue;
 						
 						txt = NameCleaner (m.Name);
-						typo = GetTypo (txt);
+						typo = GetCachedTypo (txt);
 						if (typo.Length > 0) {
 							if (!Skip (m, typo)) {
 								ReportError ("Typo in METHOD name: {0} - {1}, Type: {2}", m.Name, typo, t.Name);
@@ -863,7 +912,7 @@ namespace Introspection
 						var parameters = m.GetParameters ();
 						foreach (ParameterInfo p in parameters) {
 							txt = NameCleaner (p.Name);
-							typo = GetTypo (txt);
+							typo = GetCachedTypo (txt);
 							if (typo.Length > 0) {
 								ReportError ("Typo in PARAMETER Name: {0} - {1}, Method: {2}, Type: {3}", p.Name, typo, m.Name, t.Name);
 								totalErrors++;
@@ -924,8 +973,10 @@ namespace Introspection
 
 					// Rule 3: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-3
 					if (!message.EndsWith (".", StringComparison.Ordinal)) {
-						ReportError ("[Rule 3] Missing '.' in attribute's message: \"{0}\" - {1}", message, memberAndType);
-						totalErrors++;
+						if (!allowedRule3.Contains (typeName)) {
+							ReportError ("[Rule 3] Missing '.' in attribute's message: \"{0}\" - {1}", message, memberAndType);
+							totalErrors++;
+						}
 					}
 
 					// Rule 4: https://github.com/xamarin/xamarin-macios/wiki/BINDINGS#rule-4
@@ -949,6 +1000,14 @@ namespace Introspection
 			}
 		}
 
+		Dictionary<string, string> cached_typoes = new Dictionary<string, string> ();
+		string GetCachedTypo (string txt)
+		{
+			string rv;
+			if (!cached_typoes.TryGetValue (txt, out rv))
+				cached_typoes [txt] = rv = GetTypo (txt);
+			return rv;
+		}
 		public abstract string GetTypo (string txt);
 
 		static StringBuilder clean = new StringBuilder ();
@@ -977,6 +1036,82 @@ namespace Introspection
 				}
 			}
 			return clean.ToString ();
+		}
+
+		bool CheckLibrary (string lib)
+		{
+#if MONOMAC
+			// on macOS the file should exist on the specified path
+			// for iOS the simulator paths do not match the strings
+			switch (lib) {
+			// location changed in 10.8 but it loads fine (and fixing it breaks on earlier macOS)
+			case Constants.CFNetworkLibrary:
+			// location changed in 10.10 but it loads fine (and fixing it breaks on earlier macOS)
+			case Constants.CoreBluetoothLibrary:
+			// location changed in 10.11 but it loads fine (and fixing it breaks on earlier macOS)
+			case Constants.CoreImageLibrary:
+				break;
+			default:
+				if (!File.Exists (lib))
+					return false;
+				break;
+			}
+#endif
+			var h = IntPtr.Zero;
+			try {
+				h = Dlfcn.dlopen (lib, 0);
+				if (h != IntPtr.Zero)
+					return true;
+#if MONOMAC
+				// on macOS it might be wrong architecture
+				// i.e. 64 bits only (thin) libraries running on 32 bits process
+				if (IntPtr.Size == 4)
+					return true;
+#endif
+			} finally {
+				Dlfcn.dlclose (h);
+			}
+			return false;
+		}
+
+		[Test]
+		public void ConstantsCheck ()
+		{
+			var c = typeof (Constants);
+			foreach (var fi in c.GetFields ()) {
+				if (!fi.IsPublic)
+					continue;
+				var s = fi.GetValue (null) as string;
+				switch (fi.Name) {
+				case "Version":
+				case "SdkVersion":
+					Assert.True (Version.TryParse (s, out _), fi.Name);
+					break;
+#if !XAMCORE_4_0
+#if __TVOS__
+				case "PassKitLibrary": // not part of tvOS
+					break;
+#endif
+				case "libcompression": // bad (missing) suffix
+					Assert.True (CheckLibrary (s), fi.Name);
+					break;
+#endif
+#if __TVOS__
+				case "MetalPerformanceShadersLibrary":
+					// not supported in tvOS (12.1) simulator so load fails
+					if (Runtime.Arch == Arch.SIMULATOR)
+						break;
+					goto default;
+#endif
+				default:
+					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
+						Assert.True (CheckLibrary (s), fi.Name);
+					} else {
+						Assert.Fail ($"Unknown '{fi.Name}' field cannot be verified - please fix me!");
+					}
+					break;
+				}
+			}
 		}
 	}
 }

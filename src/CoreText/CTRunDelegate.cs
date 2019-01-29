@@ -25,7 +25,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -37,24 +36,15 @@ namespace CoreText {
 
 #region Run Delegate Callbacks
 	delegate void CTRunDelegateDeallocateCallback (IntPtr refCon);
-	delegate float CTRunDelegateGetAscentCallback (IntPtr refCon);
-	delegate float CTRunDelegateGetDescentCallback (IntPtr refCon);
-	delegate float CTRunDelegateGetWidthCallback (IntPtr refCon);
+	delegate nfloat CTRunDelegateGetCallback (IntPtr refCon);
 
 	[StructLayout (LayoutKind.Sequential)]
 	class CTRunDelegateCallbacks {
-		public CTRunDelegateVersion             version;
-		public CTRunDelegateDeallocateCallback  dealloc;
-		public CTRunDelegateGetAscentCallback   getAscent;
-		public CTRunDelegateGetDescentCallback  getDescent;
-		public CTRunDelegateGetWidthCallback    getWidth;
-	}
-#endregion
-
-#region Run Delegate Versions
-	enum CTRunDelegateVersion {
-		Version1        = 1,
-		CurrentVersion  = Version1,
+		public /* CFIndex */ nint version;
+		public CTRunDelegateDeallocateCallback dealloc;
+		public CTRunDelegateGetCallback getAscent;
+		public CTRunDelegateGetCallback getDescent;
+		public CTRunDelegateGetCallback getWidth;
 	}
 #endregion
 
@@ -88,6 +78,22 @@ namespace CoreText {
 		}
 #endif
 
+#if XAMCORE_4_0
+		public virtual nfloat GetAscent ()
+		{
+			return 0;
+		}
+
+		public virtual nfloat GetDescent ()
+		{
+			return 0;
+		}
+
+		public virtual nfloat GetWidth ()
+		{
+			return 0;
+		}
+#else
 		public virtual float GetAscent ()
 		{
 			return 0.0f;
@@ -102,30 +108,17 @@ namespace CoreText {
 		{
 			return 0.0f;
 		}
+#endif
 
 		internal CTRunDelegateCallbacks GetCallbacks ()
 		{
 			var callbacks = new CTRunDelegateCallbacks () {
-				version = CTRunDelegateVersion.Version1,
+				version = 1, // kCTRunDelegateVersion1
 				dealloc = Deallocate,
+				getAscent = GetAscent,
+				getDescent = GetDescent,
+				getWidth = GetWidth,
 			};
-
-			var flags = BindingFlags.Public | BindingFlags.Instance;
-			MethodInfo m;
-
-			if ((m = this.GetType ().GetMethod ("GetAscent", flags)) != null &&
-					m.DeclaringType != typeof (CTRunDelegateOperations)) {
-				callbacks.getAscent = GetAscent;
-			}
-			if ((m = this.GetType ().GetMethod ("GetDescent", flags)) != null &&
-					m.DeclaringType != typeof (CTRunDelegateOperations)) {
-				callbacks.getDescent = GetDescent;
-			}
-			if ((m = this.GetType ().GetMethod ("GetWidth", flags)) != null &&
-					m.DeclaringType != typeof (CTRunDelegateOperations)) {
-				callbacks.getWidth = GetWidth;
-			}
-
 			return callbacks;
 		}
 
@@ -150,31 +143,31 @@ namespace CoreText {
 			return c.Target as CTRunDelegateOperations;
 		}
 
-		[MonoPInvokeCallback (typeof (CTRunDelegateGetAscentCallback))]
-		static float GetAscent (IntPtr refCon)
+		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
+		static nfloat GetAscent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
-				return 0.0f;
-			return self.GetAscent ();
+				return 0;
+			return (nfloat) self.GetAscent ();
 		}
 
-		[MonoPInvokeCallback (typeof (CTRunDelegateGetDescentCallback))]
-		static float GetDescent (IntPtr refCon)
+		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
+		static nfloat GetDescent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
-				return 0.0f;
-			return self.GetDescent ();
+				return 0;
+			return (nfloat) self.GetDescent ();
 		}
 
-		[MonoPInvokeCallback (typeof (CTRunDelegateGetWidthCallback))]
-		static float GetWidth (IntPtr refCon)
+		[MonoPInvokeCallback (typeof (CTRunDelegateGetCallback))]
+		static nfloat GetWidth (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
 			if (self == null)
-				return 0.0f;
-			return self.GetWidth ();
+				return 0;
+			return (nfloat) self.GetWidth ();
 		}
 	}
 
@@ -218,12 +211,15 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTRunDelegateCreate (CTRunDelegateCallbacks callbacks, IntPtr refCon);
 
+		CTRunDelegateCallbacks callbacks; // prevent GC since they are called from native code
+
 		public CTRunDelegate (CTRunDelegateOperations operations)
 		{
 			if (operations == null)
 				throw ConstructorError.ArgumentNull (this, "operations");
 
-			handle = CTRunDelegateCreate (operations.GetCallbacks (), GCHandle.ToIntPtr (operations.handle));
+			callbacks = operations.GetCallbacks ();
+			handle = CTRunDelegateCreate (callbacks, GCHandle.ToIntPtr (operations.handle));
 			if (handle == IntPtr.Zero)
 				throw ConstructorError.Unknown (this);
 		}

@@ -25,6 +25,9 @@ Usage: configure [options]
 
     --enable-xamarin        Enable additional Xamarin-specific parts of the build.
 
+    --disable-packaged-llvm Compile LLVM instead of downloading a precompiled version.
+
+    --disable-packaged-mono Compile Mono from source instead of downloading a precompiled version.
 EOL
 }
 
@@ -83,6 +86,14 @@ while test x$1 != x; do
 		echo "ENABLE_BITCODE_ON_IOS=1" >> $CONFIGURED_FILE
 		shift
 		;;
+	--disable-packaged-llvm)
+		echo "DISABLE_DOWNLOAD_LLVM=1" >> $CONFIGURED_FILE
+		shift
+		;;
+    --disable-packaged-mono)
+        echo "MONO_BUILD_FROM_SOURCE=1" >> "$CONFIGURED_FILE"
+        shift
+        ;;
 	--help|-h)
 		show_help
 		exit 0

@@ -125,8 +125,8 @@ MONO_API <#= export.ReturnType #>
 {
 <# if (export.Optional) { #>
 	if (<#= export.EntryPoint #>_func == NULL)
-<# if (!string.IsNullOrEmpty (export.AlternativeEntryPoint)) { #>
-		return <#= export.AlternativeEntryPoint #> (<#= export.ArgumentNames #>);
+<# if (!string.IsNullOrEmpty (export.AlternativeExpression)) { #>
+		<#= export.AlternativeExpression #>
 <# } else {#>
 		xamarin_assertion_message ("Could not load <#= export.EntryPoint #>\n");
 <# } #>
@@ -147,5 +147,5 @@ bool
 
 <# } #>
 #else
-int fix_ranlib_warning_about_no_symbols;
+int xamarin_fix_ranlib_warning_about_no_symbols;
 #endif /* DYNAMIC_MONO_RUNTIME */

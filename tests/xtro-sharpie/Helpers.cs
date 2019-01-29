@@ -8,8 +8,16 @@ using Mono.Cecil;
 using Clang.Ast;
 
 namespace Extrospection {
-	
-	public static class Helpers {
+
+	public enum Platforms
+	{
+		macOS,
+		iOS,
+		watchOS,
+		tvOS,
+	}
+
+	public static partial class Helpers {
 
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
@@ -55,15 +63,43 @@ namespace Extrospection {
 			return index < 0 ? source : source.Substring (0, index) + replace + source.Substring (index + find.Length);
 		}
 
-		public enum Platforms
+		public static Platforms Platform { get; set; }
+
+		public static int GetPlatformManagedValue (Platforms platform)
 		{
-			macOS,
-			iOS,
-			watchOS,
-			tvOS,
+			// None, MacOSX, iOS, WatchOS, TvOS
+			switch (platform) {
+			case Platforms.macOS:
+				return 1;
+			case Platforms.iOS:
+				return 2;
+			case Platforms.watchOS:
+				return 3;
+			case Platforms.tvOS:
+				return 4;
+			default:
+				throw new InvalidOperationException ($"Unexpected Platform {Platform} in GetPlatformManagedValue");
+			}
 		}
 
-		public static Platforms Platform { get; set; }
+		// Clang.Ast.AvailabilityAttr.Platform.Name
+		public static string ClangPlatformName
+		{
+			get {
+				switch (Helpers.Platform) {
+				case Platforms.macOS:
+					return "macos";
+				case Platforms.iOS:
+					return "ios";
+				case Platforms.watchOS:
+					return "watchos";
+				case Platforms.tvOS:
+					return "tvos";
+				default:
+					throw new InvalidOperationException ($"Unexpected Platform {Platform} in ClangPlatformName");
+				}
+			}
+		}
 
 		public static bool IsAvailable (this Decl decl)
 		{
@@ -242,7 +278,7 @@ namespace Extrospection {
 
 		public static string GetSelector (this ObjCMethodDecl self)
 		{
-			return self.Selector.ToString () ?? (self.IsPropertyAccessor ? self.Name : null);
+			return self.Selector.ToString () ?? self.Name;
 		}
 
 		public static bool IsObsolete (this ICustomAttributeProvider provider)
@@ -338,6 +374,7 @@ namespace Extrospection {
 			case "MPSImage":
 			case "MPSMatrix":
 			case "MPSNeuralNetwork":
+			case "MPSRayIntersector":
 				return "MetalPerformanceShaders";
 			case "QuartzCore":
 				return "CoreAnimation";
@@ -359,6 +396,44 @@ namespace Extrospection {
 				return (o2, o1);
 			else
 				return (o1, o2);
+		}
+
+		public enum ArgumentSemantic {
+			None = -1,
+			Assign = 0,
+			Copy = 1,
+			Retain = 2,
+			Weak = 3,
+			Strong = Retain,
+			UnsafeUnretained = Assign,
+		}
+
+		public static ArgumentSemantic ToArgumentSemantic (this ObjCPropertyAttributeKind attr)
+		{
+			if ((attr & ObjCPropertyAttributeKind.Retain) != 0)
+				return ArgumentSemantic.Retain;
+			else if ((attr & ObjCPropertyAttributeKind.Copy) != 0)
+				return ArgumentSemantic.Copy;
+			else if ((attr & ObjCPropertyAttributeKind.Assign) != 0)
+				return ArgumentSemantic.Assign;
+			else if ((attr & ObjCPropertyAttributeKind.Weak) != 0)
+				return ArgumentSemantic.Weak;
+			else if ((attr & ObjCPropertyAttributeKind.Strong) != 0)
+				return ArgumentSemantic.Strong;
+			else if ((attr & ObjCPropertyAttributeKind.UnsafeUnretained) != 0)
+				return ArgumentSemantic.UnsafeUnretained;
+			else
+				return ArgumentSemantic.Assign; // Default
+		}
+
+		public static string ToUsableString (this ArgumentSemantic argSem)
+		{
+			if (argSem == ArgumentSemantic.Retain)
+				return "Strong|Retain";
+			if (argSem == ArgumentSemantic.Assign)
+				return "UnsafeUnretained|Assign";
+
+			return argSem.ToString ();
 		}
 	}
 }

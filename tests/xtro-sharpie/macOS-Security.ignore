@@ -18,7 +18,6 @@
 !missing-enum! CMSSignerStatus not bound
 !missing-enum! cssm_appledl_open_parameters_mask not bound
 !missing-enum! extension_data_format not bound
-!missing-enum! isl_status not bound
 !missing-enum! SecCodeSignatureFlags not bound
 !missing-enum! SecCodeStatus not bound
 !missing-enum! SecCredentialType not bound
@@ -666,6 +665,7 @@
 !missing-field! kSecCodeInfoTimestamp not bound
 !missing-field! kSecCodeInfoTrust not bound
 !missing-field! kSecCodeInfoUnique not bound
+!missing-field! kSecCodeInfoRuntimeVersion not bound
 !missing-field! kSecCompressionRatio not bound
 !missing-field! kSecDecodeTypeAttribute not bound
 !missing-field! kSecDigestHMACKeyAttribute not bound
@@ -1142,21 +1142,6 @@
 !missing-pinvoke! CSSM_GetTimeValue is not bound
 !missing-pinvoke! CSSM_Init is not bound
 !missing-pinvoke! CSSM_Introduce is not bound
-!missing-pinvoke! CSSM_KR_CreateRecoveryEnablementContext is not bound
-!missing-pinvoke! CSSM_KR_CreateRecoveryRegistrationContext is not bound
-!missing-pinvoke! CSSM_KR_CreateRecoveryRequestContext is not bound
-!missing-pinvoke! CSSM_KR_GenerateRecoveryFields is not bound
-!missing-pinvoke! CSSM_KR_GetPolicyInfo is not bound
-!missing-pinvoke! CSSM_KR_GetRecoveredObject is not bound
-!missing-pinvoke! CSSM_KR_PassThrough is not bound
-!missing-pinvoke! CSSM_KR_ProcessRecoveryFields is not bound
-!missing-pinvoke! CSSM_KR_QueryPolicyInfo is not bound
-!missing-pinvoke! CSSM_KR_RecoveryRequest is not bound
-!missing-pinvoke! CSSM_KR_RecoveryRequestAbort is not bound
-!missing-pinvoke! CSSM_KR_RecoveryRetrieve is not bound
-!missing-pinvoke! CSSM_KR_RegistrationRequest is not bound
-!missing-pinvoke! CSSM_KR_RegistrationRetrieve is not bound
-!missing-pinvoke! CSSM_KR_SetEnterpriseRecoveryPolicy is not bound
 !missing-pinvoke! CSSM_ListAttachedModuleManagers is not bound
 !missing-pinvoke! CSSM_ModuleAttach is not bound
 !missing-pinvoke! CSSM_ModuleDetach is not bound
@@ -1172,10 +1157,6 @@
 !missing-pinvoke! CSSM_SignDataFinal is not bound
 !missing-pinvoke! CSSM_SignDataInit is not bound
 !missing-pinvoke! CSSM_SignDataUpdate is not bound
-!missing-pinvoke! CSSM_SPI_ModuleAttach is not bound
-!missing-pinvoke! CSSM_SPI_ModuleDetach is not bound
-!missing-pinvoke! CSSM_SPI_ModuleLoad is not bound
-!missing-pinvoke! CSSM_SPI_ModuleUnload is not bound
 !missing-pinvoke! CSSM_Terminate is not bound
 !missing-pinvoke! CSSM_TP_ApplyCrlToDb is not bound
 !missing-pinvoke! CSSM_TP_CertCreateTemplate is not bound
@@ -1218,65 +1199,10 @@
 !missing-pinvoke! cssmAlgToOid is not bound
 !missing-pinvoke! cssmOidToAlg is not bound
 !missing-pinvoke! cssmPerror is not bound
-!missing-pinvoke! EISL_CheckAddressWithinModule is not bound
-!missing-pinvoke! EISL_CheckDataAddressWithinModule is not bound
-!missing-pinvoke! EISL_ContinueVerification is not bound
-!missing-pinvoke! EISL_CopyCertificateChain is not bound
-!missing-pinvoke! EISL_CreateCertificateAttributeEnumerator is not bound
-!missing-pinvoke! EISL_CreateCertificateChain is not bound
-!missing-pinvoke! EISL_CreateCertificateChainWithCertificate is not bound
-!missing-pinvoke! EISL_CreateCertificateChainWithCredentialData is not bound
-!missing-pinvoke! EISL_CreateCertificateChainWithCredentialDataAndCertificate is not bound
-!missing-pinvoke! EISL_CreateManifestAttributeEnumerator is not bound
-!missing-pinvoke! EISL_CreateManifestSectionAttributeEnumerator is not bound
-!missing-pinvoke! EISL_CreateManifestSectionEnumerator is not bound
-!missing-pinvoke! EISL_CreateSignatureAttributeEnumerator is not bound
-!missing-pinvoke! EISL_CreateSignerInfoAttributeEnumerator is not bound
-!missing-pinvoke! EISL_CreateVerfiedSignatureRoot is not bound
-!missing-pinvoke! EISL_CreateVerfiedSignatureRootWithCertificate is not bound
-!missing-pinvoke! EISL_CreateVerifiedSignatureRootWithCredentialData is not bound
-!missing-pinvoke! EISL_CreateVerifiedSignatureRootWithCredentialDataAndCertificate is not bound
-!missing-pinvoke! EISL_DuplicateVerifiedModulePtr is not bound
-!missing-pinvoke! EISL_FindCertificateAttribute is not bound
-!missing-pinvoke! EISL_FindManifestAttribute is not bound
-!missing-pinvoke! EISL_FindManifestSection is not bound
-!missing-pinvoke! EISL_FindManifestSectionAttribute is not bound
-!missing-pinvoke! EISL_FindSignatureAttribute is not bound
-!missing-pinvoke! EISL_FindSignerInfoAttribute is not bound
-!missing-pinvoke! EISL_GetCertificateChain is not bound
-!missing-pinvoke! EISL_GetLibHandle is not bound
-!missing-pinvoke! EISL_GetManifestSignatureRoot is not bound
-!missing-pinvoke! EISL_GetModuleManifestSection is not bound
-!missing-pinvoke! EISL_GetNextAttribute is not bound
-!missing-pinvoke! EISL_GetNextCertificateAttribute is not bound
-!missing-pinvoke! EISL_GetNextManifestSection is not bound
-!missing-pinvoke! EISL_GetNextManifestSectionAttribute is not bound
-!missing-pinvoke! EISL_GetNextSignatureAttribute is not bound
-!missing-pinvoke! EISL_LocateProcedureAddress is not bound
-!missing-pinvoke! EISL_RecycleAttributeEnumerator is not bound
-!missing-pinvoke! EISL_RecycleCertificateAttributeEnumerator is not bound
-!missing-pinvoke! EISL_RecycleManifestSectionAttributeEnumerator is not bound
-!missing-pinvoke! EISL_RecycleManifestSectionEnumerator is not bound
-!missing-pinvoke! EISL_RecycleSignatureAttributeEnumerator is not bound
-!missing-pinvoke! EISL_RecycleVerifiedCertificateChain is not bound
-!missing-pinvoke! EISL_RecycleVerifiedModuleCredentials is not bound
-!missing-pinvoke! EISL_RecycleVerifiedSignatureRoot is not bound
-!missing-pinvoke! EISL_SelfCheck is not bound
-!missing-pinvoke! EISL_VerifyAndLoadModule is not bound
-!missing-pinvoke! EISL_VerifyAndLoadModuleAndCredentialData is not bound
-!missing-pinvoke! EISL_VerifyAndLoadModuleAndCredentialDataWithCertificate is not bound
-!missing-pinvoke! EISL_VerifyAndLoadModuleAndCredentials is not bound
-!missing-pinvoke! EISL_VerifyAndLoadModuleAndCredentialsWithCertificate is not bound
-!missing-pinvoke! EISL_VerifyLoadedModule is not bound
-!missing-pinvoke! EISL_VerifyLoadedModuleAndCredentialData is not bound
-!missing-pinvoke! EISL_VerifyLoadedModuleAndCredentialDataWithCertificate is not bound
-!missing-pinvoke! EISL_VerifyLoadedModuleAndCredentials is not bound
-!missing-pinvoke! EISL_VerifyLoadedModuleAndCredentialsWithCertificate is not bound
 !missing-pinvoke! MDS_Initialize is not bound
 !missing-pinvoke! MDS_Install is not bound
 !missing-pinvoke! MDS_Terminate is not bound
 !missing-pinvoke! MDS_Uninstall is not bound
-!missing-pinvoke! ModuleManagerAuthenticate is not bound
 !missing-pinvoke! SecAccessCopyACLList is not bound
 !missing-pinvoke! SecAccessCopyMatchingACLList is not bound
 !missing-pinvoke! SecAccessCopyOwnerAndACL is not bound
@@ -1336,7 +1262,6 @@
 !missing-pinvoke! SecCodeCopyStaticCode is not bound
 !missing-pinvoke! SecCodeGetTypeID is not bound
 !missing-pinvoke! SecCodeMapMemory is not bound
-!missing-pinvoke! SecCopyErrorMessageString is not bound
 !missing-pinvoke! SecDecodeTransformCreate is not bound
 !missing-pinvoke! SecDecryptTransformCreate is not bound
 !missing-pinvoke! SecDecryptTransformGetTypeID is not bound
@@ -1507,7 +1432,6 @@
 !missing-pinvoke! SecVerifyTransformCreate is not bound
 !missing-pinvoke! SessionCreate is not bound
 !missing-pinvoke! SessionGetInfo is not bound
-!missing-pinvoke! SSLCopyALPNProtocols is not bound
 !missing-pinvoke! SSLCopyCertificateAuthorities is not bound
 !missing-pinvoke! SSLCopyPeerCertificates is not bound
 !missing-pinvoke! SSLCopyTrustedRoots is not bound
@@ -1524,7 +1448,6 @@
 !missing-pinvoke! SSLSetAllowsAnyRoot is not bound
 !missing-pinvoke! SSLSetAllowsExpiredCerts is not bound
 !missing-pinvoke! SSLSetAllowsExpiredRoots is not bound
-!missing-pinvoke! SSLSetALPNProtocols is not bound
 !missing-pinvoke! SSLSetCertificateAuthorities is not bound
 !missing-pinvoke! SSLSetDiffieHellmanParams is not bound
 !missing-pinvoke! SSLSetEnableCertVerify is not bound

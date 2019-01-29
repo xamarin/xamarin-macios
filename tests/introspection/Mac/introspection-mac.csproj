@@ -118,6 +118,12 @@
     <Compile Include="..\ApiAvailabilityTest.cs">
       <Link>ApiAvailabilityTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\Frameworks.cs">
+      <Link>Frameworks.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiFrameworkTest.cs">
+      <Link>ApiFrameworkTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">

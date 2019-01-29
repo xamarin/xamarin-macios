@@ -77,9 +77,9 @@ namespace CoreServices {
 				var handle = GetProperty (_AttemptPersistentConnection);
 				if (handle == IntPtr.Zero)
 					return false;
-				else if (handle == CFBoolean.False.Handle)
+				else if (handle == CFBoolean.FalseHandle)
 					return false;
-				else if (handle == CFBoolean.True.Handle)
+				else if (handle == CFBoolean.TrueHandle)
 					return true;
 				else
 					throw new InvalidCastException ();
@@ -106,9 +106,9 @@ namespace CoreServices {
 				var handle = GetProperty (_ShouldAutoredirect);
 				if (handle == IntPtr.Zero)
 					return false;
-				else if (handle == CFBoolean.False.Handle)
+				else if (handle == CFBoolean.FalseHandle)
 					return false;
-				else if (handle == CFBoolean.True.Handle)
+				else if (handle == CFBoolean.TrueHandle)
 					return true;
 				else
 					throw new InvalidCastException ();

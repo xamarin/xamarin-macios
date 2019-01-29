@@ -66,8 +66,7 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ();
 
 				var generated_data = writer.ToString ();
-				if (!File.Exists (fn) || File.ReadAllText (fn) != generated_data)
-					File.WriteAllText (fn, generated_data);
+				File.WriteAllText (fn, generated_data);
 
 				return 0;
 			}
@@ -2172,6 +2171,47 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // IntPtr func (NMatrix4, NVector3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NMatrix4 },
+						new ParameterData { TypeData = Types.NVector3 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (NMatrix4, NVector3, NVector3, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NMatrix4 },
+						new ParameterData { TypeData = Types.NVector3 },
+						new ParameterData { TypeData = Types.NVector3 },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, NMatrix4, NVector3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.NMatrix4 },
+						new ParameterData { TypeData = Types.NVector3 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // IntPtr func (MDLVoxelIndexExtent2)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
@@ -2439,6 +2479,34 @@ namespace Xamarin.BindingMethods.Generator
 					ReturnType = Types.NVector3,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.Double }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // NVector3 func (CGPoint, NMatrix4, nint, CGSize)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.NVector3,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.CGPoint },
+						new ParameterData { TypeData = Types.NMatrix4 },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.CGSize },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // NVector3 func (CGPoint, NMatrix4)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.NVector3,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.CGPoint },
+						new ParameterData { TypeData = Types.NMatrix4 },
 					},
 				}
 			);

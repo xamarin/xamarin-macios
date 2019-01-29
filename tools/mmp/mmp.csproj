@@ -5,47 +5,31 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>linker</RootNamespace>
     <AssemblyName>mmp</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+    <RootNamespace>mmp</RootNamespace>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>MONOMAC;MMP;DEBUG</DefineConstants>
+    <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>anycpu</PlatformTarget>
-    <ConsolePause>False</ConsolePause>
+    <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <UseRefCounting>false</UseRefCounting>
-    <Profiling>false</Profiling>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
+    <DefineConstants>MONOMAC;MMP;XAMARIN_APPLETLS</DefineConstants>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ConsolePause>False</ConsolePause>
-    <DefineConstants>MONOMAC;MMP</DefineConstants>
+    <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <UseRefCounting>false</UseRefCounting>
-    <Profiling>false</Profiling>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -145,6 +129,12 @@
     </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypePreserve.cs">
       <Link>Linker\TypePreserve.cs</Link>
+    </Compile>
+        <Compile Include="..\..\external\mono\external\linker\linker\Linker\AssemblyUtilities.cs">
+      <Link>Linker\AssemblyUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeNameParser.cs">
+      <Link>Linker\TypeNameParser.cs</Link>
     </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\XApiReader.cs">
       <Link>Linker\XApiReader.cs</Link>
@@ -299,6 +289,9 @@
     <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
       <Link>external\Registrar.cs</Link>
     </Compile>
+    <Compile Include="..\common\PListExtensions.cs">
+      <Link>external\PListExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\common\TargetFramework.cs">
       <Link>external\TargetFramework.cs</Link>
     </Compile>
@@ -371,6 +364,9 @@
     <Compile Include="linker\MonoMac.Tuner\MacBaseProfile.cs">
       <Link>MonoMac.Tuner\MacBaseProfile.cs</Link>
     </Compile>
+    <Compile Include="..\common\FileCopier.cs">
+      <Link>external\FileCopier.cs</Link>
+    </Compile>
     <Compile Include="..\common\Symbols.cs">
       <Link>external\Symbols.cs</Link>
     </Compile>
@@ -380,15 +376,14 @@
     <Compile Include="..\common\CoreResolver.cs">
       <Link>common\CoreResolver.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
+      <Link>external\PListObject.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <EmbeddedResource Include="config">
       <LogicalName>config</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="linker\Descriptors\mscorlib.xml">
-      <Link>Resources\mscorlib.xml</Link>
-      <LogicalName>mscorlib.xml</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="config_mobile">
       <LogicalName>config_mobile</LogicalName>

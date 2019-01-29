@@ -436,14 +436,14 @@ namespace LinkSdk {
 #else
 			const string OpenTKAssembly = "OpenTK";
 #endif
-			var gl = Type.GetType ("OpenTK.Graphics.ES11.GL, " + OpenTKAssembly, false);
+			var gl = GetTypeHelper ("OpenTK.Graphics.ES11.GL, " + OpenTKAssembly, false);
 			Assert.NotNull (gl, "ES11/GL");
-			var core = Type.GetType ("OpenTK.Graphics.ES11.GL/Core, " + OpenTKAssembly, false);
+			var core = GetTypeHelper ("OpenTK.Graphics.ES11.GL/Core, " + OpenTKAssembly, false);
 			Assert.NotNull (core, "ES11/Core");
 
-			gl = Type.GetType ("OpenTK.Graphics.ES20.GL, " + OpenTKAssembly, false);
+			gl = GetTypeHelper ("OpenTK.Graphics.ES20.GL, " + OpenTKAssembly, false);
 			Assert.NotNull (gl, "ES20/GL");
-			core = Type.GetType ("OpenTK.Graphics.ES20.GL/Core, " + OpenTKAssembly, false);
+			core = GetTypeHelper ("OpenTK.Graphics.ES20.GL/Core, " + OpenTKAssembly, false);
 			Assert.NotNull (core, "ES20/Core");
 		}
 #endif // !__WATCHOS__
@@ -489,88 +489,7 @@ namespace LinkSdk {
 			}
 		}
 #endif // !__TVOS__ && !__WATCHOS__
-		
-		[Test]
-		public void TypeDescriptor_A7793 ()
-		{
-			var c = TypeDescriptor.GetConverter (typeof (DateTimeOffset));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("DateTimeOffsetConverter"), "DateTimeOffsetConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (decimal));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("DecimalConverter"), "DecimalConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (string));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("StringConverter"), "StringConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (sbyte));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("SByteConverter"), "SByteConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (Collection<string>));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("CollectionConverter"), "CollectionConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (INSCoding));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("ReferenceConverter"), "ReferenceConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (Type));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("TypeConverter"), "TypeConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (ulong));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("UInt64Converter"), "UInt64Converter");
-
-			c = TypeDescriptor.GetConverter (typeof (int[]));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("ArrayConverter"), "ArrayConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (int?));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("NullableConverter"), "NullableConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (short));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("Int16Converter"), "Int16Converter");
-
-			c = TypeDescriptor.GetConverter (typeof (CultureInfo));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("CultureInfoConverter"), "CultureInfoConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (float));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("SingleConverter"), "SingleConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (ushort));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("UInt16Converter"), "UInt16Converter");
-		
-			c = TypeDescriptor.GetConverter (typeof (Guid));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("GuidConverter"), "GuidConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (double));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("DoubleConverter"), "DoubleConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (int));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("Int32Converter"), "Int32Converter");
-
-			c = TypeDescriptor.GetConverter (typeof (TimeSpan));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("TimeSpanConverter"), "TimeSpanConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (char));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("CharConverter"), "CharConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (long));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("Int64Converter"), "Int64Converter");
-
-			c = TypeDescriptor.GetConverter (typeof (bool));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("BooleanConverter"), "BooleanConverter");
-
-			c = TypeDescriptor.GetConverter (typeof (long));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("Int64Converter"), "Int64Converter");
-
-			c = TypeDescriptor.GetConverter (typeof (uint));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("UInt32Converter"), "UInt32Converter");
-
-			c = TypeDescriptor.GetConverter (typeof (FileShare));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("EnumConverter"), "EnumConverter");
-
-			// special case - it's not in the default list we reflect in dont link tests
-
-			c = TypeDescriptor.GetConverter (typeof (IComponent));
-			Assert.That (c.GetType ().Name, Is.EqualTo ("ComponentConverter"), "ComponentConverter");
-		}
-		
+				
 		[Test]
 		public void Parse_3677 ()
 		{
@@ -747,6 +666,13 @@ namespace LinkSdk {
 		
 		[Test]
 		// https://bugzilla.novell.com/show_bug.cgi?id=650402
+#if __WATCHOS__
+		// Fails with:
+		//     System.ExecutionEngineException : Attempting to JIT compile method 'System.Data.DataColumn:set_Expression (string)' while running in aot-only mode.
+		// because DataColumn.set_Expression uses filter clauses, which we don't support with bitcode:
+		//     LLVM failed for 'DataColumn.set_Expression': non-finally/catch/fault clause.
+		[Ignore ("https://bugzilla.xamarin.com/show_bug.cgi?id=59987")]
+#endif
 		public void ForeignKey_650402 ()
 		{
 			DataSet data = new DataSet ();
@@ -773,7 +699,7 @@ namespace LinkSdk {
 		public void Pointer_5200 ()
 		{
 			// ensure the linker did not remove the type, which is used by the runtime
-			Assert.NotNull (Type.GetType ("System.Reflection.Pointer, mscorlib"));
+			Assert.NotNull (GetTypeHelper ("System.Reflection.Pointer, mscorlib"));
 		}
 
 		[Test]
@@ -980,15 +906,17 @@ namespace LinkSdk {
 			Assert.That (path, Is.EqualTo ("/Applications"), "path - ProgramFiles");
 
 			path = TestFolder (Environment.SpecialFolder.UserProfile, readOnly: device);
+			var bundlePath = NSBundle.MainBundle.BundlePath;
+			var isExtension = bundlePath.EndsWith (".appex", StringComparison.Ordinal);
 			if (Runtime.Arch == Arch.DEVICE) {
-#if __WATCHOS__
-				Assert.That (path, Is.StringStarting ("/private/var/mobile/Containers/Data/PluginKitPlugin/"), "Containers-ios8");
-#else
-				if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0))
-					Assert.True (path.StartsWith ("/private/var/mobile/Containers/Data/Application/", StringComparison.Ordinal), "Containers-ios8");
-				else
-					Assert.True (path.StartsWith ("/private/var/mobile/Applications/", StringComparison.Ordinal), "pre-Containers");
+				if (isExtension)
+					Assert.That (path, Is.StringStarting ("/private/var/mobile/Containers/Data/PluginKitPlugin/"), "Containers-ios8");
+#if !__WATCHOS__
+				else if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0))
+					Assert.That (path, Is.StringStarting ("/private/var/mobile/Containers/Data/Application/"), "Containers-ios8");
 #endif
+				else
+					Assert.That (path, Is.StringStarting ("/private/var/mobile/Applications/"), "pre-Containers");
 			}
 
 #if !__WATCHOS__
@@ -1063,18 +991,20 @@ namespace LinkSdk {
 			// we ensure that we can create the type / call the code
 			Assert.True (SecurityDeclarationDecoratedUserCode.Check (), "call");
 			// we ensure that both the permission and the flag are NOT part of the final/linked binary (link removes security declarations)
-			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAttribute, mscorlib"), "FileIOPermissionAttribute");
-			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAccess, mscorlib"), "FileIOPermissionAccess");
+			Assert.Null (GetTypeHelper ("System.Security.Permissions.FileIOPermissionAttribute, mscorlib"), "FileIOPermissionAttribute");
+			Assert.Null (GetTypeHelper ("System.Security.Permissions.FileIOPermissionAccess, mscorlib"), "FileIOPermissionAccess");
 		}
 
 #if !__WATCHOS__
+		static Type type_uibutton = typeof (UIButton);
+
 		[Test]
 		public void UIButtonSubclass ()
 		{
 			// ensure the linker keeps the .ctor(UIButtonType) around
 			using (var b = new UIButton (UIButtonType.Custom)) {
 				// https://trello.com/c/Nf2B8mIM/484-remove-debug-code-in-the-linker
-				var m = typeof (UIButton).GetMethod ("VerifyIsUIButton", BindingFlags.Instance | BindingFlags.NonPublic);
+				var m = type_uibutton.GetMethod ("VerifyIsUIButton", BindingFlags.Instance | BindingFlags.NonPublic);
 #if DEBUG
 				// kept in debug builds
 				Assert.NotNull (m, "VerifyIsUIButton");
@@ -1090,7 +1020,7 @@ namespace LinkSdk {
 		[Test]
 		public void MonoRuntime34671 ()
 		{
-			Assert.NotNull (Type.GetType ("Mono.Runtime"), "Mono.Runtime");
+			Assert.NotNull (GetTypeHelper ("Mono.Runtime"), "Mono.Runtime");
 		}
 
 		[Test]
@@ -1108,6 +1038,20 @@ namespace LinkSdk {
 			Assert.NotNull (provider, "provider");
 			Assert.That (provider.ID, Is.EqualTo (new Guid ("981af8af-a3a3-419a-9f01-a518e3a17c1c")), "correct provider");
 		}
+
+		[Test]
+		public void Github5024 ()
+		{
+			TestRuntime.AssertXcodeVersion (6,0);
+			var sc = new UISearchController ((UIViewController) null);
+			sc.SetSearchResultsUpdater ((vc) => { });
+
+			var a = typeof (UISearchController).AssemblyQualifiedName;
+			var n = a.Replace ("UIKit.UISearchController", "UIKit.UISearchController+__Xamarin_UISearchResultsUpdating");
+			var t = Type.GetType (n);
+			Assert.NotNull (t, "private inner type");
+			Assert.IsNotNull (t.GetMethod ("UpdateSearchResultsForSearchController"), "preserved");
+		}
 #endif // !__WATCHOS__
 
 		[Test]
@@ -1115,7 +1059,7 @@ namespace LinkSdk {
 		{
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.OldTlsProvider");
-			Assert.Null (Type.GetType (fqn), "Should not be included");
+			Assert.Null (GetTypeHelper (fqn), "Should not be included");
 		}
 
 		[Test]
@@ -1123,7 +1067,7 @@ namespace LinkSdk {
 		{
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
-			Assert.Null (Type.GetType (fqn), "Should be included");
+			Assert.Null (GetTypeHelper (fqn), "Should be included");
 		}
 
 		[Test]
@@ -1134,7 +1078,18 @@ namespace LinkSdk {
 			var t = typeof (WKWebView);
 			Assert.NotNull (t, "avoid compiler optimization of unused variable"); 
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Foundation.NSProxy");
-			Assert.NotNull (Type.GetType (fqn), fqn);
+			Assert.NotNull (GetTypeHelper (fqn), fqn);
+		}
+
+		// Fools linker not to keep the type by using it in test check
+		static Type GetTypeHelper (string name)
+		{
+			return Type.GetType (name);
+		}
+
+		static Type GetTypeHelper (string name, bool throwOnError)
+		{
+			return Type.GetType (name, throwOnError);
 		}
 	}
 }

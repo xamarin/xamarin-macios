@@ -263,7 +263,11 @@ namespace Xamarin.iOS.Tasks
 			// Note: Developer/Platforms/iPhoneOS.platform/Developer/usr is a physical directory, but
 			// Developer/Platforms/iPhoneSimulator.platform/Developer/bin has always been a symlink
 			// to Developer/bin and starting with Xcode 7 Beta 2, the usr symlink no longer exists.
-			SdkUsrPath = DirExists ("SDK Usr directory", Path.Combine (platformDir, "Developer", "usr"));
+			// In Xcode 10 beta 1 Developer/Platforms/iPhoneOS.platform/Developer/usr reappeared,
+			// but since it seems incomplete don't even check for it.
+			if (AppleSdkSettings.XcodeVersion.Major < 10)
+				SdkUsrPath = DirExists ("SDK Usr directory", Path.Combine (platformDir, "Developer", "usr"));
+
 			if (string.IsNullOrEmpty (SdkUsrPath)) {
 				SdkUsrPath = DirExists ("SDK Usr directory", Path.Combine (currentSDK.DeveloperRoot, "usr"));
 				if (string.IsNullOrEmpty (SdkUsrPath))

@@ -73,6 +73,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if (connectMethodTestDone)
 				Assert.Ignore ("This test can only be executed once, it modifies global state.");
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for dynamic registration.");
 			connectMethodTestDone = true;
 			// Bug 20013. This should not throw a KeyNotFoundException.
 			Runtime.ConnectMethod (typeof (ConnectMethodClass).GetMethod ("Method"), new Selector ("method"));
@@ -120,6 +122,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void GetNSObject_Different_Class ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			IntPtr class_ptr = Class.GetHandle ("SKPhysicsBody");
 			SizeF size = new SizeF (3, 2);
@@ -138,6 +141,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void GetNSObject_Posing_Class ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			NSUrlSession session = NSUrlSession.SharedSession;
 			using (var request = new NSUrlRequest (new NSUrl ("http://www.example.com"))) {
@@ -290,9 +294,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void FinalizationRaceCondition ()
 		{
-			if ((IntPtr.Size == 8) && TestRuntime.CheckXcodeVersion (7, 0))
-				Assert.Ignore ("NSString retainCount is nuint.MaxValue, so we won't collect them");
-			
 #if __WATCHOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("This test uses too much memory for the watch.");
@@ -356,6 +357,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ConnectMethod ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for dynamic registration.");
+			
 			var minfo = typeof (RuntimeTest).GetMethod ("ConnectMethod");
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (null, new Selector ("")), "1");
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (minfo, null), "2");
@@ -371,6 +375,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ConnectMethod1 ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for dynamic registration.");
+			
 			if (connectMethod1Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod1Done = true;
@@ -385,6 +392,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ConnectMethod2 ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for dynamic registration.");
+			
 			if (connectMethod2Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod2Done = true;
@@ -407,6 +417,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ConnectMethod3 ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires support for dynamic registration.");
+			
 			if (connectMethod3Done)
 				Assert.Ignore ("This is a one-shot test. Restart to run again.");
 			connectMethod3Done = true;
@@ -577,5 +590,55 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			Assert.AreEqual (0, brokenCount, "broken count");
 		}
+
+		[Test]
+		public void MX8027 ()
+		{
+			var handle = Messaging.IntPtr_objc_msgSend (Messaging.IntPtr_objc_msgSend (Class.GetHandle (typeof (Dummy)), Selector.GetHandle ("alloc")), Selector.GetHandle ("init"));
+			try {
+				try {
+					Messaging.void_objc_msgSend_IntPtr (Class.GetHandle (typeof (Dummy)), Selector.GetHandle ("doSomethingElse:"), handle);
+					Assert.Fail ("Expected an MX8027 exception (A)");
+				} catch (RuntimeException mex) {
+					Assert.AreEqual (8027, mex.Code, "Exception code (A)");
+					Assert.That (mex.Message, Is.StringContaining ("Failed to marshal the Objective-C object"), "Failed to marshal (A)");
+					Assert.That (mex.Message, Is.StringContaining ("Additional information:"), "Additional information: (A)");
+					Assert.That (mex.Message, Is.StringContaining ("Selector: doSomethingElse:"), "Selector (A)");
+					Assert.That (mex.Message, Is.StringContaining ("DoSomethingElse"), "DoSomethingElse (A)");
+				}
+
+				try {
+					Messaging.void_objc_msgSend_IntPtr (handle, Selector.GetHandle ("doSomething:"), handle);
+					Assert.Fail ("Expected an MX8027 exception (B)");
+				} catch (RuntimeException mex) {
+					Assert.AreEqual (8027, mex.Code, "Exception code (B)");
+					Assert.That (mex.Message, Is.StringContaining ("Failed to marshal the Objective-C object"), "Failed to marshal (B)");
+					Assert.That (mex.Message, Is.StringContaining ("Additional information:"), "Additional information: (B)");
+					Assert.That (mex.Message, Is.StringContaining ("Selector: doSomething:"), "Selector (B)");
+					Assert.That (mex.Message, Is.StringContaining ("DoSomething"), "DoSomething (B)");
+				}
+			} finally {
+				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("release"));
+			}
+		}
+
+		// does not have an IntPtr constructor
+		class Dummy : NSObject {
+			[Export ("initWithFoo:")]
+			public Dummy (int foo)
+			{
+				// Prevent the default ctor from being exported.
+			}
+
+			[Export ("doSomething:")]
+			public void DoSomething (Dummy dummy)
+			{
+			}
+
+			[Export ("doSomethingElse:")]
+			public static void DoSomethingElse (Dummy dummy)
+			{
+			}
+		} 
 	}
 }

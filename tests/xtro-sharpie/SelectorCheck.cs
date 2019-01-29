@@ -4,9 +4,6 @@
 // !missing-selector!
 //             if headers defines a selector for which we have no bindings
 //
-// !unknown-selector!
-//             if we have a selector that is not part of the header files
-//
 
 using System;
 using System.Collections.Generic;
@@ -18,24 +15,9 @@ using Clang.Ast;
 namespace Extrospection {
 
 	public class SelectorCheck : BaseVisitor {
-//		Dictionary<string,List<MethodDefinition>> exports = new Dictionary<string, List<MethodDefinition>> ();
-
-		// missing
-		//	-> it's not in the type or ancestor or their interface (protocols)
-		//	-> it's not in a category
-
-		// unknown
-		//	-> quick check (HashSet) to see if it's used anywhere
-		//	-> 
-
-		// duplicate
-		//	-> the selector is defined more than once for the same type
-
-		HashSet<string> known_selectors = new HashSet<string> ();
 
 		HashSet<string> qualified_selectors = new HashSet<string> ();
-
-		//Dictionary<TypeDefinition,HashSet<string>> type_exports = new Dictionary<TypeDefinition,HashSet<string>> ();
+		Dictionary<string, Helpers.ArgumentSemantic> qualified_properties = new Dictionary<string, Helpers.ArgumentSemantic> ();
 
 		// most selectors will be found in [Export] attribtues
 		public override void VisitManagedMethod (MethodDefinition method)
@@ -51,20 +33,45 @@ namespace Extrospection {
 			foreach (var ca in method.CustomAttributes) {
 				switch (ca.Constructor.DeclaringType.Name) {
 				case "ExportAttribute":
-					string selector = ca.ConstructorArguments [0].Value as string;
-					if (!known_selectors.Contains (selector))
-						known_selectors.Add (selector);
+					var methodDefinition = method.GetName ();
+					if (!string.IsNullOrEmpty (methodDefinition)) {
+						var argumentSemantic = Helpers.ArgumentSemantic.Assign; // Default
+						if (ca.ConstructorArguments.Count > 1) {
+							argumentSemantic = (Helpers.ArgumentSemantic)ca.ConstructorArguments [1].Value;
+							qualified_properties.Add (methodDefinition, argumentSemantic);
+						}
 
-					qualified_selectors.Add (method.GetName ());
-//
-//					TypeDefinition type = method.DeclaringType;
-//					HashSet<string> list;
-//					if (!type_exports.TryGetValue (type, out list)) {
-//						list = new HashSet<string> ();
-//						type_exports.Add (type, list);
-//					}
-//					list.Add (selector);
+						qualified_selectors.Add (methodDefinition);
+					}
+
 					break;
+				}
+			}
+		}
+
+		public override void VisitObjCPropertyDecl (ObjCPropertyDecl decl)
+		{
+			// protocol members are checked in ObjCProtocolCheck
+			if (decl.DeclContext is ObjCProtocolDecl)
+				return;
+
+			// check availability macros to see if the API is available on the OS and not deprecated
+			if (!decl.IsAvailable ())
+				return;
+
+			var framework = Helpers.GetFramework (decl);
+			if (framework == null)
+				return;
+
+			var nativeArgumentSemantic = decl.Attributes.ToArgumentSemantic ();
+			var nativeMethodDefinition = decl.QualifiedName;
+
+			bool found = qualified_properties.TryGetValue (nativeMethodDefinition, out var managedArgumentSemantic);
+			if (found && managedArgumentSemantic != nativeArgumentSemantic) {
+				// FIXME: only Copy mistakes are reported now
+				if (managedArgumentSemantic == Helpers.ArgumentSemantic.Copy || nativeArgumentSemantic == Helpers.ArgumentSemantic.Copy) {
+					// FIXME: rule disactivated for now
+					//Log.On (framework).Add ($"!incorrect-argument-semantic! Native '{nativeMethodDefinition}' is declared as ({nativeArgumentSemantic.ToUsableString ().ToLowerInvariant ()}) but mapped to 'ArgumentSemantic.{managedArgumentSemantic.ToUsableString ()}'");
 				}
 			}
 		}
@@ -89,8 +96,14 @@ namespace Extrospection {
 			string selector = decl.GetSelector ();
 			if (String.IsNullOrEmpty (selector))
 				return;
-			
-			var name = (decl.IsClassMethod ? "+" : String.Empty) + decl.QualifiedName;
+
+			var name = decl.QualifiedName;
+			if (decl.IsClassMethod) {
+				// we do not bind `+{type}:new` just instance `init`
+				if (selector == "new")
+					return;
+				name = "+" + name;
+			}
 			bool found = qualified_selectors.Contains (name);
 			if (!found) {
 				// a category could be inlined into the type it extend

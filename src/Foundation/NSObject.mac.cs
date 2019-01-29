@@ -70,6 +70,7 @@ namespace Foundation {
 		static IntPtr ol = Dlfcn.dlopen (Constants.OpenALLibrary, 1);
 		static IntPtr ma = Dlfcn.dlopen (Constants.MediaAccessibilityLibrary, 1);
 		static IntPtr mi = Dlfcn.dlopen (Constants.CoreMidiLibrary, 1);
+		static IntPtr ic = Dlfcn.dlopen (Constants.ImageCaptureCoreLibrary, 1);
 #if XAMCORE_2_0 && ARCH_64
 		static IntPtr it = Dlfcn.dlopen (Constants.IntentsLibrary, 1);
 		static IntPtr me = Dlfcn.dlopen (Constants.MediaLibraryLibrary, 1);
@@ -103,6 +104,12 @@ namespace Foundation {
 		static IntPtr ios = Dlfcn.dlopen (Constants.IOSurfaceLibrary, 1);
 		static IntPtr ex = Dlfcn.dlopen (Constants.ExternalAccessoryLibrary, 1);
 		static IntPtr ms = Dlfcn.dlopen (Constants.MetalPerformanceShadersLibrary, 1);
+		static IntPtr bc = Dlfcn.dlopen (Constants.BusinessChatLibrary, 1);
+		static IntPtr ad = Dlfcn.dlopen (Constants.AdSupportLibrary, 1);
+		static IntPtr nl = Dlfcn.dlopen (Constants.NaturalLanguageLibrary, 1);
+		static IntPtr vs = Dlfcn.dlopen (Constants.VideoSubscriberAccountLibrary, 1);
+		static IntPtr un = Dlfcn.dlopen (Constants.UserNotificationsLibrary, 1);
+		static IntPtr il  = Dlfcn.dlopen (Constants.iTunesLibraryLibrary, 1);
 #endif
 		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 
@@ -110,12 +117,6 @@ namespace Foundation {
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]
 		public static readonly Assembly MonoMacAssembly = typeof (NSObject).Assembly;
 #endif
-
-		static internal void OverrideRetainAndRelease (IntPtr @class)
-		{
-			Class.class_addMethod (@class, Selector.RetainHandle, Method.RetainTrampoline, "@@:");
-			Class.class_addMethod (@class, Selector.ReleaseHandle, Method.ReleaseTrampoline, "v@:");
-		}
 
 		internal void SetAsProxy () {
 			IsDirectBinding = true;

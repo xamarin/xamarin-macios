@@ -191,7 +191,8 @@ namespace Xamarin.MacDev.Tasks
 						var plist = PDictionary.FromFile (manifest.ItemSpec);
 
 						LogWarningsAndErrors (plist, items[0]);
-					} catch (FormatException) {
+					} catch (Exception ex) {
+						Log.LogError ("Failed to load {0} log file `{1}`: {2}", ToolName, manifest.ItemSpec, ex.Message);
 					}
 
 					File.Delete (manifest.ItemSpec);
@@ -210,7 +211,7 @@ namespace Xamarin.MacDev.Tasks
 			if (plist.TryGetValue (string.Format ("com.apple.{0}.document.notices", ToolName), out array)) {
 				foreach (var item in array.OfType<PDictionary> ()) {
 					if (item.TryGetValue ("message", out message))
-						Log.LogMessage (MessageImportance.Low, "{0}", message.Value);
+						Log.LogMessage (MessageImportance.Low, "{0} notice : {1}", ToolName, message.Value);
 				}
 			}
 
@@ -234,7 +235,7 @@ namespace Xamarin.MacDev.Tasks
 					array = valuePair.Value as PArray;
 					foreach (var item in array.OfType<PDictionary> ()) {
 						if (item.TryGetValue ("message", out message))
-							Log.LogMessage (MessageImportance.Low, "{0}", message.Value);
+							Log.LogMessage (MessageImportance.Low, "{0} notice : {1}", ToolName, message.Value);
 					}
 				}
 			}
@@ -269,7 +270,7 @@ namespace Xamarin.MacDev.Tasks
 			if (plist.TryGetValue (string.Format ("com.apple.{0}.notices", ToolName), out array)) {
 				foreach (var item in array.OfType<PDictionary> ()) {
 					if (item.TryGetValue ("description", out message))
-						Log.LogError (ToolName, null, null, file.ItemSpec, 0, 0, 0, 0, "{0}", message.Value);
+						Log.LogMessage (MessageImportance.Low, "{0} notice : {1}", ToolName, message.Value);
 				}
 			}
 		}

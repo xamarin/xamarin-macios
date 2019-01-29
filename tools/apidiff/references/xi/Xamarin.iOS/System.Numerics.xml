@@ -90,6 +90,9 @@
       <namespace name="System.Numerics">
         <classes>
           <class name="BigInteger" type="struct" base="System.ValueType" sealed="true" serializable="true" charset="Ansi" layout="Sequential">
+            <attributes>
+              <attribute name="System.Runtime.CompilerServices.IsReadOnlyAttribute" />
+            </attributes>
             <interfaces>
               <interface name="System.IComparable" />
               <interface name="System.IComparable`1[System.Numerics.BigInteger]" />
@@ -302,6 +305,11 @@
                   <parameter name="other" position="0" attrib="0" type="System.UInt64" />
                 </parameters>
               </method>
+              <method name="GetByteCount(System.Boolean)" attrib="134" returntype="System.Int32">
+                <parameters>
+                  <parameter name="isUnsigned" position="0" attrib="4112" type="System.Boolean" optional="true" defaultValue="False" />
+                </parameters>
+              </method>
               <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
                 <parameters />
               </method>
@@ -401,6 +409,12 @@
               </method>
               <method name="ToByteArray()" attrib="134" returntype="System.Byte[]">
                 <parameters />
+              </method>
+              <method name="ToByteArray(System.Boolean, System.Boolean)" attrib="134" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="isUnsigned" position="0" attrib="4112" type="System.Boolean" optional="true" defaultValue="False" />
+                  <parameter name="isBigEndian" position="1" attrib="4112" type="System.Boolean" optional="true" defaultValue="False" />
+                </parameters>
               </method>
               <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
                 <parameters />

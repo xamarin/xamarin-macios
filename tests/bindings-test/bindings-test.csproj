@@ -74,6 +74,13 @@
     <Compile Include="..\api-shared\ObjCRuntime\Registrar.cs">
       <Link>Registrar.cs</Link>
     </Compile>
+    <Compile Include="RegistrarBindingTest.cs" />
+    <Compile Include="..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="RuntimeTest.cs" />
+    <Compile Include="CodeBehind.cs" />
+    <Compile Include="Messaging.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tests\test-libraries\libtest.m">

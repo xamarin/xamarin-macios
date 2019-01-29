@@ -214,8 +214,10 @@
                   <interface name="UIKit.IUIDynamicItem" />
                   <interface name="UIKit.IUIFocusEnvironment" />
                   <interface name="UIKit.IUIFocusItem" />
+                  <interface name="UIKit.IUIFocusItemContainer" />
                   <interface name="UIKit.IUIGestureRecognizerDelegate" />
                   <interface name="UIKit.IUITraitEnvironment" />
+                  <interface name="UIKit.IUIUserActivityRestoring" />
                 </interfaces>
                 <constructors>
                   <constructor name=".ctor(MonoTouch.Dialog.BaseBooleanImageElement)" attrib="6278">
@@ -547,6 +549,7 @@
           <class name="DialogViewController" type="class" base="UIKit.UITableViewController" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="Foundation.INSCoding" />
+              <interface name="Foundation.INSExtensionRequestHandling" />
               <interface name="Foundation.INSObjectProtocol" />
               <interface name="ObjCRuntime.INativeObject" />
               <interface name="System.Collections.IEnumerable" />
@@ -559,6 +562,7 @@
               <interface name="UIKit.IUITableViewDataSource" />
               <interface name="UIKit.IUITableViewDelegate" />
               <interface name="UIKit.IUITraitEnvironment" />
+              <interface name="UIKit.IUIUserActivityRestoring" />
             </interfaces>
             <fields>
               <field name="Style" attrib="6" fieldtype="UIKit.UITableViewStyle" />
@@ -852,7 +856,11 @@
                   <interface name="UIKit.IUIScrollViewDelegate" />
                 </interfaces>
                 <fields>
-                  <field name="Container" attrib="4" fieldtype="MonoTouch.Dialog.DialogViewController" />
+                  <field name="Container" attrib="4" fieldtype="MonoTouch.Dialog.DialogViewController">
+                    <attributes>
+                      <attribute name="System.WeakAttribute" />
+                    </attributes>
+                  </field>
                   <field name="Root" attrib="4" fieldtype="MonoTouch.Dialog.RootElement" />
                 </fields>
                 <constructors>
@@ -1396,7 +1404,9 @@
               <interface name="UIKit.IUIDynamicItem" />
               <interface name="UIKit.IUIFocusEnvironment" />
               <interface name="UIKit.IUIFocusItem" />
+              <interface name="UIKit.IUIFocusItemContainer" />
               <interface name="UIKit.IUITraitEnvironment" />
+              <interface name="UIKit.IUIUserActivityRestoring" />
             </interfaces>
             <fields>
               <field name="DisabledColor" attrib="6" fieldtype="UIKit.UIColor" />
@@ -2018,7 +2028,9 @@
               <interface name="UIKit.IUIDynamicItem" />
               <interface name="UIKit.IUIFocusEnvironment" />
               <interface name="UIKit.IUIFocusItem" />
+              <interface name="UIKit.IUIFocusItemContainer" />
               <interface name="UIKit.IUITraitEnvironment" />
+              <interface name="UIKit.IUIUserActivityRestoring" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -2387,7 +2399,9 @@
               <interface name="UIKit.IUIDynamicItem" />
               <interface name="UIKit.IUIFocusEnvironment" />
               <interface name="UIKit.IUIFocusItem" />
+              <interface name="UIKit.IUIFocusItemContainer" />
               <interface name="UIKit.IUITraitEnvironment" />
+              <interface name="UIKit.IUIUserActivityRestoring" />
             </interfaces>
             <fields>
               <field name="Activity" attrib="4" fieldtype="UIKit.UIActivityIndicatorView" />

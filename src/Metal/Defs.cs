@@ -226,6 +226,18 @@ namespace Metal {
 		public uint ThreadGroupsPerGrid3;
 	}
 
+	[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLStageInRegionIndirectArguments {
+		public uint StageInOrigin1;
+		public uint StageInOrigin2;
+		public uint StageInOrigin3;
+
+		public uint StageInSize1;
+		public uint StageInSize2;
+		public uint StageInSize3;
+	}
+
 	public struct MTLDrawPrimitivesIndirectArguments {
 		public uint VertexCount;
 		public uint InstanceCount;
@@ -279,7 +291,9 @@ namespace Metal {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLQuadTessellationFactorsHalf
 	{
+		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 4)]
 		public ushort[] EdgeTessellationFactor;
+		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 2)]
 		public ushort[] InsideTessellationFactor;
 		
 		public MTLQuadTessellationFactorsHalf (ushort[] edgeTessellationFactor, ushort[] insideTessellationFactor)
@@ -294,6 +308,7 @@ namespace Metal {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTriangleTessellationFactorsHalf
 	{
+		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 3)]
 		public ushort[] EdgeTessellationFactor;
 		public ushort InsideTessellationFactor;
 		

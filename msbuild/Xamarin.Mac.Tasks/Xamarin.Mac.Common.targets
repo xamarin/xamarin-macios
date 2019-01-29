@@ -14,6 +14,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 ***********************************************************************************************
 -->
 
+<!-- Xamarin.Mac.Common.targets currently is not shared with Xamarin.Mac.ObjCBinding targets,
+     so be careful not to add fixes here that should go into Xamarin.Mac.Common.props which is shared -->
+
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ArTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="Xamarin.Mac.Tasks.dll" />
@@ -24,8 +27,10 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PackLibraryResources" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PropertyListEditor" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ReadItemsFromFile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.ACTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.CodesignVerify" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.CompileAppManifest" AssemblyFile="Xamarin.Mac.Tasks.dll" />
@@ -56,60 +61,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.props"
 			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
+	
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
-
-	<PropertyGroup Condition="'$(XamarinMacFrameworkRoot)' == ''">
-		<XamarinMacFrameworkRoot>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
-	</PropertyGroup>
-
-	<Choose>
-		<When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
-			<PropertyGroup>
-				<TargetFrameworkName>Modern</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
-			</PropertyGroup>
-		</When>
-		<When Condition=" '$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true'">
-			<PropertyGroup>
-				<TargetFrameworkName>Full</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<TargetFrameworkName>System</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
-
-	<PropertyGroup Condition="'$(TargetFrameworkName)' == 'Full'">
-		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
-		<ImplicitlyExpandNETStandardFacades>False</ImplicitlyExpandNETStandardFacades>
-	</PropertyGroup>
-
-	<!-- Do not resolve from the GAC in Modern or Full unless allow-unsafe-gac-resolution is passed in -->
-	<PropertyGroup Condition="'$(TargetFrameworkName)' != 'System' And !$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
-		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
-		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
-	</PropertyGroup>
-
-	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="'$(OS)' != 'Windows_NT'" />
-
-	<!-- Location of Libraries -->
-	<Target Name="FixTargetFrameworkDirectory" AfterTargets="FixDesignTimeFacades" Condition="('$(OS)' != 'Windows_NT')">
-		<PropertyGroup>
-			<!-- For Modern / Full we overwrite TargetFrameworkDirectory to resolve non XM assemblies from our location only -->
-			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' != 'System'">$(MacBclPath);@(DesignTimeFacadeDirectories)</TargetFrameworkDirectory>
-
-			<!-- For system we extend, not overwrite TargetFrameworkDirectory. -->
-			<!-- mscorlib, System, and other BCL libs must come from Mono System to prevent corlib mistmatches. Xamarin.Mac.dll must come from XM/lib/mono/4.5/ -->
-			<!-- If we find cases of other non-XM assemblies being resolved from XM paths, we can look into using CandidateAssemblyFiles but it is msbuild only. -->
-			<TargetFrameworkDirectory Condition="'$(TargetFrameworkName)' == 'System'">$(TargetFrameworkDirectory);$(MacBclPath)</TargetFrameworkDirectory>
-		</PropertyGroup>
-	</Target>
 
 	<PropertyGroup>
 		<_CanOutputAppBundle>False</_CanOutputAppBundle>
@@ -118,8 +74,19 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_CanArchive>False</_CanArchive>
 		<_CanArchive Condition="'$(OutputType)' == 'Exe'">true</_CanArchive>
 
+		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(CodesignEntitlements)' != ''">True</_RequireProvisioningProfile>
+
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
+
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
+	</PropertyGroup>
+		
+	<PropertyGroup>
+		<!-- actool output caches -->
+		<_ACTool_PartialAppManifestCache>$(IntermediateOutputPath)actool\_PartialAppManifest.items</_ACTool_PartialAppManifestCache>
+		<_ACTool_BundleResourceCache>$(IntermediateOutputPath)actool\_BundleResourceWithLogicalName.items</_ACTool_BundleResourceCache>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.xbuild.targets"
@@ -353,9 +320,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
 			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
+			AppManifest="$(_AppManifest)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
+			SdkVersion="$(MacOSXSdkVersion)"
 			SourceFile="@(Metal)">
 			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
 		</Metal>
@@ -473,10 +442,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_DetectSigningIdentity" DependsOnTargets="_DetectAppManifest">
-		<PropertyGroup>
-			<_AppBundleName>$(AssemblyName)</_AppBundleName>
-		</PropertyGroup>
-
 		<DetectSigningIdentity
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -484,6 +449,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppManifest="$(_AppManifest)"
 			Keychain="$(CodesignKeychain)"
 			RequireCodeSigning="$(EnableCodeSigning)"
+			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
 			SdkPlatform="MacOSX"
 			ProvisioningProfile="$(CodeSignProvision)"
 			SigningKey="$(CodeSigningKey)">
@@ -497,8 +463,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_GenerateBundleName">
 		<PropertyGroup>
-			<AppBundleDir>$(OutputPath)$(_AppBundleName).app</AppBundleDir>
-			<_AppBundlePath>$(OutputPath)$(_AppBundleName).app\</_AppBundlePath>
+			<AppBundleDir>$(OutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
 			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
 		</PropertyGroup>
 	</Target>
@@ -518,11 +484,28 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IsAppExtension="$(IsAppExtension)"
 			PartialAppManifests="@(_PartialAppManifest)" />
 	</Target>
+	
+	<PropertyGroup>
+		<CompileToNativeDependsOn>
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_GenerateBundleName;
+			ResolveReferences;
+			_CompileEntitlements;
+			_CompileAppManifest;
+			_ExpandNativeReferences;
+		</CompileToNativeDependsOn>
+	</PropertyGroup>
 
-	<Target Name="_CompileToNative" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName;ResolveReferences;_CompileEntitlements;_CompileAppManifest"
-		Inputs="$(TargetDir)$(TargetFileName)"
+	<Target Name="_CompileToNative" DependsOnTargets="$(CompileToNativeDependsOn)"
+		Inputs="$(TargetDir)$(TargetFileName);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName)">
 		<ItemGroup>
+			<!-- Skip the reference assemblies. 'mmp' will fail to AOT them if passed 'aot:all'. Similar to: https://github.com/xamarin/xamarin-macios/issues/3199 -->
+			<!-- Remove exact references, such as if a package had a framework reference to 'System' that we already have -->
+			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
+			<!-- Effectively 'ResolveNuGetPackageAssets' computes the NuGet packages using their json asset file, adds the full assemblies to 'ReferenceCopyLocalPaths' and outputs the resolved references via '_ReferencesFromNuGetPackages' -->
+			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
 			<ReferenceCopyLocalAssemblyPaths Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
 		</ItemGroup>
 		<Mmp
@@ -546,14 +529,15 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ExtraArguments="$(MonoBundlingExtraArgs)"
 			NativeReferences="@(NativeReference)"
 			ExplicitReferences="@(ReferencePath);@(ReferenceCopyLocalAssemblyPaths)"
+			ResponseFilePath="$(IntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
 			AppManifest="$(_AppManifest)"
 			SdkVersion="$(MacOSXSdkVersion)"
 			IsAppExtension="$(IsAppExtension)"
 			EnableSGenConc="$(EnableSGenConc)"
-			AotScope="$(AotScope)"
-			HybridAotOption="$(HybridAotOption)"
+			AotMode="$(AOTMode)"
+			HybridAOT="$(HybridAOT)"
 			ExplicitAotAssemblies="$(ExplicitAotAssemblies)">
 			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
 		</Mmp>
@@ -594,12 +578,40 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CreateItem>
 	</Target>
 
-	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileImageAssets" />
+	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />
 
-	<Target Name="_CoreCompileImageAssets">
+	<Target Name="_BeforeCoreCompileImageAssets"
+		Inputs="@(ImageAsset);$(_AppManifest)"
+		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)">
+		
+		<!-- If any ImageAsset or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileImageAssets
+		     target runs again and updates those lists for the next run
+		-->
+		<Delete Files="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
+		<RemoveDir Directories="$(IntermediateOutputPath)actool" />
+	</Target>
+
+	<Target Name="_ReadCompileImageAssets"					
+		DependsOnTargets="_BeforeCoreCompileImageAssets">
+
+		<!-- If _BeforeCoreCompileImageAssets did not delete the generated items lists from _CoreCompileImageAsset, then we read them
+		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
+		<ReadItemsFromFile File="$(_ACTool_PartialAppManifestCache)" Condition="Exists('$(_ACTool_PartialAppManifestCache)')">
+			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
+		</ReadItemsFromFile>
+		<ReadItemsFromFile File="$(_ACTool_BundleResourceCache)" Condition="Exists('$(_ACTool_BundleResourceCache)')">
+			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
+		</ReadItemsFromFile>
+	</Target>
+
+	<Target Name="_CoreCompileImageAssets"
+		Inputs="@(ImageAsset);$(_AppManifest)"
+		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
+		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets">
+
 		<ACTool
-			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(ImageAsset)' != ''"
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AppManifest="$(_AppManifest)"
@@ -610,31 +622,42 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
-			SdkPlatform="MacOSX"
+
 			SdkDevPath="$(_SdkDevPath)"
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)"
+			SdkPlatform="MacOSX"
 			SdkVersion="$(MacOSXSdkVersion)">
-			<Output TaskParameter="PartialAppManifest" ItemName="FileWrites" />
-			<Output TaskParameter="OutputManifests" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
 			<Output TaskParameter="PartialAppManifest" ItemName="_PartialAppManifest" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+
+			<!-- Local items to be persisted to items files -->
+			<Output TaskParameter="PartialAppManifest" ItemName="_ACTool_PartialAppManifest" />
+			<Output TaskParameter="BundleResources" ItemName="_ACTool_BundleResources" />
 		</ACTool>
+		
+		<!-- Cache the generated outputs items for incremental build support -->
+		<WriteItemsToFile Items="@(_ACTool_PartialAppManifest)" ItemName="_PartialAppManifest" File="$(_ACTool_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
+		<WriteItemsToFile Items="@(_ACTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ACTool_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
+		<ItemGroup>
+			<FileWrites Include="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileSceneKitAssets" />
 
-	<Target Name="_CoreCompileSceneKitAssets">
+	<Target Name="_CoreCompileSceneKitAssets" DependsOnTargets="_GenerateBundleName">
 		<CompileSceneKitAssets
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
+			AppBundleName="$(_AppBundleName)$(AppBundleExtension)"
 			ToolExe="$(CopySceneKitAssetsExe)"
 			ToolPath="$(CopySceneKitAssetsPath)"
 			SceneKitAssets="@(SceneKitAsset)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
+			SdkPlatform="MacOSX"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkRoot="$(_SdkRoot)"
 			SdkVersion="$(MacOSXSdkVersion)">
@@ -695,8 +718,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.xbuild.targets"
-		Condition="'$(UseXamMacFullFramework)' == 'true' And '$(IsXBuild)' == 'true' "/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.xbuild.targets"
+		Condition="'$(IsXBuild)' == 'true' "/>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
 		Condition="'$(IsXBuild)' != 'true' "/>

@@ -223,6 +223,7 @@ namespace EventKit {
 		[Export ("soundName")]
 		string SoundName { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("url", ArgumentSemantic.Copy)]
 		NSUrl Url { get; set; }
 #endif
@@ -322,12 +323,12 @@ namespace EventKit {
 		[NullAllowed, Export ("structuredLocation", ArgumentSemantic.Copy)]
 		EKStructuredLocation StructuredLocation { get; set; }
 		
-		[iOS (9,0)][Mac (10,8)]
+		[iOS (9,0)]
 		[Export ("occurrenceDate")]
 		NSDate OccurrenceDate { get; }
 
 #if MONOMAC
-		[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_11, Message = "Replaced by 'BirthdayContactIdentifier'.")]
+		[Availability (Deprecated = Platform.Mac_10_11, Message = "Replaced by 'BirthdayContactIdentifier'.")]
 		[Export ("birthdayPersonUniqueID")]
 		string BirthdayPersonUniqueID { get; }
 #else
@@ -385,7 +386,7 @@ namespace EventKit {
 
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	interface EKRecurrenceEnd : NSCopying {
+	interface EKRecurrenceEnd : NSCopying, NSSecureCoding {
 		[Export ("endDate")]
 		NSDate EndDate { get;  }
 
@@ -403,7 +404,7 @@ namespace EventKit {
 
 	[Mac (10,8, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	interface EKRecurrenceDayOfWeek : NSCopying {
+	interface EKRecurrenceDayOfWeek : NSCopying, NSSecureCoding {
 		[Export ("dayOfTheWeek")]
 #if XAMCORE_4_0
 		EKWeekday DayOfTheWeek { get;  }
@@ -633,6 +634,7 @@ namespace EventKit {
 		bool SaveReminder (EKReminder reminder, bool commit, out NSError error);
 
 #if MONOMAC
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("initWithAccessToEntityTypes:")]
 		IntPtr Constructor (EKEntityMask accessToEntityTypes);
 

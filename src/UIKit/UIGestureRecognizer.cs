@@ -12,13 +12,17 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Foundation; 
 using ObjCRuntime;
 using CoreGraphics;
 
 namespace UIKit {
 	public partial class UIGestureRecognizer {
-		object recognizers;
+		//
+		// Tracks the targets (NSObject, which we always enforce to be Token) to the Selector the point to, used when disposing
+		//
+		Dictionary<Token,IntPtr> recognizers = new Dictionary<Token,IntPtr> ();
 		const string tsel = "target";
 		internal const string parametrized_selector = "target:";
 #if !XAMCORE_2_0
@@ -30,18 +34,35 @@ namespace UIKit {
 		{
 		}
 
+		// Called by the Dispose() method, because this can run from a finalizer, we need to
+		// (a) reference the handle, that we will release later, and (b) to remove the targets on the
+		// UI thread.
+		void OnDispose ()
+		{
+			var copyOfRecognizers = recognizers;
+			var savedHandle = Handle;
+			recognizers = null;
+			
+			DangerousRetain (savedHandle);
+			NSRunLoop.Main.BeginInvokeOnMainThread (() => {
+				foreach (var kv in copyOfRecognizers)
+					RemoveTarget (kv.Key, kv.Value);
+				DangerousRelease (savedHandle);
+			});
+		}
+		
 		//
 		// Signature swapped, this is only used so we can store the "token" in recognizers
 		//
 		public UIGestureRecognizer (Selector sel, Token token) : this (token, sel)
 		{
-			recognizers = token;
+			recognizers [token] = sel.Handle;
 			MarkDirty ();
 		}
 
 		internal UIGestureRecognizer (IntPtr sel, Token token) : this (token, sel)
 		{
-			recognizers = token;
+			recognizers [token] = sel;
 			MarkDirty ();
 		}
 		
@@ -111,17 +132,7 @@ namespace UIKit {
 		{
 			AddTarget (target, sel);
 			MarkDirty ();
-			if (recognizers == null)
-				recognizers = target;
-			else {
-				Hashtable table = recognizers as Hashtable;
-				if (table == null){
-					table = new Hashtable ();
-					table [recognizers] = recognizers;
-					recognizers = table;
-				}
-				table [target] = target;
-			}
+			recognizers [target] = sel;
 		}
 
 		public void RemoveTarget (Token token)
@@ -130,12 +141,16 @@ namespace UIKit {
 				throw new ArgumentNullException ("token");
 			if (recognizers == null)
 				return;
-			if (recognizers == token)
-				recognizers = null;
-			Hashtable asHash = recognizers as Hashtable;
-			if (asHash != null)
-				asHash.Remove (token);
-			RemoveTarget (token, token is ParametrizedDispatch ? Selector.GetHandle (parametrized_selector) : Selector.GetHandle (tsel));
+			if (recognizers.Remove (token, out var sel))
+				RemoveTarget (token, sel);
+		}
+
+		//
+		// Used to enumerate all the registered handlers for this UIGestureRecognizer
+		//
+		public IEnumerable<Token> GetTargets ()
+		{
+			return (IEnumerable<Token>) recognizers?.Keys ?? Array.Empty<Token> ();
 		}
 	}
 

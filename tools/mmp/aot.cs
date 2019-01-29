@@ -202,7 +202,7 @@ namespace Xamarin.Bundler {
 		public void Compile (IFileEnumerator files)
 		{
 			if (!options.IsAOT)
-				throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", options.CompilationType);
+				throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", options.CompilationType);
 
 			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
 
@@ -276,7 +276,7 @@ namespace Xamarin.Bundler {
 				case AOTCompilationType.Explicit:
 					break; // In explicit, only included includedAssemblies included
 				default:
-					throw ErrorHelper.CreateError (0099, "Internal error \"GetFilesToAOT with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", options.CompilationType);
+					throw ErrorHelper.CreateError (0099, "Internal error \"GetFilesToAOT with aot: {0}\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", options.CompilationType);
 				}
 			}
 
@@ -307,7 +307,7 @@ namespace Xamarin.Bundler {
 				case AOTCompilerType.System32:
 					return "/Library/Frameworks/Mono.framework/Commands/mono32";
 				default:
-					throw ErrorHelper.CreateError (0099, "Internal error \"MonoPath with compilerType: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", compilerType);
+					throw ErrorHelper.CreateError (0099, "Internal error \"MonoPath with compilerType: {0}\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", compilerType);
 				}
 			}
 		}

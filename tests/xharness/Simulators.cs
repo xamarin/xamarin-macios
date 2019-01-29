@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Xamarin;
 using Xamarin.Utils;
 
 namespace xharness
@@ -15,6 +18,7 @@ namespace xharness
 		public Harness Harness;
 
 		bool loaded;
+		SemaphoreSlim semaphore = new SemaphoreSlim (1);
 
 		BlockingEnumerableCollection<SimRuntime> supported_runtimes = new BlockingEnumerableCollection<SimRuntime> ();
 		BlockingEnumerableCollection<SimDeviceType> supported_device_types = new BlockingEnumerableCollection<SimDeviceType> ();
@@ -28,9 +32,12 @@ namespace xharness
 
 		public async Task LoadAsync (Log log, bool force = false)
 		{
+			await semaphore.WaitAsync ();
 			if (loaded) {
-				if (!force)
+				if (!force) {
+					semaphore.Release ();
 					return;
+				}
 				supported_runtimes.Reset ();
 				supported_device_types.Reset ();
 				available_devices.Reset ();
@@ -103,121 +110,189 @@ namespace xharness
 					available_devices.SetCompleted ();
 					available_device_pairs.SetCompleted ();
 					File.Delete (tmpfile);
+					semaphore.Release ();
 				}
 			});
 		}
 
-		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log)
+		string CreateName (string devicetype, string runtime)
+		{
+			var runtime_name = supported_runtimes?.Where ((v) => v.Identifier == runtime).FirstOrDefault ()?.Name ?? Path.GetExtension (runtime).Substring (1);
+			var device_name = supported_device_types?.Where ((v) => v.Identifier == devicetype).FirstOrDefault ()?.Name ?? Path.GetExtension (devicetype).Substring (1);
+			return $"{device_name} ({runtime_name}) - created by xharness";
+		}
+
+		// Will return all devices that match the runtime + devicetype (even if a new device was created, any other devices will also be returned)
+		async Task<IEnumerable<SimDevice>> FindOrCreateDevicesAsync (Log log, string runtime, string devicetype, bool force = false)
+		{
+			if (runtime == null || devicetype == null)
+				return null;
+
+			IEnumerable<SimDevice> devices = null;
+
+			if (!force) {
+				devices = AvailableDevices.Where ((SimDevice v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
+				if (devices.Any ())
+					return devices;
+			}
+			
+			var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"create {StringUtils.Quote (CreateName (devicetype, runtime))} {devicetype} {runtime}", log, TimeSpan.FromMinutes (1));
+			if (!rv.Succeeded) {
+				log.WriteLine ($"Could not create device for runtime={runtime} and device type={devicetype}.");
+				return null;
+			}
+
+			await LoadAsync (log, force: true);
+
+			devices = AvailableDevices.Where ((SimDevice v) => v.SimRuntime == runtime && v.SimDeviceType == devicetype);
+			if (!devices.Any ()) {
+				log.WriteLine ($"No devices loaded after creating it? runtime={runtime} device type={devicetype}.");
+				return null;
+			}
+
+			return devices;
+		}
+
+		async Task<bool> CreateDevicePair (Log log, SimDevice device, SimDevice companion_device, string runtime, string devicetype, bool create_device)
+		{
+			if (create_device) {
+				// watch device is already paired to some other phone. Create a new watch device
+				var matchingDevices = await FindOrCreateDevicesAsync (log, runtime, devicetype, force: true);
+				var unPairedDevices = matchingDevices.Where ((v) => !AvailableDevicePairs.Any ((SimDevicePair p) => { return p.Gizmo == v.UDID; }));
+				if (device != null) {
+					// If we're creating a new watch device, assume that the one we were given is not usable.
+					unPairedDevices = unPairedDevices.Where ((v) => v.UDID != device.UDID);
+				}
+				if (unPairedDevices?.Any () != true)
+					return false;
+				device = unPairedDevices.First ();
+			}
+			log.WriteLine ($"Creating device pair for '{device.Name}' and '{companion_device.Name}'");
+			var capturedLog = new StringBuilder ();
+			var pairLog = new CallbackLog ((string value) => {
+				log.WriteImpl (value);
+				capturedLog.Append (value);
+			});
+			var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"pair {device.UDID} {companion_device.UDID}", pairLog, TimeSpan.FromMinutes (1));
+			if (!rv.Succeeded) {
+				if (!create_device) {
+					var try_creating_device = false;
+					var captured_log = capturedLog.ToString ();
+					try_creating_device |= captured_log.Contains ("At least one of the requested devices is already paired with the maximum number of supported devices and cannot accept another pairing.");
+					try_creating_device |= captured_log.Contains ("The selected devices are already paired with each other.");
+					if (try_creating_device) {
+						log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID}), but will create a new watch device and try again.");
+						return await CreateDevicePair (log, device, companion_device, runtime, devicetype, true);
+					}
+				}
+
+				log.WriteLine ($"Could not create device pair for '{device.Name}' ({device.UDID}) and '{companion_device.Name}' ({companion_device.UDID})");
+				return false;
+			}
+			return true;
+		}
+
+		async Task<SimDevicePair> FindOrCreateDevicePairAsync (Log log, IEnumerable<SimDevice> devices, IEnumerable<SimDevice> companion_devices)
+		{
+			// Check if we already have a device pair with the specified devices
+			var pairs = AvailableDevicePairs.Where ((SimDevicePair pair) => {
+				if (!devices.Any ((v) => v.UDID == pair.Gizmo))
+					return false;
+				if (!companion_devices.Any ((v) => v.UDID == pair.Companion))
+					return false;
+				return true;
+			});
+
+			if (!pairs.Any ()) {
+				// No device pair. Create one.
+				// First check if the watch is already paired
+				var unPairedDevices = devices.Where ((v) => !AvailableDevicePairs.Any ((SimDevicePair p) => { return p.Gizmo == v.UDID; }));
+				var unpairedDevice = unPairedDevices.FirstOrDefault ();
+				var companion_device = companion_devices.First ();
+				var device = devices.First ();
+				if (!await CreateDevicePair (log, unpairedDevice, companion_device, device.SimRuntime, device.SimDeviceType, unpairedDevice == null))
+					return null;
+
+				await LoadAsync (log, force: true);
+
+				pairs = AvailableDevicePairs.Where ((SimDevicePair pair) => {
+					if (!devices.Any ((v) => v.UDID == pair.Gizmo))
+						return false;
+					if (!companion_devices.Any ((v) => v.UDID == pair.Companion))
+						return false;
+					return true;
+				});
+			}
+
+			return pairs.FirstOrDefault ();
+		}
+
+		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log, bool create_if_needed = true)
 		{
 			SimDevice [] simulators = null;
 
-			string [] simulator_devicetypes;
+			string simulator_devicetype;
 			string simulator_runtime;
-			string [] companion_devicetypes = null;
+			string companion_devicetype = null;
 			string companion_runtime = null;
 
 			switch (target) {
 			case AppRunnerTarget.Simulator_iOS32:
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
+				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-10-3";
 				break;
 			case AppRunnerTarget.Simulator_iOS64:
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-6" };
+				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-X";
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_iOS:
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
+				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_tvOS:
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p" };
+				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p";
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + Xamarin.SdkVersions.TVOS.Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_watchOS:
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-38mm", "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-2-38mm" };
+				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-3-38mm";
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + Xamarin.SdkVersions.WatchOS.Replace ('.', '-');
-				companion_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-6s" };
+				companion_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-X";
 				companion_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
 			default:
 				throw new Exception (string.Format ("Unknown simulator target: {0}", target));
 			}
 
-			var devices = AvailableDevices.Where ((SimDevice v) =>
-			{
-				if (v.SimRuntime != simulator_runtime)
-					return false;
+			var devices = await FindOrCreateDevicesAsync (log, simulator_runtime, simulator_devicetype);
+			var companion_devices = await FindOrCreateDevicesAsync (log, companion_runtime, companion_devicetype);
 
-				if (!simulator_devicetypes.Contains (v.SimDeviceType))
-					return false;
-
-				if (target == AppRunnerTarget.Simulator_watchOS)
-					return AvailableDevicePairs.Any ((SimDevicePair pair) => pair.Companion == v.UDID || pair.Gizmo == v.UDID);
-
-				return true;
-			});
-
-			SimDevice candidate = null;
-
-			foreach (var device in devices) {
-				var data = device;
-				var secondaryData = (SimDevice) null;
-				var nodeCompanions = AvailableDevicePairs.Where ((SimDevicePair v) => v.Companion == device.UDID);
-				var nodeGizmos = AvailableDevicePairs.Where ((SimDevicePair v) => v.Gizmo == device.UDID);
-
-				if (nodeCompanions.Any ()) {
-					var gizmo_udid = nodeCompanions.First ().Gizmo;
-					var node = AvailableDevices.Where ((SimDevice v) => v.UDID == gizmo_udid);
-					secondaryData = node.First ();
-				} else if (nodeGizmos.Any ()) {
-					var companion_udid = nodeGizmos.First ().Companion;
-					var node = AvailableDevices.Where ((SimDevice v) => v.UDID == companion_udid);
-					secondaryData = node.First ();
-				}
-				if (secondaryData != null) {
-					simulators = new SimDevice [] { data, secondaryData };
-					break;
-				} else {
-					candidate = data;
-				}
+			if (devices?.Any () != true) {
+				log.WriteLine ($"Could not find or create devices runtime={simulator_runtime} and device type={simulator_devicetype}.");
+				return null;
 			}
 
-			if (simulators == null && candidate == null && target == AppRunnerTarget.Simulator_watchOS) {
-				// We might be only missing device pairs to match phone + watch.
-				var watchDevices = AvailableDevices.Where ((SimDevice v) => { return v.SimRuntime == simulator_runtime && simulator_devicetypes.Contains (v.SimDeviceType); });
-				var companionDevices = AvailableDevices.Where ((SimDevice v) => { return v.SimRuntime == companion_runtime && companion_devicetypes.Contains (v.SimDeviceType); });
-				if (!watchDevices.Any () || !companionDevices.Any ()) {
-					log.WriteLine ($"Could not find both watch devices for <runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}> and companion device for <runtime={companion_runtime} and device type {string.Join (";", companion_devicetypes)}>");
+			if (companion_runtime == null) {
+				simulators = new SimDevice [] { devices.First () };
+			} else {
+				if (companion_devices?.Any () != true) {
+					log.WriteLine ($"Could not find or create companion devices runtime={companion_runtime} and device type={companion_devicetype}.");
 					return null;
 				}
-				var watchDevice = watchDevices.First ();
-				var companionDevice = companionDevices.First ();
 
-				log.WriteLine ($"Creating device pair for '{watchDevice.Name}' and '{companionDevice.Name}'");
-				var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"pair {watchDevice.UDID} {companionDevice.UDID}", log, TimeSpan.FromMinutes (1));
-				if (!rv.Succeeded) {
-					log.WriteLine ($"Could not create device pair, so could not find simulator for runtime={simulator_runtime} and device type={string.Join ("; ", simulator_devicetypes)}.");
+				var pair = await FindOrCreateDevicePairAsync (log, devices, companion_devices);
+				if (pair == null) {
+					log.WriteLine ($"Could not find or create device pair runtime={companion_runtime} and device type={companion_devicetype}.");
 					return null;
 				}
-				available_device_pairs.Add (new SimDevicePair ()
-				{
-					Companion = companionDevice.UDID,
-					Gizmo = watchDevice.UDID,
-					UDID = $"<created for {companionDevice.UDID} and {watchDevice.UDID}",
-				});
-				simulators = new SimDevice [] { watchDevice, companionDevice };
+
+				simulators = new SimDevice [] {
+					devices.First ((v) => v.UDID == pair.Gizmo), 
+					companion_devices.First ((v) => v.UDID == pair.Companion),
+				};
 			}
 
 			if (simulators == null) {
-				if (candidate == null) {
-					log.WriteLine ($"Could not find simulator for runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}.");
-					return null;
-				}
-				simulators = new SimDevice [] { candidate };
-			}
-
-			if (simulators == null) {
-				log.WriteLine ("Could not find simulator");
+				log.WriteLine ($"Could not find simulator for runtime={simulator_runtime} and device type={simulator_devicetype}.");
 				return null;
 			}
 
@@ -244,11 +319,13 @@ namespace xharness
 			};
 		}
 
-		class SimulatorEnumerable : IEnumerable<SimDevice>
+		class SimulatorEnumerable : IEnumerable<SimDevice>, IAsyncEnumerable
 		{
 			public Simulators Simulators;
 			public AppRunnerTarget Target;
 			public Log Log;
+			object lock_obj = new object ();
+			Task<SimDevice []> findTask;
 
 			public IEnumerator<SimDevice> GetEnumerator ()
 			{
@@ -261,6 +338,19 @@ namespace xharness
 			IEnumerator IEnumerable.GetEnumerator ()
 			{
 				return GetEnumerator ();
+			}
+
+			Task<SimDevice []> Find ()
+			{
+				lock (lock_obj) {
+					if (findTask == null)
+						findTask = Simulators.FindAsync (Target, Log);
+					return findTask;
+				}
+			}
+
+			public Task ReadyTask {
+				get { return Find (); }
 			}
 
 			class Enumerator : IEnumerator<SimDevice>
@@ -290,7 +380,7 @@ namespace xharness
 					if (moved)
 						return false;
 					if (devices == null)
-						devices = Enumerable.Simulators.FindAsync (Enumerable.Target, Enumerable.Log).Result;
+						devices = Enumerable.Find ()?.Result?.ToArray (); // Create a copy of the list of devices, so we can have enumerator-specific current index.
 					moved = true;
 					return devices?.Length > 0;
 				}
@@ -301,6 +391,11 @@ namespace xharness
 				}
 			}
 		}
+	}
+
+	public interface IAsyncEnumerable
+	{
+		Task ReadyTask { get; }
 	}
 
 	public class SimRuntime
@@ -373,6 +468,40 @@ namespace xharness
 			}
 		}
 
+		int TCCFormat {
+			get {
+				// v1: < iOS 9
+				// v2: >= iOS 9 && < iOS 12
+				// v3: >= iOS 12
+				if (SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.iOS-", StringComparison.Ordinal)) {
+					var v = Version.Parse (SimRuntime.Substring ("com.apple.CoreSimulator.SimRuntime.iOS-".Length).Replace ('-', '.'));
+					if (v.Major >= 12) {
+						return 3;
+					} else if (v.Major >= 9) {
+						return 2;
+					} else {
+						return 1;
+					}
+				} else if (SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.tvOS-", StringComparison.Ordinal)) {
+					var v = Version.Parse (SimRuntime.Substring ("com.apple.CoreSimulator.SimRuntime.tvOS-".Length).Replace ('-', '.'));
+					if (v.Major >= 12) {
+						return 3;
+					} else {
+						return 2;
+					}
+				} else if (SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS-", StringComparison.Ordinal)) {
+					var v = Version.Parse (SimRuntime.Substring ("com.apple.CoreSimulator.SimRuntime.watchOS-".Length).Replace ('-', '.'));
+					if (v.Major >= 5) {
+						return 3;
+					} else {
+						return 2;
+					}
+				} else {
+					throw new NotImplementedException ();
+				}
+			}
+		}
+
 		public async Task AgreeToPromptsAsync (Log log, params string[] bundle_identifiers)
 		{
 			if (bundle_identifiers == null || bundle_identifiers.Length == 0) {
@@ -383,6 +512,7 @@ namespace xharness
 			var TCC_db = Path.Combine (DataPath, "data", "Library", "TCC", "TCC.db");
 			var sim_services = new string [] {
 					"kTCCServiceAddressBook",
+					"kTCCServiceCalendar",
 					"kTCCServicePhotos",
 					"kTCCServiceMediaLibrary",
 					"kTCCServiceUbiquity",
@@ -390,7 +520,7 @@ namespace xharness
 				};
 
 			var failure = false;
-			var tcc_edit_timeout = 5;
+			var tcc_edit_timeout = 30;
 			var watch = new Stopwatch ();
 			watch.Start ();
 
@@ -405,8 +535,25 @@ namespace xharness
 					sql.Append (StringUtils.Quote (TCC_db));
 					sql.Append (" \"");
 					foreach (var service in sim_services) {
-						sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier);
-						sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier + ".watchkitapp");
+						switch (TCCFormat) {
+						case 1:
+							// CREATE TABLE access (service TEXT NOT NULL, client TEXT NOT NULL, client_type INTEGER NOT NULL, allowed INTEGER NOT NULL, prompt_count INTEGER NOT NULL, csreq BLOB, CONSTRAINT key PRIMARY KEY (service, client, client_type));
+							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL);", service, bundle_identifier);
+							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL);", service, bundle_identifier + ".watchkitapp");
+							break;
+						case 2:
+							// CREATE TABLE access (service	TEXT NOT NULL, client TEXT NOT NULL, client_type INTEGER NOT NULL, allowed INTEGER NOT NULL, prompt_count INTEGER NOT NULL, csreq BLOB, policy_id INTEGER, PRIMARY KEY (service, client, client_type), FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE);
+							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier);
+							sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier + ".watchkitapp");
+							break;
+						case 3: // Xcode 10+
+							// CREATE TABLE access (    service        TEXT        NOT NULL,     client         TEXT        NOT NULL,     client_type    INTEGER     NOT NULL,     allowed        INTEGER     NOT NULL,     prompt_count   INTEGER     NOT NULL,     csreq          BLOB,     policy_id      INTEGER,     indirect_object_identifier_type    INTEGER,     indirect_object_identifier         TEXT,     indirect_object_code_identity      BLOB,     flags          INTEGER,     last_modified  INTEGER     NOT NULL DEFAULT (CAST(strftime('%s','now') AS INTEGER)),     PRIMARY KEY (service, client, client_type, indirect_object_identifier),    FOREIGN KEY (policy_id) REFERENCES policies(id) ON DELETE CASCADE ON UPDATE CASCADE)
+							sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,1);", service, bundle_identifier);
+							sql.AppendFormat ("INSERT OR REPLACE INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL,NULL,'UNUSED',NULL,NULL,1);", service, bundle_identifier + ".watchkitapp");
+							break;
+						default:
+							throw new NotImplementedException ();
+						}
 					}
 					sql.Append ("\"");
 					var rv = await ProcessHelper.ExecuteCommandAsync ("sqlite3", sql.ToString (), log, TimeSpan.FromSeconds (5));
@@ -422,6 +569,9 @@ namespace xharness
 			} else {
 				log.WriteLine ("Successfully edited TCC.db");
 			}
+
+			log.WriteLine ("Current TCC database contents:");
+			await ProcessHelper.ExecuteCommandAsync ("sqlite3", $"{StringUtils.Quote (TCC_db)} .dump", log, TimeSpan.FromSeconds (5));
 		}
 
 		async Task OpenSimulator (Log log)
@@ -497,11 +647,12 @@ namespace xharness
 		bool loaded;
 
 		BlockingEnumerableCollection<Device> connected_devices = new BlockingEnumerableCollection<Device> ();
-		public IEnumerable<Device> ConnectedDevices {
-			get {
-				return connected_devices;
-			}
-		}
+
+		public IEnumerable<Device> ConnectedDevices => connected_devices;
+		public IEnumerable<Device> Connected64BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports64Bit);
+		public IEnumerable<Device> Connected32BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports32Bit);
+		public IEnumerable<Device> ConnectedTV => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.tvOS);
+		public IEnumerable<Device> ConnectedWatch => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.watchOS);
 
 		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{
@@ -583,6 +734,7 @@ namespace xharness
 		ARMv7k,
 		ARMv7s,
 		ARM64,
+		ARM64_32,
 		i386,
 		x86_64,
 	}
@@ -728,8 +880,20 @@ namespace xharness
 				}
 
 				// https://www.theiphonewiki.com/wiki/List_of_Apple_Watches
-				if (model.StartsWith ("Watch", StringComparison.Ordinal))
-					return Architecture.ARMv7k;
+				if (model.StartsWith ("Watch", StringComparison.Ordinal)) {
+					var identifier = model.Substring ("Watch".Length);
+					var values = identifier.Split (',');
+					switch (values [0]) {
+						case "1": // Apple Watch (1st gen)
+						case "2": // Apple Watch Series 1 and Series 2
+						case "3": // Apple Watch Series 3
+							return Architecture.ARMv7k;
+
+						case "4": // Apple Watch Series 4
+						default:
+							return Architecture.ARM64_32;
+					}
+				}
 
 				// https://www.theiphonewiki.com/wiki/List_of_Apple_TVs
 				if (model.StartsWith ("AppleTV", StringComparison.Ordinal))

@@ -10,7 +10,7 @@ using System.Reflection;
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
-	public partial class MMPTests 
+	public class ExtensionTests 
 	{
 		[Test]
 		public void TodayExtension_SmokeTest ()
@@ -18,10 +18,14 @@ namespace Xamarin.MMP.Tests
 			if (!PlatformHelpers.CheckSystemVersion (10, 10))
 				return;
 
-			RunMMPTest (tmpDir =>
+			MMPTests.RunMMPTest (tmpDir =>
 			{
-				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Today/TodayExtensionTest.csproj");
-				TI.BuildProject (testPath, isUnified: true);
+				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Today"), tmpDir);
+				string project = Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj");
+				string main = Path.Combine (tmpDir, "Today/TodayViewController.cs");
+				TI.CopyFileWithSubstitutions (project, project, s => s.Replace ("%ITEMGROUP%", ""));
+				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("%TESTCODE%", ""));
+				TI.BuildProject (project, isUnified: true);
 			});
 		}
 
@@ -31,10 +35,10 @@ namespace Xamarin.MMP.Tests
 			if (!PlatformHelpers.CheckSystemVersion (10, 10))
 				return;
 
-			RunMMPTest (tmpDir =>
+			MMPTests.RunMMPTest (tmpDir =>
 			{
-				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Finder/FinderExtensionTest.csproj");
-				TI.BuildProject (testPath, isUnified: true);
+				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Finder"), tmpDir);
+				TI.BuildProject (Path.Combine (tmpDir, "Finder/FinderExtensionTest.csproj"), isUnified: true);
 			});
 		}
 
@@ -44,10 +48,10 @@ namespace Xamarin.MMP.Tests
 			if (!PlatformHelpers.CheckSystemVersion (10, 10))
 				return;
 
-			RunMMPTest (tmpDir =>
+			MMPTests.RunMMPTest (tmpDir =>
 			{
-				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Share/ShareExtensionTest.csproj");
-				TI.BuildProject (testPath, isUnified: true);
+				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Share"), tmpDir);
+				TI.BuildProject (Path.Combine (tmpDir, "Share/ShareExtensionTest.csproj"), isUnified: true);
 			});
 		}
 	}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Xamarin;
 
 namespace xharness
 {
@@ -92,16 +93,7 @@ namespace xharness
 
 			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "src");
 
-			var mt_dialog_project_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.Dialog-1.tvos.csproj"));
 			string project_guid;
-			if (!project_guids.TryGetValue (mt_dialog_project_path, out project_guid)) {
-				XmlDocument mt_dialog_project = new XmlDocument ();
-				mt_dialog_project.LoadWithoutNetworkAccess (mt_dialog_project_path);
-				project_guid = mt_dialog_project.GetProjectGuid ();
-				project_guids [mt_dialog_project_path] = project_guid;
-			}
-			inputProject.CreateProjectReferenceValue ("MonoTouch.Dialog-1", mt_dialog_project_path, project_guid, "MonoTouch.Dialog-1");
-
 			var mt_nunitlite_project_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite.tvos.csproj"));
 			if (!project_guids.TryGetValue (mt_nunitlite_project_path, out project_guid)) {
 				XmlDocument mt_nunitlite_project = new XmlDocument ();

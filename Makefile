@@ -1,5 +1,5 @@
 TOP=.
-SUBDIRS=builds runtime fsharp src tools msbuild
+SUBDIRS=builds runtime fsharp src msbuild tools
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
 
@@ -57,7 +57,7 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: Make.config.inc .git/index | $(IOS
 	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
 	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@
 
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version: Make.config.inc
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version: Make.config.inc | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 	$(Q) echo $(IOS_PACKAGE_VERSION) > $@
 
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: Make.config.inc
@@ -97,7 +97,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Commands:
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo: Make.config.inc .git/index | $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)
 	$(Q_GEN) echo "Version: $(MAC_PACKAGE_VERSION)" > $@
 	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
-	$(Q) echo "Branch: $(shell git symbolic-ref --short HEAD)" >> $@
+	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
 	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@
 
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo: Make.config.inc
@@ -108,7 +108,7 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: Make.config.inc
 
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: Versions-mac.plist.in Makefile $(TOP)/Make.config versions-check.csharp
 	$(Q) ./versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
-	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(MONO_VERSION)/g" $< > $@
+	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(MONO_VERSION)/g" -e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" $< > $@
 
 ifdef INCLUDE_MAC
 TARGETS += $(MAC_TARGETS)
@@ -127,7 +127,19 @@ world: check-system
 
 .PHONY: check-system
 check-system:
+	@if [[ "x$(IOS_COMMIT_DISTANCE)" != "x$(MAC_COMMIT_DISTANCE)" ]]; then \
+		echo "$(COLOR_RED)*** The commit distance for Xamarin.iOS ($(IOS_COMMIT_DISTANCE)) and Xamarin.Mac ($(MAC_COMMIT_DISTANCE)) are different.$(COLOR_CLEAR)"; \
+		echo "$(COLOR_RED)*** To fix this problem, bump the revision (the third number) for both $(COLOR_GRAY)IOS_PACKAGE_NUMBER$(COLOR_RED) and $(COLOR_GRAY)MAC_PACKAGE_NUMBER$(COLOR_RED) in Make.versions.$(COLOR_CLEAR)"; \
+		echo "$(COLOR_RED)*** Once fixed, you need to commit the changes for them to pass this check.$(COLOR_CLEAR)"; \
+		exit 1; \
+	elif (( $(IOS_COMMIT_DISTANCE) > 999 || $(MAC_COMMIT_DISTANCE) > 999 )); then \
+		echo "$(COLOR_RED)*** The commit distance for Xamarin.iOS ($(IOS_COMMIT_DISTANCE)) and/or Xamarin.Mac ($(MAC_COMMIT_DISTANCE)) are > 999.$(COLOR_CLEAR)"; \
+		echo "$(COLOR_RED)*** To fix this problem, bump the revision (the third number) for both $(COLOR_GRAY)IOS_PACKAGE_NUMBER$(COLOR_RED) and $(COLOR_GRAY)MAC_PACKAGE_NUMBER$(COLOR_RED) in Make.versions.$(COLOR_CLEAR)"; \
+		echo "$(COLOR_RED)*** Once fixed, you need to commit the changes for them to pass this check.$(COLOR_CLEAR)"; \
+		exit 1; \
+	fi
 	@./system-dependencies.sh
+	@echo "Building Xamarin.iOS $(IOS_PACKAGE_VERSION) and Xamarin.Mac $(MAC_PACKAGE_VERSION)"
 
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -179,13 +191,11 @@ endif
 
 package:
 	mkdir -p ../package
-	$(MAKE) -C ../maccore package
+	$(MAKE) -C $(MACCORE_PATH) package
 	# copy .pkg, .zip and *updateinfo to the packages directory to be uploaded to storage
-	cp ../maccore/release/*.pkg ../package
-	-cp ../maccore/release/*.zip ../package
-	-cp ../maccore/release/*updateinfo ../package
-	-cp ../maccore/tests/*.zip ../package
-	-cp ../xamarin-macios/tests/*.zip ../package
+	$(CP) $(MACCORE_PATH)/release/*.pkg ../package
+	$(CP) $(MACCORE_PATH)/release/*.zip ../package
+	$(CP) $(MACCORE_PATH)/release/*updateinfo ../package
 
 install-system: install-system-ios install-system-mac
 	@# Clean up some old files

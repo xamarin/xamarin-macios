@@ -1,6 +1,6 @@
 ﻿// Copyright 2015 Xamarin Inc.
 
-#if IOS || TVOS
+#if !WATCHOS
 
 using System;
 using System.Runtime.InteropServices;
@@ -10,7 +10,7 @@ using Foundation;
 
 namespace GameController {
 
-	[iOS (10,0)][TV (9,0)]
+	[iOS (10,0), TV (9,0), Mac (10,12, onlyOn64: true)]
 	// GCMicroGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -44,8 +44,10 @@ namespace GameController {
 
 		// GCGamepadSnapshot.h
 		[DllImport (Constants.GameControllerLibrary)]
+		[Mac (10, 12)]
 		static extern bool GCMicroGamepadSnapShotDataV100FromNSData (out GCMicroGamepadSnapShotDataV100 snapshotData, /* NSData */ IntPtr data);
 
+		[Mac (10, 12)]
 		public static bool TryGetSnapshotData (NSData data, out GCMicroGamepadSnapShotDataV100 snapshotData)
 		{
 			return GCMicroGamepadSnapShotDataV100FromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);

@@ -140,15 +140,27 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void Scale ()
 		{
-			var transform = CGAffineTransform.MakeTranslation (0, 200);
-			transform.Scale (1, -1);
-		
-			Assert.AreEqual ((nfloat) 1, transform.xx);
-			Assert.AreEqual ((nfloat) 0, transform.yx);
-			Assert.AreEqual ((nfloat) 0, transform.xy);
-			Assert.AreEqual ((nfloat) (-1), transform.yy);
-			Assert.AreEqual ((nfloat) 0, transform.x0);
-			Assert.AreEqual ((nfloat) (-200), transform.y0);
+			var transform1 = CGAffineTransform.MakeTranslation (1, 2);
+			// t' = t * [ sx 0 0 sy 0 0 ]
+			transform1.Scale (3, 4); // MatrixOrder.Append by default
+
+			Assert.AreEqual ((nfloat) 3, transform1.xx);
+			Assert.AreEqual ((nfloat) 0, transform1.yx);
+			Assert.AreEqual ((nfloat) 0, transform1.xy);
+			Assert.AreEqual ((nfloat) 4, transform1.yy);
+			Assert.AreEqual ((nfloat) 3, transform1.x0);
+			Assert.AreEqual ((nfloat) 8, transform1.y0);
+
+			var transform2 = CGAffineTransform.MakeTranslation (1, 2);
+			// t' = [ sx 0 0 sy 0 0 ] * t – Swift equivalent
+			transform2.Scale (3, 4, MatrixOrder.Prepend);
+
+			Assert.AreEqual ((nfloat)3, transform2.xx);
+			Assert.AreEqual ((nfloat)0, transform2.yx);
+			Assert.AreEqual ((nfloat)0, transform2.xy);
+			Assert.AreEqual ((nfloat)4, transform2.yy);
+			Assert.AreEqual ((nfloat)1, transform2.x0);
+			Assert.AreEqual ((nfloat)2, transform2.y0);
 		}
 
 		[Test]
@@ -165,14 +177,14 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.IsTrue (transformM == transformN, "2");
 		}
 
-		[DllImport ("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+		[DllImport (global::ObjCRuntime.Constants.CoreGraphicsLibrary)]
 		public extern static CGAffineTransform CGAffineTransformScale (CGAffineTransform t, nfloat sx, nfloat sy);
 
 		[Test]
 		public void Translate ()
 		{
 			var transform = CGAffineTransform.MakeIdentity ();
-			transform.Translate (1, -1);
+			transform.Translate (1, -1); // MatrixOrder.Append by default
 
 			Assert.AreEqual ((nfloat) 1, transform.xx, "xx");
 			Assert.AreEqual ((nfloat) 0, transform.yx, "yx");
@@ -184,12 +196,22 @@ namespace MonoTouchFixtures.CoreGraphics {
 			transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
 			transform.Translate (2, -3);
 
-			Assert.AreEqual ((nfloat) 1, transform.xx, "xx");
-			Assert.AreEqual ((nfloat) 2, transform.yx, "yx");
-			Assert.AreEqual ((nfloat) 3, transform.xy, "xy");
-			Assert.AreEqual ((nfloat) 4, transform.yy, "yy");
-			Assert.AreEqual ((nfloat) 7, transform.x0, "x0");
-			Assert.AreEqual ((nfloat) 3, transform.y0, "y0");
+			Assert.AreEqual ((nfloat)1, transform.xx, "xx");
+			Assert.AreEqual ((nfloat)2, transform.yx, "yx");
+			Assert.AreEqual ((nfloat)3, transform.xy, "xy");
+			Assert.AreEqual ((nfloat)4, transform.yy, "yy");
+			Assert.AreEqual ((nfloat)7, transform.x0, "x0");
+			Assert.AreEqual ((nfloat)3, transform.y0, "y0");
+
+			transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
+			transform.Translate (2, -3, MatrixOrder.Prepend);
+
+			Assert.AreEqual ((nfloat)1, transform.xx, "xx");
+			Assert.AreEqual ((nfloat)2, transform.yx, "yx");
+			Assert.AreEqual ((nfloat)3, transform.xy, "xy");
+			Assert.AreEqual ((nfloat)4, transform.yy, "yy");
+			Assert.AreEqual ((nfloat)(-2), transform.x0, "x0");
+			Assert.AreEqual ((nfloat)(-2), transform.y0, "y0");
 		}
 
 		[Test]
@@ -220,14 +242,14 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.IsTrue (transformN == transformM);
 		}
 
-		[DllImport ("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+		[DllImport (global::ObjCRuntime.Constants.CoreGraphicsLibrary)]
 		public extern static CGAffineTransform CGAffineTransformTranslate (CGAffineTransform t, nfloat sx, nfloat sy);
 
 		[Test]
 		public void Rotate ()
 		{
 			var transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
-			transform.Rotate ((nfloat) Math.PI);
+			transform.Rotate ((nfloat) Math.PI); // MatrixOrder.Append by default
 
 			Assert.That ((double) (-1), Is.EqualTo ((double) transform.xx).Within (0.000001), "xx");
 			Assert.That ((double) (-2), Is.EqualTo ((double) transform.yx).Within (0.000001), "yx");
@@ -235,6 +257,16 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.That ((double) (-4), Is.EqualTo ((double) transform.yy).Within (0.000001), "yy");
 			Assert.That ((double) (-5), Is.EqualTo ((double) transform.x0).Within (0.000001), "x0");
 			Assert.That ((double) (-6), Is.EqualTo ((double) transform.y0).Within (0.000001), "y0");
+
+			transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
+			transform.Rotate ((nfloat)Math.PI, MatrixOrder.Prepend);
+
+			Assert.That ((double)(-1), Is.EqualTo ((double)transform.xx).Within (0.000001), "xx");
+			Assert.That ((double)(-2), Is.EqualTo ((double)transform.yx).Within (0.000001), "yx");
+			Assert.That ((double)(-3), Is.EqualTo ((double)transform.xy).Within (0.000001), "xy");
+			Assert.That ((double)(-4), Is.EqualTo ((double)transform.yy).Within (0.000001), "yy");
+			Assert.That ((double)5, Is.EqualTo ((double)transform.x0).Within (0.000001), "x0");
+			Assert.That ((double)6, Is.EqualTo ((double)transform.y0).Within (0.000001), "y0");
 		}
 
 		[Test]
@@ -258,7 +290,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.That ((double) 6, Is.EqualTo ((double) transformM.y0).Within (0.000001), "y0");
 		}
 
-		[DllImport ("/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics")]
+		[DllImport (global::ObjCRuntime.Constants.CoreGraphicsLibrary)]
 		public extern static CGAffineTransform CGAffineTransformRotate (CGAffineTransform t, nfloat angle);
 
 		[Test]

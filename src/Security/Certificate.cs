@@ -28,7 +28,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if XAMARIN_APPLETLS || __WATCHOS__
+#if XAMARIN_APPLETLS || WATCH
 #define NATIVE_APPLE_CERTIFICATE
 #endif
 
@@ -119,7 +119,7 @@ namespace Security {
 				return;
 			}
 
-			using (NSData cert = NSData.FromArray (impl.GetRawCertData ())) {
+			using (NSData cert = NSData.FromArray (impl.RawData)) {
 				Initialize (cert);
 			}
 		}
@@ -193,7 +193,8 @@ namespace Security {
 			if (handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("SecCertificate");
 
-			return new X509Certificate (handle);
+			var impl = new Mono.AppleTls.X509CertificateImplApple (handle, false);
+			return new X509Certificate (impl);
 #else
 			return new X509Certificate (GetRawData ());
 #endif
@@ -239,6 +240,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr SecCertificateCopyValues (/* SecCertificateRef */ IntPtr certificate, /* CFArrayRef */ IntPtr keys, /* CFErrorRef _Nullable * */ IntPtr error);
 
+		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'GetKey' instead.")]
 		public NSData GetPublicKey ()
 		{
 			if (handle == IntPtr.Zero)
@@ -270,12 +272,26 @@ namespace Security {
 		static extern /* __nullable SecKeyRef */ IntPtr SecCertificateCopyPublicKey (IntPtr /* SecCertificateRef */ certificate);
 
 		[iOS (10,3)]
+		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'GetKey' instead.")]
 		public SecKey GetPublicKey ()
 		{
 			IntPtr data = SecCertificateCopyPublicKey (handle);
 			return (data == IntPtr.Zero) ? null : new SecKey (data, true);
 		}
 #endif
+		[TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)][Watch (5,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern IntPtr /* SecKeyRef* */ SecCertificateCopyKey (IntPtr /* SecKeyRef* */ key);
+
+		[TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)][Watch (5,0)]
+		public SecKey GetKey ()
+		{
+			var key = SecCertificateCopyKey (handle);
+			return key == IntPtr.Zero ? null : new SecKey (key, true);
+		}
+
 		[iOS (10,3)] // [Mac (10,5)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SecCertificateCopyCommonName (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFStringRef * __nonnull CF_RETURNS_RETAINED */ commonName);
@@ -333,7 +349,6 @@ namespace Security {
 		}
 
 #if MONOMAC
-		[Mac (10,7)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate, IntPtr /* CFErrorRef * */ error);
 #else
@@ -342,7 +357,6 @@ namespace Security {
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate);
 #endif
 		[iOS (10,3)]
-		[Mac (10,7)]
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber(out NSError)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
@@ -551,8 +565,7 @@ namespace Security {
 			// iOS (+friends) need to pass the strong dictionary for public and private key attributes to specific keys
 			// instead of merging them with other attributes.
 			return GenerateKeyPair (type, keySizeInBits, publicAndPrivateKeyAttrs, publicAndPrivateKeyAttrs, out publicKey, out privateKey);
-#endif
-
+#else
 			if (type == SecKeyType.Invalid)
 				throw new ArgumentException ("invalid 'SecKeyType'", nameof (type));
 
@@ -562,8 +575,9 @@ namespace Security {
 			else
 				dic = new NSMutableDictionary ();
 			dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
-			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecAttributeKey.KeySizeInBits);
+			dic.LowlevelSetObject (new NSNumber (keySizeInBits), SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 			return GenerateKeyPair (dic, out publicKey, out privateKey);
+#endif
 		}
 #if !MONOMAC
 		public static SecStatusCode GenerateKeyPair (SecKeyType type, int keySizeInBits, SecPublicPrivateKeyAttrs publicKeyAttrs, SecPublicPrivateKeyAttrs privateKeyAttrs, out SecKey publicKey, out SecKey privateKey)
@@ -574,11 +588,11 @@ namespace Security {
 			using (var dic = new NSMutableDictionary ()) {
 				dic.LowlevelSetObject (type.GetConstant (), SecAttributeKey.Type);
 				using (var ksib = new NSNumber (keySizeInBits)) {
-					dic.LowlevelSetObject (ksib, SecAttributeKey.KeySizeInBits);
+					dic.LowlevelSetObject (ksib, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 					if (publicKeyAttrs != null)
-						dic.LowlevelSetObject (publicKeyAttrs.GetDictionary (), SecAttributeKey.PublicKeyAttrs);
+						dic.LowlevelSetObject (publicKeyAttrs.GetDictionary (), SecKeyGenerationAttributeKeys.PublicKeyAttrsKey.Handle);
 					if (privateKeyAttrs != null)
-						dic.LowlevelSetObject (privateKeyAttrs.GetDictionary (), SecAttributeKey.PrivateKeyAttrs);
+						dic.LowlevelSetObject (privateKeyAttrs.GetDictionary (), SecKeyGenerationAttributeKeys.PrivateKeyAttrsKey.Handle);
 					return GenerateKeyPair (dic, out publicKey, out privateKey);
 				}
 			}
@@ -789,9 +803,22 @@ namespace Security {
 		{
 			using (var ks = new NSNumber (keySizeInBits))
 			using (var md = parameters == null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
-				md.LowlevelSetObject (keyType.GetConstant (), SecAttributeKey.KeyType);
-				md.LowlevelSetObject (ks, SecAttributeKey.KeySizeInBits);
+				md.LowlevelSetObject (keyType.GetConstant (), SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
+				md.LowlevelSetObject (ks, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 				return CreateRandomKey (md, out error);
+			}
+		}
+
+		[Watch (3, 0)][TV (10, 0)][Mac (10, 12)][iOS (10, 0)]
+		static public SecKey CreateRandomKey (SecKeyGenerationParameters parameters, out NSError error)
+		{
+			if (parameters == null)
+				throw new ArgumentNullException (nameof (parameters));
+			if (parameters.KeyType == SecKeyType.Invalid)
+				throw new ArgumentException ("invalid 'SecKeyType'", "SecKeyGeneration.KeyType");
+
+			using (var dictionary = parameters.GetDictionary ()) {
+				return CreateRandomKey (dictionary, out error);
 			}
 		}
 
@@ -818,9 +845,9 @@ namespace Security {
 		{
 			using (var ks = new NSNumber (keySizeInBits))
 			using (var md = parameters == null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
-				md.LowlevelSetObject (keyType.GetConstant (), SecAttributeKey.KeyType);
+				md.LowlevelSetObject (keyType.GetConstant (), SecKeyGenerationAttributeKeys.KeyTypeKey.Handle);
 				md.LowlevelSetObject (keyClass.GetConstant (), SecAttributeKey.KeyClass);
-				md.LowlevelSetObject (ks, SecAttributeKey.KeySizeInBits);
+				md.LowlevelSetObject (ks, SecKeyGenerationAttributeKeys.KeySizeInBitsKey.Handle);
 				return Create (keyData, md, out error);
 			}
 		}

@@ -27,9 +27,20 @@ namespace Xamarin.iOS.Tasks
 			AppExtensionReferences = new Microsoft.Build.Framework.ITaskItem[] { };
 		}
 
+		public string ResponseFile = "";
+
 		public new string GenerateCommandLineCommands ()
 		{
-			return base.GenerateCommandLineCommands ();
+			var cl = base.GenerateCommandLineCommands ();
+
+			try {
+				using (StreamReader sr = new StreamReader (ResponseFilePath))
+					ResponseFile = sr.ReadToEnd ();
+			} catch (Exception e) {
+				Assert.Fail ($"The file could not be read: {e.Message}");
+			}
+
+			return cl;
 		}
 	}
 
@@ -49,9 +60,11 @@ namespace Xamarin.iOS.Tasks
 
 			Task.AppBundleDir = AppBundlePath;
 			Task.AppManifest = new TaskItem (Path.Combine (MonoTouchProjectPath, "Info.plist"));
+			Task.CompiledEntitlements = Path.Combine ("..", "bin", "Resources", "Entitlements.plist");
 			Task.IntermediateOutputPath = Path.Combine ("obj", "mtouch-cache");
 			Task.MainAssembly = new TaskItem ("Main.exe");
-			Task.References = new [] { new TaskItem ("a.dll"), new TaskItem ("b.dll"), new TaskItem ("c.dll") };
+			Task.References = new [] { new TaskItem ("a.dll"), new TaskItem ("b with spaces.dll"), new TaskItem ("c\"quoted\".dll") };
+			Task.ResponseFilePath = Path.Combine (Path.GetTempPath (), "response-file.rsp");
 			Task.SdkRoot = "/path/to/sdkroot";
 			Task.SdkVersion = "6.1";
 			Task.SymbolsList = Path.Combine (Path.GetTempPath (), "mtouch-symbol-list");
@@ -62,24 +75,29 @@ namespace Xamarin.iOS.Tasks
 		public void StandardCommandline ()
 		{
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("-r=" + Path.GetFullPath ("a.dll")), "#1a");
-			Assert.IsTrue (args.Contains ("-r=" + Path.GetFullPath ("b.dll")), "#1b");
-			Assert.IsTrue (args.Contains ("-r=" + Path.GetFullPath ("c.dll")), "#1c");
-			Assert.IsTrue (args.Contains ("Main.exe"), "#2");
+			// -r=*/a.dll
+			Assert.IsTrue (Task.ResponseFile.Contains ("-r=" + Path.GetFullPath ("a.dll")), "#1a");
+			// "-r=*/b with spaces.dll"
+			Assert.IsTrue (Task.ResponseFile.Contains ("\"-r=" + Path.GetFullPath ("b with spaces.dll") + "\""), "#1b");
+			// "-r=*/c\"quoted\".dll"
+			Assert.IsTrue (Task.ResponseFile.Contains ("\"-r=" + Path.GetFullPath ("c\\\"quoted\\\".dll") + "\""), "#1c");
+			Assert.IsTrue (Task.ResponseFile.Contains ("Main.exe"), "#2");
 
-			var expectedSimArg = string.Format (" --sim={0}", Path.GetFullPath (AppBundlePath));
-			Assert.IsTrue (args.Contains (expectedSimArg), "#3");
-			Assert.IsTrue (args.Contains ("--sdk="), "#4");
+			var expectedSimArg = $"--sim={Path.GetFullPath (AppBundlePath)}";
+			Assert.IsTrue (Task.ResponseFile.Contains (expectedSimArg), "#3");
+			Assert.IsTrue (Task.ResponseFile.Contains ("--sdk="), "#4");
 		}
 
 		[Test]
 		public void StandardCommandline_WithExtraArgs ()
 		{
 			Task.Debug = true;
-			Assert.IsTrue (Task.GenerateCommandLineCommands ().Contains ("--debug"), "#1");
+			Task.GenerateCommandLineCommands ();
+			Assert.IsTrue (Task.ResponseFile.Contains ("--debug"), "#1");
 
 			Task.Debug = false;
-			Assert.IsFalse (Task.GenerateCommandLineCommands ().Contains ("--debug"), "#2");
+			Task.GenerateCommandLineCommands ();
+			Assert.IsFalse (Task.ResponseFile.Contains ("--debug"), "#2");
 		}
 
 		[Test]
@@ -98,7 +116,7 @@ namespace Xamarin.iOS.Tasks
 			var modifiedPListPath = SetPListKey ("MinimumOSVersion", null);
 			Task.AppManifest = new TaskItem (modifiedPListPath); 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsFalse (args.Contains ("--targetver"), "#1");
+			Assert.IsFalse (Task.ResponseFile.Contains ("--targetver"), "#1");
 		}
 
 		[Test]
@@ -107,7 +125,7 @@ namespace Xamarin.iOS.Tasks
 			Task.SdkVersion = "7.5";
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--sdk=7.5"), "#1");
+			Assert.IsTrue (Task.ResponseFile.Contains ("--sdk=7.5"), "#1");
 		}
 
 		public void MTouchEnableBitcode (string frameworkIdentifier)
@@ -132,7 +150,7 @@ namespace Xamarin.iOS.Tasks
 			MTouchEnableBitcode("Xamarin.WatchOS");
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--bitcode=full"));
+			Assert.IsTrue (Task.ResponseFile.Contains ("--bitcode=full"));
 		}
 
 		[Test]
@@ -141,7 +159,7 @@ namespace Xamarin.iOS.Tasks
 			MTouchEnableBitcode("Xamarin.TVOS");
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--bitcode=asmonly"));
+			Assert.IsTrue (Task.ResponseFile.Contains ("--bitcode=asmonly"));
 		}
 
 		[Test]
@@ -150,7 +168,7 @@ namespace Xamarin.iOS.Tasks
 			Task.UseFloat32 = true;
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--aot-options=-O=float32"));
+			Assert.IsTrue (Task.ResponseFile.Contains ("--aot-options=-O=float32"));
 		}
 
 		[Test]
@@ -159,7 +177,7 @@ namespace Xamarin.iOS.Tasks
 			Task.UseFloat32 = false;
 
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("--aot-options=-O=-float32"));
+			Assert.IsTrue (Task.ResponseFile.Contains ("--aot-options=-O=-float32"));
 		}
 
 		[Test]
@@ -182,6 +200,14 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		[Test]
+		public void BuildEntitlementFlagsTest ()
+		{
+			var args = Task.GenerateCommandLineCommands ();
+			Assert.IsTrue (args.Contains ("\"--gcc_flags=-Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker"), "#1");
+			Assert.IsTrue (args.Contains ("Entitlements.plist"), "#2");
+		}
+
+		[Test]
 		public void ReferenceFrameworkFileResolution_WhenReceivedReferencePathExists()
 		{
 			using (var sdk = new TempSdk()) {
@@ -197,8 +223,15 @@ namespace Xamarin.iOS.Tasks
 					// In Windows, the path slashes are escaped.
 					expectedPath = expectedPath.Replace ("\\", "\\\\");
 
-				Assert.IsTrue (args.Contains (expectedPath));
+				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath));
 			}
+		}
+
+		[Test]
+		public void ResponseFileTest ()
+		{
+			var args = Task.GenerateCommandLineCommands ();
+			Assert.IsTrue (args.Contains ($"@{Task.ResponseFilePath}"), "#@response-file");
 		}
 
 		[TestCase("Xamarin.iOS", "Xamarin.iOS")]
@@ -218,11 +251,11 @@ namespace Xamarin.iOS.Tasks
 					// In Windows, the path slashes are escaped.
 					expectedPath = expectedPath.Replace ("\\", "\\\\");
 
-				Assert.IsTrue (args.Contains (expectedPath), string.Format(
+				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath), string.Format(
 					@"Failed to resolve facade assembly to the Sdk path.
 	Expected path:{0}
 
-	Actual args:{1}", expectedPath, args));
+	Actual args:{1}", expectedPath, Task.ResponseFile));
 			}
 		}
 
@@ -243,11 +276,11 @@ namespace Xamarin.iOS.Tasks
 					// In Windows, the path slashes are escaped.
 					expectedPath = expectedPath.Replace ("\\", "\\\\");
 
-				Assert.IsTrue (args.Contains (expectedPath), string.Format(
+				Assert.IsTrue (Task.ResponseFile.Contains (expectedPath), string.Format(
 					@"Failed to resolve facade assembly to the Sdk path.
 	Expected path:{0}
 
-	Actual args:{1}", expectedPath, args));
+	Actual args:{1}", expectedPath, Task.ResponseFile));
 			}
 		}
 
@@ -261,7 +294,7 @@ namespace Xamarin.iOS.Tasks
 
 				var args = Task.GenerateCommandLineCommands ();
 
-				Assert.IsTrue (args.Contains ("/usr/foo/System.Collections.dll"));
+				Assert.IsTrue (Task.ResponseFile.Contains ("/usr/foo/System.Collections.dll"));
 			}
 		}
 

@@ -357,9 +357,24 @@ public class B : A {}
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Verbosity = 4; // This is required to get the debug output we're testing for
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build 1");
-				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/PreBuild using mode 'None'");
+				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/2-PreBuild using mode 'None'");
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build 2");
 				mtouch.AssertOutputPattern ("Cached assemblies reloaded.");
+			}
+		}
+
+		void DumpFileStats (MTouchTool mtouch)
+		{
+			if (mtouch.Verbosity < 1)
+				return;
+			var directory = mtouch.Cache;
+			var files = Directory.GetFileSystemEntries (directory, "*", SearchOption.AllDirectories).ToList ();
+			files.Sort ((string x, string y) => string.CompareOrdinal (x, y));
+			var max = files.Max ((v) => v.Length);
+
+			var format = "    {0,-" + max + "} {1}";
+			foreach (var file in  files) {
+				Console.WriteLine (format, file, File.GetLastWriteTimeUtc (file).ToString ("HH:mm:ss.fffffff"));
 			}
 		}
 
@@ -397,34 +412,61 @@ public class B : A {}
 					mtouch.DSym = false; // faster test
 					mtouch.MSym = false; // faster test
 					mtouch.NoStrip = true; // faster test
+					//mtouch.Verbosity = 20; // Set the mtouch verbosity to something to print the mtouch output to the terminal. This will also enable additional debug output.
+
+					System.Action assertSupportsDynamicRegistrar = () => {
+						// Assert that the xamarin_supports_dynamic_registration is identical between the app and the extension.
+						string [] abis;
+						if (string.IsNullOrEmpty (abi)) {
+							abis = new string [] { "armv7" };
+						} else {
+							abis = abi.Split (',').Select ((v) => v.Replace ("+llvm", "")).ToArray ();
+						}
+						foreach (var a in abis) {
+							var ext_main = File.ReadAllText (Path.Combine (extension.Cache, a, "main.m"));
+							var app_main = File.ReadAllText (Path.Combine (mtouch.Cache, a, "main.m"));
+							var ext_str = ext_main.Substring (ext_main.IndexOf ("xamarin_supports_dynamic_registration", StringComparison.Ordinal) + 40, 4);
+							var app_str = app_main.Substring (app_main.IndexOf ("xamarin_supports_dynamic_registration", StringComparison.Ordinal) + 40, 4);
+							Assert.AreEqual (ext_str, app_str, $"Expected dynamic registration support to be identical between app ({app_str}) and extension ({ext_str}).");
+							Assert.That (ext_str, Is.EqualTo ("FALS").Or.EqualTo ("TRUE"), "SDR value");
+						}
+					};
 
 					var timestamp = DateTime.MinValue;
 
 					mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
 					Console.WriteLine ($"{DateTime.Now} **** FIRST BUILD DONE ****");
+					DumpFileStats (mtouch);
+					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
 
 					mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
 					Console.WriteLine ($"{DateTime.Now} **** SECOND BUILD DONE ****");
+					DumpFileStats (mtouch);
 
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name);
+					assertSupportsDynamicRegistrar ();
 
 					// Touch the extension's executable, nothing should change
 					new FileInfo (extension.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
 					mtouch.AssertExecute (MTouchAction.BuildDev, "touch extension executable");
 					Console.WriteLine ($"{DateTime.Now} **** TOUCH EXTENSION EXECUTABLE DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name);
+					assertSupportsDynamicRegistrar ();
 
 					// Touch the main app's executable, nothing should change
 					new FileInfo (mtouch.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
 					mtouch.AssertExecute (MTouchAction.BuildDev, "touch main app executable");
 					Console.WriteLine ($"{DateTime.Now} **** TOUCH MAIN APP EXECUTABLE DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name);
+					assertSupportsDynamicRegistrar ();
 
 					// Test that a rebuild (where something changed, in this case the .exe)
 					// actually work. We compile with custom code to make sure it's different
@@ -440,8 +482,10 @@ public class B : A {}
 					extension.CreateTemporaryServiceExtension (extraCode: codeB);
 					mtouch.AssertExecute (MTouchAction.BuildDev, "change extension executable");
 					Console.WriteLine ($"{DateTime.Now} **** CHANGE EXTENSION EXECUTABLE DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name, "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64", "testServiceExtension.dll");
+					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
@@ -450,8 +494,10 @@ public class B : A {}
 					mtouch.CreateTemporaryApp (extraCode: codeB);
 					mtouch.AssertExecute (MTouchAction.BuildDev, "change app executable");
 					Console.WriteLine ($"{DateTime.Now} **** CHANGE APP EXECUTABLE DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name, "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64", "testApp.exe");
 					extension.AssertNoneModified (timestamp, name);
+					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
@@ -460,9 +506,11 @@ public class B : A {}
 					File.WriteAllText (extension.RootAssembly + ".config", "<configuration></configuration>");
 					mtouch.AssertExecute (MTouchAction.BuildDev, "add config to extension dll");
 					Console.WriteLine ($"{DateTime.Now} **** ADD CONFIG TO EXTENSION DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name);
 					extension.AssertNoneModified (timestamp, name, "testServiceExtension.dll.config", "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64");
 					CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testServiceExtension.dll.config", "extension config added");
+					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
@@ -471,22 +519,25 @@ public class B : A {}
 					File.WriteAllText (mtouch.RootAssembly + ".config", "<configuration></configuration>");
 					mtouch.AssertExecute (MTouchAction.BuildDev, "add config to container exe");
 					Console.WriteLine ($"{DateTime.Now} **** ADD CONFIG TO CONTAINER DONE ****");
+					DumpFileStats (mtouch);
 					mtouch.AssertNoneModified (timestamp, name, "testApp.exe.config", "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64");
 					extension.AssertNoneModified (timestamp, name);
 					CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testApp.exe.config", "container config added");
+					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
 					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
-
 					{
 						// Add a satellite to the extension.
 						var satellite = extension.CreateTemporarySatelliteAssembly ();
 						mtouch.AssertExecute (MTouchAction.BuildDev, "add satellite to extension");
 						Console.WriteLine ($"{DateTime.Now} **** ADD SATELLITE TO EXTENSION DONE ****");
+						DumpFileStats (mtouch);
 						mtouch.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
 						extension.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
 						extension.AssertModified (timestamp, name, Path.GetFileName (satellite));
 						CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), Path.GetFileName (satellite), "extension satellite added");
+						assertSupportsDynamicRegistrar ();
 					}
 
 					timestamp = DateTime.Now;
@@ -497,10 +548,12 @@ public class B : A {}
 						var satellite = mtouch.CreateTemporarySatelliteAssembly ();
 						mtouch.AssertExecute (MTouchAction.BuildDev, "add satellite to container");
 						Console.WriteLine ($"{DateTime.Now} **** ADD SATELLITE TO CONTAINER DONE ****");
+						DumpFileStats (mtouch);
 						mtouch.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
 						extension.AssertNoneModified (timestamp, name, Path.GetFileName (satellite));
 						mtouch.AssertModified (timestamp, name, Path.GetFileName (satellite));
 						CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), Path.GetFileName (satellite), "container satellite added");
+						assertSupportsDynamicRegistrar ();
 					}
 				}
 			}
@@ -646,6 +699,21 @@ public class B : A {}
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
 				mtouch.AssertError (18, "Unknown command line argument: '-unknown'");
 				mtouch.AssertError (18, "Unknown command line argument: '--unknown'");
+			}
+		}
+
+		[Test]
+		public void MT0032 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Debug = false;
+				mtouch.CustomArguments = new string[] { "--debugtrack:true" };
+				mtouch.WarnAsError = new int[] { 32 };
+				mtouch.CreateTemporaryApp ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertWarningCount (0);
 			}
 		}
 
@@ -1021,9 +1089,7 @@ public class B : A {}
 				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
 				var xcodeVersionString = Configuration.XcodeVersion;
-				if (xcodeVersionString.EndsWith (".0", StringComparison.Ordinal))
-					xcodeVersionString = xcodeVersionString.Substring (0, xcodeVersionString.Length - 2);
-				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
+				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
 			}
 		}
 
@@ -1050,8 +1116,8 @@ public class B : A {}
 					apptool.Linker = MTouchLinker.LinkAll;
 					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
 					
-					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "Build", "Msym")), "App Msym dir");
-					Assert.IsFalse(Directory.Exists(Path.Combine(exttool.Cache, "Build", "Msym")), "Extenson Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "3-Build", "Msym")), "App Msym dir");
+					Assert.IsFalse(Directory.Exists(Path.Combine(exttool.Cache, "3-Build", "Msym")), "Extenson Msym dir");
 					exttool.AssertNoWarnings();
 					apptool.AssertNoWarnings();
 				}
@@ -1082,8 +1148,8 @@ public class B : A {}
 					apptool.CustomArguments = new string [] { "--nodevcodeshare" };
 					apptool.AssertExecute (MTouchAction.BuildDev, "build app");
 					
-					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "Build", "Msym")), "App Msym dir");
-					Assert.IsTrue(Directory.Exists(Path.Combine(exttool.Cache, "Build", "Msym")), "Extenson Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(apptool.Cache, "3-Build", "Msym")), "App Msym dir");
+					Assert.IsTrue(Directory.Exists(Path.Combine(exttool.Cache, "3-Build", "Msym")), "Extenson Msym dir");
 					exttool.AssertNoWarnings();
 					apptool.AssertNoWarnings();
 				}
@@ -1506,6 +1572,53 @@ public class B : A {}
 		}
 
 		[Test]
+		public void MT0113_dynamicregistrarremoval ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "arm64";
+				extension.Optimize = new string [] { "remove-dynamic-registrar" };
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the remove-dynamic-registrar optimization differ between the container app (true) and the extension (default).");
+				}
+			}
+		}
+
+		[Test]
+		[TestCase ("", null, "the interpreter settings are different between the container app (Enabled) and the extension (Disabled).")]
+		[TestCase (null, "", "the interpreter settings are different between the container app (Disabled) and the extension (Enabled).")]
+		[TestCase ("mscorlib.dll", "", "the interpreted assemblies are different between the container app (mscorlib.dll) and the extension (all assemblies).")]
+		[TestCase ("", "System.dll", "the interpreted assemblies are different between the container app (all assemblies) and the extension (System.dll).")]
+		[TestCase ("mscorlib.dll", "System.dll", "the interpreted assemblies are different between the container app (mscorlib.dll) and the extension (System.dll).")]
+		[TestCase ("mscorlib.dll", "mscorlib.dll,System.dll", "the interpreted assemblies are different between the container app (mscorlib.dll) and the extension (mscorlib.dll, System.dll).")]
+		public void MT0113_interpreter (string app_interpreter, string appex_interpreter, string msg)
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "arm64";
+				extension.Interpreter = appex_interpreter;
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.Interpreter = app_interpreter;
+					app.WarnAsError = new int [] { 113 };
+					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because " + msg); 
+				}
+			}
+		}
+
+		[Test]
 		public void CodeSharingExactContentsDifferentPaths ()
 		{
 			// Test that we allow code sharing when the exact same assembly (based on file content)
@@ -1639,7 +1752,90 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar.");
+			}
+		}
+
+		[Test]
+		public void MT0136 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				var codeDll = @"public class A {}";
+				var codeExe = @"public class B : A {}";
+
+				var dllPath = CompileTestAppLibrary (tmpdir, codeDll, profile: Profile.iOS, appName: "A");
+
+				mtouch.CreateTemporaryApp (extraCode: codeExe, extraArg: $"-r:{StringUtils.Quote (dllPath)}");
+				mtouch.Debug = false;
+				mtouch.Linker = MTouchLinker.DontLink;
+				File.Delete (dllPath);
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (136, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' referenced from '.*/testApp.exe'.");
+				mtouch.AssertError (2002, "Failed to resolve assembly: 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'");
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertWarningCount (1);
+			}
+		}
+
+		[Test]
+		public void MT0137 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				var codeDll = @"public class A {}";
+				var codeExe = @"
+[assembly: MyCustomAttribute (typeof (A))]
+
+public class MyCustomAttribute : System.Attribute
+{
+	public MyCustomAttribute (System.Type type) {}
+}
+
+[System.Diagnostics.DebuggerTypeProxyAttribute (typeof (A))]
+public class B
+{
+}
+";
+				var codeExeFile = Path.Combine (tmpdir, "extraCode.cs");
+				File.WriteAllText (codeExeFile, codeExe);
+				var dllPath = CompileTestAppLibrary (tmpdir, codeDll, profile: Profile.iOS, appName: "A");
+
+				mtouch.CreateTemporaryApp (extraArg: $"-r:{StringUtils.Quote (dllPath)} {StringUtils.Quote (codeExeFile)}");
+				mtouch.Debug = false;
+				mtouch.Linker = MTouchLinker.DontLink;
+				File.Delete (dllPath);
+				mtouch.AlwaysShowOutput = true;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (136, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' referenced from '.*/testApp.exe'.");
+				mtouch.AssertWarning (137, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', referenced by a MyCustomAttribute attribute in 'testApp.exe'.");
+				mtouch.AssertWarning (137, "Cannot find the assembly 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null', referenced by a System.Diagnostics.DebuggerTypeProxyAttribute attribute in 'testApp.exe'.");
+				mtouch.AssertWarningCount (3);
+				mtouch.AssertError (2002, "Failed to resolve assembly: 'A, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'");
+				mtouch.AssertErrorCount (1);
+			}
+		}
+
+		[Test]
+		public void MT0138 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				mtouch.CreateTemporaryApp ();
+				mtouch.WarnAsError = new int [] { 138 }; // This is just to make mtouch bail out early instead of spending time building the app when that's not what we're interested in.
+				mtouch.Interpreter = "all,-all,foo,-bar,mscorlib.dll,mscorlib";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (138, "Cannot find the assembly 'foo', passed as an argument to --interpreter.");
+				mtouch.AssertError (138, "Cannot find the assembly 'bar', passed as an argument to --interpreter.");
+				mtouch.AssertError (138, "Cannot find the assembly 'mscorlib.dll', passed as an argument to --interpreter.");
+				// just the name, without the extension, is the right way.
+				mtouch.AssertErrorCount (3);
 			}
 		}
 
@@ -2276,7 +2472,7 @@ public class TestApp {
 					var mono_framework = Path.Combine (app.AppPath, "Frameworks", "Mono.framework", "Mono");
 					Assert.That (mono_framework, Does.Exist, "mono framework existence");
 					// Verify that mtouch removed armv7s from the framework.
-					Assert.That (GetArchitectures (mono_framework), Is.EquivalentTo (new [] { "armv7", "arm64" }), "mono framework architectures");
+					Assert.That (MachO.GetArchitectures (mono_framework), Is.EquivalentTo (new [] { "armv7", "arm64" }), "mono framework architectures");
 				}
 			}
 		}
@@ -2748,7 +2944,6 @@ class Test {
 				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Test_Subexistent in registrar.o.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Inexistent., referenced from:.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Test_Subexistent in registrar.o.*");
-				mtouch.AssertOutputPattern (".*objc-class-ref in registrar.o.*");
 				mtouch.AssertOutputPattern (".*ld: symbol.s. not found for architecture arm64.*");
 				mtouch.AssertOutputPattern (".*clang: error: linker command failed with exit code 1 .use -v to see invocation.*");
 
@@ -2985,6 +3180,43 @@ class Test {
 				}
 
 				Assert.AreEqual (0, tool.Execute (MTouchAction.BuildDev), "cached build");
+			}
+		}
+
+		[Test]
+		public void ExtensionsWithSharedLibrary ()
+		{
+			using (var tool = new MTouchTool ()) {
+				tool.CreateTemporaryApp ();
+				tool.CreateTemporaryCacheDirectory ();
+				tool.Linker = MTouchLinker.LinkSdk;
+
+				var tmpdir = tool.CreateTemporaryDirectory ();
+				var dll = CompileTestAppLibrary (tmpdir, "public class L {}", appName: "commonTestLibrary");
+
+				using (var ext1 = new MTouchTool ()) {
+					ext1.References = new string [] { dll };
+					ext1.CreateTemporaryCacheDirectory ();
+					ext1.CreateTemporaryTodayExtension (extraCode: "class E1 : L {}", extraArg: $"-r:{StringUtils.Quote (dll)}");
+					ext1.Linker = MTouchLinker.LinkSdk;
+					tool.AppExtensions.Add (ext1);
+
+					using (var ext2 = new MTouchTool ()) {
+						ext2.References = new string [] { dll };
+						ext2.CreateTemporaryCacheDirectory ();
+						ext2.CreateTemporaryServiceExtension (extraCode: "class E1 : L {}", extraArg: $"-r:{StringUtils.Quote (dll)}");
+						ext2.Linker = MTouchLinker.LinkSdk;
+						tool.AppExtensions.Add (ext2);
+
+						ext2.AssertExecute (MTouchAction.BuildDev, "ext 2 build");
+						ext1.AssertExecute (MTouchAction.BuildDev, "ext 1 build");
+						tool.AssertExecute (MTouchAction.BuildDev, "main build");
+
+						Assert.That (Path.Combine (ext1.AppPath, Path.GetFileName (dll)), Does.Not.Exist, "ext1 existence");
+						Assert.That (Path.Combine (ext2.AppPath, Path.GetFileName (dll)), Does.Not.Exist, "ext2 existence");
+						Assert.That (Path.Combine (tool.AppPath, Path.GetFileName (dll)), Does.Exist, "existence");
+					}
+				}
 			}
 		}
 
@@ -3267,8 +3499,11 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.AssertWarning (2003, "Option '--optimize=inline-intptr-size' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=inline-runtime-arch' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=blockliteral-setupblock' will be ignored since linking is disabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=inline-dynamic-registration-supported' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=register-protocols' will be ignored since the static registrar is not enabled");
-				mtouch.AssertWarningCount (7);
+				mtouch.AssertWarning (2003, "Option '--optimize=remove-dynamic-registrar' will be ignored since the static registrar is not enabled");
+				mtouch.AssertWarning (2003, "Option '--optimize=static-block-to-delegate-lookup' will be ignored since the static registrar is not enabled");
+				mtouch.AssertWarningCount (10);
 			}
 
 			using (var mtouch = new MTouchTool ()) {
@@ -3499,8 +3734,8 @@ public class TestApp {
 		[TestCase ("CFNetworkHandler", "CFNetworkHandler")]
 		[TestCase ("NSUrlSessionHandler", "NSUrlSessionHandler")]
 		[TestCase ("HttpClientHandler", "HttpClientHandler")]
-		[TestCase (null, "HttpClientHandler")]
-		[TestCase ("", "HttpClientHandler")]
+		[TestCase (null, "NSUrlSessionHandler")]
+		[TestCase ("", "NSUrlSessionHandler")]
 		public void HttpClientHandler (string mtouchHandler, string expectedHandler)
 		{
 			var testCode = $@"
@@ -3648,8 +3883,8 @@ public class HandlerTest
 			var missingSimlauncherSymbols = new List<string> ();
 			foreach (var symbol in only_libxamarin) {
 				switch (symbol) {
-				case "_fix_ranlib_warning_about_no_symbols": // Dummy symbol to fix linker warning
-				case "_fix_ranlib_warning_about_no_symbols_v2": // Dummy symbol to fix linker warning
+				case "_xamarin_fix_ranlib_warning_about_no_symbols": // Dummy symbol to fix linker warning
+				case "_xamarin_fix_ranlib_warning_about_no_symbols_v2": // Dummy symbol to fix linker warning
 				case "_monotouch_IntPtr_objc_msgSendSuper_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
 				case "_monotouch_IntPtr_objc_msgSend_IntPtr": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
 				case "_xamarin_float_objc_msgSend": // Classic only, this function can probably be removed when we switch to binary copy of a Classic version of libxamarin.a
@@ -3657,12 +3892,112 @@ public class HandlerTest
 				case "_xamarin_nfloat_objc_msgSend": // XM only
 				case "_xamarin_nfloat_objc_msgSendSuper": // Xm only
 					continue;
+				case "____chkstk_darwin": // compiler magic, unrelated to XI/XM
+					continue;
 				default:
 					missingSimlauncherSymbols.Add (symbol);
 					break;
 				}
 			}
 			Assert.That (missingSimlauncherSymbols, Is.Empty, "no missing simlauncher symbols");
+		}
+
+		[Test]
+		public void LinkedAwayTypesInContainerAppLinker ()
+		{
+			var codeApp = "[Foundation.Preserve] public class TestApp1 { static void X () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+			var codeExt = @"
+public partial class KeyboardViewController : UIKit.UIInputViewController
+{
+	public KeyboardViewController (System.IntPtr handle) : base (handle) { }
+	public override void TextWillChange (UIKit.IUITextInput textInput) { }
+	public override void TextDidChange (UIKit.IUITextInput textInput) { }
+}
+
+[Foundation.Preserve] public class TestApp2 { static void X () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension (extraCode: codeExt);
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "arm64";
+				extension.DSym = false; // faster test
+				extension.MSym = false; // faster test
+				extension.NoStrip = true; // faster test
+				extension.AssertExecute (MTouchAction.BuildDev, "extension build");
+
+				using (var mtouch = new MTouchTool ()) {
+					mtouch.AppExtensions.Add (extension);
+					mtouch.CreateTemporaryApp (extraCode: codeApp);
+					mtouch.CreateTemporaryCacheDirectory ();
+					mtouch.Abi = "arm64";
+					mtouch.DSym = false; // faster test
+					mtouch.MSym = false; // faster test
+					mtouch.NoStrip = true; // faster test
+
+					mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+					mtouch.AssertNoWarnings ();
+				}
+			}
+		}
+
+		[Test]
+		public void WatchOSExtensionsWithExtensions ()
+		{
+			using (var intents_extension = new MTouchTool ()) {
+				intents_extension.Profile = Profile.watchOS;
+				intents_extension.CreateTemporaryWatchOSIntentsExtension ();
+				intents_extension.CreateTemporaryCacheDirectory ();
+				intents_extension.DSym = false; // faster test
+				intents_extension.MSym = false; // faster test
+				intents_extension.NoStrip = true; // faster test
+
+				intents_extension.AssertExecute (MTouchAction.BuildDev, "extension build");
+
+				using (var watch_extension = new MTouchTool ()) {
+					watch_extension.Profile = Profile.watchOS;
+					watch_extension.AppExtensions.Add (intents_extension);
+					watch_extension.CreateTemporaryCacheDirectory ();
+					watch_extension.CreateTemporaryWatchKitExtension ();
+					watch_extension.DSym = false; // faster test
+					watch_extension.MSym = false; // faster test
+					watch_extension.NoStrip = true; // faster test
+
+					watch_extension.AssertExecute (MTouchAction.BuildDev, "build");
+					watch_extension.AssertNoWarnings ();
+				}
+			}
+		}
+
+		[Test]
+		public void RebuildWhenReferenceSymbolsInCode ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var bindingsLibrary = GetBindingsLibrary (Profile.iOS);
+				mtouch.References = new string [] { bindingsLibrary };
+				mtouch.CreateTemporaryApp_LinkWith ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.SymbolMode = MTouchSymbolMode.Code;
+				mtouch.Verbosity = 9;
+
+				// first build
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+
+				// first rebuild, no changes
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				var output = mtouch.Output.ToString ();
+				Assert.That (output, Does.Not.Contain ("must be rebuilt"), "nothing rebuilt in first rebuild");
+				Assert.That (output, Does.Not.Contain ("clang"), "no clang in first rebuild");
+
+				// second build, touch an assembly
+				new FileInfo (bindingsLibrary).LastWriteTimeUtc = DateTime.UtcNow;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				output = mtouch.Output.ToString ();
+				Assert.That (output, Does.Contain ("Reloading cached assemblies."), "reloaded cached assemblies");
+				// we touched the binding assembly, which means mtouch re-extracted the .a from the binding library,
+				// which causes clang to execute for the main executable. This is good in this particular case, because
+				// re-executing clang successfully means we got the clang command line right.
+				Assert.That (output, Does.Contain ("clang"), "clang in second rebuild");
+			}
 		}
 
 		public void XamarinSdkAdjustLibs ()
@@ -3967,7 +4302,7 @@ public class TestApp {
 
 		static void VerifyArchitectures (string file, string message, params string[] expected)
 		{
-			var actual = GetArchitectures (file).ToArray ();
+			var actual = MachO.GetArchitectures (file).ToArray ();
 
 			Array.Sort (expected);
 			Array.Sort (actual);
@@ -3976,92 +4311,6 @@ public class TestApp {
 			var a = string.Join (", ", actual);
 
 			Assert.AreEqual (e, a, message);
-		}
-
-		static void VerifyOutput (string msg, string actual, params string[] expected)
-		{
-			var split = actual.Split (new char[] {'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
-			var actual_messages = new HashSet<string> (split, new Registrar.PatternEquality ());
-			var exp_messages = new HashSet<string> (expected, new Registrar.PatternEquality ());
-
-			actual_messages.ExceptWith (exp_messages);
-			exp_messages.ExceptWith (split);
-
-			var text = new StringBuilder ();
-			foreach (var a in actual_messages)
-				text.AppendFormat ("Unexpected error/warning ({0}):\n\t{1}\n", msg, a);
-			foreach (var a in exp_messages)
-				text.AppendFormat ("Expected error/warning not shown ({0}):\n\t{1}\n", msg, a);
-			if (text.Length != 0)
-				Assert.Fail (text.ToString ());
-		}
-
-		static List<string> GetArchitectures (string file)
-		{
-			var result = new List<string> ();
-
-			using (var fs = File.OpenRead (file)) {
-				using (var reader = new BinaryReader (fs)) {
-					int magic = reader.ReadInt32 ();
-					switch ((uint) magic) {
-					case 0xCAFEBABE: // little-endian fat binary
-						throw new NotImplementedException ("little endian fat binary");
-					case 0xBEBAFECA:
-						int architectures = System.Net.IPAddress.NetworkToHostOrder (reader.ReadInt32 ());
-						for (int i = 0; i < architectures; i++) {
-							result.Add (GetArch (System.Net.IPAddress.NetworkToHostOrder (reader.ReadInt32 ()), System.Net.IPAddress.NetworkToHostOrder (reader.ReadInt32 ())));
-							// skip to next entry
-							reader.ReadInt32 (); // offset
-							reader.ReadInt32 (); // size
-							reader.ReadInt32 (); // align
-						}
-						break;
-					case 0xFEEDFACE: // little-endian mach-o header
-					case 0xFEEDFACF: // little-endian 64-big mach-o header
-						result.Add (GetArch (reader.ReadInt32 (), reader.ReadInt32 ()));
-						break;
-					case 0xCFFAEDFE:
-					case 0xCEFAEDFE:
-						result.Add (GetArch (System.Net.IPAddress.NetworkToHostOrder (reader.ReadInt32 ()), System.Net.IPAddress.NetworkToHostOrder (reader.ReadInt32 ())));
-						break;
-					default:
-						throw new Exception (string.Format ("File '{0}' is neither a Universal binary nor a Mach-O binary (magic: 0x{1})", file, magic.ToString ("x")));
-					}
-				}
-			}
-
-			return result;
-		}
-
-		static string GetArch (int cputype, int cpusubtype)
-		{
-			const int ABI64 = 0x01000000;
-			const int X86 = 7;
-			const int ARM = 12;
-
-			switch (cputype) {
-			case ARM : // arm
-				switch (cpusubtype) {
-				case 6: return "armv6";
-				case 9: return "armv7";
-				case 11: return "armv7s";
-				default:
-					return "unknown arm variation: " + cpusubtype.ToString ();
-				}
-			case ARM  | ABI64:
-				switch (cpusubtype) {
-				case 0:
-					return "arm64";
-				default:
-					return "unknown arm/64 variation: " + cpusubtype.ToString ();
-				}
-			case X86: // x86
-				return "i386";
-			case X86 | ABI64: // x64
-				return "x86_64";
-			}
-
-			return string.Format ("unknown: {0}/{1}", cputype, cpusubtype);
 		}
 
 		public static void AssertDeviceAvailable ()

@@ -65,6 +65,8 @@ namespace AudioUnit
 		Unauthorized = -10847,
 		[iOS (11,0), Mac (10,13, onlyOn64: true), TV (11,0), NoWatch]
 		MidiOutputBufferFull = -66753,
+		[iOS (11,3), Mac (10,13,4, onlyOn64: true), TV (11,3), NoWatch]
+		InvalidParameterValue = -66743,
 		[iOS (11,0), Mac (10,13, onlyOn64: true), TV (11,0), NoWatch]
 		ExtensionNotFound = -66744,
 	}
@@ -402,7 +404,9 @@ namespace AudioUnit
 
 	public class AudioUnit : IDisposable, ObjCRuntime.INativeObject
 	{
+#pragma warning disable 649 // Field 'AudioUnit.handle' is never assigned to, and will always have its default value
 		internal IntPtr handle;
+#pragma warning restore 649
 		public IntPtr Handle {
 			get {
 				return handle;
@@ -730,6 +734,25 @@ namespace AudioUnit
 		public AudioUnitStatus MusicDeviceMIDIEvent (uint status, uint data1, uint data2, uint offsetSampleFrame = 0)
 		{
 			return MusicDeviceMIDIEvent (handle, status, data1, data2, offsetSampleFrame);
+		}
+
+		public AudioUnitStatus SetLatency (double latency)
+		{
+			// ElementCount: Float64, AudioUnitScopeType.Global is the only valid scope for Latency.
+			return AudioUnitSetProperty (handle, AudioUnitPropertyIDType.Latency, AudioUnitScopeType.Global, 0, ref latency, sizeof (double));
+		}
+
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern AudioUnitStatus AudioUnitGetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement, ref double outData, ref uint ioDataSize);
+
+		public double GetLatency ()
+		{
+			uint size = sizeof (double);
+			double latency = 0;
+			var err = AudioUnitGetProperty (handle, AudioUnitPropertyIDType.Latency, AudioUnitScopeType.Global, 0, ref latency, ref size);
+			if (err != 0)
+				throw new AudioUnitException ((int) err);
+			return latency;
 		}
 
 		#region SetRenderCallback

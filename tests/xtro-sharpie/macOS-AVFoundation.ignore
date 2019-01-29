@@ -1,3 +1,4 @@
+
 ## from iOS 4.0 to 5.1
 !unknown-field! AVMediaTypeTimedMetadata bound
 
@@ -15,16 +16,6 @@
 !missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
 
 ## unsorted
-
-!missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound
-!missing-selector! AVAudioPlayer::currentDevice not bound
-!missing-selector! AVAudioPlayer::setCurrentDevice: not bound
-!missing-selector! AVMetadataGroup::classifyingLabel not bound
-!missing-selector! AVMetadataGroup::uniqueID not bound
-!missing-selector! AVMutableMovieTrack::replaceFormatDescription:withFormatDescription: not bound
-!missing-selector! AVPlayerItem::addMediaDataCollector: not bound
-!missing-selector! AVPlayerItem::mediaDataCollectors not bound
-!missing-selector! AVPlayerItem::removeMediaDataCollector: not bound
 !unknown-native-enum! AVAudioSessionCategoryOptions bound
 !unknown-native-enum! AVAudioSessionErrorCode bound
 !unknown-native-enum! AVAudioSessionInterruptionOptions bound
@@ -35,7 +26,6 @@
 !unknown-native-enum! AVAudioSessionRouteSharingPolicy bound
 !unknown-native-enum! AVAudioSessionSetActiveOptions bound
 !unknown-native-enum! AVAudioSessionSilenceSecondaryAudioHintType bound
-!unknown-native-enum! AVAuthorizationStatus bound
 !unknown-native-enum! AVCaptureAutoFocusRangeRestriction bound
 !unknown-native-enum! AVCaptureAutoFocusSystem bound
 !unknown-native-enum! AVCaptureLensStabilizationStatus bound
@@ -44,7 +34,6 @@
 !unknown-native-enum! AVSpeechBoundary bound
 !unknown-type! AVCaptureSynchronizedData bound
 !unknown-type! AVCaptureSynchronizedDataCollection bound
-!unknown-type! AVPersistableContentKeyRequest bound
 
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)

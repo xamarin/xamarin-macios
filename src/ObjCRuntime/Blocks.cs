@@ -38,6 +38,7 @@ using ObjCRuntime;
 
 namespace ObjCRuntime {
 
+#pragma warning disable 649 //  Field 'XamarinBlockDescriptor.ref_count' is never assigned to, and will always have its default value 0
 	[StructLayout (LayoutKind.Sequential)]
 #if !XAMCORE_2_0
 	public 
@@ -49,10 +50,13 @@ namespace ObjCRuntime {
 		public IntPtr dispose;
 		public IntPtr signature;
 	}
+#pragma warning restore 649
 
 	struct XamarinBlockDescriptor {
+#pragma warning disable 649 // Field 'XamarinBlockDescriptor.descriptor' is never assigned to, and will always have its default value
 		public BlockDescriptor descriptor;
 		public volatile int ref_count;
+#pragma warning restore 649
 		// followed by variable-length string (the signature)
 	}
 
@@ -83,8 +87,12 @@ namespace ObjCRuntime {
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_block_descriptor ();
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		void SetupBlock (Delegate trampoline, Delegate userDelegate, bool safe)
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "BlockLiteral.SetupBlock is not supported when the dynamic registrar has been linked away.");
+
 			// We need to get the signature of the target method, so that we can compute
 			// the ObjC signature correctly (the generated method that's actually
 			// invoked by native code does not have enough type information to compute
@@ -228,6 +236,11 @@ namespace ObjCRuntime {
 			return (T) (object) Runtime.GetDelegateForBlock (invoke, typeof (T));
 		}
 
+		public unsafe static T GetTarget<T> (IntPtr block) where T: class /* /* requires C# 7.3+: System.MulticastDelegate */
+		{
+			return (T) ((BlockLiteral *) block)->Target;
+		}
+
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static bool IsManagedBlock (IntPtr block)
 		{
@@ -239,34 +252,73 @@ namespace ObjCRuntime {
 			return descriptor->copy_helper == ((BlockDescriptor *) literal->block_descriptor)->copy_helper;
 		}
 
-		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate, string signature)
+		static Type GetDelegateProxyType (MethodInfo minfo, uint token_ref, out MethodInfo baseMethod)
+		{
+			// A mirror of this method is also implemented in StaticRegistrar:GetDelegateProxyType
+			// If this method is changed, that method will probably have to be updated too (tests!!!)
+			baseMethod = null;
+
+			if (token_ref != Runtime.INVALID_TOKEN_REF)
+				return (Type) Class.ResolveTokenReference (token_ref, 0x02000000 /* TypeDef */);
+
+			baseMethod = minfo.GetBaseDefinition ();
+			var delegateProxies = baseMethod.ReturnTypeCustomAttributes.GetCustomAttributes (typeof (DelegateProxyAttribute), false);
+			if (delegateProxies.Length > 0)
+				return ((DelegateProxyAttribute) delegateProxies [0]).DelegateType;
+
+			// We might be implementing a protocol, find any DelegateProxy attributes on the corresponding interface as well.
+			string selector = null;
+			foreach (var iface in minfo.DeclaringType.GetInterfaces ()) {
+				if (!iface.IsDefined (typeof (ProtocolAttribute), false))
+					continue;
+
+				var map = minfo.DeclaringType.GetInterfaceMap (iface);
+				for (int i = 0; i < map.TargetMethods.Length; i++) {
+					if (map.TargetMethods [i] == minfo) {
+						delegateProxies = map.InterfaceMethods [i].ReturnTypeCustomAttributes.GetCustomAttributes (typeof (DelegateProxyAttribute), false);
+						if (delegateProxies.Length > 0)
+							return ((DelegateProxyAttribute) delegateProxies [0]).DelegateType;
+					}
+				}
+
+				// It might be an optional method/property, in which case we need to check any ProtocolMember attributes
+				if (selector == null)
+					selector = Runtime.GetExportAttribute (minfo)?.Selector ?? string.Empty;
+				if (!string.IsNullOrEmpty (selector)) {
+					var attrib = Runtime.GetProtocolMemberAttribute (iface, selector, minfo);
+					if (attrib?.ReturnTypeDelegateProxy != null)
+						return attrib.ReturnTypeDelegateProxy;
+				}
+			}
+
+			throw ErrorHelper.CreateError (8011, "Unable to locate the delegate to block conversion attribute ([DelegateProxy]) for the return value for the method {0}.{1}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name);
+		}
+
+		[BindingImpl(BindingImplOptions.Optimizable)]
+		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate, uint token_ref, string signature)
 		{
 			if (@delegate == null)
 				return IntPtr.Zero;
 
 			if (!(@delegate is Delegate))
-				throw ErrorHelper.CreateError (8016, "Unable to convert delegate to block for the return value for the method {0}.{1}, because the input isn't a delegate, it's a {1}. Please file a bug at http://bugzilla.xamarin.com.", minfo.DeclaringType.FullName, minfo.Name, @delegate.GetType ().FullName);
+				throw ErrorHelper.CreateError (8016, "Unable to convert delegate to block for the return value for the method {0}.{1}, because the input isn't a delegate, it's a {1}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", minfo.DeclaringType.FullName, minfo.Name, @delegate.GetType ().FullName);
 				
-			var baseMethod = minfo.GetBaseDefinition ();
+			Type delegateProxyType = GetDelegateProxyType (minfo, token_ref, out var baseMethod);
+			if (baseMethod == null)
+				baseMethod = minfo; // 'baseMethod' is only used in error messages, and if it's null, we just use the closest alternative we have (minfo).
+			if (delegateProxyType == null)
+				throw ErrorHelper.CreateError (8012, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: DelegateType is null. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name);
 
-			var delegateProxies = baseMethod.ReturnTypeCustomAttributes.GetCustomAttributes (typeof (DelegateProxyAttribute), false);
-			if (delegateProxies.Length == 0)
-				throw ErrorHelper.CreateError (8011, "Unable to locate the delegate to block conversion attribute ([DelegateProxy]) for the return value for the method {0}.{1}. Please file a bug at http://bugzilla.xamarin.com.", baseMethod.DeclaringType.FullName, baseMethod.Name);
-			
-			var delegateProxy = (DelegateProxyAttribute) delegateProxies [0];
-			if (delegateProxy.DelegateType == null)
-				throw ErrorHelper.CreateError (8012, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: DelegateType is null. Please file a bug at http://bugzilla.xamarin.com.", baseMethod.DeclaringType.FullName, baseMethod.Name);
-
-			var delegateProxyField = delegateProxy.DelegateType.GetField ("Handler", BindingFlags.NonPublic | BindingFlags.Static);
+			var delegateProxyField = delegateProxyType.GetField ("Handler", BindingFlags.NonPublic | BindingFlags.Static);
 			if (delegateProxyField == null)
-				throw ErrorHelper.CreateError (8013, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: DelegateType ({2}) specifies a type without a 'Handler' field. Please file a bug at http://bugzilla.xamarin.com.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxy.DelegateType.FullName);
+				throw ErrorHelper.CreateError (8013, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: DelegateType ({2}) specifies a type without a 'Handler' field. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName);
 
 			var handlerDelegate = delegateProxyField.GetValue (null);
 			if (handlerDelegate == null)
-				throw ErrorHelper.CreateError (8014, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is null. Please file a bug at http://bugzilla.xamarin.com.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxy.DelegateType.FullName);
+				throw ErrorHelper.CreateError (8014, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is null. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName);
 
 			if (!(handlerDelegate is Delegate))
-				throw ErrorHelper.CreateError (8015, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a {3}. Please file a bug at http://bugzilla.xamarin.com.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxy.DelegateType.FullName, handlerDelegate.GetType ().FullName);
+				throw ErrorHelper.CreateError (8015, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a {3}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName, handlerDelegate.GetType ().FullName);
 			
 			// We now have the information we need to create the block.
 			// Note that we must create a heap-allocated block, so we 
@@ -275,7 +327,11 @@ namespace ObjCRuntime {
 			// with the proper reference count.
 			BlockLiteral block = new BlockLiteral ();
 			if (signature == null) {
-				block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
+				if (Runtime.DynamicRegistrationSupported) {
+					block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
+				} else {
+					throw ErrorHelper.CreateError (8026, $"BlockLiteral.GetBlockForDelegate with a null signature is not supported when the dynamic registrar has been linked away (delegate type: {@delegate.GetType ().FullName}).");
+				}
 			} else {
 				block.SetupBlockImpl ((Delegate) handlerDelegate, (Delegate) @delegate, true, signature);
 			}
@@ -285,10 +341,61 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		static extern IntPtr _Block_copy (ref BlockLiteral block);
+		internal static extern IntPtr _Block_copy (ref BlockLiteral block);
+
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		internal static extern IntPtr _Block_copy (IntPtr block);
+
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		internal static extern void _Block_release (IntPtr block);
+
+		//
+		// Simple method that we can use to wrap methods that need to call a block
+		//
+		// usage:
+		// void MyCallBack () {} 
+		// BlockLiteral.SimpleCall (MyCallBack, (x) => my_PINvokeThatTakesaBlock (x));
+		//  The above will call the unmanaged my_PINvokeThatTakesaBlock method with a block
+		// that when invoked will call MyCallback
+		//
+		internal unsafe static void SimpleCall  (Action callbackToInvoke, Action <IntPtr> pinvoke)
+		{
+			unsafe {
+			        BlockLiteral block_handler = new BlockLiteral ();
+			        BlockLiteral *block_ptr_handler = &block_handler;
+			        block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, callbackToInvoke);
+
+				try {
+					pinvoke ((IntPtr) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
+			}
+		}
+		
 #endif
 	}
-		
+
+#if !COREBUILD
+	// This class sole purpose is to keep a static field that is initialized on
+	// first use of the class
+	
+	internal class BlockStaticDispatchClass {
+		internal delegate void dispatch_block_t (IntPtr block);
+
+		[MonoPInvokeCallback (typeof (dispatch_block_t))]
+		static unsafe void TrampolineDispatchBlock (IntPtr block)
+		{
+			var del = BlockLiteral.GetTarget<Action> (block);
+			if (del != null){
+			        del ();
+			}
+		}
+
+		internal static dispatch_block_t static_dispatch_block = TrampolineDispatchBlock;
+	}
+#endif
+	
 	[Flags]
 #if XAMCORE_3_0
 	internal

@@ -166,6 +166,18 @@ namespace Introspection {
 				if (IntPtr.Size == 4 && Mac.CheckSystemVersion (10, 13)) // 32-bit removed unannounced in 10.13
 					return true;
 				break;
+			case "EventKit.EKEventStore":
+			case "MonoMac.EventKit.EKEventStore":
+				if (Mac.CheckSystemVersion (10, 9) && !Mac.CheckSystemVersion (10, 10)) {
+					// Calling the constructor on Mavericks will put up a permission dialog.
+					return true;
+				}
+				break;
+			case "MonoMac.ImageKit.IKPictureTaker":
+			case "ImageKit.IKPictureTaker":
+				// https://bugzilla.xamarin.com/show_bug.cgi?id=46624
+				// https://trello.com/c/T6vkA2QF/62-29311598-ikpicturetaker-crashes-randomly-upon-deallocation?menu=filter&filter=corenfc
+				return true;
 			}
 
 			switch (type.Namespace) {

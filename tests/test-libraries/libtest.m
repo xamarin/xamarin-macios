@@ -448,6 +448,22 @@ static UltimateMachine *shared;
 	}
 @end
 
+@implementation ProtocolAssigner
+-(void) setProtocol
+{
+	ObjCProtocolTestImpl *p = [[ObjCProtocolTestImpl alloc] init];
+	[self completedSetProtocol: p];
+}
+
+-(void) completedSetProtocol: (id<ProtocolAssignerProtocol>) value
+{
+	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+}
+@end
+
+@implementation ObjCProtocolTestImpl
+@end
+
 @implementation ObjCExceptionTest
 {
 }
@@ -507,6 +523,230 @@ static UltimateMachine *shared;
 -(void) idAsIntPtr: (id)p1
 {
 	// Do nothing
+}
+@end
+
+static volatile int freed_blocks = 0;
+static volatile int called_blocks = 0;
+
+@implementation ObjCBlockTester
+static Class _TestClass = NULL;
+
++ (Class)TestClass {
+	return _TestClass;
+}
+
++ (void)setTestClass:(Class) value {
+	_TestClass = value;
+}
+
+-(void) classCallback: (void (^)(int32_t magic_number))completionHandler
+{
+	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+}
+
+-(void) callClassCallback
+{
+	__block bool called = false;
+	[self classCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
+-(void) callRequiredCallback
+{
+	__block bool called = false;
+	[self.TestObject requiredCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
++(void) callRequiredStaticCallback
+{
+	__block bool called = false;
+	[self.TestClass requiredStaticCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
+-(void) callOptionalCallback
+{
+	__block bool called = false;
+	[self.TestObject optionalCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
++(void) callOptionalStaticCallback
+{
+	__block bool called = false;
+	[self.TestClass optionalStaticCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		called = true;
+	}];
+	assert (called);
+}
+
++(void) callAssertMainThreadBlockRelease: (outerBlock) completionHandler
+{
+	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
+	__block bool success = false;
+
+	dispatch_sync (dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
+		completionHandler (^(int magic_number)
+		{
+			assert (magic_number == 42);
+			assert ([NSThread isMainThread]); // This may crash way after the failed test has finished executing.
+			success = obj != NULL; // this captures the 'obj', and it's only freed when the block is freed.
+		});
+    });
+	assert (success);
+    [obj release];
+}
+
+-(void) callAssertMainThreadBlockReleaseCallback
+{
+	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
+	__block bool success = false;
+
+	dispatch_sync (dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
+		[self assertMainThreadBlockReleaseCallback: ^(int magic_number)
+		{
+			assert (magic_number == 42);
+			assert ([NSThread isMainThread]); // This may crash way after the failed test has finished executing.
+			success = obj != NULL; // this captures the 'obj', and it's only freed when the block is freed.
+		}];
+    });
+	assert (success);
+    [obj release];
+}
+
+-(void) assertMainThreadBlockReleaseCallback: (innerBlock) completionHandler
+{
+	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+}
+
+-(void) testFreedBlocks
+{
+	FreedNotifier* obj = [[FreedNotifier alloc] init];
+	__block bool success = false;
+	[self classCallback: ^(int magic_number)
+	{
+		assert (magic_number == 42);
+		success = obj != NULL; // this captures the 'obj', and it's only freed when the block is freed.
+	}];
+	assert (success);
+	[obj release];
+}
++(int) freedBlockCount
+{
+	return freed_blocks;
+}
++(int) calledBlockCount
+{
+	return called_blocks;
+}
+
+static void block_called ()
+{
+	OSAtomicIncrement32 (&called_blocks);
+}
+
++(void) callProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance;
+{
+	if (required) {
+		if (instance) {
+			obj.myRequiredProperty ();
+		} else {
+			[[(NSObject *) obj class] myRequiredStaticProperty] ();
+		}
+	} else {
+		if (instance) {
+			obj.myOptionalProperty ();
+		} else {
+			[[(NSObject *) obj class] myOptionalStaticProperty] ();
+		}
+	}
+}
+
++(void) callProtocolWithBlockReturnValue: (id<ObjCProtocolBlockTest>) obj required: (bool) required instance: (bool) instance;
+{
+	if (required) {
+		if (instance) {
+			[obj requiredReturnValue] (42);
+		} else {
+			[[(NSObject *) obj class] requiredStaticReturnValue] (42);
+		}
+	} else {
+		if (instance) {
+			[obj optionalReturnValue] (42);
+		} else {
+			[[(NSObject *) obj class] optionalStaticReturnValue] (42);
+		}
+	}
+}
+
++(void) callProtocolWithBlockPropertiesRequired: (id<ProtocolWithBlockProperties>) obj
+{
+	obj.myRequiredProperty ();
+}
+
++(void) setProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance
+{
+	simple_callback callback = ^{ block_called (); };
+	if (required) {
+		if (instance) {
+			obj.myRequiredProperty = callback;
+		} else {
+			[[(NSObject *) obj class] setMyRequiredStaticProperty: callback];
+		}
+	} else {
+		if (instance) {
+			obj.myOptionalProperty = callback;
+		} else {
+			[[(NSObject *) obj class] setMyOptionalStaticProperty: callback];
+		}
+	}
+}
+
+@end
+
+@implementation FreedNotifier
+-(void) dealloc
+{
+	OSAtomicIncrement32 (&freed_blocks);
+	[super dealloc];
+}
+@end
+
+@implementation EvilDeallocator
+-(void) dealloc
+{
+	if (self.evilCallback != NULL)
+		self.evilCallback (314);
+	[super dealloc];
+}
+@end
+
+@implementation MainThreadDeallocator : NSObject {
+}
+-(void) dealloc
+{
+	assert ([NSThread isMainThread]);
+	[super dealloc];
 }
 @end
 

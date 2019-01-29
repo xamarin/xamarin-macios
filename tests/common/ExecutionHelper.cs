@@ -84,7 +84,7 @@ namespace Xamarin.Tests
 			output.Clear ();
 			output_lines = null;
 
-			var rv = ExecutionHelper.Execute (toolPath, string.Format (arguments, args), EnvironmentVariables, output, output, workingDirectory: WorkingDirectory);
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, $"-t -- {toolPath} " + string.Format (arguments, args), EnvironmentVariables, output, output, workingDirectory: WorkingDirectory);
 
 			if ((rv != 0 || always_show_output) && output.Length > 0)
 				Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t"));
@@ -108,6 +108,23 @@ namespace Xamarin.Tests
 			return false;
 		}
 
+		string RemovePathAtEnd (string line)
+		{
+			if (line.TrimEnd ().EndsWith ("]")) {
+				var start = line.LastIndexOf ("[");
+				if (start >= 0) {
+					// we want to get the space before `[` too.
+					if (start > 0 && line [start - 1] == ' ')
+						start --;
+
+					line = line.Substring (0, start);
+					return line;
+				}
+			}
+
+			return line;
+		}
+
 		public void ParseMessages ()
 		{
 			messages.Clear ();
@@ -120,9 +137,11 @@ namespace Xamarin.Tests
 					msg.IsError = true;
 					origin = line.Substring (0, idxError);
 					line = line.Substring (endError);
+					line = RemovePathAtEnd (line);
 				} else if (IndexOfAny (line, out var idxWarning, out var endWarning, ": warning ", ":  warning ")) {
 					origin = line.Substring (0, idxWarning);
 					line = line.Substring (endWarning);
+					line = RemovePathAtEnd (line);
 				} else if (line.StartsWith ("error ", StringComparison.Ordinal)) {
 					msg.IsError = true;
 					line = line.Substring (6);
@@ -356,13 +375,13 @@ namespace Xamarin.Tests
 		public static string ToolPath {
 			get
 			{
-				return "/Library/Frameworks/Mono.framework/Commands/xbuild";
+				return Configuration.XIBuildPath;
 			}
 		}
 
 		public static void Build (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null)
 		{
-			ExecutionHelper.Execute (ToolPath, string.Format ("/p:Configuration={0} /p:Platform={1} {2} \"{3}\"", configuration, platform, verbosity == null ? string.Empty : "/verbosity:" + verbosity, project), timeout: timeout);
+			ExecutionHelper.Execute (ToolPath, string.Format ("-- /p:Configuration={0} /p:Platform={1} {2} \"{3}\"", configuration, platform, verbosity == null ? string.Empty : "/verbosity:" + verbosity, project), timeout: timeout);
 		}
 	}
 

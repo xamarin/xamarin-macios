@@ -69,9 +69,11 @@ namespace CoreTelephony {
 
 	[BaseType (typeof (NSObject))]
 	interface CTTelephonyNetworkInfo {
+		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceSubscriberCellularProviders' instead.")]
 		[Export ("subscriberCellularProvider", ArgumentSemantic.Retain)]
 		CTCarrier SubscriberCellularProvider { get; }
 
+		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceSubscriberCellularProvidersDidUpdateNotifier' instead.")]
 		[NullAllowed] // by default this property is null
 		[Export ("subscriberCellularProviderDidUpdateNotifier")]
 #if XAMCORE_2_0
@@ -80,8 +82,29 @@ namespace CoreTelephony {
 		CTCarrierEventHandler CellularProviderUpdatedEventHandler { get; set; }
 #endif
 
+		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ServiceCurrentRadioAccessTechnology' instead.")]
 		[iOS (7,0), Export ("currentRadioAccessTechnology")]
 		NSString CurrentRadioAccessTechnology { get; }
+
+		[iOS (12,0)]
+		[NullAllowed]
+		[Export ("serviceSubscriberCellularProviders", ArgumentSemantic.Retain)]
+		NSDictionary<NSString, CTCarrier> ServiceSubscriberCellularProviders { get; }
+
+		[iOS (12,0)]
+		[NullAllowed]
+		[Export ("serviceCurrentRadioAccessTechnology", ArgumentSemantic.Retain)]
+		NSDictionary<NSString, NSString> ServiceCurrentRadioAccessTechnology { get; }
+
+		[iOS (12,0)]
+		[NullAllowed]
+		[Export ("serviceSubscriberCellularProvidersDidUpdateNotifier", ArgumentSemantic.Copy)]
+		Action<NSString> ServiceSubscriberCellularProvidersDidUpdateNotifier { get; set; }
+
+		[iOS (12,0)]
+		[Notification]
+		[Field ("CTServiceRadioAccessTechnologyDidChangeNotification")]
+		NSString ServiceRadioAccessTechnologyDidChangeNotification { get; }
 	}
 
 #if !XAMCORE_2_0
@@ -124,11 +147,35 @@ namespace CoreTelephony {
 		string CarrierName { get; }
 	}
 
+	interface ICTSubscriberDelegate {}
+
+	[Protocol]
+	[iOS (12,1)]
+	interface CTSubscriberDelegate {
+		[Abstract]
+		[Export ("subscriberTokenRefreshed:")]
+		void SubscriberTokenRefreshed (CTSubscriber subscriber);
+	}
+
 	[BaseType (typeof (NSObject))]
 	[iOS (7,0)]
 	partial interface CTSubscriber {
 		[iOS (7,0), Export ("carrierToken")]
+		[Deprecated (PlatformName.iOS, 11, 0)]
 		NSData CarrierToken { get; }
+
+		[iOS (12,1)]
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[iOS (12,1)]
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[iOS (12,1)]
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		ICTSubscriberDelegate Delegate { get; set; }
 	}
 
 #if !XAMCORE_2_0
@@ -137,8 +184,47 @@ namespace CoreTelephony {
 
 	[iOS (6,0), BaseType (typeof (NSObject))]
 	partial interface CTSubscriberInfo {
+		[Deprecated (PlatformName.iOS, 12, 1, message : "Use 'Subscribers' instead.")]
 		[Static]
 		[Export ("subscriber")]
 		CTSubscriber Subscriber { get; }
+
+		[iOS (12,1)]
+		[Static]
+		[Export ("subscribers")]
+		CTSubscriber[] Subscribers { get; }
+	}
+
+	[iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	interface CTCellularPlanProvisioningRequest : NSSecureCoding {
+		[Export ("address")]
+		string Address { get; set; }
+
+		[NullAllowed, Export ("matchingID")]
+		string MatchingId { get; set; }
+
+		[NullAllowed, Export ("OID")]
+		string Oid { get; set; }
+
+		[NullAllowed, Export ("confirmationCode")]
+		string ConfirmationCode { get; set; }
+
+		[NullAllowed, Export ("ICCID")]
+		string Iccid { get; set; }
+
+		[NullAllowed, Export ("EID")]
+		string Eid { get; set; }
+	}
+
+	[iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	interface CTCellularPlanProvisioning {
+		[Export ("supportsCellularPlan")]
+		bool SupportsCellularPlan { get; }
+
+		[Async]
+		[Export ("addPlanWith:completionHandler:")]
+		void AddPlan (CTCellularPlanProvisioningRequest request, Action<CTCellularPlanProvisioningAddPlanResult> completionHandler);
 	}
 }

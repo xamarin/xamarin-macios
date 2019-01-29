@@ -18,7 +18,6 @@ using Vector4 = global::OpenTK.Vector4;
 namespace SceneKit {
 
 	[Watch (3,0)]
-	[Mac (10, 8)]
 	[iOS (8, 0)]
 	[Native] // untyped enum (SceneKitTypes.h) but described as the value of `code` for `NSError` which is an NSInteger
 	[ErrorDomain ("SCNErrorDomain")]
@@ -27,7 +26,6 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10, 8)]
 	[iOS (8, 0)]
 	[Native]
 	public enum SCNGeometryPrimitiveType : long {
@@ -40,7 +38,6 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10, 8)]
 	[iOS (8, 0)]
 	[Native]
 	public enum SCNTransparencyMode : long {
@@ -55,7 +52,6 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10, 8)]
 	[iOS (8, 0)]
 	[Native]
 	public enum SCNCullMode : long {
@@ -63,7 +59,6 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10, 8)]
 	[iOS (8, 0)]
 	[Native]
 	public enum SCNFilterMode : long {
@@ -73,7 +68,6 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10, 8)]
 	[iOS (8, 0)]
 	[Native]
 	public enum SCNWrapMode : long {
@@ -85,7 +79,6 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10, 8)]
 	[iOS (8, 0)]
 	[Native]
 	public enum SCNSceneSourceStatus : long {
@@ -431,7 +424,8 @@ namespace SceneKit {
 		Lines = 1,
 	}
 
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+	[NoWatch, Mac (10,13), iOS (11,0)]
+	[TV (12,0)]
 	[Native]
 	public enum SCNTessellationSmoothingMode : long
 	{

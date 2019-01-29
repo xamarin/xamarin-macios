@@ -140,17 +140,11 @@ namespace LinkAll.Attributes {
 		{
 			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Runtime, " + AssemblyName);
 			Assert.NotNull (klass, "Runtime");
-			// Initialize, RegisterAssembly... are unconditionally preserved
+			// Initialize and a few other methods are unconditionally preserved
 			var method = klass.GetMethod ("Initialize", BindingFlags.NonPublic | BindingFlags.Static);
 			Assert.NotNull (method, "Initialize");
-			method = klass.GetMethod ("RegisterAssembly", BindingFlags.Public | BindingFlags.Static);
-			Assert.NotNull (method, "RegisterAssembly");
 			method = klass.GetMethod ("RegisterNSObject", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[] { typeof (NSObject), typeof (IntPtr) }, null);
 			Assert.NotNull (method, "RegisterNSObject");
-			method = klass.GetMethod ("GetBlockWrapperCreator", BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof (MethodInfo), typeof (int) }, null);
-			Assert.NotNull (method, "GetBlockWrapperCreator");
-			method = klass.GetMethod ("CreateBlockProxy", BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof (MethodInfo), typeof (IntPtr) }, null);
-			Assert.NotNull (method, "CreateBlockProxy");
 		}
 
 		[Test]

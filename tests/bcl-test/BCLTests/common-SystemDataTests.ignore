@@ -1,0 +1,64 @@
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+Monotests_Mono.Data.SqlExpressions.DateComparisonTest.TestDateComparisonRight
+Monotests_Mono.Data.SqlExpressions.DateComparisonTest.TestDateComparisonLeft
+MonoTests.System.Data.XmlDataReaderTest.XmlLoadTest
+
+# System.NotSupportedException : Encoding 1252 data could not be found. Make sure you have correct international codeset assembly installed and enabled.
+MonoTests.System.Data.SqlTypes.SqlStringTest.UnicodeBytes
+MonoTests.System.Data.SqlTypes.SqlStringTest.Create
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Data.Xml.XmlDataDocumentTest.Test6
+MonoTests.System.Data.Xml.XmlDataDocumentTest.Test5
+MonoTests.System.Data.Xml.XmlDataDocumentTest.Test4
+MonoTests.System.Data.Xml.XmlDataDocumentTest.Test3
+MonoTests.System.Data.Xml.XmlDataDocumentTest.Test2
+MonoTests.System.Data.Xml.XmlDataDocumentTest.Test1
+MonoTests.System.Data.Xml.XmlDataDocumentTest.Navigator
+MonoTests.System.Data.Xml.XmlDataDocumentTest.GetRowFromElement
+MonoTests.System.Data.Xml.XmlDataDocumentTest.GetElementFromRow
+MonoTests.System.Data.Xml.XmlDataDocumentTest.EditingXmlTree
+MonoTests.System.Data.Xml.XmlDataDocumentTest.EditingDataSet
+MonoTests.System.Data.Xml.XmlDataDocumentTest.CreateElement3
+MonoTests.System.Data.Xml.XmlDataDocumentTest.CreateElement2
+MonoTests.System.Data.Xml.XmlDataDocumentTest.CreateElement1
+MonoTests.System.Data.Xml.XmlDataDocumentTest.CloneNode
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Data.DataTableReadXmlSchemaTest.TestSampleFileXPath
+MonoTests.System.Data.DataTableReadXmlSchemaTest.TestSampleFileSimpleTables
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Data.DataTableReadXmlSchemaTest.TestSampleFileComplexTables3
+
+#  System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Data.DataTableReadXmlSchemaTest.ReadConstraints
+MonoTests.System.Data.DataTableReadXmlSchemaTest.ReadAnnotatedRelations_MultipleColumns
+MonoTests.System.Data.DataTableTest.WriteXmlSchema
+MonoTests.System.Data.DataTableTest.ReadXmlSchema
+MonoTests.System.Data.DataSetTypedDataSetTest.TypedDataSet
+MonoTests.System.Data.DataSetTest2.ReadXmlSchema_TableOrder
+MonoTests.System.Data.DataSetTest2.ReadXmlSchema_Nested
+MonoTests.System.Data.DataSetTest2.Merge_ConstraintsFromReadXmlSchema
+MonoTests.System.Data.DataSetTest.WriteXmlSchema
+
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Data.DataSetTest.ReadXmlSchema
+MonoTests.System.Data.DataSetTest.ReadWriteXmlDiffGram
+MonoTests.System.Data.DataSetTest.ReadWriteXml
+MonoTests.System.Data.DataSetTest.CloneCopy2
+MonoTests.System.Data.DataSetReadXmlTest.DataSetExtendedPropertiesTest
+MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileXPath
+MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileSimpleTables
+MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileNoTables
+MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileComplexTables3
+MonoTests.System.Data.DataSetReadXmlSchemaTest.TestSampleFileComplexTables
+MonoTests.System.Data.DataSetReadXmlSchemaTest.TestMoreThanOneRepeatableColumns
+MonoTests.System.Data.DataSetReadXmlSchemaTest.TestAnnotatedRelation2
+MonoTests.System.Data.DataSetReadXmlSchemaTest.TestAnnotatedRelation1
+MonoTests.System.Data.DataSetReadXmlSchemaTest.RepeatableSimpleElement
+MonoTests.System.Data.DataSetReadXmlSchemaTest.ReadConstraints
+MonoTests.System.Data.DataSetReadXmlSchemaTest.ReadAnnotatedRelations_MultipleColumns
+MonoTests.System.Data.DataRelationTest.RelationFromSchema
+MonoTests.System.Data.BinarySerializationTest.Test_With_Null_Values2
+MonoTests.System.Data.BinarySerializationTest.DataTableSerializationTest2

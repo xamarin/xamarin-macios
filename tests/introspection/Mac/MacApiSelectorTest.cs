@@ -191,11 +191,21 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 9))
 						return true;
 					break;
+				case "MPSImageDescriptor":
+					if (!Mac.CheckSystemVersion (10, 14)) // Likely to be fixed when we do MPS binding
+						return true;
+					break;
 				}
 				break;
 			case "readingOptionsForType:pasteboard:":
 			case "writingOptionsForType:pasteboard:":
 				return true; // Optional selectors on NSPasteboardReading/NSPasteboardWriting
+			case "newWindowForTab:": // "This method can be implemented in the responder chain", optional but not protocol directly on NSResponder
+				switch (type.Name) {
+				case "NSViewController":
+					return true;
+				}
+				break;
 			}
 
 			switch (type.Namespace) {
@@ -340,6 +350,15 @@ namespace Introspection {
 				case "NSUrlSessionConfiguration":
 					if (Mac.IsAtLeast (10, 11))
 						return true;
+					break;
+				case "NSNull":
+					switch (selectorName) {
+					case "runActionForKey:object:arguments:":
+						// This comes from implementing the CAAction protocol, which started in 10.11.
+						if (!Mac.CheckSystemVersion (10, 11))
+							return true;
+						break;
+					}
 					break;
 				}
 				break;
@@ -505,6 +524,8 @@ namespace Introspection {
 					case "delegate":
 					case "setDelegate:":
 					case "expectedPlayerCount":
+					case "chooseBestHostPlayerWithCompletionHandler:":
+					case "rematchWithCompletionHandler:":
 						return true;
 					}
 					break;
@@ -519,6 +540,11 @@ namespace Introspection {
 					case "cancel":
 					case "queryPlayerGroupActivity:withCompletionHandler:":
 					case "queryActivityWithCompletionHandler:":
+					case "cancelInviteToPlayer:":
+					case "finishMatchmakingForMatch:":
+					case "matchForInvite:completionHandler:":
+					case "startBrowsingForNearbyPlayersWithReachableHandler:":
+					case "stopBrowsingForNearbyPlayers":
 						return true;
 					}
 					break;

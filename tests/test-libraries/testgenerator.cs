@@ -58,6 +58,7 @@ static class C {
 		public string Map;
 		public string MapFrom;
 		public Version MinXcodeVersion;
+		public Version MinMacOSVersion;
 		public string ToNSNumberCastExpression;
 		public string FromNSNumberCastExpression;
 	}
@@ -82,17 +83,17 @@ static class C {
 	static BindAsData[] bindas_nsvalue = new [] {
 		new BindAsData { Managed = "CGAffineTransform", Native = "CGAffineTransform", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGAffineTransform (1, 2, 3, 4, 5, 6)", Map = ".CGAffineTransformValue", MapFrom = "FromCGAffineTransform" },
 		new BindAsData { Managed = "NSRange", Native = "NSRange", ManagedNewExpression = "new NSRange (7, 8)", Map = ".RangeValue", MapFrom = "FromRange" },
-		new BindAsData { Managed = "CGVector", Native = "CGVector", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGVector (9, 10)", Map = ".CGVectorValue", MapFrom = "FromCGVector" },
-		new BindAsData { Managed = "SCNMatrix4", Native = "SCNMatrix4", ManagedNewExpression = "SCNMatrix4.Identity", Map = ".SCNMatrix4Value", MapFrom = "FromSCNMatrix4" },
-		new BindAsData { Managed = "CLLocationCoordinate2D", Native = "CLLocationCoordinate2D", ManagedNewExpression = "new CLLocationCoordinate2D (11, 12)", Map = ".CoordinateValue", MapFrom = "FromMKCoordinate" },
-		new BindAsData { Managed = "SCNVector3", Native = "SCNVector3", ManagedNewExpression = "new SCNVector3 (13, 14, 15)", Map = ".Vector3Value", MapFrom = "FromVector" },
-		new BindAsData { Managed = "SCNVector4", Native = "SCNVector4", ManagedNewExpression = "new SCNVector4 (16, 17, 18, 19)", Map = ".Vector4Value", MapFrom = "FromVector" },
+		new BindAsData { Managed = "CGVector", Native = "CGVector", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGVector (9, 10)", Map = ".CGVectorValue", MapFrom = "FromCGVector", MinXcodeVersion = new Version (8, 0) },
+		new BindAsData { Managed = "SCNMatrix4", Native = "SCNMatrix4", ManagedNewExpression = "SCNMatrix4.Identity", Map = ".SCNMatrix4Value", MapFrom = "FromSCNMatrix4", MinMacOSVersion = new Version (10, 10), MinXcodeVersion = new Version (8, 0) },
+		new BindAsData { Managed = "CLLocationCoordinate2D", Native = "CLLocationCoordinate2D", ManagedNewExpression = "new CLLocationCoordinate2D (11, 12)", Map = ".CoordinateValue", MapFrom = "FromMKCoordinate", MinMacOSVersion = new Version (10, 9) },
+		new BindAsData { Managed = "SCNVector3", Native = "SCNVector3", ManagedNewExpression = "new SCNVector3 (13, 14, 15)", Map = ".Vector3Value", MapFrom = "FromVector", MinMacOSVersion = new Version (10, 8), MinXcodeVersion = new Version (8, 0) },
+		new BindAsData { Managed = "SCNVector4", Native = "SCNVector4", ManagedNewExpression = "new SCNVector4 (16, 17, 18, 19)", Map = ".Vector4Value", MapFrom = "FromVector", MinMacOSVersion = new Version (10, 8), MinXcodeVersion = new Version (8, 0) },
 		new BindAsData { Managed = "CGPoint", Native = "CGPoint", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGPoint (19, 20)", Map = ".CGPointValue", MapFrom = "FromCGPoint" },
 		new BindAsData { Managed = "CGSize", Native = "CGSize", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGSize (21, 22)", Map = ".CGSizeValue", MapFrom = "FromCGSize" },
 		new BindAsData { Managed = "CGRect", Native = "CGRect", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGRect (23, 24, 25, 26)", Map = ".CGRectValue", MapFrom = "FromCGRect" },
 		new BindAsData { Managed = "UIEdgeInsets", Native = "UIEdgeInsets", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new UIEdgeInsets (27, 28, 29, 30)", Map = ".UIEdgeInsetsValue", MapFrom = "FromUIEdgeInsets" },
 		new BindAsData { Managed = "UIOffset", Native = "UIOffset", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new UIOffset (31, 32)", Map = ".UIOffsetValue", MapFrom = "FromUIOffset" },
-		new BindAsData { Managed = "MKCoordinateSpan", Native = "MKCoordinateSpan", ManagedCondition = "HAVE_MAPKIT", ManagedNewExpression = "new MKCoordinateSpan (33, 34)", Map = ".CoordinateSpanValue", MapFrom = "FromMKCoordinateSpan" },
+		new BindAsData { Managed = "MKCoordinateSpan", Native = "MKCoordinateSpan", ManagedCondition = "HAVE_MAPKIT", ManagedNewExpression = "new MKCoordinateSpan (33, 34)", Map = ".CoordinateSpanValue", MapFrom = "FromMKCoordinateSpan", MinMacOSVersion = new Version (10, 9) },
 		new BindAsData { Managed = "CMTimeRange", Native = "CMTimeRange", ManagedCondition = "HAVE_COREMEDIA", ManagedNewExpression = "new CMTimeRange { Duration = new CMTime (37, 38), Start = new CMTime (39, 40) }", Map = ".CMTimeRangeValue", MapFrom = "FromCMTimeRange"  },
 		new BindAsData { Managed = "CMTime", Native = "CMTime", ManagedCondition = "HAVE_COREMEDIA",  ManagedNewExpression = "new CMTime (35, 36)", Map = ".CMTimeValue", MapFrom = "FromCMTime"  },
 		new BindAsData { Managed = "CMTimeMapping", Native = "CMTimeMapping", ManagedCondition = "HAVE_COREMEDIA", ManagedNewExpression = "new CMTimeMapping { Source = new CMTimeRange { Duration = new CMTime (42, 43), Start = new CMTime (44, 45) } }", Map = ".CMTimeMappingValue", MapFrom = "FromCMTimeMapping"  },
@@ -352,9 +353,6 @@ static class C {
 		WriteFrameworkDefines (w);
 		w.AppendLine (@"
 using System;
-#if !__WATCHOS__
-using System.Drawing;
-#endif
 
 #if __UNIFIED__
 using AVFoundation;
@@ -377,6 +375,9 @@ using Security;
 using UIKit;
 #endif
 #else
+#if !__WATCHOS__
+using System.Drawing;
+#endif
 using MonoTouch.ObjCRuntime;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -766,6 +767,18 @@ namespace Bindings.Test
 		File.WriteAllText ("../bindings-test/StructsAndEnums.generated.cs", w.ToString ());
 	}
 
+	static void WriteAsserts (StringBuilder w, BindAsData v)
+	{
+		if (v.MinXcodeVersion != null) {
+			w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
+			w.AppendLine ();
+		}
+		if (v.MinMacOSVersion != null) {
+			w.AppendLine ($"\t\t\tTestRuntime.AssertSystemVersion (PlatformName.MacOSX, {v.MinMacOSVersion.Major}, {v.MinMacOSVersion.Minor}, throwIfOtherPlatform: false);");
+			w.AppendLine ();
+		}
+	}
+
 	static void WriteRegistrarTests ()
 	{
 		var w = new StringBuilder ();
@@ -921,10 +934,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSNumberBindAs_{v.Managed}_Bindings ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new ObjCRegistrarTest ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.P{v.Managed}Number, \"initial null property\");");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.P{v.Managed}NumberNullable, \"initial nullable null property\");");
@@ -960,10 +970,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSNumberBindAs_{v.Managed}_Overrides ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new BindAsTestClassGenerated ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.{v.Managed}Number, \"initial null\");");
 			w.AppendLine ($"\t\t\t\tMessaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle (\"set{v.Managed}NumberNullable:\"), IntPtr.Zero);");
@@ -1009,10 +1016,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSNumberBindAs_{v.Managed}Array_Bindings ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new ObjCRegistrarTest ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.P{v.Managed}Array, \"initial null property\");");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.Get{v.Managed}Array (), \"initial null method\");");
@@ -1044,10 +1048,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSNumberBindAs_{v.Managed}_Array_Overrides ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new BindAsTestClassGenerated ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.{v.Managed}Array, \"initial null\");");
 			w.AppendLine ($"\t\t\t\tMessaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle (\"set{v.Managed}Array:\"), IntPtr.Zero);");
@@ -1103,10 +1104,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSValueBindAs_{v.Managed}_Bindings ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new ObjCRegistrarTest ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.P{v.Managed}Value, \"initial null property\");");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.P{v.Managed}ValueNullable, \"initial nullable null property\");");
@@ -1142,10 +1140,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSValueBindAs_{v.Managed}_Overrides ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new BindAsTestClassGenerated ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.{v.Managed}Value, \"initial null\");");
 			w.AppendLine ($"\t\t\t\tMessaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle (\"set{v.Managed}ValueNullable:\"), IntPtr.Zero);");
@@ -1191,10 +1186,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSValueBindAs_{v.Managed}Array_Bindings ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new ObjCRegistrarTest ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.P{v.Managed}Array, \"initial null property\");");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.Get{v.Managed}Array (), \"initial null method\");");
@@ -1226,10 +1218,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSValueBindAs_{v.Managed}_Array_Overrides ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new BindAsTestClassGenerated ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.{v.Managed}Array, \"initial null\");");
 			w.AppendLine ($"\t\t\t\tMessaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle (\"set{v.Managed}Array:\"), IntPtr.Zero);");
@@ -1283,10 +1272,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSStringBindAs_{v.Managed}_Bindings ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new ObjCRegistrarTest ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.Throws<ArgumentNullException> (() => {{ Console.WriteLine (obj.PSmart{v.Managed}Property); }}, \"initial zero property\");");
 			w.AppendLine ($"\t\t\t\tAssert.Throws<ArgumentNullException> (() => {{ Console.WriteLine (obj.GetSmart{v.Managed}Value ()); }}, \"initial zero method\");");
@@ -1320,10 +1306,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSStringBindAs_{v.Managed}_Overrides ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new BindAsTestClassGenerated ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.Throws<InvalidOperationException> (() => {{ Console.WriteLine (obj.PSmart{v.Managed}Property); }}, \"initial null\");");
 			w.AppendLine ($"\t\t\t\tMessaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle (\"setSmartNullable{v.Managed}Value:\"), IntPtr.Zero);");
@@ -1369,10 +1352,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSStringBindAs_{v.Managed}Array_Bindings ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new ObjCRegistrarTest ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.PSmart{v.Managed}Properties, \"initial null property\");");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.GetSmart{v.Managed}Values (), \"initial null method\");");
@@ -1404,10 +1384,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void NSStringBindAs_{v.Managed}_Array_Overrides ()");
 			w.AppendLine ("\t\t{");
-			if (v.MinXcodeVersion != null) {
-				w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
-				w.AppendLine ();
-			}
+			WriteAsserts (w, v);
 			w.AppendLine ($"\t\t\tusing (var obj = new BindAsTestClassGenerated ()) {{");
 			w.AppendLine ($"\t\t\t\tAssert.IsNull (obj.PSmart{v.Managed}Properties, \"initial null\");");
 			w.AppendLine ($"\t\t\t\tMessaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle (\"setSmart{v.Managed}Values:\"), IntPtr.Zero);");

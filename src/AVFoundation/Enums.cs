@@ -310,7 +310,6 @@ namespace AVFoundation {
 
 #if !XAMCORE_3_0 || MONOMAC
 	[NoTV]
-	[Mac (10,7)] // N/A in iOS
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDeviceTransportControlsPlaybackMode : long {
@@ -318,7 +317,6 @@ namespace AVFoundation {
 	}
 
 	[NoTV, NoWatch]
-	[Mac (10,7)] // N/A in iOS
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVVideoFieldMode : long {
@@ -470,7 +468,7 @@ namespace AVFoundation {
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
-	[NoTV, NoWatch]
+	[NoTV, Watch (5,0)]
 	[Native]
 	public enum AVAudioSessionRecordPermission : ulong {
 		Undetermined = 1970168948 /*'undt'*/,
@@ -694,7 +692,6 @@ namespace AVFoundation {
 	}
 
 	[NoiOS][NoTV][NoWatch]
-	[Mac (10, 7)]
 	[Native]
 	public enum AVContentAuthorizationStatus : long {
 		Unknown,
@@ -873,7 +870,7 @@ namespace AVFoundation {
 		CannotDoInCurrentContext = 2
 	}
 
-	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
+	[TV (11,0), Watch (5,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum AVAudioSessionRouteSharingPolicy : ulong {
 		Default = 0,
@@ -993,5 +990,13 @@ namespace AVFoundation {
 		Hlg = 0x1,
 		Hdr10 = 0x2,
 		DolbyVision = 0x4,
+	}
+
+	[Flags]
+	[Native]
+	[Watch (5,0), TV (12,0), iOS (12,0), NoMac]
+	public enum AVAudioSessionActivationOptions : ulong
+	{
+		None = 0x0,
 	}
 }

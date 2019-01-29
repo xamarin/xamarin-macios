@@ -12,7 +12,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 using OpenTK;
-#if !MONOMAC
+#if MONOMAC
+using AppKit;
+using UIViewController = AppKit.NSViewController;
+#else
 using UIKit;
 #endif
 
@@ -218,6 +221,14 @@ namespace GameController {
 
 		[Export ("rightTrigger")]
 		GCControllerButtonInput RightTrigger { get; }
+
+		[TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
+		[NullAllowed, Export ("leftThumbstickButton")]
+		GCControllerButtonInput LeftThumbstickButton { get; }
+
+		[TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
+		[NullAllowed, Export ("rightThumbstickButton")]
+		GCControllerButtonInput RightThumbstickButton { get; }
 	}
 
 	[iOS (7,0)]
@@ -271,7 +282,7 @@ namespace GameController {
 		[Export ("extendedGamepad", ArgumentSemantic.Retain)]
 		GCExtendedGamepad ExtendedGamepad { get; }
 
-		[NoMac]
+		[Mac (10,12, onlyOn64: true)]
 		[iOS (10,0)]
 		[NullAllowed, Export ("microGamepad", ArgumentSemantic.Retain)]
 		GCMicroGamepad MicroGamepad { get; }
@@ -340,12 +351,12 @@ namespace GameController {
 		bool HasAttitudeAndRotationRate { get; }
 	}
 
-	[NoMac]
+	[Mac (10,11, onlyOn64: true)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	delegate void GCMicroGamepadValueChangedHandler (GCMicroGamepad gamepad, GCControllerElement element);
 
-	[NoMac]
+	[Mac (10,11, onlyOn64: true)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
@@ -376,7 +387,7 @@ namespace GameController {
 		bool AllowsRotation { get; set; }
 	}
 
-	[NoMac]
+	[Mac (10,12, onlyOn64: true)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (GCMicroGamepad))]
@@ -391,8 +402,7 @@ namespace GameController {
 		IntPtr Constructor (GCController controller, NSData data);
 	}
 
-#if !MONOMAC
-	[NoMac]
+	[Mac (10,12, onlyOn64: true)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (UIViewController))]
@@ -406,5 +416,4 @@ namespace GameController {
 		[Export ("controllerUserInteractionEnabled")]
 		bool ControllerUserInteractionEnabled { get; set; }
 	}
-#endif
 }

@@ -565,7 +565,6 @@ namespace CoreAnimation {
 		nfloat RasterizationScale { get; set; }
 
 		[iOS (6,0)]
-		[Mac (10,8)]
 		[Export ("drawsAsynchronously")]
 		bool DrawsAsynchronously { get; set; }
 
@@ -951,6 +950,9 @@ namespace CoreAnimation {
 	}
 	
 #if !MONOMAC
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'CAMetalLayer' instead.")]
+	[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'CAMetalLayer' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'CAMetalLayer' instead.")]
 	[BaseType (typeof (CALayer))]
 	interface CAEAGLLayer : EAGLDrawable {
 		[Export ("layer"), New, Static]
@@ -1051,11 +1053,9 @@ namespace CoreAnimation {
 		[Field ("kCAAnimationPaced")]
 		NSString AnimationPaced { get; }
 
-		[Mac (10, 7)] // iOS 4.0
 		[Field ("kCAAnimationCubic")]
 		NSString AnimationCubic { get; }
 
-		[Mac (10, 7)] // iOS 4.0
 		[Field ("kCAAnimationCubicPaced")]
 		NSString AnimationCubicPaced { get; }
 
@@ -1381,12 +1381,48 @@ namespace CoreAnimation {
 
 		[Export ("endPoint")]
 		CGPoint EndPoint { get; set;  }
-	
-		[Export ("type", ArgumentSemantic.Copy)]
-		string Type { get; set;  }
 
+#if XAMCORE_4_0
+		CAGradientLayerType LayerType {
+			[Wrap ("CAGradientLayerTypeExtensions.GetValue (WeakLayerType)")]
+			get;
+			[Wrap ("WeakLayerType = value.GetConstant ()")]
+			set;
+		}
+
+		[Export ("type", ArgumentSemantic.Copy)]
+		NSString WeakLayerType { get; set; }
+#else
+		CAGradientLayerType LayerType {
+			[Wrap ("CAGradientLayerTypeExtensions.GetValue ((NSString) Type)")]
+			get;
+			[Wrap ("Type = value.GetConstant ()")]
+			set;
+		}
+
+		[Obsolete ("Use 'LayerType' property instead.")]
+		[Export ("type", ArgumentSemantic.Copy)]
+		string Type { get; set; }
+
+		[Obsolete ("Use 'CAGradientLayerType.Axial' enum instead.")]
 		[Field ("kCAGradientLayerAxial")]
 		NSString GradientLayerAxial { get; }
+#endif
+	}
+
+	enum CAGradientLayerType {
+		[Field ("kCAGradientLayerAxial")]
+		Axial,
+
+		[iOS (12,0)][TV (12,0)][Mac (10,14, onlyOn64: true)]
+		[NoWatch]
+		[Field ("kCAGradientLayerRadial")]
+		Radial,
+
+		[iOS (12,0)][TV (12,0)][Mac (10,14, onlyOn64: true)]
+		[NoWatch]
+		[Field ("kCAGradientLayerConic")]
+		Conic,
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -1465,6 +1501,7 @@ namespace CoreAnimation {
 	}
 
 #if MONOMAC
+	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'CAMetalLayer' instead.")]
 	[BaseType (typeof (CALayer))]
 	interface CAOpenGLLayer {
 		[Export ("layer"), New, Static]
@@ -1771,4 +1808,79 @@ namespace CoreAnimation {
 		[Field ("kCAEmitterBehaviorWave")]
 		NSString Wave { get; }			
 	}
+
+#if MONOMAC
+	[Internal]
+	[Static]
+	[NoiOS][NoTV][NoWatch]
+	partial interface CARendererOptionKeys {
+		[Field ("kCARendererColorSpace")]
+		NSString ColorSpace { get; }
+
+		[Mac (10,14, onlyOn64: true)]
+		[Field ("kCARendererMetalCommandQueue")]
+		NSString MetalCommandQueue { get; }
+	}
+
+	[StrongDictionary ("CARendererOptionKeys")]
+	interface CARendererOptions {
+
+		[Export ("ColorSpace")]
+		CGColorSpace ColorSpace { get; set; }
+
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("MetalCommandQueue")]
+		IMTLCommandQueue MetalCommandQueue { get; set; }
+	}
+
+	// 10.5 on the Mac
+	[NoiOS][NoTV][NoWatch]
+	[BaseType (typeof (NSObject))]
+	interface CARenderer {
+		[Mac (10,13, onlyOn64: true)]
+		[Static]
+		[Export ("rendererWithMTLTexture:options:")]
+		CARenderer Create (IMTLTexture tex, [NullAllowed] NSDictionary dict);
+
+		[Mac (10,13, onlyOn64: true)]
+		[Static]
+		[Wrap ("Create (tex, options?.Dictionary)")]
+		CARenderer Create (IMTLTexture tex, [NullAllowed] CARendererOptions options);
+
+		[NullAllowed, Export ("layer", ArgumentSemantic.Strong)]
+		CALayer Layer { get; set; }
+
+		[Export ("bounds", ArgumentSemantic.Assign)]
+		CGRect Bounds { get; set; }
+
+		[Export ("beginFrameAtTime:timeStamp:")]
+		void BeginFrame (double timeInSeconds, ref CVTimeStamp ts);
+
+		[Sealed][Internal] // since the timestamp is nullable
+		[Export ("beginFrameAtTime:timeStamp:")]
+		void BeginFrame (double timeInSeconds, IntPtr ts);
+
+		[Wrap ("BeginFrame (timeInSeconds, IntPtr.Zero)")]
+		void BeginFrame (double timeInSeconds);
+
+		[Export ("updateBounds")]
+		CGRect UpdateBounds ();
+
+		[Export ("addUpdateRect:")]
+		void AddUpdate (CGRect r);
+
+		[Export ("render")]
+		void Render ();
+
+		[Export ("nextFrameTime")]
+		double /* CFTimeInterval */ GetNextFrameTime ();
+
+		[Export ("endFrame")]
+		void EndFrame ();
+
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("setDestination:")]
+		void SetDestination (IMTLTexture tex);
+	}
+#endif
 }

@@ -27,13 +27,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text;
 
 #if UNIFIED
 using CoreFoundation;
@@ -53,8 +56,62 @@ namespace System.Net.Http {
 #else
 namespace Foundation {
 #endif
+
+	// useful extensions for the class in order to set it in a header
+	static class NSHttpCookieExtensions
+	{
+		static void AppendSegment(StringBuilder builder, string name, string value)
+		{
+			if (builder.Length > 0)
+				builder.Append ("; ");
+
+			builder.Append (name);
+			if (value != null)
+				builder.Append ("=").Append (value);
+		}
+
+		// returns the header for a cookie
+		public static string GetHeaderValue (this NSHttpCookie cookie)
+		{
+			var header = new StringBuilder();
+			AppendSegment (header, cookie.Name, cookie.Value);
+			AppendSegment (header, NSHttpCookie.KeyPath.ToString (), cookie.Path.ToString ());
+			AppendSegment (header, NSHttpCookie.KeyDomain.ToString (), cookie.Domain.ToString ());
+			AppendSegment (header, NSHttpCookie.KeyVersion.ToString (), cookie.Version.ToString ());
+
+			if (cookie.Comment != null)
+				AppendSegment (header, NSHttpCookie.KeyComment.ToString (), cookie.Comment.ToString());
+
+			if (cookie.CommentUrl != null)
+				AppendSegment (header, NSHttpCookie.KeyCommentUrl.ToString (), cookie.CommentUrl.ToString());
+
+			if (cookie.Properties.ContainsKey (NSHttpCookie.KeyDiscard))
+				AppendSegment (header, NSHttpCookie.KeyDiscard.ToString (), null);
+
+			if (cookie.ExpiresDate != null) {
+				// Format according to RFC1123; 'r' uses invariant info (DateTimeFormatInfo.InvariantInfo)
+				var dateStr = ((DateTime) cookie.ExpiresDate).ToUniversalTime ().ToString("r", CultureInfo.InvariantCulture);
+				AppendSegment (header, NSHttpCookie.KeyExpires.ToString (), dateStr);
+			}
+
+			if (cookie.Properties.ContainsKey (NSHttpCookie.KeyMaximumAge)) {
+				var timeStampString = (NSString) cookie.Properties[NSHttpCookie.KeyMaximumAge];
+				AppendSegment (header, NSHttpCookie.KeyMaximumAge.ToString (), timeStampString);
+			}
+
+			if (cookie.IsSecure)
+				AppendSegment (header, NSHttpCookie.KeySecure.ToString(), null);
+
+			if (cookie.IsHttpOnly)
+				AppendSegment (header, "httponly", null); // Apple does not show the key for the httponly
+
+			return header.ToString ();
+		}
+	}
+
 	public partial class NSUrlSessionHandler : HttpMessageHandler
 	{
+		private const string SetCookie = "Set-Cookie";
 		readonly Dictionary<string, string> headerSeparators = new Dictionary<string, string> {
 			["User-Agent"] = " ",
 			["Server"] = " "
@@ -64,10 +121,22 @@ namespace Foundation {
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
 
-		public NSUrlSessionHandler () : this (NSUrlSessionConfiguration.DefaultSessionConfiguration)
+		static NSUrlSessionConfiguration CreateConfig ()
+		{
+			// modifying the configuration does not affect future calls
+			var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
+			// but we want, by default, the timeout from HttpClient to have precedence over the one from NSUrlSession
+			// Double.MaxValue does not work, so default to 24 hours
+			config.TimeoutIntervalForRequest = 24 * 60 * 60;
+			config.TimeoutIntervalForResource = 24 * 60 * 60;
+			return config;
+		}
+
+		public NSUrlSessionHandler () : this (CreateConfig ())
 		{
 		}
 
+		[CLSCompliant (false)]
 		public NSUrlSessionHandler (NSUrlSessionConfiguration configuration)
 		{
 			if (configuration == null)
@@ -86,7 +155,7 @@ namespace Foundation {
 			else if ((sp & SecurityProtocolType.Tls12) != 0)
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;
 
-			session = NSUrlSession.FromConfiguration (configuration, new NSUrlSessionHandlerDelegate (this), null);
+			session = NSUrlSession.FromConfiguration (configuration, (INSUrlSessionDelegate) new NSUrlSessionHandlerDelegate (this), null);
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
@@ -94,10 +163,8 @@ namespace Foundation {
 
 		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
-			InflightData inflight;
 			lock (inflightRequestsLock)
-				if (inflightRequests.TryGetValue (task, out inflight))
-					inflightRequests.Remove (task);
+				inflightRequests.Remove (task);
 
 			if (cancel)
 				task?.Cancel ();
@@ -264,9 +331,16 @@ namespace Foundation {
 					foreach (var v in urlResponse.AllHeaderFields) {
 						// NB: Cocoa trolling us so hard by giving us back dummy dictionary entries
 						if (v.Key == null || v.Value == null) continue;
+						// NSUrlSession tries to be smart with cookies, we will not use the raw value but the ones provided by the cookie storage
+						if (v.Key.ToString () == SetCookie) continue;
 
 						httpResponse.Headers.TryAddWithoutValidation (v.Key.ToString (), v.Value.ToString ());
 						httpResponse.Content.Headers.TryAddWithoutValidation (v.Key.ToString (), v.Value.ToString ());
+					}
+
+					var cookies = session.Configuration.HttpCookieStorage.CookiesForUrl (response.Url);
+					for (var index = 0; index < cookies.Length; index++) {
+						httpResponse.Headers.TryAddWithoutValidation (SetCookie, cookies [index].GetHeaderValue ());
 					}
 
 					inflight.Response = httpResponse;
@@ -379,19 +453,46 @@ namespace Foundation {
 					}
 				}
 
-				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM) {
-					if (sessionHandler.Credentials != null) {
-						var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
-						if (credentialsToUse == null) {
-							var uri = inflight.Request.RequestUri;
-							credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
-						}
+				if (sessionHandler.Credentials != null && TryGetAuthenticationType (challenge.ProtectionSpace, out string authType)) {
+					NetworkCredential credentialsToUse = null;
+					if (authType != RejectProtectionSpaceAuthType) {
+						var uri = inflight.Request.RequestUri;
+						credentialsToUse = sessionHandler.Credentials.GetCredential (uri, authType);
+					}
+
+					if (credentialsToUse != null) {
 						var credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
 						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+					} else {
+						// Rejecting the challenge allows the next authentication method in the request to be delivered to
+						// the DidReceiveChallenge method. Another authentication method may have credentials available.
+						completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
 					}
-					return;
+				} else {
+					completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 				}
-				completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
+			}
+
+			static readonly string RejectProtectionSpaceAuthType = "reject";
+
+			static bool TryGetAuthenticationType (NSUrlProtectionSpace protectionSpace, out string authenticationType)
+			{
+				if (protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM) {
+					authenticationType = "NTLM";
+				} else if (protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodHTTPBasic) {
+					authenticationType = "basic";
+				} else if (protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNegotiate ||
+					protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodHTMLForm ||
+					protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodHTTPDigest) {
+					// Want to reject this authentication type to allow the next authentication method in the request to
+					// be used.
+					authenticationType = RejectProtectionSpaceAuthType;
+				} else {
+					// ServerTrust, ClientCertificate or Default.
+					authenticationType = null;
+					return false;
+				}
+				return true;
 			}
 		}
 
@@ -462,16 +563,6 @@ namespace Foundation {
 				data = new Queue<NSData> ();
 			}
 
-			protected override void Dispose (bool disposing)
-			{
-				lock (dataLock) {
-					foreach (var q in data)
-						q?.Dispose ();
-				}
-
-				base.Dispose (disposing);
-			}
-
 			public void Add (NSData d)
 			{
 				lock (dataLock) {
@@ -539,8 +630,15 @@ namespace Foundation {
 					lock (dataLock) {
 						// this is the same object, it was done to make the cleanup
 						data.Dequeue ();
-						current?.Dispose ();
 						currentStream?.Dispose ();
+						// We cannot use current?.Dispose. The reason is the following one:
+						// In the DidReceiveResponse, if iOS realizes that a buffer can be reused,
+						// because the data is the same, it will do so. Such a situation does happen
+						// between requests, that is, request A and request B will get the same NSData
+						// (buffer) in the delegate. In this case, we cannot dispose the NSData because
+						// it might be that a different request received it and it is present in
+						// its NSUrlSessionDataTaskStream stream. We can only trust the gc to do the job
+						// which is better than copying the data over. 
 						current = null;
 						currentStream = null;
 					}

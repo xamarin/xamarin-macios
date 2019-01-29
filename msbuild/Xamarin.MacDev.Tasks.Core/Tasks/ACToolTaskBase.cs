@@ -178,29 +178,10 @@ namespace Xamarin.MacDev.Tasks
 
 			args.Add ("--minimum-deployment-target", minimumDeploymentTarget);
 
-			switch (SdkPlatform) {
-			case "iPhoneSimulator":
-				args.Add ("--platform", IsWatchApp ? "watchsimulator" : "iphonesimulator");
-				break;
-			case "iPhoneOS":
-				args.Add ("--platform", IsWatchApp ? "watchos" : "iphoneos");
-				break;
-			case "MacOSX":
-				args.Add ("--platform", "macosx");
-				break;
-			case "WatchSimulator":
-				args.Add ("--platform", "watchsimulator");
-				break;
-			case "WatchOS":
-				args.Add ("--platform", "watchos");
-				break;
-			case "AppleTVSimulator":
-				args.Add ("--platform", "appletvsimulator");
-				break;
-			case "AppleTVOS":
-				args.Add ("--platform", "appletvos");
-				break;
-			}
+			var platform = PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp);
+
+			if (platform != null)
+				args.Add ("--platform", platform);
 		}
 
 		IEnumerable<ITaskItem> GetCompiledBundleResources (PDictionary output, string intermediateBundleDir)
@@ -409,12 +390,15 @@ namespace Xamarin.MacDev.Tasks
 						int line = 0, column = 0;
 						int index, endIndex;
 
-						if ((index = ex.Message.IndexOf ("At line ", StringComparison.Ordinal)) != -1) {
+						var message = ex.Message;
+						if (message.EndsWith (".", StringComparison.Ordinal))
+							message = message.Substring (0, message.Length - 1);
+						if ((index = message.IndexOf ("At line ", StringComparison.Ordinal)) != -1) {
 							index += "At line ".Length;
 
-							if ((endIndex = ex.Message.IndexOf (", column ", index, StringComparison.Ordinal)) != -1) {
-								var columnBuf = ex.Message.Substring (endIndex + ", column ".Length);
-								var lineBuf = ex.Message.Substring (index, endIndex - index);
+							if ((endIndex = message.IndexOf (", column ", index, StringComparison.Ordinal)) != -1) {
+								var columnBuf = message.Substring (endIndex + ", column ".Length);
+								var lineBuf = message.Substring (index, endIndex - index);
 
 								int.TryParse (columnBuf, out column);
 								int.TryParse (lineBuf, out line);
@@ -496,7 +480,7 @@ namespace Xamarin.MacDev.Tasks
 				bundleResources.AddRange (GetCompiledBundleResources (manifestOutput, intermediateBundleDir));
 				outputManifests.Add (manifest);
 			} catch (Exception ex) {
-				Log.LogError ("Failed to load output manifest for {0} for the file {2}: {1}", ToolName, ex.Message, manifest.ItemSpec);
+				Log.LogError ("Failed to load {0} log file `{1}`: {2}", ToolName, manifest.ItemSpec, ex.Message);
 			}
 
 			foreach (var assetpack in specs.OfType<PDictionary> ()) {

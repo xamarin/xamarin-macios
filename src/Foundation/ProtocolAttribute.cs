@@ -59,8 +59,10 @@ namespace Foundation {
 		public string Name { get; set; }
 		public string Selector { get; set; }
 		public Type ReturnType { get; set; }
+		public Type ReturnTypeDelegateProxy { get; set; }
 		public Type[] ParameterType { get; set; }
 		public bool[] ParameterByRef { get; set; }
+		public Type[] ParameterBlockProxy { get; set; }
 		public bool IsVariadic { get; set; }
 
 		public Type PropertyType { get; set; }

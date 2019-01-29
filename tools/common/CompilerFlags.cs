@@ -91,6 +91,14 @@ namespace Xamarin.Utils
 			SourceFiles.Add (file);
 		}
 
+		public void AddStandardCppLibrary ()
+		{
+			if (Driver.XcodeVersion.Major < 10)
+				return;
+			// Xcode 10 doesn't ship with libstdc++, so use libc++ instead.
+			AddOtherFlag ("-stdlib=libc++");
+		}
+
 		public void AddOtherFlag (string flag)
 		{
 			if (OtherFlags == null)
@@ -120,7 +128,7 @@ namespace Xamarin.Utils
 				AddFramework (Application.GetLibMono (mode));
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", mode);
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", mode);
 			}
 			AddOtherFlag ("-lz");
 			AddOtherFlag ("-liconv");
@@ -138,7 +146,7 @@ namespace Xamarin.Utils
 				AddFramework (Application.GetLibXamarin (mode));
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", mode);
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", mode);
 			}
 			AddFramework ("Foundation");
 			AddOtherFlag ("-lz");

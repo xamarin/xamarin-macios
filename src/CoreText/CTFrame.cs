@@ -57,19 +57,12 @@ namespace CoreText {
 		
 		static CTFrameAttributeKey ()
 		{
-			var handle = Dlfcn.dlopen (Constants.CoreTextLibrary, 0);
-			if (handle == IntPtr.Zero)
-				return;
-			try {
-				Progression = Dlfcn.GetStringConstant (handle, "kCTFrameProgressionAttributeName");
-				PathFillRule = Dlfcn.GetStringConstant (handle, "kCTFramePathFillRuleAttributeName");
-				PathWidth = Dlfcn.GetStringConstant (handle, "kCTFramePathWidthAttributeName");
-				ClippingPaths = Dlfcn.GetStringConstant (handle, "kCTFrameClippingPathsAttributeName");
-				PathClippingPath = Dlfcn.GetStringConstant (handle, "kCTFramePathClippingPathAttributeName");
-			}
-			finally {
-				Dlfcn.dlclose (handle);
-			}
+			var handle = Libraries.CoreText.Handle;
+			Progression = Dlfcn.GetStringConstant (handle, "kCTFrameProgressionAttributeName");
+			PathFillRule = Dlfcn.GetStringConstant (handle, "kCTFramePathFillRuleAttributeName");
+			PathWidth = Dlfcn.GetStringConstant (handle, "kCTFramePathWidthAttributeName");
+			ClippingPaths = Dlfcn.GetStringConstant (handle, "kCTFrameClippingPathsAttributeName");
+			PathClippingPath = Dlfcn.GetStringConstant (handle, "kCTFramePathClippingPathAttributeName");
 		}
 	}
 

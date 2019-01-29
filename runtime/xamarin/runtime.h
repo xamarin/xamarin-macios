@@ -18,6 +18,7 @@
 
 #include "main.h"
 #include "mono-runtime.h"
+#include "runtime-generated.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,14 +68,21 @@ typedef struct __attribute__((packed)) {
 } MTTokenReference;
 static const uint32_t INVALID_TOKEN_REF = 0xFFFFFFFF;
 
+enum MTTypeFlags {
+	MTTypeFlagsNone = 0,
+	MTTypeFlagsCustomType = 1, // not a platform type
+	MTTypeFlagsUserType = 2, // not a wrapped type
+};
+
 typedef struct __attribute__((packed)) {
 	void *handle;
 	uint32_t /* MTTokenReference */ type_reference;
+	uint32_t /* MTTypeFlags */ flags;
 } MTClassMap;
 
 typedef struct __attribute__((packed)) {
 	uint32_t /* MTTokenReference */ skipped_reference;
-	uint32_t /* index into MTRegistrationMap->map */ index;
+	uint32_t /* MTTokenReference */ actual_reference;
 } MTManagedClassMap;
 
 typedef struct __attribute__((packed)) {
@@ -84,7 +92,8 @@ typedef struct __attribute__((packed)) {
 
 typedef struct __attribute__((packed)) {
 	const uint32_t *protocol_tokens; // an array of token references to managed interfaces that represent protocols
-	const Protocol **protocols; // the corresponding native protocols
+	// __unsafe_unretained needed to prevent "error: pointer to non-const type 'const Protocol *' with no explicit ownership" in Embeddinator
+	const __unsafe_unretained Protocol * const * protocols; // the corresponding native protocols
 } MTProtocolMap;
 
 struct MTRegistrationMap;
@@ -107,7 +116,6 @@ struct MTRegistrationMap {
 	const MTProtocolMap protocols;
 	int assembly_count;
 	int map_count;
-	int custom_type_count;
 	int full_token_reference_count;
 	int skipped_map_count;
 	int protocol_wrapper_count;
@@ -137,6 +145,8 @@ enum NSObjectFlags {
 	NSObjectFlagsRegisteredToggleRef = 8,
 	NSObjectFlagsInFinalizerQueue = 16,
 	NSObjectFlagsHasManagedRef = 32,
+	// 64, // Used by SoM
+	NSObjectFlagsIsCustomType = 128,
 };
 
 struct AssemblyLocation {
@@ -169,10 +179,10 @@ bool			xamarin_is_class_nsstring (MonoClass *cls);
 bool			xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *exception_gchandle);
 MonoClass *		xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchandle);
 MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
-MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle);
-MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle);
-int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nativeBlock, guint32 *exception_gchandle);
-id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 *exception_gchandle);
+MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle);
+MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle);
+int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle);
+id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 token_ref /* INVALID_TOKEN_REF allowed, but requires the dynamic registrar at runtime */, guint32 *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
 void			xamarin_set_nsobject_handle (MonoObject *obj, id handle);
 uint8_t         xamarin_get_nsobject_flags (MonoObject *obj);
@@ -194,8 +204,9 @@ void			xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 void			xamarin_ftnptr_exception_handler (guint32 gchandle);
 void			xamarin_create_classes ();
 const char *	xamarin_skip_encoding_flags (const char *encoding);
-void			xamarin_add_registration_map (struct MTRegistrationMap *map);
+void			xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial);
 uint32_t		xamarin_find_protocol_wrapper_type (uint32_t token_ref);
+void			xamarin_release_block_on_main_thread (void *obj);
 
 bool			xamarin_has_managed_ref (id self);
 bool			xamarin_has_managed_ref_safe (id self);
@@ -205,6 +216,7 @@ void			xamarin_free_gchandle (id self, int gchandle);
 void			xamarin_clear_gchandle (id self);
 int				xamarin_get_gchandle_with_flags (id self);
 void			xamarin_set_gchandle (id self, int gchandle);
+void			xamarin_create_gchandle (id self, void *managed_object, int flags, bool force_weak);
 void			xamarin_create_managed_ref (id self, void * managed_object, bool retain);
 void            xamarin_release_managed_ref (id self, MonoObject *managed_obj);
 void			xamarin_notify_dealloc (id self, int gchandle);
@@ -228,6 +240,7 @@ void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool t
 void			xamarin_process_managed_exception (MonoObject *exc);
 void			xamarin_process_managed_exception_gchandle (guint32 gchandle);
 void			xamarin_throw_product_exception (int code, const char *message);
+guint32			xamarin_create_product_exception (int code, const char *message);
 NSString *		xamarin_print_all_exceptions (MonoObject *exc);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);

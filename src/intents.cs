@@ -10,6 +10,7 @@
 #if XAMCORE_2_0 // The Intents framework uses generics which is only supported in Unified
 
 using System;
+using System.ComponentModel;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
@@ -232,10 +233,29 @@ namespace Intents {
 		RestrictedIntentsNotSupportedByExtension = 2002,
 		NoHandlerProvidedForIntent = 2003,
 		InvalidIntentName = 2004,
+		NoAppAvailable = 2005,
 		RequestTimedOut = 3001,
+		MissingInformation = 3002,
 		InvalidUserVocabularyFileLocation = 4000,
 		ExtensionLaunchingTimeout = 5000,
 		ExtensionBringUpFailed = 5001,
+		ImageGeneric = 6000,
+		ImageNoServiceAvailable = 6001,
+		ImageStorageFailed = 6002,
+		ImageLoadingFailed = 6003,
+		ImageRetrievalFailed = 6004,
+		ImageProxyLoop = 6005,
+		ImageProxyInvalid = 6006,
+		ImageProxyTimeout = 6007,
+		ImageServiceFailure = 6008,
+		ImageScalingFailed = 6009,
+		PermissionDenied = 6010,
+		VoiceShortcutCreationFailed = 7000,
+		VoiceShortcutGetFailed = 7001,
+		VoiceShortcutDeleteFailed = 7002,
+		EncodingGeneric = 8000,
+		EncodingFailed = 8001,
+		DecodingGeneric = 9000,
 	}
 
 	[iOS (10, 0)]
@@ -248,7 +268,9 @@ namespace Intents {
 		InProgress,
 		Success,
 		Failure,
-		DeferredToApplication
+		DeferredToApplication,
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		UserConfirmationRequired,
 	}
 
 	[iOS (10, 0)]
@@ -282,8 +304,12 @@ namespace Intents {
 		FailurePreviousRideNeedsFeedback,
 	}
 
-	[iOS (10, 0)]
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+	[NoMac]
+#else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+#endif
+	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Native]
 	public enum INMessageAttribute : long {
@@ -359,8 +385,10 @@ namespace Intents {
 
 	[Native]
 	public enum INPersonSuggestionType : long {
+		[iOS (12,0), Mac (10,14, onlyOn64: true), Watch (5,0)]
+		None = 0,
 		SocialProfile = 1,
-		InstantMessageAddress
+		InstantMessageAddress,
 	}
 
 	[iOS (10, 0)]
@@ -392,7 +420,17 @@ namespace Intents {
 		TransferFilter = (1 << 20),
 		MonoFilter = (1 << 21),
 		FadeFilter = (1 << 22),
-		ProcessFilter = (1 << 23)
+		ProcessFilter = (1 << 23),
+		[Watch (5,0), iOS (12,0)]
+		PortraitPhoto = (1uL << 24),
+		[Watch (5,0), iOS (12,0)]
+		LivePhoto = (1uL << 25),
+		[Watch (5,0), iOS (12,0)]
+		LoopPhoto = (1uL << 26),
+		[Watch (5,0), iOS (12,0)]
+		BouncePhoto = (1uL << 27),
+		[Watch (5,0), iOS (12,0)]
+		LongExposurePhoto = (1uL << 28),
 	}
 
 	[iOS (10, 0)]
@@ -1150,6 +1188,20 @@ namespace Intents {
 		MediaVideo,
 		MediaPass,
 		MediaAudio,
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		PaymentSent,
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		PaymentRequest,
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		PaymentNote,
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		Animoji,
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		ActivitySnippet,
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		File,
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		Link,
 	}
 
 	[Watch (4,0), NoMac, iOS (11,0)]
@@ -1216,6 +1268,8 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 		FailureCredentialsUnverified,
 		FailureAccountNotFound,
+		FailureTermsAndConditionsAcceptanceRequired,
+		FailureNotEligible,
 	}
 
 	[Watch (4,0), NoMac, iOS (11,0)]
@@ -1235,6 +1289,9 @@ namespace Intents {
 		NoAccount = 1,
 		Offline,
 		MessagingServiceNotEnabledForRecipient,
+		NoValidHandle,
+		RequestedHandleInvalid,
+		NoHandleForLabel,
 	}
 
 	[Watch (4,0), NoMac, iOS (11,0)]
@@ -1327,6 +1384,82 @@ namespace Intents {
 		Contact,
 		RequestPayment,
 		SendPayment,
+		[Watch (5,0), iOS (12,0)]
+		Transit,
+		[Watch (5,0), iOS (12,0)]
+		Bus,
+		[Watch (5,0), iOS (12,0)]
+		Subway,
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[Native]
+	public enum INMediaItemType : long {
+		Unknown = 0,
+		Song,
+		Album,
+		Artist,
+		Genre,
+		Playlist,
+		PodcastShow,
+		PodcastEpisode,
+		PodcastPlaylist,
+		MusicStation,
+		AudioBook,
+		Movie,
+		TVShow,
+		TVShowEpisode,
+		MusicVideo,
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[Native]
+	public enum INPlayMediaIntentResponseCode : long {
+		Unspecified = 0,
+		Ready,
+		ContinueInApp,
+		InProgress,
+		Success,
+		HandleInApp,
+		Failure,
+		FailureRequiringAppLaunch,
+		FailureUnknownMediaType,
+		FailureNoUnplayedContent,
+		FailureRestrictedContent,
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[Native]
+	public enum INPlaybackRepeatMode : long {
+		Unknown = 0,
+		None,
+		All,
+		One,
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[Native]
+	public enum INDailyRoutineSituation : long {
+		Morning,
+		Evening,
+		Home,
+		Work,
+		School,
+		Gym,
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[Native]
+	public enum INUpcomingMediaPredictionMode : long {
+		Default = 0,
+		OnlyPredictSuggestedIntents = 1,
+	}
+
+	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+	[Native]
+	public enum INRelevantShortcutRole : long {
+		Action,
+		Information,
 	}
 
 	[iOS (10, 0)]
@@ -1576,6 +1709,18 @@ namespace Intents {
 
 		[Field ("INWorkoutNameIdentifierExercise")]
 		Exercise,
+
+		[Watch (5,0), iOS (12,0)]
+		[Field ("INWorkoutNameIdentifierHike")]
+		Hike,
+
+		[Watch (5,0), iOS (12,0)]
+		[Field ("INWorkoutNameIdentifierHighIntensityIntervalTraining")]
+		HighIntensityIntervalTraining,
+
+		[Watch (5,0), iOS (12,0)]
+		[Field ("INWorkoutNameIdentifierSwim")]
+		Swim,
 	}
 
 	// End of enums
@@ -1821,6 +1966,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarAirCirculationModeResolutionResult bound
+	[NoWatch]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCarAirCirculationModeResolutionResult {
@@ -1870,6 +2016,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarAudioSourceResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
+	[NoWatch]
 	[DisableDefaultCtor]
 	interface INCarAudioSourceResolutionResult {
 
@@ -1919,6 +2066,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarDefrosterResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
+	[NoWatch]
 	[DisableDefaultCtor]
 	interface INCarDefrosterResolutionResult {
 
@@ -1968,6 +2116,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarSeatResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
+	[NoWatch]
 	[DisableDefaultCtor]
 	interface INCarSeatResolutionResult {
 
@@ -2143,8 +2292,12 @@ namespace Intents {
 		INDateComponentsRangeResolutionResult Unsupported { get; }
 	}
 
-	[iOS (10, 0)]
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+	[NoMac]
+#else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+#endif
+	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Protocol]
 	interface INCallsDomainHandling : INStartAudioCallIntentHandling, INSearchCallHistoryIntentHandling
@@ -2359,6 +2512,7 @@ namespace Intents {
 	}
 
 	[iOS (10, 0)]
+	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
 	[Protocol]
 	interface INIntentHandlerProviding {
@@ -2425,10 +2579,10 @@ namespace Intents {
 		[Export ("defaultBookingDate", ArgumentSemantic.Copy)]
 		NSDate DefaultBookingDate { get; }
 
-		[NullAllowed, Export ("maximumPartySize", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("maximumPartySize", ArgumentSemantic.Copy)]
 		NSNumber MaximumPartySize { get; set; }
 
-		[NullAllowed, Export ("minimumPartySize", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("minimumPartySize", ArgumentSemantic.Copy)]
 		NSNumber MinimumPartySize { get; set; }
 
 		[Export ("providerImage", ArgumentSemantic.Copy)]
@@ -2811,6 +2965,23 @@ namespace Intents {
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 		[NullAllowed, Export ("intentDescription")]
 		string IntentDescription { get; }
+
+		[Watch (5,0), NoMac, iOS (12,0)]
+		[NullAllowed, Export ("suggestedInvocationPhrase")]
+		string SuggestedInvocationPhrase { get; set; }
+
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("setImage:forParameterNamed:")]
+		void SetImage ([NullAllowed] INImage image, string parameterName);
+
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("imageForParameterNamed:")]
+		[return: NullAllowed]
+		INImage GetImage (string parameterName);
+
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("keyImage")]
+		INImage GetKeyImage ();
 	}
 
 	interface INIntentResolutionResult<ObjectType> : INIntentResolutionResult { }
@@ -2847,7 +3018,12 @@ namespace Intents {
 	interface INIntentResponse : NSCopying, NSSecureCoding {
 
 		[NullAllowed, Export ("userActivity", ArgumentSemantic.Copy)]
-		NSUserActivity UserActivity { get; }
+		NSUserActivity UserActivity {
+			get;
+
+			[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+			set;
+		}
 	}
 
 	[iOS (10, 0)]
@@ -3077,8 +3253,12 @@ namespace Intents {
 		INMessageAttributeOptionsResolutionResult Unsupported { get; }
 	}
 
-	[iOS (10, 0)]
+#if XAMCORE_4_0 // TODO: Double check this if XAMCORE_4_0 happens, its been 2 years (2018) and still not usable in macOS
+	[NoMac]
+#else
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
+#endif
+	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
@@ -3255,8 +3435,12 @@ namespace Intents {
 	interface INPerson : NSCopying, NSSecureCoding, INSpeakable {
 
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:")]
-		[DesignatedInitializer]
 		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier);
+
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, bool isMe);
 
 		[NullAllowed, Export ("personHandle", ArgumentSemantic.Copy)]
 		INPersonHandle PersonHandle { get; }
@@ -3482,6 +3666,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INRadioTypeResolutionResult bound
+	[NoWatch]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRadioTypeResolutionResult {
@@ -3531,6 +3716,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
+	[NoWatch]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRelativeReferenceResolutionResult {
@@ -3580,6 +3766,7 @@ namespace Intents {
 
 	[iOS (10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
+	[NoWatch]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRelativeSettingResolutionResult {
@@ -3994,7 +4181,7 @@ namespace Intents {
 		[Export ("status", ArgumentSemantic.Assign)]
 		INRestaurantReservationUserBookingStatus Status { get; set; }
 
-		[Export ("dateStatusModified", ArgumentSemantic.Assign)]
+		[Export ("dateStatusModified", ArgumentSemantic.Copy)]
 		NSDate DateStatusModified { get; set; }
 	}
 
@@ -4519,10 +4706,17 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSearchForMessagesIntent {
 
+		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
+		[Deprecated (PlatformName.iOS, 12,0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:")]
-		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames);
+
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:conversationIdentifiers:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames, [NullAllowed] string [] conversationIdentifiers);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INPerson [], INPerson [], string [], INMessageAttributeOptions, INDateComponentsRange, string [], string [], INSpeakableString [])' instead.")]
@@ -4585,6 +4779,14 @@ namespace Intents {
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 		[Export ("speakableGroupNamesOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator SpeakableGroupNamesOperator { get; }
+
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[NullAllowed, Export ("conversationIdentifiers", ArgumentSemantic.Copy)]
+		string [] ConversationIdentifiers { get; }
+
+		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("conversationIdentifiersOperator", ArgumentSemantic.Assign)]
+		INConditionalOperator ConversationIdentifiersOperator { get; }
 	}
 
 	[iOS (10, 0)]
@@ -4992,33 +5194,44 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetClimateSettingsInCarIntent {
 
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected]
 		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:")]
-		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
 
-		[Internal]
+		[iOS (12,0)]
+		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:carName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enableFan, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableAirConditioner, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableClimateControl, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] [BindAs (typeof (int?))] NSNumber fanSpeedIndex, [NullAllowed] [BindAs (typeof (double?))] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone, [NullAllowed] INSpeakableString carName);
+
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableFan", ArgumentSemantic.Copy)]
-		NSNumber _EnableFan { get; }
+		NSNumber EnableFan { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableAirConditioner", ArgumentSemantic.Copy)]
-		NSNumber _EnableAirConditioner { get; }
+		NSNumber EnableAirConditioner { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableClimateControl", ArgumentSemantic.Copy)]
-		NSNumber _EnableClimateControl { get; }
+		NSNumber EnableClimateControl { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableAutoMode", ArgumentSemantic.Copy)]
-		NSNumber _EnableAutoMode { get; }
+		NSNumber EnableAutoMode { get; }
 
 		[Export ("airCirculationMode", ArgumentSemantic.Assign)]
 		INCarAirCirculationMode AirCirculationMode { get; }
 
+#if XAMCORE_4_0 // Adding BindAs is a breaking change
+		[BindAs (typeof (int?))]
+#endif
 		[NullAllowed, Export ("fanSpeedIndex", ArgumentSemantic.Copy)]
 		NSNumber FanSpeedIndex { get; }
 
+#if XAMCORE_4_0 // Adding BindAs is a breaking change
+		[BindAs (typeof (double?))]
+#endif
 		[NullAllowed, Export ("fanSpeedPercentage", ArgumentSemantic.Copy)]
 		NSNumber FanSpeedPercentage { get; }
 
@@ -5033,6 +5246,10 @@ namespace Intents {
 
 		[Export ("climateZone", ArgumentSemantic.Assign)]
 		INCarSeat ClimateZone { get; }
+
+		[iOS (12,0)]
+		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
+		INSpeakableString CarName { get; }
 	}
 
 	[iOS (10, 0)]
@@ -5086,6 +5303,10 @@ namespace Intents {
 
 		[Export ("resolveClimateZoneForSetClimateSettingsInCar:withCompletion:")]
 		void ResolveClimateZone (INSetClimateSettingsInCarIntent intent, Action<INCarSeatResolutionResult> completion);
+
+		[iOS (12,0)]
+		[Export ("resolveCarNameForSetClimateSettingsInCar:withCompletion:")]
+		void ResolveCarName (INSetClimateSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
 	[iOS (10, 0)]
@@ -5109,17 +5330,26 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetDefrosterSettingsInCarIntent {
 
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected]
 		[Export ("initWithEnable:defroster:")]
-		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSNumber enable, INCarDefroster defroster);
 
-		[Internal]
+		[iOS (12,0)]
+		[Export ("initWithEnable:defroster:carName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enable, INCarDefroster defroster, [NullAllowed] INSpeakableString carName);
+
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enable", ArgumentSemantic.Copy)]
-		NSNumber _Enable { get; }
+		NSNumber Enable { get; }
 
 		[Export ("defroster", ArgumentSemantic.Assign)]
 		INCarDefroster Defroster { get; }
+
+		[iOS (12,0)]
+		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
+		INSpeakableString CarName { get; }
 	}
 
 	[iOS (10, 0)]
@@ -5146,6 +5376,10 @@ namespace Intents {
 
 		[Export ("resolveDefrosterForSetDefrosterSettingsInCar:withCompletion:")]
 		void ResolveDefroster (INSetDefrosterSettingsInCarIntent intent, Action<INCarDefrosterResolutionResult> completion);
+
+		[iOS (12,0)]
+		[Export ("resolveCarNameForSetDefrosterSettingsInCar:withCompletion:")]
+		void ResolveCarName (INSetDefrosterSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
 	[iOS (10, 0)]
@@ -5228,10 +5462,19 @@ namespace Intents {
 		[Export ("initWithProfileNumber:profileLabel:defaultProfile:"), Internal]
 		IntPtr InitWithProfileNumberLabel ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel, [NullAllowed] NSNumber defaultProfile);
 
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[iOS (10, 2)]
 		[Export ("initWithProfileNumber:profileName:defaultProfile:"), Internal]
 		IntPtr InitWithProfileNumberName ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] NSNumber defaultProfile);
 
+		[iOS (12,0)]
+		[Export ("initWithProfileNumber:profileName:defaultProfile:carName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (int?))] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] [BindAs (typeof (bool?))] NSNumber defaultProfile, [NullAllowed] INSpeakableString carName);
+
+#if XAMCORE_4_0 // Breaking change
+		[BindAs (typeof (int?))]
+#endif
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
 		NSNumber ProfileNumber { get; }
 
@@ -5243,9 +5486,13 @@ namespace Intents {
 		[NullAllowed, Export ("profileName")]
 		string ProfileName { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("defaultProfile", ArgumentSemantic.Copy)]
-		NSNumber _DefaultProfile { get; }
+		NSNumber DefaultProfile { get; }
+
+		[iOS (12, 0)]
+		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
+		INSpeakableString CarName { get; }
 	}
 
 	[iOS (10, 0)]
@@ -5273,6 +5520,10 @@ namespace Intents {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "The property doesn't need to be resolved.")]
 		[Export ("resolveDefaultProfileForSetProfileInCar:withCompletion:")]
 		void ResolveDefaultProfile (INSetProfileInCarIntent intent, Action<INBooleanResolutionResult> completion);
+
+		[iOS (12,0)]
+		[Export ("resolveCarNameForSetProfileInCar:withCompletion:")]
+		void ResolveCarName (INSetProfileInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 
 		[iOS (10, 2)]
 		[Export ("resolveProfileNameForSetProfileInCar:withCompletion:")]
@@ -5376,31 +5627,43 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetSeatSettingsInCarIntent {
 
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Use the overload that takes 'INSpeakableString carName'.")]
 		[Protected] // allow subclassing
 		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:")]
-		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSNumber enableHeating, [NullAllowed] NSNumber enableCooling, [NullAllowed] NSNumber enableMassage, INCarSeat seat, [NullAllowed] NSNumber level, INRelativeSetting relativeLevelSetting);
 
-		[Internal]
+		[iOS (12,0)]
+		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:carName:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (bool?))] NSNumber enableHeating, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableCooling, [NullAllowed] [BindAs (typeof (bool?))] NSNumber enableMassage, INCarSeat seat, [NullAllowed] [BindAs (typeof (int?))] NSNumber level, INRelativeSetting relativeLevelSetting, [NullAllowed] INSpeakableString carName);
+
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableHeating", ArgumentSemantic.Copy)]
-		NSNumber _EnableHeating { get; }
+		NSNumber EnableHeating { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableCooling", ArgumentSemantic.Copy)]
-		NSNumber _EnableCooling { get; }
+		NSNumber EnableCooling { get; }
 
-		[Internal]
+		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("enableMassage", ArgumentSemantic.Copy)]
-		NSNumber _EnableMassage { get; }
+		NSNumber EnableMassage { get; }
 
 		[Export ("seat", ArgumentSemantic.Assign)]
 		INCarSeat Seat { get; }
 
+#if XAMCORE_4_0
+		[BindAs (typeof (int?))]
+#endif
 		[NullAllowed, Export ("level", ArgumentSemantic.Copy)]
 		NSNumber Level { get; }
 
 		[Export ("relativeLevelSetting", ArgumentSemantic.Assign)]
 		INRelativeSetting RelativeLevelSetting { get; }
+
+		[iOS (12,0)]
+		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
+		INSpeakableString CarName { get; }
 	}
 
 	[iOS (10, 0)]
@@ -5439,6 +5702,10 @@ namespace Intents {
 
 		[Export ("resolveRelativeLevelSettingForSetSeatSettingsInCar:withCompletion:")]
 		void ResolveRelativeLevelSetting (INSetSeatSettingsInCarIntent intent, Action<INRelativeSettingResolutionResult> completion);
+
+		[iOS (12,0)]
+		[Export ("resolveCarNameForSetSeatSettingsInCar:withCompletion:")]
+		void ResolveCarName (INSetSeatSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
 
 	[iOS (10, 0)]
@@ -5501,7 +5768,7 @@ namespace Intents {
 	[Watch (3, 2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INSpeakableString : INSpeakable {
+	interface INSpeakableString : INSpeakable, NSCopying, NSSecureCoding {
 
 		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
 		[Internal]
@@ -6073,7 +6340,7 @@ namespace Intents {
 	[BaseType (typeof (NSUserActivity))]
 	interface NSUserActivity_IntentsAdditions {
 
-		[NullAllowed, Export ("interaction")]
+		[Export ("interaction")]
 		INInteraction GetInteraction ();
 	}
 
@@ -6451,6 +6718,16 @@ namespace Intents {
 
 		[NullAllowed, Export ("distanceRemaining", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemaining { get; set; }
+
+		[Watch (5,0), iOS (12,0)]
+		[BindAs (typeof (bool?))]
+		[NullAllowed, Export ("charging", ArgumentSemantic.Copy)]
+		NSNumber Charging { get; set; }
+
+		[Watch (5,0), iOS (12,0)]
+		[BindAs (typeof (double?))]
+		[NullAllowed, Export ("minutesToFull", ArgumentSemantic.Copy)]
+		NSNumber MinutesToFull { get; set; }
 	}
 
 	[iOS (10, 3)]
@@ -7241,10 +7518,10 @@ namespace Intents {
 		[Export ("code")]
 		INCancelRideIntentResponseCode Code { get; }
 
-		[NullAllowed, Export ("cancellationFee", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("cancellationFee", ArgumentSemantic.Copy)]
 		INCurrencyAmount CancellationFee { get; set; }
 
-		[NullAllowed, Export ("cancellationFeeThreshold", ArgumentSemantic.Assign)]
+		[NullAllowed, Export ("cancellationFeeThreshold", ArgumentSemantic.Copy)]
 		NSDateComponents CancellationFeeThreshold { get; set; }
 	}
 
@@ -7484,6 +7761,7 @@ namespace Intents {
 	interface INNote : NSCopying, NSSecureCoding {
 
 		[Export ("initWithTitle:contents:groupName:createdDateComponents:modifiedDateComponents:identifier:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (INSpeakableString title, INNoteContent [] contents, [NullAllowed] INSpeakableString groupName, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
 
 		[Export ("title", ArgumentSemantic.Copy)]
@@ -7647,10 +7925,10 @@ namespace Intents {
 		INNotebookItemTypeResolutionResult Unsupported { get; }
 	}
 
-	[Watch (4,0), NoMac, iOS (11,0)]
+	[Watch (4,0), Mac (10,14, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INParameter : NSSecureCoding {
+	interface INParameter : NSCopying, NSSecureCoding {
 
 		[Static]
 		[Export ("parameterForClass:keyPath:")]
@@ -8122,15 +8400,16 @@ namespace Intents {
 	[Watch (4,0), NoMac, iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INSpatialEventTrigger {
+	interface INSpatialEventTrigger : NSCopying, NSSecureCoding {
 
 		[Export ("initWithPlacemark:event:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (CLPlacemark placemark, INSpatialEvent @event);
 
-		[Export ("placemark")]
+		[Export ("placemark", ArgumentSemantic.Copy)]
 		CLPlacemark Placemark { get; }
 
-		[Export ("event")]
+		[Export ("event", ArgumentSemantic.Assign)]
 		INSpatialEvent Event { get; }
 	}
 
@@ -8176,15 +8455,16 @@ namespace Intents {
 	interface INTask : NSCopying, NSSecureCoding {
 
 		[Export ("initWithTitle:status:taskType:spatialEventTrigger:temporalEventTrigger:createdDateComponents:modifiedDateComponents:identifier:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (INSpeakableString title, INTaskStatus status, INTaskType taskType, [NullAllowed] INSpatialEventTrigger spatialEventTrigger, [NullAllowed] INTemporalEventTrigger temporalEventTrigger, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
 
 		[Export ("title", ArgumentSemantic.Copy)]
 		INSpeakableString Title { get; }
 
-		[Export ("status")]
+		[Export ("status", ArgumentSemantic.Assign)]
 		INTaskStatus Status { get; }
 
-		[Export ("taskType")]
+		[Export ("taskType", ArgumentSemantic.Assign)]
 		INTaskType TaskType { get; }
 
 		[NullAllowed, Export ("spatialEventTrigger", ArgumentSemantic.Copy)]
@@ -8209,6 +8489,7 @@ namespace Intents {
 	interface INTaskList : NSCopying, NSSecureCoding {
 
 		[Export ("initWithTitle:tasks:groupName:createdDateComponents:modifiedDateComponents:identifier:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (INSpeakableString title, INTask [] tasks, [NullAllowed] INSpeakableString groupName, [NullAllowed] NSDateComponents createdDateComponents, [NullAllowed] NSDateComponents modifiedDateComponents, [NullAllowed] string identifier);
 
 		[Export ("title", ArgumentSemantic.Copy)]
@@ -8340,9 +8621,10 @@ namespace Intents {
 	interface INTemporalEventTrigger : NSCopying, NSSecureCoding {
 
 		[Export ("initWithDateComponentsRange:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (INDateComponentsRange dateComponentsRange);
 
-		[Export ("dateComponentsRange")]
+		[Export ("dateComponentsRange", ArgumentSemantic.Copy)]
 		INDateComponentsRange DateComponentsRange { get; }
 	}
 
@@ -8509,5 +8791,303 @@ namespace Intents {
 		INVisualCodeTypeResolutionResult Unsupported { get; }
 	}
 
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INDefaultCardTemplate : NSCopying, NSSecureCoding {
+
+		[Export ("title")]
+		string Title { get; set; }
+
+		[NullAllowed, Export ("subtitle")]
+		string Subtitle { get; set; }
+
+		[NullAllowed, Export ("image", ArgumentSemantic.Copy)]
+		INImage Image { get; set; }
+
+		[Export ("initWithTitle:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string title);
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INMediaItem : NSCopying, NSSecureCoding {
+
+		[Export ("initWithIdentifier:title:type:artwork:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] string identifier, [NullAllowed] string title, INMediaItemType type, [NullAllowed] INImage artwork);
+
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; }
+
+		[NullAllowed, Export ("title")]
+		string Title { get; }
+
+		[Export ("type", ArgumentSemantic.Assign)]
+		INMediaItemType Type { get; }
+
+		[NullAllowed, Export ("artwork", ArgumentSemantic.Copy)]
+		INImage Artwork { get; }
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INObject : INSpeakable, NSCopying, NSSecureCoding {
+
+		[Export ("initWithIdentifier:displayString:pronunciationHint:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] string identifier, string displayString, [NullAllowed] string pronunciationHint);
+
+		[Export ("initWithIdentifier:displayString:")]
+		IntPtr Constructor ([NullAllowed] string identifier, string displayString);
+
+		// Inlined by INSpeakable
+		//[NullAllowed, Export ("identifier", ArgumentSemantic.Strong)]
+		//string Identifier { get; }
+
+		[Export ("displayString")]
+		string DisplayString { get; }
+
+		// Inlined by INSpeakable
+		//[NullAllowed, Export ("pronunciationHint", ArgumentSemantic.Strong)]
+		//string PronunciationHint { get; }
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (INIntent))]
+	[DisableDefaultCtor]
+	interface INPlayMediaIntent {
+
+		[Export ("initWithMediaItems:mediaContainer:playShuffled:playbackRepeatMode:resumePlayback:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaItem mediaContainer, [NullAllowed, BindAs (typeof (bool?))] NSNumber playShuffled, INPlaybackRepeatMode playbackRepeatMode, [NullAllowed, BindAs (typeof (bool?))] NSNumber resumePlayback);
+
+		[NullAllowed, Export ("mediaItems", ArgumentSemantic.Copy)]
+		INMediaItem [] MediaItems { get; }
+
+		[NullAllowed, Export ("mediaContainer", ArgumentSemantic.Copy)]
+		INMediaItem MediaContainer { get; }
+
+		[BindAs (typeof (bool?))]
+		[NullAllowed, Export ("playShuffled", ArgumentSemantic.Copy)]
+		NSNumber PlayShuffled { get; }
+
+		[Export ("playbackRepeatMode", ArgumentSemantic.Assign)]
+		INPlaybackRepeatMode PlaybackRepeatMode { get; }
+
+		[BindAs (typeof (bool?))]
+		[NullAllowed, Export ("resumePlayback", ArgumentSemantic.Copy)]
+		NSNumber ResumePlayback { get; }
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[Protocol]
+	interface INPlayMediaIntentHandling {
+
+		[Abstract]
+		[Export ("handlePlayMedia:completion:")]
+		void HandlePlayMedia (INPlayMediaIntent intent, Action<INPlayMediaIntentResponse> completion);
+
+		[Export ("confirmPlayMedia:completion:")]
+		void Confirm (INPlayMediaIntent intent, Action<INPlayMediaIntentResponse> completion);
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INPlayMediaIntentResponse {
+
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INPlayMediaIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INPlayMediaIntentResponseCode Code { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[NullAllowed, Export ("nowPlayingInfo", ArgumentSemantic.Copy)]
+		NSDictionary WeakNowPlayingInfo { get; set; }
+	}
+
+	[Abstract]
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INRelevanceProvider : NSCopying, NSSecureCoding {
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (INRelevanceProvider))]
+	[DisableDefaultCtor]
+	interface INDateRelevanceProvider {
+
+		[Export ("startDate", ArgumentSemantic.Copy)]
+		NSDate StartDate { get; }
+
+		[NullAllowed, Export ("endDate", ArgumentSemantic.Copy)]
+		NSDate EndDate { get; }
+
+		[Export ("initWithStartDate:endDate:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSDate startDate, [NullAllowed] NSDate endDate);
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (INRelevanceProvider))]
+	[DisableDefaultCtor]
+	interface INLocationRelevanceProvider {
+
+		[Export ("region", ArgumentSemantic.Copy)]
+		CLRegion Region { get; }
+
+		[Export ("initWithRegion:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CLRegion region);
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (INRelevanceProvider))]
+	[DisableDefaultCtor]
+	interface INDailyRoutineRelevanceProvider {
+
+		[Export ("situation")]
+		INDailyRoutineSituation Situation { get; }
+
+		[Export ("initWithSituation:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INDailyRoutineSituation situation);
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INRelevantShortcut : NSSecureCoding, NSCopying {
+
+		[Export ("relevanceProviders", ArgumentSemantic.Copy)]
+		INRelevanceProvider [] RelevanceProviders { get; set; }
+
+		[NullAllowed, Export ("watchTemplate", ArgumentSemantic.Copy)]
+		INDefaultCardTemplate WatchTemplate { get; set; }
+
+		[Export ("shortcutRole", ArgumentSemantic.Assign)]
+		INRelevantShortcutRole ShortcutRole { get; set; }
+
+		[Export ("shortcut", ArgumentSemantic.Copy)]
+		INShortcut Shortcut { get; }
+
+		[Export ("initWithShortcut:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INShortcut shortcut);
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INRelevantShortcutStore {
+
+		[Static]
+		[Export ("defaultStore", ArgumentSemantic.Strong)]
+		INRelevantShortcutStore DefaultStore { get; }
+
+		[Async]
+		[Export ("setRelevantShortcuts:completionHandler:")]
+		void SetRelevantShortcuts (INRelevantShortcut [] shortcuts, [NullAllowed] Action<NSError> completionHandler);
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INShortcut : NSSecureCoding, NSCopying {
+
+		[NullAllowed, Export ("intent", ArgumentSemantic.Copy)]
+		INIntent Intent { get; }
+
+		[NullAllowed, Export ("userActivity", ArgumentSemantic.Strong)]
+		NSUserActivity UserActivity { get; }
+
+		[Export ("initWithIntent:")]
+		IntPtr Constructor (INIntent intent);
+
+		[Export ("initWithUserActivity:")]
+		IntPtr Constructor (NSUserActivity userActivity);
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INUpcomingMediaManager {
+
+		[Static]
+		[Export ("sharedManager")]
+		INUpcomingMediaManager SharedManager { get; }
+
+		[Export ("setSuggestedMediaIntents:")]
+		void SetSuggestedMediaIntents (NSOrderedSet<INPlayMediaIntent> intents);
+
+		[Export ("setPredictionMode:forType:")]
+		void SetPredictionMode (INUpcomingMediaPredictionMode mode, INMediaItemType type);
+	}
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INVoiceShortcut : NSSecureCoding, NSCopying {
+
+		[Export ("identifier", ArgumentSemantic.Strong)]
+		NSUuid Identifier { get; }
+
+		[Export ("invocationPhrase")]
+		string InvocationPhrase { get; }
+
+		[Export ("shortcut", ArgumentSemantic.Copy)]
+		INShortcut Shortcut { get; }
+	}
+
+	delegate void INVoiceShortcutCenterGetVoiceShortcutsHandler ([NullAllowed] INVoiceShortcut [] voiceShortcuts, NSError error);
+
+	[Watch (5,0), NoMac, iOS (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface INVoiceShortcutCenter {
+
+		[Static]
+		[Export ("sharedCenter", ArgumentSemantic.Strong)]
+		INVoiceShortcutCenter SharedCenter { get; }
+
+		[Async]
+		[Export ("getAllVoiceShortcutsWithCompletion:")]
+		void GetAllVoiceShortcuts (INVoiceShortcutCenterGetVoiceShortcutsHandler completionHandler);
+
+		[Async]
+		[Export ("getVoiceShortcutWithIdentifier:completion:")]
+		void GetVoiceShortcut (NSUuid identifier, Action<INVoiceShortcut, NSError> completionHandler);
+
+		[Export ("setShortcutSuggestions:")]
+		void SetShortcutSuggestions (INShortcut [] suggestions);
+	}
+
+	// TODO: We need to inline these into NSString once we figure out how the API is used.
+	//[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	//[Category]
+	//[BaseType (typeof (NSString))]
+	//interface NSString_Intents {
+	//	// +(NSString * _Nonnull)deferredLocalizedIntentsStringWithFormat:(NSString * _Nonnull)format, ... __attribute__((format(NSString, 1, 2)));
+	//	[Static, Internal]
+	//	[Export ("deferredLocalizedIntentsStringWithFormat:", IsVariadic = true)]
+	//	string DeferredLocalizedIntentsStringWithFormat (string format, IntPtr varArgs);
+
+	//	// +(NSString * _Nonnull)deferredLocalizedIntentsStringWithFormat:(NSString * _Nonnull)format fromTable:(NSString * _Nullable)table, ... __attribute__((format(NSString, 1, 3)));
+	//	[Static, Internal]
+	//	[Export ("deferredLocalizedIntentsStringWithFormat:fromTable:", IsVariadic = true)]
+	//	string DeferredLocalizedIntentsStringWithFormat (string format, [NullAllowed] string table, IntPtr varArgs);
+
+	//	// +(NSString * _Nonnull)deferredLocalizedIntentsStringWithFormat:(NSString * _Nonnull)format fromTable:(NSString * _Nullable)table arguments:(va_list)arguments __attribute__((format(NSString, 1, 0)));
+	//	[Static, Internal]
+	//	[Export ("deferredLocalizedIntentsStringWithFormat:fromTable:arguments:", IsVariadic = true)]
+	//	string DeferredLocalizedIntentsStringWithFormat (string format, [NullAllowed] string table, IntPtr arguments);
+	//}
 }
 #endif // XAMCORE_2_0

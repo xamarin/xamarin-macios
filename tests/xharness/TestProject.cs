@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using Xamarin;
 
 namespace xharness
 {
@@ -18,6 +19,9 @@ namespace xharness
 		public bool IsNUnitProject;
 		public bool GenerateVariations = true;
 		public string [] Configurations;
+		public Func<Task> Dependency;
+
+		public IEnumerable<TestProject> ProjectReferences;
 
 		public TestProject ()
 		{
@@ -110,7 +114,8 @@ namespace xharness
 			XmlDocument doc;
 			doc = new XmlDocument ();
 			doc.LoadWithoutNetworkAccess (original_path);
-			if (System.IO.Path.GetFileName (original_path).Contains ("GuiUnit_NET")) {
+			var original_name = System.IO.Path.GetFileName (original_path);
+			if (original_name.Contains ("GuiUnit_NET") || original_name.Contains ("GuiUnit_xammac_mobile")) {
 				// The GuiUnit project files writes stuff outside their project directory using relative paths,
 				// but override that so that we don't end up with multiple cloned projects writing stuff to
 				// the same location.
@@ -119,11 +124,14 @@ namespace xharness
 			}
 			doc.ResolveAllPaths (original_path);
 
+			var projectReferences = new List<TestProject> ();
 			foreach (var pr in doc.GetProjectReferences ()) {
 				var tp = new TestProject (pr.Replace ('\\', '/'));
 				await tp.CreateCopyAsync (test);
 				doc.SetProjectReferenceInclude (pr, tp.Path.Replace ('/', '\\'));
+				projectReferences.Add (tp);
 			}
+			this.ProjectReferences = projectReferences;
 
 			doc.Save (Path);
 		}
@@ -139,6 +147,7 @@ namespace xharness
 		public bool SkipiOSVariation;
 		public bool SkipwatchOSVariation;
 		public bool SkiptvOSVariation;
+		public bool BuildOnly;
 
 		// Optional
 		public BCLTestInfo BCLInfo { get; set; }
@@ -153,7 +162,7 @@ namespace xharness
 		}
 	}
 
-	public enum MacFlavors { All, Modern, Full }
+	public enum MacFlavors { All, Modern, Full, System, NonSystem }
 
 	public class MacTestProject : TestProject
 	{
@@ -162,8 +171,9 @@ namespace xharness
 		// Optional
 		public MacBCLTestInfo BCLInfo { get; set; }
 
-		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Modern;
-		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.Full;
+		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.NonSystem || TargetFrameworkFlavor == MacFlavors.Modern;
+		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.NonSystem || TargetFrameworkFlavor == MacFlavors.Full;
+		public bool GenerateSystem => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.System;
 
 		public string Platform = "x86";
 
@@ -171,7 +181,7 @@ namespace xharness
 		{
 		}
 
-		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, MacFlavors targetFrameworkFlavor = MacFlavors.All) : base (path, isExecutableProject, generateVariations)
+		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, MacFlavors targetFrameworkFlavor = MacFlavors.NonSystem) : base (path, isExecutableProject, generateVariations)
 		{
 			TargetFrameworkFlavor = targetFrameworkFlavor;
 		}

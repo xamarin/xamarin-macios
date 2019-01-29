@@ -152,7 +152,7 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 1f, 0.75f), MinBounds = new Vector3 (-0.433012784f, 0.49999997f, -0.75000006f) }, obj.BoundingBox, "BoundingBox");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
 				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
-				Assert.AreEqual (9, obj.VertexCount, "VertexCount");
+				Assert.That (obj.VertexCount, Is.GreaterThanOrEqualTo (9), "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
 			}
@@ -166,7 +166,11 @@ namespace MonoTouchFixtures.ModelIO {
 			using (var obj = MDLMesh.CreateCylindroid (1, V2, 3, 1, MDLGeometryType.Triangles, true, null)) {
 				Assert.IsNotNull (obj, "obj");
 #if MONOMAC
-				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.5f) }, obj.BoundingBox, "BoundingBox");
+				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.5f) }, obj.BoundingBox, "BoundingBox");
+				} else {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.866025388f) }, obj.BoundingBox, "BoundingBox");
+				}
 #else
 				if (TestRuntime.CheckXcodeVersion (8, 2)) {
 					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.5f) }, obj.BoundingBox, "BoundingBox");
@@ -230,7 +234,7 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.9510565f, 2, 2.85317f), MinBounds = new Vector3 (-0.9510565f, -2, -2.85317f) }, obj.BoundingBox, "BoundingBox");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
 				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
-				Assert.AreEqual (22, obj.VertexCount, "VertexCount");
+				Assert.That (obj.VertexCount, Is.GreaterThanOrEqualTo (22), "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
 			}
@@ -249,7 +253,7 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.9510565f, 2, 2.85317f), MinBounds = new Vector3 (-0.9510565f, 0.6180339f, -2.85317f) }, obj.BoundingBox, "BoundingBox");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
 				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
-				Assert.AreEqual (16, obj.VertexCount, "VertexCount");
+				Assert.That (obj.VertexCount, Is.GreaterThanOrEqualTo (16), "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
 			}

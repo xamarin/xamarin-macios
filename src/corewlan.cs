@@ -134,6 +134,10 @@ namespace CoreWlan {
 
 		[Export ("isEqualToConfiguration:")]
 		bool IsEqualToConfiguration (CWConfiguration configuration);
+
+		[Static]
+		[Export ("configuration")]
+		CWConfiguration Create ();
 	}
 
 	[BaseType (typeof (CWConfiguration))]
@@ -279,7 +283,7 @@ namespace CoreWlan {
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Static]
 		[Export ("interfaceWithName:")]
-		CWInterface FromName (string name);
+		CWInterface FromName ([NullAllowed]string name);
 
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("isEqualToInterface:")]
@@ -372,8 +376,9 @@ namespace CoreWlan {
 		[Internal]
 		NSSet _InterfaceNames { get; }
 		 
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'CWWiFiClient.FromName' instead.")]
 		[Export ("initWithInterfaceName:")]
-		IntPtr Constructor (string name);
+		IntPtr Constructor ([NullAllowed]string name);
 		 
 		[Export ("setPower:error:")]
 		bool SetPower (bool power, out NSError error);
@@ -493,7 +498,8 @@ namespace CoreWlan {
 		 
 		[Export ("bssid")]
 		string Bssid { get; }
-		 
+
+		[NullAllowed]
 		[Export ("wlanChannel")]
 		CWChannel WlanChannel { get; }
 		 
@@ -532,6 +538,7 @@ namespace CoreWlan {
 		string Ssid { get; }
 
 		[Export ("ssidData", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSData SsidData { get; }
 
 		[Export ("security", ArgumentSemantic.Assign)]

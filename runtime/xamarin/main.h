@@ -51,7 +51,9 @@ extern bool xamarin_use_new_assemblies;
 #else
 	#define xamarin_use_new_assemblies 1
 #endif
+#if DEBUG
 extern bool xamarin_gc_pump;
+#endif
 extern bool xamarin_debug_mode;
 extern bool xamarin_disable_lldb_attach;
 #if MONOMAC
@@ -67,6 +69,7 @@ extern bool xamarin_is_gc_coop;
 extern enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode;
 extern enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode;
 extern enum XamarinLaunchMode xamarin_launch_mode;
+extern bool xamarin_supports_dynamic_registration;
 
 typedef void (*xamarin_setup_callback) ();
 typedef int (*xamarin_extension_main_callback) (int argc, char** argv);
@@ -84,12 +87,6 @@ int xamarin_get_launch_mode ();
 
 int xamarin_watchextension_main (int argc, char **argv);
 
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
-
-#endif /* __XAMARIN_MAIN_H__ */
-
 #ifndef MONOTOUCH
 void xamarin_set_is_mkbundle (bool value); /* Not Public API, exact semantics is not defined yet */
 bool xamarin_get_is_mkbundle (); /* Not Public API, exact semantics is not defined yet */
@@ -97,3 +94,9 @@ bool xamarin_get_is_mkbundle (); /* Not Public API, exact semantics is not defin
 
 void xamarin_set_is_debug (bool value); /* Public API */
 bool xamarin_get_is_debug (); /* Public API */
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+#endif /* __XAMARIN_MAIN_H__ */

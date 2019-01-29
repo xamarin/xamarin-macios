@@ -79,6 +79,8 @@ namespace Foundation {
 			RegisteredToggleRef = 8,
 			InFinalizerQueue = 16,
 			HasManagedRef = 32,
+			// 64, // Used by SoM
+			IsCustomType = 128,
 		}
 
 		bool disposed { 
@@ -101,6 +103,18 @@ namespace Foundation {
 
 		internal bool InFinalizerQueue {
 			get { return ((flags & Flags.InFinalizerQueue) == Flags.InFinalizerQueue); }
+		}
+
+		bool IsCustomType {
+			get {
+				var value = (flags & Flags.IsCustomType) == Flags.IsCustomType;
+				if (!value) {
+					value = Class.IsCustomType (GetType ());
+					if (value)
+						flags |= Flags.IsCustomType;
+				}
+				return value;
+			}
 		}
 
 		[Export ("init")]
@@ -169,7 +183,7 @@ namespace Foundation {
 			if (IsRegisteredToggleRef)
 				return;
 
-			if (!allowCustomTypes && Class.IsCustomType (GetType ()))
+			if (!allowCustomTypes && IsCustomType)
 				return;
 			
 			IsRegisteredToggleRef = true;
@@ -266,7 +280,9 @@ namespace Foundation {
 						}
 					}
 
-					return (Runtime.GetProtocol (name) == protocol);
+					var proto = Runtime.GetProtocol (name);
+					if (proto != IntPtr.Zero && proto == protocol)
+						return true;
 				}
 				type = type.BaseType;
 			}
@@ -282,6 +298,7 @@ namespace Foundation {
 
 		[Export ("conformsToProtocol:")]
 		[Preserve ()]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public virtual bool ConformsToProtocol (IntPtr protocol)
 		{
 			bool does;
@@ -316,6 +333,9 @@ namespace Foundation {
 			if (does)
 				return true;
 			
+			if (!Runtime.DynamicRegistrationSupported)
+				return false;
+
 			object [] adoptedProtocols = GetType ().GetCustomAttributes (typeof (AdoptsAttribute), true);
 			foreach (AdoptsAttribute adopts in adoptedProtocols){
 				if (adopts.ProtocolHandle == protocol)
@@ -556,10 +576,22 @@ namespace Foundation {
 			var d = new NSAsyncActionDispatcher (action);
 #if MONOMAC
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, 
-			                                                NSActionDispatcher.Selector.Handle, d.Handle, false);
+		                                                        NSDispatcher.Selector.Handle, d.Handle, false);
 #else
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), 
-			                                                Selector.GetHandle (NSActionDispatcher.SelectorName), d.Handle, false);
+			                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
+#endif
+		}
+
+		internal void BeginInvokeOnMainThread (System.Threading.SendOrPostCallback cb, object state)
+		{
+			var d = new NSAsyncSynchronizationContextDispatcher (cb, state);
+#if MONOMAC
+			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle,
+		                                                        NSDispatcher.Selector.Handle, d.Handle, false);
+#else
+			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+			                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
 #endif
 		}
 		
@@ -568,13 +600,26 @@ namespace Foundation {
 			using (var d = new NSActionDispatcher (action)) {
 #if MONOMAC
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, 
-				                                                NSActionDispatcher.Selector.Handle, d.Handle, true);
+		                                                                NSDispatcher.Selector.Handle, d.Handle, true);
 #else
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), 
-				                                                Selector.GetHandle (NSActionDispatcher.SelectorName), d.Handle, true);
+				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
 #endif
 			}
 		}		
+
+		internal void InvokeOnMainThread (System.Threading.SendOrPostCallback cb, object state)
+		{
+			using (var d = new NSSynchronizationContextDispatcher (cb, state)) {
+#if MONOMAC
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle,
+			                                                        NSDispatcher.Selector.Handle, d.Handle, true);
+#else
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
+				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
+#endif
+			}
+		}
 
 		public static NSObject FromObject (object obj)
 		{
@@ -719,13 +764,13 @@ namespace Foundation {
 		public virtual void Invoke (Action action, double delay)
 		{
 			var d = new NSAsyncActionDispatcher (action);
-			d.PerformSelector (NSActionDispatcher.Selector, null, delay);
+			d.PerformSelector (NSDispatcher.Selector, null, delay);
 		}
 
 		public virtual void Invoke (Action action, TimeSpan delay)
 		{
 			var d = new NSAsyncActionDispatcher (action);
-			d.PerformSelector (NSActionDispatcher.Selector, null, delay.TotalSeconds);
+			d.PerformSelector (NSDispatcher.Selector, null, delay.TotalSeconds);
 		}
 
 		internal void ClearHandle ()

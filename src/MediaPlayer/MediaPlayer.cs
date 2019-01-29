@@ -18,6 +18,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	public enum MPMoviePlaybackState : long {
 		Stopped,
@@ -32,6 +33,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	public enum MPMovieLoadState : long {
 		Unknown        = 0,
@@ -43,6 +45,7 @@ namespace MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMovieRepeatMode : long {
@@ -53,6 +56,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	public enum MPMovieControlStyle : long {
 		None, Embedded, Fullscreen, Default = Embedded
@@ -61,6 +65,7 @@ namespace MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMovieFinishReason : long {
@@ -70,6 +75,7 @@ namespace MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	[Flags]
@@ -82,6 +88,7 @@ namespace MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMovieSourceType : long {
@@ -91,6 +98,7 @@ namespace MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMovieTimeOption : long {
@@ -100,6 +108,7 @@ namespace MediaPlayer {
 
 	// NSUInteger -> MPMediaItem.h
 	[Native]
+	[NoWatch]
 	[Flags]
 	public enum MPMediaType : ulong {
 #if !XAMCORE_2_0
@@ -145,6 +154,7 @@ namespace MediaPlayer {
 	[Native]
 	[Flags]
 	[NoTV]
+	[NoWatch]
 	public enum MPMediaPlaylistAttribute : long {
 		None    = 0,
 		OnTheGo = (1 << 0), // if set, the playlist was created on a device rather than synced from iTunes
@@ -156,6 +166,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	public enum MPMediaGrouping : long {
 		Title,
 		Album,
@@ -171,6 +182,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	public enum MPMediaPredicateComparison : long {
 		EqualsTo,
 		Contains
@@ -179,6 +191,7 @@ namespace MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMovieScalingMode : long {
@@ -199,6 +212,7 @@ namespace MediaPlayer {
 	// NSInteger -> /MPMusicPlayerController.h
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
 	[Native]
 	public enum MPMusicPlaybackState : long {
@@ -213,6 +227,7 @@ namespace MediaPlayer {
 	// NSInteger -> /MPMusicPlayerController.h
 	[Native]
 	[NoMac]
+	[NoWatch]
 	[NoTV]
 	public enum MPMusicRepeatMode : long {
 		Default,
@@ -225,6 +240,7 @@ namespace MediaPlayer {
 	[Native]
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	public enum MPMusicShuffleMode : long {
 		Default,
 		Off,
@@ -235,6 +251,7 @@ namespace MediaPlayer {
 	public delegate void MPMediaItemEnumerator (string property, NSObject value, ref bool stop);
 
 	[Mac (10,12,2)]
+	[Watch (5,0)]
 	[Native]
 	public enum MPShuffleType : long
 	{
@@ -244,6 +261,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2)]
+	[Watch (5,0)]
 	[Native]
 	public enum MPRepeatType : long
 	{
@@ -254,6 +272,7 @@ namespace MediaPlayer {
 
 	[Mac (10,12,2)]
 	[iOS (10,0)]
+	[Watch (5,0)]
 	[Native]
 	public enum MPChangeLanguageOptionSetting : long
 	{
@@ -266,6 +285,7 @@ namespace MediaPlayer {
 	[Native]
 	[Mac (10,12,2)]
 	[iOS (7,1)]
+	[Watch (5,0)]
 	public enum MPRemoteCommandHandlerStatus : long {
 		Success = 0,
 		NoSuchContent = 100,
@@ -280,6 +300,7 @@ namespace MediaPlayer {
 	[Native]
 	[Mac (10,12,2)]
 	[iOS (7,1)]
+	[Watch (5,0)]
 	public enum MPSeekCommandEventType : ulong {
 		BeginSeeking,
 		EndSeeking
@@ -287,6 +308,7 @@ namespace MediaPlayer {
 
 	[Mac (10,12,2)]
 	[iOS (9,0)]
+	[Watch (5,0)]
 	[Native]
 	public enum MPNowPlayingInfoLanguageOptionType : ulong {
 		Audible,
@@ -294,6 +316,7 @@ namespace MediaPlayer {
 	}
 
 	[NoMac]
+	[NoWatch]
 	[iOS (9,3)]
 	[Native]
 	[ErrorDomain ("MPErrorDomain")]
@@ -311,6 +334,7 @@ namespace MediaPlayer {
 
 	[NoMac]
 	[NoTV]
+	[NoWatch]
 	[iOS (9,3)]
 	[Native]
 	public enum MPMediaLibraryAuthorizationStatus : long {
@@ -323,6 +347,7 @@ namespace MediaPlayer {
 	[Mac (10,12,2)]
 	[iOS (10,0)]
 	[TV (10,0)]
+	[Watch (5,0)]
 	[Native]
 	public enum MPNowPlayingInfoMediaType : ulong
 	{
@@ -332,6 +357,7 @@ namespace MediaPlayer {
 	}
 
 	[Mac (10,12,2)]
+	[Watch (5,0)]
 	[NoiOS]
 	[NoTV]
 	[Native]

@@ -407,6 +407,21 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MTLIndirectCommandBufferDescriptor": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName) {
+				case "commandTypes":
+				case "setCommandTypes:":
+				case "inheritPipelineState":
+				case "setInheritPipelineState:":
+				case "inheritBuffers":
+				case "setInheritBuffers:":
+				case "maxFragmentBufferBindCount":
+				case "setMaxFragmentBufferBindCount:":
+				case "maxVertexBufferBindCount":
+				case "setMaxVertexBufferBindCount:":
+					return true;
+				}
+				break;
 			case "MTLPipelineBufferDescriptor":
 				switch (selectorName) {
 				case "mutability":
@@ -421,6 +436,12 @@ namespace Introspection {
 				case "dataSize":
 				case "elementIsArgumentBuffer":
 				case "elementType":
+					return true;
+				}
+				break;
+			case "MTLSharedEventListener":
+				switch (selectorName) {
+				case "dispatchQueue":
 					return true;
 				}
 				break;
@@ -458,6 +479,8 @@ namespace Introspection {
 				case "tileBuffers":
 				case "tileFunction":
 				case "setTileFunction:":
+				case "maxTotalThreadsPerThreadgroup":
+				case "setMaxTotalThreadsPerThreadgroup:":
 					return true;
 				}
 				break;
@@ -557,6 +580,15 @@ namespace Introspection {
 			case "MPSImageThresholdTruncate":
 				switch (selectorName) {
 				case "initWithDevice:thresholdValue:linearGrayColorTransform:":
+					return true;
+				}
+				break;
+			case "MPSCnnBinaryKernel":
+				switch (selectorName) {
+				// Xcode 9.4 removed both selectors from MPSCnnBinaryKernel, reported radar https://trello.com/c/7EAM0qk1
+				// but apple says this was intentional.
+				case "kernelHeight":
+				case "kernelWidth":
 					return true;
 				}
 				break;

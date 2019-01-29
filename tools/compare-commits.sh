@@ -12,10 +12,19 @@ CLEAR=$(tput sgr0 2>/dev/null || true)
 # Clone files on High Sierra, instead of copying them. Much faster.
 
 CP="cp"
-OSVERSION=${OSTYPE:6}
-if [[ $OSVERSION -ge 17 ]]; then
+if df -t apfs / >/dev/null 2>&1; then
 	CP="cp -c"
 fi
+
+function report_error_line ()
+{
+	echo "$@"
+	if test -n "$FAILURE_FILE"; then
+		# remove color codes when writing to failure file
+		# shellcheck disable=SC2001
+		echo "$@" | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g' >> "$FAILURE_FILE"
+	fi
+}
 
 function show_help ()
 {
@@ -31,6 +40,7 @@ function show_help ()
 }
 
 ORIGINAL_ARGS=("$@")
+FAILURE_FILE=
 while ! test -z "$1"; do
 	case "$1" in
 		--help|-\?|-h)
@@ -57,15 +67,23 @@ while ! test -z "$1"; do
 			WORKING_DIR="${1#*=}"
 			shift
 			;;
+		--failure-file=*)
+			FAILURE_FILE="${1#*=}"
+			shift
+			;;
+		--failure-file)
+			FAILURE_FILE="$2"
+			shift 2
+			;;
 		*)
-			echo "Unknown argument: $1"
+			echo "Error: Unknown argument: $1"
 			exit 1
 			;;
 	esac
 done
 
 if test -z "$BASE_HASH"; then
-	echo "${RED}It's required to specify the hash to compare against (--base=HASH).${CLEAR}"
+	report_error_line "${RED}Error: It's required to specify the hash to compare against (--base=HASH).${CLEAR}"
 	exit 1
 fi
 
@@ -94,8 +112,8 @@ if test -z "$BUILD_REVISION"; then
 fi
 
 if [ -n "$(git status --porcelain --ignore-submodule)" ]; then
-	echo "${RED}Working directory isn't clean:${CLEAR}"
-	git $GIT_COLOR_P status --ignore-submodule | sed 's/^/    /'
+	report_error_line "${RED}** Error: Working directory isn't clean:${CLEAR}"
+	git $GIT_COLOR_P status --ignore-submodule | sed 's/^/    /' | while read line; do report_error_line "$line"; done
 	exit 1
 fi
 
@@ -148,6 +166,7 @@ rm -Rf "$OUTPUT_DIR"
 echo "${BLUE}Preparing temporary output directory...${CLEAR}"
 mkdir -p "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono"
 mkdir -p "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono"
+mkdir -p "$OUTPUT_DIR/project-files"
 
 ln -s git "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current"
 ln -s git "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"
@@ -160,8 +179,6 @@ for dir in Xamarin.Mac 4.5; do
 	$CP -R "$ROOT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono/$dir" "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono"
 done
 
-touch "$OUTPUT_DIR/stamp"
-
 if test -z "$CURRENT_BRANCH"; then
 	echo "${BLUE}Current hash: ${WHITE}$(git log -1 --pretty="%h: %s")${BLUE} (detached)${CLEAR}"
 else
@@ -170,8 +187,17 @@ fi
 echo "${BLUE}Checking out ${WHITE}$(git log -1 --pretty="%h: %s" "$BASE_HASH")${CLEAR}...${CLEAR}"
 git checkout --quiet --force --detach "$BASE_HASH"
 
+# To ensure that our logic below doesn't modify files it shouldn't, we create a stamp
+# file, and compare the timestamps of all the files that shouldn't be modified to this
+# file's timestamp.
+touch "$OUTPUT_DIR/stamp"
+
 echo "${BLUE}Building src/...${CLEAR}"
-make -C "$ROOT_DIR/src" BUILD_DIR=../tools/comparison/build "IOS_DESTDIR=$OUTPUT_DIR/_ios-build" "MAC_DESTDIR=$OUTPUT_DIR/_mac-build" -j8
+if ! make -C "$ROOT_DIR/src" BUILD_DIR=../tools/comparison/build PROJECT_DIR="$OUTPUT_DIR/project-files" "IOS_DESTDIR=$OUTPUT_DIR/_ios-build" "MAC_DESTDIR=$OUTPUT_DIR/_mac-build" -j8; then
+	EC=$?
+	report_error_line "${RED}Failed to build src/${CLEAR}"
+	exit "$EC"
+fi
 
 #
 # API diff
@@ -179,12 +205,20 @@ make -C "$ROOT_DIR/src" BUILD_DIR=../tools/comparison/build "IOS_DESTDIR=$OUTPUT
 
 # Calculate apidiff references according to the temporary build
 echo "${BLUE}Updating apidiff references...${CLEAR}"
-make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_DIR/_ios-build" MAC_DESTDIR="$OUTPUT_DIR/_mac-build"
+if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_DIR/_ios-build" MAC_DESTDIR="$OUTPUT_DIR/_mac-build"; then
+	EC=$?
+	report_error_line "${RED}Failed to update apidiff references${CLEAR}"
+	exit "$EC"
+fi
 
 # Now compare the current build against those references
 echo "${BLUE}Running apidiff...${CLEAR}"
 APIDIFF_FILE=$OUTPUT_DIR/apidiff/api-diff.html
-make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"
+if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"; then
+	EC=$?
+	report_error_line "${RED}Failed to run apidiff${CLEAR}"
+	exit "$EC"
+fi
 
 # 
 # Generator diff
@@ -195,7 +229,7 @@ make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff
 # affecting that build.
 $CP -R "$ROOT_DIR/src/build" "$OUTPUT_DIR/build-new"
 cd "$OUTPUT_DIR"
-find build build-new '(' -name '*.dll' -or -name '*.mdb' -or -name '*.pdb' -or -name 'generated-sources' -or -name 'generated_sources' -or -name '*.exe' ')' -delete
+find build build-new '(' -name '*.dll' -or -name '*.pdb' -or -name 'generated-sources' -or -name 'generated_sources' -or -name '*.exe' -or -name '*.rsp' -or -name 'AssemblyInfo.cs' -or -name 'Constants.cs' -or -name 'generator.csproj.*' ')' -delete
 mkdir -p "$OUTPUT_DIR/generator-diff"
 GENERATOR_DIFF_FILE="$OUTPUT_DIR/generator-diff/index.html"
 git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff" || true
@@ -205,14 +239,15 @@ git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff
 MODIFIED_FILES=$(find \
 	"$ROOT_DIR/_ios-build" \
 	"$ROOT_DIR/_mac-build" \
-	"$ROOT_DIR/src/build" \
+	"$ROOT_DIR/src" \
 	"$ROOT_DIR/tools/apidiff" \
+	-type f \
 	-newer "$OUTPUT_DIR/stamp")
 
 if test -n "$MODIFIED_FILES"; then
 	# If this list files, it means something's wrong with the build process
 	# (the logic to build/work in a different directory is incomplete/broken)
-	echo "${RED}The following files were modified, and they shouldn't have been:${CLEAR}"
-	echo "$MODIFIED_FILES" | sed 's/^/    /'
+	report_error_line "${RED}** Error: The following files were modified, and they shouldn't have been:${CLEAR}"
+	echo "$MODIFIED_FILES" | sed 's/^/    /' | while read line; do report_error_line "$line"; done
 	exit 1
 fi

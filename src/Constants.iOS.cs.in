@@ -12,6 +12,9 @@ namespace MonoTouch {
 
 		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
 		public const string libcLibrary = "/usr/lib/libc.dylib";
+#if !XAMCORE_4_0
+		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
+#endif
 		public const string AddressBookLibrary = "/System/Library/Frameworks/AddressBook.framework/AddressBook";
 		public const string AddressBookUILibrary = "/System/Library/Frameworks/AddressBookUI.framework/AddressBookUI";
 		public const string AudioToolboxLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";
@@ -57,6 +60,7 @@ namespace MonoTouch {
 		public const string AudioUnitLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
 		// iOS 6
+		public const string AdSupportLibrary = "/System/Library/Frameworks/AdSupport.framework/AdSupport";
 		public const string MediaToolboxLibrary = "/System/Library/Frameworks/MediaToolbox.framework/MediaToolbox";
 		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
 		public const string SocialLibrary = "/System/Library/Frameworks/Social.framework/Social";
@@ -81,6 +85,7 @@ namespace MonoTouch {
 		public const string CoreAudioKitLibrary = "/System/Library/Frameworks/CoreAudioKit.framework/CoreAudioKit";
 		public const string CoreMotionLibrary = "/System/Library/Frameworks/CoreMotion.framework/CoreMotion";
 		public const string VideoToolboxLibrary = "/System/Library/Frameworks/VideoToolbox.framework/VideoToolbox";
+		public const string NetworkLibrary = "/System/Library/Frameworks/Network.framework/Network";
 		public const string NetworkExtensionLibrary = "/System/Library/Frameworks/NetworkExtension.framework/NetworkExtension";
 		public const string WebKitLibrary = "/System/Library/Frameworks/WebKit.framework/WebKit";
 		// iOS 8.2
@@ -95,12 +100,16 @@ namespace MonoTouch {
 		public const string MetalKitLibrary = "/System/Library/Frameworks/MetalKit.framework/MetalKit";
 		public const string ModelIOLibrary = "/System/Library/Frameworks/ModelIO.framework/ModelIO";
 		public const string GameplayKitLibrary = "/System/Library/Frameworks/GameplayKit.framework/GameplayKit";
+		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
+#if !XAMCORE_4_0
+		public const string libcompression = "/usr/lib/libcompression.dylib";
+#endif
 		// iOS 9.3
-		public const string HealthKitUILibrary = "/System/Library/Frameworks/HealthKitUI.framework/HealthKit";
+		public const string HealthKitUILibrary = "/System/Library/Frameworks/HealthKitUI.framework/HealthKitUI";
 		// iOS 10.0
 		public const string CallKitLibrary = "/System/Library/Frameworks/CallKit.framework/CallKit";
 		public const string MessagesLibrary = "/System/Library/Frameworks/Messages.framework/Messages";
-		public const string SpeechLibrary = "/System/Library/Frameworks/Speech.framework/";
+		public const string SpeechLibrary = "/System/Library/Frameworks/Speech.framework/Speech";
 		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
 		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
 		public const string UserNotificationsUILibrary = "/System/Library/Frameworks/UserNotificationsUI.framework/UserNotificationsUI";
@@ -117,5 +126,14 @@ namespace MonoTouch {
 		public const string FileProviderUILibrary = "/System/Library/Frameworks/FileProviderUI.framework/FileProviderUI";
 		public const string IOSurfaceLibrary = "/System/Library/Frameworks/IOSurface.framework/IOSurface";
 		public const string PdfKitLibrary = "/System/Library/Frameworks/PDFKit.framework/PDFKit";
+		// iOS 11.3
+		public const string BusinessChatLibrary = "/System/Library/Frameworks/BusinessChat.framework/BusinessChat";
+		// iOS 11.4
+		public const string ClassKitLibrary = "/System/Library/Frameworks/ClassKit.framework/ClassKit";
+		// iOS 12.0
+		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
+		public const string CarPlayLibrary = "/System/Library/Frameworks/CarPlay.framework/CarPlay";
+		public const string IdentityLookupUILibrary = "/System/Library/Frameworks/IdentityLookupUI.framework/IdentityLookupUI";
+		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 	}
 }

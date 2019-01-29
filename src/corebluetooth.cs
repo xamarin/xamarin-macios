@@ -46,7 +46,6 @@ namespace CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[Mac (10, 7)]
 	[BaseType (typeof (CBManager), Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBCentralManager {
@@ -115,7 +114,7 @@ namespace CoreBluetooth {
 		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
 		NSString OptionNotifyOnNotificationKey { get; }
 
-		[NoMac] // xcode 9.2 beta 2 does not include this inside its macOS header files
+		[Mac (10,14)]
 		[iOS (11,2)][TV (11,2)][Watch (4,2)]
 		[Field ("CBConnectPeripheralOptionStartDelayKey")]
 		NSString OptionStartDelayKey { get; }
@@ -195,6 +194,7 @@ namespace CoreBluetooth {
 		[Field ("CBAdvertisementDataServiceUUIDsKey")]
 		NSString ServiceUuidsKey { get; }
 
+		[Mac (10, 9)]
 		[Field ("CBAdvertisementDataOverflowServiceUUIDsKey")]
 		NSString OverflowServiceUuidsKey { get; }
 
@@ -226,14 +226,17 @@ namespace CoreBluetooth {
 	[Static, Internal]
 	interface RestoredStateKeys {
 		[iOS (7,0)]
+		[Mac (10,13)]
 		[Field ("CBCentralManagerRestoredStatePeripheralsKey")]
 		NSString PeripheralsKey { get; }
 
 		[iOS (7,0)]
+		[Mac (10,13)]
 		[Field ("CBCentralManagerRestoredStateScanServicesKey")]
 		NSString ScanServicesKey { get; }
 
 		[iOS (7,0)]
+		[Mac (10,13)]
 		[Field ("CBCentralManagerRestoredStateScanOptionsKey")]
 		NSString ScanOptionsKey { get; }
 	}
@@ -497,7 +500,8 @@ namespace CoreBluetooth {
 	[Model]
 	[Protocol]
 	interface CBPeripheralDelegate {
-		[Availability (Deprecated=Platform.iOS_8_0, Message="Use 'RssiRead' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'RssiRead' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'RssiRead' instead.")]
 		[Export ("peripheralDidUpdateRSSI:error:"), EventArgs ("NSError", true)]
 		void RssiUpdated (CBPeripheral peripheral, NSError error);
 
@@ -632,6 +636,8 @@ namespace CoreBluetooth {
 		CBUUID FromData (NSData theData);
 
 		[Availability (Deprecated = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[NoWatch]
 		[Static]
 		[Export ("UUIDWithCFUUID:")]
@@ -675,6 +681,9 @@ namespace CoreBluetooth {
 #if MONOMAC
 		[Internal]
 		[Field ("CBUUIDValidRangeString")]
+		[Introduced (PlatformName.MacOSX, 10, 12)]
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+		[Obsoleted (PlatformName.MacOSX, 10, 13)]
 		NSString CBUUIDValidRangeString { get; }
 
 		[Internal]

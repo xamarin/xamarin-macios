@@ -22,10 +22,24 @@ using AUViewControllerBase = AppKit.NSViewController;
 #else
 using UIKit;
 using AUViewControllerBase = UIKit.UIViewController;
+using NSView = Foundation.NSObject;
+using NSWindow = Foundation.NSObject;
+using NSWindowController = Foundation.NSObject;
+using NSViewController = Foundation.NSObject;
 #endif
 
 namespace CoreAudioKit {
 #if XAMCORE_2_0 || !MONOMAC
+
+	[NoiOS]
+	[Mac (10,11, onlyOn64 : true)]
+	[Flags]
+	public enum AUGenericViewDisplayFlags : uint {
+		TitleDisplay = 1u << 0,
+		PropertiesDisplay = 1u << 1,
+		ParametersDisplay = 1u << 2,
+	}
+
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(AUViewControllerBase))]
 	interface AUViewController {
@@ -59,6 +73,81 @@ namespace CoreAudioKit {
 
 		[Export ("selectViewConfiguration:")]
 		void SelectViewConfiguration (AUAudioUnitViewConfiguration viewConfiguration);
+	}
+
+	[NoiOS]
+	[Mac (10,13, onlyOn64: true)]
+	[Protocol]
+	interface AUCustomViewPersistentData {
+
+		[Abstract]
+		[NullAllowed, Export ("customViewPersistentData", ArgumentSemantic.Assign)]
+		NSDictionary<NSString, NSObject> CustomViewPersistentData { get; set; }
+	}
+
+	[NoiOS]
+	[Mac (10,13, onlyOn64: true)]
+	[DisableDefaultCtor] // Crashes
+	[BaseType (typeof (NSView))]
+	interface AUGenericView : AUCustomViewPersistentData {
+
+		[Export ("audioUnit")]
+		AudioUnit.AudioUnit AudioUnit { get; }
+
+		[Export ("showsExpertParameters")]
+		bool ShowsExpertParameters { get; set; }
+
+		[Export ("initWithAudioUnit:")]
+		IntPtr Constructor (AudioUnit.AudioUnit au);
+
+		[Export ("initWithAudioUnit:displayFlags:")]
+		IntPtr Constructor (AudioUnit.AudioUnit au, AUGenericViewDisplayFlags inFlags);
+	}
+
+	[NoiOS]
+	[Mac (10,13, onlyOn64: true)]
+	[BaseType (typeof (NSView))]
+	[DisableDefaultCtor]
+	interface AUPannerView {
+
+		[Export ("audioUnit")]
+		AudioUnit.AudioUnit AudioUnit { get; }
+
+		[Static]
+		[Export ("AUPannerViewWithAudioUnit:")]
+		AUPannerView Create (AudioUnit.AudioUnit au);
+	}
+
+	[NoiOS]
+	[Mac (10,13, onlyOn64: true)]
+	[BaseType (typeof (NSWindowController), Name = "CABTLEMIDIWindowController")]
+	interface CABtleMidiWindowController {
+
+		[Export ("initWithWindow:")]
+		IntPtr Constructor ([NullAllowed] NSWindow window);
+	}
+
+	[NoiOS]
+	[Mac (10,13, onlyOn64: true)]
+	[BaseType (typeof (NSViewController))]
+	interface CAInterDeviceAudioViewController {
+
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+	}
+
+	[NoiOS]
+	[Mac (10,13, onlyOn64: true)]
+	[DesignatedDefaultCtor]
+	[BaseType (typeof (NSWindowController))]
+	interface CANetworkBrowserWindowController {
+
+		[Export ("initWithWindow:")]
+		IntPtr Constructor ([NullAllowed] NSWindow window);
+
+		[Static]
+		[Export ("isAVBSupported")]
+		bool IsAvbSupported { get; }
 	}
 #endif
 

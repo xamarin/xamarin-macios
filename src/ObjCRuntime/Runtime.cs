@@ -22,12 +22,6 @@ using Registrar;
 using AppKit;
 #endif
 
-#if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
-#if !MMP && !MTOUCH && !MTOUCH_TEST
-using Mono.Security.Interface;
-#endif
-#endif
-
 namespace ObjCRuntime {
 	
 	public partial class Runtime {
@@ -39,6 +33,8 @@ namespace ObjCRuntime {
 #endif
 
 		static Dictionary<IntPtrTypeValueTuple,Delegate> block_to_delegate_cache;
+		static Dictionary<Type, ConstructorInfo> intptr_ctor_cache;
+		static Dictionary<Type, ConstructorInfo> intptr_bool_ctor_cache;
 
 		static List <object> delegates;
 		static List <Assembly> assemblies;
@@ -52,7 +48,7 @@ namespace ObjCRuntime {
 
 		internal static DynamicRegistrar Registrar;
 
-		const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
+		internal const uint INVALID_TOKEN_REF = 0xFFFFFFFF;
 
 		internal unsafe struct MTRegistrationMap {
 			public IntPtr assembly;
@@ -63,24 +59,32 @@ namespace ObjCRuntime {
 			public MTProtocolMap protocol_map;
 			public int assembly_count;
 			public int map_count;
-			public int custom_type_count;
 			public int full_token_reference_count;
 			public int skipped_map_count;
 			public int protocol_wrapper_count;
 			public int protocol_count;
 		}
 
+		[Flags]
+		internal enum MTTypeFlags : uint
+		{
+			None = 0,
+			CustomType = 1,
+			UserType = 2,
+		}
+
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
 		internal struct MTClassMap {
 			public IntPtr handle;
 			public uint type_reference;
+			public MTTypeFlags flags;
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
 		internal struct MTManagedClassMap
 		{
 			public uint skipped_reference; // implied token type: TypeDef
-			public uint index; // index into MTRegistrationMap.map
+			public uint actual_reference; // implied token type: TypeDef
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -122,7 +126,7 @@ namespace ObjCRuntime {
 
 		[Flags]
 		internal enum InitializationFlags : int {
-			/* unused               = 0x01 */
+			IsPartialStaticRegistrar= 0x01,
 			/* unused				= 0x02,*/
 			DynamicRegistrar		= 0x04,
 			/* unused				= 0x08,*/
@@ -162,6 +166,14 @@ namespace ObjCRuntime {
 
 		internal static unsafe InitializationOptions* options;
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static bool DynamicRegistrationSupported {
+			get {
+				// The linker may turn calls to this property into a constant
+				return true;
+			}
+		}
+
 		internal static bool Initialized {
 			get { return initialized; }
 		}
@@ -172,6 +184,7 @@ namespace ObjCRuntime {
 #endif
 
 		[Preserve] // called from native - runtime.m.
+		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
 		unsafe static void Initialize (InitializationOptions* options)
 		{
 #if PROFILE
@@ -230,13 +243,17 @@ namespace ObjCRuntime {
 			Runtime.options = options;
 			delegates = new List<object> ();
 			object_map = new Dictionary <IntPtr, WeakReference> (IntPtrEqualityComparer);
+			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
+			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			lock_obj = new object ();
 
 			NSObjectClass = NSObject.Initialize ();
 
-			Registrar = new DynamicRegistrar ();
+			if (DynamicRegistrationSupported)
+				Registrar = new DynamicRegistrar ();
 			RegisterDelegates (options);
 			Class.Initialize (options);
+			Mono.SystemDependencyProvider.Initialize ();
 			InitializePlatform (options);
 
 #if !XAMMAC_SYSTEM_MONO
@@ -342,7 +359,7 @@ namespace ObjCRuntime {
 			var smart_type = value.GetType ();
 			MethodBase getConstantMethod, getValueMethod;
 			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
-				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.");
 			var rv = (NSString) ((MethodInfo) getConstantMethod).Invoke (null, new object [] { value });
 			if (rv == null)
 				return IntPtr.Zero;
@@ -359,7 +376,7 @@ namespace ObjCRuntime {
 			var str = GetNSObject<NSString> (value);
 			MethodBase getConstantMethod, getValueMethod;
 			if (!Registrar.IsSmartEnum (smart_type, out getConstantMethod, out getValueMethod))
-				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8024, $"Could not find a valid extension type for the smart enum '{smart_type.FullName}'. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.");
 			var rv = ((MethodInfo) getValueMethod).Invoke (null, new object [] { str });
 			return GCHandle.ToIntPtr (GCHandle.Alloc (rv));
 		}
@@ -406,6 +423,12 @@ namespace ObjCRuntime {
 			return GCHandle.ToIntPtr (GCHandle.Alloc (ex)).ToInt32 ();
 		}
 
+		static int CreateRuntimeException (int code, IntPtr message)
+		{
+			var ex = ErrorHelper.CreateError (code, Marshal.PtrToStringAuto (message));
+			return GCHandle.ToIntPtr (GCHandle.Alloc (ex)).ToInt32 ();
+		}
+
 		static IntPtr UnwrapNSException (int exc_handle)
 		{
 			var obj = GCHandle.FromIntPtr (new IntPtr (exc_handle)).Target;
@@ -431,9 +454,9 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (CreateBlockProxy ((MethodInfo) ObjectWrapper.Convert (method), block));
 		}
 			
-		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature)
+		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature, uint token_ref)
 		{
-			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate), Marshal.PtrToStringAuto (signature));
+			return BlockLiteral.GetBlockForDelegate ((MethodInfo) ObjectWrapper.Convert (method), ObjectWrapper.Convert (@delegate), token_ref, Marshal.PtrToStringAuto (signature));
 		}
 
 		static unsafe Assembly GetEntryAssembly ()
@@ -502,7 +525,7 @@ namespace ObjCRuntime {
 		{
 			assemblies.Add (assembly);
 			foreach (var rf in assembly.GetReferencedAssemblies ()) {
-#if MONOMAc
+#if MONOMAC
 				if (!OnAssemblyRegistration (rf))
 					continue;
 #endif
@@ -533,11 +556,14 @@ namespace ObjCRuntime {
 			return Registrar.ComputeSignature (method, isBlockSignature);
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RegisterAssembly (Assembly a)
 		{
 			if (a == null)
 				throw new ArgumentNullException ("a");
 
+			if (!DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "Runtime.RegisterAssembly is not supported when the dynamic registrar has been linked away.");
 #if MONOMAC
 			var attributes = a.GetCustomAttributes (typeof (RequiredFrameworkAttribute), false);
 
@@ -634,7 +660,7 @@ namespace ObjCRuntime {
 
 			var mb = method as MethodBase;
 			if (method != null && mb == null)
-				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 			
 			if (method != null)
 				return ObjectWrapper.Convert (method);
@@ -650,11 +676,11 @@ namespace ObjCRuntime {
 
 			var mb = method as MethodBase;
 			if (mb == null)
-				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
 			var nsobj = ObjectWrapper.Convert (obj) as NSObject;
 			if (nsobj == null)
-				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at http://bugzilla.xamarin.com.");
+				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
 			return ObjectWrapper.Convert (FindClosedMethod (nsobj.GetType (), mb));
 		}
@@ -685,11 +711,11 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, iface, type));
 		}
 
-		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created)
+		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created, IntPtr selector, IntPtr method)
 		{
 			// It doesn't work to use System.Type in the signature, we get garbage.
 			var type = (System.Type) ObjectWrapper.Convert (type_ptr);
-			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created));
+			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created, selector, method));
 		}
 
 		static void Dispose (IntPtr mobj)
@@ -757,6 +783,48 @@ namespace ObjCRuntime {
 			return null;
 		}
 
+		internal static ProtocolMemberAttribute GetProtocolMemberAttribute (Type type, string selector, MethodInfo method)
+		{
+			var memberAttributes = type.GetCustomAttributes<ProtocolMemberAttribute> ();
+			if (memberAttributes == null)
+				return null;
+
+			foreach (var attrib in memberAttributes) {
+				if (attrib.IsStatic != method.IsStatic)
+					continue;
+
+				if (attrib.Selector != selector)
+					continue;
+
+				if (!attrib.IsProperty) {
+					var methodParameters = method.GetParameters ();
+					if ((attrib.ParameterType?.Length ?? 0) != methodParameters.Length)
+						continue;
+					var notApplicable = false;
+					for (int i = 0; i < methodParameters.Length; i++) {
+						var paramType = methodParameters [i].ParameterType;
+						var isByRef = paramType.IsByRef;
+						if (isByRef)
+							paramType = paramType.GetElementType ();
+						if (isByRef != attrib.ParameterByRef [i]) {
+							notApplicable = true;
+							break;
+						}
+						if (paramType != attrib.ParameterType [i]) {
+							notApplicable = true;
+							break;
+						}
+					}
+					if (notApplicable)
+						continue;
+				}
+
+				return attrib;
+			}
+
+			return null;
+		}
+
 		//
 		// Returns a MethodInfo that represents the method that can be used to turn
 		// a the block in the given method at the given parameter into a strongly typed
@@ -770,6 +838,8 @@ namespace ObjCRuntime {
 #endif
 		static MethodInfo GetBlockWrapperCreator (MethodInfo method, int parameter)
 		{
+			// A mirror of this method is also implemented in StaticRegistrar:FindBlockProxyCreatorMethod
+			// If this method is changed, that method will probably have to be updated too (tests!!!)
 			MethodInfo first = method;
 			MethodInfo last = null;
 			Type[] extensionParameters = null;
@@ -781,6 +851,8 @@ namespace ObjCRuntime {
 					return createMethod;
 				method = method.GetBaseDefinition ();
 			}
+
+			string selector = null;
 
 			// Might be the implementation of an interface method, so find the corresponding
 			// MethodInfo for the interface, and check for BlockProxy attributes there as well.
@@ -795,6 +867,17 @@ namespace ObjCRuntime {
 						if (createMethod != null)
 							return createMethod;
 					}
+				}
+
+				// We store the BlockProxy type in the ProtocolMemberAttribute, so check those.
+				// We may run into binding assemblies built with earlier versions of the generator,
+				// which means we can't rely on finding the BlockProxy attribute in the ProtocolMemberAttribute.
+				if (selector == null)
+					selector = GetExportAttribute (method)?.Selector ?? string.Empty;
+				if (!string.IsNullOrEmpty (selector)) {
+					var attrib = GetProtocolMemberAttribute (iface, selector, method);
+					if (attrib != null && attrib.ParameterBlockProxy.Length > parameter && attrib.ParameterBlockProxy [parameter] != null)
+						return attrib.ParameterBlockProxy [parameter].GetMethod ("Create");
 				}
 
 				// Might be an implementation of an optional protocol member.
@@ -821,7 +904,7 @@ namespace ObjCRuntime {
 				}
 			}
 
-			throw new RuntimeException (8009, true, "Unable to locate the block to delegate conversion method for the method {0}.{1}'s parameter #{2}. Please file a bug at http://bugzilla.xamarin.com.",
+			throw new RuntimeException (8009, true, "Unable to locate the block to delegate conversion method for the method {0}.{1}'s parameter #{2}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.",
 				method.DeclaringType.FullName, method.Name, parameter + 1);
 		}
 
@@ -840,7 +923,6 @@ namespace ObjCRuntime {
 #endif
 		static Delegate CreateBlockProxy (MethodInfo method, IntPtr block)
 		{
-			NSObject.DangerousRetain (block);
 			return (Delegate) method.Invoke (null, new object [] { block } );
 		}
 
@@ -949,6 +1031,31 @@ namespace ObjCRuntime {
 			}
 		}
 
+		internal static PropertyInfo FindPropertyInfo (MethodInfo accessor)
+		{
+			if (!accessor.IsSpecialName)
+				return null;
+
+			foreach (var pi in accessor.DeclaringType.GetProperties ()) {
+				if (pi.GetGetMethod () == accessor)
+					return pi;
+				if (pi.GetSetMethod () == accessor)
+					return pi;
+			}
+
+			return null;
+		}
+
+		internal static ExportAttribute GetExportAttribute (MethodInfo method)
+		{
+			var attrib = method.GetCustomAttribute<ExportAttribute> ();
+			if (attrib == null) {
+				var pinfo = FindPropertyInfo (method);
+				if (pinfo != null)
+					attrib = pinfo.GetCustomAttribute<ExportAttribute> ();
+			}
+			return attrib;
+		}
 
 		static NSObject IgnoreConstructionError (IntPtr ptr, IntPtr klass, Type type)
 		{
@@ -961,7 +1068,7 @@ namespace ObjCRuntime {
 			Ignore,
 		}
 
-		static void MissingCtor (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution)
+		static void MissingCtor (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr))
 		{
 			string msg;
 
@@ -986,15 +1093,26 @@ namespace ObjCRuntime {
 				return;
 			}
 
-			throw new Exception (string.Format (msg, ptr.ToString ("x"), new Class (klass).Name, type.FullName));
+			if (selector != IntPtr.Zero || method != IntPtr.Zero)
+				msg += "\nAdditional information:\n";
+
+			if (selector != IntPtr.Zero)
+				msg += $"\tSelector: {Selector.GetName (selector)}\n";
+			if (method != IntPtr.Zero) {
+				var mi = ObjectWrapper.Convert (method) as MethodBase;
+				if (mi != null)
+					msg += $"\tMethod: {mi.FullName}\n";
+			}
+
+			throw ErrorHelper.CreateError (8027, string.Format (msg, ptr.ToString ("x"), new Class (klass).Name, type.FullName));
 		}
 
-		static NSObject ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution)
+		static NSObject ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr))
 		{
 			Type type = Class.Lookup (klass);
 
 			if (type != null) {
-				return ConstructNSObject<NSObject> (ptr, type, missingCtorResolution);
+				return ConstructNSObject<NSObject> (ptr, type, missingCtorResolution, selector, method);
 			} else {
 				return new NSObject (ptr);
 			}
@@ -1006,7 +1124,8 @@ namespace ObjCRuntime {
 		}
 
 		// The generic argument T is only used to cast the return value.
-		static T ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T: class, INativeObject
+		// The 'selector' and 'method' arguments are only used in error messages.
+		static T ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) where T: class, INativeObject
 		{
 			if (type == null)
 				throw new ArgumentNullException ("type");
@@ -1014,7 +1133,7 @@ namespace ObjCRuntime {
 			var ctor = GetIntPtrConstructor (type);
 
 			if (ctor == null) {
-				MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution);
+				MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution, selector, method);
 				return null;
 			}
 
@@ -1040,22 +1159,36 @@ namespace ObjCRuntime {
 
 		static ConstructorInfo GetIntPtrConstructor (Type type)
 		{
+			lock (intptr_ctor_cache) {
+				if (intptr_ctor_cache.TryGetValue (type, out var rv))
+					return rv;
+			}
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
-				if (param.Length == 1 && param [0].ParameterType == typeof (IntPtr))
+				if (param.Length == 1 && param [0].ParameterType == typeof (IntPtr)) {
+					lock (intptr_ctor_cache)
+						intptr_ctor_cache [type] = ctors [i];
 					return ctors [i];
+				}
 			}
 			return null;
 		}
 
 		static ConstructorInfo GetIntPtr_BoolConstructor (Type type)
 		{
+			lock (intptr_bool_ctor_cache) {
+				if (intptr_bool_ctor_cache.TryGetValue (type, out var rv))
+					return rv;
+			}
 			var ctors = type.GetConstructors (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 			for (int i = 0; i < ctors.Length; ++i) {
 				var param = ctors[i].GetParameters ();
-				if (param.Length == 2 && param [0].ParameterType == typeof (IntPtr) && param [1].ParameterType == typeof (bool))
+				if (param.Length == 2 && param [0].ParameterType == typeof (IntPtr) && param [1].ParameterType == typeof (bool)) {
+					lock (intptr_bool_ctor_cache)
+						intptr_bool_ctor_cache [type] = ctors [i];
 					return ctors [i];
+				}
 			}
 			return null;
 		}
@@ -1103,7 +1236,7 @@ namespace ObjCRuntime {
 			return GetNSObject (ptr, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
-		internal static NSObject GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false) {
+		internal static NSObject GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) {
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -1112,7 +1245,7 @@ namespace ObjCRuntime {
 			if (o != null)
 				return o;
 
-			return ConstructNSObject (ptr, Class.GetClassForObject (ptr), missingCtorResolution);
+			return ConstructNSObject (ptr, Class.GetClassForObject (ptr), missingCtorResolution, selector, method);
 		}
 
 		static public T GetNSObject<T> (IntPtr ptr) where T : NSObject
@@ -1182,7 +1315,8 @@ namespace ObjCRuntime {
 		// NSObject subclasses (the test case in #13518 should work even with type checks).
 		//
 
-		static NSObject GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, out bool created) {
+		// The 'selector' and 'method' arguments are only used in error messages.
+		static NSObject GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, out bool created, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) {
 			created = false;
 
 			if (ptr == IntPtr.Zero)
@@ -1214,7 +1348,7 @@ namespace ObjCRuntime {
 			}
 
 			created = true;
-			return ConstructNSObject<NSObject> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
+			return ConstructNSObject<NSObject> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound, selector, method);
 		}
 
 		static Type LookupINativeObjectImplementation (IntPtr ptr, Type target_type, Type implementation = null)
@@ -1250,10 +1384,13 @@ namespace ObjCRuntime {
 			return implementation;
 		}
 
+		public static INativeObject GetINativeObject (IntPtr ptr, bool owns, Type target_type)
+		{
+			return GetINativeObject (ptr, owns, target_type, null);
+		}
+
 		// this method is identical in behavior to the generic one.
-		// TODO: figure out if it's possible to call the generic 
-		// implementation from native code.
-		static INativeObject GetINativeObject (IntPtr ptr, bool owns, Type target_type, Type implementation = null)
+		static INativeObject GetINativeObject (IntPtr ptr, bool owns, Type target_type, Type implementation)
 		{
 			if (ptr == IntPtr.Zero)
 				return null;
@@ -1338,10 +1475,12 @@ namespace ObjCRuntime {
 			unsafe {
 				var map = options->RegistrationMap;
 				if (map != null) {
-					var token = Class.GetTokenReference (type);
-					var wrapper_token = xamarin_find_protocol_wrapper_type (token);
-					if (wrapper_token != INVALID_TOKEN_REF)
-						return (Type) Class.ResolveTokenReference (wrapper_token, 0x02000000 /* TypeDef */);
+					var token = Class.GetTokenReference (type, throw_exception: false);
+					if (token != INVALID_TOKEN_REF) {
+						var wrapper_token = xamarin_find_protocol_wrapper_type (token);
+						if (wrapper_token != INVALID_TOKEN_REF)
+							return (Type)Class.ResolveTokenReference (wrapper_token, 0x02000000 /* TypeDef */);
+					}
 				}
 			}
 
@@ -1399,6 +1538,7 @@ namespace ObjCRuntime {
 			ConnectMethod (type, method, new ExportAttribute (selector.Name));
 		}
 			
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void ConnectMethod (Type type, MethodInfo method, ExportAttribute export)
 		{
 			if (type == null)
@@ -1409,6 +1549,9 @@ namespace ObjCRuntime {
 
 			if (export == null)
 				throw new ArgumentNullException ("export");
+
+			if (!DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "Runtime.ConnectMethod is not supported when the dynamic registrar has been linked away.");
 
 			Registrar.RegisterMethod (type, method, export);
 		}
@@ -1532,6 +1675,40 @@ namespace ObjCRuntime {
 			}
 
 			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#if MONOMAC
+		public static void ReleaseBlockOnMainThread (IntPtr block)
+		{
+			if (release_block_on_main_thread == null)
+				release_block_on_main_thread = LookupInternalFunction<intptr_func> ("xamarin_release_block_on_main_thread");
+			release_block_on_main_thread (block);
+		}
+		delegate void intptr_func (IntPtr block);
+		static intptr_func release_block_on_main_thread;
+#else
+		[DllImport ("__Internal", EntryPoint = "xamarin_release_block_on_main_thread")]
+		public static extern void ReleaseBlockOnMainThread (IntPtr block);
+#endif
+
+		// Throws an ArgumentNullException if 'obj' is null.
+		// This method is particularly helpful when calling another constructor from a constructor, where you can't add any statements before calling the other constructor:
+		//
+		//     Foo (object obj)
+		//         : base (Runtime.ThrowOnNull (obj, nameof (obj)).Handle)
+		//     {
+		//     }
+		//
+		internal static T ThrowOnNull<T> (T obj, string name, string message = null) where T : class
+		{
+			if (obj == null) {
+				if (message == null)
+					throw new ArgumentNullException (name);
+				else
+					throw new ArgumentNullException (name, message);
+			}
+			return obj;
 		}
 	}
 		

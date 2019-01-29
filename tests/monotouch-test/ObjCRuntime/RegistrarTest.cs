@@ -82,6 +82,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+		[Test]
+		public void RegistrarRemoval ()
+		{
+			// define set by xharness when creating test variations.
+			// It's not safe to remove the dynamic registrar in monotouch-test (by design; some of the tested API makes it unsafe, and the linker correcty detects this),
+			// so the dynamic registrar will only be removed if manually requested.
+			// Also removal of the dynamic registrar is not supported in XM
+#if OPTIMIZEALL && !__MACOS__
+			var shouldBeRemoved = true;
+#else
+			var shouldBeRemoved = false;
+#endif
+			Assert.AreEqual (shouldBeRemoved, typeof (NSObject).Assembly.GetType ("Registrar.Registrar") == null, "Registrar removal");
+			Assert.AreEqual (shouldBeRemoved, typeof (NSObject).Assembly.GetType ("Registrar.DynamicRegistrar") == null, "DynamicRegistrar removal");
+		}
+
 #if !MONOMAC
 		[Test]
 		public void TestProperties ()
@@ -268,6 +284,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestAction ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires the dynamic registrar to be available.");
+
 			using (var obj = new RegistrarTestClass ()) {
 				var sel = new Selector ("testAction:");
 				var block = new BlockLiteral ();
@@ -1395,6 +1414,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestNativeObjectArray ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+
 			using (var i1 = new MKPointAnnotation ()) {
 				using (var i2 = new MKPointAnnotation ()) {
 					using (var array = NSArray.FromObjects (i1, i2)) {
@@ -1812,6 +1833,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void CustomAppDelegatePerformFetchTest ()
 		{
+			if (!Runtime.DynamicRegistrationSupported)
+				Assert.Ignore ("This test requires the dynamic registrar to be available.");
+
 			using (var obj = new CustomApplicationDelegate ()) {
 				BlockLiteral block = new BlockLiteral ();
 				var performed = false;
@@ -2005,6 +2029,30 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+		public void BlockCollection ()
+		{
+			Exception ex = null;
+			int initialFreedCount = ObjCBlockTester.FreedBlockCount;
+			var thread = new Thread (() => {
+				try {
+					using (var obj = new Xamarin.BindingTests.RegistrarBindingTest.BlockCallbackTester ()) {
+						for (int i = 0; i < 10000; i++)
+							obj.TestFreedBlocks ();
+					}
+				} catch (Exception e) {
+					ex = e;
+				}
+			});
+			thread.Start ();
+			thread.Join ();
+			GC.Collect ();
+			GC.WaitForPendingFinalizers ();
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => { }, () => ObjCBlockTester.FreedBlockCount > initialFreedCount);
+			Assert.IsNull (ex, "No exceptions");
+			Assert.That (ObjCBlockTester.FreedBlockCount, Is.GreaterThan (initialFreedCount), "freed blocks");
+		}
+
+		[Test]
 		public void TestCtors ()
 		{
 			IntPtr ptr = IntPtr.Zero;
@@ -2041,7 +2089,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				ptr = Messaging.IntPtr_objc_msgSend (Class.GetHandle (typeof (D2)), Selector.GetHandle ("alloc"));
 				ptr = Messaging.IntPtr_objc_msgSend (ptr, Selector.GetHandle ("init"));
 				// Failed to marshal the Objective-C object 0x7adf5920 (type: AppDelegate_D2). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance (because the type 'AppDelegate+D2' does not have a constructor that takes one IntPtr argument).
-				Assert.Throws<Exception> (() => Runtime.GetNSObject<D2> (ptr), "c");
+				Assert.Throws<RuntimeException> (() => Runtime.GetNSObject<D2> (ptr), "c");
 			} finally {
 				Messaging.void_objc_msgSend (ptr, Selector.GetHandle ("release"));
 			}
@@ -2486,6 +2534,28 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			using (var obj = new NullOutParameters ())
 				obj.Invoke_V_null_out ();
 		}
+
+		[Test]
+		public unsafe void ByrefParameter ()
+		{
+			using (var obj = new ByrefParameterTest ()) {
+				using (var param = new NSObject ()) {
+					// We want an instance of an NSObject subclass that doesn't have a managed wrapper, so we create a native NSString handle.
+					IntPtr handle = NSString.CreateNative ("ByrefParameter");
+					Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("doSomething:"), new IntPtr (&handle));
+					NSString.ReleaseNative (handle);
+				}
+			}
+		}
+
+		class ByrefParameterTest : NSObject {
+			[Export ("doSomething:")]
+			public void DoSomething (ref NSString str)
+			{
+				Assert.IsNotNull (str, "NonNull NSString&");
+				Assert.AreEqual ("ByrefParameter", str.ToString ());
+			}
+		}
 	}
 
 #if !__WATCHOS__
@@ -2567,9 +2637,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var block = new BlockLiteral ();
 			var tramp = new DActionArity1V1 (SDActionArity1V1.Invoke);
 			Action<NSObject> del = (v) => { };
-			block.SetupBlock (tramp, del);
-			Assert.AreEqual ("v@:^v^v", GetBlockSignature (block), "a");
-			block.CleanupBlock ();
+			if (Runtime.DynamicRegistrationSupported) {
+				block.SetupBlock (tramp, del);
+				Assert.AreEqual ("v@:^v^v", GetBlockSignature (block), "a");
+				block.CleanupBlock ();
+			} else {
+				Assert.Throws<RuntimeException> (() => block.SetupBlock (tramp, del));
+			}
 		}
 
 		[Test]
@@ -2578,9 +2652,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var block = new BlockLiteral ();
 			var tramp = new DActionArity1V2 (SDActionArity1V2.Invoke);
 			Action<NSObject> del = (v) => { };
-			block.SetupBlock (tramp, del);
-			Assert.AreEqual ("v@?@", GetBlockSignature (block), "a");
-			block.CleanupBlock ();
+			if (Runtime.DynamicRegistrationSupported) {
+				block.SetupBlock (tramp, del);
+				Assert.AreEqual ("v@?@", GetBlockSignature (block), "a");
+				block.CleanupBlock ();
+			} else {
+				// The linker is able to rewrite calls to BlockLiteral.SetupBlock to BlockLiteral.SetupBlockImpl (which works without the dynamic registrar),
+				// but that will only happen if the code is linked, and monotouch-test is only SdkLinked. Thus this code will throw an exception
+				Assert.Throws<RuntimeException> (() => block.SetupBlock (tramp, del));
+			}
 		}
 	}
 
@@ -2612,4 +2692,43 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	public class SomeConsumer : NSObject, ISomeDelegate
 	{
 	}
+#if !__WATCHOS__ // no MetalKit on watchOS
+	// These classes implement Metal* protocols, so that the generated registrar code includes the corresponding Metal* headers.
+	// https://github.com/xamarin/xamarin-macios/issues/4422
+	class MetalKitTypesInTheSimulator : NSObject, MetalKit.IMTKViewDelegate {
+		public void Draw (MetalKit.MTKView view)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void DrawableSizeWillChange (MetalKit.MTKView view, CGSize size)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+	class MetalTypesInTheSimulator : NSObject, global::Metal.IMTLDrawable {
+		public void Present ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Present (double presentationTime)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+#if !__TVOS__ // MetalPerformanceShaders isn't available in the tvOS simulator either
+	class MetalPerformanceShadersTypesInTheSimulator : NSObject, global::MetalPerformanceShaders.IMPSDeviceProvider {
+		public global::Metal.IMTLDevice GetMTLDevice ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Present (double presentationTime)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+#endif // !__TVOS__
+#endif // !__WATCHOS__
 }

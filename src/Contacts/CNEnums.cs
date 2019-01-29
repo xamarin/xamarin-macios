@@ -85,22 +85,22 @@ namespace Contacts {
 		CommunicationError = 1,
 		DataAccessError = 2,
 		AuthorizationDenied = 100,
+		NoAccessibleWritableContainers = 101,
 		RecordDoesNotExist = 200,
 		InsertedRecordAlreadyExists = 201,
 		ContainmentCycle = 202,
 		ContainmentScope = 203,
 		ParentRecordDoesNotExist = 204,
+		RecordIdentifierInvalid = 205,
 		ValidationMultipleErrors = 300,
 		ValidationTypeMismatch = 301,
 		ValidationConfigurationError = 302,
 		PredicateInvalid = 400,
 		PolicyViolation = 500,
-		[iOS (11,0), Mac (10,13)]
 		ClientIdentifierInvalid = 600,
-		[iOS (11,0), Mac (10,13)]
 		ClientIdentifierDoesNotExist = 601,
-		[iOS (11,0), Mac (10,13)]
 		VCardMalformed = 700,
+		VCardSummarizationError = 701,
 	}
 
 	// NSInteger -> CNPostalAddressFormatter.h

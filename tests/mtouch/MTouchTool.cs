@@ -680,6 +680,99 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 ");
 		}
 
+		public void CreateTemporaryWatchOSIntentsExtension (string code = null, string appName = "intentsExtension")
+		{
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that directory
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
+			Directory.CreateDirectory (app);
+
+			if (code == null) {
+				code = @"
+using System;
+using Foundation;
+using Intents;
+using WatchKit;
+[Register (""IntentHandler"")]
+public class IntentHandler : INExtension, IINRidesharingDomainHandling {
+	protected IntentHandler (System.IntPtr handle) : base (handle) {}
+	public void HandleRequestRide (INRequestRideIntent intent, Action<INRequestRideIntentResponse> completion)  { }
+	public void HandleListRideOptions (INListRideOptionsIntent intent, Action<INListRideOptionsIntentResponse> completion) { }
+	public void HandleRideStatus (INGetRideStatusIntent intent, Action<INGetRideStatusIntentResponse> completion) { }
+	public void StartSendingUpdates (INGetRideStatusIntent intent, IINGetRideStatusIntentResponseObserver observer) { }
+	public void StopSendingUpdates (INGetRideStatusIntent intent) { }
+}";
+			}
+
+			AppPath = app;
+			Extension = true;
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile.watchOS, appName: appName);
+
+			File.WriteAllText (Path.Combine (app, "Info.plist"), $@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>BuildMachineOSBuild</key>
+	<string>17E199</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>{appName}</string>
+	<key>CFBundleExecutable</key>
+	<string>{appName}</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.testapp.watchkitapp.watchkitextension.intentswatch</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>{appName}</string>
+	<key>CFBundlePackageType</key>
+	<string>XPC!</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>MinimumOSVersion</key>
+	<string>3.2</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionAttributes</key>
+		<dict>
+			<key>IntentsRestrictedWhileLocked</key>
+			<array/>
+			<key>IntentsSupported</key>
+			<array>
+				<string>INRequestRideIntent</string>
+				<string>INListRideOptionsIntent</string>
+				<string>INGetRideStatusIntent</string>
+			</array>
+		</dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.intents-service</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>IntentHandler</string>
+	</dict>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>4</integer>
+	</array>
+</dict>
+</plist>
+");
+		}
+
 		public void CreateTemporaryApp_LinkWith ()
 		{
 			AppPath = CreateTemporaryAppDirectory ();
@@ -703,8 +796,25 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 
 		public IEnumerable<string> NativeSymbolsInExecutable {
 			get { 
-				return ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (NativeExecutablePath)}", hide_output: true).Split ('\n');
+				return GetNativeSymbolsInExecutable (NativeExecutablePath);
 			}
+		}
+
+		public static IEnumerable<string> GetNativeSymbolsInExecutable (string executable)
+		{
+			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (executable)}", hide_output: true).Split ('\n');
+
+			rv = rv.Where ((v) => {
+				if (string.IsNullOrEmpty (v))
+					return false;
+
+				if (v.StartsWith (executable, StringComparison.Ordinal) && v.EndsWith (":", StringComparison.Ordinal))
+					return false;
+
+				return true;
+			});
+
+			return rv;
 		}
 
 		protected override string ToolPath {

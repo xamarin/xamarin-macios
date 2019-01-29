@@ -13,6 +13,7 @@ using CoreMedia;
 using ObjCRuntime;
 using Foundation;
 using UIKit;
+using CoreGraphics;
 
 namespace ReplayKit {
 
@@ -126,8 +127,8 @@ namespace ReplayKit {
 	[BaseType (typeof (NSObject))]
 	interface RPScreenRecorderDelegate {
 
-		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'DidStopRecording(RPScreenRecorder,RPPreviewViewController,NSError)' instead.")]
-		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'DidStopRecording(RPScreenRecorder,RPPreviewViewController,NSError)' instead.")]
+		[Deprecated (PlatformName.TvOS, 10,0, message: "Use 'DidStopRecording(RPScreenRecorder,RPPreviewViewController,NSError)' instead.")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'DidStopRecording(RPScreenRecorder,RPPreviewViewController,NSError)' instead.")]
 		[Export ("screenRecorder:didStopRecordingWithError:previewViewController:")]
 		void DidStopRecording (RPScreenRecorder screenRecorder, NSError error, [NullAllowed] RPPreviewViewController previewViewController);
 
@@ -328,5 +329,19 @@ namespace ReplayKit {
 		[iOS (10,2)][TV (10,1)]
 		[Export ("finishBroadcastWithError:")]
 		void FinishBroadcast (NSError error);
+	}
+
+	[NoTV, iOS (12,0)]
+	[BaseType (typeof (UIView))]
+	interface RPSystemBroadcastPickerView : NSCoding {
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+
+		[NullAllowed, Export ("preferredExtension")]
+		string PreferredExtension { get; set; }
+
+		[Export ("showsMicrophoneButton")]
+		bool ShowsMicrophoneButton { get; set; }
 	}
 }

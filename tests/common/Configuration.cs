@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
+
+using Xamarin.Utils;
 
 namespace Xamarin.Tests
 {
@@ -26,6 +29,7 @@ namespace Xamarin.Tests
 		public static string xcode5_root;
 		public static string xcode6_root;
 		public static string xcode72_root;
+		public static string xcode83_root;
 #if MONOMAC
 		public static string mac_xcode_root;
 #endif
@@ -94,7 +98,27 @@ namespace Xamarin.Tests
 
 		static void ParseConfigFiles ()
 		{
-			ParseConfigFiles (FindConfigFiles ("test.config"));
+			var test_config = FindConfigFiles ("test.config");
+			if (!test_config.Any ()) {
+				// Run 'make test.config' in the tests/ directory
+				// First find the tests/ directory
+				var dir = TestAssemblyDirectory;
+				string tests_dir = null;
+				while (dir.Length > 1) {
+					var file = Path.Combine (dir, "tests");
+					if (Directory.Exists (file)) {
+						tests_dir = file;
+						break;
+					}
+					dir = Path.GetDirectoryName (dir);
+				}
+				if (tests_dir == null)
+					throw new Exception ($"Could not find the directory 'tests'. Please run 'make' in the tests/ directory.");
+				// Run make
+				ExecutionHelper.Execute ("make", $"-C {StringUtils.Quote (tests_dir)} test.config");
+				test_config = FindConfigFiles ("test.config");
+			}
+			ParseConfigFiles (test_config);
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
@@ -185,6 +209,7 @@ namespace Xamarin.Tests
 			xcode5_root = GetVariable ("XCODE5_DEVELOPER_ROOT", "/Applications/Xcode511.app/Contents/Developer");
 			xcode6_root = GetVariable ("XCODE6_DEVELOPER_ROOT", "/Applications/Xcode601.app/Contents/Developer");
 			xcode72_root = GetVariable ("XCODE72_DEVELOPER_ROOT", "/Applications/Xcode72.app/Contents/Developer");
+			xcode83_root = GetVariable ("XCODE83_DEVELOPER_ROOT", "/Applications/Xcode83.app/Contents/Developer");
 			include_ios = !string.IsNullOrEmpty (GetVariable ("INCLUDE_IOS", ""));
 			include_mac = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MAC", ""));
 			include_tvos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_TVOS", ""));
@@ -392,6 +417,7 @@ namespace Xamarin.Tests
 			}
 		}
 
+#if !XAMMAC_TESTS
 		public static string GetBaseLibrary (Profile profile)
 		{
 			switch (profile) {
@@ -448,6 +474,24 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string GetSdkPath (Profile profile, bool is_device)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				return Path.Combine (MonoTouchRootDirectory, "SDKs", "MonoTouch." + (is_device ? "iphoneos" : "iphonesimulator") + ".sdk");
+			case Profile.tvOS:
+				return Path.Combine (MonoTouchRootDirectory, "SDKs", "Xamarin.AppleTV" + (is_device ? "OS" : "Simulator") + ".sdk");
+			case Profile.watchOS:
+				return Path.Combine (MonoTouchRootDirectory, "SDKs", "Xamarin.Watch" + (is_device ? "OS" : "Simulator") + ".sdk");
+			case Profile.macOSFull:
+			case Profile.macOSMobile:
+			case Profile.macOSSystem:
+				return Path.Combine (SdkRootXM, "lib");
+			default:
+				throw new NotImplementedException (profile.ToString ());
+			}
+		}
+
 		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = false)
 		{
 			args.Append (" -lib:").Append (Path.GetDirectoryName (GetBaseLibrary (profile))).Append (' ');
@@ -456,6 +500,30 @@ namespace Xamarin.Tests
 			} else {
 				return "/Library/Frameworks/Mono.framework/Commands/mcs";
 			}
+		}
+#endif // !XAMMAC_TESTS
+
+		public static void AssertXcodeSupports32Bit ()
+		{
+			if (XcodeSupports32Bit)
+				return;
+			Assert.Ignore ("The current version of Xcode does not support compiling 32-bit macOS applications.");
+		}
+
+		public static bool XcodeSupports32Bit {
+			get {
+				return Version.Parse (XcodeVersion).Major < 10;
+			}
+		}
+
+		public static string NuGetPackagesDirectory {
+			get {
+				return Path.Combine (RootPath, "packages");
+			}
+		}
+
+		public static string XIBuildPath {
+			get { return Path.GetFullPath (Path.Combine (RootPath, "tools", "xibuild", "xibuild")); }
 		}
 	}
 }

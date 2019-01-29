@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -15,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using Xamarin.MacDev;
 using Xamarin.Utils;
 using ObjCRuntime;
 
@@ -22,6 +24,8 @@ namespace Xamarin.Bundler {
 	public partial class Driver {
 		static void AddSharedOptions (Application app, Mono.Options.OptionSet options)
 		{
+			options.Add ("sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v);
+			options.Add ("no-xcode-version-check", "Ignores the Xcode version check.", v => { min_xcode_version = null; }, true /* This is a non-documented option. Please discuss any customers running into the xcode version check on the maciosdev@ list before giving this option out to customers. */);
 			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v =>
 			{
 				try {
@@ -124,7 +128,7 @@ namespace Xamarin.Bundler {
 			options.Add ("ignore-dynamic-symbol:", "Specify that Xamarin.iOS/Xamarin.Mac should not try to prevent the linker from removing the specified symbol.", (v) => {
 				app.IgnoredSymbols.Add (v);
 			});
-			options.Add ("root-assembly:", "Specifies any root assemblies. There must be at least one root assembly, usually the main executable.", (v) => {
+			options.Add ("root-assembly=", "Specifies any root assemblies. There must be at least one root assembly, usually the main executable.", (v) => {
 				app.RootAssemblies.Add (v);
 			});
 			options.Add ("optimize=", "A comma-delimited list of optimizations to enable/disable. To enable an optimization, use --optimize=[+]remove-uithread-checks. To disable an optimizations: --optimize=-remove-uithread-checks. Use '+all' to enable or '-all' disable all optimizations. Only compiler-generated code or code otherwise marked as safe to optimize will be optimized.\n" +
@@ -134,14 +138,21 @@ namespace Xamarin.Bundler {
 #if MONOTOUCH
 					"    inline-isdirectbinding: By default enabled (requires the linker). Tries to inline calls to NSObject.IsDirectBinding to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 #else
-					"    inline-isdirectbinding: By default disabled, because it may  (requires the linker), because . Tries to inline calls to NSObject.IsDirectBinding to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
+					"    inline-isdirectbinding: By default disabled, because it may require the linker. Tries to inline calls to NSObject.IsDirectBinding to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 #endif
 #if MONOTOUCH
+					"    remove-dynamic-registrar: By default enabled when the static registrar is enabled. Removes the dynamic registrar (makes the app smaller).\n" +
 					"    inline-runtime-arch: By default always enabled (requires the linker). Inlines calls to ObjCRuntime.Runtime.Arch to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
 #endif
 					"    blockliteral-setupblock: By default enabled when using the static registrar. Optimizes calls to BlockLiteral.SetupBlock to avoid having to calculate the block signature at runtime.\n" +
 					"    inline-intptr-size: By default enabled for builds that target a single architecture (requires the linker). Inlines calls to IntPtr.Size to load a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
-					"    register-protocols: Remove unneeded metadata for protocol support. Makes the app smaller and reduces memory requirements.\n",
+					"    inline-dynamic-registration-supported: By default always enabled (requires the linker). Optimizes calls to Runtime.DynamicRegistrationSupported to be a constant value. Makes the app smaller, and slightly faster at runtime.\n" +
+					"    register-protocols: Remove unneeded metadata for protocol support. Makes the app smaller and reduces memory requirements.\n" +
+#if !MONOTOUCH
+					"    trim-architectures: Remove unneeded architectures from bundled native libraries. Makes the app smaller and is required for macOS App Store submissions.\n",
+#else
+					"",
+#endif
 					(v) => {
 						app.Optimizations.Parse (v);
 					});
@@ -303,7 +314,7 @@ namespace Xamarin.Bundler {
 			File.Move (source, target);
 		}
 
-		static void MoveIfDifferent (string path, string tmp)
+		static void MoveIfDifferent (string path, string tmp, bool use_stamp = false)
 		{
 			// Don't read the entire file into memory, it can be quite big in certain cases.
 
@@ -324,10 +335,12 @@ namespace Xamarin.Bundler {
 				FileMove (tmp, path);
 			} else {
 				Log (3, "Target {0} is up-to-date.", path);
+				if (use_stamp)
+					Driver.Touch (path + ".stamp");
 			}
 		}
 
-		public static void WriteIfDifferent (string path, string contents)
+		public static void WriteIfDifferent (string path, string contents, bool use_stamp = false)
 		{
 			var tmp = path + ".tmp";
 
@@ -340,7 +353,7 @@ namespace Xamarin.Bundler {
 				}
 
 				File.WriteAllText (tmp, contents);
-				MoveIfDifferent (path, tmp);
+				MoveIfDifferent (path, tmp, use_stamp);
 			} catch (Exception e) {
 				File.WriteAllText (path, contents);
 				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
@@ -349,7 +362,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static void WriteIfDifferent (string path, byte[] contents)
+		public static void WriteIfDifferent (string path, byte[] contents, bool use_stamp = false)
 		{
 			var tmp = path + ".tmp";
 
@@ -361,7 +374,7 @@ namespace Xamarin.Bundler {
 				}
 
 				File.WriteAllBytes (tmp, contents);
-				MoveIfDifferent (path, tmp);
+				MoveIfDifferent (path, tmp, use_stamp);
 			} catch (Exception e) {
 				File.WriteAllBytes (path, contents);
 				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
@@ -375,6 +388,13 @@ namespace Xamarin.Bundler {
 		internal static string GetFullPath ()
 		{
 			return System.Reflection.Assembly.GetExecutingAssembly ().Location;
+		}
+
+		static string xcode_product_version;
+		public static string XcodeProductVersion {
+			get {
+				return xcode_product_version;
+			}
 		}
 
 		static Version xcode_version;
@@ -418,7 +438,7 @@ namespace Xamarin.Bundler {
 
 		static void LogArguments (string [] arguments)
 		{
-			if (Verbosity < 2)
+			if (Verbosity < 1)
 				return;
 			if (!arguments.Any ((v) => v.Length > 0 && v [0] == '@'))
 				return; // no need to print arguments unless we get response files
@@ -436,6 +456,147 @@ namespace Xamarin.Bundler {
 					LogArguments (File.ReadAllLines (fn), indentation + 1);
 				}
 			}
+		}
+
+		public static void Touch (IEnumerable<string> filenames, DateTime? timestamp = null)
+		{
+			if (timestamp == null)
+				timestamp = DateTime.Now;
+			foreach (var filename in filenames) {
+				try {
+					var fi = new FileInfo (filename);
+					if (!fi.Exists) {
+						using (var fo = fi.OpenWrite ()) {
+							// Create an empty file.
+						}
+					}
+					fi.LastWriteTime = timestamp.Value;
+				} catch (Exception e) {
+					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
+				}
+			}
+		}
+
+		public static void Touch (params string [] filenames)
+		{
+			Touch ((IEnumerable<string>) filenames);
+		}
+
+		static int watch_level;
+		static Stopwatch watch;
+
+		public static int WatchLevel {
+			get { return watch_level; }
+			set {
+				watch_level = value;
+				if ((watch_level > 0) && (watch == null)) {
+					watch = new Stopwatch ();
+					watch.Start ();
+				}
+			}
+		}
+
+		public static void Watch (string msg, int level)
+		{
+			if ((watch == null) || (level > WatchLevel))
+				return;
+			for (int i = 0; i < level; i++)
+				Console.Write ("!");
+			Console.WriteLine ("Timestamp {0}: {1} ms", msg, watch.ElapsedMilliseconds);
+		}
+
+		internal static PDictionary FromPList (string name)
+		{
+			if (!File.Exists (name))
+				throw ErrorHelper.CreateError (24, "Could not find required file '{0}'.", name);
+			return PDictionary.FromFile (name);
+		}
+
+		const string XcodeDefault = "/Applications/Xcode.app";
+
+		static string FindSystemXcode ()
+		{
+			var output = new StringBuilder ();
+			if (Driver.RunCommand ("xcode-select", "-p", output: output) != 0) {
+				ErrorHelper.Warning (59, "Could not find the currently selected Xcode on the system: {0}", output.ToString ());
+				return null;
+			}
+			return output.ToString ().Trim ();
+		}
+
+		static string sdk_root;
+		static string developer_directory;
+
+		public static string DeveloperDirectory {
+			get {
+				return developer_directory;
+			}
+		}
+
+		static void ValidateXcode (bool accept_any_xcode_version, bool warn_if_not_found)
+		{
+			if (sdk_root == null) {
+				sdk_root = FindSystemXcode ();
+				if (sdk_root == null) {
+					// FindSystemXcode showed a warning in this case. In particular do not use 'string.IsNullOrEmpty' here,
+					// because FindSystemXcode may return an empty string (with no warning printed) if the xcode-select command
+					// succeeds, but returns nothing.
+					sdk_root = null;
+				} else if (!Directory.Exists (sdk_root)) {
+					ErrorHelper.Warning (60, "Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.", sdk_root);
+					sdk_root = null;
+				} else {
+					if (!accept_any_xcode_version)
+						ErrorHelper.Warning (61, "No Xcode.app specified (using --sdkroot), using the system Xcode as reported by 'xcode-select --print-path': {0}", sdk_root);
+				}
+				if (sdk_root == null) {
+					sdk_root = XcodeDefault;
+					if (!Directory.Exists (sdk_root)) {
+						if (warn_if_not_found) {
+							// mmp: and now we give up, but don't throw like mtouch, because we don't want to change behavior (this sometimes worked it appears)
+							ErrorHelper.Warning (56, "Cannot find Xcode in any of our default locations. Please install Xcode, or pass a custom path using --sdkroot=<path>.");
+							return; // Can't validate the version below if we can't even find Xcode...
+						}
+
+						throw ErrorHelper.CreateError (56, "Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot <path>.");
+					}
+					ErrorHelper.Warning (62, "No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: {0}", sdk_root);
+				}
+			} else if (!Directory.Exists (sdk_root)) {
+				throw ErrorHelper.CreateError (55, "The Xcode path '{0}' does not exist.", sdk_root);
+			}
+
+			// Check what kind of path we got
+			if (File.Exists (Path.Combine (sdk_root, "Contents", "MacOS", "Xcode"))) {
+				// path to the Xcode.app
+				developer_directory = Path.Combine (sdk_root, "Contents", "Developer");
+			} else if (File.Exists (Path.Combine (sdk_root, "..", "MacOS", "Xcode"))) {
+				// path to Contents/Developer
+				developer_directory = Path.GetFullPath (Path.Combine (sdk_root, "..", "..", "Contents", "Developer"));
+			} else {
+				throw ErrorHelper.CreateError (57, "Cannot determine the path to Xcode.app from the sdk root '{0}'. Please specify the full path to the Xcode.app bundle.", sdk_root);
+			}
+			
+			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
+
+			if (File.Exists (plist_path)) {
+				var plist = FromPList (plist_path);
+				var version = plist.GetString ("CFBundleShortVersionString");
+				xcode_version = new Version (version);
+				xcode_product_version = plist.GetString ("ProductBuildVersion");
+			} else {
+				throw ErrorHelper.CreateError (58, "The Xcode.app '{0}' is invalid (the file '{1}' does not exist).", Path.GetDirectoryName (Path.GetDirectoryName (DeveloperDirectory)), plist_path);
+			}
+
+			if (!accept_any_xcode_version) {
+				if (min_xcode_version != null && XcodeVersion < min_xcode_version)
+					throw ErrorHelper.CreateError (51, "{3} {0} requires Xcode {4} or later. The current Xcode version (found in {2}) is {1}.", Constants.Version, XcodeVersion.ToString (), sdk_root, PRODUCT, min_xcode_version);
+
+				if (XcodeVersion < SdkVersions.XcodeVersion)
+					ErrorHelper.Warning (79, "The recommended Xcode version for {4} {0} is Xcode {3} or later. The current Xcode version (found in {2}) is {1}.", Constants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, PRODUCT);
+			}
+
+			Driver.Log (1, "Using Xcode {0} ({2}) found in {1}", XcodeVersion, sdk_root, XcodeProductVersion);
 		}
 	}
 }

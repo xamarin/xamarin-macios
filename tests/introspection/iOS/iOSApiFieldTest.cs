@@ -53,7 +53,10 @@ namespace Introspection {
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
-			case "CoreNFC": // Only available on device
+			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
+				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
+					return true;
+				break;
 			case "DeviceCheck": // Only available on device
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
@@ -72,13 +75,6 @@ namespace Introspection {
 			// defined in Apple PDF (online) but not in the HTML documentation
 			// but also inside CLError.h from iOS 5.1 SDK...
 			case "ErrorUserInfoAlternateRegionKey":			// kCLErrorUserInfoAlternateRegionKey
-				return true;
-
-			// documented since iOS 4.0 - but the symbols are not in the libraries (see specific unit tests)
-			case "MakerMinoltaDictionary": 				// kCGImagePropertyMakerMinoltaDictionary
-			case "MakerFujiDictionary":				// kCGImagePropertyMakerFujiDictionary
-			case "MakerOlympusDictionary":				// kCGImagePropertyMakerOlympusDictionary
-			case "MakerPentaxDictionary":				// kCGImagePropertyMakerPentaxDictionary
 				return true;
 
 			// ImageIO: documented since iOS 4.3 but null in iOS5 (works on iOS 6.1)
@@ -115,6 +111,10 @@ namespace Introspection {
 		protected override bool Skip (string constantName, string libraryName)
 		{
 			switch (libraryName) {
+			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
+				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
+					return true;
+				break;
 			case "IOSurface":
 				return Runtime.Arch == Arch.SIMULATOR && !TestRuntime.CheckXcodeVersion (9, 0);
 			}
@@ -148,7 +148,6 @@ namespace Introspection {
 			case "MTKTextureLoaderOptionTextureCPUCacheMode":
 			case "MTKModelErrorDomain":
 			case "MTKModelErrorKey":
-			case "NFCISO15693TagResponseErrorKey": // Not in simulator since no NFC on it
 				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return false;

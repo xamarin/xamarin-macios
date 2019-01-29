@@ -241,7 +241,7 @@ namespace Xamarin.MacDev.Tasks
 
 					LogWarningsAndErrors (dict, item);
 				} catch (Exception ex) {
-					Log.LogError ("Failed to load output log file for {0}: {1}", ToolName, ex.Message);
+					Log.LogError ("Failed to load {0} log file `{1}`: {2}", ToolName, manifest.ItemSpec, ex.Message);
 					if (File.Exists (manifest.ItemSpec))
 						Log.LogError ("ibtool log: {0}", File.ReadAllText (manifest.ItemSpec));
 					continue;

@@ -1,2 +1,17 @@
 # Fixed in XAMCORE_4_0
 !unknown-native-enum! MidiNetworkConnectionPolicy bound
+
+# deprecated pinvokes and not binded.
+!missing-pinvoke! MIDISetupToData is not bound
+!missing-pinvoke! MIDISetupInstall is not bound
+!missing-pinvoke! MIDISetupGetCurrent is not bound
+!missing-pinvoke! MIDISetupFromData is not bound
+!missing-pinvoke! MIDISetupDispose is not bound
+!missing-pinvoke! MIDISetupCreate is not bound
+!missing-pinvoke! MIDISetSerialPortOwner is not bound
+!missing-pinvoke! MIDIGetSerialPortOwner is not bound
+!missing-pinvoke! MIDIGetSerialPortDrivers is not bound
+
+!missing-field! kMIDIDriverPropertyUsesSerial not bound
+!missing-field! kMIDIPropertyFactoryPatchNameFile not bound
+!missing-field! kMIDIPropertyUserPatchNameFile not bound

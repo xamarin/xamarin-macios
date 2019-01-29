@@ -5,8 +5,8 @@ using NUnit.Framework;
 
 namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public partial class NetStandardTests {
-		// [Test] https://bugzilla.xamarin.com/show_bug.cgi?id=53164
+	public class NetStandardTests {
+		[Test]
 		public void ModernUsingNetStandardLib_SmokeTest ()
 		{
 			MMPTests.RunMMPTest(tmpDir => {
@@ -14,7 +14,7 @@ namespace Xamarin.MMP.Tests {
 			});
 		}
 
-		// [Test] https://bugzilla.xamarin.com/show_bug.cgi?id=53164
+		[Test]
 		public void FullUsingNetStandardLib_SmokeTest ()
 		{
 			MMPTests.RunMMPTest(tmpDir => {
@@ -31,7 +31,7 @@ namespace Xamarin.MMP.Tests {
 
 			string netStandardProject = TI.GenerateNetStandardProject (config);
 			TI.RunAndAssert("/usr/local/share/dotnet/dotnet", $"restore {netStandardProject}", "Restore");
-			TI.BuildProject(netStandardProject, true, useMSBuild: true);
+			TI.BuildProject(netStandardProject, true);
 
 			config.ItemGroup = $@"
 <ItemGroup>
@@ -49,7 +49,7 @@ namespace Xamarin.MMP.Tests {
 			config.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=dynamic</MonoBundlingExtraArgs>";
 			config.XM45 = full;
 
-			TI.TestUnifiedExecutable(config, useMSBuild: true);
+			TI.TestUnifiedExecutable(config);
 		}
 	}
 }

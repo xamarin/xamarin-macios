@@ -96,6 +96,25 @@
     <Compile Include="..\common\BundlerTool.cs">
       <Link>BundlerTool.cs</Link>
     </Compile>
+    <Compile Include="src\CodeStrippingTests.cs" />
+    <Compile Include="..\common\MachO.cs">
+      <Link>MachO.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="src\WarningTests.cs" />
+    <Compile Include="src\Unified45.cs" />
+    <Compile Include="src\System.ServiceModel\Net45.cs" />
+    <Compile Include="src\BindingProjectTests.cs" />
+    <Compile Include="src\SmokeTests.cs" />
+    <Compile Include="src\RegistrarTests.cs" />
+    <Compile Include="src\AssemblyReferencesTests.cs" />
+    <Compile Include="src\PackageReferenceTests.cs" />
+    <Compile Include="src\BindingProjectNoEmbeddingTests.cs" />
+    <Compile Include="..\..\tools\mmp\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

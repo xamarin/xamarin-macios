@@ -112,6 +112,7 @@ namespace QuickLook {
 		CGRect FrameForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, ref UIView view);
 		
 		[Export ("previewController:transitionImageForPreviewItem:contentRect:"), DelegateName ("QLTransition"), DefaultValue (null)]
+		[return: NullAllowed]
 		UIImage TransitionImageForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, CGRect contentRect);
 
 		[iOS (10,0)]
@@ -129,13 +130,19 @@ namespace QuickLook {
 	interface QLPreviewItem {
 		[Abstract]
 		[Export ("previewItemURL")]
+#if XAMCORE_4_0
+		NSUrl PreviewItemUrl { get; }
+#else
 		NSUrl ItemUrl { get; }
+#endif
 
+		[Export ("previewItemTitle")]
 #if !XAMCORE_4_0
 		[Abstract]
-#endif
-		[Export ("previewItemTitle")]
 		string ItemTitle { get; }
+#else
+		string PreviewItemTitle { get; }
+#endif
 	}
 
 	[iOS (11,0)]
@@ -155,6 +162,7 @@ namespace QuickLook {
 		void ProvideThumbnail (QLFileThumbnailRequest request, Action<QLThumbnailReply, NSError> handler);
 	}
 
+	[ThreadSafe] // Members get called inside 'QLThumbnailProvider.ProvideThumbnail' which runs on a background thread.
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -172,6 +180,7 @@ namespace QuickLook {
 		QLThumbnailReply CreateReply (NSUrl fileUrl);
 	}
 
+	[ThreadSafe]
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface QLFileThumbnailRequest {

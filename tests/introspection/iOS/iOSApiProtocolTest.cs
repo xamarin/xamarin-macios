@@ -46,6 +46,10 @@ namespace Introspection {
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
+			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
+				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
+					return true;
+				break;
 			}
 
 			switch (type.Name) {
@@ -63,6 +67,7 @@ namespace Introspection {
 				break;
 			case "MTLFence":
 			case "MTLHeap":
+			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
 				if (Runtime.Arch != Arch.DEVICE)
 					return true;
 
@@ -70,6 +75,13 @@ namespace Introspection {
 				if (!TestRuntime.CheckXcodeVersion (8, 0))
 					return true;
 				break;
+			case "CMMovementDisorderManager":
+				// From Xcode 10 beta 2:
+				// This requires a special entitlement:
+				//     Usage of CMMovementDisorderManager requires a special entitlement.  Please see for more information https://developer.apple.com/documentation/coremotion/cmmovementdisordermanager
+				// but that web page doesn't explain anything (it's mostly empty, so this is probably just lagging documentation)
+				// I also tried enabling every entitlement in Xcode, but it still didn't work.
+				return true;
 			}
 
 			return base.Skip (type);
@@ -180,10 +192,6 @@ namespace Introspection {
 				case "MSSession":
 				case "SFContentBlockerState":
 				case "SFSafariViewControllerConfiguration":
-				case "VSAccountMetadata":
-				case "VSAccountMetadataRequest":
-				// iOS 10.2
-				case "VSAccountProviderResponse":
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
@@ -214,6 +222,13 @@ namespace Introspection {
 				case "FPUIActionExtensionContext": // Conformance not in headers
 				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
+				// iOS 11.3
+				case "PKSuicaPassProperties": // Conformance not in headers
+				case "PKTransitPassProperties": // Conformance not in headers
+				case "ARReferenceImage": // Conformance removed from headers in Xcode 9.3 Beta 4
+				case "NKAssetDownload":
+				case "NKIssue":
+					return true;
 				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
 				case "HKSeriesBuilder":
 				case "HKWorkoutRouteBuilder":
@@ -221,6 +236,13 @@ namespace Introspection {
 				// Xcode 9.2 undocumented conformance (like due to new base type)
 				case "HMHomeAccessControl":
 				case "HMAccessControl":
+					return true;
+				// iOS 12
+				case "ARDirectionalLightEstimate":
+				case "ARFrame":
+				case "ARLightEstimate":
+				case "ASCredentialProviderExtensionContext":
+				case "ILClassificationUIExtensionContext": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -264,6 +286,27 @@ namespace Introspection {
 				case "CLKComplicationTemplateExtraLargeColumnsText":
 				case "CLKComplicationTemplateExtraLargeRingImage":
 				case "CLKComplicationTemplateExtraLargeRingText":
+				// watchOS 5 / Xcode 10 GM
+				case "CLKComplicationTemplateGraphicBezelCircularText":
+				case "CLKComplicationTemplateGraphicCircular":
+				case "CLKComplicationTemplateGraphicCircularClosedGaugeImage":
+				case "CLKComplicationTemplateGraphicCircularClosedGaugeText":
+				case "CLKComplicationTemplateGraphicCircularImage":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeImage":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeRangeText":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeSimpleText":
+				case "CLKComplicationTemplateGraphicCornerCircularImage":
+				case "CLKComplicationTemplateGraphicCornerGaugeImage":
+				case "CLKComplicationTemplateGraphicCornerGaugeText":
+				case "CLKComplicationTemplateGraphicCornerStackText":
+				case "CLKComplicationTemplateGraphicCornerTextImage":
+				case "CLKComplicationTemplateGraphicRectangularLargeImage":
+				case "CLKComplicationTemplateGraphicRectangularStandardBody":
+				case "CLKComplicationTemplateGraphicRectangularTextGauge":
+				case "CLKFullColorImageProvider":
+				case "CLKGaugeProvider":
+				case "CLKSimpleGaugeProvider":
+				case "CLKTimeIntervalGaugeProvider":
 					return true;
 #endif
 				}
@@ -321,10 +364,6 @@ namespace Introspection {
 				case "MSSession":
 				case "SFContentBlockerState":
 				case "SFSafariViewControllerConfiguration":
-				case "VSAccountMetadata":
-				case "VSAccountMetadataRequest":
-				// iOS 10.2
-				case "VSAccountProviderResponse":
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
@@ -363,6 +402,13 @@ namespace Introspection {
 				case "FPUIActionExtensionContext": // Conformance not in headers
 				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
+				// iOS 11.3
+				case "PKSuicaPassProperties": // Conformance not in headers
+				case "PKTransitPassProperties": // Conformance not in headers
+				case "ARReferenceImage": // Conformance removed from headers in Xcode 9.3 Beta 4
+				case "NKAssetDownload":
+				case "NKIssue":
+					return true;
 				// Header shows implementing NSSecureCoding, but supportsSecureCoding returns false.  Radar #34800025
 				case "HKSeriesBuilder":
 				case "HKWorkoutRouteBuilder":
@@ -370,6 +416,10 @@ namespace Introspection {
 				// Xcode 9.2 undocumented conformance (like due to new base type)
 				case "HMHomeAccessControl":
 				case "HMAccessControl":
+					return true;
+				// Xcode 10
+				case "ASCredentialProviderExtensionContext":
+				case "ILClassificationUIExtensionContext": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -413,6 +463,27 @@ namespace Introspection {
 				case "CLKComplicationTemplateExtraLargeColumnsText":
 				case "CLKComplicationTemplateExtraLargeRingImage":
 				case "CLKComplicationTemplateExtraLargeRingText":
+				// watchOS 5 / Xcode 10 GM
+				case "CLKComplicationTemplateGraphicBezelCircularText":
+				case "CLKComplicationTemplateGraphicCircular":
+				case "CLKComplicationTemplateGraphicCircularClosedGaugeImage":
+				case "CLKComplicationTemplateGraphicCircularClosedGaugeText":
+				case "CLKComplicationTemplateGraphicCircularImage":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeImage":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeRangeText":
+				case "CLKComplicationTemplateGraphicCircularOpenGaugeSimpleText":
+				case "CLKComplicationTemplateGraphicCornerCircularImage":
+				case "CLKComplicationTemplateGraphicCornerGaugeImage":
+				case "CLKComplicationTemplateGraphicCornerGaugeText":
+				case "CLKComplicationTemplateGraphicCornerStackText":
+				case "CLKComplicationTemplateGraphicCornerTextImage":
+				case "CLKComplicationTemplateGraphicRectangularLargeImage":
+				case "CLKComplicationTemplateGraphicRectangularStandardBody":
+				case "CLKComplicationTemplateGraphicRectangularTextGauge":
+				case "CLKFullColorImageProvider":
+				case "CLKGaugeProvider":
+				case "CLKSimpleGaugeProvider":
+				case "CLKTimeIntervalGaugeProvider":
 					return true;
 #endif
 				}
@@ -443,10 +514,6 @@ namespace Introspection {
 				case "HKDocumentSample":
 				case "HKCdaDocumentSample":
 				case "SFSafariViewControllerConfiguration":
-				case "VSAccountMetadata":
-				case "VSAccountMetadataRequest":
-				// iOS 10.2
-				case "VSAccountProviderResponse":
 					return true;
 				// iOS 11.0
 				case "UICollectionViewUpdateItem": // Conformance not in headers
@@ -461,15 +528,23 @@ namespace Introspection {
 				// iOS 11.1
 				case "ARDirectionalLightEstimate":
 					return true;
+				// iOS 11.3
+				case "PKSuicaPassProperties": // Conformance not in headers
+				case "PKTransitPassProperties": // Conformance not in headers
+				case "WKPreferences": // Conformance not in headers
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":
 					return true;
 #endif
+				// Xcode 10
+				case "ASCredentialProviderExtensionContext":
+				case "ILClassificationUIExtensionContext": // Conformance not in headers
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
 				switch (type.Name) {
-				case "UNNotificationSound":
 				// iOS 10.3
 				case "MPMusicPlayerControllerMutableQueue":
 				case "MPMusicPlayerControllerQueue":
@@ -595,7 +670,14 @@ namespace Introspection {
 				case "UIVisualEffectView":
 				case "WKWebView":
 				case "ADBannerView":
+				case "UIAlertView":
 					return !TestRuntime.CheckXcodeVersion (8, 0);
+				case "MKOverlayView":
+				case "MKCircleView":
+				case "MKOverlayPathView":
+				case "MKPolygonView":
+				case "MKPolylineView":
+					return !TestRuntime.CheckXcodeVersion (7,0);
 				}
 				break;
 
@@ -675,13 +757,19 @@ namespace Introspection {
 				case "UIAlertController":
 				case "PKPaymentButton":
 				case "PKAddPassButton":
+				case "INUIAddVoiceShortcutButton":
 					return true;
 				}
 				break;
 
 			case "UIPasteConfigurationSupporting": // types do not conform to protocol but protocol methods work on those types (base type tests in monotouch-test)
 				return true; // Skip everything because 'UIResponder' implements 'UIPasteConfigurationSupporting' and that's 130+ types
-
+			case "CAAction":
+				switch (type.Name) {
+				case "NSNull":
+					return !TestRuntime.CheckXcodeVersion (8,0);
+				}
+				break;
 #if !__WATCHOS__
 			// Undocumented conformance (members were inlinded in 'UIViewController' before so all subtypes should conform)
 			case "UIStateRestoring":

@@ -49,10 +49,10 @@ namespace InputMethodKit {
 		[Export ("bundle")]
 		NSBundle Bundle { get; }
 
-		[Mac (10, 7), Export ("paletteWillTerminate")]
+		[Export ("paletteWillTerminate")]
 		bool PaletteWillTerminate { get; }
 
-		[Mac (10, 7), Export ("lastKeyEventWasDeadKey")]
+		[Export ("lastKeyEventWasDeadKey")]
 		bool LastKeyEventWasDeadKey { get; }
 	}
 
@@ -170,7 +170,7 @@ namespace InputMethodKit {
 		[Export ("client")]
 		NSObject Client { get; }
 
-		[Mac (10, 7), Export ("inputControllerWillClose")]
+		[Export ("inputControllerWillClose")]
 		void InputControllerWillClose ();
 
 		[Export ("annotationSelected:forCandidate:")]
@@ -213,10 +213,10 @@ namespace InputMethodKit {
 		[Export ("showSublist:subListDelegate:")]
 		void ShowSublist (NSObject [] candidates, NSObject delegateObject);
 
-		[Mac (10, 7), Export ("selectedCandidateString")]
+		[Export ("selectedCandidateString")]
 		NSAttributedString SelectedCandidateString { get; }
 
-		[Mac (10, 7), Export ("candidateFrameTopLeft")]
+		[Export ("candidateFrameTopLeft")]
 		NSPoint CandidateFrameTopLeft { set; }
 
 		[Export ("candidateFrame")]
@@ -235,25 +235,25 @@ namespace InputMethodKit {
 		[Export ("dismissesAutomatically")]
 		bool DismissesAutomatically { get; set; }
 
-		[Mac (10, 7), Export ("selectedCandidate")]
+		[Export ("selectedCandidate")]
 		nint SelectedCandidate { get; }
 
-		[Mac (10, 7), Export ("showChild")]
+		[Export ("showChild")]
 		void ShowChild ();
 
-		[Mac (10, 7), Export ("hideChild")]
+		[Export ("hideChild")]
 		void HideChild ();
 
-		[Mac (10, 7), Export ("attachChild:toCandidate:type:")]
+		[Export ("attachChild:toCandidate:type:")]
 		void AttachChild (IMKCandidates child, nint candidateIdentifier, IMKStyleType theType);
 
-		[Mac (10, 7), Export ("detachChild:")]
+		[Export ("detachChild:")]
 		void DetachChild (nint candidateIdentifier);
 
-		[Mac (10, 7), Export ("candidateData")]
+		[Export ("candidateData")]
 		NSObject [] CandidateData { set; }
 
-		[Mac (10, 7), Export ("selectCandidateWithIdentifier:")]
+		[Export ("selectCandidateWithIdentifier:")]
 		bool SelectCandidateWithIdentifier (nint candidateIdentifier);
 
 		[Export ("selectCandidate:")]
@@ -262,13 +262,13 @@ namespace InputMethodKit {
 		[Export ("showCandidates")]
 		void ShowCandidates ();
 
-		[Mac (10, 7), Export ("candidateStringIdentifier:")]
+		[Export ("candidateStringIdentifier:")]
 		nint GetCandidateIdentifier (NSObject candidateString);
 
-		[Mac (10, 7), Export ("candidateIdentifierAtLineNumber:")]
+		[Export ("candidateIdentifierAtLineNumber:")]
 		nint GetCandidateIdentifier (nint lineNumber);
 
-		[Mac (10, 7), Export ("lineNumberForCandidateWithIdentifier:")]
+		[Export ("lineNumberForCandidateWithIdentifier:")]
 		nint GetLineNumberForCandidate (nint candidateIdentifier);
 
 		[Export ("clearSelection")]

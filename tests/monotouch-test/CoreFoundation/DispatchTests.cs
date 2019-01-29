@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void MainQueueDispatch ()
 		{
-#if !DEBUG
+#if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
 			if (RunningOnSnowLeopard)
@@ -123,7 +123,16 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void Default ()
 		{
-			var qname = TestRuntime.CheckiOSSystemVersion (8, 0, false) ? "com.apple.root.default-qos" : "com.apple.root.default-priority";
+			var qname = "com.apple.root.default-priority";
+#if __IOS__ 
+			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 0))
+				qname = "com.apple.root.default-qos";
+#elif __WATCHOS__ || __TVOS__
+			qname = "com.apple.root.default-qos";
+#elif __MACOS__
+			if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
+				qname = "com.apple.root.default-qos";
+#endif
 			Assert.That (DispatchQueue.DefaultGlobalQueue.Label, Is.EqualTo (qname), "Default");
 		}
 
@@ -172,19 +181,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void GetGlobalQueue_Priority ()
 		{
-			string qdefault, qlow, qhigh;
-			if (TestRuntime.CheckiOSSystemVersion (8, 0, false)) {
-				qdefault = "com.apple.root.default-qos";
-				qlow = "com.apple.root.utility-qos";
-				qhigh = "com.apple.root.user-initiated-qos";
-			} else {
-				qdefault = "com.apple.root.default-priority";
-				qlow = "com.apple.root.low-priority";
-				qhigh = "com.apple.root.high-priority";
-			}
-			Assert.That (DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Default).Label, Is.EqualTo (qdefault), "Default");
-			Assert.That (DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Low).Label, Is.EqualTo (qlow), "Low");
-			Assert.That (DispatchQueue.GetGlobalQueue (DispatchQueuePriority.High).Label, Is.EqualTo (qhigh), "High");
+			// values changes in OS versions (and even in arch) but we only want to make sure we get a valid string so the prefix is enough
+			Assert.True (DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Default).Label.StartsWith ("com.apple.root."), "Default");
+			Assert.True (DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Low).Label.StartsWith ("com.apple.root."), "Low");
+			Assert.True (DispatchQueue.GetGlobalQueue (DispatchQueuePriority.High).Label.StartsWith ("com.apple.root."), "High");
 		}
 
 		[Test]
@@ -207,7 +207,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void EverAfter ()
 		{
-#if !DEBUG
+#if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
 			if (RunningOnSnowLeopard)

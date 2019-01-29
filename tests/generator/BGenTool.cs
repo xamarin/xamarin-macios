@@ -22,6 +22,8 @@ namespace Xamarin.Tests
 
 		public List<string> ApiDefinitions = new List<string> ();
 		public List<string> Sources = new List<string> ();
+		public List<string> References = new List<string> ();
+
 		public string [] Defines;
 		public string TmpDirectory;
 		public string ResponseFile;
@@ -93,6 +95,9 @@ namespace Xamarin.Tests
 
 			foreach (var s in Sources)
 				sb.Append (" -s=").Append (StringUtils.Quote (s));
+
+			foreach (var r in References)
+				sb.Append (" -r=").Append (StringUtils.Quote (r));
 
 			if (!string.IsNullOrEmpty (TmpDirectory))
 				sb.Append (" --tmpdir=").Append (StringUtils.Quote (TmpDirectory));

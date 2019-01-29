@@ -81,6 +81,7 @@ namespace CloudKit
 		[iOS (10,0), TV (10,0), Mac (10,12)] ManagedAccountRestricted = 32,
 		[iOS (10,0), TV (10,0), Mac (10,12)] ParticipantMayNeedVerification = 33,
 		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)] ResponseLost = 34,
+		[iOS (11,3), TV (11,3), Mac (10,13), Watch (4,3)] AssetNotAvailable = 35,
 	}
 
 	// NSInteger -> CKModifyRecordsOperation.h
@@ -232,5 +233,14 @@ namespace CloudKit
 		Gigabytes,
 		TensOfGigabytes,
 		HundredsOfGigabytes,
+	}
+
+	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Native]
+	public enum CKShareParticipantRole : long {
+		Unknown = 0,
+		Owner = 1,
+		PrivateUser = 3,
+		PublicUser = 4,
 	}
 }

@@ -43,7 +43,7 @@ sdk=$(echo $sdk | tr '[:upper:]' '[:lower:]')
 case $sdk in
 mobile|xamarin.mac|xammac)
 	bmac="bmac-mobile.exe -no-mono-path"
-	mono=$ROOT_DIR/bin/bmac-mobile-mono
+	mono=/Library/Frameworks/Mono.framework/Commands/mono
 	export MONO_PATH=$ROOT_DIR/lib/mono/Xamarin.Mac
 	;;
 *)
@@ -60,7 +60,6 @@ mobile|xamarin.mac|xammac)
 			refs="-baselib:$ROOT_DIR/lib/reference/mobile/Xamarin.Mac.dll --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile"
 			bmac=bmac-mobile.exe
 			export MONO_PATH=$ROOT_DIR/lib/mono/Xamarin.Mac
-			mono="$ROOT_DIR/bin/bmac-mobile-mono"
 		fi
 	fi
 	;;

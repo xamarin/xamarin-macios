@@ -2,8 +2,8 @@ TOP=../..
 include $(TOP)/Make.config
 
 export MD_APPLE_SDK_ROOT=$(shell dirname `dirname $(XCODE_DEVELOPER_ROOT)`)
-export XBUILD_FRAMEWORK_FOLDERS_PATH=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
-export MSBuildExtensionsPath=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
+export TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
+export MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
@@ -27,45 +27,45 @@ bin/SimpleClassStatic.a: bin bin/SimpleClass.i386.a bin/SimpleClass.x86_64.a
 	$(Q) lipo -create bin/SimpleClass.i386.a bin/SimpleClass.x86_64.a -output $@
 
 bin/Mobile-dynamic/MobileBinding.dll: bin/SimpleClassDylib.dylib
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic.csproj
 
 bin/Mobile-dynamic-newstyle/MobileBinding.dll: bin/SimpleClassDylib.dylib
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic_newstyle.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic_newstyle.csproj
 
 bin/Mobile-dynamic-spaces/Mobile\ Binding.dll: bin/SimpleClass\ Dylib.dylib
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic_spaces.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic_spaces.csproj
 
 bin/Mobile-static/MobileBinding.dll: bin/SimpleClassStatic.a
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_static.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_static.csproj
 
 bin/Mobile-static-newstyle/MobileBinding.dll: bin/SimpleClassStatic.a
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_static_newstyle.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_static_newstyle.csproj
 
 
 bin/Mobile-framework/MobileBinding.dll:
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_framework.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_framework.csproj
 
 
 bin/MobileTest-static/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-static/MobileBinding.dll
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_static.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_static.csproj
 
 bin/MobileTest-static-newstyle/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-static-newstyle/MobileBinding.dll
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_static_newstyle.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_static_newstyle.csproj
 
 bin/MobileTest-withLinker/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-static/MobileBinding.dll
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_WithLinker.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_WithLinker.csproj
 
 bin/MobileTest-dynamic/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-dynamic/MobileBinding.dll
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic.csproj
 
 bin/MobileTest-dynamic-newstyle/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-dynamic-newstyle/MobileBinding.dll
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic_newstyle.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic_newstyle.csproj
 
 bin/MobileTest-dynamic-spaces/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-dynamic-spaces/Mobile\ Binding.dll
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic_spaces.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic_spaces.csproj
 
 bin/MobileTest-framework/MobileTestApp.app/Contents/MacOS/MobileTestApp: bin/Mobile-framework/MobileBinding.dll
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_framework.csproj
+	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_framework.csproj
 
 
 

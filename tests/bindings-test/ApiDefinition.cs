@@ -1,7 +1,4 @@
 using System;
-#if !__WATCHOS__
-using System.Drawing;
-#endif
 
 #if __UNIFIED__
 using ObjCRuntime;
@@ -12,6 +9,9 @@ using AppKit;
 using UIKit;
 #endif
 #else
+#if !__WATCHOS__
+using System.Drawing;
+#endif
 using MonoTouch.ObjCRuntime;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -214,6 +214,23 @@ namespace Bindings.Test {
 		void OutNSErrorOnStack (NSObject i1, NSObject i2, NSObject i3, long i4, int i5, out NSError error);
 	}
 
+	[Protocol]
+	interface ProtocolAssignerProtocol
+	{
+	}
+
+	interface IProtocolAssignerProtocol { }
+
+	[BaseType (typeof (NSObject))]
+	interface ProtocolAssigner
+	{
+		[Export ("setProtocol")]
+		void SetProtocol ();
+
+		[Export ("completedSetProtocol:")]
+		void CompletedSetProtocol (IProtocolAssignerProtocol value);
+	}
+
 	[BaseType (typeof (NSObject))]
 	interface ObjCExceptionTest {
 		[Export ("throwObjCException")]
@@ -253,6 +270,141 @@ namespace Bindings.Test {
 		[Export ("idAsIntPtr:")]
 		void IdAsIntPtr (IntPtr p1);
 	}
+
+	[Protocol]
+	interface ObjCProtocolBlockTest
+	{
+		[Abstract]
+		[Export ("requiredCallback:")]
+		void RequiredCallback (Action<int> completionHandler);
+
+		[Abstract]
+		[Static]
+		[Export ("requiredStaticCallback:")]
+		void RequiredStaticCallback (Action<int> completionHandler);
+
+		[Export ("optionalCallback:")]
+		void OptionalCallback (Action<int> completionHandler);
+
+		[Static]
+		[Export ("optionalStaticCallback:")]
+		void OptionalStaticCallback (Action<int> completionHandler);
+
+		[Abstract]
+		[Export ("requiredReturnValue")]
+		Action<int> RequiredReturnValue ();
+
+		[Abstract]
+		[Static]
+		[Export ("requiredStaticReturnValue")]
+		Action<int> RequiredStaticReturnValue ();
+
+		[Export ("optionalReturnValue")]
+		Action<int> OptionalReturnValue ();
+
+		[Static]
+		[Export ("optionalStaticReturnValue")]
+		Action<int> OptionalStaticReturnValue ();
+	}
+
+	interface IObjCProtocolBlockTest { }
+
+	[BaseType (typeof (NSObject))]
+	interface ObjCBlockTester
+	{
+		[Export ("TestObject", ArgumentSemantic.Retain)]
+		IObjCProtocolBlockTest TestObject { get; set; }
+
+		[Static]
+		[Export ("TestClass")]
+		Class TestClass { get; set; }
+
+		[Export ("classCallback:")]
+		void ClassCallback (Action<int> completionHandler);
+
+		[Export ("callClassCallback")]
+		void CallClassCallback ();
+
+		[Export ("callRequiredCallback")]
+		void CallRequiredCallback ();
+
+		[Static]
+		[Export ("callRequiredStaticCallback")]
+		void CallRequiredStaticCallback ();
+
+		[Export ("callOptionalCallback")]
+		void CallOptionalCallback ();
+
+		[Static]
+		[Export ("callOptionalStaticCallback")]
+		void CallOptionalStaticCallback ();
+
+		[Static]
+		[Export ("callAssertMainThreadBlockRelease:")]
+		void CallAssertMainThreadBlockRelease (OuterBlock completionHandler);
+
+		[Export ("assertMainThreadBlockReleaseCallback:")]
+		void AssertMainThreadBlockReleaseCallback (InnerBlock completionHandler);
+
+		[Export ("callAssertMainThreadBlockReleaseCallback")]
+		void CallAssertMainThreadBlockReleaseCallback ();
+
+		[Export ("testFreedBlocks")]
+		void TestFreedBlocks ();
+
+		[Static]
+		[Export ("freedBlockCount")]
+		int FreedBlockCount { get; }
+
+		[Static]
+		[Export ("calledBlockCount")]
+		int CalledBlockCount { get; }
+
+		[Static]
+		[Export ("callProtocolWithBlockProperties:required:instance:")]
+		void CallProtocolWithBlockProperties (IProtocolWithBlockProperties obj, bool required, bool instance);
+
+		[Static]
+		[Export ("callProtocolWithBlockReturnValue:required:instance:")]
+		void CallProtocolWithBlockReturnValue (IObjCProtocolBlockTest obj, bool required, bool instance);
+
+		[Static]
+		[Export ("setProtocolWithBlockProperties:required:instance:")]
+		void SetProtocolWithBlockProperties (IProtocolWithBlockProperties obj, bool required, bool instance);
+
+	}
+
+	delegate void InnerBlock (int magic_number);
+	delegate void OuterBlock ([BlockCallback] InnerBlock callback);
+
+	[BaseType (typeof (NSObject))]
+	interface EvilDeallocator
+	{
+		[Export ("evilCallback")]
+		Action<int> EvilCallback { get; set; }
+	}
+
+	delegate void SimpleCallback ();
+	[BaseType (typeof (NSObject))]
+	[Protocol]
+	interface ProtocolWithBlockProperties {
+		[Abstract]
+		[Export ("myRequiredProperty")]
+		SimpleCallback MyRequiredProperty { get; set; }
+
+		[Export ("myOptionalProperty")]
+		SimpleCallback MyOptionalProperty { get; set; }
+
+		[Static]
+		[Abstract]
+		[Export ("myRequiredStaticProperty")]
+		SimpleCallback MyRequiredStaticProperty { get; set; }
+
+		[Static]
+		[Export ("myOptionalStaticProperty")]
+		SimpleCallback MyOptionalStaticProperty { get; set; }
+	}
+	interface IProtocolWithBlockProperties { }
 }
 
 

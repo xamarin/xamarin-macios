@@ -109,14 +109,14 @@ namespace SceneKit {
 	interface MTLRenderPassDescriptor {}
 #endif
 
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	delegate void SCNSceneSourceStatusHandler (float /* float, not CGFloat */ totalProgress, SCNSceneSourceStatus status, NSError error, ref bool stopLoading);
 
 	delegate void SCNAnimationDidStartHandler (SCNAnimation animation, SCNAnimatable receiver);
 	delegate void SCNAnimationDidStopHandler (SCNAnimation animation, SCNAnimatable receiver, bool completed);
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
 	interface SCNAnimatable {
@@ -319,7 +319,7 @@ namespace SceneKit {
 		
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
 	interface SCNBoundingVolume {
@@ -342,7 +342,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNBox {
 		[Export ("width")]
@@ -374,7 +374,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNCamera : SCNAnimatable, SCNTechniqueSupport, NSCopying, NSSecureCoding {
 		[NullAllowed] // by default this property is null
@@ -731,7 +731,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNCapsule {
 		[Export ("capRadius")]
@@ -754,7 +754,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNCone {
 		[Export ("topRadius")]
@@ -777,7 +777,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNCylinder {
 		[Export ("radius")]
@@ -797,7 +797,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNFloor {
 		[Export ("reflectivity")]
@@ -830,7 +830,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] 
 	interface SCNGeometry : SCNAnimatable, SCNBoundingVolume, SCNShadable, NSCopying, NSSecureCoding {
@@ -911,14 +911,15 @@ namespace SceneKit {
 		[Export ("geometryWithMDLMesh:")]
 		SCNGeometry FromMesh (MDLMesh mesh);
 
-		[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[NoWatch, Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[TV (12,0)]
 		[NullAllowed, Export ("tessellator", ArgumentSemantic.Retain)]
 		SCNGeometryTessellator Tessellator { get; set; }
 #endif
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNGeometrySource : NSSecureCoding {
 		[Export ("data")]
@@ -971,7 +972,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Static]
 	interface SCNGeometrySourceSemantic {
 		[Field ("SCNGeometrySourceSemanticVertex")]
@@ -1008,7 +1009,7 @@ namespace SceneKit {
 	}
 	
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNGeometryElement : NSSecureCoding {
 		[Export ("data")]
@@ -1053,7 +1054,8 @@ namespace SceneKit {
 	}
 
 #if XAMCORE_2_0 && !WATCH
-	[NoWatch, NoTV, Mac (10, 13, onlyOn64: true), iOS (11,0)]
+	[NoWatch, Mac (10, 13, onlyOn64: true), iOS (11,0)]
+	[TV (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SCNGeometryTessellator : NSCopying, NSSecureCoding
@@ -1085,7 +1087,7 @@ namespace SceneKit {
 #endif
 	
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Static]
 	interface SCNHitTest {
 		[Field ("SCNHitTestFirstFoundOnlyKey")]
@@ -1123,13 +1125,20 @@ namespace SceneKit {
 		[Field ("SCNHitTestOptionCategoryBitMask")]
 		NSString OptionCategoryBitMaskKey { get; }
 
+#if !XAMCORE_4_0
 		[Watch (4, 0), TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+		[Obsolete ("Use 'SearchModeKey' instead.")]
 		[Field ("SCNHitTestOptionSearchMode")]
 		NSString OptionSearchModeKey { get; }
+#endif
+
+		[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Field ("SCNHitTestOptionSearchMode")]
+		NSString SearchModeKey { get; }
 	}
 	
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	// quote: The SCNHitTestResult class is exposed as the return object from the hitTest:options: method, as an array of SCNHitTestResult objects.
 	[DisableDefaultCtor] // crash when calling description
@@ -1167,7 +1176,7 @@ namespace SceneKit {
 	}
 
 #if MONOMAC
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (CAOpenGLLayer))]
 	interface SCNLayer : SCNSceneRenderer, SCNTechniqueSupport {
 //		We already pull in the Scene property from the SCNSceneRenderer protocol, no need to redefine it here.
@@ -1177,7 +1186,7 @@ namespace SceneKit {
 #endif
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNLight : SCNAnimatable, SCNTechniqueSupport, NSCopying, NSSecureCoding {
 		[Export ("type", ArgumentSemantic.Copy)]
@@ -1334,7 +1343,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Static]
 	interface SCNLightType {
 		[Field ("SCNLightTypeAmbient")]
@@ -1359,7 +1368,7 @@ namespace SceneKit {
 	}
 
 #if MONOMAC
-	[Availability (Introduced = Platform.Mac_10_8, Deprecated = Platform.Mac_10_10)]
+	[Availability (Deprecated = Platform.Mac_10_10)]
 	[Static]
 	interface SCNLightAttribute {
 		[Field ("SCNLightAttenuationStartKey")]
@@ -1386,7 +1395,7 @@ namespace SceneKit {
 #endif
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Static]
 	interface SCNLightingModel {
 		[Field ("SCNLightingModelPhong")]
@@ -1407,7 +1416,7 @@ namespace SceneKit {
 	}
 	
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNMaterial : SCNAnimatable, SCNShadable, NSCopying, NSSecureCoding {
 		[NullAllowed] // by default this property is null
@@ -1519,7 +1528,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // runtime -> [SCNKit ERROR] Do not instantiate SCNMaterialProperty objects directly
 	interface SCNMaterialProperty : SCNAnimatable, NSSecureCoding {
@@ -1615,7 +1624,7 @@ namespace SceneKit {
 		bool IgnoreChildNodes { get; set; }
 		bool IgnoreHiddenNodes { get; set; }
 		SCNNode RootNode { get; set; }
-		SCNHitTestSearchMode OptionSearchMode { get; }
+		SCNHitTestSearchMode SearchMode { get; set; }
 	}
 
 	[Watch (3,0)]
@@ -1647,14 +1656,14 @@ namespace SceneKit {
 		NSString _AnimationImportPolicyKey { get; set; }
 	}
 
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	delegate bool SCNNodePredicate (SCNNode node, out bool stop);
 
-	[Mac (10, 8), iOS (8, 0)]
+	[iOS (8, 0)]
 	delegate void SCNNodeHandler (SCNNode node, out bool stop);
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNNode : SCNAnimatable, SCNBoundingVolume, SCNActionable, NSCopying, NSSecureCoding 
 #if IOS || TVOS
@@ -1707,7 +1716,8 @@ namespace SceneKit {
 		SCNCamera Camera { get; set;  }
 
 		[Export ("geometry", ArgumentSemantic.Retain)]
-		SCNGeometry Geometry { get; [NullAllowed] set;  }
+		[NullAllowed]
+		SCNGeometry Geometry { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("name", ArgumentSemantic.Copy)]
@@ -1773,7 +1783,8 @@ namespace SceneKit {
 
 		[Mac (10,9)]
 		[Export ("constraints", ArgumentSemantic.Copy)]
-		SCNConstraint [] Constraints { get; [NullAllowed] set; }
+		[NullAllowed]
+		SCNConstraint [] Constraints { get; set; }
 
 		[NoWatch, Mac (10, 9)]
 		[NullAllowed] // by default this property is null
@@ -1961,7 +1972,7 @@ namespace SceneKit {
 		// We took the decision to comment the following helpers since they currently do not bring
 		// any benefits over the SCN* versions, actually the SIMD types could potentially be just
 		// a little slower than the SCN* versions due to manual native conversion. If you really
-		// need them please file a bug at https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS
+		// need them please file a bug at https://github.com/xamarin/xamarin-macios/issues/new
 
 		// Please add the following code to runtime/bindings-generator.cs if you reenable the following SIMD methods.
 
@@ -2214,7 +2225,7 @@ namespace SceneKit {
 	}
 
 	[NoWatch]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface SCNNodeRendererDelegate {
@@ -2223,7 +2234,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNPlane {
 		[Export ("width")]
@@ -2252,7 +2263,7 @@ namespace SceneKit {
 
 	delegate void SCNBufferBindingHandler (ISCNBufferStream buffer, SCNNode node, SCNShadable shadable, SCNRenderer renderer);
 
-	[Mac (10,8), iOS (8,0), NoWatch]
+	[iOS (8,0), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface SCNProgram : NSCopying, NSSecureCoding {
 		[NullAllowed]
@@ -2322,7 +2333,7 @@ namespace SceneKit {
 #endif
 	}
 
-	[Mac (10,8), iOS (8,0), NoWatch]
+	[iOS (8,0), NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface SCNProgramDelegate {
@@ -2357,7 +2368,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNPyramid {
 		[Export ("width")]
@@ -2382,7 +2393,7 @@ namespace SceneKit {
 		SCNPyramid Create (nfloat width, nfloat height, nfloat length);
 	}
 
-	[Mac (10,8), iOS (8,0), NoWatch]
+	[iOS (8,0), NoWatch]
 	[BaseType (typeof (NSObject))]
 #if !MONOMAC || XAMCORE_2_0
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[SCNRenderer init]: unrecognized selector sent to instance 0x7ce85a30
@@ -2448,7 +2459,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Static]
 	interface SCNRenderingArguments {
 		[Field ("SCNModelTransform")]
@@ -2474,7 +2485,7 @@ namespace SceneKit {
 	delegate void SCNSceneExportProgressHandler (float /* float, not CGFloat */ totalProgress, NSError error, out bool stop);
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNScene :
 #if (XAMCORE_2_0 || !MONOMAC) && !WATCH
@@ -2624,7 +2635,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCNSceneSource {
@@ -2698,7 +2709,7 @@ namespace SceneKit {
 	delegate bool SCNSceneSourceFilter (NSObject entry, NSString identifier, ref bool stop);
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Static]
 	interface SCNSceneSourceLoading {
 		[Field ("SCNSceneSourceAssetDirectoryURLsKey")]
@@ -2776,7 +2787,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Static]
 	interface SCNSceneSourceLoadErrors {
 		[Field ("SCNConsistencyElementIDErrorKey")]
@@ -2793,7 +2804,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Static]
 	interface SCNSceneSourceProperties {
 		[Field ("SCNSceneSourceAssetContributorsKey")]
@@ -2827,14 +2838,14 @@ namespace SceneKit {
 	interface ISCNSceneRenderer {}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SCNSceneRenderer {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
-		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakSceneRendererDelegate { get; set;  }
 
 		[Wrap ("WeakSceneRendererDelegate")]
@@ -3069,7 +3080,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SCNSceneRendererDelegate {
@@ -3099,7 +3110,7 @@ namespace SceneKit {
 	}	
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	[DisableDefaultCtor] 
 	interface SCNSphere {
@@ -3118,7 +3129,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	[DisableDefaultCtor] 
 	interface SCNText {
@@ -3171,7 +3182,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	[DisableDefaultCtor] 
 	interface SCNTorus {
@@ -3192,7 +3203,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNTransaction {
 		[Static]
@@ -3243,7 +3254,7 @@ namespace SceneKit {
 	}
 
 	[Watch (3,0)]
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNTube {
 		[Export ("innerRadius")]
@@ -3287,8 +3298,6 @@ namespace SceneKit {
 	[StrongDictionary ("SCNRenderingOptionsKeys")]
 	interface SCNRenderingOptions
 	{
-		[Internal, Export ("SCNRenderingOptionsKeys.RenderingApiKey")]
-		NSString _RenderingApiKey { get; set; }
 
 #if XAMCORE_2_0 || !MONOMAC
 		IMTLDevice Device { get; set; }
@@ -3298,7 +3307,7 @@ namespace SceneKit {
 	}
 #endif
 
-	[Mac (10,8), iOS (8,0), NoWatch]
+	[iOS (8,0), NoWatch]
 	[BaseType (typeof (NSView))]
 	[DisableDefaultCtor] 
 	interface SCNView : SCNSceneRenderer, SCNTechniqueSupport {
@@ -3707,7 +3716,11 @@ namespace SceneKit {
 		SCNActionTimingMode TimingMode { get; set; }
 
 		[NullAllowed, Export ("timingFunction", ArgumentSemantic.Assign)]
-		Action<float> TimingFunction { get; set; }
+#if XAMCORE_4_0
+		Func<float,float> TimingFunction { get; set; }
+#else
+		Func<float,float> TimingFunction2 { get; set; }
+#endif
 
 		[Export ("speed")]
 		nfloat Speed { get; set; }
@@ -3803,7 +3816,7 @@ namespace SceneKit {
 		SCNAction PlayAudioSource (SCNAudioSource source, bool wait);
 	}
 
-	[Mac (10,8), iOS (8,0)]
+	[iOS (8,0)]
 	delegate void SCNBindingHandler (uint /* unsigned int */ programId, uint /* unsigned int */ location, SCNNode renderedNode, SCNRenderer renderer);
 
 	[Watch (3,0)]
@@ -3886,7 +3899,8 @@ namespace SceneKit {
 		[Abstract]
 		[Mac (10,10), iOS (8,0)]
 		[Export ("technique", ArgumentSemantic.Copy)]
-		SCNTechnique Technique { get; [NullAllowed] set; }
+		[NullAllowed]
+		SCNTechnique Technique { get; set; }
 	}
 
 	[Watch (3,0)]
@@ -4019,6 +4033,25 @@ namespace SceneKit {
 		[Export ("affectedByGravity")]
 		bool AffectedByGravity { [Bind ("isAffectedByGravity")] get; set; }
 		
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("setResting:")]
+		void SetResting (bool resting);
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("continuousCollisionDetectionThreshold")]
+		nfloat ContinuousCollisionDetectionThreshold { get; set; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("centerOfMassOffset", ArgumentSemantic.Assign)]
+		SCNVector3 CenterOfMassOffset { get; set; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("linearRestingThreshold")]
+		nfloat LinearRestingThreshold { get; set; }
+
+		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("angularRestingThreshold")]
+		nfloat AngularRestingThreshold { get; set; }
 	}
 
 	[Mac (10,10), iOS (8,0)]
@@ -4123,7 +4156,7 @@ namespace SceneKit {
 		[Export ("timeStep")]
 		double TimeStep { get; set; }
 
-		[Export ("contactDelegate", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("contactDelegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
 		NSObject WeakContactDelegate { get; set; }
 

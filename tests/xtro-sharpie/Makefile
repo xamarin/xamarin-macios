@@ -16,7 +16,7 @@ clean-local::
 
 bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe build:
 	$(Q) nuget restore xtro-sharpie.sln
-	$(Q_BUILD) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) xtro-sharpie.sln
+	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln
 
 XIOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll
 XIOS_GL ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
@@ -84,20 +84,39 @@ report: build
 report-short:
 	JENKINS_SERVER_COOKIE=1 make report
 
+classify-ios:
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
+
+classify-tvos:
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
+
+classify-watchos:
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
+
+classify-macos:
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XMAC_PCH) $(XMAC)
+
 classify: build $(XIOS_PCH) $(XWATCHOS_PCH) $(XTVOS_PCH) $(XMAC_PCH)
 	rm -f *.unclassified
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
-	$(MONO) bin/Debug/xtro-sharpie.exe $(XMAC_PCH) $(XMAC)
+	$(MAKE) -j4 classify-ios classify-tvos classify-watchos classify-macos
 	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe .
 	rm -f *.raw
 
 insane:
 	XTRO_SANITY_SKIP=1 make all
 
+remove-empty:
+	find . -size 0 | xargs git rm
+
 all: classify report
 
 .stamp-check-sharpie:
 	@$(TOP)/system-dependencies.sh --ignore-all --enforce-sharpie
 	@touch $@
+	
+remove-empty-files:
+	find . -empty -exec git rm -f {} \;
+
+unclassified2todo:
+	$(SYSTEM_CSC) Filter.cs u2todo/u2todo.cs
+	$(MONO) u2todo.exe

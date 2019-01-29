@@ -33,10 +33,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Microsoft.Build.Engine" />
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Tasks.v4.0" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Microsoft.Build.Framework" HintPath="$(MSBuildBinPath)\Microsoft.Build.Framework.dll" />
+    <Reference Include="Microsoft.Build.Tasks.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Tasks.Core.dll" />
+    <Reference Include="Microsoft.Build.Utilities.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Utilities.Core.dll" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="Mono.Posix" />
@@ -54,6 +53,7 @@
     <!-- Mono has a different implementation of the Move task, so when building on a Mac we need to include XBuildMoveTaskBase.cs -->
     <Compile Include="MsBuildTasks\MoveTaskBase.cs" Condition="'$(OS)' == 'Windows_NT'" />
     <Compile Include="MsBuildTasks\XBuildMoveTaskBase.cs" Condition="'$(OS)' != 'Windows_NT'" />
+    <Compile Include="PlatformUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MsBuildTasks\CopyBase.cs" />
@@ -67,6 +67,7 @@
     <Compile Include="Tasks\ArchiveTaskBase.cs" />
     <Compile Include="Tasks\ArToolTaskBase.cs" />
     <Compile Include="Tasks\BTouchTaskBase.cs" />
+    <Compile Include="Tasks\CreateBindingResourcePackageBase.cs" />
     <Compile Include="Tasks\CodesignTaskBase.cs" />
     <Compile Include="Tasks\CodesignVerifyTaskBase.cs" />
     <Compile Include="Tasks\CollectBundleResourcesTaskBase.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="PlatformFramework.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="StringParserService.cs" />
+    <Compile Include="../../tools/common/FileCopier.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -127,7 +127,7 @@ public class ListSourceFiles {
 			{ "xamarin-path=", "The path of the xamarin source.", v => xamarinpath = v },
 			{ "install-dir=", "The directory to install into. The files will be put into a src subdirectory of this directory.", v => installDir = v },
 			{ "destination-dir=", "The path to the directory used for the -pathmap at build time.", v => destinationDir = v},
-			{ "v|erbose", "Enable verbose output", v => verbose = true },
+			{ "v|verbose", "Enable verbose output", v => verbose = true },
 		};
 
 		var paths = os.Parse (arguments);
@@ -156,13 +156,18 @@ public class ListSourceFiles {
 				continue;
 			}
 
-			var assemblySrcs = GetFilePathsFromPdb(pdbFile);
-			if (verbose) {
-				Console.WriteLine("Pdb file sources are:");
-				foreach (var p in srcs)
-					Console.WriteLine($"\t{p}");
+			try {
+				var assemblySrcs = GetFilePathsFromPdb(pdbFile);
+				if (verbose) {
+					Console.WriteLine("Pdb file sources are:");
+					foreach (var p in srcs)
+						Console.WriteLine($"\t{p}");
+				}
+				srcs.UnionWith(assemblySrcs);
+			} catch (Exception) {
+				Console.WriteLine ("Error processing: {0}", pdbFile);
+				throw;
 			}
-			srcs.UnionWith(assemblySrcs);
 		}
 
 		// add the paths from the mdb files
@@ -171,13 +176,18 @@ public class ListSourceFiles {
 				Console.WriteLine ("File does not exist: {0}", mdbFile);
 				continue;
 			}
-			var assemblySrcs = GetFilePathsFromMdb (mdbFile);
-			if (verbose) {
-				Console.WriteLine("Mdb file sources are:");
-				foreach (var p in srcs)
-					Console.WriteLine($"\t{p}");
+			try {
+				var assemblySrcs = GetFilePathsFromMdb (mdbFile);
+				if (verbose) {
+					Console.WriteLine("Mdb file sources are:");
+					foreach (var p in srcs)
+						Console.WriteLine($"\t{p}");
+				}
+				srcs.UnionWith (assemblySrcs);
+			} catch (Exception) {
+				Console.WriteLine ("Error processing: {0}", mdbFile);
+				throw;
 			}
-			srcs.UnionWith (assemblySrcs);
 		}
 
 		if (verbose) {
@@ -213,7 +223,8 @@ public class ListSourceFiles {
 			var targetDir = Path.GetDirectoryName (target);
 
 			if (String.IsNullOrEmpty (targetDir)) {
-				Console.WriteLine ($"Got empty dir for {target}");
+				if (verbose)
+					Console.WriteLine ($"Got empty dir for {target}");
 				continue;
 			}
 			

@@ -26,10 +26,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool AllowUnsafeBlocks { get; set; }
 
-		public string CompilerPath { get; set; }
-
-		public bool NoStdLib { get; set; }
-
 		[Required]
 		public string BaseLibDll { get; set; }
 
@@ -93,19 +89,13 @@ namespace Xamarin.MacDev.Tasks {
 			cmd.AppendSwitch ("/v");
 			#endif
 
-			if (NoStdLib)
-				cmd.AppendSwitch ("/nostdlib");
-			cmd.AppendSwitchIfNotNull ("/compiler:", CompilerPath);
+			cmd.AppendSwitch ("/nostdlib");
 			cmd.AppendSwitchIfNotNull ("/baselib:", BaseLibDll);
 			cmd.AppendSwitchIfNotNull ("/out:", OutputAssembly);
 
-			if (NoStdLib) {
-				string dir;
-				if (!string.IsNullOrEmpty (BaseLibDll))
-					dir = Path.GetDirectoryName (BaseLibDll);
-				else
-					dir = null;
-
+			string dir;
+			if (!string.IsNullOrEmpty (BaseLibDll)) {
+				dir = Path.GetDirectoryName (BaseLibDll);
 				cmd.AppendSwitchIfNotNull ("/lib:", dir);
 				cmd.AppendSwitchIfNotNull ("/r:", Path.Combine (dir, "mscorlib.dll"));
 			}
@@ -212,15 +202,20 @@ namespace Xamarin.MacDev.Tasks {
 					{ "projectdir",   projectDir },
 					// Apparently msbuild doesn't propagate the solution path, so we can't get it.
 					// { "solutiondir",  proj.ParentSolution != null ? proj.ParentSolution.BaseDirectory : proj.BaseDirectory },
-					{ "targetpath",   Path.Combine (Path.GetDirectoryName (target), Path.GetFileName (target)) },
-					{ "targetdir",    Path.GetDirectoryName (target) },
-					{ "targetname",   Path.GetFileName (target) },
-					{ "targetext",    Path.GetExtension (target) },
 				};
+				// OutputAssembly is optional so it can be null
+				if (target != null) {
+					var d = Path.GetDirectoryName (target);
+					var n = Path.GetFileName (target);
+					customTags.Add ("targetpath", Path.Combine (d, n));
+					customTags.Add ("targetdir", d);
+					customTags.Add ("targetname", n);
+					customTags.Add ("targetext", Path.GetExtension (target));
+				}
 
 				for (int i = 0; i < extraArgs.Length; i++) {
 					var argument = extraArgs[i];
-
+					cmd.AppendTextUnquoted (" ");
 					cmd.AppendTextUnquoted (StringParserService.Parse (argument, customTags));
 				}
 			}

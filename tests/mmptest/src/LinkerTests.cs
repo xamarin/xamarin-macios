@@ -9,7 +9,8 @@ using System.Reflection;
 
 namespace Xamarin.MMP.Tests
 {
-	public partial class MMPTests
+	[TestFixture]
+	public class LinkerTests
 	{
 		int GetNumberOfTypesInLibrary (string path)
 		{
@@ -32,7 +33,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void ModernLinkingSDK_WithAllNonProductSkipped_BuildsWithSameNumberOfTypes ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				string[] dependencies = { "mscorlib", "System.Core", "System" };
 				string config = "<LinkMode>SdkOnly</LinkMode><MonoBundlingExtraArgs>--linkskip=" + dependencies.Aggregate ((arg1, arg2) => arg1 + " --linkskip=" + arg2) + "</MonoBundlingExtraArgs>";
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = config };
@@ -48,7 +49,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void FullLinkingSdk_BuildsWithFewerPlatformTypesOnly ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				string[] nonPlatformDependencies = { "mscorlib", "System.Core", "System" };
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = PlatformProjectConfig, XM45 = true };
 				TI.TestUnifiedExecutable (test);
@@ -68,7 +69,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void PlatformSDKOnClassic_ShouldNotBeSupported ()
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.TestClassicExecutable (tmpDir, csprojConfig: "<MonoBundlingExtraArgs>--linkplatform</MonoBundlingExtraArgs>\n", includeMonoRuntime:true, shouldFail: true);
 			});
 		}
@@ -80,24 +81,28 @@ namespace Xamarin.MMP.Tests
 		[TestCase ("default")]
 		public void DynamicSymbolMode (string mode)
 		{
-			RunMMPTest (tmpDir => {
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig config = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = $"<MonoBundlingExtraArgs>--dynamic-symbol-mode={mode}</MonoBundlingExtraArgs>\n", 
 				};
 				var output = TI.TestUnifiedExecutable (config);
+				string build_output;
 				switch (mode) {
 				case "linker":
 				case "default":
-					Assert.That (output.BuildOutput, Does.Contain ("-u "), "reference.m");
-					Assert.That (output.BuildOutput, Does.Not.Contain ("reference.m"), "reference.m");
+                    build_output = output.BuildOutput;
+					Assert.That (build_output, Does.Contain ("-u "), "reference.m");
+					Assert.That (build_output, Does.Not.Contain ("reference.m"), "reference.m");
 					break;
 				case "code":
-					Assert.That (output.BuildOutput, Does.Not.Contain ("-u "), "reference.m");
-					Assert.That (output.BuildOutput, Does.Contain ("reference.m"), "reference.m");
+					build_output = output.BuildOutput.Replace ("-u _SystemNative_RealPath", String.Empty);
+					Assert.That (build_output, Does.Not.Contain ("-u "), "reference.m");
+					Assert.That (build_output, Does.Contain ("reference.m"), "reference.m");
 					break;
 				case "ignore":
-					Assert.That (output.BuildOutput, Does.Not.Contain ("-u "), "reference.m");
-					Assert.That (output.BuildOutput, Does.Not.Contain ("reference.m"), "reference.m");
+					build_output = output.BuildOutput.Replace ("-u _SystemNative_RealPath", String.Empty);
+					Assert.That (build_output, Does.Not.Contain ("-u "), "reference.m");
+					Assert.That (build_output, Does.Not.Contain ("reference.m"), "reference.m");
 					break;
 				default:
 					throw new NotImplementedException ();
@@ -111,7 +116,7 @@ namespace Xamarin.MMP.Tests
 		[TestCase ("sdkonly", true)]
 		public void Linking_ShouldHandleMixedModeAssemblies (string linker, bool builds_successfully)
 		{
-			RunMMPTest(tmpDir => {
+			MMPTests.RunMMPTest(tmpDir => {
 				string libraryPath = Path.Combine (TI.FindSourceDirectory (), "../MixedClassLibrary.dll");
 
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
@@ -122,6 +127,26 @@ namespace Xamarin.MMP.Tests
 
 				var buildOutput = TI.TestUnifiedExecutable (test, shouldFail: builds_successfully).BuildOutput;
 				Assert.True (buildOutput.Contains ("2014") == builds_successfully, $"Building with {linker} did not give 2014 status {builds_successfully} as expected.\n\n{buildOutput}");
+			});
+		}
+
+		[Test]
+		public void LinkingAdditionalArguments_ShouldBeUsed ()
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>-v -v --linkplatform</MonoBundlingExtraArgs>" };
+				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.IsTrue (buildOutput.Contains ("Selected Linking: 'Platform'"), $"Build Output did not contain expected selected linking line: {buildOutput}");
+			});
+		}
+
+		[Test]
+		public void LinkingWithPartialStatic_ShouldFail ()
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar:partial --linkplatform</MonoBundlingExtraArgs>" };
+				string buildOutput = TI.TestUnifiedExecutable (test, shouldFail: true).BuildOutput;
+				Assert.True (buildOutput.Contains ("2110"), $"Building did not give the expected 2110 error.\n\n{buildOutput}");
 			});
 		}
 	}

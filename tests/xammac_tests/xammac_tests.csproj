@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0</DefineConstants>
+    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -38,7 +38,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
-    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0</DefineConstants>
+    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -60,8 +60,12 @@
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="OpenTK" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\common\Configuration.cs">
+      <Link>Configuration.cs</Link>
+    </Compile>
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
@@ -80,11 +84,9 @@
     <Compile Include="..\EmbeddedResources\ResourcesTest.cs">
       <Link>EmbeddedResources\ResourcesTest.cs</Link>
     </Compile>
-    <Compile Include="System.ServiceModel\Net45.cs" />
     <Compile Include="..\common\mac\ProjectTestHelpers.cs">
       <Link>ProjectTestHelpers.cs</Link>
     </Compile>
-    <Compile Include="Unified45.cs" />
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
@@ -142,6 +144,21 @@
     <Content Include="..\monotouch-test\AudioToolbox\1.caf">
       <Link>AudioToolbox\1.caf</Link>
     </Content>
+    <Content Include="..\monotouch-test\uncompressed.txt">
+      <Link>uncompressed.txt</Link>
+    </Content>
+    <Content Include="..\monotouch-test\compressed_lze">
+      <Link>compressed_lze</Link>
+    </Content>
+    <Content Include="..\monotouch-test\compressed_lz4">
+      <Link>compressed_lz4</Link>
+    </Content>
+    <Content Include="..\monotouch-test\compressed_lzma">
+      <Link>compressed_lzma</Link>
+    </Content>
+    <Content Include="..\monotouch-test\compressed_zip">
+      <Link>compressed_zip</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\monotouch-test\Security\openssl_crt.der">
@@ -162,7 +179,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EmbeddedResources\" />
-    <Folder Include="System.ServiceModel\" />
 	<Folder Include="..\monotouch-test\BundleResourceResources\Base.lproj\" />
   </ItemGroup>
   <ItemGroup>

@@ -50,7 +50,7 @@ namespace AppKit {
 		public static void Init ()
 		{
 			if (initialized) {
-				throw new InvalidOperationException ("Init has already be be invoked; it can only be invoke once");
+				throw new InvalidOperationException ("Init has already been invoked; it can only be invoked once");
 			}
 
 			Runtime.EnsureInitialized ();
@@ -118,13 +118,6 @@ namespace AppKit {
 				&& currentDelegateValue.GetType().IsAssignableFrom (internalDelegateType)
 				&& !newDelegateValue.GetType().IsAssignableFrom (internalDelegateType))
 				throw new InvalidOperationException (string.Format("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType(), internalDelegateType));
-		}
-
-		public NSEvent NextEvent (NSEventMask mask, NSDate expiration, string mode, bool deqFlag)
-		{
-			// NSEventMask must be casted to nuint to preserve the NSEventMask.Any special value
-			// on 64 bit systems.
-			return NextEvent ((nuint)(ulong) mask, expiration, mode, deqFlag);
 		}
 
 		public void DiscardEvents (NSEventMask mask, NSEvent lastEvent)

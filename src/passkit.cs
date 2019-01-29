@@ -90,7 +90,7 @@ namespace PassKit {
 
 		[iOS (8,0)]
 		[Static,Export ("isPaymentPassActivationAvailable")]
-		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the library's instance 'IsLibraryPaymentPassActivationAvailable' property instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use the library's instance 'IsLibraryPaymentPassActivationAvailable' property instead.")]
 		bool IsPaymentPassActivationAvailable { get; }
 
 		[iOS (9,0)]
@@ -105,6 +105,7 @@ namespace PassKit {
 
 		[NoWatch]
 		[iOS (8,0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ActivatePaymentPass (PKPaymentPass, NSData, Action<bool, NSError> completion)' instead.")]
 		[Async]
 		[Export ("activatePaymentPass:withActivationCode:completion:")]
 		void ActivatePaymentPass (PKPaymentPass paymentPass, string activationCode, [NullAllowed] Action<bool, NSError> completion);
@@ -245,6 +246,7 @@ namespace PassKit {
 		[EventArgs ("PKPaymentRequestShippingMethodUpdate")]
 		void DidSelectShippingMethod2 (PKPaymentAuthorizationViewController controller, PKShippingMethod shippingMethod, Action<PKPaymentRequestShippingMethodUpdate> completion);
 
+		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("paymentAuthorizationViewController:didSelectShippingAddress:completion:")]
 		[EventArgs ("PKPaymentShippingAddressSelected")]
 		void DidSelectShippingAddress (PKPaymentAuthorizationViewController controller, ABRecord address, PKPaymentShippingAddressSelected completion);
@@ -620,6 +622,10 @@ namespace PassKit {
 		[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
 		[Export ("requiresFelicaSecureElement")]
 		bool RequiresFelicaSecureElement { get; set; }
+
+		[iOS (12, 0)]
+		[Export ("style", ArgumentSemantic.Assign)]
+		PKAddPaymentPassStyle Style { get; set; }
 	}
 
 	[iOS (9,0)]
@@ -838,6 +844,22 @@ namespace PassKit {
 		[iOS (10,3), Watch (3,2)]
 		[Field ("PKPaymentNetworkIDCredit")]
 		NSString IDCredit { get; }
+
+		[iOS (12,0), Watch (5,0)]
+		[Field ("PKPaymentNetworkElectron")]
+		NSString Electron { get; }
+
+		[iOS (12,0), Watch (5,0)]
+		[Field ("PKPaymentNetworkMaestro")]
+		NSString Maestro { get; }
+
+		[iOS (12,0), Watch (5,0)]
+		[Field ("PKPaymentNetworkVPay")]
+		NSString VPay { get; }
+
+		[iOS (12,0), Watch (5,0)]
+		[Field ("PKPaymentNetworkEftpos")]
+		NSString Eftpos { get; }
 	}
 
 #if !WATCH
@@ -855,6 +877,10 @@ namespace PassKit {
 		[Export ("initWithPaymentButtonType:paymentButtonStyle:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (PKPaymentButtonType type, PKPaymentButtonStyle style);
+
+		[iOS (12, 0)]
+		[Export ("cornerRadius")]
+		nfloat CornerRadius { get; set; }
 	}
 
 	[iOS (9,0)]
@@ -989,8 +1015,37 @@ namespace PassKit {
 		string Value { get; }
 	}
 
+	[Watch (4,3), iOS (11,3)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PKTransitPassProperties {
+
+		[Static]
+		[Export ("passPropertiesForPass:")]
+		[return: NullAllowed]
+		PKTransitPassProperties GetPassProperties (PKPass pass);
+
+		[Export ("transitBalance", ArgumentSemantic.Copy)]
+		NSDecimalNumber TransitBalance { get; }
+
+		[Export ("transitBalanceCurrencyCode")]
+		string TransitBalanceCurrencyCode { get; }
+
+		[Export ("inStation")]
+		bool InStation { [Bind ("isInStation")] get; }
+
+		[Export ("blacklisted")]
+		bool Blacklisted { [Bind ("isBlacklisted")] get; }
+
+		[NullAllowed, Export ("expirationDate", ArgumentSemantic.Copy)]
+		NSDate ExpirationDate { get; }
+	}
+
 	[Watch (3,1), iOS (10,1)]
-	[BaseType (typeof(NSObject))]
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // hint: getter only props and a factory method.
+#endif
+	[BaseType (typeof (PKTransitPassProperties))]
 	interface PKSuicaPassProperties
 	{
 		[Static]
@@ -1009,6 +1064,14 @@ namespace PassKit {
 
 		[Export ("inShinkansenStation")]
 		bool InShinkansenStation { [Bind ("isInShinkansenStation")] get; }
+
+		[Watch (4,3), iOS (11,3)]
+		[Export ("balanceAllowedForCommute")]
+		bool BalanceAllowedForCommute { [Bind ("isBalanceAllowedForCommute")] get; }
+
+		[Watch (4,3), iOS (11,3)]
+		[Export ("lowBalanceGateNotificationEnabled")]
+		bool LowBalanceGateNotificationEnabled { [Bind ("isLowBalanceGateNotificationEnabled")] get; }
 
 		[Export ("greenCarTicketUsed")]
 		bool GreenCarTicketUsed { [Bind ("isGreenCarTicketUsed")] get; }

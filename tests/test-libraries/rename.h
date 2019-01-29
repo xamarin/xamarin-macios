@@ -3,6 +3,10 @@
 	#define theUltimateAnswer object_theUltimateAnswer
 	#define useZLib           object_useZLib
 	#define ObjCRegistrarTest object_ObjCRegistrarTest
+	#define ObjCBlockTester   object_ObjCBlockTester
+	#define FreedNotifier     object_FreedNotifier
+	#define EvilDeallocator   object_EvilDeallocator
+	#define MainThreadDeallocator object_MainThreadDeallocator
 	#define FakeType2         object_FakeType2
 	#define UltimateMachine   object_UltimateMachine
 	#define FrameworkTest     object_FrameworkTest
@@ -53,6 +57,8 @@
 	#define CtorChaining1     object_CtorChaining1
 	#define ObjCExceptionTest object_ObjCExceptionTest
 	#define ObjCProtocolClassTest object_ObjCProtocolClassTest
+	#define ProtocolAssigner      object_ProtocolAssigner
+	#define ObjCProtocolTestImpl  object_ObjCProtocolTestImpl
 	#define x_mdltransform_get_rotation_matrix object_x_mdltransform_get_rotation_matrix
 	#define x_mdltransformcomponent_get_local_transform object_x_mdltransformcomponent_get_local_transform
 	#define x_mdltransform_create_global_transform object_x_mdltransform_create_global_transform
@@ -65,6 +71,10 @@
 	#define theUltimateAnswer ar_theUltimateAnswer
 	#define useZLib           ar_useZLib
 	#define ObjCRegistrarTest ar_ObjCRegistrarTest
+	#define ObjCBlockTester   ar_ObjCBlockTester
+	#define FreedNotifier     ar_FreedNotifier
+	#define EvilDeallocator   ar_EvilDeallocator
+	#define MainThreadDeallocator ar_MainThreadDeallocator
 	#define FakeType2         ar_FakeType2
 	#define UltimateMachine   ar_UltimateMachine
 	#define FrameworkTest     ar_FrameworkTest
@@ -115,6 +125,8 @@
 	#define CtorChaining1     ar_CtorChaining1
 	#define ObjCExceptionTest ar_ObjCExceptionTest
 	#define ObjCProtocolClassTest ar_ObjCProtocolClassTest
+	#define ProtocolAssigner      ar_ProtocolAssigner
+	#define ObjCProtocolTestImpl  ar_ObjCProtocolTestImpl
 	#define x_mdltransform_get_rotation_matrix ar_x_mdltransform_get_rotation_matrix
 	#define x_mdltransformcomponent_get_local_transform ar_x_mdltransformcomponent_get_local_transform
 	#define x_mdltransform_create_global_transform ar_x_mdltransform_create_global_transform

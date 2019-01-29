@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #include <simd/simd.h>
+#include <libkern/OSAtomic.h>
 
 #include "rename.h"
 
@@ -111,6 +112,18 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	-(void) outNSErrorOnStack:(id)obj1 obj:(id)obj2 obj:(id)obj3 int64:(long long)l4 i:(int)i5 err:(NSError **)err; // 5 in regs, 6th (out) in mem (on at least x86-64)
 @end
 
+@protocol ProtocolAssignerProtocol
+@end
+
+@interface ProtocolAssigner : NSObject {
+}
+-(void) setProtocol;
+-(void) completedSetProtocol: (id<ProtocolAssignerProtocol>) value;
+@end
+
+@interface ObjCProtocolTestImpl : NSObject <ProtocolAssignerProtocol>
+@end
+
 /*
  * ObjC test class used for exception tests.
  */
@@ -133,6 +146,72 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 @interface ObjCProtocolClassTest : NSObject<ObjCProtocolTest> {
 }
 -(void) idAsIntPtr: (id)p1;
+@end
+
+typedef void (^int_callback)(int32_t magic_number);
+@protocol ObjCProtocolBlockTest
+@required
+	-(void) requiredCallback: (int_callback)completionHandler;
+	+(void) requiredStaticCallback: (int_callback)completionHandler;
+	-(int_callback) requiredReturnValue;
+	+(int_callback) requiredStaticReturnValue;
+@optional
+	-(void) optionalCallback: (int_callback)completionHandler;
+	+(void) optionalStaticCallback: (int_callback)completionHandler;
+	-(int_callback) optionalReturnValue;
+	+(int_callback) optionalStaticReturnValue;
+@end
+
+typedef void (^simple_callback)();
+@protocol ProtocolWithBlockProperties
+@required
+	@property simple_callback myRequiredProperty;
+	@property (class) simple_callback myRequiredStaticProperty;
+@optional
+	@property simple_callback myOptionalProperty;
+	@property (class) simple_callback myOptionalStaticProperty;
+@end
+@interface ObjCBlockTester : NSObject {
+}
+@property (retain) NSObject<ObjCProtocolBlockTest>* TestObject;
+@property (class, retain) Class TestClass;
+-(void) classCallback: (void (^)(int32_t magic_number))completionHandler;
+-(void) callClassCallback;
+-(void) callRequiredCallback;
++(void) callRequiredStaticCallback;
+-(void) callOptionalCallback;
++(void) callOptionalStaticCallback;
+typedef void (^innerBlock) (int magic_number);
+typedef void (^outerBlock) (innerBlock callback);
++(void) callAssertMainThreadBlockRelease: (outerBlock) completionHandler;
+-(void) callAssertMainThreadBlockReleaseCallback;
+-(void) assertMainThreadBlockReleaseCallback: (innerBlock) completionHandler;
+
+-(void) testFreedBlocks;
++(int) freedBlockCount;
+
++(void) callProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance;
++(void) callProtocolWithBlockReturnValue: (id<ObjCProtocolBlockTest>) obj required: (bool) required instance: (bool) instance;
+
++(void) setProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance;
++(int) calledBlockCount;
+@end
+
+@interface FreedNotifier : NSObject {
+}
+-(void) dealloc;
+@end
+
+@interface EvilDeallocator : NSObject {
+}
+@property (copy) void (^evilCallback)(int32_t magic_number);
+-(void) dealloc;
+@end
+
+// This object asserts that its dealloc function is called on the main thread
+@interface MainThreadDeallocator : NSObject {
+}
+-(void) dealloc;
 @end
 
 #ifdef __cplusplus

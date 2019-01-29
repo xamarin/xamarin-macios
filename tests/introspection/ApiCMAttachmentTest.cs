@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 using System.Drawing;
@@ -26,6 +26,7 @@ using ObjCRuntime;
 using Security;
 using VideoToolbox;
 using UIKit;
+using Network;
 #else
 using MonoTouch.AudioToolbox;
 using MonoTouch.CoreMedia;
@@ -41,6 +42,7 @@ using MonoTouch.ObjCRuntime;
 using MonoTouch.Security;
 using MonoTouch.VideoToolbox;
 using MonoTouch.UIKit;
+using MonoTouch.Network;
 #endif
 
 namespace Introspection {
@@ -166,13 +168,14 @@ namespace Introspection {
 		protected virtual bool Skip (string nativeName)
 		{
 			if (nativeName.Contains ("`")) {
-				nativeName = nativeName.Substring (0, nativeName.IndexOf ("`"));
+				nativeName = nativeName.Substring (0, nativeName.IndexOf ('`'));
 			}
-			if (nativeName.StartsWith ("CGPDF"))  // all those types crash the app
+			if (nativeName.StartsWith ("CGPDF", StringComparison.Ordinal))  // all those types crash the app
 				return true;
 			switch (nativeName) {
 			case "CFMachPort":
 			case "CFMessagePort":
+			case "DispatchIO": // no way to instantiate it
 			case "DispatchSource":
 			case "AudioConverter": // does crash the tests
 			case "AudioFile": // does crash the tests
@@ -202,6 +205,7 @@ namespace Introspection {
 			case "AudioComponent":
 			case "AudioUnit":
 			case "AURenderEventEnumerator":
+			case "CFPropertyList":
 			case "CGLayer":
 			case "CMFormatDescription":
 			case "CMAudioFormatDescription":
@@ -222,6 +226,13 @@ namespace Introspection {
 			case "MidiEndpoint":
 			case "ABMultiValue":
 			case "ABMutableMultiValue":
+			case "SecProtocolMetadata": // Read-only object that is surfaced during TLS negotiation callbacks, can not be created from user code.
+			case "SecProtocolOptions":  // Read-only object that is surfaced during TLS negotiation callbacks, can not be created from user code.
+			case "NWError":               // Only ever surfaced, not created from usercode
+			case "NWInterface":           // Only ever surfaced, not created from usercode
+			case "NWPath":                // Only ever surfaced, not created from usercode
+			case "NWProtocolStack":       // Only ever surfaced, not created from usercode
+			case "NWProtocolMetadata":    // While technically it can be created and the header files claim the methods exists, the library is missing the methods (radar: 42443077)
 			case "ABSource": // not skipped when running on iOS 6.1
 			// type was removed in iOS 10 (and replaced) and never consumed by other API
 			case "CGColorConverter":
@@ -261,6 +272,10 @@ namespace Introspection {
 				return writeStream;
 			case "CFUrl":
 				return CFUrl.FromFile ("/etc");
+			case "CFPropertyList":
+				return CFPropertyList.FromData (NSData.FromString ("<string>data</string>")).PropertyList;
+			case "DispatchData":
+				return DispatchData.FromByteBuffer (new byte [] { 1, 2, 3, 4 });
 			case "AudioFile":
 				var path = Path.GetFullPath ("1.caf");
 				var af = AudioFile.Open (CFUrl.FromFile (path), AudioFilePermission.Read, AudioFileType.CAF);
@@ -309,7 +324,7 @@ namespace Introspection {
 					Size = 16.0f
 				};
 				using (var fd = new CTFontDescriptor (fda))
-					return new CTFont (fd, 10, CTFontOptions.Default);
+					return new CTFont (fd, 10);
 			case "CTFontCollection":
 				return new CTFontCollection (new CTFontCollectionOptions ());
 			case "CTFontDescriptor":
@@ -384,6 +399,8 @@ namespace Introspection {
 				return VTMultiPassStorage.Create ();
 			case "CFString":
 				return new CFString ("test");
+			case "DispatchBlock":
+				return new DispatchBlock (() => { });
 			case "DispatchQueue":
 				return new DispatchQueue ("com.example.subsystem.taskXYZ");
 			case "DispatchGroup":
@@ -416,9 +433,45 @@ namespace Introspection {
 					new CVPixelBufferPoolSettings (),
 					new CVPixelBufferAttributes (CVPixelFormatType.CV24RGB, 100, 50)
 				);
+			case "NWAdvertiseDescriptor":
+				return NWAdvertiseDescriptor.CreateBonjourService ("sampleName" + DateTime.Now, "_nfs._tcp");
+			case "NWConnection": {
+				var endpoint = NWEndpoint.Create ("www.microsoft.com", "https");
+				var parameters = NWParameters.CreateTcp (configureTcp: null);
+				return new NWConnection (endpoint, parameters);
+			}
+			case "NWContentContext":
+				return new NWContentContext ("contentContext" + DateTime.Now);
+			case "NWEndpoint":
+				return NWEndpoint.Create ("www.microsoft.com", "https");
+			case "NWListener":
+				return NWListener.Create (NWParameters.CreateTcp (configureTcp: null));
+			case "NWParameters":
+				return NWParameters.CreateTcp (configureTcp: null);
+			case "NWProtocolDefinition":
+				// Makes a new instance every time
+				return NWProtocolDefinition.TcpDefinition;
+			case "NWProtocolOptions":
+				return NWProtocolOptions.CreateTcp ();
 			case "SecCertificate":
 				using (var cdata = NSData.FromArray (mail_google_com))
 					return new SecCertificate (cdata);
+			case "SecCertificate2":
+				using (var cdata = NSData.FromArray (mail_google_com))
+					return new SecCertificate2 (new SecCertificate (cdata));
+			case "SecTrust2":
+				X509Certificate x2 = new X509Certificate (mail_google_com);
+				using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
+					return new SecTrust2 (new SecTrust (x2, policy));
+			case "SecIdentity2":
+				using (var options = NSDictionary.FromObjectAndKey (new NSString ("farscape"), SecImportExport.Passphrase)) {
+					NSDictionary[] array;
+					var result = SecImportExport.ImportPkcs12 (farscape_pfx, options, out array);
+					if (result != SecStatusCode.Success)
+						throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0} due to {1}.", t.Name, result));
+					return new SecIdentity2 (new SecIdentity (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle)));
+				}
+				
 			case "SecKey":
 				SecKey private_key;
 				SecKey public_key;

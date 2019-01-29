@@ -31,11 +31,23 @@ namespace Security {
 #endif
 		UserPresence        = 1 << 0,
 
+		[Advice ("'BiometryAny' is preferred over 'TouchIDAny' since Xcode 9.3. Touch ID and Face ID together are biometric authentication mechanisms.")]
 		[iOS (9,0)][Mac (10,12,1)]
-		TouchIDAny          = 1 << 1,
+		TouchIDAny          = BiometryAny,
 
+		[Advice ("'BiometryCurrentSet' is preferred over 'TouchIDCurrentSet' since Xcode 9.3. Touch ID and Face ID together are biometric authentication mechanisms.")]
 		[iOS (9,0)][Mac (10,12,1)]
-		TouchIDCurrentSet   = 1 << 3,
+		TouchIDCurrentSet   = BiometryCurrentSet,
+
+		// Added in iOS 11.3 and macOS 10.13.4 but keeping initial availability attribute because it's using the value
+		// of 'TouchIDAny' which iOS 9 / macOS 10.12.1 will accept.
+		[iOS (9,0), Mac (10,12,1)]
+		BiometryAny         = 1 << 1,
+
+		// Added in iOS 11.3 and macOS 10.13.4 but keeping initial availability attribute because it's using the value
+		// of 'TouchIDCurrentSet' which iOS 9 / macOS 10.12.1 will accept.
+		[iOS (9,0), Mac (10,12,1)]
+		BiometryCurrentSet  = 1 << 3,
 
 		DevicePasscode      = 1 << 4,
 
@@ -97,9 +109,9 @@ namespace Security {
 		public virtual void Dispose (bool disposing)
 #endif
 		{
-			if (Handle != IntPtr.Zero){
-				CFObject.CFRelease (Handle);
-				Handle = IntPtr.Zero;
+			if (handle != IntPtr.Zero){
+				CFObject.CFRelease (handle);
+				handle = IntPtr.Zero;
 			}
 		}
 

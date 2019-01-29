@@ -33,6 +33,9 @@ namespace CoreLocation {
 		Outside
 	}
 
+#if XAMCORE_4_0 // Unavailable on macOS
+	[NoMac]
+#endif
 	[NoTV][NoWatch]
 	[iOS (7,0)]
 	[Native] // NSInteger -> CLRegion.h
@@ -46,7 +49,6 @@ namespace CoreLocation {
 	[NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
-	[Mac (10,7)]
 	partial interface CLHeading : NSSecureCoding, NSCopying {
 		[Export ("magneticHeading")]
 		double MagneticHeading { get;  }
@@ -118,7 +120,7 @@ namespace CoreLocation {
 		// Apple keep changing the 'introduction' of this field (5.0->8.0->5.0) but it was not available in 6.1
 		// nor in 7.0 - but it works on my iPad3 running iOS 7.1
 		[NoTV][NoWatch]
-		[iOS (7,1)][Mac (10, 8)]
+		[iOS (7,1)]
 		[Field ("kCLErrorUserInfoAlternateRegionKey")]
 		NSString ErrorUserInfoAlternateRegionKey { get; }
 
@@ -207,7 +209,6 @@ namespace CoreLocation {
 #endif
 	
 		[NoWatch][NoTV]
-		[Mac (10,7)]
 		[Availability (Deprecated = Platform.iOS_6_0)]
 		// Default property value is null but it cannot be set to that value
 		// it crash when a null is provided
@@ -215,25 +216,21 @@ namespace CoreLocation {
 		string Purpose { get; set; }
 
 		[NoWatch][NoTV]
-		[Mac (10,7)]
 		[Export ("headingAvailable"), Static]
 		bool HeadingAvailable { get; }
 
 		[NoWatch][NoTV]
-		[Mac (10,7)]
 		[Export ("significantLocationChangeMonitoringAvailable"), Static]
 		bool SignificantLocationChangeMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'IsMonitoringAvailable' instead.")]
-		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'IsMonitoringAvailable' instead.")]
 		[Export ("regionMonitoringAvailable"), Static]
 		bool RegionMonitoringAvailable { get; }
 
 		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
-		[Mac (10, 8)]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'IsMonitoringAvailable' and 'AuthorizationStatus' instead.")]
 		[Export ("regionMonitoringEnabled"), Static]
 		bool RegionMonitoringEnabled { get; }
@@ -250,21 +247,17 @@ namespace CoreLocation {
 
 		[NoWatch][NoTV]
 		[Export ("maximumRegionMonitoringDistance")]
-		[Mac (10,8)]
 		double MaximumRegionMonitoringDistance { get; }
 
 		[NoWatch][NoTV]
 		[Export ("monitoredRegions", ArgumentSemantic.Copy)]
-		[Mac (10,8)]
 		NSSet MonitoredRegions { get; }
 
 		[NoWatch][NoTV]
-		[Mac (10,7)]
 		[Export ("startMonitoringSignificantLocationChanges")]
 		void StartMonitoringSignificantLocationChanges ();
 
 		[NoWatch][NoTV]
-		[Mac (10,7)]
 		[Export ("stopMonitoringSignificantLocationChanges")]
 		void StopMonitoringSignificantLocationChanges ();
 
@@ -276,16 +269,13 @@ namespace CoreLocation {
 #endif
 
 		[NoWatch][NoTV]
-		[Mac (10,8)]
 		[Export ("stopMonitoringForRegion:")]
 		void StopMonitoring (CLRegion region);
 
-		[Mac (10,7)]
 		[Export ("authorizationStatus")][Static]
 		CLAuthorizationStatus Status { get; }
 
 		[NoWatch][NoTV]
-		[Mac (10,8)]
 		[Export ("startMonitoringForRegion:")]
 		void StartMonitoring (CLRegion region);
 
@@ -319,11 +309,10 @@ namespace CoreLocation {
 		[Export ("deferredLocationUpdatesAvailable")]
 		bool DeferredLocationUpdatesAvailable { get; }
 
-#if !MONOMAC
 		[iOS (6,0)]
+		[Mac (10,14, onlyOn64: true)]
 		[Field ("CLTimeIntervalMax")]
 		double MaxTimeInterval { get; }
-#endif
 
 		[NoWatch][NoTV]
 		[Mac (10,10)]
@@ -375,10 +364,6 @@ namespace CoreLocation {
 		[Export ("stopMonitoringVisits")]
 		void StopMonitoringVisits ();
 
-		[iOS (9,0)]
-		[Export ("requestLocation")]
-		void RequestLocation ();
-
 		[NoTV]
 		[iOS (9,0), Watch (4,0)]
 		[Export ("allowsBackgroundLocationUpdates")]
@@ -388,6 +373,10 @@ namespace CoreLocation {
 		[Export ("showsBackgroundLocationIndicator")]
 		bool ShowsBackgroundLocationIndicator { get; set; }
 #endif
+		[iOS (9,0)]
+		[Mac (10,14, onlyOn64: true)]
+		[Export ("requestLocation")]
+		void RequestLocation ();
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -406,6 +395,9 @@ namespace CoreLocation {
 		void UpdatedHeading (CLLocationManager  manager, CLHeading newHeading);
 #endif
 	
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#endif
 		[NoWatch][NoTV]
 		[Export ("locationManagerShouldDisplayHeadingCalibration:"), DelegateName ("CLLocationManagerEventArgs"), DefaultValue (true)]
 		bool ShouldDisplayHeadingCalibration (CLLocationManager manager);
@@ -414,22 +406,18 @@ namespace CoreLocation {
 		void Failed (CLLocationManager manager, NSError error);
 
 		[NoWatch][NoTV]
-		[Mac (10,8)]
 		[Export ("locationManager:didEnterRegion:"), EventArgs ("CLRegion")]
 		void RegionEntered (CLLocationManager manager, CLRegion region);
 
 		[NoWatch][NoTV]
-		[Mac (10,8)]
 		[Export ("locationManager:didExitRegion:"), EventArgs ("CLRegion")]
 		void RegionLeft (CLLocationManager manager, CLRegion region);
 
 		[NoWatch][NoTV]
-		[Mac (10,8)]
 		[Export ("locationManager:monitoringDidFailForRegion:withError:"), EventArgs ("CLRegionError")]
 		void MonitoringFailed (CLLocationManager manager, CLRegion region, NSError error);
 
 		[NoWatch][NoTV]
-		[Mac (10,8)]
 		[Export ("locationManager:didStartMonitoringForRegion:"), EventArgs ("CLRegion")]
 		void DidStartMonitoringForRegion (CLLocationManager manager, CLRegion region);
 
@@ -460,11 +448,17 @@ namespace CoreLocation {
 		[Export ("locationManager:didUpdateLocations:"), EventArgs ("CLLocationsUpdated")]
 		void LocationsUpdated (CLLocationManager manager, CLLocation[] locations);
 
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#endif
 		[NoWatch][NoTV]
 		[iOS (6,0)]
 		[Export ("locationManagerDidPauseLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesPaused (CLLocationManager manager);
 
+#if XAMCORE_4_0 // Unavailable on macOS
+		[NoMac]
+#endif
 		[NoWatch][NoTV]
 		[iOS (6,0)]
 		[Export ("locationManagerDidResumeLocationUpdates:"), EventArgs ("")]
@@ -479,8 +473,8 @@ namespace CoreLocation {
 	[Static]
 	partial interface CLLocationDistance {
 
+		[Mac (10,14, onlyOn64: true)]
 		[iOS (6,0)]
-		[Mac (10,9)]
 		[Field ("CLLocationDistanceMax")]
 		double MaxDistance { get; }
 
@@ -488,7 +482,6 @@ namespace CoreLocation {
 		double FilterNone { get; }
 	}
 		
-	[Mac (10,7)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	partial interface CLRegion : NSSecureCoding, NSCopying {
@@ -528,7 +521,6 @@ namespace CoreLocation {
 		bool NotifyOnExit { get; set; }
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	interface CLPlacemark : NSSecureCoding, NSCopying {
@@ -675,7 +667,6 @@ namespace CoreLocation {
 
 	delegate void CLGeocodeCompletionHandler (CLPlacemark [] placemarks, NSError error);
 
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface CLGeocoder {
 		[Export ("isGeocoding")]

@@ -17,7 +17,7 @@ using Foundation;
 namespace ImageIO {
 
 	// CGImageMetadata.h
-	[iOS (7,0), Mac (10,8)]
+	[iOS (7,0)]
 	public class CGImageMetadataTag : INativeObject, IDisposable {
 
 		// note: CGImageMetadataType is always an int (4 bytes) so it's ok to use in the pinvoke declaration
@@ -56,7 +56,7 @@ namespace ImageIO {
 
 		// CFBoolean support
 		public CGImageMetadataTag (NSString xmlns, NSString prefix, NSString name, CGImageMetadataType type, bool value) :
-			this (xmlns, prefix, name, type, value ? CFBoolean.True.Handle : CFBoolean.False.Handle)
+			this (xmlns, prefix, name, type, value ? CFBoolean.TrueHandle : CFBoolean.FalseHandle)
 		{
 		}
 

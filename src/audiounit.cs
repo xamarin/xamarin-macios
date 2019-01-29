@@ -18,6 +18,7 @@ using CoreAnimation;
 using CoreGraphics;
 #if IOS || MONOMAC
 using CoreAudioKit;
+using CoreMidi;
 #endif
 using AudioToolbox;
 using AVFoundation;
@@ -64,6 +65,9 @@ namespace AudioUnit {
 	delegate bool AUHostTransportStateBlock (ref AUHostTransportStateFlags transportStateFlags, ref double currentSamplePosition, ref double cycleStartBeatPosition, ref double cycleEndBeatPosition);
 	delegate void AURenderObserver (AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint outputBusNumber);
 	delegate float AUImplementorValueFromStringCallback (AUParameter param, string str);
+#if IOS || MONOMAC
+	delegate void AUMidiCIProfileChangedCallback (byte cable, byte channel, MidiCIProfile profile, bool enabled);
+#endif
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
@@ -253,6 +257,25 @@ namespace AudioUnit {
 		[Export ("MIDIOutputBufferSizeHint")]
 		nint MidiOutputBufferSizeHint { get; set; }
 
+#if IOS || MONOMAC
+
+		[Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("profileStateForCable:channel:")]
+		MidiCIProfileState GetProfileState (byte cable, byte channel);
+
+		[Mac (10,14, onlyOn64: true), iOS (12, 0)]
+		[NullAllowed, Export ("profileChangedBlock", ArgumentSemantic.Assign)]
+		AUMidiCIProfileChangedCallback ProfileChangedCallback { get; set; }
+
+		[Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("disableProfile:cable:onChannel:error:")]
+		bool Disable (MidiCIProfile profile, byte cable, byte channel, [NullAllowed] out NSError outError);
+
+		[Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Export ("enableProfile:cable:onChannel:error:")]
+		bool Enable (MidiCIProfile profile, byte cable, byte channel, [NullAllowed] out NSError outError);
+
+#endif
 	}
 
 	// kept separate from AUAudioUnit, quote:
@@ -288,11 +311,11 @@ namespace AudioUnit {
 		[Export ("setOutputEnabled:")]
 		bool SetOutputEnabled (bool enabled);
 		
-		[NullAllowed, Export ("inputHandler", ArgumentSemantic.Copy)]
+		[Export ("inputHandler", ArgumentSemantic.Copy)]
 		AUInputHandler GetInputHandler ();
 
-		[NullAllowed, Export ("setInputHandler:")]
-		void SetInputHandler (AUInputHandler handler);
+		[Export ("setInputHandler:")]
+		void SetInputHandler ([NullAllowed] AUInputHandler handler);
 
 		[Export ("startHardwareAndReturnError:")]
 		bool StartHardware ([NullAllowed] out NSError outError);
@@ -300,11 +323,11 @@ namespace AudioUnit {
 		[Export ("stopHardware")]
 		void StopHardware ();
 
-		[NullAllowed, Export ("outputProvider", ArgumentSemantic.Copy)]
+		[Export ("outputProvider", ArgumentSemantic.Copy)]
 		AURenderPullInputBlock GetOutputProvider ();
 
-		[NullAllowed, Export ("setOutputProvider:")]
-		void SetOutputProvider (AURenderPullInputBlock provider);
+		[Export ("setOutputProvider:")]
+		void SetOutputProvider ([NullAllowed] AURenderPullInputBlock provider);
 
 		// the following are properties but we cannot have properties in Categories.
 		[Mac (10, 13), NoWatch, NoiOS, NoTV]

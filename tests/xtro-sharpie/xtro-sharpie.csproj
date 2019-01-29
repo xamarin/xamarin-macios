@@ -20,7 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <Commandlineparameters>../../iphoneos9.2-arm64.pch /Library/Frameworks/Xamarin.iOS.framework/Versions/Current//lib/64bits/Xamarin.iOS.dll</Commandlineparameters>
+    <Commandlineparameters>../../iphoneos12.0-arm64.pch /Library/Frameworks/Xamarin.iOS.framework/Versions/Current//lib/64bits/Xamarin.iOS.dll</Commandlineparameters>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,22 +33,22 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>watchos4.2-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/Xamarin.WatchOS.dll</StartArguments>
+    <StartArguments>watchos4.3-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/Xamarin.WatchOS.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>iphoneos11.2-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>iphoneos11.3-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>appletvos11.2-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>appletvos11.3-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>macosx10.13-x86_64.pch ../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/x86_64/mobile/Xamarin.Mac.dll</StartArguments>
+    <StartArguments>macosx10.14-x86_64.pch ../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/x86_64/mobile/Xamarin.Mac.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <ItemGroup>
@@ -87,6 +87,10 @@
     <Compile Include="SimdCheck.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="RequiresSuperCheck.cs" />
+    <Compile Include="Filter.cs" />
+    <Compile Include="DeprecatedCheck.cs" />
+    <Compile Include="AttributeHelpers.cs" />
+    <Compile Include="VersionHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

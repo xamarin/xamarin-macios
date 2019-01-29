@@ -55,7 +55,9 @@ namespace MonoTouchFixtures.CoreFoundation {
 					var otherBundle = CFBundle.Get (id);
 					Assert.AreEqual (b.Info.Type, otherBundle.Info.Type,
   							 String.Format("Found bundle with diff type and id {0}", id));
-					Assert.AreEqual (b.Url.ToString (), otherBundle.Url.ToString (),
+					var bPath = (string) ((NSString) b.Url.Path).ResolveSymlinksInPath ();
+					var otherPath = (string) ((NSString) otherBundle.Url.Path).ResolveSymlinksInPath ();
+					Assert.AreEqual (bPath, otherPath,
   							 String.Format("Found bundle with diff url and id {0}", id));
 				}
 			}
@@ -179,7 +181,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var preferred = new string [] {"en", "es"};
 			var used = CFBundle.GetPreferredLocalizations (preferred);
 			Assert.IsTrue (used.Length > 0);
-			Assert.That (used, Has.Exactly (1).EqualTo ("en"));
+			foreach (var u in used)
+				Assert.That (preferred, Contains.Item (u), u);
 		}
 
 		[Test]

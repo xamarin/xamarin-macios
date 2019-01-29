@@ -1,0 +1,19 @@
+# System.PlatformNotSupportedException : Operation is not supported on this platform. 
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.NullEntropyEquivalence2
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.NullEntropyEquivalence
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.RoundTrip
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.WrongEntropy
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.ProtectEmptyData(scope: CurrentUser, useEntropy: False) 
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.ProtectEmptyData(scope: CurrentUser, useEntropy: False)
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.ProtectEmptyData(scope: LocalMachine, useEntropy: True) 
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.ProtectEmptyData(scope: LocalMachine, useEntropy: True)
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.ProtectEmptyData(scope: CurrentUser, useEntropy: True) 
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.ProtectEmptyData(scope: CurrentUser, useEntropy: True) 
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.ProtectEmptyData(scope: LocalMachine, useEntropy: False) 
+System.Security.Cryptography.ProtectedDataTests.ProtectedDataTests.ProtectEmptyData(scope: LocalMachine, useEntropy: False) 
+
+# Exception messages: Assert.Equal() Failure
+# Expected: Byte[] [53, 237, 196, 55, 227, ...]
+# Actual:   Byte[] [53, 237, 196, 55, 227, ...] 
+System.Security.Cryptography.Pkcs.EnvelopedCmsTests.Tests.StateTests.PostDecode_Encode_net46
+System.Security.Cryptography.Pkcs.EnvelopedCmsTests.Tests.StateTests.PostDecode_ContentInfo_net46

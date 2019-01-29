@@ -31,6 +31,7 @@
     <LinkMode>SdkOnly</LinkMode>
     <XamMacArch></XamMacArch>
     <AOTMode>None</AOTMode>
+    <I18n>mideast,other</I18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType></DebugType>
@@ -49,6 +50,7 @@
     <HttpClientHandler></HttpClientHandler>
     <XamMacArch></XamMacArch>
     <AOTMode>None</AOTMode>
+    <I18n>mideast,other</I18n>
     <CodeSigningKey>Mac Developer</CodeSigningKey>
     <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
   </PropertyGroup>
@@ -70,6 +72,12 @@
     <Compile Include="LinkSdkTest.cs" />
     <Compile Include="..\..\..\common\PlatformInfo.cs">
       <Link>PlatformInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CommonLinkSdkTest.cs">
+      <Link>CommonLinkSdkTest.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

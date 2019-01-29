@@ -10,6 +10,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using CoreFoundation;
 
 namespace Security {
 
@@ -44,14 +45,13 @@ namespace Security {
 		[Field ("kSecPolicyAppleCodeSigning")]
 		NSString AppleCodeSigning { get; }
 
-		[iOS (9,0)][Mac (10,7)]
+		[iOS (9,0)]
 		[Field ("kSecPolicyMacAppStoreReceipt")]
 		NSString MacAppStoreReceipt { get; }
 
 		[Field ("kSecPolicyAppleIDValidation")]
 		NSString AppleIDValidation { get; }
 			
-		[Mac (10, 8)]
 		[Field ("kSecPolicyAppleTimeStamping")]
 		NSString AppleTimeStamping { get; }
 
@@ -389,6 +389,10 @@ namespace Security {
 		[Field ("kSecAttrEffectiveKeySize")]
 		NSString EffectiveKeySizeKey { get; }
 
+		[iOS (8, 0), Mac (10, 10)]
+		[Field ("kSecAttrAccessControl")]
+		NSString AccessControlKey { get; }
+
 		[Field ("kSecAttrCanEncrypt")]
 		NSString CanEncryptKey { get; }
 
@@ -409,14 +413,90 @@ namespace Security {
 	}
 
 	[Static][Internal]
+	interface SecKeyGenerationAttributeKeys : SecAttributeKeys {
+		[Field ("kSecAttrKeyType")]
+		NSString KeyTypeKey { get; }
+
+		[Field ("kSecAttrKeySizeInBits")]
+		NSString KeySizeInBitsKey { get; }
+
+		[Field ("kSecPrivateKeyAttrs")]
+		NSString PrivateKeyAttrsKey { get; }
+
+		[Field ("kSecPublicKeyAttrs")]
+		NSString PublicKeyAttrsKey { get; }
+
+		[iOS (9, 0), Mac (10, 12)]
+		[Field ("kSecAttrTokenID")]
+		NSString TokenIDKey { get; }
+
+		[Field ("kSecAttrCanWrap")]
+		NSString CanWrapKey { get; }
+	}
+
+	[StrongDictionary ("SecAttributeKeys")]
+	interface SecKeyParameters {
+		string Label { get; set; }
+
+		bool IsPermanent { get; set; }
+
+		NSData ApplicationTag { get; set; }
+
+		int EffectiveKeySize { get; set; }
+
+		bool CanEncrypt { get; set; }
+
+		bool CanDecrypt { get; set; }
+
+		bool CanDerive { get; set; }
+
+		bool CanSign { get; set; }
+
+		bool CanVerify { get; set; }
+
+		bool CanUnwrap { get; set; }
+	}
+
+	[StrongDictionary ("SecKeyGenerationAttributeKeys")]
+	interface SecKeyGenerationParameters {
+		int KeySizeInBits { get; set; }
+
+		[StrongDictionary]
+		[Export ("PrivateKeyAttrsKey")]
+		SecKeyParameters PrivateKeyAttrs { get; set; }
+
+		[StrongDictionary]
+		[Export ("PublicKeyAttrsKey")]
+		SecKeyParameters PublicKeyAttrs { get; set; }
+
+		string Label { get; set; }
+
+		bool IsPermanent { get; set; }
+
+		NSData ApplicationTag { get; set; }
+
+		int EffectiveKeySize { get; set; }
+
+		bool CanEncrypt { get; set; }
+
+		bool CanDecrypt { get; set; }
+
+		bool CanDerive { get; set; }
+
+		bool CanSign { get; set; }
+
+		bool CanVerify { get; set; }
+
+		bool CanWrap { get; set; }
+
+		bool CanUnwrap { get; set; }
+	}
+
+	[Static][Internal]
 	interface SecAttributeKey {
 		[Mac (10,9)]
 		[Field ("kSecAttrAccessible")]
 		IntPtr Accessible { get; }
-
-		[iOS (8,0), Mac(10,10)]
-		[Field ("kSecAttrAccessControl")]
-		IntPtr AccessControl { get; }
 
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -521,20 +601,6 @@ namespace Security {
 		[Field ("kSecAttrIsExtractable")]
 		IntPtr IsExtractable { get; }
 
-		[Field ("kSecAttrKeyType")]
-		IntPtr KeyType { get; }
-
-		[Field ("kSecAttrKeySizeInBits")]
-		IntPtr KeySizeInBits { get; }
-
-		[Field ("kSecAttrCanWrap")]
-		IntPtr CanWrap { get; }
-
-		[iOS (9,0)]
-		[Mac (10,12)]
-		[Field ("kSecAttrTokenID")]
-		IntPtr TokenID { get; }
-
 		[iOS (9,0)]
 		[Mac (10,12)]
 		[Field ("kSecAttrTokenIDSecureEnclave")]
@@ -551,14 +617,6 @@ namespace Security {
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		[Field ("kSecAttrPersistentReference")]
 		IntPtr PersistentReference { get; }
-
-		[Mac (10,8)]
-		[Field ("kSecPrivateKeyAttrs")]
-		IntPtr PrivateKeyAttrs { get; }
-
-		[Mac (10,8)]
-		[Field ("kSecPublicKeyAttrs")]
-		IntPtr PublicKeyAttrs { get; }
 	}
 
 	[Static][Internal]
@@ -660,6 +718,7 @@ namespace Security {
 		[Field ("kSecValuePersistentRef")]
 		IntPtr ValuePersistentRef { get; }
 
+		[NoWatch, NoTV, NoiOS]
 		[Field ("kSecUseItemList")]
 		IntPtr UseItemList { get; }
 
@@ -686,13 +745,11 @@ namespace Security {
 	[Static][Internal]
 	interface SecCertificateOIDs
 	{
-		[Mac (10,7)]
 		[Field ("kSecOIDX509V1SubjectPublicKey")]
 		IntPtr SubjectPublicKey { get; }
 	}
 
 	[NoiOS][NoTV][NoWatch]
-	[Mac (10,7)]
 	[Static][Internal]
 	interface SecPropertyKey
 	{
@@ -1069,5 +1126,34 @@ namespace Security {
 
 		int Port { get; set; }
 	}
+
 #endif
+
+	delegate void SecProtocolVerifyComplete (bool complete);
+
+	// Respond with the identity to use for this challenge.
+	delegate void SecProtocolChallengeComplete (SecIdentity2 identity);
+
+	//
+	// These are fake NSObject types, used purely for the generator to do all the heavy lifting with block generation
+	//
+	delegate void SecProtocolKeyUpdate (SecProtocolMetadata metadata, [BlockCallback] Action complete);
+	delegate void SecProtocolChallenge (SecProtocolMetadata metadata, [BlockCallback] SecProtocolChallengeComplete challengeComplete);
+	delegate void SecProtocolVerify (SecProtocolMetadata metadata, SecTrust2 trust, [BlockCallback] SecProtocolVerifyComplete verifyComplete);
+
+	[Internal]
+	[Partial]
+	interface Callbacks {
+		[Export ("options:keyUpdateBlock:keyUpdateQueue:")]
+		[NoMethod]
+		void SetKeyUpdateBlock (SecProtocolOptions options, [BlockCallback] SecProtocolKeyUpdate keyUpdateBlock, DispatchQueue keyUpdateQueue);
+
+		[Export ("options:challengeBlock:challengeQueue:")]
+		[NoMethod]
+		void SetChallengeBlock (SecProtocolOptions options, [BlockCallback] SecProtocolChallenge challengeBlock, DispatchQueue challengeQueue);
+
+		[Export ("options:protocolVerify:verifyQueue:")]
+		[NoMethod]
+		void SetVerifyBlock (SecProtocolOptions options, [BlockCallback] SecProtocolVerify verifyBlock, DispatchQueue verifyQueue);
+	}
 }

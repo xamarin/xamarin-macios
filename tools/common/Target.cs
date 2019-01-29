@@ -64,6 +64,24 @@ namespace Xamarin.Bundler {
 			this.StaticRegistrar = new StaticRegistrar (this);
 		}
 
+		// This will find the link context, possibly looking in container targets.
+		public PlatformLinkContext GetLinkContext ()
+		{
+			if (LinkContext != null)
+				return LinkContext;
+#if MTOUCH
+			if (App.IsExtension && App.IsCodeShared)
+				return ContainerTarget.GetLinkContext ();
+#endif
+			return null;
+		}
+
+		public bool CachedLink {
+			get {
+				return cached_link;
+			}
+		}
+
 		public void ExtractNativeLinkInfo (List<Exception> exceptions)
 		{
 			foreach (var a in Assemblies) {
@@ -82,14 +100,6 @@ namespace Xamarin.Bundler {
 #endif
 		}
 
-		[DllImport (Constants.libSystemLibrary, SetLastError = true, EntryPoint = "strerror")]
-		static extern IntPtr _strerror (int errno);
-
-		internal static string strerror (int errno)
-		{
-			return Marshal.PtrToStringAuto (_strerror (errno));
-		}
-
 		[DllImport (Constants.libSystemLibrary, SetLastError = true)]
 		static extern string realpath (string path, IntPtr zero);
 
@@ -100,7 +110,7 @@ namespace Xamarin.Bundler {
 				return rv;
 
 			var errno = Marshal.GetLastWin32Error ();
-			ErrorHelper.Warning (54, "Unable to canonicalize the path '{0}': {1} ({2}).", path, strerror (errno), errno);
+			ErrorHelper.Warning (54, "Unable to canonicalize the path '{0}': {1} ({2}).", path, FileCopier.strerror (errno), errno);
 			return path;
 		}
 
@@ -132,7 +142,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (asm == null)
-				throw ErrorHelper.CreateError (99, $"Internal error: could not find the product assembly {Driver.GetProductAssembly (App)} in the list of assemblies referenced by the executable. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: could not find the product assembly {Driver.GetProductAssembly (App)} in the list of assemblies referenced by the executable. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 
 			AssemblyDefinition productAssembly = asm.AssemblyDefinition;
 
@@ -184,7 +194,7 @@ namespace Xamarin.Bundler {
 #endif
 
 						if (App.SdkVersion >= framework.Version) {
-							var add_to = App.DeploymentTarget >= framework.Version ? asm.Frameworks : asm.WeakFrameworks;
+							var add_to = framework.AlwaysWeakLinked || App.DeploymentTarget < framework.Version ? asm.WeakFrameworks : asm.Frameworks;
 							add_to.Add (framework.Name);
 							continue;
 						} else {
@@ -331,7 +341,7 @@ namespace Xamarin.Bundler {
 					return true;
 				return App.Registrar != RegistrarMode.Static;
 			default:
-				throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol type {symbol.Type} for symbol {symbol.Name}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol type {symbol.Type} for symbol {symbol.Name}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 		}
 
@@ -375,7 +385,7 @@ namespace Xamarin.Bundler {
 					sb.AppendLine ($"@interface {symbol.ObjectiveCName} : NSObject @end");
 					break;
 				default:
-					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol type {symbol.Type} for {symbol.Name}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol type {symbol.Type} for {symbol.Name}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				}
 			}
 			sb.AppendLine ("static void __xamarin_symbol_referencer () __attribute__ ((used)) __attribute__ ((optnone));");
@@ -392,13 +402,13 @@ namespace Xamarin.Bundler {
 					sb.AppendLine ($"\tvalue = [{symbol.ObjectiveCName} class];");
 					break;
 				default:
-					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol type {symbol.Type} for {symbol.Name}. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol type {symbol.Type} for {symbol.Name}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				}
 			}
 			sb.AppendLine ("}");
 			sb.AppendLine ();
 
-			Driver.WriteIfDifferent (reference_m, sb.ToString ());
+			Driver.WriteIfDifferent (reference_m, sb.ToString (), true);
 
 #if MTOUCH
 			foreach (var abi in GetArchitectures (AssemblyBuildTarget.StaticObject)) {

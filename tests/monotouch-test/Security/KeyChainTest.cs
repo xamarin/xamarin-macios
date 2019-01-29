@@ -90,7 +90,12 @@ namespace MonoTouchFixtures.Security {
 			using (var id = IdentityTest.GetIdentity ()) {
 				data.LowlevelSetObject (id.Handle, valueref.Handle);
 				SecStatusCode code = SecItemAdd (data.Handle, IntPtr.Zero);
-				Assert.True (code == SecStatusCode.DuplicateItem || code == SecStatusCode.Success);
+				var expected = Is.EqualTo (SecStatusCode.DuplicateItem).Or.EqualTo (SecStatusCode.Success);
+#if __MACOS__
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
+					expected = Is.EqualTo (SecStatusCode.Param);
+#endif
+				Assert.That (code, expected);
 			}
 		}
 		
@@ -165,6 +170,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void CheckId ()
 		{
+			TestRuntime.AssertXcodeVersion (5, 1); // macOS 10.9
 			// test case from http://stackoverflow.com/questions/9481860/monotouch-cant-get-value-of-existing-keychain-item
 			// not a bug (no class lib fix) just a misuse of the API wrt status codes
 			Guid g = Guid.NewGuid ();

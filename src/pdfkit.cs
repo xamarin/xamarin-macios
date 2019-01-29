@@ -508,9 +508,13 @@ namespace PdfKit {
 	}
 
 	[iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (PdfAction), Name = "PDFActionResetForm")]
 	interface PdfActionResetForm {
-		//has a public Init ???
+		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
+		[Export ("init")]
+		[DesignatedInitializer]
+		IntPtr Constructor ();
 		
 		//NSArray of NSString
 		[Export ("fields"), NullAllowed]
@@ -528,7 +532,7 @@ namespace PdfKit {
 		[Export ("initWithURL:")]
 		IntPtr Constructor (NSUrl url);
 
-		[Export ("URL")]
+		[Export ("URL"), NullAllowed]
 		NSUrl Url { get; set; }
 	}
 
@@ -546,7 +550,7 @@ namespace PdfKit {
 		IntPtr Constructor (CGRect bounds, PdfAnnotationKey annotationType, [NullAllowed] NSDictionary properties);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
 		[Export ("initWithBounds:")]
 		IntPtr Constructor (CGRect bounds);
 
@@ -571,9 +575,12 @@ namespace PdfKit {
 		[Export ("userName")]
 		string UserName { get; set; }
 
-		[NoiOS]
 		[Export ("popup")]
+#if MONOMAC
 		PdfAnnotationPopup Popup { get; set; }
+#else
+		PdfAnnotation Popup { get; set; }
+#endif
 
 		[Export ("shouldDisplay")]
 		bool ShouldDisplay { get; set; }
@@ -1082,6 +1089,10 @@ namespace PdfKit {
 	[BaseType (typeof (NSObject), Name = "PDFDestination")]
 	interface PdfDestination : NSCopying {
 
+		[Mac (10,13)] // This used to be a calculated macro and promoted to an actual field in 10.13.
+		[Field ("kPDFDestinationUnspecifiedValue")]
+		nfloat UnspecifiedValue { get; }
+
 		[DesignatedInitializer]
 		[Export ("initWithPage:atPoint:")]
 		IntPtr Constructor (PdfPage page, CGPoint point);
@@ -1092,7 +1103,6 @@ namespace PdfKit {
 		[Export ("point")]
 		CGPoint Point { get; }
 
-		[Mac (10, 7)]
 		[Export ("zoom")]
 		nfloat Zoom { get; set; }
 
@@ -1103,6 +1113,7 @@ namespace PdfKit {
 
 	//Add attributes for delegates/events
 	[iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFDocument", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (PdfDocumentDelegate) })]
 	interface PdfDocument : NSCopying {
 
@@ -1145,6 +1156,11 @@ namespace PdfKit {
 		[Field ("PDFDocumentDidEndPageWriteNotification", "+PDFKit")]
 		[Notification]
 		NSString DidEndPageWriteNotification { get; }
+
+		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
+		[Export ("init")]
+		[DesignatedInitializer]
+		IntPtr Constructor ();
 
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
@@ -1341,7 +1357,6 @@ namespace PdfKit {
 		PdfSelection GetSelection (PdfPage startPage, nint startCharIndex, PdfPage endPage, nint endCharIndex);
 
 		[NoiOS]
-		[Mac (10,7)]
 		[Export ("printOperationForPrintInfo:scalingMode:autoRotate:")]
 		[return: NullAllowed]
 		NSPrintOperation GetPrintOperation ([NullAllowed] NSPrintInfo printInfo, PdfPrintScalingMode scaleMode, bool doRotate);
@@ -1397,8 +1412,14 @@ namespace PdfKit {
 	}
 
 	[iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFOutline")]
 	interface PdfOutline {
+
+		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
+		[Export ("init")]
+		[DesignatedInitializer]
+		IntPtr Constructor ();
 
 		[Export ("document")]
 		PdfDocument Document { get; }
@@ -1437,8 +1458,14 @@ namespace PdfKit {
 	}
 
 	[iOS (11,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "PDFPage")]
 	interface PdfPage : NSCopying {
+
+		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
+		[Export ("init")]
+		[DesignatedInitializer]
+		IntPtr Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithImage:")]
@@ -1486,7 +1513,7 @@ namespace PdfKit {
 		CGAffineTransform GetTransform (PdfDisplayBox box);
 
 		[NoiOS]
-		[Mac (10,12)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("drawWithBox:")]
 		void Draw (PdfDisplayBox box);
 
@@ -1503,6 +1530,7 @@ namespace PdfKit {
 		NSImage GetThumbnail (CGSize size, PdfDisplayBox box);
 
 		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("transformContextForBox:")]
 		void TransformContext (PdfDisplayBox box);
 
@@ -1569,11 +1597,9 @@ namespace PdfKit {
 		[Export ("boundsForPage:")]
 		CGRect GetBoundsForPage (PdfPage page);
 
-		[Mac (10, 7)]
 		[Export ("numberOfTextRangesOnPage:")]
 		nuint GetNumberOfTextRanges (PdfPage page);
 
-		[Mac (10, 7)]
 		[Export ("rangeAtIndex:onPage:")]
 		NSRange GetRange (nuint index, PdfPage page);
 
@@ -1760,9 +1786,12 @@ namespace PdfKit {
 		[Export ("backgroundColor")]
 		NSColor BackgroundColor { get; set; }
 
-		[Mac (10,7)]
 		[Export ("interpolationQuality", ArgumentSemantic.Assign)]
 		PdfInterpolationQuality InterpolationQuality { get; set; }
+
+		[iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[Export ("pageShadowsEnabled")]
+		bool PageShadowsEnabled { get; [Bind ("enablePageShadows:")] set; }
 
 		[NoMac]
 		[Export ("usePageViewController:withViewOptions:")]
@@ -1841,10 +1870,12 @@ namespace PdfKit {
 		[Export ("highlightedSelections")]
 		PdfSelection [] HighlightedSelections { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("takePasswordFrom:")]
 		void TakePasswordFrom (NSObject sender);
 
 		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("drawPage:")]
 		void DrawPage (PdfPage page);
 
@@ -1857,6 +1888,7 @@ namespace PdfKit {
 		void DrawPagePost (PdfPage page, CGContext context);
 
 		[NoiOS]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("drawPagePost:")]
 		void DrawPagePost (PdfPage page);
 

@@ -172,23 +172,27 @@ namespace Security {
 				unsafe {
 					if (parameters != null){
 						ppars = &pars;
-						pars.ptrToAuthorization = (AuthorizationItem *) Marshal.AllocHGlobal (sizeof (AuthorizationItem) * 3);
+						pars.ptrToAuthorization = (AuthorizationItem *) Marshal.AllocHGlobal (sizeof (AuthorizationItem) * 2);
 						if (parameters.PathToSystemPrivilegeTool != null)
 							EncodeString (ref pars.ptrToAuthorization [pars.count++], "system.privilege.admin", parameters.PathToSystemPrivilegeTool);
-						if (parameters.Prompt != null)
-							EncodeString (ref pars.ptrToAuthorization [pars.count++], "prompt", parameters.Prompt);
 						if (parameters.IconPath != null)
 							EncodeString (ref pars.ptrToAuthorization [pars.count++], "prompt", parameters.IconPath);
 					}
-					if (environment != null){
+					if (environment != null || (parameters != null && parameters.Prompt != null)){
 						penv = &env;
-						env.ptrToAuthorization = (AuthorizationItem *) Marshal.AllocHGlobal (sizeof (AuthorizationItem) * 3);
-						if (environment.Username != null)
-							EncodeString (ref env.ptrToAuthorization [env.count++], "username", environment.Username);
-						if (environment.Password != null)
-							EncodeString (ref env.ptrToAuthorization [env.count++], "password", environment.Password);
-						if (environment.AddToSharedCredentialPool)
-							EncodeString (ref env.ptrToAuthorization [env.count++], "shared", null);
+						env.ptrToAuthorization = (AuthorizationItem *) Marshal.AllocHGlobal (sizeof (AuthorizationItem) * 4);
+						if (environment != null){
+							if (environment.Username != null)
+								EncodeString (ref env.ptrToAuthorization [env.count++], "username", environment.Username);
+							if (environment.Password != null)
+								EncodeString (ref env.ptrToAuthorization [env.count++], "password", environment.Password);
+							if (environment.AddToSharedCredentialPool)
+								EncodeString (ref env.ptrToAuthorization [env.count++], "shared", null);
+						}
+						if (parameters != null){
+							if (parameters.Prompt != null)
+								EncodeString (ref env.ptrToAuthorization [env.count++], "prompt", parameters.Prompt);
+						}
 					}
 					code = AuthorizationCreate (ppars, penv, flags, out auth);
 					if (code != 0)

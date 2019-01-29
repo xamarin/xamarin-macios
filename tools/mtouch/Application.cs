@@ -25,25 +25,6 @@ namespace Xamarin.Bundler {
 		MarkerOnly = 3,
 	}
 
-	[Flags]
-	public enum Abi {
-		None   =   0,
-		i386   =   1,
-		ARMv6  =   2,
-		ARMv7  =   4,
-		ARMv7s =   8,
-		ARM64 =   16,
-		x86_64 =  32,
-		Thumb  =  64,
-		LLVM   = 128,
-		ARMv7k = 256,
-		SimulatorArchMask = i386 | x86_64,
-		DeviceArchMask = ARMv6 | ARMv7 | ARMv7s | ARMv7k | ARM64,
-		ArchMask = SimulatorArchMask | DeviceArchMask,
-		Arch64Mask = x86_64 | ARM64,
-		Arch32Mask = i386 | ARMv6 | ARMv7 | ARMv7s | ARMv7k,
-	}
-
 	public static class AbiExtensions {
 		public static string AsString (this Abi self)
 		{
@@ -83,7 +64,7 @@ namespace Xamarin.Bundler {
 	public partial class Application
 	{
 		public const string ProductName = "Xamarin.iOS";
-		public const string Error91LinkerSuggestion = "set the managed linker behaviour to Link Framework SDKs Only";
+		public const string Error91LinkerSuggestion = "set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior";
 
 		public string ExecutableName;
 		public BuildTarget BuildTarget;
@@ -105,6 +86,7 @@ namespace Xamarin.Bundler {
 		public bool IsExtension;
 		public List<string> Extensions = new List<string> (); // A list of the extensions this app contains.
 		public List<Application> AppExtensions = new List<Application> ();
+		public Application ContainerApp; // For extensions, this is the containing app
 
 		public bool? EnablePie;
 		public bool NativeStrip = true;
@@ -134,6 +116,8 @@ namespace Xamarin.Bundler {
 		public string AotOtherArguments = string.Empty;
 		public bool? LLVMAsmWriter;
 		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
+		public bool UseInterpreter;
+		public List<string> InterpretedAssemblies = new List<string> ();
 
 		public Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string> ();
 
@@ -146,8 +130,65 @@ namespace Xamarin.Bundler {
 		public List<string> References = new List<string> ();
 		
 		public bool? BuildDSym;
-		public bool Is32Build { get { return IsArchEnabled (Abi.Arch32Mask); } } // If we're targetting a 32 bit arch.
-		public bool Is64Build { get { return IsArchEnabled (Abi.Arch64Mask); } } // If we're targetting a 64 bit arch.
+
+		public bool IsInterpreted (string assembly)
+		{
+			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both.
+			if (!UseInterpreter)
+				return false;
+
+			// Go through the list of assemblies to interpret in reverse order,
+			// so that the last option passed to mtouch takes precedence.
+			for (int i = InterpretedAssemblies.Count - 1; i >= 0; i--) {
+				var opt = InterpretedAssemblies [i];
+				if (opt == "all")
+					return true;
+				else if (opt == "-all")
+					return false;
+				else if (opt == assembly)
+					return true;
+				else if (opt [0] == '-' && opt.Substring (1) == assembly)
+					return false;
+			}
+
+			// There's an implicit 'all' at the start of the list.
+			return true;
+		}
+
+		public bool IsAOTCompiled (string assembly)
+		{
+			if (!UseInterpreter)
+				return true;
+
+			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both:
+			// - mscorlib will always be processed by the AOT compiler to generate required wrapper functions for the interpreter to work
+			// - mscorlib might also be fully AOT-compiled (both when the interpreter is enabled and when it's not)
+			if (assembly == "mscorlib")
+				return true;
+
+			return !IsInterpreted (assembly);
+		}
+
+		// If we're targetting a 32 bit arch.
+		bool? is32bits;
+		public bool Is32Build {
+			get {
+				if (!is32bits.HasValue)
+					is32bits = IsArchEnabled (Abi.Arch32Mask);
+				return is32bits.Value;
+			}
+		}
+
+		// If we're targetting a 64 bit arch.
+		bool? is64bits;
+		public bool Is64Build {
+			get {
+				if (!is64bits.HasValue)
+					is64bits = IsArchEnabled (Abi.Arch64Mask);
+				return is64bits.Value;
+			}
+		}
+
 		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
 		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
 
@@ -461,6 +502,9 @@ namespace Xamarin.Bundler {
 			if (EnableLLVMOnlyBitCode)
 				return false;
 
+			if (IsInterpreted (Assembly.GetIdentity (assembly)))
+				return true;
+
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
@@ -468,7 +512,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return false;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", Platform);
 			}
 		}
 
@@ -615,7 +659,7 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (76, "No architecture specified (using the --abi argument). An architecture is required for {0} projects.", "Xamarin.TVOS");
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", Platform);
 			}
 		}
 
@@ -660,7 +704,7 @@ namespace Xamarin.Bundler {
 				}
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", Platform);
 			}
 
 			foreach (var abi in abis) {
@@ -1048,6 +1092,18 @@ namespace Xamarin.Bundler {
 					}
 				}
 
+				if (UseInterpreter != appex.UseInterpreter) {
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the interpreter settings are different between the container app ({(UseInterpreter ? "Enabled" : "Disabled")}) and the extension ({(appex.UseInterpreter ? "Enabled" : "Disabled")}).");
+					continue;
+				} else if (UseInterpreter) {
+					var appAssemblies = new HashSet<string> (InterpretedAssemblies);
+					var appexAssemblies = new HashSet<string> (appex.InterpretedAssemblies);
+					if (!appAssemblies.SetEquals (appexAssemblies)) {
+						ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the interpreted assemblies are different between the container app ({(InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join (", ", InterpretedAssemblies))}) and the extension ({(appex.InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join (", ", appex.InterpretedAssemblies))}).");
+						continue;
+					}
+				}
+
 				// Check that the Abis are matching
 				foreach (var abi in appex.Abis) {
 					var matching = abis.FirstOrDefault ((v) => (v & Abi.ArchMask) == (abi & Abi.ArchMask));
@@ -1062,6 +1118,17 @@ namespace Xamarin.Bundler {
 						applicable = false;
 						break;
 					}
+				}
+
+				// Check that the remove-dynamic-registrar optimizations are identical
+				if (Optimizations.RemoveDynamicRegistrar != appex.Optimizations.RemoveDynamicRegistrar) {
+					Func<bool?, string> bool_tostr = (v) => {
+						if (!v.HasValue)
+							return "default";
+						return v.Value ? "true" : "false";
+					};
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the remove-dynamic-registrar optimization differ between the container app ({bool_tostr (appex.Optimizations.RemoveDynamicRegistrar)}) and the extension ({bool_tostr (Optimizations.RemoveDynamicRegistrar)}).");
+					continue;
 				}
 
 				// Check if there aren't referenced assemblies from different sources
@@ -1093,6 +1160,7 @@ namespace Xamarin.Bundler {
 
 			if (candidates.Count > 0)
 				SharedCodeApps.AddRange (candidates);
+			Driver.Watch ("Detect Code Sharing", 1);
 		}
 
 		void Initialize ()
@@ -1108,15 +1176,10 @@ namespace Xamarin.Bundler {
 				BitCodeMode = BitCodeMode.LLVMOnly;
 			}
 
-			if (EnableDebug) {
-				if (!DebugTrack.HasValue) {
-					DebugTrack = IsSimulatorBuild;
-				}
-			} else {
-				if (DebugTrack.HasValue) {
-					ErrorHelper.Warning (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
-				}
+			if (!DebugTrack.HasValue) {
 				DebugTrack = false;
+			} else if (DebugTrack.Value && !EnableDebug) {
+				ErrorHelper.Warning (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
 			}
 
 			if (EnableAsmOnlyBitCode)
@@ -1309,7 +1372,7 @@ namespace Xamarin.Bundler {
 					// All versions of tvOS support extensions
 					break;
 				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Platform);
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", Platform);
 				}
 			}
 
@@ -1332,6 +1395,9 @@ namespace Xamarin.Bundler {
 
 			if (EnableBitCode && IsSimulatorBuild)
 				throw ErrorHelper.CreateError (84, "Bitcode is not supported in the simulator. Do not pass --bitcode when building for the simulator.");
+
+			if (UseInterpreter && IsSimulatorBuild)
+				throw ErrorHelper.CreateError (141, "The interpreter is not supported in the simulator. Do not pass --interpreter when building for the simulator.");
 
 			Namespaces.Initialize ();
 
@@ -1490,7 +1556,7 @@ namespace Xamarin.Bundler {
 			var p = new Process ();
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.RedirectStandardError = true;
-			p.StartInfo.FileName = "mono-symbolicate";
+			p.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono-symbolicate";
 			p.StartInfo.Arguments = $"store-symbols \"{src}\" \"{dest}\"";
 
 			try {
@@ -1589,7 +1655,7 @@ namespace Xamarin.Bundler {
 					continue; // Don't copy frameworks to app extensions (except watch extensions), they go into the container app.
 
 				if (!files.All ((v) => Directory.Exists (v) == isFramework))
-					throw ErrorHelper.CreateError (99, $"Internal error: 'can't process a mix of dylibs and frameworks: {string.Join (", ", files)}'. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+					throw ErrorHelper.CreateError (99, $"Internal error: 'can't process a mix of dylibs and frameworks: {string.Join (", ", files)}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 
 				if (isFramework) {
 					// This is a framework
@@ -1613,10 +1679,16 @@ namespace Xamarin.Bundler {
 						throw new AggregateException (exceptions);
 					}
 					if (info.DylibToFramework)
-						throw ErrorHelper.CreateError (99, $"Internal error: 'can't convert frameworks to frameworks: {files.First ()}'. Please file a bug report with a test case (https://bugzilla.xamarin.com).");
+						throw ErrorHelper.CreateError (99, $"Internal error: 'can't convert frameworks to frameworks: {files.First ()}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 					var framework_src = files.First ();
 					var framework_filename = Path.Combine (framework_src, Path.GetFileNameWithoutExtension (framework_src));
-					if (!MachO.IsDynamicFramework (framework_filename)) {
+					var dynamic = false;
+					try {
+						dynamic = MachO.IsDynamicFramework (framework_filename);
+					} catch (Exception e) {
+						throw ErrorHelper.CreateError (140, e, $"File '{framework_filename}' is not a valid framework.");
+					}
+					if (!dynamic) {
 						Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_src);
 					} else {
 						var macho_file = Path.Combine (targetPath, Path.GetFileNameWithoutExtension (framework_src));
@@ -1754,6 +1826,7 @@ namespace Xamarin.Bundler {
 			}
 
 			Driver.CalculateCompilerPath (this);
+			Driver.Watch ("Select Native Compiler", 1);
 		}
 
 		public string GetLibMono (AssemblyBuildTarget build_target)
@@ -1766,7 +1839,7 @@ namespace Xamarin.Bundler {
 			case AssemblyBuildTarget.Framework:
 				return Path.Combine (Driver.GetProductSdkDirectory (this), "Frameworks", "Mono.framework");
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", build_target);
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
 			}
 		}
 
@@ -1780,7 +1853,7 @@ namespace Xamarin.Bundler {
 			case AssemblyBuildTarget.Framework:
 				return Path.Combine (Driver.GetProductSdkDirectory (this), "Frameworks", EnableDebug ? "Xamarin-debug.framework" : "Xamarin.framework");
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", build_target);
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
 			}
 		}
 
@@ -1809,6 +1882,9 @@ namespace Xamarin.Bundler {
 				} else if (line.Contains ("clang: error: linker command failed with exit code 1")) {
 					continue;
 				} else if (line.Contains ("was built for newer iOS version (5.1.1) than being linked (5.1)")) {
+					continue;
+				} else if (line.Contains ("was built for newer iOS version (7.0) than being linked (6.0)") && 
+					line.Contains (Driver.GetProductSdkDirectory (target.App))) {
 					continue;
 				}
 
@@ -2107,7 +2183,27 @@ namespace Xamarin.Bundler {
 
 		public void BundleAssemblies ()
 		{
-			var strip = ManagedStrip && IsDeviceBuild && !EnableDebug && !PackageManagedDebugSymbols;
+			Assembly.StripAssembly strip = ((path) => 
+			{
+				if (!ManagedStrip)
+					return false;
+				if (!IsDeviceBuild)
+					return false;
+				if (EnableDebug)
+					return false;
+				if (PackageManagedDebugSymbols)
+					return false;
+				/* FIXME: should be `if (IsInterpreted (Assembly.GetIdentity (path)))`.
+				 * The problem is that in mixed mode we can't do the transition
+				 * between "interp"->"aot'd methods using gsharedvt", so we
+				 * fall back to the interp and thus need the IL not to be
+				 * stripped out. Once Mono supports this, we can add back the
+				 * more precise check.
+				 * See https://github.com/mono/mono/issues/11942 */
+				if (UseInterpreter)
+					return false;
+				return true;
+			});
 
 			var grouped = Targets.SelectMany ((Target t) => t.Assemblies).GroupBy ((Assembly asm) => asm.Identity);
 			foreach (var @group in grouped) {
@@ -2117,10 +2213,10 @@ namespace Xamarin.Bundler {
 				var size_specific = assemblies.Length > 1 && !Cache.CompareAssemblies (assemblies [0].FullPath, assemblies [1].FullPath, true, true);
 
 				if (IsExtension && !IsWatchExtension) {
-					var codeShared = assemblies.Count ((v) => v.IsCodeShared);
+					var codeShared = assemblies.Count ((v) => v.IsCodeShared || v.BundleInContainerApp);
 					if (codeShared > 0) {
 						if (codeShared != assemblies.Length)
-							throw ErrorHelper.CreateError (99, $"Internal error: all assemblies in a joined build target must have the same code sharing options ({string.Join (", ", assemblies.Select ((v) => v.Identity + "=" + v.IsCodeShared))}). Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+							throw ErrorHelper.CreateError (99, $"Internal error: all assemblies in a joined build target must have the same code sharing options ({string.Join (", ", assemblies.Select ((v) => v.Identity + "=" + v.IsCodeShared))}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 
 						continue; // These resources will be found in the main app.
 					}
@@ -2157,7 +2253,7 @@ namespace Xamarin.Bundler {
 						asm.CopyAotDataFilesToDirectory (size_specific ? Path.Combine (resource_directory, Path.GetFileName (asm.Target.AppTargetDirectory)) : resource_directory);
 					break;
 				default:
-					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", build_target);
+					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
 				}
 			}
 		}
@@ -2244,7 +2340,7 @@ namespace Xamarin.Bundler {
 				sb.AppendLine ("                <integer>4</integer>");
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", Platform);
 			}
 			sb.AppendLine ("        </array>");
 

@@ -18,25 +18,9 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
 		Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
-
-	<PropertyGroup Condition="'$(OS)' == 'Unix'">
-		<XamarinMacFrameworkRoot Condition="'$(XamarinMacFrameworkRoot)' == '' And Exists('/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin')">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<!-- If we don't have a specified version/identifier, assume Mobile -->
-		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v2.0</TargetFrameworkVersion>
-		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == '' And '$(TargetFrameworkVersion)' == 'v2.0'">Xamarin.Mac</TargetFrameworkIdentifier>
-
-		<BaseLibDllPath Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll</BaseLibDllPath>
-		<BaseLibDllPath Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/4.5/Xamarin.Mac.dll</BaseLibDllPath>
-		<BTouchToolPath>$(XamarinMacFrameworkRoot)/bin/</BTouchToolPath>
-		<BTouchToolExe Condition="Exists('$(BTouchToolPath)/bgen')">bgen</BTouchToolExe>
-		<BTouchToolExe Condition="!Exists('$(BTouchToolPath)/bgen')">bmac-mobile-mono</BTouchToolExe>
-		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-
-		<DefineConstants>__UNIFIED__;__MACOS__;$(DefineConstants)</DefineConstants>
-	</PropertyGroup>
+	
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.props"
+			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />	
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 		Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>

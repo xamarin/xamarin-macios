@@ -156,9 +156,17 @@ namespace Introspection {
 			case "_AuthenticationSchemeOAuth1":
 				return true;
 			case "CBUUIDValidRangeString":
-				if (Mac.CheckSystemVersion (10, 13)); // radar 32858911
+				if (Mac.CheckSystemVersion (10, 13)) // radar 32858911
 					return true;
-				break;
+				goto default;
+#if !UNIFIED
+			case "InputRSSArticleDurationKey":
+			case "InputRSSFeedURLKey":
+			case "ProtocolRSSVisualizer":
+				if (Mac.CheckSystemVersion (10, 14))
+					return true;
+				goto default;
+#endif
 			default:
 				return base.Skip (p);
 			}
@@ -168,9 +176,9 @@ namespace Introspection {
 		{
 			switch (constantName) {
 			case "CBUUIDValidRangeString":
-				if (Mac.CheckSystemVersion (10, 13)); // radar 32858911
+				if (Mac.CheckSystemVersion (10, 13)) // radar 32858911
 					return true;
-				break;
+				goto default;
 			// Only there for API compat
 			case "kSecUseNoAuthenticationUI":
 			case "kSecUseOperationPrompt":
@@ -186,6 +194,14 @@ namespace Introspection {
 				if (Mac.Is32BitMavericks)
 					return true;
 				goto default;
+#if !UNIFIED
+			case "QCCompositionInputRSSArticleDurationKey":
+			case "QCCompositionInputRSSFeedURLKey":
+			case "QCCompositionProtocolRSSVisualizer":
+				if (Mac.CheckSystemVersion (10, 14))
+					return true;
+				goto default;
+#endif
 			default:
 				return base.Skip (constantName, libraryName);
 			}
@@ -199,7 +215,12 @@ namespace Introspection {
 			case "NSAccessibilityNotifications":
 				return true;
 			case "AVFragmentedMovieTrack":
-				return notificationName == "AVFragmentedMovieTrackTimeRangeDidChangeNotification";
+				switch (notificationName) {
+				case "AVFragmentedMovieTrackTotalSampleDataLengthDidChangeNotification":
+				case "AVFragmentedMovieTrackTimeRangeDidChangeNotification":
+					return true;
+				}
+				break;
 			case "NSTask":
 				return notificationName == "NSTaskDidTerminateNotification";
 #endif

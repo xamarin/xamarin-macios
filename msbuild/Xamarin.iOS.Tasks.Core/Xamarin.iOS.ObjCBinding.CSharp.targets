@@ -17,6 +17,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<UsingTask TaskName="Xamarin.iOS.Tasks.PrepareNativeReferences" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.BTouch" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+ 	<UsingTask TaskName="Xamarin.iOS.Tasks.CreateBindingResourcePackage" AssemblyFile="Xamarin.iOS.Tasks.dll" /> 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 
 	<UsingTask TaskName="Microsoft.Build.Tasks.Delete" AssemblyFile="Xamarin.iOS.Tasks.dll"/>
@@ -28,6 +29,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 	<Import Project="Xamarin.iOS.ObjCBinding.Common.targets" />
+	<Import Project="Xamarin.Shared.targets"/>
 
 	<PropertyGroup>
 		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)sources.list</_GeneratedSourcesFileList>
@@ -35,12 +37,13 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		<XamarinDefineConstants Condition="'$(XamarinDefineConstants)' == ''">__UNIFIED__;__MOBILE__;__IOS__</XamarinDefineConstants>
 		<DefineConstants>$(XamarinDefineConstants);$(DefineConstants)</DefineConstants>
 
-		<!-- Add our own pre-build steps -->
+ 		<!-- Add our own pre and post build steps --> 
 		<CompileDependsOn>
 			_GenerateBindings;
 			_PrepareNativeReferences;
 			_CollectGeneratedSources;
 			$(CompileDependsOn)
+ 			_CreateBindingResourcePackage; 
 		</CompileDependsOn>
 	</PropertyGroup>
 
@@ -65,7 +68,6 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 			AllowUnsafeBlocks="$(AllowUnsafeBlocks)"
 			ApiDefinitions="@(ObjcBindingApiDefinition)"
 			BaseLibDll="$(BaseLibDllPath)"
-			CompilerPath="$(CscPath)"
 			CoreSources="@(ObjcBindingCoreSource)"
 			DefineConstants="$(DefineConstants)"
 			EmitDebugInformation="$(BTouchEmitDebugInformation)"
@@ -73,7 +75,6 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
 			GeneratedSourcesFileList="$(_GeneratedSourcesFileList)"
 			Namespace="$(Namespace)"
-			NoStdLib="$(NoStdLib)"
 			OutputAssembly="$(OutputAssembly)"
 			ProcessEnums="$(ProcessEnums)"
 			ProjectDir="$(MSBuildProjectDirectory)"
@@ -89,8 +90,8 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			NativeReferences="@(NativeReference)">
-			<Output ItemName="ManifestResourceWithNoCulture" TaskParameter="EmbeddedResources" />
-			<Output ItemName="_NativeFramework" TaskParameter="NativeFrameworks" />
+			<Output ItemName="ManifestResourceWithNoCulture" TaskParameter="EmbeddedResources" Condition="'$(NoBindingEmbedding)' != 'true'"/>
+			<Output ItemName="_NativeFramework" TaskParameter="NativeFrameworks" Condition="'$(NoBindingEmbedding)' != 'true'"/>
 			<Output ItemName="Compile" TaskParameter="LinkWithAttributes" />
 		</PrepareNativeReferences>
 	</Target>

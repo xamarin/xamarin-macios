@@ -4,11 +4,14 @@ using System.IO;
 using NUnit.Framework;
 using Xamarin.MacDev;
 using System.Diagnostics;
+using Xamarin.Tests;
 
 namespace Xamarin.iOS.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class WatchKit : ExtensionTestBase {
+
+		bool isXcode10OrLater = Version.Parse (Configuration.XcodeVersion).Major >= 10;
 
 		public WatchKit (string platform) : base(platform)
 		{
@@ -17,16 +20,22 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest () 
 		{
-			this.BuildExtension ("MyWatchApp", "MyWatchKitExtension", Platform, "Debug", additionalAsserts: (ProjectPaths mtouchPaths) =>
+			this.BuildExtension ("MyWatchApp", "MyWatchKitExtension", Platform, "Debug", expectedErrorCount: isXcode10OrLater ? 1 : 0,  additionalAsserts: (ProjectPaths mtouchPaths) =>
 			{
 				Assert.IsTrue (Directory.Exists (Path.Combine (mtouchPaths.AppBundlePath, "PlugIns", "MyWatchKitExtension.appex")), "appex");
 				Assert.IsFalse (Directory.Exists (Path.Combine (mtouchPaths.AppBundlePath, "PlugIns", "MyWatchKitExtension.appex", "Frameworks")), "frameworks");
 			});
+
+			if (isXcode10OrLater)
+				Assert.AreEqual ("Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.", Engine.Logger.ErrorEvents[0].Message, "WK 1 error message");
 		}
 
 		[Test]
 		public void InvalidBundleIdTest ()
 		{
+			if (isXcode10OrLater)
+				Assert.Ignore ("WK 1 apps are not supported when running with Xcode 10+.");
+
 			var mtouchPaths = SetupProjectPaths ("MyWatchApp", platform: Platform);
 			using (var xiproj = XIProject.Clone (mtouchPaths.ProjectPath, "MyWatchKitExtension", "MyWatchKitApp")) {
 				mtouchPaths = SetupProjectPaths ("MyWatchApp", "MyWatchApp", xiproj.ProjectDirectory, platform: Platform);
@@ -38,7 +47,7 @@ namespace Xamarin.iOS.Tasks {
 				File.WriteAllText (appInfoPath, appInfoContents.Replace ("<string>com.xamarin.MyWatchApp</string>", "<string>com.xamarin.MyWatchAppX</string>"));
 
 				var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-				Engine.GlobalProperties.SetProperty ("Platform", Platform);
+				Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 				AppBundlePath = mtouchPaths ["app_bundlepath"];
 				RunTarget (proj, "Build", 2);
 				Assert.AreEqual ("The App Extension 'WatchExtension' has an invalid CFBundleIdentifier (com.xamarin.MyWatchApp.WatchExtension), it does not begin with the main app bundle's CFBundleIdentifier (com.xamarin.MyWatchAppX).", Engine.Logger.ErrorEvents [0].Message, "#1");
@@ -49,6 +58,9 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void CreateIpa () 
 		{
+			if (isXcode10OrLater)
+				Assert.Ignore ("WK 1 apps are not supported when running with Xcode 10+.");
+
 			if (Platform == "iPhoneSimulator")
 				return; // this is a device-only test.
 
@@ -61,12 +73,12 @@ namespace Xamarin.iOS.Tasks {
 
 			AppBundlePath = mtouchPaths.AppBundlePath;
 
-			Engine.GlobalProperties.SetProperty ("Platform", Platform);
-			Engine.GlobalProperties.SetProperty ("BuildIpa", "true");
-			Engine.GlobalProperties.SetProperty ("IpaIncludeArtwork", "true");
-			Engine.GlobalProperties.SetProperty ("CodesignProvision", "Automatic"); // Provisioning profile
-			Engine.GlobalProperties.SetProperty ("CodesignKey", "iPhone Developer");
-			Engine.GlobalProperties.SetProperty ("Configuration", configuration);
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
+			Engine.ProjectCollection.SetGlobalProperty ("BuildIpa", "true");
+			Engine.ProjectCollection.SetGlobalProperty ("IpaIncludeArtwork", "true");
+			Engine.ProjectCollection.SetGlobalProperty ("CodesignProvision", "Automatic"); // Provisioning profile
+			Engine.ProjectCollection.SetGlobalProperty ("CodesignKey", "iPhone Developer");
+			Engine.ProjectCollection.SetGlobalProperty ("Configuration", configuration);
 
 			RunTarget (proj, "Clean");
 			Assert.IsFalse (Directory.Exists (AppBundlePath), "{1}: App bundle exists after cleanup: {0} ", AppBundlePath, Platform);
@@ -103,7 +115,7 @@ namespace Xamarin.iOS.Tasks {
 			string wkPath = "WatchKitSupport/WK";
 			Assert.Contains (wkPath, lines, wkPath + " does not exist");
 
-			var ipaIncludeArtwork = proj.GetEvaluatedProperty ("IpaIncludeArtwork");
+			var ipaIncludeArtwork = proj.GetPropertyValue ("IpaIncludeArtwork");
 			Assert.IsTrue (output.Contains ("iTunesMetadata.plist"), string.Format ("The ipa should contain at least one iTunesMetadata.plist file if we are using an AppStore config and IpaIncludeArtwork is true. IpaIncludeArtwork: {0}", ipaIncludeArtwork));
 
 			RunTarget (proj, "Clean");

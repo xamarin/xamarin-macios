@@ -17,6 +17,7 @@ namespace Xamarin.Bundler {
 	public abstract class CoreResolver : IAssemblyResolver {
 
 		internal Dictionary<string, AssemblyDefinition> cache;
+		Dictionary<string,ReaderParameters> params_cache;
 
 		public string FrameworkDirectory { get; set; }
 		public string RootDirectory { get; set; }
@@ -26,6 +27,7 @@ namespace Xamarin.Bundler {
 		public CoreResolver ()
 		{
 			cache = new Dictionary<string, AssemblyDefinition> (NormalizedStringComparer.OrdinalIgnoreCase);
+			params_cache = new Dictionary<string, ReaderParameters> (StringComparer.Ordinal);
 		}
 
 		public IDictionary<string, AssemblyDefinition> ResolverCache { get { return cache; } }
@@ -45,7 +47,12 @@ namespace Xamarin.Bundler {
 
 		public AssemblyDefinition Resolve (AssemblyNameReference name)
 		{
-			return Resolve (name, new ReaderParameters { AssemblyResolver = this });
+			var key = name.ToString ();
+			if (!params_cache.TryGetValue (key, out ReaderParameters parameters)) {
+				parameters = new ReaderParameters { AssemblyResolver = this };
+				params_cache [key] = parameters;
+			}
+			return Resolve (name, parameters);
 		}
 
 		public abstract AssemblyDefinition Resolve (AssemblyNameReference name, ReaderParameters parameters);
@@ -83,11 +90,9 @@ namespace Xamarin.Bundler {
 				var parameters = CreateDefaultReaderParameters (fileName);
 				try {
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
+					params_cache [assembly.Name.ToString ()] = parameters;
 				}
-				catch (InvalidOperationException e) {
-					// cecil use the default message so it's not very helpful to detect the root cause
-					if (!e.TargetSite.ToString ().Contains ("Void ReadSymbols(Mono.Cecil.Cil.ISymbolReader)"))
-						throw;
+				catch (SymbolsNotMatchingException) {
 					parameters.ReadSymbols = false;
 					parameters.SymbolReaderProvider = null;
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
@@ -102,17 +107,17 @@ namespace Xamarin.Bundler {
 			return assembly;
 		}
 
-		protected AssemblyDefinition SearchDirectory (string name, string directory, string extension = ".dll", bool recursive = false)
+		protected AssemblyDefinition SearchDirectory (string name, string directory, string extension = ".dll")
 		{
-			var file = DirectoryGetFile (directory, name + extension, recursive);
+			var file = DirectoryGetFile (directory, name + extension);
 			if (file.Length > 0)
 				return Load (file);
 			return null;
 		}
 
-		static string DirectoryGetFile (string directory, string file, bool recursive)
+		static string DirectoryGetFile (string directory, string file)
 		{
-			var files = Directory.GetFiles (directory, file, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+			var files = Directory.GetFiles (directory, file);
 			if (files != null && files.Length > 0) {
 				if (files.Length > 1) {
 					ErrorHelper.Warning (133, "Found more than 1 assembly matching '{0}', choosing first:{1}{2}", file, Environment.NewLine, string.Join ("\n", files));

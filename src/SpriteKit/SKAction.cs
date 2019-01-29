@@ -12,6 +12,12 @@ using CoreGraphics;
 using CoreFoundation;
 
 namespace SpriteKit {
+
+#if !XAMCORE_4_0
+	[Obsolete ("Use 'SKActionTimingFunction2' instead.")]
+	public delegate void SKActionTimingFunction (float /* float, not CGFloat */ time);
+#endif
+
 #if XAMCORE_2_0 || !MONOMAC
 	public partial class SKAction {
 
@@ -32,6 +38,10 @@ namespace SpriteKit {
 		{
 			return Run (block, queue);
 		}
+#endif
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'TimingFunction2' instead.")]
+		public virtual SKActionTimingFunction TimingFunction { get; set; }
 #endif
 	}
 #endif

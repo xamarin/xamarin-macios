@@ -239,7 +239,7 @@ exit_with_message (const char *reason, const char *argv0, bool request_mono)
 	[alert release];
 	
 	if (request_mono && answer == NSAlertFirstButtonReturn) {
-		NSString *mono_download_url = @"http://www.go-mono.com/mono-downloads/download.html";
+		NSString *mono_download_url = @"http://www.mono-project.com/download/stable/";
 		CFURLRef url = CFURLCreateWithString (NULL, (CFStringRef) mono_download_url, NULL);
 		LSOpenCFURLRef (url, NULL);
 		CFRelease (url);
@@ -247,6 +247,7 @@ exit_with_message (const char *reason, const char *argv0, bool request_mono)
 	exit (1);
 }
 
+#ifdef DYNAMIC_MONO_RUNTIME
 static int
 check_mono_version (const char *version, const char *req_version)
 {
@@ -280,7 +281,6 @@ check_mono_version (const char *version, const char *req_version)
 	return TRUE;
 }
 
-#ifdef DYNAMIC_MONO_RUNTIME
 static int
 push_env (const char *variable, NSString *str_value)
 {
@@ -427,8 +427,9 @@ app_initialize (xamarin_initialize_data *data)
 		setrlimit (RLIMIT_NOFILE, &limit);
 	}
 
-	// 5) Verify the minimum Mono version. The minimum mono version is specified in: [...]
 	NSDictionary *plist = [[NSBundle mainBundle] infoDictionary];
+#ifdef DYNAMIC_MONO_RUNTIME
+	// 5) Verify the minimum Mono version. The minimum mono version is specified in: [...]
 	NSString *minVersion = NULL;
 	if (plist != NULL) {
 		minVersion = (NSString *) [plist objectForKey:@"MonoMinimumVersion"];
@@ -440,11 +441,10 @@ app_initialize (xamarin_initialize_data *data)
 	
 	if (!minVersion) {
 		// This must be kept in sync with mmp's minimum mono version (in driver.cs)
-		minVersion = @"4.2.0";
+		minVersion = @MIN_XM_MONO_VERSION;
 	}
 
 	char *mono_version;
-#ifdef DYNAMIC_MONO_RUNTIME
 	const char *err = xamarin_initialize_dynamic_runtime (mono_runtime_prefix);
 	if (err) {
 		mono_version = xamarin_get_mono_runtime_build_info ();
@@ -454,11 +454,11 @@ app_initialize (xamarin_initialize_data *data)
 			exit_with_message (err, data->basename, true);
 		}
 	}
-#endif
 
 	mono_version = mono_get_runtime_build_info ();
 	if (!check_mono_version (mono_version, [minVersion UTF8String]))
 		exit_with_message ([[NSString stringWithFormat:@"This application requires the Mono framework version %@ or newer.", minVersion] UTF8String], data->basename, true);
+#endif
 
 	// 6) Find the executable. The name is: [...]
 	if (data->launch_mode == XamarinLaunchModeApp) {
@@ -526,8 +526,10 @@ app_initialize (xamarin_initialize_data *data)
 
 	/* other non-documented stuff... */	
 
-	initialize_cocoa_threads (NULL);
+	xamarin_initialize_cocoa_threads (NULL);
 	init_logdir ();
+	mono_set_signal_chaining (TRUE);
+	mono_set_crash_chaining (TRUE);
 }
 
 #define __XAMARIN_MAC_RELAUNCH_APP__ "__XAMARIN_MAC_RELAUNCH_APP__"

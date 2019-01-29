@@ -42,7 +42,7 @@ namespace Xamarin {
 			case ApplePlatform.WatchOS: return WatchOSVersion;
 			case ApplePlatform.TVOS: return TVOSVersion;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at http://bugzilla.xamarin.com with a test case.", platform, Application.ProductName);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", platform, Application.ProductName);
 			}
 		}
 
@@ -54,9 +54,17 @@ namespace Xamarin {
 			case ApplePlatform.WatchOS: return MinWatchOSVersion;
 			case ApplePlatform.TVOS: return MinTVOSVersion;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at http://bugzilla.xamarin.com with a test case.", platform, Application.ProductName);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", platform, Application.ProductName);
 			}
 		}
 #endif
+
 	}
+
+#if MMP
+	static class MonoVersions {
+		public static string MinimumMono = "@MIN_XM_MONO_VERSION@";
+		public static Version MinimumMonoVersion { get { return new Version (MinimumMono); }}
+	}
+#endif
 }

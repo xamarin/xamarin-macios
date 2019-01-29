@@ -67,6 +67,15 @@ namespace CoreGraphics {
 		Only                
 	}
 
+	public enum CGImagePixelFormatInfo : uint {
+		Packed = 0,
+		Rgb555 = 1 << 16,
+		Rgb565 = 2 << 16,
+		Rgb101010 = 3 << 16,
+		RgbCif10 = 4 << 16,
+		Mask = 0xF0000,
+	}
+
 	// uint32_t -> CGImage.h
 	[Flags]
 	public enum CGBitmapFlags : uint {
@@ -89,6 +98,16 @@ namespace CoreGraphics {
 		ByteOrder32Little = (2 << 12),
 		ByteOrder16Big    = (3 << 12),
 		ByteOrder32Big    = (4 << 12)
+	}
+
+	[Flags]
+	public enum CGImageByteOrderInfo : uint {
+		ByteOrderMask     = 0x7000,
+		ByteOrderDefault  = (0 << 12),
+		ByteOrder16Little = (1 << 12),
+		ByteOrder32Little = (2 << 12),
+		ByteOrder16Big    = (3 << 12),
+		ByteOrder32Big    = (4 << 12),
 	}
 
 	// CGImage.h
@@ -197,12 +216,18 @@ namespace CoreGraphics {
 		static extern IntPtr CGWindowListCreateImage(CGRect screenBounds, CGWindowListOption windowOption, uint windowID, CGWindowImageOption imageOption);
         
 		public static CGImage ScreenImage (int windownumber, CGRect bounds)
-		{                    
-			IntPtr imageRef = CGWindowListCreateImage(bounds, CGWindowListOption.IncludingWindow, (uint)windownumber,
-								  CGWindowImageOption.Default);
+		{
+			return ScreenImage (windownumber, bounds, CGWindowListOption.IncludingWindow, CGWindowImageOption.Default);
+		}
+
+		public static CGImage ScreenImage (int windownumber, CGRect bounds, CGWindowListOption windowOption,
+			CGWindowImageOption imageOption)
+		{
+			IntPtr imageRef = CGWindowListCreateImage (bounds, windowOption, (uint) windownumber,
+								  imageOption);
 			if (imageRef == IntPtr.Zero)
 				return null;
-			return new CGImage(imageRef, true);                              
+			return new CGImage (imageRef, true);
 		}
 #elif !WATCH
 		public static CGImage ScreenImage {
@@ -440,6 +465,19 @@ namespace CoreGraphics {
 				return h == IntPtr.Zero ? null : Runtime.GetNSObject<NSString> (h);
 			}
 		}
+
+		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern CGImagePixelFormatInfo CGImageGetPixelFormatInfo (/* __nullable CGImageRef */ IntPtr handle);
+		
+		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+		public CGImagePixelFormatInfo PixelFormatInfo => CGImageGetPixelFormatInfo (handle);
+			
+		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern CGImageByteOrderInfo CGImageGetByteOrderInfo (/* __nullable CGImageRef */ IntPtr handle);
+		public CGImageByteOrderInfo ByteOrderInfo => CGImageGetByteOrderInfo (handle);
+		
 #endif // !COREBUILD
 	}
 }

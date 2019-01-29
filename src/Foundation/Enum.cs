@@ -190,19 +190,13 @@ namespace Foundation  {
 		WeekdayOrdinal = 1024,
 		Quarter = 2048,
 
-		[Mac (10, 7)]
 		WeekOfMonth = (1 << 12),
-		[Mac (10, 7)]
 		WeekOfYear = (1 << 13),
-		[Mac (10, 7)]
 		YearForWeakOfYear = (1 << 14),
 
-		[Mac (10, 7)]
 		Nanosecond = (1 << 15),
 
-		[Mac (10, 7)]
 		Calendar = (1 << 20),
-		[Mac (10, 7)]
 		TimeZone = (1 << 21),
 	}
 
@@ -899,6 +893,8 @@ namespace Foundation  {
 		Video,
 		Background,
 		Voice,
+		[Mac (10,14)][iOS (12,0)][Watch (5,0)][TV (12,0)]
+		ResponsiveData,
 		[Mac (10,12)][iOS (10,0)][Watch (3,0)][TV (10,0)]
 		CallSignaling = 11,
 	}
@@ -1090,6 +1086,7 @@ namespace Foundation  {
 	}
 
 	[iOS (8,0)]
+	[Mac (10,10)]
 	[Native]
 	public enum NSQualityOfService : long {
 		UserInteractive = 33,
@@ -1147,11 +1144,8 @@ namespace Foundation  {
 		Dash          = 1 << 7,
 		Replacement   = 1 << 8,
 		Correction    = 1 << 9,
-		[Mac (10, 7)]
 		RegularExpression  = 1 << 10,
-		[Mac (10, 7)]
 		PhoneNumber        = 1 << 11,
-		[Mac (10, 7)]
 		TransitInformation = 1 << 12,
 	}
 

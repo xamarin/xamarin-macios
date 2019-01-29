@@ -7,6 +7,9 @@ namespace ObjCRuntime {
 		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
 		public const string libcLibrary = "/usr/lib/libc.dylib";
 		public const string ObjectiveCLibrary = "/usr/lib/libobjc.dylib";
+#if !XAMCORE_4_0
+		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
+#endif
 		
 		// TVOS 9.0
 		internal const string CoreServicesLibrary = "/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices";
@@ -44,8 +47,11 @@ namespace ObjCRuntime {
 		public const string MetalPerformanceShadersLibrary = "/System/Library/Frameworks/MetalPerformanceShaders.framework/MetalPerformanceShaders";
 		public const string MobileCoreServicesLibrary = "/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices";
 		public const string ModelIOLibrary = "/System/Library/Frameworks/ModelIO.framework/ModelIO";
+		public const string NetworkLibrary = "/System/Library/Frameworks/Network.framework/Network";
 		public const string OpenGLESLibrary = "/System/Library/Frameworks/OpenGLES.framework/OpenGLES";
+#if !XAMCORE_4_0
 		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
+#endif
 		public const string QuartzLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";
 		public const string SceneKitLibrary = "/System/Library/Frameworks/SceneKit.framework/SceneKit";
 		public const string SecurityLibrary = "/System/Library/Frameworks/Security.framework/Security";
@@ -55,6 +61,10 @@ namespace ObjCRuntime {
 		public const string TVMLKitLibrary = "/System/Library/Frameworks/TVMLKit.framework/TVMLKit";
 		public const string TVServicesLibrary = "/System/Library/Frameworks/TVServices.framework/TVServices";
 		public const string UIKitLibrary = "/System/Library/Frameworks/UIKit.framework/UIKit";
+		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
+#if !XAMCORE_4_0
+		public const string libcompression = "/usr/lib/libcompression.dylib";
+#endif
 
 		// TVOS 9.2
 		public const string MapKitLibrary = "/System/Library/Frameworks/MapKit.framework/MapKit";
@@ -74,5 +84,8 @@ namespace ObjCRuntime {
 		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
 		public const string IOSurfaceLibrary = "/System/Library/Frameworks/IOSurface.framework/IOSurface";
+
+		// tvOS 12.0
+		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 	}
 }

@@ -1,7 +1,4 @@
 build
-MonoTouch.Dialog-1.csproj
-MonoTouch.Dialog-1.tvos.csproj
-MonoTouch.Dialog-1.unified.csproj
 MonoTouch.NUnitLite.csproj
 MonoTouch.NUnitLite.tvos.csproj
 MonoTouch.NUnitLite.unified.csproj
@@ -10,5 +7,7 @@ xamios.csproj
 xammac.csproj
 xamtvos.csproj
 xamwatch.csproj
-generator.csproj
+generator.csproj.inc
 *~
+*.rsp
+
