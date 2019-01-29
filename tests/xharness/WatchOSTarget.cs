@@ -19,6 +19,14 @@ namespace xharness
 		public string WatchOSExtensionProjectPath { get; private set; }
 		public string WatchOSProjectPath { get { return ProjectPath; } private set { ProjectPath = value; } }
 
+		public override string SimulatorArchitectures {
+			get { return "i386"; }
+		}
+
+		public override string DeviceArchitectures {
+			get { return "ARMv7k, ARM64_32"; }
+		}
+
 		void CreateWatchOSAppProject ()
 		{
 			var csproj = new XmlDocument ();
@@ -66,6 +74,28 @@ namespace xharness
 		{
 			var csproj = inputProject;
 			var suffix = "-watchos-extension";
+
+			// Remove unused configurations
+			csproj.DeleteConfiguration ("iPhone", "Release-bitcode");
+			csproj.DeleteConfiguration ("iPhone", "Release64");
+			csproj.DeleteConfiguration ("iPhone", "Debug64");
+
+			csproj.FixArchitectures ("i386", "ARMv7k", "iPhone", "Release32");
+			csproj.FixArchitectures ("i386", "ARMv7k", "iPhone", "Debug32");
+
+			// add Release64_32 and set the correct architecture
+			csproj.CloneConfiguration ("iPhone", "Release", "Release64_32");
+			csproj.FixArchitectures ("i386", "ARM64_32", "iPhone", "Release64_32");
+
+			// add Debug64_32 and set the correct architecture
+			csproj.CloneConfiguration ("iPhone", "Debug", "Debug64_32");
+			csproj.FixArchitectures ("i386", "ARM64_32", "iPhone", "Debug64_32");
+
+			csproj.FixArchitectures (SimulatorArchitectures, DeviceArchitectures, "iPhoneSimulator", "Debug");
+			csproj.FixArchitectures (SimulatorArchitectures, DeviceArchitectures, "iPhoneSimulator", "Release");
+			csproj.FixArchitectures (SimulatorArchitectures, DeviceArchitectures, "iPhone", "Debug");
+			csproj.FixArchitectures (SimulatorArchitectures, DeviceArchitectures, "iPhone", "Release");
+
 			csproj.SetProjectTypeGuids ("{1E2E965C-F6D2-49ED-B86E-418A60C69EEF};" + LanguageGuid);
 			csproj.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + suffix);
 			csproj.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + suffix);
@@ -73,7 +103,7 @@ namespace xharness
 			csproj.SetPlatformAssembly ("Xamarin.WatchOS");
 			csproj.SetImport (IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.AppExtension.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.AppExtension.CSharp.targets");
 			csproj.FixProjectReferences ("-watchos");
-			csproj.FixArchitectures ("i386", "ARMv7k");
+
 			csproj.FixInfoPListInclude (suffix);
 			csproj.SetOutputType ("Library");
 			csproj.AddAdditionalDefines ("BITCODE", "iPhone", "Release");
@@ -87,7 +117,7 @@ namespace xharness
 
 			// Not linking a watch extensions requires passing -Os to the native compiler.
 			// https://github.com/mono/mono/issues/9867
-			var configurations = new string [] { "Debug", "Debug32", "Release", "Release32", "Release-bitcode" };
+			var configurations = new string [] { "Debug", "Debug32", "Debug64_32", "Release", "Release32", "Release64_32" };
 			foreach (var c in configurations)
 				if (csproj.GetMtouchLink ("iPhone", c) == "None")
 					csproj.AddExtraMtouchArgs ("--gcc_flags=-Os", "iPhone", c);

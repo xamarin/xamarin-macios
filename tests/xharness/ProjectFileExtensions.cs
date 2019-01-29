@@ -120,7 +120,10 @@ namespace xharness
 				return true;
 				
 			var conditionValue = condition.Value;
-			conditionValue = conditionValue.Replace ("$(Configuration)", configuration).Replace ("$(Platform)", platform);
+			if (configuration != null)
+				conditionValue = conditionValue.Replace ("$(Configuration)", configuration);
+			if (platform != null)
+				conditionValue = conditionValue.Replace ("$(Platform)", platform);
 
 			var orsplits = conditionValue.Split (orsplitter, StringSplitOptions.None);
 			foreach (var orsplit in orsplits) {
@@ -350,7 +353,9 @@ namespace xharness
 				if (!IsNodeApplicable (mea, platform, configuration))
 					continue;
 
-				mea.InnerText += " " + value;
+				if (mea.InnerText.Length > 0 && mea.InnerText [mea.InnerText.Length - 1] != ' ')
+					mea.InnerText += " ";
+				mea.InnerText += value;
 				found = true;
 			}
 
@@ -496,12 +501,24 @@ namespace xharness
 			}
 		}
 
-		public static void FixArchitectures (this XmlDocument csproj, string simulator_arch, string device_arch)
+		public static void SetArchitecture (this XmlDocument csproj, string platform, string configuration, string architecture)
+		{
+			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'MtouchArch']");
+			foreach (XmlNode n in nodes) {
+				if (!IsNodeApplicable (n, platform, configuration))
+					continue;
+				n.InnerText = architecture;
+			}
+		}
+
+		public static void FixArchitectures (this XmlDocument csproj, string simulator_arch, string device_arch, string platform = null, string configuration = null)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'MtouchArch']");
 			if (nodes.Count == 0)
 				throw new Exception (string.Format ("Could not find MtouchArch at all"));
 			foreach (XmlNode n in nodes) {
+				if (!IsNodeApplicable (n, platform, configuration))
+					continue;
 				switch (n.InnerText.ToLower ()) {
 				case "i386":
 				case "x86_64":
@@ -512,6 +529,7 @@ namespace xharness
 				case "armv7s":
 				case "arm64":
 				case "armv7, arm64":
+				case "armv7k, arm64_32":
 					n.InnerText = device_arch;
 					break;
 				default:
@@ -751,13 +769,8 @@ namespace xharness
 
 		public static void CloneConfiguration (this XmlDocument csproj, string platform, string configuration, string new_configuration)
 		{
-			var projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']");
+			var projnode = csproj.GetPropertyGroups (platform, configuration);
 			foreach (XmlNode xmlnode in projnode) {
-				if (xmlnode.Attributes ["Condition"] == null)
-					continue;
-				if (!IsNodeApplicable (xmlnode, platform, configuration))
-					continue;
-				
 				var clone = xmlnode.Clone ();
 				var condition = clone.Attributes ["Condition"];
 				condition.InnerText = condition.InnerText.Replace (configuration, new_configuration);
@@ -765,23 +778,14 @@ namespace xharness
 				return;
 			}
 
-			throw new Exception ("Configuration not found.");
+			throw new Exception ($"Configuration {platform}|{configuration} not found.");
 		}
 
 		public static void DeleteConfiguration (this XmlDocument csproj, string platform, string configuration)
 		{
-			var projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']");
-			foreach (XmlNode xmlnode in projnode) {
-				if (xmlnode.Attributes ["Condition"] == null)
-					continue;
-				if (!IsNodeApplicable (xmlnode, platform, configuration))
-					continue;
+			var projnode = csproj.GetPropertyGroups (platform, configuration);
+			foreach (XmlNode xmlnode in projnode)
 				xmlnode.ParentNode.RemoveChild (xmlnode);
-
-				return;
-			}
-
-			throw new Exception ($"Configuration not found: {platform}:{configuration}");
 		}
 
 		static IEnumerable<XmlNode> SelectElementNodes (this XmlNode node, string name)
