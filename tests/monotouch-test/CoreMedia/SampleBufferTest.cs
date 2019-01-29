@@ -103,6 +103,46 @@ namespace MonoTouchFixtures.CoreMedia {
 		}
 
 		[Test]
+		public void CreateReadyWithImageBuffer_Block_Null ()
+		{
+			TestRuntime.AssertXcodeVersion (10,2);
+
+			CMFormatDescriptionError fde;
+			using (var pixelBuffer = new CVPixelBuffer (20, 10, CVPixelFormatType.CV24RGB))
+			using (var desc = CMVideoFormatDescription.CreateForImageBuffer (pixelBuffer, out fde)) {
+				CMSampleBufferError sbe;
+				using (var sb = CMSampleBuffer.CreateReadyWithImageBuffer (pixelBuffer, true, null, desc, new CMSampleTimingInfo [0], out sbe)) {
+					Assert.That (sb.Handle, Is.Not.EqualTo (IntPtr.Zero), "CMSampleBuffer");
+					Assert.True (sb.DataIsReady, "DataIsReady");
+					Assert.That (sbe, Is.EqualTo (CMSampleBufferError.None), "CMSampleBufferError");
+				}
+			}
+		}
+
+		static CMSampleBufferError SampleBufferMakeDataReadyHandler (CMSampleBuffer sbuf)
+		{
+			sbuf.SetDataReady ();
+			return CMSampleBufferError.None;
+		}
+
+		[Test]
+		public void CreateReadyWithImageBuffer_Block ()
+		{
+			TestRuntime.AssertXcodeVersion (10, 2);
+
+			CMFormatDescriptionError fde;
+			using (var pixelBuffer = new CVPixelBuffer (20, 10, CVPixelFormatType.CV24RGB))
+			using (var desc = CMVideoFormatDescription.CreateForImageBuffer (pixelBuffer, out fde)) {
+				CMSampleBufferError sbe;
+				using (var sb = CMSampleBuffer.CreateReadyWithImageBuffer (pixelBuffer, true, SampleBufferMakeDataReadyHandler, desc, new CMSampleTimingInfo [0], out sbe)) {
+					Assert.That (sb.Handle, Is.Not.EqualTo (IntPtr.Zero), "CMSampleBuffer");
+					Assert.True (sb.DataIsReady, "DataIsReady");
+					Assert.That (sbe, Is.EqualTo (CMSampleBufferError.None), "CMSampleBufferError");
+				}
+			}
+		}
+
+		[Test]
 		public void SetInvalidateCallback_Replace ()
 		{
 			using (var pixelBuffer = new CVPixelBuffer (20, 10, CVPixelFormatType.CV24RGB)) {

@@ -50,6 +50,11 @@ namespace CoreMedia {
 		Invalidated						= -12744,
 	}
 
+	[iOS (12,2)]
+	[TV (12,2)]
+	[Mac (10,14,4, onlyOn64: true)]
+	public delegate CMSampleBufferError CMSampleBufferMakeDataReadyHandler (CMSampleBuffer sbuf);
+
 	public class CMSampleBuffer : ICMAttachmentBearer 
 #if !COREBUILD
 	, IDisposable
@@ -821,13 +826,79 @@ namespace CoreMedia {
 			CMFormatDescription formatDescription, CMSampleTimingInfo[] sampleTiming, out CMSampleBufferError error)
 		{
 			if (imageBuffer == null)
-				throw new ArgumentNullException ("imageBuffer");
+				throw new ArgumentNullException (nameof (imageBuffer));
 			if (formatDescription == null)
-				throw new ArgumentNullException ("formatDescription");
+				throw new ArgumentNullException (nameof (formatDescription));
+			if (sampleTiming == null)
+				throw new ArgumentNullException (nameof (sampleTiming));
 
 			IntPtr buffer;
 			error = CMSampleBufferCreateReadyWithImageBuffer (IntPtr.Zero, imageBuffer.handle, 
 				formatDescription.Handle, sampleTiming, out buffer);
+
+			if (error != CMSampleBufferError.None)
+				return null;
+
+			return new CMSampleBuffer (buffer, true);
+		}
+
+		[iOS (12,2)]
+		[TV (12,2)]
+		[Mac (10,14,4, onlyOn64: true)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static unsafe extern /* OSStatus */ CMSampleBufferError CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler (
+			/* CFAllocatorRef CM_NULLABLE */ IntPtr allocator,
+			/* CVImageBufferRef CM_NONNULL */ IntPtr imageBuffer,
+			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool dataReady,
+			/* CMSampleBufferMakeDataReadyHandler CM_NULLABLE */ IntPtr makeDataReadyHandler,
+			/* CMVideoFormatDescriptionRef CM_NONNULL */ IntPtr formatDescription,
+			/* const CMSampleTimingInfo* CM_NONNULL */ CMSampleTimingInfo [] sampleTiming,
+			/* CM_RETURNS_RETAINED_PARAMETER CMSampleBufferRef CM_NULLABLE * CM_NONNULL */ out IntPtr sampleBufferOut);
+
+		internal delegate CMSampleBufferError DCMSampleBufferMakeDataReadyHandler (IntPtr block, IntPtr sbuf);
+
+		static internal class DCMSampleBufferMakeDataReadyHandlerTrampoline {
+			static internal readonly DCMSampleBufferMakeDataReadyHandler Handler = Invoke;
+
+			[MonoPInvokeCallback (typeof (DCMSampleBufferMakeDataReadyHandler))]
+			static unsafe CMSampleBufferError Invoke (IntPtr block, IntPtr sbuf)
+			{
+				var descriptor = (BlockLiteral *) block;
+				var del = (CMSampleBufferMakeDataReadyHandler) descriptor->Target;
+				return del (new CMSampleBuffer (sbuf));
+			}
+		}
+
+		[iOS (12,2)]
+		[TV (12,2)]
+		[Mac (10,14,4, onlyOn64: true)]
+		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer,
+			bool dataReady, CMSampleBufferMakeDataReadyHandler makeDataReadyHandler,
+			CMFormatDescription formatDescription, CMSampleTimingInfo [] sampleTiming, out CMSampleBufferError error)
+		{
+			if (imageBuffer == null)
+				throw new ArgumentNullException (nameof (imageBuffer));
+			if (formatDescription == null)
+				throw new ArgumentNullException (nameof (formatDescription));
+			if (sampleTiming == null)
+				throw new ArgumentNullException (nameof (sampleTiming));
+
+			IntPtr buffer;
+			unsafe {
+				if (makeDataReadyHandler == null) {
+					error = CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler (IntPtr.Zero, imageBuffer.handle, dataReady,
+						IntPtr.Zero, formatDescription.Handle, sampleTiming, out buffer);
+				} else {
+					var block = new BlockLiteral ();
+					BlockLiteral *blockPtr = &block;
+					block.SetupBlockUnsafe (DCMSampleBufferMakeDataReadyHandlerTrampoline.Handler, makeDataReadyHandler);
+
+					error = CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler (IntPtr.Zero, imageBuffer.handle, dataReady,
+						(IntPtr) blockPtr, formatDescription.Handle, sampleTiming, out buffer);
+
+					block.CleanupBlock ();
+				}
+			}
 
 			if (error != CMSampleBufferError.None)
 				return null;
