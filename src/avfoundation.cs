@@ -11812,6 +11812,12 @@ namespace AVFoundation {
 		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
+
+		// AVSampleBufferDisplayLayerImageProtection
+
+		[TV (12,2), NoWatch, Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		[Export ("preventsCapture")]
+		bool PreventsCapture { get; set; }
 	}
 
 	[NoWatch]
@@ -12683,6 +12689,26 @@ namespace AVFoundation {
 		[Export ("makeSecureTokenForExpirationDateOfPersistableContentKey:completionHandler:")]
 		void MakeSecureToken (NSData persistableContentKeyData, Action<NSData, NSError> handler);
 
+		[Async]
+		[NoTV, NoMac, iOS (12,2)]
+		[Export ("invalidatePersistableContentKey:options:completionHandler:")]
+		void InvalidatePersistableContentKey (NSData persistableContentKeyData, [NullAllowed] NSDictionary options, Action<NSData, NSError> handler);
+
+		[Async]
+		[NoTV, NoMac, iOS (12, 2)]
+		[Wrap ("InvalidatePersistableContentKey (persistableContentKeyData, options?.Dictionary, handler)")]
+		void InvalidatePersistableContentKey (NSData persistableContentKeyData, [NullAllowed] AVContentKeySessionServerPlaybackContextOptions options, Action<NSData, NSError> handler);
+
+		[Async]
+		[NoTV, NoMac, iOS (12,2)]
+		[Export ("invalidateAllPersistableContentKeysForApp:options:completionHandler:")]
+		void InvalidateAllPersistableContentKeys (NSData appIdentifier, [NullAllowed] NSDictionary options, Action<NSData, NSError> handler);
+
+		[Async]
+		[NoTV, NoMac, iOS (12, 2)]
+		[Wrap ("InvalidateAllPersistableContentKeys (appIdentifier, options?.Dictionary, handler)")]
+		void InvalidateAllPersistableContentKeys (NSData appIdentifier, [NullAllowed] AVContentKeySessionServerPlaybackContextOptions options, Action<NSData, NSError> handler);
+
 		#region AVContentKeySession_AVContentKeySessionPendingExpiredSessionReports
 
 		// binded because they are static and from a category.
@@ -12695,6 +12721,24 @@ namespace AVFoundation {
 		void RemovePendingExpiredSessionReports (NSDictionary[] expiredSessionReports, NSData appIdentifier, NSUrl storageUrl);
 
 		#endregion
+	}
+
+	[Static][Internal]
+	[NoWatch, NoTV, NoMac, iOS (12,2)]
+	interface AVContentKeySessionServerPlaybackContextOptionKeys {
+		[Field ("AVContentKeySessionServerPlaybackContextOptionProtocolVersions")]
+		NSString ProtocolVersionsKey { get; }
+
+		[Field ("AVContentKeySessionServerPlaybackContextOptionServerChallenge")]
+		NSString ServerChallengeKey { get; }
+	}
+
+	[StrongDictionary ("AVContentKeySessionServerPlaybackContextOptionKeys")]
+	[NoWatch, NoTV, NoMac, iOS (12,2)]
+	interface AVContentKeySessionServerPlaybackContextOptions {
+		NSNumber[] ProtocolVersions { get; }
+
+		NSData ServerChallenge { get; }
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
@@ -12733,6 +12777,10 @@ namespace AVFoundation {
 
 		[Export ("canProvidePersistableContentKey")]
 		bool CanProvidePersistableContentKey { get; }
+
+		[TV (12,2), Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		[Export ("options", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> Options { get; }
 
 		[Async]
 		[Export ("makeStreamingContentKeyRequestDataForApp:contentIdentifier:options:completionHandler:")]
