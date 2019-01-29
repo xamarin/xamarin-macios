@@ -174,6 +174,11 @@ namespace SafariServices {
 		void GetActiveWindow (Action<SFSafariWindow> completionHandler);
 
 		[Static][Async]
+		[Mac (10,14,4, onlyOn64: true)]
+		[Export ("getAllWindowsWithCompletionHandler:")]
+		void GetAllWindows (Action<SFSafariWindow []> completionHandler);
+
+		[Static][Async]
 		[Export ("openWindowWithURL:completionHandler:")]
 		void OpenWindow (NSUrl url, [NullAllowed] Action<SFSafariWindow> completionHandler);
 
@@ -201,7 +206,7 @@ namespace SafariServices {
 	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariPage
+	interface SFSafariPage : NSSecureCoding
 	{
 		[Export ("dispatchMessageToScriptWithName:userInfo:")]
 		void DispatchMessageToScript (string messageName, [NullAllowed] NSDictionary userInfo);
@@ -212,6 +217,16 @@ namespace SafariServices {
 		[Async]
 		[Export ("getPagePropertiesWithCompletionHandler:")]
 		void GetPageProperties (Action<SFSafariPageProperties> completionHandler);
+
+		[Mac (10,14,4, onlyOn64 : true)]
+		[Async]
+		[Export ("getContainingTabWithCompletionHandler:")]
+		void GetContainingTab (Action<SFSafariTab> completionHandler);
+
+		[Mac (10,14,4, onlyOn64 : true)]
+		[Async]
+		[Export ("getScreenshotOfVisibleAreaWithCompletionHandler:")]
+		void GetScreenshotOfVisibleArea (Action<NSImage> completionHandler);
 	}
 
 	[Mac (10,12, onlyOn64 : true)]
@@ -253,6 +268,16 @@ namespace SafariServices {
 		void AdditionalRequestHeaders (NSUrl url, Action<NSDictionary<NSString, NSString>> completionHandler);
 	}
 
+	[Mac (10,14,4, onlyOn64: true)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariExtension {
+
+		[Static][Async]
+		[Export ("getBaseURIWithCompletionHandler:")]
+		void GetBaseUri (Action<NSUrl> completionHandler);
+	}
+
 	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	interface SFSafariPageProperties
@@ -273,7 +298,7 @@ namespace SafariServices {
 	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariTab
+	interface SFSafariTab : NSSecureCoding
 	{
 		[Async]
 		[Export ("getActivePageWithCompletionHandler:")]
@@ -283,15 +308,28 @@ namespace SafariServices {
 		[Export ("getPagesWithCompletionHandler:")]
 		void GetPages (Action<SFSafariPage[]> completionHandler);
 
+		[Mac (10,14,4, onlyOn64: true)]
+		[Async]
+		[Export ("getContainingWindowWithCompletionHandler:")]
+		void GetContainingWindow (Action<SFSafariWindow> completionHandler);
+
 		[Async]
 		[Export ("activateWithCompletionHandler:")]
 		void Activate ([NullAllowed] Action completionHandler);
+
+		[Mac (10,14,4, onlyOn64: true)]
+		[Export ("navigateToURL:")]
+		void NavigateTo (NSUrl url);
+
+		[Mac (10,14,4, onlyOn64: true)]
+		[Export ("close")]
+		void Close ();
 	}
 
 	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariToolbarItem
+	interface SFSafariToolbarItem : NSSecureCoding
 	{
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'SetEnabled (bool)' or 'SetBadgeText' instead.")]
 		[Export ("setEnabled:withBadgeText:")]
@@ -312,16 +350,25 @@ namespace SafariServices {
 		[Mac (10,13, onlyOn64: true)]
 		[Export ("setLabel:")]
 		void SetLabel ([NullAllowed] string label);
+
+		[Mac (10,14,4, onlyOn64: true)]
+		[Export ("showPopover")]
+		void ShowPopover ();
 	}
 
 	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariWindow
+	interface SFSafariWindow : NSSecureCoding
 	{
 		[Async]
 		[Export ("getActiveTabWithCompletionHandler:")]
 		void GetActiveTab (Action<SFSafariTab> completionHandler);
+
+		[Mac (10,14,4, onlyOn64: true)]
+		[Async]
+		[Export ("getAllTabsWithCompletionHandler:")]
+		void GetAllTabs (Action<SFSafariTab []> completionHandler);
 
 		[Async]
 		[Export ("openTabWithURL:makeActiveIfPossible:completionHandler:")]
@@ -330,6 +377,10 @@ namespace SafariServices {
 		[Async]
 		[Export ("getToolbarItemWithCompletionHandler:")]
 		void GetToolbarItem (Action<SFSafariToolbarItem> completionHandler);
+
+		[Mac (10,14,4, onlyOn64: true)]
+		[Export ("close")]
+		void Close ();
 	}
 
 	[Mac (10,12, onlyOn64: true)]
@@ -338,6 +389,10 @@ namespace SafariServices {
 	{
 		[Export ("initWithNibName:bundle:")]
 		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+
+		[Mac (10,14,4, onlyOn64: true)]
+		[Export ("dismissPopover")]
+		void DismissPopover ();
 	}
 
 	[Mac (10,12, onlyOn64: true)]
