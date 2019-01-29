@@ -30,6 +30,8 @@
 	#define PRODUCT_EXCEPTION_TYPE   "MonoTouchException"
 	#ifdef __LP64__
 		#define ARCH_SUBDIR ".monotouch-64"
+	#elif __ILP32__
+		#define ARCH_SUBDIR ".monotouch-64_32"
 	#else
 		#define ARCH_SUBDIR ".monotouch-32"
 	#endif
