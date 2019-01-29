@@ -117,7 +117,6 @@
               </attribute>
             </attributes>
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -861,7 +860,6 @@
               </attribute>
             </attributes>
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -1064,7 +1062,6 @@
               </attribute>
             </attributes>
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -1472,9 +1469,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -1515,9 +1509,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String, System.String)" attrib="6278">
                 <parameters>
@@ -1725,9 +1716,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1743,9 +1731,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -1793,9 +1778,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String, System.Data.Services.Common.SyndicationItemProperty, System.Data.Services.Common.SyndicationTextContentKind, System.Boolean)" attrib="6278">
                 <parameters>
@@ -1876,9 +1858,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -1906,9 +1885,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />

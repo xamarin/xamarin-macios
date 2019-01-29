@@ -2081,7 +2081,6 @@
           </class>
           <class name="SqliteException" type="class" base="System.Data.Common.DbException" sealed="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -2216,9 +2215,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
