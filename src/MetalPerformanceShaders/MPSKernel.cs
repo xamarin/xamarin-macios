@@ -278,7 +278,7 @@ namespace MetalPerformanceShaders {
 		{
 			if (kernelWeights == null)
 				throw new ArgumentNullException (nameof (kernelWeights));
-			if (kernelWidth * kernelHeight < (nuint) kernelWeights.Length)
+			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
 
 			unsafe {
@@ -294,7 +294,7 @@ namespace MetalPerformanceShaders {
 		{
 			if (kernelWeights == null)
 				throw new ArgumentNullException (nameof (kernelWeights));
-			if (kernelWidth * kernelHeight < (nuint) kernelWeights.Length)
+			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
 
 			unsafe {
@@ -310,7 +310,7 @@ namespace MetalPerformanceShaders {
 		{
 			if (kernelWeights == null)
 				throw new ArgumentNullException (nameof (kernelWeights));
-			if (kernelWidth * kernelHeight < (nuint) kernelWeights.Length)
+			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
 
 			unsafe {

@@ -3553,9 +3553,7 @@ namespace Xamarin.BindingMethods.Generator
 				NativeType = "MPSAxisAlignedBoundingBox",
 				NativeWrapperType = "struct MPSAxisAlignedBoundingBoxWrapper",
 				RequireMarshal = true,
-				IsX86Stret = true,
 				IsX64Stret = true,
-				IsARMStret = true,
 			};
 		}
 	}

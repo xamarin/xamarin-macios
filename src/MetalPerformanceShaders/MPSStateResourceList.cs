@@ -50,8 +50,9 @@ namespace MetalPerformanceShaders {
 				throw new ArgumentException ("Only 10 parameters are currently supported.");
 
 			var arr = new IntPtr [10];
-			for (int i = 0; i < bufferSizes.Length; ++i) {
-				arr [i] = (IntPtr) bufferSizes [i];
+			unsafe {
+				fixed (nuint* ptr = bufferSizes)
+					Marshal.Copy ((IntPtr) ptr, arr, 0, bufferSizes.Length);
 			}
 
 			MPSStateResourceList ret;

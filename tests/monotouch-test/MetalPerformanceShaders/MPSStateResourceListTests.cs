@@ -12,15 +12,9 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using Metal;
 using MetalPerformanceShaders;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Metal;
-using MonoTouch.MetalPerformanceShaders;
-#endif
 
 using NUnit.Framework;
 

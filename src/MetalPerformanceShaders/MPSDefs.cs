@@ -329,6 +329,7 @@ namespace MetalPerformanceShaders {
 	}
 
 	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Flags]
 	[Native]
 	public enum MPSRayMaskOptions : ulong {
 		None = 0,
@@ -362,6 +363,7 @@ namespace MetalPerformanceShaders {
 	}
 
 	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Flags]
 	[Native]
 	public enum MPSAccelerationStructureUsage : ulong {
 		None = 0,
@@ -383,6 +385,7 @@ namespace MetalPerformanceShaders {
 		public Vector3 Max;
 	}
 
+	[Flags]
 	[Native]
 	[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
 	public enum MPSDeviceOptions : ulong {
