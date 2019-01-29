@@ -865,13 +865,15 @@ namespace CoreMedia {
 			{
 				var descriptor = (BlockLiteral *) block;
 				var del = (CMSampleBufferMakeDataReadyHandler) descriptor->Target;
-				return del (new CMSampleBuffer (sbuf));
+				using (var b = new CMSampleBuffer (sbuf))
+					return del (b);
 			}
 		}
 
 		[iOS (12,2)]
 		[TV (12,2)]
 		[Mac (10,14,4, onlyOn64: true)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer,
 			bool dataReady, CMSampleBufferMakeDataReadyHandler makeDataReadyHandler,
 			CMFormatDescription formatDescription, CMSampleTimingInfo [] sampleTiming, out CMSampleBufferError error)
