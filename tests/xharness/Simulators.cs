@@ -705,6 +705,7 @@ namespace xharness
 							throw new Exception ("Failed to list devices.");
 						log.WriteLine ("Result:");
 						log.WriteLine (File.ReadAllText (tmpfile));
+						log.Flush ();
 
 						var doc = new XmlDocument ();
 						doc.LoadWithoutNetworkAccess (tmpfile);
@@ -738,6 +739,7 @@ namespace xharness
 				} finally {
 					connected_devices.SetCompleted ();
 					File.Delete (tmpfile);
+					log.Flush ();
 				}
 			});
 		}
