@@ -8543,21 +8543,11 @@ namespace Foundation
 		// NSPlaceholders (informal) protocol
 		[Static]
 		[Export ("defaultPlaceholderForMarker:withBinding:")]
-#if XAMCORE_4_0 && MONOMAC
-		// When XAMCORE_4_0 occurs review - NSBindingSelectionMarker is 10.14 only type but GetDefaultPlaceholder is before, does it matter now?
-		NSObject GetDefaultPlaceholder (NSBindingSelectionMarker marker, NSString binding);
-#else
 		NSObject GetDefaultPlaceholder (NSObject marker, NSString binding);
-#endif
 
 		[Static]
 		[Export ("setDefaultPlaceholder:forMarker:withBinding:")]
-#if XAMCORE_4_0 && MONOMAC
-		// When XAMCORE_4_0 occurs review - NSBindingSelectionMarker is 10.14 only type but SetDefaultPlaceholder is before, does it matter now?
-		void SetDefaultPlaceholder (NSObject placeholder, NSBindingSelectionMarker marker, NSString binding);
-#else
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
-#endif
 
 		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("objectDidEndEditing:")]
