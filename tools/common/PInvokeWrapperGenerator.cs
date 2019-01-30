@@ -52,6 +52,13 @@ namespace Xamarin.Bundler
 			mthds.WriteLine ($"#include \"{Path.GetFileName (HeaderPath)}\"");
 
 			sb.WriteLine ("extern \"C\" {");
+
+			// Disable "control reaches end of non-void function"
+			// we throw exceptions in many code paths, which clang doesn't know about, triggering this warning.
+			sb.WriteLine ("#pragma clang diagnostic ignored \"-Wreturn-type\"");
+
+			// Disable "warning: 'X' is only available on xOS Y.Z or newer"
+			sb.WriteLine ("#pragma clang diagnostic ignored \"-Wunguarded-availability-new\"");
 		}
 
 		public void End ()
