@@ -115,7 +115,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			using (var desc = CMVideoFormatDescription.CreateForImageBuffer (pixelBuffer, out fde)) {
 				CMSampleBufferError sbe;
 				var sti = new CMSampleTimingInfo ();
-				using (var sb = CMSampleBuffer.CreateReadyWithImageBuffer (pixelBuffer, desc, sti, out sbe)) {
+				using (var sb = CMSampleBuffer.CreateReadyWithImageBuffer (pixelBuffer, desc, ref sti, out sbe)) {
 					Assert.That (sb.Handle, Is.Not.EqualTo (IntPtr.Zero), "CMSampleBuffer");
 					Assert.That (sbe, Is.EqualTo (CMSampleBufferError.None), "CMSampleBufferError");
 				}

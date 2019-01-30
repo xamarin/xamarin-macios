@@ -50,11 +50,6 @@ namespace CoreMedia {
 		Invalidated						= -12744,
 	}
 
-	[iOS (12,2)]
-	[TV (12,2)]
-	[Mac (10,14,4, onlyOn64: true)]
-	public delegate CMSampleBufferError CMSampleBufferMakeDataReadyHandler (CMSampleBuffer sbuf);
-
 	public class CMSampleBuffer : ICMAttachmentBearer 
 #if !COREBUILD
 	, IDisposable
