@@ -57,7 +57,7 @@ endif
 -include .deps.mono.mk
 .deps.mono.mk: $(TOP)/.git/modules/external/mono/HEAD
 	$(Q) printf 'MONO_DEPENDENCIES += Makefile \\\n' > $@.tmp
-	$(Q) cd $(MONO_PATH) && git ls-files 'mcs/class/*.cs' '*.h' '*.c' '*.cpp' | grep -v "/Test/" | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(MONO_PATH)/\1 \\@' >> $(abspath $@).tmp
+	$(Q) cd $(MONO_PATH) && git ls-files --recurse-submodules 'mcs/class/*.cs' 'mcs/build/*.cs' 'external/*.cs' '*.h' '*.c' '*.cpp' | grep -v "/Test/" | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(MONO_PATH)/\1 \\@' >> $(abspath $@).tmp
 	$(Q) mv $@.tmp $@
 
 # ld: weak import of symbol '_fstatat' not supported because of option: -no_weak_imports for architecture x86_64
