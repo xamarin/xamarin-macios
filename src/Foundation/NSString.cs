@@ -96,10 +96,11 @@ namespace Foundation {
 		{
 			unsafe {
 				fixed (char *ptrFirstChar = str) {
+					var ptrStart = (IntPtr) (ptrFirstChar + offset);
 	#if MONOMAC
-					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, selInitWithCharactersLengthHandle, (IntPtr) (ptrFirstChar + offset), (IntPtr) length);
+					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, selInitWithCharactersLengthHandle, ptrStart, (IntPtr) length);
 	#else
-					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, Selector.GetHandle (selInitWithCharactersLength), (IntPtr) (ptrFirstChar + offset), (IntPtr) length);
+					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, Selector.GetHandle (selInitWithCharactersLength), ptrStart, (IntPtr) length);
 	#endif
 
 					if (autorelease)
