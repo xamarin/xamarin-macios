@@ -103,6 +103,7 @@ namespace GameController {
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapshotData (
 			/* GCExtendedGamepadSnapshotData * __nullable */ ref GCExtendedGamepadSnapshotData snapshotData);
 
+		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
 		public NSData ToNSData ()
 		{
 			var p = NSDataFromGCExtendedGamepadSnapshotData (ref this);

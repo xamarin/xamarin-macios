@@ -62,9 +62,11 @@ namespace GameController {
 		public float /* float_t = float */ ButtonX;
 
 		[DllImport (Constants.GameControllerLibrary)]
+		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCMicroGamepadSnapshotData (
 			/* __nullable */ ref GCMicroGamepadSnapshotData snapshotData);
 
+		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
 		public NSData ToNSData ()
 		{
 			var p = NSDataFromGCMicroGamepadSnapshotData (ref this);
