@@ -22,6 +22,6 @@ namespace GameController {
 	[Native]
 	public enum GCMicroGamepadSnapshotDataVersion : long
 	{
-		Version1 = 0x0100
+		Version1 = 0x0100,
 	}
 }
