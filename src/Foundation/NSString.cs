@@ -117,24 +117,27 @@ namespace Foundation {
 
 		public static IntPtr CreateNative (string str, bool autorelease)
 		{
-			return CreateNative (str, 0, str.Length, autorelease);
-		}
-
-		public static IntPtr CreateNative (string str, int start, int length)
-		{
-			return CreateNative (str, start, length, false);
-		}
-
-		public static IntPtr CreateNative (string str, int start, int length, bool autorelease)
-		{
 			if (str == null)
 				return IntPtr.Zero;
 
-			if (start < 0 || start > str.Length)
-				throw new ArgumentOutOfRangeException(nameof(start));
+			return CreateNative (str, 0, str.Length, autorelease);
+		}
 
-			if (length < 0 || start > str.Length - length)
-				throw new ArgumentOutOfRangeException(nameof(length));
+		public static IntPtr CreateNative (string value, int start, int length)
+		{
+			return CreateNative (value, start, length, false);
+		}
+
+		public static IntPtr CreateNative (string value, int start, int length, bool autorelease)
+		{
+			if (value == null)
+				return IntPtr.Zero;
+
+			if (start < 0 || start > value.Length)
+				throw new ArgumentOutOfRangeException (nameof (start));
+
+			if (length < 0 || start > value.Length - length)
+				throw new ArgumentOutOfRangeException (nameof (length));
 
 #if MONOMAC
 			var handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.AllocHandle);
@@ -142,7 +145,7 @@ namespace Foundation {
 			var handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle (Selector.Alloc));
 #endif
 
-			return CreateWithCharacters (handle, str, start, length, autorelease);
+			return CreateWithCharacters (handle, value, start, length, autorelease);
 		}
 
 		public static void ReleaseNative (IntPtr handle)
@@ -157,17 +160,17 @@ namespace Foundation {
 			Handle = CreateWithCharacters (Handle, str, 0, str.Length);
 		}
 
-		public NSString (string str, int start, int length) {
-			if (str == null)
-				throw new ArgumentNullException ("str");
+		public NSString (string value, int start, int length) {
+			if (value == null)
+				throw new ArgumentNullException (nameof (value));
 
-			if (start < 0 || start > str.Length)
-				throw new ArgumentOutOfRangeException(nameof(start));
+			if (start < 0 || start > value.Length)
+				throw new ArgumentOutOfRangeException (nameof (start));
 
-			if (length < 0 || start > str.Length - length)
-				throw new ArgumentOutOfRangeException(nameof(length));
+			if (length < 0 || start > value.Length - length)
+				throw new ArgumentOutOfRangeException (nameof (length));
 
-			Handle = CreateWithCharacters (Handle, str, start, length);
+			Handle = CreateWithCharacters (Handle, value, start, length);
 		}
 	
 		public unsafe override string ToString ()
