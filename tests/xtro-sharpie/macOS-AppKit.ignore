@@ -34,6 +34,16 @@
 !missing-selector! NSObject::textStorageDidProcessEditing: not bound
 !missing-selector! NSObject::textStorageWillProcessEditing: not bound
 
+## Defined in NSLayoutManager (NSLayoutManagerDeprecated)
+!missing-selector! NSLayoutManager::getGlyphs:range: not bound
+!missing-selector! NSLayoutManager::getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits: not bound
+!missing-selector! NSLayoutManager::getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits:bidiLevels: not bound
+!missing-selector! NSLayoutManager::insertGlyphs:length:forStartingGlyphAtIndex:characterIndex: not bound
+!missing-selector! NSLayoutManager::invalidateLayoutForCharacterRange:isSoft:actualCharacterRange: not bound
+!missing-selector! NSLayoutManager::rectArrayForCharacterRange:withinSelectedCharacterRange:inTextContainer:rectCount: not bound
+!missing-selector! NSLayoutManager::setLocations:startingGlyphIndexes:count:forGlyphRange: not bound
+!missing-selector! NSLayoutManager::showPackedGlyphs:length:glyphRange:atPoint:font:color:printingAdjustment: not bound
+
 ## Used in sandbox for NSOpen/Save panel but never should have been bound. #if !XAMCORE_3_0'ed
 !unknown-type! NSRemoteOpenPanel bound
 !unknown-type! NSRemoteSavePanel bound
@@ -652,7 +662,6 @@
 !missing-protocol-member! NSDraggingSource::draggingSession:sourceOperationMaskForDraggingContext: not found
 !missing-protocol-member! NSDraggingSource::draggingSession:willBeginAtPoint: not found
 !missing-protocol-member! NSDraggingSource::ignoreModifierKeysForDraggingSession: not found
-!missing-protocol-member! NSLayoutManagerDelegate::layoutManager:shouldSetLineFragmentRect:lineFragmentUsedRect:baselineOffset:inTextContainer:forGlyphRange: not found
 !missing-protocol-member! NSPopoverDelegate::popoverShouldDetach: not found
 !missing-protocol-member! NSTextInputClient::doCommandBySelector: not found
 !missing-protocol-member! NSTextViewDelegate::textView:clickedOnCell:inRect: not found
@@ -817,40 +826,6 @@
 !missing-selector! NSInputManager::markedTextAbandoned: not bound
 !missing-selector! NSInputManager::markedTextSelectionChanged:client: not bound
 !missing-selector! NSInputServer::initWithDelegate:name: not bound
-!missing-selector! NSLayoutManager::boundsRectForTextBlock:atIndex:effectiveRange: not bound
-!missing-selector! NSLayoutManager::drawStrikethroughForGlyphRange:strikethroughType:baselineOffset:lineFragmentRect:lineFragmentGlyphRange:containerOrigin: not bound
-!missing-selector! NSLayoutManager::drawUnderlineForGlyphRange:underlineType:baselineOffset:lineFragmentRect:lineFragmentGlyphRange:containerOrigin: not bound
-!missing-selector! NSLayoutManager::fillBackgroundRectArray:count:forCharacterRange:color: not bound
-!missing-selector! NSLayoutManager::firstTextView not bound
-!missing-selector! NSLayoutManager::getGlyphs:range: not bound
-!missing-selector! NSLayoutManager::getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits: not bound
-!missing-selector! NSLayoutManager::getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits:bidiLevels: not bound
-!missing-selector! NSLayoutManager::insertGlyphs:length:forStartingGlyphAtIndex:characterIndex: not bound
-!missing-selector! NSLayoutManager::invalidateGlyphsForCharacterRange:changeInLength:actualCharacterRange: not bound
-!missing-selector! NSLayoutManager::invalidateLayoutForCharacterRange:actualCharacterRange: not bound
-!missing-selector! NSLayoutManager::invalidateLayoutForCharacterRange:isSoft:actualCharacterRange: not bound
-!missing-selector! NSLayoutManager::layoutManagerOwnsFirstResponderInWindow: not bound
-!missing-selector! NSLayoutManager::layoutRectForTextBlock:atIndex:effectiveRange: not bound
-!missing-selector! NSLayoutManager::lineFragmentRectForGlyphAtIndex:effectiveRange: not bound
-!missing-selector! NSLayoutManager::lineFragmentRectForGlyphAtIndex:effectiveRange:withoutAdditionalLayout: not bound
-!missing-selector! NSLayoutManager::lineFragmentUsedRectForGlyphAtIndex:effectiveRange: not bound
-!missing-selector! NSLayoutManager::lineFragmentUsedRectForGlyphAtIndex:effectiveRange:withoutAdditionalLayout: not bound
-!missing-selector! NSLayoutManager::rectArrayForCharacterRange:withinSelectedCharacterRange:inTextContainer:rectCount: not bound
-!missing-selector! NSLayoutManager::rulerAccessoryViewForTextView:paragraphStyle:ruler:enabled: not bound
-!missing-selector! NSLayoutManager::rulerMarkersForTextView:paragraphStyle:ruler: not bound
-!missing-selector! NSLayoutManager::setLocations:startingGlyphIndexes:count:forGlyphRange: not bound
-!missing-selector! NSLayoutManager::showAttachmentCell:inRect:characterIndex: not bound
-!missing-selector! NSLayoutManager::showCGGlyphs:positions:count:font:matrix:attributes:inContext: not bound
-!missing-selector! NSLayoutManager::showPackedGlyphs:length:glyphRange:atPoint:font:color:printingAdjustment: not bound
-!missing-selector! NSLayoutManager::strikethroughGlyphRange:strikethroughType:lineFragmentRect:lineFragmentGlyphRange:containerOrigin: not bound
-!missing-selector! NSLayoutManager::temporaryAttribute:atCharacterIndex:effectiveRange: not bound
-!missing-selector! NSLayoutManager::temporaryAttribute:atCharacterIndex:longestEffectiveRange:inRange: not bound
-!missing-selector! NSLayoutManager::temporaryAttributesAtCharacterIndex:effectiveRange: not bound
-!missing-selector! NSLayoutManager::temporaryAttributesAtCharacterIndex:longestEffectiveRange:inRange: not bound
-!missing-selector! NSLayoutManager::textContainerForGlyphAtIndex:effectiveRange: not bound
-!missing-selector! NSLayoutManager::textContainerForGlyphAtIndex:effectiveRange:withoutAdditionalLayout: not bound
-!missing-selector! NSLayoutManager::textViewForBeginningOfSelection not bound
-!missing-selector! NSLayoutManager::underlineGlyphRange:underlineType:lineFragmentRect:lineFragmentGlyphRange:containerOrigin: not bound
 !missing-selector! NSMatrix::sortUsingFunction:context: not bound
 !missing-selector! NSMediaLibraryBrowserController::frame not bound
 !missing-selector! NSMediaLibraryBrowserController::isVisible not bound

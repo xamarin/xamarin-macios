@@ -103,6 +103,52 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 			var layer2 = layer.Copy (NSZone.Default, MTLDevice.SystemDefault);
 			Assert.That (layer2.RetainCount, Is.EqualTo (1));
 		}
+
+		[Test]
+		public void GetPreferredDeviceTest ()
+		{
+			TestRuntime.AssertDevice ();
+			TestRuntime.AssertXcodeVersion (10, 2);
+
+			var preferredDevice = MPSKernel.GetPreferredDevice (MPSDeviceOptions.Default);
+			Assert.NotNull (preferredDevice);
+			Assert.IsTrue (MPSKernel.Supports (preferredDevice));
+		}
+
+		[Test]
+		public void MPSImageLaplacianPyramidCtorArrTest ()
+		{
+			TestRuntime.AssertDevice ();
+			TestRuntime.AssertXcodeVersion (10, 2);
+
+			var validArr = new float [] {
+				0, 1, 0,
+				1, -4, 1,
+				0, 1, 0,
+			};
+
+			var invalidArr = new float [] {
+				0, 1, 0,
+				1, -4, 1,
+			};
+
+			var bigvalidArr = new float [] {
+				0, 1, 0,
+				1, -4, 1,
+				0, 1, 0,
+				0, 1, 0,
+				1, -4, 1,
+				0, 1, 0,
+			};
+
+			var valid = new MPSImageLaplacianPyramid (device, 3, 3, validArr);
+			Assert.NotNull (valid, "Valid Arr");
+
+			Assert.Throws<ArgumentException> (() => new MPSImageLaplacianPyramid (device, 3, 3, invalidArr), "Invalid Arr");
+
+			var bigvalid = new MPSImageLaplacianPyramid (device, 3, 3, bigvalidArr);
+			Assert.NotNull (valid, "Big valid Arr");
+		}
 	}
 }
 

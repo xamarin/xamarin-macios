@@ -1,2 +1,5 @@
+## Was bound as both static and instance and already deprecated
+!deprecated-attribute-missing! PKPassLibrary::isPaymentPassActivationAvailable missing a [Deprecated] attribute
+
 ## made optional in xcode9 beta 3 since it was replaced with newer API
 !incorrect-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract

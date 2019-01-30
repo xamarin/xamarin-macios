@@ -4,8 +4,10 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 using ObjCRuntime;
+using Metal;
 
 using Vector4 = global::OpenTK.Vector4;
+using OpenTK;
 
 namespace MetalPerformanceShaders {
 
@@ -15,15 +17,30 @@ namespace MetalPerformanceShaders {
 	public enum MPSKernelOptions : ulong {
 		None									= 0,
 		SkipApiValidation						= 1 << 0,
-		MPSKernelOptionsAllowReducedPrecision	= 1 << 1,
+		AllowReducedPrecision = 1 << 1,
+		[iOS (10,0), TV(10,0)]
+		DisableInternalTiling = 1 << 2,
+		[iOS (10,0), TV (10,0)]
+		InsertDebugGroups = 1 << 3,
+		[iOS (11,0), TV (11,0)]
 		Verbose = 1 << 4,
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'AllowReducedPrecision' instead.")]
+		MPSKernelOptionsAllowReducedPrecision = AllowReducedPrecision,
+#endif
 	}
 
 	[iOS (9,0)][Mac (10, 13, onlyOn64: true)]
 	[Native] // NSUInteger
 	public enum MPSImageEdgeMode : ulong {
 		Zero,
-		Clamp = 1
+		Clamp = 1,
+		[iOS (12,1), TV (12,1), Mac (10,14,1, onlyOn64: true)]
+		Mirror,
+		[iOS (12,1), TV (12,1), Mac (10,14,1, onlyOn64: true)]
+		MirrorWithEdge,
+		[iOS (12,1), TV (12,1), Mac (10,14,1, onlyOn64: true)]
+		Constant,
 	}
 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
@@ -36,11 +53,25 @@ namespace MetalPerformanceShaders {
 	 
 	[iOS (10,0)][TV (10,0)][Mac (10, 13, onlyOn64: true)]
 	public enum MPSDataType : uint { // uint32_t
+		Invalid = 0,
+
 		FloatBit = 0x10000000,
 		Float16 = FloatBit | 16,
 		Float32 = FloatBit | 32,
+
+		SignedBit = 0x20000000,
+		Int8 = SignedBit | 8,
+		Int16 = SignedBit | 16,
+
+		UInt8 = 8,
+		UInt16 = 16,
+		UInt32 = 32,
+
+		[iOS (11,0), TV (11,0)]
 		NormalizedBit = 0x40000000,
+		[iOS (11,0), TV (11,0)]
 		Unorm1 = NormalizedBit | 1,
+		[iOS (11,0), TV (11,0)]
 		Unorm8 = NormalizedBit | 8,
 	}
 
@@ -52,6 +83,8 @@ namespace MetalPerformanceShaders {
 		Unorm16 = 2,
 		Float16 = 3,
 		Float32 = 4,
+		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		Count,
 	}
 
 	// uses NSInteger
@@ -91,6 +124,19 @@ namespace MetalPerformanceShaders {
 		public double ScaleY;
 		public double TranslateX;
 		public double TranslateY;
+	}
+
+	[iOS (11,3), TV (11,3), Mac (10,13,4, onlyOn64: true)]
+	public struct MPSImageCoordinate {
+		public nuint X;
+		public nuint Y;
+		public nuint Channel;
+	}
+
+	[iOS (11,3), TV (11,3), Mac (10,13,4, onlyOn64: true)]
+	public struct MPSImageRegion {
+		public MPSImageCoordinate Offset;
+		public MPSImageCoordinate Size;
 	}
 
 	// MPSImageHistogram.h
@@ -216,6 +262,136 @@ namespace MetalPerformanceShaders {
 	public struct MPSImageKeypointRangeInfo {
 		public nuint MaximumKeypoints;
 		public float MinimumThresholdValue;
+	}
+
+	[TV (11, 3), iOS (11, 3), Mac (10, 13, 4, onlyOn64: true)]
+	public struct MPSStateTextureInfo {
+		public nuint Width;
+		public nuint Height;
+		public nuint Depth;
+		public nuint ArrayLength;
+
+#pragma warning disable 0169 // Avoid warning when building core.dll and the unused reserved fields
+		nuint _PixelFormat;
+		nuint _TextureType;
+		nuint _TextureUsage;
+
+		//NSUInteger _reserved [4];
+		nuint Reserved0;
+		nuint Reserved1;
+		nuint Reserved2;
+		nuint Reserved3;
+#pragma warning restore 0169
+#if !COREBUILD
+		public MTLPixelFormat PixelFormat {
+			get => (MTLPixelFormat) (ulong) _PixelFormat;
+			set => _PixelFormat = (nuint) (ulong) value;
+		}
+
+		public MTLTextureType TextureType {
+			get => (MTLTextureType) (ulong) _TextureType;
+			set => _TextureType = (nuint) (ulong) value;
+		}
+
+		public MTLTextureUsage TextureUsage {
+			get => (MTLTextureUsage) (ulong) _TextureUsage;
+			set => _TextureUsage = (nuint) (ulong) value;
+		}
+#endif
+	}
+	[TV (11, 3), iOS (11, 3), Mac (10, 13, 4, onlyOn64: true)]
+	[Native]
+	public enum MPSStateResourceType : ulong {
+		None = 0,
+		Buffer = 1,
+		Texture = 2,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Native]
+	public enum MPSIntersectionType : ulong {
+		Nearest = 0,
+		Any = 1,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Native]
+	public enum MPSTriangleIntersectionTestType : ulong {
+		Default = 0,
+		Watertight = 1,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Native]
+	public enum MPSBoundingBoxIntersectionTestType : ulong {
+		Default = 0,
+		AxisAligned = 1,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Flags]
+	[Native]
+	public enum MPSRayMaskOptions : ulong {
+		None = 0,
+		Primitive = 1,
+		Instance = 2,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Native]
+	public enum MPSRayDataType : ulong {
+		OriginDirection = 0,
+		OriginMinDistanceDirectionMaxDistance = 1,
+		OriginMaskDirectionMaxDistance = 2,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Native]
+	public enum MPSIntersectionDataType : ulong {
+		Distance = 0,
+		PrimitiveIndex = 1,
+		PrimitiveIndexCoordinates = 2,
+		PrimitiveIndexInstanceIndex = 3,
+		PrimitiveIndexInstanceIndexCoordinates = 4,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Native]
+	public enum MPSTransformType : ulong {
+		Float4x4 = 0,
+		Identity = 1,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Flags]
+	[Native]
+	public enum MPSAccelerationStructureUsage : ulong {
+		None = 0,
+		Refit = 1,
+		FrequentRebuild = 2,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Native]
+	public enum MPSAccelerationStructureStatus : ulong {
+		Unbuilt = 0,
+		Built = 1,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MPSAxisAlignedBoundingBox {
+		public Vector3 Min;
+		public Vector3 Max;
+	}
+
+	[Flags]
+	[Native]
+	[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
+	public enum MPSDeviceOptions : ulong {
+		Default = 0,
+		LowPower = 1,
+		SkipRemovable = 2,
 	}
 }
 #endif

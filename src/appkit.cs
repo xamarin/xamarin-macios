@@ -3731,6 +3731,7 @@ namespace AppKit {
 		NSColor SelectedControl { get; }
 
 		[Static]
+		[Deprecated (PlatformName.MacOSX, message: "Use 'SelectedContentBackgroundColor' instead.")]
 		[Export ("secondarySelectedControlColor")]
 		NSColor SecondarySelectedControl { get; }
 
@@ -3821,6 +3822,7 @@ namespace AppKit {
 		NSColor HeaderText { get; }
 
 		[Static]
+		[Deprecated (PlatformName.MacOSX, message : "Use 'SelectedContentBackgroundColor' instead.")]
 		[Export ("alternateSelectedControlColor")]
 		NSColor AlternateSelectedControl { get; }
 
@@ -3829,6 +3831,7 @@ namespace AppKit {
 		NSColor AlternateSelectedControlText { get; }
 
 		[Static]
+		[Advice ("Use 'AlternatingContentBackgroundColors' instead.")]
 		[Export ("controlAlternatingRowBackgroundColors")]
 		NSColor [] ControlAlternatingRowBackgroundColors ();
 
@@ -5757,6 +5760,7 @@ namespace AppKit {
 		[Export ("runModalOpenPanel:forTypes:")]
 		nint RunModalOpenPanel (NSOpenPanel openPanel, string [] types);
 
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use 'OpenDocument (NSUrl, bool, OpenDocumentCompletionHandler)' instead.")]
 		[Export ("openDocumentWithContentsOfURL:display:error:")]
 		NSObject OpenDocument (NSUrl url, bool displayDocument, out NSError outError);
 
@@ -5767,6 +5771,7 @@ namespace AppKit {
 		[Export ("makeDocumentWithContentsOfURL:ofType:error:")]
 		NSObject MakeDocument (NSUrl url, string typeName, out NSError outError);
 
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use 'NSDocumentController.ReopenDocumentForUrl (NSUrl, NSUrl, bool, OpenDocumentCompletionHandler)' instead.")]
 		[Export ("reopenDocumentForURL:withContentsOfURL:error:")]
 		bool ReopenDocument (NSUrl url, NSUrl contentsUrl, out NSError outError);
 
@@ -6790,6 +6795,7 @@ namespace AppKit {
 		[Export ("sendAction")]
 		bool SendAction { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		NSObject WeakDelegate { get; set; } 
 
@@ -6802,24 +6808,31 @@ namespace AppKit {
 		[Export ("convertAttributes:")]
 		NSDictionary ConvertAttributes (NSDictionary attributes);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSFontDescriptor.MatchingFontDescriptors' instead.")]
 		[Export ("availableFontNamesMatchingFontDescriptor:")]
 		string [] AvailableFontNamesMatchingFontDescriptor (NSFontDescriptor descriptor);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSFontCollection.AllFontCollectionNames' instead.")]
 		[Export ("collectionNames")]
 		string [] CollectionNames { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSFontCollection.GetMatchingDescriptors ()' instead.")]
 		[Export ("fontDescriptorsInCollection:")]
 		NSArray FontDescriptorsInCollection (string collectionNames);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSFontCollection.ShowFontCollection (NSFontCollection, string, NSFontCollectionVisibility, out NSError)' instead.")]
 		[Export ("addCollection:options:")]
 		bool AddCollection (string collectionName, NSFontCollectionOptions collectionOptions);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'HideFontCollection (string, NSFontCollectionVisibility, out NSError)' instead.")]
 		[Export ("removeCollection:")]
 		bool RemoveCollection (string collectionName);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSMutableFontCollection.AddQueryForDescriptors' instead.")]
 		[Export ("addFontDescriptors:toCollection:")]
 		void AddFontDescriptors (NSFontDescriptor [] descriptors, string collectionName);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSMutableFontCollection.RemoveQueryForDescriptors' instead.")]
 		[Export ("removeFontDescriptor:fromCollection:")]
 		void RemoveFontDescriptor (NSFontDescriptor descriptor, string collection);
 
@@ -7995,13 +8008,16 @@ namespace AppKit {
 		[Export ("size")]
 		CGSize Size { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Static]
 		[Export ("menuZone")]
 		NSZone MenuZone { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("helpRequested:")]
 		void HelpRequested (NSEvent eventPtr);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("isTornOff")]
 		bool IsTornOff { get; }
 
@@ -8039,6 +8055,7 @@ namespace AppKit {
 		[Export ("showsStateColumn")]
 		bool ShowsStateColumn { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("menuChangedMessagesEnabled")]
 		bool MenuChangedMessagesEnabled { get; set; }
 
@@ -10659,454 +10676,6 @@ namespace AppKit {
 		NSLayoutConstraint [] GetConstraintsAffectingLayout (NSLayoutConstraintOrientation orientation);
 	}
 
-	delegate void NSTextLayoutEnumerateLineFragments (CGRect rect, CGRect usedRectangle, NSTextContainer textContainer, NSRange glyphRange, out bool stop);
-	delegate void NSTextLayoutEnumerateEnclosingRects (CGRect rect, out bool stop);
-	
-	[DesignatedDefaultCtor]
-	[BaseType (typeof (NSObject))]
-	partial interface NSLayoutManager : NSCoding {
-		[Export ("attributedString")]
-		NSAttributedString AttributedString { get; }
-
-		[Export ("replaceTextStorage:")]
-		void ReplaceTextStorage (NSTextStorage newTextStorage);
-
-		[Export ("textContainers")]
-		NSTextContainer [] TextContainers { get; }
-
-		[Export ("addTextContainer:")]
-		[PostGet ("TextContainers")]
-		void AddTextContainer (NSTextContainer container);
-
-		[Export ("insertTextContainer:atIndex:")]
-		[PostGet ("TextContainers")]
-		void InsertTextContainer (NSTextContainer container, nint index);
-
-		[Export ("removeTextContainerAtIndex:")]
-		[PostGet ("TextContainers")]
-		void RemoveTextContainer (nint index);
-
-		[Export ("textContainerChangedGeometry:")]
-		void TextContainerChangedGeometry (NSTextContainer container);
-
-		[Export ("textContainerChangedTextView:")]
-		void TextContainerChangedTextView (NSTextContainer container);
-
-		[Export ("layoutOptions")]
-		NSGlyphStorageOptions LayoutOptions { get; }
-
-		[Export ("hasNonContiguousLayout")]
-		bool HasNonContiguousLayout { get; }
-
-		//[Export ("invalidateGlyphsForCharacterRange:changeInLength:actualCharacterRange:")]
-		//void InvalidateGlyphs (NSRange charRange, int changeInLength, NSRangePointer actualCharRange);
-
-		//[Export ("invalidateLayoutForCharacterRange:actualCharacterRange:")]
-		//void InvalidateLayout (NSRange charRange, NSRangePointer actualCharRange);
-
-		//[Export ("invalidateLayoutForCharacterRange:isSoft:actualCharacterRange:")]
-		//void InvalidateLayout (NSRange charRange, bool isSoft, NSRangePointer actualCharRange);
-
-		[Export ("invalidateDisplayForCharacterRange:")]
-		void InvalidateDisplayForCharacterRange (NSRange charRange);
-
-		[Export ("invalidateDisplayForGlyphRange:")]
-		void InvalidateDisplayForGlyphRange (NSRange glyphRange);
-
-#if !XAMCORE_4_0
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use ProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editMask, NSRange newCharRange, nint delta, NSRange invalidatedCharRange) instead).")]
-		[Export ("textStorage:edited:range:changeInLength:invalidatedRange:")]
-		void TextStorageEdited (NSTextStorage str, NSTextStorageEditedFlags editedMask, NSRange newCharRange, nint changeInLength, NSRange invalidatedCharRange);
-#endif
-
-		[Export ("ensureGlyphsForCharacterRange:")]
-		void EnsureGlyphsForCharacterRange (NSRange charRange);
-
-		[Export ("ensureGlyphsForGlyphRange:")]
-		void EnsureGlyphsForGlyphRange (NSRange glyphRange);
-
-		[Export ("ensureLayoutForCharacterRange:")]
-		void EnsureLayoutForCharacterRange (NSRange charRange);
-
-		[Export ("ensureLayoutForGlyphRange:")]
-		void EnsureLayoutForGlyphRange (NSRange glyphRange);
-
-		[Export ("ensureLayoutForTextContainer:")]
-		void EnsureLayoutForTextContainer (NSTextContainer container);
-
-		[Export ("ensureLayoutForBoundingRect:inTextContainer:")]
-		void EnsureLayoutForBoundingRect (CGRect bounds, NSTextContainer container);
-
-		//[Export ("insertGlyphs:length:forStartingGlyphAtIndex:characterIndex:")]
-		//void InsertGlyphs (uint [] glyphs, int length, int glyphIndex, int charIndex);
-
-		[Export ("insertGlyph:atGlyphIndex:characterIndex:")]
-		void InsertGlyph (uint /* NSGlyph = unsigned int */ glyph, nint glyphIndex, nint charIndex);
-
-		[Export ("replaceGlyphAtIndex:withGlyph:")]
-		void ReplaceGlyphAtIndex (nint glyphIndex, uint /* NSGlyph = unsigned int */ newGlyph);
-
-		[Export ("deleteGlyphsInRange:")]
-		void DeleteGlyphs (NSRange glyphRange);
-
-		[Export ("setCharacterIndex:forGlyphAtIndex:")]
-		void SetCharacterIndex (nint charIndex, nint glyphIndex);
-
-		[Export ("setIntAttribute:value:forGlyphAtIndex:")]
-		void SetIntAttribute (nint attributeTag, nint value, nint glyphIndex);
-
-		[Export ("invalidateGlyphsOnLayoutInvalidationForGlyphRange:")]
-		void InvalidateGlyphsOnLayoutInvalidation (NSRange glyphRange);
-
-		[Export ("numberOfGlyphs")]
-		nint NumberOfGlyphs { get; }
-
-		[Export ("glyphAtIndex:isValidIndex:")]
-#if XAMCORE_2_0
-		uint /* NSGlyph = unsigned int */ GlyphAtIndex (nint glyphIndex, ref bool isValidIndex);
-#else
-		[Obsolete ("Use 'GlyphAtIndex' instead.")]
-		uint /* NSGlyph = unsigned int */ GlyphAtIndexisValidIndex (nuint glyphIndex, ref bool isValidIndex);
-#endif
-
-		[Export ("glyphAtIndex:")]
-#if XAMCORE_2_0
-		uint /* NSGlyph = unsigned int */ GlyphAtIndex (nint glyphIndex);
-#else
-		[Obsolete ("Use 'GlyphAtIndex' instead.")]
-		uint /* NSGlyph = unsigned int */ GlyphCount (nint glyphIndex);
-#endif
-
-		[Export ("isValidGlyphIndex:")]
-		bool IsValidGlyphIndex (nint glyphIndex);
-
-		[Export ("characterIndexForGlyphAtIndex:")]
-		nuint CharacterIndexForGlyphAtIndex (nint glyphIndex);
-
-		[Export ("glyphIndexForCharacterAtIndex:")]
-		nuint GlyphIndexForCharacterAtIndex (nint charIndex);
-
-		[Export ("intAttribute:forGlyphAtIndex:")]
-		nint GetIntAttribute (nint attributeTag, nint glyphIndex);
-
-		[Export ("setTextContainer:forGlyphRange:")]
-		void SetTextContainerForRange (NSTextContainer container, NSRange glyphRange);
-
-		[Export ("setLineFragmentRect:forGlyphRange:usedRect:")]
-		void SetLineFragmentRect (CGRect fragmentRect, NSRange glyphRange, CGRect usedRect);
-
-		[Export ("setExtraLineFragmentRect:usedRect:textContainer:")]
-		void SetExtraLineFragmentRect (CGRect fragmentRect, CGRect usedRect, NSTextContainer container);
-
-		[Export ("setLocation:forStartOfGlyphRange:")]
-		void SetLocation (CGPoint location, NSRange forStartOfGlyphRange);
-
-		//[Export ("setLocations:startingGlyphIndexes:count:forGlyphRange:")]
-		//void SetLocations (NSPointArray locations, int glyphIndexes, uint count, NSRange glyphRange);
-
-		[Export ("setNotShownAttribute:forGlyphAtIndex:")]
-		void SetNotShownAttribute (bool flag, nint glyphIndex);
-
-		[Export ("setDrawsOutsideLineFragment:forGlyphAtIndex:")]
-		void SetDrawsOutsideLineFragment (bool flag, nint glyphIndex);
-
-		[Export ("setAttachmentSize:forGlyphRange:")]
-		void SetAttachmentSize (CGSize attachmentSize, NSRange glyphRange);
-
-		[Export ("getFirstUnlaidCharacterIndex:glyphIndex:")]
-		void GetFirstUnlaidCharacterIndex (ref nuint charIndex, ref nuint glyphIndex);
-
-		[Export ("firstUnlaidCharacterIndex")]
-		nint FirstUnlaidCharacterIndex { get; }
-
-		[Export ("firstUnlaidGlyphIndex")]
-		nint FirstUnlaidGlyphIndex { get; }
-
-		//[Export ("textContainerForGlyphAtIndex:effectiveRange:")]
-		//NSTextContainer TextContainerForGlyphAt (int glyphIndex, NSRangePointer effectiveGlyphRange);
-
-		[Export ("usedRectForTextContainer:")]
-		CGRect GetUsedRectForTextContainer (NSTextContainer container);
-
-		//[Export ("lineFragmentRectForGlyphAtIndex:effectiveRange:")]
-		//CGRect LineFragmentRectForGlyphAt (int glyphIndex, NSRangePointer effectiveGlyphRange);
-
-		//[Export ("lineFragmentUsedRectForGlyphAtIndex:effectiveRange:")]
-		//CGRect LineFragmentUsedRectForGlyphAt (int glyphIndex, NSRangePointer effectiveGlyphRange);
-
-		//[Export ("lineFragmentRectForGlyphAtIndex:effectiveRange:withoutAdditionalLayout:")]
-		//CGRect LineFragmentRectForGlyphAt (int glyphIndex, NSRangePointer effectiveGlyphRange, bool flag);
-
-		//[Export ("lineFragmentUsedRectForGlyphAtIndex:effectiveRange:withoutAdditionalLayout:")]
-		//CGRect LineFragmentUsedRectForGlyphAt (int glyphIndex, NSRangePointer effectiveGlyphRange, bool flag);
-
-		//[Export ("textContainerForGlyphAtIndex:effectiveRange:withoutAdditionalLayout:")]
-		//NSTextContainer TextContainerForGlyphAt (int glyphIndex, NSRangePointer effectiveGlyphRange, bool flag);
-
-		[Export ("extraLineFragmentRect")]
-		CGRect ExtraLineFragmentRect { get; }
-
-		[Export ("extraLineFragmentUsedRect")]
-		CGRect ExtraLineFragmentUsedRect { get; }
-
-		[Export ("extraLineFragmentTextContainer")]
-		NSTextContainer ExtraLineFragmentTextContainer { get; }
-
-		[Export ("locationForGlyphAtIndex:")]
-		CGPoint LocationForGlyphAtIndex (nint glyphIndex);
-
-		[Export ("notShownAttributeForGlyphAtIndex:")]
-		bool NotShownAttributeForGlyphAtIndex (nint glyphIndex);
-
-		[Export ("drawsOutsideLineFragmentForGlyphAtIndex:")]
-		bool DrawsOutsideLineFragmentForGlyphAt (nint glyphIndex);
-
-		[Export ("attachmentSizeForGlyphAtIndex:")]
-		CGSize AttachmentSizeForGlyphAt (nint glyphIndex);
-
-		[Export ("setLayoutRect:forTextBlock:glyphRange:")]
-		void SetLayoutRect (CGRect layoutRect, NSTextBlock forTextBlock, NSRange glyphRange);
-
-		[Export ("setBoundsRect:forTextBlock:glyphRange:")]
-		void SetBoundsRect (CGRect boundsRect, NSTextBlock forTextBlock, NSRange glyphRange);
-
-		[Export ("layoutRectForTextBlock:glyphRange:")]
-		CGRect LayoutRect (NSTextBlock block, NSRange glyphRange);
-
-		[Export ("boundsRectForTextBlock:glyphRange:")]
-		CGRect BoundsRect (NSTextBlock block, NSRange glyphRange);
-
-		//[Export ("layoutRectForTextBlock:atIndex:effectiveRange:")]
-		//CGRect LayoutRect (NSTextBlock block, int glyphIndex, NSRangePointer effectiveGlyphRange);
-
-		//[Export ("boundsRectForTextBlock:atIndex:effectiveRange:")]
-		//CGRect BoundsRect (NSTextBlock block, int glyphIndex, NSRangePointer effectiveGlyphRange);
-
-		//[Export ("glyphRangeForCharacterRange:actualCharacterRange:")]
-		//NSRange GetGlyphRange (NSRange charRange, NSRangePointer actualCharRange);
-
-		//[Export ("characterRangeForGlyphRange:actualGlyphRange:")]
-		//NSRange GetCharacterRange (NSRange glyphRange, NSRangePointer actualGlyphRange);
-
-		[Export ("glyphRangeForTextContainer:")]
-		NSRange GetGlyphRange (NSTextContainer container);
-
-		[Export ("rangeOfNominallySpacedGlyphsContainingIndex:")]
-		NSRange RangeOfNominallySpacedGlyphsContainingIndex (nint glyphIndex);
-
-		//[Export ("rectArrayForCharacterRange:withinSelectedCharacterRange:inTextContainer:rectCount:")]
-		//NSRectArray RectArrayForCharacterRangewithinSelectedCharacterRangeinTextContainerrectCount (NSRange charRange, NSRange selCharRange, NSTextContainer container, uint rectCount);
-
-		[Internal]
-		[Export ("rectArrayForGlyphRange:withinSelectedGlyphRange:inTextContainer:rectCount:")]
-		[Availability (Deprecated = Platform.Mac_10_11)]
-		IntPtr GetRectArray (NSRange glyphRange, NSRange selectedGlyphRange, IntPtr textContainerHandle, out nuint rectCount);
-
-		[Export ("boundingRectForGlyphRange:inTextContainer:")]
-		CGRect BoundingRectForGlyphRange (NSRange glyphRange, NSTextContainer container);
-
-		[Export ("glyphRangeForBoundingRect:inTextContainer:")]
-		NSRange GlyphRangeForBoundingRect (CGRect bounds, NSTextContainer container);
-
-		[Export ("glyphRangeForBoundingRectWithoutAdditionalLayout:inTextContainer:")]
-		NSRange GlyphRangeForBoundingRectWithoutAdditionalLayout (CGRect bounds, NSTextContainer container);
-
-		[Export ("glyphIndexForPoint:inTextContainer:fractionOfDistanceThroughGlyph:")]
-		nuint GlyphIndexForPointInTextContainer (CGPoint point, NSTextContainer container, ref nfloat fractionOfDistanceThroughGlyph);
-
-		[Export ("glyphIndexForPoint:inTextContainer:")]
-		nuint GlyphIndexForPoint (CGPoint point, NSTextContainer container);
-
-		[Export ("fractionOfDistanceThroughGlyphForPoint:inTextContainer:")]
-		nfloat FractionOfDistanceThroughGlyphForPoint (CGPoint point, NSTextContainer container);
-
-		[Export ("characterIndexForPoint:inTextContainer:fractionOfDistanceBetweenInsertionPoints:")]
-		nuint CharacterIndexForPoint (CGPoint point, NSTextContainer container, ref nfloat fractionOfDistanceBetweenInsertionPoints);
-
-		[Export ("getLineFragmentInsertionPointsForCharacterAtIndex:alternatePositions:inDisplayOrder:positions:characterIndexes:")]
-		nuint GetLineFragmentInsertionPoints (nuint charIndex, bool aFlag, bool dFlag, IntPtr positions, IntPtr charIndexes);
-
-		//[Export ("temporaryAttributesAtCharacterIndex:effectiveRange:")]
-		//NSDictionary GetTemporaryAttributes (int charIndex, NSRangePointer effectiveCharRange);
-
-		[Export ("setTemporaryAttributes:forCharacterRange:")]
-		void SetTemporaryAttributes (NSDictionary attrs, NSRange charRange);
-
-		[Export ("addTemporaryAttributes:forCharacterRange:")]
-		void AddTemporaryAttributes (NSDictionary attrs, NSRange charRange);
-
-		[Export ("removeTemporaryAttribute:forCharacterRange:")]
-		void RemoveTemporaryAttribute (string attrName, NSRange charRange);
-
-		//[Export ("temporaryAttribute:atCharacterIndex:effectiveRange:")]
-		//NSObject GetTemporaryAttribute (string attrName, uint location, NSRangePointer range);
-
-		//[Export ("temporaryAttribute:atCharacterIndex:longestEffectiveRange:inRange:")]
-		//NSObject GetTemporaryAttribute (string attrName, uint location, NSRangePointer range, NSRange rangeLimit);
-
-		//[Export ("temporaryAttributesAtCharacterIndex:longestEffectiveRange:inRange:")]
-		//NSDictionary GetTemporaryAttributes (int characterIndex, NSRangePointer longestEffectiveRange, NSRange rangeLimit);
-
-		[Export ("addTemporaryAttribute:value:forCharacterRange:")]
-		void AddTemporaryAttribute (string attrName, NSObject value, NSRange charRange);
-
-		[Export ("substituteFontForFont:")]
-		NSFont SubstituteFontForFont (NSFont originalFont);
-
-		[Export ("defaultLineHeightForFont:")]
-		nfloat DefaultLineHeightForFont (NSFont theFont);
-
-		[Export ("defaultBaselineOffsetForFont:")]
-		nfloat DefaultBaselineOffsetForFont (NSFont theFont);
-
-		//Detected properties
-		[Export ("textStorage")]
-		NSTextStorage TextStorage { get; set; }
-
-		[Export ("glyphGenerator", ArgumentSemantic.Retain)]
-		NSGlyphGenerator GlyphGenerator { get; set; }
-
-		[Export ("typesetter", ArgumentSemantic.Retain)]
-		NSTypesetter Typesetter { get; set; }
-
-		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
-		NSObject WeakDelegate { get; set; }
-
-		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSLayoutManagerDelegate Delegate { get; set; }
-
-		[Export ("backgroundLayoutEnabled")]
-		bool BackgroundLayoutEnabled { get; set; }
-
-		[Export ("usesScreenFonts")]
-		bool UsesScreenFonts { get; set; }
-
-		[Export ("showsInvisibleCharacters")]
-		bool ShowsInvisibleCharacters { get; set; }
-
-		[Export ("showsControlCharacters")]
-		bool ShowsControlCharacters { get; set; }
-
-		[Export ("hyphenationFactor")]
-		float HyphenationFactor { get; set; } /* float, not CGFloat */
-
-		[Export ("defaultAttachmentScaling")]
-		NSImageScaling DefaultAttachmentScaling { get; set; }
-
-		[Export ("typesetterBehavior")]
-		NSTypesetterBehavior TypesetterBehavior { get; set; }
-
-		[Export ("allowsNonContiguousLayout")]
-		bool AllowsNonContiguousLayout { get; set; }
-
-		[Export ("usesFontLeading")]
-		bool UsesFontLeading { get; set; }
-
-		[Export ("drawBackgroundForGlyphRange:atPoint:")]
-		void DrawBackgroundForGlyphRange (NSRange glyphsToShow, CGPoint origin);
-
-		[Export ("drawGlyphsForGlyphRange:atPoint:")]
-		void DrawGlyphsForGlyphRange (NSRange glyphsToShow, CGPoint origin);
-
-		[Export ("characterRangeForGlyphRange:actualGlyphRange:")]
-		NSRange CharacterRangeForGlyphRange (NSRange glyphRange, out NSRange actualGlyphRange);
-
-		[Export ("glyphRangeForCharacterRange:actualCharacterRange:")]
-		NSRange GlyphRangeForCharacterRange (NSRange charRange, out NSRange actualCharRange);
-
-		[Mac (10,10)]
-		[Export ("getGlyphsInRange:glyphs:properties:characterIndexes:bidiLevels:")]
-		[Internal]
-		nuint GetGlyphsInternal (NSRange glyphRange, IntPtr glyphBuffer, IntPtr props, IntPtr charIndexBuffer, IntPtr bidiLevelBuffer);
-
-		[Mac (10,10)]
-		[Export ("propertyForGlyphAtIndex:")]
-		NSGlyphProperty GetProperty (nuint glyphIndex);
-
-		[Mac (10,11)]
-		[Export ("CGGlyphAtIndex:isValidIndex:")]
-		ushort GetCGGlyph (nuint glyphIndex, out bool isValidIndex);
-
-		[Mac (10,11)]
-		[Export ("CGGlyphAtIndex:")]
-		ushort GetCGGlyph (nuint glyphIndex);
-
-		[Mac (10,11)]
-		[Export ("processEditingForTextStorage:edited:range:changeInLength:invalidatedRange:")]
-		void ProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editMask, NSRange newCharRange, nint delta, NSRange invalidatedCharRange);
-
-		[Mac (10,11)]
-		[Export ("setGlyphs:properties:characterIndexes:font:forGlyphRange:")]
-		void SetGlyphs (IntPtr glyphs, IntPtr props, IntPtr charIndexes, NSFont aFont, NSRange glyphRange);
-
-		[Mac (10,11)]
-		[Export ("truncatedGlyphRangeInLineFragmentForGlyphAtIndex:")]
-		NSRange GetTruncatedGlyphRangeInLineFragment (nuint glyphIndex);
-
-		[Mac (10,11)]
-		[Export ("enumerateLineFragmentsForGlyphRange:usingBlock:")]
-		void EnumerateLineFragments (NSRange glyphRange, NSTextLayoutEnumerateLineFragments callback);
-
-		[Mac (10,11)]
-		[Export ("enumerateEnclosingRectsForGlyphRange:withinSelectedGlyphRange:inTextContainer:usingBlock:")]
-		void EnumerateEnclosingRects (NSRange glyphRange, NSRange selectedRange, NSTextContainer textContainer, NSTextLayoutEnumerateEnclosingRects callback);
-
-		[Mac (10, 14, onlyOn64: true)]
-		[Export ("limitsLayoutForSuspiciousContents")]
-		bool LimitsLayoutForSuspiciousContents { get; set; }
-	}
-
-	[BaseType (typeof (NSObject))]
-	[Model]
-	[Protocol]
-	interface NSLayoutManagerDelegate {
-		[Export ("layoutManagerDidInvalidateLayout:")]
-		void LayoutInvalidated (NSLayoutManager sender);
-
-		[Export ("layoutManager:didCompleteLayoutForTextContainer:atEnd:")]
-		void LayoutCompleted (NSLayoutManager layoutManager, NSTextContainer textContainer, bool layoutFinishedFlag);
-
-		[Export ("layoutManager:shouldUseTemporaryAttributes:forDrawingToScreen:atCharacterIndex:effectiveRange:")]
-		NSDictionary ShouldUseTemporaryAttributes (NSLayoutManager layoutManager, NSDictionary temporaryAttributes, bool drawingToScreen, nint charIndex, IntPtr effectiveCharRange);
-
-		[Mac (10,11)]
-		[Export ("layoutManager:shouldGenerateGlyphs:properties:characterIndexes:font:forGlyphRange:")]
-		nuint ShouldGenerateGlyphs (NSLayoutManager layoutManager, IntPtr glyphBuffer, IntPtr props, IntPtr charIndexes, NSFont aFont, NSRange glyphRange);
-
-		[Mac (10,11)]
-		[Export ("layoutManager:lineSpacingAfterGlyphAtIndex:withProposedLineFragmentRect:")]
-		nfloat GetLineSpacingAfterGlyph (NSLayoutManager layoutManager, nuint glyphIndex, CGRect rect);
-
-		[Mac (10,11)]
-		[Export ("layoutManager:paragraphSpacingBeforeGlyphAtIndex:withProposedLineFragmentRect:")]
-		nfloat GetParagraphSpacingBeforeGlyph (NSLayoutManager layoutManager, nuint glyphIndex, CGRect rect);
-
-		[Mac (10,11)]
-		[Export ("layoutManager:paragraphSpacingAfterGlyphAtIndex:withProposedLineFragmentRect:")]
-		nfloat GetParagraphSpacingAfterGlyph (NSLayoutManager layoutManager, nuint glyphIndex, CGRect rect);
-
-		[Mac (10,11)]
-		[Export ("layoutManager:shouldUseAction:forControlCharacterAtIndex:")]
-		NSControlCharacterAction ShouldUseAction (NSLayoutManager layoutManager, NSControlCharacterAction action, nuint charIndex);
-
-		[Mac (10,11)]
-		[Export ("layoutManager:shouldBreakLineByWordBeforeCharacterAtIndex:")]
-		bool ShouldBreakLineByWordBeforeCharacter (NSLayoutManager layoutManager, nuint charIndex);
-
-		[Mac (10,11)]
-		[Export ("layoutManager:shouldBreakLineByHyphenatingBeforeCharacterAtIndex:")]
-		bool ShouldBreakLineByHyphenatingBeforeCharacter (NSLayoutManager layoutManager, nuint charIndex);
-
-		[Mac (10,11)]
-		[Export ("layoutManager:boundingBoxForControlGlyphAtIndex:forTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
-		CGRect GetBoundingBox (NSLayoutManager layoutManager, nuint glyphIndex, NSTextContainer textContainer, CGRect proposedRect, CGPoint glyphPosition, nuint charIndex);
-
-		[Mac (10,11)]
-		[Export ("layoutManager:textContainer:didChangeGeometryFromSize:")]
-		void DidChangeGeometry (NSLayoutManager layoutManager, NSTextContainer textContainer, CGSize oldSize);
-	}
-
 	[Mac (10,10)]
 	[BaseType (typeof (NSGestureRecognizer))]
 	interface NSMagnificationGestureRecognizer {
@@ -12364,30 +11933,39 @@ namespace AppKit {
 		[Export ("pageSizeForPaper:")]
 		CGSize PageSizeForPaper (string paperName); 
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("statusForTable:")]
 		NSPrinterTableStatus StatusForTable (string tableName);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("isKey:inTable:")]
 		bool IsKeyInTable (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("booleanForKey:inTable:")]
 		bool BooleanForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("floatForKey:inTable:")]
 		float /* float, not CGFloat */ FloatForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("intForKey:inTable:")]
 		int /* int, not NSInteger */ IntForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("rectForKey:inTable:")]
 		CGRect RectForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("sizeForKey:inTable:")]
 		CGSize SizeForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("stringForKey:inTable:")]
 		string StringForKey (string key, string table);
 
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("stringListForKey:inTable:")]
 		string [] StringListForKey (string key, string table);
 
@@ -14759,7 +14337,7 @@ namespace AppKit {
 		[Export ("playbackDeviceIdentifier")]
 		string PlaybackDeviceID { get; set; }
 
-		// FIXME: Poor docs, no type defined for the array elements
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("channelMapping")]
 		NSObject ChannelMapping { get; set; }
 	}
@@ -16386,6 +15964,7 @@ namespace AppKit {
 		[Export ("drawPageBorderWithSize:")]
 		void DrawPageBorder (CGSize borderSize);
 		
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Never called.")]
 		[Export ("drawSheetBorderWithSize:")]
 		void DrawSheetBorder (CGSize borderSize);
 		
@@ -17591,6 +17170,7 @@ namespace AppKit {
 		[Export ("tableView:acceptDrop:row:dropOperation:")]
 		bool AcceptDrop (NSTableView tableView, [Protocolize (4)] NSDraggingInfo info, nint row, NSTableViewDropOperation dropOperation);
 	
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' instead.")]
 		[Export ("tableView:namesOfPromisedFilesDroppedAtDestination:forDraggedRowsWithIndexes:")]
 		string [] FilesDropped (NSTableView tableView, NSUrl dropDestination, NSIndexSet indexSet );
 
@@ -18936,6 +18516,7 @@ namespace AppKit {
 		[Export ("isSimpleRectangularTextContainer")]
 		bool IsSimpleRectangularTextContainer { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("containsPoint:")]
 		bool ContainsPoint (CGPoint point);
 
@@ -19085,6 +18666,7 @@ namespace AppKit {
 	interface NSTextInput
 	{
 		[Abstract]
+		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		[Export ("insertText:")]
 		void InsertText (NSObject insertString);
 
@@ -19200,6 +18782,7 @@ namespace AppKit {
 		[Export ("lowerBaseline:")]
 		void LowerBaseline (NSObject sender);
 
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use unicode characters via the character palette.")]
 		[Export ("toggleTraditionalCharacterShape:")]
 		void ToggleTraditionalCharacterShape (NSObject sender);
 
@@ -20784,6 +20367,7 @@ namespace AppKit {
 		[Export ("gState")]
 		nint GState ();
 	
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("setOneShot:")]
 		void SetOneShot (bool flag);
 	
@@ -20859,9 +20443,11 @@ namespace AppKit {
 		[Export ("sharingType")]
 		NSWindowSharingType SharingType  { get; set; }
 	
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("preferredBackingLocation")]
 		NSWindowBackingLocation PreferredBackingLocation  { get; set; }
 	
+		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("backingLocation")]
 		NSWindowBackingLocation BackingLocation { get; }
 	
@@ -21686,6 +21272,7 @@ namespace AppKit {
 		[Export ("openFile:withApplication:andDeactivate:"), ThreadSafe]
 		bool OpenFile (string fullPath, [NullAllowed] string appName, bool deactivate);
 		
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSWorkspace.OpenUrl' instead.")]
 		[Export ("openFile:fromImage:at:inView:"), ThreadSafe]
 		bool OpenFile (string fullPath, NSImage anImage, CGPoint point, NSView aView);
 		
@@ -21749,6 +21336,7 @@ namespace AppKit {
 		[Export ("getFileSystemInfoForPath:isRemovable:isWritable:isUnmountable:description:type:"), ThreadSafe]
 		bool GetFileSystemInfo (string fullPath, out bool removableFlag, out bool writableFlag, out bool unmountableFlag, out string description, out string fileSystemType);
 		
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("performFileOperation:source:destination:files:tag:"), ThreadSafe]
 		bool PerformFileOperation (NSString workspaceOperation, string source, string destination, string[] files, out nint tag);
 		
@@ -21764,9 +21352,11 @@ namespace AppKit {
 		[Export ("hideOtherApplications")]
 		void HideOtherApplications ();
 		
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("mountedLocalVolumePaths")]
 		string[] MountedLocalVolumePaths { get; }
 		
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Export ("mountedRemovableMedia")]
 		string[] MountedRemovableMedia {  get; }
 		
@@ -21786,9 +21376,11 @@ namespace AppKit {
 		[Export ("openURLs:withAppBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifiers:"), ThreadSafe]
 		bool _OpenUrls (NSUrl[] urls, string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor, [NullAllowed] string[] identifiers);
 		
+		[Deprecated (PlatformName.MacOSX, 10, 7, message: "Use 'NSWorkspace.RunningApplications' instead.")]
 		[Export ("launchedApplications")]
 		NSDictionary [] LaunchedApplications { get; }
 		
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSWorkspace.FrontmostApplication' instead.")]
 		[Export ("activeApplication")]
 		NSDictionary ActiveApplication { get; }
 		
@@ -22707,6 +22299,7 @@ namespace AppKit {
 		NSRange GlyphRangeForCharacterRange (NSRange charRange, out NSRange actualCharRange);
 
 		// TODO: could use a higher level API
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("getGlyphsInRange:glyphs:characterIndexes:glyphInscriptions:elasticBits:bidiLevels:")]
 		nuint GetGlyphsInRange (NSRange glyphsRange, IntPtr glyphBuffer, IntPtr charIndexBuffer, IntPtr inscribeBuffer, IntPtr elasticBuffer, IntPtr bidiLevelBuffer);
 
