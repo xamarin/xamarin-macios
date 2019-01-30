@@ -60,11 +60,14 @@ namespace monotouchtest
 			var str = new NSString (input.Substring (start, length));
 			var substring = new NSString (input, start, length);
 			var substringHandle = NSString.CreateNative (input, start, length);
+			try {
+				Assert.AreEqual (str, substring);
 
-			Assert.AreEqual (str, substring);
-
-			substring = NSString.FromHandle (substringHandle);
-			Assert.AreEqual (str, substring);
+				substring = (NSString)NSString.FromHandle (substringHandle);
+				Assert.AreEqual (str, substring);
+			} finally {
+				NSString.ReleaseNative (substringHandle);
+			}
 		}
 	}
 }
