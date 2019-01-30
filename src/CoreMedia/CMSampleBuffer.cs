@@ -812,22 +812,35 @@ namespace CoreMedia {
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCreateReadyWithImageBuffer (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CVImageBufferRef */ IntPtr imageBuffer,
-			/* CMFormatDescriptionRef */ IntPtr formatDescription,	// not null
-			CMSampleTimingInfo[] sampleTiming,
+			/* CMFormatDescriptionRef */ IntPtr formatDescription,  // not null
+			/* const CMSampleTimingInfo * CM_NONNULL */ ref CMSampleTimingInfo sampleTiming,
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.")]
 		[iOS (8,0)][Mac (10,10)]
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer, 
 			CMFormatDescription formatDescription, CMSampleTimingInfo[] sampleTiming, out CMSampleBufferError error)
 		{
+			if (sampleTiming == null)
+				throw new ArgumentNullException (nameof (sampleTiming));
+			if (sampleTiming.Length != 1)
+				throw new ArgumentException ("Only a single sample is allowed.", nameof (sampleTiming));
+			return CreateReadyWithImageBuffer (imageBuffer, formatDescription, sampleTiming, out error);
+		}
+#endif
+		[iOS (8,0)][Mac (10,10)]
+		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer,
+			CMFormatDescription formatDescription, ref CMSampleTimingInfo sampleTiming, out CMSampleBufferError error)
+		{
 			if (imageBuffer == null)
-				throw new ArgumentNullException ("imageBuffer");
+				throw new ArgumentNullException (nameof (imageBuffer));
 			if (formatDescription == null)
-				throw new ArgumentNullException ("formatDescription");
+				throw new ArgumentNullException (nameof (formatDescription));
 
 			IntPtr buffer;
-			error = CMSampleBufferCreateReadyWithImageBuffer (IntPtr.Zero, imageBuffer.handle, 
-				formatDescription.Handle, sampleTiming, out buffer);
+			error = CMSampleBufferCreateReadyWithImageBuffer (IntPtr.Zero, imageBuffer.handle,
+				formatDescription.Handle, ref sampleTiming, out buffer);
 
 			if (error != CMSampleBufferError.None)
 				return null;

@@ -205,6 +205,7 @@ namespace Introspection
 			"Emagic",
 			"Emaili",
 			"Embd",
+			"Emsg",	// 4cc
 			"Enc",
 			"Eppc",
 			"Eftpos", // Electronic funds transfer at point of sale

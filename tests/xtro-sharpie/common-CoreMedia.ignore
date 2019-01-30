@@ -14,6 +14,7 @@
 !missing-field! kCMFormatDescriptionColorPrimaries_P3_D65 not bound
 !missing-field! kCMFormatDescriptionColorPrimaries_SMPTE_C not bound
 !missing-field! kCMFormatDescriptionConformsToMPEG2VideoProfile not bound
+!missing-field! kCMFormatDescriptionExtension_AlternativeTransferCharacteristics not bound
 !missing-field! kCMFormatDescriptionExtension_BytesPerRow not bound
 !missing-field! kCMFormatDescriptionExtension_ChromaLocationBottomField not bound
 !missing-field! kCMFormatDescriptionExtension_ChromaLocationTopField not bound
@@ -243,11 +244,22 @@
 !missing-pinvoke! CMBufferQueueGetMinDecodeTimeStamp is not bound
 !missing-pinvoke! CMBufferQueueGetMinPresentationTimeStamp is not bound
 !missing-pinvoke! CMBufferQueueGetTypeID is not bound
+
 !missing-pinvoke! CMBufferQueueInstallTrigger is not bound
+## block version of the above API
+!missing-pinvoke! CMBufferQueueInstallTriggerHandler is not bound
+
 !missing-pinvoke! CMBufferQueueInstallTriggerWithIntegerThreshold is not bound
+## block version of the above API
+!missing-pinvoke! CMBufferQueueInstallTriggerHandlerWithIntegerThreshold is not bound
+
 !missing-pinvoke! CMBufferQueueRemoveTrigger is not bound
 !missing-pinvoke! CMBufferQueueResetWithCallback is not bound
+
 !missing-pinvoke! CMBufferQueueSetValidationCallback is not bound
+## block version of the above API
+!missing-pinvoke! CMBufferQueueSetValidationHandler is not bound
+
 !missing-pinvoke! CMBufferQueueTestTrigger is not bound
 !missing-pinvoke! CMClockGetTypeID is not bound
 !missing-pinvoke! CMClosedCaptionFormatDescriptionCopyAsBigEndianClosedCaptionDescriptionBlockBuffer is not bound
@@ -281,7 +293,11 @@
 !missing-pinvoke! CMMuxedFormatDescriptionCreate is not bound
 !missing-pinvoke! CMSampleBufferCallBlockForEachSample is not bound
 !missing-pinvoke! CMSampleBufferCopySampleBufferForRange is not bound
+
 !missing-pinvoke! CMSampleBufferCreate is not bound
+## block version of the above API
+!missing-pinvoke! CMSampleBufferCreateWithMakeDataReadyHandler is not bound
+
 !missing-pinvoke! CMSampleBufferCreateCopy is not bound
 !missing-pinvoke! CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer is not bound
 !missing-pinvoke! CMSampleBufferGetAudioStreamPacketDescriptions is not bound
@@ -355,3 +371,12 @@
 !missing-pinvoke! CMVideoFormatDescriptionCopyAsBigEndianImageDescriptionBlockBuffer is not bound
 !missing-pinvoke! CMVideoFormatDescriptionCreateFromBigEndianImageDescriptionBlockBuffer is not bound
 !missing-pinvoke! CMVideoFormatDescriptionCreateFromBigEndianImageDescriptionData is not bound
+
+## block based version of CMBufferQueueCreate (which use callbacks and is already bound)
+!missing-pinvoke! CMBufferQueueCreateWithHandlers is not bound
+
+## block based version of CMAudioSampleBufferCreateWithPacketDescriptions (which use callbacks and is already bound)
+!missing-pinvoke! CMAudioSampleBufferCreateWithPacketDescriptionsAndMakeDataReadyHandler is not bound
+
+## block based version of CMSampleBufferCreateForImageBuffer (which use callbacks and is already bound)
+!missing-pinvoke! CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler is not bound
