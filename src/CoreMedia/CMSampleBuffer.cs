@@ -817,90 +817,35 @@ namespace CoreMedia {
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferCreateReadyWithImageBuffer (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CVImageBufferRef */ IntPtr imageBuffer,
-			/* CMFormatDescriptionRef */ IntPtr formatDescription,	// not null
-			CMSampleTimingInfo[] sampleTiming,
+			/* CMFormatDescriptionRef */ IntPtr formatDescription,  // not null
+			/* const CMSampleTimingInfo * CM_NONNULL */ ref CMSampleTimingInfo sampleTiming,
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.")]
 		[iOS (8,0)][Mac (10,10)]
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer, 
 			CMFormatDescription formatDescription, CMSampleTimingInfo[] sampleTiming, out CMSampleBufferError error)
 		{
-			if (imageBuffer == null)
-				throw new ArgumentNullException (nameof (imageBuffer));
-			if (formatDescription == null)
-				throw new ArgumentNullException (nameof (formatDescription));
 			if (sampleTiming == null)
 				throw new ArgumentNullException (nameof (sampleTiming));
-
-			IntPtr buffer;
-			error = CMSampleBufferCreateReadyWithImageBuffer (IntPtr.Zero, imageBuffer.handle, 
-				formatDescription.Handle, sampleTiming, out buffer);
-
-			if (error != CMSampleBufferError.None)
-				return null;
-
-			return new CMSampleBuffer (buffer, true);
+			if (sampleTiming.Length != 1)
+				throw new ArgumentException ("Only a single sample is allowed.", nameof (sampleTiming));
+			return CreateReadyWithImageBuffer (imageBuffer, formatDescription, sampleTiming, out error);
 		}
-
-		[iOS (12,2)]
-		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
-		[DllImport (Constants.CoreMediaLibrary)]
-		static unsafe extern /* OSStatus */ CMSampleBufferError CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler (
-			/* CFAllocatorRef CM_NULLABLE */ IntPtr allocator,
-			/* CVImageBufferRef CM_NONNULL */ IntPtr imageBuffer,
-			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool dataReady,
-			/* CMSampleBufferMakeDataReadyHandler CM_NULLABLE */ IntPtr makeDataReadyHandler,
-			/* CMVideoFormatDescriptionRef CM_NONNULL */ IntPtr formatDescription,
-			/* const CMSampleTimingInfo* CM_NONNULL */ CMSampleTimingInfo [] sampleTiming,
-			/* CM_RETURNS_RETAINED_PARAMETER CMSampleBufferRef CM_NULLABLE * CM_NONNULL */ out IntPtr sampleBufferOut);
-
-		internal delegate CMSampleBufferError DCMSampleBufferMakeDataReadyHandler (IntPtr block, IntPtr sbuf);
-
-		static internal class DCMSampleBufferMakeDataReadyHandlerTrampoline {
-			static internal readonly DCMSampleBufferMakeDataReadyHandler Handler = Invoke;
-
-			[MonoPInvokeCallback (typeof (DCMSampleBufferMakeDataReadyHandler))]
-			static unsafe CMSampleBufferError Invoke (IntPtr block, IntPtr sbuf)
-			{
-				var descriptor = (BlockLiteral *) block;
-				var del = (CMSampleBufferMakeDataReadyHandler) descriptor->Target;
-				using (var b = new CMSampleBuffer (sbuf))
-					return del (b);
-			}
-		}
-
-		[iOS (12,2)]
-		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
-		[BindingImpl (BindingImplOptions.Optimizable)]
+#endif
+		[iOS (8,0)][Mac (10,10)]
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer,
-			bool dataReady, CMSampleBufferMakeDataReadyHandler makeDataReadyHandler,
-			CMFormatDescription formatDescription, CMSampleTimingInfo [] sampleTiming, out CMSampleBufferError error)
+			CMFormatDescription formatDescription, ref CMSampleTimingInfo sampleTiming, out CMSampleBufferError error)
 		{
 			if (imageBuffer == null)
 				throw new ArgumentNullException (nameof (imageBuffer));
 			if (formatDescription == null)
 				throw new ArgumentNullException (nameof (formatDescription));
-			if (sampleTiming == null)
-				throw new ArgumentNullException (nameof (sampleTiming));
 
 			IntPtr buffer;
-			unsafe {
-				if (makeDataReadyHandler == null) {
-					error = CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler (IntPtr.Zero, imageBuffer.handle, dataReady,
-						IntPtr.Zero, formatDescription.Handle, sampleTiming, out buffer);
-				} else {
-					var block = new BlockLiteral ();
-					BlockLiteral *blockPtr = &block;
-					block.SetupBlockUnsafe (DCMSampleBufferMakeDataReadyHandlerTrampoline.Handler, makeDataReadyHandler);
-
-					error = CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler (IntPtr.Zero, imageBuffer.handle, dataReady,
-						(IntPtr) blockPtr, formatDescription.Handle, sampleTiming, out buffer);
-
-					block.CleanupBlock ();
-				}
-			}
+			error = CMSampleBufferCreateReadyWithImageBuffer (IntPtr.Zero, imageBuffer.handle,
+				formatDescription.Handle, ref sampleTiming, out buffer);
 
 			if (error != CMSampleBufferError.None)
 				return null;

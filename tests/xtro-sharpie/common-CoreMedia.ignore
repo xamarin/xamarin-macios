@@ -375,5 +375,8 @@
 ## block based version of CMBufferQueueCreate (which use callbacks and is already bound)
 !missing-pinvoke! CMBufferQueueCreateWithHandlers is not bound
 
-## block based version of CMSampleBufferCreateForImageBuffer (which use callbacks and is already bound)
+## block based version of CMAudioSampleBufferCreateWithPacketDescriptions (which use callbacks and is already bound)
 !missing-pinvoke! CMAudioSampleBufferCreateWithPacketDescriptionsAndMakeDataReadyHandler is not bound
+
+## block based version of CMSampleBufferCreateForImageBuffer (which use callbacks and is already bound)
+!missing-pinvoke! CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler is not bound
