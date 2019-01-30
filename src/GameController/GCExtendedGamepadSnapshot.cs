@@ -18,9 +18,9 @@ namespace GameController {
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]
-	[Deprecated (PlatformName.iOS, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
-	[Deprecated (PlatformName.MacOSX, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
-	[Deprecated (PlatformName.TvOS, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 2, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, 4, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 2, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
 	public struct GCExtendedGamepadSnapShotDataV100 {
 
 		// Standard information
@@ -63,8 +63,6 @@ namespace GameController {
 	
 	// float_t are 4 bytes (at least for ARM64)
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
-	[iOS (7,0)]
-	[Mac (10,9, onlyOn64: true)]
 	public struct GCExtendedGamepadSnapshotData {
 
 		// Standard information
@@ -120,19 +118,25 @@ namespace GameController {
 			/* NSData * __nullable */ IntPtr data);
 		
 		[DllImport (Constants.GameControllerLibrary)]
+		[Introduced (PlatformName.iOS, 12, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 14, 4)]
+		[Introduced (PlatformName.TvOS, 12, 2)]
 		static extern bool GCExtendedGamepadSnapshotDataFromNSData (
 			/* GCExtendedGamepadSnapshotData * __nullable */ out GCExtendedGamepadSnapshotData snapshotData, 
 			/* NSData * __nullable */ IntPtr data);
 
 
-		[Deprecated (PlatformName.iOS, message: "Use 'TryGetExtendedSnapShotData' instead.")]
-		[Deprecated (PlatformName.MacOSX, message: "Use 'TryGetExtendedSnapShotData' instead.")]
-		[Deprecated (PlatformName.TvOS, message: "Use 'TryGetExtendedSnapShotData' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 2, message: "Use 'TryGetExtendedSnapShotData' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, 4, message: "Use 'TryGetExtendedSnapShotData' instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 2, message: "Use 'TryGetExtendedSnapShotData' instead.")]
 		public static bool TryGetSnapShotData (NSData data, out GCExtendedGamepadSnapShotDataV100 snapshotData)
 		{
 			return GCExtendedGamepadSnapShotDataV100FromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
 		}
 		
+		[Introduced (PlatformName.iOS, 12, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 14, 4)]
+		[Introduced (PlatformName.TvOS, 12, 2)]
 		public static bool TryGetExtendedSnapShotData (NSData data, out GCExtendedGamepadSnapshotData snapshotData)
 		{
 			return GCExtendedGamepadSnapshotDataFromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
