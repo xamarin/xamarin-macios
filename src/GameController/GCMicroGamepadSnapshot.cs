@@ -90,14 +90,10 @@ namespace GameController {
 		}
 		
 		[DllImport (Constants.GameControllerLibrary)]
-		[Introduced (PlatformName.iOS, 12, 2)]
-		[Introduced (PlatformName.MacOSX, 10, 14, 4)]
-		[Introduced (PlatformName.TvOS, 12, 2)]
+		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
 		static extern bool GCMicroGamepadSnapshotDataFromNSData (out GCMicroGamepadSnapshotData snapshotData, /* NSData */ IntPtr data);
 
-		[Introduced (PlatformName.iOS, 12, 2)]
-		[Introduced (PlatformName.MacOSX, 10, 14, 4)]
-		[Introduced (PlatformName.TvOS, 12, 2)]
+		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
 		public static bool TryGetSnapshotData (NSData data, out GCMicroGamepadSnapshotData snapshotData)
 		{
 			return GCMicroGamepadSnapshotDataFromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);

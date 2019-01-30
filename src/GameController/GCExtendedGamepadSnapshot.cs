@@ -99,6 +99,7 @@ namespace GameController {
 		bool RightThumbstickButton;
 
 		[DllImport (Constants.GameControllerLibrary)]
+		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapshotData (
 			/* GCExtendedGamepadSnapshotData * __nullable */ ref GCExtendedGamepadSnapshotData snapshotData);
 
@@ -118,9 +119,7 @@ namespace GameController {
 			/* NSData * __nullable */ IntPtr data);
 		
 		[DllImport (Constants.GameControllerLibrary)]
-		[Introduced (PlatformName.iOS, 12, 2)]
-		[Introduced (PlatformName.MacOSX, 10, 14, 4)]
-		[Introduced (PlatformName.TvOS, 12, 2)]
+		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
 		static extern bool GCExtendedGamepadSnapshotDataFromNSData (
 			/* GCExtendedGamepadSnapshotData * __nullable */ out GCExtendedGamepadSnapshotData snapshotData, 
 			/* NSData * __nullable */ IntPtr data);
@@ -134,9 +133,7 @@ namespace GameController {
 			return GCExtendedGamepadSnapShotDataV100FromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
 		}
 		
-		[Introduced (PlatformName.iOS, 12, 2)]
-		[Introduced (PlatformName.MacOSX, 10, 14, 4)]
-		[Introduced (PlatformName.TvOS, 12, 2)]
+		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
 		public static bool TryGetExtendedSnapShotData (NSData data, out GCExtendedGamepadSnapshotData snapshotData)
 		{
 			return GCExtendedGamepadSnapshotDataFromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
