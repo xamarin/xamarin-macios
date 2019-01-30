@@ -17,6 +17,7 @@ using Xamarin.iOS.UnitTests.NUnit;
 using BCLTests.TestRunner.Core;
 using Xamarin.iOS.UnitTests.XUnit;
 using System.IO;
+using NUnit.Framework.Internal.Filters;
 
 namespace Xamarin.Mac.Tests
 {
@@ -48,18 +49,42 @@ namespace Xamarin.Mac.Tests
 			var logger = new LogWriter (Console.Out); 
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
-			TestRunner runner;
-			if (RegisterType.IsXUnit)
-				runner = new XUnitTestRunner (logger);
-			else
-				runner = new NUnitTestRunner (logger);
-			
-			runner.Run (testAssemblies.ToList ());
-			
-			using (var writer = new StreamWriter(options.ResultFile)) {
-				runner.WriteResultsToFile (writer);
+			var runner = RegisterType.IsXUnit ? (TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
+			var categories = RegisterType.IsXUnit ?
+				new List<string> { 
+					"failing",
+					"nonmonotests",
+					"outerloop",
+					"nonosxtests"
+				} :
+				new List<string> {
+					"MacNotWorking",
+					"MobileNotWorking",
+					"NotOnMac",
+					"NotWorking",
+					"ValueAdd",
+					"CAS",
+					"InetAccess",
+					"NotWorkingLinqInterpreter"
+				};
+
+			if (RegisterType.IsXUnit) {
+				// special case when we are using the xunit runner,
+				// there is a trait we are not interested in which is
+				// the Benchmark one
+				var xunitRunner = runner as XUnitTestRunner;
+				xunitRunner.AddFilter (XUnitFilter.CreateTraitFilter ("Benchmark", "true", true));
 			}
-			logger.Info ($"Xml result can be found {options.ResultFile}");
+			
+			runner.SkipCategories (categories);
+			runner.Run (testAssemblies.ToList ());
+
+			if (options.ResultFile != null) {
+				using (var writer = new StreamWriter (options.ResultFile)) {
+					runner.WriteResultsToFile (writer);
+				}
+				logger.Info ($"Xml result can be found {options.ResultFile}");
+			}
 			
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
 			return runner.FailedTests != 0 ? 1 : 0;

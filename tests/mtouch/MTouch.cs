@@ -3968,6 +3968,38 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 			}
 		}
 
+		[Test]
+		public void RebuildWhenReferenceSymbolsInCode ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var bindingsLibrary = GetBindingsLibrary (Profile.iOS);
+				mtouch.References = new string [] { bindingsLibrary };
+				mtouch.CreateTemporaryApp_LinkWith ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.SymbolMode = MTouchSymbolMode.Code;
+				mtouch.Verbosity = 9;
+
+				// first build
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+
+				// first rebuild, no changes
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				var output = mtouch.Output.ToString ();
+				Assert.That (output, Does.Not.Contain ("must be rebuilt"), "nothing rebuilt in first rebuild");
+				Assert.That (output, Does.Not.Contain ("clang"), "no clang in first rebuild");
+
+				// second build, touch an assembly
+				new FileInfo (bindingsLibrary).LastWriteTimeUtc = DateTime.UtcNow;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				output = mtouch.Output.ToString ();
+				Assert.That (output, Does.Contain ("Reloading cached assemblies."), "reloaded cached assemblies");
+				// we touched the binding assembly, which means mtouch re-extracted the .a from the binding library,
+				// which causes clang to execute for the main executable. This is good in this particular case, because
+				// re-executing clang successfully means we got the clang command line right.
+				Assert.That (output, Does.Contain ("clang"), "clang in second rebuild");
+			}
+		}
+
 		public void XamarinSdkAdjustLibs ()
 		{
 			using (var exttool = new MTouchTool ()) {

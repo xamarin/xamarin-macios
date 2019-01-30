@@ -13,6 +13,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
 using Foundation;
+using NUnit.Framework.Internal.Filters;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
@@ -74,12 +75,36 @@ namespace BCLTests {
 			var logger = (writer == null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
-			Xamarin.iOS.UnitTests.TestRunner runner;
-			if (RegisterType.IsXUnit)
-				runner = new XUnitTestRunner (logger);
-			else
-				runner = new NUnitTestRunner (logger);
+			var runner = RegisterType.IsXUnit ? (Xamarin.iOS.UnitTests.TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
+			var categories = RegisterType.IsXUnit ?
+				new List<string> { 
+					"failing",
+					"nonmonotests",
+					"outerloop",
+					"nonosxtests"
+				} :
+				new List<string> {
+					"MobileNotWorking",
+					"NotOnMac",
+					"NotWorking",
+					"ValueAdd",
+					"CAS",
+					"InetAccess",
+					"NotWorkingLinqInterpreter",
+				};
 
+			if (RegisterType.IsXUnit) {
+				// special case when we are using the xunit runner,
+				// there is a trait we are not interested in which is 
+				// the Benchmark one
+				var xunitRunner = runner as XUnitTestRunner;
+				xunitRunner.AddFilter (XUnitFilter.CreateTraitFilter ("Benchmark", "true", true));
+			}
+
+			// add category filters if they have been added
+			runner.SkipCategories (categories);
+			
+			// if we have ignore files, ignore those tests
 			var skippedTests = await IgnoreFileParser.ParseContentFilesAsync (NSBundle.MainBundle.BundlePath);
 			if (skippedTests.Any ()) {
 				// ensure that we skip those tests that have been passed via the ignore files

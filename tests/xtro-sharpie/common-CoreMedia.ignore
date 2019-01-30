@@ -174,7 +174,6 @@
 !missing-field! kCMTextMarkupAlignmentType_Right not bound
 !missing-field! kCMTextMarkupAlignmentType_Start not bound
 !missing-field! kCMTextMarkupAttribute_Alignment not bound
-!missing-field! kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight not bound
 !missing-field! kCMTextMarkupAttribute_CharacterBackgroundColorARGB not bound
 !missing-field! kCMTextMarkupAttribute_CharacterEdgeStyle not bound
 !missing-field! kCMTextMarkupAttribute_GenericFontFamilyName not bound

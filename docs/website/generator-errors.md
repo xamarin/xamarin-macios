@@ -216,6 +216,14 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1117'/>BI1117: The member '*' is decorated with [Static] and its container class * is decorated with [Category] this leads to hard to use code. Please inline * into * class.
 
+### <a name='BI1118'/>[NullAllowed] should not be used on methods, like '*', but only on properties, parameters and return values.
+
+The `[NullAllowed]` attribute should not be allowed on methods but it could break existing binding projects.
+
+Historically it was used on property setters. However using the attribute on _other_ methods can be misleading, e.g. should it apply to all parameters, the return value... and its presence/action can be misinterpreted in code reviews leading to binding bugs.
+
+To fix this warning use the `[NullAllowed]` attribute only on parameters, properties or return values.
+
 <!-- 2xxx: reserved -->
 <!-- 3xxx: reserved -->
 <!-- 4xxx: reserved -->

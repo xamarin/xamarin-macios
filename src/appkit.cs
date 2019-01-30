@@ -5337,69 +5337,69 @@ namespace AppKit {
 	[BaseType (typeof (NSObject))]
 	partial interface NSDocument /* : NSUserActivityRestoring radar://42781537 */ {
 		[Export ("initWithType:error:")]
-		IntPtr Constructor (string typeName, out NSError outError);
+		IntPtr Constructor (string typeName, [NullAllowed] out NSError outError);
 
 		[Static]
 		[Export ("canConcurrentlyReadDocumentsOfType:")]
 		bool CanConcurrentlyReadDocumentsOfType (string typeName);
 
 		[Export ("initWithContentsOfURL:ofType:error:")]
-		IntPtr Constructor (NSUrl url, string typeName, out NSError outError);
+		IntPtr Constructor (NSUrl url, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("initForURL:withContentsOfURL:ofType:error:")]
-		IntPtr Constructor ([NullAllowed] NSUrl documentUrl, NSUrl documentContentsUrl, string typeName, out NSError outError);
+		IntPtr Constructor ([NullAllowed] NSUrl documentUrl, NSUrl documentContentsUrl, string typeName, [NullAllowed] out NSError outError);
 
-		 [Export ("revertDocumentToSaved:")]
-		 void RevertDocumentToSaved (NSObject sender);
+		[Export ("revertDocumentToSaved:")]
+		void RevertDocumentToSaved ([NullAllowed] NSObject sender);
 
-		 [Export ("revertToContentsOfURL:ofType:error:")]
-		 bool RevertToContentsOfUrl (NSUrl url, string typeName, out NSError outError);
+		[Export ("revertToContentsOfURL:ofType:error:")]
+		bool RevertToContentsOfUrl (NSUrl url, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("readFromURL:ofType:error:")]
-		bool ReadFromUrl (NSUrl url, string typeName, out NSError outError);
+		bool ReadFromUrl (NSUrl url, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("readFromFileWrapper:ofType:error:")]
 		bool ReadFromFileWrapper (NSFileWrapper fileWrapper, string typeName, out NSError outError);
 
 		[Export ("readFromData:ofType:error:")]
-		bool ReadFromData (NSData data, string typeName, out NSError outError);
+		bool ReadFromData (NSData data, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("writeToURL:ofType:error:")]
-		bool WriteToUrl (NSUrl url, string typeName, out NSError outError);
+		bool WriteToUrl (NSUrl url, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("fileWrapperOfType:error:")]
-		NSFileWrapper GetAsFileWrapper (string typeName, out NSError outError);
+		NSFileWrapper GetAsFileWrapper (string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("dataOfType:error:")]
-		NSData GetAsData (string typeName, out NSError outError);
+		NSData GetAsData (string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("writeSafelyToURL:ofType:forSaveOperation:error:")]
-		bool WriteSafelyToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, out NSError outError);
+		bool WriteSafelyToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, [NullAllowed] out NSError outError);
 
 		[Export ("writeToURL:ofType:forSaveOperation:originalContentsURL:error:")]
-		bool WriteToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, NSUrl absoluteOriginalContentsUrl, out NSError outError);
+		bool WriteToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, [NullAllowed] NSUrl absoluteOriginalContentsUrl, [NullAllowed] out NSError outError);
 
 		[Export ("fileAttributesToWriteToURL:ofType:forSaveOperation:originalContentsURL:error:")]
-		NSDictionary FileAttributesToWrite (NSUrl toUrl, string typeName, NSSaveOperationType saveOperation, NSUrl absoluteOriginalContentsUrl, out NSError outError);
+		NSDictionary FileAttributesToWrite (NSUrl toUrl, string typeName, NSSaveOperationType saveOperation, [NullAllowed] NSUrl absoluteOriginalContentsUrl, [NullAllowed] out NSError outError);
 
 		[Export ("keepBackupFile")]
 		bool KeepBackupFile ();
 
 		[Export ("saveDocument:")]
-		void SaveDocument (NSObject sender);
+		void SaveDocument ([NullAllowed] NSObject sender);
 
 		[Export ("saveDocumentAs:")]
-		void SaveDocumentAs (NSObject sender);
+		void SaveDocumentAs ([NullAllowed] NSObject sender);
 
 		[Export ("saveDocumentTo:")]
-		void SaveDocumentTo (NSObject sender);
+		void SaveDocumentTo ([NullAllowed] NSObject sender);
 
 		[Export ("saveDocumentWithDelegate:didSaveSelector:contextInfo:")]
-		void SaveDocument (NSObject delegateObject, Selector didSaveSelector, IntPtr contextInfo);
+		void SaveDocument ([NullAllowed] NSObject delegateObject, [NullAllowed] Selector didSaveSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Mac (10,9)]
 		[Export ("saveDocumentToPDF:")]
-		void SaveDocumentAsPdf (NSObject sender);
+		void SaveDocumentAsPdf ([NullAllowed] NSObject sender);
 
 		[Mac (10,9)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -5407,7 +5407,7 @@ namespace AppKit {
 		NSPrintOperation PDFPrintOperation { get; }
 
 		[Export ("runModalSavePanelForSaveOperation:delegate:didSaveSelector:contextInfo:")]
-		void RunModalSavePanelForSaveOperation (NSSaveOperationType saveOperation, NSObject delegateObject, Selector didSaveSelector, IntPtr contextInfo);
+		void RunModalSavePanelForSaveOperation (NSSaveOperationType saveOperation, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didSaveSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("shouldRunSavePanelWithAccessoryView")]
 		bool ShouldRunSavePanelWithAccessoryView { get; }
@@ -5422,31 +5422,32 @@ namespace AppKit {
 		string FileTypeFromLastRunSavePanel { get; }
 
 		[Export ("saveToURL:ofType:forSaveOperation:delegate:didSaveSelector:contextInfo:")]
-		void SaveToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, NSObject delegateObject, Selector didSaveSelector, IntPtr contextInfo);
+		void SaveToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didSaveSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("saveToURL:ofType:forSaveOperation:error:")]
-		bool SaveToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, out NSError outError);
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use a 'SaveToUrl' overload accepting a completion handler instead.")]
+		bool SaveToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, [NullAllowed] out NSError outError);
 
 		[Export ("hasUnautosavedChanges")]
 		bool HasUnautosavedChanges { get; }
 
 		[Export ("autosaveDocumentWithDelegate:didAutosaveSelector:contextInfo:")]
-		void AutosaveDocument (NSObject delegateObject, Selector didAutosaveSelector, IntPtr contextInfo);
+		void AutosaveDocument ([NullAllowed] NSObject delegateObject, [NullAllowed] Selector didAutosaveSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("autosavingFileType")]
 		string AutosavingFileType { get; }
 
 		[Export ("canCloseDocumentWithDelegate:shouldCloseSelector:contextInfo:")]
-		void CanCloseDocument (NSObject delegateObject, Selector shouldCloseSelector, IntPtr contextInfo);
+		void CanCloseDocument (NSObject delegateObject, [NullAllowed] Selector shouldCloseSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("close")]
 		void Close ();
 
 		[Export ("runPageLayout:")]
-		void RunPageLayout (NSObject sender);
+		void RunPageLayout ([NullAllowed] NSObject sender);
 
 		[Export ("runModalPageLayoutWithPrintInfo:delegate:didRunSelector:contextInfo:")]
-		void RunModalPageLayout (NSPrintInfo printInfo, NSObject delegateObject, Selector didRunSelector, IntPtr contextInfo);
+		void RunModalPageLayout (NSPrintInfo printInfo, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didRunSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("preparePageLayout:")]
 		bool PreparePageLayout (NSPageLayout pageLayout);
@@ -5455,16 +5456,16 @@ namespace AppKit {
 		bool ShouldChangePrintInfo (NSPrintInfo newPrintInfo);
 
 		[Export ("printDocument:")]
-		void PrintDocument (NSObject sender);
+		void PrintDocument ([NullAllowed] NSObject sender);
 
 		[Export ("printDocumentWithSettings:showPrintPanel:delegate:didPrintSelector:contextInfo:")]
-		void PrintDocument (NSDictionary printSettings, bool showPrintPanel, NSObject delegateObject, Selector didPrintSelector, IntPtr contextInfo);
+		void PrintDocument (NSDictionary printSettings, bool showPrintPanel, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didPrintSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("printOperationWithSettings:error:")]
-		NSPrintOperation PrintOperation (NSDictionary printSettings, out NSError outError);
+		NSPrintOperation PrintOperation (NSDictionary printSettings, [NullAllowed] out NSError outError);
 
 		[Export ("runModalPrintOperation:delegate:didRunSelector:contextInfo:")]
-		void RunModalPrintOperation (NSPrintOperation printOperation, NSObject delegateObject, Selector didRunSelector, IntPtr contextInfo);
+		void RunModalPrintOperation (NSPrintOperation printOperation, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didRunSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("isDocumentEdited")]
 		bool IsDocumentEdited { get; }
@@ -5473,7 +5474,7 @@ namespace AppKit {
 		void UpdateChangeCount (NSDocumentChangeType change);
 
 		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
-		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
+		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didPresentSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("presentError:")]
 		bool PresentError (NSError error);
@@ -5494,7 +5495,7 @@ namespace AppKit {
 		void WindowControllerDidLoadNib (NSWindowController windowController);
 
 		[Export ("setWindow:")]
-		void SetWindow (NSWindow window);
+		void SetWindow ([NullAllowed] NSWindow window);
 
 		[Export ("addWindowController:")]
 		[PostGet ("WindowControllers")]
@@ -5511,7 +5512,7 @@ namespace AppKit {
 		NSWindowController [] WindowControllers { get; }
 
 		[Export ("shouldCloseWindowController:delegate:shouldCloseSelector:contextInfo:")]
-		void ShouldCloseWindowController (NSWindowController windowController, NSObject delegateObject, Selector shouldCloseSelector, IntPtr contextInfo);
+		void ShouldCloseWindowController (NSWindowController windowController, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector shouldCloseSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("displayName")]
 		[NullAllowed]
@@ -5605,7 +5606,7 @@ namespace AppKit {
 		bool CanWriteAsynchronously (NSUrl toUrl, string typeName, NSSaveOperationType saveOperation);
 
 		[Export ("checkAutosavingSafetyAndReturnError:")]
-		bool CheckAutosavingSafety (out NSError outError);
+		bool CheckAutosavingSafety ([NullAllowed] out NSError outError);
 
 		[Export ("scheduleAutosaving")]
 		void ScheduleAutosaving ();
@@ -5622,13 +5623,13 @@ namespace AppKit {
 		bool PreservesVersions ();
 
 		[Export ("duplicateDocument:")]
-		void DuplicateDocument (NSObject sender);
+		void DuplicateDocument ([NullAllowed] NSObject sender);
 
 		[Export ("duplicateDocumentWithDelegate:didDuplicateSelector:contextInfo:"), Internal]
-		void _DuplicateDocument ([NullAllowed] NSObject cbackobject, [NullAllowed] Selector didDuplicateSelector, IntPtr contextInfo);
+		void _DuplicateDocument ([NullAllowed] NSObject cbackobject, [NullAllowed] Selector didDuplicateSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("duplicateAndReturnError:")]
-		NSDocument Duplicate (out NSError outError);
+		NSDocument Duplicate ([NullAllowed] out NSError outError);
 
 		[Export ("isInViewingMode")]
 		bool IsInViewingMode { get; }
@@ -5693,7 +5694,7 @@ namespace AppKit {
 		[Mac (10,12)]
 		[Export ("stopBrowsingVersionsWithCompletionHandler:")]
 		[Async]
-		void StopBrowsingVersions (Action completionHandler);
+		void StopBrowsingVersions ([NullAllowed] Action completionHandler);
 
 		[Mac (10, 13)]
 		[Export ("allowsDocumentSharing")]
@@ -25598,7 +25599,8 @@ namespace AppKit {
 	}
 
 	[Mac (10,12)]
-	[Protocol]
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
 	interface NSFilePromiseProviderDelegate
 	{
 		[Abstract]

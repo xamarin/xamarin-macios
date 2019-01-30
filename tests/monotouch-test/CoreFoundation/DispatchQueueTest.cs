@@ -105,6 +105,9 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchSync ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+
 			using (var queue = new DispatchQueue ("DispatchSync")) {
 				var called = false;
 				var callback = new Action (() => called = true);
@@ -121,6 +124,9 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchBarrierSync ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+
 			using (var queue = new DispatchQueue ("DispatchBarrierSync")) {
 				var called = false;
 				var callback = new Action (() => called = true);
@@ -137,6 +143,9 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchAsync ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+
 			using (var queue = new DispatchQueue ("DispatchAsync")) {
 				var called = false;
 				var callback = new Action (() => called = true);
@@ -156,6 +165,9 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchBarrierAsync ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+
 			using (var queue = new DispatchQueue ("DispatchBarrierAsync")) {
 				var called = false;
 				var callback = new Action (() => called = true);

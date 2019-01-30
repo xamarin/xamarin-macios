@@ -271,11 +271,42 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			resultsXml.WriteResultFile (results, writer);
 		}
 		
+		void AppendFilter (ITestFilter filter)
+		{
+			if (filter == null)
+				throw new ArgumentNullException (nameof (filter));
+			if (Filter.IsEmpty) {
+				Filter = filter;
+			} else {
+				AndFilter andFilter;
+				if (Filter is AndFilter) {
+					// add a new filter
+					andFilter = Filter as AndFilter;
+					andFilter.Add (filter);
+				} else {
+					andFilter = new AndFilter (Filter); 
+					andFilter.Add (filter);
+				}
+				Filter = andFilter;
+			}
+		}
+
 		public override void SkipTests (IEnumerable<string> tests)
 		{
 			// grab the tests and create a filter for them
 			if (tests.Any ()) {
-				Filter = new TestMethodFilter (tests);
+				AppendFilter (new TestMethodFilter (tests));
+			}
+		}
+
+		public override void SkipCategories (IEnumerable<string> categories)
+		{
+			if (categories.Any ()) {
+				// build a category expression and trust the nunit lib
+				var expression = categories.Aggregate (
+					(current, next) => current + "," + next);
+				var categoriesFilter = new NotFilter (new CategoryExpression (expression).Filter);
+				AppendFilter (categoriesFilter);
 			}
 		}
 	}

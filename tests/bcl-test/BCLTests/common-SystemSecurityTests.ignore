@@ -1,0 +1,14 @@
+# An unexpected exception type was thrown
+# Expected: System.Security.Cryptography.CryptographicException
+# but was: System.PlatformNotSupportedException : The recipients collection is empty. You must specify at least one recipient. This platform does not implement the certificate picker UI.
+MonoTests.System.Security.Cryptography.Pkcs.EnvelopedCmsTest.EncryptEmpty
+
+# System.Security.Cryptography.CryptographicException : The enveloped-data message does not contain the specified recipient.
+MonoTests.System.Security.Cryptography.Pkcs.EnvelopedCmsTest.EncryptCmsRecipientUnknown
+MonoTests.System.Security.Cryptography.Pkcs.EnvelopedCmsTest.EncryptCmsRecipientIssuerAndSerialNumber
+
+#  ContentEncryptionAlgorithm.Parameters
+#  Expected: 16
+#  But was:  0
+MonoTests.System.Security.Cryptography.Pkcs.EnvelopedCmsTest.Decrypt
+MonoTests.System.Security.Cryptography.Pkcs.EnvelopedCmsTest.Decode

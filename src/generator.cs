@@ -4096,6 +4096,9 @@ public partial class Generator : IMemberGatherer {
 		if (null_allowed_override)
 			return;
 
+		if (AttributeManager.HasAttribute<NullAllowedAttribute> (mi))
+			ErrorHelper.Show (new BindingException (1118, false, $"[NullAllowed] should not be used on methods, like '{mi}', but only on properties, parameters and return values."));
+
 		foreach (var pi in mi.GetParameters ()) {
 			var needs_null_check = ParameterNeedsNullCheck (pi, mi, propInfo);
 			if (!needs_null_check)
@@ -4526,7 +4529,7 @@ public partial class Generator : IMemberGatherer {
 	
 	bool DoesPropertyNeedDirtyCheck (PropertyInfo pi, ExportAttribute ea) 
 	{
-		switch (ea.ArgumentSemantic) {
+		switch (ea?.ArgumentSemantic) {
 		case ArgumentSemantic.Copy:
 		case ArgumentSemantic.Retain: // same as Strong
 		case ArgumentSemantic.None:
@@ -4808,7 +4811,10 @@ public partial class Generator : IMemberGatherer {
 		if (pi.CanWrite){
 			var setter = pi.GetSetMethod ();
 			var ba = GetBindAttribute (setter);
-			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pi) || AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
+			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
+			if (null_allowed)
+				ErrorHelper.Show (new BindingException (1118, false, $"[NullAllowed] should not be used on methods, like '{setter}', but only on properties, parameters and return values."));
+			null_allowed |= AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 			var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 			string sel;
 

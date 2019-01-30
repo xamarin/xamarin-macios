@@ -162,17 +162,6 @@ xamarin_initialize_cocoa_threads (init_cocoa_func *func)
 static CFMutableDictionaryRef xamarin_thread_hash = NULL;
 static pthread_mutex_t thread_hash_lock = PTHREAD_MUTEX_INITIALIZER;
 
-struct _MonoProfiler {
-	int dummy;
-};
-
-static MonoProfiler*
-create_thread_helper ()
-{
-	// COOP: no managed memory access: any mode.
-	return (MonoProfiler *)malloc (sizeof (MonoProfiler));
-}
-
 static void
 xamarin_thread_start (void *user_data)
 {
@@ -238,9 +227,7 @@ xamarin_install_nsautoreleasepool_hooks ()
 	// COOP: executed at startup (and no managed memory access): any mode.
 	xamarin_thread_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, NULL);
 
-	mono_profiler_install (create_thread_helper (), NULL);
 	mono_profiler_install_thread (thread_start, thread_end);
-	mono_profiler_set_events (MONO_PROFILE_THREADS);
 }
 	
 /* Threads & Blocks
