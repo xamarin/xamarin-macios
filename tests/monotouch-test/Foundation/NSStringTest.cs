@@ -45,6 +45,10 @@ namespace monotouchtest
 			var exception = Assert.Throws<ArgumentOutOfRangeException> (() => new NSString (input, start, length));
 
 			Assert.AreEqual (paramName, exception.ParamName);
+
+			exception = Assert.Throws<ArgumentOutOfRangeException> (() => NSString.CreateNative (input, start, length));
+
+			Assert.AreEqual (paramName, exception.ParamName);
 		}
 
 		[TestCase("asdf", 0, 4)] // Whole string
@@ -55,7 +59,11 @@ namespace monotouchtest
 		{
 			var str = new NSString (input.Substring (start, length));
 			var substring = new NSString (input, start, length);
+			var substringHandle = NSString.CreateNative (input, start, length);
 
+			Assert.AreEqual (str, substring);
+
+			substring = NSString.FromHandle (substringHandle);
 			Assert.AreEqual (str, substring);
 		}
 	}
