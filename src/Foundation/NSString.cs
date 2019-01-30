@@ -95,11 +95,11 @@ namespace Foundation {
 		static IntPtr CreateWithCharacters (IntPtr handle, string str, int offset, int length, bool autorelease = false)
 		{
 			unsafe {
-				fixed (char *ptrFirstChar = str + offset) {
+				fixed (char *ptrFirstChar = str) {
 	#if MONOMAC
-					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, selInitWithCharactersLengthHandle, (IntPtr) ptrFirstChar, (IntPtr) length);
+					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, selInitWithCharactersLengthHandle, (IntPtr) (ptrFirstChar + offset), (IntPtr) length);
 	#else
-					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, Selector.GetHandle (selInitWithCharactersLength), (IntPtr) ptrFirstChar, (IntPtr) length);
+					handle = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr (handle, Selector.GetHandle (selInitWithCharactersLength), (IntPtr) (ptrFirstChar + offset), (IntPtr) length);
 	#endif
 
 					if (autorelease)
