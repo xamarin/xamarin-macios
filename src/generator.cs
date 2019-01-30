@@ -3807,7 +3807,12 @@ public partial class Generator : IMemberGatherer {
 			if (is_stret_multi) {
 				print ("if (Runtime.Arch == Arch.DEVICE) {");
 				indent++;
-				print ("if (IntPtr.Size == 8) {");
+				if (BindingTouch.CurrentPlatform == PlatformName.WatchOS) {
+					print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
+				} else {
+					print ("if (IntPtr.Size == 8) {");
+
+				}
 				indent++;
 				GenerateInvoke (false, supercall, mi, minfo, selector, args [index64], assign_to_temp, category_type, false, EnumMode.Bit64);
 				indent--;
