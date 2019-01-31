@@ -49,6 +49,7 @@ namespace Xamarin.MMP.Tests
 						case "CoreGraphics":
 						case "CoreFoundation":
 						case "ApplicationServices":
+						case "GSS":
 							linkStatus = LinkStatus.Strong;
 							break;
 						default:
