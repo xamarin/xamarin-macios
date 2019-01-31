@@ -793,6 +793,7 @@ FOUNDATION_SOURCES = \
 # GameController
 
 GAMECONTROLLER_CORE_SOURCES = \
+	GameController/Enums.cs \
 	GameController/GCController.cs \
 
 GAMECONTROLLER_SOURCES = \
