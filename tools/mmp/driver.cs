@@ -1327,6 +1327,7 @@ namespace Xamarin.Bundler {
 						}
 
 						args.Append (StringUtils.Quote (Path.Combine (libdir, libmono_native_name + ".a"))).Append (' ');
+						args.Append ("-framework GSS ");
 					}
 
 					if (profiling.HasValue && profiling.Value) {
