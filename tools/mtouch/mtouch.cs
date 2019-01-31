@@ -149,9 +149,22 @@ namespace Xamarin.Bundler
 
 		static string mtouch_dir;
 
+		public static void Log (string value)
+		{
+			Log (0, value);
+		}
+
 		public static void Log (string format, params object [] args)
 		{
 			Log (0, format, args);
+		}
+
+		public static void Log (int min_verbosity, string value)
+		{
+			if (min_verbosity > verbose)
+				return;
+
+			Console.WriteLine (value);
 		}
 
 		public static void Log (int min_verbosity, string format, params object [] args)
