@@ -293,7 +293,7 @@ namespace Xamarin.Bundler {
 				foreach (var assm in Target.Assemblies)
 					aotOpts.Append (" ").Append (StringUtils.Quote (assm.FullPath));
 			} else {
-					aotOpts.Append (" ").Append (StringUtils.Quote (assembly_path));
+				aotOpts.Append (" ").Append (StringUtils.Quote (assembly_path));
 			}
 
 			var aotArgs = aotOpts.ToString ();
