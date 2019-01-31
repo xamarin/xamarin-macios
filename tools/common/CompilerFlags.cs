@@ -151,7 +151,7 @@ namespace Xamarin.Utils
 			AddFramework ("Foundation");
 			AddOtherFlag ("-lz");
 			if (Application.Platform != ApplePlatform.WatchOS && Application.Platform != ApplePlatform.TVOS)
-				Frameworks.Add ("CFNetwork"); // required by xamarin_start_wwan
+				AddFramework ("CFNetwork"); // required by xamarin_start_wwan
 		}
 
 		public void AddFramework (string framework)

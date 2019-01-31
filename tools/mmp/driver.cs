@@ -1601,6 +1601,7 @@ namespace Xamarin.Bundler {
 			case "oleaut32": // referenced by System.Runtime.InteropServices.Marshal._[S|G]etErrorInfo
 			case "system.native":	// handled by ProcessMonoNative()
 			case "system.security.cryptography.native.apple": // same
+			case "system.net.security.native": // same
 				return true;
 			}
 			// Shutup the warning until we decide on bug: 36478
