@@ -45,6 +45,8 @@ namespace Xamarin.MacDev.Tasks
 
 		public bool IsAppExtension { get; set; }
 
+		public bool UseHardenendRuntime { get; set; }
+
 		public string ToolExe {
 			get { return toolExe ?? ToolName; }
 			set { toolExe = value; }
@@ -92,6 +94,9 @@ namespace Xamarin.MacDev.Tasks
 
 			if (IsAppExtension)
 				args.Add ("--deep");
+
+			if (UseHardenendRuntime)
+				args.Add ("-o runtime");
 
 			args.Add ("--sign");
 			args.AddQuoted (SigningKey);
