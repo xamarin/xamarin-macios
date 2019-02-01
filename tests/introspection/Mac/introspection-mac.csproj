@@ -46,6 +46,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Data" />
     <Reference Include="XamMac" />
   </ItemGroup>
   <ItemGroup>
