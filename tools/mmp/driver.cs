@@ -877,10 +877,19 @@ namespace Xamarin.Bundler {
 			var dest = Path.Combine (mmp_dir, "libmono-native.dylib");
 			Watch ($"Adding mono-native library {name} for {MonoNativeMode}.", 1);
 
-			CopyFileAndRemoveReadOnly (src, dest);
+			if (App.Optimizations.TrimArchitectures == true) {
+				// copy to temp directory and lipo there to avoid touching the final dest file if it's up to date
+				var temp_dest = Path.Combine (App.Cache.Location, "libmono-native.dylib");
 
-			if (App.Optimizations.TrimArchitectures == true)
-				LipoLibrary (src, dest);
+				if (Application.UpdateFile (src, temp_dest)) {
+					LipoLibrary (name, temp_dest);
+					Application.CopyFile (temp_dest, dest);
+				}
+			}
+			else {
+				// we can directly update the dest
+				Application.UpdateFile (src, dest);
+			}
 		}
 
 		static void ExtractNativeLinkInfo ()
@@ -1600,7 +1609,7 @@ namespace Xamarin.Bundler {
 			case "gamin-1.so.0":	// msvcrt pulled in
 			case "asound.so.2":	// msvcrt pulled in
 			case "oleaut32": // referenced by System.Runtime.InteropServices.Marshal._[S|G]etErrorInfo
-			case "system.native":	// handled by ProcessMonoNative()
+			case "system.native":	// handled by CopyMonoNative()
 			case "system.security.cryptography.native.apple": // same
 			case "system.net.security.native": // same
 				return true;
@@ -1727,7 +1736,7 @@ namespace Xamarin.Bundler {
 			int ret = XcodeRun ("lipo", $"{StringUtils.Quote (dest)} -thin {arch} -output {StringUtils.Quote (dest)}");
 			if (ret != 0)
 				throw new MonoMacException (5311, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
-			if (name != "MonoPosixHelper")
+			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
 				ErrorHelper.Warning (2108, $"{name} was stripped of architectures except {arch} to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
 		}
 

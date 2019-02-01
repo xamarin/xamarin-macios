@@ -192,12 +192,17 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static void UpdateFile (string source, string target, bool check_contents = false)
+		// Returns true if the source file was copied to the target or false if it was already up to date.
+		public static bool UpdateFile (string source, string target, bool check_contents = false)
 		{
-			if (!Application.IsUptodate (source, target, check_contents))
+			if (!Application.IsUptodate (source, target, check_contents)) {
 				CopyFile (source, target);
-			else
+				return true;
+			}
+			else {
 				Driver.Log (3, "Target '{0}' is up-to-date", target);
+				return false;
+			}
 		}
 
 		// Checks if any of the source files have a time stamp later than any of the target files.
