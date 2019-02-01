@@ -1315,6 +1315,11 @@ namespace Xamarin.Bundler
 			if (app.EnableRepl && app.LinkMode != LinkMode.None)
 				throw new MonoTouchException (82, true, "REPL (--enable-repl) is only supported when linking is not used (--nolink).");
 
+			// needs to be set after the argument validations
+			// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
+			if (app.UseInterpreter)
+				app.EnableRepl = true;
+
 			if (cross_prefix == null)
 				cross_prefix = MonoTouchDirectory;
 
