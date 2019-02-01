@@ -7,6 +7,7 @@ using System.Text;
 using NUnit.Framework;
 using System.Reflection;
 
+using Xamarin.Utils;
 using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests
@@ -694,6 +695,39 @@ namespace Xamarin.MMP.Tests
 
 				buildOutput = TI.BuildProject (project, true);
 				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Build after touching icon must run actool");
+			});
+		}
+
+		[Test]
+		public void HardenedRuntimeCodesignOption ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>"
+				};
+
+				Func<OutputText, string> findCodesign = o => o.BuildOutput.SplitLines ().Last (x => x.Contains ("Tool /usr/bin/codesign execution started with arguments"));
+
+				var baseOutput = TI.TestUnifiedExecutable (test);
+				string baseCodesign = findCodesign (baseOutput);
+				Assert.False (baseCodesign.Contains ("-o runtime"), "Base codesign");
+
+				test.CSProjConfig += "<UseHardenendRuntime>true</UseHardenendRuntime><CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>";
+
+				const string entitlementText = @"<?xml version=""1.0"" encoding=""UTF-8"" ?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+<key>com.apple.security.cs.allow-jit</key>
+<true/>
+</dict>
+</plist>";
+
+				File.WriteAllText (Path.Combine (tmpDir, "Entitlements.plist"), entitlementText);
+
+				var hardenedOutput = TI.TestUnifiedExecutable (test);
+				string hardenedCodesign = findCodesign (hardenedOutput);
+				Assert.True (hardenedCodesign.Contains ("-o runtime"), "Hardened codesign");
 			});
 		}
 	}
