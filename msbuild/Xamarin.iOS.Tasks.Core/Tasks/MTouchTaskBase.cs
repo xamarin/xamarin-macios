@@ -414,7 +414,7 @@ namespace Xamarin.iOS.Tasks
 				args.Add ($"--interpreter={Interpreter}");
 
 			if (EnableDedup)
-				args.Add ("--dedup-aot");
+				args.AddLine ("--dedup-aot");
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.AddLine ("--linksdkonly"); break;
