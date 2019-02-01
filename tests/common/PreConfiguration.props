@@ -1,0 +1,32 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+
+    <!-- This section contains non-standard variables to customize our build for some reason -->
+
+    <!-- CustomOutputRoot
+
+         Set this variable to a custom directory to redirect the build (and
+         temporary/intermediate) output to somewhere else when building from
+         the command line. As far as I can tell, it's not possible to build
+         different project into different directories by setting
+         [Intermediate]OutputPath directly, since when passing variable values
+         to msbuild on the commandline (/p=var=value), the variables can't be
+         changed from inside the csproj, and they'll have the same value for
+         all projects (nor are they evaluated, so they can't reference other
+         variables). And building all projects into the same directory is a
+         bad idea, because some output files will clash between projects. To
+         avoid this problem, we build into a project-specific subdirectory of
+         the 'CustomOutputRoot' variable.
+
+         Project files that want to support this, must prepend
+         $(CustomOutputPath) to all their [Intermediate]OutputPath values. All
+         dependent projects must also do the same (recursively).
+
+         Among other things this allows building the same project with the
+         same platform/configuration combination multiple times in parallel
+         with eachother.
+
+    -->
+    <CustomOutputPath Condition="'$(CustomOutputRoot)' != ''">$(CustomOutputRoot)/$(MSBuildProjectName)/</CustomOutputPath>
+  </PropertyGroup>
+</Project>
