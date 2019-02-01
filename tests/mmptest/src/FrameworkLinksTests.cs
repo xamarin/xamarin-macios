@@ -111,8 +111,8 @@ namespace Xamarin.MMP.Tests
 			AssertAppKitLinkage (status);
 
 			// We expect a few number of entires, which should not grow much over time
-			// Today - Foundation, AppKit, Security, QuartzCore, CoreFoundation, CFNetwork, Carbon, CoreServices, CoreData, Quartz, CloudKit
-			Assert.Less (status.Count, 11, "Found more framework entries in clang invocation then expected - {0}\n{1}", string.Join (" ", status.Select ((v) => v.Key)), string.Join (" ", clangParts));
+			// Today - Foundation, AppKit, Security, QuartzCore, CoreFoundation, CFNetwork, Carbon, CoreServices, CoreData, Quartz, CloudKit, GSS
+			Assert.Less (status.Count, 12, "Found more framework entries in clang invocation then expected - {0}\n{1}", string.Join (" ", status.Select ((v) => v.Key)), string.Join (" ", clangParts));
 
 			AssertFrameworkMinOSRespected (status);
 		}
