@@ -142,7 +142,7 @@ namespace Introspection
 		[Test]
 		public void SymbolExists ()
 		{
-			var failed_api = new List<string> ();
+			var failed_api = new HashSet<string> ();
 			Errors = 0;
 			int c = 0, n = 0;
 			foreach (MethodInfo mi in pinvokeQuery) {
@@ -163,7 +163,7 @@ namespace Introspection
 					continue;
 
 				IntPtr lib = Dlfcn.dlopen (path, 0);
-				if (Dlfcn.GetIndirect (lib, name) == IntPtr.Zero) {
+				if (Dlfcn.GetIndirect (lib, name) == IntPtr.Zero && !failed_api.Contains (name)) {
 					ReportError ("Could not find the field '{0}' in {1}", name, path);
 					failed_api.Add (name);
 				}
