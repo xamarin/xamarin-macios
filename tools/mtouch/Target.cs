@@ -923,14 +923,7 @@ namespace Xamarin.Bundler
 		{
 			var dedupDummyDll = String.Format ("{0}.dll", DedupDummyName);
 			// Make available for the AOT compiler
-			var dllPath = Path.Combine (BuildDirectory, dedupDummyDll);
-
-			// Qualified because of collisions with cecil
-			var aName = new System.Reflection.AssemblyName (DedupDummyName);
-			var ab = AppDomain.CurrentDomain.DefineDynamicAssembly (aName, System.Reflection.Emit.AssemblyBuilderAccess.RunAndSave, BuildDirectory);
-
-			// Make .dll file
-			ab.Save (dedupDummyDll);
+			var dllPath = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), dedupDummyDll);
 
 			// Add to list
 			var ad = ManifestResolver.Load (dllPath);

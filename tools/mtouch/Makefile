@@ -198,6 +198,22 @@ $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
 	$(Q_GEN) $(SYSTEM_MSBUILD) $(TOP)/Xamarin.iOS.sln "/t:mtouch" $(XBUILD_VERBOSITY) /p:Configuration=$(MTOUCH_CONF)
 
 #
+# Deduplication assembly.
+#
+# This assembly does not reference mscorlib.dll (nor any other assemblies), so the same assembly can be used for all profiles.
+# Do not install this into the normal location for assemblies (/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.*)
+# because we don't want it to show up the IDE's references dialog, so we put it next to mtouch.exe instead.
+#
+
+MonoDeduplicatedCode.dll: Makefile
+	$(Q) touch $(subst dll,cs,$@)
+	$(Q) $(SYSTEM_CSC) $(subst dll,cs,$@) /deterministic /target:library /nostdlib /noconfig $(if $(V),,/nologo /nowarn:8021)
+	$(Q) rm -f $(subst dll,cs,$@)
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/MonoDeduplicatedCode.dll: MonoDeduplicatedCode.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
+	$(Q) $(CP) $< $@
+
+#
 # Partial static registrar libraries
 #
 
@@ -239,6 +255,7 @@ REGISTRAR_CFLAGS=-stdlib=libc++
 TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/MonoDeduplicatedCode.dll                 \
 	$(foreach launcher,$(SIMLAUNCHERS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/$(launcher)) \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/lib/Xamarin.iOS.registrar.a         \
 
