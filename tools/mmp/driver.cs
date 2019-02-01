@@ -870,7 +870,7 @@ namespace Xamarin.Bundler {
 				name = "libmono-native-compat";
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, $"Invalid mono native type: '{MonoNativeMode}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+				throw ErrorHelper.CreateError (100, $"Invalid mono native type: '{MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 
 			var src = Path.Combine (MonoDirectory, "lib", name + ".dylib");
@@ -1332,7 +1332,7 @@ namespace Xamarin.Bundler {
 							libmono_native_name = "libmono-native-compat";
 							break;
 						default:
-							throw ErrorHelper.CreateError (100, $"Invalid mono native type: '{MonoNativeMode}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+							throw ErrorHelper.CreateError (100, $"Invalid mono native type: '{MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 						}
 
 						args.Append (StringUtils.Quote (Path.Combine (libdir, libmono_native_name + ".a"))).Append (' ');

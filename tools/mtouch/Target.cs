@@ -1577,7 +1577,7 @@ namespace Xamarin.Bundler
 				}
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", app.LibMonoLinkMode);
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new.", app.LibMonoLinkMode);
 			}
 		}
 
