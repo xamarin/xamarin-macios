@@ -115,6 +115,7 @@ namespace Xamarin.Tests
 				"___mono_jit_",
 				"_sdb_options",
 				"_SystemNative_",
+				"_NetSecurityNative_",
 				"_MapHardwareType",
 				"_gateway_from_rtm",
 				"_sgen_",
