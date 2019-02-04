@@ -712,7 +712,7 @@ namespace Xamarin.MMP.Tests
 				string baseCodesign = findCodesign (baseOutput);
 				Assert.False (baseCodesign.Contains ("-o runtime"), "Base codesign");
 
-				test.CSProjConfig += "<UseHardenendRuntime>true</UseHardenendRuntime><CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>";
+				test.CSProjConfig += "<UseHardenedRuntime>true</UseHardenedRuntime><CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>";
 
 				const string entitlementText = @"<?xml version=""1.0"" encoding=""UTF-8"" ?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
