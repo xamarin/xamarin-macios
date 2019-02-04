@@ -247,7 +247,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			IsAppExtension="$(IsAppExtension)"
-			UseHardenendRuntime="$(UseHardenendRuntime)"
+			UseHardenedRuntime="$(UseHardenedRuntime)"
 			>
 		</Codesign>
 	</Target>
