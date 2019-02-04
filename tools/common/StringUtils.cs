@@ -15,6 +15,17 @@ namespace Xamarin.Utils {
 		static char shellQuoteChar;
 		static char[] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
 
+		public static string[] Quote (params string[] array)
+		{
+			if (array == null || array.Length == 0)
+				return array;
+
+			var rv = new string [array.Length];
+			for (var i = 0; i < array.Length; i++)
+				rv [i] = Quote (array [i]);
+			return rv;
+		}
+
 		public static string Quote (string f)
 		{
 			if (String.IsNullOrEmpty (f))

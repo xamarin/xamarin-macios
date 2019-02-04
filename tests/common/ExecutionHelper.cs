@@ -9,6 +9,7 @@ using System.Threading;
 using System.Diagnostics;
 
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace Xamarin.Tests
 {
@@ -379,9 +380,41 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static void Build (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null)
+		public static void BuildXM (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null)
 		{
-			ExecutionHelper.Execute (ToolPath, string.Format ("-- /p:Configuration={0} /p:Platform={1} {2} \"{3}\"", configuration, platform, verbosity == null ? string.Empty : "/verbosity:" + verbosity, project), timeout: timeout);
+			Build (project,
+				new Dictionary<string, string> {
+					{ "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (Configuration.xcode_root)) },
+					{ "TargetFrameworkFallbackSearchPaths", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks") },
+					{ "MSBuildExtensionsPathFallbackPathsOverride", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Mono.framework", "External", "xbuild") },
+					{ "XamarinMacFrameworkRoot", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current") },
+					{ "XAMMAC_FRAMEWORK_PATH", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current") },
+				}, configuration, platform, verbosity, timeout, arguments);
+		}
+
+		public static void BuildXI (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null)
+		{
+			Build (project,
+				new Dictionary<string, string> {
+					{ "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (Configuration.xcode_root)) },
+					{ "TargetFrameworkFallbackSearchPaths", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks") },
+					{ "MSBuildExtensionsPathFallbackPathsOverride", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Mono.framework", "External", "xbuild") },
+					{ "MD_MTOUCH_SDK_ROOT", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current") },
+				}, configuration, platform, verbosity, timeout, arguments);
+		}
+
+		static void Build (string project, Dictionary<string, string> environmentVariables, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null)
+		{
+			ExecutionHelper.Execute (ToolPath,
+				new string [] {
+					"--",
+					$"/p:Configuration={configuration}",
+					$"/p:Platform={platform}",
+					$"/verbosity:{(string.IsNullOrEmpty (verbosity) ? "normal" : verbosity)}",
+					project
+				}.Union (arguments ?? new string [] { }).ToArray (),
+				environmentVariables: environmentVariables,
+				timeout: timeout);
 		}
 	}
 
@@ -465,6 +498,12 @@ namespace Xamarin.Tests
 			return rv;
 		}
 
+		// The arguments are automatically quoted.
+		public static int Execute (string fileName, string[] arguments, Dictionary<string, string> environmentVariables, StringBuilder stdout, StringBuilder stderr, TimeSpan? timeout = null, string workingDirectory = null)
+		{
+			return Execute (fileName, string.Join (" ", Xamarin.Utils.StringUtils.Quote (arguments)), environmentVariables, stdout, stderr, timeout, workingDirectory);
+		}
+
 		public static int Execute (string fileName, string arguments, Dictionary<string, string> environmentVariables, StringBuilder stdout, StringBuilder stderr, TimeSpan? timeout = null, string workingDirectory = null)
 		{
 			if (stdout == null)
@@ -489,6 +528,10 @@ namespace Xamarin.Tests
 
 		[DllImport ("libc")]
 		private static extern void kill (int pid, int sig);
+		public static string Execute (string fileName, string[] arguments, bool throwOnError = true, Dictionary<string, string> environmentVariables = null, bool hide_output = false, TimeSpan? timeout = null)
+		{
+			return Execute (fileName, string.Join (" ", StringUtils.Quote (arguments)), throwOnError, environmentVariables, hide_output, timeout);
+		}
 
 		public static string Execute (string fileName, string arguments, bool throwOnError = true, Dictionary<string,string> environmentVariables = null,
 			bool hide_output = false, TimeSpan? timeout = null
