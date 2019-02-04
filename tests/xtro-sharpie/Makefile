@@ -3,9 +3,7 @@ TOP=../..
 include $(TOP)/Make.config
 
 # a 64bits mono is required because of the clang requirement
-# DON'T MERGE DON'T MERGE
-MONO ?= MONO_THREADS_SUSPEND=preemptive mono64 --debug
-# DON'T MERGE DON'T MERGE
+MONO ?= mono64 --debug
 
 XCODE=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 
