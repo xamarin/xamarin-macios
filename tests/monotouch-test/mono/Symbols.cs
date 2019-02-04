@@ -27,6 +27,7 @@ namespace MonoTouchFixtures {
 			
 			Collect ();
 			bool aot = symbols [1].Contains ("MonoTouchFixtures_Symbols_Collect");
+			bool llvmonly = symbols [1].Contains ("mono_llvmonly_runtime_invoke"); // LLVM inlines the Collect function, so 'Collect' doesn't show up in the stack trace :/
 			bool interp = false;
 
 			if (!aot) {
@@ -38,7 +39,7 @@ namespace MonoTouchFixtures {
 				}
 			}
 
-			Assert.IsTrue (aot || interp, "#1");
+			Assert.IsTrue (aot || interp || llvmonly, $"#1\n\t{string.Join ("\n\t", symbols)}");
 		}
 
 		void Collect ()
