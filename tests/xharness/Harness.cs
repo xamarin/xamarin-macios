@@ -314,9 +314,7 @@ namespace xharness
 			}
 
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			foreach (var target in monoImportTestFactory.GetMacBclTargets ()) {
-				MacTestProjects.Add (target);
-			}
+			MacTestProjects.AddRange (monoImportTestFactory.GetMacBclTargets ());
 		}
 
 		void AutoConfigureIOS ()
@@ -392,9 +390,7 @@ namespace xharness
 
 			// add all the tests that are using the precompiled mono assemblies
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			foreach (var target in monoImportTestFactory.GetiOSBclTargets ()) {
-				IOSTestProjects.Add (target);
-			}
+			IOSTestProjects.AddRange (monoImportTestFactory.GetiOSBclTargets ());
 
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));

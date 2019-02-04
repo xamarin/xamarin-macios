@@ -1937,7 +1937,7 @@ public class B
 
 			if (!File.Exists (fn)) {
 				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bindings-test" + GetProjectSuffix (profile) + ".csproj");
-				XBuild.Build (csproj, platform: "AnyCPU");
+				XBuild.BuildXI (csproj, platform: "AnyCPU");
 			}
 
 			return fn;
@@ -1950,7 +1950,7 @@ public class B
 
 			if (!File.Exists (fn)) {
 				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bindings-framework-test" + GetProjectSuffix (profile) + ".csproj");
-				XBuild.Build (csproj, platform: "AnyCPU");
+				XBuild.BuildXI (csproj, platform: "AnyCPU");
 			}
 
 			return fn;
@@ -2529,7 +2529,7 @@ public class B
 			}
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
 			var csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
-			XBuild.Build (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
+			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
 		[Test]
@@ -3080,7 +3080,7 @@ class Test {
 
 			var projectDir = Path.Combine (Configuration.SourceRoot, "tests", "link all");
 			var project = Path.Combine (projectDir, "link all.csproj");
-			XBuild.Build (project, platform: "iPhone");
+			XBuild.BuildXI (project, platform: "iPhone");
 			var appPath = Path.Combine (projectDir, "bin", "iPhone", "Debug", "link all.app");
 			foreach (var device in devices) {
 				if (mtouch.InstallOnDevice (device, appPath) != 0) {
@@ -3115,7 +3115,7 @@ class Test {
 			var containerPath = Path.Combine (projectDir, "bin", "iPhone", "Debug", "MyWatch2Container.app");
 			var appPath = Path.Combine (containerPath, "Watch", "MyWatchApp2.app");
 
-			XBuild.Build (project, platform: "iPhone");
+			XBuild.BuildXI (project, platform: "iPhone");
 			if (!Directory.Exists (appPath))
 				Assert.Fail ("Failed to build the watchOS app.");
 
@@ -4147,7 +4147,7 @@ public class Dummy {
 			File.WriteAllText (csprojpath, csproj);
 			File.WriteAllText (testfilepath, testfile);
 			File.WriteAllText (infoplistpath, MTouchTool.CreatePlist (profile, "testapp"));
-			XBuild.Build (csprojpath, configuration, platform);
+			XBuild.BuildXI (csprojpath, configuration, platform);
 			var environment_variables = new Dictionary<string, string> ();
 			if (!clean_simulator)
 				environment_variables ["SKIP_SIMULATOR_SETUP"] = "1";
