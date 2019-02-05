@@ -1631,7 +1631,7 @@ namespace Xamarin.Bundler {
 			// Collect files to bundle from every target
 			if (Targets.Count == 1) {
 				bundle_files = Targets [0].BundleFiles;
-				require_mono_native = Targets[0].LinkContext?.RequireMonoNative ?? true;
+				require_mono_native = Targets[0].MonoNative.RequireMonoNative;
 			} else {
 				foreach (var target in Targets) {
 					foreach (var kvp in target.BundleFiles) {
@@ -1640,7 +1640,7 @@ namespace Xamarin.Bundler {
 							bundle_files [kvp.Key] = info = new BundleFileInfo () { DylibToFramework = kvp.Value.DylibToFramework };
 						info.Sources.UnionWith (kvp.Value.Sources);
 					}
-					require_mono_native |= target.LinkContext?.RequireMonoNative ?? true;
+					require_mono_native |= target.MonoNative.RequireMonoNative;
 				}
 			}
 

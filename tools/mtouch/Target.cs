@@ -1550,11 +1550,72 @@ namespace Xamarin.Bundler
 			build_tasks.Add (link_task);
 		}
 
+		public class MonoNativeInfo
+		{
+			public bool RequireMonoNative { get; set; }
+			public bool RequireGss { get; set; }
+
+			public void Load (string filename)
+			{
+				using (var reader = new StreamReader (filename)) {
+					string line;
+					while ((line = reader.ReadLine ()) != null) {
+						if (line.Length == 0)
+							continue;
+						var eq = line.IndexOf ('=');
+						var typestr = line.Substring (0, eq);
+						var valstr = line.Substring (eq + 1);
+						bool value = Convert.ToBoolean (valstr);
+						switch (typestr) {
+							case "RequireMonoNative":
+								RequireMonoNative = value;
+								break;
+							case "RequireGss":
+								RequireGss = value;
+								break;
+							default:
+								throw ErrorHelper.CreateError (99, $"Internal error: invalid type string while loading cached Mono.Native info: {typestr}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+						}
+					}
+				}
+			}
+
+			public void Save (string filename)
+			{
+				using (var writer = new StreamWriter (filename)) {
+					writer.WriteLine ("RequireMonoNative={0}", RequireMonoNative);
+					writer.WriteLine ("RequireGss={0}", RequireGss);
+				}
+			}
+		}
+
+		MonoNativeInfo mono_native_info;
+
+		public MonoNativeInfo MonoNative
+		{
+			get {
+				if (mono_native_info != null)
+					return mono_native_info;
+
+				mono_native_info = new MonoNativeInfo ();
+				var cache_location = Path.Combine (App.Cache.Location, "mono-native-info.txt");
+				if (cached_link) {
+					mono_native_info.Load (cache_location);
+				} else {
+					mono_native_info.RequireMonoNative = LinkContext?.RequireMonoNative ?? true;
+					mono_native_info.RequireGss = LinkContext?.RequireGss ?? true;
+					mono_native_info.Save (cache_location);
+				}
+
+				return mono_native_info;
+			}
+		}
+
 		void HandleMonoNative (Application app, CompilerFlags compiler_flags)
 		{
 			if (app.MonoNativeMode == MonoNativeMode.None)
 				return;
-			if (LinkContext != null && !LinkContext.RequireMonoNative)
+			if (!MonoNative.RequireMonoNative)
 				return;
 			var libnative = app.GetLibNativeName ();
 			var libdir = Driver.GetMonoTouchLibDirectory (app);
@@ -1569,7 +1630,7 @@ namespace Xamarin.Bundler
 				compiler_flags.AddLinkWith (libnative);
 				switch (app.Platform) {
 				case ApplePlatform.iOS:
-					if (LinkContext?.RequireGss ?? false) {
+					if (MonoNative.RequireGss) {
 						Driver.Log (3, "Adding GSS framework reference.");
 						compiler_flags.AddFramework ("GSS");
 					}
