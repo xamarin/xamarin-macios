@@ -140,6 +140,15 @@ namespace Xamarin.Bundler
 						continue;
 					}
 					goto default; // also requires the linker
+#if MONOTOUCH
+				case Opt.RemoveUnsupportedILForBitcode:
+					if (app.Platform != Utils.ApplePlatform.WatchOS) {
+						if (!all.HasValue) // Don't show this warning if it was enabled with --optimize=all
+							ErrorHelper.Warning (2003, $"Option '--optimize={opt_names [(int) Opt.RemoveUnsupportedILForBitcode]}' will be ignored since it's only applicable to watchOS.");
+						values [i] = false;
+					}
+					break;
+#endif
 				default:
 					if (app.LinkMode == LinkMode.None) {
 						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since linking is disabled");
@@ -238,12 +247,6 @@ namespace Xamarin.Bundler
 			if (!RemoveUnsupportedILForBitcode.HasValue) {
 				// By default enabled for watchOS device builds.
 				RemoveUnsupportedILForBitcode = app.Platform == Utils.ApplePlatform.WatchOS && app.IsDeviceBuild;
-			} else if (RemoveUnsupportedILForBitcode.Value) {
-				if (app.Platform != Utils.ApplePlatform.WatchOS) {
-					if (!all.HasValue) // Don't show this warning if it was enabled with --optimize=all
-						ErrorHelper.Warning (2003, $"Option '--optimize={opt_names [(int) Opt.RemoveUnsupportedILForBitcode]}' will be ignored since it's only applicable to watchOS.");
-					RemoveUnsupportedILForBitcode = false;
-				}
 			}
 #endif
 

@@ -1752,7 +1752,7 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, remove-unsupported-il-for-bitcode.");
 			}
 		}
 
@@ -3569,10 +3569,11 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.CreateTemporaryApp ();
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Debug = true; // makes simlauncher possible, which speeds up the build
-				mtouch.Optimize = new string [] { "-inline-intptr-size" };
+				mtouch.Optimize = new string [] { "-inline-intptr-size", "remove-unsupported-il-for-bitcode" };
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 				mtouch.AssertWarning (2003, "Option '--optimize=-inline-intptr-size' will be ignored since linking is disabled");
-				mtouch.AssertWarningCount (1);
+				mtouch.AssertWarning (2003, "Option '--optimize=remove-unsupported-il-for-bitcode' will be ignored since it's only applicable to watchOS.");
+				mtouch.AssertWarningCount (2);
 			}
 		}
 
