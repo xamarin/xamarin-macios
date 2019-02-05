@@ -11,7 +11,6 @@ using Mono.Linker;
 using System;
 
 namespace MonoTouch.Tuner {
-	
 	public class RemoveBitcodeIncompatibleCodeStep : BaseSubStep {
 
 		LinkerOptions Options;
@@ -28,7 +27,7 @@ namespace MonoTouch.Tuner {
 				return SubStepTargets.Method | SubStepTargets.Type /* We don't care about types, but if not set a NullReferenceException occurs in BaseSubStep */;
 			}
 		}
-		
+
 		public override void ProcessMethod (MethodDefinition method)
 		{
 			if (!method.HasBody)
