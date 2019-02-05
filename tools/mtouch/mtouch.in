@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec /Library/Frameworks/Mono.framework/Commands/mono64 --debug --debugger-agent=transport=dt_socket,server=y,address=127.0.0.1:55555 @MONOTOUCH_PREFIX@/lib/mtouch/mtouch.exe "$@"
+exec /Library/Frameworks/Mono.framework/Commands/mono64 --debug @MONOTOUCH_PREFIX@/lib/mtouch/mtouch.exe "$@"
