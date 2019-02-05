@@ -1,0 +1,2 @@
+!missing-selector! CLKGaugeProvider::accessibilityLabel not bound
+!missing-selector! CLKGaugeProvider::setAccessibilityLabel: not bound
