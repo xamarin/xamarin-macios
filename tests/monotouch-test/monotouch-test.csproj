@@ -201,6 +201,7 @@
     <Compile Include="..\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
     </Compile>
+    <Compile Include="AVFoundation\FoureCCTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
