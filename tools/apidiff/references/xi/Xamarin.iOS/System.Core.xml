@@ -1562,6 +1562,11 @@
               <method name="CreateSetComparer()" attrib="150" static="true" returntype="System.Collections.Generic.IEqualityComparer`1[System.Collections.Generic.HashSet`1[T]]">
                 <parameters />
               </method>
+              <method name="EnsureCapacity(System.Int32)" attrib="134" returntype="System.Int32">
+                <parameters>
+                  <parameter name="capacity" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
               <method name="ExceptWith(System.Collections.Generic.IEnumerable`1[T])" attrib="486" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="other" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
@@ -2077,9 +2082,6 @@
               <property name="HasValue" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_HasValue()" attrib="2182" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2111,9 +2113,6 @@
               <property name="Value" attrib="0" ptype="System.Object">
                 <methods>
                   <method name="get_Value()" attrib="2182" returntype="System.Object">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -3165,7 +3164,6 @@
       <namespace name="System.IO.Pipes">
         <classes>
           <class name="AnonymousPipeClientStream" type="class" base="System.IO.Pipes.PipeStream" sealed="true" charset="Ansi" layout="Auto">
-            <attributes />
             <interfaces>
               <interface name="System.IDisposable" />
             </interfaces>
@@ -3213,7 +3211,6 @@
             </methods>
           </class>
           <class name="AnonymousPipeServerStream" type="class" base="System.IO.Pipes.PipeStream" sealed="true" charset="Ansi" layout="Auto">
-            <attributes />
             <interfaces>
               <interface name="System.IDisposable" />
             </interfaces>
@@ -3233,7 +3230,6 @@
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.IO.Pipes.PipeDirection, Microsoft.Win32.SafeHandles.SafePipeHandle, Microsoft.Win32.SafeHandles.SafePipeHandle)" attrib="6278">
-                <attributes />
                 <parameters>
                   <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
                   <parameter name="serverSafePipeHandle" position="1" attrib="0" type="Microsoft.Win32.SafeHandles.SafePipeHandle" />
@@ -3258,12 +3254,8 @@
             </constructors>
             <properties>
               <property name="ClientSafePipeHandle" attrib="0" ptype="Microsoft.Win32.SafeHandles.SafePipeHandle">
-                <attributes />
                 <methods>
                   <method name="get_ClientSafePipeHandle()" attrib="2182" returntype="Microsoft.Win32.SafeHandles.SafePipeHandle">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -3286,8 +3278,12 @@
               </property>
             </properties>
             <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
               <method name="DisposeLocalCopyOfClientHandle()" attrib="134" returntype="System.Void">
-                <attributes />
                 <parameters />
               </method>
               <method name="GetClientHandleAsString()" attrib="134" returntype="System.String">
@@ -3299,7 +3295,6 @@
             </methods>
           </class>
           <class name="NamedPipeClientStream" type="class" base="System.IO.Pipes.PipeStream" sealed="true" charset="Ansi" layout="Auto">
-            <attributes />
             <interfaces>
               <interface name="System.IDisposable" />
             </interfaces>
@@ -3414,7 +3409,6 @@
             </methods>
           </class>
           <class name="NamedPipeServerStream" type="class" base="System.IO.Pipes.PipeStream" sealed="true" charset="Ansi" layout="Auto">
-            <attributes />
             <interfaces>
               <interface name="System.IDisposable" />
             </interfaces>
@@ -3502,7 +3496,6 @@
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.String, System.IO.Pipes.PipeDirection, System.Int32, System.IO.Pipes.PipeTransmissionMode, System.IO.Pipes.PipeOptions, System.Int32, System.Int32, System.IO.Pipes.PipeSecurity, System.IO.HandleInheritability, System.IO.Pipes.PipeAccessRights)" attrib="6278">
-                <attributes />
                 <parameters>
                   <parameter name="pipeName" position="0" attrib="0" type="System.String" />
                   <parameter name="direction" position="1" attrib="0" type="System.IO.Pipes.PipeDirection" />
@@ -3518,7 +3511,7 @@
               </constructor>
             </constructors>
             <methods>
-              <method name="BeginWaitForConnection(System.AsyncCallback, System.Object)" attrib="16518" returntype="System.IAsyncResult">
+              <method name="BeginWaitForConnection(System.AsyncCallback, System.Object)" attrib="134" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="callback" position="0" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="1" attrib="0" type="System.Object" />
@@ -3532,12 +3525,10 @@
                   <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
-              <method name="GetImpersonationUserName()" attrib="16518" returntype="System.String">
-                <attributes />
+              <method name="GetImpersonationUserName()" attrib="134" returntype="System.String">
                 <parameters />
               </method>
               <method name="RunAsClient(System.IO.Pipes.PipeStreamImpersonationWorker)" attrib="16518" returntype="System.Void">
-                <attributes />
                 <parameters>
                   <parameter name="impersonationWorker" position="0" attrib="0" type="System.IO.Pipes.PipeStreamImpersonationWorker" />
                 </parameters>
@@ -3549,7 +3540,6 @@
                 <parameters />
               </method>
               <method name="WaitForConnectionAsync(System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
-                <attributes />
                 <parameters>
                   <parameter name="cancellationToken" position="0" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
@@ -3665,6 +3655,7 @@
             </interfaces>
             <fields>
               <field name="Asynchronous" attrib="32854" fieldtype="System.IO.Pipes.PipeOptions" value="1073741824" />
+              <field name="CurrentUserOnly" attrib="32854" fieldtype="System.IO.Pipes.PipeOptions" value="536870912" />
               <field name="None" attrib="32854" fieldtype="System.IO.Pipes.PipeOptions" value="0" />
               <field name="WriteThrough" attrib="32854" fieldtype="System.IO.Pipes.PipeOptions" value="-2147483648" />
             </fields>
@@ -3729,12 +3720,12 @@
                   <parameter name="flags" position="5" attrib="0" type="System.Security.AccessControl.AuditFlags" />
                 </parameters>
               </method>
-              <method name="Persist(System.Runtime.InteropServices.SafeHandle)" attrib="16517" returntype="System.Void">
+              <method name="Persist(System.Runtime.InteropServices.SafeHandle)" attrib="133" returntype="System.Void">
                 <parameters>
                   <parameter name="handle" position="0" attrib="0" type="System.Runtime.InteropServices.SafeHandle" />
                 </parameters>
               </method>
-              <method name="Persist(System.String)" attrib="16517" returntype="System.Void">
+              <method name="Persist(System.String)" attrib="133" returntype="System.Void">
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                 </parameters>
@@ -3832,9 +3823,6 @@
               <property name="IsAsync" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IsAsync()" attrib="2182" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -3842,15 +3830,9 @@
               <property name="IsConnected" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IsConnected()" attrib="2182" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_IsConnected(System.Boolean)" attrib="2180" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Boolean" />
                     </parameters>
@@ -3860,20 +3842,13 @@
               <property name="IsHandleExposed" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IsHandleExposed()" attrib="2180" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
               </property>
               <property name="IsMessageComplete" attrib="0" ptype="System.Boolean">
-                <attributes />
                 <methods>
                   <method name="get_IsMessageComplete()" attrib="2182" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -3886,7 +3861,6 @@
                 </methods>
               </property>
               <property name="OutBufferSize" attrib="0" ptype="System.Int32">
-                <attributes />
                 <methods>
                   <method name="get_OutBufferSize()" attrib="2502" virtual="true" returntype="System.Int32">
                     <parameters />
@@ -3933,7 +3907,7 @@
               </property>
             </properties>
             <methods>
-              <method name="BeginRead(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="16582" virtual="true" is-override="true" returntype="System.IAsyncResult">
+              <method name="BeginRead(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
@@ -3942,7 +3916,7 @@
                   <parameter name="state" position="4" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="BeginWrite(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="16582" virtual="true" is-override="true" returntype="System.IAsyncResult">
+              <method name="BeginWrite(System.Byte[], System.Int32, System.Int32, System.AsyncCallback, System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
@@ -3952,15 +3926,12 @@
                 </parameters>
               </method>
               <method name="CheckPipePropertyOperations()" attrib="453" virtual="true" returntype="System.Void">
-                <attributes />
                 <parameters />
               </method>
               <method name="CheckReadOperations()" attrib="133" returntype="System.Void">
-                <attributes />
                 <parameters />
               </method>
               <method name="CheckWriteOperations()" attrib="133" returntype="System.Void">
-                <attributes />
                 <parameters />
               </method>
               <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
@@ -3979,7 +3950,6 @@
                 </parameters>
               </method>
               <method name="Flush()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
-                <attributes />
                 <parameters />
               </method>
               <method name="GetAccessControl()" attrib="134" returntype="System.IO.Pipes.PipeSecurity">
@@ -3992,16 +3962,33 @@
                   <parameter name="isAsync" position="2" attrib="0" type="System.Boolean" />
                 </parameters>
               </method>
-              <method name="Read(System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
-                <attributes />
+              <method name="Read(System.Span`1[System.Byte])" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
                 <parameters>
-                  <parameter name="buffer" position="0" attrib="1" type="System.Byte[]" />
+                  <parameter name="buffer" position="0" attrib="0" type="System.Span`1[System.Byte]" />
+                </parameters>
+              </method>
+              <method name="Read(System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
+              <method name="ReadAsync(System.Memory`1[System.Byte], System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.ValueTask`1[System.Int32]">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Memory`1[System.Byte]" />
+                  <parameter name="cancellationToken" position="1" attrib="4112" type="System.Threading.CancellationToken" optional="true" defaultValue="NULL" />
+                </parameters>
+              </method>
+              <method name="ReadAsync(System.Byte[], System.Int32, System.Int32, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Int32]">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="cancellationToken" position="3" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
               <method name="ReadByte()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
-                <attributes />
                 <parameters />
               </method>
               <method name="Seek(System.Int64, System.IO.SeekOrigin)" attrib="198" virtual="true" is-override="true" returntype="System.Int64">
@@ -4023,16 +4010,33 @@
               <method name="WaitForPipeDrain()" attrib="134" returntype="System.Void">
                 <parameters />
               </method>
+              <method name="Write(System.ReadOnlySpan`1[System.Byte])" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.ReadOnlySpan`1[System.Byte]" />
+                </parameters>
+              </method>
               <method name="Write(System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
-                <attributes />
                 <parameters>
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
+              <method name="WriteAsync(System.ReadOnlyMemory`1[System.Byte], System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.ValueTask">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.ReadOnlyMemory`1[System.Byte]" />
+                  <parameter name="cancellationToken" position="1" attrib="4112" type="System.Threading.CancellationToken" optional="true" defaultValue="NULL" />
+                </parameters>
+              </method>
+              <method name="WriteAsync(System.Byte[], System.Int32, System.Int32, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="cancellationToken" position="3" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
               <method name="WriteByte(System.Byte)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
-                <attributes />
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Byte" />
                 </parameters>
@@ -17456,6 +17460,13 @@
             </fields>
           </class>
           <class name="ECCurve" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
+            <attributes>
+              <attribute name="System.Diagnostics.DebuggerDisplayAttribute">
+                <properties>
+                  <property name="Value" value="ECCurve: {Oid}" />
+                </properties>
+              </attribute>
+            </attributes>
             <fields>
               <field name="A" attrib="6" fieldtype="System.Byte[]" />
               <field name="B" attrib="6" fieldtype="System.Byte[]" />
@@ -18297,6 +18308,38 @@
       </namespace>
       <namespace name="System.Security.Cryptography.X509Certificates">
         <classes>
+          <class name="DSACertificateExtensions" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+            </attributes>
+            <methods>
+              <method name="CopyWithPrivateKey(System.Security.Cryptography.X509Certificates.X509Certificate2, System.Security.Cryptography.DSA)" attrib="150" static="true" returntype="System.Security.Cryptography.X509Certificates.X509Certificate2">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="certificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate2" direction="this" />
+                  <parameter name="privateKey" position="1" attrib="0" type="System.Security.Cryptography.DSA" />
+                </parameters>
+              </method>
+              <method name="GetDSAPrivateKey(System.Security.Cryptography.X509Certificates.X509Certificate2)" attrib="150" static="true" returntype="System.Security.Cryptography.DSA">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="certificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate2" direction="this" />
+                </parameters>
+              </method>
+              <method name="GetDSAPublicKey(System.Security.Cryptography.X509Certificates.X509Certificate2)" attrib="150" static="true" returntype="System.Security.Cryptography.DSA">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="certificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate2" direction="this" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
           <class name="ECDsaCertificateExtensions" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
             <attributes>
               <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />

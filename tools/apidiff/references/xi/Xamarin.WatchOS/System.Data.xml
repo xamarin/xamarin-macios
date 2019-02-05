@@ -14776,12 +14776,6 @@
                   <parameter name="connectionString" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
-              <constructor name=".ctor(System.String, System.Data.SqlClient.SqlCredential)" attrib="6278">
-                <parameters>
-                  <parameter name="connectionString" position="0" attrib="0" type="System.String" />
-                  <parameter name="credential" position="1" attrib="0" type="System.Data.SqlClient.SqlCredential" />
-                </parameters>
-              </constructor>
             </constructors>
             <properties>
               <property name="ClientConnectionId" attrib="0" ptype="System.Guid">
@@ -14931,10 +14925,16 @@
                 </parameters>
               </method>
               <method name="ChangePassword(System.String, System.String)" attrib="150" static="true" returntype="System.Void">
-                <attributes />
                 <parameters>
                   <parameter name="connectionString" position="0" attrib="0" type="System.String" />
                   <parameter name="newPassword" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ChangePassword(System.String, System.Data.SqlClient.SqlCredential, System.Security.SecureString)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="connectionString" position="0" attrib="0" type="System.String" />
+                  <parameter name="credential" position="1" attrib="0" type="System.Data.SqlClient.SqlCredential" />
+                  <parameter name="newSecurePassword" position="2" attrib="0" type="System.Security.SecureString" />
                 </parameters>
               </method>
               <method name="ClearAllPools()" attrib="150" static="true" returntype="System.Void">

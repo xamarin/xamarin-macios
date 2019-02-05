@@ -48752,11 +48752,7 @@
             <constructors>
               <constructor name=".ctor(CoreGraphics.CGRect)" attrib="6278">
                 <attributes>
-                  <attribute name="Foundation.ExportAttribute">
-                    <properties>
-                      <property name="Selector" value="initWithFrame:" />
-                    </properties>
-                  </attribute>
+                  <attribute name="Foundation.ExportAttribute" />
                 </attributes>
                 <parameters>
                   <parameter name="frame" position="0" attrib="0" type="CoreGraphics.CGRect" />
@@ -48764,11 +48760,7 @@
               </constructor>
               <constructor name=".ctor(Foundation.NSCoder)" attrib="6278">
                 <attributes>
-                  <attribute name="Foundation.ExportAttribute">
-                    <properties>
-                      <property name="Selector" value="initWithCoder:" />
-                    </properties>
-                  </attribute>
+                  <attribute name="Foundation.ExportAttribute" />
                 </attributes>
                 <parameters>
                   <parameter name="coder" position="0" attrib="0" type="Foundation.NSCoder" />
@@ -48974,11 +48966,7 @@
               </method>
               <method name="GetLayerClass()" attrib="150" static="true" returntype="ObjCRuntime.Class">
                 <attributes>
-                  <attribute name="Foundation.ExportAttribute">
-                    <properties>
-                      <property name="Selector" value="layerClass" />
-                    </properties>
-                  </attribute>
+                  <attribute name="Foundation.ExportAttribute" />
                 </attributes>
                 <parameters />
               </method>

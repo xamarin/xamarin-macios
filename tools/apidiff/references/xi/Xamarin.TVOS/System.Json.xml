@@ -411,6 +411,13 @@
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.SByte)" attrib="6278">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.SByte" />
                 </parameters>
@@ -431,16 +438,37 @@
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.UInt16)" attrib="6278">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.UInt16" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.UInt32)" attrib="6278">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.UInt32" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.UInt64)" attrib="6278">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.UInt64" />
                 </parameters>
@@ -689,6 +717,13 @@
                 </parameters>
               </method>
               <method name="op_Implicit(System.Json.JsonValue)" attrib="2198" static="true" returntype="System.SByte">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Json.JsonValue" />
                 </parameters>
@@ -709,16 +744,37 @@
                 </parameters>
               </method>
               <method name="op_Implicit(System.Json.JsonValue)" attrib="2198" static="true" returntype="System.UInt16">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Json.JsonValue" />
                 </parameters>
               </method>
               <method name="op_Implicit(System.Json.JsonValue)" attrib="2198" static="true" returntype="System.UInt32">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Json.JsonValue" />
                 </parameters>
               </method>
               <method name="op_Implicit(System.Json.JsonValue)" attrib="2198" static="true" returntype="System.UInt64">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Json.JsonValue" />
                 </parameters>
@@ -729,6 +785,13 @@
                 </parameters>
               </method>
               <method name="op_Implicit(System.SByte)" attrib="2198" static="true" returntype="System.Json.JsonValue">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.SByte" />
                 </parameters>
@@ -749,16 +812,37 @@
                 </parameters>
               </method>
               <method name="op_Implicit(System.UInt16)" attrib="2198" static="true" returntype="System.Json.JsonValue">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.UInt16" />
                 </parameters>
               </method>
               <method name="op_Implicit(System.UInt32)" attrib="2198" static="true" returntype="System.Json.JsonValue">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.UInt32" />
                 </parameters>
               </method>
               <method name="op_Implicit(System.UInt64)" attrib="2198" static="true" returntype="System.Json.JsonValue">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.UInt64" />
                 </parameters>

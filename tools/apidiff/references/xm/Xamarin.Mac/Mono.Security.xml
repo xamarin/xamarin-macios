@@ -3511,6 +3511,13 @@
                   </method>
                 </methods>
               </property>
+              <property name="CanRenegotiate" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CanRenegotiate()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="CanTimeout" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_CanTimeout()" attrib="3526" abstract="true" virtual="true" returntype="System.Boolean">
@@ -3703,6 +3710,13 @@
                   <parameter name="targetHost" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
+              <method name="AuthenticateAsClient(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="clientCertificates" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                  <parameter name="checkCertificateRevocation" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
               <method name="AuthenticateAsClient(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Security.Authentication.SslProtocols, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="targetHost" position="0" attrib="0" type="System.String" />
@@ -3714,6 +3728,13 @@
               <method name="AuthenticateAsClientAsync(System.String)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
                 <parameters>
                   <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="AuthenticateAsClientAsync(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="clientCertificates" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                  <parameter name="checkCertificateRevocation" position="2" attrib="0" type="System.Boolean" />
                 </parameters>
               </method>
               <method name="AuthenticateAsClientAsync(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Security.Authentication.SslProtocols, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
@@ -3729,6 +3750,13 @@
                   <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
                 </parameters>
               </method>
+              <method name="AuthenticateAsServer(System.Security.Cryptography.X509Certificates.X509Certificate, System.Boolean, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="clientCertificateRequired" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="checkCertificateRevocation" position="2" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
               <method name="AuthenticateAsServer(System.Security.Cryptography.X509Certificates.X509Certificate, System.Boolean, System.Security.Authentication.SslProtocols, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
@@ -3740,6 +3768,13 @@
               <method name="AuthenticateAsServerAsync(System.Security.Cryptography.X509Certificates.X509Certificate)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
                 <parameters>
                   <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                </parameters>
+              </method>
+              <method name="AuthenticateAsServerAsync(System.Security.Cryptography.X509Certificates.X509Certificate, System.Boolean, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="clientCertificateRequired" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="checkCertificateRevocation" position="2" attrib="0" type="System.Boolean" />
                 </parameters>
               </method>
               <method name="AuthenticateAsServerAsync(System.Security.Cryptography.X509Certificates.X509Certificate, System.Boolean, System.Security.Authentication.SslProtocols, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
@@ -3757,6 +3792,15 @@
                   <parameter name="asyncState" position="2" attrib="0" type="System.Object" />
                 </parameters>
               </method>
+              <method name="BeginAuthenticateAsClient(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Boolean, System.AsyncCallback, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="targetHost" position="0" attrib="0" type="System.String" />
+                  <parameter name="clientCertificates" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
+                  <parameter name="checkCertificateRevocation" position="2" attrib="0" type="System.Boolean" />
+                  <parameter name="asyncCallback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="4" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
               <method name="BeginAuthenticateAsClient(System.String, System.Security.Cryptography.X509Certificates.X509CertificateCollection, System.Security.Authentication.SslProtocols, System.Boolean, System.AsyncCallback, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="targetHost" position="0" attrib="0" type="System.String" />
@@ -3772,6 +3816,15 @@
                   <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
                   <parameter name="asyncCallback" position="1" attrib="0" type="System.AsyncCallback" />
                   <parameter name="asyncState" position="2" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="BeginAuthenticateAsServer(System.Security.Cryptography.X509Certificates.X509Certificate, System.Boolean, System.Boolean, System.AsyncCallback, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="serverCertificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
+                  <parameter name="clientCertificateRequired" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="checkCertificateRevocation" position="2" attrib="0" type="System.Boolean" />
+                  <parameter name="asyncCallback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="4" attrib="0" type="System.Object" />
                 </parameters>
               </method>
               <method name="BeginAuthenticateAsServer(System.Security.Cryptography.X509Certificates.X509Certificate, System.Boolean, System.Security.Authentication.SslProtocols, System.Boolean, System.AsyncCallback, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.IAsyncResult">
@@ -3830,6 +3883,11 @@
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="RenegotiateAsync(System.Threading.CancellationToken)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="cancellationToken" position="0" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
               <method name="SetLength(System.Int64)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
@@ -4285,6 +4343,24 @@
                   </method>
                 </methods>
               </property>
+              <property name="ClientCertificateIssuers" attrib="0" ptype="System.String[]">
+                <methods>
+                  <method name="get_ClientCertificateIssuers()" attrib="2182" returntype="System.String[]">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_ClientCertificateIssuers(System.String[])" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String[]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="ClientCertificateSelectionCallback" attrib="0" ptype="Mono.Security.Interface.MonoLocalCertificateSelectionCallback">
                 <methods>
                   <method name="get_ClientCertificateSelectionCallback()" attrib="2182" returntype="Mono.Security.Interface.MonoLocalCertificateSelectionCallback">
@@ -4311,6 +4387,24 @@
                   <method name="set_DefaultSettings(Mono.Security.Interface.MonoTlsSettings)" attrib="2198" static="true" returntype="System.Void">
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="Mono.Security.Interface.MonoTlsSettings" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DisallowUnauthenticatedCertificateRequest" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_DisallowUnauthenticatedCertificateRequest()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_DisallowUnauthenticatedCertificateRequest(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
                     </parameters>
                   </method>
                 </methods>
@@ -8109,6 +8203,10 @@
             </methods>
             <classes>
               <class name="AttrListImpl" type="class" base="System.Object" charset="Ansi" layout="Auto">
+                <interfaces>
+                  <interface name="Mono.Xml.MiniParser+IAttrList" />
+                  <interface name="Mono.Xml.MiniParser+IMutableAttrList" />
+                </interfaces>
                 <fields>
                   <field name="names" attrib="4" fieldtype="System.Collections.ArrayList" />
                   <field name="values" attrib="4" fieldtype="System.Collections.ArrayList" />
@@ -8207,6 +8305,9 @@
                 </methods>
               </class>
               <class name="HandlerAdapter" type="class" base="System.Object" charset="Ansi" layout="Auto">
+                <interfaces>
+                  <interface name="Mono.Xml.MiniParser+IHandler" />
+                </interfaces>
                 <constructors>
                   <constructor name=".ctor()" attrib="6278">
                     <parameters />
@@ -8327,6 +8428,9 @@
                 </methods>
               </class>
               <class name="IMutableAttrList" type="interface" abstract="true" charset="Ansi" layout="Auto">
+                <interfaces>
+                  <interface name="Mono.Xml.MiniParser+IAttrList" />
+                </interfaces>
                 <methods>
                   <method name="Add(System.String, System.String)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                     <parameters>
@@ -8419,6 +8523,10 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="Mono.Xml.MiniParser+IHandler" />
+              <interface name="Mono.Xml.MiniParser+IReader" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />

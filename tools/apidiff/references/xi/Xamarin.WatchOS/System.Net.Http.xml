@@ -1386,6 +1386,13 @@
                 <parameters />
               </constructor>
               <constructor name=".ctor(Foundation.NSUrlSessionConfiguration)" attrib="6278">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <parameters>
                   <parameter name="configuration" position="0" attrib="0" type="Foundation.NSUrlSessionConfiguration" />
                 </parameters>

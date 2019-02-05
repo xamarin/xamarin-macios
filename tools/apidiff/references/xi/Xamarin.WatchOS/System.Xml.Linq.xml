@@ -284,7 +284,6 @@
               <method name="Nodes(System.Collections.Generic.IEnumerable`1[T])" attrib="150" static="true" returntype="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XNode]">
                 <attributes>
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
-                  <attribute name="System.Runtime.CompilerServices.IteratorStateMachineAttribute" />
                 </attributes>
                 <parameters>
                   <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
@@ -368,13 +367,6 @@
             </fields>
           </class>
           <class name="XAttribute" type="class" base="System.Xml.Linq.XObject" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.ComponentModel.TypeDescriptionProviderAttribute">
-                <properties>
-                  <property name="TypeName" value="MS.Internal.Xml.Linq.ComponentModel.XTypeDescriptionProvider`1&lt;System.Xml.Linq.XAttribute&gt;" />
-                </properties>
-              </attribute>
-            </attributes>
             <interfaces>
               <interface name="System.Xml.IXmlLineInfo" />
             </interfaces>
@@ -792,6 +784,12 @@
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
                 </parameters>
               </method>
+              <method name="WriteToAsync(System.Xml.XmlWriter, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
             </methods>
           </class>
           <class name="XComment" type="class" base="System.Xml.Linq.XNode" charset="Ansi" layout="Auto">
@@ -835,6 +833,12 @@
               <method name="WriteTo(System.Xml.XmlWriter)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                </parameters>
+              </method>
+              <method name="WriteToAsync(System.Xml.XmlWriter, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
             </methods>
@@ -1112,6 +1116,33 @@
                   <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.LoadOptions" />
                 </parameters>
               </method>
+              <method name="LoadAsync(System.IO.Stream, System.Xml.Linq.LoadOptions, System.Threading.CancellationToken)" attrib="150" static="true" returntype="System.Threading.Tasks.Task`1[System.Xml.Linq.XDocument]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="stream" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.LoadOptions" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="LoadAsync(System.IO.TextReader, System.Xml.Linq.LoadOptions, System.Threading.CancellationToken)" attrib="150" static="true" returntype="System.Threading.Tasks.Task`1[System.Xml.Linq.XDocument]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="textReader" position="0" attrib="0" type="System.IO.TextReader" />
+                  <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.LoadOptions" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="LoadAsync(System.Xml.XmlReader, System.Xml.Linq.LoadOptions, System.Threading.CancellationToken)" attrib="150" static="true" returntype="System.Threading.Tasks.Task`1[System.Xml.Linq.XDocument]">
+                <parameters>
+                  <parameter name="reader" position="0" attrib="0" type="System.Xml.XmlReader" />
+                  <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.LoadOptions" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
               <method name="Parse(System.String)" attrib="150" static="true" returntype="System.Xml.Linq.XDocument">
                 <parameters>
                   <parameter name="text" position="0" attrib="0" type="System.String" />
@@ -1161,9 +1192,41 @@
                   <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.SaveOptions" />
                 </parameters>
               </method>
+              <method name="SaveAsync(System.Xml.XmlWriter, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="SaveAsync(System.IO.Stream, System.Xml.Linq.SaveOptions, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="stream" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.SaveOptions" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="SaveAsync(System.IO.TextWriter, System.Xml.Linq.SaveOptions, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="textWriter" position="0" attrib="0" type="System.IO.TextWriter" />
+                  <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.SaveOptions" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
               <method name="WriteTo(System.Xml.XmlWriter)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                </parameters>
+              </method>
+              <method name="WriteToAsync(System.Xml.XmlWriter, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
             </methods>
@@ -1250,15 +1313,16 @@
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
                 </parameters>
               </method>
+              <method name="WriteToAsync(System.Xml.XmlWriter, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
             </methods>
           </class>
           <class name="XElement" type="class" base="System.Xml.Linq.XContainer" charset="Ansi" layout="Auto">
             <attributes>
-              <attribute name="System.ComponentModel.TypeDescriptionProviderAttribute">
-                <properties>
-                  <property name="TypeName" value="MS.Internal.Xml.Linq.ComponentModel.XTypeDescriptionProvider`1&lt;System.Xml.Linq.XElement&gt;" />
-                </properties>
-              </attribute>
               <attribute name="System.Xml.Serialization.XmlSchemaProviderAttribute">
                 <properties>
                   <property name="IsAny" value="True" />
@@ -1468,6 +1532,33 @@
                   <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.LoadOptions" />
                 </parameters>
               </method>
+              <method name="LoadAsync(System.IO.Stream, System.Xml.Linq.LoadOptions, System.Threading.CancellationToken)" attrib="150" static="true" returntype="System.Threading.Tasks.Task`1[System.Xml.Linq.XElement]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="stream" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.LoadOptions" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="LoadAsync(System.IO.TextReader, System.Xml.Linq.LoadOptions, System.Threading.CancellationToken)" attrib="150" static="true" returntype="System.Threading.Tasks.Task`1[System.Xml.Linq.XElement]">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="textReader" position="0" attrib="0" type="System.IO.TextReader" />
+                  <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.LoadOptions" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="LoadAsync(System.Xml.XmlReader, System.Xml.Linq.LoadOptions, System.Threading.CancellationToken)" attrib="150" static="true" returntype="System.Threading.Tasks.Task`1[System.Xml.Linq.XElement]">
+                <parameters>
+                  <parameter name="reader" position="0" attrib="0" type="System.Xml.XmlReader" />
+                  <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.LoadOptions" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
               <method name="Parse(System.String)" attrib="150" static="true" returntype="System.Xml.Linq.XElement">
                 <parameters>
                   <parameter name="text" position="0" attrib="0" type="System.String" />
@@ -1551,6 +1642,32 @@
                   <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.SaveOptions" />
                 </parameters>
               </method>
+              <method name="SaveAsync(System.Xml.XmlWriter, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="SaveAsync(System.IO.Stream, System.Xml.Linq.SaveOptions, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="stream" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.SaveOptions" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="SaveAsync(System.IO.TextWriter, System.Xml.Linq.SaveOptions, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="textWriter" position="0" attrib="0" type="System.IO.TextWriter" />
+                  <parameter name="options" position="1" attrib="0" type="System.Xml.Linq.SaveOptions" />
+                  <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
               <method name="SetAttributeValue(System.Xml.Linq.XName, System.Object)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.Xml.Linq.XName" />
@@ -1571,6 +1688,12 @@
               <method name="WriteTo(System.Xml.XmlWriter)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                </parameters>
+              </method>
+              <method name="WriteToAsync(System.Xml.XmlWriter, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
               <method name="op_Explicit(System.Xml.Linq.XElement)" attrib="2198" static="true" returntype="System.Boolean">
@@ -1876,13 +1999,6 @@
             </methods>
           </class>
           <class name="XName" type="class" base="System.Object" sealed="true" serializable="true" charset="Ansi" layout="Auto">
-            <attributes>
-              <attribute name="System.Runtime.Serialization.KnownTypeAttribute">
-                <properties>
-                  <property name="Type" value="System.Xml.Linq.NameSerializer" />
-                </properties>
-              </attribute>
-            </attributes>
             <interfaces>
               <interface name="System.IEquatable`1[System.Xml.Linq.XName]" />
               <interface name="System.Runtime.Serialization.ISerializable" />
@@ -2178,6 +2294,12 @@
                   <parameter name="reader" position="0" attrib="0" type="System.Xml.XmlReader" />
                 </parameters>
               </method>
+              <method name="ReadFromAsync(System.Xml.XmlReader, System.Threading.CancellationToken)" attrib="150" static="true" returntype="System.Threading.Tasks.Task`1[System.Xml.Linq.XNode]">
+                <parameters>
+                  <parameter name="reader" position="0" attrib="0" type="System.Xml.XmlReader" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
               <method name="Remove()" attrib="134" returntype="System.Void">
                 <parameters />
               </method>
@@ -2206,6 +2328,12 @@
               <method name="WriteTo(System.Xml.XmlWriter)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                </parameters>
+              </method>
+              <method name="WriteToAsync(System.Xml.XmlWriter, System.Threading.CancellationToken)" attrib="1478" abstract="true" virtual="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
             </methods>
@@ -2428,6 +2556,12 @@
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
                 </parameters>
               </method>
+              <method name="WriteToAsync(System.Xml.XmlWriter, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
             </methods>
           </class>
           <class name="XStreamingElement" type="class" base="System.Object" charset="Ansi" layout="Auto">
@@ -2577,6 +2711,12 @@
               <method name="WriteTo(System.Xml.XmlWriter)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                </parameters>
+              </method>
+              <method name="WriteToAsync(System.Xml.XmlWriter, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
             </methods>

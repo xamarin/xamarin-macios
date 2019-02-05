@@ -300,11 +300,6 @@
           </class>
           <class name="SqliteCommand" type="class" base="System.Data.Common.DbCommand" sealed="true" charset="Ansi" layout="Auto">
             <attributes>
-              <attribute name="System.ComponentModel.DesignerAttribute">
-                <properties>
-                  <property name="DesignerTypeName" value="SQLite.Designer.SqliteCommandDesigner, SQLite.Designer, Version=1.0.36.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139" />
-                </properties>
-              </attribute>
               <attribute name="System.ComponentModel.ToolboxItemAttribute">
                 <properties>
                   <property name="ToolboxItemTypeName" value="True" />
@@ -1149,11 +1144,7 @@
                       <property name="Value" value="2000" />
                     </properties>
                   </attribute>
-                  <attribute name="System.ComponentModel.DisplayNameAttribute">
-                    <properties>
-                      <property name="DisplayNameValue" value="Cache Size" />
-                    </properties>
-                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute" />
                 </attributes>
                 <methods>
                   <method name="get_CacheSize()" attrib="2182" returntype="System.Int32">
@@ -1178,11 +1169,7 @@
                       <property name="Value" value="" />
                     </properties>
                   </attribute>
-                  <attribute name="System.ComponentModel.DisplayNameAttribute">
-                    <properties>
-                      <property name="DisplayNameValue" value="Data Source" />
-                    </properties>
-                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute" />
                 </attributes>
                 <methods>
                   <method name="get_DataSource()" attrib="2182" returntype="System.String">
@@ -1231,11 +1218,7 @@
                       <property name="Value" value="Serializable" />
                     </properties>
                   </attribute>
-                  <attribute name="System.ComponentModel.DisplayNameAttribute">
-                    <properties>
-                      <property name="DisplayNameValue" value="Default Isolation Level" />
-                    </properties>
-                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute" />
                 </attributes>
                 <methods>
                   <method name="get_DefaultIsolationLevel()" attrib="2182" returntype="System.Data.IsolationLevel">
@@ -1260,11 +1243,7 @@
                       <property name="Value" value="30" />
                     </properties>
                   </attribute>
-                  <attribute name="System.ComponentModel.DisplayNameAttribute">
-                    <properties>
-                      <property name="DisplayNameValue" value="Default Timeout" />
-                    </properties>
-                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute" />
                 </attributes>
                 <methods>
                   <method name="get_DefaultTimeout()" attrib="2182" returntype="System.Int32">
@@ -1337,11 +1316,7 @@
                       <property name="Value" value="Delete" />
                     </properties>
                   </attribute>
-                  <attribute name="System.ComponentModel.DisplayNameAttribute">
-                    <properties>
-                      <property name="DisplayNameValue" value="Journal Mode" />
-                    </properties>
-                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute" />
                 </attributes>
                 <methods>
                   <method name="get_JournalMode()" attrib="2182" returntype="Mono.Data.Sqlite.SQLiteJournalModeEnum">
@@ -1366,11 +1341,7 @@
                       <property name="Value" value="False" />
                     </properties>
                   </attribute>
-                  <attribute name="System.ComponentModel.DisplayNameAttribute">
-                    <properties>
-                      <property name="DisplayNameValue" value="Legacy Format" />
-                    </properties>
-                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute" />
                 </attributes>
                 <methods>
                   <method name="get_LegacyFormat()" attrib="2182" returntype="System.Boolean">
@@ -1395,11 +1366,7 @@
                       <property name="Value" value="0" />
                     </properties>
                   </attribute>
-                  <attribute name="System.ComponentModel.DisplayNameAttribute">
-                    <properties>
-                      <property name="DisplayNameValue" value="Max Page Count" />
-                    </properties>
-                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute" />
                 </attributes>
                 <methods>
                   <method name="get_MaxPageCount()" attrib="2182" returntype="System.Int32">
@@ -1424,11 +1391,7 @@
                       <property name="Value" value="1024" />
                     </properties>
                   </attribute>
-                  <attribute name="System.ComponentModel.DisplayNameAttribute">
-                    <properties>
-                      <property name="DisplayNameValue" value="Page Size" />
-                    </properties>
-                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute" />
                 </attributes>
                 <methods>
                   <method name="get_PageSize()" attrib="2182" returntype="System.Int32">
@@ -1506,11 +1469,7 @@
                       <property name="Value" value="False" />
                     </properties>
                   </attribute>
-                  <attribute name="System.ComponentModel.DisplayNameAttribute">
-                    <properties>
-                      <property name="DisplayNameValue" value="Read Only" />
-                    </properties>
-                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute" />
                 </attributes>
                 <methods>
                   <method name="get_ReadOnly()" attrib="2182" returntype="System.Boolean">
@@ -1535,11 +1494,7 @@
                       <property name="Value" value="Normal" />
                     </properties>
                   </attribute>
-                  <attribute name="System.ComponentModel.DisplayNameAttribute">
-                    <properties>
-                      <property name="DisplayNameValue" value="Synchronous" />
-                    </properties>
-                  </attribute>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute" />
                 </attributes>
                 <methods>
                   <method name="get_SyncMode()" attrib="2182" returntype="Mono.Data.Sqlite.SynchronizationModes">
@@ -1699,11 +1654,6 @@
               <attribute name="System.ComponentModel.DefaultEventAttribute">
                 <properties>
                   <property name="Name" value="RowUpdated" />
-                </properties>
-              </attribute>
-              <attribute name="System.ComponentModel.DesignerAttribute">
-                <properties>
-                  <property name="DesignerTypeName" value="Microsoft.VSDesigner.Data.VS.SqlDataAdapterDesigner, Microsoft.VSDesigner, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
                 </properties>
               </attribute>
               <attribute name="System.ComponentModel.ToolboxItemAttribute">
