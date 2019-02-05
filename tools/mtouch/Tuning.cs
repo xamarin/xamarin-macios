@@ -192,7 +192,7 @@ namespace MonoTouch.Tuner {
 
 			// We need to remove incompatible bitcode for all assemblies, not only the linked assemblies.
 			if (options.Application.Optimizations.RemoveUnsupportedILForBitcode == true)
-				pipeline.AppendStep (new RemoveBitcodeIncompatibleCodeStep (options));
+				pipeline.AppendStep (new SubStepDispatcher { new RemoveBitcodeIncompatibleCodeStep (options) });
 			
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.Append (new CoreTypeMapStep ());

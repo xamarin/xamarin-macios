@@ -12,7 +12,7 @@ using System;
 
 namespace MonoTouch.Tuner {
 	
-	public class RemoveBitcodeIncompatibleCodeStep : BaseStep {
+	public class RemoveBitcodeIncompatibleCodeStep : BaseSubStep {
 
 		LinkerOptions Options;
 		MethodDefinition nse_ctor_def;
@@ -23,27 +23,13 @@ namespace MonoTouch.Tuner {
 			Options = options;
 		}
 
-		protected override void ProcessAssembly (AssemblyDefinition assembly)
-		{
-			foreach (var type in assembly.MainModule.Types)
-				ProcessType (type);
-		}
-
-		void ProcessType (TypeDefinition type)
-		{
-			if (type.HasNestedTypes) {
-				foreach (var nestedType in type.NestedTypes)
-					ProcessType (nestedType);
+		public override SubStepTargets Targets {
+			get {
+				return SubStepTargets.Method | SubStepTargets.Type /* We don't care about types, but if not set a NullReferenceException occurs in BaseSubStep */;
 			}
-
-			if (type.HasMethods) {
-				foreach (var method in type.Methods)
-					ProcessMethod (method);
-			}
-
 		}
-
-		void ProcessMethod (MethodDefinition method)
+		
+		public override void ProcessMethod (MethodDefinition method)
 		{
 			if (!method.HasBody)
 				return;
@@ -67,7 +53,7 @@ namespace MonoTouch.Tuner {
 			var il = body.GetILProcessor ();
 			il.Emit (OpCodes.Ldstr, "This method contains IL not supported when compiled to bitcode.");
 			if (nse_ctor_def == null) {
-				var corlib = Context.GetAssembly ("mscorlib");
+				var corlib = context.GetAssembly ("mscorlib");
 				var nse = corlib.MainModule.GetType ("System", "NotSupportedException");
 				foreach (var ctor in nse.GetConstructors ()) {
 					if (!ctor.HasParameters)
