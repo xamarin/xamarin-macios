@@ -10,6 +10,9 @@ using Xamarin.Linker;
 using Mono.Linker;
 using System;
 
+using Xamarin.Tuner;
+using Xamarin.Linker;
+
 namespace MonoTouch.Tuner {
 	public class RemoveBitcodeIncompatibleCodeStep : BaseSubStep {
 
@@ -22,6 +25,12 @@ namespace MonoTouch.Tuner {
 			Options = options;
 		}
 
+		public DerivedLinkContext DerivedLinkContext {
+			get {
+				return (DerivedLinkContext) context;
+			}
+		}
+
 		public override SubStepTargets Targets {
 			get {
 				return SubStepTargets.Method | SubStepTargets.Type /* We don't care about types, but if not set a NullReferenceException occurs in BaseSubStep */;
@@ -30,6 +39,9 @@ namespace MonoTouch.Tuner {
 
 		public override void ProcessMethod (MethodDefinition method)
 		{
+			if (!context.Annotations.IsMarked (method))
+				return;
+
 			if (!method.HasBody)
 				return;
 
@@ -41,7 +53,14 @@ namespace MonoTouch.Tuner {
 			foreach (var eh in body.ExceptionHandlers) {
 				if (eh.HandlerType == ExceptionHandlerType.Filter) {
 					anyFilterClauses = true;
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2105, method, $"The method {method.DeclaringType.FullName}.{method.Name} contains a '{eh.HandlerType}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called."));
+					string msg;
+					PropertyDefinition property;
+					if (method.IsSpecialName && ((property = method.GetPropertyByAccessor ()) != null)) {
+						msg = $"The property {method.DeclaringType.FullName}.{property.Name} contains a '{eh.HandlerType}' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.";
+					} else {
+						msg = $"The method {method.DeclaringType.FullName}.{method.Name} contains a '{eh.HandlerType}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.";
+					}
+					DerivedLinkContext.Exceptions.Add (ErrorHelper.CreateWarning (Options.Application, 2105, method, msg));
 					break;
 				}
 			}
@@ -63,6 +82,7 @@ namespace MonoTouch.Tuner {
 					if (!parameters [0].ParameterType.Is ("System", "String"))
 						continue;
 					nse_ctor_def = ctor;
+					context.Annotations.Mark (ctor);
 					break;
 				}
 				nse_ctors = new Dictionary<ModuleDefinition, MethodReference> ();

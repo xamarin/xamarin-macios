@@ -20,8 +20,12 @@ namespace LinkSdk {
 #endif
 			if (supported) {
 				Assert.AreEqual (0, FilterClause (), "Filter me");
+				Assert.AreEqual (10, FilterClauseProperty, "Filter me getter");
+				Assert.DoesNotThrow (() => FilterClauseProperty = 20, "Filter me setter");
 			} else {
 				Assert.Throws<NotSupportedException> (() => FilterClause (), "Filter me not supported");
+				Assert.Throws<NotSupportedException> (() => { var x = FilterClauseProperty; }, "Filter me getter not supported");
+				Assert.Throws<NotSupportedException> (() => FilterClauseProperty = 30, "Filter me setter not supported");
 			}
 		}
 
@@ -35,6 +39,28 @@ namespace LinkSdk {
 				return 0;
 			} catch {
 				return 1;
+			}
+		}
+
+		// A property with a filter clause
+		// mtouch will show a warning for this property (MT2105) when building for watchOS device. This is expected.
+		static int FilterClauseProperty {
+			get {
+				try {
+					throw new Exception ("FilterMe");
+				} catch (Exception e) when (e.Message == "FilterMe") {
+					return 10;
+				} catch {
+					return 11;
+				}
+			}
+			set {
+				try {
+					throw new Exception ("FilterMe");
+				} catch (Exception e) when (e.Message == "FilterMe") {
+				} catch {
+					Assert.Fail ("Filter failure: {0}", value);
+				}
 			}
 		}
 

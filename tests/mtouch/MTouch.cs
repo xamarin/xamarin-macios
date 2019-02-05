@@ -2928,19 +2928,44 @@ class TestClass {
 			return 1;
 		}
 	}
+	static int FilterClauseProperty {
+		get {
+			try {
+				throw new System.Exception (""FilterMe"");
+			} catch (System.Exception e) when (e.Message == ""FilterMe"") {
+				return 10;
+			} catch {
+				return 11;
+			}
+		}
+		set {
+			try {
+				throw new System.Exception (""FilterMe"");
+			} catch (System.Exception e) when (e.Message == ""FilterMe"") {
+			} catch {
+				System.Console.WriteLine (""Filter failure: {0}"", value);
+			}
+		}
+	}
 }
 				";
 				ext.Profile = Profile.watchOS;
 				ext.Linker = MTouchLinker.LinkSdk;
-				ext.CreateTemporaryWatchKitExtension (extraCode: code, extraArg: "/debug");
 				ext.CreateTemporaryDirectory ();
+				ext.CreateTemporaryWatchKitExtension (extraCode: code, extraArg: "/debug");
 				ext.WarnAsError = new int [] { 2105 };
 				ext.AssertExecuteFailure (MTouchAction.BuildDev);
 				ext.AssertError (2105, "The method TestClass.FilterClause contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.", "testApp.cs", 9);
-
+				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 19);
+				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 28);
+				ext.AssertErrorCount (3);
+		
 				ext.Optimize = new string [] { "remove-unsupported-il-for-bitcode" };
 				ext.AssertExecuteFailure (MTouchAction.BuildSim);
 				ext.AssertError (2105, "The method TestClass.FilterClause contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.", "testApp.cs", 9);
+				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 19);
+				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 28);
+				ext.AssertErrorCount (3);
 			}
 		}
 
