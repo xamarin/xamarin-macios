@@ -1791,7 +1791,34 @@ See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information 
 
 Currently Xamarin.iOS does not support the 'filter' exception clauses when
 compiling to bitcode. Any methods containing such code will throw a
-NotSupportedException exception.
+NotSupportedException exception when the method is executed (the exception
+will be thrown at method entry, even if execution would follow a path that did
+not involve the 'filter' exception clause).
+
+This is an example of code that's not supported:
+
+```csharp
+void MyMethod ()
+{
+	try {
+		throw new Exception ("FilterMe");
+	} catch (Exception e)
+		when (e.Message == "FilterMe") // <- This is the filter clause.
+	{
+		Console.WriteLine ("filtered");
+	}
+}
+```
+
+This method will behave like the following example, throwing an exception at
+method entry:
+
+```csharp
+void MyMethod ()
+{
+	throw new NotSupportedException ("This method contains IL not supported when compiled to bitcode.");
+}
+```
 
 ## MT3xxx: AOT error messages
 
