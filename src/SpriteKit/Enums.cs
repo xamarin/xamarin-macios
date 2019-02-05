@@ -60,7 +60,8 @@ namespace SpriteKit {
 		Multiply = 3,
 		MultiplyX2 = 4,
 		Screen = 5,
-		Replace = 6
+		Replace = 6,
+		MultiplyAlpha = 7,
 	}
 
 	// NSInteger -> SKScene.h
