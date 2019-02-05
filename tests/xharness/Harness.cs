@@ -418,15 +418,13 @@ namespace xharness
 
 		public int Configure ()
 		{
-			if (Mac)
-				ConfigureMac ();
-			else
-				ConfigureIOS ();
-			return 0;
+			return Mac ? ConfigureMac () : ConfigureIOS ();
 		}
 
-		void ConfigureMac ()
+		int ConfigureMac ()
 		{
+			int rv = 0;
+
 			var classic_targets = new List<MacClassicTarget> ();
 			var unified_targets = new List<MacUnifiedTarget> ();
 			var hardcoded_unified_targets = new List<MacUnifiedTarget> ();
@@ -448,8 +446,11 @@ namespace xharness
  
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
 				var file = Path.ChangeExtension (proj.Path, "csproj");
- 				if (!File.Exists (file))
- 					throw new FileNotFoundException (file);
+				if (!File.Exists (file)) {
+					Console.WriteLine ($"Can't find the project file {file}.");
+					rv = 1;
+					continue;
+				}
 
 				foreach (bool thirtyTwoBit in new bool[] { false, true })
 				{
@@ -487,10 +488,13 @@ namespace xharness
  			}
  
 			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets));
+
+			return rv;
 		}
 
-		void ConfigureIOS ()
+		int ConfigureIOS ()
 		{
+			var rv = 0;
 			var unified_targets = new List<UnifiedTarget> ();
 			var tvos_targets = new List<TVOSTarget> ();
 			var watchos_targets = new List<WatchOSTarget> ();
@@ -506,8 +510,11 @@ namespace xharness
 
 			foreach (var proj in IOSTestProjects) {
 				var file = proj.Path;
-				if (!File.Exists (file))
-					throw new FileNotFoundException (file);
+				if (!File.Exists (file)) {
+					Console.WriteLine ($"Can't find the project file {file}.");
+					rv = 1;
+					continue;
+				}
 
 				if (!proj.SkipwatchOSVariation) {
 					var watchos = new WatchOSTarget () {
@@ -552,6 +559,8 @@ namespace xharness
 			SolutionGenerator.CreateSolution (this, tvos_targets, "tvos");
 			SolutionGenerator.CreateSolution (this, today_targets, "today");
 			MakefileGenerator.CreateMakefile (this, unified_targets, tvos_targets, watchos_targets, today_targets);
+
+			return rv;
 		}
 
 		public int Install ()
