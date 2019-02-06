@@ -46,10 +46,10 @@
       <Link>MonoNativeConfig.cs</Link>
     </Compile>
     <Compile Include="NativePlatformConfig.cs" />
-    <Compile Include="..\..\external\mono\mcs\class\corlib\Mono\MonoNativePlatform.cs">
+    <Compile Include="..\..\external\mono\mcs\class\corlib\Test\Mono\MonoNativePlatform.cs">
       <Link>MonoNativePlatform.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\corlib\Mono\MonoNativePlatformType.cs">
+    <Compile Include="..\..\external\mono\mcs\class\corlib\Test\Mono\MonoNativePlatformType.cs">
       <Link>MonoNativePlatformType.cs</Link>
     </Compile>
     <Compile Include="..\..\external\mono\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
