@@ -49,6 +49,11 @@ namespace Xamarin.Tests
 		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, true)]
 		public void MinOSVersion (Profile profile, MachO.LoadCommands load_command, bool device = false)
 		{
+#if MTOUCH_TESTS
+			if (device)
+				MTouch.AssertDeviceAvailable ();
+#endif
+
 			var dylibs = Directory.GetFiles (Configuration.GetSdkPath (profile, device), "*.dylib", SearchOption.AllDirectories)
 				.Where ((v) => !v.Contains ("dylib.dSYM/Contents/Resources/DWARF")); // Don't include *.dylib from inside .dSYMs.
 
