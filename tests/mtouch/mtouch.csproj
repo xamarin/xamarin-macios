@@ -83,6 +83,9 @@
       <Link>ErrorHelper.cs</Link>
     </Compile>
     <Compile Include="RuntimeException.cs" />
+    <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
