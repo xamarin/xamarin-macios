@@ -544,6 +544,8 @@ namespace Xamarin.Bundler
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out LinkContext, out assemblies);
 
+			ErrorHelper.Show (LinkContext.Exceptions);
+
 			Driver.Watch ("Link Assemblies", 1);
 		}
 
@@ -824,8 +826,6 @@ namespace Xamarin.Bundler
 			// again, and it won't do anything for the appex's sharing code with the main app (but 
 			// will still work for any appex's not sharing code).
 			allTargets.ForEach ((v) => v.linked = true);
-
-			ErrorHelper.Show (LinkContext.Exceptions);
 		}
 			
 		public void ProcessAssemblies ()
