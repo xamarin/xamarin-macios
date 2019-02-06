@@ -199,12 +199,15 @@ namespace Xamarin.Bundler {
 		public string UserGccFlags;
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
-		bool cached_executable; 
+		bool cached_executable {
+			get { return !final_build_task.Rebuilt;  }
+		}
 
 		List<Abi> abis;
 		HashSet<Abi> all_architectures; // all Abis used in the app, including extensions.
 
 		BuildTasks build_tasks;
+		BuildTask final_build_task; // either lipo or file copy (to final destination)
 
 		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
 
@@ -1507,14 +1510,32 @@ namespace Xamarin.Bundler {
 		{
 			SelectAssemblyBuildTargets (); // This must be done after the linker has run, since the linker may bring in more assemblies than only those referenced explicitly.
 
+			var link_tasks = new List<NativeLinkTask> ();
 			foreach (var target in Targets) {
 				if (target.CanWeSymlinkTheApplication ())
 					continue;
 
 				target.ComputeLinkerFlags ();
 				target.Compile ();
-				target.NativeLink (build_tasks);
+				link_tasks.AddRange (target.NativeLink (build_tasks));
 			}
+
+			if (link_tasks.Count > 1) {
+				// If we have more than one executable, we must lipo them together.
+				var lipo_task = new LipoTask {
+					InputFiles = link_tasks.Select ((v) => v.OutputFile),
+					OutputFile = Executable,
+				};
+				final_build_task = lipo_task;
+			} else {
+				var copy_task = new FileCopyTask {
+					InputFile = link_tasks [0].OutputFile,
+					OutputFile = Executable,
+				};
+				final_build_task = copy_task;
+			}
+			final_build_task.AddDependency (link_tasks);
+			build_tasks.Add (final_build_task);
 		}
 
 		void WriteNotice ()
@@ -1736,20 +1757,11 @@ namespace Xamarin.Bundler {
 					var frameworkExecutable = Path.Combine (frameworkDirectory, frameworkName);
 					Directory.CreateDirectory (frameworkDirectory);
 					if (IsDualBuild) {
-						if (Lipo (frameworkExecutable, Targets [0].Executable, Targets [1].Executable))
-							cached_executable = true;
+						Lipo (frameworkExecutable, Targets [0].Executable, Targets [1].Executable);
 					} else {
 						UpdateFile (Targets [0].Executable, frameworkExecutable);
 					}
 					CreateFrameworkInfoPList (Path.Combine (frameworkDirectory, "Info.plist"), frameworkName, BundleId + frameworkName, frameworkName);
-				}
-			} else if (IsDeviceBuild) {
-				// If building a fat app, we need to lipo the two different executables we have together
-				if (IsDualBuild) {
-					if (Lipo (Executable, Targets [0].Executable, Targets [1].Executable))
-						cached_executable = true;
-				} else {
-					cached_executable = Targets [0].CachedExecutable;
 				}
 			}
 		}
@@ -1776,7 +1788,7 @@ namespace Xamarin.Bundler {
 		}
 
 		// Returns true if is up-to-date
-		static bool Lipo (string output, params string [] inputs)
+		public static bool Lipo (string output, params string [] inputs)
 		{
 			if (IsUptodate (inputs, new string [] { output })) {
 				Driver.Log (3, "Target '{0}' is up-to-date.", output);
@@ -2153,18 +2165,8 @@ namespace Xamarin.Bundler {
 
 		public void StripNativeCode ()
 		{
-			if (IsDualBuild) {
-				bool cached = true;
-				foreach (var target in Targets)
-					cached &= target.CachedExecutable;
-				if (!cached)
-					StripNativeCode (Executable);
-			} else {
-				foreach (var target in Targets) {
-					if (!target.CachedExecutable)
-						StripNativeCode (target.Executable);
-				}
-			}
+			if (!cached_executable)
+				StripNativeCode (Executable);
 		}
 
 		public void BundleAssemblies ()

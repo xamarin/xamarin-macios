@@ -46,8 +46,8 @@ namespace Xamarin.Bundler
 		List<CompileTask> link_with_task_output = new List<CompileTask> ();
 		List<AOTTask> aot_dependencies = new List<AOTTask> ();
 		List<LinkTask> embeddinator_tasks = new List<LinkTask> ();
-		CompilerFlags linker_flags;
-		NativeLinkTask link_task;
+		Dictionary<Abi, CompilerFlags> linker_flags_by_abi = new Dictionary<Abi, CompilerFlags> ();
+		Dictionary<Abi, NativeLinkTask> link_tasks = new Dictionary<Abi, NativeLinkTask> ();
 
 		// If the assemblies were symlinked.
 		public bool Symlinked;
@@ -69,16 +69,6 @@ namespace Xamarin.Bundler
 				if (!is64bits.HasValue)
 					is64bits = Application.IsArchEnabled (Abis, Abi.Arch64Mask);
 				return is64bits.Value;
-			}
-		}
-
-		// If we didn't link the final executable because the existing binary is up-to-date.
-		public bool CachedExecutable {
-			get {
-				if (link_task == null)
-					return false;
-				
-				return !link_task.Rebuilt;
 			}
 		}
 
@@ -167,9 +157,9 @@ namespace Xamarin.Bundler
 		public void LinkWithTaskOutput (CompileTask task)
 		{
 			if (task.SharedLibrary) {
-				LinkWithDynamicLibrary (task.OutputFile);
+				LinkWithDynamicLibrary (task.Abi, task.OutputFile);
 			} else {
-				LinkWithStaticLibrary (task.OutputFile);
+				LinkWithStaticLibrary (task.Abi, task.OutputFile);
 			}
 			link_with_task_output.Add (task);
 		}
@@ -180,24 +170,24 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (t);
 		}
 
-		public void LinkWithStaticLibrary (string path)
+		public void LinkWithStaticLibrary (Abi abi, string path)
 		{
-			linker_flags.AddLinkWith (path);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddLinkWith (path);
 		}
 
-		public void LinkWithStaticLibrary (IEnumerable<string> paths)
+		public void LinkWithStaticLibrary (Abi abi, IEnumerable<string> paths)
 		{
-			linker_flags.AddLinkWith (paths);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddLinkWith (paths);
 		}
 
-		public void LinkWithFramework (string path)
+		public void LinkWithFramework (Abi abi, string path)
 		{
-			linker_flags.AddFramework (path);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddFramework (path);
 		}
 
-		public void LinkWithDynamicLibrary (string path)
+		public void LinkWithDynamicLibrary (Abi abi, string path)
 		{
-			linker_flags.AddLinkWith (path);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddLinkWith (path);
 		}
 
 		PInvokeWrapperGenerator pinvoke_state;
@@ -279,7 +269,8 @@ namespace Xamarin.Bundler
 					throw ErrorHelper.CreateError (123, $"The executable assembly {App.RootAssemblies [0]} does not reference {Driver.GetProductAssembly (App)}.dll.");
 			}
 
-			linker_flags = new CompilerFlags (this);
+			foreach (var abi in Abis)
+				linker_flags_by_abi [abi & Abi.ArchMask] = new CompilerFlags (this);
 
 			// Verify that there are no entries in our list of intepreted assemblies that doesn't match
 			// any of the assemblies we know about.
@@ -1057,8 +1048,8 @@ namespace Xamarin.Bundler
 					case AssemblyBuildTarget.StaticObject:
 						LinkWithTaskOutput (link_dependencies); // Any .s or .ll files from the AOT compiler (compiled to object files)
 						foreach (var info in infos) {
-							LinkWithStaticLibrary (info.ObjectFiles);
-							LinkWithStaticLibrary (info.BitcodeFiles);
+							LinkWithStaticLibrary (abi, info.ObjectFiles);
+							LinkWithStaticLibrary (abi, info.BitcodeFiles);
 						}
 						continue; // no linking to do here.
 					case AssemblyBuildTarget.DynamicLibrary:
@@ -1342,7 +1333,8 @@ namespace Xamarin.Bundler
 				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
 				if (File.Exists (lib)) {
 					registration_methods.Add (method);
-					LinkWithStaticLibrary (lib);
+					foreach (var abi in Abis)
+						LinkWithStaticLibrary (abi, lib);
 				}
 			}
 
@@ -1380,17 +1372,28 @@ namespace Xamarin.Bundler
 			Driver.Watch ("Compile", 1);
 		}
 
-		public void NativeLink (BuildTasks build_tasks)
+		public IEnumerable<NativeLinkTask> NativeLink (BuildTasks build_tasks)
 		{
 			if (App.Embeddinator && App.IsDeviceBuild) {
 				build_tasks.AddRange (embeddinator_tasks);
-				return;
+				return null;
 			}
 
+			foreach (var abi in Abis) {
+				var link_task = NativeLink (build_tasks, abi, Path.Combine (Path.Combine (App.Cache.Location, abi.AsArchString (), App.ExecutableName)));
+				link_tasks [abi] = link_task;
+			}
+			return link_tasks.Values;
+		}
+
+		public NativeLinkTask NativeLink (BuildTasks build_tasks, Abi abi, string output_file)
+		{
 			if (!string.IsNullOrEmpty (App.UserGccFlags))
 				App.DeadStrip = false;
 			if (App.EnableLLVMOnlyBitCode)
 				App.DeadStrip = false;
+
+			var linker_flags = linker_flags_by_abi [abi & Abi.ArchMask];
 
 			// Get global frameworks
 			linker_flags.AddFrameworks (App.Frameworks, App.WeakFrameworks);
@@ -1404,13 +1407,11 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlags (a.LinkerFlags);
 
 				if (a.BuildTarget == AssemblyBuildTarget.StaticObject) {
-					foreach (var abi in GetArchitectures (a.BuildTarget)) {
-						AotInfo info;
-						if (!a.AotInfos.TryGetValue (abi, out info))
-							continue;
-						linker_flags.AddLinkWith (info.BitcodeFiles);
-						linker_flags.AddLinkWith (info.ObjectFiles);
-					}
+					AotInfo info;
+					if (!a.AotInfos.TryGetValue (abi, out info))
+						continue;
+					linker_flags.AddLinkWith (info.BitcodeFiles);
+					linker_flags.AddLinkWith (info.ObjectFiles);
 				}
 			}
 
@@ -1432,7 +1433,7 @@ namespace Xamarin.Bundler
 				}
 			}
 
-			CompileTask.GetArchFlags (linker_flags, Abis);
+			CompileTask.GetArchFlags (linker_flags, abi);
 			if (App.IsDeviceBuild) {
 				linker_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
 				linker_flags.AddOtherFlag ($"-isysroot {StringUtils.Quote (Driver.GetFrameworkDirectory (App))}");
@@ -1446,7 +1447,7 @@ namespace Xamarin.Bundler
 			if (App.LibXamarinLinkMode != AssemblyBuildTarget.StaticObject)
 				AddToBundle (App.GetLibXamarin (App.LibXamarinLinkMode));
 
-			linker_flags.AddOtherFlag ($"-o {StringUtils.Quote (Executable)}");
+			linker_flags.AddOtherFlag ($"-o {StringUtils.Quote (output_file)}");
 
 			bool need_libcpp = false;
 			if (App.EnableBitCode)
@@ -1535,15 +1536,16 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
 
-			link_task = new NativeLinkTask
+			var link_task = new NativeLinkTask
 			{
 				Target = this,
-				OutputFile = Executable,
+				OutputFile = output_file,
 				CompilerFlags = linker_flags,
 			};
 			link_task.AddDependency (link_with_task_output);
 			link_task.AddDependency (aot_dependencies);
 			build_tasks.Add (link_task);
+			return link_task;
 		}
 
 		public static void AdjustDylibs (string output)
