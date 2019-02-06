@@ -2266,6 +2266,10 @@ namespace AVFoundation {
 		[Watch (5,0), NoTV, NoMac, NoiOS]
 		[Export ("activateWithOptions:completionHandler:")]
 		void Activate (AVAudioSessionActivationOptions options, Action<bool, NSError> handler);
+
+		[Watch (5, 2), TV (12, 2), NoMac, iOS (12, 2)]
+		[Export ("promptStyle")]
+		AVAudioSessionPromptStyle PromptStyle { get; }
 	}
 	
 	[iOS (6,0)]

@@ -37,3 +37,6 @@
 
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
+
+## Available on iOS/tvOS/watchOS but headers lack availability so we must ignore in macOS
+!unknown-native-enum! AVAudioSessionPromptStyle bound

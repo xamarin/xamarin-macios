@@ -1,2 +1,0 @@
-!missing-enum! AVAudioSessionPromptStyle not bound
-!missing-selector! AVAudioSession::promptStyle not bound
