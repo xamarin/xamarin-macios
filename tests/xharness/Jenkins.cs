@@ -310,20 +310,6 @@ namespace xharness
 					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false , Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					break;
-#if FIXME
-				case "mono-native-compat":
-				case "mono-native-unified":
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (release)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic };
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (release, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = false, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic };
-
-					yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", MonoNativeLinkMode = MonoNativeLinkMode.Static };
-
-					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
-					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; ", MonoNativeLinkMode = MonoNativeLinkMode.Static };
-					break;
-#endif
 				}
 				break;
 			case "iPhoneSimulator":
@@ -334,16 +320,6 @@ namespace xharness
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !IncludeAll };
 					break;
-#if FIXME
-				case "mono-native-compat":
-				case "mono-native-unified":
-					yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; ", MonoNativeLinkMode = MonoNativeLinkMode.Static };
-
-					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
-					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; ", MonoNativeLinkMode = MonoNativeLinkMode.Static };
-					break;
-#endif
 				}
 				break;
 			case "AnyCPU":
