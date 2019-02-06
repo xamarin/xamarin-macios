@@ -298,11 +298,6 @@ namespace Foundation {
 
 			var tcs = new TaskCompletionSource<HttpResponseMessage> ();
 
-			cancellationToken.Register (() => {
-				RemoveInflightData (dataTask);
-				tcs.TrySetCanceled ();
-			});
-
 			lock (inflightRequestsLock) {
 #if !MONOMAC  && !MONOTOUCH_WATCH
 				// Add the notification whenever needed
@@ -319,6 +314,23 @@ namespace Foundation {
 
 			if (dataTask.State == NSUrlSessionTaskState.Suspended)
 				dataTask.Resume ();
+
+			// as per documentation: 
+			// If this token is already in the canceled state, the 
+			// delegate will be run immediately and synchronously.
+			// Any exception the delegate generates will be 
+			// propagated out of this method call.
+			//
+			// The execution of the register ensures that if we 
+			// receive a already cancelled token or it is cancelled
+			// just before this call, we will cancel the task. 
+			// Other approaches are harder, since querying the state
+			// of the token does not guarantee that in the next
+			// execution a threads cancels it.
+			cancellationToken.Register (() => {
+				RemoveInflightData (dataTask);
+				tcs.TrySetCanceled ();
+			});
 
 			return await tcs.Task.ConfigureAwait (false);
 		}
