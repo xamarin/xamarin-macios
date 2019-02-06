@@ -51,7 +51,7 @@ using nint = System.Int32;
 using nuint = System.UInt32;
 #endif
 
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 using UIKit;
 #endif
 
@@ -124,7 +124,7 @@ namespace Foundation {
 		readonly NSUrlSession session;
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
-#if !MONOMAC && !WATCH
+#if !MONOMAC && !MONOTOUCH_WATCH
 		readonly bool isBackgroundSession = false;
 		NSObject notificationToken;  // needed to make sure we do not hang if not using a background session
 #endif
@@ -150,7 +150,7 @@ namespace Foundation {
 			if (configuration == null)
 				throw new ArgumentNullException (nameof (configuration));
 
-#if !MONOMAC && !WATCH
+#if !MONOMAC  && !MONOTOUCH_WATCH 
 			// if the configuration has an identifier, we are dealing with a background session, 
 			// therefore, we do not have to listen to the notifications.
 			isBackgroundSession = !string.IsNullOrEmpty (configuration.Identifier);
@@ -173,13 +173,12 @@ namespace Foundation {
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
-#if !MONOMAC && !WATCH
+#if !MONOMAC  && !MONOTOUCH_WATCH
 
 		void AddNotification ()
 		{
 			if (!isBackgroundSession && notificationToken == null)
-				using (var notification = new NSString ("UIApplicationWillResignActiveNotification"))
-					notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (notification, BackgroundNotificationCb);
+				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
 		}
 
 		void RemoveNotification ()
@@ -206,7 +205,7 @@ namespace Foundation {
 		{
 			lock (inflightRequestsLock) {
 				inflightRequests.Remove (task);
-#if !MONOMAC && !WATCH
+#if !MONOMAC  && !MONOTOUCH_WATCH
 				// do we need to be notified? If we have not inflightData, we do not
 				if (inflightRequests.Count == 0)
 					RemoveNotification ();
@@ -221,7 +220,7 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
-#if !MONOMAC && !WATCH
+#if !MONOMAC  && !MONOTOUCH_WATCH
 			// remove the notification if present, method checks against null
 			RemoveNotification ();
 #endif
@@ -305,7 +304,7 @@ namespace Foundation {
 			});
 
 			lock (inflightRequestsLock) {
-#if !MONOMAC && !WATCH
+#if !MONOMAC  && !MONOTOUCH_WATCH
 				// Add the notification whenever needed
 				AddNotification ();
 #endif
