@@ -29,14 +29,14 @@ namespace Xamarin.MMP.Tests
 
 		void AssertStrip (string libPath, bool shouldStrip)
 		{
-			var archsFound = Xamarin.Tests.MachO.GetArchitectures (libPath);
+			var archsFound = MachO.GetArchitectures (libPath);
 			if (shouldStrip) {
 				Assert.AreEqual (1, archsFound.Count, "Did not contain one archs");
-				Assert.True (archsFound.Contains ("x86_64"), "Did not contain x86_64");
+				Assert.True (archsFound.Contains (Abi.x86_64), "Did not contain x86_64");
 			} else {
 				Assert.AreEqual (2, archsFound.Count, "Did not contain two archs");
-				Assert.True (archsFound.Contains ("i386"), "Did not contain i386");
-				Assert.True (archsFound.Contains ("x86_64"), "Did not contain x86_64");
+				Assert.True (archsFound.Contains (Abi.i386), "Did not contain i386");
+				Assert.True (archsFound.Contains (Abi.x86_64), "Did not contain x86_64");
 			}
 		}
 
