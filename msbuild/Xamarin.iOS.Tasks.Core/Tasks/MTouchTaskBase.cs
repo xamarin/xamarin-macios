@@ -408,7 +408,7 @@ namespace Xamarin.iOS.Tasks
 				args.AddLine ("--sgen-conc");
 
 			if (!string.IsNullOrEmpty (Interpreter))
-				args.Add ($"--interpreter={Interpreter}");
+				args.AddLine ($"--interpreter={Interpreter}");
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.AddLine ("--linksdkonly"); break;
