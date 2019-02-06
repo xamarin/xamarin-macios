@@ -1787,6 +1787,8 @@ Mixed-mode assemblies can not be processed by the linker.
 
 See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
 
+<a name="MT2105" />
+
 ### MT2105: The method {method} contains a '{handlerType}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.
 
 Currently Xamarin.iOS does not support the 'filter' exception clauses when
@@ -1819,6 +1821,33 @@ void MyMethod ()
 	throw new NotSupportedException ("This method contains IL not supported when compiled to bitcode.");
 }
 ```
+
+<a name="MT2210" />
+<a name="MT2211" />
+<a name="MT2212" />
+<a name="MT2213" />
+<a name="MT2214" />
+<a name="MT2215" />
+<a name="MT2216" />
+<a name="MT2217" />
+<a name="MT2218" />
+<a name="MT2219" />
+
+### MT221x: Incompatible Code For Bitcode Remover failed processing `...`.
+
+Something unexpected occured when trying to remove incompatible code for
+bitcode from the application. The assembly causing the issue is named in the
+error message. In order to fix this issue the assembly will need to be
+provided in a new issue on
+[github](https://github.com/xamarin/xamarin-macios/issues/new) along with a
+complete build log with verbosity enabled (i.e. `-v -v -v -v` in the
+**Additional mtouch arguments** in the project's watchOS Build options).
+
+It's usually possible to work around this by adding
+`--optimize=-remove-unsupported-il-for-bitcode` to the **Additional mtouch arguments**
+in the project's watchOS Build options.
+
+<!-- MT2210 - MT2219 used by the above error -->
 
 ## MT3xxx: AOT error messages
 

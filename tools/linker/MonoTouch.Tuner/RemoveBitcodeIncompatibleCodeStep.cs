@@ -14,7 +14,7 @@ using Xamarin.Tuner;
 using Xamarin.Linker;
 
 namespace MonoTouch.Tuner {
-	public class RemoveBitcodeIncompatibleCodeStep : BaseSubStep {
+	public class RemoveBitcodeIncompatibleCodeStep : ExceptionalSubStep {
 
 		LinkerOptions Options;
 		MethodDefinition nse_ctor_def;
@@ -37,7 +37,10 @@ namespace MonoTouch.Tuner {
 			}
 		}
 
-		public override void ProcessMethod (MethodDefinition method)
+		protected override int ErrorCode => 2210;
+		protected override string Name => "Incompatible Code For Bitcode Remover";
+
+		protected override void Process (MethodDefinition method)
 		{
 			if (!context.Annotations.IsMarked (method))
 				return;
