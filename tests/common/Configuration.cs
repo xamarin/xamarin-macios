@@ -525,5 +525,12 @@ namespace Xamarin.Tests
 		public static string XIBuildPath {
 			get { return Path.GetFullPath (Path.Combine (RootPath, "tools", "xibuild", "xibuild")); }
 		}
+
+		public static void AssertDeviceAvailable ()
+		{
+			if (include_device)
+				return;
+			Assert.Ignore ("This build does not include device support.");
+		}
 	}
 }

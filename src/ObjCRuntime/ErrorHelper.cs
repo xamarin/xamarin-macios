@@ -36,7 +36,7 @@ using System.Linq;
 using Mono.Cecil.Cil;
 #endif
 
-#if MMP || MMP_TEST || MTOUCH
+#if MMP || MMP_TEST || MTOUCH || MTOUCH_TESTS
 namespace Xamarin.Bundler {
 #else
 namespace ObjCRuntime {
