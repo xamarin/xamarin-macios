@@ -190,6 +190,11 @@ namespace MonoTouch.Tuner {
 			// We need to store the Field attribute in annotations, since it may end up removed.
 			pipeline.Append (new ProcessExportedFields ());
 
+			// We remove incompatible bitcode from all assemblies, not only the linked assemblies.
+			RemoveBitcodeIncompatibleCodeStep remove_incompatible_bitcode = null;
+			if (options.Application.Optimizations.RemoveUnsupportedILForBitcode == true)
+				remove_incompatible_bitcode = new RemoveBitcodeIncompatibleCodeStep (options);
+
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.Append (new CoreTypeMapStep ());
 
@@ -200,6 +205,13 @@ namespace MonoTouch.Tuner {
 				pipeline.Append (new RemoveResources (options.I18nAssemblies)); // remove collation tables
 
 				pipeline.Append (new MonoTouchMarkStep ());
+
+				// We only want to remove from methods that aren't already linked away, so we need to do this
+				// after the mark step. If we remove any incompatible code, we'll mark
+				// the NotSupportedException constructor we need, so we need to do this before the sweep step.
+				if (remove_incompatible_bitcode != null)
+					pipeline.AppendStep (new SubStepDispatcher { remove_incompatible_bitcode });
+				
 				pipeline.Append (new MonoTouchSweepStep (options));
 				pipeline.Append (new CleanStep ());
 
@@ -209,8 +221,10 @@ namespace MonoTouch.Tuner {
 				pipeline.Append (new FixModuleFlags ());
 			} else {
 				SubStepDispatcher sub = new SubStepDispatcher () {
-					new RemoveUserResourcesSubStep (options)
+					new RemoveUserResourcesSubStep (options),
 				};
+				if (remove_incompatible_bitcode != null)
+					sub.Add (remove_incompatible_bitcode);
 				pipeline.Append (sub);
 			}
 
