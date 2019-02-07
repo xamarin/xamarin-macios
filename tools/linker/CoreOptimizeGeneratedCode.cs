@@ -1,6 +1,7 @@
 // Copyright 2012-2013, 2016 Xamarin Inc. All rights reserved.
 
 using System;
+using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Linker;
@@ -44,9 +45,34 @@ namespace Xamarin.Linker {
 		// This is per assembly, so we set it in 'void Process (AssemblyDefinition)'
 		bool InlineIntPtrSize { get; set; }
 
+		bool? is_arm64_calling_convention;
+
 		public CoreOptimizeGeneratedCode (LinkerOptions options)
 		{
 			Options = options;
+
+			if (Optimizations.InlineIsARM64CallingConvention == true) { 
+				if (options.Target.Abis.Count == 1) {
+					// We can only inline Runtime.InlineIsARM64CallingConvention if the generated code will execute on a single architecture (not if building for armv7+armv7s for instance).
+					switch ((options.Target.Abis [0] & Abi.ArchMask)) {
+					case Abi.i386:
+					case Abi.ARMv7:
+					case Abi.ARMv7s:
+					case Abi.ARMv7k:
+					case Abi.x86_64:
+						is_arm64_calling_convention = false;
+						break;
+					case Abi.ARM64:
+					case Abi.ARM64e:
+					case Abi.ARM64_32:
+						is_arm64_calling_convention = true;
+						break;
+					default:
+						options.LinkContext.Exceptions.Add (ErrorHelper.CreateWarning (99, $"Internal error: unknown abi: {options.Target.Abis [0]}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new)."));
+						break;
+					}
+				}
+			}
 		}
 
 		public override SubStepTargets Targets {
@@ -637,6 +663,8 @@ namespace Xamarin.Linker {
 			case "SetupBlock":
 			case "SetupBlockUnsafe":
 				return ProcessSetupBlock (caller, ins);
+			case "get_IsARM64CallingConvention":
+				return ProcessIsARM64CallingConvention (caller, ins);
 			}
 
 			return 0;
@@ -848,6 +876,30 @@ namespace Xamarin.Linker {
 
 			//Driver.Log (4, "Optimized call to BlockLiteral.SetupBlock in {0} at offset {1} with delegate type {2} and signature {3}", caller, ins.Offset, delegateType.FullName, signature);
 			return 2;
+		}
+
+		int ProcessIsARM64CallingConvention (MethodDefinition caller, Instruction ins)
+		{
+			const string operation = "inline Runtime.IsARM64CallingConvention";
+
+			if (Optimizations.InlineIsARM64CallingConvention != true)
+				return 0;
+
+			if (!is_arm64_calling_convention.HasValue)
+				return 0;
+
+			var mr = ins.Operand as MethodReference;
+			if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime"))
+				return 0;
+
+			if (!ValidateInstruction (caller, ins, operation, Code.Call))
+				return 0;
+
+			// We're fine, inline the Runtime.IsARM64CallingConvention value
+			ins.OpCode = is_arm64_calling_convention.Value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
+			ins.Operand = null;
+
+			return 0;
 		}
 
 		// Returns the type of the value pushed on the stack by the given instruction.

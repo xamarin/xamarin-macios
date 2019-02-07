@@ -502,5 +502,36 @@ namespace Linker.Shared
 			GC.KeepAlive (dummy208); GC.KeepAlive (dummy218); GC.KeepAlive (dummy228); GC.KeepAlive (dummy238); GC.KeepAlive (dummy248); GC.KeepAlive (dummy258); GC.KeepAlive (dummy268); GC.KeepAlive (dummy278); GC.KeepAlive (dummy288); GC.KeepAlive (dummy298);
 			GC.KeepAlive (dummy209); GC.KeepAlive (dummy219); GC.KeepAlive (dummy229); GC.KeepAlive (dummy239); GC.KeepAlive (dummy249); GC.KeepAlive (dummy259); GC.KeepAlive (dummy269); GC.KeepAlive (dummy279); GC.KeepAlive (dummy289); GC.KeepAlive (dummy299);
 		}
+
+		[Test]
+		public void CpuArchitecture ()
+		{
+			MethodInfo method;
+			IEnumerable<ILInstruction> instructions;
+			IEnumerable<ILInstruction> call_instructions;
+
+			method = typeof (BaseOptimizeGeneratedCodeTest).GetMethod (nameof (GetIsARM64CallingConventionOptimized), BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static);
+			instructions = new ILReader (method);
+			call_instructions = instructions.Where ((v) => v.OpCode.Name == "call");
+			Assert.AreEqual (0, call_instructions.Count (), "optimized: no call instruction");
+			Assert.AreEqual (Runtime.IsARM64CallingConvention, GetIsARM64CallingConventionOptimized (), "Value optimized");
+
+			method = typeof (BaseOptimizeGeneratedCodeTest).GetMethod (nameof (GetIsARM64CallingConventionNotOptimized), BindingFlags.NonPublic | BindingFlags.Instance);
+			instructions = new ILReader (method);
+			call_instructions = instructions.Where ((v) => v.OpCode.Name == "call");
+			Assert.AreEqual (1, call_instructions.Count (), "not optimized: 1 call instruction");
+			Assert.AreEqual (Runtime.IsARM64CallingConvention, GetIsARM64CallingConventionNotOptimized (), "Value unoptimized");
+		}
+
+		[BindingImplAttribute (BindingImplOptions.Optimizable)]
+		bool GetIsARM64CallingConventionOptimized ()
+		{
+			return Runtime.IsARM64CallingConvention;
+		}
+
+		bool GetIsARM64CallingConventionNotOptimized ()
+		{
+			return Runtime.IsARM64CallingConvention;
+		}
 	}
 }

@@ -34,6 +34,7 @@ namespace Xamarin.Bundler
 #else
 			"", // dummy value to make indices match up between XM and XI
 #endif
+			"inline-is-arm64-calling-convention",
 		};
 
 		enum Opt
@@ -50,6 +51,7 @@ namespace Xamarin.Bundler
 			RemoveDynamicRegistrar,
 			TrimArchitectures,
 			RemoveUnsupportedILForBitcode,
+			InlineIsARM64CallingConvention,
 		}
 
 		bool? all;
@@ -110,6 +112,11 @@ namespace Xamarin.Bundler
 			set { values [(int) Opt.RemoveUnsupportedILForBitcode] = value; }
 		}
 #endif
+
+		public bool? InlineIsARM64CallingConvention {
+			get { return values [(int) Opt.InlineIsARM64CallingConvention]; }
+			set { values [(int) Opt.InlineIsARM64CallingConvention] = value; }
+		}
 
 		public Optimizations ()
 		{
@@ -249,6 +256,9 @@ namespace Xamarin.Bundler
 				RemoveUnsupportedILForBitcode = app.Platform == Utils.ApplePlatform.WatchOS && app.IsDeviceBuild;
 			}
 #endif
+			// Always enable Runtime.CpuArchitecture inlining.
+			if (!InlineIsARM64CallingConvention.HasValue)
+				InlineIsARM64CallingConvention = true;
 
 			if (Driver.Verbosity > 3)
 				Driver.Log (4, "Enabled optimizations: {0}", string.Join (", ", values.Select ((v, idx) => v == true ? opt_names [idx] : string.Empty).Where ((v) => !string.IsNullOrEmpty (v))));

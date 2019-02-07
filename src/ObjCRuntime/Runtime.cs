@@ -1585,12 +1585,13 @@ namespace ObjCRuntime {
 		extern static void NSLog_arm64 (IntPtr format, IntPtr p2, IntPtr p3, IntPtr p4, IntPtr p5, IntPtr p6, IntPtr p7, IntPtr p8, [MarshalAs (UnmanagedType.LPStr)] string s);
 #endif
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static void NSLog (string format, params object[] args)
 		{
 			var fmt = NSString.CreateNative ("%s");
 			var val = (args == null || args.Length == 0) ? format : string.Format (format, args);
 #if !MONOMAC && !WATCHOS
-			if (IntPtr.Size == 8 && Arch == Arch.DEVICE)
+			if (IsARM64CallingConvention)
 				NSLog_arm64 (fmt, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, val);
 			else
 #endif
@@ -1710,8 +1711,66 @@ namespace ObjCRuntime {
 			}
 			return obj;
 		}
+
+
+		enum NXByteOrder /* unspecified in header, means most likely int */
+		{
+			Unknown,
+			LittleEndian,
+			BigEndian,
+		}
+
+		[StructLayout (LayoutKind.Sequential)]
+		struct NXArchInfo
+		{
+			IntPtr name; // const char *
+			public int CpuType; // cpu_type_t -> integer_t -> int
+			public int CpuSubType; // cpu_subtype_t -> integer_t -> int
+			public NXByteOrder ByteOrder;
+			IntPtr description; // const char *
+
+			public string Name {
+				get { return Marshal.PtrToStringUTF8 (name); }
+			}
+
+			public string Description {
+				get { return Marshal.PtrToStringUTF8 (description); }
+			}
+		}
+
+		[DllImport (Constants.libSystemLibrary)]
+		static unsafe extern NXArchInfo* NXGetLocalArchInfo ();
+
+		unsafe static NXArchInfo* arch_info;
+		// May return values that are not in the enum.
+		internal static CpuArchitecture CpuArchitecture {
+			get {
+				unsafe {
+					if (arch_info == null)
+						arch_info = NXGetLocalArchInfo ();
+					return (CpuArchitecture) ((arch_info->CpuType << 32) | arch_info->CpuSubType);
+				}
+			}
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static bool IsARM64CallingConvention {
+			get {
+#if MONOMAC
+				return false;
+#else
+				if (Arch != Arch.DEVICE)
+					return false;
+#if __WATCHOS__
+				return CpuArchitecture != CpuArchitecture.Armv7k;
+#else
+				return IntPtr.Size == 8;
+#endif
+#endif
+			}
+		}
 	}
-		
+	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>
 	{
 		public bool Equals (IntPtr x, IntPtr y)
