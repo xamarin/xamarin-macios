@@ -2498,7 +2498,7 @@ public class B
 		// non-linked device build
 		[TestCase (Target.Dev, MTouchLinker.DontLink, MTouchRegistrar.Static, "arm64")] // armv7 Xamarin.iOS.dll don't link builds are not possible anymore because we go over the code size limit,
 		[TestCase (Target.Dev, MTouchLinker.DontLink, MTouchRegistrar.Dynamic, "arm64")] // since this is out of our control we are now forcing this test to arm64. Ref. https://github.com/xamarin/xamarin-macios/issues/5512
-																						 // sdk device build
+		// sdk device build
 		[TestCase (Target.Dev, MTouchLinker.LinkSdk, MTouchRegistrar.Static, "")]
 		[TestCase (Target.Dev, MTouchLinker.LinkSdk, MTouchRegistrar.Dynamic, "")]
 		// fully linked device build
