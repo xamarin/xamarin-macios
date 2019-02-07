@@ -544,6 +544,8 @@ namespace Xamarin.Bundler
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out LinkContext, out assemblies);
 
+			ErrorHelper.Show (LinkContext.Exceptions);
+
 			Driver.Watch ("Link Assemblies", 1);
 		}
 

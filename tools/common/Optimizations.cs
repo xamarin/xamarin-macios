@@ -29,6 +29,11 @@ namespace Xamarin.Bundler
 #else
 			"trim-architectures",
 #endif
+#if MONOTOUCH
+			"remove-unsupported-il-for-bitcode",
+#else
+			"", // dummy value to make indices match up between XM and XI
+#endif
 		};
 
 		enum Opt
@@ -44,8 +49,10 @@ namespace Xamarin.Bundler
 			StaticBlockToDelegateLookup,
 			RemoveDynamicRegistrar,
 			TrimArchitectures,
+			RemoveUnsupportedILForBitcode,
 		}
 
+		bool? all;
 		bool? [] values;
 
 		public bool? RemoveUIThreadChecks {
@@ -97,6 +104,13 @@ namespace Xamarin.Bundler
 			set { values [(int) Opt.TrimArchitectures] = value; }
 		}
 
+#if MONOTOUCH
+		public bool? RemoveUnsupportedILForBitcode {
+			get { return values [(int) Opt.RemoveUnsupportedILForBitcode]; }
+			set { values [(int) Opt.RemoveUnsupportedILForBitcode] = value; }
+		}
+#endif
+
 		public Optimizations ()
 		{
 			values = new bool? [opt_names.Length];
@@ -126,6 +140,15 @@ namespace Xamarin.Bundler
 						continue;
 					}
 					goto default; // also requires the linker
+#if MONOTOUCH
+				case Opt.RemoveUnsupportedILForBitcode:
+					if (app.Platform != Utils.ApplePlatform.WatchOS) {
+						if (!all.HasValue) // Don't show this warning if it was enabled with --optimize=all
+							ErrorHelper.Warning (2003, $"Option '--optimize={opt_names [(int) Opt.RemoveUnsupportedILForBitcode]}' will be ignored since it's only applicable to watchOS.");
+						values [i] = false;
+					}
+					break;
+#endif
 				default:
 					if (app.LinkMode == LinkMode.None) {
 						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since linking is disabled");
@@ -220,6 +243,13 @@ namespace Xamarin.Bundler
 				TrimArchitectures = !app.EnableDebug;
 #endif
 
+#if MONOTOUCH
+			if (!RemoveUnsupportedILForBitcode.HasValue) {
+				// By default enabled for watchOS device builds.
+				RemoveUnsupportedILForBitcode = app.Platform == Utils.ApplePlatform.WatchOS && app.IsDeviceBuild;
+			}
+#endif
+
 			if (Driver.Verbosity > 3)
 				Driver.Log (4, "Enabled optimizations: {0}", string.Join (", ", values.Select ((v, idx) => v == true ? opt_names [idx] : string.Empty).Where ((v) => !string.IsNullOrEmpty (v))));
 		}
@@ -254,6 +284,7 @@ namespace Xamarin.Bundler
 			}
 
 			if (opt == "all") {
+				all = enabled;
 				for (int i = 0; i < values.Length; i++) {
 					if (!string.IsNullOrEmpty (opt_names [i]))
 						values [i] = enabled;

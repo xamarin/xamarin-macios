@@ -192,6 +192,7 @@
     <Compile Include="..\..\CommonLinkSdkTest.cs">
       <Link>CommonLinkSdkTest.cs</Link>
     </Compile>
+    <Compile Include="BitcodeTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
