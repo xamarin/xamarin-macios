@@ -4236,8 +4236,7 @@ public class TestApp {
 
 		public static void AssertDeviceAvailable ()
 		{
-			if (!Configuration.include_device)
-				Assert.Ignore ("This build does not include device support.");
+			Configuration.AssertDeviceAvailable ();
 		}
 
 		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)

@@ -501,5 +501,12 @@ namespace Xamarin.Tests
 				return Path.Combine (RootPath, "packages");
 			}
 		}
+
+		public static void AssertDeviceAvailable ()
+		{
+			if (include_device)
+				return;
+			Assert.Ignore ("This build does not include device support.");
+		}
 	}
 }
