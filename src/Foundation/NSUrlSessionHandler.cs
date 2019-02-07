@@ -51,6 +51,10 @@ using nint = System.Int32;
 using nuint = System.UInt32;
 #endif
 
+#if !MONOMAC
+using UIKit;
+#endif
+
 #if SYSTEM_NET_HTTP
 namespace System.Net.Http {
 #else
@@ -120,6 +124,10 @@ namespace Foundation {
 		readonly NSUrlSession session;
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
+#if !MONOMAC && !MONOTOUCH_WATCH
+		readonly bool isBackgroundSession = false;
+		NSObject notificationToken;  // needed to make sure we do not hang if not using a background session
+#endif
 
 		static NSUrlSessionConfiguration CreateConfig ()
 		{
@@ -142,6 +150,12 @@ namespace Foundation {
 			if (configuration == null)
 				throw new ArgumentNullException (nameof (configuration));
 
+#if !MONOMAC  && !MONOTOUCH_WATCH 
+			// if the configuration has an identifier, we are dealing with a background session, 
+			// therefore, we do not have to listen to the notifications.
+			isBackgroundSession = !string.IsNullOrEmpty (configuration.Identifier);
+#endif
+
 			AllowAutoRedirect = true;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
@@ -159,12 +173,44 @@ namespace Foundation {
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
+#if !MONOMAC  && !MONOTOUCH_WATCH
+
+		void AddNotification ()
+		{
+			if (!isBackgroundSession && notificationToken == null)
+				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+		}
+
+		void RemoveNotification ()
+		{
+			if (notificationToken != null) {
+				NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
+				notificationToken = null;
+			}
+		}
+
+		void BackgroundNotificationCb (NSNotification obj)
+		{
+			// we do not need to call the lock, we call cancel on the source, that will trigger all the needed code to 
+			// clean the resources and such
+			foreach (var r in inflightRequests.Values) {
+				r.CompletionSource.TrySetCanceled ();
+			}
+		}
+#endif
+
 		public long MaxInputInMemory { get; set; } = long.MaxValue;
 
 		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
-			lock (inflightRequestsLock)
+			lock (inflightRequestsLock) {
 				inflightRequests.Remove (task);
+#if !MONOMAC  && !MONOTOUCH_WATCH
+				// do we need to be notified? If we have not inflightData, we do not
+				if (inflightRequests.Count == 0)
+					RemoveNotification ();
+#endif
+			}
 
 			if (cancel)
 				task?.Cancel ();
@@ -174,6 +220,10 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
+#if !MONOMAC  && !MONOTOUCH_WATCH
+			// remove the notification if present, method checks against null
+			RemoveNotification ();
+#endif
 			lock (inflightRequestsLock) {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
@@ -182,7 +232,6 @@ namespace Foundation {
 
 				inflightRequests.Clear ();
 			}
-
 			base.Dispose (disposing);
 		}
 
@@ -249,7 +298,11 @@ namespace Foundation {
 
 			var tcs = new TaskCompletionSource<HttpResponseMessage> ();
 
-			lock (inflightRequestsLock)
+			lock (inflightRequestsLock) {
+#if !MONOMAC  && !MONOTOUCH_WATCH
+				// Add the notification whenever needed
+				AddNotification ();
+#endif
 				inflightRequests.Add (dataTask, new InflightData {
 					RequestUrl = request.RequestUri.AbsoluteUri,
 					CompletionSource = tcs,
@@ -257,6 +310,7 @@ namespace Foundation {
 					Stream = new NSUrlSessionDataTaskStream (),
 					Request = request
 				});
+			}
 
 			if (dataTask.State == NSUrlSessionTaskState.Suspended)
 				dataTask.Resume ();
