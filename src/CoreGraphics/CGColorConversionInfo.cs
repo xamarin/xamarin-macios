@@ -57,16 +57,20 @@ namespace CoreGraphics {
 			/* CGColorSpaceRef __nullable */ IntPtr space3, CGColorConversionInfoTransformType transform3, CGColorRenderingIntent intent3,
 			IntPtr lastSpaceMarker);
 
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 		// https://developer.apple.com/library/ios/documentation/Xcode/Conceptual/iPhoneOSABIReference/Articles/ARM64FunctionCallingConventions.html
 		// Declare dummies until we're on the stack then the arguments
 		// <quote>C language requires arguments smaller than int to be promoted before a call, but beyond that, unused bytes on the stack are not specified by this ABI</quote>
+		// The 'transformX' argument is a CGColorConversionInfoTransformType, which is defined as uint (uint32_t in the header),
+		// but since each parameter must be pointer-sized (to occupy the right amount of stack space),
+		// we define it as nuint (and not the enum type, which is 32-bit even on 64-bit platforms).
+		// Same for the 'intentX' argument (except that it's signed instead of unsigned).
 		[DllImport(Constants.CoreGraphicsLibrary, EntryPoint="CGColorConversionInfoCreateFromList")]
 		extern static /* CGColorConversionInfoRef __nullable */ IntPtr CGColorConversionInfoCreateFromList_arm64 (/* __nullable CFDictionaryRef */ IntPtr options,
-			IntPtr space1, long transform1, long intent1, // varargs starts after them
+			IntPtr space1, nuint transform1, nint intent1, // varargs starts after them
 			IntPtr dummy4, IntPtr dummy5, IntPtr dummy6, IntPtr dummy7, // dummies so the rest goes to the stack
-			IntPtr space2, long transform2, long intent2,
-			IntPtr space3, long transform3, long intent3,
+			IntPtr space2, nuint transform2, nint intent2,
+			IntPtr space3, nuint transform3, nint intent3,
 			IntPtr lastSpaceMarker);
 #endif
 
@@ -92,12 +96,12 @@ namespace CoreGraphics {
 			var first = triples [0]; // there's always one
 			var second = triples.Length > 1 ? triples [1] : empty; 
 			var third = triples.Length > 2 ? triples [2] : empty;
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 			if (Runtime.IsARM64CallingConvention) {
-				Handle = CGColorConversionInfoCreateFromList_arm64 (o, NativeObjectHelper.GetHandle (first.Space), (long) first.Transform, (long) first.Intent,
+				Handle = CGColorConversionInfoCreateFromList_arm64 (o, NativeObjectHelper.GetHandle (first.Space), (uint) first.Transform, (int) first.Intent,
 					IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero,
-					NativeObjectHelper.GetHandle (second.Space), (long) second.Transform, (long) second.Intent,
-					NativeObjectHelper.GetHandle (third.Space), (long) third.Transform, (long) third.Intent,
+					NativeObjectHelper.GetHandle (second.Space), (uint) second.Transform, (int) second.Intent,
+					NativeObjectHelper.GetHandle (third.Space), (uint) third.Transform, (int) third.Intent,
 					IntPtr.Zero);
 			} else {
 #endif
@@ -105,7 +109,7 @@ namespace CoreGraphics {
 					NativeObjectHelper.GetHandle (second.Space), second.Transform, second.Intent,
 					NativeObjectHelper.GetHandle (third.Space), third.Transform, third.Intent,
 					IntPtr.Zero);
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 			}
 #endif
 			if (Handle == IntPtr.Zero)
