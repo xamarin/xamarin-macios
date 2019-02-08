@@ -2511,13 +2511,16 @@ namespace xharness
 				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
 			}
 		}
-
-		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log, bool useXIBuild=false)
+		
+		// This method must be called with the desktop resource acquired
+		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
+		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource)
 		{
-			// we do not want to use xibuild on solutions, we will have some failures with Mac Full
-			var isSolution = projectPath.EndsWith (".sln", StringComparison.Ordinal);
-			if (!File.Exists (projectPath))
-				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
+			if (!RestoreNugets)
+				return;
+
+			if (!File.Exists (SolutionPath ?? TestProject.Path))
+				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", SolutionPath ?? TestProject.Path);
 
 			using (var nuget = new Process ()) {
 				nuget.StartInfo.FileName = useXIBuild && !isSolution? Harness.XIBuildPath : 
