@@ -507,6 +507,10 @@ namespace Linker.Shared
 		public void CpuArchitecture ()
 		{
 			IgnoreIfNotLinkAll ();
+#if __WATCHOS__
+			if (!Runtime.IsARM64CallingConvention && Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("Can't inline when running on armv7k.");
+#endif
 
 			MethodInfo method;
 			IEnumerable<ILInstruction> instructions;

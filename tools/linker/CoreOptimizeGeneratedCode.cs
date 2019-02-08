@@ -53,12 +53,11 @@ namespace Xamarin.Linker {
 
 			if (Optimizations.InlineIsARM64CallingConvention == true) { 
 				if (options.Target.Abis.Count == 1) {
-					// We can only inline Runtime.InlineIsARM64CallingConvention if the generated code will execute on a single architecture (not if building for armv7+armv7s for instance).
+					// We can usually inline Runtime.InlineIsARM64CallingConvention if the generated code will execute on a single architecture
 					switch ((options.Target.Abis [0] & Abi.ArchMask)) {
 					case Abi.i386:
 					case Abi.ARMv7:
 					case Abi.ARMv7s:
-					case Abi.ARMv7k:
 					case Abi.x86_64:
 						is_arm64_calling_convention = false;
 						break;
@@ -67,10 +66,16 @@ namespace Xamarin.Linker {
 					case Abi.ARM64_32:
 						is_arm64_calling_convention = true;
 						break;
+					case Abi.ARMv7k:
+						// ARMv7k binaries can run on ARM64_32, so this can't be inlined :/
+						break;
 					default:
 						options.LinkContext.Exceptions.Add (ErrorHelper.CreateWarning (99, $"Internal error: unknown abi: {options.Target.Abis [0]}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new)."));
 						break;
 					}
+				} else if (options.Target.Abis.Count == 2 && options.Target.Is32Build && options.Target.Abis.Contains (Abi.ARMv7) && options.Target.Abis.Contains (Abi.ARMv7s)) {
+					// We know we won't be running on arm64 if we're building for armv7+armv7s.
+					is_arm64_calling_convention = false;
 				}
 			}
 		}
