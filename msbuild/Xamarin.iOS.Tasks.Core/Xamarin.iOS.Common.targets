@@ -803,7 +803,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppManifest="$(_AppBundlePath)Info.plist"
 			Architectures="$(TargetArchitectures)"
 			ExecutableName="$(_ExecutableName)"
-			NativeExecutable="$(_NativeExecutable)"
 			CompiledEntitlements="$(_CompiledEntitlements)"
 			Debug="$(MtouchDebug)"
 			EnableGenericValueTypeSharing="$(MtouchEnableGenericValueTypeSharing)"
