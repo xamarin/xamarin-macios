@@ -67,6 +67,9 @@ namespace LinkSdk {
 		[Test]
 		public void FaultClauseTest ()
 		{
+#if !DEBUG
+			Assert.Ignore ("Only works if IL isn't stripped (i.e. only Debug)");
+#endif
 			// First assert that the method that is supposed to have a fault clause actually has a fault clause.
 			// This is somewhat complicated because it's not the method we call that has the fault clause, but a generated method in a generated class.
 			// This is because we only have an indirect way of making csc produce a fault clause
