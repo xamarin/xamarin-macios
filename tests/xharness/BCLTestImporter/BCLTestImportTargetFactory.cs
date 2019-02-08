@@ -31,29 +31,6 @@ namespace xharness.BCLTestImporter {
 			};
 		}
 		
-		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath)
-		{
-
-			using (var nuget = new Process ()) {
-				nuget.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
-				var args = new StringBuilder ();
-				args.Append ("restore ");
-				args.Append (StringUtils.Quote (projectPath));
-				nuget.StartInfo.Arguments = args.ToString ();
-
-				var timeout = TimeSpan.FromMinutes (15);
-				var result = await nuget.RunAsync (Harness.HarnessLog, true, timeout);
-				if (result.TimedOut) {
-					Harness.HarnessLog.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
-					return TestExecutingResult.TimedOut;
-				} 
-				if (!result.Succeeded) {
-					return TestExecutingResult.Failed;;
-				}
-				return TestExecutingResult.Succeeded;
-			}
-		}
-		
 		// generate all the different test targets.
 		public List<iOSTestProject> GetiOSBclTargets ()
 		{
@@ -66,11 +43,7 @@ namespace xharness.BCLTestImporter {
 					SkiptvOSVariation = !platforms.Contains (Platform.TvOS),
 					SkipwatchOSVariation = !platforms.Contains (Platform.WatchOS),
 					FailureMessage = failure,
-					Dependency = async () => {
-						var nugetRestoreResult = await RestoreNugetsAsync (path);
-						if (nugetRestoreResult != TestExecutingResult.Succeeded)
-							throw new Exception ($"Nuget restore failed. {nugetRestoreResult}");
-					}
+					RestoreNugetsInProject = true,
 				});
 			}
 			return result;
@@ -91,14 +64,11 @@ namespace xharness.BCLTestImporter {
 					Platform = "AnyCPU",
 					IsExecutableProject = true,
 					FailureMessage = failure,
+					RestoreNugetsInProject = true,
 					Dependency = async () => {
 						var rv = await Harness.BuildBclTests ();
 						if (!rv.Succeeded)
 							throw new Exception ($"Failed to build BCL tests, exit code: {rv.ExitCode}. Check the harness log for more details.");
-
-						var nugetRestoreResult = await RestoreNugetsAsync (path);
-						if (nugetRestoreResult != TestExecutingResult.Succeeded)
-							throw new Exception ($"Nuget restore failed. {nugetRestoreResult}");
 					}
 				});
 			}

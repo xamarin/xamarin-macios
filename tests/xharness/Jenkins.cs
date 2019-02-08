@@ -2501,7 +2501,7 @@ namespace xharness
 
 		public bool RestoreNugets {
 			get {
-				return !string.IsNullOrEmpty (SolutionPath);
+				return TestProject.RestoreNugetsInProject || !string.IsNullOrEmpty (SolutionPath);
 			}
 		}
 
@@ -2510,7 +2510,7 @@ namespace xharness
 				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
 			}
 		}
-
+		
 		// This method must be called with the desktop resource acquired
 		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
 		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource)
@@ -2518,14 +2518,14 @@ namespace xharness
 			if (!RestoreNugets)
 				return;
 
-			if (!File.Exists (SolutionPath))
-				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", SolutionPath);
+			if (!File.Exists (SolutionPath ?? TestProject.Path))
+				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", SolutionPath ?? TestProject.Path);
 
 			using (var nuget = new Process ()) {
 				nuget.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
 				var args = new StringBuilder ();
 				args.Append ("restore ");
-				args.Append (StringUtils.Quote (SolutionPath));
+				args.Append (StringUtils.Quote (SolutionPath ?? TestProject.Path));
 				nuget.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (nuget);
 				LogEvent (log, "Restoring nugets for {0} ({1})", TestName, Mode);
