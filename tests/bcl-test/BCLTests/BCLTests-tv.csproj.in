@@ -204,7 +204,6 @@
     <None Include="templates\tvOSApp\Entitlements.plist">
       <Link>Entitlements.plist</Link>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="templates\common\TestRunner.NUnit\NUnitTestRunner.cs">

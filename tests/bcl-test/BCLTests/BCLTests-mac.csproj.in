@@ -130,7 +130,6 @@
     <None Include="%PLIST PATH%">
       <LogicalName>Info.plist</LogicalName>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="templates\common\TestRunner.NUnit\NUnitTestRunner.cs">
