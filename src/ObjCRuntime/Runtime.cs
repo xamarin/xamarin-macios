@@ -1751,21 +1751,28 @@ namespace ObjCRuntime {
 			}
 		}
 
+		public readonly static bool IsARM64CallingConvention = GetIsARM64CallingConvention ();
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static bool IsARM64CallingConvention {
-			get {
-#if MONOMAC
+		static bool GetIsARM64CallingConvention ()
+		{
+#if !MONOMAC
+			return false;
+#else
+			// Make this determination based on only cputype to make it as future proof as possible.
+			// Hardcoding anything based on CpuArchitecture values might end up being broken when
+			// Apple creates a new variation of an existing cpu (but still ARM64-based),
+			// say a 'arm64e2' cpu. This code should continue to work in that case.
+			var arch = CpuArchitecture;
+			var cputype = ((ulong) arch) >> 32;
+			switch (cputype) {
+			case 12 | 0x01000000: // CPU_TYPE_ARM | CPU_ARCH_ABI64. This includes both arm64 and arm64e.
+			case 12 | 0x02000000: // CPU_TYPE_ARM | CPU_ARCH_ABI64_32. This is arm64_32
+				return true;
+			default:
 				return false;
-#else
-				if (Arch != Arch.DEVICE)
-					return false;
-#if __WATCHOS__
-				return CpuArchitecture != CpuArchitecture.Armv7k;
-#else
-				return IntPtr.Size == 8;
-#endif
-#endif
 			}
+#endif
 		}
 	}
 	

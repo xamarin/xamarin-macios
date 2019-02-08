@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -504,7 +505,7 @@ namespace Linker.Shared
 		}
 
 		[Test]
-		public void CpuArchitecture ()
+		public void IsARM64CallingConvention ()
 		{
 			IgnoreIfNotLinkAll ();
 #if __WATCHOS__
@@ -512,20 +513,29 @@ namespace Linker.Shared
 				Assert.Ignore ("Can't inline when running on armv7k.");
 #endif
 
+#if DEBUG // Release builds will strip IL, so any IL checking has to be done in debug builds.
 			MethodInfo method;
 			IEnumerable<ILInstruction> instructions;
 			IEnumerable<ILInstruction> call_instructions;
 
 			method = typeof (BaseOptimizeGeneratedCodeTest).GetMethod (nameof (GetIsARM64CallingConventionOptimized), BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static);
 			instructions = new ILReader (method);
-			call_instructions = instructions.Where ((v) => v.OpCode.Name == "call");
-			Assert.AreEqual (0, call_instructions.Count (), "optimized: no call instruction");
-			Assert.AreEqual (Runtime.IsARM64CallingConvention, GetIsARM64CallingConventionOptimized (), "Value optimized");
+			call_instructions = instructions.Where ((v) => v.OpCode.Name == "ldsfld");
+			Assert.AreEqual (0, call_instructions.Count (), "optimized: no ldsfld instruction");
 
 			method = typeof (BaseOptimizeGeneratedCodeTest).GetMethod (nameof (GetIsARM64CallingConventionNotOptimized), BindingFlags.NonPublic | BindingFlags.Instance);
 			instructions = new ILReader (method);
-			call_instructions = instructions.Where ((v) => v.OpCode.Name == "call");
-			Assert.AreEqual (1, call_instructions.Count (), "not optimized: 1 call instruction");
+			call_instructions = instructions.Where ((v) => v.OpCode.Name == "ldsfld");
+			Assert.AreEqual (1, call_instructions.Count (), "not optimized: 1 ldsfld instruction");
+			
+			method = typeof (Runtime).GetMethod ("GetIsARM64CallingConvention", BindingFlags.Static | BindingFlags.NonPublic);
+			instructions = new ILReader (method);
+			Assert.AreEqual (2, instructions.Count (), "IL Count");
+			Assert.That (instructions.Skip (0).First ().OpCode, Is.EqualTo (OpCodes.Ldc_I4_0).Or.EqualTo (OpCodes.Ldc_I4_1), "IL 1");
+			Assert.That (instructions.Skip (1).First ().OpCode, Is.EqualTo (OpCodes.Ret), "IL 2");
+#endif
+						
+			Assert.AreEqual (Runtime.IsARM64CallingConvention, GetIsARM64CallingConventionOptimized (), "Value optimized");
 			Assert.AreEqual (Runtime.IsARM64CallingConvention, GetIsARM64CallingConventionNotOptimized (), "Value unoptimized");
 		}
 

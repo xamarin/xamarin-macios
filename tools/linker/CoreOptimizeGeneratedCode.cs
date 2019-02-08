@@ -632,6 +632,15 @@ namespace Xamarin.Linker {
 				return; // nothing else to do here.
 			}
 
+			if (Optimizations.InlineIsARM64CallingConvention == true && is_arm64_calling_convention.HasValue && method.Name == "GetIsARM64CallingConvention" && method.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime")) {
+				// Rewrite to return the constant value
+				var instr = method.Body.Instructions;
+				instr.Clear ();
+				instr.Add (Instruction.Create (is_arm64_calling_convention.Value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0));
+				instr.Add (Instruction.Create (OpCodes.Ret));
+				return; // nothing else to do here.
+			}
+
 			var instructions = method.Body.Instructions;
 			for (int i = 0; i < instructions.Count; i++) {
 				var ins = instructions [i];
@@ -668,8 +677,6 @@ namespace Xamarin.Linker {
 			case "SetupBlock":
 			case "SetupBlockUnsafe":
 				return ProcessSetupBlock (caller, ins);
-			case "get_IsARM64CallingConvention":
-				return ProcessIsARM64CallingConvention (caller, ins);
 			}
 
 			return 0;
@@ -677,6 +684,12 @@ namespace Xamarin.Linker {
 
 		protected virtual void ProcessLoadStaticField (MethodDefinition caller, Instruction ins)
 		{
+			FieldReference fr = ins.Operand as FieldReference;
+			switch (fr?.Name) {
+			case "IsARM64CallingConvention":
+				ProcessIsARM64CallingConvention (caller, ins);
+				break;
+			}
 		}
 
 		void ProcessEnsureUIThread (MethodDefinition caller, Instruction ins)
@@ -893,11 +906,12 @@ namespace Xamarin.Linker {
 			if (!is_arm64_calling_convention.HasValue)
 				return 0;
 
-			var mr = ins.Operand as MethodReference;
-			if (!mr.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime"))
+			// Verify we're checking the right IsARM64CallingConvention field
+			var fr = ins.Operand as FieldReference;
+			if (!fr.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime"))
 				return 0;
 
-			if (!ValidateInstruction (caller, ins, operation, Code.Call))
+			if (!ValidateInstruction (caller, ins, operation, Code.Ldsfld))
 				return 0;
 
 			// We're fine, inline the Runtime.IsARM64CallingConvention value
