@@ -506,6 +506,8 @@ namespace Linker.Shared
 		[Test]
 		public void CpuArchitecture ()
 		{
+			IgnoreIfNotLinkAll ();
+
 			MethodInfo method;
 			IEnumerable<ILInstruction> instructions;
 			IEnumerable<ILInstruction> call_instructions;
