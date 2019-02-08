@@ -1713,16 +1713,14 @@ namespace ObjCRuntime {
 		}
 
 
-		enum NXByteOrder /* unspecified in header, means most likely int */
-		{
+		enum NXByteOrder /* unspecified in header, means most likely int */ {
 			Unknown,
 			LittleEndian,
 			BigEndian,
 		}
 
 		[StructLayout (LayoutKind.Sequential)]
-		struct NXArchInfo
-		{
+		struct NXArchInfo {
 			IntPtr name; // const char *
 			public int CpuType; // cpu_type_t -> integer_t -> int
 			public int CpuSubType; // cpu_subtype_t -> integer_t -> int

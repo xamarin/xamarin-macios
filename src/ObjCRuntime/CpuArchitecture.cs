@@ -1,7 +1,5 @@
-namespace ObjCRuntime
-{
-	internal enum CpuArchitecture : ulong
-	{
+namespace ObjCRuntime {
+	internal enum CpuArchitecture : ulong {
 		// (cputype << 32) | cpusubtype
 		I386     =   (7UL               << 32),
 		X86_64   = (( 7UL | 0x01000000) << 32),
