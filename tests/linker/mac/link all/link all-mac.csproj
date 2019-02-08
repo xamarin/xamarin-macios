@@ -81,7 +81,7 @@
     <Compile Include="..\..\CommonLinkAllTest.cs">
       <Link>CommonLinkAllTest.cs</Link>
     </Compile>
-    <Compile Include="..\..\ios\link all\ILReader.cs">
+    <Compile Include="..\..\ILReader.cs">
       <Link>ILReader.cs</Link>
     </Compile>
   </ItemGroup>
