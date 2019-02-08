@@ -256,7 +256,7 @@ namespace Xamarin.Bundler
 				RemoveUnsupportedILForBitcode = app.Platform == Utils.ApplePlatform.WatchOS && app.IsDeviceBuild;
 			}
 #endif
-			// Always enable Runtime.CpuArchitecture inlining.
+			// By default Runtime.IsARM64CallingConvention inlining is always enabled.
 			if (!InlineIsARM64CallingConvention.HasValue)
 				InlineIsARM64CallingConvention = true;
 
