@@ -2,10 +2,6 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using BCLTestImporter;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Text;
-using Xamarin.Utils;
 
 namespace xharness.BCLTestImporter {
 	// Class that is use as the connection between xharness and the BCLImporter
