@@ -200,97 +200,17 @@ namespace xharness
 				break;
 			}
 
-			if (flavor != MonoNativeFlavor.None) {
-				switch (test.ProjectPlatform) {
-				case "iPhone":
-					/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
-					yield return new TestData {
-						Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary",
-						Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary",
-						Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject",
-						Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject",
-						Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject",
-						Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "AssemblyBuildTarget: dylib (release)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary",
-						Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "AssemblyBuildTarget: dylib (release, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary",
-						Debug = false, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "AssemblyBuildTarget: SDK framework (release, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject",
-						Debug = false, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false,
-						MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all",
-						Debug = false, Profiling = false, LinkMode = "Full", MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static",
-						Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all",
-						Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; ",
-						MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor
-					};
-					break;
-
-				case "iPhoneSimulator":
-					yield return new TestData {
-						Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false,
-						MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all",
-						Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; ",
-						MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static",
-						Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor
-					};
-					yield return new TestData {
-						Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all",
-						Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL; ",
-						MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor
-					};
-					break;
-				}
-
-				yield break;
-			}
-
 			switch (test.ProjectPlatform) {
 			case "iPhone":
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
-				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic };
+				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
 
-				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic };
+				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
 
 				yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic };
+				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
 
 				switch (test.TestName) {
 				case "monotouch-test":
