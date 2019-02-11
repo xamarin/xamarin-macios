@@ -1704,16 +1704,10 @@ namespace Xamarin.Bundler
 			if (App.MonoNativeMode != MonoNativeMode.None) {
 				var lib_native_target = Path.Combine (TargetDirectory, "libmono-native.dylib");
 
-				try {
-					var lib_native_name = App.GetLibNativeName () + ".dylib";
-					var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (App), lib_native_name);
-					Application.UpdateFile (lib_native_path, lib_native_target);
-					Driver.Log (3, "Added mono-native library {0} for {1}.", lib_native_name, App.MonoNativeMode);
-				} catch (MonoTouchException) {
-					throw;
-				} catch (Exception ex) {
-					throw new MonoTouchException (1015, true, ex, "Failed to create the Mono.Native library '{0}': {1}", lib_native_target, ex.Message);
-				}
+				var lib_native_name = App.GetLibNativeName () + ".dylib";
+				var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (App), lib_native_name);
+				Application.UpdateFile (lib_native_path, lib_native_target);
+				Driver.Log (3, "Added mono-native library {0} for {1}.", lib_native_name, App.MonoNativeMode);
 			}
 
 			if (Driver.Verbosity > 0)
