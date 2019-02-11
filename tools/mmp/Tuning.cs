@@ -72,7 +72,7 @@ namespace MonoMac.Tuner {
 
 	class Linker {
 
-		public static void Process (LinkerOptions options, out LinkContext context, out List<string> assemblies)
+		public static void Process (LinkerOptions options, out MonoMacLinkContext context, out List<string> assemblies)
 		{
 			var pipeline = CreatePipeline (options);
 
@@ -118,7 +118,7 @@ namespace MonoMac.Tuner {
 			assemblies = ListAssemblies (context);
 		}
 
-		static LinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)
+		static MonoMacLinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)
 		{
 			var context = new MonoMacLinkContext (pipeline, options.Resolver);
 			context.CoreAction = AssemblyAction.Link;

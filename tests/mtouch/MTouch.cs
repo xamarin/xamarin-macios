@@ -1752,7 +1752,7 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, remove-unsupported-il-for-bitcode.");
 			}
 		}
 
@@ -1937,7 +1937,7 @@ public class B
 
 			if (!File.Exists (fn)) {
 				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bindings-test" + GetProjectSuffix (profile) + ".csproj");
-				XBuild.Build (csproj, platform: "AnyCPU");
+				XBuild.BuildXI (csproj, platform: "AnyCPU");
 			}
 
 			return fn;
@@ -1950,7 +1950,7 @@ public class B
 
 			if (!File.Exists (fn)) {
 				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bindings-framework-test" + GetProjectSuffix (profile) + ".csproj");
-				XBuild.Build (csproj, platform: "AnyCPU");
+				XBuild.BuildXI (csproj, platform: "AnyCPU");
 			}
 
 			return fn;
@@ -2294,13 +2294,13 @@ public class B
 
 				mtouch.AssertExecute (MTouchAction.BuildDev);
 				var bin = mtouch.NativeExecutablePath;
-				VerifyArchitectures (bin, "arm7s/64", "armv7", "arm64");
+				VerifyArchitectures (bin, "arm7s/64", "ARMv7", "ARM64");
 				foreach (var dylib in Directory.GetFileSystemEntries (mtouch.AppPath, "*.dylib")) {
 					if (Path.GetFileName (dylib).StartsWith ("libmono", StringComparison.Ordinal))
 						continue;
 					if (Path.GetFileName (dylib).StartsWith ("libxamarin", StringComparison.Ordinal))
 						continue;
-					VerifyArchitectures (dylib, dylib + ": arm7s/64", "armv7", "arm64");
+					VerifyArchitectures (dylib, dylib + ": arm7s/64", "ARMv7", "ARM64");
 				}
 			}
 		}
@@ -2347,14 +2347,14 @@ public class B
 		}
 
 		[Test]
-		[TestCase (Target.Dev, "armv7", "10.3")]
-		[TestCase (Target.Dev, "armv7s", "10.3")]
-		[TestCase (Target.Dev, "armv7,armv7s", "10.3")]
-		[TestCase (Target.Dev, "arm64", null)]
-		[TestCase (Target.Dev, "arm64+llvm", null)]
-		[TestCase (Target.Dev, "armv7,arm64", "10.3")]
-		[TestCase (Target.Dev, "armv7s,arm64", "10.3")]
-		[TestCase (Target.Dev, "armv7,armv7s,arm64", "10.3")]
+		[TestCase (Target.Dev, "ARMv7", "10.3")]
+		[TestCase (Target.Dev, "ARMv7s", "10.3")]
+		[TestCase (Target.Dev, "ARMv7,ARMv7s", "10.3")]
+		[TestCase (Target.Dev, "ARM64", null)]
+		[TestCase (Target.Dev, "ARM64+llvm", null)]
+		[TestCase (Target.Dev, "ARMv7,ARM64", "10.3")]
+		[TestCase (Target.Dev, "ARMv7s,ARM64", "10.3")]
+		[TestCase (Target.Dev, "ARMv7,ARMv7s,ARM64", "10.3")]
 		[TestCase (Target.Sim, "i386", "10.3")]
 		[TestCase (Target.Sim, "x86_64", null)]
 		public void Architectures_Unified (Target target, string abi, string deployment_target)
@@ -2363,7 +2363,7 @@ public class B
 				mtouch.Profile = Profile.iOS;
 				mtouch.CreateTemporaryApp ();
 
-				mtouch.Abi = abi;
+				mtouch.Abi = abi.ToLower ();
 				mtouch.TargetVer = deployment_target;
 
 				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
@@ -2430,7 +2430,7 @@ public class B
 				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
 
 				Assert.AreEqual (0, mtouch.Execute (target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim), "build");
-				VerifyArchitectures (bin,  "arch",  target == Target.Dev ? "arm64" : "x86_64");
+				VerifyArchitectures (bin,  "arch",  target == Target.Dev ? "ARM64" : "x86_64");
 			}
 		}
 
@@ -2472,7 +2472,7 @@ public class B
 					var mono_framework = Path.Combine (app.AppPath, "Frameworks", "Mono.framework", "Mono");
 					Assert.That (mono_framework, Does.Exist, "mono framework existence");
 					// Verify that mtouch removed armv7s from the framework.
-					Assert.That (MachO.GetArchitectures (mono_framework), Is.EquivalentTo (new [] { "armv7", "arm64" }), "mono framework architectures");
+					Assert.That (MachO.GetArchitectures (mono_framework).Select ((v) => v.ToString ()), Is.EquivalentTo (new [] { "ARMv7", "ARM64" }), "mono framework architectures");
 				}
 			}
 		}
@@ -2529,7 +2529,7 @@ public class B
 			}
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
 			var csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
-			XBuild.Build (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
+			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
 		[Test]
@@ -2911,6 +2911,65 @@ public class TestApp {
 		}
 
 		[Test]
+		public void MT2105 ()
+		{
+
+			using (var ext = new MTouchTool ()) {
+				var code = @"
+class TestClass {
+	// A method with a filter clause
+	static int FilterClause ()
+	{
+		try {
+			throw new System.Exception (""FilterMe"");
+		} catch (System.Exception e) when (e.Message == ""FilterMe"") {
+			return 0;
+		} catch {
+			return 1;
+		}
+	}
+	static int FilterClauseProperty {
+		get {
+			try {
+				throw new System.Exception (""FilterMe"");
+			} catch (System.Exception e) when (e.Message == ""FilterMe"") {
+				return 10;
+			} catch {
+				return 11;
+			}
+		}
+		set {
+			try {
+				throw new System.Exception (""FilterMe"");
+			} catch (System.Exception e) when (e.Message == ""FilterMe"") {
+			} catch {
+				System.Console.WriteLine (""Filter failure: {0}"", value);
+			}
+		}
+	}
+}
+				";
+				ext.Profile = Profile.watchOS;
+				ext.Linker = MTouchLinker.LinkSdk;
+				ext.CreateTemporaryDirectory ();
+				ext.CreateTemporaryWatchKitExtension (extraCode: code, extraArg: "/debug");
+				ext.WarnAsError = new int [] { 2105 };
+				ext.AssertExecuteFailure (MTouchAction.BuildDev);
+				ext.AssertError (2105, "The method TestClass.FilterClause contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.", "testApp.cs", 9);
+				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 19);
+				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 28);
+				ext.AssertErrorCount (3);
+		
+				ext.Optimize = new string [] { "remove-unsupported-il-for-bitcode" };
+				ext.AssertExecuteFailure (MTouchAction.BuildSim);
+				ext.AssertError (2105, "The method TestClass.FilterClause contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.", "testApp.cs", 9);
+				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 19);
+				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 28);
+				ext.AssertErrorCount (3);
+			}
+		}
+
+		[Test]
 		public void MT5211 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -3080,7 +3139,7 @@ class Test {
 
 			var projectDir = Path.Combine (Configuration.SourceRoot, "tests", "link all");
 			var project = Path.Combine (projectDir, "link all.csproj");
-			XBuild.Build (project, platform: "iPhone");
+			XBuild.BuildXI (project, platform: "iPhone");
 			var appPath = Path.Combine (projectDir, "bin", "iPhone", "Debug", "link all.app");
 			foreach (var device in devices) {
 				if (mtouch.InstallOnDevice (device, appPath) != 0) {
@@ -3115,7 +3174,7 @@ class Test {
 			var containerPath = Path.Combine (projectDir, "bin", "iPhone", "Debug", "MyWatch2Container.app");
 			var appPath = Path.Combine (containerPath, "Watch", "MyWatchApp2.app");
 
-			XBuild.Build (project, platform: "iPhone");
+			XBuild.BuildXI (project, platform: "iPhone");
 			if (!Directory.Exists (appPath))
 				Assert.Fail ("Failed to build the watchOS app.");
 
@@ -3510,10 +3569,11 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.CreateTemporaryApp ();
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Debug = true; // makes simlauncher possible, which speeds up the build
-				mtouch.Optimize = new string [] { "-inline-intptr-size" };
+				mtouch.Optimize = new string [] { "-inline-intptr-size", "remove-unsupported-il-for-bitcode" };
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 				mtouch.AssertWarning (2003, "Option '--optimize=-inline-intptr-size' will be ignored since linking is disabled");
-				mtouch.AssertWarningCount (1);
+				mtouch.AssertWarning (2003, "Option '--optimize=remove-unsupported-il-for-bitcode' will be ignored since it's only applicable to watchOS.");
+				mtouch.AssertWarningCount (2);
 			}
 		}
 
@@ -4147,7 +4207,7 @@ public class Dummy {
 			File.WriteAllText (csprojpath, csproj);
 			File.WriteAllText (testfilepath, testfile);
 			File.WriteAllText (infoplistpath, MTouchTool.CreatePlist (profile, "testapp"));
-			XBuild.Build (csprojpath, configuration, platform);
+			XBuild.BuildXI (csprojpath, configuration, platform);
 			var environment_variables = new Dictionary<string, string> ();
 			if (!clean_simulator)
 				environment_variables ["SKIP_SIMULATOR_SETUP"] = "1";
@@ -4302,7 +4362,7 @@ public class TestApp {
 
 		static void VerifyArchitectures (string file, string message, params string[] expected)
 		{
-			var actual = MachO.GetArchitectures (file).ToArray ();
+			var actual = MachO.GetArchitectures (file).Select ((v) => v.ToString ()).ToArray ();
 
 			Array.Sort (expected);
 			Array.Sort (actual);
@@ -4315,8 +4375,7 @@ public class TestApp {
 
 		public static void AssertDeviceAvailable ()
 		{
-			if (!Configuration.include_device)
-				Assert.Ignore ("This build does not include device support.");
+			Configuration.AssertDeviceAvailable ();
 		}
 
 		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)

@@ -1713,14 +1713,7 @@ namespace Xamarin.Bundler {
 						if (files.Count == 1) {
 							CopyFile (files.First (), targetPath);
 						} else {
-							var sb = new StringBuilder ();
-							foreach (var lib in files) {
-								sb.Append (StringUtils.Quote (lib));
-								sb.Append (' ');
-							}
-							sb.Append ("-create -output ");
-							sb.Append (StringUtils.Quote (targetPath));
-							Driver.RunLipo (sb.ToString ());
+							Driver.RunLipo (targetPath, files);
 						}
 						if (LibMonoLinkMode == AssemblyBuildTarget.Framework)
 							Driver.XcodeRun ("install_name_tool", "-change @rpath/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + StringUtils.Quote (targetPath));
@@ -1789,14 +1782,7 @@ namespace Xamarin.Bundler {
 				Driver.Log (3, "Target '{0}' is up-to-date.", output);
 				return true;
 			} else {
-				var cmd = new StringBuilder ();
-				foreach (var input in inputs) {
-					cmd.Append (StringUtils.Quote (input));
-					cmd.Append (' ');
-				}
-				cmd.Append ("-create -output ");
-				cmd.Append (StringUtils.Quote (output));
-				Driver.RunLipo (cmd.ToString ());
+				Driver.RunLipo (output, inputs);
 				return false;
 			}
 		}

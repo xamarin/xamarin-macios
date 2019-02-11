@@ -411,7 +411,7 @@ namespace Xamarin.iOS.Tasks
 				args.AddLine ("--sgen-conc");
 
 			if (!string.IsNullOrEmpty (Interpreter))
-				args.Add ($"--interpreter={Interpreter}");
+				args.AddLine ($"--interpreter={Interpreter}");
 
 			if (EnableDedup)
 				args.AddLine ("--dedup-aot");

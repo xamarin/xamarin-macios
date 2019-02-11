@@ -1408,8 +1408,9 @@ namespace Xamarin.Bundler {
 
 			linker_options = options;
 
-			Mono.Linker.LinkContext context;
-			MonoMac.Tuner.Linker.Process (options, out context, out resolved_assemblies);
+			MonoMac.Tuner.Linker.Process (options, out var context, out resolved_assemblies);
+
+			ErrorHelper.Show (context.Exceptions);
 
 			// Idealy, this would be handled by Linker.Process above. However in the non-linking case
 			// we do not run MobileMarkStep which generates the pinvoke list. Hack around this for now

@@ -1105,6 +1105,12 @@ namespace Introspection
 #endif
 				default:
 					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
+#if __IOS__
+						// NFC is currently not available on iPad
+						if (fi.Name == "CoreNFCLibrary" && UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
+							continue;
+#endif
+
 						Assert.True (CheckLibrary (s), fi.Name);
 					} else {
 						Assert.Fail ($"Unknown '{fi.Name}' field cannot be verified - please fix me!");
