@@ -746,7 +746,7 @@ namespace BCLTestImporter {
 				result = result.Replace (ContentKey, contentFiles.ToString ());
 				switch (platform){
 				case Platform.MacOSFull:
-					result = result.Replace (TargetFrameworkVersionKey, "v4.5");
+					result = result.Replace (TargetFrameworkVersionKey, "v4.5.2");
 					result = result.Replace (TargetExtraInfoKey,
 						"<UseXamMacFullFramework>true</UseXamMacFullFramework>");
 					result = result.Replace (DefineConstantsKey, "XAMCORE_2_0;ADD_BCL_EXCLUSIONS;XAMMAC_4_5");
