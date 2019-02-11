@@ -124,6 +124,11 @@ function sendrequest(url, callback)
 
 function autorefresh()
 {
+	if (window.location.protocol == "file:") {
+		console.log ("Can't autorefresh from file:// urls");
+		return;
+	}
+
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4) {
