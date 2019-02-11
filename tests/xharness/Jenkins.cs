@@ -2522,6 +2522,7 @@ namespace xharness
 				var args = new StringBuilder ();
 				args.Append ("restore ");
 				args.Append (StringUtils.Quote (projectPath));
+				args.Append (" -verbosity detailed ");
 				nuget.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (nuget);
 				LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
