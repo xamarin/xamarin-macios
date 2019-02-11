@@ -11,14 +11,14 @@ namespace Xamarin.Tests
 		Static,
 		Dynamic,
 		Framework,
-		Symlink
+		Symlink,
 	}
 
 	public enum MonoNativeFlavor
 	{
 		None,
 		Compat,
-		Unified
+		Unified,
 	}
 
 	public static class MonoNativeConfig

@@ -35,7 +35,7 @@ namespace xharness
 	{
 		None,
 		Compat,
-		Unified
+		Unified,
 	}
 
 	public enum MonoNativeLinkMode
@@ -43,7 +43,7 @@ namespace xharness
 		None,
 		Static,
 		Dynamic,
-		Symlink
+		Symlink,
 	}
 
 	public static class MonoNativeHelper
@@ -166,8 +166,6 @@ namespace xharness
 			AddProjectDefines (inputProject);
 
 			Convert (inputProject);
-
-			Console.Error.WriteLine ($"CONVERT: Mac: {Harness.Mac}, Project: {ProjectPath}");
 
 			Harness.Save (inputProject, ProjectPath);
 		}

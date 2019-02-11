@@ -1050,7 +1050,7 @@ namespace xharness
 					Ignored = ignore,
 					TestName = task.TestName,
 					IsUnitTest = macExec.IsUnitTest,
-					Variation = task.Variation
+					Variation = task.Variation,
 				};
 			}
 			var nunit = task as NUnitExecuteTask;

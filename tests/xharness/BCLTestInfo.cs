@@ -37,7 +37,7 @@ namespace xharness
 			// System.Web.Services
 			{ "System.Web.Services.Configuration", null },
 			// handle manually via templates
-			{ "test-helpers", null }
+			{ "test-helpers", null },
 		};
 
 		public BCLTestInfo (Harness harness, string testName)

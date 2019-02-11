@@ -1127,7 +1127,7 @@ namespace Xamarin.Bundler
 						if (optimizations.Count == 0) {
 							compiler_flags.AddOtherFlag ("-O2");
 						} else if (optimizations.Count == 1) {
-							compiler_flags.AddOtherFlag (optimizations[0]);
+							compiler_flags.AddOtherFlag (optimizations [0]);
 						} else {
 							throw ErrorHelper.CreateError (107, "The assemblies '{0}' have different custom LLVM optimizations ('{1}'), which is not allowed when they are all compiled to a single binary.", string.Join (", ", assemblies.Select ((v) => v.Identity)), string.Join ("', '", optimizations));
 						}
@@ -1135,7 +1135,8 @@ namespace Xamarin.Bundler
 
 					HandleMonoNative (App, compiler_flags);
 
-					var link_task = new LinkTask () {
+					var link_task = new LinkTask ()
+					{
 						Target = this,
 						Abi = abi,
 						OutputFile = compiler_output,
