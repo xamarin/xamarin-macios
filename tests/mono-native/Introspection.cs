@@ -12,17 +12,6 @@ namespace Xamarin.Tests
 	[TestFixture]
 	public class Introspection
 	{
-		// [TestFixtureSetUp]
-		public void Setup ()
-		{
-#if !JENKINS
-			Console.Error.WriteLine ($"NOT ON JENKINS!");
-#endif
-
-			var asm = Assembly.GetExecutingAssembly ();
-			Console.Error.WriteLine ($"ASM: {asm}");
-		}
-
 		public static string RootDirectory => Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
 
 		void AssertShouldExist (string name)
@@ -111,17 +100,13 @@ namespace Xamarin.Tests
 				return;
 			}
 
-			Console.Error.WriteLine ($"TEST!");
 			mono_native_initialize ();
-			Console.Error.WriteLine ($"TEST #1!");
 
 			var dylib = Dlfcn.dlopen (libname, 0);
-			Console.Error.WriteLine ($"DYLIB: {libname} - {dylib}");
 			Assert.That (dylib, Is.Not.EqualTo (IntPtr.Zero), "dlopen()ed mono-native");
 
 			try {
 				var symbol = Dlfcn.dlsym (dylib, "mono_native_initialize");
-				Console.Error.WriteLine ($"SYMBOL: {symbol}");
 				Assert.That (symbol, Is.Not.EqualTo (IntPtr.Zero), "dlsym() found mono_native_initialize()");
 			} finally {
 				Dlfcn.dlclose (dylib);
@@ -130,36 +115,6 @@ namespace Xamarin.Tests
 
 		[DllImport ("System.Native")]
 		extern static void mono_native_initialize ();
-
-		void DumpDirectory (string dir)
-		{
-			Console.Error.WriteLine ($"DUMP DIRECTORY: {dir}");
-			DumpDirectory (dir, string.Empty, Path.GetFileName (dir));
-		}
-
-		void DumpDirectory (string dir, string indent, string prefix)
-		{
-			Console.Error.WriteLine ($"{indent}- {prefix}");
-			foreach (var subdir in Directory.GetDirectories (dir)) {
-				var name = Path.Combine (prefix, Path.GetFileName (subdir));
-				DumpDirectory (subdir, indent + "  ", name);
-			}
-
-			foreach (var file in Directory.GetFiles (dir)) {
-				var name = Path.Combine (prefix, Path.GetFileName (file));
-				Console.Error.WriteLine ($"{indent} * {name}");
-			}
-		}
-
-		[Test]
-		public void MartinTest ()
-		{
-			var linkMode = MonoNativeConfig.LinkMode;
-			Console.Error.WriteLine ($"LINK MODE: {linkMode}");
-
-			Console.Error.WriteLine ($"ROOT DIR: {RootDirectory}");
-			// DumpDirectory (RootDirectory);
-		}
 
 		[Test]
 		public void TestInvoke ()
