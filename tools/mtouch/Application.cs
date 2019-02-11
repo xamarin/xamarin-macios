@@ -61,12 +61,6 @@ namespace Xamarin.Bundler {
 		Custom,
 	}
 
-	public enum MonoNativeMode {
-		None,
-		Compat,
-		Unified
-	}
-
 	public partial class Application
 	{
 		public const string ProductName = "Xamarin.iOS";
@@ -126,8 +120,6 @@ namespace Xamarin.Bundler {
 		public List<string> InterpretedAssemblies = new List<string> ();
 
 		public Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string> ();
-
-		public MonoNativeMode MonoNativeMode { get; private set; }
 
 		//
 		// Linker config
@@ -1425,8 +1417,6 @@ namespace Xamarin.Bundler {
 			}
 
 			InitializeCommon ();
-
-			SelectMonoNative ();
 
 			Driver.Watch ("Resolve References", 1);
 		}

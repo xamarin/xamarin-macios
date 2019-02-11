@@ -22,6 +22,12 @@ using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
 
 namespace Xamarin.Bundler {
 
+	public enum MonoNativeMode {
+		None,
+		Compat,
+		Unified,
+	}
+
 	[Flags]
 	public enum RegistrarOptions {
 		Default = 0,
@@ -80,6 +86,8 @@ namespace Xamarin.Bundler {
 		public Version SdkVersion;
 	
 		public bool Embeddinator { get; set; }
+
+		public MonoNativeMode MonoNativeMode { get; set; }
 
 		public Application (string[] arguments)
 		{
@@ -309,6 +317,7 @@ namespace Xamarin.Bundler {
 		{
 			Namespaces.Initialize ();
 			SelectRegistrar ();
+			SelectMonoNative ();
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
 				throw ErrorHelper.CreateError (91, "This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).", ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
