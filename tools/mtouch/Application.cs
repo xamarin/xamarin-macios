@@ -1893,7 +1893,7 @@ namespace Xamarin.Bundler {
 			case MonoNativeMode.Compat:
 				return "libmono-native-compat";
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", MonoNativeMode);
+				throw ErrorHelper.CreateError (99, "Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", MonoNativeMode);
 			}
 
 		}
