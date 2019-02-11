@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Text;
 using Xamarin;
 using Xamarin.Utils;
+using System.Xml;
 
 namespace xharness
 {
@@ -2510,7 +2511,49 @@ namespace xharness
 				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
 			}
 		}
+
+		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log)
+		{
+			if (!File.Exists (projectPath))
+				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
+
+			using (var nuget = new Process ()) {
+				nuget.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
+				var args = new StringBuilder ();
+				args.Append ("restore ");
+				args.Append (StringUtils.Quote (projectPath));
+				nuget.StartInfo.Arguments = args.ToString ();
+				SetEnvironmentVariables (nuget);
+				LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
+
+				var timeout = TimeSpan.FromMinutes (15);
+				var result = await nuget.RunAsync (log, true, timeout);
+				if (result.TimedOut) {
+					log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
+					return TestExecutingResult.TimedOut;
+				} else if (!result.Succeeded) {
+					return TestExecutingResult.Failed;
+				}
+			}
+			return TestExecutingResult.Succeeded;
+		}
 		
+		List<string> GetNestedReferenceProjects (string csproj)
+		{
+			if (!File.Exists (csproj))
+				throw new FileNotFoundException ("Could not find the project whose reference projects needed to be found.", csproj);
+			var result = new List<string> ();
+			var doc = new XmlDocument ();
+			doc.Load (csproj.Replace ("\\", "/"));
+			foreach (var referenceProject in doc.GetProjectReferences ()) {
+				var fixPath = referenceProject.Replace ("\\", "/"); // do the replace in case we use win paths
+				result.Add (fixPath);
+				// get all possible references
+				result.AddRange (GetNestedReferenceProjects (fixPath));
+			}
+			return result;
+		}
+
 		// This method must be called with the desktop resource acquired
 		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
 		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource)
@@ -2520,27 +2563,22 @@ namespace xharness
 
 			if (!File.Exists (SolutionPath ?? TestProject.Path))
 				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", SolutionPath ?? TestProject.Path);
-
-			using (var nuget = new Process ()) {
-				nuget.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
-				var args = new StringBuilder ();
-				args.Append ("restore ");
-				args.Append (StringUtils.Quote (SolutionPath ?? TestProject.Path));
-				nuget.StartInfo.Arguments = args.ToString ();
-				SetEnvironmentVariables (nuget);
-				LogEvent (log, "Restoring nugets for {0} ({1})", TestName, Mode);
-
-				var timeout = TimeSpan.FromMinutes (15);
-				var result = await nuget.RunAsync (log, true, timeout);
-				if (result.TimedOut) {
-					ExecutionResult = TestExecutingResult.TimedOut;
-					log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
-					return;
-				} else if (!result.Succeeded) {
-					ExecutionResult = TestExecutingResult.Failed;
-					return;
+				
+			// might happen that the project does contain reference projects with nugets, grab the reference projects and ensure
+			// thast they have the nugets restored (usually, watch os test projects
+			if (SolutionPath == null) {
+				var references = GetNestedReferenceProjects (TestProject.Path);
+				foreach (var referenceProject in references) {
+					var execResult = await RestoreNugetsAsync (referenceProject, log); // do the replace in case we use win paths
+					if (execResult == TestExecutingResult.TimedOut) {
+						ExecutionResult = execResult;
+						return;
+					}
 				}
 			}
+
+			// restore for the main project/solution]
+			ExecutionResult = await RestoreNugetsAsync (SolutionPath ?? TestProject.Path, log);
 		}
 	}
 
