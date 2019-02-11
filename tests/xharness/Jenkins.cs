@@ -2511,16 +2511,11 @@ namespace xharness
 				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
 			}
 		}
-		
-		// This method must be called with the desktop resource acquired
-		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
-		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource)
-		{
-			if (!RestoreNugets)
-				return;
 
-			if (!File.Exists (SolutionPath ?? TestProject.Path))
-				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", SolutionPath ?? TestProject.Path);
+		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log)
+		{
+			if (!File.Exists (projectPath))
+				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
 			using (var nuget = new Process ()) {
 				nuget.StartInfo.FileName = useXIBuild && !isSolution? Harness.XIBuildPath : 
