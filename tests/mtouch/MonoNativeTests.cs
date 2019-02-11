@@ -46,7 +46,6 @@ namespace Xamarin
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.Debug = true;
-				mtouch.FastDev = true;
 				mtouch.Linker = LinkerOption.DontLink;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
@@ -60,7 +59,6 @@ namespace Xamarin
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.Debug = true;
-				mtouch.FastDev = true;
 				mtouch.Linker = LinkerOption.LinkAll;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
@@ -90,7 +88,6 @@ namespace Xamarin
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
 				mtouch.Debug = true;
-				mtouch.FastDev = true;
 				mtouch.Linker = LinkerOption.LinkAll;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 
