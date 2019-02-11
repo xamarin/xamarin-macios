@@ -1530,6 +1530,18 @@ namespace Xamarin.Bundler
 			RunCommand ("/usr/bin/mdimport", quoted_dsym_dir);
 		}
 
+		public static void RunLipo (string output, IEnumerable<string> inputs)
+		{
+			var sb = new StringBuilder ();
+			foreach (var lib in inputs) {
+				sb.Append (StringUtils.Quote (lib));
+				sb.Append (' ');
+			}
+			sb.Append ("-create -output ");
+			sb.Append (StringUtils.Quote (output));
+			RunLipo (sb.ToString ());
+		}
+
 		public static void RunLipo (string options)
 		{
 			string lipo = FindTool ("lipo");

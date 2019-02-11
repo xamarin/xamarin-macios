@@ -4298,19 +4298,7 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.is_virtual_method || mi.Name == "Constructor"){
 			//print ("if (this.GetType () == TypeManager.{0}) {{", type.Name);
 			if (external || minfo.is_interface_impl || minfo.is_extension_method) {
-				if (dual_enum) {
-					print ("if (IntPtr.Size == 8) {");
-					indent++;
-					GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
-					indent--;
-					print ("} else {");
-					indent++;
-					GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
-					indent--;
-					print ("}");
-				} else {
-					GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
-				}
+				GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
 			} else {
 				var may_throw = ShouldMarshalNativeExceptions (mi);
 				var null_handle = may_throw && mi.Name == "Constructor";

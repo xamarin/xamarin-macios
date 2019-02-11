@@ -17,7 +17,7 @@ namespace Xamarin.Linker.Steps
 	{
 		Dictionary<TypeDefinition, Tuple<MethodDefinition, MethodDefinition>> cache;
 		protected override string Name { get; } = "Smart Enum Conversion Preserver";
-		protected override int ErrorCode { get; } = 2100;
+		protected override int ErrorCode { get; } = 2200;
 
 		public override SubStepTargets Targets {
 			get {
