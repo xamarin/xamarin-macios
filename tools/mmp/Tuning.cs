@@ -34,6 +34,7 @@ namespace MonoMac.Tuner {
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 		public bool SkipExportedSymbolsInSdkAssemblies { get; set; }
+		public MonoMacLinkContext LinkContext { get; set; }
 		public Target Target { get; set; }
 		public Application Application { get { return Target.App; } }
 
@@ -130,6 +131,7 @@ namespace MonoMac.Tuner {
 			context.OutputDirectory = options.OutputDirectory;
 			context.StaticRegistrar = options.Target.StaticRegistrar;
 			context.Target = options.Target;
+			options.LinkContext = context;
 			return context;
 		}
 
