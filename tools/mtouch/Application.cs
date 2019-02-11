@@ -1432,8 +1432,7 @@ namespace Xamarin.Bundler {
 				MonoNativeMode = DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
 				break;
 			default:
-				MonoNativeMode = MonoNativeMode.None;
-				break;
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", Platform);
 			}
 		}
 
