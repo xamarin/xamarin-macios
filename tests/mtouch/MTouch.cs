@@ -2460,6 +2460,42 @@ public class B
 		}
 
 		[Test]
+		[TestCase (Target.Dev, null, "ARMv7k")]
+		[TestCase (Target.Dev, "arm64_32+llvm", "ARM64_32")]
+		[TestCase (Target.Dev, "armv7k+llvm,arm64_32+llvm", "ARMv7k,ARM64_32")]
+		[TestCase (Target.Sim, null, "i386")]
+		public void Architectures_WatchOS (Target target, string abi, string expected_abi)
+		{
+			AssertDeviceAvailable ();
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.watchOS;
+				mtouch.Abi = abi;
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryWatchKitExtension ();
+				mtouch.Action = target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim;
+				mtouch.AssertExecute ("build");
+				VerifyArchitectures (mtouch.NativeExecutablePath, "arch", expected_abi.Split (','));
+			}
+		}
+
+		[Test]
+		public void Architectures_WatchOS_Invalid ()
+		{
+			AssertDeviceAvailable ();
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.watchOS;
+				mtouch.CreateTemporaryWatchKitExtension ();
+
+				mtouch.Abi = "armv7";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "device - armv7");
+				mtouch.AssertError ("MT", 75, "Invalid architecture 'ARMv7' for WatchOS projects. Valid architectures are: ARMv7k, ARMv7k+LLVM, ARM64_32, ARM64_32+LLVM");
+				mtouch.AssertErrorCount (1);
+			}
+		}
+
+		[Test]
 		public void MonoFrameworkArchitectures ()
 		{
 			using (var extension = new MTouchTool ()) {
