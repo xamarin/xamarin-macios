@@ -2523,7 +2523,9 @@ namespace xharness
 				var args = new StringBuilder ();
 				args.Append (useXIBuild ? "/" : "" + "restore "); // diff param depending on the tool
 				args.Append (StringUtils.Quote (projectPath));
-				if (!useXIBuild)
+				if (useXIBuild)
+					args.Append (" /verbosity:detailed ");
+				else
 					args.Append (" -verbosity detailed ");
 				nuget.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (nuget);
