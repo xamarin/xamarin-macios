@@ -2512,17 +2512,19 @@ namespace xharness
 			}
 		}
 
-		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log)
+		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log, bool useXIBuild=false)
 		{
 			if (!File.Exists (projectPath))
 				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
 			using (var nuget = new Process ()) {
-				nuget.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
+				nuget.StartInfo.FileName = useXIBuild? Harness.XIBuildPath : 
+					"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
 				var args = new StringBuilder ();
-				args.Append ("restore ");
+				args.Append (useXIBuild ? "/" : "" + "restore "); // diff param depending on the tool
 				args.Append (StringUtils.Quote (projectPath));
-				args.Append (" -verbosity detailed ");
+				if (!useXIBuild)
+					args.Append (" -verbosity detailed ");
 				nuget.StartInfo.Arguments = args.ToString ();
 				SetEnvironmentVariables (nuget);
 				LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
@@ -2557,7 +2559,7 @@ namespace xharness
 
 		// This method must be called with the desktop resource acquired
 		// (which is why it takes an IAcquiredResources as a parameter without using it in the function itself).
-		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource)
+		protected async Task RestoreNugetsAsync (Log log, IAcquiredResource resource, bool useXIBuild=false)
 		{
 			if (!RestoreNugets)
 				return;
@@ -2570,7 +2572,7 @@ namespace xharness
 			if (SolutionPath == null) {
 				var references = GetNestedReferenceProjects (TestProject.Path);
 				foreach (var referenceProject in references) {
-					var execResult = await RestoreNugetsAsync (referenceProject, log); // do the replace in case we use win paths
+					var execResult = await RestoreNugetsAsync (referenceProject, log, useXIBuild); // do the replace in case we use win paths
 					if (execResult == TestExecutingResult.TimedOut) {
 						ExecutionResult = execResult;
 						return;
@@ -2579,7 +2581,7 @@ namespace xharness
 			}
 
 			// restore for the main project/solution]
-			ExecutionResult = await RestoreNugetsAsync (SolutionPath ?? TestProject.Path, log);
+			ExecutionResult = await RestoreNugetsAsync (SolutionPath ?? TestProject.Path, log, useXIBuild);
 		}
 	}
 
@@ -2665,7 +2667,7 @@ namespace xharness
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", "Build log");
 
-				await RestoreNugetsAsync (log, resource);
+				await RestoreNugetsAsync (log, resource, useXIBuild: true);
 
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = Harness.XIBuildPath;
