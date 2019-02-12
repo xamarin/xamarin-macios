@@ -314,12 +314,9 @@ namespace xharness
 			itemGroup.AppendChild (id);
 		}
 
-		public static void SetImport (this XmlDocument csproj, string value)
+		public static void SetMainImport (this XmlDocument csproj, string value)
 		{
-			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import'][not(@Condition)]");			
-			if (imports.Count != 1)
-				throw new Exception ("More than one import");
-			imports [0].Attributes ["Project"].Value = value;
+			GetMainImportNode (csproj).Attributes ["Project"].Value = value;
 		}
 
 		public static void SetExtraLinkerDefs (this XmlDocument csproj, string value)
@@ -444,12 +441,25 @@ namespace xharness
 			return null;
 		}
 
-		public static string GetImport (this XmlDocument csproj)
+		static XmlNode GetMainImportNode (this XmlDocument csproj)
 		{
-			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import'][not(@Condition)]");
-			if (imports.Count != 1)
-				throw new Exception ("More than one import");
-			return imports [0].Attributes ["Project"].Value;
+			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import'][not(@Condition)]").Cast<XmlNode> ();
+			imports = imports.Where ((v) => {
+				var proj = v.Attributes ["Project"].Value;
+				if (proj.Contains ("$(MSBuildExtensionsPath)"))
+					return true;
+				if (proj.Contains ("$(MSBuildBinPath)"))
+					return true;
+				return false;
+			});
+			if (imports.Count () != 1)
+				throw new Exception ($"More than one import:\n\t{string.Join ("\n\t", imports.Select ((v) => v.Attributes ["Project"].Value))}");
+			return imports.First ();
+		}
+
+		public static string GetMainImport (this XmlDocument csproj)
+		{
+			return GetMainImportNode (csproj).Attributes ["Project"].Value;
 		}
 
 		public static void FixProjectReferences (this XmlDocument csproj, string suffix, Func<string, bool> fixCallback = null)

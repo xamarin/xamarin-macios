@@ -71,7 +71,7 @@ namespace xharness
 			csproj.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + suffix);
 			csproj.RemoveTargetFrameworkIdentifier ();
 			csproj.SetPlatformAssembly ("Xamarin.WatchOS");
-			csproj.SetImport (IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.AppExtension.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.AppExtension.CSharp.targets");
+			csproj.SetMainImport (IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.AppExtension.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.AppExtension.CSharp.targets");
 			csproj.FixProjectReferences ("-watchos");
 			csproj.FixArchitectures ("i386", "ARMv7k");
 			csproj.FixInfoPListInclude (suffix);
@@ -146,7 +146,7 @@ namespace xharness
 			csproj.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + Suffix);
 			csproj.RemoveTargetFrameworkIdentifier ();
 			csproj.SetPlatformAssembly ("Xamarin.WatchOS");
-			csproj.SetImport (IsBindingProject ? BindingsImports : Imports);
+			csproj.SetMainImport (IsBindingProject ? BindingsImports : Imports);
 			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0");
 			csproj.FixProjectReferences (Suffix);
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + Suffix + ".xml");

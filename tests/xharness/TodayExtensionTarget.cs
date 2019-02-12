@@ -62,7 +62,7 @@ namespace xharness
 			csproj.SetProjectTypeGuids ("{EE2C853D-36AF-4FDB-B1AD-8E90477E2198};" + LanguageGuid);
 			csproj.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + suffix);
 			csproj.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + suffix);
-			csproj.SetImport (IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.AppExtension.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.AppExtension.CSharp.targets");
+			csproj.SetMainImport (IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.AppExtension.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.AppExtension.CSharp.targets");
 			csproj.FixInfoPListInclude (suffix);
 			csproj.SetOutputType ("Library");
 			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0;TODAY_EXTENSION");

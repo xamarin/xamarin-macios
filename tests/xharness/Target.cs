@@ -99,7 +99,7 @@ namespace xharness
 			inputProject.FixProjectReferences (Suffix, FixProjectReference);
 			inputProject.SetAssemblyReference ("OpenTK", "OpenTK-1.0");
 			inputProject.SetProjectTypeGuids (IsBindingProject ? BindingsProjectTypeGuids : ProjectTypeGuids);
-			inputProject.SetImport ("$(MSBuildExtensionsPath)\\Xamarin\\" + (IsBindingProject ? BindingsImports : Imports));
+			inputProject.SetMainImport ("$(MSBuildExtensionsPath)\\Xamarin\\" + (IsBindingProject ? BindingsImports : Imports));
 			inputProject.FixTestLibrariesReferences (Platform);
 			if (!string.IsNullOrEmpty (AdditionalDefines))
 				inputProject.AddAdditionalDefines (AdditionalDefines);
@@ -174,7 +174,7 @@ namespace xharness
 	
 				outputType = inputProject.GetOutputType ();
 	
-				switch (inputProject.GetImport ()) {
+				switch (inputProject.GetMainImport ()) {
 				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.CSharp.targets":
 				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.FSharp.targets":
 				case "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.CSharp.targets":
@@ -188,7 +188,7 @@ namespace xharness
 					IsBindingProject = true;
 					break;
 				default:
-					throw new Exception (string.Format ("Unknown Imports: {0} in {1}", inputProject.GetImport (), TemplateProjectPath));
+					throw new Exception (string.Format ("Unknown Imports: {0} in {1}", inputProject.GetMainImport (), TemplateProjectPath));
 				}
 
 				ExecuteInternal ();
