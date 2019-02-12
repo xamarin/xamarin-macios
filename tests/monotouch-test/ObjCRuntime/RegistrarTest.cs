@@ -1383,7 +1383,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #if MONOMAC
 			var boolEncoding = "c";
 #else
-			var boolEncoding = (IntPtr.Size == 8 || TrampolineTest.IsArmv7k) ? "B" : "c";
+			var boolEncoding = (IntPtr.Size == 8 || TrampolineTest.IsArmv7k || TrampolineTest.IsArm64CallingConvention) ? "B" : "c";
 
 #endif
 			var exp = new string [] { "@", ":", "^v", "C", "c", "s", "s", "S", "i", "I", "q", "Q", "f", "d", boolEncoding, "@", ":", "#" };
