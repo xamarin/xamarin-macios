@@ -1546,7 +1546,7 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVOS_TAR
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.a: $(TVOS_TARGET_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_LIBMONONATIVECOMPAT) -create -output $@
+	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONONATIVECOMPAT) -create -output $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.dylib: $(TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT) -create -output $@
