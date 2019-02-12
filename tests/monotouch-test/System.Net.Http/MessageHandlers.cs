@@ -149,10 +149,13 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
-			Assert.IsTrue (done, "Request timedout.");
-			Assert.IsTrue (containsHeaders, "Request did not reach final destination.");
-			Assert.IsFalse (containsAuthorizarion, $"Authorization header did reach the final destination. {json}");
-			Assert.IsNull (ex, $"Exception {ex} for {json}");
+			if (!done) { // timeouts happen in the bost due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				Assert.IsTrue (containsHeaders, "Request did not reach final destination.");
+				Assert.IsFalse (containsAuthorizarion, $"Authorization header did reach the final destination. {json}");
+				Assert.IsNull (ex, $"Exception {ex} for {json}");
+			}
 		}
 	}
 }
