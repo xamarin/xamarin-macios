@@ -2512,7 +2512,7 @@ namespace xharness
 			}
 		}
 
-		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log)
+		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log, bool useXIBuild=false)
 		{
 			if (!File.Exists (projectPath))
 				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
