@@ -38,20 +38,21 @@ namespace Xamarin.Tests
 		}
 
 		[Test]
-		[TestCase (Profile.macOSSystem, MachO.LoadCommands.MinMacOSX)]
-		[TestCase (Profile.macOSFull, MachO.LoadCommands.MinMacOSX)]
-		[TestCase (Profile.macOSMobile, MachO.LoadCommands.MinMacOSX)]
-		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, false)]
-		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, true)]
-		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, false)]
-		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, true)]
-		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, false)]
-		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, true)]
-		public void MinOSVersion (Profile profile, MachO.LoadCommands load_command, bool device = false)
+		[TestCase (Profile.macOSSystem, MachO.LoadCommands.MinMacOSX, MachO.Platform.PLATFORM_MACOS)]
+		[TestCase (Profile.macOSFull, MachO.LoadCommands.MinMacOSX, MachO.Platform.PLATFORM_MACOS)]
+		[TestCase (Profile.macOSMobile, MachO.LoadCommands.MinMacOSX, MachO.Platform.PLATFORM_MACOS)]
+		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, MachO.Platform.PLATFORM_IOSSIMULATOR, false)]
+		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, MachO.Platform.PLATFORM_IOS, true)]
+		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, MachO.Platform.PLATFORM_WATCHOSSIMULATOR, false)]
+		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, MachO.Platform.PLATFORM_WATCHOS, true)]
+		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.PLATFORM_TVOSSIMULATOR, false)]
+		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.PLATFORM_TVOS, true)]
+		public void MinOSVersion (Profile profile, MachO.LoadCommands load_command, MachO.Platform platform, bool device = false)
 		{
 			if (device)
 				Configuration.AssertDeviceAvailable ();
 
+			// TODO: add .a files
 			var dylibs = Directory.GetFiles (Configuration.GetSdkPath (profile, device), "*.dylib", SearchOption.AllDirectories)
 				.Where ((v) => !v.Contains ("dylib.dSYM/Contents/Resources/DWARF")); // Don't include *.dylib from inside .dSYMs.
 
@@ -61,18 +62,31 @@ namespace Xamarin.Tests
 				foreach (var slice in fatfile) {
 					var any_load_command = false;
 					foreach (var lc in slice.load_commands) {
-						var mincmd = lc as MinCommand;
-						if (mincmd == null)
-							continue;
-						// Console.WriteLine ($"    {mincmd.Command} version: {mincmd.version}=0x{mincmd.version.ToString ("x")}={mincmd.Version} sdk: {mincmd.sdk}=0x{mincmd.sdk.ToString ("x")}={mincmd.Sdk}");
 
-						Assert.AreEqual (load_command, mincmd.Command, "Unexpected min load command");
+						Version lc_min_version;
+						var mincmd = lc as MinCommand;
+						if (mincmd != null){
+							Assert.AreEqual (load_command, mincmd.Command, "Unexpected min load command");
+							lc_min_version = mincmd.Version;
+						} else {
+							// starting from iOS SDK 12 the LC_BUILD_VERSION is used instead
+							var buildver = lc as BuildVersionCommand;
+							if (buildver == null)
+								continue;
+
+							Assert.AreEqual (platform, buildver.Platform, "Unexpected build version command");
+							lc_min_version = buildver.MinOS;
+						}
 
 						Version version;
 						Version alternate_version = null;
+						Version mono_native_compat_version;
+						Version mono_native_unified_version;
 						switch (load_command) {
 						case MachO.LoadCommands.MinMacOSX:
 							version = SdkVersions.MinOSXVersion;
+							mono_native_compat_version = SdkVersions.MinOSXVersion;
+							mono_native_unified_version = new Version (10, 12, 0);
 							break;
 						case MachO.LoadCommands.MiniPhoneOS:
 							version = SdkVersions.MiniOSVersion;
@@ -81,23 +95,43 @@ namespace Xamarin.Tests
 									version = new Version (7, 0, 0); // dylibs are supported starting with iOS 7.
 								alternate_version = new Version (8, 0, 0); // some iOS dylibs also have min OS 8.0 (if they're used as frameworks as well).
 							}
+							mono_native_compat_version = SdkVersions.MiniOSVersion;
+							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MintvOS:
 							version = SdkVersions.MinTVOSVersion;
+							mono_native_compat_version = SdkVersions.MinTVOSVersion;
+							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MinwatchOS:
 							version = SdkVersions.MinWatchOSVersion;
+							mono_native_compat_version = SdkVersions.MinWatchOSVersion;
+							mono_native_unified_version = new Version (5, 0, 0);
 							break;
 						default:
 							throw new NotImplementedException (load_command.ToString ());
 						}
 
-						version = new Version (version.Major, version.Minor, version.Build < 0 ? 0 : version.Build);
+						version = version.WithBuild ();
+						mono_native_compat_version = mono_native_compat_version.WithBuild ();
+						mono_native_unified_version = mono_native_unified_version.WithBuild ();
 						if (alternate_version == null)
 							alternate_version = version;
 
-						if (version != mincmd.Version && alternate_version != mincmd.Version)
-							failed.Add ($"Unexpected minOS version (expected {version}, alternatively {alternate_version}, found {mincmd.Version}) in {dylib}.");
+						switch (Path.GetFileName (dylib)) {
+						case "libmono-native-compat.dylib":
+							if (mono_native_compat_version != lc_min_version)
+								failed.Add ($"Unexpected minOS version (expected {mono_native_compat_version}, found {lc_min_version}) in {dylib}.");
+							break;
+						case "libmono-native-unified.dylib":
+							if (mono_native_unified_version != lc_min_version)
+								failed.Add ($"Unexpected minOS version (expected {mono_native_unified_version}, found {lc_min_version}) in {dylib}.");
+							break;
+						default:
+							if (version != lc_min_version && alternate_version != lc_min_version)
+								failed.Add ($"Unexpected minOS version (expected {version}, alternatively {alternate_version}, found {lc_min_version}) in {dylib}.");
+							break;
+						}
 						any_load_command = true;
 					}
 					if (!any_load_command)
@@ -106,6 +140,14 @@ namespace Xamarin.Tests
 			}
 			CollectionAssert.IsEmpty (failed, "Failures");
 		}
+	}
+
+	static class VersionExtensions
+	{
+			public static Version WithBuild (this Version version)
+			{
+				return new Version (version.Major, version.Minor, version.Build < 0 ? 0 : version.Build);
+			}
 	}
 }
 

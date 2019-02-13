@@ -133,8 +133,18 @@ namespace Xamarin
 			MintvOS = 0x2f,//#define LC_VERSION_MIN_TVOS 0x2F /* build for AppleTV min OS version */
 			MinwatchOS = 0x30,//#define LC_VERSION_MIN_WATCHOS 0x30 /* build for Watch min OS version */
 			//#define LC_NOTE 0x31 /* arbitrary data included within a Mach-O file */
-			//#define LC_BUILD_VERSION 0x32 /* build for platform min OS version */
+			BuildVersion = 0x32,//#define LC_BUILD_VERSION 0x32 /* build for platform min OS version */
+		}
 
+		public enum Platform : uint {
+			PLATFORM_MACOS = 1,
+			PLATFORM_IOS = 2,
+			PLATFORM_TVOS = 3,
+			PLATFORM_WATCHOS = 4,
+			PLATFORM_BRIDGEOS = 5,
+			PLATFORM_IOSSIMULATOR = 7,
+			PLATFORM_TVOSSIMULATOR = 8,
+			PLATFORM_WATCHOSSIMULATOR = 9,
 		}
 
 		internal static uint FromBigEndian (uint number)
@@ -657,6 +667,23 @@ namespace Xamarin
 					minCmd.sdk = reader.ReadUInt32 ();
 					lc = minCmd;
 					break;
+				case MachO.LoadCommands.BuildVersion:
+					var buildVer = new BuildVersionCommand ();
+					buildVer.cmd = reader.ReadUInt32 ();
+					buildVer.cmdsize = reader.ReadUInt32 ();
+					buildVer.platform = reader.ReadUInt32 ();
+					buildVer.minos = reader.ReadUInt32 ();
+					buildVer.sdk = reader.ReadUInt32 ();
+					buildVer.ntools = reader.ReadUInt32 ();
+					buildVer.tools = new BuildVersionCommand.BuildToolVersion[buildVer.ntools];
+					for (int j = 0; j < buildVer.ntools; j++) {
+						var buildToolVer = new BuildVersionCommand.BuildToolVersion ();
+						buildToolVer.tool = reader.ReadUInt32 ();
+						buildToolVer.version = reader.ReadUInt32 ();
+						buildVer.tools[j] = buildToolVer;
+					}
+					lc = buildVer;
+					break;
 				default:
 					lc = new LoadCommand ();
 					lc.cmd = reader.ReadUInt32 ();
@@ -882,6 +909,36 @@ namespace Xamarin
 
 		public Version Sdk {
 			get { return DeNibble (sdk); }
+		}
+	}
+
+	public class BuildVersionCommand : LoadCommand {
+		public uint platform;
+		public uint minos; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
+		public uint sdk; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
+		public uint ntools;
+		public BuildToolVersion[] tools;
+
+		public class BuildToolVersion {
+			public uint tool;
+			public uint version;
+		}
+
+		Version DeNibble (uint value)
+		{
+			return new Version ((int)(value >> 16), (int)((value >> 8) & 0xFF), (int)(value & 0xFF));
+		}
+
+		public Version MinOS {
+			get { return DeNibble (minos); }
+		}
+
+		public Version Sdk {
+			get { return DeNibble (sdk); }
+		}
+
+		public MachO.Platform Platform {
+			get { return (MachO.Platform)platform; }
 		}
 	}
 }
