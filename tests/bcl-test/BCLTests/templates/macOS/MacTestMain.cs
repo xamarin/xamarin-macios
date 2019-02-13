@@ -34,7 +34,7 @@ namespace Xamarin.Mac.Tests
 			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
 			foreach (var name in RegisterType.TypesToRegister.Keys) {
 				var a = RegisterType.TypesToRegister [name].Assembly;
-				yield return new TestAssemblyInfo (a, name);
+				yield return new TestAssemblyInfo (a, a.Location);
 			}
  		}
  		
