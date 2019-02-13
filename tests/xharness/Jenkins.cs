@@ -2521,7 +2521,7 @@ namespace xharness
 				nuget.StartInfo.FileName = useXIBuild? Harness.XIBuildPath : 
 					"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
 				var args = new StringBuilder ();
-				args.Append (useXIBuild ? "/" : "" + "restore "); // diff param depending on the tool
+				args.Append ((useXIBuild ? "/" : "") + "restore "); // diff param depending on the tool
 				args.Append (StringUtils.Quote (projectPath));
 				if (useXIBuild)
 					args.Append (" /verbosity:detailed ");
