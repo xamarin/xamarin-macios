@@ -254,6 +254,7 @@ namespace xharness
 			}
 
 			appPath = Path.Combine (Path.GetDirectoryName (ProjectFile), csproj.GetOutputPath (platform, Configuration).Replace ('\\', '/'), appName + (isExtension ? ".appex" : ".app"));
+			appPath = appPath.Replace ("$(CustomOutputPath)", "");
 			if (!Directory.Exists (appPath))
 				throw new Exception (string.Format ("The app directory {0} does not exist. This is probably a bug in the test harness.", appPath));
 

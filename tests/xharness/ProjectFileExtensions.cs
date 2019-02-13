@@ -837,7 +837,7 @@ namespace xharness
 				new string [] { "ObjcBindingCoreSource", "Include" },
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
-				new string [] { "Import", "Project", "CustomBuildActions.targets", "../SyncTestResources.targets" },
+				new string [] { "Import", "Project", "CustomBuildActions.targets", "../SyncTestResources.targets", "../common/PreConfiguration.props", "../../../common/PreConfiguration.props" },
 				new string [] { "FilesToCopy", "Include" },
 				new string [] { "FilesToCopyFoo", "Include" },
 				new string [] { "FilesToCopyFooBar", "Include" },
