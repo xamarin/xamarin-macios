@@ -200,6 +200,9 @@ namespace xharness
 				break;
 			}
 
+			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
+			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
+
 			switch (test.ProjectPlatform) {
 			case "iPhone":
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
@@ -216,19 +219,25 @@ namespace xharness
 				case "monotouch-test":
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
-					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, };
-					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, };
-					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, };
+					if (supports_interpreter) {
+						yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, };
+						yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, };
+					}
 					break;
 				case "mscorlib":
-					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					if (supports_interpreter) {
+						yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					}
 					break;
 				case "mini":
-					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false , Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					if (supports_interpreter) {
+						yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					}
 					break;
 				}
 				break;
@@ -1710,64 +1719,8 @@ namespace xharness
 					writer.WriteLine ("</ul>");
 				}
 
-				writer.WriteLine ("<div id='test-table' style='width: 100%'>");
-				if (IsServerMode) {
-					writer.WriteLine ("<div id='test-status' style='display: inline-block; margin-left: 100px;' class='autorefreshable'>");
-					if (failedTests.Count () == 0) {
-						foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
-							var enumerableGroup = group as IEnumerable<TestTask>;
-							if (enumerableGroup != null) {
-								writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", GetTestColor (v), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
-								continue;
-							}
-
-							throw new NotImplementedException ();
-						}
-					}
-
-					if (buildingTests.Any ()) {
-						writer.WriteLine ($"<h3>{buildingTests.Count ()} building tests:</h3>");
-						foreach (var test in buildingTests) {
-							var runTask = test as RunTestTask;
-							var buildDuration = string.Empty;
-							if (runTask != null)
-								buildDuration = runTask.BuildTask.Duration.ToString ();
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {buildDuration}<br />");
-						}
-					}
-
-					if (runningTests.Any ()) {
-						writer.WriteLine ($"<h3>{runningTests.Count ()} running tests:</h3>");
-						foreach (var test in runningTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {test.ProgressMessage}<br />");
-						}
-					}
-
-					if (buildingQueuedTests.Any ()) {
-						writer.WriteLine ($"<h3>{buildingQueuedTests.Count ()} tests in build queue:</h3>");
-						foreach (var test in buildingQueuedTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a><br />");
-						}
-					}
-
-					if (runningQueuedTests.Any ()) {
-						writer.WriteLine ($"<h3>{runningQueuedTests.Count ()} tests in run queue:</h3>");
-						foreach (var test in runningQueuedTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a><br />");
-						}
-					}
-
-					var resources = device_resources.Values.Concat (new Resource [] { DesktopResource });
-					if (resources.Any ()) {
-						writer.WriteLine ($"<h3>Devices:</h3>");
-						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
-							writer.WriteLine ($"{dr.Description} - {dr.Users}/{dr.MaxConcurrentUsers} users - {dr.QueuedUsers} in queue<br />");
-						}
-					}
-				}
-				writer.WriteLine ("</div>");
-
-				writer.WriteLine ("<div id='test-list' style='float:left'>");
+				writer.WriteLine ("<div id='test-table' style='width: 100%; display: flex;'>");
+				writer.WriteLine ("<div id='test-list'>");
 				var orderedTasks = allTasks.GroupBy ((TestTask v) => v.TestName);
 
 				if (IsServerMode) {
@@ -2020,6 +1973,61 @@ namespace xharness
 					}
 					if (!singleTask)
 						writer.WriteLine ("</div>");
+				}
+				writer.WriteLine ("</div>");
+				if (IsServerMode) {
+					writer.WriteLine ("<div id='test-status' style='margin-left: 100px;' class='autorefreshable'>");
+					if (failedTests.Count () == 0) {
+						foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
+							var enumerableGroup = group as IEnumerable<TestTask>;
+							if (enumerableGroup != null) {
+								writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", GetTestColor (v), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
+								continue;
+							}
+
+							throw new NotImplementedException ();
+						}
+					}
+
+					if (buildingTests.Any ()) {
+						writer.WriteLine ($"<h3>{buildingTests.Count ()} building tests:</h3>");
+						foreach (var test in buildingTests) {
+							var runTask = test as RunTestTask;
+							var buildDuration = string.Empty;
+							if (runTask != null)
+								buildDuration = runTask.BuildTask.Duration.ToString ();
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {buildDuration}<br />");
+						}
+					}
+
+					if (runningTests.Any ()) {
+						writer.WriteLine ($"<h3>{runningTests.Count ()} running tests:</h3>");
+						foreach (var test in runningTests) {
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {test.ProgressMessage}<br />");
+						}
+					}
+
+					if (buildingQueuedTests.Any ()) {
+						writer.WriteLine ($"<h3>{buildingQueuedTests.Count ()} tests in build queue:</h3>");
+						foreach (var test in buildingQueuedTests) {
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a><br />");
+						}
+					}
+
+					if (runningQueuedTests.Any ()) {
+						writer.WriteLine ($"<h3>{runningQueuedTests.Count ()} tests in run queue:</h3>");
+						foreach (var test in runningQueuedTests) {
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a><br />");
+						}
+					}
+
+					var resources = device_resources.Values.Concat (new Resource [] { DesktopResource });
+					if (resources.Any ()) {
+						writer.WriteLine ($"<h3>Devices:</h3>");
+						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
+							writer.WriteLine ($"{dr.Description} - {dr.Users}/{dr.MaxConcurrentUsers} users - {dr.QueuedUsers} in queue<br />");
+						}
+					}
 				}
 				writer.WriteLine ("</div>");
 				writer.WriteLine ("</div>");

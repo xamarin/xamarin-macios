@@ -1585,12 +1585,13 @@ namespace ObjCRuntime {
 		extern static void NSLog_arm64 (IntPtr format, IntPtr p2, IntPtr p3, IntPtr p4, IntPtr p5, IntPtr p6, IntPtr p7, IntPtr p8, [MarshalAs (UnmanagedType.LPStr)] string s);
 #endif
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static void NSLog (string format, params object[] args)
 		{
 			var fmt = NSString.CreateNative ("%s");
 			var val = (args == null || args.Length == 0) ? format : string.Format (format, args);
 #if !MONOMAC && !WATCHOS
-			if (IntPtr.Size == 8 && Arch == Arch.DEVICE)
+			if (IsARM64CallingConvention)
 				NSLog_arm64 (fmt, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, val);
 			else
 #endif
@@ -1710,8 +1711,71 @@ namespace ObjCRuntime {
 			}
 			return obj;
 		}
+
+
+		enum NXByteOrder /* unspecified in header, means most likely int */ {
+			Unknown,
+			LittleEndian,
+			BigEndian,
+		}
+
+		[StructLayout (LayoutKind.Sequential)]
+		struct NXArchInfo {
+			IntPtr name; // const char *
+			public int CpuType; // cpu_type_t -> integer_t -> int
+			public int CpuSubType; // cpu_subtype_t -> integer_t -> int
+			public NXByteOrder ByteOrder;
+			IntPtr description; // const char *
+
+			public string Name {
+				get { return Marshal.PtrToStringUTF8 (name); }
+			}
+
+			public string Description {
+				get { return Marshal.PtrToStringUTF8 (description); }
+			}
+		}
+
+		[DllImport (Constants.libSystemLibrary)]
+		static unsafe extern NXArchInfo* NXGetLocalArchInfo ();
+
+		unsafe static NXArchInfo* arch_info;
+		// May return values that are not in the enum.
+		internal static CpuArchitecture CpuArchitecture {
+			get {
+				unsafe {
+					if (arch_info == null)
+						arch_info = NXGetLocalArchInfo ();
+					return (CpuArchitecture) ((arch_info->CpuType << 32) | arch_info->CpuSubType);
+				}
+			}
+		}
+
+		public readonly static bool IsARM64CallingConvention = GetIsARM64CallingConvention ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		static bool GetIsARM64CallingConvention ()
+		{
+#if !MONOMAC
+			return false;
+#else
+			// Make this determination based on only cputype to make it as future proof as possible.
+			// Hardcoding anything based on CpuArchitecture values might end up being broken when
+			// Apple creates a new variation of an existing cpu (but still ARM64-based),
+			// say a 'arm64e2' cpu. This code should continue to work in that case.
+			var arch = CpuArchitecture;
+			var cputype = ((ulong) arch) >> 32;
+			switch (cputype) {
+			case 12 | 0x01000000: // CPU_TYPE_ARM | CPU_ARCH_ABI64. This includes both arm64 and arm64e.
+			case 12 | 0x02000000: // CPU_TYPE_ARM | CPU_ARCH_ABI64_32. This is arm64_32
+				return true;
+			default:
+				return false;
+			}
+#endif
+		}
 	}
-		
+	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>
 	{
 		public bool Equals (IntPtr x, IntPtr y)

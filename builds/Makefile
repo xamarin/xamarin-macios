@@ -300,7 +300,7 @@ endef
 $(eval $(call MacBuildTemplate,i386,mac32,$(XCODE94_DEVELOPER_ROOT),32,$(XCODE94_MAC_SDKROOT)))
 $(eval $(call MacBuildTemplate,x86_64,mac64,$(XCODE_DEVELOPER_ROOT),,$(XCODE_MAC_SDKROOT)))
 
-$(MONO_PATH)/mcs/class/lib/%: .stamp-build-tools64; @true
+$(MONO_PATH)/mcs/class/lib/%: .stamp-build-tools64;
 
 define MacInstallBclTemplate
 
@@ -556,9 +556,6 @@ ios-facade-check: $(IOS_BCL_TARGETS)
 	$(Q) rm -f .$@*
 
 watch-facade-check: $(WATCH_BCL_TARGETS)
-	@true
-
-disabled-watch-facade-check: $(WATCH_BCL_TARGETS)
 	$(Q) rm -f .$@*
 	$(Q) echo $(WATCHOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
 	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
@@ -687,19 +684,10 @@ $(IOS_BCL_TARGETS_DIRS) $(WATCH_BCL_TARGETS_DIRS) $(TVOS_BCL_TARGETS_DIRS):
 .SECONDARY:
 
 install-tools-tvos: $(TVOS_BCL_TARGETS) tvos-facade-check
-	@true
-
 install-tools-watch: $(WATCH_BCL_TARGETS) watch-facade-check
-	@true
-
 install-tools-ios: $(IOS_BCL_TARGETS) ios-facade-check
-	@true
-
 install-tools-mac: $(MAC_BCL_TARGETS) mac-facade-check
-	@true
-
 build-watchbcl: $(WATCH_BCL_TARGETS)
-	@true
 
 $(IOS_BCL_TARGETS): .stamp-build-tools64
 $(TVOS_BCL_TARGETS): .stamp-build-tools64
@@ -717,7 +705,6 @@ build-tools64: $(WATCH_BCL_TARGETS)
 endif
 
 build-tools64: $(MAC_BCL_TARGETS)
-	@true
 
 verify-signature:
 	for file in $(PREFIX)/lib/mono/2.1/*.dll; do \
@@ -1635,8 +1622,8 @@ LLVM32_TARGETS = \
 	$(PREFIX)/LLVM36/bin/opt \
 	$(PREFIX)/LLVM36/bin/llc \
 
-$(MONO_SDK_DESTDIR)/llvm-llvm64/bin/%: .stamp-build-llvm64; @true
-$(MONO_SDK_DESTDIR)/llvm36-llvm32/bin/%: .stamp-build-llvm32; @true
+$(MONO_SDK_DESTDIR)/llvm-llvm64/bin/%: .stamp-build-llvm64;
+$(MONO_SDK_DESTDIR)/llvm36-llvm32/bin/%: .stamp-build-llvm32;
 
 $(PREFIX)/LLVM/bin/%: $(MONO_SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@

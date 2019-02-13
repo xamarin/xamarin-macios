@@ -16,7 +16,6 @@ namespace BCLTestImporter {
 
 		static string NUnitPattern = "monotouch_*_test.dll"; 
 		static string xUnitPattern = "monotouch_*_xunit-test.dll";
-		static string iOSReleasePattern = "ios-release-Darwin-*";
 		internal static readonly string NameKey = "%NAME%";
 		internal static readonly string ReferencesKey = "%REFERENCES%";
 		internal static readonly string RegisterTypeKey = "%REGISTER TYPE%";

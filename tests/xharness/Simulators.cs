@@ -94,13 +94,18 @@ namespace xharness
 							});
 						}
 
-						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair")) {
+
+						var sim_device_pairs = simulator_data.
+							SelectNodes ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair").
+							Cast<XmlNode> ().
+							// There can be duplicates, so remove those.
+							Distinct ((a, b) => a.Attributes ["Gizmo"].InnerText == b.Attributes ["Gizmo"].InnerText && a.Attributes ["Companion"].InnerText == b.Attributes ["Companion"].InnerText);
+						foreach (XmlNode sim in sim_device_pairs) {
 							available_device_pairs.Add (new SimDevicePair ()
 							{
 								UDID = sim.Attributes ["UDID"].Value,
 								Companion = sim.SelectSingleNode ("Companion").InnerText,
 								Gizmo = sim.SelectSingleNode ("Gizmo").InnerText,
-
 							});
 						}
 					}

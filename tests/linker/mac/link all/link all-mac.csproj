@@ -81,6 +81,9 @@
     <Compile Include="..\..\CommonLinkAllTest.cs">
       <Link>CommonLinkAllTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\ILReader.cs">
+      <Link>ILReader.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
