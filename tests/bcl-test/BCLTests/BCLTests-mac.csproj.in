@@ -71,6 +71,9 @@
     <Reference Include="xunit.abstractions">
       <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="xunit.execution.dotnet">
+	      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.execution.dotnet.dll</HintPath>
+	    </Reference>
     <Reference Include="nunitlite">
       <HintPath>..\..\..\external\mono\mcs\class\lib\monotouch\nunitlite.dll</HintPath>
     </Reference>

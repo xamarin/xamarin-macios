@@ -2514,16 +2514,18 @@ namespace xharness
 
 		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log, bool useXIBuild=false)
 		{
+			// we do not want to use xibuild on solutions, we will have some failures with Mac Full
+			var isSolution = projectPath.EndsWith (".sln", StringComparison.Ordinal);
 			if (!File.Exists (projectPath))
 				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
 			using (var nuget = new Process ()) {
-				nuget.StartInfo.FileName = useXIBuild? Harness.XIBuildPath : 
+				nuget.StartInfo.FileName = useXIBuild && !isSolution? Harness.XIBuildPath : 
 					"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
 				var args = new StringBuilder ();
-				args.Append ((useXIBuild ? "/" : "") + "restore "); // diff param depending on the tool
+				args.Append ((useXIBuild && !isSolution? "/" : "") + "restore "); // diff param depending on the tool
 				args.Append (StringUtils.Quote (projectPath));
-				if (useXIBuild)
+				if (useXIBuild && !isSolution)
 					args.Append (" /verbosity:detailed ");
 				else
 					args.Append (" -verbosity detailed ");
