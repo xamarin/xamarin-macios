@@ -123,8 +123,9 @@ namespace xharness
 			case MonoNativeFlavor.Unified:
 				switch (platform) {
 				case DevicePlatform.iOS:
-				case DevicePlatform.tvOS:
 					return "10.0";
+				case DevicePlatform.tvOS:
+					return "10.1"; // Can't use 10.0 due to http://openradar.appspot.com/radar?id=4966840983879680.
 				case DevicePlatform.watchOS:
 					return "4.0";
 				default:
