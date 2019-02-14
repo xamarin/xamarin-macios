@@ -400,6 +400,9 @@
     <None Include="..\..\docs\website\mtouch-errors.md">
       <Link>mtouch-errors.md</Link>
     </None>
+    <None Include="MonoDeduplicatedCode.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Linker\" />
