@@ -22,7 +22,7 @@ namespace Xamarin.Bundler
 				var result = new StringBuilder ();
 				if (ProcessStartInfo.EnvironmentVariables.ContainsKey ("MONO_PATH")) {
 					result.Append ("MONO_PATH=");
-					result.Append (ProcessStartInfo.EnvironmentVariables ["MONO_PATH"]);
+					result.Append (StringUtils.Quote (ProcessStartInfo.EnvironmentVariables ["MONO_PATH"]));
 					result.Append (' ');
 				}
 				result.Append (ProcessStartInfo.FileName);
