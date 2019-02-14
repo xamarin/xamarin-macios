@@ -142,7 +142,7 @@
       <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.execution.dotnet.dll</HintPath>
     </Reference>
     <Reference Include="nunitlite">
-      <HintPath>..\..\..\external\mono\mcs\class\lib\monotouch\nunitlite.dll</HintPath>
+      <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\nunitlite.dll</HintPath>
     </Reference>
     <Reference Include="Xunit.NetCore.Extensions">
       <HintPath>..\..\..\external\mono\external\xunit-binaries\Xunit.NetCore.Extensions.dll</HintPath>
