@@ -99,7 +99,7 @@ namespace xharness
 							SelectNodes ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair").
 							Cast<XmlNode> ().
 							// There can be duplicates, so remove those.
-							Distinct ((a, b) => a.Attributes ["Gizmo"].InnerText == b.Attributes ["Gizmo"].InnerText && a.Attributes ["Companion"].InnerText == b.Attributes ["Companion"].InnerText);
+							Distinct (new SimulatorXmlNodeComparer ());
 						foreach (XmlNode sim in sim_device_pairs) {
 							available_device_pairs.Add (new SimDevicePair ()
 							{
@@ -322,6 +322,19 @@ namespace xharness
 				Target = target,
 				Log = log,
 			};
+		}
+
+		class SimulatorXmlNodeComparer : IEqualityComparer<XmlNode>
+		{
+			public bool Equals (XmlNode a, XmlNode b)
+			{
+				return a["Gizmo"].InnerText == b["Gizmo"].InnerText && a["Companion"].InnerText == b["Companion"].InnerText;
+			}
+
+			public int GetHashCode (XmlNode node)
+			{
+				return node["Gizmo"].InnerText.GetHashCode () ^ node["Companion"].InnerText.GetHashCode ();
+			}
 		}
 
 		class SimulatorEnumerable : IEnumerable<SimDevice>, IAsyncEnumerable
