@@ -119,23 +119,5 @@ namespace xharness
 			// 
 			// This makes it abundantly clear that the intention is to not await 'DoSomething', and no warnings will be shown either.
 		}
-
-		public static IEnumerable<T> Distinct<T> (this IEnumerable<T> collection, Func<T, T, bool> comparer)
-		{
-			var list = new List<T> ();
-			foreach (var item in collection) {
-				bool found = false;
-				for (var i = 0; i < list.Count; i++) {
-					if (comparer (list [i], item)) {
-						found = true;
-						break;
-					}
-				}
-				if (found)
-					continue;
-				list.Add (item);
-				yield return item;
-			}
-		}
 	}
 }
