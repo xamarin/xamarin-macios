@@ -4065,6 +4065,8 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 		[TestCase ("linker/ios/dont link/dont link.csproj")]
 		public void Dedup (string project)
 		{
+			AssertDeviceAvailable ();
+
 			var csproj = Path.Combine (Configuration.SourceRoot, "tests", project);
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			XBuild.BuildXI (csproj, configuration: "Debug64", platform: "iPhone", arguments: new string [] { $"/p:CustomOutputRoot={tmpdir}/1/" }, verbosity: "diagnostic");
