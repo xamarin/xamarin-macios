@@ -414,7 +414,7 @@ namespace Xamarin.iOS.Tasks
 				args.AddLine ($"--interpreter={Interpreter}");
 
 			if (EnableDedup)
-				args.AddLine ("--dedup-aot");
+				args.AddLine ("--optimize=deduplicate-native-code");
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.AddLine ("--linksdkonly"); break;

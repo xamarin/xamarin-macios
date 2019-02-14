@@ -648,3 +648,29 @@ building for device.
 
 The default behavior can be overridden by passing
 `--optimize=[+|-]remove-unsupported-il-for-bitcode` to mtouch/mmp.
+
+## Deduplicate AOT-compiled methods
+
+Identifies identical AOT-compiled methods, and replaces them with a single implementation.
+
+There are many scenarions where the AOT compiler can generate identical code
+between assemblies. One common example is when using generics: the native code
+for each assembly contains the native code for all generic types used within.
+For instance, if both System.dll and System.Xml.dll uses a `List<int>`, then
+the native code for both System.dll and System.Xml.dll would contain native
+code for `List<int>`.
+
+This optimization will merge these implementations, so that only one of them
+is used in the final executable.
+
+It is only applicable to device builds (thus only for iOS, tvOS and watchOS),
+and then only for AOT-compiled assemblies (i.e. not for interpreted
+assemblies).
+
+This optimization is currently in preview, and while in preview it's disabled
+by default and has to be enabled manually by passing
+`--optimize=deduplicate-native-code` to mtouch. It will be enabled by default
+when applicable when the preview ends.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]deduplicate-native-code` to mtouch.

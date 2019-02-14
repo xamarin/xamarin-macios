@@ -31,7 +31,9 @@ namespace Xamarin.Bundler
 #endif
 #if MONOTOUCH
 			"remove-unsupported-il-for-bitcode",
+			"deduplicate-native-code",
 #else
+			"", // dummy value to make indices match up between XM and XI
 			"", // dummy value to make indices match up between XM and XI
 #endif
 		};
@@ -50,7 +52,13 @@ namespace Xamarin.Bundler
 			RemoveDynamicRegistrar,
 			TrimArchitectures,
 			RemoveUnsupportedILForBitcode,
+			DeduplicateNativeCode,
 		}
+
+		// Preview optimizations are not enabled by --optimize=all
+		Opt [] preview_optimizations = {
+			Opt.DeduplicateNativeCode,
+		};
 
 		bool? all;
 		bool? [] values;
@@ -109,6 +117,11 @@ namespace Xamarin.Bundler
 			get { return values [(int) Opt.RemoveUnsupportedILForBitcode]; }
 			set { values [(int) Opt.RemoveUnsupportedILForBitcode] = value; }
 		}
+
+		public bool? DeduplicateNativeCode {
+			get { return values [(int) Opt.DeduplicateNativeCode]; }
+			set { values [(int) Opt.DeduplicateNativeCode] = value; }
+		}
 #endif
 
 		public Optimizations ()
@@ -141,6 +154,14 @@ namespace Xamarin.Bundler
 					}
 					goto default; // also requires the linker
 #if MONOTOUCH
+				case Opt.DeduplicateNativeCode:
+					if (app.IsSimulatorBuild) {
+						if (!all.HasValue) // Don't show this warning if it was enabled with --optimize=all
+							ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since it's only applicable to device builds.");
+						values [i] = false;
+						break;
+					}
+					break; // does not require the linker
 				case Opt.RemoveUnsupportedILForBitcode:
 					if (app.Platform != Utils.ApplePlatform.WatchOS) {
 						if (!all.HasValue) // Don't show this warning if it was enabled with --optimize=all
@@ -248,6 +269,11 @@ namespace Xamarin.Bundler
 				// By default enabled for watchOS device builds.
 				RemoveUnsupportedILForBitcode = app.Platform == Utils.ApplePlatform.WatchOS && app.IsDeviceBuild;
 			}
+
+			if (!DeduplicateNativeCode.HasValue) {
+				// Disabled by default when in preview.
+				DeduplicateNativeCode = false;
+			}
 #endif
 
 			if (Driver.Verbosity > 3)
@@ -286,8 +312,14 @@ namespace Xamarin.Bundler
 			if (opt == "all") {
 				all = enabled;
 				for (int i = 0; i < values.Length; i++) {
-					if (!string.IsNullOrEmpty (opt_names [i]))
-						values [i] = enabled;
+					if (string.IsNullOrEmpty (opt_names [i]))
+						continue;
+
+					// Preview optimizations are not enabled by --optimize=all
+					if (preview_optimizations.Contains ((Opt) i))
+						continue;
+					
+					values [i] = enabled;
 				}
 			} else {
 				var found = false;

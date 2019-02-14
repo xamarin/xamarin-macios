@@ -121,6 +121,7 @@ namespace Xamarin.Bundler {
 
 		public Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string> ();
 
+		public bool EnableDedup { get { return Optimizations.DeduplicateNativeCode == true; } }
 		//
 		// Linker config
 		//
