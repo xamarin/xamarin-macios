@@ -29,6 +29,7 @@
 using System;
 using System.Drawing;
 using System.ComponentModel;
+using System.Linq;
 
 using Foundation;
 using AppKit;
@@ -73,7 +74,14 @@ namespace OpenTK.Platform.MacOS
 				NSOpenGLPixelFormatAttribute.ColorSize, 24,
 				NSOpenGLPixelFormatAttribute.DepthSize, 16 };
 
-			pixelFormat = new NSOpenGLPixelFormat (attribs);
+			try {
+				pixelFormat = new NSOpenGLPixelFormat (attribs);
+			} catch (Exception) {
+				// Fails on VM because there is no hardware-acceleration
+				// https://github.com/xamarin/xamarin-macios/issues/4417
+				attribs = attribs.Skip (1).ToArray ();
+				pixelFormat = new NSOpenGLPixelFormat (attribs);
+			}
 
 			if (pixelFormat == null)
 				Console.WriteLine ("No OpenGL pixel format");
