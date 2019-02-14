@@ -929,6 +929,7 @@ namespace Xamarin.Bundler
 			var ad = ManifestResolver.Load (dllPath);
 			var asm = new Assembly (this, ad);
 			Assemblies.Add (asm);
+			asm.CopyToDirectory (BuildDirectory, false);
 		}
 
 		public void CompilePInvokeWrappers ()
