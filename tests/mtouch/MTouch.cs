@@ -4072,7 +4072,7 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 			var csproj = Path.Combine (Configuration.SourceRoot, "tests", project);
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			XBuild.BuildXI (csproj, configuration: "Debug64", platform: "iPhone", arguments: new string [] { $"/p:CustomOutputRoot={tmpdir}/1/" }, verbosity: "diagnostic");
-			XBuild.BuildXI (csproj, configuration: "Debug64", platform: "iPhone", arguments: new string [] { $"/p:CustomOutputRoot={tmpdir}/2/", "/p:MtouchEnableDedup=True" });
+			XBuild.BuildXI (csproj, configuration: "Debug64", platform: "iPhone", arguments: new string [] { $"/p:CustomOutputRoot={tmpdir}/2/", "/p:MtouchEnableDedup=True" }, verbosity: "diagnostic");
 		}
 
 		[Test]
