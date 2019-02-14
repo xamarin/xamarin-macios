@@ -53,8 +53,8 @@ namespace Xamarin.Bundler
 			RemoveDynamicRegistrar,
 			TrimArchitectures,
 			RemoveUnsupportedILForBitcode,
-			InlineIsARM64CallingConvention,
 			DeduplicateNativeCode,
+			InlineIsARM64CallingConvention,
 		}
 
 		// Preview optimizations are not enabled by --optimize=all
