@@ -1809,7 +1809,8 @@ namespace xharness
 							}
 							var progressMessage = test.ProgressMessage;
 							if (!string.IsNullOrEmpty (progressMessage))
-								writer.WriteLine (progressMessage + "<br />");
+								writer.WriteLine (HtmlFormat (progressMessage) + " <br />");
+
 							if (runTest != null) {
 								if (runTest.BuildTask.Duration.Ticks > 0) {
 									writer.WriteLine ($"Project file: {runTest.BuildTask.ProjectFile} <br />");
@@ -1985,7 +1986,7 @@ namespace xharness
 					if (runningTests.Any ()) {
 						writer.WriteLine ($"<h3>{runningTests.Count ()} running tests:</h3>");
 						foreach (var test in runningTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {test.ProgressMessage}<br />");
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {HtmlFormat ("\n\t" + test.ProgressMessage)}<br />");
 						}
 					}
 
@@ -3258,28 +3259,28 @@ namespace xharness
 
 	class RunDeviceTask : RunXITask<Device>
 	{
-		object lock_obj = new object ();
-		Log install_log;
+		AppInstallMonitorLog install_log;
 		public override string ProgressMessage {
 			get {
-				StreamReader reader;
-				lock (lock_obj)
-					reader = install_log?.GetReader ();
-				
-				if (reader == null)
+				var log = install_log;
+				if (log == null)
 					return base.ProgressMessage;
 
-				using (reader) {
-					var lines = reader.ReadToEnd ().Split ('\n');
-					for (int i = lines.Length - 1; i >= 0; i--) {
-						var idx = lines [i].IndexOf ("PercentComplete:", StringComparison.Ordinal);
-						if (idx == -1)
-							continue;
-						return "Install: " + lines [i].Substring (idx + "PercentComplete:".Length + 1) + "%";
-					}
-				}
-
-				return base.ProgressMessage;
+				var percent_complete = log.CopyingApp ? log.AppPercentComplete : log.WatchAppPercentComplete;
+				var bytes = log.CopyingApp ? log.AppBytes : log.WatchAppBytes;
+				var total_bytes = log.CopyingApp ? log.AppTotalBytes : log.WatchAppTotalBytes;
+				var elapsed = log.CopyingApp ? log.AppCopyDuration : log.WatchAppCopyDuration;
+				var speed_bps = elapsed.Ticks == 0 ? -1 : bytes / elapsed.TotalSeconds;
+				var estimated_left = TimeSpan.FromSeconds ((total_bytes - bytes) / speed_bps);
+				var transfer_percent = 100 * (double) bytes / (double) total_bytes;
+				var str = log.CopyingApp ? "App" : "Watch App";
+				var rv = $"{str} installation: {percent_complete}% done.\n" +
+					$"\tApp size: {total_bytes:N0} bytes ({total_bytes/1024.0/1024.0:N2} MB)\n" +
+					$"\tTransferred: {bytes:N0} bytes ({bytes / 1024.0 / 1024.0:N2} MB)\n" +
+					$"\tTransferred in {elapsed.TotalSeconds:#.#}s ({elapsed})\n" +
+					$"\tTransfer speed: {speed_bps:N0} B/s ({speed_bps / 1024.0 / 1024.0:N} MB/s, {60 * speed_bps / 1024.0 / 1024.0:N2} MB/m)\n" +
+					$"\tEstimated time left: {estimated_left.TotalSeconds:#.#}s ({estimated_left})";
+				return rv;
 			}
 		}
 
@@ -3311,8 +3312,6 @@ namespace xharness
 		{
 			Jenkins.MainLog.WriteLine ("Running '{0}' on device (candidates: '{1}')", ProjectFile, string.Join ("', '", Candidates.Select ((v) => v.Name).ToArray ()));
 
-			var install_log = Logs.Create ($"install-{Timestamp}.log", "Install log");
-			install_log.Timestamp = true;
 			var uninstall_log = Logs.Create ($"uninstall-{Timestamp}.log", "Uninstall log");
 			using (var device_resource = await NotifyBlockingWaitAsync (Jenkins.GetDeviceResources (Candidates).AcquireAnyConcurrentAsync ())) {
 				try {
@@ -3328,7 +3327,7 @@ namespace xharness
 						ProjectFile = ProjectFile,
 						Target = AppRunnerTarget,
 						LogDirectory = LogDirectory,
-						MainLog = install_log,
+						MainLog = uninstall_log,
 						DeviceName = Device.Name,
 						CompanionDeviceName = CompanionDevice?.Name,
 						Configuration = ProjectConfiguration,
@@ -3342,18 +3341,17 @@ namespace xharness
 
 					if (!Failed) {
 						// Install the app
-						lock (lock_obj)
-							this.install_log = install_log;
+						this.install_log = new AppInstallMonitorLog (Logs.Create ($"install-{Timestamp}.log", "Install log", timestamp: true));
 						try {
-							runner.MainLog = install_log;
-							var install_result = await runner.InstallAsync ();
+							runner.MainLog = this.install_log;
+							var install_result = await runner.InstallAsync (install_log.CancellationToken );
 							if (!install_result.Succeeded) {
 								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
 								ExecutionResult = TestExecutingResult.Failed;
 							}
 						} finally {
-							lock (lock_obj)
-								this.install_log = null;
+							this.install_log.Dispose ();
+							this.install_log = null;
 						}
 					}
 
