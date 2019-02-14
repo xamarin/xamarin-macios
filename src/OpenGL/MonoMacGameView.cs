@@ -29,7 +29,6 @@
 using System;
 using System.Drawing;
 using System.ComponentModel;
-using System.Linq;
 
 using Foundation;
 using AppKit;
@@ -68,18 +67,21 @@ namespace OpenTK.Platform.MacOS
 		public MonoMacGameView (CGRect frame, NSOpenGLContext context) : base(frame)
 		{
 			var attribs = new object [] {
-				NSOpenGLPixelFormatAttribute.Accelerated,
 				NSOpenGLPixelFormatAttribute.NoRecovery,
 				NSOpenGLPixelFormatAttribute.DoubleBuffer,
-				NSOpenGLPixelFormatAttribute.ColorSize, 24,
-				NSOpenGLPixelFormatAttribute.DepthSize, 16 };
+				NSOpenGLPixelFormatAttribute.ColorSize,
+				24,
+				NSOpenGLPixelFormatAttribute.DepthSize,
+				16,
+				NSOpenGLPixelFormatAttribute.Accelerated,
+			};
 
 			try {
 				pixelFormat = new NSOpenGLPixelFormat (attribs);
 			} catch (Exception) {
-				// Fails on VM because there is no hardware-acceleration
-				// https://github.com/xamarin/xamarin-macios/issues/4417
-				attribs = attribs.Skip (1).ToArray ();
+				// Fails on VM because there is no hardware-acceleration -> https://github.com/xamarin/xamarin-macios/issues/4417
+				// Therefore, remove 'NSOpenGLPixelFormatAttribute.Accelerated' and try again
+				attribs [attribs.Length - 1] = 0;
 				pixelFormat = new NSOpenGLPixelFormat (attribs);
 			}
 
