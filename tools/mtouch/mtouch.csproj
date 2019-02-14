@@ -386,6 +386,9 @@
     <Compile Include="..\linker\MonoTouch.Tuner\RemoveBitcodeIncompatibleCodeStep.cs">
       <Link>MonoTouch.Tuner\RemoveBitcodeIncompatibleCodeStep.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\CpuArchitecture.cs">
+      <Link>external\CpuArchitecture.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
