@@ -112,21 +112,21 @@ namespace Xamarin
 		}
 
 		[Test]
-		public void TestDeviceFrameworkCompat ()
-		{
-			TestDeviceFramework ("9.3", "libmono-native-compat.dylib");
-		}
-
-		[Test]
-		public void TestDeviceFrameworkUnified ()
-		{
-			TestDeviceFramework ("10.0", "libmono-native-unified.dylib");
-		}
-
-		void TestDeviceFramework (string version, string mono_native_dylib)
+		[TestCase (Profile.iOS, "9.3", "libmono-native-compat.dylib")]
+		[TestCase (Profile.iOS, "10.0", "libmono-native-unified.dylib")]
+		[TestCase (Profile.tvOS, "9.0", "libmono-native-compat.dylib")]
+		[TestCase (Profile.tvOS, "10.0", "libmono-native-unified.dylib")]
+		[TestCase (Profile.watchOS, "2.0", "libmono-native-compat.dylib")]
+		[TestCase (Profile.watchOS, "5.0", "libmono-native-unified.dylib")]
+		public void TestDeviceFramework (Profile profile, string version, string mono_native_dylib)
 		{
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
+				mtouch.Profile = profile;
+				if (profile == Profile.watchOS) {
+					mtouch.CreateTemporaryWatchKitExtension (extraCode: MonoNativeInitialize);
+				} else {
+					mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
+				}
 				mtouch.Linker = LinkerOption.LinkAll;
 				mtouch.AssemblyBuildTargets.Add ("@all=framework");
 				mtouch.TargetVer = version;
@@ -140,15 +140,23 @@ namespace Xamarin
 				var mono_native_path = Path.Combine (mtouch.AppPath, mono_native_dylib);
 
 				var symbols = MTouch.GetNativeSymbols (mono_native_path);
-				Assert.That (symbols, Does.Contain ("_mono_native_initialize"));
-				Assert.That (symbols, Does.Contain ("_NetSecurityNative_ImportUserName"));
-
 				var otool_dylib = ExecutionHelper.Execute ("otool", $"-L {StringUtils.Quote (mono_native_path)}", hide_output: true);
-				Assert.That (otool_dylib, Does.Contain ("/System/Library/Frameworks/GSS.framework/GSS"));
+
+				Assert.That (symbols, Does.Contain ("_mono_native_initialize"));
+				Assert.That (otool_dylib, Does.Contain ($"@rpath/{mono_native_dylib}"));
+				Assert.That (otool_dylib.Replace (mono_native_path, ""), Does.Not.Contain ("/Users/"));
+
+				if (profile == Profile.iOS) {
+					Assert.That (symbols, Does.Contain ("_NetSecurityNative_ImportUserName"));
+					Assert.That (otool_dylib, Does.Contain ("/System/Library/Frameworks/GSS.framework/GSS"));
+				} else {
+					Assert.That (symbols, Does.Not.Contain ("_NetSecurityNative_ImportUserName"));
+					Assert.That (otool_dylib, Does.Not.Contain ("/System/Library/Frameworks/GSS.framework/GSS"));
+				}
 
 				var otool_exe = ExecutionHelper.Execute ("otool", $"-L {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true);
 				Assert.That (otool_exe, Does.Not.Contain ("GSS"));
-				Assert.That (otool_exe, Does.Contain ($"@rpath/{mono_native_dylib}")); 
+				Assert.That (otool_exe, Does.Contain ($"@rpath/{mono_native_dylib}"));
 			}
 		}
 

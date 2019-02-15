@@ -1402,12 +1402,12 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.a: $(WATCHOS
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT) -m -o $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) -m -o $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(WATCHOS_DIRECTORIES):
@@ -1537,7 +1537,7 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.a: $(TVOS_TARGET
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.dylib: $(TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.a: $(TVOS_TARGET_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
@@ -1545,7 +1545,7 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.a: $(TVOS_TARGE
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.dylib: $(TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(TVOS_DIRECTORIES):
