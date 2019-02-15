@@ -2699,7 +2699,7 @@ namespace xharness
 				
 			var packages_conf = Path.Combine (Path.GetDirectoryName (TestProject.Path), "packages.config");
 			var nunit_version = string.Empty;
-			const string default_nunit_version = "3.5.0";
+			const string default_nunit_version = "3.9.0";
 
 			if (!File.Exists (packages_conf)) {
 				nunit_version = default_nunit_version;
