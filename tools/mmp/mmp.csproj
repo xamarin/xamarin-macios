@@ -130,6 +130,21 @@
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypePreserve.cs">
       <Link>Linker\TypePreserve.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\KnownMembers.cs">
+      <Link>Linker\KnownMembers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\BCL.cs">
+      <Link>Linker\BCL.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\MethodDefinitionExtensions.cs">
+      <Link>Linker\MethodDefinitionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeDefinitionExtensions.cs">
+      <Link>Linker\TypeDefinitionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\MethodBodyScanner.cs">
+      <Link>Linker\MethodBodyScanner.cs</Link>
+    </Compile>
         <Compile Include="..\..\external\mono\external\linker\linker\Linker\AssemblyUtilities.cs">
       <Link>Linker\AssemblyUtilities.cs</Link>
     </Compile>

@@ -103,6 +103,21 @@
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeReferenceExtensions.cs">
       <Link>Linker\TypeReferenceExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\KnownMembers.cs">
+      <Link>Linker\KnownMembers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\BCL.cs">
+      <Link>Linker\BCL.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\MethodDefinitionExtensions.cs">
+      <Link>Linker\MethodDefinitionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeDefinitionExtensions.cs">
+      <Link>Linker\TypeDefinitionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\linker\Linker\MethodBodyScanner.cs">
+      <Link>Linker\MethodBodyScanner.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\AssemblyResolver.cs">
       <Link>Linker\AssemblyResolver.cs</Link>
     </Compile>

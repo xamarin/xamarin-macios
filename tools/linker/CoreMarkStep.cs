@@ -281,36 +281,23 @@ namespace Xamarin.Linker.Steps {
 			return method;
 		}
 
-		protected override void MarkInterfaceImplementation (TypeDefinition type, InterfaceImplementation iface)
+		protected override bool ShouldMarkInterfaceImplementation (TypeDefinition type, InterfaceImplementation iface, TypeDefinition resolvedInterfaceType)
 		{
 			if (RegisterProtocols) {
 				// If we're registering protocols, we can remove interfaces that represent protocols.
 				// The linker will automatically mark interfaces a class implements, but we have to
 				// override the linker behavior for interfaces that represent protocols for those 
 				// interfaces to be removed.
-				var mark = false;
-				var interfaceType = iface.InterfaceType.Resolve ();
 
-				var isProtocol = type.IsNSObject (LinkContext) && interfaceType.HasCustomAttribute (LinkContext, Namespaces.Foundation, "ProtocolAttribute");
+				var isProtocol = type.IsNSObject (LinkContext) && resolvedInterfaceType.HasCustomAttribute (LinkContext, Namespaces.Foundation, "ProtocolAttribute");
 
-				if (IgnoreScope (type.Scope)) {
-					// We're not linking the current assembly, which means the interface should be marked.
-					mark = true;
-				} else if (!isProtocol) {
-					// We only skip interfaces that represent protocols.
-					mark = true;
-				}
-
-				if (!mark) {
-					if (isProtocol)
-						LinkContext.StoreProtocolMethods (interfaceType);
-
-					return;
+				// We're not linking the current assembly, which means the interface should be marked.
+				if (isProtocol && !IgnoreScope (type.Scope)) {
+					LinkContext.StoreProtocolMethods (resolvedInterfaceType);
 				}
 			}
 
-
-			base.MarkInterfaceImplementation (type, iface);
+			return base.ShouldMarkInterfaceImplementation (type, iface, resolvedInterfaceType);
 		}
 	}
 }
