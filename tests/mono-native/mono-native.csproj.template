@@ -39,7 +39,7 @@
     <DefineConstants>MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchLink>None</MtouchLink>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
     <MtouchArch>i386, x86_64</MtouchArch>
@@ -58,7 +58,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchLink>None</MtouchLink>
+    <MtouchLink>SdkOnly</MtouchLink>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
@@ -74,7 +74,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
     <MtouchArch>ARMv7</MtouchArch>
-    <MtouchLink>None</MtouchLink>
+    <MtouchLink>SdkOnly</MtouchLink>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
@@ -90,7 +90,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
     <MtouchArch>ARM64</MtouchArch>
-    <MtouchLink>None</MtouchLink>
+    <MtouchLink>SdkOnly</MtouchLink>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
