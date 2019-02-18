@@ -34,6 +34,7 @@ namespace MonoMac.Tuner {
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 		public bool SkipExportedSymbolsInSdkAssemblies { get; set; }
+		public MonoMacLinkContext LinkContext { get; set; }
 		public Target Target { get; set; }
 		public Application Application { get { return Target.App; } }
 
@@ -72,7 +73,7 @@ namespace MonoMac.Tuner {
 
 	class Linker {
 
-		public static void Process (LinkerOptions options, out LinkContext context, out List<string> assemblies)
+		public static void Process (LinkerOptions options, out MonoMacLinkContext context, out List<string> assemblies)
 		{
 			var pipeline = CreatePipeline (options);
 
@@ -118,7 +119,7 @@ namespace MonoMac.Tuner {
 			assemblies = ListAssemblies (context);
 		}
 
-		static LinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)
+		static MonoMacLinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)
 		{
 			var context = new MonoMacLinkContext (pipeline, options.Resolver);
 			context.CoreAction = AssemblyAction.Link;
@@ -130,6 +131,7 @@ namespace MonoMac.Tuner {
 			context.OutputDirectory = options.OutputDirectory;
 			context.StaticRegistrar = options.Target.StaticRegistrar;
 			context.Target = options.Target;
+			options.LinkContext = context;
 			return context;
 		}
 

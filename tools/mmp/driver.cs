@@ -739,6 +739,35 @@ namespace Xamarin.Bundler {
 			}
 
 			CreateDirectoriesIfNeeded ();
+
+			switch (arch) {
+			case "i386":
+				break;
+			case "x86_64":
+				if (IsClassic)
+					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported on non-Classic profiles.");
+				break;
+			default:
+				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
+			}
+
+			if (IsUnified && !arch_set)
+				arch = "x86_64";
+
+			if (arch != "x86_64")
+				ErrorHelper.Warning (134, "32-bit applications should be migrated to 64-bit.");
+
+			switch (arch) {
+			case "x86_64":
+				BuildTarget.Abis = new List<Abi> { Abi.x86_64 };
+				break;
+			case "i386":
+				BuildTarget.Abis = new List<Abi> { Abi.i386 };
+				break;
+			default:
+				throw ErrorHelper.CreateError (99, $"Internal error: unknown architecture '{arch}'.");
+			}
+
 			Watch ("Setup", 1);
 
 			if (!no_executable) {
@@ -1135,23 +1164,6 @@ namespace Xamarin.Bundler {
 			if (!File.Exists (libxammac))
 				throw new MonoMacException (5203, true, "Can't find {0}, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.", libxammac);
 
-			switch (arch) {
-			case "i386":
-				break;
-			case "x86_64":
-				if (IsClassic)
-					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported on non-Classic profiles.");
-				break;
-			default:
-				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
-			}
-
-			if (IsUnified && !arch_set)
-				arch = "x86_64";
-
-			if (arch != "x86_64")
-				ErrorHelper.Warning (134, "32-bit applications should be migrated to 64-bit.");
-
 			try {
 				var args = new StringBuilder ();
 				if (App.EnableDebug)
@@ -1408,8 +1420,9 @@ namespace Xamarin.Bundler {
 
 			linker_options = options;
 
-			Mono.Linker.LinkContext context;
-			MonoMac.Tuner.Linker.Process (options, out context, out resolved_assemblies);
+			MonoMac.Tuner.Linker.Process (options, out var context, out resolved_assemblies);
+
+			ErrorHelper.Show (context.Exceptions);
 
 			// Idealy, this would be handled by Linker.Process above. However in the non-linking case
 			// we do not run MobileMarkStep which generates the pinvoke list. Hack around this for now

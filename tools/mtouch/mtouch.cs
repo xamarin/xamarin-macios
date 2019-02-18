@@ -149,9 +149,22 @@ namespace Xamarin.Bundler
 
 		static string mtouch_dir;
 
+		public static void Log (string value)
+		{
+			Log (0, value);
+		}
+
 		public static void Log (string format, params object [] args)
 		{
 			Log (0, format, args);
+		}
+
+		public static void Log (int min_verbosity, string value)
+		{
+			if (min_verbosity > verbose)
+				return;
+
+			Console.WriteLine (value);
 		}
 
 		public static void Log (int min_verbosity, string format, params object [] args)
@@ -1302,6 +1315,11 @@ namespace Xamarin.Bundler
 			if (app.EnableRepl && app.LinkMode != LinkMode.None)
 				throw new MonoTouchException (82, true, "REPL (--enable-repl) is only supported when linking is not used (--nolink).");
 
+			// needs to be set after the argument validations
+			// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
+			if (app.UseInterpreter)
+				app.EnableRepl = true;
+
 			if (cross_prefix == null)
 				cross_prefix = MonoTouchDirectory;
 
@@ -1510,6 +1528,18 @@ namespace Xamarin.Bundler
 			string quoted_dsym_dir = StringUtils.Quote (dsym_dir);
 			RunDsymUtil (string.Format ("{0} -t 4 -z -o {1}", quoted_app_path, quoted_dsym_dir));
 			RunCommand ("/usr/bin/mdimport", quoted_dsym_dir);
+		}
+
+		public static void RunLipo (string output, IEnumerable<string> inputs)
+		{
+			var sb = new StringBuilder ();
+			foreach (var lib in inputs) {
+				sb.Append (StringUtils.Quote (lib));
+				sb.Append (' ');
+			}
+			sb.Append ("-create -output ");
+			sb.Append (StringUtils.Quote (output));
+			RunLipo (sb.ToString ());
 		}
 
 		public static void RunLipo (string options)

@@ -607,16 +607,21 @@ namespace xharness
 			var cancellation_source = new CancellationTokenSource ();
 			var timed_out = false;
 
-			ThreadPool.QueueUserWorkItem ((v) =>
-			{
-				if (!listener.WaitForConnection (TimeSpan.FromMinutes (Harness.LaunchTimeout))) {
-					cancellation_source.Cancel ();
-					main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
-					timed_out = true;
-				} else {
-					main_log.WriteLine ("Test run started");
-				}
-			});
+			listener.ConnectedTask
+				.TimeoutAfter (TimeSpan.FromMinutes (Harness.LaunchTimeout))
+				.ContinueWith ((v) => {
+					if (v.IsFaulted) {
+						main_log.WriteLine ("Test launch failed: {0}", v.Exception);
+					} else if (v.IsCanceled) {
+						main_log.WriteLine ("Test launch was cancelled.");
+					} else if (v.Result) {
+						main_log.WriteLine ("Test run started");
+					} else {
+						cancellation_source.Cancel ();
+						main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
+						timed_out = true;
+					}
+				}).DoNotAwait ();
 
 			foreach (var kvp in Harness.EnvironmentVariables)
 				args.AppendFormat (" -setenv={0}={1}", kvp.Key, kvp.Value);

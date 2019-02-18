@@ -104,14 +104,35 @@ namespace monotouchtestWatchKitExtension
 			var logger = (writer == null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
-			if (RegisterType.IsXUnit)
-				runner = new XUnitTestRunner (logger);
-			else {
-				runner = new NUnitTestRunner (logger) { 
-					Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter,RequiresBSDSockets").Filter)
+			runner = RegisterType.IsXUnit ? (Xamarin.iOS.UnitTests.TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
+			var categories = RegisterType.IsXUnit ?
+				new List<string> { 
+					"failing",
+					"nonmonotests",
+					"outerloop",
+					"nonosxtests"
+				} :
+				new List<string> {
+					"MobileNotWorking",
+					"NotOnMac",
+					"NotWorking",
+					"ValueAdd",
+					"CAS",
+					"InetAccess",
+					"NotWorkingLinqInterpreter",
 				};
+
+			if (RegisterType.IsXUnit) {
+				// special case when we are using the xunit runner,
+				// there is a trait we are not interested in which is 
+				// the Benchmark one
+				var xunitRunner = runner as XUnitTestRunner;
+				xunitRunner.AddFilter (XUnitFilter.CreateTraitFilter ("Benchmark", "true", true));
 			}
+			// add category filters if they have been added
+			runner.SkipCategories (categories);
 			
+			// if we have ignore files, ignore those tests
 			var skippedTests = IgnoreFileParser.ParseContentFiles (NSBundle.MainBundle.BundlePath);
 			if (skippedTests.Any ()) {
 				// ensure that we skip those tests that have been passed via the ignore files

@@ -864,10 +864,6 @@ gc_toggleref_callback (MonoObject *object)
 	return res;
 }
 
-typedef struct {
-	int dummy;
-} NRCProfiler;
-
 static void
 gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
 {
@@ -896,12 +892,9 @@ gc_enable_new_refcount (void)
 	pthread_mutex_init (&framework_peer_release_lock, &attr);
 	pthread_mutexattr_destroy (&attr);
 
-	NRCProfiler *prof = (NRCProfiler *) malloc (sizeof (NRCProfiler));
-
 	mono_gc_toggleref_register_callback (gc_toggleref_callback);
 
 	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::RegisterToggleRef" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
-	mono_profiler_install ((MonoProfiler *) prof, NULL);
 	mono_profiler_install_gc (gc_event_callback, NULL);
 }
 
@@ -913,6 +906,19 @@ get_class_from_name (MonoImage* image, const char *nmspace, const char *name, bo
 	if (!rv && !optional)
 		xamarin_assertion_message ("Fatal error: failed to load the class '%s.%s'\n.", nmspace, name);
 	return rv;
+}
+
+struct _MonoProfiler {
+	int dummy;
+};
+
+static void
+xamarin_install_mono_profiler ()
+{
+	static _MonoProfiler profiler = { 0 };
+	// This must be done before any other mono_profiler_install_* functions are called
+	// (currently gc_enable_new_refcount and xamarin_install_nsautoreleasepool_hooks).
+	mono_profiler_install (&profiler, NULL);
 }
 
 bool
@@ -1405,6 +1411,8 @@ xamarin_initialize ()
 
 	if (!register_assembly (assembly, &exception_gchandle))
 		xamarin_process_managed_exception_gchandle (exception_gchandle);
+
+	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or gc_enable_new_refcount
 
 	xamarin_install_nsautoreleasepool_hooks ();
 

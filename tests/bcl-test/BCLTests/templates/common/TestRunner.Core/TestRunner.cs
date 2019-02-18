@@ -34,6 +34,7 @@ namespace Xamarin.iOS.UnitTests
 		public abstract string WriteResultsToFile ();
 		public abstract void WriteResultsToFile (TextWriter writer);
 		public abstract void SkipTests (IEnumerable<string> tests);
+		public abstract void SkipCategories (IEnumerable<string> categories);
 
 		protected void OnError (string message)
 		{

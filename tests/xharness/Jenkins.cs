@@ -181,6 +181,9 @@ namespace xharness
 		{
 			// This function returns additional test configurations (in addition to the default one) for the specific test
 
+			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
+			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
+
 			switch (test.ProjectPlatform) {
 			case "iPhone":
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
@@ -197,19 +200,25 @@ namespace xharness
 				case "monotouch-test":
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
-					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, };
-					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, };
-					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, };
+					if (supports_interpreter) {
+						yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, };
+						yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, };
+					}
 					break;
 				case "mscorlib":
-					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					if (supports_interpreter) {
+						yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					}
 					break;
 				case "mini":
-					yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-					yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-					yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false , Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					if (supports_interpreter) {
+						yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+					}
 					break;
 				}
 				break;
@@ -700,8 +709,7 @@ namespace xharness
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (buildiOSMSBuild)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "bin", "Xamarin.iOS.Tasks.Tests.dll"),
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
+				TestProject = new TestProject (Path.Combine (Path.GetDirectoryName (buildiOSMSBuild.TestProject.Path), "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")),
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
 				Mode = "iOS",
@@ -722,8 +730,7 @@ namespace xharness
 			var nunitExecutionInstallSource = new NUnitExecuteTask (buildInstallSources)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "bin", "Release", "InstallSourcesTests.dll"),
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
+				TestProject = buildInstallSources.TestProject,
 				Platform = TestPlatform.iOS,
 				TestName = "Install Sources tests",
 				Mode = "iOS",
@@ -774,8 +781,7 @@ namespace xharness
 						exec = new NUnitExecuteTask (build) {
 							Ignored = ignored_main,
 							TestLibrary = dll,
-							TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
-							WorkingDirectory = Path.GetDirectoryName (dll),
+							TestProject = project,
 							Platform = build.Platform,
 							TestName = project.Name,
 							Timeout = TimeSpan.FromMinutes (120),
@@ -822,8 +828,7 @@ namespace xharness
 			var nunitExecutionMTouch = new NUnitExecuteTask (buildMTouch)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug", "mtouch.dll"),
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug"),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (120),
@@ -843,8 +848,7 @@ namespace xharness
 			};
 			var runGenerator = new NUnitExecuteTask (buildGenerator) {
 				TestLibrary = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
-				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
-				WorkingDirectory = Path.Combine (Harness.RootDirectory, "generator", "bin", "Debug"),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "generator", "generator-tests.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Timeout = TimeSpan.FromMinutes (10),
@@ -946,7 +950,7 @@ namespace xharness
 					Ignored = ignore,
 					TestName = build.TestName,
 					TestLibrary = dll,
-					TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+					TestProject = project,
 					WorkingDirectory = Path.GetDirectoryName (dll),
 					Platform = build.Platform,
 					Timeout = TimeSpan.FromMinutes (120),
@@ -1675,64 +1679,8 @@ namespace xharness
 					writer.WriteLine ("</ul>");
 				}
 
-				writer.WriteLine ("<div id='test-table' style='width: 100%'>");
-				if (IsServerMode) {
-					writer.WriteLine ("<div id='test-status' style='display: inline-block; margin-left: 100px;' class='autorefreshable'>");
-					if (failedTests.Count () == 0) {
-						foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
-							var enumerableGroup = group as IEnumerable<TestTask>;
-							if (enumerableGroup != null) {
-								writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", GetTestColor (v), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
-								continue;
-							}
-
-							throw new NotImplementedException ();
-						}
-					}
-
-					if (buildingTests.Any ()) {
-						writer.WriteLine ($"<h3>{buildingTests.Count ()} building tests:</h3>");
-						foreach (var test in buildingTests) {
-							var runTask = test as RunTestTask;
-							var buildDuration = string.Empty;
-							if (runTask != null)
-								buildDuration = runTask.BuildTask.Duration.ToString ();
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {buildDuration}<br />");
-						}
-					}
-
-					if (runningTests.Any ()) {
-						writer.WriteLine ($"<h3>{runningTests.Count ()} running tests:</h3>");
-						foreach (var test in runningTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {test.ProgressMessage}<br />");
-						}
-					}
-
-					if (buildingQueuedTests.Any ()) {
-						writer.WriteLine ($"<h3>{buildingQueuedTests.Count ()} tests in build queue:</h3>");
-						foreach (var test in buildingQueuedTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a><br />");
-						}
-					}
-
-					if (runningQueuedTests.Any ()) {
-						writer.WriteLine ($"<h3>{runningQueuedTests.Count ()} tests in run queue:</h3>");
-						foreach (var test in runningQueuedTests) {
-							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a><br />");
-						}
-					}
-
-					var resources = device_resources.Values.Concat (new Resource [] { DesktopResource });
-					if (resources.Any ()) {
-						writer.WriteLine ($"<h3>Devices:</h3>");
-						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
-							writer.WriteLine ($"{dr.Description} - {dr.Users}/{dr.MaxConcurrentUsers} users - {dr.QueuedUsers} in queue<br />");
-						}
-					}
-				}
-				writer.WriteLine ("</div>");
-
-				writer.WriteLine ("<div id='test-list' style='float:left'>");
+				writer.WriteLine ("<div id='test-table' style='width: 100%; display: flex;'>");
+				writer.WriteLine ("<div id='test-list'>");
 				var orderedTasks = allTasks.GroupBy ((TestTask v) => v.TestName);
 
 				if (IsServerMode) {
@@ -1985,6 +1933,61 @@ namespace xharness
 					}
 					if (!singleTask)
 						writer.WriteLine ("</div>");
+				}
+				writer.WriteLine ("</div>");
+				if (IsServerMode) {
+					writer.WriteLine ("<div id='test-status' style='margin-left: 100px;' class='autorefreshable'>");
+					if (failedTests.Count () == 0) {
+						foreach (var group in failedTests.GroupBy ((v) => v.TestName)) {
+							var enumerableGroup = group as IEnumerable<TestTask>;
+							if (enumerableGroup != null) {
+								writer.WriteLine ("<a href='#test_{2}'>{0}</a> ({1})<br />", group.Key, string.Join (", ", enumerableGroup.Select ((v) => string.Format ("<span style='color: {0}'>{1}</span>", GetTestColor (v), string.IsNullOrEmpty (v.Mode) ? v.ExecutionResult.ToString () : v.Mode)).ToArray ()), group.Key.Replace (' ', '-'));
+								continue;
+							}
+
+							throw new NotImplementedException ();
+						}
+					}
+
+					if (buildingTests.Any ()) {
+						writer.WriteLine ($"<h3>{buildingTests.Count ()} building tests:</h3>");
+						foreach (var test in buildingTests) {
+							var runTask = test as RunTestTask;
+							var buildDuration = string.Empty;
+							if (runTask != null)
+								buildDuration = runTask.BuildTask.Duration.ToString ();
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {buildDuration}<br />");
+						}
+					}
+
+					if (runningTests.Any ()) {
+						writer.WriteLine ($"<h3>{runningTests.Count ()} running tests:</h3>");
+						foreach (var test in runningTests) {
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a> {test.Duration.ToString ()} {test.ProgressMessage}<br />");
+						}
+					}
+
+					if (buildingQueuedTests.Any ()) {
+						writer.WriteLine ($"<h3>{buildingQueuedTests.Count ()} tests in build queue:</h3>");
+						foreach (var test in buildingQueuedTests) {
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a><br />");
+						}
+					}
+
+					if (runningQueuedTests.Any ()) {
+						writer.WriteLine ($"<h3>{runningQueuedTests.Count ()} tests in run queue:</h3>");
+						foreach (var test in runningQueuedTests) {
+							writer.WriteLine ($"<a href='#test_{test.TestName}'>{test.TestName} ({test.Mode})</a><br />");
+						}
+					}
+
+					var resources = device_resources.Values.Concat (new Resource [] { DesktopResource });
+					if (resources.Any ()) {
+						writer.WriteLine ($"<h3>Devices:</h3>");
+						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
+							writer.WriteLine ($"{dr.Description} - {dr.Users}/{dr.MaxConcurrentUsers} users - {dr.QueuedUsers} in queue<br />");
+						}
+					}
 				}
 				writer.WriteLine ("</div>");
 				writer.WriteLine ("</div>");
@@ -2686,6 +2689,57 @@ namespace xharness
 			: base (build_task)
 		{
 		}
+			
+		public void FindNUnitConsoleExecutable (Log log)
+		{
+			if (!string.IsNullOrEmpty (TestExecutable)) {
+				log.WriteLine ("Using existing executable: {0}", TestExecutable);
+				return;
+			}
+				
+			var packages_conf = Path.Combine (Path.GetDirectoryName (TestProject.Path), "packages.config");
+			var nunit_version = string.Empty;
+			const string default_nunit_version = "3.9.0";
+
+			if (!File.Exists (packages_conf)) {
+				nunit_version = default_nunit_version;
+				log.WriteLine ("No packages.config found for {0}: assuming nunit version is {1}", TestProject, nunit_version);
+			} else {
+				using (var str = new StreamReader (packages_conf)) {
+					using (var reader = System.Xml.XmlReader.Create (str)) {
+						while (reader.Read ()) {
+							if (reader.NodeType != System.Xml.XmlNodeType.Element)
+								continue;
+							if (reader.Name != "package")
+								continue;
+							var id = reader.GetAttribute ("id");
+							if (id != "NUnit.ConsoleRunner" && id != "NUnit.Runners")
+								continue;
+							nunit_version = reader.GetAttribute ("version");
+							break;
+						}
+					}
+				}
+				if (nunit_version == string.Empty) {
+					nunit_version = default_nunit_version;
+					log.WriteLine ("Could not find the NUnit.ConsoleRunner element in {0}, using the default version ({1})", packages_conf, nunit_version);
+				} else {
+					log.WriteLine ("Found the NUnit.ConsoleRunner/NUnit.Runners element in {0} for {2}, version is: {1}", packages_conf, nunit_version, TestProject.Path);
+				}
+			}
+				
+			if (nunit_version [0] == '2') {
+				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners." + nunit_version, "tools", "nunit-console.exe");
+				WorkingDirectory = Path.Combine (Path.GetDirectoryName (TestExecutable), "lib");
+			} else {
+				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner." + nunit_version, "tools", "nunit3-console.exe");
+				WorkingDirectory = Path.GetDirectoryName (TestLibrary);
+			}
+			TestExecutable = Path.GetFullPath (TestExecutable);
+			WorkingDirectory = Path.GetFullPath (WorkingDirectory);
+			if (!File.Exists (TestExecutable))
+				throw new FileNotFoundException ($"The nunit executable '{TestExecutable}' doesn't exist.");
+		}
 
 		public bool IsNUnit3 {
 			get {
@@ -2713,6 +2767,7 @@ namespace xharness
 				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", "XML log");
 				var log = Logs.Create ($"execute-{Timestamp}.txt", "Execution log");
 				log.Timestamp = true;
+				FindNUnitConsoleExecutable (log);
 				using (var proc = new Process ()) {
 
 					proc.StartInfo.WorkingDirectory = WorkingDirectory;

@@ -13238,7 +13238,7 @@ namespace AppKit {
 		void ScrollWheel (NSEvent theEvent);
 
 		//Detected properties
-		[Export ("documentView")]
+		[Export ("documentView", ArgumentSemantic.Retain), NullAllowed]
 		NSObject DocumentView { get; set; }
 
 		[Export ("contentView", ArgumentSemantic.Retain)]
@@ -25599,7 +25599,8 @@ namespace AppKit {
 	}
 
 	[Mac (10,12)]
-	[Protocol]
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
 	interface NSFilePromiseProviderDelegate
 	{
 		[Abstract]

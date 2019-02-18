@@ -40,9 +40,6 @@ namespace Xamarin.Bundler
 		public string BuildDirectory;
 		public string LinkDirectory;
 
-		// Note that each 'Target' can have multiple abis: armv7+armv7s for instance.
-		public List<Abi> Abis;
-
 		public Dictionary<string, BundleFileInfo> BundleFiles = new Dictionary<string, BundleFileInfo> ();
 
 		Dictionary<Abi, CompileTask> pinvoke_tasks = new Dictionary<Abi, CompileTask> ();
@@ -543,6 +540,8 @@ namespace Xamarin.Bundler
 			};
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out LinkContext, out assemblies);
+
+			ErrorHelper.Show (LinkContext.Exceptions);
 
 			Driver.Watch ("Link Assemblies", 1);
 		}

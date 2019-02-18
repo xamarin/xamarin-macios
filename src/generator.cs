@@ -4096,6 +4096,9 @@ public partial class Generator : IMemberGatherer {
 		if (null_allowed_override)
 			return;
 
+		if (AttributeManager.HasAttribute<NullAllowedAttribute> (mi))
+			ErrorHelper.Show (new BindingException (1118, false, $"[NullAllowed] should not be used on methods, like '{mi}', but only on properties, parameters and return values."));
+
 		foreach (var pi in mi.GetParameters ()) {
 			var needs_null_check = ParameterNeedsNullCheck (pi, mi, propInfo);
 			if (!needs_null_check)
@@ -4295,19 +4298,7 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.is_virtual_method || mi.Name == "Constructor"){
 			//print ("if (this.GetType () == TypeManager.{0}) {{", type.Name);
 			if (external || minfo.is_interface_impl || minfo.is_extension_method) {
-				if (dual_enum) {
-					print ("if (IntPtr.Size == 8) {");
-					indent++;
-					GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
-					indent--;
-					print ("} else {");
-					indent++;
-					GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
-					indent--;
-					print ("}");
-				} else {
-					GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
-				}
+				GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
 			} else {
 				var may_throw = ShouldMarshalNativeExceptions (mi);
 				var null_handle = may_throw && mi.Name == "Constructor";
@@ -4808,7 +4799,10 @@ public partial class Generator : IMemberGatherer {
 		if (pi.CanWrite){
 			var setter = pi.GetSetMethod ();
 			var ba = GetBindAttribute (setter);
-			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pi) || AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
+			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
+			if (null_allowed)
+				ErrorHelper.Show (new BindingException (1118, false, $"[NullAllowed] should not be used on methods, like '{setter}', but only on properties, parameters and return values."));
+			null_allowed |= AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 			var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 			string sel;
 

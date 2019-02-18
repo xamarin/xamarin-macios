@@ -19,3 +19,4 @@ MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Error
 MonoTests.System.Net.Http.HttpClientTest.Send_Content_BomEncoding
 MonoTests.System.Net.Http.HttpClientTest.Send_Content_Get
 MonoTests.System.Net.Http.HttpClientTest.Send_Content_Put
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Content_MaxResponseContentBufferSize_Error

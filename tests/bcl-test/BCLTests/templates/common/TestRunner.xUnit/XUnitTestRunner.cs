@@ -73,6 +73,12 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			messageSink.Execution.TestStartingEvent += (MessageHandlerArgs<ITestStarting> args) => HandleEvent ("TestStartingEvent", args, HandleTestStarting);
 		}
 
+		public void AddFilter (XUnitFilter filter)
+		{
+			if (filter != null) {
+				filters.Add (filter);
+			}
+		}
 		public void SetFilters (List<XUnitFilter> newFilters)
 		{
 			if (newFilters == null) {
@@ -1012,6 +1018,15 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				// create a single filter per test
 				foreach (var t in tests) {
 					filters.Add (XUnitFilter.CreateSingleFilter (t, true));
+				}
+			}
+		}
+
+		public override void SkipCategories (IEnumerable<string> categories)
+		{
+			if (categories.Any ()) {
+				foreach (var c in categories) {
+					filters.Add (XUnitFilter.CreateTraitFilter ("category", c, true));
 				}
 			}
 		}

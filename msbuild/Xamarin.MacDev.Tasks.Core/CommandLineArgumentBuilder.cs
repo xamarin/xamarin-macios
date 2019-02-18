@@ -36,7 +36,7 @@ namespace Xamarin.MacDev
 		/// </summary>
 		public void Add (string argument, bool appendLine = false)
 		{
-			if (builder.Length > 0 && !appendLine)
+			if (builder.Length > 0)
 				builder.Append (' ');
 
 			builder.Append (argument);

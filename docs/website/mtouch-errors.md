@@ -1687,7 +1687,16 @@ The assembly mentioned in the error message is loaded from multiple locations. M
 
 The root assembly could not be loaded. Please verify that the path in the error message refers to an existing file, and that it's a valid .NET assembly.
 
-<a name="MT202x" />
+<a name="MT2020" />
+<a name="MT2021" />
+<a name="MT2022" />
+<a name="MT2023" />
+<a name="MT2024" />
+<a name="MT2025" />
+<a name="MT2026" />
+<a name="MT2027" />
+<a name="MT2028" />
+<a name="MT2029" />
 
 ### MT202x: Binding Optimizer failed processing `...`.
 
@@ -1698,9 +1707,20 @@ The last digit `x` will be:
 * `1` for a type name;
 * `3` for a method name;
 
-<a name="MT2030" />
+<!-- MT2020 - MT2029 used by the above error -->
 
-### MT2030: Remove User Resources failed processing `...`.
+<a name="MT2030" />
+<a name="MT2031" />
+<a name="MT2032" />
+<a name="MT2033" />
+<a name="MT2034" />
+<a name="MT2035" />
+<a name="MT2036" />
+<a name="MT2037" />
+<a name="MT2038" />
+<a name="MT2039" />
+
+### MT203x: Remove User Resources failed processing `...`.
 
 Something unexpected occured when trying to remove user resources. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
@@ -1709,51 +1729,113 @@ User resources are files included inside assemblies (as resources) that needs to
 * `__monotouch_content_*` and `__monotouch_pages_*` resources; and
 * Native libraries embedded inside a binding assembly;
 
-<a name="MT2040" />
+<!-- MT2030 - MT2039 used by the above error -->
 
-### MT2040: Default HttpMessageHandler setter failed processing `...`.
+<a name="MT2040" />
+<a name="MT2041" />
+<a name="MT2042" />
+<a name="MT2043" />
+<a name="MT2044" />
+<a name="MT2045" />
+<a name="MT2046" />
+<a name="MT2047" />
+<a name="MT2048" />
+<a name="MT2049" />
+
+### MT204x: Default HttpMessageHandler setter failed processing `...`.
 
 Something unexpected occured when trying to set the default `HttpMessageHandler` for the application. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-<a name="MT2050" />
+<!-- MT2040 - MT2049 used by the above error -->
 
-### MT2050: Code Remover failed processing `...`.
+<a name="MT2050" />
+<a name="MT2051" />
+<a name="MT2052" />
+<a name="MT2053" />
+<a name="MT2054" />
+<a name="MT2055" />
+<a name="MT2056" />
+<a name="MT2057" />
+<a name="MT2058" />
+<a name="MT2059" />
+
+### MT205x: Code Remover failed processing `...`.
 
 Something unexpected occured when trying to remove code from BCL shipping with the application. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-<a name="MT2060" />
+<!-- MT2050 - MT2059 used by the above error -->
 
-### MT2060: Sealer failed processing `...`.
+<a name="MT2060" />
+<a name="MT2061" />
+<a name="MT2062" />
+<a name="MT2063" />
+<a name="MT2064" />
+<a name="MT2065" />
+<a name="MT2066" />
+<a name="MT2067" />
+<a name="MT2068" />
+<a name="MT2069" />
+
+### MT206x: Sealer failed processing `...`.
 
 Something unexpected occured when trying to seal types or methods (final) or when devirtualizing some methods. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-<a name="MT2070" />
+<!-- MT2060 - MT2069 used by the above error -->
 
-### MT2070: Metadata Reducer failed processing `...`.
+<a name="MT2070" />
+<a name="MT2071" />
+<a name="MT2072" />
+<a name="MT2073" />
+<a name="MT2074" />
+<a name="MT2075" />
+<a name="MT2076" />
+<a name="MT2077" />
+<a name="MT2078" />
+<a name="MT2079" />
+
+### MT207x: Metadata Reducer failed processing `...`.
 
 Something unexpected occured when trying to reduce the metadata from the application. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-<a name="MT2080" />
+<!-- MT2070 - MT2079 used by the above error -->
 
-### MT2080: MarkNSObjects failed processing `...`.
+<a name="MT2080" />
+<a name="MT2081" />
+<a name="MT2082" />
+<a name="MT2083" />
+<a name="MT2084" />
+<a name="MT2085" />
+<a name="MT2086" />
+<a name="MT2087" />
+<a name="MT2088" />
+<a name="MT2089" />
+
+### MT208x: MarkNSObjects failed processing `...`.
 
 Something unexpected occured when trying to mark `NSObject` subclasses from the application. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-<a name="MT2090" />
+<!-- MT2080 - MT2089 used by the above error -->
 
-### MT2090: Inliner failed processing `...`.
+<a name="MT2090" />
+<a name="MT2091" />
+<a name="MT2092" />
+<a name="MT2093" />
+<a name="MT2094" />
+<a name="MT2095" />
+<a name="MT2096" />
+<a name="MT2097" />
+<a name="MT2098" />
+<a name="MT2099" />
+
+### MT209x: Inliner failed processing `...`.
 
 Something unexpected occured when trying to inline code from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<!-- MT2090 - MT2099 used by the above error -->
 
 <!-- MT21xx: more linker errors -->
 
 <!--- 2100 used by mmp -->
-
-<a name="MT2100" />
-
-### MT2100: Smart Enum Conversion Preserver failed processing `...`.
-
-Something unexpected occured when trying to mark the conversion methods for smart enums from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 <a name="MT2101" />
 
@@ -1786,6 +1868,85 @@ The assembly causing the issue is named in the error message. To fix this issue 
 Mixed-mode assemblies can not be processed by the linker.
 
 See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
+
+<a name="MT2105" />
+
+### MT2105: The method {method} contains a '{handlerType}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.
+
+Currently Xamarin.iOS does not support the 'filter' exception clauses when
+compiling to bitcode. Any methods containing such code will throw a
+NotSupportedException exception when the method is executed (the exception
+will be thrown at method entry, even if execution would follow a path that did
+not involve the 'filter' exception clause).
+
+This is an example of code that's not supported:
+
+```csharp
+void MyMethod ()
+{
+	try {
+		throw new Exception ("FilterMe");
+	} catch (Exception e)
+		when (e.Message == "FilterMe") // <- This is the filter clause.
+	{
+		Console.WriteLine ("filtered");
+	}
+}
+```
+
+This method will behave like the following example, throwing an exception at
+method entry:
+
+```csharp
+void MyMethod ()
+{
+	throw new NotSupportedException ("This method contains IL not supported when compiled to bitcode.");
+}
+```
+
+<a name="MT2200" />
+<a name="MT2201" />
+<a name="MT2202" />
+<a name="MT2203" />
+<a name="MT2204" />
+<a name="MT2205" />
+<a name="MT2206" />
+<a name="MT2207" />
+<a name="MT2208" />
+<a name="MT2209" />
+
+### MT220x: Smart Enum Conversion Preserver failed processing `...`.
+
+Something unexpected occured when trying to mark the conversion methods for smart enums from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<!-- MT2200 - MT2209 used by the above error -->
+
+<a name="MT2210" />
+<a name="MT2211" />
+<a name="MT2212" />
+<a name="MT2213" />
+<a name="MT2214" />
+<a name="MT2215" />
+<a name="MT2216" />
+<a name="MT2217" />
+<a name="MT2218" />
+<a name="MT2219" />
+
+### MT221x: Incompatible Code For Bitcode Remover failed processing `...`.
+
+Something unexpected occured when trying to remove incompatible code for
+bitcode from the application. The assembly causing the issue is named in the
+error message. In order to fix this issue the assembly will need to be
+provided in a new issue on
+[github](https://github.com/xamarin/xamarin-macios/issues/new) along with a
+complete build log with verbosity enabled (i.e. `-v -v -v -v` in the
+**Additional mtouch arguments** in the project's watchOS Build options).
+
+It's usually possible to work around this by adding
+`--optimize=-remove-unsupported-il-for-bitcode` to the **Additional mtouch arguments**
+in the project's watchOS Build options.
+
+<!-- MT2210 - MT2219 used by the above error -->
 
 ## MT3xxx: AOT error messages
 

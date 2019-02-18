@@ -60,8 +60,3 @@ MonoTests.System.Net.Http.HttpClientTest.Post_TransferEncodingChunked
 #  Expected: False
 #  But was:  True
 MonoTests.System.Net.Http.HttpClientTest.Post_StreamCaching
-
-#  #3
-#  Expected: True
-#  But was:  False
-MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Content_MaxResponseContentBufferSize_Error
