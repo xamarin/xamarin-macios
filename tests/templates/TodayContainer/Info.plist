@@ -15,5 +15,22 @@
                 <integer>1</integer>
                 <integer>2</integer>
         </array>
+        <key>NSAppTransportSecurity</key>
+        <dict>
+                <key>NSAllowsArbitraryLoads</key>
+                <true/>
+        </dict>
+        <key>NSAppleMusicUsageDescription</key>
+        <string>Testing tastes</string>
+        <key>NSCameraUsageDescription</key>
+        <string>Smile!</string>
+        <key>NSContactsUsageDescription</key>
+        <string>Testing friends</string>
+        <key>NSHomeKitUsageDescription</key>
+        <string>Testing roofs</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>Testing mike</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>Testing lens</string>
 </dict>
 </plist>

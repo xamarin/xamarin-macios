@@ -38,6 +38,8 @@ namespace xharness
 		public bool IncludeXtro;
 		public bool IncludeDocs;
 
+		public bool CleanSuccessfulTestRuns = true;
+
 		public Log MainLog;
 		public Log SimulatorLoadLog;
 		public Log DeviceLoadLog;
@@ -1120,11 +1122,67 @@ namespace xharness
 							rv.Add (v);
 							return rv;
 						});
+
+						IEnumerable<TestTask> find_tasks (StreamWriter writer, string ids)
+						{
+							IEnumerable<TestTask> tasks;
+							switch (request.Url.Query) {
+							case "?all":
+								tasks = Tasks;
+								break;
+							case "?selected":
+								tasks = allTasks.Where ((v) => !v.Ignored);
+								break;
+							case "?failed":
+								tasks = allTasks.Where ((v) => v.Failed);
+								break;
+							case "?":
+								writer.WriteLine ("No tasks specified");
+								return Array.Empty<TestTask> ();
+							default:
+								var id_inputs = ids.Substring (1).Split (',');
+								var rv = new List<TestTask> (id_inputs.Length);
+								foreach (var id_input in id_inputs) {
+									if (int.TryParse (id_input, out var id)) {
+										var task = Tasks.FirstOrDefault ((t) => t.ID == id);
+										if (task == null)
+											task = Tasks.Where ((v) => v is AggregatedRunSimulatorTask).Cast<AggregatedRunSimulatorTask> ().SelectMany ((v) => v.Tasks).FirstOrDefault ((t) => t.ID == id);
+										if (task == null) {
+											writer.WriteLine ($"Could not find test {id}");
+										} else {
+											rv.Add (task);
+										}
+									} else {
+										writer.WriteLine ($"Could not parse {arguments ["id"]}");
+									}
+								}
+								tasks = rv;
+								break;
+							}
+							return tasks;
+						}
+
 						string serveFile = null;
 						switch (request.Url.LocalPath) {
 						case "/":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
 							GenerateReportImpl (response.OutputStream);
+							break;
+						case "/set-option":
+							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+														switch (request.Url.Query) {
+							case "?clean":
+								CleanSuccessfulTestRuns = true;
+								break;
+							case "?do-not-clean":
+								CleanSuccessfulTestRuns = false;
+								break;
+							default:
+								throw new NotImplementedException (request.Url.Query);
+							}
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								writer.WriteLine ("OK");
+							}
 							break;
 						case "/select":
 						case "/deselect":
@@ -1214,111 +1272,53 @@ namespace xharness
 								writer.WriteLine ("OK");
 							}
 							break;
-						case "/runalltests":
+						case "/stop":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
 							using (var writer = new StreamWriter (response.OutputStream)) {
-
+								foreach (var task in find_tasks (writer, request.Url.Query)) {
+									if (!task.Waiting) {
+										writer.WriteLine ($"Test '{task.TestName}' is not in a waiting state.");
+									} else {
+										task.Reset ();
+									}
+								}
+								writer.WriteLine ("OK");
+							}
+							break;
+						case "/run":
+							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+							using (var writer = new StreamWriter (response.OutputStream)) {
 								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
 								// then for another, since that would not take advantage of running tests on several devices in parallel.
-								var rnd = new Random ((int) DateTime.Now.Ticks);
-								foreach (var task in Tasks.OrderBy (v => rnd.Next ())) {
+								foreach (var task in find_tasks (writer, request.Url.Query).Shuffle ()) {
 									if (task.InProgress || task.Waiting) {
 										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
 									} else {
 										task.Reset ();
 										task.RunAsync ();
+									}
+								}
+								writer.WriteLine ("OK");
+							}
+							break;
+						case "/build":
+							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								foreach (var task in find_tasks (writer, request.Url.Query)) {
+									if (task.InProgress || task.Waiting) {
+										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
+									} else if (task is RunTestTask rtt) {
+										rtt.Reset ();
+										rtt.BuildAsync ().ContinueWith ((z) => {
+											if (rtt.ExecutionResult == TestExecutingResult.Built)
+												rtt.ExecutionResult = TestExecutingResult.BuildSucceeded;
+										 });
+									} else {
+										writer.WriteLine ($"Test '{task.TestName}' is not a test that can be only built.");
 									}
 								}
 
 								writer.WriteLine ("OK");
-							}
-							break;
-						case "/runselected":
-							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
-							using (var writer = new StreamWriter (response.OutputStream)) {
-								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
-								// then for another, since that would not take advantage of running tests on several devices in parallel.
-								var rnd = new Random ((int) DateTime.Now.Ticks);
-								foreach (var task in allTasks.Where ((v) => !v.Ignored).OrderBy (v => rnd.Next ())) {
-									if (task.InProgress || task.Waiting) {
-										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
-									} else {
-										task.Reset ();
-										task.RunAsync ();
-										writer.WriteLine ($"Started '{task.TestName}'.");
-									}
-								}
-							}
-							break;
-						case "/runfailed":
-							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
-							using (var writer = new StreamWriter (response.OutputStream)) {
-								foreach (var task in allTasks.Where ((v) => v.Failed)) {
-									if (task.InProgress || task.Waiting) {
-										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
-									} else {
-										task.Reset ();
-										task.RunAsync ();
-										writer.WriteLine ($"Started '{task.TestName}'.");
-									}
-								}
-							}
-							break;
-						case "/stoptest":
-						case "/runtest":
-							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
-							IEnumerable<TestTask> find_tasks (StreamWriter writer, string ids)
-							{
-								var id_inputs = ids.Split (',');
-								foreach (var id_input in id_inputs) {
-									if (int.TryParse (id_input, out var id)) {
-										var task = Tasks.FirstOrDefault ((t) => t.ID == id);
-										if (task == null)
-											task = Tasks.Where ((v) => v is AggregatedRunSimulatorTask).Cast<AggregatedRunSimulatorTask> ().SelectMany ((v) => v.Tasks).FirstOrDefault ((t) => t.ID == id);
-										if (task == null) {
-											writer.WriteLine ($"Could not find test {id}");
-										} else {
-											yield return task;
-										}
-									} else {
-										writer.WriteLine ($"Could not parse {arguments ["id"]}");
-									}
-								}
-
-							}
-							using (var writer = new StreamWriter (response.OutputStream)) {
-								var id_inputs = arguments ["id"].Split (',');
-
-								var tasks = find_tasks (writer, arguments ["id"]);
-
-								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
-								// then for another, since that would not take advantage of running tests on several devices in parallel.
-								var rnd = new Random ((int) DateTime.Now.Ticks);
-								tasks = tasks.OrderBy ((v) => rnd.Next ());
-
-								foreach (var task in tasks) {
-									switch (request.Url.LocalPath) {
-									case "/stoptest":
-										if (!task.Waiting) {
-											writer.WriteLine ($"Test '{task.TestName}' is not in a waiting state.");
-										} else {
-											task.Reset ();
-											writer.WriteLine ($"OK: {task.ID}");
-										}
-										break;
-									case "/runtest":
-										if (task.InProgress || task.Waiting) {
-											writer.WriteLine ($"Test '{task.TestName}' is already executing.");
-										} else {
-											task.Reset ();
-											task.RunAsync ();
-											writer.WriteLine ($"OK: {task.ID}");
-										}
-										break;
-									default:
-										throw new NotImplementedException ();
-									}
-								}
 							}
 							break;
 						case "/reload-devices":
@@ -1420,6 +1420,10 @@ namespace xharness
 				return "gray";
 			else if (tests.Any ((v) => v.Skipped))
 				return "orangered";
+			else if (tests.All ((v) => v.BuildSucceeded))
+				return "lightgreen";
+			else if (tests.All ((v) => v.Succeeded))
+				return "green";
 			else
 				return "black";
 		}
@@ -1447,6 +1451,8 @@ namespace xharness
 					return "darkred";
 				} else if (test.Failed) {
 					return "red";
+				} else if (test.BuildSucceeded) {
+					return "lightgreen";
 				} else if (test.Succeeded) {
 					return "green";
 				} else if (test.Ignored) {
@@ -1691,11 +1697,14 @@ namespace xharness
 			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-mac"");'>All Mac tests</a></li>
 		</ul>
 	</li>
-	<li>Run
+	<li>Execute
 		<ul>
-			<li class=""adminitem""><a href='javascript:runalltests ();'>All tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""runselected"");'>All selected tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""runfailed"");'>All failed tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""run?alltests"");'>Run all tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""run?selected"");'>Run all selected tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""run?failed"");'>Run all failed tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""build?all"");'>Build all tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""build?selected"");'>Build all selected tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""build?failed"");'>Build all failed tests</a></li>
 		</ul>
 	</li>");
 					}
@@ -1708,13 +1717,20 @@ namespace xharness
 		</ul>
 	</li>");
 					if (IsServerMode) {
-						writer.WriteLine (@"
+						writer.WriteLine ($@"
 	<li>Reload
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""reload-devices"");'>Devices</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""reload-simulators"");'>Simulators</a></li>
 		</ul>
-	</li>");
+	</li>
+
+	<li>Options
+			<ul>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
+			</ul>
+	</li>
+	");
 					}
 					writer.WriteLine ("</ul>");
 				}
@@ -1754,8 +1770,10 @@ namespace xharness
 						writer.Write ($"<div class='pdiv {ignoredClass}'>");
 						writer.Write ($"<span id='button_container2_{groupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{defaultExpander}</span>");
 						writer.Write ($"<span id='x{id_counter++}' class='p1 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{group.Key}{RenderTextStates (group)}</span>");
-						if (IsServerMode)
-							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", group.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
+						if (IsServerMode) {
+							var groupIds = string.Join (",", group.Select ((v) => v.ID.ToString ()));
+							writer.Write ($" <span class='runall'><a href='javascript: runtest (\"{groupIds}\");'>Run all</a> <a href='javascript: buildtest (\"{groupIds}\");'>Build all</a></span>");
+						}
 						writer.WriteLine ("</div>");
 						writer.WriteLine ($"<div id='test_container2_{groupId}' class='togglable' style='display: {defaultDisplay}; margin-left: 20px;'>");
 					}
@@ -1773,8 +1791,10 @@ namespace xharness
 							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p2 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{modeGroup.Key}{RenderTextStates (modeGroup)}</span>");
-							if (IsServerMode)
-								writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
+							if (IsServerMode) {
+								var modeGroupIds = string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()));
+								writer.Write ($" <span class='runall'><a href='javascript: runtest (\"{modeGroupIds}\");'>Run all</a> <a href='javascript: buildtest (\"{modeGroupIds}\");'>Build all</a></span>");
+							}
 							writer.WriteLine ("</div>");
 
 							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' class='togglable' style='display: {defaultDisplay}; margin-left: 20px;'>");
@@ -1798,18 +1818,20 @@ namespace xharness
 							var ignoredClass = test.Ignored ? "toggleable-ignored" : string.Empty;
 							var defaultExpander = autoExpand ? "&nbsp;" : "+";
 							var defaultDisplay = autoExpand ? "block" : "none";
+							var buildOnly = test.BuildOnly ? ", BuildOnly" : string.Empty;
 
 							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
-							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>) </span>");
+							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>{buildOnly}) </span>");
 							if (IsServerMode) {
 								writer.Write ($" <span id='x{id_counter++}' class='autorefreshable'>");
 								if (test.Waiting) {
 									writer.Write ($" <a class='runall' href='javascript:stoptest ({test.ID})'>Stop</a> ");
-								} else if (test.InProgress) {
+								} else if (test.InProgress && !test.Built) {
 									// Stopping is not implemented for tasks that are already executing
 								} else {
 									writer.Write ($" <a class='runall' href='javascript:runtest ({test.ID})'>Run</a> ");
+									writer.Write ($" <a class='runall' href='javascript:buildtest ({test.ID})'>Build</a> ");
 								}
 								writer.Write ("</span> ");
 							}
@@ -2091,6 +2113,7 @@ namespace xharness
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 
 		public bool RequiresXcode94;
+		public bool BuildOnly;
 
 		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
 		// Typically used to fail tasks that don't have an available device, or if there's not enough disk space.
@@ -2166,6 +2189,7 @@ namespace xharness
 		public bool Built { get { return (ExecutionResult & TestExecutingResult.Built) == TestExecutingResult.Built; } }
 		public bool Running { get { return (ExecutionResult & TestExecutingResult.Running) == TestExecutingResult.Running; } }
 
+		public bool BuildSucceeded { get { return (ExecutionResult & TestExecutingResult.BuildSucceeded) == TestExecutingResult.BuildSucceeded; } }
 		public bool Succeeded { get { return (ExecutionResult & TestExecutingResult.Succeeded) == TestExecutingResult.Succeeded; } }
 		public bool Failed { get { return (ExecutionResult & TestExecutingResult.Failed) == TestExecutingResult.Failed; } }
 		public bool Ignored {
@@ -2739,7 +2763,7 @@ namespace xharness
 				
 			var packages_conf = Path.Combine (Path.GetDirectoryName (TestProject.Path), "packages.config");
 			var nunit_version = string.Empty;
-			const string default_nunit_version = "3.5.0";
+			const string default_nunit_version = "3.9.0";
 
 			if (!File.Exists (packages_conf)) {
 				nunit_version = default_nunit_version;
@@ -3085,7 +3109,6 @@ namespace xharness
 	abstract class RunTestTask : TestTask
 	{
 		public readonly BuildToolTask BuildTask;
-		public bool BuildOnly;
 
 		public RunTestTask (BuildToolTask build_task)
 		{
@@ -3158,7 +3181,7 @@ namespace xharness
 				return;
 
 			if (BuildOnly) {
-				ExecutionResult = TestExecutingResult.Succeeded;
+				ExecutionResult = TestExecutingResult.BuildSucceeded;
 				return;
 			}
 
@@ -3421,7 +3444,7 @@ namespace xharness
 						MainLog.WriteLine ($"Post-run uninstall failed, exit code: {uninstall_result.ExitCode} (this won't affect the test result)");
 
 					// Also clean up after us locally.
-					if (Harness.InJenkins || Harness.InWrench || Succeeded)
+					if (Harness.InJenkins || Harness.InWrench || (Jenkins.CleanSuccessfulTestRuns && Succeeded))
 						await BuildTask.CleanAsync ();
 				}
 			}
@@ -3820,5 +3843,8 @@ namespace xharness
 		TimedOut         = 0x2000 + Failed,
 		HarnessException = 0x4000 + Failed,
 		BuildFailure     = 0x8000 + Failed,
+
+		// Other results
+		BuildSucceeded   = 0x10000 + Succeeded,
 	}
 }
