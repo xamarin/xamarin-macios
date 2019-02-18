@@ -38,6 +38,8 @@ namespace xharness
 		public bool IncludeXtro;
 		public bool IncludeDocs;
 
+		public bool CleanSuccessfulTestRuns = true;
+
 		public Log MainLog;
 		public Log SimulatorLoadLog;
 		public Log DeviceLoadLog;
@@ -1126,6 +1128,22 @@ namespace xharness
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
 							GenerateReportImpl (response.OutputStream);
 							break;
+						case "/set-option":
+							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+														switch (request.Url.Query) {
+							case "?clean":
+								CleanSuccessfulTestRuns = true;
+								break;
+							case "?do-not-clean":
+								CleanSuccessfulTestRuns = false;
+								break;
+							default:
+								throw new NotImplementedException (request.Url.Query);
+							}
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								writer.WriteLine ("OK");
+							}
+							break;
 						case "/select":
 						case "/deselect":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
@@ -1659,13 +1677,20 @@ namespace xharness
 		</ul>
 	</li>");
 					if (IsServerMode) {
-						writer.WriteLine (@"
+						writer.WriteLine ($@"
 	<li>Reload
 		<ul>
 			<li class=""adminitem""><a href='javascript:sendrequest (""reload-devices"");'>Devices</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""reload-simulators"");'>Simulators</a></li>
 		</ul>
-	</li>");
+	</li>
+
+	<li>Options
+			<ul>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
+			</ul>
+	</li>
+	");
 					}
 					writer.WriteLine ("</ul>");
 				}
@@ -3379,7 +3404,7 @@ namespace xharness
 						MainLog.WriteLine ($"Post-run uninstall failed, exit code: {uninstall_result.ExitCode} (this won't affect the test result)");
 
 					// Also clean up after us locally.
-					if (Harness.InJenkins || Harness.InWrench || Succeeded)
+					if (Harness.InJenkins || Harness.InWrench || (Jenkins.CleanSuccessfulTestRuns && Succeeded))
 						await BuildTask.CleanAsync ();
 				}
 			}
