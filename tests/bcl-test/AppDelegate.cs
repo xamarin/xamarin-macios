@@ -4,6 +4,7 @@ using System.Linq;
 
 #if XAMCORE_2_0
 using Foundation;
+using ObjCRuntime;
 using UIKit;
 #else
 using MonoTouch.Foundation;
@@ -36,6 +37,18 @@ namespace BCL.Tests
 		UIWindow window;
 		TouchRunner runner;
 
+		bool Interpreted {
+			get {
+				try {
+					System.Reflection.Emit.MethodRental.SwapMethodBody (null, 0, IntPtr.Zero, 0, 0);
+				} catch (PlatformNotSupportedException) {
+					return false;
+				} catch {
+					return true;
+				}
+				throw new InvalidProgramException ();
+			}
+		}
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
 		// method you should instantiate the window, load the UI into it and then make the window
@@ -48,7 +61,10 @@ namespace BCL.Tests
 			// create a new window instance based on the screen size
 			window = new UIWindow (UIScreen.MainScreen.Bounds);
 			runner = new TouchRunner (window);
-			runner.Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess").Filter);
+			var categories = "MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess";
+			if ((Runtime.Arch == Arch.SIMULATOR) || !Interpreted)
+				categories += ",NotWorkingLinqInterpreter";
+			runner.Filter = new NotFilter (new CategoryExpression (categories).Filter);
 
 			// register every tests included in the main application/assembly
 			runner.Add (System.Reflection.Assembly.GetExecutingAssembly ());
