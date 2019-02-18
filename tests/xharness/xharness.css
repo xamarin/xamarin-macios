@@ -34,7 +34,7 @@
 
 #nav {
     display: inline-block;
-    width: 350px;
+    padding-left: 0px;
 }
 
 #nav > * {

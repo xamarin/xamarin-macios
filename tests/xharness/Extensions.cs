@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace xharness
@@ -118,6 +119,12 @@ namespace xharness
 			//     DoSomethingAsync ().DoNotAwait ();
 			// 
 			// This makes it abundantly clear that the intention is to not await 'DoSomething', and no warnings will be shown either.
+		}
+	
+		public static IEnumerable<T> Shuffle<T> (this IEnumerable<T> collection)
+		{
+			var rnd = new Random ((int) DateTime.Now.Ticks);
+			return collection.OrderBy (v => rnd.Next ());
 		}
 	}
 }
