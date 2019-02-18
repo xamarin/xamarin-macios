@@ -13238,7 +13238,7 @@ namespace AppKit {
 		void ScrollWheel (NSEvent theEvent);
 
 		//Detected properties
-		[Export ("documentView")]
+		[Export ("documentView", ArgumentSemantic.Retain), NullAllowed]
 		NSObject DocumentView { get; set; }
 
 		[Export ("contentView", ArgumentSemantic.Retain)]
