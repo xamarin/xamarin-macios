@@ -176,7 +176,6 @@ namespace Xamarin.iOS.Tasks
 
 		// This property is required for VS to write the output native executable files
 		// and ensure the Inputs/Outputs of the msbuild target works correcly
-		[Required]
 		[Output]
 		public ITaskItem NativeExecutable { get; set; }
 
@@ -684,9 +683,18 @@ namespace Xamarin.iOS.Tasks
 
 			Directory.CreateDirectory (AppBundleDir);
 
+			var executableLastWriteTime = default (DateTime);
+			var executable = Path.Combine (AppBundleDir, ExecutableName);
+
+			if (File.Exists (executable))
+				executableLastWriteTime = File.GetLastWriteTimeUtc (executable);
+
 			var result = base.Execute ();
 
 			CopiedFrameworks = GetCopiedFrameworks ();
+
+			if (File.Exists (executable) && File.GetLastWriteTimeUtc (executable) != executableLastWriteTime)
+				NativeExecutable = new TaskItem (executable);
 
 			return result;
 		}
