@@ -8322,6 +8322,7 @@ namespace AVFoundation {
 		[Export ("initWithInputPort:videoPreviewLayer:")]
 		IntPtr Constructor (AVCaptureInputPort inputPort, AVCaptureVideoPreviewLayer layer);
 
+		[NullAllowed]
 		[Export ("output")]
 		AVCaptureOutput Output { get;  }
 
@@ -8372,6 +8373,7 @@ namespace AVFoundation {
 		nfloat VideoScaleAndCropFactor { get; set;  }
 #endif
 		[iOS (6,0)]
+		[NullAllowed]
 		[Export ("videoPreviewLayer")]
 		AVCaptureVideoPreviewLayer VideoPreviewLayer { get;  }
 
