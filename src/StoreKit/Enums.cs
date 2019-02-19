@@ -38,6 +38,10 @@ namespace StoreKit {
 		// iOS 12.2
 		PrivacyAcknowledgementRequired,
 		UnauthorizedRequestData,
+		InvalidOfferIdentifier,
+		InvalidSignature,
+		MissingOfferParams,
+		InvalidOfferPrice,
 	}
 
 	// typedef NSInteger SKDownloadState;
