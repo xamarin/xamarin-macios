@@ -1418,14 +1418,11 @@ namespace Xamarin.Bundler
 			if (bitcode)
 				linker_flags.AddOtherFlag (App.EnableMarkerOnlyBitCode ? "-fembed-bitcode-marker" : "-fembed-bitcode");
 			
-			if (App.EnablePie.HasValue && App.EnablePie.Value && (App.DeploymentTarget < new Version (4, 2)))
-				ErrorHelper.Error (28, "Cannot enable PIE (-pie) when targeting iOS 4.1 or earlier. Please disable PIE (-pie:false) or set the deployment target to at least iOS 4.2");
-
 			if (!App.EnablePie.HasValue)
 				App.EnablePie = true;
 
 			if (App.Platform == ApplePlatform.iOS) {
-				if (App.EnablePie.Value && (App.DeploymentTarget >= new Version (4, 2))) {
+				if (App.EnablePie.Value) {
 					linker_flags.AddOtherFlag ("-Wl,-pie");
 				} else {
 					linker_flags.AddOtherFlag ("-Wl,-no_pie");
