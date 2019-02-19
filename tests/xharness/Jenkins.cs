@@ -87,40 +87,32 @@ namespace xharness
 			return new Resources (resources);
 		}
 
+		Task LoadAsync (ref Log log, ILoadAsync loadable, string name)
+		{
+			loadable.Harness = Harness;
+			if (log == null)
+				log = Logs.Create ($"{name}-list-{Harness.Timestamp}.log", $"{name} Listing");
+			log.Description = $"{name} Listing (in progress)";
+
+			var capturedLog = log;
+			return loadable.LoadAsync (capturedLog, include_locked: false, force: true).ContinueWith ((v) => {
+				if (v.IsFaulted) {
+					capturedLog.WriteLine ("Failed to load:");
+					capturedLog.WriteLine (v.Exception);
+					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
+				} else if (v.IsCompleted) {
+					capturedLog.Description = $"{name} Listing (ok)";
+				}
+			});
+		}
+
 		// Loads both simulators and devices in parallel
 		Task LoadSimulatorsAndDevicesAsync ()
 		{
-			Simulators.Harness = Harness;
-			Devices.Harness = Harness;
+			var devs = LoadAsync (ref DeviceLoadLog, Devices, "Device");
+			var sims = LoadAsync (ref SimulatorLoadLog, Simulators, "Simulator");
 
-			if (SimulatorLoadLog == null)
-				SimulatorLoadLog = Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator Listing (in progress)");
-
-			var simulatorLoadTask = Task.Run (async () => {
-				try {
-					await Simulators.LoadAsync (SimulatorLoadLog);
-					SimulatorLoadLog.Description = "Simulator Listing (ok)";
-				} catch (Exception e) {
-					SimulatorLoadLog.WriteLine ("Failed to load simulators:");
-					SimulatorLoadLog.WriteLine (e);
-					SimulatorLoadLog.Description = $"Simulator Listing ({e.Message})";
-				}
-			});
-
-			if (DeviceLoadLog == null)
-				DeviceLoadLog = Logs.Create ($"device-list-{Harness.Timestamp}.log", "Device Listing (in progress)");
-			var deviceLoadTask = Task.Run (async () => {
-				try {
-					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
-					DeviceLoadLog.Description = "Device Listing (ok)";
-				} catch (Exception e) {
-					DeviceLoadLog.WriteLine ("Failed to load devices:");
-					DeviceLoadLog.WriteLine (e);
-					DeviceLoadLog.Description = $"Device Listing ({e.Message})";
-				}
-			});
-
-			return Task.CompletedTask;
+			return Task.WhenAll (devs, sims);
 		}
 
 		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
@@ -724,14 +716,14 @@ namespace xharness
 			return false;
 		}
 
-		async Task PopulateTasksAsync ()
+		Task PopulateTasksAsync ()
 		{
 			// Missing:
 			// api-diff
 
 			SelectTests ();
 
-			await LoadSimulatorsAndDevicesAsync ();
+			LoadSimulatorsAndDevicesAsync ().DoNotAwait ();
 
 			Tasks.AddRange (CreateRunSimulatorTasks ());
 
@@ -959,6 +951,8 @@ namespace xharness
 			Tasks.Add (runDocsTests);
 
 			Tasks.AddRange (CreateRunDeviceTasks ());
+
+			return Task.CompletedTask;
 		}
 
 		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore, bool requiresXcode94 = false)
@@ -1323,10 +1317,10 @@ namespace xharness
 							}
 							break;
 						case "/reload-devices":
-							GC.KeepAlive (Devices.LoadAsync (DeviceLoadLog, force: true));
+							LoadAsync (ref DeviceLoadLog, Devices, "Device").DoNotAwait ();
 							break;
 						case "/reload-simulators":
-							GC.KeepAlive (Simulators.LoadAsync (SimulatorLoadLog, force: true));
+							LoadAsync (ref SimulatorLoadLog, Simulators, "Simulator").DoNotAwait ();
 							break;
 						case "/quit":
 							using (var writer = new StreamWriter (response.OutputStream)) {
