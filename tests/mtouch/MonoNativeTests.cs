@@ -123,7 +123,7 @@ namespace Xamarin
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				if (profile == Profile.watchOS) {
-					mtouch.CreateTemporaryWatchKitExtension (extraCode: MonoNativeInitialize);
+					mtouch.CreateTemporaryWatchKitExtension (code: MonoNativeWatchInitialize, extraCode: MonoNativeInitialize);
 				} else {
 					mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
 				}
@@ -220,12 +220,20 @@ namespace Xamarin
 			Assert.That (files.Count, Is.EqualTo (0), "No libmono-native* libraries");
 		}
 
+		string MonoNativeWatchInitialize => @"
+using WatchKit;
+public partial class NotificationController : WKUserNotificationInterfaceController
+{
+	protected NotificationController (System.IntPtr handle) : base (handle) { X.Main(); }
+}
+";
+
 		string MonoNativeInitialize => @"
 class X {
 	[System.Runtime.InteropServices.DllImport (""System.Native"")]
 	extern static void mono_native_initialize ();
 
-	static void Main ()
+	public static void Main ()
 	{
 		System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ());
 		mono_native_initialize ();
