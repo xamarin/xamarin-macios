@@ -241,6 +241,7 @@ namespace Introspection {
 				case "ILClassificationUIExtensionContext": // Conformance not in headers
 				// iOS 12.2
 				case "PKDisbursementRequest":
+				case "PKDisbursementVoucher":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -420,6 +421,7 @@ namespace Introspection {
 				case "ILClassificationUIExtensionContext": // Conformance not in headers
 				// iOS 12.2
 				case "PKDisbursementRequest":
+				case "PKDisbursementVoucher":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -540,6 +542,9 @@ namespace Introspection {
 				// Xcode 10
 				case "ASCredentialProviderExtensionContext":
 				case "ILClassificationUIExtensionContext": // Conformance not in headers
+					return true;
+				// iOS 12.2
+				case "PKDisbursementVoucher":
 					return true;
 				}
 				break;
