@@ -432,6 +432,11 @@ namespace Introspection {
 					return true;
 				break;
 			case "MPSImageReduceUnary": // Not meant to be used, only subclasses
+			case "MPSCnnArithmetic": // Not meant to be used, only subclasses
+			case "MPSCnnArithmeticGradient": // Not meant to be used, only subclasses
+			case "MPSNNOptimizer": // Not meant to be used, only subclasses
+			case "MPSNNReduceBinary": // Not meant to be used, only subclasses
+			case "MPSNNReduceUnary": // Not meant to be used, only subclasses
 				var cstr = ctor.ToString ();
 				if (cstr == "Void .ctor(IMTLDevice)" || cstr == "Void .ctor(NSCoder, IMTLDevice)")
 					return true;

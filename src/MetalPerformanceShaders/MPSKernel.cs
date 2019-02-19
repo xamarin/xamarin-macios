@@ -214,7 +214,8 @@ namespace MetalPerformanceShaders {
 
 	public partial class MPSCnnFullyConnected {
 
-		[DesignatedInitializer]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use any of the other 'DesignatedInitializer' ctors.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use any of the other 'DesignatedInitializer' ctors.")]
 		public MPSCnnFullyConnected (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{

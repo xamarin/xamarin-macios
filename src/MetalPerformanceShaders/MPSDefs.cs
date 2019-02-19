@@ -1,4 +1,4 @@
-﻿#if XAMCORE_2_0 || !MONOMAC
+#if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
 
@@ -199,7 +199,13 @@ namespace MetalPerformanceShaders {
 		Elu,
 		PReLU,
 		ReLun,
-		Count,
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		Power,
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		Exponential,
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		Logarithm,
+		Count, // must always be last
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
@@ -232,6 +238,7 @@ namespace MetalPerformanceShaders {
 		SizeSame = 1 << 4,
 		SizeFull = 2 << 4,
 		SizeReserved = 3 << 4,
+		CustomWhitelistForNodeFusion = (1 << 13),
 		Custom = (1 << 14),
 		SizeMask = 2032,
 		ExcludeEdges = (1 << 15),
@@ -392,6 +399,129 @@ namespace MetalPerformanceShaders {
 		Default = 0,
 		LowPower = 1,
 		SkipRemovable = 2,
+	}
+
+	[TV (11, 3), Mac (10, 13, 4, onlyOn64: true), iOS (11, 3)]
+	public enum MPSCnnWeightsQuantizationType : uint {
+		None = 0,
+		Linear = 1,
+		LookupTable = 2,
+	}
+
+	[Flags]
+	[Native]
+	[TV (11, 3), Mac (10, 13, 4, onlyOn64: true), iOS (11, 3)]
+	public enum MPSCnnConvolutionGradientOption : ulong {
+		GradientWithData = 0x1,
+		GradientWithWeightsAndBias = 0x2,
+		All = GradientWithData | GradientWithWeightsAndBias,
+	}
+
+	[Flags]
+	[Native]
+	[TV (11, 3), Mac (10, 13, 4, onlyOn64: true), iOS (11, 3)]
+	public enum MPSNNComparisonType : ulong {
+		Equal,
+		NotEqual,
+		Less,
+		LessOrEqual,
+		Greater,
+		GreaterOrEqual,
+	}
+
+	[TV (11, 3), Mac (10, 13, 4, onlyOn64: true), iOS (11, 3)]
+	public enum MPSCnnLossType : uint {
+		MeanAbsoluteError = 0,
+		MeanSquaredError,
+		SoftMaxCrossEntropy,
+		SigmoidCrossEntropy,
+		CategoricalCrossEntropy,
+		Hinge,
+		Huber,
+		CosineDistance,
+		Log,
+		KullbackLeiblerDivergence,
+		Count, // must always be last
+	}
+
+	[TV (11, 3), Mac (10, 13, 4, onlyOn64: true), iOS (11, 3)]
+	public enum MPSCnnReductionType {
+		None = 0,
+		Sum,
+		Mean,
+		SumByNonZeroWeights,
+		Count, // must always be last
+	}
+
+	[Flags]
+	[Native]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	public enum MPSNNConvolutionAccumulatorPrecisionOption : ulong {
+		Half = 0x0,
+		Float = 1uL << 0,
+	}
+
+	[Flags]
+	[Native]
+	[TV (11, 3), Mac (10, 13, 4, onlyOn64: true), iOS (11, 3)]
+	public enum MPSCnnBatchNormalizationFlags : ulong {
+		Default = 0x0,
+		CalculateStatisticsAutomatic = Default,
+		CalculateStatisticsAlways = 0x1,
+		CalculateStatisticsNever = 0x2,
+		CalculateStatisticsMask = 0x3,
+	}
+
+	[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+	[Native]
+	public enum MPSNNRegularizationType : ulong {
+		None = 0,
+		L1 = 1,
+		L2 = 2,
+	}
+
+	[TV (11, 3), Mac (10, 13, 4, onlyOn64: true), iOS (11, 3)]
+	[Flags]
+	[Native]
+	public enum MPSNNTrainingStyle : ulong {
+		None = 0x0,
+		Cpu = 0x1,
+		Gpu = 0x2,
+	}
+
+	[Native]
+	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	public enum MPSRnnMatrixId : ulong {
+		SingleGateInputWeights = 0,
+		SingleGateRecurrentWeights,
+		SingleGateBiasTerms,
+		LstmInputGateInputWeights,
+		LstmInputGateRecurrentWeights,
+		LstmInputGateMemoryWeights,
+		LstmInputGateBiasTerms,
+		LstmForgetGateInputWeights,
+		LstmForgetGateRecurrentWeights,
+		LstmForgetGateMemoryWeights,
+		LstmForgetGateBiasTerms,
+		LstmMemoryGateInputWeights,
+		LstmMemoryGateRecurrentWeights,
+		LstmMemoryGateMemoryWeights,
+		LstmMemoryGateBiasTerms,
+		LstmOutputGateInputWeights,
+		LstmOutputGateRecurrentWeights,
+		LstmOutputGateMemoryWeights,
+		LstmOutputGateBiasTerms,
+		GruInputGateInputWeights,
+		GruInputGateRecurrentWeights,
+		GruInputGateBiasTerms,
+		GruRecurrentGateInputWeights,
+		GruRecurrentGateRecurrentWeights,
+		GruRecurrentGateBiasTerms,
+		GruOutputGateInputWeights,
+		GruOutputGateRecurrentWeights,
+		GruOutputGateInputGateWeights,
+		GruOutputGateBiasTerms,
+		Count, // must always be last
 	}
 }
 #endif
