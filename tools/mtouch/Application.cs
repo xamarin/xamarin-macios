@@ -1526,24 +1526,27 @@ namespace Xamarin.Bundler {
 				link_tasks.AddRange (target.NativeLink (build_tasks));
 			}
 
-			if (link_tasks.Count > 1) {
-				// If we have more than one executable, we must lipo them together.
-				var lipo_task = new LipoTask {
-					InputFiles = link_tasks.Select ((v) => v.OutputFile),
-					OutputFile = Executable,
-				};
-				final_build_task = lipo_task;
-			} else if (link_tasks.Count == 1) {
-				var copy_task = new FileCopyTask {
-					InputFile = link_tasks [0].OutputFile,
-					OutputFile = Executable,
-				};
-				final_build_task = copy_task;
-			}
-			// no link tasks if we were symlinked
-			if (final_build_task != null) {
-				final_build_task.AddDependency (link_tasks);
-				build_tasks.Add (final_build_task);
+			if (IsDeviceBuild) {
+				// If building for the simulator, the executable is written directly into the expected location within the .app, and no lipo/file copying is needed.
+				if (link_tasks.Count > 1) {
+					// If we have more than one executable, we must lipo them together.
+					var lipo_task = new LipoTask {
+						InputFiles = link_tasks.Select ((v) => v.OutputFile),
+						OutputFile = Executable,
+					};
+					final_build_task = lipo_task;
+				} else if (link_tasks.Count == 1) {
+					var copy_task = new FileCopyTask {
+						InputFile = link_tasks [0].OutputFile,
+						OutputFile = Executable,
+					};
+					final_build_task = copy_task;
+				}
+				// no link tasks if we were symlinked
+				if (final_build_task != null) {
+					final_build_task.AddDependency (link_tasks);
+					build_tasks.Add (final_build_task);
+				}
 			}
 		}
 
@@ -1765,10 +1768,11 @@ namespace Xamarin.Bundler {
 					var frameworkDirectory = Path.Combine (AppDirectory, "Frameworks", frameworkName + ".framework");
 					var frameworkExecutable = Path.Combine (frameworkDirectory, frameworkName);
 					Directory.CreateDirectory (frameworkDirectory);
-					if (IsDualBuild) {
-						Lipo (frameworkExecutable, Targets [0].Executable, Targets [1].Executable);
+					var allExecutables = Targets.SelectMany ((t) => t.Executables.Values).ToArray ();
+					if (allExecutables.Length > 1) {
+						Lipo (frameworkExecutable, allExecutables);
 					} else {
-						UpdateFile (Targets [0].Executable, frameworkExecutable);
+						UpdateFile (allExecutables [0], frameworkExecutable);
 					}
 					CreateFrameworkInfoPList (Path.Combine (frameworkDirectory, "Info.plist"), frameworkName, BundleId + frameworkName, frameworkName);
 				}
@@ -2014,27 +2018,29 @@ namespace Xamarin.Bundler {
 				new XAttribute("version", 1),
 				new XElement ("app-id", BundleId),
 				new XElement ("build-date", DateTime.Now.ToString ("O")));
-				
-			var file = MachO.Read (target.Executable);
-			
-			if (file is MachO) {
-				var mfile = file as MachOFile;
-				var uuids = GetUuids (mfile);
-				foreach (var str in uuids) {
-					root.Add (new XElement ("build-id", str));
-				}
-			} else if (file is IEnumerable<MachOFile>) {
-				var ffile = file as IEnumerable<MachOFile>;
-				foreach (var fentry in ffile) {
-					var uuids = GetUuids (fentry);
+
+			foreach (var executable in target.Executables.Values) {
+				var file = MachO.Read (executable);
+
+				if (file is MachO) {
+					var mfile = file as MachOFile;
+					var uuids = GetUuids (mfile);
 					foreach (var str in uuids) {
 						root.Add (new XElement ("build-id", str));
 					}
+				} else if (file is IEnumerable<MachOFile>) {
+					var ffile = file as IEnumerable<MachOFile>;
+					foreach (var fentry in ffile) {
+						var uuids = GetUuids (fentry);
+						foreach (var str in uuids) {
+							root.Add (new XElement ("build-id", str));
+						}
+					}
+
+				} else {
+					// do not write a manifest
+					return;
 				}
-				
-			} else {
-				// do not write a manifest
-				return;
 			}
 
 			// Write only if we need to update the manifest

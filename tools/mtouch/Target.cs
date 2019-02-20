@@ -210,9 +210,24 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public string Executable {
+		Dictionary<Abi, string> executables;
+		public IDictionary<Abi, string> Executables {
 			get {
-				return Path.Combine (TargetDirectory, App.ExecutableName);
+				if (executables == null) {
+					executables = new Dictionary<Abi, string> ();
+					if (App.IsSimulatorBuild) {
+						// When using simlauncher, we copy the executable directly to the target directory.
+						// When not using the simlauncher, but still building for the simulator, we write the executable to a arch-specific app directory (if building for both 32-bit and 64-bit), or just the app directory (if building for a single architecture)
+						if (Abis.Count != 1)
+							throw ErrorHelper.CreateError (99, $"Internal error: expected exactly one abi for a simulator architecture, found: {string.Join (", ", Abis.Select ((v) => v.ToString ()))}");
+						executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
+					} else {
+						foreach (var abi in Abis)
+							executables.Add (abi, Path.Combine (Path.Combine (App.Cache.Location, abi.AsArchString (), App.ExecutableName)));
+					}
+
+				}
+				return executables;
 			}
 		}
 
@@ -1380,7 +1395,7 @@ namespace Xamarin.Bundler
 			}
 
 			foreach (var abi in Abis) {
-				var link_task = NativeLink (build_tasks, abi, Path.Combine (Path.Combine (App.Cache.Location, abi.AsArchString (), App.ExecutableName)));
+				var link_task = NativeLink (build_tasks, abi, Executables [abi]);
 				link_tasks [abi] = link_task;
 			}
 			return link_tasks.Values;
@@ -1582,7 +1597,10 @@ namespace Xamarin.Bundler
 			foreach (var a in Assemblies)
 				a.Symlink ();
 
-			var targetExecutable = Executable;
+			if (Abis.Count != 1)
+				throw ErrorHelper.CreateError (99, $"Internal error: expected exactly one abi for a simulator architecture, found: {string.Join (", ", Abis.Select ((v) => v.ToString ()))}");
+
+			var targetExecutable = Executables.Values.First ();
 
 			Application.TryDelete (targetExecutable);
 
@@ -1594,8 +1612,8 @@ namespace Xamarin.Bundler
 				else if (Is64Build)
 					launcher.Append ("64");
 				launcher.Append ("-sgen");
-				File.Copy (launcher.ToString (), Executable);
-				File.SetLastWriteTime (Executable, DateTime.Now);
+				File.Copy (launcher.ToString (), targetExecutable);
+				File.SetLastWriteTime (targetExecutable, DateTime.Now);
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception ex) {
