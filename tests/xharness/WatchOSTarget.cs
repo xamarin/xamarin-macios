@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+
 using Xamarin;
+using Xamarin.Utils;
 
 namespace xharness
 {
@@ -88,9 +90,13 @@ namespace xharness
 			// Not linking a watch extensions requires passing -Os to the native compiler.
 			// https://github.com/mono/mono/issues/9867
 			var configurations = new string [] { "Debug", "Debug32", "Release", "Release32", "Release-bitcode" };
-			foreach (var c in configurations)
+			foreach (var c in configurations) {
+				var flags = "-fembed-bitcode-marker";
 				if (csproj.GetMtouchLink ("iPhone", c) == "None")
-					csproj.AddExtraMtouchArgs ("--gcc_flags=-Os", "iPhone", c);
+					flags += " -Os";
+
+				csproj.AddExtraMtouchArgs ($"--gcc_flags='{flags}'", "iPhone", c);
+			}
 
 			Harness.Save (csproj, WatchOSExtensionProjectPath);
 
