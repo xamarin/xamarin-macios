@@ -14,3 +14,4 @@
 !missing-protocol! PKDisbursementAuthorizationControllerDelegate not bound
 !missing-type! PKDisbursementAuthorizationController not bound
 !missing-type! PKDisbursementRequest not bound
+!missing-type! PKDisbursementVoucher not bound

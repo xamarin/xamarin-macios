@@ -1176,11 +1176,10 @@ namespace PassKit {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PKDisbursementAuthorizationControllerDelegate {
-#if false // missing PKDisbursementVoucher.h header inn xcode 10.2 beta 1
 		[Abstract]
 		[Export ("disbursementAuthorizationController:didAuthorizeWithDisbursementVoucher:")]
 		void DidAuthorize (PKDisbursementAuthorizationController controller, PKDisbursementVoucher disbursementVoucher);
-#endif
+
 		[Abstract]
 		[Export ("disbursementAuthorizationControllerDidFinish:")]
 		void DidFinish (PKDisbursementAuthorizationController controller);
@@ -1236,5 +1235,17 @@ namespace PassKit {
 
 		[NullAllowed, Export ("summaryItems", ArgumentSemantic.Copy)]
 		PKPaymentSummaryItem [] SummaryItems { get; set; }
+	}
+
+	[NoWatch]
+	[iOS (12,2)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // given from OS to PKDisbursementAuthorizationControllerDelegate
+	interface PKDisbursementVoucher {
+		[Export ("data", ArgumentSemantic.Copy)]
+		NSData Data { get; }
+
+		[Export ("redemptionURL", ArgumentSemantic.Copy)]
+		NSUrl RedemptionUrl { get; }
 	}
 }
