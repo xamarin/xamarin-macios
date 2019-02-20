@@ -221,6 +221,8 @@ The executable assembly's name and the application's name can't match the name o
 
 ### MT0028: Cannot enable PIE (-pie) when targeting iOS 4.1 or earlier. Please disable PIE (-pie:false) or set the deployment target to at least iOS 4.2
 
+This error is no longer shown (it's not possible to target iOS 4.1 or earlier anymore, iOS 6.0 is the minimum).
+
 <a name="MT0029" />
 
 ### MT0029: REPL (--enable-repl) is only supported in the simulator (--sim).

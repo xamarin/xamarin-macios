@@ -74,7 +74,7 @@ namespace Xamarin.Bundler
 				throw new AggregateException (exceptions);
 		}
 
-		public void Dot (string file)
+		public void Dot (Application app, string file)
 		{
 			var nodes = new HashSet<string> ();
 			var queue = new Queue<BuildTask> (this);
@@ -82,12 +82,17 @@ namespace Xamarin.Bundler
 			var action_nodes = new HashSet<string> ();
 			var output_nodes = new HashSet<string> ();
 			var all_nodes = new HashSet<string> ();
+			var all_files = new HashSet<string> ();
 			var circular_ref_nodes = new HashSet<string> ();
 
 			var render_file = new Func<string, string> ((v) =>
 			{
 				if (Path.GetDirectoryName (v).EndsWith (".framework", StringComparison.Ordinal))
-					return Path.GetFileName (Path.GetDirectoryName (v));
+					v = Path.GetDirectoryName (v);
+				var cache = v.IndexOf (app.Cache.Location, StringComparison.Ordinal);
+				if (cache >= 0)
+					return v.Substring (app.Cache.Location.Length).TrimStart (Path.DirectorySeparatorChar);
+
 				return Path.GetFileName (v);
 			});
 
@@ -110,20 +115,26 @@ namespace Xamarin.Bundler
 				action_nodes.Add (action_node);
 
 				var inputs = task.Inputs.ToArray ();
+				all_files.UnionWith (inputs);
 				for (int i = 0; i < inputs.Length; i++) {
-					var node = $"\"{render_file (inputs [i])}\"";
+					var node = $"\"{inputs [i]}\"";
 					all_nodes.Add (node);
 					input_nodes.Add (node);
 					nodes.Add ($"{node} -> {action_node}");
 				}
 
 				var outputs = task.Outputs.ToArray ();
+				all_files.UnionWith (outputs);
 				for (int i = 0; i < outputs.Length; i++) {
-					var node = $"\"{render_file (outputs [i])}\"";
+					var node = $"\"{outputs [i]}\"";
 					all_nodes.Add (node);
 					output_nodes.Add (node);
 					nodes.Add ($"{action_node} -> {node}");
 				}
+			}
+
+			foreach (var af in all_files) {
+				nodes.Add ($"\"{af}\" [label=\"{render_file (af)}\"]");
 			}
 
 			using (var writer = new StreamWriter (file)) {
