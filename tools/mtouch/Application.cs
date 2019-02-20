@@ -200,7 +200,13 @@ namespace Xamarin.Bundler {
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
 		bool cached_executable {
-			get { return !final_build_task.Rebuilt;  }
+			get {
+				if (final_build_task == null) {
+					// symlinked
+					return false;
+				}
+				return !final_build_task.Rebuilt;
+			}
 		}
 
 		List<Abi> abis;
@@ -1527,15 +1533,18 @@ namespace Xamarin.Bundler {
 					OutputFile = Executable,
 				};
 				final_build_task = lipo_task;
-			} else {
+			} else if (link_tasks.Count == 1) {
 				var copy_task = new FileCopyTask {
 					InputFile = link_tasks [0].OutputFile,
 					OutputFile = Executable,
 				};
 				final_build_task = copy_task;
 			}
-			final_build_task.AddDependency (link_tasks);
-			build_tasks.Add (final_build_task);
+			// no link tasks if we were symlinked
+			if (final_build_task != null) {
+				final_build_task.AddDependency (link_tasks);
+				build_tasks.Add (final_build_task);
+			}
 		}
 
 		void WriteNotice ()
