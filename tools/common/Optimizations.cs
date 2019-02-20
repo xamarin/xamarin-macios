@@ -177,7 +177,8 @@ namespace Xamarin.Bundler
 			if (!InlineIsDirectBinding.HasValue) {
 #if MONOTOUCH
 				// By default we always inline calls to NSObject.IsDirectBinding
-				InlineIsDirectBinding = true;
+				// unless the interpreter is enabled (we can't predict if code will be subclassed)
+				InlineIsDirectBinding = !app.UseInterpreter;
 #else
 				// NSObject.IsDirectBinding is not a safe optimization to apply to XM apps,
 				// because there may be additional code/assemblies we don't know about at build time.
