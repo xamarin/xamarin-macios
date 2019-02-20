@@ -31,6 +31,7 @@ namespace MonoTouch.Tuner {
 		public bool DebugBuild { get; set; }
 		public bool IsDualBuild { get; set; }
 		public bool DumpDependencies { get; set; }
+		public bool UseInterpreter { get; set; }
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 
@@ -164,7 +165,8 @@ namespace MonoTouch.Tuner {
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
 			sub.Add (new MetadataReducerSubStep ());
-			sub.Add (new SealerSubStep ());
+			if (!options.UseInterpreter)
+				sub.Add (new SealerSubStep ());
 			return sub;
 		}
 
