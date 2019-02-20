@@ -5482,7 +5482,20 @@ namespace UIKit {
 
 		[Export ("fontDescriptorWithSymbolicTraits:")]
 		UIFontDescriptor CreateWithTraits (UIFontDescriptorSymbolicTraits symbolicTraits);
-		
+
+		[NoiOS][NoTV]
+		[Watch (5,2)]
+		[Export ("fontDescriptorWithDesign:")]
+		[return: NullAllowed]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		UIFontDescriptor CreateWithDesign (NSString design);
+
+		[NoiOS][NoTV]
+		[Watch (5,2)]
+		[return: NullAllowed]
+		[Wrap ("CreateWithDesign (design.GetConstant ())")]
+		UIFontDescriptor CreateWithDesign (UIFontDescriptorSystemDesign design);
+
 		[Export ("fontDescriptorWithSize:")]
 		UIFontDescriptor CreateWithSize (nfloat newPointSize);
 		
@@ -18173,4 +18186,14 @@ namespace UIKit {
 		void DidTap (UIPencilInteraction interaction);
 	}
 #endif // !WATCH
+
+	[NoiOS][NoTV]
+	[Watch (5,2)]
+	/* NS_TYPED_ENUM */ enum UIFontDescriptorSystemDesign {
+		[DefaultEnumValue]
+		[Field ("UIFontDescriptorSystemDesignDefault")]
+		Default,
+		[Field ("UIFontDescriptorSystemDesignRounded")]
+		Rounded,
+	}
 }
