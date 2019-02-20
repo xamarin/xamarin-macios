@@ -574,9 +574,11 @@ namespace xharness
 					ProjectFile = project.Path,
 					MainLog = HarnessLog,
 				};
-				var rv = runner.InstallAsync ().Result;
-				if (!rv.Succeeded)
-					return rv.ExitCode;
+				using (var install_log = new AppInstallMonitorLog (runner.MainLog)) {
+					var rv = runner.InstallAsync (install_log.CancellationToken).Result;
+					if (!rv.Succeeded)
+						return rv.ExitCode;
+				}
 			}
 			return 0;
 		}
