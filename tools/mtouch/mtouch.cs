@@ -447,12 +447,9 @@ namespace Xamarin.Bundler
 			if (enable_llvm)
 				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append (is32bit ? "/LLVM36/bin/," : "/LLVM/bin/,");
 
-			if (!llvm_only)
-				args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
-			if (!llvm_only && enable_llvm)
-				args.Append (",");
+			args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
 			if (enable_llvm)
-				args.Append ("llvm-outfile=").Append (StringUtils.Quote (llvmOutputFile));
+				args.Append (",llvm-outfile=").Append (StringUtils.Quote (llvmOutputFile));
 			args.Append (" \"").Append (filename).Append ("\"");
 			return args.ToString ();
 		}
