@@ -123,15 +123,15 @@ namespace Xamarin.Bundler
 		//
 		// Output generation
 		static bool force = false;
-		static bool dot;
+		static string dotfile;
 		static string cross_prefix = Environment.GetEnvironmentVariable ("MONO_CROSS_PREFIX");
 		static string extra_args = Environment.GetEnvironmentVariable ("MTOUCH_ENV_OPTIONS");
 
 		static int verbose = GetDefaultVerbosity ();
 
-		public static bool Dot {
+		public static string DotFile {
 			get {
-				return dot;
+				return dotfile;
 			}
 		}
 
@@ -919,7 +919,7 @@ namespace Xamarin.Bundler
 			{ "h|?|help", "Displays the help", v => SetAction (Action.Help) },
 			{ "version", "Output version information and exit.", v => SetAction (Action.Version) },
 			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
-			{ "dot:", "Generate a dot file to visualize the build tree.", v => dot = true },
+			{ "dot:", "Generate a dot file to visualize the build tree.", v => dotfile = v ?? string.Empty },
 			{ "cache=", "Specify the directory where object files will be cached", v => app.Cache.Location = v },
 			{ "aot=", "Arguments to the static compiler",
 				v => app.AotArguments = v + (v.EndsWith (",", StringComparison.Ordinal) ? String.Empty : ",") + app.AotArguments

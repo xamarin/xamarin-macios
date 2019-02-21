@@ -423,4 +423,8 @@
       <Name>Mono.Cecil.Mdb</Name>
     </ProjectReference>
   </ItemGroup>
+  <Target Name="AfterBuild">
+    <!-- This makes sure that just building the csproj will install the updated mtouch.exe, so that tests get it without having to 'make mtouch' manually -->
+    <Exec Command="make mtouch" />
+  </Target>
 </Project>
