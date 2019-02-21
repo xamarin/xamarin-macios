@@ -17,7 +17,7 @@ namespace mini
 {
 	[TestFixture]
 	class JitTests {
-#if BITCODE
+#if __WATCHOS__
 		static string[] args = new string[] { "--exclude", "!FULLAOT", "--exclude", "!BITCODE", "--verbose" };
 #else
 		static string[] args = new string[] { "--exclude", "!FULLAOT", "--verbose" };
