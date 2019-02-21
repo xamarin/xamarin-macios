@@ -701,6 +701,10 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void HardenedRuntimeCodesignOption ()
 		{
+			// https://github.com/xamarin/xamarin-macios/issues/5653
+			if (TI.InJenkins)
+				Assert.Ignore ("Requires macOS entitlements on bots.");
+
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>"
