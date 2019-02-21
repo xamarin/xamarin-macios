@@ -390,7 +390,7 @@ namespace Xamarin.Bundler
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
 			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename));
-			bool interp_full = !interp && app.UseInterpreter && fname == "mscorlib.dll";
+			bool interp_full = !interp && app.UseInterpreter;
 			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
@@ -414,8 +414,6 @@ namespace Xamarin.Bundler
 					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.");
 				args.Append ("interp,");
 			} else if (interp_full) {
-				if (fname != "mscorlib.dll")
-					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new."); 
 				args.Append ("interp,full,");
 			} else
 				args.Append ("full,");
