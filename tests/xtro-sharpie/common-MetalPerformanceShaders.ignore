@@ -18,6 +18,10 @@
 !missing-selector! +MPSKeyedUnarchiver::unarchiveTopLevelObjectWithData:device:error: not bound
 !missing-selector! MPSKeyedUnarchiver::initForReadingWithData:device: not bound
 !missing-selector! MPSKeyedUnarchiver::initWithDevice: not bound
+!missing-selector! +MPSNNGraph::graphWithDevice:resultImage: not bound
+!missing-selector! MPSCNNBatchNormalization::reloadDataSource: not bound
+!missing-selector! MPSCNNConvolutionGradient::serializeWeightsAndBiases not bound
+!missing-selector! MPSCNNConvolutionGradient::setSerializeWeightsAndBiases: not bound
 
 ## The DesignatedInitializer is now deprecated in favor of a new one
 !missing-designated-initializer! MPSCNNNeuronELU::initWithDevice:a: is missing an [DesignatedInitializer] attribute

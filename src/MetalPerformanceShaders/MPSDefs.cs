@@ -83,8 +83,8 @@ namespace MetalPerformanceShaders {
 		Unorm16 = 2,
 		Float16 = 3,
 		Float32 = 4,
-		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
-		Count,
+		//[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		//Count, // must always be last, and because of this it will cause breaking changes.
 	}
 
 	// uses NSInteger
@@ -205,7 +205,10 @@ namespace MetalPerformanceShaders {
 		Exponential,
 		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 		Logarithm,
+#if !XAMCORE_4_0
+		[Obsolete ("The value changes when newer versions are released. It will be removed in the future.")]
 		Count, // must always be last
+#endif
 	}
 
 	[TV (11, 0), Mac (10, 13, onlyOn64: true), iOS (11, 0)]
@@ -441,7 +444,7 @@ namespace MetalPerformanceShaders {
 		CosineDistance,
 		Log,
 		KullbackLeiblerDivergence,
-		Count, // must always be last
+		//Count, // must always be last, and because of this it will cause breaking changes.
 	}
 
 	[TV (11, 3), Mac (10, 13, 4, onlyOn64: true), iOS (11, 3)]
@@ -450,7 +453,7 @@ namespace MetalPerformanceShaders {
 		Sum,
 		Mean,
 		SumByNonZeroWeights,
-		Count, // must always be last
+		//Count, // must always be last, and because of this it will cause breaking changes.
 	}
 
 	[Flags]
@@ -521,7 +524,7 @@ namespace MetalPerformanceShaders {
 		GruOutputGateRecurrentWeights,
 		GruOutputGateInputGateWeights,
 		GruOutputGateBiasTerms,
-		Count, // must always be last
+		//Count, // must always be last, and because of this it will cause breaking changes.
 	}
 }
 #endif

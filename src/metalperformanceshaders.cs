@@ -710,7 +710,6 @@ namespace MetalPerformanceShaders {
 		[Export ("clipRect", ArgumentSemantic.Assign)]
 		MTLRegion ClipRect { get; set; }
 
-		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 		[Export ("destinationFeatureChannelOffset")]
 		nuint DestinationFeatureChannelOffset { get; set; }
 
@@ -718,6 +717,7 @@ namespace MetalPerformanceShaders {
 		[Export ("sourceFeatureChannelMaxCount")]
 		nuint SourceFeatureChannelMaxCount { get; set; }
 
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 		[Export ("sourceFeatureChannelOffset")]
 		nuint SourceFeatureChannelOffset { get; set; }
 
@@ -1503,7 +1503,7 @@ namespace MetalPerformanceShaders {
 	[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 	[BaseType (typeof (MPSCnnGradientKernel), Name = "MPSCNNCrossChannelNormalizationGradient")]
 	[DisableDefaultCtor]
-	interface MPSCNNCrossChannelNormalizationGradient {
+	interface MPSCnnCrossChannelNormalizationGradient {
 
 		[Export ("alpha")]
 		float Alpha { get; set; }
@@ -1541,7 +1541,7 @@ namespace MetalPerformanceShaders {
 	[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 	[BaseType (typeof (MPSCnnGradientKernel), Name = "MPSCNNSoftMaxGradient")]
 	[DisableDefaultCtor]
-	interface MPSCNNSoftMaxGradient {
+	interface MPSCnnSoftMaxGradient {
 
 		[Export ("initWithDevice:")]
 		[DesignatedInitializer]
@@ -3128,7 +3128,7 @@ namespace MetalPerformanceShaders {
 	[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 	[BaseType (typeof (MPSCnnPoolingGradient), Name = "MPSCNNPoolingL2NormGradient")]
 	[DisableDefaultCtor]
-	interface MPSCNNPoolingL2NormGradient {
+	interface MPSCnnPoolingL2NormGradient {
 
 		[Export ("initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:")]
 		[DesignatedInitializer]
@@ -4259,11 +4259,11 @@ namespace MetalPerformanceShaders {
 	[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 	[BaseType (typeof (MPSCnnPoolingGradientNode), Name = "MPSCNNPoolingMaxGradientNode")]
 	[DisableDefaultCtor]
-	interface MPSCNNPoolingMaxGradientNode {
+	interface MPSCnnPoolingMaxGradientNode {
 
 		[Static][New]
 		[Export ("nodeWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:paddingPolicy:")]
-		MPSCNNPoolingMaxGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
+		MPSCnnPoolingMaxGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:paddingPolicy:")]
 		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight, nuint strideInPixelsX, nuint strideInPixelsY, [NullAllowed] IMPSNNPadding paddingPolicy);
@@ -4345,11 +4345,11 @@ namespace MetalPerformanceShaders {
 	[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 	[BaseType (typeof (MPSNNGradientFilterNode), Name = "MPSCNNLocalContrastNormalizationGradientNode")]
 	[DisableDefaultCtor]
-	interface MPSCNNLocalContrastNormalizationGradientNode {
+	interface MPSCnnLocalContrastNormalizationGradientNode {
 
 		[Static]
 		[Export ("nodeWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:")]
-		MPSCNNLocalContrastNormalizationGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight);
+		MPSCnnLocalContrastNormalizationGradientNode Create (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight);
 
 		[Export ("initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:")]
 		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState, nuint kernelWidth, nuint kernelHeight);
@@ -4971,12 +4971,6 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (MPSNNImageNode sourceGradient, MPSNNImageNode sourceImage, MPSNNGradientStateNode gradientState);
 	}
 
-
-
-
-
-
-
 	[TV (11,0), Mac (10, 13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof(MPSNNFilterNode), Name = "MPSCNNSoftMaxNode")]
 	[DisableDefaultCtor]
@@ -5110,7 +5104,7 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithDevice:resultImage:")]
 		IntPtr Constructor (IMTLDevice device, MPSNNImageNode resultImage);
 
-		// TODO: Review in Xcode 11 / iOS 13
+		// TODO: Review in Xcode 12 / iOS 13
 		// Looks like the following two were exposed ahead of their time
 		// [TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 		// [Export ("initWithDevice:resultImages:resultsAreNeeded:")]
@@ -5123,13 +5117,14 @@ namespace MetalPerformanceShaders {
 		// [return: NullAllowed]
 		// MPSNNGraph GraphWithDevice (MTLDevice device, MPSNNImageNode[] resultImages, [NullAllowed] bool* areResultsNeeded);
 
-		[Deprecated (PlatformName.TvOS, 11, 3)]
-		[Deprecated (PlatformName.iOS, 11, 3)]
-		[Deprecated (PlatformName.MacOSX, 10, 13, 4)]
-		[Static]
-		[Export ("graphWithDevice:resultImage:")]
-		[return: NullAllowed]
-		MPSNNGraph Create (IMTLDevice device, MPSNNImageNode resultImage);
+		// Not added because it short lived a couple of minor releases and there are alternatives.
+		//[Deprecated (PlatformName.TvOS, 11, 3)]
+		//[Deprecated (PlatformName.iOS, 11, 3)]
+		//[Deprecated (PlatformName.MacOSX, 10, 13, 4)]
+		//[Static]
+		//[Export ("graphWithDevice:resultImage:")]
+		//[return: NullAllowed]
+		//MPSNNGraph Create (IMTLDevice device, MPSNNImageNode resultImage);
 
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
@@ -5260,6 +5255,7 @@ namespace MetalPerformanceShaders {
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("copyWithZone:device:")]
+		[return: Release]
 		IMPSCnnConvolutionDataSource Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
@@ -5651,6 +5647,7 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
+		[return: Release]
 		MPSMatrixNeuronGradient Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
@@ -5686,6 +5683,7 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
+		[return: Release]
 		MPSMatrixFullyConnectedGradient Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
@@ -6534,6 +6532,7 @@ namespace MetalPerformanceShaders {
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("copyWithZone:device:")]
+		[return: Release]
 		IMPSCnnBatchNormalizationDataSource Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
@@ -6577,11 +6576,11 @@ namespace MetalPerformanceShaders {
 		[return: NullAllowed]
 		MPSCnnBatchNormalizationState GetTemporaryResultState (IMTLCommandBuffer commandBuffer, MPSImage sourceImage, [NullAllowed] NSArray<MPSState> sourceStates, MPSImage destinationImage);
 
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "Please use 'ReloadGammaAndBetaFromDataSource' and/or 'ReloadMeanAndVarianceFromDataSource' instead.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use 'ReloadGammaAndBetaFromDataSource' and/or 'ReloadMeanAndVarianceFromDataSource' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use 'ReloadGammaAndBetaFromDataSource' and/or 'ReloadMeanAndVarianceFromDataSource' instead.")]
-		[Export ("reloadDataSource:")]
-		void ReloadDataSource (IMPSCnnBatchNormalizationDataSource dataSource);
+		//[Deprecated (PlatformName.TvOS, 12, 0, message: "Please use 'ReloadGammaAndBetaFromDataSource' and/or 'ReloadMeanAndVarianceFromDataSource' instead.")]
+		//[Deprecated (PlatformName.iOS, 12, 0, message: "Please use 'ReloadGammaAndBetaFromDataSource' and/or 'ReloadMeanAndVarianceFromDataSource' instead.")]
+		//[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use 'ReloadGammaAndBetaFromDataSource' and/or 'ReloadMeanAndVarianceFromDataSource' instead.")]
+		//[Export ("reloadDataSource:")]
+		//void ReloadDataSource (IMPSCnnBatchNormalizationDataSource dataSource);
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("reloadGammaAndBetaFromDataSource")]
@@ -6695,7 +6694,7 @@ namespace MetalPerformanceShaders {
 
 		[Static]
 		[Export ("temporaryCNNConvolutionWeightsAndBiasesStateWithCommandBuffer:cnnConvolutionDescriptor:")]
-		MPSCnnConvolutionWeightsAndBiasesState GetTemporaryCNNConvolutionWeightsAndBiasesState (IMTLCommandBuffer commandBuffer, MPSCnnConvolutionDescriptor descriptor);
+		MPSCnnConvolutionWeightsAndBiasesState GetTemporaryCnnConvolutionWeightsAndBiasesState (IMTLCommandBuffer commandBuffer, MPSCnnConvolutionDescriptor descriptor);
 	}
 
 	[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
@@ -6721,11 +6720,11 @@ namespace MetalPerformanceShaders {
 		[Export ("gradientOption", ArgumentSemantic.Assign)]
 		MPSCnnConvolutionGradientOption GradientOption { get; set; }
 
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "This doesn't do anything. It is here for backward compatibility. 'MPSCnnConvolutionGradient doesn't serialize weights. It gets weight from 'State.Convolution.DataSource' on first use i.e. first 'Encode' call.")]
-		[Deprecated (PlatformName.iOS, 12, 0, message: "This doesn't do anything. It is here for backward compatibility. 'MPSCnnConvolutionGradient doesn't serialize weights. It gets weight from 'State.Convolution.DataSource' on first use i.e. first 'Encode' call.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "This doesn't do anything. It is here for backward compatibility. 'MPSCnnConvolutionGradient doesn't serialize weights. It gets weight from 'State.Convolution.DataSource' on first use i.e. first 'Encode' call.")]
-		[Export ("serializeWeightsAndBiases")]
-		bool SerializeWeightsAndBiases { get; set; }
+		//[Deprecated (PlatformName.TvOS, 12, 0, message: "This doesn't do anything. It is here for backward compatibility. 'MPSCnnConvolutionGradient doesn't serialize weights. It gets weight from 'State.Convolution.DataSource' on first use i.e. first 'Encode' call.")]
+		//[Deprecated (PlatformName.iOS, 12, 0, message: "This doesn't do anything. It is here for backward compatibility. 'MPSCnnConvolutionGradient doesn't serialize weights. It gets weight from 'State.Convolution.DataSource' on first use i.e. first 'Encode' call.")]
+		//[Deprecated (PlatformName.MacOSX, 10, 14, message: "This doesn't do anything. It is here for backward compatibility. 'MPSCnnConvolutionGradient doesn't serialize weights. It gets weight from 'State.Convolution.DataSource' on first use i.e. first 'Encode' call.")]
+		//[Export ("serializeWeightsAndBiases")]
+		//bool SerializeWeightsAndBiases { get; set; }
 
 		[Export ("initWithDevice:weights:")]
 		[DesignatedInitializer]
@@ -6872,12 +6871,14 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithCoder:")]
 		IntPtr Constructor (NSCoder decoder);
 
-		[Static]
-		[Export ("supportsSecureCoding")]
-		bool SupportsSecureCoding { get; }
+		// This needs to be inlined in classes that implement 'IMPSCnnInstanceNormalizationDataSource'.
+		//[Static]
+		//[Export ("supportsSecureCoding")]
+		//bool SupportsSecureCoding { get; }
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("copyWithZone:device:")]
+		[return: Release]
 		IMPSCnnInstanceNormalizationDataSource Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
@@ -7519,6 +7520,7 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
+		[return: Release]
 		MPSMatrixBatchNormalization Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
@@ -7563,6 +7565,7 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
+		[return: Release]
 		MPSMatrixBatchNormalizationGradient Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
 
@@ -8242,12 +8245,8 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
 
 		[Export ("copyWithZone:device:")]
-		MPSRnnMatrixTrainingLayer CopyWithZone ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
+		[return: Release]
+		MPSRnnMatrixTrainingLayer Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 	}
-
-
-
-
-
 }
 #endif
