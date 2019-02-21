@@ -587,7 +587,15 @@ namespace TestCase
 				Console.WriteLine (output);
 				Assert.Fail ($"'nuget restore' failed for {project}");
 			}
-		} 
+		}
+
+		public static bool InJenkins
+		{
+			get {
+				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
+				return !string.IsNullOrEmpty (buildRev) && buildRev == "jenkins";
+			}
+		}
 	}
 
 	static class PlatformHelpers
