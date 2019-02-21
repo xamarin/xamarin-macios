@@ -180,6 +180,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 				case TestStatus.Passed:
 					sb.Append ("\t[PASS] ");
 					PassedTests++;
+					ExecutedTests++;
 					break;
 				case TestStatus.Skipped:
 					sb.Append ("\t[IGNORED] ");
@@ -188,10 +189,12 @@ namespace Xamarin.iOS.UnitTests.NUnit
 				case TestStatus.Failed:
 					sb.Append ("\t[FAIL] ");
 					FailedTests++;
+					ExecutedTests++;
 					break;
 				case TestStatus.Inconclusive:
 					sb.Append ("\t[INCONCLUSIVE] ");
 					InconclusiveTests++;
+					ExecutedTests++;
 					break;
 				default:
 					sb.Append ("\t[INFO] ");

@@ -724,6 +724,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			}
 
 			LogFailureSummary ();
+			TotalTests += FilteredTests; // ensure that we do have in the total run the excluded ones.
 
 			bool ShouldRunAssembly (TestAssemblyInfo assemblyInfo)
 			{
