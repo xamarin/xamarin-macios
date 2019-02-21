@@ -236,7 +236,7 @@ namespace Xamarin.Bundler {
 		}
 		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
 		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
-		public AssemblyBuildTarget LibMonoNativeLinkMode => LibProfilerLinkMode;
+		public AssemblyBuildTarget LibMonoNativeLinkMode => HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary : AssemblyBuildTarget.StaticObject;
 
 		Dictionary<string, BundleFileInfo> bundle_files = new Dictionary<string, BundleFileInfo> ();
 
