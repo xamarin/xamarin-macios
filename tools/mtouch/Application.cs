@@ -199,12 +199,21 @@ namespace Xamarin.Bundler {
 		public string UserGccFlags;
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
-		bool cached_executable; 
+		bool cached_executable {
+			get {
+				if (final_build_task == null) {
+					// symlinked
+					return false;
+				}
+				return !final_build_task.Rebuilt;
+			}
+		}
 
 		List<Abi> abis;
 		HashSet<Abi> all_architectures; // all Abis used in the app, including extensions.
 
 		BuildTasks build_tasks;
+		BuildTask final_build_task; // either lipo or file copy (to final destination)
 
 		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
 
@@ -1507,13 +1516,37 @@ namespace Xamarin.Bundler {
 		{
 			SelectAssemblyBuildTargets (); // This must be done after the linker has run, since the linker may bring in more assemblies than only those referenced explicitly.
 
+			var link_tasks = new List<NativeLinkTask> ();
 			foreach (var target in Targets) {
 				if (target.CanWeSymlinkTheApplication ())
 					continue;
 
 				target.ComputeLinkerFlags ();
 				target.Compile ();
-				target.NativeLink (build_tasks);
+				link_tasks.AddRange (target.NativeLink (build_tasks));
+			}
+
+			if (IsDeviceBuild) {
+				// If building for the simulator, the executable is written directly into the expected location within the .app, and no lipo/file copying is needed.
+				if (link_tasks.Count > 1) {
+					// If we have more than one executable, we must lipo them together.
+					var lipo_task = new LipoTask {
+						InputFiles = link_tasks.Select ((v) => v.OutputFile),
+						OutputFile = Executable,
+					};
+					final_build_task = lipo_task;
+				} else if (link_tasks.Count == 1) {
+					var copy_task = new FileCopyTask {
+						InputFile = link_tasks [0].OutputFile,
+						OutputFile = Executable,
+					};
+					final_build_task = copy_task;
+				}
+				// no link tasks if we were symlinked
+				if (final_build_task != null) {
+					final_build_task.AddDependency (link_tasks);
+					build_tasks.Add (final_build_task);
+				}
 			}
 		}
 
@@ -1735,21 +1768,13 @@ namespace Xamarin.Bundler {
 					var frameworkDirectory = Path.Combine (AppDirectory, "Frameworks", frameworkName + ".framework");
 					var frameworkExecutable = Path.Combine (frameworkDirectory, frameworkName);
 					Directory.CreateDirectory (frameworkDirectory);
-					if (IsDualBuild) {
-						if (Lipo (frameworkExecutable, Targets [0].Executable, Targets [1].Executable))
-							cached_executable = true;
+					var allExecutables = Targets.SelectMany ((t) => t.Executables.Values).ToArray ();
+					if (allExecutables.Length > 1) {
+						Lipo (frameworkExecutable, allExecutables);
 					} else {
-						UpdateFile (Targets [0].Executable, frameworkExecutable);
+						UpdateFile (allExecutables [0], frameworkExecutable);
 					}
 					CreateFrameworkInfoPList (Path.Combine (frameworkDirectory, "Info.plist"), frameworkName, BundleId + frameworkName, frameworkName);
-				}
-			} else if (IsDeviceBuild) {
-				// If building a fat app, we need to lipo the two different executables we have together
-				if (IsDualBuild) {
-					if (Lipo (Executable, Targets [0].Executable, Targets [1].Executable))
-						cached_executable = true;
-				} else {
-					cached_executable = Targets [0].CachedExecutable;
 				}
 			}
 		}
@@ -1776,7 +1801,7 @@ namespace Xamarin.Bundler {
 		}
 
 		// Returns true if is up-to-date
-		static bool Lipo (string output, params string [] inputs)
+		public static bool Lipo (string output, params string [] inputs)
 		{
 			if (IsUptodate (inputs, new string [] { output })) {
 				Driver.Log (3, "Target '{0}' is up-to-date.", output);
@@ -1993,27 +2018,29 @@ namespace Xamarin.Bundler {
 				new XAttribute("version", 1),
 				new XElement ("app-id", BundleId),
 				new XElement ("build-date", DateTime.Now.ToString ("O")));
-				
-			var file = MachO.Read (target.Executable);
-			
-			if (file is MachO) {
-				var mfile = file as MachOFile;
-				var uuids = GetUuids (mfile);
-				foreach (var str in uuids) {
-					root.Add (new XElement ("build-id", str));
-				}
-			} else if (file is IEnumerable<MachOFile>) {
-				var ffile = file as IEnumerable<MachOFile>;
-				foreach (var fentry in ffile) {
-					var uuids = GetUuids (fentry);
+
+			foreach (var executable in target.Executables.Values) {
+				var file = MachO.Read (executable);
+
+				if (file is MachO) {
+					var mfile = file as MachOFile;
+					var uuids = GetUuids (mfile);
 					foreach (var str in uuids) {
 						root.Add (new XElement ("build-id", str));
 					}
+				} else if (file is IEnumerable<MachOFile>) {
+					var ffile = file as IEnumerable<MachOFile>;
+					foreach (var fentry in ffile) {
+						var uuids = GetUuids (fentry);
+						foreach (var str in uuids) {
+							root.Add (new XElement ("build-id", str));
+						}
+					}
+
+				} else {
+					// do not write a manifest
+					return;
 				}
-				
-			} else {
-				// do not write a manifest
-				return;
 			}
 
 			// Write only if we need to update the manifest
@@ -2153,18 +2180,8 @@ namespace Xamarin.Bundler {
 
 		public void StripNativeCode ()
 		{
-			if (IsDualBuild) {
-				bool cached = true;
-				foreach (var target in Targets)
-					cached &= target.CachedExecutable;
-				if (!cached)
-					StripNativeCode (Executable);
-			} else {
-				foreach (var target in Targets) {
-					if (!target.CachedExecutable)
-						StripNativeCode (target.Executable);
-				}
-			}
+			if (!cached_executable)
+				StripNativeCode (Executable);
 		}
 
 		public void BundleAssemblies ()

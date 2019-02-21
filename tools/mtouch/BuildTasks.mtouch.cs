@@ -337,7 +337,7 @@ namespace Xamarin.Bundler
 			// /System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore
 			// more details in https://bugzilla.xamarin.com/show_bug.cgi?id=31036
 			if (CompilerFlags.WeakFrameworks.Count > 0)
-				Target.AdjustDylibs (Target.Executable);
+				Target.AdjustDylibs (OutputFile);
 			Driver.Watch ("Native Link", 1);
 		}
 
@@ -586,6 +586,63 @@ namespace Xamarin.Bundler
 		public override string ToString ()
 		{
 			return Path.GetFileName (Input);
+		}
+	}
+
+	public class LipoTask : BuildTask
+	{
+		public IEnumerable<string> InputFiles { get; set; }
+		public string OutputFile { get; set; }
+
+		public override IEnumerable<string> Inputs {
+			get {
+				return InputFiles;
+			}
+		}
+
+		public override IEnumerable<string> Outputs {
+			get {
+				yield return OutputFile;
+			}
+		}
+
+		protected override void Execute ()
+		{
+			Application.Lipo (OutputFile, InputFiles.ToArray ());
+		}
+
+		public override string ToString ()
+		{
+			return Path.GetFileName (string.Join (",", InputFiles));
+		}
+	}
+
+
+	public class FileCopyTask : BuildTask
+	{
+		public string InputFile { get; set; }
+		public string OutputFile { get; set; }
+
+		public override IEnumerable<string> Inputs {
+			get {
+				yield return InputFile;
+			}
+		}
+
+		public override IEnumerable<string> Outputs {
+			get {
+				yield return OutputFile;
+			}
+		}
+
+		protected override void Execute ()
+		{
+			Application.UpdateFile (InputFile, OutputFile);
+		}
+
+		public override string ToString ()
+		{
+			return $"cp {InputFile} {OutputFile}";
 		}
 	}
 }
