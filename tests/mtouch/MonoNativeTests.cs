@@ -118,7 +118,7 @@ namespace Xamarin
 		[TestCase (Profile.tvOS, "10.0", "libmono-native-unified.dylib")]
 		[TestCase (Profile.watchOS, "2.0", "libmono-native-compat.dylib")]
 		[TestCase (Profile.watchOS, "5.0", "libmono-native-unified.dylib")]
-		public void TestDeviceFramework (Profile profile, string version, string mono_native_dylib)
+		public void TestDeviceDylib (Profile profile, string version, string mono_native_dylib)
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
@@ -128,7 +128,7 @@ namespace Xamarin
 					mtouch.CreateTemporaryApp (code: MonoNativeInitialize);
 				}
 				mtouch.Linker = LinkerOption.LinkAll;
-				mtouch.AssemblyBuildTargets.Add ("@all=framework");
+				mtouch.AssemblyBuildTargets.Add ("@all=dynamiclibrary");
 				mtouch.TargetVer = version;
 
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
