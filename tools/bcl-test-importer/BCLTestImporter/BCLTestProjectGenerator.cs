@@ -601,7 +601,7 @@ namespace BCLTestImporter {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
+		public async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
 			IEnumerable<(string name, string[] assemblies)> projects, Platform platform, string generatedDir)
 		{
 			var result = new List<(string name, string path, bool xunit, string failure)> ();

@@ -165,14 +165,18 @@ namespace BCLTestImporter {
 					info.Add (assemblyInfo);
 					outputWriter.WriteLine ($"Ref will be added for assembly: '{assemblyInfo.assembly}' hintPath: '{assemblyInfo.hintPath}'");
 				}
-				var generatedProject = BCLTestProjectGenerator.Generate (appOptions.ProjectName, appOptions.RegisterTypesPath,
-					info, appOptions.RegisterTypeTemplate, appOptions.PlistTemplate);
-				outputWriter.WriteLine ("Generated project is:");
-				outputWriter.WriteLine (generatedProject);
-				
-				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // false is do not append
-					file.Write (generatedProject);
+				// build a project list with the single project that was added
+				var projectInfo = new List<(string name, string [] assemblies)> ();
+				projectInfo.Add ((appOptions.ProjectName, appOptions.TestAssemblies.ToArray ()));
+				string outputDir = Path.GetDirectoryName (appOptions.Output);
+				var generator = new BCLTestProjectGenerator (outputDir, appOptions.MonoPath, appOptions.ProjectTemplate, appOptions.RegisterTypesPath, appOptions.PlistTemplate);
+				var generatedProject = generator.GenerateTestProjectsAsync (projectInfo, appOptions.Platform, outputDir).Result;
+				// check if it was generated and did not get any errors
+				if (generatedProject.Count == 0) {
+					outputWriter.WriteError ("Internal error, the project was not generated.");
+					return 1;
 				}
+				outputWriter.WriteLine ($"Project generated too {generatedProject [0].path}");
 				return 0;
 			} else if (appOptions.GenerateTypeRegister) {
 				outputWriter.WriteLine ("Generating type register.");
@@ -182,8 +186,8 @@ namespace BCLTestImporter {
 					outputWriter.WriteLine ($"Assembly path is {path}");
 					fixedTestAssemblies.Add (path);
 				}
-				var typesPerAssembly = GetTypeForAssemblies (fixedTestAssemblies, appOptions.Verbose);
-				var generatedCode = RegisterTypeGenerator.GenerateCode (typesPerAssembly, appOptions.IsXUnit, appOptions.RegisterTypeTemplate);
+				var typesPerAssembly = ("", GetTypeForAssemblies (fixedTestAssemblies, appOptions.Verbose));
+				var generatedCode = RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly, appOptions.IsXUnit, appOptions.RegisterTypeTemplate).Result;
 				outputWriter.WriteLine ("Generated code is:");
 				outputWriter.WriteLine (generatedCode);
 				using (var file = new StreamWriter (appOptions.Output, !appOptions.Override)) { // false is do not append

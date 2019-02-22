@@ -220,7 +220,7 @@ namespace BCLTestImporter {
 			}
 
 			message = "";
-			return false;
+			return true;
 		}
 
 		bool GenerateAllProjectsOptionsAreValid (out string message)
