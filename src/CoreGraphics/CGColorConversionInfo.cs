@@ -57,7 +57,7 @@ namespace CoreGraphics {
 			/* CGColorSpaceRef __nullable */ IntPtr space3, CGColorConversionInfoTransformType transform3, CGColorRenderingIntent intent3,
 			IntPtr lastSpaceMarker);
 
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 		// https://developer.apple.com/library/ios/documentation/Xcode/Conceptual/iPhoneOSABIReference/Articles/ARM64FunctionCallingConventions.html
 		// Declare dummies until we're on the stack then the arguments
 		// <quote>C language requires arguments smaller than int to be promoted before a call, but beyond that, unused bytes on the stack are not specified by this ABI</quote>
@@ -92,7 +92,7 @@ namespace CoreGraphics {
 			var first = triples [0]; // there's always one
 			var second = triples.Length > 1 ? triples [1] : empty; 
 			var third = triples.Length > 2 ? triples [2] : empty;
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 			if (Runtime.IsARM64CallingConvention) {
 				Handle = CGColorConversionInfoCreateFromList_arm64 (o, NativeObjectHelper.GetHandle (first.Space), (long) first.Transform, (long) first.Intent,
 					IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero,
@@ -105,7 +105,7 @@ namespace CoreGraphics {
 					NativeObjectHelper.GetHandle (second.Space), second.Transform, second.Intent,
 					NativeObjectHelper.GetHandle (third.Space), third.Transform, third.Intent,
 					IntPtr.Zero);
-#if !MONOMAC && !WATCH
+#if !MONOMAC
 			}
 #endif
 			if (Handle == IntPtr.Zero)
