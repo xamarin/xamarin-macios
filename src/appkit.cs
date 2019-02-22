@@ -589,8 +589,13 @@ namespace AppKit {
 		[Availability (Deprecated = Platform.Mac_10_12, Message = "Use EnumerateWindows instead.")]
 		NSWindow MakeWindowsPerform (Selector aSelector, bool inOrder);
 	
+		[Deprecated (PlatformName.MacOSX, 10, 7, message : "Remove usage or use 'DangerousWindows' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Export ("windows")]
 		NSWindow [] Windows { get; }
+
+		[Advice ("Use of DangerousWindows can prevent windows from leaving memory.")]
+		NSWindow [] DangerousWindows { [Wrap ("Windows")] get; }
 	
 		[Export ("setWindowsNeedUpdate:")]
 		void SetWindowsNeedUpdate (bool needUpdate);
