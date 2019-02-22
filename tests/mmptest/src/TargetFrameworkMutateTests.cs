@@ -8,6 +8,8 @@ namespace Xamarin.MMP.Tests
 	[TestFixture]
 	public class TargetFrameworkMutateTests
 	{
+		const string MigrateCSProjTag = "<MigrateToNewXMIdentifier>true</MigrateToNewXMIdentifier>";
+
 		public bool MatchesTFI (string expected, string buildOutput)
 		{
 			string tfiLine = buildOutput.SplitLines ().FirstOrDefault (x => x.StartsWith ("TargetFrameworkIdentifier =", StringComparison.Ordinal));
@@ -34,9 +36,7 @@ namespace Xamarin.MMP.Tests
 		public void ShouldNotMutateModernWithOptInFlag ()
 		{
 			MMPTests.RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<MigrateToNewXMTFI>true</MigrateToNewXMTFI>"
-				};
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = MigrateCSProjTag };
 				var buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.True (MatchesTFI ("Xamarin.Mac", buildOutput), $"Build did not have expected TFI: {TI.PrintRedirectIfLong (buildOutput)}");
 			});
@@ -48,7 +48,7 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					XM45 = true,
-					CSProjConfig = "<MigrateToNewXMTFI>true</MigrateToNewXMTFI>"
+					CSProjConfig = MigrateCSProjTag
 				};
 				var buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.True (MatchesTFI ("Xamarin.Mac.NET", buildOutput), $"Build did not have expected TFI: {TI.PrintRedirectIfLong (buildOutput)}");
