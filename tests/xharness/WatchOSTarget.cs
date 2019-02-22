@@ -108,7 +108,6 @@ namespace xharness
 
 			csproj.FixInfoPListInclude (suffix);
 			csproj.SetOutputType ("Library");
-			csproj.AddAdditionalDefines ("BITCODE", "iPhone", "Release");
 			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0;FEATURE_NO_BSD_SOCKETS");
 			csproj.RemoveReferences ("OpenTK-1.0");
 			var ext = IsFSharp ? "fs" : "cs";

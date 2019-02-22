@@ -84,7 +84,8 @@ namespace Xamarin.Linker.Steps {
 					// sanity (disable IsSealed == true above)
 					//if (type.IsSealed)
 					//	Console.WriteLine ();
-					continue;
+					if (AreMarked (overrides))
+						continue;
 				}
 
 				// we can seal the method (final in IL / !virtual in C#)
