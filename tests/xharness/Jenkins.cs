@@ -1839,7 +1839,7 @@ namespace xharness
 							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs togglable' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
-								var msg = System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />");
+								var msg = HtmlFormat (test.FailureMessage);
 								var prefix = test.Ignored ? "Ignored" : "Failure";
 								if (test.FailureMessage.Contains ('\n')) {
 									writer.WriteLine ($"{prefix}:<br /> <div style='margin-left: 20px;'>{msg}</div>");
@@ -1919,13 +1919,13 @@ namespace xharness
 											if (fails.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
 												foreach (var fail in fails)
-													writer.WriteLine ("{0} <br />", System.Web.HttpUtility.HtmlEncode (fail));
+													writer.WriteLine ("{0} <br />", HtmlFormat (fail));
 												writer.WriteLine ("</div>");
 											}
 											if (!string.IsNullOrEmpty (summary))
 												writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
 										} catch (Exception ex) {
-											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", System.Web.HttpUtility.HtmlEncode (ex.Message));
+											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", HtmlFormat (ex.Message));
 										}
 									} else if (log.Description == "Build log") {
 										HashSet<string> errors;
@@ -1952,11 +1952,11 @@ namespace xharness
 											if (errors.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
 												foreach (var error in errors)
-													writer.WriteLine ("{0} <br />", System.Web.HttpUtility.HtmlEncode (error));
+													writer.WriteLine ("{0} <br />", HtmlFormat (error));
 												writer.WriteLine ("</div>");
 											}
 										} catch (Exception ex) {
-											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", System.Web.HttpUtility.HtmlEncode (ex.Message));
+											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", HtmlFormat (ex.Message));
 										}
 									} else if (log.Description == "NUnit results" || log.Description == "XML log") {
 										try {
@@ -1971,7 +1971,7 @@ namespace xharness
 														writer.WriteLine ("<li>");
 														var test_name = failure.Attributes ["name"]?.Value;
 														var message = failure.SelectSingleNode ("failure/message")?.InnerText;
-														writer.Write (System.Web.HttpUtility.HtmlEncode (test_name));
+														writer.Write (HtmlFormat (test_name));
 														if (!string.IsNullOrEmpty (message)) {
 															writer.Write (": ");
 															writer.Write (HtmlFormat (message));
