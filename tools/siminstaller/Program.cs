@@ -130,9 +130,32 @@ namespace xsiminstaller {
 			if (!File.Exists (tmpfile)) {
 				var wc = new WebClient ();
 				try {
+					if (verbose > 0)
+						Console.WriteLine ($"Downloading '{uri}'");
 					wc.DownloadFile (uri, tmpfile);
 				} catch (Exception ex) {
-					Console.WriteLine ($"Failed to download {url}: {ex}");
+					// 403 means 404
+					if (ex is WebException we && (we.Response as HttpWebResponse)?.StatusCode == HttpStatusCode.Forbidden) {
+						Console.WriteLine ($"Failed to download {url}: Not found"); // Apple's servers return a 403 if the file doesn't exist, which can be quite confusing, so show a better error.
+					} else {
+						Console.WriteLine ($"Failed to download {url}: {ex}");
+					}
+					// We couldn't download the list of simulators, but the simulator(s) we were requested to install might already be installed.
+					// Don't fail in that case (we'd miss any potential updates, but that's probably not too bad).
+					if (install.Count > 0) {
+						if (verbose > 0)
+							Console.WriteLine ("Checking if all the requested simulators are already installed");
+						foreach (var name in install) {
+							if (!IsInstalled (name, out var _)) {
+								Console.WriteLine (verbose > 0 ? $"The simulator '{name}' is not installed." : name);
+								exit_code = 1;
+							} else if (verbose > 0) {
+								Console.WriteLine ($"The simulator '{name}' is installed.");
+							}
+						}
+						// We can't install any missing simulators, because we don't have the download url (since we couldn't download the .dvtdownloadableindex file), so just exit.
+						return exit_code;
+					}
 					return 1;
 				}
 			}
@@ -172,21 +195,17 @@ namespace xsiminstaller {
 
 				var installed = false;
 				var updateAvailable = false;
-				var installedVersion = "";
 
 				if (only_check && !install.Contains (identifier))
 					continue;
 
-				if (TryExecuteAndCapture ($"pkgutil", $"--pkg-info {identifier}", out var pkgInfo, out _)) {
-					var lines = pkgInfo.Split ('\n');
-					installedVersion = lines.First ((v) => v.StartsWith ("version: ", StringComparison.Ordinal)).Substring ("version: ".Length);
-					if (Version.Parse (installedVersion) >= Version.Parse (version)) {
+				if (IsInstalled (identifier, out var installedVersion)) {
+					if (installedVersion >= Version.Parse (version)) {
 						installed = true;
 					} else {
 						updateAvailable = true;
 					}
 				}
-
 
 				var doInstall = false;
 				if (install.Contains (identifier)) {
@@ -248,6 +267,19 @@ namespace xsiminstaller {
 			return exit_code;
 		}
 
+		static bool IsInstalled (string identifier, out Version installedVersion)
+		{
+			if (TryExecuteAndCapture ($"pkgutil", $"--pkg-info {identifier}", out var pkgInfo, out _)) {
+				var lines = pkgInfo.Split ('\n');
+				var version = lines.First ((v) => v.StartsWith ("version: ", StringComparison.Ordinal)).Substring ("version: ".Length);
+				installedVersion = Version.Parse (version);
+				return true;
+			}
+
+			installedVersion = null;
+			return false;
+		}
+
 		static bool Install (string source, long fileSize, string installPrefix)
 		{
 			var download_dir = TempDirectory;
@@ -273,7 +305,7 @@ namespace xsiminstaller {
 						lastProgress = progress;
 						var duration = watch.Elapsed.TotalSeconds;
 						var speed = progress_args.BytesReceived / duration;
-						var timeLeft = TimeSpan.FromSeconds (duration / (progress_args.BytesReceived / (double) fileSize));
+						var timeLeft = TimeSpan.FromSeconds ((progress_args.TotalBytesToReceive - progress_args.BytesReceived) / speed);
 						Console.WriteLine ($"Downloaded {progress_args.BytesReceived:N0}/{fileSize:N0} bytes = {progress}% in {duration:N1}s ({speed / 1024.0 / 1024.0:N1} MB/s; approximately {timeLeft} left)");
 					}
 				};
@@ -302,7 +334,7 @@ namespace xsiminstaller {
 						Console.WriteLine ("Found no *.pkg files in the dmg.");
 						return false;
 					} else if (packages.Length > 1) {
-						Console.WriteLine ("Found more than one *.pkg file in the dmg:\n\t", string.Join ("\n\t", packages));
+						Console.WriteLine ("Found more than one *.pkg file in the dmg:\n\t{0}", string.Join ("\n\t", packages));
 						return false;
 					}
 
@@ -320,14 +352,13 @@ namespace xsiminstaller {
 
 					try {
 						var packageInfoPath = Path.Combine (expanded_path, "PackageInfo");
-						var packageInfo = File.ReadAllText (packageInfoPath);
-						var modifiedPackageInfo = packageInfo.Replace ("<pkg-info auth=\"root\" identifier=\"com.apple.pkg", "<pkg-info install-location=\"" + installPrefix + "\" auth=\"root\" identifier=\"com.apple.pkg");
-						if (packageInfo == modifiedPackageInfo) {
-							Console.WriteLine ($"Failed to modify PackageInfo:");
-							Console.WriteLine (packageInfo);
-							return false;
-						}
-						File.WriteAllText (packageInfoPath, modifiedPackageInfo);
+						var packageInfoDoc = new XmlDocument ();
+						packageInfoDoc.Load (packageInfoPath);
+						// Add the install-location attribute to the pkg-info node
+						var attr = packageInfoDoc.CreateAttribute ("install-location");
+						attr.Value = installPrefix;
+						packageInfoDoc.SelectSingleNode ("/pkg-info").Attributes.Append (attr);
+						packageInfoDoc.Save (packageInfoPath);
 
 						var fixed_path = Path.Combine (Path.GetDirectoryName (download_path), Path.GetFileNameWithoutExtension (download_path) + "-fixed.pkg");
 						if (File.Exists (fixed_path))
