@@ -320,6 +320,58 @@ namespace MetalPerformanceShaders {
 			}
 		}
 	}
+
+	public partial class MPSCnnBinaryConvolutionNode {
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		public static MPSCnnBinaryConvolutionNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
+		{
+			unsafe {
+				fixed (void* outputBiasTermsHandle = outputBiasTerms)
+				fixed (void* outputScaleTermsHandle = outputScaleTerms)
+				fixed (void* inputBiasTermsHandle = inputBiasTerms)
+				fixed (void* inputScaleTermsHandle = inputScaleTerms)
+					return Create (sourceNode, weights, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags);
+			}
+		}
+
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		public MPSCnnBinaryConvolutionNode (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags) : base (NSObjectFlag.Empty)
+		{
+			unsafe {
+				fixed (void* outputBiasTermsHandle = outputBiasTerms)
+				fixed (void* outputScaleTermsHandle = outputScaleTerms)
+				fixed (void* inputBiasTermsHandle = inputBiasTerms)
+				fixed (void* inputScaleTermsHandle = inputScaleTerms)
+					InitializeHandle (InitWithSource (sourceNode, weights, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
+			}
+		}
+	}
+
+	public partial class MPSCnnBinaryFullyConnectedNode {
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		public static MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
+		{
+			unsafe {
+				fixed (void* outputBiasTermsHandle = outputBiasTerms)
+				fixed (void* outputScaleTermsHandle = outputScaleTerms)
+				fixed (void* inputBiasTermsHandle = inputBiasTerms)
+				fixed (void* inputScaleTermsHandle = inputScaleTerms)
+					return Create (sourceNode, weights, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags);
+			}
+		}
+
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		public MPSCnnBinaryFullyConnectedNode (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags) : base (NSObjectFlag.Empty)
+		{
+			unsafe {
+				fixed (void* outputBiasTermsHandle = outputBiasTerms)
+				fixed (void* outputScaleTermsHandle = outputScaleTerms)
+				fixed (void* inputBiasTermsHandle = inputBiasTerms)
+				fixed (void* inputScaleTermsHandle = inputScaleTerms)
+					InitializeHandle (InitWithSource (sourceNode, weights, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
+			}
+		}
+	}
 #endif
 }
 #endif
