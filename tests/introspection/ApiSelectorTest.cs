@@ -793,6 +793,8 @@ namespace Introspection {
 			case "initWithProfileNumber:profileLabel:defaultProfile:":
 			case "initWithProfileNumber:profileName:":
 			case "initWithProfileNumber:profileLabel:":
+			// MPSCnnBinaryConvolutionNode and MPSCnnBinaryFullyConnectedNode
+			case "initWithSource:weights:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:":
 			// UISegmentedControl
 			case "initWithItems:":
 				var mi = m as MethodInfo;
