@@ -202,7 +202,10 @@ namespace BCLTestImporter {
 				}
 				else {
 					var projectGenerator = new BCLTestProjectGenerator (appOptions.Output, appOptions.MonoPath,
-						appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate, appOptions.PlistTemplate);
+						appOptions.ProjectTemplate, appOptions.RegisterTypeTemplate, appOptions.PlistTemplate) {
+						iOSMonoSDKPath = appOptions.SDKDownloadPath
+					};
+					//projectGenerator.iOSMonoSDKPath 
 					outputWriter.WriteLine ("Verifying if all the test assemblies have been added.");
 					if (!appOptions.IgnoreMissingAssemblies && !projectGenerator.AllTestAssembliesAreRan (out var missingAssemblies, true)) {
 						outputWriter.WriteLine ("The following test assemblies should be added to a test project or ignored.");
