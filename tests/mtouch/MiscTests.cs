@@ -98,6 +98,8 @@ namespace Xamarin.Tests
 				"_OBJC_CLASS_$_Xamarin",
 				"_OBJC_IVAR_$_Xamarin",
 				"__ZN13XamarinObject",
+				".objc_class_name_Xamarin", // 32-bit macOS naming scheme
+				".objc_category_name_NSObject_NonXamarinObject", // 32-bit macOS naming scheme
 				"_main",
 				 // I think these are inline functions from a header
 				"__Z7isasciii",
@@ -139,7 +141,7 @@ namespace Xamarin.Tests
 
 
 			foreach (var path in paths) {
-				var symbols = MTouchTool.GetNativeSymbolsInExecutable (path);
+				var symbols = MTouchTool.GetNativeSymbolsInExecutable (path, arch: "all");
 
 				// Remove known public symbols
 				symbols = symbols.Where ((v) => {
@@ -156,6 +158,10 @@ namespace Xamarin.Tests
 					case "_ReadZStream":
 					case "_WriteZStream":
 						return false;
+					// Helper objc_msgSend functions for arm64
+					case "_objc_msgSend_stret":
+					case "_objc_msgSendSuper_stret":
+						return false;
 					}
 
 					// Be a bit more lenient with symbols from the static registrar
@@ -165,6 +171,12 @@ namespace Xamarin.Tests
 						if (v.StartsWith ("_OBJC_IVAR_$", StringComparison.Ordinal))
 							return false;
 						if (v.StartsWith ("_OBJC_METACLASS_$", StringComparison.Ordinal))
+							return false;
+
+						// 32-bit macOS naming scheme:
+						if (v.StartsWith (".objc_class_name_", StringComparison.Ordinal))
+							return false;
+						if (v.StartsWith (".objc_category_name_", StringComparison.Ordinal))
 							return false;
 					}
 
