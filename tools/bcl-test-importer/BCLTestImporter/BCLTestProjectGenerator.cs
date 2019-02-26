@@ -862,7 +862,6 @@ namespace BCLTestImporter {
 		{
 			missingAssemblies = new Dictionary<Platform, List<string>> ();
 			foreach (var platform in new [] {Platform.iOS, Platform.TvOS}) {
-				Console.WriteLine ($"Was downloaded? {wasDownloaded}");
 				var testDir = wasDownloaded ? BCLTestAssemblyDefinition.GetTestDirectoryFromDownloadsPath (GetReleaseDownload (platform), platform)
 					: BCLTestAssemblyDefinition.GetTestDirectoryFromMonoPath (MonoRootPath, platform);
 				var missingAssembliesPlatform = Directory.GetFiles (testDir, NUnitPattern).Select (Path.GetFileName).Union (
