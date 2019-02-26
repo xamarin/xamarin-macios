@@ -129,6 +129,8 @@ namespace Xamarin.Tests
 							break;
 						case MachO.LoadCommands.MinwatchOS:
 							version = SdkVersions.MinWatchOSVersion;
+							if (device)
+								alternate_version = new Version (5, 1, 0); // arm64_32 has min OS 5.1
 							mono_native_compat_version = SdkVersions.MinWatchOSVersion;
 							mono_native_unified_version = new Version (5, 0, 0);
 							break;
