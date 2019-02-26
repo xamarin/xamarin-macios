@@ -86,7 +86,7 @@ namespace Xamarin.Mac.Tests
 				logger.Info ($"Xml result can be found {options.ResultFile}");
 			}
 			
-			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
+			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");
 			return runner.FailedTests != 0 ? 1 : 0;
 		}
 	}

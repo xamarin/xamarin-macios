@@ -589,8 +589,16 @@ namespace AppKit {
 		[Availability (Deprecated = Platform.Mac_10_12, Message = "Use EnumerateWindows instead.")]
 		NSWindow MakeWindowsPerform (Selector aSelector, bool inOrder);
 	
-		[Export ("windows")]
+#if !XAMCORE_4_0
+		[Obsolete ("Remove usage or use 'DangerousWindows' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Wrap ("DangerousWindows", IsVirtual = true)] 
 		NSWindow [] Windows { get; }
+#endif
+
+		[Advice ("Use of DangerousWindows can prevent windows from leaving memory.")]
+		[Export ("windows")]
+		NSArray<NSWindow> DangerousWindows { get; }
 	
 		[Export ("setWindowsNeedUpdate:")]
 		void SetWindowsNeedUpdate (bool needUpdate);
