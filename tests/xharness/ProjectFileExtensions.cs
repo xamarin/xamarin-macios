@@ -517,7 +517,7 @@ namespace xharness
 			if (nodes.Count == 0)
 				throw new Exception (string.Format ("Could not find MtouchArch at all"));
 			foreach (XmlNode n in nodes) {
-				if (!IsNodeApplicable (n, platform, configuration))
+				if (platform != null && configuration != null && !IsNodeApplicable (n, platform, configuration))
 					continue;
 				switch (n.InnerText.ToLower ()) {
 				case "i386":
