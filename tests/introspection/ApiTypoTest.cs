@@ -234,6 +234,7 @@ namespace Introspection
 			"Gps",
 			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
+			"Gru",
 			"Greeking",
 			"Gtin",
 			"Hardlink",
@@ -276,6 +277,7 @@ namespace Introspection
 			"Intersector",
 			"Intoi",
 			"Ios",
+			"Iou",
 			"Ipa",
 			"Ipp",
 			"Iptc",
@@ -295,6 +297,7 @@ namespace Introspection
 			"Kiloamperes",
 			"Kiloohms",
 			"Kilopascals",
+			"Kullback", // Kullback-Leibler Divergence
 			"Langauges",
 			"Lacunarity",
 			"Ldaps",
@@ -305,6 +308,7 @@ namespace Introspection
 			"Lod",
 			"Lopass",
 			"Lowlevel",
+			"Lstm",
 			"Lun",
 			"Luma",
 			"Lzfse", // acronym
@@ -344,6 +348,7 @@ namespace Introspection
 			"Nai",
 			"Nanograms",
 			"Nanowatts",
+			"Nestrov",
 			"nfloat",
 			"Nfnt",
 			"nint",
