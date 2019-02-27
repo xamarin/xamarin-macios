@@ -392,9 +392,6 @@
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\ObjCRuntime\CpuArchitecture.cs">
-      <Link>external\CpuArchitecture.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
