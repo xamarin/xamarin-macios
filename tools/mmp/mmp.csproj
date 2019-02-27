@@ -379,9 +379,6 @@
     <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
       <Link>external\PListObject.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\ObjCRuntime\CpuArchitecture.cs">
-      <Link>external\CpuArchitecture.cs</Link>
-    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
