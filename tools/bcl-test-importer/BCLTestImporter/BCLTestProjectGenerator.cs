@@ -139,7 +139,7 @@ namespace BCLTestImporter {
 			(name:"MonoDataSqilteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
 			(name:"MonoDataTdsTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}),
 			(name:"MonoPoxisTests", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}),
-			(name:"MonoSecurtiyTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
+			(name:"MonoSecurityTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
 			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll"}),
 			(name:"SystemConfigurationTests", assemblies: new [] {"xammac_net_4_5_System.Configuration_test.dll"}),
 			(name:"SystemCoreTests", assemblies: new [] {"xammac_net_4_5_System.Core_test.dll"}),
