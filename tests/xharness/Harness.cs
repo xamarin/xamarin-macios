@@ -304,33 +304,18 @@ namespace xharness
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 			var bcl_suites = new string [] {
 				"mscorlib",
-				"System",
-				"System.Core",
 				"System.Data",
 				"System.Net.Http",
-				"System.Numerics",
-				"System.Runtime.Serialization",
-				"System.Transactions",
 				"System.Web.Services",
 				"System.Xml",
-				"System.Xml.Linq",
-				"Mono.Security",
-				"System.ComponentModel.DataAnnotations",
-				"System.Json",
-				"System.ServiceModel.Web",
 				"Mono.Data.Sqlite",
-				"Mono.Data.Tds",
 				"System.IO.Compression",
 				"System.IO.Compression.FileSystem",
-				"Mono.CSharp",
-				"System.Security",
 				"System.ServiceModel",
 				"System.IdentityModel",
 			};
 			var bcl_skip_watchos = new string [] {
-				"Mono.Security",
 				"Mono.Data.Tds",
-				"Mono.CSharp",
 			};
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
