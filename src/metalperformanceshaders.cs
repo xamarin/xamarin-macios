@@ -3163,7 +3163,7 @@ namespace MetalPerformanceShaders {
 		[Export ("scaleFactorY")]
 		double ScaleFactorY { get; }
 
-		[TV (11,3), Mac (10, 13, 4, onlyOn64: true), iOS (11,3)]
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("alignCorners")]
 		bool AlignCorners { get; }
 
@@ -3189,7 +3189,7 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithDevice:integerScaleFactorX:integerScaleFactorY:")]
 		IntPtr Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
-		[TV (11,3), Mac (10, 13, 4, onlyOn64: true), iOS (11,3)]
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("initWithDevice:integerScaleFactorX:integerScaleFactorY:alignCorners:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, nuint integerScaleFactorX, nuint integerScaleFactorY, bool alignCorners);
@@ -3515,7 +3515,7 @@ namespace MetalPerformanceShaders {
 		[Export ("synchronizeResource")]
 		bool SynchronizeResource { get; set; }
 
-		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		[TV (12,2), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("stopGradient")]
 		bool StopGradient { get; set; }
 	}
@@ -4845,6 +4845,7 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSCnnYoloLossNode {
 
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("nodeWithSource:lossDescriptor:")]
 		MPSCnnYoloLossNode Create (MPSNNImageNode source, MPSCnnYoloLossDescriptor descriptor);
@@ -5025,7 +5026,7 @@ namespace MetalPerformanceShaders {
 		[Export ("nodeWithSource:integerScaleFactorX:integerScaleFactorY:")]
 		MPSCnnUpsamplingBilinearNode Create (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
-		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Static]
 		[Export ("nodeWithSource:integerScaleFactorX:integerScaleFactorY:alignCorners:")]
 		MPSCnnUpsamplingBilinearNode Create (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY, bool alignCorners);
@@ -5033,7 +5034,7 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithSource:integerScaleFactorX:integerScaleFactorY:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY);
 
-		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("initWithSource:integerScaleFactorX:integerScaleFactorY:alignCorners:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, nuint integerScaleFactorX, nuint integerScaleFactorY, bool alignCorners);
 
@@ -5043,7 +5044,7 @@ namespace MetalPerformanceShaders {
 		[Export ("scaleFactorY")]
 		double ScaleFactorY { get; }
 
-		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("alignCorners")]
 		bool AlignCorners { get; }
 	}
@@ -5163,7 +5164,7 @@ namespace MetalPerformanceShaders {
 		[Export ("resultImageIsNeeded")]
 		bool ResultImageIsNeeded { get; }
 
-		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("reloadFromDataSources")]
 		void ReloadFromDataSources ();
 
@@ -6715,6 +6716,7 @@ namespace MetalPerformanceShaders {
 		[Export ("groups")]
 		nuint Groups { get; }
 
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("channelMultiplier")]
 		nuint ChannelMultiplier { get; }
 
@@ -6738,6 +6740,7 @@ namespace MetalPerformanceShaders {
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
 
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("reloadWeightsAndBiasesFromDataSource")]
 		void ReloadWeightsAndBiasesFromDataSource ();
 
@@ -7011,9 +7014,11 @@ namespace MetalPerformanceShaders {
 		[Export ("lossImage")]
 		MPSImage LossImage { get; }
 
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("labelsImage")]
 		MPSImage LabelsImage { get; }
 
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		[Export ("weightsImage")]
 		MPSImage WeightsImage { get; }
 	}
