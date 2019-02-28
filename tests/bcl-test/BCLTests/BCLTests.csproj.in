@@ -25,6 +25,7 @@
     <MtouchLink>None</MtouchLink>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -36,6 +37,7 @@
     <MtouchLink>None</MtouchLink>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
@@ -49,6 +51,7 @@
     <MtouchDebug>True</MtouchDebug>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
@@ -62,6 +65,7 @@
     <MtouchDebug>True</MtouchDebug>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchArch>ARMv7</MtouchArch>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
@@ -75,6 +79,7 @@
     <MtouchDebug>True</MtouchDebug>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchArch>ARM64</MtouchArch>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -87,6 +92,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
     <DebugType>none</DebugType>
@@ -99,6 +105,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchArch>ARMv7</MtouchArch>
     <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
     <DebugType>none</DebugType>
@@ -111,6 +118,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchArch>ARM64</MtouchArch>
     <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <DebugType>none</DebugType>
@@ -124,6 +132,7 @@
     <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchExtraArgs>--bitcode:full</MtouchExtraArgs>
     <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
