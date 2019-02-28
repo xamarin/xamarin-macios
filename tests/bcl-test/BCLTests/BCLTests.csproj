@@ -312,7 +312,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="packages.config" />
     <None Include="templates\iOSApp\Entitlements.plist">
       <Link>Entitlements.plist</Link>
     </None>
