@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
 
 #if MLAUNCH
 using Xamarin.Launcher;
@@ -199,7 +200,7 @@ namespace Xamarin
 			default:
 				if (StaticLibrary.IsStaticLibrary (reader)) {
 					var sl = new StaticLibrary ();
-					sl.Read (reader);
+					sl.Read (filename, reader, reader.BaseStream.Length);
 					return sl;
 				}
 				throw new Exception (string.Format ("File format not recognized: {0} (magic: 0x{1})", filename, magic.ToString ("X")));
@@ -220,8 +221,13 @@ namespace Xamarin
 			var file = ReadFile (filename);
 			var fatfile = file as FatFile;
 			if (fatfile != null) {
-				foreach (var ff in fatfile.entries)
-					yield return ff.entry;
+				foreach (var ff in fatfile.entries) {
+					if (ff.entry != null)
+						yield return ff.entry;
+					if (ff.static_library != null)
+						foreach (var obj in ff.static_library.ObjectFiles)
+							yield return obj;
+				}
 			} else {
 				var mf = file as MachOFile;
 				if (mf != null)
@@ -466,9 +472,73 @@ namespace Xamarin
 
 	public class StaticLibrary
 	{
-		internal void Read (BinaryReader reader)
+		List<MachOFile> object_files = new List<MachOFile> ();
+
+		public IEnumerable<MachOFile> ObjectFiles { get { return object_files; } }
+
+		static string ReadString (BinaryReader reader, int length)
+		{
+			var bytes = reader.ReadBytes (length);
+			for (var i = 0; i < bytes.Length; i++) {
+				if (bytes [i] == 0) {
+					length = i;
+					break;
+				}
+			}
+			return Encoding.ASCII.GetString (bytes, 0, length);
+		}
+
+		static long ReadDecimal (BinaryReader reader, int length)
+		{
+			var str = ReadString (reader, length);
+			str = str.TrimEnd (' ');
+			return long.Parse (str);
+		}
+
+		static long ReadOctal (BinaryReader reader, int length)
+		{
+			var str = ReadString (reader, length);
+			str = str.TrimEnd (' ');
+			return Convert.ToInt64 (str, 8);
+		}
+
+		internal void Read (string filename, BinaryReader reader, long size)
 		{
 			IsStaticLibrary (reader, throw_if_error: true);
+
+			var pos = reader.BaseStream.Position;
+			reader.BaseStream.Position += 8; // header
+
+			byte [] bytes;
+			while (reader.BaseStream.Position < pos + size) {
+				var fileIdentifier = ReadString (reader, 16);
+				var fileModificationTimestamp = ReadDecimal (reader, 12);
+				var ownerId = ReadDecimal (reader, 6);
+				var groupId = ReadDecimal (reader, 6);
+				var fileMode = ReadOctal (reader, 8);
+				var fileSize = ReadDecimal (reader, 10);
+				bytes = reader.ReadBytes (2); // ending characters
+				if (bytes [0] != 0x60 && bytes [1] != 0x0A)
+					throw ErrorHelper.CreateError (1605, $"Invalid entry '{fileIdentifier}' in the static library '{filename}', entry header doesn't end with 0x60 0x0A (found '0x{bytes [0].ToString ("x")} 0x{bytes [1].ToString ("x")}')");
+
+				if (fileIdentifier.StartsWith ("#1/", StringComparison.Ordinal)) {
+					var nameLength = int.Parse (fileIdentifier.Substring (3).TrimEnd (' '));
+					fileIdentifier = ReadString (reader, nameLength);
+					fileSize -= nameLength;
+				}
+
+				var nextPosition = reader.BaseStream.Position + fileSize;
+				if (MachOFile.IsMachOLibrary (null, reader)) {
+					var file = new MachOFile (fileIdentifier);
+					file.Read (reader);
+					object_files.Add (file);
+				}
+				// byte position is always even after each file.
+				if (nextPosition % 1 == 1)
+					nextPosition++;
+				reader.BaseStream.Position = nextPosition;
+			}
+
 		}
 
 		public static bool IsStaticLibrary (BinaryReader reader, bool throw_if_error = false)
@@ -480,7 +550,7 @@ namespace Xamarin
 			reader.BaseStream.Position = pos;
 
 			if (throw_if_error && !rv)
-				throw ErrorHelper.CreateError (1601, "Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.", System.Text.Encoding.ASCII.GetString (bytes, 0, 7));
+				throw ErrorHelper.CreateError (1601, "Not a Mach-O static library (unknown header '{0}', expected '!<arch>').", System.Text.Encoding.ASCII.GetString (bytes, 0, 7));
 
 			return rv;
 		}
@@ -511,6 +581,8 @@ namespace Xamarin
 		public uint reserved { get { return is_big_endian ? MachO.ToBigEndian (_reserved) : _reserved; } }
 
 		public List<LoadCommand> load_commands;
+
+		public string Filename { get { return filename; } }
 
 		public MachOFile (FatEntry parent)
 		{
@@ -839,7 +911,7 @@ namespace Xamarin
 				entry.Read (reader);
 			} else if (StaticLibrary.IsStaticLibrary (reader)) {
 				static_library = new StaticLibrary ();
-				static_library.Read (reader);
+				static_library.Read (parent?.Filename, reader, size);
 			} else {
 				throw ErrorHelper.CreateError (1603, "Unknown format for fat entry at position {0} in {1}.", offset, parent.Filename);
 			}
