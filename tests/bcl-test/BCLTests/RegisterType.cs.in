@@ -18,7 +18,11 @@ namespace Xamarin.iOS.UnitTests {
 		public static void RegisterTypes () 
 		{
 			// line used to ensure that the runner is not remove by the linker :/
+#if MONOMAC
+			Console.WriteLine ($"Got the runner for the linker {typeof(Xunit.Sdk.AllException)}");
+#else
 			Console.WriteLine ($"Got the runner for the linker {typeof(Xunit.Sdk.TypeUtility)}");
+#endif
 			foreach (var a in TypesToRegister.Keys) {
 				// do something with the type, so that it is not removed
 				var assemblyPath = Path.GetFileName (TypesToRegister[a].Assembly.Location);

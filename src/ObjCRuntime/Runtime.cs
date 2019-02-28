@@ -259,6 +259,7 @@ namespace ObjCRuntime {
 #if !XAMMAC_SYSTEM_MONO
 			UseAutoreleasePoolInThreadPool = true;
 #endif
+			IsARM64CallingConvention = GetIsARM64CallingConvention (); // Can only be done after Runtime.Arch is set (i.e. InitializePlatform has been called).
 
 			objc_exception_mode = options->MarshalObjectiveCExceptionMode;
 			managed_exception_mode = options->MarshalManagedExceptionMode;
@@ -1739,7 +1740,7 @@ namespace ObjCRuntime {
 		[DllImport (Constants.libSystemLibrary)]
 		static unsafe extern NXArchInfo* NXGetLocalArchInfo ();
 
-		public readonly static bool IsARM64CallingConvention = GetIsARM64CallingConvention ();
+		public static bool IsARM64CallingConvention;
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		static bool GetIsARM64CallingConvention ()

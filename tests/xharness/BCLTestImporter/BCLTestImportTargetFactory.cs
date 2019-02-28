@@ -39,6 +39,7 @@ namespace xharness.BCLTestImporter {
 					SkiptvOSVariation = !platforms.Contains (Platform.TvOS),
 					SkipwatchOSVariation = !platforms.Contains (Platform.WatchOS),
 					FailureMessage = failure,
+					RestoreNugetsInProject = true,
 				});
 			}
 			return result;
@@ -59,6 +60,7 @@ namespace xharness.BCLTestImporter {
 					Platform = "AnyCPU",
 					IsExecutableProject = true,
 					FailureMessage = failure,
+					RestoreNugetsInProject = true,
 					Dependency = async () => {
 						var rv = await Harness.BuildBclTests ();
 						if (!rv.Succeeded)
@@ -79,3 +81,4 @@ namespace xharness.BCLTestImporter {
 		}
 	}
 }
+
