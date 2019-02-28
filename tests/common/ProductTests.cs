@@ -52,17 +52,26 @@ namespace Xamarin.Tests
 			if (device)
 				Configuration.AssertDeviceAvailable ();
 
-			// TODO: add .a files
-			var dylibs = Directory.GetFiles (Configuration.GetSdkPath (profile, device), "*.dylib", SearchOption.AllDirectories)
-				.Where ((v) => !v.Contains ("dylib.dSYM/Contents/Resources/DWARF")); // Don't include *.dylib from inside .dSYMs.
+			var machoFiles = Directory.GetFiles (Configuration.GetSdkPath (profile, device), "*", SearchOption.AllDirectories)
+						.Where ((v) => {
+							if (v.Contains ("dylib.dSYM/Contents/Resources/DWARF")) {
+								// Don't include *.dylib from inside .dSYMs.
+								return false;
+							} else if (v.Contains ("libxammac-classic") || v.Contains ("libxammac-system-classic")) {
+								// We don't care about XM Classic, those are binary dependencies.
+								return false;
+							}
+							var ext = Path.GetExtension (v);
+							return ext == ".a" || ext == ".dylib";
+						}
+					);
 
 			var failed = new List<string> ();
-			foreach (var dylib in dylibs) {
-				var fatfile = MachO.Read (dylib);
+			foreach (var machoFile in machoFiles) {
+				var fatfile = MachO.Read (machoFile);
 				foreach (var slice in fatfile) {
 					var any_load_command = false;
 					foreach (var lc in slice.load_commands) {
-
 						Version lc_min_version;
 						var mincmd = lc as MinCommand;
 						if (mincmd != null){
@@ -86,10 +95,12 @@ namespace Xamarin.Tests
 							break;
 						case MachO.LoadCommands.MiniPhoneOS:
 							version = SdkVersions.MiniOSVersion;
-							if (device) {
+							if (slice.IsDynamicLibrary && device) {
 								if (version.Major < 7)
 									version = new Version (7, 0, 0); // dylibs are supported starting with iOS 7.
 								alternate_version = new Version (8, 0, 0); // some iOS dylibs also have min OS 8.0 (if they're used as frameworks as well).
+							} else if (slice.Architecture == MachO.Architectures.ARM64) {
+								alternate_version = new Version (7, 0, 0); // our arm64 slices has min iOS 7.0.
 							}
 							break;
 						case MachO.LoadCommands.MintvOS:
@@ -107,11 +118,11 @@ namespace Xamarin.Tests
 							alternate_version = version;
 
 						if (version != mincmd.Version && alternate_version != mincmd.Version)
-							failed.Add ($"Unexpected minOS version (expected {version}, alternatively {alternate_version}, found {mincmd.Version}) in {dylib}.");
+							failed.Add ($"Unexpected minOS version (expected {version}, alternatively {alternate_version}, found {mincmd.Version}) in {machoFile} ({slice.Filename}).");
 						any_load_command = true;
 					}
 					if (!any_load_command)
-						failed.Add ($"No minOS version found in {dylib}.");
+						failed.Add ($"No minOS version found in {machoFile}.");
 				}
 			}
 			CollectionAssert.IsEmpty (failed, "Failures");
