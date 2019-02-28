@@ -43,6 +43,12 @@ namespace BCLTestImporter {
 			get => monoPath;
 			set => monoPath = FixPath (value);
 		}
+		string sdkDownload;
+		public string SDKDownloadPath
+		{
+			get => sdkDownload;
+			set => sdkDownload = FixPath (value);
+		}
 		public Platform Platform { get; set; }
 		string output;
 		public string Output {
@@ -220,7 +226,7 @@ namespace BCLTestImporter {
 			}
 
 			message = "";
-			return false;
+			return true;
 		}
 
 		bool GenerateAllProjectsOptionsAreValid (out string message)
@@ -337,7 +343,8 @@ namespace BCLTestImporter {
 		{
 			return new OptionSet { 
 				{ "mono-root=", "Root directory of the mono check out that will be use to search for the unit tests."
-					+ " Example: '/Users/test/xamarin-macios/external/mono'.", p => MonoPath = p }, 
+					+ " Example: '/Users/test/xamarin-macios/external/mono'.", p => MonoPath = p },
+				{ "sdk-download=", "Path where the downloaded SDK can be found.", p => SDKDownloadPath = p},
 				{ "iOS", "Specifies that the platform to which the projects are going to be build is iOS.", i => Platform = Platform.iOS },
 				{ "watchOS", "Specifies that the platform to which the projects are going to be build is watchOS.", w => Platform = Platform.WatchOS },
 				{ "tvOS", "Specifies that the platform to which the projects are going to be build is tvOS.", t => Platform = Platform.TvOS },

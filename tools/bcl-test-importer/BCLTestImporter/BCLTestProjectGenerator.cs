@@ -96,6 +96,8 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}),
 			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}),
 			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}),
+			(name:"MonoDataSquilteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}),
+			(name:"SystemWebServicesTests", assemblies: new [] {"monotouch_System.Web.Services_test.dll"}),
 
 			// XUNIT TESTS 
 
@@ -105,6 +107,13 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityXunit", assemblies: new [] {"monotouch_System.Security_xunit-test.dll"}),
 			(name:"SystemLinqXunit", assemblies: new [] {"monotouch_System.Xml.Linq_xunit-test.dll"}),
 			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
+			(name:"SystemComponentModelCompositionXunit", assemblies: new [] {"monotouch_System.ComponentModel.Composition_xunit-test.dll"}),
+			(name:"SystemCoreXunit", assemblies: new [] {"monotouch_System.Core_xunit-test.dll"}),
+			(name:"SystemRuntimeSerializationXunit", assemblies: new [] {"monotouch_System.Runtime.Serialization_xunit-test.dll"}),
+			(name:"SystemXmlXunit", assemblies: new [] {"monotouch_System.Xml_xunit-test.dll"}),
+			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}),
+			(name:"CorlibXunit", assemblies: new [] {"monotouch_corlib_xunit-test.dll"}),
+			(name:"MicrosoftCSharpXunit", assemblies: new [] {"monotouch_Microsoft.CSharp_xunit-test.dll"}),
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
@@ -139,7 +148,7 @@ namespace BCLTestImporter {
 			(name:"MonoDataSqilteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
 			(name:"MonoDataTdsTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}),
 			(name:"MonoPoxisTests", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}),
-			(name:"MonoSecurtiyTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
+			(name:"MonoSecurityTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
 			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll"}),
 			(name:"SystemConfigurationTests", assemblies: new [] {"xammac_net_4_5_System.Configuration_test.dll"}),
 			(name:"SystemCoreTests", assemblies: new [] {"xammac_net_4_5_System.Core_test.dll"}),
@@ -601,7 +610,7 @@ namespace BCLTestImporter {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
+		public async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
 			IEnumerable<(string name, string[] assemblies)> projects, Platform platform, string generatedDir)
 		{
 			var result = new List<(string name, string path, bool xunit, string failure)> ();
@@ -853,8 +862,8 @@ namespace BCLTestImporter {
 		{
 			missingAssemblies = new Dictionary<Platform, List<string>> ();
 			foreach (var platform in new [] {Platform.iOS, Platform.TvOS}) {
-				var testDir = wasDownloaded ? BCLTestAssemblyDefinition.GetTestDirectoryFromMonoPath (MonoRootPath, platform)
-					: BCLTestAssemblyDefinition.GetTestDirectoryFromDownloadsPath (GetReleaseDownload (platform), platform); 
+				var testDir = wasDownloaded ? BCLTestAssemblyDefinition.GetTestDirectoryFromDownloadsPath (GetReleaseDownload (platform), platform)
+					: BCLTestAssemblyDefinition.GetTestDirectoryFromMonoPath (MonoRootPath, platform);
 				var missingAssembliesPlatform = Directory.GetFiles (testDir, NUnitPattern).Select (Path.GetFileName).Union (
 					Directory.GetFiles (testDir, xUnitPattern).Select (Path.GetFileName)).ToList ();
 				

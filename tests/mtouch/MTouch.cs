@@ -2508,7 +2508,7 @@ public class B
 		[TestCase (Target.Dev, Profile.iOS, "link sdk", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "monotouch-test", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "mscorlib", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "System.Core", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "System.Data", "Release64")]
 		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
 		{
 			if (target == Target.Dev)
