@@ -201,7 +201,6 @@ namespace BCLTestImporter {
 			"xammac_net_4_5_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1197
 			"xammac_net_4_5_System.ServiceModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1198
 			"xammac_net_4_5_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1199
-			"xammac_net_4_5_System.Transactions_test.dll", // issues https://github.com/xamarin/maccore/issues/1200
 			"xammac_net_4_5_System.Xml_test.dll", // issues https://github.com/xamarin/maccore/issues/1201 and https://github.com/xamarin/maccore/issues/1202
 			"xammac_net_4_5_corlib_xunit-test.dll", // issues https://github.com/xamarin/maccore/issues/1203
 			"xammac_net_4_5_System.Core_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1204
@@ -361,18 +360,19 @@ namespace BCLTestImporter {
 
 		internal static string GetCommonIgnoreFileName (string projectName) => $"common-{projectName}.ignore";
 		
-		internal static string GetIgnoreFileName (string projectName, Platform platform)
+		internal static string[] GetIgnoreFileNames (string projectName, Platform platform)
 		{
 			switch (platform) {
 			case Platform.iOS:
-				return $"iOS-{projectName}.ignore";
+				return new string [] { $"iOS-{projectName}.ignore" };
 			case Platform.MacOSFull:
+				return new string [] { $"macOSFull-{projectName}.ignore", $"macOS-{projectName}.ignore" };
 			case Platform.MacOSModern:
-				return $"macOS-{projectName}.ignore";
+				return new string [] { $"macOSModern-{projectName}.ignore", $"macOS-{projectName}.ignore" };
 			case Platform.TvOS:
-				return $"tvOS-{projectName}.ignore";
+				return new string [] { $"tvOS-{projectName}.ignore" };
 			case Platform.WatchOS:
-				return $"watchOS-{projectName}.ignore";
+				return new string [] { $"watchOS-{projectName}.ignore" };
 			default:
 				return null;
 			}
@@ -386,9 +386,11 @@ namespace BCLTestImporter {
 			var commonIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (projectName));
 			if (File.Exists (commonIgnore))
 				yield return commonIgnore;
-			var platformIgnore = Path.Combine (templateDir, GetIgnoreFileName (projectName, platform));
-			if (File.Exists (platformIgnore))
-				yield return platformIgnore;
+			foreach (var platformFile in GetIgnoreFileNames (projectName, platform)) {
+				var platformIgnore = Path.Combine (templateDir, platformFile);
+				if (File.Exists (platformIgnore))
+					yield return platformIgnore;
+			}
 		}
 
 		/// <summary>
