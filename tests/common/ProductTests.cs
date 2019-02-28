@@ -38,15 +38,15 @@ namespace Xamarin.Tests
 		}
 
 		[Test]
-		[TestCase (Profile.macOSSystem, MachO.LoadCommands.MinMacOSX, MachO.Platform.PLATFORM_MACOS)]
-		[TestCase (Profile.macOSFull, MachO.LoadCommands.MinMacOSX, MachO.Platform.PLATFORM_MACOS)]
-		[TestCase (Profile.macOSMobile, MachO.LoadCommands.MinMacOSX, MachO.Platform.PLATFORM_MACOS)]
-		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, MachO.Platform.PLATFORM_IOSSIMULATOR, false)]
-		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, MachO.Platform.PLATFORM_IOS, true)]
-		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, MachO.Platform.PLATFORM_WATCHOSSIMULATOR, false)]
-		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, MachO.Platform.PLATFORM_WATCHOS, true)]
-		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.PLATFORM_TVOSSIMULATOR, false)]
-		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.PLATFORM_TVOS, true)]
+		[TestCase (Profile.macOSSystem, MachO.LoadCommands.MinMacOSX, MachO.Platform.MacOS)]
+		[TestCase (Profile.macOSFull, MachO.LoadCommands.MinMacOSX, MachO.Platform.MacOS)]
+		[TestCase (Profile.macOSMobile, MachO.LoadCommands.MinMacOSX, MachO.Platform.MacOS)]
+		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, MachO.Platform.IOSSimulator, false)]
+		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, MachO.Platform.IOS, true)]
+		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, MachO.Platform.WatchOSSimulator, false)]
+		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, MachO.Platform.WatchOS, true)]
+		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.TvOSSimulator, false)]
+		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.TvOS, true)]
 		public void MinOSVersion (Profile profile, MachO.LoadCommands load_command, MachO.Platform platform, bool device = false)
 		{
 			if (device)

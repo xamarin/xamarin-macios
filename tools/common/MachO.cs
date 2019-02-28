@@ -138,14 +138,14 @@ namespace Xamarin
 		}
 
 		public enum Platform : uint {
-			PLATFORM_MACOS = 1,
-			PLATFORM_IOS = 2,
-			PLATFORM_TVOS = 3,
-			PLATFORM_WATCHOS = 4,
-			PLATFORM_BRIDGEOS = 5,
-			PLATFORM_IOSSIMULATOR = 7,
-			PLATFORM_TVOSSIMULATOR = 8,
-			PLATFORM_WATCHOSSIMULATOR = 9,
+			MacOS = 1,
+			IOS = 2,
+			TvOS = 3,
+			WatchOS = 4,
+			BridgeOS = 5,
+			IOSSimulator = 7,
+			TvOSSimulator = 8,
+			WatchOSSimulator = 9,
 		}
 
 		internal static uint FromBigEndian (uint number)
