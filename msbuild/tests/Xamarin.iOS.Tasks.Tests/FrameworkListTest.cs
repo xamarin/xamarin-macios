@@ -29,12 +29,12 @@ namespace Xamarin.iOS.Tasks
 
 			foreach (var assembly in frameworkListAssemblies) {
 				if (!installedAssemblies.Any (a => a.Name == assembly.Name))
-					ReportAssemblies (assembly, $"Incorrectly added assemblies in '{frameworkListFile}'");
+					ReportAssemblies (assembly, $"Incorrectly listed assemblies in '{frameworkListFile}'. Check if those assemblies/facades exist in the final SDK root folder.");
 			}
 
 			foreach (var assembly in installedAssemblies) {
 				if (!frameworkListAssemblies.Any (a => a.Name == assembly.Name))
-					ReportAssemblies (assembly, $"Missing assemblies in '{frameworkListFile}'");
+					ReportAssemblies (assembly, $"Missing assemblies in '{frameworkListFile}'. We have detected assemblies/facades in the SDK root folder that are not listed in the 'FrameworkList' file.");
 			}
 		}
 
