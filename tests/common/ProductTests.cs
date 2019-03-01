@@ -38,29 +38,60 @@ namespace Xamarin.Tests
 		}
 
 		[Test]
-		[TestCase (Profile.macOSSystem, MachO.LoadCommands.MinMacOSX, MachO.Platform.PLATFORM_MACOS)]
-		[TestCase (Profile.macOSFull, MachO.LoadCommands.MinMacOSX, MachO.Platform.PLATFORM_MACOS)]
-		[TestCase (Profile.macOSMobile, MachO.LoadCommands.MinMacOSX, MachO.Platform.PLATFORM_MACOS)]
-		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, MachO.Platform.PLATFORM_IOSSIMULATOR, false)]
-		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, MachO.Platform.PLATFORM_IOS, true)]
-		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, MachO.Platform.PLATFORM_WATCHOSSIMULATOR, false)]
-		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, MachO.Platform.PLATFORM_WATCHOS, true)]
-		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.PLATFORM_TVOSSIMULATOR, false)]
-		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.PLATFORM_TVOS, true)]
-		public void MinOSVersion (Profile profile, MachO.LoadCommands load_command, MachO.Platform platform, bool device = false)
+		[TestCase (Profile.macOSSystem, MachO.LoadCommands.MinMacOSX, MachO.Platform.MacOS, 16)]
+		[TestCase (Profile.macOSFull, MachO.LoadCommands.MinMacOSX, MachO.Platform.MacOS, 16)]
+		[TestCase (Profile.macOSMobile, MachO.LoadCommands.MinMacOSX, MachO.Platform.MacOS, 16)]
+		[TestCase (Profile.iOS, MachO.LoadCommands.MiniPhoneOS, MachO.Platform.IOS, 28)]
+		[TestCase (Profile.watchOS, MachO.LoadCommands.MinwatchOS, MachO.Platform.WatchOS, 28)]
+		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.TvOS, 28)]
+		public void MinOSVersion (Profile profile, MachO.LoadCommands load_command, MachO.Platform platform, int minFileCount)
 		{
-			if (device)
-				Configuration.AssertDeviceAvailable ();
+			var machoFiles = new HashSet<string> ();
+			var devSdkPath = Configuration.GetSdkPath (profile, true);
+			if (Directory.Exists (devSdkPath))
+				machoFiles.UnionWith (Directory.GetFiles (devSdkPath, "*", SearchOption.AllDirectories));
+			var simSdkPath = Configuration.GetSdkPath (profile, false);
+			if (devSdkPath != simSdkPath && Directory.Exists (simSdkPath))
+				machoFiles.UnionWith (Directory.GetFiles (simSdkPath, "*", SearchOption.AllDirectories));
 
-			// TODO: add .a files
-			var dylibs = Directory.GetFiles (Configuration.GetSdkPath (profile, device), "*.dylib", SearchOption.AllDirectories)
-				.Where ((v) => !v.Contains ("dylib.dSYM/Contents/Resources/DWARF")); // Don't include *.dylib from inside .dSYMs.
+			machoFiles.RemoveWhere ((v => {
+				if (v.Contains ("dylib.dSYM/Contents/Resources/DWARF")) {
+					// Don't include *.dylib from inside .dSYMs.
+					return true;
+				} else if (v.Contains ("libxammac-classic") || v.Contains ("libxammac-system-classic")) {
+					// We don't care about XM Classic, those are binary dependencies.
+					return true;
+				}
+				var ext = Path.GetExtension (v);
+				return ext != ".a" && ext != ".dylib";
+			}));
+
+			Assert.GreaterOrEqual (machoFiles.Count, minFileCount, "Minimum number of files to verify");
 
 			var failed = new List<string> ();
-			foreach (var dylib in dylibs) {
-				var fatfile = MachO.Read (dylib);
+			foreach (var machoFile in machoFiles) {
+				var fatfile = MachO.Read (machoFile);
 				foreach (var slice in fatfile) {
 					var any_load_command = false;
+					bool device;
+					switch (slice.Architecture) {
+					case MachO.Architectures.ARM64:
+					case MachO.Architectures.ARM64e:
+					case MachO.Architectures.ARM64_32:
+					case MachO.Architectures.ARMv6:
+					case MachO.Architectures.ARMv7:
+					case MachO.Architectures.ARMv7k:
+					case MachO.Architectures.ARMv7s:
+						device = true;
+						break;
+					case MachO.Architectures.i386:
+					case MachO.Architectures.x86_64:
+						device = false;
+						break;
+					default:
+						throw new NotImplementedException ($"Architecture: {slice.Architecture}");
+					}
+
 					foreach (var lc in slice.load_commands) {
 
 						Version lc_min_version;
@@ -74,7 +105,19 @@ namespace Xamarin.Tests
 							if (buildver == null)
 								continue;
 
-							Assert.AreEqual (platform, buildver.Platform, "Unexpected build version command");
+							var alternativePlatform = (MachO.Platform) 0;
+							switch (platform) {
+							case MachO.Platform.IOSSimulator:
+								alternativePlatform = MachO.Platform.IOS;
+								break;
+							case MachO.Platform.TvOSSimulator:
+								alternativePlatform = MachO.Platform.TvOS;
+								break;
+							case MachO.Platform.WatchOSSimulator:
+								alternativePlatform = MachO.Platform.WatchOS;
+								break;
+							}
+							Assert.That (buildver.Platform, Is.EqualTo (platform).Or.EqualTo (alternativePlatform), $"Unexpected build version command in {machoFile} ({slice.Filename})");
 							lc_min_version = buildver.MinOS;
 						}
 
@@ -90,10 +133,12 @@ namespace Xamarin.Tests
 							break;
 						case MachO.LoadCommands.MiniPhoneOS:
 							version = SdkVersions.MiniOSVersion;
-							if (device) {
+							if (slice.IsDynamicLibrary && device) {
 								if (version.Major < 7)
 									version = new Version (7, 0, 0); // dylibs are supported starting with iOS 7.
 								alternate_version = new Version (8, 0, 0); // some iOS dylibs also have min OS 8.0 (if they're used as frameworks as well).
+							} else if (slice.Architecture == MachO.Architectures.ARM64) {
+								alternate_version = new Version (7, 0, 0); // our arm64 slices has min iOS 7.0.
 							}
 							mono_native_compat_version = SdkVersions.MiniOSVersion;
 							mono_native_unified_version = new Version (10, 0, 0);
@@ -120,27 +165,27 @@ namespace Xamarin.Tests
 						if (alternate_version == null)
 							alternate_version = version;
 
-						switch (Path.GetFileName (dylib)) {
+						switch (Path.GetFileName (machoFile)) {
 						case "libmono-native-compat.dylib":
 							if (mono_native_compat_version != lc_min_version)
-								failed.Add ($"Unexpected minOS version (expected {mono_native_compat_version}, found {lc_min_version}) in {dylib}.");
+								failed.Add ($"Unexpected minOS version (expected {mono_native_compat_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
 							break;
 						case "libmono-native-unified.dylib":
 							if (mono_native_unified_version != lc_min_version)
-								failed.Add ($"Unexpected minOS version (expected {mono_native_unified_version}, found {lc_min_version}) in {dylib}.");
+								failed.Add ($"Unexpected minOS version (expected {mono_native_unified_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
 							break;
 						default:
 							if (version != lc_min_version && alternate_version != lc_min_version)
-								failed.Add ($"Unexpected minOS version (expected {version}, alternatively {alternate_version}, found {lc_min_version}) in {dylib}.");
+								failed.Add ($"Unexpected minOS version (expected {version}, alternatively {alternate_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
 							break;
 						}
 						any_load_command = true;
 					}
 					if (!any_load_command)
-						failed.Add ($"No minOS version found in {dylib}.");
+						failed.Add ($"No minOS version found in {machoFile}.");
 				}
 			}
-			CollectionAssert.IsEmpty (failed, "Failures");
+			Assert.IsEmpty (string.Join ("\n", failed), "Failures");
 		}
 	}
 

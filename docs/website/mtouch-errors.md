@@ -1589,6 +1589,16 @@ The format of a file can be verified using the `file` command from a terminal:
 
     file -arch all -l /path/to/file
 
+### MT1605: Invalid entry * in the static library *: *
+
+An error occurred while processing the MachO file in question.
+
+Please make sure the file is a valid Mach-O static library.
+
+The format of a file can be verified using the `file` command from a terminal:
+
+    file -arch all -l /path/to/file
+
 ## MT2xxx: Linker error messages
 
 <!--

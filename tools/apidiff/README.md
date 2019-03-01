@@ -1,26 +1,14 @@
 # New Releases
 
-Note: Don't forget to :warning: **build** :warning: the XI/XM assemblies before trying to regenerate the XML files.
+Inside `Make.config` update the `APIDIFF_REFERENCES=` line to point to the `bundle.zip` URL of the currently stable version. E.g.
 
-Doing a `make update-refs` will update the XML files where we keep the current **public** API.
-
-The result should be added/committed to git so every future revisions can be compared to the reference files.
-
-= Update reference sources using the dlls from the System version of XI/XM =
-
-    make update-ios-refs     -j IOS_DESTDIR= IOS_INSTALL_VERSION=Current
-    make update-watchos-refs -j IOS_DESTDIR= IOS_INSTALL_VERSION=Current
-    make update-tvos-refs    -j IOS_DESTDIR= IOS_INSTALL_VERSION=Current
-    make update-mac-refs     -j MAC_DESTDIR= MAC_INSTALL_VERSION=Current
-
-You can change *_INSTALL_VERSION to other than Current if you have a different version
-installed (say you have XI 9.4.0.0 installed in /Library/Frameworks/Xamarin.iOS.framework/Versions/9.4.0.0,
-in which case you can do IOS_INSTALL_VERSION=9.4.0.0
-
+```
+APIDIFF_REFERENCES=https://bosstoragemirror.blob.core.windows.net/wrench/jenkins/d15-9/2dc06c712629feeb179ed112a590d9922caac6e7/53/package/bundle.zip
+```
 
 # New Revisions
 
-On the bots each revision rebuilds every assemblies. Each of them will be compared to the XML reference files. Any changes (addition/removal) to the public API will be reported in HTML files.
+On the bots each revision rebuilds every assemblies. Each of them will be compared to the downloaded stable version from `APIDIFF_REFERENCES`. Any changes (addition/removal) to the public API will be reported in HTML files.
 
 This can be done manually with `make`. The `.\diff\` directory will contain the diffs in HTML format.
 

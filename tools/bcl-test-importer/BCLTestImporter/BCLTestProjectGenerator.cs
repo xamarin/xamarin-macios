@@ -27,6 +27,7 @@ namespace BCLTestImporter {
 		internal static readonly string TargetFrameworkVersionKey = "%TARGET FRAMEWORK VERSION%";
 		internal static readonly string TargetExtraInfoKey = "%TARGET EXTRA INFO%";
 		internal static readonly string DefineConstantsKey = "%DEFINE CONSTANTS%";
+		internal static readonly string DownloadPathKey = "%DOWNLOAD PATH%";
 		static readonly Dictionary<Platform, string> plistTemplateMatches = new Dictionary<Platform, string> {
 			{Platform.iOS, "Info.plist.in"},
 			{Platform.TvOS, "Info-tv.plist.in"},
@@ -96,6 +97,8 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}),
 			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}),
 			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}),
+			(name:"MonoDataSquilteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}),
+			(name:"SystemWebServicesTests", assemblies: new [] {"monotouch_System.Web.Services_test.dll"}),
 
 			// XUNIT TESTS 
 
@@ -105,6 +108,13 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityXunit", assemblies: new [] {"monotouch_System.Security_xunit-test.dll"}),
 			(name:"SystemLinqXunit", assemblies: new [] {"monotouch_System.Xml.Linq_xunit-test.dll"}),
 			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
+			(name:"SystemComponentModelCompositionXunit", assemblies: new [] {"monotouch_System.ComponentModel.Composition_xunit-test.dll"}),
+			(name:"SystemCoreXunit", assemblies: new [] {"monotouch_System.Core_xunit-test.dll"}),
+			(name:"SystemRuntimeSerializationXunit", assemblies: new [] {"monotouch_System.Runtime.Serialization_xunit-test.dll"}),
+			(name:"SystemXmlXunit", assemblies: new [] {"monotouch_System.Xml_xunit-test.dll"}),
+			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}),
+			(name:"CorlibXunit", assemblies: new [] {"monotouch_corlib_xunit-test.dll"}),
+			(name:"MicrosoftCSharpXunit", assemblies: new [] {"monotouch_Microsoft.CSharp_xunit-test.dll"}),
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
@@ -139,7 +149,7 @@ namespace BCLTestImporter {
 			(name:"MonoDataSqilteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
 			(name:"MonoDataTdsTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}),
 			(name:"MonoPoxisTests", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}),
-			(name:"MonoSecurtiyTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
+			(name:"MonoSecurityTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
 			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll"}),
 			(name:"SystemConfigurationTests", assemblies: new [] {"xammac_net_4_5_System.Configuration_test.dll"}),
 			(name:"SystemCoreTests", assemblies: new [] {"xammac_net_4_5_System.Core_test.dll"}),
@@ -601,7 +611,7 @@ namespace BCLTestImporter {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
+		public async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
 			IEnumerable<(string name, string[] assemblies)> projects, Platform platform, string generatedDir)
 		{
 			var result = new List<(string name, string path, bool xunit, string failure)> ();
@@ -694,8 +704,9 @@ namespace BCLTestImporter {
 		/// <param name="templatePath">A path to the template used to generate the path.</param>
 		/// <param name="infoPlistPath">The path to the info plist of the project.</param>
 		/// <returns></returns>
-		static async Task<string> GenerateAsync (string projectName, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, string infoPlistPath, Platform platform)
+		async Task<string> GenerateAsync (string projectName, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, string infoPlistPath, Platform platform)
 		{
+			var downloadPath = GetReleaseDownload (platform).Replace ("/", "\\");
 			// fix possible issues with the paths to be included in the msbuild xml
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
@@ -715,6 +726,7 @@ namespace BCLTestImporter {
 
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
+				result = result.Replace (DownloadPathKey, downloadPath);
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
@@ -746,7 +758,7 @@ namespace BCLTestImporter {
 				result = result.Replace (ContentKey, contentFiles.ToString ());
 				switch (platform){
 				case Platform.MacOSFull:
-					result = result.Replace (TargetFrameworkVersionKey, "v4.5");
+					result = result.Replace (TargetFrameworkVersionKey, "v4.5.2");
 					result = result.Replace (TargetExtraInfoKey,
 						"<UseXamMacFullFramework>true</UseXamMacFullFramework>");
 					result = result.Replace (DefineConstantsKey, "XAMCORE_2_0;ADD_BCL_EXCLUSIONS;XAMMAC_4_5");
@@ -792,6 +804,7 @@ namespace BCLTestImporter {
 
 		async Task<string> GenerateWatchExtensionAsync (string projectName, string templatePath, string infoPlistPath, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info)
 		{
+			var downloadPath = GetReleaseDownload (Platform.WatchOS).Replace ("/", "\\");
 			var sb = new StringBuilder ();
 			if (!string.IsNullOrEmpty (info.FailureMessage)) {
 				WriteReferenceFailure (sb, info.FailureMessage);
@@ -809,6 +822,7 @@ namespace BCLTestImporter {
 			
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
+				result = result.Replace (DownloadPathKey, downloadPath);
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (WatchOSTemplatePathKey, WatchExtensionTemplatePath);
 				result = result.Replace (PlistKey, infoPlistPath);
@@ -853,8 +867,8 @@ namespace BCLTestImporter {
 		{
 			missingAssemblies = new Dictionary<Platform, List<string>> ();
 			foreach (var platform in new [] {Platform.iOS, Platform.TvOS}) {
-				var testDir = wasDownloaded ? BCLTestAssemblyDefinition.GetTestDirectoryFromMonoPath (MonoRootPath, platform)
-					: BCLTestAssemblyDefinition.GetTestDirectoryFromDownloadsPath (GetReleaseDownload (platform), platform); 
+				var testDir = wasDownloaded ? BCLTestAssemblyDefinition.GetTestDirectoryFromDownloadsPath (GetReleaseDownload (platform), platform)
+					: BCLTestAssemblyDefinition.GetTestDirectoryFromMonoPath (MonoRootPath, platform);
 				var missingAssembliesPlatform = Directory.GetFiles (testDir, NUnitPattern).Select (Path.GetFileName).Union (
 					Directory.GetFiles (testDir, xUnitPattern).Select (Path.GetFileName)).ToList ();
 				

@@ -26,6 +26,20 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<_XamarinCommonPropsHasBeenImported>true</_XamarinCommonPropsHasBeenImported>
 	</PropertyGroup>
 
+
+	<!-- Story-time! MigrateToNewXMIdentifier is special because it un-does a lie we started telling from the 
+	beginning of Full (called Xamarin.Mac 4.5 back then). Back then, we released Modern (called Mobile) and 
+	when many customers upgraded from Classic they broke in terrible ways as none of their nugets worked. 
+	No nugets in the wild had heard of the Xamarin.Mac TFI and thus didn't support it. To "fix" this use case,
+	we created Full (XM 4.5) and _lied_ with our TFI claiming to be .NETFramework. Well we were close enough
+	for a vast majority of packages to work. However, this made creating Full specific package flavors impossible.
+	Now that we're getting "real" nuget support, we need to stop lying without breaking the world. We're starting by
+	allowing "opt-in" MigrateToNewXMIdentifier which will swap your declared TFI to the new hotness.
+	-->
+	<PropertyGroup Condition=" '$(MigrateToNewXMIdentifier)' == 'true' And '$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true' ">
+		<TargetFrameworkIdentifier>Xamarin.Mac.NET</TargetFrameworkIdentifier>
+	</PropertyGroup>
+
 	<PropertyGroup>
 		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
 		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' != ''">false</IsXBuild>

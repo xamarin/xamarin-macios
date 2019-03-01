@@ -259,6 +259,7 @@ namespace ObjCRuntime {
 #if !XAMMAC_SYSTEM_MONO
 			UseAutoreleasePoolInThreadPool = true;
 #endif
+			IsARM64CallingConvention = GetIsARM64CallingConvention (); // Can only be done after Runtime.Arch is set (i.e. InitializePlatform has been called).
 
 			objc_exception_mode = options->MarshalObjectiveCExceptionMode;
 			managed_exception_mode = options->MarshalManagedExceptionMode;
@@ -1739,39 +1740,24 @@ namespace ObjCRuntime {
 		[DllImport (Constants.libSystemLibrary)]
 		static unsafe extern NXArchInfo* NXGetLocalArchInfo ();
 
-		unsafe static NXArchInfo* arch_info;
-		// May return values that are not in the enum.
-		internal static CpuArchitecture CpuArchitecture {
-			get {
-				unsafe {
-					if (arch_info == null)
-						arch_info = NXGetLocalArchInfo ();
-					return (CpuArchitecture) ((arch_info->CpuType << 32) | arch_info->CpuSubType);
-				}
-			}
-		}
-
-		public readonly static bool IsARM64CallingConvention = GetIsARM64CallingConvention ();
+		public static bool IsARM64CallingConvention;
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		static bool GetIsARM64CallingConvention ()
 		{
-#if !MONOMAC
+#if MONOMAC
 			return false;
-#else
-			// Make this determination based on only cputype to make it as future proof as possible.
-			// Hardcoding anything based on CpuArchitecture values might end up being broken when
-			// Apple creates a new variation of an existing cpu (but still ARM64-based),
-			// say a 'arm64e2' cpu. This code should continue to work in that case.
-			var arch = CpuArchitecture;
-			var cputype = ((ulong) arch) >> 32;
-			switch (cputype) {
-			case 12 | 0x01000000: // CPU_TYPE_ARM | CPU_ARCH_ABI64. This includes both arm64 and arm64e.
-			case 12 | 0x02000000: // CPU_TYPE_ARM | CPU_ARCH_ABI64_32. This is arm64_32
-				return true;
-			default:
+#elif __IOS__ || __TVOS__
+			return IntPtr.Size == 8 && Arch == Arch.DEVICE;
+#elif __WATCHOS__
+			if (Arch != Arch.DEVICE)
 				return false;
+			unsafe {
+				// We're assuming Apple will only release arm64-based watch cpus from now on (i.e. only non-arm64 cpu is armv7k).
+				return NXGetLocalArchInfo ()->Name != "armv7k";
 			}
+#else
+#error Unknown platform
 #endif
 		}
 	}
