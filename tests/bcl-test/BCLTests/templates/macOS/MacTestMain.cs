@@ -77,6 +77,11 @@ namespace Xamarin.Mac.Tests
 			}
 			
 			runner.SkipCategories (categories);
+			var skippedTests = IgnoreFileParser.ParseContentFiles (NSBundle.MainBundle.ResourcePath);
+			if (skippedTests.Any ()) {
+				// ensure that we skip those tests that have been passed via the ignore files
+				runner.SkipTests (skippedTests);
+			}
 			runner.Run (testAssemblies.ToList ());
 
 			if (options.ResultFile != null) {

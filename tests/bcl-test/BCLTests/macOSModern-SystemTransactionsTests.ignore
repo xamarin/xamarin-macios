@@ -1,0 +1,90 @@
+# System.TypeLoadException : Could not set up parent class, due to: Could not load type of field 'System.Configuration.ConfigurationSection:section_handler' (1) due to: Could not resolve type with token 01000051 from typeref 
+MonoTests.System.Transactions.TransactionScopeTest.TransactionScopeWithInvalidTimeSpanThrows
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction8a
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction8
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction6e
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction6d
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction6c
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction6b
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction6a
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction10b
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction10a
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction10
+MonoTests.System.Transactions.EnlistTest.Vol2_Rollback
+MonoTests.System.Transactions.EnlistTest.Vol2_Dur1_Fail5
+MonoTests.System.Transactions.EnlistTest.Vol2_Dur1_Fail4
+MonoTests.System.Transactions.EnlistTest.Vol2_Dur1_Fail3
+MonoTests.System.Transactions.EnlistTest.Vol2_Dur1_Fail1
+MonoTests.System.Transactions.EnlistTest.Vol2_Dur1
+MonoTests.System.Transactions.EnlistTest.Vol2_Dur0_SPC
+MonoTests.System.Transactions.EnlistTest.Vol2_Committed
+MonoTests.System.Transactions.EnlistTest.Vol1_Rollback
+MonoTests.System.Transactions.EnlistTest.Vol1_Dur0_Pspe1
+MonoTests.System.Transactions.EnlistTest.Vol1_Dur0_Fail3
+MonoTests.System.Transactions.EnlistTest.Vol1_Dur0_Fail2
+MonoTests.System.Transactions.EnlistTest.Vol1_Dur0_Fail1
+MonoTests.System.Transactions.EnlistTest.Vol1_Dur0_2PC
+MonoTests.System.Transactions.EnlistTest.Vol1_Dur0
+MonoTests.System.Transactions.EnlistTest.Vol1_Committed
+MonoTests.System.Transactions.EnlistTest.Vol0_Dur1_Pspe1
+MonoTests.System.Transactions.EnlistTest.Vol0_Dur1_Fail
+MonoTests.System.Transactions.EnlistTest.Vol0_Dur1
+MonoTests.System.Transactions.EnlistTest.Vol0_Dur0_Pspe2
+MonoTests.System.Transactions.EnlistTest.Vol2SPC_Committed
+MonoTests.System.Transactions.EnlistTest.Vol1SPC_Committed
+MonoTests.System.Transactions.EnlistTest.Vol0_Dur0_Pspe1
+MonoTests.System.Transactions.EnlistTest.TransactionDispose3
+MonoTests.System.Transactions.EnlistTest.TransactionCompleted_Rollback
+MonoTests.System.Transactions.EnlistTest.TransactionCompleted_Committed
+
+# Expected: System.InvalidOperationException
+# but was: System.TypeInitializationException : The type initializer for 'System.Transactions.TransactionScope' threw an exception.
+MonoTests.System.Transactions.TransactionScopeTest.TransactionScopeCompleted3
+MonoTests.System.Transactions.TransactionScopeTest.TransactionScopeCompleted2
+MonoTests.System.Transactions.TransactionScopeTest.TransactionScopeCompleted1
+
+#  Ambient transaction exists (before)
+# Expected: null
+# But was:  <System.Transactions.CommittableTransaction>
+MonoTests.System.Transactions.TransactionScopeTest.TransactionScopeCommit
+MonoTests.System.Transactions.TransactionScopeTest.TransactionScopeAbort
+MonoTests.System.Transactions.TransactionScopeTest.RMFail2
+MonoTests.System.Transactions.TransactionScopeTest.RMFail1
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope9
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope8a
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope8
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope7
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope6
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope5
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope4
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope3
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope2
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope13
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope12
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope10
+MonoTests.System.Transactions.TransactionScopeTest.NestedTransactionScope1
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransactionRollback 
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransactionCommit
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction5
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction4
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction3
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction2
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction16
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction15
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction14
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction13
+MonoTests.System.Transactions.TransactionScopeTest.ExplicitTransaction1
+
+# Expected: 1
+#  But was:  0
+MonoTests.System.Transactions.EnlistTest.Vol2_Throwing_On_Second_Prepare
+MonoTests.System.Transactions.EnlistTest.Vol2_Throwing_On_Rollback
+MonoTests.System.Transactions.EnlistTest.Vol2_Throwing_On_First_Rollback_And_Second_Prepare
+MonoTests.System.Transactions.EnlistTest.Vol2_Throwing_On_First_Prepare_And_Second_Rollback
+MonoTests.System.Transactions.EnlistTest.Vol2_Throwing_On_First_Prepare
+MonoTests.System.Transactions.EnlistTest.Vol2_Throwing_On_Commit
+MonoTests.System.Transactions.EnlistTest.Vol2SPC_Throwing_On_Commit
+MonoTests.System.Transactions.EnlistTest.Vol1SPC_Throwing_On_Commit
+MonoTests.System.Transactions.EnlistTest.Vol1_Throwing_On_Rollback
+MonoTests.System.Transactions.EnlistTest.Vol1_Throwing_On_Prepare
+MonoTests.System.Transactions.EnlistTest.Vol1_Throwing_On_Commit
