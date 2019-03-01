@@ -97,7 +97,7 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}),
 			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}),
 			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}),
-			(name:"MonoDataSquilteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}),
+			(name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}),
 			(name:"SystemWebServicesTests", assemblies: new [] {"monotouch_System.Web.Services_test.dll"}),
 
 			// XUNIT TESTS 
@@ -146,7 +146,7 @@ namespace BCLTestImporter {
 		
 			// NUNIT Projects
 			(name:"MonoCSharpTests", assemblies: new [] {"xammac_net_4_5_Mono.CSharp_test.dll"}),
-			(name:"MonoDataSqilteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
+			(name:"MonoDataSqliteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
 			(name:"MonoDataTdsTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}),
 			(name:"MonoPoxisTests", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}),
 			(name:"MonoSecurityTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
@@ -189,14 +189,11 @@ namespace BCLTestImporter {
 			"xammac_net_4_5_I18N.Other_test.dll",
 			"xammac_net_4_5_I18N.Rare_test.dll",
 			"xammac_net_4_5_I18N.West_test.dll",
-			"xammac_net_4_5_Mono.Data.Sqlite_test.dll", // issue https://github.com/xamarin/maccore/issues/1187
 			"xammac_net_4_5_Mono.Posix_test.dll", // issue https://github.com/xamarin/maccore/issues/1188
 			"xammac_net_4_5_Mono.Posix_test.dll", // issues https://github.com/xamarin/maccore/issues/1189 and https://github.com/xamarin/maccore/issues/1190
 			"xammac_net_4_5_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1191
 			"xammac_net_4_5_System.Data_test.dll", // issues https://github.com/xamarin/maccore/issues/1192 and https://github.com/xamarin/maccore/issues/1193
 			"xammac_net_4_5_System.IdentityModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1194
-			"xammac_net_4_5_System.IO.Compression.FileSystem_test.dll", // issues https://github.com/xamarin/maccore/issues/1195
-			"xammac_net_4_5_System.IO.Compression_test.dll", // issue https://github.com/xamarin/maccore/issues/1146
 			"xammac_net_4_5_System.IdentityModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1196
 			"xammac_net_4_5_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1197
 			"xammac_net_4_5_System.ServiceModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1198
