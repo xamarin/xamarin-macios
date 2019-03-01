@@ -186,8 +186,8 @@ $(APIDIFF_DIR)/references/xi/%.xml: temp/%.dll $(MONO_API_INFO)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
 
 $(APIDIFF_DIR)/updated-references/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
+	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
+	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
 
 $(APIDIFF_DIR)/references/xm/%.xml: temp/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
