@@ -50,6 +50,8 @@ COMMON_TARGET_DIRS = \
 ARGS_32 = -define:ARCH_32
 ARGS_64 = -define:ARCH_64
 
+CURRENT_BRANCH_SED_ESCAPED:=$(subst |,\|,$(subst &,\&,$(subst $$,\$$,$(subst /,\/,$(CURRENT_BRANCH))))))
+
 #
 # Xamarin.iOS
 #
@@ -77,19 +79,18 @@ IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
 $(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e "s/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH): $(shell git log -1 --pretty=%h))/g" \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 		-e "s/@IOS_SDK_VERSION@/$(IOS_SDK_VERSION)/g" \
 		$< > $@
 
 $(IOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 	$(Q) mkdir -p $(IOS_BUILD_DIR)
-	$(call Q_PROF_GEN,ios) sed < $< > $@ 's|@PRODUCT_NAME@|$(IOS_PRODUCT)|g; s|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g; s|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH)|g; s|@PACKAGE_VERSION_MAJOR@|$(IOS_PACKAGE_VERSION_MAJOR)|g; s|@PACKAGE_VERSION_MINOR@|$(IOS_PACKAGE_VERSION_MINOR)|g; s|@PACKAGE_VERSION_REV@|$(IOS_PACKAGE_VERSION_REV)|g; s|@PACKAGE_VERSION_BUILD@|$(IOS_PACKAGE_VERSION_BUILD)|g'
+	$(call Q_PROF_GEN,ios) sed < $< > $@ 's|@PRODUCT_NAME@|$(IOS_PRODUCT)|g; s|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g; s|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH_SED_ESCAPED)|g; s|@PACKAGE_VERSION_MAJOR@|$(IOS_PACKAGE_VERSION_MAJOR)|g; s|@PACKAGE_VERSION_MINOR@|$(IOS_PACKAGE_VERSION_MINOR)|g; s|@PACKAGE_VERSION_REV@|$(IOS_PACKAGE_VERSION_REV)|g; s|@PACKAGE_VERSION_BUILD@|$(IOS_PACKAGE_VERSION_BUILD)|g'
 
 # core.dll
 $(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources
 	$(Q) mkdir -p $(IOS_BUILD_DIR)native
 	$(call Q_PROF_CSC,ios) $(IOS_CSC) -nologo -out:$@ -target:library -debug -unsafe \
-		-r:$(IOS_LIBDIR)/Mono.Security.dll \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD $(IOS_DEFINES) \
 		$(IOS_native_DEFINES) \
@@ -124,7 +125,6 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 	@mkdir -p $(IOS_BUILD_DIR)/native-$(1)
 	$$(call Q_PROF_CSC,ios/$(1) bit) $$(IOS_CSC) -nologo -out:$$@ -target:library -debug -unsafe -optimize \
 		-deterministic \
-		-r:$(IOS_LIBDIR)/Mono.Security.dll \
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
 		$$(IOS_native_DEFINES) \
@@ -411,8 +411,9 @@ MAC_MODERNHTTP_SOURCES = \
 $(MAC_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.inc | $(MAC_BUILD_DIR)
 	$(Q) sed \
 			-e "s/@VERSION@/$(MAC_PACKAGE_VERSION_MAJOR).$(MAC_PACKAGE_VERSION_MINOR).$(MAC_PACKAGE_VERSION_REV)/g" \
-			-e "s/@REVISION@/$(MAC_COMMIT_DISTANCE) ($(CURRENT_BRANCH): $(shell git log -1 --pretty=%h))/g" \
+			-e 's/@REVISION@/$(MAC_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 			-e "s/@OSX_SDK_VERSION@/$(OSX_SDK_VERSION)/g" \
+			-e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" \
 		$< > $@
 
 $(PROJECT_DIR)/xammac.csproj: xammac.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
@@ -422,7 +423,7 @@ PROJECT_FILES += $(PROJECT_DIR)/xammac.csproj
 
 $(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 	@mkdir -p $(MAC_BUILD_DIR)
-	$(call Q_PROF_GEN,mac) sed < $< > $@ 's|@PRODUCT_NAME@|$(MAC_PRODUCT)|g; s|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g; s|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH)|g; s|@PACKAGE_VERSION_MAJOR@|$(MAC_PACKAGE_VERSION_MAJOR)|g; s|@PACKAGE_VERSION_MINOR@|$(MAC_PACKAGE_VERSION_MINOR)|g; s|@PACKAGE_VERSION_REV@|$(MAC_PACKAGE_VERSION_REV)|g; s|@PACKAGE_VERSION_BUILD@|$(MAC_PACKAGE_VERSION_BUILD)|g'
+	$(call Q_PROF_GEN,mac) sed < $< > $@ 's|@PRODUCT_NAME@|$(MAC_PRODUCT)|g; s|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g; s|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH_SED_ESCAPED)|g; s|@PACKAGE_VERSION_MAJOR@|$(MAC_PACKAGE_VERSION_MAJOR)|g; s|@PACKAGE_VERSION_MINOR@|$(MAC_PACKAGE_VERSION_MINOR)|g; s|@PACKAGE_VERSION_REV@|$(MAC_PACKAGE_VERSION_REV)|g; s|@PACKAGE_VERSION_BUILD@|$(MAC_PACKAGE_VERSION_BUILD)|g'
 
 # We can't pass the --target-framework values as parameters to the templates, because the commas interfere with Make's parameter parsing.
 xm_full_profile=--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
@@ -478,7 +479,6 @@ $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCE
 		$$(MAC_$(3)_CSC) -nologo -out:$$@ -target:library -debug -unsafe \
 		-deterministic \
 		$$(MAC_COMMON_DEFINES),OBJECT_REF_TRACKING \
-		-r:Mono.Security.dll \
 		$$(MAC_$(3)_ARGS) \
 		$$(ARGS_$(6)) \
 		-publicsign -keyfile:$(SN_KEY) \
@@ -689,7 +689,7 @@ WATCHOS_SOURCES +=                \
 $(WATCH_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.watch.cs.in Makefile $(TOP)/Make.config.inc | $(WATCH_BUILD_DIR)
 	$(call Q_PROF_GEN,watch) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e "s/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH): $(shell git log -1 --pretty=%h))/g" \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 		-e "s/@WATCH_SDK_VERSION@/$(WATCH_SDK_VERSION)/g" \
 		$< > $@
 
@@ -697,7 +697,7 @@ $(WATCH_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.co
 	$(call Q_PROF_GEN,watch) sed \
 		-e 's|@PRODUCT_NAME@|Xamarin.WatchOS|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \
-		-e 's|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH)|g' \
+		-e 's|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH_SED_ESCAPED)|g' \
 		-e 's|@PACKAGE_VERSION_MAJOR@|$(IOS_PACKAGE_VERSION_MAJOR)|g' \
 		-e 's|@PACKAGE_VERSION_MINOR@|$(IOS_PACKAGE_VERSION_MINOR)|g' \
 		-e 's|@PACKAGE_VERSION_REV@|$(IOS_PACKAGE_VERSION_REV)|g' \
@@ -896,7 +896,7 @@ TVOS_SOURCES +=                \
 $(TVOS_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.tvos.cs.in Makefile $(TOP)/Make.config.inc | $(TVOS_BUILD_DIR)
 	$(call Q_PROF_GEN,tvos) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e "s/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH): $(shell git log -1 --pretty=%h))/g" \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 		-e "s/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/g" \
 		$< > $@
 
@@ -904,7 +904,7 @@ $(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.con
 	$(call Q_PROF_GEN,tvos) sed \
 		-e 's|@PRODUCT_NAME@|Xamarin.TVOS|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \
-		-e 's|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH)|g' \
+		-e 's|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH_SED_ESCAPED)|g' \
 		-e 's|@PACKAGE_VERSION_MAJOR@|$(IOS_PACKAGE_VERSION_MAJOR)|g' \
 		-e 's|@PACKAGE_VERSION_MINOR@|$(IOS_PACKAGE_VERSION_MINOR)|g' \
 		-e 's|@PACKAGE_VERSION_REV@|$(IOS_PACKAGE_VERSION_REV)|g' \
@@ -953,7 +953,6 @@ $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%dll $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVO
 	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo -out:$(basename $@).dll -target:library -debug -unsafe -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(TVOS_DEFINES) \
 		-deterministic \
-		-r:$(TVOS_LIBDIR)/Mono.Security.dll \
 		$(ARGS_64) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(TVOS_SOURCES) @$(TVOS_BUILD_DIR)/tvos/generated_sources

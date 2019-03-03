@@ -199,12 +199,21 @@ namespace Xamarin.Bundler {
 		public string UserGccFlags;
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
-		bool cached_executable; 
+		bool cached_executable {
+			get {
+				if (final_build_task == null) {
+					// symlinked
+					return false;
+				}
+				return !final_build_task.Rebuilt;
+			}
+		}
 
 		List<Abi> abis;
 		HashSet<Abi> all_architectures; // all Abis used in the app, including extensions.
 
 		BuildTasks build_tasks;
+		BuildTask final_build_task; // either lipo or file copy (to final destination)
 
 		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
 
@@ -890,8 +899,8 @@ namespace Xamarin.Bundler {
 			CompilePInvokeWrappers ();
 			BuildApp ();
 
-			if (Driver.Dot)
-				build_tasks.Dot (Path.Combine (Cache.Location, "build.dot"));
+			if (Driver.DotFile != null)
+				build_tasks.Dot (this, Driver.DotFile.Length > 0 ? Driver.DotFile : Path.Combine (Cache.Location, "build.dot"));
 
 			Driver.Watch ("Building build tasks", 1);
 			build_tasks.Execute ();
@@ -1088,6 +1097,18 @@ namespace Xamarin.Bundler {
 
 					if (appex.Definitions.Count > 0) {
 						ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the extension has custom xml definitions for the managed linker ({string.Join (", ", appex.Definitions)}).");
+						continue;
+					}
+				}
+
+				if (UseInterpreter != appex.UseInterpreter) {
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the interpreter settings are different between the container app ({(UseInterpreter ? "Enabled" : "Disabled")}) and the extension ({(appex.UseInterpreter ? "Enabled" : "Disabled")}).");
+					continue;
+				} else if (UseInterpreter) {
+					var appAssemblies = new HashSet<string> (InterpretedAssemblies);
+					var appexAssemblies = new HashSet<string> (appex.InterpretedAssemblies);
+					if (!appAssemblies.SetEquals (appexAssemblies)) {
+						ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the interpreted assemblies are different between the container app ({(InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join (", ", InterpretedAssemblies))}) and the extension ({(appex.InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join (", ", appex.InterpretedAssemblies))}).");
 						continue;
 					}
 				}
@@ -1384,6 +1405,9 @@ namespace Xamarin.Bundler {
 			if (EnableBitCode && IsSimulatorBuild)
 				throw ErrorHelper.CreateError (84, "Bitcode is not supported in the simulator. Do not pass --bitcode when building for the simulator.");
 
+			if (UseInterpreter && IsSimulatorBuild)
+				throw ErrorHelper.CreateError (141, "The interpreter is not supported in the simulator. Do not pass --interpreter when building for the simulator.");
+
 			Namespaces.Initialize ();
 
 			if (Embeddinator) {
@@ -1492,13 +1516,37 @@ namespace Xamarin.Bundler {
 		{
 			SelectAssemblyBuildTargets (); // This must be done after the linker has run, since the linker may bring in more assemblies than only those referenced explicitly.
 
+			var link_tasks = new List<NativeLinkTask> ();
 			foreach (var target in Targets) {
 				if (target.CanWeSymlinkTheApplication ())
 					continue;
 
 				target.ComputeLinkerFlags ();
 				target.Compile ();
-				target.NativeLink (build_tasks);
+				link_tasks.AddRange (target.NativeLink (build_tasks));
+			}
+
+			if (IsDeviceBuild) {
+				// If building for the simulator, the executable is written directly into the expected location within the .app, and no lipo/file copying is needed.
+				if (link_tasks.Count > 1) {
+					// If we have more than one executable, we must lipo them together.
+					var lipo_task = new LipoTask {
+						InputFiles = link_tasks.Select ((v) => v.OutputFile),
+						OutputFile = Executable,
+					};
+					final_build_task = lipo_task;
+				} else if (link_tasks.Count == 1) {
+					var copy_task = new FileCopyTask {
+						InputFile = link_tasks [0].OutputFile,
+						OutputFile = Executable,
+					};
+					final_build_task = copy_task;
+				}
+				// no link tasks if we were symlinked
+				if (final_build_task != null) {
+					final_build_task.AddDependency (link_tasks);
+					build_tasks.Add (final_build_task);
+				}
 			}
 		}
 
@@ -1698,14 +1746,7 @@ namespace Xamarin.Bundler {
 						if (files.Count == 1) {
 							CopyFile (files.First (), targetPath);
 						} else {
-							var sb = new StringBuilder ();
-							foreach (var lib in files) {
-								sb.Append (StringUtils.Quote (lib));
-								sb.Append (' ');
-							}
-							sb.Append ("-create -output ");
-							sb.Append (StringUtils.Quote (targetPath));
-							Driver.RunLipo (sb.ToString ());
+							Driver.RunLipo (targetPath, files);
 						}
 						if (LibMonoLinkMode == AssemblyBuildTarget.Framework)
 							Driver.XcodeRun ("install_name_tool", "-change @rpath/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + StringUtils.Quote (targetPath));
@@ -1727,21 +1768,13 @@ namespace Xamarin.Bundler {
 					var frameworkDirectory = Path.Combine (AppDirectory, "Frameworks", frameworkName + ".framework");
 					var frameworkExecutable = Path.Combine (frameworkDirectory, frameworkName);
 					Directory.CreateDirectory (frameworkDirectory);
-					if (IsDualBuild) {
-						if (Lipo (frameworkExecutable, Targets [0].Executable, Targets [1].Executable))
-							cached_executable = true;
+					var allExecutables = Targets.SelectMany ((t) => t.Executables.Values).ToArray ();
+					if (allExecutables.Length > 1) {
+						Lipo (frameworkExecutable, allExecutables);
 					} else {
-						UpdateFile (Targets [0].Executable, frameworkExecutable);
+						UpdateFile (allExecutables [0], frameworkExecutable);
 					}
 					CreateFrameworkInfoPList (Path.Combine (frameworkDirectory, "Info.plist"), frameworkName, BundleId + frameworkName, frameworkName);
-				}
-			} else if (IsDeviceBuild) {
-				// If building a fat app, we need to lipo the two different executables we have together
-				if (IsDualBuild) {
-					if (Lipo (Executable, Targets [0].Executable, Targets [1].Executable))
-						cached_executable = true;
-				} else {
-					cached_executable = Targets [0].CachedExecutable;
 				}
 			}
 		}
@@ -1768,20 +1801,13 @@ namespace Xamarin.Bundler {
 		}
 
 		// Returns true if is up-to-date
-		static bool Lipo (string output, params string [] inputs)
+		public static bool Lipo (string output, params string [] inputs)
 		{
 			if (IsUptodate (inputs, new string [] { output })) {
 				Driver.Log (3, "Target '{0}' is up-to-date.", output);
 				return true;
 			} else {
-				var cmd = new StringBuilder ();
-				foreach (var input in inputs) {
-					cmd.Append (StringUtils.Quote (input));
-					cmd.Append (' ');
-				}
-				cmd.Append ("-create -output ");
-				cmd.Append (StringUtils.Quote (output));
-				Driver.RunLipo (cmd.ToString ());
+				Driver.RunLipo (output, inputs);
 				return false;
 			}
 		}
@@ -1867,6 +1893,14 @@ namespace Xamarin.Bundler {
 				} else if (line.Contains ("clang: error: linker command failed with exit code 1")) {
 					continue;
 				} else if (line.Contains ("was built for newer iOS version (5.1.1) than being linked (5.1)")) {
+					continue;
+				} else if (line.Contains ("was built for newer iOS version (7.0) than being linked (6.0)") && 
+					line.Contains (Driver.GetProductSdkDirectory (target.App))) {
+					continue;
+				} else if (line.Contains ("was built for newer watchOS version (5.1) than being linked (2.0)") &&
+					line.Contains (Driver.GetProductSdkDirectory (target.App))) {
+					// We build the arm64_32 slice for watchOS for watchOS 5.1, and the armv7k slice for watchOS 2.0.
+					// Building for anything less than watchOS 5.1 will trigger this warning for the arm64_32 slice.
 					continue;
 				}
 
@@ -1989,27 +2023,29 @@ namespace Xamarin.Bundler {
 				new XAttribute("version", 1),
 				new XElement ("app-id", BundleId),
 				new XElement ("build-date", DateTime.Now.ToString ("O")));
-				
-			var file = MachO.Read (target.Executable);
-			
-			if (file is MachO) {
-				var mfile = file as MachOFile;
-				var uuids = GetUuids (mfile);
-				foreach (var str in uuids) {
-					root.Add (new XElement ("build-id", str));
-				}
-			} else if (file is IEnumerable<MachOFile>) {
-				var ffile = file as IEnumerable<MachOFile>;
-				foreach (var fentry in ffile) {
-					var uuids = GetUuids (fentry);
+
+			foreach (var executable in target.Executables.Values) {
+				var file = MachO.Read (executable);
+
+				if (file is MachO) {
+					var mfile = file as MachOFile;
+					var uuids = GetUuids (mfile);
 					foreach (var str in uuids) {
 						root.Add (new XElement ("build-id", str));
 					}
+				} else if (file is IEnumerable<MachOFile>) {
+					var ffile = file as IEnumerable<MachOFile>;
+					foreach (var fentry in ffile) {
+						var uuids = GetUuids (fentry);
+						foreach (var str in uuids) {
+							root.Add (new XElement ("build-id", str));
+						}
+					}
+
+				} else {
+					// do not write a manifest
+					return;
 				}
-				
-			} else {
-				// do not write a manifest
-				return;
 			}
 
 			// Write only if we need to update the manifest
@@ -2149,18 +2185,8 @@ namespace Xamarin.Bundler {
 
 		public void StripNativeCode ()
 		{
-			if (IsDualBuild) {
-				bool cached = true;
-				foreach (var target in Targets)
-					cached &= target.CachedExecutable;
-				if (!cached)
-					StripNativeCode (Executable);
-			} else {
-				foreach (var target in Targets) {
-					if (!target.CachedExecutable)
-						StripNativeCode (target.Executable);
-				}
-			}
+			if (!cached_executable)
+				StripNativeCode (Executable);
 		}
 
 		public void BundleAssemblies ()
@@ -2175,7 +2201,14 @@ namespace Xamarin.Bundler {
 					return false;
 				if (PackageManagedDebugSymbols)
 					return false;
-				if (IsInterpreted (Assembly.GetIdentity (path)))
+				/* FIXME: should be `if (IsInterpreted (Assembly.GetIdentity (path)))`.
+				 * The problem is that in mixed mode we can't do the transition
+				 * between "interp"->"aot'd methods using gsharedvt", so we
+				 * fall back to the interp and thus need the IL not to be
+				 * stripped out. Once Mono supports this, we can add back the
+				 * more precise check.
+				 * See https://github.com/mono/mono/issues/11942 */
+				if (UseInterpreter)
 					return false;
 				return true;
 			});

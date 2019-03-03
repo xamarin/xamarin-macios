@@ -50,7 +50,7 @@ namespace AppKit {
 		public static void Init ()
 		{
 			if (initialized) {
-				throw new InvalidOperationException ("Init has already be be invoked; it can only be invoke once");
+				throw new InvalidOperationException ("Init has already been invoked; it can only be invoked once");
 			}
 
 			Runtime.EnsureInitialized ();

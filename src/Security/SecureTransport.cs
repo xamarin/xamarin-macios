@@ -104,7 +104,6 @@ namespace Security {
 	public enum SslSessionOption {
 		BreakOnServerAuth,
 		BreakOnCertRequested,
-		[Mac (10,8)]
 		BreakOnClientAuth,
 
 		[iOS (7,0)][Mac (10,9)]

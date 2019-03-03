@@ -196,10 +196,6 @@
 
 		#region metadata/profiler.h
 
-		new Export ("void", "mono_profiler_set_events",
-			"MonoProfileFlags", "events"
-		),
-
 		new Export ("void", "mono_profiler_install",
 			"MonoProfiler *", "prof",
 			"MonoProfileFunc", "shutdown_callback"
@@ -307,6 +303,11 @@
 		#region metadata/loader.h
 
 		new Export ("void", "mono_add_internal_call",
+			"const char *", "name",
+			"const void *", "method"
+		),
+
+		new Export (true, "void", "mono_dangerous_add_raw_internal_call",
 			"const char *", "name",
 			"const void *", "method"
 		),

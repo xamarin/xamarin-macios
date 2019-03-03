@@ -213,7 +213,6 @@ namespace CoreVideo {
 #endif
 
 #if MONOMAC 
-		[Mac (10, 8)]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CVImageBufferCreateColorSpaceFromAttachments (/* CFDictionaryRef */ IntPtr attachments);
 

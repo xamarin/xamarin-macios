@@ -159,6 +159,14 @@ namespace Introspection {
 				if (Mac.CheckSystemVersion (10, 13)) // radar 32858911
 					return true;
 				goto default;
+#if !UNIFIED
+			case "InputRSSArticleDurationKey":
+			case "InputRSSFeedURLKey":
+			case "ProtocolRSSVisualizer":
+				if (Mac.CheckSystemVersion (10, 14))
+					return true;
+				goto default;
+#endif
 			default:
 				return base.Skip (p);
 			}
@@ -186,6 +194,14 @@ namespace Introspection {
 				if (Mac.Is32BitMavericks)
 					return true;
 				goto default;
+#if !UNIFIED
+			case "QCCompositionInputRSSArticleDurationKey":
+			case "QCCompositionInputRSSFeedURLKey":
+			case "QCCompositionProtocolRSSVisualizer":
+				if (Mac.CheckSystemVersion (10, 14))
+					return true;
+				goto default;
+#endif
 			default:
 				return base.Skip (constantName, libraryName);
 			}

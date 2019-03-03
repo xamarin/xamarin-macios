@@ -565,7 +565,6 @@ namespace CoreAnimation {
 		nfloat RasterizationScale { get; set; }
 
 		[iOS (6,0)]
-		[Mac (10,8)]
 		[Export ("drawsAsynchronously")]
 		bool DrawsAsynchronously { get; set; }
 
@@ -1054,11 +1053,9 @@ namespace CoreAnimation {
 		[Field ("kCAAnimationPaced")]
 		NSString AnimationPaced { get; }
 
-		[Mac (10, 7)] // iOS 4.0
 		[Field ("kCAAnimationCubic")]
 		NSString AnimationCubic { get; }
 
-		[Mac (10, 7)] // iOS 4.0
 		[Field ("kCAAnimationCubicPaced")]
 		NSString AnimationCubicPaced { get; }
 

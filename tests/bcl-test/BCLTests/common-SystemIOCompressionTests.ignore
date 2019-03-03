@@ -1,0 +1,21 @@
+# System.IO.FileNotFoundException : test.nupkg does not exist
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipDeleteEntryCheckEntries
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipEnumerateArchiveDefaultLastWriteTime
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipEnumerateEntriesCreateMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipEnumerateEntriesModifiedTime
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipEnumerateEntriesReadMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipEnumerateEntriesUpdateMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipGetArchiveEntryStreamLengthPositionReadMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipGetArchiveEntryStreamLengthPositionUpdateMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipGetEntryCreateMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipGetEntryDeleteReadMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipGetEntryDeleteUpdateMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipGetEntryOpen
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipGetEntryReadMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipGetEntryUpdateMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipOpenAndReopenEntry
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipOpenCloseAndReopenEntry
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipReadNonSeekableStream
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipWriteEntriesUpdateMode
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipWriteEntriesUpdateModeNonZeroPosition
+MonoTests.System.IO.Compression.ZipArchiveTests.ZipWriteNonSeekableStream

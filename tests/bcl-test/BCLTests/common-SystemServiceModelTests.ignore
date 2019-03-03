@@ -1,0 +1,16 @@
+# #2
+#  Expected string length 66 but was 70. Strings differ at index 11.
+#  Expected: "...ot xmlns:i="http://www.w3.org/2001/XMLSchema-instance" />"
+#  But was:  "...ot>urn:uuid:03020100-0504-0706-0809-000102030405</dummy-root>"
+MonoTests.System.ServiceModel.Channels.MessageHeaderTest.TestWriteHeaderContent2
+
+# An unexpected exception type was thrown
+# Expected: System.ServiceModel.CommunicationException
+# but was: System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.ServiceModel.Channels.MessageFaultTest.CreateFaultIncomplete4
+MonoTests.System.ServiceModel.Channels.MessageFaultTest.CreateFaultIncomplete
+MonoTests.System.ServiceModel.Channels.MessageFaultTest.CreateFault
+MonoTests.System.ServiceModel.Channels.DuplicateMesageEncodingBindingElementError 
+
+# System.ArgumentException was expected 
+MonoTests.System.ServiceModel.Channels.BindingContextTest.DuplicateMesageEncodingBindingElementError

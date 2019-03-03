@@ -46,10 +46,12 @@
       <Kind>Framework</Kind>
       <Link>XStaticObjectTest.framework</Link>
       <LinkerFlags>-lz</LinkerFlags>
+      <Frameworks>Foundation ModelIO</Frameworks>
     </NativeReference>
     <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios\XStaticArTest.framework">
       <Kind>Framework</Kind>
       <Link>XStaticArTest.framework</Link>
+      <Frameworks>Foundation ModelIO</Frameworks>
     </NativeReference>
   </ItemGroup>
   <ItemGroup>

@@ -40,7 +40,6 @@ namespace CoreMedia {
 		PermitEmptyReference	= (1<<3)
 	}
 
-	[Mac (10,7)]
 	public class CMBlockBuffer : ICMAttachmentBearer, IDisposable {
 		internal IntPtr handle;
 		internal CMCustomBlockAllocator customAllocator;

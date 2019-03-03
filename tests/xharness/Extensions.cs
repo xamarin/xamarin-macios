@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace xharness
@@ -92,6 +94,37 @@ namespace xharness
 				return true;
 			else
 				return false;
+		}
+
+		public static void DoNotAwait (this Task task)
+		{
+			// Don't do anything!
+			// 
+			// Here's why:
+			// If you want to run a task in the background, and you don't care about the result, this is the obvious way to do so:
+			//
+			//     DoSomethingAsync ();
+			//
+			// which works fine, but the compiler warns that:
+			// 
+			//     Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+			//
+			// One potential fix is to assign the return value to variable:
+			//
+			//     var x = DoSomethingAsync ();
+			//
+			// But this creates unnecessary variables. It's also still slightly confusing (why assign to a variable that's not used?).
+			// This extension method allows us to be more explicit:
+			// 
+			//     DoSomethingAsync ().DoNotAwait ();
+			// 
+			// This makes it abundantly clear that the intention is to not await 'DoSomething', and no warnings will be shown either.
+		}
+	
+		public static IEnumerable<T> Shuffle<T> (this IEnumerable<T> collection)
+		{
+			var rnd = new Random ((int) DateTime.Now.Ticks);
+			return collection.OrderBy (v => rnd.Next ());
 		}
 	}
 }

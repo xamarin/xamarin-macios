@@ -34,6 +34,11 @@ namespace monotouchtest
 
 partial class TestRuntime
 {
+	public static bool RunAsync (TimeSpan timeout, Action action, Func<bool> check_completed)
+	{
+		return RunAsync (DateTime.Now.Add (timeout), action, check_completed);
+	}
+
 	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed)
 	{
 #if __WATCHOS__

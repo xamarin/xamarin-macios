@@ -185,7 +185,7 @@ static struct Trampolines trampolines = {
 	(void *) &xamarin_set_gchandle_trampoline,
 };
 
-struct InitializationOptions options = { 0 };
+static struct InitializationOptions options = { 0 };
 
 struct Managed_NSObject {
 	MonoObject obj;
@@ -193,6 +193,25 @@ struct Managed_NSObject {
 	void *class_handle;
 	uint8_t flags;
 };
+
+static void
+xamarin_add_internal_call (const char *name, const void *method)
+{
+	/* COOP: With cooperative GC, icalls will run, like manageed methods,
+	 * in GC Unsafe mode, avoiding a thread state trandition.  In return
+	 * the icalls must guarantee that they won't block, or run indefinitely
+	 * without a safepoint, by manually performing a transition to GC Safe
+	 * mode.  With backward-compatible hybrid GC, icalls run in GC Safe
+	 * mode and the Mono API functions take care of thread state
+	 * transitions, so don't need to perform GC thread state transitions
+	 * themselves.
+	 *
+	 */
+	if (xamarin_is_gc_coop)
+		mono_dangerous_add_raw_internal_call (name, method);
+	else
+		mono_add_internal_call (name, method);
+}
 
 id
 xamarin_get_nsobject_handle (MonoObject *obj)
@@ -845,10 +864,6 @@ gc_toggleref_callback (MonoObject *object)
 	return res;
 }
 
-typedef struct {
-	int dummy;
-} NRCProfiler;
-
 static void
 gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
 {
@@ -877,12 +892,9 @@ gc_enable_new_refcount (void)
 	pthread_mutex_init (&framework_peer_release_lock, &attr);
 	pthread_mutexattr_destroy (&attr);
 
-	NRCProfiler *prof = (NRCProfiler *) malloc (sizeof (NRCProfiler));
-
 	mono_gc_toggleref_register_callback (gc_toggleref_callback);
 
-	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::RegisterToggleRef" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
-	mono_profiler_install ((MonoProfiler *) prof, NULL);
+	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::RegisterToggleRef" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
 	mono_profiler_install_gc (gc_event_callback, NULL);
 }
 
@@ -894,6 +906,19 @@ get_class_from_name (MonoImage* image, const char *nmspace, const char *name, bo
 	if (!rv && !optional)
 		xamarin_assertion_message ("Fatal error: failed to load the class '%s.%s'\n.", nmspace, name);
 	return rv;
+}
+
+struct _MonoProfiler {
+	int dummy;
+};
+
+static void
+xamarin_install_mono_profiler ()
+{
+	static _MonoProfiler profiler = { 0 };
+	// This must be done before any other mono_profiler_install_* functions are called
+	// (currently gc_enable_new_refcount and xamarin_install_nsautoreleasepool_hooks).
+	mono_profiler_install (&profiler, NULL);
 }
 
 bool
@@ -1085,12 +1110,11 @@ print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
 	char *trace = fetch_exception_property_string (exc, "get_StackTrace", true);
 	char *message = fetch_exception_property_string (exc, "get_Message", true);
 
-	if (!is_inner) {
-		[msg appendString:@"Unhandled managed exception:\n"];
-	} else {
+	if (is_inner)
 		[msg appendString:@" --- inner exception ---\n"];
-	}
-	[msg appendFormat: @"%s (%s)\n%s\n", message, type_name, trace];
+	[msg appendFormat: @"%s (%s)\n", message, type_name];
+	if (trace)
+		[msg appendFormat: @"%s\n", trace];
 
 	if (unhandled_exception_func && !is_inner)
 		unhandled_exception_func (exc, type_name, message, trace);
@@ -1151,7 +1175,7 @@ xamarin_process_managed_exception_gchandle (guint32 gchandle)
 void
 xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 {
-	PRINT ("%@", print_all_exceptions (exc));
+	PRINT ("Unhandled managed exception: %@", print_all_exceptions (exc));
 
 	abort ();
 }
@@ -1359,8 +1383,8 @@ xamarin_initialize ()
 	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue", true);
 	nsstring_class = get_class_from_name (platform_image, foundation, "NSString", true);
 
-	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_release_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
-	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_create_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
+	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_release_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
+	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_create_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
 
 	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
 
@@ -1388,7 +1412,9 @@ xamarin_initialize ()
 	if (!register_assembly (assembly, &exception_gchandle))
 		xamarin_process_managed_exception_gchandle (exception_gchandle);
 
-	install_nsautoreleasepool_hooks ();
+	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or gc_enable_new_refcount
+
+	xamarin_install_nsautoreleasepool_hooks ();
 
 #if defined (DEBUG)
 	if (xamarin_gc_pump) {
@@ -2373,7 +2399,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 	mono_gchandle_free (handle);
 
 	if (exception_gchandle != 0) {
-		PRINT (PRODUCT ": Got an exception while executing the MarshalManagedCException event (this exception will be ignored):");
+		PRINT (PRODUCT ": Got an exception while executing the MarshalManagedException event (this exception will be ignored):");
 		PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
 		mono_gchandle_free (exception_gchandle);
 		exception_gchandle = 0;
@@ -2465,7 +2491,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 	}
 	case MarshalManagedExceptionModeAbort:
 	default:
-		xamarin_assertion_message ("Aborting due to:\n%s\n", [print_all_exceptions (exception) UTF8String]);
+		xamarin_assertion_message ("Aborting due to trying to marshal managed exception:\n%s\n", [print_all_exceptions (exception) UTF8String]);
 		break;
 	}
 }

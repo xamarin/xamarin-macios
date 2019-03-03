@@ -561,6 +561,31 @@ namespace GeneratorTests
 			Assert.AreEqual (modelName, attrib.ConstructorArguments [0].Value, "Custom ObjC name");
 		}
 
+		[Test]
+		public void GHIssue5444 () => BuildFile (Profile.iOS, "ghissue5444.cs");
+
+		[Test]
+		public void GH5416_method ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.AddTestApiDefinition ("ghissue5416b.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'NSString Method(Foundation.NSDate, Foundation.NSObject)', but only on properties, parameters and return values.");
+		}
+
+		[Test]
+		public void GH5416_setter ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.AddTestApiDefinition ("ghissue5416a.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'Void set_Setter(Foundation.NSString)', but only on properties, parameters and return values.");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

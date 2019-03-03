@@ -1,0 +1,62 @@
+# #1
+#  Expected: instance of <System.Net.Http.HttpRequestException>
+#  But was:  <System.Net.WebException>
+MonoTests.System.Net.Http.HttpClientTest.WildcardConnect
+MonoTests.System.Net.Http.HttpClientTest.Send_Transfer_Encoding_Custom
+
+# #102
+#  Expected: False
+#  But was:  True
+MonoTests.System.Net.Http.HttpClientTest.Send_Transfer_Encoding_Chunked
+
+# #2
+#  Expected: True
+#  But was:  False
+MonoTests.System.Net.Http.HttpClientTest.Send_Content_Put_CustomStream
+
+#  #102
+#  Expected: False
+#  But was:  True
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Version_1_0
+
+# #102
+#  Expected: False
+#  But was:  True
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_NoContent_Put
+
+# #102
+#  Expected: False
+#  But was:  True
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_NoContent_Post
+
+# #102
+#  Expected: False
+#  But was:  True 
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_NoContent_Delete
+
+# #102
+#  Expected: False
+#  But was:  True 
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Default
+
+#  #103a
+#  Expected string length 7 but was 8. Strings differ at index 0.
+#  Expected: "chunked"
+#  But was:  "Identity" 
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_CustomHeaders
+
+# #102a
+#  Expected string length 7 but was 8. Strings differ at index 0.
+#  Expected: "chunked"
+#  But was:  "Identity"
+MonoTests.System.Net.Http.HttpClientTest.Send_Complete_Content
+
+#  #102
+#  Expected: False
+#  But was:  True
+MonoTests.System.Net.Http.HttpClientTest.Post_TransferEncodingChunked
+
+# #102
+#  Expected: False
+#  But was:  True
+MonoTests.System.Net.Http.HttpClientTest.Post_StreamCaching

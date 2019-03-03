@@ -1040,14 +1040,16 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[NullAllowed, Export ("newEvent")]
+		[return: NullAllowed]
+		[Export ("newEvent")]
 		IMTLEvent CreateEvent ();
 
 		[Mac (10, 14, onlyOn64: true), iOS (12, 0), TV (12,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[NullAllowed, Export ("newSharedEvent")]
+		[return: NullAllowed]
+		[Export ("newSharedEvent")]
 		IMTLSharedEvent CreateSharedEvent ();
 
 		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
@@ -1307,7 +1309,8 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[NullAllowed, Export ("newSharedTextureHandle")]
+		[return: NullAllowed]
+		[Export ("newSharedTextureHandle")]
 		MTLSharedTextureHandle CreateSharedTextureHandle ();
 	}
 	

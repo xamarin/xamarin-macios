@@ -70,6 +70,7 @@ namespace Foundation {
 		static IntPtr ol = Dlfcn.dlopen (Constants.OpenALLibrary, 1);
 		static IntPtr ma = Dlfcn.dlopen (Constants.MediaAccessibilityLibrary, 1);
 		static IntPtr mi = Dlfcn.dlopen (Constants.CoreMidiLibrary, 1);
+		static IntPtr ic = Dlfcn.dlopen (Constants.ImageCaptureCoreLibrary, 1);
 #if XAMCORE_2_0 && ARCH_64
 		static IntPtr it = Dlfcn.dlopen (Constants.IntentsLibrary, 1);
 		static IntPtr me = Dlfcn.dlopen (Constants.MediaLibraryLibrary, 1);
@@ -116,12 +117,6 @@ namespace Foundation {
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]
 		public static readonly Assembly MonoMacAssembly = typeof (NSObject).Assembly;
 #endif
-
-		static internal void OverrideRetainAndRelease (IntPtr @class)
-		{
-			Class.class_addMethod (@class, Selector.RetainHandle, Method.RetainTrampoline, "@@:");
-			Class.class_addMethod (@class, Selector.ReleaseHandle, Method.ReleaseTrampoline, "v@:");
-		}
 
 		internal void SetAsProxy () {
 			IsDirectBinding = true;

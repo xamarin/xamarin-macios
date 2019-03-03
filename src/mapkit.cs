@@ -100,9 +100,9 @@ namespace MapKit {
 		[Export ("initWithAnnotation:reuseIdentifier:")]
 		[PostGet ("Annotation")]
 #if XAMCORE_2_0
-		IntPtr Constructor (IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
+		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
 #else
-		IntPtr Constructor (NSObject annotation, [NullAllowed] string reuseIdentifier);
+		IntPtr Constructor ([NullAllowed] NSObject annotation, [NullAllowed] string reuseIdentifier);
 #endif
 	
 		[Export ("initWithFrame:")]
@@ -116,10 +116,11 @@ namespace MapKit {
 	
 		[Export ("annotation", ArgumentSemantic.Retain)]
 		[ThreadSafe] // Sometimes iOS will request the annotation from a non-UI thread (see https://bugzilla.xamarin.com/show_bug.cgi?27609)
+		[NullAllowed]
 #if XAMCORE_2_0
-		IMKAnnotation Annotation { get; [NullAllowed] set; }
+		IMKAnnotation Annotation { get; set; }
 #else
-		NSObject Annotation { get; [NullAllowed] set; }
+		NSObject Annotation { get; set; }
 #endif
 	
 		[Export ("image", ArgumentSemantic.Retain)]
@@ -815,9 +816,9 @@ namespace MapKit {
 
 		[Export ("initWithAnnotation:reuseIdentifier:")]
 #if XAMCORE_2_0
-		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, string reuseIdentifier);
+		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
 #else
-		IntPtr Constructor ([NullAllowed] NSObject annotation, string reuseIdentifier);
+		IntPtr Constructor ([NullAllowed] NSObject annotation, [NullAllowed] string reuseIdentifier);
 #endif
 
 		[NoTV]
@@ -1916,7 +1917,7 @@ namespace MapKit {
 		// inlined from base type
 		[Export ("initWithAnnotation:reuseIdentifier:")]
 		[PostGet ("Annotation")]
-		IntPtr Constructor (IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
+		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
 
 		[Export ("titleVisibility", ArgumentSemantic.Assign)]
 		MKFeatureVisibility TitleVisibility { get; set; }

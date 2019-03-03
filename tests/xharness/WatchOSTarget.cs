@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
+using Xamarin;
+using Xamarin.Utils;
+
 namespace xharness
 {
 	public class WatchOSTarget : iOSTarget
@@ -75,7 +78,6 @@ namespace xharness
 			csproj.FixArchitectures ("i386", "ARMv7k");
 			csproj.FixInfoPListInclude (suffix);
 			csproj.SetOutputType ("Library");
-			csproj.AddAdditionalDefines ("BITCODE", "iPhone", "Release");
 			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0;FEATURE_NO_BSD_SOCKETS");
 			csproj.RemoveReferences ("OpenTK-1.0");
 			var ext = IsFSharp ? "fs" : "cs";
@@ -87,9 +89,13 @@ namespace xharness
 			// Not linking a watch extensions requires passing -Os to the native compiler.
 			// https://github.com/mono/mono/issues/9867
 			var configurations = new string [] { "Debug", "Debug32", "Release", "Release32", "Release-bitcode" };
-			foreach (var c in configurations)
+			foreach (var c in configurations) {
+				var flags = "-fembed-bitcode-marker";
 				if (csproj.GetMtouchLink ("iPhone", c) == "None")
-					csproj.AddExtraMtouchArgs ("--gcc_flags=-Os", "iPhone", c);
+					flags += " -Os";
+
+				csproj.AddExtraMtouchArgs ($"--gcc_flags='{flags}'", "iPhone", c);
+			}
 
 			Harness.Save (csproj, WatchOSExtensionProjectPath);
 

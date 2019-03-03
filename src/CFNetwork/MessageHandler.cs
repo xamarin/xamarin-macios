@@ -41,6 +41,7 @@ using Foundation;
 
 namespace CFNetwork {
 
+	[Obsolete ("Use 'System.Net.Http.CFNetworkHandler' or the more recent 'Foundation.NSUrlSessionHandler' instead.")]
 	public class MessageHandler : HttpClientHandler {
 		public MessageHandler ()
 		{
@@ -86,19 +87,19 @@ namespace CFNetwork {
 			if (!request.RequestUri.IsAbsoluteUri)
 				throw new InvalidOperationException ();
 
-			using (var message = CreateRequest (request)) {
+			using (var message = CreateRequest (request, true)) {
 				var body = await CreateBody (request, message, cancellationToken);
-				return await ProcessRequest (request, message, body, true, cancellationToken);
+				return await ProcessRequest (request, message, body, true, cancellationToken, true);
 			}
 		}
 		#endregion
 
-		CFHTTPMessage CreateRequest (HttpRequestMessage request)
+		CFHTTPMessage CreateRequest (HttpRequestMessage request, bool isFirstRequest)
 		{
 			var message = CFHTTPMessage.CreateRequest (
 				request.RequestUri, request.Method.Method, request.Version);
 
-			SetupRequest (request, message);
+			SetupRequest (request, message, isFirstRequest);
 
 			if ((auth == null) || (Credentials == null) || !PreAuthenticate)
 				return message;
@@ -111,11 +112,12 @@ namespace CFNetwork {
 			if (credential == null)
 				return message;
 
-			message.ApplyCredentials (auth, credential);
+			if (isFirstRequest)
+				message.ApplyCredentials (auth, credential);
 			return message;
 		}
 
-		void SetupRequest (HttpRequestMessage request, CFHTTPMessage message)
+		void SetupRequest (HttpRequestMessage request, CFHTTPMessage message, bool isFirstRequest)
 		{
 			string accept_encoding = null;
 			if ((AutomaticDecompression & DecompressionMethods.GZip) != 0)
@@ -127,6 +129,8 @@ namespace CFNetwork {
 
 			if (request.Content != null) {
 				foreach (var header in request.Content.Headers) {
+					if (!isFirstRequest && header.Key == "Authorization")
+						continue;
 					var value = string.Join (",", header.Value);
 					message.SetHeaderFieldValue (header.Key, value);
 				}
@@ -190,12 +194,23 @@ namespace CFNetwork {
 
 			return request.Headers.Contains ("Keep-Alive");
 		}
+		
+		// Decide if we redirect or not, similar to what is done in the managed handler
+		// https://github.com/mono/mono/blob/eca15996c7163f331c9f2cd0a17b63e8f92b1d55/mcs/class/referencesource/System/net/System/Net/HttpWebRequest.cs#L5681
+		static bool IsRedirect (HttpStatusCode status)
+		{
+			return status == HttpStatusCode.Ambiguous || // 300
+				status == HttpStatusCode.Moved || // 301
+				status == HttpStatusCode.Redirect || // 302
+				status == HttpStatusCode.RedirectMethod || // 303
+				status == HttpStatusCode.RedirectKeepVerb; // 307
+		}
 
 		async Task<HttpResponseMessage> ProcessRequest (HttpRequestMessage request,
 		                                                CFHTTPMessage message,
 		                                                WebRequestStream body,
 		                                                bool retryWithCredentials,
-		                                                CancellationToken cancellationToken)
+		                                                CancellationToken cancellationToken, bool isFirstRequest)
 		{
 			cancellationToken.ThrowIfCancellationRequested ();
 
@@ -210,21 +225,35 @@ namespace CFNetwork {
 					request.RequestUri)
 				);
 
-			stream.Stream.ShouldAutoredirect = AllowAutoRedirect;
+			if (!isFirstRequest)
+				stream.Stream.ShouldAutoredirect = AllowAutoRedirect;
 			stream.Stream.AttemptPersistentConnection = GetKeepAlive (request);
 
 			var response = await stream.Open (
-				WorkerThread, cancellationToken).ConfigureAwait (false);
+				WorkerThread, cancellationToken).ConfigureAwait (true); // with false, we will have a deadlock.
 
 			var status = (HttpStatusCode)response.ResponseStatusCode;
 
+			if ( IsRedirect (status)) {
+				request.Headers.Authorization = null;
+				stream.Dispose ();
+				// we cannot reuse the message, will deadlock and also the message.ApplyCredentials (auth, credential); 
+				// was called the first time
+				using (var retryMsg = CreateRequest (request, false)) { 
+					return await ProcessRequest (
+						request, retryMsg, null, false, cancellationToken, false);
+				}
+				
+			}
 			if (retryWithCredentials && (body == null) &&
 			    (status == HttpStatusCode.Unauthorized) ||
 			    (status == HttpStatusCode.ProxyAuthenticationRequired)) {
 				if (HandleAuthentication (request.RequestUri, message, response)) {
 					stream.Dispose ();
-					return await ProcessRequest (
-						request, message, null, false, cancellationToken);
+					using (var retryMsg = CreateRequest (request, true)) { // behave as if it was the first attempt
+						return await ProcessRequest (
+							request, message, null, false, cancellationToken, true); // behave as if it was the first attempt
+					}
 				}
 			}
 

@@ -67,6 +67,7 @@
     <Compile Include="Tasks\ArchiveTaskBase.cs" />
     <Compile Include="Tasks\ArToolTaskBase.cs" />
     <Compile Include="Tasks\BTouchTaskBase.cs" />
+    <Compile Include="Tasks\CreateBindingResourcePackageBase.cs" />
     <Compile Include="Tasks\CodesignTaskBase.cs" />
     <Compile Include="Tasks\CodesignVerifyTaskBase.cs" />
     <Compile Include="Tasks\CollectBundleResourcesTaskBase.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="PlatformFramework.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="StringParserService.cs" />
+    <Compile Include="../../tools/common/FileCopier.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

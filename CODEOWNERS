@@ -14,7 +14,7 @@
 
 /mk @rolfbjarne
 
-/msbuild @kzu @jstedfast @emaf @rolfbjarne @VincentDondain
+/msbuild @kzu @jstedfast @emaf @rolfbjarne @VincentDondain @chamons
 
 /runtime @rolfbjarne
 
@@ -189,6 +189,10 @@
 
 /tests/xharness @rolfbjarne
 /tests/xtro-sharpie @spouliot
+/tests/mmptest @chamons
+/tests/common/mac @chamons
+/tests/msbuild-mac @chamons
+
 
 /tools/common @rolfbjarne @chamons @spouliot
 /tools/common/StaticRegistrar.cs @rolfbjarne

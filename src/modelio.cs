@@ -124,7 +124,7 @@ namespace ModelIO {
 		bool ExportAssetToUrl (NSUrl url, out NSError error);
 
 		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-		[Export ("objectAtPath:"), NullAllowed]
+		[Export ("objectAtPath:")]
 		MDLObject GetObject (string atPath);
 
 		[Static]
@@ -1715,10 +1715,12 @@ namespace ModelIO {
 		[return: NullAllowed]
 		CGImage GetImageFromTexture (nuint level);
 
-		[NullAllowed, Export ("texelDataWithTopLeftOrigin")]
+		[Export ("texelDataWithTopLeftOrigin")]
+		[return: NullAllowed]
 		NSData GetTexelDataWithTopLeftOrigin ();
 
-		[NullAllowed, Export ("texelDataWithBottomLeftOrigin")]
+		[Export ("texelDataWithBottomLeftOrigin")]
+		[return: NullAllowed]
 		NSData GetTexelDataWithBottomLeftOrigin ();
 
 		[Export ("texelDataWithTopLeftOriginAtMipLevel:create:")]

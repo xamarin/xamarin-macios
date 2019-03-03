@@ -20,12 +20,6 @@ using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
 #endif
 
-#if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
-#if !MTOUCH && !MMP && !MMP_TEST
-using Mono.Security.Interface;
-#endif
-#endif
-
 #if MMP || MMP_TEST || MTOUCH
 namespace Xamarin.Bundler {
 #elif SYSTEM_NET_HTTP

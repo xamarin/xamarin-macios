@@ -87,7 +87,9 @@ dump_state (struct CallState *state, id self, SEL sel)
 #define dump_state(...)
 #endif
 
-const char* registers[] =  { "rdi", "rsi", "rdx", "rcx", "r8", "r9", "err"  };
+#ifdef TRACE
+static const char* registers[] =  { "rdi", "rsi", "rdx", "rcx", "r8", "r9", "err"  };
+#endif
 
 static const char *
 skip_type_name (const char *ptr)

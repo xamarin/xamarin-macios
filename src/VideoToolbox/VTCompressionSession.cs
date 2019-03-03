@@ -17,7 +17,7 @@ using CoreMedia;
 using CoreVideo;
 
 namespace VideoToolbox {
-	[Mac (10,8), iOS (8,0), TV (10,2)]
+	[iOS (8,0), TV (10,2)]
 	public class VTCompressionSession : VTSession {
 		GCHandle callbackHandle;
 

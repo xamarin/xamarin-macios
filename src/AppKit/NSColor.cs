@@ -247,7 +247,7 @@ namespace AppKit {
 			}
 		}
 
-		[Mac (10, 8)][Obsolete ("Use 'UnderPageBackgroundColor' instead.")]
+		[Obsolete ("Use 'UnderPageBackgroundColor' instead.")]
 		public static NSColor UnderPageBackground {
 			get {
 				return UnderPageBackgroundColor;

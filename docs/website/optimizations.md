@@ -604,3 +604,95 @@ It is always enabled by default (as long as the static registrar is enabled).
 
 The default behavior can be overridden by passing
 `--optimize=[+|-]static-delegate-to-block-lookup` to mtouch/mmp.
+
+## Remove unsupported IL for bitcode
+
+Removes unsupported IL for bitcode, and replaces it with a `NotSupportedException`.
+
+There are certain types of IL that Xamarin.iOS doesn't support when compiling
+to bitcode. This optimization will replace the unsupported IL with an
+`NotSupportedException`, and will emit a warning at build time.
+
+This ensures that any unsupported IL will be detected at runtime even when not
+compiling to bitcode (in particular it will mean that the behavior between
+Debug and Release device builds is identical, since Debug builds do not
+compile to bitcode, while Release builds do).
+
+This optimization will change the following code:
+
+```csharp
+void Method ()
+{
+	try {
+		throw new Exception ("FilterMe");
+	} catch (Exception e) when (e.Message == "FilterMe") {
+		Console.WriteLine ("filtered");
+	}
+}
+```
+
+into the following:
+
+```csharp
+void Method ()
+{
+	throw new NotSupportedException ("This method contains IL not supported when compiled to bitcode.");
+}
+```
+
+This optimization does not require the linker to be enabled, it will process
+all assemblies, even those not linked.
+
+It is only applicable to watchOS, and then it's enabled by default when
+building for device.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]remove-unsupported-il-for-bitcode` to mtouch/mmp.
+
+## Inline Runtime.IsARM64CallingConvention
+
+Inlines the value of `Runtime.IsARM64CallingConvention` as determined at
+build time.
+
+It's usually possible to determine at build time if we'll be running on an
+ARM64 cpu at runtime, and in that case we can inline the value of this
+property to a constant `true` or `false` value.
+
+This optimization will change the following type of code:
+
+```csharp
+if (Runtime.IsARM64CallingConvention) {
+	Console.WriteLine ("Running on ARM64");
+} else {
+	Console.WriteLine ("Not running on ARM64");
+}
+```
+
+into the following when running on ARM64:
+
+```csharp
+if (true) {
+	Console.WriteLine ("Running on ARM64");
+} else {
+	Console.WriteLine ("Not running on ARM64");
+}
+```
+
+or into the following when not running on ARM64:
+
+```csharp
+if (false) {
+	Console.WriteLine ("Running on ARM64");
+} else {
+	Console.WriteLine ("Not running on ARM64");
+}
+
+```
+
+This optimization requires the linker to be enabled, and is only applied to
+methods with the `[BindingImpl (BindingImplOptions.Optimizable)]` attribute.
+
+It is always enabled by default (when the linker is enabled).
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]inline-is-arm64-calling-convention` to mtouch/mmp.

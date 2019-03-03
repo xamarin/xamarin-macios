@@ -1,0 +1,66 @@
+<!--
+***********************************************************************************************
+Xamarin.Shared.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (C) 2018 Microsoft. All rights reserved.
+***********************************************************************************************
+-->
+
+<!-- This is shared between Xamarin.iOS and Xamarin.Mac -->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+
+	<!--
+		@(NativeReference) are not safe to use as an Input to a task, as frameworks are a directory and will appears unbuilt every time.
+		So we split it into two camps as a prebuild step
+	-->
+	<Target Name="_ExpandNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
+		<ItemGroup>
+			<_FrameworkNativeReference Include="@(NativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework'" />
+			<_FileNativeReference Include="@(NativeReference)" Condition="'%(Extension)' != '.framework'" />
+		</ItemGroup>
+	</Target>
+	
+	<PropertyGroup>
+		<BindingResourcePath>$(ProjectDir)$(OutputPath)$(AssemblyName).resources</BindingResourcePath>
+	</PropertyGroup>
+
+	<Target Name="_CreateBindingResourcePackage" Condition="'$(DesignTimeBuild)' != 'true'"
+		DependsOnTargets="_ExpandNativeReferences"
+		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary);@(_FrameworkNativeReference);@(_FileNativeReference)"
+		Outputs="$(BindingResourcePath)/manifest">
+		<CreateBindingResourcePackage Condition="'$(IsMacEnabled)' == 'true' And '$(NoBindingEmbedding)' == 'true' And '$(SkipBindingResourcePackage)' != 'true'"
+			SessionId="$(BuildSessionId)"
+			OutputPath="$(OutputPath)"
+			NativeReferences="@(NativeReference)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			BindingAssembly="@(IntermediateAssembly)">
+			<Output TaskParameter="Manifest" ItemName="_BundleResourceManifest" />
+		</CreateBindingResourcePackage>
+	</Target>
+
+	<!-- Cleaning via FileWrites leaves empty framework directories on disk, so nuke via RemoveDir -->
+	<PropertyGroup>
+		<CleanDependsOn>
+			$(CleanDependsOn);
+			_CleanBindingResourcePackage
+		</CleanDependsOn>
+	</PropertyGroup>
+	<Target Name="_CleanBindingResourcePackage">
+		<RemoveDir Directories="$(BindingResourcePath);" />  
+	</Target>
+	
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
+</Project>
+

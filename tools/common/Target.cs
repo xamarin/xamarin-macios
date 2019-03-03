@@ -51,6 +51,9 @@ namespace Xamarin.Bundler {
 
 		Symbols dynamic_symbols;
 
+		// Note that each 'Target' can have multiple abis: armv7+armv7s for instance.
+		public List<Abi> Abis;
+
 #if MONOMAC
 		public bool Is32Build { get { return !Driver.Is64Bit; } }
 		public bool Is64Build { get { return Driver.Is64Bit; } }
@@ -98,14 +101,6 @@ namespace Xamarin.Bundler {
 #endif
 		}
 
-		[DllImport (Constants.libSystemLibrary, SetLastError = true, EntryPoint = "strerror")]
-		static extern IntPtr _strerror (int errno);
-
-		internal static string strerror (int errno)
-		{
-			return Marshal.PtrToStringAuto (_strerror (errno));
-		}
-
 		[DllImport (Constants.libSystemLibrary, SetLastError = true)]
 		static extern string realpath (string path, IntPtr zero);
 
@@ -116,7 +111,7 @@ namespace Xamarin.Bundler {
 				return rv;
 
 			var errno = Marshal.GetLastWin32Error ();
-			ErrorHelper.Warning (54, "Unable to canonicalize the path '{0}': {1} ({2}).", path, strerror (errno), errno);
+			ErrorHelper.Warning (54, "Unable to canonicalize the path '{0}': {1} ({2}).", path, FileCopier.strerror (errno), errno);
 			return path;
 		}
 

@@ -621,7 +621,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 				File.WriteAllText (plist_path, info_plist);
 		}
 
-		public void CreateTemporaryWatchKitExtension (string code = null)
+		public void CreateTemporaryWatchKitExtension (string code = null, string extraCode = null, string extraArg = "")
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -641,9 +641,12 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 }";
 			}
 
+			if (extraCode != null)
+				code += extraCode;
+
 			AppPath = app;
 			Extension = true;
-			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, extraArg: extraArg, profile: Profile);
 
 			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
@@ -796,8 +799,25 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 
 		public IEnumerable<string> NativeSymbolsInExecutable {
 			get { 
-				return ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (NativeExecutablePath)}", hide_output: true).Split ('\n');
+				return GetNativeSymbolsInExecutable (NativeExecutablePath);
 			}
+		}
+
+		public static IEnumerable<string> GetNativeSymbolsInExecutable (string executable)
+		{
+			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (executable)}", hide_output: true).Split ('\n');
+
+			rv = rv.Where ((v) => {
+				if (string.IsNullOrEmpty (v))
+					return false;
+
+				if (v.StartsWith (executable, StringComparison.Ordinal) && v.EndsWith (":", StringComparison.Ordinal))
+					return false;
+
+				return true;
+			});
+
+			return rv;
 		}
 
 		protected override string ToolPath {

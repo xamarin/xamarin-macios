@@ -29,14 +29,13 @@ namespace MonoTouchFixtures.NaturalLanguage {
 			using (var tagger = new NLTagger (NLTagScheme.Lemma) { String = Text })
 			using (var tag = tagger.GetTag (0, NLTokenUnit.Word, NLTagScheme.Lemma, out var range)) {
 				Assert.That (tagger.DominantLanguage, Is.EqualTo (NLLanguage.English), "DominantLanguage");
-#if !__TVOS__
-				// works everywhere expect tvOS
-				Assert.That (tag.ToString (), Is.EqualTo ("the"), "First word");
-#endif
 				Assert.That (range.Location, Is.EqualTo (0), "Location");
 				Assert.That (range.Length, Is.EqualTo (3), "Length");
+				// rdar https://trello.com/c/3oN5kuYk
+				if (tag != null)
+					Assert.That (tag.ToString (), Is.EqualTo ("the"), "First word");
 			}
-	       }
+		}
 
 		[Test]
 		public void GetTags ()

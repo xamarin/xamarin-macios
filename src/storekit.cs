@@ -311,11 +311,11 @@ namespace StoreKit {
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SKRequestDelegate)})]
 	interface SKRequest {
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
-		NSObject WeakDelegate { get; [NullAllowed] set; }
+		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
-		SKRequestDelegate Delegate { get; [NullAllowed] set; }
+		SKRequestDelegate Delegate { get; set; }
 
 		[Export ("cancel")]
 		void Cancel ();
@@ -372,11 +372,11 @@ namespace StoreKit {
 		IntPtr Constructor (NSSet productIdentifiersStringSet);
 		
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed][New]
-		NSObject WeakDelegate { get; [NullAllowed] set; }
+		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")][New]
 		[Protocolize]
-		SKProductsRequestDelegate Delegate { get; [NullAllowed] set; }
+		SKProductsRequestDelegate Delegate { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject))]

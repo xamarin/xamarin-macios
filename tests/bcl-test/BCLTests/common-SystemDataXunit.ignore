@@ -1,0 +1,20 @@
+# No exception was thrown when System.Reflection.TargetInvocationException was expected
+System.Data.Tests.DataTableReadXmlSchemaTest.XsdSchemaDeserializationOnFullFrameworkStillHasBug
+
+# Expected error message A network-related or instance-specific error occurred while establishing a connection to SQL Server., but received: The method or operation is not implemented.
+System.Data.SqlClient.Tests.TcpDefaultForAzureTest.AzureNpConnectionTest
+
+# Expected error message A network-related or instance-specific error occurred while establishing a connection to SQL Server., but received: Snix_Connect (provider: SNI_PN7, error: 35 - SNI_ERROR_35)
+System.Data.SqlClient.Tests.TcpDefaultForAzureTest.NonAzureTcpConnectionTest  
+
+# Expected error message A network-related or instance-specific error occurred while establishing a connection to SQL Server., but received: Snix_Connect (provider: SNI_PN7, error: 35 - SNI_ERROR_35)
+System.Data.SqlClient.Tests.TcpDefaultForAzureTest.AzureTcpConnectionTest
+
+# Expected error message A network-related or instance-specific error occurred while establishing a connection to SQL Server., but received: Snix_Connect (provider: SNI_PN7, error: 35 - SNI_ERROR_35)
+System.Data.SqlClient.Tests.TcpDefaultForAzureTest.NonAzureNoProtocolConnectionTest
+
+# Expected error message A network-related or instance-specific error occurred while establishing a connection to SQL Server., but received: Snix_Connect (provider: SNI_PN7, error: 35 - SNI_ERROR_35)
+System.Data.SqlClient.Tests.TcpDefaultForAzureTest.AzureNoProtocolConnectionTest
+
+#  Expected error message A network-related or instance-specific error occurred while establishing a connection to SQL Server., but received: The method or operation is not implemented.
+System.Data.SqlClient.Tests.TcpDefaultForAzureTest.NonAzureNpConnectionTest

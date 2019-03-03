@@ -1308,7 +1308,6 @@ namespace CoreImage {
 		[Field ("kCIImageColorSpace")]
 		NSString ColorSpaceKey { get; }
 
-		[Mac (10, 8)]
 		[Field ("kCIImageProperties")]
 		NSString PropertiesKey { get; }
 
@@ -1740,15 +1739,12 @@ namespace CoreImage {
 		IntPtr Constructor (UIImage image, [NullAllowed] CIImageInitializationOptions options);
 #endif
 	
-		[Mac (10, 8)]
 		[Field ("kCIImageAutoAdjustFeatures"), Internal]
 		NSString AutoAdjustFeaturesKey { get; }
 
-		[Mac (10, 8)]
 		[Field ("kCIImageAutoAdjustRedEye"), Internal]
 		NSString AutoAdjustRedEyeKey { get; }
 
-		[Mac (10, 8)]
 		[Field ("kCIImageAutoAdjustEnhance"), Internal]
 		NSString AutoAdjustEnhanceKey { get; }
 
@@ -2399,7 +2395,6 @@ namespace CoreImage {
 		[Field ("CIDetectorTypeFace"), Internal]
 		NSString TypeFace { get; }
 
-		[Mac (10, 8)]
 		[Field ("CIDetectorImageOrientation"), Internal]
 		NSString ImageOrientation { get; }
 
@@ -2413,12 +2408,10 @@ namespace CoreImage {
 		NSString AccuracyHigh { get; }
 
 		[iOS (6,0)]
-		[Mac (10,8)]
 		[Field ("CIDetectorTracking"), Internal]
 		NSString Tracking { get; }
 
 		[iOS (6,0)]
-		[Mac (10,8)]
 		[Field ("CIDetectorMinFeatureSize"), Internal]
 		NSString MinFeatureSize { get; }
 
@@ -3597,7 +3590,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[Mac (10,7)]
 	[BaseType (typeof (CIFilter))]
 	interface CIHighlightShadowAdjust {
 
@@ -4416,7 +4408,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[Mac (10,7)]
 	[BaseType (typeof (CIFilter))]
 	interface CIStraightenFilter {
 
@@ -4488,7 +4479,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[Mac (10,7)]
 	[BaseType (typeof (CIFilter))]
 	interface CITemperatureAndTint {
 
@@ -4500,7 +4490,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[Mac (10,7)]
 	[BaseType (typeof (CIFilter))]
 	interface CIToneCurve {
 
@@ -4590,7 +4579,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[Mac (10,7)]
 	[BaseType (typeof (CIFilter))]
 	interface CIVibrance {
 

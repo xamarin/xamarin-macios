@@ -22,10 +22,19 @@
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 WORKSPACE=$(pwd)
 
+MARKDOWN_INDENT="&nbsp;&nbsp;&nbsp;&nbsp;"
+echo "*** Comparing API & creating generator diff... ***"
+export COMPARE_FAILURE_FILE=$TMPDIR/api-diff-compare-failures.txt
 report_error ()
 {
 	printf "🔥 [Failed to compare API and create generator diff](%s/console) 🔥\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+	if test -f "$COMPARE_FAILURE_FILE"; then
+		sed "s/^/${MARKDOWN_INDENT//&/\\&}/" "$COMPARE_FAILURE_FILE" >> "$WORKSPACE/jenkins/pr-comments.md"
+	fi
+	printf "${MARKDOWN_INDENT}Search for \`Comparing API & creating generator diff\` in the log to view the complete log.\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
 	touch "$WORKSPACE/jenkins/failure-stamp"
+	rm -f "$COMPARE_FAILURE_FILE"
+	echo "*** Comparing API & creating generator diff failed ***"
 	exit 0
 }
 trap report_error ERR
@@ -55,7 +64,7 @@ if ! git rev-parse "$BASE" >/dev/null 2>&1; then
 	exit 0
 fi
 
-./tools/compare-commits.sh --base="$BASE^1"
+./tools/compare-commits.sh --base="$BASE^1" "--failure-file=$COMPARE_FAILURE_FILE"
 
 mkdir -p jenkins-results/apicomparison
 
@@ -65,7 +74,7 @@ cp -R tools/comparison/generator-diff jenkins-results/generator-diff
 
 if [[ "x$1" == "x--publish" ]]; then
 	URL_PREFIX=$(./jenkins/publish-results.sh | grep "^Url Prefix: " | sed 's/^Url Prefix: //')
-	URL_API="$URL_PREFIX/apicomparison/index.html"
+	URL_API="$URL_PREFIX/apicomparison/api-diff.html"
 	URL_GENERATOR="$URL_PREFIX/generator-diff/index.html"
 else
 	URL_API="$BUILD_URL/API_20diff_20_28PR_20only_29"
@@ -89,3 +98,5 @@ else
 	printf "✅ [Generator Diff](%s) (only version changes)" "$URL_GENERATOR" >> "$WORKSPACE/jenkins/pr-comments.md"
 fi
 printf "\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
+
+echo "*** Comparing API & creating generator diff completed ***"

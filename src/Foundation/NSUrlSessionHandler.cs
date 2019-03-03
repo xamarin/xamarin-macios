@@ -27,13 +27,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text;
 
 #if UNIFIED
 using CoreFoundation;
@@ -48,13 +51,71 @@ using nint = System.Int32;
 using nuint = System.UInt32;
 #endif
 
+#if !MONOMAC
+using UIKit;
+#endif
+
 #if SYSTEM_NET_HTTP
 namespace System.Net.Http {
 #else
 namespace Foundation {
 #endif
+
+	// useful extensions for the class in order to set it in a header
+	static class NSHttpCookieExtensions
+	{
+		static void AppendSegment(StringBuilder builder, string name, string value)
+		{
+			if (builder.Length > 0)
+				builder.Append ("; ");
+
+			builder.Append (name);
+			if (value != null)
+				builder.Append ("=").Append (value);
+		}
+
+		// returns the header for a cookie
+		public static string GetHeaderValue (this NSHttpCookie cookie)
+		{
+			var header = new StringBuilder();
+			AppendSegment (header, cookie.Name, cookie.Value);
+			AppendSegment (header, NSHttpCookie.KeyPath.ToString (), cookie.Path.ToString ());
+			AppendSegment (header, NSHttpCookie.KeyDomain.ToString (), cookie.Domain.ToString ());
+			AppendSegment (header, NSHttpCookie.KeyVersion.ToString (), cookie.Version.ToString ());
+
+			if (cookie.Comment != null)
+				AppendSegment (header, NSHttpCookie.KeyComment.ToString (), cookie.Comment.ToString());
+
+			if (cookie.CommentUrl != null)
+				AppendSegment (header, NSHttpCookie.KeyCommentUrl.ToString (), cookie.CommentUrl.ToString());
+
+			if (cookie.Properties.ContainsKey (NSHttpCookie.KeyDiscard))
+				AppendSegment (header, NSHttpCookie.KeyDiscard.ToString (), null);
+
+			if (cookie.ExpiresDate != null) {
+				// Format according to RFC1123; 'r' uses invariant info (DateTimeFormatInfo.InvariantInfo)
+				var dateStr = ((DateTime) cookie.ExpiresDate).ToUniversalTime ().ToString("r", CultureInfo.InvariantCulture);
+				AppendSegment (header, NSHttpCookie.KeyExpires.ToString (), dateStr);
+			}
+
+			if (cookie.Properties.ContainsKey (NSHttpCookie.KeyMaximumAge)) {
+				var timeStampString = (NSString) cookie.Properties[NSHttpCookie.KeyMaximumAge];
+				AppendSegment (header, NSHttpCookie.KeyMaximumAge.ToString (), timeStampString);
+			}
+
+			if (cookie.IsSecure)
+				AppendSegment (header, NSHttpCookie.KeySecure.ToString(), null);
+
+			if (cookie.IsHttpOnly)
+				AppendSegment (header, "httponly", null); // Apple does not show the key for the httponly
+
+			return header.ToString ();
+		}
+	}
+
 	public partial class NSUrlSessionHandler : HttpMessageHandler
 	{
+		private const string SetCookie = "Set-Cookie";
 		readonly Dictionary<string, string> headerSeparators = new Dictionary<string, string> {
 			["User-Agent"] = " ",
 			["Server"] = " "
@@ -63,8 +124,23 @@ namespace Foundation {
 		readonly NSUrlSession session;
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
+#if !MONOMAC && !MONOTOUCH_WATCH
+		readonly bool isBackgroundSession = false;
+		NSObject notificationToken;  // needed to make sure we do not hang if not using a background session
+#endif
 
-		public NSUrlSessionHandler () : this (NSUrlSessionConfiguration.DefaultSessionConfiguration)
+		static NSUrlSessionConfiguration CreateConfig ()
+		{
+			// modifying the configuration does not affect future calls
+			var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
+			// but we want, by default, the timeout from HttpClient to have precedence over the one from NSUrlSession
+			// Double.MaxValue does not work, so default to 24 hours
+			config.TimeoutIntervalForRequest = 24 * 60 * 60;
+			config.TimeoutIntervalForResource = 24 * 60 * 60;
+			return config;
+		}
+
+		public NSUrlSessionHandler () : this (CreateConfig ())
 		{
 		}
 
@@ -73,6 +149,12 @@ namespace Foundation {
 		{
 			if (configuration == null)
 				throw new ArgumentNullException (nameof (configuration));
+
+#if !MONOMAC  && !MONOTOUCH_WATCH 
+			// if the configuration has an identifier, we are dealing with a background session, 
+			// therefore, we do not have to listen to the notifications.
+			isBackgroundSession = !string.IsNullOrEmpty (configuration.Identifier);
+#endif
 
 			AllowAutoRedirect = true;
 
@@ -91,14 +173,44 @@ namespace Foundation {
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
+#if !MONOMAC  && !MONOTOUCH_WATCH
+
+		void AddNotification ()
+		{
+			if (!isBackgroundSession && notificationToken == null)
+				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+		}
+
+		void RemoveNotification ()
+		{
+			if (notificationToken != null) {
+				NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
+				notificationToken = null;
+			}
+		}
+
+		void BackgroundNotificationCb (NSNotification obj)
+		{
+			// we do not need to call the lock, we call cancel on the source, that will trigger all the needed code to 
+			// clean the resources and such
+			foreach (var r in inflightRequests.Values) {
+				r.CompletionSource.TrySetCanceled ();
+			}
+		}
+#endif
+
 		public long MaxInputInMemory { get; set; } = long.MaxValue;
 
 		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
-			InflightData inflight;
-			lock (inflightRequestsLock)
-				if (inflightRequests.TryGetValue (task, out inflight))
-					inflightRequests.Remove (task);
+			lock (inflightRequestsLock) {
+				inflightRequests.Remove (task);
+#if !MONOMAC  && !MONOTOUCH_WATCH
+				// do we need to be notified? If we have not inflightData, we do not
+				if (inflightRequests.Count == 0)
+					RemoveNotification ();
+#endif
+			}
 
 			if (cancel)
 				task?.Cancel ();
@@ -108,6 +220,10 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
+#if !MONOMAC  && !MONOTOUCH_WATCH
+			// remove the notification if present, method checks against null
+			RemoveNotification ();
+#endif
 			lock (inflightRequestsLock) {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
@@ -116,7 +232,6 @@ namespace Foundation {
 
 				inflightRequests.Clear ();
 			}
-
 			base.Dispose (disposing);
 		}
 
@@ -183,12 +298,11 @@ namespace Foundation {
 
 			var tcs = new TaskCompletionSource<HttpResponseMessage> ();
 
-			cancellationToken.Register (() => {
-				RemoveInflightData (dataTask);
-				tcs.TrySetCanceled ();
-			});
-
-			lock (inflightRequestsLock)
+			lock (inflightRequestsLock) {
+#if !MONOMAC  && !MONOTOUCH_WATCH
+				// Add the notification whenever needed
+				AddNotification ();
+#endif
 				inflightRequests.Add (dataTask, new InflightData {
 					RequestUrl = request.RequestUri.AbsoluteUri,
 					CompletionSource = tcs,
@@ -196,9 +310,27 @@ namespace Foundation {
 					Stream = new NSUrlSessionDataTaskStream (),
 					Request = request
 				});
+			}
 
 			if (dataTask.State == NSUrlSessionTaskState.Suspended)
 				dataTask.Resume ();
+
+			// as per documentation: 
+			// If this token is already in the canceled state, the 
+			// delegate will be run immediately and synchronously.
+			// Any exception the delegate generates will be 
+			// propagated out of this method call.
+			//
+			// The execution of the register ensures that if we 
+			// receive a already cancelled token or it is cancelled
+			// just before this call, we will cancel the task. 
+			// Other approaches are harder, since querying the state
+			// of the token does not guarantee that in the next
+			// execution a threads cancels it.
+			cancellationToken.Register (() => {
+				RemoveInflightData (dataTask);
+				tcs.TrySetCanceled ();
+			});
 
 			return await tcs.Task.ConfigureAwait (false);
 		}
@@ -265,9 +397,16 @@ namespace Foundation {
 					foreach (var v in urlResponse.AllHeaderFields) {
 						// NB: Cocoa trolling us so hard by giving us back dummy dictionary entries
 						if (v.Key == null || v.Value == null) continue;
+						// NSUrlSession tries to be smart with cookies, we will not use the raw value but the ones provided by the cookie storage
+						if (v.Key.ToString () == SetCookie) continue;
 
 						httpResponse.Headers.TryAddWithoutValidation (v.Key.ToString (), v.Value.ToString ());
 						httpResponse.Content.Headers.TryAddWithoutValidation (v.Key.ToString (), v.Value.ToString ());
+					}
+
+					var cookies = session.Configuration.HttpCookieStorage.CookiesForUrl (response.Url);
+					for (var index = 0; index < cookies.Length; index++) {
+						httpResponse.Headers.TryAddWithoutValidation (SetCookie, cookies [index].GetHeaderValue ());
 					}
 
 					inflight.Response = httpResponse;
@@ -380,17 +519,46 @@ namespace Foundation {
 					}
 				}
 
-				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM && sessionHandler.Credentials != null) {
-					var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
-					if (credentialsToUse == null) {
+				if (sessionHandler.Credentials != null && TryGetAuthenticationType (challenge.ProtectionSpace, out string authType)) {
+					NetworkCredential credentialsToUse = null;
+					if (authType != RejectProtectionSpaceAuthType) {
 						var uri = inflight.Request.RequestUri;
-						credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
+						credentialsToUse = sessionHandler.Credentials.GetCredential (uri, authType);
 					}
-					NSUrlCredential credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
-					completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+
+					if (credentialsToUse != null) {
+						var credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
+						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+					} else {
+						// Rejecting the challenge allows the next authentication method in the request to be delivered to
+						// the DidReceiveChallenge method. Another authentication method may have credentials available.
+						completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
+					}
 				} else {
 					completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 				}
+			}
+
+			static readonly string RejectProtectionSpaceAuthType = "reject";
+
+			static bool TryGetAuthenticationType (NSUrlProtectionSpace protectionSpace, out string authenticationType)
+			{
+				if (protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM) {
+					authenticationType = "NTLM";
+				} else if (protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodHTTPBasic) {
+					authenticationType = "basic";
+				} else if (protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNegotiate ||
+					protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodHTMLForm ||
+					protectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodHTTPDigest) {
+					// Want to reject this authentication type to allow the next authentication method in the request to
+					// be used.
+					authenticationType = RejectProtectionSpaceAuthType;
+				} else {
+					// ServerTrust, ClientCertificate or Default.
+					authenticationType = null;
+					return false;
+				}
+				return true;
 			}
 		}
 

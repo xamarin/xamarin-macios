@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using Mono.Cecil;
 using NUnit.Framework;
@@ -214,6 +215,153 @@ namespace Xamarin.Linker {
 			if (ar == null)
 				return;
 			references.Add (ar);
+		}
+
+		static string [] GetWatchOSAssemblies ()
+		{
+			var rv = new List<string> ();
+
+			rv.AddRange (Directory.GetFiles (watchOSPath, "*.dll", SearchOption.TopDirectoryOnly).
+				Select ((v) => v.Substring (watchOSPath.Length)).ToArray ());
+			rv.Remove ("Xamarin.WatchOS.dll");
+			rv.Add (Path.Combine ("..", "..", "32bits", "Xamarin.WatchOS.dll"));
+			return rv.ToArray ();
+		}
+
+		static Dictionary<string, Tuple<int /* expected exit code */, string [] /* expected 'LLVM failed' lines */>> known_llvm_failures = new Dictionary<string, Tuple<int, string []>> {
+			{ "System.Security.dll", new Tuple<int, string[]> (0, new string [] {
+				"LLVM failed for 'SignedCms.GetContent': non-finally/catch/fault clause.",
+			}) },
+			{ "System.Data.dll", new Tuple<int, string[]> (0, new string [] {
+				"LLVM failed for 'XmlDataDocument.HasPointers': non-finally/catch/fault clause.",
+				"LLVM failed for 'XmlDataDocument.OnFoliated': non-finally/catch/fault clause.",
+				"LLVM failed for 'XmlDataDocument.SetRowValueFromXmlText': non-finally/catch/fault clause.",
+				"LLVM failed for 'Constraint.CheckStateForProperty': non-finally/catch/fault clause.",
+				"LLVM failed for 'ConstraintCollection.Clear': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataColumn.set_Expression': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataColumnCollection.BaseAdd': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataColumnCollection.Clear': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataRelation.CheckStateForProperty': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataRow.set_Item': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataRow.set_ItemArray': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataSet.SetLocaleValue': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataTable.RestoreIndexEvents': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataTable.set_Locale': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataTable.NewRecordFromArray': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataTable.RaiseRowChanged': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataTable.SetNewRecordWorker': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataView.OnListChanged': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataView.SetDataViewManager': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataViewManager.OnListChanged': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataExpression.Evaluate': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataExpression.ToBoolean': non-finally/catch/fault clause.",
+				"LLVM failed for 'ExpressionParser.Parse': non-finally/catch/fault clause.",
+				"LLVM failed for 'ExpressionParser.ParseAggregateArgument': non-finally/catch/fault clause.",
+				"LLVM failed for 'Merger.MergeRelation': non-finally/catch/fault clause.",
+				"LLVM failed for 'RecordManager.CopyRecord': non-finally/catch/fault clause.",
+				"LLVM failed for 'Select.AcceptRecord': non-finally/catch/fault clause.",
+				"LLVM failed for 'XDRSchema.GetMinMax': non-finally/catch/fault clause.",
+				"LLVM failed for 'XmlTreeGen.SetMSDataAttribute': non-finally/catch/fault clause.",
+				"LLVM failed for 'SNITCPHandle.ReceiveAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'SchemaMapping.SetupSchemaWithoutKeyInfo': non-finally/catch/fault clause.",
+				"LLVM failed for 'SchemaMapping.SetupSchemaWithKeyInfo': non-finally/catch/fault clause.",
+				"LLVM failed for 'DbCommandBuilder.RowUpdatingHandler': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataAdapter.FillLoadDataRowChunk': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataAdapter.FillLoadDataRow': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataAdapter.FillMapping': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataAdapter.FillNextResult': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataRecordInternal.GetBytes': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataRecordInternal.GetChars': non-finally/catch/fault clause.",
+				"LLVM failed for 'DbDataAdapter.Update': non-finally/catch/fault clause.",
+				"LLVM failed for 'DataSetRelationCollection.AddCore': non-finally/catch/fault clause.",
+			}) },
+			{ "System.dll", new Tuple<int, string[]> (0, new string [] {
+				"LLVM failed for 'WebClient.DownloadDataInternal': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.DownloadFile': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.OpenRead': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.OpenWrite': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.UploadDataInternal': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.UploadValues': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.AbortRequest': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.DownloadBits': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.UploadBits': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.GetStringUsingEncoding': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.OpenReadAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.OpenWriteAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.DownloadStringAsyncCallback': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.DownloadStringAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.DownloadDataAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.DownloadFileAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.UploadStringAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.UploadDataAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.UploadFileAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.UploadValuesAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'WebClient.<UploadStringAsync>b__179_0': non-finally/catch/fault clause.",
+				"LLVM failed for '<DownloadBitsAsync>d__150.MoveNext': non-finally/catch/fault clause.",
+				"LLVM failed for '<UploadBitsAsync>d__152.MoveNext': non-finally/catch/fault clause.",
+				"LLVM failed for '<>c__DisplayClass164_1.<OpenReadAsync>b__0': non-finally/catch/fault clause.",
+				"LLVM failed for '<>c__DisplayClass167_1.<OpenWriteAsync>b__0': non-finally/catch/fault clause.",
+				"LLVM failed for '<WaitForWriteTaskAsync>d__55.MoveNext': non-finally/catch/fault clause.",
+				"LLVM failed for '<SendFrameFallbackAsync>d__56.MoveNext': non-finally/catch/fault clause.",
+				"LLVM failed for '<ReceiveAsyncPrivate>d__61`2.MoveNext': non-finally/catch/fault clause.",
+				"LLVM failed for '<ReceiveAsyncPrivate>d__61`2.MoveNext': non-finally/catch/fault clause.",
+			}) },
+			{ "System.Core.dll", new Tuple<int, string[]> (0, new string [] {
+				"LLVM failed for 'EnterTryCatchFinallyInstruction.Run': non-finally/catch/fault clause.",
+			}) },
+			{ "mscorlib.dll", new Tuple<int, string[]> (0, new string [] {
+				"LLVM failed for 'Console.Write': opcode oparglist",
+				"LLVM failed for 'Console.WriteLine': opcode oparglist",
+			}) },
+		};
+
+		[Test]
+		[TestCaseSource ("GetWatchOSAssemblies")]
+		public void NoLLVMFailuresInWatchOS (string asm)
+		{
+			MTouch.AssertDeviceAvailable ();
+
+			// Run LLVM on every assembly we ship in watchOS, using the arguments we usually use when done from mtouch.
+			var aot_compiler = Path.Combine (Configuration.BinDirXI, "armv7k-unknown-darwin-mono-sgen");
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var llvm_path = Path.Combine (Configuration.SdkRootXI, "LLVM36", "bin");
+			var env = new Dictionary<string, string> {
+				{ "MONO_PATH", watchOSPath }
+			};
+			var arch = "armv7k";
+			var arch_dir = Path.Combine (tmpdir, arch);
+			Directory.CreateDirectory (arch_dir);
+			var args = new StringBuilder ();
+			args.Append ("--debug ");
+			args.Append ("--llvm ");
+			args.Append ("-O=float32 ");
+			args.Append ($"--aot=mtriple={arch}-ios");
+			args.Append ($",data-outfile={Path.Combine (arch_dir, Path.GetFileNameWithoutExtension (asm) + ".aotdata." + arch)}");
+			args.Append ($",static,asmonly,direct-icalls,llvmonly,nodebug,dwarfdebug,direct-pinvoke");
+			args.Append ($",msym-dir={Path.Combine (arch_dir, Path.GetFileNameWithoutExtension (asm) + ".mSYM")}");
+			args.Append ($",llvm-path={llvm_path}");
+			args.Append ($",llvm-outfile={Path.Combine (arch_dir, Path.GetFileName (asm) + ".bc")} ");
+			args.Append (Path.Combine (watchOSPath, asm));
+
+			StringBuilder output = new StringBuilder ();
+			var rv = ExecutionHelper.Execute (aot_compiler, args.ToString (), stdout: output, stderr: output, environmentVariables: env, timeout: TimeSpan.FromMinutes (5));
+			var llvm_failed = output.ToString ().Split ('\n').Where ((v) => v.Contains ("LLVM failed"));
+			Console.WriteLine (output);
+
+			int expected_exit_code = 0;
+			if (known_llvm_failures.TryGetValue (asm, out var known_failures)) {
+				if (known_failures.Item2 != null) {
+					// Check if there are known failures for failures we've fixed
+					var known_inexistent_failures = known_failures.Item2.Where ((v) => !llvm_failed.Contains (v));
+					Assert.IsEmpty (string.Join ("\n", known_inexistent_failures), $"Redundant known failures: should be removed from dictionary for {asm}");
+					// Filter the known failures from the failed llvm lines.
+					llvm_failed = llvm_failed.Where ((v) => !known_failures.Item2.Contains (v));
+				}
+				expected_exit_code = known_failures.Item1;
+			}
+
+			Assert.IsEmpty (string.Join ("\n", llvm_failed), "LLVM failed");
+			Assert.AreEqual (expected_exit_code, rv, "AOT compilation");
 		}
 	}
 }

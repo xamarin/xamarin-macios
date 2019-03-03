@@ -7,6 +7,7 @@ using System.Text;
 using NUnit.Framework;
 using System.Reflection;
 
+using Xamarin.Utils;
 using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests
@@ -247,8 +248,7 @@ namespace Xamarin.MMP.Tests
 		{
 			TI.TestUnifiedExecutable (test, shouldFail: false);
 
-			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/Mono.Posix.dll")));
-			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib")));
+			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib")), String.Format ("Does {0}/bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib to exist?", tmpDir));
 		}
 
 
@@ -582,7 +582,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					PlistReplaceStrings = new Dictionary<string, string> {
-						{ "<string>10.7</string>", "<string>10.4</string>"}
+						{ "<string>10.9</string>", "<string>10.4</string>"}
 					}
 				};
 				TI.TestUnifiedExecutable (test, shouldFail: true);
@@ -595,7 +595,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					PlistReplaceStrings = new Dictionary<string, string> {
-						{ "<string>10.7</string>", "<string>11.0</string>"}
+						{ "<string>10.9</string>", "<string>11.0</string>"}
 					}
 				};
 				TI.TestUnifiedExecutable (test, shouldFail: true);
@@ -608,7 +608,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					PlistReplaceStrings = new Dictionary<string, string> {
-						{ "<string>10.7</string>", "<string>10.12</string>"}
+						{ "<string>10.9</string>", "<string>10.12</string>"}
 					}
 				};
 				TI.TestUnifiedExecutable (test, shouldFail: false);
@@ -646,7 +646,7 @@ namespace Xamarin.MMP.Tests
 						"<LinkMode>Full</LinkMode>",
 				};
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
-				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, trim-architectures.");
+				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, trim-architectures, inline-is-arm64-calling-convention.");
 				rv.Messages.AssertErrorCount (0);
 			});
 		}
@@ -675,7 +675,7 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		// [Test] - https://github.com/xamarin/xamarin-macios/issues/4110
+		[Test]
 		public void BuildingSameSolutionTwice_ShouldNotRunACToolTwice ()
 		{
 			RunMMPTest (tmpDir => {
@@ -695,6 +695,43 @@ namespace Xamarin.MMP.Tests
 
 				buildOutput = TI.BuildProject (project, true);
 				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Build after touching icon must run actool");
+			});
+		}
+
+		[Test]
+		public void HardenedRuntimeCodesignOption ()
+		{
+			// https://github.com/xamarin/xamarin-macios/issues/5653
+			if (TI.InJenkins)
+				Assert.Ignore ("Requires macOS entitlements on bots.");
+
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>"
+				};
+
+				Func<OutputText, string> findCodesign = o => o.BuildOutput.SplitLines ().Last (x => x.Contains ("Tool /usr/bin/codesign execution started with arguments"));
+
+				var baseOutput = TI.TestUnifiedExecutable (test);
+				string baseCodesign = findCodesign (baseOutput);
+				Assert.False (baseCodesign.Contains ("-o runtime"), "Base codesign");
+
+				test.CSProjConfig += "<UseHardenedRuntime>true</UseHardenedRuntime><CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>";
+
+				const string entitlementText = @"<?xml version=""1.0"" encoding=""UTF-8"" ?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+<key>com.apple.security.cs.allow-jit</key>
+<true/>
+</dict>
+</plist>";
+
+				File.WriteAllText (Path.Combine (tmpDir, "Entitlements.plist"), entitlementText);
+
+				var hardenedOutput = TI.TestUnifiedExecutable (test);
+				string hardenedCodesign = findCodesign (hardenedOutput);
+				Assert.True (hardenedCodesign.Contains ("-o runtime"), "Hardened codesign");
 			});
 		}
 	}

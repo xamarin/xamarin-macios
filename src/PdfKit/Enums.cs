@@ -159,7 +159,7 @@ namespace PdfKit {
 		Horizontal = 1,
 	}
 
-	[iOS (11,0), Mac (10,7)]
+	[iOS (11,0)]
 	[Native]
 	public enum PdfInterpolationQuality : long {
 		None = 0,

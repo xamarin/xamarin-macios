@@ -1922,7 +1922,7 @@ namespace ImageIO {
 		NSString PrimaryImage { get; }
 	}
 
-	[iOS (7,0), Mac (10, 8)]
+	[iOS (7,0)]
 	[Static]
 	interface CGImageMetadataTagNamespaces {
 		[Field ("kCGImageMetadataNamespaceExif")]
@@ -1948,7 +1948,7 @@ namespace ImageIO {
 		NSString IPTCExtension { get; }
 	}
 
-	[iOS (7,0), Mac (10, 8)]
+	[iOS (7,0)]
 	[Static]
 	interface CGImageMetadataTagPrefixes {
 		[Field ("kCGImageMetadataPrefixExif")]
@@ -1974,7 +1974,7 @@ namespace ImageIO {
 		NSString IPTCExtension { get; }
 	}
 
-	[iOS (7,0), Mac (10, 8)]
+	[iOS (7,0)]
 	interface CGImageMetadata {
 		[Field ("kCFErrorDomainCGImageMetadata")]
 		NSString ErrorDomain { get; }
@@ -2031,23 +2031,23 @@ namespace ImageIO {
 		[Internal][Field ("kCGImageDestinationBackgroundColor")]
 		IntPtr kBackgroundColor { get; }
 
-		[iOS (7,0), Mac (10, 8)]
+		[iOS (7,0)]
 		[Internal][Field ("kCGImageDestinationDateTime")]
 		IntPtr kDateTime { get; }
 
-		[iOS (7,0), Mac (10, 8)]
+		[iOS (7,0)]
 		[Internal][Field ("kCGImageDestinationMergeMetadata")]
 		IntPtr kMergeMetadata { get; }
 
-		[iOS (7,0), Mac (10, 8)]
+		[iOS (7,0)]
 		[Internal][Field ("kCGImageDestinationMetadata")]
 		IntPtr kMetadata { get; }
 
-		[iOS (7,0), Mac (10, 8)]
+		[iOS (7,0)]
 		[Internal][Field ("kCGImageDestinationOrientation")]
 		IntPtr kOrientation { get; }
 
-		[iOS (7,0), Mac (10, 8)]
+		[iOS (7,0)]
 		[Internal][Field ("kCGImageMetadataShouldExcludeXMP")]
 		IntPtr kShouldExcludeXMP { get; }
 
@@ -2213,15 +2213,15 @@ namespace ImageIO {
 	[Partial]
 	interface CGCopyImageSourceOptions {
 
-		[iOS (7,0), Mac (10, 8)]
+		[iOS (7,0)]
 		[Internal][Field ("kCGImageDestinationMetadata")]
 		IntPtr kMetadata { get; }
 
-		[iOS (7,0), Mac (10, 8)]
+		[iOS (7,0)]
 		[Internal][Field ("kCGImageDestinationMergeMetadata")]
 		IntPtr kMergeMetadata { get; }
 
-		[iOS (7,0), Mac (10, 8)]
+		[iOS (7,0)]
 		[Internal][Field ("kCGImageMetadataShouldExcludeXMP")]
 		IntPtr kShouldExcludeXMP { get; }
 
@@ -2229,11 +2229,11 @@ namespace ImageIO {
 		[Internal][Field ("kCGImageMetadataShouldExcludeGPS")]
 		IntPtr kShouldExcludeGPS { get; }
 
-		[iOS (7,0), Mac (10, 8)]
+		[iOS (7,0)]
 		[Internal][Field ("kCGImageDestinationDateTime")]
 		IntPtr kDateTime { get; }
 
-		[iOS (7,0), Mac (10, 8)]
+		[iOS (7,0)]
 		[Internal][Field ("kCGImageDestinationOrientation")]
 		IntPtr kOrientation { get; }
 	}

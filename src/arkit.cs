@@ -710,10 +710,17 @@ namespace ARKit {
 		[Export ("isSupported")]
 		bool IsSupported { get; }
 
+#if !XAMCORE_4_0
+		// even if static - it's abstract
 		[iOS (11,3)]
 		[Static]
-		[Export ("supportedVideoFormats")]
-		ARVideoFormat[] SupportedVideoFormats { get; }
+		[Obsolete ("This is an abstract static method. You need to call 'GetSupportedVideoFormats ()' from a subclass to get results.")]
+		ARVideoFormat[] SupportedVideoFormats {
+			// avoid the native exception leading to a crash
+			[Wrap ("Array.Empty<ARVideoFormat> ()")]
+			get;
+		}
+#endif
 
 		[iOS (11,3)]
 		[Export ("videoFormat", ArgumentSemantic.Strong)]
@@ -733,6 +740,11 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof (ARConfiguration))]
 	interface ARWorldTrackingConfiguration {
+
+		[iOS (11,3)]
+		[Static]
+		[Export ("supportedVideoFormats")]
+		ARVideoFormat[] GetSupportedVideoFormats ();
 
 		[iOS (11,3)]
 		[Export ("autoFocusEnabled")]
@@ -766,6 +778,12 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
 	interface AROrientationTrackingConfiguration {
+
+		[iOS (11,3)]
+		[Static]
+		[Export ("supportedVideoFormats")]
+		ARVideoFormat[] GetSupportedVideoFormats ();
+
 		[iOS (11,3)]
 		[Export ("autoFocusEnabled")]
 		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
@@ -795,7 +813,12 @@ namespace ARKit {
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
-	interface ARFaceTrackingConfiguration {}
+	interface ARFaceTrackingConfiguration {
+		[iOS (11,3)]
+		[Static]
+		[Export ("supportedVideoFormats")]
+		ARVideoFormat[] GetSupportedVideoFormats ();
+	}
 
 	[iOS (11,0)]
 	[NoWatch, NoTV, NoMac]
@@ -1225,6 +1248,10 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
 	interface ARImageTrackingConfiguration {
+		[Static]
+		[Export ("supportedVideoFormats")]
+		ARVideoFormat[] GetSupportedVideoFormats ();
+
 		[Export ("autoFocusEnabled")]
 		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
 
@@ -1239,6 +1266,10 @@ namespace ARKit {
 	[NoWatch, NoTV, NoMac]
 	[BaseType (typeof(ARConfiguration))]
 	interface ARObjectScanningConfiguration {
+		[Static]
+		[Export ("supportedVideoFormats")]
+		ARVideoFormat[] GetSupportedVideoFormats ();
+
 		[Export ("autoFocusEnabled")]
 		bool AutoFocusEnabled { [Bind ("isAutoFocusEnabled")] get; set; }
 

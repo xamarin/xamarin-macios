@@ -84,8 +84,8 @@ typedef id		(*xamarin_managed_to_id_func) (MonoObject *value, guint32 context, g
 
 id              xamarin_generate_conversion_to_native (MonoObject *value, MonoType *inputType, MonoType *outputType, MonoMethod *method, guint32 context, guint32 *exception_gchandle);
 void *          xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType *outputType, MonoMethod *method, guint32 *exception_gchandle, guint32 context, /*SList*/ void **free_list);
-NSNumber *      xamarin_convert_managed_to_nsnumber (MonoObject *value, MonoType *managedType, MonoType *nativeType, MonoMethod *method, guint32 *exception_gchandle);
-NSValue *       xamarin_convert_managed_to_nsvalue (MonoObject *value, MonoType *managedType, MonoType *nativeType, MonoMethod *method, guint32 *exception_gchandle);
+NSNumber *      xamarin_convert_managed_to_nsnumber (MonoObject *value, MonoClass *managedType, MonoMethod *method, guint32 context, guint32 *exception_gchandle);
+NSValue *       xamarin_convert_managed_to_nsvalue (MonoObject *value, MonoClass *managedType, MonoMethod *method, guint32 context, guint32 *exception_gchandle);
 NSString *      xamarin_convert_managed_to_nsstring (MonoObject *value, MonoType *managedType, MonoType *nativeType, MonoMethod *method, guint32 *exception_gchandle);
 MonoObject *    xamarin_convert_nsnumber_to_managed (NSNumber *value, MonoType *nativeType, MonoType *managedType, MonoMethod *method, guint32 *exception_gchandle);
 MonoObject *    xamarin_convert_nsvalue_to_managed (NSValue *value, MonoType *nativeType, MonoType *managedType, MonoMethod *method, guint32 *exception_gchandle);
@@ -103,6 +103,9 @@ xamarin_managed_to_id_func xamarin_get_smart_enum_to_nsstring_func (MonoClass *m
 
 NSArray *   xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_to_id_func convert, guint32 context, guint32 *exception_gchandle);
 MonoArray * xamarin_convert_nsarray_to_managed_with_func (NSArray *array, MonoClass *managedElementType, xamarin_id_to_managed_func convert, guint32 context, guint32 *exception_gchandle);
+
+void * xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, guint32 context, guint32 *exception_gchandle);
+void * xamarin_smart_enum_to_nsstring (MonoObject *value, guint32 context /* token ref */, guint32 *exception_gchandle);
 
 // Returns a pointer to the value type, which must be freed using xamarin_free.
 void *xamarin_nsnumber_to_bool   (NSNumber *number, void *ptr, MonoClass *managedType, guint32 context, guint32 *exception_gchandle);

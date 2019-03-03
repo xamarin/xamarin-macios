@@ -8,35 +8,31 @@ namespace Xamarin.MMP.Tests
 	[TestFixture]
 	public partial class MMPTests
 	{
-		const string nugetPath = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
-
 		public string RoslynTestProjectRoot => Path.Combine (TI.FindSourceDirectory (), "TestProjects/RoslynTestApp/");
 
-		void RestoreRoslynNuget (string projectType)
+		void RestoreRoslynNuget (string projectPath)
 		{
-			StringBuilder nugetArgs = new StringBuilder ("restore " + Path.Combine (RoslynTestProjectRoot + projectType + "/") + "packages.config");
-
-			TI.RunAndAssert (nugetPath, nugetArgs, "Restore Nuget");
+			TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget", "restore " + projectPath, "Restore Nuget");
 		}
 
-		// [Test] - https://bugzilla.xamarin.com/show_bug.cgi?id=53164
+		[Test]
 		public void XMModernRosylnProjet_ShouldBuildAndRunWithMSBuild ()
 		{
 			string projectPath = Path.Combine (RoslynTestProjectRoot, "Modern/RoslynTestApp.sln");
 
 			TI.CleanUnifiedProject (projectPath);
-			RestoreRoslynNuget ("Modern");
+			RestoreRoslynNuget (projectPath);
 			TI.BuildProject (projectPath, true);
 			TI.RunAndAssert (Path.Combine (RoslynTestProjectRoot, "Modern/bin/Debug/RoslynTestApp.app/Contents/MacOS/RoslynTestApp"), new StringBuilder (), "Run");
 		}
 
-		// [Test] - https://bugzilla.xamarin.com/show_bug.cgi?id=53164
+		[Test]
 		public void XMFullRosylnProjet_ShouldBuildAndRunWithMSBuild ()
 		{
 			string projectPath = Path.Combine (RoslynTestProjectRoot, "Full/RoslynTestApp.sln");
 
 			TI.CleanUnifiedProject (projectPath);
-			RestoreRoslynNuget ("Full");
+			RestoreRoslynNuget (projectPath);
 			TI.BuildProject (projectPath, true);
 			TI.RunAndAssert (Path.Combine (RoslynTestProjectRoot, "Full/bin/Debug/RoslynTestApp.app/Contents/MacOS/RoslynTestApp"), new StringBuilder (), "Run");
 		}

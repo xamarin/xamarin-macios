@@ -17,13 +17,13 @@ namespace Compression
 			public IntPtr State; // void * __nullable state;
 
 
-			[DllImport (Constants.libcompression)]
+			[DllImport (Constants.libcompressionLibrary)]
 			public static extern CompressionStatus compression_stream_init (ref CompressionStreamStruct stream, StreamOperation operation, CompressionAlgorithm algorithm);
 
-			[DllImport (Constants.libcompression)]
+			[DllImport (Constants.libcompressionLibrary)]
 			public static extern CompressionStatus compression_stream_process (ref CompressionStreamStruct stream, StreamFlag flags);
 
-			[DllImport (Constants.libcompression)]
+			[DllImport (Constants.libcompressionLibrary)]
 			public static extern CompressionStatus compression_stream_destroy (ref CompressionStreamStruct stream);
 		}
 }

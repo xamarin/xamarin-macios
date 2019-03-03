@@ -176,9 +176,11 @@ namespace Xamarin.iOS.Tasks
 
 		// This property is required for VS to write the output native executable files
 		// and ensure the Inputs/Outputs of the msbuild target works correcly
-		[Required]
 		[Output]
 		public ITaskItem NativeExecutable { get; set; }
+
+		[Output]
+		public ITaskItem[] CopiedFrameworks { get; set; }
 
 		#endregion
 
@@ -405,7 +407,7 @@ namespace Xamarin.iOS.Tasks
 				args.AddLine ("--sgen-conc");
 
 			if (!string.IsNullOrEmpty (Interpreter))
-				args.Add ($"--interpreter={Interpreter}");
+				args.AddLine ($"--interpreter={Interpreter}");
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.AddLine ("--linksdkonly"); break;
@@ -681,7 +683,37 @@ namespace Xamarin.iOS.Tasks
 
 			Directory.CreateDirectory (AppBundleDir);
 
-			return base.Execute ();
+			var executableLastWriteTime = default (DateTime);
+			var executable = Path.Combine (AppBundleDir, ExecutableName);
+
+			if (File.Exists (executable))
+				executableLastWriteTime = File.GetLastWriteTimeUtc (executable);
+
+			var result = base.Execute ();
+
+			CopiedFrameworks = GetCopiedFrameworks ();
+
+			if (File.Exists (executable) && File.GetLastWriteTimeUtc (executable) != executableLastWriteTime)
+				NativeExecutable = new TaskItem (executable);
+
+			return result;
+		}
+
+		ITaskItem[] GetCopiedFrameworks ()
+		{
+			var copiedFrameworks = new List<ITaskItem> ();
+			var frameworksDir = Path.Combine (AppBundleDir, "Frameworks");
+
+			if (Directory.Exists (frameworksDir)) {
+				foreach (var dir in Directory.EnumerateDirectories (frameworksDir, "*.framework")) {
+					var framework = Path.Combine (dir, Path.GetFileNameWithoutExtension (dir));
+
+					if (File.Exists (framework))
+						copiedFrameworks.Add (new TaskItem (framework));
+				}
+			}
+
+			return copiedFrameworks.ToArray ();
 		}
 
 		string ResolveFrameworkFile (string fullName)

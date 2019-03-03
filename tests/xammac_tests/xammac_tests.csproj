@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0</DefineConstants>
+    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -38,7 +38,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
-    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0</DefineConstants>
+    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -60,8 +60,12 @@
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="OpenTK" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\common\Configuration.cs">
+      <Link>Configuration.cs</Link>
+    </Compile>
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>

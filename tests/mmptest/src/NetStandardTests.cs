@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Xamarin.MMP.Tests {
 	[TestFixture]
 	public class NetStandardTests {
-		// [Test] https://bugzilla.xamarin.com/show_bug.cgi?id=53164
+		[Test]
 		public void ModernUsingNetStandardLib_SmokeTest ()
 		{
 			MMPTests.RunMMPTest(tmpDir => {
@@ -14,7 +14,7 @@ namespace Xamarin.MMP.Tests {
 			});
 		}
 
-		// [Test] https://bugzilla.xamarin.com/show_bug.cgi?id=53164
+		[Test]
 		public void FullUsingNetStandardLib_SmokeTest ()
 		{
 			MMPTests.RunMMPTest(tmpDir => {

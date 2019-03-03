@@ -17,6 +17,12 @@ namespace Xamarin.Tuner
 		internal Target Target;
 		Symbols required_symbols;
 
+		// Any errors or warnings during the link process that won't prevent linking from continuing can be stored here.
+		// This is typically used to show as many problems as possible per build (so that the user doesn't have to fix one thing, rebuild, fix another, rebuild, fix another, etc).
+		// Obviously if the problem is such that cascading errors may end up reported, this should not be used.
+		// The errors/warnings will be shown when the linker is done.
+		public List<Exception> Exceptions = new List<Exception> ();
+
 		// SDK candidates - they will be preserved only if the application (not the SDK) uses it
 		List<ICustomAttributeProvider> srs_data_contract = new List<ICustomAttributeProvider> ();
 		List<ICustomAttributeProvider> xml_serialization = new List<ICustomAttributeProvider> ();

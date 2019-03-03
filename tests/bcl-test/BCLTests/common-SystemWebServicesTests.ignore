@@ -1,0 +1,5 @@
+# System.IO.DirectoryNotFoundException: SystemWebServicesTests.app/Test/System.Web.Services.Description/test.wsdl
+MonoTests.System.Web.Services.Description.ServiceDescriptionTest.ExtensibleAttributes
+MonoTests.System.Web.Services.Description.ServiceDescriptionTest.Extensions
+MonoTests.System.Web.Services.Description.ServiceDescriptionTest.Namespaces
+MonoTests.System.Web.Services.Description.ServiceDescriptionTest.ReadAndRetrievalUrl

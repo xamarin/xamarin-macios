@@ -33,7 +33,7 @@ namespace Xamarin.iOS.Tasks
 			var timestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 			var dsymTimestamps = Directory.EnumerateFiles (dsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 
 			// Rebuild w/ no changes
 			BuildProject ("MyReleaseBuild", Platform, "Release", clean: false);
@@ -47,7 +47,7 @@ namespace Xamarin.iOS.Tasks
 			foreach (var file in dsymTimestamps.Keys)
 				Assert.AreEqual (dsymTimestamps[file], newDSymTimestamps[file], "#2: " + file);
 
-			Thread.Sleep (1000);
+			EnsureFilestampChange ();
 
 			// Rebuild after changing MtouchUseLlvm
 			File.Copy (csproj, bak, true);

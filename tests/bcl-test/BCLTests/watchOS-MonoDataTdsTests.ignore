@@ -1,0 +1,2 @@
+# System.PlatformNotSupportedException : System.Net.Dns:GetHostByName is not supported on this platform.
+MonoTests.Mono.Data.Tds.TdsConnectionPoolTest.CheckNullException

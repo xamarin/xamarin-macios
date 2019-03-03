@@ -18,4 +18,8 @@ fi
 
 ./system-dependencies.sh --provision-all
 
+sudo rm -Rf /Developer/MonoTouch
+sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
+sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
+
 echo "✅ [Provisioning succeeded]($BUILD_URL/console)" >> "$WORKSPACE/jenkins/pr-comments.md"

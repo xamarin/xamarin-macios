@@ -310,7 +310,6 @@ namespace AVFoundation {
 
 #if !XAMCORE_3_0 || MONOMAC
 	[NoTV]
-	[Mac (10,7)] // N/A in iOS
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDeviceTransportControlsPlaybackMode : long {
@@ -318,7 +317,6 @@ namespace AVFoundation {
 	}
 
 	[NoTV, NoWatch]
-	[Mac (10,7)] // N/A in iOS
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVVideoFieldMode : long {
@@ -694,7 +692,6 @@ namespace AVFoundation {
 	}
 
 	[NoiOS][NoTV][NoWatch]
-	[Mac (10,7)]
 	[Native]
 	public enum AVContentAuthorizationStatus : long {
 		Unknown,

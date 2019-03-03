@@ -40,17 +40,14 @@ namespace Xamarin.Bundler
 		public string BuildDirectory;
 		public string LinkDirectory;
 
-		// Note that each 'Target' can have multiple abis: armv7+armv7s for instance.
-		public List<Abi> Abis;
-
 		public Dictionary<string, BundleFileInfo> BundleFiles = new Dictionary<string, BundleFileInfo> ();
 
 		Dictionary<Abi, CompileTask> pinvoke_tasks = new Dictionary<Abi, CompileTask> ();
 		List<CompileTask> link_with_task_output = new List<CompileTask> ();
 		List<AOTTask> aot_dependencies = new List<AOTTask> ();
 		List<LinkTask> embeddinator_tasks = new List<LinkTask> ();
-		CompilerFlags linker_flags;
-		NativeLinkTask link_task;
+		Dictionary<Abi, CompilerFlags> linker_flags_by_abi = new Dictionary<Abi, CompilerFlags> ();
+		Dictionary<Abi, NativeLinkTask> link_tasks = new Dictionary<Abi, NativeLinkTask> ();
 
 		// If the assemblies were symlinked.
 		public bool Symlinked;
@@ -72,16 +69,6 @@ namespace Xamarin.Bundler
 				if (!is64bits.HasValue)
 					is64bits = Application.IsArchEnabled (Abis, Abi.Arch64Mask);
 				return is64bits.Value;
-			}
-		}
-
-		// If we didn't link the final executable because the existing binary is up-to-date.
-		public bool CachedExecutable {
-			get {
-				if (link_task == null)
-					return false;
-				
-				return !link_task.Rebuilt;
 			}
 		}
 
@@ -170,9 +157,9 @@ namespace Xamarin.Bundler
 		public void LinkWithTaskOutput (CompileTask task)
 		{
 			if (task.SharedLibrary) {
-				LinkWithDynamicLibrary (task.OutputFile);
+				LinkWithDynamicLibrary (task.Abi, task.OutputFile);
 			} else {
-				LinkWithStaticLibrary (task.OutputFile);
+				LinkWithStaticLibrary (task.Abi, task.OutputFile);
 			}
 			link_with_task_output.Add (task);
 		}
@@ -183,24 +170,24 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (t);
 		}
 
-		public void LinkWithStaticLibrary (string path)
+		public void LinkWithStaticLibrary (Abi abi, string path)
 		{
-			linker_flags.AddLinkWith (path);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddLinkWith (path);
 		}
 
-		public void LinkWithStaticLibrary (IEnumerable<string> paths)
+		public void LinkWithStaticLibrary (Abi abi, IEnumerable<string> paths)
 		{
-			linker_flags.AddLinkWith (paths);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddLinkWith (paths);
 		}
 
-		public void LinkWithFramework (string path)
+		public void LinkWithFramework (Abi abi, string path)
 		{
-			linker_flags.AddFramework (path);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddFramework (path);
 		}
 
-		public void LinkWithDynamicLibrary (string path)
+		public void LinkWithDynamicLibrary (Abi abi, string path)
 		{
-			linker_flags.AddLinkWith (path);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddLinkWith (path);
 		}
 
 		PInvokeWrapperGenerator pinvoke_state;
@@ -223,9 +210,24 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public string Executable {
+		Dictionary<Abi, string> executables;
+		public IDictionary<Abi, string> Executables {
 			get {
-				return Path.Combine (TargetDirectory, App.ExecutableName);
+				if (executables == null) {
+					executables = new Dictionary<Abi, string> ();
+					if (App.IsSimulatorBuild) {
+						// When using simlauncher, we copy the executable directly to the target directory.
+						// When not using the simlauncher, but still building for the simulator, we write the executable to a arch-specific app directory (if building for both 32-bit and 64-bit), or just the app directory (if building for a single architecture)
+						if (Abis.Count != 1)
+							throw ErrorHelper.CreateError (99, $"Internal error: expected exactly one abi for a simulator architecture, found: {string.Join (", ", Abis.Select ((v) => v.ToString ()))}");
+						executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
+					} else {
+						foreach (var abi in Abis)
+							executables.Add (abi, Path.Combine (Path.Combine (App.Cache.Location, abi.AsArchString (), App.ExecutableName)));
+					}
+
+				}
+				return executables;
 			}
 		}
 
@@ -282,7 +284,8 @@ namespace Xamarin.Bundler
 					throw ErrorHelper.CreateError (123, $"The executable assembly {App.RootAssemblies [0]} does not reference {Driver.GetProductAssembly (App)}.dll.");
 			}
 
-			linker_flags = new CompilerFlags (this);
+			foreach (var abi in Abis)
+				linker_flags_by_abi [abi & Abi.ArchMask] = new CompilerFlags (this);
 
 			// Verify that there are no entries in our list of intepreted assemblies that doesn't match
 			// any of the assemblies we know about.
@@ -543,6 +546,8 @@ namespace Xamarin.Bundler
 			};
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out LinkContext, out assemblies);
+
+			ErrorHelper.Show (LinkContext.Exceptions);
 
 			Driver.Watch ("Link Assemblies", 1);
 		}
@@ -1053,13 +1058,29 @@ namespace Xamarin.Bundler
 						aot_dependencies.AddRange (aottasks);
 					}
 
+					// Compile any .bc files to .o
+					foreach (var info in infos) {
+						foreach (var bc in info.BitcodeFiles) {
+							var compile_task = new CompileTask {
+								Target = this,
+								SharedLibrary = false,
+								InputFile = bc,
+								OutputFile = bc + ".o",
+								Abi = abi,
+							};
+							if (!string.IsNullOrEmpty (App.UserGccFlags))
+								compile_task.CompilerFlags.AddOtherFlag (App.UserGccFlags);
+							compile_task.AddDependency (info.Task);
+							link_dependencies.Add (compile_task);
+						}
+					}
+
 					var arch = abi.AsArchString ();
 					switch (build_target) {
 					case AssemblyBuildTarget.StaticObject:
 						LinkWithTaskOutput (link_dependencies); // Any .s or .ll files from the AOT compiler (compiled to object files)
 						foreach (var info in infos) {
-							LinkWithStaticLibrary (info.ObjectFiles);
-							LinkWithStaticLibrary (info.BitcodeFiles);
+							LinkWithStaticLibrary (abi, info.ObjectFiles);
 						}
 						continue; // no linking to do here.
 					case AssemblyBuildTarget.DynamicLibrary:
@@ -1080,7 +1101,6 @@ namespace Xamarin.Bundler
 
 					foreach (var info in infos) {
 						compiler_flags.AddLinkWith (info.ObjectFiles);
-						compiler_flags.AddLinkWith (info.BitcodeFiles);
 					}
 
 					foreach (var task in link_dependencies)
@@ -1343,7 +1363,8 @@ namespace Xamarin.Bundler
 				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
 				if (File.Exists (lib)) {
 					registration_methods.Add (method);
-					LinkWithStaticLibrary (lib);
+					foreach (var abi in Abis)
+						LinkWithStaticLibrary (abi, lib);
 				}
 			}
 
@@ -1381,17 +1402,28 @@ namespace Xamarin.Bundler
 			Driver.Watch ("Compile", 1);
 		}
 
-		public void NativeLink (BuildTasks build_tasks)
+		public IEnumerable<NativeLinkTask> NativeLink (BuildTasks build_tasks)
 		{
 			if (App.Embeddinator && App.IsDeviceBuild) {
 				build_tasks.AddRange (embeddinator_tasks);
-				return;
+				return null;
 			}
 
+			foreach (var abi in Abis) {
+				var link_task = NativeLink (build_tasks, abi, Executables [abi]);
+				link_tasks [abi] = link_task;
+			}
+			return link_tasks.Values;
+		}
+
+		public NativeLinkTask NativeLink (BuildTasks build_tasks, Abi abi, string output_file)
+		{
 			if (!string.IsNullOrEmpty (App.UserGccFlags))
 				App.DeadStrip = false;
 			if (App.EnableLLVMOnlyBitCode)
 				App.DeadStrip = false;
+
+			var linker_flags = linker_flags_by_abi [abi & Abi.ArchMask];
 
 			// Get global frameworks
 			linker_flags.AddFrameworks (App.Frameworks, App.WeakFrameworks);
@@ -1405,13 +1437,10 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlags (a.LinkerFlags);
 
 				if (a.BuildTarget == AssemblyBuildTarget.StaticObject) {
-					foreach (var abi in GetArchitectures (a.BuildTarget)) {
-						AotInfo info;
-						if (!a.AotInfos.TryGetValue (abi, out info))
-							continue;
-						linker_flags.AddLinkWith (info.BitcodeFiles);
-						linker_flags.AddLinkWith (info.ObjectFiles);
-					}
+					AotInfo info;
+					if (!a.AotInfos.TryGetValue (abi, out info))
+						continue;
+					linker_flags.AddLinkWith (info.ObjectFiles);
 				}
 			}
 
@@ -1419,21 +1448,18 @@ namespace Xamarin.Bundler
 			if (bitcode)
 				linker_flags.AddOtherFlag (App.EnableMarkerOnlyBitCode ? "-fembed-bitcode-marker" : "-fembed-bitcode");
 			
-			if (App.EnablePie.HasValue && App.EnablePie.Value && (App.DeploymentTarget < new Version (4, 2)))
-				ErrorHelper.Error (28, "Cannot enable PIE (-pie) when targeting iOS 4.1 or earlier. Please disable PIE (-pie:false) or set the deployment target to at least iOS 4.2");
-
 			if (!App.EnablePie.HasValue)
 				App.EnablePie = true;
 
 			if (App.Platform == ApplePlatform.iOS) {
-				if (App.EnablePie.Value && (App.DeploymentTarget >= new Version (4, 2))) {
+				if (App.EnablePie.Value) {
 					linker_flags.AddOtherFlag ("-Wl,-pie");
 				} else {
 					linker_flags.AddOtherFlag ("-Wl,-no_pie");
 				}
 			}
 
-			CompileTask.GetArchFlags (linker_flags, Abis);
+			CompileTask.GetArchFlags (linker_flags, abi);
 			if (App.IsDeviceBuild) {
 				linker_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
 				linker_flags.AddOtherFlag ($"-isysroot {StringUtils.Quote (Driver.GetFrameworkDirectory (App))}");
@@ -1447,7 +1473,7 @@ namespace Xamarin.Bundler
 			if (App.LibXamarinLinkMode != AssemblyBuildTarget.StaticObject)
 				AddToBundle (App.GetLibXamarin (App.LibXamarinLinkMode));
 
-			linker_flags.AddOtherFlag ($"-o {StringUtils.Quote (Executable)}");
+			linker_flags.AddOtherFlag ($"-o {StringUtils.Quote (output_file)}");
 
 			bool need_libcpp = false;
 			if (App.EnableBitCode)
@@ -1536,15 +1562,16 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
 
-			link_task = new NativeLinkTask
+			var link_task = new NativeLinkTask
 			{
 				Target = this,
-				OutputFile = Executable,
+				OutputFile = output_file,
 				CompilerFlags = linker_flags,
 			};
 			link_task.AddDependency (link_with_task_output);
 			link_task.AddDependency (aot_dependencies);
 			build_tasks.Add (link_task);
+			return link_task;
 		}
 
 		public static void AdjustDylibs (string output)
@@ -1581,7 +1608,10 @@ namespace Xamarin.Bundler
 			foreach (var a in Assemblies)
 				a.Symlink ();
 
-			var targetExecutable = Executable;
+			if (Abis.Count != 1)
+				throw ErrorHelper.CreateError (99, $"Internal error: expected exactly one abi for a simulator architecture, found: {string.Join (", ", Abis.Select ((v) => v.ToString ()))}");
+
+			var targetExecutable = Executables.Values.First ();
 
 			Application.TryDelete (targetExecutable);
 
@@ -1593,8 +1623,8 @@ namespace Xamarin.Bundler
 				else if (Is64Build)
 					launcher.Append ("64");
 				launcher.Append ("-sgen");
-				File.Copy (launcher.ToString (), Executable);
-				File.SetLastWriteTime (Executable, DateTime.Now);
+				File.Copy (launcher.ToString (), targetExecutable);
+				File.SetLastWriteTime (targetExecutable, DateTime.Now);
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception ex) {

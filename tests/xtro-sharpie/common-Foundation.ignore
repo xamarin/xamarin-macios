@@ -998,7 +998,6 @@
 !missing-selector! NSProxy::finalize not bound
 !missing-selector! NSString::propertyList not bound
 !missing-selector! NSString::propertyListFromStringsFileFormat not bound
-!missing-selector! NSURL::isFileReferenceURL not bound
 !missing-selector! NSUserActivity::init not bound
 !missing-selector! NSXMLParser::abortParsing not bound
 !missing-selector! NSXMLParser::parse not bound

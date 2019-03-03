@@ -31,12 +31,10 @@
 // we patch the system sigaction instead.
 //
 
-int my_sigaction (int signo, const struct sigaction *__restrict act, struct sigaction *__restrict oact);
-
 typedef int (*SigAction) (int sig, const struct sigaction *__restrict act, struct sigaction *__restrict oact);
-SigAction system_sigaction = sigaction;
+static SigAction system_sigaction = sigaction;
 
-int
+static int
 my_sigaction (int sig, const struct sigaction *__restrict act, struct sigaction *__restrict oact)
 {
 	//fprintf (stderr, "my_sigaction (%i, %p: handler = %p mask = %i flags = %i, %p)\n", sig, act, act ? act->sa_handler : NULL, act ? act->sa_mask : -1, act ? act->sa_flags : -1, oact);
@@ -69,7 +67,8 @@ static const interpose_t interposers[] __attribute__ ((unused)) \
 
 #elif defined(__x86_64__)
 
-void patch_sigaction ()
+static void
+patch_sigaction ()
 {
 	// Sanity check.
 	uint64_t * func = (uint64_t *) &sigaction;

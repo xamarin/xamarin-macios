@@ -114,8 +114,43 @@ namespace ObjCRuntime {
 			if (GC.MaxGeneration <= 0)
 				throw ErrorHelper.CreateError (8017, "The Boehm garbage collector is not supported. Please use SGen instead.");
 
+			VerifyMonoVersion ();
+
 			LookupInternalFunction<set_bool_func> ("xamarin_set_is_unified") (IsUnifiedBuild);
 			LookupInternalFunction<initialize_func> ("xamarin_initialize") ();
+		}
+
+		static void VerifyMonoVersion ()
+		{
+			// Verify that the system mono we're running against is of a supported version.
+			// Only verify if we're able to get the mono version (we don't want to fail if the Mono.Runtime type was linked away for instance).
+			var type = Type.GetType ("Mono.Runtime");
+			if (type == null)
+				return;
+
+			var displayName = type.GetMethod ("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
+			if (displayName == null)
+				return;
+
+			var actual = displayName.Invoke (null, null) as string;
+			if (string.IsNullOrEmpty (actual))
+				return;
+			// The version string looks something like this:
+			// "5.16.0.209 (2018-06/709b46e3338 Wed Oct 31 09:14:07 EDT 2018)"
+			// We only want the first part up until the first space.
+			var spaceIndex = actual.IndexOf (' ');
+			if (spaceIndex > 0)
+				actual = actual.Substring (0, spaceIndex);
+			if (!Version.TryParse (actual, out var actual_version))
+				return;
+
+			if (!Version.TryParse (Constants.MinMonoVersion, out var required_version))
+				return;
+
+			if (required_version <= actual_version)
+				return;
+
+			throw new NotSupportedException ($"This version of Xamarin.Mac requires Mono {required_version}, but found Mono {actual_version}.");
 		}
 
 		unsafe static void InitializePlatform (InitializationOptions* options)

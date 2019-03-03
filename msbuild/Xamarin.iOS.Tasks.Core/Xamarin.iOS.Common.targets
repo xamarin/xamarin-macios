@@ -102,6 +102,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Analysis.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Analysis.targets') And '$(OutputType)' == 'Exe'" />
 
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets" />			
+
 	<PropertyGroup>
 		<!-- Switching to a new property allows us to potentially switch from iPhone to simulator builds
 			 dynamically based on the user's selection when starting the project. This allows us to 
@@ -160,8 +162,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<UsingTask
 		TaskName="GetDependsOnNETStandard"
-		Condition="'$(IsXBuild)' != 'true' and Exists('$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll')"
-		AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll" />
+		Condition="'$(IsXBuild)' != 'true'"
+		AssemblyFile="$(MicrosoftNETBuildExtensionsTasksAssembly)" />
 
 	<Target Name="ImplicitlyExpandDesignTimeFacades" Condition="'$(ImplicitlyExpandDesignTimeFacades)' == 'true'" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
 		<ItemGroup>
@@ -187,8 +189,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
 		-->
 		<GetDependsOnNETStandard
-			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''  
-				and Exists('$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll')"
+			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''"
 			References="@(XI_CandidateNETStandardReferences)">
 			<Output TaskParameter="DependsOnNETStandard" PropertyName="XI_DependsOnNETStandard" />
 		</GetDependsOnNETStandard>
@@ -767,7 +768,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CompileAppManifest;
 			_ResolveAppExtensionReferences;
 			_GetNativeExecutableName;
-			_GetCompileToNativeInputs
+			_GetCompileToNativeInputs;
+			_ExpandNativeReferences;
 		</_CompileToNativeDependsOn>
 	</PropertyGroup>
 
@@ -779,7 +781,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
-		Inputs="@(_CompileToNativeInput)"
+		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
 
 		<ItemGroup>
@@ -801,7 +803,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppManifest="$(_AppBundlePath)Info.plist"
 			Architectures="$(TargetArchitectures)"
 			ExecutableName="$(_ExecutableName)"
-			NativeExecutable="$(_NativeExecutable)"
 			CompiledEntitlements="$(_CompiledEntitlements)"
 			Debug="$(MtouchDebug)"
 			EnableGenericValueTypeSharing="$(MtouchEnableGenericValueTypeSharing)"
@@ -1280,7 +1281,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<CompileSceneKitAssets
 			SessionId="$(BuildSessionId)"
-			AppBundleDir="$(AppBundleDir)"
+			AppBundleName="$(_AppBundleName)$(AppBundleExtension)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(CopySceneKitAssetsExe)"
 			ToolPath="$(CopySceneKitAssetsPath)"
@@ -1618,7 +1619,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</DetectDebugNetworkConfiguration>
 	</Target>
 
-	<Target Name="_CopyAppExtensionsToBundle" DependsOnTargets="_ResolveAppExtensionReferences">
+	<Target Name="_CopyAppExtensionsToBundle" DependsOnTargets="_ResolveAppExtensionReferences" Inputs="@(_ResolvedAppExtensionReferences)" 
+		  Outputs="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)">
+		
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''" Directories="$(_AppBundlePath)PlugIns" />
 
 		<Ditto
@@ -2247,6 +2250,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ITunesSourceFiles="@(_ITunesSourceFile)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			ProjectName="$(MSBuildProjectName)"
+			ProjectGuid="$(ProjectGuid)"
+			ProjectTypeGuids="$(ProjectTypeGuids)"
 			SolutionPath="$(SolutionPath)"
 			SigningKey="$(_CodeSigningKey)"
 			WatchAppReferences="@(_ResolvedWatchAppReferences)"

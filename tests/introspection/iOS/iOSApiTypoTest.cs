@@ -26,11 +26,6 @@ namespace Introspection {
 #if __WATCHOS__
 			Assert.Ignore ("Need to find alternative for UITextChecker on WatchOS.");
 #else
-			// that's slow and there's no value to run it on devices as the API names
-			// being verified won't change from the simulator
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Typos only detected on simulator");
-
 			// the dictionary used by iOS varies with versions and 
 			// we don't want to maintain special cases for each version
 			var sdk = new Version (Constants.SdkVersion);
@@ -50,6 +45,16 @@ namespace Introspection {
 				return String.Empty;
 			return txt.Substring ((int) typoRange.Location, (int) typoRange.Length);
 #endif
+		}
+
+		public override void TypoTest ()
+		{
+			// that's slow and there's no value to run it on devices as the API names
+			// being verified won't change from the simulator
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("Typos only detected on simulator");
+
+			base.TypoTest ();
 		}
 	}
 }

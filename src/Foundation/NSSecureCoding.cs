@@ -18,7 +18,6 @@ namespace Foundation {
 #endif
 
 		[iOS (6,0)]
-		[Mac (10,8)]
 		public static bool SupportsSecureCoding (Type type)
 		{
 			if (type == null)
@@ -40,7 +39,6 @@ namespace Foundation {
 		}
 
 		[iOS (6,0)]
-		[Mac (10,8)]
 		public static bool SupportsSecureCoding (Class klass)
 		{
 			if (klass == null)

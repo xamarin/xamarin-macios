@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Xsl;
+using Xamarin;
 using Xamarin.Utils;
 
 namespace xharness
@@ -263,7 +264,7 @@ namespace xharness
 			}
 		}
 
-		public async Task<ProcessExecutionResult> InstallAsync ()
+		public async Task<ProcessExecutionResult> InstallAsync (CancellationToken cancellation_token)
 		{
 			Initialize ();
 
@@ -287,25 +288,10 @@ namespace xharness
 			if (mode == "watchos")
 				args.Append (" --device ios,watchos");
 
-			var timeout = TimeSpan.FromMinutes (3);
-			if (mode == "watchos") {
-				var watchApp = Path.Combine (appPath, "Watch");
-				var info = new DirectoryInfo (watchApp);
-				if (info.Exists) {
-					long watchAppSize = 0;
-					foreach (var file in info.EnumerateFiles ("*", SearchOption.AllDirectories))
-						watchAppSize += file.Length;
-					// transfer speed is ~10MB/minute. Add another 50% just because transfer isn't the only thing happening, and also set it to at least 3 minutes
-					var estimatedTransferTime = watchAppSize / 1024 / 1024 / 10.0;
-					timeout = TimeSpan.FromMinutes (Math.Max (3, estimatedTransferTime * 1.5));
-					main_log.WriteLine ($"Estimated transfer speed to be {estimatedTransferTime} minutes based on the watch app size ({watchAppSize} bytes) and a speed of 10MB/s. Thus setting the install timeout to {timeout.TotalMinutes} minutes (giving it a little extra time).");
-				} else {
-					timeout = TimeSpan.FromMinutes (15);
-					main_log.WriteLine ($"Unable to determine watch app size, install timeout will be {timeout.TotalMinutes} minutes.");
-				}
-			}
+			var totalSize = Directory.GetFiles (appPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
+			main_log.WriteLine ($"Installing '{appPath}' to '{companion_device_name ?? device_name}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, timeout);
+			return await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -339,6 +325,76 @@ namespace xharness
 				ensure_clean_simulator_state = value;
 			}
 		}
+
+		bool IsTouchUnitResult (XmlDocument log)
+		{
+			return log.SelectSingleNode ("/TouchUnitTestRun/NUnitOutput") != null;
+		}
+
+		(XmlDocument xml, string human) ParseTouchUnitXml (XmlDocument log)
+		{
+			var nunit_output = log.SelectSingleNode ("/TouchUnitTestRun/NUnitOutput");
+			var nunitXml = new XmlDocument ();
+			nunitXml.LoadXml (nunit_output.InnerXml);
+			return (xml: nunitXml, human: log.SelectSingleNode ("/TouchUnitTestRun/TouchUnitExtraData").InnerText);
+		}
+
+		(XmlDocument xml, string human) ParseNUnitXml (XmlDocument log)
+		{
+			var str = log.InnerXml;
+			var humanReadableLog = new StringBuilder ();
+			var resultsNode = log.SelectSingleNode ("test-results");
+
+			// parse the xml and build a human readable version
+			int total = int.Parse (resultsNode.Attributes ["total"].InnerText);
+			int errors = int.Parse (resultsNode.Attributes ["errors"].InnerText);
+			int failed = int.Parse (resultsNode.Attributes ["failures"].InnerText);
+			int notRun = int.Parse (resultsNode.Attributes ["not-run"].InnerText);
+			int inconclusive = int.Parse (resultsNode.Attributes ["inconclusive"].InnerText);
+			int ignored = int.Parse (resultsNode.Attributes ["ignored"].InnerText);
+			int skipped = int.Parse (resultsNode.Attributes ["skipped"].InnerText);
+			int invalid = int.Parse (resultsNode.Attributes ["invalid"].InnerText);
+			int passed = total - errors - failed - notRun - inconclusive - ignored - skipped - invalid;
+			var testFixtures = resultsNode.SelectNodes ("//test-suite[@type='TestFixture' or @type='TestCollection']");
+			for (var i = 0; i < testFixtures.Count; i++) {
+				var node = testFixtures [i];
+				humanReadableLog.AppendLine (node.Attributes ["name"].InnerText);
+				var testCases = node.SelectNodes ("//test-case");
+				for (var j = 0; j < testCases.Count; j++) {
+					var result = testCases [j];
+					var status = result.Attributes ["result"].InnerText;
+					switch (status) {
+					case "Success":
+						humanReadableLog.Append ("\t[PASS] ");
+						break;
+					case "Ignored":
+						humanReadableLog.Append ("\t[IGNORED] ");
+						break;
+					case "Error":
+					case "Failure":
+						humanReadableLog.Append ("\t[FAIL] ");
+						break;
+					case "Inconclusive":
+						humanReadableLog.Append ("\t[INCONCLUSIVE] ");
+						break;
+					default:
+						humanReadableLog.Append ("\t[INFO] ");
+						break;
+					}
+					humanReadableLog.Append (result.Attributes ["name"].InnerText);
+					if (status == "Failure" || status == "Error") { //  we need to print the message
+						humanReadableLog.Append ($" : {result.InnerText}");
+					}
+					// add a new line
+					humanReadableLog.AppendLine ();
+				}
+				var time = node.Attributes ["time"]?.InnerText ?? "0"; // some nodes might not have the time :/
+				humanReadableLog.AppendLine ($"{node.Attributes ["name"].InnerXml} {time} ms");
+			}
+			humanReadableLog.AppendLine ($"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}");
+			return (xml: log, human: humanReadableLog.ToString());
+		}
+
 		public bool TestsSucceeded (Log listener_log, bool timed_out, bool crashed)
 		{
 			string log;
@@ -355,16 +411,18 @@ namespace xharness
 				var xmldoc = new XmlDocument ();
 				try {
 					xmldoc.LoadXml (log);
-
-					var nunit_output = xmldoc.SelectSingleNode ("/TouchUnitTestRun/NUnitOutput");
-					var xmllog = nunit_output.InnerXml;
-					var extra_output = xmldoc.SelectSingleNode ("/TouchUnitTestRun/TouchUnitExtraData");
-					log = extra_output.InnerText;
+					var testsResults = new XmlDocument ();
+					if (IsTouchUnitResult (xmldoc)) {
+						var (xml, human) = ParseTouchUnitXml (xmldoc);
+						testsResults = xml;
+						log = human;
+					} else {
+						var (xml, human) = ParseNUnitXml (xmldoc);
+						testsResults = xml;
+						log = human;
+					}
 
 					File.WriteAllText (listener_log.FullPath, log);
-
-					var testsResults = new XmlDocument ();
-					testsResults.LoadXml (xmllog);
 
 					var mainResultNode = testsResults.SelectSingleNode ("test-results");
 					if (mainResultNode == null) {
@@ -534,16 +592,21 @@ namespace xharness
 			var cancellation_source = new CancellationTokenSource ();
 			var timed_out = false;
 
-			ThreadPool.QueueUserWorkItem ((v) =>
-			{
-				if (!listener.WaitForConnection (TimeSpan.FromMinutes (Harness.LaunchTimeout))) {
-					cancellation_source.Cancel ();
-					main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
-					timed_out = true;
-				} else {
-					main_log.WriteLine ("Test run started");
-				}
-			});
+			listener.ConnectedTask
+				.TimeoutAfter (TimeSpan.FromMinutes (Harness.LaunchTimeout))
+				.ContinueWith ((v) => {
+					if (v.IsFaulted) {
+						main_log.WriteLine ("Test launch failed: {0}", v.Exception);
+					} else if (v.IsCanceled) {
+						main_log.WriteLine ("Test launch was cancelled.");
+					} else if (v.Result) {
+						main_log.WriteLine ("Test run started");
+					} else {
+						cancellation_source.Cancel ();
+						main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
+						timed_out = true;
+					}
+				}).DoNotAwait ();
 
 			foreach (var kvp in Harness.EnvironmentVariables)
 				args.AppendFormat (" -setenv={0}={1}", kvp.Key, kvp.Value);
@@ -841,6 +904,109 @@ namespace xharness
 				args.Append (" --devname ");
 				args.Append (StringUtils.Quote (device_name));
 			}
+		}
+	}
+
+	// Monitor the output from 'mlaunch --installdev' and cancel the installation if there's no output for 1 minute.
+	class AppInstallMonitorLog : Log {
+		public override string FullPath => throw new NotImplementedException ();
+
+		Log copy_to;
+		CancellationTokenSource cancellation_source;
+		
+		public bool CopyingApp;
+		public bool CopyingWatchApp;
+		public TimeSpan AppCopyDuration;
+		public TimeSpan WatchAppCopyDuration;
+		public Stopwatch AppCopyStart = new Stopwatch ();
+		public Stopwatch WatchAppCopyStart = new Stopwatch ();
+		public int AppPercentComplete;
+		public int WatchAppPercentComplete;
+		public long AppBytes;
+		public long WatchAppBytes;
+		public long AppTotalBytes;
+		public long WatchAppTotalBytes;
+
+		public CancellationToken CancellationToken {
+			get {
+				return cancellation_source.Token;
+			}
+		}
+
+		public AppInstallMonitorLog (Log copy_to)
+				: base (copy_to.Logs, $"Watch transfer log for {copy_to.Description}")
+		{
+			this.copy_to = copy_to;
+			cancellation_source = new CancellationTokenSource ();
+			cancellation_source.Token.Register (() => {
+				copy_to.WriteLine ("App installation cancelled: it timed out after no output for 1 minute.");
+			});
+		}
+
+		public override Encoding Encoding => copy_to.Encoding;
+		public override void Flush ()
+		{
+			copy_to.Flush ();
+		}
+
+		public override StreamReader GetReader ()
+		{
+			return copy_to.GetReader ();
+		}
+
+		protected override void Dispose (bool disposing)
+		{
+			base.Dispose (disposing);
+			copy_to.Dispose ();
+			cancellation_source.Dispose ();
+		}
+
+		void ResetTimer ()
+		{
+			cancellation_source.CancelAfter (TimeSpan.FromMinutes (1));
+		}
+
+		public override void WriteLine (string value)
+		{
+			var v = value.Trim ();
+			if (v.StartsWith ("Installing application bundle", StringComparison.Ordinal)) {
+				if (!CopyingApp) {
+					CopyingApp = true;
+					AppCopyStart.Start ();
+				} else if (!CopyingWatchApp) {
+					CopyingApp = false;
+					CopyingWatchApp = true;
+					AppCopyStart.Stop ();
+					WatchAppCopyStart.Start ();
+				}
+			} else if (v.StartsWith ("PercentComplete: ", StringComparison.Ordinal) && int.TryParse (v.Substring ("PercentComplete: ".Length).Trim (), out var percent)) {
+				if (CopyingApp)
+					AppPercentComplete = percent;
+				else if (CopyingWatchApp)
+					WatchAppPercentComplete = percent;
+			} else if (v.StartsWith ("NumBytes: ", StringComparison.Ordinal) && int.TryParse (v.Substring ("NumBytes: ".Length).Trim (), out var num_bytes)) {
+				if (CopyingApp) {
+					AppBytes = num_bytes;
+					AppCopyDuration = AppCopyStart.Elapsed;
+				} else if (CopyingWatchApp) {
+					WatchAppBytes = num_bytes;
+					WatchAppCopyDuration = WatchAppCopyStart.Elapsed;
+				}
+			} else if (v.StartsWith ("TotalBytes: ", StringComparison.Ordinal) && int.TryParse (v.Substring ("TotalBytes: ".Length).Trim (), out var total_bytes)) {
+				if (CopyingApp)
+					AppTotalBytes = total_bytes;
+				else if (CopyingWatchApp)
+					WatchAppTotalBytes = total_bytes;
+			}
+
+			ResetTimer ();
+
+			copy_to.WriteLine (value);
+		}
+
+		public override void Write (byte [] buffer, int offset, int count)
+		{
+			copy_to.Write (buffer, offset, count);
 		}
 	}
 }

@@ -27,19 +27,16 @@ namespace Social {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
 		[Field ("SLServiceTypeFacebook")]
-		[Mac (10,8)]
 		NSString Facebook { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Twitter SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Twitter SDK instead.")]
 		[Field ("SLServiceTypeTwitter")]
-		[Mac (10,8)]
 		NSString Twitter { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Sina Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Sina Weibo SDK instead.")]
 		[Field ("SLServiceTypeSinaWeibo")]
-		[Mac (10,8)]
 		NSString SinaWeibo { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]

@@ -2214,11 +2214,11 @@ namespace MediaPlayer {
 	[TV (10,0,1)][iOS (10,1)]
 	[NoWatch][NoMac]
 	interface NSUserActivity_MediaPlayerAdditions {
-		[NullAllowed, Export ("externalMediaContentIdentifier")]
+		[Export ("externalMediaContentIdentifier")]
 		NSString GetExternalMediaContentIdentifier ();
 
-		[NullAllowed, Export ("setExternalMediaContentIdentifier:")]
-		void SetExternalMediaContentIdentifier (NSString identifier);
+		[Export ("setExternalMediaContentIdentifier:")]
+		void SetExternalMediaContentIdentifier ([NullAllowed] NSString identifier);
 	}
 #endif
 	[iOS (9,0)][TV (9,0)]
@@ -2227,7 +2227,7 @@ namespace MediaPlayer {
 	[Category]
 	[BaseType (typeof (AVMediaSelectionOption))]
 	interface AVMediaSelectionOption_MPNowPlayingInfoLanguageOptionAdditions {
-		[NullAllowed, Export ("makeNowPlayingInfoLanguageOption")]
+		[Export ("makeNowPlayingInfoLanguageOption")]
 		MPNowPlayingInfoLanguageOption CreateNowPlayingInfoLanguageOption ();
 	}
 

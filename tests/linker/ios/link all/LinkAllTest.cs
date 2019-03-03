@@ -605,11 +605,10 @@ namespace LinkAll {
 			// special location when we build a shared (app and extensions) framework for mono
 			if (corlib.EndsWith ("/Frameworks/Xamarin.Sdk.framework/MonoBundle/mscorlib.dll", StringComparison.Ordinal))
 				Assert.Pass (corlib);
-#if __WATCHOS__
-			var suffix = "link all.appex/mscorlib.dll";
-#else
-			var suffix = "link all.app/mscorlib.dll";
-#endif
+
+			var bundlePath = NSBundle.MainBundle.BundlePath;
+			var isExtension = bundlePath.EndsWith (".appex", StringComparison.Ordinal);
+			var suffix = isExtension ? "link all.appex/mscorlib.dll" : "link all.app/mscorlib.dll";
 			Assert.That (corlib, Is.StringEnding (suffix), corlib);
 		}
 	}

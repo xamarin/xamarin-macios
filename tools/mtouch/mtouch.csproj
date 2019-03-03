@@ -49,6 +49,9 @@
     <Compile Include="..\..\src\build\ios\Constants.cs">
       <Link>external\Constants.cs</Link>
     </Compile>
+    <Compile Include="..\common\PListExtensions.cs">
+      <Link>external\PListExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\common\cache.cs">
       <Link>external\cache.cs</Link>
     </Compile>
@@ -368,6 +371,9 @@
     <Compile Include="..\common\Optimizations.cs">
       <Link>external\Optimizations.cs</Link>
     </Compile>
+    <Compile Include="..\common\FileCopier.cs">
+      <Link>external\FileCopier.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\BindingImplAttribute.cs">
       <Link>external\maccore\BindingImplAttribute.cs</Link>
     </Compile>
@@ -376,6 +382,9 @@
     </Compile>
     <Compile Include="..\..\external\mono\external\linker\linker\Linker\TypeNameParser.cs">
       <Link>Linker\TypeNameParser.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\RemoveBitcodeIncompatibleCodeStep.cs">
+      <Link>MonoTouch.Tuner\RemoveBitcodeIncompatibleCodeStep.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -411,4 +420,8 @@
       <Name>Mono.Cecil.Mdb</Name>
     </ProjectReference>
   </ItemGroup>
+  <Target Name="AfterBuild">
+    <!-- This makes sure that just building the csproj will install the updated mtouch.exe, so that tests get it without having to 'make mtouch' manually -->
+    <Exec Command="make mtouch" />
+  </Target>
 </Project>

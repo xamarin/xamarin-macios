@@ -37,7 +37,7 @@ namespace Introspection {
 			case "CIMaskedVariableBlur": // Appears removed in 10.11 but not documented
 				if (Mac.CheckSystemVersion (10, 11))
 					return true;
-				return false;
+				break;
 			case "CICMYKHalftone": // Renamed as CICmykHalftone
 				return true;
 #if !__UNIFIED__
@@ -60,9 +60,18 @@ namespace Introspection {
 			case "CITextImageGenerator":
 				return true;
 #endif
-			default:
-				return base.Skip (nativeName);
+			case "CIAreaMinMax":
+			case "CICameraCalibrationLensCorrection":
+			case "CIDither":
+			case "CIGuidedFilter":
+			case "CIMeshGenerator":
+			case "CIMix":
+			case "CISampleNearest":
+				if (IntPtr.Size == 4)
+					return true;
+				break;
 			}
+			return base.Skip (nativeName);
 		}
 	}
 }

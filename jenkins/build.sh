@@ -38,8 +38,10 @@ else
 		sed 's/^/    /' .tmp-files || true
 		if grep 'external/mono' .tmp-files > /dev/null; then
 			echo "Enabling device build because mono was bumped."
+			ENABLE_DEVICE_BUILD=1
 		elif grep 'external/llvm' .tmp-files > /dev/null; then
 			echo "Enabling device build because llvm was bumped."
+			ENABLE_DEVICE_BUILD=1
 		else
 			echo "Not enabling device build; neither mono nor llvm was bumped."
 		fi
@@ -64,6 +66,7 @@ make reset
 make git-clean-all
 make print-versions
 
+echo "Configuring the build with: $CONFIGURE_FLAGS"
 # shellcheck disable=SC2086
 ./configure $CONFIGURE_FLAGS
 

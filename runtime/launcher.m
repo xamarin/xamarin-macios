@@ -526,7 +526,7 @@ app_initialize (xamarin_initialize_data *data)
 
 	/* other non-documented stuff... */	
 
-	initialize_cocoa_threads (NULL);
+	xamarin_initialize_cocoa_threads (NULL);
 	init_logdir ();
 	mono_set_signal_chaining (TRUE);
 	mono_set_crash_chaining (TRUE);

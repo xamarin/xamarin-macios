@@ -2,8 +2,14 @@
 #include "xamarin/main.h"
 #include "main-internal.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 void
 xamarin_initialize_extension_main () __attribute__ ((constructor));
+#ifdef __cplusplus
+}
+#endif
 
 void
 xamarin_initialize_extension_main ()

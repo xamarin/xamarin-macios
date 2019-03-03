@@ -193,7 +193,7 @@ namespace Registrar {
 
 			// This list is duplicated in tests/mtouch/RegistrarTest.cs.
 			// Update that list whenever this list is updated.
-			static char[] invalidSelectorCharacters = new char[] { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n' };
+			static readonly char[] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
 			void VerifySelector (ObjCMethod method, ref List<Exception> exceptions)
 			{
 				if (method.Method == null)
@@ -233,6 +233,31 @@ namespace Registrar {
 					ch = method.Selector [idx];
 					Registrar.AddException (ref exceptions, Registrar.CreateException (4160, method, "Invalid character '{0}' (0x{1}) found in selector '{2}' for '{3}.{4}'",
 						ch, ((int) ch).ToString ("x"), method.Selector, Registrar.GetTypeFullName (Type), Registrar.GetDescriptiveMethodName (method.Method)));
+				}
+			}
+
+			public void VerifyAdoptedProtocolsNames (ref List<Exception> exceptions)
+			{
+				if (AdoptedProtocols == null)
+					return;
+
+				foreach (var adoptedProtocol in AdoptedProtocols) {
+					// Tested all of the current 'invalidSelectorCharacters' for protocol names and all of them are invalid.
+					char ch;
+					var idx = adoptedProtocol.IndexOfAny (invalidSelectorCharacters);
+					var ap = adoptedProtocol;
+					if (idx != -1) {
+						ch = adoptedProtocol [idx];
+						var str = ch.ToString ();
+						if (ch == '{') {
+							str = "{{";
+							ap = ap.Insert (idx, "{");
+						} else if (ch == '}') {
+							str = "}}";
+							ap = ap.Insert (idx, "}");
+						}
+						AddException (ref exceptions, new ProductException (4177, true, $"The 'ProtocolType' parameter of the 'Adopts' attribute used in class '{Registrar.GetTypeFullName (Type)}' contains an invalid character. Value used: '{ap}' Invalid Char: '{str}'"));
+					}
 				}
 			}
 
@@ -1898,6 +1923,7 @@ namespace Registrar {
 			};
 			objcType.VerifyRegisterAttribute (ref exceptions);
 			objcType.AdoptedProtocols = GetAdoptedProtocols (objcType);
+			objcType.VerifyAdoptedProtocolsNames (ref exceptions);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
 			objcType.Protocols = GetProtocols (objcType, ref exceptions);
 #if MMP || MTOUCH

@@ -1,5 +1,7 @@
 #!/bin/bash -ex
 
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 # Clone files instead of copying them on APFS file systems. Much faster.
 CP="cp"
 if df -t apfs / >/dev/null 2>&1; then
@@ -13,9 +15,17 @@ ZIP=$DIR.zip
 rm -Rf $DIR
 mkdir -p $DIR
 
+make test.config
+source test.config
+export MD_APPLE_SDK_ROOT=$(dirname $(dirname $XCODE_DEVELOPER_ROOT))
+export XAMMAC_FRAMEWORK_PATH=$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+export XamarinMacFrameworkRoot=$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+export TargetFrameworkFallbackSearchPaths=$MAC_DESTDIR/Library/Frameworks/Mono.framework/External/xbuild-frameworks
+export MSBuildExtensionsPathFallbackPathsOverride=$MAC_DESTDIR/Library/Frameworks/Mono.framework/External/xbuild
+
 make
 make .stamp-configure-projects-mac
-msbuild bindings-test/bindings-test-mac.csproj
+../tools/xibuild/xibuild -- bindings-test/bindings-test-mac.csproj
 make build-mac-dontlink build-mac-apitest build-mac-introspection build-mac-linksdk build-mac-linkall build-mac-xammac_tests build-mac-system-dontlink -j8
 
 for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do

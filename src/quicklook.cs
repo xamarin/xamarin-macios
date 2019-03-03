@@ -162,6 +162,7 @@ namespace QuickLook {
 		void ProvideThumbnail (QLFileThumbnailRequest request, Action<QLThumbnailReply, NSError> handler);
 	}
 
+	[ThreadSafe] // Members get called inside 'QLThumbnailProvider.ProvideThumbnail' which runs on a background thread.
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -179,6 +180,7 @@ namespace QuickLook {
 		QLThumbnailReply CreateReply (NSUrl fileUrl);
 	}
 
+	[ThreadSafe]
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface QLFileThumbnailRequest {

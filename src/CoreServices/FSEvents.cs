@@ -25,7 +25,11 @@ namespace CoreServices
 		NoDefer = 0x00000002,
 		WatchRoot = 0x00000004,
 		IgnoreSelf = 0x00000008,
-		FileEvents = 0x00000010
+		FileEvents = 0x00000010,
+		[Mac (10,9)]
+		MarkSelf = 0x00000020,
+		[Mac (10,13)]
+		UseExtendedData = 0x00000040,
 	}
 
 	// FSEvents.h: typedef UInt32                          FSEventStreamEventFlags;
@@ -53,7 +57,9 @@ namespace CoreServices
 		ItemIsSymlink = 0x00040000,
 		OwnEvent  = 0x00080000,
 		ItemIsHardlink = 0x00100000,
-		ItemIsLastHardlink = 0x00200000
+		ItemIsLastHardlink = 0x00200000,
+		[Mac (10,14, onlyOn64: true)]
+		ItemCloned = 0x00400000,
 	}
 
 	public struct FSEvent
