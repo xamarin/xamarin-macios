@@ -712,7 +712,6 @@
 !missing-pinvoke! CFSocketSetDefaultNameRegistryPortNumber is not bound
 !missing-pinvoke! CFSocketUnregister is not bound
 !missing-pinvoke! CFStringAppend is not bound
-!missing-pinvoke! CFStringAppendCharacters is not bound
 !missing-pinvoke! CFStringAppendCString is not bound
 !missing-pinvoke! CFStringAppendFormat is not bound
 !missing-pinvoke! CFStringAppendFormatAndArguments is not bound
@@ -733,6 +732,7 @@
 !missing-pinvoke! CFStringCreateCopy is not bound
 !missing-pinvoke! CFStringCreateExternalRepresentation is not bound
 !missing-pinvoke! CFStringCreateFromExternalRepresentation is not bound
+!missing-pinvoke! CFStringCreateMutableWithExternalCharactersNoCopy is not bound
 !missing-pinvoke! CFStringCreateWithBytes is not bound
 !missing-pinvoke! CFStringCreateWithBytesNoCopy is not bound
 !missing-pinvoke! CFStringCreateWithCharactersNoCopy is not bound

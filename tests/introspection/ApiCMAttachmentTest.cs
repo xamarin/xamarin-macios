@@ -282,6 +282,8 @@ namespace Introspection {
 				return af;
 			case "CFHTTPMessage":
 				return CFHTTPMessage.CreateEmpty (false);
+			case "CFMutableString":
+				return new CFMutableString ("xamarin");
 			case "CGBitmapContext":
 				byte[] data = new byte [400];
 				using (CGColorSpace space = CGColorSpace.CreateDeviceRGB ()) {
