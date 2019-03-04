@@ -193,8 +193,6 @@ namespace BCLTestImporter {
 			"xammac_net_4_5_Mono.Posix_test.dll", // issues https://github.com/xamarin/maccore/issues/1189 and https://github.com/xamarin/maccore/issues/1190
 			"xammac_net_4_5_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1191
 			"xammac_net_4_5_System.Data_test.dll", // issues https://github.com/xamarin/maccore/issues/1192 and https://github.com/xamarin/maccore/issues/1193
-			"xammac_net_4_5_System.IdentityModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1194
-			"xammac_net_4_5_System.IdentityModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1196
 			"xammac_net_4_5_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1197
 			"xammac_net_4_5_System.ServiceModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1198
 			"xammac_net_4_5_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1199
