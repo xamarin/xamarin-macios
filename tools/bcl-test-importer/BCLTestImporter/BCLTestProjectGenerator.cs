@@ -196,7 +196,6 @@ namespace BCLTestImporter {
 			"xammac_net_4_5_System.IdentityModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1194
 			"xammac_net_4_5_System.IdentityModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1196
 			"xammac_net_4_5_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1197
-			"xammac_net_4_5_System.ServiceModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1198
 			"xammac_net_4_5_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1199
 			"xammac_net_4_5_System.Xml_test.dll", // issues https://github.com/xamarin/maccore/issues/1201 and https://github.com/xamarin/maccore/issues/1202
 			"xammac_net_4_5_corlib_xunit-test.dll", // issues https://github.com/xamarin/maccore/issues/1203
