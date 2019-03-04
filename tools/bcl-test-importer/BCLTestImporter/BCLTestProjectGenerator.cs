@@ -189,7 +189,6 @@ namespace BCLTestImporter {
 			"xammac_net_4_5_I18N.Other_test.dll",
 			"xammac_net_4_5_I18N.Rare_test.dll",
 			"xammac_net_4_5_I18N.West_test.dll",
-			"xammac_net_4_5_Mono.CSharp_test.dll", //issue https://github.com/xamarin/maccore/issues/1186 
 			"xammac_net_4_5_Mono.Posix_test.dll", // issue https://github.com/xamarin/maccore/issues/1188
 			"xammac_net_4_5_Mono.Posix_test.dll", // issues https://github.com/xamarin/maccore/issues/1189 and https://github.com/xamarin/maccore/issues/1190
 			"xammac_net_4_5_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1191
