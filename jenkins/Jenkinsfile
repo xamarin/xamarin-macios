@@ -498,7 +498,7 @@ timestamps {
                         }
 
                         stage ('Generate Workspace Info') {
-                            withCredentials([string(credentialsId: '92cf81e5-6db5-408c-8a0d-192b36200a16', variable: 'GITHUB_AUTH_TOKEN')) {
+                            withCredentials([string(credentialsId: '92cf81e5-6db5-408c-8a0d-192b36200a16', variable: 'GITHUB_AUTH_TOKEN'), string(credentialsId: 'xamarin-build-tasks', variable: 'XAMARIN_BUILD_TASKS')]) {
 					            def redirect = getRedirect()
 					            sh "curl -o Xamarin.Build.Tasks.nupkg \"${redirect}\""
 					            dir("BuildTasks") {
