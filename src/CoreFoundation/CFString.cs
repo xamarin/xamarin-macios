@@ -103,6 +103,8 @@ namespace CoreFoundation {
 		internal IntPtr handle;
 		internal string str;
 
+		protected CFString () {}
+
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
 		extern static IntPtr CFStringCreateWithCharacters (IntPtr allocator, string str, nint count);
 
