@@ -1618,7 +1618,10 @@ public partial class Generator : IMemberGatherer {
 				// special case (false) so it needs to be before the _real_ INativeObject check
 				if (pi.ParameterType == SampleBufferType){
 					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-					invoke.AppendFormat ("{0} == IntPtr.Zero ? null : new CMSampleBuffer ({0}, false)", pi.Name.GetSafeParamName ());
+					if (BindThirdPartyLibrary)
+						invoke.AppendFormat ("{0} == IntPtr.Zero ? null : Runtime.GetINativeObject<CMSampleBuffer> ({0}, false)", pi.Name.GetSafeParamName ());
+					else
+						invoke.AppendFormat ("{0} == IntPtr.Zero ? null : new CMSampleBuffer ({0}, false)", pi.Name.GetSafeParamName ());
 					continue;
 				}
 			}
