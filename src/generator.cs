@@ -6736,8 +6736,8 @@ public partial class Generator : IMemberGatherer {
 						//   - We're in one of two cases: The user += an Event and then assigned their own delegate or the inverse
 						//   - One of them isn't being called anymore no matter what. Throw an exception.
 						if (!BindThirdPartyLibrary) {
-							print ("if ({0} != null)", delName);
-							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched ({1}, {2});", ApplicationClassName, delName, delegateTypePropertyName);
+							print ("if (Weak{0} != null)", delName);
+							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched (Weak{1}, {2});", ApplicationClassName, delName, delegateTypePropertyName);
 						}
 
 						print ("_{0} del = {1} as _{0};", dtype.Name, delName);
