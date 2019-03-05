@@ -30,6 +30,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void CreateString2 ()
 		{
+			Assert.Throws<ArgumentException> (() => new CFMutableString ("", -1), "negative");
 			using (var s = new CFMutableString ("bonjour!", 20)) {
 				Assert.That (s.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.That (s.ToString (), Is.EqualTo ("bonjour!"), "ToString");
@@ -50,10 +51,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void CreateCFString2 ()
 		{
-			using (var c = new CFString ("bonjour"))
-			using (var s = new CFMutableString (c, 4)) {
-				Assert.That (s.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-				Assert.That (s.ToString (), Is.EqualTo ("bonjour"), "ToString");
+			using (var c = new CFString ("bonjour")) {
+				Assert.Throws<ArgumentException> (() => new CFMutableString (c, -1), "negative");
+				using (var s = new CFMutableString (c, 4)) {
+					Assert.That (s.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+					Assert.That (s.ToString (), Is.EqualTo ("bonjour"), "ToString");
+				}
 			}
 		}
 
