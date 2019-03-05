@@ -12,7 +12,7 @@ namespace CoreFoundation {
 	
 	public class CFMutableString : CFString {
 
-		public CFMutableString (IntPtr handle)
+		protected CFMutableString (IntPtr handle)
 			: this (handle, false)
 		{
 		}
@@ -24,30 +24,36 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		static extern unsafe /* CFMutableStringRef* */ IntPtr CFStringCreateMutable (/* CFAllocatorRef* */ IntPtr alloc, nint maxLength);
+		static extern /* CFMutableStringRef* */ IntPtr CFStringCreateMutable (/* CFAllocatorRef* */ IntPtr alloc, nint maxLength);
 
 		public CFMutableString (string @string = "", nint maxLength = default (nint))
 		{
 			// not really needed - but it's consistant with other .ctor
 			if (@string == null)
 				throw new ArgumentNullException (nameof (@string));
+			// NSMallocException Out of memory. We suggest restarting the application. If you have an unsaved document, create a backup copy in Finder, then try to save.
+			if (maxLength < 0)
+				throw new ArgumentException (nameof (maxLength));
 			Handle = CFStringCreateMutable (IntPtr.Zero, maxLength);
 			if (@string != null)
 				CFStringAppendCharacters (Handle, @string, @string.Length);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		static extern unsafe /* CFMutableStringRef* */ IntPtr CFStringCreateMutableCopy (/* CFAllocatorRef* */ IntPtr alloc, nint maxLength, /* CFStringRef* */ IntPtr theString);
+		static extern /* CFMutableStringRef* */ IntPtr CFStringCreateMutableCopy (/* CFAllocatorRef* */ IntPtr alloc, nint maxLength, /* CFStringRef* */ IntPtr theString);
 
 		public CFMutableString (CFString theString, nint maxLength = default (nint))
 		{
 			if (theString == null)
 				throw new ArgumentNullException (nameof (theString));
+			// NSMallocException Out of memory. We suggest restarting the application. If you have an unsaved document, create a backup copy in Finder, then try to save.
+			if (maxLength < 0)
+				throw new ArgumentException (nameof (maxLength));
 			Handle = CFStringCreateMutableCopy (IntPtr.Zero, maxLength, theString.GetHandle ());
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
-		static extern unsafe void CFStringAppendCharacters (/* CFMutableStringRef* */ IntPtr theString, string chars, nint numChars);
+		static extern void CFStringAppendCharacters (/* CFMutableStringRef* */ IntPtr theString, string chars, nint numChars);
 
 		public void Append (string @string)
 		{
@@ -80,9 +86,11 @@ namespace CoreFoundation {
 		public bool Transform (ref CFRange range, string transform, bool reverse)
 		{
 			var t = NSString.CreateNative (transform);
-			var ret = Transform (ref range, t, reverse);
-			NSString.ReleaseNative (t);
-			return ret;
+			try {
+				return Transform (ref range, t, reverse);
+			} finally {
+				NSString.ReleaseNative (t);
+			}
 		}
 
 		bool Transform (ref CFRange range, IntPtr transform, bool reverse)
@@ -116,9 +124,11 @@ namespace CoreFoundation {
 		public bool Transform (string transform, bool reverse)
 		{
 			var t = NSString.CreateNative (transform);
-			var ret = Transform (t, reverse);
-			NSString.ReleaseNative (t);
-			return ret;
+			try {
+				return Transform (t, reverse);
+			} finally {
+				NSString.ReleaseNative (t);
+			}
 		}
 
 		bool Transform (IntPtr transform, bool reverse)
