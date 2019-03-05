@@ -541,7 +541,7 @@ timestamps {
                         stage ('Generate artifacts.json') {
                             withCredentials([string(credentialsId: '92cf81e5-6db5-408c-8a0d-192b36200a16', variable: 'GITHUB_AUTH_TOKEN'), usernamePassword(credentialsId: 'd146d4aa-a437-4633-908f-b455876c44d0', passwordVariable: 'STORAGE_PASSWORD', usernameVariable: 'STORAGE_ACCOUNT')]) {
 					            dir("BuildTasks") {
-						            sh "mono tools/BuildTasks/build-tasks.exe artifacts -s ${workspace}/xamarin-macios -a ${env.STORAGE_ACCOUNT} -c ${env.STORAGE_PASSWORD} -u ${virtualPath}/package"
+						            sh "mono tools/BuildTasks/build-tasks.exe artifacts -s ${workspace}/xamarin-macios -a ${env.STORAGE_ACCOUNT} -c ${env.STORAGE_PASSWORD} -u wrench/${virtualPath}/package"
 					                artifactsFilename = "artifacts.json"
                                 }
                             }
