@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Foundation;
 using CoreFoundation;
 using NUnit.Framework;
@@ -63,11 +63,33 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void AppendString ()
 		{
-			using (var s = new CFMutableString ("hello")) {
+			using (var s = new CFMutableString ()) {
 				Assert.Throws<ArgumentNullException> (() => s.Append ((string) null), "null");
-				s.Append (" world!");
+				// from NSHipster
+				s.Append ("Énġlišh långuãge lẳcks iñterêßţing diaçrïtičş!");
 				Assert.That (s.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-				Assert.That (s.ToString (), Is.EqualTo ("hello world!"), "ToString");
+				Assert.That (s.ToString (), Is.EqualTo ("Énġlišh långuãge lẳcks iñterêßţing diaçrïtičş!"), "ToString");
+			}
+		}
+
+		[Test]
+		public void AppendString_Unicode ()
+		{
+			using (var s = new CFMutableString ("Bonjour")) {
+				s.Append (" à tous les \ud83d\udc11!");
+				Assert.That (s.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+				// make it fail and you see the sheep printed in the touchunit runner UI :)
+				Assert.That (s.ToString (), Is.EqualTo ("Bonjour à tous les \ud83d\udc11!"), "ToString");
+			}
+		}
+
+		[Test]
+		public void AppendString_RtL ()
+		{
+			using (var s = new CFMutableString ()) {
+				s.Append ("שלום");
+				Assert.That (s.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+				Assert.That (s.ToString (), Is.EqualTo ("שלום"), "ToString");
 			}
 		}
 
