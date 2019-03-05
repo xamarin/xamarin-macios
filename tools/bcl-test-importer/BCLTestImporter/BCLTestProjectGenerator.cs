@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
 
 namespace BCLTestImporter {
 	/// <summary>
@@ -16,6 +14,7 @@ namespace BCLTestImporter {
 
 		static string NUnitPattern = "monotouch_*_test.dll"; 
 		static string xUnitPattern = "monotouch_*_xunit-test.dll";
+		internal static readonly string ProjectGuidKey = "%PROJECT GUID%";
 		internal static readonly string NameKey = "%NAME%";
 		internal static readonly string ReferencesKey = "%REFERENCES%";
 		internal static readonly string RegisterTypeKey = "%REGISTER TYPE%";
@@ -390,6 +389,16 @@ namespace BCLTestImporter {
 			}
 		}
 
+		internal static string GetProjectGuid (string projectName) 
+		{
+			//use MD5 hash to get a 16-byte hash of the string: 
+			using (var provider = new MD5CryptoServiceProvider ()) {
+				var inputBytes = Encoding.Default.GetBytes (projectName);
+				var hashBytes = provider.ComputeHash (inputBytes);
+				return new Guid (hashBytes).ToString ().ToUpper ();
+			}
+		} 
+
 		/// <summary>
 		/// Returns is a project should be ignored in a platform. A project is ignored in one of the assemblies in the
 		/// project is ignored in the platform.
@@ -725,6 +734,7 @@ namespace BCLTestImporter {
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (DownloadPathKey, downloadPath);
+				result = result.Replace (ProjectGuidKey, GetProjectGuid (projectName));
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
@@ -749,6 +759,7 @@ namespace BCLTestImporter {
 			}
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
+				result = result.Replace (ProjectGuidKey, GetProjectGuid (projectName));
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
