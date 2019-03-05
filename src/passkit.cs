@@ -1221,7 +1221,7 @@ namespace PassKit {
 	[iOS (12, 2)]
 	[BaseType (typeof (NSObject))]
 	interface PKDisbursementRequest {
-		[NullAllowed, Export ("amount", ArgumentSemantic.Copy)]
+		[Export ("amount", ArgumentSemantic.Copy)]
 		NSDecimalNumber Amount { get; set; }
 
 		[NullAllowed, Export ("currencyCode")]
