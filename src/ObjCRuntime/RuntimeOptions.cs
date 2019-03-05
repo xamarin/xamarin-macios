@@ -5,8 +5,6 @@ using System.Text;
 #if MTOUCH || MMP
 using Mono.Cecil;
 using Xamarin.Linker;
-#elif SYSTEM_NET_HTTP || (MONOMAC && XAMCORE_2_0)
-using System.Net.Http;
 #endif
 
 #if XAMCORE_2_0
@@ -22,8 +20,6 @@ using MonoTouch.ObjCRuntime;
 
 #if MMP || MMP_TEST || MTOUCH
 namespace Xamarin.Bundler {
-#elif SYSTEM_NET_HTTP
-namespace System.Net.Http {
 #else
 namespace ObjCRuntime {
 #endif
@@ -181,60 +177,6 @@ namespace ObjCRuntime {
 				throw new InvalidOperationException (string.Format ("Cannot load HttpMessageHandler `{0}`.", handler));
 			return type;
 		}
-#else
-
-		internal static RuntimeOptions Read ()
-		{
-			// for iOS NSBundle.ResourcePath returns the path to the root of the app bundle
-			// for macOS apps NSBundle.ResourcePath returns foo.app/Contents/Resources
-			// for macOS frameworks NSBundle.ResourcePath returns foo.app/Versions/Current/Resources
-			Class bundle_finder = new Class (typeof (NSObject.NSObject_Disposer));
-			var resource_dir = NSBundle.FromClass (bundle_finder).ResourcePath;
-			var plist_path = GetFileName (resource_dir);
-
-			if (!File.Exists (plist_path))
-				return null;
-
-			using (var plist = NSDictionary.FromFile (plist_path)) {
-				var options = new RuntimeOptions ();
-				options.http_message_handler = (NSString) plist ["HttpMessageHandler"];
-				return options;
-			}
-		}
-		
-#if SYSTEM_NET_HTTP || (MONOMAC && XAMCORE_2_0)
-#if MONOMAC
-		[Preserve]
-#endif
-		internal static HttpMessageHandler GetHttpMessageHandler ()
-		{
-			var options = RuntimeOptions.Read ();
-			if (options == null) {
-#if MONOTOUCH_WATCH
-				return new NSUrlSessionHandler ();
-#else
-				return new HttpClientHandler ();
-#endif
-			}
-
-			// all types will be present as this is executed only when the linker is not enabled
-			var handler_name = options.http_message_handler;
-			var t = Type.GetType (handler_name, false);
-
-			HttpMessageHandler handler = null;
-			if (t != null)
-				handler = Activator.CreateInstance (t) as HttpMessageHandler;
-			if (handler != null)
-				return handler;
-#if MONOTOUCH_WATCH
-			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler", handler_name);
-			return new NSUrlSessionHandler ();
-#else
-			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler", handler_name);
-			return new HttpClientHandler ();
-#endif
-		}
-#endif
 #endif
 
 		// Use either Create() or Read().

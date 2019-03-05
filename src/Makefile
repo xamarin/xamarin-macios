@@ -203,44 +203,6 @@ $(MONO_PATH)/mcs/class/lib/monotouch/reference_Facades/netstandard.dll: $(IOS_BU
 $(IOS_BUILD_DIR)/%/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/monotouch/%_Facades/netstandard.dll | $(IOS_BUILD_DIR)/compat/Facades $(IOS_BUILD_DIR)/reference/Facades
 	$(Q) $(CP) $< $@
 
-#
-# System.Net.Http is special
-#
-# System.Net.Http has a 2-step build process:
-#
-# 1. We build it like all the other BCL assemblies (part of the
-#    regular BCL build), since there are other BCL assemblies (Facades)
-#    that reference System.Net.Http.dll
-# 2. Then we build it a second time in src/, where we add additional
-#    source code (public types) and a reference to Xamarin.iOS.dll.
-#
-# This means we need to install the correct System.Net.Http.dll from here
-# (builds/Makefile does not install the BCL version of System.Net.Http.dll)
-#
-
-IOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
-	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/CFContentStream.cs)  \
-	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/CFNetworkHandler.cs) \
-	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/HttpClientEx.cs) \
-	$(abspath $(TOP)/src/Foundation/NSUrlSessionHandler.cs) \
-	$(abspath $(TOP)/src/ObjCRuntime/RuntimeOptions.cs) \
-
-# build (into custom LIBRARY_SUBDIR)
-$(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http%dll $(MONO_PATH)/mcs/class/lib/monotouch/reference/System.Net.Http%pdb: $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch/System.Net.Http.dll $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
-	$(call Q_PROF_CSC,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll) $(IOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
-	@# If the make we executed didn't result in building the dll/pdb (because make determined it wasn't necessary to rebuild),
-	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look rebuilt to make.
-	$(Q) touch $(basename $@).dll $(basename $@).pdb
-
-# sign dll (one target for both compat+reference)
-$(IOS_BUILD_DIR)/%/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch/%/System.Net.Http.dll | $(IOS_BUILD_DIR)/compat $(IOS_BUILD_DIR)/reference
-	$(Q) $(CP) $< $@
-	$(call Q_PROF_SN,ios/$@) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-# (one target for both compat+reference)
-$(IOS_BUILD_DIR)/%/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch/%/System.Net.Http.pdb | $(IOS_BUILD_DIR)/compat $(IOS_BUILD_DIR)/reference
-	$(Q) $(CP) $< $@
-
 clean-local::
 	rm -rf build
 	rm -f $(IOS_TARGETS) generated_sources *.mdb *.pdb
@@ -261,8 +223,6 @@ IOS_TARGETS_DIRS += \
 IOS_TARGETS += \
 	$(PROJECT_DIR)/xamios.csproj                                                   \
 	$(PROJECT_DIR)/MonoTouch.NUnitLite.csproj                                      \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.dll             \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.pdb             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll                   \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll.mdb               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK.dll                      \
@@ -285,8 +245,6 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.dll.config   \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/System.Net.Http.dll     \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/System.Net.Http.pdb     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades/System.Drawing.Primitives.dll     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades/netstandard.dll     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll                   \
@@ -404,7 +362,7 @@ MAC_CFNETWORK_SOURCES = \
 
 MAC_MODERNHTTP_SOURCES = \
 	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/HttpClientEx.cs) \
-	$(abspath $(TOP)/src/Foundation/NSUrlSessionHandler.cs) \
+	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/NSUrlSessionHandler.cs) \
 	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/CFContentStream.cs)  \
 	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/CFNetworkHandler.cs) \
 
@@ -782,28 +740,6 @@ $(MONO_PATH)/mcs/class/lib/monotouch_watch/reference_Facades/netstandard.dll: $(
 $(WATCH_BUILD_DIR)/%/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch/%_Facades/netstandard.dll | $(WATCH_BUILD_DIR)/reference/Facades
 	$(Q) $(CP) $< $@
 
-# System.Net.Http.dll is special. See comment in src/Makefile
-
-WATCH_EXTRA_SYSTEM_NET_HTTP_FILES = \
-	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/HttpClientEx.cs) \
-	$(abspath $(TOP)/src/Foundation/NSUrlSessionHandler.cs) \
-	$(abspath $(TOP)/src/ObjCRuntime/RuntimeOptions.cs) \
-
-# build (into custom LIBRARY_SUBDIR)
-$(MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http%dll $(MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http%pdb: $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch_watch/System.Net.Http.dll $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_CSC,watch) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_watch LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll) $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
-	@# If the make we executed didn't result in building the dll/pdb (because make determined it wasn't necessary to rebuild),
-	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look rebuilt to make.
-	$(Q) touch $(basename $@).dll $(basename $@).pdb
-
-# sign dll
-$(WATCH_BUILD_DIR)/reference/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll | $(WATCH_BUILD_DIR)/reference
-	$(Q) $(CP) $< $@
-	$(call Q_PROF_SN,watch) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(WATCH_BUILD_DIR)/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.pdb | $(WATCH_BUILD_DIR)/reference
-	$(Q) $(CP) $< $@
-
 $(PROJECT_DIR)/xamwatch.csproj: xamwatch.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(WATCHOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(WATCHOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
@@ -832,8 +768,6 @@ WATCH_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.pdb      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.dll                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.pdb                    \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/System.Net.Http.dll          \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/System.Net.Http.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.dll      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.pdb      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Facades/System.Drawing.Primitives.dll      \
@@ -997,30 +931,6 @@ $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference_Facades/netstandard.dll: $(TVO
 $(TVOS_BUILD_DIR)/%/Facades/netstandard.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%_Facades/netstandard.dll | $(TVOS_BUILD_DIR)/reference/Facades
 	$(Q) $(CP) $< $@
 
-# System.Net.Http.dll is special. See comment in src/Makefile
-
-TVOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
-	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/CFContentStream.cs)  \
-	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/CFNetworkHandler.cs) \
-	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/HttpClientEx.cs) \
-	$(abspath $(TOP)/src/Foundation/NSUrlSessionHandler.cs) \
-	$(abspath $(TOP)/src/ObjCRuntime/RuntimeOptions.cs) \
-
-# build (into custom LIBRARY_SUBDIR)
-$(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http%dll $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http%pdb: $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch_tv/System.Net.Http.dll $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll
-	$(call Q_PROF_CSC,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_tv LIBRARY_SUBDIR=reference MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll) $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED -D:__UNIFIED__"
-	@# If the make we executed didn't result in building the dll/pdb (because make determined it wasn't necessary to rebuild),
-	@# then this make can end up confused and in an infinite loop. So touch the output files, to make sure they look rebuilt to make.
-	$(Q) touch $(basename $@).dll $(basename $@).pdb
-
-# sign dll
-$(TVOS_BUILD_DIR)/reference/System.Net.Http.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll | $(TVOS_BUILD_DIR)/reference
-	$(Q) $(CP) $< $@
-	$(call Q_PROF_SN,tvos) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(TVOS_BUILD_DIR)/reference/System.Net.Http.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.pdb | $(TVOS_BUILD_DIR)/reference
-	$(Q) $(CP) $< $@
-
 $(PROJECT_DIR)/xamtvos.csproj: xamtvos.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(TVOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(TVOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
@@ -1051,8 +961,6 @@ TVOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.pdb             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.dll                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.pdb                        \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.dll          \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.pdb               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll.config        \
