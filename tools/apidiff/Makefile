@@ -218,7 +218,7 @@ verify-reference-assemblies-mac: $(APIDIFF_DIR)/temp/native-32/Xamarin.Mac.xml $
 
 clean-local::
 	rm -rf temp references diff *.exe* api-diff.html
-	rm -rf *.dll* bundle-*.zip
+	rm -rf *.dll* bundle-*.zip .unzip.stamp
 	rm -rf ios-*.md tvos-*.md watchos-*.md macos-*.md
 
 DIRS += $(APIDIFF_DIR)/temp $(APIDIFF_DIR)/diff
