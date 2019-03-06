@@ -91,8 +91,6 @@ namespace MonoTests.System.Net.Http
 					var managedResponse = await managedClient.GetAsync ("https://google.com");
 					if (managedResponse.Headers.TryGetValues ("Set-Cookie", out var managedCookies)) {
 						var nativeClient = new HttpClient (new NSUrlSessionHandler ());
-						// ensure we do not have this set from other tests, is a singleton :/
-						//ServicePointManager.ServerCertificateValidationCallback = null;
 						var nativeResponse = await nativeClient.GetAsync ("https://google.com");
 						if (managedResponse.Headers.TryGetValues ("Set-Cookie", out var nativeCookies)) {
 							manageCount = managedCookies.Count ();
