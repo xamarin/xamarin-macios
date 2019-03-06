@@ -32,7 +32,6 @@ MONO_ASSEMBLIES = mscorlib System System.Core System.Numerics\
 IOS_SRC_ASSEMBLIES     = \
 	Xamarin.iOS/MonoTouch.Dialog-1 Xamarin.iOS/MonoTouch.NUnitLite Xamarin.iOS/OpenTK-1.0 Xamarin.iOS/System.Net.Http Xamarin.iOS/Xamarin.iOS
 MAC_SRC_ASSEMBLIES     = \
-	XamMac XamMac.CFNetwork \
 	Xamarin.Mac/Xamarin.Mac Xamarin.Mac/OpenTK \
 	4.5/Xamarin.Mac 4.5/OpenTK
 WATCHOS_SRC_ASSEMBLIES = Xamarin.WatchOS/Xamarin.WatchOS Xamarin.WatchOS/MonoTouch.NUnitLite Xamarin.WatchOS/System.Net.Http
@@ -46,7 +45,7 @@ TVOS_ASSEMBLIES    = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.TVOS/$(file))    
 IOS_ARCH_ASSEMBLIES = native-32/Xamarin.iOS native-64/Xamarin.iOS
 MAC_ARCH_ASSEMBLIES = native-32/Xamarin.Mac native-64/Xamarin.Mac
 
-APIDIFF_IGNORE = -i 'INSObjectProtocol' -i '_Exception' -i '_Attribute' -i '_EventInfo'
+APIDIFF_IGNORE = -i 'INSObjectProtocol'
 
 # create api info. Directory hierarchy is based on installed hierarchy
 # (XM goes into temp/xm, and XI goes into temp/xi)
@@ -56,6 +55,10 @@ $(APIDIFF_DIR)/temp/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
 
 $(APIDIFF_DIR)/temp/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll
+	$(Q) mkdir -p $(dir $@)
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $< -o $@
+
+$(APIDIFF_DIR)/temp/xm/4.5/Xamarin.Mac.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $< -o $@
 
