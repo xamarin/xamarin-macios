@@ -243,14 +243,14 @@ def processAtMonkeyWrench (outputFile)
     }
 }
 
-def uploadFiles (glob, virtualPath)
+def uploadFiles (glob, containerName, virtualPath)
 {
     step ([
         $class: 'WAStoragePublisher',
         allowAnonymousAccess: true,
         cleanUpContainer: false,
         cntPubAccess: true,
-        containerName: "wrench",
+        containerName: containerName,
         doNotFailIfArchivingReturnsNothing: false,
         doNotUploadIndividualFiles: false,
         doNotWaitForPreviousBuild: true,
@@ -504,8 +504,8 @@ timestamps {
                                 dir("BuildTasks") {
                                     deleteDir ()
                                     sh "unzip ../Xamarin.Build.Tasks.nupkg"
-                                    sh "mono tools/BuildTasks/build-tasks.exe workspaceinfo -p ${workspace} -o ${workspace}/package/ci-checkout.json"
-                                    sh "mono tools/BuildTasks/build-tasks.exe dependencyinfo -p ${workspace} -o ${workspace}/package/dependency-info.json"
+                                    sh "mono tools/BuildTasks/build-tasks.exe workspaceinfo -p ${workspace} -o ${workspace}/package-internal/ci-checkout.json"
+                                    sh "mono tools/BuildTasks/build-tasks.exe dependencyinfo -p ${workspace} -o ${workspace}/package-internal/dependency-info.json"
                                 }
                             }
                         }
@@ -527,13 +527,14 @@ timestamps {
                             writeFile (file: "package/manifest", text: manifest)
 
                             sh ("ls -la package")
-                            uploadFiles ("package/*", virtualPath)
+                            uploadFiles ("package/*", "wrench", virtualPath)
+                            uploadFiles ("package-internal/*", "jenkins-internal", virtualPath)
 
                             // Also upload manifest to a predictable url (without the build number)
                             // This manifest will be overwritten in subsequent builds (for this [PR/branch]+hash combination)
-                            uploadFiles ("package/manifest", "jenkins/${branchName}/${gitHash}")
+                            uploadFiles ("package/manifest", "wrench", "jenkins/${branchName}/${gitHash}")
                             // And also create a 'latest' version (which really means 'latest built', not 'latest hash', but it will hopefully be good enough)
-                            uploadFiles ("package/manifest", "jenkins/${branchName}/latest")
+                            uploadFiles ("package/manifest", "wrench", "jenkins/${branchName}/latest")
 
                             manifestFilename = "manifest"
                         }
@@ -651,7 +652,7 @@ timestamps {
                                     echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode}")
                                     failedStages.add (currentStage)
                                 }
-                                uploadFiles ("tests/*.zip", virtualPath)
+                                uploadFiles ("tests/*.zip", "wrench", virtualPath)
                             }
 
                             timeout (time: 6, unit: 'HOURS') {
