@@ -96,12 +96,13 @@ namespace CoreFoundation {
 	
 	public class CFString
 #if !COREBUILD
-		: INativeObject, IDisposable
+		: NativeObject
 #endif
 	{
 #if !COREBUILD
-		internal IntPtr handle;
 		internal string str;
+
+		protected CFString () {}
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
 		extern static IntPtr CFStringCreateWithCharacters (IntPtr allocator, string str, nint count);
@@ -128,42 +129,12 @@ namespace CoreFoundation {
 			if (str == null)
 				throw new ArgumentNullException ("str");
 			
-			handle = CFStringCreateWithCharacters (IntPtr.Zero, str, str.Length);
+			Handle = CFStringCreateWithCharacters (IntPtr.Zero, str, str.Length);
 			this.str = str;
-		}
-
-		~CFString ()
-		{
-			Dispose (false);
-		}
-
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFStringGetTypeID")]
 		public extern static nint GetTypeID ();
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-#if XAMCORE_2_0
-		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
-		{
-			str = null;
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
 		
 		public CFString (IntPtr handle)
 			: this (handle, false)
@@ -171,11 +142,9 @@ namespace CoreFoundation {
 		}
 		
 		[Preserve (Conditional = true)]
-		internal CFString (IntPtr handle, bool owns)
+		protected internal CFString (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
 		}
 
 		// to be used when an API like CF*Get* returns a CFString
@@ -217,7 +186,7 @@ namespace CoreFoundation {
 		public static implicit operator string (CFString x)
 		{
 			if (x.str == null)
-				x.str = FetchString (x.handle);
+				x.str = FetchString (x.Handle);
 			
 			return x.str;
 		}
@@ -232,7 +201,7 @@ namespace CoreFoundation {
 				if (str != null)
 					return str.Length;
 				else
-					return (int)CFStringGetLength (handle);
+					return (int)CFStringGetLength (Handle);
 			}
 		}
 
@@ -244,7 +213,7 @@ namespace CoreFoundation {
 				if (str != null)
 					return str [(int) p];
 				else
-					return CFStringGetCharacterAtIndex (handle, p);
+					return CFStringGetCharacterAtIndex (Handle, p);
 			}
 		}
 		
@@ -252,7 +221,7 @@ namespace CoreFoundation {
 		{
 			if (str != null)
 				return str;
-			return FetchString (handle);
+			return FetchString (Handle);
 		}
 #endif // !COREBUILD
 	}

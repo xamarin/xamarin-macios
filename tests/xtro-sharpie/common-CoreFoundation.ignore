@@ -194,22 +194,6 @@
 !missing-field! kCFStreamPropertySocketRemoteHostName not bound
 !missing-field! kCFStreamPropertySocketRemotePortNumber not bound
 !missing-field! kCFStringBinaryHeapCallBacks not bound
-!missing-field! kCFStringTransformFullwidthHalfwidth not bound
-!missing-field! kCFStringTransformHiraganaKatakana not bound
-!missing-field! kCFStringTransformLatinArabic not bound
-!missing-field! kCFStringTransformLatinCyrillic not bound
-!missing-field! kCFStringTransformLatinGreek not bound
-!missing-field! kCFStringTransformLatinHangul not bound
-!missing-field! kCFStringTransformLatinHebrew not bound
-!missing-field! kCFStringTransformLatinHiragana not bound
-!missing-field! kCFStringTransformLatinKatakana not bound
-!missing-field! kCFStringTransformLatinThai not bound
-!missing-field! kCFStringTransformMandarinLatin not bound
-!missing-field! kCFStringTransformStripCombiningMarks not bound
-!missing-field! kCFStringTransformStripDiacritics not bound
-!missing-field! kCFStringTransformToLatin not bound
-!missing-field! kCFStringTransformToUnicodeName not bound
-!missing-field! kCFStringTransformToXMLHex not bound
 !missing-field! kCFTimeZoneSystemTimeZoneDidChangeNotification not bound
 !missing-field! kCFTypeArrayCallBacks not bound
 !missing-field! kCFTypeBagCallBacks not bound
@@ -728,7 +712,6 @@
 !missing-pinvoke! CFSocketSetDefaultNameRegistryPortNumber is not bound
 !missing-pinvoke! CFSocketUnregister is not bound
 !missing-pinvoke! CFStringAppend is not bound
-!missing-pinvoke! CFStringAppendCharacters is not bound
 !missing-pinvoke! CFStringAppendCString is not bound
 !missing-pinvoke! CFStringAppendFormat is not bound
 !missing-pinvoke! CFStringAppendFormatAndArguments is not bound
@@ -749,8 +732,6 @@
 !missing-pinvoke! CFStringCreateCopy is not bound
 !missing-pinvoke! CFStringCreateExternalRepresentation is not bound
 !missing-pinvoke! CFStringCreateFromExternalRepresentation is not bound
-!missing-pinvoke! CFStringCreateMutable is not bound
-!missing-pinvoke! CFStringCreateMutableCopy is not bound
 !missing-pinvoke! CFStringCreateMutableWithExternalCharactersNoCopy is not bound
 !missing-pinvoke! CFStringCreateWithBytes is not bound
 !missing-pinvoke! CFStringCreateWithBytesNoCopy is not bound
@@ -810,7 +791,6 @@
 !missing-pinvoke! CFStringTokenizerGetTypeID is not bound
 !missing-pinvoke! CFStringTokenizerGoToTokenAtIndex is not bound
 !missing-pinvoke! CFStringTokenizerSetString is not bound
-!missing-pinvoke! CFStringTransform is not bound
 !missing-pinvoke! CFStringTrim is not bound
 !missing-pinvoke! CFStringTrimWhitespace is not bound
 !missing-pinvoke! CFStringUppercase is not bound
