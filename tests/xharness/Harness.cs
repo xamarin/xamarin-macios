@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -750,10 +751,17 @@ namespace xharness
 		// Nothing really breaks when the sequence isn't identical from run to run, so
 		// this is just a best minimal effort.
 		static Random guid_generator = new Random (unchecked ((int) 0xdeadf00d));
-		public Guid NewStableGuid ()
+		public Guid NewStableGuid (string seed = null)
 		{
 			var bytes = new byte [16];
-			guid_generator.NextBytes (bytes);
+			if (seed == null) {
+				guid_generator.NextBytes (bytes);
+			} else {
+				using (var provider = MD5.Create ()) {
+					var inputBytes = Encoding.UTF8.GetBytes (seed);
+					bytes = provider.ComputeHash (inputBytes);
+				}
+			}
 			return new Guid (bytes);
 		}
 

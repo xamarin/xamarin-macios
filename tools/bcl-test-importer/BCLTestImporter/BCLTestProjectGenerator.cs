@@ -215,6 +215,7 @@ namespace BCLTestImporter {
 		public string ProjectTemplateRootPath { get; private set; }
 		public string PlistTemplateRootPath{ get; private set; }
 		public string RegisterTypesTemplatePath { get; private set; }
+		public Func<string, Guid> GuidGenerator { get; set; }
 		string GeneratedCodePathRoot => Path.Combine (OutputDirectoryPath, "generated");
 		string WatchContainerTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "Container").Replace ("/", "\\");
 		string WatchAppTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "App").Replace ("/", "\\");
@@ -388,16 +389,6 @@ namespace BCLTestImporter {
 					yield return platformIgnore;
 			}
 		}
-
-		internal static string GetProjectGuid (string projectName) 
-		{
-			//use MD5 hash to get a 16-byte hash of the string: 
-			using (var provider = MD5.Create ()) {
-				var inputBytes = Encoding.UTF8.GetBytes (projectName);
-				var hashBytes = provider.ComputeHash (inputBytes);
-				return new Guid (hashBytes).ToString ().ToUpperInvariant ();
-			}
-		} 
 
 		/// <summary>
 		/// Returns is a project should be ignored in a platform. A project is ignored in one of the assemblies in the
@@ -730,11 +721,11 @@ namespace BCLTestImporter {
 			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
 				contentFiles.Append (GetContentNode (path));
 			}
-
+			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (DownloadPathKey, downloadPath);
-				result = result.Replace (ProjectGuidKey, GetProjectGuid (projectName));
+				result = result.Replace (ProjectGuidKey, projectGuid.ToString ().ToUpperInvariant ());
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
@@ -744,7 +735,7 @@ namespace BCLTestImporter {
 			}
 		}
 		
-		static async Task<string> GenerateMacAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform)
+		async Task<string> GenerateMacAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform)
 		{
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
@@ -757,9 +748,10 @@ namespace BCLTestImporter {
 			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
 				contentFiles.Append (GetContentNode (path));
 			}
+			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
-				result = result.Replace (ProjectGuidKey, GetProjectGuid (projectName));
+				result = result.Replace (ProjectGuidKey, projectGuid.ToString ().ToUpperInvariant ());
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
