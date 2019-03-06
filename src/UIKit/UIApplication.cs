@@ -5,7 +5,8 @@
 //   Geoff Norton
 //
 // Copyright 2009, Novell, Inc.
-// Copyrigh 2014, Xamarin Inc.
+// Copyright 2014, Xamarin Inc.
+// Copyright 2019 Microsoft Corporation.
 //
 
 using System;
@@ -58,9 +59,15 @@ namespace UIKit {
 #if !WATCH
 		public static void Main (string [] args, string principalClassName, string delegateClassName)
 		{
-			IntPtr principal = principalClassName != null ? new NSString (principalClassName).Handle : IntPtr.Zero;
-			IntPtr delegatec = delegateClassName != null ? new NSString (delegateClassName).Handle : IntPtr.Zero;
-			Main (args, principal, delegatec);
+			var p = NSString.CreateNative (principalClassName);
+			var d = NSString.CreateNative (delegateClassName);
+			try {
+				Main (args, p, d);
+			} finally {
+				// it just looks nicer to release them
+				NSString.ReleaseNative (d);
+				NSString.ReleaseNative (p);
+			}
 		}
 		
 		public static void Main (string [] args, Type principalClass, Type delegateClass)
