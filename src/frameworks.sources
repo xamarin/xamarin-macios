@@ -393,6 +393,7 @@ COREDATA_SOURCES = \
 
 COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/CFIndex.cs \
+	CoreFoundation/CFMutableString.cs \
 	CoreFoundation/CFRunLoop.cs \
 	CoreFoundation/CFString.cs \
 	CoreFoundation/Dispatch.cs \

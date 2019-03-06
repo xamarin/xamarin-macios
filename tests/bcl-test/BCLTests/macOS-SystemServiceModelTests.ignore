@@ -1,0 +1,16 @@
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.X509WrappingToken1
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.X509TokenForSymmetricKeyWrap
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.UserNameToken
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.CtorNullWrappingTokenReference
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.CtorNullWrappingToken
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.CtorNullWrappingAlgorithm
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.CtorNullKey
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.CtorNullId
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.CreateBinarySecretKeyIdentifierClause
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.BinarySecretTokenForSymmetricKeyWrap
+ MonoTests.System.ServiceModel.WrappedKeySecurityTokenTest.BinarySecretTokenForAsymmetricKeyWrap
+ MonoTests.System.ServiceModel.EndpointIdentityTest.CreateX509CertificateIdentity
+ MonoTests.System.ServiceModel.EndpointAddressTest.WriteToWSA10
+ MonoTests.System.ServiceModel.EndpointAddressTest.WriteContentsToWSA10
+ MonoTests.System.ServiceModel.Description.MetadataSetTest.ReadFrom

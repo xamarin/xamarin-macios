@@ -66,4 +66,54 @@ namespace CoreFoundation {
 		NSString ErrorDomain { get; }
 	}
 #endif
+
+	enum CFStringTransform {
+		[Field ("kCFStringTransformStripCombiningMarks")]
+		StripCombiningMarks,
+
+		[Field ("kCFStringTransformToLatin")]
+		ToLatin,
+
+		[Field ("kCFStringTransformFullwidthHalfwidth")]
+		FullwidthHalfwidth,
+
+		[Field ("kCFStringTransformLatinKatakana")]
+		LatinKatakana,
+
+		[Field ("kCFStringTransformLatinHiragana")]
+		LatinHiragana,
+
+		[Field ("kCFStringTransformHiraganaKatakana")]
+		HiraganaKatakana,
+
+		[Field ("kCFStringTransformMandarinLatin")]
+		MandarinLatin,
+
+		[Field ("kCFStringTransformLatinHangul")]
+		LatinHangul,
+
+		[Field ("kCFStringTransformLatinArabic")]
+		LatinArabic,
+
+		[Field ("kCFStringTransformLatinHebrew")]
+		LatinHebrew,
+
+		[Field ("kCFStringTransformLatinThai")]
+		LatinThai,
+
+		[Field ("kCFStringTransformLatinCyrillic")]
+		LatinCyrillic,
+
+		[Field ("kCFStringTransformLatinGreek")]
+		LatinGreek,
+
+		[Field ("kCFStringTransformToXMLHex")]
+		ToXmlHex,
+
+		[Field ("kCFStringTransformToUnicodeName")]
+		ToUnicodeName,
+
+		[Field ("kCFStringTransformStripDiacritics")]
+		StripDiacritics,
+	}
 }

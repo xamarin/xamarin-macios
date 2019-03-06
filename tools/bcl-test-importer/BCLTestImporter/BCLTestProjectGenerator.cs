@@ -97,7 +97,7 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}),
 			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}),
 			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}),
-			(name:"MonoDataSquilteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}),
+			(name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}),
 			(name:"SystemWebServicesTests", assemblies: new [] {"monotouch_System.Web.Services_test.dll"}),
 
 			// XUNIT TESTS 
@@ -146,7 +146,7 @@ namespace BCLTestImporter {
 		
 			// NUNIT Projects
 			(name:"MonoCSharpTests", assemblies: new [] {"xammac_net_4_5_Mono.CSharp_test.dll"}),
-			(name:"MonoDataSqilteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
+			(name:"MonoDataSqliteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
 			(name:"MonoDataTdsTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}),
 			(name:"MonoPoxisTests", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}),
 			(name:"MonoSecurityTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
@@ -183,27 +183,19 @@ namespace BCLTestImporter {
 		};
 		
 		static readonly List<(string assembly, Platform[] platforms)> macIgnoredAssemblies = new List<(string assembly, Platform[] platforms)> {
-			(assembly: "xammac_net_4_5_corlib_test.dll",  platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // exception when loading the image via refection
-			(assembly: "xammac_net_4_5_I18N.CJK_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }),
-			(assembly: "xammac_net_4_5_I18N.MidEast_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }),
-			(assembly: "xammac_net_4_5_I18N.Other_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }),
-			(assembly: "xammac_net_4_5_I18N.Rare_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }),
-			(assembly: "xammac_net_4_5_I18N.West_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }),
-			(assembly: "xammac_net_4_5_Mono.CSharp_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), //issue https://github.com/xamarin/maccore/issues/1186 
-			(assembly: "xammac_net_4_5_Mono.Data.Sqlite_test.dll",  platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }),// issue https://github.com/xamarin/maccore/issues/1187
-			(assembly: "xammac_net_4_5_Mono.Posix_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1188
-			(assembly: "xammac_net_4_5_Mono.Posix_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1189 and https://github.com/xamarin/maccore/issues/1190
+			(assembly: "xammac_net_4_5_corlib_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // exception when loading the image via refection
+			(assembly: "xammac_net_4_5_I18N.CJK_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
+			(assembly: "xammac_net_4_5_I18N.MidEast_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
+			(assembly: "xammac_net_4_5_I18N.Other_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
+			(assembly: "xammac_net_4_5_I18N.Rare_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
+			(assembly: "xammac_net_4_5_I18N.West_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
 			(assembly: "xammac_net_4_5_System.Core_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1191
 			(assembly: "xammac_net_4_5_System.Data_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1192 and https://github.com/xamarin/maccore/issues/1193
-			(assembly: "xammac_net_4_5_System.IdentityModel_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1194
-			(assembly: "xammac_net_4_5_System.IdentityModel_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1196
 			(assembly: "xammac_net_4_5_System.Security_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1197
-			(assembly: "xammac_net_4_5_System.ServiceModel_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1198
 			(assembly: "xammac_net_4_5_System_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1199
 			(assembly: "xammac_net_4_5_System.Xml_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1201 and https://github.com/xamarin/maccore/issues/1202
 			(assembly: "xammac_net_4_5_corlib_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1203
 			(assembly: "xammac_net_4_5_System.Core_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1204
-			(assembly: "xammac_net_4_5_System.Data_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://gist.github.com/mandel-macaque/3f4d1eeca511cb8654fb518cc3bb2e92
 			(assembly: "xammac_net_4_5_System_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1209
 			(assembly: "xammac_net_4_5_System.Configuration_test.dll", platforms: new [] { Platform.MacOSModern }), // Not present in modern, ergo all tests will fail
 			(assembly: "xammac_net_4_5_System.Security_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // https://github.com/xamarin/maccore/issues/1243

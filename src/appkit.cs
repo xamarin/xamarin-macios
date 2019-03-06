@@ -17450,7 +17450,10 @@ namespace AppKit {
 		[Export ("removeTabViewItem:")][PostGet ("Items")]
 		void Remove (NSTabViewItem tabViewItem);
 
-		[Export ("delegate",  ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		NSTabViewDelegate Delegate { get; set; }
 

@@ -1618,7 +1618,10 @@ public partial class Generator : IMemberGatherer {
 				// special case (false) so it needs to be before the _real_ INativeObject check
 				if (pi.ParameterType == SampleBufferType){
 					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-					invoke.AppendFormat ("{0} == IntPtr.Zero ? null : new CMSampleBuffer ({0}, false)", pi.Name.GetSafeParamName ());
+					if (BindThirdPartyLibrary)
+						invoke.AppendFormat ("{0} == IntPtr.Zero ? null : Runtime.GetINativeObject<CMSampleBuffer> ({0}, false)", pi.Name.GetSafeParamName ());
+					else
+						invoke.AppendFormat ("{0} == IntPtr.Zero ? null : new CMSampleBuffer ({0}, false)", pi.Name.GetSafeParamName ());
 					continue;
 				}
 			}
@@ -6736,8 +6739,8 @@ public partial class Generator : IMemberGatherer {
 						//   - We're in one of two cases: The user += an Event and then assigned their own delegate or the inverse
 						//   - One of them isn't being called anymore no matter what. Throw an exception.
 						if (!BindThirdPartyLibrary) {
-							print ("if ({0} != null)", delName);
-							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched ({1}, {2});", ApplicationClassName, delName, delegateTypePropertyName);
+							print ("if (Weak{0} != null)", delName);
+							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched (Weak{1}, {2});", ApplicationClassName, delName, delegateTypePropertyName);
 						}
 
 						print ("_{0} del = {1} as _{0};", dtype.Name, delName);

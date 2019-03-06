@@ -17,7 +17,7 @@ namespace BCLTestImporter {
 		// we will remove the dict and we will use the refection based method.
 		static Dictionary<string, (string testNamespace, string testAssembly, string testType)> macCache = new Dictionary<string, (string testNamespace, string testAssembly, string testType)> {
 			{"MonoCSharpTests", ("MonoTests.Visit",  "xammac_net_4_5_Mono.CSharp_test.dll", "MonoTests.Visit.ASTVisitorTest")},
-			{"MonoDataSqilteTests", ("MonoTests.Mono.Data.Sqlite",  "xammac_net_4_5_Mono.Data.Sqlite_test.dll", "MonoTests.Mono.Data.Sqlite.SqliteiOS82BugTests")},
+			{"MonoDataSqliteTests", ("MonoTests.Mono.Data.Sqlite",  "xammac_net_4_5_Mono.Data.Sqlite_test.dll", "MonoTests.Mono.Data.Sqlite.SqliteiOS82BugTests")},
 			{"MonoDataTdsTests", ("MonoTests.Mono.Data.Tds",  "xammac_net_4_5_Mono.Data.Tds_test.dll", "MonoTests.Mono.Data.Tds.TdsConnectionPoolTest")},
 			{"MonoPoxisTests", ("MonoTests.System.IO",  "xammac_net_4_5_Mono.Posix_test.dll", "MonoTests.System.IO.StdioFileStreamTest")},
 			{"MonoSecurityTests", ("MonoTests.System.Security.Cryptography",  "xammac_net_4_5_Mono.Security_test.dll", "MonoTests.System.Security.Cryptography.SHA224ManagedTest")},
