@@ -453,7 +453,7 @@ namespace Foundation {
 					if (error != null) {
 						inflight.Errored = true;
 
-						// if the exception was set by one of the delefate methods, used it, else use the one
+						// if the exception was set by one of the delegate methods, used it, else use the one
 						// from the error.
 						var exc = inflight.Exception ?? createExceptionForNSError (error);
 						inflight.CompletionSource.TrySetException (exc);
