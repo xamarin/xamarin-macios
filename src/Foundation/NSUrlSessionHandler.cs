@@ -33,10 +33,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
+using System.Security.Cryptography.X509Certificates;
 
 #if UNIFIED
 using CoreFoundation;
@@ -451,7 +453,9 @@ namespace Foundation {
 					if (error != null) {
 						inflight.Errored = true;
 
-						var exc = createExceptionForNSError (error);
+						// if the exception was set by one of the delefate methods, used it, else use the one
+						// from the error.
+						var exc = inflight.Exception ?? createExceptionForNSError (error);
 						inflight.CompletionSource.TrySetException (exc);
 						inflight.Stream.TrySetException (exc);
 					} else {
@@ -497,45 +501,89 @@ namespace Foundation {
 
 				if (inflight == null)
 					return;
-
-				// case for the basic auth failing up front. As per apple documentation:
-				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
-				// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
-				// 	Authorization
-				// 	Connection
-				// 	Host
-				// 	Proxy-Authenticate
-				// 	Proxy-Authorization
-				// 	WWW-Authenticate
-				// but we are hiding such a situation from our users, we can nevertheless know if the header was added and deal with it. The idea is as follows,
-				// check if we are in the first attempt, if we are (PreviousFailureCount == 0), we check the headers of the request and if we do have the Auth 
-				// header, it means that we do not have the correct credentials, in any other case just do what it is expected.
-				
-				if (challenge.PreviousFailureCount == 0) {
-					var authHeader = inflight.Request?.Headers?.Authorization;
-					if (!(string.IsNullOrEmpty (authHeader?.Scheme) && string.IsNullOrEmpty (authHeader?.Parameter))) {
-						completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
+				// ToCToU for the cb
+				var validationCb = ServicePointManager.ServerCertificateValidationCallback;
+				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust && validationCb != null) {
+					// we need the SecTrust to get the certificates to fwd to the callback
+					var trust = challenge.ProtectionSpace.ServerSecTrust;
+					if (trust.Count > 0) {
+						// get cert and chain
+						var certificate = trust[0].ToX509Certificate2 ();
+						var chain = new X509Chain ();
+						chain.Build (certificate);
+						// evaluate the sectrust and match it to a SslPolicyErrors
+						// As per the docs:
+						// "In general both Proceed and Unspecified means you can trust the certificate, other values means it should not be trusted."
+						SslPolicyErrors sslPolicyErrors;
+						switch (trust.Evaluate ()) {
+						case SecTrustResult.Proceed:
+						case SecTrustResult.Unspecified:
+							sslPolicyErrors = SslPolicyErrors.None;
+							break;
+						default:
+							sslPolicyErrors = SslPolicyErrors.RemoteCertificateChainErrors;
+							break;
+						}
+						var acceptCertificate = validationCb (this, certificate, chain, sslPolicyErrors);
+						if (acceptCertificate) {
+							var credential = new NSUrlCredential (challenge.ProtectionSpace.ServerSecTrust);
+							completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+							return;
+						} else {
+							// user callback rejected the certificate, we want to set the exception, else the user will
+							// see as if the request was cancelled.
+							lock (inflight.Lock) {
+								inflight.Exception = new HttpRequestException ("An error occurred while sending the request.", new WebException ("Error: TrustFailure"));
+							}
+							completionHandler (NSUrlSessionAuthChallengeDisposition.CancelAuthenticationChallenge, null);
+							return;
+						}
+					} else {
+						// defualt handling
+						completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 						return;
 					}
-				}
-
-				if (sessionHandler.Credentials != null && TryGetAuthenticationType (challenge.ProtectionSpace, out string authType)) {
-					NetworkCredential credentialsToUse = null;
-					if (authType != RejectProtectionSpaceAuthType) {
-						var uri = inflight.Request.RequestUri;
-						credentialsToUse = sessionHandler.Credentials.GetCredential (uri, authType);
-					}
-
-					if (credentialsToUse != null) {
-						var credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
-						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
-					} else {
-						// Rejecting the challenge allows the next authentication method in the request to be delivered to
-						// the DidReceiveChallenge method. Another authentication method may have credentials available.
-						completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
-					}
 				} else {
-					completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
+
+					// case for the basic auth failing up front. As per apple documentation:
+					// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
+					// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
+					// 	Authorization
+					// 	Connection
+					// 	Host
+					// 	Proxy-Authenticate
+					// 	Proxy-Authorization
+					// 	WWW-Authenticate
+					// but we are hiding such a situation from our users, we can nevertheless know if the header was added and deal with it. The idea is as follows,
+					// check if we are in the first attempt, if we are (PreviousFailureCount == 0), we check the headers of the request and if we do have the Auth 
+					// header, it means that we do not have the correct credentials, in any other case just do what it is expected.
+
+					if (challenge.PreviousFailureCount == 0) {
+						var authHeader = inflight.Request?.Headers?.Authorization;
+						if (!(string.IsNullOrEmpty (authHeader?.Scheme) && string.IsNullOrEmpty (authHeader?.Parameter))) {
+							completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
+							return;
+						}
+					}
+
+					if (sessionHandler.Credentials != null && TryGetAuthenticationType (challenge.ProtectionSpace, out string authType)) {
+						NetworkCredential credentialsToUse = null;
+						if (authType != RejectProtectionSpaceAuthType) {
+							var uri = inflight.Request.RequestUri;
+							credentialsToUse = sessionHandler.Credentials.GetCredential (uri, authType);
+						}
+
+						if (credentialsToUse != null) {
+							var credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
+							completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+						} else {
+							// Rejecting the challenge allows the next authentication method in the request to be delivered to
+							// the DidReceiveChallenge method. Another authentication method may have credentials available.
+							completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
+						}
+					} else {
+						completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
+					}
 				}
 			}
 
@@ -577,6 +625,7 @@ namespace Foundation {
 			public HttpRequestMessage Request { get; set; }
 			public HttpResponseMessage Response { get; set; }
 
+			public Exception Exception { get; set; }
 			public bool ResponseSent { get; set; }
 			public bool Errored { get; set; }
 			public bool Disposed { get; set; }
