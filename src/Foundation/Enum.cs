@@ -986,6 +986,8 @@ namespace Foundation  {
 		ShortGeneric
 	}
 
+	[iOS (8,0)]
+	[Mac (10,10)]
 	[Native]
 	public enum NSItemProviderErrorCode : long {
 		Unknown = -1,
@@ -1064,6 +1066,8 @@ namespace Foundation  {
 		Long
 	}
 
+	[iOS (8,0)]
+	[Mac (10,10)]
 	[Native]
 	public enum NSMassFormatterUnit : long {
 		Gram = 11,
@@ -1073,6 +1077,8 @@ namespace Foundation  {
 		Stone = (6 << 8) + 3
 	}
 
+	[iOS (8,0)]
+	[Mac (10,10)]
 	[Native]
 	public enum NSLengthFormatterUnit : long {
 		Millimeter = 8,
