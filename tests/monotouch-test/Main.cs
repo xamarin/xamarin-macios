@@ -34,12 +34,12 @@ namespace monotouchtest
 
 partial class TestRuntime
 {
-	public static bool RunAsync (TimeSpan timeout, Action action, Func<bool> check_completed)
+	public static bool RunAsync (TimeSpan timeout, Action action, Func<bool> check_completed, UIImage imageToShow = null)
 	{
-		return RunAsync (DateTime.Now.Add (timeout), action, check_completed);
+		return RunAsync (DateTime.Now.Add (timeout), action, check_completed, imageToShow);
 	}
 
-	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed)
+	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed, UIImage imageToShow = null)
 	{
 #if __WATCHOS__
 		NSTimer.CreateScheduledTimer (0.01, (v) => action ());
@@ -51,7 +51,7 @@ partial class TestRuntime
 
 		return true;
 #else
-		return MonoTouchFixtures.AppDelegate.RunAsync (timeout, action, check_completed);
+		return MonoTouchFixtures.AppDelegate.RunAsync (timeout, action, check_completed, imageToShow);
 #endif
 	}
 }

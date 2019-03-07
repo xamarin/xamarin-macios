@@ -72,9 +72,9 @@ namespace MonoTouchFixtures {
 			}
 		}
 
-		public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed)
+		public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed, UIImage imageToShow = null)
 		{
-			var vc = new AsyncController (action);
+			var vc = new AsyncController (action, imageToShow);
 			var bckp = window.RootViewController;
 			window.RootViewController = vc;
 			try {
@@ -93,11 +93,13 @@ namespace MonoTouchFixtures {
 
 	class AsyncController : UIViewController {
 		Action action;
+		UIImage imageToShow;
 		static int counter;
 
-		public AsyncController (Action action)
+		public AsyncController (Action action, UIImage imageToShow = null)
 		{
 			this.action = action;
+			this.imageToShow = imageToShow;
 			counter++;
 		}
 
@@ -112,6 +114,12 @@ namespace MonoTouchFixtures {
 			default:
 				View.BackgroundColor = UIColor.LightGray;
 				break;
+			}
+			if (imageToShow != null) {
+				var imgView = new UIImageView (View.Bounds);
+				imgView.Image = imageToShow;
+				imgView.ContentMode = UIViewContentMode.Center;
+				View.AddSubview (imgView);
 			}
 #if XAMCORE_2_0
 			NSTimer.CreateScheduledTimer (0.01, (v) => action ());

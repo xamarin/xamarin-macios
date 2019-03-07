@@ -147,7 +147,7 @@ namespace CoreGraphics {
 			if (components == null)
 				throw new ArgumentNullException ("components");
 
-			handle = CGColorCreateWithPattern (colorspace.handle, pattern.handle, components);
+			handle = CGColorCreateWithPattern (colorspace.handle, pattern.Handle, components);
 			if (handle == IntPtr.Zero)
 				throw new ArgumentException ();
 		}
