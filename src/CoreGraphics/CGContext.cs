@@ -700,7 +700,7 @@ namespace CoreGraphics {
 
 		public void SetFillPattern (CGPattern pattern, nfloat [] components)
 		{
-			CGContextSetFillPattern (handle, pattern == null ? IntPtr.Zero : pattern.handle, components);
+			CGContextSetFillPattern (handle, pattern.GetHandle (), components);
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -709,7 +709,7 @@ namespace CoreGraphics {
 
 		public void SetStrokePattern (CGPattern pattern, nfloat [] components)
 		{
-			CGContextSetStrokePattern (handle, pattern == null ? IntPtr.Zero : pattern.handle, components);
+			CGContextSetStrokePattern (handle, pattern.GetHandle (), components);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
