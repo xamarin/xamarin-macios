@@ -14,7 +14,13 @@ using System.Runtime.InteropServices;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
+#if __MACOS__
+using AppKit;
+using UIImage = AppKit.NSImage;
+using UIColor = AppKit.NSColor;
+#else
 using UIKit;
+#endif
 
 using NUnit.Framework;
 
@@ -28,16 +34,21 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			// Render an image with a pattern, and show it briefly on screen.
 			// It's supposed to show a blue oval with green plus signs inside.
-			AppDelegate.RunAsync (DateTime.Now.AddSeconds (0.1), () => { }, () => true, GetRenderedPattern ());
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (0.1), () => { }, () => true, GetRenderedPattern ());
 		}
 
 		public UIImage GetRenderedPattern ()
 		{
 			var patternBounds = new CGRect (0, 0, 12, 12);
 			var bounds = new CGRect (0, 0, patternBounds.Width * patternBounds.Width, patternBounds.Height * patternBounds.Height);
+#if __MACOS__
+			var img = new NSImage (bounds.Size);
+			img.LockFocus ();
+			var context = NSGraphicsContext.CurrentContext.GraphicsPort;
+#else
 			UIGraphics.BeginImageContextWithOptions (bounds.Size, false, 0);
-
 			var context = UIGraphics.GetCurrentContext ();
+#endif
 			try {
 				context.SetStrokeColor (UIColor.Blue.CGColor);
 				context.AddEllipseInRect (bounds);
@@ -60,9 +71,17 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 				context.DrawPath (CGPathDrawingMode.FillStroke);
 
+#if __MACOS__
+				return img;
+#else
 				return UIGraphics.GetImageFromCurrentImageContext ();
+#endif
 			} finally {
+#if __MACOS__
+				img.UnlockFocus ();
+#else
 				UIGraphics.EndImageContext ();
+#endif
 			}
 		}
 	}
