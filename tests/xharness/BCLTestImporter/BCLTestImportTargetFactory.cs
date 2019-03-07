@@ -24,6 +24,7 @@ namespace xharness.BCLTestImporter {
 			projectGenerator = new BCLTestProjectGenerator (outputDir, Harness.MONO_PATH, projectTemplatePath, registerTypesTemplatePath, plistTemplatePath) {
 				iOSMonoSDKPath = Harness.MONO_SDK_DESTDIR,
 				Override = true,
+				GuidGenerator = Harness.NewStableGuid,
 			};
 		}
 		
