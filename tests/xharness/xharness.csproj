@@ -113,6 +113,7 @@
     </Compile>
     <Compile Include="SimpleFileListener.cs" />
     <Compile Include="iOSTarget.cs" />
+    <Compile Include="MonoNativeInfo.cs" />
     <Compile Include="..\..\tools\bcl-test-importer\BCLTestImporter\BCLTestAssemblyDefinition.cs">
       <Link>BCLTestImporter\BCLTestAssemblyDefinition.cs</Link>
     </Compile>

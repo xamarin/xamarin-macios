@@ -10,10 +10,10 @@ namespace Xamarin.MMP.Tests
 	public class CodeStrippingTests
 	{
 		static Func<string, bool> LipoStripConditional = s => s.Contains ("lipo") && s.Contains ("-thin");
-		static Func<string, bool> LipoStripSkipPosixConditional = s => LipoStripConditional (s) && !s.Contains ("libMonoPosixHelper.dylib");
+		static Func<string, bool> LipoStripSkipPosixAndMonoNativeConditional = s => LipoStripConditional (s) && !s.Contains ("libMonoPosixHelper.dylib") && !s.Contains ("libmono-native.dylib");
 
 		static Func<string, bool> DidAnyLipoStrip = output => output.SplitLines ().Any (LipoStripConditional);
-		static Func<string, bool> DidAnyLipoStripSkipPosix = output => output.SplitLines ().Any (LipoStripSkipPosixConditional);
+		static Func<string, bool> DidAnyLipoStripSkipPosixAndMonoNative = output => output.SplitLines ().Any (LipoStripSkipPosixAndMonoNativeConditional);
 
 		static TI.UnifiedTestConfig CreateStripTestConfig (bool? strip, string tmpDir, string additionalMMPArgs = "")
 		{
@@ -109,9 +109,9 @@ namespace Xamarin.MMP.Tests
 			Assert.False (buildOutput.Contains ("MM2108"), "MM2108 incorrectly given in in context: " + context + "\n" + buildOutput);
 		}
 
-		void AssertLipoOnlyMonoPosix (string buildOutput, string context)
+		void AssertLipoOnlyMonoPosixAndMonoNative (string buildOutput, string context)
 		{
-			Assert.False (DidAnyLipoStripSkipPosix (buildOutput), "lipo incorrectly run in context outside of libMonoPosixHelper: " + context + "\n" + buildOutput);
+			Assert.False (DidAnyLipoStripSkipPosixAndMonoNative (buildOutput), "lipo incorrectly run in context outside of libMonoPosixHelper/libmono-native: " + context + "\n" + buildOutput);
 			Assert.False (buildOutput.Contains ("MM2108"), "MM2108 incorrectly given in in context: " + context + "\n" + buildOutput);
 		}
 
@@ -152,7 +152,7 @@ namespace Xamarin.MMP.Tests
 
 				test.Release = true;
 				buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				AssertLipoOnlyMonoPosix (buildOutput, "Release"); // libMonoPosixHelper.dylib will lipo in Release
+				AssertLipoOnlyMonoPosixAndMonoNative (buildOutput, "Release"); // libMonoPosixHelper.dylib and libmono-native.dylib will lipo in Release
 			});
 		}
 	}

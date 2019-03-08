@@ -76,5 +76,10 @@
       <Name>GuiUnit_NET_4_5</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\NetworkHelpers.cs">
+      <Link>test-helpers\NetworkHelpers.cs</Link>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

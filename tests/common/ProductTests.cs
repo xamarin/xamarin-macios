@@ -72,6 +72,7 @@ namespace Xamarin.Tests
 				foreach (var slice in fatfile) {
 					var any_load_command = false;
 					foreach (var lc in slice.load_commands) {
+
 						Version lc_min_version;
 						var mincmd = lc as MinCommand;
 						if (mincmd != null){
@@ -83,15 +84,31 @@ namespace Xamarin.Tests
 							if (buildver == null)
 								continue;
 
-							Assert.AreEqual (platform, buildver.Platform, "Unexpected build version command");
+							var alternativePlatform = (MachO.Platform) 0;
+							switch (platform) {
+							case MachO.Platform.IOSSimulator:
+								alternativePlatform = MachO.Platform.IOS;
+								break;
+							case MachO.Platform.TvOSSimulator:
+								alternativePlatform = MachO.Platform.TvOS;
+								break;
+							case MachO.Platform.WatchOSSimulator:
+								alternativePlatform = MachO.Platform.WatchOS;
+								break;
+							}
+							Assert.That (buildver.Platform, Is.EqualTo (platform).Or.EqualTo (alternativePlatform) , $"Unexpected build version command in {machoFile} ({slice.Filename})");
 							lc_min_version = buildver.MinOS;
 						}
 
 						Version version;
 						Version alternate_version = null;
+						Version mono_native_compat_version;
+						Version mono_native_unified_version;
 						switch (load_command) {
 						case MachO.LoadCommands.MinMacOSX:
 							version = SdkVersions.MinOSXVersion;
+							mono_native_compat_version = SdkVersions.MinOSXVersion;
+							mono_native_unified_version = new Version (10, 12, 0);
 							break;
 						case MachO.LoadCommands.MiniPhoneOS:
 							version = SdkVersions.MiniOSVersion;
@@ -102,23 +119,45 @@ namespace Xamarin.Tests
 							} else if (slice.Architecture == MachO.Architectures.ARM64) {
 								alternate_version = new Version (7, 0, 0); // our arm64 slices has min iOS 7.0.
 							}
+							mono_native_compat_version = SdkVersions.MiniOSVersion;
+							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MintvOS:
 							version = SdkVersions.MinTVOSVersion;
+							mono_native_compat_version = SdkVersions.MinTVOSVersion;
+							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MinwatchOS:
 							version = SdkVersions.MinWatchOSVersion;
+							mono_native_compat_version = SdkVersions.MinWatchOSVersion;
+							mono_native_unified_version = new Version (5, 0, 0);
 							break;
 						default:
 							throw new NotImplementedException (load_command.ToString ());
 						}
 
 						version = version.WithBuild ();
+						mono_native_compat_version = mono_native_compat_version.WithBuild ();
+						mono_native_unified_version = mono_native_unified_version.WithBuild ();
 						if (alternate_version == null)
 							alternate_version = version;
 
-						if (version != mincmd.Version && alternate_version != mincmd.Version)
-							failed.Add ($"Unexpected minOS version (expected {version}, alternatively {alternate_version}, found {mincmd.Version}) in {machoFile} ({slice.Filename}).");
+						switch (Path.GetFileName (machoFile)) {
+						case "libmono-native-compat.dylib":
+						case "libmono-native-compat.a":
+							if (mono_native_compat_version != lc_min_version)
+								failed.Add ($"Unexpected minOS version (expected {mono_native_compat_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
+							break;
+						case "libmono-native-unified.dylib":
+						case "libmono-native-unified.a":
+							if (mono_native_unified_version != lc_min_version)
+								failed.Add ($"Unexpected minOS version (expected {mono_native_unified_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
+							break;
+						default:
+							if (version != lc_min_version && alternate_version != lc_min_version)
+								failed.Add ($"Unexpected minOS version (expected {version}, alternatively {alternate_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
+							break;
+						}
 						any_load_command = true;
 					}
 					if (!any_load_command)

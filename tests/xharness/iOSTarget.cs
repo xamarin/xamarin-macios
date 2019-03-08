@@ -6,5 +6,7 @@ namespace xharness
 	public class iOSTarget : Target
 	{
 		public iOSTestProject TestProject;
+
+		public MonoNativeInfo MonoNativeInfo => TestProject.MonoNativeInfo;
 	}
 }

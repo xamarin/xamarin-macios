@@ -71,6 +71,7 @@
       <Link>BundlerTool.cs</Link>
     </Compile>
     <Compile Include="ToolTasksBinPathTest.cs" />
+    <Compile Include="MonoNativeTests.cs" />
     <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\Metal.cs">
       <Link>Metal.cs</Link>
     </Compile>

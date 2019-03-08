@@ -79,7 +79,7 @@
     <InterfaceDefinition Include="%CONTAINER_PATH%Main.storyboard" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Info-watchos.plist">
+    <None Include="Info.plist">
       <LogicalName>Info.plist</LogicalName>
     </None>
     <None Include="%CONTAINER_PATH%Entitlements.plist" />

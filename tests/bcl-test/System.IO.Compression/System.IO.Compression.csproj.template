@@ -160,12 +160,19 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression\test.nupkg">
-      <Link>test.nupkg</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression\archive.zip">
-      <Link>archive.zip</Link>
-    </BundleResource>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression\Test\resources\test.nupkg">
+      <Link>Test\resources\test.nupkg</Link>
+      <LogicalName>Test/resources/test.nupkg</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression\Test\resources\archive.zip">
+      <Link>Test\resources\archive.zip</Link>
+      <LogicalName>Test/resources/archive.zip</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

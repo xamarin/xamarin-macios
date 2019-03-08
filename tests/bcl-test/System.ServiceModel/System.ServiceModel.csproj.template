@@ -165,15 +165,26 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault.xml">
-      <Link>Test\System.ServiceModel.Channels\soap-fault.xml</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault-incomplete.xml">
-      <Link>Test\System.ServiceModel.Channels\soap-fault-incomplete.xml</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\System.ServiceModel.Channels\soap-fault-incomplete4.xml">
-      <Link>Test\System.ServiceModel.Channels\soap-fault-incomplete4.xml</Link>
-    </BundleResource>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\NetworkHelpers.cs">
+      <Link>test-helpers\NetworkHelpers.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\soap-fault.xml">
+      <Link>Test\Resources\soap-fault.xml</Link>
+      <LogicalName>Test/Resources/soap-fault.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\soap-fault-incomplete.xml">
+      <Link>Test\Resources\soap-fault-incomplete.xml</Link>
+      <LogicalName>Test/Resources/soap-fault-incomplete.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.ServiceModel\Test\Resources\soap-fault-incomplete4.xml">
+      <Link>Test\Resources\soap-fault-incomplete4.xml</Link>
+      <LogicalName>Test/Resources/soap-fault-incomplete4.xml</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

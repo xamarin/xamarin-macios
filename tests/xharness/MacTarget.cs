@@ -6,6 +6,8 @@ namespace xharness
 	{
 		public bool ThirtyTwoBit;
 
+		public MonoNativeInfo MonoNativeInfo { get; set; }
+
 		protected override bool FixProjectReference (string name)
 		{
 			switch (name) {

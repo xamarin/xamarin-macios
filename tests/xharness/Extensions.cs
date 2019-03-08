@@ -120,7 +120,7 @@ namespace xharness
 			// 
 			// This makes it abundantly clear that the intention is to not await 'DoSomething', and no warnings will be shown either.
 		}
-	
+
 		public static IEnumerable<T> Shuffle<T> (this IEnumerable<T> collection)
 		{
 			var rnd = new Random ((int) DateTime.Now.Ticks);

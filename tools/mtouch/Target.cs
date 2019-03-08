@@ -1151,6 +1151,8 @@ namespace Xamarin.Bundler
 						}
 					}
 
+					HandleMonoNative (App, compiler_flags);
+
 					var link_task = new LinkTask ()
 					{
 						Target = this,
@@ -1562,6 +1564,8 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
 
+			HandleMonoNative (App, linker_flags);
+
 			var link_task = new NativeLinkTask
 			{
 				Target = this,
@@ -1572,6 +1576,98 @@ namespace Xamarin.Bundler
 			link_task.AddDependency (aot_dependencies);
 			build_tasks.Add (link_task);
 			return link_task;
+		}
+
+		public class MonoNativeInfo
+		{
+			public bool RequireMonoNative { get; set; }
+			public bool RequireGss { get; set; }
+
+			public void Load (string filename)
+			{
+				using (var reader = new StreamReader (filename)) {
+					string line;
+					while ((line = reader.ReadLine ()) != null) {
+						if (line.Length == 0)
+							continue;
+						var eq = line.IndexOf ('=');
+						var typestr = line.Substring (0, eq);
+						var valstr = line.Substring (eq + 1);
+						bool value = Convert.ToBoolean (valstr);
+						switch (typestr) {
+							case "RequireMonoNative":
+								RequireMonoNative = value;
+								break;
+							case "RequireGss":
+								RequireGss = value;
+								break;
+							default:
+								throw ErrorHelper.CreateError (99, $"Internal error: invalid type string while loading cached Mono.Native info: {typestr}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+						}
+					}
+				}
+			}
+
+			public void Save (string filename)
+			{
+				using (var writer = new StreamWriter (filename)) {
+					writer.WriteLine ("RequireMonoNative={0}", RequireMonoNative);
+					writer.WriteLine ("RequireGss={0}", RequireGss);
+				}
+			}
+		}
+
+		MonoNativeInfo mono_native_info;
+
+		public MonoNativeInfo MonoNative
+		{
+			get {
+				if (mono_native_info != null)
+					return mono_native_info;
+
+				mono_native_info = new MonoNativeInfo ();
+				var cache_location = Path.Combine (App.Cache.Location, "mono-native-info.txt");
+				if (cached_link) {
+					mono_native_info.Load (cache_location);
+				} else {
+					mono_native_info.RequireMonoNative = LinkContext?.RequireMonoNative ?? true;
+					mono_native_info.RequireGss = LinkContext?.RequireGss ?? true;
+					mono_native_info.Save (cache_location);
+				}
+
+				return mono_native_info;
+			}
+		}
+
+		void HandleMonoNative (Application app, CompilerFlags compiler_flags)
+		{
+			if (app.MonoNativeMode == MonoNativeMode.None)
+				return;
+			if (!MonoNative.RequireMonoNative)
+				return;
+			var libnative = app.GetLibNativeName ();
+			var libdir = Driver.GetMonoTouchLibDirectory (app);
+			Driver.Log (3, "Adding mono-native library {0} for {1}.", libnative, app);
+			switch (app.LibMonoNativeLinkMode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+				libnative = Path.Combine (libdir, libnative + ".dylib");
+				compiler_flags.AddLinkWith (libnative);
+				break;
+			case AssemblyBuildTarget.StaticObject:
+				libnative = Path.Combine (libdir, libnative + ".a");
+				compiler_flags.AddLinkWith (libnative);
+				switch (app.Platform) {
+				case ApplePlatform.iOS:
+					if (MonoNative.RequireGss) {
+						Driver.Log (3, "Adding GSS framework reference.");
+						compiler_flags.AddFramework ("GSS");
+					}
+					break;
+				}
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new.", app.LibMonoLinkMode);
+			}
 		}
 
 		public static void AdjustDylibs (string output)
@@ -1632,6 +1728,15 @@ namespace Xamarin.Bundler
 			}
 
 			Symlinked = true;
+
+			if (App.MonoNativeMode != MonoNativeMode.None) {
+				var lib_native_target = Path.Combine (TargetDirectory, "libmono-native.dylib");
+
+				var lib_native_name = App.GetLibNativeName () + ".dylib";
+				var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (App), lib_native_name);
+				Application.UpdateFile (lib_native_path, lib_native_target);
+				Driver.Log (3, "Added mono-native library {0} for {1}.", lib_native_name, App.MonoNativeMode);
+			}
 
 			if (Driver.Verbosity > 0)
 				Console.WriteLine ("Application ({0}) was built using fast-path for simulator.", string.Join (", ", Abis.ToArray ()));
