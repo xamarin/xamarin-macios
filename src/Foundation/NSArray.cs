@@ -152,25 +152,18 @@ namespace Foundation {
 			
 			IntPtr buf = Marshal.AllocHGlobal (items.Length * IntPtr.Size);
 			try {
-				NSString [] strings = new NSString [items.Length];
-				
 				for (int i = 0; i < items.Length; i++){
 					IntPtr val;
 					
 					if (items [i] == null)
 						val = NSNull.Null.Handle;
 					else {
-						strings [i] = new NSString (items [i]);
-						val = strings [i].Handle;
+						val = NSString.CreateNative (items [i], true);
 					}
 	
 					Marshal.WriteIntPtr (buf, i * IntPtr.Size, val);
 				}
 				NSArray arr = Runtime.GetNSObject<NSArray> (NSArray.FromObjects (buf, items.Length));
-				foreach (NSString ns in strings) {
-					if (ns != null)
-						ns.Dispose ();
-				}
 				return arr;
 			} finally {
 				Marshal.FreeHGlobal (buf);
