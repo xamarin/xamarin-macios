@@ -125,7 +125,7 @@ namespace CoreGraphics {
 				throw new ArgumentNullException ("name");
 			
 			using (var s = new CFString (name)){
-				handle = CGColorGetConstantColor (s.handle);
+				handle = CGColorGetConstantColor (s.Handle);
 				if (handle == IntPtr.Zero)
 					throw new ArgumentException ("name");
 				CGColorRetain (handle);
@@ -147,7 +147,7 @@ namespace CoreGraphics {
 			if (components == null)
 				throw new ArgumentNullException ("components");
 
-			handle = CGColorCreateWithPattern (colorspace.handle, pattern.handle, components);
+			handle = CGColorCreateWithPattern (colorspace.handle, pattern.Handle, components);
 			if (handle == IntPtr.Zero)
 				throw new ArgumentException ();
 		}

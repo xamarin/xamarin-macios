@@ -275,10 +275,10 @@ $(MAC_SYMLINKS): | $(MAC_DIRECTORIES)
 
 # The actual content goes into /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/FrameworkList.xml: Xamarin.Mac.Tasks/FrameworkList.xml.in Makefile | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/FrameworkList.xml: Xamarin.Mac.Tasks/Xamarin.Mac-Mobile-FrameworkList.xml.in Makefile | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild
 	$(Q) sed 's@%TargetFrameworkDirectory%@$(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac@' $< > $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/RedistList/FrameworkList.xml: Xamarin.Mac.Tasks/FrameworkList.xml.in Makefile | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/RedistList
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/RedistList/FrameworkList.xml: Xamarin.Mac.Tasks/Xamarin.Mac-Full-FrameworkList.xml.in Makefile | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/RedistList
 	$(Q) sed 's@%TargetFrameworkDirectory%@$(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5@' $< > $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/4.5/machine.config: $(TOP)/tools/mmp/machine.4_5.config | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/4.5

@@ -586,6 +586,9 @@ namespace GeneratorTests
 			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'Void set_Setter(Foundation.NSString)', but only on properties, parameters and return values.");
 		}
 
+		[Test]
+		public void GHIssue5692 () => BuildFile (Profile.iOS, "ghissue5692.cs");
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

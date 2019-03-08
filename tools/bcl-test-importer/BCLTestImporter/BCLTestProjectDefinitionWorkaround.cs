@@ -19,7 +19,7 @@ namespace BCLTestImporter
 					(assembly:"System.Core", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/System.Core.dll"),
 					(assembly:"xammac_net_4_5_Mono.CSharp_test.dll", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/tests/xammac_net_4_5_Mono.CSharp_test.dll"),
 				}},
-				{"MonoDataSqilteTests", new List<(string assembly, string hint)> {
+				{"MonoDataSqliteTests", new List<(string assembly, string hint)> {
 					(assembly:"mscorlib", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/mscorlib.dll"),
 					(assembly:"nunitlite", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/nunitlite.dll"),
 					(assembly:"Mono.Data.Sqlite", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/Mono.Data.Sqlite.dll"),
@@ -41,7 +41,7 @@ namespace BCLTestImporter
 					(assembly:"System", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/System.dll"),
 					(assembly:"xammac_net_4_5_Mono.Posix_test.dll", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/tests/xammac_net_4_5_Mono.Posix_test.dll"),
 				}},
-				{"MonoSecurtiyTests", new List<(string assembly, string hint)> {
+				{"MonoSecurityTests", new List<(string assembly, string hint)> {
 					(assembly:"mscorlib", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/mscorlib.dll"),
 					(assembly:"nunitlite", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/nunitlite.dll"),
 					(assembly:"Mono.Security", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/Mono.Security.dll"),

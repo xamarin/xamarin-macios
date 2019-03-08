@@ -76,12 +76,9 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
-    <FilesToCopyEncryptedXml Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\sample.pfx" />
-    <FilesToCopyEncryptedXml Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\EncryptedXmlSample1.xml" />
-    <FilesToCopyEncryptedXml Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\EncryptedXmlSample2.xml" />
-    <FilesToCopyEncryptedXml Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\EncryptedXmlSample3.xml" />
-    <FilesToCopyCryptographyPkcs Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Pkcs\detached.data" />
-    <FilesToCopyCryptographyPkcs Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Pkcs\detached.p7" />
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
@@ -90,8 +87,30 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <Target Name="AfterBuild">
-    <Copy SourceFiles="@(FilesToCopyEncryptedXml)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\Test\System.Security.Cryptography.Xml" />
-    <Copy SourceFiles="@(FilesToCopyCryptographyPkcs)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\Test\System.Security.Cryptography.Pkcs" />
-  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\sample.pfx">
+      <Link>Test\System.Security.Cryptography.Xml\sample.pfx</Link>
+      <LogicalName>Test/System.Security.Cryptography.Xml\sample.pfx</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\EncryptedXmlSample1.xml">
+      <Link>Test\System.Security.Cryptography.Xml\EncryptedXmlSample1.xml</Link>
+      <LogicalName>Test/System.Security.Cryptography.Xml\EncryptedXmlSample1.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\EncryptedXmlSample2.xml">
+      <Link>Test\System.Security.Cryptography.Xml\EncryptedXmlSample2.xml</Link>
+      <LogicalName>Test/System.Security.Cryptography.Xml\EncryptedXmlSample2.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Xml\EncryptedXmlSample3.xml">
+      <Link>Test\System.Security.Cryptography.Xml\EncryptedXmlSample3.xml</Link>
+      <LogicalName>Test/System.Security.Cryptography.Xml/EncryptedXmlSample3.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Pkcs\detached.data">
+      <Link>Test\System.Security.Cryptography.Pkcs\detached.data</Link>
+      <LogicalName>Test/System.Security.Cryptography.Pkcs/detached.data</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.Security\Test\System.Security.Cryptography.Pkcs\detached.p7">
+      <Link>Test\System.Security.Cryptography.Pkcs\detached.p7</Link>
+      <LogicalName>Test/System.Security.Cryptography.Pkcs/detached.p7</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

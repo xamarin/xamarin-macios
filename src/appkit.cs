@@ -589,8 +589,16 @@ namespace AppKit {
 		[Availability (Deprecated = Platform.Mac_10_12, Message = "Use EnumerateWindows instead.")]
 		NSWindow MakeWindowsPerform (Selector aSelector, bool inOrder);
 	
-		[Export ("windows")]
+#if !XAMCORE_4_0
+		[Obsolete ("Remove usage or use 'DangerousWindows' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Wrap ("DangerousWindows", IsVirtual = true)] 
 		NSWindow [] Windows { get; }
+#endif
+
+		[Advice ("Use of DangerousWindows can prevent windows from leaving memory.")]
+		[Export ("windows")]
+		NSArray<NSWindow> DangerousWindows { get; }
 	
 		[Export ("setWindowsNeedUpdate:")]
 		void SetWindowsNeedUpdate (bool needUpdate);
@@ -13238,7 +13246,7 @@ namespace AppKit {
 		void ScrollWheel (NSEvent theEvent);
 
 		//Detected properties
-		[Export ("documentView")]
+		[Export ("documentView", ArgumentSemantic.Retain), NullAllowed]
 		NSObject DocumentView { get; set; }
 
 		[Export ("contentView", ArgumentSemantic.Retain)]
@@ -17442,7 +17450,10 @@ namespace AppKit {
 		[Export ("removeTabViewItem:")][PostGet ("Items")]
 		void Remove (NSTabViewItem tabViewItem);
 
-		[Export ("delegate",  ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		NSTabViewDelegate Delegate { get; set; }
 

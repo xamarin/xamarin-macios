@@ -78,10 +78,9 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
-    <FilesToCopyResources Include="..\..\..\external\mono\mcs\class\System.IdentityModel\Test\Resources\test.cer" />
-    <FilesToCopyResources Include="..\..\..\external\mono\mcs\class\System.IdentityModel\Test\Resources\test.pfx" />
-    <FilesToCopyResources Include="..\..\..\external\mono\mcs\class\System.IdentityModel\Test\Resources\test2.pfx" />
-    <FilesToCopyResources Include="..\..\..\external\mono\mcs\class\System.IdentityModel\Test\Resources\test_neg_serial.cer" />
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
@@ -90,7 +89,22 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <Target Name="AfterBuild">
-    <Copy SourceFiles="@(FilesToCopyResources)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle\Test\Resources" />
-  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IdentityModel\Test\Resources\test.cer">
+      <Link>Test\Resources\test.cer</Link>
+      <LogicalName>Test/Resources/test.cer</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IdentityModel\Test\Resources\test.pfx">
+      <Link>Test\Resources\test.pfx</Link>
+      <LogicalName>Test/Resources/test.pfx</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IdentityModel\Test\Resources\test2.pfx">
+      <Link>Test\Resources\test2.pfx</Link>
+      <LogicalName>Test/Resources/test2.pfx</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IdentityModel\Test\Resources\test_neg_serial.cer">
+      <Link>Test\Resources\test_neg_serial.cer</Link>
+      <LogicalName>Test/Resources/test_neg_serial.cer</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

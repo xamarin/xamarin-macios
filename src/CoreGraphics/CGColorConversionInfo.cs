@@ -78,6 +78,7 @@ namespace CoreGraphics {
 		{
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public CGColorConversionInfo (NSDictionary options, params GColorConversionInfoTriple [] triples)
 		{
 			// the API won't return a valid instance if no triple is given, i.e. at least one is needed. 
@@ -92,7 +93,7 @@ namespace CoreGraphics {
 			var second = triples.Length > 1 ? triples [1] : empty; 
 			var third = triples.Length > 2 ? triples [2] : empty;
 #if !MONOMAC && !WATCH
-			if ((IntPtr.Size == 8) && (Runtime.Arch == Arch.DEVICE)) {
+			if (Runtime.IsARM64CallingConvention) {
 				Handle = CGColorConversionInfoCreateFromList_arm64 (o, NativeObjectHelper.GetHandle (first.Space), (long) first.Transform, (long) first.Intent,
 					IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero,
 					NativeObjectHelper.GetHandle (second.Space), (long) second.Transform, (long) second.Intent,

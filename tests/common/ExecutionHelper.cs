@@ -533,19 +533,20 @@ namespace Xamarin.Tests
 			return Execute (fileName, string.Join (" ", StringUtils.Quote (arguments)), throwOnError, environmentVariables, hide_output, timeout);
 		}
 
-		public static string Execute (string fileName, string arguments, bool throwOnError = true, Dictionary<string,string> environmentVariables = null,
+		public static string Execute (string fileName, string arguments, bool throwOnError = true, Dictionary<string, string> environmentVariables = null,
 			bool hide_output = false, TimeSpan? timeout = null
 		)
 		{
 			StringBuilder output = new StringBuilder ();
 			int exitCode = Execute (fileName, arguments, environmentVariables, output, output, timeout);
-			if (!hide_output) {
+			var throw_exc = throwOnError && exitCode != 0;
+			if (!hide_output || throw_exc) {
 				Console.WriteLine ("{0} {1}", fileName, arguments);
 				Console.WriteLine (output);
 				Console.WriteLine ("Exit code: {0}", exitCode);
 			}
-			if (throwOnError && exitCode != 0)
-				throw new TestExecutionException (output.ToString ());
+			if (throw_exc)
+				throw new TestExecutionException ($"Execution failed (exit code: {exitCode}) for '{fileName} {arguments}'");
 			return output.ToString ();
 		}
 	}

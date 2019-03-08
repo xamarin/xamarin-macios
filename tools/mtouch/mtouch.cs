@@ -123,15 +123,15 @@ namespace Xamarin.Bundler
 		//
 		// Output generation
 		static bool force = false;
-		static bool dot;
+		static string dotfile;
 		static string cross_prefix = Environment.GetEnvironmentVariable ("MONO_CROSS_PREFIX");
 		static string extra_args = Environment.GetEnvironmentVariable ("MTOUCH_ENV_OPTIONS");
 
 		static int verbose = GetDefaultVerbosity ();
 
-		public static bool Dot {
+		public static string DotFile {
 			get {
-				return dot;
+				return dotfile;
 			}
 		}
 
@@ -390,7 +390,7 @@ namespace Xamarin.Bundler
 			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
 			bool llvm_only = app.EnableLLVMOnlyBitCode;
 			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename));
-			bool interp_full = !interp && app.UseInterpreter && fname == "mscorlib.dll";
+			bool interp_full = !interp && app.UseInterpreter;
 			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
@@ -414,8 +414,6 @@ namespace Xamarin.Bundler
 					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.");
 				args.Append ("interp,");
 			} else if (interp_full) {
-				if (fname != "mscorlib.dll")
-					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new."); 
 				args.Append ("interp,full,");
 			} else
 				args.Append ("full,");
@@ -447,12 +445,9 @@ namespace Xamarin.Bundler
 			if (enable_llvm)
 				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append (is32bit ? "/LLVM36/bin/," : "/LLVM/bin/,");
 
-			if (!llvm_only)
-				args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
-			if (!llvm_only && enable_llvm)
-				args.Append (",");
+			args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
 			if (enable_llvm)
-				args.Append ("llvm-outfile=").Append (StringUtils.Quote (llvmOutputFile));
+				args.Append (",llvm-outfile=").Append (StringUtils.Quote (llvmOutputFile));
 			args.Append (" \"").Append (filename).Append ("\"");
 			return args.ToString ();
 		}
@@ -617,6 +612,19 @@ namespace Xamarin.Bundler
 							sw.Write (registration_methods [i]);
 							sw.WriteLine ("();");
 						}
+					}
+
+					if (app.MonoNativeMode != MonoNativeMode.None) {
+						string mono_native_lib;
+						if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject)
+							mono_native_lib = "__Internal";
+						else
+							mono_native_lib = app.GetLibNativeName () + ".dylib";
+						sw.WriteLine ();
+						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
+						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
+						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
+						sw.WriteLine ();
 					}
 
 					if (app.EnableDebug)
@@ -919,7 +927,7 @@ namespace Xamarin.Bundler
 			{ "h|?|help", "Displays the help", v => SetAction (Action.Help) },
 			{ "version", "Output version information and exit.", v => SetAction (Action.Version) },
 			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
-			{ "dot:", "Generate a dot file to visualize the build tree.", v => dot = true },
+			{ "dot:", "Generate a dot file to visualize the build tree.", v => dotfile = v ?? string.Empty },
 			{ "cache=", "Specify the directory where object files will be cached", v => app.Cache.Location = v },
 			{ "aot=", "Arguments to the static compiler",
 				v => app.AotArguments = v + (v.EndsWith (",", StringComparison.Ordinal) ? String.Empty : ",") + app.AotArguments
@@ -1528,6 +1536,18 @@ namespace Xamarin.Bundler
 			string quoted_dsym_dir = StringUtils.Quote (dsym_dir);
 			RunDsymUtil (string.Format ("{0} -t 4 -z -o {1}", quoted_app_path, quoted_dsym_dir));
 			RunCommand ("/usr/bin/mdimport", quoted_dsym_dir);
+		}
+
+		public static void RunLipo (string output, IEnumerable<string> inputs)
+		{
+			var sb = new StringBuilder ();
+			foreach (var lib in inputs) {
+				sb.Append (StringUtils.Quote (lib));
+				sb.Append (' ');
+			}
+			sb.Append ("-create -output ");
+			sb.Append (StringUtils.Quote (output));
+			RunLipo (sb.ToString ());
 		}
 
 		public static void RunLipo (string options)

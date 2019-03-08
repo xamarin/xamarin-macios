@@ -34,7 +34,7 @@ namespace Xamarin.Mac.Tests
 			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
 			foreach (var name in RegisterType.TypesToRegister.Keys) {
 				var a = RegisterType.TypesToRegister [name].Assembly;
-				yield return new TestAssemblyInfo (a, name);
+				yield return new TestAssemblyInfo (a, a.Location);
 			}
  		}
  		
@@ -77,6 +77,11 @@ namespace Xamarin.Mac.Tests
 			}
 			
 			runner.SkipCategories (categories);
+			var skippedTests = IgnoreFileParser.ParseContentFiles (NSBundle.MainBundle.ResourcePath);
+			if (skippedTests.Any ()) {
+				// ensure that we skip those tests that have been passed via the ignore files
+				runner.SkipTests (skippedTests);
+			}
 			runner.Run (testAssemblies.ToList ());
 
 			if (options.ResultFile != null) {
@@ -86,7 +91,7 @@ namespace Xamarin.Mac.Tests
 				logger.Info ($"Xml result can be found {options.ResultFile}");
 			}
 			
-			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.SkippedTests}");
+			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");
 			return runner.FailedTests != 0 ? 1 : 0;
 		}
 	}

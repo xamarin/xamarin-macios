@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
 
 namespace BCLTestImporter {
 	/// <summary>
@@ -16,7 +14,7 @@ namespace BCLTestImporter {
 
 		static string NUnitPattern = "monotouch_*_test.dll"; 
 		static string xUnitPattern = "monotouch_*_xunit-test.dll";
-		static string iOSReleasePattern = "ios-release-Darwin-*";
+		internal static readonly string ProjectGuidKey = "%PROJECT GUID%";
 		internal static readonly string NameKey = "%NAME%";
 		internal static readonly string ReferencesKey = "%REFERENCES%";
 		internal static readonly string RegisterTypeKey = "%REGISTER TYPE%";
@@ -28,6 +26,7 @@ namespace BCLTestImporter {
 		internal static readonly string TargetFrameworkVersionKey = "%TARGET FRAMEWORK VERSION%";
 		internal static readonly string TargetExtraInfoKey = "%TARGET EXTRA INFO%";
 		internal static readonly string DefineConstantsKey = "%DEFINE CONSTANTS%";
+		internal static readonly string DownloadPathKey = "%DOWNLOAD PATH%";
 		static readonly Dictionary<Platform, string> plistTemplateMatches = new Dictionary<Platform, string> {
 			{Platform.iOS, "Info.plist.in"},
 			{Platform.TvOS, "Info-tv.plist.in"},
@@ -97,6 +96,8 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}),
 			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}),
 			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}),
+			(name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}),
+			(name:"SystemWebServicesTests", assemblies: new [] {"monotouch_System.Web.Services_test.dll"}),
 
 			// XUNIT TESTS 
 
@@ -106,6 +107,13 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityXunit", assemblies: new [] {"monotouch_System.Security_xunit-test.dll"}),
 			(name:"SystemLinqXunit", assemblies: new [] {"monotouch_System.Xml.Linq_xunit-test.dll"}),
 			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
+			(name:"SystemComponentModelCompositionXunit", assemblies: new [] {"monotouch_System.ComponentModel.Composition_xunit-test.dll"}),
+			(name:"SystemCoreXunit", assemblies: new [] {"monotouch_System.Core_xunit-test.dll"}),
+			(name:"SystemRuntimeSerializationXunit", assemblies: new [] {"monotouch_System.Runtime.Serialization_xunit-test.dll"}),
+			(name:"SystemXmlXunit", assemblies: new [] {"monotouch_System.Xml_xunit-test.dll"}),
+			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}),
+			(name:"CorlibXunit", assemblies: new [] {"monotouch_corlib_xunit-test.dll"}),
+			(name:"MicrosoftCSharpXunit", assemblies: new [] {"monotouch_Microsoft.CSharp_xunit-test.dll"}),
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
@@ -137,10 +145,10 @@ namespace BCLTestImporter {
 		
 			// NUNIT Projects
 			(name:"MonoCSharpTests", assemblies: new [] {"xammac_net_4_5_Mono.CSharp_test.dll"}),
-			(name:"MonoDataSqilteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
+			(name:"MonoDataSqliteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}),
 			(name:"MonoDataTdsTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}),
 			(name:"MonoPoxisTests", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}),
-			(name:"MonoSecurtiyTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
+			(name:"MonoSecurityTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}),
 			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll"}),
 			(name:"SystemConfigurationTests", assemblies: new [] {"xammac_net_4_5_System.Configuration_test.dll"}),
 			(name:"SystemCoreTests", assemblies: new [] {"xammac_net_4_5_System.Core_test.dll"}),
@@ -173,35 +181,23 @@ namespace BCLTestImporter {
 			(name:"CorlibXunit", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}),
 		};
 		
-		static readonly List<string> macIgnoredAssemblies = new List<string> {
-			"xammac_net_4_5_corlib_test.dll	", // exception when loading the image via refection
-			"xammac_net_4_5_I18N.CJK_test.dll",
-			"xammac_net_4_5_I18N.MidEast_test.dll",
-			"xammac_net_4_5_I18N.Other_test.dll",
-			"xammac_net_4_5_I18N.Rare_test.dll",
-			"xammac_net_4_5_I18N.West_test.dll",
-			"xammac_net_4_5_Mono.CSharp_test.dll", //issue https://github.com/xamarin/maccore/issues/1186 
-			"xammac_net_4_5_Mono.Data.Sqlite_test.dll", // issue https://github.com/xamarin/maccore/issues/1187
-			"xammac_net_4_5_Mono.Posix_test.dll", // issue https://github.com/xamarin/maccore/issues/1188
-			"xammac_net_4_5_Mono.Posix_test.dll", // issues https://github.com/xamarin/maccore/issues/1189 and https://github.com/xamarin/maccore/issues/1190
-			"xammac_net_4_5_System.Core_test.dll", // issue https://github.com/xamarin/maccore/issues/1191
-			"xammac_net_4_5_System.Data_test.dll", // issues https://github.com/xamarin/maccore/issues/1192 and https://github.com/xamarin/maccore/issues/1193
-			"xammac_net_4_5_System.IdentityModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1194
-			"xammac_net_4_5_System.IO.Compression.FileSystem_test.dll", // issues https://github.com/xamarin/maccore/issues/1195
-			"xammac_net_4_5_System.IO.Compression_test.dll", // issue https://github.com/xamarin/maccore/issues/1146
-			"xammac_net_4_5_System.IdentityModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1196
-			"xammac_net_4_5_System.Security_test.dll", // issue https://github.com/xamarin/maccore/issues/1197
-			"xammac_net_4_5_System.ServiceModel_test.dll", // issues https://github.com/xamarin/maccore/issues/1198
-			"xammac_net_4_5_System_test.dll", // issues https://github.com/xamarin/maccore/issues/1199
-			"xammac_net_4_5_System.Transactions_test.dll", // issues https://github.com/xamarin/maccore/issues/1200
-			"xammac_net_4_5_System.Xml_test.dll", // issues https://github.com/xamarin/maccore/issues/1201 and https://github.com/xamarin/maccore/issues/1202
-			"xammac_net_4_5_corlib_xunit-test.dll", // issues https://github.com/xamarin/maccore/issues/1203
-			"xammac_net_4_5_System.Core_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1204
-			"xammac_net_4_5_System.Data_xunit-test.dll", // issue https://gist.github.com/mandel-macaque/3f4d1eeca511cb8654fb518cc3bb2e92
-			"xammac_net_4_5_System_xunit-test.dll", // issue https://github.com/xamarin/maccore/issues/1209
-			"xammac_net_4_5_System.Configuration_test.dll", // issue https://github.com/xamarin/maccore/issues/1189 and https://github.com/xamarin/maccore/issues/1190
-			"xammac_net_4_5_System.Security_xunit-test.dll", // https://github.com/xamarin/maccore/issues/1243
-			
+		static readonly List<(string assembly, Platform[] platforms)> macIgnoredAssemblies = new List<(string assembly, Platform[] platforms)> {
+			(assembly: "xammac_net_4_5_corlib_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // exception when loading the image via refection
+			(assembly: "xammac_net_4_5_I18N.CJK_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
+			(assembly: "xammac_net_4_5_I18N.MidEast_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
+			(assembly: "xammac_net_4_5_I18N.Other_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
+			(assembly: "xammac_net_4_5_I18N.Rare_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
+			(assembly: "xammac_net_4_5_I18N.West_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
+			(assembly: "xammac_net_4_5_System.Core_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1191
+			(assembly: "xammac_net_4_5_System.Data_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1192 and https://github.com/xamarin/maccore/issues/1193
+			(assembly: "xammac_net_4_5_System.Security_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1197
+			(assembly: "xammac_net_4_5_System_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1199
+			(assembly: "xammac_net_4_5_System.Xml_test.dll", platforms: new [] { Platform.MacOSModern }), // ignored in modern because tests use System.Xml.Serialization.Advanced.SchemaImporterExtension
+			(assembly: "xammac_net_4_5_corlib_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1203
+			(assembly: "xammac_net_4_5_System.Core_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1204
+			(assembly: "xammac_net_4_5_System_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1209
+			(assembly: "xammac_net_4_5_System.Configuration_test.dll", platforms: new [] { Platform.MacOSModern }), // Not present in modern, ergo all tests will fail
+			(assembly: "xammac_net_4_5_System.Security_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // https://github.com/xamarin/maccore/issues/1243
 		};
 
 		readonly bool isCodeGeneration;
@@ -212,6 +208,7 @@ namespace BCLTestImporter {
 		public string ProjectTemplateRootPath { get; private set; }
 		public string PlistTemplateRootPath{ get; private set; }
 		public string RegisterTypesTemplatePath { get; private set; }
+		public Func<string, Guid> GuidGenerator { get; set; }
 		string GeneratedCodePathRoot => Path.Combine (OutputDirectoryPath, "generated");
 		string WatchContainerTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "Container").Replace ("/", "\\");
 		string WatchAppTemplatePath => Path.Combine (OutputDirectoryPath, "templates", "watchOS", "App").Replace ("/", "\\");
@@ -353,18 +350,19 @@ namespace BCLTestImporter {
 
 		internal static string GetCommonIgnoreFileName (string projectName) => $"common-{projectName}.ignore";
 		
-		internal static string GetIgnoreFileName (string projectName, Platform platform)
+		internal static string[] GetIgnoreFileNames (string projectName, Platform platform)
 		{
 			switch (platform) {
 			case Platform.iOS:
-				return $"iOS-{projectName}.ignore";
+				return new string [] { $"iOS-{projectName}.ignore" };
 			case Platform.MacOSFull:
+				return new string [] { $"macOSFull-{projectName}.ignore", $"macOS-{projectName}.ignore" };
 			case Platform.MacOSModern:
-				return $"macOS-{projectName}.ignore";
+				return new string [] { $"macOSModern-{projectName}.ignore", $"macOS-{projectName}.ignore" };
 			case Platform.TvOS:
-				return $"tvOS-{projectName}.ignore";
+				return new string [] { $"tvOS-{projectName}.ignore" };
 			case Platform.WatchOS:
-				return $"watchOS-{projectName}.ignore";
+				return new string [] { $"watchOS-{projectName}.ignore" };
 			default:
 				return null;
 			}
@@ -378,9 +376,11 @@ namespace BCLTestImporter {
 			var commonIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (projectName));
 			if (File.Exists (commonIgnore))
 				yield return commonIgnore;
-			var platformIgnore = Path.Combine (templateDir, GetIgnoreFileName (projectName, platform));
-			if (File.Exists (platformIgnore))
-				yield return platformIgnore;
+			foreach (var platformFile in GetIgnoreFileNames (projectName, platform)) {
+				var platformIgnore = Path.Combine (templateDir, platformFile);
+				if (File.Exists (platformIgnore))
+					yield return platformIgnore;
+			}
 		}
 
 		/// <summary>
@@ -403,8 +403,9 @@ namespace BCLTestImporter {
 				case Platform.WatchOS:
 					return watcOSIgnoredAssemblies.Contains (a.Name);
 				case Platform.MacOSFull:
+					return macIgnoredAssemblies.Any ((ignored) => (ignored.assembly == a.Name) && ignored.platforms.Contains (Platform.MacOSFull));
 				case Platform.MacOSModern:
-					return macIgnoredAssemblies.Contains (a.Name);
+					return macIgnoredAssemblies.Any ((ignored) => (ignored.assembly == a.Name) && ignored.platforms.Contains (Platform.MacOSModern));
 				}
 			}
 			return false;
@@ -602,7 +603,7 @@ namespace BCLTestImporter {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
+		public async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
 			IEnumerable<(string name, string[] assemblies)> projects, Platform platform, string generatedDir)
 		{
 			var result = new List<(string name, string path, bool xunit, string failure)> ();
@@ -695,8 +696,9 @@ namespace BCLTestImporter {
 		/// <param name="templatePath">A path to the template used to generate the path.</param>
 		/// <param name="infoPlistPath">The path to the info plist of the project.</param>
 		/// <returns></returns>
-		static async Task<string> GenerateAsync (string projectName, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, string infoPlistPath, Platform platform)
+		async Task<string> GenerateAsync (string projectName, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, string infoPlistPath, Platform platform)
 		{
+			var downloadPath = GetReleaseDownload (platform).Replace ("/", "\\");
 			// fix possible issues with the paths to be included in the msbuild xml
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
@@ -713,9 +715,11 @@ namespace BCLTestImporter {
 			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
 				contentFiles.Append (GetContentNode (path));
 			}
-
+			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
+				result = result.Replace (DownloadPathKey, downloadPath);
+				result = result.Replace (ProjectGuidKey, projectGuid.ToString ().ToUpperInvariant ());
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
@@ -725,7 +729,7 @@ namespace BCLTestImporter {
 			}
 		}
 		
-		static async Task<string> GenerateMacAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform)
+		async Task<string> GenerateMacAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform)
 		{
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
@@ -738,8 +742,10 @@ namespace BCLTestImporter {
 			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
 				contentFiles.Append (GetContentNode (path));
 			}
+			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
+				result = result.Replace (ProjectGuidKey, projectGuid.ToString ().ToUpperInvariant ());
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
@@ -747,7 +753,7 @@ namespace BCLTestImporter {
 				result = result.Replace (ContentKey, contentFiles.ToString ());
 				switch (platform){
 				case Platform.MacOSFull:
-					result = result.Replace (TargetFrameworkVersionKey, "v4.5");
+					result = result.Replace (TargetFrameworkVersionKey, "v4.5.2");
 					result = result.Replace (TargetExtraInfoKey,
 						"<UseXamMacFullFramework>true</UseXamMacFullFramework>");
 					result = result.Replace (DefineConstantsKey, "XAMCORE_2_0;ADD_BCL_EXCLUSIONS;XAMMAC_4_5");
@@ -793,6 +799,7 @@ namespace BCLTestImporter {
 
 		async Task<string> GenerateWatchExtensionAsync (string projectName, string templatePath, string infoPlistPath, string registerPath, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info)
 		{
+			var downloadPath = GetReleaseDownload (Platform.WatchOS).Replace ("/", "\\");
 			var sb = new StringBuilder ();
 			if (!string.IsNullOrEmpty (info.FailureMessage)) {
 				WriteReferenceFailure (sb, info.FailureMessage);
@@ -810,6 +817,7 @@ namespace BCLTestImporter {
 			
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
+				result = result.Replace (DownloadPathKey, downloadPath);
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (WatchOSTemplatePathKey, WatchExtensionTemplatePath);
 				result = result.Replace (PlistKey, infoPlistPath);
@@ -854,8 +862,8 @@ namespace BCLTestImporter {
 		{
 			missingAssemblies = new Dictionary<Platform, List<string>> ();
 			foreach (var platform in new [] {Platform.iOS, Platform.TvOS}) {
-				var testDir = wasDownloaded ? BCLTestAssemblyDefinition.GetTestDirectoryFromMonoPath (MonoRootPath, platform)
-					: BCLTestAssemblyDefinition.GetTestDirectoryFromDownloadsPath (GetReleaseDownload (platform), platform); 
+				var testDir = wasDownloaded ? BCLTestAssemblyDefinition.GetTestDirectoryFromDownloadsPath (GetReleaseDownload (platform), platform)
+					: BCLTestAssemblyDefinition.GetTestDirectoryFromMonoPath (MonoRootPath, platform);
 				var missingAssembliesPlatform = Directory.GetFiles (testDir, NUnitPattern).Select (Path.GetFileName).Union (
 					Directory.GetFiles (testDir, xUnitPattern).Select (Path.GetFileName)).ToList ();
 				

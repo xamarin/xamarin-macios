@@ -495,6 +495,9 @@ namespace Xamarin.Bundler {
 					switch (file) {
 					// special case
 					case "__Internal":
+					case "System.Native":
+					case "System.Security.Cryptography.Native.Apple":
+					case "System.Net.Security.Native":
 					// well known libs
 					case "libc":
 					case "libSystem":
@@ -605,6 +608,12 @@ namespace Xamarin.Bundler {
 
 				if (culture_name.IndexOf ('.') >= 0)
 					continue; // cultures can't have dots. This way we don't check every *.app directory
+
+				switch (culture_name) {
+				case "Facades":
+				case "repl":
+					continue;
+				}
 
 				try {
 					ci = CultureInfo.GetCultureInfo (culture_name);

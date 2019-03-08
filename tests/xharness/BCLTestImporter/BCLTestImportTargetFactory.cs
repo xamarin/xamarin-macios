@@ -24,6 +24,7 @@ namespace xharness.BCLTestImporter {
 			projectGenerator = new BCLTestProjectGenerator (outputDir, Harness.MONO_PATH, projectTemplatePath, registerTypesTemplatePath, plistTemplatePath) {
 				iOSMonoSDKPath = Harness.MONO_SDK_DESTDIR,
 				Override = true,
+				GuidGenerator = Harness.NewStableGuid,
 			};
 		}
 		
@@ -39,6 +40,7 @@ namespace xharness.BCLTestImporter {
 					SkiptvOSVariation = !platforms.Contains (Platform.TvOS),
 					SkipwatchOSVariation = !platforms.Contains (Platform.WatchOS),
 					FailureMessage = failure,
+					RestoreNugetsInProject = true,
 				});
 			}
 			return result;
@@ -59,6 +61,7 @@ namespace xharness.BCLTestImporter {
 					Platform = "AnyCPU",
 					IsExecutableProject = true,
 					FailureMessage = failure,
+					RestoreNugetsInProject = true,
 					Dependency = async () => {
 						var rv = await Harness.BuildBclTests ();
 						if (!rv.Succeeded)
@@ -79,3 +82,4 @@ namespace xharness.BCLTestImporter {
 		}
 	}
 }
+

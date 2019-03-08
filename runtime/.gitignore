@@ -1,5 +1,4 @@
 .libs
-zlib-helper.c
 delegates.inc
 Delegates.generated.cs
 delegates.h

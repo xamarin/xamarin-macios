@@ -90,17 +90,17 @@ namespace Xamarin.MMP.Tests
 				switch (mode) {
 				case "linker":
 				case "default":
-                    build_output = output.BuildOutput;
+					build_output = output.BuildOutput;
 					Assert.That (build_output, Does.Contain ("-u "), "reference.m");
 					Assert.That (build_output, Does.Not.Contain ("reference.m"), "reference.m");
 					break;
 				case "code":
-					build_output = output.BuildOutput.Replace ("-u _SystemNative_RealPath", String.Empty);
+					build_output = output.BuildOutput;
 					Assert.That (build_output, Does.Not.Contain ("-u "), "reference.m");
 					Assert.That (build_output, Does.Contain ("reference.m"), "reference.m");
 					break;
 				case "ignore":
-					build_output = output.BuildOutput.Replace ("-u _SystemNative_RealPath", String.Empty);
+					build_output = output.BuildOutput;
 					Assert.That (build_output, Does.Not.Contain ("-u "), "reference.m");
 					Assert.That (build_output, Does.Not.Contain ("reference.m"), "reference.m");
 					break;

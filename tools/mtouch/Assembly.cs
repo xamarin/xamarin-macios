@@ -247,7 +247,8 @@ namespace Xamarin.Bundler {
 			var asm = Path.Combine (asm_dir, Path.GetFileName (assembly_path)) + ".s";
 			var data = Path.Combine (asm_dir, Path.GetFileNameWithoutExtension (assembly_path)) + ".aotdata" + "." + arch;
 			var llvm_aot_ofile = "";
-			var asm_output = "";
+			var asm_output = (string) null;
+			var other_output = string.Empty;
 			var is_llvm = (abi & Abi.LLVM) == Abi.LLVM;
 
 			Directory.CreateDirectory (asm_dir);
@@ -262,6 +263,7 @@ namespace Xamarin.Bundler {
 				// In llvm-only mode, the AOT compiler emits a .bc file and no .s file for JITted code
 				llvm_aot_ofile = Path.Combine (asm_dir, Path.GetFileName (assembly_path)) + ".bc";
 				aotInfo.BitcodeFiles.Add (llvm_aot_ofile);
+				other_output = Path.Combine (asm_dir, Path.GetFileName (assembly_path)) + "-output";
 			} else if (is_llvm) {
 				if (Driver.GetLLVMAsmWriter (App)) {
 					llvm_aot_ofile = Path.Combine (asm_dir, Path.GetFileName (assembly_path)) + "-llvm.s";
@@ -280,7 +282,7 @@ namespace Xamarin.Bundler {
 			aotInfo.AotDataFiles.Add (data);
 
 			var aotCompiler = Driver.GetAotCompiler (App, Target.Is64Build);
-			var aotArgs = Driver.GetAotArguments (App, assembly_path, abi, build_dir, asm_output, llvm_aot_ofile, data);
+			var aotArgs = Driver.GetAotArguments (App, assembly_path, abi, build_dir, asm_output ?? other_output, llvm_aot_ofile, data);
 			var task = new AOTTask
 			{
 				Assembly = this,

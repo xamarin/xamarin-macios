@@ -151,7 +151,7 @@ namespace CoreFoundation {
 		public string GetStringValue (string key)
 		{
 			using (var str = new CFString (key)) {
-				return CFString.FetchString (CFDictionaryGetValue (Handle, str.handle));
+				return CFString.FetchString (CFDictionaryGetValue (Handle, str.Handle));
 			}
 		}
 
@@ -178,14 +178,14 @@ namespace CoreFoundation {
 		public IntPtr GetIntPtrValue (string key)
 		{
 			using (var str = new CFString (key)) {
-				return CFDictionaryGetValue (Handle, str.handle);
+				return CFDictionaryGetValue (Handle, str.Handle);
 			}
 		}
 
 		public CFDictionary GetDictionaryValue (string key)
 		{
 			using (var str = new CFString (key)) {
-				var ptr = CFDictionaryGetValue (Handle, str.handle);
+				var ptr = CFDictionaryGetValue (Handle, str.Handle);
 				return ptr == IntPtr.Zero ? null : new CFDictionary (ptr);
 			}
 		}
@@ -193,7 +193,7 @@ namespace CoreFoundation {
 		public bool ContainsKey (string key)
 		{
 			using (var str = new CFString (key)) {
-				return CFDictionaryContainsKey (Handle, str.handle);
+				return CFDictionaryContainsKey (Handle, str.Handle);
 			}
 		}
 

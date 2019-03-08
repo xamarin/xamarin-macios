@@ -259,6 +259,7 @@ namespace ObjCRuntime {
 #if !XAMMAC_SYSTEM_MONO
 			UseAutoreleasePoolInThreadPool = true;
 #endif
+			IsARM64CallingConvention = GetIsARM64CallingConvention (); // Can only be done after Runtime.Arch is set (i.e. InitializePlatform has been called).
 
 			objc_exception_mode = options->MarshalObjectiveCExceptionMode;
 			managed_exception_mode = options->MarshalManagedExceptionMode;
@@ -1585,12 +1586,13 @@ namespace ObjCRuntime {
 		extern static void NSLog_arm64 (IntPtr format, IntPtr p2, IntPtr p3, IntPtr p4, IntPtr p5, IntPtr p6, IntPtr p7, IntPtr p8, [MarshalAs (UnmanagedType.LPStr)] string s);
 #endif
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static void NSLog (string format, params object[] args)
 		{
 			var fmt = NSString.CreateNative ("%s");
 			var val = (args == null || args.Length == 0) ? format : string.Format (format, args);
 #if !MONOMAC && !WATCHOS
-			if (IntPtr.Size == 8 && Arch == Arch.DEVICE)
+			if (IsARM64CallingConvention)
 				NSLog_arm64 (fmt, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, val);
 			else
 #endif
@@ -1710,8 +1712,56 @@ namespace ObjCRuntime {
 			}
 			return obj;
 		}
+
+
+		enum NXByteOrder /* unspecified in header, means most likely int */ {
+			Unknown,
+			LittleEndian,
+			BigEndian,
+		}
+
+		[StructLayout (LayoutKind.Sequential)]
+		struct NXArchInfo {
+			IntPtr name; // const char *
+			public int CpuType; // cpu_type_t -> integer_t -> int
+			public int CpuSubType; // cpu_subtype_t -> integer_t -> int
+			public NXByteOrder ByteOrder;
+			IntPtr description; // const char *
+
+			public string Name {
+				get { return Marshal.PtrToStringUTF8 (name); }
+			}
+
+			public string Description {
+				get { return Marshal.PtrToStringUTF8 (description); }
+			}
+		}
+
+		[DllImport (Constants.libSystemLibrary)]
+		static unsafe extern NXArchInfo* NXGetLocalArchInfo ();
+
+		public static bool IsARM64CallingConvention;
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		static bool GetIsARM64CallingConvention ()
+		{
+#if MONOMAC
+			return false;
+#elif __IOS__ || __TVOS__
+			return IntPtr.Size == 8 && Arch == Arch.DEVICE;
+#elif __WATCHOS__
+			if (Arch != Arch.DEVICE)
+				return false;
+			unsafe {
+				// We're assuming Apple will only release arm64-based watch cpus from now on (i.e. only non-arm64 cpu is armv7k).
+				return NXGetLocalArchInfo ()->Name != "armv7k";
+			}
+#else
+#error Unknown platform
+#endif
+		}
 	}
-		
+	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>
 	{
 		public bool Equals (IntPtr x, IntPtr y)

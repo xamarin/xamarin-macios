@@ -195,15 +195,17 @@ namespace xharness
 		}
 
 		// Create a new log backed with a file
-		public LogFile Create (string filename, string name)
+		public LogFile Create (string filename, string name, bool? timestamp = null)
 		{
-			return Create (Directory, filename, name);
+			return Create (Directory, filename, name, timestamp);
 		}
 
-		LogFile Create (string directory, string filename, string name)
+		LogFile Create (string directory, string filename, string name, bool? timestamp = null)
 		{
 			System.IO.Directory.CreateDirectory (directory);
 			var rv = new LogFile (this, name, Path.GetFullPath (Path.Combine (directory, filename)));
+			if (timestamp.HasValue)
+				rv.Timestamp = timestamp.Value;
 			Add (rv);
 			return rv;
 		}

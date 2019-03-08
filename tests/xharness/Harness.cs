@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -268,18 +269,11 @@ namespace xharness
 				"System",
 				"System.Core",
 				"System.Data",
-				"System.Net.Http",
-				"System.Numerics",
 				"System.Runtime.Serialization",
 				"System.Transactions", "System.Web.Services",
 				"System.Xml",
-				"System.Xml.Linq",
-				"Mono.Security",
-				"System.ComponentModel.DataAnnotations",
-				"System.Json",
 				"System.ServiceModel.Web",
 				"Mono.Data.Sqlite",
-				"Mono.Data.Tds",
 				"System.IO.Compression",
 				"System.IO.Compression.FileSystem",
 				"Mono.CSharp",
@@ -299,6 +293,20 @@ namespace xharness
 					MacTestProjects.Add (bclTestProject);
 				}
 			}
+
+			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+				foreach (var macFlavor in new MacFlavors[] { MacFlavors.Full, MacFlavors.Modern }) {
+					var monoNativeInfo = new MacMonoNativeInfo (this, flavor, macFlavor);
+					var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: macFlavor, generateVariations: true) {
+						MonoNativeInfo = monoNativeInfo,
+						Name = monoNativeInfo.ProjectName,
+						Platform = "AnyCPU"
+					};
+
+					MacTestProjects.Add (macTestProject);
+				}
+			}
+
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
 			MacTestProjects.AddRange (monoImportTestFactory.GetMacBclTargets ());
 		}
@@ -311,33 +319,18 @@ namespace xharness
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 			var bcl_suites = new string [] {
 				"mscorlib",
-				"System",
-				"System.Core",
 				"System.Data",
 				"System.Net.Http",
-				"System.Numerics",
-				"System.Runtime.Serialization",
-				"System.Transactions",
 				"System.Web.Services",
 				"System.Xml",
-				"System.Xml.Linq",
-				"Mono.Security",
-				"System.ComponentModel.DataAnnotations",
-				"System.Json",
-				"System.ServiceModel.Web",
 				"Mono.Data.Sqlite",
-				"Mono.Data.Tds",
 				"System.IO.Compression",
 				"System.IO.Compression.FileSystem",
-				"Mono.CSharp",
-				"System.Security",
 				"System.ServiceModel",
 				"System.IdentityModel",
 			};
 			var bcl_skip_watchos = new string [] {
-				"Mono.Security",
 				"Mono.Data.Tds",
-				"Mono.CSharp",
 			};
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
@@ -363,6 +356,16 @@ namespace xharness
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+
+			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+				var monoNativeInfo = new MonoNativeInfo (this, flavor);
+				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath, generateVariations: false) {
+					MonoNativeInfo = monoNativeInfo,
+					Name = monoNativeInfo.ProjectName
+				};
+
+				IOSTestProjects.Add (iosTestProject);
+			}
 
 			// add all the tests that are using the precompiled mono assemblies
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
@@ -443,9 +446,15 @@ namespace xharness
 
 			foreach (var bclTestInfo in MacTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
 				bclTestInfo.Convert ();
- 
+			foreach (var monoNativeInfo in MacTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+				monoNativeInfo.Convert ();
+
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
 				var file = Path.ChangeExtension (proj.Path, "csproj");
+
+				if (proj.MonoNativeInfo != null)
+					file = proj.MonoNativeInfo.TemplatePath;
+
 				if (!File.Exists (file)) {
 					Console.WriteLine ($"Can't find the project file {file}.");
 					rv = 1;
@@ -456,12 +465,14 @@ namespace xharness
 				{
 					if (proj.GenerateModern) {
 						var modern = new MacUnifiedTarget (true, thirtyTwoBit);
+						modern.MonoNativeInfo = proj.MonoNativeInfo;
 						configureTarget (modern, file, proj.IsNUnitProject);
 						unified_targets.Add (modern);
 					}
 
 					if (proj.GenerateFull) {
 						var full = new MacUnifiedTarget (false, thirtyTwoBit);
+						full.MonoNativeInfo = proj.MonoNativeInfo;
 						configureTarget (full, file, proj.IsNUnitProject);
 						unified_targets.Add (full);
 					}
@@ -474,9 +485,11 @@ namespace xharness
 					unified_targets.Add (system);
 				}
 
-				var classic = new MacClassicTarget ();
-				configureTarget (classic, file, false);
-				classic_targets.Add (classic);
+				if (proj.MonoNativeInfo == null) {
+					var classic = new MacClassicTarget ();
+					configureTarget (classic, file, false);
+					classic_targets.Add (classic);
+				}
 			}
  
 			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
@@ -507,9 +520,15 @@ namespace xharness
 
 			foreach (var bclTestInfo in IOSTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
 				bclTestInfo.Convert ();
+			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+				monoNativeInfo.Convert ();
 
 			foreach (var proj in IOSTestProjects) {
 				var file = proj.Path;
+
+				if (proj.MonoNativeInfo != null)
+					file = proj.MonoNativeInfo.TemplatePath;
+
 				if (!File.Exists (file)) {
 					Console.WriteLine ($"Can't find the project file {file}.");
 					rv = 1;
@@ -574,9 +593,11 @@ namespace xharness
 					ProjectFile = project.Path,
 					MainLog = HarnessLog,
 				};
-				var rv = runner.InstallAsync ().Result;
-				if (!rv.Succeeded)
-					return rv.ExitCode;
+				using (var install_log = new AppInstallMonitorLog (runner.MainLog)) {
+					var rv = runner.InstallAsync (install_log.CancellationToken).Result;
+					if (!rv.Succeeded)
+						return rv.ExitCode;
+				}
 			}
 			return 0;
 		}
@@ -770,10 +791,17 @@ namespace xharness
 		// Nothing really breaks when the sequence isn't identical from run to run, so
 		// this is just a best minimal effort.
 		static Random guid_generator = new Random (unchecked ((int) 0xdeadf00d));
-		public Guid NewStableGuid ()
+		public Guid NewStableGuid (string seed = null)
 		{
 			var bytes = new byte [16];
-			guid_generator.NextBytes (bytes);
+			if (seed == null) {
+				guid_generator.NextBytes (bytes);
+			} else {
+				using (var provider = MD5.Create ()) {
+					var inputBytes = Encoding.UTF8.GetBytes (seed);
+					bytes = provider.ComputeHash (inputBytes);
+				}
+			}
 			return new Guid (bytes);
 		}
 

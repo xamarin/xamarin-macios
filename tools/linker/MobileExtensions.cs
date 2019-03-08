@@ -92,7 +92,7 @@ namespace Xamarin.Linker {
 			return GetBindingImplAttribute (provider, context?.GetCustomAttributes (provider, Namespaces.ObjCRuntime, "BindingImplAttribute"));
 		}
 
-		static PropertyDefinition GetPropertyByAccessor (MethodDefinition method)
+		public static PropertyDefinition GetPropertyByAccessor (this MethodDefinition method)
 		{
 			foreach (PropertyDefinition property in method.DeclaringType.Properties) {
 				if (property.GetMethod == method || property.SetMethod == method)

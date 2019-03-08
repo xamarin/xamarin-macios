@@ -621,7 +621,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 				File.WriteAllText (plist_path, info_plist);
 		}
 
-		public void CreateTemporaryWatchKitExtension (string code = null)
+		public void CreateTemporaryWatchKitExtension (string code = null, string extraCode = null, string extraArg = "")
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -641,9 +641,12 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 }";
 			}
 
+			if (extraCode != null)
+				code += extraCode;
+
 			AppPath = app;
 			Extension = true;
-			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, extraArg: extraArg, profile: Profile);
 
 			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">

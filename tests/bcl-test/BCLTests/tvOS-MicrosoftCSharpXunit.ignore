@@ -1,0 +1,6 @@
+# Exception messages: System.ArgumentException : Missing parameter does not have a default value.
+Microsoft.CSharp.RuntimeBinder.Tests.DefaultParameterTests.MarshalAsOptionalsCorrectDefault
+
+# System.NotImplementedException
+Microsoft.CSharp.RuntimeBinder.Tests.DelegateInDynamicTests.DelegateWithOutParametersInDynamicNamedArgumentInvocation
+Microsoft.CSharp.RuntimeBinder.Tests.DelegateInDynamicTests.DelegateWithOutParameterInDynamic

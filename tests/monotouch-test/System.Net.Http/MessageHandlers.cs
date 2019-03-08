@@ -53,14 +53,14 @@ namespace MonoTests.System.Net.Http
 			PrintHandlerToTest ();
 
 			bool done = false;
+			string response = null;
 			Exception ex = null;
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
 			{
 				try {
 					HttpClient client = new HttpClient (GetHandler (handlerType));
-					var s = await client.GetStringAsync ("http://doesnotexist.xamarin.com");
-					Console.WriteLine (s);
+					response = await client.GetStringAsync ("http://doesnotexist.xamarin.com");
 				} catch (Exception e) {
 					ex = e;
 				} finally {
@@ -69,6 +69,7 @@ namespace MonoTests.System.Net.Http
 			}, () => done);
 
 			Assert.IsTrue (done, "Did not time out");
+			Assert.IsNull (response, $"Response is not null {response}");
 			Assert.IsNotNull (ex, "Exception");
 			// The handlers throw different types of exceptions, so we can't assert much more than that something went wrong.			
 		}
@@ -149,10 +150,14 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
-			Assert.IsTrue (done, "Request timedout.");
-			Assert.IsTrue (containsHeaders, "Request did not reach final destination.");
-			Assert.IsFalse (containsAuthorizarion, $"Authorization header did reach the final destination. {json}");
-			Assert.IsNull (ex, $"Exception {ex} for {json}");
+			if (!done) { // timeouts happen in the bost due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else if (!containsHeaders) {
+				Assert.Inconclusive ("Response from httpbin does not contain headers, therefore we cannot ensure that if the authoriation is present.");
+			} else {
+				Assert.IsFalse (containsAuthorizarion, $"Authorization header did reach the final destination. {json}");
+				Assert.IsNull (ex, $"Exception {ex} for {json}");
+			}
 		}
 	}
 }

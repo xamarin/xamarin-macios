@@ -94,13 +94,18 @@ namespace xharness
 							});
 						}
 
-						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair")) {
+
+						var sim_device_pairs = simulator_data.
+							SelectNodes ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair").
+							Cast<XmlNode> ().
+							// There can be duplicates, so remove those.
+							Distinct (new SimulatorXmlNodeComparer ());
+						foreach (XmlNode sim in sim_device_pairs) {
 							available_device_pairs.Add (new SimDevicePair ()
 							{
 								UDID = sim.Attributes ["UDID"].Value,
 								Companion = sim.SelectSingleNode ("Companion").InnerText,
 								Gizmo = sim.SelectSingleNode ("Gizmo").InnerText,
-
 							});
 						}
 					}
@@ -317,6 +322,19 @@ namespace xharness
 				Target = target,
 				Log = log,
 			};
+		}
+
+		class SimulatorXmlNodeComparer : IEqualityComparer<XmlNode>
+		{
+			public bool Equals (XmlNode a, XmlNode b)
+			{
+				return a["Gizmo"].InnerText == b["Gizmo"].InnerText && a["Companion"].InnerText == b["Companion"].InnerText;
+			}
+
+			public int GetHashCode (XmlNode node)
+			{
+				return node["Gizmo"].InnerText.GetHashCode () ^ node["Companion"].InnerText.GetHashCode ();
+			}
 		}
 
 		class SimulatorEnumerable : IEnumerable<SimDevice>, IAsyncEnumerable
@@ -813,6 +831,14 @@ namespace xharness
 					throw new NotImplementedException ();
 				}
 			}
+		}
+
+		public bool IsSupported (iOSTestProject project)
+		{
+			if (project.MonoNativeInfo == null)
+				return true;
+			var min_version = MonoNativeHelper.GetMinimumOSVersion (DevicePlatform, project.MonoNativeInfo.Flavor);
+			return Version.Parse (ProductVersion) >= Version.Parse (min_version);
 		}
 
 		public Architecture Architecture {

@@ -13,7 +13,7 @@ namespace xharness
 		string xml_data;
 
 		TaskCompletionSource<bool> stopped = new TaskCompletionSource<bool> ();
-		protected ManualResetEvent connected = new ManualResetEvent (false);
+		TaskCompletionSource<bool> connected = new TaskCompletionSource<bool> ();
 
 		public IPAddress Address { get; set; }
 		public int Port { get; set; }
@@ -21,6 +21,10 @@ namespace xharness
 		public Log TestLog { get; set; }
 		public bool AutoExit { get; set; }
 		public bool XmlOutput { get; set; }
+
+		public Task ConnectedTask {
+			get { return connected.Task; }
+		}
 
 		public abstract void Initialize ();
 		protected abstract void Start ();
@@ -35,7 +39,7 @@ namespace xharness
 		protected void Connected (string remote)
 		{
 			Log.WriteLine ("Connection from {0} saving logs to {1}", remote, TestLog.FullPath);
-			connected.Set ();
+			connected.TrySetResult (true);
 
 			if (output_writer == null) {
 				output_writer = TestLog;
@@ -85,11 +89,6 @@ $@"[Local Date/Time:	{DateTime.Now}]
 			t.Start ();
 		}
 
-		public bool WaitForConnection (TimeSpan ts)
-		{
-			return connected.WaitOne (ts);
-		}
-
 		public bool WaitForCompletion (TimeSpan ts)
 		{
 			return stopped.Task.Wait (ts);
@@ -103,6 +102,7 @@ $@"[Local Date/Time:	{DateTime.Now}]
 
 		public void Cancel ()
 		{
+			connected.TrySetCanceled ();
 			try {
 				// wait a second just in case more data arrives.
 				if (!stopped.Task.Wait (TimeSpan.FromSeconds (1)))

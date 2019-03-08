@@ -71,8 +71,9 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
-    <FilesToCopy Include="..\..\..\external\mono\mcs\class\System.IO.Compression\test.nupkg" />
-    <FilesToCopy Include="..\..\..\external\mono\mcs\class\System.IO.Compression\archive.zip" />
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
@@ -81,7 +82,14 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <Target Name="AfterBuild">
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)\$(AssemblyName).app\Contents\MonoBundle" />
-  </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression\Test\resources\test.nupkg">
+      <Link>Test\resources\test.nupkg</Link>
+      <LogicalName>Test/resources/test.nupkg</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\System.IO.Compression\Test\resources\archive.zip">
+      <Link>Test\resources\archive.zip</Link>
+      <LogicalName>Test/resources/archive.zip</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

@@ -1,0 +1,3 @@
+# Timed out after 60000ms waiting for remote process 12958
+System.Data.Tests.DataTableReadXmlSchemaTest.XsdSchemaDeserializationIgnoresLocale
+System.Data.Tests.DataTableReadXmlSchemaTest.XsdSchemaSerializationIgnoresLocale

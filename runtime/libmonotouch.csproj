@@ -44,7 +44,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="Makefile" />
-    <None Include="zlib-helper.c" />
     <None Include="xamarin\main.h" />
     <None Include="xamarin\mono-runtime.h" />
     <None Include="xamarin\runtime.h" />

@@ -27,6 +27,21 @@ reportPrefix = null
 createFinalStatus = true
 skipLocalTestRunReason = ""
 
+@NonCPS
+def getRedirect () {
+    def connection = "${env.XAMARIN_BUILD_TASKS}".toURL().openConnection()
+    connection.instanceFollowRedirects = false
+    // should be in scope at the time of this call (called within a withCredentials block)
+    connection.setRequestProperty("Authorization", "token ${env.GITHUB_AUTH_TOKEN}")
+    def response = connection.responseCode
+    connection.disconnect()
+    if (response == 302) {
+        return connection.getHeaderField("Location")
+    } else {
+        throw new Exception("DL link failed ${response}: ${content}")
+    }
+}
+
 github_pull_request_info = null
 def githubGetPullRequestInfo ()
 {
@@ -228,14 +243,14 @@ def processAtMonkeyWrench (outputFile)
     }
 }
 
-def uploadFiles (glob, virtualPath)
+def uploadFiles (glob, containerName, virtualPath)
 {
     step ([
         $class: 'WAStoragePublisher',
         allowAnonymousAccess: true,
         cleanUpContainer: false,
         cntPubAccess: true,
-        containerName: "wrench",
+        containerName: containerName,
         doNotFailIfArchivingReturnsNothing: false,
         doNotUploadIndividualFiles: false,
         doNotWaitForPreviousBuild: true,
@@ -482,65 +497,55 @@ timestamps {
                             }
                         }
 
+                        stage ('Generate Workspace Info') {
+                            withCredentials([string (credentialsId: '92cf81e5-6db5-408c-8a0d-192b36200a16', variable: 'GITHUB_AUTH_TOKEN'), string (credentialsId: 'xamarin-build-tasks', variable: 'XAMARIN_BUILD_TASKS')]) {
+                                def redirect = getRedirect ()
+                                sh "curl -o Xamarin.Build.Tasks.nupkg \"${redirect}\""
+                                dir("BuildTasks") {
+                                    deleteDir ()
+                                    sh "unzip ../Xamarin.Build.Tasks.nupkg"
+                                    sh "mono tools/BuildTasks/build-tasks.exe workspaceinfo -p ${workspace} -o ${workspace}/package-internal/ci-checkout.json"
+                                    sh "mono tools/BuildTasks/build-tasks.exe dependencyinfo -p ${workspace} -o ${workspace}/package-internal/dependency-info.json"
+                                }
+                            }
+                        }
+
                         stage ('Upload to Azure') {
                             currentStage = "${STAGE_NAME}"
                             virtualPath = "jenkins/${branchName}/${gitHash}/${env.BUILD_NUMBER}"
                             packagePrefix = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/package"
 
-                            // Create artifacts.json and manifest
+                            // Create manifest
                             def uploadingFiles = findFiles (glob: "package/*")
                             def manifest = ""
-                            def artifacts = "[\n"
                             for (int i = 0; i < uploadingFiles.length; i++) {
                                 def file = uploadingFiles [i]
-                                def f_length = file.length;
-                                def md5 = sh (returnStdout: true, script: "md5 -q '${file}'").trim ()
-                                def sha256 = sh (returnStdout: true, script: "shasum -a 256 ${file}").trim ().split (" ") [0];
                                 manifest += "${packagePrefix}/${file.name}\n"
-                                artifacts += "  {\n"
-                                artifacts += "    \"file\": \"${file.name}\",\n"
-                                artifacts += "    \"url\": \"${packagePrefix}/${file.name}\",\n"
-                                artifacts += "    \"md5\": \"${md5}\",\n"
-                                artifacts += "    \"sha256\": \"${sha256}\",\n"
-                                def map = getUpdateInfoAndVersion (file.name)
-                                def platform = map['platform']
-                                if (platform) {
-                                    try {
-                                        def updateInfo = readFile "package/${platform}-updateinfo"
-                                        def parts = updateInfo.trim ().split (" ")
-                                        artifacts += "    \"productId\": \"${parts[0]}\",\n"
-                                        artifacts += "    \"releaseId\": \"${parts[1]}\",\n"
-                                    } catch (ex) {
-                                        echo "Did not find updateinfo file for xamarin.${platform}"
-                                    }
-                                }
-                                def version = map['version']
-                                if (version) {
-                                    artifacts += "    \"version\": \"${version}\",\n"
-                                }
-                                artifacts += "    \"size\": ${f_length}\n"
-                                artifacts += "  }"
-                                if (i < uploadingFiles.length - 1)
-                                    artifacts += ","
-                                artifacts +="\n"
                             }
-                            artifacts += "]\n"
                             manifest += "${packagePrefix}/artifacts.json\n"
                             manifest += "${packagePrefix}/manifest\n"
                             writeFile (file: "package/manifest", text: manifest)
-                            writeFile (file: "package/artifacts.json", text: artifacts)
 
                             sh ("ls -la package")
-                            uploadFiles ("package/*", virtualPath)
+                            uploadFiles ("package/*", "wrench", virtualPath)
+                            uploadFiles ("package-internal/*", "jenkins-internal", virtualPath)
 
                             // Also upload manifest to a predictable url (without the build number)
                             // This manifest will be overwritten in subsequent builds (for this [PR/branch]+hash combination)
-                            uploadFiles ("package/manifest", "jenkins/${branchName}/${gitHash}")
+                            uploadFiles ("package/manifest", "wrench", "jenkins/${branchName}/${gitHash}")
                             // And also create a 'latest' version (which really means 'latest built', not 'latest hash', but it will hopefully be good enough)
-                            uploadFiles ("package/manifest", "jenkins/${branchName}/latest")
+                            uploadFiles ("package/manifest", "wrench", "jenkins/${branchName}/latest")
 
                             manifestFilename = "manifest"
-                            artifactsFilename = "artifacts.json"
+                        }
+
+                        stage ('Generate artifacts.json') {
+                            withCredentials ([string (credentialsId: '92cf81e5-6db5-408c-8a0d-192b36200a16', variable: 'GITHUB_AUTH_TOKEN'), usernamePassword (credentialsId: 'd146d4aa-a437-4633-908f-b455876c44d0', passwordVariable: 'STORAGE_PASSWORD', usernameVariable: 'STORAGE_ACCOUNT')]) {
+                                dir ("BuildTasks") {
+                                    sh "mono tools/BuildTasks/build-tasks.exe artifacts -s ${workspace}/xamarin-macios -a ${env.STORAGE_ACCOUNT} -c ${env.STORAGE_PASSWORD} -u wrench/${virtualPath}/package"
+                                    artifactsFilename = "artifacts.json"
+                                }
+                            }
                         }
 
                         stage ('Publish builds to GitHub') {
@@ -647,7 +652,7 @@ timestamps {
                                     echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode}")
                                     failedStages.add (currentStage)
                                 }
-                                uploadFiles ("tests/*.zip", virtualPath)
+                                uploadFiles ("tests/*.zip", "wrench", virtualPath)
                             }
 
                             timeout (time: 6, unit: 'HOURS') {

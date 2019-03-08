@@ -51,6 +51,9 @@ namespace Xamarin.Bundler {
 
 		Symbols dynamic_symbols;
 
+		// Note that each 'Target' can have multiple abis: armv7+armv7s for instance.
+		public List<Abi> Abis;
+
 #if MONOMAC
 		public bool Is32Build { get { return !Driver.Is64Bit; } }
 		public bool Is64Build { get { return Driver.Is64Bit; } }

@@ -1,0 +1,209 @@
+#  Exception messages: System.PlatformNotSupportedException : Operation is not supported on this platform.
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.CreateClientStreamFromStringHandle_Valid
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InOutPipeDirection_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.ValidConstructors
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidPipeHandle_Throws
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ValidWriteAsync_ValidReadAsync_APM
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadFromPipeWithClosedPartner_ReadNoBytes
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadWithZeroLengthBuffer_Nop
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadWithNegativeCount_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadWithNullBuffer_Throws_ArgumentNullException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadOnDisposedReadablePipe_Throws_ObjectDisposedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadPipeUnsupportedMembers_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ValidWrite_ValidRead
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.CopyToAsync_InvalidArgs_Throws
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ValidWriteAsync_ValidReadAsync
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadWithNegativeOffset_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadWithOutOfBoundsArray_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ValidWriteByte_ValidReadByte
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.WriteToReadOnlyPipe_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ValidWriteAsync_ValidReadAsync
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadFromPipeWithClosedPartner_ReadNoBytes
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadWithNegativeOffset_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.WriteToReadOnlyPipe_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ValidWriteAsync_ValidReadAsync_APM
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ValidWrite_ValidRead
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.CopyToAsync_InvalidArgs_Throws
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ValidWriteByte_ValidReadByte
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadWithZeroLengthBuffer_Nop
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadWithNegativeCount_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadWithOutOfBoundsArray_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadPipeUnsupportedMembers_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadOnDisposedReadablePipe_Throws_ObjectDisposedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadWithNullBuffer_Throws_ArgumentNullException
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.PipeTransmissionMode_Returns_Byte
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.ClonedClient_ActsAsOriginalClient
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.DisposeLocalCopyOfClientHandle_BeforeServerRead
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.ReadModeToByte_Accepted(serverDirection: Out, clientDirection: In)
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.ReadModeToByte_Accepted(serverDirection: In, clientDirection: Out)
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.ClonedServer_ActsAsOriginalServer
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.InvalidReadMode_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.MessageReadMode_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.OSX_BufferSizeNotSupported
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WritePipeUnsupportedMembers_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.ValidFlush_DoesntThrow
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteWithOutOfBoundsArray_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteToDisposedWriteablePipe_Throws_ObjectDisposedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteToPipeWithClosedPartner_Throws_IOException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteWithNegativeOffset_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteWithNegativeCount_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteZeroLengthBuffer_Nop
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.ReadOnWriteOnlyPipe_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteWithNullBuffer_Throws_ArgumentNullException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteToDisposedWriteablePipe_Throws_ObjectDisposedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.ValidFlush_DoesntThrow
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteWithNegativeCount_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WritePipeUnsupportedMembers_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteWithNegativeOffset_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteZeroLengthBuffer_Nop
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.ReadOnWriteOnlyPipe_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteWithOutOfBoundsArray_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteToPipeWithClosedPartner_Throws_IOException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteWithNullBuffer_Throws_ArgumentNullException
+System.IO.Pipes.Tests.TestPipeStream.TestCheckReadWrite
+System.IO.Pipes.Tests.TestPipeStream.TestCheckPipePropertyOperations_Unix
+System.IO.Pipes.Tests.TestPipeStream.TestInitializeHandle
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.NullParameters_Throws_ArgumentNullException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.CreateClientStreamFromStringHandle_Valid
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.InvalidStringParameters_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.InvalidPipeHandle_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.InOutPipeDirection_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InOutPipeDirection_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.ServerBadInheritabilityThrows
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidBufferSize_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidPipeDirection_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidPipeHandle_Throws
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.ValidConstructors
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.InvalidStringParameters_Throws_ArgumentException(handle: "abc")
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.InvalidStringParameters_Throws_ArgumentException(handle: "-1")
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidBufferSize_Throws_ArgumentOutOfRangeException(direction: InOut, bufferSize: -500)
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidBufferSize_Throws_ArgumentOutOfRangeException(direction: In, bufferSize: -500)
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidBufferSize_Throws_ArgumentOutOfRangeException(direction: Out, bufferSize: -500)
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.ServerBadInheritabilityThrows(direction: In, inheritability: 999)
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.ServerBadInheritabilityThrows(direction: Out, inheritability: 999)
+
+# System.NotImplementedException
+System.Linq.Expressions.Tests.ParameterTests.CanUseAsLambdaByRefParameter_String(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.CanWriteToRefParameter(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.CanUseAsLambdaByRefParameter(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.CanUseAsLambdaByRefParameter_Bool(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.CanUseAsLambdaByRefParameter_Char(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.CanReadFromRefParameter(useInterpreter: True)
+System.Linq.Expressions.Tests.SwitchTests.JumpBetweenCases(useIntepreter: True)
+System.Linq.Expressions.Tests.SwitchTests.NoDefaultOrCasesSwitchWithSideEffect(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.ReadAndWriteRefParameters
+System.Linq.Expressions.Tests.SwitchTests.DefaultOnlySwitchWithSideEffect(useInterpreter: True)
+System.Linq.Expressions.Tests.Compiler_Tests.CallCompiledLambdaWithTypeMissing(useInterpreter: True)
+System.Linq.Expressions.Tests.NewWithByRefParameterTests.CreateByRefAliasingCompiled
+System.Linq.Expressions.Tests.NewWithByRefParameterTests.CreateByRefThrowing(useInterpreter: True)
+System.Linq.Expressions.Tests.NewWithByRefParameterTests.CreateByRefReferencingReadonly(useInterpreter: True)
+System.Linq.Expressions.Tests.NewWithByRefParameterTests.CreateByRef(useInterpreter: True)
+System.Linq.Expressions.Tests.NewWithByRefParameterTests.CreateOut(useInterpreter: True)
+System.Linq.Expressions.Tests.InvocationTests.InvokeByRefLambda(useInterpreter: True)
+System.Linq.Expressions.Tests.ConvertTests.CustomConversionNotStandardNameFromLiftedByRef(useInterpreter: True)
+System.Linq.Expressions.Tests.ConvertTests.CustomConversionNotStandardNameFromByRef(useInterpreter: True)
+System.Linq.Expressions.Tests.OpAssign.ConvertOpWriteByRefParameterOverloadedOperator(useInterpreter: True)
+System.Dynamic.Tests.DynamicObjectTests.ByRefInvoke
+
+
+#  System.PlatformNotSupportedException : Operation is not supported on this platform. 
+System.Linq.Expressions.Tests.NewTests.GlobalMethodInMembers
+System.Linq.Expressions.Tests.NewTests.GlobalFieldInMembers
+System.Linq.Expressions.Tests.MemberBindTests.GlobalMethod
+System.Linq.Expressions.Tests.ListBindTests.GlobalMethod
+System.Linq.Expressions.Tests.InvocationTests.InvokePrivateDelegate(useInterpreter: True)
+System.Linq.Expressions.Tests.InvocationTests.InvokePrivateDelegateTypeLambda(useInterpreter: True)
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(int), typeof(System.Int32&), typeof(string)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.Int32&)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(string), typeof(System.Double*), typeof(int)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.String*)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.Int32*)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(int), typeof(System.String*), typeof(double)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.String*), typeof(System.String*), typeof(System.String*), typeof(System.String*), typeof(System.String*), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.Int32*)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(int), typeof(System.Int32&), typeof(string)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(string), typeof(System.Double*), typeof(int)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.Int32&)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(int), typeof(System.String*), typeof(double)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.String*), typeof(System.String*), typeof(System.String*), typeof(System.String*), typeof(System.String*), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.String*)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), ...])
+System.Linq.Expressions.Tests.ConstantTests.CheckTypeConstantTest(useInterpreter: True)
+System.Linq.Expressions.Tests.ConstantTests.CheckMethodInfoConstantTest(useInterpreter: True)
+System.Linq.Expressions.Tests.CastTests.CanCastEnumTypeToUnderlyingType
+System.Linq.Expressions.Tests.CastTests.CannotCastWrongUnderlyingTypeEnumChecked
+System.Linq.Expressions.Tests.CastTests.CannotCastWrongUnderlyingTypeEnum
+System.Linq.Expressions.Tests.CastTests.CanCastUnderlyingTypeToEnumTypeChecked
+System.Linq.Expressions.Tests.CastTests.CanCastUnderlyingTypeToEnumType
+System.Linq.Expressions.Tests.CastTests.CannotCastReferenceToWrongUnderlyingTypeEnumChecked
+System.Linq.Expressions.Tests.CastTests.CanCastReferenceToUnderlyingTypeToEnumTypeChecked
+System.Linq.Expressions.Tests.CastTests.CannotCastReferenceToWrongUnderlyingTypeEnum
+System.Linq.Expressions.Tests.CastTests.CanCastEnumTypeToUnderlyingTypeChecked
+System.Linq.Expressions.Tests.CastTests.CanCastReferenceToUnderlyingTypeToEnumType
+System.Linq.Expressions.Tests.BinaryLogicalTests.Method_FalseOperatorIncorrectMethod_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_TrueOperatorIncorrectMethod_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.Method_ParamsDontMatchOperator_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_VoidReturnType_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_NotStatic_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_TrueOperatorIncorrectMethod_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_ReturnTypeNotEqualToParameterTypes_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlsoGlobalMethod
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_ParamsDontMatchOperator_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_NoTrueFalseOperator_ThrowsArgumentException(name: "op_False")
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_NoTrueFalseOperator_ThrowsArgumentException(name: "op_True")
+System.Linq.Expressions.Tests.BinaryLogicalTests.Method_NoTrueFalseOperator_ThrowsArgumentException(name: "op_True")
+System.Linq.Expressions.Tests.BinaryLogicalTests.Method_NoTrueFalseOperator_ThrowsArgumentException(name: "op_False")
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_NoTrueFalseOperator_ThrowsArgumentException(name: "op_False")
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_NoTrueFalseOperator_ThrowsArgumentException(name: "op_True")
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_ExpressionDoesntMatchMethodParameters_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 3)
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 1)
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 0)
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 0)
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 3)
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 1)
+System.Linq.Expressions.Tests.BinaryLogicalTests.Method_TrueOperatorIncorrectMethod_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_ReturnTypeNotEqualToParameterTypes_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_ExpressionDoesntMatchMethodParameters_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_VoidReturnType_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_ParamsDontMatchOperator_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_NotStatic_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.OpAssign.MethodNoConvertOpWriteByRefParameter
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElseGlobalMethod
+
+#  System.ArgumentException : Missing parameter does not have a default value.
+System.Linq.Expressions.Tests.Compiler_Tests.CallCompiledLambdaWithTypeMissing
+
+# Expected: 2147483648
+# Actual:   0   Exception stack traces:   at System.Linq.Expressions.Tests.ConvertTests.VerifyNullableFloatToNullableUInt (System.Nullable`1[T] value, System.Boolean useInterpreter) [0x00035] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/Convert/ConvertTests.cs:11802 
+#  at System.Linq.Expressions.Tests.ConvertTests.ConvertNullableFloatToNullableUIntTest (System.Boolean useInterpreter) [0x000a7] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/Convert/ConvertTests.cs:3359 
+#  at (wrapper managed-to-native) System.Reflection.MonoMethod.InternalInvoke(System.Reflection.MonoMethod,object,object[],System.Exception&)
+System.Linq.Expressions.Tests.ConvertTests.ConvertNullableFloatToNullableUIntTest(useInterpreter: True)
+System.Linq.Expressions.Tests.ConvertTests.ConvertFloatToNullableUIntTest(useInterpreter: True)
+System.Linq.Expressions.Tests.ConvertTests.ConvertFloatToUIntTest(useInterpreter: True)
+System.Linq.Expressions.Tests.ConvertTests.ConvertNullableFloatToUIntTest(useInterpreter: True)
+
+# Exception messages: Assert.NotNull() Failure   Exception stack traces:   at System.Linq.Expressions.Tests.CompilerTests.VerifyEmitConstantsToIL (System.Linq.Expressions.Expression e, System.Int32 expectedCount, System.Object expectedValue) [0x0001c] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/CompilerTests.cs:437 
+#  at System.Linq.Expressions.Tests.CompilerTests.VerifyEmitConstantsToIL[T] (T value, System.Int32 expectedCount) [0x00000] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/CompilerTests.cs:429 
+#  at System.Linq.Expressions.Tests.CompilerTests.VerifyEmitConstantsToIL[T] (T value) [0x00000] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/CompilerTests.cs:424 
+#  at System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_NonNullableValueTypes () [0x00000] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/CompilerTests.cs:57 
+#  at (wrapper managed-to-native) System.Reflection.MonoMethod.InternalInvoke(System.Reflection.MonoMethod,object,object[],System.Exception&)
+#  at System.Reflection.MonoMethod.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0003b] in /Users/mandel/Xamarin/xamarin-macios/master/xamarin-macios/external/mono/mcs/class/corlib/System.Reflection/MonoMethod.cs:305 
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_NonNullableValueTypes
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_ShareReferences
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_ReferenceTypes
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_NullableValueTypes
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_LiftedToClosure
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_Enums
+
+#  Exception messages: Assert.Throws() Failure
+# Expected: typeof(System.InvalidCastException)
+# Actual:   typeof(System.NotImplementedException): byref delegate
+System.Dynamic.Tests.DynamicObjectTests.ByRefMismatch

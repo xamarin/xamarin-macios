@@ -5465,6 +5465,9 @@ namespace Foundation
 
 		[Export ("isFileURL")]
 		bool IsFileUrl { get; }
+		
+		[Export ("isFileReferenceURL")]
+		bool IsFileReferenceUrl { get; }
 
 		[Export ("parameterString")]
 		string ParameterString { get;}

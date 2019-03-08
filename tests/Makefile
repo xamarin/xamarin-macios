@@ -11,7 +11,7 @@ include $(TOP)/mk/rules.mk
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 UNIT_SERVER_DIR=$(TOUCH_UNIT_PATH)/Touch.Server
 UNIT_SERVER=$(UNIT_SERVER_DIR)/bin/Debug/Touch.Server.exe
-TEST_SUITES=monotouch-test link\ sdk link\ all dont\ link framework-test mini
+TEST_SUITES=monotouch-test link\ sdk link\ all dont\ link framework-test mini mono-native
 BCL_TEST_SUITES=mscorlib \
 	System \
 	System.Core \
@@ -202,7 +202,7 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	nuget restore bcl-test/BCLTests/BCLTests.csproj
 	$(Q) touch $@
 
-xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
+xharness/xharness.exe: $(wildcard xharness/*.cs) $(wildcard $(TOP)/tools/bcl-test-importer/BCLTestImporter/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
 	nuget restore xharness/xharness.csproj
 	$(Q_GEN) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 

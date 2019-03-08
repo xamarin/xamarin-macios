@@ -70,24 +70,15 @@
 #FILES#
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\TestResourceHelper.cs">
+      <Link>test-helpers\TestResourceHelper.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
       <Project>{D12F0F7B-8DE3-43EC-BA49-41052D065A9B}</Project>
       <Name>GuiUnit_NET_4_5</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <ItemGroup>
-    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\corlib\Test\resources\Resources.es-ES.resx">
-      <Link>Resources\Resources.es-ES.resx</Link>
-      <LogicalName>Resources.es-ES.resources</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\corlib\Test\resources\Resources.nn-NO.resx">
-      <Link>Resources\Resources.nn-NO.resx</Link>
-      <LogicalName>Resources.nn-NO.resources</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\external\mono\mcs\class\corlib\Test\resources\Resources.resx">
-      <Link>Resources\Resources.resx</Link>
-      <LogicalName>Resources.resources</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
 </Project>

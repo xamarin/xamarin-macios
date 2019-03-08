@@ -1,6 +1,7 @@
 temp/
 diff/
 links/
+references/
 updated-references/
 *api-diff.html
 index.html
@@ -9,3 +10,5 @@ tvos-*.md
 watchos-*.md
 macos-*.md
 xamarin-*.md
+.unzip.stamp
+bundle-*.zip

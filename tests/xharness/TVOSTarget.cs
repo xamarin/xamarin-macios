@@ -10,6 +10,12 @@ namespace xharness
 	{
 		public override string Suffix {
 			get {
+				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-tvos" : "-tvos";
+			}
+		}
+
+		public override string ExtraLinkerDefsSuffix {
+			get {
 				return "-tvos";
 			}
 		}
@@ -56,9 +62,18 @@ namespace xharness
 			}
 		}
 
-		protected override string GetMinimumOSVersion(string templateMinimumOSVersion)
+		protected override void CalculateName ()
 		{
-			return "9.0";
+			base.CalculateName ();
+			if (MonoNativeInfo != null)
+				Name = Name + MonoNativeInfo.FlavorSuffix;
+		}
+
+		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
+		{
+			if (MonoNativeInfo == null)
+				return "9.0";
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.tvOS, MonoNativeInfo.Flavor);
 		}
 
 		protected override int[] UIDeviceFamily {
@@ -69,7 +84,7 @@ namespace xharness
 
 		protected override string AdditionalDefines {
 			get {
-				return "XAMCORE_2_0;XAMCORE_3_0;";
+				return "XAMCORE_2_0;XAMCORE_3_0;MONOTOUCH_TV;";
 			}
 		}
 
@@ -90,6 +105,12 @@ namespace xharness
 		protected override void ProcessProject ()
 		{
 			base.ProcessProject ();
+
+			if (MonoNativeInfo != null) {
+				inputProject.AddAdditionalDefines ("MONO_NATIVE_TV");
+				MonoNativeHelper.AddProjectDefines (inputProject, MonoNativeInfo.Flavor);
+				MonoNativeHelper.RemoveSymlinkMode (inputProject);
+			}
 
 			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "src");
 

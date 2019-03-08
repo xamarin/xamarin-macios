@@ -769,6 +769,7 @@ namespace Bindings.Test
 
 	static void WriteAsserts (StringBuilder w, BindAsData v)
 	{
+		w.AppendLine ($"\t\t\tAssertIfIgnored ();");
 		if (v.MinXcodeVersion != null) {
 			w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
 			w.AppendLine ();
@@ -828,12 +829,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class RegistrarTestGenerated {");
+	public partial class RegistrarTestGenerated {");
 
 		foreach (var s in structs) {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void Test_{s} ()");
 			w.AppendLine ("\t\t{");
+			w.AppendLine ($"\t\t\tAssertIfIgnored ();");
 			w.AppendLine ("\t\t\tusing (var tc = new ObjCRegistrarTest ()) {");
 			w.AppendLine ($"\t\t\t\tvar s = tc.PS{s};");
 			for (int i = 0; i < s.Length; i++)
@@ -1461,7 +1463,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class TrampolineTestGenerated {");
+	public partial class TrampolineTestGenerated {");
 		w.AppendLine ("\t\tconst string LIBOBJC_DYLIB = \"/usr/lib/libobjc.dylib\";");
 		w.AppendLine ();
 
@@ -1525,6 +1527,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void Test_{s} ()");
 			w.AppendLine ($"\t\t{{");
+			w.AppendLine ($"\t\t\tAssertIfIgnored ();");
 			w.AppendLine ($"\t\t\tIntPtr class_ptr = Class.GetHandle (typeof (GeneratedStretTrampolines));");
 			w.AppendLine ($"\t\t\tS{s} rv = new S{s} ();");
 			w.AppendLine ($"\t\t\tdouble rvd;");

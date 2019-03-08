@@ -32,7 +32,6 @@ MONO_ASSEMBLIES = mscorlib System System.Core System.Numerics\
 IOS_SRC_ASSEMBLIES     = \
 	Xamarin.iOS/MonoTouch.Dialog-1 Xamarin.iOS/MonoTouch.NUnitLite Xamarin.iOS/OpenTK-1.0 Xamarin.iOS/System.Net.Http Xamarin.iOS/Xamarin.iOS
 MAC_SRC_ASSEMBLIES     = \
-	XamMac XamMac.CFNetwork \
 	Xamarin.Mac/Xamarin.Mac Xamarin.Mac/OpenTK \
 	4.5/Xamarin.Mac 4.5/OpenTK
 WATCHOS_SRC_ASSEMBLIES = Xamarin.WatchOS/Xamarin.WatchOS Xamarin.WatchOS/MonoTouch.NUnitLite Xamarin.WatchOS/System.Net.Http
@@ -46,6 +45,8 @@ TVOS_ASSEMBLIES    = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.TVOS/$(file))    
 IOS_ARCH_ASSEMBLIES = native-32/Xamarin.iOS native-64/Xamarin.iOS
 MAC_ARCH_ASSEMBLIES = native-32/Xamarin.Mac native-64/Xamarin.Mac
 
+APIDIFF_IGNORE = -i 'INSObjectProtocol'
+
 # create api info. Directory hierarchy is based on installed hierarchy
 # (XM goes into temp/xm, and XI goes into temp/xi)
 
@@ -54,6 +55,10 @@ $(APIDIFF_DIR)/temp/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
 
 $(APIDIFF_DIR)/temp/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll
+	$(Q) mkdir -p $(dir $@)
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $< -o $@
+
+$(APIDIFF_DIR)/temp/xm/4.5/Xamarin.Mac.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $< -o $@
 
@@ -73,7 +78,7 @@ $(APIDIFF_DIR)/temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xama
 
 $(APIDIFF_DIR)/diff/%.html: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml -i 'INSObjectProtocol' $@
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml $(APIDIFF_IGNORE) $@
 	$(Q) touch $@
 
 # this is a hack to show the difference between iOS and tvOS
@@ -157,24 +162,45 @@ endif
 # easy-to-type helper targets.
 # one rule to create all the api diffs
 
-all-local:: $(APIDIFF_DIR)/api-diff.html
+all-local:: $(BUNDLE_ZIP) $(APIDIFF_DIR)/api-diff.html
 
-# Rules to re-create the reference infos. The rules target the updated-references
-# directory, so that they're only invoked manually (otherwise the reference infos
-# would be updated every time the assemblies change, which is not what we want).
+# Rules to re-create the reference infos from the curretn stable 'bundle.zip. assemblies
+
+# split the URL in words based on the path separator, and then chose the 6th word (the hash) in the bundle zip filename
+BUNDLE_ZIP=bundle-$(word 6,$(subst /, ,$(APIDIFF_REFERENCES))).zip
+$(BUNDLE_ZIP):
+	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
+	$(Q_GEN) curl -L $(APIDIFF_REFERENCES) > $@.tmp
+	$(Q) mv $@.tmp $@
+
+.unzip.stamp: $(BUNDLE_ZIP)
+	$(Q) rm -Rf temp
+	$(Q_GEN) unzip -d temp $(BUNDLE_ZIP)
+	$(Q) touch $@
+
+# the semi-colon at the end means an empty recipe, and is required for make to consider pattern rules
+temp/%.dll: .unzip.stamp ;
 
 IOS_REFS     = $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xm/$(file).xml)
 WATCHOS_REFS = $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 
+$(APIDIFF_DIR)/references/xi/%.xml: temp/%.dll $(MONO_API_INFO)
+	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
+	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
+
 $(APIDIFF_DIR)/updated-references/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
 
-$(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/xm/%.xml: temp/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
+
+$(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll $(MONO_API_INFO)
+	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
+	$(QF_GEN) mono --debug $(MONO_API_INFO) -d $(dir $<) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
 
 update-tvos-refs: $(TVOS_REFS)
 update-watchos-refs: $(WATCHOS_REFS)
@@ -194,8 +220,8 @@ verify-reference-assemblies-mac: $(APIDIFF_DIR)/temp/native-32/Xamarin.Mac.xml $
 	@echo Mac reference assemblies are identical
 
 clean-local::
-	rm -rf temp updated-references diff *.exe* api-diff.html
-	rm -rf *.dll*
+	rm -rf temp references diff *.exe* api-diff.html
+	rm -rf *.dll* bundle-*.zip .unzip.stamp
 	rm -rf ios-*.md tvos-*.md watchos-*.md macos-*.md
 
 DIRS += $(APIDIFF_DIR)/temp $(APIDIFF_DIR)/diff
@@ -243,7 +269,7 @@ macos-markdown: ; @true
 endif
 
 $(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml -i 'INSObjectProtocol' --md $@
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml $(APIDIFF_IGNORE) --md $@
 
 wrench-api-diff:
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.iOS"
@@ -265,6 +291,7 @@ ifdef INCLUDE_TVOS
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/diff/ios-to-tvos.html"
 endif
 endif
+	$(Q) $(MAKE) .unzip.stamp
 	$(Q) $(MAKE) all -j8
 	$(Q) $(MAKE) -j8 ios-markdown tvos-markdown watchos-markdown macos-markdown
 	$(Q) $(CP) api-diff.html index.html
