@@ -1102,7 +1102,7 @@ namespace ObjCRuntime {
 			if (method != IntPtr.Zero) {
 				var mi = ObjectWrapper.Convert (method) as MethodBase;
 				if (mi != null)
-					msg += $"\tMethod: {mi.FullName}\n";
+					msg += $"\tMethod: {String.Format("{0}.{1}", mi.DeclaringType.FullName, mi.FormatNameAndSig(false))}\n";
 			}
 
 			throw ErrorHelper.CreateError (8027, string.Format (msg, ptr.ToString ("x"), new Class (klass).Name, type.FullName));
