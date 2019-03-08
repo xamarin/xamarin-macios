@@ -188,7 +188,6 @@ namespace BCLTestImporter {
 			(assembly: "xammac_net_4_5_I18N.Other_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
 			(assembly: "xammac_net_4_5_I18N.Rare_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
 			(assembly: "xammac_net_4_5_I18N.West_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
-			(assembly: "xammac_net_4_5_System.Core_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1191
 			(assembly: "xammac_net_4_5_System.Data_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1192 and https://github.com/xamarin/maccore/issues/1193
 			(assembly: "xammac_net_4_5_System.Security_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1197
 			(assembly: "xammac_net_4_5_System_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1199
