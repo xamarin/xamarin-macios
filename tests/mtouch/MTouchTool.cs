@@ -803,10 +803,10 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 			}
 		}
 
-		public static IEnumerable<string> GetNativeSymbolsInExecutable (string executable)
+		public static IEnumerable<string> GetNativeSymbolsInExecutable (string executable, string arch = null)
 		{
-			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (executable)}", hide_output: true).Split ('\n');
-
+			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", $"{(arch == null ? string.Empty : $"-arch {arch} ")}-gUj {StringUtils.Quote (executable)}", hide_output: true).Split ('\n');
+			
 			rv = rv.Where ((v) => {
 				if (string.IsNullOrEmpty (v))
 					return false;
