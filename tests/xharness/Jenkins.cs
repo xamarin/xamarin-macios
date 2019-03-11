@@ -40,6 +40,7 @@ namespace xharness
 		public bool IncludeDocs;
 
 		public bool CleanSuccessfulTestRuns = true;
+		public bool UninstallTestApp = true;
 
 		public Log MainLog;
 		public Log SimulatorLoadLog;
@@ -87,40 +88,32 @@ namespace xharness
 			return new Resources (resources);
 		}
 
+		Task LoadAsync (ref Log log, ILoadAsync loadable, string name)
+		{
+			loadable.Harness = Harness;
+			if (log == null)
+				log = Logs.Create ($"{name}-list-{Harness.Timestamp}.log", $"{name} Listing");
+			log.Description = $"{name} Listing (in progress)";
+
+			var capturedLog = log;
+			return loadable.LoadAsync (capturedLog, include_locked: false, force: true).ContinueWith ((v) => {
+				if (v.IsFaulted) {
+					capturedLog.WriteLine ("Failed to load:");
+					capturedLog.WriteLine (v.Exception);
+					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
+				} else if (v.IsCompleted) {
+					capturedLog.Description = $"{name} Listing (ok)";
+				}
+			});
+		}
+
 		// Loads both simulators and devices in parallel
 		Task LoadSimulatorsAndDevicesAsync ()
 		{
-			Simulators.Harness = Harness;
-			Devices.Harness = Harness;
+			var devs = LoadAsync (ref DeviceLoadLog, Devices, "Device");
+			var sims = LoadAsync (ref SimulatorLoadLog, Simulators, "Simulator");
 
-			if (SimulatorLoadLog == null)
-				SimulatorLoadLog = Logs.Create ($"simulator-list-{Harness.Timestamp}.log", "Simulator Listing (in progress)");
-
-			var simulatorLoadTask = Task.Run (async () => {
-				try {
-					await Simulators.LoadAsync (SimulatorLoadLog);
-					SimulatorLoadLog.Description = "Simulator Listing (ok)";
-				} catch (Exception e) {
-					SimulatorLoadLog.WriteLine ("Failed to load simulators:");
-					SimulatorLoadLog.WriteLine (e);
-					SimulatorLoadLog.Description = $"Simulator Listing ({e.Message})";
-				}
-			});
-
-			if (DeviceLoadLog == null)
-				DeviceLoadLog = Logs.Create ($"device-list-{Harness.Timestamp}.log", "Device Listing (in progress)");
-			var deviceLoadTask = Task.Run (async () => {
-				try {
-					await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
-					DeviceLoadLog.Description = "Device Listing (ok)";
-				} catch (Exception e) {
-					DeviceLoadLog.WriteLine ("Failed to load devices:");
-					DeviceLoadLog.WriteLine (e);
-					DeviceLoadLog.Description = $"Device Listing ({e.Message})";
-				}
-			});
-
-			return Task.CompletedTask;
+			return Task.WhenAll (devs, sims);
 		}
 
 		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
@@ -724,14 +717,14 @@ namespace xharness
 			return false;
 		}
 
-		async Task PopulateTasksAsync ()
+		Task PopulateTasksAsync ()
 		{
 			// Missing:
 			// api-diff
 
 			SelectTests ();
 
-			await LoadSimulatorsAndDevicesAsync ();
+			LoadSimulatorsAndDevicesAsync ().DoNotAwait ();
 
 			Tasks.AddRange (CreateRunSimulatorTasks ());
 
@@ -959,6 +952,8 @@ namespace xharness
 			Tasks.Add (runDocsTests);
 
 			Tasks.AddRange (CreateRunDeviceTasks ());
+
+			return Task.CompletedTask;
 		}
 
 		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore, bool requiresXcode94 = false)
@@ -1178,6 +1173,12 @@ namespace xharness
 							case "?do-not-clean":
 								CleanSuccessfulTestRuns = false;
 								break;
+							case "?uninstall-test-app":
+								UninstallTestApp = true;
+								break;
+							case "?do-not-uninstall-test-app":
+								UninstallTestApp = false;
+								break;
 							default:
 								throw new NotImplementedException (request.Url.Query);
 							}
@@ -1323,10 +1324,10 @@ namespace xharness
 							}
 							break;
 						case "/reload-devices":
-							GC.KeepAlive (Devices.LoadAsync (DeviceLoadLog, force: true));
+							LoadAsync (ref DeviceLoadLog, Devices, "Device").DoNotAwait ();
 							break;
 						case "/reload-simulators":
-							GC.KeepAlive (Simulators.LoadAsync (SimulatorLoadLog, force: true));
+							LoadAsync (ref SimulatorLoadLog, Simulators, "Simulator").DoNotAwait ();
 							break;
 						case "/quit":
 							using (var writer = new StreamWriter (response.OutputStream)) {
@@ -1729,6 +1730,7 @@ namespace xharness
 	<li>Options
 			<ul>
 				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(UninstallTestApp ? "do-not-uninstall-test-app" : "uninstall-test-app")}"");'>&#x{(UninstallTestApp ? "2705" : "274C")} Uninstall the app from device before and after the test run</a></span></li>
 			</ul>
 	</li>
 	");
@@ -3421,10 +3423,14 @@ namespace xharness
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
-					runner.MainLog = uninstall_log;
-					var uninstall_result = await runner.UninstallAsync ();
-					if (!uninstall_result.Succeeded)
-						MainLog.WriteLine ($"Pre-run uninstall failed, exit code: {uninstall_result.ExitCode} (this hopefully won't affect the test result)");
+					if (Jenkins.UninstallTestApp) {
+						runner.MainLog = uninstall_log;
+						var uninstall_result = await runner.UninstallAsync ();
+						if (!uninstall_result.Succeeded)
+							MainLog.WriteLine ($"Pre-run uninstall failed, exit code: {uninstall_result.ExitCode} (this hopefully won't affect the test result)");
+					} else {
+						uninstall_log.WriteLine ($"Pre-run uninstall skipped.");
+					}
 
 					if (!Failed) {
 						// Install the app
@@ -3483,10 +3489,14 @@ namespace xharness
 					}
 				} finally {
 					// Uninstall again, so that we don't leave junk behind and fill up the device.
-					runner.MainLog = uninstall_log;
-					var uninstall_result = await runner.UninstallAsync ();
-					if (!uninstall_result.Succeeded)
-						MainLog.WriteLine ($"Post-run uninstall failed, exit code: {uninstall_result.ExitCode} (this won't affect the test result)");
+					if (Jenkins.UninstallTestApp) {
+						runner.MainLog = uninstall_log;
+						var uninstall_result = await runner.UninstallAsync ();
+						if (!uninstall_result.Succeeded)
+							MainLog.WriteLine ($"Post-run uninstall failed, exit code: {uninstall_result.ExitCode} (this won't affect the test result)");
+					} else {
+						uninstall_log.WriteLine ($"Post-run uninstall skipped.");
+					}
 
 					// Also clean up after us locally.
 					if (Harness.InJenkins || Harness.InWrench || (Jenkins.CleanSuccessfulTestRuns && Succeeded))

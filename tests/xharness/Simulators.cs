@@ -13,9 +13,14 @@ using Xamarin.Utils;
 
 namespace xharness
 {
-	public class Simulators
+	interface ILoadAsync {
+		Task LoadAsync (Log log, bool include_locked, bool force);
+		Harness Harness { get; set; }
+	}
+
+	public class Simulators : ILoadAsync
 	{
-		public Harness Harness;
+		public Harness Harness { get; set; }
 
 		bool loaded;
 		SemaphoreSlim semaphore = new SemaphoreSlim (1);
@@ -30,7 +35,7 @@ namespace xharness
 		public IEnumerable<SimDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
-		public async Task LoadAsync (Log log, bool force = false)
+		public async Task LoadAsync (Log log, bool include_locked = false, bool force = false)
 		{
 			await semaphore.WaitAsync ();
 			if (loaded) {
@@ -658,9 +663,9 @@ namespace xharness
 		public SimDevice Companion; // the phone for watch devices
 	}
 
-	public class Devices
+	public class Devices : ILoadAsync
 	{
-		public Harness Harness;
+		public Harness Harness { get; set; }
 
 		bool loaded;
 
@@ -671,6 +676,11 @@ namespace xharness
 		public IEnumerable<Device> Connected32BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports32Bit);
 		public IEnumerable<Device> ConnectedTV => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.tvOS);
 		public IEnumerable<Device> ConnectedWatch => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.watchOS);
+
+		Task ILoadAsync.LoadAsync (Log log, bool include_locked, bool force)
+		{
+			return LoadAsync (log, extra_data: false, removed_locked: !include_locked, force: force);
+		}
 
 		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{

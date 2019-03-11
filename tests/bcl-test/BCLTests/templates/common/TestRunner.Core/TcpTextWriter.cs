@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 #if __IOS__
 using UIKit;
@@ -16,13 +17,59 @@ namespace BCLTests.TestRunner.Core {
 		
 		TcpClient client;
 		StreamWriter writer;
+		
+		static string SelectHostName (string[] names, int port)
+		{
+			if (names.Length == 0)
+				return null;
+
+			if (names.Length == 1)
+				return names [0];
+
+			object lock_obj = new object ();
+			string result = null;
+			int failures = 0;
+
+			using (var evt = new ManualResetEvent (false)) {
+				for (int i = names.Length - 1; i >= 0; i--) {
+					var name = names [i];
+					ThreadPool.QueueUserWorkItem ((v) =>
+						{
+							try {
+								var client = new TcpClient (name, port);
+								using (var writer = new StreamWriter (client.GetStream ())) {
+									writer.WriteLine ("ping");
+								}
+								lock (lock_obj) {
+									if (result == null)
+										result = name;
+								}
+								evt.Set ();
+							} catch (Exception) {
+								lock (lock_obj) {
+									failures++;
+									if (failures == names.Length)
+										evt.Set ();
+								}
+							}
+						});
+				}
+
+				// Wait for 1 success or all failures
+				evt.WaitOne ();
+			}
+
+			return result;
+		}
 
 		public TcpTextWriter (string hostName, int port)
 		{
 			if ((port < 0) || (port > ushort.MaxValue))
 				throw new ArgumentOutOfRangeException (nameof (port), $"Port must be between 0 and {ushort.MaxValue}" );
 
-			HostName = hostName ?? throw new ArgumentNullException (nameof (hostName));
+			if (hostName == null)
+				throw new ArgumentNullException (nameof (hostName));
+			HostName = SelectHostName (hostName.Split (','), port);
 			Port = port;
 
 #if __IOS__
