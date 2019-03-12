@@ -120,6 +120,7 @@ namespace monotouchtestWatchKitExtension
 					"CAS",
 					"InetAccess",
 					"NotWorkingLinqInterpreter",
+					"BitcodeNotSupported",
 				};
 
 			if (RegisterType.IsXUnit) {
