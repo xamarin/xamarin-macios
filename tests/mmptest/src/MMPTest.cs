@@ -715,7 +715,7 @@ namespace Xamarin.MMP.Tests
 				var baseOutput = TI.TestUnifiedExecutable (test);
 				string baseCodesign = findCodesign (baseOutput);
 				Assert.False (baseCodesign.Contains ("-o runtime"), "Base codesign");
-				Assert.False (baseCodesign.Contains ("--timestamp"), "Base codesign timestamp");
+				Assert.True (baseCodesign.Contains ("--timestamp=none"), "Base codesign timestamp");
 
 				test.CSProjConfig += "<UseHardenedRuntime>true</UseHardenedRuntime><CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>";
 

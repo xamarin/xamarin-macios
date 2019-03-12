@@ -102,6 +102,8 @@ namespace Xamarin.MacDev.Tasks
 
 			if (UseSecureTimestamp)
 				args.Add ("--timestamp");
+			else
+				args.Add ("--timestamp=none");
 
 			args.Add ("--sign");
 			args.AddQuoted (SigningKey);
