@@ -175,6 +175,7 @@ namespace xharness
 			public string Defines;
 			public string Undefines;
 			public bool Ignored;
+			public bool EnableSGenConc;
 			public MonoNativeFlavor MonoNativeFlavor;
 			public MonoNativeLinkMode MonoNativeLinkMode;
 		}
@@ -209,6 +210,8 @@ namespace xharness
 				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
 
 				yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
+				yield return new TestData { Variation = "Release: SGenConc", MTouchExtraArgs = "", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
+				yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
 
 				switch (test.TestName) {
@@ -345,6 +348,8 @@ namespace xharness
 								mono_native_link = MonoNativeLinkMode.Static;
 							MonoNativeHelper.AddProjectDefines (clone.Xml, test_data.MonoNativeFlavor, mono_native_link, task.ProjectPlatform, configuration);
 						}
+						if (test_data.EnableSGenConc)
+							clone.Xml.SetNode ("MtouchEnableSGenConc", "true", task.ProjectPlatform, configuration);
 
 						if (!debug && !isMac)
 							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
