@@ -206,7 +206,7 @@ namespace ObjCRuntime {
 #endif
 		internal static HttpMessageHandler GetHttpMessageHandler ()
 		{
-			RuntimeOptions options = RuntimeOptions.Read ();
+			var options = RuntimeOptions.Read ();
 			if (options == null) {
 #if MONOTOUCH_WATCH
 				return new NSUrlSessionHandler ();
