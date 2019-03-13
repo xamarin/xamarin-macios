@@ -175,6 +175,7 @@ namespace xharness
 			public string Defines;
 			public string Undefines;
 			public bool Ignored;
+			public bool UseThumb;
 			public MonoNativeFlavor MonoNativeFlavor;
 			public MonoNativeLinkMode MonoNativeLinkMode;
 		}
@@ -209,6 +210,7 @@ namespace xharness
 				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
 
 				yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
+				yield return new TestData { Variation = "Release: UseThum", MTouchExtraArgs = "", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, UseThumb = true };
 				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
 
 				switch (test.TestName) {
@@ -277,6 +279,9 @@ namespace xharness
 			var rv = new List<T> (tests);
 			foreach (var task in tests.ToArray ()) {
 				foreach (var test_data in GetTestData (task)) {
+					// ignore the test data of a platform that is not 32 and uses thumb
+					if (test_data.UseThumb && task.Platform != TestPlatform.iOS_Unified32)
+						continue;
 					var variation = test_data.Variation;
 					var mtouch_extra_args = test_data.MTouchExtraArgs;
 					var bundling_extra_args = test_data.MonoBundlingExtraArgs;
@@ -345,6 +350,8 @@ namespace xharness
 								mono_native_link = MonoNativeLinkMode.Static;
 							MonoNativeHelper.AddProjectDefines (clone.Xml, test_data.MonoNativeFlavor, mono_native_link, task.ProjectPlatform, configuration);
 						}
+						if (test_data.UseThumb) // no need to check the platform, already done at the top of the loop
+							clone.Xml.SetNode ("MtouchUseThumb", "true", task.ProjectPlatform, configuration);
 
 						if (!debug && !isMac)
 							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
