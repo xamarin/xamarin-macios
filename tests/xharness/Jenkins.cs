@@ -176,6 +176,7 @@ namespace xharness
 			public string Undefines;
 			public bool Ignored;
 			public bool EnableSGenConc;
+			public bool UseThumb;
 			public MonoNativeFlavor MonoNativeFlavor;
 			public MonoNativeLinkMode MonoNativeLinkMode;
 		}
@@ -211,6 +212,8 @@ namespace xharness
 
 				yield return new TestData { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
 				yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
+				if (test.Platform == TestPlatform.iOS_Unified32)
+					yield return new TestData { Variation = "Release: UseThumb", MTouchExtraArgs = "", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, UseThumb = true };
 				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
 
 				switch (test.TestName) {
@@ -349,6 +352,8 @@ namespace xharness
 						}
 						if (test_data.EnableSGenConc)
 							clone.Xml.SetNode ("MtouchEnableSGenConc", "true", task.ProjectPlatform, configuration);
+						if (test_data.UseThumb) // no need to check the platform, already done at the data iterator
+							clone.Xml.SetNode ("MtouchUseThumb", "true", task.ProjectPlatform, configuration);
 
 						if (!debug && !isMac)
 							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);

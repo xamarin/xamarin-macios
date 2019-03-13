@@ -715,6 +715,7 @@ namespace Xamarin.MMP.Tests
 				var baseOutput = TI.TestUnifiedExecutable (test);
 				string baseCodesign = findCodesign (baseOutput);
 				Assert.False (baseCodesign.Contains ("-o runtime"), "Base codesign");
+				Assert.True (baseCodesign.Contains ("--timestamp=none"), "Base codesign timestamp");
 
 				test.CSProjConfig += "<UseHardenedRuntime>true</UseHardenedRuntime><CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>";
 
@@ -732,6 +733,8 @@ namespace Xamarin.MMP.Tests
 				var hardenedOutput = TI.TestUnifiedExecutable (test);
 				string hardenedCodesign = findCodesign (hardenedOutput);
 				Assert.True (hardenedCodesign.Contains ("-o runtime"), "Hardened codesign");
+				Assert.True (hardenedCodesign.Contains ("--timestamp"), "Hardened codesign timestamp");
+
 			});
 		}
 	}

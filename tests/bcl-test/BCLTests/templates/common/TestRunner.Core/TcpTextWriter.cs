@@ -77,7 +77,7 @@ namespace BCLTests.TestRunner.Core {
 #endif
 
 			try {
-				client = new TcpClient (hostName, port);
+				client = new TcpClient (HostName, port);
 				writer = new StreamWriter (client.GetStream ());
 			}
 			catch {
