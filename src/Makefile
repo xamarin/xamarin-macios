@@ -37,7 +37,6 @@ MAC_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
 #
 IOS_WARNINGS_THAT_YOU_SHOULD_FIX=108
 
-include ./OpenGLES/Makefile.include
 include ./OpenGLES/Makefile-1.0.include
 include ./Makefile.generator
 
