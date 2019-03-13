@@ -165,7 +165,8 @@ namespace MonoTouch.Tuner {
 		{
 			SubStepDispatcher sub = new SubStepDispatcher ();
 			sub.Add (new MetadataReducerSubStep ());
-			sub.Add (new SealerSubStep ());
+			if (options.Application.Optimizations.SealAndDevirtualize == true)
+				sub.Add (new SealerSubStep ());
 			return sub;
 		}
 

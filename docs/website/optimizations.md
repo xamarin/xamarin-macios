@@ -696,3 +696,24 @@ It is always enabled by default (when the linker is enabled).
 
 The default behavior can be overridden by passing
 `--optimize=[+|-]inline-is-arm64-calling-convention` to mtouch/mmp.
+
+## Seal and Devirtualize
+
+This optimization requires the linker to be enabled and is applied globally
+on all code inside the application.
+
+When the linker _knows_ all the code inside an application it can do global
+optimization like:
+* sealing types (if not subclassed);
+* mark method has final (if not overriden in subclasses); and
+* devirtualize methods (if never overriden)
+
+The changes allow the AOT compiler to apply further optimizations when 
+generating native code.
+
+This optimization is not safe when dynamically loading code. As such it does
+not exists for Xamarin.Mac. For Xamarin.iOS it is enabled, by default,
+unless the interpreter is used.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]seal-and-devirtualize` to `mtouch`.
