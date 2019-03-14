@@ -122,7 +122,6 @@ namespace Xamarin.Tests
 				"_gateway_from_rtm",
 				"_sgen_",
 				"_arm_patch",
-				"_g_printv",
 				// These two aren't public in a way we care about
 				"l_OBJC_LABEL_PROTOCOL_$_",
 				"l_OBJC_PROTOCOL_$_",
