@@ -35,6 +35,11 @@ namespace Xamarin.Bundler
 			"", // dummy value to make indices match up between XM and XI
 #endif
 			"inline-is-arm64-calling-convention",
+#if MONOTOUCH
+			"seal-and-devirtualize",
+#else
+			"", // dummy value to make indices match up between XM and XI
+#endif
 		};
 
 		enum Opt
@@ -52,6 +57,7 @@ namespace Xamarin.Bundler
 			TrimArchitectures,
 			RemoveUnsupportedILForBitcode,
 			InlineIsARM64CallingConvention,
+			SealAndDevirtualize,
 		}
 
 		bool? all;
@@ -117,6 +123,13 @@ namespace Xamarin.Bundler
 			get { return values [(int) Opt.InlineIsARM64CallingConvention]; }
 			set { values [(int) Opt.InlineIsARM64CallingConvention] = value; }
 		}
+
+#if MONOTOUCH
+		public bool? SealAndDevirtualize {
+			get { return values [(int) Opt.SealAndDevirtualize]; }
+			set { values [(int) Opt.SealAndDevirtualize] = value; }
+		}
+#endif
 
 		public Optimizations ()
 		{
@@ -254,6 +267,11 @@ namespace Xamarin.Bundler
 			if (!RemoveUnsupportedILForBitcode.HasValue) {
 				// By default enabled for watchOS device builds.
 				RemoveUnsupportedILForBitcode = app.Platform == Utils.ApplePlatform.WatchOS && app.IsDeviceBuild;
+			}
+
+			if (!SealAndDevirtualize.HasValue) {
+				// by default run the linker SealerSubStep unless the interpreter is enabled
+				SealAndDevirtualize = !app.UseInterpreter;
 			}
 #endif
 			// By default Runtime.IsARM64CallingConvention inlining is always enabled.
