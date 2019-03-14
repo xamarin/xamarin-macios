@@ -444,8 +444,6 @@ namespace Foundation {
 
 				// this can happen if the HTTP request times out and it is removed as part of the cancellation process
 				if (inflight != null) {
-					// set the stream as finished
-					inflight.Stream.TrySetReceivedAllData ();
 
 					// send the error or send the response back
 					if (error != null) {
@@ -461,6 +459,8 @@ namespace Foundation {
 							inflight.Stream.TrySetException (exc);
 						}
 					} else {
+						// set the stream as finished
+						inflight.Stream.TrySetReceivedAllData ();
 						inflight.Completed = true;
 						SetResponse (inflight);
 					}
