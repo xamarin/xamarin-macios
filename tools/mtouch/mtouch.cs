@@ -1069,7 +1069,7 @@ namespace Xamarin.Bundler
 			{ "abi=", "Comma-separated list of ABIs to target. Currently supported: armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64, arm64+llvm, i386, x86_64", v => app.ParseAbi (v) },
 			{ "override-abi=", "Override any previous abi. Only used for testing.", v => { app.ClearAbi (); app.ParseAbi (v); }, true }, // Temporary command line arg until XS has better support for 64bit architectures.
 			{ "cxx", "Enable C++ support", v => { app.EnableCxx = true; }},
-			{ "enable-repl:", "Enable REPL support (simulator and not linking only)", v => { app.EnableRepl = ParseBool (v, "enable-repl"); }, true /* this is a hidden option until we've actually used it and made sure it works as expected */ },
+			{ "enable-repl:", "Enable REPL support. For simulator only and disabling linking is recommanded.", v => { app.EnableRepl = ParseBool (v, "enable-repl"); } },
 			{ "pie:", "Enable (default) or disable PIE (Position Independent Executable).", v => { app.EnablePie = ParseBool (v, "pie"); }},
 			{ "compiler=", "Specify the Objective-C compiler to use (valid values are gcc, g++, clang, clang++ or the full path to a GCC-compatible compiler).", v => { app.Compiler = v; }},
 			{ "fastdev", "Build an app that supports fastdev (this app will only work when launched using Xamarin Studio)", v => { app.AddAssemblyBuildTarget ("@all=dynamiclibrary"); }},
@@ -1323,10 +1323,22 @@ namespace Xamarin.Bundler
 			if (app.EnableRepl && app.LinkMode != LinkMode.None)
 				throw new MonoTouchException (82, true, "REPL (--enable-repl) is only supported when linking is not used (--nolink).");
 
-			// needs to be set after the argument validations
-			// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
-			if (app.UseInterpreter)
+			if (app.UseInterpreter) {
+				// it's confusing to use different options to get a feature to work (e.g. dynamic, SRE...) on both simulator and device
+				if (app.IsSimulatorBuild) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (141, "The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator."));
+					app.UseInterpreter = false;
+				}
+
+				// FIXME: the interpreter only supports ARM64 right now
+				// temporary - without a check here the error happens when deploying
+				if (!app.IsArchEnabled (Abi.ARM64))
+					throw ErrorHelper.CreateError (99, "Internal error: The interpreter is currently only available for 64 bits.");
+
+				// needs to be set after the argument validations
+				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
 				app.EnableRepl = true;
+			}
 
 			if (cross_prefix == null)
 				cross_prefix = MonoTouchDirectory;

@@ -949,12 +949,14 @@ It might be a broken file or a broken symlink (after decompressing an archive) t
 
 <a name="MT0141"/>
 
-### MT0141: The interpreter is not supported in the simulator. Do not pass --interpreter when building for the simulator.
+### MT0141: The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator.
 
-This error occurs when enabling the interpreter on a simulator build.
+This warning is shown when enabling the interpreter on a simulator build.
 
 The interpreter is only available for device builds as an complete or partial alternative to the ahead-of-time (AOT) compilation.
 In contrast simulator builds are using just-in-time compilation which negates most advantages of the interpreter.
+
+However it is possible to test features such as `dynamic` and `System.Reflection.Emit `on the simulator using the existing REPL (read–eval–print loop) support on the simulator. This feature is automatically enabled when `--interpreter` is used on simulator builds. However the JIT remains the only option available on the simulator, while AOT and interpreter are for devices only.
 
 # MT1xxx: Project related error messages
 
