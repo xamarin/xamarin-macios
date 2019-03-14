@@ -76,44 +76,43 @@ namespace BCLTestImporter {
 		static readonly List<(string name, string[] assemblies)> commoniOSTestProjects = new List<(string name, string[] assemblies)> {
 			// NUNIT TESTS
 
-			(name:"SystemTests", assemblies: new[] {"monotouch_System_test.dll"}),
-			(name:"SystemCoreTests", assemblies: new [] {"monotouch_System.Core_test.dll"}),
-			(name:"SystemDataTests", assemblies: new [] {"monotouch_System.Data_test.dll"}),
-			(name:"SystemNetHttpTests", assemblies: new [] {"monotouch_System.Net.Http_test.dll"}),
-			(name:"SystemNumericsTests", assemblies: new [] {"monotouch_System.Numerics_test.dll"}),
-			(name:"SystemRuntimeSerializationTests", assemblies: new [] {"monotouch_System.Runtime.Serialization_test.dll"}),
-			(name:"SystemTransactionsTests", assemblies: new [] {"monotouch_System.Transactions_test.dll"}),
-			(name:"SystemXmlTests", assemblies: new [] {"monotouch_System.Xml_test.dll"}),
-			(name:"SystemXmlLinqTests", assemblies: new [] {"monotouch_System.Xml.Linq_test.dll"}),
-			(name:"MonoSecurityTests", assemblies: new [] {"monotouch_Mono.Security_test.dll"}),
-			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"monotouch_System.ComponentModel.DataAnnotations_test.dll"}),
-			(name:"SystemJsonTests", assemblies: new [] {"monotouch_System.Json_test.dll"}),
-			(name:"SystemServiceModelWebTests", assemblies: new [] {"monotouch_System.ServiceModel.Web_test.dll"}),
-			(name:"MonoDataTdsTests", assemblies: new [] {"monotouch_Mono.Data.Tds_test.dll"}),
-			(name:"SystemIOCompressionTests", assemblies: new [] {"monotouch_System.IO.Compression_test.dll"}),
-			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"monotouch_System.IO.Compression.FileSystem_test.dll"}),
-			(name:"MonoCSharpTests", assemblies: new [] {"monotouch_Mono.CSharp_test.dll"}),
-			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}),
-			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}),
-			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}),
-			(name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}),
-			(name:"SystemWebServicesTests", assemblies: new [] {"monotouch_System.Web.Services_test.dll"}),
+			(name:"BCL tests group 1", assemblies: new[] { "monotouch_Mono.Data.Sqlite_test.dll", 
+									"monotouch_System.Security_test.dll", 
+									"monotouch_Mono.CSharp_test.dll", 
+									"monotouch_System.IO.Compression.FileSystem_test.dll", 
+									"monotouch_System.IO.Compression_test.dll",
+									"monotouch_System.ServiceModel.Web_test.dll",
+									"monotouch_System.Json_test.dll",
+									"monotouch_System.ComponentModel.DataAnnotations_test.dll",
+									"monotouch_System.Xml.Linq_test.dll",
+									"monotouch_System.Xml_test.dll",
+									"monotouch_System.Transactions_test.dll",
+									"monotouch_System.Runtime.Serialization_test.dll",
+									"monotouch_System.Numerics_test.dll",
+									"monotouch_System.Core_test.dll",
+									"monotouch_Mono.Security_test.dll",}),
+			(name:"BCL tests group 2", assemblies: new[] { "monotouch_System.Data_test.dll", 
+									"monotouch_Mono.Data.Tds_test.dll",
+									"monotouch_System.Net.Http_test.dll",
+									"monotouch_System.ServiceModel_test.dll",
+									"monotouch_System.Web.Services_test.dll",
+									"monotouch_System_test.dll",
+									"monotouch_corlib_test.dll",}), 
 
 			// XUNIT TESTS 
 
-			(name:"SystemDataXunit", assemblies: new [] {"monotouch_System.Data_xunit-test.dll"}),
-			(name:"SystemJsonXunit", assemblies: new [] {"monotouch_System.Json_xunit-test.dll"}),
-			(name:"SystemNumericsXunit", assemblies: new [] {"monotouch_System.Numerics_xunit-test.dll"}),
-			(name:"SystemSecurityXunit", assemblies: new [] {"monotouch_System.Security_xunit-test.dll"}),
-			(name:"SystemLinqXunit", assemblies: new [] {"monotouch_System.Xml.Linq_xunit-test.dll"}),
-			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}),
-			(name:"SystemComponentModelCompositionXunit", assemblies: new [] {"monotouch_System.ComponentModel.Composition_xunit-test.dll"}),
-			(name:"SystemCoreXunit", assemblies: new [] {"monotouch_System.Core_xunit-test.dll"}),
-			(name:"SystemRuntimeSerializationXunit", assemblies: new [] {"monotouch_System.Runtime.Serialization_xunit-test.dll"}),
-			(name:"SystemXmlXunit", assemblies: new [] {"monotouch_System.Xml_xunit-test.dll"}),
-			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}),
-			(name:"CorlibXunit", assemblies: new [] {"monotouch_corlib_xunit-test.dll"}),
-			(name:"MicrosoftCSharpXunit", assemblies: new [] {"monotouch_Microsoft.CSharp_xunit-test.dll"}),
+			(name:"BCL tests group 3", assemblies: new[] { "monotouch_System.Data_xunit-test.dll",
+									"monotouch_System.Json_xunit-test.dll",
+									"monotouch_System.Xml_xunit-test.dll",
+									"monotouch_System.ComponentModel.Composition_xunit-test.dll",
+									"monotouch_System.Xml.Linq_xunit-test.dll",
+									"monotouch_System.Security_xunit-test.dll",
+									"monotouch_System.Runtime.Serialization_xunit-test.dll",
+									"monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll", }),
+			(name:"BCL tests group 4", assemblies: new[] { "monotouch_System.Core_xunit-test.dll",
+									"monotouch_System.Numerics_xunit-test.dll",
+									"monotouch_System_xunit-test.dll",
+									"monotouch_corlib_xunit-test.dll",}), 
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
@@ -348,26 +347,26 @@ namespace BCLTestImporter {
 
 		internal static string GetCommonIgnoreFileName (string projectName) => $"common-{projectName}.ignore";
 		
-		internal static string[] GetIgnoreFileNames (string projectName, Platform platform)
+		internal static string[] GetIgnoreFileNames (string name, Platform platform)
 		{
 			switch (platform) {
 			case Platform.iOS:
-				return new string [] { $"iOS-{projectName}.ignore" };
+				return new string [] { $"iOS-{name}.ignore" };
 			case Platform.MacOSFull:
-				return new string [] { $"macOSFull-{projectName}.ignore", $"macOS-{projectName}.ignore" };
+				return new string [] { $"macOSFull-{name}.ignore", $"macOS-{name}.ignore" };
 			case Platform.MacOSModern:
-				return new string [] { $"macOSModern-{projectName}.ignore", $"macOS-{projectName}.ignore" };
+				return new string [] { $"macOSModern-{name}.ignore", $"macOS-{name}.ignore" };
 			case Platform.TvOS:
-				return new string [] { $"tvOS-{projectName}.ignore" };
+				return new string [] { $"tvOS-{name}.ignore" };
 			case Platform.WatchOS:
-				return new string [] { $"watchOS-{projectName}.ignore" };
+				return new string [] { $"watchOS-{name}.ignore" };
 			default:
 				return null;
 			}
 
 		}
 		
-		internal static IEnumerable<string> GetIgnoreFiles (string templatePath, string projectName, Platform platform)
+		internal static IEnumerable<string> GetIgnoreFiles (string templatePath, string projectName, List<(string assembly, string hintPath)> assemblies, Platform platform)
 		{
 			// check if the common and plaform paths can be found in the template path, if they are, we return them
 			var templateDir = Path.GetDirectoryName (templatePath);
@@ -378,6 +377,17 @@ namespace BCLTestImporter {
 				var platformIgnore = Path.Combine (templateDir, platformFile);
 				if (File.Exists (platformIgnore))
 					yield return platformIgnore;
+			}
+			// do we have ignores per files and not the project name? Add them
+			foreach (var (assembly, hintPath) in assemblies) {
+				foreach (var platformFile in GetIgnoreFileNames (assembly, platform)) {
+					var commonAssemblyIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (assembly));
+					if (File.Exists (commonAssemblyIgnore))
+						yield return commonAssemblyIgnore;
+					var platformAssemblyIgnore = Path.Combine (templateDir, platformFile);
+					if (File.Exists (platformAssemblyIgnore))
+						yield return platformAssemblyIgnore;
+				}
 			}
 		}
 
@@ -710,7 +720,7 @@ namespace BCLTestImporter {
 			}
 			
 			var contentFiles = new StringBuilder ();
-			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, info.Assemblies, platform)) {
 				contentFiles.Append (GetContentNode (path));
 			}
 			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
@@ -737,7 +747,7 @@ namespace BCLTestImporter {
 			}
 
 			var contentFiles = new StringBuilder ();
-			foreach (var path in GetIgnoreFiles (templatePath, projectName, platform)) {
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, info, platform)) {
 				contentFiles.Append (GetContentNode (path));
 			}
 			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
@@ -809,7 +819,7 @@ namespace BCLTestImporter {
 			}
 			
 			var contentFiles = new StringBuilder ();
-			foreach (var path in GetIgnoreFiles (templatePath, projectName, Platform.WatchOS)) {
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, info.Assemblies, Platform.WatchOS)) {
 				contentFiles.Append (GetContentNode (path));
 			}
 			
