@@ -452,8 +452,14 @@ namespace Foundation {
 						inflight.Errored = true;
 
 						var exc = createExceptionForNSError (error);
-						inflight.CompletionSource.TrySetException (exc);
-						inflight.Stream.TrySetException (exc);
+						// block on the stream, set the exceptions, then continue
+						// that way we ensure that threads do not jump in a not known order
+						// which ends in some cases with the response considered to be finished and the
+						// stream in a 'valid' state. Locking stops reading
+						lock (inflight.Stream.DataLock) {
+							inflight.CompletionSource.TrySetException (exc);
+							inflight.Stream.TrySetException (exc);
+						}
 					} else {
 						inflight.Completed = true;
 						SetResponse (inflight);
@@ -710,8 +716,12 @@ namespace Foundation {
 					}
 				}
 
+				// last check, we might have got an error while we read
+				ThrowIfNeeded (cancellationToken);
 				return bytesRead;
 			}
+
+			public object DataLock => dataLock;
 
 			public override bool CanRead => true;
 
