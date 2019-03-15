@@ -1332,7 +1332,7 @@ namespace Xamarin.Bundler
 
 				// FIXME: the interpreter only supports ARM64 right now
 				// temporary - without a check here the error happens when deploying
-				if (!app.IsArchEnabled (Abi.ARM64))
+				if (!app.IsSimulatorBuild && !app.IsArchEnabled (Abi.ARM64))
 					throw ErrorHelper.CreateError (99, "Internal error: The interpreter is currently only available for 64 bits.");
 
 				// needs to be set after the argument validations
