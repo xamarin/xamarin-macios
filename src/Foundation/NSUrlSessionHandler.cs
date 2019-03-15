@@ -204,6 +204,13 @@ namespace Foundation {
 		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
 			lock (inflightRequestsLock) {
+				InflightData data;
+				if (inflightRequests.TryGetValue (task, out data)) {
+					data = inflightRequests [task];
+					if (cancel)
+						data.CancellationTokenSource.Cancel ();
+					data.Dispose ();
+				}
 				inflightRequests.Remove (task);
 #if !MONOMAC  && !MONOTOUCH_WATCH
 				// do we need to be notified? If we have not inflightData, we do not
@@ -228,6 +235,7 @@ namespace Foundation {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
 					pair.Key?.Dispose ();
+					pair.Value?.Dispose ();
 				}
 
 				inflightRequests.Clear ();
@@ -307,6 +315,7 @@ namespace Foundation {
 					RequestUrl = request.RequestUri.AbsoluteUri,
 					CompletionSource = tcs,
 					CancellationToken = cancellationToken,
+					CancellationTokenSource = new CancellationTokenSource (),
 					Stream = new NSUrlSessionDataTaskStream (),
 					Request = request
 				});
@@ -385,7 +394,7 @@ namespace Foundation {
 						inflight.Stream.TrySetException (new ObjectDisposedException ("The content stream was disposed."));
 
 						sessionHandler.RemoveInflightData (dataTask);
-					}, inflight.CancellationToken);
+					}, inflight.CancellationTokenSource.Token);
 
 					// NB: The double cast is because of a Xamarin compiler bug
 					var httpResponse = new HttpResponseMessage ((HttpStatusCode)status) {
@@ -444,23 +453,19 @@ namespace Foundation {
 
 				// this can happen if the HTTP request times out and it is removed as part of the cancellation process
 				if (inflight != null) {
+					// set the stream as finished
+					inflight.Stream.TrySetReceivedAllData ();
 
 					// send the error or send the response back
 					if (error != null) {
+						// got an error, cancel the stream operatios before we do anything
+						inflight.CancellationTokenSource.Cancel (); 
 						inflight.Errored = true;
 
 						var exc = createExceptionForNSError (error);
-						// block on the stream, set the exceptions, then continue
-						// that way we ensure that threads do not jump in a not known order
-						// which ends in some cases with the response considered to be finished and the
-						// stream in a 'valid' state. Locking stops reading
-						lock (inflight.Stream.DataLock) {
-							inflight.CompletionSource.TrySetException (exc);
-							inflight.Stream.TrySetException (exc);
-						}
+						inflight.CompletionSource.TrySetException (exc);
+						inflight.Stream.TrySetException (exc);
 					} else {
-						// set the stream as finished
-						inflight.Stream.TrySetReceivedAllData ();
 						inflight.Completed = true;
 						SetResponse (inflight);
 					}
@@ -473,6 +478,9 @@ namespace Foundation {
 			{
 				lock (inflight.Lock) {
 					if (inflight.ResponseSent)
+						return;
+
+					if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
 						return;
 
 					if (inflight.CompletionSource.Task.IsCompleted)
@@ -572,13 +580,14 @@ namespace Foundation {
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
 #endif
-		class InflightData
+		class InflightData : IDisposable
 		{
 			public readonly object Lock = new object ();
 			public string RequestUrl { get; set; }
 
 			public TaskCompletionSource<HttpResponseMessage> CompletionSource { get; set; }
 			public CancellationToken CancellationToken { get; set; }
+			public CancellationTokenSource CancellationTokenSource { get; set; }
 			public NSUrlSessionDataTaskStream Stream { get; set; }
 			public HttpRequestMessage Request { get; set; }
 			public HttpResponseMessage Response { get; set; }
@@ -588,6 +597,24 @@ namespace Foundation {
 			public bool Disposed { get; set; }
 			public bool Completed { get; set; }
 			public bool Done { get { return Errored || Disposed || Completed || CancellationToken.IsCancellationRequested; } }
+
+			public void Dispose()
+			{
+				Dispose (true);
+				GC.SuppressFinalize(this);
+			}
+
+			// The bulk of the clean-up code is implemented in Dispose(bool)
+			protected virtual void Dispose (bool disposing)
+			{
+				if (disposing) {
+					if (CancellationTokenSource != null) {
+						CancellationTokenSource.Dispose ();
+						CancellationTokenSource = null;
+					}
+				}
+			}
+
 		}
 
 #if MONOMAC
@@ -684,7 +711,13 @@ namespace Foundation {
 						}
 					}
 
-					await Task.Delay (50).ConfigureAwait (false);
+					try {
+						await Task.Delay (50, cancellationToken).ConfigureAwait (false);
+					} catch (TaskCanceledException ex) {
+						// add a nicer exception for the user to catch, add the cancelation exception
+						// to have a decent stack
+						throw new TimeoutException ("The request timed out.", ex);
+					}
 				}
 
 				// try to throw again before read
@@ -716,12 +749,8 @@ namespace Foundation {
 					}
 				}
 
-				// last check, we might have got an error while we read
-				ThrowIfNeeded (cancellationToken);
 				return bytesRead;
 			}
-
-			public object DataLock => dataLock;
 
 			public override bool CanRead => true;
 
