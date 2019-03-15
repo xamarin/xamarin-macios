@@ -190,7 +190,8 @@ namespace Xamarin.Bundler
 			if (!InlineIsDirectBinding.HasValue) {
 #if MONOTOUCH
 				// By default we always inline calls to NSObject.IsDirectBinding
-				InlineIsDirectBinding = true;
+				// unless the interpreter is enabled (we can't predict if code will be subclassed)
+				InlineIsDirectBinding = !app.UseInterpreter;
 #else
 				// NSObject.IsDirectBinding is not a safe optimization to apply to XM apps,
 				// because there may be additional code/assemblies we don't know about at build time.
@@ -217,10 +218,10 @@ namespace Xamarin.Bundler
 #endif
 			}
 
-			// We will register protocols if the static registrar is enabled
+			// We will register protocols if the static registrar is enabled and loading assemblies is not possible
 			if (!RegisterProtocols.HasValue) {
 #if MONOTOUCH
-				RegisterProtocols = app.Registrar == RegistrarMode.Static;
+				RegisterProtocols = (app.Registrar == RegistrarMode.Static) && !app.UseInterpreter;
 #else
 				RegisterProtocols = false;
 #endif
@@ -248,6 +249,10 @@ namespace Xamarin.Bundler
 					RemoveDynamicRegistrar = false;
 				} else {
 #if MONOTOUCH
+					// we can't predict is unknown (at build time) code will require registration (at runtime)
+					if (app.UseInterpreter) {
+						RemoveDynamicRegistrar = false;
+					}
 					// We don't have enough information yet to determine if we can remove the dynamic
 					// registrar or not, so let the value stay unset until we do know (when running the linker).
 #else
