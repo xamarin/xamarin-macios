@@ -210,8 +210,8 @@ namespace Foundation {
 					if (cancel)
 						data.CancellationTokenSource.Cancel ();
 					data.Dispose ();
+					inflightRequests.Remove (task);
 				}
-				inflightRequests.Remove (task);
 #if !MONOMAC  && !MONOTOUCH_WATCH
 				// do we need to be notified? If we have not inflightData, we do not
 				if (inflightRequests.Count == 0)
