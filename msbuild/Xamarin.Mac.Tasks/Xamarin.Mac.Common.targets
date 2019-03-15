@@ -201,6 +201,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			IsAppExtension="$(IsAppExtension)"
+			UseSecureTimestamp="$(UseHardenedRuntime)"
 			>
 		</Codesign>
 	</Target>
@@ -250,6 +251,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ExtraArgs="$(CodesignExtraArgs)"
 			IsAppExtension="$(IsAppExtension)"
 			UseHardenedRuntime="$(UseHardenedRuntime)"
+			UseSecureTimestamp="$(UseHardenedRuntime)"
 			>
 		</Codesign>
 	</Target>

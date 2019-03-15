@@ -46,6 +46,8 @@ namespace Xamarin.MacDev.Tasks
 		public bool IsAppExtension { get; set; }
 
 		public bool UseHardenedRuntime { get; set; }
+		
+		public bool UseSecureTimestamp { get; set; }
 
 		public string ToolExe {
 			get { return toolExe ?? ToolName; }
@@ -97,6 +99,11 @@ namespace Xamarin.MacDev.Tasks
 
 			if (UseHardenedRuntime)
 				args.Add ("-o runtime");
+
+			if (UseSecureTimestamp)
+				args.Add ("--timestamp");
+			else
+				args.Add ("--timestamp=none");
 
 			args.Add ("--sign");
 			args.AddQuoted (SigningKey);
