@@ -204,9 +204,7 @@ namespace Foundation {
 		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
 			lock (inflightRequestsLock) {
-				InflightData data;
-				if (inflightRequests.TryGetValue (task, out data)) {
-					data = inflightRequests [task];
+				if (inflightRequests.TryGetValue (task, out var data)) {
 					if (cancel)
 						data.CancellationTokenSource.Cancel ();
 					data.Dispose ();
