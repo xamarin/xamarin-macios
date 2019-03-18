@@ -1190,6 +1190,12 @@ namespace xharness
 							case "?do-not-uninstall-test-app":
 								UninstallTestApp = false;
 								break;
+							case "?skip-permission-tests":
+								Harness.IncludeSystemPermissionTests = false;
+								break;
+							case "?include-permission-tests":
+								Harness.IncludeSystemPermissionTests = true;
+								break;
 							default:
 								throw new NotImplementedException (request.Url.Query);
 							}
@@ -1742,6 +1748,7 @@ namespace xharness
 			<ul>
 				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
 				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(UninstallTestApp ? "do-not-uninstall-test-app" : "uninstall-test-app")}"");'>&#x{(UninstallTestApp ? "2705" : "274C")} Uninstall the app from device before and after the test run</a></span></li>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(Harness.IncludeSystemPermissionTests ? "skip-permission-tests" : "include-permission-tests")}"");'>&#x{(Harness.IncludeSystemPermissionTests ? "2705" : "274C")} Run tests that require system permissions (might put up permission dialogs)</a></span></li>
 			</ul>
 	</li>
 	");
