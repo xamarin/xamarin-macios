@@ -2556,6 +2556,208 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreEqual ("ByrefParameter", str.ToString ());
 			}
 		}
+
+		class ArrayTester : ObjCRegistrarTest {
+			public string [] ManagedStringArrayProperty;
+			public NSObject [] ManagedNSObjectArrayProperty;
+			public INSCoding [] ManagedINSCodingArrayProperty;
+
+			public override string [] StringArrayProperty {
+				get {
+					ManagedStringArrayProperty = base.StringArrayProperty;
+					return ManagedStringArrayProperty;
+				}
+				set {
+					base.StringArrayProperty = value;
+					ManagedStringArrayProperty = value;
+				}
+			}
+
+			public override string [] GetStringArrayMethod ()
+			{
+				ManagedStringArrayProperty = base.GetStringArrayMethod ();
+				return ManagedStringArrayProperty;
+			}
+
+			public override void SetStringArrayMethod (string [] array)
+			{
+				ManagedStringArrayProperty = array;
+				base.SetStringArrayMethod (ManagedStringArrayProperty);
+			}
+
+			public override NSObject [] NSObjectArrayProperty {
+				get {
+					ManagedNSObjectArrayProperty = base.NSObjectArrayProperty;
+					return ManagedNSObjectArrayProperty;
+				}
+				set {
+					base.NSObjectArrayProperty = value;
+					ManagedNSObjectArrayProperty = value;
+				}
+			}
+
+			public override NSObject [] GetNSObjectArrayMethod ()
+			{
+				ManagedNSObjectArrayProperty = base.GetNSObjectArrayMethod ();
+				return ManagedNSObjectArrayProperty;
+			}
+
+			public override void SetNSObjectArrayMethod (NSObject [] array)
+			{
+				ManagedNSObjectArrayProperty = array;
+				base.SetNSObjectArrayMethod (array);
+			}
+
+			public override INSCoding [] INSCodingArrayProperty {
+				get {
+					ManagedINSCodingArrayProperty = base.INSCodingArrayProperty;
+					return ManagedINSCodingArrayProperty;
+				}
+				set {
+					base.INSCodingArrayProperty = value;
+					ManagedINSCodingArrayProperty = value;
+				}
+			}
+
+			public override INSCoding [] GetINSCodingArrayMethod ()
+			{
+				ManagedINSCodingArrayProperty = base.GetINSCodingArrayMethod ();
+				return INSCodingArrayProperty;
+			}
+
+			public override void SetINSCodingArrayMethod (INSCoding [] array)
+			{
+				INSCodingArrayProperty = array;
+				base.SetINSCodingArrayMethod (array);
+			}
+		}
+
+
+		[Test]
+		public void TestStringArray ()
+		{
+#if !__WATCHOS__
+			var items = 10000; // Big enough to make the GC run while we're marshalling.
+#else
+			var items = Runtime.Arch == Arch.DEVICE ? 10 : 10000; // Don't test the GC on device, there's not enough memory.
+#endif
+			var array = new string [items];
+			for (var i = 0; i < array.Length; i++)
+				array [i] = i.ToString ();
+
+			using (var obj = new ObjCRegistrarTest ()) {
+				obj.StringArrayProperty = array;
+				Assert.That (obj.StringArrayProperty, Is.EqualTo (array), "1");
+				obj.SetStringArrayMethod (null);
+				Assert.IsNull (obj.StringArrayProperty, "2");
+				obj.SetStringArrayMethod (array);
+				Assert.That (obj.StringArrayProperty, Is.EqualTo (array), "3");
+				var rv = obj.GetStringArrayMethod ();
+				Assert.That (rv, Is.EquivalentTo (array), "4");
+			}
+
+			using (var arrayObj = NSArray.FromStrings (array)) {
+				using (var obj = new ArrayTester ()) {
+					obj.ManagedStringArrayProperty = null;
+					Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setStringArrayProperty:"), arrayObj.Handle);
+					Assert.That (array, Is.EqualTo (obj.ManagedStringArrayProperty), "1B");
+					obj.ManagedStringArrayProperty = null;
+					Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("stringArrayProperty"));
+					Assert.That (array, Is.EqualTo (obj.ManagedStringArrayProperty), "2B");
+
+					obj.ManagedStringArrayProperty = null;
+					Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setStringArrayMethod:"), arrayObj.Handle);
+					Assert.That (array, Is.EqualTo (obj.ManagedStringArrayProperty), "3B");
+					obj.ManagedStringArrayProperty = null;
+					Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("getStringArrayMethod"));
+					Assert.That (array, Is.EqualTo (obj.ManagedStringArrayProperty), "4B");
+				}
+			}
+		}
+
+		[Test]
+		public void TestNSObjectArray ()
+		{
+#if !__WATCHOS__
+			var items = 10000; // Big enough to make the GC run while we're marshalling.
+#else
+			var items = Runtime.Arch == Arch.DEVICE ? 10 : 10000; // Don't test the GC on device, there's not enough memory.
+#endif
+			var array = new NSObject [items];
+			for (var i = 0; i < array.Length; i++)
+				array [i] = NSNumber.FromInt32 (i);
+
+			using (var obj = new ObjCRegistrarTest ()) {
+				obj.NSObjectArrayProperty = array;
+				Assert.That (obj.NSObjectArrayProperty, Is.EqualTo (array), "1");
+				obj.SetNSObjectArrayMethod (null);
+				Assert.IsNull (obj.NSObjectArrayProperty, "2");
+				obj.SetNSObjectArrayMethod (array);
+				Assert.That (obj.NSObjectArrayProperty, Is.EqualTo (array), "3");
+				var rv = obj.GetNSObjectArrayMethod ();
+				Assert.That (rv, Is.EquivalentTo (array), "4");
+			}
+
+			using (var arrayObj = NSArray.FromNSObjects (array)) {
+				using (var obj = new ArrayTester ()) {
+					obj.ManagedNSObjectArrayProperty = null;
+					Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setNsobjectArrayProperty:"), arrayObj.Handle);
+					Assert.That (array, Is.EqualTo (obj.ManagedNSObjectArrayProperty), "1B");
+					obj.ManagedNSObjectArrayProperty = null;
+					Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("nsobjectArrayProperty"));
+					Assert.That (array, Is.EqualTo (obj.ManagedNSObjectArrayProperty), "2B");
+
+					obj.ManagedNSObjectArrayProperty = null;
+					Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setNSObjectArrayMethod:"), arrayObj.Handle);
+					Assert.That (array, Is.EqualTo (obj.ManagedNSObjectArrayProperty), "3B");
+					obj.ManagedNSObjectArrayProperty = null;
+					Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("getNSObjectArrayMethod"));
+					Assert.That (array, Is.EqualTo (obj.ManagedNSObjectArrayProperty), "4B");
+				}
+			}
+		}
+
+		[Test]
+		public void TestINSCodingArray ()
+		{
+#if !__WATCHOS__
+			var items = 10000; // Big enough to make the GC run while we're marshalling.
+#else
+			var items = Runtime.Arch == Arch.DEVICE ? 10 : 10000; // Don't test the GC on device, there's not enough memory.
+#endif
+			var array = new INSCoding [items];
+			for (var i = 0; i < array.Length; i++)
+				array [i] = NSNumber.FromInt32 (i);
+
+			using (var obj = new ObjCRegistrarTest ()) {
+				obj.INSCodingArrayProperty = array;
+				Assert.That (obj.INSCodingArrayProperty, Is.EqualTo (array), "1");
+				obj.SetINSCodingArrayMethod (null);
+				Assert.IsNull (obj.INSCodingArrayProperty, "2");
+				obj.SetINSCodingArrayMethod (array);
+				Assert.That (obj.INSCodingArrayProperty, Is.EqualTo (array), "3");
+				var rv = obj.GetINSCodingArrayMethod ();
+				Assert.That (rv, Is.EquivalentTo (array), "4");
+			}
+
+			using (var arrayObj = NSArray.FromNSObjects<INSCoding> (array)) {
+				using (var obj = new ArrayTester ()) {
+					obj.ManagedINSCodingArrayProperty = null;
+					Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setINSCodingArrayProperty:"), arrayObj.Handle);
+					Assert.That (array, Is.EqualTo (obj.ManagedINSCodingArrayProperty), "1B");
+					obj.ManagedINSCodingArrayProperty = null;
+					Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("INSCodingArrayProperty"));
+					Assert.That (array, Is.EqualTo (obj.ManagedINSCodingArrayProperty), "2B");
+
+					obj.ManagedINSCodingArrayProperty = null;
+					Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setINSCodingArrayMethod:"), arrayObj.Handle);
+					Assert.That (array, Is.EqualTo (obj.ManagedINSCodingArrayProperty), "3B");
+					obj.ManagedINSCodingArrayProperty = null;
+					Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("getINSCodingArrayMethod"));
+					Assert.That (array, Is.EqualTo (obj.ManagedINSCodingArrayProperty), "4B");
+				}
+			}
+		}
 	}
 
 #if !__WATCHOS__

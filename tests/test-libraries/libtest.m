@@ -446,6 +446,37 @@ static UltimateMachine *shared;
 	{
 		// Nothing to do here
 	}
+
+	-(void) setStringArrayMethod:(NSArray *) array
+	{
+		self.stringArrayProperty = array;
+	}
+
+	-(NSArray *) getStringArrayMethod
+	{
+		return self.stringArrayProperty;
+	}
+
+	-(void) setNSObjectArrayMethod: (NSArray *) array
+	{
+		self.nsobjectArrayProperty = array;
+	}
+
+	-(NSArray *) getNSObjectArrayMethod
+	{
+		return self.nsobjectArrayProperty;
+	}
+
+	-(void) setINSCodingArrayMethod: (NSArray *) array
+	{
+		self.INSCodingArrayProperty = array;
+	}
+
+	-(NSArray *) getINSCodingArrayMethod
+	{
+		return self.INSCodingArrayProperty;
+	}
+
 @end
 
 @implementation ProtocolAssigner

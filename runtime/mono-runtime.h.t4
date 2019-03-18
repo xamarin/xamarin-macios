@@ -98,10 +98,11 @@ typedef void (*mono_reference_queue_callback) (void *user_data);
 
 #define mono_array_addr(array,type,index) ((type*)(void*) mono_array_addr_with_size (array, sizeof (type), index))
 #define mono_array_get(array,type,index) ( *(type*)mono_array_addr ((array), type, (index)) )
-#define mono_array_set(array,type,index,value)	\
+#define mono_array_setref(array,index,value)	\
 	do {	\
-		type *__p = (type *) mono_array_addr ((array), type, (index));	\
-		*__p = (value);	\
+		void **__p = (void **) mono_array_addr ((array), void*, (index));	\
+		mono_gc_wbarrier_set_arrayref ((array), __p, (MonoObject*)(value));	\
+		/* *__p = (value);*/	\
 	} while (0)
 
 /* metadata/assembly.h */
