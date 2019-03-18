@@ -192,6 +192,12 @@
 			"void *", "val"
 		),
 
+		new Export ("void", "mono_gc_wbarrier_set_arrayref",
+			"MonoArray *", "arr",
+			"void *", "slot_ptr",
+			"MonoObject *", "value"
+		),
+
 		#endregion
 
 		#region metadata/profiler.h
