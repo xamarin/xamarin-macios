@@ -3647,7 +3647,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// this will *not* show the MT2018 error (in fact I don't know if it's possible
 				// to run into MT2018 at all).
 				var tmpA = mtouch.CreateTemporaryDirectory ();
-				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Net.Http");
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Xml");
 
 				var dllB = Path.Combine (Configuration.SdkRootXI, "lib", "mono", "Xamarin.iOS", Path.GetFileName (dllA));
 
@@ -3657,12 +3657,12 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// Without the linker we'll just copy the references, and not actually run into problems if we copy one that doesn't work
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Net.Http.dll, actual path: .*CreateTemporaryDirectory.*/System.Net.Http.dll..");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Xml.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Xml.dll, actual path: .*CreateTemporaryDirectory.*/System.Xml.dll..");
 
 				// With the linker, we'll find out that we've loaded the right one.
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Net.Http.dll, actual path: .*CreateTemporaryDirectory.*/System.Net.Http.dll..");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Xml.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Xml.dll, actual path: .*CreateTemporaryDirectory.*/System.Xml.dll..");
 			}
 		}
 
@@ -3676,7 +3676,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// this will *not* show the MT2018 error (in fact I don't know if it's possible
 				// to run into MT2018 at all).
 				var tmpA = mtouch.CreateTemporaryDirectory ();
-				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Net.Http");
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Xml");
 
 				var dllB = Path.Combine (Configuration.SdkRootXI, "lib", "mono", "Xamarin.iOS", Path.GetFileName (dllA));
 
@@ -3686,12 +3686,12 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// Without the linker we'll just copy the references, and not actually run into problems if we copy one that doesn't work
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*CreateTemporaryDirectory.*/System.Net.Http.dll, actual path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/.*/lib/mono/Xamarin.iOS/System.Net.Http.dll..");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Xml.dll' was loaded from a different path than the provided path .provided path: .*CreateTemporaryDirectory.*/System.Xml.dll, actual path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/.*/lib/mono/Xamarin.iOS/System.Xml.dll..");
 
 				// With the linker, we'll find out that the loaded reference doesn't work.
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (2101, "Can't resolve the reference 'X', referenced from the method 'System.Void C::Main()' in 'System.Net.Http, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'.");
+				mtouch.AssertError (2101, "Can't resolve the reference 'X', referenced from the method 'System.Void C::Main()' in 'System.Xml, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'.");
 			}
 		}
 
