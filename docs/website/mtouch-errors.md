@@ -958,6 +958,11 @@ In contrast simulator builds are using just-in-time compilation which negates mo
 
 However it is possible to test features such as `dynamic` and `System.Reflection.Emit `on the simulator using the existing REPL (read–eval–print loop) support on the simulator. This feature is automatically enabled when `--interpreter` is used on simulator builds. However the JIT remains the only option available on the simulator, while AOT and interpreter are for devices only.
 
+### MT0142: Cannot find the assembly '{assembly}', passed as an argument to --interpreter.
+
+This warning is shown if the assemblies names given to the `--interpreter` option (either to interpret them or not) cannot be found.
+
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch

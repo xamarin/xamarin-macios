@@ -289,7 +289,7 @@ namespace Xamarin.Bundler
 
 			// Verify that there are no entries in our list of intepreted assemblies that doesn't match
 			// any of the assemblies we know about.
-			if (App.UseInterpreter) {
+			if (App.InterpretedAssemblies.Count > 0) {
 				var exceptions = new List<Exception> ();
 				foreach (var entry in App.InterpretedAssemblies) {
 					var assembly = entry;
@@ -305,7 +305,7 @@ namespace Xamarin.Bundler
 					if (Assemblies.ContainsKey (assembly))
 						continue;
 
-					exceptions.Add (ErrorHelper.CreateWarning (138, $"Cannot find the assembly '{assembly}', passed as an argument to --interpreter."));
+					exceptions.Add (ErrorHelper.CreateWarning (142, $"Cannot find the assembly '{assembly}', passed as an argument to --interpreter."));
 				}
 				ErrorHelper.ThrowIfErrors (exceptions);
 			}
