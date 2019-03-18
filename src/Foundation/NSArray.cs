@@ -59,6 +59,16 @@ namespace Foundation {
 			return FromNativeObjects (items, count);
 		}
 
+		public static NSArray FromNSObjects<T> (params T [] items) where T: class, INativeObject
+		{
+			return FromNativeObjects (items);
+		}
+
+		public static NSArray FromNSObjects<T> (int count, params T [] items) where T: class, INativeObject
+		{
+			return FromNativeObjects (items, count);
+		}
+
 		public static NSArray FromNSObjects<T> (Func<T, NSObject> nsobjectificator, params T [] items)
 		{
 			if (nsobjectificator == null)
@@ -104,15 +114,15 @@ namespace Foundation {
 			return FromNSObjects (nsoa);
 		}
 		
-		internal static NSArray FromNativeObjects (INativeObject[] items)
+		internal static NSArray FromNativeObjects<T> (T[] items) where T: class, INativeObject
 		{
 			if (items == null)
 				return new NSArray ();
 
-			return FromNativeObjects (items, items.Length);
+			return FromNativeObjects<T> (items, items.Length);
 		}
 
-		internal static NSArray FromNativeObjects (INativeObject [] items, nint count)
+		internal static NSArray FromNativeObjects<T> (T [] items, nint count) where T: class, INativeObject
 		{
 			if (items == null)
 				return new NSArray ();

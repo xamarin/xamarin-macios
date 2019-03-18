@@ -212,6 +212,39 @@ namespace Bindings.Test {
 
 		[Export ("outNSErrorOnStack:obj:obj:int64:i:err:")]
 		void OutNSErrorOnStack (NSObject i1, NSObject i2, NSObject i3, long i4, int i5, out NSError error);
+
+		[NullAllowed]
+		[Export ("stringArrayProperty")]
+		string[] StringArrayProperty { get; set; }
+
+		[Export ("setStringArrayMethod:")]
+		void SetStringArrayMethod ([NullAllowed] string[] array);
+
+		[return: NullAllowed]
+		[Export ("getStringArrayMethod")]
+		string[] GetStringArrayMethod ();
+
+		[NullAllowed]
+		[Export ("nsobjectArrayProperty")]
+		NSObject[] NSObjectArrayProperty { get; set; }
+
+		[Export ("setNSObjectArrayMethod:")]
+		void SetNSObjectArrayMethod ([NullAllowed] NSObject[] array);
+
+		[return: NullAllowed]
+		[Export ("getNSObjectArrayMethod")]
+		NSObject[] GetNSObjectArrayMethod ();
+
+		[NullAllowed]
+		[Export ("INSCodingArrayProperty")]
+		INSCoding[] INSCodingArrayProperty { get; set; }
+
+		[Export ("setINSCodingArrayMethod:")]
+		void SetINSCodingArrayMethod ([NullAllowed] INSCoding[] array);
+
+		[return: NullAllowed]
+		[Export ("getINSCodingArrayMethod")]
+		INSCoding[] GetINSCodingArrayMethod ();
 	}
 
 	[Protocol]
