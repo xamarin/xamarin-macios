@@ -270,7 +270,7 @@ namespace CoreText {
 					return;
 				}
 				Adapter.SetValue (Dictionary, CTFontFeatureKey.Selectors,
-						NSArray.FromNSObjects (v.ConvertAll (e => (NSObject) e.Dictionary)));
+						NSArray.FromNSObjects ((IList<NSObject>) v.ConvertAll (e => (NSObject) e.Dictionary)));
 			}
 		}
 	}
