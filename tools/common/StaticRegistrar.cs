@@ -3542,7 +3542,7 @@ namespace Registrar {
 						setup_call_stack.AppendLine ("for (j = 0; j < [arr count]; j++) {{", i);
 						if (elementType.FullName == "System.String") {
 							setup_call_stack.AppendLine ("NSString *sv = (NSString *) [arr objectAtIndex: j];", i);
-							setup_call_stack.AppendLine ("mono_array_set (marr, MonoString *, j, mono_string_new (mono_domain_get (), [sv UTF8String]));", i);
+							setup_call_stack.AppendLine ("mono_array_setref (marr, j, mono_string_new (mono_domain_get (), [sv UTF8String]));", i);
 						} else if (IsNSObject (elementType) || (elementType.Namespace == "System" && elementType.Name == "Object") || (isNativeObject = IsNativeObject (elementType))) {
 							setup_call_stack.AppendLine ("NSObject *nobj = [arr objectAtIndex: j];");
 							setup_call_stack.AppendLine ("MonoObject *mobj{0} = NULL;", i);
@@ -3585,7 +3585,7 @@ namespace Registrar {
 								setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nobj, {0}, e_class, managed_method);", i);
 							}
 							setup_call_stack.AppendLine ("}");
-							setup_call_stack.AppendLine ("mono_array_set (marr, MonoObject *, j, mobj{0});", i);
+							setup_call_stack.AppendLine ("mono_array_setref (marr, j, mobj{0});", i);
 						} else {
 							throw ErrorHelper.CreateError (App, 4111, method.Method, "The registrar cannot build a signature for type `{0}' in method `{1}`.", type.FullName, descriptiveMethodName);
 						}

@@ -320,7 +320,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							for (j = 0; j < [arr count]; j++) {
 								if (e_klass == mono_get_string_class ()) {
 									NSString *sv = (NSString *) [arr objectAtIndex: j];
-									mono_array_set (m_arr, MonoString *, j, mono_string_new (mono_domain_get (), [sv UTF8String]));
+									mono_array_setref (m_arr, j, mono_string_new (mono_domain_get (), [sv UTF8String]));
 								} else {
 									MonoObject *obj;
 									id targ = [arr objectAtIndex: j];
@@ -330,7 +330,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 #if DEBUG
 									xamarin_verify_parameter (obj, sel, self, targ, i, e_klass, method);
 #endif
-									mono_array_set (m_arr, MonoObject *, j, obj);
+									mono_array_setref (m_arr, j, obj);
 								}
 							}
 
