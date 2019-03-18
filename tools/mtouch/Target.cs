@@ -267,11 +267,19 @@ namespace Xamarin.Bundler
 					ErrorHelper.Show (new MonoTouchException (11, false, "{0} was built against a more recent runtime ({1}) than Xamarin.iOS supports.", Path.GetFileName (reference), ad.MainModule.Runtime));
 
 				// Figure out if we're referencing Xamarin.iOS or monotouch.dll
-				if (Path.GetFileNameWithoutExtension (ad.MainModule.FileName) == Driver.GetProductAssembly (App))
+				var filename = ad.MainModule.FileName;
+				if (Path.GetFileNameWithoutExtension (filename) == Driver.GetProductAssembly (App))
 					ProductAssembly = ad;
 
-				if (ad != ProductAssembly && GetRealPath (ad.MainModule.FileName) != GetRealPath (reference) && !ad.MainModule.FileName.EndsWith (".resources.dll", StringComparison.Ordinal))
-					ErrorHelper.Show (ErrorHelper.CreateWarning (109, "The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).", Path.GetFileName (reference), reference, ad.MainModule.FileName));
+				// repl / interpreter is a special case where some assemblies can switch location
+				if (ManifestResolver.EnableRepl) {
+					// in that case just tweak it before testing for mixed paths - since it's not a problem and should no warning should be in the logs
+					if (filename.StartsWith (Path.Combine (Resolver.FrameworkDirectory, "repl"), StringComparison.Ordinal))
+						filename = Path.Combine (Resolver.FrameworkDirectory, Path.GetFileName (filename));
+				}
+
+				if (ad != ProductAssembly && GetRealPath (filename) != GetRealPath (reference) && !filename.EndsWith (".resources.dll", StringComparison.Ordinal))
+					ErrorHelper.Show (ErrorHelper.CreateWarning (109, "The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).", Path.GetFileName (reference), reference, filename));
 			}
 
 			ComputeListOfAssemblies ();
