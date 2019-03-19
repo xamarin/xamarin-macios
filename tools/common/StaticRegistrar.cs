@@ -3531,10 +3531,7 @@ namespace Registrar {
 							setup_call_stack.AppendLine ("a{0} = *p{0} ? mono_string_new (mono_domain_get (), [(*p{0}) UTF8String]) : NULL;", i);
 						setup_call_stack.AppendLine ("arg_ptrs [{0}] = &a{0};", i);
 						body_setup.AppendLine ("char *str{0} = NULL;", i);
-						copyback.AppendLine ("str{0} = mono_string_to_utf8 (a{0});", i);
-						copyback.AppendLine ("*p{0} = [[NSString alloc] initWithUTF8String:str{0}];", i);
-						copyback.AppendLine ("[*p{0} autorelease];", i);
-						copyback.AppendLine ("mono_free (str{0});", i);
+						copyback.AppendLine ("*p{0} = xamarin_string_to_nsstring (a{0}, false);", i);
 					} else {
 						setup_call_stack.AppendLine ("arg_ptrs [{0}] = p{0} ? mono_string_new (mono_domain_get (), [p{0} UTF8String]) : NULL;", i);
 					}
@@ -3819,11 +3816,7 @@ namespace Registrar {
 					setup_return.AppendLine ("MonoObject *value = mono_array_get ((MonoArray *) retval, MonoObject *, i);");
 					
 					if (elementType.FullName == "System.String") {
-						setup_return.AppendLine ("char *str = mono_string_to_utf8 ((MonoString *) value);");
-						setup_return.AppendLine ("NSString *sv = [[NSString alloc] initWithUTF8String:str];");
-						setup_return.AppendLine ("[sv autorelease];");
-						setup_return.AppendLine ("mono_free (str);");
-						setup_return.AppendLine ("buf [i] = sv;");
+						setup_return.AppendLine ("buf [i] = xamarin_string_to_nsstring ((MonoString *) value, false);");
 					} else if (IsNSObject (elementType)) {
 						setup_return.AppendLine ("buf [i] = xamarin_get_nsobject_handle ((MonoObject *) value);");
 					} else if (IsINativeObject (elementType)) {
@@ -3884,12 +3877,7 @@ namespace Registrar {
 						setup_return.AppendLine ("res = retobj;");
 					} else if (type.FullName == "System.String") {
 						// This should always be an NSString and never char*
-						setup_return.AppendLine ("char *str = mono_string_to_utf8 ((MonoString *) retval);");
-						setup_return.AppendLine ("NSString *nsstr = [[NSString alloc] initWithUTF8String:str];");
-						if (!retain)
-							setup_return.AppendLine ("[nsstr autorelease];");
-						setup_return.AppendLine ("mono_free (str);");
-						setup_return.AppendLine ("res = nsstr;");
+						setup_return.AppendLine ("res = xamarin_string_to_nsstring ((MonoString *) retval, {0});", retain ? "true" : "false");
 					} else if (IsDelegate (type.Resolve ())) {
 						var signature = "NULL";
 						var token = "INVALID_TOKEN_REF";

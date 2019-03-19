@@ -51,6 +51,22 @@ xamarin_get_exception_for_parameter (int code, guint32 inner_exception_gchandle,
 	return exception_gchandle;
 }
 
+NSString *
+xamarin_string_to_nsstring (MonoString *obj, bool retain)
+{
+	if (obj == NULL)
+		return NULL;
+
+	char *str = mono_string_to_utf8 ((MonoString *) obj);
+	NSString *arg;
+	if (retain) {
+		arg = [[NSString alloc] initWithUTF8String:str];
+	} else {
+		arg = [NSString stringWithUTF8String:str];
+	}
+	mono_free (str);
+	return arg;
+}
 void
 xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_func iterator, marshal_return_value_func marshal_return_value, void *context)
 {
@@ -545,10 +561,8 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							*(NSObject **) arg = NULL;
 							LOGZ (" writing back managed null string to argument at %p\n", arg);
 						} else {
-							char *str = mono_string_to_utf8 (value);
-							*(NSObject **) arg = [[[NSString alloc] initWithUTF8String:str] autorelease];
+							*(NSObject **) arg = xamarin_string_to_nsstring (value, false);
 							LOGZ (" writing back managed string %p = %s to argument at %p\n", *(NSObject **) arg, str, arg);
-							mono_free (str);
 						}
 					} else if (xamarin_is_class_nsobject (p_klass)) {
 						*(NSObject **) arg = xamarin_get_handle ((MonoObject *) arg_frame [ofs], &exception_gchandle);
