@@ -587,7 +587,6 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 						exception_gchandle = xamarin_get_exception_for_parameter (8030, 0, "Unable to marshal the out/ref parameter", sel, method, p, i, false);
 						goto exception_handling;
 					}
-					break;
 				}
 				ofs++;
 			}
