@@ -67,6 +67,11 @@ public static class ErrorHelper {
 		return new ProductException (code, true, message, args);
 	}
 
+	public static void Warning (int code, string message, params object[] args)
+	{
+		ShowInternal (new ProductException (code, true, message, args));
+	}
+
 	static public void Show (Exception e, bool rethrow_errors = true)
 	{
 		List<Exception> exceptions = new List<Exception> ();
