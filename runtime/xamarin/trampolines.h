@@ -179,6 +179,8 @@ id xamarin_uiedgeinsets_to_nsvalue           (MonoObject *value, void *context, 
 id xamarin_uioffset_to_nsvalue               (MonoObject *value, void *context, guint32 *exception_gchandle);
 id xamarin_nsdirectionaledgeinsets_to_nsvalue(MonoObject *value, void *context, guint32 *exception_gchandle);
 
+NSString *   xamarin_string_to_nsstring (MonoString *obj, bool retain);
+
 /* Copied from SGen */
 
 static inline void

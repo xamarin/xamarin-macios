@@ -71,13 +71,7 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 			if (desc && desc->bindas [0].original_type != NULL) {
 				return xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), mono_reflection_type_get_type (desc->bindas [0].original_type), method, (void *) INVALID_TOKEN_REF, exception_gchandle);
 			} else if (r_klass == mono_get_string_class ()) {
-				char *str = mono_string_to_utf8 ((MonoString *) retval);
-				NSString *rv = [[NSString alloc] initWithUTF8String:str];
-
-				if (!retain)
-					[rv autorelease];
-				mono_free (str);
-				return (void *) rv;
+				return xamarin_string_to_nsstring ((MonoString *) retval, retain);
 			} else if (xamarin_is_class_array (r_klass)) {
 				MonoClass *e_klass = mono_class_get_element_class (r_klass);
 				bool is_string = e_klass == mono_get_string_class ();
@@ -92,13 +86,7 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 					MonoObject *value = mono_array_get (m_arr, MonoObject *, i);
 					
 					if (is_string) {
-						char *str = mono_string_to_utf8 ((MonoString *) value);
-						NSString *sv = [[NSString alloc] initWithUTF8String:str];
-
-						[sv autorelease];
-						mono_free (str);
-
-						v = sv;
+						v = xamarin_string_to_nsstring ((MonoString *) value, false);
 					} else {
 						v = xamarin_get_handle (value, exception_gchandle);
 						if (*exception_gchandle != 0) {
