@@ -692,14 +692,14 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, type));
 		}
 			
-		static IntPtr GetINativeObject_Static (IntPtr ptr, bool owns, string typename, string ifacename)
+		static IntPtr GetINativeObject_Static (IntPtr ptr, bool owns, uint iface_token, uint implementation_token)
 		{
 			/* 
 			 * This method is called from generated code from the static registrar.
 			 */
 
-			var iface = Type.GetType (ifacename, true);
-			var type = Type.GetType (typename, true);
+			var iface = Class.ResolveTypeTokenReference (iface_token);
+			var type = Class.ResolveTypeTokenReference (implementation_token);
 			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, iface, type));
 		}
 

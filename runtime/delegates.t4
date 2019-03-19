@@ -170,8 +170,8 @@
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_inative_object_static",
 			"id", "IntPtr", "obj",
 			"bool", "bool", "owns",
-			"const char *", "string", "type_name",
-			"const char *", "string", "iface_name"
+			"unsigned int", "uint", "iface_token_ref",
+			"unsigned int", "uint", "implementation_token_ref"
 		) {
 			WrappedManagedFunction = "GetINativeObject_Static",
 			OnlyDynamicUsage = false,
