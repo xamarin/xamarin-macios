@@ -271,19 +271,12 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 									*(NSObject **) arg = NULL;
 								}
 							} else if (xamarin_is_class_nsobject (p_klass)) {
-								MonoObject *obj;
-								NSObject *targ = *(NSObject **) arg;
-
-								obj = xamarin_get_nsobject_with_type_for_ptr (targ, false, p, &exception_gchandle);
+								arg_frame [ofs] = xamarin_get_nsobject_with_type_for_ptr (*(NSObject **) arg, false, p, &exception_gchandle);
 								if (exception_gchandle != 0) {
 									exception_gchandle = xamarin_get_exception_for_parameter (8029, exception_gchandle, "Unable to marshal the byref parameter", sel, method, p, i, true);
 									goto exception_handling;
 								}
-#if DEBUG
-								xamarin_verify_parameter (obj, sel, self, targ, i, p_klass, method);
-#endif
-								arg_frame [ofs] = obj;
-								LOGZ (" argument %i is a ref NSObject parameter: %p = %p\n", i + 1, arg, obj);
+								LOGZ (" argument %i is a ref NSObject parameter: %p = %p\n", i + 1, arg, arg_frame [ofs]);
 							} else {
 								exception_gchandle = xamarin_get_exception_for_parameter (8029, 0, "Unable to marshal the byref parameter", sel, method, p, i, true);
 								goto exception_handling;
