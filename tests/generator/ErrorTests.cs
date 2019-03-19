@@ -579,6 +579,60 @@ namespace BI1063Tests {
 		}
 
 		[Test]
+		public void BI1065 ()
+		{
+			var bgen = new BGenTool {
+				Profile = Profile.iOS,
+				ProcessEnums = true
+			};
+			bgen.CreateTemporaryBinding (@"
+using System;
+using ObjCRuntime;
+using Foundation;
+
+namespace BI1065Errors
+{
+	[BaseType (typeof (NSObject))]
+	interface C
+	{
+		// Can't put SEL into NSArray (SEL isn't an NSObject), so a Selector[] parameter/return value doesn't make sense
+		[Export (""testSelectorArray:"")]
+		void TestSelectorArray (Selector[] values);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1065, "Unsupported parameter type 'ObjCRuntime.Selector[]' for the parameter 'values' in BI1065Errors.C.TestSelectorArray.");
+			bgen.AssertErrorCount (1);
+		}
+
+		[Test]
+		public void BI1066 ()
+		{
+			var bgen = new BGenTool {
+				Profile = Profile.iOS,
+				ProcessEnums = true
+			};
+			bgen.CreateTemporaryBinding (@"
+using System;
+using ObjCRuntime;
+using Foundation;
+
+namespace BI1066Errors
+{
+	[BaseType (typeof (NSObject))]
+	interface C
+	{
+		// Can't put SEL into NSArray (SEL isn't an NSObject), so a Selector[] parameter/return value doesn't make sense
+		[Export (""testSelectorArrayReturnValue"")]
+		Selector[] TestSelectorArrayReturnValue ();
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1066, "Unsupported return type 'ObjCRuntime.Selector[]' in BI1066Errors.C.TestSelectorArrayReturnValue.");
+			bgen.AssertErrorCount (2); // We show the same error twice.
+		}
+
+		[Test]
 		[TestCase (Profile.iOS)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
