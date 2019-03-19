@@ -7,11 +7,9 @@ using Mono.Linker.Steps;
 
 using Xamarin.Bundler;
 using Xamarin.Linker;
+using Xamarin.Tuner;
 using Mono.Linker;
 using System;
-
-using Xamarin.Tuner;
-using Xamarin.Linker;
 
 namespace MonoTouch.Tuner {
 	public class RemoveBitcodeIncompatibleCodeStep : ExceptionalSubStep {
