@@ -155,7 +155,6 @@ namespace BCLTestImporter {
 			(name:"MonoDataSqliteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}, group: "Mac OS X BCL tests group 1"),
 			(name:"MonoDataTdsTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}, group: "Mac OS X BCL tests group 1"),
 			(name:"MonoPoxisTests", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"MonoCSharpTests", assemblies: new [] {"xammac_net_4_5_Mono.CSharp_test.dll"}, group: "Mac OS X BCL tests group 1"),
 			(name:"MonoSecurityTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}, group: "Mac OS X BCL tests group 1"),
 			(name:"SystemDataLinqTests", assemblies: new [] {"xammac_net_4_5_System.Data.Linq_test.dll"}, group: "Mac OS X BCL tests group 1"),
 			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"xammac_net_4_5_System.IO.Compression.FileSystem_test.dll"}, group: "Mac OS X BCL tests group 1"),
@@ -176,6 +175,7 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityTests", assemblies: new [] {"xammac_net_4_5_System.Security_test.dll"}, group: "Mac OS X BCL tests group 2"),
 			(name:"SystemXmlTests", assemblies: new [] {"xammac_net_4_5_System.Xml_test.dll"}, group: "Mac OS X BCL tests group 2"),
 			(name:"SystemTests", assemblies: new [] {"xammac_net_4_5_System_test.dll"}, group: "Mac OS X BCL tests group 2"),
+			(name:"MonoCSharpTests", assemblies: new [] {"xammac_net_4_5_Mono.CSharp_test.dll"}, group: "Mac OS X BCL tests group 2"), // if add to the first group, it blocks 'til a timeout, mono issue
 			
 			// xUnit Projects
 			(name:"MicrosoftCSharpXunit", assemblies: new [] {"xammac_net_4_5_Microsoft.CSharp_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
