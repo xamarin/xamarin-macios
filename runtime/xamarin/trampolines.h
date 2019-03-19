@@ -180,6 +180,8 @@ id xamarin_uioffset_to_nsvalue               (MonoObject *value, void *context, 
 id xamarin_nsdirectionaledgeinsets_to_nsvalue(MonoObject *value, void *context, guint32 *exception_gchandle);
 
 NSString *   xamarin_string_to_nsstring (MonoString *obj, bool retain);
+// domain is optional, if NULL the function will call mono_get_domain.
+MonoString * xamarin_nsstring_to_string (MonoDomain *domain, NSString *obj);
 
 /* Copied from SGen */
 

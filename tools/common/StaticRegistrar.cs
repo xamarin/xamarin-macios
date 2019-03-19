@@ -3528,12 +3528,12 @@ namespace Registrar {
 					if (isRef) {
 						body_setup.AppendLine ("MonoString *a{0} = NULL;", i);
 						if (!isOut)
-							setup_call_stack.AppendLine ("a{0} = *p{0} ? mono_string_new (mono_domain_get (), [(*p{0}) UTF8String]) : NULL;", i);
+							setup_call_stack.AppendLine ("a{0} = xamarin_nsstring_to_string (NULL, *p{0});", i);
 						setup_call_stack.AppendLine ("arg_ptrs [{0}] = &a{0};", i);
 						body_setup.AppendLine ("char *str{0} = NULL;", i);
 						copyback.AppendLine ("*p{0} = xamarin_string_to_nsstring (a{0}, false);", i);
 					} else {
-						setup_call_stack.AppendLine ("arg_ptrs [{0}] = p{0} ? mono_string_new (mono_domain_get (), [p{0} UTF8String]) : NULL;", i);
+						setup_call_stack.AppendLine ("arg_ptrs [{0}] = xamarin_nsstring_to_string (NULL, p{0});", i);
 					}
 					break;
 				default:
@@ -3555,7 +3555,7 @@ namespace Registrar {
 						setup_call_stack.AppendLine ("for (j = 0; j < [arr count]; j++) {{", i);
 						if (elementType.FullName == "System.String") {
 							setup_call_stack.AppendLine ("NSString *sv = (NSString *) [arr objectAtIndex: j];", i);
-							setup_call_stack.AppendLine ("mono_array_setref (marr, j, mono_string_new (mono_domain_get (), [sv UTF8String]));", i);
+							setup_call_stack.AppendLine ("mono_array_setref (marr, j, xamarin_nsstring_to_string (NULL, sv));", i);
 						} else if (IsNSObject (elementType) || (elementType.Namespace == "System" && elementType.Name == "Object") || (isNativeObject = IsNativeObject (elementType))) {
 							setup_call_stack.AppendLine ("NSObject *nobj = [arr objectAtIndex: j];");
 							setup_call_stack.AppendLine ("MonoObject *mobj{0} = NULL;", i);

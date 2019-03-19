@@ -67,6 +67,18 @@ xamarin_string_to_nsstring (MonoString *obj, bool retain)
 	mono_free (str);
 	return arg;
 }
+
+MonoString *
+xamarin_nsstring_to_string (MonoDomain *domain, NSString *obj)
+{
+	if (obj == NULL)
+		return NULL;
+
+	if (domain == NULL)
+		domain = mono_domain_get ();
+	return mono_string_new (domain, [obj UTF8String]);
+}
+
 void
 xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_func iterator, marshal_return_value_func marshal_return_value, void *context)
 {
@@ -361,7 +373,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 					} else {
 						if (p_klass == mono_get_string_class ()) {
 							NSString *str = (NSString *) id_arg;
-							arg_ptrs [i + mofs] = mono_string_new (domain, [str UTF8String]);
+							arg_ptrs [i + mofs] = xamarin_nsstring_to_string (domain, str);
 							LOGZ (" argument %i is NSString: %p = %s\n", i + 1, id_arg, [str UTF8String]);
 						} else if (xamarin_is_class_array (p_klass)) {
 #if DEBUG
@@ -376,7 +388,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							for (j = 0; j < [arr count]; j++) {
 								if (e_klass == mono_get_string_class ()) {
 									NSString *sv = (NSString *) [arr objectAtIndex: j];
-									mono_array_setref (m_arr, j, mono_string_new (domain, [sv UTF8String]));
+									mono_array_setref (m_arr, j, xamarin_nsstring_to_string (domain, sv));
 								} else {
 									MonoObject *obj;
 									id targ = [arr objectAtIndex: j];
