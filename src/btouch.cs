@@ -38,7 +38,7 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-class BindingTouch {
+public class BindingTouch {
 	static TargetFramework? target_framework;
 	public static PlatformName CurrentPlatform;
 	public static bool Unified;

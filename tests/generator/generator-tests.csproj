@@ -73,5 +73,11 @@
   <ItemGroup>
     <Folder Include="tests\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\generator.csproj">
+      <Project>{D2EE02C0-9BFD-477D-AC92-4DE2D8490790}</Project>
+      <Name>generator</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -18,6 +18,7 @@ namespace Xamarin.Tests
 		AssemblyDefinition assembly;
 
 		public Profile Profile;
+		public bool InProcess = true; // if executed using an in-process bgen. Ignored if using the classic bgen (for XM/Classic), in which case we'll always use the out-of-process bgen.
 		public bool ProcessEnums;
 
 		public List<string> ApiDefinitions = new List<string> ();
@@ -54,9 +55,9 @@ namespace Xamarin.Tests
 			}
 		}
 
-		string BuildArguments ()
+		string [] BuildArgumentArray ()
 		{
-			var sb = new StringBuilder ();
+			var sb = new List<string> ();
 			var targetFramework = (string) null;
 
 			switch (Profile) {
@@ -88,54 +89,72 @@ namespace Xamarin.Tests
 			}
 
 			if (!string.IsNullOrEmpty (targetFramework))
-				sb.Append (" --target-framework=").Append (targetFramework);
+				sb.Add ($"--target-framework={targetFramework}");
 
 			foreach (var ad in ApiDefinitions)
-				sb.Append (" --api=").Append (StringUtils.Quote (ad));
+				sb.Add ($"--api={ad}");
 
 			foreach (var s in Sources)
-				sb.Append (" -s=").Append (StringUtils.Quote (s));
+				sb.Add ($"-s={s}");
 
 			foreach (var r in References)
-				sb.Append (" -r=").Append (StringUtils.Quote (r));
+				sb.Add ($"-r={r}");
 
 			if (!string.IsNullOrEmpty (TmpDirectory))
-				sb.Append (" --tmpdir=").Append (StringUtils.Quote (TmpDirectory));
+				sb.Add ($"--tmpdir={TmpDirectory}");
 
 			if (!string.IsNullOrEmpty (ResponseFile))
-				sb.Append (" @").Append (StringUtils.Quote (ResponseFile));
+				sb.Add ($"@{ResponseFile}");
+
+			if (!string.IsNullOrEmpty (Out))
+				sb.Add ($"--out={Out}");
 
 			if (ProcessEnums)
-				sb.Append (" --process-enums");
+				sb.Add ("--process-enums");
 
 			if (Defines != null) {
 				foreach (var d in Defines)
-					sb.Append (" -d ").Append (StringUtils.Quote (d));
+					sb.Add ($"-d={d}");
 			}
 
 			if (WarnAsError != null) {
-				sb.Append (" --warnaserror");
+				var arg = "--warnaserror";
 				if (WarnAsError.Length > 0)
-					sb.Append (":").Append (StringUtils.Quote (WarnAsError));
+					arg += ":" + WarnAsError;
+				sb.Add (arg);
 			}
 
 			if (NoWarn != null) {
-				sb.Append (" --nowarn");
+				var arg = "--nowarn";
 				if (NoWarn.Length > 0)
-					sb.Append (":").Append (StringUtils.Quote (NoWarn));
+					arg += ":" + NoWarn;
+				sb.Add (arg);
 			}
-
-			return sb.ToString ();
+			sb.Add ("-v");
+			return sb.ToArray ();
 		}
 
 		public void AssertExecute (string message)
 		{
-			Assert.AreEqual (0, Execute (BuildArguments (), always_show_output: true), message);
+			Assert.AreEqual (0, Execute (), message);
 		}
 
 		public void AssertExecuteError (string message)
 		{
-			Assert.AreNotEqual (0, Execute (BuildArguments ()), message);
+			Assert.AreNotEqual (0, Execute (), message);
+		}
+
+		int Execute ()
+		{
+			var arguments = BuildArgumentArray ();
+			var in_process = InProcess && Profile != Profile.macOSClassic;
+			if (in_process) {
+				int rv = BindingTouch.Main (arguments);
+				Console.WriteLine (Output);
+				ParseMessages ();
+				return rv;
+			}
+			return Execute (string.Join (" ", StringUtils.Quote (arguments)), always_show_output: true);
 		}
 
 		public void AssertApiCallsMethod (string caller_namespace, string caller_type, string caller_method, string @called_method, string message)
