@@ -69,12 +69,12 @@ class BindingTouch {
 		os.WriteOptionDescriptions (Console.Out);
 	}
 	
-	static int Main (string [] args)
+	public static int Main (string [] args)
 	{
 		try {
 			return Main2 (args);
 		} catch (Exception ex) {
-			ErrorHelper.Show (ex);
+			ErrorHelper.Show (ex, false);
 			return 1;
 		}
 	}
@@ -235,6 +235,8 @@ class BindingTouch {
 		var defines = new List<string> ();
 		string generate_file_list = null;
 		bool process_enums = false;
+
+		ErrorHelper.ClearWarningLevels ();
 
 		var os = new OptionSet () {
 			{ "h|?|help", "Displays the help", v => show_help = true },
