@@ -1821,19 +1821,19 @@ public class B
 		}
 
 		[Test]
-		public void MT0138 ()
+		public void MT0142 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
 				var tmpdir = mtouch.CreateTemporaryDirectory ();
 				mtouch.CreateTemporaryCacheDirectory ();
 
 				mtouch.CreateTemporaryApp ();
-				mtouch.WarnAsError = new int [] { 138 }; // This is just to make mtouch bail out early instead of spending time building the app when that's not what we're interested in.
+				mtouch.WarnAsError = new int [] { 142 }; // This is just to make mtouch bail out early instead of spending time building the app when that's not what we're interested in.
 				mtouch.Interpreter = "all,-all,foo,-bar,mscorlib.dll,mscorlib";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (138, "Cannot find the assembly 'foo', passed as an argument to --interpreter.");
-				mtouch.AssertError (138, "Cannot find the assembly 'bar', passed as an argument to --interpreter.");
-				mtouch.AssertError (138, "Cannot find the assembly 'mscorlib.dll', passed as an argument to --interpreter.");
+				mtouch.AssertError (142, "Cannot find the assembly 'foo', passed as an argument to --interpreter.");
+				mtouch.AssertError (142, "Cannot find the assembly 'bar', passed as an argument to --interpreter.");
+				mtouch.AssertError (142, "Cannot find the assembly 'mscorlib.dll', passed as an argument to --interpreter.");
 				// just the name, without the extension, is the right way.
 				mtouch.AssertErrorCount (3);
 			}
