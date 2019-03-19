@@ -14,6 +14,9 @@ struct CallState {
 		double double_ret;
 		float float_ret;
 	};
+	bool is_stret () { return (type & Tramp_Stret) == Tramp_Stret; }
+	id self () { return ((id *) esp) [(is_stret () ? 2 : 1)]; }
+	SEL sel () { return ((SEL *) esp) [(is_stret () ? 3 : 2)]; }
 };
 
 struct ParamIterator {

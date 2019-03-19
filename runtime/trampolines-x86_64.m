@@ -77,10 +77,10 @@ get_primitive_size (char type)
 
 #ifdef TRACE
 static void
-dump_state (struct CallState *state, id self, SEL sel)
+dump_state (struct CallState *state)
 {
 	fprintf (stderr, "type: %llu is_stret: %i self: %p SEL: %s rdi: 0x%llx rsi: 0x%llx rdx: 0x%llx rcx: 0x%llx r8: 0x%llx r9: 0x%llx rbp: 0x%llx -- xmm0: %Lf xmm1: %Lf xmm2: %Lf xmm3: %Lf xmm4: %Lf xmm5: %Lf xmm6: %Lf xmm7: %Lf\n",
-		state->type, (state->type & Tramp_Stret) == Tramp_Stret, self, sel_getName (sel), state->rdi, state->rsi, state->rdx, state->rcx, state->r8, state->r9, state->rbp,
+		state->type, state->is_stret (), state->self (), sel_getName (state->sel ()), state->rdi, state->rsi, state->rdx, state->rcx, state->r8, state->r9, state->rbp,
 		state->xmm0, state->xmm1, state->xmm2, state->xmm3, state->xmm4, state->xmm5, state->xmm6, state->xmm7);
 }
 #else
@@ -538,14 +538,11 @@ xamarin_arch_trampoline (struct CallState *state)
 	MONO_ASSERT_GC_SAFE;
 
 	enum TrampolineType type = (enum TrampolineType) state->type;
-	bool is_stret = (type & Tramp_Stret) == Tramp_Stret;
-	id self = is_stret ? (id) state->rsi : (id) state->rdi;
-	SEL sel = is_stret ? (SEL) state->rdx : (SEL) state->rsi;
-	dump_state (state, self, sel);
+	dump_state (state);
 	struct ParamIterator iter;
 	iter.state = state;
-	xamarin_invoke_trampoline (type, self, sel, param_iter_next, marshal_return_value, &iter);
-	dump_state (state, self, sel);
+	xamarin_invoke_trampoline (type, state->self (), state->sel (), param_iter_next, marshal_return_value, &iter);
+	dump_state (state);
 }
 
 #endif /* __x86_64__ */
