@@ -665,7 +665,7 @@ namespace BCLTestImporter {
 		{
 
 			List<(string name, string [] assemblies)> testProjects = new List<(string name, string [] assemblies)> ();
-			if (GroupTests) {
+			if (GroupTests && platform != Platform.WatchOS) {
 				// build the grouped apps 
 				var groupedApps = new Dictionary<string, List<string>> ();
 				foreach (var (name, assemblies, group) in definitions) {

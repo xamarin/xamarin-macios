@@ -699,7 +699,7 @@ namespace xharness
 		public bool UseGroupedApps {
 			get {
 				var groupApps = Environment.GetEnvironmentVariable ("BCL_GROUPED_APPS");
-				return !string.IsNullOrEmpty (groupApps);
+				return string.IsNullOrEmpty (groupApps) || groupApps == "grouped";
 			}
 		}
 

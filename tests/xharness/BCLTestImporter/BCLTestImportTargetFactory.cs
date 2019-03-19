@@ -38,6 +38,7 @@ namespace xharness.BCLTestImporter {
 				var prefix = xunit ? "xUnit" : "NUnit";
 				result.Add (new iOSTestProject (path) {
 					Name = $"[{prefix}] Mono {name}",
+					SkipiOSVariation = !platforms.Contains (Platform.iOS),
 					SkiptvOSVariation = !platforms.Contains (Platform.TvOS),
 					SkipwatchOSVariation = !platforms.Contains (Platform.WatchOS),
 					FailureMessage = failure,
