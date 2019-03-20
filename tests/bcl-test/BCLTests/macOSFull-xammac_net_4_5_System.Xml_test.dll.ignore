@@ -1,0 +1,14 @@
+# System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.Xml.Serialization.XmlSchemaImporterTests.ImportWildcardElementAsClass
+MonoTests.System.XmlSerialization.XmlCodeExporterTests.DuplicateIdentifiers
+
+# Expected string length 566 but was 562. Strings differ at index 66.
+# Expected: "...piler.GeneratedCodeAttribute("nunit-lite-console", "0.0.0...."
+# But was:  "...piler.GeneratedCodeAttribute("SystemXmlTests", "0.0.0.0")]..."
+MonoTests.System.XmlSerialization.XmlCodeExporterTests.ExportTypeMapping_ArrayClass
+MonoTests.System.XmlSerialization.XmlCodeExporterTests.ExportTypeMapping_ArrayContainer
+MonoTests.System.XmlSerialization.XmlCodeExporterTests.ExportTypeMapping_CDataContainer
+MonoTests.System.XmlSerialization.XmlCodeExporterTests.ExportTypeMapping_ClassArrayContainer
+MonoTests.System.XmlSerialization.XmlCodeExporterTests.ExportTypeMapping_ItemChoiceType
+MonoTests.System.XmlSerialization.XmlCodeExporterTests.ExportTypeMapping_SimpleClassWithXmlAttributes
+MonoTests.System.XmlSerialization.XmlCodeExporterTests.ExportTypeMapping_ZeroFlagEnum
