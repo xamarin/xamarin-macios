@@ -227,7 +227,11 @@ namespace xharness
 
 		public static void RemoveTargetFrameworkIdentifier (this XmlDocument csproj)
 		{
-			RemoveNode (csproj, "TargetFrameworkIdentifier");
+			try {
+				RemoveNode (csproj, "TargetFrameworkIdentifier");
+			} catch {
+				// ignore exceptions, if not present, we are not worried
+			}
 		}
 
 		public static void SetAssemblyName (this XmlDocument csproj, string value)
