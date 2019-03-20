@@ -90,4 +90,4 @@ fi
 git reset --hard "$MACCORE_HASH"
 cd ..
 
-./maccore/tools/install-qa-provisioning-profiles.sh --only-create-keychain
+./maccore/tools/install-qa-provisioning-profiles.sh --only-create-keychain -v
