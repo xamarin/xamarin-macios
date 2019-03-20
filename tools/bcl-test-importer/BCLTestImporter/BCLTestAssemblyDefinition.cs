@@ -10,8 +10,8 @@ namespace BCLTestImporter {
 		static string partialPath = "mcs/class/lib";
 		static Dictionary <Platform, string> platformPathMatch = new Dictionary <Platform, string> {
 			{Platform.iOS, "monotouch"},
-			{Platform.WatchOS, "monotouch"},
-			{Platform.TvOS, "monotouch"},
+			{Platform.WatchOS, "monotouch_watch"},
+			{Platform.TvOS, "monotouch_tv"},
 			{Platform.MacOSFull, "xammac_net_4_5"},
 			{Platform.MacOSModern, "xammac_net_4_5"},
 		};
@@ -30,6 +30,18 @@ namespace BCLTestImporter {
 			// the following pattern is used when generating xunit test
 			// assemblies
 			IsXUnit = name.Contains ("_xunit-test");
+		}
+		
+		public string GetName (Platform platform)
+		{
+			switch (platform) {
+			case Platform.WatchOS:
+				return Name.Replace ("monotouch_", "monotouch_watch_");
+			case Platform.TvOS:
+				return Name.Replace ("monotouch_", "monotouch_tv_");
+			default:
+				return Name;
+			}
 		}
 
 		/// <summary>
@@ -76,7 +88,7 @@ namespace BCLTestImporter {
 		{
 			var testsRootPath = wasDownloaded? GetTestDirectoryFromDownloadsPath (rootPath, platform) : 
 				GetTestDirectoryFromMonoPath (rootPath, platform);
-			return Path.Combine (testsRootPath, Name);
+			return Path.Combine (testsRootPath, GetName (platform));
 		}
 	}
 }

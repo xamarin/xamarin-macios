@@ -465,7 +465,7 @@ namespace BCLTestImporter {
 
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
-				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name);
+				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name, "watch");
 				if (!Directory.Exists (generatedCodeDir)) {
 					Directory.CreateDirectory (generatedCodeDir);
 				}
@@ -550,7 +550,7 @@ namespace BCLTestImporter {
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				// generate the required type registration info
-				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name);
+				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name, (platform == Platform.iOS)?"ios": "tv");
 				if (!Directory.Exists (generatedCodeDir)) {
 					Directory.CreateDirectory (generatedCodeDir);
 				}
@@ -572,7 +572,7 @@ namespace BCLTestImporter {
 					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 						await file.WriteAsync (generatedProject);
 					}
-					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.iOS, true);
+					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), platform, true);
 					var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
 						projectDefinition.IsXUnit, RegisterTypesTemplatePath);
 
@@ -603,7 +603,7 @@ namespace BCLTestImporter {
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				// generate the required type registration info
-				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name);
+				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name, "mac");
 				Directory.CreateDirectory (generatedCodeDir);
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType-mac.cs");
 
