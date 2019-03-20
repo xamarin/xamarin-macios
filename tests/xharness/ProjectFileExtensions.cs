@@ -227,7 +227,11 @@ namespace xharness
 
 		public static void RemoveTargetFrameworkIdentifier (this XmlDocument csproj)
 		{
-			RemoveNode (csproj, "TargetFrameworkIdentifier");
+			try {
+				RemoveNode (csproj, "TargetFrameworkIdentifier");
+			} catch {
+				// ignore exceptions, if not present, we are not worried
+			}
 		}
 
 		public static void SetAssemblyName (this XmlDocument csproj, string value)
@@ -549,13 +553,15 @@ namespace xharness
 		public static void FixInfoPListInclude (this XmlDocument csproj, string suffix)
 		{
 			var import = csproj.SelectSingleNode ("/*/*/*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
-			import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace("Info.plist", $"Info{suffix}.plist");
-			var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
-			if (logicalName == null) {
-				logicalName = csproj.CreateElement ("LogicalName", MSBuild_Namespace);
-				import.AppendChild (logicalName);
+			if (import != null) {
+				import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace ("Info.plist", $"Info{suffix}.plist");
+				var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
+				if (logicalName == null) {
+					logicalName = csproj.CreateElement ("LogicalName", MSBuild_Namespace);
+					import.AppendChild (logicalName);
+				}
+				logicalName.InnerText = "Info.plist";
 			}
-			logicalName.InnerText = "Info.plist";
 		}
 
 		public static string GetInfoPListInclude (this XmlDocument csproj)
