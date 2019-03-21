@@ -369,9 +369,9 @@ namespace BCLTestImporter {
 			case Platform.MacOSModern:
 				return new string [] { $"macOSModern-{name}.ignore", $"macOS-{name}.ignore" };
 			case Platform.TvOS:
-				return new string [] { $"tvOS-{name}.ignore" };
+				return new string [] { $"tvOS-{name.Replace ("monotouch_tv_", "monotouch_")}.ignore" };
 			case Platform.WatchOS:
-				return new string [] { $"watchOS-{name}.ignore" };
+				return new string [] { $"watchOS-{name.Replace ("monotouch_watch_", "monotouch_")}.ignore" };
 			default:
 				return null;
 			}
