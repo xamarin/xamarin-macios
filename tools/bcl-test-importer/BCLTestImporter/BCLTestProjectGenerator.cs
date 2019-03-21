@@ -147,6 +147,7 @@ namespace BCLTestImporter {
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
 			"monotouch_Mono.Security_test.dll",
+			"monotouch_Mono.Data.Tds_test.dll", // not present in the watch tests dlls
 		};
 
 		private static readonly List<(string name, string[] assemblies, string group)> macTestProjects = new List<(string name, string[] assemblies, string group)> {
