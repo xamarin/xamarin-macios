@@ -77,7 +77,7 @@ namespace LinkSdk {
 		public void MonoAssembly_LinkedOut ()
 		{
 			Assembly a = Assembly.GetExecutingAssembly ();
-			Assert.That (a.GetType ().Name, Is.EqualTo ("MonoAssembly"), "MonoAssembly");
+			Assert.That (a.GetType ().Name, Is.EqualTo ("RuntimeAssembly"), "RuntimeAssembly");
 		}
 		
 		[Test]
@@ -173,7 +173,7 @@ namespace LinkSdk {
 		public void Bug928_MonoModule_LinkedOut ()
 		{
 			Module m = Assembly.GetExecutingAssembly ().ManifestModule;
-			Assert.That (m.GetType ().Name, Is.EqualTo ("MonoModule"), "MonoModule");
+			Assert.That (m.GetType ().Name, Is.EqualTo ("RuntimeModule"), "RuntimeModule");
 		}
 
 #if !__TVOS__ && !__WATCHOS__
@@ -1070,6 +1070,7 @@ namespace LinkSdk {
 			Assert.Null (GetTypeHelper (fqn), "Should be included");
 		}
 
+#if !__WATCHOS__ && !__TVOS__ // WebKit isn't available in tvOS or watchOS
 		[Test]
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=59247
 		public void WebKit_NSProxy ()
@@ -1080,6 +1081,7 @@ namespace LinkSdk {
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Foundation.NSProxy");
 			Assert.NotNull (GetTypeHelper (fqn), fqn);
 		}
+#endif // !__WATCHOS__ && !__TVOS__
 
 		// Fools linker not to keep the type by using it in test check
 		static Type GetTypeHelper (string name)
