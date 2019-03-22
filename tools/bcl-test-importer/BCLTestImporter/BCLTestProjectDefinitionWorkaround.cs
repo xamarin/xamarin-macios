@@ -10,7 +10,7 @@ namespace BCLTestImporter
 	public partial struct BCLTestProjectDefinition
 	{
 
-		private static Dictionary<string, List<(string assembly, string hint)>> macCachedAssemblyInfo =
+		internal static Dictionary<string, List<(string assembly, string hint)>> MacCachedAssemblyInfo =
 			new Dictionary<string, List<(string assembly, string hint)>> {
 				{"MonoCSharpTests", new List<(string assembly, string hint)> {
 					(assembly:"mscorlib", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/mscorlib.dll"),
@@ -306,7 +306,7 @@ namespace BCLTestImporter
 		public List<(string assembly, string hintPath)> GetCachedAssemblyInclusionInformation (string monoRootPath,
 			Platform platform)
 		{
-			if (!monoRootPath.EndsWith ("/"))
+			if (!monoRootPath.EndsWith ("/", StringComparison.Ordinal))
 				monoRootPath += "/";
 			var info = new List<(string assembly, string hintPath)> ();
 			switch (platform){
@@ -316,7 +316,7 @@ namespace BCLTestImporter
 				throw new InvalidOperationException ("All iOS platforms must used the dlls from the SDK and not build their own tests.");
 			case Platform.MacOSFull:
 			case Platform.MacOSModern:
-				info = macCachedAssemblyInfo[Name];
+				info = MacCachedAssemblyInfo[Name];
 				break;
 			}
 			// lets fix the path

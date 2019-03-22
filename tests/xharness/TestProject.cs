@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,7 +46,8 @@ namespace xharness
 		public TestProject AsWatchOSProject ()
 		{
 			var clone = Clone ();
-			clone.Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (Path), System.IO.Path.GetFileNameWithoutExtension (Path) + "-watchos" + System.IO.Path.GetExtension (Path));
+			var fileName = System.IO.Path.GetFileNameWithoutExtension (Path);
+			clone.Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (Path), fileName + (fileName.Contains("-watchos")?"":"-watchos") + System.IO.Path.GetExtension (Path));
 			return clone;
 		}
 
