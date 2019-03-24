@@ -148,6 +148,7 @@ namespace BCLTestImporter {
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
 			"monotouch_Mono.Security_test.dll",
+			"monotouch_Mono.Data.Tds_test.dll", // not present in the watch tests dlls
 		};
 
 		private static readonly List<(string name, string[] assemblies, string group)> macTestProjects = new List<(string name, string[] assemblies, string group)> {
@@ -361,7 +362,17 @@ namespace BCLTestImporter {
 			return sb.ToString ();
 		}
 
-		internal static string GetCommonIgnoreFileName (string projectName) => $"common-{projectName}.ignore";
+		internal static string GetCommonIgnoreFileName (string name, Platform platform)
+		{
+			switch (platform) {
+			case Platform.TvOS:
+				return $"common-{name.Replace ("monotouch_tv_", "monotouch_")}.ignore";
+			case Platform.WatchOS:
+				return $"common-{name.Replace ("monotouch_watch_", "monotouch_")}.ignore";
+			default:
+				return $"common-{name}.ignore";
+			}
+		} 
 		
 		internal static string[] GetIgnoreFileNames (string name, Platform platform)
 		{
@@ -373,20 +384,19 @@ namespace BCLTestImporter {
 			case Platform.MacOSModern:
 				return new string [] { $"macOSModern-{name}.ignore", $"macOS-{name}.ignore" };
 			case Platform.TvOS:
-				return new string [] { $"tvOS-{name}.ignore" };
+				return new string [] { $"tvOS-{name.Replace ("monotouch_tv_", "monotouch_")}.ignore" };
 			case Platform.WatchOS:
-				return new string [] { $"watchOS-{name}.ignore" };
+				return new string [] { $"watchOS-{name.Replace ("monotouch_watch_", "monotouch_")}.ignore" };
 			default:
 				return null;
 			}
-
 		}
 		
 		internal static IEnumerable<string> GetIgnoreFiles (string templatePath, string projectName, List<(string assembly, string hintPath)> assemblies, Platform platform)
 		{
 			// check if the common and plaform paths can be found in the template path, if they are, we return them
 			var templateDir = Path.GetDirectoryName (templatePath);
-			var commonIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (projectName));
+			var commonIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (projectName, platform));
 			if (File.Exists (commonIgnore))
 				yield return commonIgnore;
 			foreach (var platformFile in GetIgnoreFileNames (projectName, platform)) {
@@ -397,7 +407,7 @@ namespace BCLTestImporter {
 			// do we have ignores per files and not the project name? Add them
 			foreach (var (assembly, hintPath) in assemblies) {
 				foreach (var platformFile in GetIgnoreFileNames (assembly, platform)) {
-					var commonAssemblyIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (assembly));
+					var commonAssemblyIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (assembly, platform));
 					if (File.Exists (commonAssemblyIgnore))
 						yield return commonAssemblyIgnore;
 					var platformAssemblyIgnore = Path.Combine (templateDir, platformFile);
@@ -469,7 +479,7 @@ namespace BCLTestImporter {
 
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
-				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name);
+				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name, "watch");
 				if (!Directory.Exists (generatedCodeDir)) {
 					Directory.CreateDirectory (generatedCodeDir);
 				}
@@ -554,7 +564,7 @@ namespace BCLTestImporter {
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				// generate the required type registration info
-				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name);
+				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name, (platform == Platform.iOS)?"ios": "tv");
 				if (!Directory.Exists (generatedCodeDir)) {
 					Directory.CreateDirectory (generatedCodeDir);
 				}
@@ -576,7 +586,7 @@ namespace BCLTestImporter {
 					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 						await file.WriteAsync (generatedProject);
 					}
-					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), Platform.iOS, true);
+					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), platform, true);
 					var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
 						projectDefinition.IsXUnit, RegisterTypesTemplatePath);
 
@@ -607,7 +617,7 @@ namespace BCLTestImporter {
 				if (!projectDefinition.Validate ())
 					throw new InvalidOperationException ("xUnit and NUnit assemblies cannot be mixed in a test project.");
 				// generate the required type registration info
-				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name);
+				var generatedCodeDir = Path.Combine (generatedDir, projectDefinition.Name, "mac");
 				Directory.CreateDirectory (generatedCodeDir);
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType-mac.cs");
 
