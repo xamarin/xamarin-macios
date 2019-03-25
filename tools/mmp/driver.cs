@@ -875,17 +875,21 @@ namespace Xamarin.Bundler {
 		static void CopyMonoNative ()
 		{
 			string name;
-			switch (App.MonoNativeMode) {
-			case MonoNativeMode.None:
-				return;
-			case MonoNativeMode.Unified:
-				name = "libmono-native-unified";
-				break;
-			case MonoNativeMode.Compat:
-				name = "libmono-native-compat";
-				break;
-			default:
-				throw ErrorHelper.CreateError (99, $"Internal error: Invalid mono native type: '{App.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+			if (File.Exists (Path.Combine (MonoDirectory, "lib", "libmono-system-native.dylib"))) {
+				// legacy libmono-system-native.a needs to be included if it exists in the mono in question
+				name = "libmono-system-native";
+			} else {
+				// use modern libmono-native
+				switch (App.MonoNativeMode) {
+				case MonoNativeMode.Unified:
+					name = "libmono-native-unified";
+					break;
+				case MonoNativeMode.Compat:
+					name = "libmono-native-compat";
+					break;
+				default:
+					throw ErrorHelper.CreateError (99, $"Internal error: Invalid mono native type: '{App.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+				}
 			}
 
 			var src = Path.Combine (MonoDirectory, "lib", name + ".dylib");
@@ -1311,16 +1315,16 @@ namespace Xamarin.Bundler {
 					string libmono = Path.Combine (libdir, "libmonosgen-2.0.a");
 
 					if (!File.Exists (libmono))
-						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from http://mono-project.com/Downloads");
+						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from https://www.mono-project.com/download/");
 
 					args.Append (StringUtils.Quote (libmono)).Append (' ');
 
-					// libmono-system-native.a needs to be included if it exists in the mono in question
-					string libmonoNative =  Path.Combine (libdir, "libmono-system-native.a");
-					if (File.Exists (libmonoNative))
-						args.Append (StringUtils.Quote (libmonoNative)).Append (' ');
-
-					if (App.MonoNativeMode != MonoNativeMode.None) {
+					string libmonoSystemNative = Path.Combine (libdir, "libmono-system-native.a");
+					if (File.Exists (libmonoSystemNative)) {
+						// legacy libmono-system-native.a needs to be included if it exists in the mono in question
+						args.Append (StringUtils.Quote (libmonoSystemNative)).Append (' ');
+					} else {
+						// add modern libmono-native
 						string libmono_native_name;
 						switch (App.MonoNativeMode) {
 						case MonoNativeMode.Unified:
