@@ -1961,7 +1961,7 @@ public class B
 			return Configuration.GetBaseLibrary (profile);
 		}
 
-		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = false)
+		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = true)
 		{
 			args.Append (" -lib:").Append (Path.GetDirectoryName (GetBaseLibrary (profile))).Append (' ');
 			if (use_csc) {
@@ -4216,7 +4216,7 @@ public class Dummy {
 			ExecutionHelper.Execute ("mono", $"{StringUtils.Quote (Path.Combine (Configuration.RootPath, "tests", "xharness", "xharness.exe"))} --run {StringUtils.Quote (csprojpath)} --target ios-simulator-64 --sdkroot {Configuration.xcode_root} --logdirectory {StringUtils.Quote (Path.Combine (tmpdir, "log.txt"))} --configuration {configuration}", environmentVariables: environment_variables);
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = false)
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = true)
 		{
 			return BundlerTool.CompileTestAppExecutable (targetDirectory, code, extraArg, profile, appName, extraCode, usings, use_csc);
 		}
@@ -4226,7 +4226,7 @@ public class Dummy {
 			return BundlerTool.CompileTestAppLibrary (targetDirectory, code, extraArg, profile, appName);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = false)
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = true)
 		{
 			return BundlerTool.CompileTestAppCode (target, targetDirectory, code, extraArg, profile, appName, use_csc);
 		}

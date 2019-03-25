@@ -492,7 +492,7 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = false)
+		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = true)
 		{
 			args.Append (" -lib:").Append (Path.GetDirectoryName (GetBaseLibrary (profile))).Append (' ');
 			if (use_csc) {

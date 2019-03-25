@@ -50,7 +50,7 @@ namespace Xamarin
 			}
 		}
 
-		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = false)
+		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = true)
 		{
 			if (RootAssembly == null) {
 				OutputPath = CreateTemporaryDirectory ();

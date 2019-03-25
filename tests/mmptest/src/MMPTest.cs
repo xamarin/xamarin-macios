@@ -214,7 +214,7 @@ namespace Xamarin.MMP.Tests
 				string assemblyPath = string.Format ("{0}/b.dll", tmpDir);
 				sb.AppendFormat ("-target:library -debug -out:{0} {1}/b.cs", assemblyPath, tmpDir);
 				File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public class B { }");
-				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mcs", sb, "b");
+				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", sb, "b");
 
 				File.SetAttributes (assemblyPath, FileAttributes.ReadOnly);
 				File.SetAttributes (assemblyPath + ".mdb", FileAttributes.ReadOnly);
