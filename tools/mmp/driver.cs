@@ -1348,7 +1348,7 @@ namespace Xamarin.Bundler {
 					args.Append (" -framework Quartz ");
 				}
 
-				args.Append ("-liconv -x objective-c++ ");
+				args.Append ("-liconv -lc++ -x objective-c++ ");
 				if (XcodeVersion.Major >= 10) {
 					// Xcode 10 doesn't ship with libstdc++
 					args.Append ("-stdlib=libc++ ");
