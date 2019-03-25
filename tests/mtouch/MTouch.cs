@@ -3113,6 +3113,10 @@ class Test {
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.GccFlags = "-all_load";
+				// the test app doesn't depend on any BCL assembly that would cause mtouch to
+				// pull in GSS, but -all_load will cause all members of libmono-native to be
+				// loaded so we need to manually add GSS.framework or we'd get undefined symobls
+				mtouch.GccFlags += " -framework GSS";
 				mtouch.Abi = "armv7,arm64";
 				mtouch.TargetVer = "10.3"; // otherwise 32-bit builds aren't possible
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
