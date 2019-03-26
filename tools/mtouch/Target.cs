@@ -1727,6 +1727,8 @@ namespace Xamarin.Bundler
 				else if (Is64Build)
 					launcher.Append ("64");
 				launcher.Append ("-sgen");
+				if (Directory.Exists (targetExecutable))
+					throw new ArgumentException ($"{targetExecutable} is a directory.");
 				File.Copy (launcher.ToString (), targetExecutable);
 				File.SetLastWriteTime (targetExecutable, DateTime.Now);
 			} catch (MonoTouchException) {
