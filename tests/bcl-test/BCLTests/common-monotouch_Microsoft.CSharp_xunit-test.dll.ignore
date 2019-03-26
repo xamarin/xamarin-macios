@@ -1,0 +1,8 @@
+# DEVICE FAILURES
+
+
+#  Exception messages: Microsoft.CSharp.RuntimeBinder.RuntimeBinderException : 'System.MulticastDelegate' does not contain a definition for 'DynamicInvoke'
+Microsoft.CSharp.RuntimeBinder.Tests.AccessTests.PrivateDelegateType
+
+#  Microsoft.CSharp.RuntimeBinder.RuntimeBinderException : 'System.MulticastDelegate' does not contain a definition for 'DynamicInvoke'  
+Microsoft.CSharp.RuntimeBinder.Tests.AccessTests.PrivateValueTypeDelegateType
