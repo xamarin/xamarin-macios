@@ -54,13 +54,6 @@ namespace MetalPerformanceShaders {
 
 		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, seconds);
-
-		[DllImport (Constants.MetalPerformanceShadersLibrary)]
-		[TV (12,2), Mac (10,14,4, onlyOn64: true), iOS (12,2)]
-		static extern IntPtr MPSGetPreferredDevice (nuint options);
-
-		[TV (12,2), Mac (10,14,4, onlyOn64: true), iOS (12,2)]
-		public static IMTLDevice GetPreferredDevice (MPSDeviceOptions options) => Runtime.GetINativeObject<IMTLDevice> (MPSGetPreferredDevice ((nuint) (ulong) options), false);
 #endif
 	}
 

@@ -62,7 +62,6 @@ namespace Introspection {
 			case "MPSStateBatchResourceSize":
 			case "MPSHintTemporaryMemoryHighWaterMark":
 			case "MPSSetHeapCacheDuration":
-			case "MPSGetPreferredDevice":
 				return simulator;
 
 			// it's not needed for ARM64 and Apple does not have stubs for them in libobjc.dylib
