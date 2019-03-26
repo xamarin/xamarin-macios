@@ -8626,6 +8626,7 @@ namespace AppKit {
 		void SetTextureImage (NSOpenGLPixelBuffer pixelBuffer, NSGLColorBuffer source);
 
 		//Detected properties
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 		[Export ("view")]
 		NSView View { get; set; }
 
@@ -8653,12 +8654,15 @@ namespace AppKit {
 		[Export ("clearGLContext")]
 		void ClearGLContext ();
 
+		[RequiresSuper]
 		[Export ("update")]
 		void Update ();
 
+		[RequiresSuper]
 		[Export ("reshape")]
 		void Reshape ();
 
+		[RequiresSuper]
 		[Export ("prepareOpenGL")]
 		void PrepareOpenGL ();
 
@@ -15795,6 +15799,7 @@ namespace AppKit {
 		[Notification, Field ("NSViewBoundsDidChangeNotification")]
 		NSString BoundsChangedNotification { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 		[Notification, Field ("NSViewGlobalFrameDidChangeNotification")]
 		NSString GlobalFrameChangedNotification { get; }
 
