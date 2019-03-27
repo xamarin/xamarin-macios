@@ -105,17 +105,6 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		}
 
 		[Test]
-		public void GetPreferredDeviceTest ()
-		{
-			TestRuntime.AssertDevice ();
-			TestRuntime.AssertXcodeVersion (10, 2);
-
-			var preferredDevice = MPSKernel.GetPreferredDevice (MPSDeviceOptions.Default);
-			Assert.NotNull (preferredDevice);
-			Assert.IsTrue (MPSKernel.Supports (preferredDevice));
-		}
-
-		[Test]
 		public void MPSImageLaplacianPyramidCtorArrTest ()
 		{
 			TestRuntime.AssertDevice ();

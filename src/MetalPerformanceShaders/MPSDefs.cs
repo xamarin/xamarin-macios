@@ -395,15 +395,6 @@ namespace MetalPerformanceShaders {
 		public Vector3 Max;
 	}
 
-	[Flags]
-	[Native]
-	[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
-	public enum MPSDeviceOptions : ulong {
-		Default = 0,
-		LowPower = 1,
-		SkipRemovable = 2,
-	}
-
 	[TV (11, 3), Mac (10, 13, 4, onlyOn64: true), iOS (11, 3)]
 	public enum MPSCnnWeightsQuantizationType : uint {
 		None = 0,
