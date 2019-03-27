@@ -81,10 +81,6 @@ namespace Xamarin.Tuner
 			get; set;
 		}
 
-		public bool RequireGss {
-			get; set;
-		}
-
 		public DerivedLinkContext (Pipeline pipeline, AssemblyResolver resolver)
 			: base (pipeline, resolver)
 		{

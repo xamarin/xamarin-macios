@@ -1589,7 +1589,6 @@ namespace Xamarin.Bundler
 		public class MonoNativeInfo
 		{
 			public bool RequireMonoNative { get; set; }
-			public bool RequireGss { get; set; }
 
 			public void Load (string filename)
 			{
@@ -1606,9 +1605,6 @@ namespace Xamarin.Bundler
 							case "RequireMonoNative":
 								RequireMonoNative = value;
 								break;
-							case "RequireGss":
-								RequireGss = value;
-								break;
 							default:
 								throw ErrorHelper.CreateError (99, $"Internal error: invalid type string while loading cached Mono.Native info: {typestr}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 						}
@@ -1620,7 +1616,6 @@ namespace Xamarin.Bundler
 			{
 				using (var writer = new StreamWriter (filename)) {
 					writer.WriteLine ("RequireMonoNative={0}", RequireMonoNative);
-					writer.WriteLine ("RequireGss={0}", RequireGss);
 				}
 			}
 		}
@@ -1639,7 +1634,6 @@ namespace Xamarin.Bundler
 					mono_native_info.Load (cache_location);
 				} else {
 					mono_native_info.RequireMonoNative = LinkContext?.RequireMonoNative ?? true;
-					mono_native_info.RequireGss = LinkContext?.RequireGss ?? true;
 					mono_native_info.Save (cache_location);
 				}
 
@@ -1666,10 +1660,8 @@ namespace Xamarin.Bundler
 				compiler_flags.AddLinkWith (libnative);
 				switch (app.Platform) {
 				case ApplePlatform.iOS:
-					if (MonoNative.RequireGss) {
-						Driver.Log (3, "Adding GSS framework reference.");
-						compiler_flags.AddFramework ("GSS");
-					}
+					Driver.Log (3, "Adding GSS framework reference.");
+					compiler_flags.AddFramework ("GSS");
 					break;
 				}
 				break;
