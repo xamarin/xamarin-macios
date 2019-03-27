@@ -217,7 +217,7 @@ namespace Xamarin.MMP.Tests
 				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", sb, "b");
 
 				File.SetAttributes (assemblyPath, FileAttributes.ReadOnly);
-				File.SetAttributes (assemblyPath + ".mdb", FileAttributes.ReadOnly);
+				File.SetAttributes (Path.ChangeExtension (assemblyPath, ".pdb"), FileAttributes.ReadOnly);
 
 				// build project referencing a.dll
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)

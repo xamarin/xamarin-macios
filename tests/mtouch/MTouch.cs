@@ -3514,7 +3514,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 				// Create a sample exe
 				var code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
-				var exe = MTouch.CompileTestAppExecutable (tmp, code, "/debug:full");
+				var exe = MTouch.CompileTestAppExecutable (tmp, code, "/debug:full", use_csc: false);
 
 				mtouch.AppPath = mtouch.CreateTemporaryDirectory ();
 				mtouch.RootAssembly = exe;
@@ -3531,12 +3531,12 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 				System.Threading.Thread.Sleep (1000); // HFS does not have sub-second timestamp resolution, so make sure the timestamps actually change...
 				// Recompile the exe, adding only whitespace. This will only change the debug files
-				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", "/debug:full");
+				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", "/debug:full", use_csc: false);
 
 				// Rebuild the app
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 
-				// The mdb files should be updated, but the exe should not.
+				// The pdb files should be updated, but the exe should not.
 				Assert.AreEqual (exeStamp, File.GetLastWriteTimeUtc (exePath), "exe no change");
 				Assert.IsTrue (File.Exists (mdbPath), "mdb existence");
 				Assert.AreNotEqual (mdbStamp, File.GetLastWriteTimeUtc (mdbPath), "mdb changed");
