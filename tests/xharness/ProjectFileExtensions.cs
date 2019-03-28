@@ -598,6 +598,17 @@ namespace xharness
 					yield return node.Attributes ["Include"].Value;
 			}
 		}
+
+		public static IEnumerable<string> GetNunitAndXunitTestReferences (this XmlDocument csproj)
+		{
+			var nodes = csproj.SelectNodes ("//*[local-name() = 'Reference']");
+			foreach (XmlNode node in nodes) {
+				var includeValue = node.Attributes ["Include"].Value;
+				if (includeValue.EndsWith ("_test.dll") || includeValue.EndsWith ("_xunit-test.dll"))
+					yield return includeValue;
+			}
+		}
+
 		public static void SetProjectReferenceValue (this XmlDocument csproj, string projectInclude, string node, string value)
 		{
 			var nameNode = csproj.SelectSingleNode ("//*[local-name() = 'ProjectReference' and @Include = '" + projectInclude + "']/*[local-name() = '" + node + "']");
