@@ -2562,6 +2562,7 @@ public partial class Generator : IMemberGatherer {
 			print ("");
 			print ("//\n// This class bridges native block invocations that call into C#\n//");
 			print ("static internal class {0} {{", ti.StaticName); indent++;
+			print ("[Preserve (Conditional=true)]");
 			print ("static internal readonly {0} Handler = {1};", ti.DelegateName, ti.TrampolineName);
 			print ("");
 			print ("[MonoPInvokeCallback (typeof ({0}))]", ti.DelegateName);
