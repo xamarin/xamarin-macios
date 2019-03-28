@@ -4,6 +4,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 TOKEN=
 START=
+DEVICE_TYPE=
 while ! test -z "$1"; do
 	case "$1" in
 		--token=*)
@@ -18,6 +19,14 @@ while ! test -z "$1"; do
 			START=1
 			shift
 			;;
+		--device=*)
+			DEVICE_TYPE="${1:9}"
+			shift
+			;;
+		--device)
+			DEVICE_TYPE="$2"
+			shift 2
+			;;
 		*)
 			echo "Unknown argument: $1"
 			exit 1
@@ -30,6 +39,11 @@ if test -z "$TOKEN"; then
 	exit 1
 fi
 
+if test -z "$DEVICE_TYPE"; then
+	# set a default value
+	DEVICE_TYPE="iOS/AppleTv"
+fi
+
 P=$(cat tmp.p)
 
 VSTS_BUILD_URL="${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${SYSTEM_TEAMPROJECT}/_build/index?buildId=${BUILD_BUILDID}"
@@ -40,17 +54,17 @@ DESCRIPTION="Running device tests"
 RESULT_EMOJII=
 if test -n "$START"; then
 	GH_STATE=pending
-	DESCRIPTION="Running device tests"
+	DESCRIPTION="Running device tests on $DEVICE_TYPE"
 else
 	case "$(echo "$AGENT_JOBSTATUS" | tr '[:upper:]' '[:lower:]')" in
 		succeeded)
 			GH_STATE=success
-			DESCRIPTION="Device tests passed"
+			DESCRIPTION="Device tests passed on $DEVICE_TYPE"
 			RESULT_EMOJII="✅ "
 			;;
 		failed | canceled | succeededwithissues | *)
 			GH_STATE=error
-			DESCRIPTION="Device tests completed ($AGENT_JOBSTATUS)"
+			DESCRIPTION="Device tests completed ($AGENT_JOBSTATUS) on $DEVICE_TYPE"
 			RESULT_EMOJII="🔥 "
 			;;
 	esac
@@ -67,11 +81,11 @@ if test -z "$START"; then
 	trap cleanup ERR
 	trap cleanup EXIT
 
-	printf "%s%s on [Azure DevOps](%s): [Html Report](http://xamarin-storage/%s/jenkins-results/tests/index.html) %s\\n\\n" "$RESULT_EMOJII" "$DESCRIPTION" "$VSTS_BUILD_URL" "$P" "$RESULT_EMOJII" > "$MESSAGE_FILE"
+	printf "%s%s on [Azure DevOps](%s)($DEVICE_TYPE): [Html Report](http://xamarin-storage/%s/jenkins-results/tests/index.html) %s\\n\\n" "$RESULT_EMOJII" "$DESCRIPTION" "$VSTS_BUILD_URL" "$P" "$RESULT_EMOJII" > "$MESSAGE_FILE"
 
 	FILE=$PWD/tests/TestSummary.md
 	if ! test -f "$FILE"; then
-		printf "🔥 Tests failed catastrophically (no summary found)\\n" >> "$MESSAGE_FILE"
+		printf "🔥 Tests failed catastrophically on $DEVICE_TYPE (no summary found)\\n" >> "$MESSAGE_FILE"
 	else
 		cat "$FILE" >> "$MESSAGE_FILE"
 	fi
