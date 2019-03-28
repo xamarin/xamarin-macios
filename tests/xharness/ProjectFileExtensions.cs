@@ -604,7 +604,7 @@ namespace xharness
 			var nodes = csproj.SelectNodes ("//*[local-name() = 'Reference']");
 			foreach (XmlNode node in nodes) {
 				var includeValue = node.Attributes ["Include"].Value;
-				if (includeValue.EndsWith ("_test.dll") || includeValue.EndsWith ("_xunit-test.dll"))
+				if (includeValue.EndsWith ("_test.dll", StringComparison.Ordinal) || includeValue.EndsWith ("_xunit-test.dll", StringComparison.Ordinal))
 					yield return includeValue;
 			}
 		}
