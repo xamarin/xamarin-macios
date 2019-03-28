@@ -337,6 +337,7 @@ namespace xharness
 					T newVariation = creator (build, task);
 					newVariation.Variation = variation;
 					newVariation.Ignored = task.Ignored || ignored;
+					newVariation.BuildOnly = task.BuildOnly;
 					rv.Add (newVariation);
 				}
 			}
