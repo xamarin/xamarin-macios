@@ -69,7 +69,7 @@ else
 			;;
 	esac
 fi
-./jenkins/add-commit-status.sh --token="$TOKEN" --hash="$BUILD_REVISION" --state="$GH_STATE" --target-url="$VSTS_BUILD_URL" --description="$DESCRIPTION" --context="VSTS: device tests"
+./jenkins/add-commit-status.sh --token="$TOKEN" --hash="$BUILD_REVISION" --state="$GH_STATE" --target-url="$VSTS_BUILD_URL" --description="$DESCRIPTION" --context="VSTS: device tests ($DEVICE_TYPE)"
 
 if test -z "$START"; then
 	# When we're done, add a GitHub comment to the commit we're testing
@@ -85,7 +85,7 @@ if test -z "$START"; then
 
 	FILE=$PWD/tests/TestSummary.md
 	if ! test -f "$FILE"; then
-		printf "🔥 Tests failed catastrophically on $DEVICE_TYPE (no summary found)\\n" >> "$MESSAGE_FILE"
+		printf "🔥 Tests failed catastrophically on $DEVICE_TYPE  (no summary found)\\n" >> "$MESSAGE_FILE"
 	else
 		cat "$FILE" >> "$MESSAGE_FILE"
 	fi
