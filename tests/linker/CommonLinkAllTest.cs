@@ -1,10 +1,39 @@
 using System;
 using System.ComponentModel;
+using System.Reflection;
 
 using NUnit.Framework;
 
 using Foundation;
 
+namespace ObjCRuntime {
+	public class Trampolines {
+
+		internal delegate void DInnerBlock (IntPtr block, int magic_number);
+
+		internal class NIDInnerBlock { }
+
+		static internal class SDInnerBlock {
+			// not preserved by attributes
+			static internal readonly DInnerBlock Handler = Invoke;
+
+			[MonoPInvokeCallback (typeof (DInnerBlock))]
+			static internal void Invoke (IntPtr block, int magic_number)
+			{
+			}
+		}
+
+		static internal class SDInnerBlock_Misnamed {
+			// not preserved by attributes
+			static internal readonly DInnerBlock MisHandler = Invoke;
+
+			[MonoPInvokeCallback (typeof (DInnerBlock))]
+			static internal void Invoke (IntPtr block, int magic_number)
+			{
+			}
+		}
+	}
+}
 namespace LinkAll {
 
 	public class CustomConverter : TypeConverter {
@@ -23,6 +52,23 @@ namespace LinkAll {
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
 	public class CommonLinkAllTest {
+
+		[Test]
+		public void BindingsAndBeforeInitField ()
+		{
+			ObjCRuntime.Trampolines.SDInnerBlock.Invoke (IntPtr.Zero, 0);
+			var fields = typeof (ObjCRuntime.Trampolines.SDInnerBlock).GetFields (BindingFlags.NonPublic | BindingFlags.Static);
+			Assert.That (fields.Length, Is.EqualTo (1), "one");
+			Assert.That (fields [0].Name, Is.EqualTo ("Handler"), "Name");
+		}
+
+		[Test]
+		public void BindingsAndBeforeInitField_2 ()
+		{
+			ObjCRuntime.Trampolines.SDInnerBlock_Misnamed.Invoke (IntPtr.Zero, 0);
+			var fields = typeof (ObjCRuntime.Trampolines.SDInnerBlock_Misnamed).GetFields (BindingFlags.NonPublic | BindingFlags.Static);
+			Assert.That (fields.Length, Is.EqualTo (0), "zero");
+		}
 
 		[Test]
 		public void TypeConverter_BuiltIn ()

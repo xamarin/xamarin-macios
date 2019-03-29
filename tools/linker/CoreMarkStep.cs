@@ -155,13 +155,27 @@ namespace Xamarin.Linker.Steps {
 		{
 			try {
 				var td = base.MarkType (reference);
+				if (td == null)
+					return null;
 
 				// We're removing the Protocol attribute, which points to its wrapper type.
 				// But we need the wrapper type if the protocol interface is marked, so manually mark it.
-				if (td != null && td.IsInterface) {
+				if (td.IsInterface) {
 					var proto = LinkContext.StaticRegistrar.GetProtocolAttribute (td);
 					if (proto?.WrapperType != null)
 						MarkType (proto.WrapperType);
+				}
+
+				// older generated bindings did not preserve the `Handler` field and
+				// newer (mono 2019-02) linker can optimize them (enabled by default)
+				// so we make sure our old bindings remains linker-safe
+				if (td.IsAbstract && td.IsSealed && td.IsNested && td.HasFields) {
+					var dt = td.DeclaringType;
+					if (dt.Is ("ObjCRuntime", "Trampolines")) {
+						var f = td.Fields [0];
+						if (f.IsInitOnly && td.Fields.Count == 1 && f.Name == "Handler")
+							MarkField (f);
+					}
 				}
 
 				return td;
