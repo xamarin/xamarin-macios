@@ -107,6 +107,12 @@ namespace StoreKit {
 		[iOS (8,3), Mac (10,14, onlyOn64: true)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
+
+		[iOS (12,2)]
+		[TV (12,2)]
+		[Mac (10,14,4, onlyOn64: true)]
+		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
+		SKPaymentDiscount PaymentDiscount { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
 	}
 
 	[BaseType (typeof (SKPayment))]
@@ -140,6 +146,12 @@ namespace StoreKit {
 		[iOS (8,3), Mac (10,14, onlyOn64: true)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; set; }
+
+		[iOS (12,2)]
+		[TV (12,2)]
+		[Mac (10,14,4, onlyOn64: true)]
+		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
+		SKPaymentDiscount PaymentDiscount { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -249,6 +261,12 @@ namespace StoreKit {
 		[iOS (12,0), Mac (10,14, onlyOn64: true)]
 		[NullAllowed, Export ("subscriptionGroupIdentifier")]
 		string SubscriptionGroupIdentifier { get; }
+
+		[iOS (12,2)]
+		[TV (12,2)]
+		[Mac (10,14,4, onlyOn64: true)]
+		[Export ("discounts")]
+		SKProductDiscount [] Discounts { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -717,6 +735,12 @@ namespace StoreKit {
 		[Export ("priceLocale")]
 		NSLocale PriceLocale { get; }
 
+		[iOS (12,2)]
+		[TV (12,2)]
+		[Mac (10,14,4, onlyOn64: true)]
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; }
+
 		[Export ("subscriptionPeriod")]
 		SKProductSubscriptionPeriod SubscriptionPeriod { get; }
 
@@ -725,6 +749,12 @@ namespace StoreKit {
 
 		[Export ("paymentMode")]
 		SKProductDiscountPaymentMode PaymentMode { get; }
+
+		[iOS (12,2)]
+		[TV (12,2)]
+		[Mac (10,14,4, onlyOn64: true)]
+		[Export ("type")]
+		SKProductDiscountType Type { get; }
 	}
 
 	[iOS (11,3), NoTV, NoMac]
@@ -735,5 +765,39 @@ namespace StoreKit {
 		[Static]
 		[Export ("registerAppForAdNetworkAttribution")]
 		void RegisterAppForAdNetworkAttribution ();
+	}
+
+	[iOS (12,2)]
+	[TV (12,2)]
+	[Mac (10,14,4, onlyOn64: true)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SKPaymentDiscount {
+		[Export ("initWithIdentifier:keyIdentifier:nonce:signature:timestamp:")]
+		IntPtr Constructor (string identifier, string keyIdentifier, NSUuid nonce, string signature, NSNumber timestamp);
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("keyIdentifier")]
+		string KeyIdentifier { get; }
+
+		[Export ("nonce", ArgumentSemantic.Copy)]
+		NSUuid Nonce { get; }
+
+		[Export ("signature")]
+		string Signature { get; }
+
+		[Export ("timestamp", ArgumentSemantic.Copy)]
+		NSNumber Timestamp { get; }
+	}
+
+	[iOS (12,2)]
+	[TV (12,2)]
+	[Mac (10,14,4, onlyOn64: true)]
+	[Native]
+	public enum SKProductDiscountType : long {
+		Introductory,
+		Subscription,
 	}
 }

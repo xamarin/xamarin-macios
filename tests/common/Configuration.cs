@@ -30,6 +30,7 @@ namespace Xamarin.Tests
 		public static string xcode6_root;
 		public static string xcode72_root;
 		public static string xcode83_root;
+		public static string xcode94_root;
 #if MONOMAC
 		public static string mac_xcode_root;
 #endif
@@ -210,6 +211,7 @@ namespace Xamarin.Tests
 			xcode6_root = GetVariable ("XCODE6_DEVELOPER_ROOT", "/Applications/Xcode601.app/Contents/Developer");
 			xcode72_root = GetVariable ("XCODE72_DEVELOPER_ROOT", "/Applications/Xcode72.app/Contents/Developer");
 			xcode83_root = GetVariable ("XCODE83_DEVELOPER_ROOT", "/Applications/Xcode83.app/Contents/Developer");
+			xcode94_root = GetVariable ("XCODE94_DEVELOPER_ROOT", "/Applications/Xcode94.app/Contents/Developer");
 			include_ios = !string.IsNullOrEmpty (GetVariable ("INCLUDE_IOS", ""));
 			include_mac = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MAC", ""));
 			include_tvos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_TVOS", ""));
@@ -524,6 +526,13 @@ namespace Xamarin.Tests
 
 		public static string XIBuildPath {
 			get { return Path.GetFullPath (Path.Combine (RootPath, "tools", "xibuild", "xibuild")); }
+		}
+
+		public static void AssertDeviceAvailable ()
+		{
+			if (include_device)
+				return;
+			Assert.Ignore ("This build does not include device support.");
 		}
 	}
 }

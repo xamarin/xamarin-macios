@@ -1,4 +1,5 @@
 using ObjCRuntime;
+using System;
 
 namespace StoreKit {
 
@@ -29,7 +30,18 @@ namespace StoreKit {
 		CloudServicePermissionDenied,
 		CloudServiceNetworkConnectionFailed,
 		// iOS 10.3
-		Revoked,
+		CloudServiceRevoked,
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'SKError.CloudServiceRevoked' instead.")]
+		Revoked = CloudServiceRevoked,
+#endif
+		// iOS 12.2
+		PrivacyAcknowledgementRequired,
+		UnauthorizedRequestData,
+		InvalidOfferIdentifier,
+		InvalidSignature,
+		MissingOfferParams,
+		InvalidOfferPrice,
 	}
 
 	// typedef NSInteger SKDownloadState;

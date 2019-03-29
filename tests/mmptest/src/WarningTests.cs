@@ -10,10 +10,10 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void MM0135 ()
 		{
-			var oldXcode = Xamarin.Tests.Configuration.xcode83_root;
+			var oldXcode = Xamarin.Tests.Configuration.xcode94_root;
 
 			if (!Directory.Exists (oldXcode))
-				Assert.Ignore ("This test requires Xcode 8.3 (or updated to a newer one that still warns MM0135).");
+				Assert.Ignore ("This test requires Xcode 9.4 (or updated to a newer one that still warns MM0135).");
 
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);

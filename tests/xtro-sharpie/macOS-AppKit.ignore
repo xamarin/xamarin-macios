@@ -1207,3 +1207,9 @@
 !missing-selector! NSWorkspace::noteFileSystemChanged not bound
 !missing-selector! NSWorkspace::noteUserDefaultsChanged not bound
 !missing-selector! NSWorkspace::userDefaultsChanged not bound
+
+## Added in Xcode 10.2 Final but deprecated
+!missing-selector! NSOpenGLView::setWantsBestResolutionOpenGLSurface: not bound
+!missing-selector! NSOpenGLView::setWantsExtendedDynamicRangeOpenGLSurface: not bound
+!missing-selector! NSOpenGLView::wantsBestResolutionOpenGLSurface not bound
+!missing-selector! NSOpenGLView::wantsExtendedDynamicRangeOpenGLSurface not bound

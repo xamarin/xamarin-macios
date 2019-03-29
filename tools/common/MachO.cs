@@ -57,7 +57,7 @@ namespace Xamarin
 			x86_64 =  32,
 		}
 
-		internal enum LoadCommands : uint
+		public enum LoadCommands : uint
 		{
 			//#define LC_REQ_DYLD 0x80000000
 			ReqDyld = 0x80000000,
@@ -112,8 +112,8 @@ namespace Xamarin
 			//#define	LC_DYLD_INFO 	0x22	/* compressed dyld information */
 			//#define	LC_DYLD_INFO_ONLY (0x22|LC_REQ_DYLD)	/* compressed dyld information only */
 			//#define	LC_LOAD_UPWARD_DYLIB (0x23 | LC_REQ_DYLD) /* load upward dylib */
-			//#define LC_VERSION_MIN_MACOSX 0x24   /* build for MacOSX min OS version */
-			//#define LC_VERSION_MIN_IPHONEOS 0x25 /* build for iPhoneOS min OS version */
+			MinMacOSX = 0x24, //#define LC_VERSION_MIN_MACOSX 0x24   /* build for MacOSX min OS version */
+			MiniPhoneOS = 0x25,//#define LC_VERSION_MIN_IPHONEOS 0x25 /* build for iPhoneOS min OS version */
 			//#define LC_FUNCTION_STARTS 0x26 /* compressed table of function start addresses */
 			//#define LC_DYLD_ENVIRONMENT 0x27 /* string for dyld to treat
 			//			like environment variable */
@@ -123,6 +123,12 @@ namespace Xamarin
 			//#define LC_DYLIB_CODE_SIGN_DRS 0x2B /* Code signing DRs copied from linked dylibs */
 			//#define	LC_ENCRYPTION_INFO_64 0x2C /* 64-bit encrypted segment information */
 			//#define LC_LINKER_OPTION 0x2D /* linker options in MH_OBJECT files */
+			//#define LC_LINKER_OPTIMIZATION_HINT 0x2E /* optimization hints in MH_OBJECT files */
+			MintvOS = 0x2f,//#define LC_VERSION_MIN_TVOS 0x2F /* build for AppleTV min OS version */
+			MinwatchOS = 0x30,//#define LC_VERSION_MIN_WATCHOS 0x30 /* build for Watch min OS version */
+			//#define LC_NOTE 0x31 /* arbitrary data included within a Mach-O file */
+			//#define LC_BUILD_VERSION 0x32 /* build for platform min OS version */
+
 		}
 
 		internal static uint FromBigEndian (uint number)
@@ -621,6 +627,17 @@ namespace Xamarin
 					uuidCmd.uuid = reader.ReadBytes (16); // defined in the header as uint8_t uuid [16]
 					lc = uuidCmd;
 					break;
+				case MachO.LoadCommands.MintvOS:
+				case MachO.LoadCommands.MinMacOSX:
+				case MachO.LoadCommands.MiniPhoneOS:
+				case MachO.LoadCommands.MinwatchOS:
+					var minCmd = new MinCommand ();
+					minCmd.cmd = reader.ReadUInt32 ();
+					minCmd.cmdsize = reader.ReadUInt32 ();
+					minCmd.version = reader.ReadUInt32 ();
+					minCmd.sdk = reader.ReadUInt32 ();
+					lc = minCmd;
+					break;
 				default:
 					lc = new LoadCommand ();
 					lc.cmd = reader.ReadUInt32 ();
@@ -807,6 +824,10 @@ namespace Xamarin
 		public uint cmd;
 		public uint cmdsize;
 
+		public MachO.LoadCommands Command {
+			get { return (MachO.LoadCommands) cmd; }
+		}
+
 #if DEBUG
 		public virtual void Dump ()
 		{
@@ -845,5 +866,23 @@ namespace Xamarin
 			Console.WriteLine ("    uuid: {0}", uuid);
 		}
 #endif
+	}
+
+	public class MinCommand : LoadCommand {
+		public uint version; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
+		public uint sdk; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
+
+		Version DeNibble (uint value)
+		{
+			return new Version ((int)(value >> 16), (int)((value >> 8) & 0xFF), (int)(value & 0xFF));
+		}
+
+		public Version Version {
+			get { return DeNibble (version); }
+		}
+
+		public Version Sdk {
+			get { return DeNibble (sdk); }
+		}
 	}
 }

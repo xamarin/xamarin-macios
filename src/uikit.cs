@@ -117,6 +117,24 @@ namespace UIKit {
 		Error
 	}
 
+	[Native]
+	[ErrorDomain ("UIGuidedAccessErrorDomain")]
+	[NoWatch, NoTV, iOS (12,2)]
+	public enum UIGuidedAccessErrorCode : long {
+		PermissionDenied,
+		Failed = long.MaxValue,
+	}
+
+	[Flags, NoWatch, NoTV, iOS (12,2)]
+	[Native]
+	public enum UIGuidedAccessAccessibilityFeature : ulong {
+		VoiceOver = 1uL << 0,
+		Zoom = 1uL << 1,
+		AssistiveTouch = 1uL << 2,
+		InvertColors = 1uL << 3,
+		GrayscaleDisplay = 1uL << 4,
+	}
+
 #if WATCH
 	// hacks to ease compilation
 	interface CIColor {}
@@ -5464,7 +5482,20 @@ namespace UIKit {
 
 		[Export ("fontDescriptorWithSymbolicTraits:")]
 		UIFontDescriptor CreateWithTraits (UIFontDescriptorSymbolicTraits symbolicTraits);
-		
+
+		[NoiOS][NoTV]
+		[Watch (5,2)]
+		[Export ("fontDescriptorWithDesign:")]
+		[return: NullAllowed]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		UIFontDescriptor CreateWithDesign (NSString design);
+
+		[NoiOS][NoTV]
+		[Watch (5,2)]
+		[return: NullAllowed]
+		[Wrap ("CreateWithDesign (design.GetConstant ())")]
+		UIFontDescriptor CreateWithDesign (UIFontDescriptorSystemDesign design);
+
 		[Export ("fontDescriptorWithSize:")]
 		UIFontDescriptor CreateWithSize (nfloat newPointSize);
 		
@@ -18156,4 +18187,14 @@ namespace UIKit {
 		void DidTap (UIPencilInteraction interaction);
 	}
 #endif // !WATCH
+
+	[NoiOS][NoTV]
+	[Watch (5,2)]
+	/* NS_TYPED_ENUM */ enum UIFontDescriptorSystemDesign {
+		[DefaultEnumValue]
+		[Field ("UIFontDescriptorSystemDesignDefault")]
+		Default,
+		[Field ("UIFontDescriptorSystemDesignRounded")]
+		Rounded,
+	}
 }

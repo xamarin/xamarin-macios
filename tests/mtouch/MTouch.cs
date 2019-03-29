@@ -2267,13 +2267,13 @@ public class B
 
 				mtouch.AssertExecute (MTouchAction.BuildDev);
 				var bin = mtouch.NativeExecutablePath;
-				VerifyArchitectures (bin, "arm7s/64", "armv7", "arm64");
+				VerifyArchitectures (bin, "arm7s/64", "ARMv7", "ARM64");
 				foreach (var dylib in Directory.GetFileSystemEntries (mtouch.AppPath, "*.dylib")) {
 					if (Path.GetFileName (dylib).StartsWith ("libmono", StringComparison.Ordinal))
 						continue;
 					if (Path.GetFileName (dylib).StartsWith ("libxamarin", StringComparison.Ordinal))
 						continue;
-					VerifyArchitectures (dylib, dylib + ": arm7s/64", "armv7", "arm64");
+					VerifyArchitectures (dylib, dylib + ": arm7s/64", "ARMv7", "ARM64");
 				}
 			}
 		}
@@ -2320,14 +2320,14 @@ public class B
 		}
 
 		[Test]
-		[TestCase (Target.Dev, "armv7", "10.3")]
-		[TestCase (Target.Dev, "armv7s", "10.3")]
-		[TestCase (Target.Dev, "armv7,armv7s", "10.3")]
-		[TestCase (Target.Dev, "arm64", null)]
-		[TestCase (Target.Dev, "arm64+llvm", null)]
-		[TestCase (Target.Dev, "armv7,arm64", "10.3")]
-		[TestCase (Target.Dev, "armv7s,arm64", "10.3")]
-		[TestCase (Target.Dev, "armv7,armv7s,arm64", "10.3")]
+		[TestCase (Target.Dev, "ARMv7", "10.3")]
+		[TestCase (Target.Dev, "ARMv7s", "10.3")]
+		[TestCase (Target.Dev, "ARMv7,ARMv7s", "10.3")]
+		[TestCase (Target.Dev, "ARM64", null)]
+		[TestCase (Target.Dev, "ARM64+llvm", null)]
+		[TestCase (Target.Dev, "ARMv7,ARM64", "10.3")]
+		[TestCase (Target.Dev, "ARMv7s,ARM64", "10.3")]
+		[TestCase (Target.Dev, "ARMv7,ARMv7s,ARM64", "10.3")]
 		[TestCase (Target.Sim, "i386", "10.3")]
 		[TestCase (Target.Sim, "x86_64", null)]
 		public void Architectures_Unified (Target target, string abi, string deployment_target)
@@ -2336,7 +2336,7 @@ public class B
 				mtouch.Profile = Profile.iOS;
 				mtouch.CreateTemporaryApp ();
 
-				mtouch.Abi = abi;
+				mtouch.Abi = abi.ToLower ();
 				mtouch.TargetVer = deployment_target;
 
 				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
@@ -2403,7 +2403,7 @@ public class B
 				var bin = Path.Combine (mtouch.AppPath, Path.GetFileNameWithoutExtension (mtouch.RootAssembly));
 
 				Assert.AreEqual (0, mtouch.Execute (target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim), "build");
-				VerifyArchitectures (bin,  "arch",  target == Target.Dev ? "arm64" : "x86_64");
+				VerifyArchitectures (bin,  "arch",  target == Target.Dev ? "ARM64" : "x86_64");
 			}
 		}
 
@@ -2445,7 +2445,7 @@ public class B
 					var mono_framework = Path.Combine (app.AppPath, "Frameworks", "Mono.framework", "Mono");
 					Assert.That (mono_framework, Does.Exist, "mono framework existence");
 					// Verify that mtouch removed armv7s from the framework.
-					Assert.That (MachO.GetArchitectures (mono_framework), Is.EquivalentTo (new [] { "armv7", "arm64" }), "mono framework architectures");
+					Assert.That (MachO.GetArchitectures (mono_framework).Select ((v) => v.ToString ()), Is.EquivalentTo (new [] { "ARMv7", "ARM64" }), "mono framework architectures");
 				}
 			}
 		}
@@ -2518,8 +2518,8 @@ public class B
 		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "armv7+llvm")]
 		[TestCase (Target.Dev, MTouchLinker.Unspecified, MTouchRegistrar.Static, "armv7+llvm+thumb2")]
 		// non-linked device build
-		[TestCase (Target.Dev, MTouchLinker.DontLink, MTouchRegistrar.Static, "")]
-		[TestCase (Target.Dev, MTouchLinker.DontLink, MTouchRegistrar.Dynamic, "")]
+		[TestCase (Target.Dev, MTouchLinker.DontLink, MTouchRegistrar.Static, "arm64")] // armv7 Xamarin.iOS.dll don't link builds are not possible anymore because we go over the code size limit,
+		[TestCase (Target.Dev, MTouchLinker.DontLink, MTouchRegistrar.Dynamic, "arm64")] // since this is out of our control we are now forcing this test to arm64. Ref. https://github.com/xamarin/xamarin-macios/issues/5512
 		// sdk device build
 		[TestCase (Target.Dev, MTouchLinker.LinkSdk, MTouchRegistrar.Static, "")]
 		[TestCase (Target.Dev, MTouchLinker.LinkSdk, MTouchRegistrar.Dynamic, "")]
@@ -2985,7 +2985,7 @@ class Test {
 
 				var tests = new [] {
 					new { Name = "linkall", Abi = "armv7s", Link = MTouchLinker.Unspecified },
-					new { Name = "dontlink", Abi = "armv7s", Link = MTouchLinker.DontLink },
+					new { Name = "dontlink", Abi = "arm64", Link = MTouchLinker.DontLink },
 					new { Name = "dual", Abi = "armv7,arm64", Link = MTouchLinker.Unspecified },
 				};
 
@@ -3866,6 +3866,8 @@ public class HandlerTest
 				case "_xamarin_nfloat_objc_msgSendSuper": // Xm only
 					continue;
 				case "____chkstk_darwin": // compiler magic, unrelated to XI/XM
+				case "___block_descriptor_28_e5_v4@?0l": // new Xcode 10.2 clang option
+				case "___block_descriptor_48_e5_v8@?0l": // new Xcode 10.2 clang option
 					continue;
 				default:
 					missingSimlauncherSymbols.Add (symbol);
@@ -4243,7 +4245,7 @@ public class TestApp {
 
 		static void VerifyArchitectures (string file, string message, params string[] expected)
 		{
-			var actual = MachO.GetArchitectures (file).ToArray ();
+			var actual = MachO.GetArchitectures (file).Select ((v) => v.ToString ()).ToArray ();
 
 			Array.Sort (expected);
 			Array.Sort (actual);
@@ -4256,8 +4258,7 @@ public class TestApp {
 
 		public static void AssertDeviceAvailable ()
 		{
-			if (!Configuration.include_device)
-				Assert.Ignore ("This build does not include device support.");
+			Configuration.AssertDeviceAvailable ();
 		}
 
 		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)

@@ -69,15 +69,22 @@
     <Compile Include="..\common\BundlerTool.cs">
       <Link>BundlerTool.cs</Link>
     </Compile>
-    <Compile Include="..\common\MachO.cs">
-      <Link>MachO.cs</Link>
-    </Compile>
     <Compile Include="ToolTasksBinPathTest.cs" />
     <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\Metal.cs">
       <Link>Metal.cs</Link>
     </Compile>
     <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\MetalLib.cs">
       <Link>MetalLib.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\MachO.cs">
+      <Link>MachO.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>ErrorHelper.cs</Link>
+    </Compile>
+    <Compile Include="RuntimeException.cs" />
+    <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
