@@ -41,7 +41,7 @@ fi
 
 if test -z "$DEVICE_TYPE"; then
 	# set a default value
-	DEVICE_TYPE="iOS/AppleTv"
+	DEVICE_TYPE="iOS/tvOS"
 fi
 
 P=$(cat tmp.p)
