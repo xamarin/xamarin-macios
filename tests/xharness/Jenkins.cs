@@ -374,6 +374,7 @@ namespace xharness
 					T newVariation = creator (build, task);
 					newVariation.Variation = variation;
 					newVariation.Ignored = task.Ignored || ignored;
+					newVariation.BuildOnly = task.BuildOnly;
 					rv.Add (newVariation);
 				}
 			}
@@ -1859,6 +1860,10 @@ namespace xharness
 							writer.WriteLine ("</div>");
 							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs togglable' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
+							var testAssemblies = test.ReferencedNunitAndXunitTestAssemblies;
+							if (testAssemblies.Any ())
+								writer.WriteLine ($"Test assemblies:<br/>- {String.Join ("<br/>- ", testAssemblies)}<br />");
+
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
 								var msg = HtmlFormat (test.FailureMessage);
 								var prefix = test.Ignored ? "Ignored" : "Failure";
@@ -2317,6 +2322,26 @@ namespace xharness
 		public Logs Logs {
 			get {
 				return logs ?? (logs = new Logs (LogDirectory));
+			}
+		}
+
+		IEnumerable<string> referencedNunitAndXunitTestAssemblies;
+		public IEnumerable<string> ReferencedNunitAndXunitTestAssemblies {
+			get {
+				if (referencedNunitAndXunitTestAssemblies != null)
+					return referencedNunitAndXunitTestAssemblies;
+
+				if (TestName.Contains ("BCL tests group")) { // avoid loading unrelated projects
+					if (!File.Exists (ProjectFile))
+						return Enumerable.Empty<string> ();
+
+					var csproj = new XmlDocument ();
+					csproj.LoadWithoutNetworkAccess (ProjectFile.Replace ("\\", "/"));
+					referencedNunitAndXunitTestAssemblies = csproj.GetNunitAndXunitTestReferences ();
+				} else {
+					referencedNunitAndXunitTestAssemblies = Enumerable.Empty<string> ();
+				}
+				return referencedNunitAndXunitTestAssemblies;
 			}
 		}
 
