@@ -114,3 +114,6 @@ System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Filter
 # Exception messages: System.ArgumentException : The directory name ''
 # Parameter name: Path   Exception stack traces:
 System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Path
+
+# Exception messages: System.IO.IOException : BCL tests group  test app isn't present in the test runtime directory.   Exception stack traces:
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_ExcessPrefix
