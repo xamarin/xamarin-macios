@@ -5,11 +5,11 @@ using System.Text;
 #if MTOUCH || MMP
 using Mono.Cecil;
 using Xamarin.Linker;
-#elif (MONOMAC && XAMCORE_2_0)
+#elif (MONOMAC || SYSTEM_NET_HTTP)
 using System.Net.Http;
 #endif
 
-#if XAMCORE_2_0
+#if XAMCORE_2_0 || SYSTEM_NET_HTTP
 using Foundation;
 using ObjCRuntime;
 #elif MONOMAC && !MMP
@@ -103,8 +103,12 @@ namespace ObjCRuntime {
 				default:
 					throw ErrorHelper.CreateError (2010, "Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler", http_message_handler);
 			}
+#elif __WATCHOS__
+			return "System.Net.Http." + http_message_handler + ", Xamarin.WatchOS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065</string>";
+#elif __TVOS__
+			return "System.Net.Http." + http_message_handler + ", Xamarin.TVOS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065</string>";
 #else
-			return "System.Net.Http." + http_message_handler + ", System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</string>";
+			return "System.Net.Http." + http_message_handler + ", Xamarin.iOS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065</string>";
 #endif
 		}
 
@@ -155,21 +159,21 @@ namespace ObjCRuntime {
 			case HttpClientHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
 					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
-					type = httpModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
+					type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
-					type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
+					type = platformModule.GetType ("System.Net.Http", "HttpClientHandler");
 				}
 				break;
 			case CFNetworkHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
 					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
-					type = httpModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
+					type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
-					type = httpModule.GetType ("System.Net.Http", "CFNetworkHandler");
+					type = platformModule.GetType ("System.Net.Http", "CFNetworkHandler");
 				}
 				break;
 			case NSUrlSessionHandlerValue:
-				type = httpModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
+				type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				break;
 #endif
 			default:
@@ -200,15 +204,13 @@ namespace ObjCRuntime {
 			}
 		}
 
-#if (MONOMAC && XAMCORE_2_0)
-#if MONOMAC
+#if (MONOMAC || SYSTEM_NET_HTTP)
 		[Preserve]
-#endif
 		internal static HttpMessageHandler GetHttpMessageHandler ()
 		{
 			var options = RuntimeOptions.Read ();
 			if (options == null) {
-#if MONOTOUCH_WATCH
+#if __WATCHOS__
 				return new NSUrlSessionHandler ();
 #else
 				return new HttpClientHandler ();
@@ -224,7 +226,7 @@ namespace ObjCRuntime {
 				handler = Activator.CreateInstance (t) as HttpMessageHandler;
 			if (handler != null)
 				return handler;
-#if MONOTOUCH_WATCH
+#if __WATCHOS__
 			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler", handler_name);
 			return new NSUrlSessionHandler ();
 #else
