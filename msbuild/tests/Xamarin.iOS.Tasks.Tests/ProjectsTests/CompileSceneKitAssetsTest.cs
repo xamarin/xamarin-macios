@@ -29,5 +29,21 @@ namespace Xamarin.iOS.Tasks
 			var xml = Configuration.ReadPListAsXml (scenePath);
 			Assert.That (xml, Is.StringContaining ("<string>art.scnassets/texture.png</string>"), "asset with path");
 		}
+
+		[Test]
+		public void LibraryCompilation ()
+		{
+			var appName = "MySceneKitLibrary";
+			var platform = "AnyCPU";
+			var config = "Debug";
+
+			var mtouchPaths = SetupProjectPaths (appName, "../", true, platform, config);
+			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
+
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", platform);
+			Engine.ProjectCollection.SetGlobalProperty ("Configuration", config);
+
+			RunTarget (proj, "Build", 0);
+		}
 	}
 }
