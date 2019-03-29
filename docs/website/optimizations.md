@@ -717,3 +717,23 @@ unless the interpreter is used.
 
 The default behavior can be overridden by passing
 `--optimize=[+|-]seal-and-devirtualize` to `mtouch`.
+
+## Static constructors for BeforeFieldInit removal
+
+This optimization requires the linker to be enabled and is applied globally
+on all code inside the application.
+
+This optimization allows the linker not to mark every `.cctor` when a type
+is preserved, e.g. whenever the class/static constructor `.cctor` is only
+used for field initialization and those fields are not marked themselves 
+then it is possible to remove the `.cctor`.
+
+This optimization is enabled, by default, on both Xamarin.iOS and 
+Xamarin.Mac. However it represent a change from older versions of the linker. 
+It is possible that some existing code depend on this side effect (i.e. 
+those `.cctor` not being removed). In such case the optimization can be 
+disabled  until the correct linker annotations (e.g. 
+`[Preserve (Conditional=true)]`) are added.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]cctor-beforefieldinit` to `mtouch` or `mmp`.
