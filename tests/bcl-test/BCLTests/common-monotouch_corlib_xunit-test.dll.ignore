@@ -352,3 +352,6 @@ System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a
 
 # System.InvalidOperationException : No data found for System.Tests.GuidTests.Parse_Invalid_NetcoreApp
 System.Tests.GuidTests.Parse_Invalid_NetcoreApp
+
+# Exception messages: System.IO.IOException : BCL tests group  test app isn't present in the test runtime directory. 
+System.Text.Tests.EncodingGetEncodingTest.GetEncoding_EncodingName
