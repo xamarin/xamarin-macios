@@ -18,6 +18,7 @@ namespace CloudKit {
 		IntPtr Constructor (NSUrl fileUrl);
 
 		[Export ("fileURL", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSUrl FileUrl { get; }
 	}
 	
@@ -1105,6 +1106,7 @@ namespace CloudKit {
 
 		[Static]
 		[Export ("notificationFromRemoteNotificationDictionary:")]
+		[return: NullAllowed]
 		CKNotification FromRemoteNotificationDictionary (NSDictionary notificationDictionary);
 
 		[iOS (9,0)][Mac (10,11)]

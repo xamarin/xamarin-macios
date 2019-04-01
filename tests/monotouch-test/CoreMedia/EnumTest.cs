@@ -81,6 +81,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.That (FourCC ((int) CMMetadataFormatType.Boxed), Is.EqualTo ("mebx"), "Boxed");
 			Assert.That (FourCC ((int) CMMetadataFormatType.ICY), Is.EqualTo ("icy "), "ICY");
 			Assert.That (FourCC ((int) CMMetadataFormatType.ID3), Is.EqualTo ("id3 "), "ID3");
+			Assert.That (FourCC ((int) CMMetadataFormatType.Emsg), Is.EqualTo ("emsg"), "EMSG");
 		}
 
 		[Test]
