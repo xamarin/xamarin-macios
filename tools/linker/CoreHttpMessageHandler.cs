@@ -75,7 +75,7 @@ namespace Xamarin.Linker.Steps {
 			TypeDefinition handler = RuntimeOptions.GetHttpMessageHandler (App, Options.RuntimeOptions, systemNetHTTPAssembly.MainModule, type.Module);
 			MethodReference handler_ctor = handler.Methods.First (x => x.IsConstructor && !x.HasParameters && !x.IsStatic);
 
-			// HttpClientHandler is defined not in Xamarin.Mac.dll so we need to import
+			// HttpClientHandler is defined in System.Net.Http.dll so we need to import
 			if (handler.Name.Contains ("HttpClientHandler"))
 				handler_ctor = type.Module.ImportReference (handler_ctor);
 

@@ -79,30 +79,6 @@ namespace ObjCRuntime {
 			}
 		}
 
-		string GenerateMessageHandlerValue ()
-		{
-#if MONOMAC
-			// Unlike iOS, XM has this each in different namespaces...
-			switch (http_message_handler)
-			{
-				case HttpClientHandlerValue:
-					return "System.Net.Http.HttpClientHandler, System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</string>";
-				case CFNetworkHandlerValue:
-					return "System.Net.Http.CFNetworkHandler, Xamarin.Mac, Version=0.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065</string>";
-				case NSUrlSessionHandlerValue:
-					return "Foundation.NSUrlSessionHandler, Xamarin.Mac, Version=0.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065</string>";
-				default:
-					throw ErrorHelper.CreateError (2010, "Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler", http_message_handler);
-			}
-#elif __WATCHOS__
-			return "System.Net.Http." + http_message_handler + ", Xamarin.WatchOS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065</string>";
-#elif __TVOS__
-			return "System.Net.Http." + http_message_handler + ", Xamarin.TVOS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065</string>";
-#else
-			return "System.Net.Http." + http_message_handler + ", Xamarin.iOS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065</string>";
-#endif
-		}
-
 		internal void Write (string app_dir)
 		{
 			// note: we always create the file because the simulator won't remove old files
@@ -114,7 +90,8 @@ namespace ObjCRuntime {
 			content.AppendLine ("<dict>");
 			content.AppendLine ("<key>HttpMessageHandler</key>");
 			content.Append ("<string>");
-			content.AppendLine (GenerateMessageHandlerValue ());
+			content.Append (http_message_handler);
+			content.AppendLine ("</string>");
 			content.AppendLine ("</dict>");
 			content.AppendLine ("</plist>");
 
@@ -152,7 +129,7 @@ namespace ObjCRuntime {
 					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
 					type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
-					type = platformModule.GetType ("System.Net.Http", "HttpClientHandler");
+					type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
 				}
 				break;
 			case CFNetworkHandlerValue:
@@ -202,7 +179,7 @@ namespace ObjCRuntime {
 			// all types will be present as this is executed only when the linker is not enabled
 			var handler_name = options?.http_message_handler;
 #if __WATCHOS__
-			if (handler_name != NSUrlSessionHandlerValue)
+			if (handler_name != null && handler_name != NSUrlSessionHandlerValue)
 				Console.WriteLine ($"{handler_name} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler");
 			return new NSUrlSessionHandler ();
 #else
@@ -212,7 +189,7 @@ namespace ObjCRuntime {
 				case NSUrlSessionHandlerValue:
 					return new NSUrlSessionHandler ();
 				default:
-					if (handler_name != HttpClientHandlerValue)
+					if (handler_name != null && handler_name != HttpClientHandlerValue)
 						Console.WriteLine ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler");
 					return new HttpClientHandler ();
 			}
