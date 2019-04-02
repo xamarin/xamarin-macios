@@ -86,6 +86,12 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_ACTool_PartialAppManifestCache>$(IntermediateOutputPath)actool\_PartialAppManifest.items</_ACTool_PartialAppManifestCache>
 		<_ACTool_BundleResourceCache>$(IntermediateOutputPath)actool\_BundleResourceWithLogicalName.items</_ACTool_BundleResourceCache>
 	</PropertyGroup>
+		
+	<PropertyGroup>
+		<!-- actool output caches -->
+		<_ACTool_PartialAppManifestCache>$(IntermediateOutputPath)actool\_PartialAppManifest.items</_ACTool_PartialAppManifestCache>
+		<_ACTool_BundleResourceCache>$(IntermediateOutputPath)actool\_BundleResourceWithLogicalName.items</_ACTool_BundleResourceCache>
+	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.xbuild.targets"
 		Condition="'$(IsXBuild)' == 'true' "/>

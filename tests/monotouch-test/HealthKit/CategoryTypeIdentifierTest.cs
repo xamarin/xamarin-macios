@@ -42,6 +42,12 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (8, 0))
 						continue;
 					break;
+				case HKCategoryTypeIdentifier.HighHeartRateEvent:
+				case HKCategoryTypeIdentifier.LowHeartRateEvent:
+				case HKCategoryTypeIdentifier.IrregularHeartRhythmEvent:
+					if (!TestRuntime.CheckXcodeVersion (10, 2))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;

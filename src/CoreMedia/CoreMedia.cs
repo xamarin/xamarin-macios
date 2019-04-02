@@ -63,6 +63,7 @@ namespace CoreMedia {
 		ICY   = 0x69637920, // 'icy '
 		ID3   = 0x69643320, // 'id3 '
 		Boxed = 0x6d656278, // 'mebx'
+		Emsg  = 0x656d7367, // 'emsg'
 	}
 
 	// FourCharCode -> CMFormatDescription.h

@@ -1623,7 +1623,7 @@ namespace MediaPlayer {
 		MPPlayableContentManagerContext Context { get; }
 
 		[iOS (10,0)]
-		[Export ("nowPlayingIdentifiers", ArgumentSemantic.Strong)]
+		[Export ("nowPlayingIdentifiers", ArgumentSemantic.Copy)]
 		string[] NowPlayingIdentifiers { get; set; }
 	}
 
