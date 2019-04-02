@@ -1,0 +1,2 @@
+# System.Net.FtpWebRequestCreator is not supported on the current platform.
+System.Net.Tests.FtpWebRequestTest.Ctor_VerifyDefaults_Success
