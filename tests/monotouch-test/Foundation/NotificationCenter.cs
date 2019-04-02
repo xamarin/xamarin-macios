@@ -114,5 +114,45 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 #endif
+
+		[Test]
+		public void ThreadSafe ()
+		{
+			var threadCount = 10;
+			var threads = new Thread [threadCount];
+			var startSignal = new ManualResetEvent (false);
+			var stopSignal = new ManualResetEvent (false);
+			var center = NSNotificationCenter.DefaultCenter;
+			var name = (NSString) "dummyKey";
+			var callback = new Action<NSNotification> ((v) => { });
+			Exception ex = null;
+
+			// Add and Remove observers from multiple threads at the same time.
+			for (var i = 0; i < threadCount; i++) {
+				threads [i] = new Thread ((id) => {
+					startSignal.WaitOne ();
+					try {
+						while (!stopSignal.WaitOne (0)) {
+							var obj = center.AddObserver (name, callback);
+							center.RemoveObserver (obj);
+						}
+					} catch (Exception e) {
+						ex = e;
+					}
+				});
+				threads [i].IsBackground = true;
+				threads [i].Start (i);
+			}
+			// Ready, GO!
+			startSignal.Set ();
+			// Full sprint for 0.1s, no need to run longer since the bug triggers easily enough.
+			Thread.Sleep (TimeSpan.FromSeconds (0.1));
+			// OK, we're done now, time to stop.
+			stopSignal.Set ();
+			for (var i = 0; i < threadCount; i++) {
+				threads [i].Join ();
+			}
+			Assert.IsNull (ex, "Exception");
+		}
 	}
 }
