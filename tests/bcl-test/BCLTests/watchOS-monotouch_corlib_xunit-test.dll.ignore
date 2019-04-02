@@ -1,0 +1,2 @@
+# makes application crash
+System.Text.Tests.StringBuilderTests.Append_CharPointer_Null_ThrowsNullReferenceException
