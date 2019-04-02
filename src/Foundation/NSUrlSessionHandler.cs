@@ -38,7 +38,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
 
-#if XAMCORE_2_0 || SYSTEM_NET_HTTP
+#if XAMCORE_2_0
 using CoreFoundation;
 using Foundation;
 using Security;
@@ -55,7 +55,7 @@ using nuint = System.UInt32;
 using UIKit;
 #endif
 
-#if SYSTEM_NET_HTTP
+#if !MONOMAC
 namespace System.Net.Http {
 #else
 namespace Foundation {
@@ -525,10 +525,8 @@ namespace Foundation {
 			return await tcs.Task.ConfigureAwait (false);
 		}
 
-#if MONOMAC
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-#endif
 		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
 		{
 			readonly NSUrlSessionHandler sessionHandler;
@@ -757,10 +755,8 @@ namespace Foundation {
 			}
 		}
 
-#if MONOMAC
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-#endif
 		class InflightData : IDisposable
 		{
 			public readonly object Lock = new object ();
@@ -798,10 +794,8 @@ namespace Foundation {
 
 		}
 
-#if MONOMAC
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-#endif
 		class NSUrlSessionDataTaskStreamContent : StreamContent
 		{
 			Action disposed;
@@ -820,10 +814,8 @@ namespace Foundation {
 			}
 		}
 
-#if MONOMAC
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-#endif
 		class NSUrlSessionDataTaskStream : Stream
 		{
 			readonly Queue<NSData> data;
@@ -969,10 +961,8 @@ namespace Foundation {
 			}
 		}
 
-#if MONOMAC
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-#endif
 		class WrappedNSInputStream : NSInputStream
 		{
 			NSStreamStatus status;
