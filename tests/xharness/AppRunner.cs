@@ -372,7 +372,7 @@ namespace xharness
 						break;
 					case "Error":
 					case "Failure":
-						await writer.WriteLineAsync ("\t[FAIL] ");
+						await writer.WriteAsync ("\t[FAIL] ");
 						break;
 					case "Inconclusive":
 						await writer.WriteAsync ("\t[INCONCLUSIVE] ");
