@@ -2562,7 +2562,9 @@ public partial class Generator : IMemberGatherer {
 			print ("");
 			print ("//\n// This class bridges native block invocations that call into C#\n//");
 			print ("static internal class {0} {{", ti.StaticName); indent++;
-			print ("[Preserve (Conditional=true)]");
+			// it can't be conditional without fixing https://github.com/mono/linker/issues/516
+			// but we have a workaround in place because we can't fix old, binary bindings so...
+			// print ("[Preserve (Conditional=true)]");
 			print ("static internal readonly {0} Handler = {1};", ti.DelegateName, ti.TrampolineName);
 			print ("");
 			print ("[MonoPInvokeCallback (typeof ({0}))]", ti.DelegateName);
