@@ -5,19 +5,10 @@ using System.Text;
 #if MTOUCH || MMP
 using Mono.Cecil;
 using Xamarin.Linker;
-#elif (MONOMAC || SYSTEM_NET_HTTP)
+#else
 using System.Net.Http;
-#endif
-
-#if XAMCORE_2_0 || SYSTEM_NET_HTTP
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC && !MMP
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#elif !MTOUCH && !MMP && !MMP_TEST
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
 #endif
 
 #if MMP || MMP_TEST || MTOUCH
@@ -204,37 +195,29 @@ namespace ObjCRuntime {
 			}
 		}
 
-#if (MONOMAC || SYSTEM_NET_HTTP)
-		[Preserve]
+		[Preserve] // always present but re-written by the linker
 		internal static HttpMessageHandler GetHttpMessageHandler ()
 		{
 			var options = RuntimeOptions.Read ();
-			if (options == null) {
-#if __WATCHOS__
-				return new NSUrlSessionHandler ();
-#else
-				return new HttpClientHandler ();
-#endif
-			}
-
 			// all types will be present as this is executed only when the linker is not enabled
-			var handler_name = options.http_message_handler;
-			var t = Type.GetType (handler_name, false);
-
-			HttpMessageHandler handler = null;
-			if (t != null)
-				handler = Activator.CreateInstance (t) as HttpMessageHandler;
-			if (handler != null)
-				return handler;
+			var handler_name = options?.http_message_handler;
 #if __WATCHOS__
-			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler", handler_name);
+			if (handler_name != NSUrlSessionHandlerValue)
+				Console.WriteLine ($"{handler_name} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler");
 			return new NSUrlSessionHandler ();
 #else
-			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler", handler_name);
-			return new HttpClientHandler ();
+			switch (handler_name) {
+				case CFNetworkHandlerValue:
+					return new CFNetworkHandler ();
+				case NSUrlSessionHandlerValue:
+					return new NSUrlSessionHandler ();
+				default:
+					if (handler_name != HttpClientHandlerValue)
+						Console.WriteLine ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler");
+					return new HttpClientHandler ();
+			}
 #endif
 		}
-#endif
 #endif
 
 		// Use either Create() or Read().

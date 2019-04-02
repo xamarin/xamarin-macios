@@ -37,6 +37,16 @@ namespace Xamarin.Linker.Steps {
 		protected override string Name { get; } = "Default HttpMessageHandler setter";
 		protected override int ErrorCode { get; } = 2040;
 
+		Application App {
+			get {
+#if MONOMAC
+				return Driver.App;
+#else
+				return Options.Application;
+#endif
+			}
+		}
+
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 		{
 			switch (assembly.Name.Name) {
@@ -44,7 +54,9 @@ namespace Xamarin.Linker.Steps {
 			case "Xamarin.Mac":
 				return context.Annotations.GetAction (assembly) == AssemblyAction.Link;
 #else
-			case "System.Net.Http":
+			case "Xamarin.iOS":
+			case "Xamarin.TVOS":
+			case "Xamarin.WatchOS":
 				return context.Annotations.GetAction (assembly) == AssemblyAction.Link;
 #endif
 			default:
@@ -52,7 +64,6 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
-#if MONOMAC
 		protected override void Process (TypeDefinition type)
 		{
 			if (!type.Is ("ObjCRuntime", "RuntimeOptions"))
@@ -61,7 +72,7 @@ namespace Xamarin.Linker.Steps {
 			MethodDefinition method = type.Methods.First (x => x.Name == "GetHttpMessageHandler" && !x.HasParameters);
 
 			AssemblyDefinition systemNetHTTPAssembly = context.GetAssemblies ().First (x => x.Name.Name == "System.Net.Http");
-			TypeDefinition handler = RuntimeOptions.GetHttpMessageHandler (Driver.App, Options.RuntimeOptions, systemNetHTTPAssembly.MainModule, type.Module);
+			TypeDefinition handler = RuntimeOptions.GetHttpMessageHandler (App, Options.RuntimeOptions, systemNetHTTPAssembly.MainModule, type.Module);
 			MethodReference handler_ctor = handler.Methods.First (x => x.IsConstructor && !x.HasParameters && !x.IsStatic);
 
 			// HttpClientHandler is defined not in Xamarin.Mac.dll so we need to import
@@ -74,46 +85,5 @@ namespace Xamarin.Linker.Steps {
 			il.Emit (OpCodes.Ret);
 			method.Body = body;
 		}
-#else
-		protected override void Process (TypeDefinition type)
-		{
-			if (!type.Is ("System.Net.Http", "HttpClient"))
-				return;
-			
-			MethodDefinition default_ctor = null;
-			MethodDefinition full_ctor = null;
-			foreach (var m in type.Methods) {
-				if (m.IsStatic || !m.IsConstructor)
-					continue;
-				if (!m.HasParameters) {
-					default_ctor = m;
-				} else if (m.Parameters.Count == 2) {
-					full_ctor = m;
-				}
-			}
-
-			if (default_ctor == null || full_ctor == null)
-				throw new Exception ("Could not set the default HttpMessageHandler");
-
-			var handler = RuntimeOptions.GetHttpMessageHandler (Options.Application, Options.RuntimeOptions, type.Module);
-
-			MethodDefinition handler_ctor = null;
-			foreach (var m in handler.Methods) {
-				if (m.IsStatic || !m.IsConstructor || m.HasParameters)
-					continue;
-				handler_ctor = m;
-				break;
-			}
-			// re-write default ctor
-			var body = new MethodBody (default_ctor);
-			var il = body.GetILProcessor ();
-			il.Emit (OpCodes.Ldarg_0);
-			il.Emit (OpCodes.Newobj, handler_ctor);
-			il.Emit (OpCodes.Ldc_I4_1);
-			il.Emit (OpCodes.Call, full_ctor);
-			il.Emit (OpCodes.Ret);
-			default_ctor.Body = body;
-		}
-#endif
 	}
 }
