@@ -331,18 +331,18 @@ namespace xharness
 			return log.SelectSingleNode ("/TouchUnitTestRun/NUnitOutput") != null;
 		}
 
-		(XmlDocument xml, string human) ParseTouchUnitXml (XmlDocument log)
+		async Task<XmlDocument> ParseTouchUnitXml (XmlDocument log, StreamWriter writer)
 		{
 			var nunit_output = log.SelectSingleNode ("/TouchUnitTestRun/NUnitOutput");
 			var nunitXml = new XmlDocument ();
 			nunitXml.LoadXml (nunit_output.InnerXml);
-			return (xml: nunitXml, human: log.SelectSingleNode ("/TouchUnitTestRun/TouchUnitExtraData").InnerText);
+			await writer.WriteAsync (log.SelectSingleNode ("/TouchUnitTestRun/TouchUnitExtraData").InnerText);
+			return nunitXml;
 		}
 
-		(XmlDocument xml, string human) ParseNUnitXml (XmlDocument log)
+		async Task<XmlDocument> ParseNUnitXml (XmlDocument log, StreamWriter writer)
 		{
 			var str = log.InnerXml;
-			var humanReadableLog = new StringBuilder ();
 			var resultsNode = log.SelectSingleNode ("test-results");
 
 			// parse the xml and build a human readable version
@@ -358,44 +358,44 @@ namespace xharness
 			var testFixtures = resultsNode.SelectNodes ("//test-suite[@type='TestFixture' or @type='TestCollection']");
 			for (var i = 0; i < testFixtures.Count; i++) {
 				var node = testFixtures [i];
-				humanReadableLog.AppendLine (node.Attributes ["name"].InnerText);
+				await writer.WriteLineAsync (node.Attributes ["name"].InnerText);
 				var testCases = node.SelectNodes ("//test-case");
 				for (var j = 0; j < testCases.Count; j++) {
 					var result = testCases [j];
 					var status = result.Attributes ["result"].InnerText;
 					switch (status) {
 					case "Success":
-						humanReadableLog.Append ("\t[PASS] ");
+						await writer.WriteAsync ("\t[PASS] ");
 						break;
 					case "Ignored":
-						humanReadableLog.Append ("\t[IGNORED] ");
+						await writer.WriteAsync ("\t[IGNORED] ");
 						break;
 					case "Error":
 					case "Failure":
-						humanReadableLog.Append ("\t[FAIL] ");
+						await writer.WriteLineAsync ("\t[FAIL] ");
 						break;
 					case "Inconclusive":
-						humanReadableLog.Append ("\t[INCONCLUSIVE] ");
+						await writer.WriteAsync ("\t[INCONCLUSIVE] ");
 						break;
 					default:
-						humanReadableLog.Append ("\t[INFO] ");
+						await writer.WriteAsync ("\t[INFO] ");
 						break;
 					}
-					humanReadableLog.Append (result.Attributes ["name"].InnerText);
+					await writer.WriteAsync (result.Attributes ["name"].InnerText);
 					if (status == "Failure" || status == "Error") { //  we need to print the message
-						humanReadableLog.Append ($" : {result.InnerText}");
+						await writer.WriteAsync ($" : {result.InnerText}");
 					}
 					// add a new line
-					humanReadableLog.AppendLine ();
+					await writer.WriteLineAsync ();
 				}
 				var time = node.Attributes ["time"]?.InnerText ?? "0"; // some nodes might not have the time :/
-				humanReadableLog.AppendLine ($"{node.Attributes ["name"].InnerXml} {time} ms");
+				await writer.WriteLineAsync ($"{node.Attributes ["name"].InnerXml} {time} ms");
 			}
-			humanReadableLog.AppendLine ($"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}");
-			return (xml: log, human: humanReadableLog.ToString());
+			await writer.WriteLineAsync ($"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}");
+			return log;
 		}
 
-		public bool TestsSucceeded (Log listener_log, bool timed_out, bool crashed)
+		public async Task<bool> TestsSucceeded (Log listener_log, bool timed_out, bool crashed)
 		{
 			string log;
 			using (var reader = listener_log.GetReader ())
@@ -412,17 +412,13 @@ namespace xharness
 				try {
 					xmldoc.LoadXml (log);
 					var testsResults = new XmlDocument ();
-					if (IsTouchUnitResult (xmldoc)) {
-						var (xml, human) = ParseTouchUnitXml (xmldoc);
-						testsResults = xml;
-						log = human;
-					} else {
-						var (xml, human) = ParseNUnitXml (xmldoc);
-						testsResults = xml;
-						log = human;
+					using (var writer = new StreamWriter (listener_log.FullPath)) {
+						if (IsTouchUnitResult (xmldoc)) {
+							testsResults = await ParseTouchUnitXml (xmldoc, writer);
+						} else {
+							testsResults = await ParseNUnitXml (xmldoc, writer);
+						}
 					}
-
-					File.WriteAllText (listener_log.FullPath, log);
 
 					var mainResultNode = testsResults.SelectSingleNode ("test-results");
 					if (mainResultNode == null) {
@@ -452,6 +448,10 @@ namespace xharness
 				}
 			}
 
+			// read the parsed logs in a human readable way
+			using (var reader = new StreamReader(listener_log.FullPath)) {
+				log = await reader.ReadToEndAsync ();
+			}
 			// parsing the human readable results
 			if (log.Contains ("Tests run")) {
 				var tests_run = string.Empty;
@@ -805,7 +805,7 @@ namespace xharness
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
-				success = TestsSucceeded (listener_log, timed_out, crashed);
+				success = await TestsSucceeded (listener_log, timed_out, crashed);
 			} else if (timed_out) {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				main_log.WriteLine ("Test run never launched");
