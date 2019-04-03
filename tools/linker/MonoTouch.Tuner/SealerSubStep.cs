@@ -1,6 +1,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Linker;
@@ -84,7 +85,7 @@ namespace Xamarin.Linker.Steps {
 					// sanity (disable IsSealed == true above)
 					//if (type.IsSealed)
 					//	Console.WriteLine ();
-					if (AreMarked (overrides))
+					if (AreMarked (overrides.Select (x => x.Override).ToList ()))
 						continue;
 				}
 

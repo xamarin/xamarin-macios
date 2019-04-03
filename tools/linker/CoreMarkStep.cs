@@ -67,7 +67,8 @@ namespace Xamarin.Linker.Steps {
 				return;
 
 			// every subclass-Dispose should be calling base-Dispose
-			foreach (MethodDefinition od in overrides) {
+			foreach (var overrideInfo in overrides) {
+				var od = overrideInfo.Override;
 				// we do not need to process unmarked code (it won't be part of the final binary)
 				if (!Annotations.IsMarked (od))
 					continue;

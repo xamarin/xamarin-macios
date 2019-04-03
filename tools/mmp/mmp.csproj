@@ -82,6 +82,9 @@
     <Compile Include="..\..\external\mono\external\linker\src\linker\Linker\Annotations.cs">
       <Link>Linker\Annotations.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\mono\external\linker\src\linker\Linker\Inflater.cs">
+      <Link>Linker\Inflater.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\mono\external\linker\src\linker\Linker\AssemblyAction.cs">
       <Link>Linker\AssemblyAction.cs</Link>
     </Compile>
@@ -144,6 +147,9 @@
     </Compile>
     <Compile Include="..\..\external\mono\external\linker\src\linker\Linker\MethodBodyScanner.cs">
       <Link>Linker\MethodBodyScanner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\external\linker\src\linker\Linker\OverrideInformation.cs">
+      <Link>Linker\OverrideInformation.cs</Link>
     </Compile>
     <Compile Include="..\..\external\mono\external\linker\src\linker\Linker\AssemblyUtilities.cs">
       <Link>Linker\AssemblyUtilities.cs</Link>
