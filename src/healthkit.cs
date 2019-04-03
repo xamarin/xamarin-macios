@@ -693,6 +693,10 @@ namespace HealthKit {
 		[Watch (5, 0), iOS (12, 0)]
 		[Export ("CrossTrainerDistance")]
 		HKQuantity CrossTrainerDistance { get; set; }
+
+		[Watch (5, 2), iOS (12, 2)]
+		[Export ("HeartRateEventThreshold")]
+		HKQuantity HeartRateEventThreshold { get; set; }
 	}
 		
 	[Watch (2,0)]
@@ -843,6 +847,10 @@ namespace HealthKit {
 		[Watch (5, 0), iOS (12, 0)]
 		[Field ("HKMetadataKeyCrossTrainerDistance")]
 		NSString CrossTrainerDistance { get; }
+
+		[Watch (5, 2), iOS (12, 2)]
+		[Field ("HKMetadataKeyHeartRateEventThreshold")]
+		NSString HeartRateEventThreshold { get; }
 	}
 
 	[Watch (2,0)]
@@ -1746,6 +1754,18 @@ namespace HealthKit {
 		[iOS (10,0), Watch (3,0)]
 		[Field ("HKCategoryTypeIdentifierMindfulSession")]
 		MindfulSession,
+
+		[Watch (5,2), iOS (12,2)]
+		[Field ("HKCategoryTypeIdentifierHighHeartRateEvent")]
+		HighHeartRateEvent,
+
+		[Watch (5,2), iOS (12,2)]
+		[Field ("HKCategoryTypeIdentifierLowHeartRateEvent")]
+		LowHeartRateEvent,
+
+		[Watch (5,2), iOS (12,2)]
+		[Field ("HKCategoryTypeIdentifierIrregularHeartRhythmEvent")]
+		IrregularHeartRhythmEvent,
 	}
 
 	[Watch (2,0)]

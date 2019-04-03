@@ -130,6 +130,8 @@ namespace Xamarin.Mac.Tests
 				if (IntPtr.Size == 4 && PlatformHelper.CheckSystemVersion(10, 13)) // Removed from 32-bit in macOS 10.13
 					return true;
 				break;
+			case "QTMovie":
+				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
 			}
 
 			return false;
