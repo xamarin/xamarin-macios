@@ -121,25 +121,28 @@ namespace Foundation {
 
 		void AddObserverToList (NSObject observer, string aName, NSObject anObject)
 		{
-			__mt_ObserverList_var.Add (new ObservedData { Observer = observer, Name = aName, Object = anObject });
+			lock (__mt_ObserverList_var)
+				__mt_ObserverList_var.Add (new ObservedData { Observer = observer, Name = aName, Object = anObject });
 			MarkDirty ();
 		}
 
 		void RemoveObserversFromList (NSObject observer, string aName, NSObject anObject)
 		{
-			for (int i = __mt_ObserverList_var.Count - 1; i >= 0; i--) {
-				ObservedData od = __mt_ObserverList_var [i];
+			lock (__mt_ObserverList_var) {
+				for (int i = __mt_ObserverList_var.Count - 1; i >= 0; i--) {
+					ObservedData od = __mt_ObserverList_var [i];
 
-				if (observer != od.Observer)
-					continue;
+					if (observer != od.Observer)
+						continue;
 
-				if (aName != null && aName != od.Name)
-					continue;
+					if (aName != null && aName != od.Name)
+						continue;
 
-				if (anObject != null && anObject != od.Object)
-					continue;
+					if (anObject != null && anObject != od.Object)
+						continue;
 
-				__mt_ObserverList_var.RemoveAt (i);
+					__mt_ObserverList_var.RemoveAt (i);
+				}
 			}
 		}
 	}
