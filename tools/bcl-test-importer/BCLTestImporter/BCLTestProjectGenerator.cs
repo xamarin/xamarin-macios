@@ -78,7 +78,7 @@ namespace BCLTestImporter {
 			// NUNIT TESTS
 
 			// BCL tests group 1
-			(name:"SystemCoreTests", assemblies: new [] {"monotouch_System.Core_test.dll"}, group: "BCL tests group 1"),
+			// (name:"SystemCoreTests", assemblies: new [] {"monotouch_System.Core_test.dll"}, group: "BCL tests group 1"),
 			(name:"SystemNumericsTests", assemblies: new [] {"monotouch_System.Numerics_test.dll"}, group: "BCL tests group 1"),
 			(name:"SystemRuntimeSerializationTests", assemblies: new [] {"monotouch_System.Runtime.Serialization_test.dll"}, group: "BCL tests group 1"),
 			(name:"SystemTransactionsTests", assemblies: new [] {"monotouch_System.Transactions_test.dll"}, group: "BCL tests group 1"),
@@ -95,7 +95,7 @@ namespace BCLTestImporter {
 			(name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}, group: "BCL tests group 1"),
 			
 			// BCL tests group 2
-			(name:"SystemTests", assemblies: new[] {"monotouch_System_test.dll"}, group: "BCL tests group 2"),
+			// (name:"SystemTests", assemblies: new[] {"monotouch_System_test.dll"}, group: "BCL tests group 2"),
 			(name:"SystemDataTests", assemblies: new [] {"monotouch_System.Data_test.dll"}, group: "BCL tests group 2"),
 			(name:"SystemNetHttpTests", assemblies: new [] {"monotouch_System.Net.Http_test.dll"}, group: "BCL tests group 2"),
 			(name:"MonoDataTdsTests", assemblies: new [] {"monotouch_Mono.Data.Tds_test.dll"}, group: "BCL tests group 2"),
@@ -115,7 +115,7 @@ namespace BCLTestImporter {
 			(name:"SystemXmlXunit", assemblies: new [] {"monotouch_System.Xml_xunit-test.dll"}, group: "BCL tests group 3"),
 			
 			// BCL tests group 4
-			(name:"SystemNumericsXunit", assemblies: new [] {"monotouch_System.Numerics_xunit-test.dll"}, group: "BCL tests group 4"),
+			// (name:"SystemNumericsXunit", assemblies: new [] {"monotouch_System.Numerics_xunit-test.dll"}, group: "BCL tests group 4"),
 			(name:"SystemCoreXunit", assemblies: new [] {"monotouch_System.Core_xunit-test.dll"}, group: "BCL tests group 4"),
 			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}, group: "BCL tests group 4"),
 			(name:"MicrosoftCSharpXunit", assemblies: new [] {"monotouch_Microsoft.CSharp_xunit-test.dll"}, group: "BCL tests group 4"),
