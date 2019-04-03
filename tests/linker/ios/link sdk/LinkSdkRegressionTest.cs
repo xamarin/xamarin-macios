@@ -386,7 +386,7 @@ namespace LinkSdk {
 		}
 		
 		[Test]
-		// http://lists.ximian.com/pipermail/monotouch/2011-December/006976.html
+		// http://lists.dot.net/pipermail/monotouch/2011-December/006976.html
 		public void Linker_RuntimeWrappedException ()
 		{
 			try {
