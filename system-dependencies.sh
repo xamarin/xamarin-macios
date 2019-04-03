@@ -20,49 +20,66 @@ while ! test -z $1; do
 			;;
 		--provision-xcode)
 			PROVISION_XCODE=1
+			unset IGNORE_XCODE
 			shift
 			;;
 		--provision)
 			# historical reasons :(
 			PROVISION_XCODE=1
 			PROVISION_VS=1
+			unset IGNORE_XCODE
+			unset IGNORE_VISUAL_STUDIO
 			shift
 			;;
 		--provision-*-studio)
 			PROVISION_VS=1
+			unset IGNORE_VISUAL_STUDIO
 			shift
 			;;
 		--provision-mono)
 			PROVISION_MONO=1
+			unset IGNORE_MONO
 			shift
 			;;
 		--provision-cmake)
 			PROVISION_CMAKE=1
+			unset IGNORE_CMAKE
 			shift
 			;;
 		--provision-autotools)
 			PROVISION_AUTOTOOLS=1
+			unset IGNORE_AUTOTOOLS
 			shift
 			;;
 		--provision-sharpie)
 			PROVISION_SHARPIE=1
 			unset OPTIONAL_SHARPIE
+			unset IGNORE_SHARPIE
 			shift
 			;;
 		--provision-simulators)
 			PROVISION_SIMULATORS=1
 			unset OPTIONAL_SIMULATORS
+			unset IGNORE_SIMULATORS
 			shift
 			;;
 		--provision-all)
 			PROVISION_MONO=1
+			unset IGNORE_MONO
 			PROVISION_VS=1
+			unset IGNORE_VISUAL_STUDIO
 			PROVISION_XCODE=1
+			unset IGNORE_XCODE
 			PROVISION_CMAKE=1
+			unset IGNORE_CMAKE
 			PROVISION_AUTOTOOLS=1
+			unset IGNORE_AUTOTOOLS
 			PROVISION_HOMEBREW=1
+			unset IGNORE_HOMEBREW
 			PROVISION_SHARPIE=1
+			unset IGNORE_SHARPIE
 			PROVISION_SIMULATORS=1
+			unset IGNORE_SIMULATORS
 			shift
 			;;
 		--ignore-all)
@@ -74,6 +91,7 @@ while ! test -z $1; do
 			IGNORE_AUTOTOOLS=1
 			IGNORE_HOMEBREW=1
 			IGNORE_SHARPIE=1
+			IGNORE_SIMULATORS=1
 			shift
 			;;
 		--ignore-osx)
