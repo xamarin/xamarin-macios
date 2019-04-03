@@ -191,8 +191,7 @@ namespace xharness
 				return;
 			
 			// Make sure there's a top-level version too.
-			var project = csproj.ChildNodes [1];
-			var property_group = project.ChildNodes [0];
+			var property_group = csproj.SelectSingleNode("/*/*[local-name() = 'PropertyGroup' and not(@Condition)]");
 
 			var intermediateOutputPath = csproj.CreateElement ("IntermediateOutputPath", MSBuild_Namespace);
 			intermediateOutputPath.InnerText = value;
