@@ -1315,11 +1315,6 @@ namespace Xamarin.Bundler {
 
 					args.Append (StringUtils.Quote (libmono)).Append (' ');
 
-					// libmono-system-native.a needs to be included if it exists in the mono in question
-					string libmonoNative =  Path.Combine (libdir, "libmono-system-native.a");
-					if (File.Exists (libmonoNative))
-						args.Append (StringUtils.Quote (libmonoNative)).Append (' ');
-
 					if (App.MonoNativeMode != MonoNativeMode.None) {
 						string libmono_native_name;
 						switch (App.MonoNativeMode) {
@@ -1335,6 +1330,13 @@ namespace Xamarin.Bundler {
 
 						args.Append (StringUtils.Quote (Path.Combine (libdir, libmono_native_name + ".a"))).Append (' ');
 						args.Append ("-framework GSS ");
+					}
+
+					// libmono-system-native.a needs to be included if it exists in the mono in question
+					string libmonoNative =  Path.Combine (libdir, "libmono-system-native.a");
+					if (File.Exists (libmonoNative)) {
+						args.Append (StringUtils.Quote (libmonoNative)).Append (' ');
+						args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
 					}
 
 					if (profiling.HasValue && profiling.Value) {

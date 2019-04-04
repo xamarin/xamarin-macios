@@ -2250,6 +2250,10 @@ namespace AVFoundation {
 		[Watch (5,0), NoTV, NoMac, NoiOS]
 		[Export ("activateWithOptions:completionHandler:")]
 		void Activate (AVAudioSessionActivationOptions options, Action<bool, NSError> handler);
+
+		[Watch (5, 2), TV (12, 2), NoMac, iOS (12, 2)]
+		[Export ("promptStyle")]
+		AVAudioSessionPromptStyle PromptStyle { get; }
 	}
 	
 	[iOS (6,0)]
@@ -8283,6 +8287,7 @@ namespace AVFoundation {
 		[Export ("initWithInputPort:videoPreviewLayer:")]
 		IntPtr Constructor (AVCaptureInputPort inputPort, AVCaptureVideoPreviewLayer layer);
 
+		[NullAllowed]
 		[Export ("output")]
 		AVCaptureOutput Output { get;  }
 
@@ -8331,6 +8336,7 @@ namespace AVFoundation {
 		nfloat VideoScaleAndCropFactor { get; set;  }
 #endif
 		[iOS (6,0)]
+		[NullAllowed]
 		[Export ("videoPreviewLayer")]
 		AVCaptureVideoPreviewLayer VideoPreviewLayer { get;  }
 
@@ -11771,6 +11777,12 @@ namespace AVFoundation {
 		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
+
+		// AVSampleBufferDisplayLayerImageProtection
+
+		[TV (12,2), NoWatch, Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		[Export ("preventsCapture")]
+		bool PreventsCapture { get; set; }
 	}
 
 	[NoWatch]
@@ -12642,6 +12654,26 @@ namespace AVFoundation {
 		[Export ("makeSecureTokenForExpirationDateOfPersistableContentKey:completionHandler:")]
 		void MakeSecureToken (NSData persistableContentKeyData, Action<NSData, NSError> handler);
 
+		[Async]
+		[NoTV, NoMac, iOS (12,2)]
+		[Export ("invalidatePersistableContentKey:options:completionHandler:")]
+		void InvalidatePersistableContentKey (NSData persistableContentKeyData, [NullAllowed] NSDictionary options, Action<NSData, NSError> handler);
+
+		[Async]
+		[NoTV, NoMac, iOS (12, 2)]
+		[Wrap ("InvalidatePersistableContentKey (persistableContentKeyData, options?.Dictionary, handler)")]
+		void InvalidatePersistableContentKey (NSData persistableContentKeyData, [NullAllowed] AVContentKeySessionServerPlaybackContextOptions options, Action<NSData, NSError> handler);
+
+		[Async]
+		[NoTV, NoMac, iOS (12,2)]
+		[Export ("invalidateAllPersistableContentKeysForApp:options:completionHandler:")]
+		void InvalidateAllPersistableContentKeys (NSData appIdentifier, [NullAllowed] NSDictionary options, Action<NSData, NSError> handler);
+
+		[Async]
+		[NoTV, NoMac, iOS (12, 2)]
+		[Wrap ("InvalidateAllPersistableContentKeys (appIdentifier, options?.Dictionary, handler)")]
+		void InvalidateAllPersistableContentKeys (NSData appIdentifier, [NullAllowed] AVContentKeySessionServerPlaybackContextOptions options, Action<NSData, NSError> handler);
+
 		#region AVContentKeySession_AVContentKeySessionPendingExpiredSessionReports
 
 		// binded because they are static and from a category.
@@ -12654,6 +12686,24 @@ namespace AVFoundation {
 		void RemovePendingExpiredSessionReports (NSDictionary[] expiredSessionReports, NSData appIdentifier, NSUrl storageUrl);
 
 		#endregion
+	}
+
+	[Static][Internal]
+	[NoWatch, NoTV, NoMac, iOS (12,2)]
+	interface AVContentKeySessionServerPlaybackContextOptionKeys {
+		[Field ("AVContentKeySessionServerPlaybackContextOptionProtocolVersions")]
+		NSString ProtocolVersionsKey { get; }
+
+		[Field ("AVContentKeySessionServerPlaybackContextOptionServerChallenge")]
+		NSString ServerChallengeKey { get; }
+	}
+
+	[StrongDictionary ("AVContentKeySessionServerPlaybackContextOptionKeys")]
+	[NoWatch, NoTV, NoMac, iOS (12,2)]
+	interface AVContentKeySessionServerPlaybackContextOptions {
+		NSNumber[] ProtocolVersions { get; }
+
+		NSData ServerChallenge { get; }
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
@@ -12692,6 +12742,10 @@ namespace AVFoundation {
 
 		[Export ("canProvidePersistableContentKey")]
 		bool CanProvidePersistableContentKey { get; }
+
+		[TV (12,2), Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		[Export ("options", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> Options { get; }
 
 		[Async]
 		[Export ("makeStreamingContentKeyRequestDataForApp:contentIdentifier:options:completionHandler:")]

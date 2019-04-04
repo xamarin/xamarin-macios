@@ -245,6 +245,10 @@ namespace GameController {
 
 		[Export ("initWithController:snapshotData:")]
 		IntPtr Constructor (GCController controller, NSData data);
+
+		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
+		[Field ("GCCurrentExtendedGamepadSnapshotDataVersion")]
+		GCExtendedGamepadSnapshotDataVersion DataVersion { get; }
 	}
 
 #if !XAMCORE_2_0
@@ -400,6 +404,10 @@ namespace GameController {
 
 		[Export ("initWithController:snapshotData:")]
 		IntPtr Constructor (GCController controller, NSData data);
+
+		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
+		[Field ("GCCurrentMicroGamepadSnapshotDataVersion")]
+		GCMicroGamepadSnapshotDataVersion DataVersion { get; }
 	}
 
 	[Mac (10,12, onlyOn64: true)]

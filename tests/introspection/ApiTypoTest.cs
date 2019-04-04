@@ -210,6 +210,7 @@ namespace Introspection
 			"Emagic",
 			"Emaili",
 			"Embd",
+			"Emsg",	// 4cc
 			"Enc",
 			"Eppc",
 			"Eftpos", // Electronic funds transfer at point of sale
@@ -238,6 +239,7 @@ namespace Introspection
 			"Gps",
 			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
+			"Gru",
 			"Greeking",
 			"Gtin",
 			"Hardlink",
@@ -278,8 +280,10 @@ namespace Introspection
 			"Interframe",
 			"Interitem",
 			"Intermenstrual",
+			"Intersector",
 			"Intoi",
 			"Ios",
+			"Iou",
 			"Ipa",
 			"Ipp",
 			"Iptc",
@@ -301,6 +305,7 @@ namespace Introspection
 			"Kiloamperes",
 			"Kiloohms",
 			"Kilopascals",
+			"Kullback", // Kullback-Leibler Divergence
 			"Langauges",
 			"Lacunarity",
 			"Ldaps",
@@ -312,10 +317,12 @@ namespace Introspection
 			"Lod",
 			"Lopass",
 			"Lowlevel",
+			"Lstm",
 			"Lun",
 			"Luma",
 			"Lzfse", // acronym
 			"Lzma", // acronym
+			"Mada", // payment system
 			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",
@@ -350,6 +357,7 @@ namespace Introspection
 			"Nai",
 			"Nanograms",
 			"Nanowatts",
+			"Nestrov",
 			"nfloat",
 			"Nfnt",
 			"nint",

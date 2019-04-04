@@ -909,6 +909,10 @@ namespace ClockKit {
 		[NullAllowed, Export ("gaugeColorLocations")]
 		[BindAs (typeof (float []))] // between 0.0 and 1.0
 		NSNumber[] GaugeColorLocations { get; }
+
+		[Watch (5,2)]
+		[NullAllowed, Export ("accessibilityLabel")]
+		string AccessibilityLabel { get; set; }
 	}
 
 	[Watch (5,0)]
