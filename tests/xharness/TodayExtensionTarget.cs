@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -43,6 +43,11 @@ namespace xharness
 			if (MonoNativeInfo != null)
 				Name = Name + MonoNativeInfo.FlavorSuffix;
 		}
+		
+		bool IsGeneratedBclTest { get => IsBCLProject && TargetDirectory.Contains ("BCLTests"); }
+		
+		string GeneratedPath { get => Path.Combine (TargetDirectory, "generated", AppName.Replace (" Today", ""), "ios"); }
+		string GeneratedTemplatePath { get => Path.Combine (TargetDirectory, "templates", "today"); } 
 
 		void CreateTodayContainerProject ()
 		{
@@ -55,7 +60,7 @@ namespace xharness
 			csproj.SetProjectReferenceValue ("TodayExtension.csproj", "Project", TodayExtensionGuid);
 			csproj.SetProjectReferenceInclude ("TodayExtension.csproj", TodayExtensionProjectPath.Replace ('/', '\\'));
 			csproj.FixCompileInclude ("Main.cs", Path.Combine (Harness.TodayContainerTemplate, "Main.cs").Replace ('/', '\\'));
-			csproj.FixInfoPListInclude (suffix);
+			csproj.FixInfoPListInclude (suffix, IsGeneratedBclTest ? GeneratedPath : null);
 			TodayContainerGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
 			ProjectGuid = TodayContainerGuid;
 			csproj.SetProjectGuid (TodayContainerGuid);
@@ -66,7 +71,7 @@ namespace xharness
 			Harness.Save (csproj, TodayContainerProjectPath);
 
 			XmlDocument info_plist = new XmlDocument ();
-			var target_info_plist = Path.Combine (TargetDirectory, $"Info{suffix}.plist");
+			var target_info_plist = Path.Combine ((IsGeneratedBclTest) ? GeneratedPath : TargetDirectory, $"Info{suffix}.plist");
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (Harness.TodayContainerTemplate, "Info.plist"));
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
@@ -86,7 +91,8 @@ namespace xharness
 			csproj.SetOutputType ("Library");
 			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0;TODAY_EXTENSION");
 			var ext = IsFSharp ? "fs" : "cs";
-			csproj.AddCompileInclude ("TodayExtensionMain." + ext, Path.Combine (Harness.TodayExtensionTemplate, "TodayExtensionMain." + ext), true);
+			// we have diff templates for the bcl tests because they use xunit/nunit and not monotouch nunit.
+			csproj.AddCompileInclude ("TodayExtensionMain." + ext, Path.Combine (IsGeneratedBclTest? GeneratedTemplatePath : Harness.TodayExtensionTemplate, "TodayExtensionMain." + ext), true);
 			csproj.AddInterfaceDefinition (Path.Combine (Harness.TodayExtensionTemplate, "TodayView.storyboard").Replace ('/', '\\'));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.FixProjectReferences ("-today");
@@ -100,9 +106,11 @@ namespace xharness
 			TodayExtensionGuid = csproj.GetProjectGuid ();
 
 			XmlDocument info_plist = new XmlDocument ();
-			var target_info_plist = Path.Combine (TargetDirectory, $"Info{suffix}.plist");
-			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
-			BundleIdentifier = info_plist.GetCFBundleIdentifier () + "-today";
+			var target_info_plist = Path.Combine (IsGeneratedBclTest ? GeneratedPath : TargetDirectory, $"Info{suffix}.plist");
+			info_plist.LoadWithoutNetworkAccess (Path.Combine (IsGeneratedBclTest ? GeneratedPath : TargetDirectory, "Info.plist"));
+			BundleIdentifier = (IsGeneratedBclTest)? 
+				$"com.xamarin.bcltests.{AppName.Replace (" Today", "")}":
+				info_plist.GetCFBundleIdentifier () + "-today";
 			info_plist.SetCFBundleIdentifier (BundleIdentifier + ".todayextension");
 			info_plist.SetMinimumOSVersion (GetMinimumOSVersion ("8.0"));
 			info_plist.AddPListStringValue ("CFBundlePackageType", "XPC!");

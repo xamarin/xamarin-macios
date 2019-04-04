@@ -549,11 +549,14 @@ namespace xharness
 				FindAndReplace (node, find, replace);
 		}
 
-		public static void FixInfoPListInclude (this XmlDocument csproj, string suffix)
+		public static void FixInfoPListInclude (this XmlDocument csproj, string suffix, string fullPath=null)
 		{
 			var import = csproj.SelectSingleNode ("/*/*/*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
 			if (import != null) {
-				import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace ("Info.plist", $"Info{suffix}.plist");
+				if (string.IsNullOrEmpty (fullPath))
+					import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace ("Info.plist", $"Info{suffix}.plist");
+				else 
+					import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace ("Info.plist", $"{fullPath}\\Info{suffix}.plist");
 				var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
 				if (logicalName == null) {
 					logicalName = csproj.CreateElement ("LogicalName", MSBuild_Namespace);
