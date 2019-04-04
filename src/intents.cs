@@ -77,9 +77,9 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
 		[NoWatch, iOS (11,0)]
-		Success,
-		[NoWatch, iOS (11,0)]
 		HandleInApp,
+		[NoWatch, iOS (11,0)]
+		Success,
 	}
 
 	[iOS (10, 0)]
@@ -159,9 +159,9 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
 		[NoWatch, iOS (11,0)]
-		Success,
-		[NoWatch, iOS (11,0)]
 		HandleInApp,
+		[NoWatch, iOS (11,0)]
+		Success,
 	}
 
 	[iOS (10, 0)]
@@ -349,9 +349,9 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
 		[NoWatch, iOS (11,0)]
-		Success,
-		[NoWatch, iOS (11,0)]
 		HandleInApp,
+		[NoWatch, iOS (11,0)]
+		Success,
 	}
 
 	[iOS (10, 0)]
@@ -528,9 +528,9 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
 		[NoWatch, iOS (11,0)]
-		Success,
-		[NoWatch, iOS (11,0)]
 		HandleInApp,
+		[NoWatch, iOS (11,0)]
+		Success,
 	}
 
 	[iOS (10, 0)]
@@ -825,9 +825,9 @@ namespace Intents {
 		FailureOngoingWorkout,
 		FailureNoMatchingWorkout,
 		[Watch (4,0), iOS (11,0)]
-		Success,
-		[Watch (4,0), iOS (11,0)]
 		HandleInApp,
+		[Watch (4,0), iOS (11,0)]
+		Success,
 	}
 
 	[iOS (10, 0)]
