@@ -88,7 +88,7 @@ namespace Xamarin.Tests
 			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, $"-t -- {toolPath} " + string.Format (arguments, args), EnvironmentVariables, output, output, workingDirectory: WorkingDirectory);
 
 			if ((rv != 0 || always_show_output) && output.Length > 0)
-				Console.WriteLine ("\t" + output.Replace ("\n", "\n\t"));
+				Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t"));
 
 			ParseMessages ();
 
