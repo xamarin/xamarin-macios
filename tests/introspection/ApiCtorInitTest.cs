@@ -130,6 +130,8 @@ namespace Introspection {
 				return true;
 			case "MPSImageArithmetic": // Cannot directly initialize MPSImageArithmetic. Use one of the sub-classes of MPSImageArithmetic.
 				return true;
+			case "QTMovie":
+				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
 			}
 
 			return SkipDueToAttribute (type);
@@ -429,6 +431,16 @@ namespace Introspection {
 			case "INUIEditVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
 			case "ILClassificationUIExtensionViewController": // Meant to be an extension
 				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
+					return true;
+				break;
+			case "MPSImageReduceUnary": // Not meant to be used, only subclasses
+			case "MPSCnnArithmetic": // Not meant to be used, only subclasses
+			case "MPSCnnArithmeticGradient": // Not meant to be used, only subclasses
+			case "MPSNNOptimizer": // Not meant to be used, only subclasses
+			case "MPSNNReduceBinary": // Not meant to be used, only subclasses
+			case "MPSNNReduceUnary": // Not meant to be used, only subclasses
+				var cstr = ctor.ToString ();
+				if (cstr == "Void .ctor(IMTLDevice)" || cstr == "Void .ctor(NSCoder, IMTLDevice)")
 					return true;
 				break;
 			}

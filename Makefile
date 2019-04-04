@@ -236,12 +236,12 @@ fix-install-permissions:
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.Mac.framework
 
 git-clean-all:
-	@echo "Cleaning and resetting all dependencies. This is a destructive operation."
-	@echo "You have 5 seconds to cancel (Ctrl-C) if you wish."
+	@echo "$(COLOR_RED)Cleaning and resetting all dependencies. This is a destructive operation.$(COLOR_CLEAR)"
+	@echo "$(COLOR_RED)You have 5 seconds to cancel (Ctrl-C) if you wish.$(COLOR_CLEAR)"
 	@sleep 5
 	@echo "Cleaning xamarin-macios..."
 	@git clean -xffdq
-	@git submodule foreach -q --recursive 'git clean -xffdq'
+	@git submodule foreach -q --recursive 'git clean -xffdq && git reset --hard -q'
 	@for dir in $(DEPENDENCY_DIRECTORIES); do if test -d $(CURDIR)/$$dir; then echo "Cleaning $$dir" && cd $(CURDIR)/$$dir && git clean -xffdq && git reset --hard -q && git submodule foreach -q --recursive 'git clean -xffdq'; else echo "Skipped  $$dir (does not exist)"; fi; done
 ifdef ENABLE_XAMARIN
 	@./configure --enable-xamarin

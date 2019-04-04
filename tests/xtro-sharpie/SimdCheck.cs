@@ -74,6 +74,7 @@ namespace Extrospection
 			// the native definition. However, since we're manually marshalling this type
 			// (using [MarshalDirective]), managed code doesn't get incorrect results.
 			{ "MDLAxisAlignedBoundingBox", new NativeSimdInfo { Managed = "MDLAxisAlignedBoundingBox", }},
+			{ "MPSAxisAlignedBoundingBox", new NativeSimdInfo { Managed = "MPSAxisAlignedBoundingBox" }},
 			// The managed definition is identical to the native definition
 			{ "MPSImageHistogramInfo", new NativeSimdInfo { Managed = "MPSImageHistogramInfo" }},
 		};

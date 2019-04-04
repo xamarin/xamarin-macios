@@ -4,6 +4,4 @@
 
 ## unsorted
 
-!missing-enum! MPErrorCode not bound
-!missing-field! MPErrorDomain not bound
 !unknown-type! MPMediaItem bound
