@@ -1559,7 +1559,7 @@ namespace Xamarin.Bundler {
 				return true;
 			}
 			// Shutup the warning until we decide on bug: 36478
-			if (shortendName.ToLowerInvariant () == "intl" && IsUnifiedFullXamMacFramework)
+			if (shortendName.ToLowerInvariant () == "intl" && !native_references.Any (x => x.Contains ("libintl.dylib")) && IsUnifiedFullXamMacFramework)
 				return true;
 			return false;
 		}
