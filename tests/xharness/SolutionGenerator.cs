@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -41,7 +41,7 @@ namespace xharness
 		static string FixProjectPath (string sln_path, string project_path)
 		{
 			var sln_dir = Path.GetDirectoryName (sln_path);
-			if (project_path.StartsWith (sln_dir, StringComparison.OrdinalIgnoreCase))
+			if (project_path.StartsWith (sln_dir + Path.PathSeparator, StringComparison.OrdinalIgnoreCase))
 				project_path = project_path.Substring (sln_dir.Length + 1);
 			project_path = project_path.Replace ('/', '\\');
 			return project_path;
