@@ -37,7 +37,7 @@ using System.Net;
 using CFNetwork;
 using CoreFoundation;
 using CF=CoreFoundation;
-#elif XAMCORE_2_0 || SYSTEM_NET_HTTP
+#elif XAMCORE_2_0
 using CoreServices;
 using CoreFoundation;
 using CF=CoreFoundation;
@@ -245,7 +245,7 @@ namespace System.Net.Http
 			// Always schedule stream events handling on main-loop. Due to ConfigureAwait (false) we may end up
 			// on any thread-pool thread which may not have run-loop running
 			//
-#if XAMCORE_2_0 || SYSTEM_NET_HTTP
+#if XAMCORE_2_0
 			stream.EnableEvents (CF.CFRunLoop.Main, CF.CFRunLoop.ModeCommon);
 #else
 			stream.EnableEvents (CF.CFRunLoop.Main, CF.CFRunLoop.CFRunLoopCommonModes);
@@ -309,12 +309,12 @@ namespace System.Net.Http
 
 		void CloseStream (CFHTTPStream stream)
 		{
-			lock (streamBuckets) {
-				if (streamBuckets.TryGetValue (stream.Handle, out var bucket)) {
-					bucket.Close ();
-					streamBuckets.Remove (stream.Handle);
-				}
+			StreamBucket bucket;
+			if (streamBuckets.TryGetValue (stream.Handle, out bucket)) {
+				bucket.Close ();
+				streamBuckets.Remove (stream.Handle);
 			}
+
 			stream.Close ();
 		}
 
@@ -366,12 +366,9 @@ namespace System.Net.Http
 				}
 			}
 
-			// cancellation (CancellationTokenRegistration) can happen in parallel
-			if (!bucket.Response.Task.IsCanceled) {
-				bucket.Response.TrySetResult (response_msg);
+			bucket.Response.TrySetResult (response_msg);
 
-				bucket.ContentStream.ReadStreamData ();
-			}
+			bucket.ContentStream.ReadStreamData ();
 		}
 
 		void AddCookie (string value, Uri uri, string header)
