@@ -98,7 +98,7 @@ namespace Xamarin.Tests
 		bool IndexOfAny (string line, out int start, out int end, params string [] values)
 		{
 			foreach (var value in values) {
-				start = line.IndexOf (value);
+				start = line.IndexOf (value, StringComparison.Ordinal);
 				if (start >= 0) {
 					end = start + value.Length;
 					return true;
@@ -111,8 +111,8 @@ namespace Xamarin.Tests
 
 		string RemovePathAtEnd (string line)
 		{
-			if (line.TrimEnd ().EndsWith ("]")) {
-				var start = line.LastIndexOf ("[");
+			if (line.TrimEnd ().EndsWith ("]", StringComparison.Ordinal)) {
+				var start = line.LastIndexOf ("[", StringComparison.Ordinal);
 				if (start >= 0) {
 					// we want to get the space before `[` too.
 					if (start > 0 && line [start - 1] == ' ')
