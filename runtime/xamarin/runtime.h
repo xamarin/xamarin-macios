@@ -241,6 +241,7 @@ void			xamarin_process_managed_exception (MonoObject *exc);
 void			xamarin_process_managed_exception_gchandle (guint32 gchandle);
 void			xamarin_throw_product_exception (int code, const char *message);
 guint32			xamarin_create_product_exception (int code, const char *message);
+guint32			xamarin_create_product_exception_with_inner_exception (int code, guint32 inner_exception_gchandle /* will be freed */, const char *message);
 NSString *		xamarin_print_all_exceptions (MonoObject *exc);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);

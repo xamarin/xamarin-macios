@@ -225,6 +225,7 @@
 
 		new XDelegate ("guint32", "int", "xamarin_create_product_exception_for_error",
 			"int", "int", "code",
+			"guint32", "uint", "inner_exception_gchandle",
 			"const char *", "string", "message"
 		) {
 			WrappedManagedFunction = "CreateProductException",

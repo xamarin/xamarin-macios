@@ -744,9 +744,21 @@ namespace ObjCRuntime {
 			Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, is_static, obj, ref mthis, desc);
 		}
 
-		static int CreateProductException (int code, string msg)
+		// If inner_exception_gchandle is provided, it will be freed.
+		static int CreateProductException (int code, uint inner_exception_gchandle, string msg)
 		{
-			var ex = ErrorHelper.CreateError (code, msg);
+			Exception inner_exception = null;
+			if (inner_exception_gchandle != 0) {
+				GCHandle gchandle = GCHandle.FromIntPtr (new IntPtr (inner_exception_gchandle));
+				inner_exception = (Exception) gchandle.Target;
+				gchandle.Free ();
+			}
+			Exception ex;
+			if (inner_exception != null) {
+				ex = ErrorHelper.CreateError (code, inner_exception, msg);
+			} else {
+				ex = ErrorHelper.CreateError (code, msg);
+			}
 			return GCHandle.ToIntPtr (GCHandle.Alloc (ex, GCHandleType.Normal)).ToInt32 ();
 		}
 

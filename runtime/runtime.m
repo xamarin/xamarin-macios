@@ -2505,13 +2505,18 @@ xamarin_throw_product_exception (int code, const char *message)
 guint32
 xamarin_create_product_exception (int code, const char *message)
 {
+	return xamarin_create_product_exception_with_inner_exception (code, 0, message);
+}
+
+guint32
+xamarin_create_product_exception_with_inner_exception (int code, guint32 inner_exception_gchandle, const char *message)
+{
 	guint32 exception_gchandle = 0;
-	guint32 handle = xamarin_create_product_exception_for_error (code, message, &exception_gchandle);
+	guint32 handle = xamarin_create_product_exception_for_error (code, inner_exception_gchandle, message, &exception_gchandle);
 	if (exception_gchandle != 0)
 		return exception_gchandle;
 	return handle;
 }
-
 void
 xamarin_insert_dllmap ()
 {
