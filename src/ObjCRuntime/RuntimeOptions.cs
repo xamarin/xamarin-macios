@@ -22,10 +22,6 @@ namespace ObjCRuntime {
 		const string CFNetworkHandlerValue = "CFNetworkHandler";
 		const string NSUrlSessionHandlerValue = "NSUrlSessionHandler";
 
-		const string DefaultTlsProviderValue = "default";
-		const string LegacyTlsProviderValue = "legacy";
-		const string AppleTlsProviderValue = "appletls";
-
 		string http_message_handler;
 
 #if MTOUCH || MMP
@@ -36,7 +32,6 @@ namespace ObjCRuntime {
 		{
 			var options = new RuntimeOptions ();
 			options.http_message_handler = ParseHttpMessageHandler (app, http_message_handler);
-			ParseTlsProvider (tls_provider);
 			return options;
 		}
 
@@ -45,7 +40,7 @@ namespace ObjCRuntime {
 			switch (value) {
 			// default
 			case null:
-				return HttpClientHandlerValue;
+				return (app.Platform == Utils.ApplePlatform.WatchOS) ? NSUrlSessionHandlerValue : HttpClientHandlerValue;
 			case CFNetworkHandlerValue:
 			case HttpClientHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
@@ -59,23 +54,6 @@ namespace ObjCRuntime {
 				if (app.Platform == Utils.ApplePlatform.WatchOS) // This is value we don't know about at all, show as error instead of warning.
 					throw ErrorHelper.CreateError (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", value);
 				throw ErrorHelper.CreateError (2010, "Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler", value);
-			}
-		}
-
-		static string ParseTlsProvider (string value)
-		{
-			switch (value) {
-			// default
-			case null:
-				return DefaultTlsProviderValue;
-			case DefaultTlsProviderValue:
-			case AppleTlsProviderValue:
-				return value;
-			case LegacyTlsProviderValue:
-				ErrorHelper.Warning (2016, "Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.", value, AppleTlsProviderValue);
-				return AppleTlsProviderValue;
-			default:
-				throw ErrorHelper.CreateError (2011, "Unknown TlsProvider `{0}`.  Valid values are default or appletls", value);
 			}
 		}
 
