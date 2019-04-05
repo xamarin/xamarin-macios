@@ -22,7 +22,6 @@ namespace TVMLKit {
 
 	public partial class TVViewElement {
 #if !COREBUILD
-#if !XAMCORE_4_0
 		[Export ("updateType")]
 		public virtual TVElementUpdateType UpdateType {
 			get {
@@ -54,7 +53,6 @@ namespace TVMLKit {
 				}
 			}
 		}
-#endif // !XAMCORE_4_0
 #endif
 	}
 }
