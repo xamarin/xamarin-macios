@@ -76,8 +76,10 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
+		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[NoWatch, iOS (11,0)]
 		HandleInApp,
+		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[NoWatch, iOS (11,0)]
 		Success,
 	}
@@ -158,8 +160,10 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
+		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[NoWatch, iOS (11,0)]
 		HandleInApp,
+		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[NoWatch, iOS (11,0)]
 		Success,
 	}
@@ -348,8 +352,10 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
+		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[NoWatch, iOS (11,0)]
 		HandleInApp,
+		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[NoWatch, iOS (11,0)]
 		Success,
 	}
@@ -527,8 +533,10 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureNoMatchingWorkout,
+		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[NoWatch, iOS (11,0)]
 		HandleInApp,
+		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[NoWatch, iOS (11,0)]
 		Success,
 	}
@@ -824,8 +832,10 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 		FailureOngoingWorkout,
 		FailureNoMatchingWorkout,
+		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[Watch (4,0), iOS (11,0)]
 		HandleInApp,
+		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[Watch (4,0), iOS (11,0)]
 		Success,
 	}
