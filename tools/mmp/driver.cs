@@ -1323,6 +1323,7 @@ namespace Xamarin.Bundler {
 					if (File.Exists (libmonoSystemNative)) {
 						// legacy libmono-system-native.a needs to be included if it exists in the mono in question
 						args.Append (StringUtils.Quote (libmonoSystemNative)).Append (' ');
+						args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
 					} else {
 						// add modern libmono-native
 						string libmono_native_name;

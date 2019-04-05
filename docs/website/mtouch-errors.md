@@ -864,7 +864,7 @@ A failure occurred when touching a file (which is done to ensure partial builds 
 
 This warning can most likely be ignored; in case of any problems file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) and it will be investigated.
 
-<a name="MT0129"/>
+<a name="MT0129" />
 
 ### MT0129: Debugging symbol file for '*' does not match the assembly and is ignored.
 
@@ -876,18 +876,18 @@ This warning won't affect the application being built, however you might not be 
 
 Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
 
-<a name="MT0130"/>
+<a name="MT0130" />
 
 ### MT0130: No root assemblies found. You should provide at least one root assembly.
 When running --runregistrar, at least one root assembly should be provided.
 
-<a name="MT0131"/>
+<a name="MT0131" />
 
 ### MT0131: Product assembly '{0}' not found in assembly list: '{1}'
 
 When running --runregistrar, the assembly list should include the product assembly, Xamarin.iOS, Xamarin.WatchOS, Xamarin.TVOS.
 
-<a name="MT0132"/>
+<a name="MT0132" />
 
 ### MT0132: Unknown optimization: *. Valid values are: *
 
@@ -897,7 +897,7 @@ The accepted format is `[+|-]optimization-name`, where `optimization-name` is on
 
 See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimization/) for a complete description of each optimization.
 
-<a name="MT0133"/>
+<a name="MT0133" />
 
 ### MT0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
 
@@ -917,7 +917,7 @@ Alternatively, enable the managed [linker](https://docs.microsoft.com/en-us/xama
 
 As a last-straw solution, use an older version of Xamarin.iOS that does not require these new SDKs to be present during the build process.
 
-<a name="MT0136"/>
+<a name="MT0136" />
 
 ### MT0136: Cannot find the assembly {assembly} referenced from {assembly}.
 
@@ -939,7 +939,7 @@ means that if the build otherwise succeeds, this warning can be ignored.
 
 <!-- 0138-0139: used by mmp -->
 
-<a name="MT0140"/>
+<a name="MT0140" />
 
 ### MT0140: File '{framework_filename}' is not a valid framework.
 
@@ -947,7 +947,7 @@ This error occurs when `mtouch` reads a binary in a `.framework` directory that 
 
 It might be a broken file or a broken symlink (after decompressing an archive) to a valid file. The native framework should be removed and replaced with a valid one. 
 
-<a name="MT0141"/>
+<a name="MT0141" />
 
 ### MT0141: The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator.
 
@@ -957,6 +957,8 @@ The interpreter is only available for device builds as an complete or partial al
 In contrast simulator builds are using just-in-time compilation which negates most advantages of the interpreter.
 
 However it is possible to test features such as `dynamic` and `System.Reflection.Emit `on the simulator using the existing REPL (read–eval–print loop) support on the simulator. This feature is automatically enabled when `--interpreter` is used on simulator builds. However the JIT remains the only option available on the simulator, while AOT and interpreter are for devices only.
+
+<a name="MT0142" />
 
 ### MT0142: Cannot find the assembly '{assembly}', passed as an argument to --interpreter.
 
@@ -3515,6 +3517,8 @@ There are a few reasons this may happen:
 
 * This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
-### <a name="MT8028"/>MT8028: The runtime function {function} has been linked away.
+<a name="MT8028" />
+
+### MT8028: The runtime function {function} has been linked away.
 
 This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).

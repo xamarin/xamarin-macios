@@ -125,6 +125,10 @@ namespace Xamarin.Tests
 				// These two aren't public in a way we care about
 				"l_OBJC_LABEL_PROTOCOL_$_",
 				"l_OBJC_PROTOCOL_$_",
+				// block stuff, automatically exported by clang
+				"___block_descriptor_",
+				"___copy_helper_block_",
+				"___destroy_helper_block_",
 			};
 
 			paths.RemoveWhere ((v) => {

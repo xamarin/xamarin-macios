@@ -999,4 +999,12 @@ namespace AVFoundation {
 	{
 		None = 0x0,
 	}
+
+	[Native]
+	public enum AVAudioSessionPromptStyle : ulong
+	{
+		None = 0x6e6f6e65, // 1852796517 - 'none'
+		Short = 0x73687274, // 1936224884 - 'shrt'
+		Normal = 0x6e726d6c, //1852992876 - 'nrml'
+	}
 }
