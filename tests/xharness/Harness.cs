@@ -77,6 +77,7 @@ namespace xharness
 		public string WatchOSExtensionTemplate { get; set; }
 		public string TodayContainerTemplate { get; set; }
 		public string TodayExtensionTemplate { get; set; }
+		public string BCLTodayExtensionTemplate { get; set; }
 		public string MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string TVOS_MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public bool INCLUDE_IOS { get; set; }
@@ -355,6 +356,7 @@ namespace xharness
 
 			TodayContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayContainer"));
 			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayExtension"));
+			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test", "BCLTests", "templates", "today"));
 		}
 
 		Dictionary<string, string> make_config = new Dictionary<string, string> ();

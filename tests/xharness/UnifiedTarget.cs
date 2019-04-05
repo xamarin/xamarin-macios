@@ -55,7 +55,15 @@ namespace xharness
 			}
 		}
 
-		protected override string GetMinimumOSVersion(string templateMinimumOSVersion)
+		protected override void CalculateName ()
+		{
+			if (TargetDirectory.Contains ("BCLTests"))
+				Name = TestProject.Name.Substring (TestProject.Name.IndexOf ("BCL", StringComparison.Ordinal)); 
+			else
+				base.CalculateName ();
+		}
+
+		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
 			return templateMinimumOSVersion;
 		}
