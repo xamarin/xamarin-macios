@@ -447,7 +447,7 @@ namespace Introspection {
 			case "MPSNNReduceBinary": // Not meant to be used, only subclasses
 			case "MPSNNReduceUnary": // Not meant to be used, only subclasses
 				var cstr = ctor.ToString ();
-				if (cstr == "Void .ctor(IMTLDevice)" || cstr == "Void .ctor(NSCoder, IMTLDevice)")
+				if (cstr == "Void .ctor(Metal.IMTLDevice)" || cstr == $"Void .ctor({foundation_namespace}.NSCoder, Metal.IMTLDevice)")
 					return true;
 				break;
 			}
