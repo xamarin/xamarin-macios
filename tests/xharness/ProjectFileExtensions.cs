@@ -549,7 +549,7 @@ namespace xharness
 				FindAndReplace (node, find, replace);
 		}
 
-		public static void FixInfoPListInclude (this XmlDocument csproj, string suffix, string fullPath=null)
+		public static void FixInfoPListInclude (this XmlDocument csproj, string suffix, string fullPath = null)
 		{
 			var import = csproj.SelectSingleNode ("/*/*/*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
 			if (import != null) {
