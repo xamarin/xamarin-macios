@@ -8,7 +8,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.Mac.Tasks.Tasks
+namespace Xamarin.Mac.Tasks
 {
     public abstract class ArchiveTaskBase : Xamarin.MacDev.Tasks.ArchiveTaskBase
     {
