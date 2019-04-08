@@ -22,8 +22,8 @@ namespace TVMLKit {
 
 	public partial class TVViewElement {
 #if !COREBUILD
-		[Export ("updateType")]
 		public virtual TVElementUpdateType UpdateType {
+			[Export ("updateType")]
 			get {
 				var value = _UpdateType;
 				switch ((long) value) {
@@ -33,21 +33,18 @@ namespace TVMLKit {
 					} else {
 						return TVElementUpdateType.Children;
 					}
-					break;
 				case 3:
 					if (UIDevice.CurrentDevice.CheckSystemVersion (12, 0)) {
 						return TVElementUpdateType.Children;
 					} else {
 						return TVElementUpdateType.Self;
 					}
-					break;
 				case 4:
 					if (UIDevice.CurrentDevice.CheckSystemVersion (12, 0)) {
 						return TVElementUpdateType.Self;
 					} else {
 						return TVElementUpdateType.Styles;
 					}
-					break;
 				default:
 					return value;
 				}
