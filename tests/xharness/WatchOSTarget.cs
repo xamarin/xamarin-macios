@@ -209,7 +209,10 @@ namespace xharness
 
 		protected override void CalculateName ()
 		{
-			base.CalculateName ();
+			if (TargetDirectory.Contains ("BCLTests"))
+				Name = TestProject.Name;
+			else
+				base.CalculateName ();
 			if (MonoNativeInfo != null)
 				Name = Name + MonoNativeInfo.FlavorSuffix;
 		}
