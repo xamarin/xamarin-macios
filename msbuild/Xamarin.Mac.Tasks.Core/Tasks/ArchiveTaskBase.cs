@@ -47,6 +47,20 @@ namespace Xamarin.Mac.Tasks
                 arInfo.Add ("Name", new PString (plist.GetCFBundleName () ?? plist.GetCFBundleDisplayName ()));
                 arInfo.Add ("ApplicationProperties", props);
 
+                if (!string.IsNullOrEmpty (ProjectGuid))
+                    arInfo.Add ("ProjectGuid", new PString (ProjectGuid));
+
+                if (!string.IsNullOrEmpty (ProjectTypeGuids))
+                    arInfo.Add ("ProjectTypeGuids", new PString (ProjectTypeGuids));
+
+                if (!string.IsNullOrEmpty (SolutionPath)) {
+                    arInfo.Add ("SolutionName", new PString (Path.GetFileNameWithoutExtension (SolutionPath)));
+                    arInfo.Add ("SolutionPath", new PString (SolutionPath));
+                }
+
+                if (!string.IsNullOrEmpty (InsightsApiKey))
+                    arInfo.Add ("InsightsApiKey", new PString (InsightsApiKey));
+
                 arInfo.Save (Path.Combine (archiveDir, "Info.plist"));
             } catch (Exception ex) {
                 Log.LogErrorFromException (ex);
