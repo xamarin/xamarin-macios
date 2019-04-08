@@ -898,10 +898,10 @@ namespace Registrar {
 
 		public void GetMethodDescriptionAndObject (Type type, IntPtr selector, bool is_static, IntPtr obj, ref IntPtr mthis, IntPtr desc)
 		{
-			var sel = new Selector (selector);
-			var res = GetMethodNoThrow (type, type, sel.Name, is_static);
+			var sel = Selector.GetName (selector);
+			var res = GetMethodNoThrow (type, type, sel, is_static);
 			if (res == null)
-				throw ErrorHelper.CreateError (8006, "Failed to find the selector '{0}' on the type '{1}'", sel.Name, type.FullName);
+				throw ErrorHelper.CreateError (8006, "Failed to find the selector '{0}' on the type '{1}'", sel, type.FullName);
 
 			if (res.IsInstanceCategory) {
 				mthis = IntPtr.Zero;
@@ -919,10 +919,10 @@ namespace Registrar {
 
 		public void GetMethodDescription (Type type, IntPtr selector, bool is_static, IntPtr desc)
 		{
-			var sel = new Selector (selector);
-			var res = GetMethodNoThrow (type, type, sel.Name, is_static);
+			var sel = Selector.GetName (selector);
+			var res = GetMethodNoThrow (type, type, sel, is_static);
 			if (res == null)
-				throw ErrorHelper.CreateError (8006, "Failed to find the selector '{0}' on the type '{1}'", sel.Name, type.FullName);
+				throw ErrorHelper.CreateError (8006, "Failed to find the selector '{0}' on the type '{1}'", sel, type.FullName);
 			if (type.IsGenericType && res.Method is ConstructorInfo)
 				throw ErrorHelper.CreateError (4133, "Cannot construct an instance of the type '{0}' from Objective-C because the type is generic.", type.FullName);
 
