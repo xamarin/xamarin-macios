@@ -62,6 +62,7 @@ namespace Xamarin.Mac.Tasks
                     arInfo.Add ("InsightsApiKey", new PString (InsightsApiKey));
 
                 arInfo.Save (Path.Combine (archiveDir, "Info.plist"));
+                ArchiveDir = archiveDir;
             } catch (Exception ex) {
                 Log.LogErrorFromException (ex);
                 Directory.Delete (archiveDir, true);
