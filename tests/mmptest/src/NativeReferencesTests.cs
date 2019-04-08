@@ -210,5 +210,20 @@ namespace Xamarin.MMP.Tests
 				NativeReferenceTestCore (tmpDir, test, "MultipleNativeReferences_OnlyInvokeMMPOneTime_AndCopyEverythingIn", null, true);
 			});
 		}
+
+
+		[Test]
+		public void ReferenceNativeRefNoCodeUsage_ShouldStillCopy ()
+		{
+			MMPTests.RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					XM45 = true,
+					ItemGroup = CreateSingleNativeRef ("/Library/Frameworks/Mono.framework/Libraries/libintl.dylib", "Dynamic")
+				};
+				var log = TI.TestUnifiedExecutable (test);
+				Console.WriteLine (log.BuildOutput);
+				Assert.True (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libintl.dylib")));
+			});
+		}
 	}
 }
