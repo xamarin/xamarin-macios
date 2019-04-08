@@ -143,6 +143,7 @@ namespace BCLTestImporter {
 		static readonly List<string> iOSIgnoredAssemblies = new List<string> {};
 
 		static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
+			"monotouch_System.Data_xunit-test.dll", // ignore until we have PR https://github.com/mono/mono/pull/13935
 		};
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
