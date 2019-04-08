@@ -20,9 +20,6 @@ namespace Xamarin.Mac.Tasks
                 var plist = PDictionary.FromFile (Path.Combine (AppBundleDir.ItemSpec, "Contents", "Info.plist"));
                 var productsDir = Path.Combine (archiveDir, "Products");
 
-                // TODO: Archive the OnDemandResources.
-                // I don't have any on hand, so I can't use an Xcode-created archive as reference.
-
                 // Archive the Applications...
                 var appDestDir = Path.Combine (productsDir, "Applications", Path.GetFileName (AppBundleDir.ItemSpec));
                 Ditto (AppBundleDir.ItemSpec, appDestDir);
@@ -44,7 +41,6 @@ namespace Xamarin.Mac.Tasks
                 props.Add ("CFBundleShortVersionString", new PString (version ?? (build ?? "1.0")));
                 props.Add ("CFBundleVersion", new PString (build ?? "1.0"));
                 props.Add ("SigningIdentity", SigningKey);
-                // TODO: Add "Team" key (Apple Team ID) here. Extract it from the SigningKey somehow?
 
                 arInfo.Add ("ArchiveVersion", new PNumber (2));
                 arInfo.Add ("CreationDate", Now);
