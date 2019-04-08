@@ -826,6 +826,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppBundleDir="$(AppBundleDir)"
 			InsightsApiKey="$(XamarinInsightsApiKey)"
 			SigningKey="$(_CodeSigningKey)"
+			ProjectName="$(MSBuildProjectName)"
+			ProjectGuid="$(ProjectGuid)"
+			ProjectTypeGuids="$(ProjectTypeGuids)"
 			>
 			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir" />
 		</Archive>
