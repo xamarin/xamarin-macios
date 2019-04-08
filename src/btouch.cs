@@ -58,7 +58,7 @@ class BindingTouch {
 	}
 
 	public static string ToolName {
-		get { return Path.GetFileNameWithoutExtension (System.Reflection.Assembly.GetEntryAssembly ().Location); }
+		get { return "bgen"; }
 	}
 
 	static void ShowHelp (OptionSet os)
