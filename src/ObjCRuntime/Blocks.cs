@@ -259,7 +259,7 @@ namespace ObjCRuntime {
 			baseMethod = null;
 
 			if (token_ref != Runtime.INVALID_TOKEN_REF)
-				return (Type) Class.ResolveTokenReference (token_ref, 0x02000000 /* TypeDef */);
+				return Class.ResolveTypeTokenReference (token_ref);
 
 			baseMethod = minfo.GetBaseDefinition ();
 			var delegateProxies = baseMethod.ReturnTypeCustomAttributes.GetCustomAttributes (typeof (DelegateProxyAttribute), false);
