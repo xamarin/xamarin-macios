@@ -737,5 +737,23 @@ namespace Xamarin.MMP.Tests
 
 			});
 		}
+
+		[TestCase (false)]
+		[TestCase (true)]
+		public void ArchiveTask (bool full)
+		{
+			// https://github.com/xamarin/xamarin-macios/issues/5653
+			if (TI.InJenkins)
+				Assert.Ignore ("Requires macOS entitlements on bots.");
+
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					XM45 = full,
+					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>"
+				};
+				TI.TestUnifiedExecutable (test);
+				var output = TI.BuildProject (Path.Combine (tmpDir, full ? "XM45Example.csproj" : "UnifiedExample.csproj"), true, release: true, extraArgs: "/p:ArchiveOnBuild=true ");
+			});
+		}
 	}
 }
