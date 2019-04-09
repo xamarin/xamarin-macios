@@ -142,11 +142,9 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "xamarin-forms-samples";
 		const string CATEGORY = "xamarinformssamples"; // categories can't contain dashes
-		const string HASH = "34bb42317262908413ed256f819fae3356ed6667";
+		const string HASH = "206f4c3a2be1e988eda2ad9130a37019c60f1c7e";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
-				// Known failures
-				{ "WebServices/TodoREST/iOS/TodoREST.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-samples/pull/451" } },
 			};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
