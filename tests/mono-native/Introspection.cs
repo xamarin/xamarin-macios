@@ -109,11 +109,7 @@ namespace Xamarin.Tests
 				if (MonoNativeConfig.LinkMode != MonoNativeLinkMode.Static) {
 					var symbol = Dlfcn.dlsym (dylib, "mono_native_initialize");
 
-#if MONOTOUCH_TV || MONOTOUCH_WATCH // on tvOS/watchOS we emit a native reference for P/Invokes in all assemblies (thus dlsym won't find any symbols)
-					Assert.That (symbol, Is.EqualTo (IntPtr.Zero), "dlsym() not found mono_native_initialize()");
-#else
 					Assert.That (symbol, Is.Not.EqualTo (IntPtr.Zero), "dlsym() found mono_native_initialize()");
-#endif
 				}
 			} finally {
 				Dlfcn.dlclose (dylib);
