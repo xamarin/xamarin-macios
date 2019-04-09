@@ -135,7 +135,6 @@ namespace BCLTestImporter {
 			"monotouch_Mono.CodeContracts_test.dll", // not supported by xamarin
 			"monotouch_Novell.Directory.Ldap_test.dll", // not supported by xamarin
 			"monotouch_Mono.Profiler.Log_xunit-test.dll", // special tests that need an extra app to connect as a profiler
-			"monotouch_Microsoft.CSharp_xunit-test.dll", // mono-cil-strip fails due to an exception from cecil, issue https://github.com/xamarin/xamarin-macios/issues/5868
 		};
 		
 		// list of assemblies that are going to be ignored, any project with an assemblies that is ignored will
