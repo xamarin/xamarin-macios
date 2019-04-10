@@ -1475,12 +1475,19 @@ namespace Foundation
 
 	[BaseType (typeof (NSRegularExpression))]
 	interface NSDataDetector : NSCopying, NSCoding {
-		// Invalid parent ctor: -[NSDataDetector initWithPattern:options:error:]: Not valid for NSDataDetector
-//		[Export ("initWithPattern:options:error:")]
-//		IntPtr Constructor (NSString pattern, NSRegularExpressionOptions options, out NSError error);
+		[DesignatedInitializer]
+		[Export ("initWithTypes:error:")]
+		IntPtr Constructor (NSTextCheckingTypes options, out NSError error);
+
+		[Wrap ("this ((NSTextCheckingTypes) options, out error)")]
+		IntPtr Constructor (NSTextCheckingType options, out NSError error);
 
 		[Export ("dataDetectorWithTypes:error:"), Static]
 		NSDataDetector Create (NSTextCheckingTypes checkingTypes, out NSError error);
+
+		[Static]
+		[Wrap ("Create ((NSTextCheckingTypes) checkingTypes, out error)")]
+		NSDataDetector Create (NSTextCheckingType checkingTypes, out NSError error);
 
 		[Export ("checkingTypes")]
 		NSTextCheckingTypes CheckingTypes { get; }
@@ -4566,6 +4573,10 @@ namespace Foundation
 		[Export ("initWithPattern:options:error:")]
 		IntPtr Constructor (NSString pattern, NSRegularExpressionOptions options, out NSError error);
 
+		[Static]
+		[Export ("regularExpressionWithPattern:options:error:")]
+		NSRegularExpression Create (NSString pattern, NSRegularExpressionOptions options, out NSError error);
+
 		[Export ("pattern")]
 		NSString Pattern { get; }
 
@@ -4579,21 +4590,37 @@ namespace Foundation
 		[Static]
 		NSString GetEscapedPattern (NSString str);
 
+		/* From the NSMatching category */
+
 		[Export ("enumerateMatchesInString:options:range:usingBlock:")]
 		void EnumerateMatches (NSString str, NSMatchingOptions options, NSRange range, NSMatchEnumerator enumerator);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GetMatches2' instead, this method has the wrong return type.")]
 		[Export ("matchesInString:options:range:")]
 		NSString [] GetMatches (NSString str, NSMatchingOptions options, NSRange range);
+#endif
+
+		[Export ("matchesInString:options:range:")]
+#if XAMCORE_4_0
+		NSTextCheckingResult [] GetMatches (NSString str, NSMatchingOptions options, NSRange range);
+#else
+		[Sealed]
+		NSTextCheckingResult [] GetMatches2 (NSString str, NSMatchingOptions options, NSRange range);
+#endif
 
 		[Export ("numberOfMatchesInString:options:range:")]
 		nuint GetNumberOfMatches (NSString str, NSMatchingOptions options, NSRange range);
 		
 		[Export ("firstMatchInString:options:range:")]
+		[return: NullAllowed]
 		NSTextCheckingResult FindFirstMatch (string str, NSMatchingOptions options, NSRange range);
 		
 		[Export ("rangeOfFirstMatchInString:options:range:")]
 		NSRange GetRangeOfFirstMatch (string str, NSMatchingOptions options, NSRange range);
 		
+		/* From the NSReplacement category */
+
 		[Export ("stringByReplacingMatchesInString:options:range:withTemplate:")]
 		string ReplaceMatches (string sourceString, NSMatchingOptions options, NSRange range, string template);
 		
