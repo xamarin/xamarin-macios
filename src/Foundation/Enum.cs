@@ -1170,6 +1170,7 @@ namespace Foundation  {
 		IgnoreMetacharacters        = 1 << 2,
 		DotMatchesLineSeparators    = 1 << 3,
 		AnchorsMatchLines           = 1 << 4,
+		UseUnixLineSeparators       = 1 << 5,
 		UseUnicodeWordBoundaries    = 1 << 6
 	}
 
