@@ -1416,7 +1416,7 @@ namespace Xamarin.Bundler
 		{
 			if (App.Embeddinator && App.IsDeviceBuild) {
 				build_tasks.AddRange (embeddinator_tasks);
-				return null;
+				return Array.Empty<NativeLinkTask> ();
 			}
 
 			foreach (var abi in Abis) {
