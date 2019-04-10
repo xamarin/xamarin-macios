@@ -156,7 +156,8 @@ static class C {
 			for (int i = 0; i < s.Length; i++) {
 				w.Append (GetNativeName (s [i])).Append (" x").Append (i).Append ("; ");
 			}
-			w.AppendLine ($"}} S{s};");
+			w.AppendLine ($"}};");
+			w.AppendLine ($"typedef struct S{s} S{s};");
 		}
 
 		File.WriteAllText ("libtest.structs.h", w.ToString ());
