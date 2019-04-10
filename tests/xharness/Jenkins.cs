@@ -33,7 +33,6 @@ namespace xharness
 		public bool IncludeiOSMSBuild = true;
 		public bool IncludeMtouch;
 		public bool IncludeBtouch;
-		public bool IncludeSampleTests;
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
@@ -667,7 +666,6 @@ namespace xharness
 			SetEnabled (labels, "ios-device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
 			SetEnabled (labels, "mac-32", ref IncludeMac32);
-			SetEnabled (labels, "sample", ref IncludeSampleTests);
 			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
@@ -979,7 +977,7 @@ namespace xharness
 				TestName = "Sample tests",
 				Timeout = TimeSpan.FromDays (1), // These can take quite a while to execute.
 				InProcess = true,
-				Ignored = !IncludeSampleTests,
+				Ignored = true, // Ignored by default, can be run manually. On CI will execute if the label 'run-sample-tests' is present on a PR (but in Azure Devops on a different bot).
 			};
 			Tasks.Add (runSampleTests);
 
