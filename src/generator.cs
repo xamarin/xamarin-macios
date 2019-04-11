@@ -887,7 +887,7 @@ public partial class Generator : IMemberGatherer {
 	// Static version of the above (!Compat) field, set on each Go invocation, needed because some static
 	// helper methods need to access this.   This is the exact opposite of Compat.
 	public static bool UnifiedAPI { get { return BindingTouch.Unified; } }
-	public static int XamcoreVersion {
+	public int XamcoreVersion {
 		get {
 			switch (Generator.CurrentPlatform) {
 			case PlatformName.MacOSX:
@@ -3414,7 +3414,7 @@ public partial class Generator : IMemberGatherer {
 			return false;
 
 		var attrib = attribs [0];
-		return Generator.XamcoreVersion >= attrib.Version;
+		return XamcoreVersion >= attrib.Version;
 	}
 
 	public string MakeSignature (MemberInformation minfo, bool is_async, ParameterInfo[] parameters, string extra = "", bool alreadyPreserved = false)
