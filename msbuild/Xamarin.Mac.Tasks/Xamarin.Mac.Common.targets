@@ -18,7 +18,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
      so be careful not to add fixes here that should go into Xamarin.Mac.Common.props which is shared -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.Archive" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ArTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="Xamarin.Mac.Tasks.dll" />
@@ -32,6 +31,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.Archive" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.ACTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.CodesignVerify" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.CompileAppManifest" AssemblyFile="Xamarin.Mac.Tasks.dll" />
@@ -110,6 +110,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_CreateAppBundle;
 			Codesign;
 			_CreateInstaller;
+			Archive;
 		</BuildDependsOn>
 	</PropertyGroup>
 
@@ -829,6 +830,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ProjectName="$(MSBuildProjectName)"
 			ProjectGuid="$(ProjectGuid)"
 			ProjectTypeGuids="$(ProjectTypeGuids)"
+			OutputPath="$(OutputPath)"
 			>
 			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir" />
 		</Archive>
