@@ -448,14 +448,22 @@ namespace xharness
 				}
 			}
 
+			var log_lines = new List<string> ();
+			string resultLine = null;
 			// read the parsed logs in a human readable way
 			using (var reader = new StreamReader(listener_log.FullPath)) {
-				log = await reader.ReadToEndAsync ();
+				string line;
+				while ((line = await reader.ReadLineAsync()) != null)
+				{
+					log_lines.Add(line);
+					if (line.Contains ("Tests run"))
+						resultLine = line;
+				}
 			}
+
 			// parsing the human readable results
-			if (log.Contains ("Tests run")) {
+			if (resultLine != null) {
 				var tests_run = string.Empty;
-				var log_lines = log.Split ('\n');
 				var failed = false;
 				foreach (var line in log_lines) {
 					if (line.Contains ("Tests run:")) {
