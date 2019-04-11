@@ -106,14 +106,17 @@ namespace Xamarin.Tests
 			Assert.That (dylib, Is.Not.EqualTo (IntPtr.Zero), "dlopen()ed mono-native");
 
 			try {
-				if (MonoNativeConfig.LinkMode != MonoNativeLinkMode.Static) {
-					var symbol = Dlfcn.dlsym (dylib, "mono_native_initialize");
-
-#if MONOTOUCH_TV || MONOTOUCH_WATCH // on tvOS/watchOS we emit a native reference for P/Invokes in all assemblies (thus dlsym won't find any symbols)
-					Assert.That (symbol, Is.EqualTo (IntPtr.Zero), "dlsym() not found mono_native_initialize()");
+#if MONOTOUCH_TV || MONOTOUCH_WATCH // on tvOS/watchOS we emit a native reference for P/Invokes in all assemblies, so we'll strip away the 'mono_native_initialize' symbol when we're linking statically (since we don't need the symbol).
+				var has_symbol = MonoNativeConfig.LinkMode != MonoNativeLinkMode.Static || Runtime.Arch == Arch.SIMULATOR;
 #else
-					Assert.That (symbol, Is.Not.EqualTo (IntPtr.Zero), "dlsym() found mono_native_initialize()");
+				var has_symbol = true;
 #endif
+				var symbol = Dlfcn.dlsym (dylib, "mono_native_initialize");
+
+				if (has_symbol) {
+					Assert.That (symbol, Is.Not.EqualTo (IntPtr.Zero), "dlsym() found mono_native_initialize()");
+				} else {
+					Assert.That (symbol, Is.EqualTo (IntPtr.Zero), "dlsym() did not find mono_native_initialize()");
 				}
 			} finally {
 				Dlfcn.dlclose (dylib);
