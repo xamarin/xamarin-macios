@@ -5,6 +5,7 @@ using Type = IKVM.Reflection.Type;
 
 public static class TypeManager {
 	public static BindingTouch BindingTouch;
+	static Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 	public static Type System_Attribute;
 	public static Type System_Boolean;
 	public static Type System_Byte;

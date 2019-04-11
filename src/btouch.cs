@@ -51,6 +51,7 @@ public class BindingTouch {
 	List<string> libs = new List<string> ();
 
 	public Universe universe;
+	public Frameworks Frameworks;
 
 	public TargetFramework TargetFramework {
 		get { return target_framework.Value; }
@@ -515,6 +516,7 @@ public class BindingTouch {
 
 			AttributeManager.BindingTouch = this;
 			Stret.BindingTouch = this;
+			Frameworks = new Frameworks (CurrentPlatform);
 
 			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
 			Assembly platform_assembly = baselib;
