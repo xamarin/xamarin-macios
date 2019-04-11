@@ -841,7 +841,7 @@ public partial class Generator : IMemberGatherer {
 	internal bool IsPublicMode;
 
 	NamespaceManager ns;
-	static BindingTouch BindingTouch;
+	BindingTouch BindingTouch;
 	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 	public TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
