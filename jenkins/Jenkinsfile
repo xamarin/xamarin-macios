@@ -611,7 +611,7 @@ timestamps {
                                     def outputFile = "${workspace}/xamarin-macios/wrench-launch-external.output.tmp"
                                     try {
                                         withCredentials ([string (credentialsId: 'macios_provisionator_pat', variable: 'PROVISIONATOR_VSTS_PAT')]) {
-                                            sh ("make -C ${workspace}/../maccore/external/tests wrench-launch-sample-builds 'BUILD_REVISION=${gitHash}' 'BUILD_BRANCH=${vsts_branch}' 2>&1 | tee ${outputFile}")
+                                            sh ("make -C ${workspace}/../maccore/tests/external wrench-launch-sample-builds 'BUILD_REVISION=${gitHash}' 'BUILD_BRANCH=${vsts_branch}' 2>&1 | tee ${outputFile}")
                                         }
                                         processAtMonkeyWrench (outputFile)
                                     } catch (error) {
