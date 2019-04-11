@@ -78,8 +78,8 @@ public static class ReflectionExtensions {
 		return base_type;
 	}
 
-	public static List <PropertyInfo> GatherProperties (this Type type) {
-		return type.GatherProperties (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+	public static List <PropertyInfo> GatherProperties (this Type type, Generator generator) {
+		return type.GatherProperties (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, generator);
 	}
 
 	//
@@ -108,10 +108,10 @@ public static class ReflectionExtensions {
 			);
 	}
 
-	public static List <PropertyInfo> GatherProperties (this Type type, BindingFlags flags) {
+	public static List <PropertyInfo> GatherProperties (this Type type, BindingFlags flags, Generator generator) {
 		List <PropertyInfo> properties = new List <PropertyInfo> (type.GetProperties (flags));
 
-		if (Generator.IsPublicMode)
+		if (generator.IsPublicMode)
 			return properties;
 
 		Type parent_type = GetBaseType (type);
@@ -142,8 +142,8 @@ public static class ReflectionExtensions {
 		return properties;
 	}
 
-	public static List <MethodInfo> GatherMethods (this Type type) {
-		return type.GatherMethods (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+	public static List <MethodInfo> GatherMethods (this Type type, Generator generator) {
+		return type.GatherMethods (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, generator);
 	}
 
 	public static bool IsInternal (this MemberInfo mi)
@@ -169,10 +169,10 @@ public static class ReflectionExtensions {
 			|| (Generator.UnifiedAPI && Generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (type));
 	}
 	
-	public static List <MethodInfo> GatherMethods (this Type type, BindingFlags flags) {
+	public static List <MethodInfo> GatherMethods (this Type type, BindingFlags flags, Generator generator) {
 		List <MethodInfo> methods = new List <MethodInfo> (type.GetMethods (flags));
 
-		if (Generator.IsPublicMode)
+		if (generator.IsPublicMode)
 			return methods;
 
 		Type parent_type = GetBaseType (type);
@@ -836,7 +836,7 @@ public partial class Frameworks {
 }
 
 public partial class Generator : IMemberGatherer {
-	internal static bool IsPublicMode;
+	internal bool IsPublicMode;
 
 	static NamespaceManager ns;
 	static BindingTouch BindingTouch;
@@ -2159,7 +2159,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		BindingTouch = binding_touch;
 		ns = nsm;
-		Generator.IsPublicMode = is_public_mode;
+		IsPublicMode = is_public_mode;
 		this.external = external;
 		this.debug = debug;
 		this.types = types;
@@ -2433,7 +2433,7 @@ public partial class Generator : IMemberGatherer {
 				DeclareInvoker (mi);
 			}
 
-			foreach (var pi in t.GatherProperties (BindingFlags.Instance | BindingFlags.Public)){
+			foreach (var pi in t.GatherProperties (BindingFlags.Instance | BindingFlags.Public, this)){
 				if (pi.IsUnavailable ())
 					continue;
 
@@ -2758,7 +2758,7 @@ public partial class Generator : IMemberGatherer {
 				print ("[Preserve (Conditional = true)]");
 				print ("public {0} (NSDictionary dictionary) : base (dictionary) {{}}\n", typeName);
 
-				foreach (var pi in dictType.GatherProperties ()){
+				foreach (var pi in dictType.GatherProperties (this)) {
 					if (pi.IsUnavailable ())
 						continue;
 					
@@ -4458,13 +4458,13 @@ public partial class Generator : IMemberGatherer {
 	{
 		if (source.IsEnum)
 			yield break;
-		foreach (var method in source.GatherMethods (BindingFlags.Public | BindingFlags.Instance))
+		foreach (var method in source.GatherMethods (BindingFlags.Public | BindingFlags.Instance, this))
 			yield return method;
 		foreach (var parent in source.GetInterfaces ()){
 			// skip case where the interface implemented comes from an already built assembly (e.g. monotouch.dll)
 			// e.g. Dispose won't have an [Export] since it's present to satisfy System.IDisposable
 			if (parent.FullName != "System.IDisposable") {
-				foreach (var method in parent.GatherMethods (BindingFlags.Public | BindingFlags.Instance)) {
+				foreach (var method in parent.GatherMethods (BindingFlags.Public | BindingFlags.Instance, this)) {
 					yield return method;
 				}
 			}
@@ -4473,13 +4473,13 @@ public partial class Generator : IMemberGatherer {
 
 	public IEnumerable<PropertyInfo> GetTypeContractProperties (Type source)
 	{
-		foreach (var prop in source.GatherProperties ())
+		foreach (var prop in source.GatherProperties (this))
 			yield return prop;
 		foreach (var parent in source.GetInterfaces ()){
 			// skip case where the interface implemented comes from an already built assembly (e.g. monotouch.dll)
 			// e.g. the Handle property won't have an [Export] since it's present to satisfyINativeObject
 			if (parent.Name != "INativeObject") {
-				foreach (var prop in parent.GatherProperties ())
+				foreach (var prop in parent.GatherProperties (this))
 					yield return prop;
 			}
 		}
@@ -6802,7 +6802,7 @@ public partial class Generator : IMemberGatherer {
 
 					string previous_miname = null;
 					int miname_count = 0;
-					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name, StringComparer.Ordinal)) {
+					foreach (var mi in dtype.GatherMethods (this).OrderBy (m => m.Name, StringComparer.Ordinal)) {
 						if (ShouldSkipEventGeneration (mi))
 							continue;
 						
@@ -6983,7 +6983,7 @@ public partial class Generator : IMemberGatherer {
 				repeatedDelegateApiNames.Clear ();
 				// Now add the instance vars and event handlers
 				foreach (var dtype in bta.Events.OrderBy (d => d.Name, StringComparer.Ordinal)) {
-					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name, StringComparer.Ordinal)) {
+					foreach (var mi in dtype.GatherMethods (this).OrderBy (m => m.Name, StringComparer.Ordinal)) {
 						if (ShouldSkipEventGeneration (mi))
 							continue;
 
