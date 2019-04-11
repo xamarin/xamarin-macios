@@ -267,6 +267,7 @@ public static class StringExtensions
 // For now, it only supports the [PlainString] attribute on strings.
 //
 public class MarshalInfo {
+	public Generator Generator;
 	public bool PlainString;
 	public Type Type;
 	public bool IsOut;
@@ -279,31 +280,23 @@ public class MarshalInfo {
 	public bool IsAligned;
 
 	// Used for parameters
-	public MarshalInfo (MethodInfo mi, ParameterInfo pi)
+	public MarshalInfo (Generator generator, MethodInfo mi, ParameterInfo pi)
 	{
+		this.Generator = generator;
 		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (pi);
 		Type = pi.ParameterType;
-		ZeroCopyStringMarshal = (Type == Generator.TypeManager.System_String) && PlainString == false && !Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (pi) && Generator.SharedGenerator.type_wants_zero_copy;
+		ZeroCopyStringMarshal = (Type == Generator.TypeManager.System_String) && PlainString == false && !Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (pi) && generator.type_wants_zero_copy;
 		if (ZeroCopyStringMarshal && Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (mi))
 			ZeroCopyStringMarshal = false;
 		IsOut = TypeManager.IsOutParameter (pi);
 	}
 
 	// Used to return values
-	public MarshalInfo (MethodInfo mi)
+	public MarshalInfo (Generator generator, MethodInfo mi)
 	{
+		this.Generator = generator;
 		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi));
 		Type = mi.ReturnType;
-	}
-
-	public static bool UseString (MethodInfo mi, ParameterInfo pi)
-	{
-		return new MarshalInfo (mi, pi).PlainString;
-	}
-
-	public static implicit operator MarshalInfo (MethodInfo mi)
-	{
-		return new MarshalInfo (mi);
 	}
 }
 
@@ -1801,7 +1794,7 @@ public partial class Generator : IMemberGatherer {
 			return pi.Name.GetSafeParamName ();
 
 		if (pi.ParameterType == TypeManager.System_String){
-			var mai = new MarshalInfo (mi, pi);
+			var mai = new MarshalInfo (this, mi, pi);
 			if (mai.PlainString)
 				return pi.Name.GetSafeParamName ();
 			else {
@@ -1949,7 +1942,7 @@ public partial class Generator : IMemberGatherer {
 			sb.Append ("xamarin_");
 		
 		try {
-			sb.Append (ParameterGetMarshalType (new MarshalInfo (mi) { IsAligned = aligned, EnumMode = enum_mode } ));
+			sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi) { IsAligned = aligned, EnumMode = enum_mode } ));
 		} catch (BindingException ex) {
 			throw new BindingException (ex.Code, ex.Error, ex,  "{0} in method `{1}'", ex.Message, mi.Name);
 		}
@@ -1964,7 +1957,7 @@ public partial class Generator : IMemberGatherer {
 				continue;
 			sb.Append ("_");
 			try {
-				sb.Append (ParameterGetMarshalType (new MarshalInfo (mi, pi) { EnumMode = enum_mode }).Replace (' ', '_'));
+				sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }).Replace (' ', '_'));
 			} catch (BindingException ex) {
 				throw new BindingException (ex.Code, ex.Error, ex, "{0} in parameter `{1}' from {2}.{3}", ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
@@ -1997,7 +1990,7 @@ public partial class Generator : IMemberGatherer {
 			b.Append (", ");
 
 			try {
-				b.Append (ParameterGetMarshalType (new MarshalInfo (mi, pi) { EnumMode = enum_mode }, true));
+				b.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }, true));
 			} catch (BindingException ex) {
 				throw new BindingException (ex.Code, ex.Error, ex, "{0} in parameter {1} of {2}.{3}", ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
@@ -2021,7 +2014,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		print (m, "\t\tpublic extern static {0} {1} ({3}IntPtr receiver, IntPtr selector{2});",
-		       need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (mi) { EnumMode = enum_mode }, true), method_name, b.ToString (),
+		       need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi) { EnumMode = enum_mode }, true), method_name, b.ToString (),
 		       need_stret ? (aligned ? "IntPtr" : "out " + FormatTypeUsedIn (ns.CoreObjCRuntime, mi.ReturnType)) + " retval, " : "");
 	}
 
@@ -2162,8 +2155,6 @@ public partial class Generator : IMemberGatherer {
 		return AttributeManager.GetCustomAttribute<ExportAttribute> (pinfo).ToGetter (pinfo);
 	}
 
-	public static Generator SharedGenerator;
-	
 	public Generator (BindingTouch binding_touch, NamespaceManager nsm, bool is_public_mode, bool external, bool debug, Type [] types, Type [] strong_dictionaries)
 	{
 		BindingTouch = binding_touch;
@@ -2174,7 +2165,6 @@ public partial class Generator : IMemberGatherer {
 		this.types = types;
 		this.strong_dictionaries = strong_dictionaries;
 		basedir = ".";
-		SharedGenerator = this;
 	}
 
 	bool SkipGenerationOfType (Type t)
@@ -3575,7 +3565,7 @@ public partial class Generator : IMemberGatherer {
 			throw new ArgumentException ("the provided Method has a void return type, it should never call this method");
 		}
 		
-		MarshalInfo mai = new MarshalInfo (mi);
+		MarshalInfo mai = new MarshalInfo (this, mi);
 		MarshalType mt;
 
 		if (IsNativeEnum (mi.ReturnType) && enum_mode == EnumMode.Bit32) {
@@ -3687,7 +3677,7 @@ public partial class Generator : IMemberGatherer {
 			foreach (var pi in mi.GetParameters ()){
 				if (IsTarget (pi)){
 					if (pi.ParameterType == TypeManager.System_String){
-						var mai = new MarshalInfo (mi, pi);
+						var mai = new MarshalInfo (this, mi, pi);
 						
 						if (mai.PlainString)
 							ErrorHelper.Show (new BindingException (1101, false, "Trying to use a string as a [Target]"));
@@ -3930,7 +3920,7 @@ public partial class Generator : IMemberGatherer {
 		List<string> stringParameters = null;
 		
 		foreach (var pi in mi.GetParameters ()){
- 			var mai = new MarshalInfo (mi, pi);
+			var mai = new MarshalInfo (this, mi, pi);
 
  			if (mai.ZeroCopyStringMarshal){
  				if (stringParameters == null)
@@ -4006,7 +3996,7 @@ public partial class Generator : IMemberGatherer {
 		by_ref_init = new StringBuilder ();
 		
 		foreach (var pi in mi.GetParameters ()){
-			MarshalInfo mai = new MarshalInfo (mi, pi);
+			MarshalInfo mai = new MarshalInfo (this, mi, pi);
 
 			if (!IsTarget (pi)){
 				// Construct invocation
