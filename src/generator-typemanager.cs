@@ -4,6 +4,7 @@ using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 
 public static class TypeManager {
+	public static BindingTouch BindingTouch;
 	public static Type System_Attribute;
 	public static Type System_Boolean;
 	public static Type System_Byte;
@@ -182,8 +183,10 @@ public static class TypeManager {
 		return type.GetEnumUnderlyingType ();
 	}
 
-	public static void Initialize (Assembly api, Assembly corlib, Assembly platform, Assembly system, Assembly binding)
+	public static void Initialize (BindingTouch binding_touch, Assembly api, Assembly corlib, Assembly platform, Assembly system, Assembly binding)
 	{
+		BindingTouch = binding_touch;
+
 		api_assembly = api;
 		corlib_assembly = corlib;
 		platform_assembly = platform;

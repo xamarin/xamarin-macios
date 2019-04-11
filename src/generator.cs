@@ -833,6 +833,7 @@ public partial class Generator : IMemberGatherer {
 	internal static bool IsPublicMode;
 
 	static NamespaceManager ns;
+	static BindingTouch BindingTouch;
 	Dictionary<Type,IEnumerable<string>> selectors = new Dictionary<Type,IEnumerable<string>> ();
 	Dictionary<Type,bool> need_static = new Dictionary<Type,bool> ();
 	Dictionary<Type,bool> need_abstract = new Dictionary<Type,bool> ();
@@ -2149,8 +2150,9 @@ public partial class Generator : IMemberGatherer {
 
 	public static Generator SharedGenerator;
 	
-	public Generator (NamespaceManager nsm, bool is_public_mode, bool external, bool debug, Type [] types, Type [] strong_dictionaries)
+	public Generator (BindingTouch binding_touch, NamespaceManager nsm, bool is_public_mode, bool external, bool debug, Type [] types, Type [] strong_dictionaries)
 	{
+		BindingTouch = binding_touch;
 		ns = nsm;
 		Generator.IsPublicMode = is_public_mode;
 		this.external = external;

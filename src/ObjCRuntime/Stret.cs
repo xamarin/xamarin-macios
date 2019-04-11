@@ -37,7 +37,8 @@ namespace ObjCRuntime
 	class Stret
 	{
 #if BGENERATOR
-		static bool isUnified = BindingTouch.Unified;
+		public static BindingTouch BindingTouch;
+		static bool isUnified { get { return BindingTouch.Unified; } }
 #elif __UNIFIED__
 		const bool isUnified = true;
 #else

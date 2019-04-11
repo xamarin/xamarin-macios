@@ -39,21 +39,20 @@ using Foundation;
 using Xamarin.Utils;
 
 public class BindingTouch {
-	static TargetFramework? target_framework;
-	public static PlatformName CurrentPlatform;
-	public static bool Unified;
-	public static bool skipSystemDrawing;
-	public static string outfile;
+	TargetFramework? target_framework;
+	public PlatformName CurrentPlatform;
+	public bool Unified;
+	public bool skipSystemDrawing;
+	public string outfile;
 
-	static string baselibdll;
-	static string attributedll;
-	static string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+	string baselibdll;
+	string attributedll;
 
-	static List<string> libs = new List<string> ();
+	List<string> libs = new List<string> ();
 
-	public static Universe universe;
+	public Universe universe;
 
-	public static TargetFramework TargetFramework {
+	public TargetFramework TargetFramework {
 		get { return target_framework.Value; }
 	}
 
@@ -79,7 +78,7 @@ public class BindingTouch {
 		}
 	}
 
-	static string GetAttributeLibraryPath ()
+	string GetAttributeLibraryPath ()
 	{
 		if (!string.IsNullOrEmpty (attributedll))
 			return attributedll;
@@ -112,7 +111,7 @@ public class BindingTouch {
 		}
 	}
 
-	static IEnumerable<string> GetLibraryDirectories ()
+	IEnumerable<string> GetLibraryDirectories ()
 	{
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -147,7 +146,7 @@ public class BindingTouch {
 			yield return lib;
 	}
 
-	static string LocateAssembly (string name)
+	string LocateAssembly (string name)
 	{
 		foreach (var asm in universe.GetAssemblies ()) {
 			if (asm.GetName ().Name == name)
@@ -166,7 +165,7 @@ public class BindingTouch {
 		throw new FileNotFoundException ($"Could not find the assembly '{name}' in any of the directories: {string.Join (", ", GetLibraryDirectories ())}");
 	}
 
-	static string GetSDKRoot ()
+	string GetSDKRoot ()
 	{
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -186,7 +185,7 @@ public class BindingTouch {
 		}
 	}
 
-	static void SetTargetFramework (string fx)
+	void SetTargetFramework (string fx)
 	{
 		TargetFramework tf;
 		if (!TargetFramework.TryParse (fx, out tf))
@@ -197,7 +196,7 @@ public class BindingTouch {
 			throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
-	public static string NamespacePlatformPrefix {
+	public string NamespacePlatformPrefix {
 		get {
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
@@ -212,6 +211,12 @@ public class BindingTouch {
 	}
 
 	static int Main2 (string [] args)
+	{
+		var touch = new BindingTouch ();
+		return touch.Main3 (args);
+	}
+
+	int Main3 (string [] args)
 	{
 		bool show_help = false;
 		bool zero_copy = false;
@@ -235,6 +240,7 @@ public class BindingTouch {
 		var defines = new List<string> ();
 		string generate_file_list = null;
 		bool process_enums = false;
+		string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
 
 		ErrorHelper.ClearWarningLevels ();
 
@@ -507,11 +513,14 @@ public class BindingTouch {
 				return 1;
 			}
 
+			AttributeManager.BindingTouch = this;
+			Stret.BindingTouch = this;
+
 			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
 			Assembly platform_assembly = baselib;
 			Assembly system_assembly = universe.LoadFile (LocateAssembly ("System"));
 			Assembly binding_assembly = universe.LoadFile (GetAttributeLibraryPath ());
-			TypeManager.Initialize (api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
+			TypeManager.Initialize (this, api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {
@@ -549,7 +558,7 @@ public class BindingTouch {
 				skipSystemDrawing
 			);
 
-			var g = new Generator (nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
+			var g = new Generator (this, nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors ?? (Unified && CurrentPlatform != PlatformName.MacOSX),

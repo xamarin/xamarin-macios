@@ -7,6 +7,8 @@ using PlatformName = ObjCRuntime.PlatformName;
 
 public static class AttributeManager
 {
+	public static BindingTouch BindingTouch;
+
 	// This method gets the System.Type for a IKVM.Reflection.Type to a System.Type.
 	// It knows about our mock attribute logic, so it will return the corresponding non-mocked System.Type for a mocked IKVM.Reflection.Type.
 	static System.Type ConvertType (Type type, ICustomAttributeProvider provider)
