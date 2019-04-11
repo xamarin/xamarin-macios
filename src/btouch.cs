@@ -51,6 +51,7 @@ public class BindingTouch {
 	List<string> libs = new List<string> ();
 
 	public Universe universe;
+	public TypeManager TypeManager = new TypeManager ();
 	public Frameworks Frameworks;
 	public AttributeManager AttributeManager;
 

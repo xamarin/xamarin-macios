@@ -3,137 +3,138 @@ using System;
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 
-public static class TypeManager {
-	public static BindingTouch BindingTouch;
-	static Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
-	public static Type System_Attribute;
-	public static Type System_Boolean;
-	public static Type System_Byte;
-	public static Type System_Delegate;
-	public static Type System_Double;
-	public static Type System_Float;
-	public static Type System_Int16;
-	public static Type System_Int32;
-	public static Type System_Int64;
-	public static Type System_IntPtr;
-	public static Type System_Object;
-	public static Type System_SByte;
-	public static Type System_String;
-	public static Type System_String_Array;
-	public static Type System_UInt16;
-	public static Type System_UInt32;
-	public static Type System_UInt64;
-	public static Type System_Void;
+public class TypeManager {
+	BindingTouch BindingTouch;
+	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 
-	public static Type System_nint;
-	public static Type System_nuint;
-	public static Type System_nfloat;
+	public Type System_Attribute;
+	public Type System_Boolean;
+	public Type System_Byte;
+	public Type System_Delegate;
+	public Type System_Double;
+	public Type System_Float;
+	public Type System_Int16;
+	public Type System_Int32;
+	public Type System_Int64;
+	public Type System_IntPtr;
+	public Type System_Object;
+	public Type System_SByte;
+	public Type System_String;
+	public Type System_String_Array;
+	public Type System_UInt16;
+	public Type System_UInt32;
+	public Type System_UInt64;
+	public Type System_Void;
+
+	public Type System_nint;
+	public Type System_nuint;
+	public Type System_nfloat;
 
 	/* fundamental */
-	public static Type NSObject;
-	public static Type INativeObject;
+	public Type NSObject;
+	public Type INativeObject;
 
 	/* objcruntime */
-	public static Type BlockLiteral;
-	public static Type Class;
-	public static Type Protocol;
-	public static Type Selector;
+	public Type BlockLiteral;
+	public Type Class;
+	public Type Protocol;
+	public Type Selector;
 
-	public static Type Constants;
+	public Type Constants;
 
 	/* Different binding types */
 
-	public static Type DictionaryContainerType;
+	public Type DictionaryContainerType;
 
-	public static Type ABAddressBook;
-	public static Type ABPerson;
-	public static Type ABRecord;
-	public static Type AudioBuffers;
-	public static Type AudioComponent;
-	public static Type AudioUnit;
-	public static Type AURenderEventEnumerator;
-	public static Type AVCaptureWhiteBalanceGains;
-	public static Type CATransform3D;
-	public static Type CFRunLoop;
-	public static Type CGAffineTransform;
-	public static Type CGColor;
-	public static Type CGColorSpace;
-	public static Type CGContext;
-	public static Type CGPDFDocument;
-	public static Type CGPDFPage;
-	public static Type CGGradient;
-	public static Type CGImage;
-	public static Type CGLayer;
-	public static Type CGLContext;
-	public static Type CGLPixelFormat;
-	public static Type CGPath;
-	public static Type CGVector;
-	public static Type CLLocationCoordinate2D;
-	public static Type CMAudioFormatDescription;
-	public static Type CMClock;
-	public static Type CMFormatDescription;
-	public static Type CMSampleBuffer;
-	public static Type CMTime;
-	public static Type CMTimebase;
-	public static Type CMTimeMapping;
-	public static Type CMTimeRange;
-	public static Type CMVideoFormatDescription;
-	public static Type CVImageBuffer;
-	public static Type CVPixelBuffer;
-	public static Type CVPixelBufferPool;
-	public static Type DispatchQueue;
-	public static Type DispatchData;
-	public static Type MidiEndpoint;
-	public static Type MKCoordinateSpan;
-	public static Type MTAudioProcessingTap;
-	public static Type MusicSequence;
-	public static Type NSNumber;
-	public static Type NSRange;
-	public static Type NSString;
-	public static Type NSValue;
-	public static Type NSZone;
-	public static Type SCNMatrix4;
-	public static Type SCNVector3;
-	public static Type SCNVector4;
-	public static Type SecAccessControl;
-	public static Type SecIdentity;
-	public static Type SecTrust;
-	public static Type SecProtocolMetadata;
-	public static Type SecProtocolOptions;
-	public static Type SecTrust2;
-	public static Type SecIdentity2;
-	public static Type UIEdgeInsets;
-	public static Type UIOffset;
-	public static Type NSDirectionalEdgeInsets;
+	public Type ABAddressBook;
+	public Type ABPerson;
+	public Type ABRecord;
+	public Type AudioBuffers;
+	public Type AudioComponent;
+	public Type AudioUnit;
+	public Type AURenderEventEnumerator;
+	public Type AVCaptureWhiteBalanceGains;
+	public Type CATransform3D;
+	public Type CFRunLoop;
+	public Type CGAffineTransform;
+	public Type CGColor;
+	public Type CGColorSpace;
+	public Type CGContext;
+	public Type CGPDFDocument;
+	public Type CGPDFPage;
+	public Type CGGradient;
+	public Type CGImage;
+	public Type CGLayer;
+	public Type CGLContext;
+	public Type CGLPixelFormat;
+	public Type CGPath;
+	public Type CGVector;
+	public Type CLLocationCoordinate2D;
+	public Type CMAudioFormatDescription;
+	public Type CMClock;
+	public Type CMFormatDescription;
+	public Type CMSampleBuffer;
+	public Type CMTime;
+	public Type CMTimebase;
+	public Type CMTimeMapping;
+	public Type CMTimeRange;
+	public Type CMVideoFormatDescription;
+	public Type CVImageBuffer;
+	public Type CVPixelBuffer;
+	public Type CVPixelBufferPool;
+	public Type DispatchQueue;
+	public Type DispatchData;
+	public Type MidiEndpoint;
+	public Type MKCoordinateSpan;
+	public Type MTAudioProcessingTap;
+	public Type MusicSequence;
+	public Type NSNumber;
+	public Type NSRange;
+	public Type NSString;
+	public Type NSValue;
+	public Type NSZone;
+	public Type SCNMatrix4;
+	public Type SCNVector3;
+	public Type SCNVector4;
+	public Type SecAccessControl;
+	public Type SecIdentity;
+	public Type SecTrust;
+	public Type SecProtocolMetadata;
+	public Type SecProtocolOptions;
+	public Type SecTrust2;
+	public Type SecIdentity2;
+	public Type UIEdgeInsets;
+	public Type UIOffset;
+	public Type NSDirectionalEdgeInsets;
 
-	public static Type CoreGraphics_CGPoint;
-	public static Type CoreGraphics_CGRect;
-	public static Type CoreGraphics_CGSize;
+	public Type CoreGraphics_CGPoint;
+	public Type CoreGraphics_CGRect;
+	public Type CoreGraphics_CGSize;
 
-	static Assembly api_assembly;
-	static Assembly corlib_assembly;
-	static Assembly platform_assembly;
-	static Assembly system_assembly;
-	static Assembly binding_assembly;
+	Assembly api_assembly;
+	Assembly corlib_assembly;
+	Assembly platform_assembly;
+	Assembly system_assembly;
+	Assembly binding_assembly;
 
-	public static Assembly CorlibAssembly {
+	public Assembly CorlibAssembly {
 		get { return corlib_assembly; }
 	}
 
-	public static Assembly PlatformAssembly {
+	public Assembly PlatformAssembly {
 		get { return platform_assembly; }
 		set { platform_assembly = value; }
 	}
 
-	public static Assembly SystemAssembly {
+	public Assembly SystemAssembly {
 		get { return system_assembly; }
 	}
 
-	public static Assembly BindingAssembly {
+	public Assembly BindingAssembly {
 		get { return binding_assembly; }
 	}
 
-	static Type Lookup (Assembly assembly, string @namespace, string @typename, bool inexistentOK = false)
+	Type Lookup (Assembly assembly, string @namespace, string @typename, bool inexistentOK = false)
 	{
 		string fullname;
 		string nsManagerPrefix = null;
@@ -156,7 +157,7 @@ public static class TypeManager {
 		return rv;
 	}
 
-	public static Type GetUnderlyingNullableType (Type type)
+	public Type GetUnderlyingNullableType (Type type)
 	{
 		if (!type.IsConstructedGenericType)
 			return null;
@@ -184,7 +185,7 @@ public static class TypeManager {
 		return type.GetEnumUnderlyingType ();
 	}
 
-	public static void Initialize (BindingTouch binding_touch, Assembly api, Assembly corlib, Assembly platform, Assembly system, Assembly binding)
+	public void Initialize (BindingTouch binding_touch, Assembly api, Assembly corlib, Assembly platform, Assembly system, Assembly binding)
 	{
 		BindingTouch = binding_touch;
 
@@ -214,7 +215,7 @@ public static class TypeManager {
 		System_UInt64 = Lookup (corlib_assembly, "System", "UInt64");
 		System_Void = Lookup (corlib_assembly, "System", "Void");
 
-		if (Generator.UnifiedAPI) {
+		if (BindingTouch.Unified) {
 			System_nint = Lookup (platform_assembly, "System", "nint");
 			System_nuint = Lookup (platform_assembly, "System", "nuint");
 			System_nfloat = Lookup (platform_assembly, "System", "nfloat");
@@ -230,7 +231,7 @@ public static class TypeManager {
 		Protocol = Lookup (platform_assembly, "ObjCRuntime", "Protocol");
 		Selector = Lookup (platform_assembly, "ObjCRuntime", "Selector");
 
-		if (Generator.UnifiedAPI) {
+		if (BindingTouch.Unified) {
 			Constants = Lookup (platform_assembly, "ObjCRuntime", "Constants");
 		} else {
 			Constants = Lookup (platform_assembly, "", "Constants");
@@ -322,7 +323,7 @@ public static class TypeManager {
 			NSDirectionalEdgeInsets = Lookup (platform_assembly, "UIKit", "NSDirectionalEdgeInsets");
 		}
 
-		if (Generator.UnifiedAPI) {
+		if (BindingTouch.Unified) {
 			CoreGraphics_CGRect = Lookup (platform_assembly, "CoreGraphics", "CGRect");
 			CoreGraphics_CGPoint = Lookup (platform_assembly, "CoreGraphics", "CGPoint");
 			CoreGraphics_CGSize = Lookup (platform_assembly, "CoreGraphics", "CGSize");

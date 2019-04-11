@@ -73,7 +73,7 @@ public static class ReflectionExtensions {
 	public static Type GetBaseType (Type type)
 	{
 		BaseTypeAttribute bta = GetBaseTypeAttribute (type);
-		Type base_type = bta != null ?  bta.BaseType : TypeManager.System_Object;
+		Type base_type = bta != null ?  bta.BaseType : Generator.TypeManager.System_Object;
 
 		return base_type;
 	}
@@ -118,7 +118,7 @@ public static class ReflectionExtensions {
 		string owrap;
 		string nwrap;
 
-		if (parent_type != TypeManager.NSObject) {
+		if (parent_type != Generator.TypeManager.NSObject) {
 			if (Generator.AttributeManager.HasAttribute<ModelAttribute> (parent_type)) {
 				foreach (PropertyInfo pinfo in parent_type.GetProperties (flags)) {
 					bool toadd = true;
@@ -177,7 +177,7 @@ public static class ReflectionExtensions {
 
 		Type parent_type = GetBaseType (type);
 
-		if (parent_type != TypeManager.NSObject) {
+		if (parent_type != Generator.TypeManager.NSObject) {
 			if (Generator.AttributeManager.HasAttribute<ModelAttribute> (parent_type))
 				foreach (MethodInfo minfo in parent_type.GetMethods ())
 					if (Generator.AttributeManager.HasAttribute<ExportAttribute> (minfo))
@@ -283,7 +283,7 @@ public class MarshalInfo {
 	{
 		PlainString = Generator.AttributeManager.HasAttribute<PlainStringAttribute> (pi);
 		Type = pi.ParameterType;
-		ZeroCopyStringMarshal = (Type == TypeManager.System_String) && PlainString == false && !Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (pi) && Generator.SharedGenerator.type_wants_zero_copy;
+		ZeroCopyStringMarshal = (Type == Generator.TypeManager.System_String) && PlainString == false && !Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (pi) && Generator.SharedGenerator.type_wants_zero_copy;
 		if (ZeroCopyStringMarshal && Generator.AttributeManager.HasAttribute<DisableZeroCopyAttribute> (mi))
 			ZeroCopyStringMarshal = false;
 		IsOut = TypeManager.IsOutParameter (pi);
@@ -389,7 +389,7 @@ public class GeneratedType {
 				ImplementsAppearance = true;
 		}
 		var btype = ReflectionExtensions.GetBaseType (Type);
-		if (btype != TypeManager.System_Object){
+		if (btype != Generator.TypeManager.System_Object){
 			Parent = btype;
 			// protected against a StackOverflowException - bug #19751
 			// it does not protect against large cycles (but good against copy/paste errors)
@@ -505,7 +505,7 @@ public class MemberInformation
 		// declaration.  If this is an inlined method, then we need to see if this was
 		// also inlined in any of the base classes.
 		if (mi.DeclaringType != type){
-			for (var baseType = ReflectionExtensions.GetBaseType (type); baseType != null && baseType != TypeManager.System_Object; baseType = ReflectionExtensions.GetBaseType (baseType)){
+			for (var baseType = ReflectionExtensions.GetBaseType (type); baseType != null && baseType != Generator.TypeManager.System_Object; baseType = ReflectionExtensions.GetBaseType (baseType)){
 				foreach (var baseMethod in gather.GetTypeContractMethods (baseType)){
 					if (baseMethod.DeclaringType != baseType && baseMethod ==  mi){
 						// We found a case, we need to flag it as new.
@@ -522,10 +522,10 @@ public class MemberInformation
 	{
 		is_basewrapper_protocol_method = isBaseWrapperProtocolMethod;
 		foreach (ParameterInfo pi in mi.GetParameters ())
-			if (pi.ParameterType.IsSubclassOf (TypeManager.System_Delegate))
+			if (pi.ParameterType.IsSubclassOf (Generator.TypeManager.System_Delegate))
 				is_unsafe = true;
 
-		if (!is_unsafe &&  mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate))
+		if (!is_unsafe &&  mi.ReturnType.IsSubclassOf (Generator.TypeManager.System_Delegate))
 			is_unsafe = true;
 
 		if (selector != null) {
@@ -576,7 +576,7 @@ public class MemberInformation
 	public MemberInformation (IMemberGatherer gather, PropertyInfo pi, Type type, bool is_interface_impl = false)
 	: this (gather, (MemberInfo)pi, type, is_interface_impl, false, false, false)
 	{
-		if (pi.PropertyType.IsSubclassOf (TypeManager.System_Delegate))
+		if (pi.PropertyType.IsSubclassOf (Generator.TypeManager.System_Delegate))
 			is_unsafe = true;
 
 		var export = Generator.GetExportAttribute (pi, out wrap_method);
@@ -848,6 +848,7 @@ public partial class Generator : IMemberGatherer {
 	static NamespaceManager ns;
 	static BindingTouch BindingTouch;
 	static Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
+	public static TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public static AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	Dictionary<Type,IEnumerable<string>> selectors = new Dictionary<Type,IEnumerable<string>> ();
 	Dictionary<Type,bool> need_static = new Dictionary<Type,bool> ();
@@ -976,8 +977,8 @@ public partial class Generator : IMemberGatherer {
 	public string BaseDir { get { return basedir; } set { basedir = value; }}
 	string basedir;
 	HashSet<string> generated_files = new HashSet<string> ();
-	public Type CoreNSObject = TypeManager.NSObject;
-	public Type SampleBufferType = TypeManager.CMSampleBuffer;
+	public Type CoreNSObject = Generator.TypeManager.NSObject;
+	public Type SampleBufferType = Generator.TypeManager.CMSampleBuffer;
 
 	static string CoreImageMap {
 		get {

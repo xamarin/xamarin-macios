@@ -45,7 +45,7 @@ namespace ObjCRuntime {
 		{
 			Type = type;
 #if BGENERATOR
-			var nullable = type.IsArray ? TypeManager.GetUnderlyingNullableType (type.GetElementType ()) : TypeManager.GetUnderlyingNullableType (type);
+			var nullable = type.IsArray ? Generator.TypeManager.GetUnderlyingNullableType (type.GetElementType ()) : Generator.TypeManager.GetUnderlyingNullableType (type);
 			IsNullable = nullable != null;
 			IsValueType = IsNullable ? nullable.IsValueType : type.IsValueType;
 #endif

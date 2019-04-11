@@ -8,6 +8,7 @@ using PlatformName = ObjCRuntime.PlatformName;
 public class AttributeManager
 {
 	public BindingTouch BindingTouch;
+	TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 
 	public AttributeManager (BindingTouch binding_touch)
 	{
