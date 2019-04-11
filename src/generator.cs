@@ -967,7 +967,7 @@ public partial class Generator : IMemberGatherer {
 	// Whether to use ZeroCopy for strings, defaults to false
 	public bool ZeroCopyStrings;
 
-	public static bool BindThirdPartyLibrary { get { return BindingTouch.BindThirdPartyLibrary; } }
+	public bool BindThirdPartyLibrary { get { return BindingTouch.BindThirdPartyLibrary; } }
 	public bool InlineSelectors;
 	public string BaseDir { get { return basedir; } set { basedir = value; }}
 	string basedir;
@@ -5973,7 +5973,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	static string GetAssemblyName ()
+	string GetAssemblyName ()
 	{
 		if (BindThirdPartyLibrary)
 			return Path.GetFileNameWithoutExtension (BindingTouch.outfile);
