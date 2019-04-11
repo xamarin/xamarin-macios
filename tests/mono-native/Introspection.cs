@@ -107,7 +107,7 @@ namespace Xamarin.Tests
 
 			try {
 #if MONOTOUCH_TV || MONOTOUCH_WATCH // on tvOS/watchOS we emit a native reference for P/Invokes in all assemblies, so we'll strip away the 'mono_native_initialize' symbol when we're linking statically (since we don't need the symbol).
-				var has_symbol = MonoNativeConfig.LinkMode != MonoNativeLinkMode.Static;
+				var has_symbol = MonoNativeConfig.LinkMode != MonoNativeLinkMode.Static || Runtime.Arch == Arch.SIMULATOR;
 #else
 				var has_symbol = true;
 #endif
