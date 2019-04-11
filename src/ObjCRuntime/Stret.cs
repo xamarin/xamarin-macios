@@ -40,7 +40,6 @@ namespace ObjCRuntime
 #if BGENERATOR
 		public static BindingTouch BindingTouch;
 		static TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
-		static bool isUnified { get { return BindingTouch.Unified; } }
 #elif __UNIFIED__
 		const bool isUnified = true;
 #else
@@ -89,12 +88,15 @@ namespace ObjCRuntime
 			return true;
 		}
 
-		static bool IsMagicTypeOrCorlibType (Type t)
+		static bool IsMagicTypeOrCorlibType (Type t, Generator generator)
 		{
 			switch (t.Name) {
 			case "nint":
 			case "nuint":
 			case "nfloat":
+#if BGENERATOR
+				var isUnified = generator.UnifiedAPI;
+#endif
 				if (!isUnified)
 					return false;
 
@@ -129,7 +131,7 @@ namespace ObjCRuntime
 
 			Type t = returnType;
 
-			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
+			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t, generator))
 				return false;
 
 			var fieldTypes = new List<Type> ();
@@ -191,7 +193,7 @@ namespace ObjCRuntime
 		{
 			Type t = returnType;
 
-			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
+			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t, generator))
 				return false;
 
 			var fieldTypes = new List<Type> ();
@@ -208,12 +210,15 @@ namespace ObjCRuntime
 
 		public static bool X86_64NeedStret (Type returnType, Generator generator)
 		{
+#if BGENERATOR
+			var isUnified = generator.UnifiedAPI;
+#endif
 			if (!isUnified)
 				return false;
 
 			Type t = returnType;
 
-			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
+			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t, generator))
 				return false;
 
 			var fieldTypes = new List<Type> ();
