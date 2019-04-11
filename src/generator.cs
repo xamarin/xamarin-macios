@@ -1264,8 +1264,8 @@ public partial class Generator : IMemberGatherer {
 		return type.Assembly.GetType (type.FullName + "Extensions") != null;
 	}
 
-	static Dictionary<Type,string> nsvalue_create_map;
-	static Dictionary<Type,string> NSValueCreateMap {
+	Dictionary<Type,string> nsvalue_create_map;
+	Dictionary<Type,string> NSValueCreateMap {
 		get {
 			if (nsvalue_create_map == null) {
 				nsvalue_create_map = new Dictionary<Type, string> ();
@@ -1385,8 +1385,8 @@ public partial class Generator : IMemberGatherer {
 		return temp;
 	}
 
-	static Dictionary<Type,string> nsnumber_return_map;
-	static Dictionary<Type,string> NSNumberReturnMap {
+	Dictionary<Type,string> nsnumber_return_map;
+	Dictionary<Type,string> NSNumberReturnMap {
 		get {
 			if (nsnumber_return_map == null) {
 				nsnumber_return_map = new Dictionary<Type, string> {
@@ -1412,8 +1412,8 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	static Dictionary<Type,string> nsvalue_return_map;
-	static Dictionary<Type,string> NSValueReturnMap {
+	Dictionary<Type,string> nsvalue_return_map;
+	Dictionary<Type,string> NSValueReturnMap {
 		get {
 			if (nsvalue_return_map == null) {
 				nsvalue_return_map = new Dictionary<Type, string> {
