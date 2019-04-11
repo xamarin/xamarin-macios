@@ -42,10 +42,10 @@ namespace Xamarin.Mac.Tasks
                 props.Add ("CFBundleVersion", new PString (build ?? "1.0"));
                 props.Add ("SigningIdentity", SigningKey);
 
+                arInfo.Add ("ApplicationProperties", props);
                 arInfo.Add ("ArchiveVersion", new PNumber (2));
                 arInfo.Add ("CreationDate", Now);
                 arInfo.Add ("Name", new PString (plist.GetCFBundleName () ?? plist.GetCFBundleDisplayName ()));
-                arInfo.Add ("ApplicationProperties", props);
 
                 if (!string.IsNullOrEmpty (ProjectGuid))
                     arInfo.Add ("ProjectGuid", new PString (ProjectGuid));
