@@ -363,20 +363,11 @@ public class TrampolineInfo {
 // which types need to have Appearance methods created
 //
 public class GeneratedType {
-	static Dictionary<Type,GeneratedType> knownTypes = new Dictionary<Type,GeneratedType> ();
-
-	public static GeneratedType Lookup (Type t, Generator generator)
+	public GeneratedType (Type t, GeneratedTypes root)
 	{
-		if (knownTypes.ContainsKey (t))
-			return knownTypes [t];
-		var n = new GeneratedType (t, generator);
-		knownTypes [t] = n;
-		return n;
-	}
-	
-	public GeneratedType (Type t, Generator generator)
-	{
+		Root = root;
 		Type = t;
+		var generator = root.Generator;
 		foreach (var iface in Type.GetInterfaces ()){
 			if (iface.Name == "UIAppearance" || iface.Name == "IUIAppearance")
 				ImplementsAppearance = true;
@@ -388,7 +379,7 @@ public class GeneratedType {
 			// it does not protect against large cycles (but good against copy/paste errors)
 			if (Parent == Type)
 				throw new BindingException (1030, true, "{0} cannot have [BaseType(typeof({1}))] as it creates a circular dependency", Type, Parent);
-			ParentGenerated = Lookup (Parent, generator);
+			ParentGenerated = Root.Lookup (Parent);
 
 			// If our parent had UIAppearance, we flag this class as well
 			if (ParentGenerated.ImplementsAppearance)
@@ -399,6 +390,7 @@ public class GeneratedType {
 		if (generator.AttributeManager.HasAttribute<CategoryAttribute> (t))
 			ImplementsAppearance = false;
 	}
+	public GeneratedTypes Root;
 	public Type Type;
 	public List<GeneratedType> Children = new List<GeneratedType> (1);
 	public Type Parent;
@@ -413,6 +405,27 @@ public class GeneratedType {
 				appearance_selectors = new List<MemberInfo> ();
 			return appearance_selectors;
 		}
+	}
+}
+
+public class GeneratedTypes
+{
+	public Generator Generator;
+
+	Dictionary<Type, GeneratedType> knownTypes = new Dictionary<Type, GeneratedType> ();
+
+	public GeneratedTypes (Generator generator)
+	{
+		this.Generator = generator;
+	}
+
+	public GeneratedType Lookup (Type t)
+	{
+		if (knownTypes.ContainsKey (t))
+			return knownTypes [t];
+		var n = new GeneratedType (t, this);
+		knownTypes [t] = n;
+		return n;
 	}
 }
 
@@ -845,6 +858,8 @@ public partial class Generator : IMemberGatherer {
 	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 	public TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
+	public GeneratedTypes GeneratedTypes;
+
 	Dictionary<Type,IEnumerable<string>> selectors = new Dictionary<Type,IEnumerable<string>> ();
 	Dictionary<Type,bool> need_static = new Dictionary<Type,bool> ();
 	Dictionary<Type,bool> need_abstract = new Dictionary<Type,bool> ();
@@ -2185,6 +2200,8 @@ public partial class Generator : IMemberGatherer {
 
 	public void Go ()
 	{
+		GeneratedTypes = new GeneratedTypes (this);
+
 		marshal_types.Add (new MarshalType (TypeManager.NSObject, create: "Runtime.GetNSObject ("));
 		marshal_types.Add (new MarshalType (TypeManager.Selector, create: "Selector.FromHandle ("));
 		marshal_types.Add (new MarshalType (TypeManager.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
@@ -2286,7 +2303,7 @@ public partial class Generator : IMemberGatherer {
 				continue;
 
 			// We call lookup to build the hierarchy graph
-			GeneratedType.Lookup (t, this);
+			GeneratedTypes.Lookup (t);
 			
 			var tselectors = new List<string> ();
 			
@@ -6003,7 +6020,7 @@ public partial class Generator : IMemberGatherer {
 		string TypeName = GetGeneratedTypeName (type);
 		indent = 0;
 		var instance_fields_to_clear_on_dispose = new List<string> ();
-		var gtype = GeneratedType.Lookup (type, this);
+		var gtype = GeneratedTypes.Lookup (type);
 		var appearance_selectors = gtype.ImplementsAppearance ? gtype.AppearanceSelectors : null;
 
 		using (var sw = GetOutputStreamForType (type)) {
@@ -7055,7 +7072,7 @@ public partial class Generator : IMemberGatherer {
 			//
 			// Appearance class
 			//
-			var gt = GeneratedType.Lookup (type, this);
+			var gt = GeneratedTypes.Lookup (type);
 			if (gt.ImplementsAppearance){
 				var parent_implements_appearance = gt.Parent != null && gt.ParentGenerated.ImplementsAppearance;
 				string base_class;
