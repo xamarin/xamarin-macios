@@ -518,7 +518,6 @@ public class BindingTouch {
 			}
 
 			AttributeManager = new AttributeManager (this);
-			Stret.BindingTouch = this;
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
