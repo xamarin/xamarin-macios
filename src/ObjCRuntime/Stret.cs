@@ -27,6 +27,7 @@ using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 #else
 using System.Reflection;
+using Generator = System.Object;
 #endif
 using System.Runtime.InteropServices;
 
@@ -113,7 +114,7 @@ namespace ObjCRuntime
 			}
 		}
 
-		public static bool ArmNeedStret (Type returnType)
+		public static bool ArmNeedStret (Type returnType, Generator generator)
 		{
 			bool has32bitArm;
 #if BGENERATOR
@@ -132,7 +133,7 @@ namespace ObjCRuntime
 				return false;
 
 			var fieldTypes = new List<Type> ();
-			var size = GetValueTypeSize (t, fieldTypes, false);
+			var size = GetValueTypeSize (t, fieldTypes, false, generator);
 
 			bool isWatchOS;
 #if BGENERATOR
@@ -186,7 +187,7 @@ namespace ObjCRuntime
 			return true;
 		}
 
-		public static bool X86NeedStret (Type returnType)
+		public static bool X86NeedStret (Type returnType, Generator generator)
 		{
 			Type t = returnType;
 
@@ -194,7 +195,7 @@ namespace ObjCRuntime
 				return false;
 
 			var fieldTypes = new List<Type> ();
-			var size = GetValueTypeSize (t, fieldTypes, false);
+			var size = GetValueTypeSize (t, fieldTypes, false, generator);
 
 			if (size > 8)
 				return true;
@@ -205,7 +206,7 @@ namespace ObjCRuntime
 			return false;
 		}
 
-		public static bool X86_64NeedStret (Type returnType)
+		public static bool X86_64NeedStret (Type returnType, Generator generator)
 		{
 			if (!isUnified)
 				return false;
@@ -216,10 +217,10 @@ namespace ObjCRuntime
 				return false;
 
 			var fieldTypes = new List<Type> ();
-			return GetValueTypeSize (t, fieldTypes, true) > 16;
+			return GetValueTypeSize (t, fieldTypes, true, generator) > 16;
 		}
 
-		static int GetValueTypeSize (Type type, List<Type> fieldTypes, bool is_64_bits)
+		static int GetValueTypeSize (Type type, List<Type> fieldTypes, bool is_64_bits, Generator generator)
 		{
 			int size = 0;
 			int maxElementSize = 1;
@@ -228,16 +229,16 @@ namespace ObjCRuntime
 				// Find the maximum of "field size + field offset" for each field.
 				foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
 #if BGENERATOR
-					var fieldOffset = Generator.AttributeManager.GetCustomAttribute<FieldOffsetAttribute> (field);
+					var fieldOffset = generator.AttributeManager.GetCustomAttribute<FieldOffsetAttribute> (field);
 #else
 					var fieldOffset = (FieldOffsetAttribute) Attribute.GetCustomAttribute (field, typeof (FieldOffsetAttribute));
 #endif
 					var elementSize = 0;
-					GetValueTypeSize (type, field.FieldType, fieldTypes, is_64_bits, ref elementSize, ref maxElementSize);
+					GetValueTypeSize (type, field.FieldType, fieldTypes, is_64_bits, ref elementSize, ref maxElementSize, generator);
 					size = Math.Max (size, elementSize + fieldOffset.Value);
 				}
 			} else {
-				GetValueTypeSize (type, type, fieldTypes, is_64_bits, ref size, ref maxElementSize);
+				GetValueTypeSize (type, type, fieldTypes, is_64_bits, ref size, ref maxElementSize, generator);
 			}
 
 			if (size % maxElementSize != 0)
@@ -254,7 +255,7 @@ namespace ObjCRuntime
 			return size += add;
 		}
 
-		static void GetValueTypeSize (Type original_type, Type type, List<Type> field_types, bool is_64_bits, ref int size, ref int max_element_size)
+		static void GetValueTypeSize (Type original_type, Type type, List<Type> field_types, bool is_64_bits, ref int size, ref int max_element_size, Generator generator)
 		{
 			// FIXME:
 			// SIMD types are not handled correctly here (they need 16-bit alignment).
@@ -300,12 +301,12 @@ namespace ObjCRuntime
 			// composite struct
 			foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
 #if BGENERATOR
-				var marshalAs = Generator.AttributeManager.GetCustomAttribute<MarshalAsAttribute> (field);
+				var marshalAs = generator.AttributeManager.GetCustomAttribute<MarshalAsAttribute> (field);
 #else
 				var marshalAs = (MarshalAsAttribute) Attribute.GetCustomAttribute (field, typeof (MarshalAsAttribute));
 #endif
 				if (marshalAs == null) {
-					GetValueTypeSize (original_type, field.FieldType, field_types, is_64_bits, ref size, ref max_element_size);
+					GetValueTypeSize (original_type, field.FieldType, field_types, is_64_bits, ref size, ref max_element_size, generator);
 					continue;
 				}
 
@@ -313,7 +314,7 @@ namespace ObjCRuntime
 				switch (marshalAs.Value) {
 				case UnmanagedType.ByValArray:
 					var types = new List<Type> ();
-					GetValueTypeSize (original_type, field.FieldType.GetElementType (), types, is_64_bits, ref type_size, ref max_element_size);
+					GetValueTypeSize (original_type, field.FieldType.GetElementType (), types, is_64_bits, ref type_size, ref max_element_size, generator);
 					multiplier = marshalAs.SizeConst;
 					break;
 				case UnmanagedType.U1:
@@ -343,15 +344,15 @@ namespace ObjCRuntime
 			}
 		}
 
-		public static bool NeedStret (Type returnType)
+		public static bool NeedStret (Type returnType, Generator generator)
 		{
-			if (X86NeedStret (returnType))
+			if (X86NeedStret (returnType, generator))
 				return true;
 
-			if (X86_64NeedStret (returnType))
+			if (X86_64NeedStret (returnType, generator))
 				return true;
 
-			if (ArmNeedStret (returnType))
+			if (ArmNeedStret (returnType, generator))
 				return true;
 
 			return false;

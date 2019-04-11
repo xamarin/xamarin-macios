@@ -106,7 +106,7 @@ public partial class Generator {
 
 		// properties
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
-			if (p.IsUnavailable ())
+			if (p.IsUnavailable (this))
 				continue;
 			
 			print ("");
