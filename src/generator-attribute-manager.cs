@@ -5,13 +5,18 @@ using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 using PlatformName = ObjCRuntime.PlatformName;
 
-public static class AttributeManager
+public class AttributeManager
 {
-	public static BindingTouch BindingTouch;
+	public BindingTouch BindingTouch;
+
+	public AttributeManager (BindingTouch binding_touch)
+	{
+		BindingTouch = binding_touch;
+	}
 
 	// This method gets the System.Type for a IKVM.Reflection.Type to a System.Type.
 	// It knows about our mock attribute logic, so it will return the corresponding non-mocked System.Type for a mocked IKVM.Reflection.Type.
-	static System.Type ConvertType (Type type, ICustomAttributeProvider provider)
+	System.Type ConvertType (Type type, ICustomAttributeProvider provider)
 	{
 		System.Type rv;
 		if (type.Assembly == TypeManager.CorlibAssembly) {
@@ -51,7 +56,7 @@ public static class AttributeManager
 
 	// This method gets the IKVM.Reflection.Type for a System.Type.
 	// It knows about our mock attribute logic, so it will return the mocked IKVM.Reflection.Type for a mocked System.Type.
-	static Type ConvertType (System.Type type, ICustomAttributeProvider provider)
+	Type ConvertType (System.Type type, ICustomAttributeProvider provider)
 	{
 		Type rv;
 		if (type.Assembly == typeof (int).Assembly) {
@@ -128,7 +133,7 @@ public static class AttributeManager
 		}
 	}
 
-	static IEnumerable<T> CreateAttributeInstance <T> (CustomAttributeData attribute, ICustomAttributeProvider provider) where T : System.Attribute
+	IEnumerable<T> CreateAttributeInstance <T> (CustomAttributeData attribute, ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		var convertedAttributes = ConvertOldAttributes (attribute);
 		if (convertedAttributes.Any ())
@@ -214,7 +219,7 @@ public static class AttributeManager
 		return ((T) instance).Yield ();
 	}
 
-	static T [] FilterAttributes<T> (IList<CustomAttributeData> attributes, ICustomAttributeProvider provider) where T : System.Attribute
+	T [] FilterAttributes<T> (IList<CustomAttributeData> attributes, ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		if (attributes == null || attributes.Count == 0)
 			return Array.Empty<T> ();
@@ -234,7 +239,7 @@ public static class AttributeManager
 		return Array.Empty<T> ();
 	}
 
-	public static T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute
+	public T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		return FilterAttributes<T> (GetIKVMAttributes (provider), provider);
 	}
@@ -265,7 +270,7 @@ public static class AttributeManager
 		return false;
 	}
 
-	public static bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
+	public bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
 	{
 		var attribute_type = ConvertType (typeof (T), provider);
 		var attribs = GetIKVMAttributes (provider);
@@ -283,7 +288,7 @@ public static class AttributeManager
 		return false;
 	}
 
-	public static T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : System.Attribute
+	public T GetCustomAttribute<T> (ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		if (provider is null)
 			return null;

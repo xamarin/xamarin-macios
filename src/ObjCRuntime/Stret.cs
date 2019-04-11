@@ -227,7 +227,7 @@ namespace ObjCRuntime
 				// Find the maximum of "field size + field offset" for each field.
 				foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
 #if BGENERATOR
-					var fieldOffset = AttributeManager.GetCustomAttribute<FieldOffsetAttribute> (field);
+					var fieldOffset = Generator.AttributeManager.GetCustomAttribute<FieldOffsetAttribute> (field);
 #else
 					var fieldOffset = (FieldOffsetAttribute) Attribute.GetCustomAttribute (field, typeof (FieldOffsetAttribute));
 #endif
@@ -299,7 +299,7 @@ namespace ObjCRuntime
 			// composite struct
 			foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
 #if BGENERATOR
-				var marshalAs = AttributeManager.GetCustomAttribute<MarshalAsAttribute> (field);
+				var marshalAs = Generator.AttributeManager.GetCustomAttribute<MarshalAsAttribute> (field);
 #else
 				var marshalAs = (MarshalAsAttribute) Attribute.GetCustomAttribute (field, typeof (MarshalAsAttribute));
 #endif

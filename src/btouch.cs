@@ -52,6 +52,7 @@ public class BindingTouch {
 
 	public Universe universe;
 	public Frameworks Frameworks;
+	public AttributeManager AttributeManager;
 
 	public TargetFramework TargetFramework {
 		get { return target_framework.Value; }
@@ -514,7 +515,7 @@ public class BindingTouch {
 				return 1;
 			}
 
-			AttributeManager.BindingTouch = this;
+			AttributeManager = new AttributeManager (this);
 			Stret.BindingTouch = this;
 			Frameworks = new Frameworks (CurrentPlatform);
 
