@@ -553,6 +553,7 @@ public class BindingTouch {
 			}
 
 			var nsManager = new NamespaceManager (
+				this,
 				NamespacePlatformPrefix,
 				ns == null ? firstApiDefinitionName : ns,
 				skipSystemDrawing

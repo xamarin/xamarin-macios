@@ -638,6 +638,10 @@ public class MemberInformation
 
 public class NamespaceManager
 {
+	public BindingTouch BindingTouch;
+	PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
+	bool UnifiedAPI { get { return BindingTouch.Unified; } }
+
 	public string Prefix { get; private set; }
 
 	// Where the core messaging lives
@@ -653,8 +657,9 @@ public class NamespaceManager
 	public ICollection<string> ImplicitNamespaces { get; private set; }
 	public ICollection<string> NamespacesThatConflictWithTypes { get; private set; }
 
-	public NamespaceManager (string prefix, string customObjCRuntimeNS, bool skipSystemDrawing)
+	public NamespaceManager (BindingTouch binding_touch, string prefix, string customObjCRuntimeNS, bool skipSystemDrawing)
 	{
+		BindingTouch = binding_touch;
 		Prefix = prefix;
 
 		CoreObjCRuntime = Get ("ObjCRuntime");
@@ -677,7 +682,7 @@ public class NamespaceManager
 			UINamespaces.Add (Get ("UIKit"));
 		if (Frameworks.HaveTwitter)
 			UINamespaces.Add (Get ("Twitter"));
-		if (Frameworks.HaveGameKit && Generator.CurrentPlatform != PlatformName.MacOSX && Generator.CurrentPlatform != PlatformName.WatchOS)
+		if (Frameworks.HaveGameKit && CurrentPlatform != PlatformName.MacOSX && CurrentPlatform != PlatformName.WatchOS)
 			UINamespaces.Add (Get ("GameKit"));
 		if (Frameworks.HaveNewsstandKit)
 			UINamespaces.Add (Get ("NewsstandKit"));
@@ -689,7 +694,7 @@ public class NamespaceManager
 			UINamespaces.Add (Get ("EventKitUI"));
 		if (Frameworks.HaveAddressBookUI)
 			UINamespaces.Add (Get ("AddressBookUI"));
-		if (Frameworks.HaveMapKit && Generator.CurrentPlatform != PlatformName.MacOSX && Generator.CurrentPlatform != PlatformName.TvOS && Generator.CurrentPlatform != PlatformName.WatchOS)
+		if (Frameworks.HaveMapKit && CurrentPlatform != PlatformName.MacOSX && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.WatchOS)
 			UINamespaces.Add (Get ("MapKit"));
 		if (Frameworks.HaveMessageUI)
 			UINamespaces.Add (Get ("MessageUI"));
@@ -713,7 +718,7 @@ public class NamespaceManager
 
 		if (Frameworks.HaveAudioUnit)
 			ImplicitNamespaces.Add (Get ("AudioUnit"));
-		if (Frameworks.HaveContacts && Generator.UnifiedAPI)
+		if (Frameworks.HaveContacts && UnifiedAPI)
 			ImplicitNamespaces.Add (Get ("Contacts"));
 		if (Frameworks.HaveCoreAnimation)
 			ImplicitNamespaces.Add (Get ("CoreAnimation"));
@@ -723,7 +728,7 @@ public class NamespaceManager
 			ImplicitNamespaces.Add (Get ("CoreVideo"));
 		if (Frameworks.HaveCoreMedia)
 			ImplicitNamespaces.Add (Get ("CoreMedia"));
-		if (Frameworks.HaveSecurity && Generator.CurrentPlatform != PlatformName.WatchOS)
+		if (Frameworks.HaveSecurity && CurrentPlatform != PlatformName.WatchOS)
 			ImplicitNamespaces.Add (Get ("Security"));
 		if (Frameworks.HaveAVFoundation)
 			ImplicitNamespaces.Add (Get ("AVFoundation"));
@@ -733,33 +738,33 @@ public class NamespaceManager
 			ImplicitNamespaces.Add (Get ("QTKit"));
 		if (Frameworks.HaveAppKit)
 			ImplicitNamespaces.Add (Get ("AppKit"));
-		if (Frameworks.HaveCloudKit && Generator.CurrentPlatform != PlatformName.WatchOS && Generator.CurrentPlatform != PlatformName.TvOS && Generator.CurrentPlatform != PlatformName.iOS)
+		if (Frameworks.HaveCloudKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.iOS)
 			ImplicitNamespaces.Add (Get ("CloudKit"));
-		if (Frameworks.HaveCoreMotion && Generator.CurrentPlatform != PlatformName.WatchOS && Generator.CurrentPlatform != PlatformName.TvOS && Generator.CurrentPlatform != PlatformName.MacOSX)
+		if (Frameworks.HaveCoreMotion && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.MacOSX)
 			ImplicitNamespaces.Add (Get ("CoreMotion"));
-		if (Frameworks.HaveMapKit && Generator.CurrentPlatform != PlatformName.WatchOS && Generator.CurrentPlatform != PlatformName.TvOS && Generator.CurrentPlatform != PlatformName.MacOSX)
+		if (Frameworks.HaveMapKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.MacOSX)
 			ImplicitNamespaces.Add (Get ("MapKit"));
 		if (Frameworks.HaveUIKit)
 			ImplicitNamespaces.Add (Get ("UIKit"));
 		if (Frameworks.HaveNewsstandKit)
 			ImplicitNamespaces.Add (Get ("NewsstandKit"));
-		if (Frameworks.HaveGLKit && Generator.CurrentPlatform != PlatformName.WatchOS && Generator.CurrentPlatform != PlatformName.MacOSX)
+		if (Frameworks.HaveGLKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.MacOSX)
 			ImplicitNamespaces.Add (Get ("GLKit"));
-		if (Frameworks.HaveQuickLook && Generator.CurrentPlatform != PlatformName.WatchOS && Generator.CurrentPlatform != PlatformName.TvOS && Generator.CurrentPlatform != PlatformName.MacOSX)
+		if (Frameworks.HaveQuickLook && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.MacOSX)
 			ImplicitNamespaces.Add (Get ("QuickLook"));
 		if (Frameworks.HaveAddressBook)
 			ImplicitNamespaces.Add (Get ("AddressBook"));
 
-		if (Frameworks.HaveModelIO && !(Generator.CurrentPlatform == PlatformName.MacOSX && !Generator.UnifiedAPI))
+		if (Frameworks.HaveModelIO && !(CurrentPlatform == PlatformName.MacOSX && !UnifiedAPI))
 			ImplicitNamespaces.Add (Get ("ModelIO"));
-		if (Frameworks.HaveMetal && !(Generator.CurrentPlatform == PlatformName.MacOSX && !Generator.UnifiedAPI))
+		if (Frameworks.HaveMetal && !(CurrentPlatform == PlatformName.MacOSX && !UnifiedAPI))
 			ImplicitNamespaces.Add (Get ("Metal"));
 
 		if (Frameworks.HaveCoreImage)
 			ImplicitNamespaces.Add (Get ("CoreImage"));
 		if (Frameworks.HavePhotos)
 			ImplicitNamespaces.Add (Get ("Photos"));
-		if (Frameworks.HaveMediaPlayer && Generator.UnifiedAPI)
+		if (Frameworks.HaveMediaPlayer && UnifiedAPI)
 			ImplicitNamespaces.Add (Get ("MediaPlayer"));
 		if (Frameworks.HaveMessages)
 			ImplicitNamespaces.Add (Get ("Messages"));
@@ -767,7 +772,7 @@ public class NamespaceManager
 			ImplicitNamespaces.Add (Get ("GameplayKit"));
 		if (Frameworks.HaveSpriteKit)
 			ImplicitNamespaces.Add (Get ("SpriteKit"));
-		if (Frameworks.HaveFileProvider && Generator.UnifiedAPI)
+		if (Frameworks.HaveFileProvider && UnifiedAPI)
 			ImplicitNamespaces.Add (Get ("FileProvider"));
 
 		// These are both types and namespaces
