@@ -754,6 +754,8 @@ namespace Xamarin.MMP.Tests
 				TI.TestUnifiedExecutable (test);
 				var output = TI.BuildProject (Path.Combine (tmpDir, full ? "XM45Example.csproj" : "UnifiedExample.csproj"), true, release: true, extraArgs: "/p:ArchiveOnBuild=true ");
 			});
+
+			// TODO: Add something to validate the archive is loadable by Xcode
 		}
 	}
 }
