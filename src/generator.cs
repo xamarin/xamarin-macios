@@ -842,7 +842,7 @@ public partial class Generator : IMemberGatherer {
 
 	NamespaceManager ns;
 	static BindingTouch BindingTouch;
-	static Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
+	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 	public static TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	Dictionary<Type,IEnumerable<string>> selectors = new Dictionary<Type,IEnumerable<string>> ();
