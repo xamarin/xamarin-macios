@@ -150,7 +150,13 @@ namespace Xamarin.Tests
 			var arguments = BuildArgumentArray ();
 			var in_process = InProcess && Profile != Profile.macOSClassic;
 			if (in_process) {
-				int rv = BindingTouch.Main (arguments);
+				int rv;
+				ThreadStaticTextWriter.ReplaceConsole (Output);
+				try {
+					rv = BindingTouch.Main (arguments);
+				} finally {
+					ThreadStaticTextWriter.RestoreConsole ();
+				}
 				Console.WriteLine (Output);
 				ParseMessages ();
 				return rv;
@@ -307,6 +313,94 @@ namespace Xamarin.Tests
 			default:
 				throw new NotImplementedException (profile.ToString ());
 			}
+		}
+	}
+
+	// This class will replace stdout/stderr with its own thread-static storage for stdout/stderr.
+	// This means we're capturing stdout/stderr per thread.
+	class ThreadStaticTextWriter : TextWriter
+	{
+		[ThreadStatic]
+		static TextWriter current_writer;
+
+		static ThreadStaticTextWriter instance = new ThreadStaticTextWriter ();
+		static object lock_obj = new object ();
+		static int counter;
+
+		static TextWriter original_stdout;
+		static TextWriter original_stderr;
+
+		public static void ReplaceConsole (StringBuilder sb)
+		{
+			lock (lock_obj) { 
+				if (counter == 0) {
+					original_stdout = Console.Out;
+					original_stderr = Console.Error;
+					Console.SetOut (instance);
+					Console.SetError (instance);
+				}
+				counter++;
+				current_writer = new StringWriter (sb);
+			}
+		}
+
+		public static void RestoreConsole ()
+		{ 
+			lock (lock_obj) {
+				current_writer.Dispose ();
+				current_writer = null;
+				counter--;
+				if (counter == 0) {
+					Console.SetOut (original_stdout);
+					Console.SetError (original_stderr);
+					original_stdout = null;
+					original_stderr = null;
+				}
+			}
+		}
+
+		ThreadStaticTextWriter ()
+		{
+		}
+
+		public TextWriter CurrentWriter {
+			get {
+				if (current_writer == null)
+					return original_stdout;
+				return current_writer;
+			}
+		}
+
+		public override Encoding Encoding => Encoding.UTF8;
+
+		public override void WriteLine ()
+		{
+			lock (lock_obj)
+				CurrentWriter.WriteLine ();
+		}
+
+		public override void Write (char value)
+		{
+			lock (lock_obj)
+				CurrentWriter.Write (value);
+		}
+
+		public override void Write (string value)
+		{
+			lock (lock_obj)
+				CurrentWriter.Write (value);
+		}
+
+		public override void Write (char [] buffer)
+		{
+			lock (lock_obj)
+				CurrentWriter.Write (buffer);
+		}
+
+		public override void WriteLine (string value)
+		{
+			lock (lock_obj)
+				CurrentWriter.WriteLine (value);
 		}
 	}
 }
