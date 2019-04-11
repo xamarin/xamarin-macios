@@ -149,24 +149,24 @@ public static class ReflectionExtensions {
 	public static bool IsInternal (this MemberInfo mi, Generator generator)
 	{
 		return generator.AttributeManager.HasAttribute<InternalAttribute> (mi)
-			|| (Generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
+			|| (generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
 	}
 
 	public static bool IsUnifiedInternal (this MemberInfo mi, Generator generator)
 	{
-		return (Generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
+		return (generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
 	}
 
 	public static bool IsInternal (this PropertyInfo pi, Generator generator)
 	{
 		return generator.AttributeManager.HasAttribute<InternalAttribute> (pi)
-			|| (Generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (pi));
+			|| (generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (pi));
 	}
 
 	public static bool IsInternal (this Type type, Generator generator)
 	{
 		return generator.AttributeManager.HasAttribute<InternalAttribute> (type)
-			|| (Generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (type));
+			|| (generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (type));
 	}
 	
 	public static List <MethodInfo> GatherMethods (this Type type, BindingFlags flags, Generator generator) {
@@ -886,7 +886,7 @@ public partial class Generator : IMemberGatherer {
 
 	// Static version of the above (!Compat) field, set on each Go invocation, needed because some static
 	// helper methods need to access this.   This is the exact opposite of Compat.
-	public static bool UnifiedAPI { get { return BindingTouch.Unified; } }
+	public bool UnifiedAPI { get { return BindingTouch.Unified; } }
 	public int XamcoreVersion {
 		get {
 			switch (Generator.CurrentPlatform) {
@@ -1639,7 +1639,7 @@ public partial class Generator : IMemberGatherer {
 			if (Frameworks.HaveAudioToolbox) {
 				if (pi.ParameterType == TypeManager.AudioBuffers){
 					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-					invoke.AppendFormat ("new global::{0}AudioToolbox.AudioBuffers ({1})", Generator.UnifiedAPI ? "" : "MonoTouch.", pi.Name.GetSafeParamName ());
+					invoke.AppendFormat ("new global::{0}AudioToolbox.AudioBuffers ({1})", UnifiedAPI ? "" : "MonoTouch.", pi.Name.GetSafeParamName ());
 					continue;
 				}
 			}
@@ -2485,7 +2485,7 @@ public partial class Generator : IMemberGatherer {
 		return "using (var nsn = Runtime.GetNSObject<NSNumber> (value))\n\treturn " + cast + "nsn." + propertyToCall + ";";
 	}
 
-	static Type GetCorrectGenericType (Type type)
+	Type GetCorrectGenericType (Type type)
 	{
 		if (UnifiedAPI)
 			return type;
