@@ -30,6 +30,7 @@ namespace Xamarin.Tests
 		public string ResponseFile;
 		public string WarnAsError; // Set to empty string to pass /warnaserror, set to non-empty string to pass /warnaserror:<nonemptystring>
 		public string NoWarn; // Set to empty string to pass /nowarn, set to non-empty string to pass /nowarn:<nonemptystring>
+		public string Out;
 
 		protected override string ToolPath { get { return Profile == Profile.macOSClassic ? Configuration.BGenClassicPath : Configuration.BGenPath; } }
 		protected override string MessagePrefix { get { return "BI"; } }
@@ -271,7 +272,7 @@ namespace Xamarin.Tests
 		void LoadAssembly ()
 		{
 			if (assembly == null)
-				assembly = AssemblyDefinition.ReadAssembly (Path.Combine (TmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll"));
+				assembly = AssemblyDefinition.ReadAssembly (Out ?? (Path.Combine (TmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll")));
 		}
 
 		void EnsureTempDir ()
@@ -289,6 +290,7 @@ namespace Xamarin.Tests
 				ApiDefinitions.Add (api);
 			}
 			WorkingDirectory = TmpDirectory;
+			Out = Path.Combine (WorkingDirectory, "api0.dll");
 		}
 
 		public static string [] GetDefaultDefines (Profile profile)
