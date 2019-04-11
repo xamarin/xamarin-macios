@@ -41,6 +41,7 @@ using Xamarin.Utils;
 public class BindingTouch {
 	TargetFramework? target_framework;
 	public PlatformName CurrentPlatform;
+	public bool BindThirdPartyLibrary = true;
 	public bool Unified;
 	public bool skipSystemDrawing;
 	public string outfile;
@@ -257,7 +258,7 @@ public class BindingTouch {
 			{ "sourceonly=", "Only generates the source", v => generate_file_list = v },
 			{ "ns=", "Sets the namespace for storing helper classes", v => ns = v },
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
-			{ "core", "Use this to build product assemblies", v => Generator.BindThirdPartyLibrary = false },
+			{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (StringUtils.Quote (v)) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
@@ -569,7 +570,7 @@ public class BindingTouch {
 				InlineSelectors = inline_selectors ?? (Unified && CurrentPlatform != PlatformName.MacOSX),
 			};
 
-			if (!Unified && !Generator.BindThirdPartyLibrary) {
+			if (!Unified && !BindThirdPartyLibrary) {
 				foreach (var mi in baselib.GetType (nsManager.CoreObjCRuntime + ".Messaging").GetMethods ()){
 					if (mi.Name.IndexOf ("_objc_msgSend", StringComparison.Ordinal) != -1)
 						g.RegisterMethodName (mi.Name);
