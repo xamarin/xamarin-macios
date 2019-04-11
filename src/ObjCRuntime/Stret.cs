@@ -119,7 +119,7 @@ namespace ObjCRuntime
 		{
 			bool has32bitArm;
 #if BGENERATOR
-			has32bitArm = BindingTouch.CurrentPlatform != PlatformName.TvOS && BindingTouch.CurrentPlatform != PlatformName.MacOSX;
+			has32bitArm = generator.CurrentPlatform != PlatformName.TvOS && generator.CurrentPlatform != PlatformName.MacOSX;
 #elif MONOMAC || __TVOS__
 			has32bitArm = false;
 #else
@@ -138,7 +138,7 @@ namespace ObjCRuntime
 
 			bool isWatchOS;
 #if BGENERATOR
-			isWatchOS = BindingTouch.CurrentPlatform == PlatformName.WatchOS;
+			isWatchOS = generator.CurrentPlatform == PlatformName.WatchOS;
 #elif __WATCHOS__
 			isWatchOS = true;
 #else
@@ -159,7 +159,7 @@ namespace ObjCRuntime
 
 			bool isiOS;
 #if BGENERATOR
-			isiOS = BindingTouch.CurrentPlatform == PlatformName.iOS;
+			isiOS = generator.CurrentPlatform == PlatformName.iOS;
 #elif __IOS__
 			isiOS = true;
 #else

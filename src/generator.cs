@@ -96,7 +96,7 @@ public static class ReflectionExtensions {
 	{
 		return generator.AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (provider)
 			.Any (attr => attr.AvailabilityKind == AvailabilityKind.Unavailable &&
-				attr.Platform == Generator.CurrentPlatform);
+				attr.Platform == generator.CurrentPlatform);
 	}
 	
 	public static AvailabilityBaseAttribute GetAvailability (this ICustomAttributeProvider attrProvider, AvailabilityKind availabilityKind, Generator generator)
@@ -104,7 +104,7 @@ public static class ReflectionExtensions {
 		return generator.AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (attrProvider)
 			.FirstOrDefault (attr =>
 				attr.AvailabilityKind == availabilityKind &&
-					attr.Platform == Generator.CurrentPlatform
+					attr.Platform == generator.CurrentPlatform
 			);
 	}
 
@@ -867,9 +867,9 @@ public partial class Generator : IMemberGatherer {
 
 	public bool Compat { get { return !UnifiedAPI; } }
 
-	public static PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
+	public PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
 
-	public static string ApplicationClassName {
+	public string ApplicationClassName {
 		get {
 			switch (CurrentPlatform) {
 			case PlatformName.iOS:
@@ -889,7 +889,7 @@ public partial class Generator : IMemberGatherer {
 	public bool UnifiedAPI { get { return BindingTouch.Unified; } }
 	public int XamcoreVersion {
 		get {
-			switch (Generator.CurrentPlatform) {
+			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
 			case PlatformName.iOS:
 				return UnifiedAPI ? 2 : 1;
@@ -973,7 +973,7 @@ public partial class Generator : IMemberGatherer {
 	string basedir;
 	HashSet<string> generated_files = new HashSet<string> ();
 
-	static string CoreImageMap {
+	string CoreImageMap {
 		get {
 			switch (CurrentPlatform) {
 			case PlatformName.iOS:
@@ -988,7 +988,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	static string CoreServicesMap {
+	string CoreServicesMap {
 		get {
 			switch (CurrentPlatform) {
 			case PlatformName.iOS:
@@ -1003,7 +1003,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	static string PDFKitMap {
+	string PDFKitMap {
 		get {
 			switch (CurrentPlatform) {
 			case PlatformName.iOS:
@@ -2177,7 +2177,7 @@ public partial class Generator : IMemberGatherer {
 		if (Compat)
 			return AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (t)
 				.Any (attr => attr.AvailabilityKind == AvailabilityKind.Introduced &&
-					attr.Platform == Generator.CurrentPlatform &&
+					attr.Platform == CurrentPlatform &&
 					attr.Architecture == PlatformArchitecture.Arch64);
 
 		return false;
