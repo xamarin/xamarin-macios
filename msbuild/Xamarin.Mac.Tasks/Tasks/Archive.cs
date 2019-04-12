@@ -1,6 +1,6 @@
 ﻿namespace Xamarin.Mac.Tasks
 {
-    public class Archive : ArchiveTaskBase
-    {
-    }
+	public class Archive : ArchiveTaskBase
+	{
+	}
 }
