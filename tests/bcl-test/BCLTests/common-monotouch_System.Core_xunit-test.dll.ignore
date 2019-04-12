@@ -467,3 +467,18 @@ System.Dynamic.Tests.SetIndexBinderTests.IndexErrorIsNotBindingError
 System.Dynamic.Tests.SetIndexBinderTests.ListIndexing
 System.Dynamic.Tests.GetIndexBinderTests.IndexErrorIsNotBindingError
 System.Dynamic.Tests.GetIndexBinderTests.ListIndexing
+
+# DEVICE FAILURES + RELEASE CONFIG 
+
+#System.InvalidOperationException : Sequence contains no matching element
+System.Linq.Expressions.Tests.ExpressionDebuggerTypeProxyTests.VerifyDebugView
+System.Linq.Expressions.Tests.ExpressionDebuggerTypeProxyTests.ThrowOnNullToCtor
+System.Dynamic.Tests.ExpandoObjectProxyTests.ViewTypeThrowsOnNull
+System.Dynamic.Tests.ExpandoObjectProxyTests.ValueCollectionCorrectlyViewed
+System.Dynamic.Tests.ExpandoObjectProxyTests.ItemsAreRootHidden
+System.Dynamic.Tests.ExpandoObjectProxyTests.KeyCollectionCorrectlyViewed
+System.Dynamic.Tests.BindingRestrictionsProxyTests.MergedRestrictionsExpressions
+System.Dynamic.Tests.BindingRestrictionsProxyTests.ThrowOnNullToCtor
+System.Dynamic.Tests.BindingRestrictionsProxyTests.MergedRestrictionsProperties
+System.Dynamic.Tests.BindingRestrictionsProxyTests.EmptyRestiction
+System.Dynamic.Tests.BindingRestrictionsProxyTests.CustomRestriction
