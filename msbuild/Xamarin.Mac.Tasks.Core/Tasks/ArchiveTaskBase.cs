@@ -44,7 +44,7 @@ namespace Xamarin.Mac.Tasks
 
                 arInfo.Add ("ApplicationProperties", props);
                 arInfo.Add ("ArchiveVersion", new PNumber (2));
-                arInfo.Add ("CreationDate", Now);
+                arInfo.Add ("CreationDate", new PDate (Now.ToUniversalTime ()));
                 arInfo.Add ("Name", new PString (plist.GetCFBundleName () ?? plist.GetCFBundleDisplayName ()));
 
                 if (!string.IsNullOrEmpty (ProjectGuid))
