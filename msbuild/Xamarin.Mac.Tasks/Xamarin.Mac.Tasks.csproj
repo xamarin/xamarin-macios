@@ -47,6 +47,7 @@
     <Compile Include="Tasks\ScnTool.cs" />
     <Compile Include="Tasks\TextureAtlas.cs" />
     <Compile Include="Tasks\PrepareNativeReferences.cs" />
+    <Compile Include="Tasks\Archive.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
