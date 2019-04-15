@@ -38,27 +38,30 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
-class BindingTouch {
-	static TargetFramework? target_framework;
-	public static PlatformName CurrentPlatform;
-	public static bool Unified;
-	public static bool skipSystemDrawing;
-	public static string outfile;
+public class BindingTouch {
+	TargetFramework? target_framework;
+	public PlatformName CurrentPlatform;
+	public bool BindThirdPartyLibrary = true;
+	public bool Unified;
+	public bool skipSystemDrawing;
+	public string outfile;
 
-	static string baselibdll;
-	static string attributedll;
-	static string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+	string baselibdll;
+	string attributedll;
 
-	static List<string> libs = new List<string> ();
+	List<string> libs = new List<string> ();
 
-	public static Universe universe;
+	public Universe universe;
+	public TypeManager TypeManager = new TypeManager ();
+	public Frameworks Frameworks;
+	public AttributeManager AttributeManager;
 
-	public static TargetFramework TargetFramework {
+	public TargetFramework TargetFramework {
 		get { return target_framework.Value; }
 	}
 
 	public static string ToolName {
-		get { return Path.GetFileNameWithoutExtension (System.Reflection.Assembly.GetEntryAssembly ().Location); }
+		get { return "bgen"; }
 	}
 
 	static void ShowHelp (OptionSet os)
@@ -69,17 +72,17 @@ class BindingTouch {
 		os.WriteOptionDescriptions (Console.Out);
 	}
 	
-	static int Main (string [] args)
+	public static int Main (string [] args)
 	{
 		try {
 			return Main2 (args);
 		} catch (Exception ex) {
-			ErrorHelper.Show (ex);
+			ErrorHelper.Show (ex, false);
 			return 1;
 		}
 	}
 
-	static string GetAttributeLibraryPath ()
+	string GetAttributeLibraryPath ()
 	{
 		if (!string.IsNullOrEmpty (attributedll))
 			return attributedll;
@@ -112,7 +115,7 @@ class BindingTouch {
 		}
 	}
 
-	static IEnumerable<string> GetLibraryDirectories ()
+	IEnumerable<string> GetLibraryDirectories ()
 	{
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -147,7 +150,7 @@ class BindingTouch {
 			yield return lib;
 	}
 
-	static string LocateAssembly (string name)
+	string LocateAssembly (string name)
 	{
 		foreach (var asm in universe.GetAssemblies ()) {
 			if (asm.GetName ().Name == name)
@@ -166,7 +169,7 @@ class BindingTouch {
 		throw new FileNotFoundException ($"Could not find the assembly '{name}' in any of the directories: {string.Join (", ", GetLibraryDirectories ())}");
 	}
 
-	static string GetSDKRoot ()
+	string GetSDKRoot ()
 	{
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -186,7 +189,7 @@ class BindingTouch {
 		}
 	}
 
-	static void SetTargetFramework (string fx)
+	void SetTargetFramework (string fx)
 	{
 		TargetFramework tf;
 		if (!TargetFramework.TryParse (fx, out tf))
@@ -197,7 +200,7 @@ class BindingTouch {
 			throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
-	public static string NamespacePlatformPrefix {
+	public string NamespacePlatformPrefix {
 		get {
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
@@ -212,6 +215,12 @@ class BindingTouch {
 	}
 
 	static int Main2 (string [] args)
+	{
+		var touch = new BindingTouch ();
+		return touch.Main3 (args);
+	}
+
+	int Main3 (string [] args)
 	{
 		bool show_help = false;
 		bool zero_copy = false;
@@ -235,6 +244,9 @@ class BindingTouch {
 		var defines = new List<string> ();
 		string generate_file_list = null;
 		bool process_enums = false;
+		string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+
+		ErrorHelper.ClearWarningLevels ();
 
 		var os = new OptionSet () {
 			{ "h|?|help", "Displays the help", v => show_help = true },
@@ -246,7 +258,7 @@ class BindingTouch {
 			{ "sourceonly=", "Only generates the source", v => generate_file_list = v },
 			{ "ns=", "Sets the namespace for storing helper classes", v => ns = v },
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
-			{ "core", "Use this to build product assemblies", v => Generator.BindThirdPartyLibrary = false },
+			{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (StringUtils.Quote (v)) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
@@ -512,11 +524,14 @@ class BindingTouch {
 				return 1;
 			}
 
+			AttributeManager = new AttributeManager (this);
+			Frameworks = new Frameworks (CurrentPlatform);
+
 			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
 			Assembly platform_assembly = baselib;
 			Assembly system_assembly = universe.LoadFile (LocateAssembly ("System"));
 			Assembly binding_assembly = universe.LoadFile (GetAttributeLibraryPath ());
-			TypeManager.Initialize (api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
+			TypeManager.Initialize (this, api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {
@@ -549,18 +564,19 @@ class BindingTouch {
 			}
 
 			var nsManager = new NamespaceManager (
+				this,
 				NamespacePlatformPrefix,
 				ns == null ? firstApiDefinitionName : ns,
 				skipSystemDrawing
 			);
 
-			var g = new Generator (nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
+			var g = new Generator (this, nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors ?? (Unified && CurrentPlatform != PlatformName.MacOSX),
 			};
 
-			if (!Unified && !Generator.BindThirdPartyLibrary) {
+			if (!Unified && !BindThirdPartyLibrary) {
 				foreach (var mi in baselib.GetType (nsManager.CoreObjCRuntime + ".Messaging").GetMethods ()){
 					if (mi.Name.IndexOf ("_objc_msgSend", StringComparison.Ordinal) != -1)
 						g.RegisterMethodName (mi.Name);

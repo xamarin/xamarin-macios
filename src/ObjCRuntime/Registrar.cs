@@ -822,17 +822,17 @@ namespace Registrar {
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
 #if __WATCHOS__
-					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (NativeReturnType) : Stret.X86NeedStret (NativeReturnType);
+					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
 #elif MONOMAC
-					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType) : Stret.X86NeedStret (NativeReturnType);
+					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
 #elif __IOS__
 					if (Runtime.Arch == Arch.DEVICE) {
-						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (NativeReturnType);
+						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (NativeReturnType, null);
 					} else {
-						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType) : Stret.X86_64NeedStret (NativeReturnType);
+						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType, null) : Stret.X86_64NeedStret (NativeReturnType, null);
 					}
 #elif __TVOS__
-					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (NativeReturnType);
+					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (NativeReturnType, null);
 #else
 	#error unknown architecture
 #endif

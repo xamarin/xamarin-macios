@@ -54,8 +54,12 @@ public static class ErrorHelper {
 		Warning = 0,
 		Disable = 1,
 	}
-	
-	static public int Verbosity { get; set; }
+
+	[ThreadStatic]
+	static int verbosity;
+	static public int Verbosity { get { return verbosity; } set { verbosity = value; } }
+
+	[ThreadStatic]
 	static Dictionary<int, WarningLevel> warning_levels;
 	
 	public static ProductException CreateError (int code, string message, params object[] args)
@@ -63,18 +67,26 @@ public static class ErrorHelper {
 		return new ProductException (code, true, message, args);
 	}
 
-	static public void Show (Exception e)
+	static public void Show (Exception e, bool rethrow_errors = true)
 	{
 		List<Exception> exceptions = new List<Exception> ();
 		bool error = false;
 
 		CollectExceptions (e, exceptions);
 
-		foreach (var ex in exceptions)
-			error |= ShowInternal (ex);
+		if (rethrow_errors) {
+			foreach (var ex in exceptions) {
+				if (ex is ProductException pe && !pe.Error)
+					continue;
+				error = true;
+				break;
+			}
+			if (error)
+				throw e;
+		}
 
-		if (error)
-			Environment.Exit (1);
+		foreach (var ex in exceptions)
+			ShowInternal (ex);
 	}
 
 	static void CollectExceptions (Exception ex, List<Exception> exceptions)
@@ -155,5 +167,10 @@ public static class ErrorHelper {
 			warning_levels [code.Value] = level;
 		else
 			warning_levels [-1] = level; // code -1: all codes.
+	}
+
+	public static void ClearWarningLevels ()
+	{
+		warning_levels?.Clear ();
 	}
 }

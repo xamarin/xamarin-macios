@@ -26,7 +26,7 @@ Console.WriteLine ("partial class Frameworks {");
 for (int i = 0; i < names.Length; i++) {
 	var name = names [i];
 	var frameworks = allframeworks [i];
-	Console.Write ($"\tstatic readonly HashSet<string> {name} = new HashSet<string> {{\"");
+	Console.Write ($"\treadonly HashSet<string> {name} = new HashSet<string> {{\"");
 	Console.Write (string.Join ("\", \"", frameworks));
 	Console.WriteLine ("\"};");
 }
@@ -34,8 +34,8 @@ for (int i = 0; i < names.Length; i++) {
 var allArray = all.ToArray ();
 Array.Sort (allArray);
 foreach (var fw in allArray)
-	Console.WriteLine ($"\tstatic bool? _{fw.Replace (".", "")};");
+	Console.WriteLine ($"\tbool? _{fw.Replace (".", "")};");
 foreach (var fw in allArray)
-	Console.WriteLine ($"\tpublic static bool Have{fw} {{ get {{ if (!_{fw}.HasValue) _{fw} = GetValue (\"{fw}\"); return _{fw}.Value; }} }}");
+	Console.WriteLine ($"\tpublic bool Have{fw} {{ get {{ if (!_{fw}.HasValue) _{fw} = GetValue (\"{fw}\"); return _{fw}.Value; }} }}");
 Console.WriteLine ("}");
 Environment.Exit (0);
