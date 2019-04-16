@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
@@ -451,7 +451,7 @@ namespace xharness
 				if (!IsIncluded (project))
 					ignored = true;
 
-				if (!project.SkipiOSVariation) {
+				if (!project.SkipiOSVariation && !Harness.SkipiOSDeviceVariations) {
 					var build64 = new XBuildTask {
 						Jenkins = this,
 						ProjectConfiguration = "Debug64",
@@ -484,7 +484,7 @@ namespace xharness
 					rv.Add (new RunDeviceTask (buildToday, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOSExtensions, BuildOnly = project.BuildOnly || ForceExtensionBuildOnly });
 				}
 
-				if (!project.SkiptvOSVariation) {
+				if (!project.SkiptvOSVariation && !Harness.SkipTvOSDeviceVariations) {
 					var tvOSProject = project.AsTvOSProject ();
 					var buildTV = new XBuildTask {
 						Jenkins = this,
@@ -497,7 +497,7 @@ namespace xharness
 					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedTV.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludetvOS, BuildOnly = project.BuildOnly });
 				}
 
-				if (!project.SkipwatchOSVariation) {
+				if (!project.SkipwatchOSVariation && !Harness.SkipWatchOSDeviceVariations) {
 					var watchOSProject = project.AsWatchOSProject ();
 					var buildWatch = new XBuildTask {
 						Jenkins = this,

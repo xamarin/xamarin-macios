@@ -704,6 +704,27 @@ namespace xharness
 				return string.IsNullOrEmpty (groupApps) || groupApps == "grouped";
 			}
 		}
+		
+		public bool SkipTvOSDeviceVariations {
+			get {
+				var skipTv = Environment.GetEnvironmentVariable ("SKIP_TVOS_VARIATIONS");
+				return !string.IsNullOrEmpty (skipTv) && skipTv == "true";
+			}
+		}
+		
+		public bool SkipiOSDeviceVariations {
+			get {
+				var skipiOs = Environment.GetEnvironmentVariable ("SKIP_IOS_VARIATIONS");
+				return !string.IsNullOrEmpty (skipiOs) && skipiOs == "true";
+			}
+		}
+		
+		public bool SkipWatchOSDeviceVariations {
+			get {
+				var skipWatchOS = Environment.GetEnvironmentVariable ("SKIP_WATCHOS_VARIATIONS");
+				return !string.IsNullOrEmpty (skipWatchOS) && skipWatchOS == "true";
+			}
+		}
 
 		public int Execute ()
 		{
