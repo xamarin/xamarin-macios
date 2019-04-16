@@ -451,7 +451,7 @@ namespace xharness
 				if (!IsIncluded (project))
 					ignored = true;
 
-				if (!project.SkipiOSVariation && !Harness.SkipiOSDeviceVariations) {
+				if (!project.SkipiOSVariation) {
 					var build64 = new XBuildTask {
 						Jenkins = this,
 						ProjectConfiguration = "Debug64",
@@ -460,7 +460,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build64, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
+					rv.Add (new RunDeviceTask (build64, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = Harness.SkipiOSDeviceVariations || ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
@@ -470,7 +470,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
+					rv.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = Harness.SkipiOSDeviceVariations || ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
@@ -481,10 +481,10 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildToday.CloneTestProject (todayProject);
-					rv.Add (new RunDeviceTask (buildToday, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOSExtensions, BuildOnly = project.BuildOnly || ForceExtensionBuildOnly });
+					rv.Add (new RunDeviceTask (buildToday, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = Harness.SkipiOSDeviceVariations || ignored || !IncludeiOSExtensions, BuildOnly = project.BuildOnly || ForceExtensionBuildOnly });
 				}
 
-				if (!project.SkiptvOSVariation && !Harness.SkipTvOSDeviceVariations) {
+				if (!project.SkiptvOSVariation) {
 					var tvOSProject = project.AsTvOSProject ();
 					var buildTV = new XBuildTask {
 						Jenkins = this,
@@ -494,10 +494,10 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildTV.CloneTestProject (tvOSProject);
-					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedTV.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludetvOS, BuildOnly = project.BuildOnly });
+					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedTV.Where (d => d.IsSupported (project))) { Ignored = Harness.SkipTvOSDeviceVariations || ignored || !IncludetvOS, BuildOnly = project.BuildOnly });
 				}
 
-				if (!project.SkipwatchOSVariation && !Harness.SkipWatchOSDeviceVariations) {
+				if (!project.SkipwatchOSVariation) {
 					var watchOSProject = project.AsWatchOSProject ();
 					var buildWatch = new XBuildTask {
 						Jenkins = this,
@@ -507,7 +507,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildWatch.CloneTestProject (watchOSProject);
-					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedWatch.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
+					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedWatch.Where (d => d.IsSupported (project))) { Ignored = Harness.SkipWatchOSDeviceVariations || ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
 				}
 			}
 
