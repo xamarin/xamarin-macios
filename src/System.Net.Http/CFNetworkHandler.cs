@@ -267,6 +267,10 @@ namespace System.Net.Http
  				var status = initialRequest.StatusCode;
  				if (IsRedirect (status) && allowAutoRedirect) {
  					bucket.StreamCanBeDisposed = true;
+ 					// we do not care about the first stream cbs
+					stream.HasBytesAvailableEvent -= HandleHasBytesAvailableEvent;
+					stream.ErrorEvent -= HandleErrorEvent;
+					stream.ClosedEvent -= HandleClosedEvent;
 					// remove headers in a redirect for Authentication.
 					request.Headers.Authorization = null;
  					return await SendAsync (request, cancellationToken, false).ConfigureAwait (false);
