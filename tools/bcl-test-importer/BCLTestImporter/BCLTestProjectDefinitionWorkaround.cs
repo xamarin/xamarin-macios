@@ -251,7 +251,7 @@ namespace BCLTestImporter
 					(assembly:"Microsoft.CSharp", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/Microsoft.CSharp.dll"),
 					(assembly:"xammac_net_4_5_System.Numerics_xunit-test.dll", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/tests/xammac_net_4_5_System.Numerics_xunit-test.dll"),
 				}},
-				{"SystemRuntimeCompilerServicesXunit", new List<(string assembly, string hint)> {
+				{"SystemRuntimeCompilerServicesUnsafeXunit", new List<(string assembly, string hint)> {
 					(assembly:"mscorlib", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/mscorlib.dll"),
 					(assembly:"xunit.core", hint:""),
 					(assembly:"xunit.abstractions", hint:""),
