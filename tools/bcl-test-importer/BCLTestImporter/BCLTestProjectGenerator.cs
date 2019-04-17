@@ -583,7 +583,7 @@ namespace BCLTestImporter {
 					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 						await file.WriteAsync (generatedProject);
 					}
-					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), platform, true);
+					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (platform), platform, true);
 					var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
 						projectDefinition.IsXUnit, RegisterTypesTemplatePath);
 
@@ -971,21 +971,21 @@ namespace BCLTestImporter {
 		public bool AllTestAssembliesAreRan (out Dictionary<Platform, List<string>> missingAssemblies, bool wasDownloaded)
 		{
 			missingAssemblies = new Dictionary<Platform, List<string>> ();
-			foreach (var platform in new [] {Platform.iOS, Platform.TvOS}) {
+			foreach (var platform in new [] {Platform.iOS, Platform.TvOS, Platform.WatchOS}) {
 				var testDir = wasDownloaded ? BCLTestAssemblyDefinition.GetTestDirectoryFromDownloadsPath (GetReleaseDownload (platform), platform)
 					: BCLTestAssemblyDefinition.GetTestDirectoryFromMonoPath (MonoRootPath, platform);
 				var missingAssembliesPlatform = Directory.GetFiles (testDir, NUnitPattern).Select (Path.GetFileName).Union (
 					Directory.GetFiles (testDir, xUnitPattern).Select (Path.GetFileName)).ToList ();
 				
 				foreach (var assembly in CommonIgnoredAssemblies) {
-					missingAssembliesPlatform.Remove (assembly);
+					missingAssembliesPlatform.Remove (new BCLTestAssemblyDefinition (assembly).GetName (platform));
 				}
 				
 				// loop over the mono root path and grab all the assemblies, then intersect the found ones with the added
 				// and ignored ones.
 				foreach (var projectDefinition in commoniOSTestProjects) {
 					foreach (var testAssembly in projectDefinition.assemblies) {
-						missingAssembliesPlatform.Remove (testAssembly);
+						missingAssembliesPlatform.Remove (new BCLTestAssemblyDefinition (testAssembly).GetName (platform));
 					}
 				}
 
