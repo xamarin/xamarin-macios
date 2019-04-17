@@ -92,7 +92,8 @@ namespace BCLTestImporter {
 			(name:"MonoCSharpTests", assemblies: new [] {"monotouch_Mono.CSharp_test.dll"}, group: "BCL tests group 1"),
 			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}, group: "BCL tests group 1"),
 			(name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}, group: "BCL tests group 1"),
-			
+			(name:"MonoRuntimeTests", assemblies: new [] {"monotouch_Mono.Runtime.Tests_test.dll"}, group: "BCL tests group 1"),
+
 			// BCL tests group 2
 			(name:"SystemTests", assemblies: new[] {"monotouch_System_test.dll"}, group: "BCL tests group 2"),
 			(name:"SystemDataTests", assemblies: new [] {"monotouch_System.Data_test.dll"}, group: "BCL tests group 2"),
@@ -122,6 +123,10 @@ namespace BCLTestImporter {
 
 			// BCL tests group 5
 			(name:"CorlibXunit", assemblies: new [] {"monotouch_corlib_xunit-test.dll"}, group: "BCL tests group 5"),
+
+			// BCL tests group 6
+			(name:"SystemNetHttpUnitTestsXunit", assemblies: new [] {"monotouch_System.Net.Http.UnitTests_xunit-test.dll"}, group: "BCL tests group 6"),
+			(name:"SystemNetHttpFunctionalTestsXunit", assemblies: new [] {"monotouch_System.Net.Http.FunctionalTests_xunit-test.dll"}, group: "BCL tests group 6"),
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
