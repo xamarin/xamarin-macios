@@ -6,7 +6,7 @@ namespace PdfKit {
 	partial class PdfAnnotation {
 #if __IOS__
 		[Obsolete ("Empty stub (not a public API on iOS).")]
-		public virtual string ToolTip { get; set; }
+		public virtual string ToolTip { get; }
 #endif
 	}
 
