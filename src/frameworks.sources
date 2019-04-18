@@ -1231,6 +1231,7 @@ PDFKIT_API_SOURCES = \
 
 PDFKIT_SOURCES = \
 	PdfKit/PdfAnnotation.cs \
+	PdfKit/PdfCompat.cs \
 	PdfKit/PdfKit.cs \
 
 # Photos
