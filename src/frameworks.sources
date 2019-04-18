@@ -1565,6 +1565,7 @@ VIDEOTOOLBOX_SOURCES = \
 
 VISION_SOURCES = \
 	Vision/VNBarcodeSymbologyExtensions.cs \
+	Vision/VNCompat.cs \
 	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
 	Vision/VNRequest.cs \
