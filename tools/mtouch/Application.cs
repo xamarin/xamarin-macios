@@ -514,7 +514,12 @@ namespace Xamarin.Bundler {
 			if (EnableLLVMOnlyBitCode)
 				return false;
 
-			if (IsInterpreted (Assembly.GetIdentity (assembly)))
+			// Even if this assembly is aot'ed, if we are using the interpreter we can't yet
+			// guarantee that code in this assembly won't be executed in interpreted mode,
+			// which can happen for virtual calls between assemblies, during exception handling
+			// etc. We make sure we don't strip away symbols needed for pinvoke calls.
+			// https://github.com/mono/mono/issues/14206
+			if (UseInterpreter)
 				return true;
 
 			switch (Platform) {
