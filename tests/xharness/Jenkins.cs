@@ -25,6 +25,7 @@ namespace xharness
 		public bool IncludeMac = true;
 		public bool IncludeMac32 = true;
 		public bool IncludeiOS = true;
+		public bool IncludeiOS32 = true;
 		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
 		public bool IncludetvOS = true;
@@ -150,7 +151,10 @@ namespace xharness
 				break;
 			case TestPlatform.iOS_Unified:
 				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
-				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
+				if (IncludeiOS32)
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
+				else 
+					platforms = new TestPlatform [] { TestPlatform.iOS_Unified64 };
 				break;
 			case TestPlatform.iOS_TodayExtension64:
 				targets = new AppRunnerTarget[] { AppRunnerTarget.Simulator_iOS64 };
@@ -486,7 +490,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
+					rv.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOS || !IncludeiOS32, BuildOnly = project.BuildOnly });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
@@ -687,6 +691,7 @@ namespace xharness
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
 			SetEnabled (labels, "tvos", ref IncludetvOS);
+			SetEnabled (labels, "ios-32", ref IncludeiOS32);
 			SetEnabled (labels, "watchos", ref IncludewatchOS);
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
