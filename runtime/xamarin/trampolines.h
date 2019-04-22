@@ -179,9 +179,20 @@ id xamarin_uiedgeinsets_to_nsvalue           (MonoObject *value, void *context, 
 id xamarin_uioffset_to_nsvalue               (MonoObject *value, void *context, guint32 *exception_gchandle);
 id xamarin_nsdirectionaledgeinsets_to_nsvalue(MonoObject *value, void *context, guint32 *exception_gchandle);
 
+// These functions can be passed as xamarin_id_to_managed_func/xamarin_managed_to_id_func parameters
+id           xamarin_convert_string_to_nsstring (MonoObject *obj, void *context, guint32 *exception_gchandle);
+
+// These are simpler versions of the above string<->nsstring conversion functions.
 NSString *   xamarin_string_to_nsstring (MonoString *obj, bool retain);
 // domain is optional, if NULL the function will call mono_get_domain.
 MonoString * xamarin_nsstring_to_string (MonoDomain *domain, NSString *obj);
+
+// Either managed_type or managed_class has to be provided
+NSArray *   xamarin_managed_array_to_nsarray (MonoArray *array, MonoType *managed_type, MonoClass *managed_class, guint32 *exception_gchandle);
+
+NSArray *   xamarin_managed_string_array_to_nsarray (MonoArray *array, guint32 *exception_gchandle);
+NSArray *   xamarin_managed_nsobject_array_to_nsarray (MonoArray *array, guint32 *exception_gchandle);
+NSArray *   xamarin_managed_inativeobject_array_to_nsarray (MonoArray *array, guint32 *exception_gchandle);
 
 /* Copied from SGen */
 
