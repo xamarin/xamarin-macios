@@ -1313,6 +1313,8 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 {
 	id *buf = NULL;
 	NSArray *rv = NULL;
+	int element_size = 0;
+	char *ptr = NULL;
 
 	if (array == NULL)
 		return NULL;
@@ -1323,10 +1325,18 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 
 	buf = (id *) malloc (sizeof (id) * length);
 	MonoClass *element_class = mono_class_get_element_class (mono_object_get_class ((MonoObject *) array));
-	int element_size = mono_class_value_size (element_class, NULL);
-	char *ptr = (char *) mono_array_addr_with_size (array, element_size, 0);
+	bool is_value_type = mono_class_is_valuetype (element_class);
+	if (is_value_type) {
+		element_size = mono_class_value_size (element_class, NULL);
+		ptr = (char *) mono_array_addr_with_size (array, element_size, 0);
+	}
 	for (int i = 0; i < length; i++) {
-		MonoObject *value = mono_value_box (mono_domain_get (), element_class, ptr + element_size * i);
+		MonoObject *value;
+		if (is_value_type) {
+			value = mono_value_box (mono_domain_get (), element_class, ptr + element_size * i);
+		} else {
+			value = mono_array_get (array, MonoObject *, i);
+		}
 		buf [i] = convert (value, context, exception_gchandle);
 		if (*exception_gchandle != 0) {
 			*exception_gchandle = xamarin_get_exception_for_element_conversion_failure (*exception_gchandle, i);
@@ -1353,17 +1363,29 @@ xamarin_convert_nsarray_to_managed_with_func (NSArray *array, MonoClass *managed
 	if (length == 0)
 		return rv;
 
+	bool is_value_type = mono_class_is_valuetype (managedElementType);
+	MonoObject *mobj;
 	void *valueptr = NULL;
-	int element_size = mono_class_value_size (managedElementType, NULL);
-	char *ptr = (char *) mono_array_addr_with_size (rv, element_size, 0);
+	int element_size = 0;
+	char *ptr = NULL;
+
+	if (is_value_type) {
+		element_size = mono_class_value_size (managedElementType, NULL);
+		ptr = (char *) mono_array_addr_with_size (rv, element_size, 0);
+	}
 	for (int i = 0; i < length; i++) {
-		valueptr = convert ([array objectAtIndex: i], valueptr, managedElementType, context, exception_gchandle);
+		if (is_value_type) {
+			valueptr = convert ([array objectAtIndex: i], valueptr, managedElementType, context, exception_gchandle);
+			memcpy (ptr, valueptr, element_size);
+			ptr += element_size;
+		} else {
+			mobj = (MonoObject *) convert ([array objectAtIndex: i], NULL, managedElementType, context, exception_gchandle);
+			mono_array_setref (rv, i, mobj);
+		}
 		if (*exception_gchandle != 0) {
 			*exception_gchandle = xamarin_get_exception_for_element_conversion_failure (*exception_gchandle, i);
 			goto exception_handling;
 		}
-		memcpy (ptr, valueptr, element_size);
-		ptr += element_size;
 	}
 
 exception_handling:
