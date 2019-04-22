@@ -12,7 +12,7 @@ namespace MetalPerformanceShaders {
 			return null;
 		}
 
-		[Obsolete ("Always throw a 'NotSupportedExceptipn' (not a public API).")]
+		[Obsolete ("Always throw a 'NotSupportedException' (not a public API).")]
 		public MPSCnnConvolutionTransposeNode (MPSNNImageNode sourceNode, MPSCnnConvolutionStateNode convolutionState, IMPSCnnConvolutionDataSource weights) : base (IntPtr.Zero)
 		{
 			throw new NotSupportedException ();
