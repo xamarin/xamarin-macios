@@ -381,36 +381,12 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							arg_ptrs [i + mofs] = xamarin_nsstring_to_string (domain, str);
 							LOGZ (" argument %i is NSString: %p = %s\n", i + 1, id_arg, [str UTF8String]);
 						} else if (xamarin_is_class_array (p_klass)) {
-#if DEBUG
-							xamarin_check_objc_type (id_arg, [NSArray class], sel, self, i, method);
-#endif
-							NSArray *arr = (NSArray *) id_arg;
-							MonoClass *e_klass = mono_class_get_element_class (p_klass);
-							MonoType *e = mono_class_get_type (e_klass);
-							MonoArray *m_arr = mono_array_new (domain, e_klass, [arr count]);
-							int j;
-
-							for (j = 0; j < [arr count]; j++) {
-								if (e_klass == mono_get_string_class ()) {
-									NSString *sv = (NSString *) [arr objectAtIndex: j];
-									mono_array_setref (m_arr, j, xamarin_nsstring_to_string (domain, sv));
-								} else {
-									MonoObject *obj;
-									id targ = [arr objectAtIndex: j];
-									obj = xamarin_get_nsobject_with_type_for_ptr (targ, false, e, &exception_gchandle);
-									if (exception_gchandle != 0) {
-										exception_gchandle = xamarin_get_exception_for_parameter (8029, exception_gchandle, "Unable to marshal the array parameter", sel, method, p, i, true);
-										goto exception_handling;
-									}
-#if DEBUG
-									xamarin_verify_parameter (obj, sel, self, targ, i, e_klass, method);
-#endif
-									mono_array_setref (m_arr, j, obj);
-								}
+							arg_ptrs [i + mofs] = xamarin_nsarray_to_managed_array ((NSArray *) id_arg, p, p_klass, &exception_gchandle);
+							if (exception_gchandle != 0) {
+								exception_gchandle = xamarin_get_exception_for_parameter (8029, exception_gchandle, "Unable to marshal the array parameter", sel, method, p, i, true);
+								goto exception_handling;
 							}
-
 							LOGZ (" argument %i is NSArray\n", i + 1);
-							arg_ptrs [i + mofs] = m_arr;
 						} else if (xamarin_is_class_nsobject (p_klass)) {
 							if (semantic == ArgumentSemanticCopy) {
 								id_arg = [id_arg copy];

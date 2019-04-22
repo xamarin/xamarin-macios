@@ -902,10 +902,23 @@ id xamarin_uioffset_to_nsvalue               (MonoObject *value, void *context, 
 
 #pragma clang diagnostic pop
 
+struct conversion_data {
+	MonoDomain *domain;
+	MonoType *element_type;
+	MonoClass *element_class;
+	MonoReflectionType *element_reflection_type;
+};
+
 id
 xamarin_convert_string_to_nsstring (MonoObject *obj, void *context, guint32 *exception_gchandle)
 {
 	return xamarin_string_to_nsstring ((MonoString *) obj, false);
+}
+
+void *
+xamarin_convert_nsstring_to_string (id value, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle)
+{
+	return xamarin_nsstring_to_string (NULL, (NSString *) value);
 }
 
 id
@@ -918,6 +931,20 @@ id
 xamarin_inativeobject_to_nsobject (MonoObject *object, void *context, guint32 *exception_gchandle)
 {
 	return xamarin_get_handle_for_inativeobject (object, exception_gchandle);
+}
+
+void *
+xamarin_nsobject_to_object (id object, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle)
+{
+	struct conversion_data * data = (struct conversion_data *) context;
+	return xamarin_get_nsobject_with_type_for_ptr (object, false, data->element_type, exception_gchandle);
+}
+
+void *
+xamarin_nsobject_to_inativeobject (id object, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle)
+{
+	struct conversion_data * data = (struct conversion_data *) context;
+	return xamarin_get_inative_object_dynamic (object, false, data->element_reflection_type, exception_gchandle);
 }
 
 NSArray *
@@ -963,6 +990,63 @@ xamarin_managed_array_to_nsarray (MonoArray *array, MonoType *managed_type, Mono
 		return NULL;
 	char *msg = xamarin_strdup_printf ("Unable to convert from a managed array of %s to an NSArray.", element_name);
 	*exception_gchandle = xamarin_create_product_exception_with_inner_exception (8032, *exception_gchandle, msg);
+	xamarin_free (msg);
+	xamarin_free (element_name);
+	return NULL;
+}
+
+MonoArray *
+xamarin_nsarray_to_managed_string_array (NSArray *array, guint32 *exception_gchandle)
+{
+	return xamarin_convert_nsarray_to_managed_with_func (array, mono_get_string_class (), xamarin_convert_nsstring_to_string, 0, exception_gchandle);
+}
+
+MonoArray *
+xamarin_nsarray_to_managed_nsobject_array (NSArray *array, MonoType *array_type, MonoClass *element_class, guint32 *exception_gchandle)
+{
+	struct conversion_data data = { 0 };
+	data.domain = mono_domain_get ();
+	data.element_class = element_class == NULL ? mono_class_get_element_class (mono_class_from_mono_type (array_type)) : element_class;
+	data.element_type = mono_class_get_type (data.element_class);
+	data.element_reflection_type = mono_type_get_object (data.domain, data.element_type);
+	return xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_object, &data, exception_gchandle);
+}
+
+MonoArray *
+xamarin_nsarray_to_managed_inativeobject_array (NSArray *array, MonoType *array_type, MonoClass *element_class, guint32 *exception_gchandle)
+{
+	struct conversion_data data = { 0 };
+	data.domain = mono_domain_get ();
+	data.element_class = element_class == NULL ? mono_class_get_element_class (mono_class_from_mono_type (array_type)) : element_class;
+	data.element_type = mono_class_get_type (data.element_class);
+	data.element_reflection_type = mono_type_get_object (data.domain, data.element_type);
+	return xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_inativeobject, &data, exception_gchandle);
+}
+
+MonoArray *
+xamarin_nsarray_to_managed_array (NSArray *array, MonoType *managed_type, MonoClass *managed_class, guint32 *exception_gchandle)
+{
+	if (array == NULL)
+		return NULL;
+
+	if (managed_class == NULL)
+		managed_class = mono_class_from_mono_type (managed_type);
+
+	MonoClass *e_klass = mono_class_get_element_class (managed_class);
+	if (e_klass == mono_get_string_class ()) {
+		return xamarin_nsarray_to_managed_string_array (array, exception_gchandle);
+	} else if (xamarin_is_class_nsobject (e_klass)) {
+		return xamarin_nsarray_to_managed_nsobject_array (array, managed_type, e_klass, exception_gchandle);
+	} else if (xamarin_is_class_inativeobject (e_klass)) {
+		return xamarin_nsarray_to_managed_inativeobject_array (array, managed_type, e_klass, exception_gchandle);
+	}
+
+	// Don't know how to convert: show an exception.
+	char *element_name = xamarin_type_get_full_name (mono_class_get_type (e_klass), exception_gchandle);
+	if (*exception_gchandle != 0)
+		return NULL;
+	char *msg = xamarin_strdup_printf ("Unable to convert from an NSArray to a managed array of %s.", element_name);
+	*exception_gchandle = xamarin_create_product_exception_with_inner_exception (8031, *exception_gchandle, msg);
 	xamarin_free (msg);
 	xamarin_free (element_name);
 	return NULL;
