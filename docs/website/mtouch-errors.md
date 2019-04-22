@@ -3565,6 +3565,16 @@ If the managed binding is from a third-party vendor, please contact the vendor.
 
 If the managed binding is shipped with Xamarin.iOS, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
 
+<a name="MT8032" />
+
+### MT8032: Unable to convert from a managed array of {type} to an NSArray.
+
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.iOS, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
 <a name="MT8033" />
 
 ### MT8033: Unable to marshal the return value of type {type} to Objective-C.
