@@ -54,9 +54,10 @@ enum ArgumentSemantic /* Xcode 4.4 doesn't like this ': int' */ {
 //
 // The `value` parameter is the value to convert.
 //
-// The `ptr` parameter is optional, if passed the resulting value type will be
-// stored here. If NULL, memory is allocated and returned, and the return
-// value must be freed using `xamarin_free`.
+// The `ptr` parameter must not be passed if the managed type is a class. If
+// the managed type is a value type, `ptr` is optional, and if passed the
+// resulting value will be stored here. If NULL, memory is allocated and
+// returned, and the return value must be freed using `xamarin_free`.
 //
 // The `managedType` parameter is the managed type to convert to.
 //
@@ -73,7 +74,7 @@ enum ArgumentSemantic /* Xcode 4.4 doesn't like this ': int' */ {
 // to any exceptions that occur.
 //
 // The return value is:
-// * xamarin_id_to_managed_func: a pointer to the resulting value type. If
+// * xamarin_id_to_managed_func: a pointer to the resulting value. If
 //   `ptr` was passed, this value is also returned, otherwise newly allocated
 //   memory is returned (which must be freed with `xamarin_free`). If an
 //   exception occurs, 'ptr' is returned (and no memory allocated).
