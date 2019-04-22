@@ -3803,39 +3803,20 @@ namespace Registrar {
 					setup_return.AppendLine ("res = *({0} *) mono_object_unbox ((MonoObject *) retval);", rettype);
 				} else if (isArray) {
 					var elementType = ((ArrayType) returntype).ElementType;
-					
-					setup_return.AppendLine ("if (retval) {");
-					setup_return.AppendLine ("int length = mono_array_length ((MonoArray *) retval);");
-					setup_return.AppendLine ("int i;");
-					setup_return.AppendLine ("id *buf = (id *) malloc (sizeof (void *) * length);");
-					setup_return.AppendLine ("for (i = 0; i < length; i++) {");
-					setup_return.AppendLine ("MonoObject *value = mono_array_get ((MonoArray *) retval, MonoObject *, i);");
-					
+					var conversion_func = string.Empty;
 					if (elementType.FullName == "System.String") {
-						setup_return.AppendLine ("buf [i] = xamarin_string_to_nsstring ((MonoString *) value, false);");
+						conversion_func = "xamarin_managed_string_array_to_nsarray";
 					} else if (IsNSObject (elementType)) {
-						setup_return.AppendLine ("buf [i] = xamarin_get_nsobject_handle ((MonoObject *) value);");
+						conversion_func = "xamarin_managed_nsobject_array_to_nsarray";
 					} else if (IsINativeObject (elementType)) {
-						setup_return.AppendLine ("buf [i] = xamarin_get_handle_for_inativeobject ((MonoObject *) value, &exception_gchandle);");
-						setup_return.AppendLine ("xamarin_process_managed_exception_gchandle (exception_gchandle);");
-						setup_return.AppendLine ("if (exception_gchandle != 0) {");
-						setup_return.AppendLine ("free (buf);");
-						setup_return.AppendLine ("goto exception_handling;");
-						setup_return.AppendLine ("}");
+						conversion_func = "xamarin_managed_inativeobject_array_to_nsarray";
 					} else {
 						throw ErrorHelper.CreateError (App, 4111, method.Method, "The registrar cannot build a signature for type `{0}' in method `{1}`.", method.NativeReturnType.FullName, descriptiveMethodName);
 					}
-					
-					setup_return.AppendLine ("}");
-						
-					setup_return.AppendLine ("NSArray *arr = [[NSArray alloc] initWithObjects: buf count: length];");
-					setup_return.AppendLine ("free (buf);");
-					if (!retain)
-						setup_return.AppendLine ("[arr autorelease];");
-					setup_return.AppendLine ("res = arr;");
-					setup_return.AppendLine ("} else {");
-					setup_return.AppendLine ("res = NULL;");
-					setup_return.AppendLine ("}");
+					setup_return.AppendLine ("res = {0} ((MonoArray *) retval, &exception_gchandle);", conversion_func);
+					if (retain)
+						setup_return.AppendLine ("[res retain];");
+					setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					setup_return.AppendLine ("xamarin_framework_peer_lock ();");
 					setup_return.AppendLine ("mt_dummy_use (retval);");
 					setup_return.AppendLine ("xamarin_framework_peer_unlock ();");
