@@ -467,7 +467,7 @@ namespace xharness
 				if (!IsIncluded (project))
 					ignored = true;
 
-				if (!project.SkipiOSVariation && !Harness.SkipiOSDeviceVariations) {
+				if (!project.SkipiOSVariation) {
 					var build64 = new XBuildTask {
 						Jenkins = this,
 						ProjectConfiguration = "Debug64",
@@ -500,7 +500,7 @@ namespace xharness
 					rv.Add (new RunDeviceTask (buildToday, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOSExtensions, BuildOnly = project.BuildOnly || ForceExtensionBuildOnly });
 				}
 
-				if (!project.SkiptvOSVariation && !Harness.SkipTvOSDeviceVariations) {
+				if (!project.SkiptvOSVariation) {
 					var tvOSProject = project.AsTvOSProject ();
 					var buildTV = new XBuildTask {
 						Jenkins = this,
@@ -513,7 +513,7 @@ namespace xharness
 					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedTV.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludetvOS, BuildOnly = project.BuildOnly });
 				}
 
-				if (!project.SkipwatchOSVariation && !Harness.SkipWatchOSDeviceVariations) {
+				if (!project.SkipwatchOSVariation) {
 					var watchOSProject = project.AsWatchOSProject ();
 					var buildWatch = new XBuildTask {
 						Jenkins = this,
