@@ -3492,10 +3492,8 @@ namespace Registrar {
 				case "ObjCRuntime.Selector":
 				case CompatNamespace + ".ObjCRuntime.Selector":
 					if (isRef) {
-						if (isOut) {
-							body_setup.AppendLine ("void *a{0} = NULL;", i);
-						} else {
-							body_setup.AppendLine ("void *a{0} = NULL;", i);
+						body_setup.AppendLine ("MonoObject *a{0} = NULL;", i);
+						if (!isOut) {
 							setup_call_stack.AppendLine ("a{0} = *p{0} ? xamarin_get_selector (*p{0}, &exception_gchandle) : NULL;", i);
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 						}
@@ -3509,10 +3507,8 @@ namespace Registrar {
 				case "ObjCRuntime.Class":
 				case CompatNamespace + ".ObjCRuntime.Class":
 					if (isRef) {
-						if (isOut) {
-							body_setup.AppendLine ("void *a{0} = NULL;", i);
-						} else {
-							body_setup.AppendLine ("void *a{0} = NULL;", i);
+						body_setup.AppendLine ("MonoObject *a{0} = NULL;", i);
+						if (!isOut) {
 							setup_call_stack.AppendLine ("a{0} = *p{0} ? xamarin_get_class (*p{0}, &exception_gchandle) : NULL;", i);
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 						}
