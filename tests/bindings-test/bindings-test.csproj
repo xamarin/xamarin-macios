@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
+    <ObjcBindingApiDefinition Include="..\generator\tests\ref-out-parameters.cs" />
     <ObjcBindingApiDefinition Include="ApiDefinition.generated.cs" />
     <ObjcBindingApiDefinition Include="ApiProtocol.cs" />
   </ItemGroup>
