@@ -29,11 +29,11 @@ _xamarin_i386_common_trampoline:
 	movl	%esp, %ebp
 .cfi_def_cfa_register %ebp
 
-	pushl	%esi # we use %esi as a pointer to our CallState struct. It's a preserved register, so we need to save it.
+	pushl	%esi # we use %esi as a pointer to our XamarinCallState struct. It's a preserved register, so we need to save it.
 
-	subl	$0x24,	%esp	# allocate 32 bytes from the stack. 24 bytes for our CallState struct + 4 bytes for the parameters to xamarin_arch_trampoline + alignment.
+	subl	$0x24,	%esp	# allocate 32 bytes from the stack. 24 bytes for our XamarinCallState struct + 4 bytes for the parameters to xamarin_arch_trampoline + alignment.
 
-	# %esi points our CallState structure (on the stack)
+	# %esi points our XamarinCallState structure (on the stack)
 	movl	%esp,	%esi
 	addl	$0x4,	%esi
 
@@ -44,7 +44,7 @@ _xamarin_i386_common_trampoline:
 	addl	$0x4,	   %ecx
 	movl	%ecx,	12(%esi) # esp (at entry to this function)
 
-	movl	%esi,	  (%esp) # 1st argument to xamarin_arch_trampoline, a pointer to the CallState structure.
+	movl	%esi,	  (%esp) # 1st argument to xamarin_arch_trampoline, a pointer to the XamarinCallState structure.
 	call	_xamarin_arch_trampoline
 
 	# get return value(s)

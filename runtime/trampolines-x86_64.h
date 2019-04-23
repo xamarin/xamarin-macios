@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-struct CallState {
+struct XamarinCallState {
 	uint64_t type;
 	uint64_t rdi;                        // 1st argument
 	union {
@@ -32,13 +32,13 @@ struct CallState {
 };
 
 struct ParamIterator {
-	struct CallState *state;
+	struct XamarinCallState *state;
 	int byte_count;
 	int float_count;
 	uint8_t *stack_next;
 };
 
-void xamarin_arch_trampoline (struct CallState *state);
+void xamarin_arch_trampoline (struct XamarinCallState *state);
 
 #ifdef __cplusplus
 } /* extern "C" */

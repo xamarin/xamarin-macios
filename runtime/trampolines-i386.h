@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-struct CallState {
+struct XamarinCallState {
 	uint32_t type; // the type of trampoline
 	uint32_t eax; // undefined on entry, return value upon exit
 	uint32_t edx; // undefined on entry, return value upon exit
@@ -20,12 +20,12 @@ struct CallState {
 };
 
 struct ParamIterator {
-	struct CallState *state;
+	struct XamarinCallState *state;
 	uint8_t *stack_next;
 	uint8_t *stret;
 };
 
-void xamarin_arch_trampoline (struct CallState *state);
+void xamarin_arch_trampoline (struct XamarinCallState *state);
 
 #ifdef __cplusplus
 } /* extern "C" */
