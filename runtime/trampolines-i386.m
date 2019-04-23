@@ -32,7 +32,7 @@ create_mt_exception (char *msg)
 
 #ifdef TRACE
 static void
-dump_state (struct CallState *state)
+dump_state (struct XamarinCallState *state)
 {
 	fprintf (stderr, "type: %u is_stret: %i self: %p SEL: %s eax: 0x%x edx: 0x%x esp: 0x%x -- double_ret: %f float_ret: %f\n",
 		state->type, state->is_stret (), state->self (), sel_getName (state->sel ()), state->eax, state->edx, state->esp,
@@ -181,7 +181,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 }
 
 void
-xamarin_arch_trampoline (struct CallState *state)
+xamarin_arch_trampoline (struct XamarinCallState *state)
 {
 	dump_state (state);
 	struct ParamIterator iter;
