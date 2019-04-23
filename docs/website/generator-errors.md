@@ -39,6 +39,12 @@ An invalid target framework was passed using the --target-framework argument. Pl
 
 This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
+### <a name='BI0099'/>BI0099: Internal error *. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+
+This error message is reported when an internal consistency check fails.
+
+This usually indicates a bug in binding generator; please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+
 # BI1xxx: code generation
 
 <!-- 1xxx: code generation -->
@@ -177,6 +183,8 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 ### <a name='BI1062'/>BI1062: The member '*' contains ref/out parameters and must not be decorated with [Async].
 
 ### <a name='BI1063'/>BI1063: The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '*'.
+
+### <a name='BI1064'/>BI1064: Unsupported ref/out parameter type '{type}' for the parameter '{name}' in {method}.
 
 ### <a name='BI1065'/>BI1065: Unsupported parameter type '{type}' for the parameter '{name}' in {method}.
 

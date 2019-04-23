@@ -1069,6 +1069,20 @@ public partial class Generator : IMemberGatherer {
 		return (pt == TypeManager.System_Int32 || pt == TypeManager.System_Int64 || pt == TypeManager.System_Byte || pt == TypeManager.System_Int16);
 	}
 
+	public bool IsNSObject (Type type)
+	{
+		if (type == TypeManager.NSObject)
+			return true;
+
+		if (type.IsSubclassOf (TypeManager.NSObject))
+			return true;
+
+		if (BindThirdPartyLibrary)
+			return false;
+
+		return type.IsInterface;
+	}
+
 	public string PrimitiveType (Type t, bool formatted = false, EnumMode enum_mode = EnumMode.Compat)
 	{
 		if (t == TypeManager.System_Void)
@@ -4117,19 +4131,76 @@ public partial class Generator : IMemberGatherer {
 
 			// Handle ByRef
 			if (mai.Type.IsByRef && mai.Type.GetElementType ().IsValueType == false){
-				string isForcedOwns;
-				var isForced = HasForcedAttribute (pi, out isForcedOwns);
-				by_ref_init.AppendFormat ("IntPtr {0}Value = IntPtr.Zero;\n", pi.Name.GetSafeParamName ());
+				// For out/ref parameters we support:
+				// * string and string[]
+				// * NSObject (and subclasses), and array of NSObject (and subclasses)
+				// * INativeObject subclasses (but not INativeObject itself), and array of INativeObject subclasses (but not arrays of INativeObject itself)
+				// 	* Except that we do not support arrays of Selector
+				// Modifications to an array (i.e. changing an element) are not marshalled back.
+				// If the array is modified, then a new array instance must be created and assigned to the ref/out parameter for us to marshal back any modifications.
+				var elementType = mai.Type.GetElementType ();
+				var isString = elementType == TypeManager.System_String;
+				var isINativeObject = elementType == TypeManager.INativeObject;
+				var isINativeObjectSubclass = !isINativeObject && TypeManager.INativeObject.IsAssignableFrom (elementType);
+				var isNSObject = IsNSObject (elementType);
+				var isArray = elementType.IsArray;
+				var isArrayOfString = isArray && elementType.GetElementType () == TypeManager.System_String;
+				var isArrayOfNSObject = isArray && IsNSObject (elementType.GetElementType ());
+				var isArrayOfINativeObject = isArray && elementType.GetElementType () == TypeManager.INativeObject;
+				var isArrayOfINativeObjectSubclass = isArray && TypeManager.INativeObject.IsAssignableFrom (elementType.GetElementType ());
+				var isArrayOfSelector = isArray && elementType.GetElementType () == TypeManager.Selector;
 
-				by_ref_processing.AppendLine();
-				if (mai.Type.GetElementType () == TypeManager.System_String){
-					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? NSString.FromHandle ({0}Value) : null;", pi.Name.GetSafeParamName ());
-				} else if (pi.ParameterType.GetElementType ().IsArray) {
-					by_ref_processing.AppendFormat ("{0} = {0}Value != IntPtr.Zero ? NSArray.ArrayFromHandle<{1}> ({0}Value) : null;", pi.Name.GetSafeParamName (), RenderType (mai.Type.GetElementType ().GetElementType ()));
-				} else if (isForced) {
-					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? Runtime.GetINativeObject<{1}> ({0}Value, {2}) : null;", pi.Name.GetSafeParamName (), RenderType (mai.Type.GetElementType ()), isForcedOwns);
+				if (!isString && !isArrayOfNSObject && !isNSObject && !isArrayOfString && !isINativeObjectSubclass && !isArrayOfINativeObjectSubclass || isINativeObject || isArrayOfSelector || isArrayOfINativeObject) {
+					exceptions.Add (ErrorHelper.CreateError (1064, "Unsupported ref/out parameter type '{0}' for the parameter '{1}' in {2}.{3}.", elementType.FullName, string.IsNullOrEmpty (pi.Name) ? $"#{pi.Position}" : pi.Name, mi.DeclaringType.FullName, mi.Name));
+					continue;
+				}
+
+				if (pi.IsOut) {
+					by_ref_init.AppendFormat ("IntPtr {0}Value = IntPtr.Zero;\n", pi.Name.GetSafeParamName ());
 				} else {
-					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? Runtime.GetNSObject<{1}> ({0}Value) : null;", pi.Name.GetSafeParamName (), RenderType (mai.Type.GetElementType ()));
+					by_ref_init.AppendFormat ("IntPtr {0}Value = ", pi.Name.GetSafeParamName ());
+					if (isString) {
+						by_ref_init.AppendFormat ("NSString.CreateNative ({0}, true);\n", pi.Name.GetSafeParamName ());
+						by_ref_init.AppendFormat ("IntPtr {0}OriginalValue = {0}Value;\n", pi.Name.GetSafeParamName ());
+					} else if (isArrayOfNSObject || isArrayOfINativeObjectSubclass) {
+						by_ref_init.Insert (0, string.Format ("NSArray {0}ArrayValue = NSArray.FromNSObjects ({0});\n", pi.Name.GetSafeParamName ()));
+						by_ref_init.AppendFormat ("{0}ArrayValue == null ? IntPtr.Zero : {0}ArrayValue.Handle;\n", pi.Name.GetSafeParamName ());
+					} else if (isArrayOfString) {
+						by_ref_init.Insert (0, string.Format ("NSArray {0}ArrayValue = {0} == null ? null : NSArray.FromStrings ({0});\n", pi.Name.GetSafeParamName ()));
+						by_ref_init.AppendFormat ("{0}ArrayValue == null ? IntPtr.Zero : {0}ArrayValue.Handle;\n", pi.Name.GetSafeParamName ());
+					} else if (isNSObject || isINativeObjectSubclass) {
+						by_ref_init.AppendFormat ("{0} == null ? IntPtr.Zero : {0}.Handle;\n", pi.Name.GetSafeParamName ());
+					} else {
+						throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out (input) code for {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+					}
+				}
+
+				if (isString) {
+					if (!pi.IsOut)
+						by_ref_processing.AppendFormat ("if ({0}Value != {0}OriginalValue)\n\t", pi.Name.GetSafeParamName ());
+					by_ref_processing.AppendFormat ("{0} = NSString.FromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
+				} else if (isArray) {
+					if (!pi.IsOut)
+						by_ref_processing.AppendFormat ("if ({0}Value != ({0}ArrayValue == null ? IntPtr.Zero : {0}ArrayValue.Handle))\n\t", pi.Name.GetSafeParamName ());
+
+					if (isArrayOfNSObject || isArrayOfINativeObjectSubclass) {
+						by_ref_processing.AppendFormat ("{0} = NSArray.ArrayFromHandle<{1}> ({0}Value);\n", pi.Name.GetSafeParamName (), RenderType (elementType.GetElementType ()));
+					} else if (isArrayOfString) {
+						by_ref_processing.AppendFormat ("{0} = NSArray.StringArrayFromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
+					} else {
+						throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out code for array {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+					}
+
+					if (!pi.IsOut)
+						by_ref_processing.AppendFormat ("{0}ArrayValue?.Dispose ();\n", pi.Name.GetSafeParamName ());
+				} else if (isNSObject) {
+					by_ref_processing.AppendFormat ("{0} = Runtime.GetNSObject<{1}> ({0}Value);\n", pi.Name.GetSafeParamName (), RenderType (elementType));
+				} else if (isINativeObjectSubclass) {
+					if (!pi.IsOut)
+						by_ref_processing.AppendFormat ("if ({0}Value != ({0} == null ? IntPtr.Zero : {0}.Handle))\n\t", pi.Name.GetSafeParamName ());
+					by_ref_processing.AppendFormat ("{0} = Runtime.GetINativeObject<{1}> ({0}Value, false);\n", pi.Name.GetSafeParamName (), RenderType (elementType));
+				} else {
+					throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out (output) code for {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				}
 			}
 		}
