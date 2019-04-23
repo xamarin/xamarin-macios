@@ -102,11 +102,11 @@ namespace xharness
 					capturedLog.WriteLine ("Failed to load:");
 					capturedLog.WriteLine (v.Exception);
 					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
-				} else if (v.IsCompleted) { // TODO
+				} else if (v.IsCompleted) {
 					var devices = loadable as Devices;
 					var devicesTypes = new StringBuilder ();
 					if (devices != null) {
-						if (devices.Connected32BitIOS.Any()) {
+						if (devices.Connected32BitIOS.Any ()) {
 							devicesTypes.Append ("iOS 32 bit");
 						}
 						if (devices.Connected64BitIOS.Any ()) {
@@ -119,7 +119,7 @@ namespace xharness
 							devicesTypes.Append (devicesTypes.Length == 0 ? "watchOS" : ", watchOS");
 						}
 					}
-					capturedLog.Description = (devices == null)? $"{name} Listing (ok)." : $"{name} Listing (ok). Devices types are: {devicesTypes.ToString ()}";
+					capturedLog.Description = (devices == null || devicesTypes.Length == 0)? $"{name} Listing (ok)." : $"{name} Listing (ok). Devices types are: {devicesTypes.ToString ()}";
 				}
 			});
 		}
@@ -139,33 +139,35 @@ namespace xharness
 
 			AppRunnerTarget [] targets;
 			TestPlatform [] platforms;
+			bool [] ignored;
 
 			switch (buildTask.Platform) {
 			case TestPlatform.tvOS:
 				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
 				platforms = new TestPlatform [] { TestPlatform.tvOS };
+				ignored = new [] { false };
 				break;
 			case TestPlatform.watchOS:
 				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
 				platforms = new TestPlatform [] { TestPlatform.watchOS };
+				ignored = new [] { false };
 				break;
 			case TestPlatform.iOS_Unified:
 				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
-				if (IncludeiOS32)
-					platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
-				else 
-					platforms = new TestPlatform [] { TestPlatform.iOS_Unified64 };
+				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
+				ignored = new [] { !IncludeiOS32, false};
 				break;
 			case TestPlatform.iOS_TodayExtension64:
 				targets = new AppRunnerTarget[] { AppRunnerTarget.Simulator_iOS64 };
 				platforms = new TestPlatform[] { TestPlatform.iOS_TodayExtension64 };
+				ignored = new [] { false };
 				break;
 			default:
 				throw new NotImplementedException ();
 			}
 
 			for (int i = 0; i < targets.Length; i++)
-				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.SelectDevices (targets [i], SimulatorLoadLog)) { Platform = platforms [i], Ignored = buildTask.Ignored });
+				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.SelectDevices (targets [i], SimulatorLoadLog)) { Platform = platforms [i], Ignored = ignored[i] || buildTask.Ignored });
 
 			return runtasks;
 		}
