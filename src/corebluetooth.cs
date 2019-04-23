@@ -358,13 +358,6 @@ namespace CoreBluetooth {
 		[Export ("permissions", ArgumentSemantic.Assign)]
 		CBAttributePermissions Permissions { get; set; }
 
-		[NoTV]
-		[NoWatch]
-		[NullAllowed]
-		[Export ("UUID", ArgumentSemantic.Retain)]
-		[Override]
-		CBUUID UUID { get; [Availability (Obsoleted = Platform.Mac_10_13)] set; }
-
 		[Export ("properties", ArgumentSemantic.Assign)]
 		[Override]
 		CBCharacteristicProperties Properties { get; set; }
@@ -573,13 +566,17 @@ namespace CoreBluetooth {
 	interface CBService {
 		[iOS (6,0), Mac (10,9)]
 		[Export ("isPrimary")]
-		bool Primary { get; [NotImplemented ("Not available on CBCharacteristic, only available on CBMutableService")] set; }
+#if XAMCORE_4_0
+		bool Primary { get; }
+#else
+		bool Primary { get; [NotImplemented ("Not available on CBService, only available on CBMutableService")] set; }
+#endif
 
 		[Export ("includedServices", ArgumentSemantic.Retain)]
-		CBService [] IncludedServices { get; [NotImplemented ("Not available on CBCharacteristic, only available on CBMutableService")] set;  }
+		CBService [] IncludedServices { get; [NotImplemented ("Not available on CBService, only available on CBMutableService")] set;  }
 
 		[Export ("characteristics", ArgumentSemantic.Retain)]
-		CBCharacteristic [] Characteristics { get; [NotImplemented ("Not available on CBCharacteristic, only available on CBMutableService")] set;  }
+		CBCharacteristic [] Characteristics { get; [NotImplemented ("Not available on CBService, only available on CBMutableService")] set;  }
 
 		[Export ("peripheral", ArgumentSemantic.Weak)]
 		CBPeripheral Peripheral { get; }
@@ -597,18 +594,6 @@ namespace CoreBluetooth {
 		[Export ("initWithType:primary:")]
 		[PostGet ("UUID")]
 		IntPtr Constructor (CBUUID uuid, bool primary);
-
-		[NoTV]
-		[NoWatch]
-		[Export ("UUID", ArgumentSemantic.Retain)]
-		[Override]
-		CBUUID UUID { get; [Availability (Obsoleted = Platform.Mac_10_13)] set; }
-
-		[NoTV]
-		[NoWatch]
-		[Export ("isPrimary")]
-		[Override]
-		bool Primary { get; set; }
 
 		[Export ("includedServices", ArgumentSemantic.Retain)]
 		[Override]
