@@ -287,6 +287,13 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							} else if (p_klass == mono_get_string_class ()) {
 								arg_frame [ofs] = xamarin_nsstring_to_string (domain, *(NSString **) arg);
 								LOGZ (" argument %i is a ref NSString %p: %p\n", i + 1, arg, arg_frame [ofs]);
+							} else if (xamarin_is_class_array (p_klass)) {
+								arg_frame [ofs] = xamarin_nsarray_to_managed_array (*(NSArray **) arg, p, p_klass, &exception_gchandle);
+								if (exception_gchandle != 0) {
+									exception_gchandle = xamarin_get_exception_for_parameter (8029, exception_gchandle, "Unable to marshal the byref parameter", sel, method, p, i, true);
+									goto exception_handling;
+								}
+								LOGZ (" argument %i is ref NSArray (%p => %p => %p)\n", i + 1, arg, *(NSArray **) arg, arg_frame [ofs]);
 							} else {
 								exception_gchandle = xamarin_get_exception_for_parameter (8029, 0, "Unable to marshal the byref parameter", sel, method, p, i, true);
 								goto exception_handling;
@@ -568,6 +575,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 				if (value == pvalue) {
 					// No need to copy back if the value didn't change
+					// For arrays this means that we won't copy back arrays if an element in the array changed (which can happen in managed code: the array pointer and size are immutable, but array elements can change).
+					// If the developer wants to change an array element, a new array must be created and assigned to the ref parameter.
+					// This is by design: otherwise we'll have to copy arrays even though they didn't change (because we can't know if they changed without comparing every element).
 					LOGZ (" not writing back managed object to argument at index %i (%p => %p) because it didn't change\n", i, arg, value);
 					continue;
 				} else if (value == NULL) {
@@ -585,6 +595,13 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 					if (exception_gchandle != 0)
 						goto exception_handling;
 					LOGZ (" writing back managed INativeObject %p to argument at index %i (%p)\n", value, i + 1, arg);
+				} else if (xamarin_is_class_array (p_klass)) {
+					obj = xamarin_managed_array_to_nsarray ((MonoArray *) value, p, p_klass, &exception_gchandle);
+					if (exception_gchandle != 0) {
+						exception_gchandle = xamarin_get_exception_for_parameter (8030, exception_gchandle, "Unable to marshal the out/ref parameter", sel, method, p, i, false);
+						goto exception_handling;
+					}
+					LOGZ (" writing back managed array %p to argument at index %i (%p)\n", value, i + 1, arg);
 				} else {
 					exception_gchandle = xamarin_get_exception_for_parameter (8030, 0, "Unable to marshal the out/ref parameter", sel, method, p, i, false);
 					goto exception_handling;
