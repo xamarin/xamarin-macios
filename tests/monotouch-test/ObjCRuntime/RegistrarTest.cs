@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
 #if XAMCORE_2_0
+using CoreFoundation;
+using MapKit;
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 using AddressBook;
 using AddressBookUI;
@@ -443,6 +446,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		static extern IntPtr class_getProperty (IntPtr cls, string name);
+
+		[DllImport ("/usr/lib/libobjc.dylib")]
+		internal static extern IntPtr object_getClass (IntPtr obj);
 
 		[Test]
 		public void TestNonVirtualProperty ()
@@ -2757,6 +2763,2488 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Assert.That (array, Is.EqualTo (obj.ManagedINSCodingArrayProperty), "4B");
 				}
 			}
+		}
+		[Test]
+		public void RefOutTest_CFBundle ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testCFBundle:a:b:");
+				var dummyObj = CFBundle.GetMain ();
+				CFBundle refObj = null;
+				CFBundle outObj = null;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestCFBundle (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "CFBundle-1A-ref");
+				Assert.IsNull (outObj, "CFBundle-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestCFBundle (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "CFBundle-1M-ref");
+				Assert.IsNull (outObj, "CFBundle-1M-out");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "CFBundle-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "CFBundle-1DA-out");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "CFBundle-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "CFBundle-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestCFBundle (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj.Handle, refObj.Handle, "CFBundle-2A-ref");
+				Assert.AreSame (dummyObj, refObj, "CBundle-2A-ref-same");
+				Assert.IsNull (outObj, "CFBundle-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestCFBundle (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj.Handle, refObj.Handle, "CFBundle-2M-ref");
+				Assert.AreSame (dummyObj, refObj, "CBundle-2M-ref-same");
+				Assert.IsNull (outObj, "CFBundle-2M-out");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "CFBundle-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "CFBundle-2DA-out");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "CFBundle-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "CFBundle-2DM-out");
+
+
+				/// 3 set both parameteres to the same pointer of a CFBundle
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestCFBundle (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj.Handle, refObj.Handle, "CFBundle-3A-ref");
+				Assert.AreSame (dummyObj, refObj, "CBundle-3A-ref-same");
+				Assert.AreEqual (dummyObj.Handle, outObj.Handle, "CFBundle-3A-out");
+				Assert.AreNotSame (dummyObj, outObj, "CBundle-3A-ref-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestCFBundle (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj.Handle, refObj.Handle, "CFBundle-3M-ref");
+				Assert.AreNotSame (dummyObj, refObj, "CBundle-3M-ref-same");
+				Assert.AreEqual (dummyObj.Handle, outObj.Handle, "CFBundle-3M-out");
+				Assert.AreNotSame (dummyObj, outObj, "CBundle-3M-ref-out");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "CFBundle-3DA-ref");
+				Assert.AreEqual (dummyObj.Handle, outValue, "CFBundle-3DA-out");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "CFBundle-3DM-ref");
+				Assert.AreEqual (dummyObj.Handle, outValue, "CFBundle-3DM-out");
+
+
+				/// 4 set both parameteres to different pointers of a CFBundle
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				obj.TestCFBundle (action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "CFBundle-4A-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "CFBundle-4A-out");
+				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "CBundle-4A-ref-distinct");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				obj.TestCFBundle (action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "CFBundle-4M-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "CFBundle-4M-out");
+				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "CBundle-4M-ref-distinct");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotEqual (IntPtr.Zero, refValue, "CFBundle-4DA-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outValue, "CFBundle-4DA-out");
+				Assert.AreNotEqual (refValue, outValue, "CBundle-4DA-ref-distinct");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotEqual (IntPtr.Zero, refValue, "CFBundle-4DM-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outValue, "CFBundle-4DM-out");
+				Assert.AreNotEqual (refValue, outValue, "CBundle-4DM-ref-distinct");
+			}
+		}
+
+		[Test]
+		public void RefOutTest_INSCoding ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testINSCoding:a:b:");
+				INSCoding dummyObj = new NSString ("Dummy obj");
+				INSCoding refObj = null;
+				INSCoding outObj = null;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestINSCoding (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSCoding-1A-ref");
+				Assert.IsNull (outObj, "NSCoding-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestINSCoding (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSCoding-1M-ref");
+				Assert.IsNull (outObj, "NSCoding-1M-out");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSCoding-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSCoding-1DA-out");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSCoding-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSCoding-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestINSCoding (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj.Handle, refObj.Handle, "NSCoding-2A-ref");
+				Assert.AreSame (dummyObj, refObj, "NSCoding-2A-ref-same");
+				Assert.IsNull (outObj, "NSCoding-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestINSCoding (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj.Handle, refObj.Handle, "NSCoding-2M-ref");
+				Assert.AreSame (dummyObj, refObj, "NSCoding-2M-ref-same");
+				Assert.IsNull (outObj, "NSCoding-2M-out");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "NSCoding-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSCoding-2DA-out");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "NSCoding-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSCoding-2DM-out");
+
+
+				/// 3 set both parameteres to the same pointer of a NSCoding
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestINSCoding (action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (dummyObj.Handle, refObj.Handle, "NSCoding-3A-ref");
+				Assert.AreNotSame (dummyObj, refObj, "NSCoding-3A-ref-same");
+				Assert.AreNotEqual (dummyObj.Handle, outObj.Handle, "NSCoding-3A-out");
+				Assert.AreNotSame (dummyObj, outObj, "NSCoding-3A-ref-out");
+				Assert.AreEqual (refObj.Handle, outObj.Handle, "NSCoding-3A-out-ref-eq");
+				Assert.AreNotSame (refObj, outObj, "NSCoding-3A-ref-out-not-safe");
+				Assert.That (refObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-3A-ref-wrapper-type");
+				Assert.That (outObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-3A-ref-wrapper-type");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestINSCoding (action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (dummyObj.Handle, refObj.Handle, "NSCoding-3M-ref");
+				Assert.AreNotSame (dummyObj, refObj, "NSCoding-3M-ref-same");
+				Assert.AreNotEqual (dummyObj.Handle, outObj.Handle, "NSCoding-3M-out");
+				Assert.AreNotSame (dummyObj, outObj, "NSCoding-3M-ref-out");
+				Assert.AreEqual (refObj.Handle, outObj.Handle, "NSCoding-3M-out-ref-eq");
+				Assert.AreSame (refObj, outObj, "NSCoding-3M-ref-out-not-safe");
+				Assert.That (refObj, Is.TypeOf<NSString> (), "NSCoding-3M-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSString> (), "NSCoding-3M-ref-wrapper-type");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotEqual (dummyObj.Handle, refValue, "NSCoding-3DA-ref");
+				Assert.AreNotEqual (dummyObj.Handle, outValue, "NSCoding-3DA-out");
+				Assert.AreSame (refObj, outObj, "NSCoding-3DA-out-ref-same");
+				Assert.That (refObj, Is.TypeOf<NSString> (), "NSCoding-3DA-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSString> (), "NSCoding-3DA-ref-wrapper-type");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotEqual (dummyObj.Handle, refValue, "NSCoding-3DM-ref");
+				Assert.AreNotEqual (dummyObj.Handle, outValue, "NSCoding-3DM-out");
+				Assert.AreSame (refObj, outObj, "NSCoding-3DM-out-ref-eq");
+				Assert.That (refObj, Is.TypeOf<NSString> (), "NSCoding-3DM-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSString> (), "NSCoding-3DM-ref-wrapper-type");
+
+
+				/// 4 set both parameteres to different pointers of a NSCoding
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				obj.TestINSCoding (action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSCoding-4A-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSCoding-4A-out");
+				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSCoding-4A-ref-distinct");
+				Assert.That (refObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
+				Assert.That (outObj.GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				obj.TestINSCoding (action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSCoding-4M-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSCoding-4M-out");
+				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSCoding-4M-ref-distinct");
+				Assert.That (refObj, Is.TypeOf<NSString> (), "NSCoding-4M-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSString> (), "NSCoding-4M-ref-wrapper-type");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSCoding-4DA-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSCoding-4DA-out");
+				Assert.AreNotEqual (refValue, outValue, "NSCoding-4DA-ref-distinct");
+				Assert.That (refObj, Is.TypeOf<NSString> (), "NSCoding-4DA-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSString> (), "NSCoding-4DA-ref-wrapper-type");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSCoding-4DM-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSCoding-4DM-out");
+				Assert.AreNotEqual (refValue, outValue, "NSCoding-4DM-ref-distinct");
+				Assert.That (refObj, Is.TypeOf<NSString> (), "NSCoding-4DM-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSString> (), "NSCoding-4DM-ref-wrapper-type");
+			}
+		}
+
+		[Test]
+		public void RefOutTest_NSObject ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testNSObject:a:b:");
+				NSObject dummyObj = new NSString ("Dummy obj");
+				NSObject refObj = null;
+				NSObject outObj = null;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestNSObject (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSObject-1A-ref");
+				Assert.IsNull (outObj, "NSObject-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestNSObject (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSObject-1M-ref");
+				Assert.IsNull (outObj, "NSObject-1M-out");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSObject-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSObject-1DA-out");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSObject-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSObject-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestNSObject (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj.Handle, refObj.Handle, "NSObject-2A-ref");
+				Assert.AreSame (dummyObj, refObj, "NSObject-2A-ref-same");
+				Assert.IsNull (outObj, "NSObject-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestNSObject (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj.Handle, refObj.Handle, "NSObject-2M-ref");
+				Assert.AreSame (dummyObj, refObj, "NSObject-2M-ref-same");
+				Assert.IsNull (outObj, "NSObject-2M-out");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "NSObject-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSObject-2DA-out");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "NSObject-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSObject-2DM-out");
+
+
+				/// 3 set both parameteres to the same pointer of a NSObject
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestNSObject (action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (dummyObj.Handle, refObj.Handle, "NSObject-3A-ref");
+				Assert.AreNotEqual (dummyObj.Handle, outObj.Handle, "NSObject-3A-out");
+				Assert.AreSame (refObj, outObj, "NSObject-3A-ref-out-not-safe");
+				Assert.That (refObj, Is.TypeOf<NSObject> (), "NSObject-3A-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSObject> (), "NSObject-3A-ref-wrapper-type");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestNSObject (action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (dummyObj.Handle, refObj.Handle, "NSObject-3M-ref");
+				Assert.AreNotEqual (dummyObj.Handle, outObj.Handle, "NSObject-3M-out");
+				Assert.AreSame (refObj, outObj, "NSObject-3M-ref-out-not-safe");
+				Assert.That (refObj, Is.TypeOf<NSObject> (), "NSObject-3M-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSObject> (), "NSObject-3M-ref-wrapper-type");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotEqual (dummyObj.Handle, refValue, "NSObject-3DA-ref");
+				Assert.AreNotEqual (dummyObj.Handle, outValue, "NSObject-3DA-out");
+				Assert.AreEqual (refValue, outValue, "NSObject-3DA-out-ref-same");
+				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSObject> (), "NSObject-3DA-ref-wrapper-type");
+				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSObject> (), "NSObject-3DA-ref-wrapper-type");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotEqual (dummyObj.Handle, refValue, "NSObject-3DM-ref");
+				Assert.AreNotEqual (dummyObj.Handle, outValue, "NSObject-3DM-out");
+				Assert.AreEqual (refValue, outValue, "NSObject-3DM-out-ref-eq");
+				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSObject> (), "NSObject-3DM-ref-wrapper-type");
+				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSObject> (), "NSObject-3DM-ref-wrapper-type");
+
+
+				/// 4 set both parameteres to different pointers of a NSObject
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				obj.TestNSObject (action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSObject-4A-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSObject-4A-out");
+				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSObject-4A-ref-distinct");
+				Assert.That (refObj, Is.TypeOf<NSObject> (), "NSObject-4A-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSObject> (), "NSObject-4A-ref-wrapper-type");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				obj.TestNSObject (action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSObject-4M-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSObject-4M-out");
+				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSObject-4M-ref-distinct");
+				Assert.That (refObj, Is.TypeOf<NSObject> (), "NSObject-4M-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSObject> (), "NSObject-4M-ref-wrapper-type");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSObject-4DA-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSObject-4DA-out");
+				Assert.AreNotEqual (refValue, outValue, "NSObject-4DA-ref-distinct");
+				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSObject> (), "NSObject-4DA-ref-wrapper-type");
+				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSObject> (), "NSObject-4DA-ref-wrapper-type");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSObject-4DM-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSObject-4DM-out");
+				Assert.AreNotEqual (refValue, outValue, "NSObject-4DM-ref-distinct");
+				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSObject> (), "NSObject-4DM-ref-wrapper-type");
+				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSObject> (), "NSObject-4DM-ref-wrapper-type");
+			}
+		}
+
+		[Test]
+		public void RefOutTest_NSValue ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testNSValue:a:b:");
+				var dummyObj = NSValue.FromMKCoordinate (new CLLocationCoordinate2D (3, 14));
+				NSValue refObj = null;
+				NSValue outObj = null;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestValue (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSValue-1A-ref");
+				Assert.IsNull (outObj, "NSValue-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestValue (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSValue-1M-ref");
+				Assert.IsNull (outObj, "NSValue-1M-out");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSValue-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSValue-1DA-out");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSValue-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSValue-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestValue (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj.Handle, refObj.Handle, "NSValue-2A-ref");
+				Assert.AreSame (dummyObj, refObj, "NSValue-2A-ref-same");
+				Assert.IsNull (outObj, "NSValue-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestValue (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj.Handle, refObj.Handle, "NSValue-2M-ref");
+				Assert.AreSame (dummyObj, refObj, "NSValue-2M-ref-same");
+				Assert.IsNull (outObj, "NSValue-2M-out");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "NSValue-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSValue-2DA-out");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "NSValue-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSValue-2DM-out");
+
+
+				/// 3 set both parameteres to the same pointer of a NSValue
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestValue (action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (dummyObj.Handle, refObj.Handle, "NSValue-3A-ref");
+				Assert.AreNotEqual (dummyObj.Handle, outObj.Handle, "NSValue-3A-out");
+				Assert.AreSame (refObj, outObj, "NSValue-3A-ref-out-not-safe");
+				Assert.That (refObj, Is.TypeOf<NSValue> (), "NSValue-3A-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSValue> (), "NSValue-3A-ref-wrapper-type");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestValue (action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (dummyObj.Handle, refObj.Handle, "NSValue-3M-ref");
+				Assert.AreNotEqual (dummyObj.Handle, outObj.Handle, "NSValue-3M-out");
+				Assert.AreSame (refObj, outObj, "NSValue-3M-ref-out-not-safe");
+				Assert.That (refObj, Is.TypeOf<NSValue> (), "NSValue-3M-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSValue> (), "NSValue-3M-ref-wrapper-type");
+
+				// direct native
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotEqual (dummyObj.Handle, refValue, "NSValue-3DA-ref");
+				Assert.AreNotEqual (dummyObj.Handle, outValue, "NSValue-3DA-out");
+				Assert.AreEqual (refValue, outValue, "NSValue-3DA-out-ref-same");
+				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSValue> (), "NSValue-3DA-ref-wrapper-type");
+				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSValue> (), "NSValue-3DA-ref-wrapper-type");
+
+				// direct managed
+				refValue = dummyObj.Handle; // set to non-null
+				outValue = dummyObj.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotEqual (dummyObj.Handle, refValue, "NSValue-3DM-ref");
+				Assert.AreNotEqual (dummyObj.Handle, outValue, "NSValue-3DM-out");
+				Assert.AreEqual (refValue, outValue, "NSValue-3DM-out-ref-eq");
+				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSValue> (), "NSValue-3DM-ref-wrapper-type");
+				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSValue> (), "NSValue-3DM-ref-wrapper-type");
+
+
+				/// 4 set both parameteres to different pointers of a NSValue
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				obj.TestValue (action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSValue-4A-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSValue-4A-out");
+				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSValue-4A-ref-distinct");
+				Assert.That (refObj, Is.TypeOf<NSValue> (), "NSValue-4A-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSValue> (), "NSValue-4A-ref-wrapper-type");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				obj.TestValue (action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSValue-4M-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSValue-4M-out");
+				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSValue-4M-ref-distinct");
+				Assert.That (refObj, Is.TypeOf<NSValue> (), "NSValue-4M-ref-wrapper-type");
+				Assert.That (outObj, Is.TypeOf<NSValue> (), "NSValue-4M-ref-wrapper-type");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSValue-4DA-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSValue-4DA-out");
+				Assert.AreNotEqual (refValue, outValue, "NSValue-4DA-ref-distinct");
+				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSValue> (), "NSValue-4DA-ref-wrapper-type");
+				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSValue> (), "NSValue-4DA-ref-wrapper-type");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSValue-4DM-ref");
+				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSValue-4DM-out");
+				Assert.AreNotEqual (refValue, outValue, "NSValue-4DM-ref-distinct");
+				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSValue> (), "NSValue-4DM-ref-wrapper-type");
+				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSValue> (), "NSValue-4DM-ref-wrapper-type");
+			}
+		}
+
+		[Test]
+		public void RefOutTest_String ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testString:a:b:");
+				var dummyObj = "dummy string";
+				var dummyObjHandle = NSString.CreateNative (dummyObj, true);
+				string refObj = null;
+				string outObj = null;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestString (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "String-1A-ref");
+				Assert.IsNull (outObj, "String-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestString (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "String-1M-ref");
+				Assert.IsNull (outObj, "String-1M-out");
+
+				// direct native
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "String-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "String-1DA-out");
+
+				// direct managed
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "String-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "String-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestString (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj, refObj, "String-2A-ref");
+				Assert.IsNull (outObj, "String-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestString (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj, refObj, "String-2M-ref");
+				Assert.IsNull (outObj, "String-2M-out");
+
+				// direct native
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj, NSString.FromHandle (refValue), "String-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "String-2DA-out");
+
+				// direct managed
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj, NSString.FromHandle (refValue), "String-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "String-2DM-out");
+
+
+				/// 3 set both parameteres to the same pointer of a String
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestString (action << 0, ref refObj, out outObj);
+				Assert.AreEqual ("A constant native string", refObj, "String-3A-ref");
+				Assert.AreEqual ("A constant native string", outObj, "String-3A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestString (action << 8, ref refObj, out outObj);
+				Assert.AreEqual ("A constant managed string", refObj, "String-3M-ref");
+				Assert.AreEqual ("A constant managed string", outObj, "String-3M-out");
+
+				// direct native
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotEqual (refValue, outValue, "String-3DA-eq"); // The managed roundtrip means 'outValue' is re-created (because it's nulled out upon entering managed code)
+				Assert.AreEqual ("A constant native string", NSString.FromHandle (refValue), "String-3DA-ref");
+				Assert.AreEqual ("A constant native string", NSString.FromHandle (outValue), "String-3DA-out");
+
+				// direct managed
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotEqual (refValue, outValue, "String-3DM-eq"); // The managed roundtrip means 'outValue' is re-created (because it's nulled out upon entering managed code)
+				Assert.AreEqual ("A constant managed string", NSString.FromHandle (refValue), "String-3DM-ref");
+				Assert.AreEqual ("A constant managed string", NSString.FromHandle (outValue), "String-3DM-out");
+
+
+				/// 4 set both parameteres to different pointers of a String
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				obj.TestString (action << 0, ref refObj, out outObj);
+				Assert.AreEqual ("Hello Xamarin", refObj, "String-4A-ref-value");
+				Assert.AreEqual ("Hello Microsoft", outObj, "String-4A-out-value");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				obj.TestString (action << 8, ref refObj, out outObj);
+				Assert.AreEqual ("Hello Xamarin from managed", refObj, "String-4M-ref-value");
+				Assert.AreEqual ("Hello Microsoft from managed", outObj, "String-4M-out-value");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual ("Hello Xamarin", NSString.FromHandle (refValue), "String-4DA-ref-value");
+				Assert.AreEqual ("Hello Microsoft", NSString.FromHandle (outValue), "String-4DA-out-value");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual ("Hello Xamarin from managed", NSString.FromHandle (refValue), "String-4DM-ref-value");
+				Assert.AreEqual ("Hello Microsoft from managed", NSString.FromHandle (outValue), "String-4DM-out-value");
+			}
+		}
+
+		[Test]
+		public void RefOutTest_Int ()
+		{
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testInt:a:b:");
+				var dummyObj = 314;
+				int refObj = 0;
+				int outObj = 0;
+				int action;
+
+				/// 1: set both to 0
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestInt (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (0, refObj, "Int-1A-ref");
+				Assert.AreEqual (0, outObj, "Int-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestInt (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (0, refObj, "Int-1M-ref");
+				Assert.AreEqual (0, outObj, "Int-1M-out");
+
+				// direct native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 0, ref refObj, out outObj);
+				Assert.AreEqual (0, refObj, "Int-1DA-ref");
+				Assert.AreEqual (0, outObj, "Int-1DA-out");
+
+				// direct managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 8, ref refObj, out outObj);
+				Assert.AreEqual (0, refObj, "Int-1DM-ref");
+				Assert.AreEqual (0, outObj, "Int-1DM-out");
+
+				/// 2: N/A for testInt
+
+				/// 3 set both parameteres to the same pointer of a Int
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestInt (action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (dummyObj, refObj, "Int-3A-ref");
+				Assert.AreNotEqual (dummyObj, outObj, "Int-3A-out");
+				Assert.AreEqual (refObj, outObj, "Int-3A-out-ref-eq");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				obj.TestInt (action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (dummyObj, refObj, "Int-3M-ref");
+				Assert.AreNotEqual (dummyObj, outObj, "Int-3M-out");
+				Assert.AreEqual (refObj, outObj, "Int-3M-out-ref-eq");
+
+				// direct native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (dummyObj, refObj, "Int-3DA-ref");
+				Assert.AreNotEqual (dummyObj, outObj, "Int-3DA-out");
+				Assert.AreEqual (refObj, outObj, "Int-3DA-out-ref-same");
+
+				// direct managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (dummyObj, refObj, "Int-3DM-ref");
+				Assert.AreNotEqual (dummyObj, outObj, "Int-3DM-out");
+				Assert.AreEqual (refObj, outObj, "Int-3DM-out-ref-eq");
+
+
+				/// 4 set both parameteres to different pointers of a Int
+				action = 4;
+
+				// native
+				refObj = 0; // set to 0
+				outObj = 0; // set to 0
+				obj.TestInt (action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (0, refObj, "Int-4A-ref");
+				Assert.AreNotEqual (0, outObj, "Int-4A-out");
+				Assert.AreNotEqual (refObj, outObj, "Int-4A-ref-distinct");
+
+				// managed
+				refObj = 0; // set to 0
+				outObj = 0; // set to 0
+				obj.TestInt (action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (0, refObj, "Int-4M-ref");
+				Assert.AreNotEqual (0, outObj, "Int-4M-out");
+				Assert.AreNotEqual (refObj, outObj, "Int-4M-ref-distinct");
+
+				// direct native
+				refObj = 0; // set to 0
+				outObj = 0; // set to 0
+				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 0, ref refObj, out outObj);
+				Assert.AreNotEqual (0, refObj, "Int-4DA-ref");
+				Assert.AreNotEqual (0, outObj, "Int-4DA-out");
+				Assert.AreNotEqual (refObj, outObj, "Int-4DA-ref-distinct");
+				Assert.AreEqual (3141592, refObj, "Int-4DA-ref-value");
+				Assert.AreEqual (2718282, outObj, "Int-4DA-out-value");
+
+				// direct managed
+				refObj = 0; // set to 0
+				outObj = 0; // set to 0
+				Messaging.void_objc_msgSend_int_int_int (obj.Handle, sel, action << 8, ref refObj, out outObj);
+				Assert.AreNotEqual (0, refObj, "Int-4DM-ref");
+				Assert.AreNotEqual (0, outObj, "Int-4DM-out");
+				Assert.AreNotEqual (refObj, outObj, "Int-4DM-ref-distinct");
+				Assert.AreEqual (3141592, refObj, "Int-4DM-ref-value");
+				Assert.AreEqual (2718282, outObj, "Int-4DM-out-value");
+			}
+		}
+
+		[Test]
+		public void RefOutTest_Sel ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testSelector:a:b:");
+				var dummyObj = new Selector ("dummy string");
+				var dummyObjHandle = dummyObj.Handle;
+				Selector refObj = null;
+				Selector outObj = null;
+				TestMethod<Selector> test = obj.TestSelector;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "Selector-1A-ref");
+				Assert.IsNull (outObj, "Selector-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "Selector-1M-ref");
+				Assert.IsNull (outObj, "Selector-1M-out");
+
+				// direct native
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				IntPtr x = Marshal.AllocHGlobal (16);
+				//Marshal.WriteIntPtr (x, (IntPtr) 0xdeadf00d);
+				//Marshal.WriteIntPtr (x, 8, (IntPtr) 0xbabebabe);
+				//Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, x, x);
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "Selector-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "Selector-1DA-out");
+
+				// direct managed
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "Selector-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "Selector-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj, refObj, "Selector-2A-ref");
+				Assert.IsNull (outObj, "Selector-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj, refObj, "Selector-2M-ref");
+				Assert.IsNull (outObj, "Selector-2M-out");
+
+				// direct native
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "Selector-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "Selector-2DA-out");
+
+				// direct managed
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "Selector-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "Selector-2DM-out");
+
+
+				/// 3 set both parameteres to the same selector
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (Selector.GetHandle ("testSelector"), refObj.Handle, "Selector-3A-ref");
+				Assert.AreEqual (Selector.GetHandle ("testSelector"), outObj.Handle, "Selector-3A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelector"), refObj.Handle, "Selector-3M-ref");
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelector"), outObj.Handle, "Selector-3M-out");
+
+				// direct native
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (refValue, outValue, "Selector-3DA-eq"); // The managed roundtrip means 'outValue' is re-created (because it's nulled out upon entering managed code), but because selectors are unique, we get back the same pointer.
+				Assert.AreEqual (Selector.GetHandle ("testSelector"), refValue, "Selector-3DA-ref");
+				Assert.AreEqual (Selector.GetHandle ("testSelector"), outValue, "Selector-3DA-out");
+
+				// direct managed
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (refValue, outValue, "Selector-3DM-eq"); // The managed roundtrip means 'outValue' is re-created (because it's nulled out upon entering managed code), but because selectors are unique, we get back the same pointer.
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelector"), refValue, "Selector-3DM-ref");
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelector"), outValue, "Selector-3DM-out");
+
+
+				/// 4 set both parameteres to different selectors
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (Selector.GetHandle ("testSelector:a:"), refObj.Handle, "Selector-4A-ref-value");
+				Assert.AreEqual (Selector.GetHandle ("testSelector:b:"), outObj.Handle, "Selector-4A-out-value");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelectorA"), refObj.Handle, "Selector-4M-ref-value");
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelectorB"), outObj.Handle, "Selector-4M-out-value");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (Selector.GetHandle ("testSelector:a:"), refValue, "Selector-4DA-ref-value");
+				Assert.AreEqual (Selector.GetHandle ("testSelector:b:"), outValue, "Selector-4DA-out-value");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelectorA"), refValue, "Selector-4DM-ref-value");
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelectorB"), outValue, "Selector-4DM-out-value");
+			}
+		}
+
+		[Test]
+		public void RefOutTest_Class ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testClass:a:b:");
+				var dummyObj = new Class (typeof (NSObject));
+				var dummyObjHandle = dummyObj.Handle;
+				Class refObj = null;
+				Class outObj = null;
+				TestMethod<Class> test = obj.TestClass;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "Class-1A-ref");
+				Assert.IsNull (outObj, "Class-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "Class-1M-ref");
+				Assert.IsNull (outObj, "Class-1M-out");
+
+				// direct native
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "Class-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "Class-1DA-out");
+
+				// direct managed
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "Class-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "Class-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj, refObj, "Class-2A-ref");
+				Assert.IsNull (outObj, "Class-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (dummyObj, refObj, "Class-2M-ref");
+				Assert.IsNull (outObj, "Class-2M-out");
+
+				// direct native
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "Class-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "Class-2DA-out");
+
+				// direct managed
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (dummyObj.Handle, refValue, "Class-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "Class-2DM-out");
+
+
+				/// 3 set both parameteres to the same Class
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (Class.GetHandle ("NSString"), refObj.Handle, "Class-3A-ref");
+				Assert.AreEqual (Class.GetHandle ("NSString"), outObj.Handle, "Class-3A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (Class.GetHandle (typeof (SomeConsumer)), refObj.Handle, "Class-3M-ref");
+				Assert.AreEqual (Class.GetHandle (typeof (SomeConsumer)), outObj.Handle, "Class-3M-out");
+
+				// direct native
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (refValue, outValue, "String-3DA-eq"); // The managed roundtrip means 'outValue' is re-created (because it's nulled out upon entering managed code), but since Class instances are singletons, we get back the same value.
+				Assert.AreEqual (Class.GetHandle ("NSString"), refValue, "Class-3DA-ref");
+				Assert.AreEqual (Class.GetHandle ("NSString"), outValue, "Class-3DA-out");
+
+				// direct managed
+				refValue = dummyObjHandle; // set to non-null
+				outValue = dummyObjHandle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (refValue, outValue, "Class-3DM-eq"); // The managed roundtrip means 'outValue' is re-created (because it's nulled out upon entering managed code), but since Class instances are singletons, we get back the same value.
+				Assert.AreEqual (Class.GetHandle (typeof (SomeConsumer)), refValue, "Class-3DM-ref");
+				Assert.AreEqual (Class.GetHandle (typeof (SomeConsumer)), outValue, "Class-3DM-out");
+
+
+				/// 4 set both parameteres to different Classes
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 0, ref refObj, out outObj);
+				Assert.AreEqual (Class.GetHandle ("NSBundle"), refObj.Handle, "Class-4A-ref-value");
+				Assert.AreEqual (Class.GetHandle ("NSDate"), outObj.Handle, "Class-4A-out-value");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 8, ref refObj, out outObj);
+				Assert.AreEqual (Class.GetHandle (typeof (RefOutParametersSubclass)), refObj.Handle, "Class-4M-ref-value");
+				Assert.AreEqual (Class.GetHandle ("RefOutParameters"), outObj.Handle, "Class-4M-out-value");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (Class.GetHandle ("NSBundle"), refValue, "Class-4DA-ref-value");
+				Assert.AreEqual (Class.GetHandle ("NSDate"), outValue, "Class-4DA-out-value");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (Class.GetHandle (typeof (RefOutParametersSubclass)), refValue, "Class-4DM-ref-value");
+				Assert.AreEqual (Class.GetHandle ("RefOutParameters"), outValue, "Class-4DM-out-value");
+			}
+		}
+
+		void AssertAreEqual (INativeObject [] expected, INativeObject [] actual, string msg)
+		{
+			if (expected == null && actual == null)
+				return;
+			if (expected == null ^ actual == null)
+				Assert.Fail ("One is null and the other is not. Expected: {0} Actual: {1}. " + msg, expected, actual);
+			Assert.AreEqual (expected.Length, actual.Length, "Length." + msg);
+			for (int i = 0; i < expected.Length; i++) {
+				Assert.AreEqual (expected [i].Handle, actual [i].Handle, $"Index #{i}: {msg}");
+			}
+		}
+
+		void AssertAreNotEqual (INativeObject [] expected, INativeObject [] actual, string msg)
+		{
+			if (expected == null && actual == null)
+				Assert.Fail ("Both are null. " + msg);
+			if (expected == null ^ actual == null)
+				return;
+			if (expected.Length != actual.Length)
+				return;
+			for (int i = 0; i < Math.Min (actual.Length, expected.Length); i++) {
+				if (expected [i].Handle != actual [i].Handle)
+					return;
+			}
+			Assert.Fail ("Both arrays are equal. " + msg);
+		}
+
+		[Test]
+		public unsafe void RefOutTest_INSCodingArray ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testINSCodingArray:a:b:");
+				var dummyObj = new INSCoding [] { new NSString ("Dummy obj") };
+				var dummyArray = NSArray.FromNSObjects<INSCoding> (dummyObj);
+				INSCoding [] refObj = null;
+				INSCoding [] outObj = null;
+				TestMethod<INSCoding []> test = obj.TestINSCodingArray;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSCodingArray-1A-ref");
+				Assert.IsNull (outObj, "NSCodingArray-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSCodingArray-1M-ref");
+				Assert.IsNull (outObj, "NSCodingArray-1M-out");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSCodingArray-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSCodingArray-1DA-out");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSCodingArray-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSCodingArray-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				AssertAreEqual (dummyObj, refObj, "NSCodingArray-2A-ref");
+				Assert.AreSame (dummyObj, refObj, "NSCodingArray-2A-ref-same");
+				Assert.IsNull (outObj, "NSCodingArray-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				AssertAreEqual (dummyObj, refObj, "NSCodingArray-2M-ref");
+				Assert.AreSame (dummyObj, refObj, "NSCodingArray-2M-ref-same");
+				Assert.IsNull (outObj, "NSCodingArray-2M-out");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				AssertAreEqual (dummyObj, NSArray.ArrayFromHandle<INSCoding> (refValue), "NSCodingArray-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSCodingArray-2DA-out");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				AssertAreEqual (dummyObj, NSArray.ArrayFromHandle<INSCoding> (refValue), "NSCodingArray-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSCodingArray-2DM-out");
+
+
+				/// 3 set both parameters to the same pointer of an NSCodingArray array
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.AreNotSame (dummyObj, refObj, "NSCodingArray-3A-ref-same");
+				Assert.AreNotSame (dummyObj, outObj, "NSCodingArray-3A-ref-out");
+				AssertAreEqual (refObj, outObj, "NSCodingArray-3A-out-ref-eq");
+				Assert.AreNotSame (refObj, outObj, "NSCodingArray-3A-ref-out-not-safe");
+				Assert.That (refObj [0].GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCodingArray-3A-ref-wrapper-type");
+				Assert.That (outObj [0].GetType ().FullName, Is.StringContaining ("CodingWrapper"), "NSCodingArray-3A-ref-wrapper-type");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.AreNotSame (dummyObj, refObj, "NSCodingArray-3M-ref-same");
+				Assert.AreNotSame (dummyObj, outObj, "NSCodingArray-3M-ref-out");
+				AssertAreEqual (refObj, outObj, "NSCodingArray-3M-ref-out-not-safe");
+				Assert.That (refObj [0], Is.TypeOf<NSString> (), "NSCodingArray-3M-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSString> (), "NSCodingArray-3M-ref-wrapper-type");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotSame (refValue, outValue, "NSCodingArray-3DA-out-ref-not-same");
+				AssertAreEqual (refObj, outObj, "NSCodingArray-3DA-out-ref-equal");
+				Assert.That (refObj [0], Is.TypeOf<NSString> (), "NSCodingArray-3DA-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSString> (), "NSCodingArray-3DA-ref-wrapper-type");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotSame (refValue, outValue, "NSCodingArray-3DM-out-ref-not-same");
+				AssertAreEqual (refObj, outObj, "NSCodingArray-3DM-out-ref-equal");
+				Assert.That (refObj [0], Is.TypeOf<NSString> (), "NSCodingArray-3DM-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSString> (), "NSCodingArray-3DM-ref-wrapper-type");
+
+
+				/// 4 set both parameteres to different pointers of a NSCodingArray
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNotNull (refObj, "NSCodingArray-4A-ref");
+				Assert.IsNotNull (outObj, "NSCodingArray-4A-out");
+				AssertAreNotEqual (refObj, outObj, "NSCodingArray-4A-ref-distinct");
+				Assert.That (refObj [0].GetType ().FullName, Is.StringContaining ("NSNumber").Or.StringContaining ("CodingWrapper"), "NSCodingArray-4A-ref-wrapper-type");
+				Assert.That (outObj [0].GetType ().FullName, Is.StringContaining ("NSNumber").Or.StringContaining ("CodingWrapper"), "NSCodingArray-4A-ref-wrapper-type");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 8, ref refObj, out outObj);
+				AssertAreNotEqual (refObj, outObj, "NSCodingArray-4M-ref-distinct");
+				Assert.That (refObj [0], Is.TypeOf<NSString> (), "NSCodingArray-4M-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSString> (), "NSCodingArray-4M-ref-wrapper-type");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				AssertAreNotEqual (NSArray.ArrayFromHandle<INSCoding> (refValue), NSArray.ArrayFromHandle<INSCoding> (outValue), "NSCodingArray-4DA-ref-distinct");
+				Assert.That (refObj [0], Is.TypeOf<NSString> (), "NSCodingArray-4DA-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSString> (), "NSCodingArray-4DA-ref-wrapper-type");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				AssertAreNotEqual (NSArray.ArrayFromHandle<INSCoding> (refValue), NSArray.ArrayFromHandle<INSCoding> (outValue), "NSCodingArray-4DM-ref-distinct");
+				Assert.That (refObj [0], Is.TypeOf<NSString> (), "NSCodingArray-4DM-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSString> (), "NSCodingArray-4DM-ref-wrapper-type");
+			}
+		}
+
+		delegate void TestMethod<T> (int action, ref T refObj, out T outObj);
+
+		[Test]
+		public unsafe void RefOutTest_NSObjectArray ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testNSObjectArray:a:b:");
+				var dummyObj = new NSObject [] { new NSString ("Dummy obj") };
+				var dummyArray = NSArray.FromNSObjects<NSObject> (dummyObj);
+				NSObject [] refObj = null;
+				NSObject [] outObj = null;
+				TestMethod<NSObject []> test = obj.TestNSObjectArray;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSObjectArray-1A-ref");
+				Assert.IsNull (outObj, "NSObjectArray-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSObjectArray-1M-ref");
+				Assert.IsNull (outObj, "NSObjectArray-1M-out");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSObjectArray-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSObjectArray-1DA-out");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSObjectArray-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSObjectArray-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				AssertAreEqual (dummyObj, refObj, "NSObjectArray-2A-ref");
+				Assert.AreSame (dummyObj, refObj, "NSObjectArray-2A-ref-same");
+				Assert.IsNull (outObj, "NSObjectArray-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				AssertAreEqual (dummyObj, refObj, "NSObjectArray-2M-ref");
+				Assert.AreSame (dummyObj, refObj, "NSObjectArray-2M-ref-same");
+				Assert.IsNull (outObj, "NSObjectArray-2M-out");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				AssertAreEqual (dummyObj, NSArray.ArrayFromHandle<NSObject> (refValue), "NSObjectArray-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSObjectArray-2DA-out");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				AssertAreEqual (dummyObj, NSArray.ArrayFromHandle<NSObject> (refValue), "NSObjectArray-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSObjectArray-2DM-out");
+
+
+				/// 3 set both parameters to the same pointer of an NSObjectArray array
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.AreNotSame (dummyObj, refObj, "NSObjectArray-3A-ref-same");
+				Assert.AreNotSame (dummyObj, outObj, "NSObjectArray-3A-ref-out");
+				AssertAreEqual (refObj, outObj, "NSObjectArray-3A-out-ref-eq");
+				Assert.AreNotSame (refObj, outObj, "NSObjectArray-3A-ref-out-not-safe");
+				Assert.That (refObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "World" }), "NSObjectArray-3A-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "World" }), "NSObjectArray-3A-obj-equiv");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.AreNotSame (dummyObj, refObj, "NSObjectArray-3M-ref-same");
+				Assert.AreNotSame (dummyObj, outObj, "NSObjectArray-3M-ref-out");
+				AssertAreEqual (refObj, outObj, "NSObjectArray-3M-ref-out-not-safe");
+				Assert.That (refObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "World", (NSString) "from", (NSString) "managed" }), "NSObjectArray-3M-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "World", (NSString) "from", (NSString) "managed" }), "NSObjectArray-3M-obj-equiv");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotEqual (refValue, outValue, "NSObjectArray-3DA-out-ref-not-same");
+				refObj = NSArray.ArrayFromHandle<NSObject> (refValue);
+				outObj = NSArray.ArrayFromHandle<NSObject> (outValue);
+				Assert.That (refObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "World" }), "NSObjectArray-3DA-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "World" }), "NSObjectArray-3DA-obj-equiv");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotEqual (refValue, outValue, "NSObjectArray-3DM-out-ref-not-same");
+				refObj = NSArray.ArrayFromHandle<NSObject> (refValue);
+				outObj = NSArray.ArrayFromHandle<NSObject> (outValue);
+				Assert.That (refObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "World", (NSString) "from", (NSString) "managed" }), "NSObjectArray-3DM-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "World", (NSString) "from", (NSString) "managed" }), "NSObjectArray-3DM-obj-equiv");
+
+
+				/// 4 set both parameteres to different pointers of a NSObjectArray
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 0, ref refObj, out outObj);
+				Assert.That (refObj, Is.EquivalentTo (new NSObject [] { NSNumber.FromInt32 (3), NSNumber.FromInt32 (14) }), "NSObjectArray-4A-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "Xamarin" }), "NSObjectArray-4A-obj-equiv");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 8, ref refObj, out outObj);
+				AssertAreNotEqual (refObj, outObj, "NSObjectArray-4M-ref-distinct");
+				Assert.That (refObj, Is.EquivalentTo (new NSObject [] { NSNumber.FromInt32 (2), NSNumber.FromInt32 (71) }), "NSObjectArray-4M-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "Microsoft", (NSString) "from", (NSString) "managed" }), "NSObjectArray-4M-obj-equiv");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				refObj = NSArray.ArrayFromHandle<NSObject> (refValue);
+				outObj = NSArray.ArrayFromHandle<NSObject> (outValue);
+				Assert.That (refObj, Is.EquivalentTo (new NSObject [] { NSNumber.FromInt32 (3), NSNumber.FromInt32 (14) }), "NSObjectArray-4DA-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "Xamarin" }), "NSObjectArray-4DA-obj-equiv");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				refObj = NSArray.ArrayFromHandle<NSObject> (refValue);
+				outObj = NSArray.ArrayFromHandle<NSObject> (outValue);
+				Assert.That (refObj, Is.EquivalentTo (new NSObject [] { NSNumber.FromInt32 (2), NSNumber.FromInt32 (71) }), "NSObjectArray-4DM-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new NSObject [] { (NSString) "Hello", (NSString) "Microsoft", (NSString) "from", (NSString) "managed" }), "NSObjectArray-4DM-obj-equiv");
+			}
+		}
+
+		[Test]
+		public unsafe void RefOutTest_NSValueArray ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testNSValueArray:a:b:");
+				var dummyObj = new NSValue [] { NSValue.FromMKCoordinate (new CLLocationCoordinate2D (3, 14)) };
+				var dummyArray = NSArray.FromNSObjects<NSValue> (dummyObj);
+				NSValue [] refObj = null;
+				NSValue [] outObj = null;
+				TestMethod<NSValue []> test = obj.TestNSValueArray;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSValueArray-1A-ref");
+				Assert.IsNull (outObj, "NSValueArray-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSValueArray-1M-ref");
+				Assert.IsNull (outObj, "NSValueArray-1M-out");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSValueArray-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSValueArray-1DA-out");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSValueArray-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSValueArray-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				AssertAreEqual (dummyObj, refObj, "NSValueArray-2A-ref");
+				Assert.AreSame (dummyObj, refObj, "NSValueArray-2A-ref-same");
+				Assert.IsNull (outObj, "NSValueArray-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				AssertAreEqual (dummyObj, refObj, "NSValueArray-2M-ref");
+				Assert.AreSame (dummyObj, refObj, "NSValueArray-2M-ref-same");
+				Assert.IsNull (outObj, "NSValueArray-2M-out");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				AssertAreEqual (dummyObj, NSArray.ArrayFromHandle<NSValue> (refValue), "NSValueArray-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSValueArray-2DA-out");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				AssertAreEqual (dummyObj, NSArray.ArrayFromHandle<NSValue> (refValue), "NSValueArray-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSValueArray-2DM-out");
+
+
+				/// 3 set both parameters to the same pointer of an NSValueArray array
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.AreNotSame (dummyObj, refObj, "NSValueArray-3A-ref-same");
+				Assert.AreNotSame (dummyObj, outObj, "NSValueArray-3A-ref-out");
+				AssertAreEqual (refObj, outObj, "NSValueArray-3A-out-ref-eq");
+				Assert.AreNotSame (refObj, outObj, "NSValueArray-3A-ref-out-not-safe");
+				Assert.That (refObj [0], Is.TypeOf<NSValue> (), "NSValueArray-3A-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSValue> (), "NSValueArray-3A-ref-wrapper-type");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.AreNotSame (dummyObj, refObj, "NSValueArray-3M-ref-same");
+				Assert.AreNotSame (dummyObj, outObj, "NSValueArray-3M-ref-out");
+				AssertAreEqual (refObj, outObj, "NSValueArray-3M-ref-out-not-safe");
+				Assert.That (refObj [0], Is.TypeOf<NSValue> (), "NSValueArray-3M-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSValue> (), "NSValueArray-3M-ref-wrapper-type");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreNotSame (refValue, outValue, "NSValueArray-3DA-out-ref-not-same");
+				AssertAreEqual (refObj, outObj, "NSValueArray-3DA-out-ref-equal");
+				Assert.That (refObj [0], Is.TypeOf<NSValue> (), "NSValueArray-3DA-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSValue> (), "NSValueArray-3DA-ref-wrapper-type");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreNotSame (refValue, outValue, "NSValueArray-3DM-out-ref-not-same");
+				AssertAreEqual (refObj, outObj, "NSValueArray-3DM-out-ref-equal");
+				Assert.That (refObj [0], Is.TypeOf<NSValue> (), "NSValueArray-3DM-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSValue> (), "NSValueArray-3DM-ref-wrapper-type");
+
+
+				/// 4 set both parameteres to different pointers of a NSValueArray
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNotNull (refObj, "NSValueArray-4A-ref");
+				Assert.IsNotNull (outObj, "NSValueArray-4A-out");
+				AssertAreNotEqual (refObj, outObj, "NSValueArray-4A-ref-distinct");
+				Assert.That (refObj [0], Is.TypeOf<NSValue> (), "NSValueArray-4A-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSValue> (), "NSValueArray-4A-ref-wrapper-type");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 8, ref refObj, out outObj);
+				AssertAreNotEqual (refObj, outObj, "NSValueArray-4M-ref-distinct");
+				Assert.That (refObj [0], Is.TypeOf<NSValue> (), "NSValueArray-4M-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSValue> (), "NSValueArray-4M-ref-wrapper-type");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				AssertAreNotEqual (NSArray.ArrayFromHandle<NSValue> (refValue), NSArray.ArrayFromHandle<NSValue> (outValue), "NSValueArray-4DA-ref-distinct");
+				Assert.That (refObj [0], Is.TypeOf<NSValue> (), "NSValueArray-4DA-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSValue> (), "NSValueArray-4DA-ref-wrapper-type");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				AssertAreNotEqual (NSArray.ArrayFromHandle<NSValue> (refValue), NSArray.ArrayFromHandle<NSValue> (outValue), "NSValueArray-4DM-ref-distinct");
+				Assert.That (refObj [0], Is.TypeOf<NSValue> (), "NSValueArray-4DM-ref-wrapper-type");
+				Assert.That (outObj [0], Is.TypeOf<NSValue> (), "NSValueArray-4DM-ref-wrapper-type");
+			}
+		}
+
+		[Test]
+		public unsafe void RefOutTest_StringArray ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testStringArray:a:b:");
+				var dummyObj = new string [] { "Hello" };
+				var dummyArray = NSArray.FromStrings (dummyObj);
+				string [] refObj = null;
+				string [] outObj = null;
+				TestMethod<string []> test = obj.TestStringArray;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSStringArray-1A-ref");
+				Assert.IsNull (outObj, "NSStringArray-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSStringArray-1M-ref");
+				Assert.IsNull (outObj, "NSStringArray-1M-out");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSStringArray-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSStringArray-1DA-out");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSStringArray-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSStringArray-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.That (dummyObj, Is.EquivalentTo (refObj), "NSStringArray-2A-ref");
+				Assert.AreSame (dummyObj, refObj, "NSStringArray-2A-ref-same");
+				Assert.IsNull (outObj, "NSStringArray-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.That (dummyObj, Is.EquivalentTo (refObj), "NSStringArray-2M-ref");
+				Assert.AreSame (dummyObj, refObj, "NSStringArray-2M-ref-same");
+				Assert.IsNull (outObj, "NSStringArray-2M-out");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.That (dummyObj, Is.EquivalentTo (NSArray.StringArrayFromHandle (refValue)), "NSStringArray-2DA-ref");
+				Assert.AreEqual (dummyArray.Handle, refValue, "NSStringArray-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSStringArray-2DA-out");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.That (dummyObj, Is.EquivalentTo (NSArray.StringArrayFromHandle (refValue)), "NSStringArray-2DM-ref");
+				Assert.AreEqual (dummyArray.Handle, refValue, "NSStringArray-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSStringArray-2DM-out");
+
+
+				/// 3 set both parameters to the same pointer of an NSStringArray array
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.That (outObj, Is.EquivalentTo (new string [] { "Hello", "World" }), "NSStringArray-3A-out-contents");
+				Assert.That (refObj, Is.EquivalentTo (new string [] { "Hello", "World" }), "NSStringArray-3A-ref-contents");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.That (outObj, Is.EquivalentTo (new string [] { "Hello", "Managed", "World" }), "NSStringArray-3M-out-contents");
+				Assert.That (refObj, Is.EquivalentTo (new string [] { "Hello", "Managed", "World" }), "NSStringArray-3M-ref-contents");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				refObj = NSArray.StringArrayFromHandle (refValue);
+				outObj = NSArray.StringArrayFromHandle (outValue);
+				Assert.That (outObj, Is.EquivalentTo (new string [] { "Hello", "World" }), "NSStringArray-3DA-out-contents");
+				Assert.That (refObj, Is.EquivalentTo (new string [] { "Hello", "World" }), "NSStringArray-3DA-ref-contents");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				refObj = NSArray.StringArrayFromHandle (refValue);
+				outObj = NSArray.StringArrayFromHandle (outValue);
+				Assert.That (outObj, Is.EquivalentTo (new string [] { "Hello", "Managed", "World" }), "NSStringArray-3DM-out-contents");
+				Assert.That (refObj, Is.EquivalentTo (new string [] { "Hello", "Managed", "World" }), "NSStringArray-3DM-ref-contents");
+
+
+				/// 4 set both parameteres to different pointers of a NSStringArray
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNotNull (refObj, "NSStringArray-4A-ref");
+				Assert.IsNotNull (outObj, "NSStringArray-4A-out");
+				Assert.That (refObj, Is.EquivalentTo (new string [] { "Hello", "Microsoft" }), "NSStringArray-4A-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new string [] { "Hello", "Xamarin" }), "NSStringArray-4A-obj-equiv");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 8, ref refObj, out outObj);
+				Assert.That (refObj, Is.EquivalentTo (new string [] { "Hello", "Microsoft", "from", "managed" }), "NSStringArray-4M-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new string [] { "Hello", "Xamarin", "from", "managed" }), "NSStringArray-4M-obj-equiv");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				refObj = NSArray.StringArrayFromHandle (refValue);
+				outObj = NSArray.StringArrayFromHandle (outValue);
+				Assert.That (refObj, Is.EquivalentTo (new string [] { "Hello", "Microsoft" }), "NSStringArray-4DA-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new string [] { "Hello", "Xamarin" }), "NSStringArray-4DA-obj-equiv");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				refObj = NSArray.StringArrayFromHandle (refValue);
+				outObj = NSArray.StringArrayFromHandle (outValue);
+				Assert.That (refObj, Is.EquivalentTo (new string [] { "Hello", "Microsoft", "from", "managed" }), "NSStringArray-4DM-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new string [] { "Hello", "Xamarin", "from", "managed" }), "NSStringArray-4DM-obj-equiv");
+
+				/// 5 change a value in the ref input
+				/// Here we verify that changing an element in the input array is not copied back to the ref argument.
+				/// If an element needs to be changed, a new array must be created, and elements copied over, including the modified one.
+				action = 5;
+
+				// Only managed calls can be done because we need to use an NSMutableArray, and the binding code creates NSArrays when marshalling to native code.
+				Func<string [], NSMutableArray> fromStrings = (arr) => {
+				 	var rv = new NSMutableArray ((nuint) arr.Length);
+					for (int i = 0; i < arr.Length; i++)
+						rv.Add ((NSString) arr [i]);
+					return rv;
+				};
+
+				// managed
+				refObj = new string [] { "Hello", "World" };
+				test (action << 8, ref refObj, out var _);
+				// Here the array changed, because we didn't go through any binding code at all
+				Assert.That (refObj, Is.EquivalentTo (new string [] { "Hello", "Universe" }), "NSStringArray-5M-ref-equiv");
+
+				// direct managed
+				refObj = new string [] { "Hello", "World" };
+				using (var arr = fromStrings (refObj)) {
+					refValue = arr.Handle;
+					Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out var _);
+					refObj = NSArray.StringArrayFromHandle (refValue);
+					Assert.That (refObj, Is.EquivalentTo (new string [] { "Hello", "World" }), "NSStringArray-5DM-ref-equiv");
+				}
+			}
+		}
+
+		[Test]
+		public unsafe void RefOutTest_ClassArray ()
+		{
+			IntPtr refValue = IntPtr.Zero;
+			IntPtr outValue = IntPtr.Zero;
+
+			using (var obj = new RefOutParametersSubclass ()) {
+				var sel = Selector.GetHandle ("testClassArray:a:b:");
+				var dummyObj = new Class [] { new Class (typeof (NSObject)) };
+				var dummyArray = NSArray.FromIntPtrs (new IntPtr [] { Class.GetHandle (typeof (NSObject)) });
+				Class [] refObj = null;
+				Class [] outObj = null;
+				TestMethod<Class []> test = obj.TestClassArray;
+				int action;
+
+				/// 1: set both to null
+				action = 1;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSClassArray-1A-ref");
+				Assert.IsNull (outObj, "NSClassArray-1A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.IsNull (refObj, "NSClassArray-1M-ref");
+				Assert.IsNull (outObj, "NSClassArray-1M-out");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSClassArray-1DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSClassArray-1DA-out");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.AreEqual (IntPtr.Zero, refValue, "NSClassArray-1DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSClassArray-1DM-out");
+
+				/// 2: verify that refValue points to something
+				action = 2;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.That (dummyObj, Is.EquivalentTo (refObj), "NSClassArray-2A-ref");
+				Assert.AreSame (dummyObj, refObj, "NSClassArray-2A-ref-same");
+				Assert.IsNull (outObj, "NSClassArray-2A-out");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.That (dummyObj, Is.EquivalentTo (refObj), "NSClassArray-2M-ref");
+				Assert.AreSame (dummyObj, refObj, "NSClassArray-2M-ref-same");
+				Assert.IsNull (outObj, "NSClassArray-2M-out");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				Assert.That (dummyObj, Is.EquivalentTo (NSArray.ArrayFromHandle<Class> (refValue)), "NSClassArray-2DA-ref");
+				Assert.AreEqual (dummyArray.Handle, refValue, "NSClassArray-2DA-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSClassArray-2DA-out");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				Assert.That (dummyObj, Is.EquivalentTo (NSArray.ArrayFromHandle<Class> (refValue)), "NSClassArray-2DM-ref");
+				Assert.AreEqual (dummyArray.Handle, refValue, "NSClassArray-2DM-ref");
+				Assert.AreEqual (IntPtr.Zero, outValue, "NSClassArray-2DM-out");
+
+
+				/// 3 set both parameters to the same pointer of an Class array
+				action = 3;
+
+				// native
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 0, ref refObj, out outObj);
+				Assert.That (outObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSString)), new Class (typeof (NSDate)) }), "NSClassArray-3A-out-contents");
+				Assert.That (refObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSString)), new Class (typeof (NSDate)) }), "NSClassArray-3A-ref-contents");
+
+				// managed
+				refObj = dummyObj; // set to non-null
+				outObj = dummyObj; // set to non-null
+				test (action << 8, ref refObj, out outObj);
+				Assert.That (outObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSSet)), new Class (typeof (NSDictionary)) }), "NSClassArray-3M-out-contents");
+				Assert.That (refObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSSet)), new Class (typeof (NSDictionary)) }), "NSClassArray-3M-ref-contents");
+
+				// direct native
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				refObj = NSArray.ArrayFromHandle<Class> (refValue);
+				outObj = NSArray.ArrayFromHandle<Class> (outValue);
+				Assert.That (outObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSString)), new Class (typeof (NSDate)) }), "NSClassArray-3DA-out-contents");
+				Assert.That (refObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSString)), new Class (typeof (NSDate)) }), "NSClassArray-3DA-ref-contents");
+
+				// direct managed
+				refValue = dummyArray.Handle; // set to non-null
+				outValue = dummyArray.Handle; // set to non-null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				refObj = NSArray.ArrayFromHandle<Class> (refValue);
+				outObj = NSArray.ArrayFromHandle<Class> (outValue);
+				Assert.That (outObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSSet)), new Class (typeof (NSDictionary)) }), "NSClassArray-3DM-out-contents");
+				Assert.That (refObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSSet)), new Class (typeof (NSDictionary)) }), "NSClassArray-3DM-ref-contents");
+
+
+				/// 4 set both parameteres to different pointers of a NSClassArray
+				action = 4;
+
+				// native
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 0, ref refObj, out outObj);
+				Assert.IsNotNull (refObj, "NSClassArray-4A-ref");
+				Assert.IsNotNull (outObj, "NSClassArray-4A-out");
+				Assert.That (refObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSString)), new Class (typeof (NSValue)) }), "NSClassArray-4A-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSData)), new Class (typeof (NSDate)) }), "NSClassArray-4A-obj-equiv");
+
+				// managed
+				refObj = null; // set to null
+				outObj = null; // set to null
+				test (action << 8, ref refObj, out outObj);
+				Assert.That (refObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSSet)), new Class (typeof (NSMutableSet)) }), "NSClassArray-4M-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSDictionary)), new Class (typeof (NSMutableDictionary)) }), "NSClassArray-4M-obj-equiv");
+
+				// direct native
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
+				refObj = NSArray.ArrayFromHandle<Class> (refValue);
+				outObj = NSArray.ArrayFromHandle<Class> (outValue);
+				Assert.That (refObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSString)), new Class (typeof (NSValue)) }), "NSClassArray-4DA-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSData)), new Class (typeof (NSDate)) }), "NSClassArray-4DA-obj-equiv");
+
+				// direct managed
+				refValue = IntPtr.Zero; // set to null
+				outValue = IntPtr.Zero; // set to null
+				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
+				refObj = NSArray.ArrayFromHandle<Class> (refValue);
+				outObj = NSArray.ArrayFromHandle<Class> (outValue);
+				Assert.That (refObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSSet)), new Class (typeof (NSMutableSet)) }), "NSClassArray-4DM-ref-equiv");
+				Assert.That (outObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSDictionary)), new Class (typeof (NSMutableDictionary)) }), "NSClassArray-4DM-obj-equiv");
+
+				/// 5 change a value in the ref input
+				/// Here we verify that changing an element in the input array is not copied back to the ref argument.
+				/// If an element needs to be changed, a new array must be created, and elements copied over, including the modified one.
+				action = 5;
+
+				// Only managed calls can be done because we need to use an NSMutableArray, and the binding code creates NSArrays when marshalling to native code.
+				Func<Class [], NSMutableArray> fromValues = (arr) => {
+					return new NSMutableArray<Class> (arr);
+				};
+
+				// managed
+				refObj = new Class [] { new Class (typeof (NSObject)), new Class (typeof (NSObject)) };
+				test (action << 8, ref refObj, out var _);
+				// Here the array changed, because we didn't go through any binding code at all
+				Assert.That (refObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSMutableString)), new Class (typeof (NSObject)) }), "NSClassArray-5M-ref-equiv");
+
+				// direct managed
+				refObj = new Class [] { new Class (typeof (NSObject)), new Class (typeof (NSObject)) };
+				using (var arr = fromValues (refObj)) {
+					refValue = arr.Handle;
+					Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out var _);
+					refObj = NSArray.ArrayFromHandle<Class> (refValue);
+					Assert.That (refObj, Is.EquivalentTo (new Class [] { new Class (typeof (NSObject)), new Class (typeof (NSObject)) }), "NSClassArray-5DM-ref-equiv");
+				}
+			}
+		}
+
+		class RefOutParametersSubclass : BI1064.RefOutParameters
+		{
+			public override void TestCFBundle (int action, ref CFBundle refValue, out CFBundle outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestCFBundle (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "2");
+					outValue = null; // compiler-enforced
+					break;
+				case 3: // set both parameteres to the same pointer of a CFBundle
+					var obj = global::CoreFoundation.CFBundle.GetMain ();
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different pointers of a CFBundle
+					refValue = global::CoreFoundation.CFBundle.GetAll () [0];
+					outValue = global::CoreFoundation.CFBundle.GetAll () [1];
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestINSCoding (int action, ref INSCoding refValue, out INSCoding outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestINSCoding (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "2");
+					outValue = null; // compiler-enforced
+					break;
+				case 3: // set both parameteres to the same pointer of an NSString
+					var obj = new NSString ("A managed string");
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different pointers of an NSString
+					refValue = new NSString ("A managed ref string");
+					outValue = new NSString ("A managed out string");
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestNSObject (int action, ref NSObject refValue, out NSObject outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestNSObject (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "2");
+					outValue = null; // compiler-enforced
+					break;
+				case 3: // set both parameteres to the same pointer of an NSObject
+					var obj = new NSObject ();
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different objects
+					refValue = new NSObject ();
+					outValue = new NSObject ();
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestValue (int action, ref NSValue refValue, out NSValue outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestValue (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "2");
+					outValue = null; // compiler-enforced
+					break;
+				case 3: // set both parameteres to the same pointer of an NSObject
+					var obj = NSValue.FromMKCoordinate (new CLLocationCoordinate2D (3, 14));
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different objects
+					refValue = NSValue.FromMKCoordinate (new CLLocationCoordinate2D (3, 14));
+					outValue = NSValue.FromMKCoordinate (new CLLocationCoordinate2D (2, 71)); 
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestString (int action, ref string refValue, out string outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestString (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "2");
+					outValue = null; // compiler-enforced
+					break;
+				case 3: // set both parameteres to the same pointer of an NSObject
+					var obj = "A constant managed string";
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different objects
+					refValue = "Hello Xamarin from managed";
+					outValue = "Hello Microsoft from managed";
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestInt (int action, ref int refValue, out int outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestInt (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = 0;
+					outValue = 0;
+					break;
+				case 3: // set both parameteres to the same value
+					refValue = 314159;
+					outValue = 314159;
+					break;
+				case 4: // set both parameteres to different values
+					refValue = 3141592;
+					outValue = 2718282;
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestSelector (int action, ref Selector refValue, out Selector outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestSelector (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "TestSelector: 2");
+					outValue = null;
+					break;
+				case 3: // set both parameteres to the same value
+					var obj = new Selector ("testManagedSelector");
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different values
+					refValue = new Selector ("testManagedSelectorA");
+					outValue = new Selector ("testManagedSelectorB");
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestClass (int action, ref Class refValue, out Class outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestClass (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue);
+					outValue = null;
+					break;
+				case 3: // set both parameteres to the same value
+					var obj = new Class (typeof (SomeConsumer));
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different values
+					refValue = new Class (typeof (RefOutParametersSubclass));
+					outValue = new Class (typeof (BI1064.RefOutParameters));
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestINSCodingArray (int action, ref INSCoding [] refValue, out INSCoding [] outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestINSCodingArray (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "2");
+					outValue = null; // compiler-enforced
+					break;
+				case 3: // set both parameteres to the same pointer of an NSObject
+					var obj = new INSCoding [] { (NSString) "A constant managed string" };
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different objects
+					refValue = new INSCoding [] { (NSString) "Hello Xamarin from managed" };
+					outValue = new INSCoding [] { (NSString) "Hello Microsoft from managed" };
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestNSObjectArray (int action, ref NSObject [] refValue, out NSObject [] outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestNSObjectArray (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "2");
+					outValue = null; // compiler-enforced
+					break;
+				case 3: // set both parameteres to the same pointer of an NSObject
+					var obj = new NSObject [] { (NSString) "Hello", (NSString) "World", (NSString) "from", (NSString) "managed" };
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different objects
+					refValue = new NSObject [] { NSNumber.FromInt32 (2), NSNumber.FromInt32 (71) };
+					outValue = new NSObject [] { (NSString) "Hello", (NSString) "Microsoft", (NSString) "from", (NSString) "managed" };
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestNSValueArray (int action, ref NSValue [] refValue, out NSValue [] outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestNSValueArray (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "2");
+					outValue = null; // compiler-enforced
+					break;
+				case 3: // set both parameteres to the same pointer of an NSObject
+					var obj = new NSValue [] { NSValue.FromMKCoordinate (new CLLocationCoordinate2D (3, 14)), NSValue.FromMKCoordinate (new CLLocationCoordinate2D (2, 71))  };
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different objects
+					refValue = new NSValue [] { NSValue.FromMKCoordinate (new CLLocationCoordinate2D (3, 14)), NSValue.FromMKCoordinate (new CLLocationCoordinate2D (15, 92)) };
+					outValue = new NSValue [] { NSValue.FromMKCoordinate (new CLLocationCoordinate2D (2, 71)), NSValue.FromMKCoordinate (new CLLocationCoordinate2D (82, 82)) };
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
+			public override void TestStringArray (int action, ref string [] refValue, out string [] outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestStringArray (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "2");
+					outValue = null; // compiler-enforced
+					break;
+				case 3: // set both parameteres to the same pointer of an NSObject
+					var obj = new string [] { "Hello", "Managed", "World" };
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different objects
+					refValue = new string [] { "Hello", "Microsoft", "from", "managed" };
+					outValue = new string [] { "Hello", "Xamarin", "from", "managed" };
+					break;
+				case 5: // change a value in the ref input
+					refValue [1] = "Universe";
+					outValue = null;
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+				
+			public override void TestClassArray (int action, ref Class [] refValue, out Class [] outValue)
+			{
+				var managedAction = (action & 0xFF00) >> 8;
+				switch (managedAction) {
+				case 0: // call native
+					base.TestClassArray (action, ref refValue, out outValue);
+					break;
+				case 1: // set both to null
+					refValue = null;
+					outValue = null;
+					break;
+				case 2: // verify that refValue points to something
+					Assert.IsNotNull (refValue, "2");
+					outValue = null; // compiler-enforced
+					break;
+				case 3: // set both parameteres to the same pointer of an NSObject
+					var obj = new Class [] { new Class (typeof (NSSet)), new Class (typeof (NSDictionary)) };
+					refValue = obj;
+					outValue = obj;
+					break;
+				case 4: // set both parameteres to different objects
+					refValue = new Class [] { new Class (typeof (NSSet)), new Class (typeof (NSMutableSet)) };
+					outValue = new Class [] { new Class (typeof (NSDictionary)), new Class (typeof (NSMutableDictionary)) };
+					break;
+				case 5: // change a value in the ref input
+					refValue [1] = new Class (typeof (NSMutableString));
+					outValue = null;
+					break;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+
 		}
 	}
 
