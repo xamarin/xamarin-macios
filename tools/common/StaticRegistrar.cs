@@ -976,6 +976,12 @@ namespace Registrar {
 				// This matches what the dynamic registrar (System.Reflection) does.
 				return ts.ElementType;
 			}
+
+			if (type is ByReferenceType brt) {
+				// ByReferenceType.GetElementType also calls GetElementType recursively.
+				return brt.ElementType;
+			}
+
 			return type.GetElementType ();
 		}
 
@@ -2353,7 +2359,7 @@ namespace Registrar {
 				return "id";
 
 			if (reftype != null) {
-				string res = ToObjCParameterType (reftype.GetElementType (), descriptiveMethodName, exceptions, inMethod);
+				string res = ToObjCParameterType (GetElementType (reftype), descriptiveMethodName, exceptions, inMethod);
 				if (res == null)
 					return null;
 				return res + "*";
@@ -3407,6 +3413,7 @@ namespace Registrar {
 				var isRef = type.IsByReference;
 				var isOut = param.IsOut || paramBase.IsOut;
 				var isArray = type is ArrayType;
+				var isByRefArray = isRef && GetElementType (type) is ArrayType;
 				var isNativeEnum = false;
 				var td = type.Resolve ();
 				var isVariadic = i + 1 == num_arg && method.IsVariadic;
@@ -3417,7 +3424,7 @@ namespace Registrar {
 						throw ErrorHelper.CreateError (4163, $"Internal error in the registrar (BindAs parameters can't be ref/out: {descriptiveMethodName}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
 					continue;
 				} else if (isRef) {
-					type = type.GetElementType ();
+					type = GetElementType (type);
 					td = type.Resolve ();
 					original_objctype = ToObjCParameterType (type, descriptiveMethodName, exceptions,  method.Method);
 					objctype = ToObjCParameterType (type, descriptiveMethodName, exceptions, method.Method) + "*";
@@ -3535,14 +3542,23 @@ namespace Registrar {
 					}
 					break;
 				default:
-					if (isArray) {
+					if (isArray || isByRefArray) {
 						var elementType = ((ArrayType)type).ElementType;
 
 						body_setup.AppendLine ("MonoArray *marr{0} = NULL;", i);
 						body_setup.AppendLine ("NSArray *arr{0} = NULL;", i);
-						setup_call_stack.AppendLine ("arr{0} = p{0};", i);
-						if (App.EnableDebug)
-							setup_call_stack.AppendLine ("xamarin_check_objc_type (p{0}, [NSArray class], _cmd, self, {0}, managed_method);", i);
+						if (isByRefArray) {
+							body_setup.AppendLine ("MonoArray *original_marr{0} = NULL;", i);
+							setup_call_stack.AppendLine ("if (p{0} == NULL) {{", i);
+							setup_call_stack.AppendLine ("arg_ptrs [{0}] = NULL;", i);
+							setup_call_stack.AppendLine ("} else {");
+							setup_call_stack.AppendLine ("if (*p{0} != NULL) {{", i);
+							setup_call_stack.AppendLine ("arr{0} = *(NSArray **) p{0};", i);
+						} else {
+							setup_call_stack.AppendLine ("arr{0} = p{0};", i);
+							if (App.EnableDebug)
+								setup_call_stack.AppendLine ("xamarin_check_objc_type (p{0}, [NSArray class], _cmd, self, {0}, managed_method);", i);
+						}
 
 						var isString = elementType.Is ("System", "String");
 						var isNSObject = !isString && IsNSObject (elementType);
@@ -3587,7 +3603,27 @@ namespace Registrar {
 						} else {
 							throw ErrorHelper.CreateError (App, 4111, method.Method, "The registrar cannot build a signature for type `{0}' in method `{1}`.", type.FullName, descriptiveMethodName);
 						}
-						setup_call_stack.AppendLine ("arg_ptrs [{0}] = marr{0};", i);
+						if (isByRefArray) {
+							setup_call_stack.AppendLine ("}");
+							setup_call_stack.AppendLine ("original_marr{0} = marr{0};", i);
+							setup_call_stack.AppendLine ("arg_ptrs [{0}] = &marr{0};", i);
+							setup_call_stack.AppendLine ("}");
+						} else {
+							setup_call_stack.AppendLine ("arg_ptrs [{0}] = marr{0};", i);
+						}
+						if (isByRefArray) {
+							copyback.AppendLine ("if (p{0} && original_marr{0} != marr{0}) {{", i);
+							if (isString) {
+								copyback.AppendLine ("*p{0} = xamarin_managed_string_array_to_nsarray (marr{0}, &exception_gchandle);", i);
+							} else if (isNSObject) {
+								copyback.AppendLine ("*p{0} = xamarin_managed_nsobject_array_to_nsarray (marr{0}, &exception_gchandle);", i);
+							} else if (isINativeObject) {
+								copyback.AppendLine ("*p{0} = xamarin_managed_inativeobject_array_to_nsarray (marr{0}, &exception_gchandle);", i);
+							} else {
+								throw ErrorHelper.CreateError (99, "Internal error: byref array is neither string, NSObject or INativeObject.");
+							}
+							copyback.AppendLine ("}");
+						}
 					} else if (IsNSObject (type)) {
 						if (isRef) {
 							body_setup.AppendLine ("MonoObject *mobj{0} = NULL;", i);
