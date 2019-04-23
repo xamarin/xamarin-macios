@@ -514,7 +514,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							goto exception_handling;
 						LOGZ (" writing back managed NSObject %p to argument at %p\n", *(NSObject **) arg, arg);
 					} else if (xamarin_is_class_inativeobject (p_klass)) {
-						*(NSObject **) arg = xamarin_get_handle ((MonoObject *) arg_frame [ofs], &exception_gchandle);
+						*(NSObject **) arg = xamarin_get_handle_for_inativeobject ((MonoObject *) arg_frame [ofs], &exception_gchandle);
 						if (exception_gchandle != 0)
 							goto exception_handling;
 						LOGZ (" writing back managed INativeObject %p to argument at %p\n", *(NSObject **) arg, arg);
