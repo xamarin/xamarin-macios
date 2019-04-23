@@ -3816,8 +3816,9 @@ namespace AVFoundation {
 
 		// note: we cannot use [Bind] here as it would break compatibility with iOS 6.x
 		// `isFinished` was only added in iOS 7.0 SDK and cannot be called in earlier versions
-		[Export ("finished")]
-		bool Finished { /* [Bind ("isFinished")] */ get;  }
+		[Export ("isFinished")]
+		[iOS (7,0)] // on iOS 6 it was `finished` but it's now rejected by Apple
+		bool Finished { get; }
 
 		[Export ("finishLoadingWithResponse:data:redirect:")]
 		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Message = "Use the 'Response', 'Redirect' properties and the 'AVAssetResourceLoadingDataRequest.Responds' and 'AVAssetResourceLoadingRequest.FinishLoading' methods instead.")]
