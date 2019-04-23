@@ -907,6 +907,8 @@ struct conversion_data {
 	MonoType *element_type;
 	MonoClass *element_class;
 	MonoReflectionType *element_reflection_type;
+	uint32_t iface_token_ref;
+	uint32_t implementation_token_ref;
 };
 
 id
@@ -945,6 +947,13 @@ xamarin_nsobject_to_inativeobject (id object, void *ptr, MonoClass *managedType,
 {
 	struct conversion_data * data = (struct conversion_data *) context;
 	return xamarin_get_inative_object_dynamic (object, false, data->element_reflection_type, exception_gchandle);
+}
+
+void *
+xamarin_nsobject_to_inativeobject_static (id object, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle)
+{
+	struct conversion_data * data = (struct conversion_data *) context;
+	return xamarin_get_inative_object_static (object, false, data->iface_token_ref, data->implementation_token_ref, exception_gchandle);
 }
 
 NSArray *
@@ -1021,6 +1030,17 @@ xamarin_nsarray_to_managed_inativeobject_array (NSArray *array, MonoType *array_
 	data.element_type = mono_class_get_type (data.element_class);
 	data.element_reflection_type = mono_type_get_object (data.domain, data.element_type);
 	return xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_inativeobject, &data, exception_gchandle);
+}
+
+MonoArray *
+xamarin_nsarray_to_managed_inativeobject_array_static (NSArray *array, MonoType *array_type, MonoClass *element_class, uint32_t iface_token_ref, uint32_t implementation_token_ref, guint32 *exception_gchandle)
+{
+	struct conversion_data data = { 0 };
+	data.element_class = element_class == NULL ? mono_class_get_element_class (mono_class_from_mono_type (array_type)) : element_class;
+	data.element_type = mono_class_get_type (data.element_class);
+	data.iface_token_ref = iface_token_ref;
+	data.implementation_token_ref = implementation_token_ref;
+	return xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_inativeobject_static, &data, exception_gchandle);
 }
 
 MonoArray *

@@ -3535,75 +3535,57 @@ namespace Registrar {
 				default:
 					if (isArray) {
 						var elementType = ((ArrayType)type).ElementType;
-						var isNativeObject = false;
-						
-						setup_call_stack.AppendLine ("if (p{0}) {{", i);
-						setup_call_stack.AppendLine ("NSArray *arr = (NSArray *) p{0};", i);
+
+						body_setup.AppendLine ("MonoArray *marr{0} = NULL;", i);
+						body_setup.AppendLine ("NSArray *arr{0} = NULL;", i);
+						setup_call_stack.AppendLine ("arr{0} = p{0};", i);
 						if (App.EnableDebug)
 							setup_call_stack.AppendLine ("xamarin_check_objc_type (p{0}, [NSArray class], _cmd, self, {0}, managed_method);", i);
-						setup_call_stack.AppendLine ("MonoClass *e_class;");
-						setup_call_stack.AppendLine ("MonoArray *marr;");
-						setup_call_stack.AppendLine ("MonoType *p;");
-						setup_call_stack.AppendLine ("int j;", i);
-						setup_call_stack.AppendLine ("p = xamarin_get_parameter_type (managed_method, {0});", i);
-						setup_call_stack.AppendLine ("e_class = mono_class_get_element_class (mono_class_from_mono_type (p));");
-						setup_call_stack.AppendLine ("marr = mono_array_new (mono_domain_get (), e_class, [arr count]);", i);
-						setup_call_stack.AppendLine ("for (j = 0; j < [arr count]; j++) {{", i);
-						if (elementType.FullName == "System.String") {
-							setup_call_stack.AppendLine ("NSString *sv = (NSString *) [arr objectAtIndex: j];", i);
-							setup_call_stack.AppendLine ("mono_array_setref (marr, j, xamarin_nsstring_to_string (NULL, sv));", i);
-						} else if (IsNSObject (elementType) || (elementType.Namespace == "System" && elementType.Name == "Object") || (isNativeObject = IsNativeObject (elementType))) {
-							setup_call_stack.AppendLine ("NSObject *nobj = [arr objectAtIndex: j];");
-							setup_call_stack.AppendLine ("MonoObject *mobj{0} = NULL;", i);
-							setup_call_stack.AppendLine ("if (nobj) {");
-							if (isNativeObject) {
-								TypeDefinition nativeObjType = elementType.Resolve ();
 
-								if (nativeObjType.IsInterface) {
-									var wrapper_type = GetProtocolAttributeWrapperType (nativeObjType);
-									if (wrapper_type == null)
-										throw ErrorHelper.CreateError (4125, "The registrar found an invalid type '{0}' in signature for method '{1}': " +
-											"The interface must have a Protocol attribute specifying its wrapper type.",
-											td.FullName, descriptiveMethodName);
+						var isString = elementType.Is ("System", "String");
+						var isNSObject = !isString && IsNSObject (elementType);
+						var isINativeObject = !isString && !isNSObject && IsNativeObject (elementType);
 
-									nativeObjType = wrapper_type.Resolve ();
-								}
+						if (isString) {
+							setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_string_array (arr{0}, &exception_gchandle);", i);
+							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
+						} else if (isNSObject) {
+							setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_nsobject_array (arr{0}, xamarin_get_parameter_type (managed_method, {0}), NULL, &exception_gchandle);", i);
+							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
+						} else if (isINativeObject) {
+							TypeDefinition nativeObjType = elementType.Resolve ();
+							var isNativeObjectInterface = nativeObjType.IsInterface;
 
-								// verify that the type has a ctor with two parameters
-								if (!HasIntPtrBoolCtor (nativeObjType))
-									throw ErrorHelper.CreateError (4103, 
-										"The registrar found an invalid type `{0}` in signature for method `{1}`: " + 
-										"The type implements INativeObject, but does not have a constructor that takes " +
-										"two (IntPtr, bool) arguments.", nativeObjType.FullName, descriptiveMethodName);
+							if (isNativeObjectInterface) {
+								var wrapper_type = GetProtocolAttributeWrapperType (nativeObjType);
+								if (wrapper_type == null)
+									throw ErrorHelper.CreateError (4125, "The registrar found an invalid type '{0}' in signature for method '{1}': " +
+										"The interface must have a Protocol attribute specifying its wrapper type.",
+										td.FullName, descriptiveMethodName);
 
+								nativeObjType = wrapper_type.Resolve ();
+							}
 
-								if (nativeObjType.IsInterface) {
-									setup_call_stack.AppendLine ("mobj{0} = xamarin_get_inative_object_static (nobj, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (elementType, TokenType.TypeDef), elementType.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
-									setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
-								} else {
-									// find the MonoClass for this parameter
-									setup_call_stack.AppendLine ("MonoType *type{0};", i);
-									setup_call_stack.AppendLine ("type{0} = xamarin_get_parameter_type (managed_method, {0});", i);
-									setup_call_stack.AppendLine ("mobj{0} = xamarin_get_inative_object_dynamic (nobj, false, mono_type_get_object (mono_domain_get (), mono_class_get_type (e_class)), &exception_gchandle);", i);
-									setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
-								}
+							// verify that the type has a ctor with two parameters
+							if (!HasIntPtrBoolCtor (nativeObjType))
+								throw ErrorHelper.CreateError (4103, 
+									"The registrar found an invalid type `{0}` in signature for method `{1}`: " + 
+									"The type implements INativeObject, but does not have a constructor that takes " +
+									"two (IntPtr, bool) arguments.", nativeObjType.FullName, descriptiveMethodName);
+
+							if (isNativeObjectInterface) {
+								var resolvedElementType = ResolveType (elementType);
+								var iface_token_ref = $"0x{CreateTokenReference (resolvedElementType, TokenType.TypeDef):X} /* {resolvedElementType} */ ";
+								var implementation_token_ref = $"0x{CreateTokenReference (nativeObjType, TokenType.TypeDef):X} /* {nativeObjType} */ ";
+								setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_inativeobject_array_static (arr{0}, xamarin_get_parameter_type (managed_method, {0}), NULL, {1}, {2}, &exception_gchandle);", i, iface_token_ref, implementation_token_ref);
 							} else {
-								setup_call_stack.AppendLine ("mobj{0} = xamarin_get_managed_object_for_ptr_fast (nobj, &exception_gchandle);", i);
-								setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
+								setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_inativeobject_array (arr{0}, xamarin_get_parameter_type (managed_method, {0}), NULL, &exception_gchandle);", i);
 							}
-							if (App.EnableDebug) {
-								setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nobj, {0}, e_class, managed_method);", i);
-							}
-							setup_call_stack.AppendLine ("}");
-							setup_call_stack.AppendLine ("mono_array_setref (marr, j, mobj{0});", i);
+							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 						} else {
 							throw ErrorHelper.CreateError (App, 4111, method.Method, "The registrar cannot build a signature for type `{0}' in method `{1}`.", type.FullName, descriptiveMethodName);
 						}
-						setup_call_stack.AppendLine ("}");
-						setup_call_stack.AppendLine ("arg_ptrs [{0}] = marr;", i);
-						setup_call_stack.AppendLine ("} else {");
-						setup_call_stack.AppendLine ("arg_ptrs [{0}] = NULL;", i);
-						setup_call_stack.AppendLine ("}");
+						setup_call_stack.AppendLine ("arg_ptrs [{0}] = marr{0};", i);
 					} else if (IsNSObject (type)) {
 						if (isRef) {
 							body_setup.AppendLine ("MonoObject *mobj{0} = NULL;", i);
