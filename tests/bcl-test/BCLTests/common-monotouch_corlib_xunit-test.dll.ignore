@@ -355,3 +355,31 @@ System.Tests.GuidTests.Parse_Invalid_NetcoreApp
 
 # Exception messages: System.IO.IOException : BCL tests group  test app isn't present in the test runtime directory. 
 System.Text.Tests.EncodingGetEncodingTest.GetEncoding_EncodingName
+
+# DEVICE FAILURES
+System.Collections.Tests.StackTests.DebuggerAttribute_NullStack_ThrowsArgumentNullException
+System.Collections.Tests.StackTests.DebuggerAttribute
+System.Collections.Tests.QueueTests.DebuggerAttribute_NullQueue_ThrowsArgumentNullException
+System.Collections.Tests.QueueTests.DebuggerAttribute
+System.Collections.Concurrent.Tests.BlockingCollectionTests.TestDebuggerAttributes
+System.Collections.Concurrent.Tests.BlockingCollectionTests.TestDebuggerAttributes_Null
+System.Collections.Specialized.Tests.ListDictionaryTests.Remove_CustomComparerTest
+System.Collections.Specialized.Tests.ListDictionaryTests.Set_CustomComparerTest
+System.Collections.Generic.Tests.ComparerTests.NullableComparisons<Int32>(leftValue: -1, leftHasValue: True, rightValue: 4, rightHasValue: True, expected: -1)
+System.Collections.Generic.Tests.ComparerTests.NullableComparisons<Int32>(leftValue: 4, leftHasValue: True, rightValue: -1, rightHasValue: True, expected: 1)
+System.Collections.Generic.Tests.ComparerTests.NullableComparisons<Int32>(leftValue: -2147483648, leftHasValue: True, rightValue: 0, rightHasValue: False, expected: 1)
+System.Collections.Generic.Tests.ComparerTests.NullableComparisons<Int32>(leftValue: -2147483648, leftHasValue: True, rightValue: 0, rightHasValue: False, expected: 1)
+System.Collections.Generic.Tests.ComparerTests.NullableComparisons<Int32>(leftValue: -2147483648, leftHasValue: True, rightValue: 2147483647, rightHasValue: True, expected: -1)
+System.Collections.Generic.Tests.ComparerTests.NullableComparisons<Int32>(leftValue: 2147483647, leftHasValue: True, rightValue: -2147483648, rightHasValue: True, expected: 1)
+System.Collections.Generic.Tests.ComparerTests.NullableComparisons<Int32>(leftValue: 0, leftHasValue: False, rightValue: -2147483648, rightHasValue: True, expected: -1)
+System.Collections.Generic.Tests.ComparerTests.NullableComparisons<Int32>(leftValue: 0, leftHasValue: False, rightValue: -2147483648, rightHasValue: True, expected: -1)
+System.Tests.ValueTupleTests.TestEquals_GetHashCode
+System.Collections.Tests.HashtableTests.Ctor_Int_Int_IEqualityComparer(capacity: 10, loadFactor: 0,2)
+System.Collections.Tests.HashtableTests.Ctor_Int_Int_IEqualityComparer(capacity: 0, loadFactor: 0,1)
+System.Collections.Tests.HashtableTests.Ctor_Int_Int_IEqualityComparer(capacity: 100, loadFactor: 0,3)
+System.Collections.Tests.HashtableTests.DebuggerAttribute
+System.Collections.Tests.HashtableTests.ContainsKey_EqualObjects
+System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestDebuggerAttributes_Null
+System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestDebuggerAttributes
+System.SpanTests.ReadOnlySpanTests.BinarySearch_UInt
+System.SpanTests.ReadOnlySpanTests.BinarySearch_Double

@@ -470,7 +470,7 @@ namespace xharness
 						Console.WriteLine (line);
 						tests_run = line.Replace ("Tests run: ", "");
 						break;
-					} else if (line.Contains ("FAIL")) {
+					} else if (line.Contains ("[FAIL]")) {
 						Console.WriteLine (line);
 						failed = true;
 					}
