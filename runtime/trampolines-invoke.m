@@ -284,6 +284,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								if (exception_gchandle != 0)
 									goto exception_handling;
 								LOGZ (" argument %i is a ref ptr/INativeObject %p: %p\n", i + 1, arg, arg_frame [ofs]);
+							} else if (p_klass == mono_get_string_class ()) {
+								arg_frame [ofs] = xamarin_nsstring_to_string (domain, *(NSString **) arg);
+								LOGZ (" argument %i is a ref NSString %p: %p\n", i + 1, arg, arg_frame [ofs]);
 							} else {
 								exception_gchandle = xamarin_get_exception_for_parameter (8029, 0, "Unable to marshal the byref parameter", sel, method, p, i, true);
 								goto exception_handling;
