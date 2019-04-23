@@ -180,9 +180,7 @@
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject_with_type",
 			"id", "IntPtr", "obj",
 			"void *", "IntPtr", "type",
-			"int32_t *", "out bool", "created",
-			"SEL", "IntPtr", "selector",
-			"MonoReflectionMethod *", "IntPtr", "method"
+			"int32_t *", "out bool", "created"
 		) {
 			WrappedManagedFunction = "GetNSObjectWithType",
 			OnlyDynamicUsage = false,

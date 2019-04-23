@@ -703,11 +703,11 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, iface, type));
 		}
 
-		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created, IntPtr selector, IntPtr method)
+		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created)
 		{
 			// It doesn't work to use System.Type in the signature, we get garbage.
 			var type = (System.Type) ObjectWrapper.Convert (type_ptr);
-			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created, selector, method));
+			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created));
 		}
 
 		static void Dispose (IntPtr mobj)
@@ -1072,7 +1072,7 @@ namespace ObjCRuntime {
 			Ignore,
 		}
 
-		static void MissingCtor (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr))
+		static void MissingCtor (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution)
 		{
 			string msg;
 
@@ -1097,26 +1097,15 @@ namespace ObjCRuntime {
 				return;
 			}
 
-			if (selector != IntPtr.Zero || method != IntPtr.Zero)
-				msg += "\nAdditional information:\n";
-
-			if (selector != IntPtr.Zero)
-				msg += $"\tSelector: {Selector.GetName (selector)}\n";
-			if (method != IntPtr.Zero) {
-				var mi = ObjectWrapper.Convert (method) as MethodBase;
-				if (mi != null)
-					msg += $"\tMethod: {mi.FullName}\n";
-			}
-
 			throw ErrorHelper.CreateError (8027, string.Format (msg, ptr.ToString ("x"), new Class (klass).Name, type.FullName));
 		}
 
-		static NSObject ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr))
+		static NSObject ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution)
 		{
 			Type type = Class.Lookup (klass);
 
 			if (type != null) {
-				return ConstructNSObject<NSObject> (ptr, type, missingCtorResolution, selector, method);
+				return ConstructNSObject<NSObject> (ptr, type, missingCtorResolution);
 			} else {
 				return new NSObject (ptr);
 			}
@@ -1129,7 +1118,7 @@ namespace ObjCRuntime {
 
 		// The generic argument T is only used to cast the return value.
 		// The 'selector' and 'method' arguments are only used in error messages.
-		static T ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) where T: class, INativeObject
+		static T ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T: class, INativeObject
 		{
 			if (type == null)
 				throw new ArgumentNullException ("type");
@@ -1137,7 +1126,7 @@ namespace ObjCRuntime {
 			var ctor = GetIntPtrConstructor (type);
 
 			if (ctor == null) {
-				MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution, selector, method);
+				MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution);
 				return null;
 			}
 
@@ -1240,7 +1229,7 @@ namespace ObjCRuntime {
 			return GetNSObject (ptr, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
-		internal static NSObject GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) {
+		internal static NSObject GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false) {
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -1249,7 +1238,7 @@ namespace ObjCRuntime {
 			if (o != null)
 				return o;
 
-			return ConstructNSObject (ptr, Class.GetClassForObject (ptr), missingCtorResolution, selector, method);
+			return ConstructNSObject (ptr, Class.GetClassForObject (ptr), missingCtorResolution);
 		}
 
 		static public T GetNSObject<T> (IntPtr ptr) where T : NSObject
@@ -1320,7 +1309,7 @@ namespace ObjCRuntime {
 		//
 
 		// The 'selector' and 'method' arguments are only used in error messages.
-		static NSObject GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, out bool created, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) {
+		static NSObject GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, out bool created) {
 			created = false;
 
 			if (ptr == IntPtr.Zero)
@@ -1352,7 +1341,7 @@ namespace ObjCRuntime {
 			}
 
 			created = true;
-			return ConstructNSObject<NSObject> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound, selector, method);
+			return ConstructNSObject<NSObject> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
 		static Type LookupINativeObjectImplementation (IntPtr ptr, Type target_type, Type implementation = null)

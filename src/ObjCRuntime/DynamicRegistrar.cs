@@ -906,11 +906,15 @@ namespace Registrar {
 			if (res.IsInstanceCategory) {
 				mthis = IntPtr.Zero;
 			} else {
-				var nsobj = Runtime.GetNSObject (obj, Runtime.MissingCtorResolution.ThrowConstructor1NotFound, true, selector, ObjectWrapper.Convert (res.Method));
-				mthis = ObjectWrapper.Convert (nsobj);
-				if (res.Method.ContainsGenericParameters) {
-					res.WriteUnmanagedDescription (desc, Runtime.FindClosedMethod (nsobj.GetType (), res.Method));
-					return;
+				try {
+					var nsobj = Runtime.GetNSObject (obj, Runtime.MissingCtorResolution.ThrowConstructor1NotFound, true);
+					mthis = ObjectWrapper.Convert (nsobj);
+					if (res.Method.ContainsGenericParameters) {
+						res.WriteUnmanagedDescription (desc, Runtime.FindClosedMethod (nsobj.GetType (), res.Method));
+						return;
+					}
+				} catch (Exception e) {
+					throw ErrorHelper.CreateError (8035, e, $"Failed to get the 'this' instance in a method call to {res.DescriptiveMethodName}.");
 				}
 			}
 

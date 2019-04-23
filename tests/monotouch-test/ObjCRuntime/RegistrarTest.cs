@@ -477,7 +477,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				handle = Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
 				Assert.Fail ("Expected [[Open_1 alloc] init] to fail.");
 			} catch (PlatformException mex) {
-				Assert.AreEqual ("Cannot construct an instance of the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+Open`1' from Objective-C because the type is generic.", mex.Message);
+				Assert.That (mex.ToString (), Is.StringContaining ("Cannot construct an instance of the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+Open`1' from Objective-C because the type is generic."), "Exception message");
 			} finally {
 				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("release")); // or should this be dealloc directly?
 			}

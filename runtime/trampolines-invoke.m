@@ -19,6 +19,19 @@
 #define LOGZ(...)
 #endif
 
+static guint32
+xamarin_get_exception_for_method (int code, guint32 inner_exception_gchandle, const char *reason, SEL sel, id self)
+{
+	guint32 exception_gchandle = 0;
+	char *msg = xamarin_strdup_printf ("%s\n"
+		"Additional information:\n"
+		"\tSelector: %s\n"
+		"\tType: %s\n", reason, sel_getName (sel), class_getName ([self class]));
+	exception_gchandle = xamarin_create_product_exception_with_inner_exception (code, inner_exception_gchandle, msg);
+	xamarin_free (msg);
+	return exception_gchandle;
+}
+
 guint32
 xamarin_get_exception_for_parameter (int code, guint32 inner_exception_gchandle, const char *reason, SEL sel, MonoMethod *method, MonoType *p, int i, bool to_managed)
 {
@@ -120,8 +133,10 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	} else {
 		xamarin_get_method_and_object_for_selector ([self class], sel, is_static, self, &mthis, desc, &exception_gchandle);
 	}
-	if (exception_gchandle != 0)
+	if (exception_gchandle != 0) {
+		exception_gchandle = xamarin_get_exception_for_method (8034, exception_gchandle, "Failed to lookup the required marshalling information.", sel, self);
 		goto exception_handling;
+	}
 
 	method = xamarin_get_reflection_method_method (desc->method);
 	msig = mono_method_signature (method);
@@ -139,9 +154,11 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	if (isCategoryInstance) {
 		// we know this must be an id
 		p = mono_signature_get_params (msig, &iter);
-		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (self, false, p, sel, method, &exception_gchandle);
-		if (exception_gchandle != 0)
+		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (self, false, p, &exception_gchandle);
+		if (exception_gchandle != 0) {
+			exception_gchandle = xamarin_get_exception_for_parameter (8029, exception_gchandle, "Unable to marshal the parameter", sel, method, p, 0, true);
 			goto exception_handling;
+		}
 		mofs = 1;
 	}
 
@@ -216,9 +233,11 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 									MonoObject *obj;
 									NSObject *targ = *(NSObject **) arg;
 
-									obj = xamarin_get_nsobject_with_type_for_ptr (targ, false, p, sel, method, &exception_gchandle);
-									if (exception_gchandle != 0)
+									obj = xamarin_get_nsobject_with_type_for_ptr (targ, false, p, &exception_gchandle);
+									if (exception_gchandle != 0) {
+										exception_gchandle = xamarin_get_exception_for_parameter (8029, exception_gchandle, "Unable to marshal the byref parameter", sel, method, p, i, true);
 										goto exception_handling;
+									}
 #if DEBUG
 									xamarin_verify_parameter (obj, sel, self, targ, i, p_klass, method);
 #endif
@@ -345,9 +364,11 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								} else {
 									MonoObject *obj;
 									id targ = [arr objectAtIndex: j];
-									obj = xamarin_get_nsobject_with_type_for_ptr (targ, false, e, sel, method, &exception_gchandle);
-									if (exception_gchandle != 0)
+									obj = xamarin_get_nsobject_with_type_for_ptr (targ, false, e, &exception_gchandle);
+									if (exception_gchandle != 0) {
+										exception_gchandle = xamarin_get_exception_for_parameter (8029, exception_gchandle, "Unable to marshal the array parameter", sel, method, p, i, true);
 										goto exception_handling;
+									}
 #if DEBUG
 									xamarin_verify_parameter (obj, sel, self, targ, i, e_klass, method);
 #endif
@@ -364,9 +385,11 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							}
 							MonoObject *obj;
 							int32_t created = false;
-							obj = xamarin_get_nsobject_with_type_for_ptr_created (id_arg, false, p, &created, sel, method, &exception_gchandle);
-							if (exception_gchandle != 0)
+							obj = xamarin_get_nsobject_with_type_for_ptr_created (id_arg, false, p, &created, &exception_gchandle);
+							if (exception_gchandle != 0) {
+								exception_gchandle = xamarin_get_exception_for_parameter (8029, exception_gchandle, "Unable to marshal the parameter", sel, method, p, i, true);
 								goto exception_handling;
+							}
 
 							if (created && obj) {
 								bool is_transient = xamarin_is_parameter_transient (mono_method_get_object (domain, method, NULL), i, &exception_gchandle);
@@ -401,7 +424,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								[id_arg autorelease];
 							}
 							MonoObject *obj;
-							obj = xamarin_get_nsobject_with_type_for_ptr (id_arg, false, p, sel, method, &exception_gchandle);
+							obj = xamarin_get_nsobject_with_type_for_ptr (id_arg, false, p, &exception_gchandle);
 							if (exception_gchandle != 0)
 								goto exception_handling;
 #if DEBUG

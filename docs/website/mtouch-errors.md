@@ -3574,3 +3574,15 @@ This usually indicates a bug in Objective-C binding code.
 If the managed binding is from a third-party vendor, please contact the vendor.
 
 If the managed binding is shipped with Xamarin.iOS, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MT8034" />
+
+### MT8034: Failed to lookup the required marshalling information.
+
+This exception will have an inner exception which gives the reason for the failure.
+
+<a name="MT8035" />
+
+### MT8035: Failed to get the 'this' instance in a method call to {method}.
+
+This exception will have an inner exception which gives the reason for the failure.
