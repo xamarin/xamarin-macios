@@ -345,6 +345,7 @@ function install_specific_xcode () {
 		cd $PROVISION_DOWNLOAD_DIR
 		# make sure there's nothing interfering
 		rm -Rf *.app
+		rm -Rf $XCODE_ROOT
 		# extract
 		/System/Library/CoreServices/Applications/Archive\ Utility.app/Contents/MacOS/Archive\ Utility "$XCODE_DMG"
 		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
