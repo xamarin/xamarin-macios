@@ -538,7 +538,7 @@ public class BindingTouch {
 					try {
 						universe.LoadFile (r);
 					} catch (Exception ex) {
-						ErrorHelper.Show (new BindingException (1104, false, "Could not load the referenced library '{0}': {1}.", r, ex.Message));
+						ErrorHelper.Warning (1104, "Could not load the referenced library '{0}': {1}.", r, ex.Message);
 					}
 				}
 			}
