@@ -3498,7 +3498,8 @@ namespace Registrar {
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 						}
 						setup_call_stack.AppendLine ("arg_ptrs [{0}] = &a{0};", i);
-						copyback.AppendLine ("*p{0} = a{0};", i);
+						copyback.AppendLine ("*p{0} = a{0} ? (SEL) xamarin_get_handle_for_inativeobject (a{0}, &exception_gchandle) : NULL;", i);
+						copyback.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					} else {
 						setup_call_stack.AppendLine ("arg_ptrs [{0}] = p{0} ? xamarin_get_selector (p{0}, &exception_gchandle) : NULL;", i);
 						setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
@@ -3513,7 +3514,8 @@ namespace Registrar {
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 						}
 						setup_call_stack.AppendLine ("arg_ptrs [{0}] = &a{0};", i);
-						copyback.AppendLine ("*p{0} = a{0};", i);
+						copyback.AppendLine ("*p{0} = a{0} ? (Class) xamarin_get_handle_for_inativeobject (a{0}, &exception_gchandle) : NULL;", i);
+						copyback.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					} else {
 						setup_call_stack.AppendLine ("arg_ptrs [{0}] = p{0} ? xamarin_get_class (p{0}, &exception_gchandle) : NULL;", i);
 						setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");

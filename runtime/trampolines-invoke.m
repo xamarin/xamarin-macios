@@ -245,6 +245,8 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			switch (type [0]) {
 				case _C_PTR: {
 					switch (type [1]) {
+						case _C_CLASS:
+						case _C_SEL:
 						case _C_ID: {
 							MonoClass *p_klass = mono_class_from_mono_type (p);
 							if (!mono_type_is_byref (p)) {
@@ -277,6 +279,11 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 									goto exception_handling;
 								}
 								LOGZ (" argument %i is a ref NSObject parameter: %p = %p\n", i + 1, arg, arg_frame [ofs]);
+							} else if (xamarin_is_class_inativeobject (p_klass)) {
+								arg_frame [ofs] = xamarin_get_inative_object_dynamic (*(NSObject **) arg, false, mono_type_get_object (domain, p), &exception_gchandle);
+								if (exception_gchandle != 0)
+									goto exception_handling;
+								LOGZ (" argument %i is a ref ptr/INativeObject %p: %p\n", i + 1, arg, arg_frame [ofs]);
 							} else {
 								exception_gchandle = xamarin_get_exception_for_parameter (8029, 0, "Unable to marshal the byref parameter", sel, method, p, i, true);
 								goto exception_handling;
@@ -550,7 +557,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 				continue;
 			}
 
-			if (type [0] == _C_PTR && type [1] == _C_ID) {
+			if (type [0] == _C_PTR && (type [1] == _C_ID || type [1] == _C_SEL || type [1] == _C_CLASS)) {
 				MonoClass *p_klass = mono_class_from_mono_type (p);
 				MonoObject *value = *(MonoObject **) arg_ptrs [i + mofs];
 				MonoObject *pvalue = (MonoObject *) arg_copy [i + mofs];
