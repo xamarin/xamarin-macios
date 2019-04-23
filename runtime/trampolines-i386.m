@@ -32,10 +32,10 @@ create_mt_exception (char *msg)
 
 #ifdef TRACE
 static void
-dump_state (struct CallState *state, id self, SEL sel)
+dump_state (struct CallState *state)
 {
 	fprintf (stderr, "type: %u is_stret: %i self: %p SEL: %s eax: 0x%x edx: 0x%x esp: 0x%x -- double_ret: %f float_ret: %f\n",
-		state->type, (state->type & Tramp_Stret) == Tramp_Stret, self, sel_getName (sel), state->eax, state->edx, state->esp,
+		state->type, state->is_stret (), state->self (), sel_getName (state->sel ()), state->eax, state->edx, state->esp,
 		state->double_ret, state->float_ret);
 }
 #else
@@ -183,16 +183,11 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 void
 xamarin_arch_trampoline (struct CallState *state)
 {
-	enum TrampolineType type = (enum TrampolineType) state->type;
-	bool is_stret = (type & Tramp_Stret) == Tramp_Stret;
-	int offset = is_stret ? 1 : 0;
-	id self = ((id *) state->esp) [offset + 1];
-	SEL sel = ((SEL *) state->esp) [offset + 2];
-	dump_state (state, self, sel);
+	dump_state (state);
 	struct ParamIterator iter;
 	iter.state = state;
-	xamarin_invoke_trampoline (type, self, sel, param_iter_next, marshal_return_value, &iter);
-	dump_state (state, self, sel);
+	xamarin_invoke_trampoline ((enum TrampolineType) state->type, state->self (), state->sel (), param_iter_next, marshal_return_value, &iter);
+	dump_state (state);
 }
 
 #endif /* __i386__ */

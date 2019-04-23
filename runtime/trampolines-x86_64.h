@@ -25,6 +25,10 @@ struct CallState {
 	long double xmm5;
 	long double xmm6;
 	long double xmm7;
+
+	bool is_stret () { return (type & Tramp_Stret) == Tramp_Stret; }
+	id self ()  { return is_stret () ? (id) rsi : (id) rdi; }
+	SEL sel () { return is_stret () ? (SEL) rdx : (SEL) rsi; }
 };
 
 struct ParamIterator {
