@@ -69,7 +69,7 @@ public static class ErrorHelper {
 
 	public static void Warning (int code, string message, params object[] args)
 	{
-		ShowInternal (new ProductException (code, true, message, args));
+		Show (new ProductException (code, false, message, args));
 	}
 
 	static public void Show (Exception e, bool rethrow_errors = true)
