@@ -719,7 +719,9 @@ It's possible to force the linker to keep the dynamic registrar by adding
 `--optimize=-remove-dynamic-registrar` to the additional mmp arguments in
 the project's Mac Build options.
 
-### <a name="MT8027"/>MT8027: Failed to marshal the Objective-C object {handle} (type: {managed_type}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance.
+<a name="MT8027" />
+
+### MM8027: Failed to marshal the Objective-C object {handle} (type: {managed_type}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance.
 
 This occurs when the Xamarin.Mac runtime finds an Objective-C object without a
 corresponding managed wrapper object, and when trying to create that managed
@@ -747,7 +749,9 @@ There are a few reasons this may happen:
 
 * It could be a bug in Xamarin.Mac. If this is the case, please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new).
 
-### <a name="MM8028"/>MM8028: The runtime function {function} has been linked away.
+<a name="MM8028" />
+
+### MM8028: The runtime function {function} has been linked away.
 
 This usually indicates a bug in Xamarin.Mac, because runtime functions should
 not be linked away if they're needed. Please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
