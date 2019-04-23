@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		public void Metal ()
 		{
 			TestRuntime.AssertDevice ();
-			TestRuntime.AssertXcodeVersion (9, 0);
+			TestRuntime.AssertXcodeVersion (10, 0);
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
