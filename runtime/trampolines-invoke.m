@@ -122,6 +122,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	SList *dispose_list = NULL;
 	SList *free_list = NULL;
 	int num_arg;
+	int managed_arg_count;
 	NSMethodSignature *sig;
 
 	if (is_static) {
@@ -143,8 +144,10 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	int frame_length;
 	void **arg_frame;
 	void **arg_ptrs;
+	void **arg_copy = NULL; // used to detect if ref/out parameters were changed.
+	bool *writeback = NULL; // used to detect if a particular parameter is ref/out parameter.
 	void *iter = NULL;
-	gboolean needs_writeback = FALSE;
+	gboolean needs_writeback = FALSE; // determines if there are any ref/out parameters.
 	MonoType *p;
 	int ofs;
 	int i;
@@ -173,7 +176,8 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 	frame_length = [sig frameLength] - (sizeof (void *) * (isCategoryInstance ? 1 : 2));
 	arg_frame = (void **) alloca (frame_length);
-	arg_ptrs = (void **) alloca (sizeof (void *) * (num_arg + (isCategoryInstance ? 1 : 0)));
+	managed_arg_count = num_arg + (isCategoryInstance ? 1 : 0);
+	arg_ptrs = (void **) alloca (sizeof (void *) * managed_arg_count);
 	
 #ifdef TRACE
 	memset (arg_ptrs, 0xDEADF00D, num_arg * sizeof (void*));
@@ -250,11 +254,22 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							bool is_parameter_out = xamarin_is_parameter_out (mono_method_get_object (domain, method, NULL), i, &exception_gchandle);
 							if (exception_gchandle != 0)
 								goto exception_handling;
-							if (is_parameter_out) {
-								arg_frame [ofs] = NULL;
-								arg_ptrs [i + mofs] = &arg_frame [frameofs];
+
+							if (!needs_writeback) {
 								needs_writeback = TRUE;
+								arg_copy = (void **) calloc (managed_arg_count, sizeof (void *));
+								writeback = (bool *) calloc (managed_arg_count, sizeof (bool));
+							}
+							arg_frame [ofs] = NULL;
+							arg_ptrs [i + mofs] = &arg_frame [frameofs];
+							writeback [i + mofs] = TRUE;
+							if (is_parameter_out) {
 								LOGZ (" argument %i is an out parameter. Passing in a pointer to a NULL value.\n", i + 1);
+								if (arg != NULL) {
+									// Write NULL to the argument we got right away. Managed code might not write to it (or write NULL),
+									// in which case our code to detect if the value changed will say it didn't and not copy it back.
+									*(NSObject **) arg = NULL;
+								}
 							} else if (xamarin_is_class_nsobject (p_klass)) {
 								MonoObject *obj;
 								NSObject *targ = *(NSObject **) arg;
@@ -268,13 +283,13 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								xamarin_verify_parameter (obj, sel, self, targ, i, p_klass, method);
 #endif
 								arg_frame [ofs] = obj;
-								arg_ptrs [i + mofs] = &arg_frame [frameofs];
 								LOGZ (" argument %i is a ref NSObject parameter: %p = %p\n", i + 1, arg, obj);
-								needs_writeback = TRUE;
 							} else {
 								exception_gchandle = xamarin_get_exception_for_parameter (8029, 0, "Unable to marshal the byref parameter", sel, method, p, i, true);
 								goto exception_handling;
 							}
+							arg_copy [i + mofs] = arg_frame [ofs];
+							LOGZ (" argument %i's value: %p\n", i + 1, arg_copy [i + mofs]);
 							break;
 						}
 						case _C_PTR: {
@@ -519,6 +534,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		fprintf (stderr, " calling managed method with %i arguments: ", num_arg);
 		for (int i = 0; i < num_arg; i++)
 			fprintf (stderr, "%p ", arg_ptrs [i]);
+		fprintf (stderr, " writeback: %i", needs_writeback);
 		fprintf (stderr, "\n");
 #endif
 
@@ -528,6 +544,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		fprintf (stderr, " called managed method with %i arguments: ", num_arg);
 		for (int i = 0; i < num_arg; i++)
 			fprintf (stderr, "%p ", arg_ptrs [i]);
+		fprintf (stderr, " writeback: %i", needs_writeback);
 		fprintf (stderr, "\n");
 #endif
 
@@ -547,8 +564,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 			p = mono_signature_get_params (msig, &iter);
 
-			if (size > sizeof (void *)) {
+			if (size > sizeof (void *) || !writeback [i + mofs]) {
 				// Skip over any structs. In any case they can't be write-back parameters.
+				// Also skip over any arguments we aren't supposed to write back to.
 				iterator (IteratorIterate, context, type, size, NULL, &exception_gchandle);
 				if (exception_gchandle != 0)
 					goto exception_handling;
@@ -560,10 +578,15 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 					goto exception_handling;
 				if (type [0] == _C_PTR && type [1] == _C_ID) {
 					MonoClass *p_klass = mono_class_from_mono_type (p);
+					MonoObject *value = *(MonoObject **) arg_ptrs [i + mofs];
+					MonoObject *pvalue = (MonoObject *) arg_copy [i + mofs];
 
 					if (arg == NULL) {
 						// Can't write back to a NULL pointer, so ignore this.
 						LOGZ (" not writing back to a null pointer\n");
+					} else if (value == pvalue) {
+						// The value didn't change, so no need to copyback.
+						LOGZ (" not writing back managed object to argument at index %i (%p => %p) because it didn't change\n", i, arg, value);
 					} else if (p_klass == mono_get_string_class ()) {
 						MonoString *value = (MonoString *) arg_frame [ofs];
 						if (value == NULL) {
@@ -634,6 +657,16 @@ exception_handling:
 			list = list->next;
 		}
 		s_list_free (free_list);
+	}
+
+	if (arg_copy != NULL) {
+		free (arg_copy);
+		arg_copy = NULL;
+	}
+
+	if (writeback) {
+		free (writeback);
+		writeback = NULL;
 	}
 
 	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
