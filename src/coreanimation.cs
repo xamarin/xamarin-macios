@@ -1760,12 +1760,17 @@ namespace CoreAnimation {
 		NSString RenderAdditive { get; }			
 	}
 
+// Corresponding headers were removed in Xcode 9 without any explanation
+// rdar #33590997 was filled - no news
+// 'initWithType:' and 'behaviorWithType:' API now cause rejection
+// https://trello.com/c/J8BDDUV9/86-33590997-coreanimation-quartzcore-api-removals
+#if !XAMCORE_4_0
 	[iOS (7,0), Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterBehavior : NSSecureCoding {
 
-		[Export ("initWithType:")]
-		IntPtr Constructor (NSString type);
+		// [Export ("initWithType:")]
+		// IntPtr Constructor (NSString type);
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -1780,8 +1785,8 @@ namespace CoreAnimation {
 		[Static][Export ("behaviorTypes")]
 		NSString[] BehaviorTypes { get; }
 
-		[Static][Export ("behaviorWithType:")]
-		CAEmitterBehavior Create (NSString type);
+		// [Static][Export ("behaviorWithType:")]
+		// CAEmitterBehavior Create (NSString type);
 
 		[Field ("kCAEmitterBehaviorAlignToMotion")]
 		NSString AlignToMotion { get; }			
@@ -1808,6 +1813,7 @@ namespace CoreAnimation {
 		[Field ("kCAEmitterBehaviorWave")]
 		NSString Wave { get; }			
 	}
+#endif
 
 #if MONOMAC
 	[Internal]
