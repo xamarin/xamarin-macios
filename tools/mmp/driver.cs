@@ -1063,7 +1063,11 @@ namespace Xamarin.Bundler {
 			var sb = new StringBuilder ();
 			using (var sw = new StringWriter (sb)) {
 				sw.WriteLine ("#define MONOMAC 1");
-				sw.WriteLine ("#include <xamarin/xamarin.h>");
+				if (IsClassic) {
+					sw.WriteLine ("#include <xamarin-classic/xamarin.h>");
+				} else {
+					sw.WriteLine ("#include <xamarin/xamarin.h>");
+				}
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
 				if (Driver.Registrar == RegistrarMode.PartialStatic)
