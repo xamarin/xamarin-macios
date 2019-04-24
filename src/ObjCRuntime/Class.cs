@@ -19,6 +19,9 @@ using Registrar;
 
 namespace ObjCRuntime {
 	public partial class Class : INativeObject
+#if !COREBUILD
+	, IEquatable<Class>
+#endif
 	{
 #if !COREBUILD
 		public static bool ThrowOnInitFailure = true;
@@ -98,6 +101,24 @@ namespace ObjCRuntime {
 		public static IntPtr GetHandle (string name)
 		{
 			return objc_getClass (name);
+		}
+
+		public override bool Equals (object right)
+		{
+			return Equals (right as Class);
+		}
+
+		public bool Equals (Class right)
+		{
+			if (right == null)
+				return false;
+
+			return handle == right.handle;
+		}
+
+		public override int GetHashCode ()
+		{
+			return handle.GetHashCode ();
 		}
 
 		// This method is treated as an intrinsic operation by
