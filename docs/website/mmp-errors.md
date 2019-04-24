@@ -797,3 +797,9 @@ This exception will have an inner exception which gives the reason for the failu
 ### MM8035: Failed to get the 'this' instance in a method call to {method}.
 
 This exception will have an inner exception which gives the reason for the failure.
+
+<a name="MM8036" />
+
+### MM8036: Failed to marshal the value at index {index}.
+
+This exception will have an inner exception which gives the reason for the failure.
