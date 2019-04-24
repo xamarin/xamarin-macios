@@ -3586,3 +3586,9 @@ This exception will have an inner exception which gives the reason for the failu
 ### MT8035: Failed to get the 'this' instance in a method call to {method}.
 
 This exception will have an inner exception which gives the reason for the failure.
+
+<a name="MT8036" />
+
+### MT8036: Failed to convert the value at index {index} from {type} to {type}.
+
+This exception will have an inner exception which gives the reason for the failure.
