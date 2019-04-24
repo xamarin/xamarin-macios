@@ -23,6 +23,7 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreAnimation {
 
+	[Ignore ("CAEmitterBehavior is now being rejected by Apple")]
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class EmitterBehaviorTest {
