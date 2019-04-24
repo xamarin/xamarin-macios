@@ -1,10 +1,11 @@
 //
-// StaticRegistrar.cs: The static registrar
+// ClassicStaticRegistrar.cs: a copy of StaticRegistrar when StaticRegistrar was compatible with the binary files (libxammac, XamMac.dll) we ship for Xamarin.Mac Classic.
 // 
 // Authors:
 //   Rolf Bjarne Kvinge <rolf@xamarin.com>
 //
 // Copyright 2013 Xamarin Inc. 
+// Copyright 2019 Microsoft Corp.
 //
 
 using System;
