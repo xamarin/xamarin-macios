@@ -6027,7 +6027,7 @@ namespace MetalPerformanceShaders {
 		void EncodeReconstruction (IMTLCommandBuffer commandBuffer, IMTLTexture guidanceTexture, IMTLTexture coefficientsTexture, IMTLTexture destinationTexture);
 	}
 
-	[TV (11,0), iOS (11,0), Mac (10,13, onlyOn64: true)]
+	[TV (12,0), iOS (12,0), Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (MPSKernel))]
 	[DisableDefaultCtor]
 	interface MPSImageNormalizedHistogram {
