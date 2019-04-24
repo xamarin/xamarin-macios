@@ -795,8 +795,6 @@ namespace Xamarin.Bundler {
 
 			ExtractNativeLinkInfo ();
 
-			BuildTarget.StaticRegistrar = new StaticRegistrar (BuildTarget);
-
 			BuildTarget.ValidateAssembliesBeforeLink ();
 
 			if (!no_executable) {

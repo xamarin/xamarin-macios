@@ -464,7 +464,16 @@ namespace Xamarin.Bundler {
 #if MONOTOUCH
 			BuildTarget = BuildTarget.Simulator;
 #endif
-			var registrar = new Registrar.StaticRegistrar (this);
+			Registrar.IStaticRegistrar registrar;
+#if MMP
+			if (Driver.IsClassic) {
+				registrar = new Registrar.ClassicStaticRegistrar (this);
+			} else {
+				registrar = new Registrar.StaticRegistrar (this);
+			}
+#else
+			registrar = new Registrar.StaticRegistrar (this);
+#endif
 			if (RootAssemblies.Count == 1)
 				registrar.GenerateSingleAssembly (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else
