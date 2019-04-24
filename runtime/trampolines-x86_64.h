@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-struct CallState {
+struct XamarinCallState {
 	uint64_t type;
 	uint64_t rdi;                        // 1st argument
 	union {
@@ -25,16 +25,20 @@ struct CallState {
 	long double xmm5;
 	long double xmm6;
 	long double xmm7;
+
+	bool is_stret () { return (type & Tramp_Stret) == Tramp_Stret; }
+	id self ()  { return is_stret () ? (id) rsi : (id) rdi; }
+	SEL sel () { return is_stret () ? (SEL) rdx : (SEL) rsi; }
 };
 
 struct ParamIterator {
-	struct CallState *state;
+	struct XamarinCallState *state;
 	int byte_count;
 	int float_count;
 	uint8_t *stack_next;
 };
 
-void xamarin_arch_trampoline (struct CallState *state);
+void xamarin_arch_trampoline (struct XamarinCallState *state);
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -178,6 +178,10 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1063'/>BI1063: The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '*'.
 
+### <a name='BI1065'/>BI1065: Unsupported parameter type '{type}' for the parameter '{name}' in {method}.
+
+### <a name='BI1066'/>BI1066: Unsupported return type '{type}' in {method}.
+
 # BI11xx: warnings
 
 <!-- 11xx: warnings -->

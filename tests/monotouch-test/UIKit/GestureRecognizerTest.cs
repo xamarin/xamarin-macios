@@ -28,6 +28,14 @@ namespace MonoTouchFixtures.UIKit {
 	public class GestureRecognizerTest {
 
 		[Test]
+		public void DoubleDispose ()
+		{
+			using (var gr = new UIGestureRecognizer ()) {
+				gr.Dispose ();
+			}
+		}
+
+		[Test]
 		public void Null ()
 		{
 			using (var gr = new UIGestureRecognizer (Null)) {

@@ -336,7 +336,6 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[Ignore ("Fails with: api.cs(10,17): error CS0246: The type or namespace name `CBUUID' could not be found. Are you missing `CoreBluetooth' using directive?")]
 		public void GenericStrongDictionary ()
 		{
 			BuildFile (Profile.iOS, "generic-strong-dictionary.cs");

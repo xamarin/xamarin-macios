@@ -458,11 +458,13 @@ timestamps {
                         stage ('Build') {
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
-                            withEnv ([
-                                "CURRENT_BRANCH=${branchName}",
-                                "PACKAGE_HEAD_BRANCH=${branchName}"
-                                ]) {
-                                sh ("${workspace}/xamarin-macios/jenkins/build.sh --configure-flags --enable-xamarin")
+                            timeout (time: 1, unit: 'HOURS') {
+                                withEnv ([
+                                    "CURRENT_BRANCH=${branchName}",
+                                    "PACKAGE_HEAD_BRANCH=${branchName}"
+                                    ]) {
+                                    sh ("${workspace}/xamarin-macios/jenkins/build.sh --configure-flags --enable-xamarin")
+                                }
                             }
                         }
 
