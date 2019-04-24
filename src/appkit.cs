@@ -17458,7 +17458,7 @@ namespace AppKit {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
-		[Wrap ("WeakDelegate")]
+		[Wrap ("WeakDelegate", IsVirtual = true)]
 		[Protocolize]
 		NSTabViewDelegate Delegate { get; set; }
 
