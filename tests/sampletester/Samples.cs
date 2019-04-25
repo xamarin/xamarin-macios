@@ -145,6 +145,8 @@ namespace Samples {
 		const string HASH = "206f4c3a2be1e988eda2ad9130a37019c60f1c7e";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+				// Build solution instead of csproj.
+				{ "WebServices/TodoWCF/iOS/TodoWCF.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "WebServices/TodoWCF/TodoWCF.sln" } },
 			};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
