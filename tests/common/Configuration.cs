@@ -10,7 +10,7 @@ using Xamarin.Utils;
 
 namespace Xamarin.Tests
 {
-	class Configuration
+	static partial class Configuration
 	{
 		public const string XI_ProductName = "MonoTouch";
 		public const string XM_ProductName = "Xamarin.Mac";
@@ -19,6 +19,7 @@ namespace Xamarin.Tests
 
 		static string mt_root;
 		static string ios_destdir;
+		static string mac_destdir;
 		public static string mt_src_root;
 		public static string sdk_version;
 		public static string watchos_sdk_version;
@@ -41,6 +42,32 @@ namespace Xamarin.Tests
 		public static bool include_tvos;
 		public static bool include_watchos;
 		public static bool include_device;
+
+		static bool? use_system; // if the system-installed XI/XM should be used instead of the local one.
+		public static bool UseSystem {
+			get {
+				if (!use_system.HasValue)
+					use_system = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("TESTS_USE_SYSTEM"));
+				return use_system.Value;
+			}
+			set {
+				use_system = value;
+			}
+		}
+
+		public static string XcodeLocation {
+			get {
+				return xcode_root;
+			}
+		}
+
+		public static string IOS_DESTDIR {
+			get { return ios_destdir;  }
+		}
+
+		public static string MAC_DESTDIR {
+			get { return mac_destdir; }
+		}
 
 		// This is the location of an Xcode which is older than the recommended one.
 		public static string GetOldXcodeRoot (Version min_version = null)
@@ -99,7 +126,7 @@ namespace Xamarin.Tests
 
 		static void ParseConfigFiles ()
 		{
-			var test_config = FindConfigFiles ("test.config");
+			var test_config = FindConfigFiles (UseSystem ? "test-system.config" : "test.config");
 			if (!test_config.Any ()) {
 				// Run 'make test.config' in the tests/ directory
 				// First find the tests/ directory
@@ -202,6 +229,7 @@ namespace Xamarin.Tests
 
 			mt_root = GetVariable ("MONOTOUCH_PREFIX", "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current");
 			ios_destdir = GetVariable ("IOS_DESTDIR", null);
+			mac_destdir = GetVariable ("MAC_DESTDIR", null);
 			sdk_version = GetVariable ("IOS_SDK_VERSION", "8.0");
 			watchos_sdk_version = GetVariable ("WATCH_SDK_VERSION", "2.0");
 			tvos_sdk_version = GetVariable ("TVOS_SDK_VERSION", "9.0");
@@ -235,6 +263,7 @@ namespace Xamarin.Tests
 			Console.WriteLine ("Test configuration:");
 			Console.WriteLine ("  MONOTOUCH_PREFIX={0}", mt_root);
 			Console.WriteLine ("  IOS_DESTDIR={0}", ios_destdir);
+			Console.WriteLine ("  MAC_DESTDIR={0}", mac_destdir);
 			Console.WriteLine ("  SDK_VERSION={0}", sdk_version);
 			Console.WriteLine ("  XCODE_ROOT={0}", xcode_root);
 			Console.WriteLine ("  XCODE5_ROOT={0}", xcode5_root);

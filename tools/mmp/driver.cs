@@ -70,7 +70,7 @@ namespace Xamarin.Bundler {
 		internal const string NAME = "mmp";
 		const string PRODUCT = "Xamarin.Mac";
 		internal static Application App = new Application (Environment.GetCommandLineArgs ());
-		static Target BuildTarget = new Target (App);
+		static Target BuildTarget;
 		static List<string> references = new List<string> ();
 		static List<string> resources = new List<string> ();
 		static List<string> resolved_assemblies = new List<string> ();
@@ -500,6 +500,7 @@ namespace Xamarin.Bundler {
 			else
 				Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
 
+			BuildTarget = new Target (App);
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}.{1}", Constants.Version, Constants.Revision);
@@ -795,8 +796,6 @@ namespace Xamarin.Bundler {
 
 			ExtractNativeLinkInfo ();
 
-			BuildTarget.StaticRegistrar = new StaticRegistrar (BuildTarget);
-
 			BuildTarget.ValidateAssembliesBeforeLink ();
 
 			if (!no_executable) {
@@ -1065,7 +1064,11 @@ namespace Xamarin.Bundler {
 			var sb = new StringBuilder ();
 			using (var sw = new StringWriter (sb)) {
 				sw.WriteLine ("#define MONOMAC 1");
-				sw.WriteLine ("#include <xamarin/xamarin.h>");
+				if (IsClassic) {
+					sw.WriteLine ("#include <xamarin-classic/xamarin.h>");
+				} else {
+					sw.WriteLine ("#include <xamarin/xamarin.h>");
+				}
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
 				if (Driver.Registrar == RegistrarMode.PartialStatic)

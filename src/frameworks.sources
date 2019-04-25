@@ -372,6 +372,7 @@ COREBLUETOOTH_CORE_SOURCES = \
 	CoreBluetooth/AdvertisementDataOptions.cs \
 
 COREBLUETOOTH_SOURCES = \
+	CoreBluetooth/CBCompat.cs \
 	CoreBluetooth/CBPeer.cs \
 	CoreBluetooth/CBUUID.cs \
 	CoreBluetooth/CoreBluetooth.cs \
@@ -1069,6 +1070,7 @@ METALPERFORMANCESHADERS_CORE_SOURCES = \
 	MetalPerformanceShaders/MPSKernel.cs \
 
 METALPERFORMANCESHADERS_SOURCES = \
+	MetalPerformanceShaders/MPSCompat.cs \
 	MetalPerformanceShaders/MPSImageBatch.cs \
 	MetalPerformanceShaders/MPSImageScale.cs \
 	MetalPerformanceShaders/MPSCnnConvolutionDescriptor.cs \
@@ -1231,6 +1233,7 @@ PDFKIT_API_SOURCES = \
 
 PDFKIT_SOURCES = \
 	PdfKit/PdfAnnotation.cs \
+	PdfKit/PdfCompat.cs \
 	PdfKit/PdfKit.cs \
 
 # Photos
@@ -1564,6 +1567,7 @@ VIDEOTOOLBOX_SOURCES = \
 
 VISION_SOURCES = \
 	Vision/VNBarcodeSymbologyExtensions.cs \
+	Vision/VNCompat.cs \
 	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
 	Vision/VNRequest.cs \

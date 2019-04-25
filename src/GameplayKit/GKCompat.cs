@@ -1,6 +1,8 @@
 // Compatibility stubs
 
 using System;
+using Foundation;
+using ObjCRuntime;
 using OpenTK;
 
 #if !XAMCORE_4_0 && !MONOMAC
@@ -13,6 +15,13 @@ namespace GameplayKit {
 		public static GKQuadTree QuadTreeWithMinPosition (Vector2 min, Vector2 max, float minCellSize)
 		{
 			return new GKQuadTree (min, max, minCellSize);
+		}
+
+		[Deprecated (PlatformName.iOS, 10,0, message: "Empty stub (always return `false`) as this API is now rejected).")]
+		[Deprecated (PlatformName.TvOS, 10,0, message: "Empty stub (always return `false`) as this API is now rejected).")]
+		public virtual bool RemoveData (NSObject data)
+		{
+			return false;
 		}
 	}
 
