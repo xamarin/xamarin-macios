@@ -82,6 +82,7 @@ namespace UIKit {
 		[Export ("textContainerChangedGeometry:")]
 		void TextContainerChangedGeometry (NSTextContainer container);
 
+		[NoiOS][NoTV]
 		[Export ("textContainerChangedTextView:")]
 		void TextContainerChangedTextView (NSTextContainer container);
 
@@ -709,13 +710,16 @@ namespace UIKit {
 
 		/* GetTemporaryAttributes (NSUInteger, nullable NSRangePointer) */
 
+		[NoiOS][NoTV]
 		[Protected]
 		[Export ("temporaryAttributesAtCharacterIndex:effectiveRange:")]
 		NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, IntPtr effectiveCharacterRange);
 
+		[NoiOS][NoTV]
 		[Wrap ("GetTemporaryAttributes (characterIndex, IntPtr.Zero)")]
 		NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex);
 
+		[NoiOS][NoTV]
 		[Sealed]
 		[Export ("temporaryAttributesAtCharacterIndex:effectiveRange:")]
 		NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, out NSRange effectiveCharacterRange);
@@ -727,8 +731,9 @@ namespace UIKit {
 		void SetTemporaryAttributes (NSDictionary attrs, NSRange charRange);
 #endif
 
+		[NoiOS][NoTV]
 		[Export ("addTemporaryAttributes:forCharacterRange:")]
-#if XAMCORE_4_0 || !MONOMAC
+#if XAMCORE_4_0
 		void AddTemporaryAttributes (NSDictionary<NSString, NSObject> attributes, NSRange characterRange);
 #else
 		void AddTemporaryAttributes (NSDictionary attrs, NSRange charRange);
@@ -737,17 +742,19 @@ namespace UIKit {
 		// This API can take an NSString or managed string, but some related API
 		// takes a generic dictionary that can't use a managed string, so for symmetry
 		// provide an NSString overload as well.
-#if !XAMCORE_4_0 && MONOMAC
+#if !XAMCORE_4_0
 		[Sealed]
 #endif
+		[NoiOS][NoTV]
 		[Export ("removeTemporaryAttribute:forCharacterRange:")]
 		void RemoveTemporaryAttribute (NSString attributeName, NSRange characterRange);
 
-#if XAMCORE_4_0 || !MONOMAC
+#if XAMCORE_4_0
 		[Sealed]
 #endif
+		[NoiOS][NoTV]
 		[Export ("removeTemporaryAttribute:forCharacterRange:")]
-#if XAMCORE_4_0 || !MONOMAC
+#if XAMCORE_4_0
 		void RemoveTemporaryAttribute (string attributeName, NSRange characterRange);
 #else
 		void RemoveTemporaryAttribute (string attrName, NSRange charRange);
@@ -755,39 +762,48 @@ namespace UIKit {
 
 		/* GetTemporaryAttribute (NSString, NSUInteger, nullable NSRangePointer) */
 		[Protected]
+		[NoiOS][NoTV]
 		[Export ("temporaryAttribute:atCharacterIndex:effectiveRange:")]
 		NSObject GetTemporaryAttribute (NSString attributeName, nuint characterIndex, /* nullable NSRangePointer */ IntPtr effectiveRange);
 
 		[Wrap ("GetTemporaryAttribute (attributeName, characterIndex, IntPtr.Zero)")]
+		[NoiOS][NoTV]
 		NSObject GetTemporaryAttribute (NSString attributeName, nuint characterIndex);
 
 		[Sealed]
+		[NoiOS][NoTV]
 		[Export ("temporaryAttribute:atCharacterIndex:effectiveRange:")]
 		NSObject GetTemporaryAttribute (NSString attributeName, nuint characterIndex, /* nullable NSRangePointer */ out NSRange effectiveRange);
 
 		/* GetTemporaryAttribute (NSString, NSUInteger, nullable NSRangePointer, NSRange) */
 
 		[Protected]
+		[NoiOS][NoTV]
 		[Export ("temporaryAttribute:atCharacterIndex:longestEffectiveRange:inRange:")]
 		NSObject GetTemporaryAttribute (NSString attributeName, nuint characterIndex, /* nullable NSRangePointer */ IntPtr longestEffectiveRange, NSRange rangeLimit);
 
 		[Wrap ("GetTemporaryAttribute (attributeName, characterIndex, IntPtr.Zero, rangeLimit)")]
+		[NoiOS][NoTV]
 		NSObject GetTemporaryAttribute (NSString attributeName, nuint characterIndex, NSRange rangeLimit);
 
 		[Sealed]
+		[NoiOS][NoTV]
 		[Export ("temporaryAttribute:atCharacterIndex:longestEffectiveRange:inRange:")]
 		NSObject GetTemporaryAttribute (NSString attributeName, nuint characterIndex, /* nullable NSRangePointer */ out NSRange longestEffectiveRange, NSRange rangeLimit);
 
 		/* GetTemporaryAttributes (NSUInteger, nullable NSRangePointer, NSRange) */
 
 		[Protected]
+		[NoiOS][NoTV]
 		[Export ("temporaryAttributesAtCharacterIndex:longestEffectiveRange:inRange:")]
 		NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, /* nullable NSRangePointer */ IntPtr longestEffectiveRange, NSRange rangeLimit);
 
 		[Wrap ("GetTemporaryAttributes (characterIndex, IntPtr.Zero, rangeLimit)")]
+		[NoiOS][NoTV]
 		NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, NSRange rangeLimit);
 
 		[Sealed]
+		[NoiOS][NoTV]
 		[Export ("temporaryAttributesAtCharacterIndex:longestEffectiveRange:inRange:")]
 		NSDictionary<NSString, NSObject> GetTemporaryAttributes (nuint characterIndex, /* nullable NSRangePointer */ out NSRange longestEffectiveRange, NSRange rangeLimit);
 
@@ -797,14 +813,16 @@ namespace UIKit {
 #if !XAMCORE_4_0
 		[Sealed]
 #endif
+		[NoiOS][NoTV]
 		[Export ("addTemporaryAttribute:value:forCharacterRange:")]
 		void AddTemporaryAttribute (NSString attributeName, NSObject value, NSRange characterRange);
 
 #if XAMCORE_4_0
 		[Sealed]
 #endif
+		[NoiOS][NoTV]
 		[Export ("addTemporaryAttribute:value:forCharacterRange:")]
-#if XAMCORE_4_0 || !MONOMAC
+#if XAMCORE_4_0
 		void AddTemporaryAttribute (string attributeName, NSObject value, NSRange characterRange);
 #else
 		void AddTemporaryAttribute (string attrName, NSObject value, NSRange charRange);
@@ -817,15 +835,17 @@ namespace UIKit {
 		NSFont SubstituteFontForFont (NSFont originalFont);
 #endif
 
+		[NoiOS][NoTV]
 		[Export ("defaultLineHeightForFont:")]
-#if XAMCORE_4_0 || !MONOMAC
+#if XAMCORE_4_0
 		nfloat GetDefaultLineHeight (NSFont font);
 #else
 		nfloat DefaultLineHeightForFont (NSFont theFont);
 #endif
 
+		[NoiOS][NoTV]
 		[Export ("defaultBaselineOffsetForFont:")]
-#if XAMCORE_4_0 || !MONOMAC
+#if XAMCORE_4_0
 		nfloat GetDefaultBaselineOffset (NSFont font);
 #else
 		nfloat DefaultBaselineOffsetForFont (NSFont theFont);
