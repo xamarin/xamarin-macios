@@ -1,10 +1,11 @@
 //
-// StaticRegistrar.cs: The static registrar
+// ClassicStaticRegistrar.cs: a copy of StaticRegistrar when StaticRegistrar was compatible with the binary files (libxammac, XamMac.dll) we ship for Xamarin.Mac Classic.
 // 
 // Authors:
 //   Rolf Bjarne Kvinge <rolf@xamarin.com>
 //
 // Copyright 2013 Xamarin Inc. 
+// Copyright 2019 Microsoft Corp.
 //
 
 using System;
@@ -29,199 +30,9 @@ using Mono.Cecil;
 using Mono.Tuner;
 
 namespace Registrar {
-	/*
-	 * This class will automatically detect lines starting/ending with curly braces,
-	 * and indent/unindent accordingly.
-	 * 
-	 * It doesn't cope with indentation due to other circumstances than
-	 * curly braces (such as one-line if statements for instance). In this case
-	 * call Indent/Unindent manually.
-	 * 
-	 * Also don't try to print '\n' directly, it'll get confused. Use
-	 * the AppendLine/WriteLine family of methods instead.
-	 */
-	class AutoIndentStringBuilder : IDisposable {
-		StringBuilder sb = new StringBuilder ();
-		int indent;
-		bool was_last_newline = true;
-
-		public int Indentation {
-			get { return indent; }
-			set { indent = value; }
-		}
-
-		public AutoIndentStringBuilder ()
-		{
-		}
-
-		public AutoIndentStringBuilder (int indentation)
-		{
-			indent = indentation;
-		}
-
-		public StringBuilder StringBuilder {
-			get {
-				return sb;
-			}
-		}
-
-		void OutputIndentation ()
-		{
-			if (!was_last_newline)
-				return;
-			sb.Append ('\t', indent);
-			was_last_newline = false;
-		}
-
-		void Output (string a)
-		{
-			if (a.StartsWith ("}", StringComparison.Ordinal))
-				Unindent ();
-			OutputIndentation ();
-			sb.Append (a);
-			if (a.EndsWith ("{", StringComparison.Ordinal))
-				Indent ();
-		}
-
-		public AutoIndentStringBuilder AppendLine (AutoIndentStringBuilder isb)
-		{
-			if (isb.Length > 0) {
-				sb.Append (isb.ToString ());
-				AppendLine ();
-			}
-
-			return this;
-		}
-
-		public AutoIndentStringBuilder Append (AutoIndentStringBuilder isb)
-		{
-			if (isb.Length > 0)
-				sb.Append (isb.ToString ());
-
-			return this;
-		}
-
-		public AutoIndentStringBuilder Append (string value)
-		{
-			Output (value);
-			return this;
-		}
-
-		public AutoIndentStringBuilder AppendFormat (string format, params object[] args)
-		{
-			Output (string.Format (format, args));
-			return this;
-		}
-
-		public AutoIndentStringBuilder AppendLine (string value)
-		{
-			Output (value);
-			sb.AppendLine ();
-			was_last_newline = true;
-			return this;
-		}
-
-		public AutoIndentStringBuilder AppendLine ()
-		{
-			sb.AppendLine ();
-			was_last_newline = true;
-			return this;
-		}
-
-		public AutoIndentStringBuilder AppendLine (string format, params object[] args)
-		{
-			Output (string.Format (format, args));
-			sb.AppendLine ();
-			was_last_newline = true;
-			return this;
-		}
-
-		public AutoIndentStringBuilder Write (string value)
-		{
-			return Append (value);
-		}
-
-		public AutoIndentStringBuilder Write (string format, params object[] args)
-		{
-			return AppendFormat (format, args);
-		}
-
-		public AutoIndentStringBuilder WriteLine (string format, params object[] args)
-		{
-			return AppendLine (format, args);
-		}
-
-		public AutoIndentStringBuilder WriteLine (string value)
-		{
-			return AppendLine (value);
-		}
-
-		public AutoIndentStringBuilder WriteLine ()
-		{
-			return AppendLine ();
-		}
-
-		public AutoIndentStringBuilder WriteLine (AutoIndentStringBuilder isb)
-		{
-			return AppendLine (isb);
-		}
-
-		public void Replace (string find, string replace)
-		{
-			sb.Replace (find, replace);
-		}
-
-		public AutoIndentStringBuilder Indent ()
-		{
-			indent++;
-			if (indent > 100)
-				throw new ArgumentOutOfRangeException ("indent");
-			return this;
-		}
-
-		public AutoIndentStringBuilder Unindent ()
-		{
-			indent--;
-			return this;
-		}
-
-		public int Length {
-			get { return sb.Length; }
-		}
-
-		public void Clear ()
-		{
-			sb.Clear ();
-			was_last_newline = true;
-		}
-
-		public void Dispose ()
-		{
-			Clear ();
-		}
-		public override string ToString ()
-		{
-			return sb.ToString (0, sb.Length);
-		}
-	}
-
-	interface IStaticRegistrar
-	{
-		bool HasAttribute (ICustomAttributeProvider provider, string @namespace, string name, bool inherits = false);
-		bool HasProtocolAttribute (TypeReference type);
-		RegisterAttribute GetRegisterAttribute (TypeReference type);
-		ProtocolAttribute GetProtocolAttribute (TypeReference type);
-		string GetExportedTypeName (TypeReference type, RegisterAttribute register_attribute);
-		void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly);
-		void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path);
-		string ComputeSignature (TypeReference DeclaringType, MethodDefinition Method, Registrar.ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false);
-		string ComputeSignature (TypeReference declaring_type, bool is_ctor, TypeReference return_type, TypeReference [] parameters, MethodDefinition mi = null, Registrar.ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false);
-		bool MapProtocolMember (MethodDefinition method, out MethodDefinition extensionMethod);
-		string PlatformAssembly { get; }
-		Dictionary<ICustomAttribute, MethodDefinition> ProtocolMemberMethodMap { get; }
-	}
-
-	class StaticRegistrar : Registrar, IStaticRegistrar
+	// This class is a copy of StaticRegistrar when StaticRegistrar was compatible with the binary files (libxammac, XamMac.dll) we ship for Xamarin.Mac Classic.
+	// Since those files aren't updated anymore, we can't update the StaticRegistrar either, so we're instead using this copy.
+	class ClassicStaticRegistrar : Registrar, IStaticRegistrar
 	{
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
@@ -650,12 +461,12 @@ namespace Registrar {
 			trace = !LaxMode && (app.RegistrarOptions & RegistrarOptions.Trace) == RegistrarOptions.Trace;
 		}
 
-		public StaticRegistrar (Application app)
+		public ClassicStaticRegistrar (Application app)
 		{
 			Init (app);
 		}
 
-		public StaticRegistrar (Target target)
+		public ClassicStaticRegistrar (Target target)
 		{
 			Init (target.App);
 			this.Target = target;
@@ -4879,9 +4690,9 @@ namespace Registrar {
 
 			header.WriteLine ("#include <stdarg.h>");
 			if (SupportsModernObjectiveC) {
-				methods.WriteLine ("#include <xamarin/xamarin.h>");
+				methods.WriteLine ("#include <xamarin-classic/xamarin.h>");
 			} else {
-				header.WriteLine ("#include <xamarin/xamarin.h>");
+				header.WriteLine ("#include <xamarin-classic/xamarin.h>");
 			}
 			header.WriteLine ("#include <objc/objc.h>");
 			header.WriteLine ("#include <objc/runtime.h>");
@@ -4936,97 +4747,5 @@ namespace Registrar {
 
 			return base.SkipRegisterAssembly (assembly);
 		}
-	}
-
-	// Replicate a few attribute types here, with TypeDefinition instead of Type
-
-	class ProtocolAttribute : Attribute {
-		public TypeDefinition WrapperType { get; set; }
-		public string Name { get; set; }
-		public bool IsInformal { get; set; }
-		public Version FormalSinceVersion { get; set; }
-	}
-
-	class BlockProxyAttribute : Attribute
-	{
-		public TypeDefinition Type { get; set; }
-	}
-
-	class DelegateProxyAttribute : Attribute
-	{
-		public TypeDefinition DelegateType { get; set; }
-	}
-
-	class BindAsAttribute : Attribute
-	{
-		public BindAsAttribute (TypeReference type)
-		{
-			this.Type = type;
-		}
-
-		public TypeReference Type { get; set; }
-		public TypeReference OriginalType { get; set; }
-	}
-
-	public sealed class ProtocolMemberAttribute : Attribute {
-		public ProtocolMemberAttribute () {}
-
-		public bool IsRequired { get; set; }
-		public bool IsProperty { get; set; }
-		public bool IsStatic { get; set; }
-		public string Name { get; set; }
-		public string Selector { get; set; }
-		public TypeReference ReturnType { get; set; }
-		public TypeReference ReturnTypeDelegateProxy { get; set; }
-		public TypeReference[] ParameterType { get; set; }
-		public bool[] ParameterByRef { get; set; }
-		public TypeReference [] ParameterBlockProxy { get; set; }
-		public bool IsVariadic { get; set; }
-
-		public TypeReference PropertyType { get; set; }
-		public string GetterSelector { get; set; }
-		public string SetterSelector { get; set; }
-		public ArgumentSemantic ArgumentSemantic { get; set; }
-
-		public MethodDefinition Method { get; set; } // not in the API, used to find the original method in the static registrar
-	}
-
-	class CategoryAttribute : Attribute {
-		public CategoryAttribute (TypeDefinition type)
-		{
-			Type = type;
-		}
-
-		public TypeDefinition Type { get; set; }
-		public string Name { get; set; }
-	}
-
-	class RegisterAttribute : Attribute {
-		public RegisterAttribute () {}
-		public RegisterAttribute (string name) {
-			this.Name = name;
-		}
-
-		public RegisterAttribute (string name, bool isWrapper) {
-			this.Name = name;
-			this.IsWrapper = isWrapper;
-		}
-
-		public string Name { get; set; }
-		public bool IsWrapper { get; set; }
-		public bool SkipRegistration { get; set; }
-	}
-
-	class AdoptsAttribute : Attribute
-	{
-		public string ProtocolType { get; set; }
-	}
-
-	[Flags]
-	internal enum MTTypeFlags : uint
-	{
-		None = 0,
-		CustomType = 1,
-		UserType = 2,
 	}
 }

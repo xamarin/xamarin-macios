@@ -13,7 +13,7 @@ namespace Xamarin.Tuner
 {
 	public class DerivedLinkContext : LinkContext
 	{
-		internal StaticRegistrar StaticRegistrar;
+		internal IStaticRegistrar StaticRegistrar;
 		internal Target Target;
 		Symbols required_symbols;
 
