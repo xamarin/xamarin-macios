@@ -77,7 +77,7 @@ get_primitive_size (char type)
 
 #ifdef TRACE
 static void
-dump_state (struct CallState *state)
+dump_state (struct XamarinCallState *state)
 {
 	fprintf (stderr, "type: %llu is_stret: %i self: %p SEL: %s rdi: 0x%llx rsi: 0x%llx rdx: 0x%llx rcx: 0x%llx r8: 0x%llx r9: 0x%llx rbp: 0x%llx -- xmm0: %Lf xmm1: %Lf xmm2: %Lf xmm3: %Lf xmm4: %Lf xmm5: %Lf xmm6: %Lf xmm7: %Lf\n",
 		state->type, state->is_stret (), state->self (), sel_getName (state->sel ()), state->rdi, state->rsi, state->rdx, state->rcx, state->r8, state->r9, state->rbp,
@@ -532,7 +532,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 }
 
 void
-xamarin_arch_trampoline (struct CallState *state)
+xamarin_arch_trampoline (struct XamarinCallState *state)
 {
 	// COOP: called from ObjC, and does not access managed memory.
 	MONO_ASSERT_GC_SAFE;

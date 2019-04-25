@@ -44,7 +44,7 @@ namespace Xamarin.Bundler {
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 
-		internal StaticRegistrar StaticRegistrar { get; set; }
+		internal IStaticRegistrar StaticRegistrar { get; set; }
 
 		// If we didn't link because the existing (cached) assemblyes are up-to-date.
 		bool cached_link = false;
@@ -62,7 +62,15 @@ namespace Xamarin.Bundler {
 		public Target (Application app)
 		{
 			this.App = app;
+#if MMP
+			if (Driver.IsClassic) {
+				this.StaticRegistrar = new ClassicStaticRegistrar (this);
+			} else {
+				this.StaticRegistrar = new StaticRegistrar (this);
+			}
+#else
 			this.StaticRegistrar = new StaticRegistrar (this);
+#endif
 		}
 
 		// This will find the link context, possibly looking in container targets.

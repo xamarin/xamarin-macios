@@ -90,10 +90,9 @@ namespace LinkAll.Interfaces {
 			// I::Bar is used in F so everyone implementing I needs Bar 
 			Assert.NotNull (type_i.GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "I::Bar");
 
-			// Foo and Bar are never used on B - so Foo can be removed
+			// Foo and Bar are never used on B - so they can be removed
 			Assert.Null (type_b.GetMethod ("Foo", BindingFlags.Instance | BindingFlags.Public), "B::Foo");
-			// but Bar cannot since B implements I
-			Assert.NotNull (type_b.GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "B::Bar");
+			Assert.Null (type_b.GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "B::Bar");
 		}
 
 		[DllImport ("/usr/lib/system/libsystem_dnssd.dylib")]

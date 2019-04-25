@@ -117,12 +117,8 @@ namespace MonoTouch.Tuner
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 					break;
 				case "System.Native":
-				case "System.Security.Cryptography.Native.Apple":
-					DerivedLinkContext.RequireMonoNative = true;
-					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
-					break;
 				case "System.Net.Security.Native":
-					DerivedLinkContext.RequireGss = true;
+				case "System.Security.Cryptography.Native.Apple":
 					DerivedLinkContext.RequireMonoNative = true;
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 					break;

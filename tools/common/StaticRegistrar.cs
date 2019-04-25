@@ -205,7 +205,23 @@ namespace Registrar {
 		}
 	}
 
-	class StaticRegistrar : Registrar
+	interface IStaticRegistrar
+	{
+		bool HasAttribute (ICustomAttributeProvider provider, string @namespace, string name, bool inherits = false);
+		bool HasProtocolAttribute (TypeReference type);
+		RegisterAttribute GetRegisterAttribute (TypeReference type);
+		ProtocolAttribute GetProtocolAttribute (TypeReference type);
+		string GetExportedTypeName (TypeReference type, RegisterAttribute register_attribute);
+		void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly);
+		void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path);
+		string ComputeSignature (TypeReference DeclaringType, MethodDefinition Method, Registrar.ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false);
+		string ComputeSignature (TypeReference declaring_type, bool is_ctor, TypeReference return_type, TypeReference [] parameters, MethodDefinition mi = null, Registrar.ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false);
+		bool MapProtocolMember (MethodDefinition method, out MethodDefinition extensionMethod);
+		string PlatformAssembly { get; }
+		Dictionary<ICustomAttribute, MethodDefinition> ProtocolMemberMethodMap { get; }
+	}
+
+	class StaticRegistrar : Registrar, IStaticRegistrar
 	{
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
@@ -4619,6 +4635,13 @@ namespace Registrar {
 		uint CreateFullTokenReference (MemberReference member)
 		{
 			var rv = (full_token_reference_count++ << 1) + 1;
+			switch (member.MetadataToken.TokenType) {
+			case TokenType.TypeDef:
+			case TokenType.Method:
+				break; // OK
+			default:
+				throw ErrorHelper.CreateError (99, $"Internal error: unsupported tokentype ({member.MetadataToken.TokenType}) for {member.FullName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+			}
 			full_token_references.AppendFormat ("\t\t{{ /* #{3} = 0x{4:X} */ \"{0}\", 0x{1:X}, 0x{2:X} }},\n", GetAssemblyName (member.Module.Assembly), member.Module.MetadataToken.ToUInt32 (), member.MetadataToken.ToUInt32 (), full_token_reference_count, rv);
 			return rv;
 		}

@@ -3671,13 +3671,6 @@ namespace MetalPerformanceShaders {
 	[BaseType (typeof (MPSCnnConvolutionNode), Name = "MPSCNNConvolutionTransposeNode")]
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnConvolutionTransposeNode {
-		[Static]
-		[Export ("nodeWithSource:convolutionState:weights:")]
-		MPSCnnConvolutionTransposeNode Create (MPSNNImageNode sourceNode, [NullAllowed]MPSCnnConvolutionStateNode convolutionState, IMPSCnnConvolutionDataSource weights);
-
-		[Export ("initWithSource:convolutionState:weights:")]
-		IntPtr Constructor (MPSNNImageNode sourceNode, [NullAllowed]MPSCnnConvolutionStateNode convolutionState, IMPSCnnConvolutionDataSource weights);
-
 		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 		[Static]
 		[Export ("nodeWithSource:convolutionGradientState:weights:")]
@@ -6027,7 +6020,7 @@ namespace MetalPerformanceShaders {
 		void EncodeReconstruction (IMTLCommandBuffer commandBuffer, IMTLTexture guidanceTexture, IMTLTexture coefficientsTexture, IMTLTexture destinationTexture);
 	}
 
-	[TV (11,0), iOS (11,0), Mac (10,13, onlyOn64: true)]
+	[TV (12,0), iOS (12,0), Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (MPSKernel))]
 	[DisableDefaultCtor]
 	interface MPSImageNormalizedHistogram {

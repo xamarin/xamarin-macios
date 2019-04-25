@@ -98,6 +98,7 @@ namespace Xamarin.Tests
 				"_OBJC_CLASS_$_Xamarin",
 				"_OBJC_IVAR_$_Xamarin",
 				"__ZN13XamarinObject",
+				"__ZN16XamarinCallState",
 				".objc_class_name_Xamarin", // 32-bit macOS naming scheme
 				".objc_category_name_NSObject_NonXamarinObject", // 32-bit macOS naming scheme
 				"_main",
@@ -122,7 +123,6 @@ namespace Xamarin.Tests
 				"_gateway_from_rtm",
 				"_sgen_",
 				"_arm_patch",
-				"_g_printv",
 				// These two aren't public in a way we care about
 				"l_OBJC_LABEL_PROTOCOL_$_",
 				"l_OBJC_PROTOCOL_$_",

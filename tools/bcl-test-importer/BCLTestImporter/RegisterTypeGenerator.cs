@@ -43,7 +43,7 @@ namespace BCLTestImporter {
 			{"SystemDataXunit", new [] {("System.Data.SqlClient.Tests",  "xammac_net_4_5_System.Data_xunit-test.dll", "System.Data.SqlClient.Tests.CloneTests")}},
 			{"SystemJsonXunit", new [] {("System.Json.Tests",  "xammac_net_4_5_System.Json_xunit-test.dll", "System.Json.Tests.JsonArrayTests")}},
 			{"SystemNumericsXunit", new [] {("System.Numerics.Tests",  "xammac_net_4_5_System.Numerics_xunit-test.dll", "System.Numerics.Tests.GenericVectorTests")}},
-			{"SystemRuntimeCompilerServicesXunit", new [] {("System.Runtime.CompilerServices",  "xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll", "System.Runtime.CompilerServices.UnsafeTests")}},
+			{"SystemRuntimeCompilerServicesUnsafeXunit", new [] {("System.Runtime.CompilerServices",  "xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll", "System.Runtime.CompilerServices.UnsafeTests")}},
 			{"SystemXmlLinqXunit", new [] {("Microsoft.Test.ModuleCore",  "xammac_net_4_5_System.Xml.Linq_xunit-test.dll", "Microsoft.Test.ModuleCore.LtmContext")}},
 			{"SystemServiceModelTests", new [] {("MonoTests.System.ServiceModel",  "xammac_net_4_5_System.ServiceModel_test.dll", "MonoTests.System.ServiceModel.Bug36080")}},
 			{"SystemSecurityXunit", new [] {("System.Security.Cryptography.Pkcs.Tests",  "xammac_net_4_5_System.Security_xunit-test.dll", "System.Security.Cryptography.Pkcs.Tests.CryptographicAttributeObjectCollectionTests")}},

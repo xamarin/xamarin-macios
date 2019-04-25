@@ -97,6 +97,22 @@ namespace CoreAnimation {
 		}
 		public bool Finished { get; set; }
 	}
+
+	[Obsolete ("This type was removed in Xcode 9.")]
+	public partial class CAEmitterBehavior {
+
+		[Obsolete ("Always throw a 'NotSupportedException' (not a public API).")]
+		public CAEmitterBehavior (NSString type)
+		{
+			throw new NotSupportedException ();
+		}
+
+		[Obsolete ("Always throw a 'NotSupportedException' (not a public API).")]
+		public static CAEmitterBehavior Create (NSString type)
+		{
+			throw new NotSupportedException ();
+		}
+	}
 }
 
 #endif

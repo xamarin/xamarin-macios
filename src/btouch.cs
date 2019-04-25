@@ -351,6 +351,7 @@ public class BindingTouch {
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/2.1/monotouch.dll");
 			Path.Combine (GetSDKRoot (), "bin/smcs");
+			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/2.1/", references);
 			break;
 		case "xamarin.ios":
@@ -359,6 +360,7 @@ public class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.iOS", references);
 			break;
 		case "xamarin.tvos":
@@ -367,6 +369,7 @@ public class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
+			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.TVOS", references);
 			break;
 		case "xamarin.watchos":
@@ -375,6 +378,7 @@ public class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
+			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
 			break;
 		case "xammac":
@@ -382,6 +386,7 @@ public class BindingTouch {
 			Unified = false;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "XamMac.dll");
+			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references);
 			break;
 		case "xamarin.mac":
@@ -398,9 +403,11 @@ public class BindingTouch {
 			}
 			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				skipSystemDrawing = true;
+				references.Add ("Facades/System.Drawing.Common");
 				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.Mac", references);
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
 				skipSystemDrawing = true;
+				references.Add ("Facades/System.Drawing.Common");
 				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/4.5", references);
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				skipSystemDrawing = false;
@@ -538,7 +545,7 @@ public class BindingTouch {
 					try {
 						universe.LoadFile (r);
 					} catch (Exception ex) {
-						ErrorHelper.Show (new BindingException (1104, false, "Could not load the referenced library '{0}': {1}.", r, ex.Message));
+						ErrorHelper.Warning (1104, "Could not load the referenced library '{0}': {1}.", r, ex.Message);
 					}
 				}
 			}

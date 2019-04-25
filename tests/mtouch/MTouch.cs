@@ -1752,7 +1752,7 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, remove-unsupported-il-for-bitcode, inline-is-arm64-calling-convention, seal-and-devirtualize.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, remove-unsupported-il-for-bitcode, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit.");
 			}
 		}
 
@@ -1961,7 +1961,7 @@ public class B
 			return Configuration.GetBaseLibrary (profile);
 		}
 
-		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = false)
+		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = true)
 		{
 			args.Append (" -lib:").Append (Path.GetDirectoryName (GetBaseLibrary (profile))).Append (' ');
 			if (use_csc) {
@@ -2998,7 +2998,7 @@ class Test {
 
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
 
-				mtouch.AssertOutputPattern ("Undefined symbols for architecture arm64:");
+				mtouch.AssertOutputPattern ("Undefined symbols for architecture");
 				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Inexistent., referenced from:.*");
 				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Test_Subexistent in registrar.o.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Inexistent., referenced from:.*");
@@ -3514,7 +3514,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 				// Create a sample exe
 				var code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
-				var exe = MTouch.CompileTestAppExecutable (tmp, code, "/debug:full");
+				var exe = MTouch.CompileTestAppExecutable (tmp, code, "/debug:full", use_csc: false);
 
 				mtouch.AppPath = mtouch.CreateTemporaryDirectory ();
 				mtouch.RootAssembly = exe;
@@ -3531,12 +3531,12 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 				System.Threading.Thread.Sleep (1000); // HFS does not have sub-second timestamp resolution, so make sure the timestamps actually change...
 				// Recompile the exe, adding only whitespace. This will only change the debug files
-				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", "/debug:full");
+				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", "/debug:full", use_csc: false);
 
 				// Rebuild the app
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 
-				// The mdb files should be updated, but the exe should not.
+				// The pdb files should be updated, but the exe should not.
 				Assert.AreEqual (exeStamp, File.GetLastWriteTimeUtc (exePath), "exe no change");
 				Assert.IsTrue (File.Exists (mdbPath), "mdb existence");
 				Assert.AreNotEqual (mdbStamp, File.GetLastWriteTimeUtc (mdbPath), "mdb changed");
@@ -3564,7 +3564,8 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.AssertWarning (2003, "Option '--optimize=static-block-to-delegate-lookup' will be ignored since the static registrar is not enabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=inline-is-arm64-calling-convention' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=seal-and-devirtualize' will be ignored since linking is disabled");
-				mtouch.AssertWarningCount (12);
+				mtouch.AssertWarning (2003, "Option '--optimize=cctor-beforefieldinit' will be ignored since linking is disabled");
+				mtouch.AssertWarningCount (13);
 			}
 
 			using (var mtouch = new MTouchTool ()) {
@@ -3647,7 +3648,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// this will *not* show the MT2018 error (in fact I don't know if it's possible
 				// to run into MT2018 at all).
 				var tmpA = mtouch.CreateTemporaryDirectory ();
-				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Net.Http");
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Xml");
 
 				var dllB = Path.Combine (Configuration.SdkRootXI, "lib", "mono", "Xamarin.iOS", Path.GetFileName (dllA));
 
@@ -3657,12 +3658,12 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// Without the linker we'll just copy the references, and not actually run into problems if we copy one that doesn't work
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Net.Http.dll, actual path: .*CreateTemporaryDirectory.*/System.Net.Http.dll..");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Xml.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Xml.dll, actual path: .*CreateTemporaryDirectory.*/System.Xml.dll..");
 
 				// With the linker, we'll find out that we've loaded the right one.
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Net.Http.dll, actual path: .*CreateTemporaryDirectory.*/System.Net.Http.dll..");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Xml.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Xml.dll, actual path: .*CreateTemporaryDirectory.*/System.Xml.dll..");
 			}
 		}
 
@@ -3676,7 +3677,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// this will *not* show the MT2018 error (in fact I don't know if it's possible
 				// to run into MT2018 at all).
 				var tmpA = mtouch.CreateTemporaryDirectory ();
-				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Net.Http");
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Xml");
 
 				var dllB = Path.Combine (Configuration.SdkRootXI, "lib", "mono", "Xamarin.iOS", Path.GetFileName (dllA));
 
@@ -3686,12 +3687,12 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// Without the linker we'll just copy the references, and not actually run into problems if we copy one that doesn't work
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*CreateTemporaryDirectory.*/System.Net.Http.dll, actual path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/.*/lib/mono/Xamarin.iOS/System.Net.Http.dll..");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Xml.dll' was loaded from a different path than the provided path .provided path: .*CreateTemporaryDirectory.*/System.Xml.dll, actual path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/.*/lib/mono/Xamarin.iOS/System.Xml.dll..");
 
 				// With the linker, we'll find out that the loaded reference doesn't work.
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (2101, "Can't resolve the reference 'X', referenced from the method 'System.Void C::Main()' in 'System.Net.Http, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'.");
+				mtouch.AssertError (2101, "Can't resolve the reference 'X', referenced from the method 'System.Void C::Main()' in 'System.Xml, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'.");
 			}
 		}
 
@@ -4218,7 +4219,7 @@ public class Dummy {
 			ExecutionHelper.Execute ("mono", $"{StringUtils.Quote (Path.Combine (Configuration.RootPath, "tests", "xharness", "xharness.exe"))} --run {StringUtils.Quote (csprojpath)} --target ios-simulator-64 --sdkroot {Configuration.xcode_root} --logdirectory {StringUtils.Quote (Path.Combine (tmpdir, "log.txt"))} --configuration {configuration}", environmentVariables: environment_variables);
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = false)
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = true)
 		{
 			return BundlerTool.CompileTestAppExecutable (targetDirectory, code, extraArg, profile, appName, extraCode, usings, use_csc);
 		}
@@ -4228,7 +4229,7 @@ public class Dummy {
 			return BundlerTool.CompileTestAppLibrary (targetDirectory, code, extraArg, profile, appName);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = false)
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = true)
 		{
 			return BundlerTool.CompileTestAppCode (target, targetDirectory, code, extraArg, profile, appName, use_csc);
 		}

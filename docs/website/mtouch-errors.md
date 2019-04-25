@@ -3489,7 +3489,29 @@ It's possible to force the linker to keep the dynamic registrar by adding
 `--optimize=-remove-dynamic-registrar` to the additional mtouch arguments in
 the project's iOS Build options.
 
-### <a name="MM8027"/>MM8027: Failed to marshal the Objective-C object {handle} (type: {managed_type}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance.
+<a name="MT8025" />
+
+#### MT8025: Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because {reasons}
+
+This indicates a bug in Xamarin.iOS. Please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new).
+
+A potential workaround would be to disable the `register-protocols`
+optimization, by passing `--optimize:-register-protocols` as an additional mmp
+argument in the project's Mac Build options.
+
+<a name="MT8026" />
+
+#### MT8026: * is not supported when the dynamic registrar has been linked away.
+ 
+This usually indicates a bug in Xamarin.iOS, because the dynamic registrar should not be linked away if it's needed. Please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new).
+ 
+It's possible to force the linker to keep the dynamic registrar by adding
+`--optimize=-remove-dynamic-registrar` to the additional mtouch arguments in
+the project's iOS Build options.
+
+<a name="MT8027" />
+
+### MT8027: Failed to marshal the Objective-C object {handle} (type: {managed_type}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance.
 
 This occurs when the Xamarin.iOS runtime finds an Objective-C object without a
 corresponding managed wrapper object, and when trying to create that managed

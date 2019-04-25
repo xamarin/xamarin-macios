@@ -70,7 +70,7 @@ namespace Xamarin.Bundler {
 		internal const string NAME = "mmp";
 		const string PRODUCT = "Xamarin.Mac";
 		internal static Application App = new Application (Environment.GetCommandLineArgs ());
-		static Target BuildTarget = new Target (App);
+		static Target BuildTarget;
 		static List<string> references = new List<string> ();
 		static List<string> resources = new List<string> ();
 		static List<string> resolved_assemblies = new List<string> ();
@@ -500,6 +500,7 @@ namespace Xamarin.Bundler {
 			else
 				Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
 
+			BuildTarget = new Target (App);
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}.{1}", Constants.Version, Constants.Revision);
@@ -795,8 +796,6 @@ namespace Xamarin.Bundler {
 
 			ExtractNativeLinkInfo ();
 
-			BuildTarget.StaticRegistrar = new StaticRegistrar (BuildTarget);
-
 			BuildTarget.ValidateAssembliesBeforeLink ();
 
 			if (!no_executable) {
@@ -875,17 +874,21 @@ namespace Xamarin.Bundler {
 		static void CopyMonoNative ()
 		{
 			string name;
-			switch (App.MonoNativeMode) {
-			case MonoNativeMode.None:
-				return;
-			case MonoNativeMode.Unified:
-				name = "libmono-native-unified";
-				break;
-			case MonoNativeMode.Compat:
-				name = "libmono-native-compat";
-				break;
-			default:
-				throw ErrorHelper.CreateError (99, $"Internal error: Invalid mono native type: '{App.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+			if (File.Exists (Path.Combine (MonoDirectory, "lib", "libmono-system-native.dylib"))) {
+				// legacy libmono-system-native.a needs to be included if it exists in the mono in question
+				name = "libmono-system-native";
+			} else {
+				// use modern libmono-native
+				switch (App.MonoNativeMode) {
+				case MonoNativeMode.Unified:
+					name = "libmono-native-unified";
+					break;
+				case MonoNativeMode.Compat:
+					name = "libmono-native-compat";
+					break;
+				default:
+					throw ErrorHelper.CreateError (99, $"Internal error: Invalid mono native type: '{App.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+				}
 			}
 
 			var src = Path.Combine (MonoDirectory, "lib", name + ".dylib");
@@ -1065,7 +1068,11 @@ namespace Xamarin.Bundler {
 			var sb = new StringBuilder ();
 			using (var sw = new StringWriter (sb)) {
 				sw.WriteLine ("#define MONOMAC 1");
-				sw.WriteLine ("#include <xamarin/xamarin.h>");
+				if (IsClassic) {
+					sw.WriteLine ("#include <xamarin-classic/xamarin.h>");
+				} else {
+					sw.WriteLine ("#include <xamarin/xamarin.h>");
+				}
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
 				if (Driver.Registrar == RegistrarMode.PartialStatic)
@@ -1311,11 +1318,17 @@ namespace Xamarin.Bundler {
 					string libmono = Path.Combine (libdir, "libmonosgen-2.0.a");
 
 					if (!File.Exists (libmono))
-						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from http://mono-project.com/Downloads");
+						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from https://www.mono-project.com/download/");
 
 					args.Append (StringUtils.Quote (libmono)).Append (' ');
 
-					if (App.MonoNativeMode != MonoNativeMode.None) {
+					string libmonoSystemNative = Path.Combine (libdir, "libmono-system-native.a");
+					if (File.Exists (libmonoSystemNative)) {
+						// legacy libmono-system-native.a needs to be included if it exists in the mono in question
+						args.Append (StringUtils.Quote (libmonoSystemNative)).Append (' ');
+						args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
+					} else {
+						// add modern libmono-native
 						string libmono_native_name;
 						switch (App.MonoNativeMode) {
 						case MonoNativeMode.Unified:
@@ -1332,13 +1345,6 @@ namespace Xamarin.Bundler {
 						args.Append ("-framework GSS ");
 					}
 
-					// libmono-system-native.a needs to be included if it exists in the mono in question
-					string libmonoNative =  Path.Combine (libdir, "libmono-system-native.a");
-					if (File.Exists (libmonoNative)) {
-						args.Append (StringUtils.Quote (libmonoNative)).Append (' ');
-						args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
-					}
-
 					if (profiling.HasValue && profiling.Value) {
 						args.Append (StringUtils.Quote (Path.Combine (libdir, "libmono-profiler-log.a"))).Append (' ');
 						args.Append ("-u _mono_profiler_init_log -lz ");
@@ -1350,7 +1356,7 @@ namespace Xamarin.Bundler {
 					args.Append (" -framework Quartz ");
 				}
 
-				args.Append ("-liconv -x objective-c++ ");
+				args.Append ("-liconv -lc++ -x objective-c++ ");
 				if (XcodeVersion.Major >= 10) {
 					// Xcode 10 doesn't ship with libstdc++
 					args.Append ("-stdlib=libc++ ");

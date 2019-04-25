@@ -1289,7 +1289,7 @@ namespace Registrar {
 				internal const string INativeObject           =	"INativeObject";
 		}
 
-		internal string PlatformAssembly {
+		public string PlatformAssembly {
 			get {
 				return IsDualBuild ? DualAssemblyName : CompatAssemblyName;
 			}
