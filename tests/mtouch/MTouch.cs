@@ -2998,7 +2998,7 @@ class Test {
 
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
 
-				mtouch.AssertOutputPattern ("Undefined symbols for architecture arm64:");
+				mtouch.AssertOutputPattern ("Undefined symbols for architecture");
 				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Inexistent., referenced from:.*");
 				mtouch.AssertOutputPattern (".*_OBJC_METACLASS_._Test_Subexistent in registrar.o.*");
 				mtouch.AssertOutputPattern (".*_OBJC_CLASS_._Inexistent., referenced from:.*");
