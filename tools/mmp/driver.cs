@@ -70,7 +70,7 @@ namespace Xamarin.Bundler {
 		internal const string NAME = "mmp";
 		const string PRODUCT = "Xamarin.Mac";
 		internal static Application App = new Application (Environment.GetCommandLineArgs ());
-		static Target BuildTarget = new Target (App);
+		static Target BuildTarget;
 		static List<string> references = new List<string> ();
 		static List<string> resources = new List<string> ();
 		static List<string> resolved_assemblies = new List<string> ();
@@ -500,6 +500,7 @@ namespace Xamarin.Bundler {
 			else
 				Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
 
+			BuildTarget = new Target (App);
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}.{1}", Constants.Version, Constants.Revision);
