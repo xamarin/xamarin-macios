@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
@@ -25,6 +25,7 @@ namespace xharness
 		public bool IncludeMac = true;
 		public bool IncludeMac32 = true;
 		public bool IncludeiOS = true;
+		public bool IncludeiOS32 = true;
 		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
 		public bool IncludetvOS = true;
@@ -102,7 +103,23 @@ namespace xharness
 					capturedLog.WriteLine (v.Exception);
 					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
 				} else if (v.IsCompleted) {
-					capturedLog.Description = $"{name} Listing (ok)";
+					var devices = loadable as Devices;
+					var devicesTypes = new StringBuilder ();
+					if (devices != null) {
+						if (devices.Connected32BitIOS.Any ()) {
+							devicesTypes.Append ("iOS 32 bit");
+						}
+						if (devices.Connected64BitIOS.Any ()) {
+							devicesTypes.Append (devicesTypes.Length == 0 ? "iOS 64 bit" : ", iOS 64 bit");
+						}
+						if (devices.ConnectedTV.Any ()) {
+							devicesTypes.Append (devicesTypes.Length == 0 ? "tvOS" : ", tvOS");
+						}
+						if (devices.ConnectedWatch.Any ()) {
+							devicesTypes.Append (devicesTypes.Length == 0 ? "watchOS" : ", watchOS");
+						}
+					}
+					capturedLog.Description = (devices == null || devicesTypes.Length == 0)? $"{name} Listing (ok)." : $"{name} Listing (ok). Devices types are: {devicesTypes.ToString ()}";
 				}
 			});
 		}
@@ -122,30 +139,35 @@ namespace xharness
 
 			AppRunnerTarget [] targets;
 			TestPlatform [] platforms;
+			bool [] ignored;
 
 			switch (buildTask.Platform) {
 			case TestPlatform.tvOS:
 				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
 				platforms = new TestPlatform [] { TestPlatform.tvOS };
+				ignored = new [] { false };
 				break;
 			case TestPlatform.watchOS:
 				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
 				platforms = new TestPlatform [] { TestPlatform.watchOS };
+				ignored = new [] { false };
 				break;
 			case TestPlatform.iOS_Unified:
 				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
 				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
+				ignored = new [] { !IncludeiOS32, false};
 				break;
 			case TestPlatform.iOS_TodayExtension64:
 				targets = new AppRunnerTarget[] { AppRunnerTarget.Simulator_iOS64 };
 				platforms = new TestPlatform[] { TestPlatform.iOS_TodayExtension64 };
+				ignored = new [] { false };
 				break;
 			default:
 				throw new NotImplementedException ();
 			}
 
 			for (int i = 0; i < targets.Length; i++)
-				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.SelectDevices (targets [i], SimulatorLoadLog)) { Platform = platforms [i], Ignored = buildTask.Ignored });
+				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.SelectDevices (targets [i], SimulatorLoadLog)) { Platform = platforms [i], Ignored = ignored[i] || buildTask.Ignored });
 
 			return runtasks;
 		}
@@ -470,7 +492,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
+					rv.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOS || !IncludeiOS32, BuildOnly = project.BuildOnly });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
@@ -671,6 +693,7 @@ namespace xharness
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
 			SetEnabled (labels, "tvos", ref IncludetvOS);
+			SetEnabled (labels, "ios-32", ref IncludeiOS32);
 			SetEnabled (labels, "watchos", ref IncludewatchOS);
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
