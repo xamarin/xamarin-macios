@@ -78,6 +78,7 @@
   <File AssemblyName="System.Diagnostics.TraceEvent" Version="4.0.0.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.Diagnostics.TraceSource" Version="4.0.0.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.Diagnostics.Tracing" Version="4.2.1.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Drawing.Common" Version="4.0.0.0" PublicKeyToken="cc7b13ffcd2ddd51" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.Drawing.Primitives" Version="4.0.1.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.Dynamic.Runtime" Version="4.0.10.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.Globalization.Calendars" Version="4.0.1.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />

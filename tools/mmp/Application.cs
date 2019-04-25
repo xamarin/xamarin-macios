@@ -25,9 +25,7 @@ namespace Xamarin.Bundler {
 
 		void SelectMonoNative ()
 		{
-			if (Driver.IsClassic)
-				MonoNativeMode = MonoNativeMode.None;
-			else if (DeploymentTarget >= new Version (10, 12))
+			if (DeploymentTarget >= new Version (10, 12))
 				MonoNativeMode = MonoNativeMode.Unified;
 			else
 				MonoNativeMode = MonoNativeMode.Compat;

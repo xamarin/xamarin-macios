@@ -36,7 +36,7 @@ $(MAC_BUILD_DIR)/full-32/OpenTK.dll: $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full
 	$(call Q_PROF_CSC,mac/$(VARIANT)) $(MAC_full_CSC) \
 		-nologo -out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
 		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
-		-r:System.Drawing.dll $(XAMMAC) \
+		$(XAMMAC) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
 		$(MAC_OPENTK_FULL_SOURCES)
 

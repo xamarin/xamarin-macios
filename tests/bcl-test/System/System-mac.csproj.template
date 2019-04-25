@@ -85,6 +85,9 @@
     <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\SocketResponder.cs">
       <Link>test-helpers\SocketResponder.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\external\mono\mcs\class\test-helpers\PathHelpers.cs">
+      <Link>test-helpers\PathHelpers.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">

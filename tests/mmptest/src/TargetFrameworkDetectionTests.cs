@@ -16,7 +16,7 @@ namespace Xamarin.MMP.Tests
 		{
 			string path = Path.Combine (tmpDir, "b.exe");
 			File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public static class EntryPoint { public static void Main () {} }");
-			TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mcs", string.Format ("-out:{0} {1}/b.cs", path, tmpDir), "CreateTestExe");
+			TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", string.Format ("-out:{0} {1}/b.cs", path, tmpDir), "CreateTestExe");
 			return path;
 		}
 

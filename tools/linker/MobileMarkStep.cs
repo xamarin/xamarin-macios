@@ -114,13 +114,13 @@ namespace Xamarin.Linker.Steps {
 			return type;
 		}
 
-		protected override void MarkMethods (TypeDefinition type)
+		protected override bool MarkMethods (TypeDefinition type)
 		{
 			// type can be null if we're not linking the assembly where the type reside,
 			// e.g. --linkskip=System, in such case GetType returns null and an NRE can occur
 			if (type == null)
-				return;
-			base.MarkMethods (type);
+				return false;
+			return base.MarkMethods (type);
 		}
 
 		protected void MarkConstructors (TypeDefinition type)

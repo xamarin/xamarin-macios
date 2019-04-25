@@ -229,9 +229,6 @@ namespace Xamarin.Linker {
 		}
 
 		static Dictionary<string, Tuple<int /* expected exit code */, string [] /* expected 'LLVM failed' lines */>> known_llvm_failures = new Dictionary<string, Tuple<int, string []>> {
-			{ "System.Security.dll", new Tuple<int, string[]> (0, new string [] {
-				"LLVM failed for 'SignedCms.GetContent': non-finally/catch/fault clause.",
-			}) },
 			{ "System.Data.dll", new Tuple<int, string[]> (0, new string [] {
 				"LLVM failed for 'XmlDataDocument.HasPointers': non-finally/catch/fault clause.",
 				"LLVM failed for 'XmlDataDocument.OnFoliated': non-finally/catch/fault clause.",
@@ -310,8 +307,8 @@ namespace Xamarin.Linker {
 				"LLVM failed for 'EnterTryCatchFinallyInstruction.Run': non-finally/catch/fault clause.",
 			}) },
 			{ "mscorlib.dll", new Tuple<int, string[]> (0, new string [] {
-				"LLVM failed for 'Console.Write': opcode oparglist",
-				"LLVM failed for 'Console.WriteLine': opcode oparglist",
+				"LLVM failed for 'Console.Write': opcode arglist",
+				"LLVM failed for 'Console.WriteLine': opcode arglist",
 			}) },
 		};
 
