@@ -98,7 +98,7 @@ namespace CoreAnimation {
 		public bool Finished { get; set; }
 	}
 
-	[Obsolete ("Type removed in Xcode 9 (rdar #33590997).")]
+	[Obsolete ("This type was removed in Xcode 9.")]
 	public partial class CAEmitterBehavior {
 
 		[Obsolete ("Always throw a 'NotSupportedException' (not a public API).")]

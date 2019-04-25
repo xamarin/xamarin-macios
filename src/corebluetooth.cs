@@ -569,14 +569,14 @@ namespace CoreBluetooth {
 #if XAMCORE_4_0
 		bool Primary { get; }
 #else
-		bool Primary { get; [NotImplemented ("Not available on CBService, only available on CBMutableService")] set; }
+		bool Primary { get; [NotImplemented ("Not available on 'CBService', only available on 'CBMutableService'.")] set; }
 #endif
 
 		[Export ("includedServices", ArgumentSemantic.Retain)]
-		CBService [] IncludedServices { get; [NotImplemented ("Not available on CBService, only available on CBMutableService")] set;  }
+		CBService [] IncludedServices { get; [NotImplemented ("Not available on 'CBService', only available on CBMutableService.")] set;  }
 
 		[Export ("characteristics", ArgumentSemantic.Retain)]
-		CBCharacteristic [] Characteristics { get; [NotImplemented ("Not available on CBService, only available on CBMutableService")] set;  }
+		CBCharacteristic [] Characteristics { get; [NotImplemented ("Not available on 'CBService', only available on CBMutableService.")] set;  }
 
 		[Export ("peripheral", ArgumentSemantic.Weak)]
 		CBPeripheral Peripheral { get; }
