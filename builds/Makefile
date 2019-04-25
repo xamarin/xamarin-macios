@@ -535,7 +535,7 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 	System.Numerics.Vectors System.Reflection.Context \
 	System.Security \
 	System.Windows System.Xml.Serialization System.Net \
-	Microsoft.CSharp Mono.CSharp
+	Microsoft.CSharp Mono.CSharp System.Net.Http
 
 IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
 

@@ -15,6 +15,7 @@ namespace BCLTestImporter
 				{"MonoCSharpTests", new List<(string assembly, string hint)> {
 					(assembly:"mscorlib", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/mscorlib.dll"),
 					(assembly:"Mono.CSharp", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/Mono.CSharp.dll"),
+					(assembly:"Microsoft.CSharp", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/Microsoft.CSharp.dll"),
 					(assembly:"nunitlite", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/nunitlite.dll"),
 					(assembly:"System.Core", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/System.Core.dll"),
 					(assembly:"xammac_net_4_5_Mono.CSharp_test.dll", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/tests/xammac_net_4_5_Mono.CSharp_test.dll"),
@@ -250,7 +251,7 @@ namespace BCLTestImporter
 					(assembly:"Microsoft.CSharp", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/Microsoft.CSharp.dll"),
 					(assembly:"xammac_net_4_5_System.Numerics_xunit-test.dll", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/tests/xammac_net_4_5_System.Numerics_xunit-test.dll"),
 				}},
-				{"SystemRuntimeCompilerServicesXunit", new List<(string assembly, string hint)> {
+				{"SystemRuntimeCompilerServicesUnsafeXunit", new List<(string assembly, string hint)> {
 					(assembly:"mscorlib", hint:"{MONO_ROOT}mcs/class/lib/xammac_net_4_5/mscorlib.dll"),
 					(assembly:"xunit.core", hint:""),
 					(assembly:"xunit.abstractions", hint:""),

@@ -23,6 +23,7 @@
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="mscorlib"/>
     <Reference Include="System"/>
     <Reference Include="System.Core"/>
   </ItemGroup>

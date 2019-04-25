@@ -136,6 +136,8 @@ namespace MonoTouch.Tuner {
 			context.Target = options.Target;
 			context.ExcludedFeatures = new [] { "remoting", "com", "sre" };
 			context.SymbolWriterProvider = new CustomSymbolWriterProvider ();
+			if (options.Application.Optimizations.StaticConstructorBeforeFieldInit == false)
+				context.DisabledOptimizations |= CodeOptimizations.BeforeFieldInit;
 			options.LinkContext = context;
 
 			return context;

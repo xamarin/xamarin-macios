@@ -333,11 +333,18 @@ namespace Introspection {
 
 		protected virtual bool Match (ConstructorInfo ctor, Type type)
 		{
+#if XAMCORE_2_0
+			string foundation_namespace = "Foundation";
+#elif MONOMAC
+			string foundation_namespace = "MonoMac.Foundation";
+#else
+			string foundation_namespace = "MonoTouch.Foundation";
+#endif
 			switch (type.Name) {
 			case "MKTileOverlayRenderer":
 				// NSInvalidArgumentEception Expected a MKTileOverlay
 				// looks like Apple has not yet added a DI for this type, but it should be `initWithTileOverlay:`
-				if (ctor.ToString () == "Void .ctor(IMKOverlay)")
+				if (ctor.ToString () == $"Void .ctor(MapKit.IMKOverlay)")
 					return true;
 				break;
 			case "MPSMatrixMultiplication":
@@ -345,18 +352,18 @@ namespace Introspection {
 			case "MPSImageHistogram":
 				// Could not initialize an instance of the type 'MetalPerformanceShaders.MPSImageHistogram': the native 'initWithDevice:' method returned nil.
 				// make sense: there's a `initWithDevice:histogramInfo:` DI
-				if (ctor.ToString () == "Void .ctor(IMTLDevice)")
+				if (ctor.ToString () == $"Void .ctor(Metal.IMTLDevice)")
 					return true;
 				break;
 			case "NSDataDetector":
 				// -[NSDataDetector initWithPattern:options:error:]: Not valid for NSDataDetector
-				if (ctor.ToString () == "Void .ctor(NSString, NSRegularExpressionOptions, NSError&)")
+				if (ctor.ToString () == $"Void .ctor({foundation_namespace}.NSString, {foundation_namespace}.NSRegularExpressionOptions, {foundation_namespace}.NSError ByRef)")
 					return true;
 				break;
 			case "SKStoreProductViewController":
 			case "SKCloudServiceSetupViewController":
 				// SKStoreProductViewController and SKCloudServiceSetupViewController are OS View Controllers which can't be customized. Therefore they shouldn't re-expose initWithNibName:bundle:
-				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
+				if (ctor.ToString () == $"Void .ctor(System.String, {foundation_namespace}.NSBundle)")
 					return true;
 				break;
 			case "MKCompassButton":
@@ -388,19 +395,19 @@ namespace Introspection {
 				// This ctor was introduced in 10,13 but all of the above objects are deprecated in 10,12
 				// so it does not make much sense to expose this ctor in all the deprecated subclasses
 #if XAMCORE_2_0
-				if (ctor.ToString () == "Void .ctor(CGRect, NSString, NSDictionary)")
+				if (ctor.ToString () == $"Void .ctor(CoreGraphics.CGRect, {foundation_namespace}.NSString, {foundation_namespace}.NSDictionary)")
 #else
-				if (ctor.ToString () == "Void .ctor(RectangleF, NSString, NSDictionary)")
+				if (ctor.ToString () == $"Void .ctor(System.Drawing.RectangleF, {foundation_namespace}.NSString, {foundation_namespace}.NSDictionary)")
 #endif
 					return true;
 				break;
 			case "VNTargetedImageRequest": // Explicitly disabled
-				if (ctor.ToString () == "Void .ctor(VNRequestCompletionHandler)")
+				if (ctor.ToString () == $"Void .ctor(Vision.VNRequestCompletionHandler)")
 					return true;
 				break;
 			case "PKPaymentRequestShippingContactUpdate":
 				// a more precise designated initializer is provided
-				if (ctor.ToString () == "Void .ctor(PKPaymentSummaryItem[])")
+				if (ctor.ToString () == $"Void .ctor(PassKit.PKPaymentSummaryItem[])")
 					return true;
 				break;
 			case "NSApplication": // Does not make sense, also it crashes
@@ -410,12 +417,12 @@ namespace Introspection {
 			case "NSCustomImageRep": // exception raised
 			case "NSEPSImageRep": // exception raised
 			case "NSPdfImageRep": // exception raised
-				if (ctor.ToString () == "Void .ctor()")
+				if (ctor.ToString () == $"Void .ctor()")
 					return true;
 				break;
 			case "AUPannerView": // Do not make sense without the AudioUnit
 			case "AUGenericView": // Do not make sense without the AudioUnit
-				if (ctor.ToString () == "Void .ctor(CGRect)")
+				if (ctor.ToString () == $"Void .ctor(CoreGraphics.CGRect)")
 					return true;
 				break;
 			case "MDLNoiseTexture":
@@ -430,7 +437,7 @@ namespace Introspection {
 			case "INUIAddVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
 			case "INUIEditVoiceShortcutViewController": // Doesn't make sense without INVoiceShortcut and there is no other way to set this unless you use the other only .ctor
 			case "ILClassificationUIExtensionViewController": // Meant to be an extension
-				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
+				if (ctor.ToString () == $"Void .ctor(System.String, {foundation_namespace}.NSBundle)")
 					return true;
 				break;
 			case "MPSImageReduceUnary": // Not meant to be used, only subclasses
@@ -440,7 +447,7 @@ namespace Introspection {
 			case "MPSNNReduceBinary": // Not meant to be used, only subclasses
 			case "MPSNNReduceUnary": // Not meant to be used, only subclasses
 				var cstr = ctor.ToString ();
-				if (cstr == "Void .ctor(IMTLDevice)" || cstr == "Void .ctor(NSCoder, IMTLDevice)")
+				if (cstr == "Void .ctor(Metal.IMTLDevice)" || cstr == $"Void .ctor({foundation_namespace}.NSCoder, Metal.IMTLDevice)")
 					return true;
 				break;
 			}
