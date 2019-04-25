@@ -963,6 +963,24 @@ namespace xharness
 			};
 			Tasks.Add (runDocsTests);
 
+			var buildSampleTests = new XBuildTask {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.sln"))),
+				SpecifyPlatform = false,
+				Platform = TestPlatform.All,
+				ProjectConfiguration = "Debug",
+			};
+			var runSampleTests = new NUnitExecuteTask (buildSampleTests) {
+				TestLibrary = Path.Combine (Harness.RootDirectory, "sampletester", "bin", "Debug", "sampletester.dll"),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.csproj"))),
+				Platform = TestPlatform.All,
+				TestName = "Sample tests",
+				Timeout = TimeSpan.FromDays (1), // These can take quite a while to execute.
+				InProcess = true,
+				Ignored = true, // Ignored by default, can be run manually. On CI will execute if the label 'run-sample-tests' is present on a PR (but in Azure Devops on a different bot).
+			};
+			Tasks.Add (runSampleTests);
+
 			Tasks.AddRange (CreateRunDeviceTasks ());
 
 			return Task.CompletedTask;

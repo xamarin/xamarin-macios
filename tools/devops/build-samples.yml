@@ -1,0 +1,137 @@
+# Xamarin
+# Build samples
+
+variables:
+  azure_build_url: '$(System.CollectionUri)/$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)'
+  macOSVersion: 'Hosted Mac Internal Mojave'
+  debug_filter: '^.*Debug.*$'
+  release_filter: '^.*Release.*$'
+  iphone_filter: '^iPhone$'
+  iphonesimulator_filter: '^iPhoneSimulator$'
+  mac_platform_filter: '^$'
+  name_filter_af: '^[A-Fa-f].*$'
+  name_filter_gr: '^[G-Rg-r].*$'
+  name_filter_rest: '^[^A-Ra-r].*$'
+
+jobs:
+- job: ReportStartToGitHub
+  displayName: Set pending GitHub status
+  pool:
+    name: '$(macOSVersion)'
+  steps:
+  - bash: ./jenkins/add-commit-status.sh "--token=$(github-pat)" "--hash=$BUILD_SOURCEVERSION" "--state=pending" --target-url="$AZURE_BUILD_URL" --description="$BUILD_DEFINITIONNAME" --context="$BUILD_DEFINITIONNAME"
+    displayName: Set pending GitHub status
+
+- job: macOS
+  dependsOn: ReportStartToGitHub
+  displayName: Build samples
+  timeoutInMinutes: 360
+  strategy:
+    matrix:
+      # We have rougly 900 tests, which take a while to build for device.
+      # So in that case, we split them in 3 buckets of roughly 300 tests each,
+      # based on the first letter of the project's filename.
+      Debug|iPhone|A-F:
+        TEST_PLATFORM_FILTER_EXPRESSION: $(iphone_filter)
+        TEST_CONFIG_FILTER_EXPRESSION: $(debug_filter)
+        TEST_NAME_FILTER_EXPRESSION: $(name_filter_af)
+      Debug|iPhone|G-R:
+        TEST_PLATFORM_FILTER_EXPRESSION: $(iphone_filter)
+        TEST_CONFIG_FILTER_EXPRESSION: $(debug_filter)
+        TEST_NAME_FILTER_EXPRESSION: $(name_filter_gr)
+      Debug|iPhone|S-Z:
+        TEST_PLATFORM_FILTER_EXPRESSION: $(iphone_filter)
+        TEST_CONFIG_FILTER_EXPRESSION: $(debug_filter)
+        TEST_NAME_FILTER_EXPRESSION: $(name_filter_rest)
+      Debug|iPhoneSimulator:
+        TEST_PLATFORM_FILTER_EXPRESSION: $(iphonesimulator_filter)
+        TEST_CONFIG_FILTER_EXPRESSION: $(debug_filter)
+      Release|iPhone|A-F:
+        TEST_PLATFORM_FILTER_EXPRESSION: $(iphone_filter)
+        TEST_CONFIG_FILTER_EXPRESSION: $(release_filter)
+        TEST_NAME_FILTER_EXPRESSION: $(name_filter_af)
+      Release|iPhone|G-R:
+        TEST_PLATFORM_FILTER_EXPRESSION: $(iphone_filter)
+        TEST_CONFIG_FILTER_EXPRESSION: $(release_filter)
+        TEST_NAME_FILTER_EXPRESSION: $(name_filter_gr)
+      Release|iPhone|S-Z:
+        TEST_PLATFORM_FILTER_EXPRESSION: $(iphone_filter)
+        TEST_CONFIG_FILTER_EXPRESSION: $(release_filter)
+        TEST_NAME_FILTER_EXPRESSION: $(name_filter_rest)
+      Release|iPhoneSimulator:
+        TEST_PLATFORM_FILTER_EXPRESSION: $(iphonesimulator_filter)
+        TEST_CONFIG_FILTER_EXPRESSION: $(release_filter)
+      Debug|Mac:
+        TEST_PLATFORM_FILTER_EXPRESSION: $(mac_platform_filter)
+        TEST_CONFIG_FILTER_EXPRESSION: $(debug_filter)
+      Release|Mac:
+        TEST_PLATFORM_FILTER_EXPRESSION: $(mac_platform_filter)
+        TEST_CONFIG_FILTER_EXPRESSION: $(release_filter)
+
+  pool:
+    name: '$(macOSVersion)'
+
+  steps:
+  - checkout: self
+    persistCredentials: true
+
+  - bash: ./tools/devops/system-info.sh
+    displayName: System Info
+
+  - bash: ./tools/devops/fetch-maccore.sh
+    displayName: Fetch maccore
+
+  - task: xamops.azdevex.provisionator-task.provisionator@1
+    displayName: Provision XI/XM/Mono/Xcode/Objective-Sharpie
+    inputs:
+      provisioning_script: $(System.DefaultWorkingDirectory)/tools/devops/build-samples.csx
+
+  - bash: ./tools/devops/system-info.sh
+    displayName: System Info post provisioning
+
+  - bash: ./tools/devops/build-samples.sh
+    displayName: Run tests
+
+  - task: PublishTestResults@2
+    displayName: Publish test results
+    condition: always()
+    inputs:
+      testResultsFormat: NUnit
+      testResultsFiles: '**/TestResult*.xml'
+      testRunTitle: Sample tests (build)
+      publishRunAttachments: true
+      mergeTestResults: true
+
+  - bash: echo "##vso[task.setvariable variable=JobStatus;isOutput=true]$AGENT_JOBSTATUS"
+    name: ExportedVariables
+    displayName: Export status
+    condition: always()
+
+- job: ReportResultsToGitHub
+  displayName: Report status/results to GitHub
+  dependsOn: macOS
+  condition: always()
+  pool:
+    name: '$(macOSVersion)'
+  variables:
+    jobResultDebugiPhoneAF: $[ dependencies.macOS.outputs['Debug|iPhone|A-F.ExportedVariables.JobStatus'] ]
+    jobResultDebugiPhoneGR: $[ dependencies.macOS.outputs['Debug|iPhone|G-R.ExportedVariables.JobStatus'] ]
+    jobResultDebugiPhoneSZ: $[ dependencies.macOS.outputs['Debug|iPhone|S-Z.ExportedVariables.JobStatus'] ]
+    jobResultDebugiPhoneSimulator: $[ dependencies.macOS.outputs['Debug|iPhoneSimulator.ExportedVariables.JobStatus'] ]
+    jobResultReleaseiPhoneAF: $[ dependencies.macOS.outputs['Release|iPhone|A-F.ExportedVariables.JobStatus'] ]
+    jobResultReleaseiPhoneGR: $[ dependencies.macOS.outputs['Release|iPhone|G-R.ExportedVariables.JobStatus'] ]
+    jobResultReleaseiPhoneSZ: $[ dependencies.macOS.outputs['Release|iPhone|S-Z.ExportedVariables.JobStatus'] ]
+    jobResultReleaseiPhoneSimulator: $[ dependencies.macOS.outputs['Release|iPhoneSimulator.ExportedVariables.JobStatus'] ]
+    jobResultDebugMac: $[ dependencies.macOS.outputs['Debug|Mac.ExportedVariables.JobStatus'] ]
+    jobResultReleaseMac: $[ dependencies.macOS.outputs['Release|Mac.ExportedVariables.JobStatus'] ]
+  steps:
+  - bash: |
+      ./tools/devops/build-samples-report-to-github.sh "$(github-pat)" \
+        "Debug|iPhone|A-F" "Debug|iPhone|G-R" "Debug|iPhone|S-Z" \
+        "Debug|iPhoneSimulator" \
+        "Release|iPhone|A-F" "Release|iPhone|G-R" "Release|iPhone|S-Z" \
+        "Release|iPhoneSimulator" \
+        "Debug|Mac" \
+        "Release|Mac"
+    displayName: Report results to GitHub as comment / status
+    condition: always()
