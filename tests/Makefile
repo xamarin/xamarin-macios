@@ -92,7 +92,8 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 	@echo "XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)" >> $@
-	@echo "MONO_SDK_DESTDIR=$(MONO_SDK_DESTDIR)" >> $@
+	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
+	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
 	@echo "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
 
 test-system.config:
@@ -102,7 +103,8 @@ test-system.config:
 	@echo "MAC_DESTDIR=/" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
-	@echo "MONO_SDK_DESTDIR=$(MONO_SDK_DESTDIR)" >> $@
+	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
+	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
