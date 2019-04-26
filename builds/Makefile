@@ -3,26 +3,29 @@ include $(TOP)/Make.config
 
 PREFIX=$(abspath $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/)
 
-download: downloads/$(basename $(MONO_FILENAME))
+download: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $(MONO_MAC_FILENAME))
 
-downloads/$(MONO_FILENAME):
+downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
+downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
+
+downloads/$(MONO_IOS_FILENAME) downloads/$(MONO_MAC_FILENAME):
 	$(Q) mkdir -p downloads
 	$(Q) echo "Downloading $(MONO_URL)..."
 	$(Q) curl -f -L $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Downloaded $(MONO_URL)"
 
-downloads/$(basename $(MONO_FILENAME)): downloads/$(MONO_FILENAME)
-	$(Q) echo "Unzipping $(MONO_FILENAME)..."
+downloads/%: downloads/%.zip
+	$(Q) echo "Unzipping $*..."
 	$(Q) rm -Rf $@.tmp
 	$(Q) unzip -q -d $@.tmp $<
 	$(Q) mv $@.tmp $@
-	$(Q) echo "Unzipped $(MONO_FILENAME)"
+	$(Q) echo "Unzipped $*."
 
 clean-locals::
 	$(Q) rm -Rf downloads
 
-.stamp-download-%: downloads/$(basename $(MONO_FILENAME))
+.stamp-download-%: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $(MONO_MAC_FILENAME))
 	$(Q) touch $@
 
 ifeq ($(MONO_BUILD_FROM_SOURCE),)
@@ -1598,18 +1601,18 @@ build-llvm32: .stamp-build-llvm32
 build-llvm64: .stamp-build-llvm64
 
 .stamp-compile-llvm64: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_SDK_BUILDDIR) provision-llvm-llvm64 $(SDK_ARGS)
+	$(MAKE) -C $(MONO_IOS_SDK_BUILDDIR) provision-llvm-llvm64 $(SDK_ARGS)
 	$(Q) touch $@
 
 .stamp-compile-llvm32: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_SDK_BUILDDIR) provision-llvm36-llvm32 $(SDK_ARGS)
+	$(MAKE) -C $(MONO_IOS_SDK_BUILDDIR) provision-llvm36-llvm32 $(SDK_ARGS)
 	$(Q) touch $@
 
 .stamp-build-llvm64: .stamp-$(MONO_BUILD_MODE)-llvm64
 .stamp-build-llvm32: .stamp-$(MONO_BUILD_MODE)-llvm32
 
 clean-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_SDK_BUILDDIR) clean-llvm36-llvm32 clean-llvm-llvm64 $(SDK_ARGS)
+	$(MAKE) -C $(MONO_IOS_SDK_BUILDDIR) clean-llvm36-llvm32 clean-llvm-llvm64 $(SDK_ARGS)
 	$(RM) .stamp-*-llvm*
 
 .PHONY: install-llvm64 install-llvm32 llvm32 llvm64
@@ -1622,13 +1625,13 @@ LLVM32_TARGETS = \
 	$(PREFIX)/LLVM36/bin/opt \
 	$(PREFIX)/LLVM36/bin/llc \
 
-$(MONO_SDK_DESTDIR)/llvm-llvm64/bin/%: .stamp-build-llvm64;
-$(MONO_SDK_DESTDIR)/llvm36-llvm32/bin/%: .stamp-build-llvm32;
+$(MONO_IOS_SDK_DESTDIR)/llvm-llvm64/bin/%: .stamp-build-llvm64;
+$(MONO_IOS_SDK_DESTDIR)/llvm36-llvm32/bin/%: .stamp-build-llvm32;
 
-$(PREFIX)/LLVM/bin/%: $(MONO_SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
+$(PREFIX)/LLVM/bin/%: $(MONO_IOS_SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
-$(PREFIX)/LLVM36/bin/%: $(MONO_SDK_DESTDIR)/llvm36-llvm32/bin/% | $(PREFIX)/LLVM36/bin
+$(PREFIX)/LLVM36/bin/%: $(MONO_IOS_SDK_DESTDIR)/llvm36-llvm32/bin/% | $(PREFIX)/LLVM36/bin
 	$(call Q_2,INSTALL ,[LLVM32]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
 $(PREFIX)/LLVM/bin $(PREFIX)/LLVM36/bin:
@@ -1674,7 +1677,7 @@ install-local:: install-$(1)
 clean-local:: clean-$(1)
 
 .stamp-compile-$(1): .stamp-build-llvm64 .stamp-build-llvm32 $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS)
+	$(MAKE) -C $(MONO_IOS_SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS)
 	$(Q) touch $$@
 
 .stamp-build-$(1): .stamp-$(MONO_BUILD_MODE)-$(1)
@@ -1686,14 +1689,14 @@ _$(1)_CROSS_TARGETS = \
 
 $(SDK_DESTDIR)/ios-$(1)/bin/$(4): .stamp-build-$(1)
 
-$(PREFIX)/bin/$(3): $(MONO_SDK_DESTDIR)/ios-$(1)-release/bin/$(4) | $(PREFIX)/bin
+$(PREFIX)/bin/$(3): $(MONO_IOS_SDK_DESTDIR)/ios-$(1)-release/bin/$(4) | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $$< $$@
 
 install-$(1): install-$(2) $$(_$(1)_CROSS_TARGETS)
 
 clean-$(1): $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_SDK_BUILDDIR) clean-ios-$(1) $(SDK_ARGS)
-	-rm -rf $(MONO_SDK_DESTDIR)/$(1) .stamp-build-$(1)
+	$(MAKE) -C $(MONO_IOS_SDK_BUILDDIR) clean-ios-$(1) $(SDK_ARGS)
+	-rm -rf $(MONO_IOS_SDK_DESTDIR)/$(1) .stamp-build-$(1)
 
 endef
 
