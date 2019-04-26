@@ -27,6 +27,7 @@ using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 #else
 using System.Reflection;
+using Generator = System.Object;
 #endif
 using System.Runtime.InteropServices;
 
@@ -37,7 +38,6 @@ namespace ObjCRuntime
 	class Stret
 	{
 #if BGENERATOR
-		static bool isUnified = BindingTouch.Unified;
 #elif __UNIFIED__
 		const bool isUnified = true;
 #else
@@ -50,11 +50,11 @@ namespace ObjCRuntime
 			return members <= 4;
 		}
 
-		static bool IsHomogeneousAggregateBaseType_Armv7k (Type t)
+		static bool IsHomogeneousAggregateBaseType_Armv7k (Type t, Generator generator)
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5500-L5514
 #if BGENERATOR
-			if (t == TypeManager.System_Float || t == TypeManager.System_Double || t == TypeManager.System_nfloat)
+			if (t == generator.TypeManager.System_Float || t == generator.TypeManager.System_Double || t == generator.TypeManager.System_nfloat)
 				return true;
 #else
 			if (t == typeof (float) || t == typeof (double) || t == typeof (nfloat))
@@ -64,7 +64,7 @@ namespace ObjCRuntime
 			return false;
 		}
 
-		static bool IsHomogeneousAggregate_Armv7k (List<Type> fieldTypes)
+		static bool IsHomogeneousAggregate_Armv7k (List<Type> fieldTypes, Generator generator)
 		{
 			// Very simplified version of https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L4051
 			// since C# supports a lot less types than clang does.
@@ -75,7 +75,7 @@ namespace ObjCRuntime
 			if (!IsHomogeneousAggregateSmallEnough_Armv7k (fieldTypes [0], fieldTypes.Count))
 				return false;
 
-			if (!IsHomogeneousAggregateBaseType_Armv7k (fieldTypes [0]))
+			if (!IsHomogeneousAggregateBaseType_Armv7k (fieldTypes [0], generator))
 				return false;
 
 			for (int i = 1; i < fieldTypes.Count; i++) {
@@ -86,36 +86,39 @@ namespace ObjCRuntime
 			return true;
 		}
 
-		static bool IsMagicTypeOrCorlibType (Type t)
+		static bool IsMagicTypeOrCorlibType (Type t, Generator generator)
 		{
 			switch (t.Name) {
 			case "nint":
 			case "nuint":
 			case "nfloat":
+#if BGENERATOR
+				var isUnified = generator.UnifiedAPI;
+#endif
 				if (!isUnified)
 					return false;
 
 				if (t.Namespace != "System")
 					return false;
 #if BGENERATOR
-				return t.Assembly == TypeManager.PlatformAssembly;
+				return t.Assembly == generator.TypeManager.PlatformAssembly;
 #else
 				return t.Assembly == typeof (NSObject).Assembly;
 #endif
 			default:
 #if BGENERATOR
-				return t.Assembly == TypeManager.CorlibAssembly;
+				return t.Assembly == generator.TypeManager.CorlibAssembly;
 #else
 				return t.Assembly == typeof (object).Assembly;
 #endif
 			}
 		}
 
-		public static bool ArmNeedStret (Type returnType)
+		public static bool ArmNeedStret (Type returnType, Generator generator)
 		{
 			bool has32bitArm;
 #if BGENERATOR
-			has32bitArm = BindingTouch.CurrentPlatform != PlatformName.TvOS && BindingTouch.CurrentPlatform != PlatformName.MacOSX;
+			has32bitArm = generator.CurrentPlatform != PlatformName.TvOS && generator.CurrentPlatform != PlatformName.MacOSX;
 #elif MONOMAC || __TVOS__
 			has32bitArm = false;
 #else
@@ -126,15 +129,15 @@ namespace ObjCRuntime
 
 			Type t = returnType;
 
-			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
+			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t, generator))
 				return false;
 
 			var fieldTypes = new List<Type> ();
-			var size = GetValueTypeSize (t, fieldTypes, false);
+			var size = GetValueTypeSize (t, fieldTypes, false, generator);
 
 			bool isWatchOS;
 #if BGENERATOR
-			isWatchOS = BindingTouch.CurrentPlatform == PlatformName.WatchOS;
+			isWatchOS = generator.CurrentPlatform == PlatformName.WatchOS;
 #elif __WATCHOS__
 			isWatchOS = true;
 #else
@@ -149,13 +152,13 @@ namespace ObjCRuntime
 					return false;
 
 				// Except homogeneous aggregates, which are not stret either.
-				if (IsHomogeneousAggregate_Armv7k (fieldTypes))
+				if (IsHomogeneousAggregate_Armv7k (fieldTypes, generator))
 					return false;
 			}
 
 			bool isiOS;
 #if BGENERATOR
-			isiOS = BindingTouch.CurrentPlatform == PlatformName.iOS;
+			isiOS = generator.CurrentPlatform == PlatformName.iOS;
 #elif __IOS__
 			isiOS = true;
 #else
@@ -184,15 +187,15 @@ namespace ObjCRuntime
 			return true;
 		}
 
-		public static bool X86NeedStret (Type returnType)
+		public static bool X86NeedStret (Type returnType, Generator generator)
 		{
 			Type t = returnType;
 
-			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
+			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t, generator))
 				return false;
 
 			var fieldTypes = new List<Type> ();
-			var size = GetValueTypeSize (t, fieldTypes, false);
+			var size = GetValueTypeSize (t, fieldTypes, false, generator);
 
 			if (size > 8)
 				return true;
@@ -203,21 +206,24 @@ namespace ObjCRuntime
 			return false;
 		}
 
-		public static bool X86_64NeedStret (Type returnType)
+		public static bool X86_64NeedStret (Type returnType, Generator generator)
 		{
+#if BGENERATOR
+			var isUnified = generator.UnifiedAPI;
+#endif
 			if (!isUnified)
 				return false;
 
 			Type t = returnType;
 
-			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
+			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t, generator))
 				return false;
 
 			var fieldTypes = new List<Type> ();
-			return GetValueTypeSize (t, fieldTypes, true) > 16;
+			return GetValueTypeSize (t, fieldTypes, true, generator) > 16;
 		}
 
-		static int GetValueTypeSize (Type type, List<Type> fieldTypes, bool is_64_bits)
+		static int GetValueTypeSize (Type type, List<Type> fieldTypes, bool is_64_bits, Generator generator)
 		{
 			int size = 0;
 			int maxElementSize = 1;
@@ -226,16 +232,16 @@ namespace ObjCRuntime
 				// Find the maximum of "field size + field offset" for each field.
 				foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
 #if BGENERATOR
-					var fieldOffset = AttributeManager.GetCustomAttribute<FieldOffsetAttribute> (field);
+					var fieldOffset = generator.AttributeManager.GetCustomAttribute<FieldOffsetAttribute> (field);
 #else
 					var fieldOffset = (FieldOffsetAttribute) Attribute.GetCustomAttribute (field, typeof (FieldOffsetAttribute));
 #endif
 					var elementSize = 0;
-					GetValueTypeSize (type, field.FieldType, fieldTypes, is_64_bits, ref elementSize, ref maxElementSize);
+					GetValueTypeSize (type, field.FieldType, fieldTypes, is_64_bits, ref elementSize, ref maxElementSize, generator);
 					size = Math.Max (size, elementSize + fieldOffset.Value);
 				}
 			} else {
-				GetValueTypeSize (type, type, fieldTypes, is_64_bits, ref size, ref maxElementSize);
+				GetValueTypeSize (type, type, fieldTypes, is_64_bits, ref size, ref maxElementSize, generator);
 			}
 
 			if (size % maxElementSize != 0)
@@ -252,7 +258,7 @@ namespace ObjCRuntime
 			return size += add;
 		}
 
-		static void GetValueTypeSize (Type original_type, Type type, List<Type> field_types, bool is_64_bits, ref int size, ref int max_element_size)
+		static void GetValueTypeSize (Type original_type, Type type, List<Type> field_types, bool is_64_bits, ref int size, ref int max_element_size, Generator generator)
 		{
 			// FIXME:
 			// SIMD types are not handled correctly here (they need 16-bit alignment).
@@ -298,12 +304,12 @@ namespace ObjCRuntime
 			// composite struct
 			foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
 #if BGENERATOR
-				var marshalAs = AttributeManager.GetCustomAttribute<MarshalAsAttribute> (field);
+				var marshalAs = generator.AttributeManager.GetCustomAttribute<MarshalAsAttribute> (field);
 #else
 				var marshalAs = (MarshalAsAttribute) Attribute.GetCustomAttribute (field, typeof (MarshalAsAttribute));
 #endif
 				if (marshalAs == null) {
-					GetValueTypeSize (original_type, field.FieldType, field_types, is_64_bits, ref size, ref max_element_size);
+					GetValueTypeSize (original_type, field.FieldType, field_types, is_64_bits, ref size, ref max_element_size, generator);
 					continue;
 				}
 
@@ -311,7 +317,7 @@ namespace ObjCRuntime
 				switch (marshalAs.Value) {
 				case UnmanagedType.ByValArray:
 					var types = new List<Type> ();
-					GetValueTypeSize (original_type, field.FieldType.GetElementType (), types, is_64_bits, ref type_size, ref max_element_size);
+					GetValueTypeSize (original_type, field.FieldType.GetElementType (), types, is_64_bits, ref type_size, ref max_element_size, generator);
 					multiplier = marshalAs.SizeConst;
 					break;
 				case UnmanagedType.U1:
@@ -341,15 +347,15 @@ namespace ObjCRuntime
 			}
 		}
 
-		public static bool NeedStret (Type returnType)
+		public static bool NeedStret (Type returnType, Generator generator)
 		{
-			if (X86NeedStret (returnType))
+			if (X86NeedStret (returnType, generator))
 				return true;
 
-			if (X86_64NeedStret (returnType))
+			if (X86_64NeedStret (returnType, generator))
 				return true;
 
-			if (ArmNeedStret (returnType))
+			if (ArmNeedStret (returnType, generator))
 				return true;
 
 			return false;

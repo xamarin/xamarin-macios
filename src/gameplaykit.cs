@@ -1988,11 +1988,6 @@ namespace GameplayKit {
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
-		[Export ("removeData:")]
-		bool RemoveData (NSObject data);
-
-		[Deprecated (PlatformName.iOS, 10, 0)]
-		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("removeData:withNode:")]
 		bool RemoveData (NSObject data, GKQuadTreeNode node);
 #endif

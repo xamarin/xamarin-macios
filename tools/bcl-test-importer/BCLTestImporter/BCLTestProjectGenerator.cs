@@ -92,7 +92,8 @@ namespace BCLTestImporter {
 			(name:"MonoCSharpTests", assemblies: new [] {"monotouch_Mono.CSharp_test.dll"}, group: "BCL tests group 1"),
 			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}, group: "BCL tests group 1"),
 			(name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}, group: "BCL tests group 1"),
-			
+			(name:"MonoRuntimeTests", assemblies: new [] {"monotouch_Mono.Runtime.Tests_test.dll"}, group: "BCL tests group 1"),
+
 			// BCL tests group 2
 			(name:"SystemTests", assemblies: new[] {"monotouch_System_test.dll"}, group: "BCL tests group 2"),
 			(name:"SystemDataTests", assemblies: new [] {"monotouch_System.Data_test.dll"}, group: "BCL tests group 2"),
@@ -112,7 +113,8 @@ namespace BCLTestImporter {
 			(name:"SystemComponentModelCompositionXunit", assemblies: new [] {"monotouch_System.ComponentModel.Composition_xunit-test.dll"}, group: "BCL tests group 3"),
 			(name:"SystemRuntimeSerializationXunit", assemblies: new [] {"monotouch_System.Runtime.Serialization_xunit-test.dll"}, group: "BCL tests group 3"),
 			(name:"SystemXmlXunit", assemblies: new [] {"monotouch_System.Xml_xunit-test.dll"}, group: "BCL tests group 3"),
-			
+			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}, group: "BCL tests group 3"),
+
 			// BCL tests group 4
 			(name:"SystemNumericsXunit", assemblies: new [] {"monotouch_System.Numerics_xunit-test.dll"}, group: "BCL tests group 4"),
 			(name:"SystemCoreXunit", assemblies: new [] {"monotouch_System.Core_xunit-test.dll"}, group: "BCL tests group 4"),
@@ -121,6 +123,10 @@ namespace BCLTestImporter {
 
 			// BCL tests group 5
 			(name:"CorlibXunit", assemblies: new [] {"monotouch_corlib_xunit-test.dll"}, group: "BCL tests group 5"),
+
+			// BCL tests group 6
+			(name:"SystemNetHttpUnitTestsXunit", assemblies: new [] {"monotouch_System.Net.Http.UnitTests_xunit-test.dll"}, group: "BCL tests group 6"),
+			(name:"SystemNetHttpFunctionalTestsXunit", assemblies: new [] {"monotouch_System.Net.Http.FunctionalTests_xunit-test.dll"}, group: "BCL tests group 6"),
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
@@ -184,7 +190,7 @@ namespace BCLTestImporter {
 			(name:"SystemDataXunit", assemblies: new [] {"xammac_net_4_5_System.Data_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
 			(name:"SystemJsonXunit", assemblies: new [] {"xammac_net_4_5_System.Json_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
 			(name:"SystemNumericsXunit", assemblies: new [] {"xammac_net_4_5_System.Numerics_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
-			(name:"SystemRuntimeCompilerServicesXunit", assemblies: new [] {"xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
+			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
 			(name:"SystemSecurityXunit", assemblies: new [] {"xammac_net_4_5_System.Security_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
 			(name:"SystemXmlLinqXunit", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
 			(name:"SystemXunit", assemblies: new [] {"xammac_net_4_5_System_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
@@ -582,7 +588,7 @@ namespace BCLTestImporter {
 					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 						await file.WriteAsync (generatedProject);
 					}
-					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (Platform.iOS), platform, true);
+					var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (platform), platform, true);
 					var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
 						projectDefinition.IsXUnit, RegisterTypesTemplatePath);
 
@@ -970,21 +976,21 @@ namespace BCLTestImporter {
 		public bool AllTestAssembliesAreRan (out Dictionary<Platform, List<string>> missingAssemblies, bool wasDownloaded)
 		{
 			missingAssemblies = new Dictionary<Platform, List<string>> ();
-			foreach (var platform in new [] {Platform.iOS, Platform.TvOS}) {
+			foreach (var platform in new [] {Platform.iOS, Platform.TvOS, Platform.WatchOS}) {
 				var testDir = wasDownloaded ? BCLTestAssemblyDefinition.GetTestDirectoryFromDownloadsPath (GetReleaseDownload (platform), platform)
 					: BCLTestAssemblyDefinition.GetTestDirectoryFromMonoPath (MonoRootPath, platform);
 				var missingAssembliesPlatform = Directory.GetFiles (testDir, NUnitPattern).Select (Path.GetFileName).Union (
 					Directory.GetFiles (testDir, xUnitPattern).Select (Path.GetFileName)).ToList ();
 				
 				foreach (var assembly in CommonIgnoredAssemblies) {
-					missingAssembliesPlatform.Remove (assembly);
+					missingAssembliesPlatform.Remove (new BCLTestAssemblyDefinition (assembly).GetName (platform));
 				}
 				
 				// loop over the mono root path and grab all the assemblies, then intersect the found ones with the added
 				// and ignored ones.
 				foreach (var projectDefinition in commoniOSTestProjects) {
 					foreach (var testAssembly in projectDefinition.assemblies) {
-						missingAssembliesPlatform.Remove (testAssembly);
+						missingAssembliesPlatform.Remove (new BCLTestAssemblyDefinition (testAssembly).GetName (platform));
 					}
 				}
 

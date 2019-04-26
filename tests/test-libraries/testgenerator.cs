@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -139,9 +140,9 @@ static class C {
 		case 'c':
 		case 's':
 		case 'i':
-		case 'l': return ((i + 1) * multiplier).ToString ();
-		case 'f': return (3.14f * (i + 1) * multiplier) + "f";
-		case 'd': return (1.23f * (i + 1) * multiplier).ToString ();
+		case 'l': return ((i + 1) * multiplier).ToString (CultureInfo.InvariantCulture);
+		case 'f': return (3.14f * (i + 1) * multiplier).ToString (CultureInfo.InvariantCulture) + "f";
+		case 'd': return (1.23f * (i + 1) * multiplier).ToString (CultureInfo.InvariantCulture);
 		default:
 			throw new NotImplementedException ();
 		}
@@ -156,7 +157,8 @@ static class C {
 			for (int i = 0; i < s.Length; i++) {
 				w.Append (GetNativeName (s [i])).Append (" x").Append (i).Append ("; ");
 			}
-			w.AppendLine ($"}} S{s};");
+			w.AppendLine ($"}};");
+			w.AppendLine ($"typedef struct S{s} S{s};");
 		}
 
 		File.WriteAllText ("libtest.structs.h", w.ToString ());

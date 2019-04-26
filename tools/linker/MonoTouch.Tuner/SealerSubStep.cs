@@ -109,6 +109,17 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
+		bool AreMarked (List<OverrideInformation> list)
+		{
+			if (list == null)
+				return false;
+			foreach (var m in list) {
+				if (Annotations.IsMarked (m.Override))
+					return true;
+			}
+			return false;
+		}
+
 		bool AreMarked (List<MethodDefinition> list)
 		{
 			if (list == null)

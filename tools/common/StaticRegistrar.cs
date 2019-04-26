@@ -205,7 +205,23 @@ namespace Registrar {
 		}
 	}
 
-	class StaticRegistrar : Registrar
+	interface IStaticRegistrar
+	{
+		bool HasAttribute (ICustomAttributeProvider provider, string @namespace, string name, bool inherits = false);
+		bool HasProtocolAttribute (TypeReference type);
+		RegisterAttribute GetRegisterAttribute (TypeReference type);
+		ProtocolAttribute GetProtocolAttribute (TypeReference type);
+		string GetExportedTypeName (TypeReference type, RegisterAttribute register_attribute);
+		void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly);
+		void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path);
+		string ComputeSignature (TypeReference DeclaringType, MethodDefinition Method, Registrar.ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false);
+		string ComputeSignature (TypeReference declaring_type, bool is_ctor, TypeReference return_type, TypeReference [] parameters, MethodDefinition mi = null, Registrar.ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false);
+		bool MapProtocolMember (MethodDefinition method, out MethodDefinition extensionMethod);
+		string PlatformAssembly { get; }
+		Dictionary<ICustomAttribute, MethodDefinition> ProtocolMemberMethodMap { get; }
+	}
+
+	class StaticRegistrar : Registrar, IStaticRegistrar
 	{
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
@@ -3569,7 +3585,8 @@ namespace Registrar {
 
 
 								if (nativeObjType.IsInterface) {
-									setup_call_stack.AppendLine ("mobj{0} = xamarin_get_inative_object_static (nobj, false, \"{1}\", \"{2}\");", i, GetAssemblyQualifiedName (nativeObjType), GetAssemblyQualifiedName (elementType));
+									setup_call_stack.AppendLine ("mobj{0} = xamarin_get_inative_object_static (nobj, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (elementType, TokenType.TypeDef), elementType.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
+									setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 								} else {
 									// find the MonoClass for this parameter
 									setup_call_stack.AppendLine ("MonoType *type{0};", i);
@@ -3675,7 +3692,7 @@ namespace Registrar {
 							if (isOut) {
 								setup_call_stack.AppendLine ("inobj{0} = NULL;", i);
 							} else if (td.IsInterface) {
-								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (*p{0}, false, \"{1}\", \"{2}\", &exception_gchandle);", i, GetAssemblyQualifiedName (nativeObjType), GetAssemblyQualifiedName (td));
+								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (*p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (td, TokenType.TypeDef), td.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
 								setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 							} else {
 								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_dynamic (*p{0}, false, mono_type_get_object (mono_domain_get (), type{0}), &exception_gchandle);", i);
@@ -3689,7 +3706,7 @@ namespace Registrar {
 							copyback.AppendLine ("*p{0} = (id) handle{0};", i);
 						} else {
 							if (td.IsInterface) {
-								setup_call_stack.AppendLine ("arg_ptrs [{0}] = xamarin_get_inative_object_static (p{0}, false, \"{1}\", \"{2}\", &exception_gchandle);", i, GetAssemblyQualifiedName (nativeObjType), GetAssemblyQualifiedName (td));
+								setup_call_stack.AppendLine ("arg_ptrs [{0}] = xamarin_get_inative_object_static (p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (td, TokenType.TypeDef), td.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
 							} else {
 								setup_call_stack.AppendLine ("arg_ptrs [{0}] = xamarin_get_inative_object_dynamic (p{0}, false, mono_type_get_object (mono_domain_get (), type{0}), &exception_gchandle);", i);
 							}
@@ -3739,7 +3756,7 @@ namespace Registrar {
 			
 			// the actual invoke
 			if (isCtor) {
-				invoke.AppendLine ("mthis = mono_object_new (mono_domain_get (), mono_method_get_class (managed_method));", counter);
+				invoke.AppendLine ("mthis = mono_object_new (mono_domain_get (), mono_method_get_class (managed_method));");
 				body_setup.AppendLine ("uint8_t flags = NSObjectFlagsNativeRef;");
 				invoke.AppendLine ("xamarin_set_nsobject_handle (mthis, self);");
 				invoke.AppendLine ("xamarin_set_nsobject_flags (mthis, flags);");
@@ -4618,6 +4635,13 @@ namespace Registrar {
 		uint CreateFullTokenReference (MemberReference member)
 		{
 			var rv = (full_token_reference_count++ << 1) + 1;
+			switch (member.MetadataToken.TokenType) {
+			case TokenType.TypeDef:
+			case TokenType.Method:
+				break; // OK
+			default:
+				throw ErrorHelper.CreateError (99, $"Internal error: unsupported tokentype ({member.MetadataToken.TokenType}) for {member.FullName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+			}
 			full_token_references.AppendFormat ("\t\t{{ /* #{3} = 0x{4:X} */ \"{0}\", 0x{1:X}, 0x{2:X} }},\n", GetAssemblyName (member.Module.Assembly), member.Module.MetadataToken.ToUInt32 (), member.MetadataToken.ToUInt32 (), full_token_reference_count, rv);
 			return rv;
 		}

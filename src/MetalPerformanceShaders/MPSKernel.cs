@@ -40,6 +40,20 @@ namespace MetalPerformanceShaders {
 				}
 			}
 		}
+
+		[DllImport (Constants.MetalPerformanceShadersLibrary)]
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		static extern void MPSHintTemporaryMemoryHighWaterMark (IntPtr commandBuffer, nuint bytes);
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		public static void HintTemporaryMemoryHighWaterMark (IMTLCommandBuffer commandBuffer, nuint sizeInBytes) => MPSHintTemporaryMemoryHighWaterMark (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, sizeInBytes);
+
+		[DllImport (Constants.MetalPerformanceShadersLibrary)]
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		static extern void MPSSetHeapCacheDuration (IntPtr commandBuffer, double seconds);
+
+		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, seconds);
 #endif
 	}
 
@@ -193,7 +207,8 @@ namespace MetalPerformanceShaders {
 
 	public partial class MPSCnnFullyConnected {
 
-		[DesignatedInitializer]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use any of the other 'DesignatedInitializer' ctors.")]
+		[Deprecated (PlatformName.iOS, 11, 0, message: "Use any of the other 'DesignatedInitializer' ctors.")]
 		public MPSCnnFullyConnected (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
@@ -247,6 +262,106 @@ namespace MetalPerformanceShaders {
 			unsafe {
 				fixed (float* ptr = kernelWeights)
 					InitializeHandle (InitWithDevice (device, kernelWidth, kernelHeight, (IntPtr) ptr), "initWithDevice:kernelWidth:kernelHeight:weights:");
+			}
+		}
+	}
+
+	public partial class MPSImageLaplacianPyramid {
+		[DesignatedInitializer]
+		public MPSImageLaplacianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
+		{
+			if (kernelWeights == null)
+				throw new ArgumentNullException (nameof (kernelWeights));
+			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
+				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
+
+			unsafe {
+				fixed (float* ptr = kernelWeights)
+					InitializeHandle (InitWithDevice (device, kernelWidth, kernelHeight, (IntPtr) ptr), "initWithDevice:kernelWidth:kernelHeight:weights:");
+			}
+		}
+	}
+
+	public partial class MPSImageLaplacianPyramidSubtract {
+		[DesignatedInitializer]
+		public MPSImageLaplacianPyramidSubtract (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
+		{
+			if (kernelWeights == null)
+				throw new ArgumentNullException (nameof (kernelWeights));
+			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
+				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
+
+			unsafe {
+				fixed (float* ptr = kernelWeights)
+					InitializeHandle (InitWithDevice (device, kernelWidth, kernelHeight, (IntPtr) ptr), "initWithDevice:kernelWidth:kernelHeight:weights:");
+			}
+		}
+	}
+
+	public partial class MPSImageLaplacianPyramidAdd {
+		[DesignatedInitializer]
+		public MPSImageLaplacianPyramidAdd (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
+		{
+			if (kernelWeights == null)
+				throw new ArgumentNullException (nameof (kernelWeights));
+			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
+				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
+
+			unsafe {
+				fixed (float* ptr = kernelWeights)
+					InitializeHandle (InitWithDevice (device, kernelWidth, kernelHeight, (IntPtr) ptr), "initWithDevice:kernelWidth:kernelHeight:weights:");
+			}
+		}
+	}
+
+	public partial class MPSCnnBinaryConvolutionNode {
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		public static MPSCnnBinaryConvolutionNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
+		{
+			unsafe {
+				fixed (void* outputBiasTermsHandle = outputBiasTerms)
+				fixed (void* outputScaleTermsHandle = outputScaleTerms)
+				fixed (void* inputBiasTermsHandle = inputBiasTerms)
+				fixed (void* inputScaleTermsHandle = inputScaleTerms)
+					return Create (sourceNode, weights, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags);
+			}
+		}
+
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		public MPSCnnBinaryConvolutionNode (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags) : base (NSObjectFlag.Empty)
+		{
+			unsafe {
+				fixed (void* outputBiasTermsHandle = outputBiasTerms)
+				fixed (void* outputScaleTermsHandle = outputScaleTerms)
+				fixed (void* inputBiasTermsHandle = inputBiasTerms)
+				fixed (void* inputScaleTermsHandle = inputScaleTerms)
+					InitializeHandle (InitWithSource (sourceNode, weights, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
+			}
+		}
+	}
+
+	public partial class MPSCnnBinaryFullyConnectedNode {
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		public static MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
+		{
+			unsafe {
+				fixed (void* outputBiasTermsHandle = outputBiasTerms)
+				fixed (void* outputScaleTermsHandle = outputScaleTerms)
+				fixed (void* inputBiasTermsHandle = inputBiasTerms)
+				fixed (void* inputScaleTermsHandle = inputScaleTerms)
+					return Create (sourceNode, weights, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags);
+			}
+		}
+
+		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		public MPSCnnBinaryFullyConnectedNode (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags) : base (NSObjectFlag.Empty)
+		{
+			unsafe {
+				fixed (void* outputBiasTermsHandle = outputBiasTerms)
+				fixed (void* outputScaleTermsHandle = outputScaleTerms)
+				fixed (void* inputBiasTermsHandle = inputBiasTerms)
+				fixed (void* inputScaleTermsHandle = inputScaleTerms)
+					InitializeHandle (InitWithSource (sourceNode, weights, (IntPtr) outputBiasTermsHandle, (IntPtr) outputScaleTermsHandle, (IntPtr) inputBiasTermsHandle, (IntPtr) inputScaleTermsHandle, type, flags));
 			}
 		}
 	}

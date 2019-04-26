@@ -10,7 +10,8 @@ namespace InstallSources
 	{
 		static string GeneratedExtension = ".g.cs";
 		static string NativeTypeSubpath = "NativeTypes";
-		static string CommonSourceSubpath = "/build/common/";
+		static string CommonBuildSourceSubpath = "/build/common/";
+		static string CommonToolsSourceSubpath = "/tools/common/";
 		static string RuntimeSubpath = "generated.cs";
 
 		/// <summary>
@@ -54,7 +55,7 @@ namespace InstallSources
 		/// <param name="path">Path.</param>
 		public static bool IsManualSource (string path)
 		{
-			return path.EndsWith (".cs", StringComparison.CurrentCulture) && !path.Contains (CommonSourceSubpath) && !path.Contains (NativeTypeSubpath);
+			return path.EndsWith (".cs", StringComparison.CurrentCulture) && !path.Contains (CommonBuildSourceSubpath) && !path.Contains (CommonToolsSourceSubpath) && !path.Contains (NativeTypeSubpath);
 		}
 
 		/// <summary>
@@ -92,18 +93,24 @@ namespace InstallSources
 		string GetSourcePathForNativeType (string path)
 		{
 			string src = "";
-			var pos = path.IndexOf (CommonSourceSubpath, StringComparison.InvariantCulture);
+			var pos = path.IndexOf (CommonBuildSourceSubpath, StringComparison.InvariantCulture);
 			if (pos >= 0) {
-				src = path.Remove (0, pos + CommonSourceSubpath.Length);
+				src = path.Remove (0, pos + CommonBuildSourceSubpath.Length);
 				src = Path.Combine (XamarinSourcePath, "build", "common", src);
 			} else {
-				pos = path.IndexOf (NativeTypeSubpath, StringComparison.InvariantCulture);
+				pos = path.IndexOf (CommonToolsSourceSubpath, StringComparison.InvariantCulture);
 				if (pos >= 0) {
-					src = path.Remove (0, pos);
-					src = Path.Combine (XamarinSourcePath, src);
+					src = path.Remove (0, pos + CommonToolsSourceSubpath.Length);
+					src = Path.GetFullPath (Path.Combine (XamarinSourcePath, "..", "tools", "common", src));
 				} else {
-					Console.WriteLine ($"Ignoring path {path}");
-					return "";
+					pos = path.IndexOf (NativeTypeSubpath, StringComparison.InvariantCulture);
+					if (pos >= 0) {
+						src = path.Remove (0, pos);
+						src = Path.Combine (XamarinSourcePath, src);
+					} else {
+						Console.WriteLine ($"Ignoring path {path}");
+						return "";
+					}
 				}
 			}
 			return src;

@@ -35,7 +35,7 @@ create_mt_exception (char *msg)
 
 #ifdef TRACE
 static void
-dump_state (struct CallState *state)
+dump_state (struct XamarinCallState *state)
 {
 	PRINT ("type: %u is_stret: %i self: %p SEL: %s -- double_ret: %f float_ret: %f longlong_ret: %llu ptr_ret: %p\n",
 		state->type, (state->type & Tramp_Stret) == Tramp_Stret, state->self, sel_getName (state->sel),
@@ -49,7 +49,7 @@ static void
 param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, guint32 *exception_gchandle)
 {
 	struct ParamIterator *it = (struct ParamIterator *) context;
-	struct CallState *state = it->state;
+	struct XamarinCallState *state = it->state;
 	
 	if (action == IteratorStart) {
 		va_copy (it->ap, state->ap);
@@ -93,7 +93,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 {
 	MonoObject *value = (MonoObject *) vvalue;
 	struct ParamIterator *it = (struct ParamIterator *) context;
-	struct CallState *state = it->state;
+	struct XamarinCallState *state = it->state;
 
 	LOGZ (" marshalling return value %p as %s\n", value, type);
 
@@ -173,7 +173,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 }
 
 static void
-xamarin_varargs_trampoline (struct CallState *state)
+xamarin_varargs_trampoline (struct XamarinCallState *state)
 {
 	dump_state (state);
 	struct ParamIterator iter;
@@ -185,7 +185,7 @@ xamarin_varargs_trampoline (struct CallState *state)
 double
 xamarin_fpret_double_trampoline (id self, SEL sel, ...)
 {
-	struct CallState state;
+	struct XamarinCallState state;
 	state.type = Tramp_FpretDouble;
 	state.self = self;
 	state.sel = sel;
@@ -199,7 +199,7 @@ xamarin_fpret_double_trampoline (id self, SEL sel, ...)
 float
 xamarin_fpret_single_trampoline (id self, SEL sel, ...)
 {
-	struct CallState state;
+	struct XamarinCallState state;
 	state.type = Tramp_FpretSingle;
 	state.self = self;
 	state.sel = sel;
@@ -213,7 +213,7 @@ xamarin_fpret_single_trampoline (id self, SEL sel, ...)
 long long
 xamarin_longret_trampoline (id self, SEL sel, ...)
 {
-	struct CallState state;
+	struct XamarinCallState state;
 	state.type = Tramp_LongRet;
 	state.self = self;
 	state.sel = sel;
@@ -227,7 +227,7 @@ xamarin_longret_trampoline (id self, SEL sel, ...)
 void
 xamarin_stret_trampoline (void *buffer, id self, SEL sel, ...)
 {
-	struct CallState state;
+	struct XamarinCallState state;
 	state.type = Tramp_Stret;
 	state.self = self;
 	state.sel = sel;
@@ -240,7 +240,7 @@ xamarin_stret_trampoline (void *buffer, id self, SEL sel, ...)
 void *
 xamarin_trampoline (id self, SEL sel, ...)
 {
-	struct CallState state;
+	struct XamarinCallState state;
 	state.type = Tramp_Default;
 	state.self = self;
 	state.sel = sel;
@@ -254,7 +254,7 @@ xamarin_trampoline (id self, SEL sel, ...)
 void *
 xamarin_ctor_trampoline (id self, SEL sel, ...)
 {
-	struct CallState state;
+	struct XamarinCallState state;
 	state.type = Tramp_Ctor;
 	state.self = self;
 	state.sel = sel;
@@ -268,7 +268,7 @@ xamarin_ctor_trampoline (id self, SEL sel, ...)
 void *
 xamarin_static_trampoline (id self, SEL sel, ...)
 {
-	struct CallState state;
+	struct XamarinCallState state;
 	state.type = Tramp_Static;
 	state.self = self;
 	state.sel = sel;
@@ -282,7 +282,7 @@ xamarin_static_trampoline (id self, SEL sel, ...)
 float
 xamarin_static_fpret_single_trampoline (id self, SEL sel, ...)
 {
-	struct CallState state;
+	struct XamarinCallState state;
 	state.type = Tramp_StaticFpretSingle;
 	state.self = self;
 	state.sel = sel;
@@ -296,7 +296,7 @@ xamarin_static_fpret_single_trampoline (id self, SEL sel, ...)
 double
 xamarin_static_fpret_double_trampoline (id self, SEL sel, ...)
 {
-	struct CallState state;
+	struct XamarinCallState state;
 	state.type = Tramp_StaticFpretDouble;
 	state.self = self;
 	state.sel = sel;
@@ -310,7 +310,7 @@ xamarin_static_fpret_double_trampoline (id self, SEL sel, ...)
 long long
 xamarin_static_longret_trampoline (id self, SEL sel, ...)
 {
-	struct CallState state;
+	struct XamarinCallState state;
 	state.type = Tramp_StaticLongRet;
 	state.self = self;
 	state.sel = sel;
@@ -324,7 +324,7 @@ xamarin_static_longret_trampoline (id self, SEL sel, ...)
 void
 xamarin_static_stret_trampoline (void *buffer, id self, SEL sel, ...)
 {
-	CallState state;
+	XamarinCallState state;
 	state.type = Tramp_StaticStret;
 	state.self = self;
 	state.sel = sel;

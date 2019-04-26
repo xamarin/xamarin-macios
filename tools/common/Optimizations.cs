@@ -40,6 +40,7 @@ namespace Xamarin.Bundler
 #else
 			"", // dummy value to make indices match up between XM and XI
 #endif
+			"cctor-beforefieldinit",
 		};
 
 		enum Opt
@@ -58,6 +59,7 @@ namespace Xamarin.Bundler
 			RemoveUnsupportedILForBitcode,
 			InlineIsARM64CallingConvention,
 			SealAndDevirtualize,
+			StaticConstructorBeforeFieldInit,
 		}
 
 		bool? all;
@@ -130,6 +132,11 @@ namespace Xamarin.Bundler
 			set { values [(int) Opt.SealAndDevirtualize] = value; }
 		}
 #endif
+
+		public bool? StaticConstructorBeforeFieldInit {
+			get { return values [(int) Opt.StaticConstructorBeforeFieldInit]; }
+			set { values [(int) Opt.StaticConstructorBeforeFieldInit] = value; }
+		}
 
 		public Optimizations ()
 		{
@@ -282,6 +289,10 @@ namespace Xamarin.Bundler
 			// By default Runtime.IsARM64CallingConvention inlining is always enabled.
 			if (!InlineIsARM64CallingConvention.HasValue)
 				InlineIsARM64CallingConvention = true;
+
+			// by default we try to eliminate any .cctor we can
+			if (!StaticConstructorBeforeFieldInit.HasValue)
+				StaticConstructorBeforeFieldInit = true;
 
 			if (Driver.Verbosity > 3)
 				Driver.Log (4, "Enabled optimizations: {0}", string.Join (", ", values.Select ((v, idx) => v == true ? opt_names [idx] : string.Empty).Where ((v) => !string.IsNullOrEmpty (v))));

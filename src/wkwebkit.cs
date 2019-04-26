@@ -244,7 +244,6 @@ namespace WebKit
 		[Export ("javaScriptCanOpenWindowsAutomatically")]
 		bool JavaScriptCanOpenWindowsAutomatically { get; set; }
 
-
 #if MONOMAC
 		[Export ("javaEnabled")]
 		bool JavaEnabled { get; set; }

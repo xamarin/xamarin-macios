@@ -71,7 +71,7 @@ namespace MonoTouch.Tuner {
 			"System.Runtime.CompilerServices.DecimalConstantAttribute",
 			"System.Runtime.CompilerServices.DefaultDependencyAttribute",
 			//"System.Runtime.CompilerServices.ExtensionAttribute", used at runtime by LINQ, see bug #3028
-			"System.Runtime.CompilerServices.RuntimeCompatibilityAttribute",
+			//"System.Runtime.CompilerServices.RuntimeCompatibilityAttribute", used at runtime by runtime wrapped exception handling
 			"System.Runtime.CompilerServices.StringFreezingAttribute",
 			"System.Runtime.ConstrainedExecution.PrePrepareMethodAttribute",
 			"System.Runtime.ConstrainedExecution.ReliabilityContractAttribute",

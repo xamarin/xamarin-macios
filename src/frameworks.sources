@@ -372,6 +372,7 @@ COREBLUETOOTH_CORE_SOURCES = \
 	CoreBluetooth/AdvertisementDataOptions.cs \
 
 COREBLUETOOTH_SOURCES = \
+	CoreBluetooth/CBCompat.cs \
 	CoreBluetooth/CBPeer.cs \
 	CoreBluetooth/CBUUID.cs \
 	CoreBluetooth/CoreBluetooth.cs \
@@ -792,6 +793,7 @@ FOUNDATION_SOURCES = \
 # GameController
 
 GAMECONTROLLER_CORE_SOURCES = \
+	GameController/Enums.cs \
 	GameController/GCController.cs \
 
 GAMECONTROLLER_SOURCES = \
@@ -1068,12 +1070,16 @@ METALPERFORMANCESHADERS_CORE_SOURCES = \
 	MetalPerformanceShaders/MPSKernel.cs \
 
 METALPERFORMANCESHADERS_SOURCES = \
+	MetalPerformanceShaders/MPSCompat.cs \
+	MetalPerformanceShaders/MPSImageBatch.cs \
 	MetalPerformanceShaders/MPSImageScale.cs \
 	MetalPerformanceShaders/MPSCnnConvolutionDescriptor.cs \
 	MetalPerformanceShaders/MPSCnnNeuron.cs \
 	MetalPerformanceShaders/MPSCnnKernel.cs \
 	MetalPerformanceShaders/MPSMatrixDescriptor.cs \
 	MetalPerformanceShaders/MPSImageHistogram.cs \
+	MetalPerformanceShaders/MPSStateBatch.cs \
+	MetalPerformanceShaders/MPSStateResourceList.cs \
 
 # MobileCoreServices
 
@@ -1227,6 +1233,7 @@ PDFKIT_API_SOURCES = \
 
 PDFKIT_SOURCES = \
 	PdfKit/PdfAnnotation.cs \
+	PdfKit/PdfCompat.cs \
 	PdfKit/PdfKit.cs \
 
 # Photos
@@ -1560,6 +1567,7 @@ VIDEOTOOLBOX_SOURCES = \
 
 VISION_SOURCES = \
 	Vision/VNBarcodeSymbologyExtensions.cs \
+	Vision/VNCompat.cs \
 	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
 	Vision/VNRequest.cs \

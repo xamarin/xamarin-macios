@@ -1,0 +1,3 @@
+<configuration>
+	<dllmap dll="System.Native" target="$mono_libdir/libmono-native-compat.dylib" os="!windows" />
+</configuration>

@@ -8,6 +8,8 @@
     <AssemblyName>bgen</AssemblyName>
     <RootNamespace>bgen</RootNamespace>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <BuildDir Condition="'$(BUILD_DIR)' != ''">$(BUILD_DIR)\</BuildDir>
+    <BuildDir Condition="'$(BUILD_DIR)' == ''">build\</BuildDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -21,6 +23,7 @@
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="mscorlib"/>
     <Reference Include="System"/>
     <Reference Include="System.Core"/>
   </ItemGroup>
@@ -356,7 +359,7 @@
     <Compile Include="..\src\ObjCRuntime\Stret.cs"/>
     <Compile Include="..\tools\common\TargetFramework.cs"/>
     <Compile Include="..\tools\common\StringUtils.cs"/>
-    <Compile Include="build\generator-frameworks.g.cs"/>
+    <Compile Include="$(BuildDir)generator-frameworks.g.cs"/>
     <Compile Include="..\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs"/>
     <Compile Include="..\src\Foundation\AdviceAttribute.cs"/>
     <Compile Include="..\src\Foundation\ExportAttribute.cs"/>

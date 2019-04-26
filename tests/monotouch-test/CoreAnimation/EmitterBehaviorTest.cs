@@ -23,6 +23,9 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreAnimation {
 
+	[Ignore ("CAEmitterBehavior is now being rejected by Apple")]
+	// kept around in case it gets ressurected since the radar is not closed
+	// https://trello.com/c/J8BDDUV9/86-33590997-coreanimation-quartzcore-api-removals
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class EmitterBehaviorTest {

@@ -1,10 +1,19 @@
 #!/bin/bash -e
 
+if test -n "$V"; then set -x; fi
+
 DEPENDENCY_NAME="$1"
 
 # Calculate the remote from the format: git@github.com:<remote>/<repo>.git
-DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/git@github.com:/}
-DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/*}
+if [[ $DEPENDENCY_MODULE =~ git@github.com ]]; then
+	# git@ url
+	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/git@github.com:/}
+	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/*}
+else
+	# https:// url
+	DEPENDENCY_REMOTE=${DEPENDENCY_MODULE/https:\/\/github.com\//}
+	DEPENDENCY_REMOTE=${DEPENDENCY_REMOTE%%/*}
+fi
 
 if test -d "$DEPENDENCY_PATH"; then
 	cd "$DEPENDENCY_PATH"

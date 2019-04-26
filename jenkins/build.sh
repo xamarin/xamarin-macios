@@ -56,7 +56,13 @@ else
 			echo "Not enabling device build; no label named 'enable-device-build' was found."
 		fi
 	fi
+
+	if ./jenkins/fetch-pr-labels.sh --check=run-sample-tests; then
+		echo "The sample tests won't be triggered from public jenkins even if the 'run-sample-tests' label is set (build on internal Jenkins instead)."
+		printf "ℹ️ The sample tests won't be triggered from public jenkins even if the 'run-sample-tests' label is set (build on internal Jenkins instead)." >> "$WORKSPACE/jenkins/pr-comments.md"
+	fi
 fi
+
 
 if test -z "$ENABLE_DEVICE_BUILD"; then
 	CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-ios-device"

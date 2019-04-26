@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-struct CallState {
+struct XamarinCallState {
 	enum TrampolineType type; // the type of trampoline
 	id self;
 	SEL sel;
@@ -22,7 +22,7 @@ struct CallState {
 };
 
 struct ParamIterator {
-	struct CallState *state;
+	struct XamarinCallState *state;
 	va_list ap;
 };
 

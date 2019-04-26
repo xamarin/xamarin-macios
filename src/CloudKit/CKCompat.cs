@@ -17,6 +17,10 @@ namespace CloudKit {
 		{
 			return 0;
 		}
+
+		[Deprecated (PlatformName.iOS, 9,0, message: "Empty stub (rejected by Apple). Use 'QualityOfService' property.")]
+		[Deprecated (PlatformName.MacOSX, 10,11, message: "Empty stub (rejected by Apple). Use 'QualityOfService' property.")]
+		public virtual bool UsesBackgroundSession { get; set; }
 	}
 
 	public partial class CKNotificationID {

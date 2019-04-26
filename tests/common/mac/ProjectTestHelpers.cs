@@ -238,7 +238,7 @@ namespace Xamarin.MMP.Tests
 			RunAndAssert (Configuration.XIBuildPath, new StringBuilder ("-- " + csprojTarget + " /t:clean"), "Clean");
 		}
 
-		public static string BuildProject (string csprojTarget, bool isUnified, bool shouldFail = false, bool release = false, string[] environment = null)
+		public static string BuildProject (string csprojTarget, bool isUnified, bool shouldFail = false, bool release = false, string[] environment = null, string extraArgs = "")
 		{
 			string rootDirectory = FindRootDirectory ();
 
@@ -263,6 +263,9 @@ namespace Xamarin.MMP.Tests
 			} else {
 				buildArgs.Append (" build ");
 			}
+
+			if (!string.IsNullOrEmpty (extraArgs))
+				buildArgs.Append (extraArgs);
 
 			buildArgs.Append (StringUtils.Quote (csprojTarget));
 

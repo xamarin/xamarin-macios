@@ -13,7 +13,7 @@ namespace Xamarin.Tuner
 {
 	public class DerivedLinkContext : LinkContext
 	{
-		internal StaticRegistrar StaticRegistrar;
+		internal IStaticRegistrar StaticRegistrar;
 		internal Target Target;
 		Symbols required_symbols;
 
@@ -78,10 +78,6 @@ namespace Xamarin.Tuner
 		}
 
 		public bool RequireMonoNative {
-			get; set;
-		}
-
-		public bool RequireGss {
 			get; set;
 		}
 

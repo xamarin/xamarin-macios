@@ -214,10 +214,10 @@ namespace Xamarin.MMP.Tests
 				string assemblyPath = string.Format ("{0}/b.dll", tmpDir);
 				sb.AppendFormat ("-target:library -debug -out:{0} {1}/b.cs", assemblyPath, tmpDir);
 				File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public class B { }");
-				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mcs", sb, "b");
+				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", sb, "b");
 
 				File.SetAttributes (assemblyPath, FileAttributes.ReadOnly);
-				File.SetAttributes (assemblyPath + ".mdb", FileAttributes.ReadOnly);
+				File.SetAttributes (Path.ChangeExtension (assemblyPath, ".pdb"), FileAttributes.ReadOnly);
 
 				// build project referencing a.dll
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
@@ -646,7 +646,7 @@ namespace Xamarin.MMP.Tests
 						"<LinkMode>Full</LinkMode>",
 				};
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: false);
-				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, trim-architectures, inline-is-arm64-calling-convention.");
+				rv.Messages.AssertWarning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, trim-architectures, inline-is-arm64-calling-convention, cctor-beforefieldinit.");
 				rv.Messages.AssertErrorCount (0);
 			});
 		}
@@ -736,6 +736,26 @@ namespace Xamarin.MMP.Tests
 				Assert.True (hardenedCodesign.Contains ("--timestamp"), "Hardened codesign timestamp");
 
 			});
+		}
+
+		[TestCase (false)]
+		[TestCase (true)]
+		public void ArchiveTask (bool full)
+		{
+			// https://github.com/xamarin/xamarin-macios/issues/5653
+			if (TI.InJenkins)
+				Assert.Ignore ("Requires macOS entitlements on bots.");
+
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					XM45 = full,
+					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>"
+				};
+				TI.TestUnifiedExecutable (test);
+				var output = TI.BuildProject (Path.Combine (tmpDir, full ? "XM45Example.csproj" : "UnifiedExample.csproj"), true, release: true, extraArgs: "/p:ArchiveOnBuild=true ");
+			});
+
+			// TODO: Add something to validate the archive is loadable by Xcode
 		}
 	}
 }
