@@ -1097,17 +1097,6 @@ namespace ObjCRuntime {
 				return;
 			}
 
-			if (selector != IntPtr.Zero || method != IntPtr.Zero)
-				msg += "\nAdditional information:\n";
-
-			if (selector != IntPtr.Zero)
-				msg += $"\tSelector: {Selector.GetName (selector)}\n";
-			if (method != IntPtr.Zero) {
-				var mi = ObjectWrapper.Convert (method) as MethodBase;
-				if (mi != null)
-					msg += $"\tMethod: {String.Format("{0}.{1}", mi.DeclaringType.FullName, mi.FormatNameAndSig(false))}\n";
-			}
-
 			throw ErrorHelper.CreateError (8027, string.Format (msg, ptr.ToString ("x"), new Class (klass).Name, type.FullName));
 		}
 
