@@ -120,6 +120,7 @@ echo "Configuring the build with: $CONFIGURE_FLAGS"
 # shellcheck disable=SC2086
 ./configure $CONFIGURE_FLAGS
 
+sleep 3600 # test timeout support
 time make -j8
 time make install -j8
 
