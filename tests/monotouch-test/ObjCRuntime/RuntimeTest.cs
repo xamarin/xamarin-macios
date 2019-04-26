@@ -592,30 +592,32 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-		public void MX8027 ()
+		public void MX8029 ()
 		{
 			var handle = Messaging.IntPtr_objc_msgSend (Messaging.IntPtr_objc_msgSend (Class.GetHandle (typeof (Dummy)), Selector.GetHandle ("alloc")), Selector.GetHandle ("init"));
 			try {
 				try {
 					Messaging.void_objc_msgSend_IntPtr (Class.GetHandle (typeof (Dummy)), Selector.GetHandle ("doSomethingElse:"), handle);
-					Assert.Fail ("Expected an MX8027 exception (A)");
+					Assert.Fail ("Expected an MX8029 exception (A)");
 				} catch (RuntimeException mex) {
-					Assert.AreEqual (8027, mex.Code, "Exception code (A)");
-					Assert.That (mex.Message, Is.StringContaining ("Failed to marshal the Objective-C object"), "Failed to marshal (A)");
-					Assert.That (mex.Message, Is.StringContaining ("Additional information:"), "Additional information: (A)");
-					Assert.That (mex.Message, Is.StringContaining ("Selector: doSomethingElse:"), "Selector (A)");
-					Assert.That (mex.Message, Is.StringContaining ("DoSomethingElse"), "DoSomethingElse (A)");
+					Assert.AreEqual (8029, mex.Code, "Exception code (A)");
+					var failure = mex.ToString ();
+					Assert.That (failure, Is.StringContaining ("Failed to marshal the Objective-C object"), "Failed to marshal (A)");
+					Assert.That (failure, Is.StringContaining ("Additional information:"), "Additional information: (A)");
+					Assert.That (failure, Is.StringContaining ("Selector: doSomethingElse:"), "Selector (A)");
+					Assert.That (failure, Is.StringContaining ("DoSomethingElse"), "DoSomethingElse (A)");
 				}
 
 				try {
 					Messaging.void_objc_msgSend_IntPtr (handle, Selector.GetHandle ("doSomething:"), handle);
-					Assert.Fail ("Expected an MX8027 exception (B)");
+					Assert.Fail ("Expected an MX8034 exception (B)");
 				} catch (RuntimeException mex) {
-					Assert.AreEqual (8027, mex.Code, "Exception code (B)");
-					Assert.That (mex.Message, Is.StringContaining ("Failed to marshal the Objective-C object"), "Failed to marshal (B)");
-					Assert.That (mex.Message, Is.StringContaining ("Additional information:"), "Additional information: (B)");
-					Assert.That (mex.Message, Is.StringContaining ("Selector: doSomething:"), "Selector (B)");
-					Assert.That (mex.Message, Is.StringContaining ("DoSomething"), "DoSomething (B)");
+					Assert.That (mex.Code, Is.EqualTo (8034).Or.EqualTo (8027), "Exception code (B)");
+					var failure = mex.ToString ();
+					Assert.That (failure, Is.StringContaining ("Failed to marshal the Objective-C object"), "Failed to marshal (B)");
+					Assert.That (failure, Is.StringContaining ("Additional information:"), "Additional information: (B)");
+					Assert.That (failure, Is.StringContaining ("Selector: doSomething:"), "Selector (B)");
+					Assert.That (failure, Is.StringContaining ("DoSomething"), "DoSomething (B)");
 				}
 			} finally {
 				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("release"));

@@ -179,8 +179,8 @@ bool			xamarin_is_class_nsstring (MonoClass *cls);
 bool			xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *exception_gchandle);
 MonoClass *		xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchandle);
 MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
-MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle);
-MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle);
+MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle);
+MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle);
 int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle);
 id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 token_ref /* INVALID_TOKEN_REF allowed, but requires the dynamic registrar at runtime */, guint32 *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
@@ -241,6 +241,7 @@ void			xamarin_process_managed_exception (MonoObject *exc);
 void			xamarin_process_managed_exception_gchandle (guint32 gchandle);
 void			xamarin_throw_product_exception (int code, const char *message);
 guint32			xamarin_create_product_exception (int code, const char *message);
+guint32			xamarin_create_product_exception_with_inner_exception (int code, guint32 inner_exception_gchandle /* will be freed */, const char *message);
 NSString *		xamarin_print_all_exceptions (MonoObject *exc);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);

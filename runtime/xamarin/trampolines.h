@@ -91,6 +91,7 @@ MonoObject *    xamarin_convert_nsnumber_to_managed (NSNumber *value, MonoType *
 MonoObject *    xamarin_convert_nsvalue_to_managed (NSValue *value, MonoType *nativeType, MonoType *managedType, MonoMethod *method, guint32 *exception_gchandle);
 MonoObject *    xamarin_convert_nsstring_to_managed (NSString *value, MonoType *nativeType, MonoType *managedType, MonoMethod *method, guint32 *exception_gchandle);
 guint32         xamarin_create_bindas_exception (MonoType *inputType, MonoType *outputType, MonoMethod *method);
+guint32         xamarin_get_exception_for_parameter (int code, guint32 inner_exception_gchandle, const char *reason, SEL sel, MonoMethod *method, MonoType *p, int i, bool to_managed);
 
 xamarin_id_to_managed_func xamarin_get_nsnumber_to_managed_func (MonoClass *managedType, MonoMethod *method, guint32 *exception_gchandle);
 xamarin_managed_to_id_func xamarin_get_managed_to_nsnumber_func (MonoClass *managedType, MonoMethod *method, guint32 *exception_gchandle);

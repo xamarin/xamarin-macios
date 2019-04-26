@@ -43,8 +43,8 @@
 
 static pthread_mutex_t refcount_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
-void *
-xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
+static void *
+xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -143,6 +143,38 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 		default:
 			return *(void **) mono_object_unbox (retval);
 	}
+}
+
+
+static guint32
+xamarin_get_exception_for_return_value (int code, guint32 inner_exception_gchandle, SEL sel, MonoMethod *method, MonoType *returnType)
+{
+	guint32 exception_gchandle = 0;
+	char *to_name = xamarin_type_get_full_name (returnType, &exception_gchandle);
+	if (exception_gchandle != 0)
+		return exception_gchandle;
+	char *method_full_name = mono_method_full_name (method, TRUE);
+	char *msg = xamarin_strdup_printf ("Unable to marshal the return value of type '%s' to Objective-C.\n"
+		"Additional information:\n"
+		"\tSelector: %s\n"
+		"\tMethod: %s\n", to_name, sel_getName (sel), method_full_name);
+	exception_gchandle = xamarin_create_product_exception_with_inner_exception (code, inner_exception_gchandle, msg);
+	xamarin_free (msg);
+	xamarin_free (to_name);
+	xamarin_free (method_full_name);
+	return exception_gchandle;
+}
+
+void *
+xamarin_marshal_return_value (SEL sel, MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
+{
+	void *rv;
+	rv = xamarin_marshal_return_value_impl (mtype, type, retval, retain, method, desc, exception_gchandle);
+	if (*exception_gchandle != 0) {
+		*exception_gchandle = xamarin_get_exception_for_return_value (8033, *exception_gchandle, sel, method, mtype);
+		return NULL;
+	}
+	return rv;
 }
 
 static const char *
@@ -1122,7 +1154,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, gui
 		managed_method = xamarin_get_managed_method_for_token (context /* token ref */, exception_gchandle);
 		if (*exception_gchandle != 0) return NULL;
 
-		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), NULL, NULL, exception_gchandle);
+		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), exception_gchandle);
 		if (*exception_gchandle != 0) return NULL;
 
 		obj = mono_runtime_invoke (managed_method, NULL, arg_ptrs, &exception);

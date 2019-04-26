@@ -755,3 +755,45 @@ There are a few reasons this may happen:
 
 This usually indicates a bug in Xamarin.Mac, because runtime functions should
 not be linked away if they're needed. Please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MM8029" />
+
+### MM8029: Unable to marshal the {byref?} parameter {index} whose managed type is {type} to managed.
+
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.Mac, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MM8030" />
+
+### MM8030: Unable to marshal the {byref?} parameter {index} whose managed type is {type} to Objective-C.
+
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.Mac, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MM8033" />
+
+### MM8033: Unable to marshal the return value of type {type} to Objective-C.
+
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.Mac, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MM8034" />
+
+### MM8034: Failed to lookup the required marshalling information.
+
+This exception will have an inner exception which gives the reason for the failure.
+
+<a name="MM8035" />
+
+### MM8035: Failed to get the 'this' instance in a method call to {method}.
+
+This exception will have an inner exception which gives the reason for the failure.
