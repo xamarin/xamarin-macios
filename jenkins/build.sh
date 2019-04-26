@@ -21,7 +21,7 @@ timeout ()
 	(
 		sleep "$1"
 		echo "Execution timed out after $1 seconds."
-		printf "❌ [Build timed out](%s/console) 🔥\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+		printf "❌ [Build timed out](%s/console)\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
 		kill -9 $SELF_PID
 	)&
 	# kill the subprocess timeout if we exit before we time out
@@ -121,7 +121,6 @@ echo "Configuring the build with: $CONFIGURE_FLAGS"
 # shellcheck disable=SC2086
 ./configure $CONFIGURE_FLAGS
 
-sleep 3600 # test timeout support
 time make -j8
 time make install -j8
 
