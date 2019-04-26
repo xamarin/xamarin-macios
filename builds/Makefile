@@ -506,27 +506,6 @@ WATCHOS_FACADE_ASSEMBLIES = $(IOS_FACADE_ASSEMBLIES)
 TVOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 WATCHOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 
-ios-facade-check: $(IOS_BCL_TARGETS)
-	$(Q) rm -f .$@*
-	$(Q) echo $(IOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
-	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch/Facades" not defined in "$(FACADE_SUBDIRS_MK)"***\n"; exit 1; fi
-	$(Q) rm -f .$@*
-
-watch-facade-check: $(WATCH_BCL_TARGETS)
-	$(Q) rm -f .$@*
-	$(Q) echo $(WATCHOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_watch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
-	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
-	$(Q) rm -f .$@*
-
-tvos-facade-check: $(TVOS_BCL_TARGETS) 
-	$(Q) rm -f .$@*
-	$(Q) echo $(TVOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
-	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
-	$(Q) rm -f .$@*
-
 NO_MDB_ASSEMBLIES = System.Windows System.Xml.Serialization
 
 IOS_BCL_TARGETS_DIRS +=                    \
@@ -640,6 +619,27 @@ $(BUILD_DESTDIR)/mac-bcl/%.pdb: $(MONO_MAC_SDK_DESTDIR)/mac-bcl/%.pdb | $(TMP_BC
 
 $(IOS_BCL_TARGETS_DIRS) $(WATCH_BCL_TARGETS_DIRS) $(TVOS_BCL_TARGETS_DIRS):
 	$(Q) mkdir -p $@
+
+ios-facade-check: $(IOS_BCL_TARGETS)
+	$(Q) rm -f .$@*
+	$(Q) echo $(IOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch/Facades" not defined in "$(FACADE_SUBDIRS_MK)"***\n"; exit 1; fi
+	$(Q) rm -f .$@*
+
+watch-facade-check: $(WATCH_BCL_TARGETS)
+	$(Q) rm -f .$@*
+	$(Q) echo $(WATCHOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_watch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
+	$(Q) rm -f .$@*
+
+tvos-facade-check: $(TVOS_BCL_TARGETS) 
+	$(Q) rm -f .$@*
+	$(Q) echo $(TVOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
+	$(Q) rm -f .$@*
 
 # Keep all intermediate files always.
 .SECONDARY:
