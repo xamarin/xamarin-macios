@@ -8,10 +8,19 @@ download: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $(MONO
 downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
 downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
 
+# This target downloads the mono archives, there's one for Xamarin.iOS and one for Xamarin.Mac.
+# If doing many clean builds, it's possible to copy the downloaded zip file to ~/Library/Caches/xamarin-macios
+# to avoid having to download it every time. The zip files have to be copied manually, otherwise
+# we'd end up filling up a lot of hard drives around the world.
 downloads/$(MONO_IOS_FILENAME) downloads/$(MONO_MAC_FILENAME):
 	$(Q) mkdir -p downloads
 	$(Q) echo "Downloading $(MONO_URL)..."
-	$(Q) curl -f -L $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp
+	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
+		echo "Found a cached version of $(MONO_URL) in ~/Library/Caches/xamarin-macios/$(notdir $@)."; \
+		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
+	else \
+		curl -f -L $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp; \
+	fi
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Downloaded $(MONO_URL)"
 
