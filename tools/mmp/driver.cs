@@ -374,6 +374,9 @@ namespace Xamarin.Bundler {
 					aotOptions = new AOTOptions (forceAotVariable);
 			}
 
+			if (!targetFramework.HasValue)
+				targetFramework = TargetFramework.Default;
+
 			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
 
 			ErrorHelper.Verbosity = verbose;
@@ -388,9 +391,6 @@ namespace Xamarin.Bundler {
 			}
 
 			bool force45From40UnifiedSystemFull = false;
-
-			if (!targetFramework.HasValue)
-				targetFramework = TargetFramework.Default;
 
 			// At least once instance of a TargetFramework of Xamarin.Mac,v2.0,(null) was found already. Assume any v2.0 implies a desire for Modern.
 			if (TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile || TargetFramework.Version == TargetFramework.Xamarin_Mac_2_0_Mobile.Version) {
