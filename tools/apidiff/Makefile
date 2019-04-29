@@ -175,19 +175,20 @@ $(BUNDLE_ZIP):
 
 UNZIP_STAMP=$(APIDIFF_DIR)/.unzip.stamp
 $(UNZIP_STAMP): $(BUNDLE_ZIP)
-	$(Q) rm -Rf temp
-	$(Q_GEN) unzip -d temp $(BUNDLE_ZIP)
+	$(Q) rm -Rf temp/downloads
+	$(Q) mkdir -p temp
+	$(Q_GEN) unzip -q -d temp/downloads $(BUNDLE_ZIP)
 	$(Q) touch $@
 
 # the semi-colon at the end means an empty recipe, and is required for make to consider pattern rules
-temp/%.dll: $(UNZIP_STAMP) ;
+temp/downloads/%.dll: $(UNZIP_STAMP) ;
 
 IOS_REFS     = $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xm/$(file).xml)
 WATCHOS_REFS = $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 
-$(APIDIFF_DIR)/references/xi/%.xml: temp/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/xi/%.xml: temp/downloads/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
 
@@ -195,7 +196,7 @@ $(APIDIFF_DIR)/updated-references/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/li
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
 
-$(APIDIFF_DIR)/references/xm/%.xml: temp/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/xm/%.xml: temp/downloads/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
 
