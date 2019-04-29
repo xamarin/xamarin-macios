@@ -11,10 +11,6 @@
 ## native use `NSUInteger` not a real enum - that's why there's a `[Native]`
 !unknown-native-enum! AVAudioSessionInterruptionFlags bound
 
-## We only bind "finished" as we cannot use [Bind] here as it would break compatibility with iOS 6.x
-## `isFinished` was only added in iOS 7.0 SDK and cannot be called in earlier versions
-!missing-selector! AVAssetResourceLoadingRequest::isFinished not bound
-
 ## it's already defined in the base class, it's fine even if it returns mutable tracks in this case 
 !missing-selector! AVMutableComposition::tracks not bound
 
