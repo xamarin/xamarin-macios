@@ -203,6 +203,14 @@ MonoArray * xamarin_nsarray_to_managed_nsobject_array (NSArray *array, MonoType 
 MonoArray * xamarin_nsarray_to_managed_inativeobject_array (NSArray *array, MonoType *array_type, MonoClass *element_class, guint32 *exception_gchandle);
 MonoArray * xamarin_nsarray_to_managed_inativeobject_array_static (NSArray *array, MonoType *array_type, MonoClass *element_class, uint32_t iface_token_ref, uint32_t implementation_token_ref, guint32 *exception_gchandle);
 
+void * xamarin_nsobject_to_object (id object, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle);
+id     xamarin_object_to_nsobject (MonoObject *object, void *context, guint32 *exception_gchandle);
+
+id     xamarin_inativeobject_to_nsobject (MonoObject *object, void *context, guint32 *exception_gchandle);
+
+void * xamarin_nsobject_to_inativeobject (id object, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle);
+void * xamarin_nsobject_to_inativeobject_static (id object, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle);
+
 /* Copied from SGen */
 
 static inline void
