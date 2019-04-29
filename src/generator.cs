@@ -4143,6 +4143,7 @@ public partial class Generator : IMemberGatherer {
 				var isINativeObject = elementType == TypeManager.INativeObject;
 				var isINativeObjectSubclass = !isINativeObject && TypeManager.INativeObject.IsAssignableFrom (elementType);
 				var isNSObject = IsNSObject (elementType);
+				var isForcedType = HasForcedAttribute (pi, out var isForcedOwns);
 				var isArray = elementType.IsArray;
 				var isArrayOfString = isArray && elementType.GetElementType () == TypeManager.System_String;
 				var isArrayOfNSObject = isArray && IsNSObject (elementType.GetElementType ());
@@ -4193,12 +4194,12 @@ public partial class Generator : IMemberGatherer {
 
 					if (!pi.IsOut)
 						by_ref_processing.AppendFormat ("{0}ArrayValue?.Dispose ();\n", pi.Name.GetSafeParamName ());
-				} else if (isNSObject) {
+				} else if (isNSObject && !isForcedType) {
 					by_ref_processing.AppendFormat ("{0} = Runtime.GetNSObject<{1}> ({0}Value);\n", pi.Name.GetSafeParamName (), RenderType (elementType));
 				} else if (isINativeObjectSubclass) {
 					if (!pi.IsOut)
 						by_ref_processing.AppendFormat ("if ({0}Value != ({0} == null ? IntPtr.Zero : {0}.Handle))\n\t", pi.Name.GetSafeParamName ());
-					by_ref_processing.AppendFormat ("{0} = Runtime.GetINativeObject<{1}> ({0}Value, false);\n", pi.Name.GetSafeParamName (), RenderType (elementType));
+					by_ref_processing.AppendFormat ("{0} = Runtime.GetINativeObject<{1}> ({0}Value, {2});\n", pi.Name.GetSafeParamName (), RenderType (elementType), isForcedType ? isForcedOwns : "false");
 				} else {
 					throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out (output) code for {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				}
