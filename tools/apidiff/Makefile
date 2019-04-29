@@ -12,9 +12,9 @@ endif
 
 APIDIFF_DIR=.
 
-MONO_API_INFO = $(MONO_PATH)/mcs/class/lib/build/mono-api-info.exe
-MONO_API_HTML = $(MONO_PATH)/mcs/class/lib/build/mono-api-html.exe
-MONO_BUILD = MONO_PATH=$(MONO_PATH)/mcs/class/lib/build $(TOP)/builds/tools64/mono/mini/mono
+MONO_API_INFO = $(MONO_IOS_SDK_BUILDDIR)/ios-bcl/monotouch_tools/mono-api-info.exe
+MONO_API_HTML = $(MONO_IOS_SDK_BUILDDIR)/ios-bcl/monotouch_tools/mono-api-html.exe
+MONO_BUILD = $(SYSTEM_MONO)
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
