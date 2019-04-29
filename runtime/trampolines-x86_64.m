@@ -79,8 +79,8 @@ get_primitive_size (char type)
 static void
 dump_state (struct XamarinCallState *state)
 {
-	fprintf (stderr, "type: %llu is_stret: %i self: %p SEL: %s rdi: 0x%llx rsi: 0x%llx rdx: 0x%llx rcx: 0x%llx r8: 0x%llx r9: 0x%llx rbp: 0x%llx -- xmm0: %Lf xmm1: %Lf xmm2: %Lf xmm3: %Lf xmm4: %Lf xmm5: %Lf xmm6: %Lf xmm7: %Lf\n",
-		state->type, state->is_stret (), state->self (), sel_getName (state->sel ()), state->rdi, state->rsi, state->rdx, state->rcx, state->r8, state->r9, state->rbp,
+	fprintf (stderr, "type: %llu is_stret: %i self: %p SEL: %s rdi: 0x%llx rsi: 0x%llx rdx: 0x%llx rcx: 0x%llx r8: 0x%llx r9: 0x%llx rbp: 0x%llx rax: 0x%llx rdx out: 0x%llx -- xmm0: %Lf xmm1: %Lf xmm2: %Lf xmm3: %Lf xmm4: %Lf xmm5: %Lf xmm6: %Lf xmm7: %Lf\n",
+		state->type, state->is_stret (), state->self (), sel_getName (state->sel ()), state->rdi, state->rsi, state->rdx, state->rcx, state->r8, state->r9, state->rbp, state->rax, state->rdx_out,
 		state->xmm0, state->xmm1, state->xmm2, state->xmm3, state->xmm4, state->xmm5, state->xmm6, state->xmm7);
 }
 #else
