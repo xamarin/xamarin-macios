@@ -37,6 +37,24 @@ clean-locals::
 .stamp-download-%: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $(MONO_MAC_FILENAME))
 	$(Q) touch $@
 
+# We get the list of facade assemblies from the mono archive. The problem is
+# that we use a makefile function to list all the facade assemblies in the
+# decompressed location, but there won't be any assemblies there until the
+# archive has been downloaded and extracted. At that point make has already
+# executed all the functions in the makefile, and found nothing. Ops.
+#
+# So here's a little hack: if a makefile includes another makefile, and that
+# makefile does not exist, and there's a target that can build that other
+# makefile, then make will run that target, and once that target has
+# completed, make will re-load the entire makefile. So we include a stamp file
+# that will be created once the mono archives have been downloaded, and at
+# that point make will re-read the entire makefile and the functions that
+# tries to list the facade assemblies actually find them. Also the stamp file
+# is empty (and thus a valid makefile), so it's safe to include.
+ifeq ($(MONO_BUILD_FROM_SOURCE),)
+-include .stamp-download-makefile
+endif
+
 ifeq ($(MONO_BUILD_FROM_SOURCE),)
 all-local:: download
 endif
@@ -194,11 +212,19 @@ MAC_ASSEMBLY_NAMES = \
 	System.Net.Http.WinHttpHandler \
 	System.Numerics.Vectors
 
+ifeq ($(MONO_BUILD_FROM_SOURCE),)
+xammac_FACADES=$(basename $(notdir $(wildcard $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac/Facades/*.dll)))
+xammac_net_4_5_FACADES=$(basename $(notdir $(wildcard $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5/Facades/*.dll)))
+monotouch_FACADES=$(basename $(notdir $(wildcard $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch/Facades/*.dll)))
+else
 FACADE_SUBDIRS_MK = $(MONO_PATH)/mcs/class/Facades/subdirs.make
 # File does not exist before checking out mono
 -include $(FACADE_SUBDIRS_MK)
 
-MAC_FACADE_ASSEMBLY_NAMES = $(xammac_PARALLEL_SUBDIRS) $(xammac_SUBDIRS)
+xammac_FACADES=$(xammac_PARALLEL_SUBDIRS) $(xammac_SUBDIRS)
+xammac_net_4_5_FACADES=$(xammac_net_4_5_PARALLEL_SUBDIRS) $(xammac_net_4_5_SUBDIRS)
+monotouch_FACADES=$(monotouch_PARALLEL_SUBDIRS) $(monotouch_SUBDIRS)
+endif
 
 MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 	Mono.Messaging \
@@ -213,13 +239,11 @@ MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 
 MAC_4_5_ASSEMBLY_NAMES = $(MAC_ASSEMBLY_NAMES) $(MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES)
 
-MAC_4_5_FACADE_ASSEMBLY_NAMES = $(xammac_net_4_5_PARALLEL_SUBDIRS) $(xammac_net_4_5_SUBDIRS)
-
 MAC_ASSEMBLIES = $(MAC_ASSEMBLY_NAMES)
-MAC_FACADE_ASSEMBLIES = $(MAC_FACADE_ASSEMBLY_NAMES)
+MAC_FACADE_ASSEMBLIES = $(xammac_FACADES)
 MAC_NO_MDB_ASSEMBLIES = System.Windows System.Xml.Serialization
 MAC_4_5_ASSEMBLIES = $(MAC_4_5_ASSEMBLY_NAMES)
-MAC_4_5_FACADE_ASSEMBLIES = $(MAC_4_5_FACADE_ASSEMBLY_NAMES)
+MAC_4_5_FACADE_ASSEMBLIES = $(xammac_net_4_5_FACADES)
 
 MAC_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
@@ -332,12 +356,18 @@ $(eval $(call MacInstallBclTemplate,4.5,xammac_net_4_5))
 $(MAC_DIRECTORIES) $(BUILD_DESTDIR):
 	$(Q) mkdir -p $@
 
+
+ifeq ($(MONO_BUILD_FROM_SOURCE),)
+mac-facade-check:
+	$(Q) echo "$@ is disabled/redundant when using the mono archive."
+else
 mac-facade-check: $(MAC_BCL_TARGETS)
 	$(Q) rm -f .$@*
 	$(Q) echo $(MAC_4_5_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
 	$(Q) ls -1 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5/Facades " not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
+endif
 
 define lipo_template_static
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1: mac32/$(2)/.libs/$(1) mac64/$(2)/.libs/$(1) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
@@ -506,7 +536,7 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 
 IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
 
-IOS_FACADE_ASSEMBLIES = $(monotouch_PARALLEL_SUBDIRS) $(monotouch_SUBDIRS)
+IOS_FACADE_ASSEMBLIES = $(monotouch_FACADES)
 
 TVOS_ASSEMBLIES = $(IOS_ASSEMBLIES)
 WATCHOS_ASSEMBLIES = $(filter-out Mono.Security Mono.Data.Tds,$(IOS_ASSEMBLIES))
@@ -629,6 +659,10 @@ $(BUILD_DESTDIR)/mac-bcl/%.pdb: $(MONO_MAC_SDK_DESTDIR)/mac-bcl/%.pdb | $(TMP_BC
 $(IOS_BCL_TARGETS_DIRS) $(WATCH_BCL_TARGETS_DIRS) $(TVOS_BCL_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
+ifeq ($(MONO_BUILD_FROM_SOURCE),)
+ios-facade-check watch-facade-check tvos-facade-check:
+	$(Q) echo "$@ is disabled/redundant when using the mono archive."
+else
 ios-facade-check: $(IOS_BCL_TARGETS)
 	$(Q) rm -f .$@*
 	$(Q) echo $(IOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
@@ -649,6 +683,7 @@ tvos-facade-check: $(TVOS_BCL_TARGETS)
 	$(Q) ls -1 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
+endif
 
 # Keep all intermediate files always.
 .SECONDARY:
