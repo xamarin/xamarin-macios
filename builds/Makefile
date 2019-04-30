@@ -461,7 +461,10 @@ endif
 install-bcl:: install-bcl-mac
 
 .stamp-compile-bcl: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-bcl package-mac-bcl $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios-bcl $(SDK_ARGS)
+	$(Q) mv $(SDK_BUILDDIR)/bcl $(SDK_BUILDDIR)/ios-bcl
+	$(Q) rm -f $(SDK_BUILDDIR)/.stamp-*bcl*
+	$(MAKE) -C $(SDK_BUILDDIR) package-mac-bcl $(SDK_ARGS)
 	$(Q) touch $@
 
 .stamp-build-bcl: .stamp-$(MONO_BUILD_MODE)-bcl;
