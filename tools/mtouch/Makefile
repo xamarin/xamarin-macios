@@ -306,7 +306,7 @@ TARGET_DIRS = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib          \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib                 \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib             \
-	$(IOS_DESTDIR)$(XAMARIN_TVOSR_SDK)/usr/lib                   \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib                    \
 
 $(TARGET_DIRS):
 	$(Q) mkdir -p $@
