@@ -78,21 +78,21 @@ namespace BCLTestImporter {
 			// NUNIT TESTS
 
 			// BCL tests group 1
-			// (name:"SystemCoreTests", assemblies: new [] {"monotouch_System.Core_test.dll"}, group: "BCL tests group 1"),
+			(name:"SystemCoreTests", assemblies: new [] {"monotouch_System.Core_test.dll"}, group: "BCL tests group 1"),
 			(name:"SystemNumericsTests", assemblies: new [] {"monotouch_System.Numerics_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemRuntimeSerializationTests", assemblies: new [] {"monotouch_System.Runtime.Serialization_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemTransactionsTests", assemblies: new [] {"monotouch_System.Transactions_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemXmlTests", assemblies: new [] {"monotouch_System.Xml_test.dll"}, group: "BCL tests group 1"),
+			// (name:"SystemRuntimeSerializationTests", assemblies: new [] {"monotouch_System.Runtime.Serialization_test.dll"}, group: "BCL tests group 1"),
+			// (name:"SystemTransactionsTests", assemblies: new [] {"monotouch_System.Transactions_test.dll"}, group: "BCL tests group 1"),
+			// (name:"SystemXmlTests", assemblies: new [] {"monotouch_System.Xml_test.dll"}, group: "BCL tests group 1"),
 			(name:"SystemXmlLinqTests", assemblies: new [] {"monotouch_System.Xml.Linq_test.dll"}, group: "BCL tests group 1"),
 			(name:"MonoSecurityTests", assemblies: new [] {"monotouch_Mono.Security_test.dll"}, group: "BCL tests group 1"),
 			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"monotouch_System.ComponentModel.DataAnnotations_test.dll"}, group: "BCL tests group 1"),
 			(name:"SystemJsonTests", assemblies: new [] {"monotouch_System.Json_test.dll"}, group: "BCL tests group 1"),
 			(name:"SystemServiceModelWebTests", assemblies: new [] {"monotouch_System.ServiceModel.Web_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemIOCompressionTests", assemblies: new [] {"monotouch_System.IO.Compression_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"monotouch_System.IO.Compression.FileSystem_test.dll"}, group: "BCL tests group 1"),
+			// (name:"SystemIOCompressionTests", assemblies: new [] {"monotouch_System.IO.Compression_test.dll"}, group: "BCL tests group 1"),
+			// (name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"monotouch_System.IO.Compression.FileSystem_test.dll"}, group: "BCL tests group 1"),
 			(name:"MonoCSharpTests", assemblies: new [] {"monotouch_Mono.CSharp_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}, group: "BCL tests group 1"),
-			(name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}, group: "BCL tests group 1"),
+			// (name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}, group: "BCL tests group 1"),
+			// (name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}, group: "BCL tests group 1"),
 			
 			// BCL tests group 2
 			// (name:"SystemTests", assemblies: new[] {"monotouch_System_test.dll"}, group: "BCL tests group 2"),
