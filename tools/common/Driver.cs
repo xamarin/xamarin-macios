@@ -235,7 +235,6 @@ namespace Xamarin.Bundler {
 
 		public static int RunCommand (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
 		{
-			Exception stdin_exc = null;
 			var info = new ProcessStartInfo (path, args);
 			info.UseShellExecute = false;
 			info.RedirectStandardInput = false;
@@ -295,9 +294,6 @@ namespace Xamarin.Bundler {
 				} else if (verbose > 0 && output.Length > 0 && !suppressPrintOnErrors) {
 					Console.WriteLine (output.ToString ());
 				}
-
-				if (stdin_exc != null)
-					throw stdin_exc;
 			}
 
 			return 0;
