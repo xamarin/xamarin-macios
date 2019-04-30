@@ -15,7 +15,13 @@ using System.Threading.Tasks;
 
 namespace Xamarin.Bundler {
 	public partial class Driver {
-		public static int RunCommand (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, string args, string [] env, out StringBuilder output, bool suppressPrintOnErrors, int verbose)
+		{
+			output = new StringBuilder ();
+			return RunCommand (path, args, env, output, suppressPrintOnErrors, verbose);
+		}
+
+		public static int RunCommand (string path, string args, string[] env, StringBuilder output, bool suppressPrintOnErrors, int verbose)
 		{
 			var info = new ProcessStartInfo (path, args);
 			info.UseShellExecute = false;
@@ -81,9 +87,9 @@ namespace Xamarin.Bundler {
 			return 0;
 		}
 
-		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		public static Task<int> RunCommandAsync (string path, string args, string [] env, StringBuilder output, bool suppressPrintOnErrors, int verbose)
 		{
-			return Task.Run (() => RunCommand (path, args, env, output, suppressPrintOnErrors));
+			return Task.Run (() => RunCommand (path, args, env, output, suppressPrintOnErrors, verbose));
 		}
 	}
 }

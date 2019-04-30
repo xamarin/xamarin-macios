@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Xamarin.MacDev;
 using Xamarin.Utils;
@@ -229,6 +230,16 @@ namespace Xamarin.Bundler {
 			if (Array.IndexOf (TargetFramework.ValidFrameworks, targetFramework.Value) == -1)
 				throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", targetFramework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 #endif
+		}
+
+		public static int RunCommand (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		{
+			return RunCommand (path, args, env, output, suppressPrintOnErrors, verbose);
+		}
+
+		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		{
+			return RunCommandAsync (path, args, env, output, suppressPrintOnErrors, verbose);
 		}
 
 #if !MMP_TEST
