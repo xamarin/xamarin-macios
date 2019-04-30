@@ -16,8 +16,8 @@ public static class LibTest {
 static class LinkWithConstants
 {
 #if __WATCHOS__
-	public const string Frameworks = "Foundation";
+	public const string Frameworks = "Foundation CoreLocation";
 #else
-	public const string Frameworks = "Foundation ModelIO";
+	public const string Frameworks = "Foundation ModelIO CoreLocation";
 #endif
 }
