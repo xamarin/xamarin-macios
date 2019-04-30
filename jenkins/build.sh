@@ -106,6 +106,11 @@ else
 		echo "The sample tests won't be triggered from public jenkins even if the 'run-sample-tests' label is set (build on internal Jenkins instead)."
 		printf "ℹ️ The sample tests won't be triggered from public jenkins even if the 'run-sample-tests' label is set (build on internal Jenkins instead)." >> "$WORKSPACE/jenkins/pr-comments.md"
 	fi
+
+	if ./jenkins/fetch-pr-labels.sh --check=disable-packaged-mono; then
+		echo "Building mono from source because the label 'disable-packaged-mono' was found."
+		CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-packaged-mono"
+	fi
 fi
 
 
