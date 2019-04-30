@@ -112,7 +112,6 @@ $(BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources
 		-sourceonly=$(IOS_BUILD_DIR)/native/generated_sources \
 		-compiler=$(IOS_CSC) \
 		-nologo -nostdlib -noconfig \
-		-no-mono-path \
 		-tmpdir=$(IOS_BUILD_DIR)/native \
 		-baselib=$(IOS_BUILD_DIR)/native/core.dll \
 		-attributelib=$(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll \
@@ -639,7 +638,6 @@ $(BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.sources
 		-sourceonly=$(WATCH_BUILD_DIR)/watch/generated_sources   \
 		-compiler=$(WATCH_CSC) \
 		-nologo -nostdlib -noconfig                              \
-		-no-mono-path                                            \
 		-tmpdir=$(WATCH_BUILD_DIR)/watch                         \
 		-baselib=$(WATCH_BUILD_DIR)/watch/core.dll               \
 		-attributelib=$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll \
@@ -809,7 +807,6 @@ $(BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources
 		-sourceonly=$(TVOS_BUILD_DIR)/tvos/generated_sources     \
 		-compiler=$(TV_CSC) \
 		-nologo -nostdlib -noconfig                              \
-		-no-mono-path                                            \
 		-tmpdir=$(TVOS_BUILD_DIR)/tvos                         \
 		-baselib=$(TVOS_BUILD_DIR)/tvos/core.dll               \
 		-attributelib=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll \
