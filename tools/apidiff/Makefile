@@ -170,7 +170,12 @@ all-local:: $(BUNDLE_ZIP) $(APIDIFF_DIR)/api-diff.html
 BUNDLE_ZIP=$(APIDIFF_DIR)/bundle-$(word 6,$(subst /, ,$(APIDIFF_REFERENCES))).zip
 $(BUNDLE_ZIP):
 	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
-	$(Q_GEN) curl -L $(APIDIFF_REFERENCES) > $@.tmp
+	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
+		echo "Found a cached version of $(APIDIFF_REFERENCES)) in ~/Library/Caches/xamarin-macios/$(notdir $@)."; \
+		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
+	else \
+		curl -L $(APIDIFF_REFERENCES) > $@.tmp; \
+	fi
 	$(Q) mv $@.tmp $@
 
 UNZIP_STAMP=$(APIDIFF_DIR)/.unzip.stamp
