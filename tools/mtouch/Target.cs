@@ -1350,7 +1350,7 @@ namespace Xamarin.Bundler
 				registration_methods.Add ("xamarin_create_classes");
 			}
 
-			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None) {
+			if (App.Registrar == RegistrarMode.Dynamic && App.LinkMode == LinkMode.None) {
 				string method;
 				string library;
 				switch (App.Platform) {
