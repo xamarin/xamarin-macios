@@ -23,18 +23,18 @@
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="mscorlib"/>
-    <Reference Include="System"/>
-    <Reference Include="System.Core"/>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets"/>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
-    <StartArguments/>
+    <StartArguments />
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
-      <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"/>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
+      <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'ios' ">
@@ -42,7 +42,7 @@
     <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvos' ">
@@ -50,7 +50,7 @@
     <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchos' ">
@@ -58,7 +58,7 @@
     <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git"/>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'mac-mobile' ">
@@ -66,7 +66,7 @@
     <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"/>
+      <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'mac-full' ">
@@ -74,7 +74,7 @@
     <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
     <EnvironmentVariables>
-      <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"/>
+      <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
     </EnvironmentVariables>
   </PropertyGroup>
   <ItemGroup>
@@ -348,37 +348,37 @@
     <Compile Include="..\external\mono\external\ikvm\reflect\Writer\VersionInfo.cs">
       <Link>ikvm\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="..\src\btouch.cs"/>
-    <Compile Include="..\src\error.cs"/>
-    <Compile Include="..\src\generator.cs"/>
-    <Compile Include="..\src\generator-attributes.cs"/>
-    <Compile Include="..\src\generator-attribute-manager.cs"/>
-    <Compile Include="..\src\generator-enums.cs"/>
-    <Compile Include="..\src\generator-filters.cs"/>
-    <Compile Include="..\src\generator-typemanager.cs"/>
-    <Compile Include="..\src\ObjCRuntime\Stret.cs"/>
-    <Compile Include="..\tools\common\TargetFramework.cs"/>
-    <Compile Include="..\tools\common\StringUtils.cs"/>
-    <Compile Include="$(BuildDir)generator-frameworks.g.cs"/>
-    <Compile Include="..\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs"/>
-    <Compile Include="..\src\Foundation\AdviceAttribute.cs"/>
-    <Compile Include="..\src\Foundation\ExportAttribute.cs"/>
-    <Compile Include="..\src\Foundation\FieldAttribute.cs"/>
-    <Compile Include="..\src\Foundation\ModelAttribute.cs"/>
-    <Compile Include="..\src\Foundation\NotImplementedAttribute.cs"/>
-    <Compile Include="..\src\Foundation\PreserveAttribute.cs"/>
-    <Compile Include="..\src\Foundation\ProtocolAttribute.cs"/>
-    <Compile Include="..\src\Foundation\RegisterAttribute.cs"/>
-    <Compile Include="..\src\ObjCRuntime\AlphaAttribute.cs"/>
-    <Compile Include="..\src\ObjCRuntime\ArgumentSemantic.cs"/>
-    <Compile Include="..\src\ObjCRuntime\BindAsAttribute.cs"/>
-    <Compile Include="..\src\ObjCRuntime\BindingImplAttribute.cs"/>
-    <Compile Include="..\src\ObjCRuntime\LinkWithAttribute.cs"/>
-    <Compile Include="..\src\ObjCRuntime\NativeAttribute.cs"/>
-    <Compile Include="..\src\ObjCRuntime\PlatformAvailability2.cs"/>
-    <Compile Include="..\src\ObjCRuntime\PlatformAvailabilityShadow.cs"/>
-    <Compile Include="..\src\ObjCRuntime\Registrar.core.cs"/>
-    <Compile Include="..\src\ObjCRuntime\RequiresSuperAttribute.cs"/>
+    <Compile Include="..\src\btouch.cs" />
+    <Compile Include="..\src\error.cs" />
+    <Compile Include="..\src\generator.cs" />
+    <Compile Include="..\src\generator-attributes.cs" />
+    <Compile Include="..\src\generator-attribute-manager.cs" />
+    <Compile Include="..\src\generator-enums.cs" />
+    <Compile Include="..\src\generator-filters.cs" />
+    <Compile Include="..\src\generator-typemanager.cs" />
+    <Compile Include="..\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="..\tools\common\TargetFramework.cs" />
+    <Compile Include="..\tools\common\StringUtils.cs" />
+    <Compile Include="$(BuildDir)generator-frameworks.g.cs" />
+    <Compile Include="..\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs" />
+    <Compile Include="..\src\Foundation\AdviceAttribute.cs" />
+    <Compile Include="..\src\Foundation\ExportAttribute.cs" />
+    <Compile Include="..\src\Foundation\FieldAttribute.cs" />
+    <Compile Include="..\src\Foundation\ModelAttribute.cs" />
+    <Compile Include="..\src\Foundation\NotImplementedAttribute.cs" />
+    <Compile Include="..\src\Foundation\PreserveAttribute.cs" />
+    <Compile Include="..\src\Foundation\ProtocolAttribute.cs" />
+    <Compile Include="..\src\Foundation\RegisterAttribute.cs" />
+    <Compile Include="..\src\ObjCRuntime\AlphaAttribute.cs" />
+    <Compile Include="..\src\ObjCRuntime\ArgumentSemantic.cs" />
+    <Compile Include="..\src\ObjCRuntime\BindAsAttribute.cs" />
+    <Compile Include="..\src\ObjCRuntime\BindingImplAttribute.cs" />
+    <Compile Include="..\src\ObjCRuntime\LinkWithAttribute.cs" />
+    <Compile Include="..\src\ObjCRuntime\NativeAttribute.cs" />
+    <Compile Include="..\src\ObjCRuntime\PlatformAvailability2.cs" />
+    <Compile Include="..\src\ObjCRuntime\PlatformAvailabilityShadow.cs" />
+    <Compile Include="..\src\ObjCRuntime\Registrar.core.cs" />
+    <Compile Include="..\src\ObjCRuntime\RequiresSuperAttribute.cs" />
   </ItemGroup>
   <Target Name="AfterBuild">
     <Exec Command="make bgen" />
