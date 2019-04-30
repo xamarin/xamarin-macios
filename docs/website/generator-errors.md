@@ -43,7 +43,7 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 This error message is reported when an internal consistency check fails.
 
-This usually indicates a bug in binding generator; please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+This usually indicates a bug in the binding generator; please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
 # BI1xxx: code generation
 
