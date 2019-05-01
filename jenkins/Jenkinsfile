@@ -243,14 +243,14 @@ def processAtMonkeyWrench (outputFile)
     }
 }
 
-def uploadFiles (glob, virtualPath)
+def uploadFiles (glob, containerName, virtualPath)
 {
     step ([
         $class: 'WAStoragePublisher',
         allowAnonymousAccess: true,
         cleanUpContainer: false,
         cntPubAccess: true,
-        containerName: "wrench",
+        containerName: containerName,
         doNotFailIfArchivingReturnsNothing: false,
         doNotUploadIndividualFiles: false,
         doNotWaitForPreviousBuild: true,
