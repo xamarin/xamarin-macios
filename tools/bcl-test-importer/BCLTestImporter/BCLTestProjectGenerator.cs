@@ -149,12 +149,13 @@ namespace BCLTestImporter {
 		static readonly List<string> iOSIgnoredAssemblies = new List<string> {};
 
 		static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
-			"xammac_net_4_5_corlib_xunit-test.dll", // issue https://github.com/mono/mono/issues/14293
+			"monotouch_corlib_xunit-test.dll", // issue https://github.com/mono/mono/issues/14293
 		};
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
 			"monotouch_Mono.Security_test.dll",
 			"monotouch_Mono.Data.Tds_test.dll", // not present in the watch tests dlls
+			"monotouch_corlib_xunit-test.dll", // issue https://github.com/mono/mono/issues/14293
 		};
 
 		private static readonly List<(string name, string[] assemblies, string group)> macTestProjects = new List<(string name, string[] assemblies, string group)> {
@@ -558,8 +559,12 @@ namespace BCLTestImporter {
 		{
 			if (platform == Platform.WatchOS) 
 				throw new ArgumentException (nameof (platform));
+			if (!projects.Any()) // return an empty list
+				return new List<(string name, string path, bool xunit, string failure)> ();
 			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
 			foreach (var def in projects) {
+				if (def.assemblies.Length == 0)
+					continue;
 				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
 				if (IsIgnored (projectDefinition, platform)) // some projects are ignored, so we just continue
 					continue;
