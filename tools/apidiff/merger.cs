@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 
 class Merger {
 
@@ -49,6 +51,14 @@ class Merger {
 			}
 		}
 
+		// https://github.com/MicrosoftDocs/xamarin-docs/blob/live/contributing-guidelines/template.md#file-name
+		var filename = $"{os}-{from}-{to}".Replace ('.', '-').ToLowerInvariant () + ".md";
+		byte[] digest = null;
+		using (var md = MD5.Create ())
+			digest = md.ComputeHash (Encoding.UTF8.GetBytes (filename));
+		// (not cryptographically) unique (but good enough) for each filename - so document remains with the same id when it's updated/regenerated
+		var guid = new Guid (digest);
+
 		var headers = new StringWriter ();
 		var title = $"{platform} SDK API diff: {from} vs {to}";
 		// https://github.com/MicrosoftDocs/xamarin-docs/blob/live/contributing-guidelines/template.md#metadata
@@ -59,15 +69,13 @@ class Merger {
 		headers.WriteLine ($"ms.author: sepoulio");
 		headers.WriteLine ($"ms.date: {DateTime.Now.ToString ("d", new CultureInfo ("en-US"))}");
 		headers.WriteLine ($"ms.topic: article");
-		headers.WriteLine ($"ms.assetid: {Guid.NewGuid ().ToString ().ToLowerInvariant ()}");
+		headers.WriteLine ($"ms.assetid: {guid.ToString ().ToLowerInvariant ()}");
 		headers.WriteLine ($"ms.prod: xamarin");
 		headers.WriteLine ("---");
 		headers.WriteLine ();
 		headers.WriteLine ($"# {title}");
 		headers.WriteLine ();
 
-		// https://github.com/MicrosoftDocs/xamarin-docs/blob/live/contributing-guidelines/template.md#file-name
-		var filename = $"{os}-{from}-{to}".Replace ('.', '-').ToLowerInvariant () + ".md";
 		File.WriteAllText (filename, headers.ToString ());
 
 		var alldiffs = content.ToString ();
