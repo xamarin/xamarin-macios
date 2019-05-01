@@ -149,13 +149,11 @@ namespace BCLTestImporter {
 		static readonly List<string> iOSIgnoredAssemblies = new List<string> {};
 
 		static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
-			"monotouch_corlib_xunit-test.dll", // issue https://github.com/mono/mono/issues/14293
 		};
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
 			"monotouch_Mono.Security_test.dll",
 			"monotouch_Mono.Data.Tds_test.dll", // not present in the watch tests dlls
-			"monotouch_corlib_xunit-test.dll", // issue https://github.com/mono/mono/issues/14293
 		};
 
 		private static readonly List<(string name, string[] assemblies, string group)> macTestProjects = new List<(string name, string[] assemblies, string group)> {
