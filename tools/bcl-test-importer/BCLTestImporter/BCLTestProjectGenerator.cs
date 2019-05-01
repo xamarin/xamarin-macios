@@ -149,6 +149,7 @@ namespace BCLTestImporter {
 		static readonly List<string> iOSIgnoredAssemblies = new List<string> {};
 
 		static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
+			"xammac_net_4_5_corlib_xunit-test.dll", // issue https://github.com/mono/mono/issues/14293
 		};
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
