@@ -279,20 +279,28 @@ TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
 	$(foreach launcher,$(SIMLAUNCHERS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/$(launcher)) \
 	$(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib/Xamarin.iOS.registrar.a       \
-	$(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/usr/lib/Xamarin.iOS.registrar.a          \
+
+ifdef INCLUDE_DEVICE
+TARGETS += $(IOS_DESTDIR)$(MONOTOUCH_DEVICE_SDK)/usr/lib/Xamarin.iOS.registrar.a
+endif
 
 ifdef INCLUDE_WATCH
 TARGETS += \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/Xamarin.WatchOS.registrar.a \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/Xamarin.WatchOS.registrar.a        \
 
+ifdef INCLUDE_DEVICE
+TARGETS += $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/Xamarin.WatchOS.registrar.a
 endif
+endif
+
 
 ifdef INCLUDE_TVOS
 TARGETS +=	\
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/Xamarin.TVOS.registrar.a       \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/Xamarin.TVOS.registrar.a              \
 
+ifdef INCLUDE_DEVICE
+TARGETS += $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/Xamarin.TVOS.registrar.a
+endif
 endif
 
 TARGET_DIRS = \
