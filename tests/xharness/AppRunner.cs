@@ -408,6 +408,7 @@ namespace xharness
 				// we have to parse the xml result
 				crashed = false;
 				var xmldoc = new XmlDocument ();
+				XmlNode mainResultNode;
 				try {
 					using (var reader = listener_log.GetReader ()) {
 						xmldoc.Load (reader);
@@ -420,20 +421,23 @@ namespace xharness
 							}
 						}
 
-						var mainResultNode = testsResults.SelectSingleNode ("test-results");
-						if (mainResultNode == null) {
-							Harness.LogWrench ($"Node is null.");
-						} else {
-							// update the information of the main node to add information about the mode and the test that is excuted. This will later create
-							// nicer reports in jenkins
-							mainResultNode.Attributes ["name"].Value = Target.AsString ();
-							// store a clean version of the logs, later this will be used by the bots to show results in github/web
-							var path = listener_log.FullPath;
-							path = Path.ChangeExtension (path, "xml");
-							testsResults.Save (path);
-							Logs.AddFile (path, "Test xml");
-						}
+						mainResultNode = testsResults.SelectSingleNode ("test-results");
 					}
+					
+					if (mainResultNode == null) {
+						Harness.LogWrench ($"Node is null.");
+					} else {
+						// update the information of the main node to add information about the mode and the test that is excuted. This will later create
+						// nicer reports in jenkins
+						mainResultNode.Attributes ["name"].Value = Target.AsString ();
+						// store a clean version of the logs, later this will be used by the bots to show results in github/web
+						var path = listener_log.FullPath;
+						path = Path.ChangeExtension (path, "xml");
+						// we already have all the data needed in the listerner, rather than saving from the doc, copy 
+						File.Copy (listener_log.FullPath, path, true);
+						Logs.AddFile (path, "Test xml");
+					}
+
 					// write on the log 
 					File.Copy (tmpFile, listener_log.FullPath, true);
 					File.Delete (tmpFile);
