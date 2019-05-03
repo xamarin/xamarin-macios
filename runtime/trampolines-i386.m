@@ -22,14 +22,6 @@
 #define LOGZ(...) ;
 #endif
 
-static guint32
-create_mt_exception (char *msg)
-{
-	MonoException *ex = xamarin_create_exception (msg);
-	xamarin_free (msg);
-	return mono_gchandle_new ((MonoObject *) ex, FALSE);
-}
-
 #ifdef TRACE
 static void
 dump_state (struct XamarinCallState *state)
@@ -159,7 +151,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		} else if (size == 1) {
 			it->state->eax = *(uint8_t *) mono_object_unbox (value);
 		} else {
-			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
+			*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
 		}
 		break;
 	// For primitive types we get a pointer to the actual value
@@ -203,7 +195,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		if (size == 4) {
 			it->state->eax = (uint32_t) value;
 		} else {
-			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i)\n", type, (int) size));
+			*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i)\n", type, (int) size));
 		}
 		break;
 	}
