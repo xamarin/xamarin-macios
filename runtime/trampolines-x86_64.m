@@ -91,21 +91,6 @@ dump_state (struct XamarinCallState *state)
 static const char* registers[] =  { "rdi", "rsi", "rdx", "rcx", "r8", "r9", "err"  };
 #endif
 
-static const char *
-skip_type_name (const char *ptr)
-{
-	const char *t = ptr;
-	do {
-		if (*t == '=') {
-			t++;
-			return t;
-		}
-		t++;
-	} while (*t != 0);
-
-	return ptr;
-}
-
 static int
 param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *target, size_t total_size, guint32 *exception_gchandle)
 {
@@ -406,7 +391,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 				v[1] = 0; // theoretically impossible, but it silences static analysis, and if the real world proves the theory wrong, then we still get consistent behavior.
 			}
 			// figure out where to put the values.
-			const char *t = skip_type_name (type);
+			const char *t = xamarin_skip_type_name (type);
 			int acc = 0;
 			int stores = 0;
 
@@ -469,7 +454,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 
 			};
 		} else if (size == 8) {
-			type = skip_type_name (type);
+			type = xamarin_skip_type_name (type);
 			if (!strncmp (type, "ff}", 3) || !strncmp (type, "d}", 2)) {
 				// the only two fully fp combinations are: ff and d
 				memcpy (&it->state->xmm0, mono_object_unbox (value), 8);
@@ -478,7 +463,12 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 				it->state->rax = *(uint64_t *) mono_object_unbox (value);
 			}
 		} else if (size < 8) {
-			memcpy (&it->state->rax, mono_object_unbox (value), size);
+			type = xamarin_skip_type_name (type);
+			if (!strncmp (type, "f}", 2)) {
+				memcpy (&it->state->xmm0, mono_object_unbox (value), 4);
+			} else {
+				memcpy (&it->state->rax, mono_object_unbox (value), size);
+			}
 		} else {
 			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
 			return;

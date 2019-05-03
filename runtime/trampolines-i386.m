@@ -107,27 +107,57 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		}
 	
 		if (size > 4 && size <= 8) {
-			// returned in %eax and %edx
-			void *unboxed = mono_object_unbox (value);
-
-			// read the struct into 2 32bit values.
-			uint32_t v[2];
-			v[0] = *(uint32_t *) unboxed;
-			// read as much as we can of the second value
-			unboxed = 1 + (uint32_t *) unboxed;
-			if (size == 8) {
-				v[1] = *(uint32_t *) unboxed;
-			} else if (size == 6) {
-				v[1] = *(uint16_t *) unboxed;
-			} else if (size == 5) {
-				v[1] = *(uint8_t *) unboxed;
+			type = xamarin_skip_type_name (type);
+			if (size == 8 && !strncmp (type, "d}", 2)) {
+				it->state->double_ret = *(double *) mono_object_unbox (value);
+				// structures containing a single float/double value use
+				// objc_msgSend (not objc_msgSend_fpret), but they still
+				// behave like objc_msgSend_fpret (they return the value using
+				// the floating point stack). Here we fake that behavior by
+				// overring the trampoline type, so that the assembler code
+				// that handles the return value knows to push the return
+				// value on the floating point stack.
+				it->state->type = Tramp_FpretDouble | (it->state->type & Tramp_Static);
 			} else {
-				v[1] = 0; // theoretically impossible, but it silences static analysis, and if the real world proves the theory wrong, then we still get consistent behavior.
+				// returned in %eax and %edx
+				void *unboxed = mono_object_unbox (value);
+
+				// read the struct into 2 32bit values.
+				uint32_t v[2];
+				v[0] = *(uint32_t *) unboxed;
+				// read as much as we can of the second value
+				unboxed = 1 + (uint32_t *) unboxed;
+				if (size == 8) {
+					v[1] = *(uint32_t *) unboxed;
+				} else if (size == 6) {
+					v[1] = *(uint16_t *) unboxed;
+				} else if (size == 5) {
+					v[1] = *(uint8_t *) unboxed;
+				} else {
+					v[1] = 0; // theoretically impossible, but it silences static analysis, and if the real world proves the theory wrong, then we still get consistent behavior.
+				}
+				it->state->eax = v[0];
+				it->state->edx = v[1];
 			}
-			it->state->eax = v[0];
-			it->state->edx = v[1];
 		} else if (size == 4) {
-			it->state->eax = *(uint32_t *) mono_object_unbox (value);
+			type = xamarin_skip_type_name (type);
+			if (!strncmp (type, "f}", 2)) {
+				it->state->float_ret = *(float *) mono_object_unbox (value);
+				// structures containing a single float/double value use
+				// objc_msgSend (not objc_msgSend_fpret), but they still
+				// behave like objc_msgSend_fpret (they return the value using
+				// the floating point stack). Here we fake that behavior by
+				// overring the trampoline type, so that the assembler code
+				// that handles the return value knows to push the return
+				// value on the floating point stack.
+				it->state->type = Tramp_FpretSingle | (it->state->type & Tramp_Static);
+			} else {
+				it->state->eax = *(uint32_t *) mono_object_unbox (value);
+			}
+		} else if (size == 2) {
+			it->state->eax = *(uint16_t *) mono_object_unbox (value);
+		} else if (size == 1) {
+			it->state->eax = *(uint8_t *) mono_object_unbox (value);
 		} else {
 			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
 		}
