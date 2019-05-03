@@ -15,13 +15,6 @@
 #include "runtime-internal.h"
 #include "trampolines-x86_64.h"
 
-//#define TRACE
-#ifdef TRACE
-#define LOGZ(...) fprintf (stderr, __VA_ARGS__);
-#else
-#define LOGZ(...) ;
-#endif
-
 /*
  * Standard x86_64 calling convention:
  * Input:

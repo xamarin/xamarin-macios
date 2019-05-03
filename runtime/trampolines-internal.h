@@ -6,6 +6,13 @@
 #include "xamarin/mono-runtime.h"
 #include "xamarin/runtime.h"
 
+#define TRACE
+#ifdef TRACE
+#define LOGZ(...) fprintf (stderr, __VA_ARGS__);
+#else
+#define LOGZ(...) ;
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
