@@ -409,30 +409,31 @@ namespace xharness
 				crashed = false;
 				var xmldoc = new XmlDocument ();
 				try {
-					xmldoc.Load (listener_log.GetReader ());
-					var testsResults = new XmlDocument ();
-					using (var writer = new StreamWriter (tmpFile)) {
-						if (IsTouchUnitResult (xmldoc)) {
-							testsResults = ParseTouchUnitXml (xmldoc, writer);
+					using (var reader = listener_log.GetReader ()) {
+						xmldoc.Load (reader);
+						var testsResults = new XmlDocument ();
+						using (var writer = new StreamWriter (tmpFile)) {
+							if (IsTouchUnitResult (xmldoc)) {
+								testsResults = ParseTouchUnitXml (xmldoc, writer);
+							} else {
+								testsResults = ParseNUnitXml (xmldoc, writer);
+							}
+						}
+
+						var mainResultNode = testsResults.SelectSingleNode ("test-results");
+						if (mainResultNode == null) {
+							Harness.LogWrench ($"Node is null.");
 						} else {
-							testsResults = ParseNUnitXml (xmldoc, writer);
+							// update the information of the main node to add information about the mode and the test that is excuted. This will later create
+							// nicer reports in jenkins
+							mainResultNode.Attributes ["name"].Value = Target.AsString ();
+							// store a clean version of the logs, later this will be used by the bots to show results in github/web
+							var path = listener_log.FullPath;
+							path = Path.ChangeExtension (path, "xml");
+							testsResults.Save (path);
+							Logs.AddFile (path, "Test xml");
 						}
 					}
-
-					var mainResultNode = testsResults.SelectSingleNode ("test-results");
-					if (mainResultNode == null) {
-						Harness.LogWrench ($"Node is null.");
-					} else {
-						// update the information of the main node to add information about the mode and the test that is excuted. This will later create
-						// nicer reports in jenkins
-						mainResultNode.Attributes ["name"].Value = Target.AsString ();
-						// store a clean version of the logs, later this will be used by the bots to show results in github/web
-						var path = listener_log.FullPath;
-						path = Path.ChangeExtension (path, "xml");
-						testsResults.Save (path);
-						Logs.AddFile (path, "Test xml");
-					}
-					
 					// write on the log 
 					File.Copy (tmpFile, listener_log.FullPath, true);
 					File.Delete (tmpFile);
