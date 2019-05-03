@@ -310,6 +310,12 @@ namespace Xamarin.Linker.Steps {
 				if (isProtocol && !IgnoreScope (type.Scope)) {
 					LinkContext.StoreProtocolMethods (resolvedInterfaceType);
 				}
+			} else if (LinkContext.App.Registrar == Bundler.RegistrarMode.Dynamic) {
+				// If we're using the dynamic registrar, we need to mark interfaces that represent protocols
+				// even if it doesn't look like the interfaces are used, since we need them at runtime.
+				var isProtocol = type.IsNSObject (LinkContext) && resolvedInterfaceType.HasCustomAttribute (LinkContext, Namespaces.Foundation, "ProtocolAttribute");
+				if (isProtocol)
+					return true;
 			}
 
 			return base.ShouldMarkInterfaceImplementation (type, iface, resolvedInterfaceType);
