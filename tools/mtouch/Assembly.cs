@@ -283,6 +283,7 @@ namespace Xamarin.Bundler {
 
 			var aotCompiler = Driver.GetAotCompiler (App, Target.Is64Build);
 			var aotArgs = Driver.GetAotArguments (App, assembly_path, abi, build_dir, asm_output ?? other_output, llvm_aot_ofile, data);
+			Driver.Log (1, "AOT compiler call: {0} {1}", aotCompiler, aotArgs);
 			var task = new AOTTask
 			{
 				Assembly = this,
