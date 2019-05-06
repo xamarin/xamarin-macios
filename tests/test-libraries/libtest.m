@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <MapKit/MapKit.h>
 
 #include <objc/objc.h>
 #include <objc/runtime.h>
@@ -781,4 +782,439 @@ static void block_called ()
 }
 @end
 
+@implementation RefOutParameters : NSObject {
+}
+-(void) testCFBundle: (int) action a:(CFBundleRef *) refValue b:(CFBundleRef *) outValue
+{
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same pointer of a CFBundle
+		*refValue = CFBundleGetMainBundle ();
+		*outValue = CFBundleGetMainBundle ();
+		break;
+	case 4: // set both parameteres to different pointers of a CFBundle
+		*refValue = (CFBundleRef) CFArrayGetValueAtIndex (CFBundleGetAllBundles (), 0);
+		*outValue = (CFBundleRef) CFArrayGetValueAtIndex (CFBundleGetAllBundles (), 1);
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testINSCoding: (int) action a:(id<NSCoding>*) refValue b:(id<NSCoding>*) outValue
+{
+	NSString *str = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same pointer of an NSString (which implements NSCoding)
+		str = @"Some static string";
+		*refValue = str;
+		*outValue = str;
+		return;
+	case 4: // set both parameteres to different pointers of an NSString
+		*refValue = @"A static string for ref";
+		*outValue = @"A static string for out";
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testNSObject: (int) action a:(id *) refValue b:(id *) outValue
+{
+	NSObject *obj = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same pointer of an NSObject
+		obj = [NSObject new];
+		*refValue = obj;
+		*outValue = obj;
+		return;
+	case 4: // set both parameteres to different objects
+		*refValue = [NSObject new];
+		*outValue = [NSObject new];
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testNSValue: (int) action a:(NSValue **) refValue b:(NSValue **) outValue
+{
+	NSValue *obj = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same pointer of an NSValue
+		obj = [NSValue valueWithMKCoordinate: CLLocationCoordinate2DMake (3, 14)];
+		*refValue = obj;
+		*outValue = obj;
+		return;
+	case 4: // set both parameteres to different objects
+		*refValue = [NSValue valueWithMKCoordinate: CLLocationCoordinate2DMake (3, 14)];
+		*outValue = [NSValue valueWithMKCoordinate: CLLocationCoordinate2DMake (2, 71)];
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testString: (int) action a:(NSString **) refValue b:(NSString **) outValue
+{
+	NSString *obj = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same pointer of an NSString
+		obj = @"A constant native string";
+		*refValue = obj;
+		*outValue = obj;
+		return;
+	case 4: // set both parameteres to different objects
+		*refValue = [NSString stringWithUTF8String: "Hello Xamarin"];
+		*outValue = [NSString stringWithUTF8String: "Hello Microsoft"];
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testInt: (int) action a:(int32_t *) refValue b:(int32_t *) outValue
+{
+	NSString *obj = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to 0
+		*refValue = 0;
+		*outValue = 0;
+		break;
+	case 3: // set both parameteres to the same value
+		obj = @"A constant native string";
+		*refValue = 314159;
+		*outValue = 314159;
+		return;
+	case 4: // set both parameteres to different objects
+		*refValue = 3141592;
+		*outValue = 2718282;
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testSelector: (int) action a:(SEL *) refValue b:(SEL *) outValue
+{
+	SEL obj = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same selector
+		obj = @selector (testSelector);
+		*refValue = obj;
+		*outValue = obj;
+		return;
+	case 4: // set both parameteres to different selectors
+		*refValue = @selector (testSelector:a:);
+		*outValue = @selector (testSelector:b:);
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testClass: (int) action a:(Class *) refValue b:(Class *) outValue
+{
+	Class obj = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same class
+		obj = [NSString class];
+		*refValue = obj;
+		*outValue = obj;
+		return;
+	case 4: // set both parameteres to different classes
+		*refValue = [NSBundle class];
+		*outValue = [NSDate class];
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testINSCodingArray: (int) action a:(NSArray **) refValue b:(NSArray **) outValue
+{
+	NSArray *arr = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same pointer of an NSArray of NSString (which implements NSCoding)
+		arr =
+		@[
+			// This looks funny, but it's to ensure we don't get strings that are statically allocated (in which case the same pointer would be returned in multiple calls, which may throw off some of our tests)
+			[[NSString stringWithUTF8String: "Hello"] stringByAppendingString: @"World"],
+			[[NSString stringWithUTF8String: "Hello"] stringByAppendingString: @"Universe"]
+		];
+		*refValue = arr;
+		*outValue = arr;
+		return;
+	case 4: // set both parameteres to different NSArrays
+		*refValue = @[@3, @14];
+		*outValue = @[[NSString stringWithUTF8String: "Hello"], [NSString stringWithUTF8String: "Xamarin"]];
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testNSObjectArray: (int) action a:(NSArray **) refValue b:(NSArray **) outValue
+{
+	NSArray *arr = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same pointer of an NSArray of NSString
+		arr = @[@"Hello", @"World"];
+		*refValue = arr;
+		*outValue = arr;
+		return;
+	case 4: // set both parameteres to different NSArrays
+		*refValue = @[@3, @14];
+		*outValue = @[@"Hello", @"Xamarin"];
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testNSValueArray: (int) action a:(NSArray **) refValue b:(NSArray **) outValue
+{
+	NSArray *arr = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same pointer of an NSArray of NSValue
+		arr = @[[NSValue valueWithMKCoordinate: CLLocationCoordinate2DMake (3, 14)], [NSValue valueWithMKCoordinate: CLLocationCoordinate2DMake (2, 71)]];
+		*refValue = arr;
+		*outValue = arr;
+		return;
+	case 4: // set both parameteres to different NSArrays
+		*refValue = @[[NSValue valueWithMKCoordinate: CLLocationCoordinate2DMake (3, 14)], [NSValue valueWithMKCoordinate: CLLocationCoordinate2DMake (15, 92)]];
+		*outValue = @[[NSValue valueWithMKCoordinate: CLLocationCoordinate2DMake (2, 71)], [NSValue valueWithMKCoordinate: CLLocationCoordinate2DMake (82, 82)]];
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testStringArray: (int) action a:(NSArray **) refValue b:(NSArray **) outValue
+{
+	NSArray *arr = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same pointer of an NSArray of NSString
+		arr = @[@"Hello", @"World"];
+		*refValue = arr;
+		*outValue = arr;
+		return;
+	case 4: // set both parameteres to different NSArrays
+		*refValue = @[@"Hello", @"Microsoft"];
+		*outValue = @[@"Hello", @"Xamarin"];
+		break;
+	case 5: // assert that we got an immutable array
+		// We'll never get a mutable array (the binding code creates NSArrays), so assert that.
+		assert (![*refValue isKindOfClass: [NSMutableArray class]]);
+		break;
+	default:
+		abort ();
+	}
+}
+
+-(void) testClassArray: (int) action a:(NSArray **) refValue b:(NSArray **) outValue
+{
+	NSArray *arr = NULL;
+
+	// We should never get null pointers.
+	assert (refValue != NULL);
+	assert (outValue != NULL);
+
+	// out parameters from managed code should always be NULL upon entry
+	assert (*outValue == NULL);
+
+	switch (action & 0xFF) {
+	case 1: // Set both to null
+		*refValue = NULL;
+		*outValue = NULL;
+		break;
+	case 2: // verify that refValue points to something
+		assert (*refValue != NULL);
+		break;
+	case 3: // set both parameteres to the same pointer of an NSArray of NSString
+		arr = @[[NSString class], [NSDate class]];
+		*refValue = arr;
+		*outValue = arr;
+		return;
+	case 4: // set both parameteres to different NSArrays
+		*refValue = @[[NSString class], [NSValue class]];
+		*outValue = @[[NSData class], [NSDate class]];
+		break;
+	case 5: // assert that we got an immutable array
+		// We'll never get a mutable array (the binding code creates NSArrays), so assert that.
+		assert (![*refValue isKindOfClass: [NSMutableArray class]]);
+		break;
+	default:
+		abort ();
+	}
+}
+@end
 #include "libtest.decompile.m"
