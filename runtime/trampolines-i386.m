@@ -15,13 +15,6 @@
 #include "runtime-internal.h"
 #include "trampolines-i386.h"
 
-//#define TRACE
-#ifdef TRACE
-#define LOGZ(...) fprintf (stderr, __VA_ARGS__);
-#else
-#define LOGZ(...) ;
-#endif
-
 #ifdef TRACE
 static void
 dump_state (struct XamarinCallState *state)
