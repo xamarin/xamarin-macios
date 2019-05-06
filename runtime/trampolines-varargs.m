@@ -157,7 +157,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			break;
 		}
 
-		state->ptr_ret = xamarin_marshal_return_value (mtype, type, value, retain, method, desc, exception_gchandle);
+		state->ptr_ret = xamarin_marshal_return_value (it->state->sel, mtype, type, value, retain, method, desc, exception_gchandle);
 		break;
 	case _C_VOID:
 		break;

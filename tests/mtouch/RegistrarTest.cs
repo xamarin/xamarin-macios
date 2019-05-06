@@ -146,6 +146,45 @@ class DateMembers : NSObject {
 		}
 
 		[Test]
+		public void MT4111 ()
+		{
+			var code = @"
+class DateMembers : NSObject {
+	[Export (""F1:"")]
+	void F1 (int[] a) {}
+
+	[Export (""F2"")]
+	int[] F2 () { throw new Exception (); }
+
+	[Export (""F3:"")]
+	void F3 (ref int[] d) {}
+
+	[Export (""F4"")]
+	int[] F4 { get; set; }
+
+	[Export (""F5:"")]
+	void F5 (out int[] d) { throw new Exception (); }
+}
+";
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: code, usings: "using Foundation; using System;", extraArg: "/debug:full");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.AssertExecuteFailure ();
+				mtouch.AssertError (4111, "The registrar cannot build a signature for type `System.Int32[]' in method `DateMembers.F1`.", "testApp.cs", 5);
+				mtouch.AssertError (4111, "The registrar cannot build a signature for type `System.Int32[]' in method `DateMembers.F2`.", "testApp.cs", 8);
+				mtouch.AssertError (4111, "The registrar cannot build a signature for type `System.Int32[]' in method `DateMembers.F3`.", "testApp.cs", 11);
+				mtouch.AssertError (4111, "The registrar cannot build a signature for type `System.Int32[]' in method `DateMembers.get_F4`.", "testApp.cs", 14);
+				mtouch.AssertError (4111, "The registrar cannot build a signature for type `System.Int32[]' in method `DateMembers.set_F4`.", "testApp.cs", 14);
+				mtouch.AssertError (4111, "The registrar cannot build a signature for type `System.Int32[]' in method `DateMembers.F5`.", "testApp.cs", 17);
+				mtouch.AssertErrorCount (6);
+				mtouch.AssertNoWarnings ();
+			}
+		}
+
+		[Test]
 		public void MT4117 ()
 		{
 			var code = @"

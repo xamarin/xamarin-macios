@@ -245,6 +245,15 @@ namespace MonoTouch.ObjCRuntime
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
 		public extern static void CATransform3D_objc_msgSend_stret (out CATransform3D buf, IntPtr receiver, IntPtr selector);
 #endif // !__WATCHOS__
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		public extern static void void_objc_msgSend_int_IntPtr_IntPtr (IntPtr receiver, IntPtr selector, int p1, ref IntPtr p2, out IntPtr p3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		public extern static void void_objc_msgSend_int_IntPtr_IntPtr (IntPtr receiver, IntPtr selector, int p1, IntPtr p2, IntPtr p3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		public extern static void void_objc_msgSend_int_int_int (IntPtr receiver, IntPtr selector, int p1, ref int p2, out int p3);
 	}
 }
 

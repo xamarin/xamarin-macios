@@ -15,8 +15,8 @@ using System.Runtime.InteropServices;
 static class LinkWithConstants
 {
 #if __WATCHOS__
-	public const string Frameworks = "";
+	public const string Frameworks = "CoreLocation";
 #else
-	public const string Frameworks = "ModelIO";
+	public const string Frameworks = "CoreLocation ModelIO";
 #endif
 }

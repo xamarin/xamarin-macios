@@ -6,6 +6,8 @@ using System.Text;
 
 #if MLAUNCH
 using Xamarin.Launcher;
+#elif XAMARIN_HOSTING
+using Xamarin.Hosting;
 #else
 using Xamarin.Bundler;
 #endif

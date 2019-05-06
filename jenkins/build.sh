@@ -1,5 +1,10 @@
 #!/bin/bash -e
 
+# Script that builds xamarin-macios for CI
+#
+#     --configure-flags=<flags>: Flags to pass to --configure. Optional
+#     --timeout=<timeout>: Time out the build after <timeout> seconds.
+
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 WORKSPACE=$(pwd)
 
@@ -9,8 +14,48 @@ report_error ()
 }
 trap report_error ERR
 
-if [[ x$1 == x--configure-flags ]]; then
-	CONFIGURE_FLAGS="$2"
+timeout ()
+{
+	# create a subprocess that kills this process after a certain number of seconds
+	SELF_PID=$$
+	(
+		sleep "$1"
+		echo "Execution timed out after $1 seconds."
+		printf "❌ [Build timed out](%s/console)\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+		kill -9 $SELF_PID
+	)&
+	# kill the subprocess timeout if we exit before we time out
+	TIMEOUT_PID=$!
+	trap 'kill -9 $TIMEOUT_PID' EXIT
+}
+
+while ! test -z "$1"; do
+	case "$1" in
+		--configure-flags=*)
+			CONFIGURE_FLAGS="${1#*=}"
+			shift
+			;;
+		--configure-flags)
+			CONFIGURE_FLAGS="$2"
+			shift 2
+			;;
+		--timeout=*)
+			TIMEOUT="${1#*=}"
+			shift
+			;;
+		--timeout)
+			TIMEOUT="$2"
+			shift 2
+			;;
+		*)
+			echo "Unknown argument: $1"
+			exit 1
+			;;
+    esac
+done
+
+if test -n "$TIMEOUT"; then
+	timeout "$TIMEOUT"
 fi
 
 ls -la "$WORKSPACE/jenkins"
@@ -60,6 +105,11 @@ else
 	if ./jenkins/fetch-pr-labels.sh --check=run-sample-tests; then
 		echo "The sample tests won't be triggered from public jenkins even if the 'run-sample-tests' label is set (build on internal Jenkins instead)."
 		printf "ℹ️ The sample tests won't be triggered from public jenkins even if the 'run-sample-tests' label is set (build on internal Jenkins instead)." >> "$WORKSPACE/jenkins/pr-comments.md"
+	fi
+
+	if ./jenkins/fetch-pr-labels.sh --check=disable-packaged-mono; then
+		echo "Building mono from source because the label 'disable-packaged-mono' was found."
+		CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-packaged-mono"
 	fi
 fi
 

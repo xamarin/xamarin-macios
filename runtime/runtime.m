@@ -274,17 +274,17 @@ xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 }
 
 MonoObject *
-xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle)
+xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
 	int32_t created;
-	return xamarin_get_nsobject_with_type_for_ptr_created (self, owns, type, &created, selector, managed_method, exception_gchandle);
+	return xamarin_get_nsobject_with_type_for_ptr_created (self, owns, type, &created, exception_gchandle);
 }
 
 MonoObject *
-xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle)
+xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -305,7 +305,7 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 			return mobj;
 	}
 
-	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, selector, managed_method == NULL ? NULL : mono_method_get_object (mono_domain_get (), managed_method, NULL), exception_gchandle);
+	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, exception_gchandle);
 }
 
 MonoObject *
@@ -2505,13 +2505,18 @@ xamarin_throw_product_exception (int code, const char *message)
 guint32
 xamarin_create_product_exception (int code, const char *message)
 {
+	return xamarin_create_product_exception_with_inner_exception (code, 0, message);
+}
+
+guint32
+xamarin_create_product_exception_with_inner_exception (int code, guint32 inner_exception_gchandle, const char *message)
+{
 	guint32 exception_gchandle = 0;
-	guint32 handle = xamarin_create_product_exception_for_error (code, message, &exception_gchandle);
+	guint32 handle = xamarin_create_product_exception_for_error (code, inner_exception_gchandle, message, &exception_gchandle);
 	if (exception_gchandle != 0)
 		return exception_gchandle;
 	return handle;
 }
-
 void
 xamarin_insert_dllmap ()
 {
