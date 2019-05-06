@@ -5404,6 +5404,7 @@ namespace Foundation
 		NSString RegistrationDomain { get; }
 
 		[iOS (9,3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[NoMac][NoTV]
 		[Notification]
 		[Field ("NSUserDefaultsSizeLimitExceededNotification")]
@@ -5415,12 +5416,14 @@ namespace Foundation
 		NSString NoCloudAccountNotification { get; }
 
 		[iOS (9,3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[NoMac][NoTV]
 		[Notification]
 		[Field ("NSUbiquitousUserDefaultsDidChangeAccountsNotification")]
 		NSString DidChangeAccountsNotification { get; }
 
 		[iOS (9,3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[NoMac][NoTV]
 		[Notification]
 		[Field ("NSUbiquitousUserDefaultsCompletedInitialSyncNotification")]
@@ -10756,18 +10759,21 @@ namespace Foundation
 
 #if IOS && !XAMCORE_4_0
 		[iOS (9, 3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[Notification]
 		[Obsolete ("Use 'NSUserDefaults.SizeLimitExceededNotification' instead.")]
 		[Field ("NSUserDefaultsSizeLimitExceededNotification")]
 		NSString SizeLimitExceededNotification { get; }
 
 		[iOS (9, 3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[Notification]
 		[Obsolete ("Use 'NSUserDefaults.DidChangeAccountsNotification' instead.")]
 		[Field ("NSUbiquitousUserDefaultsDidChangeAccountsNotification")]
 		NSString DidChangeAccountsNotification { get; }
 
 		[iOS (9, 3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[Notification]
 		[Obsolete ("Use 'NSUserDefaults.CompletedInitialSyncNotification' instead.")]
 		[Field ("NSUbiquitousUserDefaultsCompletedInitialSyncNotification")]
