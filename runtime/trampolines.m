@@ -1462,3 +1462,18 @@ exception_handling:
 	xamarin_free (msg);
 	return exception_gchandle;
 }
+
+const char *
+xamarin_skip_type_name (const char *ptr)
+{
+	const char *t = ptr;
+	do {
+		if (*t == '=') {
+			t++;
+			return t;
+		}
+		t++;
+	} while (*t != 0);
+
+	return ptr;
+}
