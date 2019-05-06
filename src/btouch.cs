@@ -486,9 +486,6 @@ public class BindingTouch {
 			var si = new ProcessStartInfo (compiler, cargs.ToString ()) {
 				UseShellExecute = false,
 			};
-				
-			// HACK: We are calling btouch with forced 2.1 path but we need working mono for compiler
-			si.EnvironmentVariables.Remove ("MONO_PATH");
 
 			if (verbose)
 				Console.WriteLine ("{0} {1}", si.FileName, si.Arguments);
@@ -620,9 +617,6 @@ public class BindingTouch {
 			si = new ProcessStartInfo (compiler, cargs.ToString ()) {
 				UseShellExecute = false,
 			};
-
-			// HACK: We are calling btouch with forced 2.1 path but we need working mono for compiler
-			si.EnvironmentVariables.Remove ("MONO_PATH");
 
 			if (verbose)
 				Console.WriteLine ("{0} {1}", si.FileName, si.Arguments);
