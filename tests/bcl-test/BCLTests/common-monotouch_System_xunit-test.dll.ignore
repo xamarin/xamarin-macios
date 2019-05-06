@@ -117,3 +117,9 @@ System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Path
 
 # Exception messages: System.IO.IOException : BCL tests group  test app isn't present in the test runtime directory.   Exception stack traces:
 System.Text.RegularExpressions.Tests.RegexMatchTests.Match_ExcessPrefix
+
+# blocks the testing app
+System.Net.WebSockets.Tests.WebSocketTests.CreateClientBuffer_InvalidSendValues(size: -1)
+System.Net.WebSockets.Tests.WebSocketTests.CreateClientBuffer_InvalidSendValues(size: 0)
+System.Net.WebSockets.Tests.WebSocketTests.WebSocketProtocol_CreateFromConnectedStream_CanSendReceiveData
+System.Net.WebSockets.Tests.WebSocketTests.ReceiveAsync_ServerSplitHeader_ValidDataReceived
