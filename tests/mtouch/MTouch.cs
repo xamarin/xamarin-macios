@@ -2078,9 +2078,19 @@ public class B
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 
 				var load_commands = ExecutionHelper.Execute ("otool", $"-l {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true);
+				Asserts.DoesNotContain ("SafariServices", load_commands, "SafariServices");
+				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
+				Asserts.DoesNotContain ("NewsstandKit", load_commands, "NewsstandKit");
+
+				// Try again with the static registrar
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+
+				load_commands = ExecutionHelper.Execute ("otool", $"-l {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true);
 				Asserts.DoesNotContain ("SafariServices", load_commands, "SafariServices");
 				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
 				Asserts.DoesNotContain ("QuickLook", load_commands, "QuickLook");
