@@ -43,6 +43,34 @@
 
 static pthread_mutex_t refcount_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
+size_t
+xamarin_get_primitive_size (char type)
+{
+	switch (type) {
+	case _C_ID: return sizeof (id);
+	case _C_CLASS: return sizeof (Class);
+	case _C_SEL: return sizeof (SEL);
+	case _C_CHR: return sizeof (char);
+	case _C_UCHR: return sizeof (unsigned char);
+	case _C_SHT: return sizeof (short);
+	case _C_USHT: return sizeof (unsigned short);
+	case _C_INT: return sizeof (int);
+	case _C_UINT: return sizeof (unsigned int);
+	case _C_LNG: return sizeof (long);
+	case _C_ULNG: return sizeof (unsigned long);
+	case _C_LNG_LNG: return sizeof (long long);
+	case _C_ULNG_LNG: return sizeof (unsigned long long);
+	case _C_FLT: return sizeof (float);
+	case _C_DBL: return sizeof (double);
+	case _C_BOOL: return sizeof (BOOL);
+	case _C_VOID: return 0;
+	case _C_PTR: return sizeof (void *);
+	case _C_CHARPTR: return sizeof (char *);
+	default:
+		return 0;
+	}
+}
+
 static void *
 xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
 {
@@ -283,6 +311,15 @@ get_type_description_length (const char *desc)
 		length++;
 
 	return length;
+}
+
+// The input string will be freed (so that the caller can use xamarin_strdup_printf easily).
+guint32
+xamarin_create_mt_exception (char *msg)
+{
+	MonoException *ex = xamarin_create_exception (msg);
+	xamarin_free (msg);
+	return mono_gchandle_new ((MonoObject *) ex, FALSE);
 }
 
 int
