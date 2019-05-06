@@ -940,6 +940,7 @@ namespace UIKit {
 #endif
 
 		[Mac (10,11)]
+		[iOS (9,0)] // Show up in the iOS 7.0 headers, but they can't be found at runtime until iOS 9.
 		[Export ("CGGlyphAtIndex:isValidIndex:")]
 #if XAMCORE_4_0
 		CGGlyph GetGlyph (nuint glyphIndex, out bool isValidIndex);
@@ -950,6 +951,7 @@ namespace UIKit {
 #endif
 
 		[Mac (10,11)]
+		[iOS (9,0)] // Show up in the iOS 7.0 headers, but they can't be found at runtime until iOS 9.
 		[Export ("CGGlyphAtIndex:")]
 #if XAMCORE_4_0
 		CGGlyph GetGlyph (nuint glyphIndex);
