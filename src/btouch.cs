@@ -275,7 +275,7 @@ public class BindingTouch {
 			{ "attributelib=", "Sets the attribute library", v => attributedll = v },
 			{ "use-zero-copy", v=> zero_copy = true },
 			{ "nostdlib", "Does not reference mscorlib.dll library", l => nostdlib = true },
-			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { } },
+			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { }, true },
 			{ "native-exception-marshalling", "Enable the marshalling support for Objective-C exceptions", (v) => { /* no-op */} },
 			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)",
 				v => inline_selectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
