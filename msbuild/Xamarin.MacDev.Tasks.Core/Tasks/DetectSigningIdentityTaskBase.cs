@@ -311,7 +311,8 @@ namespace Xamarin.MacDev.Tasks
 			if (profiles.Count == 0) {
 				foreach (var f in failures)
 					Log.LogMessage (MessageImportance.Low, "{0}", f);
-				Log.LogError ($"Could not find any available provisioning profiles for {PlatformName}.");
+				
+				Log.LogError ($"Could not find any available provisioning profiles for {AppBundleName} on {PlatformName}.");
 				return null;
 			}
 
@@ -335,7 +336,7 @@ namespace Xamarin.MacDev.Tasks
 				}) select new CodeSignIdentity { SigningKey = c, Profile = p }).ToList ();
 
 				if (pairs.Count == 0) {
-					Log.LogError ("No installed provisioning profiles match the installed " + PlatformName + " signing identities.");
+					Log.LogError ($"No installed provisioning profiles match the installed {PlatformName} {AppBundleName} signing identities.");
 					return null;
 				}
 			} else {
