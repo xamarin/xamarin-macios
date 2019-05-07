@@ -674,13 +674,30 @@ namespace xharness
 		void SelectTestsByLabel (int pull_request)
 		{
 			var labels = new HashSet<string> ();
-			labels.UnionWith (Harness.Labels);
-			if (pull_request > 0)
-				labels.UnionWith (GitHub.GetLabels (Harness, pull_request));
+			if (Harness.Labels.Any ()) {
+				labels.UnionWith (Harness.Labels);
+				MainLog.WriteLine ($"{Harness.Labels.Count} label(s) were passed on the command line.");
+			} else {
+				MainLog.WriteLine ($"No labels were passed on the command line.");
+			}
+			if (pull_request > 0) {
+				var lbls = GitHub.GetLabels (Harness, pull_request);
+				if (lbls.Any ()) {
+					labels.UnionWith (lbls);
+					MainLog.WriteLine ($"Found {lbls.Count ()} label(s) in the pull request #{pull_request}: {string.Join (", ", lbls)}");
+				} else {
+					MainLog.WriteLine ($"No labels were found in the pull request #{pull_request}.");
+				}
+			}
 			var env_labels = Environment.GetEnvironmentVariable ("XHARNESS_LABELS");
-			if (!string.IsNullOrEmpty (env_labels))
-				labels.UnionWith (env_labels.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
+			if (!string.IsNullOrEmpty (env_labels)) {
+				var lbls = env_labels.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+				labels.UnionWith (lbls);
+				MainLog.WriteLine ($"Found {lbls.Count ()} label(s) in the environment variable XHARNESS_LABELS: {string.Join (", ", lbls)}");
+			} else {
+				MainLog.WriteLine ($"No labels were in the environment variable XHARNESS_LABELS.");
+			}
+			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
 
 			// disabled by default
 			SetEnabled (labels, "mtouch", ref IncludeMtouch);
