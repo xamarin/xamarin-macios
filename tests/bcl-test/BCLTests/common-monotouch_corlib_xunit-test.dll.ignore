@@ -620,14 +620,58 @@ System.Threading.Tasks.Tests.ValueTaskTests.Generic_Awaiter_OnCompleted(mode: Va
 System.Threading.Tasks.Tests.ValueTaskTests.Generic_Awaiter_UnsafeOnCompleted(mode: Result)
 System.Threading.Tasks.Tests.ValueTaskTests.Generic_Awaiter_UnsafeOnCompleted(mode: Task)
 System.Threading.Tasks.Tests.ValueTaskTests.Generic_Awaiter_UnsafeOnCompleted(mode: ValueTaskSource)
-System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_OnCompleted
-System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_UnsafeOnCompleted
-System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_OnCompleted
-System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_UnsafeOnCompleted
-System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_Awaiter_ContinuesOnCapturedContext
-System.Threading.Tasks.Tests.ValueTaskTests.Generic_Awaiter_ContinuesOnCapturedContext
-System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext
-System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_OnCompleted(mode: Result, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_OnCompleted(mode: Task, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_OnCompleted(mode: ValueTaskSource, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_OnCompleted(mode: Result, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_OnCompleted(mode: Task, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_OnCompleted(mode: ValueTaskSource, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_UnsafeOnCompleted(mode: Result, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_UnsafeOnCompleted(mode: Task, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_UnsafeOnCompleted(mode: ValueTaskSource, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_UnsafeOnCompleted(mode: Result, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_UnsafeOnCompleted(mode: Task, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_UnsafeOnCompleted(mode: ValueTaskSource, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_OnCompleted(mode: Result, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_OnCompleted(mode: Task, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_OnCompleted(mode: ValueTaskSource, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_OnCompleted(mode: Result, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_OnCompleted(mode: Task, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_OnCompleted(mode: ValueTaskSource, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_UnsafeOnCompleted(mode: Result, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_UnsafeOnCompleted(mode: Task, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_UnsafeOnCompleted(mode: ValueTaskSource, continueOnCapturedContext: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_UnsafeOnCompleted(mode: Result, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_UnsafeOnCompleted(mode: Task, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_UnsafeOnCompleted(mode: ValueTaskSource, continueOnCapturedContext: False)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_Awaiter_ContinuesOnCapturedContext(mode: Result)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_Awaiter_ContinuesOnCapturedContext(mode: Task)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_Awaiter_ContinuesOnCapturedContext(mode: ValueTaskSource)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_Awaiter_ContinuesOnCapturedContext(mode: Task, sync: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_Awaiter_ContinuesOnCapturedContext(mode: ValueTaskSource, sync: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_Awaiter_ContinuesOnCapturedContext(mode: Result, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_Awaiter_ContinuesOnCapturedContext(mode: Task, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_Awaiter_ContinuesOnCapturedContext(mode: ValueTaskSource, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Task, continueOnCapturedContext: True, sync: False)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: ValueTaskSource, continueOnCapturedContext: True, sync: False)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Task, continueOnCapturedContext: False, sync: False)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: ValueTaskSource, continueOnCapturedContext: False, sync: False)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Result, continueOnCapturedContext: True, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Task, continueOnCapturedContext: True, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: ValueTaskSource, continueOnCapturedContext: True, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Result, continueOnCapturedContext: False, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Task, continueOnCapturedContext: False, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: ValueTaskSource, continueOnCapturedContext: False, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Task, continueOnCapturedContext: True, sync: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: ValueTaskSource, continueOnCapturedContext: True, sync: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Task, continueOnCapturedContext: False, sync: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: ValueTaskSource, continueOnCapturedContext: False, sync: False)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Result, continueOnCapturedContext: True, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Task, continueOnCapturedContext: True, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: ValueTaskSource, continueOnCapturedContext: True, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Result, continueOnCapturedContext: False, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: Task, continueOnCapturedContext: False, sync: True)
+System.Threading.Tasks.Tests.ValueTaskTests.Generic_ConfiguredAwaiter_ContinuesOnCapturedContext(mode: ValueTaskSource, continueOnCapturedContext: False, sync: True)
 System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_GetHashCode_FromDefault_0
 System.Threading.Tasks.Tests.ValueTaskTests.Generic_GetHashCode_FromResult_ContainsResult
 System.Threading.Tasks.Tests.ValueTaskTests.NonGeneric_GetHashCode_FromObject_MatchesObjectHashCode(mode: Task)
@@ -677,7 +721,11 @@ System.IO.Tests.File_AppendAllTextAsync_Encoded.NonExistentPathAsync
 System.IO.Tests.File_AppendAllTextAsync_Encoded.NullContent_CreatesFileAsync
 System.IO.Tests.File_AppendAllTextAsync_Encoded.EmptyStringContent_CreatesFileAsync
 System.IO.Tests.File_AppendAllTextAsync_Encoded.InvalidParametersAsync
-System.IO.Tests.File_AppendAllTextAsync_Encoded.ValidWriteAsync
+System.IO.Tests.File_AppendAllTextAsync_Encoded.ValidWriteAsync(size: 0)
+System.IO.Tests.File_AppendAllTextAsync_Encoded.ValidWriteAsync(size: 100)
+System.IO.Tests.File_AppendAllTextAsync_Encoded.ValidWriteAsync(size: 4096)
+System.IO.Tests.File_AppendAllTextAsync_Encoded.ValidWriteAsync(size: 4097)
+System.IO.Tests.File_AppendAllTextAsync_Encoded.ValidWriteAsync(size: 10000)
 System.IO.Tests.File_AppendAllTextAsync_Encoded.OpenFile_ThrowsIOExceptionAsync
 System.IO.Tests.File_AppendAllTextAsync_Encoded.Read_FileNotFoundAsync
 System.IO.Tests.File_AppendAllTextAsync_Encoded.WriteToReadOnlyFileAsync
@@ -707,8 +755,14 @@ System.IO.Tests.File_AppendAllLinesAsync_Encoded.DisposingEnumeratorClosesFileAs
 System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_SetStateMachine_InvalidArgument_ThrowsException
 System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_Start_ExecutionContextChangesInMoveNextDontFlowOut
 System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_Start_ExecutionContextChangesInMoveNextDontFlowOut
-System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_UsedWithAsyncMethod_CompletesSuccessfully
-System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_UsedWithAsyncMethod_CompletesSuccessfully(yields: 0)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_UsedWithAsyncMethod_CompletesSuccessfully(yields: 1)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_UsedWithAsyncMethod_CompletesSuccessfully(yields: 2)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_UsedWithAsyncMethod_CompletesSuccessfully(yields: 10)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully(yields: 0)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully(yields: 1)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully(yields: 2)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully(yields: 10)
 System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.AwaitTasksAndValueTasks_InTaskAndValueTaskMethods
 System.Threading.ThreadPools.Tests.ThreadPoolTests.ConcurrentInitializeTest
 System.Threading.ThreadPools.Tests.ThreadPoolTests.GetMinMaxThreadsTest
@@ -718,23 +772,62 @@ System.Threading.ThreadPools.Tests.ThreadPoolTests.SetMinMaxThreadsTest_ChangedI
 System.Threading.ThreadPools.Tests.ThreadPoolTests.SetMinThreadsTo0Test
 System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueRegisterPositiveAndFlowTest
 System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueRegisterNegativeTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_NullValidForState
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ReferenceTypeStateObjectPassedThrough
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ValueTypeStateObjectPassedThrough
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_RunsAsynchronously
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe
-System.IO.Tests.BufferedStreamFlushTests.ShouldNotFlushUnderlyingStreamIfReadOnly
-System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: True, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: True, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: False, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: False, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_NullValidForState(preferLocal: True, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_NullValidForState(preferLocal: True, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_NullValidForState(preferLocal: False, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_NullValidForState(preferLocal: False, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ReferenceTypeStateObjectPassedThrough(preferLocal: True, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ReferenceTypeStateObjectPassedThrough(preferLocal: True, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ReferenceTypeStateObjectPassedThrough(preferLocal: False, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ReferenceTypeStateObjectPassedThrough(preferLocal: False, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ValueTypeStateObjectPassedThrough(preferLocal: True, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ValueTypeStateObjectPassedThrough(preferLocal: True, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ValueTypeStateObjectPassedThrough(preferLocal: False, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ValueTypeStateObjectPassedThrough(preferLocal: False, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_RunsAsynchronously(preferLocal: True, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_RunsAsynchronously(preferLocal: True, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_RunsAsynchronously(preferLocal: False, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_RunsAsynchronously(preferLocal: False, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: True, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: True, useUnsafe: False)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: False, useUnsafe: True)
+System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: False, useUnsafe: False)
+System.IO.Tests.BufferedStreamFlushTests.ShouldNotFlushUnderlyingStreamIfReadOnly(underlyingCanSeek: True)
+System.IO.Tests.BufferedStreamFlushTests.ShouldNotFlushUnderlyingStreamIfReadOnly(underlyingCanSeek: False)
+System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: True, underlyingCanSeek: True)
+System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: True, underlyingCanSeek: False)
+System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: False, underlyingCanSeek: True)
+System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: False, underlyingCanSeek: False)
 System.IO.Tests.StreamCopyToTests.IfCanSeekIsFalseLengthAndPositionShouldNotBeCalled
 System.IO.Tests.StreamCopyToTests.AsyncIfCanSeekIsFalseLengthAndPositionShouldNotBeCalled
 System.IO.Tests.StreamCopyToTests.IfCanSeekIsTrueLengthAndPositionShouldOnlyBeCalledOnce
 System.IO.Tests.StreamCopyToTests.AsyncIfCanSeekIsTrueLengthAndPositionShouldOnlyBeCalledOnce
-System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsLessThanOrEqualToPositionCopyToShouldStillBeCalledWithAPositiveBufferSize
-System.IO.Tests.StreamCopyToTests.IfLengthMinusPositionPositiveOverflowsBufferSizeShouldStillBePositive
-System.IO.Tests.StreamCopyToTests.AsyncIfLengthMinusPositionPositiveOverflowsBufferSizeShouldStillBePositive
-System.IO.Tests.StreamCopyToTests.IfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally
-System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsLessThanOrEqualToPositionCopyToShouldStillBeCalledWithAPositiveBufferSize(length: 5, position: 5)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsLessThanOrEqualToPositionCopyToShouldStillBeCalledWithAPositiveBufferSize(length: 3, position: 5)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsLessThanOrEqualToPositionCopyToShouldStillBeCalledWithAPositiveBufferSize(length: -1, position: -1)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsLessThanOrEqualToPositionCopyToShouldStillBeCalledWithAPositiveBufferSize(length: 0, position: 0)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsLessThanOrEqualToPositionCopyToShouldStillBeCalledWithAPositiveBufferSize(length: -500, position: 0)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsLessThanOrEqualToPositionCopyToShouldStillBeCalledWithAPositiveBufferSize(length: 0, position: 500)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsLessThanOrEqualToPositionCopyToShouldStillBeCalledWithAPositiveBufferSize(length: -500, position: 500)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsLessThanOrEqualToPositionCopyToShouldStillBeCalledWithAPositiveBufferSize(length: -9223372036854775808, position: 9223372036854775807)
+System.IO.Tests.StreamCopyToTests.IfLengthMinusPositionPositiveOverflowsBufferSizeShouldStillBePositive(length: 9223372036854775807, position: -9223372036854775808)
+System.IO.Tests.StreamCopyToTests.IfLengthMinusPositionPositiveOverflowsBufferSizeShouldStillBePositive(length: 1, position: -9223372036854775807)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthMinusPositionPositiveOverflowsBufferSizeShouldStillBePositive(length: 9223372036854775807, position: -9223372036854775808)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthMinusPositionPositiveOverflowsBufferSizeShouldStillBePositive(length: 1, position: -9223372036854775807)
+System.IO.Tests.StreamCopyToTests.IfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally(length: 5, position: 3)
+System.IO.Tests.StreamCopyToTests.IfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally(length: -3, position: -6)
+System.IO.Tests.StreamCopyToTests.IfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally(length: 0, position: -3)
+System.IO.Tests.StreamCopyToTests.IfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally(length: 9223372036854775807, position: 0)
+System.IO.Tests.StreamCopyToTests.IfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally(length: 85000, position: 123)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally(length: 5, position: 3)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally(length: -3, position: -6)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally(length: 0, position: -3)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally(length: 9223372036854775807, position: 0)
+System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsGreaterThanPositionAndDoesNotOverflowEverythingShouldGoNormally(length: 85000, position: 123)
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_InvalidArgsThrows
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_PrecanceledToken_Cancels
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_AllDataCopied
