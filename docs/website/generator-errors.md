@@ -27,7 +27,7 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 ### <a name='BI0002'/>BI0002: Could not compile the API bindings.
 
-This error is shown when the generated failed to compile the API bindings.
+This error is shown when the generator failed to compile the API bindings.
 
 ### <a name='BI0026'/>BI0026: Could not parse the command line argument '{argument}': {message}
 
