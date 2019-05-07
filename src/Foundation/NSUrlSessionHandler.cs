@@ -168,7 +168,7 @@ namespace Foundation {
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_1;
 			else if ((sp & SecurityProtocolType.Tls12) != 0)
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;
-			else if ((sp & (SecurityProtocolType.Tls13) 12288) != 0)
+			else if ((sp & (SecurityProtocolType) 12288) != 0) // Tls13 value not yet in monno
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_3;
 				
 			session = NSUrlSession.FromConfiguration (configuration, (INSUrlSessionDelegate) new NSUrlSessionHandlerDelegate (this), null);
