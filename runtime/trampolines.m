@@ -322,6 +322,126 @@ xamarin_create_mt_exception (char *msg)
 	return mono_gchandle_new ((MonoObject *) ex, FALSE);
 }
 
+// Skips any brace and the content within. Supports nested braced content.
+// Example:
+//    {bc}d => d
+//    {a{b}cd}e => e
+static const char *
+skip_nested_brace (const char *type)
+{
+	if (*type != '{')
+		return type;
+	while (*++type) {
+		switch (*type) {
+		case '{':
+			return skip_nested_brace (type);
+		case '}':
+			return type++;
+		default:
+			type++;
+			break;
+		}
+	}
+	return NULL;
+}
+
+// Takes a struct type name and collapses it into just the types of the
+// fields. The purpose of this function is to get a string where each
+// character represents the type + size of a field in the struct.
+//
+// Examples:
+//     {MKCoordinateRegion={CLLocationCoordinate2D=dd}{MKCoordinateSpan=dd}} => dddd
+//     {CGRect=dddd} => dddd
+//     ^q => ^
+//	   @? => @ (this is a block)
+//
+// type: the input type name
+// struct_name: where to write the collapsed struct name. Returns an empty string if the array isn't big enough.
+// max_char: the maximum number of characters to write to struct_name
+// return value: false if something went wrong (an exception thrown, or struct_name wasn't big enough).
+bool
+xamarin_collapse_struct_name (const char *type, char struct_name[], int max_char, guint32 *exception_gchandle)
+{
+	const char *input = type;
+	int c = 0;
+	struct_name [0] = 0;
+
+	while (*type) {
+		switch (*type) {
+		case _C_STRUCT_B:
+			// Skip until '='
+			while (type [1] != 0 && type [0] != '=')
+				type++;
+			break;
+		case _C_CONST:
+		case _C_STRUCT_E:
+			// don't care about these
+			break;
+		case _C_PTR:
+			if (c == max_char) {
+				LOGZ ("    xamarin_collapse_struct_name (%s, %i) => failed!\n", input, max_char);
+				struct_name [0] = 0; // return an empty string
+				return false;
+			}
+			struct_name [c++] = *type;
+			type++;
+			// this might be a pointer to a pointer to a pointer to a labrador!
+			while (*type == _C_PTR)
+				type++;
+			// it might be a pointer to some nested stuff. skip that.
+			if (*type == '{')
+				type = skip_nested_brace (type);
+			else
+				type++;
+			continue;
+		case _C_ID:
+		case _C_CLASS:
+		case _C_SEL:
+		case _C_CHR:
+		case _C_UCHR:
+		case _C_SHT:
+		case _C_USHT:
+		case _C_INT:
+		case _C_UINT:
+		case _C_LNG:
+		case _C_ULNG:
+		case _C_LNG_LNG:
+		case _C_ULNG_LNG:
+		case _C_FLT:
+		case _C_DBL:
+		case _C_BOOL:
+		case _C_CHARPTR:
+			if (c == max_char) {
+				LOGZ ("    xamarin_collapse_struct_name (%s, %i) => failed!\n", input, max_char);
+				struct_name [0] = 0; // return an empty string
+				return false;
+			}
+			struct_name [c++] = *type;
+			break;
+		case _C_UNDEF:
+			// unknown. this could be a block in which case the previous character is a '@'.
+			break;
+		case _C_ATOM:
+		case _C_ARY_B:
+		case _C_ARY_E:
+		case _C_UNION_B:
+		case _C_UNION_E:
+		case _C_VOID:
+		case _C_BFLD:
+		default:
+			// don't understand.
+			struct_name [0] = 0; // return an empty string
+			*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf (PRODUCT ": Cannot marshal type %s (unexpected type encoding: %c)\n", input, *type));
+			return false;
+		}
+		type++;
+	}
+
+	struct_name [c] = 0; // Zero-terminate.
+	LOGZ ("    xamarin_collapse_struct_name (%s, %i) => %s (succeeded)\n", input, max_char, struct_name);
+	return true;
+}
+
 int
 xamarin_get_frame_length (id self, SEL sel)
 {
