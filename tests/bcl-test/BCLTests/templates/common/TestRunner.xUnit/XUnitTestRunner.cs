@@ -1018,7 +1018,18 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			if (tests.Any ()) {
 				// create a single filter per test
 				foreach (var t in tests) {
-					filters.Add (XUnitFilter.CreateSingleFilter (t, true));
+					if (t.StartsWith("KLASS:", StringComparison.Ordinal)) {
+						var klass = t.Replace ("KLASS:", "");
+						filters.Add (XUnitFilter.CreateClassFilter (klass, true));
+					} if (t.StartsWith ("KLASS32:", StringComparison.Ordinal) && IntPtr.Size == 4) {
+						var klass = t.Replace ("KLASS32:", "");
+						filters.Add (XUnitFilter.CreateClassFilter (klass, true));
+					} if (t.StartsWith ("KLASS64:", StringComparison.Ordinal) && IntPtr.Size == 8) {
+						var klass = t.Replace ("KLASS32:", "");
+						filters.Add (XUnitFilter.CreateClassFilter (klass, true));
+					}  else {
+						filters.Add (XUnitFilter.CreateSingleFilter (t, true));
+					}
 				}
 			}
 		}

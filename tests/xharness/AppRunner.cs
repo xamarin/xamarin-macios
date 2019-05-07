@@ -473,7 +473,7 @@ namespace xharness
 				var tests_run = string.Empty;
 				var failed = false;
 				
-				using (var reader = new StreamReader (listener_log.FullPath)) {
+				using (var reader = listener_log.GetReader () ) {
 					string line;
 					while ((line = reader.ReadLine ()) != null)
 					{
