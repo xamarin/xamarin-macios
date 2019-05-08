@@ -298,6 +298,9 @@
     <Compile Include="..\common\Driver.cs">
       <Link>external\Driver.cs</Link>
     </Compile>
+    <Compile Include="..\common\Execution.cs">
+      <Link>external\Execution.cs</Link>
+    </Compile>
     <Compile Include="..\common\TargetFramework.cs">
       <Link>external\TargetFramework.cs</Link>
     </Compile>

@@ -81,6 +81,9 @@ define NativeCompilationTemplate
 .libs/ios/%$(1).arm64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/ios
 	$$(call Q_2,CC,    [ios]) $(DEVICE_CC) $(DEVICE64_CFLAGS)      $$(EXTRA_DEFINES) $(DEV64_I) -g $(2) -c $$< -o $$@ 
 
+.libs/ios/%$(1).arm64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/ios
+	$$(call Q_2,ASM,   [ios]) $(DEVICE_CC) $(DEVICE64_CFLAGS)      $$(EXTRA_DEFINES) $(DEV64_I) -g $(2) -c $$< -o $$@
+
 .libs/ios/%$(1).arm64.dylib: | .libs/ios
 	$$(call Q_2,LD,    [ios]) $(DEVICE_CC) $(DEVICE64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib -fapplication-extension
 
@@ -141,6 +144,9 @@ define NativeCompilationTemplate
 
 .libs/tvos/%$(1).arm64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/tvos
 	$$(call Q_2,CC,    [tvos]) $(DEVICE_CC)    $(DEVICETV_CFLAGS)            $$(EXTRA_DEFINES) $(DEV_TV_I) -g $(2) -c $$< -o $$@ 
+
+.libs/tvos/%$(1).arm64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/tvos
+	$$(call Q_2,ASM,   [tvos]) $(DEVICE_CC)    $(DEVICETV_CFLAGS)            $$(EXTRA_DEFINES) $(DEV_TV_I) -g $(2) -c $$< -o $$@
 
 .libs/tvos/%$(1).arm64.dylib: | .libs/tvos
 	$$(call Q_2,LD,    [tvos]) $(DEVICE_CC)    $(DEVICETV_CFLAGS)            $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib -fapplication-extension

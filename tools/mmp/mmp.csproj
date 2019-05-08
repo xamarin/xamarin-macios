@@ -325,6 +325,9 @@
     <Compile Include="..\common\Driver.cs">
       <Link>external\Driver.cs</Link>
     </Compile>
+    <Compile Include="..\common\Execution.cs">
+      <Link>external\Execution.cs</Link>
+    </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
       <Link>external\StaticRegistrar.cs</Link>
     </Compile>

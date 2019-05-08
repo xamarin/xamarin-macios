@@ -258,6 +258,7 @@ namespace xharness
 
 			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
 			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
+			var supports_dynamic_registrar_on_device = test.Platform == TestPlatform.iOS_Unified64 || test.Platform == TestPlatform.tvOS;
 
 			switch (test.ProjectPlatform) {
 			case "iPhone":
@@ -275,6 +276,8 @@ namespace xharness
 
 				switch (test.TestName) {
 				case "monotouch-test":
+					if (supports_dynamic_registrar_on_device)
+						yield return new TestData { Variation = "Debug (dynamic registrar)", MTouchExtraArgs = "--registrar:dynamic", Debug = true, Profiling = false };
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
 					yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
@@ -722,13 +725,30 @@ namespace xharness
 		void SelectTestsByLabel (int pull_request)
 		{
 			var labels = new HashSet<string> ();
-			labels.UnionWith (Harness.Labels);
-			if (pull_request > 0)
-				labels.UnionWith (GitHub.GetLabels (Harness, pull_request));
+			if (Harness.Labels.Any ()) {
+				labels.UnionWith (Harness.Labels);
+				MainLog.WriteLine ($"{Harness.Labels.Count} label(s) were passed on the command line.");
+			} else {
+				MainLog.WriteLine ($"No labels were passed on the command line.");
+			}
+			if (pull_request > 0) {
+				var lbls = GitHub.GetLabels (Harness, pull_request);
+				if (lbls.Any ()) {
+					labels.UnionWith (lbls);
+					MainLog.WriteLine ($"Found {lbls.Count ()} label(s) in the pull request #{pull_request}: {string.Join (", ", lbls)}");
+				} else {
+					MainLog.WriteLine ($"No labels were found in the pull request #{pull_request}.");
+				}
+			}
 			var env_labels = Environment.GetEnvironmentVariable ("XHARNESS_LABELS");
-			if (!string.IsNullOrEmpty (env_labels))
-				labels.UnionWith (env_labels.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
+			if (!string.IsNullOrEmpty (env_labels)) {
+				var lbls = env_labels.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+				labels.UnionWith (lbls);
+				MainLog.WriteLine ($"Found {lbls.Count ()} label(s) in the environment variable XHARNESS_LABELS: {string.Join (", ", lbls)}");
+			} else {
+				MainLog.WriteLine ($"No labels were in the environment variable XHARNESS_LABELS.");
+			}
+			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
 
 			// disabled by default
 			SetEnabled (labels, "mtouch", ref IncludeMtouch);
