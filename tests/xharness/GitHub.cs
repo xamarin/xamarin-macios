@@ -46,7 +46,7 @@ namespace xharness
 				var doc = new XmlDocument ();
 				doc.Load (reader);
 				var rv = new List<string> ();
-				foreach (XmlNode node in doc.SelectNodes ("/root/labels/name")) {
+				foreach (XmlNode node in doc.SelectNodes ("/root/labels/item/name")) {
 					rv.Add (node.InnerText);
 				}
 				return rv;
