@@ -103,9 +103,8 @@ namespace xharness
 					capturedLog.WriteLine (v.Exception);
 					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
 				} else if (v.IsCompleted) {
-					var devices = loadable as Devices;
-					var devicesTypes = new StringBuilder ();
-					if (devices != null) {
+					if (loadable is Devices devices) {
+						var devicesTypes = new StringBuilder ();
 						if (devices.Connected32BitIOS.Any ()) {
 							devicesTypes.Append ("iOS 32 bit");
 						}
@@ -118,8 +117,15 @@ namespace xharness
 						if (devices.ConnectedWatch.Any ()) {
 							devicesTypes.Append (devicesTypes.Length == 0 ? "watchOS" : ", watchOS");
 						}
+						capturedLog.Description = (devicesTypes.Length == 0) ? $"{name} Listing (ok - no devices found)." : $"{name} Listing (ok). Devices types are: {devicesTypes.ToString ()}";
 					}
-					capturedLog.Description = (devices == null || devicesTypes.Length == 0)? $"{name} Listing (ok)." : $"{name} Listing (ok). Devices types are: {devicesTypes.ToString ()}";
+					if (loadable is Simulators simulators) {
+						var simulatorTypes = new StringBuilder ();
+						foreach (var sim in simulators.AvailableDevices) {
+							simulatorTypes.Append (simulatorTypes.Length == 0 ?  sim.Name: $", {sim.Name}");
+						}
+						capturedLog.Description = (simulatorTypes.Length == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok). Simulators are: {simulatorTypes.ToString ()}";
+					}
 				}
 			});
 		}
