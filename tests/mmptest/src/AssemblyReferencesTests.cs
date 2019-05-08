@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
@@ -17,7 +18,11 @@ namespace Xamarin.MMP.Tests
 					TestCode = "System.Drawing.RectangleF f = new System.Drawing.RectangleF ();",
 					XM45 = true
 				};
-				TI.TestUnifiedExecutable (test, shouldFail: true);
+				TI.TestUnifiedExecutable (test);
+				var allAssembliesInBundle = Directory.GetFiles (test.BundlePath, "*.dll", SearchOption.AllDirectories).Select (Path.GetFileName);
+				Assert.That (allAssembliesInBundle, Does.Contain ("mscorlib.dll"), "mscorlib.dll");
+				Assert.That (allAssembliesInBundle, Does.Contain ("System.Drawing.Common.dll"), "System.Drawing.Common.dll");
+				Assert.That (allAssembliesInBundle, Does.Not.Contain ("System.Drawing.dll"), "System.Drawing.dll");
 			});
 		}
 
