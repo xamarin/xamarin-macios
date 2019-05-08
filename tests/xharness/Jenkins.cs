@@ -736,7 +736,7 @@ namespace xharness
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
-			SetEnabled (labels, "ios-device", ref IncludeDevice);
+			SetEnabled (labels, "device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
 			SetEnabled (labels, "mac-32", ref IncludeMac32);
 			SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
