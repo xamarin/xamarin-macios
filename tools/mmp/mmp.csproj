@@ -412,6 +412,7 @@
     <Compile Include="..\common\ClassicStaticRegistrar.cs">
       <Link>external\ClassicStaticRegistrar.cs</Link>
     </Compile>
+    <Compile Include="Target.mmp.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -87,7 +87,7 @@ namespace Xamarin.Bundler {
 	
 		public bool Embeddinator { get; set; }
 
-		public MonoNativeMode MonoNativeMode { get; set; }
+		public List<Target> Targets = new List<Target> ();
 
 		public Application (string[] arguments)
 		{
@@ -321,7 +321,8 @@ namespace Xamarin.Bundler {
 		{
 			Namespaces.Initialize ();
 			SelectRegistrar ();
-			SelectMonoNative ();
+			foreach (var target in Targets)
+				target.SelectMonoNative ();
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
 				throw ErrorHelper.CreateError (91, "This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).", ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);

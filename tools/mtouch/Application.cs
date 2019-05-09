@@ -194,8 +194,6 @@ namespace Xamarin.Bundler {
 
 		bool RequiresXcodeHeaders => LinkMode == LinkMode.None;
 
-		public List<Target> Targets = new List<Target> ();
-
 		public string UserGccFlags;
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
@@ -1432,21 +1430,6 @@ namespace Xamarin.Bundler {
 			Driver.Watch ("Resolve References", 1);
 		}
 
-		void SelectMonoNative ()
-		{
-			switch (Platform) {
-			case ApplePlatform.iOS:
-			case ApplePlatform.TVOS:
-				MonoNativeMode = DeploymentTarget.Major >= 10 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
-				break;
-			case ApplePlatform.WatchOS:
-				MonoNativeMode = DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
-				break;
-			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", Platform);
-			}
-		}
-
 		void SelectRegistrar ()
 		{
 			// If the default values are changed, remember to update CanWeSymlinkTheApplication
@@ -1668,13 +1651,15 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			if (require_mono_native && MonoNativeMode != MonoNativeMode.None && (LibMonoNativeLinkMode == AssemblyBuildTarget.DynamicLibrary)) {
-				BundleFileInfo info;
-				var lib_native_name = GetLibNativeName () + ".dylib";
-				bundle_files[lib_native_name] = info = new BundleFileInfo ();
-				var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (this), lib_native_name);
-				info.Sources.Add (lib_native_path);
-				Driver.Log (3, "Adding mono-native library {0} for {1}.", lib_native_name, MonoNativeMode);
+			if (require_mono_native && LibMonoNativeLinkMode == AssemblyBuildTarget.DynamicLibrary) {
+				foreach (var target in Targets) {
+					BundleFileInfo info;
+					var lib_native_name = target.GetLibNativeName () + ".dylib";
+					bundle_files [lib_native_name] = info = new BundleFileInfo ();
+					var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (this), lib_native_name);
+					info.Sources.Add (lib_native_path);
+					Driver.Log (3, "Adding mono-native library {0} for {1}.", lib_native_name, target.MonoNativeMode);
+				}
 			}
 
 			// And from ourselves
@@ -1899,19 +1884,6 @@ namespace Xamarin.Bundler {
 			default:
 				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
 			}
-		}
-
-		public string GetLibNativeName ()
-		{
-			switch (MonoNativeMode) {
-			case MonoNativeMode.Unified:
-				return "libmono-native-unified";
-			case MonoNativeMode.Compat:
-				return "libmono-native-compat";
-			default:
-				throw ErrorHelper.CreateError (99, "Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", MonoNativeMode);
-			}
-
 		}
 
 		// this will filter/remove warnings that are not helpful (e.g. complaining about non-matching armv6-6 then armv7-6 on fat binaries)
