@@ -77,6 +77,7 @@ namespace xharness
 		public string WatchOSExtensionTemplate { get; set; }
 		public string TodayContainerTemplate { get; set; }
 		public string TodayExtensionTemplate { get; set; }
+		public string BCLTodayExtensionTemplate { get; set; }
 		public string MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string TVOS_MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public bool INCLUDE_IOS { get; set; }
@@ -322,7 +323,10 @@ namespace xharness
 			foreach (var p in test_suites)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))) { Name = p });
 			foreach (var p in fsharp_test_suites)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))) {
+					SkipiOSVariation = true,
+					Name = p
+				});
 			foreach (var p in library_projects)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false) { Name = p });
 			foreach (var p in fsharp_library_projects)
@@ -352,6 +356,7 @@ namespace xharness
 
 			TodayContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayContainer"));
 			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayExtension"));
+			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test", "BCLTests", "templates", "today"));
 		}
 
 		Dictionary<string, string> make_config = new Dictionary<string, string> ();
@@ -652,6 +657,13 @@ namespace xharness
 			get {
 				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
 				return !string.IsNullOrEmpty (buildRev) && buildRev == "jenkins";
+			}
+		}
+		
+		public bool UseGroupedApps {
+			get {
+				var groupApps = Environment.GetEnvironmentVariable ("BCL_GROUPED_APPS");
+				return string.IsNullOrEmpty (groupApps) || groupApps == "grouped";
 			}
 		}
 

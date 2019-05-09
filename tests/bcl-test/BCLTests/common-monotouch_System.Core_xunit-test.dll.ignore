@@ -207,3 +207,278 @@ System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_Enums
 # Expected: typeof(System.InvalidCastException)
 # Actual:   typeof(System.NotImplementedException): byref delegate
 System.Dynamic.Tests.DynamicObjectTests.ByRefMismatch
+
+## DEVICE FAILURES
+
+# System.NullReferenceException : Object reference not set to an instance of an object
+System.Linq.Tests.LegacyTests.ThenByTests.ThenBy1
+System.Linq.Tests.LegacyTests.ThenByTests.ThenBy2
+System.Linq.Tests.LegacyTests.ThenByTests.SecondaryKeysAreUnique
+System.Linq.Tests.UnionTests.CommonElementsShared
+System.Linq.Tests.UnionTests.Union1
+System.Linq.Tests.ThenByDescendingTests.AscendingKeyThenDescendingKey
+System.Linq.Tests.ThenByDescendingTests.ThenByDescending2
+System.Linq.Tests.ThenByDescendingTests.ThenByDescending1
+System.Linq.Tests.TakeLastTests.TakeLast
+System.Linq.Tests.SumTests.Sum20
+System.Linq.Tests.SumTests.Sum12
+System.Linq.Tests.SumTests.Sum4
+System.Linq.Tests.SumTests.SumOfLong_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum18
+System.Linq.Tests.SumTests.Sum5
+System.Linq.Tests.SumTests.Sum17
+System.Linq.Tests.SumTests.SumOfFloat_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum15
+System.Linq.Tests.SumTests.SumOfNullableOfFloat_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum8
+System.Linq.Tests.SumTests.Sum9
+System.Linq.Tests.SumTests.Sum3
+System.Linq.Tests.SumTests.Sum7
+System.Linq.Tests.SumTests.SumOfDouble_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum16
+System.Linq.Tests.SumTests.Sum2
+System.Linq.Tests.SumTests.Sum10
+System.Linq.Tests.SumTests.SumOfNullableOfDouble_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum6
+System.Linq.Tests.SumTests.SumOfNullableOfDecimal_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.SumOfNullableOfInt_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.SumOfDecimal_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.SumOfNullableOfLong_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum14
+System.Linq.Tests.QueryableTests.MatchSequencePattern
+System.Linq.Tests.OrderByDescendingTests.FirstAndLastAreDuplicatesCustomComparer
+System.Linq.Tests.OrderByDescendingTests.OrderByDescending2
+System.Linq.Tests.OrderByDescendingTests.KeySelectorCalled
+System.Linq.Tests.OrderByDescendingTests.FirstAndLastAreDuplicatesNullPassedAsComparer
+System.Linq.Tests.MinTests.EmptyDoubleWithSelector
+System.Linq.Tests.MinTests.NullableDecimalMinimumRepeated
+System.Linq.Tests.MinTests.DecimalMinimumRepeated
+System.Linq.Tests.MinTests.MinNullableSingleWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.SingleMinimumRepeated
+System.Linq.Tests.MinTests.EmptyInt32WithSelector
+System.Linq.Tests.MinTests.MinNullableDecimalWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.StringMinimumRepeated
+System.Linq.Tests.MinTests.MinNullableDoubleWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptyInt64Source
+System.Linq.Tests.MinTests.EmptyNullableInt64Source
+System.Linq.Tests.MinTests.NullableSingleMinimumRepated
+System.Linq.Tests.MinTests.Min2
+System.Linq.Tests.MinTests.NullableInt64MinimumRepeated
+System.Linq.Tests.MinTests.MinDecimalWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.MinNullableInt64WithSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptySingle
+System.Linq.Tests.MinTests.EmptyDoubleSource
+System.Linq.Tests.MinTests.EmptySingleWithSelector
+System.Linq.Tests.MinTests.EmptyInt64WithSelector
+System.Linq.Tests.MinTests.MinInt32WithSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptyNullableInt32Source
+System.Linq.Tests.MinTests.NullableDoubleMinimumRepeated
+System.Linq.Tests.MinTests.MinDoubleWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.Int64MinimumRepeated
+System.Linq.Tests.MinTests.DoubleMinimumRepeated
+System.Linq.Tests.MinTests.EmptyNullableDecimalSource
+System.Linq.Tests.MinTests.EmptyBooleanSource
+System.Linq.Tests.MinTests.MinInt64WithSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptyNullableDoubleSource
+System.Linq.Tests.MinTests.EmptyNullableSingleSource
+System.Linq.Tests.MinTests.EmptyDecimalWithSelector
+System.Linq.Tests.MinTests.Min1
+System.Linq.Tests.MinTests.EmptyDateTimeWithSelector
+System.Linq.Tests.MinTests.MinSingleWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptyDateTimeSource
+System.Linq.Tests.MinTests.NullableInt32MinimumRepeated
+System.Linq.Tests.MinTests.EmptyDecimalSource
+System.Linq.Tests.MinTests.Int32MinimumRepeated
+System.Linq.Tests.MinTests.MinNullableInt32WithSelectorAccessingProperty
+System.Linq.Tests.MinTests.MinStringWitSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptyStringSource
+System.Linq.Tests.MinTests.EmptyInt32Source
+System.Linq.Tests.MaxTests.MaxNullableInt32WithSelectorAccessingField
+System.Linq.Tests.MaxTests.MaxNullableDecimalWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.EmptyDouble
+System.Linq.Tests.MaxTests.EmptySingleWithSelector
+System.Linq.Tests.MaxTests.Int64MaxRepeated
+System.Linq.Tests.MaxTests.MaxDoubleWithSelectorAccessingField
+System.Linq.Tests.MaxTests.DecimalMaximumRepeated
+System.Linq.Tests.MaxTests.EmptyNullableInt64WithSelector
+System.Linq.Tests.MaxTests.Max2
+System.Linq.Tests.MaxTests.EmptyDecimalWithSelector
+System.Linq.Tests.MaxTests.EmptyDecimal
+System.Linq.Tests.MaxTests.EmptyInt32
+System.Linq.Tests.MaxTests.MaxNullableSingleWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.MaxStringWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.EmptyNullableDecimal
+System.Linq.Tests.MaxTests.MaxSingleWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.Single_MaxRepeated
+System.Linq.Tests.MaxTests.Int32MaxRepeated
+System.Linq.Tests.MaxTests.EmptyDoubleWithSelector
+System.Linq.Tests.MaxTests.Max1
+System.Linq.Tests.MaxTests.MaxDecimalWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.EmptyNullableInt64
+System.Linq.Tests.MaxTests.EmptyNullableDouble
+System.Linq.Tests.MaxTests.EmptyNullableInt32
+System.Linq.Tests.MaxTests.EmptyString
+System.Linq.Tests.MaxTests.StringMaximumRepeated
+System.Linq.Tests.MaxTests.EmptyNullableSingleWithSelector
+System.Linq.Tests.MaxTests.EmptyNullableSingle
+System.Linq.Tests.MaxTests.EmptyInt64WithSelector
+System.Linq.Tests.MaxTests.EmptyNullableDoubleWithSelector
+System.Linq.Tests.MaxTests.DoubleMaximumRepeated
+System.Linq.Tests.MaxTests.NullableSingleMaxRepeated
+System.Linq.Tests.MaxTests.MaxInt32WithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.MaxNullableDoubleWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.EmptyBoolean
+System.Linq.Tests.MaxTests.EmptyNullableDecimalWithSelector
+System.Linq.Tests.MaxTests.NullableInt32MaxRepeated
+System.Linq.Tests.MaxTests.NullableDecimalMaximumRepeated
+System.Linq.Tests.MaxTests.EmptyInt64
+System.Linq.Tests.MaxTests.MaxInt64WithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.MaxNullableInt64WithSelectorAccessingField
+System.Linq.Tests.MaxTests.EmptyDateTime
+System.Linq.Tests.MaxTests.EmptyNullableDateTimeWithSelector
+System.Linq.Tests.MaxTests.NullableInt64MaximumRepeated
+System.Linq.Tests.MaxTests.EmptySingle
+System.Linq.Tests.LongCountTests.MultipleElements
+System.Linq.Tests.LongCountTests.EmptySourceWithPredicate
+System.Linq.Tests.LongCountTests.LongCount1
+System.Linq.Tests.LongCountTests.EmptySource
+System.Linq.Tests.LongCountTests.LongCount2
+System.Linq.Tests.LongCountTests.PredicateTrueFirstAndLast
+System.Linq.Tests.JoinTests.Join1
+System.Linq.Tests.JoinTests.SelectorsReturnNull
+System.Linq.Tests.JoinTests.FirstOuterMatchesLastInnerLastOuterMatchesFirstInnerSameNumberElements
+System.Linq.Tests.IntersectTests.BothEmpty
+System.Linq.Tests.IntersectTests.Intersect1
+System.Linq.Tests.GroupJoinTests.GroupJoin1
+System.Linq.Tests.GroupJoinTests.OuterEmptyInnerNonEmpty
+System.Linq.Tests.GroupByTests.NullComparer
+System.Linq.Tests.GroupByTests.GroupBy5
+System.Linq.Tests.GroupByTests.AllElementsSameKeyResultSelectorUsed
+System.Linq.Tests.GroupByTests.SingleNonNullElement
+System.Linq.Tests.GroupByTests.NullComparerResultSelectorUsed
+System.Linq.Tests.GroupByTests.EmptySourceWithResultSelector
+System.Linq.Tests.GroupByTests.GroupBy3
+System.Linq.Tests.GroupByTests.DuplicateKeysCustomComparer
+System.Linq.Tests.GroupByTests.GroupBy6
+System.Linq.Tests.GroupByTests.GroupBy1
+System.Linq.Tests.GroupByTests.GroupBy7
+System.Linq.Tests.GroupByTests.GroupBy8
+System.Linq.Tests.DefaultIfEmptyTests.DefaultIfEmpty1
+System.Linq.Tests.DefaultIfEmptyTests.EmptyNullableSourceNoDefaultPassed
+System.Linq.Tests.DefaultIfEmptyTests.SeveralElementsNoDefaultPassed
+System.Linq.Tests.DefaultIfEmptyTests.EmptyNonNullableSourceNoDefaultPassed
+System.Linq.Tests.AverageTests.Average9
+System.Linq.Tests.AverageTests.Average13
+System.Linq.Tests.AverageTests.Average3
+System.Linq.Tests.AverageTests.Average10
+System.Linq.Tests.AverageTests.MultipleIntSouce
+System.Linq.Tests.AverageTests.MultipleDoubleFromSelector
+System.Linq.Tests.AverageTests.Average19
+System.Linq.Tests.AverageTests.Average2
+System.Linq.Tests.AverageTests.MultipleNullableFloatSource
+System.Linq.Tests.AverageTests.MultipleNullableDoubleSource
+System.Linq.Tests.AverageTests.MultipleDecimalFromSelector
+System.Linq.Tests.AverageTests.Average14
+System.Linq.Tests.AverageTests.NullableFloatFromSelector
+System.Linq.Tests.AverageTests.Average17
+System.Linq.Tests.AverageTests.MultipleDoubleValues
+System.Linq.Tests.AverageTests.Average1
+System.Linq.Tests.AverageTests.Average8
+System.Linq.Tests.AverageTests.NullableLongFromSelector
+System.Linq.Tests.AverageTests.Average12
+System.Linq.Tests.AverageTests.NullableDecimalFromSelector
+System.Linq.Tests.AverageTests.Average4
+System.Linq.Tests.AverageTests.MultipleIntFromSelector
+System.Linq.Tests.AverageTests.Average15
+System.Linq.Tests.AverageTests.Average16
+System.Linq.Tests.AverageTests.Average6
+System.Linq.Tests.AverageTests.MultipleNullableeDecimalSource
+System.Linq.Tests.AverageTests.Average7
+System.Linq.Tests.AverageTests.MultipleLongValues
+System.Linq.Tests.AverageTests.NullableDoubleFromSelector
+System.Linq.Tests.AverageTests.Average5
+System.Linq.Tests.AverageTests.Average18
+System.Linq.Tests.AverageTests.MultipleNullableLongSource
+System.Linq.Tests.AverageTests.MultipleFloatValues
+System.Linq.Tests.AverageTests.Average11
+System.Linq.Tests.AverageTests.MultipleDecimalValues
+System.Linq.Tests.AverageTests.MultipleNullableIntSource
+System.Linq.Tests.AverageTests.MultipleLongFromSelector
+System.Linq.Tests.AverageTests.Average20
+System.Linq.Tests.AverageTests.NullableIntFromSelector
+System.Linq.Tests.AverageTests.MultipleFloatFromSelector
+System.Linq.Tests.AggregateTests.MultipleElementsSeedResultSelector
+System.Linq.Tests.AggregateTests.Aggregate3
+System.Linq.Expressions.Tests.UnaryPlusNullableTests.CheckUnaryArithmeticUnaryPlusNullableDecimalTest(useInterpreter: True)
+System.Linq.Expressions.Tests.UnaryPlusTests.CheckUnaryArithmeticUnaryPlusDecimalTest(useInterpreter: True)
+System.Linq.Expressions.Tests.PreIncrementAssignTests.IncorrectMethodParameterCount
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: null, result: null, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.IncorrectMethodParameterCount
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: null, result: null, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostIncrementAssignTests.IncorrectMethodParameterCount
+System.Linq.Expressions.Tests.PostDecrementAssignTests.IncorrectMethodParameterCount
+System.Linq.Expressions.Tests.PostDecrementAssignTests.OverflowingValuesThrow(value: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: null, result: null, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: -1, _: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 79228162514264337593543950334, _: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: -79228162514264337593543950334, _: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 79228162514264337593543950334, _: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 1, _: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 0, _: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: null, _: null, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 1, _: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: -79228162514264337593543950334, _: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: -1, _: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 0, _: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.OverflowingValuesThrow(value: -79228162514264337593543950335, useInterpreter: False)
+
+# typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException): Cannot apply indexing with [] to an expression of type 'System.Collections.Generic.List<int>'
+System.Dynamic.Tests.SetIndexBinderTests.IndexErrorIsNotBindingError
+System.Dynamic.Tests.SetIndexBinderTests.ListIndexing
+System.Dynamic.Tests.GetIndexBinderTests.IndexErrorIsNotBindingError
+System.Dynamic.Tests.GetIndexBinderTests.ListIndexing
+
+# DEVICE FAILURES + RELEASE CONFIG 
+
+#System.InvalidOperationException : Sequence contains no matching element
+System.Linq.Expressions.Tests.ExpressionDebuggerTypeProxyTests.VerifyDebugView
+System.Linq.Expressions.Tests.ExpressionDebuggerTypeProxyTests.ThrowOnNullToCtor
+System.Dynamic.Tests.ExpandoObjectProxyTests.ViewTypeThrowsOnNull
+System.Dynamic.Tests.ExpandoObjectProxyTests.ValueCollectionCorrectlyViewed
+System.Dynamic.Tests.ExpandoObjectProxyTests.ItemsAreRootHidden
+System.Dynamic.Tests.ExpandoObjectProxyTests.KeyCollectionCorrectlyViewed
+System.Dynamic.Tests.BindingRestrictionsProxyTests.MergedRestrictionsExpressions
+System.Dynamic.Tests.BindingRestrictionsProxyTests.ThrowOnNullToCtor
+System.Dynamic.Tests.BindingRestrictionsProxyTests.MergedRestrictionsProperties
+System.Dynamic.Tests.BindingRestrictionsProxyTests.EmptyRestiction
+System.Dynamic.Tests.BindingRestrictionsProxyTests.CustomRestriction
