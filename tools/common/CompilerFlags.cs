@@ -101,6 +101,8 @@ namespace Xamarin.Utils
 
 		public void AddOtherFlag (string flag)
 		{
+			if (string.IsNullOrEmpty (flag))
+				return;
 			if (OtherFlags == null)
 				OtherFlags = new HashSet<string> ();
 			OtherFlags.Add (flag);
