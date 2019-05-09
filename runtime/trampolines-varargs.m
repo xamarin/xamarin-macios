@@ -1,4 +1,4 @@
-#if !defined (__i386__) && !defined (__x86_64__) && !defined (__arm64__)
+#if !defined (__i386__) && !defined (__x86_64__) && !(defined (__arm64__) && !defined(__ILP32__))
 #define __VARARGS_TRAMPOLINES__ 1
 #endif
 
