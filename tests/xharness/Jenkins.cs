@@ -120,11 +120,8 @@ namespace xharness
 						capturedLog.Description = (devicesTypes.Length == 0) ? $"{name} Listing (ok - no devices found)." : $"{name} Listing (ok). Devices types are: {devicesTypes.ToString ()}";
 					}
 					if (loadable is Simulators simulators) {
-						var simulatorTypes = new StringBuilder ();
-						foreach (var sim in simulators.AvailableDevices) {
-							simulatorTypes.Append (simulatorTypes.Length == 0 ?  sim.Name: $", {sim.Name}");
-						}
-						capturedLog.Description = (simulatorTypes.Length == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok). Simulators are: {simulatorTypes.ToString ()}";
+						var simCount = simulators.AvailableDevices.Count ();
+						capturedLog.Description = ( simCount == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok - Found {simCount} simulators).";
 					}
 				}
 			});
