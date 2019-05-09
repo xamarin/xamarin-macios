@@ -232,6 +232,9 @@ namespace Introspection {
 				}
 				break;
 			case "UIUserActivityRestoring":
+				if (!TestRuntime.CheckXcodeVersion (10, 0))
+					return true;
+
 				switch (type.Name) {
 				// UIKit.framework/Headers/UIDocument.h
 				case "UIDocument":
