@@ -129,7 +129,7 @@ namespace BCLTestImporter {
 				return (references.FailureMessage, null);
 			var asm = references.References.Select (
 					a => (assembly: a, 
-						hintPath: BCLTestAssemblyDefinition.GetHintPathForRefenreceAssembly (a, monoRootPath, platform))).Union (
+						hintPath: BCLTestAssemblyDefinition.GetHintPathForReferenceAssembly (a, monoRootPath, platform))).Union (
 					TestAssemblies.Select (
 						definition => (assembly: definition.GetName (platform),
 							hintPath: definition.GetPath (monoRootPath, platform, wasDownloaded))))

@@ -23,6 +23,7 @@ namespace xharness.BCLTestImporter {
 
 			projectGenerator = new BCLTestProjectGenerator (outputDir, Harness.MONO_PATH, projectTemplatePath, registerTypesTemplatePath, plistTemplatePath) {
 				iOSMonoSDKPath = Harness.MONO_IOS_SDK_DESTDIR,
+				MacMonoSDKPath = Harness.MONO_MAC_SDK_DESTDIR,
 				Override = true,
 				GuidGenerator = Harness.NewStableGuid,
 				GroupTests = Harness.InJenkins || Harness.UseGroupedApps,
@@ -64,11 +65,6 @@ namespace xharness.BCLTestImporter {
 					IsExecutableProject = true,
 					FailureMessage = failure,
 					RestoreNugetsInProject = true,
-					Dependency = async () => {
-						var rv = await Harness.BuildBclTests ();
-						if (!rv.Succeeded)
-							throw new Exception ($"Failed to build BCL tests, exit code: {rv.ExitCode}. Check the harness log for more details.");
-					}
 				});
 			}
 			return result;

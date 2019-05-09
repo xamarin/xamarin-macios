@@ -13,7 +13,7 @@ namespace BCLTestImporter {
 			{Platform.WatchOS, "monotouch_watch"},
 			{Platform.TvOS, "monotouch_tv"},
 			{Platform.MacOSFull, "xammac_net_4_5"},
-			{Platform.MacOSModern, "xammac_net_4_5"},
+			{Platform.MacOSModern, "xammac"},
 		};
 		#endregion
 		
@@ -39,6 +39,8 @@ namespace BCLTestImporter {
 				return Name.Replace ("monotouch_", "monotouch_watch_");
 			case Platform.TvOS:
 				return Name.Replace ("monotouch_", "monotouch_tv_");
+			case Platform.MacOSModern:
+				return Name.Replace ("xammac_net_4_5", "xammac");
 			default:
 				return Name;
 			}
@@ -69,10 +71,21 @@ namespace BCLTestImporter {
 		{
 			if (string.IsNullOrEmpty (downloadsPath))
 				throw new ArgumentNullException (nameof (downloadsPath));
-			return Path.Combine (downloadsPath, "ios-bcl", platformPathMatch [platform], "tests"); 
+
+			switch (platform) {
+			case Platform.MacOSFull:
+			case Platform.MacOSModern:
+				return Path.Combine (downloadsPath, "mac-bcl", platformPathMatch [platform], "tests");
+			case Platform.iOS:
+			case Platform.TvOS:
+			case Platform.WatchOS:
+				return Path.Combine (downloadsPath, "ios-bcl", platformPathMatch [platform], "tests"); 
+			}
+
+			return null;
 		}
 
-		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, Platform plaform)
+		public static string GetHintPathForReferenceAssembly (string assembly, string monoRootPath, Platform plaform)
 		{
 			var hintPath = Path.Combine (monoRootPath, partialPath, platformPathMatch[plaform], $"{assembly}.dll");
 			return File.Exists (hintPath) ? hintPath : null;
