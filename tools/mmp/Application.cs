@@ -22,13 +22,5 @@ namespace Xamarin.Bundler {
 		{
 			Driver.SelectRegistrar ();
 		}
-
-		void SelectMonoNative ()
-		{
-			if (DeploymentTarget >= new Version (10, 12))
-				MonoNativeMode = MonoNativeMode.Unified;
-			else
-				MonoNativeMode = MonoNativeMode.Compat;
-		}
 	}
 }

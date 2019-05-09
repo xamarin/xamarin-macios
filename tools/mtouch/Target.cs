@@ -98,6 +98,34 @@ namespace Xamarin.Bundler
 			}
 		}
 
+		public void SelectMonoNative ()
+		{
+			switch (App.Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				MonoNativeMode = App.DeploymentTarget.Major >= 10 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				break;
+			case ApplePlatform.WatchOS:
+				MonoNativeMode = App.DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				break;
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
+			}
+		}
+
+		public string GetLibNativeName ()
+		{
+			switch (MonoNativeMode) {
+			case MonoNativeMode.Unified:
+				return "libmono-native-unified";
+			case MonoNativeMode.Compat:
+				return "libmono-native-compat";
+			default:
+				throw ErrorHelper.CreateError (99, "Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", MonoNativeMode);
+			}
+
+		}
+
 		List<Abi> GetArchitectures (AssemblyBuildTarget build_target)
 		{
 			switch (build_target) {
@@ -1643,11 +1671,11 @@ namespace Xamarin.Bundler
 
 		void HandleMonoNative (Application app, CompilerFlags compiler_flags)
 		{
-			if (app.MonoNativeMode == MonoNativeMode.None)
+			if (MonoNativeMode == MonoNativeMode.None)
 				return;
 			if (!MonoNative.RequireMonoNative)
 				return;
-			var libnative = app.GetLibNativeName ();
+			var libnative = GetLibNativeName ();
 			var libdir = Driver.GetMonoTouchLibDirectory (app);
 			Driver.Log (3, "Adding mono-native library {0} for {1}.", libnative, app);
 			switch (app.LibMonoNativeLinkMode) {
@@ -1731,13 +1759,13 @@ namespace Xamarin.Bundler
 
 			Symlinked = true;
 
-			if (App.MonoNativeMode != MonoNativeMode.None) {
+			if (MonoNativeMode != MonoNativeMode.None) {
 				var lib_native_target = Path.Combine (TargetDirectory, "libmono-native.dylib");
 
-				var lib_native_name = App.GetLibNativeName () + ".dylib";
+				var lib_native_name = GetLibNativeName () + ".dylib";
 				var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (App), lib_native_name);
 				Application.UpdateFile (lib_native_path, lib_native_target);
-				Driver.Log (3, "Added mono-native library {0} for {1}.", lib_native_name, App.MonoNativeMode);
+				Driver.Log (3, "Added mono-native library {0} for {1}.", lib_native_name, MonoNativeMode);
 			}
 
 			if (Driver.Verbosity > 0)

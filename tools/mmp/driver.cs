@@ -501,6 +501,7 @@ namespace Xamarin.Bundler {
 				Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
 
 			BuildTarget = new Target (App);
+			App.Targets.Add (BuildTarget);
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}.{1}", Constants.Version, Constants.Revision);
@@ -879,7 +880,7 @@ namespace Xamarin.Bundler {
 				name = "libmono-system-native";
 			} else {
 				// use modern libmono-native
-				switch (App.MonoNativeMode) {
+				switch (BuildTarget.MonoNativeMode) {
 				case MonoNativeMode.Unified:
 					name = "libmono-native-unified";
 					break;
@@ -887,13 +888,13 @@ namespace Xamarin.Bundler {
 					name = "libmono-native-compat";
 					break;
 				default:
-					throw ErrorHelper.CreateError (99, $"Internal error: Invalid mono native type: '{App.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+					throw ErrorHelper.CreateError (99, $"Internal error: Invalid mono native type: '{BuildTarget.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				}
 			}
 
 			var src = Path.Combine (MonoDirectory, "lib", name + ".dylib");
 			var dest = Path.Combine (mmp_dir, "libmono-native.dylib");
-			Watch ($"Adding mono-native library {name} for {App.MonoNativeMode}.", 1);
+			Watch ($"Adding mono-native library {name} for {BuildTarget.MonoNativeMode}.", 1);
 
 			if (App.Optimizations.TrimArchitectures == true) {
 				// copy to temp directory and lipo there to avoid touching the final dest file if it's up to date
@@ -1330,7 +1331,7 @@ namespace Xamarin.Bundler {
 					} else {
 						// add modern libmono-native
 						string libmono_native_name;
-						switch (App.MonoNativeMode) {
+						switch (BuildTarget.MonoNativeMode) {
 						case MonoNativeMode.Unified:
 							libmono_native_name = "libmono-native-unified";
 							break;
@@ -1338,7 +1339,7 @@ namespace Xamarin.Bundler {
 							libmono_native_name = "libmono-native-compat";
 							break;
 						default:
-							throw ErrorHelper.CreateError (99, $"Invalid error: Invalid mono native type: '{App.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+							throw ErrorHelper.CreateError (99, $"Invalid error: Invalid mono native type: '{BuildTarget.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 						}
 
 						args.Append (StringUtils.Quote (Path.Combine (libdir, libmono_native_name + ".a"))).Append (' ');
