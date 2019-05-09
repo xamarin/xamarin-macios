@@ -1430,6 +1430,7 @@ namespace xharness
 										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
 									} else {
 										task.Reset ();
+										task.BuildOnly = false;
 										task.RunAsync ();
 									}
 								}
