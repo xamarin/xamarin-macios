@@ -186,6 +186,13 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<RemoveDir Directories="$(IntermediateOutputPath)" />
 	</Target>
 
+	<Target Name="_AddExtraReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(DisableExtraReferences)' != 'true'">
+		<ItemGroup>
+			<!-- https://github.com/mono/mono/issues/13483 -->
+			<Reference Include="System.Drawing.Common.dll" />
+		</ItemGroup>
+	</Target>
+
 	<PropertyGroup>
 		<_CollectBundleResourcesDependsOn>
 			_CompileImageAssets;

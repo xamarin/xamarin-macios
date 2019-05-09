@@ -156,7 +156,6 @@
     <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Net.Http" />
     <Reference Include="OpenTK-1.0" />
-    <Reference Include="System.Drawing.Common" /> <!-- FIXME: https://github.com/mono/mono/issues/13483 -->
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist">
