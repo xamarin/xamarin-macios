@@ -434,9 +434,11 @@ namespace Contacts {
 
 		[iOS (11,0), Mac (10,13, onlyOn64: true)]
 		[Field ("CNLabelContactRelationSon")]
+		[Watch (4,0)]
 		NSString Son { get; }
 
 		[iOS (11,0), Mac (10,13, onlyOn64: true)]
+		[Watch (4,0)]
 		[Field ("CNLabelContactRelationDaughter")]
 		NSString Daughter { get; }
 	}
@@ -973,6 +975,7 @@ namespace Contacts {
 		string Street { get; set; }
 
 		[iOS (10,3), Mac (10,12,4, onlyOn64: true)]
+		[Watch (3,3)]
 		[New]
 		[Export ("subLocality")]
 		string SubLocality { get; set; }
@@ -982,6 +985,7 @@ namespace Contacts {
 		string City { get; set; }
 
 		[iOS (10,3), Mac (10,12,4, onlyOn64: true)]
+		[Watch (3,3)]
 		[New]
 		[Export ("subAdministrativeArea")]
 		string SubAdministrativeArea { get; set; }
@@ -1054,6 +1058,7 @@ namespace Contacts {
 		string Street { get; }
 
 		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Watch (3,3)]
 		[Export ("subLocality")]
 		string SubLocality { get; }
 
@@ -1061,6 +1066,7 @@ namespace Contacts {
 		string City { get; }
 
 		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Watch (3,3)]
 		[Export ("subAdministrativeArea")]
 		string SubAdministrativeArea { get; }
 
@@ -1096,12 +1102,14 @@ namespace Contacts {
 
 		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
 		[Field ("CNPostalAddressSubLocalityKey")]
+		[Watch (3,3)]
 		NSString SubLocality { get; }
 
 		[Field ("CNPostalAddressCityKey")]
 		NSString City { get; }
 
 		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Watch (3,3)]
 		[Field ("CNPostalAddressSubAdministrativeAreaKey")]
 		NSString SubAdministrativeArea { get; }
 
@@ -1135,10 +1143,12 @@ namespace Contacts {
 		IsoCountryCode,
 
 		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Watch (3,3)]
 		[Field ("CNPostalAddressSubLocalityKey")]
 		SubLocality,
 
 		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Watch (3,3)]
 		[Field ("CNPostalAddressSubAdministrativeAreaKey")]
 		SubAdministrativeArea,
 	}

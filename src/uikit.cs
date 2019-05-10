@@ -4559,6 +4559,7 @@ namespace UIKit {
 		UIColor FromCGColor (CGColor color);
 
 		[iOS (11,0), TV (11,0)]
+		[Watch (4,0)]
 		[Static]
 		[Export ("colorNamed:")]
 		[return: NullAllowed]

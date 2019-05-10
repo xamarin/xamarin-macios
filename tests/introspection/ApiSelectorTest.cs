@@ -259,6 +259,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "SKAttribute":
+			case "SKAttributeValue":
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
+						return true;
+					break;
+				}
+				break;
 			case "SKUniform":
 				switch (selectorName) {
 				// New selectors

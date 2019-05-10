@@ -2074,18 +2074,21 @@ namespace SpriteKit {
 		SKUniform Create (string name, float /* float, not CGFloat */ value);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10, 0)]
 		[Static]
 		[Export ("uniformWithName:vectorFloat2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Vector2 value);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10, 0)]
 		[Static]
 		[Export ("uniformWithName:vectorFloat3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Vector3 value);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10, 0)]
 		[Static]
 		[Export ("uniformWithName:vectorFloat4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2094,6 +2097,7 @@ namespace SpriteKit {
 #if !XAMCORE_4_0
 		[Obsolete ("Use the '(string, MatrixFloat2x2)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10, 0)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2101,6 +2105,7 @@ namespace SpriteKit {
 #endif
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10, 0)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2109,6 +2114,7 @@ namespace SpriteKit {
 #if !XAMCORE_4_0
 		[Obsolete ("Use the '(string, MatrixFloat3x3)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10, 0)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2116,6 +2122,7 @@ namespace SpriteKit {
 #endif
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10, 0)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2124,6 +2131,7 @@ namespace SpriteKit {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'the '(string, MatrixFloat4x4)' overload instead.")]
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10, 0)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -2131,6 +2139,7 @@ namespace SpriteKit {
 #endif
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10, 0)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
