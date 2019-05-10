@@ -1293,7 +1293,7 @@ namespace xharness
 							break;
 						case "/set-option":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
-														switch (request.Url.Query) {
+							switch (request.Url.Query) {
 							case "?clean":
 								CleanSuccessfulTestRuns = true;
 								break;
@@ -1473,17 +1473,21 @@ namespace xharness
 							server.Stop ();
 							break;
 						case "/favicon.ico":
-							var favicon = File.ReadAllBytes (Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico"));
-							response.OutputStream.Write (favicon, 0, favicon.Length);
-							response.OutputStream.Close ();
-							break;
-						case "/xharness.css":
-						case "/xharness.js":
-							serveFile = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), request.Url.LocalPath.Substring (1));
+							serveFile = Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico");
 							goto default;
+						case "/index.html":
+							var redirect_to = request.Url.AbsoluteUri.Replace ("/index.html", "/" + Path.GetFileName (LogDirectory) + "/index.html");
+							response.Redirect (redirect_to);
+							break;
 						default:
+							var filename = Path.GetFileName (request.Url.LocalPath);
+							if (filename == "index.html" && Path.GetFileName (LogDirectory) == Path.GetFileName (Path.GetDirectoryName (request.Url.LocalPath))) {
+									// We're asked for the report for the current test run, so re-generate it.
+								GenerateReport ();
+							}
+
 							if (serveFile == null)
-								serveFile = Path.Combine (LogDirectory, request.Url.LocalPath.Substring (1));
+								serveFile = Path.Combine (Path.GetDirectoryName (LogDirectory), request.Url.LocalPath.Substring (1));
 							var path = serveFile;
 							if (File.Exists (path)) {
 								var buffer = new byte [4096];
@@ -1500,6 +1504,9 @@ namespace xharness
 									case ".js":
 										response.ContentType = "text/javascript";
 										break;
+									case ".ico":
+										response.ContentType = "image/png";
+										break;
 									default:
 										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
 										break;
@@ -1508,6 +1515,7 @@ namespace xharness
 										response.OutputStream.Write (buffer, 0, read);
 								}
 							} else {
+								Console.WriteLine ($"404: {request.Url.LocalPath}");
 								response.StatusCode = 404;
 								response.OutputStream.WriteByte ((byte) '?');
 							}
@@ -1527,7 +1535,7 @@ namespace xharness
 			};
 			thread.Start ();
 
-			var url = $"http://localhost:{port}/";
+			var url = $"http://localhost:{port}/" + Path.GetFileName (LogDirectory) + "/index.html";
 			Console.WriteLine ($"Launching {url} in the system's default browser.");
 			Process.Start ("open", url);
 
@@ -1628,12 +1636,14 @@ namespace xharness
 					foreach (var file in new string [] { "xharness.js", "xharness.css" }) {
 						File.Copy (Path.Combine (dependentFileLocation, file), Path.Combine (LogDirectory, file), true);
 					}
+					File.Copy (Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico"), Path.Combine (LogDirectory, "favicon.ico"), true);
 				}
 			} catch (Exception e) {
 				this.MainLog.WriteLine ("Failed to write log: {0}", e);
 			}
 		}
 
+		string previous_test_runs;
 		void GenerateReportImpl (Stream stream, StreamWriter markdown_summary = null)
 		{
 			var id_counter = 0;
@@ -1805,7 +1815,7 @@ namespace xharness
 				} else {
 					writer.Write ($"No tests selected.");
 				}
-				writer.WriteLine ("</span>");
+				writer.Write ("</span>");
 				writer.WriteLine ("</h2>");
 				if (allTasks.Count > 0) {
 					writer.WriteLine ($"<ul id='nav'>");
@@ -1813,34 +1823,34 @@ namespace xharness
 						writer.WriteLine (@"
 	<li>Select
 		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all"");'>All tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-device"");'>All device tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-simulator"");'>All simulator tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-ios"");'>All iOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-tvos"");'>All tvOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-watchos"");'>All watchOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-mac"");'>All Mac tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all"");'>All tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-device"");'>All device tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-simulator"");'>All simulator tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-ios"");'>All iOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-tvos"");'>All tvOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-watchos"");'>All watchOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-mac"");'>All Mac tests</a></li>
 		</ul>
 	</li>
 	<li>Deselect
 		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all"");'>All tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-device"");'>All device tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-simulator"");'>All simulator tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-ios"");'>All iOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-tvos"");'>All tvOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-watchos"");'>All watchOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-mac"");'>All Mac tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all"");'>All tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-device"");'>All device tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-simulator"");'>All simulator tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-ios"");'>All iOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-tvos"");'>All tvOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-watchos"");'>All watchOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-mac"");'>All Mac tests</a></li>
 		</ul>
 	</li>
 	<li>Execute
 		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""run?alltests"");'>Run all tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""run?selected"");'>Run all selected tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""run?failed"");'>Run all failed tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""build?all"");'>Build all tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""build?selected"");'>Build all selected tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""build?failed"");'>Build all failed tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/run?alltests"");'>Run all tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/run?selected"");'>Run all selected tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/run?failed"");'>Run all failed tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/build?all"");'>Build all tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/build?selected"");'>Build all selected tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/build?failed"");'>Build all failed tests</a></li>
 		</ul>
 	</li>");
 					}
@@ -1856,19 +1866,51 @@ namespace xharness
 						writer.WriteLine ($@"
 	<li>Reload
 		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""reload-devices"");'>Devices</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""reload-simulators"");'>Simulators</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/reload-devices"");'>Devices</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/reload-simulators"");'>Simulators</a></li>
 		</ul>
 	</li>
 
 	<li>Options
 			<ul>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(UninstallTestApp ? "do-not-uninstall-test-app" : "uninstall-test-app")}"");'>&#x{(UninstallTestApp ? "2705" : "274C")} Uninstall the app from device before and after the test run</a></span></li>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(Harness.IncludeSystemPermissionTests ? "skip-permission-tests" : "include-permission-tests")}"");'>&#x{(Harness.IncludeSystemPermissionTests ? "2705" : "274C")} Run tests that require system permissions (might put up permission dialogs)</a></span></li>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(UninstallTestApp ? "do-not-uninstall-test-app" : "uninstall-test-app")}"");'>&#x{(UninstallTestApp ? "2705" : "274C")} Uninstall the app from device before and after the test run</a></span></li>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(Harness.IncludeSystemPermissionTests ? "skip-permission-tests" : "include-permission-tests")}"");'>&#x{(Harness.IncludeSystemPermissionTests ? "2705" : "274C")} Run tests that require system permissions (might put up permission dialogs)</a></span></li>
 			</ul>
 	</li>
 	");
+						if (previous_test_runs == null) {
+							var sb = new StringBuilder ();
+							var previous = Directory.GetDirectories (Path.GetDirectoryName (LogDirectory)).
+									Select ((v) => Path.Combine (v, "index.html")).
+									    Where (File.Exists);
+							if (previous.Any ()) {
+								sb.AppendLine ("\t<li>Previous test runs");
+								sb.AppendLine ("\t\t<ul>");
+								foreach (var prev in previous) {
+									var dir = Path.GetFileName (Path.GetDirectoryName (prev));
+									var ts = dir;
+									var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
+									if (description != null) {
+										description = description.Substring (description.IndexOf ('>') + 1); // <h2 ...>
+										description = description.Substring (description.IndexOf ('>') + 1); // <span id= ...>
+
+										var h2end = description.LastIndexOf ("</h2>", StringComparison.Ordinal);
+										if (h2end > -1)
+											description = description.Substring (0, h2end);
+										description = description.Substring (0, description.LastIndexOf ('<'));
+									} else {
+										description = "<unknown state>";
+									}
+									sb.AppendLine ($"\t\t\t<li class=\"adminitem\"><a href='/{dir}/index.html'>{ts}: {description}</a></li>");
+								}
+								sb.AppendLine ("\t\t</ul>");
+								sb.AppendLine ("\t</li>");
+							}
+							previous_test_runs = sb.ToString ();
+						}
+						if (!string.IsNullOrEmpty (previous_test_runs))
+							writer.Write (previous_test_runs);
 					}
 					writer.WriteLine ("</ul>");
 				}
