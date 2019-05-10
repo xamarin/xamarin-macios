@@ -226,10 +226,10 @@ namespace Introspection {
 				return TestRuntime.CheckXcodeVersion (10,0);
 			case "CMMovementDisorderManager": // Not available in simulator, added info to radar://41110708 
 #if __WATCHOS__
-                    // Doesn't exist in the simulator; aborts on device if the required entitlement isn't available.
-                    return true;
+				// Doesn't exist in the simulator; aborts on device if the required entitlement isn't available.
+				return true;
 #endif
-                    return Runtime.Arch == Arch.SIMULATOR;
+				return Runtime.Arch == Arch.SIMULATOR;
 			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
 				return Runtime.Arch == Arch.SIMULATOR;
 			default:
