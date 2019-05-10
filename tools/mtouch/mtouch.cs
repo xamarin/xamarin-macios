@@ -484,8 +484,9 @@ namespace Xamarin.Bundler
 		}
 
 		// note: this is executed under Parallel.ForEach
-		public static string GenerateMain (Application app, IEnumerable<Assembly> assemblies, string assembly_name, Abi abi, string main_source, IList<string> registration_methods)
+		public static string GenerateMain (Target target, IEnumerable<Assembly> assemblies, string assembly_name, Abi abi, string main_source, IList<string> registration_methods)
 		{
+			var app = target.App;
 			var assembly_externs = new StringBuilder ();
 			var assembly_aot_modules = new StringBuilder ();
 			var register_assemblies = new StringBuilder ();
@@ -614,12 +615,12 @@ namespace Xamarin.Bundler
 						}
 					}
 
-					if (app.MonoNativeMode != MonoNativeMode.None) {
+					if (target.MonoNativeMode != MonoNativeMode.None) {
 						string mono_native_lib;
 						if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject)
 							mono_native_lib = "__Internal";
 						else
-							mono_native_lib = app.GetLibNativeName () + ".dylib";
+							mono_native_lib = target.GetLibNativeName () + ".dylib";
 						sw.WriteLine ();
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
 						sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
