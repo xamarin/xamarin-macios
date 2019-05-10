@@ -4796,7 +4796,11 @@ namespace AppKit {
 		NSFont Font { get; set; }
 
 		[Export ("formatter", ArgumentSemantic.Retain), NullAllowed]
+#if XAMCORE_4_0
+		NSFormatter Formatter { get; set; }
+#else
 		NSObject Formatter { get; set; }
+#endif
 
 		[Export ("objectValue", ArgumentSemantic.Copy)]
 		NSObject ObjectValue { get; set; }
