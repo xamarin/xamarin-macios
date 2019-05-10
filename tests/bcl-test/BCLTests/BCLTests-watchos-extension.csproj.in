@@ -58,8 +58,7 @@
     <MtouchExtraArgs></MtouchExtraArgs>
     <MtouchArch>ARMv7k, ARM64_32</MtouchArch>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <IpaPackageName>
-    </IpaPackageName>
+    <MtouchLink>SdkOnly</MtouchLink>
     <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64_32|iPhone' ">
@@ -73,6 +72,7 @@
     <MtouchArch>ARM64_32</MtouchArch>
     <MtouchExtraArgs></MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -85,6 +85,7 @@
     <MtouchArch>ARMv7k</MtouchArch>
     <MtouchExtraArgs></MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -100,6 +101,7 @@
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchEnableBitcode>true</MtouchEnableBitcode>
     <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
+    <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64_32|iPhone' ">
     <Optimize>true</Optimize>
@@ -111,6 +113,7 @@
     <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32 --gcc_flags='-fembed-bitcode-marker'</MtouchExtraArgs>
     <MtouchArch>ARM64_32</MtouchArch>
     <MtouchUseLlvm>True</MtouchUseLlvm>
+    <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
     <Optimize>true</Optimize>
@@ -122,6 +125,7 @@
     <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32 --gcc_flags='-fembed-bitcode-marker'</MtouchExtraArgs>
     <MtouchArch>ARMv7k</MtouchArch>
     <MtouchUseLlvm>True</MtouchUseLlvm>
+    <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Mono.Options" Version="5.3.0.1" />
