@@ -60,7 +60,6 @@
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="OpenTK" />
-    <Reference Include="System.Drawing.Common" /> <!-- FIXME: https://github.com/mono/mono/issues/13483 -->
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
