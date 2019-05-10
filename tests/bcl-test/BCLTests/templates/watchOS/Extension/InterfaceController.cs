@@ -25,6 +25,7 @@ namespace monotouchtestWatchKitExtension
 	{
 		bool running;
 		Xamarin.iOS.UnitTests.TestRunner runner;
+		HttpTextWriter http_writer;
 
 		[Action ("runTests:")]
 		partial void RunTests (NSObject obj);
@@ -93,10 +94,14 @@ namespace monotouchtestWatchKitExtension
 		{
 			var options = ApplicationOptions.Current;
 			TextWriter writer = null;
-			if (!string.IsNullOrEmpty (options.HostName) && string.IsNullOrEmpty(options.LogFile))
-				writer = new HttpTextWriter () { HostName = options.HostName, Port = options.HostPort };
-			if (!string.IsNullOrEmpty (options.LogFile))
+			if (!string.IsNullOrEmpty (options.HostName) && string.IsNullOrEmpty (options.LogFile)) {
+				http_writer = new HttpTextWriter () { HostName = options.HostName.Split (',')[0], Port = options.HostPort };
+				Console.WriteLine ("Sending results to {0}:{1} using HTTP", http_writer.HostName, http_writer.Port);
+				http_writer.Open ();
+				writer = http_writer;
+			} else if (!string.IsNullOrEmpty (options.LogFile)) {
 				writer = new StreamWriter (options.LogFile);
+			}
 
 			// we generate the logs in two different ways depending if the generate xml flag was
 			// provided. If it was, we will write the xml file to the tcp writer if present, else
@@ -157,8 +162,16 @@ namespace monotouchtestWatchKitExtension
 						logger.Info ($"Xml result can be found {resultsFilePath}");
 					}
 					logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");
-					if (options.TerminateAfterExecution)
-						TerminateWithSuccess ();
+					if (options.TerminateAfterExecution) {
+						var writer_finished_task = http_writer?.FinishedTask;
+						http_writer?.Close ();
+						Task.Run (async () => {
+							if (writer_finished_task != null) {
+								await writer_finished_task;
+							}
+							TerminateWithSuccess ();
+						});
+					}
 				});
 			});
 		}
