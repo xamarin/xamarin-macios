@@ -2405,7 +2405,7 @@ namespace AppKit {
 		[Export ("keyEquivalent")]
 		string KeyEquivalent { get; }
 	
-		[Export ("formatter", ArgumentSemantic.Retain)]
+		[Export ("formatter", ArgumentSemantic.Retain), NullAllowed]
 		NSFormatter Formatter { get; set; }
 	
 		[Export ("objectValue", ArgumentSemantic.Copy), NullAllowed]
@@ -4795,7 +4795,7 @@ namespace AppKit {
 		[Export ("font")]
 		NSFont Font { get; set; }
 
-		[Export ("formatter", ArgumentSemantic.Retain)]
+		[Export ("formatter", ArgumentSemantic.Retain), NullAllowed]
 		NSObject Formatter { get; set; }
 
 		[Export ("objectValue", ArgumentSemantic.Copy)]
