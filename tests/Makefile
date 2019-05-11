@@ -360,7 +360,7 @@ wrench-%:
 
 wrench-jenkins: xharness/xharness.exe
 	$(Q) rm -f $@-failed.stamp
-	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --trace=E:all --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-ios-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) || echo "$$?" > $@-failed.stamp
+	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --trace=E:all --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) || echo "$$?" > $@-failed.stamp
 	@echo "@MonkeyWrench: SetSummary: <br/>`cat $(abspath $(CURDIR))/TestSummary.md | awk 1 ORS='<br/>'`"
 	@echo "@MonkeyWrench: AddFile: $(abspath $(CURDIR))/TestSummary.md"
 	$(Q) if test -e $@-failed.stamp; then EC=`cat $@-failed.stamp`; rm -f $@-failed.stamp; exit $$EC; fi
@@ -379,7 +379,7 @@ runner: xharness/xharness.exe
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
 vsts-device-tests: xharness/xharness.exe
-	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests, --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
+	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 ifdef ENABLE_XAMARIN
 wrench-launch-external wrench-report-external:

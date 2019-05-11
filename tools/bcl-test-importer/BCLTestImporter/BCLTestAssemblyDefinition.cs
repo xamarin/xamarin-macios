@@ -8,6 +8,7 @@ namespace BCLTestImporter {
 		#region static vars
 		
 		static string partialPath = "mcs/class/lib";
+		static string downloadPartialPath = "ios-bcl";
 		static Dictionary <Platform, string> platformPathMatch = new Dictionary <Platform, string> {
 			{Platform.iOS, "monotouch"},
 			{Platform.WatchOS, "monotouch_watch"},
@@ -85,9 +86,15 @@ namespace BCLTestImporter {
 			return null;
 		}
 
-		public static string GetHintPathForReferenceAssembly (string assembly, string monoRootPath, Platform plaform)
+		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, Platform plaform, bool isDownload)
 		{
-			var hintPath = Path.Combine (monoRootPath, partialPath, platformPathMatch[plaform], $"{assembly}.dll");
+			var hintPath = Path.Combine (monoRootPath, isDownload? downloadPartialPath : partialPath, platformPathMatch[plaform], $"{assembly}.dll");
+			if (File.Exists (hintPath)) {
+				return hintPath;
+			} else {
+				// we could be referencing a dll in the test dir, lets test that
+				hintPath = Path.Combine (monoRootPath, isDownload? downloadPartialPath : partialPath, platformPathMatch[plaform], "tests", $"{assembly}.dll");
+			}
 			return File.Exists (hintPath) ? hintPath : null;
 		}
 		

@@ -179,6 +179,8 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyExifSubsecTimeOrginal")]
 		NSString ExifSubsecTimeOrginal { get; }
 		[iOS (10,0)][Mac (10,11)]
+		[TV (10,0)]
+		[Watch (3,0)]
 		[Field ("kCGImagePropertyExifSubsecTimeOriginal")]
 		NSString ExifSubsecTimeOriginal { get; }
 		[Field ("kCGImagePropertyExifSubsecTimeDigitized")]
@@ -2065,6 +2067,7 @@ namespace ImageIO {
 
 		[iOS (9,3)][Mac (10,12)]
 		[TV (9,2)]
+		[Watch (2,3)]
 		[Internal][Field ("kCGImageDestinationOptimizeColorForSharing")]
 		IntPtr kOptimizeColorForSharing { get; }
 	}
@@ -2093,6 +2096,7 @@ namespace ImageIO {
 		bool EmbedThumbnail { get; set; }
 
 		[iOS (9,3)][Mac (10,12)]
+		[Watch (2,3)]
 		[Export ("OptimizeColorForSharing")]
 		bool OptimizeColorForSharing { get; set; }
 
@@ -2158,6 +2162,7 @@ namespace ImageIO {
 
 		[iOS (9,3)][Mac (10,12)]
 		[TV (9,2)]
+		[Watch (2,3)]
 		[Field ("kCGImageDestinationOptimizeColorForSharing")]
 		NSString OptimizeColorForSharing { get; }
 

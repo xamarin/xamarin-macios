@@ -109,7 +109,7 @@ namespace Xamarin.Bundler
 
 		protected override void Execute ()
 		{
-			Driver.GenerateMain (Target.App, Target.Assemblies, Target.App.AssemblyName, Abi, MainM, RegistrationMethods);
+			Driver.GenerateMain (Target, Target.Assemblies, Target.App.AssemblyName, Abi, MainM, RegistrationMethods);
 		}
 	}
 

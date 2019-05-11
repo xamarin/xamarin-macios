@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -331,18 +331,18 @@ namespace xharness
 			return log.SelectSingleNode ("/TouchUnitTestRun/NUnitOutput") != null;
 		}
 
-		(XmlDocument xml, string human) ParseTouchUnitXml (XmlDocument log)
+		XmlDocument ParseTouchUnitXml (XmlDocument log, StreamWriter writer)
 		{
 			var nunit_output = log.SelectSingleNode ("/TouchUnitTestRun/NUnitOutput");
 			var nunitXml = new XmlDocument ();
 			nunitXml.LoadXml (nunit_output.InnerXml);
-			return (xml: nunitXml, human: log.SelectSingleNode ("/TouchUnitTestRun/TouchUnitExtraData").InnerText);
+			writer.Write (log.SelectSingleNode ("/TouchUnitTestRun/TouchUnitExtraData").InnerText);
+			return nunitXml;
 		}
 
-		(XmlDocument xml, string human) ParseNUnitXml (XmlDocument log)
+		XmlDocument ParseNUnitXml (XmlDocument log, StreamWriter writer)
 		{
 			var str = log.InnerXml;
-			var humanReadableLog = new StringBuilder ();
 			var resultsNode = log.SelectSingleNode ("test-results");
 
 			// parse the xml and build a human readable version
@@ -358,73 +358,72 @@ namespace xharness
 			var testFixtures = resultsNode.SelectNodes ("//test-suite[@type='TestFixture' or @type='TestCollection']");
 			for (var i = 0; i < testFixtures.Count; i++) {
 				var node = testFixtures [i];
-				humanReadableLog.AppendLine (node.Attributes ["name"].InnerText);
+				writer.WriteLine (node.Attributes ["name"].InnerText);
 				var testCases = node.SelectNodes ("//test-case");
 				for (var j = 0; j < testCases.Count; j++) {
 					var result = testCases [j];
 					var status = result.Attributes ["result"].InnerText;
 					switch (status) {
 					case "Success":
-						humanReadableLog.Append ("\t[PASS] ");
+						writer.Write ("\t[PASS] ");
 						break;
 					case "Ignored":
-						humanReadableLog.Append ("\t[IGNORED] ");
+						writer.Write ("\t[IGNORED] ");
 						break;
 					case "Error":
 					case "Failure":
-						humanReadableLog.Append ("\t[FAIL] ");
+						writer.Write ("\t[FAIL] ");
 						break;
 					case "Inconclusive":
-						humanReadableLog.Append ("\t[INCONCLUSIVE] ");
+						writer.Write ("\t[INCONCLUSIVE] ");
 						break;
 					default:
-						humanReadableLog.Append ("\t[INFO] ");
+						writer.Write ("\t[INFO] ");
 						break;
 					}
-					humanReadableLog.Append (result.Attributes ["name"].InnerText);
+					writer.Write (result.Attributes ["name"].InnerText);
 					if (status == "Failure" || status == "Error") { //  we need to print the message
-						humanReadableLog.Append ($" : {result.InnerText}");
+						writer.Write ($" : {result.InnerText}");
 					}
 					// add a new line
-					humanReadableLog.AppendLine ();
+					writer.WriteLine ();
 				}
 				var time = node.Attributes ["time"]?.InnerText ?? "0"; // some nodes might not have the time :/
-				humanReadableLog.AppendLine ($"{node.Attributes ["name"].InnerXml} {time} ms");
+				writer.WriteLine ($"{node.Attributes ["name"].InnerXml} {time} ms");
 			}
-			humanReadableLog.AppendLine ($"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}");
-			return (xml: log, human: humanReadableLog.ToString());
+			writer.WriteLine ($"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}");
+			return log;
 		}
 
 		public bool TestsSucceeded (Log listener_log, bool timed_out, bool crashed)
 		{
-			string log;
-			using (var reader = listener_log.GetReader ())
-				log = reader.ReadToEnd ();
 			// parsing the result is different if we are in jenkins or not.
 			// When in Jenkins, Touch.Unit produces an xml file instead of a console log (so that we can get better test reporting).
 			// However, for our own reporting, we still want the console-based log. This log is embedded inside the xml produced
 			// by Touch.Unit, so we need to extract it and write it to disk. We also need to re-save the xml output, since Touch.Unit
 			// wraps the NUnit xml output with additional information, which we need to unwrap so that Jenkins understands it.
 			if (Harness.InJenkins) {
+				// use a tmp file so that we can use the reader in xml and write the humman version
+				var tmpFile = Path.GetTempFileName ();
 				// we have to parse the xml result
 				crashed = false;
 				var xmldoc = new XmlDocument ();
+				XmlNode mainResultNode;
 				try {
-					xmldoc.LoadXml (log);
-					var testsResults = new XmlDocument ();
-					if (IsTouchUnitResult (xmldoc)) {
-						var (xml, human) = ParseTouchUnitXml (xmldoc);
-						testsResults = xml;
-						log = human;
-					} else {
-						var (xml, human) = ParseNUnitXml (xmldoc);
-						testsResults = xml;
-						log = human;
+					using (var reader = listener_log.GetReader ()) {
+						xmldoc.Load (reader);
+						var testsResults = new XmlDocument ();
+						using (var writer = new StreamWriter (tmpFile)) {
+							if (IsTouchUnitResult (xmldoc)) {
+								testsResults = ParseTouchUnitXml (xmldoc, writer);
+							} else {
+								testsResults = ParseNUnitXml (xmldoc, writer);
+							}
+						}
+
+						mainResultNode = testsResults.SelectSingleNode ("test-results");
 					}
-
-					File.WriteAllText (listener_log.FullPath, log);
-
-					var mainResultNode = testsResults.SelectSingleNode ("test-results");
+					
 					if (mainResultNode == null) {
 						Harness.LogWrench ($"Node is null.");
 					} else {
@@ -434,9 +433,14 @@ namespace xharness
 						// store a clean version of the logs, later this will be used by the bots to show results in github/web
 						var path = listener_log.FullPath;
 						path = Path.ChangeExtension (path, "xml");
-						testsResults.Save (path);
+						// we already have all the data needed in the listerner, rather than saving from the doc, copy 
+						File.Copy (listener_log.FullPath, path, true);
 						Logs.AddFile (path, "Test xml");
 					}
+
+					// write on the log 
+					File.Copy (tmpFile, listener_log.FullPath, true);
+					File.Delete (tmpFile);
 				} catch (Exception e) {
 					main_log.WriteLine ("Could not parse xml result file: {0}", e);
 
@@ -452,19 +456,35 @@ namespace xharness
 				}
 			}
 
-			// parsing the human readable results
-			if (log.Contains ("Tests run")) {
+			// read until the end and decide if we got results, do not store them
+			// we do not want to use too much memory
+			string resultLine = null;
+			using (var reader = new StreamReader (listener_log.FullPath)) {
+				string line;
+				while ((line = reader.ReadLine ()) != null)
+				{
+					if (line.Contains ("Tests run"))
+						resultLine = line;
+				}
+			}
+
+			// read the parsed logs in a human readable way
+			if (resultLine != null) {
 				var tests_run = string.Empty;
-				var log_lines = log.Split ('\n');
 				var failed = false;
-				foreach (var line in log_lines) {
-					if (line.Contains ("Tests run:")) {
-						Console.WriteLine (line);
-						tests_run = line.Replace ("Tests run: ", "");
-						break;
-					} else if (line.Contains ("FAIL")) {
-						Console.WriteLine (line);
-						failed = true;
+				
+				using (var reader = listener_log.GetReader () ) {
+					string line;
+					while ((line = reader.ReadLine ()) != null)
+					{
+						if (line.Contains ("Tests run:")) {
+							Console.WriteLine (line);
+							tests_run = line.Replace ("Tests run: ", "");
+							break;
+						} else if (line.Contains ("[FAIL]")) {
+							Console.WriteLine (line);
+							failed = true;
+						}
 					}
 				}
 

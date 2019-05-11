@@ -36,6 +36,7 @@ namespace xharness
 		public bool IncludeBtouch;
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
+		public bool IncludeOldSimulatorTests;
 		public bool IncludeDevice;
 		public bool IncludeXtro;
 		public bool IncludeDocs;
@@ -103,9 +104,8 @@ namespace xharness
 					capturedLog.WriteLine (v.Exception);
 					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
 				} else if (v.IsCompleted) {
-					var devices = loadable as Devices;
-					var devicesTypes = new StringBuilder ();
-					if (devices != null) {
+					if (loadable is Devices devices) {
+						var devicesTypes = new StringBuilder ();
 						if (devices.Connected32BitIOS.Any ()) {
 							devicesTypes.Append ("iOS 32 bit");
 						}
@@ -118,8 +118,12 @@ namespace xharness
 						if (devices.ConnectedWatch.Any ()) {
 							devicesTypes.Append (devicesTypes.Length == 0 ? "watchOS" : ", watchOS");
 						}
+						capturedLog.Description = (devicesTypes.Length == 0) ? $"{name} Listing (ok - no devices found)." : $"{name} Listing (ok). Devices types are: {devicesTypes.ToString ()}";
 					}
-					capturedLog.Description = (devices == null || devicesTypes.Length == 0)? $"{name} Listing (ok)." : $"{name} Listing (ok). Devices types are: {devicesTypes.ToString ()}";
+					if (loadable is Simulators simulators) {
+						var simCount = simulators.AvailableDevices.Count ();
+						capturedLog.Description = ( simCount == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok - Found {simCount} simulators).";
+					}
 				}
 			});
 		}
@@ -133,27 +137,61 @@ namespace xharness
 			return Task.WhenAll (devs, sims);
 		}
 
+		AppRunnerTarget[] GetAppRunnerTargets (TestPlatform platform)
+		{
+			switch (platform) {
+			case TestPlatform.tvOS:
+				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
+			case TestPlatform.watchOS:
+				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
+			case TestPlatform.iOS_Unified:
+				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
+			case TestPlatform.iOS_Unified32:
+				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32 };
+			case TestPlatform.iOS_Unified64:
+			case TestPlatform.iOS_TodayExtension64:
+				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS64 };
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
+		}
+
+		string GetSimulatorMinVersion (TestPlatform platform)
+		{
+			switch (platform) {
+			case TestPlatform.iOS:
+			case TestPlatform.iOS_Unified:
+			case TestPlatform.iOS_TodayExtension64:
+			case TestPlatform.iOS_Unified32:
+			case TestPlatform.iOS_Unified64:
+				return "iOS " + Xamarin.SdkVersions.MiniOSSimulator;
+			case TestPlatform.tvOS:
+				return "tvOS " + Xamarin.SdkVersions.MinTVOSSimulator;
+			case TestPlatform.watchOS:
+				return "watchOS " + Xamarin.SdkVersions.MinWatchOSSimulator;
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
+		}
+
 		IEnumerable<RunSimulatorTask> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
 		{
 			var runtasks = new List<RunSimulatorTask> ();
 
-			AppRunnerTarget [] targets;
+			AppRunnerTarget [] targets = GetAppRunnerTargets (buildTask.Platform);
 			TestPlatform [] platforms;
 			bool [] ignored;
 
 			switch (buildTask.Platform) {
 			case TestPlatform.tvOS:
-				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
 				platforms = new TestPlatform [] { TestPlatform.tvOS };
 				ignored = new [] { false };
 				break;
 			case TestPlatform.watchOS:
-				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
 				platforms = new TestPlatform [] { TestPlatform.watchOS };
 				ignored = new [] { false };
 				break;
 			case TestPlatform.iOS_Unified:
-				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
 				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
 				ignored = new [] { !IncludeiOS32, false};
 				break;
@@ -167,7 +205,7 @@ namespace xharness
 			}
 
 			for (int i = 0; i < targets.Length; i++)
-				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.SelectDevices (targets [i], SimulatorLoadLog)) { Platform = platforms [i], Ignored = ignored[i] || buildTask.Ignored });
+				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.SelectDevices (targets [i], SimulatorLoadLog, false)) { Platform = platforms [i], Ignored = ignored[i] || buildTask.Ignored });
 
 			return runtasks;
 		}
@@ -201,6 +239,7 @@ namespace xharness
 			public bool UseThumb;
 			public MonoNativeFlavor MonoNativeFlavor;
 			public MonoNativeLinkMode MonoNativeLinkMode;
+			public IEnumerable<IDevice> Candidates;
 		}
 
 		IEnumerable<TestData> GetTestData (RunTestTask test)
@@ -278,6 +317,15 @@ namespace xharness
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR" };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = !IncludeAll };
 					break;
+				case "introspection":
+					foreach (var target in GetAppRunnerTargets (test.Platform))
+						yield return new TestData {
+							Variation = $"Debug ({GetSimulatorMinVersion (test.Platform)})",
+							Debug = true,
+							Candidates = Simulators.SelectDevices (target, SimulatorLoadLog, true),
+							Ignored = !IncludeOldSimulatorTests, 
+						};
+					break;
 				}
 				break;
 			case "AnyCPU":
@@ -300,7 +348,7 @@ namespace xharness
 			}
 		}
 
-		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<XBuildTask, T, T> creator) where T: RunTestTask
+		IEnumerable<T> CreateTestVariations<T> (IEnumerable<T> tests, Func<XBuildTask, T, IEnumerable<IDevice>, T> creator) where T: RunTestTask
 		{
 			foreach (var task in tests) {
 				if (string.IsNullOrEmpty (task.Variation))
@@ -320,6 +368,7 @@ namespace xharness
 					var defines = test_data.Defines;
 					var undefines = test_data.Undefines;
 					var ignored = test_data.Ignored;
+					var candidates = test_data.Candidates;
 
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
@@ -397,7 +446,7 @@ namespace xharness
 						InitialTask = clone_task,
 						TestName = clone.Name,
 					};
-					T newVariation = creator (build, task);
+					T newVariation = creator (build, task, candidates);
 					newVariation.Variation = variation;
 					newVariation.Ignored = task.Ignored || ignored;
 					newVariation.BuildOnly = task.BuildOnly;
@@ -408,7 +457,7 @@ namespace xharness
 			return rv;
 		}
 
-		IEnumerable<TestTask> CreateRunSimulatorTasks ()
+		async Task<IEnumerable<TestTask>> CreateRunSimulatorTasksAsync ()
 		{
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
@@ -455,14 +504,19 @@ namespace xharness
 				}
 			}
 
-			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test) => new RunSimulatorTask (buildTask, test.Candidates)).ToList ();
+			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) => new RunSimulatorTask (buildTask, candidates?.Cast<SimDevice> () ?? test.Candidates)).ToList ();
 
-			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Platform)) {
-				yield return new AggregatedRunSimulatorTask (taskGroup) {
+			foreach (var tv in testVariations)
+				await tv.FindSimulatorAsync ();
+
+			var rv = new List<AggregatedRunSimulatorTask> ();
+			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Device?.UDID ?? task.Candidates.ToString ())) {
+				rv.Add (new AggregatedRunSimulatorTask (taskGroup) {
 					Jenkins = this,
 					TestName = $"Tests for {taskGroup.Key}",
-				};
+				});
 			}
+			return rv;
 		}
 
 		IEnumerable<TestTask> CreateRunDeviceTasks ()
@@ -537,7 +591,7 @@ namespace xharness
 				}
 			}
 
-			return CreateTestVariations (rv, (buildTask, test) => new RunDeviceTask (buildTask, test.Candidates));
+			return CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)
@@ -706,9 +760,10 @@ namespace xharness
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
 			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
-			SetEnabled (labels, "ios-device", ref IncludeDevice);
+			SetEnabled (labels, "device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
 			SetEnabled (labels, "mac-32", ref IncludeMac32);
+			SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
 			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
@@ -773,7 +828,7 @@ namespace xharness
 			return false;
 		}
 
-		Task PopulateTasksAsync ()
+		async Task PopulateTasksAsync ()
 		{
 			// Missing:
 			// api-diff
@@ -782,7 +837,7 @@ namespace xharness
 
 			LoadSimulatorsAndDevicesAsync ().DoNotAwait ();
 
-			Tasks.AddRange (CreateRunSimulatorTasks ());
+			Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
 			var buildiOSMSBuild = new XBuildTask ()
 			{
@@ -886,7 +941,7 @@ namespace xharness
 							TestName = project.Name,
 							IsUnitTest = true,
 						};
-						execs = CreateTestVariations (new [] { exec }, (buildTask, test) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
+						execs = CreateTestVariations (new [] { exec }, (buildTask, test, candidates) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
 					}
 					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
 
@@ -1026,8 +1081,6 @@ namespace xharness
 			Tasks.Add (runSampleTests);
 
 			Tasks.AddRange (CreateRunDeviceTasks ());
-
-			return Task.CompletedTask;
 		}
 
 		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore, bool requiresXcode94 = false)
@@ -1240,7 +1293,7 @@ namespace xharness
 							break;
 						case "/set-option":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
-														switch (request.Url.Query) {
+							switch (request.Url.Query) {
 							case "?clean":
 								CleanSuccessfulTestRuns = true;
 								break;
@@ -1377,6 +1430,7 @@ namespace xharness
 										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
 									} else {
 										task.Reset ();
+										task.BuildOnly = false;
 										task.RunAsync ();
 									}
 								}
@@ -1419,17 +1473,21 @@ namespace xharness
 							server.Stop ();
 							break;
 						case "/favicon.ico":
-							var favicon = File.ReadAllBytes (Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico"));
-							response.OutputStream.Write (favicon, 0, favicon.Length);
-							response.OutputStream.Close ();
-							break;
-						case "/xharness.css":
-						case "/xharness.js":
-							serveFile = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), request.Url.LocalPath.Substring (1));
+							serveFile = Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico");
 							goto default;
+						case "/index.html":
+							var redirect_to = request.Url.AbsoluteUri.Replace ("/index.html", "/" + Path.GetFileName (LogDirectory) + "/index.html");
+							response.Redirect (redirect_to);
+							break;
 						default:
+							var filename = Path.GetFileName (request.Url.LocalPath);
+							if (filename == "index.html" && Path.GetFileName (LogDirectory) == Path.GetFileName (Path.GetDirectoryName (request.Url.LocalPath))) {
+									// We're asked for the report for the current test run, so re-generate it.
+								GenerateReport ();
+							}
+
 							if (serveFile == null)
-								serveFile = Path.Combine (LogDirectory, request.Url.LocalPath.Substring (1));
+								serveFile = Path.Combine (Path.GetDirectoryName (LogDirectory), request.Url.LocalPath.Substring (1));
 							var path = serveFile;
 							if (File.Exists (path)) {
 								var buffer = new byte [4096];
@@ -1446,6 +1504,9 @@ namespace xharness
 									case ".js":
 										response.ContentType = "text/javascript";
 										break;
+									case ".ico":
+										response.ContentType = "image/png";
+										break;
 									default:
 										response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
 										break;
@@ -1454,6 +1515,7 @@ namespace xharness
 										response.OutputStream.Write (buffer, 0, read);
 								}
 							} else {
+								Console.WriteLine ($"404: {request.Url.LocalPath}");
 								response.StatusCode = 404;
 								response.OutputStream.WriteByte ((byte) '?');
 							}
@@ -1473,7 +1535,7 @@ namespace xharness
 			};
 			thread.Start ();
 
-			var url = $"http://localhost:{port}/";
+			var url = $"http://localhost:{port}/" + Path.GetFileName (LogDirectory) + "/index.html";
 			Console.WriteLine ($"Launching {url} in the system's default browser.");
 			Process.Start ("open", url);
 
@@ -1574,12 +1636,14 @@ namespace xharness
 					foreach (var file in new string [] { "xharness.js", "xharness.css" }) {
 						File.Copy (Path.Combine (dependentFileLocation, file), Path.Combine (LogDirectory, file), true);
 					}
+					File.Copy (Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico"), Path.Combine (LogDirectory, "favicon.ico"), true);
 				}
 			} catch (Exception e) {
 				this.MainLog.WriteLine ("Failed to write log: {0}", e);
 			}
 		}
 
+		string previous_test_runs;
 		void GenerateReportImpl (Stream stream, StreamWriter markdown_summary = null)
 		{
 			var id_counter = 0;
@@ -1751,7 +1815,7 @@ namespace xharness
 				} else {
 					writer.Write ($"No tests selected.");
 				}
-				writer.WriteLine ("</span>");
+				writer.Write ("</span>");
 				writer.WriteLine ("</h2>");
 				if (allTasks.Count > 0) {
 					writer.WriteLine ($"<ul id='nav'>");
@@ -1759,34 +1823,34 @@ namespace xharness
 						writer.WriteLine (@"
 	<li>Select
 		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all"");'>All tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-device"");'>All device tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-simulator"");'>All simulator tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-ios"");'>All iOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-tvos"");'>All tvOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-watchos"");'>All watchOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-mac"");'>All Mac tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all"");'>All tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-device"");'>All device tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-simulator"");'>All simulator tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-ios"");'>All iOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-tvos"");'>All tvOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-watchos"");'>All watchOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/select?all-mac"");'>All Mac tests</a></li>
 		</ul>
 	</li>
 	<li>Deselect
 		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all"");'>All tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-device"");'>All device tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-simulator"");'>All simulator tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-ios"");'>All iOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-tvos"");'>All tvOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-watchos"");'>All watchOS tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-mac"");'>All Mac tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all"");'>All tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-device"");'>All device tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-simulator"");'>All simulator tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-ios"");'>All iOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-tvos"");'>All tvOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-watchos"");'>All watchOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/deselect?all-mac"");'>All Mac tests</a></li>
 		</ul>
 	</li>
 	<li>Execute
 		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""run?alltests"");'>Run all tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""run?selected"");'>Run all selected tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""run?failed"");'>Run all failed tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""build?all"");'>Build all tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""build?selected"");'>Build all selected tests</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""build?failed"");'>Build all failed tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/run?alltests"");'>Run all tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/run?selected"");'>Run all selected tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/run?failed"");'>Run all failed tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/build?all"");'>Build all tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/build?selected"");'>Build all selected tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/build?failed"");'>Build all failed tests</a></li>
 		</ul>
 	</li>");
 					}
@@ -1802,19 +1866,51 @@ namespace xharness
 						writer.WriteLine ($@"
 	<li>Reload
 		<ul>
-			<li class=""adminitem""><a href='javascript:sendrequest (""reload-devices"");'>Devices</a></li>
-			<li class=""adminitem""><a href='javascript:sendrequest (""reload-simulators"");'>Simulators</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/reload-devices"");'>Devices</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""/reload-simulators"");'>Simulators</a></li>
 		</ul>
 	</li>
 
 	<li>Options
 			<ul>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(UninstallTestApp ? "do-not-uninstall-test-app" : "uninstall-test-app")}"");'>&#x{(UninstallTestApp ? "2705" : "274C")} Uninstall the app from device before and after the test run</a></span></li>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""set-option?{(Harness.IncludeSystemPermissionTests ? "skip-permission-tests" : "include-permission-tests")}"");'>&#x{(Harness.IncludeSystemPermissionTests ? "2705" : "274C")} Run tests that require system permissions (might put up permission dialogs)</a></span></li>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(UninstallTestApp ? "do-not-uninstall-test-app" : "uninstall-test-app")}"");'>&#x{(UninstallTestApp ? "2705" : "274C")} Uninstall the app from device before and after the test run</a></span></li>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(Harness.IncludeSystemPermissionTests ? "skip-permission-tests" : "include-permission-tests")}"");'>&#x{(Harness.IncludeSystemPermissionTests ? "2705" : "274C")} Run tests that require system permissions (might put up permission dialogs)</a></span></li>
 			</ul>
 	</li>
 	");
+						if (previous_test_runs == null) {
+							var sb = new StringBuilder ();
+							var previous = Directory.GetDirectories (Path.GetDirectoryName (LogDirectory)).
+									Select ((v) => Path.Combine (v, "index.html")).
+									    Where (File.Exists);
+							if (previous.Any ()) {
+								sb.AppendLine ("\t<li>Previous test runs");
+								sb.AppendLine ("\t\t<ul>");
+								foreach (var prev in previous) {
+									var dir = Path.GetFileName (Path.GetDirectoryName (prev));
+									var ts = dir;
+									var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
+									if (description != null) {
+										description = description.Substring (description.IndexOf ('>') + 1); // <h2 ...>
+										description = description.Substring (description.IndexOf ('>') + 1); // <span id= ...>
+
+										var h2end = description.LastIndexOf ("</h2>", StringComparison.Ordinal);
+										if (h2end > -1)
+											description = description.Substring (0, h2end);
+										description = description.Substring (0, description.LastIndexOf ('<'));
+									} else {
+										description = "<unknown state>";
+									}
+									sb.AppendLine ($"\t\t\t<li class=\"adminitem\"><a href='/{dir}/index.html'>{ts}: {description}</a></li>");
+								}
+								sb.AppendLine ("\t\t</ul>");
+								sb.AppendLine ("\t</li>");
+							}
+							previous_test_runs = sb.ToString ();
+						}
+						if (!string.IsNullOrEmpty (previous_test_runs))
+							writer.Write (previous_test_runs);
 					}
 					writer.WriteLine ("</ul>");
 				}
@@ -1946,8 +2042,11 @@ namespace xharness
 									IEnumerable<IDevice> candidates = (runTest as RunDeviceTask)?.Candidates;
 									if (candidates == null)
 										candidates = (runTest as RunSimulatorTask)?.Candidates;
-									if (candidates != null)
-										writer.WriteLine ($"Candidate devices: {string.Join (", ", candidates.Select ((v) => v.Name))} <br />");
+									if (candidates != null) {
+										writer.WriteLine ($"Candidate devices:<br />");
+										foreach (var candidate in candidates)
+											writer.WriteLine ($"&nbsp;&nbsp;&nbsp;&nbsp;{candidate.Name} (Version: {candidate.OSVersion})<br />");
+									}
 									writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
 								}
 								if (test.Duration.Ticks > 0)
@@ -3646,19 +3745,37 @@ namespace xharness
 			}
 		}
 
-		public Task SelectSimulatorAsync ()
+		public async Task FindSimulatorAsync ()
+		{
+			if (Device != null)
+				return;
+
+			var asyncEnumerable = Candidates as IAsyncEnumerable;
+			if (asyncEnumerable != null)
+				await asyncEnumerable.ReadyTask;
+
+			if (!Candidates.Any ()) {
+				ExecutionResult = TestExecutingResult.Skipped;
+				FailureMessage = "No applicable devices found.";
+			} else {
+				Device = Candidates.First ();
+				if (Platform == TestPlatform.watchOS)
+					CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
+			}
+
+		}
+
+		public async Task SelectSimulatorAsync ()
 		{
 			if (Finished)
-				return Task.FromResult (true);
+				return;
 			
 			if (!BuildTask.Succeeded) {
 				ExecutionResult = TestExecutingResult.BuildFailure;
-				return Task.FromResult (true);
+				return;
 			}
 
-			Device = Candidates.First ();
-			if (Platform == TestPlatform.watchOS)
-				CompanionDevice = Jenkins.Simulators.FindCompanionDevice (Jenkins.SimulatorLoadLog, Device);
+			await FindSimulatorAsync ();
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
 			runner = new AppRunner ()
@@ -3673,8 +3790,6 @@ namespace xharness
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();
-
-			return Task.FromResult (true);
 		}
 
 		class NondisposedResource : IAcquiredResource
@@ -3780,8 +3895,10 @@ namespace xharness
 				// We need to set the dialog permissions for all the apps
 				// before launching the simulator, because once launched
 				// the simulator caches the values in-memory.
-				foreach (var task in executingTasks)
+				foreach (var task in executingTasks) {
+					await task.VerifyRunAsync ();
 					await task.SelectSimulatorAsync ();
+				}
 
 				var devices = executingTasks.First ().Simulators;
 				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");

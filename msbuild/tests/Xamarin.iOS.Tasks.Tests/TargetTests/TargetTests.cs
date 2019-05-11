@@ -139,14 +139,19 @@ namespace Xamarin.iOS.Tasks
 		{
 			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.ResolveReferences);
 			var references = MonoTouchProjectInstance.GetItems ("ReferencePath").ToArray ();
+			var expected_references = new string[] {
+				"MyLibrary.dll",
+				"System.dll",
+				"System.Xml.dll",
+				"System.Core.dll",
+				"mscorlib.dll",
+				"Xamarin.iOS.dll",
+				"System.Drawing.Common.dll",
+			};
+			Array.Sort (expected_references);
 
-			Assert.AreEqual (6, references.Length, "#1");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("MyLibrary")), "#2");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("System")), "#3a");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("System.Xml")), "#3b");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("System.Core")), "#3c");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("mscorlib")), "#3d");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("Xamarin.iOS")), "#3e");
+			var actual_references = references.Select ((v) => Path.GetFileName (v.EvaluatedInclude)).OrderBy ((v) => v);
+			CollectionAssert.AreEquivalent (expected_references, actual_references, "References");
 		}
 
 		[Test]
@@ -154,13 +159,18 @@ namespace Xamarin.iOS.Tasks
 		{
 			RunTargetOnInstance (LibraryProjectInstance, TargetName.ResolveReferences);
 			var references = LibraryProjectInstance.GetItems ("ReferencePath").ToArray ();
+			var expected_references = new string[] {
+				"System.dll",
+				"System.Xml.dll",
+				"System.Core.dll",
+				"mscorlib.dll",
+				"Xamarin.iOS.dll",
+				"System.Drawing.Common.dll",
+			};
+			Array.Sort (expected_references);
 
-			Assert.AreEqual (5, references.Length, "#1");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("System")), "#2a");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("System.Xml")), "#2b");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("System.Core")), "#2c");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("mscorlib")), "#2d");
-			Assert.IsTrue (references.Any (t => t.EvaluatedInclude.Contains ("Xamarin.iOS")), "#2e");
+			var actual_references = references.Select ((v) => Path.GetFileName (v.EvaluatedInclude)).OrderBy ((v) => v);
+			CollectionAssert.AreEquivalent (expected_references, actual_references, "References");
 		}
 
 		[Test]

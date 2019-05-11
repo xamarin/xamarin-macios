@@ -46,7 +46,7 @@ function quit ()
 		   window.close ();
 		}
 	};
-	xhttp.open("GET", "quit", true);
+	xhttp.open("GET", "/quit", true);
 	xhttp.send();
 }
 
@@ -94,17 +94,17 @@ function keyhandler(event)
 
 function buildtest(id)
 {
-	sendrequest ("build?" + id);
+	sendrequest ("/build?" + id);
 }
 
 function runtest(id)
 {
-	sendrequest ("run?" + id);
+	sendrequest ("/run?" + id);
 }
 
 function stoptest(id)
 {
-	sendrequest ("stop?" + id);
+	sendrequest ("/stop?" + id);
 }
 
 function sendrequest(url, callback)
