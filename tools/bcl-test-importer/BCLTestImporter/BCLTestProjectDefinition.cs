@@ -97,12 +97,12 @@ namespace BCLTestImporter {
 					if (!types.Any ()) {
 						continue;
 					}
-					dict[Path.GetFileName (path)] = types.First (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")));
+					dict[Path.GetFileName (path)] = types.First (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
 				} catch (ReflectionTypeLoadException e) { // ReflectionTypeLoadException
 					// we did get an exception, possible reason, the type comes from an assebly not loaded, but 
 					// nevertheless we can do something about it, get all the not null types in the exception
 					// and use one of them
-					var types = e.Types.Where (t => t != null).Where (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")));
+					var types = e.Types.Where (t => t != null).Where (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
 					if (types.Any()) {
 						dict[Path.GetFileName (path)] = types.First ();
 					}
@@ -129,7 +129,7 @@ namespace BCLTestImporter {
 				return (references.FailureMessage, null);
 			var asm = references.References.Select (
 					a => (assembly: a, 
-						hintPath: BCLTestAssemblyDefinition.GetHintPathForRefenreceAssembly (a, monoRootPath, platform))).Union (
+						hintPath: BCLTestAssemblyDefinition.GetHintPathForRefenreceAssembly (a, monoRootPath, platform, wasDownloaded))).Union (
 					TestAssemblies.Select (
 						definition => (assembly: definition.GetName (platform),
 							hintPath: definition.GetPath (monoRootPath, platform, wasDownloaded))))

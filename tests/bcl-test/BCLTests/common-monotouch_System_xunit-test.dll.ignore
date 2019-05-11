@@ -1,0 +1,125 @@
+# block app
+System.Net.Tests.WebClientTest.DefaultCtor_PropertiesReturnExpectedValues
+System.Net.Tests.WebClientTest.Properties_InvalidArguments_ThrowExceptions
+System.Net.Tests.WebClientTest.DownloadData_InvalidArguments_ThrowExceptions
+System.Net.Tests.WebClientTest.DownloadFile_InvalidArguments_ThrowExceptions
+System.Net.Tests.WebClientTest.DownloadString_InvalidArguments_ThrowExceptions
+System.Net.Tests.WebClientTest.UploadData_InvalidArguments_ThrowExceptions
+System.Net.Tests.WebClientTest.UploadFile_InvalidArguments_ThrowExceptions
+System.Net.Tests.WebClientTest.UploadString_InvalidArguments_ThrowExceptions
+System.Net.Tests.WebClientTest.UploadValues_InvalidArguments_ThrowExceptions
+System.Net.Tests.WebClientTest.OpenWrite_InvalidArguments_ThrowExceptions
+System.Net.Tests.WebClientTest.OpenRead_InvalidArguments_ThrowExceptions
+System.Net.Tests.WebClientTest.BaseAddress_Roundtrips
+System.Net.Tests.WebClientTest.CachePolicy_Roundtrips
+System.Net.Tests.WebClientTest.Credentials_Roundtrips
+System.Net.Tests.WebClientTest.Proxy_Roundtrips
+System.Net.Tests.WebClientTest.Encoding_Roundtrips
+System.Net.Tests.WebClientTest.Headers_Roundtrips
+System.Net.Tests.WebClientTest.QueryString_Roundtrips
+System.Net.Tests.WebClientTest.UseDefaultCredentials_Roundtrips
+System.Net.Tests.WebClientTest.ResponseHeaders_ContainsHeadersAfterOperation
+System.Net.Tests.WebClientTest.RequestHeaders_AddDisallowedHeaderAndSendRequest_ThrowsWebException(headerName: "Connection", headerValue: "close")
+System.Net.Tests.WebClientTest.RequestHeaders_AddDisallowedHeaderAndSendRequest_ThrowsWebException(headerName: "Expect", headerValue: "100-continue")
+System.Net.Tests.WebClientTest.RequestHeaders_AddHostHeaderAndSendRequest_ExpectedResult(hostHeaderValue: "http://localhost", throwsWebException: True)
+System.Net.Tests.WebClientTest.RequestHeaders_AddHostHeaderAndSendRequest_ExpectedResult(hostHeaderValue: "localhost", throwsWebException: False)
+System.Net.Tests.WebClientTest.RequestHeaders_SpecialHeaders_RequestSucceeds
+System.Net.Tests.WebClientTest.ConcurrentOperations_Throw
+System.Net.Tests.SyncWebClientTest.DownloadString_Success(contentType: null)
+System.Net.Tests.SyncWebClientTest.DownloadString_Success(contentType: "text/html; charset=utf-8")
+System.Net.Tests.SyncWebClientTest.DownloadString_Success(contentType: "text/html; charset=us-ascii")
+System.Net.Tests.SyncWebClientTest.DownloadData_Success
+System.Net.Tests.SyncWebClientTest.DownloadData_LargeData_Success
+System.Net.Tests.SyncWebClientTest.DownloadFile_Success
+System.Net.Tests.SyncWebClientTest.OpenRead_Success
+System.Net.Tests.SyncWebClientTest.OpenWrite_Success
+System.Net.Tests.SyncWebClientTest.UploadData_Success
+System.Net.Tests.SyncWebClientTest.UploadData_LargeData_Success
+System.Net.Tests.SyncWebClientTest.UploadFile_Success
+System.Net.Tests.SyncWebClientTest.UploadString_Success
+System.Net.Tests.SyncWebClientTest.UploadValues_Success
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: null)
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=utf-8")
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=us-ascii")
+System.Net.Tests.TaskWebClientTest.DownloadData_Success
+System.Net.Tests.TaskWebClientTest.DownloadData_LargeData_Success
+System.Net.Tests.TaskWebClientTest.DownloadFile_Success
+System.Net.Tests.TaskWebClientTest.OpenRead_Success
+System.Net.Tests.TaskWebClientTest.OpenWrite_Success
+System.Net.Tests.TaskWebClientTest.UploadData_Success
+System.Net.Tests.TaskWebClientTest.UploadData_LargeData_Success
+System.Net.Tests.TaskWebClientTest.UploadFile_Success
+System.Net.Tests.TaskWebClientTest.UploadString_Success
+System.Net.Tests.TaskWebClientTest.UploadValues_Successs
+
+#    Exception messages: Exit code was 134 but it should have been 42
+# Expected: True
+# Actual:   False 
+System.Text.RegularExpressions.Tests.RegexCacheTests.Ctor_Cache_Uses_culture_and_options
+System.Text.RegularExpressions.Tests.RegexCacheTests.Ctor_Cache_Second_drops_first
+System.Text.RegularExpressions.Tests.RegexCacheTests.Ctor_Cache_Promote_entries
+System.Text.RegularExpressions.Tests.RegexCacheTests.Ctor_Cache_Shrink_cache
+System.Text.RegularExpressions.Tests.RegexCacheTests.Ctor_Cache_Uses_dictionary_linked_list_switch_does_not_throw
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_Timeout_Throws
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_SpecialUnicodeCharacters_Invariant
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_SpecialUnicodeCharacters_enUS
+RemoteExecutorTests.RemoteInvokeWritesToFile
+System.Text.RegularExpressions.Tests.RegexConstructorTests.StaticCtor_InvalidTimeoutObject_ExceptionThrown
+System.Text.RegularExpressions.Tests.RegexConstructorTests.StaticCtor_InvalidTimeoutRange_ExceptionThrown
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsBasic
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsDanish
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsTurkish
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsEnUS
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsAzeriLatin
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsCzech
+
+#  Exception messages: System.PlatformNotSupportedException : Operation is not supported on this platform.
+System.IO.Tests.FileSystemWatcherTests_netstandard17.SynchronizingObject_GetSetRoundtrips
+System.IO.Tests.FileSystemWatcherTests_netstandard17.SynchronizingObject_CalledOnError
+System.IO.Tests.FileSystemWatcherTests_netstandard17.EndInit_DoesNotEnableEventRaisedEvents
+System.IO.Tests.FileSystemWatcherTests_netstandard17.BeginEndInit_Repeated
+System.IO.Tests.FileSystemWatcherTests_netstandard17.BeginInit_PausesEnableRaisingEvents
+System.IO.Tests.FileSystemWatcherTests_netstandard17.Site_NonNullSetEnablesRaisingEvents
+System.IO.Tests.FileSystemWatcherTests_netstandard17.Site_GetSetRoundtrips
+System.IO.Tests.FileSystemWatcherTests_netstandard17.EndRaisingEventsDuringPause
+System.IO.Tests.FileSystemWatcherTests_netstandard17.SynchronizingObject_CalledOnEvent(expectedChangeType: Created)
+System.IO.Tests.FileSystemWatcherTests_netstandard17.SynchronizingObject_CalledOnEvent(expectedChangeType: Changed)
+System.IO.Tests.FileSystemWatcherTests_netstandard17.SynchronizingObject_CalledOnEvent(expectedChangeType: Deleted)
+System.IO.Tests.FileSystemWatcherTests_netstandard17.SynchronizingObject_CalledOnRenamed
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Deleted
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_OnError
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_ctor_path_pattern
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_OnRenamed
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_ctor
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Error
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_ctor_path
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_OnCreated
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Renamed
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Created
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Changed
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_EnableRaisingEvents
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Disposed
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_NewFileInfoAction_TriggersNothing
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_OnChanged
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_StopCalledOnBackgroundThreadDoesNotDeadlock
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_OnDeleted
+
+#   Exception messages: Assert.Equal() Failure
+#          ↓ (pos 0)
+# Expected: abc.dll
+# Actual:   ABC.DLL
+#          ↑ (pos 0) 
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Filter
+
+# Exception messages: System.ArgumentException : The directory name ''
+# Parameter name: Path   Exception stack traces:
+System.IO.Tests.FileSystemWatcherTests.FileSystemWatcher_Path
+
+# Exception messages: System.IO.IOException : BCL tests group  test app isn't present in the test runtime directory.   Exception stack traces:
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_ExcessPrefix
+
+# blocks the testing app
+System.Net.WebSockets.Tests.WebSocketTests.CreateClientBuffer_InvalidSendValues(size: -1)
+System.Net.WebSockets.Tests.WebSocketTests.CreateClientBuffer_InvalidSendValues(size: 0)
+System.Net.WebSockets.Tests.WebSocketTests.WebSocketProtocol_CreateFromConnectedStream_CanSendReceiveData
+System.Net.WebSockets.Tests.WebSocketTests.ReceiveAsync_ServerSplitHeader_ValidDataReceived

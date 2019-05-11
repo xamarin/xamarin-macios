@@ -557,8 +557,12 @@ namespace BCLTestImporter {
 		{
 			if (platform == Platform.WatchOS) 
 				throw new ArgumentException (nameof (platform));
+			if (!projects.Any()) // return an empty list
+				return new List<(string name, string path, bool xunit, string failure)> ();
 			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
 			foreach (var def in projects) {
+				if (def.assemblies.Length == 0)
+					continue;
 				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
 				if (IsIgnored (projectDefinition, platform)) // some projects are ignored, so we just continue
 					continue;
