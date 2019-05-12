@@ -115,7 +115,6 @@ $(BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources
 		-tmpdir=$(IOS_BUILD_DIR)/native \
 		-baselib=$(IOS_BUILD_DIR)/native/core.dll \
 		-attributelib=$(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll \
-		-r=$(MONO_PATH)/mcs/class/lib/monotouch/System.dll \
 		-native-exception-marshalling \
 		--ns=ObjCRuntime \
 		--target-framework=Xamarin.iOS,v1.0 \
@@ -176,10 +175,10 @@ $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.i
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.pdb | $(IOS_BUILD_DIR)/reference
 	$(Q) $(CP) $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/% : $(MACIOS_BINARIES_PATH)/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/% : $(MACIOS_BINARIES_PATH)/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades
 	$(Q) $(CP) $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/% : $(MACIOS_BINARIES_PATH)/Facades/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/% : $(MACIOS_BINARIES_PATH)/Facades/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades
 	$(Q) $(CP) $< $@
 
 $(IOS_BUILD_DIR)/compat/%: $(MACIOS_BINARIES_PATH)/% | $(IOS_BUILD_DIR)/compat
@@ -201,6 +200,7 @@ IOS_TARGETS_DIRS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1             \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades     \
 
 IOS_TARGETS += \
 	$(PROJECT_DIR)/xamios.csproj                                                   \
@@ -575,7 +575,6 @@ WATCH_BMONO = MONO_PATH=$(WATCH_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/b
 WATCH_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 WATCH_GENERATE=$(SYSTEM_MONO) --debug $(WATCH_GENERATOR)
 WATCH_GENERATED_DEFINES= -d:WATCH -d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__
-WATCH_BCL_DIR = $(MONO_PATH)/mcs/class/lib/monotouch_watch
 
 WATCHOS_EXTRA_CORE_SOURCES = \
     $(WATCH_BUILD_DIR)/Constants.cs    \
@@ -641,7 +640,6 @@ $(BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.sources
 		-tmpdir=$(WATCH_BUILD_DIR)/watch                         \
 		-baselib=$(WATCH_BUILD_DIR)/watch/core.dll               \
 		-attributelib=$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll \
-		-r=$(MONO_PATH)/mcs/class/lib/monotouch_watch/System.dll \
 		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
 		$(WATCH_GENERATED_DEFINES)				\
@@ -810,7 +808,6 @@ $(BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources
 		-tmpdir=$(TVOS_BUILD_DIR)/tvos                         \
 		-baselib=$(TVOS_BUILD_DIR)/tvos/core.dll               \
 		-attributelib=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll \
-		-r=$(MONO_PATH)/mcs/class/lib/monotouch_tv/System.dll \
 		$(TVOS_GENERATED_DEFINES)				\
 		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
