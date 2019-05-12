@@ -4,7 +4,7 @@ include $(TOP)/Make.config
 PACKAGE_PATH = ../../../packages
 NUGET_CONSOLE = $(PACKAGE_PATH)/NUnit.Runners.2.6.4/tools/nunit-console.exe
 NUGET_LIB = $(PACKAGE_PATH)/NUnit.2.6.4/lib/nunit.framework.dll
-CECIL_LIB = ../../../external/mono/external/cecil/bin/net_4_0_Release/Mono.Cecil.dll
+CECIL_LIB = $(PACKAGE_PATH)/Mono.Cecil.0.10.3/lib/net40/Mono.Cecil.dll
 
 test_sources = \
 	aot.cs \
@@ -20,11 +20,9 @@ run:: tests.dll $(NUGET_CONSOLE)
 mmp.exe: ../mmp.exe
 	$(Q) $(CP) ../mmp.exe mmp.exe
  
-nunit.framework.dll nunit-console.exe:
+nunit.framework.dll nunit-console.exe Mono.Cecil.dll:
 	/Library/Frameworks/Mono.framework/Commands/nuget restore packages.config
 	$(CP) $(NUGET_LIB) nunit.framework.dll
-
-Mono.Cecil.dll:
 	$(CP) $(CECIL_LIB) Mono.Cecil.dll
 
 tests.dll: $(test_sources) mmp.exe nunit.framework.dll Mono.Cecil.dll
