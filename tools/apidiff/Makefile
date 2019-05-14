@@ -167,7 +167,7 @@ all-local:: $(BUNDLE_ZIP) $(APIDIFF_DIR)/api-diff.html
 # Rules to re-create the reference infos from the curretn stable 'bundle.zip. assemblies
 
 # split the URL in words based on the path separator, and then chose the 6th word (the hash) in the bundle zip filename
-BUNDLE_ZIP=$(APIDIFF_DIR)/bundle-$(word 6,$(subst /, ,$(APIDIFF_REFERENCES))).zip
+BUNDLE_ZIP ?= $(APIDIFF_DIR)/bundle-$(word 6,$(subst /, ,$(APIDIFF_REFERENCES))).zip
 $(BUNDLE_ZIP):
 	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
 	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
