@@ -41,6 +41,7 @@ namespace Xamarin.Bundler
 			"", // dummy value to make indices match up between XM and XI
 #endif
 			"cctor-beforefieldinit",
+			"custom-attributes-removal",
 		};
 
 		enum Opt
@@ -60,6 +61,7 @@ namespace Xamarin.Bundler
 			InlineIsARM64CallingConvention,
 			SealAndDevirtualize,
 			StaticConstructorBeforeFieldInit,
+			CustomAttributesRemoval,
 		}
 
 		bool? all;
@@ -136,6 +138,11 @@ namespace Xamarin.Bundler
 		public bool? StaticConstructorBeforeFieldInit {
 			get { return values [(int) Opt.StaticConstructorBeforeFieldInit]; }
 			set { values [(int) Opt.StaticConstructorBeforeFieldInit] = value; }
+		}
+
+		public bool? CustomAttributesRemoval {
+			get { return values [(int) Opt.CustomAttributesRemoval]; }
+			set { values [(int) Opt.CustomAttributesRemoval] = value; }
 		}
 
 		public Optimizations ()
@@ -293,6 +300,10 @@ namespace Xamarin.Bundler
 			// by default we try to eliminate any .cctor we can
 			if (!StaticConstructorBeforeFieldInit.HasValue)
 				StaticConstructorBeforeFieldInit = true;
+
+			// by default we remove rarely used custom attributes
+			if (!CustomAttributesRemoval.HasValue)
+				CustomAttributesRemoval = true;
 
 			if (Driver.Verbosity > 3)
 				Driver.Log (4, "Enabled optimizations: {0}", string.Join (", ", values.Select ((v, idx) => v == true ? opt_names [idx] : string.Empty).Where ((v) => !string.IsNullOrEmpty (v))));

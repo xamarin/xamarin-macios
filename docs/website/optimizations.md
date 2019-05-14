@@ -737,3 +737,21 @@ disabled  until the correct linker annotations (e.g.
 
 The default behavior can be overridden by passing
 `--optimize=[+|-]cctor-beforefieldinit` to `mtouch` or `mmp`.
+
+## Custom Attributes Removal
+
+This optimization requires the linker to be enabled and is applied globally
+on all assemblies inside the application.
+
+This optimization removes a number of, rarely used, custom attributes from
+assemblies. In turn this allows the linker to later remove the associated
+code from the base class libraries (BCL). This help reduce both the
+metadata and code size for your application.
+
+This optimization is enabled, by default, on both Xamarin.iOS and
+Xamarin.Mac. If some of the removed custom attributes are required for
+your application you can disable this optimization, without totally
+disabling the managed linker.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]custom-attributes-removal` to `mtouch`.
