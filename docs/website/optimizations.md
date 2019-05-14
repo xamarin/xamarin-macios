@@ -754,4 +754,4 @@ your application you can disable this optimization, without totally
 disabling the managed linker.
 
 The default behavior can be overridden by passing
-`--optimize=[+|-]custom-attributes-removal` to `mtouch`.
+`--optimize=[+|-]custom-attributes-removal` to `mtouch` or `mmp`.
