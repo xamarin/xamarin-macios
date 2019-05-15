@@ -21,7 +21,7 @@ cp -r origin/Xamarin.Mac/ ../../_mac-build/Library/Frameworks/Xamarin.Mac.framew
 # cleanup after ourselves
 rm -Rf origin
 
-# run Makefile using the target/currennt bundle
+# run Makefile using the target/current bundle
 BUNDLE_ZIP=$2 make jenkins-api-diff
 
 echo Custom API diff complete. You need to clean this directory and do another "make install"
