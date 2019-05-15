@@ -8,7 +8,7 @@ make clean
 rm -Rf origin
 unzip -d origin $1
 
-# copy files over (dirty!) the currennt install directories
+# copy files over (dirty!) the current install directories
 cp -r origin/2.1/ ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/2.1/
 cp -r origin/Xamarin.iOS/ ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.iOS/
 cp -r origin/Xamarin.TVOS/ ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/
