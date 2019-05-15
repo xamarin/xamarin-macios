@@ -194,15 +194,21 @@ namespace BCLTestImporter {
 			
 			// xUnit Projects
 			(name:"MicrosoftCSharpXunit", assemblies: new [] {"xammac_net_4_5_Microsoft.CSharp_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemComponentModelCompositionXunit", assemblies: new [] {"xammac_net_4_5_System.ComponentModel.Composition_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemCoreXunit", assemblies: new [] {"xammac_net_4_5_System.Core_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemDataXunit", assemblies: new [] {"xammac_net_4_5_System.Data_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemJsonXunit", assemblies: new [] {"xammac_net_4_5_System.Json_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemNetHttpFunctionalTestsXunit", assemblies: new [] {"xammac_net_4_5_System.Net.Http.FunctionalTests_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemNetHttpUnitTestsXunit", assemblies: new [] {"xammac_net_4_5_System.Net.Http.UnitTests_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemNumericsXunit", assemblies: new [] {"xammac_net_4_5_System.Numerics_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemSecurityXunit", assemblies: new [] {"xammac_net_4_5_System.Security_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemXmlLinqXunit", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemXmlXunit", assemblies: new [] {"xammac_net_4_5_System.Xml_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemXunit", assemblies: new [] {"xammac_net_4_5_System_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
-			(name:"CorlibXunit", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}, group: "Mac OS X BCL tests group 4"),
+			
+			(name:"CorlibXunit", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}, group: "Mac OS X BCL tests group 5"),
+
 		};
 		
 		static readonly List<(string assembly, Platform[] platforms)> macIgnoredAssemblies = new List<(string assembly, Platform[] platforms)> {
@@ -219,11 +225,8 @@ namespace BCLTestImporter {
 			(assembly: "xammac_net_4_5_Mono.Posix_test.dll", platforms: new [] { Platform.MacOSModern}), // not present 
 			(assembly: "xammac_net_4_5_Mono.Messaging_test.dll", platforms: new [] { Platform.MacOSModern}), // not present 
 			(assembly: "xammac_net_4_5_System.Data_test.dll", platforms: new [] { Platform.MacOSModern }), // tests use 'System.Configuration.IConfigurationSectionHandler' not present in modern 
-			(assembly: "xammac_net_4_5_corlib_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1203
-			(assembly: "xammac_net_4_5_System.Core_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1204
-			(assembly: "xammac_net_4_5_System_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1209
 			(assembly: "xammac_net_4_5_System.Configuration_test.dll", platforms: new [] { Platform.MacOSModern }), // Not present in modern, ergo all tests will fail
-			(assembly: "xammac_net_4_5_System.Security_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // https://github.com/xamarin/maccore/issues/1243
+			(assembly: "xammac_net_4_5_corlib_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1203
 		};
 
 		readonly bool isCodeGeneration;
@@ -396,7 +399,7 @@ namespace BCLTestImporter {
 			case Platform.MacOSFull:
 				return new string [] { $"macOSFull-{name}.ignore", $"macOS-{name}.ignore" };
 			case Platform.MacOSModern:
-				return new string [] { $"macOSModern-{name}.ignore", $"macOS-{name.Replace ("xammac_", "xammac_net_4_5_")}.ignore" };
+				return new string [] { $"macOSModern-{name.Replace ("xammac_", "xammac_net_4_5_")}.ignore", $"macOS-{name.Replace ("xammac_", "xammac_net_4_5_")}.ignore" };
 			case Platform.TvOS:
 				return new string [] { $"tvOS-{name.Replace ("monotouch_tv_", "monotouch_")}.ignore" };
 			case Platform.WatchOS:
@@ -835,6 +838,7 @@ namespace BCLTestImporter {
 		
 		async Task<string> GenerateMacAsync (string projectName, string registerPath,  (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, string infoPlistPath, Platform platform)
 		{
+			var downloadPath = Path.Combine(GetReleaseDownload (platform), "mac-bcl", platform == Platform.MacOSFull? "xammac_net_4_5" : "xammac").Replace ("/", "\\");
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
 			if (!string.IsNullOrEmpty (info.FailureMessage)) {
@@ -853,6 +857,7 @@ namespace BCLTestImporter {
 			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
+				result = result.Replace (DownloadPathKey, downloadPath);
 				result = result.Replace (ProjectGuidKey, projectGuid.ToString ().ToUpperInvariant ());
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());
