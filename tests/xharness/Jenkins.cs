@@ -1643,6 +1643,23 @@ namespace xharness
 			}
 		}
 
+		bool IsHE0038Error (Log log) {
+			if (log == null)
+				return false;
+			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
+				using (var reader = log.GetReader ()) {
+					while (!reader.EndOfStream) {
+						string line = reader.ReadLine ()?.Trim ();
+						if (line == null)
+							continue;
+						if (line.StartsWith ("error HE0038", StringComparison.Ordinal))
+							return true;
+					}
+				}
+			}
+			return false;
+		}
+		
 		string previous_test_runs;
 		void GenerateReportImpl (Stream stream, StreamWriter markdown_summary = null)
 		{
@@ -2002,7 +2019,12 @@ namespace xharness
 
 							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
-							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>{buildOnly}) </span>");
+							// we have a very common error we want to make this easier for the person that is dealing with the results
+							if (test.ExecutionResult == TestExecutingResult.Crashed && IsHE0038Error (logs.First (l => l.Description == "Run log"))) {
+								writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state} <a href='https://github.com/xamarin/maccore/issues/581'>HE0038</a></span>{buildOnly}) </span>");
+							} else {
+								writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>{buildOnly}) </span>");
+							}
 							if (IsServerMode) {
 								writer.Write ($" <span id='x{id_counter++}' class='autorefreshable'>");
 								if (test.Waiting) {
