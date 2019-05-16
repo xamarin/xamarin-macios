@@ -832,32 +832,30 @@ System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_InvalidArgsThrows
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_PrecanceledToken_Cancels
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_AllDataCopied
 
-# blocks on 32 devices 
-KLASS32:System.IO.Tests.FileInfo_CopyTo_str_b
-KLASS32:System.IO.Tests.File_Copy_str_str_b
-KLASS32:System.IO.Tests.FileInfo_CopyTo_str
-KLASS32:System.IO.Tests.File_Copy_str_str
-KLASS32:System.Reflection.Tests.MemberInfoNetCoreAppTests
-KLASS32:System.Memory.Tests.ReadOnlySequenceTestsChar+SplitInThreeSegments
-KLASS32:System.Memory.Tests.ReadOnlySequenceTestsChar+SegmentPerChar
-KLASS32:System.Memory.Tests.ReadOnlySequenceTestsChar+SingleSegment
-KLASS32:System.Memory.Tests.ReadOnlySequenceTestsChar+Memory
-KLASS32:System.Memory.Tests.ReadOnlySequenceTestsChar+String
-KLASS32:System.Memory.Tests.ReadOnlySequenceTestsChar+Array
-KLASS32:System.Memory.Tests.ReadOnlySequenceTestsByte+SplitInThreeSegments
-KLASS32:System.Memory.Tests.ReadOnlySequenceTestsByte+SegmentPerByte
-KLASS32:System.Memory.Tests.ReadOnlySequenceTestsByte+SingleSegment
+# tests do crash do to memory issues
+KLASS:System.IO.Tests.FileInfo_CopyTo_str_b
+KLASS:System.IO.Tests.File_Copy_str_str_b
+KLASS:System.IO.Tests.FileInfo_CopyTo_str
+KLASS:System.IO.Tests.File_Copy_str_str
+KLASS:System.Reflection.Tests.MemberInfoNetCoreAppTests
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+SplitInThreeSegments
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+SegmentPerChar
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+SingleSegment
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+Memory
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+String
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+Array
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsByte+SplitInThreeSegments
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsByte+SegmentPerByte
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsByte+SingleSegment
 
 
 # produces malloc errors on 32 devices.
 # malloc: *** mach_vm_map(size=1048576) failed (error code=3)
-KLASS32:System.IO.Tests.UmaTests.UmaReadWrite
-
-# failures only on 32b devices
+KLASS:System.IO.Tests.UmaTests.UmaReadWrite
 
 # Expected: typeof(System.ArgumentException)
 # Actual:   typeof(System.MissingMethodException): Method not found: System.TimeSpan System.TimeSpan.Divide(double)
-KLASS32:System.Tests.TimeSpanTests
+KLASS:System.Tests.TimeSpanTests
 
 # DEVICE FAILURES
 System.Collections.Tests.StackTests.DebuggerAttribute_NullStack_ThrowsArgumentNullException
