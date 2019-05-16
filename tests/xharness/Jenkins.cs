@@ -2099,7 +2099,18 @@ namespace xharness
 										log_target = "_self";
 										break;
 									}
-									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									if (log.Description == "Build log") {
+										var binlog = log.FullPath.Replace (".txt", ".binlog");
+										if (File.Exists (binlog)) {
+											var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+											var binLink = string.Format ("<a href='{0}' type='{2}' target='{3}' style='display:{4}'>{1}</a><br />", LinkEncode (binlog.Substring (LogDirectory.Length + 1)), "Binlog download", log_type, log_target, test.Building ? "none" : "inline");
+											writer.Write ("{0} {1}", textLink, binLink);
+										} else {
+											writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+										}
+									} else {
+										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									}
 									if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
 										string summary;
 										List<string> fails;
@@ -2940,6 +2951,7 @@ namespace xharness
 		{
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", "Build log");
+				var binlogPath = log.FullPath.Replace (".txt", ".binlog");
 
 				await RestoreNugetsAsync (log, resource, useXIBuild: true);
 
@@ -2948,6 +2960,7 @@ namespace xharness
 					var args = new StringBuilder ();
 					args.Append ("-- ");
 					args.Append ("/verbosity:diagnostic ");
+					args.Append ($"/bl:\"{binlogPath}\" ");
 					if (SpecifyPlatform)
 						args.Append ($"/p:Platform={ProjectPlatform} ");
 					if (SpecifyConfiguration)
