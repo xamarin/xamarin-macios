@@ -92,14 +92,14 @@ namespace BCLTestImporter {
 			return null;
 		}
 
-		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, Platform plaform, bool isDownload)
+		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, Platform platform, bool isDownload)
 		{
-			var hintPath = Path.Combine (monoRootPath, isDownload? downloadPartialPath[plaform] : partialPath, platformPathMatch[plaform], $"{assembly}.dll");
+			var hintPath = Path.Combine (monoRootPath, isDownload? downloadPartialPath [platform] : partialPath, platformPathMatch [platform], $"{assembly}.dll");
 			if (File.Exists (hintPath)) {
 				return hintPath;
 			} else {
 				// we could be referencing a dll in the test dir, lets test that
-				hintPath = Path.Combine (monoRootPath, isDownload? downloadPartialPath[plaform] : partialPath, platformPathMatch[plaform], "tests", $"{assembly}.dll");
+				hintPath = Path.Combine (monoRootPath, isDownload? downloadPartialPath [platform] : partialPath, platformPathMatch [platform], "tests", $"{assembly}.dll");
 			}
 			return File.Exists (hintPath) ? hintPath : null;
 		}
