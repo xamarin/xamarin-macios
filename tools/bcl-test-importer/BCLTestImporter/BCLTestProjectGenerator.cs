@@ -73,7 +73,7 @@ namespace BCLTestImporter {
 
 		// we have two different types of list, those that are for the iOS like projects (ios, tvos and watch os) and those 
 		// for mac
-		static readonly List<(string name, string[] assemblies, string[] extraArgs, string group)> commoniOSTestProjects = new List<(string name, string[] assemblies, string[] extraArgs, string group)> {
+		static readonly List<(string name, string[] assemblies, string extraArgs, string group)> commoniOSTestProjects = new List<(string name, string[] assemblies, string extraArgs, string group)> {
 			// NUNIT TESTS
 
 			// BCL tests group 1
@@ -156,7 +156,7 @@ namespace BCLTestImporter {
 			"monotouch_Mono.Data.Tds_test.dll", // not present in the watch tests dlls
 		};
 
-		private static readonly List<(string name, string[] assemblies, string[] extraArgs, string group)> macTestProjects = new List<(string name, string[] assemblies, string[] extraArgs, string group)> {
+		private static readonly List<(string name, string[] assemblies, string extraArgs, string group)> macTestProjects = new List<(string name, string[] assemblies, string extraArgs, string group)> {
 		
 			// NUNIT Projects
 			(name:"MonoDataSqliteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
@@ -205,7 +205,7 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityXunit", assemblies: new [] {"xammac_net_4_5_System.Security_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemXmlLinqXunit", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemXmlXunit", assemblies: new [] {"xammac_net_4_5_System.Xml_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
-			(name:"SystemXunit", assemblies: new [] {"xammac_net_4_5_System_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemXunit", assemblies: new [] {"xammac_net_4_5_System_xunit-test.dll"}, extraArgs: "--optimize=-custom-attributes-removal", group: "Mac OS X BCL tests group 4"),
 			
 			(name:"CorlibXunit", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 5"),
 
@@ -481,10 +481,10 @@ namespace BCLTestImporter {
 			return false;
 		}
 
-		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateWatchOSTestProjectsAsync (
-			IEnumerable<(string name, string[] assemblies, string[] extraArgs)> projects, string generatedDir)
+		async Task<List<(string name, string path, bool xunit, string extraArgs, string failure)>> GenerateWatchOSTestProjectsAsync (
+			IEnumerable<(string name, string[] assemblies, string extraArgs)> projects, string generatedDir)
 		{
-			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string extraArgs, string failure)> ();
 			foreach (var def in projects) {
 				// each watch os project requires 3 different ones:
 				// 1. The app
@@ -562,20 +562,20 @@ namespace BCLTestImporter {
 					failure = e.Message;
 				}
 				// we have the 3 projects we depend on, we need the root one, the one that will be used by harness
-				projectPaths.Add ((name: projectDefinition.Name, path: rootProjectPath, xunit: projectDefinition.IsXUnit, failure: failure));
+				projectPaths.Add ((name: projectDefinition.Name, path: rootProjectPath, xunit: projectDefinition.IsXUnit, extraArgs: projectDefinition.ExtraArgs, failure: failure));
 			} // foreach project
 
 			return projectPaths;
 		}
 		
-		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateiOSTestProjectsAsync (
-			IEnumerable<(string name, string[] assemblies, string [] extraArgs)> projects, Platform platform, string generatedDir)
+		async Task<List<(string name, string path, bool xunit, string extraArgs, string failure)>> GenerateiOSTestProjectsAsync (
+			IEnumerable<(string name, string[] assemblies, string extraArgs)> projects, Platform platform, string generatedDir)
 		{
 			if (platform == Platform.WatchOS) 
 				throw new ArgumentException (nameof (platform));
 			if (!projects.Any()) // return an empty list
-				return new List<(string name, string path, bool xunit, string failure)> ();
-			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
+				return new List<(string name, string path, bool xunit, string extraArgs, string failure)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string extraArgs, string failure)> ();
 			foreach (var def in projects) {
 				if (def.assemblies.Length == 0)
 					continue;
@@ -621,16 +621,16 @@ namespace BCLTestImporter {
 				} catch (Exception e) {
 					failure = e.Message;
 				}
-				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit, failure: failure));
+				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit, extraArgs: projectDefinition.ExtraArgs, failure: failure));
 			} // foreach project
 
 			return projectPaths;
 		}
 		
-		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateMacTestProjectsAsync (
-			IEnumerable<(string name, string[] assemblies, string[] extraArgs)> projects, string generatedDir, Platform platform)
+		async Task<List<(string name, string path, bool xunit, string extraArgs, string failure)>> GenerateMacTestProjectsAsync (
+			IEnumerable<(string name, string[] assemblies, string extraArgs)> projects, string generatedDir, Platform platform)
 		{
-			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string extraArgs, string failure)> ();
 			foreach (var def in projects) {
 				if (!def.assemblies.Any ())
 					continue;
@@ -666,7 +666,7 @@ namespace BCLTestImporter {
 					info, projectTemplatePath, infoPlistPath, platform);
 					
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
-				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit, failure: null));
+				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit, extraArgs: projectDefinition.ExtraArgs, failure: null));
 				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 					await file.WriteAsync (generatedProject);
 				}
@@ -682,10 +682,10 @@ namespace BCLTestImporter {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		public async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
-			IEnumerable<(string name, string[] assemblies, string[] extraArgs)> projects, Platform platform, string generatedDir)
+		public async Task<List<(string name, string path, bool xunit, string extraArgs, string failure)>> GenerateTestProjectsAsync (
+			IEnumerable<(string name, string[] assemblies, string extraArgs)> projects, Platform platform, string generatedDir)
 		{
-			var result = new List<(string name, string path, bool xunit, string failure)> ();
+			var result = new List<(string name, string path, bool xunit, string extraArgs, string failure)> ();
 			switch (platform) {
 			case Platform.WatchOS:
 				result = await GenerateWatchOSTestProjectsAsync (projects, generatedDir);
@@ -702,10 +702,10 @@ namespace BCLTestImporter {
 			return result;
 		}
 		
-		List <(string name, string[] assemblies, string[] extraArgs)> GetProjectDefinitions (List<(string name, string [] assemblies, string[] extraArgs, string group)> definitions, Platform platform)
+		List <(string name, string[] assemblies, string extraArgs)> GetProjectDefinitions (List<(string name, string [] assemblies, string extraArgs, string group)> definitions, Platform platform)
 		{
 
-			List<(string name, string [] assemblies, string[] extraArgs)> testProjects = new List<(string name, string [] assemblies, string[] extraArgs)> ();
+			List<(string name, string [] assemblies, string extraArgs)> testProjects = new List<(string name, string [] assemblies, string extraArgs)> ();
 			if (GroupTests && platform != Platform.WatchOS) {
 				// build the grouped apps 
 				var groupedApps = new Dictionary<string, List<string>> ();
@@ -719,13 +719,16 @@ namespace BCLTestImporter {
 					if (groupedApps.ContainsKey (group)) {
 						groupedApps [group].AddRange (validAssemblies);
 						if (extraArgs != null)
-							groupedAppsExtraArgs [group].AddRange (extraArgs);
+							groupedAppsExtraArgs [group].Add (extraArgs);
 					} else {
 						groupedApps [group] = new List<string> (validAssemblies);
+						groupedAppsExtraArgs [group] = new List<string> ();
+						groupedAppsExtraArgs [group].Add (extraArgs);
 					}
 				}
 				foreach (var group in groupedApps.Keys) {
-					testProjects.Add ((name: group, assemblies: groupedApps [group].ToArray (), extraArgs: groupedAppsExtraArgs [group].ToArray()));
+					var cleanedExtraArgs = groupedAppsExtraArgs [group].Distinct ();
+					testProjects.Add ((name: group, assemblies: groupedApps [group].ToArray (), extraArgs: string.Join (" ", cleanedExtraArgs)));
 				}
 			} else {
 				foreach (var (name, assemblies, extraArgs, group) in definitions) {
@@ -735,9 +738,9 @@ namespace BCLTestImporter {
 			return testProjects;
 		}
 		// generates a project per platform of the common projects. 
-		async Task<List<(string name, string path, bool xunit, List<Platform> platforms, string failure)>> GenerateAllCommonTestProjectsAsync ()
+		async Task<List<(string name, string path, bool xunit, string extraArg, List<Platform> platforms, string failure)>> GenerateAllCommonTestProjectsAsync ()
 		{
-			var projectPaths = new List<(string name, string path, bool xunit, List<Platform> platforms, string failure)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string extraArg, List<Platform> platforms, string failure)> ();
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
 			var generatedCodePathRoot = GeneratedCodePathRoot;
@@ -745,12 +748,12 @@ namespace BCLTestImporter {
 				Directory.CreateDirectory (generatedCodePathRoot);
 			}
 
-			var projects = new Dictionary<string, (string path, bool xunit, List<Platform> platforms, string failure)> ();
+			var projects = new Dictionary<string, (string path, bool xunit, string extraArgs, List<Platform> platforms, string failure)> ();
 			foreach (var platform in new [] {Platform.iOS, Platform.TvOS, Platform.WatchOS}) {
 				var generated = await GenerateTestProjectsAsync (GetProjectDefinitions (commoniOSTestProjects, platform), platform, generatedCodePathRoot);
-				foreach (var (name, path, xunit, failure) in generated) {
+				foreach (var (name, path, xunit, extraArgs, failure) in generated) {
 					if (!projects.ContainsKey (name)) {
-						projects [name] = (path, xunit, new List<Platform> { platform }, failure);
+						projects [name] = (path, xunit, extraArgs, new List<Platform> { platform }, failure);
 					} else {
 						projects [name].platforms.Add (platform);
 					}
@@ -759,15 +762,15 @@ namespace BCLTestImporter {
 			
 			// return the grouped projects
 			foreach (var name in projects.Keys) {
-				projectPaths.Add ((name, projects[name].path, projects[name].xunit, projects[name].platforms, projects[name].failure));
+				projectPaths.Add ((name, projects[name].path, projects[name].xunit, projects[name].extraArgs, projects[name].platforms, projects[name].failure));
 			}
 			return projectPaths;
 		}
 		
 		// creates all the projects that have already been defined
-		public async Task<List<(string name, string path, bool xunit, List<Platform> platforms, string failure)>> GenerateAlliOSTestProjectsAsync ()
+		public async Task<List<(string name, string path, bool xunit, string extraArgs, List<Platform> platforms, string failure)>> GenerateAlliOSTestProjectsAsync ()
 		{
-			var projectPaths = new List<(string name, string path, bool xunit, List<Platform> platforms, string failure)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string extraArgs, List<Platform> platforms, string failure)> ();
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
 			var generatedCodePathRoot = GeneratedCodePathRoot;
@@ -780,9 +783,9 @@ namespace BCLTestImporter {
 			return projectPaths;
 		}
 
-		public List<(string name, string path, bool xunit, List<Platform> platforms, string failure)> GenerateAlliOSTestProjects () => GenerateAlliOSTestProjectsAsync ().Result;
+		public List<(string name, string path, bool xunit, string extraArgs, List<Platform> platforms, string failure)> GenerateAlliOSTestProjects () => GenerateAlliOSTestProjectsAsync ().Result;
 		
-		public async Task<List<(string name, string path, bool xunit, string failure)>> GenerateAllMacTestProjectsAsync (Platform platform)
+		public async Task<List<(string name, string path, bool xunit, string extraArgs, string failure)>> GenerateAllMacTestProjectsAsync (Platform platform)
 		{
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
@@ -794,7 +797,7 @@ namespace BCLTestImporter {
 			return generated;
 		}
 
-		public List<(string name, string path, bool xunit, string failure)> GenerateAllMacTestProjects (Platform platform) => GenerateAllMacTestProjectsAsync (platform).Result;
+		public List<(string name, string path, bool xunit, string extraArg, string failure)> GenerateAllMacTestProjects (Platform platform) => GenerateAllMacTestProjectsAsync (platform).Result;
 
 		/// <summary>
 		/// Generates an iOS project for testing purposes. The generated project will contain the references to the
