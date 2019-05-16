@@ -648,7 +648,7 @@ namespace Xamarin.Bundler {
 			var assembly_location_count = 0;
 			var enable_llvm = (abi & Abi.LLVM) != 0;
 
-			register_assemblies.AppendLine ("\tguint32 exception_gchandle = 0;");
+			register_assemblies.AppendLine ("\tGCHandle exception_gchandle = INVALID_GCHANDLE;");
 			foreach (var s in assemblies) {
 				if (!s.IsAOTCompiled)
 					continue;

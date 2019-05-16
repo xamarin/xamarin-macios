@@ -34,13 +34,13 @@
 		},
 
 		new XDelegate ("void", "void", "xamarin_rethrow_managed_exception",
-			"guint32", "uint", "original_exception_gchandle"
+			"GCHandle", "IntPtr", "original_exception_gchandle"
 		) {
 			WrappedManagedFunction = "RethrowManagedException",
 			OnlyDynamicUsage = false,
 		},
 
-		new XDelegate ("int", "int", "xamarin_create_ns_exception",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_create_ns_exception",
 			"NSException *", "IntPtr", "exc"
 		) {
 			WrappedManagedFunction = "CreateNSException",
@@ -48,7 +48,7 @@
 		},
 
 		new XDelegate ("NSException *", "IntPtr", "xamarin_unwrap_ns_exception",
-			"uint32_t", "uint", "exc_handle"
+			"GCHandle", "IntPtr", "exc_handle"
 		) {
 			WrappedManagedFunction = "UnwrapNSException",
 			OnlyDynamicUsage = false,
@@ -225,9 +225,9 @@
 			OnlyDynamicUsage = true,
 		},
 
-		new XDelegate ("guint32", "int", "xamarin_create_product_exception_for_error",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_create_product_exception_for_error",
 			"int", "int", "code",
-			"guint32", "uint", "inner_exception_gchandle",
+			"GCHandle", "IntPtr", "inner_exception_gchandle",
 			"const char *", "string", "message"
 		) {
 			WrappedManagedFunction = "CreateProductException",
@@ -249,7 +249,7 @@
 		},
 
 		new XDelegate ("enum MarshalManagedExceptionMode", "MarshalManagedExceptionMode", "xamarin_on_marshal_managed_exception",
-			"int", "int", "exception"
+			"GCHandle", "IntPtr", "exception"
 		) {
 			WrappedManagedFunction = "OnMarshalManagedException",
 			OnlyDynamicUsage = false,
@@ -278,7 +278,7 @@
 			OnlyDynamicUsage = true,
 		},
 
-		new XDelegate ("int32_t", "int", "xamarin_create_runtime_exception",
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_create_runtime_exception",
 			"int32_t", "int", "code",
 			"const char *", "IntPtr", "message"
 		) {
@@ -487,7 +487,7 @@
 				if (nameOnly) {
 					builder.Append (", exception_gchandle");
 				} else {
-					builder.Append (", guint32 *exception_gchandle");
+					builder.Append (", GCHandle *exception_gchandle");
 				}
 			}
 
@@ -521,7 +521,7 @@
 				if (nameOnly) {
 					// nothing to do
 				} else {
-					builder.Append (", out int exception_gchandle");
+					builder.Append (", out IntPtr exception_gchandle");
 				}
 			}
 
