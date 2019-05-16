@@ -160,19 +160,7 @@ namespace MonoMac.Tuner {
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.AppendStep (new CoreTypeMapStep ());
 
-				var subdispatcher = new SubStepDispatcher {
-					new ApplyPreserveAttribute (),
-					new OptimizeGeneratedCodeSubStep (options),
-					new RemoveUserResourcesSubStep (),
-					new CoreRemoveAttributes (),
-					new CoreHttpMessageHandler (options),
-					new MarkNSObjects (),
-				};
-				// CoreRemoveSecurity can modify non-linked assemblies
-				// but the conditions for this cannot happen if only the platform assembly is linked
-				if (options.LinkMode != LinkMode.Platform)
-					subdispatcher.Add (new CoreRemoveSecurity ());
-				pipeline.AppendStep (subdispatcher);
+				pipeline.AppendStep (GetSubSteps (options));
 
 				pipeline.AppendStep (new MonoMacPreserveCode (options));
 				pipeline.AppendStep (new PreserveCrypto ());
@@ -198,6 +186,27 @@ namespace MonoMac.Tuner {
 			pipeline.AppendStep (new OutputStep ());
 
 			return pipeline;
+		}
+
+		static SubStepDispatcher GetSubSteps (LinkerOptions options)
+		{
+			SubStepDispatcher sub = new SubStepDispatcher ();
+			sub.Add (new ApplyPreserveAttribute ());
+			sub.Add (new OptimizeGeneratedCodeSubStep (options));
+			sub.Add (new RemoveUserResourcesSubStep ());
+			// OptimizeGeneratedCodeSubStep and RemoveUserResourcesSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
+			if (options.Application.Optimizations.CustomAttributesRemoval == true)
+				sub.Add (new CoreRemoveAttributes ());
+
+			sub.Add (new CoreHttpMessageHandler (options));
+			sub.Add (new MarkNSObjects ());
+
+			// CoreRemoveSecurity can modify non-linked assemblies
+			// but the conditions for this cannot happen if only the platform assembly is linked
+			if (options.LinkMode != LinkMode.Platform)
+				sub.Add (new CoreRemoveSecurity ());
+
+			return sub;
 		}
 
 		static List<string> ListAssemblies (LinkContext context)
