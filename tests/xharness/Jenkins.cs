@@ -2079,9 +2079,13 @@ namespace xharness
 									}
 									if (log.Description == "Build log") {
 										var binlog = log.FullPath.Replace (".txt", ".binlog");
-										var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
-										var binLink = string.Format ("<a href='{0}' type='{2}' target='{3}' style='display:{4}'>{1}</a><br />", LinkEncode (binlog.Substring (LogDirectory.Length + 1)), "Binlog download", log_type, log_target, test.Building? "none" : "inline");
-										writer.Write ("{0} {1}", textLink, binLink);
+										if (File.Exists (binlog)) {
+											var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+											var binLink = string.Format ("<a href='{0}' type='{2}' target='{3}' style='display:{4}'>{1}</a><br />", LinkEncode (binlog.Substring (LogDirectory.Length + 1)), "Binlog download", log_type, log_target, test.Building ? "none" : "inline");
+											writer.Write ("{0} {1}", textLink, binLink);
+										} else {
+											writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+										}
 									} else {
 										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									}
