@@ -295,11 +295,13 @@ namespace xharness
 						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					}
 					if (supports_interpreter) {
+						// interpreter is broken for monotouch-test: https://github.com/xamarin/maccore/issues/1613, so ignore for now
+						var ignore_interpreter_because_of_1613 = true;
 						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, };
+							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
+							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
 						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
 					}
 					break;
 				case "mscorlib":
@@ -1215,7 +1217,7 @@ namespace xharness
 				}
 				Task.WaitAll (tasks.ToArray ());
 				GenerateReport ();
-				return Tasks.Any ((v) => v.Failed || v.Skipped) ? 1 : 0;
+				return Tasks.Any ((v) => v.Failed || v.DeviceNotFound) ? 1 : 0;
 			} catch (Exception ex) {
 				MainLog.WriteLine ("Unexpected exception: {0}", ex);
 				Console.WriteLine ("Unexpected exception: {0}", ex);
@@ -1592,7 +1594,7 @@ namespace xharness
 				return "black";
 			else if (tests.Any ((v) => v.Ignored))
 				return "gray";
-			else if (tests.Any ((v) => v.Skipped))
+			else if (tests.Any ((v) => v.DeviceNotFound))
 				return "orangered";
 			else if (tests.All ((v) => v.BuildSucceeded))
 				return "lightgreen";
@@ -1633,7 +1635,7 @@ namespace xharness
 					return "gray";
 				} else if (test.Waiting) {
 					return "darkgray";
-				} else if (test.Skipped) {
+				} else if (test.DeviceNotFound) {
 					return "orangered";
 				} else {
 					return "pink";
@@ -1744,7 +1746,7 @@ namespace xharness
 			}
 
 			var failedTests = allTasks.Where ((v) => v.Failed);
-			var skippedTests = allTasks.Where ((v) => v.Skipped);
+			var deviceNotFound = allTasks.Where ((v) => v.DeviceNotFound);
 			var unfinishedTests = allTasks.Where ((v) => !v.Finished);
 			var passedTests = allTasks.Where ((v) => v.Succeeded);
 			var runningTests = allTasks.Where ((v) => v.Running && !v.Waiting);
@@ -1770,9 +1772,9 @@ namespace xharness
 					markdown_summary.Write ($"# Test run in progress: ");
 					markdown_summary.Write (string.Join (", ", list));
 				} else if (failedTests.Any ()) {
-					markdown_summary.Write ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
-				} else if (skippedTests.Any ()) {
-					markdown_summary.Write ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed.");
+					markdown_summary.Write ($"{failedTests.Count ()} tests failed, {deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed.");
+				} else if (deviceNotFound.Any ()) {
+					markdown_summary.Write ($"{deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
 					markdown_summary.Write ($"# All {passedTests.Count ()} tests passed");
 				} else {
@@ -1833,7 +1835,7 @@ namespace xharness
 					; // default
 				} else if (failedTests.Any ()) {
 					headerColor = "red";
-				} else if (skippedTests.Any ()) {
+				} else if (deviceNotFound.Any ()) {
 					headerColor = "orange";
 				} else if (passedTests.Any ()) {
 					headerColor = "green";
@@ -1854,9 +1856,9 @@ namespace xharness
 					writer.Write (string.Join (", ", list));
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
-					writer.Write ($"{failedTests.Count ()} tests failed, {skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed");
-				} else if (skippedTests.Any ()) {
-					writer.Write ($"{skippedTests.Count ()} tests skipped, {passedTests.Count ()} tests passed");
+					writer.Write ($"{failedTests.Count ()} tests failed, {deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed");
+				} else if (deviceNotFound.Any ()) {
+					writer.Write ($"{deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed");
 				} else if (passedTests.Any ()) {
 					writer.Write ($"All {passedTests.Count ()} tests passed");
 				} else {
@@ -2451,7 +2453,7 @@ namespace xharness
 				ExecutionResult = value ? TestExecutingResult.Ignored : TestExecutingResult.NotStarted;
 			}
 		}
-		public bool Skipped { get { return ExecutionResult == TestExecutingResult.Skipped; } }
+		public bool DeviceNotFound { get { return ExecutionResult == TestExecutingResult.DeviceNotFound; } }
 
 		public bool Crashed { get { return (ExecutionResult & TestExecutingResult.Crashed) == TestExecutingResult.Crashed; } }
 		public bool TimedOut { get { return (ExecutionResult & TestExecutingResult.TimedOut) == TestExecutingResult.TimedOut; } }
@@ -3606,7 +3608,7 @@ namespace xharness
 			if (asyncEnumerable != null)
 				await asyncEnumerable.ReadyTask;
 			if (!enumerable.Any ()) {
-				ExecutionResult = TestExecutingResult.Skipped;
+				ExecutionResult = TestExecutingResult.DeviceNotFound;
 				FailureMessage = "No applicable devices found.";
 			}
 		}
@@ -3828,7 +3830,7 @@ namespace xharness
 				await asyncEnumerable.ReadyTask;
 
 			if (!Candidates.Any ()) {
-				ExecutionResult = TestExecutingResult.Skipped;
+				ExecutionResult = TestExecutingResult.DeviceNotFound;
 				FailureMessage = "No applicable devices found.";
 			} else {
 				Device = Candidates.First ();
@@ -4188,7 +4190,7 @@ namespace xharness
 		Succeeded        =  0x100 + Finished,
 		Failed           =  0x200 + Finished,
 		Ignored          =  0x400 + Finished,
-		Skipped          =  0x800 + Finished,
+		DeviceNotFound   =  0x800 + Finished,
 
 		// Finished & Failed results
 		Crashed          = 0x1000 + Failed,
