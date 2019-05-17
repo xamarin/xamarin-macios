@@ -97,6 +97,7 @@ namespace xharness
 			rv.GenerateVariations = GenerateVariations;
 			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
+			rv.MTouchExtraArgs = MTouchExtraArgs;
 			return rv;
 		}
 

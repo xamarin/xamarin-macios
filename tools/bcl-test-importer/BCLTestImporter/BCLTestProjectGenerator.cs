@@ -118,7 +118,7 @@ namespace BCLTestImporter {
 			// BCL tests group 4
 			(name:"SystemNumericsXunit", assemblies: new [] {"monotouch_System.Numerics_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
 			(name:"SystemCoreXunit", assemblies: new [] {"monotouch_System.Core_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
-			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
+			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}, extraArgs: "--optimize=-custom-attributes-removal", group: "BCL tests group 4"),
 			(name:"MicrosoftCSharpXunit", assemblies: new [] {"monotouch_Microsoft.CSharp_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
 
 			// BCL tests group 5
@@ -206,7 +206,7 @@ namespace BCLTestImporter {
 			(name:"SystemSecurityXunit", assemblies: new [] {"xammac_net_4_5_System.Security_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemXmlLinqXunit", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemXmlXunit", assemblies: new [] {"xammac_net_4_5_System.Xml_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
-			(name:"SystemXunit", assemblies: new [] {"xammac_net_4_5_System_xunit-test.dll"}, extraArgs: "--optimize=-custom-attributes-removal", group: "Mac OS X BCL tests group 4"),
+			(name:"SystemXunit", assemblies: new [] {"xammac_net_4_5_System_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
 			
 			(name:"CorlibXunit", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 5"),
 
