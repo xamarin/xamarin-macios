@@ -118,7 +118,7 @@ namespace BCLTestImporter {
 			// BCL tests group 4
 			(name:"SystemNumericsXunit", assemblies: new [] {"monotouch_System.Numerics_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
 			(name:"SystemCoreXunit", assemblies: new [] {"monotouch_System.Core_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
-			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}, extraArgs: "--optimize=-custom-attributes-removal", group: "BCL tests group 4"),
+			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
 			(name:"MicrosoftCSharpXunit", assemblies: new [] {"monotouch_Microsoft.CSharp_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
 
 			// BCL tests group 5
