@@ -269,20 +269,6 @@ namespace xharness
 
 			var bcl_suites = new string[] {
 				"mscorlib",
-				"System",
-				"System.Core",
-				"System.Data",
-				"System.Runtime.Serialization",
-				"System.Transactions", "System.Web.Services",
-				"System.Xml",
-				"System.ServiceModel.Web",
-				"Mono.Data.Sqlite",
-				"System.IO.Compression",
-				"System.IO.Compression.FileSystem",
-				"Mono.CSharp",
-				"System.Security",
-				"System.ServiceModel",
-				"System.IdentityModel",
 			};
 			foreach (var p in bcl_suites) {
 				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
@@ -322,18 +308,8 @@ namespace xharness
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 			var bcl_suites = new string [] {
 				"mscorlib",
-				"System.Data",
-				"System.Net.Http",
-				"System.Web.Services",
-				"System.Xml",
-				"Mono.Data.Sqlite",
-				"System.IO.Compression",
-				"System.IO.Compression.FileSystem",
-				"System.ServiceModel",
-				"System.IdentityModel",
 			};
 			var bcl_skip_watchos = new string [] {
-				"Mono.Data.Tds",
 			};
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
