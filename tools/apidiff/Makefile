@@ -246,11 +246,8 @@ $(DIRS):
 	$(Q) mkdir -p $@
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
-# marking those files as .SECONDARY will prevent that deletion.
-.SECONDARY: $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
-.SECONDARY: $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/temp/xm/$(file).xml)
-.SECONDARY: $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
-.SECONDARY: $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
+# defining a .SECONDARY rule will prevent that deletion.
+.SECONDARY:
 
 merger.exe: merger.cs
 	$(Q) $(SYSTEM_CSC) -debug $< -out:$@
