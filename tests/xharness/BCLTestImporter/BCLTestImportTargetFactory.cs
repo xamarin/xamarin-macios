@@ -35,7 +35,7 @@ namespace xharness.BCLTestImporter {
 		{
 			var result = new List<iOSTestProject> ();
 			// generate all projects, then create a new iOSTarget per project
-			foreach (var (name, path, xunit, platforms, failure) in projectGenerator.GenerateAlliOSTestProjects ()) {
+			foreach (var (name, path, xunit, extraArgs, platforms, failure) in projectGenerator.GenerateAlliOSTestProjects ()) {
 				var prefix = xunit ? "xUnit" : "NUnit";
 				result.Add (new iOSTestProject (path) {
 					Name = $"[{prefix}] Mono {name}",
@@ -44,6 +44,7 @@ namespace xharness.BCLTestImporter {
 					SkipwatchOSVariation = !platforms.Contains (Platform.WatchOS),
 					FailureMessage = failure,
 					RestoreNugetsInProject = true,
+					MTouchExtraArgs = extraArgs,
 				});
 			}
 			return result;
@@ -57,7 +58,7 @@ namespace xharness.BCLTestImporter {
 			else
 				platform = Platform.MacOSModern;
 			var result = new List<MacTestProject> ();
-			foreach (var (name, path, xunit, failure) in projectGenerator.GenerateAllMacTestProjects (platform)) {
+			foreach (var (name, path, xunit, extraArgs, failure) in projectGenerator.GenerateAllMacTestProjects (platform)) {
 				var prefix = xunit ? "xUnit" : "NUnit";
 				result.Add (new MacTestProject (path, targetFrameworkFlavor: flavor, generateVariations: false) {
 					Name = $"[{prefix}] Mono {name}",
@@ -65,6 +66,7 @@ namespace xharness.BCLTestImporter {
 					IsExecutableProject = true,
 					FailureMessage = failure,
 					RestoreNugetsInProject = true,
+					MTouchExtraArgs = extraArgs,
 				});
 			}
 			return result;
