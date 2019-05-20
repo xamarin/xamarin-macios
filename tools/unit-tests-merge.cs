@@ -9,7 +9,7 @@ var args = Environment.GetCommandLineArgs ();
 // then comes the ones we care about, the path with all the xunit and nunit files
 
 if (args.Length < 3) {
-    Console.WriteLine ($"Missing path for the direcotry that contains the test results files.");
+    Console.WriteLine ($"Missing path for the directory that contains the test results files.");
     Environment.Exit (-1);
 }
 
