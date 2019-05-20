@@ -173,7 +173,8 @@ all-local:: $(BUNDLE_ZIP) $(APIDIFF_DIR)/api-diff.html
 # Rules to re-create the reference infos from the curretn stable 'bundle.zip. assemblies
 
 # split the URL in words based on the path separator, and then chose the 6th word (the hash) in the bundle zip filename
-BUNDLE_ZIP ?= $(APIDIFF_DIR)/bundle-$(word 6,$(subst /, ,$(APIDIFF_REFERENCES))).zip
+APIDIFF_HASH ?= $(word 6,$(subst /, ,$(APIDIFF_REFERENCES)))
+BUNDLE_ZIP ?= $(APIDIFF_DIR)/bundle-$(APIDIFF_HASH).zip
 $(BUNDLE_ZIP):
 	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
 	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
@@ -184,22 +185,23 @@ $(BUNDLE_ZIP):
 	fi
 	$(Q) mv $@.tmp $@
 
-UNZIP_STAMP=$(APIDIFF_DIR)/.unzip.stamp
+UNZIP_STAMP=$(APIDIFF_DIR)/.unzip.$(APIDIFF_HASH).stamp
+UNZIP_DIR=temp/downloads/$(APIDIFF_HASH)
 $(UNZIP_STAMP): $(BUNDLE_ZIP)
-	$(Q) rm -Rf temp/downloads
-	$(Q) mkdir -p temp
-	$(Q_GEN) unzip -q -d temp/downloads $(BUNDLE_ZIP)
+	$(Q) rm -Rf $(UNZIP_DIR)
+	$(Q) mkdir -p $(dir $(UNZIP_DIR))
+	$(Q_GEN) unzip -q -d $(UNZIP_DIR) $(BUNDLE_ZIP)
 	$(Q) touch $@
 
 # the semi-colon at the end means an empty recipe, and is required for make to consider pattern rules
-temp/downloads/%.dll: $(UNZIP_STAMP) ;
+$(UNZIP_DIR)/%.dll: $(UNZIP_STAMP) ;
 
 IOS_REFS     = $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xm/$(file).xml)
 WATCHOS_REFS = $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 
-$(APIDIFF_DIR)/references/xi/%.xml: temp/downloads/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
 
@@ -207,7 +209,7 @@ $(APIDIFF_DIR)/updated-references/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/li
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
 
-$(APIDIFF_DIR)/references/xm/%.xml: temp/downloads/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/xm/%.xml: $(UNZIP_DIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
 
