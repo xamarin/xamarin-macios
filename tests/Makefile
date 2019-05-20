@@ -198,12 +198,6 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-.stamp-build-mono-unit-tests: $(TOP)/.git/modules/external/mono/HEAD
-	make -j8 -C $(TOP)/external/mono/mcs/class -i do-test PROFILE=xammac_net_4_5 # TODO: This should not be needed and we should get the dlls from the SDK.
-	make -j8 -C $(TOP)/external/mono/mcs/class -i do-xunit-test PROFILE=xammac_net_4_5 # TODO: This should not be needed and we should get the dlls from the SDK.
-	nuget restore bcl-test/BCLTests/BCLTests.csproj
-	$(Q) touch $@
-
 xharness/xharness.exe: $(wildcard xharness/*.cs) $(wildcard $(TOP)/tools/bcl-test-importer/BCLTestImporter/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
 	nuget restore xharness/xharness.csproj
 	$(Q_GEN) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj

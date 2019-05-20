@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 
@@ -8,13 +8,19 @@ namespace BCLTestImporter {
 		#region static vars
 		
 		static string partialPath = "mcs/class/lib";
-		static string downloadPartialPath = "ios-bcl";
-		static Dictionary <Platform, string> platformPathMatch = new Dictionary <Platform, string> {
+		static readonly Dictionary<Platform, string> downloadPartialPath = new Dictionary<Platform, string> {
+			{Platform.iOS, "ios-bcl"},
+			{Platform.WatchOS, "ios-bcl"},
+			{Platform.TvOS, "ios-bcl"},
+			{Platform.MacOSFull, "mac-bcl"},
+			{Platform.MacOSModern, "mac-bcl"},
+		};
+		static readonly Dictionary <Platform, string> platformPathMatch = new Dictionary <Platform, string> {
 			{Platform.iOS, "monotouch"},
 			{Platform.WatchOS, "monotouch_watch"},
 			{Platform.TvOS, "monotouch_tv"},
 			{Platform.MacOSFull, "xammac_net_4_5"},
-			{Platform.MacOSModern, "xammac_net_4_5"},
+			{Platform.MacOSModern, "xammac"},
 		};
 		#endregion
 		
@@ -40,6 +46,8 @@ namespace BCLTestImporter {
 				return Name.Replace ("monotouch_", "monotouch_watch_");
 			case Platform.TvOS:
 				return Name.Replace ("monotouch_", "monotouch_tv_");
+			case Platform.MacOSModern:
+				return Name.Replace ("xammac_net_4_5", "xammac");
 			default:
 				return Name;
 			}
@@ -70,17 +78,28 @@ namespace BCLTestImporter {
 		{
 			if (string.IsNullOrEmpty (downloadsPath))
 				throw new ArgumentNullException (nameof (downloadsPath));
-			return Path.Combine (downloadsPath, "ios-bcl", platformPathMatch [platform], "tests"); 
+
+			switch (platform) {
+			case Platform.MacOSFull:
+			case Platform.MacOSModern:
+				return Path.Combine (downloadsPath, "mac-bcl", platformPathMatch [platform], "tests");
+			case Platform.iOS:
+			case Platform.TvOS:
+			case Platform.WatchOS:
+				return Path.Combine (downloadsPath, "ios-bcl", platformPathMatch [platform], "tests"); 
+			}
+
+			return null;
 		}
 
-		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, Platform plaform, bool isDownload)
+		public static string GetHintPathForRefenreceAssembly (string assembly, string monoRootPath, Platform platform, bool isDownload)
 		{
-			var hintPath = Path.Combine (monoRootPath, isDownload? downloadPartialPath : partialPath, platformPathMatch[plaform], $"{assembly}.dll");
+			var hintPath = Path.Combine (monoRootPath, isDownload? downloadPartialPath [platform] : partialPath, platformPathMatch [platform], $"{assembly}.dll");
 			if (File.Exists (hintPath)) {
 				return hintPath;
 			} else {
 				// we could be referencing a dll in the test dir, lets test that
-				hintPath = Path.Combine (monoRootPath, isDownload? downloadPartialPath : partialPath, platformPathMatch[plaform], "tests", $"{assembly}.dll");
+				hintPath = Path.Combine (monoRootPath, isDownload? downloadPartialPath [platform] : partialPath, platformPathMatch [platform], "tests", $"{assembly}.dll");
 			}
 			return File.Exists (hintPath) ? hintPath : null;
 		}

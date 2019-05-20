@@ -73,60 +73,60 @@ namespace BCLTestImporter {
 
 		// we have two different types of list, those that are for the iOS like projects (ios, tvos and watch os) and those 
 		// for mac
-		static readonly List<(string name, string[] assemblies, string group)> commoniOSTestProjects = new List<(string name, string[] assemblies, string group)> {
+		static readonly List<(string name, string[] assemblies, string extraArgs, string group)> commoniOSTestProjects = new List<(string name, string[] assemblies, string extraArgs, string group)> {
 			// NUNIT TESTS
 
 			// BCL tests group 1
-			(name:"SystemCoreTests", assemblies: new [] {"monotouch_System.Core_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemNumericsTests", assemblies: new [] {"monotouch_System.Numerics_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemRuntimeSerializationTests", assemblies: new [] {"monotouch_System.Runtime.Serialization_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemTransactionsTests", assemblies: new [] {"monotouch_System.Transactions_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemXmlTests", assemblies: new [] {"monotouch_System.Xml_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemXmlLinqTests", assemblies: new [] {"monotouch_System.Xml.Linq_test.dll"}, group: "BCL tests group 1"),
-			(name:"MonoSecurityTests", assemblies: new [] {"monotouch_Mono.Security_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"monotouch_System.ComponentModel.DataAnnotations_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemJsonTests", assemblies: new [] {"monotouch_System.Json_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemServiceModelWebTests", assemblies: new [] {"monotouch_System.ServiceModel.Web_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemIOCompressionTests", assemblies: new [] {"monotouch_System.IO.Compression_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"monotouch_System.IO.Compression.FileSystem_test.dll"}, group: "BCL tests group 1"),
-			(name:"MonoCSharpTests", assemblies: new [] {"monotouch_Mono.CSharp_test.dll"}, group: "BCL tests group 1"),
-			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}, group: "BCL tests group 1"),
-			(name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}, group: "BCL tests group 1"),
-			(name:"MonoRuntimeTests", assemblies: new [] {"monotouch_Mono.Runtime.Tests_test.dll"}, group: "BCL tests group 1"),
+			(name:"SystemCoreTests", assemblies: new [] {"monotouch_System.Core_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemNumericsTests", assemblies: new [] {"monotouch_System.Numerics_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemRuntimeSerializationTests", assemblies: new [] {"monotouch_System.Runtime.Serialization_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemTransactionsTests", assemblies: new [] {"monotouch_System.Transactions_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemXmlTests", assemblies: new [] {"monotouch_System.Xml_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemXmlLinqTests", assemblies: new [] {"monotouch_System.Xml.Linq_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"MonoSecurityTests", assemblies: new [] {"monotouch_Mono.Security_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"monotouch_System.ComponentModel.DataAnnotations_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemJsonTests", assemblies: new [] {"monotouch_System.Json_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemServiceModelWebTests", assemblies: new [] {"monotouch_System.ServiceModel.Web_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemIOCompressionTests", assemblies: new [] {"monotouch_System.IO.Compression_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"monotouch_System.IO.Compression.FileSystem_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"MonoCSharpTests", assemblies: new [] {"monotouch_Mono.CSharp_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"SystemSecurityTests", assemblies: new [] {"monotouch_System.Security_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"MonoDataSqliteTests", assemblies: new [] {"monotouch_Mono.Data.Sqlite_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
+			(name:"MonoRuntimeTests", assemblies: new [] {"monotouch_Mono.Runtime.Tests_test.dll"}, extraArgs: null, group: "BCL tests group 1"),
 
 			// BCL tests group 2
-			(name:"SystemTests", assemblies: new[] {"monotouch_System_test.dll"}, group: "BCL tests group 2"),
-			(name:"SystemDataTests", assemblies: new [] {"monotouch_System.Data_test.dll"}, group: "BCL tests group 2"),
-			(name:"SystemNetHttpTests", assemblies: new [] {"monotouch_System.Net.Http_test.dll"}, group: "BCL tests group 2"),
-			(name:"MonoDataTdsTests", assemblies: new [] {"monotouch_Mono.Data.Tds_test.dll"}, group: "BCL tests group 2"),
-			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}, group: "BCL tests group 2"),
-			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}, group: "BCL tests group 2"),
-			(name:"SystemWebServicesTests", assemblies: new [] {"monotouch_System.Web.Services_test.dll"}, group: "BCL tests group 2"),
+			(name:"SystemTests", assemblies: new[] {"monotouch_System_test.dll"}, extraArgs: null, group: "BCL tests group 2"),
+			(name:"SystemDataTests", assemblies: new [] {"monotouch_System.Data_test.dll"}, extraArgs: null, group: "BCL tests group 2"),
+			(name:"SystemNetHttpTests", assemblies: new [] {"monotouch_System.Net.Http_test.dll"}, extraArgs: null, group: "BCL tests group 2"),
+			(name:"MonoDataTdsTests", assemblies: new [] {"monotouch_Mono.Data.Tds_test.dll"}, extraArgs: null, group: "BCL tests group 2"),
+			(name:"SystemServiceModelTests", assemblies: new [] {"monotouch_System.ServiceModel_test.dll"}, extraArgs: null, group: "BCL tests group 2"),
+			(name:"CorlibTests", assemblies: new [] {"monotouch_corlib_test.dll"}, extraArgs: null, group: "BCL tests group 2"),
+			(name:"SystemWebServicesTests", assemblies: new [] {"monotouch_System.Web.Services_test.dll"}, extraArgs: null, group: "BCL tests group 2"),
 
 			// XUNIT TESTS 
 
 			// BCL tests group 3
-			(name:"SystemDataXunit", assemblies: new [] {"monotouch_System.Data_xunit-test.dll"}, group: "BCL tests group 3"),
-			(name:"SystemJsonXunit", assemblies: new [] {"monotouch_System.Json_xunit-test.dll"}, group: "BCL tests group 3"),
-			(name:"SystemSecurityXunit", assemblies: new [] {"monotouch_System.Security_xunit-test.dll"}, group: "BCL tests group 3"),
-			(name:"SystemLinqXunit", assemblies: new [] {"monotouch_System.Xml.Linq_xunit-test.dll"}, group: "BCL tests group 3"),
-			(name:"SystemComponentModelCompositionXunit", assemblies: new [] {"monotouch_System.ComponentModel.Composition_xunit-test.dll"}, group: "BCL tests group 3"),
-			(name:"SystemRuntimeSerializationXunit", assemblies: new [] {"monotouch_System.Runtime.Serialization_xunit-test.dll"}, group: "BCL tests group 3"),
-			(name:"SystemXmlXunit", assemblies: new [] {"monotouch_System.Xml_xunit-test.dll"}, group: "BCL tests group 3"),
-			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}, group: "BCL tests group 3"),
+			(name:"SystemDataXunit", assemblies: new [] {"monotouch_System.Data_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 3"),
+			(name:"SystemJsonXunit", assemblies: new [] {"monotouch_System.Json_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 3"),
+			(name:"SystemSecurityXunit", assemblies: new [] {"monotouch_System.Security_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 3"),
+			(name:"SystemLinqXunit", assemblies: new [] {"monotouch_System.Xml.Linq_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 3"),
+			(name:"SystemComponentModelCompositionXunit", assemblies: new [] {"monotouch_System.ComponentModel.Composition_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 3"),
+			(name:"SystemRuntimeSerializationXunit", assemblies: new [] {"monotouch_System.Runtime.Serialization_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 3"),
+			(name:"SystemXmlXunit", assemblies: new [] {"monotouch_System.Xml_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 3"),
+			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"monotouch_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 3"),
 
 			// BCL tests group 4
-			(name:"SystemNumericsXunit", assemblies: new [] {"monotouch_System.Numerics_xunit-test.dll"}, group: "BCL tests group 4"),
-			(name:"SystemCoreXunit", assemblies: new [] {"monotouch_System.Core_xunit-test.dll"}, group: "BCL tests group 4"),
-			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}, group: "BCL tests group 4"),
-			(name:"MicrosoftCSharpXunit", assemblies: new [] {"monotouch_Microsoft.CSharp_xunit-test.dll"}, group: "BCL tests group 4"),
+			(name:"SystemNumericsXunit", assemblies: new [] {"monotouch_System.Numerics_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
+			(name:"SystemCoreXunit", assemblies: new [] {"monotouch_System.Core_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
+			(name:"SystemXunit", assemblies: new [] {"monotouch_System_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
+			(name:"MicrosoftCSharpXunit", assemblies: new [] {"monotouch_Microsoft.CSharp_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
 
 			// BCL tests group 5
-			(name:"CorlibXunit", assemblies: new [] {"monotouch_corlib_xunit-test.dll"}, group: "BCL tests group 5"),
+			(name:"CorlibXunit", assemblies: new [] {"monotouch_corlib_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 5"),
 
 			// BCL tests group 6
-			(name:"SystemNetHttpUnitTestsXunit", assemblies: new [] {"monotouch_System.Net.Http.UnitTests_xunit-test.dll"}, group: "BCL tests group 6"),
-			(name:"SystemNetHttpFunctionalTestsXunit", assemblies: new [] {"monotouch_System.Net.Http.FunctionalTests_xunit-test.dll"}, group: "BCL tests group 6"),
+			(name:"SystemNetHttpUnitTestsXunit", assemblies: new [] {"monotouch_System.Net.Http.UnitTests_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 6"),
+			(name:"SystemNetHttpFunctionalTestsXunit", assemblies: new [] {"monotouch_System.Net.Http.FunctionalTests_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 6"),
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
@@ -158,62 +158,77 @@ namespace BCLTestImporter {
 			"monotouch_Mono.Data.Tds_test.dll", // not present in the watch tests dlls
 		};
 
-		private static readonly List<(string name, string[] assemblies, string group)> macTestProjects = new List<(string name, string[] assemblies, string group)> {
+		private static readonly List<(string name, string[] assemblies, string extraArgs, string group)> macTestProjects = new List<(string name, string[] assemblies, string extraArgs, string group)> {
 		
 			// NUNIT Projects
-			(name:"MonoDataSqliteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"MonoDataTdsTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"MonoPoxisTests", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"MonoSecurityTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemDataLinqTests", assemblies: new [] {"xammac_net_4_5_System.Data.Linq_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"xammac_net_4_5_System.IO.Compression.FileSystem_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemIOCompressionTests", assemblies: new [] {"xammac_net_4_5_System.IO.Compression_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemIdentityModelTests", assemblies: new [] {"xammac_net_4_5_System.IdentityModel_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemJsonTests", assemblies: new [] {"xammac_net_4_5_System.Json_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemNetHttpTests", assemblies: new [] {"xammac_net_4_5_System.Net.Http_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemNumericsTests", assemblies: new [] {"xammac_net_4_5_System.Numerics_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemRuntimeSerializationFormattersSoapTests", assemblies: new [] {"xammac_net_4_5_System.Runtime.Serialization.Formatters.Soap_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemServiceModelTests", assemblies: new [] {"xammac_net_4_5_System.ServiceModel_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemTransactionsTests", assemblies: new [] {"xammac_net_4_5_System.Transactions_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemXmlLinqTests", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemConfigurationTests", assemblies: new [] {"xammac_net_4_5_System.Configuration_test.dll"}, group: "Mac OS X BCL tests group 1"),
-			(name:"SystemDataTests", assemblies: new [] {"xammac_net_4_5_System.Data_test.dll"}, group: "Mac OS X BCL tests group 1"),
+			(name:"MonoDataSqliteTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Sqlite_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"MonoDataTdsTests", assemblies: new [] {"xammac_net_4_5_Mono.Data.Tds_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"MonoMessagingTests", assemblies: new [] {"xammac_net_4_5_Mono.Messaging_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"MonoPoxisTests", assemblies: new [] {"xammac_net_4_5_Mono.Posix_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"MonoSecurityTests", assemblies: new [] {"xammac_net_4_5_Mono.Security_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemConfigurationTests", assemblies: new [] {"xammac_net_4_5_System.Configuration_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemDataLinqTests", assemblies: new [] {"xammac_net_4_5_System.Data.Linq_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemDataTests", assemblies: new [] {"xammac_net_4_5_System.Data_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemIOCompressionFileSystemTests", assemblies: new [] {"xammac_net_4_5_System.IO.Compression.FileSystem_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemIOCompressionTests", assemblies: new [] {"xammac_net_4_5_System.IO.Compression_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemIdentityModelTests", assemblies: new [] {"xammac_net_4_5_System.IdentityModel_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemJsonTests", assemblies: new [] {"xammac_net_4_5_System.Json_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemMessagingTests", assemblies: new [] {"xammac_net_4_5_System.Messaging_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemNetHttpWebRequestTests", assemblies: new [] {"xammac_net_4_5_System.Net.Http.WebRequest_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemNumericsTests", assemblies: new [] {"xammac_net_4_5_System.Numerics_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemRuntimeSerializationFormattersSoapTests", assemblies: new [] {"xammac_net_4_5_System.Runtime.Serialization.Formatters.Soap_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemRuntimeSerializationTests", assemblies: new [] {"xammac_net_4_5_System.Runtime.Serialization_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemServiceModelWebTest", assemblies: new [] {"xammac_net_4_5_System.ServiceModel.Web_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemServiceModelTests", assemblies: new [] {"xammac_net_4_5_System.ServiceModel_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemTransactionsTests", assemblies: new [] {"xammac_net_4_5_System.Transactions_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemWebServicesTests", assemblies: new [] {"xammac_net_4_5_System.Web.Services_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+			(name:"SystemXmlLinqTests", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 1"),
+		
+			(name:"SystemNetHttpTests", assemblies: new [] {"xammac_net_4_5_System.Net.Http_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 2"), // do not mix with SystemNetHttpWebRequestTests since there is a type collision
+			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 2"),
+			(name:"SystemCoreTests", assemblies: new [] {"xammac_net_4_5_System.Core_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 2"),
+			(name:"SystemSecurityTests", assemblies: new [] {"xammac_net_4_5_System.Security_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 2"),
+			(name:"SystemXmlTests", assemblies: new [] {"xammac_net_4_5_System.Xml_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 2"),
+			(name:"SystemTests", assemblies: new [] {"xammac_net_4_5_System_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 2"),
+			(name:"MonoCSharpTests", assemblies: new [] {"xammac_net_4_5_Mono.CSharp_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 2"), // if add to the first group, it blocks 'til a timeout, mono issue
 			
-			(name:"SystemComponentModelDataAnnotationsTests", assemblies: new [] {"xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll"}, group: "Mac OS X BCL tests group 2"),
-			(name:"SystemCoreTests", assemblies: new [] {"xammac_net_4_5_System.Core_test.dll"}, group: "Mac OS X BCL tests group 2"),
-			(name:"SystemSecurityTests", assemblies: new [] {"xammac_net_4_5_System.Security_test.dll"}, group: "Mac OS X BCL tests group 2"),
-			(name:"SystemXmlTests", assemblies: new [] {"xammac_net_4_5_System.Xml_test.dll"}, group: "Mac OS X BCL tests group 2"),
-			(name:"SystemTests", assemblies: new [] {"xammac_net_4_5_System_test.dll"}, group: "Mac OS X BCL tests group 2"),
-			(name:"MonoCSharpTests", assemblies: new [] {"xammac_net_4_5_Mono.CSharp_test.dll"}, group: "Mac OS X BCL tests group 2"), // if add to the first group, it blocks 'til a timeout, mono issue
+			(name:"CorlibTests", assemblies: new [] {"xammac_net_4_5_corlib_test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 3"),
 			
 			// xUnit Projects
-			(name:"MicrosoftCSharpXunit", assemblies: new [] {"xammac_net_4_5_Microsoft.CSharp_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
-			(name:"SystemCoreXunit", assemblies: new [] {"xammac_net_4_5_System.Core_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
-			(name:"SystemDataXunit", assemblies: new [] {"xammac_net_4_5_System.Data_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
-			(name:"SystemJsonXunit", assemblies: new [] {"xammac_net_4_5_System.Json_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
-			(name:"SystemNumericsXunit", assemblies: new [] {"xammac_net_4_5_System.Numerics_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
-			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
-			(name:"SystemSecurityXunit", assemblies: new [] {"xammac_net_4_5_System.Security_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
-			(name:"SystemXmlLinqXunit", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
-			(name:"SystemXunit", assemblies: new [] {"xammac_net_4_5_System_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
-			(name:"CorlibXunit", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}, group: "Mac OS X BCL tests group 3"),
+			(name:"MicrosoftCSharpXunit", assemblies: new [] {"xammac_net_4_5_Microsoft.CSharp_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemComponentModelCompositionXunit", assemblies: new [] {"xammac_net_4_5_System.ComponentModel.Composition_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemCoreXunit", assemblies: new [] {"xammac_net_4_5_System.Core_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemDataXunit", assemblies: new [] {"xammac_net_4_5_System.Data_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemJsonXunit", assemblies: new [] {"xammac_net_4_5_System.Json_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemNetHttpFunctionalTestsXunit", assemblies: new [] {"xammac_net_4_5_System.Net.Http.FunctionalTests_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemNetHttpUnitTestsXunit", assemblies: new [] {"xammac_net_4_5_System.Net.Http.UnitTests_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemNumericsXunit", assemblies: new [] {"xammac_net_4_5_System.Numerics_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemRuntimeCompilerServicesUnsafeXunit", assemblies: new [] {"xammac_net_4_5_System.Runtime.CompilerServices.Unsafe_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemSecurityXunit", assemblies: new [] {"xammac_net_4_5_System.Security_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemXmlLinqXunit", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemXmlXunit", assemblies: new [] {"xammac_net_4_5_System.Xml_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			(name:"SystemXunit", assemblies: new [] {"xammac_net_4_5_System_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
+			
+			(name:"CorlibXunit", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 5"),
+
 		};
 		
 		static readonly List<(string assembly, Platform[] platforms)> macIgnoredAssemblies = new List<(string assembly, Platform[] platforms)> {
-			(assembly: "xammac_net_4_5_corlib_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // exception when loading the image via refection
 			(assembly: "xammac_net_4_5_I18N.CJK_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
 			(assembly: "xammac_net_4_5_I18N.MidEast_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
 			(assembly: "xammac_net_4_5_I18N.Other_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
 			(assembly: "xammac_net_4_5_I18N.Rare_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
 			(assembly: "xammac_net_4_5_I18N.West_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), 
+			(assembly: "xammac_net_4_5_System.Runtime.Serialization.Formatters.Soap_test.dll", platforms: new [] { Platform.MacOSModern}), // not present 
+			(assembly: "xammac_net_4_5_System.Net.Http.WebRequest_test.dll", platforms: new [] { Platform.MacOSModern}), // not present 
+			(assembly: "xammac_net_4_5_System.Messaging_test.dll", platforms: new [] { Platform.MacOSModern}), // not present 
+			(assembly: "xammac_net_4_5_System.IdentityModel_test.dll", platforms: new [] { Platform.MacOSModern}), // not present 
+			(assembly: "xammac_net_4_5_System.Data.Linq_test.dll", platforms: new [] { Platform.MacOSModern}), // not present 
+			(assembly: "xammac_net_4_5_Mono.Posix_test.dll", platforms: new [] { Platform.MacOSModern}), // not present 
+			(assembly: "xammac_net_4_5_Mono.Messaging_test.dll", platforms: new [] { Platform.MacOSModern}), // not present 
 			(assembly: "xammac_net_4_5_System.Data_test.dll", platforms: new [] { Platform.MacOSModern }), // tests use 'System.Configuration.IConfigurationSectionHandler' not present in modern 
-			(assembly: "xammac_net_4_5_System_test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1199
-			(assembly: "xammac_net_4_5_System.Xml_test.dll", platforms: new [] { Platform.MacOSModern }), // ignored in modern because tests use System.Xml.Serialization.Advanced.SchemaImporterExtension
-			(assembly: "xammac_net_4_5_corlib_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1203
-			(assembly: "xammac_net_4_5_System.Core_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1204
-			(assembly: "xammac_net_4_5_System_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issue https://github.com/xamarin/maccore/issues/1209
 			(assembly: "xammac_net_4_5_System.Configuration_test.dll", platforms: new [] { Platform.MacOSModern }), // Not present in modern, ergo all tests will fail
-			(assembly: "xammac_net_4_5_System.Security_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // https://github.com/xamarin/maccore/issues/1243
+			(assembly: "xammac_net_4_5_corlib_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1203
 		};
 
 		readonly bool isCodeGeneration;
@@ -222,6 +237,7 @@ namespace BCLTestImporter {
 		public string OutputDirectoryPath { get; private  set; }
 		public string MonoRootPath { get; private set; }
 		public string iOSMonoSDKPath { get; set; }
+		public string MacMonoSDKPath { get; set; }
 		public string ProjectTemplateRootPath { get; private set; }
 		public string PlistTemplateRootPath{ get; private set; }
 		public string RegisterTypesTemplatePath { get; private set; }
@@ -256,7 +272,7 @@ namespace BCLTestImporter {
 				return iOSMonoSDKPath;
 			case Platform.MacOSFull:
 			case Platform.MacOSModern:
-				return null;
+				return MacMonoSDKPath;
 			default:
 				return null;
 			}
@@ -385,7 +401,7 @@ namespace BCLTestImporter {
 			case Platform.MacOSFull:
 				return new string [] { $"macOSFull-{name}.ignore", $"macOS-{name}.ignore" };
 			case Platform.MacOSModern:
-				return new string [] { $"macOSModern-{name}.ignore", $"macOS-{name}.ignore" };
+				return new string [] { $"macOSModern-{name.Replace ("xammac_", "xammac_net_4_5_")}.ignore", $"macOS-{name.Replace ("xammac_", "xammac_net_4_5_")}.ignore" };
 			case Platform.TvOS:
 				return new string [] { $"tvOS-{name.Replace ("monotouch_tv_", "monotouch_")}.ignore" };
 			case Platform.WatchOS:
@@ -467,17 +483,17 @@ namespace BCLTestImporter {
 			return false;
 		}
 
-		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateWatchOSTestProjectsAsync (
-			IEnumerable<(string name, string[] assemblies)> projects, string generatedDir)
+		async Task<List<(string name, string path, bool xunit, string extraArgs, string failure)>> GenerateWatchOSTestProjectsAsync (
+			IEnumerable<(string name, string[] assemblies, string extraArgs)> projects, string generatedDir)
 		{
-			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string extraArgs, string failure)> ();
 			foreach (var def in projects) {
 				// each watch os project requires 3 different ones:
 				// 1. The app
 				// 2. The container
 				// 3. The extensions
 				// TODO: The following is very similar to what is done in the iOS generation. Must be grouped
-				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
+				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies, def.extraArgs);
 				if (IsIgnored (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
@@ -548,24 +564,24 @@ namespace BCLTestImporter {
 					failure = e.Message;
 				}
 				// we have the 3 projects we depend on, we need the root one, the one that will be used by harness
-				projectPaths.Add ((name: projectDefinition.Name, path: rootProjectPath, xunit: projectDefinition.IsXUnit, failure: failure));
+				projectPaths.Add ((name: projectDefinition.Name, path: rootProjectPath, xunit: projectDefinition.IsXUnit, extraArgs: projectDefinition.ExtraArgs, failure: failure));
 			} // foreach project
 
 			return projectPaths;
 		}
 		
-		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateiOSTestProjectsAsync (
-			IEnumerable<(string name, string[] assemblies)> projects, Platform platform, string generatedDir)
+		async Task<List<(string name, string path, bool xunit, string extraArgs, string failure)>> GenerateiOSTestProjectsAsync (
+			IEnumerable<(string name, string[] assemblies, string extraArgs)> projects, Platform platform, string generatedDir)
 		{
 			if (platform == Platform.WatchOS) 
 				throw new ArgumentException (nameof (platform));
 			if (!projects.Any()) // return an empty list
-				return new List<(string name, string path, bool xunit, string failure)> ();
-			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
+				return new List<(string name, string path, bool xunit, string extraArgs, string failure)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string extraArgs, string failure)> ();
 			foreach (var def in projects) {
 				if (def.assemblies.Length == 0)
 					continue;
-				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
+				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies, def.extraArgs);
 				if (IsIgnored (projectDefinition, platform)) // some projects are ignored, so we just continue
 					continue;
 
@@ -607,18 +623,20 @@ namespace BCLTestImporter {
 				} catch (Exception e) {
 					failure = e.Message;
 				}
-				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit, failure: failure));
+				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit, extraArgs: projectDefinition.ExtraArgs, failure: failure));
 			} // foreach project
 
 			return projectPaths;
 		}
 		
-		async Task<List<(string name, string path, bool xunit, string failure)>> GenerateMacTestProjectsAsync (
-			IEnumerable<(string name, string[] assemblies)> projects, string generatedDir, Platform platform)
+		async Task<List<(string name, string path, bool xunit, string extraArgs, string failure)>> GenerateMacTestProjectsAsync (
+			IEnumerable<(string name, string[] assemblies, string extraArgs)> projects, string generatedDir, Platform platform)
 		{
-			var projectPaths = new List<(string name, string path, bool xunit, string failure)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string extraArgs, string failure)> ();
 			foreach (var def in projects) {
-				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies);
+				if (!def.assemblies.Any ())
+					continue;
+				var projectDefinition = new BCLTestProjectDefinition (def.name, def.assemblies, def.extraArgs);
 				if (IsIgnored (projectDefinition, platform)) // some projects are ignored, so we just continue
 					continue;
 
@@ -629,8 +647,9 @@ namespace BCLTestImporter {
 				Directory.CreateDirectory (generatedCodeDir);
 				var registerTypePath = Path.Combine (generatedCodeDir, "RegisterType-mac.cs");
 
-				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (def.name, projectDefinition.IsXUnit,
-					RegisterTypesTemplatePath, platform);
+				var typesPerAssembly = projectDefinition.GetTypeForAssemblies (GetReleaseDownload (platform), platform, true);
+				var registerCode = await RegisterTypeGenerator.GenerateCodeAsync (typesPerAssembly,
+					projectDefinition.IsXUnit, RegisterTypesTemplatePath);
 
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
@@ -644,10 +663,12 @@ namespace BCLTestImporter {
 				}
 
 				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[platform]);
+				var info = projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true);
 				var generatedProject = await GenerateMacAsync (projectDefinition.Name, registerTypePath,
-					projectDefinition.GetCachedAssemblyInclusionInformation (MonoRootPath, platform), projectTemplatePath, infoPlistPath, platform);
+					info, projectTemplatePath, infoPlistPath, platform);
+					
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
-				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit, failure: null));
+				projectPaths.Add ((name: projectDefinition.Name, path: projectPath, xunit: projectDefinition.IsXUnit, extraArgs: projectDefinition.ExtraArgs, failure: null));
 				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 					await file.WriteAsync (generatedProject);
 				}
@@ -663,10 +684,10 @@ namespace BCLTestImporter {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		public async Task<List<(string name, string path, bool xunit, string failure)>> GenerateTestProjectsAsync (
-			IEnumerable<(string name, string[] assemblies)> projects, Platform platform, string generatedDir)
+		public async Task<List<(string name, string path, bool xunit, string extraArgs, string failure)>> GenerateTestProjectsAsync (
+			IEnumerable<(string name, string[] assemblies, string extraArgs)> projects, Platform platform, string generatedDir)
 		{
-			var result = new List<(string name, string path, bool xunit, string failure)> ();
+			var result = new List<(string name, string path, bool xunit, string extraArgs, string failure)> ();
 			switch (platform) {
 			case Platform.WatchOS:
 				result = await GenerateWatchOSTestProjectsAsync (projects, generatedDir);
@@ -683,14 +704,15 @@ namespace BCLTestImporter {
 			return result;
 		}
 		
-		List <(string name, string[] assemblies)> GetProjectDefinitions (List<(string name, string [] assemblies, string group)> definitions, Platform platform)
+		List <(string name, string[] assemblies, string extraArgs)> GetProjectDefinitions (List<(string name, string [] assemblies, string extraArgs, string group)> definitions, Platform platform)
 		{
 
-			List<(string name, string [] assemblies)> testProjects = new List<(string name, string [] assemblies)> ();
+			List<(string name, string [] assemblies, string extraArgs)> testProjects = new List<(string name, string [] assemblies, string extraArgs)> ();
 			if (GroupTests && platform != Platform.WatchOS) {
 				// build the grouped apps 
 				var groupedApps = new Dictionary<string, List<string>> ();
-				foreach (var (name, assemblies, group) in definitions) {
+				var groupedAppsExtraArgs = new Dictionary<string, List<string>> ();
+				foreach (var (name, assemblies, extraArgs, group) in definitions) {
 					var validAssemblies = new List<string> ();
 					foreach (var a in assemblies) { // filter ignored assemblies
 						if (!IsIgnored (a, platform)) 
@@ -698,24 +720,29 @@ namespace BCLTestImporter {
 					}
 					if (groupedApps.ContainsKey (group)) {
 						groupedApps [group].AddRange (validAssemblies);
+						if (extraArgs != null)
+							groupedAppsExtraArgs [group].Add (extraArgs);
 					} else {
 						groupedApps [group] = new List<string> (validAssemblies);
+						groupedAppsExtraArgs [group] = new List<string> ();
+						groupedAppsExtraArgs [group].Add (extraArgs);
 					}
 				}
 				foreach (var group in groupedApps.Keys) {
-					testProjects.Add ((name: group, assemblies: groupedApps [group].ToArray ()));
+					var cleanedExtraArgs = groupedAppsExtraArgs [group].Distinct ();
+					testProjects.Add ((name: group, assemblies: groupedApps [group].ToArray (), extraArgs: string.Join (" ", cleanedExtraArgs)));
 				}
 			} else {
-				foreach (var (name, assemblies, group) in definitions) {
-					testProjects.Add ((name, assemblies));
+				foreach (var (name, assemblies, extraArgs, group) in definitions) {
+					testProjects.Add ((name, assemblies, extraArgs));
 				}
 			}
 			return testProjects;
 		}
 		// generates a project per platform of the common projects. 
-		async Task<List<(string name, string path, bool xunit, List<Platform> platforms, string failure)>> GenerateAllCommonTestProjectsAsync ()
+		async Task<List<(string name, string path, bool xunit, string extraArg, List<Platform> platforms, string failure)>> GenerateAllCommonTestProjectsAsync ()
 		{
-			var projectPaths = new List<(string name, string path, bool xunit, List<Platform> platforms, string failure)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string extraArg, List<Platform> platforms, string failure)> ();
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
 			var generatedCodePathRoot = GeneratedCodePathRoot;
@@ -723,12 +750,12 @@ namespace BCLTestImporter {
 				Directory.CreateDirectory (generatedCodePathRoot);
 			}
 
-			var projects = new Dictionary<string, (string path, bool xunit, List<Platform> platforms, string failure)> ();
+			var projects = new Dictionary<string, (string path, bool xunit, string extraArgs, List<Platform> platforms, string failure)> ();
 			foreach (var platform in new [] {Platform.iOS, Platform.TvOS, Platform.WatchOS}) {
 				var generated = await GenerateTestProjectsAsync (GetProjectDefinitions (commoniOSTestProjects, platform), platform, generatedCodePathRoot);
-				foreach (var (name, path, xunit, failure) in generated) {
+				foreach (var (name, path, xunit, extraArgs, failure) in generated) {
 					if (!projects.ContainsKey (name)) {
-						projects [name] = (path, xunit, new List<Platform> { platform }, failure);
+						projects [name] = (path, xunit, extraArgs, new List<Platform> { platform }, failure);
 					} else {
 						projects [name].platforms.Add (platform);
 					}
@@ -737,15 +764,15 @@ namespace BCLTestImporter {
 			
 			// return the grouped projects
 			foreach (var name in projects.Keys) {
-				projectPaths.Add ((name, projects[name].path, projects[name].xunit, projects[name].platforms, projects[name].failure));
+				projectPaths.Add ((name, projects[name].path, projects[name].xunit, projects[name].extraArgs, projects[name].platforms, projects[name].failure));
 			}
 			return projectPaths;
 		}
 		
 		// creates all the projects that have already been defined
-		public async Task<List<(string name, string path, bool xunit, List<Platform> platforms, string failure)>> GenerateAlliOSTestProjectsAsync ()
+		public async Task<List<(string name, string path, bool xunit, string extraArgs, List<Platform> platforms, string failure)>> GenerateAlliOSTestProjectsAsync ()
 		{
-			var projectPaths = new List<(string name, string path, bool xunit, List<Platform> platforms, string failure)> ();
+			var projectPaths = new List<(string name, string path, bool xunit, string extraArgs, List<Platform> platforms, string failure)> ();
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
 			var generatedCodePathRoot = GeneratedCodePathRoot;
@@ -758,9 +785,9 @@ namespace BCLTestImporter {
 			return projectPaths;
 		}
 
-		public List<(string name, string path, bool xunit, List<Platform> platforms, string failure)> GenerateAlliOSTestProjects () => GenerateAlliOSTestProjectsAsync ().Result;
+		public List<(string name, string path, bool xunit, string extraArgs, List<Platform> platforms, string failure)> GenerateAlliOSTestProjects () => GenerateAlliOSTestProjectsAsync ().Result;
 		
-		public async Task<List<(string name, string path, bool xunit, string failure)>> GenerateAllMacTestProjectsAsync (Platform platform)
+		public async Task<List<(string name, string path, bool xunit, string extraArgs, string failure)>> GenerateAllMacTestProjectsAsync (Platform platform)
 		{
 			if (!isCodeGeneration)
 				throw new InvalidOperationException ("Project generator was instantiated to delete the generated code.");
@@ -768,44 +795,11 @@ namespace BCLTestImporter {
 			if (!Directory.Exists (generatedCodePathRoot)) {
 				Directory.CreateDirectory (generatedCodePathRoot);
 			}
-			if (GroupTests) {
-				// special case until we have the support to add reflection on Mac OS X that depends on the download of the Mono SDK. Get the info
-				// from the cache, but since we are grouping, we have to ensure that we do not add the info for the projects that have to be ignored
-				var projectsHints = new Dictionary<string, List<(string assembly, string hint)>> ();
-				var projectTypes = new Dictionary<string, List<(string testNamespace, string testAssembly, string testType)>> ();
-				foreach (var (name, assemblies, group) in macTestProjects) {
-					var filteredAssemblies = new List<(string assembly, string hint)> (BCLTestProjectDefinition.MacCachedAssemblyInfo [name]);
-					foreach (var assemblyHint in BCLTestProjectDefinition.MacCachedAssemblyInfo [name]) {
-						if (IsIgnored (assemblyHint.assembly, platform))
-							filteredAssemblies.Remove (assemblyHint);
-					}
-					if (projectsHints.ContainsKey (group)) {
-						projectsHints [group].AddRange (filteredAssemblies);
-					} else {
-						projectsHints [group] = new List<(string assembly, string hint)> (filteredAssemblies);
-					}
-					var filteredType = new List<(string testNamespace, string testAssembly, string testType)> (RegisterTypeGenerator.MacCache [name]);
-					foreach (var typeRegistration in RegisterTypeGenerator.MacCache [name]) {
-						if (IsIgnored (typeRegistration.testAssembly, platform))
-							filteredType.Remove (typeRegistration); 
-					}
-					if (projectTypes.ContainsKey (group)) {
-						projectTypes [group].AddRange (filteredType);
-					} else {
-						projectTypes [group] = new List<(string testNamespace, string testAssembly, string testType)> (filteredType);
-					}
-				}
-				// add them to the caches, they have the same keys
-				foreach (var groupName in projectsHints.Keys) {
-					BCLTestProjectDefinition.MacCachedAssemblyInfo [groupName] = projectsHints [groupName];
-					RegisterTypeGenerator.MacCache [groupName] = projectTypes [groupName].ToArray ();
-				}
-			}
 			var generated = await GenerateTestProjectsAsync (GetProjectDefinitions (macTestProjects, platform), platform, generatedCodePathRoot);
 			return generated;
 		}
 
-		public List<(string name, string path, bool xunit, string failure)> GenerateAllMacTestProjects (Platform platform) => GenerateAllMacTestProjectsAsync (platform).Result;
+		public List<(string name, string path, bool xunit, string extraArg, string failure)> GenerateAllMacTestProjects (Platform platform) => GenerateAllMacTestProjectsAsync (platform).Result;
 
 		/// <summary>
 		/// Generates an iOS project for testing purposes. The generated project will contain the references to the
@@ -850,22 +844,28 @@ namespace BCLTestImporter {
 			}
 		}
 		
-		async Task<string> GenerateMacAsync (string projectName, string registerPath, List<(string assembly, string hintPath)> info, string templatePath, string infoPlistPath, Platform platform)
+		async Task<string> GenerateMacAsync (string projectName, string registerPath,  (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, string infoPlistPath, Platform platform)
 		{
+			var downloadPath = Path.Combine(GetReleaseDownload (platform), "mac-bcl", platform == Platform.MacOSFull? "xammac_net_4_5" : "xammac").Replace ("/", "\\");
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
-			foreach (var assemblyInfo in info) {
-				if (!excludeDlls.Contains (assemblyInfo.assembly))
-				sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
+			if (!string.IsNullOrEmpty (info.FailureMessage)) {
+				WriteReferenceFailure (sb, info.FailureMessage);
+			} else {
+				foreach (var assemblyInfo in info.Assemblies) {
+					if (!excludeDlls.Contains (assemblyInfo.assembly))
+						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
+				}
 			}
 
 			var contentFiles = new StringBuilder ();
-			foreach (var path in GetIgnoreFiles (templatePath, projectName, info, platform)) {
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, info.Assemblies, platform)) {
 				contentFiles.Append (GetContentNode (path));
 			}
 			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
+				result = result.Replace (DownloadPathKey, downloadPath);
 				result = result.Replace (ProjectGuidKey, projectGuid.ToString ().ToUpperInvariant ());
 				result = result.Replace (NameKey, projectName);
 				result = result.Replace (ReferencesKey, sb.ToString ());

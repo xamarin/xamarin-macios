@@ -672,7 +672,7 @@ timestamps {
                                 uploadFiles ("tests/*.zip", "wrench", virtualPath)
                             }
 
-                            timeout (time: 10, unit: 'HOURS') {
+                            timeout (time: 13, unit: 'HOURS') {
                                 // We run tests locally and on older macOS bots in parallel.
                                 // The older macOS tests run quickly (and the bots should usually be idle),
                                 // which means that the much longer normal (local) test run should take
