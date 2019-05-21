@@ -44,6 +44,10 @@ using MonoTouch.UIKit;
 
 partial class TestRuntime
 {
+
+	[DllImport (Constants.CoreFoundationLibrary)]
+	public extern static nint CFGetRetainCount (IntPtr handle);
+
 	[DllImport ("/usr/lib/system/libdyld.dylib")]
 	static extern int dyld_get_program_sdk_version ();
 
