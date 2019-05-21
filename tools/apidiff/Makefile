@@ -168,7 +168,7 @@ endif
 # easy-to-type helper targets.
 # one rule to create all the api diffs
 
-all-local:: $(BUNDLE_ZIP) $(APIDIFF_DIR)/api-diff.html
+all-local:: $(APIDIFF_DIR)/api-diff.html
 
 # Rules to re-create the reference infos from the curretn stable 'bundle.zip. assemblies
 
