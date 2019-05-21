@@ -22,6 +22,7 @@ namespace xharness
 		public Func<Task> Dependency;
 		public string FailureMessage;
 		public bool RestoreNugetsInProject;
+		public string MTouchExtraArgs;
 
 		public IEnumerable<TestProject> ProjectReferences;
 
@@ -96,6 +97,7 @@ namespace xharness
 			rv.GenerateVariations = GenerateVariations;
 			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
+			rv.MTouchExtraArgs = MTouchExtraArgs;
 			return rv;
 		}
 

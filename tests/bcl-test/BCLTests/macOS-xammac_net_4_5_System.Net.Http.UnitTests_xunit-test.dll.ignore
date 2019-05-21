@@ -1,0 +1,4 @@
+#  Timed out after 60000ms waiting for remote process 1536\nExpected: True\nActual: False
+System.Net.Http.Tests.HttpEnvironmentProxyTest.HttpProxy_EnvironmentProxy_Loaded
+System.Net.Http.Tests.HttpEnvironmentProxyTest.HttpProxy_CredentialParsing_Basic
+System.Net.Http.Tests.HttpEnvironmentProxyTest.HttpProxy_Exceptions_Match

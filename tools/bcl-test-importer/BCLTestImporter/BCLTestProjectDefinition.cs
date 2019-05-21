@@ -12,6 +12,7 @@ namespace BCLTestImporter {
 	public partial struct BCLTestProjectDefinition {
 		public string Name { get; set; }
 		public List<BCLTestAssemblyDefinition> TestAssemblies {get; private set;}
+		public string ExtraArgs { get; private set; }
 		public bool IsXUnit {
 			get {
 				if (TestAssemblies.Count > 0)
@@ -20,21 +21,23 @@ namespace BCLTestImporter {
 			}
 		}
 
-		public BCLTestProjectDefinition (string name, string[] assemblies)
+		public BCLTestProjectDefinition (string name, string[] assemblies, string extraArgs)
 		{
 			if (assemblies.Length == 0)
 				throw new ArgumentException ("Most provide at least an assembly.");
 			Name = name;
 			TestAssemblies = new List<BCLTestAssemblyDefinition> (assemblies.Length);
+			ExtraArgs = extraArgs;
 			foreach (var assembly in assemblies) {
 				TestAssemblies.Add (new BCLTestAssemblyDefinition (assembly));
 			}
 		}
 		
-		public BCLTestProjectDefinition (string name, List<BCLTestAssemblyDefinition> assemblies)
+		public BCLTestProjectDefinition (string name, List<BCLTestAssemblyDefinition> assemblies, string extraArgs)
 		{
 			Name = name;
 			TestAssemblies = assemblies;
+			ExtraArgs = extraArgs;
 		}
 		
 		static (string FailureMessage, IEnumerable<string> References) GetAssemblyReferences (string assemblyPath) {
