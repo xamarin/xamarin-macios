@@ -86,7 +86,7 @@ namespace CoreServices {
 			if (handle == IntPtr.Zero)
 				return null;
 
-			return new CFHTTPAuthentication (handle);
+			return new CFHTTPAuthentication (handle, true);
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
