@@ -71,23 +71,11 @@
       <HintPath>%DOWNLOAD PATH%\System.Xml.Linq.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Mac" />
-    <Reference Include="xunit.core">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.abstractions">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.dotnet">
-	      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.execution.dotnet.dll</HintPath>
-	    </Reference>
     <Reference Include="nunitlite">
       <HintPath>%DOWNLOAD PATH%\nunitlite.dll</HintPath>
     </Reference>
      <Reference Include="Xunit.NetCore.Extensions">
-       <HintPath>..\..\..\external\mono\external\xunit-binaries\Xunit.NetCore.Extensions.dll</HintPath>
+       <HintPath>%DOWNLOAD PATH%\tests\Xunit.NetCore.Extensions.dll</HintPath>
      </Reference>
   </ItemGroup>
   <ItemGroup>

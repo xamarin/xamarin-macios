@@ -93,23 +93,11 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.WatchOS" />
-    <Reference Include="xunit.core">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.abstractions">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.dotnet">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.execution.dotnet.dll</HintPath>
-    </Reference>
     <Reference Include="nunitlite">
       <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\nunitlite.dll</HintPath>
     </Reference>
     <Reference Include="Xunit.NetCore.Extensions">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\Xunit.NetCore.Extensions.dll</HintPath>
+      <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\tests\Xunit.NetCore.Extensions.dll</HintPath>
     </Reference>
      <Reference Include="System.Xml.Linq" />
   </ItemGroup>
