@@ -1721,7 +1721,11 @@ namespace xharness
 					markdown_summary.Write ($"# Test run in progress: ");
 					markdown_summary.Write (string.Join (", ", list));
 				} else if (failedTests.Any ()) {
-					markdown_summary.Write ($"{failedTests.Count ()} tests failed, {deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed.");
+					if (deviceNotFound.Any ()) {
+						markdown_summary.Write ($"{failedTests.Count ()} tests failed, {deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed.");
+					} else {
+						markdown_summary.Write ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+					}
 				} else if (deviceNotFound.Any ()) {
 					markdown_summary.Write ($"{deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
@@ -1805,7 +1809,11 @@ namespace xharness
 					writer.Write (string.Join (", ", list));
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
-					writer.Write ($"{failedTests.Count ()} tests failed, {deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed");
+					if (deviceNotFound.Any ()) {
+						writer.Write ($"{failedTests.Count ()} tests failed, {deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed");
+					} else {
+						writer.Write ($"{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed");
+					}
 				} else if (deviceNotFound.Any ()) {
 					writer.Write ($"{deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed");
 				} else if (passedTests.Any ()) {
