@@ -2825,6 +2825,8 @@ There are two main reasons for this:
 * The symbol is correct, but it's a symbol that's already preserved by normal
   means (some build options causes the exact list of dynamic symbols to vary).
 
+<!-- 5219 and 5220 used by mmp -->
+
 ### MT53xx: Other tools
 
 <!--
