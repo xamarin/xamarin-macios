@@ -181,11 +181,11 @@ namespace MonoTests.System.Net.Http
 					return false;
 				};
 			} else {
-			    ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
-				    servicePointManagerCbWasExcuted = true;
-				    // return false, since we want to test that the exception is raised
-				    return false;
-			    };
+				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
+					servicePointManagerCbWasExcuted = true;
+					// return false, since we want to test that the exception is raised
+					return false;
+				};
 			}
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
