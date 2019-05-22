@@ -330,7 +330,7 @@ namespace xharness
 		{
 			// TouchUnitTestRun is the very first node in the TouchUnit xml result
 			// which is not preset in the xunit xml, therefore we know the runner
-			// wuite quickly
+			// quite quickly
 			bool isTouchUnit = false;
 			using (var reader = XmlReader.Create (stream)) {
 				while (reader.Read ()) {
