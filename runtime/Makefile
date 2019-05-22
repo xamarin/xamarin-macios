@@ -197,7 +197,7 @@ $(eval $(call PlatformTemplate,ios,IOS,armv7 armv7s arm64,x86 x86_64,IOS,IPHONE)
 endif
 
 ifdef INCLUDE_WATCH
-$(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k,x86,WATCH,WATCH))
+$(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k arm64_32,x86,WATCH,WATCH))
 endif
 
 ifdef INCLUDE_TVOS
@@ -336,6 +336,7 @@ armv7_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).armv7.o,$$($(2)_SOURCE_
 armv7s_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).armv7s.o,$$($(2)_SOURCE_STEMS))
 armv7k_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).armv7k.o,$$($(2)_SOURCE_STEMS))
 arm64_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_SOURCE_STEMS))  $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_ARM64_SOURCE_STEMS))
+arm64_32_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).arm64_32.o,$$($(2)_SOURCE_STEMS))
 
 $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(1),$(2),$(3),$(4),$$(arch))))
 
@@ -361,6 +362,9 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(
 .libs/$(1)/libxamarin$(4).armv7k.dylib: EXTRA_FLAGS=$$($(1)$(3)_COMMON_DYLIB_FLAGS)
 .libs/$(1)/libxamarin$(4).armv7k.dylib: $$(armv7k_$(1)$(3)_OBJECTS)
 
+.libs/$(1)/libxamarin$(4).arm64_32.dylib: EXTRA_FLAGS=$$($(1)$(3)_COMMON_DYLIB_FLAGS)
+.libs/$(1)/libxamarin$(4).arm64_32.dylib: $$(arm64_32_$(1)$(3)_OBJECTS)
+
 .libs/$(1)/Xamarin$(4).x86.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS)
 .libs/$(1)/Xamarin$(4).x86.framework: $$(x86_$(1)$(3)_OBJECTS)
 
@@ -378,6 +382,9 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(
 
 .libs/$(1)/Xamarin$(4).armv7k.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS)
 .libs/$(1)/Xamarin$(4).armv7k.framework: $$(armv7k_$(1)$(3)_OBJECTS)
+
+.libs/$(1)/Xamarin$(4).arm64_32.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS)
+.libs/$(1)/Xamarin$(4).arm64_32.framework: $$(arm64_32_$(1)$(3)_OBJECTS)
 endef
 
 $(eval $(call LibXamarinTemplate,ios,IOS))

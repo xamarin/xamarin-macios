@@ -340,7 +340,8 @@ namespace xharness
 				var monoNativeInfo = new MonoNativeInfo (this, flavor);
 				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath, generateVariations: false) {
 					MonoNativeInfo = monoNativeInfo,
-					Name = monoNativeInfo.ProjectName
+					Name = monoNativeInfo.ProjectName,
+					SkipwatchOSARM64_32Variation = monoNativeInfo.ProjectName.Contains ("compat"),
 				};
 
 				IOSTestProjects.Add (iosTestProject);

@@ -152,6 +152,7 @@ namespace xharness
 	{
 		public bool SkipiOSVariation;
 		public bool SkipwatchOSVariation;
+		public bool SkipwatchOSARM64_32Variation;
 		public bool SkiptvOSVariation;
 		public bool BuildOnly;
 
