@@ -439,6 +439,9 @@ namespace xharness
 		
 		(string resultLine, bool failed, bool crashed) ParseResult (Log listener_log, bool timed_out, bool crashed)
 		{
+			if (!File.Exists (listener_log.FullPath))
+				return (null, false, true); // if we do not have a log file, the test crashes
+
 			// parsing the result is different if we are in jenkins or not.
 			// When in Jenkins, Touch.Unit produces an xml file instead of a console log (so that we can get better test reporting).
 			// However, for our own reporting, we still want the console-based log. This log is embedded inside the xml produced
@@ -447,7 +450,7 @@ namespace xharness
 			// 
 			// On the other hand, the nunit and xunit do not have that data and have to be parsed.
 			if (Harness.InJenkins) {
-				(string resultLine, bool failed, bool crashed) parseResult = ("", false, false);
+				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				// move the xml to a tmp path, that path will be use to read the xml
 				// in the reader, and the writer will use the stream from the logger to
 				// write the human readable log
