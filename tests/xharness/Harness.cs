@@ -824,7 +824,7 @@ namespace xharness
 			}
 
 			var name = Path.GetFileName (report.Path);
-			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}");
+			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, StringUtils.Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;
@@ -907,7 +907,7 @@ namespace xharness
 						var downloaded_crash_reports = new List<LogFile> ();
 						foreach (var file in end_crashes) {
 							var name = Path.GetFileName (file);
-							var crash_report_target = Logs.Create (name, $"Crash report: {name}");
+							var crash_report_target = Logs.Create (name, $"Crash report: {name}", timestamp: false);
 							var sb = new StringBuilder ();
 							sb.Append (" --download-crash-report=").Append (StringUtils.Quote (file));
 							sb.Append (" --download-crash-report-to=").Append (StringUtils.Quote (crash_report_target.Path));
