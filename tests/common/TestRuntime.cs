@@ -32,6 +32,7 @@ using ObjCRuntime;
 #else
 using nint=global::System.Int32;
 #if MONOMAC
+using MonoMac;
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
