@@ -94,6 +94,8 @@
 			<key>com.apple.watchkit</key>
 			<string>8.2</string>
 			<key>com.apple.AudioUnit-UI</key>
+			<string>8.2</string>
+			<key>com.apple.AudioUnit</key>
 			<string>8.0</string>
 			<key>com.apple.Safari.content-blocker</key>
 			<string>9.0</string>
