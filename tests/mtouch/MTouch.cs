@@ -2533,6 +2533,9 @@ public class B
 				break;
 			case "monotouch-test":
 				break;
+			case "mscorlib":
+				subdir = "/bcl-test"
+				break;
 			default:
 				subdir = "/bcl-test/BCLTests";
 				break;
