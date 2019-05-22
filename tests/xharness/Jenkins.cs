@@ -305,7 +305,8 @@ namespace xharness
 					}
 					break;
 				case "mscorlib":
-					yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
+					if (supports_debug)
+						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					if (supports_interpreter) {
 						if (supports_debug) {
 							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
@@ -315,7 +316,8 @@ namespace xharness
 					}
 					break;
 				case "mini":
-					yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
+					if (supports_debug)
+						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					if (supports_interpreter) {
 						if (supports_debug) {
 							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
