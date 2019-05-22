@@ -393,12 +393,7 @@ namespace xharness
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader["type"] == "TestFixture" || reader["type"] == "TestCollection")) {
 						var testCaseName = reader ["name"];
 						writer.WriteLine (testCaseName);
-						var time = "";
-						try {
-							time = reader ["time"];
-						} catch (Exception) { // some nodes might not have the time :/
-							time = "0";
-						}
+						var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
 						// get the first node and then move in the siblings of the same type
 						reader.ReadToDescendant ("test-case");
 						do {
