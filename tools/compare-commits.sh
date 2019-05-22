@@ -131,9 +131,12 @@ CURRENT_HASH=$(git log -1 --pretty=%H)
 GENERATOR_DIFF_FILE=
 APIDIFF_FILE=
 
-function upon_exit ()
+HASH_RESTORED=
+function restore_hash ()
 {
-	if test -z "$CURRENT_BRANCH"; then
+	if test -n "$HASH_RESTORED"; then
+		echo "Previous hash/branch already restored."
+	elif test -z "$CURRENT_BRANCH"; then
 		echo "Restoring the previous hash ${BLUE}${CURRENT_HASH}${CLEAR} (there was no previous branch; probably because HEAD was detached)"
 		git checkout --force "$CURRENT_HASH"
 		echo "Previous hash restored successfully."
@@ -143,6 +146,12 @@ function upon_exit ()
 		git reset --hard "$CURRENT_HASH"
 		echo "Previous branch restored successfully."
 	fi
+	HASH_RESTORED=1
+}
+
+function upon_exit ()
+{
+	restore_hash
 
 	if ! test -z "$GENERATOR_DIFF_FILE"; then
 		echo "Generator diff: $GENERATOR_DIFF_FILE"
@@ -202,21 +211,15 @@ fi
 #
 # API diff
 #
+#   First we calculate the apidiff references for the hash we're comparing against
+#   Then we restore the original hash, and finally we calculate the api diff.
+#
 
 # Calculate apidiff references according to the temporary build
 echo "${BLUE}Updating apidiff references...${CLEAR}"
 if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_DIR/_ios-build" MAC_DESTDIR="$OUTPUT_DIR/_mac-build"; then
 	EC=$?
 	report_error_line "${RED}Failed to update apidiff references${CLEAR}"
-	exit "$EC"
-fi
-
-# Now compare the current build against those references
-echo "${BLUE}Running apidiff...${CLEAR}"
-APIDIFF_FILE=$OUTPUT_DIR/apidiff/api-diff.html
-if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"; then
-	EC=$?
-	report_error_line "${RED}Failed to run apidiff${CLEAR}"
 	exit "$EC"
 fi
 
@@ -250,4 +253,15 @@ if test -n "$MODIFIED_FILES"; then
 	report_error_line "${RED}** Error: The following files were modified, and they shouldn't have been:${CLEAR}"
 	echo "$MODIFIED_FILES" | sed 's/^/    /' | while read line; do report_error_line "$line"; done
 	exit 1
+fi
+
+restore_hash
+
+# Now compare the current build against those references
+echo "${BLUE}Running apidiff...${CLEAR}"
+APIDIFF_FILE=$OUTPUT_DIR/apidiff/api-diff.html
+if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"; then
+	EC=$?
+	report_error_line "${RED}Failed to run apidiff${CLEAR}"
+	exit "$EC"
 fi

@@ -143,6 +143,8 @@ namespace xharness
 			case TestPlatform.tvOS:
 				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
 			case TestPlatform.watchOS:
+			case TestPlatform.watchOS_32:
+			case TestPlatform.watchOS_64_32:
 				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
 			case TestPlatform.iOS_Unified:
 				return new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
@@ -168,6 +170,8 @@ namespace xharness
 			case TestPlatform.tvOS:
 				return "tvOS " + Xamarin.SdkVersions.MinTVOSSimulator;
 			case TestPlatform.watchOS:
+			case TestPlatform.watchOS_32:
+			case TestPlatform.watchOS_64_32:
 				return "watchOS " + Xamarin.SdkVersions.MinWatchOSSimulator;
 			default:
 				throw new NotImplementedException (platform.ToString ());
@@ -188,7 +192,7 @@ namespace xharness
 				ignored = new [] { false };
 				break;
 			case TestPlatform.watchOS:
-				platforms = new TestPlatform [] { TestPlatform.watchOS };
+				platforms = new TestPlatform [] { TestPlatform.watchOS_32 };
 				ignored = new [] { false };
 				break;
 			case TestPlatform.iOS_Unified:
@@ -234,7 +238,7 @@ namespace xharness
 			public string LinkMode;
 			public string Defines;
 			public string Undefines;
-			public bool Ignored;
+			public bool? Ignored;
 			public bool EnableSGenConc;
 			public bool UseThumb;
 			public MonoNativeFlavor MonoNativeFlavor;
@@ -262,17 +266,21 @@ namespace xharness
 			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
 			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
 			var supports_dynamic_registrar_on_device = test.Platform == TestPlatform.iOS_Unified64 || test.Platform == TestPlatform.tvOS;
+			// arm64_32 is only supported for Release builds for now.
+			var supports_debug = test.Platform != TestPlatform.watchOS_64_32;
 
 			switch (test.ProjectPlatform) {
 			case "iPhone":
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
-				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
+				if (supports_debug) {
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
+				}
 
-				yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
-
-				yield return new TestData { Variation = "Release", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
+				if (test.ProjectConfiguration.Contains ("Debug"))
+					yield return new TestData { Variation = "Release", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
 				if (test.Platform == TestPlatform.iOS_Unified32)
 					yield return new TestData { Variation = "Release: UseThumb", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, UseThumb = true };
 				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
@@ -282,29 +290,37 @@ namespace xharness
 					if (supports_dynamic_registrar_on_device)
 						yield return new TestData { Variation = "Debug (dynamic registrar)", MTouchExtraArgs = "--registrar:dynamic", Debug = true, Profiling = false };
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
-					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
-					yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
+					if (supports_debug) {
+						yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
+						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
+					}
 					if (supports_interpreter) {
 						// interpreter is broken for monotouch-test: https://github.com/xamarin/maccore/issues/1613, so ignore for now
 						var ignore_interpreter_because_of_1613 = true;
-						yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
-						yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
+						if (supports_debug) {
+							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
+							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
+						}
 						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
 					}
 					break;
 				case "mscorlib":
 					yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					if (supports_interpreter) {
-						yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-						yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						if (supports_debug) {
+							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						}
 						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					}
 					break;
 				case "mini":
 					yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					if (supports_interpreter) {
-						yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-						yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						if (supports_debug) {
+							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						}
 						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					}
 					break;
@@ -354,7 +370,7 @@ namespace xharness
 		{
 			foreach (var task in tests) {
 				if (string.IsNullOrEmpty (task.Variation))
-					task.Variation = "Debug";
+					task.Variation = task.ProjectConfiguration.Contains ("Debug") ? "Debug" : "Release";
 			}
 
 			var rv = new List<T> (tests);
@@ -450,7 +466,7 @@ namespace xharness
 					};
 					T newVariation = creator (build, task, candidates);
 					newVariation.Variation = variation;
-					newVariation.Ignored = task.Ignored || ignored;
+					newVariation.Ignored = ignored ?? task.Ignored;
 					newVariation.BuildOnly = task.BuildOnly;
 					rv.Add (newVariation);
 				}
@@ -581,15 +597,27 @@ namespace xharness
 
 				if (!project.SkipwatchOSVariation) {
 					var watchOSProject = project.AsWatchOSProject ();
-					var buildWatch = new XBuildTask {
+					var buildWatch32 = new XBuildTask {
 						Jenkins = this,
-						ProjectConfiguration = "Debug",
+						ProjectConfiguration = "Debug32",
 						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.watchOS,
+						Platform = TestPlatform.watchOS_32,
 						TestName = project.Name,
 					};
-					buildWatch.CloneTestProject (watchOSProject);
-					rv.Add (new RunDeviceTask (buildWatch, Devices.ConnectedWatch.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
+					buildWatch32.CloneTestProject (watchOSProject);
+					rv.Add (new RunDeviceTask (buildWatch32, Devices.ConnectedWatch) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
+
+					if (!project.SkipwatchOSARM64_32Variation) {
+						var buildWatch64_32 = new XBuildTask {
+							Jenkins = this,
+							ProjectConfiguration = "Release64_32", // We don't support Debug for ARM64_32 yet.
+							ProjectPlatform = "iPhone",
+							Platform = TestPlatform.watchOS_64_32,
+							TestName = project.Name,
+						};
+						buildWatch64_32.CloneTestProject (watchOSProject);
+						rv.Add (new RunDeviceTask (buildWatch64_32, Devices.ConnectedWatch32_64.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
+					}
 				}
 			}
 
@@ -1366,6 +1394,8 @@ namespace xharness
 									case "?all-watchos":
 										switch (task.Platform) {
 										case TestPlatform.watchOS:
+										case TestPlatform.watchOS_32:
+										case TestPlatform.watchOS_64_32:
 											is_match = true;
 											break;
 										default:
@@ -2627,6 +2657,8 @@ namespace xharness
 			case TestPlatform.iOS_TodayExtension64:
 			case TestPlatform.tvOS:
 			case TestPlatform.watchOS:
+			case TestPlatform.watchOS_32:
+			case TestPlatform.watchOS_64_32:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
@@ -3544,6 +3576,10 @@ namespace xharness
 				case TestPlatform.tvOS:
 				case TestPlatform.watchOS:
 					return Platform.ToString () + " - " + XIMode;
+				case TestPlatform.watchOS_32:
+					return "watchOS 32-bits - " + XIMode;
+				case TestPlatform.watchOS_64_32:
+					return "watchOS 64-bits (ARM64_32) - " + XIMode;
 				case TestPlatform.iOS_Unified32:
 					return "iOS Unified 32-bits - " + XIMode;
 				case TestPlatform.iOS_Unified64:
@@ -3629,6 +3665,8 @@ namespace xharness
 				AppRunnerTarget = AppRunnerTarget.Device_tvOS;
 				break;
 			case TestPlatform.watchOS:
+			case TestPlatform.watchOS_32:
+			case TestPlatform.watchOS_64_32:
 				AppRunnerTarget = AppRunnerTarget.Device_watchOS;
 				break;
 			default:
@@ -3645,7 +3683,7 @@ namespace xharness
 				try {
 					// Set the device we acquired.
 					Device = Candidates.First ((d) => d.UDID == device_resource.Resource.Name);
-					if (Platform == TestPlatform.watchOS)
+					if (Device.DevicePlatform == DevicePlatform.watchOS)
 						CompanionDevice = Jenkins.Devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
@@ -4117,6 +4155,8 @@ namespace xharness
 		iOS_TodayExtension64,
 		tvOS,
 		watchOS,
+		watchOS_32,
+		watchOS_64_32,
 
 		Mac,
 		Mac_Classic,

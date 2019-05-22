@@ -396,7 +396,7 @@ timestamps {
     def mainMacOSVersion = 14
     node ("xamarin-macios && macos-10.${mainMacOSVersion}") {
         try {
-            timeout (time: 9, unit: 'HOURS') {
+            timeout (time: 15, unit: 'HOURS') {
                 // Hard-code a workspace, since branch-based and PR-based
                 // builds would otherwise use different workspaces, which
                 // wastes a lot of disk space.
