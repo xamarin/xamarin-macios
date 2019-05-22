@@ -96,7 +96,7 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
 	@echo "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
 
-test-system.config:
+test-system.config: Makefile $(TOP)/Make.config
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
 	@echo "IOS_DESTDIR=/" >> $@

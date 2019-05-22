@@ -185,7 +185,7 @@ MTOUCH_DIR=bin/$(MTOUCH_CONF)
 LOCAL_MTOUCH=$(MTOUCH_DIR)/mtouch.exe
 
 # mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch needs to be rebuilt or not.
-mtouch.csproj.inc: Makefile ../common/create-makefile-fragment.sh
+mtouch.csproj.inc: Makefile ../common/create-makefile-fragment.sh $(TOP)/Make.config
 	$(Q_GEN) MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR) ../common/create-makefile-fragment.sh $(CURDIR)/mtouch.csproj
 
 -include mtouch.csproj.inc
