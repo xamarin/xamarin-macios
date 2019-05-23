@@ -105,15 +105,23 @@ namespace monotouchtestWatchKitExtension
 			}
 			running = true;
 			cmdRun.SetEnabled (false);
-			lblStatus.SetText ("Running");
-			BeginInvokeOnMainThread (() => {
+			lblStatus.SetText ("Running in background");
+
+			var timer = NSTimer.CreateRepeatingScheduledTimer (TimeSpan.FromSeconds (1), (v) => RenderResults ());
+			var runnerThread = new Thread (() => {
 				runner.Run ();
 
-				cmdRun.SetEnabled (true);
-				lblStatus.SetText ("Done");
-				running = false;
-				RenderResults ();
-			});
+				InvokeOnMainThread (() => {
+					cmdRun.SetEnabled (true);
+					lblStatus.SetText ("Done");
+					running = false;
+					timer.Dispose ();
+					RenderResults ();
+				});
+			}) {
+				IsBackground = true,
+			};
+			runnerThread.Start ();
 		}
 
 		void RenderResults ()
