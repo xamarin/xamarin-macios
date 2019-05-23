@@ -303,7 +303,12 @@ class Issue4072Session : NSUrlSession {
 				bundler.Linker = LinkerOption.DontLink;
 				bundler.AssertExecute ();
 				bundler.AssertWarning (4175, "The parameter 'completionHandler' in the method 'Issue4072Session.CreateDataTask(Foundation.NSUrl,Foundation.NSUrlSessionResponse)' has an invalid BlockProxy attribute (the type passed to the attribute does not have a 'Create' method).", "testApp.cs", 11);
+#if __MACOS__
+				bundler.AssertWarning (5220, "Skipping framework 'QTKit'. It is prohibited (rejected) by the Mac App Store");
+				bundler.AssertWarningCount (2);
+#else
 				bundler.AssertWarningCount (1);
+#endif
 			}
 
 			using (var bundler = new BundlerTool ()) {
