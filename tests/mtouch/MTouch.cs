@@ -2554,7 +2554,7 @@ public class B
 		[TestCase (Target.Dev, Profile.iOS, "link sdk", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "monotouch-test", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "mscorlib", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "System.Data", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "BCL tests group 1", "Release64")]
 		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
 		{
 			if (target == Target.Dev)
@@ -2569,12 +2569,20 @@ public class B
 				break;
 			case "monotouch-test":
 				break;
-			default:
+			case "mscorlib":
 				subdir = "/bcl-test";
+				break;
+			default:
+				subdir = "/bcl-test/BCLTests";
 				break;
 			}
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
-			var csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
+			string csproj = null;
+			if (subdir == "/bcl-test/BCLTests") { // bcl tests are generated and are not in their own dir
+				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname + GetProjectSuffix (profile) + ".csproj");
+			} else {
+				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
+			}
 			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
