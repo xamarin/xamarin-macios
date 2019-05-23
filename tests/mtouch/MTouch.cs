@@ -676,7 +676,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.Abi = "invalid-arm";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (15, "Invalid ABI: invalid-arm. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.");
+				mtouch.AssertError (15, "Invalid ABI: invalid-arm. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64, arm64+llvm, arm64_32 and arm64_32+llvm.");
 			}
 		}
 
@@ -2406,7 +2406,7 @@ public class B
 				mtouch.TargetVer = "10.3";
 				mtouch.Abi = "armv6";
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildDev));
-				mtouch.AssertError ("MT", 15, "Invalid ABI: armv6. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.");
+				mtouch.AssertError ("MT", 15, "Invalid ABI: armv6. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64, arm64+llvm, arm64_32 and arm64_32+llvm.");
 
 				mtouch.Abi = "armv7";
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
@@ -2446,6 +2446,42 @@ public class B
 				mtouch.Abi = "armv7";
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildDev), "device - armv7");
 				mtouch.AssertError ("MT", 75, "Invalid architecture 'ARMv7' for TVOS projects. Valid architectures are: ARM64, ARM64+LLVM");
+			}
+		}
+
+		[Test]
+		[TestCase (Target.Dev, null, "ARMv7k")]
+		[TestCase (Target.Dev, "arm64_32+llvm", "ARM64_32")]
+		[TestCase (Target.Dev, "armv7k+llvm,arm64_32+llvm", "ARMv7k,ARM64_32")]
+		[TestCase (Target.Sim, null, "i386")]
+		public void Architectures_WatchOS (Target target, string abi, string expected_abi)
+		{
+			AssertDeviceAvailable ();
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.watchOS;
+				mtouch.Abi = abi;
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryWatchKitExtension ();
+				mtouch.Action = target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim;
+				mtouch.AssertExecute ("build");
+				VerifyArchitectures (mtouch.NativeExecutablePath, "arch", expected_abi.Split (','));
+			}
+		}
+
+		[Test]
+		public void Architectures_WatchOS_Invalid ()
+		{
+			AssertDeviceAvailable ();
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.watchOS;
+				mtouch.CreateTemporaryWatchKitExtension ();
+
+				mtouch.Abi = "armv7";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "device - armv7");
+				mtouch.AssertError ("MT", 75, "Invalid architecture 'ARMv7' for WatchOS projects. Valid architectures are: ARMv7k, ARMv7k+LLVM, ARM64_32, ARM64_32+LLVM");
+				mtouch.AssertErrorCount (1);
 			}
 		}
 
