@@ -154,7 +154,7 @@ namespace xharness
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, $"Info{Suffix}-extension.plist");
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
-			BundleIdentifier = info_plist.GetCFBundleIdentifier () + "-watch";
+			BundleIdentifier = info_plist.GetCFBundleIdentifier () + "_watch";
 			if (BundleIdentifier.Length >= 58)
 				BundleIdentifier = BundleIdentifier.Substring (0, 57); // If the main app's bundle id is 58 characters (or sometimes more), then the watch extension crashes at launch. radar #29847128.
 			info_plist.SetCFBundleIdentifier (BundleIdentifier + ".watchkitapp.watchkitextension");
