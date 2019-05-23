@@ -705,7 +705,6 @@
 !missing-pinvoke! CFSocketGetContext is not bound
 !missing-pinvoke! CFSocketGetDefaultNameRegistryPortNumber is not bound
 !missing-pinvoke! CFSocketGetTypeID is not bound
-!missing-pinvoke! CFSocketInvalidate is not bound
 !missing-pinvoke! CFSocketIsValid is not bound
 !missing-pinvoke! CFSocketRegisterSocketSignature is not bound
 !missing-pinvoke! CFSocketRegisterValue is not bound
