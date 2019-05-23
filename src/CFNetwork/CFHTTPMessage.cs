@@ -93,7 +93,7 @@ namespace CoreServices {
 		public static CFHTTPMessage CreateEmpty (bool request)
 		{
 			var handle = CFHTTPMessageCreateEmpty (IntPtr.Zero, request);
-			return new CFHTTPMessage (handle);			
+			return new CFHTTPMessage (handle, true);
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -110,7 +110,7 @@ namespace CoreServices {
 
 			var handle = CFHTTPMessageCreateRequest (
 				IntPtr.Zero, method.Handle, url.Handle, GetVersion (version));
-			return new CFHTTPMessage (handle);
+			return new CFHTTPMessage (handle, true);
 		}
 
 		public static CFHTTPMessage CreateRequest (Uri uri, string method)

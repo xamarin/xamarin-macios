@@ -30,7 +30,9 @@ using UIKit;
 #endif
 using ObjCRuntime;
 #else
+using nint=global::System.Int32;
 #if MONOMAC
+using MonoMac;
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
@@ -44,6 +46,10 @@ using MonoTouch.UIKit;
 
 partial class TestRuntime
 {
+
+	[DllImport (Constants.CoreFoundationLibrary)]
+	public extern static nint CFGetRetainCount (IntPtr handle);
+
 	[DllImport ("/usr/lib/system/libdyld.dylib")]
 	static extern int dyld_get_program_sdk_version ();
 
