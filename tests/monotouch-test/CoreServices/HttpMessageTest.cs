@@ -69,7 +69,16 @@ namespace MonoTouchFixtures.CoreServices {
 				Assert.Throws<InvalidOperationException> (delegate { var x = m.ResponseStatusCode; }, "ResponseStatusCode");
 				Assert.Throws<InvalidOperationException> (delegate { var x = m.ResponseStatusLine; }, "ResponseStatusLine");
 				Assert.That (m.Version.ToString (), Is.EqualTo ("1.0"), "Version");
-				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint)1), "RetainCount");
+				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint) 1), "RetainCount");
+			}
+		}
+
+		[Test]
+		public void CreateResponseAuth ()
+		{
+			using (var m = CFHTTPMessage.CreateEmpty (false))
+			using (var authentication = CFHTTPAuthentication.CreateFromResponse (m)) {
+				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 			}
 		}
 	}
