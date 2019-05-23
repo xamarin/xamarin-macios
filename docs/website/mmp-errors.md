@@ -643,7 +643,7 @@ The application has references to the `{nspace}` namespace of `Xamarin.Mac.dll`.
 The associated OS framework is known to be **prohibited** in Apple's Mac App Store applications.
 
 However `mmp` was instructed, using `--link-prohibited-framework`, to natively link to the associated framework.
-You can silence this warning by adding `--nowarn=5219` to the **Addtional mmp arguments** in your project's options.
+You can silence this warning by adding `--nowarn=5219` to the **Additional mmp arguments** in your project's options.
 
 <a name="MT5220" />
 
