@@ -411,6 +411,7 @@ namespace Xamarin.Tests
 					$"/p:Configuration={configuration}",
 					$"/p:Platform={platform}",
 					$"/verbosity:{(string.IsNullOrEmpty (verbosity) ? "normal" : verbosity)}",
+					"/r:True", // restore nuget packages which are used in some test cases
 					project
 				}.Union (arguments ?? new string [] { }).ToArray (),
 				environmentVariables: environmentVariables,

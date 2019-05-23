@@ -305,7 +305,8 @@ namespace xharness
 					}
 					break;
 				case "mscorlib":
-					yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
+					if (supports_debug)
+						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					if (supports_interpreter) {
 						if (supports_debug) {
 							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
@@ -315,7 +316,8 @@ namespace xharness
 					}
 					break;
 				case "mini":
-					yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
+					if (supports_debug)
+						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					if (supports_interpreter) {
 						if (supports_debug) {
 							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
@@ -1770,7 +1772,10 @@ namespace xharness
 					markdown_summary.Write ($"# Test run in progress: ");
 					markdown_summary.Write (string.Join (", ", list));
 				} else if (failedTests.Any ()) {
-					markdown_summary.Write ($"{failedTests.Count ()} tests failed, {deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed.");
+					markdown_summary.Write ($"{failedTests.Count ()} tests failed, ");
+					if (deviceNotFound.Any ())
+						markdown_summary.Write ($"{deviceNotFound.Count ()} tests' device not found, ");
+					markdown_summary.Write ($"{passedTests.Count ()} tests passed.");
 				} else if (deviceNotFound.Any ()) {
 					markdown_summary.Write ($"{deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
@@ -1854,7 +1859,10 @@ namespace xharness
 					writer.Write (string.Join (", ", list));
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
-					writer.Write ($"{failedTests.Count ()} tests failed, {deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed");
+					writer.Write ($"{failedTests.Count ()} tests failed, ");
+					if (deviceNotFound.Any ())
+						writer.Write ($"{deviceNotFound.Count ()} tests' device not found, ");
+					writer.Write ($"{passedTests.Count ()} tests passed");
 				} else if (deviceNotFound.Any ()) {
 					writer.Write ($"{deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed");
 				} else if (passedTests.Any ()) {
