@@ -655,7 +655,7 @@ To avoid rejections `mmp` will not, by default, natively link with the mentioned
 Any feature that use the mentioned framework will not work and might crash at runtime.
 
 If needed (e.g. not submitting to the App Store) you can ask `mmp` to link against the framework by adding `--link-prohibited-framework` to the **Addtional mmp arguments** in your project's options.
-You can silence this warning by adding `--nowarn=5220` to the **Addtional mmp arguments** in your project's options.
+You can silence this warning by adding `--nowarn=5220` to the **Additional mmp arguments** in your project's options.
 
 ### MM53xx: other tools
 
