@@ -78,7 +78,7 @@ namespace MonoTouchFixtures.CoreServices {
 		{
 			using (var m = CFHTTPMessage.CreateEmpty (false))
 			using (var authentication = CFHTTPAuthentication.CreateFromResponse (m)) {
-				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint) 1), "RetainCount");
+				Assert.That (TestRuntime.CFGetRetainCount (authentication.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 			}
 		}
 	}
