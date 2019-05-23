@@ -30,6 +30,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			// All constructors end up using the shared private constructor.
 			using (var socket = new CFSocket ()) {
+				socket.Invalidate ();
 				Assert.That (TestRuntime.CFGetRetainCount (socket.Handle), Is.EqualTo (1), "RetainCount");
 			}
 		}

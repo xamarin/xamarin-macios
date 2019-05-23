@@ -583,5 +583,13 @@ namespace CoreFoundation {
 					throw new CFSocketException (error);
 			}
 		}
+
+		[DllImport (Constants.CoreFoundationLibrary)]
+		extern static void CFSocketInvalidate (IntPtr handle);
+
+		public void Invalidate ()
+		{
+			CFSocketInvalidate (handle);
+		}
 	}
 }
