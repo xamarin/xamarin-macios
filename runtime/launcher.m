@@ -358,7 +358,11 @@ update_environment (xamarin_initialize_data *data)
 		NSURL *appSupport = [appSupportDirectories objectAtIndex: 0];
 		if (appSupport != nil && appBundleID != nil) {
 			NSURL *appDirectory = [appSupport URLByAppendingPathComponent:appBundleID isDirectory: YES];
-			setenv ("MONO_REGISTRY_PATH", [[appDirectory path] UTF8String], 1);
+			// Only set registry if path exists (see https://devdiv.visualstudio.com/DevDiv/_workitems/edit/896438)
+			NSFileManager *filemgr = [NSFileManager defaultManager];
+			BOOL isDir = YES;
+			if ([filemgr fileExistsAtPath:[[NSBundle mainBundle] bundlePath] isDirectory: &isDir])
+				setenv ("MONO_REGISTRY_PATH", [[appDirectory path] UTF8String], 1);
 		}
 	}
 #endif
