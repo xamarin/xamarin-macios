@@ -135,6 +135,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.TVOS" />
     <Reference Include="nunitlite">
@@ -143,7 +144,9 @@
     <Reference Include="Xunit.NetCore.Extensions">
       <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\tests\Xunit.NetCore.Extensions.dll</HintPath>
     </Reference>
-     <Reference Include="System.Xml.Linq" />
+    <Reference Include="xunit.execution.dotnet">
+      <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\tests\xunit.execution.dotnet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
 %REFERENCES%
@@ -246,6 +249,4 @@
     %CONTENT RESOURCES%
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
-  <Import Project="..\..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" />
-  <Import Project="..\..\..\packages\xunit.core.2.4.0\build\xunit.core.targets" Condition="Exists('..\..\..\packages\xunit.core.2.4.0\build\xunit.core.targets')" />
 </Project>
