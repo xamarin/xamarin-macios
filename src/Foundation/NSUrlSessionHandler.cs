@@ -61,6 +61,8 @@ namespace System.Net.Http {
 namespace Foundation {
 #endif
 
+	public delegate bool NSUrlSessionHandlerTrustOverrideCallback (NSUrlSessionHandler sender, SecTrust trust);
+
 	// useful extensions for the class in order to set it in a header
 	static class NSHttpCookieExtensions
 	{
@@ -276,6 +278,18 @@ namespace Foundation {
 			set {
 				EnsureModifiability ();
 				credentials = value;
+			}
+		}
+
+		NSUrlSessionHandlerTrustOverrideCallback trustOverride;
+
+		public NSUrlSessionHandlerTrustOverrideCallback TrustOverride {
+			get {
+				return trustOverride;
+			}
+			set {
+				EnsureModifiability ();
+				trustOverride = value;
 			}
 		}
 
@@ -643,7 +657,7 @@ namespace Foundation {
 						inflight.CancellationTokenSource.Cancel (); 
 						inflight.Errored = true;
 
-						var exc = createExceptionForNSError (error);
+						var exc = inflight.Exception ?? createExceptionForNSError (error);
 						inflight.CompletionSource.TrySetException (exc);
 						inflight.Stream.TrySetException (exc);
 					} else {
@@ -693,6 +707,22 @@ namespace Foundation {
 				if (inflight == null)
 					return;
 
+				// ToCToU for the callback
+				var trustCallback = sessionHandler.TrustOverride;
+				if (trustCallback != null && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
+					if (trustCallback (sessionHandler, challenge.ProtectionSpace.ServerSecTrust)) {
+						var credential = new NSUrlCredential (challenge.ProtectionSpace.ServerSecTrust);
+						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+					} else {
+						// user callback rejected the certificate, we want to set the exception, else the user will
+						// see as if the request was cancelled.
+						lock (inflight.Lock) {
+							inflight.Exception = new HttpRequestException ("An error occurred while sending the request.", new WebException ("Error: TrustFailure"));
+						}
+						completionHandler (NSUrlSessionAuthChallengeDisposition.CancelAuthenticationChallenge, null);
+					}
+					return;
+				}
 				// case for the basic auth failing up front. As per apple documentation:
 				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
 				// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
@@ -705,7 +735,7 @@ namespace Foundation {
 				// but we are hiding such a situation from our users, we can nevertheless know if the header was added and deal with it. The idea is as follows,
 				// check if we are in the first attempt, if we are (PreviousFailureCount == 0), we check the headers of the request and if we do have the Auth 
 				// header, it means that we do not have the correct credentials, in any other case just do what it is expected.
-				
+
 				if (challenge.PreviousFailureCount == 0) {
 					var authHeader = inflight.Request?.Headers?.Authorization;
 					if (!(string.IsNullOrEmpty (authHeader?.Scheme) && string.IsNullOrEmpty (authHeader?.Parameter))) {
@@ -771,6 +801,7 @@ namespace Foundation {
 			public HttpRequestMessage Request { get; set; }
 			public HttpResponseMessage Response { get; set; }
 
+			public Exception Exception { get; set; }
 			public bool ResponseSent { get; set; }
 			public bool Errored { get; set; }
 			public bool Disposed { get; set; }
