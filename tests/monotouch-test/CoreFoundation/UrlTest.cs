@@ -33,12 +33,30 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 
 		[Test]
+		public void RetainCountFromFile ()
+		{
+			var path = typeof (int).Assembly.Location;
+
+			using (var url = CFUrl.FromFile (path)) {
+				Assert.That (TestRuntime.CFGetRetainCount (url.Handle), Is.EqualTo ((nint) 1), "RetainCount");
+			}
+		}
+
+		[Test]
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromUrlString_Null ()
 		{
 			CFUrl.FromUrlString (null, CFUrl.FromFile ("/"));
 		}
-		
+
+		[Test]
+		public void RetainCountFromUrl ()
+		{
+			using (var url = CFUrl.FromUrlString ("http://xamarin.com", null)) {
+				Assert.That(TestRuntime.CFGetRetainCount (url.Handle), Is.EqualTo ((nint) 1), "RetainCount");
+			}
+		}
+
 		[Test]
 		public void ToString_ ()
 		{
