@@ -316,17 +316,13 @@ namespace CoreFoundation {
 			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof(CFStreamClientContext)));
 			try {
 				Marshal.StructureToPtr (ctx, ptr, false);
-				handle = CFSocketCreate (
-					IntPtr.Zero, family, type, proto, (nuint) (ulong) cbTypes, OnCallback, ptr);
+				Initialize (
+					CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) cbTypes, OnCallback, ptr),
+					loop
+				);
 			} finally {
 				Marshal.FreeHGlobal (ptr);
 			}
-
-			if (handle == IntPtr.Zero)
-				throw new CFSocketException (CFSocketError.Error);
-
-			var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
-			loop.AddSource (source, CFRunLoop.ModeDefault);
 		}
 
 		internal CFSocket (CFSocketNativeHandle sock)
@@ -340,28 +336,27 @@ namespace CoreFoundation {
 			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof(CFStreamClientContext)));
 			try {
 				Marshal.StructureToPtr (ctx, ptr, false);
-				handle = CFSocketCreateWithNative (
-					IntPtr.Zero, sock, (nuint) (ulong) cbTypes, OnCallback, ptr);
+				Initialize (
+					CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) cbTypes, OnCallback, ptr),
+					CFRunLoop.Current
+				);
 			} finally {
 				Marshal.FreeHGlobal (ptr);
 			}
-
-			if (handle == IntPtr.Zero)
-				throw new CFSocketException (CFSocketError.Error);
-
-			var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
-			var loop = CFRunLoop.Current;
-			loop.AddSource (source, CFRunLoop.ModeDefault);
 		}
 
 		CFSocket (IntPtr handle)
 		{
-			this.handle = handle;
-			gch = GCHandle.Alloc (this);
+			Initialize (handle, CFRunLoop.Main);
+		}
 
-			var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
-			var loop = CFRunLoop.Current;
-			loop.AddSource (source, CFRunLoop.ModeDefault);
+		void Initialize (IntPtr ptr, CFRunLoop runLoop)
+		{
+			handle = ptr;
+
+			using (var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true)) {
+				runLoop.AddSource (source, CFRunLoop.ModeDefault);
+			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -379,8 +374,6 @@ namespace CoreFoundation {
 				var sig = new CFSocketSignature (family, type, proto, address);
 				var handle = CFSocketCreateConnectedToSocketSignature (
 					IntPtr.Zero, ref sig, (nuint) (ulong) cbTypes, OnCallback, IntPtr.Zero, timeout);
-				if (handle == IntPtr.Zero)
-					throw new CFSocketException (CFSocketError.Error);
 
 				return new CFSocket (handle);
 			}
