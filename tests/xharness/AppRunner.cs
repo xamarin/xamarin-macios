@@ -371,7 +371,7 @@ namespace xharness
 			}
 			var passed = total - errors - failed - notRun - inconclusive - ignored - skipped - invalid;
 			var resultLine = $"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}";
-			return (resultLine, total == 0 || (errors != 0 && failed != 0));
+			return (resultLine, total == 0 || errors != 0 || failed != 0);
 		}
 
 		(string resultLine, bool failed) ParseNUnitXml (StreamReader stream, StreamWriter writer)
@@ -434,7 +434,7 @@ namespace xharness
 			string resultLine = $"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}";
 			writer.WriteLine (resultLine);
 			
-			return (resultLine, total == 0 | (errors != 0 && failed != 0));
+			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
 		
 		(string resultLine, bool failed, bool crashed) ParseResult (Log listener_log, bool timed_out, bool crashed)
@@ -543,9 +543,9 @@ namespace xharness
 		public bool TestsSucceeded (Log listener_log, bool timed_out, bool crashed)
 		{
 			var (resultLine, failed, crashed_out) = ParseResult (listener_log, timed_out, crashed);
-			var tests_run = resultLine.Replace ("Tests run: ", "");
 			// read the parsed logs in a human readable way
 			if (resultLine != null) {
+				var tests_run = resultLine.Replace ("Tests run: ", "");
 				if (failed) {
 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
 					main_log.WriteLine ("Test run failed");
