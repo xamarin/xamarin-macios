@@ -324,7 +324,6 @@ namespace CoreFoundation {
 
 			if (handle == IntPtr.Zero)
 				throw new CFSocketException (CFSocketError.Error);
-			gch = GCHandle.Alloc (this);
 
 			var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
 			loop.AddSource (source, CFRunLoop.ModeDefault);
