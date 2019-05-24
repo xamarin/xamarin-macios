@@ -543,9 +543,9 @@ namespace xharness
 		public bool TestsSucceeded (Log listener_log, bool timed_out, bool crashed)
 		{
 			var (resultLine, failed, crashed_out) = ParseResult (listener_log, timed_out, crashed);
-			var tests_run = resultLine.Replace ("Tests run: ", "");
 			// read the parsed logs in a human readable way
 			if (resultLine != null) {
+				var tests_run = resultLine.Replace ("Tests run: ", "");
 				if (failed) {
 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
 					main_log.WriteLine ("Test run failed");
