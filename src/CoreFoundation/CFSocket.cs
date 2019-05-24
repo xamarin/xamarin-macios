@@ -278,12 +278,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFSocketCreate (IntPtr allocator, int /*SInt32*/ family, int /*SInt32*/ type, int /*SInt32*/ proto,
 		                                     nuint /*CFOptionFlags*/ callBackTypes,
-		                                     CFSocketCallBack callout, IntPtr ctx);
+		                                     CFSocketCallBack callout, ref CFStreamClientContext ctx);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFSocketCreateWithNative (IntPtr allocator, CFSocketNativeHandle sock,
                                                        nuint /*CFOptionFlags*/ callBackTypes,
-		                                               CFSocketCallBack callout, IntPtr ctx);
+		                                               CFSocketCallBack callout, ref CFStreamClientContext ctx);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFSocketCreateRunLoopSource (IntPtr allocator, IntPtr socket, nint order);
@@ -313,16 +313,10 @@ namespace CoreFoundation {
 			var ctx = new CFStreamClientContext ();
 			ctx.Info = GCHandle.ToIntPtr (gch);
 
-			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof(CFStreamClientContext)));
-			try {
-				Marshal.StructureToPtr (ctx, ptr, false);
-				Initialize (
-					CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) cbTypes, OnCallback, ptr),
-					loop
-				);
-			} finally {
-				Marshal.FreeHGlobal (ptr);
-			}
+			Initialize (
+				CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) cbTypes, OnCallback, ref ctx),
+				loop
+			);
 		}
 
 		internal CFSocket (CFSocketNativeHandle sock)
@@ -333,16 +327,10 @@ namespace CoreFoundation {
 			var ctx = new CFStreamClientContext ();
 			ctx.Info = GCHandle.ToIntPtr (gch);
 
-			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof(CFStreamClientContext)));
-			try {
-				Marshal.StructureToPtr (ctx, ptr, false);
-				Initialize (
-					CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) cbTypes, OnCallback, ptr),
-					CFRunLoop.Current
-				);
-			} finally {
-				Marshal.FreeHGlobal (ptr);
-			}
+			Initialize (
+				CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) cbTypes, OnCallback, ref ctx),
+				CFRunLoop.Current
+			);
 		}
 
 		CFSocket (IntPtr handle)
