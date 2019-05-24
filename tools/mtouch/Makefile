@@ -191,7 +191,7 @@ mtouch.csproj.inc: Makefile ../common/create-makefile-fragment.sh $(TOP)/Make.co
 -include mtouch.csproj.inc
 
 $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
-	$(Q_GEN) $(SYSTEM_MSBUILD) $(TOP)/Xamarin.iOS.sln "/t:mtouch" $(XBUILD_VERBOSITY) /p:Configuration=$(MTOUCH_CONF) /p:MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)
+	$(Q_GEN) $(SYSTEM_MSBUILD) $(TOP)/Xamarin.iOS.sln "/t:mtouch" $(XBUILD_VERBOSITY) /p:Configuration=$(MTOUCH_CONF)
 
 #
 # Partial static registrar libraries

@@ -46,7 +46,7 @@ downloads/%: downloads/%.zip
 clean-local::
 	$(Q) rm -Rf downloads .stamp-download-mono
 
-all-local:: .stamp-download-mono
+all-local:: .stamp-download-mono .stamp-mono-ios-sdk-destdir
 
 else
 
@@ -86,7 +86,7 @@ endif
 	$(MAKE) -C $(SDK_BUILDDIR) configure-ios configure-mac $(SDK_ARGS)
 	$(Q) touch $@
 
-.stamp-compile-mono: .stamp-configure-mono $(MONO_DEPENDENCIES) $(BUILDS_MAKEFILE_DEP)
+.stamp-compile-mono: .stamp-configure-mono $(MONO_DEPENDENCIES) $(BUILDS_MAKEFILE_DEP) $(TOP)/Make.config
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios package-ios-bcl package-mac package-mac-bcl $(SDK_ARGS)
 	$(Q) touch $@
 
@@ -94,9 +94,13 @@ clean-local::
 	$(MAKE) -C $(SDK_BUILDDIR) clean $(SDK_ARGS)
 	$(Q) rm -f .stamp-compile-mono
 
-all-local:: .stamp-compile-mono
+all-local:: .stamp-compile-mono .stamp-mono-ios-sdk-destdir
 
 endif
+
+.stamp-mono-ios-sdk-destdir: .stamp-$(MONO_BUILD_MODE)
+	ln -sf $(MONO_IOS_SDK_DESTDIR) mono-ios-sdk-destdir
+	$(Q) touch $@
 
 ifdef FALSE  # TODO see if we still need this?
 ifdef ENABLE_XAMARIN
