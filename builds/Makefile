@@ -102,15 +102,6 @@ endif
 	ln -sf $(MONO_IOS_SDK_DESTDIR) mono-ios-sdk-destdir
 	$(Q) touch $@
 
-ifdef FALSE  # TODO see if we still need this?
-ifdef ENABLE_XAMARIN
-XAMARIN_AUTOGEN_FLAGS=--enable-extension-module=xamarin
-XAMARIN_IOS_CONFIGURE_FLAGS=--enable-extension-module=xamarin
-XAMARIN_MAC_CONFIGURE_FLAGS=--enable-extension-module=xamarin --enable-extension-module
--include $(MACCORE_PATH)/builds/Makefile.include
-endif
-endif
-
 ifndef DISABLE_STRIP
 INSTALL_STRIP_FLAG=-s
 endif
