@@ -347,40 +347,46 @@ namespace CoreFoundation {
 		CFSocket (int family, int type, int proto, CFRunLoop loop)
 		{
 			var ctx = new CFSocketContext (this);
-			try {
-				Initialize (
-					CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
-					loop
-				);
-			} finally {
-				ctx.Dispose ();
-			}
+			Initialize (
+				CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
+				loop,
+				ctx
+			);
 		}
 
 		internal CFSocket (CFSocketNativeHandle sock)
 		{
 			var ctx = new CFSocketContext (this);
+			Initialize (
+				CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
+				CFRunLoop.Current,
+				ctx
+			);
+		}
+
+		internal CFSocket (CFSocketSignature sig, double timeout)
+		{
+			var ctx = new CFSocketContext (this);
+			Initialize (
+				CFSocketCreateConnectedToSocketSignature (IntPtr.Zero, ref sig, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx, timeout),
+				CFRunLoop.Current,
+				ctx
+			);
+		}
+
+		void Initialize (IntPtr ptr, CFRunLoop runLoop, CFSocketContext ctx)
+		{
 			try {
-				Initialize (
-					CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
-					CFRunLoop.Current
-				);
+				if (ptr == IntPtr.Zero)
+					throw new CFSocketException (CFSocketError.Error);
+
+				handle = ptr;
+
+				using (var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true)) {
+					runLoop.AddSource (source, CFRunLoop.ModeDefault);
+				}
 			} finally {
 				ctx.Dispose ();
-			}
-		}
-
-		CFSocket (IntPtr handle)
-		{
-			Initialize (handle, CFRunLoop.Main);
-		}
-
-		void Initialize (IntPtr ptr, CFRunLoop runLoop)
-		{
-			handle = ptr;
-
-			using (var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true)) {
-				runLoop.AddSource (source, CFRunLoop.ModeDefault);
 			}
 		}
 
@@ -388,19 +394,15 @@ namespace CoreFoundation {
 		extern static IntPtr CFSocketCreateConnectedToSocketSignature (IntPtr allocator, ref CFSocketSignature signature,
 		                                                               nuint /*CFOptionFlags*/ callBackTypes,
 		                                                               CFSocketCallBack callout,
-		                                                               IntPtr context, double timeout);
+		                                                               ref CFSocketContext context, double timeout);
 
 		public static CFSocket CreateConnectedToSocketSignature (AddressFamily family, SocketType type,
 		                                                         ProtocolType proto, IPEndPoint endpoint,
 		                                                         double timeout)
 		{
-			var cbTypes = CFSocketCallBackType.ConnectCallBack | CFSocketCallBackType.DataCallBack;
 			using (var address = new CFSocketAddress (endpoint)) {
 				var sig = new CFSocketSignature (family, type, proto, address);
-				var handle = CFSocketCreateConnectedToSocketSignature (
-					IntPtr.Zero, ref sig, (nuint) (ulong) cbTypes, OnCallback, IntPtr.Zero, timeout);
-
-				return new CFSocket (handle);
+				return new CFSocket (sig, timeout);
 			}
 		}
 
