@@ -305,30 +305,21 @@ namespace CoreFoundation {
 		{
 		}
 
+		const CFSocketCallBackType defaultCallbackTypes = CFSocketCallBackType.DataCallBack | CFSocketCallBackType.ConnectCallBack;
 		CFSocket (int family, int type, int proto, CFRunLoop loop)
 		{
-			var cbTypes = CFSocketCallBackType.DataCallBack | CFSocketCallBackType.ConnectCallBack;
-
-			gch = GCHandle.Alloc (this);
-			var ctx = new CFStreamClientContext ();
-			ctx.Info = GCHandle.ToIntPtr (gch);
-
+			var ctx = CreateContext ();
 			Initialize (
-				CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) cbTypes, OnCallback, ref ctx),
+				CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
 				loop
 			);
 		}
 
 		internal CFSocket (CFSocketNativeHandle sock)
 		{
-			var cbTypes = CFSocketCallBackType.DataCallBack | CFSocketCallBackType.WriteCallBack;
-
-			gch = GCHandle.Alloc (this);
-			var ctx = new CFStreamClientContext ();
-			ctx.Info = GCHandle.ToIntPtr (gch);
-
+			var ctx = CreateContext ();
 			Initialize (
-				CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) cbTypes, OnCallback, ref ctx),
+				CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
 				CFRunLoop.Current
 			);
 		}
@@ -336,6 +327,14 @@ namespace CoreFoundation {
 		CFSocket (IntPtr handle)
 		{
 			Initialize (handle, CFRunLoop.Main);
+		}
+
+		CFStreamClientContext CreateContext ()
+		{
+			gch = GCHandle.Alloc (this);
+			return new CFStreamClientContext {
+				Info = GCHandle.ToIntPtr (gch),
+			};
 		}
 
 		void Initialize (IntPtr ptr, CFRunLoop runLoop)
