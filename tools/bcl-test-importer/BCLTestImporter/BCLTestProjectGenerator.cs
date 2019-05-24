@@ -228,7 +228,6 @@ namespace BCLTestImporter {
 			(assembly: "xammac_net_4_5_Mono.Messaging_test.dll", platforms: new [] { Platform.MacOSModern}), // not present 
 			(assembly: "xammac_net_4_5_System.Data_test.dll", platforms: new [] { Platform.MacOSModern }), // tests use 'System.Configuration.IConfigurationSectionHandler' not present in modern 
 			(assembly: "xammac_net_4_5_System.Configuration_test.dll", platforms: new [] { Platform.MacOSModern }), // Not present in modern, ergo all tests will fail
-			(assembly: "xammac_net_4_5_corlib_xunit-test.dll", platforms: new [] { Platform.MacOSFull, Platform.MacOSModern }), // issues https://github.com/xamarin/maccore/issues/1203
 		};
 
 		readonly bool isCodeGeneration;
