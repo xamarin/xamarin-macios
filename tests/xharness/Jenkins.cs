@@ -526,8 +526,10 @@ namespace xharness
 
 			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) => new RunSimulatorTask (buildTask, candidates?.Cast<SimDevice> () ?? test.Candidates)).ToList ();
 
-			foreach (var tv in testVariations)
-				await tv.FindSimulatorAsync ();
+			foreach (var tv in testVariations) {
+				if (!tv.Ignored)
+					await tv.FindSimulatorAsync ();
+			}
 
 			var rv = new List<AggregatedRunSimulatorTask> ();
 			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Device?.UDID ?? task.Candidates.ToString ())) {
