@@ -209,9 +209,51 @@ namespace CoreFoundation {
 		}
 	}
 
+	[StructLayout (LayoutKind.Sequential)]
+	struct CFSocketContext
+	{
+		nint Version; // CFIndex
+		/* void*/ IntPtr Info;
+		IntPtr Retain;
+		IntPtr Release;
+		IntPtr CopyDescription;
+
+		public CFSocketContext (CFSocket socket) : this ()
+		{
+			Info = (IntPtr) GCHandle.Alloc (socket);
+			Retain = Marshal.GetFunctionPointerForDelegate (retainCallback);
+			Release = Marshal.GetFunctionPointerForDelegate (releaseCallback);
+		}
+
+		public void Dispose ()
+		{
+			// Free the initial GCHandle, we have already given native a new one.
+			GCHandle.FromIntPtr (Info).Free ();
+		}
+
+		delegate IntPtr RetainCallback (IntPtr ptr);
+		static readonly RetainCallback retainCallback = OnContextRetain;
+
+		[MonoPInvokeCallback (typeof (RetainCallback))]
+		static IntPtr OnContextRetain (IntPtr ptr)
+		{
+			var gch = GCHandle.FromIntPtr (ptr);
+			return (IntPtr) GCHandle.Alloc (gch.Target);
+		}
+
+		delegate void ReleaseCallback (IntPtr ptr);
+		static readonly ReleaseCallback releaseCallback = OnContextRelease;
+
+		[MonoPInvokeCallback (typeof (ReleaseCallback))]
+		static void OnContextRelease (IntPtr ptr)
+		{
+			// This is always called with the GCHandle allocated by OnContextRetain.
+			GCHandle.FromIntPtr (ptr).Free ();
+		}
+	}
+
 	public class CFSocket : CFType, INativeObject, IDisposable {
 		IntPtr handle;
-		GCHandle gch;
 
 		~CFSocket ()
 		{
@@ -230,10 +272,6 @@ namespace CoreFoundation {
 		
 		protected virtual void Dispose (bool disposing)
 		{
-			if (disposing) {
-				if (gch.IsAllocated)
-					gch.Free ();
-			}
 			if (handle != IntPtr.Zero) {
 				CFObject.CFRelease (handle);
 				handle = IntPtr.Zero;
@@ -278,12 +316,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFSocketCreate (IntPtr allocator, int /*SInt32*/ family, int /*SInt32*/ type, int /*SInt32*/ proto,
 		                                     nuint /*CFOptionFlags*/ callBackTypes,
-		                                     CFSocketCallBack callout, ref CFStreamClientContext ctx);
+		                                     CFSocketCallBack callout, ref CFSocketContext ctx);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFSocketCreateWithNative (IntPtr allocator, CFSocketNativeHandle sock,
                                                        nuint /*CFOptionFlags*/ callBackTypes,
-		                                               CFSocketCallBack callout, ref CFStreamClientContext ctx);
+		                                               CFSocketCallBack callout, ref CFSocketContext ctx);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFSocketCreateRunLoopSource (IntPtr allocator, IntPtr socket, nint order);
@@ -300,41 +338,41 @@ namespace CoreFoundation {
 
 		public CFSocket (AddressFamily family, SocketType type, ProtocolType proto, CFRunLoop loop)
 			: this (CFSocketSignature.AddressFamilyToInt (family),
-			        CFSocketSignature.SocketTypeToInt (type),
-			        CFSocketSignature.ProtocolToInt (proto), loop)
+				CFSocketSignature.SocketTypeToInt (type),
+				CFSocketSignature.ProtocolToInt (proto), loop)
 		{
 		}
 
 		const CFSocketCallBackType defaultCallbackTypes = CFSocketCallBackType.DataCallBack | CFSocketCallBackType.ConnectCallBack;
 		CFSocket (int family, int type, int proto, CFRunLoop loop)
 		{
-			var ctx = CreateContext ();
-			Initialize (
-				CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
-				loop
-			);
+			var ctx = new CFSocketContext (this);
+			try {
+				Initialize (
+					CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
+					loop
+				);
+			} finally {
+				ctx.Dispose ();
+			}
 		}
 
 		internal CFSocket (CFSocketNativeHandle sock)
 		{
-			var ctx = CreateContext ();
-			Initialize (
-				CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
-				CFRunLoop.Current
-			);
+			var ctx = new CFSocketContext (this);
+			try {
+				Initialize (
+					CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
+					CFRunLoop.Current
+				);
+			} finally {
+				ctx.Dispose ();
+			}
 		}
 
 		CFSocket (IntPtr handle)
 		{
 			Initialize (handle, CFRunLoop.Main);
-		}
-
-		CFStreamClientContext CreateContext ()
-		{
-			gch = GCHandle.Alloc (this);
-			return new CFStreamClientContext {
-				Info = GCHandle.ToIntPtr (gch),
-			};
 		}
 
 		void Initialize (IntPtr ptr, CFRunLoop runLoop)
