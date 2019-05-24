@@ -6,8 +6,6 @@
 	<string>com.xamarin.mscorlibtests</string>
 	<key>MinimumOSVersion</key>
 	<string>6.0</string>
-	<key>UIApplicationExitsOnSuspend</key>
-	<true/>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
