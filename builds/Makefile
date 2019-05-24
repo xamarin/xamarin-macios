@@ -46,6 +46,8 @@ IPHONESIMULATOR_PREFIX=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/us
 IPHONEOS_SDK=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk
 IPHONEOS_PREFIX=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/usr
 
+all-local:: .stamp-mono-ios-sdk-destdir
+
 ifdef ENABLE_XAMARIN
 XAMARIN_AUTOGEN_FLAGS=--enable-extension-module=xamarin
 XAMARIN_IOS_CONFIGURE_FLAGS=--enable-extension-module=xamarin
@@ -141,6 +143,10 @@ endif
 
 SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
 SDK_DESTDIR = $(abspath $(MONO_PATH)/sdks/out)
+
+.stamp-mono-ios-sdk-destdir:
+	ln -sf $(MONO_IOS_SDK_DESTDIR) mono-ios-sdk-destdir
+	$(Q) touch $@
 
 $(MONO_PATH)/sdks/Make.config:
 	echo "DISABLE_ANDROID=1" > $@
