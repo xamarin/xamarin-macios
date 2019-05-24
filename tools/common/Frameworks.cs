@@ -446,6 +446,16 @@ public class Frameworks : Dictionary <string, Framework>
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
 		foreach (var nspace in namespaces) {
+			switch (nspace) {
+			case "QTKit":
+				if (Driver.LinkProhibitedFrameworks) {
+					ErrorHelper.Warning (5219, $"Linking against framework '{nspace}'. It is prohibited (rejected) by the Mac App Store");
+				}  else {
+					ErrorHelper.Warning (5220, $"Skipping framework '{nspace}'. It is prohibited (rejected) by the Mac App Store");
+					continue;
+				}
+				break;
+			}
 			if (Driver.GetFrameworks (app).TryGetValue (nspace, out var framework)) {
 				if (app.SdkVersion >= framework.Version) {
 					var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;

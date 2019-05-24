@@ -526,8 +526,10 @@ namespace xharness
 
 			var testVariations = CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) => new RunSimulatorTask (buildTask, candidates?.Cast<SimDevice> () ?? test.Candidates)).ToList ();
 
-			foreach (var tv in testVariations)
-				await tv.FindSimulatorAsync ();
+			foreach (var tv in testVariations) {
+				if (!tv.Ignored)
+					await tv.FindSimulatorAsync ();
+			}
 
 			var rv = new List<AggregatedRunSimulatorTask> ();
 			foreach (var taskGroup in testVariations.GroupBy ((RunSimulatorTask task) => task.Device?.UDID ?? task.Candidates.ToString ())) {
@@ -1651,7 +1653,7 @@ namespace xharness
 					var report = Path.Combine (LogDirectory, "index.html");
 					var tmpreport = Path.Combine (LogDirectory, $"index-{Harness.Timestamp}.tmp.html");
 					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Harness.Timestamp}.tmp");
-					using (var stream = new FileStream (tmpreport, FileMode.CreateNew, FileAccess.ReadWrite)) {
+					using (var stream = new FileStream (tmpreport, FileMode.Create, FileAccess.ReadWrite)) {
 						using (var markdown_writer = (string.IsNullOrEmpty (tmpmarkdown) ? null : new StreamWriter (tmpmarkdown))) {
 							GenerateReportImpl (stream, markdown_writer);
 						}

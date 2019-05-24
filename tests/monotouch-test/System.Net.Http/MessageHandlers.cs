@@ -1,4 +1,4 @@
-﻿//
+//
 // MessageHandlers.cs
 //
 
@@ -172,6 +172,7 @@ namespace MonoTests.System.Net.Http
 			bool servicePointManagerCbWasExcuted = false;
 			bool done = false;
 			Exception ex = null;
+			HttpResponseMessage result = null;
 
 			var handler = GetHandler (handlerType);
 			if (handler is NSUrlSessionHandler ns) {
@@ -195,7 +196,7 @@ namespace MonoTests.System.Net.Http
 					client.BaseAddress = new Uri ("https://httpbin.org");
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
-					var result = await client.GetAsync ("https://httpbin.org/redirect/3");
+					result = await client.GetAsync ("https://httpbin.org/redirect/3");
 				} catch (Exception e) {
 					ex = e;
 				} finally {
@@ -204,10 +205,11 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
-			if (!done) { // timeouts happen in the bost due to dns issues, connection issues etc.. we do not want to fail
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				// assert the exception type
+				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
 				Assert.IsInstanceOfType (typeof (HttpRequestException), ex);
 				Assert.IsNotNull (ex.InnerException);
 				Assert.IsInstanceOfType (typeof (WebException), ex.InnerException);
@@ -256,7 +258,7 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
-			if (!done) { // timeouts happen in the bost due to dns issues, connection issues etc.. we do not want to fail
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				// assert that we did not get an exception
