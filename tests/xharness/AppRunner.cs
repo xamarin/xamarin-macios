@@ -371,7 +371,7 @@ namespace xharness
 			}
 			var passed = total - errors - failed - notRun - inconclusive - ignored - skipped - invalid;
 			var resultLine = $"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}";
-			return (resultLine, errors != 0 || failed != 0);
+			return (resultLine, total == 0 || errors != 0 || failed != 0);
 		}
 
 		(string resultLine, bool failed) ParseNUnitXml (StreamReader stream, StreamWriter writer)
@@ -434,7 +434,7 @@ namespace xharness
 			string resultLine = $"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}";
 			writer.WriteLine (resultLine);
 			
-			return (resultLine, errors != 0 || failed != 0);
+			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
 		
 		(string resultLine, bool failed, bool crashed) ParseResult (Log listener_log, bool timed_out, bool crashed)
