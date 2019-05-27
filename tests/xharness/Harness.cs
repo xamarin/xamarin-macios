@@ -268,7 +268,6 @@ namespace xharness
 			}
 
 			var bcl_suites = new string[] {
-				"mscorlib",
 			};
 			foreach (var p in bcl_suites) {
 				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
@@ -307,12 +306,9 @@ namespace xharness
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 			var bcl_suites = new string [] {
-				"mscorlib",
 			};
 			var bcl_skip_watchos = new string [] {
 			};
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
 			foreach (var p in test_suites)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))) { Name = p });
 			foreach (var p in fsharp_test_suites)

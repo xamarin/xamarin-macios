@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>%APPLICATION NAME%</string>
+	<string>com.xamarin.bcltests.%APPLICATION NAME%</string>
 	<key>CFBundleIdentifier</key>
 	<string>%BUNDLE INDENTIFIER%</string>
 	<key>CFBundleName</key>

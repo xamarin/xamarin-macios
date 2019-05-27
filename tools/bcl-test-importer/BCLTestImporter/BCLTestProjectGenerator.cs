@@ -122,7 +122,7 @@ namespace BCLTestImporter {
 			(name:"MicrosoftCSharpXunit", assemblies: new [] {"monotouch_Microsoft.CSharp_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 4"),
 
 			// BCL tests group 5
-			(name:"CorlibXunit", assemblies: new [] {"monotouch_corlib_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 5"),
+			(name:"mscorlib", assemblies: new [] {"monotouch_corlib_xunit-test.dll"}, extraArgs: null, group: "mscorlib"), // special testcase for the corlib which is later used in xHarness for diff config options
 
 			// BCL tests group 6
 			(name:"SystemNetHttpUnitTestsXunit", assemblies: new [] {"monotouch_System.Net.Http.UnitTests_xunit-test.dll"}, extraArgs: null, group: "BCL tests group 6"),
@@ -208,8 +208,8 @@ namespace BCLTestImporter {
 			(name:"SystemXmlLinqXunit", assemblies: new [] {"xammac_net_4_5_System.Xml.Linq_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemXmlXunit", assemblies: new [] {"xammac_net_4_5_System.Xml_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
 			(name:"SystemXunit", assemblies: new [] {"xammac_net_4_5_System_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 4"),
-			
-			(name:"CorlibXunit", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}, extraArgs: null, group: "Mac OS X BCL tests group 5"),
+
+			(name:"mscorlib", assemblies: new [] {"xammac_net_4_5_corlib_xunit-test.dll"}, extraArgs: null, group: "mscorlib"), // special testcase for the corlib which is later used in xHarness for diff config options
 
 		};
 		
