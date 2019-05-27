@@ -42,8 +42,8 @@ namespace xharness
 		}
 
 		// This is the maccore/tests directory.
-		string root_directory;
-		public string RootDirectory {
+		static string root_directory;
+		public static string RootDirectory {
 			get {
 				if (root_directory == null) {
 					var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
