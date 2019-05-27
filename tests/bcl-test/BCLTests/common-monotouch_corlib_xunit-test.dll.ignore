@@ -799,6 +799,7 @@ System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsGreaterThanPositionAndDoesNotOv
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_InvalidArgsThrows
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_PrecanceledToken_Cancels
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_AllDataCopied
+# mono issue: https://github.com/mono/mono/issues/14666
 KLASS:System.Threading.ThreadPools.Tests.ThreadPoolTests
 
 # tests do crash do to memory issues

@@ -210,6 +210,7 @@ System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWrit
 System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: True, underlyingCanSeek: False)
 System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: False, underlyingCanSeek: True)
 System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: False, underlyingCanSeek: False)
+# mono issue: https://github.com/mono/mono/issues/14666 
 KLASS:System.Threading.ThreadPools.Tests.ThreadPoolTests
 KLASS:System.IO.Tests.File_AppendAllTextAsync
 KLASS:System.IO.Tests.File_AppendAllTextAsync_Encoded
