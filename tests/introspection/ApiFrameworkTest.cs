@@ -78,10 +78,10 @@ namespace Introspection {
 			// not a framework, largely p/invokes to /usr/lib/libSystem.dylib
 			case "Darwin":
 				return true;
+#endif
 			// not directly bindings
 			case "System.Net.Http":
 				return true;
-#endif
 			default:
 				return false;
 			}

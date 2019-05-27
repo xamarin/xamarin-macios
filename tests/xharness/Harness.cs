@@ -269,20 +269,6 @@ namespace xharness
 
 			var bcl_suites = new string[] {
 				"mscorlib",
-				"System",
-				"System.Core",
-				"System.Data",
-				"System.Runtime.Serialization",
-				"System.Transactions", "System.Web.Services",
-				"System.Xml",
-				"System.ServiceModel.Web",
-				"Mono.Data.Sqlite",
-				"System.IO.Compression",
-				"System.IO.Compression.FileSystem",
-				"Mono.CSharp",
-				"System.Security",
-				"System.ServiceModel",
-				"System.IdentityModel",
 			};
 			foreach (var p in bcl_suites) {
 				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
@@ -322,18 +308,8 @@ namespace xharness
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 			var bcl_suites = new string [] {
 				"mscorlib",
-				"System.Data",
-				"System.Net.Http",
-				"System.Web.Services",
-				"System.Xml",
-				"Mono.Data.Sqlite",
-				"System.IO.Compression",
-				"System.IO.Compression.FileSystem",
-				"System.ServiceModel",
-				"System.IdentityModel",
 			};
 			var bcl_skip_watchos = new string [] {
-				"Mono.Data.Tds",
 			};
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
@@ -364,7 +340,8 @@ namespace xharness
 				var monoNativeInfo = new MonoNativeInfo (this, flavor);
 				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath, generateVariations: false) {
 					MonoNativeInfo = monoNativeInfo,
-					Name = monoNativeInfo.ProjectName
+					Name = monoNativeInfo.ProjectName,
+					SkipwatchOSARM64_32Variation = monoNativeInfo.ProjectName.Contains ("compat"),
 				};
 
 				IOSTestProjects.Add (iosTestProject);
@@ -885,14 +862,6 @@ namespace xharness
 
 			return rv;
 		}
-
-		Task<ProcessExecutionResult> build_bcl_tests;
- 		public Task<ProcessExecutionResult> BuildBclTests ()
- 		{
- 			if (build_bcl_tests == null)
- 				build_bcl_tests = ProcessHelper.ExecuteCommandAsync ("make", $".stamp-build-mono-unit-tests -C {StringUtils.Quote (Path.GetFullPath (RootDirectory))}", HarnessLog, TimeSpan.FromMinutes (30));
- 			return build_bcl_tests;
- 		}
 
 	}
 

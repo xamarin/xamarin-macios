@@ -134,7 +134,7 @@ namespace Xamarin.MMP.Tests
 
 				// Due to https://bugzilla.xamarin.com/show_bug.cgi?id=48311 we can get warnings related to the registrar
 				Func<string, bool> hasLegitWarning = results =>
-					results.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("warning") && !x.Contains ("deviceBrowserView:selectionDidChange:"));
+					results.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("warning") && !(x.Contains ("deviceBrowserView:selectionDidChange:") || x.Contains ("It is prohibited (rejected) by the Mac App Store")));
 
 				// Mobile
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;

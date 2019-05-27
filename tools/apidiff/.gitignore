@@ -10,5 +10,5 @@ tvos-*.md
 watchos-*.md
 macos-*.md
 xamarin-*.md
-.unzip.stamp
+*.stamp
 bundle-*.zip

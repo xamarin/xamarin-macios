@@ -1,0 +1,26 @@
+# blocks app
+KLASS:System.Net.Tests.SyncWebClientTest
+KLASS:System.Text.RegularExpressions.Tests.RegexGroupTests
+KLASS:System.Text.RegularExpressions.Tests.RegexCacheTests
+KLASS:System.Text.RegularExpressions.Tests.RegexConstructorTests
+KLASS:System.Net.WebSockets.Tests.WebSocketTests
+System.Net.WebSockets.Tests.WebSocketTests.ReceiveAsync_ServerSplitHeader_ValidDataReceived
+System.Net.Tests.WebClientTest.ResponseHeaders_ContainsHeadersAfterOperation
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: null)
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=utf-8")
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=us-ascii")
+System.Net.Tests.TaskWebClientTest.DownloadData_Success
+System.Net.Tests.TaskWebClientTest.DownloadData_LargeData_Success
+System.Net.Tests.TaskWebClientTest.DownloadFile_Success
+System.Net.Tests.TaskWebClientTest.OpenRead_Success
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=utf-8")
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: null)
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=us-ascii")
+System.Text.RegularExpressions.Tests.RegexConstructorTests.Ctor_InvalidPattern(pattern: "?((a)a|", options: None)
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_Timeout_Throws
+System.Text.RegularExpressions.Tests.RegexConstructorTests.StaticCtor_InvalidTimeoutRange_ExceptionThrown
+RemoteExecutorTests.RemoteInvokeWritesToFile
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_ExcessPrefix
+System.Net.Tests.WebClientTest.RequestHeaders_SpecialHeaders_RequestSucceeds
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_SpecialUnicodeCharacters_enUS
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_SpecialUnicodeCharacters_Invariant

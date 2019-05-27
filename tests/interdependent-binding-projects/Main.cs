@@ -34,4 +34,13 @@ public partial class AppDelegate : UIApplicationDelegate
 		UIApplication.Main (args, null, typeof (AppDelegate));
 	}
 }
+#else
+public static partial class TestLoader {
+	static partial void AddTestAssembliesImpl (BaseTouchRunner runner)
+	{
+		runner.Add (typeof (Xamarin.BindingTests2.BindingTest).Assembly);
+		runner.Add (typeof (Xamarin.BindingTests.ProtocolTest).Assembly);
+	}
+}
+
 #endif // !__WATCHOS__

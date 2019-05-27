@@ -10296,7 +10296,7 @@ namespace AppKit {
 		void ResetCursorRects ();
 
 		[Export ("setToolTip:forCell:")]
-		void SetToolTipForCell (string toolTipString, NSCell cell);
+		void SetToolTipForCell ([NullAllowed] string toolTipString, NSCell cell);
 
 		[Export ("toolTipForCell:")]
 		string ToolTipForCell (NSCell cell);
@@ -13701,7 +13701,7 @@ namespace AppKit {
 		NSMenu GetMenu (nint forSegment);
 
 		[Export ("setToolTip:forSegment:")]
-		void SetToolTip (string toolTip, nint forSegment);
+		void SetToolTip ([NullAllowed] string toolTip, nint forSegment);
 
 		[Export ("toolTipForSegment:")]
 		string GetToolTip (nint forSegment);

@@ -104,6 +104,7 @@ namespace Xamarin.Tests
 						Version alternate_version = null;
 						Version mono_native_compat_version;
 						Version mono_native_unified_version;
+						Version alternate_mono_native_unified_version = null;
 						switch (load_command) {
 						case MachO.LoadCommands.MinMacOSX:
 							version = SdkVersions.MinOSXVersion;
@@ -129,8 +130,12 @@ namespace Xamarin.Tests
 							break;
 						case MachO.LoadCommands.MinwatchOS:
 							version = SdkVersions.MinWatchOSVersion;
+							if (device)
+								alternate_version = new Version (5, 1, 0); // arm64_32 has min OS 5.1
 							mono_native_compat_version = SdkVersions.MinWatchOSVersion;
 							mono_native_unified_version = new Version (5, 0, 0);
+							if (device)
+								alternate_mono_native_unified_version = new Version (5, 1, 0); // armv7k has 5.0, arm64_32 has 5.1
 							break;
 						default:
 							throw new NotImplementedException (load_command.ToString ());
@@ -141,6 +146,8 @@ namespace Xamarin.Tests
 						mono_native_unified_version = mono_native_unified_version.WithBuild ();
 						if (alternate_version == null)
 							alternate_version = version;
+						if (alternate_mono_native_unified_version == null)
+							alternate_mono_native_unified_version = mono_native_unified_version;
 
 						switch (Path.GetFileName (machoFile)) {
 						case "libmono-native-compat.dylib":
@@ -150,7 +157,7 @@ namespace Xamarin.Tests
 							break;
 						case "libmono-native-unified.dylib":
 						case "libmono-native-unified.a":
-							if (mono_native_unified_version != lc_min_version)
+							if (mono_native_unified_version != lc_min_version && alternate_mono_native_unified_version != lc_min_version)
 								failed.Add ($"Unexpected minOS version (expected {mono_native_unified_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
 							break;
 						default:
