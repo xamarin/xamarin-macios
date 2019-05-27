@@ -2177,6 +2177,10 @@ namespace xharness
 													summary = data_tuple.Item1;
 													fails = data_tuple.Item2;
 												}
+												if (fails.Count > 100) {
+													fails.Add ("...");
+													break;
+												}
 											}
 											if (fails.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
@@ -2203,8 +2207,13 @@ namespace xharness
 														// Sometimes we put error messages in pull request descriptions
 														// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
 														// So exclude any lines matching 'ghprbPull', to avoid reporting those environment variables as build errors.
-														if (line.Contains (": error") && !line.Contains ("ghprbPull"))
+														if (line.Contains (": error") && !line.Contains ("ghprbPull")) {
 															errors.Add (line);
+															if (errors.Count > 20) {
+																errors.Add ("...");
+																break;
+															}
+														}
 													}
 													log_data [log] = new Tuple<long, object> (reader.BaseStream.Length, errors);
 												} else {
