@@ -210,7 +210,7 @@ System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWrit
 System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: True, underlyingCanSeek: False)
 System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: False, underlyingCanSeek: True)
 System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: False, underlyingCanSeek: False)
-KLASS:System.Threading.ThreadPools.Tests.ThreadPoolTests.ConcurrentInitializeTest
+KLASS:System.Threading.ThreadPools.Tests.ThreadPoolTests
 KLASS:System.IO.Tests.File_AppendAllTextAsync
 KLASS:System.IO.Tests.File_AppendAllTextAsync_Encoded
 KLASS:System.IO.Tests.File_AppendAllLinesAsync
@@ -253,26 +253,7 @@ System.IO.Tests.File_Exists.UncPathWithoutShareNameAsPath_ReturnsFalse
 
 # Expected: True
 # Actual:   False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_RunsAsynchronously
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ReferenceTypeStateObjectPassedThrough
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: True, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: True, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: False, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: False, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: True, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: False, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: False, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: True, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ValueTypeStateObjectPassedThrough
 System.IO.Tests.FileInfo_Exists.UnsharedFileExists
-System.Threading.ThreadPools.Tests.ThreadPoolTests.GetAvailableThreadsTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueRegisterPositiveAndFlowTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueRegisterNegativeTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.ConcurrentInitializeTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.GetMinMaxThreadsTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_NullValidForState
 
 # Exception messages: Timed out after 60000ms waiting for remote process 14899
 Expected: True

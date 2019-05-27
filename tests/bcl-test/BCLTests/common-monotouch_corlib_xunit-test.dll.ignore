@@ -764,38 +764,6 @@ System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAs
 System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully(yields: 2)
 System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully(yields: 10)
 System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.AwaitTasksAndValueTasks_InTaskAndValueTaskMethods
-System.Threading.ThreadPools.Tests.ThreadPoolTests.ConcurrentInitializeTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.GetMinMaxThreadsTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.GetAvailableThreadsTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.SetMinMaxThreadsTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.SetMinMaxThreadsTest_ChangedInDotNetCore
-System.Threading.ThreadPools.Tests.ThreadPoolTests.SetMinThreadsTo0Test
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueRegisterPositiveAndFlowTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueRegisterNegativeTest
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: True, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: True, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: False, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_InvalidArguments_Throws(preferLocal: False, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_NullValidForState(preferLocal: True, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_NullValidForState(preferLocal: True, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_NullValidForState(preferLocal: False, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_NullValidForState(preferLocal: False, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ReferenceTypeStateObjectPassedThrough(preferLocal: True, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ReferenceTypeStateObjectPassedThrough(preferLocal: True, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ReferenceTypeStateObjectPassedThrough(preferLocal: False, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ReferenceTypeStateObjectPassedThrough(preferLocal: False, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ValueTypeStateObjectPassedThrough(preferLocal: True, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ValueTypeStateObjectPassedThrough(preferLocal: True, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ValueTypeStateObjectPassedThrough(preferLocal: False, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ValueTypeStateObjectPassedThrough(preferLocal: False, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_RunsAsynchronously(preferLocal: True, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_RunsAsynchronously(preferLocal: True, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_RunsAsynchronously(preferLocal: False, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_RunsAsynchronously(preferLocal: False, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: True, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: True, useUnsafe: False)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: False, useUnsafe: True)
-System.Threading.ThreadPools.Tests.ThreadPoolTests.QueueUserWorkItem_PreferLocal_ExecutionContextFlowedIfSafe(preferLocal: False, useUnsafe: False)
 System.IO.Tests.BufferedStreamFlushTests.ShouldNotFlushUnderlyingStreamIfReadOnly(underlyingCanSeek: True)
 System.IO.Tests.BufferedStreamFlushTests.ShouldNotFlushUnderlyingStreamIfReadOnly(underlyingCanSeek: False)
 System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: True, underlyingCanSeek: True)
@@ -831,6 +799,7 @@ System.IO.Tests.StreamCopyToTests.AsyncIfLengthIsGreaterThanPositionAndDoesNotOv
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_InvalidArgsThrows
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_PrecanceledToken_Cancels
 System.IO.Tests.StreamCopyToTests.CopyToAsync_StreamToken_AllDataCopied
+KLASS:System.Threading.ThreadPools.Tests.ThreadPoolTests
 
 # tests do crash do to memory issues
 KLASS:System.IO.Tests.FileInfo_CopyTo_str_b
