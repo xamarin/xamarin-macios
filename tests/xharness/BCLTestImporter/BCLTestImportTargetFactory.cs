@@ -35,17 +35,17 @@ namespace xharness.BCLTestImporter {
 		{
 			var result = new List<iOSTestProject> ();
 			// generate all projects, then create a new iOSTarget per project
-			foreach (var (name, path, xunit, extraArgs, platforms, failure) in projectGenerator.GenerateAlliOSTestProjects ()) {
-				var prefix = xunit ? "xUnit" : "NUnit";
-				var finalName = (name == "mscorlib") ? name : $"[{prefix}] Mono {name}"; // mscorlib is our special test
-				result.Add (new iOSTestProject (path) {
+			foreach (var tp in projectGenerator.GenerateAlliOSTestProjects ()) {
+				var prefix = tp.XUnit ? "xUnit" : "NUnit";
+				var finalName = (tp.Name == "mscorlib") ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
+				result.Add (new iOSTestProject (tp.Path) {
 					Name = finalName,
-					SkipiOSVariation = !platforms.Contains (Platform.iOS),
-					SkiptvOSVariation = !platforms.Contains (Platform.TvOS),
-					SkipwatchOSVariation = !platforms.Contains (Platform.WatchOS),
-					FailureMessage = failure,
+					SkipiOSVariation = !tp.Platforms.Contains (Platform.iOS),
+					SkiptvOSVariation = !tp.Platforms.Contains (Platform.TvOS),
+					SkipwatchOSVariation = !tp.Platforms.Contains (Platform.WatchOS),
+					FailureMessage = tp.Failure,
 					RestoreNugetsInProject = true,
-					MTouchExtraArgs = extraArgs,
+					MTouchExtraArgs = tp.ExtraArgs,
 				});
 			}
 			return result;
@@ -59,16 +59,16 @@ namespace xharness.BCLTestImporter {
 			else
 				platform = Platform.MacOSModern;
 			var result = new List<MacTestProject> ();
-			foreach (var (name, path, xunit, extraArgs, failure) in projectGenerator.GenerateAllMacTestProjects (platform)) {
-				var prefix = xunit ? "xUnit" : "NUnit";
-				var finalName = (name == "mscorlib") ? name : $"[{prefix}] Mono {name}"; // mscorlib is our special test
-				result.Add (new MacTestProject (path, targetFrameworkFlavor: flavor, generateVariations: false) {
+			foreach (var tp in projectGenerator.GenerateAllMacTestProjects (platform)) {
+				var prefix = tp.XUnit ? "xUnit" : "NUnit";
+				var finalName = (tp.Name == "mscorlib") ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
+				result.Add (new MacTestProject (tp.Path, targetFrameworkFlavor: flavor, generateVariations: false) {
 					Name = finalName,
 					Platform = "AnyCPU",
 					IsExecutableProject = true,
-					FailureMessage = failure,
+					FailureMessage = tp.Failure,
 					RestoreNugetsInProject = true,
-					MTouchExtraArgs = extraArgs,
+					MTouchExtraArgs = tp.ExtraArgs,
 				});
 			}
 			return result;
