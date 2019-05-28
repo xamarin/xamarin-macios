@@ -302,7 +302,7 @@ namespace xharness
 
 		void AutoConfigureIOS ()
 		{
-			var test_suites = new string [] { "monotouch-test", "framework-test", "mini", "interdependent-binding-projects" };
+			var test_suites = new string [] { "monotouch-test", "framework-test", "interdependent-binding-projects" };
 			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-test2", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
