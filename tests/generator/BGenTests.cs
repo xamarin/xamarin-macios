@@ -588,10 +588,16 @@ namespace GeneratorTests
 		[Test]
 		public void GHIssue5692 () => BuildFile (Profile.iOS, "ghissue5692.cs");
 
+		[Test]
 		public void RefOutParameters ()
 		{
 			BuildFile (Profile.macOSMobile, true, "tests/ref-out-parameters.cs");
+		}
 
+		[Test]
+		public void ReturnRelease ()
+		{
+			BuildFile (Profile.iOS, "tests/return-release.cs");
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
