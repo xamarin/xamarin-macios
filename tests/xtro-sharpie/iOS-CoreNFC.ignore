@@ -1,0 +1,5 @@
+
+# Initial result from new rule missing-release-attribute-on-return-value
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreNFC.NFCIso15693TagWrapper::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreNFC.NFCTagCommandConfiguration::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreNFC.NFCTagWrapper::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

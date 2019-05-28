@@ -315,17 +315,6 @@ namespace xharness
 						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					}
 					break;
-				case "mini":
-					if (supports_debug)
-						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
-					if (supports_interpreter) {
-						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-					}
-					break;
 				}
 				break;
 			case "iPhoneSimulator":
@@ -676,10 +665,6 @@ namespace xharness
 		{
 			// https://github.com/xamarin/maccore/issues/1008
 			ForceExtensionBuildOnly = true;
-
-			// https://github.com/xamarin/maccore/issues/1011
-			foreach (var mono in Harness.IOSTestProjects.Where (x => x.Name == "mini"))
-				mono.BuildOnly = true;
 		}
 
 		void SelectTestsByModifiedFiles (int pull_request)
@@ -1185,7 +1170,6 @@ namespace xharness
 				if (Harness.InWrench)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
-				Harness.HarnessLog.Timestamp = true;
 
 				var tasks = new List<Task> ();
 				if (IsServerMode)
@@ -1201,7 +1185,6 @@ namespace xharness
 				}
 				if (!string.IsNullOrEmpty (Harness.PeriodicCommand)) {
 					var periodic_log = Logs.Create ("PeriodicCommand.log", "Periodic command log");
-					periodic_log.Timestamp = true;
 					Task.Run (async () => await ExecutePeriodicCommandAsync (periodic_log));
 				}
 
@@ -1944,7 +1927,7 @@ namespace xharness
 							if (previous.Any ()) {
 								sb.AppendLine ("\t<li>Previous test runs");
 								sb.AppendLine ("\t\t<ul>");
-								foreach (var prev in previous) {
+								foreach (var prev in previous.OrderBy ((v) => v).Reverse ()) {
 									var dir = Path.GetFileName (Path.GetDirectoryName (prev));
 									var ts = dir;
 									var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
@@ -2175,6 +2158,10 @@ namespace xharness
 													summary = data_tuple.Item1;
 													fails = data_tuple.Item2;
 												}
+												if (fails.Count > 100) {
+													fails.Add ("...");
+													break;
+												}
 											}
 											if (fails.Count > 0) {
 												writer.WriteLine ("<div style='padding-left: 15px;'>");
@@ -2201,8 +2188,13 @@ namespace xharness
 														// Sometimes we put error messages in pull request descriptions
 														// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
 														// So exclude any lines matching 'ghprbPull', to avoid reporting those environment variables as build errors.
-														if (line.Contains (": error") && !line.Contains ("ghprbPull"))
+														if (line.Contains (": error") && !line.Contains ("ghprbPull")) {
 															errors.Add (line);
+															if (errors.Count > 20) {
+																errors.Add ("...");
+																break;
+															}
+														}
 													}
 													log_data [log] = new Tuple<long, object> (reader.BaseStream.Length, errors);
 												} else {
@@ -2963,7 +2955,6 @@ namespace xharness
 					make.StartInfo.Arguments = Target;
 					SetEnvironmentVariables (make);
 					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", "Build log");
-					log.Timestamp = true;
 					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
@@ -3161,7 +3152,6 @@ namespace xharness
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", "XML log");
 				var log = Logs.Create ($"execute-{Timestamp}.txt", "Execution log");
-				log.Timestamp = true;
 				FindNUnitConsoleExecutable (log);
 				using (var proc = new Process ()) {
 
@@ -3348,7 +3338,6 @@ namespace xharness
 					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
-					log.Timestamp = true;
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
@@ -3721,7 +3710,7 @@ namespace xharness
 
 					if (!Failed) {
 						// Install the app
-						this.install_log = new AppInstallMonitorLog (Logs.Create ($"install-{Timestamp}.log", "Install log", timestamp: true));
+						this.install_log = new AppInstallMonitorLog (Logs.Create ($"install-{Timestamp}.log", "Install log"));
 						try {
 							runner.MainLog = this.install_log;
 							var install_result = await runner.InstallAsync (install_log.CancellationToken );

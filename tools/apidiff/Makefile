@@ -47,11 +47,11 @@ MAC_ARCH_ASSEMBLIES = native-32/Xamarin.Mac native-64/Xamarin.Mac
 
 APIDIFF_IGNORE = -i 'INSObjectProtocol'
 
-.download-$(MONO_HASH).stamp:
+$(APIDIFF_DIR)/.download-$(MONO_HASH).stamp:
 	$(MAKE) -C $(TOP)/builds download
 	$(Q) touch $@
 
-$(MONO_API_INFO) $(MONO_API_HTML): .download-$(MONO_HASH).stamp
+$(MONO_API_INFO) $(MONO_API_HTML): $(APIDIFF_DIR)/.download-$(MONO_HASH).stamp
 
 # create api info. Directory hierarchy is based on installed hierarchy
 # (XM goes into temp/xm, and XI goes into temp/xi)
