@@ -1,3 +1,13 @@
 ## OSX-only API, rdar #22524785
 ## see https://trello.com/c/kpksFWto/6-22524785-coreimage-headers-discrepancies
 !missing-selector! CIKernel::setROISelector: not bound
+
+# Initial result from new rule missing-release-attribute-on-return-value
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreImage.CIBarcodeDescriptor::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreImage.CIColor::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreImage.CIFilter::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreImage.CIFilterShape::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreImage.CIImage::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreImage.CIQRCodeFeature::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreImage.CISampler::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreImage.CIVector::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

@@ -91,6 +91,7 @@
     <Compile Include="DeprecatedCheck.cs" />
     <Compile Include="AttributeHelpers.cs" />
     <Compile Include="VersionHelpers.cs" />
+    <Compile Include="ReleaseAttributeCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

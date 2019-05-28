@@ -10,3 +10,9 @@
 
 ## this was, at some point, crashing on macOS so we provided a different implementation that expose events
 !missing-selector! CBCentralManager::init not bound
+
+# Initial result from new rule missing-release-attribute-on-return-value
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreBluetooth.CBCentral::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreBluetooth.CBPeer::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreBluetooth.CBPeripheral::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject CoreBluetooth.CBUUID::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
