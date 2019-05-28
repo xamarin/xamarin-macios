@@ -1946,7 +1946,7 @@ namespace xharness
 							if (previous.Any ()) {
 								sb.AppendLine ("\t<li>Previous test runs");
 								sb.AppendLine ("\t\t<ul>");
-								foreach (var prev in previous) {
+								foreach (var prev in previous.OrderBy ((v) => v).Reverse ()) {
 									var dir = Path.GetFileName (Path.GetDirectoryName (prev));
 									var ts = dir;
 									var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
