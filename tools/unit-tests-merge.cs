@@ -55,27 +55,10 @@ try {
 	string clr_version = null;
 
 	foreach ( var filePath in files) {
+		Console.WriteLine ($"Reading {filePath}");
 		using (var stream = new StreamReader (filePath))
 		using (var reader = XmlReader.Create (stream)) {
 			while (reader.Read ()) {
-				if (reader.NodeType == XmlNodeType.Element && reader.Name == "environment") {
-					if (string.IsNullOrEmpty (os_version))
-						os_version = reader ["os-version"];
-					if (string.IsNullOrEmpty (platform))
-						platform = reader ["platform"];
-					if (string.IsNullOrEmpty (cwd))
-						cwd = reader ["cwd"];
-					if (string.IsNullOrEmpty (machine_name))
-						machine_name = reader ["machine-name"];
-					if (string.IsNullOrEmpty (user))
-						user = reader ["user"];
-					if (string.IsNullOrEmpty (user_domain))
-						user_domain = reader ["user_domain"];
-					if (string.IsNullOrEmpty (nunit_version)
-						nunit_version = reader ["nunit-version"];
-					if (string.IsNullOrEmpty (clr_version))
-						clr_version = reader ["clr-version"]
-				}
 				if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
 					// read the attrs and get out of the loop
 					errors += Convert.ToInt64 (reader ["errors"]);
@@ -90,6 +73,26 @@ try {
 						time = time.Value.Add (TimeSpan.Parse (reader ["time"]));
 					else
 						time = TimeSpan.Parse (reader ["time"]);
+					if (reader.ReadToFollowing ("environment")) {
+						if (reader.NodeType == XmlNodeType.Element && reader.Name == "environment") {
+							if (string.IsNullOrEmpty (os_version))
+								os_version = reader ["os-version"];
+							if (string.IsNullOrEmpty (platform))
+								platform = reader ["platform"];
+							if (string.IsNullOrEmpty (cwd))
+								cwd = reader ["cwd"];
+							if (string.IsNullOrEmpty (machine_name))
+								machine_name = reader ["machine-name"];
+							if (string.IsNullOrEmpty (user))
+								user = reader ["user"];
+							if (string.IsNullOrEmpty (user_domain))
+								user_domain = reader ["user_domain"];
+							if (string.IsNullOrEmpty (nunit_version))
+								nunit_version = reader ["nunit-version"];
+							if (string.IsNullOrEmpty (clr_version))
+								clr_version = reader ["clr-version"];
+						}
+					}
 					break; // while loop exit
 				}
 			}
@@ -103,27 +106,43 @@ try {
 		File.Delete (outPutPath);
 
 	using (var writer = File.CreateText (outPutPath)) {
+		Console.WriteLine ("Writing grouped result");
 		writer.WriteLine ("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 		writer.WriteLine ($"<test-results name=\"Test results\" errors=\"{errors}\" inconclusive=\"{inconclusive}\" ignored=\"{ignored}\" invalid=\"{invalid}\" not-run=\"{notRun}\" date=\"{date}\" time=\"{time.Value}\" total=\"{total}\" failures=\"{failures}\" skipped=\"{skipped}\">");
-		writer.WriteLine ($"<environment os-version=\"{os_version}\" platform=\"{platform}\" cwd=\"{cwd}\" machine-name=\"{machine_name}\" user=\"{user}\" user-domain=\"{user_domain}\" nunit-version=\"{nunit_version}\" clr-version=\"{clr_version}\"></environment>");
-		writer.WriteLine ("<culture-info current-culture=\"unknown\" current-uiculture=\"unknown\" />");
+		writer.WriteLine ($"  <environment os-version=\"{os_version}\" platform=\"{platform}\" cwd=\"{cwd}\" machine-name=\"{machine_name}\" user=\"{user}\" user-domain=\"{user_domain}\" nunit-version=\"{nunit_version}\" clr-version=\"{clr_version}\"></environment>");
+		writer.WriteLine ("  <culture-info current-culture=\"unknown\" current-uiculture=\"unknown\" />");
+		writer.WriteLine ($"  <test-suite type=\"Assemblies\" name=\"Device Tests\" executed=\"True\" success=\"{(errors == 0 && failures == 0)? "True" : "False" }\" result=\"{(errors == 0 && failures == 0)? "Success" : "Failure"}\" time=\"{time.Value}\">");
+    	writer.WriteLine ("    <results>");
 		foreach (var filePath in files) {
+			var testName = "";
 			using (var stream = new StreamReader (filePath))
 			using (var reader = XmlReader.Create (stream)) {
 				while (reader.Read ()) {
+					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") { // grab the name of the test, will improve parsing on the server side
+						testName = reader ["name"];
+					}
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader ["type"] == "Assemblies" || reader ["type"] == "TestSuite")) {
-						// add the current node to the writer
-						writer.WriteLine (reader.ReadOuterXml ());
+						if (string.IsNullOrEmpty (testName)) {
+							// add the current node to the writer
+							writer.WriteLine (reader.ReadOuterXml ());
+						} else {
+							writer.Write ($"<test-suite type=\"{reader ["type"]}\" name=\"{testName}\" executed=\"{reader ["executed"]}\" success=\"{reader ["success"]}\" result=\"{reader ["result"]}\" time=\"{reader ["time"]}\">");
+							writer.WriteLine (reader.ReadInnerXml ());
+							writer.WriteLine ("</test-suite>");
+						}
 					}
 				}
 			}
 		}
+		writer.WriteLine ("    </results>");
+		writer.WriteLine ("  </test-suite>");
 		writer.WriteLine ("</test-results>");
 	}
 	Console.WriteLine ($"File merge completed to file {outPutPath}");
 
 } catch (Exception e) {
 	Console.WriteLine ($"Got {e.Message}");
+	throw e;
 	Environment.Exit (-1);
 }
 
