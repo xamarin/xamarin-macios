@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using xharness;
 
 namespace BCLTestImporter {
 	/// <summary>
@@ -125,7 +126,7 @@ namespace BCLTestImporter {
 			// BCL tests group 4
 			new BclTestProjectInfo { Name = "SystemNumericsXunit", assemblies = new [] { "monotouch_System.Numerics_xunit-test.dll" }, Group = "BCL tests group 4" },
 			new BclTestProjectInfo { Name = "SystemCoreXunit", assemblies = new [] { "monotouch_System.Core_xunit-test.dll" }, Group = "BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemXunit", assemblies = new [] { "monotouch_System_xunit-test.dll" }, Group = "BCL tests group 4" },
+			new BclTestProjectInfo { Name = "SystemXunit", assemblies = new [] { "monotouch_System_xunit-test.dll" }, ExtraArgs = $"--xml={Path.Combine (Harness.RootDirectory, "bcl-test", "BCLTests", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", Group = "BCL tests group 4" },
 			new BclTestProjectInfo { Name = "MicrosoftCSharpXunit", assemblies = new [] { "monotouch_Microsoft.CSharp_xunit-test.dll" }, Group = "BCL tests group 4" },
 
 			// BCL tests group 5
@@ -731,7 +732,8 @@ namespace BCLTestImporter {
 					} else {
 						groupedApps [def.Group] = new List<string> (validAssemblies);
 						groupedAppsExtraArgs [def.Group] = new List<string> ();
-						groupedAppsExtraArgs [def.Group].Add (def.ExtraArgs);
+						if (def.ExtraArgs != null)
+							groupedAppsExtraArgs [def.Group].Add (def.ExtraArgs);
 					}
 				}
 				foreach (var group in groupedApps.Keys) {
