@@ -1187,7 +1187,6 @@ namespace xharness
 				if (Harness.InWrench)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
-				Harness.HarnessLog.Timestamp = true;
 
 				var tasks = new List<Task> ();
 				if (IsServerMode)
@@ -1203,7 +1202,6 @@ namespace xharness
 				}
 				if (!string.IsNullOrEmpty (Harness.PeriodicCommand)) {
 					var periodic_log = Logs.Create ("PeriodicCommand.log", "Periodic command log");
-					periodic_log.Timestamp = true;
 					Task.Run (async () => await ExecutePeriodicCommandAsync (periodic_log));
 				}
 
@@ -2974,7 +2972,6 @@ namespace xharness
 					make.StartInfo.Arguments = Target;
 					SetEnvironmentVariables (make);
 					var log = Logs.Create ($"make-{Platform}-{Timestamp}.txt", "Build log");
-					log.Timestamp = true;
 					LogEvent (log, "Making {0} in {1}", Target, WorkingDirectory);
 					if (!Harness.DryRun) {
 						var timeout = Timeout;
@@ -3172,7 +3169,6 @@ namespace xharness
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				var xmlLog = Logs.CreateFile ($"log-{Timestamp}.xml", "XML log");
 				var log = Logs.Create ($"execute-{Timestamp}.txt", "Execution log");
-				log.Timestamp = true;
 				FindNUnitConsoleExecutable (log);
 				using (var proc = new Process ()) {
 
@@ -3359,7 +3355,6 @@ namespace xharness
 					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
-					log.Timestamp = true;
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 
@@ -3732,7 +3727,7 @@ namespace xharness
 
 					if (!Failed) {
 						// Install the app
-						this.install_log = new AppInstallMonitorLog (Logs.Create ($"install-{Timestamp}.log", "Install log", timestamp: true));
+						this.install_log = new AppInstallMonitorLog (Logs.Create ($"install-{Timestamp}.log", "Install log"));
 						try {
 							runner.MainLog = this.install_log;
 							var install_result = await runner.InstallAsync (install_log.CancellationToken );
