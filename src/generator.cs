@@ -4458,14 +4458,22 @@ public partial class Generator : IMemberGatherer {
 				RegisterMethodName ("void_objc_msgSend");
 			}
 
-			if (!needsPtrZeroCheck)
+			if (!needsPtrZeroCheck) {
+				print ("if (ret != null)");
+				indent++;
 				print ("global::{0}.void_objc_msgSend (ret.Handle, Selector.GetHandle (\"release\"));", ns.Messaging);
-			else {
+				indent--;
+			} else {
 				// We must create the managed wrapper before calling Release on it
 				// FIXME: https://trello.com/c/1ukS9TbL/43-introduce-common-object-type-for-all-unmanaged-types-which-will-correctly-implement-idisposable-and-inativeobject
 				// We should consider using return INativeObject<T> (ptr, bool); here at some point
-				print ("global::{0} relObj = ret == IntPtr.Zero ? null : new global::{0} (ret);", mi.ReturnType.FullName);
-				print ("if (relObj != null) global::{0}.void_objc_msgSend (relObj.Handle, Selector.GetHandle (\"release\"));", ns.Messaging);
+				print ("global::{0} relObj = null;", mi.ReturnType.FullName);
+				print ("if (ret != IntPtr.Zero) {");
+				indent++;
+				print ("relObj = new global::{0} (ret);", mi.ReturnType.FullName);
+				print ("global::{0}.void_objc_msgSend (ret, Selector.GetHandle (\"release\"));", ns.Messaging);
+				indent--;
+				print ("}");
 			}
 		}
 		
