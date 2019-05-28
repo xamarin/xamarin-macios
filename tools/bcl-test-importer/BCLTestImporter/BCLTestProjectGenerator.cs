@@ -141,6 +141,9 @@ namespace BCLTestImporter {
 			"monotouch_Mono.CodeContracts_test.dll", // not supported by xamarin
 			"monotouch_Novell.Directory.Ldap_test.dll", // not supported by xamarin
 			"monotouch_Mono.Profiler.Log_xunit-test.dll", // special tests that need an extra app to connect as a profiler
+			"monotouch_System.ComponentModel.Composition_xunit-test.dll", // has no test classes, all test have been removed by mono
+			"monotouch_System.Net.Http.FunctionalTests_xunit-test.dll", // has no test classes, all test have been removed by mono
+			"monotouch_System.Runtime.Serialization_xunit-test.dll", // has no test classes, all test have been removed by mono
 		};
 		
 		// list of assemblies that are going to be ignored, any project with an assemblies that is ignored will
