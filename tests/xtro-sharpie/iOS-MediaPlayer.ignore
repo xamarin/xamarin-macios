@@ -48,3 +48,11 @@
 !missing-selector! MPMediaItem::skipCount not bound
 !missing-selector! MPMediaItem::title not bound
 !missing-selector! MPMediaItem::userGrouping not bound
+
+# Initial result from new rule missing-release-attribute-on-return-value
+!missing-release-attribute-on-return-value! Foundation.NSObject MediaPlayer.MPMediaQuery::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject MediaPlayer.MPMediaQuerySection::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject MediaPlayer.MPMovieAccessLog::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject MediaPlayer.MPMovieAccessLogEvent::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject MediaPlayer.MPMovieErrorLog::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject MediaPlayer.MPMovieErrorLogEvent::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
