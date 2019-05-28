@@ -1,7 +1,7 @@
 <linker>
 	<assembly fullname="System">
 		<type fullname="System.Text.RegularExpressions.CollectionDebuggerProxy`1" preserve="all" />
-    </assembly>
+	</assembly>
 	<assembly fullname="System.Core">
 		<type fullname="System.Dynamic.BindingRestrictions/BindingRestrictionsProxy" preserve="all" />
 		<type fullname="System.Dynamic.ExpandoObject/KeyCollectionDebugView" preserve="all" />
@@ -32,5 +32,5 @@
 		<type fullname="System.Linq.Expressions.Expression/TryExpressionProxy" preserve="all" />
 		<type fullname="System.Linq.Expressions.Expression/TypeBinaryExpressionProxy" preserve="all" />
 		<type fullname="System.Linq.Expressions.Expression/UnaryExpressionProxy" preserve="all" />
-    </assembly>
+	</assembly>
 </linker>
