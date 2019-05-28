@@ -42,6 +42,7 @@ namespace xharness.BCLTestImporter {
 					Name = finalName,
 					SkipiOSVariation = !tp.Platforms.Contains (Platform.iOS),
 					SkiptvOSVariation = !tp.Platforms.Contains (Platform.TvOS),
+					SkipwatchOS32Variation = tp.Name == "mscorlib", // mscorlib is our special test
 					SkipwatchOSVariation = !tp.Platforms.Contains (Platform.WatchOS),
 					FailureMessage = tp.Failure,
 					RestoreNugetsInProject = true,

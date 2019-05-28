@@ -151,8 +151,9 @@ namespace xharness
 	public class iOSTestProject : TestProject
 	{
 		public bool SkipiOSVariation;
-		public bool SkipwatchOSVariation;
+		public bool SkipwatchOSVariation; // skip both
 		public bool SkipwatchOSARM64_32Variation;
+		public bool SkipwatchOS32Variation;
 		public bool SkiptvOSVariation;
 		public bool BuildOnly;
 

@@ -601,15 +601,17 @@ namespace xharness
 
 				if (!project.SkipwatchOSVariation) {
 					var watchOSProject = project.AsWatchOSProject ();
-					var buildWatch32 = new XBuildTask {
-						Jenkins = this,
-						ProjectConfiguration = "Debug32",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.watchOS_32,
-						TestName = project.Name,
-					};
-					buildWatch32.CloneTestProject (watchOSProject);
-					rv.Add (new RunDeviceTask (buildWatch32, Devices.ConnectedWatch) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
+					if (!project.SkipwatchOS32Variation) {
+						var buildWatch32 = new XBuildTask {
+							Jenkins = this,
+							ProjectConfiguration = "Debug32",
+							ProjectPlatform = "iPhone",
+							Platform = TestPlatform.watchOS_32,
+							TestName = project.Name,
+						};
+						buildWatch32.CloneTestProject (watchOSProject);
+						rv.Add (new RunDeviceTask (buildWatch32, Devices.ConnectedWatch) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
+					}
 
 					if (!project.SkipwatchOSARM64_32Variation) {
 						var buildWatch64_32 = new XBuildTask {
