@@ -335,7 +335,7 @@ namespace MonoTouchFixtures.Metal {
 
 			using (var buffer = device.CreateBuffer (1024, MTLResourceOptions.CpuCacheModeDefault)) {
 				using (var descriptor = new MTLTextureDescriptor ()) {
-					using (var texture = buffer.CreateTexture (descriptor, 0, 64)) {
+					using (var texture = buffer.CreateTexture (descriptor, 0, 256)) {
 						Assert.IsNotNull (buffer, "MTLBuffer.CreateTexture (MTLTextureDescriptor, nuint, nuint): NonNull");
 					}
 				}
