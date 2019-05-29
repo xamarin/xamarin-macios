@@ -132,6 +132,9 @@ namespace Introspection {
 				return true;
 			case "QTMovie":
 				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
+			case "MTLFunctionConstantValues":
+				// the type was added with Xcode 8, but the default ctor in Xcode 9.
+				return !TestRuntime.CheckXcodeVersion (9, 0);
 			}
 
 			return SkipDueToAttribute (type);
