@@ -1783,8 +1783,13 @@ namespace Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface MTLFunctionConstantValues : NSCopying
 	{
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("setConstantValue:type:atIndex:")]
 		void SetConstantValue (IntPtr value, MTLDataType type, nuint index);
 
