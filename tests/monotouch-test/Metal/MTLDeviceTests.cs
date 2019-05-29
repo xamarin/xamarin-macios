@@ -148,7 +148,7 @@ namespace MonoTouchFixtures.Metal {
 #if __MACOS__
 			var resourceOptions7 = MTLResourceOptions.StorageModeManaged;
 #else
-				var resourceOptions7 = MTLResourceOptions.CpuCacheModeDefault;
+			var resourceOptions7 = MTLResourceOptions.CpuCacheModeDefault;
 #endif
 			using (var buffer = device.CreateBufferNoCopy (buffer_mem, (nuint)buffer_length, resourceOptions7, (pointer, length) => { FreePageAligned (pointer, (int)length); freed = true; })) {
 				Assert.IsNotNull (buffer, "CreateBufferNoCopy: NonNull 1");
