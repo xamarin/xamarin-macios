@@ -23,7 +23,11 @@ downloads/$(MONO_IOS_FILENAME) downloads/$(MONO_MAC_FILENAME):
 	else \
 		EC=0; \
 		curl -f -L $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp || EC=$$?; \
-		if [[ x$$EC == x22 ]]; then printf "$(COLOR_RED)*** Could not download the archive $(notdir $@) because the URL doesn't exist. This can happen if bumping mono very soon after the corresponding commit was pushed to mono (i.e. the archive hasn't been built yet). If so, please wait a bit and try again.$(COLOR_CLEAR)\n"; fi; \
+		if [[ x$$EC == x22 ]]; then \
+			MSG="Could not download the archive %s because the URL doesn't exist. This can happen if bumping mono very soon after the corresponding commit was pushed to mono (i.e. the archive hasn't been built yet). If so, please wait a bit and try again."; \
+			printf "$(COLOR_RED)*** $$MSG$(COLOR_CLEAR)\n" "$(notdir $@)"; \
+			if test -n "$$FAILURE_REASON_PATH"; then printf "$$MSG\n" "[$(notdir $@)]($(MONO_URL))" >> "$$FAILURE_REASON_PATH"; fi; \
+		fi; \
 		if [[ x$$EC != x0 ]]; then exit $$EC; fi; \
 	fi
 	$(Q) mv $@.tmp $@
