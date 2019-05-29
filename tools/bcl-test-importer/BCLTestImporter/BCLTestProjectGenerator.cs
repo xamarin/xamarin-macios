@@ -466,9 +466,10 @@ namespace BCLTestImporter {
 				rootPath = Path.Combine (rootPath, "mac-bcl", "xammac", "tests");
 				break;
 			}
-			foreach (var fileName in new [] {"nunit-excludes.txt", "xunit-excludes.txt"}) {
-				yield return Path.Combine (rootPath, fileName);
-			}
+			return return new [] {
+ 				Path.Combine (rootPath, "nunit-excludes.txt"),
+				Path.Combine (rootPath, "xunit-excludes.txt")
+			};
 		}
 		
 		string GenerateIncludeFilesNode (string projectName, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, Platform platform)
