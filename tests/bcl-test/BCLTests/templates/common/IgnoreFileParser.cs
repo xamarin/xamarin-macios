@@ -70,6 +70,21 @@ namespace BCLTests {
 			return ignoredTests;
 		}
 		
+		public static async Task<IEnumerable<string>> ParseTraitsContentFileAsync (string contentDir, bool isXUnit)
+		{
+			var ignoredTraits = new List<string> ();
+			var ignoreFile = Path.Combine (contentDir, isXUnit ? "xunit-excludes.txt" : "nunit-excludes.txt");
+			using (var reader = new StreamReader (ignoreFile)) {
+				string line;
+				while ((line = await reader.ReadLineAsync()) != null) {
+					if (string.IsNullOrEmpty (line))
+						continue;
+					ignoredTraits.Add (line);
+				}
+			}
+			return ignoredTraits;
+		}
+
 		public static IEnumerable<string> ParseContentFiles (string contentDir)
 		{
 			var ignoredTests = new List<string> ();

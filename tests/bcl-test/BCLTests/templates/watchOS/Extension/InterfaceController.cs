@@ -110,31 +110,8 @@ namespace monotouchtestWatchKitExtension
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
 			runner = RegisterType.IsXUnit ? (Xamarin.iOS.UnitTests.TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
-			var categories = RegisterType.IsXUnit ?
-				new List<string> { 
-					"failing",
-					"nonmonotests",
-					"outerloop",
-					"nonosxtests"
-				} :
-				new List<string> {
-					"MobileNotWorking",
-					"NotOnMac",
-					"NotWorking",
-					"ValueAdd",
-					"CAS",
-					"InetAccess",
-					"NotWorkingLinqInterpreter",
-					"BitcodeNotSupported",
-				};
+			var categories = IgnoreFileParser.ParseTraitsContentFileAsync (NSBundle.MainBundle.BundlePath, RegisterType.IsXUnit).Result;
 
-			if (RegisterType.IsXUnit) {
-				// special case when we are using the xunit runner,
-				// there is a trait we are not interested in which is 
-				// the Benchmark one
-				var xunitRunner = runner as XUnitTestRunner;
-				xunitRunner.AddFilter (XUnitFilter.CreateTraitFilter ("Benchmark", "true", true));
-			}
 			// add category filters if they have been added
 			runner.SkipCategories (categories);
 			

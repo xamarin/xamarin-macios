@@ -50,32 +50,8 @@ namespace Xamarin.Mac.Tests
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
 			var runner = RegisterType.IsXUnit ? (TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
-			var categories = RegisterType.IsXUnit ?
-				new List<string> { 
-					"failing",
-					"nonmonotests",
-					"outerloop",
-					"nonosxtests"
-				} :
-				new List<string> {
-					"MacNotWorking",
-					"MobileNotWorking",
-					"NotOnMac",
-					"NotWorking",
-					"ValueAdd",
-					"CAS",
-					"InetAccess",
-					"NotWorkingLinqInterpreter"
-				};
+			var categories = IgnoreFileParser.ParseTraitsContentFileAsync (NSBundle.MainBundle.ResourcePath, RegisterType.IsXUnit).Result;
 
-			if (RegisterType.IsXUnit) {
-				// special case when we are using the xunit runner,
-				// there is a trait we are not interested in which is
-				// the Benchmark one
-				var xunitRunner = runner as XUnitTestRunner;
-				xunitRunner.AddFilter (XUnitFilter.CreateTraitFilter ("Benchmark", "true", true));
-			}
-			
 			runner.SkipCategories (categories);
 			var skippedTests = IgnoreFileParser.ParseContentFiles (NSBundle.MainBundle.ResourcePath);
 			if (skippedTests.Any ()) {

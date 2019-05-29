@@ -76,30 +76,7 @@ namespace BCLTests {
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
 			var runner = RegisterType.IsXUnit ? (Xamarin.iOS.UnitTests.TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
-			var categories = RegisterType.IsXUnit ?
-				new List<string> { 
-					"failing",
-					"nonmonotests",
-					"outerloop",
-					"nonosxtests"
-				} :
-				new List<string> {
-					"MobileNotWorking",
-					"NotOnMac",
-					"NotWorking",
-					"ValueAdd",
-					"CAS",
-					"InetAccess",
-					"NotWorkingLinqInterpreter",
-				};
-
-			if (RegisterType.IsXUnit) {
-				// special case when we are using the xunit runner,
-				// there is a trait we are not interested in which is 
-				// the Benchmark one
-				var xunitRunner = runner as XUnitTestRunner;
-				xunitRunner.AddFilter (XUnitFilter.CreateTraitFilter ("Benchmark", "true", true));
-			}
+			var categories = await IgnoreFileParser.ParseTraitsContentFileAsync (NSBundle.MainBundle.BundlePath, RegisterType.IsXUnit);
 
 			// add category filters if they have been added
 			runner.SkipCategories (categories);
