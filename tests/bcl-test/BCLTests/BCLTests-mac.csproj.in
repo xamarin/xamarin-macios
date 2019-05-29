@@ -6,9 +6,9 @@
     <ProjectGuid>{%PROJECT GUID%}</ProjectGuid>
     <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>%NAME%</RootNamespace>
+    <RootNamespace>com.xamarin.bcltests.%NAME%</RootNamespace>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
-    <AssemblyName>%NAME%</AssemblyName>
+    <AssemblyName>com.xamarin.bcltests.%NAME%</AssemblyName>
     <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
     <TargetFrameworkVersion>%TARGET FRAMEWORK VERSION%</TargetFrameworkVersion>
     %TARGET EXTRA INFO%
