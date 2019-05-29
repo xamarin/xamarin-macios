@@ -49,6 +49,7 @@ APIDIFF_IGNORE = -i 'INSObjectProtocol'
 
 $(APIDIFF_DIR)/.download-$(MONO_HASH).stamp:
 	$(MAKE) -C $(TOP)/builds download
+	$(Q) mkdir -p $(dir $@)
 	$(Q) touch $@
 
 $(MONO_API_INFO) $(MONO_API_HTML): $(APIDIFF_DIR)/.download-$(MONO_HASH).stamp
