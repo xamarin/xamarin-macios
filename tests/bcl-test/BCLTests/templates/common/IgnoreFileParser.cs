@@ -76,7 +76,7 @@ namespace BCLTests {
 			var ignoreFile = Path.Combine (contentDir, isXUnit ? "xunit-excludes.txt" : "nunit-excludes.txt");
 			using (var reader = new StreamReader (ignoreFile)) {
 				string line;
-				while ((line = await reader.ReadLineAsync()) != null) {
+				while ((line = await reader.ReadLineAsync ()) != null) {
 					if (string.IsNullOrEmpty (line))
 						continue;
 					ignoredTraits.Add (line);
