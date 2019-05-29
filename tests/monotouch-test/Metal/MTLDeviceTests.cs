@@ -368,10 +368,12 @@ namespace MonoTouchFixtures.Metal {
 				using (var func = library.CreateFunction ("grayscaleKernel")) {
 					Assert.IsNotNull (func, "CreateFunction (string): nonnull");
 				}
-				using (var constants = new MTLFunctionConstantValues ()) {
-					using (var func = library.CreateFunction ("grayscaleKernel", constants, out var error)) {
-						Assert.IsNotNull (func, "CreateFunction (string, MTLFunctionConstantValues, NSError): nonnull");
-						Assert.IsNull (error, "CreateFunction (string, MTLFunctionConstantValues, NSError): null error");
+				if (TestRuntime.CheckXcodeVersion (9, 0)) { // MTLFunctionConstantValues didn't have a default ctor until Xcode 9.
+					using (var constants = new MTLFunctionConstantValues ()) {
+						using (var func = library.CreateFunction ("grayscaleKernel", constants, out var error)) {
+							Assert.IsNotNull (func, "CreateFunction (string, MTLFunctionConstantValues, NSError): nonnull");
+							Assert.IsNull (error, "CreateFunction (string, MTLFunctionConstantValues, NSError): null error");
+						}
 					}
 				}
 			}
