@@ -148,6 +148,28 @@ namespace Metal {
 			fixed (void * handle = positions)
 				GetDefaultSamplePositions (This, (IntPtr)handle, count);
 		}
+
+#if !XAMCORE_4_0
+		[return: Release]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static IMTLLibrary CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError error)
+		{
+			if (data == null)
+				throw new ArgumentNullException ("data");
+			IntPtr errorValue = IntPtr.Zero;
+
+			IMTLLibrary ret;
+			ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
+			error = Runtime.GetNSObject<NSError> (errorValue);
+
+			return ret;
+		}
+
+		public static IMTLLibrary CreateDefaultLibrary (this IMTLDevice This, NSBundle bundle, out NSError error)
+		{
+			return MTLDevice_Extensions.CreateLibrary (This, bundle, out error);
+		}
+#endif
 	}
 }
 #endif
