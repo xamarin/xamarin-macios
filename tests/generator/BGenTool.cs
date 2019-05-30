@@ -151,11 +151,19 @@ namespace Xamarin.Tests
 			var in_process = InProcess && Profile != Profile.macOSClassic;
 			if (in_process) {
 				int rv;
+				var previous_environment = new Dictionary<string, string> ();
+				foreach (var kvp in EnvironmentVariables) {
+					previous_environment [kvp.Key] = Environment.GetEnvironmentVariable (kvp.Key);
+					Environment.SetEnvironmentVariable (kvp.Key, kvp.Value);
+				}
 				ThreadStaticTextWriter.ReplaceConsole (Output);
 				try {
 					rv = BindingTouch.Main (arguments);
 				} finally {
 					ThreadStaticTextWriter.RestoreConsole ();
+					foreach (var kvp in previous_environment) {
+						Environment.SetEnvironmentVariable (kvp.Key, kvp.Value);
+					}
 				}
 				Console.WriteLine (Output);
 				ParseMessages ();
