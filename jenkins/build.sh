@@ -8,9 +8,14 @@
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 WORKSPACE=$(pwd)
 
+export FAILURE_REASON_PATH="$WORKSPACE/jenkins/build-failure.md"
+
 report_error ()
 {
 	printf "🔥 [Build failed](%s/console) 🔥\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+	if test -f "$FAILURE_REASON_PATH"; then
+		sed 's/^/* /' "$FAILURE_REASON_PATH" >> "$WORKSPACE/jenkins/pr-comments.md"
+	fi
 }
 trap report_error ERR
 

@@ -3,10 +3,7 @@
 
 THISDIR=$(TOP)/mk
 
-COLOR_GRAY:=$(shell tput setaf 250 2>/dev/null)
-COLOR_GREEN:=$(shell tput setaf 120 2>/dev/null)
-COLOR_RED:=$(shell tput setaf 1 2>/dev/null)
-COLOR_CLEAR:=$(shell tput sgr0 2>/dev/null)
+include $(THISDIR)/colors.mk
 
 define CheckSubmoduleTemplate
 #$(eval NEEDED_$(2)_VERSION:=$(shell git --git-dir $(abspath $($(2)_PATH)/../..)/.git --work-tree $(abspath $($(2)_PATH)/../..) ls-tree HEAD --full-tree -- external/$(1) | awk -F' ' '{printf "%s",$$3}'))

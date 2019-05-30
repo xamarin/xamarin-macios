@@ -189,6 +189,7 @@ namespace Extrospection {
 					else
 						raws [i] = new List<string> ();
 				}
+				var failures = new List<string> ();
 				foreach (var entry in common) {
 					if (!entry.StartsWith ("!", StringComparison.Ordinal))
 						continue;
@@ -198,8 +199,16 @@ namespace Extrospection {
 						if (found)
 							break;
 					}
-					if (!found)
+					if (!found) {
 						Log ($"?unknown-entry? {entry} in 'common-{fx}.ignore'");
+						failures.Add (entry);
+					}
+				}
+				if (failures.Count > 0 && !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"))) {
+					var sanitized = new List<string> (common);
+					foreach (var failure in failures)
+						sanitized.Remove (failure);
+					File.WriteAllLines (Path.Combine (directory, $"common-{fx}.ignore"), sanitized);
 				}
 			}
 			// * a platform ignore must existing in it's corresponding raw file
@@ -212,12 +221,21 @@ namespace Extrospection {
 					continue;
 				var rawfile = Path.ChangeExtension (file, ".raw");
 				var raws = new List<string> (File.ReadAllLines (rawfile));
-				foreach (var entry in File.ReadAllLines (file)) {
+				var failures = new List<string> ();
+				var lines = File.ReadAllLines (file);
+				foreach (var entry in lines) {
 					if (!entry.StartsWith ("!", StringComparison.Ordinal))
 						continue;
 					if (raws.Contains (entry))
 						continue;
 					Log ($"?unknown-entry? {entry} in '{shortname}'");
+					failures.Add (entry);
+				}
+				if (failures.Count > 0 && !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"))) {
+					var sanitized = new List<string> (lines);
+					foreach (var failure in failures)
+						sanitized.Remove (failure);
+					File.WriteAllLines (file, sanitized);
 				}
 			}
 
