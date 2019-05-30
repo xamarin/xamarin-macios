@@ -23,6 +23,7 @@ namespace xharness
 		public string FailureMessage;
 		public bool RestoreNugetsInProject;
 		public string MTouchExtraArgs;
+		public double TimeoutMultiplier = 1;
 
 		public IEnumerable<TestProject> ProjectReferences;
 
@@ -98,6 +99,7 @@ namespace xharness
 			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
 			rv.MTouchExtraArgs = MTouchExtraArgs;
+			rv.TimeoutMultiplier = TimeoutMultiplier;
 			return rv;
 		}
 
