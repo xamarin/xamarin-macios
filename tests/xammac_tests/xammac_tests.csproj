@@ -144,6 +144,12 @@
     <Content Include="..\monotouch-test\AudioToolbox\1.caf">
       <Link>AudioToolbox\1.caf</Link>
     </Content>
+    <Content Include="..\monotouch-test\Resources\metal-sample.metal">
+      <Link>Resources\metal-sample.metal</Link>
+    </Content>
+    <Content Include="..\monotouch-test\Resources\fragmentShader.metal">
+      <Link>Resources\fragmentShader.metal</Link>
+    </Content>
     <Content Include="..\monotouch-test\uncompressed.txt">
       <Link>uncompressed.txt</Link>
     </Content>
@@ -159,6 +165,11 @@
     <Content Include="..\monotouch-test\compressed_zip">
       <Link>compressed_zip</Link>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Metal Include="..\monotouch-test\Resources\metal-sample.metal">
+      <Link>Resources\metal-sample.metal</Link>
+    </Metal>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\monotouch-test\Security\openssl_crt.der">
@@ -210,8 +221,14 @@
     <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
     <GeneratedTestOutput Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
+    <CustomMetalSmeltingInput Include="..\monotouch-test\Resources\fragmentShader.metal" />
   </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
+  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\Contents\Resources\fragmentShader.metallib" DependsOnTargets="_GenerateBundleName">
+    <MakeDir Directories="$(IntermediateOutputPath)\Contents\Resources;$(AppBundleDir)\Contents\Resources" />
+    <Exec Command="xcrun -sdk macosx metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -mmacos-version-min=10.13" />
+    <Exec Command="xcrun -sdk macosx metallib $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -o $(AppBundleDir)\Contents\Resources\fragmentShader.metallib" />
+  </Target>
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>
