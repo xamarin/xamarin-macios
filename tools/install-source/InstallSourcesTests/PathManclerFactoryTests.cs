@@ -42,7 +42,7 @@ namespace InstallSourcesTests
 			Directory.CreateDirectory (tmpRoot);
 
 			// create a path for the mono paths
-			var monoPath = Path.Combine (tmpRoot, "external", "mono");
+			var monoPath = Path.Combine (tmpRoot, "external", "mono", "sdks", "out", "ios-sources");
 			Directory.CreateDirectory (monoPath);
 			fakeMonoPath = Path.Combine (monoPath, "FakeStirng.cs");
 			CreateFakeFile (fakeMonoPath);
@@ -79,11 +79,10 @@ namespace InstallSourcesTests
 		[Test]
 		public void TestIsMonoPath ()
 		{
-			var monoPathMap = fakeMonoPath.Replace (factory.MonoSourcePath, Path.Combine (installDir, "src", "Xamarin.iOS"));
+			var monoLocalPath = Path.Combine (fakeMonoPath, "FakeStirng.cs");
 			var xamarinPathMap = fakeXamarinPath.Replace(factory.XamarinSourcePath, Path.Combine (installDir, "src", "Xamarin.iOS"));
-			Assert.IsTrue (factory.IsMonoPath (monoPathMap), "Present mono path");
+			Assert.IsTrue (factory.IsMonoPath (monoLocalPath), "Present local mono path");
 			Assert.IsFalse (factory.IsMonoPath (xamarinPathMap), "Present xamarin path");
-		
 		}
 		
 		[Test]

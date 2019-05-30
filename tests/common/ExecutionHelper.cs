@@ -412,6 +412,7 @@ namespace Xamarin.Tests
 					$"/p:Platform={platform}",
 					$"/verbosity:{(string.IsNullOrEmpty (verbosity) ? "normal" : verbosity)}",
 					"/r:True", // restore nuget packages which are used in some test cases
+					"/t:Clean,Build", // clean and then build, in case we left something behind in a shared dir
 					project
 				}.Union (arguments ?? new string [] { }).ToArray (),
 				environmentVariables: environmentVariables,

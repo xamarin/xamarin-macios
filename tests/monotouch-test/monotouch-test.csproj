@@ -171,22 +171,22 @@
     </Compile>
     <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPointF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestPointF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPointF.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestRectangle.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestRectangle.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestRectangle.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestRectangleF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestRectangleF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestRectangleF.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSize.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestSize.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestSize.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSizeF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestSizeF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestSizeF.cs</Link>
     </Compile>
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">
@@ -314,11 +314,16 @@
     <BundleResource Include="xamvideotest.mp4" />
     <BundleResource Include="CoreImage\xamarinmonkey.heic" />
     <BundleResource Include="Resources\Base.lproj\Localizable.strings" />
+    <BundleResource Include="Resources\metal-sample.metal" />
+    <BundleResource Include="Resources\fragmentShader.metal" />
     <BundleResource Include="uncompressed.txt" />
     <BundleResource Include="compressed_lze" />
     <BundleResource Include="compressed_lz4" />
     <BundleResource Include="compressed_lzma" />
     <BundleResource Include="compressed_zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <Metal Include="Resources\metal-sample.metal" Condition="'$(Platform)' != 'iPhoneSimulator' " />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
@@ -347,8 +352,20 @@
     <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
     <GeneratedTestOutput Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
+    <CustomMetalSmeltingInput Include="Resources\fragmentShader.metal" />
   </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
+  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\fragmentShader.metallib" Condition="'$(Platform)' != 'iPhoneSimulator' And '$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" DependsOnTargets="_GenerateBundleName">
+    <PropertyGroup>
+        <_SmeltingSdk Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">iphoneos</_SmeltingSdk>
+        <_SmeltingSdk Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">appletvos</_SmeltingSdk>
+        <_SmeltingMinOS Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">-mios-version-min=11.0</_SmeltingMinOS>
+        <_SmeltingMinOS Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">-mtvos-version-min=11.0</_SmeltingMinOS>
+    </PropertyGroup>
+    <MakeDir Directories="$(IntermediateOutputPath);$(AppBundleDir)" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\fragmentShader.air $(_SmeltingMinOS)" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" />
+  </Target>
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting" >
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>

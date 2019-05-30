@@ -3,7 +3,6 @@ include $(TOP)/Make.config
 
 DESTDIR ?= /usr/local/bin/
 CONFIGURATION ?= Debug
-MONO_ROOT:=../../../external/mono/
 
 test-importer: 
 	@make -C ../../../tools/bcl-test-importer/ all
@@ -13,7 +12,7 @@ test-importer:
 
 generate-test-projects: test-importer ./RegisterType.cs.in ./BCLTests.csproj.in
 	mono ./bcl-test-importer/BCLTestImporter.exe --generate-all-projects --output=. --clean
-	mono ./bcl-test-importer/BCLTestImporter.exe --generate-all-projects --output=. --override --register-type-template=RegisterType.cs.in --project-template=. --plist-template=. --mono-root=../../../external/mono/ --sdk-download=$(MONO_IOS_SDK_DESTDIR) -iOS -v
+	mono ./bcl-test-importer/BCLTestImporter.exe --generate-all-projects --output=. --override --register-type-template=RegisterType.cs.in --project-template=. --plist-template=. --sdk-download=$(MONO_IOS_SDK_DESTDIR) -iOS -v
 
 all: generate-test-projects
 

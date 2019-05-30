@@ -86,14 +86,11 @@ else
 	if git diff-tree --no-commit-id --name-only -r "origin/pr/$ghprbPullId/merge^..origin/pr/$ghprbPullId/merge" > .tmp-files; then
 		echo "Modified files found":
 		sed 's/^/    /' .tmp-files || true
-		if grep 'external/mono' .tmp-files > /dev/null; then
+		if grep 'mk/mono.mk' .tmp-files > /dev/null; then
 			echo "Enabling device build because mono was bumped."
 			ENABLE_DEVICE_BUILD=1
-		elif grep 'external/llvm' .tmp-files > /dev/null; then
-			echo "Enabling device build because llvm was bumped."
-			ENABLE_DEVICE_BUILD=1
 		else
-			echo "Not enabling device build; neither mono nor llvm was bumped."
+			echo "Not enabling device build; mono wasn't bumped."
 		fi
 	fi
 	rm -f .tmp-files

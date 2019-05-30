@@ -3,7 +3,16 @@ include $(TOP)/Make.config
 
 PREFIX=$(abspath $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/)
 
-download: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $(MONO_MAC_FILENAME))
+# Keep all intermediate files always.
+.SECONDARY:
+
+##
+## Mono download vs. build
+##
+ifeq ($(MONO_BUILD_FROM_SOURCE),)
+
+download: download-mono
+download-mono: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $(MONO_MAC_FILENAME))
 
 downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
 downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
@@ -36,138 +45,128 @@ downloads/$(MONO_IOS_FILENAME) downloads/$(MONO_MAC_FILENAME):
 downloads/%: downloads/%.zip
 	$(Q) echo "Unzipping $*..."
 	$(Q) rm -Rf $@.tmp
-	$(Q) unzip -q -d $@.tmp $<
+	$(Q) 7z x $< -o$@.tmp
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
-clean-locals::
-	$(Q) rm -Rf downloads
-
-.stamp-download-%: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $(MONO_MAC_FILENAME))
+.stamp-download-mono: download-mono $(TOP)/Make.config
 	$(Q) touch $@
 
-ifeq ($(MONO_BUILD_FROM_SOURCE),)
-all-local:: download
-endif
+clean-local::
+	$(Q) rm -Rf downloads .stamp-download-mono
 
-IPHONESIMULATOR_SDK=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk
-IPHONESIMULATOR_PREFIX=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr
-IPHONEOS_SDK=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk
-IPHONEOS_PREFIX=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/usr
+all-local:: .stamp-download-mono .stamp-mono-ios-sdk-destdir
 
-all-local:: .stamp-mono-ios-sdk-destdir
-
-ifdef ENABLE_XAMARIN
-XAMARIN_AUTOGEN_FLAGS=--enable-extension-module=xamarin
-XAMARIN_IOS_CONFIGURE_FLAGS=--enable-extension-module=xamarin
-XAMARIN_MAC_CONFIGURE_FLAGS=--enable-extension-module=xamarin --enable-extension-module
--include $(MACCORE_PATH)/builds/Makefile.include
-endif
-
-ifndef DISABLE_STRIP
-INSTALL_STRIP_FLAG=-s
-endif
-
-ifndef ENABLE_XI_BTLS
-XAMARIN_IOS_CONFIGURE_FLAGS += --disable-btls
-endif
-ifndef ENABLE_XM_BTLS
-XAMARIN_MAC_CONFIGURE_FLAGS += --disable-btls
-endif
+else
 
 # this is a list of all the files from mono we care about, so that we
 # can use that list as dependencies for our makefile targets
 -include .deps.mono.mk
-.deps.mono.mk: $(TOP)/.git/modules/external/mono/HEAD
+.deps.mono.mk: mk/mono.mk
 	$(Q) printf 'MONO_DEPENDENCIES += Makefile \\\n' > $@.tmp
 	$(Q) cd $(MONO_PATH) && git ls-files --recurse-submodules 'mcs/class/*.cs' 'mcs/build/*.cs' 'external/*.cs' '*.h' '*.c' '*.cpp' | grep -v "/Test/" | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(MONO_PATH)/\1 \\@' >> $(abspath $@).tmp
 	$(Q) mv $@.tmp $@
 
-# ld: weak import of symbol '_fstatat' not supported because of option: -no_weak_imports for architecture x86_64
-# according to 'man fstatat' it appeared in OS X 10.10 (iOS 8)
-# so disable 'fstatat' by setting using ac_cv_func_fstatat=no
-# ld: weak import of symbol '_readlinkat' not supported because of option: -no_weak_imports for architecture x86_64
-# according to 'man readlinkat' it appeared in OS X 10.10 (iOS 8)
-# so disable 'readlinkat' by setting using ac_cv_func_readlinkat=no
-# these can be removed when our min ios/osx version (at runtime) is macOS 10.10+ or iOS 8+
-
-# ld: weak import of symbol '_futimens' not supported because of option: -no_weak_imports for architecture x86_64
-# ld: weak import of symbol '_utimensat' not supported because of option: -no_weak_imports for architecture x86_64
-# headers say these methods were introduced in 10.13:
-# usr/include/sys/stat.h:int	futimens(int __fd, const struct timespec __times[2]) __API_AVAILABLE(macosx(10.13), ios(11.0), tvos(11.0), watchos(4.0));
-# int	utimensat(int __fd, const char *__path, const struct timespec __times[2], int __flag) __API_AVAILABLE(macosx(10.13), ios(11.0), tvos(11.0), watchos(4.0));
-# so disable 'futimens' and 'utimensat'
-
-COMMON_ACVARS =  \
-	ac_cv_func_fstatat=no \
-	ac_cv_func_readlinkat=no \
-	ac_cv_func_futimens=no \
-	ac_cv_func_utimensat=no \
-
-COMMON_LDFLAGS=-Wl,-no_weak_imports
-
-BITCODE_CFLAGS=-fexceptions
-BITCODE_LDFLAGS=-framework CoreFoundation -lobjc -lc++
-BITCODE_CONFIGURE_FLAGS=--enable-llvm-runtime --with-bitcode=yes
-
-ifdef ENABLE_BITCODE_ON_IOS
-IOS_BITCODE_CFLAGS=$(BITCODE_CFLAGS) -fembed-bitcode-marker
-IOS_BITCODE_CXXFLAGS=$(BITCODE_CFLAGS) -fembed-bitcode-marker
-IOS_BITCODE_LDFLAGS=$(BITCODE_LDFLAGS)
-IOS_BITCODE_CONFIGURE_FLAGS=$(BITCODE_CONFIGURE_FLAGS)
-endif
-
-#
-# The install-* targets should not depend on any of the build-* targets,
-# because it will slow down the install targets unnecessarily (the build-*
-# targets will recurse into multiple directories, which would be wasteful
-# since in most cases the build has already been done)
-#
-# Currently 'make install' takes about 4 seconds (without running any build-*
-# targets)
-#
-# This means that 'make all install' will not work in this directory, it must
-# be 'make all && make install'.
-#
-
-# This turns off the clang: warning: argument unused during compilation
-# warnings when using clang+ccache together
-CCACHE_CFLAGS=-Qunused-arguments
-CCACHE_CXXFLAGS=-Qunused-arguments
-
 #
 # Configuration for the mono sdk makefiles
 #
-SDK_CONFIG=$(MONO_PATH)/sdks/Make.config
 SDK_ARGS= \
 	XCODE_DIR=$(XCODE_DEVELOPER_ROOT) XCODE32_DIR=$(XCODE94_DEVELOPER_ROOT) \
 	IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) \
 	TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) \
 	WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) \
-	IGNORE_PROVISION_LLVM=1
+	WATCHOS5_VERSION=$(WATCH_SDK_VERSION) WATCHOS5_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) \
+	MACOS_VERSION=$(OSX_SDK_VERSION) MACOS_VERSION_MIN=$(MIN_OSX_SDK_VERSION)
 
-ifdef DISABLE_DOWNLOAD_LLVM
-SDK_ARGS += DISABLE_DOWNLOAD_LLVM=1
+SDK_CONFIG = $(MONO_PATH)/sdks/Make.config
+SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
+
+$(SDK_CONFIG):
+	echo "DISABLE_ANDROID=1" > $@
+	echo "DISABLE_DESKTOP=1" >> $@
+	echo "DISABLE_WASM=1" >> $@
+
+ifdef DISABLE_BUILDS_MAKEFILE_DEP
+BUILDS_MAKEFILE_DEP =
+else
+BUILDS_MAKEFILE_DEP = Makefile
 endif
 
-SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
-SDK_DESTDIR = $(abspath $(MONO_PATH)/sdks/out)
+.stamp-configure-mono: $(SDK_CONFIG)
+	$(MAKE) -C $(SDK_BUILDDIR) configure-ios configure-mac $(SDK_ARGS)
+	$(Q) touch $@
 
-.stamp-mono-ios-sdk-destdir:
+.stamp-compile-mono: .stamp-configure-mono $(MONO_DEPENDENCIES) $(BUILDS_MAKEFILE_DEP) $(TOP)/Make.config
+	$(MAKE) -C $(SDK_BUILDDIR) package-ios package-ios-bcl package-mac package-mac-bcl $(SDK_ARGS)
+	$(Q) touch $@
+
+clean-local::
+	$(MAKE) -C $(SDK_BUILDDIR) clean $(SDK_ARGS)
+	$(Q) rm -f .stamp-compile-mono
+
+all-local:: .stamp-compile-mono .stamp-mono-ios-sdk-destdir
+
+endif
+
+.stamp-mono-ios-sdk-destdir: .stamp-$(MONO_BUILD_MODE)
 	ln -sf $(MONO_IOS_SDK_DESTDIR) mono-ios-sdk-destdir
 	$(Q) touch $@
 
-$(MONO_PATH)/sdks/Make.config:
-	echo "DISABLE_ANDROID=1" > $@
+ifndef DISABLE_STRIP
+INSTALL_STRIP_FLAG=-s
+endif
 
-##
-## Xamarin.Mac
-##
+#
+# Xamarin.iOS/WatchOS/TVOS/Mac BCL assemblies
+#
+install-local:: install-bcl
+all-local:: install-bcl
 
-# We only build the mono runtimes here (mac32 and mac64)
-# The xammac classlibs are built as a part of the 'tools64' build.
+$(MONO_IOS_SDK_DESTDIR)/ios-bcl/%: .stamp-$(MONO_BUILD_MODE)
+$(MONO_MAC_SDK_DESTDIR)/mac-bcl/%: .stamp-$(MONO_BUILD_MODE)
 
-MAC_ASSEMBLY_NAMES = \
+IOS_ASSEMBLIES =  \
+	I18N \
+	I18N.CJK \
+	I18N.MidEast \
+	I18N.Other \
+	I18N.Rare \
+	I18N.West \
+	Microsoft.CSharp \
+	Mono.CSharp \
+	Mono.Data.Sqlite \
+	Mono.Data.Tds \
+	Mono.Security \
+	mscorlib \
+	System \
+	System.ComponentModel.Composition \
+	System.ComponentModel.DataAnnotations \
+	System.Core \
+	System.Data \
+	System.Data.Services.Client \
+	System.IdentityModel \
+	System.IO.Compression \
+	System.IO.Compression.FileSystem \
+	System.Json \
+	System.Net \
+	System.Net.Http \
+	System.Net.Http.WinHttpHandler \
+	System.Numerics \
+	System.Numerics.Vectors \
+	System.Reflection.Context \
+	System.Runtime.Serialization \
+	System.Security \
+	System.ServiceModel \
+	System.ServiceModel.Internals \
+	System.ServiceModel.Web \
+	System.Transactions \
+	System.Web.Services \
+	System.Windows \
+	System.Xml \
+	System.Xml.Linq \
+	System.Xml.Serialization
+
+MAC_ASSEMBLIES = \
 	I18N \
 	I18N.CJK \
 	I18N.MidEast \
@@ -209,13 +208,8 @@ MAC_ASSEMBLY_NAMES = \
 	System.Net.Http.WinHttpHandler \
 	System.Numerics.Vectors
 
-FACADE_SUBDIRS_MK = $(MONO_PATH)/mcs/class/Facades/subdirs.make
-# File does not exist before checking out mono
--include $(FACADE_SUBDIRS_MK)
-
-MAC_FACADE_ASSEMBLY_NAMES = $(xammac_PARALLEL_SUBDIRS) $(xammac_SUBDIRS)
-
-MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
+MAC_4_5_ASSEMBLIES = \
+	$(MAC_ASSEMBLIES) \
 	Mono.Messaging \
 	Mono.Posix \
 	System.Configuration \
@@ -226,237 +220,348 @@ MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 	System.Messaging \
 	System.Runtime.Serialization.Formatters.Soap
 
-MAC_4_5_ASSEMBLY_NAMES = $(MAC_ASSEMBLY_NAMES) $(MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES)
+COMMON_FACADE_ASSEMBLIES = \
+    Microsoft.Win32.Primitives \
+    Microsoft.Win32.Registry \
+    Microsoft.Win32.Registry.AccessControl \
+    System.AppContext \
+    System.Collections \
+    System.Collections.Concurrent \
+    System.Collections.NonGeneric \
+    System.Collections.Specialized \
+    System.ComponentModel \
+    System.ComponentModel.Annotations \
+    System.ComponentModel.EventBasedAsync \
+    System.ComponentModel.Primitives \
+    System.ComponentModel.TypeConverter \
+    System.Console \
+    System.Data.Common \
+    System.Data.SqlClient \
+    System.Diagnostics.Contracts \
+    System.Diagnostics.Debug \
+    System.Diagnostics.FileVersionInfo \
+    System.Diagnostics.Process \
+    System.Diagnostics.StackTrace \
+    System.Diagnostics.TextWriterTraceListener \
+    System.Diagnostics.Tools \
+    System.Diagnostics.TraceEvent \
+    System.Diagnostics.TraceSource \
+    System.Diagnostics.Tracing \
+    System.Drawing.Common \
+    System.Drawing.Primitives \
+    System.Dynamic.Runtime \
+    System.Globalization \
+    System.Globalization.Calendars \
+    System.Globalization.Extensions \
+    System.IO \
+    System.IO.Compression.ZipFile \
+    System.IO.FileSystem \
+    System.IO.FileSystem.AccessControl \
+    System.IO.FileSystem.DriveInfo \
+    System.IO.FileSystem.Primitives \
+    System.IO.FileSystem.Watcher \
+    System.IO.IsolatedStorage \
+    System.IO.MemoryMappedFiles \
+    System.IO.Pipes \
+    System.IO.UnmanagedMemoryStream \
+    System.Linq \
+    System.Linq.Expressions \
+    System.Linq.Parallel \
+    System.Linq.Queryable \
+    System.Net.AuthenticationManager \
+    System.Net.Cache \
+    System.Net.HttpListener \
+    System.Net.Mail \
+    System.Net.NameResolution \
+    System.Net.NetworkInformation \
+    System.Net.Ping \
+    System.Net.Primitives \
+    System.Net.Requests \
+    System.Net.Security \
+    System.Net.ServicePoint \
+    System.Net.Sockets \
+    System.Net.Utilities \
+    System.Net.WebHeaderCollection \
+    System.Net.WebSockets \
+    System.Net.WebSockets.Client \
+    System.ObjectModel \
+    System.Reflection \
+    System.Reflection.Emit \
+    System.Reflection.Emit.ILGeneration \
+    System.Reflection.Emit.Lightweight \
+    System.Reflection.Extensions \
+    System.Reflection.Primitives \
+    System.Reflection.TypeExtensions \
+    System.Resources.Reader \
+    System.Resources.ReaderWriter \
+    System.Resources.ResourceManager \
+    System.Resources.Writer \
+    System.Runtime \
+    System.Runtime.CompilerServices.VisualC \
+    System.Runtime.Extensions \
+    System.Runtime.Handles \
+    System.Runtime.InteropServices \
+    System.Runtime.InteropServices.RuntimeInformation \
+    System.Runtime.InteropServices.WindowsRuntime \
+    System.Runtime.Numerics \
+    System.Runtime.Serialization.Formatters \
+    System.Runtime.Serialization.Json \
+    System.Runtime.Serialization.Primitives \
+    System.Runtime.Serialization.Xml \
+    System.Security.AccessControl \
+    System.Security.Claims \
+    System.Security.Cryptography.Algorithms \
+    System.Security.Cryptography.Csp \
+    System.Security.Cryptography.DeriveBytes \
+    System.Security.Cryptography.Encoding \
+    System.Security.Cryptography.Encryption \
+    System.Security.Cryptography.Encryption.Aes \
+    System.Security.Cryptography.Encryption.ECDiffieHellman \
+    System.Security.Cryptography.Encryption.ECDsa \
+    System.Security.Cryptography.Hashing \
+    System.Security.Cryptography.Hashing.Algorithms \
+    System.Security.Cryptography.Primitives \
+    System.Security.Cryptography.ProtectedData \
+    System.Security.Cryptography.RandomNumberGenerator \
+    System.Security.Cryptography.RSA \
+    System.Security.Cryptography.X509Certificates \
+    System.Security.Principal \
+    System.Security.Principal.Windows \
+    System.Security.SecureString \
+    System.ServiceModel.Duplex \
+    System.ServiceModel.Http \
+    System.ServiceModel.NetTcp \
+    System.ServiceModel.Primitives \
+    System.ServiceModel.Security \
+    System.ServiceProcess.ServiceController \
+    System.Text.Encoding \
+    System.Text.Encoding.CodePages \
+    System.Text.Encoding.Extensions \
+    System.Text.RegularExpressions \
+    System.Threading \
+    System.Threading.AccessControl \
+    System.Threading.Overlapped \
+    System.Threading.Tasks \
+    System.Threading.Tasks.Parallel \
+    System.Threading.Thread \
+    System.Threading.ThreadPool \
+    System.Threading.Timer \
+    System.ValueTuple \
+    System.Xml.ReaderWriter \
+    System.Xml.XDocument \
+    System.Xml.XmlDocument \
+    System.Xml.XmlSerializer \
+    System.Xml.XPath \
+    System.Xml.XPath.XDocument \
+    System.Xml.Xsl.Primitives \
+    netstandard
 
-MAC_4_5_FACADE_ASSEMBLY_NAMES = $(xammac_net_4_5_PARALLEL_SUBDIRS) $(xammac_net_4_5_SUBDIRS)
+MOBILE_ADDITIONAL_FACADE_ASSEMBLIES = \
+	System.Buffers \
+	System.Memory \
+	System.Reflection.DispatchProxy \
+	System.Runtime.Loader \
+	System.Security.Cryptography.Cng \
+	System.Security.Cryptography.OpenSsl \
+	System.Security.Cryptography.Pkcs \
+	System.Threading.Tasks.Extensions \
+	System.Xml.XPath.XmlDocument
 
-MAC_ASSEMBLIES = $(MAC_ASSEMBLY_NAMES)
-MAC_FACADE_ASSEMBLIES = $(MAC_FACADE_ASSEMBLY_NAMES)
-MAC_NO_MDB_ASSEMBLIES = System.Windows System.Xml.Serialization
-MAC_4_5_ASSEMBLIES = $(MAC_4_5_ASSEMBLY_NAMES)
-MAC_4_5_FACADE_ASSEMBLIES = $(MAC_4_5_FACADE_ASSEMBLY_NAMES)
+TVOS_ASSEMBLIES = $(IOS_ASSEMBLIES)
+WATCHOS_ASSEMBLIES = $(filter-out Mono.Security Mono.Data.Tds,$(IOS_ASSEMBLIES))
 
-MAC_DIRECTORIES = \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib \
+IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
+TVOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
+WATCHOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
+
+IOS_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
+TVOS_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
+WATCHOS_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
+MAC_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
+MAC_4_5_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) System.Net.Http.Rtc
+
+IOS_BCL_DIRECTORIES = \
+	$(PREFIX)/lib/mono/2.1 \
+	$(PREFIX)/lib/mono/2.1/Facades \
+	$(PREFIX)/lib/mono/2.1/repl \
+	$(PREFIX)/lib/mono/Xamarin.iOS \
+	$(PREFIX)/lib/mono/Xamarin.iOS/Facades \
+	$(PREFIX)/lib/mono/Xamarin.iOS/repl
+
+WATCHOS_BCL_DIRECTORIES = \
+	$(PREFIX)/lib/mono/Xamarin.WatchOS \
+	$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades \
+	$(PREFIX)/lib/mono/Xamarin.WatchOS/repl
+
+TVOS_BCL_DIRECTORIES = \
+	$(PREFIX)/lib/mono/Xamarin.TVOS \
+	$(PREFIX)/lib/mono/Xamarin.TVOS/Facades \
+	$(PREFIX)/lib/mono/Xamarin.TVOS/repl
+
+MAC_BCL_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades
+
+NO_PDB_ASSEMBLIES = System.Windows System.Xml.Serialization
+MAC_NO_PDB_ASSEMBLIES = System.Windows System.Xml.Serialization
+
+IOS_BCL_TARGETS =                                                                                                  \
+	$(foreach file,$(IOS_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/$(file).dll)                                                \
+	$(foreach file,$(filter-out $(NO_PDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/2.1/$(file).pdb)         \
+	$(foreach file,$(IOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).dll)                                        \
+	$(foreach file,$(filter-out $(NO_PDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).pdb) \
+	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/Facades/$(file).dll)                                 \
+	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/Facades/$(file).dll)                         \
+	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).dll)                                      \
+	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).pdb)                                  \
+	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll)                              \
+	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).pdb)                          \
+
+WATCHOS_BCL_TARGETS = \
+	$(foreach file,$(WATCHOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll)                                        \
+	$(foreach file,$(filter-out $(NO_PDB_ASSEMBLIES),$(WATCHOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).pdb) \
+	$(foreach file,$(WATCHOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/$(file).dll)                         \
+	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll)                              \
+	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).pdb)                          \
+
+TVOS_BCL_TARGETS = \
+	$(foreach file,$(TVOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll)                                        \
+	$(foreach file,$(filter-out $(NO_PDB_ASSEMBLIES),$(TVOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).pdb) \
+	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/$(file).dll)                         \
+	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
+	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).pdb)                          \
 
 MAC_BCL_TARGETS = \
 	$(foreach file,$(MAC_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).dll)                \
-	$(foreach file,$(filter-out $(MAC_NO_MDB_ASSEMBLIES),$(MAC_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).pdb)            \
+	$(foreach file,$(filter-out $(MAC_NO_PDB_ASSEMBLIES),$(MAC_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).pdb)            \
 	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/$(file).dll) \
 	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file).dll)                    \
-	$(foreach file,$(filter-out $(MAC_NO_MDB_ASSEMBLIES),$(MAC_4_5_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file).pdb)                \
+	$(foreach file,$(filter-out $(MAC_NO_PDB_ASSEMBLIES),$(MAC_4_5_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file).pdb)                \
 	$(foreach file,$(MAC_4_5_FACADE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades/$(file).dll)     \
 
-MAC_TARGETS = \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-profiler-log.a \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-compat.a \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-unified.a \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-compat.dylib \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-unified.dylib \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.dylib \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.a \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono-32 \
-	$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current \
-	$(MAC_DIRECTORIES) \
+$(PREFIX)/lib/mono/Xamarin.iOS/Facades/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.iOS/Facades
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch/Facades/$(notdir $@) $@
 
-#  $(3): specific xcode path
-define MacBuildTemplate
-$(2)_CPPFLAGS = \
-	-isysroot $(5) \
-	-mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-$(2)_CFLAGS = -O2 -arch $(1)
-$(2)_CXXFLAGS = -O2 -arch $(1)
-$(2)_LDFLAGS = $(COMMON_LDFLAGS) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-$(2)_CONFIGURE_FLAGS = \
-	--prefix=$$(BUILD_DESTDIR)/$(2) \
-	--host=$(1)-apple-darwin10 \
-	--cache-file=../$(2).config.cache \
-	--enable-maintainer-mode \
-	--with-glib=embedded \
-	--with-mcs-docs=no \
-	--disable-nls \
-	--disable-iconv \
-	--disable-mcs-build \
-	--disable-boehm \
-	$(XAMARIN_MAC_CONFIGURE_FLAGS) \
+$(PREFIX)/lib/mono/Xamarin.iOS/repl/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.iOS/repl
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_runtime/$(notdir $@) $@
 
-$(2)_ACVARS = $(COMMON_ACVARS)
+$(PREFIX)/lib/mono/Xamarin.iOS/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.iOS
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch/$(notdir $@) $@
 
-$(2)_CONFIGURE_ENVIRONMENT = \
-	$$($(2)_ACVARS) \
-	PATH="$(MONO_PREFIX)/bin:$(PATH)" \
-	CPPFLAGS="$$($(2)_CPPFLAGS)" \
-	CFLAGS="$$($(2)_CFLAGS)" \
-	CXXFLAGS="$$($(2)_CXXFLAGS)" \
-	LDFLAGS="$$($(2)_LDFLAGS)" \
-	CC="$(MAC$(4)_CC)" \
-	CXX="$(MAC$(4)_CXX)" \
-	DEVELOPER_DIR="$(3)" \
+$(PREFIX)/lib/mono/2.1/Facades/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/2.1/Facades
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch/Facades/$(notdir $@) $@
 
-setup:: setup-$(2)
+$(PREFIX)/lib/mono/2.1/repl/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/2.1/repl
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_runtime/$(notdir $@) $@
 
-setup-$(2): .stamp-configure-$(2)
+$(PREFIX)/lib/mono/2.1/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/2.1
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch/$(notdir $@) $@
 
-.stamp-configure-$(2): $(MONO_PATH)/configure
-	$(Q) $$($(2)_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh $(2) $(abspath $(MONO_PATH)/configure) $$($(2)_CONFIGURE_FLAGS)
+$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.WatchOS/Facades
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_watch/Facades/$(notdir $@) $@
 
-$(BUILD_DESTDIR)/mono-$(2): mono-wrapper.in .stamp-configure-$(2) | $(BUILD_DESTDIR)
-	$$(Q_GEN) sed < $$< > $$@ 's|@ARCH@|$(1)|g; s|@MONO@|$(realpath .)/$(2)/mono/mini/mono|g; s|@FRAMEWORK_ROOT@|$(abspath $(MAC_DESTDIR)/$$(MAC_FRAMEWORK_CURRENT_DIR))|g'
-	$$(Q) chmod +x $$@
+$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_watch_runtime/$(notdir $@) $@
 
-.stamp-build-$(2): .stamp-configure-$(2) $(BUILD_DESTDIR)/mono-$(2) $(MONO_DEPENDENCIES)
-	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/mono
-	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/mono install
-	PATH="$(MONO_PREFIX)/bin:$(PATH)" $(MAKE) -C $(2)/support
-	$(Q) touch $$@
+$(PREFIX)/lib/mono/Xamarin.WatchOS/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.WatchOS
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_watch/$(notdir $@) $@
 
-build-$(2): .stamp-build-$(2)
-endef
+$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.TVOS/Facades
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/Facades/$(notdir $@) $@
 
-$(eval $(call MacBuildTemplate,i386,mac32,$(XCODE94_DEVELOPER_ROOT),32,$(XCODE94_MAC_SDKROOT)))
-$(eval $(call MacBuildTemplate,x86_64,mac64,$(XCODE_DEVELOPER_ROOT),,$(XCODE_MAC_SDKROOT)))
+$(PREFIX)/lib/mono/Xamarin.TVOS/repl/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.TVOS/repl
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv_runtime/$(notdir $@) $@
 
-$(MONO_PATH)/mcs/class/lib/%: .stamp-build-tools64;
+$(PREFIX)/lib/mono/Xamarin.TVOS/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.TVOS
+	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/$(notdir $@) $@
 
-define MacInstallBclTemplate
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades
+	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac/Facades/$(notdir $@) $@
 
-MAC_DIRECTORIES += \
-	$$(BUILD_DESTDIR)/bcl/$(2)/Facades \
-	$$(BUILD_DESTDIR)/bcl/$(2)         \
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac
+	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac/$(notdir $@) $@
 
-$$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%: $$(BUILD_DESTDIR)/bcl/$(2)/% | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
-	$$(Q) install -m 0755 $$< $$@
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades
+	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5/Facades/$(notdir $@) $@
 
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5
+	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5/$(notdir $@) $@
 
-$$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.pdb: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.pdb | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
-	$$(Q) install -m 0644 $$< $$@
-endef
-
-$(eval $(call MacInstallBclTemplate,Xamarin.Mac,xammac))
-$(eval $(call MacInstallBclTemplate,4.5,xammac_net_4_5))
-
-$(MAC_DIRECTORIES) $(BUILD_DESTDIR):
+$(IOS_BCL_DIRECTORIES) $(WATCHOS_BCL_DIRECTORIES) $(TVOS_BCL_DIRECTORIES) $(MAC_BCL_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-mac-facade-check: $(MAC_BCL_TARGETS)
+MONO_ARCHIVE_IOS_IGNORED_ASSEMBLIES = Mono.Simd System.Runtime.CompilerServices.Unsafe nunitlite  # TODO check if we should add them
+MONO_ARCHIVE_MAC_IGNORED_ASSEMBLIES = System.Runtime.CompilerServices.Unsafe nunitlite  # TODO check if we should add them
+MONO_ARCHIVE_MAC_4_5_IGNORED_ASSEMBLIES = SMDiagnostics System.Net.Http.WebRequest System.Runtime.CompilerServices.Unsafe nunitlite  # TODO check if we should add them
+
+ios-assemblies-check: $(IOS_BCL_TARGETS)
 	$(Q) rm -f .$@*
-	$(Q) echo $(MAC_4_5_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
-	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades " not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
+	$(Q) echo $(IOS_ASSEMBLIES) $(IOS_FACADE_ASSEMBLIES) $(MONO_ARCHIVE_IOS_IGNORED_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are assemblies in "$(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch" not defined in IOS_ASSEMBLIES or IOS_FACADE_ASSEMBLIES ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
-define lipo_template_static
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1: mac32/$(2)/.libs/$(1) mac64/$(2)/.libs/$(1) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
-	$(QT_LIPO) lipo -create $$+ -output $$@
+watchos-assemblies-check: $(WATCHOS_BCL_TARGETS)
+	$(Q) rm -f .$@*
+	$(Q) echo $(WATCHOS_ASSEMBLIES) $(WATCHOS_FACADE_ASSEMBLIES) $(MONO_ARCHIVE_IOS_IGNORED_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_watch $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_watch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are assemblies in "$(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_watch" not defined in WATCHOS_ASSEMBLIES or WATCHOS_FACADE_ASSEMBLIES ***\n"; exit 1; fi
+	$(Q) rm -f .$@*
 
-mac32/$(2)/.libs/$(1): .stamp-build-mac32
-mac64/$(2)/.libs/$(1): .stamp-build-mac64
-MAC_TARGETS += $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1
-endef
+tvos-assemblies-check: $(TVOS_BCL_TARGETS) 
+	$(Q) rm -f .$@*
+	$(Q) echo $(TVOS_ASSEMBLIES) $(TVOS_FACADE_ASSEMBLIES) $(MONO_ARCHIVE_IOS_IGNORED_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are assemblies in "$(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv" not defined in TVOS_ASSEMBLIES or TVOS_FACADE_ASSEMBLIES ***\n"; exit 1; fi
+	$(Q) rm -f .$@*
 
-define lipo_template_dynamic
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1: mac32/$(2)/.libs/$(1) mac64/$(2)/.libs/$(1) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
-	$(QT_LIPO) lipo -create $$+ -output $$@
-	$(Q) install_name_tool -id @rpath/$1 $$@
+mac-assemblies-check: $(MAC_BCL_TARGETS)
+	$(Q) rm -f .$@*
+	$(Q) echo $(MAC_ASSEMBLIES) $(MAC_FACADE_ASSEMBLIES) $(MONO_ARCHIVE_MAC_IGNORED_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are assemblies in "$(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac " not defined in MAC_ASSEMBLIES or MAC_FACADE_ASSEMBLIES ***\n"; exit 1; fi
+	$(Q) rm -f .$@*
 
-mac32/$(2)/.libs/$(1): .stamp-build-mac32
-mac64/$(2)/.libs/$(1): .stamp-build-mac64
-MAC_TARGETS += $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1
-endef
+mac-45-assemblies-check: $(MAC_BCL_TARGETS)
+	$(Q) rm -f .$@*
+	$(Q) echo $(MAC_4_5_ASSEMBLIES) $(MAC_4_5_FACADE_ASSEMBLIES) $(MONO_ARCHIVE_MAC_4_5_IGNORED_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are assemblies in "$(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5 " not defined in MAC_4_5_ASSEMBLIES or MAC_4_5_FACADE_ASSEMBLIES ***\n"; exit 1; fi
+	$(Q) rm -f .$@*
 
-$(eval $(call lipo_template_static,libmono-profiler-log.a,mono/profiler))
-$(eval $(call lipo_template_static,libmonosgen-2.0.a,mono/mini))
-$(eval $(call lipo_template_dynamic,libmonosgen-2.0.dylib,mono/mini))
-$(eval $(call lipo_template_dynamic,libMonoPosixHelper.dylib,support))
-$(eval $(call lipo_template_static,libmono-native-compat.a,mono/native))
-$(eval $(call lipo_template_static,libmono-native-unified.a,mono/native))
-$(eval $(call lipo_template_dynamic,libmono-native-compat.dylib,mono/native))
-$(eval $(call lipo_template_dynamic,libmono-native-unified.dylib,mono/native))
+install-bcl-ios: $(IOS_BCL_TARGETS) ios-assemblies-check
+install-bcl-tvos: $(TVOS_BCL_TARGETS) tvos-assemblies-check
+install-bcl-watchos: $(WATCHOS_BCL_TARGETS) watchos-assemblies-check
+install-bcl-mac: $(MAC_BCL_TARGETS) mac-assemblies-check mac-45-assemblies-check
 
-mac32/data/mono-2.pc: .stamp-build-mac32
-install/mac64/bin/mono-sgen: .stamp-build-mac64
-install/mac32/bin/mono-sgen: .stamp-build-mac32
+install-bcl:: install-bcl-ios
+install-bcl:: install-bcl-watchos
+install-bcl:: install-bcl-tvos
+install-bcl:: install-bcl-mac
+### TODO END
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.dylib $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.a: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
-	$(Q_LN) ln -sf libmonosgen-2.0$(suffix $@) $@
+verify-signature:
+	for file in $(PREFIX)/lib/mono/2.1/*.dll; do \
+		MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $$file;	\
+	done
+	@MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/monotouch.dll			\
+	@MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/MonoTouch.Dialog.dll		\
+	@MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/MonoTouch.NUnitLite.dll	\
+	@MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/OpenTK.dll			\
+	@MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/OpenTK-10.dll
+	for file in $$(find $(PREFIX)/lib/mono/2.1/Facades -name "*.dll"); do \
+		MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $$file;	\
+	done
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc: mac32/data/mono-2.pc | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig
-	$(Q_CP) $(CP) $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config: mac-System.config | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System
-	$(Q_CP) $(CP) $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono: install/mac64/bin/mono-sgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
-	$(Q) install -m 0755 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono-32: install/mac32/bin/mono-sgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
-	$(Q) install -m 0755 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current:
-	$(Q_LN) ln -hfs $(MAC_INSTALL_VERSION) $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current
-
-build:: build-mac
-build-mac: $(MAC_TARGETS)
-
-install-local:: install-mac
-install-mac: $(MAC_TARGETS)
-
-clean-local:: clean-mac
-
-clean-mac: clean-mac32 clean-mac64
-
-clean-mac32:
-	rm -rf mac32 .stamp-configure-mac32 mac32.config.cache
-
-clean-mac64:
-	rm -rf mac64 .stamp-configure-mac64 mac64.config.cache
-
-##
-## Xamarin.iOS
-##
-
-all-local:: build
-
-ifdef INCLUDE_IOS
-all-local:: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs
-endif
-
-setup::
-
-ifdef INCLUDE_IOS
-install-local:: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs
-endif
-
-clean-local::
-	@rm -rf $(BUILD_DESTDIR) .stamp-configure-*
-	@rm -f $(MONO_PATH)/configure
-
-ifdef DISABLE_BUILDS_MAKEFILE_DEP
-BUILDS_MAKEFILE_DEP =
-else
-BUILDS_MAKEFILE_DEP = Makefile
-endif
-
-# SDK builds need to depend on this since they are executed by recursive make executions
-$(MONO_PATH)/configure: $(MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
-	$(Q) ./wrap-autogen.sh $(MONO_PATH) mono $(XAMARIN_AUTOGEN_FLAGS)
-
-configure-mono:
-	rm -f $(MONO_PATH)/configure
-	$(MAKE) $(MONO_PATH)/configure
-
+#
+# smcs
 # FIXME: Needed because of broken MonoDevelop assumptions
+#
+install-local:: install-smcs
+all-local:: install-smcs
+
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs:
 	@mkdir -p $(dir $@)
 	@echo Installing smcs script
@@ -470,1191 +575,384 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs:
 	@echo "\$$SMCS -nostdlib -r:$(abspath $(IOS_TARGETDIR)/$(MONOTOUCH_PREFIX)/lib/mono/2.1/mscorlib.dll) -r:$(abspath $(IOS_TARGETDIR)/$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.dll) \"\$$@\"" >> $@
 	@chmod +x $@
 
-#
-# Tools 64bit build.  Builds all the class libs as well.
-#
-TOOLS64_CFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC)
-TOOLS64_CXXFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC)
-TOOLS64_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) $(COMMON_LDFLAGS)
-
-TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
-			--with-monotouch_tv=yes \
-			--with-monotouch_watch=yes \
-			--prefix=$(BUILD_DESTDIR)/tools64 \
-			--enable-maintainer-mode \
-			--cache-file=../tools64.config.cache \
-			--with-glib=embedded \
-			--enable-minimal=com	\
-			--with-profile4_x=no \
-			--with-monotouch=yes \
-			--with-xammac=yes \
-			--with-mcs-docs=no \
-			--disable-nls \
-			--disable-iconv	\
-			--disable-boehm \
-			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
-
-TOOLS64_ACVARS = $(COMMON_ACVARS)
-
-TOOLS64_CONFIGURE_ENVIRONMENT = \
-	$(TOOLS64_ACVARS) \
-	CFLAGS="$(TOOLS64_CFLAGS)" \
-	CXXFLAGS="$(TOOLS64_CXXFLAGS)" \
-	LDFLAGS="$(TOOLS64_LDFLAGS)" \
-	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) \
-	CC="$(MAC_CC)" \
-	CXX="$(MAC_CXX)" \
-
-tools:: build-tools64 install-tools
-
-setup:: setup-tools64
-build:: build-tools64
-clean-local:: clean-tools64
-
-tools64: build-tools64 install-tools
-
-ifdef INCLUDE_IOS
-install-local:: install-tools-ios
-install-tools:: install-tools-ios
-endif
-install-local:: install-tools-mac
-install-tools:: install-tools-mac
-
-setup-tools64: .stamp-configure-tools64
-
-.stamp-configure-tools64: $(MONO_PATH)/configure
-	$(Q) $(TOOLS64_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh tools64 $(abspath $(MONO_PATH)/configure) $(TOOLS64_CONFIGURE_FLAGS)
-
-build-tools-bcl: build-tools64
-build-tools: build-tools64
-
-.stamp-build-tools64: .stamp-configure-tools64 $(MONO_DEPENDENCIES)
-	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO) MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) XAMMAC_MCS_FLAGS=$(MAC_CSC_FLAGS)
-	# NO_INSTALL is defined in mono/mcs/build/profiles except for net_4_5. If we don't have it, then it attempts to install into a gac, and sometimes fail
-	NO_INSTALL=1 $(MAKE) -C tools64 -j 1 install EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
-	@touch .stamp-build-tools64
-
-clean-tools64:
-	rm -rf tools64 .stamp-*-tools64 tools64.config.cache
-	rm -f .stamp-build-tools64
-
-ifdef INCLUDE_WATCH
-install-local:: install-tools-watch
-install-tools:: install-tools-watch
-endif
-ifdef INCLUDE_TVOS
-install-local:: install-tools-tvos
-install-tools:: install-tools-tvos
-endif
+install-smcs: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs
 
 #
-# Xamarin.iOS/WatchOS/TVOS BCL assemblies
+# Xamarin.Mac common pieces
 #
+install-local:: install-mac-common
+all-local:: install-mac-common
 
-# note: Mono.Cairo is probably used for Android only (removed from xtouch list)
-IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.Data.Sqlite Mono.Data.Tds Mono.Security mscorlib \
-	System System.Core System.Data System.Data.Services.Client System.Json System.Runtime.Serialization \
-	System.ServiceModel.Web System.ServiceModel System.Transactions System.Web.Services System.Xml.Linq System.Xml \
-	System.ServiceModel.Internals \
-	System.Numerics System.IdentityModel System.IO.Compression System.IO.Compression.FileSystem \
-	System.ComponentModel.DataAnnotations System.ComponentModel.Composition \
-	System.Net.Http.WinHttpHandler \
-	System.Numerics.Vectors System.Reflection.Context \
-	System.Security \
-	System.Windows System.Xml.Serialization System.Net \
-	Microsoft.CSharp Mono.CSharp System.Net.Http
+MAC_COMMON_DIRECTORIES = \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions \
+	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR) \
 
-IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
+MAC_COMMON_TARGETS = \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Commands \
+	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo \
+	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version \
+	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo \
+	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist \
 
-IOS_FACADE_ASSEMBLIES = $(monotouch_PARALLEL_SUBDIRS) $(monotouch_SUBDIRS)
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions
+	$(Q_LN) ln -hfs $(MAC_INSTALL_VERSION) $@
 
-TVOS_ASSEMBLIES = $(IOS_ASSEMBLIES)
-WATCHOS_ASSEMBLIES = $(filter-out Mono.Security Mono.Data.Tds,$(IOS_ASSEMBLIES))
-TVOS_FACADE_ASSEMBLIES = $(IOS_FACADE_ASSEMBLIES)
-WATCHOS_FACADE_ASSEMBLIES = $(IOS_FACADE_ASSEMBLIES)
-TVOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
-WATCHOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Commands:
+	$(Q_LN) ln -hfs $(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin $@
 
-ios-facade-check: $(IOS_BCL_TARGETS)
-	$(Q) rm -f .$@*
-	$(Q) echo $(IOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
-	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/monotouch/Facades" not defined in "$(FACADE_SUBDIRS_MK)"***\n"; exit 1; fi
-	$(Q) rm -f .$@*
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo: $(TOP)/Make.config.inc $(TOP)/.git/index | $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)
+	$(Q_GEN) echo "Version: $(MAC_PACKAGE_VERSION)" > $@
+	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
+	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
+	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@
 
-watch-facade-check: $(WATCH_BCL_TARGETS)
-	$(Q) rm -f .$@*
-	$(Q) echo $(WATCHOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
-	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
-	$(Q) rm -f .$@*
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo: $(TOP)/Make.config.inc
+	$(Q) echo "0ab364ff-c0e9-43a8-8747-3afb02dc7731 $(MAC_PACKAGE_UPDATE_ID)" > $@
 
-tvos-facade-check: $(TVOS_BCL_TARGETS) 
-	$(Q) rm -f .$@*
-	$(Q) echo $(TVOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
-	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
-	$(Q) rm -f .$@*
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: $(TOP)/Make.config.inc
+	$(Q) echo $(MAC_PACKAGE_VERSION) > $@
 
-NO_MDB_ASSEMBLIES = System.Windows System.Xml.Serialization
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: $(TOP)/Versions-mac.plist.in Makefile $(TOP)/Make.config $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
+	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
+	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_MAC_SDK_DESTDIR)/mac-mono-version.txt)/g" -e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" $< > $@
 
-IOS_BCL_TARGETS_DIRS +=                    \
-	$(PREFIX)/lib/mono/2.1                 \
-	$(PREFIX)/lib/mono/2.1/Facades         \
-	$(PREFIX)/lib/mono/Xamarin.iOS         \
-	$(PREFIX)/lib/mono/Xamarin.iOS/Facades \
-	$(PREFIX)/lib/mono/2.1/repl            \
-	$(PREFIX)/lib/mono/Xamarin.iOS/repl    \
-	$(BUILD_DESTDIR)/bcl/monotouch         \
-	$(BUILD_DESTDIR)/bcl/monotouch/Facades \
-	$(BUILD_DESTDIR)/bcl/monotouch_runtime \
-
-WATCH_BCL_TARGETS_DIRS +=                      \
-	$(PREFIX)/lib/mono/Xamarin.WatchOS         \
-	$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades \
-	$(PREFIX)/lib/mono/Xamarin.WatchOS/repl    \
-	$(BUILD_DESTDIR)/bcl/monotouch_watch         \
-	$(BUILD_DESTDIR)/bcl/monotouch_watch/Facades \
-	$(BUILD_DESTDIR)/bcl/monotouch_watch_runtime \
-
-TVOS_BCL_TARGETS_DIRS +=                    \
-	$(PREFIX)/lib/mono/Xamarin.TVOS         \
-	$(PREFIX)/lib/mono/Xamarin.TVOS/Facades \
-	$(PREFIX)/lib/mono/Xamarin.TVOS/repl    \
-	$(BUILD_DESTDIR)/bcl/monotouch_tv         \
-	$(BUILD_DESTDIR)/bcl/monotouch_tv/Facades \
-	$(BUILD_DESTDIR)/bcl/monotouch_tv_runtime \
-
-IOS_BCL_TARGETS +=                                                                                                  \
-	$(foreach file,$(IOS_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/$(file).dll)                                                \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/2.1/$(file).pdb)         \
-	$(foreach file,$(IOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).dll)                                        \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).pdb) \
-	$(PREFIX)/lib/mono/Xamarin.iOS/mscorlib.dll                                                                     \
-	$(PREFIX)/lib/mono/2.1/mscorlib.dll                                                                             \
-	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/Facades/$(file).dll)                                 \
-	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/Facades/$(file).dll)                         \
-	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).dll)                                      \
-	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).pdb)                                  \
-	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll)                              \
-	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).pdb)                          \
-
-WATCH_BCL_TARGETS += \
-	$(foreach file,$(WATCHOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll)                                        \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(WATCHOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).pdb) \
-	$(PREFIX)/lib/mono/Xamarin.WatchOS/mscorlib.dll                                                                             \
-	$(foreach file,$(WATCHOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/$(file).dll)                         \
-	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll)                              \
-	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).pdb)                          \
-
-TVOS_BCL_TARGETS += \
-	$(foreach file,$(TVOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll)                                        \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(TVOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).pdb) \
-	$(PREFIX)/lib/mono/Xamarin.TVOS/mscorlib.dll                                                                          \
-	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/$(file).dll)                         \
-	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
-	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).pdb)                          \
-
-$(PREFIX)/lib/mono/Xamarin.iOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_runtime/% | $(PREFIX)/lib/mono/Xamarin.iOS/repl
-	$(Q) install -m 0755 $< $@
-
-$(PREFIX)/lib/mono/Xamarin.iOS/%: $(BUILD_DESTDIR)/bcl/monotouch/% | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/Facades
-	$(Q) install -m 0644 $< $@
-
-$(PREFIX)/lib/mono/2.1/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_runtime/% | $(PREFIX)/lib/mono/2.1/repl
-	$(Q) install -m 0755 $< $@
-
-$(PREFIX)/lib/mono/2.1/%: $(BUILD_DESTDIR)/bcl/monotouch/% | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/Facades
-	$(Q) install -m 0755 $< $@
-
-$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_watch_runtime/% | $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
-	$(Q) install -m 0755 $< $@
-
-$(PREFIX)/lib/mono/Xamarin.WatchOS/%: $(BUILD_DESTDIR)/bcl/monotouch_watch/% | $(PREFIX)/lib/mono/Xamarin.WatchOS $(PREFIX)/lib/mono/Xamarin.WatchOS/Facades
-	$(Q) install -m 0755 $< $@
-
-$(PREFIX)/lib/mono/Xamarin.TVOS/repl/%: $(BUILD_DESTDIR)/bcl/monotouch_tv_runtime/% | $(PREFIX)/lib/mono/Xamarin.TVOS/repl
-	$(Q) install -m 0755 $< $@
-
-$(PREFIX)/lib/mono/Xamarin.TVOS/%: $(BUILD_DESTDIR)/bcl/monotouch_tv/% | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/Facades
-	$(Q) install -m 0755 $< $@
-
-# copy to temporary directory before signing
-# otherwise we end up re-signing if installing into a different directory.
-
-TMP_BCL_TARGET_DIRS = \
-	$(BUILD_DESTDIR)/bcl/monotouch \
-	$(BUILD_DESTDIR)/bcl/monotouch/Facades \
-	$(BUILD_DESTDIR)/bcl/monotouch_runtime \
-	$(BUILD_DESTDIR)/bcl/monotouch_tv \
-	$(BUILD_DESTDIR)/bcl/monotouch_tv/Facades \
-	$(BUILD_DESTDIR)/bcl/monotouch_tv_runtime \
-	$(BUILD_DESTDIR)/bcl/monotouch_watch \
-	$(BUILD_DESTDIR)/bcl/monotouch_watch/Facades \
-	$(BUILD_DESTDIR)/bcl/monotouch_watch_runtime \
-	$(BUILD_DESTDIR)/bcl/xammac \
-	$(BUILD_DESTDIR)/bcl/xammac/Facades \
-	$(BUILD_DESTDIR)/bcl/xammac_net_4_5 \
-	$(BUILD_DESTDIR)/bcl/xammac_net_4_5/Facades \
-
-$(BUILD_DESTDIR)/bcl/%.dll: $(MONO_PATH)/mcs/class/lib/%.dll | $(TMP_BCL_TARGET_DIRS)
-	$(Q) $(CP) $< $@
-	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
-
-$(BUILD_DESTDIR)/bcl/%.pdb: $(MONO_PATH)/mcs/class/lib/%.pdb | $(TMP_BCL_TARGET_DIRS)
-	$(Q) $(CP) $< $@
-
-$(IOS_BCL_TARGETS_DIRS) $(WATCH_BCL_TARGETS_DIRS) $(TVOS_BCL_TARGETS_DIRS):
+$(MAC_COMMON_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-# Keep all intermediate files always.
-.SECONDARY:
-
-install-tools-tvos: $(TVOS_BCL_TARGETS) tvos-facade-check
-install-tools-watch: $(WATCH_BCL_TARGETS) watch-facade-check
-install-tools-ios: $(IOS_BCL_TARGETS) ios-facade-check
-install-tools-mac: $(MAC_BCL_TARGETS) mac-facade-check
-build-watchbcl: $(WATCH_BCL_TARGETS)
-
-$(IOS_BCL_TARGETS): .stamp-build-tools64
-$(TVOS_BCL_TARGETS): .stamp-build-tools64
-$(MAC_BCL_TARGETS): .stamp-build-tools64
-$(WATCH_BCL_TARGETS): .stamp-build-tools64
-
-ifdef INCLUDE_IOS
-build-tools64: $(IOS_BCL_TARGETS)
-endif
-ifdef INCLUDE_TVOS
-build-tools64: $(TVOS_BCL_TARGETS)
-endif
-ifdef INCLUDE_WATCH
-build-tools64: $(WATCH_BCL_TARGETS)
-endif
-
-build-tools64: $(MAC_BCL_TARGETS)
-
-verify-signature:
-	for file in $(PREFIX)/lib/mono/2.1/*.dll; do \
-		MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $$file;	\
-	done
-	@MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/monotouch.dll			\
-	@MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/MonoTouch.Dialog.dll		\
-	@MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/MonoTouch.NUnitLite.dll	\
-	@MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/OpenTK.dll			\
-	@MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/OpenTK-10.dll
-	for file in $(IOS_FACADE_ASSEMBLIES); do \
-		MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -v $(PREFIX)/lib/mono/2.1/Facades/$$file.dll;	\
-	done
+install-mac-common: $(MAC_COMMON_TARGETS)
 
 #
-# Simulator builds
+# Xamarin.Mac Mono runtime pieces
 #
+install-local:: install-mac
+all-local:: install-mac
 
-SIM_BIN=$(SIMULATOR_BIN_PATH)
-SIM_ACVARS = \
-	$(COMMON_ACVARS) \
-	ac_cv_func_clock_nanosleep=no \
-	mono_cv_uscore=yes \
-	ac_cv_func_system=no \
+MAC_DIRECTORIES = \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System
+
+MAC_TARGETS = \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmonosgen-2.0.a                    \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-profiler-log.a               \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-compat.a              \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-unified.a             \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmonosgen-2.0.dylib                \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libMonoPosixHelper.dylib             \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-compat.dylib          \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-native-unified.dylib         \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.dylib                    \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.a                        \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc                  \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono                     \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono-32                  \
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
+	$(Q) $(CP) $(MONO_MAC_SDK_DESTDIR)/mac-libs/$(notdir $@) $@
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.dylib $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-2.0.a: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
+	$(Q) ln -sf libmonosgen-2.0$(suffix $@) $@
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
+	$(Q) mkdir -p $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig
+	$(Q) $(CP) $(MONO_MAC_SDK_DESTDIR)/mac-pkgconfig/mono-2.pc $@
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config: mac-System.config | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System
+	$(Q) $(CP) $< $@
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bin/mono-sgen $@
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono-32: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bin/mono-sgen-32 $@
+
+$(MAC_DIRECTORIES):
+	$(Q) mkdir -p $@
+
+install-mac: $(MAC_TARGETS)
 
 #
-# Parameters:
-# $(1): arch
-# $(2): target prefix
-# $(3): mono sdk target prefix
-# $(4): mono sdk dir name
+# Xamarin.iOS/WatchOS/TVOS common pieces
 #
-define SimulatorBuildTemplate
+install-local:: install-ios-common
+all-local:: install-ios-common
 
-.PHONY: $(2)
+IOS_COMMON_DIRECTORIES = \
+	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions \
+	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) \
+	$(IOS_DESTDIR)/Developer/MonoTouch \
+	$(IOS_DESTDIR)/Developer/MonoTouch/usr \
+	$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono \
 
-$(2):: build-$(2)
+IOS_COMMON_TARGETS = \
+	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current \
+	$(IOS_DESTDIR)/Developer/MonoTouch/usr/bin \
+	$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/2.1 \
+	$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/Xamarin.iOS \
+	$(IOS_DESTDIR)/Developer/MonoTouch/updateinfo \
+	$(IOS_DESTDIR)/Developer/MonoTouch/Version \
+	$(IOS_DESTDIR)/Developer/MonoTouch/usr/share \
+	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo \
+	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version \
+	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo \
+	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist \
 
-build:: build-$(2)
-clean-local:: clean-$(2)
+$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current: | $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions
+	$(Q_LN) ln -hfs $(IOS_INSTALL_VERSION) $@
 
-.stamp-build-$(2): $(MONO_PATH)/configure $(MONO_DEPENDENCIES) $(BUILD_DESTDIR)/$(2)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
-	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-$(4)/lib $(BUILD_DESTDIR)/$(2)
-	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-$(4)/include $(BUILD_DESTDIR)/$(2)
-	$(Q) touch $$@
+$(IOS_DESTDIR)/Developer/MonoTouch/usr/bin: | $(IOS_DESTDIR)/Developer/MonoTouch/usr
+	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin) $@
 
-build-$(2): .stamp-build-$(2)
+$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/2.1: | $(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono
+	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1) $@
 
-clean-$(2):
-	-rm -rf .stamp-*-$(2) $(BUILD_DESTDIR)/$(2)
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(3) $(SDK_ARGS)
+$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/Xamarin.iOS: | $(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono
+	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS) $@
 
-build-iphonesimulator:: build-$(2)
-clean-iphonesimulator:: clean-$(2)
+$(IOS_DESTDIR)/Developer/MonoTouch/updateinfo: | $(IOS_DESTDIR)/Developer/MonoTouch
+	$(Q_LN) ln -fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/updateinfo) $@
 
-$(eval SIM_TARGET_LIBMONOSGEN:=$(SIM_TARGET_LIBMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a)
-$(eval SIM_TARGET_SHAREDMONOSGEN:=$(SIM_TARGET_SHAREDMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib)
-$(eval SIM_TARGET_LIBLOGPROFILER:=$(SIM_TARGET_LIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a)
-$(eval SIM_TARGET_SHAREDLIBLOGPROFILER:=$(SIM_TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib)
-$(eval SIM_TARGET_LIBMONONATIVECOMPAT:=$(SIM_TARGET_LIBMONONATIVECOMPAT) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.a)
-$(eval SIM_TARGET_LIBMONONATIVEUNIFIED:=$(SIM_TARGET_LIBMONONATIVEUNIFIED) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.a)
-$(eval SIM_TARGET_SHAREDLIBMONONATIVECOMPAT:=$(SIM_TARGET_SHAREDLIBMONONATIVECOMPAT) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.dylib)
-$(eval SIM_TARGET_SHAREDLIBMONONATIVEUNIFIED:=$(SIM_TARGET_SHAREDLIBMONONATIVEUNIFIED) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.dylib)
+$(IOS_DESTDIR)/Developer/MonoTouch/Version: | $(IOS_DESTDIR)/Developer/MonoTouch
+	$(Q_LN) ln -fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/Version) $@
 
+$(IOS_DESTDIR)/Developer/MonoTouch/usr/share: | $(IOS_DESTDIR)/Developer/MonoTouch/usr
+	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/share) $@
 
-$(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.dylib: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.dylib: .stamp-build-$(2)
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: $(TOP)/Make.config.inc $(TOP)/.git/index | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
+	$(Q_GEN) echo "Version: $(IOS_PACKAGE_VERSION)" > $@
+	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
+	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
+	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@
 
-$(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$(Q) $(CP) $$< $$@
-	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-$(4)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version: $(TOP)/Make.config.inc | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
+	$(Q) echo $(IOS_PACKAGE_VERSION) > $@
 
-$(BUILD_DESTDIR)/$(2):
-	$$(Q) mkdir -p $$@
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: $(TOP)/Make.config.inc
+	$(Q) echo "4569c276-1397-4adb-9485-82a7696df22e $(IOS_PACKAGE_UPDATE_ID)" > $@
 
-$(BUILD_DESTDIR)/$(2)/tmp-lib:
-	$$(Q) mkdir -p $$@
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: $(TOP)/Versions-ios.plist.in Makefile $(TOP)/Make.config $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
+	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
+	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_IOS_SDK_DESTDIR)/ios-mono-version.txt)/g" $< > $@
 
-endef
+$(IOS_COMMON_DIRECTORIES):
+	$(Q) mkdir -p $@
 
-ifdef INCLUDE_IOS
-$(eval $(call SimulatorBuildTemplate,i386,simulator86,sim32,sim32-release))
-$(eval $(call SimulatorBuildTemplate,x86_64,simulator64,sim64,sim64-release))
-endif
+install-ios-common: $(IOS_COMMON_TARGETS)
 
-iphonesimulator:: setup-iphonesimulator build-iphonesimulator install-iphonesimulator
-
-# this needs to be here because the normal usage of this makefile is "make all install", but nothing actually lists the -iphonesimulator targets as dependencies.
-ifdef INCLUDE_IOS
+#
+# iPhone simulator Mono runtime pieces
+#
 install-local:: install-iphonesimulator
 all-local:: install-iphonesimulator
-endif
-
-IPHONESIMULATOR_TARGETS = \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmonosgen-2.0.a             \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmonosgen-2.0.dylib         \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-profiler-log.a        \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-profiler-log.dylib    \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-compat.a       \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-unified.a      \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-compat.dylib   \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-unified.dylib  \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework/Mono       \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist \
 
 IPHONESIMULATOR_DIRECTORIES = \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework            \
-	$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib
 
-$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmonosgen-2.0.a: $(SIM_TARGET_LIBMONOSGEN) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
-	$(Q) lipo $(SIM_TARGET_LIBMONOSGEN) -create -output $@
+IPHONESIMULATOR_TARGETS = \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a             \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a        \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-native-compat.a       \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-native-unified.a      \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib         \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib  \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib    \
+	$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks/Mono.framework/Mono        \
 
-$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmonosgen-2.0.dylib: $(SIM_TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
-	$(Q) lipo $(SIM_TARGET_SHAREDMONOSGEN) -create -output $@
-	$(Q) install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
+$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/usr/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios-sim/$(notdir $@) $@
+	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios-sim/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios-sim/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-profiler-log.a: $(SIM_TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
-	$(Q) lipo $(SIM_TARGET_LIBLOGPROFILER) -create -output $@
-
-$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-profiler-log.dylib: $(SIM_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
-	$(Q) lipo $(SIM_TARGET_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-compat.a: $(SIM_TARGET_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
-	$(Q) lipo $(SIM_TARGET_LIBMONONATIVECOMPAT) -create -output $@
-
-$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-unified.a: $(SIM_TARGET_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
-	$(Q) lipo $(SIM_TARGET_LIBMONONATIVEUNIFIED) -create -output $@
-
-$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-compat.dylib: $(SIM_TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
-	$(Q) lipo $(SIM_TARGET_SHAREDLIBMONONATIVECOMPAT) -create -output $@
-	$(Q) install_name_tool -id @rpath/libmono-native-compat.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-native-unified.dylib: $(SIM_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
-	$(Q) lipo $(SIM_TARGET_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
-	$(Q) install_name_tool -id @rpath/libmono-native-unified.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
+$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios-sim/Mono.framework $(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios-sim/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks
 
 $(IPHONESIMULATOR_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework/Mono: $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmonosgen-2.0.dylib | $(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
-	$(Q) install_name_tool -id @rpath/Mono.framework/Mono $@
-	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
-
-$(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-Info.plist | $(IOS_DESTDIR)$(IPHONESIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
-
 install-iphonesimulator:: $(IPHONESIMULATOR_TARGETS)
 
 #
-# Watch simulator build
+# Watch simulator Mono runtime pieces
 #
-
-ifdef INCLUDE_WATCH
-build:: build-watchsimulator
-clean-local:: clean-watchsimulator
 install-local:: install-watchsimulator
 all-local:: install-watchsimulator
 
-watchsimulator: build-watchsimulator install-watchsimulator
-
-.PHONY: watchsimulator
-endif
-
-.stamp-build-watchsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simwatch $(SDK_ARGS)
-	$(Q) mkdir -p $(BUILD_DESTDIR)/watchsimulator
-	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-simwatch-release/lib $(BUILD_DESTDIR)/watchsimulator
-	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-simwatch-release/include $(BUILD_DESTDIR)/watchsimulator
-	$(Q) touch $@
-
-build-watchsimulator: .stamp-build-watchsimulator
-
-clean-watchsimulator:
-	$(Q) rm -rf .stamp-*-watchsimulator $(BUILD_DESTDIR)/watchsimulator
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simwatch $(SDK_ARGS)
-
-WATCHSIMULATOR_LIBMONOSGEN                = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.a
-WATCHSIMULATOR_SHAREDMONOSGEN             = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.dylib
-WATCHSIMULATOR_LIBLOGPROFILER             = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log-static.a
-WATCHSIMULATOR_SHAREDLIBLOGPROFILER       = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log.0.dylib
-WATCHSIMULATOR_LIBMONONATIVECOMPAT        = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-native-compat.a
-WATCHSIMULATOR_LIBMONONATIVEUNIFIED       = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-native-unified.a
-WATCHSIMULATOR_SHAREDLIBMONONATIVECOMPAT  = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-native-compat.dylib
-WATCHSIMULATOR_SHAREDLIBMONONATIVEUNIFIED = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-native-unified.dylib
-
-$(WATCHSIMULATOR_LIBMONOSGEN): .stamp-build-watchsimulator
-$(WATCHSIMULATOR_SHAREDMONOSGEN): .stamp-build-watchsimulator
-$(WATCHSIMULATOR_LIBLOGPROFILER): .stamp-build-watchsimulator
-$(WATCHSIMULATOR_SHAREDLIBLOGPROFILER): .stamp-build-watchsimulator
-$(WATCHSIMULATOR_LIBMONONATIVECOMPAT): .stamp-build-watchsimulator
-$(WATCHSIMULATOR_LIBMONONATIVEUNIFIED): .stamp-build-watchsimulator
-$(WATCHSIMULATOR_SHAREDLIBMONONATIVECOMPAT): .stamp-build-watchsimulator
-$(WATCHSIMULATOR_SHAREDLIBMONONATIVEUNIFIED): .stamp-build-watchsimulator
+WATCHSIMULATOR_DIRECTORIES = \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
 
 WATCHSIMULATOR_TARGETS = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a            \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a       \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.a      \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.a     \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib        \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib  \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib   \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.a       \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.a      \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib   \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib  \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework/Mono       \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist \
 
-WATCHSIMULATOR_DIRECTORIES =                                                 \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework            \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib                               \
+$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos-sim/$(notdir $@) $@
+	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos-sim/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos-sim/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a: $(WATCHSIMULATOR_LIBMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_LIBMONOSGEN) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib: $(WATCHSIMULATOR_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDMONOSGEN) -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(WATCHSIMULATOR_LIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_LIBLOGPROFILER) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simwatch-release/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.a: $(WATCHSIMULATOR_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_LIBMONONATIVECOMPAT) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib: $(WATCHSIMULATOR_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDLIBMONONATIVECOMPAT) -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-simwatch-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.a: $(WATCHSIMULATOR_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_LIBMONONATIVEUNIFIED) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib: $(WATCHSIMULATOR_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-simwatch-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
+$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/watchos-sim/Mono.framework $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/watchos-sim/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks
 
 $(WATCHSIMULATOR_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework/Mono: $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/Mono.framework/Mono $@
-	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-watchos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
-
 install-watchsimulator: $(WATCHSIMULATOR_TARGETS)
 
 #
-# TV simulator build
+# TV simulator Mono runtime pieces
 #
-
-ifdef INCLUDE_TVOS
-build:: build-tvsimulator
-clean-local:: clean-tvsimulator
 install-local:: install-tvsimulator
 all-local:: install-tvsimulator
 
-tvsimulator: build-tvsimulator install-tvsimulator
-
-.PHONY: tvsimulator
-endif
-
-.stamp-build-tvsimulator: $(MONO_PATH)/configure $(MONO_DEPENDENCIES)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-simtv $(SDK_ARGS)
-	$(Q) mkdir -p $(BUILD_DESTDIR)/tvsimulator
-	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-simtv-release/lib $(BUILD_DESTDIR)/tvsimulator
-	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-simtv-release/include $(BUILD_DESTDIR)/tvsimulator
-	$(Q) touch $@
-
-build-tvsimulator: .stamp-build-tvsimulator
-
-clean-tvsimulator:
-	$(Q) rm -rf .stamp-*-tvsimulator $(BUILD_DESTDIR)/tvsimulator
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-simtv $(SDK_ARGS)
-
-TVSIMULATOR_LIBMONOSGEN                = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.a
-TVSIMULATOR_SHAREDMONOSGEN             = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.dylib
-TVSIMULATOR_LIBLOGPROFILER             = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log-static.a
-TVSIMULATOR_SHAREDLIBLOGPROFILER       = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log.0.dylib
-TVSIMULATOR_LIBMONONATIVECOMPAT        = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-native-compat.a
-TVSIMULATOR_LIBMONONATIVEUNIFIED       = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-native-unified.a
-TVSIMULATOR_SHAREDLIBMONONATIVECOMPAT  = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-native-compat.dylib
-TVSIMULATOR_SHAREDLIBMONONATIVEUNIFIED = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-native-unified.dylib
-
-$(TVSIMULATOR_LIBMONOSGEN): .stamp-build-tvsimulator
-$(TVSIMULATOR_SHAREDMONOSGEN): .stamp-build-tvsimulator
-$(TVSIMULATOR_LIBLOGPROFILER): .stamp-build-tvsimulator
-$(TVSIMULATOR_SHAREDLIBLOGPROFILER): .stamp-build-tvsimulator
-$(TVSIMULATOR_LIBMONONATIVECOMPAT): .stamp-build-tvsimulator
-$(TVSIMULATOR_LIBMONONATIVEUNIFIED): .stamp-build-tvsimulator
-$(TVSIMULATOR_SHAREDLIBMONONATIVECOMPAT): .stamp-build-tvsimulator
-$(TVSIMULATOR_SHAREDLIBMONONATIVEUNIFIED): .stamp-build-tvsimulator
+TVSIMULATOR_DIRECTORIES = \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
 
 TVSIMULATOR_TARGETS = \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a            \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a       \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib   \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-compat.a      \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-unified.a     \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib  \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib \
+	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib   \
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Mono       \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist \
 
-TVSIMULATOR_DIRECTORIES =                                                 \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework            \
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib                               \
+$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos-sim/$(notdir $@) $@
+	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos-sim/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos-sim/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a: $(TVSIMULATOR_LIBMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_LIBMONOSGEN) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib: $(TVSIMULATOR_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDMONOSGEN) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(TVSIMULATOR_LIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_LIBLOGPROFILER) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-simtv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-compat.a: $(TVSIMULATOR_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_LIBMONONATIVECOMPAT) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-compat.dylib: $(TVSIMULATOR_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDLIBMONONATIVECOMPAT) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-simtv-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-unified.a: $(TVSIMULATOR_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_LIBMONONATIVEUNIFIED) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-native-unified.dylib: $(TVSIMULATOR_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-simtv-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
+$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/tvos-sim/Mono.framework $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/tvos-sim/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks
 
 $(TVSIMULATOR_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Mono: $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/Mono.framework/Mono $@
-	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-tvos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
-
 install-tvsimulator: $(TVSIMULATOR_TARGETS)
 
-##
-# Device builds
 #
-# We use --build=i386-apple-darwin10 explicitly here so that even though osx defaults to 64 bit,
-# we end up with a sizeof-compatible built (since all current arms are 32b)
+# iPhone device Mono runtime pieces
 #
-
-PLATFORM_BIN=$(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-PLATFORM_SDK=$(DEVICE_SDK)
-
-# usage $(call DeviceBuildTemplate (armv7,target7,<platform suffix>,<configure flags>,<unused>))
-
-define DeviceBuildTemplate
-
-# $(1) architecture
-# $(2) target prefix
-# $(3) mono sdk target
-# $(4) contains the architecture specific configure flags
-# $(5) contains min ios version
-
-.PHONY: $(2)
-
-$(2): build-$(2)
-
-build:: build-$(2)
-clean-local:: clean-$(2)
-
-.stamp-build-$(2): .stamp-build-cross64 .stamp-build-cross32 $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-$(3) $(SDK_ARGS)
-	$(Q) mkdir -p $(BUILD_DESTDIR)/$(2)
-	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-$(3)-release/* $(BUILD_DESTDIR)/$(2)
-	$(Q) touch $$@
-
-build-$(2): .stamp-build-$(2)
-
-clean-$(2):
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-$(3) $(SDK_ARGS)
-	-rm -rf .stamp-*-$(2) $(BUILD_DESTDIR)/$(2)
-
-setup-iphoneos::
-build-iphoneos:: build-$(2)
-clean-iphoneos:: clean-$(2)
-
-build-ios: build-iphoneos
-clean-ios: clean-iphoneos
-install-ios: install-iphoneos
-
-$(eval TARGET_LIBMONOSGEN:=$(TARGET_LIBMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a)
-$(eval TARGET_SHAREDMONOSGEN:=$(TARGET_SHAREDMONOSGEN) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib)
-$(eval TARGET_LIBLOGPROFILER:=$(TARGET_LIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a)
-$(eval TARGET_LIBMONOEEINTERP:=$(TARGET_LIBMONOEEINTERP) $(BUILD_DESTDIR)/$(2)/lib/libmono-ee-interp.a)
-$(eval TARGET_LIBMONOICALLTABLE:=$(TARGET_LIBMONOICALLTABLE) $(BUILD_DESTDIR)/$(2)/lib/libmono-icall-table.a)
-$(eval TARGET_LIBMONOILGEN:=$(TARGET_LIBMONOILGEN) $(BUILD_DESTDIR)/$(2)/lib/libmono-ilgen.a)
-$(eval TARGET_SHAREDLIBLOGPROFILER:=$(TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib)
-$(eval TARGET_LIBMONONATIVECOMPAT:=$(TARGET_LIBMONONATIVECOMPAT) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.a)
-$(eval TARGET_LIBMONONATIVEUNIFIED:=$(TARGET_LIBMONONATIVEUNIFIED) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.a)
-$(eval TARGET_SHAREDLIBMONONATIVECOMPAT:=$(TARGET_SHAREDLIBMONONATIVECOMPAT) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.dylib)
-$(eval TARGET_SHAREDLIBMONONATIVEUNIFIED:=$(TARGET_SHAREDLIBMONONATIVEUNIFIED) $(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.dylib)
-$(eval TARGET_MONOFRAMEWORK:=$(TARGET_MONOFRAMEWORK) $(BUILD_DESTDIR)/$(2)/tmp-lib/Mono)
-
-$(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-ee-interp.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-icall-table.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-ilgen.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.a: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-native-compat.dylib: .stamp-build-$(2)
-$(BUILD_DESTDIR)/$(2)/lib/libmono-native-unified.dylib: .stamp-build-$(2)
-
-$(BUILD_DESTDIR)/$(2)/tmp-lib:
-	$$(Q) mkdir -p $$@
-
-# We have the following requirements:
-#
-# * libmonos*.a: must have miphone-version-min=5.1.1 (the earliest iOS version we support) - although it's 7.0 for the ARM64 slice.
-# * libmonosgen-2.0.dylib: must have miphone-version-min=7.0 (otherwise iOS 9 won't load it; see bug #34267).
-# * libmono-profiler-log.dylib: same as libmonosgen-2.0.dylib
-# * Mono.framework/Mono: must have miphone-version-min=8.0, otherwise the native linker won't add a LC_ENCRYPTION_INFO load command,
-#   which the App Store requires (see bug #32820). This is not a problem for libmonosgen-2.0.dylib, because that library is only
-#   used for incremental builds, which are not published).
-#
-# And we don't want to build Mono 3 times for each architecture...
-#
-# So what we do is to take the static library (libmonosgen-2.0.a), extract all the object files, and re-link
-# them the required times according to how many versions we need.
-#
-$(BUILD_DESTDIR)/$(2)/tmp-lib/Mono: $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/Mono.framework/Mono -miphoneos-version-min=8.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS)
-
-$(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/libmonosgen-2.0.dylib -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS) -lz
-
-$(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.a $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
-	$$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $$< $$@ -arch $(1) -install_name @rpath/libmono-profiler-log.dylib -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) $(IOS_BITCODE_LDFLAGS) -L$(BUILD_DESTDIR)/$(2)/tmp-lib -lmonosgen-2.0 -lz
-
-endef
-
-ARM_ARCH_CONFIGURE_FLAGS=--host=arm-apple-darwin10 --disable-boehm
-ARM64_ARCH_CONFIGURE_FLAGS=--host=aarch64-apple-darwin10 --disable-boehm
-
-ifdef INCLUDE_IOS
-ifdef INCLUDE_DEVICE
-ifndef DEVICE_RUNTIMES
-DEVICE_RUNTIMES="armv7 armv7s arm64 "
-endif
-endif
-endif
-
-# Note the spaces in findstring arguments, this is needed to distinguish between armv7 and armv7s for example
-ifneq ($(findstring armv7 , $(DEVICE_RUNTIMES) ),)
-$(eval $(call DeviceBuildTemplate,armv7,target7,target32,$(ARM_ARCH_CONFIGURE_FLAGS),$(MIN_IOS_SDK_VERSION)))
-endif
-
-ifneq ($(findstring armv7s , $(DEVICE_RUNTIMES) ),)
-$(eval $(call DeviceBuildTemplate,armv7s,target7s,target32s,$(ARM_ARCH_CONFIGURE_FLAGS),$(MIN_IOS_SDK_VERSION)))
-endif
-
-ifneq ($(findstring arm64 , $(DEVICE_RUNTIMES) ),)
-$(eval $(call DeviceBuildTemplate,arm64,target64,target64,$(ARM64_ARCH_CONFIGURE_FLAGS),7.0))
-endif
-
-ifdef INCLUDE_DEVICE
-ifdef INCLUDE_IOS
-iphoneos:: setup-iphoneos build-iphoneos install-iphoneos
-device:: iphoneos
-clean-device: clean-iphoneos
-install-device: install-iphoneos
-
-# this needs to be here because the normal usage of this makefile is "make all install", but nothing actually lists the -iphoneos targets as dependencies.
 install-local:: install-iphoneos
 all-local:: install-iphoneos
 
-LIBMONO_PROFILER_IPHONEOS_DYLIB=$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib
-
-IPHONEOS_TARGETS = \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.a                                  \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.dylib                              \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.a                             \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-ee-interp.a                                \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-icall-table.a                              \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-ilgen.a                                    \
-	$(LIBMONO_PROFILER_IPHONEOS_DYLIB)														\
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-compat.a                            \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-unified.a                           \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-compat.dylib                        \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-unified.dylib                       \
-	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Mono                            \
-	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Info.plist                      \
-
 IPHONEOS_DIRECTORIES = \
-	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework                      \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib                                         \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib
 
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.a: $(TARGET_LIBMONOSGEN) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_LIBMONOSGEN) -create -output $@
+IPHONEOS_TARGETS =                                                     \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmonosgen-2.0.a            \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-profiler-log.a       \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-ee-interp.a          \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-icall-table.a        \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-ilgen.a              \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-native-compat.a      \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-native-unified.a     \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-native-compat.dylib  \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-native-unified.dylib \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.dylib: $(TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_SHAREDMONOSGEN) -create -output $@
-	$(Q) install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
+$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $@
+	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.a: $(TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_LIBLOGPROFILER) -create -output $@
-
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-ee-interp.a: $(TARGET_LIBMONOEEINTERP) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_LIBMONOEEINTERP) -create -output $@
-
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-icall-table.a: $(TARGET_LIBMONOICALLTABLE) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_LIBMONOICALLTABLE) -create -output $@
-
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-ilgen.a: $(TARGET_LIBMONOILGEN) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_LIBMONOILGEN) -create -output $@
-
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib: $(TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-compat.a: $(TARGET_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_LIBMONONATIVECOMPAT) -create -output $@
-
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-unified.a: $(TARGET_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_LIBMONONATIVEUNIFIED) -create -output $@
-
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-compat.dylib: $(TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_SHAREDLIBMONONATIVECOMPAT) -create -output $@
-	$(Q) install_name_tool -id @rpath/libmono-native-compat.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-native-unified.dylib: $(TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
-	$(Q) lipo $(TARGET_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
-	$(Q) install_name_tool -id @rpath/libmono-native-unified.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
+$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios/Mono.framework $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 
 $(IPHONEOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: $(TARGET_MONOFRAMEWORK) | $(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework
-	$(Q) lipo $(TARGET_MONOFRAMEWORK) -create -output $@
-	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
-
-$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-Info.plist | $(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
-
-install-iphoneos:: $(IPHONEOS_TARGETS)
-
-endif # INCLUDE_IOS
-endif # INCLUDE_DEVICE
+install-iphoneos: $(IPHONEOS_TARGETS)
 
 #
-# Watch device build
-# 
-
-WATCHOS_SDK      = $(DEVICEWATCH_SDK)
-WATCHOS_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-
-ifdef INCLUDE_WATCH
-ifdef INCLUDE_DEVICE
-build:: build-targetwatch build-targetwatch64_32
-clean-local:: clean-targetwatch clean-targetwatch64_32
+# Watch device Mono runtime pieces
+#
 install-local:: install-watchos
 all-local:: install-watchos
 
-targetwatch: build-targetwatch install-watchos
-targetwatch64_32: build-targetwatch64_32 install-watch64_32
-watchos:: targetwatch targetwatch64_32
-
-.PHONY: targetwatch targetwatch64_32
-
-.stamp-build-targetwatch: .stamp-build-crosswatch $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch $(SDK_ARGS)
-	$(Q) mkdir -p $(BUILD_DESTDIR)/targetwatch
-	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-targetwatch-release/* $(BUILD_DESTDIR)/targetwatch
-	$(Q) touch $@
-
-.stamp-build-targetwatch64_32: $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targetwatch64_32 $(SDK_ARGS)
-	$(Q) mkdir -p $(BUILD_DESTDIR)/targetwatch64_32
-	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-targetwatch64_32-release/* $(BUILD_DESTDIR)/targetwatch64_32
-	$(Q) touch $@
-
-build-targetwatch: .stamp-build-targetwatch
-build-targetwatch64_32: .stamp-build-targetwatch64_32
-
-clean-targetwatch:
-	$(Q) rm -rf $(BUILD_DESTDIR)/targetwatch .stamp-*-targetwatch
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-targetwatch $(SDK_ARGS)
-
-clean-targetwatch64_32:
-	$(Q) rm -rf $(BUILD_DESTDIR)/targetwatch64_32 .stamp-*-targetwatch64_32
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-targetwatch64_32 $(SDK_ARGS)
-
-setup-watchos: setup-targetwatch setup-targetwatch64_32
-build-watchos: build-targetwatch build-targetwatch64_32
-clean-watchos: clean-targetwatch clean-targetwatch64_32
-
-WATCHOS_TARGET_LIBMONOSGEN = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.a
-
-WATCHOS_TARGET_SHAREDMONOSGEN = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.dylib
-
-WATCHOS_TARGET_LIBLOGPROFILER = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log-static.a \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-profiler-log-static.a
-
-WATCHOS_TARGET_LIBMONOEEINTERP = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmono-ee-interp.a \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-ee-interp.a
-
-WATCHOS_TARGET_LIBMONOICALLTABLE = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmono-icall-table.a \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-icall-table.a
-
-WATCHOS_TARGET_LIBMONOILGEN = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmono-ilgen.a \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-ilgen.a
-
-WATCHOS_TARGET_SHAREDLIBLOGPROFILER = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-profiler-log.0.dylib
-
-WATCHOS_TARGET_LIBMONONATIVECOMPAT        = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.a \
-
-WATCHOS_TARGET_LIBMONONATIVEUNIFIED       = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.a \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.a \
-
-WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.dylib \
-
-WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED = \
-	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.dylib \
-
-WATCHOS_TARGET_MONOFRAMEWORK = \
-	$(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono \
-	$(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/Mono
-
-$(WATCHOS_TARGET_LIBMONOSGEN): .stamp-build-targetwatch .stamp-build-targetwatch64_32
-$(WATCHOS_TARGET_SHAREDMONOSGEN): .stamp-build-targetwatch .stamp-build-targetwatch64_32
-$(WATCHOS_TARGET_LIBLOGPROFILER): .stamp-build-targetwatch .stamp-build-targetwatch64_32
-$(WATCHOS_TARGET_LIBMONOEEINTERP): .stamp-build-targetwatch .stamp-build-targetwatch64_32
-$(WATCHOS_TARGET_LIBMONOICALLTABLE): .stamp-build-targetwatch .stamp-build-targetwatch64_32
-$(WATCHOS_TARGET_LIBMONOILGEN): .stamp-build-targetwatch .stamp-build-targetwatch64_32
-$(WATCHOS_TARGET_SHAREDLIBLOGPROFILER): .stamp-build-targetwatch .stamp-build-targetwatch64_32
-$(WATCHOS_TARGET_LIBMONONATIVECOMPAT):  .stamp-build-targetwatch .stamp-build-targetwatch64_32
-$(WATCHOS_TARGET_LIBMONONATIVEUNIFIED):  .stamp-build-targetwatch .stamp-build-targetwatch64_32
-$(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT):  .stamp-build-targetwatch .stamp-build-targetwatch64_32
-$(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED):  .stamp-build-targetwatch .stamp-build-targetwatch64_32
-
-device:: watchos
+WATCHOS_DIRECTORIES = \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 
 WATCHOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.a            \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.a       \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ee-interp.a          \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-icall-table.a        \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ilgen.a              \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.a      \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.a     \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.dylib  \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.dylib \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono       \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-WATCHOS_DIRECTORIES = \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib                   \
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@) $@
+	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.a: $(WATCHOS_TARGET_LIBMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOSGEN) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib: $(WATCHOS_TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmonosgen-2.0.dylib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmonosgen-2.0.dylib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmonosgen-2.0.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmonosgen-2.0.dylib -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.a: $(WATCHOS_TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBLOGPROFILER) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ee-interp.a: $(WATCHOS_TARGET_LIBMONOEEINTERP) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOEEINTERP) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-icall-table.a: $(WATCHOS_TARGET_LIBMONOICALLTABLE) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOICALLTABLE) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ilgen.a: $(WATCHOS_TARGET_LIBMONOILGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOILGEN) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-profiler-log.0.dylib
-	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-profiler-log.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-profiler-log.0.dylib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-profiler-log.0.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-profiler-log.0.dylib -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib \
-		-change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
-		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
-		$@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.a: $(WATCHOS_TARGET_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONONATIVECOMPAT) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.a: $(WATCHOS_TARGET_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONONATIVEUNIFIED) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT) -m -o $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib \
-		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmono-native.dylib @rpath/libmono-native-unified.dylib \
-		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
-		-change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib \
-		-change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
-		$@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/watchos/Mono.framework $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/watchos/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
 
 $(WATCHOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: $(WATCHOS_TARGET_MONOFRAMEWORK) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
-	$(Q) lipo $(WATCHOS_TARGET_MONOFRAMEWORK) -create -output $@
-	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-watchos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
-
-$(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a
-	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch armv7k -install_name @rpath/Mono.framework/Mono -mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK) -lc++ -fembed-bitcode
-
-$(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.a
-	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch arm64_32 -install_name @rpath/Mono.framework/Mono -mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK) -lc++ -fembed-bitcode
-
 install-watchos: $(WATCHOS_TARGETS)
 
-endif # INCLUDE_DEVICE
-endif # INCLUDE_WATCH
-
 #
-# TV device build
+# TV device Mono runtime pieces
 #
-
-TVOS_SDK      = $(DEVICETV_SDK)
-TVOS_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-
-ifdef INCLUDE_TVOS
-ifdef INCLUDE_DEVICE
-build:: build-targettv
-clean-local:: clean-targettv
 install-local:: install-tvos
 all-local:: install-tvos
 
-targettv: build-targettv install-tvos
-tvos:: targettv
-
-.PHONY: targettv
-
-.stamp-build-targettv: .stamp-build-cross64 $(MONO_PATH)/configure $(SDK_CONFIG) $(MONO_DEPENDENCIES)
-	$(MAKE) -C $(SDK_BUILDDIR) package-ios-targettv $(SDK_ARGS)
-	$(Q) mkdir -p $(BUILD_DESTDIR)/targettv
-	$(Q) $(CP) -r $(SDK_DESTDIR)/ios-targettv-release/* $(BUILD_DESTDIR)/targettv
-	$(Q) touch $@
-
-build-targettv: .stamp-build-targettv
-
-clean-targettv:
-	$(Q) rm -rf $(BUILD_DESTDIR)/targettv .stamp-*-targettv
-	$(MAKE) -C $(SDK_BUILDDIR) clean-ios-targettv $(SDK_ARGS)
-
-build-tvos: build-targettv
-clean-tvos: clean-targettv
-
-TVOS_TARGET_LIBMONOSGEN                = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.a
-TVOS_TARGET_SHAREDMONOSGEN             = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.dylib
-TVOS_TARGET_LIBLOGPROFILER             = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log-static.a
-TVOS_TARGET_LIBMONOEEINTERP            = $(BUILD_DESTDIR)/targettv/lib/libmono-ee-interp.a
-TVOS_TARGET_LIBMONOICALLTABLE          = $(BUILD_DESTDIR)/targettv/lib/libmono-icall-table.a
-TVOS_TARGET_LIBMONOILGEN               = $(BUILD_DESTDIR)/targettv/lib/libmono-ilgen.a
-TVOS_TARGET_SHAREDLIBLOGPROFILER       = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log.0.dylib
-TVOS_TARGET_LIBMONONATIVECOMPAT        = $(BUILD_DESTDIR)/targettv/lib/libmono-native-compat.a
-TVOS_TARGET_LIBMONONATIVEUNIFIED       = $(BUILD_DESTDIR)/targettv/lib/libmono-native-unified.a
-TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = $(BUILD_DESTDIR)/targettv/lib/libmono-native-compat.dylib
-TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED = $(BUILD_DESTDIR)/targettv/lib/libmono-native-unified.dylib
-
-$(TVOS_TARGET_LIBMONOSGEN): .stamp-build-targettv
-$(TVOS_TARGET_SHAREDMONOSGEN): .stamp-build-targettv
-$(TVOS_TARGET_LIBLOGPROFILER): .stamp-build-targettv
-$(TVOS_TARGET_LIBMONOEEINTERP): .stamp-build-targettv
-$(TVOS_TARGET_LIBMONOICALLTABLE): .stamp-build-targettv
-$(TVOS_TARGET_LIBMONOILGEN): .stamp-build-targettv
-$(TVOS_TARGET_SHAREDLIBLOGPROFILER): .stamp-build-targettv
-$(TVOS_TARGET_LIBMONONATIVECOMPAT): .stamp-build-targettv
-$(TVOS_TARGET_LIBMONONATIVEUNIFIED): .stamp-build-targettv
-$(TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT): .stamp-build-targettv
-$(TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED): .stamp-build-targettv
-
-device:: tvos
+TVOS_DIRECTORIES = \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 
 TVOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.a            \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a       \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ee-interp.a          \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-icall-table.a        \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ilgen.a              \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.a      \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.a     \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.dylib  \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.dylib \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono       \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-TVOS_DIRECTORIES = \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib                   \
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@) $@
+	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.a: $(TVOS_TARGET_LIBMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONOSGEN) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib: $(TVOS_TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_SHAREDMONOSGEN) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a: $(TVOS_TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBLOGPROFILER) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ee-interp.a: $(TVOS_TARGET_LIBMONOEEINTERP) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONOEEINTERP) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-icall-table.a: $(TVOS_TARGET_LIBMONOICALLTABLE) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONOICALLTABLE) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-ilgen.a: $(TVOS_TARGET_LIBMONOILGEN) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONOILGEN) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) lipo $(TVOS_TARGET_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.a: $(TVOS_TARGET_LIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONONATIVECOMPAT) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-compat.dylib: $(TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.a: $(TVOS_TARGET_LIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBMONONATIVEUNIFIED) -create -output $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.dylib: $(TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
-	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib -change $(SDK_DESTDIR)/ios-targettv-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
-	$(Q) dsymutil -t 4 -o $@.dSYM $@
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/tvos/Mono.framework $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/tvos/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
 
 $(TVOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: $(BUILD_DESTDIR)/targettv/tmp-lib/Mono | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
-	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
-
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-tvos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
-
-$(BUILD_DESTDIR)/targettv/tmp-lib/Mono: $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.a
-	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch arm64 -install_name @rpath/Mono.framework/Mono -mtvos-version-min=$(MIN_TVOS_SDK_VERSION) -isysroot $(DEVICETV_SDK) -lc++ -fembed-bitcode
-
 install-tvos: $(TVOS_TARGETS)
-
-endif # INCLUDE_DEVICE
-endif # INCLUDE_TVOS
 
 #
 # Cross compilers
@@ -1665,44 +963,31 @@ endif # INCLUDE_TVOS
 # bit version targeting arm64.
 # These are compiled using the mono sdk makefiles
 #
+install-local:: install-cross
 
-install-directories:
-	install -d $(PREFIX)/bin
-	install -d $(PREFIX)/share/mono
-	install -d $(PREFIX)/lib/mono/2.1/Facades
-	install -d $(PREFIX)/lib/mono/Xamarin.iOS
-	install -d $(IOS_DESTDIR)/$(IPHONESIMULATOR_PREFIX)/include
-	install -d $(IOS_DESTDIR)/$(IPHONESIMULATOR_PREFIX)/lib
-	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/include
-	install -d $(IOS_DESTDIR)/$(IPHONEOS_PREFIX)/lib
+$(MONO_IOS_SDK_DESTDIR)/ios-cross32-release/bin/arm-darwin-mono-sgen: .stamp-$(MONO_BUILD_MODE)
+$(MONO_IOS_SDK_DESTDIR)/ios-cross64-release/bin/aarch64-darwin-mono-sgen: .stamp-$(MONO_BUILD_MODE)
+$(MONO_IOS_SDK_DESTDIR)/ios-crosswatch-release/bin/armv7k-unknown-darwin-mono-sgen: .stamp-$(MONO_BUILD_MODE)
+
+$(PREFIX)/bin/arm-darwin-mono-sgen: $(MONO_IOS_SDK_DESTDIR)/ios-cross32-release/bin/arm-darwin-mono-sgen | $(PREFIX)/bin
+	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
+
+$(PREFIX)/bin/arm64-darwin-mono-sgen: $(MONO_IOS_SDK_DESTDIR)/ios-cross64-release/bin/aarch64-darwin-mono-sgen | $(PREFIX)/bin
+	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
+
+$(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen: $(MONO_IOS_SDK_DESTDIR)/ios-crosswatch-release/bin/armv7k-unknown-darwin-mono-sgen | $(PREFIX)/bin
+	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
+
+$(PREFIX)/bin:
+	$(Q) mkdir -p $@
+
+.PHONY: install-cross
+install-cross: $(PREFIX)/bin/arm-darwin-mono-sgen $(PREFIX)/bin/arm64-darwin-mono-sgen $(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen
 
 #
-# Add explicit targets for building llvm before building the cross compilers, to
-# avoid building/downloading it in parallel by the nested make invocations.
+# LLVM
 #
-ifdef INCLUDE_DEVICE
-clean-local:: clean-llvm
-endif
-
-build-llvm32: .stamp-build-llvm32
-build-llvm64: .stamp-build-llvm64
-
-.stamp-compile-llvm64: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_IOS_SDK_BUILDDIR) provision-llvm-llvm64 $(SDK_ARGS)
-	$(Q) touch $@
-
-.stamp-compile-llvm32: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_IOS_SDK_BUILDDIR) provision-llvm36-llvm32 $(SDK_ARGS)
-	$(Q) touch $@
-
-.stamp-build-llvm64: .stamp-$(MONO_BUILD_MODE)-llvm64
-.stamp-build-llvm32: .stamp-$(MONO_BUILD_MODE)-llvm32
-
-clean-llvm: $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_IOS_SDK_BUILDDIR) clean-llvm36-llvm32 clean-llvm-llvm64 $(SDK_ARGS)
-	$(RM) .stamp-*-llvm*
-
-.PHONY: install-llvm64 install-llvm32 llvm32 llvm64
+install-local:: install-llvm
 
 LLVM64_TARGETS = \
 	$(PREFIX)/LLVM/bin/opt \
@@ -1712,8 +997,8 @@ LLVM32_TARGETS = \
 	$(PREFIX)/LLVM36/bin/opt \
 	$(PREFIX)/LLVM36/bin/llc \
 
-$(MONO_IOS_SDK_DESTDIR)/llvm-llvm64/bin/%: .stamp-build-llvm64;
-$(MONO_IOS_SDK_DESTDIR)/llvm36-llvm32/bin/%: .stamp-build-llvm32;
+$(MONO_IOS_SDK_DESTDIR)/llvm-llvm64/bin/%: .stamp-$(MONO_BUILD_MODE)
+$(MONO_IOS_SDK_DESTDIR)/llvm36-llvm32/bin/%: .stamp-$(MONO_BUILD_MODE)
 
 $(PREFIX)/LLVM/bin/%: $(MONO_IOS_SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
@@ -1724,73 +1009,7 @@ $(PREFIX)/LLVM36/bin/%: $(MONO_IOS_SDK_DESTDIR)/llvm36-llvm32/bin/% | $(PREFIX)/
 $(PREFIX)/LLVM/bin $(PREFIX)/LLVM36/bin:
 	$(Q) mkdir -p $@
 
+.PHONY: install-llvm64 install-llvm32 install-llvm
 install-llvm: install-llvm32 install-llvm64
 install-llvm32: $(LLVM32_TARGETS)
 install-llvm64: $(LLVM64_TARGETS)
-
-llvm: install-llvm
-llvm64: install-llvm64
-llvm32: install-llvm32
-
-$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(MONO_PATH)/configure $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
-	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
-
-targetwatch/mono/arch/arm/arm_dpimacros.h: .stamp-configure-targetwatch
-	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)
-
-$(PREFIX)/bin:
-	$(Q) mkdir -p $@
-
-# Dependency used to build the offsets tool before recursively calling sdk makefiles
-offsets-tool: $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe
-
-##
-# Cross compiler template
-#
-# Parameters:
-#  $(1): target prefix (cross32 etc)
-#  $(2): llvm (llvm32 or llvm64)
-#  $(3): cross compiler executable (arm-darwin-mono-sgen)
-#  $(4): cross compiler executable generated by mono sdk
-##
-define iOSCrossTemplate
-
-$(1): build-$(1) install-$(1)
-
-.PHONY: build-$(1) install-$(1)
-
-build:: build-$(1)
-install-local:: install-$(1)
-clean-local:: clean-$(1)
-
-.stamp-compile-$(1): .stamp-build-llvm64 .stamp-build-llvm32 $(MONO_PATH)/configure $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe $(MONO_DEPENDENCIES) $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_IOS_SDK_BUILDDIR) package-ios-$(1) $(SDK_ARGS)
-	$(Q) touch $$@
-
-.stamp-build-$(1): .stamp-$(MONO_BUILD_MODE)-$(1)
-
-build-$(1): .stamp-build-$(1)
-
-_$(1)_CROSS_TARGETS = \
-	$(PREFIX)/bin/$(3)  \
-
-$(SDK_DESTDIR)/ios-$(1)/bin/$(4): .stamp-build-$(1)
-
-$(PREFIX)/bin/$(3): $(MONO_IOS_SDK_DESTDIR)/ios-$(1)-release/bin/$(4) | $(PREFIX)/bin
-	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $$< $$@
-
-install-$(1): install-$(2) $$(_$(1)_CROSS_TARGETS)
-
-clean-$(1): $(SDK_CONFIG)
-	$(MAKE) -C $(MONO_IOS_SDK_BUILDDIR) clean-ios-$(1) $(SDK_ARGS)
-	-rm -rf $(MONO_IOS_SDK_DESTDIR)/$(1) .stamp-build-$(1)
-
-endef
-
-ifdef INCLUDE_IOS
-ifdef INCLUDE_DEVICE
-$(eval $(call iOSCrossTemplate,cross32,llvm32,arm-darwin-mono-sgen,arm-darwin-mono-sgen))
-$(eval $(call iOSCrossTemplate,cross64,llvm64,arm64-darwin-mono-sgen,aarch64-darwin-mono-sgen))
-$(eval $(call iOSCrossTemplate,crosswatch,llvm32,armv7k-unknown-darwin-mono-sgen,armv7k-unknown-darwin-mono-sgen))
-endif
-endif

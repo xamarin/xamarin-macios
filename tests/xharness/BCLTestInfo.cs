@@ -124,6 +124,8 @@ namespace xharness
 		{
 			var testName = TestName == "mscorlib" ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
+			if (!File.Exists (main_test_sources)) // TODO: revert this
+				return;
 			var main_test_files = File.ReadAllLines (main_test_sources);
 			var watch_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
 			var watch_test_files = File.ReadAllLines (watch_test_sources).Where ((arg) => !string.IsNullOrEmpty (arg));
@@ -220,6 +222,8 @@ namespace xharness
 		{
 			var testName = TestName == "mscorlib" ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
+			if (!File.Exists (main_test_sources))  // TODO: revert this
+				return "";
 			var main_test_files = File.ReadAllLines (main_test_sources);
 
 			var sb = new StringBuilder[2] { new StringBuilder (), new StringBuilder () };

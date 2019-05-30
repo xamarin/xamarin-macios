@@ -36,6 +36,12 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Security" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
@@ -439,15 +445,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\external\mono\external\cecil\Mono.Cecil.csproj">
-      <Project>{D68133BD-1E63-496E-9EDE-4FBDBF77B486}</Project>
-      <Name>Mono.Cecil</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\external\mono\external\cecil\symbols\mdb\Mono.Cecil.Mdb.csproj">
-      <Project>{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}</Project>
-      <Name>Mono.Cecil.Mdb</Name>
-    </ProjectReference>
   </ItemGroup>
 </Project>

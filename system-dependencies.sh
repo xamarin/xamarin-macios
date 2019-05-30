@@ -46,6 +46,11 @@ while ! test -z $1; do
 			unset IGNORE_CMAKE
 			shift
 			;;
+		--provision-7z)
+			PROVISION_7Z=1
+			unset IGNORE_7Z
+			shift
+			;;
 		--provision-autotools)
 			PROVISION_AUTOTOOLS=1
 			unset IGNORE_AUTOTOOLS
@@ -72,6 +77,8 @@ while ! test -z $1; do
 			unset IGNORE_XCODE
 			PROVISION_CMAKE=1
 			unset IGNORE_CMAKE
+			PROVISION_7Z=1
+			unset IGNORE_7Z
 			PROVISION_AUTOTOOLS=1
 			unset IGNORE_AUTOTOOLS
 			PROVISION_HOMEBREW=1
@@ -88,6 +95,7 @@ while ! test -z $1; do
 			IGNORE_VISUAL_STUDIO=1
 			IGNORE_XCODE=1
 			IGNORE_CMAKE=1
+			IGNORE_7Z=1
 			IGNORE_AUTOTOOLS=1
 			IGNORE_HOMEBREW=1
 			IGNORE_SHARPIE=1
@@ -116,6 +124,10 @@ while ! test -z $1; do
 			;;
 		--ignore-cmake)
 			IGNORE_CMAKE=1
+			shift
+			;;
+		--ignore-7z)
+			IGNORE_7Z=1
 			shift
 			;;
 		--ignore-sharpie)
@@ -691,6 +703,31 @@ function check_cmake () {
 	ok "Found CMake $ACTUAL_CMAKE_VERSION (at least $MIN_CMAKE_VERSION is required)"
 }
 
+function install_7z () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install 7z, but brew is not installed."
+		return
+	fi
+
+	brew install p7zip
+}
+
+function check_7z () {
+	if ! test -z $IGNORE_7Z; then return; fi
+
+
+	if ! 7z &> /dev/null; then
+		if ! test -z $PROVISION_7Z; then
+			install_7z
+		else
+			fail "You must install 7z (no specific version is required)"
+		fi
+		return
+	fi
+
+	ok "Found 7z (no specific version is required)"
+}
+
 function check_homebrew ()
 {
 	if ! test -z $IGNORE_HOMEBREW; then return; fi
@@ -844,6 +881,7 @@ check_autotools
 check_mono
 check_visual_studio
 check_cmake
+check_7z
 check_objective_sharpie
 check_simulators
 
