@@ -5357,6 +5357,8 @@ public partial class Generator : IMemberGatherer {
 
 		if (!minfo.is_interface_impl) {
 			PrintMethodAttributes (minfo);
+		} else if (minfo.is_return_release) {
+			print ("[return: ReleaseAttribute ()]");
 		}
 
 		var mod = minfo.GetVisibility ();
