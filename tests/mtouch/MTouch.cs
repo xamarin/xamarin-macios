@@ -2570,12 +2570,12 @@ public class B
 			case "monotouch-test":
 				break;
 			default:
-				subdir = "/bcl-test/BCLTests";
+				subdir = "/bcl-test";
 				break;
 			}
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
 			string csproj = null;
-			if (subdir == "/bcl-test/BCLTests") { // bcl tests are generated and are not in their own dir
+			if (subdir == "/bcl-test") { // bcl tests are generated and are not in their own dir
 				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname + GetProjectSuffix (profile) + ".csproj");
 			} else {
 				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
