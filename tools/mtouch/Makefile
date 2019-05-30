@@ -161,24 +161,20 @@ SIMLAUNCHER_FRAMEWORKS =  \
 
 define SimlauncherTemplate
 
-simlauncher$(5)$(1): simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a $(BUILD_DESTDIR)/simulator$(4)/lib/libmono$(3)-2.0.a Makefile Xamarin.iOS.registrar.ios.simulator.a
-	$(QT_CC) $(SIMULATOR_CC) -DDEBUG -DSIMLAUNCHER $(2) -gdwarf-2 \
+simlauncher$(3)-sgen: simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a Makefile Xamarin.iOS.registrar.ios.simulator.a
+	$(QT_CC) $(SIMULATOR_CC) -DDEBUG -DSIMLAUNCHER $(1) -gdwarf-2 \
 		-L$(TOP)/runtime/.libs/ios \
-		-L$(BUILD_DESTDIR)/simulator$(4)/lib/ \
 		-I$(TOP)/runtime \
-		-I$(BUILD_DESTDIR)/simulator$(4)/include/mono-2.0 \
-		-I$(TOP)/builds/simulator$(4)/mono/eglib \
-		-I$(MONO_PATH)/mono/eglib \
-		$(BUILD_DESTDIR)/simulator$(4)/lib/libmono$(3)-2.0.a \
+		$(MONO_IOS_SDK_DESTDIR)/ios-libs/ios-sim/libmonosgen-2.0.a \
 		$(foreach u,$(UNREFERENCED_SYMBOLS),-u $u)  \
 		$(TOP)/runtime/.libs/ios/libapp.a \
 		-Wl,-w \
-		-lz -liconv $(TOP)/runtime/.libs/ios/libxamarin-debug.a simlauncher.m $(SIMLAUNCHER_FRAMEWORKS) $(SIMULATOR$(4)_OBJC_CFLAGS) -o $$@
+		-lz -liconv $(TOP)/runtime/.libs/ios/libxamarin-debug.a simlauncher.m $(SIMLAUNCHER_FRAMEWORKS) $(SIMULATOR$(2)_OBJC_CFLAGS) -o $$@
 
 endef
 
-$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,sgen,86,32))
-$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,sgen,64,64))
+$(eval $(call SimlauncherTemplate,-DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,86,32))
+$(eval $(call SimlauncherTemplate,-DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,64,64))
 
 #
 # mtouch
@@ -189,7 +185,7 @@ MTOUCH_DIR=bin/$(MTOUCH_CONF)
 LOCAL_MTOUCH=$(MTOUCH_DIR)/mtouch.exe
 
 # mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch needs to be rebuilt or not.
-mtouch.csproj.inc: Makefile ../common/create-makefile-fragment.sh
+mtouch.csproj.inc: Makefile ../common/create-makefile-fragment.sh $(TOP)/Make.config
 	$(Q_GEN) ../common/create-makefile-fragment.sh $(CURDIR)/mtouch.csproj
 
 -include mtouch.csproj.inc

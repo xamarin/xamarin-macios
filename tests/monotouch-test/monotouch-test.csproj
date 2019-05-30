@@ -171,22 +171,22 @@
     </Compile>
     <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPointF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestPointF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPointF.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestRectangle.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestRectangle.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestRectangle.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestRectangleF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestRectangleF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestRectangleF.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSize.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestSize.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestSize.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSizeF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestSizeF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestSizeF.cs</Link>
     </Compile>
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">

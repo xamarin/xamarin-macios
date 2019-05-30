@@ -12,8 +12,8 @@ endif
 
 APIDIFF_DIR=.
 
-MONO_API_INFO = $(MONO_IOS_SDK_BUILDDIR)/ios-bcl/monotouch_tools/mono-api-info.exe
-MONO_API_HTML = $(MONO_IOS_SDK_BUILDDIR)/ios-bcl/monotouch_tools/mono-api-html.exe
+MONO_API_INFO = $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tools/mono-api-info.exe
+MONO_API_HTML = $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tools/mono-api-html.exe
 MONO_BUILD = $(SYSTEM_MONO)
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds

@@ -62,15 +62,14 @@ namespace InstallSources
 		public bool IsMonoPath (string path)
 		{
 			// remove the intall dir and append the mono source path
-			if (path.StartsWith(InstallDir, StringComparison.Ordinal)) {
+			if (path.StartsWith(MonoPathMangler.iOSFramework, StringComparison.Ordinal) || path.StartsWith(MonoPathMangler.MacFramework, StringComparison.Ordinal)) {
 				// dealing with the jenkins paths
 				if (Verbose) {
 					Console.WriteLine($"Install dir is {InstallDir}");
 					Console.WriteLine($"Original path os {path}");
 				}
 				
-				var srcDir = Path.Combine(InstallDir, srcSubPath, 
-					(InstallDir.Contains(xamariniOSDir) ? xamariniOSDir : xamarinMacDir));
+				var srcDir = path.Contains (xamariniOSDir) ? MonoPathMangler.iOSFramework : MonoPathMangler.MacFramework;
 				if (Verbose)
 					Console.WriteLine($"Src path to remove {srcDir}");
 				var relative = path.Remove(0, srcDir.Length);
@@ -109,7 +108,9 @@ namespace InstallSources
 		
 		public bool IsIgnored (string path)
 		{
-			return path.Contains ("/mcs/mcs/");
+			return path.Contains ("/mcs/mcs/") ||
+				path.Contains ("xammac-parser.cs") ||		// this would require adding sources to the Mono mac archive
+				path.Contains ("xammac_net_4_5-parser.cs");	// which would add a lot of duplicate files, so just ignore these
 		}
 		
 		public IPathMangler GetMangler (string path)

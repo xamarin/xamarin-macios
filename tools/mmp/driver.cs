@@ -902,10 +902,9 @@ namespace Xamarin.Bundler {
 				// copy to temp directory and lipo there to avoid touching the final dest file if it's up to date
 				var temp_dest = Path.Combine (App.Cache.Location, "libmono-native.dylib");
 
-				if (Application.UpdateFile (src, temp_dest)) {
+				if (Application.UpdateFile (src, temp_dest))
 					LipoLibrary (name, temp_dest);
-					Application.CopyFile (temp_dest, dest);
-				}
+				Application.UpdateFile (temp_dest, dest);
 			}
 			else {
 				// we can directly update the dest

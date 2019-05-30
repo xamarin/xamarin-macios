@@ -1,6 +1,3 @@
-mono_root=$(MONO_PATH)
-builds_root=$(TOP)/builds
-
 # helpful rules to compile things for the various architectures
 
 COMMON_I:= -I.

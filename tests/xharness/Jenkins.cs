@@ -686,8 +686,7 @@ namespace xharness
 				"tools/common",
 				"tools/linker",
 				"src/ObjCRuntime/Registrar.cs",
-				"external/mono",
-				"external/llvm",
+				"mk/mono.mk",
 				"msbuild",
 			};
 			var mmp_prefixes = new string [] {
@@ -697,14 +696,13 @@ namespace xharness
 				"tools/common",
 				"tools/linker",
 				"src/ObjCRuntime/Registrar.cs",
-				"external/mono",
+				"mk/mono.mk",
 				"msbuild",
 			};
 			var bcl_prefixes = new string [] {
 				"tests/bcl-test",
 				"tests/common",
-				"external/mono",
-				"external/llvm",
+				"mk/mono.mk",
 			};
 			var btouch_prefixes = new string [] {
 				"src/btouch.cs",

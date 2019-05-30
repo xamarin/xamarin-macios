@@ -120,19 +120,19 @@ namespace Xamarin.Tests
 							} else if (slice.Architecture == MachO.Architectures.ARM64) {
 								alternate_version = new Version (7, 0, 0); // our arm64 slices has min iOS 7.0.
 							}
-							mono_native_compat_version = SdkVersions.MiniOSVersion;
+							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MintvOS:
 							version = SdkVersions.MinTVOSVersion;
-							mono_native_compat_version = SdkVersions.MinTVOSVersion;
+							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MinwatchOS:
 							version = SdkVersions.MinWatchOSVersion;
 							if (device)
 								alternate_version = new Version (5, 1, 0); // arm64_32 has min OS 5.1
-							mono_native_compat_version = SdkVersions.MinWatchOSVersion;
+							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (5, 0, 0);
 							if (device)
 								alternate_mono_native_unified_version = new Version (5, 1, 0); // armv7k has 5.0, arm64_32 has 5.1
