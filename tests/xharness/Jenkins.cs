@@ -1657,10 +1657,10 @@ namespace xharness
 			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
 				using (var reader = log.GetReader ()) {
 					while (!reader.EndOfStream) {
-						string line = reader.ReadLine ()?.Trim ();
+						string line = reader.ReadLine ();
 						if (line == null)
 							continue;
-						if (line.StartsWith ("error HE0038", StringComparison.Ordinal))
+						if (line.Contains ("error HE0038: Failed to launch the app"))
 							return true;
 					}
 				}
