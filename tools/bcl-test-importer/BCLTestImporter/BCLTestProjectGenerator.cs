@@ -466,7 +466,7 @@ namespace BCLTestImporter {
 				rootPath = Path.Combine (rootPath, "mac-bcl", "xammac", "tests");
 				break;
 			}
-			return return new [] {
+			return new [] {
  				Path.Combine (rootPath, "nunit-excludes.txt"),
 				Path.Combine (rootPath, "xunit-excludes.txt")
 			};
