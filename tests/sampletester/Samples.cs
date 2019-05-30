@@ -171,7 +171,7 @@ namespace Samples {
 				{ "Chapter27/StepSliderDemo/StepSliderDemo/StepSliderDemo.iOS/StepSliderDemo.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Chapter27/StepSliderDemo/StepSliderDemo.sln" } },
 				{ "Chapter28/MapDemos/MapDemos/MapDemos.iOS/MapDemos.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Chapter28/MapDemos/MapDemos.sln" } },
 				{ "Chapter28/WhereAmI/WhereAmI/WhereAmI.iOS/WhereAmI.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Chapter28/WhereAmI/WhereAmI.sln" } },
-				
+
 				// Known failures
 				{ "Chapter02/FS/Greetings/Greetings.iOS/Greetings.iOS.fsproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/57" } },
 				{ "Chapter02/FS/Hello/Hello.iOS/Hello.iOS.fsproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/57" } },
