@@ -77,6 +77,7 @@ namespace BCLTestImporter {
 			public string [] assemblies;
 			public string ExtraArgs;
 			public string Group;
+			public double TimeoutMultiplier = 1;
 		}
 
 		// we have two different types of list, those that are for the iOS like projects (ios, tvos and watch os) and those 
@@ -108,7 +109,7 @@ namespace BCLTestImporter {
 			new BclTestProjectInfo { Name = "SystemNetHttpTests", assemblies = new [] { "monotouch_System.Net.Http_test.dll" }, Group = "BCL tests group 2" },
 			new BclTestProjectInfo { Name = "MonoDataTdsTests", assemblies = new [] { "monotouch_Mono.Data.Tds_test.dll" }, Group = "BCL tests group 2" },
 			new BclTestProjectInfo { Name = "SystemServiceModelTests", assemblies = new [] { "monotouch_System.ServiceModel_test.dll" }, Group = "BCL tests group 2" },
-			new BclTestProjectInfo { Name = "CorlibTests", assemblies = new [] { "monotouch_corlib_test.dll" }, Group = "BCL tests group 2" },
+			new BclTestProjectInfo { Name = "CorlibTests", assemblies = new [] { "monotouch_corlib_test.dll" }, Group = "BCL tests group 2", TimeoutMultiplier = 2 },
 			new BclTestProjectInfo { Name = "SystemWebServicesTests", assemblies = new [] { "monotouch_System.Web.Services_test.dll" }, Group = "BCL tests group 2" },
 
 			// XUNIT TESTS 
@@ -160,8 +161,6 @@ namespace BCLTestImporter {
 		static readonly List<string> iOSIgnoredAssemblies = new List<string> {};
 
 		static readonly List<string> tvOSIgnoredAssemblies = new List<string> {
-			"monotouch_corlib_xunit-test.dll", // ignored due to https://github.com/xamarin/maccore/issues/1611 until mono fixes it
-			"monotouch_System_xunit-test.dll", // ignored due to https://github.com/xamarin/maccore/issues/1610
 		};
 
 		static readonly List<string> watcOSIgnoredAssemblies = new List<string> {
@@ -573,7 +572,7 @@ namespace BCLTestImporter {
 					failure = e.Message;
 				}
 				// we have the 3 projects we depend on, we need the root one, the one that will be used by harness
-				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = rootProjectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = failure } );
+				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = rootProjectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = failure, TimeoutMultiplier = def.TimeoutMultiplier } );
 			} // foreach project
 
 			return projectPaths;
@@ -631,7 +630,7 @@ namespace BCLTestImporter {
 				} catch (Exception e) {
 					failure = e.Message;
 				}
-				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = projectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = failure });
+				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = projectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = failure, TimeoutMultiplier = def.TimeoutMultiplier });
 			} // foreach project
 
 			return projectPaths;
@@ -675,7 +674,7 @@ namespace BCLTestImporter {
 					info, projectTemplatePath, infoPlistPath, platform);
 					
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
-				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = projectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = null });
+				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = projectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = null, TimeoutMultiplier = def.TimeoutMultiplier });
 				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 					await file.WriteAsync (generatedProject);
 				}
@@ -719,6 +718,7 @@ namespace BCLTestImporter {
 				// build the grouped apps 
 				var groupedApps = new Dictionary<string, List<string>> ();
 				var groupedAppsExtraArgs = new Dictionary<string, List<string>> ();
+				double timeoutMultiplier = 1;
 				foreach (var def in definitions) {
 					var validAssemblies = new List<string> ();
 					foreach (var a in def.assemblies) { // filter ignored assemblies
@@ -735,14 +735,15 @@ namespace BCLTestImporter {
 						if (def.ExtraArgs != null)
 							groupedAppsExtraArgs [def.Group].Add (def.ExtraArgs);
 					}
+					timeoutMultiplier += (def.TimeoutMultiplier - 1);
 				}
 				foreach (var group in groupedApps.Keys) {
 					var cleanedExtraArgs = groupedAppsExtraArgs [group].Distinct ();
-					testProjects.Add (new BclTestProjectInfo { Name = group, assemblies = groupedApps [group].ToArray (), ExtraArgs = string.Join (" ", cleanedExtraArgs) });
+					testProjects.Add (new BclTestProjectInfo { Name = group, assemblies = groupedApps [group].ToArray (), ExtraArgs = string.Join (" ", cleanedExtraArgs), TimeoutMultiplier = timeoutMultiplier });
 				}
 			} else {
 				foreach (var def in definitions) {
-					testProjects.Add (new BclTestProjectInfo { Name = def.Name, assemblies = def.assemblies, ExtraArgs = def.ExtraArgs });
+					testProjects.Add (new BclTestProjectInfo { Name = def.Name, assemblies = def.assemblies, ExtraArgs = def.ExtraArgs, TimeoutMultiplier = def.TimeoutMultiplier });
 				}
 			}
 			return testProjects;
@@ -763,16 +764,17 @@ namespace BCLTestImporter {
 				var generated = await GenerateTestProjectsAsync (GetProjectDefinitions (commoniOSTestProjects, platform), platform, generatedCodePathRoot);
 				foreach (var tp in generated) {
 					if (!projects.ContainsKey (tp.Name)) {
-						projects [tp.Name] = new iOSBclTestProject { Path = tp.Path, XUnit = tp.XUnit, ExtraArgs = tp.ExtraArgs, Platforms = new List<Platform> { platform }, Failure = tp.Failure };
+						projects [tp.Name] = new iOSBclTestProject { Path = tp.Path, XUnit = tp.XUnit, ExtraArgs = tp.ExtraArgs, Platforms = new List<Platform> { platform }, Failure = tp.Failure, TimeoutMultiplier = tp.TimeoutMultiplier };
 					} else {
 						projects [tp.Name].Platforms.Add (platform);
+						projects [tp.Name].TimeoutMultiplier += (tp.TimeoutMultiplier - 1);
 					}
 				}
 			} // foreach platform
 			
 			// return the grouped projects
 			foreach (var name in projects.Keys) {
-				projectPaths.Add (new iOSBclTestProject { Name = name, Path = projects [name].Path, XUnit = projects [name].XUnit, ExtraArgs = projects [name].ExtraArgs, Platforms = projects [name].Platforms, Failure = projects [name].Failure });
+				projectPaths.Add (new iOSBclTestProject { Name = name, Path = projects [name].Path, XUnit = projects [name].XUnit, ExtraArgs = projects [name].ExtraArgs, Platforms = projects [name].Platforms, Failure = projects [name].Failure, TimeoutMultiplier = projects [name].TimeoutMultiplier });
 			}
 			return projectPaths;
 		}
@@ -784,6 +786,7 @@ namespace BCLTestImporter {
 			public string ExtraArgs;
 			public List<Platform> Platforms;
 			public string Failure;
+			public double TimeoutMultiplier = 1;
 		}
 
 		public class BclTestProject {
@@ -792,6 +795,7 @@ namespace BCLTestImporter {
 			public bool XUnit;
 			public string ExtraArgs;
 			public string Failure;
+			public double TimeoutMultiplier = 1;
 		}
 
 		// creates all the projects that have already been defined

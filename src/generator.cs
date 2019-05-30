@@ -5228,13 +5228,7 @@ public partial class Generator : IMemberGatherer {
 	void PrintMethodAttributes (MemberInformation minfo)
 	{
 		MethodInfo mi = minfo.method;
-
-		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (mi)) {
-			print ("[Obsolete (\"{0}\", {1})]",
-			       oa.Message, oa.IsError ? "true" : "false");
-			print ("[EditorBrowsable (EditorBrowsableState.Never)]");
-
-		}
+		var editor_browsable_attribute = false;
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (mi)) 
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
@@ -5245,6 +5239,13 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				print ("[EditorBrowsable (EditorBrowsableState.{0})]", ea.State);
 			}
+			editor_browsable_attribute = true;
+		}
+
+		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (mi)) {
+			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
+			if (!editor_browsable_attribute)
+				print ("[EditorBrowsable (EditorBrowsableState.Never)]");
 		}
 
 		if (minfo.is_return_release)
@@ -5357,6 +5358,8 @@ public partial class Generator : IMemberGatherer {
 
 		if (!minfo.is_interface_impl) {
 			PrintMethodAttributes (minfo);
+		} else if (minfo.is_return_release) {
+			print ("[return: ReleaseAttribute ()]");
 		}
 
 		var mod = minfo.GetVisibility ();

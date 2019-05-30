@@ -47,6 +47,7 @@ namespace xharness.BCLTestImporter {
 					FailureMessage = tp.Failure,
 					RestoreNugetsInProject = true,
 					MTouchExtraArgs = tp.ExtraArgs,
+					TimeoutMultiplier = tp.TimeoutMultiplier,
 				});
 			}
 			return result;

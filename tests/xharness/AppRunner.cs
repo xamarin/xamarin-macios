@@ -76,6 +76,8 @@ namespace xharness
 			}
 		}
 
+		public double TimeoutMultiplier { get; set; } = 1;
+
 		// For watch apps we end up with 2 simulators, the watch simulator (the main one), and the iphone simulator (the companion one).
 		SimDevice[] simulators;
 		SimDevice simulator { get { return simulators [0]; } }
@@ -712,6 +714,7 @@ namespace xharness
 			if (!isSimulator)
 				args.Append (" --disable-memory-limits");
 
+			var timeout = TimeSpan.FromMinutes (Harness.Timeout * TimeoutMultiplier);
 			if (isSimulator) {
 				if (!await FindSimulatorAsync ())
 					return 1;
@@ -759,11 +762,11 @@ namespace xharness
 
 				main_log.WriteLine ("Starting test run");
 
-				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), run_log, TimeSpan.FromMinutes (Harness.Timeout), cancellation_token: cancellation_source.Token);
+				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), run_log, timeout, cancellation_token: cancellation_source.Token);
 				if (result.TimedOut) {
 					timed_out = true;
 					success = false;
-					main_log.WriteLine ("Test run timed out after {0} minute(s).", Harness.Timeout);
+					main_log.WriteLine ("Test run timed out after {0} minute(s).", timeout);
 				} else if (result.Succeeded) {
 					main_log.WriteLine ("Test run completed");
 					success = true;
@@ -794,8 +797,8 @@ namespace xharness
 					if (pid > 0) {
 						var launchTimedout = cancellation_source.IsCancellationRequested;
 						var timeoutType = launchTimedout ? "Launch" : "Completion";
-						var timeoutValue = launchTimedout ? Harness.LaunchTimeout : Harness.Timeout;
-						main_log.WriteLine ($"{timeoutType} timed out after {timeoutValue}");
+						var timeoutValue = launchTimedout ? Harness.LaunchTimeout : timeout.TotalSeconds;
+						main_log.WriteLine ($"{timeoutType} timed out after {timeoutValue} seconds");
 						await Process_Extensions.KillTreeAsync (pid, main_log, true);
 					} else {
 						main_log.WriteLine ("Could not find pid in mtouch output.");
@@ -842,7 +845,6 @@ namespace xharness
 						launch_failure = true;
 				});
 				var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
-				var timeout = TimeSpan.FromMinutes (Harness.Timeout);
 				var timeoutWatch = Stopwatch.StartNew ();
 				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), runLog, timeout, cancellation_token: cancellation_source.Token);
 
@@ -857,7 +859,7 @@ namespace xharness
 				if (result.TimedOut) {
 					timed_out = true;
 					success = false;
-					main_log.WriteLine ("Test run timed out after {0} minute(s).", Harness.Timeout);
+					main_log.WriteLine ("Test run timed out after {0} minute(s).", timeout.TotalMinutes);
 				} else if (result.Succeeded) {
 					main_log.WriteLine ("Test run completed");
 					success = true;
