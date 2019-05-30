@@ -63,19 +63,15 @@ endef
 
 
 $(shell rm -f .check-versions-failure)
-$(eval $(call CheckSubmoduleTemplate,mono,MONO))
+
 $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
 $(eval $(call CheckSubmoduleTemplate,opentk,OPENTK))
 $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
 $(eval $(call CheckSubmoduleTemplate,guiunit,GUI_UNIT))
 $(eval $(call CheckSubmoduleTemplate,macios-binaries,MACIOS_BINARIES))
 
+include $(TOP)/mk/mono.mk
 include $(TOP)/mk/xamarin.mk
-
-# some hackish reset-* targets to deal with what needs to happen in various parts of the build tree when you reset a module
-
-reset-mono::
-	$(Q) rm -f $(TOP)/.stamp-build* $(MONO_PATH)/configure
 
 check-versions::
 	@if test -e .check-versions-failure; then  \

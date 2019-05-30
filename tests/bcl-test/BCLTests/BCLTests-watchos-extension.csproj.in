@@ -141,27 +141,18 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.WatchOS" />
-    <Reference Include="xunit.core">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.abstractions">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.dotnet">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\xunit.execution.dotnet.dll</HintPath>
-    </Reference>
     <Reference Include="nunitlite">
       <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\nunitlite.dll</HintPath>
     </Reference>
     <Reference Include="Xunit.NetCore.Extensions">
-      <HintPath>..\..\..\external\mono\external\xunit-binaries\Xunit.NetCore.Extensions.dll</HintPath>
+      <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\tests\Xunit.NetCore.Extensions.dll</HintPath>
     </Reference>
-     <Reference Include="System.Xml.Linq" />
+    <Reference Include="xunit.execution.dotnet">
+      <HintPath>%DOWNLOAD PATH%\ios-bcl\monotouch\tests\xunit.execution.dotnet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
 %REFERENCES%
@@ -247,6 +238,4 @@
     <Folder Include="TestRunner.xUnit\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\WatchOS\Xamarin.WatchOS.AppExtension.CSharp.targets" />
-  <Import Project="..\..\..\packages\xunit.core.2.4.1\build\xunit.core.targets" Condition="Exists('..\..\..\packages\xunit.core.2.4.1\build\xunit.core.targets')" />
-  <Import Project="..\..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
 </Project>

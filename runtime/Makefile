@@ -312,8 +312,6 @@ $(eval $(call LibTemplate,ios,IOS))
 $(eval $(call LibTemplate,watchos,WATCHOS))
 $(eval $(call LibTemplate,tvos,TVOS))
 
-SDK_BUILDDIR=$(MONO_PATH)/sdks/builds
-
 #
 # LibXamarinTemplate (and LibXamarinArchTemplate) builds libxamarin.a
 #
@@ -411,7 +409,7 @@ MAC_OBJC_CFLAGS=-ObjC++ -std=c++0x -fno-exceptions -DMIN_XM_MONO_VERSION=\"$(MIN
 MAC_CFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -Wall -DMONOMAC -g -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
 MAC_LDFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -framework AppKit
 
-MAC_STATIC_CFLAGS = $(MAC_CFLAGS) -I$(TOP)/builds/$(BUILD_DESTDIR)/install/mac32/include/mono-2.0
+MAC_STATIC_CFLAGS = $(MAC_CFLAGS)
 
 MAC_SOURCES = $(SHARED_SOURCES) $(SHARED_I386_SOURCES) $(SHARED_X86_64_SOURCES) launcher.m
 

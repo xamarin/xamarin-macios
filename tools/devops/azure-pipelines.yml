@@ -25,7 +25,7 @@ jobs:
 
   - bash: |
       echo "Setting up prerequisites from brew..."
-      brew install libtool autoconf automake bison flex
+      brew install libtool autoconf automake bison flex p7zip
     displayName: "Setting up prerequisites from brew..."
 
   - task: xamops.azdevex.provisionator-task.provisionator@1

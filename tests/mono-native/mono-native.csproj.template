@@ -173,13 +173,13 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="NativePlatformConfig.cs" />
     <Compile Include="Introspection.cs" />
-    <Compile Include="..\..\external\mono\mcs\class\corlib\Test\Mono\MonoNativePlatform.cs">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatform.cs">
       <Link>MonoNativePlatform.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\corlib\Test\Mono\MonoNativePlatformType.cs">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatformType.cs">
       <Link>MonoNativePlatformType.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
       <Link>NativePlatformTest.cs</Link>
     </Compile>
     <Compile Include="..\common\MonoNativeConfig.cs">
