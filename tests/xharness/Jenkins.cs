@@ -459,6 +459,7 @@ namespace xharness
 					newVariation.Variation = variation;
 					newVariation.Ignored = ignored ?? task.Ignored;
 					newVariation.BuildOnly = task.BuildOnly;
+					newVariation.TimeoutMultiplier = task.TimeoutMultiplier;
 					rv.Add (newVariation);
 				}
 			}
@@ -505,9 +506,10 @@ namespace xharness
 						derived.CloneTestProject (pair.Item1);
 						var simTasks = CreateRunSimulatorTaskAsync (derived);
 						runSimulatorTasks.AddRange (simTasks);
-						if (configurations.Length > 1) {
-							foreach (var task in simTasks)
+						foreach (var task in simTasks) {
+							if (configurations.Length > 1)
 								task.Variation = config;
+							task.TimeoutMultiplier = project.TimeoutMultiplier;
 						}
 					}
 				}
@@ -533,6 +535,7 @@ namespace xharness
 		IEnumerable<TestTask> CreateRunDeviceTasks ()
 		{
 			var rv = new List<RunDeviceTask> ();
+			var projectTasks = new List<RunDeviceTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
 				if (!project.IsExecutableProject)
@@ -542,6 +545,7 @@ namespace xharness
 				if (!IsIncluded (project))
 					ignored = true;
 
+				projectTasks.Clear ();
 				if (!project.SkipiOSVariation) {
 					var build64 = new XBuildTask {
 						Jenkins = this,
@@ -551,7 +555,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build64, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOS, BuildOnly = project.BuildOnly });
+					projectTasks.Add (new RunDeviceTask (build64, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS });
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
@@ -561,7 +565,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					rv.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOS || !IncludeiOS32, BuildOnly = project.BuildOnly });
+					projectTasks.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS || !IncludeiOS32 });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
@@ -572,7 +576,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildToday.CloneTestProject (todayProject);
-					rv.Add (new RunDeviceTask (buildToday, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludeiOSExtensions, BuildOnly = project.BuildOnly || ForceExtensionBuildOnly });
+					projectTasks.Add (new RunDeviceTask (buildToday, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOSExtensions, BuildOnly = ForceExtensionBuildOnly });
 				}
 
 				if (!project.SkiptvOSVariation) {
@@ -585,7 +589,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					buildTV.CloneTestProject (tvOSProject);
-					rv.Add (new RunDeviceTask (buildTV, Devices.ConnectedTV.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludetvOS, BuildOnly = project.BuildOnly });
+					projectTasks.Add (new RunDeviceTask (buildTV, Devices.ConnectedTV.Where (d => d.IsSupported (project))) { Ignored = !IncludetvOS });
 				}
 
 				if (!project.SkipwatchOSVariation) {
@@ -599,7 +603,7 @@ namespace xharness
 							TestName = project.Name,
 						};
 						buildWatch32.CloneTestProject (watchOSProject);
-						rv.Add (new RunDeviceTask (buildWatch32, Devices.ConnectedWatch) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
+						projectTasks.Add (new RunDeviceTask (buildWatch32, Devices.ConnectedWatch) { Ignored = !IncludewatchOS });
 					}
 
 					if (!project.SkipwatchOSARM64_32Variation) {
@@ -611,9 +615,15 @@ namespace xharness
 							TestName = project.Name,
 						};
 						buildWatch64_32.CloneTestProject (watchOSProject);
-						rv.Add (new RunDeviceTask (buildWatch64_32, Devices.ConnectedWatch32_64.Where (d => d.IsSupported (project))) { Ignored = ignored || !IncludewatchOS, BuildOnly = project.BuildOnly });
+						projectTasks.Add (new RunDeviceTask (buildWatch64_32, Devices.ConnectedWatch32_64.Where (d => d.IsSupported (project))) { Ignored = !IncludewatchOS });
 					}
 				}
+				foreach (var task in projectTasks) {
+					task.TimeoutMultiplier = project.TimeoutMultiplier;
+					task.BuildOnly |= project.BuildOnly;
+					task.Ignored |= ignored;
+				}
+				rv.AddRange (projectTasks);
 			}
 
 			return CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates));
@@ -1668,10 +1678,10 @@ namespace xharness
 			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
 				using (var reader = log.GetReader ()) {
 					while (!reader.EndOfStream) {
-						string line = reader.ReadLine ()?.Trim ();
+						string line = reader.ReadLine ();
 						if (line == null)
 							continue;
-						if (line.StartsWith ("error HE0038", StringComparison.Ordinal))
+						if (line.Contains ("error HE0038: Failed to launch the app"))
 							return true;
 					}
 				}
@@ -3431,6 +3441,7 @@ namespace xharness
 	abstract class RunTestTask : TestTask
 	{
 		public readonly BuildToolTask BuildTask;
+		public double TimeoutMultiplier { get; set; } = 1;
 
 		public RunTestTask (BuildToolTask build_task)
 		{
@@ -3698,6 +3709,7 @@ namespace xharness
 						DeviceName = Device.Name,
 						CompanionDeviceName = CompanionDevice?.Name,
 						Configuration = ProjectConfiguration,
+						TimeoutMultiplier = TimeoutMultiplier,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
@@ -3861,6 +3873,7 @@ namespace xharness
 				LogDirectory = LogDirectory,
 				MainLog = Logs.Create ($"run-{Device.UDID}-{Timestamp}.log", "Run log"),
 				Configuration = ProjectConfiguration,
+				TimeoutMultiplier = TimeoutMultiplier,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();

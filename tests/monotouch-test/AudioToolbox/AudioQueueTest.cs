@@ -10,8 +10,10 @@
 #if !__WATCHOS__
 
 using System;
+using System.Collections.Generic;
 #if XAMCORE_2_0
 using Foundation;
+using AVFoundation;
 using AudioToolbox;
 #else
 using MonoTouch.Foundation;
@@ -43,11 +45,21 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void ChannelAssignments ()
 		{
 			var aq = new OutputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
+			
+			var route = global::AVFoundation.AVAudioSession.SharedInstance ().CurrentRoute;
+			var outputs = route.Outputs;
+			if (outputs.Length > 0) {
+				var port = outputs [0];
+				var assignments = new List<AudioQueueChannelAssignment> ();
+				var id = port.UID;
+				for (int i = 0; i < aq.AudioStreamDescription.ChannelsPerFrame; i++) {
+					assignments.Add (new AudioQueueChannelAssignment (id, (uint) i));
+				}
+				Assert.AreEqual (AudioQueueStatus.Ok, aq.SetChannelAssignments (assignments.ToArray ()));
+			} else {
+				Assert.Ignore ("No outputs in the current route ({0})", route.Description);
+			}
 
-			Assert.AreEqual (AudioQueueStatus.Ok, aq.SetChannelAssignments (
-					new AudioQueueChannelAssignment ("11", 0),
-					new AudioQueueChannelAssignment ("22", 1)
-				));
 		}
 #endif
 		

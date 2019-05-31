@@ -16,7 +16,7 @@ namespace xharness.BCLTestImporter {
 		public BCLTestImportTargetFactory (Harness harness)
 		{
 			Harness = harness;
-			var outputDir = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bcl-test", "BCLTests"));
+			var outputDir = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bcl-test"));
 			var projectTemplatePath = outputDir;
 			var registerTypesTemplatePath = Path.Combine (outputDir, "RegisterType.cs.in");
 			var plistTemplatePath = outputDir;
@@ -47,6 +47,7 @@ namespace xharness.BCLTestImporter {
 					FailureMessage = tp.Failure,
 					RestoreNugetsInProject = true,
 					MTouchExtraArgs = tp.ExtraArgs,
+					TimeoutMultiplier = tp.TimeoutMultiplier,
 				});
 			}
 			return result;

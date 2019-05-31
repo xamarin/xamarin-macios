@@ -110,14 +110,16 @@ namespace MonoTouchFixtures.Metal {
 			}
 
 #if __MACOS__
-			using (var descriptor = MTLTextureDescriptor.CreateTexture2DDescriptor (MTLPixelFormat.RGBA8Unorm, 64, 64, false)) {
-				descriptor.StorageMode = MTLStorageMode.Private;
-				using (var texture = device.CreateSharedTexture (descriptor)) {
-					Assert.IsNotNull (texture, "CreateSharedTexture (MTLTextureDescriptor): NonNull");
+			if (TestRuntime.CheckXcodeVersion (10, 0)) {
+				using (var descriptor = MTLTextureDescriptor.CreateTexture2DDescriptor (MTLPixelFormat.RGBA8Unorm, 64, 64, false)) {
+					descriptor.StorageMode = MTLStorageMode.Private;
+					using (var texture = device.CreateSharedTexture (descriptor)) {
+						Assert.IsNotNull (texture, "CreateSharedTexture (MTLTextureDescriptor): NonNull");
 
-					using (var handle = texture.CreateSharedTextureHandle ())
-					using (var shared = device.CreateSharedTexture (handle))
-						Assert.IsNotNull (texture, "CreateSharedTexture (MTLSharedTextureHandle): NonNull");
+						using (var handle = texture.CreateSharedTextureHandle ())
+						using (var shared = device.CreateSharedTexture (handle))
+							Assert.IsNotNull (texture, "CreateSharedTexture (MTLSharedTextureHandle): NonNull");
+					}
 				}
 			}
 #endif
