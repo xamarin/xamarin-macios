@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			if (outputs.Length > 0) {
 				var port = outputs [0];
 				var assignments = new List<AudioQueueChannelAssignment> ();
-				var id = port.Channels [0].OwningPortUID;
+				var id = port.UID;
 				for (int i = 0; i < aq.AudioStreamDescription.ChannelsPerFrame; i++) {
 					assignments.Add (new AudioQueueChannelAssignment (id, (uint) i));
 				}
