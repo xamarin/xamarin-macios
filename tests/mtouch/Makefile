@@ -29,12 +29,12 @@ run-tests: bin/Debug/mtouch.dll test.config
 	@[[ ! -e .failed-stamp ]] 
 
 # mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch.dll needs to be rebuilt or not.
-mtouch.csproj.inc: $(TOP)/tools/common/create-makefile-fragment.sh Makefile $(TOP)/Make.config
+mtouch.csproj.inc: $(TOP)/tools/common/create-makefile-fragment.sh Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(Q_GEN) $< $(CURDIR)/mtouch.csproj
 -include mtouch.csproj.inc
 
 bin/Debug/mtouch.dll: $(mtouch_dependencies)
-	$(Q) $(SYSTEM_MONO) /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore packages.config
+	$(Q_XBUILD) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore packages.config
 	$(SYSTEM_XIBUILD) -- mtouch.csproj $(XBUILD_VERBOSITY)
 	$(Q) rm -f .failed-stamp
 

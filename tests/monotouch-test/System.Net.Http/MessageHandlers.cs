@@ -70,8 +70,7 @@ namespace MonoTests.System.Net.Http
 
 			Assert.IsTrue (done, "Did not time out");
 			Assert.IsNull (response, $"Response is not null {response}");
-			Assert.IsNotNull (ex, "Exception");
-			// The handlers throw different types of exceptions, so we can't assert much more than that something went wrong.			
+			Assert.IsInstanceOfType (typeof (HttpRequestException), ex, "Exception");
 		}
 
 #if !__WATCHOS__

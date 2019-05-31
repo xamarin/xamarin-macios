@@ -1,26 +1,27 @@
-# blocks app
-KLASS:System.Net.Tests.SyncWebClientTest
-KLASS:System.Text.RegularExpressions.Tests.RegexGroupTests
-KLASS:System.Text.RegularExpressions.Tests.RegexCacheTests
-KLASS:System.Text.RegularExpressions.Tests.RegexConstructorTests
-KLASS:System.Net.WebSockets.Tests.WebSocketTests
-System.Net.WebSockets.Tests.WebSocketTests.ReceiveAsync_ServerSplitHeader_ValidDataReceived
-System.Net.Tests.WebClientTest.ResponseHeaders_ContainsHeadersAfterOperation
-System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: null)
-System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=utf-8")
-System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=us-ascii")
-System.Net.Tests.TaskWebClientTest.DownloadData_Success
-System.Net.Tests.TaskWebClientTest.DownloadData_LargeData_Success
-System.Net.Tests.TaskWebClientTest.DownloadFile_Success
-System.Net.Tests.TaskWebClientTest.OpenRead_Success
-System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=utf-8")
-System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: null)
-System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=us-ascii")
-System.Text.RegularExpressions.Tests.RegexConstructorTests.Ctor_InvalidPattern(pattern: "?((a)a|", options: None)
-System.Text.RegularExpressions.Tests.RegexMatchTests.Match_Timeout_Throws
+# Exception messages: System.IO.IOException mono issue: https://github.com/mono/mono/issues/15328
+System.Text.RegularExpressions.Tests.RegexConstructorTests.StaticCtor_InvalidTimeoutObject_ExceptionThrown
 System.Text.RegularExpressions.Tests.RegexConstructorTests.StaticCtor_InvalidTimeoutRange_ExceptionThrown
-RemoteExecutorTests.RemoteInvokeWritesToFile
-System.Text.RegularExpressions.Tests.RegexMatchTests.Match_ExcessPrefix
-System.Net.Tests.WebClientTest.RequestHeaders_SpecialHeaders_RequestSucceeds
-System.Text.RegularExpressions.Tests.RegexMatchTests.Match_SpecialUnicodeCharacters_enUS
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_Timeout_Throws
 System.Text.RegularExpressions.Tests.RegexMatchTests.Match_SpecialUnicodeCharacters_Invariant
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_ExcessPrefix
+System.Text.RegularExpressions.Tests.RegexMatchTests.Match_SpecialUnicodeCharacters_enUS
+System.Text.RegularExpressions.Tests.RegexCacheTests.Ctor_Cache_Uses_culture_and_options
+System.Text.RegularExpressions.Tests.RegexCacheTests.Ctor_Cache_Promote_entries
+System.Text.RegularExpressions.Tests.RegexCacheTests.Ctor_Cache_Uses_dictionary_linked_list_switch_does_not_throw
+System.Text.RegularExpressions.Tests.RegexCacheTests.Ctor_Cache_Second_drops_first
+System.Text.RegularExpressions.Tests.RegexCacheTests.Ctor_Cache_Shrink_cache
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsEnUS
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsDanish
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsAzeriLatin
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsTurkish
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsBasic
+System.Text.RegularExpressions.Tests.RegexGroupTests.GroupsCzech
+RemoteExecutorTests.RemoteInvokeWritesToFile
+
+# mono 2019 issue https://github.com/mono/mono/issues/15040
+# Exception messages: Assert.Equal() Failure
+# Expected: 20
+# Actual:   10   Exception stack traces:   at System.Runtime.CompilerServices.UnsafeTests.ReadWriteDoublePointer () [0x00020] in /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/src/Xamarin.Mac/external/corefx/src/System.Runtime.CompilerServices.Unsafe/tests/UnsafeTests.cs:96 
+#  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+#  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/src/Xamarin.Mac/mcs/class/corlib/System.Reflection/RuntimeMethodInfo.cs:395 
+System.Runtime.CompilerServices.UnsafeTests.ReadWriteDoublePointer

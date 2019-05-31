@@ -7216,10 +7216,22 @@ namespace AppKit {
 		[Static]
 		[Export ("gridViewWithNumberOfColumns:rows:")]
 		NSGridView Create (nint columnCount, nint rowCount);
+		
+#if !XAMCORE_4_0
+		[Static]
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		[Obsolete ("You should use either 'NSGridView.Create(NSView [][] rowsAndColumns)' or 'NSGridView.Create(NSView [,] rowsAndColumns)'.")]
+		[Export ("gridViewWithViews:")]
+		NSGridView Create (NSView [] rows);
+#endif
+		
+		[Static]
+		[Export ("gridViewWithViews:")]
+		NSGridView Create (NSView [][] rowsAndColumns);
 
 		[Static]
 		[Export ("gridViewWithViews:")]
-		NSGridView Create (NSView [] rows);
+		NSGridView Create (NSView [,] rowsAndColumns);
 
 		[Export ("numberOfRows")]
 		nint RowCount { get; }
@@ -8214,7 +8226,7 @@ namespace AppKit {
 		[Export ("hidden")]
 		bool Hidden { [Bind ("isHidden")] get; set; }
 
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
 		[Mac (10, 13)]
@@ -8916,7 +8928,7 @@ namespace AppKit {
 		void DidDragTableColumn (NSOutlineView outlineView, NSTableColumn tableColumn);
 		
 		[Export ("outlineView:toolTipForCell:rect:tableColumn:item:mouseLocation:")]
-		string ToolTipForCell (NSOutlineView outlineView, NSCell cell, ref CGRect rect, NSTableColumn tableColumn, NSObject item, CGPoint mouseLocation);
+		string ToolTipForCell (NSOutlineView outlineView, NSCell cell, ref CGRect rect, [NullAllowed] NSTableColumn tableColumn, NSObject item, CGPoint mouseLocation);
 	
 		[Export ("outlineView:heightOfRowByItem:"), NoDefaultValue]
 		nfloat GetRowHeight (NSOutlineView outlineView, NSObject item);
@@ -10299,6 +10311,7 @@ namespace AppKit {
 		void SetToolTipForCell ([NullAllowed] string toolTipString, NSCell cell);
 
 		[Export ("toolTipForCell:")]
+		[return: NullAllowed]
 		string ToolTipForCell (NSCell cell);
 
 		//Detected properties
@@ -13542,7 +13555,7 @@ namespace AppKit {
 		NSImageScaling GetImageScaling (nint segment);
 
 		[Export ("setLabel:forSegment:")]
-		void SetLabel (string label, nint segment);
+		void SetLabel ([NullAllowed] string label, nint segment);
 
 		[Export ("labelForSegment:")]
 		string GetLabel (nint segment);
@@ -13704,6 +13717,7 @@ namespace AppKit {
 		void SetToolTip ([NullAllowed] string toolTip, nint forSegment);
 
 		[Export ("toolTipForSegment:")]
+		[return: NullAllowed]
 		string GetToolTip (nint forSegment);
 
 		[Export ("setTag:forSegment:")]
@@ -14843,7 +14857,7 @@ namespace AppKit {
 		bool Enabled { [Bind ("isEnabled")]get; set; }
 
 		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
 		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
@@ -15756,7 +15770,7 @@ namespace AppKit {
 		[Export ("postsBoundsChangedNotifications")]
 		bool PostsBoundsChangedNotifications { get; set; }
 
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 				
 		[Export ("registerForDraggedTypes:")]
@@ -16191,6 +16205,10 @@ namespace AppKit {
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("viewDidChangeEffectiveAppearance")]
 		void ViewDidChangeEffectiveAppearance ();
+
+		[Internal]
+		[Export ("sortSubviewsUsingFunction:context:")]
+		void SortSubviews (IntPtr function_pointer, IntPtr context);
 	}
 
 	[BaseType (typeof (NSAnimation))]
@@ -16565,7 +16583,7 @@ namespace AppKit {
 		[Export ("resizingMask")]
 		NSTableColumnResizing ResizingMask { get; set; }
 	
-		[Export ("headerToolTip")]
+		[Export ("headerToolTip"), NullAllowed]
 		string HeaderToolTip { get; set; }
 	
 		[Export ("hidden")]
@@ -17619,7 +17637,7 @@ namespace AppKit {
 		[Export ("sizeOfLabel:")]
 		CGSize SizeOfLabel (bool computeMin);
 
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
 		[Mac (10,10)]
@@ -19336,6 +19354,7 @@ namespace AppKit {
 		void DidChangeTypingAttributes (NSNotification notification);
 
 		[Export ("textView:willDisplayToolTip:forCharacterAtIndex:"), DelegateName ("NSTextViewTooltip"), DefaultValueFromArgument ("tooltip")]
+		[return: NullAllowed]
 		string WillDisplayToolTip (NSTextView textView, string tooltip, nuint characterIndex);
 
 		[Export ("textView:completions:forPartialWordRange:indexOfSelectedItem:"), DelegateName ("NSTextViewCompletion"), DefaultValue (null)]
@@ -19634,7 +19653,7 @@ namespace AppKit {
 		[Export ("paletteLabel")]
 		string PaletteLabel { get; set; }
 
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
 		[Export ("menuFormRepresentation", ArgumentSemantic.Retain)]
@@ -23206,7 +23225,7 @@ namespace AppKit {
 	partial interface NSTableViewDelegate {
 
 		[Export ("tableView:toolTipForCell:rect:tableColumn:row:mouseLocation:"), DelegateName ("NSTableViewToolTip"), DefaultValue ("null")]
-		NSString GetToolTip (NSTableView tableView, NSCell cell, ref CGRect rect, NSTableColumn tableColumn, nint row, CGPoint mouseLocation);
+		NSString GetToolTip (NSTableView tableView, NSCell cell, ref CGRect rect, [NullAllowed] NSTableColumn tableColumn, nint row, CGPoint mouseLocation);
 	}
 
 	partial interface NSBrowser {
@@ -26619,7 +26638,7 @@ namespace AppKit {
 		[NullAllowed, Export ("attributedTitle", ArgumentSemantic.Copy)]
 		NSAttributedString AttributedTitle { get; set; }
 
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
 		[NullAllowed, Export ("accessoryView", ArgumentSemantic.Strong)]

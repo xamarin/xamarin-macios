@@ -1,0 +1,15 @@
+# block test app
+MonoTests.System.Diagnostics.StackFrameTest3.GetFrames_AsyncCalls
+
+#  An unexpected exception type was thrown
+# Expected: System.ArgumentNullException
+# but was: System.IO.DirectoryNotFoundException : Could not find a part of the path
+MonoTests.System.ActivatorTest.GetObject_UrlNull
+
+#  System.NullReferenceException : Object reference not set to an instance of an object
+MonoTests.System.Reflection.Emit.ModuleBuilderTest.DuplicateSymbolDocument
+MonoTests.System.Reflection.Emit.TypeBuilderTest.CircularArrayType
+
+#  Expected: True
+#  But was:  False
+MonoTests.System.Runtime.InteropServices.RuntimeEnvironmentTest.SystemConfigurationFile
