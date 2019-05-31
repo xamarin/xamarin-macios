@@ -7,8 +7,8 @@
     <ProjectGuid>{C459A4DD-0AFF-4B2C-9DEC-4B62CE04F4E2}</ProjectGuid>
     <ProjectTypeGuids>{06FA79CB-D6CD-4721-BB4B-1BD202089C55}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>%NAME%</RootNamespace>
-    <AssemblyName>%NAME%</AssemblyName>
+    <RootNamespace>com.xamarin.bcltests.%NAME%</RootNamespace>
+    <AssemblyName>com.xamarin.bcltests.%NAME%</AssemblyName>
     <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
     <TargetFrameworkIdentifier>Xamarin.TVOS</TargetFrameworkIdentifier>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
