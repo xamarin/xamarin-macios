@@ -233,6 +233,7 @@ namespace xharness
 			public string Variation;
 			public string MTouchExtraArgs;
 			public string MonoBundlingExtraArgs; // mmp
+			public string KnownFailure;
 			public bool Debug;
 			public bool Profiling;
 			public string LinkMode;
@@ -377,7 +378,11 @@ namespace xharness
 					var defines = test_data.Defines;
 					var undefines = test_data.Undefines;
 					var ignored = test_data.Ignored;
+					var known_failure = test_data.KnownFailure;
 					var candidates = test_data.Candidates;
+
+					if (!string.IsNullOrEmpty (known_failure))
+						ignored = true;
 
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
@@ -460,6 +465,7 @@ namespace xharness
 					newVariation.Ignored = ignored ?? task.Ignored;
 					newVariation.BuildOnly = task.BuildOnly;
 					newVariation.TimeoutMultiplier = task.TimeoutMultiplier;
+					newVariation.KnownFailure = known_failure;
 					rv.Add (newVariation);
 				}
 			}
@@ -2079,6 +2085,9 @@ namespace xharness
 							if (testAssemblies.Any ())
 								writer.WriteLine ($"Test assemblies:<br/>- {String.Join ("<br/>- ", testAssemblies)}<br />");
 
+							if (!string.IsNullOrEmpty (test.KnownFailure))
+								writer.WriteLine ($"Known failure: {test.KnownFailure} <br />");
+
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
 								var msg = HtmlFormat (test.FailureMessage);
 								var prefix = test.Ignored ? "Ignored" : "Failure";
@@ -2379,6 +2388,7 @@ namespace xharness
 
 		public bool RequiresXcode94;
 		public bool BuildOnly;
+		public string KnownFailure;
 
 		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
 		// Typically used to fail tasks that don't have an available device, or if there's not enough disk space.
