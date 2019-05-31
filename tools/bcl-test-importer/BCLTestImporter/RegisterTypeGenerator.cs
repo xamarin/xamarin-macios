@@ -43,5 +43,14 @@ namespace BCLTestImporter {
 				return result;
 			}
 		}
+		
+		public static async Task GenerateCodeToFileAsync ((string FailureMessage, Dictionary<string, Type> Types) typeRegistration, bool isXunit,
+			string templatePath, string destinationPath)
+		{
+			var registerCode = await GenerateCodeAsync (typeRegistration, isXunit, templatePath);
+			using (var file = new StreamWriter (destinationPath, false)) { // false is do not append
+				await file.WriteAsync (registerCode);
+			}
+		}
 	}
 }

@@ -125,7 +125,10 @@ namespace xharness
 			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0;FEATURE_NO_BSD_SOCKETS;MONOTOUCH_WATCH;");
 			csproj.RemoveReferences ("OpenTK-1.0");
 			var ext = IsFSharp ? "fs" : "cs";
-			csproj.AddCompileInclude ("InterfaceController." + ext, Path.Combine (Harness.WatchOSExtensionTemplate, "InterfaceController." + ext));
+			if (IsBCLProject)
+				csproj.AddCompileInclude ("InterfaceController." + ext, Path.Combine (Harness.RootDirectory, "bcl-test", "templates", "watchOS", "Extension", "InterfaceController." + ext));
+			else 
+				csproj.AddCompileInclude ("InterfaceController." + ext, Path.Combine (Harness.WatchOSExtensionTemplate, "InterfaceController." + ext));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.SetMtouchUseBitcode (true, "iPhone", "Release");
 			csproj.SetMtouchUseLlvm (true, "iPhone", "Release");

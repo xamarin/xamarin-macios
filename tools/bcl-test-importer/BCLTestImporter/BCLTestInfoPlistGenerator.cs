@@ -26,6 +26,14 @@ namespace BCLTestImporter {
 				return result;
 			}
 		}
+		
+		public static async Task GenerateCodeToFileAsync (string templatePath, string projectName, string destinationPath)
+		{
+			var plist = await GenerateCodeAsync (templatePath, projectName);
+			using (var file = new StreamWriter (destinationPath, false)) { // false is do not append
+				await file.WriteAsync (plist);
+			}
+		}
 
 		// Generates the code for the type registration using the give path to the template to use
 		public static string GenerateCode (string templatePath, string projectName) => GenerateCodeAsync (templatePath, projectName).Result;
