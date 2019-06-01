@@ -220,7 +220,7 @@ namespace Extrospection {
 				if (!shortname.Contains ("-"))
 					continue;
 				var rawfile = Path.ChangeExtension (file, ".raw");
-				var raws = new List<string> (File.ReadAllLines (rawfile));
+				var raws = new List<string> (File.Exists (rawfile) ? File.ReadAllLines (rawfile) : Array.Empty<string> ());
 				var failures = new List<string> ();
 				var lines = File.ReadAllLines (file);
 				foreach (var entry in lines) {
