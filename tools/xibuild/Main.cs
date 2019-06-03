@@ -206,7 +206,7 @@ namespace xibuild {
 			SetToolsetProperty ("MSBuildExtensionsPath32", MSBuildExtensionsPath);
 			SetToolsetProperty ("MSBuildExtensionsPath64", MSBuildExtensionsPath);
 			SetToolsetProperty ("RoslynTargetsPath", Path.Combine (MSBuildBin, "Roslyn"));
-			SetToolsetProperty ("MSBuildSdksPath", MSBuildSdksPath);
+			SetToolsetProperty ("MSBuildSDKsPath", MSBuildSdksPath);
 
 			dstXml.Save (targetConfigFile);
 			return;
