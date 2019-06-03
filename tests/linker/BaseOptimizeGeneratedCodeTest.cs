@@ -76,6 +76,9 @@ namespace Linker.Shared
 		{
 			IgnoreIfNotLinkAll ();
 
+			// If you ran this test locally and it failed, run it again. If it fails multiple times, file a bug.
+			TestRuntime.IgnoreInCI ("This test randomly fails, so ignore it when doing CI (https://github.com/xamarin/maccore/issues/649)");
+
 			const int iterations = 5000;
 
 			// Set the XAMARIN_IOS_SKIP_BLOCK_CHECK environment variable to skip a few expensive validation checks done in the simulator
