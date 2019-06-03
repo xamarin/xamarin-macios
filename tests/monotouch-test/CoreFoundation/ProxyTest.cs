@@ -8,6 +8,8 @@
 //
 
 using System;
+using System.Threading;
+using System.IO;
 #if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
@@ -42,5 +44,28 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Dlfcn.dlclose (lib);
 			}
 		}
+		
+		[Test]
+		public void TestPACParsing ()
+		{
+			var cbCalled = new AutoResetEvent (false);
+			CFProxy proxy;
+			// get the path for the pac file, try to parse it and ensure that 
+			// our cb was called
+#if MONOMAC
+ 			string uncompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/example.pac");
+#else
+ 			string uncompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+#endif
+			using (var path = new NSString (uncompressedFilePath))
+			using (var url = new NSUrl ("http://docs.xamarin.com")) {
+				CFNetwork.ExecuteProxyAutoConfigurationScript (path, url, (client, proxyList, error) => {
+					cbCalled.Set ();
+					Assert.AreEqual (1, proxyList.Count);
+					proxy = (CFProxy) proxyList.GetItem<CFProxy> (0);
+				}, new CFStreamClientContext ());
+			}
+
+			cbCalled.WaitOne ();
 	}
 }
