@@ -580,16 +580,23 @@ namespace CoreFoundation {
 			return new CFProxySettings (dict);
 		}
 		
-#if notyet
-		// FIXME: These require bindings for CFRunLoopSource and CFStreamClientContext
-		
 		public delegate void CFProxyAutoConfigurationResultCallback (IntPtr client, NSArray proxyList, NSError error);
+		static CFProxyAutoConfigurationResultCallback static_AutoConfigurationResult = TrampolineAutoConfigurationResult;
+
+		[MonoPInvokeCallback (typeof (CFProxyAutoConfigurationResultCallback))]
+		static void TrampolineAutoConfigurationResult (IntPtr block, NSArray proxyList, NSError error)
+		{
+			var del = BlockLiteral.GetTarget<Action<NSArray, NSError>> (block);
+			if (del != null) {
+				del (proxyList, error);
+			}
+		}
 		
 		[DllImport (Constants.CFNetworkLibrary)]
-		extern static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationScript (
+		extern unsafe static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationScript (
 			/* CFStringRef __nonnull */ IntPtr proxyAutoConfigurationScript,
 			/* CFURLRef __nonnull */ IntPtr targetURL,
-			/* CFProxyAutoConfigurationResultCallback __nonnull */ IntPtr cb,
+			/* CFProxyAutoConfigurationResultCallback __nonnull */ void* cb,
 			/* CFStreamClientContext * __nonnull */ IntPtr clientContext);
 		
 		public static CFRunLoopSource ExecuteProxyAutoConfigurationScript (NSString proxyAutoConfigurationScript, NSUrl targetURL, CFProxyAutoConfigurationResultCallback resultCallback, CFStreamClientContext clientContext)
@@ -602,19 +609,27 @@ namespace CoreFoundation {
 
 			if (resultCallback == null)
 				throw new ArgumentNullException ("resultCallback");
-
-			if (clientContext == null)
-				throw new ArgumentNullException ("clientContext");
-
-			IntPtr source = CFNetworkExecuteProxyAutoConfigurationScript (proxyAutoConfigurationScript.Handle, targetURL.Handle, resultCallback, clientContext);
-			return (source == IntPtr.Zero) ? null : new CFRunLoopSource (source);
+			unsafe {
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_AutoConfigurationResult, resultCallback);
+		
+				try {
+					IntPtr clientPtr = Marshal.AllocHGlobal (Marshal.SizeOf (clientContext));
+					Marshal.StructureToPtr (clientContext, clientPtr, false);
+					IntPtr source = CFNetworkExecuteProxyAutoConfigurationScript (proxyAutoConfigurationScript.Handle, targetURL.Handle, (void*) block_ptr_handler, clientPtr);
+					return (source == IntPtr.Zero) ? null : new CFRunLoopSource (source);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
+			}
 		}
 		
 		[DllImport (Constants.CFNetworkLibrary)]
-		extern static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationURL (
+		extern unsafe static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationURL (
 			/* CFURLRef __nonnull */ IntPtr proxyAutoConfigurationURL,
 			/* CFURLRef __nonnull */ IntPtr targetURL,
-			/* CFProxyAutoConfigurationResultCallback __nonnull */ IntPtr cb,
+			/* CFProxyAutoConfigurationResultCallback __nonnull */ void* cb,
 			/* CFStreamClientContext * __nonnull */ IntPtr clientContext);
 
 		public static CFRunLoopSource ExecuteProxyAutoConfigurationURL (NSUrl proxyAutoConfigurationURL, NSUrl targetURL, CFProxyAutoConfigurationResultCallback resultCallback, CFStreamClientContext clientContext)
@@ -627,14 +642,20 @@ namespace CoreFoundation {
 
 			if (resultCallback == null)
 				throw new ArgumentNullException ("resultCallback");
-
-			if (clientContext == null)
-				throw new ArgumentNullException ("clientContext");
-
-			IntPtr source = CFNetworkExecuteProxyAutoConfigurationURL (proxyAutoConfigurationURL.Handle, targetURL.Handle, resultCallback, clientContext);
-			return (source == IntPtr.Zero) ? null : new CFRunLoopSource (source);
+			unsafe {
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_AutoConfigurationResult, resultCallback);
+				try {
+					IntPtr clientPtr = Marshal.AllocHGlobal (Marshal.SizeOf (clientContext));
+					Marshal.StructureToPtr (clientContext, clientPtr, false);
+					IntPtr source = CFNetworkExecuteProxyAutoConfigurationURL (proxyAutoConfigurationURL.Handle, targetURL.Handle, (void*) block_ptr_handler, clientPtr);
+					return (source == IntPtr.Zero) ? null : new CFRunLoopSource (source);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
+			}
 		}
-#endif
 		
 		class CFWebProxy : IWebProxy {
 			ICredentials credentials;
