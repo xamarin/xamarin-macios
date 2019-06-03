@@ -228,7 +228,8 @@ namespace xibuild {
 				if (string.IsNullOrEmpty (value))
 					return;
 
-				var valueAttribute = toolsets.SelectSingleNode ($"property[@name='{name}']/@value");
+				// MSBuild property names are case insensitive
+				var valueAttribute = toolsets.SelectSingleNode ($"property[translate(@name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='{name.ToLower()}']/@value");
 				if (valueAttribute != null) {
 					valueAttribute.Value = value;
 				} else {
