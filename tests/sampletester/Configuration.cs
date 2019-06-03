@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -20,6 +21,23 @@ namespace Xamarin.Tests {
 	</config>
 </configuration>
 ");
+				}
+				var global_json = Path.Combine (rv, "global.json");
+				if (!File.Exists (global_json) || true) {
+					if (Directory.GetDirectories ("/usr/local/share/dotnet/sdk", "2.2.1*", SearchOption.TopDirectoryOnly).Length > 0) {
+						// Workaround for https://github.com/NuGet/Home/issues/7956
+						// See also:
+						// * https://github.com/mono/mono/issues/13537
+						File.WriteAllText (global_json,
+							@"{
+""sdk"": {
+	""version"": ""2.2.100""
+}
+			}
+");
+					} else {
+						Console.WriteLine ("Could not detect dotnet v2.2.1*; some projects may fail to build due to https://github.com/NuGet/Home/issues/7956.");
+					}
 				}
 				return rv;
 			}
