@@ -459,6 +459,7 @@ namespace xharness
 				var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ()); 
 
 				File.Move (listener_log.FullPath, tmpFile);
+				main_log.WriteLine ($"Moving xml file '{listener_log.FullPath}' to '{tmpFile}'");
 				crashed = false;
 				try {
 					using (var streamReaderTmp = new StreamReader (tmpFile)) {
@@ -501,7 +502,8 @@ namespace xharness
 					}
 					return parseResult;
 				} catch (Exception e) {
-					main_log.WriteLine ("Could not parse xml result file: {0}", e);
+					main_log.WriteLine ("Are we running on Jenkins/VSTS? '{0}'", Harness.InJenkins);
+					main_log.WriteLine ("Could not parse xml result file '{0}': {1}", listener_log.FullPath, e);
 
 					if (timed_out) {
 						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
