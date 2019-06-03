@@ -181,7 +181,9 @@ namespace Xamarin.MacDev.Tasks
 			Parallel.ForEach (Resources, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
 				Codesign (item);
 
-				codesignedFiles.AddRange (GetCodesignedFiles (item));
+				var files = GetCodesignedFiles (item);
+				lock (codesignedFiles)
+					codesignedFiles.AddRange (files);
 			});
 
 			CodesignedFiles = codesignedFiles.ToArray ();
