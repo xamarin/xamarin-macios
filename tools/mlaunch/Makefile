@@ -7,7 +7,7 @@ COLOR_CLEAR:=$(shell tput sgr0 2>/dev/null)
 
 ifdef ENABLE_XAMARIN
 all-local install-local clean-local::
-	$(MAKE) -C $(MACCORE_PATH)/tools/mlaunch $@
+	$(MAKE) -C $(MACCORE_PATH)/tools/mlaunch $@ MSBUILD_VERBOSITY="/p:LinkMode=None"
 else
 all-local install-local::
 	$(Q) $(CP) -R $(MACIOS_BINARIES_PATH)/mlaunch/bin/mlaunch $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin
