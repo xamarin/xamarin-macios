@@ -1374,7 +1374,12 @@ WATCHOS_TARGET_LIBMONONATIVECOMPAT        = \
 
 WATCHOS_TARGET_LIBMONONATIVEUNIFIED       = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.a \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.a \
+
+ifdef MONO_BUILD_FROM_SOURCE
+WATCHOS_TARGET_LIBMONONATIVEUNIFIED       += $(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native-unified.a
+else
+WATCHOS_TARGET_LIBMONONATIVEUNIFIED       += $(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.a
+endif
 
 WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.dylib \
