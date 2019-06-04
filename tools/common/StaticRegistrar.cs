@@ -2741,6 +2741,14 @@ namespace Registrar {
 #endif
 
 				
+				// Photos headers are broken in Xcode 11 beta 1
+				if (IsTypeCore (@class, "Photos") || IsTypeCore (@class, "PhotosUI"))
+					continue;
+
+				// Xcode 11 beta 1 shipped without WatchKit for iOS!
+				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS)
+					continue;
+
 				if (@class.IsFakeProtocol)
 					continue;
 
