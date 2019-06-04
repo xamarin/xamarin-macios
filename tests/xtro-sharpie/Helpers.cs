@@ -373,6 +373,7 @@ namespace Extrospection {
 			case "MPSCore":
 			case "MPSImage":
 			case "MPSMatrix":
+			case "MPSNDArray":
 			case "MPSNeuralNetwork":
 			case "MPSRayIntersector":
 				return "MetalPerformanceShaders";
