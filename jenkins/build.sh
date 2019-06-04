@@ -113,6 +113,9 @@ if test -z "$ENABLE_DEVICE_BUILD"; then
 	CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-ios-device"
 fi
 
+# Build from source for Xcode 11 support until mono has packages
+MONO_BUILD_FROM_SOURCE=1
+
 make reset
 make git-clean-all
 make print-versions
