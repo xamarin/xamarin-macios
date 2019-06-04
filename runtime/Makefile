@@ -483,10 +483,10 @@ SYSTEM_LAUNCHER$(2)_OBJECTS = $$(foreach src,$$(MAC_SOURCES),.libs/mac/$$(basena
 
 endef
 
-$(eval $(call ObjTemplate,i386,32,,,32))
-$(eval $(call ObjTemplate,x86_64,64,,,64))
-$(eval $(call ObjTemplate,i386,DEBUG32,-debug,-DDEBUG,32))
-$(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG,64))
+$(eval $(call ObjTemplate,i386,32,,-DOBJC_OLD_DISPATCH_PROTOTYPES=1,32))
+$(eval $(call ObjTemplate,x86_64,64,,-DOBJC_OLD_DISPATCH_PROTOTYPES=1,64))
+$(eval $(call ObjTemplate,i386,DEBUG32,-debug,-DDEBUG -DOBJC_OLD_DISPATCH_PROTOTYPES=1,32))
+$(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG -DOBJC_OLD_DISPATCH_PROTOTYPES=1,64))
 
 $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_DEFINES=-DEXTENSION
 
