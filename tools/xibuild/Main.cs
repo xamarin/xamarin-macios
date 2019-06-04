@@ -206,7 +206,7 @@ namespace xibuild {
 			SetToolsetProperty ("MSBuildExtensionsPath32", MSBuildExtensionsPath);
 			SetToolsetProperty ("MSBuildExtensionsPath64", MSBuildExtensionsPath);
 			SetToolsetProperty ("RoslynTargetsPath", Path.Combine (MSBuildBin, "Roslyn"));
-			SetToolsetProperty ("MSBuildSdksPath", MSBuildSdksPath);
+			SetToolsetProperty ("MSBuildSDKsPath", MSBuildSdksPath);
 
 			dstXml.Save (targetConfigFile);
 			return;
@@ -228,7 +228,8 @@ namespace xibuild {
 				if (string.IsNullOrEmpty (value))
 					return;
 
-				var valueAttribute = toolsets.SelectSingleNode ($"property[@name='{name}']/@value");
+				// MSBuild property names are case insensitive
+				var valueAttribute = toolsets.SelectSingleNode ($"property[translate(@name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='{name.ToLowerInvariant()}']/@value");
 				if (valueAttribute != null) {
 					valueAttribute.Value = value;
 				} else {
