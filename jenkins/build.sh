@@ -114,7 +114,7 @@ if test -z "$ENABLE_DEVICE_BUILD"; then
 fi
 
 # Build from source for Xcode 11 support until mono has packages
-MONO_BUILD_FROM_SOURCE=1
+CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-packaged-mono"
 
 make reset
 make git-clean-all
