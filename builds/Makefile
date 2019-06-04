@@ -1473,7 +1473,7 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.dylib: $(WATC
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).dylib -create -output $@
+	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib -create -output $@
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).dylib @rpath/libmono-native-unified.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
