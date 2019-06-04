@@ -131,6 +131,8 @@ namespace MonoMac.Tuner {
 			context.OutputDirectory = options.OutputDirectory;
 			context.StaticRegistrar = options.Target.StaticRegistrar;
 			context.Target = options.Target;
+			context.DisabledOptimizations |= CodeOptimizations.UnreachableBodies;  // TODO: revert this if linker issue is fixed
+
 			options.LinkContext = context;
 			return context;
 		}
