@@ -30,7 +30,7 @@ namespace Xamarin.iOS.UnitTests
 			Logger = logger ?? throw new ArgumentNullException (nameof (logger));
 		}
 
-		public abstract void Run (IList <TestAssemblyInfo> testAssemblies);
+		public abstract void Run (IEnumerable<TestAssemblyInfo> testAssemblies);
 		public abstract string WriteResultsToFile ();
 		public abstract void WriteResultsToFile (TextWriter writer);
 		public abstract void SkipTests (IEnumerable<string> tests);

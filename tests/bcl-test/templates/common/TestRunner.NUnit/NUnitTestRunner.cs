@@ -35,7 +35,7 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			builderSettings = new Dictionary<string, object> (StringComparer.OrdinalIgnoreCase);
 		}
 
-		public override void Run (IList<TestAssemblyInfo> testAssemblies)
+		public override void Run (IEnumerable<TestAssemblyInfo> testAssemblies)
 		{
 			if (testAssemblies == null)
 				throw new ArgumentNullException (nameof (testAssemblies));
