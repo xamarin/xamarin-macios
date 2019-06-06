@@ -443,7 +443,7 @@ namespace Xamarin.Bundler
 			}
 
 			if (enable_llvm)
-				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append (is32bit ? "/LLVM36/bin/," : "/LLVM/bin/,");
+				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append (is32bit ? "/LLVM/bin/," : "/LLVM/bin/,");
 
 			args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
 			if (enable_llvm)

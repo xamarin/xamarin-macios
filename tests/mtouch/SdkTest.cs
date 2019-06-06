@@ -321,7 +321,7 @@ namespace Xamarin.Linker {
 			// Run LLVM on every assembly we ship in watchOS, using the arguments we usually use when done from mtouch.
 			var aot_compiler = Path.Combine (Configuration.BinDirXI, "armv7k-unknown-darwin-mono-sgen");
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-			var llvm_path = Path.Combine (Configuration.SdkRootXI, "LLVM36", "bin");
+			var llvm_path = Path.Combine (Configuration.SdkRootXI, "LLVM", "bin");
 			var env = new Dictionary<string, string> {
 				{ "MONO_PATH", watchOSPath }
 			};
