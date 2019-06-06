@@ -679,7 +679,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			log (message);
 		}
 
-		public override void Run (IList <TestAssemblyInfo> testAssemblies)
+		public override void Run (IEnumerable<TestAssemblyInfo> testAssemblies)
 		{
 			if (testAssemblies == null)
 				throw new ArgumentNullException (nameof (testAssemblies));
