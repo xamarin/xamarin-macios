@@ -160,7 +160,7 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "xamarin-forms-book-samples";
 		const string CATEGORY = "xamarinformsbookssamples"; // categories can't contain dashes
-		const string HASH = "79f51213ed742878333e072fdc74c2ee894c0130";
+		const string HASH = "dc2bf3a47a46068cfc22b4163c06e218821adb81";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj,
@@ -173,34 +173,9 @@ namespace Samples {
 				{ "Chapter28/WhereAmI/WhereAmI/WhereAmI.iOS/WhereAmI.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Chapter28/WhereAmI/WhereAmI.sln" } },
 
 				// Known failures
-				{ "Chapter02/FS/Greetings/Greetings.iOS/Greetings.iOS.fsproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter02/FS/Hello/Hello.iOS/Hello.iOS.fsproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter03/FS/Baskervilles/Baskervilles/Baskervilles.iOS/Baskervilles.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter03/FS/NamedFontSizes/NamedFontSizes/NamedFontSizes.iOS/NamedFontSizes.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter03/FS/VariableFormPara/VariableFormattedParagraph/VariableFormattedParagraph.iOS/VariableFormattedParagraph.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter03/FS/VariableFormText/VariableFormattedText/VariableFormattedText.iOS/VariableFormattedText.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/BlackCat/BlackCat/BlackCat.iOS/BlackCat.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/ColorBlocks/ColorBlocks/ColorBlocks.iOS/ColorBlocks.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/ColorList/ColorList/ColorList.iOS/ColorList.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/ColorLoop/ColorLoop/ColorLoop.iOS/ColorLoop.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/FramedText/FramedText/FramedText.iOS/FramedText.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/ReflectedColors/ReflectedColors/ReflectedColors.iOS/ReflectedColors.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/SizedBoxView/SizedBoxView/SizedBoxView.iOS/SizedBoxView.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/VerticalOptionsDemo/VerticalOptionsDemo/VerticalOptionsDemo.iOS/VerticalOptionsDemo.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/EmpiricalFontSize/EmpiricalFontSize/EmpiricalFontSize.iOS/EmpiricalFontSize.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/EstimatedFontSize/EstimatedFontSize/EstimatedFontSize.iOS/EstimatedFontSize.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/FitToSizeClock/FitToSizeClock/FitToSizeClock.iOS/FitToSizeClock.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/FontSizes/FontSizes/FontSizes.iOS/FontSizes.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/MetricalBoxView/MetricalBoxView/MetricalBoxView.iOS/MetricalBoxView.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/WhatSize/WhatSize/WhatSize.iOS/WhatSize.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter06/FS/ButtonLambdas/ButtonLambdas/ButtonLambdas.iOS/ButtonLambdas.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter06/FS/ButtonLogger/ButtonLogger/ButtonLogger.iOS/ButtonLogger.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter06/FS/PersistentKeypad/PersistentKeypad/PersistentKeypad.iOS/PersistentKeypad.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter06/FS/SimplestKeypad/SimplestKeypad/SimplestKeypad.iOS/SimplestKeypad.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter06/FS/TwoButtons/TwoButtons/TwoButtons.iOS/TwoButtons.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter07/FS/CodePlusXaml/CodePlusXaml/CodePlusXaml.iOS/CodePlusXaml.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter08/FS/XamlKeypad/XamlKeypad/XamlKeypad.iOS/XamlKeypad.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-			};
+				{ "Chapter02/FS/Greetings/Greetings.iOS/Greetings.iOS.fsproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/57" } },
+				{ "Chapter02/FS/Hello/Hello.iOS/Hello.iOS.fsproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/57" } },
+		};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
