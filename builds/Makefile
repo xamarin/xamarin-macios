@@ -42,7 +42,7 @@ downloads/$(MONO_IOS_FILENAME) downloads/$(MONO_MAC_FILENAME):
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Downloaded $(MONO_URL)"
 
-downloads/%: downloads/%.zip
+downloads/%: downloads/%.7z
 	$(Q) echo "Unzipping $*..."
 	$(Q) rm -Rf $@.tmp
 	$(Q) 7z x $< -o$@.tmp
