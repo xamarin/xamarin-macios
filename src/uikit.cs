@@ -27,6 +27,7 @@ using CoreData;
 #if XAMCORE_2_0
 #if IOS
 using FileProvider;
+using UserNotifications;
 #endif // IOS
 #if !TVOS
 using Intents;
@@ -2258,6 +2259,18 @@ namespace UIKit {
 		[Static][Export ("objectWithRestorationIdentifierPath:coder:")]
 		IUIStateRestoring GetStateRestorationObjectFromPath (NSString [] identifierComponents, NSCoder coder);
 #endif
+	}
+
+	[iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIOpenUrlContext
+	{
+		[Export ("URL", ArgumentSemantic.Copy)]
+		NSUrl Url { get; }
+	
+		[Export ("options", ArgumentSemantic.Strong)]
+		UISceneOpenUrlOptions Options { get; }
 	}
 
 	interface IUIViewAnimating {}
@@ -6711,6 +6724,251 @@ namespace UIKit {
 		UIRectEdge Edges { get; set; }
 	}
 
+	interface IUISceneDelegate {}
+	[iOS (13,0)]
+	[BaseType (typeof(UIResponder))]
+	[DisableDefaultCtor]
+	interface UIScene
+	{
+		[Export ("initWithSession:connectionOptions:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UISceneSession session, UISceneConnectionOptions connectionOptions);
+	
+		[Export ("session")]
+		UISceneSession Session { get; }
+	
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IUISceneDelegate Delegate { get; set; }
+	
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Strong)]
+		NSObject WeakDelegate { get; set; }
+	
+		[Export ("activationState")]
+		UISceneActivationState ActivationState { get; }
+	
+		[Export ("title")]
+		string Title { get; set; }
+	
+		[Export ("activationConditions", ArgumentSemantic.Strong)]
+		UISceneActivationConditions ActivationConditions { get; set; }
+
+		[iOS (13, 0)]
+		[Field ("UISceneWillConnectNotification")]
+		[Notification]
+		NSString WillConnectNotification { get; }
+	
+		[iOS (13, 0)]
+		[Field ("UISceneDidDisconnectNotification")]
+		[Notification]
+		NSString DidDisconnectNotification { get; }
+	
+		[iOS (13, 0)]
+		[Field ("UISceneDidActivateNotification")]
+		[Notification]
+		NSString DidActivateNotification { get; }
+
+		[iOS (13, 0)]
+		[Field ("UISceneWillDeactivateNotification")]
+		[Notification]
+		NSString WillDeactivateNotification { get; }
+	
+		[iOS (13, 0)]
+		[Field ("UISceneWillEnterForegroundNotification")]
+		[Notification]
+		NSString WillEnterForegroundNotification { get; }
+	
+		[iOS (13, 0)]
+		[Field ("UISceneDidEnterBackgroundNotification")]
+		[Notification]
+		NSString DidEnterBackgroundNotification { get; }
+	}
+
+	[iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface UISceneActivationConditions : NSSecureCoding
+	{
+		[Export ("canActivateForTargetContentIdentifierPredicate", ArgumentSemantic.Copy)]
+		NSPredicate CanActivateForTargetContentIdentifierPredicate { get; set; }
+	
+		[Export ("prefersToActivateForTargetContentIdentifierPredicate", ArgumentSemantic.Copy)]
+		NSPredicate PrefersToActivateForTargetContentIdentifierPredicate { get; set; }
+	}
+
+	[iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface UISceneActivationRequestOptions
+	{
+		[NullAllowed, Export ("requestingScene", ArgumentSemantic.Strong)]
+		UIScene RequestingScene { get; set; }
+	}
+
+	// IDEA: This should be an enum, but we would need some sort of special support in Constructors, as
+	// the enum is being used for constructors
+	[iOS(13,0)]
+	interface UISceneSessionRole {
+		[Field ("UIWindowSceneSessionRoleApplication")]
+		NSString Application { get; }
+
+		[Field ("UIWindowSceneSessionRoleExternalDisplay")]
+		NSString ExternalDisplay { get; }
+	}
+
+	[iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface UISceneConfiguration : NSCopying, NSSecureCoding
+	{
+		[Static]
+		[Export ("configurationWithName:sessionRole:")]
+		// Docs: The uiscenesessionrole is linked to one of the values from the static alss UISceneSessionRole
+		UISceneConfiguration FromName ([NullAllowed] string name, NSString uiSceneSessionRole);
+	
+		[Export ("initWithName:sessionRole:")]
+		[DesignatedInitializer]
+		// Docs: The uiscenesessionrole is linked to one of the values from the static alss UISceneSessionRole
+		IntPtr Constructor ([NullAllowed] string name, NSString uiSceneSessionRole);
+	
+		[NullAllowed, Export ("name")]
+		string Name { get; }
+	
+		[Export ("role")]
+		// Docs: The Role is linked to one of the values from the static alss UISceneSessionRole
+		NSString Role { get; }
+	
+		[NullAllowed, Export ("sceneClass", ArgumentSemantic.Assign)]
+		Class SceneClass { get; set; }
+	
+		[NullAllowed, Export ("delegateClass", ArgumentSemantic.Assign)]
+		Class DelegateClass { get; set; }
+	
+		[NullAllowed, Export ("storyboard", ArgumentSemantic.Strong)]
+		UIStoryboard Storyboard { get; set; }
+	}
+	
+	[iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UISceneConnectionOptions
+	{
+		[Export ("URLContexts", ArgumentSemantic.Copy)]
+		NSSet<UIOpenUrlContext> URLContexts { get; }
+	
+		[NullAllowed, Export ("sourceApplication")]
+		string SourceApplication { get; }
+	
+		[NullAllowed, Export ("handoffUserActivityType")]
+		string HandoffUserActivityType { get; }
+	
+		[Export ("userActivities", ArgumentSemantic.Copy)]
+		NSSet<NSUserActivity> UserActivities { get; }
+	
+		[NoTV]
+		[NullAllowed, Export ("notificationResponse")]
+		UNNotificationResponse NotificationResponse { get; }
+	
+		[NoTV]
+		[NullAllowed, Export ("shortcutItem")]
+		UIApplicationShortcutItem ShortcutItem { get; }
+	
+		[NullAllowed, Export ("cloudKitShareMetadata")]
+		CKShareMetadata CloudKitShareMetadata { get; }
+	}
+	
+	[iOS (13,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface UISceneDelegate
+	{
+		[Export ("scene:willConnectToSession:options:")]
+		void SceneWillConnectToSession (UIScene scene, UISceneSession session, UISceneConnectionOptions connectionOptions);
+	
+		[Export ("sceneDidDisconnect:")]
+		void SceneDidDisconnect (UIScene scene);
+	
+		[Export ("sceneDidBecomeActive:")]
+		void SceneDidBecomeActive (UIScene scene);
+	
+		[Export ("sceneWillResignActive:")]
+		void SceneWillResignActive (UIScene scene);
+	
+		[Export ("sceneWillEnterForeground:")]
+		void SceneWillEnterForeground (UIScene scene);
+	
+		[Export ("sceneDidEnterBackground:")]
+		void SceneDidEnterBackground (UIScene scene);
+	
+		[Export ("scene:openURLContexts:")]
+		void SceneOpenUrl (UIScene scene, NSSet<UIOpenUrlContext> URLContexts);
+	
+		[Export ("stateRestorationActivityForScene:")]
+		[return: NullAllowed]
+		NSUserActivity StateRestorationActivityForScene (UIScene scene);
+	
+		[Export ("scene:willContinueUserActivityWithType:")]
+		void SceneWillContinueUserActivity (UIScene scene, string userActivityType);
+	
+		[Export ("scene:continueUserActivity:")]
+		void SceneContinueUserActivity (UIScene scene, NSUserActivity userActivity);
+	
+		[Export ("scene:didFailToContinueUserActivityWithType:error:")]
+		void SceneDidFailToContinueUserActivity (UIScene scene, string userActivityType, NSError error);
+	
+		[Export ("scene:didUpdateUserActivity:")]
+		void SceneDidUpdateUserActivity (UIScene scene, NSUserActivity userActivity);
+	}
+
+	[iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface UISceneDestructionRequestOptions {
+	}
+	
+	[iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface UISceneOpenExternalURLOptions
+	{
+		[Export ("universalLinksOnly")]
+		bool UniversalLinksOnly { get; set; }
+	}
+	
+	[iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UISceneOpenUrlOptions
+	{
+		[NullAllowed, Export ("sourceApplication")]
+		string SourceApplication { get; }
+	
+		[NullAllowed, Export ("annotation")]
+		NSObject Annotation { get; }
+	
+		[Export ("openInPlace")]
+		bool OpenInPlace { get; }
+	}
+
+	[iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UISceneSession : NSSecureCoding
+	{
+		[NullAllowed, Export ("scene")]
+		UIScene Scene { get; }
+	
+		[Export ("role")]
+		string Role { get; }
+	
+		[Export ("configuration", ArgumentSemantic.Copy)]
+		UISceneConfiguration Configuration { get; }
+	
+		[Export ("persistentIdentifier")]
+		string PersistentIdentifier { get; }
+	
+		[NullAllowed, Export ("stateRestorationActivity")]
+		NSUserActivity StateRestorationActivity { get; }
+	
+		[NullAllowed, Export ("userInfo", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> UserInfo { get; set; }
+	}
+	
 	//
 	// This class comes with an "init" constructor (which we autogenerate)
 	// and does not require us to call this with initWithFrame:

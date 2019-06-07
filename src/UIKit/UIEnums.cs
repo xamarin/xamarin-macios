@@ -2254,6 +2254,14 @@ namespace UIKit {
 	{
 		Generic = 1,
 	}
+
+	[iOS (13,0)]
+	[ErrorDomain ("UISceneErrorDomain")]
+	[Native]
+	public enum UISceneErrorCode : long {
+		MultipleScenesNotSupported,
+		RequestDenied
+	}
 	
 	[iOS (12,0), TV (12,0), NoWatch]
 	[Native]
@@ -2309,4 +2317,16 @@ namespace UIKit {
 		Standard = 0,
 		iOS
 	}
+
+	[iOS (13,0)]
+	[Native]
+	public enum UISceneActivationState : long
+	{
+		Unattached = -1,
+		ForegroundActive,
+		ForegroundInactive,
+		Background
+	}
+
+	
 }
