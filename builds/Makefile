@@ -993,23 +993,14 @@ LLVM64_TARGETS = \
 	$(PREFIX)/LLVM/bin/opt \
 	$(PREFIX)/LLVM/bin/llc \
 
-LLVM32_TARGETS = \
-	$(PREFIX)/LLVM36/bin/opt \
-	$(PREFIX)/LLVM36/bin/llc \
-
 $(MONO_IOS_SDK_DESTDIR)/llvm-llvm64/bin/%: .stamp-$(MONO_BUILD_MODE)
-$(MONO_IOS_SDK_DESTDIR)/llvm36-llvm32/bin/%: .stamp-$(MONO_BUILD_MODE)
 
 $(PREFIX)/LLVM/bin/%: $(MONO_IOS_SDK_DESTDIR)/llvm-llvm64/bin/% | $(PREFIX)/LLVM/bin
 	$(call Q_2,INSTALL ,[LLVM64]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
-$(PREFIX)/LLVM36/bin/%: $(MONO_IOS_SDK_DESTDIR)/llvm36-llvm32/bin/% | $(PREFIX)/LLVM36/bin
-	$(call Q_2,INSTALL ,[LLVM32]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
-
-$(PREFIX)/LLVM/bin $(PREFIX)/LLVM36/bin:
+$(PREFIX)/LLVM/bin:
 	$(Q) mkdir -p $@
 
-.PHONY: install-llvm64 install-llvm32 install-llvm
-install-llvm: install-llvm32 install-llvm64
-install-llvm32: $(LLVM32_TARGETS)
+.PHONY: install-llvm64 install-llvm
+install-llvm: install-llvm64
 install-llvm64: $(LLVM64_TARGETS)
