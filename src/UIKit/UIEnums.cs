@@ -775,6 +775,8 @@ namespace UIKit {
 
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LightContent' instead.")]
 		BlackOpaque = 2,
+
+		DarkContent = 3
 	}
 
 	// NSInteger -> UIApplication.h
