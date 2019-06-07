@@ -7126,8 +7126,145 @@ namespace UIKit {
 		new
 #endif
 		string[] WritableTypeIdentifiers { get; }
+
+		// 13.0
+	        [Watch (6,0), TV (13,0), iOS (13,0)]
+	        [Static]
+	        [Export ("systemImageNamed:")]
+	        [return: NullAllowed]
+	        UIImage SystemImage (string name);
+	
+	        [Watch (6,0), TV (13,0), iOS (13,0)]
+	        [Static]
+	        [Export ("systemImageNamed:withConfiguration:")]
+	        [return: NullAllowed]
+	        UIImage SystemImage (string name, [NullAllowed] UIImageConfiguration configuration);
+	
+	        [Watch (6,0), TV (13,0), iOS (13,0)]
+	        [Static]
+	        [Export ("systemImageNamed:compatibleWithTraitCollection:")]
+	        [return: NullAllowed]
+	        UIImage SystemImage (string name, [NullAllowed] UITraitCollection traitCollection);
+	
+	        [Watch (6,0), TV (13,0), iOS (13,0)]
+	        [Static]
+	        [Export ("imageNamed:inBundle:withConfiguration:")]
+	        [return: NullAllowed]
+	        UIImage FromBundle (string name, [NullAllowed] NSBundle bundle, [NullAllowed] UIImageConfiguration configuration);
+	
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	        [Export ("symbolImage")]
+	        bool SymbolImage { [Bind ("isSymbolImage")] get; }
+	
+	        [Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	        [Export ("baselineOffsetFromBottom")]
+	        nfloat BaselineOffsetFromBottom { get; }
+		
+	        [Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	        [Export ("hasBaseline")]
+	        bool HasBaseline { get; }
+	
+	        [Watch (6,0), TV (13,0), iOS (13,0)]
+	        [Export ("imageWithBaselineOffsetFromBottom:")]
+	        UIImage ImageWithBaselineOffsetFromBottom (nfloat baselineOffset);
+		
+	        [Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	        [Export ("imageWithoutBaseline")]
+		UIImage GetImageWithoutBaseline ();
+	
+	        [Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	        [Export ("configuration", ArgumentSemantic.Copy)]
+	        UIImageConfiguration Configuration { get; }
+	
+	        [Watch (6,0), TV (13,0), iOS (13,0)]
+	        [Export ("imageWithConfiguration:")]
+	        UIImage FromConfiguration (UIImageConfiguration configuration);
+	
+	        [Watch (6, 0), TV (13, 0), iOS (13, 0)]
+	        [NullAllowed, Export ("symbolConfiguration", ArgumentSemantic.Copy)]
+	        UIImageSymbolConfiguration SymbolConfiguration { get; }
+		
+	        [Watch (6,0), TV (13,0), iOS (13,0)]
+	        [Export ("imageByApplyingSymbolConfiguration:")]
+	        [return: NullAllowed]
+	        UIImage FromSymbolConfiguration (UIImageSymbolConfiguration configuration);
 	}
 
+	[Watch (6,0), TV (13,0), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIImageConfiguration : NSCopying, NSSecureCoding
+	{
+	        [NullAllowed, Export ("traitCollection")]
+	        UITraitCollection TraitCollection { get; }
+	
+	        [Export ("configurationWithTraitCollection:")]
+	        UIImageConfiguration ConfigurationWithTraitCollection ([NullAllowed] UITraitCollection traitCollection);
+	
+	        [Export ("configurationByApplyingConfiguration:")]
+	        UIImageConfiguration ConfigurationByApplyingConfiguration ([NullAllowed] UIImageConfiguration otherConfiguration);
+	}
+
+	[Watch (6,0), TV (13,0), iOS (13,0)]
+	[BaseType (typeof(UIImageConfiguration))]
+	interface UIImageSymbolConfiguration
+	{
+		[Static]
+		[Export ("unspecifiedConfiguration")]
+		UIImageSymbolConfiguration UnspecifiedConfiguration { get; }
+	
+		[Static]
+		[Export ("configurationWithScale:")]
+		UIImageSymbolConfiguration FromScale (UIImageSymbolScale scale);
+	
+		[Static]
+		[Export ("configurationWithPointSize:")]
+		UIImageSymbolConfiguration FromPointSize (nfloat pointSize);
+	
+		[Static]
+		[Export ("configurationWithWeight:")]
+		UIImageSymbolConfiguration FromhWeight (UIImageSymbolWeight weight);
+	
+		[Static]
+		[Export ("configurationWithPointSize:weight:")]
+		UIImageSymbolConfiguration FromPointSize (nfloat pointSize, UIImageSymbolWeight weight);
+	
+		[Static]
+		[Export ("configurationWithPointSize:weight:scale:")]
+		UIImageSymbolConfiguration FromPointSize (nfloat pointSize, UIImageSymbolWeight weight, UIImageSymbolScale scale);
+	
+		[Static]
+		[Export ("configurationWithTextStyle:")]
+		UIImageSymbolConfiguration FromTextStyle (string textStyle);
+	
+		[Static]
+		[Export ("configurationWithTextStyle:scale:")]
+		UIImageSymbolConfiguration FromTextStyle (string textStyle, UIImageSymbolScale scale);
+	
+		[Static]
+		[Export ("configurationWithFont:")]
+		UIImageSymbolConfiguration FromFont (UIFont font);
+	
+		[Static]
+		[Export ("configurationWithFont:scale:")]
+		UIImageSymbolConfiguration FromFont (UIFont font, UIImageSymbolScale scale);
+	
+		[Export ("configurationWithoutTextStyle")]
+		UIImageSymbolConfiguration ConfigurationWithoutTextStyle ();
+	
+		[Export ("configurationWithoutScale")]
+		UIImageSymbolConfiguration ConfigurationWithoutScale ();
+	
+		[Export ("configurationWithoutWeight")]
+		UIImageSymbolConfiguration ConfigurationWithoutWeight ();
+	
+		[Export ("configurationWithoutPointSizeAndWeight")]
+		UIImageSymbolConfiguration ConfigurationWithoutPointSizeAndWeight ();
+	
+		[Export ("isEqualToConfiguration:")]
+		bool IsEqualToConfiguration ([NullAllowed] UIImageSymbolConfiguration otherConfiguration);
+	}
+		
 #if !WATCH
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
@@ -7140,8 +7277,10 @@ namespace UIKit {
 		void RegisterImage (UIImage image, UITraitCollection traitCollection);
 
 		[Export ("unregisterImageWithTraitCollection:")]
-		void UnregisterImageWithTraitCollection (UITraitCollection traitCollection);
+			void UnregisterImageWithTraitCollection (UITraitCollection traitCollection);
 	}
+
+
 
 	[BaseType (typeof (NSObject))]
 	interface UIEvent {

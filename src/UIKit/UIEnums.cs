@@ -843,6 +843,9 @@ namespace UIKit {
 	[Native]
 	[NoWatch]
 	public enum UIModalPresentationStyle : long {
+		None = -1,
+		[NoTV]
+		Automatic = -2,
 		FullScreen = 0,
 		[NoTV]
 		PageSheet,
@@ -855,7 +858,6 @@ namespace UIKit {
 		[NoTV]
 		Popover,
 		BlurOverFullScreen,
-		None = -1
 	}
 	
 	// NSUInteger -> UISwipeGestureRecognizer.h
@@ -2271,5 +2273,40 @@ namespace UIKit {
 		NoContentError,
 		UnknownImageFormatError,
 		JobFailedError
+	}
+
+	[Watch (6,0), TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UIImageSymbolScale : long
+	{
+		Default = -1,
+		Unspecified = 0,
+		Small = 1,
+		Medium,
+		Large
+	}
+
+	[Watch (6,0), TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UIImageSymbolWeight : long
+	{
+		Unspecified = 0,
+		UltraLight = 1,
+		Thin,
+		Light,
+		Regular,
+		Medium,
+		Semibold,
+		Bold,
+		Heavy,
+		Black
+	}
+
+	[Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Native]
+	public enum NSTextScalingType : long
+	{
+		Standard = 0,
+		iOS
 	}
 }
