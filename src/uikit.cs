@@ -13269,42 +13269,55 @@ namespace UIKit {
 		CGRect ContentStretch { get; set; }
 
 		[Static] [Export ("beginAnimations:context:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void BeginAnimations ([NullAllowed] string animationID, IntPtr context);
 
 		[Static] [Export ("commitAnimations")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void CommitAnimations ();
 
 		[Static] [Export ("setAnimationDelegate:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationDelegate (NSObject del);
 
 		[Static] [Export ("setAnimationWillStartSelector:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationWillStartSelector (Selector sel);
 		
 		[Static] [Export ("setAnimationDidStopSelector:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationDidStopSelector (Selector sel);
 		
 		[Static] [Export ("setAnimationDuration:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationDuration (double duration);
 
 		[Static] [Export ("setAnimationDelay:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationDelay (double delay);
 		
 		[Static] [Export ("setAnimationStartDate:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationStartDate (NSDate startDate);
 		
 		[Static] [Export ("setAnimationCurve:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationCurve (UIViewAnimationCurve curve);
 		
 		[Static] [Export ("setAnimationRepeatCount:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationRepeatCount (float repeatCount /* This is float, not nfloat */);
 		
 		[Static] [Export ("setAnimationRepeatAutoreverses:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationRepeatAutoreverses (bool repeatAutoreverses);
 		
 		[Static] [Export ("setAnimationBeginsFromCurrentState:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationBeginsFromCurrentState (bool fromCurrentState);
 
 		[Static] [Export ("setAnimationTransition:forView:cache:")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use the block-based animation instead.")]
 		void SetAnimationTransition (UIViewAnimationTransition transition, UIView forView, bool cache);
 
 		[Static] [Export ("areAnimationsEnabled")]
@@ -13520,6 +13533,11 @@ namespace UIKit {
 		[Async]
 		void PerformSystemAnimation (UISystemAnimation animation, UIView [] views, UIViewAnimationOptions options, Action parallelAnimations, UICompletionHandler completion);
 
+		[iOS(12,0),TV(12,0)]
+		[Static]
+		[Export ("modifyAnimationsWithRepeatCount:autoreverses:animations:")]
+		void ModifyAnimation (nfloat repeatCount, bool autoReverses, Action animations);
+
 		[iOS (7,0)]
 		[Static, Export ("animateKeyframesWithDuration:delay:options:animations:completion:")]
 		[Async]
@@ -13707,15 +13725,15 @@ namespace UIKit {
 		[Export ("canBecomeFocused")]
 		new bool CanBecomeFocused { get; }
 
-		[NoWatch, NoTV, iOS (11,0)]
+		[NoWatch, TV(13,0), iOS (11,0)]
 		[Export ("addInteraction:")]
 		void AddInteraction (IUIInteraction interaction);
 	
-		[NoWatch, NoTV, iOS (11,0)]
+		[NoWatch, TV(13,0), iOS (11,0)]
 		[Export ("removeInteraction:")]
 		void RemoveInteraction (IUIInteraction interaction);
 	
-		[NoWatch, NoTV, iOS (11, 0)]
+		[NoWatch, TV(13,0), iOS (11, 0)]
 		[Export ("interactions", ArgumentSemantic.Copy)]
 		IUIInteraction[] Interactions { get; set; }
 
@@ -13724,6 +13742,12 @@ namespace UIKit {
 		[TV (11,0), iOS (11,0)]
 		[Export ("accessibilityIgnoresInvertColors")]
 		bool AccessibilityIgnoresInvertColors { get; set; }
+
+		// UserInterfaceStyle category
+		[TV (13, 0), NoWatch, iOS (13, 0)]
+		[Export ("overrideUserInterfaceStyle", ArgumentSemantic.Assign)]
+		UIUserInterfaceStyle OverrideUserInterfaceStyle { get; set; }
+		
 	}
 
 	[Category, BaseType (typeof (UIView))]
@@ -16251,7 +16275,7 @@ namespace UIKit {
 		bool NeedsInputModeSwitchKey { get; }
 	}
 
-	[NoWatch, NoTV, iOS (11,0)]
+	[NoWatch, TV(13,0), iOS (11,0)]
 	[Protocol]
 	interface UIInteraction
 	{
