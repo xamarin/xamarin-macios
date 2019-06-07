@@ -505,7 +505,8 @@ namespace UIKit {
 	[NoWatch]
 	public enum UITableViewStyle : long {
 		Plain,
-		Grouped
+		Grouped,
+		InsetGrouped
 	}
 
 	// NSInteger -> UITableView.h
@@ -2328,5 +2329,13 @@ namespace UIKit {
 		Background
 	}
 
-	
+	[iOS (13,0)]
+	[Native]
+	public enum UICommandState : long
+	{
+		Off,
+		On,
+		Mixed,
+		Hidden
+	}
 }
