@@ -87,7 +87,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 		{
 			BeginInvokeOnMainThread (() =>
 			{
-				runner.Run ((IList<TestAssemblyInfo>)testAssemblies);
+				runner.Run (testAssemblies);
 			});
 		});
 

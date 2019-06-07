@@ -127,7 +127,7 @@ namespace monotouchtestWatchKitExtension
 				BeginInvokeOnMainThread (() =>
 				{
 					lblStatus.SetText (string.Format ("{0} tests", runner.TotalTests));
-					runner.Run ((IList<TestAssemblyInfo>)testAssemblies);
+					runner.Run (testAssemblies);
 					RenderResults ();
 					cmdRun.SetEnabled (true);
 					cmdRun.SetHidden (false);

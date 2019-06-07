@@ -109,7 +109,7 @@ namespace BCLTests {
 				runner.SkipTests (skippedTests);
 			}
 
-			runner.Run ((IList<TestAssemblyInfo>)testAssemblies);
+			runner.Run (testAssemblies);
 			if (options.EnableXml) {
 				runner.WriteResultsToFile (writer);
 				logger.Info ("Xml file was written to the tcp listener.");

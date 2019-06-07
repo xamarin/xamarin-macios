@@ -58,7 +58,7 @@ namespace Xamarin.Mac.Tests
 				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);
 			}
-			runner.Run (testAssemblies.ToList ());
+			runner.Run (testAssemblies);
 
 			if (options.ResultFile != null) {
 				using (var writer = new StreamWriter (options.ResultFile)) {
