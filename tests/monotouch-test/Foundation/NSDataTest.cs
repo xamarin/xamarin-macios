@@ -155,9 +155,14 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Ignore ("NSData.FromUrl doesn't seem to work in watchOS");
 			}
 #endif
+			NSError error;
 			using (var url = new NSUrl ("https://www.microsoft.com/robots.txt"))
-			using (var x = NSData.FromUrl (url)) {
-				Assert.That ((x != null) && (x.Length > 0));
+			using (var x = NSData.FromUrl (url, NSDataReadingOptions.Uncached, out error)) {
+				if (error != null) {
+					Assert.Inconclusive ($"Could not access url error is '{error.Description}'");
+				} else {
+					Assert.That ((x != null) && (x.Length > 0));
+				}
 			}
 		}
 
