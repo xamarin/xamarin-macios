@@ -52,10 +52,10 @@ namespace BCLTestImporter {
 		public string GetPListPath (WatchAppType appType)
 		{
 			switch (appType) {
-				case WatchAppType.App:
-					return Path.Combine (GeneratedSubdirPath, "Info-watchos-app.plist");
-				default:
-					return Path.Combine (GeneratedSubdirPath, "Info-watchos-extension.plist");
+			case WatchAppType.App:
+				return Path.Combine (GeneratedSubdirPath, "Info-watchos-app.plist");
+			default:
+				return Path.Combine (GeneratedSubdirPath, "Info-watchos-extension.plist");
 			}
 		}
 		
