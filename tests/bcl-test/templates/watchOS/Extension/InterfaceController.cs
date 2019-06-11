@@ -110,7 +110,7 @@ namespace monotouchtestWatchKitExtension
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
 			runner = RegisterType.IsXUnit ? (Xamarin.iOS.UnitTests.TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
-			var categories = IgnoreFileParser.ParseTraitsContentFileAsync (NSBundle.MainBundle.BundlePath, RegisterType.IsXUnit).Result;
+			var categories = IgnoreFileParser.ParseTraitsContentFile (NSBundle.MainBundle.BundlePath, RegisterType.IsXUnit);
 
 			// add category filters if they have been added
 			runner.SkipCategories (categories);

@@ -50,8 +50,7 @@ namespace Xamarin.Mac.Tests
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
 			var runner = RegisterType.IsXUnit ? (TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
-			var categories = IgnoreFileParser.ParseTraitsContentFileAsync (NSBundle.MainBundle.ResourcePath, RegisterType.IsXUnit).Result;
-
+			var categories = IgnoreFileParser.ParseTraitsContentFile (NSBundle.MainBundle.ResourcePath, RegisterType.IsXUnit);
 			runner.SkipCategories (categories);
 			var skippedTests = IgnoreFileParser.ParseContentFiles (NSBundle.MainBundle.ResourcePath);
 			if (skippedTests.Any ()) {

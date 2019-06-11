@@ -84,6 +84,21 @@ namespace BCLTests {
 			}
 			return ignoredTraits;
 		}
+		
+		public static IEnumerable<string> ParseTraitsContentFile (string contentDir, bool isXUnit)
+		{
+			var ignoredTraits = new List<string> ();
+			var ignoreFile = Path.Combine (contentDir, isXUnit ? "xunit-excludes.txt" : "nunit-excludes.txt");
+			using (var reader = new StreamReader (ignoreFile)) {
+				string line;
+				while ((line = reader.ReadLine ()) != null) {
+					if (string.IsNullOrEmpty (line))
+						continue;
+					ignoredTraits.Add (line);
+				}
+			}
+			return ignoredTraits;
+		}
 
 		public static IEnumerable<string> ParseContentFiles (string contentDir)
 		{
