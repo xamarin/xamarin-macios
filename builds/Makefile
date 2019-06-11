@@ -62,9 +62,9 @@ else
 # this is a list of all the files from mono we care about, so that we
 # can use that list as dependencies for our makefile targets
 -include .deps.mono.mk
-.deps.mono.mk: mk/mono.mk
+.deps.mono.mk: $(TOP)/Make.config
 	$(Q) printf 'MONO_DEPENDENCIES += Makefile \\\n' > $@.tmp
-	$(Q) cd $(MONO_PATH) && git ls-files --recurse-submodules 'mcs/class/*.cs' 'mcs/build/*.cs' 'external/*.cs' '*.h' '*.c' '*.cpp' | grep -v "/Test/" | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(MONO_PATH)/\1 \\@' >> $(abspath $@).tmp
+	$(Q) cd $(MONO_PATH) && git ls-files --recurse-submodules 'mcs/class/*.cs' 'mcs/build/*.cs' 'external/*.cs' '*.h' '*.c' '*.cpp' | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(MONO_PATH)/\1 \\@' >> $(abspath $@).tmp
 	$(Q) mv $@.tmp $@
 
 #
