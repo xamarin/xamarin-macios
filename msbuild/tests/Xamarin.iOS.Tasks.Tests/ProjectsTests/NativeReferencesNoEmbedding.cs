@@ -85,22 +85,30 @@ namespace Xamarin.iOS.Tasks
 
 			const string CreatePackageString = "Creating binding resource package";
 
+			Console.WriteLine ($"------------------- #1 ----------------");
 			// First build should create a package
 			BuildProjectNoEmbedding (bindingLib);
 			Assert.True (GetMessages ().Contains (CreatePackageString), "First build did not create package?");
 			ClearMessages ();
 
+			Console.WriteLine ($"------------------- #2 ----------------");
 			// No change build should not
 			BuildProjectNoEmbedding (bindingLib, clean : false);
 			Assert.False (GetMessages ().Contains (CreatePackageString), "Rebuild build did create package?");
 			ClearMessages ();
 
+			//Console.WriteLine ($"------------------- #3 touched {bindingLib.ProjectCSProjPath} ----------------");
 			// Touching the binding project should
 			Touch (bindingLib.ProjectCSProjPath);
 			BuildProjectNoEmbedding (bindingLib, clean: false);
-			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding project build did not create package?");
+			bool b = GetMessages ().Contains (CreatePackageString);
+			Console.WriteLine ($"--------------------- **** So, it {b ? "contained" : "did not contain"} {CreatePackageString}'");
+
+
+			Assert.True (b, "Binding project build did not create package?");
 			ClearMessages ();
 
+			Console.WriteLine ($"-------------------- #4 ------------");
 			// Touching the binding file should
 			Touch (Path.Combine (Path.GetDirectoryName (bindingLib.ProjectCSProjPath), @"../../../tests/bindings-framework-test/ApiDefinition.cs"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
@@ -116,6 +124,8 @@ namespace Xamarin.iOS.Tasks
 			Touch (Path.Combine (Path.GetDirectoryName (bindingLib.ProjectCSProjPath), @"../../../tests/test-libraries/.libs/ios/XTest.framework/XTest"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
 			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding build did not create package?");
+
+			Console.WriteLine ($"----------------------------- <<<<<<<<< ShouldNotUnnecessarilyRebuildBindingProject >>>>>>>>>>> -------------------");
 		}
 
 		[TestCase (true)]
