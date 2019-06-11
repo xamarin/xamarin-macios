@@ -208,7 +208,8 @@ namespace Xamarin.Bundler {
 
 			List<string> filesToAOT = GetFilesToAOT (files);
 			Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-				string command = String.Format ("--aot{0} {1}{2}", options.IsHybridAOT ? "=hybrid" : "", IsModern ? "--runtime=mobile " : "", StringUtils.Quote (file));
+				string command = String.Format ("--aot{0} {1}{2}{3}", options.IsHybridAOT ? "=hybrid" : "", 
+							IsModern ? "--runtime=mobile " : "", IsRelease ? "" : "--debug ", StringUtils.Quote (file));
 				if (RunCommand (MonoPath, command, monoEnv) != 0)
 					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
 			});
