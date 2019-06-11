@@ -498,14 +498,14 @@ function check_mono () {
 		if ! test -z $PROVISION_MONO; then
 			install_mono
 		else
-			fail "You must install the Mono MDK (http://www.mono-project.com/download/)"
+			fail "You must install the Mono MDK. Download URL: $MIN_MONO_URL"
 			return
 		fi
 	elif ! test -e $MONO_VERSION_FILE; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
 		else
-			fail "Could not find VERSION file, you must install the Mono MDK (http://www.mono-project.com/download/)"
+			fail "Could not find Mono's VERSION file, you must install the Mono MDK. Download URL: $MIN_MONO_URL"
 			return
 		fi
 	fi
@@ -519,7 +519,8 @@ function check_mono () {
 			install_mono
 			ACTUAL_MONO_VERSION=`cat $MONO_VERSION_FILE`
 		else
-			fail "You must have at least Mono $MIN_MONO_VERSION, found $ACTUAL_MONO_VERSION"
+			MIN_MONO_URL=$(grep ^MIN_MONO_URL= Make.config | sed 's/.*=//')
+			fail "You must have at least Mono $MIN_MONO_VERSION, found $ACTUAL_MONO_VERSION. Download URL: $MIN_MONO_URL"
 			return
 		fi
 	elif [[ "$ACTUAL_MONO_VERSION" == "$MAX_MONO_VERSION" ]]; then
