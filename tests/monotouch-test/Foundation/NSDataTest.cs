@@ -155,15 +155,27 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Ignore ("NSData.FromUrl doesn't seem to work in watchOS");
 			}
 #endif
-			NSError error;
-			using (var url = new NSUrl ("https://www.microsoft.com/robots.txt"))
-			using (var x = NSData.FromUrl (url, NSDataReadingOptions.Uncached, out error)) {
-				if (error != null) {
-					Assert.Inconclusive ($"Could not access url error is '{error.Description}'");
-				} else {
-					Assert.That ((x != null) && (x.Length > 0));
+			// we have network issues, try several urls, if one works, be happy, else fail
+			var urls = new string [] {
+				"https://www.microsoft.com/robots.txt",
+				"https://www.xamarin.com/robots.txt",
+				"http://www.bing.com/robots.txt",
+				"https://www.xbox.com/robots.txt",
+				"https://www.msn.com/robots.txt",
+				"https://visualstudio.microsoft.com/robots.txt",
+			};
+			for (var i = 0; i < urls.Length; i++) {
+				NSError error;
+				using (var nsUrl = new NSUrl (urls [i]))
+				using (var x = NSData.FromUrl (nsUrl, NSDataReadingOptions.Uncached, out error)) {
+					if (error != null)
+						continue;
+					Assert.That (x != null);
+					Assert.That (x.Length > 0);
+					return;
 				}
 			}
+			Assert.Fail ("None of the urls could be fetch.");
 		}
 
 		[Test]
