@@ -261,8 +261,8 @@ namespace BCLTestImporter {
 			var contentDir = Path.Combine (assetsTargetDir, "AppIcon.appiconset");
 			if (!Directory.Exists (contentDir))
 				Directory.CreateDirectory (contentDir);
-			File.Copy (Path.Combine (assetsPath, "AppIcon.appiconset", "Contents.json"), contentDir, true);
-			File.Copy (Path.Combine (assetsPath, "Contents.json"), assetsTargetDir, true);
+			File.Copy (Path.Combine (assetsPath, "AppIcon.appiconset", "Contents.json"), Path.Combine (contentDir, "Contents.json"), true);
+			File.Copy (Path.Combine (assetsPath, "Contents.json"), Path.Combine (assetsTargetDir, "Contents.json"), true);
 		}
 
 		// creates the reference node
