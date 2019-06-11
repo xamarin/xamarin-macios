@@ -506,7 +506,7 @@ namespace UIKit {
 	public enum UITableViewStyle : long {
 		Plain,
 		Grouped,
-		InsetGrouped
+		InsetGrouped,
 	}
 
 	// NSInteger -> UITableView.h
@@ -776,7 +776,7 @@ namespace UIKit {
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LightContent' instead.")]
 		BlackOpaque = 2,
 
-		DarkContent = 3
+		DarkContent = 3,
 	}
 
 	// NSInteger -> UIApplication.h
@@ -2263,7 +2263,7 @@ namespace UIKit {
 	[Native]
 	public enum UISceneErrorCode : long {
 		MultipleScenesNotSupported,
-		RequestDenied
+		RequestDenied,
 	}
 	
 	[iOS (12,0), TV (12,0), NoWatch]
@@ -2294,7 +2294,7 @@ namespace UIKit {
 		Unspecified = 0,
 		Small = 1,
 		Medium,
-		Large
+		Large,
 	}
 
 	[Watch (6,0), TV (13,0), iOS (13,0)]
@@ -2310,7 +2310,7 @@ namespace UIKit {
 		Semibold,
 		Bold,
 		Heavy,
-		Black
+		Black,
 	}
 
 	[Mac (10,15, onlyOn64: true), iOS (13,0)]
@@ -2318,7 +2318,7 @@ namespace UIKit {
 	public enum NSTextScalingType : long
 	{
 		Standard = 0,
-		iOS
+		iOS,
 	}
 
 	[iOS (13,0)]
@@ -2328,7 +2328,7 @@ namespace UIKit {
 		Unattached = -1,
 		ForegroundActive,
 		ForegroundInactive,
-		Background
+		Background,
 	}
 
 	[iOS (13,0)]
@@ -2338,6 +2338,6 @@ namespace UIKit {
 		Off,
 		On,
 		Mixed,
-		Hidden
+		Hidden,
 	}
 }
