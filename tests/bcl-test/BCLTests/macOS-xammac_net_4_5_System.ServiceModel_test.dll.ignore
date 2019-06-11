@@ -14,3 +14,6 @@
  MonoTests.System.ServiceModel.EndpointAddressTest.WriteToWSA10
  MonoTests.System.ServiceModel.EndpointAddressTest.WriteContentsToWSA10
  MonoTests.System.ServiceModel.Description.MetadataSetTest.ReadFrom
+ MonoTests.System.ServiceModel.Channels.MessageFaultTest.CreateFault
+ MonoTests.System.ServiceModel.Channels.MessageFaultTest.CreateFaultIncomplete
+ MonoTests.System.ServiceModel.Channels.MessageFaultTest.CreateFaultIncomplete4
