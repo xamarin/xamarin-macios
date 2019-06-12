@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace BCLTestImporter {
 	/// <summary>
@@ -11,7 +10,7 @@ namespace BCLTestImporter {
 		internal static string IndentifierReplacement = "%BUNDLE INDENTIFIER%";
 		internal static string WatchAppIndentifierReplacement = "%WATCHAPP INDENTIFIER%";
 	
-		public static async Task<string> GenerateCodeAsync (string templatePath, string projectName)
+		public static string GenerateCode (string templatePath, string projectName)
 		{
 			if (templatePath == null)
 				throw new ArgumentNullException (nameof (templatePath));
@@ -19,7 +18,7 @@ namespace BCLTestImporter {
 				throw new ArgumentNullException (nameof (projectName));
 			// got the lines we want to add, read the template and substitute
 			using (var reader = new StreamReader(templatePath)) {
-				var result = await reader.ReadToEndAsync ();
+				var result = reader.ReadToEnd ();
 				result = result.Replace (ApplicationNameReplacement, projectName);
 				result = result.Replace (IndentifierReplacement, $"com.xamarin.bcltests.{projectName}");
 				result = result.Replace (WatchAppIndentifierReplacement, $"com.xamarin.bcltests.{projectName}.container");
@@ -27,15 +26,13 @@ namespace BCLTestImporter {
 			}
 		}
 		
-		public static async Task GenerateCodeToFileAsync (string templatePath, string projectName, string destinationPath)
+		public static void GenerateCodeToFile (string templatePath, string projectName, string destinationPath)
 		{
-			var plist = await GenerateCodeAsync (templatePath, projectName);
+			var plist = GenerateCode (templatePath, projectName);
 			using (var file = new StreamWriter (destinationPath, false)) { // false is do not append
-				await file.WriteAsync (plist);
+				file.Write (plist);
 			}
 		}
 
-		// Generates the code for the type registration using the give path to the template to use
-		public static string GenerateCode (string templatePath, string projectName) => GenerateCodeAsync (templatePath, projectName).Result;
 	}
 }
