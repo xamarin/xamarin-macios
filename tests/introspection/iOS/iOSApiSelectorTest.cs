@@ -212,6 +212,11 @@ namespace Introspection {
 					if (TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
+				case "priority":
+				case "setPriority:":
+					if (TestRuntime.CheckXcodeVersion (11, 0))
+						return true;
+					break;
 				}
 				break;
 			case "NSUrlSessionConfiguration":
@@ -227,6 +232,12 @@ namespace Introspection {
 				case "originalRequest":
 				case "response":
 					if (TestRuntime.CheckXcodeVersion (7, 0))
+						return true;
+					break;
+				case "loadedTimeRanges":
+				case "options":
+				case "URLAsset":
+					if (TestRuntime.CheckXcodeVersion (11, 0))
 						return true;
 					break;
 				}

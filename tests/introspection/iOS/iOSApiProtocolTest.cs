@@ -258,6 +258,28 @@ namespace Introspection {
 				case "PKDisbursementRequest":
 				case "PKDisbursementVoucher":
 					return true;
+				// iOS 13 beta 1 (to be reviewed)
+				case "LAContext":
+				case "VNFaceLandmarkRegion2D":
+				case "VNFaceLandmarkRegion":
+				case "VNFaceLandmarks":
+				case "VNFaceLandmarks2D":
+				case "MKPolygon":
+				case "HMAction":
+				case "NSUrlSessionTaskMetrics":
+				case "NSUrlSessionTaskTransactionMetrics":
+				case "MLMultiArrayConstraint":
+				case "MLDictionaryConstraint":
+				case "MLFeatureDescription":
+				case "MLImageConstraint":
+				case "MLImageSize":
+				case "MLImageSizeConstraint":
+				case "MLModelConfiguration":
+				case "MLModelDescription":
+				case "MLMultiArrayShapeConstraint":
+				case "MLPredictionOptions":
+				case "MLSequenceConstraint":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -438,6 +460,32 @@ namespace Introspection {
 				case "PKDisbursementRequest":
 				case "PKDisbursementVoucher":
 					return true;
+				// iOS 13 beta 1 (to be reviewed)
+				case "LAContext":
+				case "VNFaceLandmarkRegion2D":
+				case "VNFaceLandmarkRegion":
+				case "VNFaceLandmarks":
+				case "VNFaceLandmarks2D":
+				case "MKPolygon":
+				case "HMAction":
+				case "NSLayoutManager":
+				case "NSTextContainer":
+				case "UISpringTimingParameters":
+				case "NSException":
+				case "NSUrlSessionTaskMetrics":
+				case "NSUrlSessionTaskTransactionMetrics":
+				case "MLMultiArrayConstraint":
+				case "MLDictionaryConstraint":
+				case "MLFeatureDescription":
+				case "MLImageConstraint":
+				case "MLImageSize":
+				case "MLImageSizeConstraint":
+				case "MLModelConfiguration":
+				case "MLModelDescription":
+				case "MLMultiArrayShapeConstraint":
+				case "MLPredictionOptions":
+				case "MLSequenceConstraint":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -561,6 +609,15 @@ namespace Introspection {
 				// iOS 12.2
 				case "PKDisbursementVoucher":
 					return true;
+				// iOS 13 beta 1 (to be reviewed)
+				case "VNFaceLandmarkRegion2D":
+				case "VNFaceLandmarkRegion":
+				case "VNFaceLandmarks":
+				case "VNFaceLandmarks2D":
+				case "HMAction":
+				case "HMCharacteristicWriteAction":
+				case "MLPredictionOptions":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -573,6 +630,8 @@ namespace Introspection {
 				case "INRestaurantGuest":
 				case "INPerson":
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
+				// iOS 13 beta 1 (to be reviewed)
+				case "UIKeyCommand":
 					return true;
 				}
 				break;

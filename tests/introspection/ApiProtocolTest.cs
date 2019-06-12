@@ -243,6 +243,14 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "SCNTechniqueSupport":
+				if (!TestRuntime.CheckXcodeVersion (11,0))
+					return false;
+				switch (type.Name) {
+				case "SCNLight":
+					return true;
+				}
+				break;
 			}
 			return false;
 		}
