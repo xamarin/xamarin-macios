@@ -27,6 +27,19 @@ System.Text.RegularExpressions.Tests.RegexMatchTests.Match_SpecialUnicodeCharact
 
 # blocks app mono 2019-06 issue https://github.com/mono/mono/issues/14938
 KLASS:System.Net.Security.Tests.SslStreamSniTest
+KLASS:System.Net.Security.Tests.SyncSslStreamSystemDefaultTest
+KLASS:System.Net.Security.Tests.SslClientAuthenticationOptionsTest.ClientOptions_ServerOptions_NotMutatedDuringAuthentication
+KLASS:System.Net.Security.Tests.SslStreamNetworkStreamTest
+KLASS:System.Net.Security.Tests.SslStreamStreamToStreamTest_BeginEnd
+KLASS:System.Net.Security.Tests.SslStreamStreamToStreamTest_Sync
+KLASS:System.Net.Security.Tests.SslStreamAlertsTest
+KLASS:System.Net.Security.Tests.SslClientAuthenticationOptionsTest
+KLASS:System.Net.Security.Tests.SslStreamCredentialCacheTest
+KLASS:System.Net.Security.Tests.ServerAsyncAuthenticateTest
+KLASS:System.Net.Security.Tests.CertificateValidationClientServer
+KLASS:System.Net.Security.Tests.ApmSslStreamSystemDefaultTest
+KLASS:System.Net.Security.Tests.SslStreamStreamToStreamTest_Async
+KLASS:System.Net.Security.Tests.AsyncSslStreamSystemDefaultTest
 System.Net.Security.Tests.ClientAsyncAuthenticateTest.ClientAsyncAuthenticate_IndividualServerVsAllClientSupportedProtocols_Success(serverProtocol: Tls)
 System.Net.Security.Tests.ClientDefaultEncryptionTest.ClientDefaultEncryption_ServerRequireEncryption_ConnectWithEncryption
 System.Net.Security.Tests.ClientDefaultEncryptionTest.ClientDefaultEncryption_ServerAllowNoEncryption_ConnectWithEncryption
@@ -60,3 +73,12 @@ System.Net.Security.Tests.ClientAsyncAuthenticateTest.ClientAsyncAuthenticate_Al
 System.Net.Security.Tests.ClientAsyncAuthenticateTest.ClientAsyncAuthenticate_AllServerVsIndividualClientSupportedProtocols_Success(clientProtocol: Tls11)
 System.Net.Security.Tests.ClientAsyncAuthenticateTest.ClientAsyncAuthenticate_AllServerVsIndividualClientSupportedProtocols_Success(clientProtocol: Tls11)
 System.Net.Security.Tests.ClientAsyncAuthenticateTest.ClientAsyncAuthenticate_SslStreamClientServerNone_UseStrongCryptoSet 
+System.Net.Security.Tests.AsyncSslStreamSystemDefaultTest.ClientAndServer_OneOrBothUseDefault_Ok(clientProtocols: null, serverProtocols: Tls12)
+
+# mono 2019 issue https://github.com/mono/mono/issues/15040
+# Exception messages: Assert.Equal() Failure
+# Expected: 20
+# Actual:   10   Exception stack traces:   at System.Runtime.CompilerServices.UnsafeTests.ReadWriteDoublePointer () [0x00020] in /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/src/Xamarin.Mac/external/corefx/src/System.Runtime.CompilerServices.Unsafe/tests/UnsafeTests.cs:96 
+#  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+#  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/src/Xamarin.Mac/mcs/class/corlib/System.Reflection/RuntimeMethodInfo.cs:395 
+System.Runtime.CompilerServices.UnsafeTests.ReadWriteDoublePointer
