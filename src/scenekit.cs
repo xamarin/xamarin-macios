@@ -2885,6 +2885,11 @@ namespace SceneKit {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
+#if XAMCORE_4_0
+		[Unavailable (PlatformName.WatchOS)]
+#else
+		[Obsoleted (PlatformName.WatchOS, 6, 0, message: "API removed, please do not use.")]
+#endif
 		[Export ("context")]
 		IntPtr Context { get;  }
 
