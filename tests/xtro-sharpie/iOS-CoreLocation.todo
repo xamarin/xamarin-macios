@@ -1,0 +1,30 @@
+!deprecated-attribute-missing! CLBeacon::proximityUUID missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLBeaconRegion::initWithProximityUUID:identifier: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLBeaconRegion::initWithProximityUUID:major:identifier: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLBeaconRegion::initWithProximityUUID:major:minor:identifier: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLBeaconRegion::proximityUUID missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLLocationManager::rangedRegions missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLLocationManager::startRangingBeaconsInRegion: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLLocationManager::stopRangingBeaconsInRegion: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLLocationManagerDelegate::locationManager:didRangeBeacons:inRegion: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLLocationManagerDelegate::locationManager:rangingBeaconsDidFailForRegion:withError: missing a [Deprecated] attribute
+!missing-protocol-member! CLLocationManagerDelegate::locationManager:didFailRangingBeaconsForConstraint:error: not found
+!missing-protocol-member! CLLocationManagerDelegate::locationManager:didRangeBeacons:satisfyingConstraint: not found
+!missing-selector! CLBeacon::timestamp not bound
+!missing-selector! CLBeacon::UUID not bound
+!missing-selector! CLBeaconIdentityConstraint::initWithUUID: not bound
+!missing-selector! CLBeaconIdentityConstraint::initWithUUID:major: not bound
+!missing-selector! CLBeaconIdentityConstraint::initWithUUID:major:minor: not bound
+!missing-selector! CLBeaconIdentityConstraint::major not bound
+!missing-selector! CLBeaconIdentityConstraint::minor not bound
+!missing-selector! CLBeaconIdentityConstraint::UUID not bound
+!missing-selector! CLBeaconRegion::beaconIdentityConstraint not bound
+!missing-selector! CLBeaconRegion::initWithBeaconIdentityConstraint:identifier: not bound
+!missing-selector! CLBeaconRegion::initWithUUID:identifier: not bound
+!missing-selector! CLBeaconRegion::initWithUUID:major:identifier: not bound
+!missing-selector! CLBeaconRegion::initWithUUID:major:minor:identifier: not bound
+!missing-selector! CLBeaconRegion::UUID not bound
+!missing-selector! CLLocationManager::rangedBeaconConstraints not bound
+!missing-selector! CLLocationManager::startRangingBeaconsSatisfyingConstraint: not bound
+!missing-selector! CLLocationManager::stopRangingBeaconsSatisfyingConstraint: not bound
+!missing-type! CLBeaconIdentityConstraint not bound

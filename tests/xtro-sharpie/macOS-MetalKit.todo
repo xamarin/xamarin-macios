@@ -1,0 +1,2 @@
+!missing-selector! MTKView::preferredDevice not bound
+!missing-selector! MTKView::preferredDrawableSize not bound

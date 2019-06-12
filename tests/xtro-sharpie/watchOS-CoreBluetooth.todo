@@ -1,0 +1,14 @@
+!deprecated-attribute-missing! CBPeripheralManager::authorizationStatus missing a [Deprecated] attribute
+!missing-enum! CBCentralManagerFeature not bound
+!missing-enum! CBConnectionEvent not bound
+!missing-enum! CBManagerAuthorization not bound
+!missing-field! CBConnectionEventMatchingOptionPeripheralUUIDs not bound
+!missing-field! CBConnectionEventMatchingOptionServiceUUIDs not bound
+!missing-field! CBConnectPeripheralOptionEnableTransportBridgingKey not bound
+!missing-field! CBConnectPeripheralOptionRequiresANCS not bound
+!missing-protocol-member! CBCentralManagerDelegate::centralManager:connectionEventDidOccur:forPeripheral: not found
+!missing-protocol-member! CBCentralManagerDelegate::centralManager:didUpdateANCSAuthorizationForPeripheral: not found
+!missing-selector! +CBCentralManager::supportsFeatures: not bound
+!missing-selector! CBCentralManager::registerForConnectionEventsWithOptions: not bound
+!missing-selector! CBManager::authorization not bound
+!missing-selector! CBPeripheral::ancsAuthorized not bound

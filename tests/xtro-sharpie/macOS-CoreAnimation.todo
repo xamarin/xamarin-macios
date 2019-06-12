@@ -1,0 +1,6 @@
+!missing-field! kCACornerCurveCircular not bound
+!missing-field! kCACornerCurveContinuous not bound
+!missing-selector! +CALayer::cornerCurveExpansionFactor: not bound
+!missing-selector! CALayer::cornerCurve not bound
+!missing-selector! CALayer::setCornerCurve: not bound
+!missing-selector! CAMetalLayer::preferredDevice not bound

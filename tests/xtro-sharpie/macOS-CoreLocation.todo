@@ -1,0 +1,4 @@
+!missing-selector! CLFloor::level not bound
+!missing-selector! CLLocation::floor not bound
+!missing-selector! CLLocationManager::requestAlwaysAuthorization not bound
+!missing-type! CLFloor not bound

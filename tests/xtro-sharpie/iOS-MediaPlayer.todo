@@ -1,0 +1,7 @@
+!deprecated-attribute-missing! MPVolumeView::areWirelessRoutesAvailable missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPVolumeView::isWirelessRouteActive missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPVolumeView::routeButtonImageForState: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPVolumeView::routeButtonRectForBounds: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPVolumeView::setRouteButtonImage:forState: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPVolumeView::setShowsRouteButton: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MPVolumeView::showsRouteButton missing a [Deprecated] attribute

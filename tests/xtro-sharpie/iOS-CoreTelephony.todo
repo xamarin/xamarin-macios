@@ -1,0 +1,4 @@
+!missing-protocol! CTTelephonyNetworkInfoDelegate not bound
+!missing-selector! CTTelephonyNetworkInfo::dataServiceIdentifier not bound
+!missing-selector! CTTelephonyNetworkInfo::delegate not bound
+!missing-selector! CTTelephonyNetworkInfo::setDelegate: not bound

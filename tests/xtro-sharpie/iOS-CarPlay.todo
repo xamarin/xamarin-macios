@@ -1,0 +1,11 @@
+!deprecated-attribute-missing! CPManeuver::setSymbolSet: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CPManeuver::symbolSet missing a [Deprecated] attribute
+!deprecated-attribute-missing! CPNavigationAlert::initWithTitleVariants:subtitleVariants:imageSet:primaryAction:secondaryAction:duration: missing a [Deprecated] attribute
+!missing-selector! CPInterfaceController::prefersDarkUserInterfaceStyle not bound
+!missing-selector! CPInterfaceController::setPrefersDarkUserInterfaceStyle: not bound
+!missing-selector! CPManeuver::setSymbolImage: not bound
+!missing-selector! CPManeuver::symbolImage not bound
+!missing-selector! CPNavigationAlert::image not bound
+!missing-selector! CPNavigationAlert::initWithTitleVariants:subtitleVariants:image:primaryAction:secondaryAction:duration: not bound
+!missing-selector! CPWindow::setTemplateApplicationScene: not bound
+!missing-selector! CPWindow::templateApplicationScene not bound
