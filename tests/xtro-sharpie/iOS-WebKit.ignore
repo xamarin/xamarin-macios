@@ -1,7 +1,14 @@
 ## unfortunate (but required for API compatibility) the name exists in both WatchKit and WebKit namespaces
 ## it's reported as missing here because it's removed from the list when processing WatchKit
+### not reported due to lack of WatchKit headers in xcode 11 beta 1
 !duplicate-type-name! WKErrorCode enum exists as both WebKit.WKErrorCode and WatchKit.WKErrorCode
-!missing-enum! WKErrorCode not bound
+###!missing-enum! WKErrorCode not bound
+
+# Moved into a *deprecated* category that is now visible from iOS (but were only on macOS before)
+!missing-selector! WKPreferences::javaEnabled not bound
+!missing-selector! WKPreferences::plugInsEnabled not bound
+!missing-selector! WKPreferences::setJavaEnabled: not bound
+!missing-selector! WKPreferences::setPlugInsEnabled: not bound
 
 # Initial result from new rule missing-release-attribute-on-return-value
 !missing-release-attribute-on-return-value! Foundation.NSObject WebKit.WKFrameInfo::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

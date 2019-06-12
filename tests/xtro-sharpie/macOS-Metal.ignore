@@ -3,12 +3,6 @@
 !missing-field! MTLDeviceWasAddedNotification not bound
 !missing-field! MTLDeviceWasRemovedNotification not bound
 
-## fixed in XAMCORE_4_0
-!extra-protocol-member! unexpected selector MTLCommandBuffer::GPUEndTime found
-!extra-protocol-member! unexpected selector MTLCommandBuffer::GPUStartTime found
-!extra-protocol-member! unexpected selector MTLCommandBuffer::kernelEndTime found
-!extra-protocol-member! unexpected selector MTLCommandBuffer::kernelStartTime found
-
 
 ## unsorted
 

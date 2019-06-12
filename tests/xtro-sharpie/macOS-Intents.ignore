@@ -1,6 +1,3 @@
-## The signature uses INBooleanResolutionResult which is not available on mac
-!missing-protocol-member! INSearchCallHistoryIntentHandling::resolveUnseenForSearchCallHistory:withCompletion: not found
-
 ## unsorted
 
 !unknown-native-enum! INSetMessageAttributeIntentResponseCode bound
@@ -21,27 +18,6 @@
 !missing-enum! INGetRestaurantGuestIntentResponseCode not bound
 !missing-enum! INGetUserCurrentRestaurantReservationBookingsIntentResponseCode not bound
 !missing-enum! INRestaurantReservationUserBookingStatus not bound
-!missing-selector! +INDateComponentsResolutionResult::confirmationRequiredWithDateComponentsToConfirm: not bound
-!missing-selector! +INDateComponentsResolutionResult::disambiguationWithDateComponentsToDisambiguate: not bound
-!missing-selector! +INDateComponentsResolutionResult::successWithResolvedDateComponents: not bound
-!missing-selector! INImageNoteContent::image not bound
-!missing-selector! INImageNoteContent::initWithImage: not bound
-!missing-selector! INInteractionINInteraction::parameterValueForParameter: not bound
-!missing-selector! INTextNoteContent::initWithText: not bound
-!missing-selector! INTextNoteContent::text not bound
-!missing-type! INDateComponentsResolutionResult not bound
-!missing-type! INImageNoteContent not bound
-!missing-type! INNoteContent not bound
-!missing-type! INTextNoteContent not bound
-
-## The following fields are reported as not present in macOS, and from the names it makes sense
-## even if headers says they are present they really are not.
-!missing-field! INSearchCallHistoryIntentIdentifier not bound
-!missing-field! INSearchForMessagesIntentIdentifier not bound
-!missing-field! INSendMessageIntentIdentifier not bound
-!missing-field! INSetMessageAttributeIntentIdentifier not bound
-!missing-field! INStartAudioCallIntentIdentifier not bound
-!missing-field! INStartVideoCallIntentIdentifier not bound
 
 # Initial result from new rule missing-release-attribute-on-return-value
 !missing-release-attribute-on-return-value! Foundation.NSObject Intents.INCallRecord::Copy(Foundation.NSZone)'s selector's ('copyWithZone:') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

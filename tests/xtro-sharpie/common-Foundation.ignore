@@ -181,7 +181,6 @@
 !unknown-type! InternalNSNotificationHandler bound
 
 # Apple internals (we do not expose them)
-!missing-field! _NSConstantStringClassReference not bound
 !missing-type! NSConstantString not bound
 !missing-type! NSSimpleCString not bound
 

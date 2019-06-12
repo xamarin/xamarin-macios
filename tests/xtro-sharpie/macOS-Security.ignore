@@ -1402,10 +1402,7 @@
 !missing-pinvoke! SecTransformSetDataAction is not bound
 !missing-pinvoke! SecTransformSetTransformAction is not bound
 !missing-pinvoke! SecTrustCopyAnchorCertificates is not bound
-!missing-pinvoke! SecTrustedApplicationCopyData is not bound
-!missing-pinvoke! SecTrustedApplicationCreateFromPath is not bound
 !missing-pinvoke! SecTrustedApplicationGetTypeID is not bound
-!missing-pinvoke! SecTrustedApplicationSetData is not bound
 !missing-pinvoke! SecTrustGetCssmResult is not bound
 !missing-pinvoke! SecTrustGetCssmResultCode is not bound
 !missing-pinvoke! SecTrustGetResult is not bound
