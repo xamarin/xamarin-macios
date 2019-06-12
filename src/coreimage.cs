@@ -5670,7 +5670,7 @@ namespace CoreImage {
 		bool Perceptual { get; set; }
 	}
 
-	[CorImageFilter]
+	[CoreImageFilter]
 	[iOS (13,0)]
 	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
