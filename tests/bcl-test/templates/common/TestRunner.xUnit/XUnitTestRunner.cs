@@ -1038,7 +1038,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		{
 			if (categories.Any ()) {
 				foreach (var c in categories) {
-					filters.Add (XUnitFilter.CreateTraitFilter ("category", c, true));
+					var traitInfo = c.Split ("=");
+					filters.Add (XUnitFilter.CreateTraitFilter (traitInfo[0], traitInfo[1], true));
 				}
 			}
 		}
