@@ -49,7 +49,7 @@
     left: -9999px;
     padding: 10px;
     z-index: 2;
-    width: 200px;
+    min-width: 200px;
     border-style: ridge;
     border-width: thin;
 }
