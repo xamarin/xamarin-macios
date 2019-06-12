@@ -2580,7 +2580,7 @@ public class B
 			} else {
 				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
 			}
-			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (testname == "dont link" ? 40 : 15));
+			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
 		[Test]
