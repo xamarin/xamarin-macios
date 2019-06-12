@@ -4449,14 +4449,31 @@ public partial class Generator : IMemberGatherer {
 		}
 		
 		if (minfo.is_return_release) {
-			if (!needsPtrZeroCheck)
-				print ("{0}.void_objc_msgSend (ret.Handle, Selector.GetHandle (Selector.Release));", ns.Messaging);
-			else {
+
+			// Make sure we generate the required signature in Messaging only if needed 
+			// bool_objc_msgSendSuper_IntPtr: for respondsToSelector:
+			if (!send_methods.ContainsKey ("void_objc_msgSend")) {
+				print (m, "[DllImport (LIBOBJC_DYLIB, EntryPoint=\"objc_msgSendSuper\")]");
+				print (m, "public extern static void void_objc_msgSend (IntPtr receiever, IntPtr selector);");
+				RegisterMethodName ("void_objc_msgSend");
+			}
+
+			if (!needsPtrZeroCheck) {
+				print ("if (ret != null)");
+				indent++;
+				print ("global::{0}.void_objc_msgSend (ret.Handle, Selector.GetHandle (\"release\"));", ns.Messaging);
+				indent--;
+			} else {
 				// We must create the managed wrapper before calling Release on it
 				// FIXME: https://trello.com/c/1ukS9TbL/43-introduce-common-object-type-for-all-unmanaged-types-which-will-correctly-implement-idisposable-and-inativeobject
 				// We should consider using return INativeObject<T> (ptr, bool); here at some point
-				print ("global::{0} relObj = ret == IntPtr.Zero ? null : new global::{0} (ret);", mi.ReturnType.FullName);
-				print ("if (relObj != null) global::{0}.void_objc_msgSend (relObj.Handle, Selector.GetHandle (Selector.Release));", ns.Messaging);
+				print ("global::{0} relObj = null;", mi.ReturnType.FullName);
+				print ("if (ret != IntPtr.Zero) {");
+				indent++;
+				print ("relObj = new global::{0} (ret);", mi.ReturnType.FullName);
+				print ("global::{0}.void_objc_msgSend (ret, Selector.GetHandle (\"release\"));", ns.Messaging);
+				indent--;
+				print ("}");
 			}
 		}
 		
@@ -5211,13 +5228,7 @@ public partial class Generator : IMemberGatherer {
 	void PrintMethodAttributes (MemberInformation minfo)
 	{
 		MethodInfo mi = minfo.method;
-
-		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (mi)) {
-			print ("[Obsolete (\"{0}\", {1})]",
-			       oa.Message, oa.IsError ? "true" : "false");
-			print ("[EditorBrowsable (EditorBrowsableState.Never)]");
-
-		}
+		var editor_browsable_attribute = false;
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (mi)) 
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
@@ -5228,6 +5239,13 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				print ("[EditorBrowsable (EditorBrowsableState.{0})]", ea.State);
 			}
+			editor_browsable_attribute = true;
+		}
+
+		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (mi)) {
+			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
+			if (!editor_browsable_attribute)
+				print ("[EditorBrowsable (EditorBrowsableState.Never)]");
 		}
 
 		if (minfo.is_return_release)
