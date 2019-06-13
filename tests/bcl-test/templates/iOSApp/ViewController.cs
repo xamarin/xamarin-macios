@@ -88,7 +88,8 @@ namespace BCLTests {
 				runner.SkipTests (skippedTests);
 			}
 
-			runner.Run (testAssemblies);
+			await runner.Run (testAssemblies).ConfigureAwait (false);
+
 			if (options.EnableXml) {
 				runner.WriteResultsToFile (writer);
 				logger.Info ("Xml file was written to the tcp listener.");

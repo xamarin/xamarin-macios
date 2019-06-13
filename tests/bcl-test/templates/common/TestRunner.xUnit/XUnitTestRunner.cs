@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -679,7 +681,24 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			log (message);
 		}
 
-		public override void Run (IEnumerable<TestAssemblyInfo> testAssemblies)
+		static async Task WaitForEvent (WaitHandle handle, TimeSpan timeout)
+		{
+			var tcs = new TaskCompletionSource<object> ();
+			var registration = ThreadPool.RegisterWaitForSingleObject (handle, (_, timedOut) => {
+				if (timedOut)
+					tcs.TrySetCanceled ();
+				else
+					tcs.TrySetResult (null);
+			}, tcs, timeout, true);
+
+			try {
+				await tcs.Task.ConfigureAwait (false);
+			} finally {
+				registration.Unregister (handle);
+			}
+		}
+
+		public override async Task Run (IEnumerable<TestAssemblyInfo> testAssemblies)
 		{
 			if (testAssemblies == null)
 				throw new ArgumentNullException (nameof (testAssemblies));
@@ -712,7 +731,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				XElement assemblyElement = null;
 				try {
 					OnAssemblyStart (assemblyInfo.Assembly);
-					assemblyElement = Run (assemblyInfo.Assembly, assemblyInfo.FullPath);
+					assemblyElement = await Run (assemblyInfo.Assembly, assemblyInfo.FullPath).ConfigureAwait (false);
 				} catch (FileNotFoundException ex) {
 					OnWarning ($"Assembly '{assemblyInfo.Assembly}' using path '{assemblyInfo.FullPath}' cannot be found on the filesystem. xUnit requires access to actual on-disk file.");
 					OnWarning ($"Exception is '{ex}'");
@@ -883,7 +902,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			return TestFrameworkOptions.ForExecution (configuration);
 		}
 
-		XElement Run (Assembly assembly, string assemblyPath)
+		async Task<XElement> Run (Assembly assembly, string assemblyPath)
 		{
 			using (var frontController = new XunitFrontController (AppDomainSupport, assemblyPath, null, false)) {
 				using (var discoverySink = new TestDiscoverySink ()) {
@@ -915,9 +934,11 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					executionOptions.SetDisableParallelization (!RunInParallel);
 					executionOptions.SetSynchronousMessageReporting (true);
 
+					var tcs = new TaskCompletionSource<object> ();
+
 					try {
 						frontController.RunTests (testCases, resultsSink, executionOptions);
-						resultsSink.Finished.WaitOne ();
+						await WaitForEvent (resultsSink.Finished, TimeSpan.FromDays (10)).ConfigureAwait (false);
 					} finally {
 						resultsSink.Dispose ();
 					}
