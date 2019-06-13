@@ -280,7 +280,7 @@ namespace Introspection {
 				switch (name) {
 				case "render:toIOSurface:bounds:colorSpace:":
 					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
+						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
@@ -291,7 +291,7 @@ namespace Introspection {
 				case "initWithIOSurface:":
 				case "initWithIOSurface:options:":
 					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
+						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
@@ -301,7 +301,7 @@ namespace Introspection {
 				switch (name) {
 				case "initWithIOSurface:":
 					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
+						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
@@ -315,7 +315,7 @@ namespace Introspection {
 				case "setTessellator:":
 				case "tessellator":
 					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
+						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
@@ -801,7 +801,8 @@ namespace Introspection {
 				switch (declaredType.Name) {
 				case "CIImage":
 					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
+						// does not work (like other IOSurface API) in beta 1
+						return true; // return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
