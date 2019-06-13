@@ -31,16 +31,12 @@ namespace ReplayKit {
 		ActivePhoneCall = -5811,
 		FailedToSave = -5812,
 		CarPlay = -5813,
-		[iOS (11,2), TV (11,2)]
 		FailedApplicationConnectionInvalid = -5814,
-		[iOS (11,2), TV (11,2)]
 		FailedApplicationConnectionInterrupted = -5815,
-		[iOS (11,2), TV (11,2)]
 		FailedNoMatchingApplicationContext = -5816,
-		[iOS (11,2), TV (11,2)]
 		FailedMediaServicesFailure = -5817,
-		[iOS (11,2), TV (11,2)]
 		VideoMixingFailure = -5818,
+		PhotoFailure = -5819,
 	}
 
 	[NoiOS]
