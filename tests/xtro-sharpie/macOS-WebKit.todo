@@ -1,4 +1,3 @@
-## appended from unclassified file
 !deprecated-attribute-missing! WKPreferences::javaEnabled missing a [Deprecated] attribute
 !deprecated-attribute-missing! WKPreferences::plugInsEnabled missing a [Deprecated] attribute
 !deprecated-attribute-missing! WKPreferences::setJavaEnabled: missing a [Deprecated] attribute

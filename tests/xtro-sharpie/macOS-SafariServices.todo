@@ -1,4 +1,3 @@
-## appended from unclassified file
 !missing-protocol-conformance! SFSafariPage should conform to NSCopying
 !missing-protocol-conformance! SFSafariTab should conform to NSCopying
 !missing-protocol-conformance! SFSafariToolbarItem should conform to NSCopying

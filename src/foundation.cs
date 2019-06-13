@@ -2195,6 +2195,7 @@ namespace Foundation
 #if XAMCORE_2_0
 		[Abstract]
 #endif
+		[return: Release]
 		[Export ("copyWithZone:")]
 		NSObject Copy ([NullAllowed] NSZone zone);
 	}

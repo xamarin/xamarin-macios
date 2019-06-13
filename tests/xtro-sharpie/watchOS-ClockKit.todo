@@ -1,4 +1,3 @@
-## appended from unclassified file
 !missing-selector! +CLKFullColorImageProvider::providerWithFullColorImage:tintedImageProvider: not bound
 !missing-selector! CLKComplicationTemplateGraphicCircularStackImage::line1ImageProvider not bound
 !missing-selector! CLKComplicationTemplateGraphicCircularStackImage::line2TextProvider not bound

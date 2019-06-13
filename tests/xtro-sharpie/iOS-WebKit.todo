@@ -1,4 +1,3 @@
-## appended from unclassified file
 !missing-enum! WKContentMode not bound
 !missing-protocol-member! WKNavigationDelegate::webView:decidePolicyForNavigationAction:preferences:decisionHandler: not found
 !missing-selector! WKNavigation::effectiveContentMode not bound
