@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Threading;
 
 using UIKit;
 using ObjCRuntime;
@@ -88,18 +89,20 @@ namespace BCLTests {
 				runner.SkipTests (skippedTests);
 			}
 
-			runner.Run (testAssemblies);
-			if (options.EnableXml) {
-				runner.WriteResultsToFile (writer);
-				logger.Info ("Xml file was written to the tcp listener.");
-			} else {
-				string resultsFilePath = runner.WriteResultsToFile ();
-				logger.Info ($"Xml result can be found {resultsFilePath}");
-			}
-			
-			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");
-			if (options.TerminateAfterExecution)
-				TerminateWithSuccess ();
+			ThreadPool.QueueUserWorkItem ((v) => {
+				runner.Run (testAssemblies);
+				if (options.EnableXml) {
+					runner.WriteResultsToFile (writer);
+					logger.Info ("Xml file was written to the tcp listener.");
+				} else {
+					string resultsFilePath = runner.WriteResultsToFile ();
+					logger.Info ($"Xml result can be found {resultsFilePath}");
+				}
+
+				logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");
+				if (options.TerminateAfterExecution)
+					TerminateWithSuccess ();
+			});
 
 		}
 

@@ -15,7 +15,7 @@ namespace Xamarin.iOS.UnitTests
 		public long ExecutedTests { get; protected set; } = 0;
 		public long TotalTests { get; protected set; } = 0;
 		public long FilteredTests { get; protected set; } = 0;
-		public bool RunInParallel { get; set; } = false;
+		public bool RunInParallel { get; set; } = true;
 		public string TestsRootDirectory { get; set; }
 		public bool RunAllTestsByDefault { get; set; } = true;
 		public bool LogExcludedTests { get; set; }
