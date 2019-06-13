@@ -179,6 +179,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10,14 },
 					{ "UserNotifications", "UserNotifications", 10,14 },
 					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
+
+					{ "DeviceCheck", "DeviceCheck", 10,15 },
 				};
 			}
 			return mac_frameworks;
@@ -285,7 +287,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "ARKit", "ARKit", 11 },
 				{ "CoreNFC", "CoreNFC", 11, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked */
-				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
+				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), new Version (13, 0) },
 				{ "IdentityLookup", "IdentityLookup", 11 },
 				{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 				{ "CoreML", "CoreML", 11 },
@@ -419,7 +421,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 					{ "VideoToolbox", "VideoToolbox", 10,2 },
 
-					{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
+					{ "DeviceCheck", "DeviceCheck", new Version (11, 0), new Version (13, 0) },
 					{ "CoreML", "CoreML", 11 },
 					{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 					{ "Vision", "Vision", 11 },

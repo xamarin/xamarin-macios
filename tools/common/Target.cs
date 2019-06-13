@@ -187,9 +187,12 @@ namespace Xamarin.Bundler {
 						case "MetalKit":
 						case "MetalPerformanceShaders":
 						case "CoreNFC":
-						case "DeviceCheck":
 							// some frameworks do not exists on simulators and will result in linker errors if we include them
 							if (App.IsSimulatorBuild)
+								continue;
+							break;
+						case "DeviceCheck":
+							if (App.IsSimulatorBuild && App.SdkVersion.Major < 13)
 								continue;
 							break;
 						case "PushKit":
