@@ -1,2 +1,0 @@
-!missing-protocol-member! WCSessionDelegate::sessionCompanionAppInstalledDidChange: not found
-!missing-selector! WCSession::isCompanionAppInstalled not bound

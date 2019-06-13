@@ -103,6 +103,11 @@ namespace WatchConnectivity {
 		[NoWatch][iOS (10,0)]
 		[Export ("remainingComplicationUserInfoTransfers")]
 		nuint RemainingComplicationUserInfoTransfers { get; }
+
+		[Watch (6,0)]
+		[NoiOS]
+		[Export ("companionAppInstalled")]
+		bool CompanionAppInstalled { [Bind("isCompanionAppInstalled")] get; }
 	}
 
 	interface IWCSessionDelegate { }
@@ -167,6 +172,11 @@ namespace WatchConnectivity {
 		[NoWatch][iOS (9,3)]
 		[Export ("sessionDidDeactivate:")]
 		void DidDeactivate (WCSession session);
+
+		[Watch (6,0)]
+		[NoiOS]
+		[Export ("sessionCompanionAppInstalledDidChange:")]
+		void CompanionAppInstalledDidChange (WCSession session);
 	}
 
 	[iOS (9,0)]
