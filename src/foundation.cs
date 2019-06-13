@@ -10126,9 +10126,7 @@ namespace Foundation
 	}
 
 	[NoWatch]
-#if XAMCORE_3_0
 	[DisableDefaultCtor] // the instance just crash when trying to call selectors
-#endif
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSNetServiceDelegate)})]
 	interface NSNetService {
 		[DesignatedInitializer]

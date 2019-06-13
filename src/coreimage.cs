@@ -5637,4 +5637,88 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CISaliencyMapFilter {
 	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIDocumentEnhancer {
+
+		[CoreImageFilterProperty ("inputAmount")]
+		float Amount { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIKMeans {
+
+		[CoreImageFilterProperty ("inputMeans")]
+		CIImage Means { get; set; }
+
+		[CoreImageFilterProperty ("inputCount")]
+		float Count { get; set; }
+
+		[CoreImageFilterProperty ("inputExtent")]
+		CIVector Extent { get; set; }
+
+		[CoreImageFilterProperty ("inputPasses")]
+		int Passes { get; set; }
+
+		[CoreImageFilterProperty ("inputPerceptual")]
+		bool Perceptual { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMorphologyRectangleMaximum {
+
+		[CoreImageFilterProperty ("inputHeight")]
+		int Height { get; set; }
+
+		[CoreImageFilterProperty ("inputWidth")]
+		int Width { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIMorphologyRectangleMinimum {
+
+		[CoreImageFilterProperty ("inputHeight")]
+		int Height { get; set; }
+
+		[CoreImageFilterProperty ("inputWidth")]
+		int Width { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIPaletteCentroid {
+
+		[CoreImageFilterProperty ("inputPaletteImage")]
+		CIImage PaletteImage { get; set; }
+
+		[CoreImageFilterProperty ("inputPerceptual")]
+		bool Perceptual { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIPalettize {
+
+		[CoreImageFilterProperty ("inputPaletteImage")]
+		CIImage PaletteImage { get; set; }
+
+		[CoreImageFilterProperty ("inputPerceptual")]
+		bool Perceptual { get; set; }
+	}
 }

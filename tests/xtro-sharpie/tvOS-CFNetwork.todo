@@ -1,0 +1,5 @@
+!missing-field! kCFStreamNetworkServiceTypeAVStreaming not bound
+!missing-field! kCFStreamNetworkServiceTypeResponsiveAV not bound
+!missing-field! kCFStreamPropertyAllowConstrainedNetworkAccess not bound
+!missing-field! kCFStreamPropertyAllowExpensiveNetworkAccess not bound
+!missing-field! kCFStreamPropertyConnectionIsExpensive not bound

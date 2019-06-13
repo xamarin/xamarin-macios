@@ -124,6 +124,8 @@ SDK_ARGS= \
 	IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) \
 	TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) \
 	WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) \
+	WATCHOS5_VERSION=$(WATCH_SDK_VERSION) WATCHOS5_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) \
+	MACOS_VERSION=$(OSX_SDK_VERSION) MACOS_VERSION_MIN=$(MIN_OSX_SDK_VERSION)
 	IGNORE_PROVISION_LLVM=1
 
 ifdef DISABLE_DOWNLOAD_LLVM
@@ -1370,16 +1372,23 @@ WATCHOS_TARGET_SHAREDLIBLOGPROFILER = \
 WATCHOS_TARGET_LIBMONONATIVECOMPAT        = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.a \
 
+
+ifdef MONO_BUILD_FROM_SOURCE
+WATCHOS_ARM6432_LIBMONO_NATIVE_NAME = libmono-native-unified
+else
+WATCHOS_ARM6432_LIBMONO_NATIVE_NAME = libmono-native
+endif
+
 WATCHOS_TARGET_LIBMONONATIVEUNIFIED       = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.a \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.a \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).a \
 
 WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.dylib \
 
 WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.dylib \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).dylib \
 
 WATCHOS_TARGET_MONOFRAMEWORK = \
 	$(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono \
@@ -1463,10 +1472,10 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.dylib: $(WATC
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib
+	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib -create -output $@
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib \
-		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmono-native.dylib @rpath/libmono-native-unified.dylib \
+		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).dylib @rpath/libmono-native-unified.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \

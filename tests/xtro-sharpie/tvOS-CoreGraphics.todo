@@ -1,0 +1,14 @@
+!missing-enum! CGPDFTagType not bound
+!missing-field! kCGColorSpaceExtendedLinearDisplayP3 not bound
+!missing-field! kCGColorSpaceExtendedLinearITUR_2020 not bound
+!missing-field! kCGColorSpaceITUR_2020_PQ_EOTF not bound
+!missing-field! kCGPDFTagPropertyActualText not bound
+!missing-field! kCGPDFTagPropertyAlternativeText not bound
+!missing-field! kCGPDFTagPropertyLanguageText not bound
+!missing-field! kCGPDFTagPropertyTitleText not bound
+!missing-pinvoke! CGColorConversionInfoCreateWithOptions is not bound
+!missing-pinvoke! CGColorCreateGenericGrayGamma2_2 is not bound
+!missing-pinvoke! CGColorCreateSRGB is not bound
+!missing-pinvoke! CGPDFContextBeginTag is not bound
+!missing-pinvoke! CGPDFContextEndTag is not bound
+!missing-pinvoke! CGPDFTagTypeGetName is not bound

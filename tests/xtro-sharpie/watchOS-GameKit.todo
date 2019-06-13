@@ -1,0 +1,5 @@
+!deprecated-attribute-missing! GKPlayer::playerID missing a [Deprecated] attribute
+!missing-enum! GKTournamentErrorCode not bound
+!missing-field! GKTournamentErrorDomain not bound
+!missing-selector! +GKLocalPlayer::local not bound
+!missing-selector! GKLocalPlayer::loadChallengableFriendsWithCompletionHandler: not bound

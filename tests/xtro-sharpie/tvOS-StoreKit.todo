@@ -1,0 +1,10 @@
+!deprecated-attribute-missing! SKDownload::contentLength missing a [Deprecated] attribute
+!missing-protocol! SKPaymentQueueDelegate not bound
+!missing-protocol-member! SKPaymentTransactionObserver::paymentQueueDidChangeStorefront: not found
+!missing-selector! SKDownload::expectedContentLength not bound
+!missing-selector! SKPaymentQueue::delegate not bound
+!missing-selector! SKPaymentQueue::setDelegate: not bound
+!missing-selector! SKPaymentQueue::storefront not bound
+!missing-selector! SKStorefront::countryCode not bound
+!missing-selector! SKStorefront::identifier not bound
+!missing-type! SKStorefront not bound

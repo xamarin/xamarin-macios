@@ -1,0 +1,4 @@
+!missing-enum! QLPreviewItemEditingMode not bound
+!missing-protocol-member! QLPreviewControllerDelegate::previewController:didSaveEditedCopyOfPreviewItem:atURL: not found
+!missing-protocol-member! QLPreviewControllerDelegate::previewController:didUpdateContentsOfPreviewItem: not found
+!missing-protocol-member! QLPreviewControllerDelegate::previewController:editingModeForPreviewItem: not found

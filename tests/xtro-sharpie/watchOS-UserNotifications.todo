@@ -1,0 +1,7 @@
+!missing-selector! UNMutableNotificationContent::setTargetContentIdentifier: not bound
+!missing-selector! UNMutableNotificationContent::targetContentIdentifier not bound
+!missing-selector! UNNotificationContent::targetContentIdentifier not bound
+!missing-selector! UNNotificationServiceExtension::didReceiveNotificationRequest:withContentHandler: not bound
+!missing-selector! UNNotificationServiceExtension::serviceExtensionTimeWillExpire not bound
+!missing-selector! UNNotificationSettings::announcementSetting not bound
+!missing-type! UNNotificationServiceExtension not bound

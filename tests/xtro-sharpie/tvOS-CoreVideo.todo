@@ -1,0 +1,4 @@
+!missing-field! kCVImageBufferAlphaChannelMode_PremultipliedAlpha not bound
+!missing-field! kCVImageBufferAlphaChannelMode_StraightAlpha not bound
+!missing-field! kCVImageBufferAlphaChannelModeKey not bound
+!missing-field! kCVMetalTextureStorageMode not bound

@@ -162,8 +162,8 @@ define NativeCompilationTemplate
 	$$(call Q_2,LD,    [tvos]) $(DEVICE_CC)    $(DEVICETV_CFLAGS)            $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks -fapplication-extension
 endef
 
-$(eval $(call NativeCompilationTemplate,,-O2))
-$(eval $(call NativeCompilationTemplate,-debug,-DDEBUG))
+$(eval $(call NativeCompilationTemplate,,-O2 -DOBJC_OLD_DISPATCH_PROTOTYPES=1))
+$(eval $(call NativeCompilationTemplate,-debug,-DDEBUG -DOBJC_OLD_DISPATCH_PROTOTYPES=1))
 
 .libs/ios .libs/watchos .libs/tvos:
 	$(Q) mkdir -p $@

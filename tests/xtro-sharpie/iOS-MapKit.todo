@@ -1,0 +1,131 @@
+!deprecated-attribute-missing! MKLocalSearchCompleter::filterType missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKLocalSearchCompleter::setFilterType: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapCamera::altitude missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapCamera::setAltitude: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapSnapshotOptions::scale missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapSnapshotOptions::setScale: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapSnapshotOptions::setShowsPointsOfInterest: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapSnapshotOptions::showsPointsOfInterest missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::setShowsPointsOfInterest: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MKMapView::showsPointsOfInterest missing a [Deprecated] attribute
+!missing-designated-initializer! MKLocalSearchRequest::init is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MKLocalSearchRequest::initWithCompletion: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MKPointAnnotation::init is missing an [DesignatedInitializer] attribute
+!missing-enum! MKLocalSearchCompleterResultType not bound
+!missing-enum! MKLocalSearchResultType not bound
+!missing-field! MKMapCameraZoomDefault not bound
+!missing-field! MKPointOfInterestCategoryAirport not bound
+!missing-field! MKPointOfInterestCategoryAmusementPark not bound
+!missing-field! MKPointOfInterestCategoryAquarium not bound
+!missing-field! MKPointOfInterestCategoryATM not bound
+!missing-field! MKPointOfInterestCategoryBakery not bound
+!missing-field! MKPointOfInterestCategoryBank not bound
+!missing-field! MKPointOfInterestCategoryBeach not bound
+!missing-field! MKPointOfInterestCategoryBrewery not bound
+!missing-field! MKPointOfInterestCategoryCafe not bound
+!missing-field! MKPointOfInterestCategoryCampground not bound
+!missing-field! MKPointOfInterestCategoryCarRental not bound
+!missing-field! MKPointOfInterestCategoryEVCharger not bound
+!missing-field! MKPointOfInterestCategoryFireStation not bound
+!missing-field! MKPointOfInterestCategoryFitnessCenter not bound
+!missing-field! MKPointOfInterestCategoryFoodMarket not bound
+!missing-field! MKPointOfInterestCategoryGasStation not bound
+!missing-field! MKPointOfInterestCategoryHospital not bound
+!missing-field! MKPointOfInterestCategoryHotel not bound
+!missing-field! MKPointOfInterestCategoryLaundry not bound
+!missing-field! MKPointOfInterestCategoryLibrary not bound
+!missing-field! MKPointOfInterestCategoryMarina not bound
+!missing-field! MKPointOfInterestCategoryMovieTheater not bound
+!missing-field! MKPointOfInterestCategoryMuseum not bound
+!missing-field! MKPointOfInterestCategoryNationalPark not bound
+!missing-field! MKPointOfInterestCategoryNightlife not bound
+!missing-field! MKPointOfInterestCategoryPark not bound
+!missing-field! MKPointOfInterestCategoryParking not bound
+!missing-field! MKPointOfInterestCategoryPharmacy not bound
+!missing-field! MKPointOfInterestCategoryPlayground not bound
+!missing-field! MKPointOfInterestCategoryPolice not bound
+!missing-field! MKPointOfInterestCategoryPostOffice not bound
+!missing-field! MKPointOfInterestCategoryPublicTransport not bound
+!missing-field! MKPointOfInterestCategoryReligiousSite not bound
+!missing-field! MKPointOfInterestCategoryRestaurant not bound
+!missing-field! MKPointOfInterestCategoryRestroom not bound
+!missing-field! MKPointOfInterestCategorySchool not bound
+!missing-field! MKPointOfInterestCategoryStadium not bound
+!missing-field! MKPointOfInterestCategoryStore not bound
+!missing-field! MKPointOfInterestCategoryTheater not bound
+!missing-field! MKPointOfInterestCategoryUniversity not bound
+!missing-field! MKPointOfInterestCategoryWinery not bound
+!missing-field! MKPointOfInterestCategoryZoo not bound
+!missing-protocol! MKGeoJSONObject not bound
+!missing-protocol-conformance! MKMultiPoint should conform to MKGeoJSONObject (defined in 'MKGeoJSONSerialization' category)
+!missing-protocol-conformance! MKPointAnnotation should conform to MKGeoJSONObject (defined in 'MKGeoJSONSerialization' category)
+!missing-protocol-conformance! MKPolygon should conform to MKGeoJSONObject (defined in 'MKGeoJSONSerialization' category)
+!missing-protocol-conformance! MKPolyline should conform to MKGeoJSONObject (defined in 'MKGeoJSONSerialization' category)
+!missing-selector! +MKPointOfInterestFilter::filterExcludingAllCategories not bound
+!missing-selector! +MKPointOfInterestFilter::filterIncludingAllCategories not bound
+!missing-selector! MKGeoJSONDecoder::geoJSONObjectsWithData:error: not bound
+!missing-selector! MKGeoJSONFeature::geometry not bound
+!missing-selector! MKGeoJSONFeature::identifier not bound
+!missing-selector! MKGeoJSONFeature::properties not bound
+!missing-selector! MKLocalSearchCompleter::pointOfInterestFilter not bound
+!missing-selector! MKLocalSearchCompleter::resultTypes not bound
+!missing-selector! MKLocalSearchCompleter::setPointOfInterestFilter: not bound
+!missing-selector! MKLocalSearchCompleter::setResultTypes: not bound
+!missing-selector! MKLocalSearchRequest::initWithNaturalLanguageQuery: not bound
+!missing-selector! MKLocalSearchRequest::initWithNaturalLanguageQuery:region: not bound
+!missing-selector! MKLocalSearchRequest::pointOfInterestFilter not bound
+!missing-selector! MKLocalSearchRequest::resultTypes not bound
+!missing-selector! MKLocalSearchRequest::setPointOfInterestFilter: not bound
+!missing-selector! MKLocalSearchRequest::setResultTypes: not bound
+!missing-selector! MKMapCamera::centerCoordinateDistance not bound
+!missing-selector! MKMapCamera::setCenterCoordinateDistance: not bound
+!missing-selector! MKMapCameraBoundary::initWithCoder: not bound
+!missing-selector! MKMapCameraBoundary::initWithCoordinateRegion: not bound
+!missing-selector! MKMapCameraBoundary::initWithMapRect: not bound
+!missing-selector! MKMapCameraBoundary::mapRect not bound
+!missing-selector! MKMapCameraBoundary::region not bound
+!missing-selector! MKMapCameraZoomRange::initWithMaxCenterCoordinateDistance: not bound
+!missing-selector! MKMapCameraZoomRange::initWithMinCenterCoordinateDistance: not bound
+!missing-selector! MKMapCameraZoomRange::initWithMinCenterCoordinateDistance:maxCenterCoordinateDistance: not bound
+!missing-selector! MKMapCameraZoomRange::maxCenterCoordinateDistance not bound
+!missing-selector! MKMapCameraZoomRange::minCenterCoordinateDistance not bound
+!missing-selector! MKMapItem::pointOfInterestCategory not bound
+!missing-selector! MKMapItem::setPointOfInterestCategory: not bound
+!missing-selector! MKMapSnapshot::traitCollection not bound
+!missing-selector! MKMapSnapshotOptions::pointOfInterestFilter not bound
+!missing-selector! MKMapSnapshotOptions::setPointOfInterestFilter: not bound
+!missing-selector! MKMapSnapshotOptions::setTraitCollection: not bound
+!missing-selector! MKMapSnapshotOptions::traitCollection not bound
+!missing-selector! MKMapView::cameraBoundary not bound
+!missing-selector! MKMapView::cameraZoomRange not bound
+!missing-selector! MKMapView::pointOfInterestFilter not bound
+!missing-selector! MKMapView::setCameraBoundary: not bound
+!missing-selector! MKMapView::setCameraBoundary:animated: not bound
+!missing-selector! MKMapView::setCameraZoomRange: not bound
+!missing-selector! MKMapView::setCameraZoomRange:animated: not bound
+!missing-selector! MKMapView::setPointOfInterestFilter: not bound
+!missing-selector! MKMultiPolygon::initWithPolygons: not bound
+!missing-selector! MKMultiPolygon::polygons not bound
+!missing-selector! MKMultiPolygonRenderer::initWithMultiPolygon: not bound
+!missing-selector! MKMultiPolygonRenderer::multiPolygon not bound
+!missing-selector! MKMultiPolyline::initWithPolylines: not bound
+!missing-selector! MKMultiPolyline::polylines not bound
+!missing-selector! MKMultiPolylineRenderer::initWithMultiPolyline: not bound
+!missing-selector! MKMultiPolylineRenderer::multiPolyline not bound
+!missing-selector! MKOverlayPathRenderer::setShouldRasterize: not bound
+!missing-selector! MKOverlayPathRenderer::shouldRasterize not bound
+!missing-selector! MKPointAnnotation::initWithCoordinate: not bound
+!missing-selector! MKPointAnnotation::initWithCoordinate:title:subtitle: not bound
+!missing-selector! MKPointOfInterestFilter::excludesCategory: not bound
+!missing-selector! MKPointOfInterestFilter::includesCategory: not bound
+!missing-selector! MKPointOfInterestFilter::initExcludingCategories: not bound
+!missing-selector! MKPointOfInterestFilter::initIncludingCategories: not bound
+!missing-type! MKGeoJSONDecoder not bound
+!missing-type! MKGeoJSONFeature not bound
+!missing-type! MKMapCameraBoundary not bound
+!missing-type! MKMapCameraZoomRange not bound
+!missing-type! MKMultiPolygon not bound
+!missing-type! MKMultiPolygonRenderer not bound
+!missing-type! MKMultiPolyline not bound
+!missing-type! MKMultiPolylineRenderer not bound
+!missing-type! MKPointOfInterestFilter not bound

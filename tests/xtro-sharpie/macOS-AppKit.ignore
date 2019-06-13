@@ -949,7 +949,6 @@
 !missing-selector! NSResponder::setInterfaceStyle: not bound
 !missing-selector! NSResponder::undoManager not bound
 !missing-selector! NSSavePanel::selectText: not bound
-!missing-selector! NSScreen::maximumExtendedDynamicRangeColorComponentValue not bound
 !missing-selector! NSScroller::setFloatValue:knobProportion: not bound
 !missing-selector! NSSegmentedCell::interiorBackgroundStyleForSegment: not bound
 !missing-selector! NSSegmentedControl::indexOfSelectedItem not bound

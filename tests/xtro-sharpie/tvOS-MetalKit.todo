@@ -1,0 +1,6 @@
+!missing-selector! MTKView::depthStencilAttachmentTextureUsage not bound
+!missing-selector! MTKView::multisampleColorAttachmentTextureUsage not bound
+!missing-selector! MTKView::preferredDevice not bound
+!missing-selector! MTKView::preferredDrawableSize not bound
+!missing-selector! MTKView::setDepthStencilAttachmentTextureUsage: not bound
+!missing-selector! MTKView::setMultisampleColorAttachmentTextureUsage: not bound

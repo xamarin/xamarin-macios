@@ -611,6 +611,7 @@ namespace UserNotifications {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
+	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // as per docs
 	[DisableDefaultCtor]
