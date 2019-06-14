@@ -58,6 +58,7 @@ namespace xharness
 		public virtual string DefaultAssemblyReference { get { return "Xamarin.iOS"; } }
 		public virtual IEnumerable<string> ReferenceToRemove { get { return Enumerable.Empty<string> (); } }
 		public virtual Dictionary<string, string> NewPropertiesToAdd { get { return new Dictionary<string, string> (); } }
+		public virtual HashSet<string> PropertiesToRemove {  get { return null;  } }
 
 		public const string FSharpGuid = "{F2A71F9B-5D33-465A-A702-920D77279786}";
 		public const string CSharpGuid = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
@@ -95,7 +96,13 @@ namespace xharness
 
 			var newProperties = NewPropertiesToAdd;
 			foreach (var k in newProperties.Keys)
-				inputProject.SetTopLevelPropertyGroupValue (k, newProperties[k]);	
+				inputProject.SetTopLevelPropertyGroupValue (k, newProperties[k]);
+
+			var removedProperties = PropertiesToRemove;
+			if (removedProperties != null) {
+				foreach (var p in removedProperties)
+					inputProject.RemoveNode (p, false);
+			}
 
 			inputProject.FixProjectReferences (Suffix, FixProjectReference);
 			inputProject.SetAssemblyReference ("OpenTK", "OpenTK-1.0");

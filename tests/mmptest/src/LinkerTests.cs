@@ -67,14 +67,6 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void PlatformSDKOnClassic_ShouldNotBeSupported ()
-		{
-			MMPTests.RunMMPTest (tmpDir => {
-				TI.TestClassicExecutable (tmpDir, csprojConfig: "<MonoBundlingExtraArgs>--linkplatform</MonoBundlingExtraArgs>\n", includeMonoRuntime:true, shouldFail: true);
-			});
-		}
-
-		[Test]
 		[TestCase ("linker")]
 		[TestCase ("code")]
 		[TestCase ("ignore")]
