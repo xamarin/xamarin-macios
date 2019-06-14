@@ -59,16 +59,15 @@ namespace WebKit
 		WebContentProcessTerminated,
 		WebViewInvalidated,
 		JavaScriptExceptionOccurred,
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		JavaScriptResultTypeIsUnsupported,
-		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
+		// Xcode 9
 		ContentRuleListStoreCompileFailed,
-		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
 		ContentRuleListStoreLookUpFailed,
-		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
 		ContentRuleListStoreRemoveFailed,
-		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
-		ContentRuleListStoreVersionMismatch
+		ContentRuleListStoreVersionMismatch,
+		// Xcode 11
+		AttributedStringContentFailedToLoad,
+		AttributedStringContentLoadTimedOut,
 	}
 
 #if !MONOMAC || !XAMCORE_4_0
