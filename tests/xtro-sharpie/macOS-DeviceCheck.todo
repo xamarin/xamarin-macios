@@ -1,6 +1,0 @@
-!missing-enum! DCError not bound
-!missing-field! DCErrorDomain not bound
-!missing-selector! +DCDevice::currentDevice not bound
-!missing-selector! DCDevice::generateTokenWithCompletionHandler: not bound
-!missing-selector! DCDevice::isSupported not bound
-!missing-type! DCDevice not bound
