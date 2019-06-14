@@ -9,6 +9,7 @@
 
 using System;
 using NUnit.Framework;
+using System.Globalization;
 
 #if XAMCORE_2_0
 using Foundation;
@@ -32,9 +33,14 @@ namespace MonoTouchFixtures.Security {
 			var desc = SecStatusCode.Success.GetStatusDescription ();
 			Assert.NotNull (desc, $"{nameof (desc)} not null");
 
-			// This value generated from objc enum documentation and very unlikely to change.
-			var noErr = "No error.";
-			Assert.That (desc, Is.EqualTo (noErr), $"{nameof (desc)} == {noErr}");
+			var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+			if (lang.Equals ("en", StringComparison.InvariantCultureIgnoreCase)) {
+				// This value generated from objc enum documentation and very unlikely to change.
+				var noErr = "No error.";
+				Assert.That (desc, Is.EqualTo (noErr), $"{nameof (desc)} == {noErr}");
+			} else {
+				Assert.Inconclusive ($"Device in a not known language {lang}.");
+			}
 		}
 	}
 }
