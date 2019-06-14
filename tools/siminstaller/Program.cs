@@ -260,7 +260,12 @@ namespace xsiminstaller {
 			}
 
 			if (install.Count > 0) {
-				Console.WriteLine ("Unknown simulators: {0}", string.Join (", ", install));
+				if (only_check) {
+					foreach (var sim in install)
+						Console.WriteLine ($"{sim} (unknown)");
+				} else {
+					Console.WriteLine ("Unknown simulators: {0}", string.Join (", ", install));
+				}
 				return 1;
 			}
 
