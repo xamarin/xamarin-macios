@@ -49,7 +49,6 @@
     <Folder Include="unit\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\ClassicTests.cs" />
     <Compile Include="src\MMPTest.cs" />
     <Compile Include="src\NativeReferencesTests.cs" />
     <Compile Include="..\common\mac\ProjectTestHelpers.cs">
