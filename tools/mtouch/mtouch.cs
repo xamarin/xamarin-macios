@@ -672,6 +672,14 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("\txamarin_register_modules = xamarin_register_modules_impl;");
 					sw.WriteLine ("}");
 
+					if (app.Platform == ApplePlatform.WatchOS && app.SdkVersion.Major >= 6) {
+						sw.WriteLine ();
+						sw.WriteLine ("extern \"C\" { int WKExtensionMain (int argc, char* argv[]); }");
+						sw.WriteLine ("int main (int argc, char *argv[])");
+						sw.WriteLine ("{");
+						sw.WriteLine ("\treturn WKExtensionMain (argc, argv);");
+						sw.WriteLine ("}");
+					}
 				}
 				WriteIfDifferent (main_source, sb.ToString (), true);
 			} catch (MonoTouchException) {
