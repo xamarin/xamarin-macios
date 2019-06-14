@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+# Testing mono build here, not running our tests.
+exit 0
+
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 WORKSPACE=$(pwd)
 
