@@ -2340,4 +2340,29 @@ namespace UIKit {
 		Mixed,
 		Hidden,
 	}
+
+	[Flags, iOS (13,0)]
+	[Native]
+	public enum UIMenuOptions : ulong
+	{
+		DisplayInline = 1uL << 0,
+		Destructive = 1uL << 1
+	}
+	
+	[Flags, iOS (13,0)]
+	[Native]
+	public enum UIActionOptions : ulong
+	{
+		Disabled = 1uL << 0,
+		Selected = 1uL << 1,
+		Destructive = 1uL << 2
+	}
+
+	[NoWatch, NoTV, iOS (13,0)]
+	[Native]
+	public enum UIContextMenuInteractionCommitStyle : ulong
+	{
+		Dismiss = 0,
+		Pop
+	}	
 }

@@ -1794,6 +1794,21 @@ namespace UIKit {
 		void ShowFrom (CGRect rect, UIView inView, bool animated);
 	}
 
+	delegate void UIActionHandler (UIAction action);
+
+	[iOS (13,0)]
+	[BaseType (typeof(UIMenuElement<UIAction>))]
+	[DisableDefaultCtor]
+	interface UIAction
+	{
+		[Export ("options")]
+		UIActionOptions Options { get; }
+	
+		[Static]
+		[Export ("actionWithTitle:image:options:handler:")]
+		UIAction Create (string title, [NullAllowed] UIImage image, UIActionOptions options, UIActionHandler handler);
+	}
+		
 	interface IUIActionSheetDelegate {}
 
 	[NoTV]
@@ -3196,6 +3211,47 @@ namespace UIKit {
 		AccessibilityExtraExtraExtraLarge
 	}
 
+	delegate UIViewController UIContextMenuContentPreviewProvider ();
+#if MISSING_GENERATOR_SUPPORT
+	delegate UIMenu<UIAction> UIContextMenuActionProvider (UIMenuElement<UIAction> [] suggestedActions);
+#endif
+	[NoWatch, NoTV, iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIContextMenuConfiguration
+	{
+		[Export ("identifier")]
+		INSCopying Identifier { get; }
+
+#if MISSING_GENERATOR_SUPPORT
+		[Static]
+		[Export ("configurationWithIdentifier:previewProvider:actionProvider:")]
+		UIContextMenuConfiguration Create ([NullAllowed] INSCopying identifier, [NullAllowed] UIContextMenuContentPreviewProvider previewProvider, [NullAllowed] UIContextMenuActionProvider actionProvider);
+#endif
+	}
+
+	interface IUIContextMenuInteractionCommitAnimating {}
+	[NoWatch, NoTV, iOS (13,0)]
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	interface UIContextMenuInteractionCommitAnimating
+	{
+		[Abstract]
+		[Export ("preferredCommitStyle", ArgumentSemantic.Assign)]
+		UIContextMenuInteractionCommitStyle PreferredCommitStyle { get; set; }
+	
+		[Abstract]
+		[NullAllowed, Export ("previewViewController")]
+		UIViewController PreviewViewController { get; }
+	
+		[Abstract]
+		[Export ("addAnimations:")]
+		void AddAnimations (Action animations);
+	
+		[Abstract]
+		[Export ("addCompletion:")]
+		void AddCompletion (Action completion);
+	}
+		
 	interface IUICoordinateSpace {}
 	
 	[Protocol]
@@ -4082,6 +4138,37 @@ namespace UIKit {
 		[iOS (11,0)]
 		[Export ("collectionView:shouldSpringLoadItemAtIndexPath:withContext:")]
 		bool ShouldSpringLoadItem (UICollectionView collectionView, NSIndexPath indexPath, IUISpringLoadedInteractionContext context);
+
+		[NoWatch, NoTV, iOS (13,0)]
+		[Export ("collectionView:shouldBeginMultipleSelectionInteractionAtIndexPath:")]
+		bool ShouldBeginMultipleSelectionInteraction (UICollectionView collectionView, NSIndexPath indexPath);
+	
+		[NoWatch, NoTV, iOS (13,0)]
+		[Export ("collectionView:didBeginMultipleSelectionInteractionAtIndexPath:")]
+		void DidBeginMultipleSelectionInteraction (UICollectionView collectionView, NSIndexPath indexPath);
+	
+		[NoWatch, NoTV, iOS (13,0)]
+		[Export ("collectionViewDidEndMultipleSelectionInteraction:")]
+		void DidEndMultipleSelectionInteraction (UICollectionView collectionView);
+	
+		[NoWatch, NoTV, iOS (13,0)]
+		[Export ("collectionView:contextMenuConfigurationForItemAtIndexPath:point:")]
+		[return: NullAllowed]
+		UIContextMenuConfiguration GetContextMenuConfiguration (UICollectionView collectionView, NSIndexPath itemIndexPath, CGPoint point);
+	
+		[NoWatch, NoTV, iOS (13,0)]
+		[Export ("collectionView:previewForHighlightingContextMenuWithConfiguration:")]
+		[return: NullAllowed]
+		UITargetedPreview GetPreviewForHighlightingContextMenu (UICollectionView collectionView, UIContextMenuConfiguration configuration);
+	
+		[NoWatch, NoTV, iOS (13,0)]
+		[Export ("collectionView:previewForDismissingContextMenuWithConfiguration:")]
+		[return: NullAllowed]
+		UITargetedPreview GetPreviewForDismissingContextMenu (UICollectionView collectionView, UIContextMenuConfiguration configuration);
+	
+		[NoWatch, NoTV, iOS (13,0)]
+		[Export ("collectionView:willCommitMenuWithAnimator:")]
+		void WillCommitMenu (UICollectionView collectionView, IUIContextMenuInteractionCommitAnimating animator);
 	}
 
 	[iOS (6,0)]
@@ -7436,6 +7523,7 @@ namespace UIKit {
 	
 	        [Watch (6,0), TV (13,0), iOS (13,0)]
 	        [Export ("imageWithConfiguration:")]
+			[return: NullAllowed]
 	        UIImage FromConfiguration (UIImageConfiguration configuration);
 	
 	        [Watch (6, 0), TV (13, 0), iOS (13, 0)]
@@ -8667,6 +8755,36 @@ namespace UIKit {
 		NSString MenuFrameDidChangeNotification { get; }
 	}
 
+	[iOS (13,0)]
+	[BaseType (typeof(UIMenuElement<NSObject>))]
+	[DisableDefaultCtor]
+	interface UIMenu<T> : NSSecureCoding
+	{
+		[Export ("identifier")]
+		string Identifier { get; }
+	
+		[Export ("options")]
+		UIMenuOptions Options { get; }
+	
+		[Export ("children")]
+		UIMenuElement<T>[] Children { get; }
+	
+		[Export ("menuByReplacingChildren:")]
+		UIMenu<T> MenuByReplacingChildren (UIMenuElement<T>[] newChildren);
+	}
+
+	[iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIMenuElement<T> : NSCopying
+	{
+		[Export ("title")]
+		string Title { get; }
+	
+		[NullAllowed, Export ("image")]
+		UIImage Image { get; }
+	}
+	
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	interface UIMenuItem {
@@ -9718,6 +9836,42 @@ namespace UIKit {
 		[Export ("title")]
 		string Title { get; }
 	}
+
+	[NoWatch, NoTV, iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIPreviewParameters : NSCopying
+	{
+		[Export ("initWithTextLineRects:")]
+		IntPtr Constructor (NSValue[] textLineRects);
+	
+		[NullAllowed, Export ("visiblePath", ArgumentSemantic.Copy)]
+		UIBezierPath VisiblePath { get; set; }
+	
+		[Export ("backgroundColor", ArgumentSemantic.Copy)]
+		UIColor BackgroundColor { get; set; }
+	}
+
+	[NoWatch, NoTV, iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UIPreviewTarget : NSCopying
+	{
+		[Export ("initWithContainer:center:transform:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIView container, CGPoint center, CGAffineTransform transform);
+	
+		[Export ("initWithContainer:center:")]
+		IntPtr Constructor (UIView container, CGPoint center);
+	
+		[Export ("container")]
+		UIView Container { get; }
+	
+		[Export ("center")]
+		CGPoint Center { get; }
+	
+		[Export ("transform")]
+		CGAffineTransform Transform { get; }
+	}	
 	
 	[BaseType (typeof (UIView))]
 	interface UIProgressView : NSCoding {
@@ -17574,6 +17728,38 @@ namespace UIKit {
 		[Export ("previewForURL:title:target:")]
 		UITargetedDragPreview GetPreview (NSUrl url, [NullAllowed] string title, UIDragPreviewTarget target);
 	}
+
+	[NoWatch, NoTV, iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface UITargetedPreview : NSCopying
+	{
+		[Export ("initWithView:parameters:target:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIView view, UIPreviewParameters parameters, UIPreviewTarget target);
+	
+		[Export ("initWithView:parameters:")]
+		IntPtr Constructor (UIView view, UIPreviewParameters parameters);
+	
+		[Export ("initWithView:")]
+		IntPtr Constructor (UIView view);
+	
+		[Export ("target")]
+		UIPreviewTarget Target { get; }
+	
+		[Export ("view")]
+		UIView View { get; }
+	
+		[Export ("parameters", ArgumentSemantic.Copy)]
+		UIPreviewParameters Parameters { get; }
+	
+		[Export ("size")]
+		CGSize Size { get; }
+	
+		[Export ("retargetedPreviewWithTarget:")]
+		UITargetedPreview RetargetedPreviewWithTarget (UIPreviewTarget newTarget);
+	}
+		
 
 	[NoWatch, NoTV]
 	[iOS (11,0)]
