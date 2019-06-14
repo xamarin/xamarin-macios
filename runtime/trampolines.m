@@ -296,7 +296,8 @@ xamarin_get_frame_length (id self, SEL sel)
 	// So instead parse the description ourselves.
 
 	int length = 0;
-	Class cls = [self class];
+	[self class]; // There's a bug in the ObjC runtime where we might get an uninitialized Class instance from object_getClass. See #6258. Calling the 'class' selector first makes sure the Class instance is initialized.
+	Class cls = object_getClass (self);
 	const char *method_description = get_method_description (cls, sel);
 	const char *desc = method_description;
 	if (desc == NULL) {
