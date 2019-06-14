@@ -290,8 +290,13 @@ namespace Introspection {
 				switch (name) {
 				case "initWithIOSurface:":
 				case "initWithIOSurface:options:":
+					// works on both sim/device with Xcode 11 (continue main logic)
+					if (TestRuntime.CheckXcodeVersion (11, 0))
+						break;
+					// did not work on simulator before iOS 13 (shortcut logic)
 					if (Runtime.Arch == Arch.SIMULATOR)
-						return !TestRuntime.CheckXcodeVersion (11, 0);
+						return true;
+					// was a private framework (on iOS) before Xcode 9.0 (shortcut logic)
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
@@ -800,9 +805,13 @@ namespace Introspection {
 			case "imageWithIOSurface:options:":
 				switch (declaredType.Name) {
 				case "CIImage":
+					// works on both sim/device with Xcode 11 (continue main logic)
+					if (TestRuntime.CheckXcodeVersion (11, 0))
+						break;
+					// did not work on simulator before iOS 13 (shortcut logic)
 					if (Runtime.Arch == Arch.SIMULATOR)
-						// does not work (like other IOSurface API) in beta 1
-						return true; // return !TestRuntime.CheckXcodeVersion (11, 0);
+						return true;
+					// was a private framework (on iOS) before Xcode 9.0 (shortcut logic)
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
 					break;
