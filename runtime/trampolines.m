@@ -296,7 +296,7 @@ xamarin_get_frame_length (id self, SEL sel)
 	// So instead parse the description ourselves.
 
 	int length = 0;
-	Class cls = object_getClass (self);
+	Class cls = [self class];
 	const char *method_description = get_method_description (cls, sel);
 	const char *desc = method_description;
 	if (desc == NULL) {

@@ -78,7 +78,7 @@ while ! test -z $1; do
 			unset IGNORE_HOMEBREW
 			PROVISION_SHARPIE=1
 			unset IGNORE_SHARPIE
-			#PROVISION_SIMULATORS=1
+			PROVISION_SIMULATORS=1
 			unset IGNORE_SIMULATORS
 			shift
 			;;

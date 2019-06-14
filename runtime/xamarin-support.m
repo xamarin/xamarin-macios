@@ -14,6 +14,10 @@ xamarin_get_locale_country_code ()
 	// COOP: no managed memory access: any mode.
 	NSLocale *locale = [NSLocale currentLocale];
 	NSString *cc = [locale objectForKey: NSLocaleCountryCode];
+	if (cc == NULL) {
+		// Assume the US if the country isn't available.
+		return strdup ("US");
+	}
 	return strdup ([cc UTF8String]);
 }
 
