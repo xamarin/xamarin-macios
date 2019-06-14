@@ -34,7 +34,11 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			using (var stpf = new UISimpleTextPrintFormatter ()) {
 				Assert.That (stpf.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
+				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+					Assert.NotNull (stpf.Color, "Color");
+					Assert.Null (stpf.Font, "Font");
+					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
+				} else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
 					Assert.Null (stpf.Color, "Color");
 					Assert.Null (stpf.Font, "Font");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
@@ -51,7 +55,10 @@ namespace MonoTouchFixtures.UIKit {
 		public void StringCtor ()
 		{
 			using (var stpf = new UISimpleTextPrintFormatter ("Xamarin")) {
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
+				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+					Assert.NotNull (stpf.Color, "Color");
+					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
+				} else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
 					Assert.Null (stpf.Color, "Color");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
 				} else {
