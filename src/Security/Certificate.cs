@@ -686,8 +686,13 @@ namespace Security {
 			if (signedData == null)
 				throw new ArgumentNullException ("signedData");
 			unsafe {
-				fixed (byte *sp = signature)
-				fixed (byte *dp = signedData) {
+				// SecKeyRawVerify will try to read from the signedData/signature pointers even if
+				// the corresponding length is 0, which may crash (happens in Xcode 11 beta 1)
+				// so if length is 0, then pass an array with one element.
+				var signatureArray = signature.Length == 0 ? new byte [] { 0 } : signature;
+				var signedDataArray = signedData.Length == 0 ? new byte [] { 0 } : signedData;
+				fixed (byte *sp = signatureArray)
+				fixed (byte *dp = signedDataArray) {
 					return SecKeyRawVerify (handle, padding, (IntPtr) dp, (nint) signedData.Length, (IntPtr) sp, (nint) signature.Length);
 				}
 			}
