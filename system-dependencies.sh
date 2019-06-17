@@ -357,7 +357,7 @@ function install_specific_xcode () {
 	rm -f $XCODE_DMG
 
 	log "Removing any com.apple.quarantine attributes from the installed Xcode"
-	$SUDO xattr -d -r com.apple.quarantine $XCODE_ROOT
+	$SUDO xattr -s -d -r com.apple.quarantine $XCODE_ROOT
 
 	if is_at_least_version $XCODE_VERSION 5.0; then
 		log "Accepting Xcode license"
