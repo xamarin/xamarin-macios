@@ -30,7 +30,7 @@ namespace Xamarin.MacDev.Tasks
 		}
 
 		protected override string ToolName {
-			get { return "metallib"; }
+			get { return "xcrun"; }
 		}
 
 		protected override string GenerateFullPathToTool ()
@@ -47,6 +47,7 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var args = new CommandLineArgumentBuilder ();
 
+			args.Add ("metallib");
 			args.Add ("-o");
 			args.AddQuoted (OutputLibrary);
 

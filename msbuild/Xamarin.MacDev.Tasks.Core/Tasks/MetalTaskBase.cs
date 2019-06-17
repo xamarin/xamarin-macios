@@ -53,7 +53,7 @@ namespace Xamarin.MacDev.Tasks
 		}
 
 		protected override string ToolName {
-			get { return "metal"; }
+			get { return "xcrun"; }
 		}
 
 		protected override string GenerateFullPathToTool ()
@@ -94,6 +94,7 @@ namespace Xamarin.MacDev.Tasks
 			OutputFile = new TaskItem (Path.ChangeExtension (path, ".air"));
 			OutputFile.SetMetadata ("LogicalName", Path.ChangeExtension (logicalName, ".air"));
 
+			args.Add ("metal");
 			args.Add ("-arch", "air64");
 			args.Add ("-emit-llvm");
 			args.Add ("-c");
