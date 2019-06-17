@@ -2,3 +2,5 @@
 !missing-selector! CLLocation::floor not bound
 !missing-selector! CLLocationManager::requestAlwaysAuthorization not bound
 !missing-type! CLFloor not bound
+## appended from unclassified file
+!deprecated-attribute-missing! CLLocationManager::deferredLocationUpdatesAvailable missing a [Deprecated] attribute

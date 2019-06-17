@@ -12,3 +12,8 @@
 !missing-pinvoke! CGPDFContextBeginTag is not bound
 !missing-pinvoke! CGPDFContextEndTag is not bound
 !missing-pinvoke! CGPDFTagTypeGetName is not bound
+## appended from unclassified file
+!missing-field! kCGColorSpaceDisplayP3_HLG not bound
+!missing-field! kCGColorSpaceDisplayP3_PQ_EOTF not bound
+!missing-field! kCGColorSpaceITUR_2020_HLG not bound
+!missing-pinvoke! CGColorSpaceIsHDR is not bound

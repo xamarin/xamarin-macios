@@ -73,3 +73,5 @@
 !missing-selector! SCNTechnique::setLibrary: not bound
 !missing-selector! SCNView::drawableResizesAsynchronously not bound
 !missing-selector! SCNView::setDrawableResizesAsynchronously: not bound
+## appended from unclassified file
+!missing-field! SCNLightingModelShadowOnly not bound

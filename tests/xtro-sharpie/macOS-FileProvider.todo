@@ -70,14 +70,14 @@
 !missing-selector! NSFileProviderRequest::requestingExecutable not bound
 !missing-selector! NSFileProviderSearchQuery::allowedContentTypes not bound
 !missing-selector! NSFileProviderSearchQuery::allowedPathExtensions not bound
-!missing-selector! NSFileProviderSearchQuery::content not bound
 !missing-selector! NSFileProviderSearchQuery::filename not bound
 !missing-selector! NSFileProviderSearchQuery::scopedToItemIdentifier not bound
 !missing-selector! NSFileProviderSearchQuery::searchContainerItemIdentifier not bound
-!missing-selector! NSFileProviderSearchQuery::searchString not bound
 !missing-type! NSFileProviderDomain not bound
 !missing-type! NSFileProviderExtension not bound
 !missing-type! NSFileProviderItemVersion not bound
 !missing-type! NSFileProviderManager not bound
 !missing-type! NSFileProviderRequest not bound
 !missing-type! NSFileProviderSearchQuery not bound
+## appended from unclassified file
+!missing-selector! NSFileProviderExtension::performActionWithIdentifier:onItemsWithIdentifiers:completionHandler: not bound

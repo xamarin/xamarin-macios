@@ -30,3 +30,5 @@
 !missing-type! NSDerivedAttributeDescription not bound
 !missing-type! NSPersistentCloudKitContainer not bound
 !missing-type! NSPersistentCloudKitContainerOptions not bound
+## appended from unclassified file
+!missing-selector! NSPersistentStoreCoordinator::currentPersistentHistoryTokenFromStores: not bound

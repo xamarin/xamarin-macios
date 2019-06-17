@@ -114,3 +114,11 @@
 !missing-type! ASWebAuthenticationSession not bound
 !missing-type! ASWebAuthenticationSessionRequest not bound
 !missing-type! ASWebAuthenticationSessionWebBrowserSessionManager not bound
+## appended from unclassified file
+!missing-enum! ASAuthorizationAppleIDButtonStyle not bound
+!missing-enum! ASAuthorizationAppleIDButtonType not bound
+!missing-selector! +ASAuthorizationAppleIDButton::buttonWithType:style: not bound
+!missing-selector! ASAuthorizationAppleIDButton::cornerRadius not bound
+!missing-selector! ASAuthorizationAppleIDButton::initWithAuthorizationButtonType:authorizationButtonStyle: not bound
+!missing-selector! ASAuthorizationAppleIDButton::setCornerRadius: not bound
+!missing-type! ASAuthorizationAppleIDButton not bound

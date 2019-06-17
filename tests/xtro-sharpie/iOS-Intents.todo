@@ -382,3 +382,14 @@
 !missing-type! INURLResolutionResult not bound
 !missing-type! INUserContext not bound
 !missing-type! INVolumeResolutionResult not bound
+## appended from unclassified file
+!missing-enum! INAddTasksTemporalEventTriggerUnsupportedReason not bound
+!missing-enum! INSetTaskAttributeTemporalEventTriggerUnsupportedReason not bound
+!missing-protocol-member! INAddTasksIntentHandling::resolveTemporalEventTriggerForAddTasks:completion: not found
+!missing-protocol-member! INSetTaskAttributeIntentHandling::resolveTemporalEventTriggerForSetTaskAttribute:completion: not found
+!missing-selector! +INAddTasksTemporalEventTriggerResolutionResult::unsupportedForReason: not bound
+!missing-selector! +INSetTaskAttributeTemporalEventTriggerResolutionResult::unsupportedForReason: not bound
+!missing-selector! INAddTasksTemporalEventTriggerResolutionResult::initWithTemporalEventTriggerResolutionResult: not bound
+!missing-selector! INSetTaskAttributeTemporalEventTriggerResolutionResult::initWithTemporalEventTriggerResolutionResult: not bound
+!missing-type! INAddTasksTemporalEventTriggerResolutionResult not bound
+!missing-type! INSetTaskAttributeTemporalEventTriggerResolutionResult not bound

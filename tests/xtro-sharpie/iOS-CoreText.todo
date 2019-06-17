@@ -6,3 +6,6 @@
 !missing-pinvoke! CTFontManagerRequestFonts is not bound
 !missing-pinvoke! CTFontManagerUnregisterFontDescriptors is not bound
 !missing-pinvoke! CTFontManagerUnregisterFontURLs is not bound
+## appended from unclassified file
+!missing-field! kCTFontManagerErrorFontAssetNameKey not bound
+!missing-pinvoke! CTFontManagerRegisterFontsWithAssetNames is not bound

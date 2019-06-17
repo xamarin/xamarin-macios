@@ -68,3 +68,5 @@
 !missing-selector! SCNScene::wantsScreenSpaceReflection not bound
 !missing-selector! SCNTechnique::library not bound
 !missing-selector! SCNTechnique::setLibrary: not bound
+## appended from unclassified file
+!missing-field! SCNLightingModelShadowOnly not bound
