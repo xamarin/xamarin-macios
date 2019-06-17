@@ -1061,7 +1061,7 @@ public class B : A {}
 			// Any old Xcode will do.
 			var old_xcode = Configuration.GetOldXcodeRoot ();
 			if (!Directory.Exists (old_xcode))
-				Assert.Ignore ($"This test needs an Xcode older than {Configuration.XcodeVersion}");
+				Assert.Ignore ($"This test needs an Xcode older than {Configuration.XcodeVersionString}");
 
 			// Get the SDK version for this Xcode version
 			string sdk_platform;
@@ -1088,7 +1088,7 @@ public class B : A {}
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
-				var xcodeVersionString = Configuration.XcodeVersion;
+				var xcodeVersionString = Configuration.XcodeVersionString;
 				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
 			}
 		}

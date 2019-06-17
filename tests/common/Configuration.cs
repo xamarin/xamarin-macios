@@ -26,7 +26,7 @@ namespace Xamarin.Tests
 		public static string tvos_sdk_version;
 		public static string macos_sdk_version;
 		public static string xcode_root;
-		public static string XcodeVersion;
+		public static string XcodeVersionString;
 		public static string xcode5_root;
 		public static string xcode6_root;
 		public static string xcode72_root;
@@ -42,6 +42,15 @@ namespace Xamarin.Tests
 		public static bool include_tvos;
 		public static bool include_watchos;
 		public static bool include_device;
+
+		static Version xcode_version;
+		public static Version XcodeVersion {
+			get {
+				if (xcode_version == null)
+					xcode_version = Version.Parse (XcodeVersionString);
+				return xcode_version;
+			}
+		}
 
 		static bool? use_system; // if the system-installed XI/XM should be used instead of the local one.
 		public static bool UseSystem {
@@ -75,7 +84,7 @@ namespace Xamarin.Tests
 			var xcodes = Directory.GetDirectories ("/Applications", "Xcode*.app", SearchOption.TopDirectoryOnly);
 			var with_versions = new List<Tuple<Version, string>> ();
 
-			var max_version = Version.Parse (XcodeVersion);
+			var max_version = Version.Parse (XcodeVersionString);
 			foreach (var xcode in xcodes) {
 				var path = Path.Combine (xcode, "Contents", "Developer");
 				var version = Version.Parse (GetXcodeVersion (path));
@@ -246,7 +255,7 @@ namespace Xamarin.Tests
 			include_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_WATCH", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 
-			XcodeVersion = GetXcodeVersion (xcode_root);
+			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
 			mac_xcode_root = xcode_root;
 #endif
@@ -543,7 +552,7 @@ namespace Xamarin.Tests
 
 		public static bool XcodeSupports32Bit {
 			get {
-				return Version.Parse (XcodeVersion).Major < 10;
+				return Version.Parse (XcodeVersionString).Major < 10;
 			}
 		}
 

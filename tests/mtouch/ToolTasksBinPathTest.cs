@@ -6,7 +6,7 @@ using Xamarin.Tests;
 namespace AppleSdkSettings {
 
 	public static class XcodeVersion {
-		public static int Major = Version.Parse (Configuration.XcodeVersion).Major;
+		public static int Major { get { return Configuration.XcodeVersion.Major; } }
 	}
 }
 
