@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -33,6 +34,9 @@ namespace Xamarin.MacDev.Tasks
 		public string SdkVersion { get; set; }
 
 		[Required]
+		public string SdkRoot { get; set; }
+
+		[Required]
 		public ITaskItem SourceFile { get; set; }
 
 		#endregion
@@ -53,7 +57,7 @@ namespace Xamarin.MacDev.Tasks
 		}
 
 		protected override string ToolName {
-			get { return "xcrun"; }
+			get { return "metal"; }
 		}
 
 		protected override string GenerateFullPathToTool ()
@@ -64,6 +68,13 @@ namespace Xamarin.MacDev.Tasks
 			var path = Path.Combine (DevicePlatformBinDir, ToolExe);
 
 			return File.Exists (path) ? path : ToolExe;
+		}
+
+		public override bool Execute ()
+		{
+			if (AppleSdkSettings.XcodeVersion.Major >= 11)
+				EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"SDKROOT={SdkRoot}");
+			return base.Execute ();
 		}
 
 		protected override string GenerateCommandLineCommands ()
@@ -94,7 +105,6 @@ namespace Xamarin.MacDev.Tasks
 			OutputFile = new TaskItem (Path.ChangeExtension (path, ".air"));
 			OutputFile.SetMetadata ("LogicalName", Path.ChangeExtension (logicalName, ".air"));
 
-			args.Add ("metal");
 			args.Add ("-arch", "air64");
 			args.Add ("-emit-llvm");
 			args.Add ("-c");

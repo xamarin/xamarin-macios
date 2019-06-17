@@ -4,7 +4,7 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -23,6 +23,9 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string SdkDevPath { get; set; }
 
+		[Required]
+		public string SdkRoot { get; set; }
+
 		#endregion
 
 		protected abstract string DevicePlatformBinDir {
@@ -30,7 +33,7 @@ namespace Xamarin.MacDev.Tasks
 		}
 
 		protected override string ToolName {
-			get { return "xcrun"; }
+			get { return "metallib"; }
 		}
 
 		protected override string GenerateFullPathToTool ()
@@ -47,7 +50,6 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var args = new CommandLineArgumentBuilder ();
 
-			args.Add ("metallib");
 			args.Add ("-o");
 			args.AddQuoted (OutputLibrary);
 
@@ -69,6 +71,9 @@ namespace Xamarin.MacDev.Tasks
 
 			if (!Directory.Exists (dir))
 				Directory.CreateDirectory (dir);
+
+			if (AppleSdkSettings.XcodeVersion.Major >= 11)
+				EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"SDKROOT={SdkRoot}");
 
 			return base.Execute ();
 		}
