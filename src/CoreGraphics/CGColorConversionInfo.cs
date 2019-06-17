@@ -121,14 +121,14 @@ namespace CoreGraphics {
 		extern static IntPtr CGColorConversionInfoCreate (/* cg_nullable CGColorSpaceRef */ IntPtr src, /* cg_nullable CGColorSpaceRef */ IntPtr dst);
 
 		[iOS (10,0)][Mac (10,12)]
-		public CGColorConversionInfo (CGColorSpace src, CGColorSpace dst)
+		public CGColorConversionInfo (CGColorSpace source, CGColorSpace destination)
 		{
 			// API accept null arguments but returns null, which we can't use
-			if (src == null)
-				throw new ArgumentNullException (nameof (src));
-			if (dst == null)
-				throw new ArgumentNullException (nameof (dst));
-			Handle = CGColorConversionInfoCreate (src.Handle, dst.Handle);
+			if (source == null)
+				throw new ArgumentNullException (nameof (source));
+			if (destination == null)
+				throw new ArgumentNullException (nameof (destination));
+			Handle = CGColorConversionInfoCreate (source.Handle, destination.Handle);
 
 			if (Handle == IntPtr.Zero)
 				throw new Exception ("Failed to create CGColorConversionInfo");
@@ -145,14 +145,14 @@ namespace CoreGraphics {
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-		public CGColorConversionInfo (CGColorSpace src, CGColorSpace dst, NSDictionary options)
+		public CGColorConversionInfo (CGColorSpace source, CGColorSpace destination, NSDictionary options)
 		{
-			if (src == null)
-				throw new ArgumentNullException (nameof (src));
-			if (dst == null)
-				throw new ArgumentNullException (nameof (dst));
+			if (source == null)
+				throw new ArgumentNullException (nameof (source));
+			if (destination == null)
+				throw new ArgumentNullException (nameof (destination));
 
-			Handle = CGColorConversionInfoCreateWithOptions (src.Handle, dst.Handle, options.GetHandle ());
+			Handle = CGColorConversionInfoCreateWithOptions (source.Handle, destination.Handle, options.GetHandle ());
 
 			if (Handle == IntPtr.Zero)
 				throw new Exception ("Failed to create CGColorConversionInfo");
@@ -162,8 +162,8 @@ namespace CoreGraphics {
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
-		public CGColorConversionInfo (CGColorSpace src, CGColorSpace dst, CGColorConversionOptions options) :
-			this (src, dst, options?.Dictionary)
+		public CGColorConversionInfo (CGColorSpace source, CGColorSpace destination, CGColorConversionOptions options) :
+			this (source, destination, options?.Dictionary)
 		{
 		}
 
