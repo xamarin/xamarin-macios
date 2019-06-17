@@ -119,8 +119,10 @@ namespace Xamarin.Tests
 								alternate_version = new Version (8, 0, 0); // some iOS dylibs also have min OS 8.0 (if they're used as frameworks as well).
 							} else if (slice.Architecture == MachO.Architectures.ARM64) {
 								alternate_version = new Version (7, 0, 0); // our arm64 slices has min iOS 7.0.
+							} else if (slice.IsDynamicLibrary && !device) {
+								version = new Version (8, 0, 0);
 							}
-							mono_native_compat_version = SdkVersions.MiniOSVersion;
+							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MintvOS:
