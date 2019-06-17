@@ -249,6 +249,48 @@ namespace CoreGraphics {
 			using (var s = new CFString (name))
 				CGPDFContextSetDestinationForRect (Handle, s.Handle, rect);
 		}
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern void CGPDFContextBeginTag (/* CGContextRef* */ IntPtr context, CGPdfTagType tagType, /* CFDictionaryRef* _Nullable */ IntPtr tagProperties);
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		public void BeginTag (CGPdfTagType tagType, NSDictionary tagProperties)
+		{
+			CGPDFContextBeginTag (Handle, tagType, tagProperties.GetHandle ());
+		}
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		public void BeginTag (CGPdfTagType tagType, CGPdfTagProperties tagProperties)
+		{
+			var d = tagProperties?.Dictionary;
+			CGPDFContextBeginTag (Handle, tagType, d.GetHandle ());
+		}
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern void CGPDFContextEndTag (/* CGContextRef* */ IntPtr context);
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		public void EndTag ()
+		{
+			CGPDFContextEndTag (Handle);
+		}
 		
 		protected override void Dispose (bool disposing)
 		{

@@ -134,6 +134,39 @@ namespace CoreGraphics {
 				throw new Exception ("Failed to create CGColorConversionInfo");
 		}
 
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		[DllImport(Constants.CoreGraphicsLibrary)]
+		static extern /* CGColorConversionInfoRef* */ IntPtr CGColorConversionInfoCreateWithOptions (/* CGColorSpaceRef* */ IntPtr src, /* CGColorSpaceRef* */ IntPtr dst, /* CFDictionaryRef _Nullable */ IntPtr options);
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		public CGColorConversionInfo (CGColorSpace src, CGColorSpace dst, NSDictionary options)
+		{
+			if (src == null)
+				throw new ArgumentNullException (nameof (src));
+			if (dst == null)
+				throw new ArgumentNullException (nameof (dst));
+
+			Handle = CGColorConversionInfoCreateWithOptions (src.Handle, dst.Handle, options.GetHandle ());
+
+			if (Handle == IntPtr.Zero)
+				throw new Exception ("Failed to create CGColorConversionInfo");
+		}
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		public CGColorConversionInfo (CGColorSpace src, CGColorSpace dst, CGColorConversionOptions options) :
+			this (src, dst, options?.Dictionary)
+		{
+		}
+
 		~CGColorConversionInfo ()
 		{
 			Dispose (false);
