@@ -4426,7 +4426,9 @@ public class TestApp {
 			if (!string.IsNullOrEmpty (arch))
 				arguments += " -arch " + arch;
 			var symbols = ExecutionHelper.Execute ("nm", arguments, hide_output: true).Split ('\n');
-			return symbols.Select ((v) => {
+			return symbols.Where ((v) => {
+				return !v.EndsWith (": no symbols", StringComparison.Ordinal);
+			}).Select ((v) => {
 				var idx = v.LastIndexOf (": ", StringComparison.Ordinal);
 				if (idx <= 0)
 					return v;
