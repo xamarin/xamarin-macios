@@ -60,5 +60,7 @@ namespace ObjCRuntime {
 		// WatchOS 5
 		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 		public const string MediaPlayerLibrary = "/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer";
+		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
+
 	}
 }

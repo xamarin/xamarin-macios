@@ -181,6 +181,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
 
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
+					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
 				};
 			}
 			return mac_frameworks;
@@ -305,6 +306,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IdentityLookupUI", "IdentityLookupUI", 12,0 },
 				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 				{ "Network", "Network", 12, 0 },
+				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 			};
 		}
 		return ios_frameworks;
@@ -355,6 +357,8 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "NaturalLanguage", "NaturalLanguage", 5 },
 				{ "MediaPlayer", "MediaPlayer", 5 },
+				{ "SoundAnalysis", "SoundAnalysis", 6 },
+
 			};
 		}
 		return watch_frameworks;
@@ -429,6 +433,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 					{ "Network", "Network", 12, 0 } ,
 					{ "TVUIKit", "TVUIKit", 12,0 },
+					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
 				};
 			}
 			return tvos_frameworks;

@@ -156,5 +156,7 @@ namespace MonoMac {
 
 		// macOS 10.15
 		public const string DeviceCheckLibrary = "/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck";
+		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
+
 	}
 }
