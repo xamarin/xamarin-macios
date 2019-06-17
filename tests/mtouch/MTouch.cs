@@ -3995,6 +3995,8 @@ public class HandlerTest
 				case "____chkstk_darwin": // compiler magic, unrelated to XI/XM
 				case "___block_descriptor_28_e5_v4@?0l": // new Xcode 10.2 clang option
 				case "___block_descriptor_48_e5_v8@?0l": // new Xcode 10.2 clang option
+				case "___block_descriptor_28_e5_v4\u0001?0l": // Xcode 11 b1 name
+				case "___block_descriptor_48_e5_v8\u0001?0l": // Xcode 11 b1 name
 					continue;
 				default:
 					missingSimlauncherSymbols.Add (symbol);
