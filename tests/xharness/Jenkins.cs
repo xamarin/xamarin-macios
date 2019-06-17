@@ -764,7 +764,6 @@ namespace xharness
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
 			SetEnabled (labels, "device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
-			SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
 			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
@@ -801,6 +800,14 @@ namespace xharness
 					IncludeDocs = false; // could have been enabled by 'run-all-tests', so disable it if we can't run it.
 					MainLog.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
 				}
+			}
+
+			// old simulator tests is also a bit special:
+			// - enabled by default if using a beta Xcode, otherwise disabled by default
+			changed = SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
+			if (!changed && Harness.IsBetaXcode) {
+				IncludeOldSimulatorTests = true;
+				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
 			}
 		}
 
