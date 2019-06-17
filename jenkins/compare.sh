@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+exit 0
+
 #
 # How to run API comparison locally:
 #
