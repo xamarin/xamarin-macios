@@ -4,8 +4,6 @@ namespace xharness
 {
 	public class MacTarget : Target
 	{
-		public bool ThirtyTwoBit;
-
 		public MonoNativeInfo MonoNativeInfo { get; set; }
 
 		protected override bool FixProjectReference (string name)

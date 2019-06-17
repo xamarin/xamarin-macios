@@ -209,7 +209,7 @@
     <BundleResource Include="..\monotouch-test\CoreImage\xamarinmonkey.heic">
       <Link>CoreImage\xamarinmonkey.heic</Link>
     </BundleResource>
-	<BundleResource Include="..\monotouch-test\Resources\Base.lproj\Localizable.strings" >
+	<BundleResource Include="..\monotouch-test\Resources\Base.lproj\Localizable.strings">
       <Link>Base.lproj\Localizable.strings</Link>
     </BundleResource>
   </ItemGroup>

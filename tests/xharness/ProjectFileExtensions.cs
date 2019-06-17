@@ -778,10 +778,10 @@ namespace xharness
 			}
 		}
 
-		public static void RemoveNode (this XmlDocument csproj, string node)
+		public static void RemoveNode (this XmlDocument csproj, string node, bool throwOnInexistentNode = true)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = '" + node + "']");
-			if (nodes.Count == 0)
+			if (throwOnInexistentNode && nodes.Count == 0)
 				throw new Exception (string.Format ("Could not find node {0}", node));
 			foreach (XmlNode n in nodes) {
 				n.ParentNode.RemoveChild (n);

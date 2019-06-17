@@ -92,7 +92,6 @@
     <Compile Include="DeviceLogCapturer.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="SolutionGenerator.cs" />
-    <Compile Include="MacClassicTarget.cs" />
     <Compile Include="MacUnifiedTarget.cs" />
     <Compile Include="MacTarget.cs" />
     <Compile Include="SimpleHttpListener.cs" />

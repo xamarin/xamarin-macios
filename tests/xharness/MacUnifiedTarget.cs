@@ -19,10 +19,9 @@ namespace xharness
 		bool SkipProjectGeneration;
 		bool SkipSuffix;
 
-		public MacUnifiedTarget (bool mobile, bool thirtyTwoBit, bool shouldSkipProjectGeneration = false, bool skipSuffix = false) : base ()
+		public MacUnifiedTarget (bool mobile, bool shouldSkipProjectGeneration = false, bool skipSuffix = false) : base ()
 		{
 			Mobile = mobile;
-			ThirtyTwoBit = thirtyTwoBit;
 			SkipProjectGeneration = shouldSkipProjectGeneration;
 			SkipSuffix = skipSuffix;
 		}
@@ -52,11 +51,11 @@ namespace xharness
 				if (MonoNativeInfo != null) {
 					if (System)
 						return MonoNativeInfo.FlavorSuffix + "-system";
-					return MonoNativeInfo.FlavorSuffix + (ThirtyTwoBit ? "-32" : "");
+					return MonoNativeInfo.FlavorSuffix;
 				}
 				if (System)
 					return "-system";
-				var suffix = (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "-32" : "");
+				var suffix = (Mobile ? "" : "XM45");
 				return "-unified" + (IsBCL ? "" : suffix);
 			}
 		}
@@ -65,7 +64,7 @@ namespace xharness
 			get {
 				if (System)
 					return "system";
-				string suffix = (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "32" : "");
+				string suffix = (Mobile ? "" : "XM45");
 				return "unified" + (IsBCL ? "" : suffix);
 			}
 		}
@@ -118,7 +117,7 @@ namespace xharness
 			}
 		}
 
-		public override string DefaultAssemblyReference { get { return "XamMac"; } }
+		public override string DefaultAssemblyReference { get { return "Xamarin.Mac"; } }
 
 		public override IEnumerable<string> ReferenceToRemove { get { yield return "System.Drawing"; } }
 
@@ -144,8 +143,16 @@ namespace xharness
 					props.Add ("UseXamMacFullFramework", "true");
 				}
 
-				props.Add ("XamMacArch", ThirtyTwoBit ? "i386" : "x86_64");
+				props.Add ("XamMacArch", "x86_64");
 				return props;
+			}
+		}
+
+		public override HashSet<string> PropertiesToRemove {
+			get {
+				if (!ShouldSetTargetFrameworkIdentifier)
+					return new HashSet<string> { "TargetFrameworkIdentifier" };
+				return null;
 			}
 		}
 
