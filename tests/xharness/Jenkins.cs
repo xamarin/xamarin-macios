@@ -20,10 +20,8 @@ namespace xharness
 
 		public Harness Harness;
 		public bool IncludeAll;
-		public bool IncludeClassicMac = true;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
-		public bool IncludeMac32 = true;
 		public bool IncludeiOS = true;
 		public bool IncludeiOS32 = true;
 		public bool IncludeiOSExtensions;
@@ -391,11 +389,8 @@ namespace xharness
 						var canSymlink = false;
 						switch (task.Platform) {
 						case TestPlatform.Mac:
-						case TestPlatform.Mac_Classic:
 						case TestPlatform.Mac_Unified:
-						case TestPlatform.Mac_Unified32:
 						case TestPlatform.Mac_UnifiedXM45:
-						case TestPlatform.Mac_UnifiedXM45_32:
 						case TestPlatform.Mac_UnifiedSystem:
 							isMac = true;
 							break;
@@ -531,7 +526,7 @@ namespace xharness
 			return rv;
 		}
 
-		IEnumerable<TestTask> CreateRunDeviceTasks ()
+		async Task<IEnumerable<TestTask>> CreateRunDeviceTasksAsync ()
 		{
 			var rv = new List<RunDeviceTask> ();
 
@@ -769,7 +764,6 @@ namespace xharness
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
 			SetEnabled (labels, "device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
-			SetEnabled (labels, "mac-32", ref IncludeMac32);
 			SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
 			SetEnabled (labels, "all", ref IncludeAll);
 
@@ -779,7 +773,6 @@ namespace xharness
 			SetEnabled (labels, "ios-32", ref IncludeiOS32);
 			SetEnabled (labels, "watchos", ref IncludewatchOS);
 			SetEnabled (labels, "mac", ref IncludeMac);
-			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
 			bool inc_permission_tests = Harness.IncludeSystemPermissionTests;
@@ -844,7 +837,10 @@ namespace xharness
 
 			LoadSimulatorsAndDevicesAsync ().DoNotAwait ();
 
-			Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
+			var loadsim = CreateRunSimulatorTasksAsync ()
+				.ContinueWith ((v) => { Console.WriteLine ("Simulator tasks created"); Tasks.AddRange (v.Result); });
+			
+			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
 			var buildiOSMSBuild = new XBuildTask ()
 			{
@@ -890,7 +886,6 @@ namespace xharness
 
 			foreach (var project in Harness.MacTestProjects) {
 				bool ignored = !IncludeMac;
-				bool ignored32 = !IncludeMac || !IncludeMac32;
 				if (!IncludeMmpTest && project.Path.Contains ("mmptest"))
 					ignored = true;
 
@@ -901,20 +896,9 @@ namespace xharness
 				if (configurations == null)
 					configurations = new string [] { "Debug" };
 				foreach (var config in configurations) {
-					BuildProjectTask build;
-					if (project.MonoNativeInfo != null) {
-						build = new XBuildTask ();
-						build.Platform = TestPlatform.Mac_Unified;
-						build.CloneTestProject (project);
-					} else if (project.GenerateVariations) {
-						build = new MdtoolTask ();
-						build.Platform = TestPlatform.Mac_Classic;
-						build.TestProject = project;
-					} else {
-						build = new XBuildTask ();
-						build.Platform = TestPlatform.Mac;
-						build.CloneTestProject (project);
-					}
+					XBuildTask build = new XBuildTask ();
+					build.Platform = TestPlatform.Mac_Unified;
+					build.CloneTestProject (project);
 					build.Jenkins = this;
 					build.SolutionPath = project.SolutionPath;
 					build.ProjectConfiguration = config;
@@ -925,10 +909,6 @@ namespace xharness
 					RunTestTask exec;
 					IEnumerable<RunTestTask> execs;
 					var ignored_main = ignored;
-					if ((ignored32 || !IncludeClassicMac) && project.GenerateVariations) {
-						ignored_main = true; // Only if generating variations is the main project is an XM Classic app
-						build.RequiresXcode94 = true;
-					}
 					if (project.IsNUnitProject) {
 						var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
 						exec = new NUnitExecuteTask (build) {
@@ -955,12 +935,8 @@ namespace xharness
 					Tasks.AddRange (execs);
 					foreach (var e in execs) {
 						if (project.GenerateVariations && project.MonoNativeInfo == null) {
-							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified, "-unified", ignored));
-							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified" + "-32", ignored32, true));
-							if (project.GenerateFull) {
+							if (project.GenerateFull)
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored32, true));
-							}
 							if (project.GenerateSystem)
 								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedSystem, "-system", ignored));
 						}
@@ -1087,10 +1063,14 @@ namespace xharness
 			};
 			Tasks.Add (runSampleTests);
 
-			Tasks.AddRange (CreateRunDeviceTasks ());
+			var loaddev = CreateRunDeviceTasksAsync ().ContinueWith ((v) => {
+				Console.WriteLine ("Got device tasks completed");
+				Tasks.AddRange (v.Result);
+			});
+			Task.WaitAll (loadsim, loaddev);
 		}
 
-		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore, bool requiresXcode94 = false)
+		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore)
 		{
 			var build = new XBuildTask ()
 			{
@@ -1103,7 +1083,6 @@ namespace xharness
 			};
 			var tp = new TestProject (Path.ChangeExtension (AddSuffixToPath (original_project.Path, suffix), "csproj"));
 			build.CloneTestProject (tp);
-			build.RequiresXcode94 = requiresXcode94;
 
 			var macExec = task as MacExecuteTask;
 			if (macExec != null) {
@@ -1386,11 +1365,8 @@ namespace xharness
 									case "?all-mac":
 										switch (task.Platform) {
 										case TestPlatform.Mac:
-										case TestPlatform.Mac_Classic:
 										case TestPlatform.Mac_Unified:
-										case TestPlatform.Mac_Unified32:
 										case TestPlatform.Mac_UnifiedXM45:
-										case TestPlatform.Mac_UnifiedXM45_32:
 										case TestPlatform.Mac_UnifiedSystem:
 											is_match = true;
 											break;
@@ -2336,7 +2312,6 @@ namespace xharness
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 
-		public bool RequiresXcode94;
 		public bool BuildOnly;
 
 		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
@@ -2457,16 +2432,11 @@ namespace xharness
 					return $"unknown test name ({GetType ().Name}";
 				switch (Platform) {
 				case TestPlatform.Mac:
-				case TestPlatform.Mac_Classic:
 					return rv;
 				case TestPlatform.Mac_Unified:
-					return rv.Substring (0, rv.Length - "-unified".Length);
-				case TestPlatform.Mac_Unified32:
-					return rv.Substring (0, rv.Length - "-unified-32".Length);
+					return rv;//.Substring (0, rv.Length - "-unified".Length);
 				case TestPlatform.Mac_UnifiedXM45:
 					return rv.Substring (0, rv.Length - "-unifiedXM45".Length);
-				case TestPlatform.Mac_UnifiedXM45_32:
-					return rv.Substring (0, rv.Length - "-unifiedXM45-32".Length);
 				case TestPlatform.Mac_UnifiedSystem:
 					return rv.Substring (0, rv.Length - "-unifiedSystem".Length);
 				default:
@@ -2620,7 +2590,7 @@ namespace xharness
 
 		protected void SetEnvironmentVariables (Process process)
 		{
-			var xcodeRoot = RequiresXcode94 ? Harness.Xcode94Root : Harness.XcodeRoot;
+			var xcodeRoot = Harness.XcodeRoot;
 			
 			switch (Platform) {
 			case TestPlatform.iOS:
@@ -2638,11 +2608,8 @@ namespace xharness
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 				break;
 			case TestPlatform.Mac:
-			case TestPlatform.Mac_Classic:
 			case TestPlatform.Mac_Unified:
-			case TestPlatform.Mac_Unified32:
 			case TestPlatform.Mac_UnifiedXM45:
-			case TestPlatform.Mac_UnifiedXM45_32:
 			case TestPlatform.Mac_UnifiedSystem:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
@@ -2872,42 +2839,6 @@ namespace xharness
 
 			// restore for the main project/solution]
 			ExecutionResult = await RestoreNugetsAsync (SolutionPath ?? TestProject.Path, log, useXIBuild);
-		}
-	}
-
-	class MdtoolTask : BuildProjectTask
-	{
-		protected override async Task ExecuteAsync ()
-		{
-			ExecutionResult = TestExecutingResult.Building;
-			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", "Build log");
-				await RestoreNugetsAsync (log, resource);
-				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = "/Applications/Visual Studio.app/Contents/MacOS/vstool";
-					var args = new StringBuilder ();
-					args.Append ("build ");
-					var sln = Path.ChangeExtension (ProjectFile, "sln");
-					args.Append (StringUtils.Quote (File.Exists (sln) ? sln : ProjectFile));
-					xbuild.StartInfo.Arguments = args.ToString ();
-					SetEnvironmentVariables (xbuild);
-					LogEvent (log, "Building {0} ({1})", TestName, Mode);
-					if (!Harness.DryRun) {
-						var timeout = TimeSpan.FromMinutes (5);
-						var result = await xbuild.RunAsync (log, true, timeout);
-						if (result.TimedOut) {
-							ExecutionResult = TestExecutingResult.TimedOut;
-							log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
-						} else if (result.Succeeded) {
-							ExecutionResult = TestExecutingResult.Succeeded;
-						} else {
-							ExecutionResult = TestExecutingResult.Failed;
-						}
-					}
-					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
-				}
-				log.Dispose ();
-			}
 		}
 	}
 
@@ -3206,16 +3137,10 @@ namespace xharness
 				switch (Platform) {
 				case TestPlatform.Mac:
 					return "Mac";
-				case TestPlatform.Mac_Classic:
-					return "Mac Classic";
 				case TestPlatform.Mac_Unified:
 					return "Mac Unified";
-				case TestPlatform.Mac_Unified32:
-					return "Mac Unified 32-bit";
 				case TestPlatform.Mac_UnifiedXM45:
 					return "Mac Unified XM45";
-				case TestPlatform.Mac_UnifiedXM45_32:
-					return "Mac Unified XM45 32-bit";
 				case TestPlatform.Mac_UnifiedSystem:
 					return "Mac Unified System";
 				default:
@@ -3276,14 +3201,8 @@ namespace xharness
 			case TestPlatform.Mac_Unified:
 				suffix = "-unified";
 				break;
-			case TestPlatform.Mac_Unified32:
-				suffix = "-unified-32";
-				break;
 			case TestPlatform.Mac_UnifiedXM45:
 				suffix = "-unifiedXM45";
-				break;
-			case TestPlatform.Mac_UnifiedXM45_32:
-				suffix = "-unifiedXM45-32";
 				break;
 			case TestPlatform.Mac_UnifiedSystem:
 				suffix = "-unifiedSystem";
@@ -4130,11 +4049,8 @@ namespace xharness
 		watchOS_64_32,
 
 		Mac,
-		Mac_Classic,
 		Mac_Unified,
 		Mac_UnifiedXM45,
-		Mac_Unified32,
-		Mac_UnifiedXM45_32,
 		Mac_UnifiedSystem,
 	}
 

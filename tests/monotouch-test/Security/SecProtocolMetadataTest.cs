@@ -23,6 +23,9 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void IPDefaults ()
 		{
+			if (TestRuntime.CheckXcodeVersion (11, 0))
+				Assert.Ignore ("NWProtocolMetadata.CreateIPMetadata () returns a metadata object with uninitialized metadata, which means the asserts here fail randomly.");
+
 			using (var m = NWProtocolMetadata.CreateIPMetadata ()) {
 				var s = m.SecProtocolMetadata;
 				// This is mostly, but not always, returning false

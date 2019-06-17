@@ -61,10 +61,19 @@ namespace MonoTouchFixtures.UIKit {
 				} else {
 					Assert.IsNull (tf.SelectedTextRange, "SelectedTextRange");
 				}
-				Assert.IsNull (tf.TypingAttributes, "default");
+				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+					Assert.That (tf.TypingAttributes, Is.Empty, "default");
+				} else {
+					Assert.IsNull (tf.TypingAttributes, "default");
+				}
 				// ^ calling TypingAttributes does not crash like UITextView does, it simply returns null
 				tf.TypingAttributes = new NSDictionary ();
-				Assert.IsNull (tf.TypingAttributes, "empty");
+				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+					Assert.That (tf.TypingAttributes, Is.Empty, "empty");
+
+				} else {
+					Assert.IsNull (tf.TypingAttributes, "empty");
+				}
 				// and it stays null, even if assigned, since there's not selection
 			}
 		}

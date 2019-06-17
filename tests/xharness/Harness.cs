@@ -96,7 +96,6 @@ namespace xharness
 		// Run
 		public AppRunnerTarget Target { get; set; }
 		public string SdkRoot { get; set; }
-		public string SdkRoot94 { get; set; }
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
@@ -133,12 +132,6 @@ namespace xharness
 		public string XcodeRoot {
 			get {
 				return FindXcode (SdkRoot);
-			}
-		}
-
-		public string Xcode94Root {
-			get {
-				return FindXcode (SdkRoot94);
 			}
 		}
 
@@ -228,8 +221,6 @@ namespace xharness
 			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
-			if (string.IsNullOrEmpty (SdkRoot94))
-				SdkRoot94 = make_config ["XCODE94_DEVELOPER_ROOT"];
 			MONO_IOS_SDK_DESTDIR = make_config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = make_config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
@@ -242,7 +233,7 @@ namespace xharness
 				new { Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", GenerateSystem = true },
 			};
 			foreach (var p in test_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory + "/" + p.ProjectFile + ".sln"))) {
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory + "/" + p.ProjectFile + ".csproj"))) {
 					Name = p.Name,
 					TargetFrameworkFlavor = p.GenerateSystem ? MacFlavors.All : MacFlavors.NonSystem,
 				});
@@ -433,7 +424,6 @@ namespace xharness
 		{
 			int rv = 0;
 
-			var classic_targets = new List<MacClassicTarget> ();
 			var unified_targets = new List<MacUnifiedTarget> ();
 			var hardcoded_unified_targets = new List<MacUnifiedTarget> ();
 
@@ -466,46 +456,30 @@ namespace xharness
 					continue;
 				}
 
-				foreach (bool thirtyTwoBit in new bool[] { false, true })
-				{
-					if (proj.GenerateModern) {
-						var modern = new MacUnifiedTarget (true, thirtyTwoBit);
-						modern.MonoNativeInfo = proj.MonoNativeInfo;
-						configureTarget (modern, file, proj.IsNUnitProject);
-						unified_targets.Add (modern);
-					}
-
-					if (proj.GenerateFull) {
-						var full = new MacUnifiedTarget (false, thirtyTwoBit);
-						full.MonoNativeInfo = proj.MonoNativeInfo;
-						configureTarget (full, file, proj.IsNUnitProject);
-						unified_targets.Add (full);
-					}
+				if (proj.GenerateFull) {
+					var full = new MacUnifiedTarget (false);
+					full.MonoNativeInfo = proj.MonoNativeInfo;
+					configureTarget (full, file, proj.IsNUnitProject);
+					unified_targets.Add (full);
 				}
 
 				if (proj.GenerateSystem) {
-					var system = new MacUnifiedTarget (false, false);
+					var system = new MacUnifiedTarget (false);
 					system.System = true;
 					configureTarget (system, file, proj.IsNUnitProject);
 					unified_targets.Add (system);
-				}
-
-				if (proj.MonoNativeInfo == null) {
-					var classic = new MacClassicTarget ();
-					configureTarget (classic, file, false);
-					classic_targets.Add (classic);
 				}
 			}
  
 			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
 				var file = proj.Path;
-				var unified = new MacUnifiedTarget (proj.GenerateModern, thirtyTwoBit: false, shouldSkipProjectGeneration: true);
+				var unified = new MacUnifiedTarget (proj.GenerateModern, shouldSkipProjectGeneration: true);
 				unified.BCLInfo = proj.BCLInfo;
 				configureTarget (unified, file, proj.IsNUnitProject);
 				hardcoded_unified_targets.Add (unified);
  			}
  
-			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets));
+			MakefileGenerator.CreateMacMakefile (this, unified_targets.Union (hardcoded_unified_targets));
 
 			return rv;
 		}

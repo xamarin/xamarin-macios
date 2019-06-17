@@ -69,6 +69,9 @@
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
+    <Compile Include="..\common\Extensions.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
     <Compile Include="..\common\mac\MacTestMain.cs">
       <Link>MacTestMain.cs</Link>
     </Compile>
@@ -206,7 +209,7 @@
     <BundleResource Include="..\monotouch-test\CoreImage\xamarinmonkey.heic">
       <Link>CoreImage\xamarinmonkey.heic</Link>
     </BundleResource>
-	<BundleResource Include="..\monotouch-test\Resources\Base.lproj\Localizable.strings" >
+	<BundleResource Include="..\monotouch-test\Resources\Base.lproj\Localizable.strings">
       <Link>Base.lproj\Localizable.strings</Link>
     </BundleResource>
   </ItemGroup>

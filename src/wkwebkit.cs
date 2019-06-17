@@ -154,6 +154,11 @@ namespace WebKit
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKNavigation {
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[Export ("effectiveContentMode")]
+		WKContentMode EffectiveContentMode { get; }
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
@@ -191,6 +196,11 @@ namespace WebKit
 
 		[Export ("webView:decidePolicyForNavigationResponse:decisionHandler:")]
 		void DecidePolicy (WKWebView webView, WKNavigationResponse navigationResponse, Action<WKNavigationResponsePolicy> decisionHandler);
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[Export ("webView:decidePolicyForNavigationAction:preferences:decisionHandler:")]
+		void DecidePolicy (WKWebView webView, WKNavigationAction navigationAction, WKWebpagePreferences preferences, Action<WKNavigationActionPolicy, WKWebpagePreferences> decisionHandler);
 
 		[Export ("webView:didStartProvisionalNavigation:")]
 		void DidStartProvisionalNavigation (WKWebView webView, WKNavigation navigation);
@@ -245,9 +255,11 @@ namespace WebKit
 		bool JavaScriptCanOpenWindowsAutomatically { get; set; }
 
 #if MONOMAC
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Feature no longer supported.")]
 		[Export ("javaEnabled")]
 		bool JavaEnabled { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Feature no longer supported.")]
 		[Export ("plugInsEnabled")]
 		bool PlugInsEnabled { get; set; }
 
@@ -310,6 +322,11 @@ namespace WebKit
 
 		[Export ("snapshotWidth")]
 		NSNumber SnapshotWidth { get; set; }
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[Export ("afterScreenUpdates")]
+		bool AfterScreenUpdates { get; set; }
 	}
 
 #if XAMCORE_2_0
@@ -785,6 +802,11 @@ namespace WebKit
 		[return: NullAllowed]
 		IWKUrlSchemeHandler GetUrlSchemeHandler (string urlScheme);
 #endif
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[Export ("defaultWebpagePreferences", ArgumentSemantic.Copy)]
+		WKWebpagePreferences DefaultWebpagePreferences { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
@@ -857,5 +879,23 @@ namespace WebKit
 	interface WKPreviewElementInfo : NSCopying {
 		[NullAllowed, Export ("linkURL")]
 		NSUrl LinkUrl { get; }
+	}
+
+	[Mac (10,15, onlyOn64: true)]
+	[iOS (13,0)]
+	[Native]
+	public enum WKContentMode : long {
+		Recommended,
+		Mobile,
+		Desktop,
+	}
+
+	[Mac (10,15, onlyOn64: true)]
+	[iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface WKWebpagePreferences {
+
+		[Export ("preferredContentMode", ArgumentSemantic.Assign)]
+		WKContentMode PreferredContentMode { get; set; }
 	}
 }

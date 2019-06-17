@@ -25,6 +25,7 @@
     <HttpClientHandler>HttpClientHandler</HttpClientHandler>
     <LinkMode>None</LinkMode>
     <AOTMode>None</AOTMode>
+    <DefineConstants>XAMCORE_2_0</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

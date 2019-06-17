@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.Photos {
 		// on macOS `initWithLivePhotoEditingInput:` returns `nil` and we throw
 		[Test]
 #endif
-#if !DEBUG
+#if !DEBUG || OPTIMIZEALL
 		[Ignore ("Photos.framework headers are broken in Xcode 11 beta 1 (and optimizations fails)")]
 #endif
 		public void Linker ()
