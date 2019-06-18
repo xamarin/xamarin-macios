@@ -552,7 +552,7 @@ namespace Xamarin.Tests
 
 		public static bool XcodeSupports32Bit {
 			get {
-				return Version.Parse (XcodeVersionString).Major < 10;
+				return XcodeVersion.Major < 10;
 			}
 		}
 
