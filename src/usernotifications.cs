@@ -63,6 +63,8 @@ namespace UserNotifications {
 		AllowInCarPlay = (2 << 0),
 		HiddenPreviewsShowTitle = (1 << 2),
 		HiddenPreviewsShowSubtitle = (1 << 3),
+		[iOS (13,0)][Watch (6,0)][NoMac]
+		AllowAnnouncement = (1 << 4),
 	}
 
 	[iOS (10, 0)]
@@ -371,6 +373,11 @@ namespace UserNotifications {
 		[NoWatch, NoTV, iOS (12, 0)]
 		[Export ("summaryArgumentCount")]
 		nuint SummaryArgumentCount { get; }
+
+		[iOS (13,0)]
+		[TV (13,0)][Watch (6,0)] // no direct mention in headers
+		[NullAllowed, Export ("targetContentIdentifier")]
+		string TargetContentIdentifier { get; [NotImplemented] set; }
 	}
 
 	[iOS (10, 0)]
@@ -425,6 +432,11 @@ namespace UserNotifications {
 		[NoWatch, NoTV, iOS (12, 0)]
 		[Export ("summaryArgumentCount")]
 		nuint SummaryArgumentCount { get; set; }
+
+		[iOS (13,0)]
+		[TV (13,0)][Watch (6,0)] // no direct mention in headers
+		[NullAllowed, Export ("targetContentIdentifier")]
+		string TargetContentIdentifier { get; set; }
 	}
 
 	[iOS (10, 0)]
@@ -502,8 +514,8 @@ namespace UserNotifications {
 
 	[iOS (10, 0)]
 	[Mac (10,14, onlyOn64: true)]
+	[Watch (6,0)]
 	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // as per docs
 	interface UNNotificationServiceExtension {
@@ -568,6 +580,10 @@ namespace UserNotifications {
 		[Watch (5, 0), NoTV, Mac (10, 14, onlyOn64: true), iOS (12, 0)]
 		[Export ("providesAppNotificationSettings")]
 		bool ProvidesAppNotificationSettings { get; }
+
+		[Watch (6,0), NoTV, NoMac, iOS (13,0)]
+		[Export ("announcementSetting")]
+		UNNotificationSetting AnnouncementSetting { get; }
 	}
 
 	[iOS (10, 0)]
