@@ -49,6 +49,10 @@ namespace IncomingCallNotifications {
 
 		[Export ("isEqualToHandle:")]
 		bool IsEqual (ICHandle handle);
+
+		// // required from NSCopying
+		// [Export ("copyWithZone:")]
+		// NSObject Copy (NSZone zone);
 	}
 
 	[iOS (13,0)]
@@ -68,6 +72,10 @@ namespace IncomingCallNotifications {
 
 		[Export ("video", ArgumentSemantic.Assign)]
 		bool Video { [Bind ("isVideo")] get; set; }
+
+		// // required from NSCopying
+		// [Export ("copyWithZone:")]
+		// NSObject Copy (NSZone zone);
 	}
 
 	[iOS (13,0)]
@@ -109,6 +117,10 @@ namespace IncomingCallNotifications {
 
 		[Export ("localizedDisplayName", ArgumentSemantic.Copy), NullAllowed]
 		string DisplayName { get; set; }
+
+		// // required from NSCopying
+		// [Export ("copyWithZone:")]
+		// NSObject Copy (NSZone zone);
 	}
 }
 
