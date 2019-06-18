@@ -28,3 +28,7 @@
 !missing-selector! CLLocationManager::startRangingBeaconsSatisfyingConstraint: not bound
 !missing-selector! CLLocationManager::stopRangingBeaconsSatisfyingConstraint: not bound
 !missing-type! CLBeaconIdentityConstraint not bound
+## appended from unclassified file
+!deprecated-attribute-missing! CLLocationManager::allowDeferredLocationUpdatesUntilTraveled:timeout: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLLocationManager::deferredLocationUpdatesAvailable missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLLocationManager::disallowDeferredLocationUpdates missing a [Deprecated] attribute

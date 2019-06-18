@@ -66,6 +66,13 @@ namespace Introspection {
 			//  NSUnknownKeyException [<CIDepthOfField 0x158586970> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputPoint2.
 			case "CIDepthOfField":
 				return true;
+			// TODO: https://github.com/xamarin/xamarin-macios/issues/6340
+			case "CIGaborGradients":
+			case "CIKeystoneCorrectionCombined":
+			case "CIKeystoneCorrectionHorizontal":
+			case "CIKeystoneCorrectionVertical":
+			case "CIPerspectiveRotate":
+				return true;
 			// Apple does **not** document filters as API (like we do)
 			// uncomment calls to `GenerateBinding` to use introspection code to generate the skeleton binding code and complete it
 			// e.g. picking better types like `bool` instead of `NSNumber'

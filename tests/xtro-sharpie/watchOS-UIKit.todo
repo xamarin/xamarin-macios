@@ -60,3 +60,6 @@
 !missing-type! NSDataAsset not bound
 !missing-type! UIImageConfiguration not bound
 !missing-type! UIImageSymbolConfiguration not bound
+## appended from unclassified file
+!missing-selector! UIImage::imageWithTintColor: not bound
+!missing-selector! UIImage::imageWithTintColor:renderingMode: not bound

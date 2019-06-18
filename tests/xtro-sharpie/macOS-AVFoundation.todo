@@ -99,7 +99,6 @@
 !missing-selector! AVAudioIONode::setVoiceProcessingEnabled:error: not bound
 !missing-selector! AVAudioSinkNode::initWithReceiverBlock: not bound
 !missing-selector! AVAudioSourceNode::initWithRenderBlock: not bound
-!missing-selector! AVAudioSourceNode::initWithRenderBlock:format: not bound
 !missing-selector! AVCaptureAudioDataOutput::recommendedAudioSettingsForAssetWriterWithOutputFileType: not bound
 !missing-selector! AVCaptureDevice::activeColorSpace not bound
 !missing-selector! AVCaptureDevice::deviceType not bound
@@ -218,3 +217,7 @@
 !missing-type! AVSpeechSynthesizer not bound
 !missing-type! AVSpeechUtterance not bound
 !missing-type! AVVideoCompositionRenderHint not bound
+## appended from unclassified file
+!missing-field! AVContentKeyRequestRequiresValidationDataInSecureTokenKey not bound
+!missing-selector! AVAudioSourceNode::initWithFormat:renderBlock: not bound
+!missing-selector! AVCaptureSession::connections not bound

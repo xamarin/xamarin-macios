@@ -65,3 +65,5 @@
 !missing-selector! SCNScene::setScreenSpaceReflectionStride: not bound
 !missing-selector! SCNScene::setWantsScreenSpaceReflection: not bound
 !missing-selector! SCNScene::wantsScreenSpaceReflection not bound
+## appended from unclassified file
+!missing-field! SCNLightingModelShadowOnly not bound
