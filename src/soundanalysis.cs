@@ -18,140 +18,140 @@ using ObjCRuntime;
 
 namespace SoundAnalysis {
 
-    [ErrorDomain ("SNErrorDomain")]
-    [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+	[ErrorDomain ("SNErrorDomain")]
+	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
 	[Native]
-    enum SNErrorCode : long {
-        UnknownError = 1,
-        OperationFailed,
-        InvalidFormat,
-        InvalidModel,
-    }
+	enum SNErrorCode : long {
+		UnknownError = 1,
+		OperationFailed,
+		InvalidFormat,
+		InvalidModel,
+	}
 
-    [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
-    [BaseType (typeof (NSObject))]
-    [DisableDefaultCtor]
-    interface SNAudioStreamAnalyzer {
+	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SNAudioStreamAnalyzer {
 
-        [DesignatedInitializer]
-        [Export ("initWithFormat:")]
-        IntPtr Constructor (AVAudioFormat format);
-        
-        [Export ("addRequest:withObserver:error:")]
-        bool AddRequest (ISNRequest request, ISNResultsObserving observer, [NullAllowed] out NSError error);
+		[DesignatedInitializer]
+		[Export ("initWithFormat:")]
+		IntPtr Constructor (AVAudioFormat format);
 
-        [Export ("removeRequest:")]
-        void RemoveRequest (ISNRequest request);
-        
-        [Export ("removeAllRequests")]
-        void RemoveAllRequests ();
+		[Export ("addRequest:withObserver:error:")]
+		bool AddRequest (ISNRequest request, ISNResultsObserving observer, [NullAllowed] out NSError error);
 
-        [Export ("analyzeAudioBuffer:atAudioFramePosition:")]
-        void Analyze (AVAudioBuffer audioBuffer, long audioFramePosition);
-        
-        [Export ("completeAnalysis")]
-        void CompleteAnalysis ();
-    }
+		[Export ("removeRequest:")]
+		void RemoveRequest (ISNRequest request);
 
-    delegate void SNAudioFileAnalyzerAnalyzeHandler (bool didReachEndOfFile);
+		[Export ("removeAllRequests")]
+		void RemoveAllRequests ();
 
-    [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
-    [BaseType (typeof (NSObject))]
-    [DisableDefaultCtor]
-    interface SNAudioFileAnalyzer {
+		[Export ("analyzeAudioBuffer:atAudioFramePosition:")]
+		void Analyze (AVAudioBuffer audioBuffer, long audioFramePosition);
 
-        [DesignatedInitializer]
-        [Export ("initWithURL:error:")]
-        IntPtr Constructor (NSUrl url, [NullAllowed] out NSError error);
+		[Export ("completeAnalysis")]
+		void CompleteAnalysis ();
+	}
 
-        [Export ("addRequest:withObserver:error:")]
-        bool AddRequest (ISNRequest request, ISNResultsObserving observer, [NullAllowed] out NSError error);
+	delegate void SNAudioFileAnalyzerAnalyzeHandler (bool didReachEndOfFile);
 
-        [Export ("removeRequest:")]
-        void RemoveRequest (ISNRequest request);
+	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SNAudioFileAnalyzer {
 
-        [Export ("removeAllRequests")]
-        void RemoveAllRequests ();
+		[DesignatedInitializer]
+		[Export ("initWithURL:error:")]
+		IntPtr Constructor (NSUrl url, [NullAllowed] out NSError error);
 
-        [Export ("analyze")]
-        void Analyze ();
+		[Export ("addRequest:withObserver:error:")]
+		bool AddRequest (ISNRequest request, ISNResultsObserving observer, [NullAllowed] out NSError error);
 
-        [Async]
-        [Export ("analyzeWithCompletionHandler:")]
-        void Analyze (SNAudioFileAnalyzerAnalyzeHandler completionHandler);
+		[Export ("removeRequest:")]
+		void RemoveRequest (ISNRequest request);
 
-        [Export ("cancelAnalysis")]
-        void CancelAnalysis ();
-    }
+		[Export ("removeAllRequests")]
+		void RemoveAllRequests ();
 
-    [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
-    [BaseType (typeof (NSObject))]
-    [DisableDefaultCtor]
-    interface SNClassification {
+		[Export ("analyze")]
+		void Analyze ();
 
-        [Export ("identifier")]
-        string Identifier { get; }
+		[Async]
+		[Export ("analyzeWithCompletionHandler:")]
+		void Analyze (SNAudioFileAnalyzerAnalyzeHandler completionHandler);
 
-        [Export ("confidence")]
-        double Confidence { get; }
-    }
+		[Export ("cancelAnalysis")]
+		void CancelAnalysis ();
+	}
 
-    [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
-    [BaseType (typeof (NSObject))]
-    [DisableDefaultCtor]
-    interface SNClassificationResult : SNResult {
+	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SNClassification {
 
-        [Export ("classifications")]
-        SNClassification [] Classifications { get; }
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("confidence")]
+		double Confidence { get; }
+	}
+
+	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SNClassificationResult : SNResult {
+
+		[Export ("classifications")]
+		SNClassification [] Classifications { get; }
 #if !WATCH // Remove when CoreMedia is enabled on watchOS
-        [Export ("timeRange")]
-        CMTimeRange TimeRange { get; }
+		[Export ("timeRange")]
+		CMTimeRange TimeRange { get; }
 #endif
-    }
+	}
 
-    [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
-    [BaseType (typeof (NSObject))]
-    [DisableDefaultCtor]
-    interface SNClassifySoundRequest : SNRequest {
+	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SNClassifySoundRequest : SNRequest {
 
-        [Export ("overlapFactor")]
-        double OverlapFactor { get; set; }
+		[Export ("overlapFactor")]
+		double OverlapFactor { get; set; }
 
-        [return: NullAllowed]
-        [Export ("initWithMLModel:error:")]
-        IntPtr Constructor (MLModel mlModel, [NullAllowed] out NSError error);
-    }
+		[return: NullAllowed]
+		[Export ("initWithMLModel:error:")]
+		IntPtr Constructor (MLModel mlModel, [NullAllowed] out NSError error);
+	}
 
-    interface ISNRequest { }
+	interface ISNRequest { }
 
-    [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
-    [Protocol]
-    interface SNRequest {
+	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+	[Protocol]
+	interface SNRequest {
 
-    }
+	}
 
-    interface ISNResult { }
+	interface ISNResult { }
 
-    [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
-    [Protocol]
+	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+	[Protocol]
 	interface SNResult {
 
-    }
+	}
 
-    interface ISNResultsObserving { }
+	interface ISNResultsObserving { }
 
-    [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
-    [Protocol]
-    interface SNResultsObserving {
+	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+	[Protocol]
+	interface SNResultsObserving {
 
-        [Abstract]
-        [Export ("request:didProduceResult:")]
-        void RequestDidProduceResult (ISNRequest request, ISNResult result);
+		[Abstract]
+		[Export ("request:didProduceResult:")]
+		void RequestDidProduceResult (ISNRequest request, ISNResult result);
 
-        [Export ("request:didFailWithError:")]
-        void RequestDidFailWithError (ISNRequest request, NSError error);
+		[Export ("request:didFailWithError:")]
+		void RequestDidFailWithError (ISNRequest request, NSError error);
 
-        [Export ("requestDidComplete:")]
-        void RequestDidComplete (ISNRequest request);
-    }
+		[Export ("requestDidComplete:")]
+		void RequestDidComplete (ISNRequest request);
+	}
 }
