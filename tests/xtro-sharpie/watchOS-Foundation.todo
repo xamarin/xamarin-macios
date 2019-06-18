@@ -205,3 +205,10 @@
 !missing-type! NSURLSessionWebSocketMessage not bound
 !missing-type! NSURLSessionWebSocketTask not bound
 !missing-type! NSXPCCoder not bound
+## appended from unclassified file
+!missing-selector! NSMutableURLRequest::allowsConstrainedNetworkAccess not bound
+!missing-selector! NSMutableURLRequest::allowsExpensiveNetworkAccess not bound
+!missing-selector! NSMutableURLRequest::setAllowsConstrainedNetworkAccess: not bound
+!missing-selector! NSMutableURLRequest::setAllowsExpensiveNetworkAccess: not bound
+!missing-selector! NSURLRequest::allowsConstrainedNetworkAccess not bound
+!missing-selector! NSURLRequest::allowsExpensiveNetworkAccess not bound

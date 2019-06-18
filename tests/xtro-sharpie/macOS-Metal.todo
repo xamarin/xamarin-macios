@@ -93,3 +93,16 @@
 !missing-selector! MTLTextureDescriptor::swizzle not bound
 !missing-type! MTLCaptureDescriptor not bound
 !missing-type! MTLCounterSampleBufferDescriptor not bound
+## appended from unclassified file
+!missing-enum! MTLDeviceLocation not bound
+!missing-protocol-member! MTLBuffer::newRemoteBufferViewForDevice: not found
+!missing-protocol-member! MTLBuffer::remoteStorageBuffer not found
+!missing-protocol-member! MTLDevice::location not found
+!missing-protocol-member! MTLDevice::locationNumber not found
+!missing-protocol-member! MTLDevice::maxTransferRate not found
+!missing-protocol-member! MTLDevice::peerCount not found
+!missing-protocol-member! MTLDevice::peerGroupID not found
+!missing-protocol-member! MTLDevice::peerIndex not found
+!missing-protocol-member! MTLDevice::supportsShaderBarycentricCoordinates not found
+!missing-protocol-member! MTLTexture::newRemoteTextureViewForDevice: not found
+!missing-protocol-member! MTLTexture::remoteStorageTexture not found

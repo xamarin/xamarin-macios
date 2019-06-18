@@ -1,7 +1,5 @@
 !missing-enum! QLThumbnailGenerationRequestRepresentationTypes not bound
-!missing-enum! QLThumbnailGeneratorError not bound
 !missing-enum! QLThumbnailRepresentationType not bound
-!missing-field! QLThumbnailGeneratorErrorDomain not bound
 !missing-selector! +QLThumbnailGenerator::sharedGenerator not bound
 !missing-selector! QLThumbnailGenerationRequest::iconMode not bound
 !missing-selector! QLThumbnailGenerationRequest::initWithFileAtURL:size:scale:representationTypes: not bound
@@ -21,3 +19,6 @@
 !missing-type! QLThumbnailGenerationRequest not bound
 !missing-type! QLThumbnailGenerator not bound
 !missing-type! QLThumbnailRepresentation not bound
+## appended from unclassified file
+!missing-enum! QLThumbnailError not bound
+!missing-field! QLThumbnailErrorDomain not bound

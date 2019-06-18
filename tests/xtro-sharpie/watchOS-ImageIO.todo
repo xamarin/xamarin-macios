@@ -17,3 +17,5 @@
 !missing-field! kCGImagePropertyHEICSFrameInfoArray not bound
 !missing-field! kCGImagePropertyHEICSLoopCount not bound
 !missing-field! kCGImagePropertyHEICSUnclampedDelayTime not bound
+## appended from unclassified file
+!missing-field! kCGImagePropertyIsSticker not bound

@@ -61,7 +61,6 @@
 !missing-selector! AVAudioSession::setAllowHapticsAndSystemSoundsDuringRecording:error: not bound
 !missing-selector! AVAudioSinkNode::initWithReceiverBlock: not bound
 !missing-selector! AVAudioSourceNode::initWithRenderBlock: not bound
-!missing-selector! AVAudioSourceNode::initWithRenderBlock:format: not bound
 !missing-selector! AVCaptureDevice::constituentDevices not bound
 !missing-selector! AVCaptureDevice::isVirtualDevice not bound
 !missing-selector! AVCaptureDeviceDiscoverySession::supportedMultiCamDeviceSets not bound
@@ -129,3 +128,6 @@
 !missing-type! AVCompositionTrackFormatDescriptionReplacement not bound
 !missing-type! AVSemanticSegmentationMatte not bound
 !missing-type! AVVideoCompositionRenderHint not bound
+## appended from unclassified file
+!missing-field! AVContentKeyRequestRequiresValidationDataInSecureTokenKey not bound
+!missing-selector! AVAudioSourceNode::initWithFormat:renderBlock: not bound

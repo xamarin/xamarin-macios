@@ -5640,6 +5640,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[iOS (13,0)]
+	[TV (13,0)]
 	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIDocumentEnhancer {
@@ -5650,6 +5651,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[iOS (13,0)]
+	[TV (13,0)]
 	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIKMeans {
@@ -5672,6 +5674,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[iOS (13,0)]
+	[TV (13,0)]
 	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMorphologyRectangleMaximum {
@@ -5685,6 +5688,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[iOS (13,0)]
+	[TV (13,0)]
 	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMorphologyRectangleMinimum {
@@ -5698,6 +5702,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[iOS (13,0)]
+	[TV (13,0)]
 	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPaletteCentroid {
@@ -5711,6 +5716,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[iOS (13,0)]
+	[TV (13,0)]
 	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPalettize {

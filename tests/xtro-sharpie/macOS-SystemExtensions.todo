@@ -17,3 +17,6 @@
 !missing-type! OSSystemExtensionManager not bound
 !missing-type! OSSystemExtensionProperties not bound
 !missing-type! OSSystemExtensionRequest not bound
+## appended from unclassified file
+!missing-field! NSSystemExtensionUsageDescriptionKey not bound
+!missing-field! OSBundleUsageDescriptionKey not bound

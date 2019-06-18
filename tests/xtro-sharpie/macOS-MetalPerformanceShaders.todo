@@ -599,3 +599,11 @@
 !missing-type! MPSTemporaryNDArray not bound
 !unknown-simd-type-mapping! The Simd type vector_uchar16 does not have a mapping to a managed type. Please add one in SimdCheck.cs
 !wrong-base-type! MPSTriangleAccelerationStructure expected MPSPolygonAccelerationStructure actual MPSAccelerationStructure
+## appended from unclassified file
+!missing-enum! MPSCNNConvolutionWeightsLayout not bound
+!missing-protocol-member! MPSCNNConvolutionDataSource::weightsLayout not found
+!missing-selector! MPSCNNConvolutionGradientState::gradientForWeightsLayout not bound
+!missing-selector! MPSCNNConvolutionWeightsAndBiasesState::biasesOffset not bound
+!missing-selector! MPSCNNConvolutionWeightsAndBiasesState::initWithWeights:weightsOffset:biases:biasesOffset:cnnConvolutionDescriptor: not bound
+!missing-selector! MPSCNNConvolutionWeightsAndBiasesState::weightsOffset not bound
+!missing-selector! MPSMatrixRandom::encodeToCommandBuffer:destinationMatrix: not bound
