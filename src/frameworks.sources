@@ -1778,7 +1778,7 @@ MAC_FRAMEWORKS =            \
 	NotificationCenter 	\
 	OpenGL                  \
 	PdfKit                  \
-	PencilKit				\
+	PencilKit               \
 	Photos                  \
 	PhotosUI				\
 	PrintCore		\
@@ -1874,7 +1874,7 @@ IOS_FRAMEWORKS =         \
 	OpenGLES \
 	PassKit \
 	PdfKit \
-	PencilKit		\
+	PencilKit \
 	Photos \
 	PhotosUI \
 	PushKit \
