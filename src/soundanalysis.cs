@@ -9,12 +9,16 @@
 
 using System;
 using AVFoundation;
-#if !WATCH
-using CoreMedia;
-#endif
 using CoreML;
 using Foundation;
 using ObjCRuntime;
+
+// TODO: Remove when CoreMedia is enabled on watchOS
+#if WATCH
+using CMTimeRange = Foundation.NSObject;
+#else
+using CoreMedia;
+#endif
 
 namespace SoundAnalysis {
 
@@ -103,10 +107,10 @@ namespace SoundAnalysis {
 
 		[Export ("classifications")]
 		SNClassification [] Classifications { get; }
-#if !WATCH // Remove when CoreMedia is enabled on watchOS
+
+		[NoWatch] // TODO: Remove when CoreMedia is enabled on watchOS
 		[Export ("timeRange")]
 		CMTimeRange TimeRange { get; }
-#endif
 	}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
