@@ -355,6 +355,45 @@ namespace BCLTestImporter {
 				}
 			}
 		}
+		
+		internal IEnumerable<string> GetTraitsFiles (Platform platform)
+		{
+			var rootPath = GetReleaseDownload (platform);
+			switch (platform) {
+			case Platform.iOS:
+				rootPath = Path.Combine (rootPath, "ios-bcl", "monotouch", "tests");
+				break;
+			case Platform.TvOS:
+				rootPath = Path.Combine (rootPath, "ios-bcl", "monotouch_tv", "tests");
+				break;
+			case Platform.WatchOS:
+				rootPath = Path.Combine (rootPath, "ios-bcl", "monotouch_watch", "tests");
+				break;
+			case Platform.MacOSFull:
+				rootPath = Path.Combine (rootPath, "mac-bcl", "xammac_net_4_5", "tests");
+				break;
+			case Platform.MacOSModern:
+				rootPath = Path.Combine (rootPath, "mac-bcl", "xammac", "tests");
+				break;
+			}
+			return new [] {
+ 				Path.Combine (rootPath, "nunit-excludes.txt"),
+				Path.Combine (rootPath, "xunit-excludes.txt")
+			};
+		}
+		
+		string GenerateIncludeFilesNode (string projectName, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, Platform platform)
+		{
+			var contentFiles = new StringBuilder ();
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, info.Assemblies, platform)) {
+				contentFiles.Append (GetContentNode (path));
+			}
+			// add the files that contain the traits/categoiries info
+			foreach (var path in GetTraitsFiles (platform)) {
+				contentFiles.Append (GetContentNode (path));
+			}
+			return contentFiles.ToString ();
+		}
 
 		/// <summary>
 		/// Returns is a project should be ignored in a platform. A project is ignored in one of the assemblies in the
@@ -693,6 +732,7 @@ namespace BCLTestImporter {
 			foreach (var path in GetIgnoreFiles (paths.ProjectTemplatePath, projectName, info.Assemblies, platform)) {
 				contentFiles.Append (GetContentNode (path));
 			}
+
 			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
 			using (var reader = new StreamReader(paths.ProjectTemplatePath)) {
 				var result = reader.ReadToEnd ();
@@ -726,6 +766,7 @@ namespace BCLTestImporter {
 			foreach (var path in GetIgnoreFiles (paths.ProjectTemplatePath, projectName, info.Assemblies, platform)) {
 				contentFiles.Append (GetContentNode (path));
 			}
+
 			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
 			using (var reader = new StreamReader(paths.ProjectTemplatePath)) {
 				var result = reader.ReadToEnd ();
@@ -804,12 +845,11 @@ namespace BCLTestImporter {
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 				}
 			}
-			
 			var contentFiles = new StringBuilder ();
 			foreach (var path in GetIgnoreFiles (templatePath, projectName, info.Assemblies, Platform.WatchOS)) {
-				contentFiles.Append (GetContentNode (path));
+			    contentFiles.Append (GetContentNode (path));
 			}
-			
+
 			using (var reader = new StreamReader(templatePath)) {
 				var result = reader.ReadToEnd ();
 				result = result.Replace (DownloadPathKey, downloadPath);
