@@ -1717,6 +1717,7 @@ COMMON_FRAMEWORKS =         \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \
+	SoundAnalysis 			\
 	SpriteKit               \
 
 MAC_FRAMEWORKS =            \
@@ -1788,7 +1789,6 @@ MAC_FRAMEWORKS =            \
 	SearchKit               \
 	Security                \
 	Social                  \
-	SoundAnalysis 			\
 	StoreKit                \
 	SystemConfiguration     \
 	UserNotifications       \
@@ -1879,7 +1879,6 @@ IOS_FRAMEWORKS =         \
 	SafariServices \
 	Security \
 	Social \
-	SoundAnalysis \
 	Speech \
 	StoreKit \
 	SystemConfiguration \
@@ -1916,7 +1915,6 @@ WATCHOS_FRAMEWORKS =        \
 	NaturalLanguage         \
 	PassKit                 \
 	Security                \
-	SoundAnalysis 			\
 	UIKit XKit              \
 	UserNotifications       \
 	WatchConnectivity       \
@@ -1964,7 +1962,6 @@ TVOS_FRAMEWORKS =           \
 	PhotosUI                \
 	ReplayKit               \
 	Security                \
-	SoundAnalysis 			\
 	StoreKit                \
 	SystemConfiguration     \
 	TVMLKit                 \
