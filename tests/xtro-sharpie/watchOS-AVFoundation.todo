@@ -789,7 +789,6 @@
 !missing-selector! AVAudioSession::setAllowHapticsAndSystemSoundsDuringRecording:error: not bound
 !missing-selector! AVAudioSinkNode::initWithReceiverBlock: not bound
 !missing-selector! AVAudioSourceNode::initWithRenderBlock: not bound
-!missing-selector! AVAudioSourceNode::initWithRenderBlock:format: not bound
 !missing-selector! AVComposition::naturalSize not bound
 !missing-selector! AVComposition::tracks not bound
 !missing-selector! AVComposition::tracksWithMediaCharacteristic: not bound
@@ -1199,3 +1198,6 @@
 !missing-type! AVSemanticSegmentationMatte not bound
 !missing-type! AVTimedMetadataGroup not bound
 !missing-type! AVURLAsset not bound
+## appended from unclassified file
+!missing-field! AVContentKeyRequestRequiresValidationDataInSecureTokenKey not bound
+!missing-selector! AVAudioSourceNode::initWithFormat:renderBlock: not bound

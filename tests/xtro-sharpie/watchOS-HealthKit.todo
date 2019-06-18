@@ -50,7 +50,6 @@
 !missing-selector! HKQuantitySeriesSampleQuery::orderByQuantitySampleStartDate not bound
 !missing-selector! HKQuantitySeriesSampleQuery::setIncludeSample: not bound
 !missing-selector! HKQuantitySeriesSampleQuery::setOrderByQuantitySampleStartDate: not bound
-!missing-selector! HKSampleType::isDurationRestricted not bound
 !missing-selector! HKSampleType::maximumAllowedDuration not bound
 !missing-selector! HKStatistics::duration not bound
 !missing-selector! HKStatistics::durationForSource: not bound
@@ -63,3 +62,7 @@
 !missing-type! HKHeartbeatSeriesQuery not bound
 !missing-type! HKHeartbeatSeriesSample not bound
 !wrong-base-type! HKCumulativeQuantitySeriesSample expected HKCumulativeQuantitySample actual HKQuantitySample
+## appended from unclassified file
+!missing-selector! HKSampleType::isMaximumDurationRestricted not bound
+!missing-selector! HKSampleType::isMinimumDurationRestricted not bound
+!missing-selector! HKSampleType::minimumAllowedDuration not bound

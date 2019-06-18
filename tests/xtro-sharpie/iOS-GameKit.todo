@@ -29,3 +29,5 @@
 !missing-selector! GKRemoteUIController::setShouldApplyGameCenterTheme: not bound
 !missing-selector! GKRemoteUIController::shouldApplyGameCenterTheme not bound
 !missing-type! GKRemoteUIController not bound
+## appended from unclassified file
+!missing-selector! GKPlayer::scopedIDsArePersistent not bound

@@ -1777,10 +1777,12 @@ namespace CloudKit {
 		string[] SubtitleLocalizationArgs { get; set; }
 
 		[Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[TV (11,0)]
 		[Export ("shouldSendMutableContent")]
 		bool ShouldSendMutableContent { get; set; }
 
 		[Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[TV (11,0)]
 		[NullAllowed, Export ("collapseIDKey")]
 		string CollapseIdKey { get; set; }
 	}

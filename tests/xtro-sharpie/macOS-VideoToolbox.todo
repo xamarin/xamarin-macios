@@ -12,3 +12,6 @@
 !missing-field! kVTVideoEncoderList_SupportedSelectionProperties not bound
 !missing-field! kVTVideoEncoderSpecification_PreferredEncoderGPURegistryID not bound
 !missing-field! kVTVideoEncoderSpecification_RequiredEncoderGPURegistryID not bound
+## appended from unclassified file
+!missing-field! kVTCompressionPropertyKey_UsingGPURegistryID not bound
+!missing-field! kVTDecompressionPropertyKey_UsingGPURegistryID not bound

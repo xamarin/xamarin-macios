@@ -116,6 +116,13 @@ namespace xharness
 			LaunchTimeout = InWrench ? 3 : 120;
 		}
 
+		public bool IsBetaXcode {
+			get {
+				// There's no string.Contains (string, StringComparison) overload, so use IndexOf instead.
+				return XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
+			}
+		}
+
 		static string FindXcode (string path)
 		{
 			var p = path;

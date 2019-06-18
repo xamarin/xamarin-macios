@@ -1,6 +1,5 @@
 !missing-pinvoke! CTFontManagerCopyRegisteredFontDescriptors is not bound
 !missing-pinvoke! CTFontManagerRegisterFontDescriptors is not bound
 !missing-pinvoke! CTFontManagerRegisterFontURLs is not bound
-!missing-pinvoke! CTFontManagerRequestFonts is not bound
 !missing-pinvoke! CTFontManagerUnregisterFontDescriptors is not bound
 !missing-pinvoke! CTFontManagerUnregisterFontURLs is not bound

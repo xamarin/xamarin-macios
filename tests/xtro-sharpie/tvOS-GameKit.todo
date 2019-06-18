@@ -30,3 +30,5 @@
 !missing-selector! GKRemoteUIController::shouldApplyGameCenterTheme not bound
 !missing-type! GKRemoteUIController not bound
 !unknown-native-enum! GKPeerPickerConnectionType bound
+## appended from unclassified file
+!missing-selector! GKPlayer::scopedIDsArePersistent not bound
