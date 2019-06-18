@@ -306,6 +306,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IdentityLookupUI", "IdentityLookupUI", 12,0 },
 				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 				{ "Network", "Network", 12, 0 },
+
 				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 			};
 		}
@@ -357,6 +358,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "NaturalLanguage", "NaturalLanguage", 5 },
 				{ "MediaPlayer", "MediaPlayer", 5 },
+
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 
 			};
@@ -433,6 +435,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 					{ "Network", "Network", 12, 0 } ,
 					{ "TVUIKit", "TVUIKit", 12,0 },
+
 					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
 				};
 			}

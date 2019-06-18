@@ -1,10 +1,10 @@
 //
-// DeviceCheck C# bindings
+// SoundAnalysis C# bindings
 //
 // Authors:
 //	TJ Lambert  <t-anlamb@microsoft.com>
 //
-// Copyright 2019 Xamarin Inc. All rights reserved.
+// Copyright 2019 Microsoft Corporation All rights reserved.
 //
 
 using System;
@@ -117,28 +117,23 @@ namespace SoundAnalysis {
 		[Export ("overlapFactor")]
 		double OverlapFactor { get; set; }
 
-		[return: NullAllowed]
 		[Export ("initWithMLModel:error:")]
 		IntPtr Constructor (MLModel mlModel, [NullAllowed] out NSError error);
 	}
 
-	interface ISNRequest { }
+	interface ISNRequest {}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
 	[Protocol]
-	interface SNRequest {
+	interface SNRequest {}
 
-	}
-
-	interface ISNResult { }
+	interface ISNResult {}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
 	[Protocol]
-	interface SNResult {
+	interface SNResult {}
 
-	}
-
-	interface ISNResultsObserving { }
+	interface ISNResultsObserving {}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
 	[Protocol]
@@ -146,12 +141,12 @@ namespace SoundAnalysis {
 
 		[Abstract]
 		[Export ("request:didProduceResult:")]
-		void RequestDidProduceResult (ISNRequest request, ISNResult result);
+		void DidProduceResult (ISNRequest request, ISNResult result);
 
 		[Export ("request:didFailWithError:")]
-		void RequestDidFailWithError (ISNRequest request, NSError error);
+		void DidFail (ISNRequest request, NSError error);
 
 		[Export ("requestDidComplete:")]
-		void RequestDidComplete (ISNRequest request);
+		void DidComplete (ISNRequest request);
 	}
 }
