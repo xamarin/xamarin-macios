@@ -25,7 +25,7 @@ namespace SoundAnalysis {
         UnknownError = 1,
         OperationFailed,
         InvalidFormat,
-        InvalidModel,    
+        InvalidModel,
     }
 
     [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
@@ -52,7 +52,7 @@ namespace SoundAnalysis {
         [Export ("completeAnalysis")]
         void CompleteAnalysis ();
     }
-    
+
     delegate void SNAudioFileAnalyzerAnalyzeHandler (bool didReachEndOfFile);
 
     [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
@@ -66,20 +66,20 @@ namespace SoundAnalysis {
 
         [Export ("addRequest:withObserver:error:")]
         bool AddRequest (ISNRequest request, ISNResultsObserving observer, [NullAllowed] out NSError error);
-        
+
         [Export ("removeRequest:")]
         void RemoveRequest (ISNRequest request);
-        
+
         [Export ("removeAllRequests")]
         void RemoveAllRequests ();
-        
+
         [Export ("analyze")]
         void Analyze ();
 
         [Async]
         [Export ("analyzeWithCompletionHandler:")]
         void Analyze (SNAudioFileAnalyzerAnalyzeHandler completionHandler);
-        
+
         [Export ("cancelAnalysis")]
         void CancelAnalysis ();
     }
@@ -91,11 +91,11 @@ namespace SoundAnalysis {
 
         [Export ("identifier")]
         string Identifier { get; }
-        
+
         [Export ("confidence")]
         double Confidence { get; }
     }
-    
+
     [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
     [BaseType (typeof (NSObject))]
     [DisableDefaultCtor]
@@ -116,12 +116,12 @@ namespace SoundAnalysis {
 
         [Export ("overlapFactor")]
         double OverlapFactor { get; set; }
-        
+
         [return: NullAllowed]
         [Export ("initWithMLModel:error:")]
         IntPtr Constructor (MLModel mlModel, [NullAllowed] out NSError error);
     }
-    
+
     interface ISNRequest { }
 
     [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
@@ -131,15 +131,15 @@ namespace SoundAnalysis {
     }
 
     interface ISNResult { }
-    
+
     [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
     [Protocol]
-    interface SNResult {
+	interface SNResult {
 
     }
-    
+
     interface ISNResultsObserving { }
-    
+
     [Watch (6, 0), TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
     [Protocol]
     interface SNResultsObserving {
@@ -147,10 +147,10 @@ namespace SoundAnalysis {
         [Abstract]
         [Export ("request:didProduceResult:")]
         void RequestDidProduceResult (ISNRequest request, ISNResult result);
-        
+
         [Export ("request:didFailWithError:")]
         void RequestDidFailWithError (ISNRequest request, NSError error);
-        
+
         [Export ("requestDidComplete:")]
         void RequestDidComplete (ISNRequest request);
     }
