@@ -70,14 +70,9 @@ namespace MonoTouchFixtures.PassKit {
 				Assert.NotNull (pass.Icon, "Icon");
 #endif
 
-				// need to ensure it's english locale
-				if (TestRuntime.CheckXcodeVersion (11, 0)) {
-					Assert.That (pass.LocalizedDescription, Is.Null, "LocalizedName");
-				} else {
-					Assert.That (pass.LocalizedDescription, Is.Not.Null, "LocalizedName");
-					Assert.That (pass.LocalizedDescription, Is.Not.Empty, "LocalizedName");
-				}
-				Assert.That (string.IsNullOrEmpty (pass.LocalizedName), Is.False, "LocalizedName");
+				Assert.That (pass.LocalizedDescription, Is.Not.Null, "LocalizedDescription is not null");
+				Assert.That (pass.LocalizedDescription, Is.Not.Empty, "LocalizedDescription is not empty");
+				Assert.That (string.IsNullOrEmpty (pass.LocalizedName), Is.False, "LocalizedName is false");
 
 				Assert.That (pass.OrganizationName, Is.EqualTo ("Skyport Airways"), "OrganizationName");
 				Assert.That (pass.PassTypeIdentifier, Is.EqualTo ("pass.com.apple.devpubs.example"), "PassTypeIdentifier");
