@@ -493,16 +493,19 @@ namespace WebKit
 		void DidClose (WKWebView webView);
 
 		[iOS (10,0)][NoMac]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
 		[Export ("webView:shouldPreviewElement:")]
 		bool ShouldPreviewElement (WKWebView webView, WKPreviewElementInfo elementInfo);
 
 #if !MONOMAC
 		[iOS (10,0)][NoMac]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
 		[Export ("webView:previewingViewControllerForElement:defaultActions:")]
 		[return: NullAllowed]
 		UIViewController GetPreviewingViewController (WKWebView webView, WKPreviewElementInfo elementInfo, IWKPreviewActionItem[] previewActions);
 
 		[iOS (10,0)][NoMac]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
 		[Export ("webView:commitPreviewingViewController:")]
 		void CommitPreviewingViewController (WKWebView webView, UIViewController previewingViewController);
 #endif
@@ -850,6 +853,7 @@ namespace WebKit
 	interface IWKPreviewActionItem {}
 
 	[iOS (10,0)][NoMac]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
 	[Protocol]
 	interface WKPreviewActionItem : UIPreviewActionItem {
 		[Abstract]
@@ -860,6 +864,7 @@ namespace WebKit
 
 	[iOS (10,0)][NoMac]
 	[Static]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
 	interface WKPreviewActionItemIdentifier {
 		[Field ("WKPreviewActionItemIdentifierOpen")]
 		NSString Open { get; }
@@ -875,6 +880,7 @@ namespace WebKit
 	}
 
 	[iOS (10,0)][NoMac]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'WKContextMenuElementInfo' instead.")]
 	[BaseType (typeof (NSObject))]
 	interface WKPreviewElementInfo : NSCopying {
 		[NullAllowed, Export ("linkURL")]
@@ -897,5 +903,14 @@ namespace WebKit
 
 		[Export ("preferredContentMode", ArgumentSemantic.Assign)]
 		WKContentMode PreferredContentMode { get; set; }
+	}
+
+	[NoMac]
+	[iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface WKContextMenuElementInfo {
+		[NullAllowed, Export ("linkURL")]
+		NSUrl LinkUrl { get; }
 	}
 }
