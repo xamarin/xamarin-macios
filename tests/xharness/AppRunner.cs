@@ -458,8 +458,9 @@ namespace xharness
 				// write the human readable log
 				var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ()); 
 
-				File.Move (listener_log.FullPath, tmpFile);
-				main_log.WriteLine ($"Moving xml file '{listener_log.FullPath}' to '{tmpFile}'");
+				File.Copy (listener_log.FullPath, tmpFile);
+				main_log.WriteLine ($"Copying xml file '{listener_log.FullPath}' to '{tmpFile}'");
+				Console.WriteLine ($"Copying xml file '{listener_log.FullPath}' to '{tmpFile}'");
 				crashed = false;
 				try {
 					using (var streamReaderTmp = new StreamReader (tmpFile)) {
