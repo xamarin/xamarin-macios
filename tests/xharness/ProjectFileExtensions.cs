@@ -861,6 +861,8 @@ namespace xharness
 				new string [] { "FilesToCopyResources", "Include" },
 				new string [] { "FilesToCopyXMLFiles", "Include" },
 				new string [] { "FilesToCopyChannels", "Include" },
+				new string [] { "CustomMetalSmeltingInput", "Include" },
+				new string [] { "Metal", "Include" },
 			};
 			var nodes_with_variables = new string []
 			{

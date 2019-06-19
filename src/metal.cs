@@ -164,6 +164,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newTextureWithDescriptor:offset:bytesPerRow:")]
+		[return: Release]
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, nuint offset, nuint bytesPerRow);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
@@ -791,34 +792,42 @@ namespace Metal {
 #endif
 		[Export ("newHeapWithDescriptor:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLHeap CreateHeap (MTLHeapDescriptor descriptor);
 
 		[Abstract, Export ("newCommandQueue")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLCommandQueue CreateCommandQueue ();
 
 		[Abstract, Export ("newCommandQueueWithMaxCommandBufferCount:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLCommandQueue CreateCommandQueue (nuint maxCommandBufferCount);
 
 		[Abstract, Export ("newBufferWithLength:options:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLBuffer CreateBuffer (nuint length, MTLResourceOptions options);
 
 		[Abstract, Export ("newBufferWithBytes:length:options:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLBuffer CreateBuffer (IntPtr pointer, nuint length, MTLResourceOptions options);
 
 		[Abstract, Export ("newBufferWithBytesNoCopy:length:options:deallocator:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLBuffer CreateBufferNoCopy (IntPtr pointer, nuint length, MTLResourceOptions options, MTLDeallocator deallocator);
 
 		[Abstract, Export ("newDepthStencilStateWithDescriptor:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLDepthStencilState CreateDepthStencilState (MTLDepthStencilDescriptor descriptor);
 
 		[Abstract, Export ("newTextureWithDescriptor:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor);
 
 #if XAMCORE_4_0
@@ -826,6 +835,7 @@ namespace Metal {
 #endif
 		[iOS (11,0), TV (11,0), NoWatch, Mac (10,11)]
 		[return: NullAllowed]
+		[return: Release]
 		[Export ("newTextureWithDescriptor:iosurface:plane:")]
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, IOSurface.IOSurface iosurface, nuint plane);
 
@@ -835,6 +845,7 @@ namespace Metal {
 #endif
 		[Export ("newSharedTextureWithDescriptor:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLTexture CreateSharedTexture (MTLTextureDescriptor descriptor);
 
 		[NoiOS, NoTV, Mac (10,14, onlyOn64: true)]
@@ -843,36 +854,57 @@ namespace Metal {
 #endif
 		[Export ("newSharedTextureWithHandle:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLTexture CreateSharedTexture (MTLSharedTextureHandle sharedHandle);
 
 		[Abstract, Export ("newSamplerStateWithDescriptor:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLSamplerState CreateSamplerState (MTLSamplerDescriptor descriptor);
 
 		[Abstract, Export ("newDefaultLibrary")]
+		[return: Release]
 		IMTLLibrary CreateDefaultLibrary ();
 
 		[Abstract, Export ("newLibraryWithFile:error:")]
+		[return: Release]
 		IMTLLibrary CreateLibrary (string filepath, out NSError error);
 
+#if !XAMCORE_4_0
 		[Abstract, Export ("newLibraryWithData:error:")]
+		[return: Release]
+		[Obsolete ("Use the overload that take a 'DispatchData' instead.")]
 		IMTLLibrary CreateLibrary (NSObject data, out NSError error);
+#endif
+
+#if XAMCORE_4_0
+		[Abstract]
+		[Export ("newLibraryWithData:error:")]
+		[return: Release]
+		IMTLLibrary CreateLibrary (DispatchData data, out NSError error);
+#endif
 
 		[Abstract, Export ("newLibraryWithSource:options:error:")]
+		[return: Release]
 		IMTLLibrary CreateLibrary (string source, MTLCompileOptions options, out NSError error);
 
 		[Abstract, Export ("newLibraryWithSource:options:completionHandler:")]
+		[Async]
 		void CreateLibrary (string source, MTLCompileOptions options, Action<IMTLLibrary, NSError> completionHandler);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-#if XAMCORE_4_0
-		[Abstract]
-#endif
 		[Export ("newDefaultLibraryWithBundle:error:")]
+		[return: Release]
 		[return: NullAllowed]
+#if XAMCORE_4_0
+		IMTLLibrary CreateDefaultLibrary (NSBundle bundle, out NSError error);
+#else
+		[Obsolete ("Use 'CreateDefaultLibrary' instead.")]
 		IMTLLibrary CreateLibrary (NSBundle bundle, out NSError error);
+#endif
 
 		[Abstract, Export ("newRenderPipelineStateWithDescriptor:error:")]
+		[return: Release]
 		IMTLRenderPipelineState CreateRenderPipelineState (MTLRenderPipelineDescriptor descriptor, out NSError error);
 
 		[Abstract, Export ("newRenderPipelineStateWithDescriptor:completionHandler:")]
@@ -882,6 +914,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newRenderPipelineStateWithDescriptor:options:reflection:error:")]
+		[return: Release]
 		IMTLRenderPipelineState CreateRenderPipelineState (MTLRenderPipelineDescriptor descriptor, MTLPipelineOption options, out MTLRenderPipelineReflection reflection, out NSError error);
 
 #if XAMCORE_2_0
@@ -894,6 +927,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newComputePipelineStateWithFunction:options:reflection:error:")]
+		[return: Release]
 		IMTLComputePipelineState CreateComputePipelineState (IMTLFunction computeFunction, MTLPipelineOption options, out MTLComputePipelineReflection reflection, out NSError error);
 
 #if XAMCORE_2_0
@@ -903,6 +937,7 @@ namespace Metal {
 		void CreateComputePipelineState (IMTLFunction computeFunction, Action<IMTLComputePipelineState, NSError> completionHandler);
 
 		[Abstract, Export ("newComputePipelineStateWithFunction:error:")]
+		[return: Release]
 		IMTLComputePipelineState CreateComputePipelineState (IMTLFunction computeFunction, out NSError error);
 
 		[Abstract, Export ("newComputePipelineStateWithFunction:options:completionHandler:")]
@@ -914,6 +949,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newComputePipelineStateWithDescriptor:options:reflection:error:")]
+		[return: Release]
 		IMTLComputePipelineState CreateComputePipelineState (MTLComputePipelineDescriptor descriptor, MTLPipelineOption options, out MTLComputePipelineReflection reflection, out NSError error);
 
 		[iOS (9,0)]
@@ -929,6 +965,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newFence")]
+		[return: Release]
 		IMTLFence CreateFence ();
 
 		[Abstract, Export ("supportsFeatureSet:")]
@@ -976,6 +1013,7 @@ namespace Metal {
 #endif
 		[Export ("newLibraryWithURL:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLLibrary CreateLibrary (NSUrl url, [NullAllowed] out NSError error);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
@@ -1026,6 +1064,7 @@ namespace Metal {
 #endif
 		[Export ("newArgumentEncoderWithArguments:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLArgumentEncoder CreateArgumentEncoder (MTLArgumentDescriptor[] arguments);
 
 		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
@@ -1034,6 +1073,7 @@ namespace Metal {
 #endif
 		[Export ("newIndirectCommandBufferWithDescriptor:maxCommandCount:options:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLIndirectCommandBuffer CreateIndirectCommandBuffer (MTLIndirectCommandBufferDescriptor descriptor, nuint maxCount, MTLResourceOptions options);
 
 		[Mac (10, 14, onlyOn64: true), iOS (12, 0), TV (12,0)]
@@ -1041,6 +1081,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[return: NullAllowed]
+		[return: Release]
 		[Export ("newEvent")]
 		IMTLEvent CreateEvent ();
 
@@ -1049,6 +1090,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[return: NullAllowed]
+		[return: Release]
 		[Export ("newSharedEvent")]
 		IMTLSharedEvent CreateSharedEvent ();
 
@@ -1058,6 +1100,7 @@ namespace Metal {
 #endif
 		[Export ("newSharedEventWithHandle:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLSharedEvent CreateSharedEvent (MTLSharedEventHandle sharedEventHandle);
 
 		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
@@ -1104,6 +1147,7 @@ namespace Metal {
 #endif
 		[Export ("newRenderPipelineStateWithTileDescriptor:options:reflection:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLRenderPipelineState CreateRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, [NullAllowed] out MTLRenderPipelineReflection reflection, [NullAllowed] out NSError error);
 
 		[iOS (11,0), NoTV, NoMac, NoWatch]
@@ -1245,6 +1289,7 @@ namespace Metal {
 
 		[Abstract, Export ("newTextureViewWithPixelFormat:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLTexture CreateTextureView (MTLPixelFormat pixelFormat);
 
 #if XAMCORE_4_0
@@ -1258,6 +1303,7 @@ namespace Metal {
 #endif
 		[Export ("newTextureViewWithPixelFormat:textureType:levels:slices:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLTexture CreateTextureView (MTLPixelFormat pixelFormat, MTLTextureType textureType, NSRange levelRange, NSRange sliceRange);
 
 #if XAMCORE_2_0
@@ -1310,6 +1356,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[return: NullAllowed]
+		[return: Release]
 		[Export ("newSharedTextureHandle")]
 		MTLSharedTextureHandle CreateSharedTextureHandle ();
 	}
@@ -1739,6 +1786,10 @@ namespace Metal {
 	[DisableDefaultCtor]
 	interface MTLFunctionConstantValues : NSCopying
 	{
+		[iOS (11,0), TV (11,0), Mac (10,13)]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("setConstantValue:type:atIndex:")]
 		void SetConstantValue (IntPtr value, MTLDataType type, nuint index);
 
@@ -1826,6 +1877,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newArgumentEncoderWithBufferIndex:")]
+		[return: Release]
 		IMTLArgumentEncoder CreateArgumentEncoder (nuint bufferIndex);
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
@@ -1833,6 +1885,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newArgumentEncoderWithBufferIndex:reflection:")]
+		[return: Release]
 		IMTLArgumentEncoder CreateArgumentEncoder (nuint bufferIndex, [NullAllowed] out MTLArgument reflection);
 	}
 
@@ -1852,6 +1905,7 @@ namespace Metal {
 		string [] FunctionNames { get; }
 
 		[Abstract, Export ("newFunctionWithName:")]
+		[return: Release]
 		IMTLFunction CreateFunction (string functionName);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
@@ -1860,6 +1914,7 @@ namespace Metal {
 #endif
 		[Export ("newFunctionWithName:constantValues:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLFunction CreateFunction (string name, MTLFunctionConstantValues constantValues, out NSError error);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
@@ -1867,6 +1922,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newFunctionWithName:constantValues:completionHandler:")]
+		[Async]
 		void CreateFunction (string name, MTLFunctionConstantValues constantValues, Action<IMTLFunction, NSError> completionHandler);
 
 		[Field ("MTLLibraryErrorDomain")]
@@ -1879,7 +1935,11 @@ namespace Metal {
 
 		[NullAllowed] // by default this property is null
 		[Export ("preprocessorMacros", ArgumentSemantic.Copy)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSObject> PreprocessorMacros { get; set; }
+#else
 		NSDictionary PreprocessorMacros { get; set; }
+#endif
 
 		[Export ("fastMathEnabled")]
 		bool FastMathEnabled { get; set; }
@@ -2756,11 +2816,13 @@ namespace Metal {
 		[Abstract]
 		[Export ("newBufferWithLength:options:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLBuffer CreateBuffer (nuint length, MTLResourceOptions options);
 
 		[Abstract]
 		[Export ("newTextureWithDescriptor:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLTexture CreateTexture (MTLTextureDescriptor desc);
 
 		[Abstract]
@@ -2976,9 +3038,11 @@ namespace Metal {
 		MTLCaptureManager Shared { get; }
 
 		[Export ("newCaptureScopeWithDevice:")]
+		[return: Release]
 		IMTLCaptureScope CreateNewCaptureScope (IMTLDevice device);
 
 		[Export ("newCaptureScopeWithCommandQueue:")]
+		[return: Release]
 		IMTLCaptureScope CreateNewCaptureScope (IMTLCommandQueue commandQueue);
 
 		[Export ("startCaptureWithDevice:")]
@@ -3141,6 +3205,7 @@ namespace Metal {
 #endif
 		[Export ("newArgumentEncoderForBufferAtIndex:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLArgumentEncoder CreateArgumentEncoder (nuint index);
 	}
 
@@ -3231,6 +3296,7 @@ namespace Metal {
 
 		[Abstract]
 		[Export ("newSharedEventHandle")]
+		[return: Release]
 		MTLSharedEventHandle CreateSharedEventHandle ();
 
 		[Abstract]
