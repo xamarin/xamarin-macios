@@ -70,7 +70,7 @@ namespace monotouchtestWatchKitExtension
 		{
 		}
 
-		public override void Awake (NSObject context)
+		public override  void Awake (NSObject context)
 		{
 			base.Awake (context);
 
@@ -124,10 +124,10 @@ namespace monotouchtestWatchKitExtension
 			
 			ThreadPool.QueueUserWorkItem ((v) =>
 			{
-				BeginInvokeOnMainThread (() =>
+				BeginInvokeOnMainThread (async () =>
 				{
 					lblStatus.SetText (string.Format ("{0} tests", runner.TotalTests));
-					runner.Run (testAssemblies);
+					await runner.Run (testAssemblies).ConfigureAwait (false);
 					RenderResults ();
 					cmdRun.SetEnabled (true);
 					cmdRun.SetHidden (false);

@@ -692,7 +692,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			}, tcs, timeout, true);
 
 			try {
-				await tcs.Task.ConfigureAwait (false);
+				if (!tcs.Task.IsCompleted)
+					await tcs.Task.ConfigureAwait (false);
 			} finally {
 				registration.Unregister (handle);
 			}
@@ -937,8 +938,10 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					var tcs = new TaskCompletionSource<object> ();
 
 					try {
+						// set the wait for event cb first, then execute the tests
+						var resultTask = WaitForEvent (resultsSink.Finished, TimeSpan.FromDays (10)).ConfigureAwait (false);
 						frontController.RunTests (testCases, resultsSink, executionOptions);
-						await WaitForEvent (resultsSink.Finished, TimeSpan.FromDays (10)).ConfigureAwait (false);
+						await resultTask;
 					} finally {
 						resultsSink.Dispose ();
 					}
