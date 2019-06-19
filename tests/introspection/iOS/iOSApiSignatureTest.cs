@@ -232,7 +232,6 @@ namespace Introspection {
 			case "PostNotification": // completion handler is not always called
 				return m.DeclaringType.Name == "ICNotificationManager";
 			}
-
 			return base.IgnoreAsync (m);
 		}
 	}
