@@ -25,6 +25,12 @@ namespace xharness
 
 		public IEnumerable<TestProject> ProjectReferences;
 
+		// Optional
+		public BCLTestInfo BCLInfo { get; set; }
+
+		// Optional
+		public MonoNativeInfo MonoNativeInfo { get; set; }
+
 		public TestProject ()
 		{
 		}
@@ -154,12 +160,6 @@ namespace xharness
 		public bool SkiptvOSVariation;
 		public bool BuildOnly;
 
-		// Optional
-		public BCLTestInfo BCLInfo { get; set; }
-
-		// Optional
-		public MonoNativeInfo MonoNativeInfo { get; set; }
-
 		public iOSTestProject ()
 		{
 		}
@@ -175,12 +175,6 @@ namespace xharness
 	public class MacTestProject : TestProject
 	{
 		public MacFlavors TargetFrameworkFlavor;
-
-		// Optional
-		public MacBCLTestInfo BCLInfo { get; set; }
-
-		// Optional
-		public MacMonoNativeInfo MonoNativeInfo { get; set; }
 
 		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.NonSystem || TargetFrameworkFlavor == MacFlavors.Modern;
 		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.NonSystem || TargetFrameworkFlavor == MacFlavors.Full;

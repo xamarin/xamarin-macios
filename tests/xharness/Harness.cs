@@ -481,7 +481,7 @@ namespace xharness
 			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
 				var file = proj.Path;
 				var unified = new MacTarget (proj.GenerateModern, shouldSkipProjectGeneration: true);
-				unified.BCLInfo = proj.BCLInfo;
+				unified.BCLInfo = (MacBCLTestInfo) proj.BCLInfo;
 				configureTarget (unified, file, proj.IsNUnitProject);
 				hardcoded_unified_targets.Add (unified);
  			}
