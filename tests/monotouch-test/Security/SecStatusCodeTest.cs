@@ -32,9 +32,14 @@ namespace MonoTouchFixtures.Security {
 			var desc = SecStatusCode.Success.GetStatusDescription ();
 			Assert.NotNull (desc, $"{nameof (desc)} not null");
 
-			// This value generated from objc enum documentation and very unlikely to change.
-			var noErr = "No error.";
-			Assert.That (desc, Is.EqualTo (noErr), $"{nameof (desc)} == {noErr}");
+			var lang = NSLocale.CurrentLocale.Identifier;
+			if (lang.Equals ("en_US", StringComparison.InvariantCultureIgnoreCase)) {
+				// This value generated from objc enum documentation and very unlikely to change.
+				var noErr = "No error.";
+				Assert.That (desc, Is.EqualTo (noErr), $"{nameof (desc)} == {noErr}");
+			} else {
+				Assert.Inconclusive ($"Device in a not known language {lang}.");
+			}
 		}
 	}
 }
