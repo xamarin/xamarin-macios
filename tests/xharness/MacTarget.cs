@@ -9,7 +9,7 @@ namespace xharness
 {
 	public class MacTarget : Target
 	{
-		public bool Mobile { get; private set; }
+		public bool Modern { get; private set; }
 		public bool System { get; set; }
 
 		// Optional
@@ -21,7 +21,7 @@ namespace xharness
 
 		public MacTarget (bool mobile, bool shouldSkipProjectGeneration = false, bool skipSuffix = false) : base ()
 		{
-			Mobile = mobile;
+			Modern = mobile;
 			SkipProjectGeneration = shouldSkipProjectGeneration;
 			SkipSuffix = skipSuffix;
 		}
@@ -55,7 +55,7 @@ namespace xharness
 				}
 				if (System)
 					return "-system";
-				var suffix = (Mobile ? "" : "-full");
+				var suffix = (Modern ? "" : "-full");
 				return "-unified" + (IsBCL ? "" : suffix);
 			}
 		}
@@ -64,7 +64,7 @@ namespace xharness
 			get {
 				if (System)
 					return "system";
-				string suffix = (Mobile ? "" : "-full");
+				string suffix = (Modern ? "" : "-full");
 				return "unified" + (IsBCL ? "" : suffix);
 			}
 		}
@@ -139,7 +139,7 @@ namespace xharness
 
 		public override IEnumerable<string> ReferenceToRemove { get { yield return "System.Drawing"; } }
 
-		public override bool ShouldSetTargetFrameworkIdentifier { get { return Mobile; } }
+		public override bool ShouldSetTargetFrameworkIdentifier { get { return Modern; } }
 
 		public override Dictionary<string, string> NewPropertiesToAdd 
 		{
@@ -151,7 +151,7 @@ namespace xharness
 				if (System) {
 					props.Add ("TargetFrameworkVersion", "v4.7.1");
 					props.Add ("MonoBundlingExtraArgs", "--embed-mono=no");
-				} else if (Mobile)
+				} else if (Modern)
 				{
 					props.Add ("TargetFrameworkVersion", "v2.0");
 				}
