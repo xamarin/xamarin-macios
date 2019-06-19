@@ -55,7 +55,7 @@ namespace xharness
 				}
 				if (System)
 					return "-system";
-				var suffix = (Mobile ? "" : "XM45");
+				var suffix = (Mobile ? "" : "-full");
 				return "-unified" + (IsBCL ? "" : suffix);
 			}
 		}
@@ -64,7 +64,7 @@ namespace xharness
 			get {
 				if (System)
 					return "system";
-				string suffix = (Mobile ? "" : "XM45");
+				string suffix = (Mobile ? "" : "-full");
 				return "unified" + (IsBCL ? "" : suffix);
 			}
 		}
