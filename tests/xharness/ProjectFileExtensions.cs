@@ -569,14 +569,20 @@ namespace xharness
 				FindAndReplace (node, find, replace);
 		}
 
-		public static void FixInfoPListInclude (this XmlDocument csproj, string suffix, string fullPath = null)
+		public static void FixInfoPListInclude (this XmlDocument csproj, string suffix, string fullPath = null, string newName = null)
 		{
-			var import = csproj.SelectSingleNode ("/*/*/*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
+			var import = GetInfoPListNode (csproj, false);
 			if (import != null) {
-				if (string.IsNullOrEmpty (fullPath))
-					import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace ("Info.plist", $"Info{suffix}.plist");
-				else 
-					import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace ("Info.plist", $"{fullPath}\\Info{suffix}.plist");
+				var value = import.Attributes ["Include"].Value;
+				var fname = System.IO.Path.GetFileName (value.Replace ('\\', '/'));
+				if (newName == null) {
+					if (string.IsNullOrEmpty (fullPath))
+						newName = value.Replace (fname, $"Info{suffix}.plist");
+					else
+						newName = value.Replace (fname, $"{fullPath}\\Info{suffix}.plist");
+				}
+				import.Attributes ["Include"].Value = value.Replace (fname, newName);
+
 				var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
 				if (logicalName == null) {
 					logicalName = csproj.CreateElement ("LogicalName", MSBuild_Namespace);
@@ -586,23 +592,30 @@ namespace xharness
 			}
 		}
 
-		public static string GetInfoPListInclude (this XmlDocument csproj)
+		static XmlNode GetInfoPListNode (this XmlDocument csproj, bool throw_if_not_found = false)
 		{
 			var logicalNames = csproj.SelectNodes ("//*[local-name() = 'LogicalName']");
 			foreach (XmlNode ln in logicalNames) {
 				if (!ln.InnerText.Contains("Info.plist"))
 					continue;
-				return ln.ParentNode.Attributes ["Include"].Value;
+				return ln.ParentNode;
 			}
 			var nodes = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
 			if (nodes.Count > 0) {
-				return nodes [0].Attributes [0].Value; // return the value, which could be Info.plist or a full path (linked).
+				return nodes [0]; // return the value, which could be Info.plist or a full path (linked).
 			}
 			nodes = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info-tv.plist')]");
 			if (nodes.Count > 0) {
-				return nodes [0].Attributes [0].Value; // return the value, which could be Info.plist or a full path (linked).
+				return nodes [0]; // return the value, which could be Info.plist or a full path (linked).
 			}
-			throw new Exception ($"Could not find Info.plist include.");
+			if (throw_if_not_found)
+				throw new Exception ($"Could not find Info.plist include.");
+			return null;
+		}
+
+		public static string GetInfoPListInclude (this XmlDocument csproj)
+		{
+			return GetInfoPListNode (csproj).Attributes ["Include"].Value;
 		}
 
 		public static IEnumerable<string> GetProjectReferences (this XmlDocument csproj)
