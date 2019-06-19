@@ -15,7 +15,11 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		protected override string DevicePlatformBinDir {
-			get { return Path.Combine (SdkDevPath, "Platforms", "iPhoneOS.platform", "usr", "bin"); }
+			get {
+				return AppleSdkSettings.XcodeVersion.Major >= 11
+					? Path.Combine (SdkDevPath, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin")
+					: Path.Combine (SdkDevPath, "Platforms", "iPhoneOS.platform", "usr", "bin");
+			}
 		}
 	}
 }

@@ -814,6 +814,9 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 				if (v.StartsWith (executable, StringComparison.Ordinal) && v.EndsWith (":", StringComparison.Ordinal))
 					return false;
 
+				if (v == "no symbols")
+					return false;
+
 				return true;
 			});
 

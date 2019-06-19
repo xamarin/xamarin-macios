@@ -568,6 +568,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(IPhoneResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
+			SdkRoot="$(_SdkRoot)"
 			SdkVersion="$(MtouchSdkVersion)"
 			SourceFile="@(Metal)">
 			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
@@ -603,6 +604,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			Items="@(_ForgedMetal)"
 			SdkDevPath="$(_SdkDevPath)"
+			SdkRoot="$(_SdkRoot)"
 			OutputLibrary="$(_AppBundlePath)default.metallib">
 		</MetalLib>
 	</Target>

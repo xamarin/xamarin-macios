@@ -96,9 +96,6 @@
     <Compile Include="ProjectsTests\CodesignAppBundle.cs" />
     <Compile Include="ProjectsTests\BindingReferences.cs" />
     <Compile Include="ProjectsTests\CoreMLCompiler.cs" />
-    <Compile Include="..\..\..\tools\common\StringUtils.cs">
-      <Link>StringUtils.cs</Link>
-    </Compile>
     <Compile Include="ProjectsTests\Bug60536.cs" />
     <Compile Include="..\..\..\tests\common\Profile.cs">
       <Link>Profile.cs</Link>

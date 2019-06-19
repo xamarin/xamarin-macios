@@ -123,9 +123,11 @@ namespace Xamarin.Tests
 				"_gateway_from_rtm",
 				"_sgen_",
 				"_arm_patch",
-				// These two aren't public in a way we care about
+				// These aren't public in a way we care about
 				"l_OBJC_LABEL_PROTOCOL_$_",
+				"__OBJC_LABEL_PROTOCOL_$_", // Xcode 11 b1 format
 				"l_OBJC_PROTOCOL_$_",
+				"__OBJC_PROTOCOL_$_",  // Xcode 11 b1 format
 				// block stuff, automatically exported by clang
 				"___block_descriptor_",
 				"___copy_helper_block_",

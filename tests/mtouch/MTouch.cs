@@ -1061,7 +1061,7 @@ public class B : A {}
 			// Any old Xcode will do.
 			var old_xcode = Configuration.GetOldXcodeRoot ();
 			if (!Directory.Exists (old_xcode))
-				Assert.Ignore ($"This test needs an Xcode older than {Configuration.XcodeVersion}");
+				Assert.Ignore ($"This test needs an Xcode older than {Configuration.XcodeVersionString}");
 
 			// Get the SDK version for this Xcode version
 			string sdk_platform;
@@ -1088,7 +1088,7 @@ public class B : A {}
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Sdk = sdk_version;
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
-				var xcodeVersionString = Configuration.XcodeVersion;
+				var xcodeVersionString = Configuration.XcodeVersionString;
 				mtouch.AssertError (91, String.Format ("This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).", name, GetSdkVersion (profile), xcodeVersionString));
 			}
 		}
@@ -2754,7 +2754,11 @@ public class TestApp {
 				mtouch.GccFlags = StringUtils.Quote (lib);
 				mtouch.TargetVer = "10.3"; // otherwise 32-bit build isn't possible
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build a");
-				mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, file was built for archive which is not the architecture being linked (i386): {lib}");
+				if (Configuration.XcodeVersion.Major >= 11) {
+					mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, building for iOS Simulator-i386 but attempting to link with file built for unknown-archive");
+				} else {
+					mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, file was built for archive which is not the architecture being linked (i386): {lib}");
+				}
 			}
 		}
 
@@ -3995,6 +3999,8 @@ public class HandlerTest
 				case "____chkstk_darwin": // compiler magic, unrelated to XI/XM
 				case "___block_descriptor_28_e5_v4@?0l": // new Xcode 10.2 clang option
 				case "___block_descriptor_48_e5_v8@?0l": // new Xcode 10.2 clang option
+				case "___block_descriptor_28_e5_v4\u0001?0l": // Xcode 11 b1 name
+				case "___block_descriptor_48_e5_v8\u0001?0l": // Xcode 11 b1 name
 					continue;
 				default:
 					missingSimlauncherSymbols.Add (symbol);
@@ -4426,7 +4432,9 @@ public class TestApp {
 			if (!string.IsNullOrEmpty (arch))
 				arguments += " -arch " + arch;
 			var symbols = ExecutionHelper.Execute ("nm", arguments, hide_output: true).Split ('\n');
-			return symbols.Select ((v) => {
+			return symbols.Where ((v) => {
+				return !v.EndsWith (": no symbols", StringComparison.Ordinal);
+			}).Select ((v) => {
 				var idx = v.LastIndexOf (": ", StringComparison.Ordinal);
 				if (idx <= 0)
 					return v;
