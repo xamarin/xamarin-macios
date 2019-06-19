@@ -1426,11 +1426,13 @@ WATCHOS_TARGETS =                                                             \
 WATCHOS_DIRECTORIES = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib                   \
+	$(BUILD_DESTDIR)/targetwatch/tmp-lib                           \
+	$(BUILD_DESTDIR)/targetwatch64_32/tmp-lib                      \
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.a: $(WATCHOS_TARGET_LIBMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOSGEN) -create -output $@
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib: $(WATCHOS_TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib: $(WATCHOS_TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib $(BUILD_DESTDIR)/targetwatch/tmp-lib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmonosgen-2.0.dylib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmonosgen-2.0.dylib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmonosgen-2.0.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmonosgen-2.0.dylib -create -output $@
@@ -1449,7 +1451,7 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-icall-table.a: $(WATCHOS_TA
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ilgen.a: $(WATCHOS_TARGET_LIBMONOILGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONOILGEN) -create -output $@
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib $(BUILD_DESTDIR)/targetwatch/tmp-lib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-profiler-log.0.dylib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-profiler-log.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-profiler-log.0.dylib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-profiler-log.0.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-profiler-log.0.dylib -create -output $@
