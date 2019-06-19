@@ -85,9 +85,9 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 		
 		ThreadPool.QueueUserWorkItem ((v) =>
 		{
-			BeginInvokeOnMainThread (() =>
+			BeginInvokeOnMainThread (async () =>
 			{
-				runner.Run (testAssemblies);
+				await runner.Run (testAssemblies).ConfigureAwait (false);;
 			});
 		});
 

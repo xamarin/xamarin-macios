@@ -18,12 +18,13 @@ using BCLTests.TestRunner.Core;
 using Xamarin.iOS.UnitTests.XUnit;
 using System.IO;
 using NUnit.Framework.Internal.Filters;
+using System.Threading.Tasks;
 
 namespace Xamarin.Mac.Tests
 {
 	static class MainClass
 	{
-		static int Main (string[] args)
+		static Task<int> Main (string[] args)
 		{
 			NSApplication.Init();
 			return RunTests (args);
@@ -38,7 +39,7 @@ namespace Xamarin.Mac.Tests
 			}
  		}
  		
-		static int RunTests (string [] original_args)
+		static async Task<int> RunTests (string [] original_args)
 		{
 			Console.WriteLine ("Running tests");
 			var options = ApplicationOptions.Current;
@@ -57,7 +58,7 @@ namespace Xamarin.Mac.Tests
 				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);
 			}
-			runner.Run (testAssemblies);
+			await runner.Run (testAssemblies).ConfigureAwait (false);
 
 			if (options.ResultFile != null) {
 				using (var writer = new StreamWriter (options.ResultFile)) {

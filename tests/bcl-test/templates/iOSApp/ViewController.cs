@@ -87,8 +87,8 @@ namespace BCLTests {
 				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);
 			}
+			await runner.Run (testAssemblies).ConfigureAwait (false);
 
-			runner.Run (testAssemblies);
 			if (options.EnableXml) {
 				runner.WriteResultsToFile (writer);
 				logger.Info ("Xml file was written to the tcp listener.");
@@ -99,7 +99,7 @@ namespace BCLTests {
 			
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");
 			if (options.TerminateAfterExecution)
-				TerminateWithSuccess ();
+				BeginInvokeOnMainThread (TerminateWithSuccess);
 
 		}
 
