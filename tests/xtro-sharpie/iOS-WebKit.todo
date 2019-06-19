@@ -1,6 +1,0 @@
-!deprecated-attribute-missing! WKPreviewElementInfo missing a [Deprecated] attribute
-!deprecated-attribute-missing! WKUIDelegate::webView:commitPreviewingViewController: missing a [Deprecated] attribute
-!deprecated-attribute-missing! WKUIDelegate::webView:previewingViewControllerForElement:defaultActions: missing a [Deprecated] attribute
-!deprecated-attribute-missing! WKUIDelegate::webView:shouldPreviewElement: missing a [Deprecated] attribute
-!missing-selector! WKContextMenuElementInfo::linkURL not bound
-!missing-type! WKContextMenuElementInfo not bound
