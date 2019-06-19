@@ -64,6 +64,8 @@ namespace xharness
 			}
 			set {
 				root_directory = value;
+				if (root_directory != null)
+					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
 			}
 		}
 
@@ -441,8 +443,6 @@ namespace xharness
 				target.Execute ();
 			};
 
- 			RootDirectory = Path.GetFullPath (RootDirectory).TrimEnd ('/');
- 
  			if (AutoConf)
 				AutoConfigureMac ();
 
@@ -498,8 +498,6 @@ namespace xharness
 			var tvos_targets = new List<TVOSTarget> ();
 			var watchos_targets = new List<WatchOSTarget> ();
 			var today_targets = new List<TodayExtensionTarget> ();
-
-			RootDirectory = Path.GetFullPath (RootDirectory).TrimEnd ('/');
 
 			if (AutoConf)
 				AutoConfigureIOS ();
