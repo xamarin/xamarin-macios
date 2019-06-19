@@ -124,6 +124,8 @@ namespace CoreNFC {
 		IntPtr Constructor (NSRange range, nuint chunkSize, nuint maximumRetries, double retryInterval);
 	}
 
+	delegate void NFCGetSystemInfoCompletionHandler (nint dsfid, nint afi, nint blockSize, nint blockCount, nint icReference, NSError error);
+
 	interface INFCIso15693Tag { }
 
 	//[iOS (11,0), NoTV, NoWatch, NoMac]
@@ -240,7 +242,7 @@ namespace CoreNFC {
 		[Abstract]
 #endif
 		[Export ("getSystemInfoWithRequestFlag:completionHandler:")]
-		void GetSystemInfo (RequestFlag flags, Action<nint, nint, nint, nint, nint, NSError> completionHandler);
+		void GetSystemInfo (RequestFlag flags, NFCGetSystemInfoCompletionHandler completionHandler);
 
 		[iOS (13,0)]
 #if XAMCORE_4_0
@@ -762,7 +764,7 @@ namespace CoreNFC {
 
 		[Abstract]
 		[Export ("sendCommandAPDU:completionHandler:")]
-		void SendCommand (NFCIso7816Apdu apdu, Action<NSData, byte, byte, NSError> completionHandler);
+		void SendCommand (NFCIso7816Apdu apdu, NFCIso7816SendCompletionHandler completionHandler);
 	}
 
 	[iOS (13,0)]
@@ -797,7 +799,7 @@ namespace CoreNFC {
 
 	interface INFCMiFareTag {}
 
-	delegate void NFCMiFareTagSendMiFareIso7816CompletionHandler (NSData responseData, byte sw1, byte sw2, NSError error);
+	delegate void NFCIso7816SendCompletionHandler (NSData responseData, byte sw1, byte sw2, NSError error);
 
 	[iOS (13,0)]
 	[Protocol]
@@ -820,7 +822,7 @@ namespace CoreNFC {
 
 		[Abstract]
 		[Export ("sendMiFareISO7816Command:completionHandler:")]
-		void SendMiFareIso7816Command (NFCIso7816Apdu apdu, NFCMiFareTagSendMiFareIso7816CompletionHandler completionHandler);
+		void SendMiFareIso7816Command (NFCIso7816Apdu apdu, NFCIso7816SendCompletionHandler completionHandler);
 	}
 
 	interface INFCTagReaderSessionDelegate {}
