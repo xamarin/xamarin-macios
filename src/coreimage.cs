@@ -2719,11 +2719,8 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[iOS (9,0)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaAverage {
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -5653,7 +5650,7 @@ namespace CoreImage {
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15, onlyOn64: true)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIReductionFilter))]
 	interface CIKMeans {
 
 		[CoreImageFilterProperty ("inputMeans")]
@@ -5661,9 +5658,6 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputCount")]
 		float Count { get; set; }
-
-		[CoreImageFilterProperty ("inputExtent")]
-		CIVector Extent { get; set; }
 
 		[CoreImageFilterProperty ("inputPasses")]
 		int Passes { get; set; }
@@ -5677,7 +5671,8 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CIFilter))]
-	interface CIMorphologyRectangleMaximum {
+	[Abstract]
+	interface CIMorphologyRectangle {
 
 		[CoreImageFilterProperty ("inputHeight")]
 		int Height { get; set; }
@@ -5690,14 +5685,16 @@ namespace CoreImage {
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15, onlyOn64: true)]
-	[BaseType (typeof (CIFilter))]
+	[BaseType (typeof (CIMorphologyRectangle))]
+	interface CIMorphologyRectangleMaximum {
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIMorphologyRectangle))]
 	interface CIMorphologyRectangleMinimum {
-
-		[CoreImageFilterProperty ("inputHeight")]
-		int Height { get; set; }
-
-		[CoreImageFilterProperty ("inputWidth")]
-		int Width { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -5726,5 +5723,81 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputPerceptual")]
 		bool Perceptual { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	[Abstract]
+	interface CIKeystoneCorrection {
+
+		[CoreImageFilterProperty ("inputFocalLength")]
+		float FocalLength { get; set; }
+
+		[CoreImageFilterProperty ("inputTopRight")]
+		CIVector TopRight { get; set; }
+
+		[CoreImageFilterProperty ("inputBottomRight")]
+		CIVector BottomRight { get; set; }
+
+		[CoreImageFilterProperty ("inputTopLeft")]
+		CIVector TopLeft { get; set; }
+
+		[CoreImageFilterProperty ("inputBottomLeft")]
+		CIVector BottomLeft { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIKeystoneCorrection))]
+	interface CIKeystoneCorrectionCombined {
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIKeystoneCorrection))]
+	interface CIKeystoneCorrectionHorizontal {
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIKeystoneCorrection))]
+	interface CIKeystoneCorrectionVertical {
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIPerspectiveRotate {
+
+		[CoreImageFilterProperty ("inputFocalLength")]
+		float FocalLength { get; set; }
+
+		[CoreImageFilterProperty ("inputRoll")]
+		float Roll { get; set; }
+
+		[CoreImageFilterProperty ("inputPitch")]
+		float Pitch { get; set; }
+
+		[CoreImageFilterProperty ("inputYaw")]
+		float Yaw { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIGaborGradients {
 	}
 }

@@ -54,6 +54,12 @@ namespace Introspection {
 
 		static Type CIFilterType = typeof (CIFilter);
 
+#if false
+		static TextWriter BindingOutput;
+#else
+		static TextWriter BindingOutput = Console.Out;
+#endif
+
 		protected virtual bool Skip (Type type)
 		{
 			return Skip (type.Name) || SkipDueToAttribute (type);
@@ -65,13 +71,6 @@ namespace Introspection {
 			// Both reported in radar #21548819
 			//  NSUnknownKeyException [<CIDepthOfField 0x158586970> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputPoint2.
 			case "CIDepthOfField":
-				return true;
-			// TODO: https://github.com/xamarin/xamarin-macios/issues/6340
-			case "CIGaborGradients":
-			case "CIKeystoneCorrectionCombined":
-			case "CIKeystoneCorrectionHorizontal":
-			case "CIKeystoneCorrectionVertical":
-			case "CIPerspectiveRotate":
 				return true;
 			// Apple does **not** document filters as API (like we do)
 			// uncomment calls to `GenerateBinding` to use introspection code to generate the skeleton binding code and complete it
@@ -95,8 +94,8 @@ namespace Introspection {
 				string type_name = qname.Replace ("CIFilter", filter_name);
 				if (Type.GetType (type_name, false, true) == null) {
 					filters.Add (filter_name);
-					// uncomment to generate bindings for any new native filter
-//					GenerateBinding (CIFilter.FromName (filter_name), Console.Out);
+					if (BindingOutput != null)
+						GenerateBinding (CIFilter.FromName (filter_name), BindingOutput);
 				}
 				n++;
 			}
@@ -137,7 +136,7 @@ namespace Introspection {
 					if (!superFilters.Contains (super)) {
 						superFilters.Add (super);
 						Console.WriteLine ("[GENERATED] {0}", super);
-						GenerateBinding (CIFilter.FromName (super), Console.Out);
+						GenerateBinding (CIFilter.FromName (super), BindingOutput);
 					}
 				}
 #endif
@@ -201,22 +200,20 @@ namespace Introspection {
 				writer.WriteLine ();
 				var dict = attributes [k] as NSDictionary;
 				var type = dict [(NSString) "CIAttributeClass"];
-				writer.WriteLine ("\t[CoreImageFilterProperty (\"{0}\")]", key);
+				writer.WriteLine ($"\t[CoreImageFilterProperty (\"{key}\")]");
 
 				// by default we drop the "input" prefix, but keep the "output" prefix to avoid confusion
 				if (key.StartsWith ("input", StringComparison.Ordinal))
 					key = Char.ToUpperInvariant (key [5]) + key.Substring (6);
-				
-				var ptype = type.ToString ();
-				// Too many things ends up in NSNumber but we do a better job in our bindings
-				if (ptype == "NSNumber") {
-					ptype = "float";
-					writer.WriteLine ("\t// TODO: this was an NSNumber transformed to float, but maybe an int or bool is more appropriate");
-				}
-				writer.WriteLine ("\t{0} {1} {{ get; set; }}", ptype, key);
+
+				writer.WriteLine ("\t/* REMOVE-ME");
+				writer.WriteLine (dict);
+				writer.WriteLine ("\t*/");
+				writer.WriteLine ($"\t{type} {key} {{ get; set; }}");
 			}
 			writer.WriteLine ("}");
 			writer.WriteLine ();
+			writer.Flush ();
 		}
 	}
 }
