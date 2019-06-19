@@ -93,7 +93,6 @@
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="SolutionGenerator.cs" />
     <Compile Include="MacUnifiedTarget.cs" />
-    <Compile Include="MacTarget.cs" />
     <Compile Include="SimpleHttpListener.cs" />
     <Compile Include="SimpleListener.cs" />
     <Compile Include="Jenkins.cs" />

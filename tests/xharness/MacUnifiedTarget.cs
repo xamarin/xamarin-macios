@@ -7,7 +7,7 @@ using Xamarin;
 
 namespace xharness
 {
-	public class MacUnifiedTarget : MacTarget
+	public class MacUnifiedTarget : Target
 	{
 		public bool Mobile { get; private set; }
 		public bool System { get; set; }
@@ -114,6 +114,24 @@ namespace xharness
 		public override string Platform {
 			get {
 				return "mac";
+			}
+		}
+		
+		public MonoNativeInfo MonoNativeInfo { get; set; }
+
+		protected override bool FixProjectReference (string name)
+		{
+			switch (name) {
+			case "GuiUnit_NET_4_5":
+				return false;
+			default:
+				return base.FixProjectReference (name);
+			}
+		}
+
+		public string SimplifiedName {
+			get {
+				return Name.EndsWith ("-mac", StringComparison.Ordinal) ? Name.Substring (0, Name.Length - 4) : Name;
 			}
 		}
 

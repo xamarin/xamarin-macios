@@ -434,7 +434,7 @@ namespace xharness
 			var unified_targets = new List<MacUnifiedTarget> ();
 			var hardcoded_unified_targets = new List<MacUnifiedTarget> ();
 
-			Action<MacTarget, string, bool> configureTarget = (MacTarget target, string file, bool isNUnitProject) => {
+			Action<MacUnifiedTarget, string, bool> configureTarget = (MacUnifiedTarget target, string file, bool isNUnitProject) => {
 				target.TemplateProjectPath = file;
 				target.Harness = this;
 				target.IsNUnitProject = isNUnitProject;
