@@ -731,7 +731,7 @@ namespace xharness
 			}
 		}
 
-		public static void RemoveDefines (this XmlDocument csproj, string defines, string platform, string configuration)
+		public static void RemoveDefines (this XmlDocument csproj, string defines, string platform = null, string configuration = null)
 		{
 			var separator = new char [] { ';' };
 			var defs = defines.Split (separator, StringSplitOptions.RemoveEmptyEntries);

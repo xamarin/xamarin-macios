@@ -902,9 +902,27 @@ namespace xharness
 				var configurations = project.Configurations;
 				if (configurations == null)
 					configurations = new string [] { "Debug" };
+
+				TestPlatform platform;
+				switch (project.TargetFrameworkFlavors) {
+				case MacFlavors.Console:
+					platform = TestPlatform.Mac;
+					break;
+				case MacFlavors.Full:
+					platform = TestPlatform.Mac_Full;
+					break;
+				case MacFlavors.Modern:
+					platform = TestPlatform.Mac_Modern;
+					break;
+				case MacFlavors.System:
+					platform = TestPlatform.Mac_System;
+					break;
+				default:
+					throw new NotImplementedException (project.TargetFrameworkFlavors.ToString ());
+				}
 				foreach (var config in configurations) {
 					XBuildTask build = new XBuildTask ();
-					build.Platform = TestPlatform.Mac_Modern;
+					build.Platform = platform;
 					build.CloneTestProject (project);
 					build.Jenkins = this;
 					build.SolutionPath = project.SolutionPath;
@@ -937,17 +955,11 @@ namespace xharness
 						};
 						execs = CreateTestVariations (new [] { exec }, (buildTask, test, candidates) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
 					}
-					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
+
+					foreach (var e in execs)
+						e.Variation = config;
 
 					Tasks.AddRange (execs);
-					foreach (var e in execs) {
-						if (project.GenerateVariations && project.MonoNativeInfo == null) {
-							if (project.GenerateFull)
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Full, "-full", ignored));
-							if (project.GenerateSystem)
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_System, "-system", ignored));
-						}
-					}
 				}
 			}
 
@@ -1075,46 +1087,6 @@ namespace xharness
 				Tasks.AddRange (v.Result);
 			});
 			Task.WaitAll (loadsim, loaddev);
-		}
-
-		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore)
-		{
-			var build = new XBuildTask ()
-			{
-				Platform = platform,
-				Jenkins = task.Jenkins,
-				ProjectConfiguration = task.ProjectConfiguration,
-				ProjectPlatform = task.ProjectPlatform,
-				SpecifyPlatform = task.BuildTask.SpecifyPlatform,
-				SpecifyConfiguration = task.BuildTask.SpecifyConfiguration,
-			};
-			var tp = new TestProject (Path.ChangeExtension (AddSuffixToPath (original_project.Path, suffix), "csproj"));
-			build.CloneTestProject (tp);
-
-			var macExec = task as MacExecuteTask;
-			if (macExec != null) {
-				return new MacExecuteTask (build) {
-					Ignored = ignore,
-					TestName = task.TestName,
-					IsUnitTest = macExec.IsUnitTest,
-					Variation = task.Variation,
-				};
-			}
-			var nunit = task as NUnitExecuteTask;
-			if (nunit != null) {
-				var project = build.TestProject;
-				var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
-				return new NUnitExecuteTask (build) {
-					Ignored = ignore,
-					TestName = build.TestName,
-					TestLibrary = dll,
-					TestProject = project,
-					WorkingDirectory = Path.GetDirectoryName (dll),
-					Platform = build.Platform,
-					Timeout = TimeSpan.FromMinutes (120),
-				};
-			}
-			throw new NotImplementedException ();
 		}
 
 		async Task ExecutePeriodicCommandAsync (Log periodic_loc)

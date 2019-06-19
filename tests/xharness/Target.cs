@@ -51,9 +51,10 @@ namespace xharness
 		protected virtual string GetMinimumOSVersion (string templateMinimumOSVersion) { throw new NotImplementedException (); }
 		protected virtual int[] UIDeviceFamily { get { throw new NotImplementedException (); } }
 		protected virtual string AdditionalDefines { get { return string.Empty; } }
+		protected virtual string RemoveDefines { get { return string.Empty; } }
 		public virtual string Platform { get { throw new NotImplementedException (); } }
 
-		public virtual bool ShouldSkipProjectGeneration { get { return false; } } // Only generate makefile to invoke hard coded csproj
+		public bool ShouldSkipProjectGeneration { get; set; }
 		public virtual bool ShouldSetTargetFrameworkIdentifier { get { return true; } }
 		public virtual string DefaultAssemblyReference { get { return "Xamarin.iOS"; } }
 		public virtual IEnumerable<string> ReferenceToRemove { get { return Enumerable.Empty<string> (); } }
@@ -112,6 +113,8 @@ namespace xharness
 			inputProject.FixTestLibrariesReferences (Platform);
 			if (!string.IsNullOrEmpty (AdditionalDefines))
 				inputProject.AddAdditionalDefines (AdditionalDefines);
+			if (!string.IsNullOrEmpty (RemoveDefines))
+				inputProject.RemoveDefines (RemoveDefines);
 		}
 
 		protected void CreateExecutableProject ()

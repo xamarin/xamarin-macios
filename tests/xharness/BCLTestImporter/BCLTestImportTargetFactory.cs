@@ -58,7 +58,7 @@ namespace xharness.BCLTestImporter {
 			var result = new List<MacTestProject> ();
 			foreach (var (name, path, xunit, failure) in projectGenerator.GenerateAllMacTestProjects (platform)) {
 				var prefix = xunit ? "xUnit" : "NUnit";
-				result.Add (new MacTestProject (path, targetFrameworkFlavor: flavor, generateVariations: false) {
+				result.Add (new MacTestProject (path, targetFrameworkFlavor: flavor) {
 					Name = $"[{prefix}] Mono {name}",
 					Platform = "AnyCPU",
 					IsExecutableProject = true,

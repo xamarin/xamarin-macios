@@ -9,63 +9,51 @@ namespace xharness
 {
 	public class MacTarget : Target
 	{
-		public bool Modern { get; private set; }
-		public bool System { get; set; }
+		public MacFlavors Flavor { get; private set; }
+		public bool Modern => Flavor == MacFlavors.Modern;
+		public bool System => Flavor == MacFlavors.System;
+		public bool Full => Flavor == MacFlavors.Full;
 
-		// Optional
-		public MacBCLTestInfo BCLInfo { get; set; }
-		bool IsBCL => BCLInfo != null;
-
-		bool SkipProjectGeneration;
-		bool SkipSuffix;
-
-		public MacTarget (bool mobile, bool shouldSkipProjectGeneration = false, bool skipSuffix = false) : base ()
+		public MacTarget (MacFlavors flavor)
 		{
-			Modern = mobile;
-			SkipProjectGeneration = shouldSkipProjectGeneration;
-			SkipSuffix = skipSuffix;
+			Flavor = flavor;
 		}
 
 		protected override void CalculateName ()
 		{
 			base.CalculateName ();
 
-			if (IsBCL)
-				Name = Name + BCLInfo.FlavorSuffix;
 			if (MonoNativeInfo != null)
 				Name = Name + MonoNativeInfo.FlavorSuffix;
 		}
 
-		public override bool ShouldSkipProjectGeneration
-		{
-			get
-			{
-				return SkipProjectGeneration;
-			}
-		}
-
 		public override string Suffix {
 			get {
-				if (SkipProjectGeneration)
-					return "";
-				if (MonoNativeInfo != null) {
-					if (System)
-						return MonoNativeInfo.FlavorSuffix + "-system";
-					return MonoNativeInfo.FlavorSuffix;
-				}
-				if (System)
+				switch (Flavor) {
+				case MacFlavors.Modern:
+					return string.Empty;
+				case MacFlavors.Full:
+					return "-full";
+				case MacFlavors.System:
 					return "-system";
-				var suffix = (Modern ? "" : "-full");
-				return "-unified" + (IsBCL ? "" : suffix);
+				default:
+					throw new NotImplementedException ($"Suffix for {Flavor}");
+				}
 			}
 		}
 
 		public override string MakefileWhereSuffix {
 			get {
-				if (System)
+				switch (Flavor) {
+				case MacFlavors.Modern:
+					return string.Empty;
+				case MacFlavors.Full:
+					return "full";
+				case MacFlavors.System:
 					return "system";
-				string suffix = (Modern ? "" : "-full");
-				return "unified" + (IsBCL ? "" : suffix);
+				default:
+					throw new NotImplementedException ($"Suffix for {Flavor}");
+				}
 			}
 		}
 			
@@ -101,7 +89,23 @@ namespace xharness
 
 		protected override string AdditionalDefines {
 			get {
-				return "XAMCORE_2_0";
+				var rv = "XAMCORE_2_0";
+
+				if (Full)
+					rv += ";XAMMAC_4_5";
+
+				return rv;
+			}
+		}
+
+		protected override string RemoveDefines {
+			get {
+				var rv = string.Empty;
+
+				if (!Modern)
+					rv += ";XAMMAC;MOBILE";
+
+				return rv;
 			}
 		}
 
@@ -119,22 +123,22 @@ namespace xharness
 		
 		public MonoNativeInfo MonoNativeInfo { get; set; }
 
-		protected override bool FixProjectReference (string name, out string fixed_name)
+		protected override bool FixProjectReference (string name, out string fixed_reference)
 		{
-			fixed_name = null;
+			fixed_reference = null;
 			switch (name) {
 			case "GuiUnit_NET_4_5":
 				if (Flavor == MacFlavors.Full || Flavor == MacFlavors.System)
 					return false;
-				fixed_name = "GuiUnit_xammac_mobile";
+				fixed_reference = "GuiUnit_xammac_mobile";
 				return true;
 			case "GuiUnit_xammac_mobile":
 				if (Flavor == MacFlavors.Modern)
 					return false;
-				fixed_name = "GuiUnit_NET_4_5";
+				fixed_reference = "GuiUnit_NET_4_5";
 				return true;
 			default:
-				return base.FixProjectReference (name, out fixed_name);
+				return base.FixProjectReference (name, out fixed_reference);
 			}
 		}
 
@@ -181,42 +185,6 @@ namespace xharness
 					return new HashSet<string> { "TargetFrameworkIdentifier" };
 				return null;
 			}
-		}
-
-		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
-		{
-			if (MonoNativeInfo == null)
-				return templateMinimumOSVersion;
-			switch (MonoNativeInfo.Flavor) {
-			case MonoNativeFlavor.Compat:
-				return "10.9";
-			case MonoNativeFlavor.Unified:
-				return "10.12";
-			default:
-				throw new Exception ($"Unknown MonoNativeFlavor: {MonoNativeInfo.Flavor}");
-			}
-		}
-
-		protected override void ProcessProject ()
-		{
-			base.ProcessProject ();
-
-			if (MonoNativeInfo == null)
-				return;
-
-			MonoNativeInfo.AddProjectDefines (inputProject);
-			inputProject.AddAdditionalDefines ("MONO_NATIVE_MAC");
-
-			XmlDocument info_plist = new XmlDocument ();
-			var target_info_plist = Path.Combine (TargetDirectory, "Info" + Suffix + ".plist");
-			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info-mac.plist"));
-			BundleIdentifier = info_plist.GetCFBundleIdentifier ();
-			var plist_min_version = info_plist.GetMinimummacOSVersion ();
-			info_plist.SetMinimummacOSVersion (GetMinimumOSVersion (plist_min_version));
-
-			inputProject.FixInfoPListInclude (Suffix);
-
-			Harness.Save (info_plist, target_info_plist);
 		}
 	}
 }
