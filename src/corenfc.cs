@@ -693,7 +693,7 @@ namespace CoreNFC {
 
 		[Abstract]
 		[Export ("currentIDm", ArgumentSemantic.Retain)]
-		NSData CurrentIDm { get; }
+		NSData CurrentIdm { get; }
 
 		[Abstract]
 		[Export ("pollingWithSystemCode:requestCode:timeSlot:completionHandler:")]
