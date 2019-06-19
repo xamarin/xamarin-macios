@@ -935,14 +935,10 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					executionOptions.SetDisableParallelization (!RunInParallel);
 					executionOptions.SetSynchronousMessageReporting (true);
 
-					try {
-						// set the wait for event cb first, then execute the tests
-						var resultTask = WaitForEvent (resultsSink.Finished, TimeSpan.FromDays (10)).ConfigureAwait (false);
-						frontController.RunTests (testCases, resultsSink, executionOptions);
-						await resultTask;
-					} finally {
-						resultsSink.Dispose ();
-					}
+					// set the wait for event cb first, then execute the tests
+					var resultTask = WaitForEvent (resultsSink.Finished, TimeSpan.FromDays (10)).ConfigureAwait (false);
+					frontController.RunTests (testCases, resultsSink, executionOptions);
+					await resultTask;
 
 					return assemblyElement;
 				}
