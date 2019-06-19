@@ -229,7 +229,10 @@ namespace Introspection {
 			case "AccommodatePresentedSubitemDeletion":
 			case "SavePresentedItemChanges":
 				return m.DeclaringType.Name == "UIDocument";
+			case "PostNotification": // completion handler is not always called
+				return m.DeclaringType.Name == "ICNotificationManager";
 			}
+
 			return base.IgnoreAsync (m);
 		}
 	}
