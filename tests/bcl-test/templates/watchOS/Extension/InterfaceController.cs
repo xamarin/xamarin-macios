@@ -70,7 +70,7 @@ namespace monotouchtestWatchKitExtension
 		{
 		}
 
-		public override  void Awake (NSObject context)
+		public override void Awake (NSObject context)
 		{
 			base.Awake (context);
 
