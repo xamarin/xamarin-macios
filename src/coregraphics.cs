@@ -194,6 +194,36 @@ namespace CoreGraphics {
 		[iOS (11,0)][Mac (10,13)][Watch (4,0)][TV (11,0)]
 		[Field ("kCGColorSpaceGenericLab")]
 		NSString GenericLab { get; }
+
+		[Mac (10,14,3, onlyOn64: true)][iOS (12,3)]
+		[TV (12,3)][Watch (5,3)]
+		[Field ("kCGColorSpaceExtendedLinearITUR_2020")]
+		NSString ExtendedLinearItur_2020 { get; }
+
+		[Mac (10,14,3, onlyOn64: true)][iOS (12,3)]
+		[TV (12,3)][Watch (5,3)]
+		[Field ("kCGColorSpaceExtendedLinearDisplayP3")]
+		NSString ExtendedLinearDisplayP3 { get; }
+
+		[Mac (10,14, onlyOn64: true)][iOS (12,0)]
+		[TV (12,0)][Watch (5,0)]
+		[Field ("kCGColorSpaceITUR_2020_PQ_EOTF")]
+		NSString Itur_2020_PQ_Eotf { get; }
+
+		[Mac (10,14,6, onlyOn64: true)][iOS (13,0)]
+		[TV (13,0)][Watch (6,0)]
+		[Field ("kCGColorSpaceDisplayP3_PQ_EOTF")]
+		NSString DisplayP3_PQ_Eotf { get; }
+
+		[Mac (10,14,6, onlyOn64: true)][iOS (13,0)]
+		[TV (13,0)][Watch (6,0)]
+		[Field ("kCGColorSpaceDisplayP3_HLG")]
+		NSString DisplayP3_Hlg { get; }
+
+		[Mac (10,14,6, onlyOn64: true)][iOS (13,0)]
+		[TV (13,0)][Watch (6,0)]
+		[Field ("kCGColorSpaceITUR_2020_HLG")]
+		NSString Itur_2020_Hlg { get; }
 	}
 
 	[Partial]
@@ -256,5 +286,38 @@ namespace CoreGraphics {
 #if XAMCORE_2_0
 		CGRect DestinationRect { get; set; }
 #endif
+	}
+
+	[Mac (10,15, onlyOn64: true)]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Watch (6,0)]
+	[Static]
+	[Internal]
+	interface CGPdfTagPropertyKeys {
+		[Field ("kCGPDFTagPropertyActualText")]
+		NSString ActualTextKey { get; }
+
+		[Field ("kCGPDFTagPropertyAlternativeText")]
+		NSString AlternativeTextKey { get; }
+
+		[Field ("kCGPDFTagPropertyTitleText")]
+		NSString TitleTextKey { get; }
+
+		[Field ("kCGPDFTagPropertyLanguageText")]
+		NSString LanguageTextKey { get; }
+	}
+
+	[Mac (10,15, onlyOn64: true)]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Watch (6,0)]
+	[StrongDictionary ("CGPdfTagPropertyKeys")]
+	interface CGPdfTagProperties {
+		// <quote>The following CGPDFTagProperty keys are to be paired with CFStringRef values</quote>
+		string ActualText { get; set; }
+		string AlternativeText { get; set; }
+		string TitleText { get; set; }
+		string LanguageText { get; set; }
 	}
 }

@@ -275,6 +275,40 @@ namespace CoreGraphics {
 				color == null ? IntPtr.Zero : color.Handle, options == null ? IntPtr.Zero : options.Handle);
 			return h == IntPtr.Zero ? null : new CGColor (h);
 		}
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern /* CGColorRef* */ IntPtr CGColorCreateSRGB (nfloat red, nfloat green, nfloat blue, nfloat alpha);
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		static public CGColor CreateSrgb (nfloat red, nfloat green, nfloat blue, nfloat alpha)
+		{
+			var h = CGColorCreateSRGB (red, green, blue, alpha);
+			return h == IntPtr.Zero ? null : new CGColor (h);
+		}
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern /* CGColorRef* */ IntPtr CGColorCreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha);
+
+		[Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Watch (6,0)]
+		static public CGColor CreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha)
+		{
+			var h = CGColorCreateGenericGrayGamma2_2 (gray, alpha);
+			return h == IntPtr.Zero ? null : new CGColor (h);
+		}
 #endif // !COREBUILD
 	}
 }
