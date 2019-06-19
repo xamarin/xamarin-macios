@@ -460,20 +460,33 @@ namespace xharness
 			return imports [0].Attributes ["Project"].Value;
 		}
 
-		public static void FixProjectReferences (this XmlDocument csproj, string suffix, Func<string, bool> fixCallback = null)
+		public delegate bool FixReferenceDelegate (string reference, out string fixed_reference);
+		public static void FixProjectReferences (this XmlDocument csproj, string suffix, FixReferenceDelegate fixCallback = null)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'ProjectReference']");
 			if (nodes.Count == 0)
 				return;
 			foreach (XmlNode n in nodes) {
 				var name = n ["Name"].InnerText;
-				if (fixCallback != null && !fixCallback (name))
+				string fixed_name = null;
+				if (fixCallback != null && !fixCallback (name, out fixed_name))
 					continue;
 				var include = n.Attributes ["Include"];
-				include.Value = include.Value.Replace (".csproj", suffix + ".csproj");
-				include.Value = include.Value.Replace (".fsproj", suffix + ".fsproj");
+				string fixed_include;
+				if (fixed_name == null) {
+					fixed_include = include.Value;
+					fixed_include = fixed_include.Replace (".csproj", suffix + ".csproj");
+					fixed_include = fixed_include.Replace (".fsproj", suffix + ".fsproj");
+				} else {
+					var unix_path = include.Value.Replace ('\\', '/');
+					var unix_dir = System.IO.Path.GetDirectoryName (unix_path);
+					fixed_include = System.IO.Path.Combine (unix_dir, fixed_name + System.IO.Path.GetExtension (unix_path));
+					fixed_include = fixed_include.Replace ('/', '\\');
+				}
+				n.Attributes ["Include"].Value = fixed_include;
 				var nameElement = n ["Name"];
-				nameElement.InnerText = System.IO.Path.GetFileNameWithoutExtension (include.Value.Replace ('\\', '/'));
+				name = System.IO.Path.GetFileNameWithoutExtension (fixed_include.Replace ('\\', '/'));
+				nameElement.InnerText = name;
 			}
 		}
 

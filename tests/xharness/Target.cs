@@ -65,8 +65,9 @@ namespace xharness
 
 		public string LanguageGuid { get { return IsFSharp ? FSharpGuid : CSharpGuid; } }
 
-		protected virtual bool FixProjectReference (string name)
+		protected virtual bool FixProjectReference (string name, out string fixed_name)
 		{
+			fixed_name = null;
 			return true;
 		}
 
