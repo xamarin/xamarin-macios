@@ -7,7 +7,7 @@ using Xamarin;
 
 namespace xharness
 {
-	public class MacUnifiedTarget : Target
+	public class MacTarget : Target
 	{
 		public bool Mobile { get; private set; }
 		public bool System { get; set; }
@@ -19,7 +19,7 @@ namespace xharness
 		bool SkipProjectGeneration;
 		bool SkipSuffix;
 
-		public MacUnifiedTarget (bool mobile, bool shouldSkipProjectGeneration = false, bool skipSuffix = false) : base ()
+		public MacTarget (bool mobile, bool shouldSkipProjectGeneration = false, bool skipSuffix = false) : base ()
 		{
 			Mobile = mobile;
 			SkipProjectGeneration = shouldSkipProjectGeneration;

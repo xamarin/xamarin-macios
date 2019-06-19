@@ -431,10 +431,10 @@ namespace xharness
 		{
 			int rv = 0;
 
-			var unified_targets = new List<MacUnifiedTarget> ();
-			var hardcoded_unified_targets = new List<MacUnifiedTarget> ();
+			var unified_targets = new List<MacTarget> ();
+			var hardcoded_unified_targets = new List<MacTarget> ();
 
-			Action<MacUnifiedTarget, string, bool> configureTarget = (MacUnifiedTarget target, string file, bool isNUnitProject) => {
+			Action<MacTarget, string, bool> configureTarget = (MacTarget target, string file, bool isNUnitProject) => {
 				target.TemplateProjectPath = file;
 				target.Harness = this;
 				target.IsNUnitProject = isNUnitProject;
@@ -464,14 +464,14 @@ namespace xharness
 				}
 
 				if (proj.GenerateFull) {
-					var full = new MacUnifiedTarget (false);
+					var full = new MacTarget (false);
 					full.MonoNativeInfo = proj.MonoNativeInfo;
 					configureTarget (full, file, proj.IsNUnitProject);
 					unified_targets.Add (full);
 				}
 
 				if (proj.GenerateSystem) {
-					var system = new MacUnifiedTarget (false);
+					var system = new MacTarget (false);
 					system.System = true;
 					configureTarget (system, file, proj.IsNUnitProject);
 					unified_targets.Add (system);
@@ -480,7 +480,7 @@ namespace xharness
  
 			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
 				var file = proj.Path;
-				var unified = new MacUnifiedTarget (proj.GenerateModern, shouldSkipProjectGeneration: true);
+				var unified = new MacTarget (proj.GenerateModern, shouldSkipProjectGeneration: true);
 				unified.BCLInfo = proj.BCLInfo;
 				configureTarget (unified, file, proj.IsNUnitProject);
 				hardcoded_unified_targets.Add (unified);
