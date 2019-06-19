@@ -35,7 +35,7 @@ namespace IncomingCallNotifications {
 	[iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ICHandle : INSCopying {
+	interface ICHandle : NSCopying {
 
 		[Export ("type")]
 		ICHandleType Type { get; }
@@ -49,16 +49,12 @@ namespace IncomingCallNotifications {
 
 		[Export ("isEqualToHandle:")]
 		bool IsEqual (ICHandle handle);
-
-		// // required from NSCopying
-		// [Export ("copyWithZone:")]
-		// NSObject Copy (NSZone zone);
 	}
 
 	[iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ICNotification : INSCopying {
+	interface ICNotification : NSCopying {
 
 		[DesignatedInitializer]
 		[Export ("initWithUUID:handle:")]
@@ -72,10 +68,6 @@ namespace IncomingCallNotifications {
 
 		[Export ("video", ArgumentSemantic.Assign)]
 		bool Video { [Bind ("isVideo")] get; set; }
-
-		// // required from NSCopying
-		// [Export ("copyWithZone:")]
-		// NSObject Copy (NSZone zone);
 	}
 
 	[iOS (13,0)]
@@ -102,7 +94,7 @@ namespace IncomingCallNotifications {
 		IntPtr Constructor (ICNotificationManagerConfiguration configuration);
 
 		[Export ("setDelegate:queue:")]
-		void SetDelegate ([NullAllowed] IICNotificationManagerDelegate WeakDelegate, [NullAllowed] DispatchQueue queue);
+		void SetDelegate ([NullAllowed] IICNotificationManagerDelegate Delegate, [NullAllowed] DispatchQueue queue);
 
 		[Export ("postNotification:completion:")]
 		void PostNotification (ICNotification notification, [NullAllowed] Action<NSError> completion);
@@ -113,14 +105,10 @@ namespace IncomingCallNotifications {
 
 	[iOS (13,0)]
 	[BaseType (typeof (NSObject))]
-	interface ICNotificationManagerConfiguration : INSCopying {
+	interface ICNotificationManagerConfiguration : NSCopying {
 
 		[Export ("localizedDisplayName", ArgumentSemantic.Copy), NullAllowed]
 		string DisplayName { get; set; }
-
-		// // required from NSCopying
-		// [Export ("copyWithZone:")]
-		// NSObject Copy (NSZone zone);
 	}
 }
 
