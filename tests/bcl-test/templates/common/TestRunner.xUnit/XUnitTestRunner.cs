@@ -935,8 +935,6 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					executionOptions.SetDisableParallelization (!RunInParallel);
 					executionOptions.SetSynchronousMessageReporting (true);
 
-					var tcs = new TaskCompletionSource<object> ();
-
 					try {
 						// set the wait for event cb first, then execute the tests
 						var resultTask = WaitForEvent (resultsSink.Finished, TimeSpan.FromDays (10)).ConfigureAwait (false);
