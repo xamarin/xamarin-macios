@@ -37,6 +37,16 @@ namespace ReplayKit {
 		FailedMediaServicesFailure = -5817,
 		VideoMixingFailure = -5818,
 		PhotoFailure = -5819,
+		FailedToObtainUrl = -5820,
+		FailedIncorrectTimeStamps = -5821,
+		FailedToProcessFirstSample = -5822,
+		FailedAssetWriterFailedToSave = -5823,
+		FailedNoAssetWriter = -5824,
+		FailedAssetWriterInWrongState = -5825,
+		FailedAssetWriterExportFailed = -5826,
+		FailedToRemoveFile = -5827,
+		FailedAssetWriterExportCanceled = -5828,
+		AttemptToStopNonRecording = -5829,
 	}
 
 	[NoiOS]
