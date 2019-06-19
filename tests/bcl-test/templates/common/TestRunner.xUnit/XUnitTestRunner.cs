@@ -1027,7 +1027,10 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					} if (t.StartsWith ("KLASS64:", StringComparison.Ordinal) && IntPtr.Size == 8) {
 						var klass = t.Replace ("KLASS32:", "");
 						filters.Add (XUnitFilter.CreateClassFilter (klass, true));
-					}  else {
+					} if (t.StartsWith ("Platform32:", StringComparison.Ordinal) && IntPtr.Size == 4) {
+						var filter = t.Replace ("Platform32:", "");
+						filters.Add (XUnitFilter.CreateSingleFilter (filter, true));
+					} else {
 						filters.Add (XUnitFilter.CreateSingleFilter (t, true));
 					}
 				}
