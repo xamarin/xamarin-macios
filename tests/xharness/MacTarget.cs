@@ -202,8 +202,8 @@ namespace xharness
 			var target_info_plist = Path.Combine (TargetDirectory, "Info" + Suffix + ".plist");
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info-mac.plist"));
 			BundleIdentifier = info_plist.GetCFBundleIdentifier ();
-			var plist_min_version = info_plist.GetPListStringValue ("LSMinimumSystemVersion");
-			info_plist.SetPListStringValue ("LSMinimumSystemVersion", GetMinimumOSVersion (plist_min_version));
+			var plist_min_version = info_plist.GetMinimummacOSVersion ();
+			info_plist.SetMinimummacOSVersion (GetMinimumOSVersion (plist_min_version));
 
 			inputProject.FixInfoPListInclude (Suffix);
 
