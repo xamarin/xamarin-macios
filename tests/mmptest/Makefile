@@ -37,7 +37,7 @@ run: build
 	@[[ ! -e .failed-stamp ]]
 
 build:
-	$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore ../tests-mac.sln
+	$(Q_XBUILD) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore ../tests-mac.sln
 	$(SYSTEM_XIBUILD) -- mmptest.csproj $(XBUILD_VERBOSITY)
 
 clean-local::
