@@ -78,7 +78,10 @@ namespace Xamarin.Tests
 			var max_version = Version.Parse (XcodeVersion);
 			foreach (var xcode in xcodes) {
 				var path = Path.Combine (xcode, "Contents", "Developer");
-				var version = Version.Parse (GetXcodeVersion (path));
+				var xcode_version = GetXcodeVersion (path);
+				if (xcode_version == null)
+					continue;
+				var version = Version.Parse (xcode_version);
 				if (version >= max_version)
 					continue;
 				if (min_version != null && version < min_version)
