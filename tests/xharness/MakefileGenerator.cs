@@ -68,7 +68,7 @@ namespace xharness
 				var nuget_restore_dependency = ".stamp-nuget-restore-mac";
 				writer.WriteLine ("PACKAGES_CONFIG:=$(shell find . -name packages.config)");
 				writer.WriteLine ($"{nuget_restore_dependency}: tests-mac.sln $(PACKAGES_CONFIG)");
-				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore tests-mac.sln");
+				writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore tests-mac.sln");
 				writer.WriteLine ("\t$(Q) touch $@");
 
 				var allTargets = new List<MacUnifiedTarget> ();
