@@ -510,6 +510,18 @@ build-tools: build-tools64
 	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO) MONOTOUCH_MCS_FLAGS=$(IOS_CSC_FLAGS) XAMMAC_MCS_FLAGS=$(MAC_CSC_FLAGS)
 	# NO_INSTALL is defined in mono/mcs/build/profiles except for net_4_5. If we don't have it, then it attempts to install into a gac, and sometimes fail
 	NO_INSTALL=1 $(MAKE) -C tools64 -j 1 install EXTERNAL_MCS=$(SYSTEM_CSC) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+	@# build test assemblies as well
+	$(MAKE) -C tools64/runtime test xunit-test -j8 build_profiles="monotouch monotouch_tv monotouch_watch xammac xammac_net_4_5"
+	@# Copy results to where xharness expects it to be
+	@# This will create a conflict when merged to master: choose master's version.
+	mkdir -p $(MONO_IOS_SDK_DESTDIR)/ios-bcl/{monotouch,monotouch_tv,monotouch_watch}
+	for p in monotouch monotouch_tv monotouch_watch; do \
+		$(CP) -r $(MONO_PATH)/mcs/class/lib/$$p/tests $(MONO_IOS_SDK_DESTDIR)/ios-bcl/$$p/; \
+	done
+	mkdir -p $(MONO_MAC_SDK_DESTDIR)/mac-bcl/{xammac,xammac_net_4_5}
+	for p in xammac xammac_net_4_5; do \
+		$(CP) -r $(MONO_PATH)/mcs/class/lib/$$p/tests $(MONO_MAC_SDK_DESTDIR)/mac-bcl/$$p/; \
+	done
 	@touch .stamp-build-tools64
 
 clean-tools64:
