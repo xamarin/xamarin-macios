@@ -344,6 +344,18 @@ namespace Introspection {
 				case "CLKSimpleGaugeProvider":
 				case "CLKTimeIntervalGaugeProvider":
 					return true;
+#elif __TVOS__
+				case "TVTopShelfAction":
+				case "TVTopShelfCarouselContent":
+				case "TVTopShelfCarouselItem":
+				case "TVTopShelfInsetContent":
+				case "TVTopShelfItem":
+				case "TVTopShelfItemCollection":
+				case "TVTopShelfNamedAttribute":
+				case "TVTopShelfObject":
+				case "TVTopShelfSectionedContent":
+				case "TVTopShelfSectionedItem":
+					return true;
 #endif
 				}
 				break;
@@ -549,6 +561,18 @@ namespace Introspection {
 				case "CLKGaugeProvider":
 				case "CLKSimpleGaugeProvider":
 				case "CLKTimeIntervalGaugeProvider":
+					return true;
+#elif __TVOS__
+				case "TVTopShelfAction":
+				case "TVTopShelfCarouselContent":
+				case "TVTopShelfCarouselItem":
+				case "TVTopShelfInsetContent":
+				case "TVTopShelfItem":
+				case "TVTopShelfItemCollection":
+				case "TVTopShelfNamedAttribute":
+				case "TVTopShelfObject":
+				case "TVTopShelfSectionedContent":
+				case "TVTopShelfSectionedItem":
 					return true;
 #endif
 				}
