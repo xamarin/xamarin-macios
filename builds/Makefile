@@ -517,6 +517,7 @@ build-tools: build-tools64
 	mkdir -p $(MONO_IOS_SDK_DESTDIR)/ios-bcl/{monotouch,monotouch_tv,monotouch_watch}
 	for p in monotouch monotouch_tv monotouch_watch; do \
 		$(CP) -r $(MONO_PATH)/mcs/class/lib/$$p/tests $(MONO_IOS_SDK_DESTDIR)/ios-bcl/$$p/; \
+		$(CP) $(MONO_PATH)/mcs/class/lib/monotouch/nunitlite.* $(MONO_IOS_SDK_DESTDIR)/ios-bcl/$$p/; \
 	done
 	mkdir -p $(MONO_MAC_SDK_DESTDIR)/mac-bcl/{xammac,xammac_net_4_5}
 	for p in xammac xammac_net_4_5; do \
