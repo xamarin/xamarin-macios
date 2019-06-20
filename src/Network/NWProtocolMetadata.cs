@@ -87,7 +87,35 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_tls_copy_sec_protocol_metadata (IntPtr handle);
 
-		public SecProtocolMetadata SecProtocolMetadata => new SecProtocolMetadata (nw_tls_copy_sec_protocol_metadata (GetCheckedHandle ()), owns: true);
+		void CheckIsIP ()
+		{
+			if (!IsIP)
+				throw new InvalidOperationException ("This metadata is not IP metadata.");
+		}
+
+		void CheckIsTcp ()
+		{
+			if (!IsTcp)
+				throw new InvalidOperationException ("This metadata is not Tcp metadata.");
+		}
+
+		void CheckIsTls ()
+		{
+			if (!IsTls)
+				throw new InvalidOperationException ("This metadata is not TLS metadata.");
+		}
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'SecTlsProtocolMetadata' instead.")]
+		public SecProtocolMetadata SecProtocolMetadata => TlsSecProtocolMetadata;
+#endif
+
+		public SecProtocolMetadata TlsSecProtocolMetadata {
+			get {
+				CheckIsTls ();
+				return new SecProtocolMetadata (nw_tls_copy_sec_protocol_metadata (GetCheckedHandle ()), owns: true);
+			}
+		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_metadata_set_ecn_flag (OS_nw_protocol_metadata metadata, NWIPEcnFlag ecn_flag);
@@ -96,15 +124,24 @@ namespace Network {
 		static extern NWIPEcnFlag nw_ip_metadata_get_ecn_flag (OS_nw_protocol_metadata metadata);
 
 		public NWIPEcnFlag IPMetadataEcnFlag {
-			get => nw_ip_metadata_get_ecn_flag (GetCheckedHandle ());
-			set => nw_ip_metadata_set_ecn_flag (GetCheckedHandle (), value);
+			get {
+				CheckIsIP ();
+				return nw_ip_metadata_get_ecn_flag (GetCheckedHandle ());
+			}
+			set {
+				CheckIsIP ();
+				nw_ip_metadata_set_ecn_flag (GetCheckedHandle (), value);
+			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern /* uint64_t */ ulong nw_ip_metadata_get_receive_time (OS_nw_protocol_metadata metadata);
 
 		public ulong IPMetadataReceiveTime {
-			get => nw_ip_metadata_get_receive_time (GetCheckedHandle ());
+			get {
+				CheckIsIP ();
+				return nw_ip_metadata_get_receive_time (GetCheckedHandle ());
+			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -113,19 +150,41 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWServiceClass nw_ip_metadata_get_service_class (OS_nw_protocol_metadata metadata);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'IPServiceClass' instead.")]
 		public NWServiceClass ServiceClass {
-			get => nw_ip_metadata_get_service_class (GetCheckedHandle ());
-			set => nw_ip_metadata_set_service_class (GetCheckedHandle (), value);
+			get => IPServiceClass;
+			set => IPServiceClass = value;
+		}
+#endif
+
+		public NWServiceClass IPServiceClass {
+			get {
+				CheckIsIP ();
+				return nw_ip_metadata_get_service_class (GetCheckedHandle ());
+			}
+			set {
+				CheckIsIP ();
+				nw_ip_metadata_set_service_class (GetCheckedHandle (), value);
+			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static /* uint32_t */ uint nw_tcp_get_available_receive_buffer (IntPtr handle);
 
-		public uint TcpGetAvailableReceiveBuffer () => nw_tcp_get_available_receive_buffer (GetCheckedHandle ());
+		public uint TcpGetAvailableReceiveBuffer ()
+		{
+			CheckIsTcp ();
+			return nw_tcp_get_available_receive_buffer (GetCheckedHandle ());
+		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static /* uint32_t */ uint nw_tcp_get_available_send_buffer (IntPtr handle);
 
-		public uint TcpGetAvailableSendBuffer () => nw_tcp_get_available_send_buffer (GetCheckedHandle ());
+		public uint TcpGetAvailableSendBuffer ()
+		{
+			CheckIsTcp ();
+			return nw_tcp_get_available_send_buffer (GetCheckedHandle ());
+		}
 	}
 }
