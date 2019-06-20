@@ -64,6 +64,8 @@ namespace xharness
 			}
 			set {
 				root_directory = value;
+				if (root_directory != null)
+					root_directory = Path.GetFullPath (root_directory).TrimEnd ('/');
 			}
 		}
 
@@ -233,30 +235,32 @@ namespace xharness
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
 		}
 		 
-		void AutoConfigureMac ()
+		int AutoConfigureMac (bool generate_projects)
 		{
+			int rv = 0;
+
 			var test_suites = new [] {
-				new { Directory = "apitest", ProjectFile = "apitest", Name = "apitest", GenerateSystem = false },
-				new { Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", GenerateSystem = true },
+				new { Directory = "apitest", ProjectFile = "apitest", Name = "apitest", Flavors = MacFlavors.Full | MacFlavors.Modern },
+				new { Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", Flavors = MacFlavors.Modern | MacFlavors.Full | MacFlavors.System },
 			};
 			foreach (var p in test_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory + "/" + p.ProjectFile + ".csproj"))) {
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj"))) {
 					Name = p.Name,
-					TargetFrameworkFlavor = p.GenerateSystem ? MacFlavors.All : MacFlavors.NonSystem,
+					TargetFrameworkFlavors = p.Flavors,
 				});
 			}
 			
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 
 			var hard_coded_test_suites = new [] {
-				new { Directory = "mmptest", ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", },
-				new { Directory = "msbuild-mac", ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = true, Configurations = (string[]) null, Platform = "x86" },
-				new { Directory = "xammac_tests", ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "AnyCPU" },
-				new { Directory = "linker/mac/link all", ProjectFile = "link all-mac", Name = "link all", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", },
-				new { Directory = "linker/mac/link sdk", ProjectFile = "link sdk-mac", Name = "link sdk", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", },
+				new { Directory = "mmptest", ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", Flavors = MacFlavors.Console, },
+				new { Directory = "msbuild-mac", ProjectFile = "msbuild-mac", Name = "MSBuild tests", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", Flavors = MacFlavors.Console, },
+				new { Directory = "xammac_tests", ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "AnyCPU", Flavors = MacFlavors.Modern, },
+				new { Directory = "linker/mac/link all", ProjectFile = "link all-mac", Name = "link all", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
+				new { Directory = "linker/mac/link sdk", ProjectFile = "link sdk-mac", Name = "link sdk", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
 			};
 			foreach (var p in hard_coded_test_suites) {
-				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory + "/" + p.ProjectFile + ".csproj")), generateVariations: false) {
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj")), targetFrameworkFlavor: p.Flavors) {
 					Name = p.Name,
 					IsNUnitProject = p.IsNUnit,
 					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
@@ -283,33 +287,94 @@ namespace xharness
 				"System.IdentityModel",
 			};
 			foreach (var p in bcl_suites) {
-				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
-					var bclTestInfo = new MacBCLTestInfo (this, p, flavor);
-					var bclTestProject = new MacTestProject (bclTestInfo.ProjectPath, targetFrameworkFlavor: flavor, generateVariations: false) {
-						Name = p,
-						BCLInfo = bclTestInfo,
-						Platform = "AnyCPU",
-					};
+				var bclTestInfo = new MacBCLTestInfo (this, p);
+				var bclTestProject = new MacTestProject (bclTestInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
+					Name = p,
+					BCLInfo = bclTestInfo,
+					Platform = "AnyCPU",
+				};
 
-					MacTestProjects.Add (bclTestProject);
-				}
+				MacTestProjects.Add (bclTestProject);
 			}
 
-			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				foreach (var macFlavor in new MacFlavors[] { MacFlavors.Full, MacFlavors.Modern }) {
-					var monoNativeInfo = new MacMonoNativeInfo (this, flavor, macFlavor);
-					var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: macFlavor, generateVariations: true) {
-						MonoNativeInfo = monoNativeInfo,
-						Name = monoNativeInfo.ProjectName,
-						Platform = "AnyCPU"
-					};
+			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+				var monoNativeInfo = new MacMonoNativeInfo (this, flavor);
+				var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
+					MonoNativeInfo = monoNativeInfo,
+					Name = monoNativeInfo.ProjectName,
+					Platform = "AnyCPU",
 
-					MacTestProjects.Add (macTestProject);
-				}
+				};
+
+				MacTestProjects.Add (macTestProject);
 			}
 
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
 			MacTestProjects.AddRange (monoImportTestFactory.GetMacBclTargets ());
+
+			// Generate test projects from templates (bcl/mono-native templates)
+			if (generate_projects) {
+				foreach (var bclTestInfo in MacTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
+					bclTestInfo.Convert ();
+
+				foreach (var mtp in MacTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+					mtp.Convert ();
+			}
+
+			// All test projects should be either Modern projects or NUnit/console executables at this point.
+			// If we need to generate Full/System variations, we do that here.
+			var unified_targets = new List<MacTarget> ();
+
+			Action<MacTarget, string, bool> configureTarget = (MacTarget target, string file, bool isNUnitProject) => {
+				target.TemplateProjectPath = file;
+				target.Harness = this;
+				target.IsNUnitProject = isNUnitProject;
+				if (!generate_projects)
+					target.ShouldSkipProjectGeneration = true;
+				target.Execute ();
+			};
+
+			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations).ToArray ()) {
+				var file = proj.Path;
+				if (!File.Exists (file)) {
+					Console.WriteLine ($"Can't find the project file {file}.");
+					rv = 1;
+					continue;
+				}
+
+				// Generate variations if requested
+				if (proj.GenerateFull) {
+					var target = new MacTarget (MacFlavors.Full);
+					target.MonoNativeInfo = proj.MonoNativeInfo;
+					configureTarget (target, file, proj.IsNUnitProject);
+					unified_targets.Add (target);
+
+					var cloned_project = (MacTestProject) proj.Clone ();
+					cloned_project.TargetFrameworkFlavors = MacFlavors.Full;
+					cloned_project.Path = target.ProjectPath;
+					MacTestProjects.Add (cloned_project);
+				}
+
+				if (proj.GenerateSystem) {
+					var target = new MacTarget (MacFlavors.System);
+					configureTarget (target, file, proj.IsNUnitProject);
+					unified_targets.Add (target);
+
+					var cloned_project = (MacTestProject) proj.Clone ();
+					cloned_project.TargetFrameworkFlavors = MacFlavors.System;
+					cloned_project.Path = target.ProjectPath;
+					MacTestProjects.Add (cloned_project);
+				}
+
+				// We're done generating now
+				// Re-use the existing TestProject instance instead of creating a new one.
+				proj.TargetFrameworkFlavors = MacFlavors.Modern; // the default/template flavor is 'Modern'
+			}
+
+			if (generate_projects)
+				MakefileGenerator.CreateMacMakefile (this, unified_targets);
+
+			return rv;
 		}
 
 		void AutoConfigureIOS ()
@@ -360,7 +425,7 @@ namespace xharness
 
 			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MonoNativeInfo (this, flavor);
-				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath, generateVariations: false) {
+				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
 					SkipwatchOSARM64_32Variation = monoNativeInfo.ProjectName.Contains ("compat"),
@@ -424,71 +489,7 @@ namespace xharness
 
 		public int Configure ()
 		{
-			return Mac ? ConfigureMac () : ConfigureIOS ();
-		}
-
-		int ConfigureMac ()
-		{
-			int rv = 0;
-
-			var unified_targets = new List<MacUnifiedTarget> ();
-			var hardcoded_unified_targets = new List<MacUnifiedTarget> ();
-
-			Action<MacTarget, string, bool> configureTarget = (MacTarget target, string file, bool isNUnitProject) => {
-				target.TemplateProjectPath = file;
-				target.Harness = this;
-				target.IsNUnitProject = isNUnitProject;
-				target.Execute ();
-			};
-
- 			RootDirectory = Path.GetFullPath (RootDirectory).TrimEnd ('/');
- 
- 			if (AutoConf)
-				AutoConfigureMac ();
-
-			foreach (var bclTestInfo in MacTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
-				bclTestInfo.Convert ();
-			foreach (var monoNativeInfo in MacTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
-				monoNativeInfo.Convert ();
-
-			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
-				var file = Path.ChangeExtension (proj.Path, "csproj");
-
-				if (proj.MonoNativeInfo != null)
-					file = proj.MonoNativeInfo.TemplatePath;
-
-				if (!File.Exists (file)) {
-					Console.WriteLine ($"Can't find the project file {file}.");
-					rv = 1;
-					continue;
-				}
-
-				if (proj.GenerateFull) {
-					var full = new MacUnifiedTarget (false);
-					full.MonoNativeInfo = proj.MonoNativeInfo;
-					configureTarget (full, file, proj.IsNUnitProject);
-					unified_targets.Add (full);
-				}
-
-				if (proj.GenerateSystem) {
-					var system = new MacUnifiedTarget (false);
-					system.System = true;
-					configureTarget (system, file, proj.IsNUnitProject);
-					unified_targets.Add (system);
-				}
-			}
- 
-			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
-				var file = proj.Path;
-				var unified = new MacUnifiedTarget (proj.GenerateModern, shouldSkipProjectGeneration: true);
-				unified.BCLInfo = proj.BCLInfo;
-				configureTarget (unified, file, proj.IsNUnitProject);
-				hardcoded_unified_targets.Add (unified);
- 			}
- 
-			MakefileGenerator.CreateMacMakefile (this, unified_targets.Union (hardcoded_unified_targets));
-
-			return rv;
+			return Mac ? AutoConfigureMac (true) : ConfigureIOS ();
 		}
 
 		int ConfigureIOS ()
@@ -498,8 +499,6 @@ namespace xharness
 			var tvos_targets = new List<TVOSTarget> ();
 			var watchos_targets = new List<WatchOSTarget> ();
 			var today_targets = new List<TodayExtensionTarget> ();
-
-			RootDirectory = Path.GetFullPath (RootDirectory).TrimEnd ('/');
 
 			if (AutoConf)
 				AutoConfigureIOS ();
@@ -712,7 +711,7 @@ namespace xharness
 		{
 			if (AutoConf) {
 				AutoConfigureIOS ();
-				AutoConfigureMac ();
+				AutoConfigureMac (false);
 			}
 			
 			var jenkins = new Jenkins ()

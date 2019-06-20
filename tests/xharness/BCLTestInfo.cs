@@ -172,18 +172,11 @@ namespace xharness
 
 	public class MacBCLTestInfo : BCLTestInfo
 	{
-		public MacFlavors Flavor { get; private set; }
-
-		public MacBCLTestInfo (Harness harness, string testName, MacFlavors flavor) : base (harness, testName)
+		public MacBCLTestInfo (Harness harness, string testName) : base (harness, testName)
 		{
-			if (flavor == MacFlavors.All || flavor == MacFlavors.NonSystem)
-				throw new ArgumentException ("Each target must be a specific flavor");
-
-			Flavor = flavor;
 		}
 
-		public string FlavorSuffix => Flavor == MacFlavors.Full ? "-full" : "-modern";
-		public string ProjectSuffix =>  "-mac" + FlavorSuffix + ".csproj";
+		public string ProjectSuffix =>  "-mac.csproj";
 		public string ProjectPath => Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + ProjectSuffix);
 		public string TemplatePath => Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-mac.csproj.template");
 
@@ -195,23 +188,12 @@ namespace xharness
 			xml = xml.Replace ("#FILES#", GetFileList ());
 			inputProject.LoadXmlWithoutNetworkAccess (xml);
 
-			switch (Flavor) {
-			case MacFlavors.Modern:
-				inputProject.SetTargetFrameworkIdentifier ("Xamarin.Mac");
-				inputProject.SetTargetFrameworkVersion ("v2.0");
-				inputProject.RemoveNode ("UseXamMacFullFramework");
-				inputProject.AddAdditionalDefines ("MOBILE;XAMMAC");
-				inputProject.AddReference ("Mono.Security");
-				break;
-			case MacFlavors.Full:
-				inputProject.AddAdditionalDefines ("XAMMAC_4_5");
-				break;
-			default:
-				throw new NotImplementedException (Flavor.ToString ());
-			}
-			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + FlavorSuffix);
-			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + FlavorSuffix);
-			inputProject.SetAssemblyName (inputProject.GetAssemblyName () + FlavorSuffix);
+			// The csproj template is Xamarin.Mac/Full, so make it Modern instead
+			inputProject.SetTargetFrameworkIdentifier ("Xamarin.Mac");
+			inputProject.SetTargetFrameworkVersion ("v2.0");
+			inputProject.RemoveNode ("UseXamMacFullFramework");
+			inputProject.AddAdditionalDefines ("MOBILE;XAMMAC");
+			inputProject.AddReference ("Mono.Security");
 
 			Harness.Save (inputProject, ProjectPath);
 		}

@@ -26,7 +26,7 @@ namespace xharness
 
 		enum MacTargetNameType { Build, Clean, Exec, Run }
 
-		static string MakeMacUnifiedTargetName (MacUnifiedTarget target, MacTargetNameType type)
+		static string MakeMacUnifiedTargetName (MacTarget target, MacTargetNameType type)
 		{
 			var make_escaped_suffix = "-" + target.Platform.Replace (" ", "\\ ");
 			var make_escaped_name = target.SimplifiedName.Replace (" ", "\\ ");
@@ -57,7 +57,7 @@ namespace xharness
 			return path;
 		}
 
-		public static void CreateMacMakefile (Harness harness, IEnumerable<MacUnifiedTarget> targets)
+		public static void CreateMacMakefile (Harness harness, IEnumerable<MacTarget> targets)
 		{
 			var makefile = Path.Combine (harness.RootDirectory, "Makefile-mac.inc");
 			using (var writer = new StreamWriter (makefile, false, new UTF8Encoding (false))) {
@@ -71,7 +71,7 @@ namespace xharness
 				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore tests-mac.sln");
 				writer.WriteLine ("\t$(Q) touch $@");
 
-				var allTargets = new List<MacUnifiedTarget> ();
+				var allTargets = new List<MacTarget> ();
 				allTargets.AddRange (targets);
 
 				List<string> allTargetNames = new List<string> (allTargets.Count);
@@ -95,7 +95,7 @@ namespace xharness
 					allTargetNames.Add (MakeMacUnifiedTargetName (target, MacTargetNameType.Build));
 					allTargetCleanNames.Add (MakeMacUnifiedTargetName (target, MacTargetNameType.Clean));
 
-					string guiUnitDependency = target.Mobile ? "$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe" : "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe";
+					string guiUnitDependency = target.Modern ? "$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe" : "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe";
 
 					writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Build), "{0}", target.ProjectPath.Replace (" ", "\\ ") + " "  + guiUnitDependency + " " + nuget_restore_dependency);
 					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
@@ -146,7 +146,7 @@ namespace xharness
 				writer.WriteLine ("# Container targets that run multiple test projects");
 				writer.WriteLine ();
 
-				IEnumerable<MacUnifiedTarget> groupableTargets = allTargets;
+				IEnumerable<MacTarget> groupableTargets = allTargets;
 
 				var grouped = groupableTargets.GroupBy ((target) => target.SimplifiedName);
 				foreach (MacTargetNameType action in Enum.GetValues (typeof (MacTargetNameType))) {

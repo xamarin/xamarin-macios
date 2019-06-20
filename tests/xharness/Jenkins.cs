@@ -389,9 +389,9 @@ namespace xharness
 						var canSymlink = false;
 						switch (task.Platform) {
 						case TestPlatform.Mac:
-						case TestPlatform.Mac_Unified:
-						case TestPlatform.Mac_UnifiedXM45:
-						case TestPlatform.Mac_UnifiedSystem:
+						case TestPlatform.Mac_Modern:
+						case TestPlatform.Mac_Full:
+						case TestPlatform.Mac_System:
 							isMac = true;
 							break;
 						case TestPlatform.iOS:
@@ -902,9 +902,27 @@ namespace xharness
 				var configurations = project.Configurations;
 				if (configurations == null)
 					configurations = new string [] { "Debug" };
+
+				TestPlatform platform;
+				switch (project.TargetFrameworkFlavors) {
+				case MacFlavors.Console:
+					platform = TestPlatform.Mac;
+					break;
+				case MacFlavors.Full:
+					platform = TestPlatform.Mac_Full;
+					break;
+				case MacFlavors.Modern:
+					platform = TestPlatform.Mac_Modern;
+					break;
+				case MacFlavors.System:
+					platform = TestPlatform.Mac_System;
+					break;
+				default:
+					throw new NotImplementedException (project.TargetFrameworkFlavors.ToString ());
+				}
 				foreach (var config in configurations) {
 					XBuildTask build = new XBuildTask ();
-					build.Platform = TestPlatform.Mac_Unified;
+					build.Platform = platform;
 					build.CloneTestProject (project);
 					build.Jenkins = this;
 					build.SolutionPath = project.SolutionPath;
@@ -937,17 +955,11 @@ namespace xharness
 						};
 						execs = CreateTestVariations (new [] { exec }, (buildTask, test, candidates) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
 					}
-					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
+
+					foreach (var e in execs)
+						e.Variation = config;
 
 					Tasks.AddRange (execs);
-					foreach (var e in execs) {
-						if (project.GenerateVariations && project.MonoNativeInfo == null) {
-							if (project.GenerateFull)
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-							if (project.GenerateSystem)
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedSystem, "-system", ignored));
-						}
-					}
 				}
 			}
 
@@ -1075,46 +1087,6 @@ namespace xharness
 				Tasks.AddRange (v.Result);
 			});
 			Task.WaitAll (loadsim, loaddev);
-		}
-
-		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore)
-		{
-			var build = new XBuildTask ()
-			{
-				Platform = platform,
-				Jenkins = task.Jenkins,
-				ProjectConfiguration = task.ProjectConfiguration,
-				ProjectPlatform = task.ProjectPlatform,
-				SpecifyPlatform = task.BuildTask.SpecifyPlatform,
-				SpecifyConfiguration = task.BuildTask.SpecifyConfiguration,
-			};
-			var tp = new TestProject (Path.ChangeExtension (AddSuffixToPath (original_project.Path, suffix), "csproj"));
-			build.CloneTestProject (tp);
-
-			var macExec = task as MacExecuteTask;
-			if (macExec != null) {
-				return new MacExecuteTask (build) {
-					Ignored = ignore,
-					TestName = task.TestName,
-					IsUnitTest = macExec.IsUnitTest,
-					Variation = task.Variation,
-				};
-			}
-			var nunit = task as NUnitExecuteTask;
-			if (nunit != null) {
-				var project = build.TestProject;
-				var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
-				return new NUnitExecuteTask (build) {
-					Ignored = ignore,
-					TestName = build.TestName,
-					TestLibrary = dll,
-					TestProject = project,
-					WorkingDirectory = Path.GetDirectoryName (dll),
-					Platform = build.Platform,
-					Timeout = TimeSpan.FromMinutes (120),
-				};
-			}
-			throw new NotImplementedException ();
 		}
 
 		async Task ExecutePeriodicCommandAsync (Log periodic_loc)
@@ -1372,9 +1344,9 @@ namespace xharness
 									case "?all-mac":
 										switch (task.Platform) {
 										case TestPlatform.Mac:
-										case TestPlatform.Mac_Unified:
-										case TestPlatform.Mac_UnifiedXM45:
-										case TestPlatform.Mac_UnifiedSystem:
+										case TestPlatform.Mac_Modern:
+										case TestPlatform.Mac_Full:
+										case TestPlatform.Mac_System:
 											is_match = true;
 											break;
 										default:
@@ -2440,12 +2412,12 @@ namespace xharness
 				switch (Platform) {
 				case TestPlatform.Mac:
 					return rv;
-				case TestPlatform.Mac_Unified:
+				case TestPlatform.Mac_Modern:
 					return rv;//.Substring (0, rv.Length - "-unified".Length);
-				case TestPlatform.Mac_UnifiedXM45:
-					return rv.Substring (0, rv.Length - "-unifiedXM45".Length);
-				case TestPlatform.Mac_UnifiedSystem:
-					return rv.Substring (0, rv.Length - "-unifiedSystem".Length);
+				case TestPlatform.Mac_Full:
+					return rv.Substring (0, rv.Length - "-full".Length);
+				case TestPlatform.Mac_System:
+					return rv.Substring (0, rv.Length - "-system".Length);
 				default:
 					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 8);
@@ -2615,9 +2587,9 @@ namespace xharness
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 				break;
 			case TestPlatform.Mac:
-			case TestPlatform.Mac_Unified:
-			case TestPlatform.Mac_UnifiedXM45:
-			case TestPlatform.Mac_UnifiedSystem:
+			case TestPlatform.Mac_Modern:
+			case TestPlatform.Mac_Full:
+			case TestPlatform.Mac_System:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
@@ -3144,12 +3116,12 @@ namespace xharness
 				switch (Platform) {
 				case TestPlatform.Mac:
 					return "Mac";
-				case TestPlatform.Mac_Unified:
-					return "Mac Unified";
-				case TestPlatform.Mac_UnifiedXM45:
-					return "Mac Unified XM45";
-				case TestPlatform.Mac_UnifiedSystem:
-					return "Mac Unified System";
+				case TestPlatform.Mac_Modern:
+					return "Mac Modern";
+				case TestPlatform.Mac_Full:
+					return "Mac Full";
+				case TestPlatform.Mac_System:
+					return "Mac System";
 				default:
 					throw new NotImplementedException (Platform.ToString ());
 				}
@@ -3205,14 +3177,14 @@ namespace xharness
 				name = System.IO.Path.GetFileName (System.IO.Path.GetDirectoryName (projectDir));
 			var suffix = string.Empty;
 			switch (Platform) {
-			case TestPlatform.Mac_Unified:
-				suffix = "-unified";
+			case TestPlatform.Mac_Modern:
+				suffix = "-modern";
 				break;
-			case TestPlatform.Mac_UnifiedXM45:
-				suffix = "-unifiedXM45";
+			case TestPlatform.Mac_Full:
+				suffix = "-full";
 				break;
-			case TestPlatform.Mac_UnifiedSystem:
-				suffix = "-unifiedSystem";
+			case TestPlatform.Mac_System:
+				suffix = "-system";
 				break;
 			}
 			if (ProjectFile.EndsWith (".sln", StringComparison.Ordinal)) {
@@ -4056,9 +4028,9 @@ namespace xharness
 		watchOS_64_32,
 
 		Mac,
-		Mac_Unified,
-		Mac_UnifiedXM45,
-		Mac_UnifiedSystem,
+		Mac_Modern,
+		Mac_Full,
+		Mac_System,
 	}
 
 	[Flags]
