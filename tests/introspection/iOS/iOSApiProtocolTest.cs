@@ -93,10 +93,10 @@ namespace Introspection {
 				// These were bound by mistake, and they're gone in XAMCORE_4_0.
 				return true;
 #endif
-            case "SNClassificationResult": // Class is not being created properly
-                return true;
-            case "SNClassifySoundRequest": // Class is not being created properly
-                return true;
+			case "SNClassificationResult": // Class is not being created properly
+				return true;
+			case "SNClassifySoundRequest": // Class is not being created properly
+				return true;
 			}
 
 			return base.Skip (type);
