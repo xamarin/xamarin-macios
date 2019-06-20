@@ -120,27 +120,18 @@ namespace xharness
 		protected void CreateExecutableProject ()
 		{
 			ProcessProject ();
-			if (Harness.Mac) {
-				ProjectGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
-				inputProject.SetProjectGuid (ProjectGuid);
-			} else {
-				inputProject.FixArchitectures (SimulatorArchitectures, DeviceArchitectures);
-				inputProject.FixInfoPListInclude (Suffix);
-				inputProject.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
-			}
+			PostProcessExecutableProject ();
 			Harness.Save (inputProject, ProjectPath);
 
-			if (!Harness.Mac) {
-				ProjectGuid = inputProject.GetProjectGuid ();
+			UpdateInfoPList ();
+		}
 
-				XmlDocument info_plist = new XmlDocument ();
-				var target_info_plist = Path.Combine (TargetDirectory, "Info" + Suffix + ".plist");
-				info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
-				BundleIdentifier = info_plist.GetCFBundleIdentifier ();
-				info_plist.SetMinimumOSVersion (GetMinimumOSVersion (info_plist.GetMinimumOSVersion ()));
-				info_plist.SetUIDeviceFamily (UIDeviceFamily);
-				Harness.Save (info_plist, target_info_plist);
-			}
+		protected virtual void PostProcessExecutableProject ()
+		{
+		}
+
+		protected virtual void UpdateInfoPList ()
+		{
 		}
 
 		protected void CreateLibraryProject ()

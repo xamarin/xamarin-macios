@@ -186,5 +186,13 @@ namespace xharness
 				return null;
 			}
 		}
+
+		protected override void PostProcessExecutableProject ()
+		{
+			base.PostProcessExecutableProject ();
+
+			ProjectGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
+			inputProject.SetProjectGuid (ProjectGuid);
+		}
 	}
 }
