@@ -75,10 +75,10 @@ namespace IncomingCallNotifications {
 	interface ICNotificationManagerDelegate {
 
 		[Export ("notificationManager:didAcceptNotification:")]
-		void DidAcceptNotification (ICNotificationManager notificationManager, ICNotification notification);
+		void DidAccept (ICNotificationManager notificationManager, ICNotification notification);
 
 		[Export ("notificationManager:didDeclineNotification:reason:")]
-		void DidDeclineNotification (ICNotificationManager notificationManager, ICNotification notification, ICDeclineReason reason);
+		void DidDecline (ICNotificationManager notificationManager, ICNotification notification, ICDeclineReason reason);
 	}
 
 	interface IICNotificationManagerDelegate {}
@@ -100,7 +100,7 @@ namespace IncomingCallNotifications {
 		void PostNotification (ICNotification notification, [NullAllowed] Action<NSError> completion);
 
 		[Export ("cancelNotificationWithIdentifier:")]
-		void PostNotification (NSUuid identifier);
+		void CancelNotification (NSUuid identifier);
 	}
 
 	[iOS (13,0), Mac (10, 15, onlyOn64: true)]
@@ -108,7 +108,7 @@ namespace IncomingCallNotifications {
 	interface ICNotificationManagerConfiguration : NSCopying {
 
 		[Export ("localizedDisplayName", ArgumentSemantic.Copy), NullAllowed]
-		string DisplayName { get; set; }
+		string LocalizedDisplayName { get; set; }
 	}
 }
 
