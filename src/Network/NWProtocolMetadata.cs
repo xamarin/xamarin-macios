@@ -96,7 +96,7 @@ namespace Network {
 		void CheckIsTcp ()
 		{
 			if (!IsTcp)
-				throw new InvalidOperationException ("This metadata is not Tcp metadata.");
+				throw new InvalidOperationException ("This metadata is not TCP metadata.");
 		}
 
 		void CheckIsTls ()
