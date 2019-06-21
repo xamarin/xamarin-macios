@@ -595,16 +595,9 @@ namespace CoreAnimation {
 
 		[NoWatch] // headers not updated
 		[TV (13,0)][Mac (10, 15, onlyOn64: true)][iOS (13, 0)]
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("cornerCurveExpansionFactor:")]
-		nfloat GetCornerCurveExpansionFactor (NSString curve);
-
-		[NoWatch] // headers not updated
-		[TV (13,0)][Mac (10, 15, onlyOn64: true)][iOS (13, 0)]
-		[Static]
-		[Wrap ("GetCornerCurveExpansionFactor (curve.GetConstant ())")]
-		nfloat GetCornerCurveExpansionFactor (CACornerCurve curve);
+		nfloat GetCornerCurveExpansionFactor ([BindAs (typeof (CACornerCurve))] NSString curve);
 	}
 
 	[NoWatch] // headers not updated
