@@ -430,9 +430,7 @@ $(MAC_BUILD_DIR)/$(1)/$(2:.dll=.pdb): $(MAC_BUILD_DIR)/$(1)/$(2)
 
 endef
 
-$(eval $(call MAC_TARGETS_template,mobile-32,Xamarin.Mac.dll,mobile,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-32,32))
 $(eval $(call MAC_TARGETS_template,mobile-64,Xamarin.Mac.dll,mobile,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-64,64))
-$(eval $(call MAC_TARGETS_template,full-32,Xamarin.Mac.dll,full,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-32,32))
 $(eval $(call MAC_TARGETS_template,full-64,Xamarin.Mac.dll,full,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-64,64))
 
 $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.dll
@@ -443,23 +441,11 @@ $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.
 	@mkdir -p $(@D)
 	$(Q) $(CP) $^ $@
 
-$(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll: $(MACIOS_BINARIES_PATH)/XamMac.CFNetwork.dll | $(MAC_BUILD_DIR)/compat
-	$(Q) $(CP) $< $@
-	$(Q) $(CP) $<.mdb $@.mdb
-
-$(MAC_BUILD_DIR)/compat/XamMac.dll: $(MACIOS_BINARIES_PATH)/XamMac.dll | $(MAC_BUILD_DIR)/compat
-	$(Q) $(CP) $< $@
-	$(Q) $(CP) $<.mdb $@.mdb
-
 MAC_VARIANTS_TARGETS = \
-	$(MAC_BUILD_DIR)/compat/XamMac.dll \
-	$(MAC_BUILD_DIR)/mobile-32/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/mobile-64/Xamarin.Mac.dll \
-	$(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/full-64/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll \
-	$(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll
 
 INSTALL_TARGETS+=install-mac
 ALL_TARGETS+=all-mac
@@ -469,9 +455,6 @@ MAC_TARGETS_DIRS += \
 	$(MAC_BUILD_DIR)/mobile \
 	$(MAC_BUILD_DIR)/mobile/Facades \
 	$(MAC_BUILD_DIR)/full \
-	$(MAC_BUILD_DIR)/compat \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile      \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full        \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile    \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full      \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile \
@@ -486,29 +469,19 @@ MAC_TARGETS_DIRS += \
 MAC_TARGETS += \
 	$(PROJECT_DIR)/xammac.csproj                                                        \
 	$(MAC_VARIANTS_TARGETS)                                                             \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll                      \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.dll     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.pdb     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/Xamarin.Mac.dll       \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/Xamarin.Mac.pdb       \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.dll        \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.pdb        \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.dll          \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.pdb          \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.dll          \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.pdb          \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.dll            \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.pdb            \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.CFNetwork.dll            \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.pdb     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.pdb             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/xammac.pc
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll: $(MAC_BUILD_DIR)/compat/XamMac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
-	$(Q) install -m 0755 $< $@
-	$(Q) install -m 0644 $<.mdb $@.mdb
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile
 	$(Q) install -m 0755 $< $@
@@ -522,12 +495,6 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.dll: $(
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/mobile-64/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile
 	$(Q) install -m 0644 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/mobile-32/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile
-	$(Q) install -m 0755 $< $@
-	
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/mobile-32/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile
-	$(Q) install -m 0644 $< $@
-
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full
 	$(Q) install -m 0755 $< $@
 
@@ -539,16 +506,6 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.dll: $(MA
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/full-64/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full
 	$(Q) install -m 0644 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full
-	$(Q) install -m 0755 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.pdb : $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full
-	$(Q) install -m 0644 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.CFNetwork.dll: $(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
-	$(Q) install -m 0755 $< $@
-	$(Q) install -m 0644 $< $(@:.dll=.pdb)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.pdb: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac
 	$(Q) ln -sF ../../reference/mobile/$(@F) $@
