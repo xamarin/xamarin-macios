@@ -1717,6 +1717,7 @@ COMMON_FRAMEWORKS =         \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \
+	SoundAnalysis 			\
 	SpriteKit               \
 
 MAC_FRAMEWORKS =            \
