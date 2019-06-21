@@ -564,7 +564,6 @@
 !missing-selector! UIResponder::buildCommandsWithBuilder: not bound
 !missing-selector! UIResponder::validateCommand: not bound
 !missing-selector! UIResponder::validationForCommand: not bound
-!missing-selector! UISceneConnectionOptions::notificationResponse not bound
 !missing-selector! UIScreenshotService::delegate not bound
 !missing-selector! UIScreenshotService::setDelegate: not bound
 !missing-selector! UIScreenshotService::windowScene not bound
