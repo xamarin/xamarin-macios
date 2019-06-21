@@ -72,6 +72,7 @@ namespace xharness
 		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
 		internal static Resource DesktopResource = new Resource ("Desktop", Environment.ProcessorCount);
+		internal static Resource NugetResource = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
 
 		static Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
 		internal static Resources GetDeviceResources (IEnumerable<Device> devices)
@@ -2222,9 +2223,9 @@ namespace xharness
 						}
 					}
 
-					var resources = device_resources.Values.Concat (new Resource [] { DesktopResource });
+					var resources = device_resources.Values.Concat (new Resource [] { DesktopResource, NugetResource });
 					if (resources.Any ()) {
-						writer.WriteLine ($"<h3>Devices:</h3>");
+						writer.WriteLine ($"<h3>Devices/Resources:</h3>");
 						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
 							writer.WriteLine ($"{dr.Description} - {dr.Users}/{dr.MaxConcurrentUsers} users - {dr.QueuedUsers} in queue<br />");
 						}
@@ -2744,37 +2745,39 @@ namespace xharness
 
 		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log, bool useXIBuild=false)
 		{
-			// we do not want to use xibuild on solutions, we will have some failures with Mac Full
-			var isSolution = projectPath.EndsWith (".sln", StringComparison.Ordinal);
-			if (!File.Exists (projectPath))
-				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
+			using (var resource = await Jenkins.NugetResource.AcquireExclusiveAsync ()) {
+				// we do not want to use xibuild on solutions, we will have some failures with Mac Full
+				var isSolution = projectPath.EndsWith (".sln", StringComparison.Ordinal);
+				if (!File.Exists (projectPath))
+					throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
-			using (var nuget = new Process ()) {
-				nuget.StartInfo.FileName = useXIBuild && !isSolution? Harness.XIBuildPath : 
-					"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
-				var args = new StringBuilder ();
-				args.Append ((useXIBuild && !isSolution? "/" : "") + "restore "); // diff param depending on the tool
-				args.Append (StringUtils.Quote (projectPath));
-				if (useXIBuild && !isSolution)
-					args.Append (" /verbosity:detailed ");
-				else
-					args.Append (" -verbosity detailed ");
-				nuget.StartInfo.Arguments = args.ToString ();
-				SetEnvironmentVariables (nuget);
-				LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
+				using (var nuget = new Process ()) {
+					nuget.StartInfo.FileName = useXIBuild && !isSolution ? Harness.XIBuildPath :
+						"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
+					var args = new StringBuilder ();
+					args.Append ((useXIBuild && !isSolution ? "/" : "") + "restore "); // diff param depending on the tool
+					args.Append (StringUtils.Quote (projectPath));
+					if (useXIBuild && !isSolution)
+						args.Append (" /verbosity:detailed ");
+					else
+						args.Append (" -verbosity detailed ");
+					nuget.StartInfo.Arguments = args.ToString ();
+					SetEnvironmentVariables (nuget);
+					LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
 
-				var timeout = TimeSpan.FromMinutes (15);
-				var result = await nuget.RunAsync (log, true, timeout);
-				if (result.TimedOut) {
-					log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
-					return TestExecutingResult.TimedOut;
-				} else if (!result.Succeeded) {
-					return TestExecutingResult.Failed;
+					var timeout = TimeSpan.FromMinutes (15);
+					var result = await nuget.RunAsync (log, true, timeout);
+					if (result.TimedOut) {
+						log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
+						return TestExecutingResult.TimedOut;
+					} else if (!result.Succeeded) {
+						return TestExecutingResult.Failed;
+					}
 				}
+
+				LogEvent (log, "Restoring nugets completed for {0} ({1}) on path {2}", TestName, Mode, projectPath);
+				return TestExecutingResult.Succeeded;
 			}
-			
-			LogEvent (log, "Restoring nugets completed for {0} ({1}) on path {2}", TestName, Mode, projectPath);
-			return TestExecutingResult.Succeeded;
 		}
 		
 		List<string> GetNestedReferenceProjects (string csproj)
