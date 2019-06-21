@@ -46,7 +46,7 @@ namespace xharness
 			get {
 				switch (Flavor) {
 				case MacFlavors.Modern:
-					return string.Empty;
+					return "modern";
 				case MacFlavors.Full:
 					return "full";
 				case MacFlavors.System:
@@ -106,12 +106,6 @@ namespace xharness
 					rv += ";XAMMAC;MOBILE";
 
 				return rv;
-			}
-		}
-
-		public override bool IsMultiArchitecture {
-			get {
-				return true;
 			}
 		}
 
