@@ -2280,7 +2280,7 @@ namespace UIKit {
 		JobFailedError
 	}
 
-	[iOS (13,0), NoWatch]
+	[iOS (13,0), TV (13,0), NoWatch]
 	[ErrorDomain ("UISceneErrorDomain")]
 	[Native]
 	public enum UISceneErrorCode : long
@@ -2316,7 +2316,7 @@ namespace UIKit {
 		Black,
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Mac (10,15, onlyOn64: true), iOS (13,0), TV (13,0)]
 	[Native]
 	public enum NSTextScalingType : long
 	{
@@ -2324,7 +2324,7 @@ namespace UIKit {
 		iOS,
 	}
 
-	[iOS (13,0), NoWatch]
+	[iOS (13,0), TV (13,0), NoWatch]
 	[Native]
 	public enum UISceneActivationState : long
 	{
@@ -2334,7 +2334,7 @@ namespace UIKit {
 		Background,
 	}
 
-	[iOS (13,0), NoWatch]
+	[iOS (13,0), TV (13,0), NoWatch]
 	[Native]
 	public enum UICommandState : long
 	{
@@ -2344,7 +2344,8 @@ namespace UIKit {
 		Hidden,
 	}
 
-	[Flags, iOS (13,0), NoWatch]
+	[Flags]
+	[iOS (13,0), TV (13,0), NoWatch]
 	[Native]
 	public enum UIMenuOptions : ulong
 	{
@@ -2352,7 +2353,8 @@ namespace UIKit {
 		Destructive = 1uL << 1,
 	}
 
-	[Flags, iOS (13,0), NoWatch]
+	[Flags]
+	[iOS (13,0), TV (13,0), NoWatch]
 	[Native]
 	public enum UIActionOptions : ulong
 	{
@@ -2369,7 +2371,7 @@ namespace UIKit {
 		Pop,
 	}
 
-	[iOS (13,0), NoWatch]
+	[iOS (13,0), TV (13,0), NoWatch]
 	public enum UISceneSessionRole
 	{
 		[Field ("UIWindowSceneSessionRoleApplication")]
@@ -2379,7 +2381,7 @@ namespace UIKit {
 		ExternalDisplay,
 	}
 
-	[iOS (13,0), NoWatch]
+	[iOS (13,0), TV (13,0), NoWatch]
 	public enum UIMenuIdentifier
 	{
 		[DefaultEnumValue]
