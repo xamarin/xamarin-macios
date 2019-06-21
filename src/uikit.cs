@@ -7190,7 +7190,7 @@ namespace UIKit {
 	}
 #endif // !WATCH
 
-		[NoWatch, NoTV]
+	[NoWatch, NoTV]
 	[iOS (11,0)]
 	[Protocol]
 	interface UIItemProviderPresentationSizeProviding {
