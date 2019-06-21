@@ -22,47 +22,46 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseSGen>true</UseSGen>
     <IncludeMonoRuntime>True</IncludeMonoRuntime>
-    <EnablePackageSigning>False</EnablePackageSigning>
-    <CreatePackage>False</CreatePackage>
-    <CodeSigningKey>Mac Developer</CodeSigningKey>
-    <EnableCodeSigning>False</EnableCodeSigning>
-    <PlatformTarget>x86</PlatformTarget>
     <LinkMode>Full</LinkMode>
-    <UseSGen>false</UseSGen>
+    <MonoBundlingExtraArgs></MonoBundlingExtraArgs>
+    <AOTMode>None</AOTMode>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Release</OutputPath>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LinkMode>Full</LinkMode>
+    <UseSGen>true</UseSGen>
     <IncludeMonoRuntime>True</IncludeMonoRuntime>
-    <EnablePackageSigning>False</EnablePackageSigning>
-    <CreatePackage>False</CreatePackage>
+    <LinkMode>Full</LinkMode>
+    <MonoBundlingExtraArgs></MonoBundlingExtraArgs>
+    <AOTMode>None</AOTMode>
+    <EnableCodeSigning>false</EnableCodeSigning>
     <CodeSigningKey>Mac Developer</CodeSigningKey>
-    <EnableCodeSigning>False</EnableCodeSigning>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseSGen>false</UseSGen>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Xamarin.Mac" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LinkPosix1.cs" />
-    <Compile Include="..\common\Test.cs">
-      <Link>Test.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Info.plist" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <ItemGroup>
-    <InterfaceDefinition Include="..\common\MainMenu.xib">
-      <Link>MainMenu.xib</Link>
-    </InterfaceDefinition>
+    <Compile Include="..\common\Test.cs">
+      <Link>Test.cs</Link>
+    </Compile>
+    <Compile Include="LinkPosix1.cs" />
   </ItemGroup>
 </Project>

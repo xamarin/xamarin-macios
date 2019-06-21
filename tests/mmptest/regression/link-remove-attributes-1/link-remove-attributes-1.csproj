@@ -22,32 +22,33 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseSGen>True</UseSGen>
+    <UseSGen>true</UseSGen>
     <IncludeMonoRuntime>true</IncludeMonoRuntime>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>True</IncludeMonoRuntime>
-    <CodeSigningKey>Mac Developer</CodeSigningKey>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
-    <I18n></I18n>
     <LinkMode>Full</LinkMode>
+    <MonoBundlingExtraArgs></MonoBundlingExtraArgs>
+    <AOTMode>None</AOTMode>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LinkMode>Full</LinkMode>
-    <UseSGen>True</UseSGen>
+    <UseSGen>true</UseSGen>
     <IncludeMonoRuntime>true</IncludeMonoRuntime>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <CodeSigningKey>Developer ID Application</CodeSigningKey>
+    <LinkMode>Full</LinkMode>
+    <MonoBundlingExtraArgs></MonoBundlingExtraArgs>
+    <AOTMode>None</AOTMode>
     <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnablePackageSigning>false</EnablePackageSigning>
     <PackageSigningKey>Developer ID Installer</PackageSigningKey>
-    <I18n></I18n>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -65,10 +66,5 @@
       <Link>Test.cs</Link>
     </Compile>
     <Compile Include="LinkRemoveAttributes.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="..\common\MainMenu.xib">
-      <Link>MainMenu.xib</Link>
-    </InterfaceDefinition>
   </ItemGroup>
 </Project>
