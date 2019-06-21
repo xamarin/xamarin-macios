@@ -626,6 +626,10 @@ namespace ClockKit {
 		[NullAllowed]
 		[Export ("timeZone", ArgumentSemantic.Retain)]
 		NSTimeZone TimeZone { get; set; }
+
+		[Watch (6,0)]
+		[Export ("uppercase")]
+		bool Uppercase { get; set; }
 	}
 
 	[BaseType (typeof (CLKTextProvider))]
@@ -888,8 +892,17 @@ namespace ClockKit {
 		[Export ("providerWithFullColorImage:")]
 		CLKFullColorImageProvider Create (UIImage image);
 
+		[Watch (6,0)]
+		[Static]
+		[Export ("providerWithFullColorImage:tintedImageProvider:")]
+		CLKFullColorImageProvider Create (UIImage image, [NullAllowed] CLKImageProvider tintedImageProvider);
+
 		[Export ("image", ArgumentSemantic.Retain)]
 		UIImage Image { get; set; }
+
+		[Watch (6,0)]
+		[NullAllowed, Export ("tintedImageProvider", ArgumentSemantic.Retain)]
+		CLKImageProvider TintedImageProvider { get; set; }
 
 		[NullAllowed, Export ("accessibilityLabel", ArgumentSemantic.Retain)]
 		string AccessibilityLabel { get; set; }
@@ -957,6 +970,28 @@ namespace ClockKit {
 
 		[Export ("endFillFraction")]
 		float EndFillFraction { get; }
+	}
+
+	[Watch (6,0)]
+	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
+	interface CLKComplicationTemplateGraphicCircularStackText {
+
+		[Export ("line1TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Line1TextProvider { get; set; }
+
+		[Export ("line2TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Line2TextProvider { get; set; }
+	}
+
+	[Watch (6,0)]
+	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
+	interface CLKComplicationTemplateGraphicCircularStackImage {
+
+		[Export ("line1ImageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider Line1ImageProvider { get; set; }
+
+		[Export ("line2TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Line2TextProvider { get; set; }
 	}
 }
 
