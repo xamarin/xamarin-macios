@@ -106,7 +106,7 @@ namespace Network {
 		}
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use 'SecTlsProtocolMetadata' instead.")]
+		[Obsolete ("Use 'TlsSecProtocolMetadata' instead.")]
 		public SecProtocolMetadata SecProtocolMetadata => TlsSecProtocolMetadata;
 #endif
 
