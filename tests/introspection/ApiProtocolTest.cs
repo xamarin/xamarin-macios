@@ -103,6 +103,9 @@ namespace Introspection {
 				case "VSAccountProviderResponse":
 				case "PHEditingExtensionContext":
 				case "HKCumulativeQuantitySeriesSample":
+				// Xcode 11 - Conformance not in headers
+				case "UISceneActivationConditions":
+				case "UISceneSession":
 					return true;
 				}
 				break;
@@ -114,6 +117,8 @@ namespace Introspection {
 				// Xcode 10
 				case "UNNotificationCategory":
 				case "UNNotificationSound":
+				// Xcode 11 - Conformance not in headers
+				case "UISceneSession":
 					return true;
 				}
 				break;
