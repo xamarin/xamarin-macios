@@ -2372,7 +2372,7 @@ namespace UIKit {
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]
-	public enum UISceneSessionRole
+	public enum UIWindowSceneSessionRole
 	{
 		[Field ("UIWindowSceneSessionRoleApplication")]
 		Application,

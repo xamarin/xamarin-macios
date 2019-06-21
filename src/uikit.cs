@@ -868,7 +868,7 @@ namespace UIKit {
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Static]
 		[Export ("textAttachmentWithImage:")]
-		NSTextAttachment FromImage (UIImage image);
+		NSTextAttachment Create (UIImage image);
 	}
 
 	[Protocol]
@@ -6845,32 +6845,26 @@ namespace UIKit {
 		[Export ("activationConditions", ArgumentSemantic.Strong)]
 		UISceneActivationConditions ActivationConditions { get; set; }
 
-		[iOS (13,0)]
 		[Field ("UISceneWillConnectNotification")]
 		[Notification]
 		NSString WillConnectNotification { get; }
 
-		[iOS (13,0)]
 		[Field ("UISceneDidDisconnectNotification")]
 		[Notification]
 		NSString DidDisconnectNotification { get; }
 
-		[iOS (13,0)]
 		[Field ("UISceneDidActivateNotification")]
 		[Notification]
 		NSString DidActivateNotification { get; }
 
-		[iOS (13,0)]
 		[Field ("UISceneWillDeactivateNotification")]
 		[Notification]
 		NSString WillDeactivateNotification { get; }
 
-		[iOS (13,0)]
 		[Field ("UISceneWillEnterForegroundNotification")]
 		[Notification]
 		NSString WillEnterForegroundNotification { get; }
 
-		[iOS (13,0)]
 		[Field ("UISceneDidEnterBackgroundNotification")]
 		[Notification]
 		NSString DidEnterBackgroundNotification { get; }
@@ -6923,12 +6917,8 @@ namespace UIKit {
 
 	[iOS (13,0), TV (13,0)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[DesignatedDefaultCtor]
 	interface UISceneActivationConditions : NSSecureCoding {
-
-		[Export ("init")]
-		[DesignatedInitializer]
-		IntPtr Constructor ();
 
 		[Export ("canActivateForTargetContentIdentifierPredicate", ArgumentSemantic.Copy)]
 		NSPredicate CanActivateForTargetContentIdentifierPredicate { get; set; }
@@ -6952,16 +6942,16 @@ namespace UIKit {
 
 		[Static]
 		[Export ("configurationWithName:sessionRole:")]
-		UISceneConfiguration FromName ([NullAllowed] string name, [BindAs (typeof (UISceneSessionRole))] NSString sessionRole);
+		UISceneConfiguration Create ([NullAllowed] string name, [BindAs (typeof (UIWindowSceneSessionRole))] NSString sessionRole);
 
 		[Export ("initWithName:sessionRole:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string name, [BindAs (typeof (UISceneSessionRole))] NSString sessionRole);
+		IntPtr Constructor ([NullAllowed] string name, [BindAs (typeof (UIWindowSceneSessionRole))] NSString sessionRole);
 
 		[NullAllowed, Export ("name")]
 		string Name { get; }
 
-		[BindAs (typeof (UISceneSessionRole))]
+		[BindAs (typeof (UIWindowSceneSessionRole))]
 		[Export ("role")]
 		NSString Role { get; }
 
@@ -7606,39 +7596,39 @@ namespace UIKit {
 
 		[Static]
 		[Export ("configurationWithScale:")]
-		UIImageSymbolConfiguration FromScale (UIImageSymbolScale scale);
+		UIImageSymbolConfiguration Create (UIImageSymbolScale scale);
 
 		[Static]
 		[Export ("configurationWithPointSize:")]
-		UIImageSymbolConfiguration FromPointSize (nfloat pointSize);
+		UIImageSymbolConfiguration Create (nfloat pointSize);
 
 		[Static]
 		[Export ("configurationWithWeight:")]
-		UIImageSymbolConfiguration FromWeight (UIImageSymbolWeight weight);
+		UIImageSymbolConfiguration Create (UIImageSymbolWeight weight);
 
 		[Static]
 		[Export ("configurationWithPointSize:weight:")]
-		UIImageSymbolConfiguration FromPointSize (nfloat pointSize, UIImageSymbolWeight weight);
+		UIImageSymbolConfiguration Create (nfloat pointSize, UIImageSymbolWeight weight);
 
 		[Static]
 		[Export ("configurationWithPointSize:weight:scale:")]
-		UIImageSymbolConfiguration FromPointSize (nfloat pointSize, UIImageSymbolWeight weight, UIImageSymbolScale scale);
+		UIImageSymbolConfiguration Create (nfloat pointSize, UIImageSymbolWeight weight, UIImageSymbolScale scale);
 
 		[Static]
 		[Export ("configurationWithTextStyle:")]
-		UIImageSymbolConfiguration FromTextStyle ([BindAs (typeof (UIFontTextStyle))] NSString textStyle);
+		UIImageSymbolConfiguration Create ([BindAs (typeof (UIFontTextStyle))] NSString textStyle);
 
 		[Static]
 		[Export ("configurationWithTextStyle:scale:")]
-		UIImageSymbolConfiguration FromTextStyle ([BindAs (typeof (UIFontTextStyle))] NSString textStyle, UIImageSymbolScale scale);
+		UIImageSymbolConfiguration Create ([BindAs (typeof (UIFontTextStyle))] NSString textStyle, UIImageSymbolScale scale);
 
 		[Static]
 		[Export ("configurationWithFont:")]
-		UIImageSymbolConfiguration FromFont (UIFont font);
+		UIImageSymbolConfiguration Create (UIFont font);
 
 		[Static]
 		[Export ("configurationWithFont:scale:")]
-		UIImageSymbolConfiguration FromFont (UIFont font, UIImageSymbolScale scale);
+		UIImageSymbolConfiguration Create (UIFont font, UIImageSymbolScale scale);
 
 		[Export ("configurationWithoutTextStyle")]
 		UIImageSymbolConfiguration ConfigurationWithoutTextStyle { get; }
@@ -7697,12 +7687,8 @@ namespace UIKit {
 
 	[NoWatch, NoTV, iOS (13,0)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[DesignatedDefaultCtor]
 	interface UIPreviewParameters : NSCopying {
-
-		[Export ("init")]
-		[DesignatedInitializer]
-		IntPtr Constructor ();
 
 		[Export ("initWithTextLineRects:")]
 		IntPtr Constructor (NSValue [] textLineRects);
