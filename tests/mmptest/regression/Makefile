@@ -13,7 +13,6 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 TESTS_4_0 = \
 	link-posix-1 \
 	link-posix-2 \
-	link-system.web-icalls \
 	link-keep-resources-1 \
 	link-preserve-assembly \
 	link-uithread-1 \
