@@ -505,7 +505,9 @@ namespace UIKit {
 	[NoWatch]
 	public enum UITableViewStyle : long {
 		Plain,
-		Grouped
+		Grouped,
+		[NoTV, iOS (13,0)]
+		InsetGrouped,
 	}
 
 	// NSInteger -> UITableView.h
@@ -774,6 +776,9 @@ namespace UIKit {
 
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LightContent' instead.")]
 		BlackOpaque = 2,
+
+		[iOS (13,0)]
+		DarkContent = 3,
 	}
 
 	// NSInteger -> UIApplication.h
@@ -843,6 +848,9 @@ namespace UIKit {
 	[Native]
 	[NoWatch]
 	public enum UIModalPresentationStyle : long {
+		None = -1,
+		[iOS (13,0)]
+		Automatic = -2,
 		FullScreen = 0,
 		[NoTV]
 		PageSheet,
@@ -855,7 +863,6 @@ namespace UIKit {
 		[NoTV]
 		Popover,
 		BlurOverFullScreen,
-		None = -1
 	}
 	
 	// NSUInteger -> UISwipeGestureRecognizer.h
@@ -2271,5 +2278,196 @@ namespace UIKit {
 		NoContentError,
 		UnknownImageFormatError,
 		JobFailedError
+	}
+
+	[iOS (13,0), NoWatch]
+	[ErrorDomain ("UISceneErrorDomain")]
+	[Native]
+	public enum UISceneErrorCode : long
+	{
+		MultipleScenesNotSupported,
+		RequestDenied,
+	}
+
+	[Watch (6,0), TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UIImageSymbolScale : long
+	{
+		Default = -1,
+		Unspecified = 0,
+		Small = 1,
+		Medium,
+		Large,
+	}
+
+	[Watch (6,0), TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UIImageSymbolWeight : long
+	{
+		Unspecified = 0,
+		UltraLight = 1,
+		Thin,
+		Light,
+		Regular,
+		Medium,
+		Semibold,
+		Bold,
+		Heavy,
+		Black,
+	}
+
+	[Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Native]
+	public enum NSTextScalingType : long
+	{
+		Standard = 0,
+		iOS,
+	}
+
+	[iOS (13,0), NoWatch]
+	[Native]
+	public enum UISceneActivationState : long
+	{
+		Unattached = -1,
+		ForegroundActive,
+		ForegroundInactive,
+		Background,
+	}
+
+	[iOS (13,0), NoWatch]
+	[Native]
+	public enum UICommandState : long
+	{
+		Off,
+		On,
+		Mixed,
+		Hidden,
+	}
+
+	[Flags, iOS (13,0), NoWatch]
+	[Native]
+	public enum UIMenuOptions : ulong
+	{
+		DisplayInline = 1uL << 0,
+		Destructive = 1uL << 1,
+	}
+
+	[Flags, iOS (13,0), NoWatch]
+	[Native]
+	public enum UIActionOptions : ulong
+	{
+		Disabled = 1uL << 0,
+		Selected = 1uL << 1,
+		Destructive = 1uL << 2,
+	}
+
+	[NoWatch, NoTV, iOS (13, 0)]
+	[Native]
+	public enum UIContextMenuInteractionCommitStyle : long
+	{
+		Dismiss = 0,
+		Pop,
+	}
+
+	[iOS (13,0), NoWatch]
+	public enum UISceneSessionRole
+	{
+		[Field ("UIWindowSceneSessionRoleApplication")]
+		Application,
+
+		[Field ("UIWindowSceneSessionRoleExternalDisplay")]
+		ExternalDisplay,
+	}
+
+	[iOS (13,0), NoWatch]
+	public enum UIMenuIdentifier
+	{
+		[DefaultEnumValue]
+		[Field (null)]
+		None,
+		[Field ("UIMenuApplication")]
+		Application,
+		[Field ("UIMenuFile")]
+		File,
+		[Field ("UIMenuEdit")]
+		Edit,
+		[Field ("UIMenuView")]
+		View,
+		[Field ("UIMenuWindow")]
+		Window,
+		[Field ("UIMenuHelp")]
+		Help,
+		[Field ("UIMenuAbout")]
+		About,
+		[Field ("UIMenuPreferences")]
+		Preferences,
+		[Field ("UIMenuServices")]
+		Services,
+		[Field ("UIMenuHide")]
+		Hide,
+		[Field ("UIMenuQuit")]
+		Quit,
+		[Field ("UIMenuNewScene")]
+		NewScene,
+		[Field ("UIMenuClose")]
+		Close,
+		[Field ("UIMenuPrint")]
+		Print,
+		[Field ("UIMenuUndoRedo")]
+		UndoRedo,
+		[Field ("UIMenuStandardEdit")]
+		StandardEdit,
+		[Field ("UIMenuFind")]
+		Find,
+		[Field ("UIMenuReplace")]
+		Replace,
+		[Field ("UIMenuShare")]
+		Share,
+		[Field ("UIMenuTextStyle")]
+		TextStyle,
+		[Field ("UIMenuSpelling")]
+		Spelling,
+		[Field ("UIMenuSpellingPanel")]
+		SpellingPanel,
+		[Field ("UIMenuSpellingOptions")]
+		SpellingOptions,
+		[Field ("UIMenuSubstitutions")]
+		Substitutions,
+		[Field ("UIMenuSubstitutionsPanel")]
+		SubstitutionsPanel,
+		[Field ("UIMenuSubstitutionOptions")]
+		SubstitutionOptions,
+		[Field ("UIMenuTransformations")]
+		Transformations,
+		[Field ("UIMenuSpeech")]
+		Speech,
+		[Field ("UIMenuLookup")]
+		Lookup,
+		[Field ("UIMenuLearn")]
+		Learn,
+		[Field ("UIMenuFormat")]
+		Format,
+		[Field ("UIMenuFont")]
+		Font,
+		[Field ("UIMenuTextSize")]
+		TextSize,
+		[Field ("UIMenuTextColor")]
+		TextColor,
+		[Field ("UIMenuTextStylePasteboard")]
+		TextStylePasteboard,
+		[Field ("UIMenuText")]
+		Text,
+		[Field ("UIMenuWritingDirection")]
+		WritingDirection,
+		[Field ("UIMenuAlignment")]
+		Alignment,
+		[Field ("UIMenuFullscreen")]
+		Fullscreen,
+		[Field ("UIMenuMinimizeAndZoom")]
+		MinimizeAndZoom,
+		[Field ("UIMenuBringAllToFront")]
+		BringAllToFront,
+		[Field ("UIMenuRoot")]
+		Root,
 	}
 }

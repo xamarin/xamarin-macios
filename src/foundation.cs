@@ -5246,6 +5246,12 @@ namespace Foundation
 		[Async]
 		[Export ("deleteAllSavedUserActivitiesWithCompletionHandler:")]
 		void DeleteAllSavedUserActivities (Action handler);
+
+		// Inlined from NSUserActivity (UISceneActivationConditions)
+
+		[iOS (13,0), NoTV, NoMac, NoWatch]
+		[NullAllowed, Export ("targetContentIdentifier")]
+		string TargetContentIdentifier { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
