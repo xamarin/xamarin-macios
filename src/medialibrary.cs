@@ -113,26 +113,32 @@ namespace MediaLibrary {
 		NSString PhotosPublishedAlbumTypeIdentifier { get; }
 
 		[Mac (10,10, onlyOn64 : true)]
+		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Field ("MLPhotosAllMomentsGroupTypeIdentifier")]
 		NSString PhotosAllMomentsGroupTypeIdentifier { get; }
 
 		[Mac (10,10, onlyOn64 : true)]
+		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Field ("MLPhotosMomentGroupTypeIdentifier")]
 		NSString PhotosMomentGroupTypeIdentifier { get; }
 
 		[Mac (10,10, onlyOn64 : true)]
+		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Field ("MLPhotosAllCollectionsGroupTypeIdentifier")]
 		NSString PhotosAllCollectionsGroupTypeIdentifier { get; }
 
 		[Mac (10,10, onlyOn64 : true)]
+		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Field ("MLPhotosCollectionGroupTypeIdentifier")]
 		NSString PhotosCollectionGroupTypeIdentifier { get; }
 
 		[Mac (10,10, onlyOn64 : true)]
+		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Field ("MLPhotosAllYearsGroupTypeIdentifier")]
 		NSString PhotosAllYearsGroupTypeIdentifier { get; }
 
 		[Mac (10,10, onlyOn64 : true)]
+		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Field ("MLPhotosYearGroupTypeIdentifier")]
 		NSString PhotosYearGroupTypeIdentifier { get; }
 
