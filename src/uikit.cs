@@ -13761,7 +13761,7 @@ namespace UIKit {
 		[Async]
 		void PerformSystemAnimation (UISystemAnimation animation, UIView [] views, UIViewAnimationOptions options, Action parallelAnimations, UICompletionHandler completion);
 
-		[TV (12,0), iOS (12,0)] // Yep headers state iOS 12
+		[TV (13,0), iOS (13,0)] // Yep headers stated iOS 12 but they are such a liars...
 		[Static]
 		[Export ("modifyAnimationsWithRepeatCount:autoreverses:animations:")]
 		void ModifyAnimations (nfloat count, bool autoreverses, Action animations);
