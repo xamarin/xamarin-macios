@@ -1,4 +1,4 @@
-# Exception messages: System.IO.IOException mono issue:
+# Exception messages: System.IO.IOException mono issue: https://github.com/mono/mono/issues/15328
 System.Text.RegularExpressions.Tests.RegexConstructorTests.StaticCtor_InvalidTimeoutObject_ExceptionThrown
 System.Text.RegularExpressions.Tests.RegexConstructorTests.StaticCtor_InvalidTimeoutRange_ExceptionThrown
 System.Text.RegularExpressions.Tests.RegexMatchTests.Match_Timeout_Throws
