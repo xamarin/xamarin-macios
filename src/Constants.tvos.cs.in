@@ -88,6 +88,7 @@ namespace ObjCRuntime {
 		// tvOS 12.0
 		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 		// tvOS 13.0
+		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
 		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
 
 	}

@@ -1708,6 +1708,7 @@ SHARED_SOURCES = \
 
 COMMON_FRAMEWORKS =         \
 	Accelerate              \
+	AuthenticationServices	\
 	AVFoundation            \
 	CoreBluetooth           \
 	CoreFoundation          \
@@ -1809,7 +1810,6 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
-	AuthenticationServices \
 	BusinessChat \
 	CallKit \
 	CarPlay \
