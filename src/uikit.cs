@@ -7537,7 +7537,7 @@ namespace UIKit {
 
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("imageWithConfiguration:")]
-		UIImage FromConfiguration (UIImageConfiguration configuration);
+		UIImage ApplyConfiguration (UIImageConfiguration configuration);
 
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[NullAllowed, Export ("symbolConfiguration", ArgumentSemantic.Copy)]
@@ -7546,15 +7546,15 @@ namespace UIKit {
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("imageByApplyingSymbolConfiguration:")]
 		[return: NullAllowed]
-		UIImage FromSymbolConfiguration (UIImageSymbolConfiguration configuration);
+		UIImage ApplyConfiguration (UIImageSymbolConfiguration configuration);
 
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("imageWithTintColor:")]
-		UIImage FromTintColor (UIColor color);
+		UIImage ApplyTintColor (UIColor color);
 
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("imageWithTintColor:renderingMode:")]
-		UIImage FromTintColor (UIColor color, UIImageRenderingMode renderingMode);
+		UIImage ApplyTintColor (UIColor color, UIImageRenderingMode renderingMode);
 
 		// Inlined from UIImage (PreconfiguredSystemImages)
 
@@ -7641,16 +7641,16 @@ namespace UIKit {
 		UIImageSymbolConfiguration FromFont (UIFont font, UIImageSymbolScale scale);
 
 		[Export ("configurationWithoutTextStyle")]
-		UIImageSymbolConfiguration GetConfigurationWithoutTextStyle ();
+		UIImageSymbolConfiguration ConfigurationWithoutTextStyle { get; }
 
 		[Export ("configurationWithoutScale")]
-		UIImageSymbolConfiguration GetConfigurationWithoutScale ();
+		UIImageSymbolConfiguration ConfigurationWithoutScale { get; }
 
 		[Export ("configurationWithoutWeight")]
-		UIImageSymbolConfiguration GetConfigurationWithoutWeight ();
+		UIImageSymbolConfiguration ConfigurationWithoutWeight { get; }
 
 		[Export ("configurationWithoutPointSizeAndWeight")]
-		UIImageSymbolConfiguration GetConfigurationWithoutPointSizeAndWeight ();
+		UIImageSymbolConfiguration ConfigurationWithoutPointSizeAndWeight { get; }
 
 		[Export ("isEqualToConfiguration:")]
 		bool IsEqualTo ([NullAllowed] UIImageSymbolConfiguration otherConfiguration);
