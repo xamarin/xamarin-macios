@@ -324,10 +324,17 @@ function install_specific_xcode () {
 	local XCODE_NAME=`basename $XCODE_URL`
 	local XCODE_DMG=$PROVISION_DOWNLOAD_DIR/$XCODE_NAME
 
+	# Apple always uses the same name when extracting Xcode, only adding -beta if needed
+	if [[ $XCODE_NAME == *"Beta"* ]]; then
+		local XCODE_DOWNLOAD_PATH=$HOME/Downloads/Xcode-beta.app
+	else
+		local XCODE_DOWNLOAD_PATH=$HOME/Downloads/Xcode.app
+	fi
+
 	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
 	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
 	if test -f "$HOME/Downloads/$XCODE_NAME"; then
-		log "Found Xcode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
+		log "Found $XCODE_NAME in your ~/Downloads folder, copying that version to $XCODE_DMG instead of re-downloading it."
 		cp "$HOME/Downloads/$XCODE_NAME" "$XCODE_DMG"
 	else
 		curl -L $XCODE_URL > $XCODE_DMG
@@ -350,10 +357,13 @@ function install_specific_xcode () {
 		# make sure there's nothing interfering
 		rm -Rf *.app
 		rm -Rf $XCODE_ROOT
+		# since all extracted Xcode have the same name
+		# we want to make sure we use the last extracted one
+		rm -Rf $XCODE_DOWNLOAD_PATH
 		# extract
 		/System/Library/CoreServices/Applications/Archive\ Utility.app/Contents/MacOS/Archive\ Utility "$XCODE_DMG"
 		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
-		mv *.app $XCODE_ROOT
+		mv $XCODE_DOWNLOAD_PATH $XCODE_ROOT
 		popd > /dev/null
 	else
 		fail "Don't know how to install $XCODE_DMG"
