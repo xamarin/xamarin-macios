@@ -23,6 +23,7 @@ using CoreImage;
 using CoreAnimation;
 #endif
 using CoreData;
+using UserNotifications;
 
 #if XAMCORE_2_0
 #if IOS
@@ -7002,11 +7003,11 @@ namespace UIKit {
 
 		[Export ("userActivities", ArgumentSemantic.Copy)]
 		NSSet<NSUserActivity> UserActivities { get; }
-#if false //TDODO: UNNotificationResponse is not public
+
 		[NoTV]
 		[NullAllowed, Export ("notificationResponse")]
 		UNNotificationResponse NotificationResponse { get; }
-#endif
+
 		[NoTV]
 		[NullAllowed, Export ("shortcutItem")]
 		UIApplicationShortcutItem ShortcutItem { get; }
