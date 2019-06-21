@@ -11,8 +11,6 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 
 TESTS_4_0 = \
-	link-gdiplus-1 \
-	link-gdiplus-2 \
 	link-posix-1 \
 	link-posix-2 \
 	link-system.web-icalls \
