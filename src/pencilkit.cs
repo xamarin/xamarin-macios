@@ -173,7 +173,6 @@ namespace PencilKit {
 		[DesignatedInitializer]
 		[Export("init")]
 		IntPtr Constructor();
-
 	}
 
 	[iOS (13, 0), Mac (10, 15, onlyOn64: true)]
