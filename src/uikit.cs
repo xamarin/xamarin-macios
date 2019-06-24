@@ -10234,7 +10234,7 @@ namespace UIKit {
 
 		[Export ("initWithSearchResultsController:")]
 		[DesignatedInitializer]
-		[Advice("You can pass a null UIViewController to display the search results in the same view.")]
+		[Advice ("You can pass a null UIViewController to display the search results in the same view.")]
 		IntPtr Constructor ([NullAllowed] UIViewController searchResultsController);
 		
 		[NullAllowed] // by default this property is null
