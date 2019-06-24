@@ -8513,7 +8513,7 @@ namespace UIKit {
 		[iOS (11,0)]
 		[Export ("largeTitleDisplayMode", ArgumentSemantic.Assign)]
 		UINavigationItemLargeTitleDisplayMode LargeTitleDisplayMode { get; set; }
-		
+
 		[NoTV]
 		[iOS (11,0)]
 		[NullAllowed, Export ("searchController", ArgumentSemantic.Retain)]
@@ -10231,7 +10231,7 @@ namespace UIKit {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
-		
+
 		[Export ("initWithSearchResultsController:")]
 		[DesignatedInitializer]
 		[Advice("You can pass a null UIViewController to display the search results in the same view.")]
