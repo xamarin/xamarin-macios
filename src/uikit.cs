@@ -10225,7 +10225,7 @@ namespace UIKit {
 	{
 		[Export ("init")]
 		[DesignatedInitializer]
-		[Advice("It's recommended to use the constructor that takes a UIViewController searchResultsController in order to create/initialize an attached UISearchBar.")]
+		[Advice ("It's recommended to use the constructor that takes a UIViewController searchResultsController in order to create/initialize an attached UISearchBar.")]
 		IntPtr Constructor ();
 
 		[Export ("initWithNibName:bundle:")]
