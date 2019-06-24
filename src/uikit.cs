@@ -10225,7 +10225,7 @@ namespace UIKit {
 	{
 		[Export ("init")]
 		[DesignatedInitializer]
-		[Advice ("It's recommended to use the constructor that takes a UIViewController searchResultsController in order to create/initialize an attached UISearchBar.")]
+		[Advice ("It's recommended to use the constructor that takes a 'UIViewController searchResultsController' in order to create/initialize an attached 'UISearchBar'.")]
 		IntPtr Constructor ();
 
 		[Export ("initWithNibName:bundle:")]
@@ -10234,7 +10234,7 @@ namespace UIKit {
 
 		[Export ("initWithSearchResultsController:")]
 		[DesignatedInitializer]
-		[Advice ("You can pass a null UIViewController to display the search results in the same view.")]
+		[Advice ("You can pass a null 'UIViewController' to display the search results in the same view.")]
 		IntPtr Constructor ([NullAllowed] UIViewController searchResultsController);
 		
 		[NullAllowed] // by default this property is null
