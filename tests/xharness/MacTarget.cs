@@ -123,22 +123,22 @@ namespace xharness
 		
 		public MonoNativeInfo MonoNativeInfo { get; set; }
 
-		protected override bool FixProjectReference (string name, out string fixed_reference)
+		protected override bool FixProjectReference (string name, out string fixed_name)
 		{
-			fixed_reference = null;
+			fixed_name = null;
 			switch (name) {
 			case "GuiUnit_NET_4_5":
 				if (Flavor == MacFlavors.Full || Flavor == MacFlavors.System)
 					return false;
-				fixed_reference = "GuiUnit_xammac_mobile";
+				fixed_name = "GuiUnit_xammac_mobile";
 				return true;
 			case "GuiUnit_xammac_mobile":
 				if (Flavor == MacFlavors.Modern)
 					return false;
-				fixed_reference = "GuiUnit_NET_4_5";
+				fixed_name = "GuiUnit_NET_4_5";
 				return true;
 			default:
-				return base.FixProjectReference (name, out fixed_reference);
+				return base.FixProjectReference (name, out fixed_name);
 			}
 		}
 
