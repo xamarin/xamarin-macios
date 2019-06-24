@@ -182,6 +182,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
+					{ "IncomingCallNotifications", "IncomingCallNotifications", 10,15 },
 				};
 			}
 			return mac_frameworks;
@@ -308,6 +309,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "Network", "Network", 12, 0 },
 
 				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
+				{ "IncomingCallNotifications", "IncomingCallNotifications", 13, 0 },
 			};
 		}
 		return ios_frameworks;

@@ -1755,6 +1755,7 @@ MAC_FRAMEWORKS =            \
 	ImageIO                 \
 	ImageCaptureCore	\
 	ImageKit                \
+	IncomingCallNotifications \
 	Intents                 \
 	IOSurface 		\
 	iTunesLibrary           \
@@ -1846,6 +1847,7 @@ IOS_FRAMEWORKS =         \
 	IdentityLookup \
 	IdentityLookupUI \
 	ImageIO \
+	IncomingCallNotifications \
 	Intents \
 	IntentsUI \
 	IOSurface \
