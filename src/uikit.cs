@@ -8513,7 +8513,7 @@ namespace UIKit {
 		[iOS (11,0)]
 		[Export ("largeTitleDisplayMode", ArgumentSemantic.Assign)]
 		UINavigationItemLargeTitleDisplayMode LargeTitleDisplayMode { get; set; }
-		
+
 		[NoTV]
 		[iOS (11,0)]
 		[NullAllowed, Export ("searchController", ArgumentSemantic.Retain)]
@@ -10220,21 +10220,12 @@ namespace UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController))]
-	[DisableDefaultCtor] // designated
-	partial interface UISearchController : UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning
-	{
-		[Export ("init")]
-		[DesignatedInitializer]
-		[Advice("It's recommended to use the constructor that takes a UIViewController searchResultsController in order to create/initialize an attached UISearchBar.")]
-		IntPtr Constructor ();
-
+	partial interface UISearchController : UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
-		
+
 		[Export ("initWithSearchResultsController:")]
-		[DesignatedInitializer]
-		[Advice("You can pass a null UIViewController to display the search results in the same view.")]
 		IntPtr Constructor ([NullAllowed] UIViewController searchResultsController);
 		
 		[NullAllowed] // by default this property is null
