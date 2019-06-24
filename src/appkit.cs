@@ -13543,7 +13543,7 @@ namespace AppKit {
 		NSImageScaling GetImageScaling (nint segment);
 
 		[Export ("setLabel:forSegment:")]
-		void SetLabel (string label, nint segment);
+		void SetLabel ([NullAllowed] string label, nint segment);
 
 		[Export ("labelForSegment:")]
 		string GetLabel (nint segment);
