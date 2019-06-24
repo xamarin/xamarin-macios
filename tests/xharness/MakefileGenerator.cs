@@ -28,22 +28,20 @@ namespace xharness
 
 		static string MakeMacUnifiedTargetName (MacTarget target, MacTargetNameType type)
 		{
-			var make_escaped_suffix = "-" + target.Platform.Replace (" ", "\\ ");
+			var make_escaped_suffix = target.Platform.Replace (" ", "\\ ");
 			var make_escaped_name = target.SimplifiedName.Replace (" ", "\\ ");
 
-			switch (type)
-			{
-				case MacTargetNameType.Build:
-					return string.Format ("build{0}-{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-				case MacTargetNameType.Clean:
-					return string.Format ("clean{0}-{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-				case MacTargetNameType.Exec:
-					return string.Format ("exec{0}-{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-				case MacTargetNameType.Run:
-					return string.Format ("run{0}-{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-				default:
-					throw new NotImplementedException ();
+			var sb = new StringBuilder ();
+			sb.Append (type.ToString ().ToLowerInvariant ());
+			sb.Append ('-');
+			sb.Append (make_escaped_suffix);
+			sb.Append ('-');
+			if (!string.IsNullOrEmpty (target.MakefileWhereSuffix)) {
+				sb.Append (target.MakefileWhereSuffix);
+				sb.Append ('-');
 			}
+			sb.Append (make_escaped_name);
+			return sb.ToString ();
 		}
 
 		static string CreateRelativePath (string path, string relative_to)
