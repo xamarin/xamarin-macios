@@ -2232,7 +2232,15 @@ namespace xharness
 										try {
 											if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
 												var doc = new System.Xml.XmlDocument ();
-												doc.LoadWithoutNetworkAccess (log.FullPath);
+												try {
+													doc.LoadWithoutNetworkAccess (log.FullPath);
+												} catch (Exception e) {
+													using (var str = new StreamReader (log.FullPath)) {
+														var content = str.ReadToEnd ();
+														var newE = new Exception ($"File path is {log.FullPath} content is {content}", e);
+														throw newE;
+													}
+												}
 												var failures = doc.SelectNodes ("//test-case[@result='Error' or @result='Failure']").Cast<System.Xml.XmlNode> ().ToArray ();
 												if (failures.Length > 0) {
 													writer.WriteLine ("<div style='padding-left: 15px;'>");
