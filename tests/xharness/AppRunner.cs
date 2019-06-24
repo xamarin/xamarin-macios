@@ -467,18 +467,17 @@ namespace xharness
 						var isTouchUnit = IsTouchUnitResult (streamReaderTmp); // method resets position
 						using (var writer = new StreamWriter (listener_log.FullPath, true)) { // write the human result to the log file
 							if (isTouchUnit) {
-								var (resultLine, failed)= ParseTouchUnitXml (streamReaderTmp, writer);
+								var (resultLine, failed) = ParseTouchUnitXml (streamReaderTmp, writer);
 								parseResult.resultLine = resultLine;
 								parseResult.failed = failed;
 							} else {
-								var (resultLine, failed)= ParseNUnitXml (streamReaderTmp, writer);
+								var (resultLine, failed) = ParseNUnitXml (streamReaderTmp, writer);
 								parseResult.resultLine = resultLine;
 								parseResult.failed = failed;
 							}
 						}
-						// reset pos of the stream
-						streamReaderTmp.BaseStream.Position = 0;
-						streamReaderTmp.DiscardBufferedData ();
+					}
+					using (var streamReaderTmp = new StreamReader (tmpFile)) {
 						var path = listener_log.FullPath;
 						path = Path.ChangeExtension (path, "xml");
 						// both the nunit and xunit runners are not
