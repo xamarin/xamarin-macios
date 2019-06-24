@@ -49,7 +49,7 @@ downloads/%: downloads/%.7z
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
-.stamp-download-mono: download-mono $(TOP)/Make.config
+.stamp-download-mono: download-mono $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(Q) touch $@
 
 clean-local::
@@ -62,7 +62,7 @@ else
 # this is a list of all the files from mono we care about, so that we
 # can use that list as dependencies for our makefile targets
 -include .deps.mono.mk
-.deps.mono.mk: $(TOP)/Make.config
+.deps.mono.mk: $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(Q) printf 'MONO_DEPENDENCIES += Makefile \\\n' > $@.tmp
 	$(Q) cd $(MONO_PATH) && git ls-files --recurse-submodules 'mcs/class/*.cs' 'mcs/build/*.cs' 'external/*.cs' '*.h' '*.c' '*.cpp' | sed 's/ /\\ /g' | sed 's@^\(.*\)$$@	$(MONO_PATH)/\1 \\@' >> $(abspath $@).tmp
 	$(Q) mv $@.tmp $@
@@ -96,7 +96,7 @@ endif
 	$(MAKE) -C $(SDK_BUILDDIR) configure-ios configure-mac $(SDK_ARGS)
 	$(Q) touch $@
 
-.stamp-compile-mono: .stamp-configure-mono $(MONO_DEPENDENCIES) $(BUILDS_MAKEFILE_DEP) $(TOP)/Make.config
+.stamp-compile-mono: .stamp-configure-mono $(MONO_DEPENDENCIES) $(BUILDS_MAKEFILE_DEP) $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios package-ios-bcl package-mac package-mac-bcl $(SDK_ARGS)
 	$(Q) touch $@
 
@@ -613,7 +613,7 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo: $(TOP)/Make.config.inc
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: $(TOP)/Make.config.inc
 	$(Q) echo $(MAC_PACKAGE_VERSION) > $@
 
-$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: $(TOP)/Versions-mac.plist.in Makefile $(TOP)/Make.config $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: $(TOP)/Versions-mac.plist.in Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
 	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_MAC_SDK_DESTDIR)/mac-mono-version.txt)/g" -e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" $< > $@
 
@@ -732,7 +732,7 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version: $(TOP)/Make.config.inc | $(IOS_DESTD
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: $(TOP)/Make.config.inc
 	$(Q) echo "4569c276-1397-4adb-9485-82a7696df22e $(IOS_PACKAGE_UPDATE_ID)" > $@
 
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: $(TOP)/Versions-ios.plist.in Makefile $(TOP)/Make.config $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: $(TOP)/Versions-ios.plist.in Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
 	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_IOS_SDK_DESTDIR)/ios-mono-version.txt)/g" $< > $@
 
