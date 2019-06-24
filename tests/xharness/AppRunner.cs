@@ -456,8 +456,10 @@ namespace xharness
 				// move the xml to a tmp path, that path will be use to read the xml
 				// in the reader, and the writer will use the stream from the logger to
 				// write the human readable log
-				var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ()); 
-
+				var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
+				var info = new FileInfo (listener_log.FullPath);
+				if (info.Length == 0)
+					throw new IOException ($"Empty log file found in {listener_log.FullPath}");
 				File.Copy (listener_log.FullPath, tmpFile);
 				main_log.WriteLine ($"Copying xml file '{listener_log.FullPath}' to '{tmpFile}'");
 				Console.WriteLine ($"Copying xml file '{listener_log.FullPath}' to '{tmpFile}'");
@@ -477,6 +479,9 @@ namespace xharness
 							}
 						}
 					}
+					info = new FileInfo (tmpFile);
+					if (info.Length == 0)
+						throw new IOException ($"Empty log file found in {tmpFile}");
 					using (var streamReaderTmp = new StreamReader (tmpFile)) {
 						var path = listener_log.FullPath;
 						path = Path.ChangeExtension (path, "xml");
@@ -497,6 +502,9 @@ namespace xharness
 								}
 							}
 						}
+						info = new FileInfo (path);
+						if (info.Length == 0)
+							throw new IOException ($"Empty log file found in {path}");
 						// we do not longer need the tmp file
 						Logs.AddFile (path, "Test xml");
 					}
