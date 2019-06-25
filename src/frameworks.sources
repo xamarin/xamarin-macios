@@ -1769,6 +1769,7 @@ MAC_FRAMEWORKS =            \
 	IOSurface 		\
 	iTunesLibrary           \
 	JavaScriptCore          \
+	LinkPresentation        \
 	LocalAuthentication     \
 	MapKit                  \
 	MediaAccessibility      \
@@ -1864,6 +1865,7 @@ IOS_FRAMEWORKS =         \
 	IntentsUI \
 	IOSurface \
 	JavaScriptCore \
+	LinkPresentation \
 	LocalAuthentication \
 	MapKit \
 	MediaAccessibility \
@@ -1924,6 +1926,7 @@ WATCHOS_FRAMEWORKS =        \
 	HomeKit                 \
 	ImageIO                 \
 	Intents                 \
+	LinkPresentation        \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \

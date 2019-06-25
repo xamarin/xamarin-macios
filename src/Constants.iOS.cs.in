@@ -140,5 +140,6 @@ namespace MonoTouch {
 		public const string IncomingCallNotificationsLibrary = "/System/Library/Frameworks/IncomingCallNotifications.framework/IncomingCallNotifications";
 		public const string BackgroundTasksLibrary = "/System/Library/Frameworks/BackgroundTasks.framework/BackgroundTasks";
 		public const string PencilKitLibrary = "/System/Library/Frameworks/PencilKit.framework/PencilKit";
+		public const string LinkPresentationLibrary = "/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation";
 	}
 }
