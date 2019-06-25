@@ -1781,6 +1781,7 @@ MAC_FRAMEWORKS =            \
 	Photos                  \
 	PhotosUI				\
 	PrintCore		\
+	PushKit			\
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \
@@ -1916,6 +1917,7 @@ WATCHOS_FRAMEWORKS =        \
 	MobileCoreServices      \
 	NaturalLanguage         \
 	PassKit                 \
+	PushKit			\
 	Security                \
 	UIKit XKit              \
 	UserNotifications       \

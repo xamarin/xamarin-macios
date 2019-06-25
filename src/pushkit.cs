@@ -5,6 +5,9 @@ using System;
 
 namespace PushKit 
 {
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Watch (6,0)]
+	[Mac (10,15, onlyOn64: true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -16,6 +19,9 @@ namespace PushKit
 		NSData Token { get; }
 	}
 
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Watch (6,0)]
+	[Mac (10,15, onlyOn64: true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -27,6 +33,9 @@ namespace PushKit
 		NSDictionary DictionaryPayload { get; }
 	}
 
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Watch (6,0)]
+	[Mac (10,15, onlyOn64: true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -53,19 +62,32 @@ namespace PushKit
 	[Static]
 	interface PKPushType {
 		
+		[Unavailable (PlatformName.UIKitForMac)]
+		[NoWatch]
+		[NoMac]
 		[Field ("PKPushTypeVoIP")]
 		NSString Voip { get; }
 
 		[iOS (9,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use directly from watchOS instead.")]
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Watch (6,0)]
+		[NoMac]
 		[Field ("PKPushTypeComplication")]
 		NSString Complication { get; }
 
+		[Introduced (PlatformName.UIKitForMac, 13,0)]
 		[iOS (11,0)]
+		[NoWatch]
+		[Mac (10,15, onlyOn64: true)]
 		[Field ("PKPushTypeFileProvider")]
 		NSString FileProvider { get; }
 	}
 
 	[iOS (8,0)]
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Watch (6,0)]
+	[Mac (10,15, onlyOn64: true)]
 	[Model]
 	[Protocol]
 	[BaseType (typeof (NSObject))]
@@ -74,6 +96,8 @@ namespace PushKit
 		[Export ("pushRegistry:didUpdatePushCredentials:forType:"), EventArgs ("PKPushRegistryUpdated"), EventName ("CredentialsUpdated")]
 		void DidUpdatePushCredentials (PKPushRegistry registry, PKPushCredentials credentials, string type);
 
+		[NoWatch]
+		[NoMac]
 		[Abstract] // now optional in iOS 11
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use the 'DidReceiveIncomingPushWithPayload' overload accepting an 'Action' argument instead.")]
 		[Export ("pushRegistry:didReceiveIncomingPushWithPayload:forType:"), EventArgs ("PKPushRegistryRecieved"), EventName ("IncomingPushReceived")]
