@@ -30,6 +30,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 #if MONOMAC
 using AppKit;
@@ -38,6 +39,7 @@ using OpenGL;
 #else
 using OpenGLES;
 using UIKit;
+using CAEdrMetadata = Foundation.NSObject;
 #endif
 using Foundation;
 using CoreImage;
@@ -584,6 +586,28 @@ namespace CoreAnimation {
 		[TV (11,0)][Mac (10,13)][iOS (11,0)]
 		[Export ("maskedCorners", ArgumentSemantic.Assign)]
 		CACornerMask MaskedCorners { get; set; }
+
+		[BindAs (typeof (CACornerCurve))]
+		[NoWatch] // headers not updated
+		[TV (13,0)][Mac (10, 15, onlyOn64: true)][iOS (13, 0)]
+		[Export ("cornerCurve")]
+		NSString CornerCurve { get; set; }
+
+		[NoWatch] // headers not updated
+		[TV (13,0)][Mac (10, 15, onlyOn64: true)][iOS (13, 0)]
+		[Static]
+		[Export ("cornerCurveExpansionFactor:")]
+		nfloat GetCornerCurveExpansionFactor ([BindAs (typeof (CACornerCurve))] NSString curve);
+	}
+
+	[NoWatch] // headers not updated
+	[TV (13,0)][Mac (10, 15, onlyOn64: true)][iOS (13, 0)]
+	enum CACornerCurve {
+		[DefaultEnumValue]
+		[Field ("kCACornerCurveCircular")]
+		Circular,
+		[Field ("kCACornerCurveContinuous")]
+		Continuous,
 	}
 
 #if XAMCORE_2_0 || !MONOMAC
@@ -640,6 +664,21 @@ namespace CoreAnimation {
 		[TV (11,2)][Mac (10,13,2)][iOS (11,2)]
 		[Export ("maximumDrawableCount")]
 		nuint MaximumDrawableCount { get; set; }
+
+		[NoWatch] // headers not updated
+		[TV (13,0)][Mac (10, 15, onlyOn64: true)][iOS (13, 0)]
+		[NullAllowed, Export ("colorspace", ArgumentSemantic.Assign)]
+		CGColorSpace ColorSpace { get; set; }
+
+		[NoWatch] // headers not updated
+		[TV (13,0)][Mac (10, 15, onlyOn64: true)][iOS (13, 0)]
+		[NullAllowed, Export ("preferredDevice")]
+		IMTLDevice PreferredDevice { get; }
+
+		[NoWatch][NoiOS][NoTV]
+		[Mac (10, 14, 6, onlyOn64: true)]
+		[NullAllowed, Export ("EDRMetadata", ArgumentSemantic.Strong)]
+		CAEdrMetadata EdrMetadata { get; set; }
 	}
 #endif
 
@@ -1887,6 +1926,25 @@ namespace CoreAnimation {
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("setDestination:")]
 		void SetDestination (IMTLTexture tex);
+	}
+
+	[NoWatch][NoiOS][NoTV]
+	[Mac (10,14,6, onlyOn64: true)]
+	[BaseType (typeof (NSObject), Name = "CAEDRMetadata")]
+	[DisableDefaultCtor]
+	interface CAEdrMetadata {
+
+		[Static]
+		[Export ("HDR10MetadataWithDisplayInfo:contentInfo:opticalOutputScale:")]
+		CAEdrMetadata GetHdr10Metadata ([NullAllowed] NSData displayData, [NullAllowed] NSData contentData, float scale);
+
+		[Static]
+		[Export ("HDR10MetadataWithMinLuminance:maxLuminance:opticalOutputScale:")]
+		CAEdrMetadata GetHdr10Metadata (float minNits, float maxNits, float scale);
+
+		[Static]
+		[Export ("HLGMetadata", ArgumentSemantic.Retain)]
+		CAEdrMetadata HlgMetadata { get; }
 	}
 #endif
 }
