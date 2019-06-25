@@ -38,7 +38,7 @@
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DYNAMIC_REGISTRAR;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -98,7 +98,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
@@ -112,7 +112,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <MtouchArch>ARMv7</MtouchArch>
@@ -126,7 +126,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <MtouchArch>ARM64</MtouchArch>
@@ -140,7 +140,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v --bitcode:full</MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
