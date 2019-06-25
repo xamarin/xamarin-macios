@@ -306,7 +306,6 @@ namespace AuthenticationServices {
 
 	[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (NSObject), Name = "ASAuthorizationAppleIDProvider")]
-	//[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[ASAuthorizationAppleIDRequest init]: unrecognized selector sent to instance 0x600000950000
 	interface ASAuthorizationAppleIdProvider : ASAuthorizationProvider {
 
 		[Export ("createRequest")]
@@ -322,7 +321,8 @@ namespace AuthenticationServices {
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
-	[BaseType (typeof(ASAuthorizationOpenIdRequest), Name = "ASAuthorizationAppleIDRequest")]
+	[BaseType (typeof (ASAuthorizationOpenIdRequest), Name = "ASAuthorizationAppleIDRequest")]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[ASAuthorizationAppleIDRequest init]: unrecognized selector sent to instance 0x600002ff8b40 
 	interface ASAuthorizationAppleIdRequest {
 
 		[NullAllowed, Export ("user")]
@@ -414,7 +414,8 @@ namespace AuthenticationServices {
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
-	[BaseType (typeof(ASAuthorizationRequest), Name = "ASAuthorizationOpenIDRequest")]
+	[BaseType (typeof (ASAuthorizationRequest), Name = "ASAuthorizationOpenIDRequest")]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[ASAuthorizationOpenIDRequest init]: unrecognized selector sent to instance 0x600002ff0660 
 	interface ASAuthorizationOpenIdRequest {
 
 		[NullAllowed, Export ("requestedScopes", ArgumentSemantic.Copy)]
