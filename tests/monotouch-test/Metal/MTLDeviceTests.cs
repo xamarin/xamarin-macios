@@ -111,6 +111,7 @@ namespace MonoTouchFixtures.Metal {
 
 #if __MACOS__
 			if (TestRuntime.CheckXcodeVersion (10, 0)) {
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 6)) // https://github.com/xamarin/maccore/issues/1800
 				using (var descriptor = MTLTextureDescriptor.CreateTexture2DDescriptor (MTLPixelFormat.RGBA8Unorm, 64, 64, false)) {
 					descriptor.StorageMode = MTLStorageMode.Private;
 					using (var texture = device.CreateSharedTexture (descriptor)) {
@@ -276,6 +277,7 @@ namespace MonoTouchFixtures.Metal {
 			}
 
 			if (TestRuntime.CheckXcodeVersion (10, 0)) {
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 6)) // https://github.com/xamarin/maccore/issues/1801
 				using (var descriptor = new MTLIndirectCommandBufferDescriptor ()) {
 					using (var library = device.CreateIndirectCommandBuffer (descriptor, 1, MTLResourceOptions.CpuCacheModeDefault)) {
 						Assert.IsNotNull (library, "CreateIndirectCommandBuffer: NonNull");
