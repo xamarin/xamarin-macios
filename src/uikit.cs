@@ -10224,7 +10224,6 @@ namespace UIKit {
 	partial interface UISearchController : UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning
 	{
 		[Export ("init")]
-		[DesignatedInitializer]
 		[Advice ("It's recommended to use the constructor that takes a 'UIViewController searchResultsController' in order to create/initialize an attached 'UISearchBar'.")]
 		IntPtr Constructor ();
 
