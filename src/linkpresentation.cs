@@ -18,6 +18,12 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+// TODO Include this in pull request: Inserted NoWatch since UIView is not available on watch and In file included from Xamarin.WatchOS.registrar.watchos.m:2:
+// ./Xamarin.WatchOS.registrar.watchos.h:11:9: fatal error: 'LinkPresentation/LinkPresentation.h' file not found
+// #import <LinkPresentation/LinkPresentation.h>
+//         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ./Xamarin.WatchOS.registrar.watchos.h:11:9: note: did not find header 'LinkPresentation.h' in framework 'LinkPresentation'
+
 namespace LinkPresentation {
 
 	[ErrorDomain ("LPErrorDomain")]
