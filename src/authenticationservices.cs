@@ -23,7 +23,7 @@ using UIWindow = Foundation.NSObject;
 
 namespace AuthenticationServices {
 
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoMac][NoTV][NoWatch]
 	[iOS (12,0)]
 	[Native]
@@ -34,7 +34,7 @@ namespace AuthenticationServices {
 		StoreBusy = 2,
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoMac][NoTV][NoWatch]
 	[iOS (12,0)]
 	[Native]
@@ -46,7 +46,7 @@ namespace AuthenticationServices {
 		CredentialIdentityNotFound = 101,
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoMac][NoTV][NoWatch]
 	[iOS (12,0)]
 	[Native]
@@ -66,7 +66,7 @@ namespace AuthenticationServices {
 
 	delegate void ASCredentialIdentityStoreCompletionHandler (bool success, NSError error);
 
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoMac][NoTV][NoWatch]
 	[iOS (12,0)]
 	[BaseType (typeof (NSObject))]
@@ -97,7 +97,7 @@ namespace AuthenticationServices {
 		void ReplaceCredentialIdentities (ASPasswordCredentialIdentity[] newCredentialIdentities, [NullAllowed] ASCredentialIdentityStoreCompletionHandler completion);
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoMac][NoTV][NoWatch]
 	[iOS (12,0)]
 	[BaseType (typeof (NSObject))]
@@ -112,7 +112,7 @@ namespace AuthenticationServices {
 
 	delegate void ASCredentialProviderExtensionRequestCompletionHandler (bool expired);
 
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoMac][NoTV][NoWatch]
 	[iOS (12,0)]
 	[BaseType (typeof (NSExtensionContext))]
@@ -128,7 +128,7 @@ namespace AuthenticationServices {
 		void CancelRequest (NSError error);
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoMac][NoTV][NoWatch]
 	[iOS (12,0)]
 	[BaseType (typeof (NSObject))]
@@ -144,7 +144,7 @@ namespace AuthenticationServices {
 		ASCredentialServiceIdentifierType Type { get; }
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoMac][NoTV][NoWatch]
 	[iOS (12,0)]
 	[BaseType (typeof (NSObject))]
@@ -171,7 +171,7 @@ namespace AuthenticationServices {
 		nint Rank { get; set; }
 	}
 
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoMac][NoTV][NoWatch]
 	[iOS (12,0)]
 	[BaseType (typeof (UIViewController))]
@@ -230,7 +230,7 @@ namespace AuthenticationServices {
 
 		[iOS (13,0)]
 		[NullAllowed, Export ("presentationContextProvider", ArgumentSemantic.Weak)]
-		ASWebAuthenticationPresentationContextProviding PresentationContextProvider { get; set; }
+		IASWebAuthenticationPresentationContextProviding PresentationContextProvider { get; set; }
 
 		[iOS (13,0)]
 		[Export ("prefersEphemeralWebBrowserSession")]
@@ -306,7 +306,7 @@ namespace AuthenticationServices {
 
 	[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (NSObject), Name = "ASAuthorizationAppleIDProvider")]
-	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[ASAuthorizationAppleIDRequest init]: unrecognized selector sent to instance 0x600000950000
+	//[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[ASAuthorizationAppleIDRequest init]: unrecognized selector sent to instance 0x600000950000
 	interface ASAuthorizationAppleIdProvider : ASAuthorizationProvider {
 
 		[Export ("createRequest")]
@@ -323,7 +323,6 @@ namespace AuthenticationServices {
 
 	[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof(ASAuthorizationOpenIdRequest), Name = "ASAuthorizationAppleIDRequest")]
-	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[ASAuthorizationOpenIDRequest init]: unrecognized selector sent to instance 0x6000009431b0
 	interface ASAuthorizationAppleIdRequest {
 
 		[NullAllowed, Export ("user")]
@@ -440,14 +439,9 @@ namespace AuthenticationServices {
 
 	[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (ASAuthorizationRequest))]
-	[DisableDefaultCtor] // Name: NSInvalidArgumentException Reason: -[ASAuthorizationPasswordRequest init]: unrecognized selector sent to instance 0x6000005f2dc0
-	interface ASAuthorizationPasswordRequest {
-
-		// inlined from base class
-		[Export ("initWithAuthorizationRequests:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (ASAuthorizationRequest[] authorizationRequests);
-	}
+	[Abstract] // see documentation
+	// Name: NSInvalidArgumentException Reason: -[ASAuthorizationPasswordRequest init]: unrecognized selector sent to instance 0x6000005f2dc0
+	interface ASAuthorizationPasswordRequest { }
 
 	interface IASAuthorizationProvider { }
 
@@ -455,7 +449,7 @@ namespace AuthenticationServices {
 	[Protocol]
 	interface ASAuthorizationProvider { }
 
-	// [Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoWatch, NoTV, Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[Protocol]
 	interface ASAuthorizationProviderExtensionAuthorizationRequestHandler {
@@ -468,7 +462,7 @@ namespace AuthenticationServices {
 		void CancelAuthorization (ASAuthorizationProviderExtensionAuthorizationRequest request);
 	}
 
-	// [Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoWatch, NoTV, Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface ASAuthorizationProviderExtensionAuthorizationRequest {
@@ -558,7 +552,7 @@ namespace AuthenticationServices {
 
 		[Static]
 		[Export ("authorizationProviderWithIdentityProviderURL:")]
-		ASAuthorizationSingleSignOnProvider CreateProvider (NSUrl url);
+		ASAuthorizationSingleSignOnProvider CreateProvider (NSUrl identityProviderUrl);
 
 		[Export ("createRequest")]
 		ASAuthorizationSingleSignOnRequest CreateRequest ();
@@ -597,13 +591,13 @@ namespace AuthenticationServices {
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15, onlyOn64: true), iOS (13,0)]
-	[BaseType (typeof (UIControl))]
+	[BaseType (typeof (UIControl), Name = "ASAuthorizationAppleIDButton")]
 	[DisableDefaultCtor]
-	interface ASAuthorizationAppleIDButton {
+	interface ASAuthorizationAppleIdButton {
 
 		[Static]
 		[Export ("buttonWithType:style:")]
-		ASAuthorizationAppleIDButton Create (ASAuthorizationAppleIdButtonType type, ASAuthorizationAppleIdButtonStyle style);
+		ASAuthorizationAppleIdButton Create (ASAuthorizationAppleIdButtonType type, ASAuthorizationAppleIdButtonStyle style);
 
 		[Export ("initWithAuthorizationButtonType:authorizationButtonStyle:")]
 		[DesignatedInitializer]
@@ -613,9 +607,10 @@ namespace AuthenticationServices {
 		nfloat CornerRadius { get; set; }
 	}
 
+	interface IASWebAuthenticationPresentationContextProviding { }
+
 	[NoWatch, NoTV, Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[Protocol]
-	[BaseType (typeof (NSObject))]
 	interface ASWebAuthenticationPresentationContextProviding {
 
 		[Abstract]
