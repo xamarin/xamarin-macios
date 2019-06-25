@@ -1,3 +1,0 @@
-# adding these since weak delegate exists in base class
-!missing-selector! PKCanvasView::delegate not bound
-!missing-selector! PKCanvasView::setDelegate: not bound
