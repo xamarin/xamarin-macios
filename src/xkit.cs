@@ -54,7 +54,7 @@ namespace UIKit {
 	[iOS (7,0)]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	partial interface NSLayoutManager : NSCoding {
+	partial interface NSLayoutManager : NSSecureCoding {
 
 #if !XAMCORE_4_0
 		// This was removed in the headers in the macOS 10.11 SDK

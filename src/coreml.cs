@@ -95,7 +95,7 @@ namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
-	interface MLFeatureDescription : NSCopying {
+	interface MLFeatureDescription : NSCopying, NSSecureCoding {
 
 		[Export ("name")]
 		string Name { get; }
@@ -256,7 +256,7 @@ namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
-	interface MLModelDescription {
+	interface MLModelDescription : NSSecureCoding {
 
 		[Export ("inputDescriptionsByName")]
 		NSDictionary<NSString, MLFeatureDescription> InputDescriptionsByName { get; }
@@ -369,7 +369,7 @@ namespace CoreML {
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface MLDictionaryConstraint {
+	interface MLDictionaryConstraint : NSSecureCoding {
 
 		[Export ("keyType")]
 		MLFeatureType KeyType { get; }
@@ -378,7 +378,7 @@ namespace CoreML {
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface MLImageConstraint {
+	interface MLImageConstraint : NSSecureCoding {
 
 		[Export ("pixelsHigh")]
 		nint PixelsHigh { get; }
@@ -397,7 +397,7 @@ namespace CoreML {
 	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface MLMultiArrayConstraint {
+	interface MLMultiArrayConstraint : NSSecureCoding {
 
 		[Internal]
 		[Export ("shape")]
@@ -497,7 +497,7 @@ namespace CoreML {
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MLImageSize {
+	interface MLImageSize : NSSecureCoding {
 
 		[Export ("pixelsWide")]
 		nint PixelsWide { get; }
@@ -509,7 +509,7 @@ namespace CoreML {
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MLImageSizeConstraint {
+	interface MLImageSizeConstraint : NSSecureCoding {
 
 		[Export ("type")]
 		MLImageSizeConstraintType Type { get; }
@@ -527,7 +527,7 @@ namespace CoreML {
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MLMultiArrayShapeConstraint {
+	interface MLMultiArrayShapeConstraint : NSSecureCoding {
 
 		[Export ("type")]
 		MLMultiArrayShapeConstraintType Type { get; }
@@ -569,7 +569,7 @@ namespace CoreML {
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MLSequenceConstraint : NSCopying {
+	interface MLSequenceConstraint : NSCopying, NSSecureCoding {
 
 		[Export ("valueDescription")]
 		MLFeatureDescription ValueDescription { get; }
@@ -580,7 +580,7 @@ namespace CoreML {
 
 	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
-	interface MLModelConfiguration : NSCopying {
+	interface MLModelConfiguration : NSCopying, NSSecureCoding {
 
 		[Export ("computeUnits", ArgumentSemantic.Assign)]
 		MLComputeUnits ComputeUnits { get; set; }
