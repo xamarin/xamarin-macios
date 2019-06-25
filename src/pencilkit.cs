@@ -104,8 +104,8 @@ namespace PencilKit {
 		NSString AppleDrawingTypeIdentifier { get; }
 
 		[DesignatedInitializer]
-		[Export("init")]
-		IntPtr Constructor();
+		[Export ("init")]
+		IntPtr Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithData:error:")]
@@ -181,8 +181,8 @@ namespace PencilKit {
 	interface PKLassoTool {
 
 		[DesignatedInitializer]
-		[Export("init")]
-		IntPtr Constructor();
+		[Export ("init")]
+		IntPtr Constructor ();
 	}
 
 	[iOS (13, 0), NoMac]
