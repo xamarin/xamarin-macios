@@ -1741,6 +1741,7 @@ MAC_FRAMEWORKS =            \
 	CoreLocation            \
 	CoreMedia               \
 	CoreMidi                \
+	CoreMotion		\
 	CoreServices            \
 	CoreSpotlight           \
 	CoreText                \
