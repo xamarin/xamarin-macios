@@ -134,6 +134,11 @@ namespace Xamarin.Mac.Tests
 				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
 			}
 
+			switch (t.Namespace) {
+			case "QTKit":
+				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15); // QTKit is gone in 10.15.
+			}
+
 			return false;
 		}
 
