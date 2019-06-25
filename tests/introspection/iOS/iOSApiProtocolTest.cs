@@ -347,6 +347,9 @@ namespace Introspection {
 				case "CLKGaugeProvider":
 				case "CLKSimpleGaugeProvider":
 				case "CLKTimeIntervalGaugeProvider":
+				// watchOS 6 / Xcode 11
+				case "CLKComplicationTemplateGraphicCircularStackImage":
+				case "CLKComplicationTemplateGraphicCircularStackText":
 					return true;
 #elif __TVOS__
 				case "TVTopShelfAction":
@@ -565,6 +568,9 @@ namespace Introspection {
 				case "CLKGaugeProvider":
 				case "CLKSimpleGaugeProvider":
 				case "CLKTimeIntervalGaugeProvider":
+				// watchOS 6 / Xcode 11
+				case "CLKComplicationTemplateGraphicCircularStackImage":
+				case "CLKComplicationTemplateGraphicCircularStackText":
 					return true;
 #elif __TVOS__
 				case "TVTopShelfAction":
