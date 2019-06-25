@@ -1929,7 +1929,7 @@ namespace CoreAnimation {
 	}
 
 	[NoWatch][NoiOS][NoTV]
-	[Mac (10,14,6, onlyOn64: true)]
+	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (NSObject), Name = "CAEDRMetadata")]
 	[DisableDefaultCtor]
 	interface CAEdrMetadata {
