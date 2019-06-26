@@ -267,7 +267,7 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetDestMIDIEndpoint (/* MusicTrack */ IntPtr inTrack, MidiEndpointRef outEndpoint);
 
-		public MusicPlayerStatus GetDestMIDIEndpoint (MidiEndpoint endpoint)
+		public MusicPlayerStatus GetDestMidiEndpoint (MidiEndpoint endpoint)
 		{
 			return MusicTrackGetDestMIDIEndpoint (handle, endpoint == null ? MidiObject.InvalidRef : endpoint.MidiHandle);
 		}
