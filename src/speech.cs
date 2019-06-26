@@ -5,6 +5,7 @@
 //	Alex Soto  <alex.soto@xamarin.com>
 //	TJ Lambert  <t-anlamb@microsoft.com>
 //
+// Copyright 2016 Xamarin Inc. All rights reserved.
 // Copyright 2019 Microsoft Corporation All rights reserved.
 //
 
@@ -23,7 +24,7 @@ namespace Speech {
 		Running = 1,
 		Finishing = 2,
 		Canceling = 3,
-		Completed = 4
+		Completed = 4,
 	}
 
 	[Native]
@@ -32,7 +33,7 @@ namespace Speech {
 		Unspecified = 0,
 		Dictation = 1,
 		Search = 2,
-		Confirmation = 3
+		Confirmation = 3,
 	}
 
 	[Native]
@@ -41,7 +42,7 @@ namespace Speech {
 		NotDetermined,
 		Denied,
 		Restricted,
-		Authorized
+		Authorized,
 	}
 
 	[Mac (10,15, onlyOn64: true), iOS (10,0)]
