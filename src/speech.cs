@@ -3,8 +3,9 @@
 //
 // Authors:
 //	Alex Soto  <alex.soto@xamarin.com>
+//	TJ Lambert  <t-anlamb@microsoft.com>
 //
-// Copyright 2016 Xamarin Inc. All rights reserved.
+// Copyright 2019 Microsoft Corporation All rights reserved.
 //
 
 using System;
@@ -16,7 +17,7 @@ using ObjCRuntime;
 namespace Speech {
 
 	[Native]
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	public enum SFSpeechRecognitionTaskState : long {
 		Starting = 0,
 		Running = 1,
@@ -26,7 +27,7 @@ namespace Speech {
 	}
 
 	[Native]
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	public enum SFSpeechRecognitionTaskHint : long {
 		Unspecified = 0,
 		Dictation = 1,
@@ -35,7 +36,7 @@ namespace Speech {
 	}
 
 	[Native]
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	public enum SFSpeechRecognizerAuthorizationStatus : long {
 		NotDetermined,
 		Denied,
@@ -43,7 +44,7 @@ namespace Speech {
 		Authorized
 	}
 
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	[DisableDefaultCtor]
 	[Abstract] // no docs (yet) but it has no means (init*) to create it, unlike its subclasses
 	[BaseType (typeof (NSObject))]
@@ -60,9 +61,13 @@ namespace Speech {
 
 		[NullAllowed, Export ("interactionIdentifier")]
 		string InteractionIdentifier { get; set; }
+
+		[iOS (13, 0)]
+		[Export ("requiresOnDeviceRecognition")]
+		bool RequiresOnDeviceRecognition { get; set; }
 	}
 
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	[BaseType (typeof (SFSpeechRecognitionRequest), Name = "SFSpeechURLRecognitionRequest")]
 	[DisableDefaultCtor]
 	interface SFSpeechUrlRecognitionRequest {
@@ -75,7 +80,7 @@ namespace Speech {
 		NSUrl Url { get; }
 	}
 
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	[BaseType (typeof (SFSpeechRecognitionRequest))]
 	interface SFSpeechAudioBufferRecognitionRequest {
 
@@ -92,7 +97,7 @@ namespace Speech {
 		void EndAudio ();
 	}
 
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionResult : NSCopying, NSSecureCoding {
 
@@ -106,7 +111,7 @@ namespace Speech {
 		bool Final { [Bind ("isFinal")] get; }
 	}
 
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTask {
 
@@ -129,9 +134,9 @@ namespace Speech {
 		NSError Error { get; }
 	}
 
-	interface ISFSpeechRecognitionTaskDelegate { }
+	interface ISFSpeechRecognitionTaskDelegate {}
 
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTaskDelegate {
@@ -155,9 +160,9 @@ namespace Speech {
 		void DidFinishSuccessfully (SFSpeechRecognitionTask task, bool successfully);
 	}
 
-	interface ISFSpeechRecognizerDelegate { }
+	interface ISFSpeechRecognizerDelegate {}
 
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizerDelegate {
@@ -166,7 +171,7 @@ namespace Speech {
 		void AvailabilityDidChange (SFSpeechRecognizer speechRecognizer, bool available);
 	}
 
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizer {
 
@@ -192,6 +197,10 @@ namespace Speech {
 		[Export ("locale", ArgumentSemantic.Copy)]
 		NSLocale Locale { get; }
 
+		[iOS (13, 0)]
+		[Export ("supportsOnDeviceRecognition")]
+		bool SupportsOnDeviceRecognition { get; set; }
+
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		ISFSpeechRecognizerDelegate Delegate { get; set; }
 
@@ -209,7 +218,7 @@ namespace Speech {
 		NSOperationQueue Queue { get; set; }
 	}
 
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscription : NSCopying, NSSecureCoding {
 
@@ -218,9 +227,17 @@ namespace Speech {
 
 		[Export ("segments", ArgumentSemantic.Copy)]
 		SFTranscriptionSegment [] Segments { get; }
+
+		[iOS (13, 0)]
+		[Export ("speakingRate")]
+		double SpeakingRate { get; }
+
+		[iOS (13, 0)]
+		[Export ("averagePauseDuration")]
+		double AveragePauseDuration { get; }
 	}
 
-	[iOS (10, 0)]
+	[Mac (10,15, onlyOn64: true), iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscriptionSegment : NSCopying, NSSecureCoding {
 
@@ -241,6 +258,38 @@ namespace Speech {
 
 		[Export ("alternativeSubstrings")]
 		string [] AlternativeSubstrings { get; }
+
+		[iOS (13, 0)]
+		[NullAllowed, Export ("voiceAnalytics")]
+		SFVoiceAnalytics VoiceAnalytics { get; }
+	}
+
+	[Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface SFAcousticFeature : NSCopying, NSSecureCoding {
+
+		[Export ("acousticFeatureValuePerFrame", ArgumentSemantic.Copy)]
+		NSNumber[] AcousticFeatureValuePerFrame { get; }
+
+		[Export ("frameDuration")]
+		double FrameDuration { get; }
+	}
+
+	[Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface SFVoiceAnalytics : NSCopying, NSSecureCoding {
+
+		[Export ("jitter", ArgumentSemantic.Copy)]
+		SFAcousticFeature Jitter { get; }
+
+		[Export ("shimmer", ArgumentSemantic.Copy)]
+		SFAcousticFeature Shimmer { get; }
+
+		[Export ("pitch", ArgumentSemantic.Copy)]
+		SFAcousticFeature Pitch { get; }
+
+		[Export ("voicing", ArgumentSemantic.Copy)]
+		SFAcousticFeature Voicing { get; }
 	}
 }
 
