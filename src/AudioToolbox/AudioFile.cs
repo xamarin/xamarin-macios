@@ -250,7 +250,7 @@ namespace AudioToolbox {
 	public struct AudioPacketDependencyInfoTranslation
 	{
 		public long Packet;
-		[MarshalAs(UnmanagedType.U4)]
+		[MarshalAs (UnmanagedType.U4)]
 		public bool IsIndependentlyDecodable;
 		public uint NumberPrerollPackets;
 	}
