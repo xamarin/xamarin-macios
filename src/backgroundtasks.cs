@@ -35,6 +35,7 @@ namespace BackgroundTasks {
 		bool RequiresExternalPower { get; set; }
 	}
 
+	[Abstract]
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
