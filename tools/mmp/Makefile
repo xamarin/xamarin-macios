@@ -88,7 +88,7 @@ mmp: \
 
 clean-local::
 	rm -f mmp.stub.c mmp.helper.o
-	rm -f bin obj
+	rm -rf bin obj
 	rm -f Xamarin.Mac.registrar.*
 	$(SYSTEM_MSBUILD) "/t:Clean" /p:Configuration=$(MMP_CONF) *.csproj
 
