@@ -138,9 +138,6 @@ namespace MonoTouch.Tuner {
 			context.SymbolWriterProvider = new CustomSymbolWriterProvider ();
 			if (options.Application.Optimizations.StaticConstructorBeforeFieldInit == false)
 				context.DisabledOptimizations |= CodeOptimizations.BeforeFieldInit;
-
-			context.DisabledOptimizations |= CodeOptimizations.UnreachableBodies;  // TODO: revert this if linker issue is fixed
-
 			options.LinkContext = context;
 
 			return context;
