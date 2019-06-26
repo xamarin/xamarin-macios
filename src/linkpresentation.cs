@@ -22,7 +22,6 @@ using ObjCRuntime;
 namespace LinkPresentation {
 
 	[ErrorDomain ("LPErrorDomain")]
-	[NoWatch]
 	[Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[Native]
 	public enum LPErrorCode : long {
@@ -32,7 +31,6 @@ namespace LinkPresentation {
 		MetadataFetchTimedOut,
 	}
 
-	[NoWatch]
 	[Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface LPLinkMetadata : NSCopying, NSSecureCoding {
@@ -59,7 +57,6 @@ namespace LinkPresentation {
 		NSUrl RemoteVideoUrl { get; set; }
 	}
 
-	[NoWatch]
 	[Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (UIView))]
 	interface LPLinkView {
@@ -78,7 +75,6 @@ namespace LinkPresentation {
 		LPLinkMetadata Metadata { get; set; }
 	}
 
-	[NoWatch]
 	[Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface LPMetadataProvider {
