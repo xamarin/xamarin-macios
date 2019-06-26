@@ -64,6 +64,9 @@ namespace AudioToolbox {
 		AMR = 0x616d7266, // amrf
 		[NoWatch, iOS (11,0), Mac(10,13), TV (11,0)]
 		FLAC =  0x666c6163, // flac
+		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[NoWatch, iOS (13,0), Mac(10,15), TV (13,0)]
+		LatmInLoas = 0x6c6f6173, // loas
 	}
 
 	public enum AudioFileError {// Implictly cast to OSType in AudioFile.h
@@ -211,6 +214,44 @@ namespace AudioToolbox {
 				return CFString.FetchString (Name_cfstringref);
 			}
 		}
+	}
+
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AudioPacketRangeByteCountTranslation
+	{
+		public long Packet;
+		public long PacketCount;
+		public long ByteCountUpperBound;
+	}
+
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AudioPacketRollDistanceTranslation
+	{
+		public long Packet;
+		public long RollDistance;
+	}
+
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AudioIndependentPacketTranslation
+	{
+		public long Packet;
+		public long IndependentlyDecodablePacket;
+	}
+
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AudioPacketDependencyInfoTranslation
+	{
+		public long Packet;
+		public uint IsIndependentlyDecodable;
+		public uint NumberPrerollPackets;
 	}
 
 	public enum AudioFileMarkerType : uint // UInt32 in AudioFileMarkerType - AudioFile.h

@@ -186,6 +186,7 @@ AUDIOTOOLBOX_SOURCES = \
 	AudioToolbox/AudioSession.cs \
 	AudioToolbox/AudioSessions.cs \
 	AudioToolbox/AudioToolbox.cs \
+	AudioToolbox/Enums.cs \
 	AudioToolbox/SystemSound.cs \
 	AudioToolbox/MusicPlayer.cs \
 	AudioToolbox/MusicTrack.cs \
