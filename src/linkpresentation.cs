@@ -19,8 +19,6 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
-// TODO Include this in pull request: Inserted NoWatch since UIView is not available on watch and In file included from Xamarin.WatchOS.registrar.watchos.m:2:
-
 namespace LinkPresentation {
 
 	[ErrorDomain ("LPErrorDomain")]
