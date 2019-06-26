@@ -210,17 +210,17 @@ namespace CoreGraphics {
 		[Field ("kCGColorSpaceITUR_2020_PQ_EOTF")]
 		NSString Itur_2020_PQ_Eotf { get; }
 
-		[Mac (10,14,6, onlyOn64: true)][iOS (13,0)]
+		[Mac (10,15, onlyOn64: true)][iOS (13,0)]
 		[TV (13,0)][Watch (6,0)]
 		[Field ("kCGColorSpaceDisplayP3_PQ_EOTF")]
 		NSString DisplayP3_PQ_Eotf { get; }
 
-		[Mac (10,14,6, onlyOn64: true)][iOS (13,0)]
+		[Mac (10,15, onlyOn64: true)][iOS (13,0)]
 		[TV (13,0)][Watch (6,0)]
 		[Field ("kCGColorSpaceDisplayP3_HLG")]
 		NSString DisplayP3_Hlg { get; }
 
-		[Mac (10,14,6, onlyOn64: true)][iOS (13,0)]
+		[Mac (10,15, onlyOn64: true)][iOS (13,0)]
 		[TV (13,0)][Watch (6,0)]
 		[Field ("kCGColorSpaceITUR_2020_HLG")]
 		NSString Itur_2020_Hlg { get; }

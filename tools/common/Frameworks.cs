@@ -180,6 +180,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UserNotifications", "UserNotifications", 10,14 },
 					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
 
+					{ "AuthenticationServices", "AuthenticationServices", 10,15 },
 					{ "CoreMotion", "CoreMotion", 10,15 },
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
@@ -362,6 +363,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "NaturalLanguage", "NaturalLanguage", 5 },
 				{ "MediaPlayer", "MediaPlayer", 5 },
 
+				{ "AuthenticationServices", "AuthenticationServices", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 
 			};
@@ -439,6 +441,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Network", "Network", 12, 0 } ,
 					{ "TVUIKit", "TVUIKit", 12,0 },
 
+					{ "AuthenticationServices", "AuthenticationServices", 13,0 },
 					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
 				};
 			}
