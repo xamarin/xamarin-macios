@@ -138,5 +138,6 @@ namespace MonoTouch {
 		// iOS 13.0
 		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
 		public const string IncomingCallNotificationsLibrary = "/System/Library/Frameworks/IncomingCallNotifications.framework/IncomingCallNotifications";
+		public const string BackgroundTasksLibrary = "/System/Library/Frameworks/BackgroundTasks.framework/BackgroundTasks";
 	}
 }

@@ -276,6 +276,11 @@ AVKIT_API_SOURCES = \
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
 
+# BackgroundTasks
+
+BACKGROUNDTASKS_API_SOURCES = \
+	BackgroundTasks/Enums.cs \
+
 # BusinessChat
 
 BUSINESSCHAT_API_SOURCES = \
@@ -1811,6 +1816,7 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	BackgroundTasks \
 	BusinessChat \
 	CallKit \
 	CarPlay \
@@ -1928,6 +1934,7 @@ TVOS_FRAMEWORKS =           \
 	AdSupport               \
 	AudioToolbox            \
 	AudioUnit               \
+	BackgroundTasks         \
 	CFNetwork               \
 	CloudKit                \
 	CoreAnimation           \
