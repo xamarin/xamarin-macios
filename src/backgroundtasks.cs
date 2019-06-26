@@ -14,15 +14,16 @@ using ObjCRuntime;
 
 namespace BackgroundTasks {
 
+	[Abstract]
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
-	[BaseType (typeof(BGTaskRequest))]
+	[BaseType (typeof (BGTaskRequest))]
 	interface BGAppRefreshTaskRequest {
 		[Export ("initWithIdentifier:")]
 		IntPtr Constructor (string identifier);
 	}
 
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
-	[BaseType (typeof(BGTaskRequest))]
+	[BaseType (typeof (BGTaskRequest))]
 	interface BGProcessingTaskRequest {
 		[Export ("initWithIdentifier:")]
 		IntPtr Constructor (string identifier);
@@ -35,7 +36,7 @@ namespace BackgroundTasks {
 	}
 
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BGTaskRequest : NSCopying {
 		[Export ("identifier")]
@@ -45,8 +46,9 @@ namespace BackgroundTasks {
 		NSDate EarliestBeginDate { get; set; }
 	}
 
+	[Abstract]
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BGTask
 	{
@@ -61,17 +63,17 @@ namespace BackgroundTasks {
 	}
 
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
-	[BaseType (typeof(BGTask))]
+	[BaseType (typeof (BGTask))]
 	interface BGAppRefreshTask {
 	}
 
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
-	[BaseType (typeof(BGTask))]
+	[BaseType (typeof (BGTask))]
 	interface BGProcessingTask {
 	}
 
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BGTaskScheduler {
 		[Static]
@@ -93,7 +95,7 @@ namespace BackgroundTasks {
 
 		[Async]
 		[Export ("getPendingTaskRequestsWithCompletionHandler:")]
-		void GetPending (Action<NSArray<BGTaskRequest>> completionHandler);
+		void GetPending (Action<BGTaskRequest []> completionHandler);
 	}
 
 }
