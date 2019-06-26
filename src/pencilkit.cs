@@ -97,15 +97,11 @@ namespace PencilKit {
 
 	[iOS (13, 0), Mac (10, 15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[DesignatedDefaultCtor]
 	interface PKDrawing : NSCopying, NSSecureCoding {
 
 		[Field ("PKAppleDrawingTypeIdentifier")]
 		NSString AppleDrawingTypeIdentifier { get; }
-
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithData:error:")]
@@ -177,13 +173,8 @@ namespace PencilKit {
 
 	[iOS (13, 0), NoMac]
 	[BaseType (typeof (PKTool))]
-	[DisableDefaultCtor]
-	interface PKLassoTool {
-
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
-	}
+	[DesignatedDefaultCtor]
+	interface PKLassoTool {}
 
 	[iOS (13, 0), NoMac]
 	[BaseType (typeof (NSObject))]
