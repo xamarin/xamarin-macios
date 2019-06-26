@@ -181,6 +181,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
 
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
+					{ "PushKit", "PushKit", 10,15 },
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
 					{ "IncomingCallNotifications", "IncomingCallNotifications", 10,15 },
 				};
@@ -361,6 +362,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "NaturalLanguage", "NaturalLanguage", 5 },
 				{ "MediaPlayer", "MediaPlayer", 5 },
 
+				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 
 			};
