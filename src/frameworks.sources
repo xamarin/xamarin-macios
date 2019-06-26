@@ -1926,7 +1926,6 @@ WATCHOS_FRAMEWORKS =        \
 	HomeKit                 \
 	ImageIO                 \
 	Intents                 \
-	LinkPresentation        \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \

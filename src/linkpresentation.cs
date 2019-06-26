@@ -15,14 +15,11 @@ using UIKit;
 #endif
 
 using System;
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
 // TODO Include this in pull request: Inserted NoWatch since UIView is not available on watch and In file included from Xamarin.WatchOS.registrar.watchos.m:2:
-// ./Xamarin.WatchOS.registrar.watchos.h:11:9: fatal error: 'LinkPresentation/LinkPresentation.h' file not found
-// #import <LinkPresentation/LinkPresentation.h>
-//         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ./Xamarin.WatchOS.registrar.watchos.h:11:9: note: did not find header 'LinkPresentation.h' in framework 'LinkPresentation'
 
 namespace LinkPresentation {
 
@@ -68,6 +65,10 @@ namespace LinkPresentation {
 	[Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (UIView))]
 	interface LPLinkView {
+
+		[Export ("initWithFrame:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGRect rect);
 
 		[Export ("initWithURL:")]
 		IntPtr Constructor (NSUrl url);
