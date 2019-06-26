@@ -10232,7 +10232,6 @@ namespace UIKit {
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("initWithSearchResultsController:")]
-		[DesignatedInitializer]
 		[Advice ("You can pass a null 'UIViewController' to display the search results in the same view.")]
 		IntPtr Constructor ([NullAllowed] UIViewController searchResultsController);
 		
