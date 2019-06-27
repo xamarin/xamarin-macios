@@ -615,8 +615,8 @@ namespace Introspection {
 				switch (selectorName) {
 				case "copyWithZone:":
 				case "encodeWithCoder:":
-					// Conformance added in macOS 10.15
-					if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+					// Conformance added in Xcode 11
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						return true;
 					break;
 				}
@@ -634,8 +634,8 @@ namespace Introspection {
 			case "MLSequenceConstraint":
 				switch (selectorName) {
 				case "encodeWithCoder:":
-					// Conformance added in macOS 10.15
-					if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+					// Conformance added in Xcode 11
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						return true;
 					break;
 				}
