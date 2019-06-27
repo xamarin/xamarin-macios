@@ -62,7 +62,7 @@ namespace PushKit
 	[Static]
 	interface PKPushType {
 		
-		[Unavailable (PlatformName.UIKitForMac)]
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoWatch]
 		[NoMac]
 		[Field ("PKPushTypeVoIP")]
@@ -70,7 +70,7 @@ namespace PushKit
 
 		[iOS (9,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use directly from watchOS instead.")]
-		[Unavailable (PlatformName.UIKitForMac)]
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Watch (6,0)]
 		[NoMac]
 		[Field ("PKPushTypeComplication")]
