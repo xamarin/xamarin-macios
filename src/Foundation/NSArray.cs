@@ -63,33 +63,6 @@ namespace Foundation {
 		{
 			return FromNativeObjects (items);
 		}
-		
-		public static NSArray FromNSObjects<T> (T [,] items) where T: class, INativeObject
-		{
-			if (items == null)
-				return null;
-			
-			var width = items.GetLength (0);
-			var height = items.GetLength (1);
-			var ret = new NSMutableArray ((nuint)(width * height));
-			for (var y = 0; y < height; y++)
-			{
-				for (var x = 0; x < width; x++)
-					ret.Add (NSArray.FromNSObjects (items [x, y]));
-			}
-			return ret;
-		}
-		public static NSArray FromNSObjects<T> (params T [][] items) where T: class, INativeObject
-		{
-			if (items == null)
-				return null;
-
-			var ret = new NSMutableArray ((nuint)items.Length);
-			foreach (var t in items)
-				ret.Add (NSArray.FromNSObjects (t));
-
-			return ret;
-		}
 
 		public static NSArray FromNSObjects<T> (int count, params T [] items) where T: class, INativeObject
 		{

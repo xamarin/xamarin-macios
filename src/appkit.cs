@@ -7217,21 +7217,10 @@ namespace AppKit {
 		[Export ("gridViewWithNumberOfColumns:rows:")]
 		NSGridView Create (nint columnCount, nint rowCount);
 
-#if !XAMCORE_4_0
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		[Obsolete]
 		[Static]
 		[Export ("gridViewWithViews:")]
 		NSGridView Create (NSView [] rows);
-#endif
-		[Static]
-		[Export ("gridViewWithViews:")]
-		NSGridView Create (NSView [][] rowsAndColumns);
 
-		[Static]
-		[Export ("gridViewWithViews:")]
-		NSGridView Create (NSView [,] rowsAndColumns);
-		
 		[Export ("numberOfRows")]
 		nint RowCount { get; }
 
