@@ -18,7 +18,7 @@ using ObjCRuntime;
 namespace Speech {
 
 	[Native]
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	public enum SFSpeechRecognitionTaskState : long {
 		Starting = 0,
 		Running = 1,
@@ -28,7 +28,7 @@ namespace Speech {
 	}
 
 	[Native]
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	public enum SFSpeechRecognitionTaskHint : long {
 		Unspecified = 0,
 		Dictation = 1,
@@ -37,7 +37,7 @@ namespace Speech {
 	}
 
 	[Native]
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	public enum SFSpeechRecognizerAuthorizationStatus : long {
 		NotDetermined,
 		Denied,
@@ -45,7 +45,7 @@ namespace Speech {
 		Authorized,
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	[DisableDefaultCtor]
 	[Abstract] // no docs (yet) but it has no means (init*) to create it, unlike its subclasses
 	[BaseType (typeof (NSObject))]
@@ -68,7 +68,7 @@ namespace Speech {
 		bool RequiresOnDeviceRecognition { get; set; }
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (SFSpeechRecognitionRequest), Name = "SFSpeechURLRecognitionRequest")]
 	[DisableDefaultCtor]
 	interface SFSpeechUrlRecognitionRequest {
@@ -81,7 +81,7 @@ namespace Speech {
 		NSUrl Url { get; }
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (SFSpeechRecognitionRequest))]
 	interface SFSpeechAudioBufferRecognitionRequest {
 
@@ -98,7 +98,7 @@ namespace Speech {
 		void EndAudio ();
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionResult : NSCopying, NSSecureCoding {
 
@@ -112,7 +112,7 @@ namespace Speech {
 		bool Final { [Bind ("isFinal")] get; }
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTask {
 
@@ -137,7 +137,7 @@ namespace Speech {
 
 	interface ISFSpeechRecognitionTaskDelegate {}
 
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTaskDelegate {
@@ -163,7 +163,7 @@ namespace Speech {
 
 	interface ISFSpeechRecognizerDelegate {}
 
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizerDelegate {
@@ -172,7 +172,7 @@ namespace Speech {
 		void AvailabilityDidChange (SFSpeechRecognizer speechRecognizer, bool available);
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizer {
 
@@ -219,7 +219,7 @@ namespace Speech {
 		NSOperationQueue Queue { get; set; }
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscription : NSCopying, NSSecureCoding {
 
@@ -238,7 +238,7 @@ namespace Speech {
 		double AveragePauseDuration { get; }
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (10,0)]
+	[iOS (10,0), Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscriptionSegment : NSCopying, NSSecureCoding {
 
@@ -265,8 +265,9 @@ namespace Speech {
 		SFVoiceAnalytics VoiceAnalytics { get; }
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[iOS (13,0), Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface SFAcousticFeature : NSCopying, NSSecureCoding {
 
 		[Export ("acousticFeatureValuePerFrame", ArgumentSemantic.Copy)]
@@ -276,8 +277,9 @@ namespace Speech {
 		double FrameDuration { get; }
 	}
 
-	[Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[iOS (13,0), Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface SFVoiceAnalytics : NSCopying, NSSecureCoding {
 
 		[Export ("jitter", ArgumentSemantic.Copy)]
