@@ -65,5 +65,6 @@ namespace ObjCRuntime {
 		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
 		public const string PushKitLibrary = "/System/Library/Frameworks/PushKit.framework/PushKit";
 		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
+
 	}
 }
