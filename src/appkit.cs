@@ -7217,7 +7217,7 @@ namespace AppKit {
 		[Export ("gridViewWithNumberOfColumns:rows:")]
 		NSGridView Create (nint columnCount, nint rowCount);
 		
-#if XAMCORE_4_0
+#if !XAMCORE_4_0
 		[Static]
 		[Export ("gridViewWithViews:")]
 		NSGridView Create (NSView [] rows);
