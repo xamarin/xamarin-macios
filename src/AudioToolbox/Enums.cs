@@ -11,6 +11,6 @@ namespace AudioToolbox {
 		ExpertParameter = (1u << 0),
 		InvisibleParameter = (1u << 1),
 		MetaParameter = (1u << 2),
-		UserInterfaceParameter = (1u << 3)
+		UserInterfaceParameter = (1u << 3),
 	}
 }
