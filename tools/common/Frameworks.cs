@@ -181,6 +181,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
 
 					{ "AuthenticationServices", "AuthenticationServices", 10,15 },
+					{ "CoreMotion", "CoreMotion", 10,15 },
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
 					{ "IncomingCallNotifications", "IncomingCallNotifications", 10,15 },
