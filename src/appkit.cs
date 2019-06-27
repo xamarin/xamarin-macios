@@ -7218,7 +7218,7 @@ namespace AppKit {
 		NSGridView Create (nint columnCount, nint rowCount);
 		
 #if !XAMCORE_4_0
-		[EditorBrowsable(EditorBrowsableState.Never)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete]
 		[Static]
 		[Export ("gridViewWithViews:")]
