@@ -159,6 +159,12 @@ namespace Introspection {
 				case "VSAccountProviderResponse":
 				case "PHEditingExtensionContext":
 					return true;
+				// Xcode 11 (on device only)
+				case "ICHandle":
+				case "ICNotification":
+				case "ICNotificationManagerConfiguration":
+				case "MPSNNNeuronDescriptor":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -205,6 +211,12 @@ namespace Introspection {
 				case "VSAccountMetadataRequest":
 				case "VSAccountProviderResponse":
 				case "PHEditingExtensionContext":
+					return true;
+				// Xcode 11 (on device only)
+				case "ICHandle":
+				case "ICNotification":
+				case "ICNotificationManagerConfiguration":
+				case "MPSNNNeuronDescriptor":
 					return true;
 				}
 				break;
