@@ -8,8 +8,6 @@
 !missing-field! PHLivePhotoInfoIsDegradedKey not bound
 !missing-field! PHPhotosErrorDomain not bound
 !missing-protocol! PHPhotoLibraryAvailabilityObserver not bound
-!missing-protocol-conformance! PHLivePhoto should conform to NSCopying
-!missing-protocol-conformance! PHLivePhoto should conform to NSSecureCoding
 !missing-selector! +PHAssetChangeRequest::changeRequestForAsset: not bound
 !missing-selector! +PHAssetChangeRequest::creationRequestForAssetFromImage: not bound
 !missing-selector! +PHAssetChangeRequest::creationRequestForAssetFromImageAtFileURL: not bound
