@@ -1,4 +1,6 @@
 !incorrect-protocol-member! CPBarButtonProviding::backButton is REQUIRED and should be abstract
 !incorrect-protocol-member! CPBarButtonProviding::setBackButton: is REQUIRED and should be abstract
+
+# xamarin/maccore#1822
 !missing-selector! CPWindow::setTemplateApplicationScene: not bound
 !missing-selector! CPWindow::templateApplicationScene not bound

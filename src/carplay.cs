@@ -383,7 +383,7 @@ namespace CarPlay {
 	interface CPManeuver : NSCopying, NSSecureCoding {
 
 		[Introduced (PlatformName.iOS, 12,0)]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'CPManeuver.symbolImage' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'CPManeuver.SymbolImage' instead.")]
 		[NullAllowed, Export ("symbolSet", ArgumentSemantic.Strong)]
 		CPImageSet SymbolSet { get; set; }
  
@@ -807,12 +807,11 @@ namespace CarPlay {
 		UILayoutGuide MapButtonSafeAreaLayoutGuide { get; }
 
 #if false
-// Apple is trying to use CPTemplateApplicationScene but it is not exposed. FB6231565
+// Apple is trying to use CPTemplateApplicationScene but it is not exposed. xamarin/maccore#1822
 		[NullAllowed, Export ("templateApplicationScene", ArgumentSemantic.Weak)]
 		CPTemplateApplicationScene TemplateApplicationScene { get; set; }
 #endif
 	}
-
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
