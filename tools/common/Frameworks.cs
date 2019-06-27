@@ -183,6 +183,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AuthenticationServices", "AuthenticationServices", 10,15 },
 					{ "CoreMotion", "CoreMotion", 10,15 },
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
+					{ "PushKit", "PushKit", 10,15 },
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
 					{ "IncomingCallNotifications", "IncomingCallNotifications", 10,15 },
 				};
@@ -364,6 +365,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "MediaPlayer", "MediaPlayer", 5 },
 
 				{ "AuthenticationServices", "AuthenticationServices", 6 },
+				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 
 			};
