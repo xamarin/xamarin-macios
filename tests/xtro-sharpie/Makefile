@@ -15,7 +15,7 @@ clean-local::
 	rm -rf *os*.pch*
 
 bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe build:
-	$(Q) nuget restore xtro-sharpie.sln
+	$(Q) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore xtro-sharpie.sln
 	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln
 
 XIOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll
