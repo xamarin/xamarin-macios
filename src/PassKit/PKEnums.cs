@@ -138,7 +138,7 @@ namespace PassKit {
 		ServicePickup,
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[iOS (9,0)]
 	[Native]
 	public enum PKAddPaymentPassError : long
@@ -200,7 +200,7 @@ namespace PassKit {
 	}
 
 	[iOS (12,0)]
-	[NoWatch]
+	[NoWatch] // https://feedbackassistant.apple.com/feedback/6301809 https://github.com/xamarin/maccore/issues/1819
 	[Native]
 	public enum PKAddPaymentPassStyle : ulong {
 		Payment,
