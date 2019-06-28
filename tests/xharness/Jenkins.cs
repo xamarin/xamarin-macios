@@ -2581,8 +2581,12 @@ namespace xharness
 						return Enumerable.Empty<string> ();
 
 					var csproj = new XmlDocument ();
-					csproj.LoadWithoutNetworkAccess (ProjectFile.Replace ("\\", "/"));
-					referencedNunitAndXunitTestAssemblies = csproj.GetNunitAndXunitTestReferences ();
+					try {
+						csproj.LoadWithoutNetworkAccess (ProjectFile.Replace ("\\", "/"));
+						referencedNunitAndXunitTestAssemblies = csproj.GetNunitAndXunitTestReferences ();
+					} catch (Exception e) {
+						referencedNunitAndXunitTestAssemblies = new string [] { $"Exception: {e.Message}", $"Filename: {ProjectFile}" };
+					}
 				} else {
 					referencedNunitAndXunitTestAssemblies = Enumerable.Empty<string> ();
 				}
