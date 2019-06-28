@@ -265,11 +265,14 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetDestMIDIEndpoint (/* MusicTrack */ IntPtr inTrack, MidiEndpointRef outEndpoint);
+		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetDestMIDIEndpoint (/* MusicTrack */ IntPtr inTrack, out MidiEndpointRef outEndpoint);
 
-		public MusicPlayerStatus GetDestMidiEndpoint (MidiEndpoint endpoint)
+		public MusicPlayerStatus GetDestMidiEndpoint (out MidiEndpoint outEndpoint)
 		{
-			return MusicTrackGetDestMIDIEndpoint (handle, endpoint == null ? MidiObject.InvalidRef : endpoint.MidiHandle);
+			MidiEndpointRef midiHandle; 
+			var reuslt = MusicTrackGetDestMIDIEndpoint (handle, out midiHandle);
+			outEndpoint = new MidiEndpoint (midiHandle);
+			return reuslt;
 		}
 #endif
 

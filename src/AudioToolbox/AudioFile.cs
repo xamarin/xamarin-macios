@@ -199,8 +199,7 @@ namespace AudioToolbox {
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct AudioFileMarker
-	{
+	public struct AudioFileMarker {
 		public double FramePosition;
 		internal IntPtr Name_cfstringref;
 		public int    MarkerID;
@@ -219,8 +218,7 @@ namespace AudioToolbox {
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
-	public struct AudioPacketRangeByteCountTranslation
-	{
+	public struct AudioPacketRangeByteCountTranslation {
 		public long Packet;
 		public long PacketCount;
 		public long ByteCountUpperBound;
@@ -229,8 +227,7 @@ namespace AudioToolbox {
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
-	public struct AudioPacketRollDistanceTranslation
-	{
+	public struct AudioPacketRollDistanceTranslation {
 		public long Packet;
 		public long RollDistance;
 	}
@@ -238,8 +235,7 @@ namespace AudioToolbox {
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
-	public struct AudioIndependentPacketTranslation
-	{
+	public struct AudioIndependentPacketTranslation {
 		public long Packet;
 		public long IndependentlyDecodablePacket;
 	}
@@ -247,8 +243,7 @@ namespace AudioToolbox {
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
-	public struct AudioPacketDependencyInfoTranslation
-	{
+	public struct AudioPacketDependencyInfoTranslation {
 		public long Packet;
 		[MarshalAs (UnmanagedType.U4)]
 		public bool IsIndependentlyDecodable;
