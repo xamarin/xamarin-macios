@@ -998,6 +998,7 @@ MAPKIT_SOURCES = \
 
 MEDIAACCESSIBILITY_SOURCES = \
 	MediaAccessibility/MediaAccessibility.cs \
+	MediaAccessibility/MAImageCaptioning.cs \
 
 # MediaPlayer
 
