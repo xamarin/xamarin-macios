@@ -116,6 +116,7 @@
 !missing-protocol! UITextInteractionDelegate not bound
 !missing-protocol! UIWindowSceneDelegate not bound
 !missing-protocol-conformance! NSTextAttachment should conform to NSSecureCoding
+!missing-protocol-conformance! NSTextContainer should conform to NSSecureCoding
 !missing-protocol-member! UIAdaptivePresentationControllerDelegate::presentationControllerDidAttemptToDismiss: not found
 !missing-protocol-member! UIAdaptivePresentationControllerDelegate::presentationControllerDidDismiss: not found
 !missing-protocol-member! UIAdaptivePresentationControllerDelegate::presentationControllerShouldDismiss: not found
