@@ -782,16 +782,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_GetCompileToNativeInputs">
 		<ItemGroup>
-			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName)" />
-			<_CompileToNativeInput Condition="'@(_ResolvedAppExtensionReferences)' != ''" Include="%(_ResolvedAppExtensionReferences.Identity)\..\mtouch.stamp" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
-		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
-		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
-
-		<ItemGroup>
 			<!-- Skip the reference assemblies. There is currently no scenario where it is valid to pass them to 'mtouch'. They are impossible to AOT. Fixes: https://github.com/xamarin/xamarin-macios/issues/3199 -->
 			<!-- Remove exact references, such as if a package had a framework reference to 'System' that we already have -->
 			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
@@ -799,7 +789,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<!-- This requires nuget libraries to be copied locally, which by default only happens for executable projects, so we set 'CopyNuGetImplementations' to true for extensions (see comment in Xamarin.iOS.AppExtension.CSharp.targets for more info) -->
 			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
 			<MTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName);@(ReferencePath);@(MTouchReferencePath)" />
+			<_CompileToNativeInput Condition="'@(_ResolvedAppExtensionReferences)' != ''" Include="%(_ResolvedAppExtensionReferences.Identity)\..\mtouch.stamp" />
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
+		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
+		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
 
 		<MTouch
 			SessionId="$(BuildSessionId)"
