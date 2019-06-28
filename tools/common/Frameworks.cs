@@ -181,9 +181,12 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
 
 					{ "AuthenticationServices", "AuthenticationServices", 10,15 },
+					{ "CoreMotion", "CoreMotion", 10,15 },
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
+					{ "PushKit", "PushKit", 10,15 },
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
 					{ "IncomingCallNotifications", "IncomingCallNotifications", 10,15 },
+					{ "PencilKit", "PencilKit", 10,15 },
 				};
 			}
 			return mac_frameworks;
@@ -312,6 +315,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 				{ "IncomingCallNotifications", "IncomingCallNotifications", 13, 0 },
 				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
+				{ "PencilKit", "PencilKit", 13, 0 },
 			};
 		}
 		return ios_frameworks;
@@ -364,6 +368,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "MediaPlayer", "MediaPlayer", 5 },
 
 				{ "AuthenticationServices", "AuthenticationServices", 6 },
+				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 
 			};
