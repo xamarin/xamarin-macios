@@ -36,7 +36,8 @@ namespace ObjCRuntime
 		MacOSX,
 		iOS,
 		WatchOS,
-		TvOS
+		TvOS,
+		UIKitForMac,
 	}
 
 	public enum AvailabilityKind

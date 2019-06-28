@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 namespace CoreMotion {
 
 	// CMDeviceMotion.h
+	[Mac (10,15, onlyOn64: true)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMCalibratedMagneticField {
 		public CMMagneticField Field;

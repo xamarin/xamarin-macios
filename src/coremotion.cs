@@ -6,22 +6,24 @@
 //
 // Copyright 2010, Novell, Inc.
 // Copyright 2013-2015 Xamarin Inc.
+// Copyright 2019 Microsoft Corporation
 //
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 using CoreLocation;
-using UIKit;
 using System;
 
 namespace CoreMotion {
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
+	[Mac (10,15, onlyOn64: true)]
 	interface CMAccelerometerData : NSSecureCoding {
 		[Export ("acceleration")]
 		CMAcceleration Acceleration { get; }
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof (CMAccelerometerData))]
 	[DisableDefaultCtor]
@@ -33,6 +35,7 @@ namespace CoreMotion {
 		NSDate StartDate { get; }
 	}
 
+	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMLogItem : NSSecureCoding, NSCopying {
@@ -40,10 +43,14 @@ namespace CoreMotion {
 		double Timestamp { get; }
 	}
 
+	[NoMac]
 	delegate void CMAccelerometerHandler (CMAccelerometerData data, NSError error);
+	[NoMac]
 	delegate void CMGyroHandler (CMGyroData gyroData, NSError error);
+	[NoMac]
 	delegate void CMDeviceMotionHandler (CMDeviceMotion motion, NSError error);
 
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	interface CMMotionManager {
 		[Export ("accelerometerAvailable")]
@@ -146,6 +153,7 @@ namespace CoreMotion {
 		bool ShowsDeviceMovementDisplay { get; set; }
 	}
 
+	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	//<quote>You access CMAttitude objects through the attitude property of each CMDeviceMotion objects passed to an application.</quote>
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
@@ -169,6 +177,7 @@ namespace CoreMotion {
 		void MultiplyByInverseOfAttitude (CMAttitude attitude);
 	}
 
+	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMDeviceMotion : NSSecureCoding {
@@ -192,6 +201,7 @@ namespace CoreMotion {
 		double Heading { get; }
 	}
 
+	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMGyroData : NSSecureCoding {
@@ -199,6 +209,7 @@ namespace CoreMotion {
 		CMRotationRate RotationRate { get; }
 	}
 
+	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
 	interface CMMagnetometerData : NSSecureCoding {
@@ -216,6 +227,7 @@ namespace CoreMotion {
 	[iOS (7,0)]
 	delegate void CMStepUpdateHandler (nint numberOfSteps, NSDate timestamp, NSError error);
 
+	[NoMac]
 	[NoWatch]
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
@@ -237,6 +249,7 @@ namespace CoreMotion {
 		void StopStepCountingUpdates ();
 	}
 
+	[Mac (10,15, onlyOn64: true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface CMPedometerData : NSSecureCoding, NSCopying {
@@ -273,6 +286,7 @@ namespace CoreMotion {
 		NSNumber AverageActivePace { get; }
 	}
 
+	[Mac (10,15, onlyOn64: true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface CMPedometer {
@@ -330,12 +344,15 @@ namespace CoreMotion {
 		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
+	[NoMac]
 	[iOS (7,0)]
 	delegate void CMMotionActivityHandler (CMMotionActivity activity);
 
+	[NoMac]
 	[iOS (7,0)]
 	delegate void CMMotionActivityQueryHandler (CMMotionActivity[] activities, NSError error);
 
+	[NoMac]
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	interface CMMotionActivityManager {
@@ -360,6 +377,7 @@ namespace CoreMotion {
 		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
+	[NoMac]
 	[iOS (7,0)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // <quote>You do not create instances of this class yourself.</quote>
@@ -390,6 +408,7 @@ namespace CoreMotion {
 		bool Cycling { get; }
 	}
 
+	[NoMac]
 	[iOS (8,0)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // this does not look to be meant to be user created (and crash when description is called)
@@ -401,6 +420,7 @@ namespace CoreMotion {
 		NSNumber Pressure { get; }
 	}
 
+	[NoMac]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface CMAltimeter {
@@ -421,6 +441,7 @@ namespace CoreMotion {
 		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
+	[Mac (10,15, onlyOn64: true)]
 	[Watch (4,0), iOS (11,0)]
 	[Native]
 	public enum CMAuthorizationStatus : long {
@@ -430,12 +451,14 @@ namespace CoreMotion {
 		Authorized,
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	interface CMSensorDataList /* NSFastEnumeration */
 	{
 	}
 		
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	interface CMSensorRecorder
@@ -466,6 +489,7 @@ namespace CoreMotion {
 		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
+	[Mac (10,15, onlyOn64: true)]
 	[Watch (3,0)][NoTV][iOS (10,0)]
 	[Native]
 	public enum CMPedometerEventType : long {
@@ -473,6 +497,7 @@ namespace CoreMotion {
 		Resume
 	}
 
+	[Mac (10,15, onlyOn64: true)]
 	[Watch (3,0)][NoTV][iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // instances exposed from delegate
@@ -484,6 +509,7 @@ namespace CoreMotion {
 		CMPedometerEventType Type { get; }
 	}
 
+	[NoMac]
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -502,6 +528,7 @@ namespace CoreMotion {
 		float PercentLikely { get; }
 	}
 
+	[NoMac]
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -532,12 +559,15 @@ namespace CoreMotion {
 		float PercentStrong { get; }
 	}
 
+	[NoMac]
 	[Watch (5,0), NoTV, NoMac, NoiOS]
 	delegate void CMDyskineticSymptomResultHandler (CMDyskineticSymptomResult [] dyskineticSymptomResult, NSError error);
 
+	[NoMac]
 	[Watch (5,0), NoTV, NoMac, NoiOS]
 	delegate void CMTremorResultHandler (CMTremorResult [] tremorResults, NSError error);
 
+	[NoMac]
 	[Watch (5,0), NoTV, NoMac, NoiOS]
 	[BaseType (typeof (NSObject))]
 	interface CMMovementDisorderManager {
@@ -566,5 +596,44 @@ namespace CoreMotion {
 
 		[NullAllowed, Export ("monitorKinesiasExpirationDate")]
 		NSDate MonitorKinesiasExpirationDate { get; }
+	}
+
+	[Mac (10,15, onlyOn64: true)]
+	[ErrorDomain ("CMErrorDomain")]
+	// untyped enum -> CMError.h
+	public enum CMError {
+		Null = 100,
+		DeviceRequiresMovement,
+		TrueNorthNotAvailable,
+		Unknown,
+		MotionActivityNotAvailable,
+		MotionActivityNotAuthorized,
+		MotionActivityNotEntitled,
+		InvalidParameter,
+		InvalidAction,
+		NotAvailable,
+		NotEntitled,
+		NotAuthorized,
+	}
+
+	[NoMac]
+	// untyped enum -> CMAttitude.h
+	// in Xcode 6.3 SDK is became an NSUInteger
+	[Flags]
+	[Native]
+	public enum CMAttitudeReferenceFrame : ulong {
+		XArbitraryZVertical = 1 << 0,
+		XArbitraryCorrectedZVertical = 1 << 1,
+		XMagneticNorthZVertical = 1 << 2,
+		XTrueNorthZVertical = 1 << 3,
+	}
+
+	[NoMac]
+	// NSInteger -> CMMotionActivity.h
+	[Native]
+	public enum CMMotionActivityConfidence : long {
+		Low = 0,
+		Medium,
+		High,
 	}
 }

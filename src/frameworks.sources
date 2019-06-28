@@ -1708,6 +1708,7 @@ SHARED_SOURCES = \
 
 COMMON_FRAMEWORKS =         \
 	Accelerate              \
+	AuthenticationServices	\
 	AVFoundation            \
 	CoreBluetooth           \
 	CoreFoundation          \
@@ -1741,6 +1742,7 @@ MAC_FRAMEWORKS =            \
 	CoreLocation            \
 	CoreMedia               \
 	CoreMidi                \
+	CoreMotion		\
 	CoreServices            \
 	CoreSpotlight           \
 	CoreText                \
@@ -1778,9 +1780,11 @@ MAC_FRAMEWORKS =            \
 	NotificationCenter 	\
 	OpenGL                  \
 	PdfKit                  \
+	PencilKit               \
 	Photos                  \
 	PhotosUI				\
 	PrintCore		\
+	PushKit			\
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \
@@ -1810,7 +1814,6 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
-	AuthenticationServices \
 	BusinessChat \
 	CallKit \
 	CarPlay \
@@ -1873,6 +1876,7 @@ IOS_FRAMEWORKS =         \
 	OpenGLES \
 	PassKit \
 	PdfKit \
+	PencilKit \
 	Photos \
 	PhotosUI \
 	PushKit \
@@ -1916,6 +1920,7 @@ WATCHOS_FRAMEWORKS =        \
 	MobileCoreServices      \
 	NaturalLanguage         \
 	PassKit                 \
+	PushKit			\
 	Security                \
 	UIKit XKit              \
 	UserNotifications       \
