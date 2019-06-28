@@ -110,14 +110,17 @@ namespace MonoTouchFixtures.Metal {
 			}
 
 #if __MACOS__
-			using (var descriptor = MTLTextureDescriptor.CreateTexture2DDescriptor (MTLPixelFormat.RGBA8Unorm, 64, 64, false)) {
-				descriptor.StorageMode = MTLStorageMode.Private;
-				using (var texture = device.CreateSharedTexture (descriptor)) {
-					Assert.IsNotNull (texture, "CreateSharedTexture (MTLTextureDescriptor): NonNull");
+			if (TestRuntime.CheckXcodeVersion (10, 0)) {
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 6)) // https://github.com/xamarin/maccore/issues/1800
+				using (var descriptor = MTLTextureDescriptor.CreateTexture2DDescriptor (MTLPixelFormat.RGBA8Unorm, 64, 64, false)) {
+					descriptor.StorageMode = MTLStorageMode.Private;
+					using (var texture = device.CreateSharedTexture (descriptor)) {
+						Assert.IsNotNull (texture, "CreateSharedTexture (MTLTextureDescriptor): NonNull");
 
-					using (var handle = texture.CreateSharedTextureHandle ())
-					using (var shared = device.CreateSharedTexture (handle))
-						Assert.IsNotNull (texture, "CreateSharedTexture (MTLSharedTextureHandle): NonNull");
+						using (var handle = texture.CreateSharedTextureHandle ())
+						using (var shared = device.CreateSharedTexture (handle))
+							Assert.IsNotNull (texture, "CreateSharedTexture (MTLSharedTextureHandle): NonNull");
+					}
 				}
 			}
 #endif
@@ -273,28 +276,27 @@ namespace MonoTouchFixtures.Metal {
 				Assert.IsNotNull (library, "CreateArgumentEncoder (MTLArgumentDescriptor[]): NonNull");
 			}
 
-			TestRuntime.AssertXcodeVersion (10, 0);
-			using (var descriptor = new MTLIndirectCommandBufferDescriptor ()) {
-				using (var library = device.CreateIndirectCommandBuffer (descriptor, 1, MTLResourceOptions.CpuCacheModeDefault)) {
-					Assert.IsNotNull (library, "CreateIndirectCommandBuffer: NonNull");
+			if (TestRuntime.CheckXcodeVersion (10, 0)) {
+				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 6)) // https://github.com/xamarin/maccore/issues/1801
+				using (var descriptor = new MTLIndirectCommandBufferDescriptor ()) {
+					using (var library = device.CreateIndirectCommandBuffer (descriptor, 1, MTLResourceOptions.CpuCacheModeDefault)) {
+						Assert.IsNotNull (library, "CreateIndirectCommandBuffer: NonNull");
+					}
 				}
-			}
 
-			TestRuntime.AssertXcodeVersion (10, 0);
-			using (var evt = device.CreateEvent ()) {
-				Assert.IsNotNull (evt, "CreateEvent: NonNull");
-			}
+				using (var evt = device.CreateEvent ()) {
+					Assert.IsNotNull (evt, "CreateEvent: NonNull");
+				}
 
-			TestRuntime.AssertXcodeVersion (10, 0);
-			using (var evt = device.CreateSharedEvent ()) {
-				Assert.IsNotNull (evt, "CreateSharedEvent: NonNull");
-			}
+				using (var evt = device.CreateSharedEvent ()) {
+					Assert.IsNotNull (evt, "CreateSharedEvent: NonNull");
+				}
 
-			TestRuntime.AssertXcodeVersion (10, 0);
-			using (var evt1 = device.CreateSharedEvent ())
-			using (var evt_handle = evt1.CreateSharedEventHandle ())
-			using (var evt = device.CreateSharedEvent (evt_handle)) {
-				Assert.IsNotNull (evt, "CreateSharedEvent (MTLSharedEventHandle): NonNull");
+				using (var evt1 = device.CreateSharedEvent ())
+				using (var evt_handle = evt1.CreateSharedEventHandle ())
+				using (var evt = device.CreateSharedEvent (evt_handle)) {
+					Assert.IsNotNull (evt, "CreateSharedEvent (MTLSharedEventHandle): NonNull");
+				}
 			}
 
 			using (var descriptor = new MTLRenderPipelineDescriptor ())

@@ -161,7 +161,6 @@
 !missing-protocol! UITextFormattingCoordinatorDelegate not bound
 !missing-protocol! UITextInteractionDelegate not bound
 !missing-protocol! UIWindowSceneDelegate not bound
-!missing-protocol-conformance! NSLayoutManager should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextAttachment should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextContainer should conform to NSSecureCoding
 !missing-protocol-conformance! NSUserActivity should conform to NSItemProviderReading (defined in 'NSItemProvider' category)

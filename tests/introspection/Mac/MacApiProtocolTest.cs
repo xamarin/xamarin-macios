@@ -74,6 +74,15 @@ namespace Introspection {
 				case "NSTextBlock":
 				case "NSTextTable":
 				case "NSTextTableBlock":
+				// Xcode 11 (running on macOS 10.15)
+				case "LAContext": // Conformance not in headers
+				case "ICHandle": // Conformance not in headers
+				case "ICNotification": // Conformance not in headers
+				case "ICNotificationManagerConfiguration": // Conformance not in headers
+				case "MKPolygon": // Conformance not in headers
+				case "MLPredictionOptions": // Conformance not in headers
+				case "NSUrlSessionTaskMetrics": // Conformance not in headers
+				case "NSUrlSessionTaskTransactionMetrics": // Conformance not in headers
 					return true;
 #if !UNIFIED
 				// existing classic/old binary is not updated
@@ -106,6 +115,9 @@ namespace Introspection {
 				case "ACAccount": // Not declared in header file
 				case "NEFlowMetaData": // Not declared in header file
 				case "ACAccountCredential": // Not declared in header file
+				// Xcode 11 (running on macOS 10.15)
+				case "NSCollectionViewUpdateItem": // Not declared in header file
+				case "MLPredictionOptions": // Not declared in header file
 					return true;
 				}
 				break;
@@ -155,6 +167,15 @@ namespace Introspection {
 				case "NSPersistentHistoryToken": // Conformance not in headers
 				// Xcode 10 (running on macOS 10.14)
 				case "NSTextAlternatives":
+				// Xcode 11 (running on macOS 10.15)
+				case "ICHandle": // Conformance not in headers
+				case "ICNotification": // Conformance not in headers
+				case "ICNotificationManagerConfiguration": // Conformance not in headers
+				case "LAContext": // Conformance not in headers
+				case "MKPolygon": // Conformance not in headers
+				case "MLPredictionOptions": // Conformance not in headers
+				case "NSUrlSessionTaskMetrics": // Conformance not in headers
+				case "NSUrlSessionTaskTransactionMetrics": // Conformance not in headers
 					return true;
 				}
 				break;

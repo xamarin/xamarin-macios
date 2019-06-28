@@ -582,7 +582,7 @@ namespace Vision {
 	[Abstract]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface VNFaceLandmarkRegion {
+	interface VNFaceLandmarkRegion : NSCopying, NSSecureCoding {
 
 		[Export ("pointCount")]
 		nuint PointCount { get; }
@@ -606,7 +606,7 @@ namespace Vision {
 	[Abstract]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface VNFaceLandmarks {
+	interface VNFaceLandmarks  : NSCopying, NSSecureCoding {
 
 		[Export ("confidence")]
 		float Confidence { get; }

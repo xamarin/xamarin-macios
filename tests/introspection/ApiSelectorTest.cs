@@ -609,6 +609,37 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "VNFaceLandmarkRegion":
+			case "VNFaceLandmarks":
+			case "PHLivePhoto":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					// Conformance added in Xcode 11
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
+						return true;
+					break;
+				}
+				break;
+			case "MPSNNNeuronDescriptor":
+			case "MLDictionaryConstraint":
+			case "MLFeatureDescription":
+			case "MLImageConstraint":
+			case "MLImageSize":
+			case "MLImageSizeConstraint":
+			case "MLModelConfiguration":
+			case "MLModelDescription":
+			case "MLMultiArrayConstraint":
+			case "MLMultiArrayShapeConstraint":
+			case "MLSequenceConstraint":
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					// Conformance added in Xcode 11
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			// old binding mistake
