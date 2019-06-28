@@ -4,7 +4,7 @@
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
 //
-// Copyright 2018 Microsoft Corporation. All rights reserved.
+// Copyright 2018-2019 Microsoft Corporation. All rights reserved.
 //
 
 #if XAMCORE_2_0
@@ -807,7 +807,7 @@ namespace CarPlay {
 		UILayoutGuide MapButtonSafeAreaLayoutGuide { get; }
 
 #if false
-// Apple is trying to use CPTemplateApplicationScene but it is not exposed. xamarin/maccore#1822
+// Apple is trying to use CPTemplateApplicationScene but it is not exposed. https://github.com/xamarin/maccore/issues/1822
 		[NullAllowed, Export ("templateApplicationScene", ArgumentSemantic.Weak)]
 		CPTemplateApplicationScene TemplateApplicationScene { get; set; }
 #endif
