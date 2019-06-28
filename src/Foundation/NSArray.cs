@@ -81,14 +81,15 @@ namespace Foundation {
 			
 			var width = items.GetLength (0);
 			var height = items.GetLength (1);
-			var ret = new NSMutableArray ((nuint)(width * height));
-			for (var y = 0; y < height; y++)
-			{
-				for (var x = 0; x < width; x++)
-					ret.Add (NSArray.FromNSObjects (items [x, y]));
+			var ret = new T [height][];
+			for (var y = 0; y < height; y++) {
+				var row = new T [width];
+				for (var x = 0; x < width; x++) {
+					row [x] = items [x, y];
+				}
+				ret [y] = row;
 			}
-			
-			return ret;
+			return FromNSObjects (ret);
 		}
 		public static NSArray FromNSObjects<T> (int count, params T [] items) where T: class, INativeObject
 		{

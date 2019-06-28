@@ -7217,8 +7217,10 @@ namespace AppKit {
 		[Export ("gridViewWithNumberOfColumns:rows:")]
 		NSGridView Create (nint columnCount, nint rowCount);
 		
-#if XAMCORE_4_0
+#if !XAMCORE_4_0
 		[Static]
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		[Obsolete ("You should use either 'NSGridView.Create(NSView [][] rowsAndColumns)' or 'NSGridView.Create(NSView [,] rowsAndColumns)'.")]
 		[Export ("gridViewWithViews:")]
 		NSGridView Create (NSView [] rows);
 #endif
