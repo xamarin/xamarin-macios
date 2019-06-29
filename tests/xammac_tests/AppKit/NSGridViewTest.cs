@@ -30,7 +30,7 @@ namespace MonoTouchFixtures.AppKit {
 		}
 
 		[Test]
-		public void CreateWithTwoDimensionalNSViewArray()
+		public void CreateWithTwoDimensionalNSViewArray ()
 		{
 			NSView [,] nSViewsTwoDim = new NSView [2, 2];
 			nSViewsTwoDim [0, 0] = new NSView ();
