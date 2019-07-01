@@ -177,9 +177,10 @@ namespace Introspection {
 				break;
 #if !XAMCORE_4_0
 			case "NSUrl":
+			case "ARQuickLookPreviewItem":
 				switch (selectorName) {
 				case "previewItemTitle":
-					// 'previewItemTitle' should be optional (fixed in XAMCORE_4_0)
+					// 'previewItemTitle' is inlined from the QLPreviewItem protocol and should be optional (fixed in XAMCORE_4_0)
 					return true;
 				}
 				break;

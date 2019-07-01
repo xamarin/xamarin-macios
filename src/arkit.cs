@@ -1616,6 +1616,11 @@ namespace ARKit {
 	[BaseType (typeof(UIView))]
 	interface ARCoachingOverlayView {
 
+		// inherited from UIView
+		[DesignatedInitializer]
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		IARCoachingOverlayViewDelegate Delegate { get; set; }
