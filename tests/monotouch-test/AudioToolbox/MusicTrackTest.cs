@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MusicTractTest {
+	public class MusicTrackTest {
 
 		MusicSequence sequence;
 		MusicTrack track;
