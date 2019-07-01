@@ -245,7 +245,7 @@ namespace AudioToolbox {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketDependencyInfoTranslation {
 		public long Packet;
-		[MarshalAs (UnmanagedType.U4)]
+		[MarshalAs (UnmanagedType.I4)]
 		public bool IsIndependentlyDecodable;
 		public uint NumberPrerollPackets;
 	}
