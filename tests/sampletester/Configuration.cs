@@ -28,10 +28,12 @@ namespace Xamarin.Tests {
 						// Workaround for https://github.com/NuGet/Home/issues/7956
 						// See also:
 						// * https://github.com/mono/mono/issues/13537
+						// * https://github.com/xamarin/maccore/issues/1811
+						// The version number here must match the version in tools/devops/build-samples.csx
 						File.WriteAllText (global_json,
 							@"{
 ""sdk"": {
-	""version"": ""2.2.100""
+	""version"": ""2.2.204""
 }
 			}
 ");
