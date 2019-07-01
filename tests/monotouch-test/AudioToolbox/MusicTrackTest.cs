@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		}
 
 		[TearDown]
-		public void TeatDown ()
+		public void TearDown ()
 		{
 			track?.Dispose ();
 			sequence?.Dispose ();
