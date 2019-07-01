@@ -1870,13 +1870,15 @@ namespace ARKit {
 	[DisableDefaultCtor]
 	interface ARSkeletonDefinition {
 
-		[Static]
-		[Export ("defaultBody3DSkeletonDefinition")]
-		ARSkeletonDefinition DefaultBody3DSkeletonDefinition { get; }
+		// Present in the header, but not at runtime. https://github.com/xamarin/maccore/issues/1828
+		// [Static]
+		// [Export ("defaultBody3DSkeletonDefinition")]
+		// ARSkeletonDefinition DefaultBody3DSkeletonDefinition { get; }
 
-		[Static]
-		[Export ("defaultBody2DSkeletonDefinition")]
-		ARSkeletonDefinition DefaultBody2DSkeletonDefinition { get; }
+		// Present in the header, but not at runtime. https://github.com/xamarin/maccore/issues/1828
+		// [Static]
+		// [Export ("defaultBody2DSkeletonDefinition")]
+		// ARSkeletonDefinition DefaultBody2DSkeletonDefinition { get; }
 
 		[Export ("jointNames")]
 		string[] JointNames { get; }
@@ -1887,8 +1889,9 @@ namespace ARKit {
 		[NullAllowed, Export ("neutralBodySkeleton3D")]
 		ARSkeleton3D NeutralBodySkeleton3D { get; }
 
-		[Export ("indexForJointName:")]
-		nuint GetJointIndex ([BindAs (typeof (ARSkeletonJointName))] NSString jointName);
+		// Present in the header, but not at runtime. https://github.com/xamarin/maccore/issues/1828
+		// [Export ("indexForJointName:")]
+		// nuint GetJointIndex ([BindAs (typeof (ARSkeletonJointName))] NSString jointName);
 	}
 
 	[iOS (13,0)]
