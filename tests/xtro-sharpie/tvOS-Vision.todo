@@ -5,11 +5,7 @@
 !missing-field! VNAnimalDetectorDog not bound
 !missing-pinvoke! VNElementTypeSize is not bound
 !missing-protocol! VNRequestProgressProviding not bound
-!missing-protocol-conformance! VNFaceLandmarkRegion should conform to NSCopying
-!missing-protocol-conformance! VNFaceLandmarkRegion should conform to NSSecureCoding
 !missing-protocol-conformance! VNFaceLandmarkRegion should conform to VNRequestRevisionProviding
-!missing-protocol-conformance! VNFaceLandmarks should conform to NSCopying
-!missing-protocol-conformance! VNFaceLandmarks should conform to NSSecureCoding
 !missing-protocol-conformance! VNFaceLandmarks should conform to VNRequestRevisionProviding
 !missing-selector! +VNClassifyImageRequest::knownClassificationsForRevision:error: not bound
 !missing-selector! +VNDetectAnimalRectanglesRequest::knownAnimalDetectorsForRevision: not bound

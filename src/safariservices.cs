@@ -206,7 +206,7 @@ namespace SafariServices {
 	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariPage : NSSecureCoding
+	interface SFSafariPage : NSSecureCoding, NSCopying
 	{
 		[Export ("dispatchMessageToScriptWithName:userInfo:")]
 		void DispatchMessageToScript (string messageName, [NullAllowed] NSDictionary userInfo);
@@ -298,7 +298,7 @@ namespace SafariServices {
 	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariTab : NSSecureCoding
+	interface SFSafariTab : NSSecureCoding, NSCopying
 	{
 		[Async]
 		[Export ("getActivePageWithCompletionHandler:")]
@@ -329,7 +329,7 @@ namespace SafariServices {
 	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariToolbarItem : NSSecureCoding
+	interface SFSafariToolbarItem : NSSecureCoding, NSCopying
 	{
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'SetEnabled (bool)' or 'SetBadgeText' instead.")]
 		[Export ("setEnabled:withBadgeText:")]
@@ -359,7 +359,7 @@ namespace SafariServices {
 	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariWindow : NSSecureCoding
+	interface SFSafariWindow : NSSecureCoding, NSCopying
 	{
 		[Async]
 		[Export ("getActiveTabWithCompletionHandler:")]

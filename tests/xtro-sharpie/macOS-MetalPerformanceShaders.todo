@@ -15,7 +15,6 @@
 !missing-protocol-conformance! MPSCNNBatchNormalizationNode should conform to MPSNNTrainableNode
 !missing-protocol-conformance! MPSCNNConvolutionNode should conform to MPSNNTrainableNode
 !missing-protocol-conformance! MPSCNNInstanceNormalizationNode should conform to MPSNNTrainableNode
-!missing-protocol-conformance! MPSNNNeuronDescriptor should conform to NSSecureCoding
 !missing-protocol-member! MPSCNNInstanceNormalizationDataSource::load not found
 !missing-protocol-member! MPSCNNInstanceNormalizationDataSource::purge not found
 !missing-selector! +MPSCNNConvolutionTransposeGradientNode::nodeWithSourceGradient:sourceImage:convolutionTransposeGradientState:weights: not bound

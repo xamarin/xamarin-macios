@@ -178,6 +178,34 @@ namespace Introspection {
 				// https://bugzilla.xamarin.com/show_bug.cgi?id=46624
 				// https://trello.com/c/T6vkA2QF/62-29311598-ikpicturetaker-crashes-randomly-upon-deallocation?menu=filter&filter=corenfc
 				return true;
+			case "Photos.PHProjectChangeRequest":
+				if (TestRuntime.CheckSystemVersion (ObjCRuntime.PlatformName.MacOSX, 10, 15)) {
+					/*
+	 Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'This method can only be called from inside of -[PHPhotoLibrary performChanges:completionHandler:] or -[PHPhotoLibrary performChangesAndWait:error:]'
+	0   CoreFoundation                      0x00007fff34f29063 __exceptionPreprocess + 250
+	1   libobjc.A.dylib                     0x00007fff6a6aa06b objc_exception_throw + 48
+	2   Photos                              0x00007fff3fe8a643 +[PHPhotoLibrary stringFromPHPhotoLibraryType:] + 0
+	3   Photos                              0x00007fff3ff6055d -[PHChangeRequest init] + 85
+	*/
+					return true;
+				}
+				break;
+			case "AVKit.AVCaptureView":
+			// Deallocating the AVCaptureView starts up the A/V capturing pipeline (!):
+			/*
+24  com.apple.avfoundation            0x00007fff28298a2f -[AVCaptureSession startRunning] + 97
+25  com.apple.AVKit                   0x00007fff2866621f __72-[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:]_block_invoke_2 + 293
+26  com.apple.AVKit                   0x00007fff2866609a __72-[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:]_block_invoke + 489
+27  com.apple.AVKit                   0x00007fff28661bd4 -[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:] + 234
+28  com.apple.AVKit                   0x00007fff28661c53 -[AVCaptureController session] + 53
+29  com.apple.AVKit                   0x00007fff28670d2b -[AVCaptureView dealloc] + 124
+
+				This is unfortunate because capturing audio/video requires permission,
+				and since macOS tests don't execute in a session that can show UI,
+				the permission system (TCC) fails and the process ends up crashing
+				due to a privacy violation (even if the required entry is present in the Info.plist).
+		     */
+				return true;
 			}
 
 			switch (type.Namespace) {
@@ -201,6 +229,10 @@ namespace Introspection {
 			case "MediaPlayer":
 			case "MonoMac.MediaPlayer":
 				if (!Mac.CheckSystemVersion (10, 12) || IntPtr.Size != 8)
+					return true;
+				break;
+			case "QTKit":
+				if (Mac.CheckSystemVersion (10, 15)) // QTKit is gone in 10.15
 					return true;
 				break;
 			}

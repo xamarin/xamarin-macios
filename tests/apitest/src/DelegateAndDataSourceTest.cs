@@ -132,6 +132,14 @@ namespace Xamarin.Mac.Tests
 				break;
 			case "QTMovie":
 				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
+			case "AVCaptureView":
+				// Deallocating a AVCaptureView makes it trigger a permission dialog, which we don't want, so just skip this type.
+				return true;
+			}
+
+			switch (t.Namespace) {
+			case "QTKit":
+				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15); // QTKit is gone in 10.15.
 			}
 
 			return false;

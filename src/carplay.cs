@@ -4,7 +4,7 @@
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
 //
-// Copyright 2018 Microsoft Corporation. All rights reserved.
+// Copyright 2018-2019 Microsoft Corporation. All rights reserved.
 //
 
 #if XAMCORE_2_0
@@ -207,6 +207,10 @@ namespace CarPlay {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
+		[iOS (13,0)]
+		[Export ("prefersDarkUserInterfaceStyle")]
+		bool PrefersDarkUserInterfaceStyle { get; set; }
+
 		[Export ("setRootTemplate:animated:")]
 		void SetRootTemplate (CPTemplate rootTemplate, bool animated);
 
@@ -378,8 +382,14 @@ namespace CarPlay {
 	[BaseType (typeof (NSObject))]
 	interface CPManeuver : NSCopying, NSSecureCoding {
 
+		[Introduced (PlatformName.iOS, 12,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'CPManeuver.SymbolImage' instead.")]
 		[NullAllowed, Export ("symbolSet", ArgumentSemantic.Strong)]
 		CPImageSet SymbolSet { get; set; }
+ 
+ 		[iOS (13,0)]
+		[NullAllowed, Export ("symbolImage", ArgumentSemantic.Strong)]
+		UIImage SymbolImage { get; set; }
 
 		[Export ("instructionVariants", ArgumentSemantic.Copy)]
 		string [] InstructionVariants { get; set; }
@@ -558,8 +568,14 @@ namespace CarPlay {
 	[DisableDefaultCtor]
 	interface CPNavigationAlert : NSSecureCoding {
 
+		
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use constructor that takes in 'UIImage' instead of 'CPImageSet'.")]
 		[Export ("initWithTitleVariants:subtitleVariants:imageSet:primaryAction:secondaryAction:duration:")]
-		IntPtr Constructor (string [] titleVariants, string [] subtitleVariants, [NullAllowed] CPImageSet imageSet, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
+		IntPtr Constructor (string[] titleVariants, [NullAllowed] string[] subtitleVariants, [NullAllowed] CPImageSet imageSet, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
+
+		[iOS (13,0)]
+		[Export ("initWithTitleVariants:subtitleVariants:image:primaryAction:secondaryAction:duration:")]
+		IntPtr Constructor (string[] titleVariants, [NullAllowed] string[] subtitleVariants, [NullAllowed] UIImage image, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
 
 		[Export ("updateTitleVariants:subtitleVariants:")]
 		void UpdateTitleVariants (string [] newTitleVariants, string [] newSubtitleVariants);
@@ -572,6 +588,10 @@ namespace CarPlay {
 
 		[NullAllowed, Export ("imageSet", ArgumentSemantic.Copy)]
 		CPImageSet ImageSet { get; }
+
+		[iOS (13,0)]
+		[NullAllowed, Export ("image", ArgumentSemantic.Copy)]
+		UIImage Image { get; }
 
 		[Export ("primaryAction", ArgumentSemantic.Strong)]
 		CPAlertAction PrimaryAction { get; }
@@ -785,6 +805,12 @@ namespace CarPlay {
 
 		[Export ("mapButtonSafeAreaLayoutGuide")]
 		UILayoutGuide MapButtonSafeAreaLayoutGuide { get; }
+
+#if false
+// Apple is trying to use CPTemplateApplicationScene but it is not exposed. https://github.com/xamarin/maccore/issues/1822
+		[NullAllowed, Export ("templateApplicationScene", ArgumentSemantic.Weak)]
+		CPTemplateApplicationScene TemplateApplicationScene { get; set; }
+#endif
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]

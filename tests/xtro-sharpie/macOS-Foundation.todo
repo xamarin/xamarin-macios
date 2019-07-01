@@ -47,7 +47,6 @@
 !missing-field! NSHTTPCookieSameSiteStrict not bound
 !missing-field! NSURLErrorNetworkUnavailableReasonKey not bound
 !missing-protocol! NSURLSessionWebSocketDelegate not bound
-!missing-protocol-conformance! NSException should conform to NSSecureCoding
 !missing-protocol-conformance! NSOperationQueue should conform to NSProgressReporting
 !missing-selector! +NSByteCountFormatter::stringFromMeasurement:countStyle: not bound
 !missing-selector! +NSDate::now not bound

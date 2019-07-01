@@ -18478,7 +18478,7 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	partial interface NSTextContainer : NSCoding {
+	partial interface NSTextContainer : NSSecureCoding {
 		[Export ("initWithContainerSize:"), Internal]
 		[Sealed]
 		IntPtr InitWithContainerSize (CGSize size);
