@@ -24,11 +24,11 @@ namespace MonoTouchFixtures.BackgroundTasks {
 		public static void RegisterTestTasks ()
 		{
 			registered = BGTaskScheduler.Shared.Register (taskIdentifier, null, (task) => {
-				HandleBackgroudTask (task as BGProcessingTask);
+				HandleBackgroundTask (task as BGProcessingTask);
 			});
 		}
 
-		static void HandleBackgroudTask (BGProcessingTask task)
+		static void HandleBackgroundTask (BGProcessingTask task)
 		{
 			// reset the event and state that the task was completed
 			taskWasCalled = true;
@@ -56,7 +56,7 @@ namespace MonoTouchFixtures.BackgroundTasks {
 			BGTaskScheduler.Shared.Submit (request, out error);
 			Assert.IsNull (error, $"Error submiting request {error}");
 			LaunchBGTask ();
-			autoResetEvent.WaitOne ();
+			autoResetEvent.WaitOne (300);
 			Assert.True (taskWasCalled, "Called task.");
 		}
 	}
