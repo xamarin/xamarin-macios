@@ -79,11 +79,11 @@ namespace BackgroundTasks {
 	interface BGTaskScheduler {
 		[Static]
 		[Export ("sharedScheduler", ArgumentSemantic.Strong)]
-		BGTaskScheduler SharedScheduler { get; }
+		BGTaskScheduler Shared { get; }
 
 		[Advice ("This API is not available when using iOS App Extensions.")]
 		[Export ("registerForTaskWithIdentifier:usingQueue:launchHandler:")]
-		bool RegisterForTask (string identifier, [NullAllowed] DispatchQueue queue, Action<BGTask> launchHandler);
+		bool Register (string identifier, [NullAllowed] DispatchQueue queue, Action<BGTask> launchHandler);
 
 		[Export ("submitTaskRequest:error:")]
 		bool Submit (BGTaskRequest taskRequest, [NullAllowed] out NSError error);
