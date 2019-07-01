@@ -245,9 +245,12 @@ namespace AudioToolbox {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketDependencyInfoTranslation {
 		public long Packet;
-		[MarshalAs (UnmanagedType.I4)]
-		public bool IsIndependentlyDecodable;
+		uint isIndependentlyDecodable;
 		public uint NumberPrerollPackets;
+		public bool IsIndependentlyDecodable {
+			get { return isIndependentlyDecodable != 0;}
+			set { isIndependentlyDecodable =  (value)? 1U: 0U;}
+		}
 	}
 
 	public enum AudioFileMarkerType : uint // UInt32 in AudioFileMarkerType - AudioFile.h
