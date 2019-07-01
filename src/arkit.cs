@@ -609,9 +609,6 @@ namespace ARKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IARSCNViewDelegate Delegate { get; set; }
 
-		[Export ("session", ArgumentSemantic.Strong)]
-		new ARSession Session { get; set; }
-
 		[Export ("scene", ArgumentSemantic.Strong)]
 		SCNScene Scene { get; set; }
 
@@ -680,9 +677,6 @@ namespace ARKit {
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IARSKViewDelegate Delegate { get; set; }
-
-		[Export ("session", ArgumentSemantic.Strong)]
-		new ARSession Session { get; set; }
 
 		[Export ("anchorForNode:")]
 		[return: NullAllowed]
