@@ -51,8 +51,7 @@ namespace BackgroundTasks {
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface BGTask
-	{
+	interface BGTask {
 		[Export ("identifier")]
 		string Identifier { get; }
 
