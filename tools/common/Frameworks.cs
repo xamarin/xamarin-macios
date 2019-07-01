@@ -187,6 +187,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
 					{ "IncomingCallNotifications", "IncomingCallNotifications", 10,15 },
 					{ "PencilKit", "PencilKit", 10,15 },
+					{ "Speech", "Speech", 10,15 },
 				};
 			}
 			return mac_frameworks;

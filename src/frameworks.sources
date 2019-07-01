@@ -1795,6 +1795,7 @@ MAC_FRAMEWORKS =            \
 	SearchKit               \
 	Security                \
 	Social                  \
+	Speech                  \
 	StoreKit                \
 	SystemConfiguration     \
 	UserNotifications       \
