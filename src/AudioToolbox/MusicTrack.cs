@@ -270,9 +270,9 @@ namespace AudioToolbox {
 		public MusicPlayerStatus GetDestMidiEndpoint (out MidiEndpoint outEndpoint)
 		{
 			MidiEndpointRef midiHandle; 
-			var reuslt = MusicTrackGetDestMIDIEndpoint (handle, out midiHandle);
-			outEndpoint = new MidiEndpoint (midiHandle);
-			return reuslt;
+			var result = MusicTrackGetDestMIDIEndpoint (handle, out midiHandle);
+			outEndpoint = (result == MusicPlayerStatus.Success)? new MidiEndpoint (midiHandle): null;
+			return result;
 		}
 #endif
 
