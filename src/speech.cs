@@ -221,7 +221,6 @@ namespace Speech {
 
 	[iOS (10, 0), Mac (10, 15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
 	interface SFTranscription : NSCopying, NSSecureCoding {
 
 		[Export ("formattedString")]
