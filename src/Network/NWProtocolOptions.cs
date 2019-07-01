@@ -184,5 +184,17 @@ namespace Network {
 		extern static IntPtr nw_tls_copy_sec_protocol_options (IntPtr options);
 
 		public SecProtocolOptions TlsProtocolOptions => new SecProtocolOptions (nw_tls_copy_sec_protocol_options (GetCheckedHandle ()), owns: true);
+
+		//
+		// WebService options
+		//
+
+		[DllImport (Constants.NetworkLibrary)]
+		extern static IntPtr nw_ws_create_options(NWWSVersion version);
+
+		public NWProtocolOptions WebServiceOptions (NWWSVersion version)
+		{
+			new NWProtocolOptions (nw_ws_create_options (version));
+		}
 	}
 }

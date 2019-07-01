@@ -60,5 +60,9 @@ namespace Network {
 
 		public static NWProtocolDefinition TlsDefinition => new NWProtocolDefinition (nw_protocol_copy_tls_definition (), owns: true);
 
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_protocol_definition nw_protocol_copy_ws_definition ();
+
+		public static NWProtocolDefinition WebServiceDefinition => NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 	}
 }
