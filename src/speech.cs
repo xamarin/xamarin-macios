@@ -100,7 +100,6 @@ namespace Speech {
 
 	[iOS (10, 0), Mac (10, 15, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
 	interface SFSpeechRecognitionResult : NSCopying, NSSecureCoding {
 
 		[Export ("bestTranscription", ArgumentSemantic.Copy)]
