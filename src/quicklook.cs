@@ -7,6 +7,7 @@
 //
 // Copyright 2009, Novell, Inc.
 // Copyright 2012 Xamarin Inc
+// Copyright 2019 Microsoft Corporation
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -92,6 +93,14 @@ namespace QuickLook {
 		QLPreviewItem GetPreviewItem (QLPreviewController controller, nint index);
 	}
 
+	[iOS (13,0)]
+	[Native]
+	public enum QLPreviewItemEditingMode : long {
+		Disabled = 0,
+		UpdateContents,
+		CreateCopy,
+	}
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -119,6 +128,19 @@ namespace QuickLook {
 		[Export ("previewController:transitionViewForPreviewItem:"), DelegateName ("QLTransitionView"), DefaultValue (null)]
 		[return: NullAllowed]
 		UIView TransitionViewForPreviewItem (QLPreviewController controller, IQLPreviewItem item);
+
+		[iOS (13,0)]
+		[Export ("previewController:editingModeForPreviewItem:"), DelegateName("QLEditingMode"), DefaultValue ("QLPreviewItemEditingMode.Disabled")]
+		QLPreviewItemEditingMode EditingModeForPreviewItem (QLPreviewController controller, IQLPreviewItem item);
+
+		[iOS (13,0)]
+		[Export ("previewController:didUpdateContentsOfPreviewItem:"), EventArgs ("QLPreviewControllerDelegateDidUpdate")]
+		void DidUpdateContentsOfPreviewItem (QLPreviewController controller, IQLPreviewItem item);
+
+		[iOS (13,0)]
+		[Export ("previewController:didSaveEditedCopyOfPreviewItem:atURL:"), EventArgs ("QLPreviewControllerDelegateDidSave")]
+		void DidSaveEditedCopyOfPreviewItem (QLPreviewController controller, IQLPreviewItem item, NSUrl modifiedContentsUrl);
+
 #endif
 	}
 
