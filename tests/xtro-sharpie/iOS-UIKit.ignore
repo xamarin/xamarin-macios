@@ -1,10 +1,6 @@
 ## we do not (need to) redefine the tintColor at every level, it will be dispatched to the right type
 !missing-selector! UIRefreshControl::setTintColor: not bound
 !missing-selector! UIRefreshControl::tintColor not bound
-!missing-selector! UIStepper::setTintColor: not bound
-!missing-selector! UIStepper::tintColor not bound
-!missing-selector! UISwitch::setTintColor: not bound
-!missing-selector! UISwitch::tintColor not bound
 !missing-selector! UIToolbar::setTintColor: not bound
 !missing-selector! UIToolbar::tintColor not bound
 

@@ -1,0 +1,12 @@
+!missing-pinvoke! JSObjectDeletePropertyForKey is not bound
+!missing-pinvoke! JSObjectGetPropertyForKey is not bound
+!missing-pinvoke! JSObjectHasPropertyForKey is not bound
+!missing-pinvoke! JSObjectMakeDeferredPromise is not bound
+!missing-pinvoke! JSObjectSetPropertyForKey is not bound
+!missing-pinvoke! JSValueIsSymbol is not bound
+!missing-pinvoke! JSValueMakeSymbol is not bound
+!missing-selector! +JSValue::valueWithNewPromiseInContext:fromExecutor: not bound
+!missing-selector! +JSValue::valueWithNewPromiseRejectedWithReason:inContext: not bound
+!missing-selector! +JSValue::valueWithNewPromiseResolvedWithResult:inContext: not bound
+!missing-selector! +JSValue::valueWithNewSymbolFromDescription:inContext: not bound
+!missing-selector! JSValue::isSymbol not bound

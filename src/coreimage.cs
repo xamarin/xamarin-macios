@@ -5800,4 +5800,21 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIGaborGradients {
 	}
+
+	[CoreImageFilter]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[Mac (10,15, onlyOn64: true)]
+	[BaseType (typeof (CIFilter))]
+	interface CIRoundedRectangleGenerator {
+
+		[CoreImageFilterProperty ("inputExtent")]
+		CIVector Extent { get; set; }
+
+		[CoreImageFilterProperty ("inputRadius")]
+		float Radius { get; set; }
+
+		[CoreImageFilterProperty ("inputColor")]
+		CIColor Color { get; set; }
+	}
 }

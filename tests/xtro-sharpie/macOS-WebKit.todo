@@ -1,0 +1,7 @@
+!missing-field! NSReadAccessURLDocumentOption not bound
+!missing-selector! +NSAttributedString::loadFromHTMLWithData:options:completionHandler: not bound
+!missing-selector! +NSAttributedString::loadFromHTMLWithFileURL:options:completionHandler: not bound
+!missing-selector! +NSAttributedString::loadFromHTMLWithRequest:options:completionHandler: not bound
+!missing-selector! +NSAttributedString::loadFromHTMLWithString:options:completionHandler: not bound
+!missing-selector! WKPreferences::isFraudulentWebsiteWarningEnabled not bound
+!missing-selector! WKPreferences::setFraudulentWebsiteWarningEnabled: not bound
