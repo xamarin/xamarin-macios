@@ -769,13 +769,13 @@ namespace ARKit {
 
 		[iOS (13,0)]
 		[Export ("raycast:")]
-		ARRaycastResult[] PerformRaycast (ARRaycastQuery query);
+		ARRaycastResult[] Raycast (ARRaycastQuery query);
 
 		[iOS (13,0)]
 		[Async]
 		[Export ("trackedRaycast:updateHandler:")]
 		[return: NullAllowed]
-		ARTrackedRaycast PerformTrackedRaycast (ARRaycastQuery query, Action<NSArray<ARRaycastResult>> updateHandler);
+		ARTrackedRaycast TrackedRaycast (ARRaycastQuery query, Action<NSArray<ARRaycastResult>> updateHandler);
 
 		[iOS (13,0)]
 		[Export ("updateWithCollaborationData:")]
