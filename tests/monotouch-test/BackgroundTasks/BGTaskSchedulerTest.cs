@@ -24,9 +24,11 @@ namespace MonoTouchFixtures.BackgroundTasks {
 
 		public static void RegisterTestTasks ()
 		{
-			registered = BGTaskScheduler.Shared.Register (taskIdentifier, null, (task) => {
-				HandleBackgroundTask (task as BGProcessingTask);
-			});
+			if (TestRuntime.CheckXcodeVersion (11, 0)) {
+				registered = BGTaskScheduler.Shared.Register (taskIdentifier, null, (task) => {
+					HandleBackgroundTask (task as BGProcessingTask);
+				});
+			}
 		}
 
 		static void HandleBackgroundTask (BGProcessingTask task)
