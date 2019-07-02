@@ -15,19 +15,13 @@ using NSImage = Foundation.NSObject; // help [NoiOS] and [NoTV]
 using AppKit;
 #endif
 
-// TODO Check what to do with typedef things like below.
-// Uniquely identify a resource data request
-// -typedef int32_t PHAssetResourceDataRequestID PHOTOS_AVAILABLE_IOS_TVOS(9_0, 10_0);
-// +typedef int32_t PHAssetResourceDataRequestID;
-//  static const PHAssetResourceDataRequestID PHInvalidAssetResourceDataRequestID = 0;
-
 namespace Photos
 {
 	[iOS (8,0)]
 	[TV (10,0)]
 	[Mac (10,12)]
 	[BaseType (typeof (NSObject))]
-	interface PHAdjustmentData {
+	interface PHAdjustmentData : NSCoding, NSSecureCoding {
 
 		[Export ("initWithFormatIdentifier:formatVersion:data:")]
 		IntPtr Constructor (string formatIdentifier, string formatVersion, NSData data);
@@ -134,7 +128,8 @@ namespace Photos
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Will be removed in a future release")]
 		[Unavailable (PlatformName.UIKitForMac)]
 		[NoMac]
-		[Static, Advice ("This API is not available when using UIKit on macOS.")]
+		[Static] 
+		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("fetchAssetsWithALAssetURLs:options:")]
 		PHFetchResult FetchAssets (NSUrl[] assetUrls, [NullAllowed] PHFetchOptions options);
 
@@ -310,7 +305,7 @@ namespace Photos
 	interface PHAssetContentEditingInputExtensions {
 
 		// TODO does this need an async attribute? 
-		[Async]
+		// [Async]
 		[Export ("requestContentEditingInputWithOptions:completionHandler:")]
 		nuint RequestContentEditingInput ([NullAllowed] PHContentEditingInputRequestOptions options, PHContentEditingHandler completionHandler);
 
@@ -319,18 +314,18 @@ namespace Photos
 	}
 
 	// TODO this was not changed in the diffs, but did not find this in the file
-	[TV (10,0), Mac (10,15, onlyOn64: true), iOS (8,0)]
-	[Category]
-	[BaseType (typeof (PHContentEditingOutput))]
-	interface PHContentEditingOutput_PHAssetChangeRequest {
+	// [TV (10,0), Mac (10,15, onlyOn64: true), iOS (8,0)]
+	// [Category]
+	// [BaseType (typeof (PHContentEditingOutput))]
+	// interface PHContentEditingOutput_PHAssetChangeRequest {
 
-		[Export ("initWithPlaceholderForCreatedAsset:")]
-		IntPtr Constructor (PHObjectPlaceholder placeholderForCreatedAsset);
-	}
+	// 	[Export ("initWithPlaceholderForCreatedAsset:")]
+	// 	IntPtr Constructor (PHObjectPlaceholder placeholderForCreatedAsset);
+	// }
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,15, onlyOn64: true)]
+	[Mac (10,13, onlyOn64: true)]
 	[BaseType (typeof (PHChangeRequest))]
 	[DisableDefaultCtor] // fails when calling ToString (see below) and there are (static) API to create them
 	// NSInternalInconsistencyException Reason: This method can only be called from inside of -[PHPhotoLibrary performChanges:] or -[PHPhotoLibrary performChangeAndWait:]
@@ -450,28 +445,15 @@ namespace Photos
 	[TV (13,0)]
 	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
-	interface PHChangeRequest {}
+	[DisableDefaultCtor]
+	interface PHChangeRequest {
 
-	// @interface PHCloudIdentifier : NSObject <NSSecureCoding>
-	[Unavailable (PlatformName.UIKitForMac)]
-	[NoTV, NoiOS, Mac (10,13, onlyOn64: true)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
-	[BaseType (typeof(NSObject))]
-	interface PHCloudIdentifier : INSSecureCoding {
-
-		[Static]
-		[Export ("notFoundIdentifier")]
-		PHCloudIdentifier NotFoundIdentifier { get; }
-
-		[Export ("stringValue")]
-		string StringValue { get; }
-
-		[Export ("initWithStringValue:")]
-		IntPtr Constructor (string stringValue);
+		[Internal]
+		[Export ("init")]
+		IntPtr Constructor ();
 	}
 
 	[Mac (10,13, onlyOn64 : true)]
->>>>>>> first run through but errors
 	delegate void PHChangeDetailEnumerator (nuint fromIndex, nuint toIndex);
 
 	[iOS (8,0)]
@@ -757,11 +739,11 @@ namespace Photos
 		PHAdjustmentData AdjustmentData { get; }
 
 		[Export ("displaySizeImage", ArgumentSemantic.Strong)]
-// #if MONOMAC
-// 		NSImage DisplaySizeImage { get; }							TODO Remove!!!
-// #else
+#if MONOMAC
+		NSImage DisplaySizeImage { get; }							// TODO Remove!!!
+#else
 		UIImage DisplaySizeImage { get; }
-// #endif
+#endif
 
 		[Export ("fullSizeImageURL", ArgumentSemantic.Copy)]
 		NSUrl FullSizeImageUrl { get; }
@@ -769,8 +751,7 @@ namespace Photos
 		[Export ("fullSizeImageOrientation")]
 		CoreImage.CIImageOrientation FullSizeImageOrientation { get; }
 
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Availability (Deprecated = Platform.iOS_9_0, Message="Use 'AudiovisualAsset' property instead.")]
 		[NoMac]
 		[NullAllowed, Export ("avAsset", ArgumentSemantic.Strong)]
 		AVAsset AvAsset { get; }
@@ -793,7 +774,7 @@ namespace Photos
 	[TV (10,0)]
 	[Mac (10,12)]
 	[BaseType (typeof (NSObject))]
-	interface PHContentEditingOutput {
+	interface PHContentEditingOutput : NSCoding, NSSecureCoding {
 
 		[Export ("initWithContentEditingInput:")]
 		IntPtr Constructor (PHContentEditingInput contentEditingInput);
@@ -853,7 +834,7 @@ namespace Photos
 	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling 'description' and seems to be only returned from iOS (not user created)
-	interface PHFetchResult : NSCopying, NSFastEnumeration {
+	interface PHFetchResult : NSCopying {
 
 		[Export ("count")]
 		nint Count { get; }
@@ -983,7 +964,7 @@ namespace Photos
 	delegate void PHImageManagerRequestAvAssetHandler (AVAsset asset, AVAudioMix audioMix, NSDictionary info);
 #endif
 	delegate void PHImageManagerRequestLivePhoto (PHLivePhoto livePhoto, NSDictionary info);
-	delegate void PHImageManagerRequestImageDataHandler ([Nullable] NSData imageData, [Nullable] string dataUTI, CGImagePropertyOrientation orientation, [Nullable] NSDictionary info);
+	delegate void PHImageManagerRequestImageDataHandler ([NullAllowed] NSData imageData, [NullAllowed] string dataUTI, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary info);
 
 	[iOS (8,0)]
 	[TV (10,0)]
@@ -1139,81 +1120,28 @@ namespace Photos
 		[Export ("performChangesAndWait:error:")]
 		bool PerformChangesAndWait (Action changeHandler, out NSError error);
 
-		// [Export ("registerChangeObserver:")]
-		// void RegisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
+		[Export ("registerChangeObserver:")]
+		void RegisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
 
-		// [Export ("unregisterChangeObserver:")]
-		// void UnregisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
+		[Export ("unregisterChangeObserver:")]
+		void UnregisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
 
 		[TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
 		[NullAllowed, Export ("unavailabilityReason", ArgumentSemantic.Strong)]
 		NSError UnavailabilityReason { get; }
 
-		[Export ("registerChangeObserver:")]
-		void RegisterChangeObserver (PHPhotoLibraryChangeObserver observer);
+		// [Export ("registerChangeObserver:")]
+		// void RegisterChangeObserver (PHPhotoLibraryChangeObserver observer);
 
-		[Export ("unregisterChangeObserver:")]
-		void UnregisterChangeObserver (PHPhotoLibraryChangeObserver observer);
-	}
-
-	[Unavailable (PlatformName.UIKitForMac)]
-	[NoTV, NoiOS, Mac (10,13)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
-	[BaseType (typeof (PHAssetCollection))]
-	interface PHProject {
-
-		[Export ("projectExtensionData")]
-		NSData ProjectExtensionData { get; }
-
-		[Export ("hasProjectPreview")]
-		bool HasProjectPreview { get; }
-	}
-
-	[Unavailable (PlatformName.UIKitForMac)]
-	[NoTV, NoiOS, Mac (10,13)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
-	[BaseType (typeof(PHChangeRequest))]
-	interface PHProjectChangeRequest {
-
-		[Export ("initWithProject:")]
-		IntPtr Constructor (PHProject project);
-
-		[Export ("title")]
-		string Title { get; set; }
-
-		[Export ("projectExtensionData", ArgumentSemantic.Copy)]
-		NSData ProjectExtensionData { get; set; }
-
-		[Introduced (PlatformName.MacOSX, 10, 13)]
-		[Deprecated (PlatformName.MacOSX, 10, 14)]
-		[Export ("setKeyAsset:")]
-		void SetKeyAsset ([NullAllowed] PHAsset keyAsset);
-
-		[Export ("setProjectPreviewImage:")]
-		void SetProjectPreviewImage (UIImage previewImage);
-
-		[Mac (10,14, onlyOn64: true)]
-		[Export ("removeAssets:")]
-		void RemoveAssets (NSFastEnumeration assets);
-	}
-
-	// @interface CloudIdentifiers (PHPhotoLibrary)
-	[Unavailable (PlatformName.UIKitForMac)]
-	[NoTV, NoiOS, Mac (10,13)]
-	[Advice ("This API is not available when using UIKit on macOS."), Category]
-	[BaseType (typeof(PHPhotoLibrary))]
-	interface PHPhotoLibrary_CloudIdentifiers {
-
-		[Export ("localIdentifiersForCloudIdentifiers:")]
-		string[] LocalIdentifiersForCloudIdentifiers (PHCloudIdentifier[] cloudIdentifiers);
-
-		[Export ("cloudIdentifiersForLocalIdentifiers:")]
-		PHCloudIdentifier[] CloudIdentifiersForLocalIdentifiers (string[] localIdentifiers);
+		// [Export ("unregisterChangeObserver:")]
+		// void UnregisterChangeObserver (PHPhotoLibraryChangeObserver observer);
 	}
 
 	[Mac (10,13)]
 	[NoTV][NoiOS]
 	[Category]
+	[Unavailable (PlatformName.UIKitForMac)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (PHPhotoLibrary))]
 	interface PHPhotoLibrary_CloudIdentifiers {
 
@@ -1227,52 +1155,52 @@ namespace Photos
 		NSString PHLocalIdentifierNotFound { get; }
 	}
 
-// 	[iOS (9,1)]
-// 	[TV (10,0)]
-// #if MONOMAC
-// 	[DisableDefaultCtor] // NS_UNAVAILABLE
-// #endif
-// 	[Mac (10,12, onlyOn64 : true)]
-// 	[BaseType (typeof(NSObject))]
-// 	interface PHLivePhoto
-// #if !MONOMAC
-// 	: NSSecureCoding, NSCopying
-// #endif
-// 	{
-// 		[Export ("size")]
-// 		CGSize Size { get; }
-
-// #if !MONOMAC
-// 		[Static]
-// 		[Export ("requestLivePhotoWithResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:")]
-// 		int RequestLivePhoto (NSUrl[] fileUrls, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, Action<PHLivePhoto, NSDictionary> resultHandler);
-
-// 		[Static]
-// 		[Export ("cancelLivePhotoRequestWithRequestID:")]
-// 		void CancelLivePhotoRequest (int requestID);
-// #endif
-// 	}
-
-	delegate void PHLivePhotoRequestLivePhotoHandler ([Nullable] PHLivePhoto livePhoto, NSDictionary info);
-
-	[TV (10,0), Mac (10,12), iOS (9,1)]
+	[iOS (9,1)]
+	[TV (10,0)]
+#if MONOMAC
+	[DisableDefaultCtor] // NS_UNAVAILABLE
+#endif
+	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface PHLivePhoto : NSCopying, NSSecureCoding {
-
+	interface PHLivePhoto
+#if !MONOMAC
+	: NSSecureCoding, NSCopying
+#endif
+	{
 		[Export ("size")]
 		CGSize Size { get; }
 
-		[Mac (10,15, onlyOn64: true)]
+#if !MONOMAC
 		[Static]
 		[Export ("requestLivePhotoWithResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:")]
-		int RequestLivePhoto (NSUrl[] fileURLs, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, PHLivePhotoRequestLivePhotoHandler resultHandler);
+		int RequestLivePhoto (NSUrl[] fileUrls, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, PHLivePhotoRequestLivePhotoHandler resultHandler);
 
-		[Mac (10,15, onlyOn64: true)]
 		[Static]
 		[Export ("cancelLivePhotoRequestWithRequestID:")]
 		void CancelLivePhotoRequest (int requestID);
+#endif
 	}
+
+	[iOS (9,1)]
+	delegate void PHLivePhotoRequestLivePhotoHandler ([NullAllowed] PHLivePhoto livePhoto, NSDictionary info);
+
+	// [TV (10,0),Mac (10,15, onlyOn64: true), iOS (9,1)]
+	// [BaseType (typeof(NSObject))]
+	// [DisableDefaultCtor]
+	// interface PHLivePhoto : NSCopying, NSSecureCoding {
+
+	// 	[Mac (10,12, onlyOn64: true)]
+	// 	[Export ("size")]
+	// 	CGSize Size { get; }
+
+	// 	[Static]
+	// 	[Export ("requestLivePhotoWithResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:")]
+	// 	int RequestLivePhoto (NSUrl[] fileURLs, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, PHLivePhotoRequestLivePhotoHandler resultHandler);
+
+	// 	[Static]
+	// 	[Export ("cancelLivePhotoRequestWithRequestID:")]
+	// 	void CancelLivePhotoRequest (int requestID);
+	// }
 
 	[iOS (8,0)]
 	[TV (10,0)]
@@ -1436,6 +1364,8 @@ namespace Photos
 
 	[Mac (10,13)]
 	[NoiOS][NoTV]
+	[Unavailable (PlatformName.UIKitForMac)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (PHAssetCollection))]
 	interface PHProject {
 
@@ -1448,7 +1378,9 @@ namespace Photos
 	}
 
 	[Mac (10,13)]
+	[Unavailable (PlatformName.UIKitForMac)]
 	[NoiOS][NoTV]
+	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	interface PHProjectChangeRequest {
 
@@ -1461,6 +1393,7 @@ namespace Photos
 		[Export ("projectExtensionData", ArgumentSemantic.Copy)]
 		NSData ProjectExtensionData { get; set; }
 
+		[Introduced (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("setKeyAsset:")]
 		void SetKeyAsset ([NullAllowed] PHAsset keyAsset);
@@ -1476,6 +1409,8 @@ namespace Photos
 
 	[Mac (10,13)]
 	[NoiOS][NoTV]
+	[Unavailable (PlatformName.UIKitForMac)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHCloudIdentifier : NSSecureCoding {

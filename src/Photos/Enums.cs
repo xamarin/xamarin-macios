@@ -61,7 +61,7 @@ namespace Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,15, onlyOn64: true)]
 	[Native]
 	public enum PHVideoRequestOptionsDeliveryMode : long {
 		Automatic = 0,
