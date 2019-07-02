@@ -191,7 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EmbeddedResources\" />
-        <Folder Include="..\monotouch-test\BundleResourceResources\Base.lproj\" />
+	<Folder Include="..\monotouch-test\BundleResourceResources\Base.lproj\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
