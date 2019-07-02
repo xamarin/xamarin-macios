@@ -51,7 +51,7 @@ namespace Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[NoMac]
+	[Mac (10,15, onlyOn64: true)]
 	[Native]
 	public enum PHVideoRequestOptionsVersion : long {
 		Current = 0,
@@ -76,6 +76,11 @@ namespace Photos
 	[Mac (10,12)]
 	[Native]
 	public enum PHCollectionListType : long {
+		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
+		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Unavailable (PlatformName.MacOSX)]
 		MomentList  = 1,
 		Folder      = 2,
 		SmartFolder = 3
@@ -86,7 +91,18 @@ namespace Photos
 	[Mac (10,12)]
 	[Native]
 	public enum PHCollectionListSubtype : long {
+		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
+		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Unavailable (PlatformName.MacOSX)]
 		MomentListCluster = 1,
+
+		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
+		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Unavailable (PlatformName.MacOSX)]
 		MomentListYear = 2,
 
 		RegularFolder = 100,
@@ -114,7 +130,7 @@ namespace Photos
 	[Mac (10,12)]
 	[Native]
 	public enum PHCollectionEditOperation : long {
-		None             = 0,
+		// None             = 0,
 		DeleteContent    = 1,
 		RemoveContent    = 2,
 		AddContent       = 3,
@@ -132,6 +148,12 @@ namespace Photos
 	public enum PHAssetCollectionType : long {
 		Album      = 1,
 		SmartAlbum = 2,
+
+		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
+		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Unavailable (PlatformName.MacOSX)]
 		Moment     = 3
 	}
 
@@ -166,10 +188,13 @@ namespace Photos
 		SmartAlbumDepthEffect   = 212,
 		[iOS (10,3), TV (10,2)][Mac (10,13)]
 		SmartAlbumLivePhotos = 213,
-		[iOS (11,0)][TV(11,0)][NoMac]
+		[iOS (11,0)][TV(11,0)][Mac (10,15, onlyOn64 : true)]
 		SmartAlbumAnimated = 214,
-		[iOS (11,0)][TV(11,0)][NoMac]
+		[iOS (11,0)][TV(11,0)][Mac (10,15, onlyOn64 : true)]
 		SmartAlbumLongExposures = 215,
+		[iOS (13,0)][TV(13,0)][Mac (10,15, onlyOn64 : true)]
+		SmartAlbumUnableToUpload = 216,
+
 
 #if XAMCORE_2_0
 		Any           = Int64.MaxValue
@@ -212,14 +237,15 @@ namespace Photos
 		None               = 0,
 		PhotoPanorama      = (1 << 0),
 		PhotoHDR           = (1 << 1),
+		[iOS (9,0)]
 		Screenshot         = (1 << 2),
+		[iOS (9,1)]
 		PhotoLive          = (1 << 3),
-		[iOS (10,2), TV (10,1)]
+		[iOS (10,2), TV (10,1), Mac (10,12,2, onlyOn64 : true)]
 		PhotoDepthEffect   = (1 << 4),
 		VideoStreamed      = (1 << 16),
 		VideoHighFrameRate = (1 << 17),
 		VideoTimelapse     = (1 << 18),
-			
 	}
 
 	// NSUInteger -> PhotosTypes.h
@@ -246,8 +272,7 @@ namespace Photos
 	[Mac (10,12)]
 	[TV (10,0)]
 	[Native]
-	public enum PHAssetResourceType : long
-	{
+	public enum PHAssetResourceType : long {
 		Photo = 1,
 		Video = 2,
 		Audio = 3,
@@ -256,7 +281,14 @@ namespace Photos
 		FullSizeVideo = 6,
 		AdjustmentData = 7,
 		AdjustmentBasePhoto = 8,
-		PairedVideo = 9
+		[iOS (9,1)]
+		PairedVideo = 9,
+		[Mac (10,15, onlyOn64 : true), iOS (10,0)]
+		FullSizePairedVideo = 10,
+		[Mac (10,15, onlyOn64 : true), iOS (10,0)]
+		AdjustmentBasePairedVideo = 11,
+		[Mac (10,15, onlyOn64 : true), iOS (13,0)]
+		AdjustmentBaseVideo = 12,
 	}
 
 	[iOS (9,0)]
@@ -350,5 +382,16 @@ namespace Photos
 		SdofImage = 7,
 		SdofPlusOriginal_SdofImage = 8,
 		SdofPlusOriginal_OriginalImage = 9,
+	}
+
+	[ErrorDomain ("PHPhotosErrorDomain")]
+	[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Native]
+	public enum PHPhotosError : long {
+		Invalid = -1,
+		UserCancelled = 3072,
+		LibraryVolumeOffline = 3114,
+		RelinquishingLibraryBundleToWriter = 3142,
+		SwitchingSystemPhotoLibrary = 3143
 	}
 }
