@@ -17,6 +17,7 @@ namespace BackgroundTasks {
 	[Abstract]
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
 	[BaseType (typeof (BGTaskRequest))]
+	[DisableDefaultCtor]
 	interface BGAppRefreshTaskRequest {
 		[Export ("initWithIdentifier:")]
 		IntPtr Constructor (string identifier);
@@ -24,6 +25,7 @@ namespace BackgroundTasks {
 
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
 	[BaseType (typeof (BGTaskRequest))]
+	[DisableDefaultCtor]
 	interface BGProcessingTaskRequest {
 		[Export ("initWithIdentifier:")]
 		IntPtr Constructor (string identifier);
@@ -64,11 +66,13 @@ namespace BackgroundTasks {
 
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
 	[BaseType (typeof (BGTask))]
+	[DisableDefaultCtor]
 	interface BGAppRefreshTask {
 	}
 
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
 	[BaseType (typeof (BGTask))]
+	[DisableDefaultCtor]
 	interface BGProcessingTask {
 	}
 

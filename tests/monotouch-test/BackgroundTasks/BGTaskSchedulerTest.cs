@@ -1,3 +1,4 @@
+#if __IOS__ || __TVOS__
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -48,6 +49,7 @@ namespace MonoTouchFixtures.BackgroundTasks {
 		public void SubmitTaskRequestTest ()
 		{
 			TestRuntime.AssertDevice ();
+			TestRuntime.AssertXcodeVersion (11, 0);
 			Assert.True (registered, "Task was not registered.");
 			// get the shared scheduler, create a request and submit it, this will be called asap
 			// and the autoreset event set.
@@ -61,3 +63,4 @@ namespace MonoTouchFixtures.BackgroundTasks {
 		}
 	}
 }
+#endif
