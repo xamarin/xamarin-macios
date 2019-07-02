@@ -640,6 +640,12 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "BGTaskScheduler":
+				switch (selectorName) {
+				case "sharedScheduler":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake

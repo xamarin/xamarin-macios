@@ -315,6 +315,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 				{ "IncomingCallNotifications", "IncomingCallNotifications", 13, 0 },
+				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 				{ "PencilKit", "PencilKit", 13, 0 },
 			};
 		}
@@ -448,6 +449,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "AuthenticationServices", "AuthenticationServices", 13,0 },
 					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
+					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 				};
 			}
 			return tvos_frameworks;
