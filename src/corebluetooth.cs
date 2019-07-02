@@ -7,6 +7,8 @@
 //
 // Copyright 2011-2013 Xamarin Inc
 //
+using System.ComponentModel;
+
 using ObjCRuntime;
 using Foundation;
 using System;
@@ -43,6 +45,59 @@ namespace CoreBluetooth {
 	interface CBManager {
 		[Export ("state", ArgumentSemantic.Assign)]
 		CBManagerState State { get; }
+
+		[iOS (13,0), TV (13,0), Watch (6,0), Mac (10, 15)]
+		[Export ("authorization", ArgumentSemantic.Assign)]
+		CBManagerAuthorization Authorization { get; }
+	}
+
+	[iOS (13,0), TV (13,0), Watch (6,0)]
+	[StrongDictionary ("CBConnectionEventMatchingOptionsKeys")]
+	interface CBConnectionEventMatchingOptions {
+		NSUuid [] PeripheralUuids { get; set; }
+		CBUUID [] ServiceUuids { get; set;}
+	}
+
+	[iOS (13,0), TV (13,0), Watch (6,0)]
+	[Static]
+	[Internal]
+	interface CBConnectionEventMatchingOptionsKeys {
+		[Field ("CBConnectionEventMatchingOptionPeripheralUUIDs")]
+		NSString PeripheralUuidsKey { get; }
+		[Field ("CBConnectionEventMatchingOptionServiceUUIDs")]
+		NSString ServiceUuidsKey { get; }
+	}
+
+	[StrongDictionary ("CBConnectPeripheralOptionsKeys")]
+	interface CBConnectPeripheralOptions {
+		[Mac (10,13)] [iOS (6,0)]
+		bool NotifyOnConnection { get; set; }
+		bool NotifyOnDisconnection { get; set; }
+		[Mac (10,13)][iOS (6,0)]
+		bool NotifyOnNotification { get; set; }
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		bool EnableTransportBridging { get; set; }
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		bool RequiresAncs { get; set; }
+	}
+
+	[Static]
+	[Internal]
+	interface CBConnectPeripheralOptionsKeys {
+		[Mac (10,13)] [iOS (6,0)]
+		[Field ("CBConnectPeripheralOptionNotifyOnConnectionKey")]
+		NSString NotifyOnConnectionKey { get; }
+		[Field ("CBConnectPeripheralOptionNotifyOnDisconnectionKey")]
+		NSString NotifyOnDisconnectionKey { get; }
+		[Mac (10,13)][iOS (6,0)]
+		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
+		NSString NotifyOnNotificationKey { get; }
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Field ("CBConnectPeripheralOptionEnableTransportBridgingKey")]
+		NSString EnableTransportBridgingKey { get; }
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Field ("CBConnectPeripheralOptionRequiresANCS")]
+		NSString RequiresAncsKey {get; }
 	}
 
 	[Watch (4,0)]
@@ -92,8 +147,12 @@ namespace CoreBluetooth {
 		[Export ("stopScan")]
 		void StopScan ();
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("connectPeripheral:options:")]
 		void ConnectPeripheral (CBPeripheral peripheral, [NullAllowed] NSDictionary options);
+
+		[Wrap ("ConnectPeripheral (peripheral, options?.Dictionary)")]
+		void ConnectPeripheral (CBPeripheral peripheral, [NullAllowed] CBConnectPeripheralOptions options);
 
 		[Export ("cancelPeripheralConnection:")]
 		void CancelPeripheralConnection (CBPeripheral peripheral);
@@ -101,14 +160,17 @@ namespace CoreBluetooth {
 		[Field ("CBCentralManagerScanOptionAllowDuplicatesKey")]
 		NSString ScanOptionAllowDuplicatesKey { get; }
 
+		[Obsolete ("Use 'CBConnectPeripheralOptions' instead.")]
 		[Field ("CBConnectPeripheralOptionNotifyOnDisconnectionKey")]
 		NSString OptionNotifyOnDisconnectionKey { get; }
 
+		[Obsolete ("Use 'CBConnectPeripheralOptions' instead.")]
 		[Mac (10,13)]
 		[iOS (6,0)]
 		[Field ("CBConnectPeripheralOptionNotifyOnConnectionKey")]
 		NSString OptionNotifyOnConnectionKey { get; }
 
+		[Obsolete ("Use 'CBConnectPeripheralOptions' instead.")]
 		[Mac (10,13)]
 		[iOS (6,0)]
 		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
@@ -159,6 +221,20 @@ namespace CoreBluetooth {
 		[Mac (10,13)]
 		[Export ("isScanning")]
 		bool IsScanning { get; }
+
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Static]
+		[Export ("supportsFeatures:")]
+		bool SupportsFeatures (CBCentralManagerFeature features);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Export ("registerForConnectionEventsWithOptions:")]
+		void RegisterForConnectionEvents ([NullAllowed] NSDictionary options);
+
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Wrap ("RegisterForConnectionEvents (options?.Dictionary)")]
+		void RegisterForConnectionEvents ([NullAllowed] CBConnectionEventMatchingOptions options);
 	}
 
 	[Watch (4,0)]
@@ -276,6 +352,14 @@ namespace CoreBluetooth {
 		
 		[Export ("centralManager:willRestoreState:"), EventArgs ("CBWillRestore")]
 		void WillRestoreState (CBCentralManager central, NSDictionary dict);
+
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Export ("centralManager:connectionEventDidOccur:forPeripheral:"), EventArgs ("CBPeripheralConnectionEvent")]
+		void ConnectionEventDidOccur (CBCentralManager central, CBConnectionEvent connectionEvent, CBPeripheral peripheral);
+
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[Export ("centralManager:didUpdateANCSAuthorizationForPeripheral:"), EventArgs ("CBAncsAuthorizationUpdate")]
+		void DidUpdateAncsAuthorization (CBCentralManager central, CBPeripheral peripheral);
 	}
 
 	[Watch (4,0)]
@@ -486,6 +570,10 @@ namespace CoreBluetooth {
 		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
 		[Export ("openL2CAPChannel:")]
 		void OpenL2CapChannel (ushort psm);
+
+		[iOS (13, 0), TV (13,0), Watch (6,0)]
+		[Export ("ancsAuthorized")]
+		bool AncsAuthorized { get; }
 	}
 
 	[Watch (4,0)]
@@ -858,6 +946,8 @@ namespace CoreBluetooth {
 		NSString RestoredStateAdvertisementDataKey { get; }
 
 #if !MONOMAC || !XAMCORE_4_0
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CBManager.Authorization' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'CBManager.Authorization' instead.")]
 		[iOS (7,0)]
 		[Static]
 		[Export ("authorizationStatus")]
