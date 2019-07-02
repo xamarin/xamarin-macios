@@ -38,11 +38,9 @@
 !missing-protocol! NSCollectionLayoutVisibleItem not bound
 !missing-protocol! NSTextCheckingClient not bound
 !missing-protocol! NSTextInputTraits not bound
-!missing-protocol-conformance! NSLayoutManager should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextAlternatives should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextAttachment should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextBlock should conform to NSSecureCoding
-!missing-protocol-conformance! NSTextContainer should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextList should conform to NSSecureCoding
 !missing-selector! +NSBindingSelectionMarker::defaultPlaceholderForMarker:onClass:withBinding: not bound
 !missing-selector! +NSBindingSelectionMarker::setDefaultPlaceholder:forMarker:onClass:withBinding: not bound

@@ -3938,7 +3938,7 @@ namespace Foundation
 	[BaseType (typeof (NSObject))]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
-	interface NSException : NSCoding, NSCopying {
+	interface NSException : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithName:reason:userInfo:")]
 		IntPtr Constructor (string name, string reason, [NullAllowed] NSDictionary userInfo);

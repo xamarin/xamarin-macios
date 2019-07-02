@@ -1,7 +1,0 @@
-!missing-selector! AUAudioUnit::deleteUserPreset:error: not bound
-!missing-selector! AUAudioUnit::isLoadedInProcess not bound
-!missing-selector! AUAudioUnit::presetStateFor:error: not bound
-!missing-selector! AUAudioUnit::saveUserPreset:error: not bound
-!missing-selector! AUAudioUnit::setParameterTree: not bound
-!missing-selector! AUAudioUnit::supportsUserPresets not bound
-!missing-selector! AUAudioUnit::userPresets not bound

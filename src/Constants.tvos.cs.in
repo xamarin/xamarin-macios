@@ -90,6 +90,7 @@ namespace ObjCRuntime {
 		// tvOS 13.0
 		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
 		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
+		public const string BackgroundTasksLibrary = "/System/Library/Frameworks/BackgroundTasks.framework/BackgroundTasks";
 
 	}
 }

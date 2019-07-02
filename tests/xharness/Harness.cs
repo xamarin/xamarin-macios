@@ -689,6 +689,13 @@ namespace xharness
 			}
 		}
 		
+		public bool InCI {
+			get {
+				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
+				return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+			}
+		}
+
 		public bool UseGroupedApps {
 			get {
 				var groupApps = Environment.GetEnvironmentVariable ("BCL_GROUPED_APPS");

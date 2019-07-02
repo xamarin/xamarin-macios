@@ -162,5 +162,6 @@ namespace MonoMac {
 		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
 		public const string IncomingCallNotificationsLibrary = "/System/Library/Frameworks/IncomingCallNotifications.framework/IncomingCallNotifications";
 		public const string PencilKitLibrary = "/System/Library/Frameworks/PencilKit.framework/PencilKit";
+		public const string SpeechLibrary = "/System/Library/Frameworks/Speech.framework/Speech";
 	}
 }

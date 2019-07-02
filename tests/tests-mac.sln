@@ -13,11 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuiUnit_NET_4_5", "..\exter
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac", "linker\mac\dont link\dont link-mac.csproj", "{78831857-A261-8EE0-A5F6-33D2628DE5D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apitest-unifiedXM45", "apitest\apitest-unifiedXM45.csproj", "{EF5231F6-E06A-BC8A-9B5C-181E2AC5EBBC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apitest", "apitest\apitest.csproj", "{EF5231F6-E06A-BC8A-9B5C-181E2AC5EBBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "introspection-mac", "introspection\Mac\introspection-mac.csproj", "{E0E84B58-C333-1BF3-D1EC-42EE3EA0D071}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link-mac-unifiedXM45", "linker\mac\dont link\dont link-mac-unifiedXM45.csproj", "{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link all-mac", "linker\mac\link all\link all-mac.csproj", "{4C943B12-C5AF-4CD4-B583-B4011D13CAAB}"
 EndProject
@@ -131,18 +129,6 @@ Global
 		{E0E84B58-C333-1BF3-D1EC-42EE3EA0D071}.Debug|x86.Build.0 = Debug|x86
 		{E0E84B58-C333-1BF3-D1EC-42EE3EA0D071}.Release|x86.ActiveCfg = Release|x86
 		{E0E84B58-C333-1BF3-D1EC-42EE3EA0D071}.Release|x86.Build.0 = Release|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.Debug|Any CPU.Build.0 = Debug|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.Release|Any CPU.ActiveCfg = Release|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.Release|Any CPU.Build.0 = Release|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.Default|Any CPU.ActiveCfg = Debug|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.Default|Any CPU.Build.0 = Debug|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.AppStore|Any CPU.ActiveCfg = Debug|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.AppStore|Any CPU.Build.0 = Debug|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.Debug|x86.ActiveCfg = Debug|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.Debug|x86.Build.0 = Debug|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.Release|x86.ActiveCfg = Release|x86
-		{3E867194-BFE6-E5EC-F39F-63AF6A5304FF}.Release|x86.Build.0 = Release|x86
 		{4C943B12-C5AF-4CD4-B583-B4011D13CAAB}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{4C943B12-C5AF-4CD4-B583-B4011D13CAAB}.Debug|Any CPU.Build.0 = Debug|x86
 		{4C943B12-C5AF-4CD4-B583-B4011D13CAAB}.Release|Any CPU.ActiveCfg = Debug|x86

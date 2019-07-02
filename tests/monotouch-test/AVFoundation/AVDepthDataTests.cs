@@ -38,6 +38,9 @@ namespace MonoTouchFixtures.AVFoundation {
 			var imageSource = CGImageSource.FromData (imgdata);
 			Assert.NotNull (imageSource, "imageSource");
 
+			// fetching the image count works around a crash in CopyAuxiliaryDataInfo on macOS 10.15 (https://github.com/xamarin/maccore/issues/1802).
+			Assert.AreNotEqual (0, imageSource.ImageCount, "ImageCount");
+
 			var info = imageSource.CopyAuxiliaryDataInfo (0, CGImageAuxiliaryDataType.Disparity);
 			Assert.NotNull (info, "info");
 

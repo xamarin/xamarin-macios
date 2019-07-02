@@ -7391,7 +7391,7 @@ namespace MetalPerformanceShaders {
 	[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MPSNNNeuronDescriptor : NSCopying {
+	interface MPSNNNeuronDescriptor : NSCopying, NSSecureCoding {
 
 		[Export ("neuronType", ArgumentSemantic.Assign)]
 		MPSCnnNeuronType NeuronType { get; set; }

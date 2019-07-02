@@ -113,6 +113,11 @@ namespace Introspection {
 			case "MonoMac.Growl":
 			case "Growl":
 				return true;
+			case "QTKit":
+				// QTKit is gone in 10.15.
+				if (Mac.CheckSystemVersion (10, 15))
+					return true;
+				break;
 			}
 
 			return base.Skip (type);
@@ -193,6 +198,13 @@ namespace Introspection {
 					break;
 				case "MPSImageDescriptor":
 					if (!Mac.CheckSystemVersion (10, 14)) // Likely to be fixed when we do MPS binding
+						return true;
+					break;
+				case "SFSafariPage":
+				case "SFSafariTab":
+				case "SFSafariToolbarItem":
+				case "SFSafariWindow":
+					if (!Mac.CheckSystemVersion (10, 15))
 						return true;
 					break;
 				}
@@ -634,6 +646,32 @@ namespace Introspection {
 				case "CBPeripheral":
 					if (selectorName == "UUID" && Mac.CheckSystemVersion (10, 13)) // UUID removed from headers in 10.13
 						return true;
+					break;
+				}
+				break;
+			case "ImageCaptureCore":
+				switch (type.Name) {
+				case "ICDevice":
+					switch (selectorName) {
+					case "buttonPressed":
+						// It's just gone! https://github.com/xamarin/maccore/issues/1796
+						if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+							return true;
+						break;
+					}
+					break;
+				}
+				break;
+			case "Photos":
+				switch (type.Name) {
+				case "PHAsset":
+					switch (selectorName) {
+					case "isSyncFailureHidden":
+						// It's just gone! https://github.com/xamarin/maccore/issues/1797
+						if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+							return true;
+						break;
+					}
 					break;
 				}
 				break;
@@ -1127,10 +1165,15 @@ namespace Introspection {
 				case "taskDescription":
 				case "setTaskDescription:":
 				case "taskIdentifier":
+					if (!Mac.CheckSystemVersion (10, 11))
+						return true;
+					break;
 				case "priority":
 				case "setPriority:":
 					if (!Mac.CheckSystemVersion (10, 11))
 						return true;
+					if (Mac.CheckSystemVersion (10, 15))
+						return true; // it works fine at both build time and runtime, so this is probably a weird implementation detail where reflection doesn't find the methods.
 					break;
 				}
 				break;

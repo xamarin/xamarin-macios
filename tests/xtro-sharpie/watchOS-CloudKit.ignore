@@ -46,3 +46,6 @@
 !missing-selector! CKModifyRecordsOperation::init not bound
 !missing-selector! CKModifyRecordZonesOperation::init not bound
 !missing-selector! CKQueryOperation::init not bound
+
+## Types (and members) added and deprecated in the same version (watchOS 6,0)
+!missing-selector! CKSubscription::recordType not bound
