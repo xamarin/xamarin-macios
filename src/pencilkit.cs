@@ -18,6 +18,7 @@ using UIGestureRecognizer = Foundation.NSObject;
 using UIResponder = Foundation.NSObject;
 using UIView = Foundation.NSObject;
 using UIWindow = Foundation.NSObject;
+using UIUserInterfaceStyle = Foundation.NSObject;
 #else
 using UIKit;
 #endif
