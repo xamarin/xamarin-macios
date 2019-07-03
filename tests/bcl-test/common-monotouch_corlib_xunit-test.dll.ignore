@@ -292,75 +292,8 @@ System.Reflection.Emit.Tests.MethodBuilderSetImplementationFlags.SetImplementati
 # In value:  TaskScheduler[] [ThreadPoolTaskScheduler { Id = 1, MaximumConcurrencyLevel = 2147483647 }]  
 System.Threading.Tasks.Tests.TaskSchedulerTests.GetTaskSchedulersForDebugger_DebuggerAttached_ReturnsAllSchedulers
 
-# Exception messages: Exit code was 134 but it should have been 42
-System.Collections.Tests.CaseInsensitiveHashCodeProviderTests.Default_Compare_TurkishI
-System.Collections.Tests.CaseInsensitiveHashCodeProviderTests.Ctor_Empty_ChangeCurrentCulture_GetHashCodeCompare(a: "hello", b: "HELLO", expected: True)
-System.Collections.Tests.CaseInsensitiveHashCodeProviderTests.Ctor_Empty_ChangeCurrentCulture_GetHashCodeCompare(a: 10, b: 5, expected: False)
-System.Collections.Tests.CaseInsensitiveHashCodeProviderTests.Ctor_Empty_ChangeCurrentCulture_GetHashCodeCompare(a: "hello", b: "goodbye", expected: False)
-System.Collections.Tests.CaseInsensitiveHashCodeProviderTests.Ctor_Empty_ChangeCurrentCulture_GetHashCodeCompare(a: "hello", b: "hello", expected: True)
-System.Collections.Tests.CaseInsensitiveHashCodeProviderTests.Ctor_Empty_ChangeCurrentCulture_GetHashCodeCompare(a: 5, b: 5, expected: True)
-System.Collections.Tests.CaseInsensitiveHashCodeProviderTests.Ctor_Empty_ChangeCurrentCulture_GetHashCodeCompare(a: "HELLO", b: "HELLO", expected: True)
-System.Collections.Tests.CaseInsensitiveHashCodeProviderTests.Ctor_Empty_ChangeCurrentCulture_GetHashCodeCompare(a: 5, b: 10, expected: False)
-System.Tests.SingleTests.Test_ToString
-System.Tests.DecimalTests.Test_ToString
-System.Collections.Tests.HashtableTests.Ctor_Int_Int_IEqualityComparer
-System.Collections.Tests.HashtableTests.Ctor_IDictionary_Int_IEqualityComparer
-System.Collections.Tests.HashtableTests.Ctor_IEqualityComparer
-System.Collections.Tests.HashtableTests.Ctor_IDictionary_IEqualityComparer
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare
-System.Tests.DoubleTests.Test_ToString
-System.Reflection.Emit.Tests.PropertyBuilderTest.CanRead_NoAccessors_ReturnsFalse
-System.Collections.Tests.HashtableTests.Ctor_Int_IEqualityComparer(capacity: 0)
-System.Collections.Tests.HashtableTests.Ctor_Int_IEqualityComparer(capacity: 1000)
-System.Collections.Tests.HashtableTests.Ctor_Int_IEqualityComparer(capacity: 10)
-System.Collections.Tests.HashtableTests.Ctor_Int_IEqualityComparer(capacity: 100)
-System.Collections.Tests.HashtableTests.Ctor_Int_Int_IEqualityComparer(capacity: 10, loadFactor: 0.2)
-System.Collections.Tests.HashtableTests.Ctor_Int_Int_IEqualityComparer(capacity: 1000, loadFactor: 1)
-System.Collections.Tests.HashtableTests.Ctor_Int_Int_IEqualityComparer(capacity: 0, loadFactor: 0.1)
-System.Collections.Tests.HashtableTests.Ctor_Int_Int_IEqualityComparer(capacity: 100, loadFactor: 0.3)
-System.Text.Tests.StringBuilderTests.Test_Append_Decimal
-System.Text.Tests.StringBuilderTests.Test_Insert_Decimal
-System.Text.Tests.StringBuilderTests.Test_Insert_Double
-System.Text.Tests.StringBuilderTests.Test_Insert_Float
-System.Text.Tests.StringBuilderTests.Test_Append_Double
-System.Text.Tests.StringBuilderTests.Test_Append_Float
-System.Collections.Tests.ComparerTests.DefaultInvariant_Compare
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: 5, b: 10, expected: -1)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: "hello", b: "hello", expected: 0)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: "HELLO", b: "HELLO", expected: 0)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: "hello", b: "HELLO", expected: 0)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: 10, b: 5, expected: 1)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: "hello", b: "null", expected: 1)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: "null", b: "hello", expected: -1)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: "hello", b: "goodbye", expected: 1)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: "null", b: 5, expected: -1)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: "null", b: "null", expected: 0)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: "file", b: "FILE", expected: 0)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: 5, b: "null", expected: 1)
-System.Collections.Tests.CaseInsensitiveComparerTests.DefaultInvariant_Compare(a: 5, b: 5, expected: 0)
-
 # System.InvalidOperationException : No data found for System.Tests.GuidTests.Parse_Invalid_NetcoreApp
 System.Tests.GuidTests.Parse_Invalid_NetcoreApp
-
-# Exception messages: System.IO.IOException : BCL tests group  test app isn't present in the test runtime directory. 
-System.Text.Tests.EncodingGetEncodingTest.GetEncoding_EncodingName
-
-# System.IO.IOException : BCL tests group  test app isn't present in the test runtime directory. 
-System.IO.Tests.FileStream_ctor_str_fm_fa_fs_buffer.FileShareOpen_Inheritable
-System.IO.Tests.FileInfo_OpenSpecial.FileShareOpen_Inheritable
-System.IO.Tests.File_OpenSpecial.FileShareOpen_Inheritable
-System.Tests.TypeTestsExtended.GetTypeByNameCaseSensitiveTypeloadFailure
-System.Tests.TypeTestsExtended.GetTypeByName_NoSuchType_ThrowsTypeLoadException(typeName: "System.Collections.Generic.Dictionary`2[[Program, "...)
-System.Tests.TypeTestsExtended.GetTypeByName_NoSuchType_ThrowsTypeLoadException(typeName: "")
-System.IO.Tests.File_Open_str_fm_fa_fs.FileShareOpen_Inheritable
-System.IO.Tests.File_Move.MoveToSameNameDifferentCasing
-System.IO.Tests.Directory_GetEntries_CurrentDirectory.CurrentDirectory
-System.IO.Tests.FileStream_ctor_str_fm_fa_fs_buffer_async.FileShareOpen_Inheritable
-System.IO.Tests.FileStream_ctor_str_fm_fa_fs_buffer_fo.FileShareOpen_Inheritable
-System.IO.Tests.FileInfo_Open_fm_fa_fs.FileShareOpen_Inheritable
-System.IO.Tests.FileStream_ctor_str_fm_fa_fs.FileShareOpen_Inheritable
-System.IO.Tests.Directory_SetCurrentDirectory.SetToValidOtherDirectory
-System.IO.Tests.FileInfo_MoveTo.MoveToSameNameDifferentCasing
 
 #  Exception messages: Assert.Equal() Failure
 # Expected: 252
