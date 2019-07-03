@@ -105,6 +105,7 @@ namespace ARKit {
 		None = 0,
 		ResetTracking = 1 << 0,
 		RemoveExistingAnchors = 1 << 1,
+		StopTrackedRaycasts = 1 << 2,
 	}
 
 	[iOS (11,0)]
@@ -218,6 +219,13 @@ namespace ARKit {
 	public enum ARSegmentationClass : byte {
 		None = 0,
 		Person = 255,
+	}
+
+	[iOS (13,0)]
+	[Native]
+	public enum ARCollaborationDataPriority : long {
+		Critical,
+		Optional,
 	}
 
 	[iOS (12,0)]
@@ -609,6 +617,10 @@ namespace ARKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IARSCNViewDelegate Delegate { get; set; }
 
+		// We get the Session property from ARSessionProviding, but only the getter, so we must redefine the property here.
+		[Export ("session", ArgumentSemantic.Strong)]
+		new ARSession Session { get; set; }
+
 		[Export ("scene", ArgumentSemantic.Strong)]
 		SCNScene Scene { get; set; }
 
@@ -677,6 +689,10 @@ namespace ARKit {
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IARSKViewDelegate Delegate { get; set; }
+
+		// We get the Session property from ARSessionProviding, but only the getter, so we must redefine the property here.
+		[Export ("session", ArgumentSemantic.Strong)]
+		new ARSession Session { get; set; }
 
 		[Export ("anchorForNode:")]
 		[return: NullAllowed]
@@ -1641,7 +1657,10 @@ namespace ARKit {
 		bool ActivatesAutomatically { get; set; }
 
 		[Export ("active")]
-		bool Active { [Bind ("isActive")] get; set; }
+		bool Active {
+			[Bind ("isActive")] get;
+			[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetActive' instead.")] set;
+		}
 
 		[Export ("setActive:animated:")]
 		void SetActive (bool active, bool animated);
@@ -1667,13 +1686,10 @@ namespace ARKit {
 	[iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface ARCollaborationData {
+	interface ARCollaborationData : NSSecureCoding {
 
-		[Export ("data")]
-		NSData Data { get; }
-
-		[Export ("initWithData:")]
-		IntPtr Constructor (NSData data);
+		[Export ("priority")]
+		ARCollaborationDataPriority Priority { get; }
 	}
 
 	[iOS (13,0)]
@@ -1884,6 +1900,9 @@ namespace ARKit {
 		// [Static]
 		// [Export ("defaultBody2DSkeletonDefinition")]
 		// ARSkeletonDefinition DefaultBody2DSkeletonDefinition { get; }
+
+		[Export ("jointCount")]
+		nuint JointCount { get; }
 
 		[Export ("jointNames")]
 		string[] JointNames { get; }
