@@ -15,7 +15,7 @@ namespace AppKit {
 		delegate nint view_compare_func (IntPtr view1, IntPtr view2, IntPtr context);
 		static view_compare_func view_comparer = view_compare;
 
-		class SortData
+		sealed class SortData
 		{
 			public Exception Exception;
 			public Func<NSView, NSView, NSComparisonResult> Comparer;
