@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -69,8 +70,16 @@ namespace Foundation {
 				return null;
 			
 			var ret = new NSMutableArray ((nuint)items.Length);
-			foreach (var t in items)
-				ret.Add (NSArray.FromNSObjects (t));
+			foreach (var t in items) {
+				if (t == null)
+					throw new ArgumentNullException(nameof (t));
+				foreach (var n in t) {
+					if(n == null)
+						throw new ArgumentNullException (nameof (n));
+				}
+
+				ret.Add (NSArray.FromNSObjects (t));	
+			}
 
 			return ret;
 		}
@@ -85,6 +94,8 @@ namespace Foundation {
 			for (var y = 0; y < height; y++) {
 				var row = new T [width];
 				for (var x = 0; x < width; x++) {
+					//if (items [x, y] == null)
+					//	throw new ArgumentNullException (); not sure if I should catch the error here 
 					row [x] = items [x, y];
 				}
 				ret [y] = row;
