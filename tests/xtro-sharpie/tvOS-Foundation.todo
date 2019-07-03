@@ -18,10 +18,39 @@
 !deprecated-attribute-missing! NSOperationQueue::operationCount missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSOperationQueue::operations missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSURL::parameterString missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSURLSessionStreamTask::stopSecureConnection missing a [Deprecated] attribute
+!missing-field! NSInconsistentArchiveException not bound
+!missing-field! NSURLErrorNetworkUnavailableReasonKey not bound
+!missing-selector! +NSByteCountFormatter::stringFromMeasurement:countStyle: not bound
+!missing-selector! NSArray::arrayByApplyingDifference: not bound
+!missing-selector! NSArray::differenceFromArray: not bound
+!missing-selector! NSArray::differenceFromArray:withOptions: not bound
+!missing-selector! NSArray::differenceFromArray:withOptions:usingEquivalenceTest: not bound
+!missing-selector! NSByteCountFormatter::stringForObjectValue: not bound
+!missing-selector! NSByteCountFormatter::stringFromMeasurement: not bound
+!missing-selector! NSDirectoryEnumerator::isEnumeratingDirectoryPostOrder not bound
+!missing-selector! NSFileHandle::closeAndReturnError: not bound
+!missing-selector! NSFileHandle::getOffset:error: not bound
+!missing-selector! NSFileHandle::readDataToEndOfFileAndReturnError: not bound
+!missing-selector! NSFileHandle::readDataUpToLength:error: not bound
+!missing-selector! NSFileHandle::seekToEndReturningOffset:error: not bound
+!missing-selector! NSFileHandle::seekToOffset:error: not bound
+!missing-selector! NSFileHandle::synchronizeAndReturnError: not bound
+!missing-selector! NSFileHandle::truncateAtOffset:error: not bound
+!missing-selector! NSFileHandle::writeData:error: not bound
+!missing-selector! NSHTTPURLResponse::valueForHTTPHeaderField: not bound
+!missing-selector! NSMutableArray::applyDifference: not bound
+!missing-selector! NSMutableOrderedSet::applyDifference: not bound
+!missing-selector! NSOperationQueue::addBarrierBlock: not bound
+!missing-selector! NSOrderedCollectionDifference::differenceByTransformingChangesWithBlock: not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet: not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet:withOptions: not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet:withOptions:usingEquivalenceTest: not bound
+!missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
+## appended from unclassified file
 !deprecated-attribute-missing! NSURLCache::initWithMemoryCapacity:diskCapacity:diskPath: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSURLSessionDataTask::init missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSURLSessionDownloadTask::init missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSURLSessionStreamTask::stopSecureConnection missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSURLSessionTask::init missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSURLSessionTaskMetrics::init missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSURLSessionTaskTransactionMetrics::init missing a [Deprecated] attribute
@@ -37,11 +66,8 @@
 !missing-field! NSHTTPCookieSameSiteLax not bound
 !missing-field! NSHTTPCookieSameSitePolicy not bound
 !missing-field! NSHTTPCookieSameSiteStrict not bound
-!missing-field! NSInconsistentArchiveException not bound
-!missing-field! NSURLErrorNetworkUnavailableReasonKey not bound
 !missing-protocol! NSURLSessionWebSocketDelegate not bound
 !missing-protocol-conformance! NSOperationQueue should conform to NSProgressReporting
-!missing-selector! +NSByteCountFormatter::stringFromMeasurement:countStyle: not bound
 !missing-selector! +NSDate::now not bound
 !missing-selector! +NSListFormatter::localizedStringByJoiningStrings: not bound
 !missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index: not bound
@@ -87,37 +113,21 @@
 !missing-selector! +NSUnitInformationStorage::zettabits not bound
 !missing-selector! +NSUnitInformationStorage::zettabytes not bound
 !missing-selector! +NSXPCConnection::currentConnection not bound
-!missing-selector! NSArray::arrayByApplyingDifference: not bound
-!missing-selector! NSArray::differenceFromArray: not bound
-!missing-selector! NSArray::differenceFromArray:withOptions: not bound
-!missing-selector! NSArray::differenceFromArray:withOptions:usingEquivalenceTest: not bound
-!missing-selector! NSByteCountFormatter::stringForObjectValue: not bound
-!missing-selector! NSByteCountFormatter::stringFromMeasurement: not bound
 !missing-selector! NSData::compressedDataUsingAlgorithm:error: not bound
 !missing-selector! NSData::decompressedDataUsingAlgorithm:error: not bound
-!missing-selector! NSDirectoryEnumerator::isEnumeratingDirectoryPostOrder not bound
-!missing-selector! NSFileHandle::closeAndReturnError: not bound
-!missing-selector! NSFileHandle::getOffset:error: not bound
-!missing-selector! NSFileHandle::readDataToEndOfFileAndReturnError: not bound
-!missing-selector! NSFileHandle::readDataUpToLength:error: not bound
-!missing-selector! NSFileHandle::seekToEndReturningOffset:error: not bound
-!missing-selector! NSFileHandle::seekToOffset:error: not bound
-!missing-selector! NSFileHandle::synchronizeAndReturnError: not bound
-!missing-selector! NSFileHandle::truncateAtOffset:error: not bound
-!missing-selector! NSFileHandle::writeData:error: not bound
 !missing-selector! NSHTTPCookie::sameSitePolicy not bound
-!missing-selector! NSHTTPURLResponse::valueForHTTPHeaderField: not bound
 !missing-selector! NSListFormatter::itemFormatter not bound
 !missing-selector! NSListFormatter::locale not bound
 !missing-selector! NSListFormatter::setItemFormatter: not bound
 !missing-selector! NSListFormatter::setLocale: not bound
 !missing-selector! NSListFormatter::stringForObjectValue: not bound
 !missing-selector! NSListFormatter::stringFromItems: not bound
-!missing-selector! NSMutableArray::applyDifference: not bound
 !missing-selector! NSMutableData::compressUsingAlgorithm:error: not bound
 !missing-selector! NSMutableData::decompressUsingAlgorithm:error: not bound
-!missing-selector! NSMutableOrderedSet::applyDifference: not bound
-!missing-selector! NSOperationQueue::addBarrierBlock: not bound
+!missing-selector! NSMutableURLRequest::allowsConstrainedNetworkAccess not bound
+!missing-selector! NSMutableURLRequest::allowsExpensiveNetworkAccess not bound
+!missing-selector! NSMutableURLRequest::setAllowsConstrainedNetworkAccess: not bound
+!missing-selector! NSMutableURLRequest::setAllowsExpensiveNetworkAccess: not bound
 !missing-selector! NSOperationQueue::progress not bound
 !missing-selector! NSOrderedCollectionChange::associatedIndex not bound
 !missing-selector! NSOrderedCollectionChange::changeType not bound
@@ -125,7 +135,6 @@
 !missing-selector! NSOrderedCollectionChange::initWithObject:type:index: not bound
 !missing-selector! NSOrderedCollectionChange::initWithObject:type:index:associatedIndex: not bound
 !missing-selector! NSOrderedCollectionChange::object not bound
-!missing-selector! NSOrderedCollectionDifference::differenceByTransformingChangesWithBlock: not bound
 !missing-selector! NSOrderedCollectionDifference::hasChanges not bound
 !missing-selector! NSOrderedCollectionDifference::initWithChanges: not bound
 !missing-selector! NSOrderedCollectionDifference::initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects: not bound
@@ -133,10 +142,6 @@
 !missing-selector! NSOrderedCollectionDifference::insertions not bound
 !missing-selector! NSOrderedCollectionDifference::inverseDifference not bound
 !missing-selector! NSOrderedCollectionDifference::removals not bound
-!missing-selector! NSOrderedSet::differenceFromOrderedSet: not bound
-!missing-selector! NSOrderedSet::differenceFromOrderedSet:withOptions: not bound
-!missing-selector! NSOrderedSet::differenceFromOrderedSet:withOptions:usingEquivalenceTest: not bound
-!missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
 !missing-selector! NSRelativeDateTimeFormatter::calendar not bound
 !missing-selector! NSRelativeDateTimeFormatter::dateTimeStyle not bound
 !missing-selector! NSRelativeDateTimeFormatter::formattingContext not bound
@@ -152,6 +157,8 @@
 !missing-selector! NSRelativeDateTimeFormatter::stringForObjectValue: not bound
 !missing-selector! NSRelativeDateTimeFormatter::unitsStyle not bound
 !missing-selector! NSURLCache::initWithMemoryCapacity:diskCapacity:directoryURL: not bound
+!missing-selector! NSURLRequest::allowsConstrainedNetworkAccess not bound
+!missing-selector! NSURLRequest::allowsExpensiveNetworkAccess not bound
 !missing-selector! NSURLSession::init not bound
 !missing-selector! NSURLSession::webSocketTaskWithRequest: not bound
 !missing-selector! NSURLSession::webSocketTaskWithURL: not bound
@@ -203,10 +210,3 @@
 !missing-type! NSURLSessionWebSocketMessage not bound
 !missing-type! NSURLSessionWebSocketTask not bound
 !missing-type! NSXPCCoder not bound
-## appended from unclassified file
-!missing-selector! NSMutableURLRequest::allowsConstrainedNetworkAccess not bound
-!missing-selector! NSMutableURLRequest::allowsExpensiveNetworkAccess not bound
-!missing-selector! NSMutableURLRequest::setAllowsConstrainedNetworkAccess: not bound
-!missing-selector! NSMutableURLRequest::setAllowsExpensiveNetworkAccess: not bound
-!missing-selector! NSURLRequest::allowsConstrainedNetworkAccess not bound
-!missing-selector! NSURLRequest::allowsExpensiveNetworkAccess not bound

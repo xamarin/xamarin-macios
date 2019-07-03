@@ -352,3 +352,9 @@
 !missing-selector! +CIFilter::keystoneCorrectionHorizontalFilter not bound
 !missing-selector! +CIFilter::keystoneCorrectionVerticalFilter not bound
 !missing-selector! +CIFilter::perspectiveRotateFilter not bound
+## appended from unclassified file
+!missing-field! kCIInputEnableEDRModeKey not bound
+!missing-protocol! CIFourCoordinateGeometryFilter not bound
+!missing-protocol! CIRoundedRectangleGenerator not bound
+!missing-selector! +CIFilter::roundedRectangleGeneratorFilter not bound
+!missing-selector! CIImage::imageByApplyingTransform:highQualityDownsample: not bound

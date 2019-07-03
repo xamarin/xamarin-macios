@@ -61,8 +61,6 @@
 !missing-selector! ARCoachingOverlayView::setGoal: not bound
 !missing-selector! ARCoachingOverlayView::setSession: not bound
 !missing-selector! ARCoachingOverlayView::setSessionProvider: not bound
-!missing-selector! ARCollaborationData::data not bound
-!missing-selector! ARCollaborationData::initWithData: not bound
 !missing-selector! ARConfiguration::frameSemantics not bound
 !missing-selector! ARConfiguration::setFrameSemantics: not bound
 !missing-selector! ARFaceTrackingConfiguration::isWorldTrackingEnabled not bound
@@ -150,3 +148,7 @@
 !missing-type! ARSkeleton3D not bound
 !missing-type! ARSkeletonDefinition not bound
 !missing-type! ARTrackedRaycast not bound
+## appended from unclassified file
+!missing-enum! ARCollaborationDataPriority not bound
+!missing-selector! ARCollaborationData::priority not bound
+!missing-selector! ARSkeletonDefinition::jointCount not bound

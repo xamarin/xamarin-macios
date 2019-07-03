@@ -9,3 +9,7 @@
 ## appended from unclassified file
 !missing-field! kCTFontManagerErrorFontAssetNameKey not bound
 !missing-pinvoke! CTFontManagerRegisterFontsWithAssetNames is not bound
+## appended from unclassified file
+!missing-field! kCTTrackingAttributeName not bound
+!missing-pinvoke! CTFontManagerCreateFontDescriptorsFromData is not bound
+!missing-pinvoke! CTRunGetBaseAdvancesAndOrigins is not bound

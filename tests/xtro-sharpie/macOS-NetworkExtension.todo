@@ -110,3 +110,6 @@
 !missing-type! NENetworkRule not bound
 !missing-type! NETransparentProxyManager not bound
 !missing-type! NETransparentProxyNetworkSettings not bound
+## appended from unclassified file
+!missing-selector! NEFilterVerdict::setShouldReport: not bound
+!missing-selector! NEFilterVerdict::shouldReport not bound

@@ -1806,12 +1806,6 @@ namespace UIKit {
 	[DisableDefaultCtor]
 	interface UIAction {
 
-		[Export ("options")]
-		UIActionOptions Options { get; }
-
-		[Static]
-		[Export ("actionWithTitle:image:options:handler:")]
-		UIAction Create (string title, [NullAllowed] UIImage image, UIActionOptions options, UIActionHandler handler);
 	}
 
 	interface IUIActionSheetDelegate {}
@@ -7676,7 +7670,7 @@ namespace UIKit {
 	[iOS (13,0), TV (13,0), NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface UIMenuElement : NSCopying {
+	interface UIMenuElement : NSCopying, NSSecureCoding {
 
 		[Export ("title")]
 		string Title { get; }

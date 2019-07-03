@@ -84,3 +84,6 @@
 ## appended from unclassified file
 !missing-field! AVContentKeyRequestRequiresValidationDataInSecureTokenKey not bound
 !missing-selector! AVAudioSourceNode::initWithFormat:renderBlock: not bound
+## appended from unclassified file
+!missing-selector! AVMutableCompositionTrack::isEnabled not bound
+!missing-selector! AVMutableCompositionTrack::setEnabled: not bound

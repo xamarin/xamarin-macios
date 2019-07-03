@@ -635,7 +635,6 @@
 !missing-protocol-conformance! NSCollectionViewItem should conform to NSCollectionViewElement
 !missing-protocol-conformance! NSColorPicker should conform to NSColorPickingDefault
 !missing-protocol-conformance! NSFontAssetRequest should conform to NSProgressReporting
-!missing-protocol-conformance! NSLayoutConstraint should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSMenu should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSMenuItem should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSOpenGLContext should conform to NSLocking
