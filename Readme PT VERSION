@@ -1,0 +1,47 @@
+<img src="banner.png" alt="Xamarin.iOS + Xamarin.Mac logo" height="145" >
+
+# Xamarin.iOS & Xamarin.Mac #
+
+|              | Status                                    |
+|--------------|-------------------------------------------|
+| master       | [![xamarin-macios-builds-master][1]][2]   |
+
+[1]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds-master/badge/icon
+[2]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds-master
+
+## Bem Vindo!
+
+Este módulo é o principal repositório para **Xamarin.iOS** e **Xamarin.Mac**.
+
+Esses SDKs nos permitem criar aplicativos para iOS, tvOS, watchOS e macOS utilizando os mesmos controles de interface do usuário que teríamos em Objective-C e Xcode, exceto com a flexibilidade e elegância de uma linguagem moderna (C #), o poder do .NET Base Class Library (BCL) e duas IDEs de primeira classe - Visual Studio para Mac e Visual Studio - na ponta dos dedos.
+
+Este repositório é onde desenvolvemos os SDKs Xamarin.iOS e Xamarin.Mac. Existem algumas maneiras pelas quais você pode contribuir, por exemplo:
+
+- [Submeta bugs e solicitações de recursos(requests)](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions)
+- [Revise as alterações do código-fonte](https://github.com/xamarin/xamarin-macios/pulls)
+- [Submeter pull requests](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute#pull-requests) para resolver issues e consertar bugs.
+
+## Contribuindo
+
+Se você estiver interessado em corrigir problemas e contribuir diretamente para a base de código, consulte o documento [Como contribuir](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute), que abrange o seguinte:
+
+- Como [rodar](https://github.com/xamarin/xamarin-macios/wiki/Build-&-Run) da fonte.
+- O [Fluxo de desenvolvimento](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute#work-branches), incluindo [depuração](https://github.com/xamarin/xamarin-macios/wiki/Build-&-Run#debugging-applications-from-source) e [execução de testes](https://github.com/xamarin/xamarin-macios/blob/master/tests/README.md)
+- [Guia de Codificação](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute#coding-guidelines)
+- [Submetendo pull requests](https://github.com/xamarin/xamarin-macios/wiki/How-to-Contribute#pull-requests)
+
+## Feedback
+
+- Faça perguntas no [Stack Overflow](https://stackoverflow.com/questions/tagged/xamarin.ios) or the [Xamarin Forums](https://forums.xamarin.com/)
+- [Solicite um novo recurso](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#writing-good-bug-reports-and-feature-requests) on GitHub
+- [Votar em solicitações de recursos existentes](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#before-submitting-an-issue)
+- [Submita bugs no GitHub Issues](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions)
+- Discutir desenvolvimento e design em [Gitter](https://gitter.im/xamarin/xamarin-macios) ou email [macios-devel@lists.xamarin.com](http://lists.xamarin.com/mailman/listinfo/macios-devel)
+
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/xamarin/xamarin-macios?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+## Licença
+
+Copyright (c) .NET Foundation Contributors.  Todos os direitos reservados.
+Licenciado sob a licença [MIT] (https://github.com/xamarin/xamarin-macios/blob/master/LICENSE).
+
