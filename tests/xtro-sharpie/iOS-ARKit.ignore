@@ -11,3 +11,8 @@
 
 # only exposed in subclasses (it's static but also abstract) - see https://github.com/xamarin/xamarin-macios/issues/5347
 !missing-selector! +ARConfiguration::supportedVideoFormats not bound
+
+# Broken headers showing inexistent functions (https://github.com/xamarin/maccore/issues/1828)
+!missing-selector! +ARSkeletonDefinition::defaultBody2DSkeletonDefinition not bound
+!missing-selector! +ARSkeletonDefinition::defaultBody3DSkeletonDefinition not bound
+!missing-selector! ARSkeletonDefinition::indexForJointName: not bound
