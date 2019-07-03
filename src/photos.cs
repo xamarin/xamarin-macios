@@ -1082,9 +1082,10 @@ namespace Photos
 		void PhotoLibraryDidChange (PHChange changeInstance);
 	}
 
+	interface IPHPhotoLibraryAvailabilityObserver {}
+
 	[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface PHPhotoLibraryAvailabilityObserver {
 
 		// TODO Not sure why sharpie said this one was abstract
@@ -1130,11 +1131,19 @@ namespace Photos
 		[NullAllowed, Export ("unavailabilityReason", ArgumentSemantic.Strong)]
 		NSError UnavailabilityReason { get; }
 
+		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Export ("registerAvailabilityObserver:")]
+		void RegisterAvailabilityObserver (IPHPhotoLibraryAvailabilityObserver observer);
+
+		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Export ("unregisterAvailabilityObserver:")]
+		void UnregisterAvailabilityObserver (IPHPhotoLibraryAvailabilityObserver observer);
+
 		// [Export ("registerChangeObserver:")]
-		// void RegisterChangeObserver (PHPhotoLibraryChangeObserver observer);
+		// void RegisterChangeObserver (IPHPhotoLibraryChangeObserver observer);
 
 		// [Export ("unregisterChangeObserver:")]
-		// void UnregisterChangeObserver (PHPhotoLibraryChangeObserver observer);
+		// void UnregisterChangeObserver (IPHPhotoLibraryChangeObserver observer);
 	}
 
 	[Mac (10,13)]
