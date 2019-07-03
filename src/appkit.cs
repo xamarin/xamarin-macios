@@ -8690,6 +8690,7 @@ namespace AppKit {
 		NSOpenPanel OpenPanel { get; }
 
 		[Advice ("You must use 'OpenPanel' method if the application is sandboxed.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "All open panels now run out-of-process, use 'OpenPanel' method instead")]
 		[Export ("init")]
 		IntPtr Constructor ();
 
@@ -12954,6 +12955,7 @@ namespace AppKit {
 		NSSavePanel SavePanel { get; }
 
 		[Advice ("You must use 'SavePanel' method if the application is sandboxed.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "All save panels now run out-of-process, use 'SavePanel' method instead")]
 		[Export ("init")]
 		IntPtr Constructor ();
 

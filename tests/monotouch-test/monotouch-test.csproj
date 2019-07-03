@@ -280,6 +280,7 @@
     <Folder Include="NaturalLanguage\" />
     <Folder Include="Vision\" />
     <Folder Include="Compression\" />
+    <Folder Include="BackgroundTasks\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />

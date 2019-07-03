@@ -1,18 +1,7 @@
 !deprecated-attribute-missing! GKPlayer::playerID missing a [Deprecated] attribute
 !missing-enum! GKTournamentErrorCode not bound
-!missing-field! GKRemoteUIApplyThemeKey not bound
-!missing-field! GKRemoteUIAuthCancelURL not bound
-!missing-field! GKRemoteUIAuthErrorMessage not bound
-!missing-field! GKRemoteUIAuthOKURL not bound
-!missing-field! GKRemoteUIAuthPassword not bound
-!missing-field! GKRemoteUIAuthTitle not bound
-!missing-field! GKRemoteUIAuthUserName not bound
-!missing-field! GKRemoteUIErrorDomain not bound
-!missing-field! GKRemoteUILayoutStyleKey not bound
 !missing-field! GKTournamentErrorDomain not bound
-!missing-protocol! GKRemoteUIAuxiliaryViewDelegate not bound
 !missing-selector! +GKLocalPlayer::local not bound
-!missing-selector! +GKRemoteUIController::remoteUIController not bound
 !missing-selector! GKLocalPlayer::isMultiplayerGamingRestricted not bound
 !missing-selector! GKLocalPlayer::loadChallengableFriendsWithCompletionHandler: not bound
 !missing-selector! GKMatchRequest::restrictToAutomatch not bound
@@ -21,14 +10,6 @@
 !missing-selector! GKMatchRequest::tournamentForInvitePool not bound
 !missing-selector! GKPlayer::gamePlayerID not bound
 !missing-selector! GKPlayer::teamPlayerID not bound
-!missing-selector! GKRemoteUIController::completionHandler not bound
-!missing-selector! GKRemoteUIController::error not bound
-!missing-selector! GKRemoteUIController::loading not bound
-!missing-selector! GKRemoteUIController::presentInParentNavigationController:animated: not bound
-!missing-selector! GKRemoteUIController::setCompletionHandler: not bound
-!missing-selector! GKRemoteUIController::setShouldApplyGameCenterTheme: not bound
-!missing-selector! GKRemoteUIController::shouldApplyGameCenterTheme not bound
-!missing-type! GKRemoteUIController not bound
 !unknown-native-enum! GKPeerPickerConnectionType bound
 ## appended from unclassified file
 !missing-selector! GKPlayer::scopedIDsArePersistent not bound

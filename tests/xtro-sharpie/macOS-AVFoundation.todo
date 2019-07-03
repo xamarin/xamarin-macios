@@ -221,3 +221,7 @@
 !missing-field! AVContentKeyRequestRequiresValidationDataInSecureTokenKey not bound
 !missing-selector! AVAudioSourceNode::initWithFormat:renderBlock: not bound
 !missing-selector! AVCaptureSession::connections not bound
+## appended from unclassified file
+!missing-field! AVAssetExportPresetAppleProRes4444LPCM not bound
+!missing-selector! AVMutableCompositionTrack::isEnabled not bound
+!missing-selector! AVMutableCompositionTrack::setEnabled: not bound

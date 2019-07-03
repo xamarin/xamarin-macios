@@ -186,6 +186,7 @@ AUDIOTOOLBOX_SOURCES = \
 	AudioToolbox/AudioSession.cs \
 	AudioToolbox/AudioSessions.cs \
 	AudioToolbox/AudioToolbox.cs \
+	AudioToolbox/Enums.cs \
 	AudioToolbox/SystemSound.cs \
 	AudioToolbox/MusicPlayer.cs \
 	AudioToolbox/MusicTrack.cs \
@@ -275,6 +276,11 @@ AVKIT_API_SOURCES = \
 
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
+
+# BackgroundTasks
+
+BACKGROUNDTASKS_API_SOURCES = \
+	BackgroundTasks/Enums.cs \
 
 # BusinessChat
 
@@ -1758,7 +1764,6 @@ MAC_FRAMEWORKS =            \
 	ImageIO                 \
 	ImageCaptureCore	\
 	ImageKit                \
-	IncomingCallNotifications \
 	Intents                 \
 	IOSurface 		\
 	iTunesLibrary           \
@@ -1816,6 +1821,7 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	BackgroundTasks \
 	BusinessChat \
 	CallKit \
 	CarPlay \
@@ -1852,7 +1858,6 @@ IOS_FRAMEWORKS =         \
 	IdentityLookup \
 	IdentityLookupUI \
 	ImageIO \
-	IncomingCallNotifications \
 	Intents \
 	IntentsUI \
 	IOSurface \
@@ -1935,6 +1940,7 @@ TVOS_FRAMEWORKS =           \
 	AdSupport               \
 	AudioToolbox            \
 	AudioUnit               \
+	BackgroundTasks         \
 	CFNetwork               \
 	CloudKit                \
 	CoreAnimation           \

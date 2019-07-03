@@ -3,3 +3,7 @@
 !missing-pinvoke! CTFontManagerRegisterFontURLs is not bound
 !missing-pinvoke! CTFontManagerUnregisterFontDescriptors is not bound
 !missing-pinvoke! CTFontManagerUnregisterFontURLs is not bound
+## appended from unclassified file
+!missing-field! kCTTrackingAttributeName not bound
+!missing-pinvoke! CTFontManagerCreateFontDescriptorsFromData is not bound
+!missing-pinvoke! CTRunGetBaseAdvancesAndOrigins is not bound

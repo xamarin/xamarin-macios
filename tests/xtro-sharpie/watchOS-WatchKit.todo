@@ -75,3 +75,5 @@
 !missing-type! WKExtendedRuntimeSession not bound
 !missing-type! WKInterfaceAuthorizationAppleIDButton not bound
 !missing-type! WKInterfaceTextField not bound
+## appended from unclassified file
+!missing-selector! WKExtendedRuntimeSession::notifyUserWithHaptic:repeatHandler: not bound

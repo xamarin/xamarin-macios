@@ -1,0 +1,9 @@
+## appended from unclassified file
+!missing-enum! HMHomeManagerAuthorizationStatus not bound
+!missing-protocol! HMNetworkConfigurationProfileDelegate not bound
+!missing-protocol-member! HMHomeManagerDelegate::homeManager:didUpdateAuthorizationStatus: not found
+!missing-selector! HMHomeManager::authorizationStatus not bound
+!missing-selector! HMNetworkConfigurationProfile::delegate not bound
+!missing-selector! HMNetworkConfigurationProfile::isNetworkAccessRestricted not bound
+!missing-selector! HMNetworkConfigurationProfile::setDelegate: not bound
+!missing-type! HMNetworkConfigurationProfile not bound

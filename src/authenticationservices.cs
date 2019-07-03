@@ -481,7 +481,7 @@ namespace AuthenticationServices {
 		void Complete (NSDictionary<NSString, NSString> httpAuthorizationHeaders);
 
 		[Export ("completeWithHTTPResponse:httpBody:")]
-		void Complete (NSHttpUrlResponse httpResponse, NSData httpBody);
+		void Complete (NSHttpUrlResponse httpResponse, [NullAllowed] NSData httpBody);
 
 		[Export ("completeWithError:")]
 		void Complete (NSError error);
