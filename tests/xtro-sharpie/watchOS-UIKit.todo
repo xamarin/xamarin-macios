@@ -24,3 +24,5 @@
 !missing-selector! NSDataAsset::typeIdentifier not bound
 !missing-type! NSDataAsset not bound
 ## appended from unclassified file
+## appended from unclassified file
+!missing-field! UIAccessibilitySpeechAttributeSpellOut not bound

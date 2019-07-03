@@ -1,0 +1,3 @@
+!missing-field! VSAccountProviderAuthenticationSchemeAPI not bound
+!missing-selector! VSAccountMetadataRequest::accountProviderAuthenticationToken not bound
+!missing-selector! VSAccountMetadataRequest::setAccountProviderAuthenticationToken: not bound
