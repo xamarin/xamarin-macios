@@ -173,20 +173,21 @@ namespace CoreBluetooth {
 		High
 	}
 
-	[iOS (13,0), TV (13,0), Watch (6,0), Mac (10,15)]
+	[iOS (13,0), TV (13,0), Watch (6,0), Mac (10,15, onlyOn64: true)]
 	[Native]
 	public enum CBConnectionEvent : long {
 		Disconnected = 0,
 		Connected = 1,
 	}
 
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[Flags, iOS (13,0), TV (13,0), Watch (6,0)]
 	[Native]
 	public enum CBCentralManagerFeature : ulong {
 		ExtendedScanAndConnect = 1uL << 0,
 	}
 
-	[iOS (13,0), TV (13,0), Watch (6,0), Mac (10,15)]
+	[iOS (13,0), TV (13,0), Watch (6,0), Mac (10,15, onlyOn64: true)]
 	[Native]
 	public enum CBManagerAuthorization : long {
 		NotDetermined = 0,
