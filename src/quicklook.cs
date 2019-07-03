@@ -131,15 +131,15 @@ namespace QuickLook {
 
 		[iOS (13,0)]
 		[Export ("previewController:editingModeForPreviewItem:"), DelegateName("QLEditingMode"), DefaultValue ("QLPreviewItemEditingMode.Disabled")]
-		QLPreviewItemEditingMode EditingModeForPreviewItem (QLPreviewController controller, IQLPreviewItem item);
+		QLPreviewItemEditingMode GetEditingMode (QLPreviewController controller, IQLPreviewItem previewItem);
 
 		[iOS (13,0)]
 		[Export ("previewController:didUpdateContentsOfPreviewItem:"), EventArgs ("QLPreviewControllerDelegateDidUpdate")]
-		void DidUpdateContentsOfPreviewItem (QLPreviewController controller, IQLPreviewItem item);
+		void DidUpdateContents (QLPreviewController controller, IQLPreviewItem previewItem);
 
 		[iOS (13,0)]
 		[Export ("previewController:didSaveEditedCopyOfPreviewItem:atURL:"), EventArgs ("QLPreviewControllerDelegateDidSave")]
-		void DidSaveEditedCopyOfPreviewItem (QLPreviewController controller, IQLPreviewItem item, NSUrl modifiedContentsUrl);
+		void DidSaveEditedCopy (QLPreviewController controller, IQLPreviewItem previewItem, NSUrl modifiedContentsUrl);
 
 #endif
 	}
