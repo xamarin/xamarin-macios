@@ -18,6 +18,7 @@ using UIGestureRecognizer = Foundation.NSObject;
 using UIResponder = Foundation.NSObject;
 using UIView = Foundation.NSObject;
 using UIWindow = Foundation.NSObject;
+using UIUserInterfaceStyle = Foundation.NSObject;
 #else
 using UIKit;
 #endif
@@ -164,6 +165,10 @@ namespace PencilKit {
 		[BindAs (typeof (PKInkType))]
 		NSString InkType { get; }
 
+		[Static]
+		[Export ("convertColor:fromUserInterfaceStyle:to:")]
+		UIColor ConvertColor (UIColor color, UIUserInterfaceStyle fromUserInterfaceStyle, UIUserInterfaceStyle toUserInterfaceStyle);
+
 		[Export ("color")]
 		UIColor Color { get; }
 
@@ -225,6 +230,12 @@ namespace PencilKit {
 
 		[Export ("frameObscuredInView:")]
 		CGRect GetFrameObscured (UIView view);
+
+		[Export ("overrideUserInterfaceStyle", ArgumentSemantic.Assign)]
+		UIUserInterfaceStyle OverrideUserInterfaceStyle { get; set; }
+
+		[Export ("colorUserInterfaceStyle", ArgumentSemantic.Assign)]
+		UIUserInterfaceStyle ColorUserInterfaceStyle { get; set; }
 
 		[Static]
 		[return: NullAllowed]
