@@ -1883,6 +1883,7 @@ namespace ARKit {
 		IntPtr RawJointLandmarks { get; }
 
 		[Export ("landmarkForJointNamed:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector2 GetLandmarkPoint ([BindAs (typeof (ARSkeletonJointName))] NSString jointName);
 	}
 

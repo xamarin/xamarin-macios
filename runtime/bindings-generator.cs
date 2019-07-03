@@ -2449,6 +2449,18 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // Vector2 func (IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Vector2,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // void func (NVector3, Double)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
