@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -191,7 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EmbeddedResources\" />
-    <Folder Include="..\monotouch-test\BundleResourceResources\Base.lproj\" />
+	<Folder Include="..\monotouch-test\BundleResourceResources\Base.lproj\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
@@ -207,7 +207,7 @@
     <BundleResource Include="..\monotouch-test\CoreImage\xamarinmonkey.heic">
       <Link>CoreImage\xamarinmonkey.heic</Link>
     </BundleResource>
-    <BundleResource Include="..\monotouch-test\Resources\Base.lproj\Localizable.strings">
+	<BundleResource Include="..\monotouch-test\Resources\Base.lproj\Localizable.strings" >
       <Link>Base.lproj\Localizable.strings</Link>
     </BundleResource>
   </ItemGroup>
