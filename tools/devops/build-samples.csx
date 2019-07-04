@@ -60,8 +60,19 @@ InstallPackage ("Objective-Sharpie", FindVariable ("MIN_SHARPIE_URL"));
 
 // Xcode
 var xcode_path = Path.GetDirectoryName (Path.GetDirectoryName (FindVariable ("XCODE_DEVELOPER_ROOT")));
-Console.WriteLine ($"ln -Fhs {xcode_path} /Applications/Xcode.app");
-Exec ("ln", "-Fhs", xcode_path, "/Applications/Xcode.app");
+if (!Directory.Exists (xcode_path)) {
+	var root = Path.GetDirectoryName (Path.GetDirectoryName (FindVariable ("XCODE_DEVELOPER_ROOT")));
+	Console.WriteLine ($"Could not find an already installed Xcode in {root}, will download and install.");
+	var xcode_provisionator_name = FindVariable ("XCODE_PROVISIONATOR_NAME");
+	Xcode (xcode_provisionator_name).XcodeSelect ();
+	Console.WriteLine ($"ln -Fhs /Applications/Xcode.app {root}");
+	Exec ("ln", "-Fhs", "/Applications/Xcode.app", root);
+	Exec ("ls", "-la", "/Applications");
+} else {
+	Console.WriteLine ($"ln -Fhs {xcode_path} /Applications/Xcode.app");
+	Exec ("ln", "-Fhs", xcode_path, "/Applications/Xcode.app");
+}
 
 // Provisioning profiles
+Console.WriteLine ("Provisioning provisioning profiles...")
 Exec ($"../../../maccore/tools/install-qa-provisioning-profiles.sh");
