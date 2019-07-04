@@ -69,15 +69,16 @@ namespace Foundation {
 				return null;
 			
 			var ret = new NSMutableArray ((nuint)items.Length);
-			foreach (var t in items) {
-				if (t == null)
-					throw new ArgumentNullException(nameof (t));
-				foreach (var n in t) {
-					if(n == null)
-						throw new ArgumentNullException (nameof (n));
+			for (var i = 0; i < items.Length; i++) {
+				var row = items [i];
+				if (row == null)
+					throw new ArgumentNullException (nameof (items), $"Element [{i}] is null");
+				for (var j = 0; j < row.Length; j++) {
+					var element = row [j];
+					if (element == null)
+						throw new ArgumentNullException (nameof (items), $"Element [{i}][{j}] is null");
 				}
-
-				ret.Add (NSArray.FromNSObjects (t));	
+				ret.Add (NSArray.FromNSObjects (row));
 			}
 
 			return ret;
