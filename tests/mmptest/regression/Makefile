@@ -34,9 +34,6 @@ TESTS_UNIFIED = \
 	link-preserve-assembly \
 	link-remove-attributes-1 \
 
-DISABLED_4_5_TESTS_MONO_4_2 = \
-	link-httpclient-async \
-
 ALL_TESTS = \
 	$(TESTS_UNIFIED) \
 	$(TESTS_4_0) \
