@@ -79,6 +79,9 @@
     <Compile Include="..\..\CommonLinkSdkTest.cs">
       <Link>CommonLinkSdkTest.cs</Link>
     </Compile>
+    <Compile Include="..\LinkAnyTest.cs">
+      <Link>LinkAnyTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">

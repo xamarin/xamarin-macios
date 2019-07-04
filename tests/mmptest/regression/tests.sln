@@ -35,8 +35,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-safe-1", "link-safe-1\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-frameworks-1", "link-frameworks-1\link-frameworks-1.csproj", "{842CDD77-7FC8-4BAB-AF69-C6C0D9DB217C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-aes-1", "link-aes-1\link-aes-1.csproj", "{12A3E976-A434-4512-8579-CA395923874D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-data-contract-1", "link-data-contract-1\link-data-contract-1.csproj", "{CCE59D9C-CA71-4DB8-8156-98D7A9428534}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-nativebuilder-1", "link-nativebuilder-1\link-nativebuilder-1.csproj", "{D37FC010-0D17-4B68-ABA8-33BA599CD94C}"
@@ -68,12 +66,6 @@ Global
 		{0A4EBB71-92E1-448C-BAA6-DFFB9491D8A0}.Debug|x86.Build.0 = Debug|x86
 		{0A4EBB71-92E1-448C-BAA6-DFFB9491D8A0}.Release|x86.ActiveCfg = Release|x86
 		{0A4EBB71-92E1-448C-BAA6-DFFB9491D8A0}.Release|x86.Build.0 = Release|x86
-		{12A3E976-A434-4512-8579-CA395923874D}.AppStore|x86.ActiveCfg = AppStore|Any CPU
-		{12A3E976-A434-4512-8579-CA395923874D}.AppStore|x86.Build.0 = AppStore|Any CPU
-		{12A3E976-A434-4512-8579-CA395923874D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{12A3E976-A434-4512-8579-CA395923874D}.Debug|x86.Build.0 = Debug|Any CPU
-		{12A3E976-A434-4512-8579-CA395923874D}.Release|x86.ActiveCfg = Release|Any CPU
-		{12A3E976-A434-4512-8579-CA395923874D}.Release|x86.Build.0 = Release|Any CPU
 		{141239A4-4094-4349-A3F3-00CD16643226}.AppStore|x86.ActiveCfg = AppStore|x86
 		{141239A4-4094-4349-A3F3-00CD16643226}.AppStore|x86.Build.0 = AppStore|x86
 		{141239A4-4094-4349-A3F3-00CD16643226}.Debug|x86.ActiveCfg = Debug|x86
