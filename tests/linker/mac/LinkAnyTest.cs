@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading;
@@ -42,6 +43,51 @@ namespace LinkAnyTest {
 				Assert.IsTrue (waited, "async/await worked");
 			} finally {
 				SynchronizationContext.SetSynchronizationContext (current_sc);
+			}
+		}
+
+		[Test]
+		public void WebClientTest ()
+		{
+			var url = "http://www.microsoft.com";
+			var wc = new WebClient ();
+			var data = wc.DownloadString (url);
+
+			Assert.That (data, Is.Not.Empty, "Downloaded content");
+		}
+
+		[Test]
+		public void WebClientTest_Https ()
+		{
+			var url = "https://www.microsoft.com";
+			var wc = new WebClient ();
+			var data = wc.DownloadString (url);
+
+			Assert.That (data, Is.Not.Empty, "Downloaded content");
+		}
+
+		[Test]
+		public void WebClientTest_Async ()
+		{
+			var current_sc = SynchronizationContext.Current;
+			try {
+				// we do not want the async code to get back to the AppKit thread, hanging the process
+				SynchronizationContext.SetSynchronizationContext (null);
+
+				string data = null;
+
+				async Task GetWebPage (string url)
+				{
+					var wc = new WebClient ();
+					var task = wc.DownloadStringTaskAsync (new Uri (url));
+					data = await task;
+				}
+
+				GetWebPage ("http://www.microsoft.com").Wait ();
+				Assert.That (data, Is.Not.Empty, "Downloaded content");
+			} finally {
+				SynchronizationContext.SetSynchronizationContext (current_sc);
+
 			}
 		}
 	}
