@@ -15,7 +15,6 @@ TESTS_4_0 = \
 	link-uithread-1 \
 	link-uithread-2 \
 	link-safe-1 \
-	link-frameworks-1 \
 	embedded-mono \
 	system-mono \
 	embedded-mono-profile \
@@ -32,6 +31,7 @@ DISABLED_TESTS_MONO_4_4 =  \
 
 TESTS_UNIFIED = \
 	custom-bundle-name \
+	link-frameworks-1 \
 	link-keep-resources-1 \
 	link-keep-resources-2 \
 	link-posix-1 \
