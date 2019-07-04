@@ -3856,6 +3856,7 @@ namespace Foundation
 		// now exposed with the corresponding WKErrorCode enum
 		[NoMac, NoTV]
 		[iOS (8,2)]
+		[Unavailable (PlatformName.iOS)]
 		[Field ("WatchKitErrorDomain", "WatchKit")]
 		NSString WatchKitErrorDomain { get; }
 #endif
