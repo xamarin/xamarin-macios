@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.AppKit {
 			
 			NSGridView nSGridViewArrayOfArray = NSGridView.Create (nSViewsArrayOfArray);
 
-			Assert.NotNull(nSGridViewArrayOfArray);
+			Assert.NotNull (nSGridViewArrayOfArray);
 			Assert.AreEqual ("0", ((NSTextView)(nSGridViewArrayOfArray.GetCell (0, 0)).ContentView).Value, "0,0");
 			Assert.AreEqual ("1", ((NSTextView)(nSGridViewArrayOfArray.GetCell (0, 1)).ContentView).Value, "0,1");
 			Assert.AreEqual ("2", ((NSTextView)(nSGridViewArrayOfArray.GetCell (0, 2)).ContentView).Value, "0,2");
