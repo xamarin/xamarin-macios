@@ -11,7 +11,6 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 
 TESTS_4_0 = \
-	link-preserve-assembly \
 	link-uithread-1 \
 	link-uithread-2 \
 	link-safe-1 \
@@ -35,6 +34,7 @@ TESTS_UNIFIED = \
 	link-keep-resources-1 \
 	link-keep-resources-2 \
 	link-posix-1 \
+	link-preserve-assembly \
 
 DISABLED_4_5_TESTS_MONO_4_2 = \
 	link-httpclient-async \
