@@ -93,8 +93,6 @@ namespace Foundation {
 			for (var y = 0; y < height; y++) {
 				var row = new T [width];
 				for (var x = 0; x < width; x++) {
-					//if (items [x, y] == null)
-					//	throw new ArgumentNullException (); not sure if I should catch the error here 
 					row [x] = items [x, y];
 				}
 				ret [y] = row;
