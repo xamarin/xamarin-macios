@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Xml;
+using System.Xml.Serialization;
 
 using AppKit;
 using Foundation;
@@ -64,6 +67,31 @@ namespace LinkAllTests
 				} finally {
 					mre.Set ();
 				}
+			}
+		}
+
+		[Test]
+		public void XmlSerialization ()
+		{
+			const string xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+				"<SerializeMe xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" SetMe=\"2\">" +
+				"</SerializeMe>";
+			using (var sr = new StringReader (xml))
+			using (var xr = new XmlTextReader (sr)) {
+				var xs = new XmlSerializer (typeof (SerializeMe));
+				SerializeMe item = xs.Deserialize (xr) as SerializeMe;
+				Assert.AreEqual (2, item.SetMe, "SetMe");
+			}
+		}
+
+		public class SerializeMe {
+
+			[XmlAttribute]
+			public int SetMe { get; set; }
+
+			public SerializeMe ()
+			{
+				SetMe = 1;
 			}
 		}
 	}
