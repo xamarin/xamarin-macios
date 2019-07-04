@@ -2205,15 +2205,6 @@ namespace Registrar {
 				}
 				goto default;
 #endif
-			case "WatchKit":
-				// There's a bug in Xcode 7 beta 2 headers where the build fails with
-				// ObjC++ files if WatchKit.h is included before UIKit.h (radar 21651022).
-				// Workaround this by manually include UIKit.h before WatchKit.h.
-				if (!namespaces.Contains ("UIKit"))
-					header.WriteLine ("#import <UIKit/UIKit.h>");
-				header.WriteLine ("#import <WatchKit/WatchKit.h>");
-				namespaces.Add ("UIKit");
-				return;
 			case "QTKit":
 #if MONOMAC
 				if (App.SdkVersion >= MacOSTenTwelveVersion)
@@ -2745,9 +2736,11 @@ namespace Registrar {
 				if (IsTypeCore (@class, "Photos") || IsTypeCore (@class, "PhotosUI"))
 					continue;
 
-				// Xcode 11 beta 1 shipped without WatchKit for iOS!
-				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS)
+				// Xcode 11 removed WatchKit for iOS!
+				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS) {
+					exceptions.Add (ErrorHelper.CreateWarning (4178, $"The class '{@class.Type.FullName}' will not be registered because the WatchKit framework has been removed from iOS."));
 					continue;
+				}
 
 				if (@class.IsFakeProtocol)
 					continue;

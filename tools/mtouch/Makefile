@@ -154,6 +154,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 # note 4: GameCenter was removed in Xcode 7 beta 5, and GameKit is back.
 # note 5: Metal* seems to be supported as of some Xcode 7 beta (b2 didn't, but the final release does)
 # note 6: Xcode 11 beta 1 shipped without WatchKit.
+# note 7: Xcode 11 beta 3 documented that shipping without WatchKit was done on purpose (in the release notes).
 
 # keep the above list of weak_framework in sync with mtouch.cs
 # except it is no a mistake that GameController and MediaAccessibility (#13636) are not built into simlauncher

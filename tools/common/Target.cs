@@ -205,9 +205,9 @@ namespace Xamarin.Bundler {
 							}
 							break;
 						case "WatchKit":
-							// Xcode 11 beta 1 doesn't ship WatchKit for iOS
+							// Xcode 11 doesn't ship WatchKit for iOS
 							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
-								ErrorHelper.Warning (99, "Not linking with WatchKit because Xcode 11 beta 1 does not ship with the WatchKit framework.");
+								ErrorHelper.Warning (5219, "Not linking with WatchKit because it has been removed from iOS.");
 								continue;
 							}
 							break;

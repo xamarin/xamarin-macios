@@ -2545,6 +2545,14 @@ If this is not the case, please file a [bug report](https://github.com/xamarin/x
 
 The name of an Objective-C protocol can't contain certain characters which means that the `Adopts` attribute on the corresponding managed class can't have the `ProtocolType` parameter containing them. Please refer to the provided error message and fix accordingly.
 
+### MT4178: The class '{class}' will not be registered because the WatchKit framework has been removed from iOS.
+
+Apple removed the WatchKit framework on iOS, so any code that uses it will not work anymore.
+
+Any code that uses the WatchKit framework must be removed/rewritten.
+
+Reference: https://github.com/xamarin/xamarin-macios/issues/6492
+
 # MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
@@ -2824,6 +2832,12 @@ There are two main reasons for this:
 	* The symbol for Objective-C classes is `OBJC_CLASS_$_<classname>`.
 * The symbol is correct, but it's a symbol that's already preserved by normal
   means (some build options causes the exact list of dynamic symbols to vary).
+
+### MT5219: Not linking with {framework} because it has been removed from {platform}.
+
+The framework in question has been removed, and Xamarin.iOS can't link with it.
+
+Any code that uses the framework must be removed/rewritten.
 
 ### MT53xx: Other tools
 

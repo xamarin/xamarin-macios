@@ -583,6 +583,8 @@ complicated to get it right when doing it manually.
 
 If this is not the case, please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
+<!-- 4178: used by mtouch -->
+
 ## MM5xxx: GCC and toolchain
 
 ### MM51xx: compilation
@@ -620,6 +622,12 @@ If this is not the case, please file a [bug report](https://github.com/xamarin/x
 #### MM5218: Can't ignore the dynamic symbol {symbol} (--ignore-dynamic-symbol={symbol}) because it was not detected as a dynamic symbol.
 
 See the [equivalent mtouch warning](~/ios/troubleshooting/mtouch-errors.md#MT5218).
+
+### MM5219: Not linking with {framework} because it has been removed from {platform}.
+
+The framework in question has been removed, and Xamarin.Mac can't link with it.
+
+Any code that uses the framework must be removed/rewritten.
 
 <!-- 5206 used by mtouch -->
 <!-- 5207 used by mtouch -->
