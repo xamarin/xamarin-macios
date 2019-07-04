@@ -1,8 +1,0 @@
-## the returned type WKCrownSequencer is not available on iOS (watchOS only)
-### not reported due to lack of WatchKit headers in xcode 11 beta 1
-###!missing-selector! WKInterfaceController::crownSequencer not bound
-
-## deprecated (and likely never supported from iOS, but in the headers)
-### not reported due to lack of WatchKit headers in xcode 11 beta 1
-###!missing-selector! WKInterfaceController::beginGlanceUpdates not bound
-###!missing-selector! WKInterfaceController::endGlanceUpdates not bound
