@@ -297,6 +297,9 @@ get_type_description_length (const char *desc)
 			length = 1;
 			break;
 		case _C_UNDEF:
+			// Example: [NSView sortSubviewsUsingFunction:context:] = '^?16^v24'
+			length = 1;
+			break;
 		case _C_ATOM:
 		case _C_VECTOR:
 			xamarin_assertion_message ("Unhandled type encoding: %s", desc);

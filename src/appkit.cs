@@ -16193,6 +16193,10 @@ namespace AppKit {
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("viewDidChangeEffectiveAppearance")]
 		void ViewDidChangeEffectiveAppearance ();
+
+		[Internal]
+		[Export ("sortSubviewsUsingFunction:context:")]
+		void SortSubviews (IntPtr function_pointer, IntPtr context);
 	}
 
 	[BaseType (typeof (NSAnimation))]
