@@ -17,10 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-keep-resources-2", "li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-preserve-assembly", "link-preserve-assembly\link-preserve-assembly.csproj", "{39DD1BD5-1204-4D9E-A460-3A532DB3A797}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-uithread-1", "link-uithread-1\link-uithread-1.csproj", "{1F4422A4-C6B2-49B5-BB1D-6CA4676397CA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-uithread-2", "link-uithread-2\link-uithread-2.csproj", "{26909B1A-21F0-484A-9DD0-EE5F612FB91B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-xml-serialization", "link-xml-serialization\link-xml-serialization.csproj", "{6223332F-517A-43D0-9BCC-037645A24E97}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-remove-attributes-1", "link-remove-attributes-1\link-remove-attributes-1.csproj", "{F977D041-B0A5-49DE-815E-B210DBE140A5}"
@@ -62,18 +58,6 @@ Global
 		{148DC17B-B29F-48A7-97CD-EECE26015B25}.Debug|x86.Build.0 = Debug|x86
 		{148DC17B-B29F-48A7-97CD-EECE26015B25}.Release|x86.ActiveCfg = Release|x86
 		{148DC17B-B29F-48A7-97CD-EECE26015B25}.Release|x86.Build.0 = Release|x86
-		{1F4422A4-C6B2-49B5-BB1D-6CA4676397CA}.AppStore|x86.ActiveCfg = AppStore|x86
-		{1F4422A4-C6B2-49B5-BB1D-6CA4676397CA}.AppStore|x86.Build.0 = AppStore|x86
-		{1F4422A4-C6B2-49B5-BB1D-6CA4676397CA}.Debug|x86.ActiveCfg = Debug|x86
-		{1F4422A4-C6B2-49B5-BB1D-6CA4676397CA}.Debug|x86.Build.0 = Debug|x86
-		{1F4422A4-C6B2-49B5-BB1D-6CA4676397CA}.Release|x86.ActiveCfg = Release|x86
-		{1F4422A4-C6B2-49B5-BB1D-6CA4676397CA}.Release|x86.Build.0 = Release|x86
-		{26909B1A-21F0-484A-9DD0-EE5F612FB91B}.AppStore|x86.ActiveCfg = AppStore|x86
-		{26909B1A-21F0-484A-9DD0-EE5F612FB91B}.AppStore|x86.Build.0 = AppStore|x86
-		{26909B1A-21F0-484A-9DD0-EE5F612FB91B}.Debug|x86.ActiveCfg = Debug|x86
-		{26909B1A-21F0-484A-9DD0-EE5F612FB91B}.Debug|x86.Build.0 = Debug|x86
-		{26909B1A-21F0-484A-9DD0-EE5F612FB91B}.Release|x86.ActiveCfg = Release|x86
-		{26909B1A-21F0-484A-9DD0-EE5F612FB91B}.Release|x86.Build.0 = Release|x86
 		{359E3AA4-A0E2-41A5-A5C5-03D322B71FE4}.AppStore|x86.ActiveCfg = AppStore|x86
 		{359E3AA4-A0E2-41A5-A5C5-03D322B71FE4}.AppStore|x86.Build.0 = AppStore|x86
 		{359E3AA4-A0E2-41A5-A5C5-03D322B71FE4}.Debug|x86.ActiveCfg = Debug|x86
