@@ -36,16 +36,12 @@ TESTS_UNIFIED = \
 	link-keep-resources-2 \
 	link-posix-1 \
 
-TESTS_4_5 = \
-	link-callfilepath-45 \
-
 DISABLED_4_5_TESTS_MONO_4_2 = \
 	link-httpclient-async \
 
 ALL_TESTS = \
 	$(TESTS_UNIFIED) \
 	$(TESTS_4_0) \
-	$(TESTS_4_5)
 
 all-local:: run
 
