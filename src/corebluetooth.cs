@@ -353,13 +353,11 @@ namespace CoreBluetooth {
 		[Export ("centralManager:willRestoreState:"), EventArgs ("CBWillRestore")]
 		void WillRestoreState (CBCentralManager central, NSDictionary dict);
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
-		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[iOS (13,0), TV (13,0), Watch (6,0), NotMac]
 		[Export ("centralManager:connectionEventDidOccur:forPeripheral:"), EventArgs ("CBPeripheralConnectionEvent")]
 		void ConnectionEventDidOccur (CBCentralManager central, CBConnectionEvent connectionEvent, CBPeripheral peripheral);
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
-		[iOS (13,0), TV (13,0), Watch (6,0)]
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
 		[Export ("centralManager:didUpdateANCSAuthorizationForPeripheral:"), EventArgs ("CBAncsAuthorizationUpdate")]
 		void DidUpdateAncsAuthorization (CBCentralManager central, CBPeripheral peripheral);
 	}
