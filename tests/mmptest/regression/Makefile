@@ -23,7 +23,6 @@ TESTS_4_0 = \
 	system-mono-profile \
 
 DISABLED_TESTS_MONO_4_2 =  \
-	link-data-contract-1 \
 	link-webclient-2 \
 	link-xml-serialization \
 
