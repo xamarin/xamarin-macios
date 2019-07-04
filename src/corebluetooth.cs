@@ -353,7 +353,7 @@ namespace CoreBluetooth {
 		[Export ("centralManager:willRestoreState:"), EventArgs ("CBWillRestore")]
 		void WillRestoreState (CBCentralManager central, NSDictionary dict);
 
-		[iOS (13,0), TV (13,0), Watch (6,0), NotMac]
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
 		[Export ("centralManager:connectionEventDidOccur:forPeripheral:"), EventArgs ("CBPeripheralConnectionEvent")]
 		void ConnectionEventDidOccur (CBCentralManager central, CBConnectionEvent connectionEvent, CBPeripheral peripheral);
 
