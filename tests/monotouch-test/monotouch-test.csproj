@@ -281,6 +281,7 @@
     <Folder Include="Vision\" />
     <Folder Include="Compression\" />
     <Folder Include="BackgroundTasks\" />
+    <Folder Include="WebKit\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
@@ -292,6 +293,8 @@
     <Content Include="LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc" />
     <Content Include="drum01.mp3" />
     <Content Include="Model3.arobject" />
+    <Content Include="access-denied.html" />
+    <Content Include="access-granted.html" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="LaunchScreen.storyboard" />
