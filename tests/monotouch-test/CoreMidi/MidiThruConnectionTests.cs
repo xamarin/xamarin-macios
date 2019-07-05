@@ -88,8 +88,19 @@ namespace MonoTouchFixtures.CoreMidi {
 				Assert.IsTrue (err == MidiError.Ok, "midi connection error");
 				// Test dynamic part of the struct
 				Assert.IsTrue (gotParams.Controls.Length == cnnParams.Controls.Length, "midi params objects should be the same amount");
-				Assert.IsTrue (gotParams.Maps.Length == cnnParams.Maps.Length, "midi params objects should be the same amount");
+				for (var i = 0; i < gotParams.Controls.Length; i++) {
+					Assert.AreEqual (cnnParams.Controls [i].ControlNumber, gotParams.Controls [i].ControlNumber, $"ControlNumber [{i}]");
+					Assert.AreEqual (cnnParams.Controls [i].ControlType, gotParams.Controls [i].ControlType, $"ControlType [{i}]");
+					Assert.AreEqual (cnnParams.Controls [i].Param, gotParams.Controls [i].Param, $"Param [{i}]");
+					Assert.AreEqual (cnnParams.Controls [i].RemappedControlType, gotParams.Controls [i].RemappedControlType, $"RemappedControlType [{i}]");
+					Assert.AreEqual (cnnParams.Controls [i].Transform, gotParams.Controls [i].Transform, $"Transform [{i}]");
 
+				}
+				Assert.IsTrue (gotParams.Maps.Length == cnnParams.Maps.Length, "midi params objects should be the same amount");
+				for (var i = 0; i < gotParams.Maps.Length; i++) {
+					Assert.That (cnnParams.Maps [i].Value, Is.EqualTo (gotParams.Maps [i].Value), $"Maps [{i}]");
+				}
+				
 				var newParams = new MidiThruConnectionParams {
 					FilterOutAllControls = false,
 					FilterOutBeatClock = true,
