@@ -3,8 +3,6 @@
 
 ## unsorted
 
-!duplicate-type-name! NSFileWrapperReadingOptions enum exists as both Foundation.NSFileWrapperReadingOptions and AppKit.NSFileWrapperReadingOptions
-!duplicate-type-name! NSWritingDirection enum exists as both Foundation.NSWritingDirection and AppKit.NSWritingDirection
 !extra-designated-initializer! NSScriptCommand::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
 !extra-protocol-member! unexpected selector NSURLSessionDelegate::URLSessionDidFinishEventsForBackgroundURLSession: found
 !missing-enum! NSBackgroundActivityResult not bound
