@@ -5,6 +5,7 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 	// keys names got changed at some point, but they all refer to a CMSampleBuffer (there is not CMSample obj)
+	[Watch (6,0)]
 	enum CMSampleBufferAttachmentKey { 
 		[Field ("kCMSampleAttachmentKey_NotSync")]
 		NotSync,
@@ -77,7 +78,7 @@ namespace CoreMedia {
 		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix")]
 		CameraIntrinsicMatrix,
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14, onlyOn64: true), Watch (6,0)]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReasonInfo")]
 		DroppedFrameReasonInfo,
 		[Mac (10,10)]

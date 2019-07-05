@@ -8,8 +8,6 @@
 // Copyright 2012-2014 Xamarin Inc
 //
 
-#if !WATCH
-
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -31,6 +29,7 @@ using UIKit;
 namespace CoreMedia {
 
 	// untyped enum (used as an OSStatus) -> CMSampleBuffer.h
+	[Watch (6,0)]
 	public enum CMSampleBufferError : int {
 		None							= 0,
 		AllocationFailed				= -12730,
@@ -50,6 +49,7 @@ namespace CoreMedia {
 		Invalidated						= -12744,
 	}
 
+	[Watch (6,0)]
 	public class CMSampleBuffer : ICMAttachmentBearer 
 #if !COREBUILD
 	, IDisposable
@@ -850,6 +850,7 @@ namespace CoreMedia {
 #endif // !COREBUILD
 	}
 
+	[NoWatch]
 	public enum LensStabilizationStatus { Active, OutOfRange, Unavailable, Off, None }
 
 #if !COREBUILD
@@ -1012,7 +1013,7 @@ namespace CoreMedia {
 			}
 		}
 
-		[iOS (9,0)]
+		[iOS (9,0), NoWatch]
 		public LensStabilizationStatus StillImageLensStabilizationStatus {
 			get {
 				string reason = GetStringValue (CMSampleAttachmentKey.StillImageLensStabilizationInfo);
@@ -1035,5 +1036,3 @@ namespace CoreMedia {
 	}
 #endif
 }
-
-#endif // !WATCH

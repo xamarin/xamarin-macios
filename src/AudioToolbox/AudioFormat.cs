@@ -40,12 +40,14 @@ using AudioFileID = System.IntPtr;
 namespace AudioToolbox {
 
 	// AudioFormatListItem
+	[Watch (6,0)]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct AudioFormat
 	{
 		public AudioStreamBasicDescription AudioStreamBasicDescription;
 		public AudioChannelLayoutTag AudioChannelLayoutTag;
 
+#if !WATCH
 		public unsafe static AudioFormat? GetFirstPlayableFormat (AudioFormat[] formatList)
 		{
 			if (formatList == null)
@@ -59,10 +61,10 @@ namespace AudioToolbox {
 				var ptr_size = sizeof (AudioFormat) * formatList.Length;
 				if (AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FirstPlayableFormatFromList, ptr_size, item, ref size, out index) != 0)
 					return null;
-
 				return formatList [index];
 			}
 		}
+#endif
 
 		public override string ToString ()
 		{
@@ -70,6 +72,7 @@ namespace AudioToolbox {
 		}
 	}
 
+	[NoWatch]
 	public enum AudioFormatError : int // Implictly cast to OSType
 	{
 		None					= 0,
@@ -84,6 +87,7 @@ namespace AudioToolbox {
         // '!dat'
 	}
 
+	[NoWatch]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioValueRange
 	{
@@ -91,15 +95,17 @@ namespace AudioToolbox {
     	public double Maximum;
 	}
 
+	[NoWatch]
 	public enum AudioBalanceFadeType : uint // UInt32 in AudioBalanceFades
 	{
 		MaxUnityGain = 0,
 		EqualPower = 1
 	}
 
+	[NoWatch]
 	public class AudioBalanceFade
 	{
-#if !COREBUILD
+#if !COREBUILD && !WATCH
 		[StructLayout (LayoutKind.Sequential)]
 		struct Layout
 		{
@@ -165,15 +171,17 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
+	[NoWatch]
 	public enum PanningMode : uint // UInt32 in AudioPanningInfo
 	{
 		SoundField					= 3,
 		VectorBasedPanning			= 4
 	}
 
+	[NoWatch]
 	public class AudioPanningInfo
 	{
-#if !COREBUILD
+#if !COREBUILD && !WATCH
 		[StructLayout (LayoutKind.Sequential)]
 		struct Layout
 		{
@@ -244,6 +252,7 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
+#if !WATCH
 	static partial class AudioFormatPropertyNative
 	{
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -385,4 +394,5 @@ namespace AudioToolbox {
 		HardwareCodecCapabilities	= 0x68776363,	// 'hwcc'
 #endif
 	}
+#endif // !WATCH
 }

@@ -13,6 +13,7 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
+	[Watch (6,0)]
 	[StructLayout(LayoutKind.Sequential)]
 	public partial struct CMTime {
 		// CMTimeFlags -> uint32_t -> CMTime.h
@@ -375,6 +376,7 @@ namespace CoreMedia {
 		}
 
 #if !XAMCORE_2_0
+		[NoWatch]
 		[Obsolete ("Use 'FromDictionary (NSDictionary)' instead.")]
 		public static CMTime FromDictionary (IntPtr dict)
 		{

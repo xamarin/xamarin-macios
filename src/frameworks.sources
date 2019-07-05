@@ -1721,6 +1721,7 @@ COMMON_FRAMEWORKS =         \
 	AVFoundation            \
 	CoreBluetooth           \
 	CoreFoundation          \
+	CoreMedia               \
 	CoreML                  \
 	CoreVideo               \
 	Compression             \
@@ -1749,7 +1750,6 @@ MAC_FRAMEWORKS =            \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMedia               \
 	CoreMidi                \
 	CoreMotion		\
 	CoreServices            \
@@ -1839,7 +1839,6 @@ IOS_FRAMEWORKS =         \
 	CoreImage \
 	CoreLocation \
 	CoreMIDI \
-	CoreMedia \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
@@ -1950,7 +1949,6 @@ TVOS_FRAMEWORKS =           \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMedia               \
 	CoreSpotlight			\
 	CoreText                \
 	DeviceCheck             \
