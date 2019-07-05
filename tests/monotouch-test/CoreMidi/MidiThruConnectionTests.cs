@@ -24,6 +24,7 @@ namespace MonoTouchFixtures.CoreMidi {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
+	[Ignore ("https://github.com/xamarin/maccore/issues/1834")]
 	public class MidiThruConnectionTests {
 
 		[Test]
