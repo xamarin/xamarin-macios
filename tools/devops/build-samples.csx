@@ -74,5 +74,5 @@ if (!Directory.Exists (xcode_path)) {
 }
 
 // Provisioning profiles
-Console.WriteLine ("Provisioning provisioning profiles...")
+Console.WriteLine ("Provisioning provisioning profiles...");
 Exec ($"../../../maccore/tools/install-qa-provisioning-profiles.sh");
