@@ -86,6 +86,9 @@ namespace JavaScriptCore {
 		IntPtr JSGlobalContextRefPtr { get; }
 	}
 
+	[Mac (10,15, onlyOn64: true), iOS (13,0)][TV (13,0)]
+	delegate void JSPromiseCreationExecutor (JSValue resolve, JSValue rejected);
+
 	[Mac (10,9, onlyOn64: true), iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // invalid (null) Handle is returned
@@ -122,6 +125,26 @@ namespace JavaScriptCore {
 
 		[Static, Export ("valueWithUndefinedInContext:")]
 		JSValue Undefined (JSContext context);
+
+		[Mac (10,15, onlyOn64: true), iOS (13,0)][TV (13,0)]
+		[Static]
+		[Export ("valueWithNewPromiseInContext:fromExecutor:")]
+		JSValue CreatePromise (JSContext context, JSPromiseCreationExecutor callback);
+
+		[Mac (10,15, onlyOn64: true), iOS (13,0)][TV (13,0)]
+		[Static]
+		[Export ("valueWithNewPromiseResolvedWithResult:inContext:")]
+		JSValue CreateResolvedPromise (NSObject result, JSContext context);
+
+		[Mac (10,15, onlyOn64: true), iOS (13,0)][TV (13,0)]
+		[Static]
+		[Export ("valueWithNewPromiseRejectedWithReason:inContext:")]
+		JSValue CreateRejectedPromise (NSObject reason, JSContext context);
+
+		[Mac (10,15, onlyOn64: true), iOS (13,0)][TV (13,0)]
+		[Static]
+		[Export ("valueWithNewSymbolFromDescription:inContext:")]
+		JSValue CreateSymbol (string description, JSContext context);
 
 		[Export ("toObject")]
 		NSObject ToObject ();
@@ -278,6 +301,10 @@ namespace JavaScriptCore {
 
 		[Export ("JSValueRef")]
 		IntPtr JSValueRefPtr { get; }
+
+		[Mac (10, 15, onlyOn64: true), iOS (13, 0)][TV (13,0)]
+		[Export ("isSymbol")]
+		bool IsSymbol { get; }
 	}
 
 	[Mac (10,9, onlyOn64: true), iOS (7,0)]
