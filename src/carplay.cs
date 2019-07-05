@@ -76,7 +76,7 @@ namespace CarPlay {
 	[Native]
 	enum CPAmbientLightStatus : ulong {
 		Light = 1uL << 0,
-		Dark = 1uL << 1
+		Dark = 1uL << 1,
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
