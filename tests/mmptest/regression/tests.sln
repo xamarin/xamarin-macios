@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-httpclient-async", "li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-webclient-3", "link-webclient-3\link-webclient-3.csproj", "{359E3AA4-A0E2-41A5-A5C5-03D322B71FE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-system.web-icalls", "link-system.web-icalls\link-system.web-icalls.csproj", "{6F2CC0E5-BE6A-4B96-AEDE-1A6EFE517166}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-keep-resources-1", "link-keep-resources-1\link-keep-resources-1.csproj", "{0A4EBB71-92E1-448C-BAA6-DFFB9491D8A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-keep-resources-2", "link-keep-resources-2\link-keep-resources-2.csproj", "{9D5EA758-05CE-416C-B2D1-523E481C0DCD}"
@@ -120,12 +118,6 @@ Global
 		{6223332F-517A-43D0-9BCC-037645A24E97}.Debug|x86.Build.0 = Debug|x86
 		{6223332F-517A-43D0-9BCC-037645A24E97}.Release|x86.ActiveCfg = Release|x86
 		{6223332F-517A-43D0-9BCC-037645A24E97}.Release|x86.Build.0 = Release|x86
-		{6F2CC0E5-BE6A-4B96-AEDE-1A6EFE517166}.AppStore|x86.ActiveCfg = AppStore|x86
-		{6F2CC0E5-BE6A-4B96-AEDE-1A6EFE517166}.AppStore|x86.Build.0 = AppStore|x86
-		{6F2CC0E5-BE6A-4B96-AEDE-1A6EFE517166}.Debug|x86.ActiveCfg = Debug|x86
-		{6F2CC0E5-BE6A-4B96-AEDE-1A6EFE517166}.Debug|x86.Build.0 = Debug|x86
-		{6F2CC0E5-BE6A-4B96-AEDE-1A6EFE517166}.Release|x86.ActiveCfg = Release|x86
-		{6F2CC0E5-BE6A-4B96-AEDE-1A6EFE517166}.Release|x86.Build.0 = Release|x86
 		{7B6ECB8B-ED54-4687-A8BE-7ADA22973F3F}.AppStore|x86.ActiveCfg = Debug|Any CPU
 		{7B6ECB8B-ED54-4687-A8BE-7ADA22973F3F}.AppStore|x86.Build.0 = Debug|Any CPU
 		{7B6ECB8B-ED54-4687-A8BE-7ADA22973F3F}.Debug|x86.ActiveCfg = Debug|Any CPU
