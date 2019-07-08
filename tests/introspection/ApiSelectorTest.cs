@@ -647,6 +647,19 @@ namespace Introspection {
 					return true;
 				}
 				break;
+#if !__MONOMAC__
+			case "ARSkeletonDefinition":
+				switch (selectorName) {
+				case "indexForJointName:":
+				case "defaultBody2DSkeletonDefinition":
+				case "defaultBody3DSkeletonDefinition":
+					// This selector does not exist in the simulator
+					if (Runtime.Arch == Arch.SIMULATOR)
+						return true;
+					break;
+				}
+				break;
+#endif
 			}
 
 			// old binding mistake
