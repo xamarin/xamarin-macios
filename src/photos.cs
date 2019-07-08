@@ -13,6 +13,7 @@ using UIKit;
 using NSImage = Foundation.NSObject; // help [NoiOS] and [NoTV]
 #else
 using AppKit;
+using UIImage = AppKit.NSImage;
 #endif
 
 namespace Photos
@@ -153,11 +154,9 @@ namespace Photos
 	[BaseType (typeof (PHChangeRequest))]
 	interface PHAssetChangeRequest {
 
-#if !MONOMAC
 		[Static]
 		[Export ("creationRequestForAssetFromImage:")]
 		PHAssetChangeRequest FromImage (UIImage image);
-#endif
 
 		[Static]
 		[Export ("creationRequestForAssetFromImageAtFileURL:")]
@@ -210,7 +209,6 @@ namespace Photos
 		[Export ("creationRequestForAsset")]
 		PHAssetCreationRequest CreationRequestForAsset ();
 
-		// +(BOOL)supportsAssetResourceTypes:(NSArray<NSNumber * __nonnull> * __nonnull)types;
 		[Static]
 		[Internal, Export ("supportsAssetResourceTypes:")]
 		bool _SupportsAssetResourceTypes (NSNumber[] types);
@@ -304,24 +302,12 @@ namespace Photos
 	[BaseType (typeof (PHAsset))]
 	interface PHAssetContentEditingInputExtensions {
 
-		// TODO does this need an async attribute? 
-		// [Async]
 		[Export ("requestContentEditingInputWithOptions:completionHandler:")]
 		nuint RequestContentEditingInput ([NullAllowed] PHContentEditingInputRequestOptions options, PHContentEditingHandler completionHandler);
 
 		[Export ("cancelContentEditingInputRequest:")]
 		void CancelContentEditingInputRequest (nuint requestID);
 	}
-
-	// TODO this was not changed in the diffs, but did not find this in the file
-	// [TV (10,0), Mac (10,15, onlyOn64: true), iOS (8,0)]
-	// [Category]
-	// [BaseType (typeof (PHContentEditingOutput))]
-	// interface PHContentEditingOutput_PHAssetChangeRequest {
-
-	// 	[Export ("initWithPlaceholderForCreatedAsset:")]
-	// 	IntPtr Constructor (PHObjectPlaceholder placeholderForCreatedAsset);
-	// }
 
 	[iOS (8,0)]
 	[TV (10,0)]
@@ -740,7 +726,7 @@ namespace Photos
 
 		[Export ("displaySizeImage", ArgumentSemantic.Strong)]
 #if MONOMAC
-		NSImage DisplaySizeImage { get; }							// TODO Remove!!!
+		NSImage DisplaySizeImage { get; }
 #else
 		UIImage DisplaySizeImage { get; }
 #endif
@@ -779,9 +765,6 @@ namespace Photos
 		[Export ("initWithContentEditingInput:")]
 		IntPtr Constructor (PHContentEditingInput contentEditingInput);
 
-
-		// TODO should this be moved into a category attribute thing?
-		[NoMac]
 		[Export ("initWithPlaceholderForCreatedAsset:")]
 		IntPtr Constructor (PHObjectPlaceholder placeholderForCreatedAsset);
 
@@ -1088,7 +1071,6 @@ namespace Photos
 	[Protocol]
 	interface PHPhotoLibraryAvailabilityObserver {
 
-		// TODO Not sure why sharpie said this one was abstract
 		[Abstract]
 		[Export ("photoLibraryDidBecomeUnavailable:")]
 		void PhotoLibraryDidBecomeUnavailable (PHPhotoLibrary photoLibrary);
@@ -1138,12 +1120,6 @@ namespace Photos
 		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 		[Export ("unregisterAvailabilityObserver:")]
 		void UnregisterAvailabilityObserver (IPHPhotoLibraryAvailabilityObserver observer);
-
-		// [Export ("registerChangeObserver:")]
-		// void RegisterChangeObserver (IPHPhotoLibraryChangeObserver observer);
-
-		// [Export ("unregisterChangeObserver:")]
-		// void UnregisterChangeObserver (IPHPhotoLibraryChangeObserver observer);
 	}
 
 	[Mac (10,13)]
@@ -1171,15 +1147,10 @@ namespace Photos
 #endif
 	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface PHLivePhoto
-#if !MONOMAC
-	: NSSecureCoding, NSCopying
-#endif
-	{
+	interface PHLivePhoto : NSSecureCoding, NSCopying {
 		[Export ("size")]
 		CGSize Size { get; }
 
-#if !MONOMAC
 		[Static]
 		[Export ("requestLivePhotoWithResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:")]
 		int RequestLivePhoto (NSUrl[] fileUrls, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, PHLivePhotoRequestLivePhotoHandler resultHandler);
@@ -1187,29 +1158,10 @@ namespace Photos
 		[Static]
 		[Export ("cancelLivePhotoRequestWithRequestID:")]
 		void CancelLivePhotoRequest (int requestID);
-#endif
 	}
 
 	[iOS (9,1)]
 	delegate void PHLivePhotoRequestLivePhotoHandler ([NullAllowed] PHLivePhoto livePhoto, NSDictionary info);
-
-	// [TV (10,0),Mac (10,15, onlyOn64: true), iOS (9,1)]
-	// [BaseType (typeof(NSObject))]
-	// [DisableDefaultCtor]
-	// interface PHLivePhoto : NSCopying, NSSecureCoding {
-
-	// 	[Mac (10,12, onlyOn64: true)]
-	// 	[Export ("size")]
-	// 	CGSize Size { get; }
-
-	// 	[Static]
-	// 	[Export ("requestLivePhotoWithResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:")]
-	// 	int RequestLivePhoto (NSUrl[] fileURLs, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, PHLivePhotoRequestLivePhotoHandler resultHandler);
-
-	// 	[Static]
-	// 	[Export ("cancelLivePhotoRequestWithRequestID:")]
-	// 	void CancelLivePhotoRequest (int requestID);
-	// }
 
 	[iOS (8,0)]
 	[TV (10,0)]
@@ -1390,7 +1342,7 @@ namespace Photos
 	[Unavailable (PlatformName.UIKitForMac)]
 	[NoiOS][NoTV]
 	[Advice ("This API is not available when using UIKit on macOS.")]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof (PHChangeRequest))]
 	interface PHProjectChangeRequest {
 
 		[Export ("initWithProject:")]

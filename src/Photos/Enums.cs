@@ -392,6 +392,6 @@ namespace Photos
 		UserCancelled = 3072,
 		LibraryVolumeOffline = 3114,
 		RelinquishingLibraryBundleToWriter = 3142,
-		SwitchingSystemPhotoLibrary = 3143
+		SwitchingSystemPhotoLibrary = 3143,
 	}
 }
