@@ -49,7 +49,6 @@ namespace apitest
 			Assert.IsTrue (textView.HasMarkedText, "NSTextInputClient_ShouldMarkText - Failed to mark text");
 			Assert.AreEqual (textView.MarkedRange, new NSRange (5, 7));
 
-			// Unmarking the text fixes a crasher: https://github.com/xamarin/maccore/issues/1794
 			textView.UnmarkText ();
 		}
 
