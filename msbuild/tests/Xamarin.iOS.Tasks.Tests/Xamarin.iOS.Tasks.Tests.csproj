@@ -70,6 +70,7 @@
     <Compile Include="ProjectsTests\ProjectWithFrameworks.cs" />
     <Compile Include="ProjectsTests\NativeReferences.cs" />
     <Compile Include="ProjectsTests\ProjectTest.cs" />
+    <Compile Include="ProjectsTests\XamarinForms.cs" />
     <Compile Include="ProjectsTests\Extensions\WatchKit2.cs" />
     <Compile Include="..\..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
