@@ -361,7 +361,7 @@ namespace Photos
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Mac (10,15, onlyOn64 : true)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHAssetResourceManager {
 
@@ -385,7 +385,7 @@ namespace Photos
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Mac (10,15, onlyOn64 : true)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface PHAssetResourceRequestOptions : NSCopying {
 
 		[Export ("networkAccessAllowed")]
@@ -1146,7 +1146,7 @@ namespace Photos
 	[DisableDefaultCtor] // NS_UNAVAILABLE
 #endif
 	[Mac (10,12, onlyOn64 : true)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface PHLivePhoto : NSSecureCoding, NSCopying {
 		[Export ("size")]
 		CGSize Size { get; }

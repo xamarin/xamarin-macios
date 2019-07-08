@@ -1,1 +1,4 @@
 !missing-protocol-conformance! PHFetchResult should conform to NSFastEnumeration
+
+# Enum is named PHPhotosErrorDomain and is clashing with domain name
+!unknown-native-enum! PHPhotosError bound
