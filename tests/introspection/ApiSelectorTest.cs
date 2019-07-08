@@ -647,6 +647,14 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "INParameter":
+				switch (selectorName) {
+				case "copyWithZone:":
+					if (!TestRuntime.CheckXcodeVersion (10, 0))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			// old binding mistake
