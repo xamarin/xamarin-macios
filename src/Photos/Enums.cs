@@ -76,10 +76,8 @@ namespace Photos
 	[Mac (10,12)]
 	[Native]
 	public enum PHCollectionListType : long {
-		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
-		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[Unavailable (PlatformName.MacOSX)]
 		MomentList  = 1,
 		Folder      = 2,
@@ -91,17 +89,13 @@ namespace Photos
 	[Mac (10,12)]
 	[Native]
 	public enum PHCollectionListSubtype : long {
-		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
-		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[Unavailable (PlatformName.MacOSX)]
 		MomentListCluster = 1,
 
-		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
-		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[Unavailable (PlatformName.MacOSX)]
 		MomentListYear = 2,
 
@@ -130,7 +124,7 @@ namespace Photos
 	[Mac (10,12)]
 	[Native]
 	public enum PHCollectionEditOperation : long {
-		// None             = 0,
+		None             = 0,
 		DeleteContent    = 1,
 		RemoveContent    = 2,
 		AddContent       = 3,
@@ -149,10 +143,8 @@ namespace Photos
 		Album      = 1,
 		SmartAlbum = 2,
 
-		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
-		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[Unavailable (PlatformName.MacOSX)]
 		Moment     = 3
 	}
@@ -272,7 +264,8 @@ namespace Photos
 	[Mac (10,12)]
 	[TV (10,0)]
 	[Native]
-	public enum PHAssetResourceType : long {
+	public enum PHAssetResourceType : long
+	{
 		Photo = 1,
 		Video = 2,
 		Audio = 3,

@@ -138,7 +138,7 @@ namespace Photos
 		[Export ("sourceType", ArgumentSemantic.Assign)]
 		PHAssetSourceType SourceType { get; }
 
-		[TV (11,0), iOS (11,0), Mac (10, 15, onlyOn64: true),]
+		[TV (11,0), iOS (11,0), Mac (10, 15, onlyOn64: true)]
 		[Export ("playbackStyle", ArgumentSemantic.Assign)]
 		PHAssetPlaybackStyle PlaybackStyle { get; }
 
@@ -201,7 +201,7 @@ namespace Photos
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Mac (10,15, onlyOn64: true)]
-	[BaseType (typeof (PHAssetChangeRequest))]
+	[BaseType (typeof(PHAssetChangeRequest))]
 	[DisableDefaultCtor]
 	interface PHAssetCreationRequest
 	{
@@ -226,9 +226,10 @@ namespace Photos
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Mac (10,15, onlyOn64: true)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // crashes: -[PHAssetResource init]: unrecognized selector sent to instance 0x7f9e15884e90
-	interface PHAssetResource {
+	interface PHAssetResource
+	{
 
 		[Export ("type", ArgumentSemantic.Assign)]
 		PHAssetResourceType ResourceType { get; }
@@ -361,9 +362,10 @@ namespace Photos
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Mac (10,15, onlyOn64 : true)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface PHAssetResourceManager {
+	interface PHAssetResourceManager
+	{
 
 		[Static]
 		[Export ("defaultManager")]
@@ -380,19 +382,17 @@ namespace Photos
 		void CancelDataRequest (int requestID);
 	}
 
-	delegate void PHAssetResourceProgressHandler (double progress);
-
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Mac (10,15, onlyOn64 : true)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 	interface PHAssetResourceRequestOptions : NSCopying {
 
 		[Export ("networkAccessAllowed")]
 		bool NetworkAccessAllowed { [Bind ("isNetworkAccessAllowed")] get; set; }
 
 		[NullAllowed, Export ("progressHandler", ArgumentSemantic.Copy)]
-		PHAssetResourceProgressHandler ProgressHandler { get; set; }
+		Action<double> ProgressHandler { get; set; }
 	}
 
 	[iOS (8,0)]
@@ -434,6 +434,7 @@ namespace Photos
 	[DisableDefaultCtor]
 	interface PHChangeRequest {
 
+		// create comment about being Internal after I talk to Alex 
 		[Internal]
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -999,7 +1000,7 @@ namespace Photos
 
 		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 		[Export ("requestImageDataAndOrientationForAsset:options:resultHandler:")]
-		int RequestImageDataAndOrientationForAsset (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageManagerRequestImageDataHandler resultHandler);
+		int RequestImageDataAndOrientation (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageManagerRequestImageDataHandler resultHandler);
 	}
 
 #if MONOMAC
@@ -1147,21 +1148,19 @@ namespace Photos
 #endif
 	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface PHLivePhoto : NSSecureCoding, NSCopying {
+	interface PHLivePhoto : NSSecureCoding, NSCopying
+	{
 		[Export ("size")]
 		CGSize Size { get; }
 
 		[Static]
 		[Export ("requestLivePhotoWithResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:")]
-		int RequestLivePhoto (NSUrl[] fileUrls, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, PHLivePhotoRequestLivePhotoHandler resultHandler);
+		int RequestLivePhoto (NSUrl[] fileUrls, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, Action<PHLivePhoto, NSDictionary> resultHandler);
 
 		[Static]
 		[Export ("cancelLivePhotoRequestWithRequestID:")]
 		void CancelLivePhotoRequest (int requestID);
 	}
-
-	[iOS (9,1)]
-	delegate void PHLivePhotoRequestLivePhotoHandler ([NullAllowed] PHLivePhoto livePhoto, NSDictionary info);
 
 	[iOS (8,0)]
 	[TV (10,0)]
