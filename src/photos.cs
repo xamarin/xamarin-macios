@@ -123,13 +123,13 @@ namespace Photos
 		[Export ("fetchAssetsWithOptions:")]
 		PHFetchResult FetchAssets ([NullAllowed] PHFetchOptions options);
 
-		[Introduced (PlatformName.TvOS, 8, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.TvOS, 11, 0, message: "Will be removed in a future release")]
-		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Will be removed in a future release")]
+		[Introduced (PlatformName.TvOS, 8,0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.TvOS, 11,0, message: "Will be removed in a future release")]
+		[Introduced (PlatformName.iOS, 8,0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Will be removed in a future release")]
 		[Unavailable (PlatformName.UIKitForMac)]
 		[NoMac]
-		[Static] 
+		[Static]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("fetchAssetsWithALAssetURLs:options:")]
 		PHFetchResult FetchAssets (NSUrl[] assetUrls, [NullAllowed] PHFetchOptions options);
