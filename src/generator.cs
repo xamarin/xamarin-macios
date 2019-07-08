@@ -1477,7 +1477,7 @@ public partial class Generator : IMemberGatherer {
 					nsvalue_return_map [TypeManager.CMTimeMapping] = ".CMTimeMappingValue";
 				}
 
-				if (Frameworks.HaveCoreMedia)
+				if (Frameworks.HaveCoreAnimation)
 					nsvalue_return_map [TypeManager.CATransform3D] = ".CATransform3DValue";
 			}
 			return nsvalue_return_map;
