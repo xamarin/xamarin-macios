@@ -55,7 +55,7 @@ namespace PhotosUI {
 
 	[TV (10,0)]
 	[iOS (9,1)]
-	[Mac (10,12, onlyOn64: true)]
+	// [Mac (10,12, onlyOn64: true)]
 #if MONOMAC
 	[BaseType (typeof (NSView))]
 #else
@@ -119,7 +119,7 @@ namespace PhotosUI {
 
 	[TV (10,0)]
 	[iOS (9,1)]
-	[Mac (10,12, onlyOn64: true)]
+	// [Mac (10,12, onlyOn64: true)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhotoViewDelegate {
@@ -471,6 +471,7 @@ namespace PhotosUI {
 	[iOS (8,0)]
 	[NoMac][NoTV]
 	[DisableDefaultCtor]
+	[Deprecated (PlatformName.iOS, 13, 0]
 	[BaseType (typeof (NSExtensionContext))]
 	interface PHEditingExtensionContext
 	{
