@@ -647,7 +647,7 @@ namespace Introspection {
 					return true;
 				}
 				break;
-#if !__MONOMAC__
+#if !__MACOS__
 			case "ARSkeletonDefinition":
 				switch (selectorName) {
 				case "indexForJointName:":
