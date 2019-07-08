@@ -6,9 +6,6 @@
 //
 // Copyright 2012-2014 Xamarin Inc All rights reserved.
 //
-
-#if !__WATCHOS__
-
 using System;
 #if XAMCORE_2_0
 using Foundation;
@@ -124,4 +121,3 @@ namespace MonoTouchFixtures.CoreMedia {
 	}
 }
 
-#endif // !__WATCHOS__
