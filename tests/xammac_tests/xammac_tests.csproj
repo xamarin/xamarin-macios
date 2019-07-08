@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
+    <Compile Include="AppKit\NSGridViewTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
