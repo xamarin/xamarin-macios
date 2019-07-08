@@ -11,8 +11,6 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 
 TESTS_4_0 = \
-	link-posix-1 \
-	link-posix-2 \
 	link-keep-resources-1 \
 	link-preserve-assembly \
 	link-uithread-1 \
@@ -36,6 +34,7 @@ DISABLED_TESTS_MONO_4_4 =  \
 	link-remove-attributes-1
 
 TESTS_UNIFIED = \
+	link-posix-1 \
 	custom-bundle-name
 
 TESTS_4_5 = \
