@@ -34,6 +34,7 @@ DISABLED_TESTS_MONO_4_4 =  \
 TESTS_UNIFIED = \
 	custom-bundle-name \
 	link-keep-resources-1 \
+	link-keep-resources-2 \
 	link-posix-1 \
 
 TESTS_4_5 = \
