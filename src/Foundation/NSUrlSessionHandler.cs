@@ -129,6 +129,7 @@ namespace Foundation {
 #if !MONOMAC && !__WATCHOS__
 		readonly bool isBackgroundSession = false;
 		NSObject notificationToken;  // needed to make sure we do not hang if not using a background session
+		readonly object notificationTokenLock = new object (); // need to make sure that threads do no step on each other with a dispose and a remove  inflight data
 #endif
 
 		static NSUrlSessionConfiguration CreateConfig ()
@@ -181,16 +182,20 @@ namespace Foundation {
 
 		void AddNotification ()
 		{
-			if (!isBackgroundSession && notificationToken == null)
-				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+			lock (notificationTokenLock) {
+				if (!isBackgroundSession && notificationToken == null)
+					notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+			} // lock
 		}
 
 		void RemoveNotification ()
 		{
-			if (notificationToken != null) {
-				NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
-				notificationToken = null;
-			}
+			lock (notificationTokenLock) {
+				if (notificationToken != null) {
+					NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
+					notificationToken = null;
+				}
+			} // lock
 		}
 
 		void BackgroundNotificationCb (NSNotification obj)
