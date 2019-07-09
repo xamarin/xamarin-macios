@@ -1,5 +1,4 @@
 #load "utils.csx"
-#load "../../../maccore/tools/devops/external-deps.csx" // this will map the Xcode locations from Azure into our expected locations using symlinks.
 
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +12,7 @@ using Newtonsoft.Json.Linq;
 using Xamarin.Provisioning;
 using Xamarin.Provisioning.Model;
 
-// Provision Mono, XI, XM, Mono, Objective-Sharpie, Xcode, provisioning profiles.
+// Provision Mono, XI, XM, Mono, Objective-Sharpie, provisioning profiles.
 //
 // We get Mono from the current commit's MIN_MONO_URL value in Make.config
 // We get XI and XM from the current commit's manifest from GitHub's statuses
@@ -58,10 +57,6 @@ InstallPackage ("Xamarin.iOS", FindVariable ("XI_PACKAGE"));
 InstallPackage ("Xamarin.Mac", FindVariable ("XM_PACKAGE"));
 InstallPackage ("Objective-Sharpie", FindVariable ("MIN_SHARPIE_URL"));
 
-// Xcode
-var xcode_path = Path.GetDirectoryName (Path.GetDirectoryName (FindVariable ("XCODE_DEVELOPER_ROOT")));
-Console.WriteLine ($"ln -Fhs {xcode_path} /Applications/Xcode.app");
-Exec ("ln", "-Fhs", xcode_path, "/Applications/Xcode.app");
-
 // Provisioning profiles
+Console.WriteLine ("Provisioning provisioning profiles...");
 Exec ($"../../../maccore/tools/install-qa-provisioning-profiles.sh");
