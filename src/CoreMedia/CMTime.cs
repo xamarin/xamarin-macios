@@ -376,13 +376,14 @@ namespace CoreMedia {
 		}
 
 #if !XAMCORE_2_0
-		[NoWatch]
+#if !WATCH
 		[Obsolete ("Use 'FromDictionary (NSDictionary)' instead.")]
 		public static CMTime FromDictionary (IntPtr dict)
 		{
 			return CMTimeMakeFromDictionary (dict);
 		}
-#endif		
+#endif // !WATCH
+#endif	// !XAMCORE_@_)	
 #endif // !COREBUILD
 	}
 }

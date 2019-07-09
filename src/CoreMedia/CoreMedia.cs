@@ -26,11 +26,12 @@ namespace CoreMedia {
 		Subtitle      = 1935832172, // 'sbtl'
 		TimeCode      = 1953325924, // 'tmcd'
 #if !XAMCORE_2_0
+#if !WATCH
 		// not part of the header file anymore
-		[NoWatch]
 		[Obsolete ("Use 'Metadata' instead.")]
 		TimedMetadata = 1953326452, // 'tmet'
-#endif
+#endif // !WATCH
+#endif // !XAMCORE_2_0
 		// note: the 4CC was obsoleted, i.e. Metadata is a new 4CC
 		Metadata      = 0x6D657461, // 'meta'
 	}
@@ -115,10 +116,11 @@ namespace CoreMedia {
 		public static readonly CMTimeRange Zero;
 
 #if !XAMCORE_3_0
-		[NoWatch]
+#if !WATCH
 		[Obsolete ("Use 'InvalidRange'.")]
 		public static readonly CMTimeRange Invalid;
-#endif
+#endif // !WATCH
+#endif // !XAMCORE_3_0
 		public static readonly CMTimeRange InvalidRange;
 
 		[iOS (9,0)][Mac (10,11)]

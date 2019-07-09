@@ -78,7 +78,7 @@ namespace CoreMedia {
 		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix")]
 		CameraIntrinsicMatrix,
-		[Mac (10,14, onlyOn64: true), Watch (6,0)]
+		[Mac (10,14, onlyOn64: true)]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReasonInfo")]
 		DroppedFrameReasonInfo,
 		[Mac (10,10)]

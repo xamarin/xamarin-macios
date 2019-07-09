@@ -168,7 +168,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.AreEqual (first.Start, second.Start, "CompareCMTimeRange - start - " + description);
 		}
 
-#if XAMCORE_2_0
+#if XAMCORE_2_0 && !__WATCHOS__
 		[Test]
 		public void CMTimeStrongDictionary ()
 		{

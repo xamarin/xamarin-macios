@@ -47,7 +47,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		}
 
 
-#if !__TVOS__ && !MONOMAC // GetAuthorizationStatus is not available on mac
+#if __IOS__// GetAuthorizationStatus is not available on mac
 		[Test]
 		public void Video ()
 		{

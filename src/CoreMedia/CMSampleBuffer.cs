@@ -850,8 +850,9 @@ namespace CoreMedia {
 #endif // !COREBUILD
 	}
 
-	[NoWatch]
+#if !WATCH
 	public enum LensStabilizationStatus { Active, OutOfRange, Unavailable, Off, None }
+#endif
 
 #if !COREBUILD
 	public partial class CMSampleBufferAttachmentSettings : DictionaryContainer {
@@ -1013,7 +1014,8 @@ namespace CoreMedia {
 			}
 		}
 
-		[iOS (9,0), NoWatch]
+#if !WATCH
+		[iOS (9,0)]
 		public LensStabilizationStatus StillImageLensStabilizationStatus {
 			get {
 				string reason = GetStringValue (CMSampleAttachmentKey.StillImageLensStabilizationInfo);
@@ -1032,7 +1034,8 @@ namespace CoreMedia {
 				return LensStabilizationStatus.None;
 			}
 		}
-#endif
+#endif // !WATCH
+#endif // !MONOMAC
 	}
 #endif
 }

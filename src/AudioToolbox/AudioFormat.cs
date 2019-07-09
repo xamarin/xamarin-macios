@@ -72,7 +72,8 @@ namespace AudioToolbox {
 		}
 	}
 
-	[NoWatch]
+#if !WATCH
+
 	public enum AudioFormatError : int // Implictly cast to OSType
 	{
 		None					= 0,
@@ -87,7 +88,6 @@ namespace AudioToolbox {
         // '!dat'
 	}
 
-	[NoWatch]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioValueRange
 	{
@@ -95,17 +95,15 @@ namespace AudioToolbox {
     	public double Maximum;
 	}
 
-	[NoWatch]
 	public enum AudioBalanceFadeType : uint // UInt32 in AudioBalanceFades
 	{
 		MaxUnityGain = 0,
 		EqualPower = 1
 	}
 
-	[NoWatch]
 	public class AudioBalanceFade
 	{
-#if !COREBUILD && !WATCH
+#if !COREBUILD
 		[StructLayout (LayoutKind.Sequential)]
 		struct Layout
 		{
@@ -171,17 +169,15 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
-	[NoWatch]
 	public enum PanningMode : uint // UInt32 in AudioPanningInfo
 	{
 		SoundField					= 3,
 		VectorBasedPanning			= 4
 	}
 
-	[NoWatch]
 	public class AudioPanningInfo
 	{
-#if !COREBUILD && !WATCH
+#if !COREBUILD
 		[StructLayout (LayoutKind.Sequential)]
 		struct Layout
 		{
@@ -252,7 +248,6 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
-#if !WATCH
 	static partial class AudioFormatPropertyNative
 	{
 		[DllImport (Constants.AudioToolboxLibrary)]
