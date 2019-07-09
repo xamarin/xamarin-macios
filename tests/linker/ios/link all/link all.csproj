@@ -198,6 +198,9 @@
     <Compile Include="..\..\CommonLinkAllTest.cs">
       <Link>CommonLinkAllTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonLinkAnyTest.cs">
+      <Link>CommonLinkAnyTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />

@@ -16,7 +16,6 @@ TESTS_4_0 = \
 	link-uithread-2 \
 	link-safe-1 \
 	link-frameworks-1 \
-	link-blocks-1 \
 	embedded-mono \
 	system-mono \
 	embedded-mono-profile \

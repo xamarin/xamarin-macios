@@ -33,8 +33,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-frameworks-1", "link-f
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-nativebuilder-1", "link-nativebuilder-1\link-nativebuilder-1.csproj", "{D37FC010-0D17-4B68-ABA8-33BA599CD94C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-blocks-1", "link-blocks-1\link-blocks-1.csproj", "{26634789-2957-4A78-BBF0-929BCA74440F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-preserve-calendar-1", "link-preserve-calendar-1\link-preserve-calendar-1.csproj", "{910B8B76-46C3-4550-AB5C-BD813F053A98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link-preserve-calendar-2", "link-preserve-calendar-2\link-preserve-calendar-2.csproj", "{88BD48BB-BF1C-40B2-90C0-3C2C644E3037}"
@@ -72,12 +70,6 @@ Global
 		{1F4422A4-C6B2-49B5-BB1D-6CA4676397CA}.Debug|x86.Build.0 = Debug|x86
 		{1F4422A4-C6B2-49B5-BB1D-6CA4676397CA}.Release|x86.ActiveCfg = Release|x86
 		{1F4422A4-C6B2-49B5-BB1D-6CA4676397CA}.Release|x86.Build.0 = Release|x86
-		{26634789-2957-4A78-BBF0-929BCA74440F}.AppStore|x86.ActiveCfg = AppStore|Any CPU
-		{26634789-2957-4A78-BBF0-929BCA74440F}.AppStore|x86.Build.0 = AppStore|Any CPU
-		{26634789-2957-4A78-BBF0-929BCA74440F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{26634789-2957-4A78-BBF0-929BCA74440F}.Debug|x86.Build.0 = Debug|Any CPU
-		{26634789-2957-4A78-BBF0-929BCA74440F}.Release|x86.ActiveCfg = Release|Any CPU
-		{26634789-2957-4A78-BBF0-929BCA74440F}.Release|x86.Build.0 = Release|Any CPU
 		{26909B1A-21F0-484A-9DD0-EE5F612FB91B}.AppStore|x86.ActiveCfg = AppStore|x86
 		{26909B1A-21F0-484A-9DD0-EE5F612FB91B}.AppStore|x86.Build.0 = AppStore|x86
 		{26909B1A-21F0-484A-9DD0-EE5F612FB91B}.Debug|x86.ActiveCfg = Debug|x86
