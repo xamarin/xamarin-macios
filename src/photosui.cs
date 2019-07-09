@@ -471,7 +471,7 @@ namespace PhotosUI {
 	[iOS (8,0)]
 	[NoMac][NoTV]
 	[DisableDefaultCtor]
-	[Deprecated (PlatformName.iOS, 13, 0]
+	[Deprecated (PlatformName.iOS, 13, 0)]
 	[BaseType (typeof (NSExtensionContext))]
 	interface PHEditingExtensionContext
 	{
