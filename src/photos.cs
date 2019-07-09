@@ -957,8 +957,8 @@ namespace Photos
 		[Export ("cancelImageRequest:")]
 		void CancelImageRequest (int /* PHImageRequestID = int32_t */ requestID);
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "use RequestImageDataAndOrientation instead")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "use RequestImageDataAndOrientation instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'RequestImageDataAndOrientation (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageManagerRequestImageDataHandler resultHandler)' instead")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'RequestImageDataAndOrientation (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageManagerRequestImageDataHandler resultHandler)' instead")]
 		[NoMac]
 		[Export ("requestImageDataForAsset:options:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestImageData (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageDataHandler handler);
