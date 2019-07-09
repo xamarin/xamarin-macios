@@ -123,10 +123,8 @@ namespace Photos
 		[Export ("fetchAssetsWithOptions:")]
 		PHFetchResult FetchAssets ([NullAllowed] PHFetchOptions options);
 
-		[Introduced (PlatformName.TvOS, 8,0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.TvOS, 11,0, message: "Will be removed in a future release")]
-		[Introduced (PlatformName.iOS, 8,0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.iOS, 11,0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.TvOS, 11,0)]
+		[Deprecated (PlatformName.iOS, 11,0)]
 		[Unavailable (PlatformName.UIKitForMac)]
 		[NoMac]
 		[Static]
@@ -366,7 +364,6 @@ namespace Photos
 	[DisableDefaultCtor]
 	interface PHAssetResourceManager
 	{
-
 		[Static]
 		[Export ("defaultManager")]
 		PHAssetResourceManager DefaultManager { get; }
@@ -434,7 +431,9 @@ namespace Photos
 	[DisableDefaultCtor]
 	interface PHChangeRequest {
 
-		// create comment about being Internal after I talk to Alex 
+		// Since PHAssetChangeRequest has obsolete no argument ctor from file below and its base class is 
+		// PHChangeRequest, we create internal no argument constructor
+		// https://github.com/xamarin/xamarin-macios/blob/c99ad292b2e357f4f2acb083e03281a323da44a2/src/Photos/PHAssetChangeRequest.cs#L7-L15
 		[Internal]
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -563,19 +562,15 @@ namespace Photos
 		[Export ("fetchAssetCollectionsWithALAssetGroupURLs:options:")]
 		PHFetchResult FetchAssetCollections (NSUrl[] assetGroupUrls, [NullAllowed] PHFetchOptions options);
 
-		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
-		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[NoMac]
 		[Static]
 		[Export ("fetchMomentsInMomentList:options:")]
 		PHFetchResult FetchMoments (PHCollectionList momentList, [NullAllowed] PHFetchOptions options);
 
-		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
-		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[NoMac]
 		[Static]
 		[Export ("fetchMomentsWithOptions:")]
@@ -623,19 +618,15 @@ namespace Photos
 		[Export ("fetchCollectionListsWithType:subtype:options:")]
 		PHFetchResult FetchCollectionLists (PHCollectionListType type, PHCollectionListSubtype subType, [NullAllowed] PHFetchOptions options);
 
-		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
-		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[NoMac]
 		[Static]
 		[Export ("fetchMomentListsWithSubtype:containingMoment:options:")]
 		PHFetchResult FetchMomentLists (PHCollectionListSubtype subType, PHAssetCollection moment, [NullAllowed] PHFetchOptions options);
 
-		[Introduced (PlatformName.iOS, 8, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Will be removed in a future release")]
-		[Introduced (PlatformName.TvOS, 10, 0, message: "Will be removed in a future release")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Will be removed in a future release")]
+		[Deprecated (PlatformName.iOS, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 13, 0)]
 		[NoMac]
 		[Static]
 		[Export ("fetchMomentListsWithSubtype:options:")]
@@ -948,7 +939,7 @@ namespace Photos
 	delegate void PHImageManagerRequestAvAssetHandler (AVAsset asset, AVAudioMix audioMix, NSDictionary info);
 #endif
 	delegate void PHImageManagerRequestLivePhoto (PHLivePhoto livePhoto, NSDictionary info);
-	delegate void PHImageManagerRequestImageDataHandler ([NullAllowed] NSData imageData, [NullAllowed] string dataUTI, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary info);
+	delegate void PHImageManagerRequestImageDataHandler ([NullAllowed] NSData imageData, [NullAllowed] string dataUti, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary info);
 
 	[iOS (8,0)]
 	[TV (10,0)]
@@ -966,10 +957,8 @@ namespace Photos
 		[Export ("cancelImageRequest:")]
 		void CancelImageRequest (int /* PHImageRequestID = int32_t */ requestID);
 
-		[Introduced (PlatformName.iOS, 8, 0)]
-		[Deprecated (PlatformName.iOS, 13, 0)]
-		[Introduced (PlatformName.TvOS, 8, 0)]
-		[Deprecated (PlatformName.TvOS, 13, 0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "use RequestImageDataAndOrientation instead")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "use RequestImageDataAndOrientation instead")]
 		[NoMac]
 		[Export ("requestImageDataForAsset:options:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestImageData (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageDataHandler handler);
@@ -1116,11 +1105,11 @@ namespace Photos
 
 		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 		[Export ("registerAvailabilityObserver:")]
-		void RegisterAvailabilityObserver (IPHPhotoLibraryAvailabilityObserver observer);
+		void Register (IPHPhotoLibraryAvailabilityObserver observer);
 
 		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 		[Export ("unregisterAvailabilityObserver:")]
-		void UnregisterAvailabilityObserver (IPHPhotoLibraryAvailabilityObserver observer);
+		void Unregister (IPHPhotoLibraryAvailabilityObserver observer);
 	}
 
 	[Mac (10,13)]
