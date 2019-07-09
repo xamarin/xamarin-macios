@@ -154,6 +154,8 @@ ARKIT_SOURCES = \
 	ARKit/ARFaceGeometry.cs \
 	ARKit/ARPlaneGeometry.cs \
 	ARKit/ARPointCloud.cs \
+	ARKit/ARSkeleton3D.cs \
+	ARKit/ARSkeleton2D.cs \
 
 # AssetsLibrary
 
@@ -1768,6 +1770,7 @@ MAC_FRAMEWORKS =            \
 	IOSurface 		\
 	iTunesLibrary           \
 	JavaScriptCore          \
+	LinkPresentation        \
 	LocalAuthentication     \
 	MapKit                  \
 	MediaAccessibility      \
@@ -1862,6 +1865,7 @@ IOS_FRAMEWORKS =         \
 	IntentsUI \
 	IOSurface \
 	JavaScriptCore \
+	LinkPresentation \
 	LocalAuthentication \
 	MapKit \
 	MediaAccessibility \

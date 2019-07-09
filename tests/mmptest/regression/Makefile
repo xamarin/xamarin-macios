@@ -11,18 +11,11 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 
 TESTS_4_0 = \
-	link-gdiplus-1 \
-	link-gdiplus-2 \
-	link-posix-1 \
-	link-posix-2 \
-	link-system.web-icalls \
-	link-keep-resources-1 \
 	link-preserve-assembly \
 	link-uithread-1 \
 	link-uithread-2 \
 	link-safe-1 \
 	link-frameworks-1 \
-	link-aes-1 \
 	link-blocks-1 \
 	embedded-mono \
 	system-mono \
@@ -30,7 +23,6 @@ TESTS_4_0 = \
 	system-mono-profile \
 
 DISABLED_TESTS_MONO_4_2 =  \
-	link-data-contract-1 \
 	link-webclient-2 \
 	link-xml-serialization \
 
@@ -40,7 +32,10 @@ DISABLED_TESTS_MONO_4_4 =  \
 	link-remove-attributes-1
 
 TESTS_UNIFIED = \
-	custom-bundle-name
+	custom-bundle-name \
+	link-keep-resources-1 \
+	link-keep-resources-2 \
+	link-posix-1 \
 
 TESTS_4_5 = \
 	link-callfilepath-45 \

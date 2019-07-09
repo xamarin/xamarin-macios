@@ -539,6 +539,84 @@ namespace Foundation
 		[Mac (10,11)][iOS (9,0)]
 		[Export ("containsAttachmentsInRange:")]
 		bool ContainsAttachmentsInRange (NSRange range);
+
+		// inlined from NSAttributedStringWebKitAdditions category (since they are all static members)
+
+		[NoWatch][NoTV] // really inside WKWebKit
+		[Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Static]
+		[Export ("loadFromHTMLWithRequest:options:completionHandler:")]
+		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory")]
+		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		void LoadFromHtml (NSUrlRequest request, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
+
+		[NoWatch][NoTV] // really inside WKWebKit
+		[Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Static]
+		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
+		[Wrap ("LoadFromHtml (request, options == null ? null : options.Dictionary, completionHandler)")]
+		void LoadFromHtml (NSUrlRequest request, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
+
+		[NoWatch][NoTV] // really inside WKWebKit
+		[Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Static]
+		[Export ("loadFromHTMLWithFileURL:options:completionHandler:")]
+		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory")]
+		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		void LoadFromHtml (NSUrl fileUrl, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
+
+		[NoWatch][NoTV] // really inside WKWebKit
+		[Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Static]
+		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
+		[Wrap ("LoadFromHtml (fileUrl, options == null ? null : options.Dictionary, completionHandler)")]
+		void LoadFromHtml (NSUrl fileUrl, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
+
+		[NoWatch][NoTV] // really inside WKWebKit
+		[Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Static]
+		[Export ("loadFromHTMLWithString:options:completionHandler:")]
+		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory")]
+		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		void LoadFromHtml (string @string, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
+
+		[NoWatch][NoTV] // really inside WKWebKit
+		[Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Static]
+		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
+		[Wrap ("LoadFromHtml (@string, options == null ? null : options.Dictionary, completionHandler)")]
+		void LoadFromHtml (string @string, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
+
+		[NoWatch][NoTV] // really inside WKWebKit
+		[Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Static]
+		[Export ("loadFromHTMLWithData:options:completionHandler:")]
+		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory")]
+		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		void LoadFromHtml (NSData data, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
+
+		[NoWatch][NoTV] // really inside WKWebKit
+		[Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Static]
+		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
+		[Wrap ("LoadFromHtml (data, options == null ? null : options.Dictionary, completionHandler)")]
+		void LoadFromHtml (NSData data, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
+	}
+
+	[NoWatch][NoTV] // really inside WKWebKit
+	[Mac (10,15, onlyOn64: true), iOS (13,0)]
+	delegate void NSAttributedStringCompletionHandler ([NullAllowed] NSAttributedString attributedString, [NullAllowed] NSDictionary<NSString, NSObject> attributes, [NullAllowed] NSError error);
+
+	[NoWatch][NoTV] // really inside WKWebKit
+	[Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+	[Static][Internal]
+	interface NSAttributedStringDocumentReadingOptionKeys {
+		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
+		NSString ReadAccessUrlKey { get; }
 	}
 
 	[BaseType (typeof (NSObject),

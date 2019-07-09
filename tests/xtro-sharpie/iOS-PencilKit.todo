@@ -1,5 +1,0 @@
-!missing-selector! +PKInkingTool::convertColor:fromUserInterfaceStyle:to: not bound
-!missing-selector! PKToolPicker::colorUserInterfaceStyle not bound
-!missing-selector! PKToolPicker::overrideUserInterfaceStyle not bound
-!missing-selector! PKToolPicker::setColorUserInterfaceStyle: not bound
-!missing-selector! PKToolPicker::setOverrideUserInterfaceStyle: not bound

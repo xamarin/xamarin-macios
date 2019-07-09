@@ -14,7 +14,6 @@ using ObjCRuntime;
 
 namespace BackgroundTasks {
 
-	[Abstract]
 	[TV (13,0), NoWatch, NoMac, iOS (13,0)]
 	[BaseType (typeof (BGTaskRequest))]
 	[DisableDefaultCtor]

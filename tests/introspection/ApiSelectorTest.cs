@@ -177,9 +177,10 @@ namespace Introspection {
 				break;
 #if !XAMCORE_4_0
 			case "NSUrl":
+			case "ARQuickLookPreviewItem":
 				switch (selectorName) {
 				case "previewItemTitle":
-					// 'previewItemTitle' should be optional (fixed in XAMCORE_4_0)
+					// 'previewItemTitle' is inlined from the QLPreviewItem protocol and should be optional (fixed in XAMCORE_4_0)
 					return true;
 				}
 				break;
@@ -644,6 +645,27 @@ namespace Introspection {
 				switch (selectorName) {
 				case "sharedScheduler":
 					return true;
+				}
+				break;
+#if !__MACOS__
+			case "ARSkeletonDefinition":
+				switch (selectorName) {
+				case "indexForJointName:":
+				case "defaultBody2DSkeletonDefinition":
+				case "defaultBody3DSkeletonDefinition":
+					// This selector does not exist in the simulator
+					if (Runtime.Arch == Arch.SIMULATOR)
+						return true;
+					break;
+				}
+				break;
+#endif
+			case "INParameter":
+				switch (selectorName) {
+				case "copyWithZone:":
+					if (!TestRuntime.CheckXcodeVersion (10, 0))
+						return true;
+					break;
 				}
 				break;
 			}

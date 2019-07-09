@@ -36,7 +36,7 @@ namespace ReplayKit {
 		FailedNoMatchingApplicationContext = -5816,
 		FailedMediaServicesFailure = -5817,
 		VideoMixingFailure = -5818,
-		PhotoFailure = -5819,
+		BroadcastSetupFailed = -5819,
 		FailedToObtainUrl = -5820,
 		FailedIncorrectTimeStamps = -5821,
 		FailedToProcessFirstSample = -5822,
@@ -47,6 +47,8 @@ namespace ReplayKit {
 		FailedToRemoveFile = -5827,
 		FailedAssetWriterExportCanceled = -5828,
 		AttemptToStopNonRecording = -5829,
+		AttemptToStartInRecordingState = -5830,
+		PhotoFailure = -5831,
 	}
 
 	[NoiOS]

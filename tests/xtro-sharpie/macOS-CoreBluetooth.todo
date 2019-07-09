@@ -1,4 +1,0 @@
-!deprecated-attribute-missing! CBPeripheralManager::authorizationStatus missing a [Deprecated] attribute
-!missing-enum! CBConnectionEvent not bound
-!missing-enum! CBManagerAuthorization not bound
-!missing-selector! CBManager::authorization not bound

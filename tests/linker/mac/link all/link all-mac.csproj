@@ -58,6 +58,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -68,6 +70,9 @@
     </Compile>
     <Compile Include="..\..\..\common\mac\Mac.cs">
       <Link>Mac.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ios\link all\DataContractTest.cs">
+      <Link>DataContractTest.cs</Link>
     </Compile>
     <Compile Include="..\..\BaseOptimizeGeneratedCodeTest.cs" />
     <Compile Include="LinkAllTest.cs" />
@@ -83,6 +88,9 @@
     </Compile>
     <Compile Include="..\..\ILReader.cs">
       <Link>ILReader.cs</Link>
+    </Compile>
+    <Compile Include="..\LinkAnyTest.cs">
+      <Link>LinkAnyTest.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
