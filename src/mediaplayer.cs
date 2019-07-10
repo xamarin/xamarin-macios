@@ -20,10 +20,10 @@ using AppKit;
 using UIKit;
 #endif
 using System;
-#if WATCH
-using AVMediaSelectionGroup = Foundation.NSObject;
-using AVMediaSelectionOption = Foundation.NSObject;
-#endif
+// #if WATCH // TODO Will be removed after CoreMedia and AVFoundation are updated
+// using AVMediaSelectionGroup = Foundation.NSObject;
+// using AVMediaSelectionOption = Foundation.NSObject;
+// #endif
 
 namespace MediaPlayer {
 #if XAMCORE_2_0 || !MONOMAC
@@ -1280,12 +1280,17 @@ namespace MediaPlayer {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVRoutePickerView instead")]
 		[Export ("showsRouteButton")]
 		bool ShowsRouteButton { get; set; }
 
+		[Introduced (PlatformName.iOS, 7, 0, message: "Use AVRouteDetector.multipleRoutesDetected instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVRouteDetector.multipleRoutesDetected instead.")]
 		[Export ("showsVolumeSlider")]
 		bool ShowsVolumeSlider { get; set; }
 
+		[Introduced (PlatformName.iOS, 7, 0, message: "Use AVPlayer.externalPlaybackActive instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVPlayer.externalPlaybackActive instead.")]
 		[iOS (6,0)]
 		[Export ("setMinimumVolumeSliderImage:forState:")]
 		void SetMinimumVolumeSliderImage ([NullAllowed] UIImage image, UIControlState state);
@@ -1319,22 +1324,27 @@ namespace MediaPlayer {
 		CGRect GetVolumeThumbRect (CGRect bounds, CGRect columeSliderRect, float /* float, not CGFloat */ value);
 
 		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVRoutePickerView.routePickerButtonStyle instead.")]
 		[Export ("setRouteButtonImage:forState:")]
 		void SetRouteButtonImage ([NullAllowed] UIImage image, UIControlState state);
 
 		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "See AVRoutePickerView for possible replacements.")]
 		[Export ("routeButtonImageForState:")]
 		UIImage GetRouteButtonImage (UIControlState state);
 
 		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "See AVRoutePickerView for possible replacements.")]
 		[Export ("routeButtonRectForBounds:")]
 		CGRect GetRouteButtonRect (CGRect bounds);
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVRouteDetector.multipleRoutesDetected instead.")]
 		[Export ("wirelessRoutesAvailable")]
 		bool AreWirelessRoutesAvailable { [Bind ("areWirelessRoutesAvailable")] get; }
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVPlayer.externalPlaybackActive instead.")]
 		[Export ("wirelessRouteActive")]
 		bool IsWirelessRouteActive { [Bind ("isWirelessRouteActive")] get; }
 
@@ -1344,11 +1354,13 @@ namespace MediaPlayer {
 		UIImage VolumeWarningSliderImage { get; set; }
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVRouteDetectorMultipleRoutesDetectedDidChangeNotification instead.")]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRoutesAvailableDidChangeNotification")]
 		NSString WirelessRoutesAvailableDidChangeNotification { get; }
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVPlayer.externalPlaybackActive KVO instead.")]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRouteActiveDidChangeNotification")]
 		NSString WirelessRouteActiveDidChangeNotification { get; }
@@ -1383,6 +1395,7 @@ namespace MediaPlayer {
 
 		[NoiOS]
 		[NoTV]
+		[Introduced (PlatformName.UIKitForMac, 13, 0)]
 		[Export ("playbackState")]
 		MPNowPlayingPlaybackState PlaybackState { get; set; }
 
@@ -2224,8 +2237,8 @@ namespace MediaPlayer {
 	}
 #endif
 	[iOS (9,0)][TV (9,0)]
-	[Mac (10,12,1)]
-	[NoWatch]
+	[Mac (10,12,1, onlyOn64: true)]
+	[Watch (6,0)]
 	[Category]
 	[BaseType (typeof (AVMediaSelectionOption))]
 	interface AVMediaSelectionOption_MPNowPlayingInfoLanguageOptionAdditions {
@@ -2234,8 +2247,8 @@ namespace MediaPlayer {
 	}
 
 	[iOS (9,0)][TV (9,0)]
-	[Mac (10,12,1)]
-	[NoWatch]
+	[Mac (10,12,1, onlyOn64: true)]
+	[Watch (6,0)]
 	[Category]
 	[BaseType (typeof (AVMediaSelectionGroup))]
 	interface AVMediaSelectionGroup_MPNowPlayingInfoLanguageOptionAdditions {
