@@ -1,5 +1,3 @@
-#if !MONOMAC
-
 using System;
 
 namespace Photos {

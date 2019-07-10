@@ -1257,6 +1257,7 @@ PHOTOS_SOURCES = \
 	Photos/PHFetchResult.cs \
 	Photos/PHLivePhoto.cs \
 	Photos/PHPhotoLibrary.cs \
+	Photos/PHChangeRequest.cs \
 
 # PhotosUI
 
