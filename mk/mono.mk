@@ -3,5 +3,3 @@ NEEDED_MONO_BRANCH := martin-2019-06
 
 MONO_DIRECTORY := mono
 MONO_MODULE    := https://github.com/mono/mono
-
-MONO_BUILD_FROM_SOURCE	:= 1
