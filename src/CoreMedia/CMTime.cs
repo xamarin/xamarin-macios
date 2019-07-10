@@ -383,7 +383,7 @@ namespace CoreMedia {
 			return CMTimeMakeFromDictionary (dict);
 		}
 #endif // !WATCH
-#endif	// !XAMCORE_@_)	
+#endif	// !XAMCORE_2_0
 #endif // !COREBUILD
 	}
 }
