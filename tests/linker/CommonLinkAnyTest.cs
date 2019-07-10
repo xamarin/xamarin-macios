@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using Foundation;
@@ -28,5 +29,18 @@ namespace LinkAnyTest {
 			Assert.AreEqual (IntPtr.Size == 8 ? 48 : 28, size, "BlockLiteral size");
 
 		}
+
+		[Test]
+		public void CallerFilePath ()
+		{
+			Bug7114 ();
+		}
+
+		// https://bugzilla.xamarin.com/show_bug.cgi?id=7114
+		public static void Bug7114 ([CallerFilePath] string filePath = null)
+		{
+			Assert.IsNotNull (filePath, "CallerFilePath");
+		}
+
 	}
 }
