@@ -429,15 +429,7 @@ namespace Photos
 	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface PHChangeRequest {
-
-		// Since PHAssetChangeRequest has obsolete no argument ctor from file below and its base class is 
-		// PHChangeRequest, we create internal no argument constructor
-		// https://github.com/xamarin/xamarin-macios/blob/c99ad292b2e357f4f2acb083e03281a323da44a2/src/Photos/PHAssetChangeRequest.cs#L7-L15
-		[Internal]
-		[Export ("init")]
-		IntPtr Constructor ();
-	}
+	interface PHChangeRequest {}
 
 	[Mac (10,13, onlyOn64 : true)]
 	delegate void PHChangeDetailEnumerator (nuint fromIndex, nuint toIndex);
