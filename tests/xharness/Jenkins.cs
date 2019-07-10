@@ -218,7 +218,7 @@ namespace xharness
 			if (!IncludeBcl && project.IsBclTest)
 				return false;
 
-			if (!Harness.IncludeSystemPermissionTests && project.Name == "introspection")
+			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
 				return false;
 
 			return true;
@@ -777,9 +777,9 @@ namespace xharness
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
-			bool inc_permission_tests = Harness.IncludeSystemPermissionTests;
-			SetEnabled (labels, "system-permission", ref inc_permission_tests);
-			Harness.IncludeSystemPermissionTests = inc_permission_tests;
+			bool inc_permission_tests = false;
+			if (SetEnabled (labels, "system-permission", ref inc_permission_tests))
+				Harness.IncludeSystemPermissionTests = inc_permission_tests;
 
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
@@ -1279,6 +1279,9 @@ namespace xharness
 								break;
 							case "?include-permission-tests":
 								Harness.IncludeSystemPermissionTests = true;
+								break;
+							case "?clear-permission-tests":
+								Harness.IncludeSystemPermissionTests = null;
 								break;
 							default:
 								throw new NotImplementedException (request.Url.Query);
@@ -1852,6 +1855,18 @@ namespace xharness
 		</ul>
 	</li>");
 					if (IsServerMode) {
+						var include_system_permission_option = string.Empty;
+						var include_system_permission_icon = string.Empty;
+						if (Harness.IncludeSystemPermissionTests == null) {
+							include_system_permission_option = "include-permission-tests";
+							include_system_permission_icon = "2753";
+						} else if (Harness.IncludeSystemPermissionTests.Value) {
+							include_system_permission_option = "skip-permission-tests";
+							include_system_permission_icon = "2705";
+						} else {
+							include_system_permission_option = "clear-permission-tests";
+							include_system_permission_icon = "274C";
+						}
 						writer.WriteLine ($@"
 	<li>Reload
 		<ul>
@@ -1864,7 +1879,7 @@ namespace xharness
 			<ul>
 				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
 				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(UninstallTestApp ? "do-not-uninstall-test-app" : "uninstall-test-app")}"");'>&#x{(UninstallTestApp ? "2705" : "274C")} Uninstall the app from device before and after the test run</a></span></li>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(Harness.IncludeSystemPermissionTests ? "skip-permission-tests" : "include-permission-tests")}"");'>&#x{(Harness.IncludeSystemPermissionTests ? "2705" : "274C")} Run tests that require system permissions (might put up permission dialogs)</a></span></li>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{include_system_permission_option}"");'>&#x{include_system_permission_icon} Run tests that require system permissions (might put up permission dialogs)</a></span></li>
 			</ul>
 	</li>
 	");
@@ -3209,6 +3224,8 @@ namespace xharness
 						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", "NUnit results");
 						proc.StartInfo.Arguments = $"-result={StringUtils.Quote (xml)}";
 					}
+					if (!Harness.GetIncludeSystemPermissionTests (Platform, false))
+						proc.StartInfo.EnvironmentVariables ["DISABLE_SYSTEM_PERMISSION_TESTS"] = "1";
 					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
