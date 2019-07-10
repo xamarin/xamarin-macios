@@ -57,22 +57,14 @@ namespace Xamarin.Bundler {
 		public MonoNativeMode MonoNativeMode { get; set; }
 
 #if MONOMAC
-		public bool Is32Build { get { return !Driver.Is64Bit; } }
-		public bool Is64Build { get { return Driver.Is64Bit; } }
+		public bool Is32Build { get { return false; } }
+		public bool Is64Build { get { return true; } }
 #endif
 
 		public Target (Application app)
 		{
 			this.App = app;
-#if MMP
-			if (Driver.IsClassic) {
-				this.StaticRegistrar = new ClassicStaticRegistrar (this);
-			} else {
-				this.StaticRegistrar = new StaticRegistrar (this);
-			}
-#else
 			this.StaticRegistrar = new StaticRegistrar (this);
-#endif
 		}
 
 		// This will find the link context, possibly looking in container targets.

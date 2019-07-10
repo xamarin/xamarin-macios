@@ -52,11 +52,7 @@ public class Frameworks : Dictionary <string, Framework>
 	public void Add (string @namespace, string framework, Version version, Version version_available_in_simulator = null, bool alwaysWeakLink = false)
 	{
 		var fr = new Framework () {
-#if MTOUCH || MMP
-			Namespace = Driver.IsUnified ? @namespace : Registrar.Registrar.CompatNamespace + "." + @namespace,
-#else
 			Namespace = @namespace,
-#endif
 			Name = framework,
 			Version = version,
 			VersionAvailableInSimulator = version_available_in_simulator ?? version,
