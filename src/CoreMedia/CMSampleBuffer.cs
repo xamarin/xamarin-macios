@@ -817,6 +817,7 @@ namespace CoreMedia {
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
 #if !XAMCORE_4_0
+#if !WATCH
 		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.")]
 		[iOS (8,0)][Mac (10,10)]
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer, 
@@ -828,7 +829,8 @@ namespace CoreMedia {
 				throw new ArgumentException ("Only a single sample is allowed.", nameof (sampleTiming));
 			return CreateReadyWithImageBuffer (imageBuffer, formatDescription, sampleTiming, out error);
 		}
-#endif
+#endif // !WATCH
+#endif // !XAMCORE_4_0
 		[iOS (8,0)][Mac (10,10)]
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer,
 			CMFormatDescription formatDescription, ref CMSampleTimingInfo sampleTiming, out CMSampleBufferError error)
