@@ -496,9 +496,6 @@ COREIMAGE_SOURCES = \
 	CoreImage/CISampler.cs \
 	CoreImage/CIVector.cs \
 
-COREIMAGE_API_SOURCES = \
-	CoreMedia/Enums.cs \
-
 # CoreLocation
 
 CORELOCATION_CORE_SOURCES = \
@@ -529,6 +526,9 @@ COREMEDIA_SOURCES = \
 	CoreMedia/CMCustomBlockAllocator.cs \
 	CoreMedia/CMBufferQueue.cs \
 	CoreMedia/CMMemoryPool.cs \
+
+COREMEDIA_API_SOURCES = \
+	CoreMedia/Enums.cs \
 
 # CoreMidi
 
