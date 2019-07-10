@@ -2,4 +2,4 @@ NEEDED_MONO_VERSION := 52f8b2584c85f31331ff7525fb27272abe243c5a
 NEEDED_MONO_BRANCH := martin-2019-06
 
 MONO_DIRECTORY := mono
-MONO_MODULE    := https://github.com/baulig/mono
+MONO_MODULE    := https://github.com/mono/mono
