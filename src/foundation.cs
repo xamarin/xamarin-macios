@@ -16040,7 +16040,7 @@ namespace Foundation
 
 		[Static]
 		[Export ("localizedStringByJoiningStrings:")]
-		// using `NSString[]` since they might be one (of many) `NSString` subclass that hanldle localization
+		// using `NSString[]` since they might be one (or many) `NSString` subclass(es) that handle localization
 		string GetLocalizedString (NSString[] joinedStrings);
 
 		[Export ("stringFromItems:")]
