@@ -299,7 +299,7 @@ namespace Xamarin.Utils
 			}
 
 			if (Application.HasAnyDynamicLibraries) {
-				args.Append (" -Xlinker -rpath -Xlinker @executable_path");
+				args.Append (" -Xlinker -rpath -Xlinker @executable_path/");
 				if (Application.IsExtension)
 					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../..");
 			}
