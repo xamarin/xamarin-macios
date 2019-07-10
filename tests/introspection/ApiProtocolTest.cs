@@ -223,8 +223,16 @@ namespace Introspection {
 				}
 				break;
 			case "NSProgressReporting":
-				if (!TestRuntime.CheckXcodeVersion (9, 0))
-					return true;
+				switch (type.Name) {
+				case "NSOperationQueue":
+					if (!TestRuntime.CheckXcodeVersion (11,0))
+						return true;
+					break;
+				default:
+					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
+				}
 				break;
 			case "GKSceneRootNodeType":
 				// it's an empty protocol, defined by a category and does not reply as expected
