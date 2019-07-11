@@ -38,6 +38,7 @@ namespace LinkAllTests
 
 			ThreadPool.QueueUserWorkItem ((v) => Tester.Test ());
 			Assert.IsTrue (Tester.mre.WaitOne (TimeSpan.FromSeconds (10)), "Successful wait");
+			// The UI thread check only happens for debug builds, on release build it's linked away.
 #if DEBUG
 			var expected_ex_thrown = true;
 #else
