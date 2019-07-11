@@ -1472,12 +1472,12 @@ namespace Contacts {
 		[return: NullAllowed]
 		NSObject GetUnifiedMeContact (NSArray keys, [NullAllowed] out NSError error);
 
-		/* [Unavailable (PlatformName.Swift)]
+		/* Unable to bind due to generic type errors: https://github.com/xamarin/xamarin-macios/issues/6561
 		[Export ("enumeratorForContactFetchRequest:error:")]
 		[return: NullAllowed]
 		CNFetchResult<NSEnumerator<CNContact>> GetEnumeratorForContact (CNContactFetchRequest request, [NullAllowed] out NSError error);*/
 
-		/* [Unavailable (PlatformName.Swift)]
+		/* Unable to bind due to generic type errors: https://github.com/xamarin/xamarin-macios/issues/6561
 		[Export ("enumeratorForChangeHistoryFetchRequest:error:")]
 		[return: NullAllowed]
 		CNFetchResult<NSEnumerator<CNChangeHistoryEvent>> GetEnumeratorForChangeHistory (CNChangeHistoryFetchRequest request, [NullAllowed] out NSError error);*/
