@@ -149,7 +149,7 @@ namespace UIKit {
 		}
 
 		[iOS(13,0), TV(13,0)]
-		public static UIFont GetMonospacedSystemFont (nfloat fontSize, UIFontWeight weight) => GetMonospacedSystemFont (fontSize, GetFontWeight (weight));
+		public static UIFont GetMonospacedSystemFont (nfloat size, UIFontWeight weight) => GetMonospacedSystemFont (size, GetFontWeight (weight));
 
 		// In this case we want to _always_ return a different managed instance
 		// so one can be disposed without affecting others
