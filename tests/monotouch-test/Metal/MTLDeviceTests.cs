@@ -277,7 +277,9 @@ namespace MonoTouchFixtures.Metal {
 			}
 
 			if (TestRuntime.CheckXcodeVersion (10, 0)) {
+#if __MACOS__
 				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 6)) // https://github.com/xamarin/maccore/issues/1801
+#endif
 				using (var descriptor = new MTLIndirectCommandBufferDescriptor ()) {
 					using (var library = device.CreateIndirectCommandBuffer (descriptor, 1, MTLResourceOptions.CpuCacheModeDefault)) {
 						Assert.IsNotNull (library, "CreateIndirectCommandBuffer: NonNull");
