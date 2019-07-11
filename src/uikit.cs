@@ -20036,7 +20036,7 @@ namespace UIKit {
 
 		[Static]
 		[Export ("itemWithLayoutSize:supplementaryItems:")]
-		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize, NSCollectionLayoutSupplementaryItem [] supplementaryItems);
+		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutSupplementaryItem [] supplementaryItems);
 
 		[Export ("contentInsets", ArgumentSemantic.Assign)]
 		NSDirectionalEdgeInsets ContentInsets { get; set; }
