@@ -310,7 +310,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,15, onlyOn64: true)]
 	[BaseType (typeof (PHChangeRequest))]
 	[DisableDefaultCtor] // fails when calling ToString (see below) and there are (static) API to create them
 	// NSInternalInconsistencyException Reason: This method can only be called from inside of -[PHPhotoLibrary performChanges:] or -[PHPhotoLibrary performChangeAndWait:]
@@ -1119,7 +1119,7 @@ namespace Photos
 		PHCloudIdentifier[] GetCloudIdentifiers (string[] localIdentifiers);
 
 		[Field ("PHLocalIdentifierNotFound")]
-		NSString PHLocalIdentifierNotFound { get; }
+		NSString LocalIdentifierNotFound { get; }
 	}
 
 	[iOS (9,1)]
@@ -1334,7 +1334,6 @@ namespace Photos
 		[Export ("projectExtensionData", ArgumentSemantic.Copy)]
 		NSData ProjectExtensionData { get; set; }
 
-		[Introduced (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("setKeyAsset:")]
 		void SetKeyAsset ([NullAllowed] PHAsset keyAsset);

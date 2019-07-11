@@ -280,7 +280,7 @@ namespace Photos
 		FullSizePairedVideo = 10,
 		[Mac (10,15, onlyOn64 : true), iOS (10,0)]
 		AdjustmentBasePairedVideo = 11,
-		[Mac (10,15, onlyOn64 : true), iOS (13,0)]
+		[Mac (10,15, onlyOn64 : true), iOS (13,0), TV (13,0)]
 		AdjustmentBaseVideo = 12,
 	}
 
