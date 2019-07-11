@@ -73,7 +73,7 @@ namespace CoreText {
 		Subscript   = -1,
 	}
 
-	public static class CTStringAttributeKey {
+	public static partial class CTStringAttributeKey {
 		public static readonly NSString Font;
 		public static readonly NSString ForegroundColorFromContext;
 		public static readonly NSString KerningAdjustment;
@@ -228,6 +228,12 @@ namespace CoreText {
 				return h == IntPtr.Zero ? null : new CGColor (h);
 			}
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.StrokeColor, value);}
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		public float? TrackingAdjustment {
+			get {return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.TrackingAttributeName);}
+			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.TrackingAttributeName, value);}
 		}
 
 		// Documentation says this must be 'CFNumber', doesn't specify exact type

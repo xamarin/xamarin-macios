@@ -98,4 +98,25 @@ namespace CoreText {
 		[Field ("kCTTypesetterOptionAllowUnboundedLayout")]
 		NSString AllowUnboundedLayout { get; }
 	}
+
+	[Static]
+	interface CTFontManagerErrorKeys {
+		[Field ("kCTFontManagerErrorFontURLsKey")]
+		NSString FontUrlsKey { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Field ("kCTFontManagerErrorFontDescriptorsKey")]
+		NSString FontDescriptorsKey { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Field ("kCTFontManagerErrorFontAssetNameKey")]
+		NSString FontAssetNameKey { get; }
+	}
+
+	[Static][Partial]
+	interface CTStringAttributeKey {
+		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Field ("kCTTrackingAttributeName")]
+		NSString TrackingAttributeName { get; }
+	}
 }

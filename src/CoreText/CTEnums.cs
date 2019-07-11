@@ -42,6 +42,11 @@ namespace CoreText {
 		AlreadyRegistered = 105,
 		NotRegistered = 201,
 		InUse = 202,
-		SystemRequired = 202
+		SystemRequired = 203,
+		RegistrationFailed = 301,
+		MissingEntitlement = 302,
+		InsufficientInfo = 303,
+		CancelledByUser = 304,
+		DuplicatedName = 305,
 	}
 }

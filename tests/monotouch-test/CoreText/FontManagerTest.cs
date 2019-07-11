@@ -62,6 +62,80 @@ namespace MonoTouchFixtures.CoreText {
 		}
 
 		[Test]
+		public void RegisterFonts_Null ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			Assert.Throws<ArgumentNullException> (() => CTFontManager.RegisterFonts (null, CTFontManagerScope.Process, true, null), "null array");
+			Assert.Throws<ArgumentException> (() => CTFontManager.RegisterFonts (new NSUrl [] { null }, CTFontManagerScope.Process, true, null), "null element");
+		}
+
+		[Test]
+		public void UnregisterFonts_Null ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			Assert.Throws<ArgumentNullException> (() => CTFontManager.UnregisterFonts (null, CTFontManagerScope.Process, null), "null array");
+			Assert.Throws<ArgumentException> (() => CTFontManager.UnregisterFonts (new NSUrl [] { null }, CTFontManagerScope.Process, null), "null element");
+		}
+
+		[Test]
+		public void RegisterFonts_NoCallback ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			var ttf = Path.GetFullPath ("Pacifico.ttf");
+			if (!File.Exists (ttf))
+				Assert.Ignore ("Could not find the font file {0}", ttf);
+
+			using (var url = NSUrl.FromFilename (ttf)) {
+				var array = new [] { url };
+				CTFontManager.RegisterFonts (array, CTFontManagerScope.Process, true, null);
+				CTFontManager.UnregisterFonts (array, CTFontManagerScope.Process, null);
+			}
+
+			using (var url = NSUrl.FromFilename (Path.GetFullPath ("NonExistent.ttf"))) {
+				var array = new [] { url };
+				CTFontManager.RegisterFonts (array, CTFontManagerScope.Process, true, null);
+				CTFontManager.UnregisterFonts (array, CTFontManagerScope.Process, null);
+			}
+		}
+
+		static bool SuccessDone (NSError [] errors, bool done)
+		{
+			Assert.That (errors.Length, Is.EqualTo (0), "errors");
+			Assert.True (done, "done");
+			return true;
+		}
+
+		static bool FailureDone (NSError [] errors, bool done)
+		{
+			Assert.That (errors.Length, Is.EqualTo (1), "errors");
+			Assert.True (errors [0].UserInfo.TryGetValue (CTFontManagerErrorKeys.FontUrlsKey, out var urls), "FontUrlsKey");
+			Assert.True ((urls as NSArray).GetItem<NSUrl> (0).AbsoluteString.EndsWith ("NonExistent.ttf", StringComparison.Ordinal), "NonExistent"); 
+			Assert.True (done, "done");
+			return true;
+		}
+
+		[Test]
+		public void RegisterFonts_WithCallback ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			var ttf = Path.GetFullPath ("Pacifico.ttf");
+			if (!File.Exists (ttf))
+				Assert.Ignore ("Could not find the font file {0}", ttf);
+
+			using (var url = NSUrl.FromFilename (ttf)) {
+				var array = new [] { url };
+				CTFontManager.RegisterFonts (array, CTFontManagerScope.Process, true, SuccessDone);
+				CTFontManager.UnregisterFonts (array, CTFontManagerScope.Process, SuccessDone);
+			}
+
+			using (var url = NSUrl.FromFilename (Path.GetFullPath ("NonExistent.ttf"))) {
+				var array = new [] { url };
+				CTFontManager.RegisterFonts (array, CTFontManagerScope.Process, true, FailureDone);
+				CTFontManager.UnregisterFonts (array, CTFontManagerScope.Process, FailureDone);
+			}
+		}
+
+		[Test]
 		public void RegisterTTFs ()
 		{
 			var ttf = Path.GetFullPath ("Pacifico.ttf");
@@ -83,6 +157,62 @@ namespace MonoTouchFixtures.CoreText {
 			Assert.IsNotNull (err, "err 4");
 			Assert.AreEqual (1, err.Length, "err 4 l");
 			Assert.IsNotNull (err [0], "err 4[0]");
+		}
+
+		[Test]
+		public void RegisterFontDescriptors_Null ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			Assert.Throws<ArgumentNullException> (() => CTFontManager.RegisterFontDescriptors (null, CTFontManagerScope.Process, true, null), "null array");
+			Assert.Throws<ArgumentException> (() => CTFontManager.RegisterFontDescriptors (new CTFontDescriptor [] { null }, CTFontManagerScope.Process, true, null), "null element");
+		}
+
+		[Test]
+		public void UnregisterFontDescriptors_Null ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			Assert.Throws<ArgumentNullException> (() => CTFontManager.UnregisterFontDescriptors (null, CTFontManagerScope.Process, null), "null array");
+			Assert.Throws<ArgumentException> (() => CTFontManager.UnregisterFontDescriptors (new CTFontDescriptor [] { null }, CTFontManagerScope.Process, null), "null element");
+		}
+
+		[Test]
+		public void RegisterFontDescriptors_NoCallback ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			var ttf = Path.GetFullPath ("Pacifico.ttf");
+			if (!File.Exists (ttf))
+				Assert.Ignore ("Could not find the font file {0}", ttf);
+
+			CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
+				FamilyName = "Courier",
+				StyleName = "Bold",
+				Size = 16.0f
+			};
+			using (CTFontDescriptor fd = new CTFontDescriptor (fda)) {
+				var array = new [] { fd };
+				CTFontManager.RegisterFontDescriptors (array, CTFontManagerScope.Process, true, null);
+				CTFontManager.UnregisterFontDescriptors (array, CTFontManagerScope.Process, null);
+			}
+		}
+
+		[Test]
+		public void RegisterFontDescriptors_WithCallback ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			var ttf = Path.GetFullPath ("Pacifico.ttf");
+			if (!File.Exists (ttf))
+				Assert.Ignore ("Could not find the font file {0}", ttf);
+
+			CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
+				FamilyName = "Courier",
+				StyleName = "Bold",
+				Size = 16.0f
+			};
+			using (CTFontDescriptor fd = new CTFontDescriptor (fda)) {
+				var array = new [] { fd };
+				CTFontManager.RegisterFontDescriptors (array, CTFontManagerScope.Process, true, SuccessDone);
+				CTFontManager.UnregisterFontDescriptors (array, CTFontManagerScope.Process, SuccessDone);
+			}
 		}
 
 		[Test]
@@ -122,15 +252,60 @@ namespace MonoTouchFixtures.CoreText {
 			if (!TestRuntime.CheckXcodeVersion (5, 0))
 				Assert.Ignore ("Requires iOS 7.0+ or macOS 10.9+");
 			var ttf = Path.GetFullPath ("NonExistent.ttf");
-			if (!File.Exists (ttf))
-				Assert.Ignore ("Could not find the font file {0}", ttf);
 
-			var url = NSUrl.FromFilename (ttf);
-
-			// method under test
-			var fonts = CTFontManager.GetFonts (url);
-			Assert.AreEqual (0, fonts.Length);
+			using (var url = NSUrl.FromFilename (ttf)) {
+				var fonts = CTFontManager.GetFonts (url);
+				Assert.AreEqual (0, fonts.Length);
+			}
 		}
 
+		[Test]
+		public void CreateFontDescriptor ()
+		{
+			Assert.Throws<ArgumentNullException> (() => CTFontManager.CreateFontDescriptor (null), "null");
+
+			using (var data = NSData.FromFile (Path.GetFullPath ("Pacifico.ttf")))
+				Assert.NotNull (CTFontManager.CreateFontDescriptor (data), "font");
+			using (var data = NSData.FromFile (Path.GetFullPath ("Tamarin.pdf")))
+				Assert.Null (CTFontManager.CreateFontDescriptor (data), "not a font");
+		}
+
+		[Test]
+		public void CreateFontDescriptors ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			Assert.Throws<ArgumentNullException> (() => CTFontManager.CreateFontDescriptors (null), "null");
+
+			using (var data = NSData.FromFile (Path.GetFullPath ("Pacifico.ttf"))) {
+				var fds = CTFontManager.CreateFontDescriptors (data);
+				Assert.That (fds.Length, Is.EqualTo (1), "font");
+			}
+			using (var data = NSData.FromFile (Path.GetFullPath ("Tamarin.pdf"))) {
+				var fds = CTFontManager.CreateFontDescriptors (data);
+				Assert.That (fds.Length, Is.EqualTo (0), "not font(s)");
+			}
+		}
+
+#if __IOS__
+		[Test]
+		public void RequestFonts ()
+		{
+			CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
+				FamilyName = "Courier",
+				StyleName = "Bold",
+				Size = 16.0f
+			};
+			using (CTFontDescriptor fd = new CTFontDescriptor (fda)) {
+				Assert.Throws<ArgumentNullException> (() => CTFontManager.RequestFonts (new [] { fd }, null), "null");
+
+				var callback = false;
+				CTFontManager.RequestFonts (new [] { fd }, (unresolved) => {
+					Assert.That (unresolved.Length, Is.EqualTo (0), "all resolved");
+					callback = true;
+				});
+				Assert.True (callback, "callback");
+			}
+		}
+#endif
 	}
 }
