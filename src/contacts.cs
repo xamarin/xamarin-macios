@@ -289,8 +289,8 @@ namespace Contacts {
 		NSString InstantMessageAddresses { get; }
 	}
 
-	[iOS (9,0), Mac (10,11)]
-	[BaseType (typeof (NSObject))]
+	[iOS (9,0), Mac (10,11, onlyOn64: true)]
+	[BaseType (typeof (CNFetchRequest))]
 	[DisableDefaultCtor] // using init raises an exception according to docs
 	interface CNContactFetchRequest : NSSecureCoding {
 
@@ -441,6 +441,794 @@ namespace Contacts {
 		[Watch (4,0)]
 		[Field ("CNLabelContactRelationDaughter")]
 		NSString Daughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationColleauge")] // Apple issue: https://feedbackassistant.apple.com/feedback/6623415
+		NSString Colleague { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationTeacher")]
+		NSString Teacher { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSibling")]
+		NSString Sibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerSibling")]
+		NSString YoungerSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderSibling")]
+		NSString ElderSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerSister")]
+		NSString YoungerSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungestSister")]
+		NSString YoungestSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderSister")]
+		NSString ElderSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationEldestSister")]
+		NSString EldestSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerBrother")]
+		NSString YoungerBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungestBrother")]
+		NSString YoungestBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderBrother")]
+		NSString ElderBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationEldestBrother")]
+		NSString EldestBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationMaleFriend")]
+		NSString MaleFriend { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationFemaleFriend")]
+		NSString FemaleFriend { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationWife")]
+		NSString Wife { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationHusband")]
+		NSString Husband { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationMalePartner")]
+		NSString MalePartner { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationFemalePartner")]
+		NSString FemalePartner { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGirlfriendOrBoyfriend")]
+		NSString GirlfriendOrBoyfriend { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGirlfriend")]
+		NSString Girlfriend { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationBoyfriend")]
+		NSString Boyfriend { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandparent")]
+		NSString Grandparent { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandmother")]
+		NSString Grandmother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandmotherMothersMother")]
+		NSString GrandmotherMothersMother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandmotherFathersMother")]
+		NSString GrandmotherFathersMother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandfather")]
+		NSString Grandfather { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandfatherMothersFather")]
+		NSString GrandfatherMothersFather { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandfatherFathersFather")]
+		NSString GrandfatherFathersFather { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGreatGrandparent")]
+		NSString GreatGrandparent { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGreatGrandmother")]
+		NSString GreatGrandmother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGreatGrandfather")]
+		NSString GreatGrandfather { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandchild")]
+		NSString Grandchild { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGranddaughter")]
+		NSString Granddaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandson")]
+		NSString Grandson { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGreatGrandchild")]
+		NSString GreatGrandchild { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGreatGranddaughter")]
+		NSString GreatGranddaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGreatGrandson")]
+		NSString GreatGrandson { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationParentInLaw")]
+		NSString ParentInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationMotherInLaw")]
+		NSString MotherInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationMotherInLawWifesMother")]
+		NSString MotherInLawWifesMother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationMotherInLawHusbandsMother")]
+		NSString MotherInLawHusbandsMother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationFatherInLaw")]
+		NSString FatherInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationFatherInLawWifesFather")]
+		NSString FatherInLawWifesFather { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationFatherInLawHusbandsFather")]
+		NSString FatherInLawHusbandsFather { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCoParentInLaw")]
+		NSString CoParentInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCoMotherInLaw")]
+		NSString CoMotherInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCoFatherInLaw")]
+		NSString CoFatherInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSiblingInLaw")]
+		NSString SiblingInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerSiblingInLaw")]
+		NSString YoungerSiblingInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderSiblingInLaw")]
+		NSString ElderSiblingInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSisterInLaw")]
+		NSString SisterInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerSisterInLaw")]
+		NSString YoungerSisterInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderSisterInLaw")]
+		NSString ElderSisterInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSisterInLawSpousesSister")]
+		NSString SisterInLawSpousesSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSisterInLawWifesSister")]
+		NSString SisterInLawWifesSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSisterInLawHusbandsSister")]
+		NSString SisterInLawHusbandsSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSisterInLawBrothersWife")]
+		NSString SisterInLawBrothersWife { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSisterInLawYoungerBrothersWife")]
+		NSString SisterInLawYoungerBrothersWife { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSisterInLawElderBrothersWife")]
+		NSString SisterInLawElderBrothersWife { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationBrotherInLaw")]
+		NSString BrotherInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerBrotherInLaw")]
+		NSString YoungerBrotherInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderBrotherInLaw")]
+		NSString ElderBrotherInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationBrotherInLawSpousesBrother")]
+		NSString BrotherInLawSpousesBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationBrotherInLawHusbandsBrother")]
+		NSString BrotherInLawHusbandsBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationBrotherInLawWifesBrother")]
+		NSString BrotherInLawWifesBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationBrotherInLawSistersHusband")]
+		NSString BrotherInLawSistersHusband { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationBrotherInLawYoungerSistersHusband")]
+		NSString BrotherInLawYoungerSistersHusband { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationBrotherInLawElderSistersHusband")]
+		NSString BrotherInLawElderSistersHusband { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSisterInLawWifesBrothersWife")]
+		NSString SisterInLawWifesBrothersWife { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSisterInLawHusbandsBrothersWife")]
+		NSString SisterInLawHusbandsBrothersWife { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationBrotherInLawWifesSistersHusband")]
+		NSString BrotherInLawWifesSistersHusband { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationBrotherInLawHusbandsSistersHusband")]
+		NSString BrotherInLawHusbandsSistersHusband { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCoSiblingInLaw")]
+		NSString CoSiblingInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCoSisterInLaw")]
+		NSString CoSisterInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCoBrotherInLaw")]
+		NSString CoBrotherInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationChildInLaw")]
+		NSString ChildInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationDaughterInLaw")]
+		NSString DaughterInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSonInLaw")]
+		NSString SonInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousin")]
+		NSString Cousin { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousin")]
+		NSString YoungerCousin { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousin")]
+		NSString ElderCousin { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationMaleCousin")]
+		NSString MaleCousin { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationFemaleCousin")]
+		NSString FemaleCousin { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinParentsSiblingsChild")]
+		NSString CousinParentsSiblingsChild { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinParentsSiblingsSon")]
+		NSString CousinParentsSiblingsSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinParentsSiblingsSon")]
+		NSString YoungerCousinParentsSiblingsSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinParentsSiblingsSon")]
+		NSString ElderCousinParentsSiblingsSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinParentsSiblingsDaughter")]
+		NSString CousinParentsSiblingsDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinParentsSiblingsDaughter")]
+		NSString YoungerCousinParentsSiblingsDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinParentsSiblingsDaughter")]
+		NSString ElderCousinParentsSiblingsDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinMothersSistersDaughter")]
+		NSString CousinMothersSistersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinMothersSistersDaughter")]
+		NSString YoungerCousinMothersSistersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinMothersSistersDaughter")]
+		NSString ElderCousinMothersSistersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinMothersSistersSon")]
+		NSString CousinMothersSistersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinMothersSistersSon")]
+		NSString YoungerCousinMothersSistersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinMothersSistersSon")]
+		NSString ElderCousinMothersSistersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinMothersBrothersDaughter")]
+		NSString CousinMothersBrothersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinMothersBrothersDaughter")]
+		NSString YoungerCousinMothersBrothersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinMothersBrothersDaughter")]
+		NSString ElderCousinMothersBrothersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinMothersBrothersSon")]
+		NSString CousinMothersBrothersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinMothersBrothersSon")]
+		NSString YoungerCousinMothersBrothersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinMothersBrothersSon")]
+		NSString ElderCousinMothersBrothersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinFathersSistersDaughter")]
+		NSString CousinFathersSistersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinFathersSistersDaughter")]
+		NSString YoungerCousinFathersSistersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinFathersSistersDaughter")]
+		NSString ElderCousinFathersSistersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinFathersSistersSon")]
+		NSString CousinFathersSistersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinFathersSistersSon")]
+		NSString YoungerCousinFathersSistersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinFathersSistersSon")]
+		NSString ElderCousinFathersSistersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinFathersBrothersDaughter")]
+		NSString CousinFathersBrothersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinFathersBrothersDaughter")]
+		NSString YoungerCousinFathersBrothersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinFathersBrothersDaughter")]
+		NSString ElderCousinFathersBrothersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinFathersBrothersSon")]
+		NSString CousinFathersBrothersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinFathersBrothersSon")]
+		NSString YoungerCousinFathersBrothersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinFathersBrothersSon")]
+		NSString ElderCousinFathersBrothersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinGrandparentsSiblingsChild")]
+		NSString CousinGrandparentsSiblingsChild { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinGrandparentsSiblingsDaughter")]
+		NSString CousinGrandparentsSiblingsDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinGrandparentsSiblingsSon")]
+		NSString CousinGrandparentsSiblingsSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinMothersSiblingsSonOrFathersSistersSon")]
+		NSString YoungerCousinMothersSiblingsSonOrFathersSistersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinMothersSiblingsSonOrFathersSistersSon")]
+		NSString ElderCousinMothersSiblingsSonOrFathersSistersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationYoungerCousinMothersSiblingsDaughterOrFathersSistersDaughter")]
+		NSString YoungerCousinMothersSiblingsDaughterOrFathersSistersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationElderCousinMothersSiblingsDaughterOrFathersSistersDaughter")]
+		NSString ElderCousinMothersSiblingsDaughterOrFathersSistersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationParentsSibling")]
+		NSString ParentsSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationParentsYoungerSibling")]
+		NSString ParentsYoungerSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationParentsElderSibling")]
+		NSString ParentsElderSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationParentsSiblingMothersSibling")]
+		NSString ParentsSiblingMothersSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationParentsSiblingMothersYoungerSibling")]
+		NSString ParentsSiblingMothersYoungerSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationParentsSiblingMothersElderSibling")]
+		NSString ParentsSiblingMothersElderSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationParentsSiblingFathersSibling")]
+		NSString ParentsSiblingFathersSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationParentsSiblingFathersYoungerSibling")]
+		NSString ParentsSiblingFathersYoungerSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationParentsSiblingFathersElderSibling")]
+		NSString ParentsSiblingFathersElderSibling { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAunt")]
+		NSString Aunt { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntParentsSister")]
+		NSString AuntParentsSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntParentsYoungerSister")]
+		NSString AuntParentsYoungerSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntParentsElderSister")]
+		NSString AuntParentsElderSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntFathersSister")]
+		NSString AuntFathersSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntFathersYoungerSister")]
+		NSString AuntFathersYoungerSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntFathersElderSister")]
+		NSString AuntFathersElderSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntFathersBrothersWife")]
+		NSString AuntFathersBrothersWife { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntFathersYoungerBrothersWife")]
+		NSString AuntFathersYoungerBrothersWife { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntFathersElderBrothersWife")]
+		NSString AuntFathersElderBrothersWife { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntMothersSister")]
+		NSString AuntMothersSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntMothersYoungerSister")]
+		NSString AuntMothersYoungerSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntMothersElderSister")]
+		NSString AuntMothersElderSister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationAuntMothersBrothersWife")]
+		NSString AuntMothersBrothersWife { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandaunt")]
+		NSString Grandaunt { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncle")]
+		NSString Uncle { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleParentsBrother")]
+		NSString UncleParentsBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleParentsYoungerBrother")]
+		NSString UncleParentsYoungerBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleParentsElderBrother")]
+		NSString UncleParentsElderBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleMothersBrother")]
+		NSString UncleMothersBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleMothersYoungerBrother")]
+		NSString UncleMothersYoungerBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleMothersElderBrother")]
+		NSString UncleMothersElderBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleMothersSistersHusband")]
+		NSString UncleMothersSistersHusband { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleFathersBrother")]
+		NSString UncleFathersBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleFathersYoungerBrother")]
+		NSString UncleFathersYoungerBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleFathersElderBrother")]
+		NSString UncleFathersElderBrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleFathersSistersHusband")]
+		NSString UncleFathersSistersHusband { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleFathersYoungerSistersHusband")]
+		NSString UncleFathersYoungerSistersHusband { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationUncleFathersElderSistersHusband")]
+		NSString UncleFathersElderSistersHusband { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGranduncle")]
+		NSString Granduncle { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSiblingsChild")]
+		NSString SiblingsChild { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNiece")]
+		NSString Niece { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNieceSistersDaughter")]
+		NSString NieceSistersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNieceBrothersDaughter")]
+		NSString NieceBrothersDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNieceSistersDaughterOrWifesSiblingsDaughter")]
+		NSString NieceSistersDaughterOrWifesSiblingsDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNieceBrothersDaughterOrHusbandsSiblingsDaughter")]
+		NSString NieceBrothersDaughterOrHusbandsSiblingsDaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNephew")]
+		NSString Nephew { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNephewSistersSon")]
+		NSString NephewSistersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNephewBrothersSon")]
+		NSString NephewBrothersSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNephewBrothersSonOrHusbandsSiblingsSon")]
+		NSString NephewBrothersSonOrHusbandsSiblingsSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNephewSistersSonOrWifesSiblingsSon")]
+		NSString NephewSistersSonOrWifesSiblingsSon { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandniece")]
+		NSString Grandniece { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandnieceSistersGranddaughter")]
+		NSString GrandnieceSistersGranddaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandnieceBrothersGranddaughter")]
+		NSString GrandnieceBrothersGranddaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandnephew")]
+		NSString Grandnephew { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandnephewSistersGrandson")]
+		NSString GrandnephewSistersGrandson { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandnephewBrothersGrandson")]
+		NSString GrandnephewBrothersGrandson { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationStepparent")]
+		NSString Stepparent { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationStepfather")]
+		NSString Stepfather { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationStepmother")]
+		NSString Stepmother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationStepchild")]
+		NSString Stepchild { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationStepson")]
+		NSString Stepson { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationStepdaughter")]
+		NSString Stepdaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationStepbrother")]
+		NSString Stepbrother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationStepsister")]
+		NSString Stepsister { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationMotherInLawOrStepmother")]
+		NSString MotherInLawOrStepmother { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationFatherInLawOrStepfather")]
+		NSString FatherInLawOrStepfather { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationDaughterInLawOrStepdaughter")]
+		NSString DaughterInLawOrStepdaughter { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSonInLawOrStepson")]
+		NSString SonInLawOrStepson { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationCousinOrSiblingsChild")]
+		NSString CousinOrSiblingsChild { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNieceOrCousin")]
+		NSString NieceOrCousin { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationNephewOrCousin")]
+		NSString CNephewOrCousin { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGrandchildOrSiblingsChild")]
+		NSString GrandchildOrSiblingsChild { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationGreatGrandchildOrSiblingsGrandchild")]
+		NSString GreatGrandchildOrSiblingsGrandchild { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationDaughterInLawOrSisterInLaw")]
+		NSString DaughterInLawOrSisterInLaw { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelContactRelationSonInLawOrBrotherInLaw")]
+		NSString SonInLawOrBrotherInLaw { get; }
 	}
 
 	delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
@@ -449,7 +1237,213 @@ namespace Contacts {
 #endif
 	delegate void CNContactStoreListContactsHandler (CNContact contact, ref bool stop);
 
-	[iOS (9,0), Mac (10,11)]
+	interface ICNChangeHistoryEventVisitor {}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Protocol]
+	interface CNChangeHistoryEventVisitor
+	{
+		[Abstract]
+		[Export ("visitDropEverythingEvent:")]
+		void DropEverything (CNChangeHistoryDropEverythingEvent @event);
+
+		[Abstract]
+		[Export ("visitAddContactEvent:")]
+		void AddContact (CNChangeHistoryAddContactEvent @event);
+
+		[Abstract]
+		[Export ("visitUpdateContactEvent:")]
+		void UpdateContact (CNChangeHistoryUpdateContactEvent @event);
+
+		[Abstract]
+		[Export ("visitDeleteContactEvent:")]
+		void DeleteContact (CNChangeHistoryDeleteContactEvent @event);
+
+		[Export ("visitAddGroupEvent:")]
+		void AddGroup (CNChangeHistoryAddGroupEvent @event);
+
+		[Export ("visitUpdateGroupEvent:")]
+		void UpdateGroup (CNChangeHistoryUpdateGroupEvent @event);
+
+		[Export ("visitDeleteGroupEvent:")]
+		void DeleteGroup (CNChangeHistoryDeleteGroupEvent @event);
+
+		[Export ("visitAddMemberToGroupEvent:")]
+		void AddMemberToGroup (CNChangeHistoryAddMemberToGroupEvent @event);
+
+		[Export ("visitRemoveMemberFromGroupEvent:")]
+		void RemoveMemberFromGroup (CNChangeHistoryRemoveMemberFromGroupEvent @event);
+
+		[Export ("visitAddSubgroupToGroupEvent:")]
+		void AddSubgroupToGroup (CNChangeHistoryAddSubgroupToGroupEvent @event);
+
+		[Export ("visitRemoveSubgroupFromGroupEvent:")]
+		void RemoveSubgroupFromGroup (CNChangeHistoryRemoveSubgroupFromGroupEvent @event);
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryEvent : NSCopying, NSSecureCoding
+	{
+		[Export ("acceptEventVisitor:")]
+		void AcceptEventVisitor (ICNChangeHistoryEventVisitor visitor);
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	interface CNChangeHistoryDropEverythingEvent {}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryAddContactEvent
+	{
+		[Export ("contact", ArgumentSemantic.Strong)]
+		CNContact Contact { get; }
+
+		[NullAllowed, Export ("containerIdentifier", ArgumentSemantic.Strong)]
+		string ContainerIdentifier { get; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryUpdateContactEvent
+	{
+		[Export ("contact", ArgumentSemantic.Strong)]
+		CNContact Contact { get; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryDeleteContactEvent
+	{
+		[Export ("contactIdentifier", ArgumentSemantic.Strong)]
+		string ContactIdentifier { get; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryAddGroupEvent
+	{
+		[Export ("group", ArgumentSemantic.Strong)]
+		CNGroup Group { get; }
+
+		[Export ("containerIdentifier", ArgumentSemantic.Strong)]
+		string ContainerIdentifier { get; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryUpdateGroupEvent
+	{
+		[Export ("group", ArgumentSemantic.Strong)]
+		CNGroup Group { get; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryDeleteGroupEvent
+	{
+		[Export ("groupIdentifier", ArgumentSemantic.Strong)]
+		string GroupIdentifier { get; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryAddMemberToGroupEvent
+	{
+		[Export ("member", ArgumentSemantic.Strong)]
+		CNContact Member { get; }
+
+		[Export ("group", ArgumentSemantic.Strong)]
+		CNGroup Group { get; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryRemoveMemberFromGroupEvent
+	{
+		[Export ("member", ArgumentSemantic.Strong)]
+		CNContact Member { get; }
+
+		[Export ("group", ArgumentSemantic.Strong)]
+		CNGroup Group { get; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryAddSubgroupToGroupEvent
+	{
+		[Export ("subgroup", ArgumentSemantic.Strong)]
+		CNGroup Subgroup { get; }
+
+		[Export ("group", ArgumentSemantic.Strong)]
+		CNGroup Group { get; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNChangeHistoryEvent))]
+	[DisableDefaultCtor]
+	interface CNChangeHistoryRemoveSubgroupFromGroupEvent
+	{
+		[Export ("subgroup", ArgumentSemantic.Strong)]
+		CNGroup Subgroup { get; }
+
+		[Export ("group", ArgumentSemantic.Strong)]
+		CNGroup Group { get; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface CNFetchRequest {}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (CNFetchRequest))]
+	interface CNChangeHistoryFetchRequest : NSSecureCoding
+	{
+		[NullAllowed, Export ("startingToken", ArgumentSemantic.Copy)]
+		NSData StartingToken { get; set; }
+
+		[NullAllowed, Export ("additionalContactKeyDescriptors", ArgumentSemantic.Copy)]
+		// we cannot use ICNKeyDescriptor as Apple (and others) can adopt it from categories
+		// cannot be exposed as NSString since they could be internalized types, like CNAggregateKeyDescriptor
+		NSArray AdditionalContactKeyDescriptors { get; set; }
+
+		[Export ("shouldUnifyResults")]
+		bool ShouldUnifyResults { get; set; }
+
+		[Export ("mutableObjects")]
+		bool MutableObjects { get; set; }
+
+		[Export ("includeGroupChanges")]
+		bool IncludeGroupChanges { get; set; }
+
+		[Export ("excludedTransactionAuthors", ArgumentSemantic.Copy)]
+		string[] ExcludedTransactionAuthors { get; set; }
+	}
+
+	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CNFetchResult
+	{
+		[Export ("value", ArgumentSemantic.Strong)]
+		NSObject Value { get; }
+
+		[Export ("currentHistoryToken", ArgumentSemantic.Copy)]
+		NSData CurrentHistoryToken { get; }
+	}
+
+	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface CNContactStore {
 
@@ -463,16 +1457,30 @@ namespace Contacts {
 
 		[Export ("unifiedContactsMatchingPredicate:keysToFetch:error:")]
 		[Protected] // we cannot use ICNKeyDescriptor as Apple (and others) can adopt it from categories
-		CNContact[] GetUnifiedContacts (NSPredicate predicate, NSArray keys, out NSError error);
+		[return: NullAllowed]
+		CNContact[] GetUnifiedContacts (NSPredicate predicate, NSArray keys, [NullAllowed] out NSError error);
 
 		[Export ("unifiedContactWithIdentifier:keysToFetch:error:")]
 		[Protected] // we cannot use ICNKeyDescriptor as Apple (and others) can adopt it from categories
-		CNContact GetUnifiedContact (string identifier, NSArray keys, out NSError error);
+		[return: NullAllowed]
+		CNContact GetUnifiedContact (string identifier, NSArray keys, [NullAllowed] out NSError error);
 
 		[NoiOS, NoWatch]
 		[Export ("unifiedMeContactWithKeysToFetch:error:")]
 		[Protected] // we cannot use ICNKeyDescriptor as Apple (and others) can adopt it from categories
-		NSObject GetUnifiedMeContact (NSArray keys, out NSError error);
+		[return: NullAllowed]
+		NSObject GetUnifiedMeContact (NSArray keys, [NullAllowed] out NSError error);
+
+		/* [Unavailable (PlatformName.Swift)]
+		[Export ("enumeratorForContactFetchRequest:error:")]
+		[return: NullAllowed]
+		CNFetchResult<NSEnumerator<CNContact>> GetEnumeratorForContact (CNContactFetchRequest request, [NullAllowed] out NSError error);*/
+
+		/* [Unavailable (PlatformName.Swift)]
+		[Export ("enumeratorForChangeHistoryFetchRequest:error:")]
+		[return: NullAllowed]
+		CNFetchResult<NSEnumerator<CNChangeHistoryEvent>> GetEnumeratorForChangeHistory (CNChangeHistoryFetchRequest request, [NullAllowed] out NSError error);*/
+
 
 #if !XAMCORE_4_0 && !WATCH
 		[Obsolete ("Use the overload that takes 'CNContactStoreListContactsHandler' instead.")]
@@ -482,18 +1490,24 @@ namespace Contacts {
 		[Sealed] // We will introduce breaking changes anyways if XAMCORE_4_0 happens
 #endif
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
-		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreListContactsHandler handler);
+		bool EnumerateContacts (CNContactFetchRequest fetchRequest, [NullAllowed] out NSError error, CNContactStoreListContactsHandler handler);
 
 		[Export ("groupsMatchingPredicate:error:")]
-		CNGroup [] GetGroups ([NullAllowed] NSPredicate predicate, out NSError error);
+		[return: NullAllowed]
+		CNGroup [] GetGroups ([NullAllowed] NSPredicate predicate, [NullAllowed] out NSError error);
 
 		[Export ("containersMatchingPredicate:error:")]
-		CNContainer [] GetContainers ([NullAllowed] NSPredicate predicate, out NSError error);
+		[return: NullAllowed]
+		CNContainer [] GetContainers ([NullAllowed] NSPredicate predicate, [NullAllowed] out NSError error);
 
 #if !WATCH
 		[Export ("executeSaveRequest:error:")]
-		bool ExecuteSaveRequest (CNSaveRequest saveRequest, out NSError error);
+		[return: NullAllowed]
+		bool ExecuteSaveRequest (CNSaveRequest saveRequest, [NullAllowed] out NSError error);
 #endif
+		[Watch (6, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[Export ("currentHistoryToken", ArgumentSemantic.Copy)]
+		NSData CurrentHistoryToken { get; }
 
 		[Export ("defaultContainerIdentifier")]
 		[NullAllowed]
@@ -825,6 +1839,10 @@ namespace Contacts {
 
 		[Field ("CNLabelWork")]
 		NSString Work { get; }
+
+		[iOS (13, 0)]
+		[Field ("CNLabelSchool")]
+		NSString School { get; }
 
 		[Field ("CNLabelOther")]
 		NSString Other { get; }
