@@ -10,6 +10,7 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
+	[Watch (6,0)]
 	[Partial]
 	interface CMMemoryPool {
 
@@ -18,7 +19,7 @@ namespace CoreMedia {
 	}
 
 	[Static][Internal]
-	[Mac (10, 9), iOS (6,0)]
+	[Mac (10, 9), iOS (6,0), Watch (6,0)]
 	interface CMTextMarkupAttributesKeys {
 		[Internal][Field ("kCMTextMarkupAttribute_ForegroundColorARGB")]
 		NSString ForegroundColorARGB { get; }
@@ -44,9 +45,10 @@ namespace CoreMedia {
 		[Internal]
 		[Field("kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight")]
 		NSString BaseFontSizePercentageRelativeToVideoHeight { get; }
-    }
+	}
 
 	[Static][Internal]
+	[Watch (6,0)]
 	interface CMSampleAttachmentKey {
 		[Field ("kCMSampleAttachmentKey_NotSync")]
 		NSString NotSync { get; }
@@ -166,8 +168,17 @@ namespace CoreMedia {
 		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix")]
 		NSString CameraIntrinsicMatrixKey { get; }
+
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[Field ("kCMSampleAttachmentKey_AudioIndependentSampleDecoderRefreshCount")]
+		NSString AudioIndependentSampleDecoderRefreshCountKey { get; }
+
+		[Mac (10,10), Watch (6,0)]
+		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
+		NSString ForceKeyFrameKey { get; }
 	}
 
+	[Watch (6,0)]
 	[StrongDictionary ("CMSampleAttachmentKey")]
 	interface CMSampleBufferAttachmentSettings {
 
@@ -196,10 +207,16 @@ namespace CoreMedia {
 
 		[iOS (11,0), Mac (10,13), TV (11,0)]
 		NSData CameraIntrinsicMatrix { get; set; }
+
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		nint AudioIndependentSampleDecoderRefreshCount { get; set; }
+
+		[Mac (10,10), Watch (6,0)]
+		bool ForceKeyFrame { get; set; }
 	}
 
 	[Internal]
-	[iOS (11,0), Mac (10,13), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0), Watch (6,0)]
 	[Static]
 	interface CMHevcTemporalLevelInfoKeys {
 
@@ -225,7 +242,7 @@ namespace CoreMedia {
 		NSString LevelIndexKey { get; }
 	}
 
-	[iOS (11,0), Mac (10,13), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0), Watch (6,0)]
 	[StrongDictionary ("CMHevcTemporalLevelInfoKeys")]
 	interface CMHevcTemporalLevelInfoSettings {
 
@@ -240,6 +257,7 @@ namespace CoreMedia {
 
 #if false
 	// right now the generator can't add fields in a partial struct
+	[Watch (6,0)]
 	[Partial]
 	interface CMTime {
 		[Field ("kCMTimeValueKey")]
