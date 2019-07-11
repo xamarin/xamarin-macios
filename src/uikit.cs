@@ -20085,7 +20085,7 @@ namespace UIKit {
 
 		[Static]
 		[Export ("horizontalGroupWithLayoutSize:subitems:")]
-		NSCollectionLayoutGroup CreateHorizontal (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem [] subitems);
+		NSCollectionLayoutGroup CreateHorizontal (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutItem [] subitems);
 
 		[Static]
 		[Export ("verticalGroupWithLayoutSize:subitem:count:")]
