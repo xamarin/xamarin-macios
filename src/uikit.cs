@@ -1234,19 +1234,19 @@ namespace UIKit {
 		[Export ("accessibilityNavigationStyle")]
 		UIAccessibilityNavigationStyle AccessibilityNavigationStyle { get; set; }
 
-		[TV (13,0), iOS (13,0)]
+		[TV (13,0), iOS (13,0), Watch (6,0)]
 		[Export ("accessibilityRespondsToUserInteraction")]
 		bool AccessibilityRespondsToUserInteraction { get; set; }
 
-		[TV (13,0), iOS (13,0)]
+		[TV (13,0), iOS (13,0), Watch (6,0)]
 		[Export ("accessibilityUserInputLabels", ArgumentSemantic.Strong)]
 		string [] AccessibilityUserInputLabels { get; set; }
 
-		[TV (13,0), iOS (13,0)]
+		[TV (13,0), iOS (13,0), Watch (6,0)]
 		[Export ("accessibilityAttributedUserInputLabels", ArgumentSemantic.Copy)]
 		NSAttributedString [] AccessibilityAttributedUserInputLabels { get; set; }
 
-		[TV (13,0), iOS (13,0)]
+		[TV (13,0), iOS (13,0), Watch (6,0)]
 		[NullAllowed, Export ("accessibilityTextualContext", ArgumentSemantic.Strong)]
 		string AccessibilityTextualContext { get; set; }
 
@@ -5832,9 +5832,9 @@ namespace UIKit {
 		[Internal] // bug 25511
 		IntPtr _FromName (string name, nfloat size);
 
-		[iOS (13,0), TV (13,0)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Static]
-		[Internal] // bug 25511
+		[Internal] // bug https://xamarin.github.io/bugzilla-archives/25/25511/bug.html
 		[Export ("monospacedSystemFontOfSize:weight:")]
 		IntPtr _MonospacedSystemFontOfSize (nfloat fontSize, double weight);
 
@@ -11811,11 +11811,11 @@ namespace UIKit {
 		NSString NSDefaultTabIntervalDocumentAttribute { get; }
 
 		// we do not seem to expose other options like NSDefaultAttributesDocumentOption so keeping these as is for now
-		[iOS (13,0), TV (13,0)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Internal, Field ("NSTargetTextScalingDocumentOption")]
 		NSString NSTargetTextScalingDocumentOption { get; }
 
-		[iOS (13,0), TV (13,0)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Internal, Field ("NSSourceTextScalingDocumentOption")]
 		NSString NSSourceTextScalingDocumentOption { get; }
 	}
@@ -14525,7 +14525,9 @@ namespace UIKit {
 		[Export ("transform3D", ArgumentSemantic.Assign)]
 		CATransform3D Transform3D { get; set; }
 
-#if !TVOS // avoid a CS0109 also these are not in TVOS anyways...
+#if TVOS
+#pragma warning disable 0109 // The member 'member' does not hide an inherited member. The new keyword is not required
+#endif
 		// From UIView (UILargeContentViewer)
 
 		[NoWatch, NoTV, iOS (13,0)]
@@ -14547,6 +14549,8 @@ namespace UIKit {
 		[NoWatch, NoTV, iOS (13,0)]
 		[Export ("largeContentImageInsets", ArgumentSemantic.Assign)]
 		new UIEdgeInsets LargeContentImageInsets { get; set; }
+#if TVOS
+#pragma warning restore 0109
 #endif
 	}
 
@@ -14884,15 +14888,34 @@ namespace UIKit {
 		[Export ("shouldPerformSegueWithIdentifier:sender:")]
 		bool ShouldPerformSegue (string segueIdentifier, NSObject sender);
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CanPerformUnwind2' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CanPerformUnwind2' instead.")]
+#if !XAMCORE_4_0
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CanPerformUnwindSegueAction' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CanPerformUnwindSegueAction' instead.")]
+#else
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CanPerformUnwind' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CanPerformUnwind' instead.")]
+#endif // !XAMCORE_4_0
 		[iOS (6,0)]
 		[Export ("canPerformUnwindSegueAction:fromViewController:withSender:")]
-		bool CanPerformUnwind (Selector segueAction, UIViewController fromViewController, NSObject sender);
+		bool
+#if !XAMCORE_4_0
+		CanPerformUnwind
+#else
+		CanPerformUnwindDeprecated
+#endif // !XAMCORE_4_0
+		(Selector segueAction, UIViewController fromViewController, NSObject sender);
 
+		// Apple decided to rename the selector and it clashes with our current one
+		// we will get the right name 'CanPerformUnwind' if XAMCORE_4_0 happens, use CanPerformUnwindSegueAction for now.
 		[TV (13,0), iOS (13,0)]
 		[Export ("canPerformUnwindSegueAction:fromViewController:sender:")]
-		bool CanPerformUnwind2 (Selector segueAction, UIViewController fromViewController, [NullAllowed] NSObject sender);
+		bool
+#if !XAMCORE_4_0
+		CanPerformUnwindSegueAction
+#else
+		CanPerformUnwind
+#endif // !XAMCORE_4_0
+		(Selector segueAction, UIViewController fromViewController, [NullAllowed] NSObject sender);
 
 		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]

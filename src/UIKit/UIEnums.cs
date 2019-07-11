@@ -2539,7 +2539,7 @@ namespace UIKit {
 		ContinuousGroupLeadingBoundary,
 		Paging,
 		GroupPaging,
-		GroupPagingCentered
+		GroupPagingCentered,
 	}
 
 	[Flags, Watch (6,0), TV (13,0), iOS (13,0)]

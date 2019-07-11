@@ -8962,19 +8962,19 @@ namespace Foundation
 		[Export ("awakeFromNib")]
 		void AwakeFromNib ();
 
-		[NoWatch, TV (13,0), iOS (13,0)]
+		[NoWatch, TV (13,0), iOS (13,0), Mac (10,15, onlyOn64: true)]
 		[Export ("accessibilityRespondsToUserInteraction")]
 		bool AccessibilityRespondsToUserInteraction { get; set; }
 
-		[NoWatch, TV (13,0), iOS (13,0)]
+		[NoWatch, TV (13,0), iOS (13,0), Mac (10,15, onlyOn64: true)]
 		[Export ("accessibilityUserInputLabels", ArgumentSemantic.Strong)]
 		string [] AccessibilityUserInputLabels { get; set; }
 
-		[NoWatch, TV (13,0), iOS (13,0)]
+		[NoWatch, TV (13,0), iOS (13,0), Mac (10,15, onlyOn64: true)]
 		[Export ("accessibilityAttributedUserInputLabels", ArgumentSemantic.Copy)]
 		NSAttributedString[] AccessibilityAttributedUserInputLabels { get; set; }
 
-		[NoWatch, TV (13, 0), iOS (13, 0)]
+		[NoWatch, TV (13,0), iOS (13,0), Mac (10,15, onlyOn64: true)]
 		[NullAllowed, Export ("accessibilityTextualContext", ArgumentSemantic.Strong)]
 		string AccessibilityTextualContext { get; set; }
 	}
@@ -13756,7 +13756,7 @@ namespace Foundation
 		[Mac (10,15, onlyOn64 : true)]
 		[Field ("NSTextScalingDocumentAttribute", "AppKit")]
 #else
-		[iOS (13,0), TV (13,0)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Field ("NSTextScalingDocumentAttribute", "UIKit")]
 #endif
 		NSString TextScalingDocumentAttribute { get; }
@@ -13765,7 +13765,7 @@ namespace Foundation
 		[Mac (10,15, onlyOn64 : true)]
 		[Field ("NSSourceTextScalingDocumentAttribute", "AppKit")]
 #else
-		[iOS (13,0), TV (13,0)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Field ("NSSourceTextScalingDocumentAttribute", "UIKit")]
 #endif
 		NSString SourceTextScalingDocumentAttribute { get; }
@@ -13774,7 +13774,7 @@ namespace Foundation
 		[Mac (10,15, onlyOn64 : true)]
 		[Field ("NSCocoaVersionDocumentAttribute", "AppKit")]
 #else
-		[iOS (13,0)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Field ("NSCocoaVersionDocumentAttribute", "UIKit")]
 #endif
 		NSString CocoaVersionDocumentAttribute { get; }
