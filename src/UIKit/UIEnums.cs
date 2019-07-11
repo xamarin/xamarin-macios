@@ -29,9 +29,20 @@ namespace UIKit {
 	[Native]
 	[NoWatch]
 	public enum UIActivityIndicatorViewStyle : long {
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Large' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Large' instead.")]
 		WhiteLarge,
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Medium' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Medium' instead.")]
 		White,
-		Gray
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Medium' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Medium' instead.")]
+		Gray,
+
+		[iOS (13,0), TV (13,0)]
+		Medium = 100,
+		[iOS (13,0), TV (13,0)]
+		Large = 101,
 	}
 
 	// NSInteger -> UIAlertView.h
@@ -756,6 +767,7 @@ namespace UIKit {
 	// NSInteger -> UIActionSheet.h
 	[Native]
 	[NoTV][NoWatch]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "'UIActionSheet' is deprecated.")]
 	public enum UIActionSheetStyle : long {
 		Automatic        = -1,
 		Default          = UIBarStyle.Default,
@@ -1125,9 +1137,14 @@ namespace UIKit {
 	}
 	
 	// NSInteger -> UITextInput.h
+	// NSWritingDirection == UITextWritingDirection
 	[Native]
 	[NoWatch]
+#if XAMCORE_4_0
+	public enum NSWritingDirection : long {
+#else
 	public enum UITextWritingDirection : long {
+#endif
 		Natural = -1,
 		LeftToRight,
 		RightToLeft,
@@ -1603,6 +1620,36 @@ namespace UIKit {
 		Regular = 4,
 		[iOS (10,0)]
 		Prominent = 5,
+		[iOS (13,0), NoTV]
+		SystemUltraThinMaterial,
+		[iOS (13,0), NoTV]
+		SystemThinMaterial,
+		[iOS (13,0), NoTV]
+		SystemMaterial,
+		[iOS (13,0), NoTV]
+		SystemThickMaterial,
+		[iOS (13,0), NoTV]
+		SystemChromeMaterial,
+		[iOS (13,0), NoTV]
+		SystemUltraThinMaterialLight,
+		[iOS (13,0), NoTV]
+		SystemThinMaterialLight,
+		[iOS (13,0), NoTV]
+		SystemMaterialLight,
+		[iOS (13,0), NoTV]
+		SystemThickMaterialLight,
+		[iOS (13,0), NoTV]
+		SystemChromeMaterialLight,
+		[iOS (13,0), NoTV]
+		SystemUltraThinMaterialDark,
+		[iOS (13,0), NoTV]
+		SystemThinMaterialDark,
+		[iOS (13,0), NoTV]
+		SystemMaterialDark,
+		[iOS (13,0), NoTV]
+		SystemThickMaterialDark,
+		[iOS (13,0), NoTV]
+		SystemChromeMaterialDark,
 	}
 
 	[Native]
@@ -1689,6 +1736,7 @@ namespace UIKit {
 
 	[Native]
 	[NoTV][NoWatch]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIContextualActionStyle' and corresponding APIs instead.")]
 	public enum UITableViewRowActionStyle : long {
 		Default, Destructive = Default, Normal
 	}
@@ -1979,7 +2027,9 @@ namespace UIKit {
 		None = 0,
 		DataTable,
 		List,
-		Landmark
+		Landmark,
+		[iOS (13,0), TV (13,0), Watch (6,0)]
+		SemanticGroup,
 	}
 	
 	[NoWatch]
@@ -2318,16 +2368,14 @@ namespace UIKit {
 
 	[Mac (10,15, onlyOn64: true), iOS (13,0), TV (13,0)]
 	[Native]
-	public enum NSTextScalingType : long
-	{
+	public enum NSTextScalingType : long {
 		Standard = 0,
 		iOS,
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]
 	[Native]
-	public enum UISceneActivationState : long
-	{
+	public enum UISceneActivationState : long {
 		Unattached = -1,
 		ForegroundActive,
 		ForegroundInactive,
@@ -2336,44 +2384,37 @@ namespace UIKit {
 
 	[iOS (13,0), TV (13,0), NoWatch]
 	[Native]
-	public enum UICommandState : long
-	{
+	public enum UIMenuElementState : long {
 		Off,
 		On,
 		Mixed,
-		Hidden,
+	}
+
+	[iOS (13,0), TV (13,0), NoWatch]
+	[Native]
+	public enum UIMenuElementAttributes : ulong {
+		Disabled = 1uL << 0,
+		Destructive = 1uL << 1,
+		Hidden = 1uL << 2,
 	}
 
 	[Flags]
 	[iOS (13,0), TV (13,0), NoWatch]
 	[Native]
-	public enum UIMenuOptions : ulong
-	{
+	public enum UIMenuOptions : ulong {
 		DisplayInline = 1uL << 0,
 		Destructive = 1uL << 1,
 	}
 
-	[Flags]
-	[iOS (13,0), TV (13,0), NoWatch]
-	[Native]
-	public enum UIActionOptions : ulong
-	{
-		Disabled = 1uL << 0,
-		Selected = 1uL << 1,
-		Destructive = 1uL << 2,
-	}
-
 	[NoWatch, NoTV, iOS (13, 0)]
 	[Native]
-	public enum UIContextMenuInteractionCommitStyle : long
-	{
+	public enum UIContextMenuInteractionCommitStyle : long {
 		Dismiss = 0,
 		Pop,
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]
-	public enum UIWindowSceneSessionRole
-	{
+	public enum UIWindowSceneSessionRole {
 		[Field ("UIWindowSceneSessionRoleApplication")]
 		Application,
 
@@ -2382,8 +2423,7 @@ namespace UIKit {
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]
-	public enum UIMenuIdentifier
-	{
+	public enum UIMenuIdentifier {
 		[DefaultEnumValue]
 		[Field (null)]
 		None,
@@ -2471,5 +2511,140 @@ namespace UIKit {
 		BringAllToFront,
 		[Field ("UIMenuRoot")]
 		Root,
+	}
+
+	[iOS (13,0), TV (13,0), Watch (6,0)]
+	public enum UIAccessibilityTextualContext {
+		[Field ("UIAccessibilityTextualContextWordProcessing")]
+		WordProcessing,
+		[Field ("UIAccessibilityTextualContextNarrative")]
+		Narrative,
+		[Field ("UIAccessibilityTextualContextMessaging")]
+		Messaging,
+		[Field ("UIAccessibilityTextualContextSpreadsheet")]
+		Spreadsheet,
+		[Field ("UIAccessibilityTextualContextFileSystem")]
+		FileSystem,
+		[Field ("UIAccessibilityTextualContextSourceCode")]
+		SourceCode,
+		[Field ("UIAccessibilityTextualContextConsole")]
+		Console,
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UICollectionLayoutSectionOrthogonalScrollingBehavior : long {
+		None,
+		Continuous,
+		ContinuousGroupLeadingBoundary,
+		Paging,
+		GroupPaging,
+		GroupPagingCentered
+	}
+
+	[Flags, Watch (6,0), TV (13,0), iOS (13,0)]
+	[Native]
+	public enum NSDirectionalRectEdge : ulong {
+		None = 0x0,
+		Top = 1uL << 0,
+		Leading = 1uL << 1,
+		Bottom = 1uL << 2,
+		Trailing = 1uL << 3,
+		All = Top | Leading | Bottom | Trailing,
+	}
+
+	[Watch (6,0), TV (13,0), iOS (13,0)]
+	[Native]
+	public enum NSRectAlignment : long {
+		None = 0,
+		Top,
+		TopLeading,
+		Leading,
+		BottomLeading,
+		Bottom,
+		BottomTrailing,
+		Trailing,
+		TopTrailing,
+	}
+
+	[TV (13,0), NoWatch, iOS (13,0)]
+	[Native]
+	public enum UIAccessibilityContrast : long {
+		Unspecified = -1,
+		Normal,
+		High,
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UILegibilityWeight : long {
+		Unspecified = -1,
+		Regular,
+		Bold,
+	}
+
+	[NoWatch, NoTV, iOS (13,0)]
+	[Native]
+	public enum UIUserInterfaceLevel : long {
+		Unspecified = -1,
+		Base,
+		Elevated,
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UIEditingInteractionConfiguration : long {
+		None = 0,
+		Default = 1,
+	}
+
+	[NoTV, NoWatch, iOS (13,0)]
+	[Native]
+	public enum UISplitViewControllerBackgroundStyle : long {
+		None,
+		Sidebar,
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UITabBarItemAppearanceStyle : long {
+		Stacked,
+		Inline,
+		CompactInline,
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UITextAlternativeStyle : long {
+		None,
+		LowConfidence,
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UITextInteractionMode : long {
+		Editable,
+		NonEditable,
+	}
+
+	[NoWatch, NoTV, iOS (13,0)]
+	[Native]
+	public enum UIVibrancyEffectStyle : long {
+		Label,
+		SecondaryLabel,
+		TertiaryLabel,
+		QuaternaryLabel,
+		Fill,
+		SecondaryFill,
+		TertiaryFill,
+		Separator,
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Native]
+	public enum UIWindowSceneDismissalAnimation : long {
+		Standard = 1,
+		Commit = 2,
+		Decline = 3,
 	}
 }

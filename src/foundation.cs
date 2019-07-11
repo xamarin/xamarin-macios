@@ -5329,8 +5329,11 @@ namespace Foundation
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true), Watch (2,0), TV (9,0)] // .objc_class_name_NSUserActivity", referenced from '' not found
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // xcode 8 beta 4 marks it as API_DEPRECATED
-	partial interface NSUserActivity {
-	
+	partial interface NSUserActivity
+#if IOS // iOS only.
+	: NSItemProviderReading, NSItemProviderWriting
+#endif
+	{
 		[DesignatedInitializer]
 		[Export ("initWithActivityType:")]
 #if XAMCORE_2_0
@@ -5472,7 +5475,7 @@ namespace Foundation
 
 		// Inlined from NSUserActivity (UISceneActivationConditions)
 
-		[iOS (13,0), NoTV, NoMac, NoWatch]
+		[iOS (13,0), TV (13,0), NoMac, NoWatch]
 		[NullAllowed, Export ("targetContentIdentifier")]
 		string TargetContentIdentifier { get; set; }
 	}
@@ -8958,6 +8961,22 @@ namespace Foundation
 #endif
 		[Export ("awakeFromNib")]
 		void AwakeFromNib ();
+
+		[NoWatch, TV (13,0), iOS (13,0)]
+		[Export ("accessibilityRespondsToUserInteraction")]
+		bool AccessibilityRespondsToUserInteraction { get; set; }
+
+		[NoWatch, TV (13,0), iOS (13,0)]
+		[Export ("accessibilityUserInputLabels", ArgumentSemantic.Strong)]
+		string [] AccessibilityUserInputLabels { get; set; }
+
+		[NoWatch, TV (13,0), iOS (13,0)]
+		[Export ("accessibilityAttributedUserInputLabels", ArgumentSemantic.Copy)]
+		NSAttributedString[] AccessibilityAttributedUserInputLabels { get; set; }
+
+		[NoWatch, TV (13, 0), iOS (13, 0)]
+		[NullAllowed, Export ("accessibilityTextualContext", ArgumentSemantic.Strong)]
+		string AccessibilityTextualContext { get; set; }
 	}
 
 	[BaseType (typeof(NSObject))]
@@ -13732,6 +13751,33 @@ namespace Foundation
 		[NoiOS, NoWatch, NoTV][Availability (Deprecated = Platform.Mac_10_11)]
 		[Field ("NSUnderlineByWordMask", "AppKit")]
 		nint UnderlineByWordMaskAttributeName { get; }
+
+#if MONOMAC
+		[Mac (10,15, onlyOn64 : true)]
+		[Field ("NSTextScalingDocumentAttribute", "AppKit")]
+#else
+		[iOS (13,0), TV (13,0)]
+		[Field ("NSTextScalingDocumentAttribute", "UIKit")]
+#endif
+		NSString TextScalingDocumentAttribute { get; }
+
+#if MONOMAC
+		[Mac (10,15, onlyOn64 : true)]
+		[Field ("NSSourceTextScalingDocumentAttribute", "AppKit")]
+#else
+		[iOS (13,0), TV (13,0)]
+		[Field ("NSSourceTextScalingDocumentAttribute", "UIKit")]
+#endif
+		NSString SourceTextScalingDocumentAttribute { get; }
+
+#if MONOMAC
+		[Mac (10,15, onlyOn64 : true)]
+		[Field ("NSCocoaVersionDocumentAttribute", "AppKit")]
+#else
+		[iOS (13,0)]
+		[Field ("NSCocoaVersionDocumentAttribute", "UIKit")]
+#endif
+		NSString CocoaVersionDocumentAttribute { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]

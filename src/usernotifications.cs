@@ -17,6 +17,12 @@ using CoreLocation;
 using CoreMedia;
 #endif
 
+#if MONOMAC || WATCH
+using UIScene = Foundation.NSObject;
+#else
+using UIKit;
+#endif
+
 namespace UserNotifications {
 
 	[iOS (10, 0)]
@@ -500,6 +506,10 @@ namespace UserNotifications {
 
 		[Wrap ("!IsDefaultAction && !IsDismissAction")]
 		bool IsCustomAction { get; }
+
+		[iOS (13,0), TV (13,0), NoWatch, NoMac]
+		[NullAllowed, Export ("targetScene")]
+		UIScene TargetScene { get; }
 	}
 
 	[iOS (10, 0)]

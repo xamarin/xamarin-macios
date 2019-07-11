@@ -230,7 +230,6 @@
 !missing-field! NSCategoryDocumentAttribute not bound
 !missing-field! NSAppearanceDocumentAttribute not bound
 !missing-field! NSCharacterEncodingDocumentAttribute not bound
-!missing-field! NSCocoaVersionDocumentAttribute not bound
 !missing-field! NSColorListDidChangeNotification not bound
 !missing-field! NSColorListIOException not bound
 !missing-field! NSColorListNotEditableException not bound
