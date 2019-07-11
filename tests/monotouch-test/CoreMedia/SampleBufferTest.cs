@@ -82,7 +82,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !__WATCHOS__
 		[Test]
 		public void CreateReadyWithImageBuffer_ArrayValidations ()
 		{
