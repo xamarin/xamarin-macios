@@ -1404,6 +1404,7 @@ namespace Contacts {
 
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface CNFetchRequest {}
 
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
