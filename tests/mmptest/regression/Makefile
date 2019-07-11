@@ -11,8 +11,6 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 
 TESTS_4_0 = \
-	link-uithread-1 \
-	link-uithread-2 \
 	link-safe-1 \
 	embedded-mono \
 	system-mono \

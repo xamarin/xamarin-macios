@@ -32,7 +32,7 @@
     <XamMacArch></XamMacArch>
     <AOTMode>None</AOTMode>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <MonoBundlingExtraArgs>--optimize=all</MonoBundlingExtraArgs>
+    <MonoBundlingExtraArgs>--optimize=all,-remove-uithread-checks</MonoBundlingExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType></DebugType>
