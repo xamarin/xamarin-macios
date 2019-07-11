@@ -20093,7 +20093,7 @@ namespace UIKit {
 
 		[Static]
 		[Export ("verticalGroupWithLayoutSize:subitems:")]
-		NSCollectionLayoutGroup CreateVertical (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem [] subitems);
+		NSCollectionLayoutGroup CreateVertical (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutItem [] subitems);
 
 		[Static]
 		[Export ("customGroupWithLayoutSize:itemProvider:")]
