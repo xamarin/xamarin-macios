@@ -19,7 +19,6 @@ TESTS_4_0 = \
 
 DISABLED_TESTS_MONO_4_2 =  \
 	link-webclient-2 \
-	link-xml-serialization \
 
 DISABLED_TESTS_MONO_4_4 =  \
 	link-webclient-1 \
