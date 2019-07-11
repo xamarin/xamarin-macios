@@ -26,7 +26,6 @@ DISABLED_TESTS_MONO_4_2 =  \
 DISABLED_TESTS_MONO_4_4 =  \
 	link-webclient-1 \
 	link-webclient-3 \
-	link-remove-attributes-1
 
 TESTS_UNIFIED = \
 	custom-bundle-name \
@@ -35,6 +34,7 @@ TESTS_UNIFIED = \
 	link-keep-resources-2 \
 	link-posix-1 \
 	link-preserve-assembly \
+	link-remove-attributes-1 \
 
 DISABLED_4_5_TESTS_MONO_4_2 = \
 	link-httpclient-async \
