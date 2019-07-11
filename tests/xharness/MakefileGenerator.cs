@@ -103,6 +103,8 @@ namespace xharness
 					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 					writer.WriteLine ();
 
+					if (!harness.GetIncludeSystemPermissionTests (TestPlatform.Mac, false))
+						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "export DISABLE_SYSTEM_PERMISSION_TESTS=1");
 					writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
 					if (target.IsNUnitProject) {
 						writer.WriteLine ("\t$(Q)rm -f $(CURDIR)/.{0}-failed.stamp", make_escaped_name);
