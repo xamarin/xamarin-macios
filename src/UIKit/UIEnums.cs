@@ -1136,19 +1136,17 @@ namespace UIKit {
 		Forward, Backward, Right, Left, Up, Down
 	}
 	
+#if !XAMCORE_4_0
 	// NSInteger -> UITextInput.h
-	// NSWritingDirection == UITextWritingDirection
+	// UITextWritingDirection instances needs to be replaced by NSWritingDirection in XAMCORE_4_0
 	[Native]
 	[NoWatch]
-#if XAMCORE_4_0
-	public enum NSWritingDirection : long {
-#else
 	public enum UITextWritingDirection : long {
-#endif
 		Natural = -1,
 		LeftToRight,
 		RightToLeft,
 	}
+#endif
 
 	// NSInteger -> UITextInput.h
 	[Native]
