@@ -18,12 +18,13 @@ using BCLTests.TestRunner.Core;
 using Xamarin.iOS.UnitTests.XUnit;
 using System.IO;
 using NUnit.Framework.Internal.Filters;
+using System.Threading.Tasks;
 
 namespace Xamarin.Mac.Tests
 {
 	static class MainClass
 	{
-		static int Main (string[] args)
+		static Task<int> Main (string[] args)
 		{
 			NSApplication.Init();
 			return RunTests (args);
@@ -38,7 +39,7 @@ namespace Xamarin.Mac.Tests
 			}
  		}
  		
-		static int RunTests (string [] original_args)
+		static async Task<int> RunTests (string [] original_args)
 		{
 			Console.WriteLine ("Running tests");
 			var options = ApplicationOptions.Current;
@@ -50,39 +51,14 @@ namespace Xamarin.Mac.Tests
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
 			var runner = RegisterType.IsXUnit ? (TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
-			var categories = RegisterType.IsXUnit ?
-				new List<string> { 
-					"failing",
-					"nonmonotests",
-					"outerloop",
-					"nonosxtests"
-				} :
-				new List<string> {
-					"MacNotWorking",
-					"MobileNotWorking",
-					"NotOnMac",
-					"NotWorking",
-					"ValueAdd",
-					"CAS",
-					"InetAccess",
-					"NotWorkingLinqInterpreter"
-				};
-
-			if (RegisterType.IsXUnit) {
-				// special case when we are using the xunit runner,
-				// there is a trait we are not interested in which is
-				// the Benchmark one
-				var xunitRunner = runner as XUnitTestRunner;
-				xunitRunner.AddFilter (XUnitFilter.CreateTraitFilter ("Benchmark", "true", true));
-			}
-			
+			var categories = IgnoreFileParser.ParseTraitsContentFile (NSBundle.MainBundle.ResourcePath, RegisterType.IsXUnit);
 			runner.SkipCategories (categories);
 			var skippedTests = IgnoreFileParser.ParseContentFiles (NSBundle.MainBundle.ResourcePath);
 			if (skippedTests.Any ()) {
 				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);
 			}
-			runner.Run (testAssemblies.ToList ());
+			await runner.Run (testAssemblies).ConfigureAwait (false);
 
 			if (options.ResultFile != null) {
 				using (var writer = new StreamWriter (options.ResultFile)) {

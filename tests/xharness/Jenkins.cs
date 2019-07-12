@@ -233,6 +233,7 @@ namespace xharness
 			public string Variation;
 			public string MTouchExtraArgs;
 			public string MonoBundlingExtraArgs; // mmp
+			public string KnownFailure;
 			public bool Debug;
 			public bool Profiling;
 			public string LinkMode;
@@ -295,13 +296,11 @@ namespace xharness
 						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					}
 					if (supports_interpreter) {
-						// interpreter is broken for monotouch-test: https://github.com/xamarin/maccore/issues/1613, so ignore for now
-						var ignore_interpreter_because_of_1613 = true;
 						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
+							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false };
+							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false };
 						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Ignored = ignore_interpreter_because_of_1613, };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false };
 					}
 					break;
 				case "mscorlib":
@@ -309,10 +308,10 @@ namespace xharness
 						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					if (supports_interpreter) {
 						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = "<a href='https://github.com/xamarin/maccore/issues/1683'>#1683</a>" };
+							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = "<a href='https://github.com/xamarin/maccore/issues/1682'>#1682</a>" };
 						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = "<a href='https://github.com/xamarin/maccore/issues/1682'>#1682</a>" };
 					}
 					break;
 				}
@@ -377,7 +376,11 @@ namespace xharness
 					var defines = test_data.Defines;
 					var undefines = test_data.Undefines;
 					var ignored = test_data.Ignored;
+					var known_failure = test_data.KnownFailure;
 					var candidates = test_data.Candidates;
+
+					if (!string.IsNullOrEmpty (known_failure))
+						ignored = true;
 
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
@@ -460,6 +463,7 @@ namespace xharness
 					newVariation.Ignored = ignored ?? task.Ignored;
 					newVariation.BuildOnly = task.BuildOnly;
 					newVariation.TimeoutMultiplier = task.TimeoutMultiplier;
+					newVariation.KnownFailure = known_failure;
 					rv.Add (newVariation);
 				}
 			}
@@ -1672,7 +1676,7 @@ namespace xharness
 			}
 		}
 
-		bool IsHE0038Error (Log log) {
+		public bool IsHE0038Error (Log log) {
 			if (log == null)
 				return false;
 			if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
@@ -2003,7 +2007,7 @@ namespace xharness
 						writer.Write ($"<span id='button_container2_{groupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{defaultExpander}</span>");
 						writer.Write ($"<span id='x{id_counter++}' class='p1 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{group.Key}{RenderTextStates (group)}</span>");
 						if (IsServerMode) {
-							var groupIds = string.Join (",", group.Select ((v) => v.ID.ToString ()));
+							var groupIds = string.Join (",", group.Where ((v) => string.IsNullOrEmpty (v.KnownFailure)).Select ((v) => v.ID.ToString ()));
 							writer.Write ($" <span class='runall'><a href='javascript: runtest (\"{groupIds}\");'>Run all</a> <a href='javascript: buildtest (\"{groupIds}\");'>Build all</a></span>");
 						}
 						writer.WriteLine ("</div>");
@@ -2024,7 +2028,7 @@ namespace xharness
 							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p2 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{modeGroup.Key}{RenderTextStates (modeGroup)}</span>");
 							if (IsServerMode) {
-								var modeGroupIds = string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()));
+								var modeGroupIds = string.Join (",", modeGroup.Where ((v) => string.IsNullOrEmpty (v.KnownFailure)).Select ((v) => v.ID.ToString ()));
 								writer.Write ($" <span class='runall'><a href='javascript: runtest (\"{modeGroupIds}\");'>Run all</a> <a href='javascript: buildtest (\"{modeGroupIds}\");'>Build all</a></span>");
 							}
 							writer.WriteLine ("</div>");
@@ -2055,11 +2059,10 @@ namespace xharness
 							writer.Write ($"<div class='pdiv {ignoredClass}'>");
 							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
 							// we have a very common error we want to make this easier for the person that is dealing with the results
-							if (test.ExecutionResult == TestExecutingResult.Crashed && IsHE0038Error (logs.First (l => l.Description == "Run log"))) {
-								writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state} <a href='https://github.com/xamarin/maccore/issues/581'>HE0038</a></span>{buildOnly}) </span>");
-							} else {
-								writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>{buildOnly}) </span>");
-							}
+							var knownFailure = string.Empty;
+							if (!string.IsNullOrEmpty (test.KnownFailure))
+								knownFailure = $" {test.KnownFailure}";
+							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}{knownFailure}</span>{buildOnly}) </span>");
 							if (IsServerMode) {
 								writer.Write ($" <span id='x{id_counter++}' class='autorefreshable'>");
 								if (test.Waiting) {
@@ -2078,6 +2081,9 @@ namespace xharness
 							var testAssemblies = test.ReferencedNunitAndXunitTestAssemblies;
 							if (testAssemblies.Any ())
 								writer.WriteLine ($"Test assemblies:<br/>- {String.Join ("<br/>- ", testAssemblies)}<br />");
+
+							if (!string.IsNullOrEmpty (test.KnownFailure))
+								writer.WriteLine ($"Known failure: {test.KnownFailure} <br />");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage)) {
 								var msg = HtmlFormat (test.FailureMessage);
@@ -2379,6 +2385,7 @@ namespace xharness
 
 		public bool RequiresXcode94;
 		public bool BuildOnly;
+		public string KnownFailure;
 
 		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
 		// Typically used to fail tasks that don't have an available device, or if there's not enough disk space.
@@ -2574,8 +2581,12 @@ namespace xharness
 						return Enumerable.Empty<string> ();
 
 					var csproj = new XmlDocument ();
-					csproj.LoadWithoutNetworkAccess (ProjectFile.Replace ("\\", "/"));
-					referencedNunitAndXunitTestAssemblies = csproj.GetNunitAndXunitTestReferences ();
+					try {
+						csproj.LoadWithoutNetworkAccess (ProjectFile.Replace ("\\", "/"));
+						referencedNunitAndXunitTestAssemblies = csproj.GetNunitAndXunitTestReferences ();
+					} catch (Exception e) {
+						referencedNunitAndXunitTestAssemblies = new string [] { $"Exception: {e.Message}", $"Filename: {ProjectFile}" };
+					}
 				} else {
 					referencedNunitAndXunitTestAssemblies = Enumerable.Empty<string> ();
 				}
@@ -3921,6 +3932,10 @@ namespace xharness
 				await runner.RunAsync ();
 			}
 			ExecutionResult = runner.Result;
+
+			KnownFailure = null;
+			if (Jenkins.IsHE0038Error (runner.MainLog))
+				KnownFailure = $"<a href='https://github.com/xamarin/maccore/issues/581'>HE0038</a>";
 		}
 
 		protected override string XIMode {

@@ -76,30 +76,7 @@ namespace BCLTests {
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
 			var runner = RegisterType.IsXUnit ? (Xamarin.iOS.UnitTests.TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
-			var categories = RegisterType.IsXUnit ?
-				new List<string> { 
-					"failing",
-					"nonmonotests",
-					"outerloop",
-					"nonosxtests"
-				} :
-				new List<string> {
-					"MobileNotWorking",
-					"NotOnMac",
-					"NotWorking",
-					"ValueAdd",
-					"CAS",
-					"InetAccess",
-					"NotWorkingLinqInterpreter",
-				};
-
-			if (RegisterType.IsXUnit) {
-				// special case when we are using the xunit runner,
-				// there is a trait we are not interested in which is 
-				// the Benchmark one
-				var xunitRunner = runner as XUnitTestRunner;
-				xunitRunner.AddFilter (XUnitFilter.CreateTraitFilter ("Benchmark", "true", true));
-			}
+			var categories = await IgnoreFileParser.ParseTraitsContentFileAsync (NSBundle.MainBundle.BundlePath, RegisterType.IsXUnit);
 
 			// add category filters if they have been added
 			runner.SkipCategories (categories);
@@ -110,8 +87,8 @@ namespace BCLTests {
 				// ensure that we skip those tests that have been passed via the ignore files
 				runner.SkipTests (skippedTests);
 			}
+			await runner.Run (testAssemblies).ConfigureAwait (false);
 
-			runner.Run ((IList<TestAssemblyInfo>)testAssemblies);
 			if (options.EnableXml) {
 				runner.WriteResultsToFile (writer);
 				logger.Info ("Xml file was written to the tcp listener.");
@@ -122,7 +99,7 @@ namespace BCLTests {
 			
 			logger.Info ($"Tests run: {runner.TotalTests} Passed: {runner.PassedTests} Inconclusive: {runner.InconclusiveTests} Failed: {runner.FailedTests} Ignored: {runner.FilteredTests}");
 			if (options.TerminateAfterExecution)
-				TerminateWithSuccess ();
+				BeginInvokeOnMainThread (TerminateWithSuccess);
 
 		}
 

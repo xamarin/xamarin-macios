@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -679,7 +681,25 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			log (message);
 		}
 
-		public override void Run (IList <TestAssemblyInfo> testAssemblies)
+		static async Task WaitForEvent (WaitHandle handle, TimeSpan timeout)
+		{
+			var tcs = new TaskCompletionSource<object> ();
+			var registration = ThreadPool.RegisterWaitForSingleObject (handle, (_, timedOut) => {
+				if (timedOut)
+					tcs.TrySetCanceled ();
+				else
+					tcs.TrySetResult (null);
+			}, tcs, timeout, true);
+
+			try {
+				if (!tcs.Task.IsCompleted)
+					await tcs.Task.ConfigureAwait (false);
+			} finally {
+				registration.Unregister (handle);
+			}
+		}
+
+		public override async Task Run (IEnumerable<TestAssemblyInfo> testAssemblies)
 		{
 			if (testAssemblies == null)
 				throw new ArgumentNullException (nameof (testAssemblies));
@@ -712,7 +732,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				XElement assemblyElement = null;
 				try {
 					OnAssemblyStart (assemblyInfo.Assembly);
-					assemblyElement = Run (assemblyInfo.Assembly, assemblyInfo.FullPath);
+					assemblyElement = await Run (assemblyInfo.Assembly, assemblyInfo.FullPath).ConfigureAwait (false);
 				} catch (FileNotFoundException ex) {
 					OnWarning ($"Assembly '{assemblyInfo.Assembly}' using path '{assemblyInfo.FullPath}' cannot be found on the filesystem. xUnit requires access to actual on-disk file.");
 					OnWarning ($"Exception is '{ex}'");
@@ -883,7 +903,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 			return TestFrameworkOptions.ForExecution (configuration);
 		}
 
-		XElement Run (Assembly assembly, string assemblyPath)
+		async Task<XElement> Run (Assembly assembly, string assemblyPath)
 		{
 			using (var frontController = new XunitFrontController (AppDomainSupport, assemblyPath, null, false)) {
 				using (var discoverySink = new TestDiscoverySink ()) {
@@ -915,12 +935,10 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					executionOptions.SetDisableParallelization (!RunInParallel);
 					executionOptions.SetSynchronousMessageReporting (true);
 
-					try {
-						frontController.RunTests (testCases, resultsSink, executionOptions);
-						resultsSink.Finished.WaitOne ();
-					} finally {
-						resultsSink.Dispose ();
-					}
+					// set the wait for event cb first, then execute the tests
+					var resultTask = WaitForEvent (resultsSink.Finished, TimeSpan.FromDays (10)).ConfigureAwait (false);
+					frontController.RunTests (testCases, resultsSink, executionOptions);
+					await resultTask;
 
 					return assemblyElement;
 				}
@@ -1021,13 +1039,16 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					if (t.StartsWith("KLASS:", StringComparison.Ordinal)) {
 						var klass = t.Replace ("KLASS:", "");
 						filters.Add (XUnitFilter.CreateClassFilter (klass, true));
-					} if (t.StartsWith ("KLASS32:", StringComparison.Ordinal) && IntPtr.Size == 4) {
+					} else if (t.StartsWith ("KLASS32:", StringComparison.Ordinal) && IntPtr.Size == 4) {
 						var klass = t.Replace ("KLASS32:", "");
 						filters.Add (XUnitFilter.CreateClassFilter (klass, true));
-					} if (t.StartsWith ("KLASS64:", StringComparison.Ordinal) && IntPtr.Size == 8) {
+					} else if (t.StartsWith ("KLASS64:", StringComparison.Ordinal) && IntPtr.Size == 8) {
 						var klass = t.Replace ("KLASS32:", "");
 						filters.Add (XUnitFilter.CreateClassFilter (klass, true));
-					}  else {
+					} else if (t.StartsWith ("Platform32:", StringComparison.Ordinal) && IntPtr.Size == 4) {
+						var filter = t.Replace ("Platform32:", "");
+						filters.Add (XUnitFilter.CreateSingleFilter (filter, true));
+					} else {
 						filters.Add (XUnitFilter.CreateSingleFilter (t, true));
 					}
 				}
@@ -1038,7 +1059,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		{
 			if (categories.Any ()) {
 				foreach (var c in categories) {
-					filters.Add (XUnitFilter.CreateTraitFilter ("category", c, true));
+					var traitInfo = c.Split ("=");
+					filters.Add (XUnitFilter.CreateTraitFilter (traitInfo[0], traitInfo[1], true));
 				}
 			}
 		}

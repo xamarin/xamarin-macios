@@ -34,7 +34,7 @@ mtouch.csproj.inc: $(TOP)/tools/common/create-makefile-fragment.sh Makefile $(TO
 -include mtouch.csproj.inc
 
 bin/Debug/mtouch.dll: $(mtouch_dependencies)
-	$(Q) $(SYSTEM_MONO) /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore packages.config
+	$(Q_XBUILD) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore packages.config
 	$(SYSTEM_XIBUILD) -- mtouch.csproj $(XBUILD_VERBOSITY)
 	$(Q) rm -f .failed-stamp
 

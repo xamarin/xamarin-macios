@@ -148,6 +148,10 @@ while ! test -z $1; do
 			unset OPTIONAL_SIMULATORS
 			shift
 			;;
+		-v | --verbose)
+			set -x
+			shift
+			;;
 		*)
 			echo "Unknown argument: $1"
 			exit 1
@@ -399,6 +403,73 @@ function install_specific_xcode () {
 	ok "Xcode $XCODE_VERSION provisioned"
 }
 
+function install_coresimulator ()
+{
+	local XCODE_DEVELOPER_ROOT
+	local CORESIMULATOR_PKG
+	local CORESIMULATOR_PKG_DIR
+	local XCODE_ROOT
+	local TARGET_CORESIMULATOR_VERSION
+	local CURRENT_CORESIMULATOR_VERSION
+
+	XCODE_DEVELOPER_ROOT=$(grep XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//')
+	XCODE_ROOT=$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")
+	CORESIMULATOR_PKG=$XCODE_ROOT/Contents/Resources/Packages/XcodeSystemResources.pkg
+
+	if ! test -f "$CORESIMULATOR_PKG"; then
+		warn "Could not find XcodeSystemResources.pkg (which contains CoreSimulator.framework) in $XCODE_DEVELOPER_ROOT ($CORESIMULATOR_PKG doesn't exist)."
+		return
+	fi
+
+	# Get the CoreSimulator.framework version from our Xcode
+	# Extract the .pkg to get the pkg's PackageInfo file, which contains the CoreSimulator.framework version.
+	CORESIMULATOR_PKG_DIR=$(mktemp -d)
+	pkgutil --expand "$CORESIMULATOR_PKG" "$CORESIMULATOR_PKG_DIR/extracted"
+
+	if ! TARGET_CORESIMULATOR_VERSION=$(xmllint --xpath 'string(/pkg-info/bundle-version/bundle[@id="com.apple.CoreSimulator"]/@CFBundleShortVersionString)' "$CORESIMULATOR_PKG_DIR/extracted/PackageInfo"); then
+		rm -rf "$CORESIMULATOR_PKG_DIR"
+		warn "Failed to look up the CoreSimulator version of $XCODE_DEVELOPER_ROOT"
+		return
+	fi
+	rm -rf "$CORESIMULATOR_PKG_DIR"
+
+	# Get the CoreSimulator.framework currently installed
+	local CURRENT_CORESIMULATOR_PATH=/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/CoreSimulator
+	local CURRENT_CORESIMULATOR_VERSION=0.0
+	if test -f "$CURRENT_CORESIMULATOR_PATH"; then
+		CURRENT_CORESIMULATOR_VERSION=$(otool -L $CURRENT_CORESIMULATOR_PATH | grep "$CURRENT_CORESIMULATOR_PATH.*current version" | sed -e 's/.*current version//' -e 's/)//' -e 's/[[:space:]]//g')
+	fi
+
+	# Either version may be composed of either 2 or 3 numbers.
+	# We only care about the first two, so strip off the 3rd number if it exists.
+	# shellcheck disable=SC2001
+	CURRENT_CORESIMULATOR_VERSION=$(echo "$CURRENT_CORESIMULATOR_VERSION" | sed 's/\([0-9]*[.][0-9]*\).*/\1/')
+	# shellcheck disable=SC2001
+	TARGET_CORESIMULATOR_VERSION=$(echo "$TARGET_CORESIMULATOR_VERSION" | sed 's/\([0-9]*[.][0-9]*\).*/\1/')
+
+	# Compare versions to see if we got what we need
+	if [[ x"$TARGET_CORESIMULATOR_VERSION" == x"$CURRENT_CORESIMULATOR_VERSION" ]]; then
+		log "Found CoreSimulator.framework $CURRENT_CORESIMULATOR_VERSION (exactly $TARGET_CORESIMULATOR_VERSION is recommended)"
+		return
+	fi
+
+	if test -z $PROVISION_XCODE; then
+		# This is not a failure for now, until this logic has been tested thoroughly
+		warn "You should have exactly CoreSimulator.framework version $TARGET_CORESIMULATOR_VERSION (found $CURRENT_CORESIMULATOR_VERSION). Execute './system-dependencies.sh --provision-xcode' to install the expected version."
+		return
+	fi
+
+	# Just installing the package won't work, because there's a version check somewhere
+	# that prevents the macOS installer from downgrading, so remove the existing
+	# CoreSimulator.framework manually first.
+	log "Installing CoreSimulator.framework $CURRENT_CORESIMULATOR_VERSION..."
+	$SUDO rm -Rf /Library/Developer/PrivateFrameworks/CoreSimulator.framework
+	$SUDO installer -pkg "$CORESIMULATOR_PKG" -target /
+
+	CURRENT_CORESIMULATOR_VERSION=$(otool -L $CURRENT_CORESIMULATOR_PATH | grep "$CURRENT_CORESIMULATOR_PATH.*current version" | sed -e 's/.*current version//' -e 's/)//' -e 's/[[:space:]]//g')
+	log "Installed CoreSimulator.framework $CURRENT_CORESIMULATOR_VERSION successfully."
+}
+
 function check_specific_xcode () {
 	local XCODE_DEVELOPER_ROOT=`grep XCODE$1_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	local XCODE_VERSION=`grep XCODE$1_VERSION= Make.config | sed 's/.*=//'`
@@ -461,6 +532,7 @@ function check_xcode () {
 
 	# must have latest Xcode in /Applications/Xcode<version>.app
 	check_specific_xcode
+	install_coresimulator
 	check_specific_xcode "94"
 
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
@@ -498,14 +570,14 @@ function check_mono () {
 		if ! test -z $PROVISION_MONO; then
 			install_mono
 		else
-			fail "You must install the Mono MDK (http://www.mono-project.com/download/)"
+			fail "You must install the Mono MDK. Download URL: $MIN_MONO_URL"
 			return
 		fi
 	elif ! test -e $MONO_VERSION_FILE; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
 		else
-			fail "Could not find VERSION file, you must install the Mono MDK (http://www.mono-project.com/download/)"
+			fail "Could not find Mono's VERSION file, you must install the Mono MDK. Download URL: $MIN_MONO_URL"
 			return
 		fi
 	fi
@@ -519,7 +591,8 @@ function check_mono () {
 			install_mono
 			ACTUAL_MONO_VERSION=`cat $MONO_VERSION_FILE`
 		else
-			fail "You must have at least Mono $MIN_MONO_VERSION, found $ACTUAL_MONO_VERSION"
+			MIN_MONO_URL=$(grep ^MIN_MONO_URL= Make.config | sed 's/.*=//')
+			fail "You must have at least Mono $MIN_MONO_VERSION, found $ACTUAL_MONO_VERSION. Download URL: $MIN_MONO_URL"
 			return
 		fi
 	elif [[ "$ACTUAL_MONO_VERSION" == "$MAX_MONO_VERSION" ]]; then

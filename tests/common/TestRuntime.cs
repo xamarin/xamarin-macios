@@ -103,6 +103,14 @@ partial class TestRuntime
 		return new Version (major, minor, build);
 	}
 
+	public static void IgnoreInCI (string message)
+	{
+		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+		if (!in_ci)
+			return;
+		NUnit.Framework.Assert.Ignore (message);
+	}
+
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)
 	{
 		if (CheckXcodeVersion (major, minor, build))
