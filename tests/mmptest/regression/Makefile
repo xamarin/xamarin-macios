@@ -11,7 +11,6 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 
 TESTS_4_0 = \
-	link-safe-1 \
 	embedded-mono \
 	system-mono \
 	embedded-mono-profile \
@@ -25,6 +24,7 @@ TESTS_UNIFIED = \
 	link-posix-1 \
 	link-preserve-assembly \
 	link-remove-attributes-1 \
+	link-safe-1 \
 
 ALL_TESTS = \
 	$(TESTS_UNIFIED) \
