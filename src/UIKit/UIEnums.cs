@@ -1136,19 +1136,20 @@ namespace UIKit {
 		Forward, Backward, Right, Left, Up, Down
 	}
 	
+#if !XAMCORE_4_0
 	// NSInteger -> UITextInput.h
-	// NSWritingDirection == UITextWritingDirection
+	// Not hard deprecating now but until XAMCORE_4_0 happens or we can
+	// properly fix all the API using this.
+	// see: https://github.com/xamarin/xamarin-macios/issues/6573
+	// Use Foundation.NSWritingDirection instead.
 	[Native]
 	[NoWatch]
-#if XAMCORE_4_0
-	public enum NSWritingDirection : long {
-#else
 	public enum UITextWritingDirection : long {
-#endif
 		Natural = -1,
 		LeftToRight,
 		RightToLeft,
 	}
+#endif
 
 	// NSInteger -> UITextInput.h
 	[Native]
