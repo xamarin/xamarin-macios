@@ -403,6 +403,7 @@ timestamps {
                 workspace = "${env.HOME}/jenkins/workspace/xamarin-macios"
                 commentFile = "${workspace}/xamarin-macios/jenkins/pr-comments.md"
                 withEnv ([
+                    "BUILD_REVISION=jenkins",
                     "PATH=/Library/Frameworks/Mono.framework/Versions/Current/Commands:${env.PATH}",
                     "WORKSPACE=${workspace}"
                     ]) {
