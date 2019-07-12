@@ -153,6 +153,12 @@
     <Content Include="..\monotouch-test\Resources\fragmentShader.metal">
       <Link>Resources\fragmentShader.metal</Link>
     </Content>
+    <Content Include="..\monotouch-test\Pacifico.ttf">
+      <Link>Pacifico.ttf</Link>
+    </Content>
+    <Content Include="..\monotouch-test\Tamarin.pdf">
+      <Link>Tamarin.pdf</Link>
+    </Content>
     <Content Include="..\monotouch-test\uncompressed.txt">
       <Link>uncompressed.txt</Link>
     </Content>

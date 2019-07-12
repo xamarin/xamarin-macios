@@ -290,6 +290,7 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void RequestFonts ()
 		{
+			TestRuntime.AssertXcodeVersion (11, 0);
 			CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
 				FamilyName = "Courier",
 				StyleName = "Bold",
