@@ -6759,7 +6759,7 @@ namespace UIKit {
 		NSString Escape { get; }
 
 		[iOS (9,0)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIKeyCommand' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIKeyCommand.Create (NSString, UIKeyModifierFlags, Selector)' overload instead.")]
 		[Static]
 		[Export ("keyCommandWithInput:modifierFlags:action:discoverabilityTitle:")]
 		UIKeyCommand Create (NSString keyCommandInput, UIKeyModifierFlags modifierFlags, Selector action, NSString discoverabilityTitle);
@@ -6767,7 +6767,7 @@ namespace UIKit {
 		[iOS (9,0)]
 		[NullAllowed]
 		[Export ("discoverabilityTitle")]
-		NSString DiscoverabilityTitle { get; [Deprecated (PlatformName.iOS, 13, 0, message: "Use 'UIKeyCommand.DiscoverabilityTitle' instead.")] set; }
+		NSString DiscoverabilityTitle { get; set; }
 	}
 
 	[Protocol]
@@ -11813,11 +11813,11 @@ namespace UIKit {
 		// we do not seem to expose other options like NSDefaultAttributesDocumentOption so keeping these as is for now
 		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Internal, Field ("NSTargetTextScalingDocumentOption")]
-		NSString NSTargetTextScalingDocumentOption { get; }
+		NSString TargetTextScalingDocumentOption { get; }
 
 		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Internal, Field ("NSSourceTextScalingDocumentOption")]
-		NSString NSSourceTextScalingDocumentOption { get; }
+		NSString SourceTextScalingDocumentOption { get; }
 	}
 	
 #if !WATCH
@@ -21151,33 +21151,8 @@ namespace UIKit {
 		UITabBarItemStateAppearance Focused { get; }
 	}
 
-	// TODO: The following break the registrar with:
-
-	//	[FAIL] iOSApiProtocolTest.ApiProtocolTest.Copying : System.AggregateException : One or more errors occurred. (The registrar found an invalid generic parameter type '' in the parameter snapshot of the method 'UIKit.UICollectionViewDiffableDataSource`2.ApplySnapshot(,System.Boolean)'. The generic parameter must have an 'NSObject' constraint.) (The registrar found an invalid generic return type '' in the method 'UIKit.UICollectionViewDiffableDataSource`2.get_Snapshot()'. The generic return type must have an 'NSObject' constraint.)
-	//	----> ObjCRuntime.RuntimeException : The registrar found an invalid generic parameter type '' in the parameter snapshot of the method 'UIKit.UICollectionViewDiffableDataSource`2.ApplySnapshot(,System.Boolean)'. The generic parameter must have an 'NSObject' constraint.
-	//		  at Registrar.DynamicRegistrar.Register (System.Type type) [0x00018] in xamarin-macios/src/ObjCRuntime/DynamicRegistrar.cs:1165
-	//		  at ObjCRuntime.Class.Register (System.Type type) [0x00000] in xamarin-macios/src/ObjCRuntime/Class.cs:237
-	//		  at ObjCRuntime.Class.GetClassHandle (System.Type type, System.Boolean throw_if_failure, System.Boolean& is_custom_type) [0x000ef] in xamarin-macios/src/ObjCRuntime/Class.cs:170
-	//		  at ObjCRuntime.Class.GetClassHandle (System.Type type) [0x00000] in xamarin-macios/src/ObjCRuntime/Class.cs:181
-	//		  at ObjCRuntime.Class.GetHandle (System.Type type) [0x00000] in xamarin-macios/src/ObjCRuntime/Class.cs:134
-	//		  at Introspection.ApiProtocolTest.GetClass (System.Type type) [0x00001] in xamarin-macios/tests/introspection/ApiProtocolTest.cs:62
-	//		  at Introspection.ApiProtocolTest.CheckProtocol (System.String protocolName, System.Action`3[T1,T2,T3] action) [0x00099] in xamarin-macios/tests/introspection/ApiProtocolTest.cs:279
-	//		  at Introspection.ApiProtocolTest.Copying () [0x00008] in xamarin-macios/tests/introspection/ApiProtocolTest.cs:353
-	//		  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
-	//		  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in xamarin-macios/external/mono/mcs/class/corlib/System.Reflection/RuntimeMethodInfo.cs:391
-	//		--RuntimeException
-	//
-	//	[FAIL] iOSApiProtocolTest.ApiProtocolTest.GeneralCase : System.AggregateException : One or more errors occurred. (The registrar found an invalid generic parameter type '' in the parameter snapshot of the method 'UIKit.UITableViewDiffableDataSource`2.ApplySnapshot(,System.Boolean)'. The generic parameter must have an 'NSObject' constraint.) (The registrar found an invalid generic return type '' in the method 'UIKit.UITableViewDiffableDataSource`2.get_Snapshot()'. The generic return type must have an 'NSObject' constraint.)
-	//	----> ObjCRuntime.RuntimeException : The registrar found an invalid generic parameter type '' in the parameter snapshot of the method 'UIKit.UITableViewDiffableDataSource`2.ApplySnapshot(,System.Boolean)'. The generic parameter must have an 'NSObject' constraint.
-	//		  at Registrar.DynamicRegistrar.Register (System.Type type) [0x00018] in xamarin-macios/src/ObjCRuntime/DynamicRegistrar.cs:1165
-	//		  at ObjCRuntime.Class.Register (System.Type type) [0x00000] in xamarin-macios/src/ObjCRuntime/Class.cs:237
-	//		  at ObjCRuntime.Class.GetClassHandle (System.Type type, System.Boolean throw_if_failure, System.Boolean& is_custom_type) [0x000ef] in xamarin-macios/src/ObjCRuntime/Class.cs:170
-	//		  at ObjCRuntime.Class.GetClassHandle (System.Type type) [0x00000] in xamarin-macios/src/ObjCRuntime/Class.cs:181
-	//		  at ObjCRuntime.Class..ctor (System.Type type) [0x00006] in xamarin-macios/src/ObjCRuntime/Class.cs:66
-	//		  at Introspection.ApiProtocolTest.GeneralCase () [0x00148] in xamarin-macios/tests/introspection/ApiProtocolTest.cs:428
-	//		  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
-	//		  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in xamarin-macios/external/mono/mcs/class/corlib/System.Reflection/RuntimeMethodInfo.cs:391
-	//		--RuntimeException
+	// TODO: The following break the registrar:
+	// https://github.com/xamarin/xamarin-macios/issues/6567
 
 	// [Watch (6,0), TV (13,0), iOS (13,0)]
 	// [BaseType (typeof (NSObject))]
