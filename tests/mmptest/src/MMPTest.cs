@@ -38,7 +38,7 @@ namespace Xamarin.MMP.Tests
 					// Build a library with the conflicting name
 					TI.UnifiedTestConfig libConfig = new TI.UnifiedTestConfig (tmpDir) { XM45 = XM45, ProjectName = projectName, AssemblyName = assemblyName };
 					string csprojTarget = TI.GenerateUnifiedLibraryProject (libConfig);
-					TI.BuildProject (csprojTarget, isUnified : true);
+					TI.BuildProject (csprojTarget);
 
 					// Build an exe using that library, it should fail the build
 					string referenceCode = string.Format (@"<Reference Include=""TestApp""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug", assemblyName + ".dll"));
@@ -115,7 +115,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig libConfig = new TI.UnifiedTestConfig (libraryDirectory) { ProjectName = libraryName };
 				string csprojTarget = TI.GenerateUnifiedLibraryProject (libConfig);
 
-				TI.BuildProject (csprojTarget, isUnified : true);
+				TI.BuildProject (csprojTarget);
 
 				string referenceCode = string.Format (@"<Reference Include=""UnifiedLibrary""><HintPath>{0}</HintPath></Reference>", Path.Combine (libraryDirectory, "bin/Debug/", $"{libraryName}.dll"));
 
@@ -405,7 +405,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"ConsoleXMApp.csproj");
-				TI.BuildProject (testPath, isUnified: true);
+				TI.BuildProject (testPath);
 				string exePath = Path.Combine (TI.FindSourceDirectory (), @"bin/Debug/ConsoleXMApp.exe");
 				var output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono64", new StringBuilder (exePath), "RunSideBySizeXamMac");
 				Assert.IsTrue (output.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("True")), "Unified_SideBySideXamMac_ConsoleTest run"); 
@@ -570,7 +570,7 @@ namespace Xamarin.MMP.Tests
 				};
 
 				string csprojTarget = TI.GenerateUnifiedLibraryProject (libConfig);
-				TI.BuildProject (csprojTarget, isUnified: true);
+				TI.BuildProject (csprojTarget);
 
 				string referenceCode = string.Format (@"<Reference Include=""UnifiedLibrary""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug/UnifiedLibrary.dll"));
 
@@ -679,7 +679,10 @@ namespace Xamarin.MMP.Tests
 		public void MM0138 ()
 		{
 			MMPTests.RunMMPTest (tmpDir => {
-				var rv = TI.TestClassicExecutable (tmpDir, csprojConfig: "<IncludeMonoRuntime>true</IncludeMonoRuntime>", shouldFail: true);
+				string csprojTarget = Path.Combine (TI.FindSourceDirectory (), "ClassicExample.csproj");
+				string buildOutput = TI.BuildClassicProject (csprojTarget);
+				Console.WriteLine (buildOutput);
+				var rv = new OutputText (buildOutput, string.Empty);
 				rv.Messages.AssertError (138, "Building 32-bit apps is not possible when using Xcode 10. Please migrate project to the Unified API.");
 				rv.Messages.AssertWarningCount (0);
 			});

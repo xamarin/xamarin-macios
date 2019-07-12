@@ -48,7 +48,7 @@ namespace Xamarin.MMP.Tests
 			binding.StructsAndEnumsConfig = "public class UnifiedWithDepNativeRefLibTestClass {}";
 
 			string projectPath = TI.GenerateBindingLibraryProject (binding);
-			return TI.BuildProject (projectPath, true, shouldFail: shouldFail);
+			return TI.BuildProject (projectPath, shouldFail: shouldFail);
 		}
 
 		internal static Tuple <TI.UnifiedTestConfig, TI.UnifiedTestConfig> GenerateTestProject (BindingProjectType type, string tmpDir)
