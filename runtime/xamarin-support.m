@@ -103,8 +103,6 @@ xamarin_timezone_get_names (int *count)
 
 //
 // Returns the geopolitical region ID of the local timezone.
-// Previously we just provided the data to TimeZoneInfo.MonoTouch.cs and that
-// defaulted the ID to "Local", which is incorrect. 
 
 const char *
 xamarin_timezone_get_local_name ()
@@ -112,7 +110,7 @@ xamarin_timezone_get_local_name ()
 	NSTimeZone *tz = nil;
 	tz = [NSTimeZone localTimeZone];
 	NSString *name = [tz name];
-	return strdup ([name UTF8String]);
+	return (name != nil) ? strdup ([name UTF8String]) : strdup ("Local");
 }
 
 #if !TARGET_OS_WATCH && !TARGET_OS_TV
