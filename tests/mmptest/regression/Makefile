@@ -17,13 +17,6 @@ TESTS_4_0 = \
 	embedded-mono-profile \
 	system-mono-profile \
 
-DISABLED_TESTS_MONO_4_2 =  \
-	link-webclient-2 \
-
-DISABLED_TESTS_MONO_4_4 =  \
-	link-webclient-1 \
-	link-webclient-3 \
-
 TESTS_UNIFIED = \
 	custom-bundle-name \
 	link-frameworks-1 \
