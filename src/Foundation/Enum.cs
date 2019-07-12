@@ -812,8 +812,6 @@ namespace Foundation  {
 	}
 #endif
 
-	// Will be removed in favor of the UIKit/AppKit one to match Apple behavior inside xkit.cs
-#if !XAMCORE_4_0
 #if !MONOMAC || !XAMCORE_3_0
 	[Native]
 #if MONOMAC
@@ -823,7 +821,6 @@ namespace Foundation  {
 		Natural = -1, LeftToRight = 0, RightToLeft = 1,
 	}
 #endif // !MONOMAC || !XAMCORE_3_0
-#endif // !XAMCORE_4_0
 
 	[Flags]
 	[Native]

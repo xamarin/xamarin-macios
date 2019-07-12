@@ -1190,22 +1190,4 @@ namespace UIKit {
 		[Export ("layoutManager:shouldSetLineFragmentRect:lineFragmentUsedRect:baselineOffset:inTextContainer:forGlyphRange:")]
 		bool ShouldSetLineFragmentRect (NSLayoutManager layoutManager, ref CGRect lineFragmentRect, ref CGRect lineFragmentUsedRect, ref nfloat baselineOffset, NSTextContainer textContainer, NSRange glyphRange);
 	}
-
-	[Flags, Native]
-	// This type belongs in UIkit and AppKit and should be enabled
-	// once the Foundation one is removed in XAMCORE_4_0
-#if XAMCORE_4_0
-	[Watch (2,0), iOS (6,0)]
-#else
-	[NoWatch, NoiOS, NoTV]
-#endif
-	public enum NSWritingDirection : long {
-		Natural = -1,
-		LeftToRight,
-		RightToLeft,
-		[NoWatch, NoTV, NoiOS]
-		Embedding = 0,
-		[NoWatch, NoTV, NoiOS]
-		Override = 2,
-	}
 }

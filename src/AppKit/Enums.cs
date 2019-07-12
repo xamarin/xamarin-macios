@@ -1289,6 +1289,14 @@ namespace AppKit {
 		Natural = 4
 	}
 
+	[Flags]
+	[Native]
+	public enum NSWritingDirection : long {
+		Natural = -1, LeftToRight, RightToLeft,
+		Embedding = 0,
+		Override = 2,
+	}
+
 #if !XAMCORE_4_0
 	[Native]
 	public enum NSTextMovement : long {
