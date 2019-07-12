@@ -580,15 +580,35 @@ namespace CoreFoundation {
 			return new CFProxySettings (dict);
 		}
 		
-		public delegate void CFProxyAutoConfigurationResultCallback (IntPtr client, NSArray proxyList, NSError error);
+		public delegate void CFProxyAutoConfigurationResultCallback (IntPtr client, NSObject[] proxyList, NSError error);
 		static CFProxyAutoConfigurationResultCallback static_AutoConfigurationResult = TrampolineAutoConfigurationResult;
 
 		[MonoPInvokeCallback (typeof (CFProxyAutoConfigurationResultCallback))]
-		static void TrampolineAutoConfigurationResult (IntPtr block, NSArray proxyList, NSError error)
+		static void TrampolineAutoConfigurationResult (IntPtr block, NSObject[] proxyList, NSError error)
 		{
-			var del = BlockLiteral.GetTarget<Action<NSArray, NSError>> (block);
+			var del = BlockLiteral.GetTarget<Action<NSObject [], NSError>> (block);
 			if (del != null) {
 				del (proxyList, error);
+			}
+		}
+
+		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+		[UserDelegateType (typeof (CFProxyAutoConfigurationResultCallback))]
+		internal delegate void DCFProxyAutoConfigurationResultCallback (IntPtr block, IntPtr client, IntPtr proxyList, IntPtr error);
+
+		static internal class SDCFProxyAutoConfigurationResultCallback {
+			static internal readonly DCFProxyAutoConfigurationResultCallback Handler = Invoke;
+
+			[MonoPInvokeCallback (typeof (DCFProxyAutoConfigurationResultCallback))]
+			static unsafe void Invoke (IntPtr block, IntPtr client, IntPtr proxyList, IntPtr error)
+			{
+				Console.WriteLine ("DUUUUDE WE ARE IN");
+				var descriptor = (BlockLiteral*) block;
+				Console.WriteLine ("Got the block!");
+				var del = descriptor->Target as CFProxyAutoConfigurationResultCallback;
+				Console.WriteLine ("CASTED!");
+				if (del != null)
+					del (client, NSArray.ArrayFromHandle<NSObject> (proxyList), Runtime.GetNSObject<NSError> (error));
 			}
 		}
 		
@@ -596,7 +616,7 @@ namespace CoreFoundation {
 		extern unsafe static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationScript (
 			/* CFStringRef __nonnull */ IntPtr proxyAutoConfigurationScript,
 			/* CFURLRef __nonnull */ IntPtr targetURL,
-			/* CFProxyAutoConfigurationResultCallback __nonnull */ void* cb,
+			/* CFProxyAutoConfigurationResultCallback __nonnull */ ref BlockLiteral cb,
 			/* CFStreamClientContext * __nonnull */ IntPtr clientContext);
 		
 		public static CFRunLoopSource ExecuteProxyAutoConfigurationScript (NSString proxyAutoConfigurationScript, NSUrl targetURL, CFProxyAutoConfigurationResultCallback resultCallback, CFStreamClientContext clientContext)
@@ -609,20 +629,20 @@ namespace CoreFoundation {
 
 			if (resultCallback == null)
 				throw new ArgumentNullException ("resultCallback");
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_AutoConfigurationResult, resultCallback);
+			
+			IntPtr clientPtr = Marshal.AllocHGlobal (Marshal.SizeOf (clientContext));
+			Marshal.StructureToPtr (clientContext, clientPtr, false);
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_AutoConfigurationResult, resultCallback);
+			//block_handler.SetupBlockUnsafe (SDCFProxyAutoConfigurationResultCallback.Handler, resultCallback);
 		
-				try {
-					IntPtr clientPtr = Marshal.AllocHGlobal (Marshal.SizeOf (clientContext));
-					Marshal.StructureToPtr (clientContext, clientPtr, false);
-					IntPtr source = CFNetworkExecuteProxyAutoConfigurationScript (proxyAutoConfigurationScript.Handle, targetURL.Handle, (void*) block_ptr_handler, clientPtr);
-					return (source == IntPtr.Zero) ? null : new CFRunLoopSource (source);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			try {
+				IntPtr source = CFNetworkExecuteProxyAutoConfigurationScript (proxyAutoConfigurationScript.Handle, targetURL.Handle, ref block_handler, clientPtr);
+				return (source == IntPtr.Zero) ? null : new CFRunLoopSource (source);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
+
 		}
 		
 		[DllImport (Constants.CFNetworkLibrary)]

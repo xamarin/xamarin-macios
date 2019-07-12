@@ -57,15 +57,33 @@ namespace MonoTouchFixtures.CoreFoundation {
 #else
  			string uncompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
 #endif
-			using (var path = new NSString (uncompressedFilePath))
-			using (var url = new NSUrl ("http://docs.xamarin.com")) {
-				CFNetwork.ExecuteProxyAutoConfigurationScript (path, url, (client, proxyList, error) => {
-					cbCalled.Set ();
-					Assert.AreEqual (1, proxyList.Count);
-					proxy = (CFProxy) proxyList.GetItem<CFProxy> (0);
-				}, new CFStreamClientContext ());
-			}
+			NSObject.InvokeInBackground (() => {
+				var runLoop = NSRunLoop.Current;
+				var cfRunLoop = NSRunLoop.Main.GetCFRunLoop ();
 
-			cbCalled.WaitOne ();
+				using (var path = new NSString (uncompressedFilePath))
+				using (var url = new NSUrl ("http://docs.xamarin.com")) {
+					var runLoopSource = CFNetwork.ExecuteProxyAutoConfigurationScript (path, url, (client, proxyList, error) => {
+						Assert.AreEqual (1, proxyList.Length);
+						Console.WriteLine ("GO IT!!");
+					}, new CFStreamClientContext ());
+					Assert.NotNull (runLoopSource, "runLoopSource");
+					cfRunLoop.AddSource (runLoopSource, CFRunLoop.ModeCommon);
+				}
+				// This is our "killswitch" to fail the test if we take too long
+				NSTimer timer = NSTimer.CreateTimer (30, t => {
+					Console.WriteLine ("Test Failed");
+					//throw new InvalidOperationException ();
+				});
+
+				try {
+					runLoop.AddTimer (timer, NSRunLoopMode.Common);
+					runLoop.Run ();
+					Console.WriteLine ("DONE");
+				} catch (Exception e) {
+					Console.WriteLine (e);
+				}
+			});
+		}
 	}
 }
