@@ -453,6 +453,22 @@ namespace Introspection {
 				if (cstr == "Void .ctor(Metal.IMTLDevice)" || cstr == $"Void .ctor({foundation_namespace}.NSCoder, Metal.IMTLDevice)")
 					return true;
 				break;
+			case "MFMailComposeViewController": // You are meant to use the system provided one
+			case "MFMessageComposeViewController": // You are meant to use the system provided one
+			case "GKFriendRequestComposeViewController": // You are meant to use the system provided one
+			case "GKGameCenterViewController": // You are meant to use the system provided one
+			case "GKMatchmakerViewController": // You are meant to use the system provided one
+			case "GKTurnBasedMatchmakerViewController": // You are meant to use the system provided one
+			case "UIImagePickerController": // You are meant to use the system provided one
+			case "UIVideoEditorController": // You are meant to use the system provided one
+				if (ctor.ToString () == $"Void .ctor(System.String, {foundation_namespace}.NSBundle)")
+					return true;
+				if (ctor.ToString () == $"Void .ctor(UIKit.UIViewController)")
+					return true;
+				break;
+			case "UICollectionViewCompositionalLayout":
+				// Explicitly disabled ctors - (instancetype)init NS_UNAVAILABLE;
+				return true;
 			}
 
 			var ep = ctor.GetParameters ();

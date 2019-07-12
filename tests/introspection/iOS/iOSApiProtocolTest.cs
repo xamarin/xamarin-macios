@@ -286,6 +286,7 @@ namespace Introspection {
 				case "ARSkeleton3D": // Conformance not in headers
 				case "ARSkeleton2D": // Conformance not in headers
 				case "ARCollaborationData":  // Conformance not in headers
+				case "UIFontPickerViewControllerConfiguration": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -510,6 +511,7 @@ namespace Introspection {
 				case "ARSkeleton3D": // Conformance not in headers
 				case "ARSkeleton2D": // Conformance not in headers
 				case "ARCollaborationData":  // Conformance not in headers
+				case "UIFontPickerViewControllerConfiguration":  // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
