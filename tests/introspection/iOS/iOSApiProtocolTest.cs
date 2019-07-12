@@ -93,6 +93,10 @@ namespace Introspection {
 				// These were bound by mistake, and they're gone in XAMCORE_4_0.
 				return true;
 #endif
+			case "SNClassificationResult": // Class is not being created properly
+				return true;
+			case "SNClassifySoundRequest": // Class is not being created properly
+				return true;
 			}
 
 			return base.Skip (type);
@@ -279,6 +283,9 @@ namespace Introspection {
 				case "MLMultiArrayShapeConstraint":
 				case "MLPredictionOptions":
 				case "MLSequenceConstraint":
+				case "ARSkeleton3D": // Conformance not in headers
+				case "ARSkeleton2D": // Conformance not in headers
+				case "ARCollaborationData":  // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -343,6 +350,9 @@ namespace Introspection {
 				case "CLKGaugeProvider":
 				case "CLKSimpleGaugeProvider":
 				case "CLKTimeIntervalGaugeProvider":
+				// watchOS 6 / Xcode 11
+				case "CLKComplicationTemplateGraphicCircularStackImage":
+				case "CLKComplicationTemplateGraphicCircularStackText":
 					return true;
 #elif __TVOS__
 				case "TVTopShelfAction":
@@ -497,6 +507,9 @@ namespace Introspection {
 				case "MLMultiArrayShapeConstraint":
 				case "MLPredictionOptions":
 				case "MLSequenceConstraint":
+				case "ARSkeleton3D": // Conformance not in headers
+				case "ARSkeleton2D": // Conformance not in headers
+				case "ARCollaborationData":  // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -561,6 +574,9 @@ namespace Introspection {
 				case "CLKGaugeProvider":
 				case "CLKSimpleGaugeProvider":
 				case "CLKTimeIntervalGaugeProvider":
+				// watchOS 6 / Xcode 11
+				case "CLKComplicationTemplateGraphicCircularStackImage":
+				case "CLKComplicationTemplateGraphicCircularStackText":
 					return true;
 #elif __TVOS__
 				case "TVTopShelfAction":

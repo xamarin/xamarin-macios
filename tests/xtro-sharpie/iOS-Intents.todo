@@ -282,7 +282,6 @@
 !missing-selector! INStartCallIntent::callCapability not bound
 !missing-selector! INStartCallIntent::contacts not bound
 !missing-selector! INStartCallIntent::destinationType not bound
-!missing-selector! INStartCallIntent::initWithAudioRoute:destinationType:contacts:callCapability: not bound
 !missing-selector! INStartCallIntentResponse::code not bound
 !missing-selector! INStartCallIntentResponse::initWithCode:userActivity: not bound
 !missing-selector! INTask::initWithTitle:status:taskType:spatialEventTrigger:temporalEventTrigger:createdDateComponents:modifiedDateComponents:identifier:priority: not bound
@@ -393,3 +392,6 @@
 !missing-selector! INSetTaskAttributeTemporalEventTriggerResolutionResult::initWithTemporalEventTriggerResolutionResult: not bound
 !missing-type! INAddTasksTemporalEventTriggerResolutionResult not bound
 !missing-type! INSetTaskAttributeTemporalEventTriggerResolutionResult not bound
+## appended from unclassified file
+!missing-selector! INStartCallIntent::initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability: not bound
+!missing-selector! INStartCallIntent::recordTypeForRedialing not bound

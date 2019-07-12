@@ -268,6 +268,10 @@ namespace WebKit
 		[Export ("tabFocusesLinks")]
 		bool TabFocusesLinks { get; set; }
 #endif
+
+		[Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[Export ("fraudulentWebsiteWarningEnabled")]
+		bool FraudulentWebsiteWarningEnabled { [Bind ("isFraudulentWebsiteWarningEnabled")] get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
@@ -493,22 +497,38 @@ namespace WebKit
 		void DidClose (WKWebView webView);
 
 		[iOS (10,0)][NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetContextMenuConfiguration' instead.")]
 		[Export ("webView:shouldPreviewElement:")]
 		bool ShouldPreviewElement (WKWebView webView, WKPreviewElementInfo elementInfo);
 
 #if !MONOMAC
 		[iOS (10,0)][NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetContextMenuConfiguration' instead.")]
 		[Export ("webView:previewingViewControllerForElement:defaultActions:")]
 		[return: NullAllowed]
 		UIViewController GetPreviewingViewController (WKWebView webView, WKPreviewElementInfo elementInfo, IWKPreviewActionItem[] previewActions);
 
 		[iOS (10,0)][NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'WillCommitContextMenu' instead.")]
 		[Export ("webView:commitPreviewingViewController:")]
 		void CommitPreviewingViewController (WKWebView webView, UIViewController previewingViewController);
+
+		[iOS (13,0)][NoMac]
+		[Export ("webView:contextMenuConfigurationForElement:completionHandler:")]
+		void SetContextMenuConfiguration (WKWebView webView, WKContextMenuElementInfo elementInfo, Action<UIContextMenuConfiguration> completionHandler);
+
+		[iOS (13,0)][NoMac]
+		[Export ("webView:contextMenuForElement:willCommitWithAnimator:")]
+		void WillCommitContextMenu (WKWebView webView, WKContextMenuElementInfo elementInfo, IUIContextMenuInteractionCommitAnimating animator);
 #endif
+
+		[iOS (13,0)][NoMac]
+		[Export ("webView:contextMenuWillPresentForElement:")]
+		void ContextMenuWillPresent (WKWebView webView, WKContextMenuElementInfo elementInfo);
+
+		[iOS (13,0)][NoMac]
+		[Export ("webView:contextMenuDidEndForElement:")]
+		void ContextMenuDidEnd (WKWebView webView, WKContextMenuElementInfo elementInfo);
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
@@ -913,4 +933,5 @@ namespace WebKit
 		[NullAllowed, Export ("linkURL")]
 		NSUrl LinkUrl { get; }
 	}
+
 }

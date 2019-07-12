@@ -180,7 +180,14 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UserNotifications", "UserNotifications", 10,14 },
 					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
 
+					{ "AuthenticationServices", "AuthenticationServices", 10,15 },
+					{ "CoreMotion", "CoreMotion", 10,15 },
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
+					{ "PushKit", "PushKit", 10,15 },
+					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
+					{ "PencilKit", "PencilKit", 10,15 },
+					{ "Speech", "Speech", 10,15 },
+					{ "LinkPresentation", "LinkPresentation", 10,15 },
 				};
 			}
 			return mac_frameworks;
@@ -305,6 +312,11 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IdentityLookupUI", "IdentityLookupUI", 12,0 },
 				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 				{ "Network", "Network", 12, 0 },
+
+				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
+				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
+				{ "PencilKit", "PencilKit", 13, 0 },
+				{ "LinkPresentation", "LinkPresentation", 13, 0 },
 			};
 		}
 		return ios_frameworks;
@@ -355,6 +367,12 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "NaturalLanguage", "NaturalLanguage", 5 },
 				{ "MediaPlayer", "MediaPlayer", 5 },
+
+				{ "AuthenticationServices", "AuthenticationServices", 6 },
+				{ "PushKit", "PushKit", 6 },
+				{ "SoundAnalysis", "SoundAnalysis", 6 },
+				{ "CoreMedia", "CoreMedia", 6 },
+
 			};
 		}
 		return watch_frameworks;
@@ -429,6 +447,10 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 					{ "Network", "Network", 12, 0 } ,
 					{ "TVUIKit", "TVUIKit", 12,0 },
+
+					{ "AuthenticationServices", "AuthenticationServices", 13,0 },
+					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
+					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 				};
 			}
 			return tvos_frameworks;

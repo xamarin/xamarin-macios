@@ -54,7 +54,7 @@ namespace Introspection {
 
 		static Type CIFilterType = typeof (CIFilter);
 
-#if false
+#if true
 		static TextWriter BindingOutput;
 #else
 		static TextWriter BindingOutput = Console.Out;

@@ -5,7 +5,7 @@
 //	Alex Soto  <alex.soto@xamarin.com>
 //
 // Copyright 2016 Xamarin Inc. All rights reserved.
-// Copyright 2018 Microsoft Corporation.
+// Copyright 2018-2019 Microsoft Corporation.
 //
 
 using System;
@@ -31,7 +31,8 @@ namespace VideoSubscriberAccount {
 		UserCancelled = 2,
 		ServiceTemporarilyUnavailable = 3,
 		ProviderRejected = 4,
-		InvalidVerificationToken = 5
+		InvalidVerificationToken = 5,
+		Rejected = 6,
 	}
 
 	[Native]
@@ -118,15 +119,23 @@ namespace VideoSubscriberAccount {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IVSAccountManagerDelegate Delegate { get; set; }
 
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoMac]
 		[Async]
 		[Export ("checkAccessStatusWithOptions:completionHandler:")]
 		void CheckAccessStatus (NSDictionary options, Action<VSAccountAccessStatus, NSError> completionHandler);
 
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoMac]
 		[Async]
 		[Export ("enqueueAccountMetadataRequest:completionHandler:")]
 		VSAccountManagerResult Enqueue (VSAccountMetadataRequest accountMetadataRequest, Action<VSAccountMetadata, NSError> completionHandler);
+
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMac]
+		[TV (13,0)][iOS (13,0)]
+		[Field ("VSOpenTVProviderSettingsURLString")]
+		NSString OpenTVProviderSettingsUrl { get; }
 	}
 
 	[iOS (10, 0)]
@@ -230,6 +239,10 @@ namespace VideoSubscriberAccount {
 		[TV (10,1)][iOS (10,2)]
 		[Export ("supportedAuthenticationSchemes", ArgumentSemantic.Copy)]
 		NSString[] SupportedAuthenticationSchemesString { get; set; }
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15, onlyOn64: true)]
+		[NullAllowed, Export ("accountProviderAuthenticationToken")]
+		string AccountProviderAuthenticationToken { get; set; }
 	}
 
 	[iOS (10,2)]
@@ -258,6 +271,10 @@ namespace VideoSubscriberAccount {
 	enum VSAccountProviderAuthenticationScheme {
 		[Field ("VSAccountProviderAuthenticationSchemeSAML")]
 		Saml,
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15, onlyOn64: true)]
+		[Field ("VSAccountProviderAuthenticationSchemeAPI")]
+		Api,
 	}
 
 	[TV (11,0)][iOS (11,0)]

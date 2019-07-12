@@ -135,5 +135,10 @@ namespace MonoTouch {
 		public const string CarPlayLibrary = "/System/Library/Frameworks/CarPlay.framework/CarPlay";
 		public const string IdentityLookupUILibrary = "/System/Library/Frameworks/IdentityLookupUI.framework/IdentityLookupUI";
 		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
+		// iOS 13.0
+		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
+		public const string BackgroundTasksLibrary = "/System/Library/Frameworks/BackgroundTasks.framework/BackgroundTasks";
+		public const string PencilKitLibrary = "/System/Library/Frameworks/PencilKit.framework/PencilKit";
+		public const string LinkPresentationLibrary = "/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation";
 	}
 }

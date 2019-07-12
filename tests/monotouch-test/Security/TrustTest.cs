@@ -343,7 +343,9 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (trust.GetCustomAnchorCertificates ().Length, Is.EqualTo (certs.Count), "GetCustomAnchorCertificates");
 
 #if __MACOS__
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 13)) {
+				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15)) {
+					trust_result = SecTrustResult.RecoverableTrustFailure;
+				} else if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 13)) {
 					trust_result = SecTrustResult.Unspecified;
 				} else if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
 					trust_result = SecTrustResult.Invalid;

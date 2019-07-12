@@ -27,7 +27,6 @@
 !missing-selector! NSFileProviderItemVersion::contentVersion not bound
 !missing-selector! NSFileProviderItemVersion::initWithContentVersion:metadataVersion: not bound
 !missing-selector! NSFileProviderItemVersion::metadataVersion not bound
-!missing-selector! NSFileProviderManager::downloadItemWithIdentifier:downloadPolicy:completionHandler: not bound
 !missing-selector! NSFileProviderManager::enumeratorForMaterializedItems not bound
 !missing-selector! NSFileProviderManager::evictItemWithIdentifier:completionHandler: not bound
 !missing-selector! NSFileProviderManager::getUserVisibleURLForItemIdentifier:completionHandler: not bound
@@ -43,3 +42,5 @@
 !missing-type! NSFileProviderSearchQuery not bound
 ## appended from unclassified file
 !missing-selector! NSFileProviderExtension::performActionWithIdentifier:onItemsWithIdentifiers:completionHandler: not bound
+## appended from unclassified file
+!missing-selector! NSFileProviderManager::setDownloadPolicy:forItemWithIdentifier:completionHandler: not bound

@@ -11,47 +11,24 @@ export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.fra
 
 
 TESTS_4_0 = \
-	link-gdiplus-1 \
-	link-gdiplus-2 \
-	link-posix-1 \
-	link-posix-2 \
-	link-system.web-icalls \
-	link-keep-resources-1 \
-	link-preserve-assembly \
-	link-uithread-1 \
-	link-uithread-2 \
-	link-safe-1 \
-	link-frameworks-1 \
-	link-aes-1 \
-	link-blocks-1 \
 	embedded-mono \
 	system-mono \
 	embedded-mono-profile \
 	system-mono-profile \
 
-DISABLED_TESTS_MONO_4_2 =  \
-	link-data-contract-1 \
-	link-webclient-2 \
-	link-xml-serialization \
-
-DISABLED_TESTS_MONO_4_4 =  \
-	link-webclient-1 \
-	link-webclient-3 \
-	link-remove-attributes-1
-
 TESTS_UNIFIED = \
-	custom-bundle-name
-
-TESTS_4_5 = \
-	link-callfilepath-45 \
-
-DISABLED_4_5_TESTS_MONO_4_2 = \
-	link-httpclient-async \
+	custom-bundle-name \
+	link-frameworks-1 \
+	link-keep-resources-1 \
+	link-keep-resources-2 \
+	link-posix-1 \
+	link-preserve-assembly \
+	link-remove-attributes-1 \
+	link-safe-1 \
 
 ALL_TESTS = \
 	$(TESTS_UNIFIED) \
 	$(TESTS_4_0) \
-	$(TESTS_4_5)
 
 all-local:: run
 

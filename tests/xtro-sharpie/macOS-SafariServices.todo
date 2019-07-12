@@ -1,6 +1,9 @@
-!missing-protocol-conformance! SFSafariPage should conform to NSCopying
-!missing-protocol-conformance! SFSafariTab should conform to NSCopying
-!missing-protocol-conformance! SFSafariToolbarItem should conform to NSCopying
-!missing-protocol-conformance! SFSafariWindow should conform to NSCopying
 !missing-protocol-member! SFSafariExtensionHandling::contentBlockerWithIdentifier:blockedResourcesWithURLs:onPage: not found
 !missing-protocol-member! SFSafariExtensionHandling::page:willNavigateToURL: not found
+## appended from unclassified file
+!missing-selector! SFUniversalLink::applicationURL not bound
+!missing-selector! SFUniversalLink::initWithWebpageURL: not bound
+!missing-selector! SFUniversalLink::isEnabled not bound
+!missing-selector! SFUniversalLink::setEnabled: not bound
+!missing-selector! SFUniversalLink::webpageURL not bound
+!missing-type! SFUniversalLink not bound

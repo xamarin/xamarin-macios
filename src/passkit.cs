@@ -179,11 +179,13 @@ namespace PassKit {
 		[Export ("token", ArgumentSemantic.Strong)]
 		PKPaymentToken Token { get; }
 
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoWatch]
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'BillingContact' instead.")]
 		ABRecord BillingAddress { get; }
 
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoWatch]
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ShippingContact' instead.")]
@@ -246,6 +248,7 @@ namespace PassKit {
 		[EventArgs ("PKPaymentRequestShippingMethodUpdate")]
 		void DidSelectShippingMethod2 (PKPaymentAuthorizationViewController controller, PKShippingMethod shippingMethod, Action<PKPaymentRequestShippingMethodUpdate> completion);
 
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("paymentAuthorizationViewController:didSelectShippingAddress:completion:")]
 		[EventArgs ("PKPaymentShippingAddressSelected")]
@@ -380,6 +383,7 @@ namespace PassKit {
 		[Export ("requiredBillingAddressFields", ArgumentSemantic.UnsafeUnretained)]
 		PKAddressField RequiredBillingAddressFields { get; set; }
 
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
@@ -391,6 +395,7 @@ namespace PassKit {
 		[Export ("requiredShippingAddressFields", ArgumentSemantic.UnsafeUnretained)]
 		PKAddressField RequiredShippingAddressFields { get; set; }
 
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
@@ -626,6 +631,11 @@ namespace PassKit {
 		[iOS (12, 0)]
 		[Export ("style", ArgumentSemantic.Assign)]
 		PKAddPaymentPassStyle Style { get; set; }
+
+		[NoWatch] // https://feedbackassistant.apple.com/feedback/6301809 https://github.com/xamarin/maccore/issues/1819
+		[iOS (13,0)]
+		[Export ("productIdentifiers", ArgumentSemantic.Copy)]
+		NSSet<NSString> ProductIdentifiers { get; set; }
 	}
 
 	[iOS (9,0)]

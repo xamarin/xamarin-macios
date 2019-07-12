@@ -30,3 +30,21 @@
 !missing-type! NSPersistentCloudKitContainerOptions not bound
 ## appended from unclassified file
 !missing-selector! NSPersistentStoreCoordinator::currentPersistentHistoryTokenFromStores: not bound
+## appended from unclassified file
+!missing-enum! NSBatchInsertRequestResultType not bound
+!missing-selector! +NSBatchInsertRequest::batchInsertRequestWithEntityName:objects: not bound
+!missing-selector! NSBatchInsertRequest::entity not bound
+!missing-selector! NSBatchInsertRequest::entityName not bound
+!missing-selector! NSBatchInsertRequest::init not bound
+!missing-selector! NSBatchInsertRequest::initWithEntity:andObjects: not bound
+!missing-selector! NSBatchInsertRequest::initWithEntity:objects: not bound
+!missing-selector! NSBatchInsertRequest::initWithEntityName:andObjects: not bound
+!missing-selector! NSBatchInsertRequest::initWithEntityName:objects: not bound
+!missing-selector! NSBatchInsertRequest::objectsToInsert not bound
+!missing-selector! NSBatchInsertRequest::resultType not bound
+!missing-selector! NSBatchInsertRequest::setObjectsToInsert: not bound
+!missing-selector! NSBatchInsertRequest::setResultType: not bound
+!missing-selector! NSBatchInsertResult::result not bound
+!missing-selector! NSBatchInsertResult::resultType not bound
+!missing-type! NSBatchInsertRequest not bound
+!missing-type! NSBatchInsertResult not bound

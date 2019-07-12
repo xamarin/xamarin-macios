@@ -378,6 +378,9 @@ namespace Introspection {
 			case "TVDigitEntryViewController":
 				// full screen, no customization w/NIB
 				return true;
+			case "TVDocumentViewController":
+				// as documented
+				return true;
 #endif
 			case "PdfAnnotationButtonWidget":
 			case "PdfAnnotationChoiceWidget":

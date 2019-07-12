@@ -325,14 +325,21 @@ namespace xharness
 			// If we need to generate Full/System variations, we do that here.
 			var unified_targets = new List<MacTarget> ();
 
-			Action<MacTarget, string, bool> configureTarget = (MacTarget target, string file, bool isNUnitProject) => {
+			Action<MacTarget, string, bool, bool> configureTarget = (MacTarget target, string file, bool isNUnitProject, bool skip_generation) => {
 				target.TemplateProjectPath = file;
 				target.Harness = this;
 				target.IsNUnitProject = isNUnitProject;
-				if (!generate_projects)
+				if (!generate_projects || skip_generation)
 					target.ShouldSkipProjectGeneration = true;
 				target.Execute ();
 			};
+
+			foreach (var proj in MacTestProjects) {
+				var target = new MacTarget (MacFlavors.Modern);
+				target.MonoNativeInfo = proj.MonoNativeInfo;
+				configureTarget (target, proj.Path, proj.IsNUnitProject, true);
+				unified_targets.Add (target);
+			}
 
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations).ToArray ()) {
 				var file = proj.Path;
@@ -346,7 +353,7 @@ namespace xharness
 				if (proj.GenerateFull) {
 					var target = new MacTarget (MacFlavors.Full);
 					target.MonoNativeInfo = proj.MonoNativeInfo;
-					configureTarget (target, file, proj.IsNUnitProject);
+					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
 					var cloned_project = (MacTestProject) proj.Clone ();
@@ -357,7 +364,8 @@ namespace xharness
 
 				if (proj.GenerateSystem) {
 					var target = new MacTarget (MacFlavors.System);
-					configureTarget (target, file, proj.IsNUnitProject);
+					target.MonoNativeInfo = proj.MonoNativeInfo;
+					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
 					var cloned_project = (MacTestProject) proj.Clone ();
@@ -681,6 +689,13 @@ namespace xharness
 			}
 		}
 		
+		public bool InCI {
+			get {
+				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
+				return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+			}
+		}
+
 		public bool UseGroupedApps {
 			get {
 				var groupApps = Environment.GetEnvironmentVariable ("BCL_GROUPED_APPS");

@@ -71,3 +71,7 @@
 
 ## Does not make much sense to have it bound in tvOS
 !missing-field! UIGuidedAccessErrorDomain not bound
+
+# Xcode 11
+## UICommandGroupable is introduced and deprecated in Xcode 11 Beta 2 so likely it will be removed in a future beta
+!missing-protocol-conformance! UIMenuElement should conform to UICommandGroupable

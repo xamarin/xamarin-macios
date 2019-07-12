@@ -60,5 +60,12 @@ namespace ObjCRuntime {
 		// WatchOS 5
 		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
 		public const string MediaPlayerLibrary = "/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer";
+
+		// WatchOS 6
+		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
+		public const string PushKitLibrary = "/System/Library/Frameworks/PushKit.framework/PushKit";
+		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
+		public const string CoreMediaLibrary = "/System/Library/Frameworks/CoreMedia.framework/CoreMedia";
+
 	}
 }

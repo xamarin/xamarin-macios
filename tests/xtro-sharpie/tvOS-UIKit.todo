@@ -6,7 +6,6 @@
 !deprecated-attribute-missing! UICollectionViewDelegate::collectionView:performAction:forItemAtIndexPath:withSender: missing a [Deprecated] attribute
 !deprecated-attribute-missing! UICollectionViewDelegate::collectionView:shouldShowMenuForItemAtIndexPath: missing a [Deprecated] attribute
 !deprecated-attribute-missing! UIKeyCommand::keyCommandWithInput:modifierFlags:action:discoverabilityTitle: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIKeyCommand::setDiscoverabilityTitle: missing a [Deprecated] attribute
 !deprecated-attribute-missing! UIPopoverBackgroundView::wantsDefaultContentAppearance missing a [Deprecated] attribute
 !deprecated-attribute-missing! UIPreviewAction missing a [Deprecated] attribute
 !deprecated-attribute-missing! UIPreviewActionGroup missing a [Deprecated] attribute
@@ -14,19 +13,6 @@
 !deprecated-attribute-missing! UITableViewDelegate::tableView:canPerformAction:forRowAtIndexPath:withSender: missing a [Deprecated] attribute
 !deprecated-attribute-missing! UITableViewDelegate::tableView:performAction:forRowAtIndexPath:withSender: missing a [Deprecated] attribute
 !deprecated-attribute-missing! UITableViewDelegate::tableView:shouldShowMenuForRowAtIndexPath: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::beginAnimations:context: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::commitAnimations missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationBeginsFromCurrentState: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationCurve: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationDelay: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationDelegate: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationDidStopSelector: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationDuration: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationRepeatAutoreverses: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationRepeatCount: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationStartDate: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationTransition:forView:cache: missing a [Deprecated] attribute
-!deprecated-attribute-missing! UIView::setAnimationWillStartSelector: missing a [Deprecated] attribute
 !deprecated-attribute-missing! UIViewController::canPerformUnwindSegueAction:fromViewController:withSender: missing a [Deprecated] attribute
 !deprecated-attribute-missing! UIViewController::isModalInPopover missing a [Deprecated] attribute
 !deprecated-attribute-missing! UIViewController::previewActionItems missing a [Deprecated] attribute
@@ -42,19 +28,11 @@
 !missing-designated-initializer! UISearchController::initWithSearchResultsController: is missing an [DesignatedInitializer] attribute
 !missing-enum! NSDirectionalRectEdge not bound
 !missing-enum! NSRectAlignment not bound
-!missing-enum! NSTextScalingType not bound
 !missing-enum! UIAccessibilityContrast not bound
-!missing-enum! UIActionOptions not bound
 !missing-enum! UICollectionLayoutSectionOrthogonalScrollingBehavior not bound
-!missing-enum! UICommandState not bound
 !missing-enum! UICommandStateMask not bound
 !missing-enum! UIDirectionalRectEdge not bound
-!missing-enum! UIImageSymbolScale not bound
-!missing-enum! UIImageSymbolWeight not bound
 !missing-enum! UILegibilityWeight not bound
-!missing-enum! UIMenuOptions not bound
-!missing-enum! UISceneActivationState not bound
-!missing-enum! UISceneErrorCode not bound
 !missing-enum! UITabBarItemAppearanceStyle not bound
 !missing-enum! UITextAlternativeStyle not bound
 !missing-enum! UITextInteractionMode not bound
@@ -122,57 +100,6 @@
 !missing-field! UIFontDescriptorSystemDesignMonospaced not bound
 !missing-field! UIFontDescriptorSystemDesignRounded not bound
 !missing-field! UIFontDescriptorSystemDesignSerif not bound
-!missing-field! UIMenuAbout not bound
-!missing-field! UIMenuAlignment not bound
-!missing-field! UIMenuApplication not bound
-!missing-field! UIMenuBringAllToFront not bound
-!missing-field! UIMenuClose not bound
-!missing-field! UIMenuEdit not bound
-!missing-field! UIMenuFile not bound
-!missing-field! UIMenuFind not bound
-!missing-field! UIMenuFont not bound
-!missing-field! UIMenuFormat not bound
-!missing-field! UIMenuFullscreen not bound
-!missing-field! UIMenuHelp not bound
-!missing-field! UIMenuHide not bound
-!missing-field! UIMenuLearn not bound
-!missing-field! UIMenuLookup not bound
-!missing-field! UIMenuMinimizeAndZoom not bound
-!missing-field! UIMenuNewScene not bound
-!missing-field! UIMenuPreferences not bound
-!missing-field! UIMenuPrint not bound
-!missing-field! UIMenuQuit not bound
-!missing-field! UIMenuReplace not bound
-!missing-field! UIMenuRoot not bound
-!missing-field! UIMenuServices not bound
-!missing-field! UIMenuShare not bound
-!missing-field! UIMenuSpeech not bound
-!missing-field! UIMenuSpelling not bound
-!missing-field! UIMenuSpellingOptions not bound
-!missing-field! UIMenuSpellingPanel not bound
-!missing-field! UIMenuStandardEdit not bound
-!missing-field! UIMenuSubstitutionOptions not bound
-!missing-field! UIMenuSubstitutions not bound
-!missing-field! UIMenuSubstitutionsPanel not bound
-!missing-field! UIMenuText not bound
-!missing-field! UIMenuTextColor not bound
-!missing-field! UIMenuTextSize not bound
-!missing-field! UIMenuTextStyle not bound
-!missing-field! UIMenuTextStylePasteboard not bound
-!missing-field! UIMenuTransformations not bound
-!missing-field! UIMenuUndoRedo not bound
-!missing-field! UIMenuView not bound
-!missing-field! UIMenuWindow not bound
-!missing-field! UIMenuWritingDirection not bound
-!missing-field! UISceneDidActivateNotification not bound
-!missing-field! UISceneDidDisconnectNotification not bound
-!missing-field! UISceneDidEnterBackgroundNotification not bound
-!missing-field! UISceneErrorDomain not bound
-!missing-field! UISceneWillConnectNotification not bound
-!missing-field! UISceneWillDeactivateNotification not bound
-!missing-field! UISceneWillEnterForegroundNotification not bound
-!missing-field! UIWindowSceneSessionRoleApplication not bound
-!missing-field! UIWindowSceneSessionRoleExternalDisplay not bound
 !missing-pinvoke! UIAccessibilityIsOnOffSwitchLabelsEnabled is not bound
 !missing-pinvoke! UIAccessibilityIsVideoAutoplayEnabled is not bound
 !missing-pinvoke! UIAccessibilityShouldDifferentiateWithoutColor is not bound
@@ -183,13 +110,10 @@
 !missing-protocol! NSCollectionLayoutVisibleItem not bound
 !missing-protocol! UICommandBuilder not bound
 !missing-protocol! UICommandGroupable not bound
-!missing-protocol! UIInteraction not bound
-!missing-protocol! UISceneDelegate not bound
 !missing-protocol! UIScreenshotServiceDelegate not bound
 !missing-protocol! UITextFormattingCoordinatorDelegate not bound
 !missing-protocol! UITextInteractionDelegate not bound
 !missing-protocol! UIWindowSceneDelegate not bound
-!missing-protocol-conformance! NSLayoutManager should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextAttachment should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextContainer should conform to NSSecureCoding
 !missing-protocol-member! UIAdaptivePresentationControllerDelegate::presentationControllerDidAttemptToDismiss: not found
@@ -231,7 +155,6 @@
 !missing-selector! +NSCollectionLayoutSpacing::flexibleSpacing: not bound
 !missing-selector! +NSCollectionLayoutSupplementaryItem::supplementaryItemWithLayoutSize:elementKind:containerAnchor: not bound
 !missing-selector! +NSCollectionLayoutSupplementaryItem::supplementaryItemWithLayoutSize:elementKind:containerAnchor:itemAnchor: not bound
-!missing-selector! +UIAction::actionWithTitle:image:options:handler: not bound
 !missing-selector! +UIButton::systemButtonWithImage:target:action: not bound
 !missing-selector! +UIColor::colorWithDynamicProvider: not bound
 !missing-selector! +UIColor::groupTableViewBackgroundColor not bound
@@ -264,27 +187,8 @@
 !missing-selector! +UICommandSystem::contextSystem not bound
 !missing-selector! +UICommandSystem::mainSystem not bound
 !missing-selector! +UIFont::monospacedSystemFontOfSize:weight: not bound
-!missing-selector! +UIImage::actionsImage not bound
-!missing-selector! +UIImage::addImage not bound
-!missing-selector! +UIImage::closeImage not bound
-!missing-selector! +UIImage::imageNamed:inBundle:withConfiguration: not bound
-!missing-selector! +UIImage::removeImage not bound
-!missing-selector! +UIImage::systemImageNamed: not bound
-!missing-selector! +UIImage::systemImageNamed:compatibleWithTraitCollection: not bound
-!missing-selector! +UIImage::systemImageNamed:withConfiguration: not bound
-!missing-selector! +UIImageSymbolConfiguration::configurationWithFont: not bound
-!missing-selector! +UIImageSymbolConfiguration::configurationWithFont:scale: not bound
-!missing-selector! +UIImageSymbolConfiguration::configurationWithPointSize: not bound
-!missing-selector! +UIImageSymbolConfiguration::configurationWithPointSize:weight: not bound
-!missing-selector! +UIImageSymbolConfiguration::configurationWithPointSize:weight:scale: not bound
-!missing-selector! +UIImageSymbolConfiguration::configurationWithScale: not bound
-!missing-selector! +UIImageSymbolConfiguration::configurationWithTextStyle: not bound
-!missing-selector! +UIImageSymbolConfiguration::configurationWithTextStyle:scale: not bound
-!missing-selector! +UIImageSymbolConfiguration::configurationWithWeight: not bound
-!missing-selector! +UIImageSymbolConfiguration::unspecifiedConfiguration not bound
 !missing-selector! +UIKeyCommand::commandWithTitle:action:input:modifierFlags:propertyList: not bound
 !missing-selector! +UIKeyCommand::commandWithTitle:action:input:modifierFlags:propertyList:alternates: not bound
-!missing-selector! +UISceneConfiguration::configurationWithName:sessionRole: not bound
 !missing-selector! +UITextFormattingCoordinator::isFontPanelVisible not bound
 !missing-selector! +UITextFormattingCoordinator::textFormattingCoordinatorForWindowScene: not bound
 !missing-selector! +UITextFormattingCoordinator::toggleFontPanel: not bound
@@ -292,7 +196,6 @@
 !missing-selector! +UITraitCollection::setUITraitCollection: not bound
 !missing-selector! +UITraitCollection::traitCollectionWithAccessibilityContrast: not bound
 !missing-selector! +UITraitCollection::traitCollectionWithLegibilityWeight: not bound
-!missing-selector! +UIView::modifyAnimationsWithRepeatCount:autoreverses:animations: not bound
 !missing-selector! NSCollectionLayoutAnchor::edges not bound
 !missing-selector! NSCollectionLayoutAnchor::isAbsoluteOffset not bound
 !missing-selector! NSCollectionLayoutAnchor::isFractionalOffset not bound
@@ -395,7 +298,6 @@
 !missing-selector! UIAccessibilityCustomAction::initWithAttributedName:actionHandler: not bound
 !missing-selector! UIAccessibilityCustomAction::initWithName:actionHandler: not bound
 !missing-selector! UIAccessibilityCustomAction::setActionHandler: not bound
-!missing-selector! UIAction::options not bound
 !missing-selector! UIApplication::connectedScenes not bound
 !missing-selector! UIApplication::openSessions not bound
 !missing-selector! UIApplication::requestSceneSessionActivation:userActivity:options:errorHandler: not bound
@@ -420,9 +322,6 @@
 !missing-selector! UIBarAppearance::setBackgroundImageContentMode: not bound
 !missing-selector! UIBarAppearance::setShadowColor: not bound
 !missing-selector! UIBarAppearance::setShadowImage: not bound
-!missing-selector! UIBarAppearance::setupDefaultBackground not bound
-!missing-selector! UIBarAppearance::setupOpaqueBackground not bound
-!missing-selector! UIBarAppearance::setupTransparentBackground not bound
 !missing-selector! UIBarAppearance::shadowColor not bound
 !missing-selector! UIBarAppearance::shadowImage not bound
 !missing-selector! UIBarButtonItemAppearance::configureWithDefaultForStyle: not bound
@@ -430,11 +329,9 @@
 !missing-selector! UIBarButtonItemAppearance::focused not bound
 !missing-selector! UIBarButtonItemAppearance::highlighted not bound
 !missing-selector! UIBarButtonItemAppearance::init not bound
-!missing-selector! UIBarButtonItemAppearance::initWithBarButtonItemStyle: not bound
 !missing-selector! UIBarButtonItemAppearance::initWithCoder: not bound
 !missing-selector! UIBarButtonItemAppearance::initWithStyle: not bound
 !missing-selector! UIBarButtonItemAppearance::normal not bound
-!missing-selector! UIBarButtonItemAppearance::setupDefaultAppearanceForStyle: not bound
 !missing-selector! UIBarButtonItemStateAppearance::backgroundImage not bound
 !missing-selector! UIBarButtonItemStateAppearance::backgroundImagePositionAdjustment not bound
 !missing-selector! UIBarButtonItemStateAppearance::setBackgroundImage: not bound
@@ -494,56 +391,12 @@
 !missing-selector! UICommandValidation::setPreferredTitle: not bound
 !missing-selector! UIFontDescriptor::fontDescriptorWithDesign: not bound
 !missing-selector! UIGestureRecognizer::initWithCoder: not bound
-!missing-selector! UIImage::baselineOffsetFromBottom not bound
-!missing-selector! UIImage::configuration not bound
-!missing-selector! UIImage::hasBaseline not bound
-!missing-selector! UIImage::imageByApplyingSymbolConfiguration: not bound
-!missing-selector! UIImage::imageWithBaselineOffsetFromBottom: not bound
-!missing-selector! UIImage::imageWithConfiguration: not bound
-!missing-selector! UIImage::imageWithoutBaseline not bound
-!missing-selector! UIImage::isSymbolImage not bound
-!missing-selector! UIImage::symbolConfiguration not bound
 !missing-selector! UIImageAsset::imageWithConfiguration: not bound
 !missing-selector! UIImageAsset::registerImage:withConfiguration: not bound
 !missing-selector! UIImageAsset::unregisterImageWithConfiguration: not bound
-!missing-selector! UIImageConfiguration::configurationByApplyingConfiguration: not bound
-!missing-selector! UIImageConfiguration::configurationWithTraitCollection: not bound
-!missing-selector! UIImageConfiguration::traitCollection not bound
-!missing-selector! UIImageSymbolConfiguration::configurationWithoutPointSizeAndWeight not bound
-!missing-selector! UIImageSymbolConfiguration::configurationWithoutScale not bound
-!missing-selector! UIImageSymbolConfiguration::configurationWithoutTextStyle not bound
-!missing-selector! UIImageSymbolConfiguration::configurationWithoutWeight not bound
-!missing-selector! UIImageSymbolConfiguration::isEqualToConfiguration: not bound
 !missing-selector! UIImageView::preferredSymbolConfiguration not bound
 !missing-selector! UIImageView::setPreferredSymbolConfiguration: not bound
 !missing-selector! UIKeyCommand::action not bound
-!missing-selector! UIMenu::children not bound
-!missing-selector! UIMenu::identifier not bound
-!missing-selector! UIMenu::initWithCoder: not bound
-!missing-selector! UIMenu::menuByReplacingChildren: not bound
-!missing-selector! UIMenu::options not bound
-!missing-selector! UIMenuElement::image not bound
-!missing-selector! UIMenuElement::title not bound
-!missing-selector! UIMutableCommand::discoverabilityTitle not bound
-!missing-selector! UIMutableCommand::image not bound
-!missing-selector! UIMutableCommand::isEnabled not bound
-!missing-selector! UIMutableCommand::setDiscoverabilityTitle: not bound
-!missing-selector! UIMutableCommand::setEnabled: not bound
-!missing-selector! UIMutableCommand::setImage: not bound
-!missing-selector! UIMutableCommand::setState: not bound
-!missing-selector! UIMutableCommand::setTitle: not bound
-!missing-selector! UIMutableCommand::state not bound
-!missing-selector! UIMutableCommand::title not bound
-!missing-selector! UIMutableKeyCommand::discoverabilityTitle not bound
-!missing-selector! UIMutableKeyCommand::image not bound
-!missing-selector! UIMutableKeyCommand::isEnabled not bound
-!missing-selector! UIMutableKeyCommand::setDiscoverabilityTitle: not bound
-!missing-selector! UIMutableKeyCommand::setEnabled: not bound
-!missing-selector! UIMutableKeyCommand::setImage: not bound
-!missing-selector! UIMutableKeyCommand::setState: not bound
-!missing-selector! UIMutableKeyCommand::setTitle: not bound
-!missing-selector! UIMutableKeyCommand::state not bound
-!missing-selector! UIMutableKeyCommand::title not bound
 !missing-selector! UINavigationBar::compactAppearance not bound
 !missing-selector! UINavigationBar::scrollEdgeAppearance not bound
 !missing-selector! UINavigationBar::setCompactAppearance: not bound
@@ -556,13 +409,11 @@
 !missing-selector! UINavigationBarAppearance::buttonAppearance not bound
 !missing-selector! UINavigationBarAppearance::doneButtonAppearance not bound
 !missing-selector! UINavigationBarAppearance::largeTitleTextAttributes not bound
-!missing-selector! UINavigationBarAppearance::plainButtonAppearance not bound
 !missing-selector! UINavigationBarAppearance::setBackButtonAppearance: not bound
 !missing-selector! UINavigationBarAppearance::setBackIndicatorImage:transitionMaskImage: not bound
 !missing-selector! UINavigationBarAppearance::setButtonAppearance: not bound
 !missing-selector! UINavigationBarAppearance::setDoneButtonAppearance: not bound
 !missing-selector! UINavigationBarAppearance::setLargeTitleTextAttributes: not bound
-!missing-selector! UINavigationBarAppearance::setPlainButtonAppearance: not bound
 !missing-selector! UINavigationBarAppearance::setTitlePositionAdjustment: not bound
 !missing-selector! UINavigationBarAppearance::setTitleTextAttributes: not bound
 !missing-selector! UINavigationBarAppearance::titlePositionAdjustment not bound
@@ -573,54 +424,9 @@
 !missing-selector! UINavigationItem::setScrollEdgeAppearance: not bound
 !missing-selector! UINavigationItem::setStandardAppearance: not bound
 !missing-selector! UINavigationItem::standardAppearance not bound
-!missing-selector! UIOpenURLContext::options not bound
-!missing-selector! UIOpenURLContext::URL not bound
 !missing-selector! UIResponder::buildCommandsWithBuilder: not bound
 !missing-selector! UIResponder::validateCommand: not bound
 !missing-selector! UIResponder::validationForCommand: not bound
-!missing-selector! UIScene::activationConditions not bound
-!missing-selector! UIScene::activationState not bound
-!missing-selector! UIScene::delegate not bound
-!missing-selector! UIScene::initWithSession:connectionOptions: not bound
-!missing-selector! UIScene::session not bound
-!missing-selector! UIScene::setActivationConditions: not bound
-!missing-selector! UIScene::setDelegate: not bound
-!missing-selector! UIScene::setTitle: not bound
-!missing-selector! UIScene::title not bound
-!missing-selector! UISceneActivationConditions::canActivateForTargetContentIdentifierPredicate not bound
-!missing-selector! UISceneActivationConditions::init not bound
-!missing-selector! UISceneActivationConditions::initWithCoder: not bound
-!missing-selector! UISceneActivationConditions::prefersToActivateForTargetContentIdentifierPredicate not bound
-!missing-selector! UISceneActivationConditions::setCanActivateForTargetContentIdentifierPredicate: not bound
-!missing-selector! UISceneActivationConditions::setPrefersToActivateForTargetContentIdentifierPredicate: not bound
-!missing-selector! UISceneActivationRequestOptions::requestingScene not bound
-!missing-selector! UISceneActivationRequestOptions::setRequestingScene: not bound
-!missing-selector! UISceneConfiguration::delegateClass not bound
-!missing-selector! UISceneConfiguration::initWithName:sessionRole: not bound
-!missing-selector! UISceneConfiguration::name not bound
-!missing-selector! UISceneConfiguration::role not bound
-!missing-selector! UISceneConfiguration::sceneClass not bound
-!missing-selector! UISceneConfiguration::setDelegateClass: not bound
-!missing-selector! UISceneConfiguration::setSceneClass: not bound
-!missing-selector! UISceneConfiguration::setStoryboard: not bound
-!missing-selector! UISceneConfiguration::storyboard not bound
-!missing-selector! UISceneConnectionOptions::cloudKitShareMetadata not bound
-!missing-selector! UISceneConnectionOptions::handoffUserActivityType not bound
-!missing-selector! UISceneConnectionOptions::sourceApplication not bound
-!missing-selector! UISceneConnectionOptions::URLContexts not bound
-!missing-selector! UISceneConnectionOptions::userActivities not bound
-!missing-selector! UISceneOpenExternalURLOptions::setUniversalLinksOnly: not bound
-!missing-selector! UISceneOpenExternalURLOptions::universalLinksOnly not bound
-!missing-selector! UISceneOpenURLOptions::annotation not bound
-!missing-selector! UISceneOpenURLOptions::openInPlace not bound
-!missing-selector! UISceneOpenURLOptions::sourceApplication not bound
-!missing-selector! UISceneSession::configuration not bound
-!missing-selector! UISceneSession::persistentIdentifier not bound
-!missing-selector! UISceneSession::role not bound
-!missing-selector! UISceneSession::scene not bound
-!missing-selector! UISceneSession::setUserInfo: not bound
-!missing-selector! UISceneSession::stateRestorationActivity not bound
-!missing-selector! UISceneSession::userInfo not bound
 !missing-selector! UIScreenshotService::delegate not bound
 !missing-selector! UIScreenshotService::setDelegate: not bound
 !missing-selector! UIScreenshotService::windowScene not bound
@@ -665,10 +471,8 @@
 !missing-selector! UITabBarItemAppearance::init not bound
 !missing-selector! UITabBarItemAppearance::initWithCoder: not bound
 !missing-selector! UITabBarItemAppearance::initWithStyle: not bound
-!missing-selector! UITabBarItemAppearance::initWithTabBarItemLayout: not bound
 !missing-selector! UITabBarItemAppearance::normal not bound
 !missing-selector! UITabBarItemAppearance::selected not bound
-!missing-selector! UITabBarItemAppearance::setupDefaultAppearanceForStyle: not bound
 !missing-selector! UITabBarItemStateAppearance::badgeBackgroundColor not bound
 !missing-selector! UITabBarItemStateAppearance::badgePositionAdjustment not bound
 !missing-selector! UITabBarItemStateAppearance::badgeTextAttributes not bound
@@ -699,22 +503,14 @@
 !missing-selector! UITextView::usesStandardTextScaling not bound
 !missing-selector! UIToolbarAppearance::buttonAppearance not bound
 !missing-selector! UIToolbarAppearance::doneButtonAppearance not bound
-!missing-selector! UIToolbarAppearance::plainButtonAppearance not bound
 !missing-selector! UIToolbarAppearance::setButtonAppearance: not bound
 !missing-selector! UIToolbarAppearance::setDoneButtonAppearance: not bound
-!missing-selector! UIToolbarAppearance::setPlainButtonAppearance: not bound
 !missing-selector! UITraitCollection::accessibilityContrast not bound
 !missing-selector! UITraitCollection::hasDifferentColorAppearanceComparedToTraitCollection: not bound
 !missing-selector! UITraitCollection::imageConfiguration not bound
 !missing-selector! UITraitCollection::legibilityWeight not bound
 !missing-selector! UITraitCollection::performAsUITraitCollection: not bound
-!missing-selector! UIView::addInteraction: not bound
-!missing-selector! UIView::interactions not bound
-!missing-selector! UIView::overrideUIView not bound
-!missing-selector! UIView::removeInteraction: not bound
-!missing-selector! UIView::setOverrideUIView: not bound
 !missing-selector! UIView::setTransform3D: not bound
-!missing-selector! UIView::setUIView: not bound
 !missing-selector! UIView::transform3D not bound
 !missing-selector! UIViewController::canPerformUnwindSegueAction:fromViewController:sender: not bound
 !missing-selector! UIViewController::isModalInPresentation not bound
@@ -746,7 +542,6 @@
 !missing-type! NSCollectionLayoutSpacing not bound
 !missing-type! NSCollectionLayoutSupplementaryItem not bound
 !missing-type! NSDiffableDataSourceSnapshot not bound
-!missing-type! UIAction not bound
 !missing-type! UIBarAppearance not bound
 !missing-type! UIBarButtonItemAppearance not bound
 !missing-type! UIBarButtonItemStateAppearance not bound
@@ -758,23 +553,8 @@
 !missing-type! UICommandGroup not bound
 !missing-type! UICommandSystem not bound
 !missing-type! UICommandValidation not bound
-!missing-type! UIImageConfiguration not bound
-!missing-type! UIImageSymbolConfiguration not bound
-!missing-type! UIMenu not bound
-!missing-type! UIMenuElement not bound
-!missing-type! UIMutableCommand not bound
 !missing-type! UIMutableKeyCommand not bound
 !missing-type! UINavigationBarAppearance not bound
-!missing-type! UIOpenURLContext not bound
-!missing-type! UIScene not bound
-!missing-type! UISceneActivationConditions not bound
-!missing-type! UISceneActivationRequestOptions not bound
-!missing-type! UISceneConfiguration not bound
-!missing-type! UISceneConnectionOptions not bound
-!missing-type! UISceneDestructionRequestOptions not bound
-!missing-type! UISceneOpenExternalURLOptions not bound
-!missing-type! UISceneOpenURLOptions not bound
-!missing-type! UISceneSession not bound
 !missing-type! UIScreenshotService not bound
 !missing-type! UITabBarAppearance not bound
 !missing-type! UITabBarItemAppearance not bound
@@ -792,16 +572,62 @@
 ## appended from unclassified file
 !missing-enum! UIEditingInteractionConfiguration not bound
 !missing-protocol! UIMenuBuilder not bound
-!missing-selector! +NSTextAttachment::textAttachmentWithImage: not bound
-!missing-selector! +UIMenu::menuWithTitle:children: not bound
-!missing-selector! +UIMenu::menuWithTitle:image:identifier:options:children: not bound
 !missing-selector! +UIMenuSystem::contextSystem not bound
 !missing-selector! +UIMenuSystem::mainSystem not bound
-!missing-selector! UIImage::imageWithTintColor: not bound
-!missing-selector! UIImage::imageWithTintColor:renderingMode: not bound
 !missing-selector! UIMenuSystem::setNeedsRebuild not bound
 !missing-selector! UIMenuSystem::setNeedsRevalidate not bound
 !missing-selector! UIResponder::buildMenuWithBuilder: not bound
 !missing-selector! UIResponder::editingInteractionConfiguration not bound
-!missing-selector! UIScene::openURL:options:completionHandler: not bound
 !missing-type! UIMenuSystem not bound
+## appended from unclassified file
+!deprecated-attribute-missing! UIApplication::beginIgnoringInteractionEvents missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIApplication::endIgnoringInteractionEvents missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIApplication::isIgnoringInteractionEvents missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIApplication::keyWindow missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIWindow::setScreen: missing a [Deprecated] attribute
+!missing-enum! UIMenuElementAttributes not bound
+!missing-enum! UIMenuElementState not bound
+!missing-field! UIAccessibilitySpeechAttributeSpellOut not bound
+!missing-protocol-conformance! NSLayoutAnchor should conform to NSCoding
+!missing-protocol-conformance! NSLayoutAnchor should conform to NSCopying
+!missing-protocol-conformance! UIKeyCommand should conform to NSMutableCopying
+!missing-selector! +UIAction::actionWithTitle:image:identifier:handler: not bound
+!missing-selector! +UICommand::commandWithTitle:image:action:propertyList: not bound
+!missing-selector! +UICommand::commandWithTitle:image:action:propertyList:alternates: not bound
+!missing-selector! +UIKeyCommand::commandWithTitle:image:action:input:modifierFlags:propertyList: not bound
+!missing-selector! +UIKeyCommand::commandWithTitle:image:action:input:modifierFlags:propertyList:alternates: not bound
+!missing-selector! UIAction::attributes not bound
+!missing-selector! UIAction::discoverabilityTitle not bound
+!missing-selector! UIAction::identifier not bound
+!missing-selector! UIAction::image not bound
+!missing-selector! UIAction::setAttributes: not bound
+!missing-selector! UIAction::setDiscoverabilityTitle: not bound
+!missing-selector! UIAction::setImage: not bound
+!missing-selector! UIAction::setState: not bound
+!missing-selector! UIAction::setTitle: not bound
+!missing-selector! UIAction::state not bound
+!missing-selector! UIAction::title not bound
+!missing-selector! UICommand::attributes not bound
+!missing-selector! UICommand::image not bound
+!missing-selector! UICommand::setAttributes: not bound
+!missing-selector! UICommand::setDiscoverabilityTitle: not bound
+!missing-selector! UICommand::setEnabled: not bound
+!missing-selector! UICommand::setImage: not bound
+!missing-selector! UICommand::setState: not bound
+!missing-selector! UICommand::setTitle: not bound
+!missing-selector! UICommand::title not bound
+!missing-selector! UIKeyCommand::alternates not bound
+!missing-selector! UIKeyCommand::attributes not bound
+!missing-selector! UIKeyCommand::image not bound
+!missing-selector! UIKeyCommand::mutableCopy not bound
+!missing-selector! UIKeyCommand::propertyList not bound
+!missing-selector! UIKeyCommand::setAttributes: not bound
+!missing-selector! UIKeyCommand::setImage: not bound
+!missing-selector! UIKeyCommand::setState: not bound
+!missing-selector! UIKeyCommand::setTitle: not bound
+!missing-selector! UIKeyCommand::state not bound
+!missing-selector! UIKeyCommand::title not bound
+!missing-selector! UISegmentedControl::selectedSegmentTintColor not bound
+!missing-selector! UISegmentedControl::setSelectedSegmentTintColor: not bound
+!unknown-native-enum! UIActionOptions bound
+!unknown-native-enum! UICommandState bound

@@ -3,16 +3,6 @@
 !missing-field! MLFeatureValueImageOptionCropAndScale not bound
 !missing-field! MLFeatureValueImageOptionCropRect not bound
 !missing-protocol! MLWritable not bound
-!missing-protocol-conformance! MLDictionaryConstraint should conform to NSSecureCoding
-!missing-protocol-conformance! MLFeatureDescription should conform to NSSecureCoding
-!missing-protocol-conformance! MLImageConstraint should conform to NSSecureCoding
-!missing-protocol-conformance! MLImageSize should conform to NSSecureCoding
-!missing-protocol-conformance! MLImageSizeConstraint should conform to NSSecureCoding
-!missing-protocol-conformance! MLModelConfiguration should conform to NSSecureCoding
-!missing-protocol-conformance! MLModelDescription should conform to NSSecureCoding
-!missing-protocol-conformance! MLMultiArrayConstraint should conform to NSSecureCoding
-!missing-protocol-conformance! MLMultiArrayShapeConstraint should conform to NSSecureCoding
-!missing-protocol-conformance! MLSequenceConstraint should conform to NSSecureCoding
 !missing-selector! +MLFeatureValue::featureValueWithCGImage:constraint:options:error: not bound
 !missing-selector! +MLFeatureValue::featureValueWithCGImage:pixelsWide:pixelsHigh:pixelFormatType:options:error: not bound
 !missing-selector! +MLFeatureValue::featureValueWithImageAtURL:constraint:options:error: not bound
@@ -44,7 +34,6 @@
 !missing-selector! MLModelConfiguration::updateParameters not bound
 !missing-selector! MLModelDescription::isUpdatable not bound
 !missing-selector! MLModelDescription::trainingInputDescriptionsByName not bound
-!missing-selector! MLModelDescription::updateParameterDescriptionsByKey not bound
 !missing-selector! MLNumericConstraint::enumeratedNumbers not bound
 !missing-selector! MLNumericConstraint::maxNumber not bound
 !missing-selector! MLNumericConstraint::minNumber not bound
@@ -72,3 +61,11 @@
 !missing-type! MLUpdateContext not bound
 !missing-type! MLUpdateProgressHandlers not bound
 !missing-type! MLUpdateTask not bound
+## appended from unclassified file
+!missing-selector! +MLParameterKey::seed not bound
+!missing-selector! +MLParameterKey::shuffle not bound
+!missing-selector! MLKey::scope not bound
+!missing-selector! MLModelConfiguration::parameters not bound
+!missing-selector! MLModelConfiguration::setParameters: not bound
+!missing-selector! MLModelDescription::parameterDescriptionsByKey not bound
+!missing-selector! MLParameterKey::scopedTo: not bound

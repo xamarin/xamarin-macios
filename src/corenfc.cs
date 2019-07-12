@@ -308,19 +308,19 @@ namespace CoreNFC {
 		[Static]
 		[Export ("wellKnownTypeURIPayloadWithString:")]
 		[return: NullAllowed]
-		NFCNdefPayload CreateWellKnowType (string uri);
+		NFCNdefPayload CreateWellKnownTypePayload (string uri);
 
 		[iOS (13,0)]
 		[Static]
 		[Export ("wellKnownTypeURIPayloadWithURL:")]
 		[return: NullAllowed]
-		NFCNdefPayload CreateWellKnowType (NSUrl url);
+		NFCNdefPayload CreateWellKnownTypePayload (NSUrl url);
 
 		[iOS (13,0)]
 		[Static]
 		[Export ("wellKnowTypeTextPayloadWithString:locale:")]
 		[return: NullAllowed]
-		NFCNdefPayload CreateWellKnowType (string text, NSLocale locale);
+		NFCNdefPayload CreateWellKnownTypePayload (string text, NSLocale locale);
 
 		[iOS (13,0)]
 		[NullAllowed, Export ("wellKnownTypeURIPayload")]

@@ -124,26 +124,29 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[TestCase (false)]
-		[TestCase (true)]
-		public void Unified_HelloWorld_ShouldHaveNoWarnings (bool release)
+		[TestCase (false, false)]
+		[TestCase (false, true)]
+		[TestCase (true, false)]
+		[TestCase (true, true)]
+		public void Unified_HelloWorld_ShouldHaveNoWarnings (bool release, bool full)
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
 				test.Release = release;
+				test.XM45 = full;
 
-				// Due to https://bugzilla.xamarin.com/show_bug.cgi?id=48311 we can get warnings related to the registrar
-				Func<string, bool> hasLegitWarning = results =>
-					results.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("warning") && !x.Contains ("deviceBrowserView:selectionDidChange:"));
+				var buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 
-				// Mobile
-				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsTrue (!hasLegitWarning (buildResults), "Unified_HelloWorld_ShouldHaveNoWarnings - Mobile had warning: \n" + buildResults);
+				var buildLines = buildResults.Split ('\n');
+				var messages = Tool.ParseMessages (buildLines, "mmp");
 
-				// XM45
-				test.XM45 = true;
-				buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsTrue (!hasLegitWarning (buildResults), "Unified_HelloWorld_ShouldHaveNoWarnings - XM45 had warning: \n" + buildResults);
+				var warnings = messages.Where ((v) => v.IsWarning);
+
+				if (warnings.Any ()) {
+					Console.WriteLine ("Build output:");
+					Console.WriteLine (buildResults);
+				}
+				Assert.That (warnings, Is.Empty, "Unified_HelloWorld_ShouldHaveNoWarnings had warnings");
 			});
 		}
 
@@ -409,35 +412,56 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		[Test]
-		public void UnifiedDebugBuilds_ShouldLinkToPartialStatic_UnlessDisabled ()
+		[TestCase (false)]
+		[TestCase (true)]
+		public void UnifiedDebugBuilds_ShouldLinkToPartialStatic_UnlessDisabled_Release (bool xm45)
 		{
-			RunMMPTest (tmpDir =>
-			{
-				foreach (bool xm45 in new bool[] { false, true })
-				{
-					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
-
-					test.Release = true;
-					string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-					Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "Release build should not use partial static registrar\n" + buildResults);
-
-					test.Release = false;
-					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols>";
-					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-					Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "Debug build should use partial static registrar\n" + buildResults );
-
-					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=dynamic</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
-					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-					Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=dynamic build should not use partial static registrar\n" + buildResults);
-
-					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=partial</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
-					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-					Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=partial build should use partial static registrar\n" + buildResults);
-				}
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
+				test.Release = true;
+				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "Release build should not use partial static registrar\n" + buildResults);
 			});
 		}
 
+		[TestCase (false)]
+		[TestCase (true)]
+		public void UnifiedDebugBuilds_ShouldLinkToPartialStatic_UnlessDisabled_Debug (bool xm45)
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
+				test.Release = false;
+				test.CSProjConfig = "<DebugSymbols>true</DebugSymbols>";
+				var buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "Debug build should use partial static registrar\n" + buildResults);
+			});
+		}
+
+		[TestCase (false)]
+		[TestCase (true)]
+		public void UnifiedDebugBuilds_ShouldLinkToPartialStatic_UnlessDisabled_Debug_dynamic (bool xm45)
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
+				test.Release = false;
+				test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=dynamic</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
+				var buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=dynamic build should not use partial static registrar\n" + buildResults);
+			});
+		}
+
+		[TestCase (false)]
+		[TestCase (true)]
+		public void UnifiedDebugBuilds_ShouldLinkToPartialStatic_UnlessDisabled_Debug_partial (bool xm45)
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
+				test.Release = false;
+				test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=partial</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
+				var buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+				Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=partial build should use partial static registrar\n" + buildResults);
+			});
+		}
 		//https://testrail.xamarin.com/index.php?/cases/view/234141&group_by=cases:section_id&group_order=asc&group_id=51097
 		[Test]
 		public void Unified45Build_CompileToNativeOutput ()

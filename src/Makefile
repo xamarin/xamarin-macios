@@ -541,6 +541,7 @@ WATCHOS_EXTRA_CORE_SOURCES = \
     $(IOS_OPENTK_1_0_CORE_SOURCES)     \
     AudioToolbox/AudioBuffers.cs       \
     AudioToolbox/AudioType.cs          \
+    AudioToolbox/AudioFormat.cs          \
     $(SHARED_SYSTEM_DRAWING_SOURCES)   \
     System.Drawing/ColorKnownColorTypeForwarders.cs \
 

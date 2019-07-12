@@ -17,7 +17,9 @@ namespace JavaScriptCore {
 		Boolean,
 		Number,
 		String,
-		Object
+		Object,
+		[iOS (13,0)][Mac (10,15, onlyOn64: true)]
+		Symbol,
 	}
 
 	// typedef unsigned -> JSObjectRef.h

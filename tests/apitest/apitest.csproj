@@ -22,9 +22,9 @@
     <OutputPath>bin\x86\Debug</OutputPath>
     <DefineConstants>DEBUG;MONOMAC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <EnableCodeSigning>false</EnableCodeSigning>
+    <EnableCodeSigning>true</EnableCodeSigning>
     <CodeSigningKey>Mac Developer</CodeSigningKey>
     <CreatePackage>false</CreatePackage>
     <EnablePackageSigning>false</EnablePackageSigning>
@@ -37,7 +37,7 @@
     <OutputPath>bin\x86\Release</OutputPath>
     <DefineConstants>MONOMAC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <EnableCodeSigning>true</EnableCodeSigning>
     <CodeSigningKey>Developer ID Application</CodeSigningKey>

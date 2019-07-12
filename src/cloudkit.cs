@@ -393,22 +393,22 @@ namespace CloudKit {
 		void DeleteRecordZone (CKRecordZoneID zoneId, Action<CKRecordZoneID, NSError> completionHandler);
 
 		[Export ("fetchSubscriptionWithID:completionHandler:")]
-		[NoWatch]
+		[Watch (6,0)]
 		[Async]
 		void FetchSubscription (string subscriptionId, Action<CKSubscription, NSError> completionHandler);
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Export ("fetchAllSubscriptionsWithCompletionHandler:")]
 		[Async]
 		void FetchAllSubscriptions (Action<CKSubscription[], NSError> completionHandler);
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Export ("saveSubscription:completionHandler:")]
 		[Async]
 		void SaveSubscription (CKSubscription subscription, Action<CKSubscription, NSError> completionHandler);
 
 		[Export ("deleteSubscriptionWithID:completionHandler:")]
-		[NoWatch]
+		[Watch (6,0)]
 		[Async]
 		void DeleteSubscription (string subscriptionID, CKDatabaseDeleteSubscriptionHandler completionHandler);
 	}
@@ -832,7 +832,7 @@ namespace CloudKit {
 	delegate void CKFetchSubscriptionsCompleteHandler (NSDictionary subscriptionsBySubscriptionId, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
-	[NoWatch]
+	[Watch (6,0)]
 	[BaseType (typeof (CKDatabaseOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKFetchSubscriptionsOperation {
@@ -1020,7 +1020,7 @@ namespace CloudKit {
 	delegate void CKModifySubscriptionsHandler (CKSubscription [] savedSubscriptions, string [] deletedSubscriptionIds, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
-	[NoWatch]
+	[Watch (6,0)]
 	[BaseType (typeof (CKDatabaseOperation))]
 	[DisableDefaultCtor] // designated
 	interface CKModifySubscriptionsOperation {
@@ -1584,7 +1584,7 @@ namespace CloudKit {
 		CKRecordID RecordId { get; }
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[iOS (10,0)][TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(CKSubscription))]
@@ -1610,7 +1610,7 @@ namespace CloudKit {
 		CKQuerySubscriptionOptions SubscriptionOptions { get; }
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[iOS (10,0)][TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(CKSubscription))]
@@ -1631,7 +1631,7 @@ namespace CloudKit {
 		string RecordType { get; set; }
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[iOS (10,0)][TV (10,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(CKSubscription))]
 	interface CKDatabaseSubscription : NSSecureCoding, NSCopying
@@ -1644,27 +1644,31 @@ namespace CloudKit {
 		string RecordType { get; set; }
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // objc_exception_throw on [CKSubscription init]
 	[BaseType (typeof (NSObject))]
 	interface CKSubscription : NSSecureCoding, NSCopying {
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("initWithRecordType:predicate:options:")]
 		IntPtr Constructor (string recordType, NSPredicate predicate, CKSubscriptionOptions subscriptionOptions);
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("initWithRecordType:predicate:subscriptionID:options:")]
 		IntPtr Constructor (string recordType, NSPredicate predicate, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKRecordZoneSubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKRecordZoneSubscription'.")]
 		[Export ("initWithZoneID:options:")]
 		IntPtr Constructor (CKRecordZoneID zoneId, CKSubscriptionOptions subscriptionOptions);
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKRecordZoneSubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKRecordZoneSubscription'.")]
 		[Export ("initWithZoneID:subscriptionID:options:")]
@@ -1675,33 +1679,37 @@ namespace CloudKit {
 
 		[Export ("subscriptionType", ArgumentSemantic.UnsafeUnretained)]
 		CKSubscriptionType SubscriptionType { get; }
-
+		
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("recordType")]
 		string RecordType { get; }
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("predicate", ArgumentSemantic.Copy)]
 		NSPredicate Predicate { get; }
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscriptionOptions'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscriptionOptions'.")]
 		[Export ("subscriptionOptions", ArgumentSemantic.UnsafeUnretained)]
 		CKSubscriptionOptions SubscriptionOptions { get; }
 
-		[TV (10,0)]
+		[TV (10,0), Watch (6,0)]
 		[Export ("notificationInfo", ArgumentSemantic.Copy)]
 		CKNotificationInfo NotificationInfo { get; set; }
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKRecordZoneSubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKRecordZoneSubscription'.")]
 		[Export ("zoneID", ArgumentSemantic.Copy)]
 		CKRecordZoneID ZoneID { get; set; }
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[iOS (8,0)][TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface CKNotificationInfo : NSSecureCoding, NSCopying, NSCoding {

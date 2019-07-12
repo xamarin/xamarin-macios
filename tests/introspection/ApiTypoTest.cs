@@ -204,7 +204,8 @@ namespace Introspection
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
 			"Ecn",   // Explicit Congestion Notification
 			"Ect",   // ECN Capable Transport
-			"Editability", 
+			"Editability",
+			"Edr",
 			"Eof", // acronym End-Of-File
 			"Elu",
 			"Emagic",
@@ -214,6 +215,7 @@ namespace Introspection
 			"Enc",
 			"Eppc",
 			"Eftpos", // Electronic funds transfer at point of sale
+			"Eotf", // DisplayP3_PQ_Eotf
 			"Exhange",
 			"Exp",
 			"Expr",
@@ -291,6 +293,7 @@ namespace Introspection
 			"Iso",
 			"Itf",
 			"Itu",
+			"Itur", // Itur_2020_Hlg
 			"Jcb", // Japanese credit card company
 			"Jfif",
 			"Jis",
@@ -308,12 +311,14 @@ namespace Introspection
 			"Kullback", // Kullback-Leibler Divergence
 			"Langauges",
 			"Lacunarity",
+			"Latm", //  Low Overhead Audio Transport Multiplex
 			"Ldaps",
 			"Lerp",
 			"Linecap",
 			"Lingustic",
 			"libcompression",
 			"libdispatch",
+			"Loas", // Low Overhead Audio Stream 
 			"Lod",
 			"Lopass",
 			"Lowlevel",
@@ -383,6 +388,7 @@ namespace Introspection
 			"Orth",
 			"ove",
 			"Paeth", // PNG filter
+			"Palettize",
 			"Parms", // short for Parameters
 			"Peap",
 			"Perlin",
@@ -500,6 +506,8 @@ namespace Introspection
 			"Tls",
 			"Ttls",
 			"Tlv",
+			"Toc",
+			"Toci",
 			"Toi",
 			"Transceive",
 			"Trc",
@@ -534,6 +542,7 @@ namespace Introspection
 			"Voronoi",
 			"Vnode",
 			"Vpn",
+			"Warichu",
 			"Wep",
 			"Wpa",
 			"Warpable",

@@ -7,6 +7,8 @@
 //   Rolf Bjarne Kvinge
 //
 
+#if !MONOMAC
+
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -29,3 +31,5 @@ namespace CoreMotion {
 #endregion
 	}
 }
+
+#endif

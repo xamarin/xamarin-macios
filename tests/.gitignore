@@ -16,6 +16,7 @@ build
 *-today-extension.?sproj
 *-today.sln
 *-system.csproj
+*-unified*.csproj
 Makefile-mac.inc
 .stamp*
 Info-*.plist

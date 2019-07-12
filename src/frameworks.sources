@@ -154,6 +154,8 @@ ARKIT_SOURCES = \
 	ARKit/ARFaceGeometry.cs \
 	ARKit/ARPlaneGeometry.cs \
 	ARKit/ARPointCloud.cs \
+	ARKit/ARSkeleton3D.cs \
+	ARKit/ARSkeleton2D.cs \
 
 # AssetsLibrary
 
@@ -186,6 +188,7 @@ AUDIOTOOLBOX_SOURCES = \
 	AudioToolbox/AudioSession.cs \
 	AudioToolbox/AudioSessions.cs \
 	AudioToolbox/AudioToolbox.cs \
+	AudioToolbox/Enums.cs \
 	AudioToolbox/SystemSound.cs \
 	AudioToolbox/MusicPlayer.cs \
 	AudioToolbox/MusicTrack.cs \
@@ -275,6 +278,11 @@ AVKIT_API_SOURCES = \
 
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
+
+# BackgroundTasks
+
+BACKGROUNDTASKS_API_SOURCES = \
+	BackgroundTasks/Enums.cs \
 
 # BusinessChat
 
@@ -488,9 +496,6 @@ COREIMAGE_SOURCES = \
 	CoreImage/CISampler.cs \
 	CoreImage/CIVector.cs \
 
-COREIMAGE_API_SOURCES = \
-	CoreMedia/Enums.cs \
-
 # CoreLocation
 
 CORELOCATION_CORE_SOURCES = \
@@ -521,6 +526,9 @@ COREMEDIA_SOURCES = \
 	CoreMedia/CMCustomBlockAllocator.cs \
 	CoreMedia/CMBufferQueue.cs \
 	CoreMedia/CMMemoryPool.cs \
+
+COREMEDIA_API_SOURCES = \
+	CoreMedia/Enums.cs \
 
 # CoreMidi
 
@@ -998,6 +1006,7 @@ MAPKIT_SOURCES = \
 
 MEDIAACCESSIBILITY_SOURCES = \
 	MediaAccessibility/MediaAccessibility.cs \
+	MediaAccessibility/MAImageCaptioning.cs \
 
 # MediaPlayer
 
@@ -1708,15 +1717,18 @@ SHARED_SOURCES = \
 
 COMMON_FRAMEWORKS =         \
 	Accelerate              \
+	AuthenticationServices	\
 	AVFoundation            \
 	CoreBluetooth           \
 	CoreFoundation          \
+	CoreMedia               \
 	CoreML                  \
 	CoreVideo               \
 	Compression             \
 	Foundation              \
 	GameKit                 \
 	SceneKit                \
+	SoundAnalysis 			\
 	SpriteKit               \
 
 MAC_FRAMEWORKS =            \
@@ -1738,8 +1750,8 @@ MAC_FRAMEWORKS =            \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMedia               \
 	CoreMidi                \
+	CoreMotion		\
 	CoreServices            \
 	CoreSpotlight           \
 	CoreText                \
@@ -1758,6 +1770,7 @@ MAC_FRAMEWORKS =            \
 	IOSurface 		\
 	iTunesLibrary           \
 	JavaScriptCore          \
+	LinkPresentation        \
 	LocalAuthentication     \
 	MapKit                  \
 	MediaAccessibility      \
@@ -1776,9 +1789,11 @@ MAC_FRAMEWORKS =            \
 	NotificationCenter 	\
 	OpenGL                  \
 	PdfKit                  \
+	PencilKit               \
 	Photos                  \
 	PhotosUI				\
 	PrintCore		\
+	PushKit			\
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \
@@ -1788,6 +1803,7 @@ MAC_FRAMEWORKS =            \
 	SearchKit               \
 	Security                \
 	Social                  \
+	Speech                  \
 	StoreKit                \
 	SystemConfiguration     \
 	UserNotifications       \
@@ -1808,7 +1824,7 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
-	AuthenticationServices \
+	BackgroundTasks \
 	BusinessChat \
 	CallKit \
 	CarPlay \
@@ -1824,7 +1840,6 @@ IOS_FRAMEWORKS =         \
 	CoreImage \
 	CoreLocation \
 	CoreMIDI \
-	CoreMedia \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
@@ -1849,6 +1864,7 @@ IOS_FRAMEWORKS =         \
 	IntentsUI \
 	IOSurface \
 	JavaScriptCore \
+	LinkPresentation \
 	LocalAuthentication \
 	MapKit \
 	MediaAccessibility \
@@ -1870,6 +1886,7 @@ IOS_FRAMEWORKS =         \
 	OpenGLES \
 	PassKit \
 	PdfKit \
+	PencilKit \
 	Photos \
 	PhotosUI \
 	PushKit \
@@ -1913,6 +1930,7 @@ WATCHOS_FRAMEWORKS =        \
 	MobileCoreServices      \
 	NaturalLanguage         \
 	PassKit                 \
+	PushKit			\
 	Security                \
 	UIKit XKit              \
 	UserNotifications       \
@@ -1925,6 +1943,7 @@ TVOS_FRAMEWORKS =           \
 	AdSupport               \
 	AudioToolbox            \
 	AudioUnit               \
+	BackgroundTasks         \
 	CFNetwork               \
 	CloudKit                \
 	CoreAnimation           \
@@ -1932,7 +1951,6 @@ TVOS_FRAMEWORKS =           \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMedia               \
 	CoreSpotlight			\
 	CoreText                \
 	DeviceCheck             \
