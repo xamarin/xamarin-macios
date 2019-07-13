@@ -118,7 +118,6 @@ namespace NotificationCenter {
 		[Static]
 		[Export ("widgetEffectForVibrancyStyle:")]
 		UIVibrancyEffect GetWidgetEffectForVibrancyStyle (UIVibrancyEffectStyle vibrancyStyle);
-
 	}
 #endif
 
