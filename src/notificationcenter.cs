@@ -82,7 +82,7 @@ namespace NotificationCenter {
 	[BaseType (typeof (NSExtensionContext))]
 	interface NSExtensionContext_NCWidgetAdditions {
 		[iOS (10,0)]
-		[Export ("widgetLargestAvailableDisplwidgetEffectForVibrancyStyleayMode")]
+		[Export ("widgetLargestAvailableDisplayMode")]
 		NCWidgetDisplayMode GetWidgetLargestAvailableDisplayMode ();
 
 		[iOS (10,0)]
