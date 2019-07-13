@@ -73,7 +73,7 @@ namespace NotificationCenter {
 #else
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 #endif
-		[Deprecated (PlatformName.iOS, 10,0)]
+		[Deprecated (PlatformName.iOS, 10,0), "Use 'UIVibrancyEffect.WidgetEffectForVibrancyStyle' instead."]
 		[Static, Export ("notificationCenterVibrancyEffect")]
 		UIVibrancyEffect NotificationCenterVibrancyEffect ();
 	}
@@ -103,14 +103,22 @@ namespace NotificationCenter {
 	[BaseType (typeof (UIVibrancyEffect))]
 	interface UIVibrancyEffect_NCWidgetAdditions {
 		[iOS (10,0)]
+		[Deprecated (PlatformName.iOS, 13,0), "Use 'UIVibrancyEffect.WidgetEffectForVibrancyStyle' instead. "]
 		[Static]
 		[Export ("widgetPrimaryVibrancyEffect")]
 		UIVibrancyEffect GetWidgetPrimaryVibrancyEffect ();
 
 		[iOS (10,0)]
+		[Deprecated (PlatformName.iOS, 13,0), "Use 'UIVibrancyEffect.WidgetEffectForVibrancyStyle' instead. "]
 		[Static]
 		[Export ("widgetSecondaryVibrancyEffect")]
 		UIVibrancyEffect GetWidgetSecondaryVibrancyEffect ();
+
+		[iOS (13,0)]
+		[Static]
+		[Export ("widgetEffectForVibrancyStyle")]
+		UIVibrancyEffect WidgetEffectForVibrancyStyle (UIVibrancyEffectStyle vibrancyStyle);
+
 	}
 #endif
 
