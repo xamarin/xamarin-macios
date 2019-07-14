@@ -7216,10 +7216,22 @@ namespace AppKit {
 		[Static]
 		[Export ("gridViewWithNumberOfColumns:rows:")]
 		NSGridView Create (nint columnCount, nint rowCount);
+		
+#if !XAMCORE_4_0
+		[Static]
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		[Obsolete ("You should use either 'NSGridView.Create(NSView [][] rowsAndColumns)' or 'NSGridView.Create(NSView [,] rowsAndColumns)'.")]
+		[Export ("gridViewWithViews:")]
+		NSGridView Create (NSView [] rows);
+#endif
+		
+		[Static]
+		[Export ("gridViewWithViews:")]
+		NSGridView Create (NSView [][] rowsAndColumns);
 
 		[Static]
 		[Export ("gridViewWithViews:")]
-		NSGridView Create (NSView [] rows);
+		NSGridView Create (NSView [,] rowsAndColumns);
 
 		[Export ("numberOfRows")]
 		nint RowCount { get; }
@@ -16193,6 +16205,10 @@ namespace AppKit {
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("viewDidChangeEffectiveAppearance")]
 		void ViewDidChangeEffectiveAppearance ();
+
+		[Internal]
+		[Export ("sortSubviewsUsingFunction:context:")]
+		void SortSubviews (IntPtr function_pointer, IntPtr context);
 	}
 
 	[BaseType (typeof (NSAnimation))]

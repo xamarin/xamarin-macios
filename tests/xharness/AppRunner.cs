@@ -612,6 +612,11 @@ namespace xharness
 				args.Append (" -setenv=NUNIT_ENABLE_XML_MODE=wrapped");
 			}
 
+			if (Harness.InCI) {
+				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
+				args.Append ($" -setenv=BUILD_REVISION=${Environment.GetEnvironmentVariable ("BUILD_REVISION")}");
+			}
+
 			if (!Harness.IncludeSystemPermissionTests)
 				args.Append (" -setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1");
 

@@ -20,3 +20,6 @@ System.Runtime.CompilerServices.Tests.ConfiguredCancelableAsyncEnumerableTests.C
 # Expected: typeof(System.OverflowException)
 # Actual:   (No exception was thrown)
 System.Tests.DecimalTests.Remainder_Invalid(d1: 79228162514264337593543950335, d2: 0.1, exceptionType: typeof(System.OverflowException))
+
+# fails on 32b and crashes the test app. Issue https://github.com/xamarin/maccore/issues/1788
+Platform32:System.Threading.Tasks.Tests.ParallelForTests.RunSimpleParallelForeachAddTest_List(count: 16777216)

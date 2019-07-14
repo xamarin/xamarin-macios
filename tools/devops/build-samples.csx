@@ -65,3 +65,7 @@ Exec ("ln", "-Fhs", xcode_path, "/Applications/Xcode.app");
 
 // Provisioning profiles
 Exec ($"../../../maccore/tools/install-qa-provisioning-profiles.sh");
+
+// .NET core
+// The version number here must match the one in Xamarin.Tests.Configuration:CreateGlobalConfig (tests/sampletester/Configuration.cs).
+DotNetCoreSdk ("2.2.204");
