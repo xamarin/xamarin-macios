@@ -42,6 +42,7 @@
 		<string>sgen-concurrent-gc</string>
 		<string>link-platform</string>
 		<string>hybrid-aot</string>
+		<string>64-bit-only</string>
 	</array>
 	<key>Optimizations</key>
 	<dict>

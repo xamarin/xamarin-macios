@@ -119,21 +119,6 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void Unified_WithStaticNativeRef_32bit ()
-		{
-			Configuration.AssertXcodeSupports32Bit ();
-
-			MMPTests.RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<XamMacArch>i386</XamMacArch>",
-					References = $"<Reference Include=\"SimpleBinding_static\"><HintPath>{MobileStaticBindingPath}</HintPath></Reference>",
-					TestCode = "System.Console.WriteLine (new Simple.SimpleClass ().DoIt ());"
-				};
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithStaticNativeRef_32bit", null, true, false);
-			});
-		}
-
-		[Test]
 		public void Unified_WithNativeReferences_MissingLibrariesActAsExpected ()
 		{
 			MMPTests.RunMMPTest (tmpDir => {

@@ -105,8 +105,6 @@ public class BindingTouch {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
 			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
-			} else if (target_framework == TargetFramework.XamMac_1_0) {
-				return Path.Combine (GetSDKRoot (), "lib", "bgen", "XamMac.BindingAttributes.dll");
 			} else {
 				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
 			}
@@ -136,9 +134,6 @@ public class BindingTouch {
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
 			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
-			} else if (target_framework == TargetFramework.XamMac_1_0) {
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono");
-				yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
 			} else {
 				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
 			}
@@ -419,11 +414,6 @@ public class BindingTouch {
 			break;
 		default:
 			throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
-		}
-
-		if (target_framework == TargetFramework.XamMac_1_0 && !references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "System.Drawing")) {
-			// If we're targeting XM/Classic ensure we have a reference to System.Drawing.dll.
-			references.Add ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll");
 		}
 
 		if (sources.Count > 0) {

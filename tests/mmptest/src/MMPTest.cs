@@ -38,7 +38,7 @@ namespace Xamarin.MMP.Tests
 					// Build a library with the conflicting name
 					TI.UnifiedTestConfig libConfig = new TI.UnifiedTestConfig (tmpDir) { XM45 = XM45, ProjectName = projectName, AssemblyName = assemblyName };
 					string csprojTarget = TI.GenerateUnifiedLibraryProject (libConfig);
-					TI.BuildProject (csprojTarget, isUnified : true);
+					TI.BuildProject (csprojTarget);
 
 					// Build an exe using that library, it should fail the build
 					string referenceCode = string.Format (@"<Reference Include=""TestApp""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug", assemblyName + ".dll"));
@@ -115,7 +115,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig libConfig = new TI.UnifiedTestConfig (libraryDirectory) { ProjectName = libraryName };
 				string csprojTarget = TI.GenerateUnifiedLibraryProject (libConfig);
 
-				TI.BuildProject (csprojTarget, isUnified : true);
+				TI.BuildProject (csprojTarget);
 
 				string referenceCode = string.Format (@"<Reference Include=""UnifiedLibrary""><HintPath>{0}</HintPath></Reference>", Path.Combine (libraryDirectory, "bin/Debug/", $"{libraryName}.dll"));
 
@@ -147,25 +147,6 @@ namespace Xamarin.MMP.Tests
 					Console.WriteLine (buildResults);
 				}
 				Assert.That (warnings, Is.Empty, "Unified_HelloWorld_ShouldHaveNoWarnings had warnings");
-			});
-		}
-
-		[Test]
-		public void Unified_HelloWorld_ShouldWarnOn32Bit ()
-		{
-			Configuration.AssertXcodeSupports32Bit ();
-
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<XamMacArch>i386</XamMacArch>"
-				};
-
-				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.True (buildResults.Contains ("MM0134"), "32-bit Modern did not contain MM0134");
-	
-				test.XM45 = true;
-				buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.True (buildResults.Contains ("MM0134"), "32-bit Full did not contain MM0134");
 			});
 		}
 
@@ -362,7 +343,7 @@ namespace Xamarin.MMP.Tests
 
 					// And try again. 
 					// If we fail, we'll likley fail with "did not generate an exe" before returning but let's check anyway
-					string secondBuildOutput = TI.BuildProject (Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test)), true);
+					string secondBuildOutput = TI.BuildProject (Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test)));
 					Assert.IsTrue (!secondBuildOutput.Contains ("Skipping target \"_CompileToNative"), "Did not skip");
 					Assert.IsTrue (secondBuildOutput.Contains ("Building target \"_CompileToNative\" completely"), "Did need to build");
 				}
@@ -385,7 +366,7 @@ namespace Xamarin.MMP.Tests
 					ItemGroup = string.Format (BundleResourceTemplate, resoucePath),
 				};
 				var libProject = TI.GenerateUnifiedLibraryProject (test);
-				TI.BuildProject (libProject, true);
+				TI.BuildProject (libProject);
 
 				string referenceCode = string.Format (@"<Reference Include=""UnifiedLibrary""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug", "UnifiedLibrary.dll"));
 
@@ -405,7 +386,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"ConsoleXMApp.csproj");
-				TI.BuildProject (testPath, isUnified: true);
+				TI.BuildProject (testPath);
 				string exePath = Path.Combine (TI.FindSourceDirectory (), @"bin/Debug/ConsoleXMApp.exe");
 				var output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono64", new StringBuilder (exePath), "RunSideBySizeXamMac");
 				Assert.IsTrue (output.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("True")), "Unified_SideBySideXamMac_ConsoleTest run"); 
@@ -559,32 +540,6 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void Unified32BitWithXMRequiringLibrary_ShouldReferenceCorrectXM_AndNotCrash ()
-		{
-			Configuration.AssertXcodeSupports32Bit ();
-
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig libConfig = new TI.UnifiedTestConfig (tmpDir) {
-					ProjectName = "UnifiedLibrary",
-					TestCode = "namespace Library { public static class Foo { public static void Bar () { var v = new Foundation.NSObject (); } } }"
-				};
-
-				string csprojTarget = TI.GenerateUnifiedLibraryProject (libConfig);
-				TI.BuildProject (csprojTarget, isUnified: true);
-
-				string referenceCode = string.Format (@"<Reference Include=""UnifiedLibrary""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug/UnifiedLibrary.dll"));
-
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = @"<PlatformTarget>x86</PlatformTarget><XamMacArch>i386</XamMacArch>",
-					ReferencesBeforePlatform = referenceCode,
-					TestCode = "Library.Foo.Bar ();"
-				};
-
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
 		public void OldXcodeTest ()
 		{
 			var oldXcode = Xamarin.Tests.Configuration.GetOldXcodeRoot ();
@@ -676,17 +631,20 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void MM0138 ()
+		public void MM0143 ()
 		{
 			MMPTests.RunMMPTest (tmpDir => {
-				var rv = TI.TestClassicExecutable (tmpDir, csprojConfig: "<IncludeMonoRuntime>true</IncludeMonoRuntime>", shouldFail: true);
-				rv.Messages.AssertError (138, "Building 32-bit apps is not possible when using Xcode 10. Please migrate project to the Unified API.");
+				string csprojTarget = Path.Combine (TI.FindSourceDirectory (), "ClassicExample.csproj");
+				string buildOutput = TI.BuildClassicProject (csprojTarget);
+				Console.WriteLine (buildOutput);
+				var rv = new OutputText (buildOutput, string.Empty);
+				rv.Messages.AssertError (143, "Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.");
 				rv.Messages.AssertWarningCount (0);
 			});
 		}
 
 		[Test]
-		public void MM0139 ()
+		public void MM0144 ()
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
@@ -694,7 +652,7 @@ namespace Xamarin.MMP.Tests
 				};
 
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: true);
-				rv.Messages.AssertError (139, "Building 32-bit apps is not possible when using Xcode 10. Please change the architecture in the project's Mac Build options to 'x86_64'.");
+				rv.Messages.AssertError (144, "Building 32-bit apps is not supported anymore. Please change the architecture in the project's Mac Build options to 'x86_64'.");
 				rv.Messages.AssertWarningCount (0);
 			});
 		}
@@ -709,15 +667,15 @@ namespace Xamarin.MMP.Tests
 
 				string project = TI.GenerateUnifiedExecutableProject (test);
 
-				string buildOutput = TI.BuildProject (project, true);
+				string buildOutput = TI.BuildProject (project);
 				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Initial build should run actool");
 
-				buildOutput = TI.BuildProject (project, true);
+				buildOutput = TI.BuildProject (project);
 				Assert.False (buildOutput.Contains ("actool execution started with arguments"), $"Second build should not run actool");
 
 				TI.RunAndAssert ("touch", Path.Combine (tmpDir, "Assets.xcassets/AppIcon.appiconset/AppIcon-256@2x.png"), "touch icon");
 
-				buildOutput = TI.BuildProject (project, true);
+				buildOutput = TI.BuildProject (project);
 				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Build after touching icon must run actool");
 			});
 		}
@@ -776,7 +734,7 @@ namespace Xamarin.MMP.Tests
 					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>"
 				};
 				TI.TestUnifiedExecutable (test);
-				var output = TI.BuildProject (Path.Combine (tmpDir, full ? "XM45Example.csproj" : "UnifiedExample.csproj"), true, release: true, extraArgs: "/p:ArchiveOnBuild=true ");
+				var output = TI.BuildProject (Path.Combine (tmpDir, full ? "XM45Example.csproj" : "UnifiedExample.csproj"), release: true, extraArgs: "/p:ArchiveOnBuild=true ");
 			});
 
 			// TODO: Add something to validate the archive is loadable by Xcode

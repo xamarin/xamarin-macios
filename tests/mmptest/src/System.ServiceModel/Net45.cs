@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.ServiceModel {
 			if (File.Exists (testResults))
 				File.Delete (testResults);
 
-			TI.BuildProject (testFolder + "/ServiceModel_Test.csproj", true);
+			TI.BuildProject (testFolder + "/ServiceModel_Test.csproj");
 
 			TI.RunAndAssert (testFolder + "/bin/Debug/ServiceModel_Test.app/Contents/MacOS/ServiceModel_Test", (string)null, "Run");
 			Assert.True (File.Exists (testResults));
