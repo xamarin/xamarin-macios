@@ -489,7 +489,11 @@ namespace GameController {
 
 		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 		[Export ("setStateFromExtendedGamepad:")]
-		void SetStateFromExtendedGamepad (GCExtendedGamepad extendedGamepad);
+		void SetState (GCExtendedGamepad extendedGamepad);
+
+		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Export ("setStateFromMicroGamepad:")]
+		void SetState (GCMicroGamepad microGamepad);
 	}
 
 

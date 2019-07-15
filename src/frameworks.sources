@@ -810,13 +810,13 @@ FOUNDATION_SOURCES = \
 GAMECONTROLLER_CORE_SOURCES = \
 	GameController/Enums.cs \
 	GameController/GCController.cs \
+	GameController/GCMotion.cs \
 
 GAMECONTROLLER_SOURCES = \
 	GameController/Compat.cs \
 	GameController/GCExtendedGamepadSnapshot.cs \
 	GameController/GCGamepadSnapshot.cs \
 	GameController/GCMicroGamepadSnapshot.cs \
-	GameController/GCMotion.cs \
 
 # GameKit
 

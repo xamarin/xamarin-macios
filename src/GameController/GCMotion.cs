@@ -13,35 +13,36 @@ using Foundation;
 
 namespace GameController {
 
-	[iOS (13,0), Mac (10,15), TV (13,0)]
+	// Removed the Headers for these structs because I could not compile with them.
+	// [iOS (13,0), Mac (10,15, onlyOn64: true), TV (13,0)]
 	public struct GCAcceleration {
-	
-		public double x;
 
-		public double y;
+		public double X;
 
-		public double z;
+		public double Y;
+
+		public double Z;
 	}
 
-	[iOS (13,0), Mac (10,15), TV (13,0)]
+	// [iOS (13,0), Mac (10,15, onlyOn64: true), TV (13,0)]
 	public struct GCRotationRate {
 
-		public double x;
+		public double X;
 
-		public double y;
+		public double Y;
 
-		public double z;
+		public double Z;
 	}
 
-	[iOS (13,0), Mac (10,15), TV (13,0)]
+	// [iOS (13,0), Mac (10,15, onlyOn64: true), TV (13,0)]
 	public struct GCQuaternion {
-		
-		public double x;
 
-		public double y;
+		public double X;
 
-		public double z;
+		public double Y;
 
-		public double w;
+		public double Z;
+
+		public double W;
 	}
 }
