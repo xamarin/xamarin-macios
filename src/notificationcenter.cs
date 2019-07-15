@@ -103,13 +103,13 @@ namespace NotificationCenter {
 	[BaseType (typeof (UIVibrancyEffect))]
 	interface UIVibrancyEffect_NCWidgetAdditions {
 		[iOS (10,0)]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'UIVibrancyEffect.GetWidgetEffect' instead. ")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'UIVibrancyEffect.GetWidgetEffect' instead.")]
 		[Static]
 		[Export ("widgetPrimaryVibrancyEffect")]
 		UIVibrancyEffect GetWidgetPrimaryVibrancyEffect ();
 
 		[iOS (10,0)]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'UIVibrancyEffect.GetWidgetEffect' instead. ")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'UIVibrancyEffect.GetWidgetEffect' instead.")]
 		[Static]
 		[Export ("widgetSecondaryVibrancyEffect")]
 		UIVibrancyEffect GetWidgetSecondaryVibrancyEffect ();
