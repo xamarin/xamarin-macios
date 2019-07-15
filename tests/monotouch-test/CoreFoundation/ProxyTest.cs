@@ -100,6 +100,42 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 
 		[Test]
+		public void TestPACParsingAsync ()
+		{
+			CFProxy [] proxies = null;
+			NSError error = null;
+			NSObject cbClient = null;
+			bool done = false;
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+
+			var script = File.ReadAllText (pacPath);
+			var targetUri = new Uri ("http://docs.xamarin.com");
+			
+			Exception ex;
+			bool foundProxies;
+			// similar to the other tests, but we want to ensure that the async/await API works
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+					CancellationTokenSource cancelSource = new CancellationTokenSource ();
+					CancellationToken cancelToken = cancelSource.Token;
+					var result = await CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+					proxies = result.proxies;
+					error = result.error;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+			Assert.IsNull (cbClient, "Null client");
+			Assert.IsNull (error, "Null error");
+			Assert.IsNotNull (proxies, "Not null proxies");
+			Assert.AreEqual (1, proxies.Length, "Length");
+			// assert the data of the proxy, although we are really testing the js used
+			Assert.AreEqual (8080, proxies [0].Port, "Port");
+		}
+
+		[Test]
 		public void TestPACParsingUrl ()
 		{
 			NSError error;
@@ -148,6 +184,41 @@ namespace MonoTouchFixtures.CoreFoundation {
 				// assert the data of the proxy, although we are really testing the js used
 				Assert.AreEqual (8080, proxies [0].Port, "Port");
 			}
+		}
+
+		[Test]
+		public void TestPACParsingUrlAsync ()
+		{
+			CFProxy [] proxies = null;
+			NSError error = null;
+			NSObject cbClient = null;
+			bool done = false;
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			var pacUri = new Uri (pacPath);
+			var targetUri = new Uri ("http://docs.xamarin.com");
+
+			Exception ex;
+			bool foundProxies;
+			// similar to the other tests, but we want to ensure that the async/await API works
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+					CancellationTokenSource cancelSource = new CancellationTokenSource ();
+					CancellationToken cancelToken = cancelSource.Token;
+					var result = await CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+					proxies = result.proxies;
+					error = result.error;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+			Assert.IsNull (cbClient, "Null client");
+			Assert.IsNull (error, "Null error");
+			Assert.IsNotNull (proxies, "Not null proxies");
+			Assert.AreEqual (1, proxies.Length, "Length");
+			// assert the data of the proxy, although we are really testing the js used
+			Assert.AreEqual (8080, proxies [0].Port, "Port");
 		}
 #endif
 	}

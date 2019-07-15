@@ -30,6 +30,8 @@
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using ObjCRuntime;
 using Foundation;
 
@@ -579,7 +581,7 @@ namespace CoreFoundation {
 			dict.DangerousRelease ();
 			return new CFProxySettings (dict);
 		}
-		
+
 		delegate void CFProxyAutoConfigurationResultCallbackInternal (IntPtr client, IntPtr proxyList, IntPtr error);
 		public delegate void CFProxyAutoConfigurationResultCallback (NSObject client, CFProxy[] proxyList, NSError error);
 		
@@ -671,13 +673,58 @@ namespace CoreFoundation {
 			}
 		}
 		
+		public static async Task<(CFProxy[] proxies, NSError error)> ExecuteProxyAutoConfigurationScriptAsync (string proxyAutoConfigurationScript, Uri targetUrl, CancellationToken cancellationToken)
+		{
+			if (proxyAutoConfigurationScript == null)
+				throw new ArgumentNullException (nameof (proxyAutoConfigurationScript));
+
+			if (targetUrl == null)
+				throw new ArgumentNullException (nameof (targetUrl));
+
+			using (var pacScript = new NSString (proxyAutoConfigurationScript)) 
+			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
+				if (url == null)
+					return (null, null);
+
+				CFProxy[] proxies = null;
+				NSError outError = null;
+				await Task.Run (() => {
+					// we need the runloop of THIS thread, so it is important to get it in the correct context
+					var runLoop = CFRunLoop.Current;
+					CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
+						if (proxyList != IntPtr.Zero) {
+							using (var array = new CFArray (proxyList, false)){
+								proxies = new CFProxy [array.Count];
+								for (int i = 0; i < proxies.Length; i++) {
+									var dict = new NSDictionary (array.GetValue (i));
+									proxies[i] = new CFProxy (dict);
+								}
+								if (error != IntPtr.Zero)
+								outError = new NSError (error);
+							}
+						}
+						runLoop.Stop ();
+					};
+					var clientContext = new CFStreamClientContext ();
+					using (var loopSource = new CFRunLoopSource (CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref clientContext)))
+					using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
+						runLoop.AddSource (loopSource, mode);
+						// blocks until stop is called, will be done in the cb set previously
+						runLoop.RunInMode (mode, double.MaxValue, false);
+						runLoop.RemoveSource (loopSource, mode);
+					}
+				}, cancellationToken).ConfigureAwait (false);
+				
+				return (proxies: proxies, error: outError);
+			}
+		}
+
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationURL (
 			/* CFURLRef __nonnull */ IntPtr proxyAutoConfigurationURL,
 			/* CFURLRef __nonnull */ IntPtr targetURL,
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
-
 
 		public static CFRunLoopSource ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCb, CFStreamClientContext context)
 		{
@@ -764,6 +811,56 @@ namespace CoreFoundation {
 						outError = new NSError (cbError);
 					return proxies;
 				}
+			}
+		}
+
+		public static async Task<(CFProxy[] proxies, NSError error)> ExecuteProxyAutoConfigurationUrlAsync (Uri proxyAutoConfigurationUrl, Uri targetUrl, CancellationToken cancellationToken)
+		{
+			// similar to the sync method, but we will spawn a thread and wait in an async manner to an autoreset event to be fired
+			if (proxyAutoConfigurationUrl == null)
+				throw new ArgumentNullException (nameof (proxyAutoConfigurationUrl));
+
+			if (targetUrl == null)
+				throw new ArgumentNullException (nameof (targetUrl));
+			
+			using (var pacUrl = new NSUrl (proxyAutoConfigurationUrl.AbsoluteUri)) // toll free bridge to CFUrl
+			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
+				if (pacUrl == null)
+					return (null, null);
+
+				if (url == null)
+					return (null, null);
+
+				CFProxy[] proxies = null;
+				NSError outError = null;
+				await Task.Run (() => {
+					// we need the runloop of THIS thread, so it is important to get it in the correct context
+					var runLoop = CFRunLoop.Current;
+					CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
+						if (proxyList != IntPtr.Zero) {
+							using (var array = new CFArray (proxyList, false)){
+								proxies = new CFProxy [array.Count];
+								for (int i = 0; i < proxies.Length; i++) {
+									var dict = new NSDictionary (array.GetValue (i));
+									proxies[i] = new CFProxy (dict);
+								}
+								if (error != IntPtr.Zero)
+								outError = new NSError (error);
+							}
+						}
+						runLoop.Stop ();
+					};
+					var clientContext = new CFStreamClientContext ();
+					using (var loopSource = new CFRunLoopSource (CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref clientContext)))
+					using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
+						runLoop.AddSource (loopSource, mode);
+						// blocks until stop is called, will be done in the cb set previously
+						runLoop.RunInMode (mode, double.MaxValue, false);
+						runLoop.RemoveSource (loopSource, mode);
+					}
+				}, cancellationToken).ConfigureAwait (false);
+
+				return (proxies: proxies, error: outError);
 			}
 		}
 		
