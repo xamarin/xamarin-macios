@@ -25,12 +25,14 @@ namespace UIKit {
 		}
 
 		[iOS (10,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 		static public UIVibrancyEffect CreatePrimaryVibrancyEffectForNotificationCenter ()
 		{
 			return (null as UIVibrancyEffect).GetWidgetPrimaryVibrancyEffect ();
 		}
 
 		[iOS (10,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 		static public UIVibrancyEffect CreateSecondaryVibrancyEffectForNotificationCenter ()
 		{
 			return (null as UIVibrancyEffect).GetWidgetSecondaryVibrancyEffect ();
