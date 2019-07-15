@@ -26,7 +26,7 @@ namespace Xamarin.MMP.Tests
 
 				string project = TI.GenerateUnifiedExecutableProject (config);
 				TI.NugetRestore (project);
-				TI.BuildProject (project, true);
+				TI.BuildProject (project);
 				TI.RunGeneratedUnifiedExecutable (config);
 			});
 		}
