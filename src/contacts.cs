@@ -1253,8 +1253,7 @@ namespace Contacts {
 
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[Protocol]
-	interface CNChangeHistoryEventVisitor
-	{
+	interface CNChangeHistoryEventVisitor {
 		[Abstract]
 		[Export ("visitDropEverythingEvent:")]
 		void DropEverything (CNChangeHistoryDropEverythingEvent @event);
@@ -1296,8 +1295,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryEvent : NSCopying, NSSecureCoding
-	{
+	interface CNChangeHistoryEvent : NSCopying, NSSecureCoding {
 		[Export ("acceptEventVisitor:")]
 		void AcceptEventVisitor (ICNChangeHistoryEventVisitor visitor);
 	}
@@ -1309,8 +1307,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryAddContactEvent
-	{
+	interface CNChangeHistoryAddContactEvent {
 		[Export ("contact", ArgumentSemantic.Strong)]
 		CNContact Contact { get; }
 
@@ -1321,8 +1318,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryUpdateContactEvent
-	{
+	interface CNChangeHistoryUpdateContactEvent {
 		[Export ("contact", ArgumentSemantic.Strong)]
 		CNContact Contact { get; }
 	}
@@ -1330,8 +1326,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryDeleteContactEvent
-	{
+	interface CNChangeHistoryDeleteContactEvent {
 		[Export ("contactIdentifier", ArgumentSemantic.Strong)]
 		string ContactIdentifier { get; }
 	}
@@ -1339,8 +1334,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryAddGroupEvent
-	{
+	interface CNChangeHistoryAddGroupEvent {
 		[Export ("group", ArgumentSemantic.Strong)]
 		CNGroup Group { get; }
 
@@ -1351,8 +1345,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryUpdateGroupEvent
-	{
+	interface CNChangeHistoryUpdateGroupEvent {
 		[Export ("group", ArgumentSemantic.Strong)]
 		CNGroup Group { get; }
 	}
@@ -1360,8 +1353,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryDeleteGroupEvent
-	{
+	interface CNChangeHistoryDeleteGroupEvent {
 		[Export ("groupIdentifier", ArgumentSemantic.Strong)]
 		string GroupIdentifier { get; }
 	}
@@ -1369,8 +1361,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryAddMemberToGroupEvent
-	{
+	interface CNChangeHistoryAddMemberToGroupEvent {
 		[Export ("member", ArgumentSemantic.Strong)]
 		CNContact Member { get; }
 
@@ -1381,8 +1372,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryRemoveMemberFromGroupEvent
-	{
+	interface CNChangeHistoryRemoveMemberFromGroupEvent {
 		[Export ("member", ArgumentSemantic.Strong)]
 		CNContact Member { get; }
 
@@ -1393,8 +1383,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryAddSubgroupToGroupEvent
-	{
+	interface CNChangeHistoryAddSubgroupToGroupEvent {
 		[Export ("subgroup", ArgumentSemantic.Strong)]
 		CNGroup Subgroup { get; }
 
@@ -1405,8 +1394,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
-	interface CNChangeHistoryRemoveSubgroupFromGroupEvent
-	{
+	interface CNChangeHistoryRemoveSubgroupFromGroupEvent {
 		[Export ("subgroup", ArgumentSemantic.Strong)]
 		CNGroup Subgroup { get; }
 
@@ -1421,8 +1409,7 @@ namespace Contacts {
 
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (CNFetchRequest))]
-	interface CNChangeHistoryFetchRequest : NSSecureCoding
-	{
+	interface CNChangeHistoryFetchRequest : NSSecureCoding {
 		[NullAllowed, Export ("startingToken", ArgumentSemantic.Copy)]
 		NSData StartingToken { get; set; }
 
@@ -1445,8 +1432,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CNFetchResult
-	{
+	interface CNFetchResult {
 		[Export ("value", ArgumentSemantic.Strong)]
 		NSObject Value { get; }
 
