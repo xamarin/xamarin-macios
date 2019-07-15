@@ -245,6 +245,18 @@ namespace CoreText {
 			NSRange range = new NSRange () { Location = 0, Length = 0 };
 			return CTRunGetTypographicBounds (handle, range, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern void CTRunGetBaseAdvancesAndOrigins (/* CTRunRef */ IntPtr runRef, /* CFRange */ NSRange range, CGSize[] advancesBuffer, CGPoint[] originsBuffer);
+
+		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		public void GetBaseAdvancesAndOrigins (NSRange range, out CGSize[] advancesBuffer, out CGPoint[] originsBuffer)
+		{
+			advancesBuffer = GetBuffer<CGSize> (range, null);
+			originsBuffer = GetBuffer<CGPoint> (range, null);
+			CTRunGetBaseAdvancesAndOrigins (handle, range, advancesBuffer, originsBuffer);
+		}
 	}
 }
 
