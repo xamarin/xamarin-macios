@@ -4,20 +4,16 @@ include $(TOP)/Make.config
 
 MMP=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin/mmp
 
-export MD_APPLE_SDK_ROOT=$(shell dirname `dirname $(XCODE94_DEVELOPER_ROOT)`)
+export MD_APPLE_SDK_ROOT:=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 export TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+export XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR))
 
-
-TESTS_4_0 = \
-	embedded-mono \
-	system-mono \
-	embedded-mono-profile \
-	system-mono-profile \
-
-TESTS_UNIFIED = \
+ALL_TESTS = \
 	custom-bundle-name \
+	embedded-mono \
+	embedded-mono-profile \
 	link-frameworks-1 \
 	link-keep-resources-1 \
 	link-keep-resources-2 \
@@ -25,21 +21,16 @@ TESTS_UNIFIED = \
 	link-preserve-assembly \
 	link-remove-attributes-1 \
 	link-safe-1 \
-
-ALL_TESTS = \
-	$(TESTS_UNIFIED) \
-	$(TESTS_4_0) \
+	system-mono \
+	system-mono-profile \
 
 all-local:: run
 
-embedded-mono/bin system-mono/bin embedded-mono-profile/bin system-mono-profile/bin $(foreach test,$(TESTS_UNIFIED),$(test)/bin): dylib/libTest.dylib
-	DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(SYSTEM_XIBUILD) -- $(@D)/$(@D).csproj
-
-%/bin: dylib/libTest.dylib
-	DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(MDTOOL) build $*/$*.csproj
+$(foreach test,$(ALL_TESTS),$(test)/bin): dylib/libTest.dylib
+	$(QF_GEN) if ! $(SYSTEM_XIBUILD) -- $(@D)/$(@D).csproj; then EC=$$?; rm -Rf $@; exit $$EC; fi
 
 dylib/libTest.dylib: dylib/src.c
-	clang $< -o$@ -arch i386 -arch x86_64 -shared
+	$(QF_GEN) $(XCODE_CC) $< -o$@ -arch x86_64 -shared
 
 build: $(foreach test,$(ALL_TESTS),$(test)/bin)
 
@@ -47,6 +38,11 @@ run run-test run-tests:
 	$(MAKE) clean
 	$(MAKE) build
 	$(MAKE) exec
+
+run-test-%:
+	rm -Rf $*/bin
+	$(MAKE) $*/bin
+	$(MAKE) exec-$*
 
 exec-system-mono-profile exec-embedded-mono-profile: export MONO_ENV_OPTIONS=--profile=log:output=output.mlpd
 

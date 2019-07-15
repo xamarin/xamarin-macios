@@ -10,7 +10,7 @@ namespace LocalAuthentication {
 	public enum LABiometryType : long {
 		None,
 		TouchId,
-		[NoMac]
+		[Mac (10,15, onlyOn64: true)]
 		FaceId,
 #if !XAMCORE_4_0
 		[NoMac]

@@ -41,6 +41,4 @@
 !missing-type! NSFileProviderRequest not bound
 !missing-type! NSFileProviderSearchQuery not bound
 ## appended from unclassified file
-!missing-selector! NSFileProviderExtension::performActionWithIdentifier:onItemsWithIdentifiers:completionHandler: not bound
-## appended from unclassified file
 !missing-selector! NSFileProviderManager::setDownloadPolicy:forItemWithIdentifier:completionHandler: not bound
