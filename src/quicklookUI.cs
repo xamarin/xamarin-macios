@@ -171,6 +171,6 @@ namespace QuickLookUI {
 
 		[Mac (10,15, onlyOn64: true)]
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
-		void PreparePreviewOfFile (NSUrl url, Action<NSError> ItemLoadingHandler);
+		void PreparePreviewOfFile (NSUrl url, Action<NSError> completionHandler);
 	}
 }
