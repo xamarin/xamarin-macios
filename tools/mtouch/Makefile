@@ -29,6 +29,7 @@ UNREFERENCED_SYMBOLS = 							\
 	_xamarin_start_wwan							\
 	_xamarin_timezone_get_data					\
 	_xamarin_timezone_get_names					\
+	_xamarin_timezone_get_local_name			\
 	_xamarin_IntPtr_objc_msgSend_IntPtr			\
 	_xamarin_IntPtr_objc_msgSendSuper_IntPtr	\
 	_xamarin_release_managed_ref				\
