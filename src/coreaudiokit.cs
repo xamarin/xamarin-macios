@@ -174,6 +174,8 @@ namespace CoreAudioKit {
 	}
 
 	[iOS (8,0)]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (UIView))]
 	interface CAInterAppAudioSwitcherView {
 		[Export ("initWithFrame:")]
@@ -190,6 +192,8 @@ namespace CoreAudioKit {
 	}
 
 	[iOS (8,0)]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (UIView))]
 	interface CAInterAppAudioTransportView {
 		[Export ("initWithFrame:")]
