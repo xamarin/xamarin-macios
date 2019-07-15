@@ -580,99 +580,102 @@ namespace CoreFoundation {
 			return new CFProxySettings (dict);
 		}
 		
-		public delegate void CFProxyAutoConfigurationResultCallback (IntPtr client, NSObject[] proxyList, NSError error);
-		static CFProxyAutoConfigurationResultCallback static_AutoConfigurationResult = TrampolineAutoConfigurationResult;
-
-		[MonoPInvokeCallback (typeof (CFProxyAutoConfigurationResultCallback))]
-		static void TrampolineAutoConfigurationResult (IntPtr block, NSObject[] proxyList, NSError error)
-		{
-			var del = BlockLiteral.GetTarget<Action<NSObject [], NSError>> (block);
-			if (del != null) {
-				del (proxyList, error);
-			}
-		}
-
-		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-		[UserDelegateType (typeof (CFProxyAutoConfigurationResultCallback))]
-		internal delegate void DCFProxyAutoConfigurationResultCallback (IntPtr block, IntPtr client, IntPtr proxyList, IntPtr error);
-
-		static internal class SDCFProxyAutoConfigurationResultCallback {
-			static internal readonly DCFProxyAutoConfigurationResultCallback Handler = Invoke;
-
-			[MonoPInvokeCallback (typeof (DCFProxyAutoConfigurationResultCallback))]
-			static unsafe void Invoke (IntPtr block, IntPtr client, IntPtr proxyList, IntPtr error)
-			{
-				Console.WriteLine ("DUUUUDE WE ARE IN");
-				var descriptor = (BlockLiteral*) block;
-				Console.WriteLine ("Got the block!");
-				var del = descriptor->Target as CFProxyAutoConfigurationResultCallback;
-				Console.WriteLine ("CASTED!");
-				if (del != null)
-					del (client, NSArray.ArrayFromHandle<NSObject> (proxyList), Runtime.GetNSObject<NSError> (error));
-			}
-		}
+		delegate void CFProxyAutoConfigurationResultCallback (IntPtr client, IntPtr proxyList, IntPtr error);
 		
 		[DllImport (Constants.CFNetworkLibrary)]
-		extern unsafe static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationScript (
+		extern static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationScript (
 			/* CFStringRef __nonnull */ IntPtr proxyAutoConfigurationScript,
 			/* CFURLRef __nonnull */ IntPtr targetURL,
-			/* CFProxyAutoConfigurationResultCallback __nonnull */ ref BlockLiteral cb,
-			/* CFStreamClientContext * __nonnull */ IntPtr clientContext);
+			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallback cb,
+			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext  clientContext);
 		
-		public static CFRunLoopSource ExecuteProxyAutoConfigurationScript (NSString proxyAutoConfigurationScript, NSUrl targetURL, CFProxyAutoConfigurationResultCallback resultCallback, CFStreamClientContext clientContext)
+		public static CFProxy[] ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl)
 		{
 			if (proxyAutoConfigurationScript == null)
-				throw new ArgumentNullException ("proxyAutoConfigurationScript");
+				throw new ArgumentNullException (nameof (proxyAutoConfigurationScript));
 
-			if (targetURL == null)
-				throw new ArgumentNullException ("targetURL");
+			if (targetUrl == null)
+				throw new ArgumentNullException (nameof (targetUrl));
 
-			if (resultCallback == null)
-				throw new ArgumentNullException ("resultCallback");
-			
-			IntPtr clientPtr = Marshal.AllocHGlobal (Marshal.SizeOf (clientContext));
-			Marshal.StructureToPtr (clientContext, clientPtr, false);
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_AutoConfigurationResult, resultCallback);
-			//block_handler.SetupBlockUnsafe (SDCFProxyAutoConfigurationResultCallback.Handler, resultCallback);
-		
-			try {
-				IntPtr source = CFNetworkExecuteProxyAutoConfigurationScript (proxyAutoConfigurationScript.Handle, targetURL.Handle, ref block_handler, clientPtr);
-				return (source == IntPtr.Zero) ? null : new CFRunLoopSource (source);
-			} finally {
-				block_handler.CleanupBlock ();
+			using (var pacScript = new NSString (proxyAutoConfigurationScript)) 
+			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
+				if (url == null)
+					return null;
+
+				CFProxy[] proxies = null;
+				var runLoop = CFRunLoop.Current;
+
+				CFProxyAutoConfigurationResultCallback cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
+					if (proxyList != IntPtr.Zero) {
+						var array = new CFArray (proxyList, false);
+						proxies = new CFProxy [array.Count];
+						for (int i = 0; i < proxies.Length; i++) {
+							var dict = new NSDictionary (array.GetValue (i));
+							proxies[i] = new CFProxy (dict);
+						}
+						array.Dispose ();
+					}
+					runLoop.Stop ();
+				};
+
+				var clientContext = new CFStreamClientContext ();
+				using (var loopSource = new CFRunLoopSource (CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref clientContext)))
+				using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
+					runLoop.AddSource (loopSource, mode);
+					runLoop.RunInMode (mode, double.MaxValue, false);
+					runLoop.RemoveSource (loopSource, mode);
+					return proxies;
+				}
 			}
-
 		}
 		
 		[DllImport (Constants.CFNetworkLibrary)]
-		extern unsafe static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationURL (
+		extern static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationURL (
 			/* CFURLRef __nonnull */ IntPtr proxyAutoConfigurationURL,
 			/* CFURLRef __nonnull */ IntPtr targetURL,
-			/* CFProxyAutoConfigurationResultCallback __nonnull */ void* cb,
-			/* CFStreamClientContext * __nonnull */ IntPtr clientContext);
+			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallback cb,
+			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
 
-		public static CFRunLoopSource ExecuteProxyAutoConfigurationURL (NSUrl proxyAutoConfigurationURL, NSUrl targetURL, CFProxyAutoConfigurationResultCallback resultCallback, CFStreamClientContext clientContext)
+
+		public static CFProxy[] ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl)
 		{
-			if (proxyAutoConfigurationURL == null)
-				throw new ArgumentNullException ("proxyAutoConfigurationURL");
+			if (proxyAutoConfigurationUrl == null)
+				throw new ArgumentNullException (nameof (proxyAutoConfigurationUrl));
 
-			if (targetURL == null)
-				throw new ArgumentNullException ("targetURL");
+			if (targetUrl == null)
+				throw new ArgumentNullException (nameof (targetUrl));
 
-			if (resultCallback == null)
-				throw new ArgumentNullException ("resultCallback");
-			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_AutoConfigurationResult, resultCallback);
-				try {
-					IntPtr clientPtr = Marshal.AllocHGlobal (Marshal.SizeOf (clientContext));
-					Marshal.StructureToPtr (clientContext, clientPtr, false);
-					IntPtr source = CFNetworkExecuteProxyAutoConfigurationURL (proxyAutoConfigurationURL.Handle, targetURL.Handle, (void*) block_ptr_handler, clientPtr);
-					return (source == IntPtr.Zero) ? null : new CFRunLoopSource (source);
-				} finally {
-					block_handler.CleanupBlock ();
+			using (var pacUrl = new NSUrl (proxyAutoConfigurationUrl.AbsoluteUri)) // toll free bridge to CFUrl
+			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
+				if (pacUrl == null)
+					return null;
+
+				if (url == null)
+					return null;
+
+				CFProxy[] proxies = null;
+				var runLoop = CFRunLoop.Current;
+
+				CFProxyAutoConfigurationResultCallback cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
+					if (proxyList != IntPtr.Zero) {
+						var array = new CFArray (proxyList, false);
+						proxies = new CFProxy [array.Count];
+						for (int i = 0; i < proxies.Length; i++) {
+							var dict = new NSDictionary (array.GetValue (i));
+							proxies[i] = new CFProxy (dict);
+						}
+						array.Dispose ();
+					}
+					runLoop.Stop ();
+				};
+
+				var clientContext = new CFStreamClientContext ();
+				using (var loopSource = new CFRunLoopSource (CFNetworkExecuteProxyAutoConfigurationURL(pacUrl.Handle, url.Handle, cb, ref clientContext)))
+				using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
+					runLoop.AddSource (loopSource, mode);
+					runLoop.RunInMode (mode, double.MaxValue, false);
+					runLoop.RemoveSource (loopSource, mode);
+					return proxies;
 				}
 			}
 		}
