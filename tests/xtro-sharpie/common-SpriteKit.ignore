@@ -12,3 +12,6 @@
 ## both introduced and deprecated in Xcode8
 !missing-selector! SKView::preferredFrameRate not bound
 !missing-selector! SKView::setPreferredFrameRate: not bound
+
+## missing in xcode 11 beta 3 https://feedbackassistant.apple.com/feedback/6644627 https://github.com/xamarin/maccore/issues/1887
+!missing-pinvoke! floatToHalfFloat is not bound
