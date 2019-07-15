@@ -647,6 +647,27 @@ namespace Introspection {
 					return true;
 				}
 				break;
+#if !__MACOS__
+			case "ARSkeletonDefinition":
+				switch (selectorName) {
+				case "indexForJointName:":
+				case "defaultBody2DSkeletonDefinition":
+				case "defaultBody3DSkeletonDefinition":
+					// This selector does not exist in the simulator
+					if (Runtime.Arch == Arch.SIMULATOR)
+						return true;
+					break;
+				}
+				break;
+#endif
+			case "INParameter":
+				switch (selectorName) {
+				case "copyWithZone:":
+					if (!TestRuntime.CheckXcodeVersion (10, 0))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			// old binding mistake

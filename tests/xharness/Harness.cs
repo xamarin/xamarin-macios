@@ -111,11 +111,37 @@ namespace xharness
 		public string PeriodicCommandArguments { get; set; }
 		public TimeSpan PeriodicCommandInterval { get; set; }
 		// whether tests that require access to system resources (system contacts, photo library, etc) should be executed or not
-		public bool IncludeSystemPermissionTests { get; set; } = true;
+		public bool? IncludeSystemPermissionTests { get; set; }
 
 		public Harness ()
 		{
 			LaunchTimeout = InWrench ? 3 : 120;
+		}
+
+		public bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device)
+		{
+			// If we've been told something in particular, that takes precedence.
+			if (IncludeSystemPermissionTests.HasValue)
+				return IncludeSystemPermissionTests.Value;
+
+			// If we haven't been told, try to be smart.
+			switch (platform) {
+			case TestPlatform.iOS:
+			case TestPlatform.Mac:
+			case TestPlatform.Mac_Full:
+			case TestPlatform.Mac_Modern:
+			case TestPlatform.Mac_System:
+				// On macOS we can't edit the TCC database easily
+				// (it requires adding the mac has to be using MDM: https://carlashley.com/2018/09/28/tcc-round-up/)
+				// So by default ignore any tests that would pop up permission dialogs in CI.
+				return !InCI;
+			default:
+				// On device we have the same issue as on the mac: we can't edit the TCC database.
+				if (device)
+					return !InCI;
+				// But in the simulator we can just write to the simulator's TCC database (and we do)
+				return true;
+			}
 		}
 
 		public bool IsBetaXcode {

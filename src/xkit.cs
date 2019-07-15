@@ -885,6 +885,12 @@ namespace UIKit {
 		[Export ("showsControlCharacters")]
 		bool ShowsControlCharacters { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Please use 'UsesDefaultHyphenation' or 'NSParagraphStyle.HyphenationFactor' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use 'UsesDefaultHyphenation' or 'NSParagraphStyle.HyphenationFactor' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Please use 'UsesDefaultHyphenation' or 'NSParagraphStyle.HyphenationFactor' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use 'UsesDefaultHyphenation' or 'NSParagraphStyle.HyphenationFactor' instead.")]
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("hyphenationFactor")]
 #if MONOMAC
 		float HyphenationFactor { get; set; } /* This is defined as float in AppKit headers. */
@@ -1006,9 +1012,20 @@ namespace UIKit {
 		[Export ("enumerateEnclosingRectsForGlyphRange:withinSelectedGlyphRange:inTextContainer:usingBlock:")]
 		void EnumerateEnclosingRects (NSRange glyphRange, NSRange selectedRange, NSTextContainer textContainer, NSTextLayoutEnumerateEnclosingRects callback);
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Protected] // Can be overridden
 		[Export ("showCGGlyphs:positions:count:font:matrix:attributes:inContext:")]
 		void ShowGlyphs (IntPtr glyphs, IntPtr positions, nuint glyphCount, NSFont font, CGAffineTransform textMatrix, NSDictionary attributes, [NullAllowed] CGContext graphicsContext);
+
+		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Protected] // Can be overridden
+		[Export ("showCGGlyphs:positions:count:font:textMatrix:attributes:inContext:")]
+		void ShowGlyphs (IntPtr glyphs, IntPtr positions, nint glyphCount, NSFont font, CGAffineTransform textMatrix, NSDictionary attributes, [NullAllowed] CGContext graphicsContext);
 
 		// Unfortunately we can't provide a nicer API for this, because it uses C-style arrays.
 		// And providing a nicer overload when it's only purpose is to be overridden is useless.
@@ -1037,6 +1054,11 @@ namespace UIKit {
 		[TV (12, 0), iOS (12, 0)]
 		[Export ("limitsLayoutForSuspiciousContents")]
 		bool LimitsLayoutForSuspiciousContents { get; set; }
+
+		[Mac (10,15, onlyOn64: true)]
+		[TV (13,0), iOS (13,0)]
+		[Export ("usesDefaultHyphenation")]
+		bool UsesDefaultHyphenation { get; set; }
 	}
 
 	[NoiOS][NoWatch][NoTV]

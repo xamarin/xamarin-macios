@@ -311,12 +311,14 @@ namespace Introspection
 			"Kullback", // Kullback-Leibler Divergence
 			"Langauges",
 			"Lacunarity",
+			"Latm", //  Low Overhead Audio Transport Multiplex
 			"Ldaps",
 			"Lerp",
 			"Linecap",
 			"Lingustic",
 			"libcompression",
 			"libdispatch",
+			"Loas", // Low Overhead Audio Stream 
 			"Lod",
 			"Lopass",
 			"Lowlevel",

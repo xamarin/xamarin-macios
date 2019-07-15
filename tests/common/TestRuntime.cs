@@ -678,6 +678,26 @@ partial class TestRuntime
 			break;
 		}
 	}
+
+	public static void RequestContactsPermission (bool assert_granted = false)
+	{
+		switch (CNContactStore.GetAuthorizationStatus (CNEntityType.Contacts)) {
+		case CNAuthorizationStatus.NotDetermined:
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the contacts.");
+
+			// There's a static method to check for permission, but an instance method to ask for permission
+			using (var store = new CNContactStore ()) {
+				store.RequestAccess (CNEntityType.Contacts, (granted, error) => {
+					Console.WriteLine ("Contacts permission {0} (error: {1})", granted ? "granted" : "denied", error);
+				});
+			}
+			break;
+		}
+
+		CheckContactsPermission (assert_granted);
+	}
+
 #endif // XAMCORE_2_0
 
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__

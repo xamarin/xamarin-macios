@@ -8,8 +8,6 @@
 // Copyright 2012-2014 Xamarin Inc
 //
 
-#if !WATCH
-
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -31,6 +29,7 @@ using UIKit;
 namespace CoreMedia {
 
 	// untyped enum (used as an OSStatus) -> CMSampleBuffer.h
+	[Watch (6,0)]
 	public enum CMSampleBufferError : int {
 		None							= 0,
 		AllocationFailed				= -12730,
@@ -50,6 +49,7 @@ namespace CoreMedia {
 		Invalidated						= -12744,
 	}
 
+	[Watch (6,0)]
 	public class CMSampleBuffer : ICMAttachmentBearer 
 #if !COREBUILD
 	, IDisposable
@@ -817,6 +817,7 @@ namespace CoreMedia {
 			/* CMSampleBufferRef* */ out IntPtr sBufOut);
 
 #if !XAMCORE_4_0
+#if !WATCH
 		[Obsolete ("Use the 'CreateReadyWithImageBuffer' overload with a single ref, not array, 'CMSampleTimingInfo' parameter.")]
 		[iOS (8,0)][Mac (10,10)]
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer, 
@@ -828,7 +829,8 @@ namespace CoreMedia {
 				throw new ArgumentException ("Only a single sample is allowed.", nameof (sampleTiming));
 			return CreateReadyWithImageBuffer (imageBuffer, formatDescription, sampleTiming, out error);
 		}
-#endif
+#endif // !WATCH
+#endif // !XAMCORE_4_0
 		[iOS (8,0)][Mac (10,10)]
 		public static CMSampleBuffer CreateReadyWithImageBuffer (CVImageBuffer imageBuffer,
 			CMFormatDescription formatDescription, ref CMSampleTimingInfo sampleTiming, out CMSampleBufferError error)
@@ -850,7 +852,9 @@ namespace CoreMedia {
 #endif // !COREBUILD
 	}
 
+#if !WATCH
 	public enum LensStabilizationStatus { Active, OutOfRange, Unavailable, Off, None }
+#endif
 
 #if !COREBUILD
 	public partial class CMSampleBufferAttachmentSettings : DictionaryContainer {
@@ -1012,6 +1016,7 @@ namespace CoreMedia {
 			}
 		}
 
+#if !WATCH
 		[iOS (9,0)]
 		public LensStabilizationStatus StillImageLensStabilizationStatus {
 			get {
@@ -1031,9 +1036,8 @@ namespace CoreMedia {
 				return LensStabilizationStatus.None;
 			}
 		}
-#endif
+#endif // !WATCH
+#endif // !MONOMAC
 	}
 #endif
 }
-
-#endif // !WATCH

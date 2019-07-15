@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml;
-using MonoMac.AppKit;
+using AppKit;
 
 // Test
 // * application use some attributes that the linker will remove (unneeded at runtime)
@@ -18,7 +18,7 @@ using MonoMac.AppKit;
 // removed in release builds only
 [assembly: Debuggable (DebuggableAttribute.DebuggingModes.Default)]
 
-[assembly: MonoMac.Foundation.LinkerSafe]
+[assembly: Foundation.LinkerSafe]
 
 // not removed
 [assembly: AssemblyCompany ("Xamarin Inc.")]
@@ -33,12 +33,12 @@ namespace Xamarin.Mac.Linker.Test {
 	[System.Obsolete]
 //	[System.Xml.MonoFIX]
 
-	[MonoMac.ObjCRuntime.Availability]
-	[MonoMac.ObjCRuntime.Lion]
-	[MonoMac.ObjCRuntime.MountainLion]
-	[MonoMac.ObjCRuntime.Mavericks]
-	[MonoMac.ObjCRuntime.Since (5,0)]
-	[MonoMac.ObjCRuntime.ThreadSafe]
+	[ObjCRuntime.Availability]
+	[ObjCRuntime.Deprecated (ObjCRuntime.PlatformName.MacOSX)]
+	[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX)]
+	[ObjCRuntime.Introduced (ObjCRuntime.PlatformName.MacOSX)]
+	[ObjCRuntime.Unavailable (ObjCRuntime.PlatformName.MacOSX)]
+	[ObjCRuntime.ThreadSafe]
 
 	[DebuggerDisplay ("")]
 	[DebuggerNonUserCode]
@@ -50,12 +50,12 @@ namespace Xamarin.Mac.Linker.Test {
 	class DebugLinkRemoveAttributes {
 
 		// will be removed - but the instance field will be kept
-		[MonoMac.Foundation.Preserve]
+		[Foundation.Preserve]
 		// removed in release builds only
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		XmlDocument document;
 
-		[MonoMac.Foundation.Advice ("")]
+		[Foundation.Advice ("")]
 		// removed in release builds only
 		[DebuggerHidden]
 		[DebuggerStepperBoundary]
@@ -88,13 +88,13 @@ namespace Xamarin.Mac.Linker.Test {
 			try {
 				var type = typeof (DebugLinkRemoveAttributes);
 				CheckPresence (type, "System.ObsoleteAttribute", false);
-				CheckPresence (type, "MonoMac.Foundation.AdviceAttribute", false);
-				CheckPresence (type, "MonoMac.ObjCRuntime.AvailabilityAttribute", false);
-				CheckPresence (type, "MonoMac.ObjCRuntime.LionAttribute", false);
-				CheckPresence (type, "MonoMac.ObjCRuntime.MountainLionAttribute", false);
-				CheckPresence (type, "MonoMac.ObjCRuntime.MavericksAttribute", false);
-				CheckPresence (type, "MonoMac.ObjCRuntime.SinceAttribute", false);
-				CheckPresence (type, "MonoMac.ObjCRuntime.ThreadSafeAttribute", false);
+				CheckPresence (type, "Foundation.AdviceAttribute", false);
+				CheckPresence (type, "ObjCRuntime.AvailabilityAttribute", false);
+				CheckPresence (type, "ObjCRuntime.LionAttribute", false);
+				CheckPresence (type, "ObjCRuntime.MountainLionAttribute", false);
+				CheckPresence (type, "ObjCRuntime.MavericksAttribute", false);
+				CheckPresence (type, "ObjCRuntime.SinceAttribute", false);
+				CheckPresence (type, "ObjCRuntime.ThreadSafeAttribute", false);
 				CheckPresence (type, "System.Diagnostics.DebuggerDisplay", debug);
 				CheckPresence (type, "System.Diagnostics.DebuggerNonUserCode", debug);
 				CheckPresence (type, "System.Diagnostics.DebuggerTypeProxy", debug);
@@ -102,19 +102,19 @@ namespace Xamarin.Mac.Linker.Test {
 				CheckPresence (type, "System.Runtime.InteropServices.GuidAttribute", true);
 
 				var assembly = type.Assembly;
-				CheckPresence (assembly, "MonoMac.Foundation.LinkerSafeAttribute", false);
+				CheckPresence (assembly, "Foundation.LinkerSafeAttribute", false);
 				CheckPresence (assembly, "System.Diagnostics.DebuggableAttribute", debug);
 				CheckPresence (assembly, "System.Reflection.AssemblyCompanyAttribute", true);
 
 				var method = type.GetMethod ("CheckPresence", BindingFlags.Static | BindingFlags.NonPublic);
-				CheckPresence (method, "MonoMac.Foundation.AdviceAttribute", false);
+				CheckPresence (method, "Foundation.AdviceAttribute", false);
 				CheckPresence (method, "System.Diagnostics.DebuggerHiddenAttribute", debug);
 				CheckPresence (method, "System.Diagnostics.DebuggerStepperBoundaryAttribute", debug);
 				CheckPresence (method, "System.Diagnostics.DebuggerStepThroughAttribute", debug);
 				CheckPresence (method, "System.LoaderOptimizationAttribute", true);
 
 				var field = type.GetField ("document", BindingFlags.Instance| BindingFlags.NonPublic);
-				CheckPresence (field, "MonoMac.Foundation.PreserveAttribute", false);
+				CheckPresence (field, "Foundation.PreserveAttribute", false);
 				CheckPresence (field, "System.Diagnostics.DebuggerBrowsableAttribute", debug);
 			}
 			finally {

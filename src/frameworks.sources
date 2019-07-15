@@ -496,9 +496,6 @@ COREIMAGE_SOURCES = \
 	CoreImage/CISampler.cs \
 	CoreImage/CIVector.cs \
 
-COREIMAGE_API_SOURCES = \
-	CoreMedia/Enums.cs \
-
 # CoreLocation
 
 CORELOCATION_CORE_SOURCES = \
@@ -529,6 +526,9 @@ COREMEDIA_SOURCES = \
 	CoreMedia/CMCustomBlockAllocator.cs \
 	CoreMedia/CMBufferQueue.cs \
 	CoreMedia/CMMemoryPool.cs \
+
+COREMEDIA_API_SOURCES = \
+	CoreMedia/Enums.cs \
 
 # CoreMidi
 
@@ -1744,6 +1744,7 @@ COMMON_FRAMEWORKS =         \
 	AVFoundation            \
 	CoreBluetooth           \
 	CoreFoundation          \
+	CoreMedia               \
 	CoreML                  \
 	CoreVideo               \
 	Compression             \
@@ -1772,7 +1773,6 @@ MAC_FRAMEWORKS =            \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMedia               \
 	CoreMidi                \
 	CoreMotion		\
 	CoreServices            \
@@ -1793,6 +1793,7 @@ MAC_FRAMEWORKS =            \
 	IOSurface 		\
 	iTunesLibrary           \
 	JavaScriptCore          \
+	LinkPresentation        \
 	LocalAuthentication     \
 	MapKit                  \
 	MediaAccessibility      \
@@ -1862,7 +1863,6 @@ IOS_FRAMEWORKS =         \
 	CoreImage \
 	CoreLocation \
 	CoreMIDI \
-	CoreMedia \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
@@ -1887,6 +1887,7 @@ IOS_FRAMEWORKS =         \
 	IntentsUI \
 	IOSurface \
 	JavaScriptCore \
+	LinkPresentation \
 	LocalAuthentication \
 	MapKit \
 	MediaAccessibility \
@@ -1973,7 +1974,6 @@ TVOS_FRAMEWORKS =           \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMedia               \
 	CoreSpotlight			\
 	CoreText                \
 	DeviceCheck             \

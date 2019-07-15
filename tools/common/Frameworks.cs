@@ -187,6 +187,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
 					{ "PencilKit", "PencilKit", 10,15 },
 					{ "Speech", "Speech", 10,15 },
+					{ "LinkPresentation", "LinkPresentation", 10,15 },
 				};
 			}
 			return mac_frameworks;
@@ -315,6 +316,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 				{ "PencilKit", "PencilKit", 13, 0 },
+				{ "LinkPresentation", "LinkPresentation", 13, 0 },
 			};
 		}
 		return ios_frameworks;
@@ -369,6 +371,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AuthenticationServices", "AuthenticationServices", 6 },
 				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
+				{ "CoreMedia", "CoreMedia", 6 },
 
 			};
 		}

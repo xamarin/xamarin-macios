@@ -577,6 +577,10 @@ namespace ClockKit {
 		[Static]
 		[Export ("localizableTextProviderWithStringsFileFormatKey:textProviders:")]
 		CLKTextProvider CreateLocalizable (string formatKey, CLKTextProvider[] textProviders);
+
+		[NullAllowed]
+		[Export ("accessibilityLabel")]
+		string AccessibilityLabel { get; set; }
 	}
 
 	[BaseType (typeof (CLKTextProvider))]
@@ -600,10 +604,6 @@ namespace ClockKit {
 		[NullAllowed]
 		[Export ("shortText")]
 		string ShortText { get; set; }
-
-		[NullAllowed]
-		[Export ("accessibilityLabel")]
-		string AccessibilityLabel { get; set; }
 	}
 
 	[BaseType (typeof (CLKTextProvider))]

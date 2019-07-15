@@ -63,17 +63,20 @@ namespace MonoTouchFixtures.MediaAccessibility {
 
 			var temp = String.Empty;
 			using (NSUrl url = new NSUrl (NSBundle.MainBundle.ResourceUrl.AbsoluteString + "basn3p08.png")) {
-				Assert.True (MAImageCaptioning.SetCaption (url, "xamarin", out var e), "Set");
-				Assert.Null (e, "ro / set / no error"); // weird, it can't be saved back to the file metadata
+				// In Xcode 11 beta 3, the native P/Invoke will very helpfully crash if called with a read-only file path.
+				// So don't do that.
 
-				var s = MAImageCaptioning.GetCaption (url, out e);
-				Assert.Null (s, "ro / roundtrip"); // not very surprising since Set can't save it
-				Assert.Null (e, "ro / get / no error");
+				//Assert.True (MAImageCaptioning.SetCaption (url, "xamarin", out var e), "Set");
+				//Assert.Null (e, "ro / set / no error"); // weird, it can't be saved back to the file metadata
 
-				Assert.True (MAImageCaptioning.SetCaption (url, "xamarin", out e), "Set 2");
-				s = MAImageCaptioning.GetCaption (url, out e);
-				Assert.Null (s, "ro / back to original");
-				Assert.Null (e, "ro / get back / no error");
+				//var s = MAImageCaptioning.GetCaption (url, out e);
+				//Assert.Null (s, "ro / roundtrip"); // not very surprising since Set can't save it
+				//Assert.Null (e, "ro / get / no error");
+
+				//Assert.True (MAImageCaptioning.SetCaption (url, "xamarin", out e), "Set 2");
+				//s = MAImageCaptioning.GetCaption (url, out e);
+				//Assert.Null (s, "ro / back to original");
+				//Assert.Null (e, "ro / get back / no error");
 
 				// 2nd try with a read/write copy
 				temp = Path.Combine (Path.GetTempPath (), "basn3p08.png");

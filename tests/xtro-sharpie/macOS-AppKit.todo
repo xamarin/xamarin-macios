@@ -3,8 +3,6 @@
 !deprecated-attribute-missing! NSButtonCell::setKeyEquivalentFont:size: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSClipView::copiesOnScroll missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSClipView::setCopiesOnScroll: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSLayoutManager::hyphenationFactor missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSLayoutManager::setHyphenationFactor: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSSplitViewDelegate::splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSWorkspace::absolutePathForAppBundleWithIdentifier: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSWorkspace::fullPathForApplication: missing a [Deprecated] attribute
@@ -29,10 +27,8 @@
 !missing-field! NSFontDescriptorSystemDesignMonospaced not bound
 !missing-field! NSFontDescriptorSystemDesignRounded not bound
 !missing-field! NSFontDescriptorSystemDesignSerif not bound
-!missing-field! NSSourceTextScalingDocumentAttribute not bound
 !missing-field! NSSourceTextScalingDocumentOption not bound
 !missing-field! NSTargetTextScalingDocumentOption not bound
-!missing-field! NSTextScalingDocumentAttribute not bound
 !missing-protocol! NSCollectionLayoutContainer not bound
 !missing-protocol! NSCollectionLayoutEnvironment not bound
 !missing-protocol! NSCollectionLayoutVisibleItem not bound
@@ -186,9 +182,6 @@
 !missing-selector! NSDiffableDataSourceSnapshot::sectionIdentifiers not bound
 !missing-selector! NSEvent::charactersByApplyingModifiers: not bound
 !missing-selector! NSFontDescriptor::fontDescriptorWithDesign: not bound
-!missing-selector! NSLayoutManager::setUsesDefaultHyphenation: not bound
-!missing-selector! NSLayoutManager::showCGGlyphs:positions:count:font:textMatrix:attributes:inContext: not bound
-!missing-selector! NSLayoutManager::usesDefaultHyphenation not bound
 !missing-selector! NSMovie::init not bound
 !missing-selector! NSMovie::initWithCoder: not bound
 !missing-selector! NSResponder::changeModeWithEvent: not bound

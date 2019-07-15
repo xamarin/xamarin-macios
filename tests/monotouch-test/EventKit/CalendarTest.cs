@@ -118,8 +118,6 @@ namespace MonoTouchFixtures.EventKit {
 
 #if __WATCHOS__
 			Assert.True (c.Immutable, "Immutable");
-#elif MONOMAC
-			Assert.AreEqual (TestRuntime.CheckXcodeVersion (11, 0), c.Immutable, "Immutable");
 #else
 			Assert.False (c.Immutable, "Immutable");
 #endif

@@ -18,8 +18,8 @@ GH_STATE=success
 FILE=commit-comment.md
 
 for STEP in $STEPS; do
-  # The environment variable's name is the variation name in uppercase, and special symbols removed (|-)
-  STEPNAME=JOBRESULT$(echo "$STEP" | tr '[:lower:]' '[:upper:]' | sed -e 's/|//g' -e 's/-//g')
+  # The environment variable's name is the variation name in uppercase, and special symbols removed (|-_)
+  STEPNAME=JOBRESULT$(echo "$STEP" | tr '[:lower:]' '[:upper:]' | sed -e 's/|//g' -e 's/-//g' -e 's/_//g')
   STEPSTATUS=${!STEPNAME}
   if [[ "$STEPSTATUS" == "Succeeded" ]]; then
     STEPEMOJII="✅"
