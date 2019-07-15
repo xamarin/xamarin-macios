@@ -17,7 +17,6 @@ namespace GeneratorTests
 	public class BGenTests
 	{
 		[Test]
-		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
@@ -27,7 +26,6 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSSystem)]
 		public void BMac_NonAbsoluteReference_StillBuilds (Profile profile)
 		{
@@ -35,7 +33,6 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSSystem)]
 		public void BMac_AbsoluteSystemReference_StillBuilds (Profile profile)
 		{
@@ -43,7 +40,6 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
@@ -53,7 +49,6 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
@@ -63,7 +58,6 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
@@ -73,7 +67,6 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
@@ -177,7 +170,6 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		[TestCase (Profile.macOSClassic)]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
 		[TestCase (Profile.macOSSystem)]
