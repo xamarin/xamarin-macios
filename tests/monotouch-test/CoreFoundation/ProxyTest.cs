@@ -44,17 +44,14 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Dlfcn.dlclose (lib);
 			}
 		}
-		
+#if !__WATCHOS__ && !MONOMAC
 		[Test]
 		public void TestPACParsingScript ()
 		{
 			// get the path for the pac file, try to parse it and ensure that 
 			// our cb was called
-#if MONOMAC
- 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/example.pac");
-#else
 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
-#endif
+
 			var script = File.ReadAllText (pacPath);
 			var targetUri = new Uri ("http://docs.xamarin.com");
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri);
@@ -66,11 +63,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPACParsingUrl ()
 		{
-#if MONOMAC
- 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/example.pac");
-#else
 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
-#endif
 			var pacUri = new Uri (pacPath);
 			var targetUri = new Uri ("http://docs.xamarin.com");
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri);
@@ -78,5 +71,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 			// assert the data of the proxy, although we are really testing the js used
 			Assert.AreEqual (8080, proxies [0].Port, "Port");
 		}
+#endif
 	}
 }
