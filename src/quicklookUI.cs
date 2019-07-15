@@ -168,5 +168,9 @@ namespace QuickLookUI {
 #endif
 		[Export ("preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler:")]
 		void PreparePreviewOfSearchableItem (string identifier, string queryString, Action<NSError> ItemLoadingHandler);
+
+		[Mac (10,15, onlyOn64: true)]
+		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
+		void PreparePreviewOfFile (NSUrl url, Action<NSError> ItemLoadingHandler);
 	}
 }
