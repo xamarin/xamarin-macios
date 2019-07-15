@@ -3,8 +3,10 @@
 //
 // Authors:
 //   Aaron Bockover (abock@xamarin.com)
+//   TJ Lambert (t-anlamb@microsoft.com)
 //
 // Copyright 2013, 2015 Xamarin Inc.
+// Copyright 2019 Microsoft Corporation
 
 using System;
 
