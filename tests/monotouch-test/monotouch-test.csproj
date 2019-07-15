@@ -321,6 +321,7 @@
     <BundleResource Include="compressed_lz4" />
     <BundleResource Include="compressed_lzma" />
     <BundleResource Include="compressed_zip" />
+    <BundleResource Include="example.pac" />
   </ItemGroup>
   <ItemGroup>
     <Metal Include="Resources\metal-sample.metal" Condition="'$(Platform)' != 'iPhoneSimulator' " />
@@ -365,7 +366,7 @@
     <Exec Command="xcrun -sdk $(_SmeltingSdk) metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\fragmentShader.air $(_SmeltingMinOS)" />
     <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" />
   </Target>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting" >
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>

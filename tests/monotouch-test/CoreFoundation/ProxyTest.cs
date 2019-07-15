@@ -46,44 +46,37 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 		
 		[Test]
-		public void TestPACParsing ()
+		public void TestPACParsingScript ()
 		{
-			var cbCalled = new AutoResetEvent (false);
-			CFProxy proxy;
 			// get the path for the pac file, try to parse it and ensure that 
 			// our cb was called
 #if MONOMAC
- 			string uncompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/example.pac");
+ 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/example.pac");
 #else
- 			string uncompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
 #endif
-			NSObject.InvokeInBackground (() => {
-				var runLoop = NSRunLoop.Current;
-				var cfRunLoop = NSRunLoop.Main.GetCFRunLoop ();
+			var script = File.ReadAllText (pacPath);
+			var targetUri = new Uri ("http://docs.xamarin.com");
+			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri);
+			Assert.AreEqual (1, proxies.Length, "Length");
+			// assert the data of the proxy, although we are really testing the js used
+			Assert.AreEqual (8080, proxies [0].Port, "Port");
+		}
 
-				using (var path = new NSString (uncompressedFilePath))
-				using (var url = new NSUrl ("http://docs.xamarin.com")) {
-					var runLoopSource = CFNetwork.ExecuteProxyAutoConfigurationScript (path, url, (client, proxyList, error) => {
-						Assert.AreEqual (1, proxyList.Length);
-						Console.WriteLine ("GO IT!!");
-					}, new CFStreamClientContext ());
-					Assert.NotNull (runLoopSource, "runLoopSource");
-					cfRunLoop.AddSource (runLoopSource, CFRunLoop.ModeCommon);
-				}
-				// This is our "killswitch" to fail the test if we take too long
-				NSTimer timer = NSTimer.CreateTimer (30, t => {
-					Console.WriteLine ("Test Failed");
-					//throw new InvalidOperationException ();
-				});
-
-				try {
-					runLoop.AddTimer (timer, NSRunLoopMode.Common);
-					runLoop.Run ();
-					Console.WriteLine ("DONE");
-				} catch (Exception e) {
-					Console.WriteLine (e);
-				}
-			});
+		[Test]
+		public void TestPACParsingUrl ()
+		{
+#if MONOMAC
+ 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/example.pac");
+#else
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+#endif
+			var pacUri = new Uri (pacPath);
+			var targetUri = new Uri ("http://docs.xamarin.com");
+			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri);
+			Assert.AreEqual (1, proxies.Length, "Length");
+			// assert the data of the proxy, although we are really testing the js used
+			Assert.AreEqual (8080, proxies [0].Port, "Port");
 		}
 	}
 }
