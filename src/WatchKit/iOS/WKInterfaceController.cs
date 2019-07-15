@@ -242,6 +242,8 @@ namespace WatchKit {
 		}
 	} /* class WKInterfaceController */
 
+	[Obsolete ("The WatchKit framework has been removed from iOS")]
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class WKPresentMediaPlayerResult {
 		public WKPresentMediaPlayerResult (bool didPlayToEnd, double /* NSTimeInterval */ endTime)
 		{

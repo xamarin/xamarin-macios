@@ -8,6 +8,10 @@ using ObjCRuntime;
 
 namespace WatchKit {
 	[Register ("WKAccessibilityImageRegion", SkipRegistration = true)]
+	[Introduced (PlatformName.iOS, 8,2, PlatformArchitecture.All)]
+	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
+	[Obsolete ("The WatchKit framework has been removed from iOS")]
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class WKAccessibilityImageRegion : NSObject {
 		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException ("The WatchKit framework has been removed from iOS"); } }
 
