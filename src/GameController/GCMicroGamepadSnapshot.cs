@@ -14,9 +14,9 @@ namespace GameController {
 	// GCMicroGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
-	[Deprecated (PlatformName.iOS, 12, 2, message: "Use 'GCMicroGamepadSnapshotData' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 14, 4, message: "Use 'GCMicroGamepadSnapshotData' instead.")]
-	[Deprecated (PlatformName.TvOS, 12, 2, message: "Use 'GCMicroGamepadSnapshotData' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 2, message: "Use [GCController controllerWithMicroGamepad] instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, 4, message: "Use [GCController controllerWithMicroGamepad] instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 2, message: "Use [GCController controllerWithMicroGamepad] instead.")]
 	public struct GCMicroGamepadSnapShotDataV100 {
 
 		// Standard information
@@ -32,6 +32,9 @@ namespace GameController {
 		public float /* float_t = float */ ButtonA;
 		public float /* float_t = float */ ButtonX;
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
 		[DllImport (Constants.GameControllerLibrary)]
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCMicroGamepadSnapShotDataV100 (
 			/* __nullable */ ref GCMicroGamepadSnapShotDataV100 snapshotData);
@@ -45,6 +48,9 @@ namespace GameController {
 
 	// GCMicroGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	public struct GCMicroGamepadSnapshotData {
 
@@ -61,6 +67,9 @@ namespace GameController {
 		public float /* float_t = float */ ButtonA;
 		public float /* float_t = float */ ButtonX;
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
 		[DllImport (Constants.GameControllerLibrary)]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCMicroGamepadSnapshotData (
@@ -78,6 +87,9 @@ namespace GameController {
 	public partial class GCMicroGamepadSnapshot {
 
 		// GCGamepadSnapshot.h
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
 		[DllImport (Constants.GameControllerLibrary)]
 		[Mac (10, 12)]
 		static extern bool GCMicroGamepadSnapShotDataV100FromNSData (out GCMicroGamepadSnapShotDataV100 snapshotData, /* NSData */ IntPtr data);
@@ -91,6 +103,9 @@ namespace GameController {
 			return GCMicroGamepadSnapShotDataV100FromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
 		}
 		
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
 		[DllImport (Constants.GameControllerLibrary)]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		static extern bool GCMicroGamepadSnapshotDataFromNSData (out GCMicroGamepadSnapshotData snapshotData, /* NSData */ IntPtr data);

@@ -49,6 +49,9 @@ namespace GameController {
 
 		[Export ("value")]
 		float Value { get; } /* float, not CGFloat */
+
+		[Export ("setValue:")]
+		void SetValue (float value);
 	}
 
 	delegate void GCControllerButtonValueChanged (GCControllerButtonInput button, float /* float, not CGFloat */ buttonValue, bool pressed);
@@ -74,6 +77,9 @@ namespace GameController {
 		[Export ("pressed")]
 		bool IsPressed { [Bind ("isPressed")] get; }
 
+		[Export ("setValue:")]
+		void SetValue (float value);
+
 #if !XAMCORE_4_0
 		[iOS (8,0), Mac (10,10)]
 		[Obsolete ("Use the 'PressedChangedHandler' property.")]
@@ -81,7 +87,7 @@ namespace GameController {
 		void SetPressedChangedHandler (GCControllerButtonValueChanged handler);
 #endif
 
-		[iOS (8,0), Mac (10,10)]
+		[iOS (8,0), Mac (10,10), TV (13,0)]
 		[NullAllowed]
 		[Export ("pressedChangedHandler", ArgumentSemantic.Copy)]
 		GCControllerButtonValueChanged PressedChangedHandler { get; set; }
@@ -115,10 +121,16 @@ namespace GameController {
 
 		[Export ("right")]
 		GCControllerButtonInput Right { get; }
+
+		[Export ("setValueForXAxis:yAxis:")]
+		void SetValueForXAxis (float xAxis, float yAxis);
 	}
 
 	delegate void GCGamepadValueChangedHandler (GCGamepad gamepad, GCControllerElement element);
 
+	[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use GCExtendedGamepad instead")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use GCExtendedGamepad instead")]
+	[Deprecated (PlatformName.TvOS, 10, 0, message: "Use GCExtendedGamepad instead")]
 	[iOS (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
@@ -156,6 +168,9 @@ namespace GameController {
 		GCControllerButtonInput RightShoulder { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCGamepad has been deprecated, use GCExtendedGamepad instead")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "GCGamepad has been deprecated, use GCExtendedGamepad instead")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "GCGamepad has been deprecated, use GCExtendedGamepad instead")]
 	[iOS (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (GCGamepad))]
@@ -186,6 +201,10 @@ namespace GameController {
 		[Export ("valueChangedHandler", ArgumentSemantic.Copy)]
 		GCExtendedGamepadValueChangedHandler ValueChangedHandler { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
+		[Introduced (PlatformName.TvOS, 7, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
 		[Export ("saveSnapshot")]
 		GCExtendedGamepadSnapshot SaveSnapshot ();
 
@@ -229,10 +248,26 @@ namespace GameController {
 		[TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
 		[NullAllowed, Export ("rightThumbstickButton")]
 		GCControllerButtonInput RightThumbstickButton { get; }
+
+		[TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[Export ("buttonMenu")]
+		GCControllerButtonInput ButtonMenu { get; }
+
+		[TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[NullAllowed, Export ("buttonOptions")]
+		GCControllerButtonInput ButtonOptions { get; }
+
+		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Export ("setStateFromExtendedGamepad:")]
+		void SetState (GCExtendedGamepad extendedGamepad);
 	}
 
 	[iOS (7,0)]
 	[Mac (10,9)]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
+	[Introduced (PlatformName.TvOS, 9, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
 	[BaseType (typeof (GCExtendedGamepad))]
 	[DisableDefaultCtor]
 	partial interface GCExtendedGamepadSnapshot {
@@ -246,6 +281,9 @@ namespace GameController {
 		[Export ("initWithController:snapshotData:")]
 		IntPtr Constructor (GCController controller, NSData data);
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		[Field ("GCCurrentExtendedGamepadSnapshotDataVersion")]
 		GCExtendedGamepadSnapshotDataVersion DataVersion { get; }
@@ -258,6 +296,11 @@ namespace GameController {
 	[iOS (7,0), Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	partial interface GCController {
+
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "controllerPausedHandler has been deprecated. Use the Menu button found on the controller's profile, if it exists.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "controllerPausedHandler has been deprecated. Use the Menu button found on the controller's profile, if it exists.")]
+		[Introduced (PlatformName.TvOS, 9, 0, message: "controllerPausedHandler has been deprecated. Use the Menu button found on the controller's profile, if it exists.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "controllerPausedHandler has been deprecated. Use the Menu button found on the controller's profile, if it exists.")]
 
 		[Export ("controllerPausedHandler", ArgumentSemantic.Copy)]
 #if XAMCORE_2_0
@@ -280,6 +323,10 @@ namespace GameController {
 		nint PlayerIndex { get; set; }
 #endif
 
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Introduced (PlatformName.TvOS, 7, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("gamepad", ArgumentSemantic.Retain)]
 		GCGamepad Gamepad { get; }
 
@@ -288,6 +335,7 @@ namespace GameController {
 
 		[Mac (10,12)]
 		[iOS (10,0)]
+		[TV (13,0)]
 		[NullAllowed, Export ("microGamepad", ArgumentSemantic.Retain)]
 		GCMicroGamepad MicroGamepad { get; }
 
@@ -307,16 +355,38 @@ namespace GameController {
 		[Notification, Field ("GCControllerDidDisconnectNotification")]
 		NSString DidDisconnectNotification { get; }
 
-		[iOS (8,0), Mac (10,10)]
+		[iOS (8,0), Mac (10,10), TV(13,0)]
 		[Export ("motion", ArgumentSemantic.Retain)]
 		GCMotion Motion { get; }
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("handlerQueue", ArgumentSemantic.Retain)]
 		DispatchQueue HandlerQueue { get; set; }
+
+		[TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[Export ("productCategory")]
+		string ProductCategory { get; }
+
+		[TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[Export ("snapshot")]
+		bool Snapshot { [Bind ("isSnapshot")] get; }
+
+		[TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[Export ("capture")]
+		GCController Capture { get; }
+
+		[TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[Static]
+		[Export ("controllerWithMicroGamepad")]
+		GCController ControllerWithMicroGamepad { get; }
+
+		[TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[Static]
+		[Export ("controllerWithExtendedGamepad")]
+		GCController ControllerWithExtendedGamepad { get; }
 	}
 
-	[iOS (8,0), Mac (10,10)]
+	[iOS (8,0), Mac (10,10), TV (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // access thru GCController.Motion - returns a nil Handle
 	partial interface GCMotion {
@@ -344,7 +414,7 @@ namespace GameController {
 		[Export ("attitude", ArgumentSemantic.Assign)]
 		Quaterniond Attitude { get; }
 
-		[TV (11,0)]
+		[TV (11,0), iOS (11,0), Mac (10,13)]
 		[Export ("rotationRate", ArgumentSemantic.Assign)]
 		Vector3d RotationRate { get; }
 
@@ -353,6 +423,26 @@ namespace GameController {
 		[Mac (10,13)]
 		[Export ("hasAttitudeAndRotationRate")]
 		bool HasAttitudeAndRotationRate { get; }
+
+		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Export ("setGravity:")]
+		void SetGravity (GCAcceleration gravity);
+
+		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Export ("setUserAcceleration:")]
+		void SetUserAcceleration (GCAcceleration userAcceleration);
+
+		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Export ("setAttitude:")]
+		void SetAttitude (GCQuaternion attitude);
+
+		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Export ("setRotationRate:")]
+		void SetRotationRate (GCRotationRate rotationRate);
+
+		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Export ("setStateFromMotion:")]
+		void SetState (GCMotion motion);
 	}
 
 	[Mac (10,11)]
@@ -372,6 +462,9 @@ namespace GameController {
 		[NullAllowed, Export ("valueChangedHandler", ArgumentSemantic.Copy)]
 		GCMicroGamepadValueChangedHandler ValueChangedHandler { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
 		[Export ("saveSnapshot")]
 		GCMicroGamepadSnapshot SaveSnapshot { get; }
 
@@ -389,8 +482,20 @@ namespace GameController {
 
 		[Export ("allowsRotation")]
 		bool AllowsRotation { get; set; }
+
+		[TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[Export ("buttonMenu")]
+		GCControllerButtonInput ButtonMenu { get; }
+
+		[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Export ("setStateFromExtendedGamepad:")]
+		void SetStateFromExtendedGamepad (GCExtendedGamepad extendedGamepad);
 	}
 
+
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController capture] instead")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController capture] instead")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController capture] instead")]
 	[Mac (10,12)]
 	[iOS (10,0)]
 	[TV (9,0)]
@@ -405,6 +510,9 @@ namespace GameController {
 		[Export ("initWithController:snapshotData:")]
 		IntPtr Constructor (GCController controller, NSData data);
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "GCMicroGamepadSnapshot has been deprecated, use [GCController controllerWithMicroGamepad] instead")]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		[Field ("GCCurrentMicroGamepadSnapshotDataVersion")]
 		GCMicroGamepadSnapshotDataVersion DataVersion { get; }
