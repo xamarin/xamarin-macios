@@ -203,7 +203,6 @@ namespace GameController {
 
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
-		[Introduced (PlatformName.TvOS, 7, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController capture] instead")]
 		[Export ("saveSnapshot")]
 		GCExtendedGamepadSnapshot SaveSnapshot ();
@@ -266,7 +265,6 @@ namespace GameController {
 	[Mac (10,9)]
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
-	[Introduced (PlatformName.TvOS, 9, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
 	[BaseType (typeof (GCExtendedGamepad))]
 	[DisableDefaultCtor]
@@ -299,7 +297,6 @@ namespace GameController {
 
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "controllerPausedHandler has been deprecated. Use the Menu button found on the controller's profile, if it exists.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "controllerPausedHandler has been deprecated. Use the Menu button found on the controller's profile, if it exists.")]
-		[Introduced (PlatformName.TvOS, 9, 0, message: "controllerPausedHandler has been deprecated. Use the Menu button found on the controller's profile, if it exists.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "controllerPausedHandler has been deprecated. Use the Menu button found on the controller's profile, if it exists.")]
 
 		[Export ("controllerPausedHandler", ArgumentSemantic.Copy)]
@@ -325,7 +322,6 @@ namespace GameController {
 
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Deprecated (PlatformName.iOS, 10, 0)]
-		[Introduced (PlatformName.TvOS, 7, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("gamepad", ArgumentSemantic.Retain)]
 		GCGamepad Gamepad { get; }

@@ -76,11 +76,8 @@ namespace GameController {
 		}
 	}
 	
-	[Introduced (PlatformName.MacOSX, 10, 11, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
-	[Introduced (PlatformName.iOS, 9, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
-	[Introduced (PlatformName.TvOS, 9, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "GCExtendedGamepadSnapshot has been deprecated, use [GCController controllerWithExtendedGamepad] instead")]
 	// float_t are 4 bytes (at least for ARM64)
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
