@@ -580,17 +580,56 @@ namespace CoreFoundation {
 			return new CFProxySettings (dict);
 		}
 		
-		delegate void CFProxyAutoConfigurationResultCallback (IntPtr client, IntPtr proxyList, IntPtr error);
+		delegate void CFProxyAutoConfigurationResultCallbackInternal (IntPtr client, IntPtr proxyList, IntPtr error);
+		public delegate void CFProxyAutoConfigurationResultCallback (NSObject client, CFProxy[] proxyList, NSError error);
 		
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationScript (
 			/* CFStringRef __nonnull */ IntPtr proxyAutoConfigurationScript,
 			/* CFURLRef __nonnull */ IntPtr targetURL,
-			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallback cb,
+			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext  clientContext);
-		
-		public static CFProxy[] ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl)
+
+		public static CFRunLoopSource ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCb, CFStreamClientContext context)
 		{
+			if (proxyAutoConfigurationScript == null)
+				throw new ArgumentNullException (nameof (proxyAutoConfigurationScript));
+
+			if (targetUrl == null)
+				throw new ArgumentNullException (nameof (targetUrl));
+
+			if (clientCb == null)
+				throw new ArgumentNullException (nameof (clientCb));
+			
+			using (var pacScript = new NSString (proxyAutoConfigurationScript)) 
+			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
+				if (url == null)
+					return null;
+
+				CFProxy[] proxies = null;
+
+				CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
+					if (proxyList != IntPtr.Zero) {
+						using (var array = new CFArray (proxyList, false)) {
+							proxies = new CFProxy [array.Count];
+							for (int i = 0; i < proxies.Length; i++) {
+								var dict = new NSDictionary (array.GetValue (i));
+								proxies[i] = new CFProxy (dict);
+							}
+						}
+						// call the clients cb, with more decent casted objs
+						clientCb ((client != IntPtr.Zero)? null : new NSObject (client), proxies, (error == IntPtr.Zero) ? null : new NSError (error));
+					}
+				};
+				var loopSourcePtr = CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref context);
+				return (loopSourcePtr == IntPtr.Zero) ? null : new CFRunLoopSource (loopSourcePtr);
+			}
+		}	
+
+		public static CFProxy[] ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, out NSError outError)
+		{
+			outError = null;
+			IntPtr cbError = IntPtr.Zero;
 			if (proxyAutoConfigurationScript == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationScript));
 
@@ -605,16 +644,17 @@ namespace CoreFoundation {
 				CFProxy[] proxies = null;
 				var runLoop = CFRunLoop.Current;
 
-				CFProxyAutoConfigurationResultCallback cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
+				CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
 					if (proxyList != IntPtr.Zero) {
-						var array = new CFArray (proxyList, false);
-						proxies = new CFProxy [array.Count];
-						for (int i = 0; i < proxies.Length; i++) {
-							var dict = new NSDictionary (array.GetValue (i));
-							proxies[i] = new CFProxy (dict);
+						using (var array = new CFArray (proxyList, false)) {
+							proxies = new CFProxy [array.Count];
+							for (int i = 0; i < proxies.Length; i++) {
+								var dict = new NSDictionary (array.GetValue (i));
+								proxies[i] = new CFProxy (dict);
+							}
 						}
-						array.Dispose ();
 					}
+					cbError = error;
 					runLoop.Stop ();
 				};
 
@@ -624,6 +664,8 @@ namespace CoreFoundation {
 					runLoop.AddSource (loopSource, mode);
 					runLoop.RunInMode (mode, double.MaxValue, false);
 					runLoop.RemoveSource (loopSource, mode);
+					if (cbError != IntPtr.Zero)
+						outError = new NSError (cbError);
 					return proxies;
 				}
 			}
@@ -633,12 +675,54 @@ namespace CoreFoundation {
 		extern static /* CFRunLoopSourceRef __nonnull */ IntPtr CFNetworkExecuteProxyAutoConfigurationURL (
 			/* CFURLRef __nonnull */ IntPtr proxyAutoConfigurationURL,
 			/* CFURLRef __nonnull */ IntPtr targetURL,
-			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallback cb,
+			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
 
 
-		public static CFProxy[] ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl)
+		public static CFRunLoopSource ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCb, CFStreamClientContext context)
 		{
+			if (proxyAutoConfigurationUrl == null)
+				throw new ArgumentNullException (nameof (proxyAutoConfigurationUrl));
+
+			if (targetUrl == null)
+				throw new ArgumentNullException (nameof (targetUrl));
+			
+			if (clientCb == null)
+				throw new ArgumentNullException (nameof (clientCb));
+
+			using (var pacUrl = new NSUrl (proxyAutoConfigurationUrl.AbsoluteUri)) // toll free bridge to CFUrl
+			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
+				if (pacUrl == null)
+					return null;
+
+				if (url == null)
+					return null;
+
+				CFProxy[] proxies = null;
+
+				CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
+					if (proxyList != IntPtr.Zero) {
+						using (var array = new CFArray (proxyList, false)) {
+							proxies = new CFProxy [array.Count];
+							for (int i = 0; i < proxies.Length; i++) {
+								var dict = new NSDictionary (array.GetValue (i));
+								proxies[i] = new CFProxy (dict);
+							}
+						}
+						// call the clients cb, with more decent casted objs
+						clientCb ((client != IntPtr.Zero)? null : new NSObject (client), proxies, (error == IntPtr.Zero) ? null : new NSError (error));
+					}
+				};
+
+				var loopSourcePtr = CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref context);
+				return (loopSourcePtr == IntPtr.Zero) ? null : new CFRunLoopSource (loopSourcePtr);
+			}
+		}
+
+		public static CFProxy[] ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, out NSError outError)
+		{ 
+			outError = null;
+			IntPtr cbError = IntPtr.Zero;
 			if (proxyAutoConfigurationUrl == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationUrl));
 
@@ -656,15 +740,16 @@ namespace CoreFoundation {
 				CFProxy[] proxies = null;
 				var runLoop = CFRunLoop.Current;
 
-				CFProxyAutoConfigurationResultCallback cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
+				CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
 					if (proxyList != IntPtr.Zero) {
-						var array = new CFArray (proxyList, false);
-						proxies = new CFProxy [array.Count];
-						for (int i = 0; i < proxies.Length; i++) {
-							var dict = new NSDictionary (array.GetValue (i));
-							proxies[i] = new CFProxy (dict);
+						using (var array = new CFArray (proxyList, false)){
+							proxies = new CFProxy [array.Count];
+							for (int i = 0; i < proxies.Length; i++) {
+								var dict = new NSDictionary (array.GetValue (i));
+								proxies[i] = new CFProxy (dict);
+							}
+							cbError = error;
 						}
-						array.Dispose ();
 					}
 					runLoop.Stop ();
 				};
@@ -675,6 +760,8 @@ namespace CoreFoundation {
 					runLoop.AddSource (loopSource, mode);
 					runLoop.RunInMode (mode, double.MaxValue, false);
 					runLoop.RemoveSource (loopSource, mode);
+					if (cbError != IntPtr.Zero)
+						outError = new NSError (cbError);
 					return proxies;
 				}
 			}
