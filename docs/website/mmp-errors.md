@@ -253,6 +253,18 @@ Change the architecture in the project's Mac Build options to 'x86_64' in order 
 
 <!-- 0140-0142 taken my mtouch -->
 
+#### MM0143: Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.
+
+Xamarin.Mac does not support the Classic API anymore, because the Classic API is 32-bit only, and macOS 10.15+ does not support 32-bit applications.
+
+The project must be [migrated to a Unified project](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/unified/updating-mac-apps) in order to support 64-bit.
+
+#### MM0144: Building 32-bit apps is not supported anymore. Please change the architecture in the project's Mac Build options to 'x86_64'.
+
+This version of Xamarin.Mac does not support building 32-bit applications.
+
+Change the architecture in the project's Mac Build options to 'x86_64' in order to build a 64-bit application.
+
 ## MM1xxx: file copy / symlinks (project related)
 
 <a name="MM1034" />

@@ -676,20 +676,20 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void MM0138 ()
+		public void MM0143 ()
 		{
 			MMPTests.RunMMPTest (tmpDir => {
 				string csprojTarget = Path.Combine (TI.FindSourceDirectory (), "ClassicExample.csproj");
 				string buildOutput = TI.BuildClassicProject (csprojTarget);
 				Console.WriteLine (buildOutput);
 				var rv = new OutputText (buildOutput, string.Empty);
-				rv.Messages.AssertError (138, "Building 32-bit apps is not possible when using Xcode 10. Please migrate project to the Unified API.");
+				rv.Messages.AssertError (143, "Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.");
 				rv.Messages.AssertWarningCount (0);
 			});
 		}
 
 		[Test]
-		public void MM0139 ()
+		public void MM0144 ()
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
@@ -697,7 +697,7 @@ namespace Xamarin.MMP.Tests
 				};
 
 				var rv = TI.TestUnifiedExecutable (test, shouldFail: true);
-				rv.Messages.AssertError (139, "Building 32-bit apps is not possible when using Xcode 10. Please change the architecture in the project's Mac Build options to 'x86_64'.");
+				rv.Messages.AssertError (144, "Building 32-bit apps is not supported anymore. Please change the architecture in the project's Mac Build options to 'x86_64'.");
 				rv.Messages.AssertWarningCount (0);
 			});
 		}

@@ -964,6 +964,7 @@ However it is possible to test features such as `dynamic` and `System.Reflection
 
 This warning is shown if the assemblies names given to the `--interpreter` option (either to interpret them or not) cannot be found.
 
+<!-- 0143-0144: used by mmp -->
 
 # MT1xxx: Project related error messages
 
