@@ -199,10 +199,6 @@ namespace LinkAll {
 		}
 
 		[Test]
-#if !XAMCORE_2_0
-		// internal (to be removed) in unified
-		[Since (9,9)]
-#endif
 #if !XAMCORE_3_0
 		[Availability ()]
 		[iOS (9,9)]
