@@ -49,12 +49,12 @@ namespace GameController {
 		// Buttons in the range [0.0, 1.0]
 		public float /* float_t = float */ LeftTrigger;
 		public float /* float_t = float */ RightTrigger;
-		[iOS (12,2), Mac (10,14,4, onlyOn64: true), TV (12,2)]
-		public bool supportsClickableThumbsticks;
-		[iOS (12,2), Mac (10,14,4, onlyOn64: true), TV (12,2)]
-		public bool leftThumbstickButton;
-		[iOS (12,2), Mac (10,14,4, onlyOn64: true), TV (12,2)]
-		public bool rightThumbstickButton;
+		[iOS (12,2), Mac (10,14,4), TV (12,2)]
+		public bool SupportsClickableThumbsticks;
+		[iOS (12,2), Mac (10,14,4), TV (12,2)]
+		public bool LeftThumbstickButton;
+		[iOS (12,2), Mac (10,14,4), TV (12,2)]
+		public bool RightThumbstickButton;
 
 		// radar: https://trello.com/c/7FoGTORD (GCExtendedGamepadSnapShotDataV100 struct size / alignment not backward compatible)
 		// [TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
