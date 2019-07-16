@@ -12,7 +12,7 @@ MMP_DIR=bin/$(MMP_CONF)
 LOCAL_MMP=$(MMP_DIR)/mmp.exe
 
 # mmp.csproj.inc contains the mmp_dependencies variable used to determine if mmp needs to be rebuilt or not.
-mmp.csproj.inc: Makefile ../common/create-makefile-fragment.sh $(TOP)/Make.config
+mmp.csproj.inc: Makefile ../common/create-makefile-fragment.sh $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(Q_GEN) ../common/create-makefile-fragment.sh $(CURDIR)/mmp.csproj
 
 -include mmp.csproj.inc
@@ -88,7 +88,7 @@ mmp: \
 
 clean-local::
 	rm -f mmp.stub.c mmp.helper.o
-	rm -f bin obj
+	rm -rf bin obj
 	rm -f Xamarin.Mac.registrar.*
 	$(SYSTEM_MSBUILD) "/t:Clean" /p:Configuration=$(MMP_CONF) *.csproj
 

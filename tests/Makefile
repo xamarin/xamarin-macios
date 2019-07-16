@@ -84,7 +84,7 @@ endif
 package-tests:
 	$(MAKE) qa-test-dependencies.zip mac-test-package.zip
 
-test.config: Makefile $(TOP)/Make.config
+test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(abspath $(MONOTOUCH_PREFIX))" >> $@
 	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
@@ -96,7 +96,7 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
 	@echo "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
 
-test-system.config: Makefile $(TOP)/Make.config
+test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
 	@echo "IOS_DESTDIR=/" >> $@
