@@ -90,7 +90,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				// block until cb is called
 				runLoop.RunInMode (mode, double.MaxValue, false);
 				runLoop.RemoveSource (source, mode);
-				Assert.IsNotNull (cbClient, "Null client");
+				Assert.IsNull (cbClient, "Null client");
 				Assert.IsNull (error, "Null error");
 				Assert.IsNotNull (proxies, "Not null proxies");
 				Assert.AreEqual (1, proxies.Length, "Length");
@@ -177,7 +177,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				// block until cb is called
 				runLoop.RunInMode (mode, double.MaxValue, false);
 				runLoop.RemoveSource (source, mode);
-				Assert.IsNotNull (cbClient, "Null client");
+				Assert.IsNull (cbClient, "Null client");
 				Assert.IsNull (error, "Null error");
 				Assert.IsNotNull (proxies, "Not null proxies");
 				Assert.AreEqual (1, proxies.Length, "Length");
