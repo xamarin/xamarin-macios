@@ -426,7 +426,7 @@ namespace Photos
 
 	[iOS (13,0)]
 	[TV (13,0)]
-	[Mac (10,13)]
+	[Mac (10,15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHChangeRequest {}
@@ -495,7 +495,7 @@ namespace Photos
 		[Export ("canContainCollections", ArgumentSemantic.Assign)]
 		bool CanContainCollections { get; }
 
-		[Mac (10,13)]
+		[Mac (10,15)]
 		[Export ("localizedTitle", ArgumentSemantic.Strong)]
 		string LocalizedTitle { get; }
 
@@ -730,7 +730,7 @@ namespace Photos
 		[NullAllowed, Export ("audiovisualAsset", ArgumentSemantic.Strong)]
 		AVAsset AudiovisualAsset { get; }
 
-		[iOS (10,0), Mac (10,12)]
+		[iOS (10,0), Mac (10,15)]
 		[NullAllowed, Export ("livePhoto", ArgumentSemantic.Strong)]
 		PHLivePhoto LivePhoto { get; }
 
@@ -1128,7 +1128,7 @@ namespace Photos
 	[DisableDefaultCtor] // NS_UNAVAILABLE
 #endif
 	[Mac (10,12)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 	interface PHLivePhoto : NSSecureCoding, NSCopying
 	{
 		[Export ("size")]
@@ -1145,12 +1145,11 @@ namespace Photos
 		void CancelLivePhotoRequest (int requestID);
 	}
 
-	[iOS (8,0)]
+	[iOS (9,1)]
 	[TV (10,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhotoRequestOptions : NSCopying	{
-
 		[Export ("deliveryMode", ArgumentSemantic.Assign)]
 		PHImageRequestOptionsDeliveryMode DeliveryMode { get; set; }
 
