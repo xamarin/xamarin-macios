@@ -142,11 +142,11 @@ namespace Security {
 			return trust_result;
 		}
 
-		[Watch (5,0)][TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)]
+		[Watch (5,0)][TV (12,0)][Mac (10,14)][iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern bool SecTrustEvaluateWithError (/* SecTrustRef */ IntPtr trust, out /* CFErrorRef** */ IntPtr error);
 
-		[Watch (5,0)][TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)]
+		[Watch (5,0)][TV (12,0)][Mac (10,14)][iOS (12,0)]
 		public bool Evaluate (out NSError error)
 		{
 			var result = SecTrustEvaluateWithError (handle, out var err);
@@ -208,14 +208,14 @@ namespace Security {
 		[iOS (12,1,1)]
 		[Watch (5,1,1)]
 		[TV (12,1,1)]
-		[Mac (10,14,2, onlyOn64: true)]
+		[Mac (10,14,2)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern SecStatusCode /* OSStatus */ SecTrustSetSignedCertificateTimestamps (/* SecTrustRef* */ IntPtr trust, /* CFArrayRef* */ IntPtr sctArray);
 
 		[iOS (12,1,1)]
 		[Watch (5,1,1)]
 		[TV (12,1,1)]
-		[Mac (10,14,2, onlyOn64: true)]
+		[Mac (10,14,2)]
 		public SecStatusCode SetSignedCertificateTimestamps (IEnumerable<NSData> sct)
 		{
 			if (sct == null)
@@ -228,7 +228,7 @@ namespace Security {
 		[iOS (12,1,1)]
 		[Watch (5,1,1)]
 		[TV (12,1,1)]
-		[Mac (10,14,2, onlyOn64: true)]
+		[Mac (10,14,2)]
 		public SecStatusCode SetSignedCertificateTimestamps (NSArray<NSData> sct)
 		{
 			return SecTrustSetSignedCertificateTimestamps (handle, sct.GetHandle ());

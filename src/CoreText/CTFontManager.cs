@@ -149,7 +149,7 @@ namespace CoreText {
 			}
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		public delegate bool CTFontRegistrationHandler (NSError[] errors, bool done);
 
 		internal delegate bool InnerRegistrationHandler (IntPtr block, IntPtr errors, bool done);
@@ -162,15 +162,15 @@ namespace CoreText {
 			return del != null ? del (NSArray.ArrayFromHandle<NSError> (errors), done) : true;
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, bool enabled, IntPtr registrationHandler);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, bool enabled, ref BlockLiteral registrationHandler);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RegisterFonts (NSUrl [] fontUrls, CTFontManagerScope scope, bool enabled, CTFontRegistrationHandler registrationHandler)
 		{
@@ -224,15 +224,15 @@ namespace CoreText {
 			}
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe void CTFontManagerUnregisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, IntPtr registrationHandler);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe void CTFontManagerUnregisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, ref BlockLiteral registrationHandler);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void UnregisterFonts (NSUrl [] fontUrls, CTFontManagerScope scope, CTFontRegistrationHandler registrationHandler)
 		{
@@ -353,15 +353,15 @@ namespace CoreText {
 			
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, bool enabled, IntPtr registrationHandler);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, bool enabled, ref BlockLiteral registrationHandler);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RegisterFontDescriptors (CTFontDescriptor[] fontDescriptors, CTFontManagerScope scope, bool enabled, CTFontRegistrationHandler registrationHandler)
 		{
@@ -377,15 +377,15 @@ namespace CoreText {
 			}
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe void CTFontManagerUnregisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, IntPtr registrationHandler);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe void CTFontManagerUnregisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, ref BlockLiteral registrationHandler);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void UnregisterFontDescriptors (CTFontDescriptor[] fontDescriptors, CTFontManagerScope scope, CTFontRegistrationHandler registrationHandler)
 		{
@@ -401,11 +401,11 @@ namespace CoreText {
 			}
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFArrayRef */ IntPtr CTFontManagerCopyRegisteredFontDescriptors (CTFontManagerScope scope, bool enabled);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		public static CTFontDescriptor[] GetRegisteredFontDescriptors (CTFontManagerScope scope, bool enabled)
 		{
 			var p = CTFontManagerCopyRegisteredFontDescriptors (scope, enabled);
@@ -429,11 +429,11 @@ namespace CoreText {
 			return new CTFontDescriptor (p, owns: true);
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe /* CFArrayRef */ IntPtr CTFontManagerCreateFontDescriptorsFromData (/* CFDataRef */ IntPtr data);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		public static CTFontDescriptor[] CreateFontDescriptors (NSData data)
 		{
 			if (data == null)

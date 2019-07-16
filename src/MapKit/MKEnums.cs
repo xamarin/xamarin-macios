@@ -39,7 +39,7 @@ namespace MapKit {
 		Hybrid,
 		SatelliteFlyover,
 		HybridFlyover,
-		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		MutedStandard,
 	}
 
@@ -119,7 +119,7 @@ namespace MapKit {
 		Only
 	}
 
-	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13)]
 	[Native]
 	public enum MKAnnotationViewCollisionMode : long {
 		Rectangle,
@@ -133,7 +133,7 @@ namespace MapKit {
 		Trailing,
 	}
 
-	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13)]
 	[Native]
 	public enum MKFeatureVisibility : long {
 		Adaptive,

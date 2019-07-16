@@ -533,12 +533,12 @@ namespace CoreGraphics {
 			return new CFPropertyList (x, owns: true);
 		}
 
-		[Mac (10,15, onlyOn64: true)][iOS(13,0)]
+		[Mac (10,15)][iOS(13,0)]
 		[TV (13,0)][Watch (6,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern bool CGColorSpaceIsHDR (/* CGColorSpaceRef */ IntPtr space);
 
-		[Mac (10,15, onlyOn64: true)][iOS(13,0)]
+		[Mac (10,15)][iOS(13,0)]
 		[TV (13,0)][Watch (6,0)]
 		public bool IsHdr {
 			get {

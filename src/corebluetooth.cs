@@ -46,7 +46,7 @@ namespace CoreBluetooth {
 		[Export ("state", ArgumentSemantic.Assign)]
 		CBManagerState State { get; }
 
-		[iOS (13,0), TV (13,0), Watch (6,0), Mac (10, 15, onlyOn64: true)]
+		[iOS (13,0), TV (13,0), Watch (6,0), Mac (10, 15)]
 		[Export ("authorization", ArgumentSemantic.Assign)]
 		CBManagerAuthorization Authorization { get; }
 	}
@@ -112,7 +112,7 @@ namespace CoreBluetooth {
 		[Protocolize]
 		CBCentralManagerDelegate Delegate { get; set; }
 		
-		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
+		[Mac (10, 7)]
 		[Export ("initWithDelegate:queue:")]
 		[PostGet ("WeakDelegate")]
 		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue);
@@ -130,13 +130,13 @@ namespace CoreBluetooth {
 		[NoTV]
 		[NoWatch]
 		[Availability (Obsoleted = Platform.iOS_9_0)]
-		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
+		[Mac (10, 7)]
 		[Export ("retrievePeripherals:"), Internal]
 		void RetrievePeripherals (NSArray peripheralUUIDs);
 
 		[NoTV]
 		[NoWatch]
-		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
+		[Mac (10, 7)]
 		[Export ("retrieveConnectedPeripherals")]
 		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
 		void RetrieveConnectedPeripherals ();
@@ -506,7 +506,7 @@ namespace CoreBluetooth {
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
 		[Export ("isConnected")]
-		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
+		[Mac (10, 7)]
 		bool IsConnected { get;  }
 
 		[Export ("services", ArgumentSemantic.Retain)]
@@ -563,11 +563,11 @@ namespace CoreBluetooth {
 		[Export ("state")]
 		CBPeripheralState State { get; }
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("canSendWriteWithoutResponse")]
 		bool CanSendWriteWithoutResponse { get; }
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("openL2CAPChannel:")]
 		void OpenL2CapChannel (ushort psm);
 
@@ -864,7 +864,7 @@ namespace CoreBluetooth {
 	[BaseType (typeof (CBManager), Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
 	interface CBPeripheralManager {
 
-		[Mac (10,9, onlyOn64: true)]  // Was removed from 32-bit in 10.13 unannounced
+		[Mac (10,9)] 
 		[Export ("init")]
 		IntPtr Constructor ();
 
@@ -921,11 +921,11 @@ namespace CoreBluetooth {
 		[Export ("updateValue:forCharacteristic:onSubscribedCentrals:")]
 		bool UpdateValue (NSData value, CBMutableCharacteristic characteristic, [NullAllowed] CBCentral[] subscribedCentrals);
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("publishL2CAPChannelWithEncryption:")]
 		void PublishL2CapChannel (bool encryptionRequired);
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("unpublishL2CAPChannel:")]
 		void UnpublishL2CapChannel (ushort psm);
 
@@ -1029,19 +1029,19 @@ namespace CoreBluetooth {
 	[Watch (4,0)][iOS (11,0)][TV (11,0)][Mac (10,13)]
 	[BaseType (typeof (NSObject), Name = "CBL2CAPChannel")]
 	interface CBL2CapChannel {
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		[Export ("peer")]
 		CBPeer Peer { get; }
 
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		[Export ("inputStream")]
 		NSInputStream InputStream { get; }
 
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		[Export ("outputStream")]
 		NSOutputStream OutputStream { get; }
 
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		[Export ("PSM")]
 		/* uint16_t */ ushort Psm { get; }
 	}

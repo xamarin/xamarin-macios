@@ -216,7 +216,7 @@ namespace AudioToolbox {
 	}
 
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
-	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
+	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRangeByteCountTranslation {
 		public long Packet;
@@ -225,7 +225,7 @@ namespace AudioToolbox {
 	}
 
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
-	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
+	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRollDistanceTranslation {
 		public long Packet;
@@ -233,7 +233,7 @@ namespace AudioToolbox {
 	}
 
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
-	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
+	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioIndependentPacketTranslation {
 		public long Packet;
@@ -241,7 +241,7 @@ namespace AudioToolbox {
 	}
 
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
-	[NoWatch, iOS (13,0), Mac (10,15, onlyOn64 : true), TV (13,0)]
+	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketDependencyInfoTranslation {
 		public long Packet;

@@ -383,17 +383,17 @@ namespace UIKit {
 		void StopProvidingItemAtUrl (NSUrl url);
 
 		// TODO: Enable with new iOS 13 FileProvider bindings.
-		// [NoWatch, NoTV, Mac (10,15, onlyOn64: true), iOS (13,0)]
+		// [NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 		// [Async]
 		// [Export ("fetchContentsForItemWithIdentifier:version:completionHandler:")]
 		// NSProgress FetchContents (string itemIdentifier, [NullAllowed] NSFileProviderItemVersion requestedVersion, Action<NSURL, NSFileProviderItem, NSError> completionHandler);
 
-		// [NoWatch, NoTV, Mac (10,15, onlyOn64: true), iOS (13,0)]
+		// [NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 		// [Async]
 		// [Export ("fetchContentsForItemWithIdentifier:version:usingExistingContentsAtURL:existingVersion:completionHandler:")]
 		// NSProgress FetchContents (string itemIdentifier, [NullAllowed] NSFileProviderItemVersion requestedVersion, NSUrl existingContents, NSFileProviderItemVersion existingVersion, Action<NSURL, NSFileProviderItem, NSError> completionHandler);
 
-		// [NoWatch, NoTV, Mac (10,15, onlyOn64: true), iOS (13,0)]
+		// [NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 		// [Async]
 		// [Export ("itemChanged:baseVersion:changedFields:contents:completionHandler:")]
 		// void ItemChanged (NSFileProviderItem item, NSFileProviderItemVersion version, NSFileProviderItemField changedFields, [NullAllowed] NSUrl newContents, Action<NSFileProviderItem, NSError> completionHandler);
@@ -467,7 +467,7 @@ namespace UIKit {
 		[Export ("setFavoriteRank:forItemIdentifier:completionHandler:")]
 		void SetFavoriteRank ([NullAllowed] NSNumber favoriteRank, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[NoWatch, NoTV, Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 		[Async]
 		[Export ("performActionWithIdentifier:onItemsWithIdentifiers:completionHandler:")]
 		NSProgress PerformAction (string actionIdentifier, string[] itemIdentifiers, Action<NSError> completionHandler);

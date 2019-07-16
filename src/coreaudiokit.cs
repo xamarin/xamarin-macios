@@ -32,7 +32,7 @@ namespace CoreAudioKit {
 #if XAMCORE_2_0 || !MONOMAC
 
 	[NoiOS]
-	[Mac (10,11, onlyOn64 : true)]
+	[Mac (10,11)]
 	[Flags]
 	public enum AUGenericViewDisplayFlags : uint {
 		TitleDisplay = 1u << 0,
@@ -40,7 +40,7 @@ namespace CoreAudioKit {
 		ParametersDisplay = 1u << 2,
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(AUViewControllerBase))]
 	interface AUViewController {
 		[Export ("initWithNibName:bundle:")]
@@ -48,7 +48,7 @@ namespace CoreAudioKit {
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
-	[iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[iOS (11,0)][Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface AUAudioUnitViewConfiguration : NSSecureCoding {
 		[Export ("initWithWidth:height:hostHasController:")]
@@ -65,7 +65,7 @@ namespace CoreAudioKit {
 	}
 
 	[Category]
-	[iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[iOS (11,0)][Mac (10,13)]
 	[BaseType (typeof (AUAudioUnit))]
 	interface AUAudioUnitViewControllerExtensions {
 		[Export ("supportedViewConfigurations:")]
@@ -76,7 +76,7 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[Protocol]
 	interface AUCustomViewPersistentData {
 
@@ -86,7 +86,7 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[DisableDefaultCtor] // Crashes
 	[BaseType (typeof (NSView))]
 	interface AUGenericView : AUCustomViewPersistentData {
@@ -105,7 +105,7 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSView))]
 	[DisableDefaultCtor]
 	interface AUPannerView {
@@ -119,7 +119,7 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSWindowController), Name = "CABTLEMIDIWindowController")]
 	interface CABtleMidiWindowController {
 
@@ -128,7 +128,7 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSViewController))]
 	interface CAInterDeviceAudioViewController {
 
@@ -137,7 +137,7 @@ namespace CoreAudioKit {
 	}
 
 	[NoiOS]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSWindowController))]
 	interface CANetworkBrowserWindowController {

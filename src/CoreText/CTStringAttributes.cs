@@ -230,7 +230,7 @@ namespace CoreText {
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.StrokeColor, value);}
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		public float? TrackingAdjustment {
 			get {return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.TrackingAttributeName);}
 			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.TrackingAttributeName, value);}

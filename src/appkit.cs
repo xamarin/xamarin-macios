@@ -385,7 +385,7 @@ namespace AppKit {
 		[Field ("NSAppearanceNameAqua")]
 		NSString NameAqua { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Field ("NSAppearanceNameDarkAqua")]
 		NSString NameDarkAqua { get; }
 
@@ -401,23 +401,23 @@ namespace AppKit {
 		[Field ("NSAppearanceNameVibrantLight")]
 		NSString NameVibrantLight { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Field ("NSAppearanceNameAccessibilityHighContrastAqua")]
 		NSString NameAccessibilityHighContrastAqua { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Field ("NSAppearanceNameAccessibilityHighContrastDarkAqua")]
 		NSString NameAccessibilityHighContrastDarkAqua { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Field ("NSAppearanceNameAccessibilityHighContrastVibrantLight")]
 		NSString NameAccessibilityHighContrastVibrantLight { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Field ("NSAppearanceNameAccessibilityHighContrastVibrantDark")]
 		NSString NameAccessibilityHighContrastVibrantDark { get; }
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("bestMatchFromAppearancesWithNames:")]
 		[return: NullAllowed]
 		string FindBestMatch (string[] appearances);
@@ -726,11 +726,11 @@ namespace AppKit {
 		[Export ("unregisterForRemoteNotifications")]
 		void UnregisterForRemoteNotifications ();
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("registerForRemoteNotifications")]
 		void RegisterForRemoteNotifications ();
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Export ("registeredForRemoteNotifications")]
 		bool IsRegisteredForRemoteNotifications { [Bind ("isRegisteredForRemoteNotifications")] get; }
 
@@ -984,25 +984,25 @@ namespace AppKit {
 		void DecodedRestorableState (NSApplication app, NSCoder state);
 
 #if XAMCORE_2_0
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[Export ("application:willContinueUserActivityWithType:"), DelegateName ("NSApplicationUserActivityType"), DefaultValue (false)]
 		bool WillContinueUserActivity (NSApplication application, string userActivityType);
 
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[Export ("application:continueUserActivity:restorationHandler:"), DelegateName ("NSApplicationContinueUserActivity"), DefaultValue (false)]
 		bool ContinueUserActivity (NSApplication application, NSUserActivity userActivity, ContinueUserActivityRestorationHandler restorationHandler);
 #endif
 
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[Export ("application:didFailToContinueUserActivityWithType:error:"), EventArgs ("NSApplicationFailed"), DefaultValue (false)]
 		void FailedToContinueUserActivity (NSApplication application, string userActivityType, NSError error);
 
 #if XAMCORE_2_0
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[Export ("application:didUpdateUserActivity:"), EventArgs ("NSApplicationUpdatedUserActivity"), DefaultValue (false)]
 		void UpdatedUserActivity (NSApplication application, NSUserActivity userActivity);
 
-		[Mac (10,12, onlyOn64 : true)]
+		[Mac (10,12)]
 		[Export ("application:userDidAcceptCloudKitShareWithMetadata:"), EventArgs ("NSApplicationUserAcceptedCloudKitShare")]
 		void UserDidAcceptCloudKitShare (NSApplication application, CKShareMetadata metadata);
 #endif
@@ -2299,7 +2299,7 @@ namespace AppKit {
 		[NullAllowed, Export ("bezelColor", ArgumentSemantic.Copy)]
 		NSColor BezelColor { get; set; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[NullAllowed, Export ("contentTintColor", ArgumentSemantic.Copy)]
 		NSColor ContentTintColor { get; set; }
 	}
@@ -4093,42 +4093,42 @@ namespace AppKit {
 		[Export ("systemGrayColor", ArgumentSemantic.Strong)]
 		NSColor SystemGrayColor { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Static]
 		[Export ("separatorColor", ArgumentSemantic.Strong)]
 		NSColor SeparatorColor { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Static]
 		[Export ("selectedContentBackgroundColor", ArgumentSemantic.Strong)]
 		NSColor SelectedContentBackgroundColor { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Static]
 		[Export ("unemphasizedSelectedContentBackgroundColor", ArgumentSemantic.Strong)]
 		NSColor UnemphasizedSelectedContentBackgroundColor { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Static]
 		[Export ("alternatingContentBackgroundColors", ArgumentSemantic.Strong)]
 		NSColor[] AlternatingContentBackgroundColors { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Static]
 		[Export ("unemphasizedSelectedTextBackgroundColor", ArgumentSemantic.Strong)]
 		NSColor UnemphasizedSelectedTextBackgroundColor { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Static]
 		[Export ("unemphasizedSelectedTextColor", ArgumentSemantic.Strong)]
 		NSColor UnemphasizedSelectedTextColor { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Static]
 		[Export ("controlAccentColor", ArgumentSemantic.Strong)]
 		NSColor ControlAccentColor { get; }
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("colorWithSystemEffect:")]
 		NSColor FromSystemEffect (NSColorSystemEffect systemEffect);
 
@@ -4192,7 +4192,7 @@ namespace AppKit {
 		bool WriteToUrl ([NullAllowed] NSUrl url, [NullAllowed] out NSError error);
 	}
 
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSColorChanging
 	{
@@ -4869,7 +4869,7 @@ namespace AppKit {
 		void EndEditing ([NullAllowed] NSText textObj);
 	}
 
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSEditorRegistration
 	{
@@ -4880,7 +4880,7 @@ namespace AppKit {
 		void ObjectDidEndEditing (INSEditor editor);
 	}
 
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Category]
 	[BaseType (typeof(NSObject))]
 	interface NSObject_NSEditorRegistration
@@ -4894,7 +4894,7 @@ namespace AppKit {
 	
 	interface INSEditor {}
 
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSEditor
 	{
@@ -5679,17 +5679,17 @@ namespace AppKit {
 		string [] RestorableStateKeyPaths ();
 
 #if XAMCORE_2_0
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		[Export ("userActivity", ArgumentSemantic.Strong)]
 		NSUserActivity UserActivity { get; set; }
 
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity userActivity);
 
 		// Should be removed but radar://42781537 - Classes fail to conformsToProtocol despite header declaration
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity userActivity);
 #endif
@@ -6187,7 +6187,7 @@ namespace AppKit {
 
 	}
 
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSFontChanging
 	{
@@ -7843,7 +7843,7 @@ namespace AppKit {
 		void Rotate (NSEvent rotateEvent);
 
 #if XAMCORE_2_0
-		[Mac (10,10,3, onlyOn64 : true)]
+		[Mac (10,10,3)]
 		[Export ("pressureChangeWithEvent:")]
 		void PressureChange (NSEvent pressureChangeEvent);
 #endif
@@ -7946,7 +7946,7 @@ namespace AppKit {
 		void RemoveAllItems ();
 
 		[Export ("itemArray", ArgumentSemantic.Copy)]
-		NSMenuItem[] Items { get; [Mac (10, 14, onlyOn64: true)] set; }
+		NSMenuItem[] Items { get; [Mac (10, 14)] set; }
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'Items' instead.")]
@@ -10106,7 +10106,7 @@ namespace AppKit {
 		[Export ("imageViewWithImage:")]
 		NSImageView FromImage (NSImage image);
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[NullAllowed, Export ("contentTintColor", ArgumentSemantic.Copy)]
 		NSColor ContentTintColor { get; set; }
 	}
@@ -11017,7 +11017,7 @@ namespace AppKit {
 		nint NumberOfTouchesRequired { get; set; }
 	}
 
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSPasteboardTypeOwner
 	{
@@ -12283,7 +12283,7 @@ namespace AppKit {
 
 	// Technically on NSResponder but responder subclasses can implement any that make sense
 	// So bound for user classes but not added to NSResponder binding
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSStandardKeyBindingResponding
 	{
@@ -12727,21 +12727,21 @@ namespace AppKit {
 		bool WantsForwardedScrollEventsForAxis (NSEventGestureAxis axis);
 
 #if XAMCORE_2_0
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		[Export ("userActivity", ArgumentSemantic.Strong)]
 		NSUserActivity UserActivity { get; set; }
 
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[Export ("updateUserActivityState:")]
 		void UpdateUserActivityState (NSUserActivity userActivity);
 
 		// Should be removed but radar://42781537 - Classes fail to conformsToProtocol despite header declaration
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity userActivity);
 
-		[Mac (10,10,3, onlyOn64 : true)]
+		[Mac (10,10,3)]
 		[Export ("pressureChangeWithEvent:")]
 		void PressureChange (NSEvent pressureChangeEvent);
 #endif
@@ -16186,7 +16186,7 @@ namespace AppKit {
 		[Export ("layoutGuides", ArgumentSemantic.Copy)]
 		NSLayoutGuide[] LayoutGuides { get; }
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("viewDidChangeEffectiveAppearance")]
 		void ViewDidChangeEffectiveAppearance ();
 	}
@@ -16385,27 +16385,27 @@ namespace AppKit {
 		NSStoryboard Storyboard { get; }
 
 #if XAMCORE_2_0
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[Export ("presentViewControllerInWidget:")]
 		void PresentViewControllerInWidget (NSViewController viewController);
 
-		[Mac (10, 10, onlyOn64: true)]
+		[Mac (10, 10)]
 		[NullAllowed, Export ("extensionContext", ArgumentSemantic.Retain)]
 		NSExtensionContext ExtensionContext { get; }
 
-		[Mac (10, 10, onlyOn64: true)]
+		[Mac (10, 10)]
 		[NullAllowed, Export ("sourceItemView", ArgumentSemantic.Strong)]
 		NSView SourceItemView { get; set; }
 
-		[Mac (10, 10, onlyOn64: true)]
+		[Mac (10, 10)]
 		[Export ("preferredScreenOrigin", ArgumentSemantic.Assign)]
 		CGPoint PreferredScreenOrigin { get; set; }
 
-		[Mac (10, 10, onlyOn64: true)]
+		[Mac (10, 10)]
 		[Export ("preferredMinimumSize")]
 		CGSize PreferredMinimumSize { get; }
 
-		[Mac (10, 10, onlyOn64: true)]
+		[Mac (10, 10)]
 		[Export ("preferredMaximumSize")]
 		CGSize PreferredMaximumSize { get; }
 #endif
@@ -17422,12 +17422,12 @@ namespace AppKit {
 
 #if XAMCORE_4_0
 		[Export ("tabViewItems")]
-		NSTabViewItem [] Items { get; [Mac (10, 14, onlyOn64: true)] set; }
+		NSTabViewItem [] Items { get; [Mac (10, 14)] set; }
 #else
 		[Export ("tabViewItems")]
 		NSTabViewItem [] Items { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Export ("setTabViewItems:")]
 		void SetItems (NSTabViewItem [] items);
 #endif
@@ -17878,19 +17878,19 @@ namespace AppKit {
 		[Export ("attachmentCell", ArgumentSemantic.Retain)]
 		NSTextAttachmentCell AttachmentCell { get; set; }
 
-		[Mac (10,11, onlyOn64: true)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : contents
+		[Mac (10,11)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : contents
 		[NullAllowed, Export ("contents", ArgumentSemantic.Copy)]
 		NSData Contents { get; set; }
 
-		[Mac (10,11, onlyOn64: true)]
+		[Mac (10,11)]
 		[NullAllowed, Export ("fileType")]
 		string FileType { get; set; }
 
-		[Mac (10,11, onlyOn64: true)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : image
+		[Mac (10,11)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : image
 		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
 		NSImage Image { get; set; }
 
-		[Mac (10,11, onlyOn64: true)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : bounds
+		[Mac (10,11)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : bounds
 		[Export ("bounds", ArgumentSemantic.Assign)]
 		CGRect Bounds { get; set; }
 	}
@@ -19220,26 +19220,26 @@ namespace AppKit {
 		[NullAllowed, Export ("candidateListTouchBarItem", ArgumentSemantic.Strong)]
 		NSCandidateListTouchBarItem CandidateListTouchBarItem { get; }
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("performValidatedReplacementInRange:withAttributedString:")]
 		bool PerformValidatedReplacement (NSRange range, NSAttributedString attributedString);
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Static]
 		[Export ("scrollableTextView")]
 		NSScrollView CreateScrollableTextView (); 
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Static]
 		[Export ("fieldEditor")]
 		NSTextView CreateFieldEditor (); 
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Static]
 		[Export ("scrollableDocumentContentTextView")]
 		NSScrollView CreateScrollableDocumentContentTextView (); 
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Static]
 		[Export ("scrollablePlainDocumentContentTextView")]
 		NSScrollView CreateScrollablePlainDocumentContentTextView (); 
@@ -19562,7 +19562,7 @@ namespace AppKit {
 		[Field ("NSToolbarCloudSharingItemIdentifier")]
 		NSString NSToolbarCloudSharingItemIdentifier { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[NullAllowed, Export ("centeredItemIdentifier")]
 		string CenteredItemIdentifier { get; set; }
 	}
@@ -19589,7 +19589,7 @@ namespace AppKit {
 		void DidRemoveItem (NSNotification notification);
 	}
 
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSToolbarItemValidation
 	{
@@ -19598,7 +19598,7 @@ namespace AppKit {
 		bool ValidateToolbarItem (NSToolbarItem item);
 	}
 
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Category]
 	[BaseType (typeof(NSObject))]
 	interface NSObject_NSToolbarItemValidation
@@ -20885,15 +20885,15 @@ namespace AppKit {
 		[Export ("convertPointFromScreen:")]
 		CGPoint ConvertPointFromScreen (CGPoint point);
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("convertPointToBacking:")]
 		CGPoint ConvertPointToBacking (CGPoint point);
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("convertPointFromBacking:")]
 		CGPoint ConvertPointFromBacking (CGPoint point);
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Export ("appearanceSource", ArgumentSemantic.Weak)]
 		INSAppearanceCustomization AppearanceSource { get; set; }
 	}
@@ -21532,12 +21532,12 @@ namespace AppKit {
 		[Notification]
 		NSString DisplayOptionsDidChangeNotification { get; }
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("requestAuthorizationOfType:completionHandler:")]
 		void RequestAuthorization (NSWorkspaceAuthorizationType type, Action<NSWorkspaceAuthorization, NSError> completionHandler);
 	}
 	
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSWorkspaceAuthorization {
@@ -22060,7 +22060,7 @@ namespace AppKit {
 	interface INSSharingServiceDelegate {}
 
 	[Protocol, Model]
-	[Mac (10, 12, onlyOn64: true)]
+	[Mac (10, 12)]
 	[BaseType (typeof (NSSharingServiceDelegate))]
 	interface NSCloudSharingServiceDelegate
 	{
@@ -22913,7 +22913,7 @@ namespace AppKit {
 		bool AllowsExpansionToolTips { get; set; }
 	}
 
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSViewToolTipOwner
 	{
@@ -25666,7 +25666,7 @@ namespace AppKit {
 
 #if XAMCORE_2_0
 	[Protocol]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	interface NSCloudSharingValidation
 	{
 		[Abstract]
@@ -25731,7 +25731,7 @@ namespace AppKit {
 		bool ValidateMenuItem (NSMenuItem menuItem);
 	}
 
-	[Mac (10, 14, onlyOn64: true)]
+	[Mac (10, 14)]
 	[Protocol]
 	interface NSMenuItemValidation
 	{

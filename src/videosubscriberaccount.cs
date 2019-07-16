@@ -22,7 +22,7 @@ namespace VideoSubscriberAccount {
 	[Native]
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[ErrorDomain ("VSErrorDomain")]
 	public enum VSErrorCode : long {
@@ -38,7 +38,7 @@ namespace VideoSubscriberAccount {
 	[Native]
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	public enum VSAccountAccessStatus : long {
 		NotDetermined = 0,
@@ -49,7 +49,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Static]
 	[Internal]
@@ -71,7 +71,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[StrongDictionary ("VSErrorInfoKeys")]
 	interface VSErrorInfo {
@@ -91,7 +91,7 @@ namespace VideoSubscriberAccount {
 	[Protocol, Model]
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountManagerDelegate {
@@ -111,7 +111,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountManager {
@@ -140,7 +140,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Static]
 	[Internal]
@@ -152,7 +152,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[StrongDictionary ("VSCheckAccessOptionKeys")]
 	interface VSAccountManagerAccessOptions {
@@ -163,7 +163,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -175,7 +175,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountMetadata {
@@ -198,7 +198,7 @@ namespace VideoSubscriberAccount {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
@@ -240,14 +240,14 @@ namespace VideoSubscriberAccount {
 		[Export ("supportedAuthenticationSchemes", ArgumentSemantic.Copy)]
 		NSString[] SupportedAuthenticationSchemesString { get; set; }
 
-		[iOS (13,0)][TV (13,0)][Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[NullAllowed, Export ("accountProviderAuthenticationToken")]
 		string AccountProviderAuthenticationToken { get; set; }
 	}
 
 	[iOS (10,2)]
 	[TV (10,1)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountProviderResponse {
 
@@ -267,18 +267,18 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10,2)]
 	[TV (10,1)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	enum VSAccountProviderAuthenticationScheme {
 		[Field ("VSAccountProviderAuthenticationSchemeSAML")]
 		Saml,
 
-		[iOS (13,0)][TV (13,0)][Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("VSAccountProviderAuthenticationSchemeAPI")]
 		Api,
 	}
 
 	[TV (11,0)][iOS (11,0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum VSSubscriptionAccessLevel : long {
 		Unknown,
@@ -287,7 +287,7 @@ namespace VideoSubscriberAccount {
 	}
 
 	[TV (11,0)][iOS (11,0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof (NSObject))]
 	interface VSSubscription {
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
@@ -305,7 +305,7 @@ namespace VideoSubscriberAccount {
 	}
 
 	[TV (11,0)][iOS (11,0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VSSubscriptionRegistrationCenter {

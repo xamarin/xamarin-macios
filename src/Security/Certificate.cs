@@ -283,11 +283,11 @@ namespace Security {
 			return (data == IntPtr.Zero) ? null : new SecKey (data, true);
 		}
 #endif
-		[TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)][Watch (5,0)]
+		[TV (12,0)][Mac (10,14)][iOS (12,0)][Watch (5,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef* */ SecCertificateCopyKey (IntPtr /* SecKeyRef* */ key);
 
-		[TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)][Watch (5,0)]
+		[TV (12,0)][Mac (10,14)][iOS (12,0)][Watch (5,0)]
 		public SecKey GetKey ()
 		{
 			var key = SecCertificateCopyKey (handle);

@@ -567,16 +567,19 @@ namespace ObjCRuntime
 		{
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload that takes '(major, minor)', since iOS is always 64-bit.")]
 		public iOSAttribute (byte major, byte minor, bool onlyOn64 = false)
 			: this (major, minor, 0, onlyOn64)
 		{
 		}
 
-
+		[Obsolete ("Use the overload that takes '(major, minor, subminor)', since iOS is always 64-bit.")]
 		public iOSAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
 			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32) | (onlyOn64 ? Platform.iOS_Arch64 : Platform.None))
 		{
 		}
+#endif
 
 	}
 

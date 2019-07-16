@@ -96,7 +96,7 @@ namespace PencilKit {
 		bool AllowsFingerDrawing { get; set; }
 	}
 
-	[iOS (13, 0), Mac (10, 15, onlyOn64: true)]
+	[iOS (13, 0), Mac (10, 15)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	interface PKDrawing : NSCopying, NSSecureCoding {

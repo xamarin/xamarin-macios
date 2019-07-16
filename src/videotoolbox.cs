@@ -42,7 +42,7 @@ namespace VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_AllowFrameReordering")]
 		NSString AllowFrameReordering { get; }
 
-		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		[Mac (10,14), iOS (12,0), TV (12,0)]
 		[Field ("kVTCompressionPropertyKey_AllowOpenGOP")]
 		NSString AllowOpenGop { get; }
 
@@ -88,7 +88,7 @@ namespace VideoToolbox {
 		NSString RealTime { get; }
 
 		[Field ("kVTCompressionPropertyKey_MaximizePowerEfficiency")]
-		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		[Mac (10,14), iOS (12,0), TV (12,0)]
 		NSString MaximizePowerEfficiency { get; }
 
 		// Hints
@@ -197,7 +197,7 @@ namespace VideoToolbox {
 		[Export ("AllowFrameReordering")]
 		bool AllowFrameReordering { get; set; }
 
-		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		[Mac (10,14), iOS (12,0), TV (12,0)]
 		[Export ("AllowOpenGop")]
 		bool AllowOpenGop { get; set; }
 
@@ -226,7 +226,7 @@ namespace VideoToolbox {
 		[Export ("RealTime")]
 		bool RealTime { get; set; }
 
-		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		[Mac (10,14), iOS (12,0), TV (12,0)]
 		[Export ("MaximizePowerEfficiency")]
 		bool MaximizePowerEfficiency { get; set; }
 
@@ -568,7 +568,7 @@ namespace VideoToolbox {
 		NSString RealTime { get; }
 
 		[Field ("kVTDecompressionPropertyKey_MaximizePowerEfficiency")]
-		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		[Mac (10,14), iOS (12,0), TV (12,0)]
 		NSString MaximizePowerEfficiency { get; }
 
 		[Field ("kVTDecompressionPropertyKey_ThreadCount")]
@@ -680,7 +680,7 @@ namespace VideoToolbox {
 		[Export ("RealTime")]
 		bool RealTime { get; set; }
 
-		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+		[Mac (10,14), iOS (12,0), TV (12,0)]
 		[Export ("MaximizePowerEfficiency")]
 		bool MaximizePowerEfficiency { get; set; }
 
@@ -733,11 +733,11 @@ namespace VideoToolbox {
 		[Export ("RequireHardwareAcceleratedVideoDecoder")]
 		bool RequireHardwareAcceleratedVideoDecoder { get; set; }
 
-		[Mac (10, 13, 4, onlyOn64 : true)][NoiOS][NoTV]
+		[Mac (10, 13, 4)][NoiOS][NoTV]
 		[Export ("RequiredDecoderGpuRegistryId")]
 		NSNumber RequiredDecoderGpuRegistryId { get; }
 
-		[Mac (10, 13, 4, onlyOn64 : true)][NoiOS][NoTV]
+		[Mac (10, 13, 4)][NoiOS][NoTV]
 		[Export ("PreferredDecoderGpuRegistryId")]
 		NSNumber PreferredDecoderGpuRegistryId { get; }
 	}
@@ -751,11 +751,11 @@ namespace VideoToolbox {
 		[Field ("kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder")]
 		NSString RequireHardwareAcceleratedVideoDecoder { get; }
 
-		[Mac (10, 13, 4, onlyOn64 : true)][NoiOS][NoTV]
+		[Mac (10, 13, 4)][NoiOS][NoTV]
 		[Field ("kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID")]
 		NSString RequiredDecoderGpuRegistryId { get; }
 
-		[Mac (10, 13, 4, onlyOn64 : true)][NoiOS][NoTV]
+		[Mac (10, 13, 4)][NoiOS][NoTV]
 		[Field ("kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID")]
 		NSString PreferredDecoderGpuRegistryId { get; }
 	}

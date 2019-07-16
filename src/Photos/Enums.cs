@@ -7,7 +7,7 @@ namespace Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	public enum PHImageContentMode : long {
 		AspectFit = 0,
@@ -18,7 +18,7 @@ namespace Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[Native]
 	public enum PHImageRequestOptionsVersion : long {
 		Current = 0,
@@ -29,7 +29,7 @@ namespace Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[Native]
 	public enum PHImageRequestOptionsDeliveryMode : long {
 		Opportunistic = 0,
@@ -40,7 +40,7 @@ namespace Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[Native]
 	public enum PHImageRequestOptionsResizeMode : long {
 		None = 0,
@@ -73,7 +73,7 @@ namespace Photos
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	public enum PHCollectionListType : long {
 		MomentList  = 1,
@@ -83,7 +83,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	public enum PHCollectionListSubtype : long {
 		MomentListCluster = 1,
@@ -111,7 +111,7 @@ namespace Photos
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	public enum PHCollectionEditOperation : long {
 		None             = 0,
@@ -127,7 +127,7 @@ namespace Photos
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	public enum PHAssetCollectionType : long {
 		Album      = 1,
@@ -138,7 +138,7 @@ namespace Photos
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	public enum PHAssetCollectionSubtype : long {
 		AlbumRegular         = 2,
@@ -162,9 +162,9 @@ namespace Photos
 		SmartAlbumSelfPortraits = 210,
 		[iOS (9,0)]
 		SmartAlbumScreenshots   = 211,
-		[iOS (10,2), TV (10,1)][Mac (10,13, onlyOn64 : true)]
+		[iOS (10,2), TV (10,1)][Mac (10,13)]
 		SmartAlbumDepthEffect   = 212,
-		[iOS (10,3), TV (10,2)][Mac (10,13, onlyOn64 : true)]
+		[iOS (10,3), TV (10,2)][Mac (10,13)]
 		SmartAlbumLivePhotos = 213,
 		[iOS (11,0)][TV(11,0)][NoMac]
 		SmartAlbumAnimated = 214,
@@ -181,7 +181,7 @@ namespace Photos
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	public enum PHAssetEditOperation : long {
 		None       = 0,
@@ -193,7 +193,7 @@ namespace Photos
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	public enum PHAssetMediaType : long {
 		Unknown = 0,
@@ -205,7 +205,7 @@ namespace Photos
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	[Flags]
 	public enum PHAssetMediaSubtype : ulong {
@@ -225,7 +225,7 @@ namespace Photos
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	[Flags]
 	public enum PHAssetBurstSelectionType : ulong {
@@ -236,14 +236,14 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[Native]
 	public enum PHAuthorizationStatus : long {
 		NotDetermined, Restricted, Denied, Authorized
 	}
 
 	[iOS (9,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[TV (10,0)]
 	[Native]
 	public enum PHAssetResourceType : long
@@ -261,7 +261,7 @@ namespace Photos
 
 	[iOS (9,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	public enum PHAssetSourceType : ulong
 	{
@@ -273,7 +273,7 @@ namespace Photos
 
 	[iOS (10,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Native]
 	public enum PHLivePhotoFrameType : long {
 		Photo,
@@ -281,7 +281,7 @@ namespace Photos
 	}
 
 	[TV (11,0), iOS (11,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[Native]
 	public enum PHAssetPlaybackStyle : long {
 		Unsupported = 0,
@@ -292,7 +292,7 @@ namespace Photos
 		VideoLooping = 5,
 	}
 
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[NoiOS][NoTV]
 	[Native]
 	public enum PHProjectTextElementType : long {
@@ -301,7 +301,7 @@ namespace Photos
 		Subtitle,
 	}
 
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[NoiOS][NoTV]
 	[Native]
 	public enum PHProjectCreationSource : long {
@@ -319,7 +319,7 @@ namespace Photos
 		ProjectExtension = 26,
 	}
 
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[NoiOS][NoTV]
 	[Native]
 	public enum PHProjectSectionType : long {
@@ -329,7 +329,7 @@ namespace Photos
 		Auxiliary = 3,
 	}
 
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[NoiOS][NoTV]
 	[Native]
 	[ErrorDomain ("PHLivePhotoEditingErrorDomain")]
@@ -338,7 +338,7 @@ namespace Photos
 		Aborted,
 	}
 
-	[Mac (10,14, onlyOn64 : true)]
+	[Mac (10,14)]
 	[NoiOS][NoTV]
 	public enum FigExifCustomRenderedValue : short {
 		NotCustom = 0,

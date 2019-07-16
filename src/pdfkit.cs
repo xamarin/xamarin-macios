@@ -1786,7 +1786,7 @@ namespace PdfKit {
 		[Export ("interpolationQuality", ArgumentSemantic.Assign)]
 		PdfInterpolationQuality InterpolationQuality { get; set; }
 
-		[iOS (12,0), Mac (10,14, onlyOn64: true)]
+		[iOS (12,0), Mac (10,14)]
 		[Export ("pageShadowsEnabled")]
 		bool PageShadowsEnabled { get; [Bind ("enablePageShadows:")] set; }
 

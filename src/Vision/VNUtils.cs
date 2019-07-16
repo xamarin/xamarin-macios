@@ -18,7 +18,7 @@ using Foundation;
 using Vector2 = global::OpenTK.Vector2;
 
 namespace Vision {
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	public static partial class VNUtils {
 	
 		[Field ("VNNormalizedIdentityRect", Constants.VisionLibrary)]

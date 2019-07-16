@@ -246,11 +246,11 @@ namespace CoreText {
 			return CTRunGetTypographicBounds (handle, range, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern void CTRunGetBaseAdvancesAndOrigins (/* CTRunRef */ IntPtr runRef, /* CFRange */ NSRange range, CGSize[] advancesBuffer, CGPoint[] originsBuffer);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		public void GetBaseAdvancesAndOrigins (NSRange range, out CGSize[] advancesBuffer, out CGPoint[] originsBuffer)
 		{
 			advancesBuffer = GetBuffer<CGSize> (range, null);

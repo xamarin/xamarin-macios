@@ -459,7 +459,7 @@ namespace CoreVideo {
 	// }
 #endif
 
-	[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+	[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 	[Static, Internal]
 	interface CVMetalTextureAttributesKeys {
 
@@ -467,7 +467,7 @@ namespace CoreVideo {
 		NSString UsageKey { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+	[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 	[StrongDictionary ("CVMetalTextureAttributesKeys")]
 	interface CVMetalTextureAttributes {
 		// Create stub DictionaryContainer class

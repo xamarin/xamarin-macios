@@ -1575,7 +1575,7 @@ namespace CoreData
 	}
 
 #if !WATCH
-	[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface NSCoreDataCoreSpotlightDelegate
 	{
@@ -1678,7 +1678,7 @@ namespace CoreData
 		NSString SaveConflictsErrorKey { get; }
 
 #if !WATCH
-		[NoWatch, NoTV, Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
 		[Export ("coreSpotlightExporter")]
 		NSCoreDataCoreSpotlightDelegate CoreSpotlightExporter { get; }
 #endif

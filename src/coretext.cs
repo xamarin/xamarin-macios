@@ -94,7 +94,7 @@ namespace CoreText {
 		NSString ForceEmbeddingLevel { get; }
 #endif
 
-		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 		[Field ("kCTTypesetterOptionAllowUnboundedLayout")]
 		NSString AllowUnboundedLayout { get; }
 	}
@@ -115,7 +115,7 @@ namespace CoreText {
 
 	[Static][Partial]
 	interface CTStringAttributeKey {
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Field ("kCTTrackingAttributeName")]
 		NSString TrackingAttributeName { get; }
 	}

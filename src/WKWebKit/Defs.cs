@@ -98,7 +98,7 @@ namespace WebKit
 #endif
 	}
 
-	[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+	[iOS (10,0)][Mac (10,12)]
 	[Native]
 	[Flags]
 	public enum WKAudiovisualMediaTypes : ulong	{

@@ -377,13 +377,13 @@ namespace Foundation  {
 		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingErrorMaximum = 5375,
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionFailedError = 5376,
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		DecompressionFailedError = 5377,
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionErrorMinimum = 5376,
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		CompressionErrorMaximum = 5503,
 	}
 	
@@ -557,9 +557,9 @@ namespace Foundation  {
 		SkipsSubdirectoryDescendants = 1 << 0,
 		SkipsPackageDescendants      = 1 << 1,
 		SkipsHiddenFiles             = 1 << 2,
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		IncludesDirectoriesPostOrder = 1 << 3,
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		ProducesRelativePathUrls     = 1 << 4,
 	}
 
@@ -729,9 +729,9 @@ namespace Foundation  {
 		PrettyPrinted = 1,
 		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
 		SortedKeys = (1 << 1),
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		FragmentsAllowed = (1 << 2),
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		WithoutEscapingSlashes = (1 << 3),
 	}
 
@@ -921,9 +921,9 @@ namespace Foundation  {
 		Voice,
 		[Mac (10,14)][iOS (12,0)][Watch (5,0)][TV (12,0)]
 		ResponsiveData = 6,
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		AVStreaming = 8,
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		ResponsiveAV = 9,
 		[Mac (10,12)][iOS (10,0)][Watch (3,0)][TV (10,0)]
 		CallSignaling = 11,

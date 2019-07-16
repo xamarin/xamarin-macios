@@ -19,7 +19,7 @@ namespace Photos
 {
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[BaseType (typeof (NSObject))]
 	interface PHAdjustmentData : NSCoding, NSSecureCoding {
 
@@ -38,7 +38,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 #if MONOMAC
 	[DisableDefaultCtor] // Crashes mac introspection test
 #endif
@@ -386,7 +386,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface PHChange {
 
@@ -399,7 +399,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface PHObjectChangeDetails {
 
@@ -416,12 +416,12 @@ namespace Photos
 		bool ObjectWasDeleted { get; }
 	}
 
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	delegate void PHChangeDetailEnumerator (nuint fromIndex, nuint toIndex);
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface PHFetchResultChangeDetails {
 
@@ -465,7 +465,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (PHObject))]
 	[DisableDefaultCtor] // not user createable (calling description fails, see below) must be fetched by API
 	// NSInternalInconsistencyException Reason: PHCollection has no identifier
@@ -497,7 +497,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (PHCollection))]
 	interface PHAssetCollection {
 
@@ -557,7 +557,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (PHCollection))]
 	interface PHCollectionList {
 
@@ -657,7 +657,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[BaseType (typeof (NSObject))]
 	interface PHContentEditingInput {
 
@@ -706,14 +706,14 @@ namespace Photos
 		PHLivePhoto LivePhoto { get; }
 
 		[TV (11,0), iOS (11,0)]
-		[Mac (10,13, onlyOn64 : true)]
+		[Mac (10,13)]
 		[Export ("playbackStyle", ArgumentSemantic.Assign)]
 		PHAssetPlaybackStyle PlaybackStyle { get; }
 	}
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[BaseType (typeof (NSObject))]
 	interface PHContentEditingOutput : NSCoding, NSSecureCoding {
 
@@ -734,7 +734,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface PHFetchOptions : NSCopying {
 
@@ -764,12 +764,12 @@ namespace Photos
 		nuint FetchLimit { get; set; }
 	}
 
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	delegate void PHFetchResultEnumerator (NSObject element, nuint elementIndex, out bool stop);
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling 'description' and seems to be only returned from iOS (not user created)
 	interface PHFetchResult : NSCopying {
@@ -819,7 +819,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface PHImageRequestOptions : NSCopying {
 
@@ -870,7 +870,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[Static]
 	interface PHImageKeys {
 
@@ -907,7 +907,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface PHImageManager {
 
@@ -976,7 +976,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // doc -> "abstract base class"
 	// throws "NSInternalInconsistencyException Reason: PHObject has no identifier"
@@ -999,7 +999,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[Protocol]
 	[Model]
 	[BaseType (typeof (NSObject))]
@@ -1016,7 +1016,7 @@ namespace Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: -[PHPhotoLibrary init] unsupported
 	interface PHPhotoLibrary {
@@ -1046,7 +1046,7 @@ namespace Photos
 		void UnregisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
 	}
 
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[NoTV][NoiOS]
 	[Category]
 	[BaseType (typeof (PHPhotoLibrary))]
@@ -1064,7 +1064,7 @@ namespace Photos
 #if MONOMAC
 	[DisableDefaultCtor] // NS_UNAVAILABLE
 #endif
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface PHLivePhoto : NSSecureCoding, NSCopying
 	{
@@ -1124,7 +1124,7 @@ namespace Photos
 
 	[iOS (10,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NS_UNAVAILABLE
 	interface PHLivePhotoEditingContext {
@@ -1168,7 +1168,7 @@ namespace Photos
 
 #if XAMCORE_2_0
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11,0)][TV (11,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,12)]
 		[Async]
 		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options?.Dictionary, handler)")]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] PHLivePhotoEditingOption options, Action<PHLivePhoto, NSError> handler);
@@ -1188,7 +1188,7 @@ namespace Photos
 
 #if XAMCORE_2_0
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11,0)][TV (11,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,12)]
 		[Async]
 		[Wrap ("_SaveLivePhoto (output, options?.Dictionary, handler)")]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] PHLivePhotoEditingOption options, Action<bool, NSError> handler);
@@ -1202,7 +1202,7 @@ namespace Photos
 
 	[iOS (10,0)]
 	[TV (10,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Protocol]
 	interface PHLivePhotoFrame {
 		[Abstract]
@@ -1225,7 +1225,7 @@ namespace Photos
 #if XAMCORE_2_0 // fails to build with mac/classic
 	[iOS (11,0)]
 	[TV (11,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[Static][Internal]
 	interface PHLivePhotoEditingOptionKeys {
 		[Field ("PHLivePhotoShouldRenderAtPlaybackTime")]
@@ -1234,14 +1234,14 @@ namespace Photos
 
 	[iOS (11,0)]
 	[TV (11,0)]
-	[Mac (10,12, onlyOn64 : true)]
+	[Mac (10,12)]
 	[StrongDictionary ("PHLivePhotoEditingOptionKeys")]
 	interface PHLivePhotoEditingOption {
 		bool ShouldRenderAtPlaybackTime { get; }
 	}
 #endif
 
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[NoiOS][NoTV]
 	[BaseType (typeof (PHAssetCollection))]
 	interface PHProject {
@@ -1249,12 +1249,12 @@ namespace Photos
 		[Export ("projectExtensionData")]
 		NSData ProjectExtensionData { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Export ("hasProjectPreview")]
 		bool HasProjectPreview { get; }
 	}
 
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[NoiOS][NoTV]
 	[BaseType (typeof (NSObject))]
 	interface PHProjectChangeRequest {
@@ -1272,16 +1272,16 @@ namespace Photos
 		[Export ("setKeyAsset:")]
 		void SetKeyAsset ([NullAllowed] PHAsset keyAsset);
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("setProjectPreviewImage:")]
 		void SetProjectPreviewImage (NSImage previewImage);
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("removeAssets:")]
 		void RemoveAssets (PHAsset [] /*id<NSFastEnumeration>*/ assets); //a collection of PHAsset objects
 	}
 
-	[Mac (10,13, onlyOn64 : true)]
+	[Mac (10,13)]
 	[NoiOS][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

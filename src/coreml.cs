@@ -24,7 +24,7 @@ using IMTLTexture = global::Foundation.NSObject; // Won't be used just to make c
 
 namespace CoreML {
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum MLFeatureType : long {
 		Invalid = 0,
@@ -34,23 +34,23 @@ namespace CoreML {
 		Image = 4,
 		MultiArray = 5,
 		Dictionary = 6,
-		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 		Sequence = 7,
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[ErrorDomain ("MLModelErrorDomain")]
 	[Native]
 	public enum MLModelError : long {
 		Generic = 0,
 		FeatureType = 1,
 		IO = 3,
-		[Watch (4,2), TV (11,2), Mac (10,13,2, onlyOn64: true), iOS (11,2)]
+		[Watch (4,2), TV (11,2), Mac (10,13,2), iOS (11,2)]
 		CustomLayer = 4,
 		CustomModel = 5,
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum MLMultiArrayDataType : long {
 		Double = 65536 | 64,
@@ -58,7 +58,7 @@ namespace CoreML {
 		Int32 = 131072 | 32,
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	public enum MLImageSizeConstraintType : long {
 		Unspecified = 0,
@@ -66,7 +66,7 @@ namespace CoreML {
 		Range = 3,
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	public enum MLMultiArrayShapeConstraintType : long {
 		Unspecified = 1,
@@ -74,7 +74,7 @@ namespace CoreML {
 		Range = 3,
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	public enum MLComputeUnits : long {
 		CpuOnly = 0,
@@ -82,7 +82,7 @@ namespace CoreML {
 		All = 2,
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MLDictionaryFeatureProvider : MLFeatureProvider {
 
@@ -93,7 +93,7 @@ namespace CoreML {
 		IntPtr Constructor (NSDictionary<NSString, NSObject> dictionary, out NSError error);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MLFeatureDescription : NSCopying, NSSecureCoding {
 
@@ -120,14 +120,14 @@ namespace CoreML {
 		[NullAllowed, Export ("dictionaryConstraint", ArgumentSemantic.Assign)]
 		MLDictionaryConstraint DictionaryConstraint { get; }
 
-		[Watch (5,0),TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0),TV (12,0), Mac (10,14), iOS (12,0)]
 		[NullAllowed, Export ("sequenceConstraint")]
 		MLSequenceConstraint SequenceConstraint { get; }
 	}
 
 	interface IMLFeatureProvider { }
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Protocol]
 	interface MLFeatureProvider {
 
@@ -141,7 +141,7 @@ namespace CoreML {
 		MLFeatureValue GetFeatureValue (string featureName);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MLFeatureValue : NSCopying {
 
@@ -169,7 +169,7 @@ namespace CoreML {
 		[NullAllowed, Export ("imageBufferValue")]
 		CVPixelBuffer ImageBufferValue { get; }
 
-		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 		[NullAllowed, Export ("sequenceValue")]
 		MLSequence SequenceValue { get; }
 
@@ -177,7 +177,7 @@ namespace CoreML {
 		[Export ("featureValueWithPixelBuffer:")]
 		MLFeatureValue Create (CVPixelBuffer value);
 
-		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("featureValueWithSequence:")]
 		MLFeatureValue Create (MLSequence sequence);
@@ -211,14 +211,14 @@ namespace CoreML {
 		bool IsEqual (MLFeatureValue value);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MLModel {
 
 		[Export ("modelDescription")]
 		MLModelDescription ModelDescription { get; }
 
-		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("configuration")]
 		MLModelConfiguration Configuration { get; }
 
@@ -227,7 +227,7 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLModel Create (NSUrl url, out NSError error);
 
-		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("modelWithContentsOfURL:configuration:error:")]
 		[return: NullAllowed]
@@ -241,7 +241,7 @@ namespace CoreML {
 		[return: NullAllowed]
 		IMLFeatureProvider GetPrediction (IMLFeatureProvider input, MLPredictionOptions options, out NSError error);
 
-		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("predictionsFromBatch:options:error:")]
 		[return: NullAllowed]
 		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, MLPredictionOptions options, out NSError error);
@@ -254,7 +254,7 @@ namespace CoreML {
 		NSUrl CompileModel (NSUrl modelUrl, out NSError error);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MLModelDescription : NSSecureCoding {
 
@@ -278,7 +278,7 @@ namespace CoreML {
 		MLModelMetadata Metadata { get; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Internal]
 	[Static]
 	interface MLModelMetadataKeys {
@@ -299,7 +299,7 @@ namespace CoreML {
 		NSString CreatorDefinedKey { get; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[StrongDictionary ("MLModelMetadataKeys")]
 	interface MLModelMetadata {
 		string Description { get; }
@@ -309,7 +309,7 @@ namespace CoreML {
 		string CreatorDefined { get; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MLMultiArray {
@@ -366,7 +366,7 @@ namespace CoreML {
 		void SetObject (NSNumber obj, IntPtr key);
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MLDictionaryConstraint : NSSecureCoding {
@@ -375,7 +375,7 @@ namespace CoreML {
 		MLFeatureType KeyType { get; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MLImageConstraint : NSSecureCoding {
@@ -389,12 +389,12 @@ namespace CoreML {
 		[Export ("pixelFormatType")]
 		uint PixelFormatType { get; }
 
-		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("sizeConstraint")]
 		MLImageSizeConstraint SizeConstraint { get; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MLMultiArrayConstraint : NSSecureCoding {
@@ -406,12 +406,12 @@ namespace CoreML {
 		[Export ("dataType")]
 		MLMultiArrayDataType DataType { get; }
 
-		[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("shapeConstraint")]
 		MLMultiArrayShapeConstraint ShapeConstraint { get; }
 	}
 
-	[Watch (4,0), TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MLPredictionOptions {
 
@@ -419,7 +419,7 @@ namespace CoreML {
 		bool UsesCpuOnly { get; set; }
 	}
 
-	[NoWatch, TV (11,2), Mac (10,13,2, onlyOn64: true), iOS (11,2)]
+	[NoWatch, TV (11,2), Mac (10,13,2), iOS (11,2)]
 	[Protocol]
 	interface MLCustomLayer {
 
@@ -445,7 +445,7 @@ namespace CoreML {
 		bool Encode (IMTLCommandBuffer commandBuffer, IMTLTexture[] inputs, IMTLTexture[] outputs, [NullAllowed] out NSError error);
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MLArrayBatchProvider : MLBatchProvider {
@@ -462,7 +462,7 @@ namespace CoreML {
 
 	interface IMLBatchProvider {}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[Protocol]
 	interface MLBatchProvider {
 
@@ -475,7 +475,7 @@ namespace CoreML {
 		IMLFeatureProvider GetFeatures (nint index);
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[Protocol, Model (AutoGeneratedName = true)]
 	interface MLCustomModel {
@@ -494,7 +494,7 @@ namespace CoreML {
 		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, MLPredictionOptions options, out NSError error);
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MLImageSize : NSSecureCoding {
@@ -506,7 +506,7 @@ namespace CoreML {
 		nint PixelsHigh { get; }
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MLImageSizeConstraint : NSSecureCoding {
@@ -524,7 +524,7 @@ namespace CoreML {
 		MLImageSize[] EnumeratedImageSizes { get; }
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MLMultiArrayShapeConstraint : NSSecureCoding {
@@ -539,7 +539,7 @@ namespace CoreML {
 		NSArray<NSNumber>[] EnumeratedShapes { get; }
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MLSequence {
@@ -566,7 +566,7 @@ namespace CoreML {
 		NSNumber[] Int64Values { get; }
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MLSequenceConstraint : NSCopying, NSSecureCoding {
@@ -578,7 +578,7 @@ namespace CoreML {
 		NSRange CountRange { get; }
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	interface MLModelConfiguration : NSCopying, NSSecureCoding {
 

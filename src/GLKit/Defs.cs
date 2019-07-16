@@ -134,11 +134,11 @@ namespace GLKit {
 		public bool Normalized;
 
 #if !COREBUILD
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport (Constants.GLKitLibrary, EntryPoint = "GLKVertexAttributeParametersFromModelIO")]
 		extern static GLKVertexAttributeParameters FromVertexFormat_ (nuint vertexFormat);
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		public static GLKVertexAttributeParameters FromVertexFormat (MDLVertexFormat vertexFormat)
 		{
 			return FromVertexFormat_ ((nuint) (ulong) vertexFormat);

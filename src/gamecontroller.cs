@@ -22,7 +22,7 @@ using UIKit;
 namespace GameController {
 
 	[iOS (7,0)]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // The GCControllerElement class is never instantiated directly.
 	partial interface GCControllerElement {
@@ -39,7 +39,7 @@ namespace GameController {
 	delegate void GCControllerAxisValueChangedHandler (GCControllerAxisInput axis, float /* float, not CGFloat */ value);
 
 	[iOS (7,0)]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerAxisInput {
@@ -53,7 +53,7 @@ namespace GameController {
 
 	delegate void GCControllerButtonValueChanged (GCControllerButtonInput button, float /* float, not CGFloat */ buttonValue, bool pressed);
 
-	[iOS (7,0), Mac (10,9, onlyOn64: true)]
+	[iOS (7,0), Mac (10,9)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerButtonInput {
@@ -90,7 +90,7 @@ namespace GameController {
 	delegate void GCControllerDirectionPadValueChangedHandler (GCControllerDirectionPad dpad, float /* float, not CGFloat */ xValue, float /* float, not CGFloat */ yValue);
 
 	[iOS (7,0)]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerDirectionPad {
@@ -120,7 +120,7 @@ namespace GameController {
 	delegate void GCGamepadValueChangedHandler (GCGamepad gamepad, GCControllerElement element);
 
 	[iOS (7,0)]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCGamepad {
@@ -157,7 +157,7 @@ namespace GameController {
 	}
 
 	[iOS (7,0)]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	[BaseType (typeof (GCGamepad))]
 	[DisableDefaultCtor]
 	partial interface GCGamepadSnapshot {
@@ -175,7 +175,7 @@ namespace GameController {
 	delegate void GCExtendedGamepadValueChangedHandler (GCExtendedGamepad gamepad, GCControllerElement element);
 
 	[iOS (7,0)]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCExtendedGamepad {
@@ -222,17 +222,17 @@ namespace GameController {
 		[Export ("rightTrigger")]
 		GCControllerButtonInput RightTrigger { get; }
 
-		[TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
+		[TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
 		[NullAllowed, Export ("leftThumbstickButton")]
 		GCControllerButtonInput LeftThumbstickButton { get; }
 
-		[TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
+		[TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
 		[NullAllowed, Export ("rightThumbstickButton")]
 		GCControllerButtonInput RightThumbstickButton { get; }
 	}
 
 	[iOS (7,0)]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	[BaseType (typeof (GCExtendedGamepad))]
 	[DisableDefaultCtor]
 	partial interface GCExtendedGamepadSnapshot {
@@ -246,7 +246,7 @@ namespace GameController {
 		[Export ("initWithController:snapshotData:")]
 		IntPtr Constructor (GCController controller, NSData data);
 
-		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
+		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		[Field ("GCCurrentExtendedGamepadSnapshotDataVersion")]
 		GCExtendedGamepadSnapshotDataVersion DataVersion { get; }
 	}
@@ -255,7 +255,7 @@ namespace GameController {
 	delegate void GCControllerPausedHandler (GCController controller);
 #endif
 
-	[iOS (7,0), Mac (10,9, onlyOn64: true)]
+	[iOS (7,0), Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	partial interface GCController {
 
@@ -286,7 +286,7 @@ namespace GameController {
 		[Export ("extendedGamepad", ArgumentSemantic.Retain)]
 		GCExtendedGamepad ExtendedGamepad { get; }
 
-		[Mac (10,12, onlyOn64: true)]
+		[Mac (10,12)]
 		[iOS (10,0)]
 		[NullAllowed, Export ("microGamepad", ArgumentSemantic.Retain)]
 		GCMicroGamepad MicroGamepad { get; }
@@ -316,7 +316,7 @@ namespace GameController {
 		DispatchQueue HandlerQueue { get; set; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64: true)]
+	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // access thru GCController.Motion - returns a nil Handle
 	partial interface GCMotion {
@@ -350,17 +350,17 @@ namespace GameController {
 
 		[TV (11,0)]
 		[iOS (11,0)]
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		[Export ("hasAttitudeAndRotationRate")]
 		bool HasAttitudeAndRotationRate { get; }
 	}
 
-	[Mac (10,11, onlyOn64: true)]
+	[Mac (10,11)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	delegate void GCMicroGamepadValueChangedHandler (GCMicroGamepad gamepad, GCControllerElement element);
 
-	[Mac (10,11, onlyOn64: true)]
+	[Mac (10,11)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
@@ -391,7 +391,7 @@ namespace GameController {
 		bool AllowsRotation { get; set; }
 	}
 
-	[Mac (10,12, onlyOn64: true)]
+	[Mac (10,12)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (GCMicroGamepad))]
@@ -405,12 +405,12 @@ namespace GameController {
 		[Export ("initWithController:snapshotData:")]
 		IntPtr Constructor (GCController controller, NSData data);
 
-		[TV (12, 2), Mac (10, 14, 4, onlyOn64: true), iOS (12, 2)]
+		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		[Field ("GCCurrentMicroGamepadSnapshotDataVersion")]
 		GCMicroGamepadSnapshotDataVersion DataVersion { get; }
 	}
 
-	[Mac (10,12, onlyOn64: true)]
+	[Mac (10,12)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (UIViewController))]

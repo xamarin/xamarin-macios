@@ -309,11 +309,11 @@ namespace CoreMedia {
 			return CMTimeMinimum (time1, time2);
 		}
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimeFoldIntoRange (CMTime time, CMTimeRange foldRange);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public static CMTime Fold (CMTime time, CMTimeRange foldRange)
 		{
 			return CMTimeFoldIntoRange (time, foldRange);

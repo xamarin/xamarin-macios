@@ -41,7 +41,7 @@ namespace MapKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	interface MKAnnotation {
 		[Export ("coordinate")][Abstract]
 		CLLocationCoordinate2D Coordinate { get;
@@ -69,7 +69,7 @@ namespace MapKit {
 	[BaseType (typeof (MKAnnotation))]
 	[Model]
 	[Protocol]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	interface MKOverlay {
 #if MONOMAC || XAMCORE_2_0
 		[Abstract]
@@ -94,7 +94,7 @@ namespace MapKit {
 	[BaseType (typeof (UIView))]
 	[NoWatch]
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	interface MKAnnotationView {
 		[DesignatedInitializer]
 		[Export ("initWithAnnotation:reuseIdentifier:")]
@@ -180,24 +180,24 @@ namespace MapKit {
 		[Export ("rightCalloutOffset")]
 		CGPoint RightCallpoutOffset { get; set; }
 #endif
-		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[TV (11,0)][iOS (11,0)][Mac (10,13)]
 		[NullAllowed, Export ("clusteringIdentifier")]
 		string ClusteringIdentifier { get; set; }
 
-		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[TV (11,0)][iOS (11,0)][Mac (10,13)]
 		[NullAllowed, Export ("clusterAnnotationView", ArgumentSemantic.Weak)]
 		MKAnnotationView ClusterAnnotationView { get; }
 
-		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[TV (11,0)][iOS (11,0)][Mac (10,13)]
 		[Advice ("Pre-defined constants are available from 'MKFeatureDisplayPriority'.")]
 		[Export ("displayPriority")]
 		float DisplayPriority { get; set; }
 
-		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[TV (11,0)][iOS (11,0)][Mac (10,13)]
 		[Export ("collisionMode", ArgumentSemantic.Assign)]
 		MKAnnotationViewCollisionMode CollisionMode { get; set; }
 
-		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[TV (11,0)][iOS (11,0)][Mac (10,13)]
 		[Export ("prepareForDisplay")]
 		[RequiresSuper]
 		void PrepareForDisplay ();
@@ -205,7 +205,7 @@ namespace MapKit {
 
 	[ThreadSafe]
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[BaseType (typeof (MKShape))]
 	interface MKCircle : MKOverlay {
 		[Export ("radius")]
@@ -244,7 +244,7 @@ namespace MapKit {
 	
 	[TV (9,2)]
 	[iOS (6,0)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	interface MKDirectionsRequest {
 		[NullAllowed] // by default this property is null
@@ -281,7 +281,7 @@ namespace MapKit {
 	[BaseType (typeof (NSObject))]
 	[iOS (6,0)]
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	interface MKMapItem : NSSecureCoding
 #if IOS // #if TARGET_OS_IOS
 		, NSItemProviderReading, NSItemProviderWriting
@@ -380,7 +380,7 @@ namespace MapKit {
 #if !WATCH
 	[TV (9,2)]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof (MKMapViewDelegate)})]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	interface MKMapView {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -487,15 +487,15 @@ namespace MapKit {
 		[return: NullAllowed]
 		MKAnnotationView DequeueReusableAnnotation (string withViewIdentifier);
 	
-		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[TV (11,0)][iOS (11,0)][Mac (10,13)]
 		[Export ("dequeueReusableAnnotationViewWithIdentifier:forAnnotation:")]
 		MKAnnotationView DequeueReusableAnnotation (string identifier, IMKAnnotation annotation);
 
-		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[TV (11,0)][iOS (11,0)][Mac (10,13)]
 		[Export ("registerClass:forAnnotationViewWithReuseIdentifier:")]
 		void Register ([NullAllowed] Class viewClass, string identifier);
 
-		[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[TV (11,0)][iOS (11,0)][Mac (10,13)]
 		[Wrap ("Register (viewType == null ? null : new Class (viewType), identifier)")]
 		void Register ([NullAllowed] Type viewType, string identifier);
 
@@ -693,7 +693,7 @@ namespace MapKit {
 	}
 
 	[Static]
-	[TV (11,0)][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+	[TV (11,0)][iOS (11,0)][Mac (10,13)]
 	[NoWatch]
 	interface MKMapViewDefault {
 		[Field ("MKMapViewDefaultAnnotationViewReuseIdentifier")]
@@ -706,7 +706,7 @@ namespace MapKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	interface MKMapViewDelegate {
 		[Export ("mapView:regionWillChangeAnimated:"), EventArgs ("MKMapViewChange")]
 		void RegionWillChange (MKMapView mapView, bool animated);
@@ -796,11 +796,11 @@ namespace MapKit {
 		[iOS (7,0), Export ("mapViewDidFinishRenderingMap:fullyRendered:"), EventArgs ("MKDidFinishRenderingMap")]
 		void DidFinishRenderingMap (MKMapView mapView, bool fullyRendered);
 
-		[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13)]
 		[Export ("mapView:clusterAnnotationForMemberAnnotations:"), DelegateName ("MKCreateClusterAnnotation"), DefaultValue (null)]
 		MKClusterAnnotation CreateClusterAnnotation (MKMapView mapView, IMKAnnotation[] memberAnnotations);
 
-		[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+		[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13)]
 		[Export ("mapViewDidChangeVisibleRegion:")]
 		void DidChangeVisibleRegion (MKMapView mapView);
 	}
@@ -809,7 +809,7 @@ namespace MapKit {
 	// crash on Dispose when created from 'init'
 	[DisableDefaultCtor]
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	interface MKPinAnnotationView {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -873,7 +873,7 @@ namespace MapKit {
 	// crash (at least) when calling 'description' when instance is created by 'init'
 	[DisableDefaultCtor]
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	interface MKPlacemark : MKAnnotation, NSCopying {
 		[Export ("initWithCoordinate:addressDictionary:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, [NullAllowed] NSDictionary addressDictionary);
@@ -885,13 +885,13 @@ namespace MapKit {
 #endif // !MONOMAC && !WATCH
 
 		[Watch (3,0)][TV (10,0)][iOS (10,0)]
-		[Mac (10,12, onlyOn64 : true)]
+		[Mac (10,12)]
 		[Export ("initWithCoordinate:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate);
 
 #if !TVOS && XAMCORE_2_0
 		[Watch (3,0)][iOS (10,0)]
-		[Mac (10,12, onlyOn64 : true)]
+		[Mac (10,12)]
 		[NoTV]
 		[Export ("initWithCoordinate:postalAddress:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, CNPostalAddress postalAddress);
@@ -1065,7 +1065,7 @@ namespace MapKit {
 
 #if !WATCH
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 #if XAMCORE_2_0 || MONOMAC
 	[BaseType (typeof (NSObject))]
 	[Abstract]
@@ -1090,7 +1090,7 @@ namespace MapKit {
 	}
 
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[BaseType (typeof (MKShape))]
 	interface MKPointAnnotation {
 		[Export ("coordinate")]
@@ -1115,7 +1115,7 @@ namespace MapKit {
 
 	[ThreadSafe]
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[BaseType (typeof (MKMultiPoint))]
 	interface MKPolygon : MKOverlay {
 		[Export ("interiorPolygons")]
@@ -1151,7 +1151,7 @@ namespace MapKit {
 
 	[ThreadSafe]
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[BaseType (typeof (MKMultiPoint))]
 	interface MKPolyline : MKOverlay {
 		[Static]
@@ -1189,7 +1189,7 @@ namespace MapKit {
 
 	[BaseType (typeof (MKShape))]
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	interface MKMultiPoint {
 		[Export ("points"), Internal]
 		IntPtr _Points { get;  }
@@ -1203,7 +1203,7 @@ namespace MapKit {
 
 	[BaseType (typeof (NSObject))]
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	interface MKUserLocation : IMKAnnotation { // This is wrong. It should be MKAnnotation but we can't due to API compat. When you fix this remove hack in generator.cs to enable warning again
 		[Export ("updating")]
 		bool Updating { [Bind ("isUpdating")] get; }
@@ -1246,7 +1246,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (6,1)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
 #if !XAMCORE_2_0 && !MONOMAC
@@ -1272,7 +1272,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (6,1)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
 #if !XAMCORE_2_0 && !MONOMAC
@@ -1280,7 +1280,7 @@ namespace MapKit {
 #endif
 	interface MKLocalSearchRequest : NSCopying {
 
-		[TV (9,2)][NoWatch][iOS (9,3)][Mac (10,11,4, onlyOn64 : true)]
+		[TV (9,2)][NoWatch][iOS (9,3)][Mac (10,11,4)]
 		[Export ("initWithCompletion:")]
 		IntPtr Constructor (MKLocalSearchCompletion completion);
 
@@ -1294,7 +1294,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (6,1)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** setObjectForKey: object cannot be nil (key: mapItems)
@@ -1313,7 +1313,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKOverlayPathRenderer))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKCircleRenderer {
 
 		[Export ("initWithCircle:")]
@@ -1325,7 +1325,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: Cannot initialize MKDirections with nil request
 	partial interface MKDirections {
 
@@ -1354,7 +1354,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKETAResponse {
 		[Export ("source")]
 		MKMapItem Source { get; }
@@ -1384,7 +1384,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKDirectionsResponse {
 
 		[Export ("source")]
@@ -1399,7 +1399,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKRoute {
 
 		[Export ("name")]
@@ -1426,7 +1426,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKRouteStep {
 
 		[Export ("instructions")]
@@ -1449,7 +1449,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSFormatter))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKDistanceFormatter {
 
 		[Export ("stringFromDistance:")]
@@ -1471,7 +1471,7 @@ namespace MapKit {
 #if !WATCH
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKPolyline))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKGeodesicPolyline {
 
 		[Static, Export ("polylineWithPoints:count:")]
@@ -1485,7 +1485,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKMapCamera : NSCopying, NSSecureCoding {
 
 		[Export ("centerCoordinate")]
@@ -1515,7 +1515,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKMapSnapshot {
 
 		[Export ("image")]
@@ -1526,7 +1526,7 @@ namespace MapKit {
 
 #if MONOMAC
 		[NoWatch][NoTV][NoiOS]
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("appearance")]
 		NSAppearance Appearance { get; }
 #endif
@@ -1534,7 +1534,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKMapSnapshotOptions : NSCopying {
 
 		[Export ("camera", ArgumentSemantic.Copy)]
@@ -1565,7 +1565,7 @@ namespace MapKit {
 
 #if MONOMAC
 		[NoWatch][NoTV][NoiOS]
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[NullAllowed, Export ("appearance", ArgumentSemantic.Strong)]
 		NSAppearance Appearance { get; set; }
 #endif
@@ -1573,7 +1573,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKMapSnapshotter {
 
 		[DesignatedInitializer]
@@ -1599,7 +1599,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKOverlayRenderer))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[ThreadSafe]
 	partial interface MKOverlayPathRenderer {
 
@@ -1658,7 +1658,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKOverlayRenderer {
 
 		[DesignatedInitializer]
@@ -1709,7 +1709,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKOverlayPathRenderer))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKPolygonRenderer {
 
 		[Export ("initWithPolygon:")]
@@ -1721,7 +1721,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKOverlayPathRenderer))]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKPolylineRenderer {
 
 		[Export ("initWithPolyline:")]
@@ -1733,7 +1733,7 @@ namespace MapKit {
 
 	[ThreadSafe]
 	[TV (9,2)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 #if XAMCORE_2_0 || MONOMAC
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	partial interface MKTileOverlay : MKOverlay {
@@ -1784,7 +1784,7 @@ namespace MapKit {
 	[iOS (7,0), BaseType (typeof (MKOverlayRenderer))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: Expected a MKTileOverlay but got (null)
 	[DisableDefaultCtor] // throw in iOS8 beta 1 ^
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	partial interface MKTileOverlayRenderer {
 		// This ctor is not allowed: NSInvalidArgumentEception Expected a MKTileOverlay
 //		[Export ("initWithOverlay:")]
@@ -1877,7 +1877,7 @@ namespace MapKit {
 		void SetMapItem (MKMapItem item);
 	}
 
-[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13, onlyOn64: true)]
+[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MKClusterAnnotation : MKAnnotation {

@@ -1022,7 +1022,7 @@ namespace UIKit {
 		[Export ("showCGGlyphs:positions:count:font:matrix:attributes:inContext:")]
 		void ShowGlyphs (IntPtr glyphs, IntPtr positions, nuint glyphCount, NSFont font, CGAffineTransform textMatrix, NSDictionary attributes, [NullAllowed] CGContext graphicsContext);
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Protected] // Can be overridden
 		[Export ("showCGGlyphs:positions:count:font:textMatrix:attributes:inContext:")]
 		void ShowGlyphs (IntPtr glyphs, IntPtr positions, nint glyphCount, NSFont font, CGAffineTransform textMatrix, NSDictionary attributes, [NullAllowed] CGContext graphicsContext);
@@ -1050,12 +1050,12 @@ namespace UIKit {
  		[Export ("showAttachmentCell:inRect:characterIndex:")]
 		void ShowAttachmentCell (NSCell cell, CGRect rect, nuint characterIndex);
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[TV (12, 0), iOS (12, 0)]
 		[Export ("limitsLayoutForSuspiciousContents")]
 		bool LimitsLayoutForSuspiciousContents { get; set; }
 
-		[Mac (10,15, onlyOn64: true)]
+		[Mac (10,15)]
 		[TV (13,0), iOS (13,0)]
 		[Export ("usesDefaultHyphenation")]
 		bool UsesDefaultHyphenation { get; set; }

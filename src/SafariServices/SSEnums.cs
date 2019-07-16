@@ -61,12 +61,12 @@ namespace SafariServices {
 	}
 
 	[NoiOS]
-	[Mac (10,12,4, onlyOn64: true)]
+	[Mac (10,12,4)]
 	[Native]
 	public enum SFSafariServicesVersion : long {
 		V10_0,
 		V10_1,
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		V11_0,
 	}
 }

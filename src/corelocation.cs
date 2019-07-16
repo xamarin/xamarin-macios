@@ -310,7 +310,7 @@ namespace CoreLocation {
 		bool DeferredLocationUpdatesAvailable { get; }
 
 		[iOS (6,0)]
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Field ("CLTimeIntervalMax")]
 		double MaxTimeInterval { get; }
 
@@ -374,7 +374,7 @@ namespace CoreLocation {
 		bool ShowsBackgroundLocationIndicator { get; set; }
 #endif
 		[iOS (9,0)]
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("requestLocation")]
 		void RequestLocation ();
 	}
@@ -473,7 +473,7 @@ namespace CoreLocation {
 	[Static]
 	partial interface CLLocationDistance {
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[iOS (6,0)]
 		[Field ("CLLocationDistanceMax")]
 		double MaxDistance { get; }

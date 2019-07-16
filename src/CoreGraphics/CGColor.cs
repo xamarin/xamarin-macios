@@ -276,14 +276,14 @@ namespace CoreGraphics {
 			return h == IntPtr.Zero ? null : new CGColor (h);
 		}
 
-		[Mac (10,15, onlyOn64: true)]
+		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef* */ IntPtr CGColorCreateSRGB (nfloat red, nfloat green, nfloat blue, nfloat alpha);
 
-		[Mac (10,15, onlyOn64: true)]
+		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
@@ -293,14 +293,14 @@ namespace CoreGraphics {
 			return h == IntPtr.Zero ? null : new CGColor (h);
 		}
 
-		[Mac (10,15, onlyOn64: true)]
+		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef* */ IntPtr CGColorCreateGenericGrayGamma2_2 (nfloat gray, nfloat alpha);
 
-		[Mac (10,15, onlyOn64: true)]
+		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]

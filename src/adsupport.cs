@@ -13,7 +13,7 @@ using System;
 
 namespace AdSupport {
 
-	[iOS (6,0)][Mac (10,14, onlyOn64: true)]
+	[iOS (6,0)][Mac (10,14)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASIdentifierManager {
