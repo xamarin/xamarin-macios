@@ -112,8 +112,10 @@ namespace MonoMac.Tuner {
 					if (a != null)
 						message.AppendLine ($"\tAssembly: `{a}`");
 				}
+				if (e.InnerException is AssemblyResolutionException res)
+					message.AppendLine ("Attempting to resolve: " + res.AssemblyReference?.Name);
 				message.Append ($"Reason: {e.Message}");
-				throw new MonoMacException (2001, true, e, "Could not link assemblies. {0}", message);
+				throw new MonoMacException (2001, true, e, "Could not link (or process) assemblies. {0}", message);
 			}
 
 			assemblies = ListAssemblies (context);
