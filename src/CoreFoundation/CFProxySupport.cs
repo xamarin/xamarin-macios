@@ -587,10 +587,11 @@ namespace CoreFoundation {
 		// helper delegate to reuse code
 		delegate IntPtr CreatePACCFRunLoopSource (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context);
 
-		static CFProxy[] ParseProxies (IntPtr proxyList) {
+		static CFProxy[] ParseProxies (IntPtr proxyList)
+		{
 			CFProxy[] proxies = null;
 			if (proxyList != IntPtr.Zero) {
-				using (var array = new CFArray (proxyList, false)){
+				using (var array = new CFArray (proxyList, false)) {
 					proxies = new CFProxy [array.Count];
 					for (int i = 0; i < proxies.Length; i++) {
 						var dict = new NSDictionary (array.GetValue (i));
@@ -609,9 +610,10 @@ namespace CoreFoundation {
 				// we need the runloop of THIS thread, so it is important to get it in the correct context
 				var runLoop = CFRunLoop.Current;
 				CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
-					proxies = ParseProxies (proxyList);
 					if (error != IntPtr.Zero)
 						outError = new NSError (error);
+					else
+						proxies = ParseProxies (proxyList);
 					runLoop.Stop ();
 				};
 				var clientContext = new CFStreamClientContext ();
@@ -656,7 +658,7 @@ namespace CoreFoundation {
 		{
 			CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
 				var proxies = ParseProxies (proxyList);
-				clientCb ((client != IntPtr.Zero)? null : new NSObject (client), proxies, (error == IntPtr.Zero) ? null : new NSError (error));
+				clientCb ((client != IntPtr.Zero)? null : Runtime.GetNSObject<NSObject> (client), proxies, (error == IntPtr.Zero) ? null : Runtime.GetNSObject<NSError> (error));
 			};
 			var loopSourcePtr = factory (cb, ref clientContext);
 			return (loopSourcePtr == IntPtr.Zero) ? null : new CFRunLoopSource (loopSourcePtr);
@@ -682,9 +684,6 @@ namespace CoreFoundation {
 			
 			using (var pacScript = new NSString (proxyAutoConfigurationScript)) 
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
-				if (url == null)
-					throw new ArgumentException ($"Could not get AbsoluteUri for {nameof (url)}");
-
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context) {
 					return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref context);
 				};
@@ -704,9 +703,6 @@ namespace CoreFoundation {
 
 			using (var pacScript = new NSString (proxyAutoConfigurationScript)) 
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
-				if (url == null)
-					throw new ArgumentException ($"Could not get AbsoluteUri for {nameof (url)}");
-
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context) {
 					return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref context);
 				};
@@ -724,8 +720,6 @@ namespace CoreFoundation {
 
 			using (var pacScript = new NSString (proxyAutoConfigurationScript)) 
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
-				if (url == null)
-					throw new ArgumentException ($"Could not get AbsoluteUri for {nameof (url)}");
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context) {
 					return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref context);
 				};
@@ -754,12 +748,6 @@ namespace CoreFoundation {
 
 			using (var pacUrl = new NSUrl (proxyAutoConfigurationUrl.AbsoluteUri)) // toll free bridge to CFUrl
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
-				if (pacUrl == null)
-					throw new ArgumentException ($"Could not get AbsoluteUri for {nameof (pacUrl)}");
-
-				if (url == null)
-					throw new ArgumentException ($"Could not get AbsoluteUri for {nameof (url)}");
-
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context) {
 					return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref context);
 				};
@@ -779,12 +767,6 @@ namespace CoreFoundation {
 
 			using (var pacUrl = new NSUrl (proxyAutoConfigurationUrl.AbsoluteUri)) // toll free bridge to CFUrl
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
-				if (pacUrl == null)
-					throw new ArgumentException ($"Could not get AbsoluteUri for {nameof (pacUrl)}");
-
-				if (url == null)
-					throw new ArgumentException ($"Could not get AbsoluteUri for {nameof (url)}");
-
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context) {
 					return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref context);
 				};
@@ -803,12 +785,6 @@ namespace CoreFoundation {
 			
 			using (var pacUrl = new NSUrl (proxyAutoConfigurationUrl.AbsoluteUri)) // toll free bridge to CFUrl
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
-				if (pacUrl == null)
-					throw new ArgumentException ($"Could not get AbsoluteUri for {nameof (pacUrl)}");
-
-				if (url == null)
-					throw new ArgumentException ($"Could not get AbsoluteUri for {nameof (url)}");
-
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context) {
 					return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref context);
 				};
