@@ -71,7 +71,7 @@ namespace StoreKit {
 		void DeleteContentForProduct (string productId);
 #endif
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Field ("SKDownloadTimeRemainingUnknown")]
 		double TimeRemainingUnknown { get; }
 
@@ -105,13 +105,13 @@ namespace StoreKit {
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		string ApplicationUsername { get; }
 
-		[iOS (8,3), Mac (10,14, onlyOn64: true)]
+		[iOS (8,3), Mac (10,14)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
 
 		[iOS (12,2)]
 		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
 		SKPaymentDiscount PaymentDiscount { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
 	}
@@ -144,13 +144,13 @@ namespace StoreKit {
 		[Export ("applicationUsername", ArgumentSemantic.Copy)][New]
 		string ApplicationUsername { get; set; }
 
-		[iOS (8,3), Mac (10,14, onlyOn64: true)]
+		[iOS (8,3), Mac (10,14)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; set; }
 
 		[iOS (12,2)]
 		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
 		SKPaymentDiscount PaymentDiscount { get; set; }
 	}
@@ -243,7 +243,7 @@ namespace StoreKit {
 		[Export ("contentLengths")]
 		NSNumber [] ContentLengths { get; }
 
-		[iOS (6,0), Mac (10,14, onlyOn64: true)]
+		[iOS (6,0), Mac (10,14)]
 		[Export ("downloadContentLengths")]
 		NSNumber [] DownloadContentLengths { get;  }
 
@@ -257,7 +257,7 @@ namespace StoreKit {
 		[Export ("contentVersion")]
 		string ContentVersion { get; }
 
-		[iOS (6,0), Mac (10,14, onlyOn64: true)]
+		[iOS (6,0), Mac (10,14)]
 		[Export ("downloadContentVersion")]
 		string DownloadContentVersion { get;  }
 
@@ -269,13 +269,13 @@ namespace StoreKit {
 		[NullAllowed, Export ("introductoryPrice")]
 		SKProductDiscount IntroductoryPrice { get; }
 
-		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		[iOS (12,0), TV (12,0), Mac (10,14)]
 		[NullAllowed, Export ("subscriptionGroupIdentifier")]
 		string SubscriptionGroupIdentifier { get; }
 
 		[iOS (12,2)]
 		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Export ("discounts")]
 		SKProductDiscount [] Discounts { get; }
 	}
@@ -714,7 +714,7 @@ namespace StoreKit {
 	}
 #endif
 
-	[iOS (10,3), Mac (10,14, onlyOn64: true)]
+	[iOS (10,3), Mac (10,14)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Not specified but very likely
@@ -748,7 +748,7 @@ namespace StoreKit {
 
 		[iOS (12,2)]
 		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[NullAllowed, Export ("identifier")]
 		string Identifier { get; }
 
@@ -763,7 +763,7 @@ namespace StoreKit {
 
 		[iOS (12,2)]
 		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Export ("type")]
 		SKProductDiscountType Type { get; }
 	}
@@ -780,7 +780,7 @@ namespace StoreKit {
 
 	[iOS (12,2)]
 	[TV (12,2)]
-	[Mac (10,14,4, onlyOn64: true)]
+	[Mac (10,14,4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SKPaymentDiscount {
@@ -805,7 +805,7 @@ namespace StoreKit {
 
 	[iOS (12,2)]
 	[TV (12,2)]
-	[Mac (10,14,4, onlyOn64: true)]
+	[Mac (10,14,4)]
 	[Native]
 	public enum SKProductDiscountType : long {
 		Introductory,

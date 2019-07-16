@@ -18,7 +18,7 @@ namespace CoreGraphics {
 		Append = 1,
 	}
 
-	[Mac (10,15, onlyOn64: true)]
+	[Mac (10,15)]
 	[iOS (13,0)]
 	public enum CGPdfTagType /* int32_t */ {
 		Document = 100,
@@ -72,7 +72,7 @@ namespace CoreGraphics {
 		Form,
 	}
 
-	[Mac (10,15, onlyOn64: true)]
+	[Mac (10,15)]
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Watch (6,0)]

@@ -1022,28 +1022,28 @@ namespace AVFoundation {
 		void DisableManualRenderingMode ();
 
 #if !WATCH
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0), NoWatch]
+		[TV (12,0), Mac (10,14), iOS (12,0), NoWatch]
 		[Export ("connectMIDI:to:format:block:")]
 		void ConnectMidi (AVAudioNode sourceNode, AVAudioNode destinationNode, [NullAllowed] AVAudioFormat format, [NullAllowed] AUMidiOutputEventBlock tapHandler);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0), NoWatch]
+		[TV (12,0), Mac (10,14), iOS (12,0), NoWatch]
 		[Export ("connectMIDI:toNodes:format:block:")]
 		void ConnectMidi (AVAudioNode sourceNode, AVAudioNode[] destinationNodes, [NullAllowed] AVAudioFormat format, [NullAllowed] AUMidiOutputEventBlock tapHandler);
 #endif
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0), NoWatch]
+		[TV (12,0), Mac (10,14), iOS (12,0), NoWatch]
 		[Export ("disconnectMIDI:from:")]
 		void DisconnectMidi (AVAudioNode sourceNode, AVAudioNode destinationNode);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0), NoWatch]
+		[TV (12,0), Mac (10,14), iOS (12,0), NoWatch]
 		[Export ("disconnectMIDI:fromNodes:")]
 		void DisconnectMidi (AVAudioNode sourceNode, AVAudioNode[] destinationNodes);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0), NoWatch]
+		[TV (12,0), Mac (10,14), iOS (12,0), NoWatch]
 		[Export ("disconnectMIDIInput:")]
 		void DisconnectMidiInput (AVAudioNode node);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0), NoWatch]
+		[TV (12,0), Mac (10,14), iOS (12,0), NoWatch]
 		[Export ("disconnectMIDIOutput:")]
 		void DisconnectMidiOutput (AVAudioNode node);
 	}
@@ -1356,7 +1356,7 @@ namespace AVFoundation {
 		void RemoveTapOnBus (nuint bus);
 
 #if XAMCORE_2_0
-		[NoWatch, TV (11, 0), Mac (10, 13, onlyOn64 : true), iOS (11, 0)]
+		[NoWatch, TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("AUAudioUnit")]
 		AUAudioUnit AUAudioUnit { get; }
 #endif
@@ -1745,17 +1745,17 @@ namespace AVFoundation {
 		AVAudioSessionChannelDescription [] ChannelAssignments { get; set; }
 #endif
 		[iOS (6,0)]
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("recordAtTime:")]
 		bool RecordAt (double time);
 
 		[iOS (6,0)]
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("recordAtTime:forDuration:")]
 		bool RecordAt (double time, double duration);
 
 		[iOS (6,0)]
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("deviceCurrentTime")]
 		double DeviceCurrentTime { get; }
 
@@ -2463,7 +2463,7 @@ namespace AVFoundation {
 		[Async]
 		void FromComponentDescription (AudioComponentDescription audioComponentDescription, AudioComponentInstantiationOptions options, Action<AVAudioUnit, NSError> completionHandler);
 
-		[NoWatch, iOS (9,0), Mac (10,11, onlyOn64 : true)]
+		[NoWatch, iOS (9,0), Mac (10,11)]
 		[Export ("AUAudioUnit")]
 		AUAudioUnit AUAudioUnit { get; }
 #endif
@@ -3098,7 +3098,7 @@ namespace AVFoundation {
 		[Export ("fragmentedAssetMinderWithAsset:mindingInterval:")]
 		AVFragmentedAssetMinder FromAsset (AVAsset asset, double mindingInterval);
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("initWithAsset:mindingInterval:")]
 		IntPtr Constructor (IAVFragmentMinding asset, double mindingInterval);
 
@@ -3333,12 +3333,12 @@ namespace AVFoundation {
 	[BaseType (typeof(NSObject))]
 	interface AVSampleBufferRenderSynchronizer
 	{
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Field ("AVSampleBufferRenderSynchronizerRateDidChangeNotification")]
 		[Notification]
 		NSString RateDidChangeNotification { get; }
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("currentTime")]
 		CMTime CurrentTime { get; }
 
@@ -3844,7 +3844,7 @@ namespace AVFoundation {
 		NSData GetPersistentContentKey (NSData keyVendorResponse, [NullAllowed] NSDictionary<NSString,NSObject> options, out NSError error);
 #endif
 
-		[iOS (9,0), Mac (10, 14, onlyOn64: true)]
+		[iOS (9,0), Mac (10, 14)]
 		[Field ("AVAssetResourceLoadingRequestStreamingContentKeyRequestRequiresPersistentKey")]
 		NSString StreamingContentKeyRequestRequiresPersistentKey { get; }
 
@@ -3872,7 +3872,7 @@ namespace AVFoundation {
 		[Export ("finishLoading")]
 		void FinishLoading ();
 		
-		[TV (12, 0), Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+		[TV (12, 0), Mac (10, 14), iOS (12, 0)]
 		[Export ("requestor")]
 		AVAssetResourceLoadingRequestor Requestor { get; }
 	}
@@ -6548,7 +6548,7 @@ namespace AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (6,0)][Mac (10,10, onlyOn64:true)]
+	[iOS (6,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSGenericException Reason: Cannot instantiate AVMetadataObject because it is an abstract superclass.
 	[DisableDefaultCtor]
@@ -6627,7 +6627,7 @@ namespace AVFoundation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (6,0)][Mac (10,10, onlyOn64:true)]
+	[iOS (6,0)][Mac (10,10)]
 	[BaseType (typeof (AVMetadataObject))]
 	interface AVMetadataFaceObject : NSCopying {
 		[Export ("hasRollAngle")]
@@ -7288,11 +7288,11 @@ namespace AVFoundation {
 		[Export ("insertTimeRanges:ofTracks:atTime:error:")]
 		bool InsertTimeRanges (NSValue[] cmTimeRanges, AVAssetTrack [] tracks, CMTime startTime, out NSError error);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("addTrackAssociationToTrack:type:")]
 		void AddTrackAssociation (AVCompositionTrack compositionTrack, string trackAssociationType);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("removeTrackAssociationToTrack:type:")]
 		void RemoveTrackAssociation (AVCompositionTrack compositionTrack, string trackAssociationType);
 	}
@@ -7803,7 +7803,7 @@ namespace AVFoundation {
 		[Export ("animationTool", ArgumentSemantic.Retain), NullAllowed]
 		AVVideoCompositionCoreAnimationTool AnimationTool { get;  }
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("renderScale")]
 		float RenderScale { get; [NotImplemented] set; } // defined as 'float'
 
@@ -7902,7 +7902,7 @@ namespace AVFoundation {
 		[Export ("animationTool", ArgumentSemantic.Retain)]
 		AVVideoCompositionCoreAnimationTool AnimationTool { get; set;  }
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("renderScale")]
 		float RenderScale { get; set; } // defined as 'float'
 
@@ -8216,12 +8216,12 @@ namespace AVFoundation {
 		[Notification]
 		NSString DidStopRunningNotification { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Field ("AVCaptureSessionInterruptionEndedNotification")]
 		[Notification]
 		NSString InterruptionEndedNotification { get; }
 
-		[Mac (10, 14, onlyOn64: true)]
+		[Mac (10, 14)]
 		[Field ("AVCaptureSessionWasInterruptedNotification")]
 		[Notification]
 		NSString WasInterruptedNotification { get; }
@@ -9635,7 +9635,7 @@ namespace AVFoundation {
 		BuiltInTrueDepthCamera,
 	}
 
-	[NoTV, iOS (7,0), Mac (10,14, onlyOn64: true), NoWatch] // matches API that uses it.
+	[NoTV, iOS (7,0), Mac (10,14), NoWatch] // matches API that uses it.
 	enum AVAuthorizationMediaType {
 		Video,
 		Audio,
@@ -9854,20 +9854,20 @@ namespace AVFoundation {
 #endif
 
 		[iOS (7,0)]
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Static, Export ("requestAccessForMediaType:completionHandler:")]
 		[Async]
 		void RequestAccessForMediaType (NSString avMediaTypeToken, AVRequestAccessStatus completion);
 
 		// Calling this method with any media type other than AVMediaTypeVideo or AVMediaTypeAudio raises an exception.
 		[iOS (7,0)]
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Static]
 		[Wrap ("GetAuthorizationStatus (mediaType == AVAuthorizationMediaType.Video ? AVMediaTypes.Video.GetConstant () : AVMediaTypes.Audio.GetConstant ())")]
 		AVAuthorizationStatus GetAuthorizationStatus (AVAuthorizationMediaType mediaType);
 
 		[iOS (7,0)]
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Static, Export ("authorizationStatusForMediaType:")]
 		AVAuthorizationStatus GetAuthorizationStatus (NSString avMediaTypeToken);
 
@@ -10471,7 +10471,7 @@ namespace AVFoundation {
 
 		// From AVPlayerVideoDisplaySleepPrevention (AVPlayer) Category
 
-		[TV (12, 0), NoWatch, Mac (10, 14, onlyOn64: true), iOS (12, 0)]
+		[TV (12, 0), NoWatch, Mac (10, 14), iOS (12, 0)]
 		[Export ("preventsDisplaySleepDuringVideoPlayback")]
 		bool PreventsDisplaySleepDuringVideoPlayback { get; set; }
 	}
@@ -11792,7 +11792,7 @@ namespace AVFoundation {
 
 		// AVSampleBufferDisplayLayerImageProtection
 
-		[TV (12,2), NoWatch, Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		[TV (12,2), NoWatch, Mac (10,14,4), iOS (12,2)]
 		[Export ("preventsCapture")]
 		bool PreventsCapture { get; set; }
 	}
@@ -12594,11 +12594,11 @@ namespace AVFoundation {
 		[Export ("contentKeySession:didUpdatePersistableContentKey:forContentKeyIdentifier:")]
 		void DidUpdate (AVContentKeySession session, NSData persistableContentKey, NSObject keyIdentifier);
 
-		[TV (12,0), NoWatch, Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), NoWatch, Mac (10,14), iOS (12,0)]
 		[Export ("contentKeySession:contentKeyRequestDidSucceed:")]
 		void DidSucceed (AVContentKeySession session, AVContentKeyRequest keyRequest);
 
-		[TV (12,0), NoWatch, Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), NoWatch, Mac (10,14), iOS (12,0)]
 		[Export ("contentKeySessionDidGenerateExpiredSessionReport:")]
 		void DidGenerateExpiredSessionReport (AVContentKeySession session);
 	}
@@ -12757,7 +12757,7 @@ namespace AVFoundation {
 		[Export ("canProvidePersistableContentKey")]
 		bool CanProvidePersistableContentKey { get; }
 
-		[TV (12,2), Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		[TV (12,2), Mac (10,14,4), iOS (12,2)]
 		[Export ("options", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> Options { get; }
 
@@ -12943,7 +12943,7 @@ namespace AVFoundation {
 		NSData GetFileDataRepresentation (IAVCapturePhotoFileDataRepresentationCustomizer customizer);
 	}
 
-	[NoWatch, TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[NoWatch, TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface AVPortraitEffectsMatte
@@ -12971,7 +12971,7 @@ namespace AVFoundation {
 		CVPixelBuffer MattingImage { get; }
 	}
 
-	[NoWatch, TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[NoWatch, TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface AVAssetResourceLoadingRequestor

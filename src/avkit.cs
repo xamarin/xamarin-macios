@@ -324,7 +324,7 @@ namespace AVKit {
 
 #else
 
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[BaseType (typeof (NSView))]
 	interface AVPlayerView {
 		[Export ("initWithFrame:")]
@@ -385,7 +385,7 @@ namespace AVKit {
 		bool ShowsSharingServiceButton { get; set; }
 	}
 
-	[Mac (10,10, onlyOn64 : true)]
+	[Mac (10,10)]
 	[BaseType (typeof (NSView))]
 	interface AVCaptureView {
 		[Export ("initWithFrame:")]
@@ -414,7 +414,7 @@ namespace AVKit {
 	interface IAVCaptureViewDelegate { }
 
 	[Protocol, Model]
-	[Mac (10,10, onlyOn64 : true)]
+	[Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	interface AVCaptureViewDelegate {
 		[Abstract]

@@ -7,7 +7,7 @@ using CoreFoundation;
 
 namespace Network {
 
-	[TV (12,0), Mac (10,14 ,onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public enum NWErrorDomain {
 		Invalid = 0,
 		[Field ("kNWErrorDomainPOSIX")]
@@ -18,7 +18,7 @@ namespace Network {
 		Tls = 3,
 	}
 
-	[TV (12,0), Mac (10,14 ,onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Static]
 	[Internal]
 	partial interface NWContentContextConstants {
@@ -32,7 +32,7 @@ namespace Network {
 		IntPtr _DefaultStream { get; }
 	}
 
-	[TV (12,0), Mac (10,14 ,onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Static]
 	[Internal]
 	partial interface NWConnectionConstants {
@@ -41,7 +41,7 @@ namespace Network {
 		IntPtr _SendIdempotentContent { get; }
 	}
 
-	[TV (12,0), Mac (10,14 ,onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Static]
 	[Internal]
 	partial interface NWParametersConstants {

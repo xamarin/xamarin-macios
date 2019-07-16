@@ -9,7 +9,7 @@ using Foundation;
 
 namespace MediaAccessibility {
 
-	[TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[TV (13,0), Mac (10,15), iOS (13,0)]
 	public static partial class MAImageCaptioning {
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]

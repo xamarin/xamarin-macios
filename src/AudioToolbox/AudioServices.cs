@@ -41,7 +41,7 @@ namespace AudioToolbox {
 		BadSpecifierSizeError = 0x21737063,		// '!spc'
 		SystemSoundUnspecifiedError = -1500,
 		SystemSoundClientTimedOutError = -1501,
-		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		[iOS (10,0), Mac (10,12)]
 		SystemSoundExceededMaximumDurationError = -1502,
 	}
 

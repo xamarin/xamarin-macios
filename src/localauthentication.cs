@@ -10,7 +10,7 @@ namespace LocalAuthentication {
 	public enum LABiometryType : long {
 		None,
 		TouchId,
-		[Mac (10,15, onlyOn64: true)]
+		[Mac (10,15)]
 		FaceId,
 #if !XAMCORE_4_0
 		[NoMac]
@@ -22,7 +22,7 @@ namespace LocalAuthentication {
 	[iOS (8,0), Mac (10,10)]
 	delegate void LAContextReplyHandler (bool success, NSError error);
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // ".objc_class_name_LAContext", referenced from: '' not found
+	[iOS (8,0), Mac (10,10)] // ".objc_class_name_LAContext", referenced from: '' not found
 	[BaseType (typeof (NSObject))]
 	interface LAContext {
 		[NullAllowed] // by default this property is null
@@ -70,11 +70,11 @@ namespace LocalAuthentication {
 		[NullAllowed, Export ("localizedCancelTitle")]
 		string LocalizedCancelTitle { get; set; }
 
-		[iOS (9,0)][Mac (10,12,4, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,12,4)]
 		[Field ("LATouchIDAuthenticationMaximumAllowableReuseDuration")]
 		double /* NSTimeInterval */ TouchIdAuthenticationMaximumAllowableReuseDuration { get; }
 
-		[iOS (9,0)][Mac (10,12,4, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,12,4)]
 		[Export ("touchIDAuthenticationAllowableReuseDuration")]
 		double /* NSTimeInterval */ TouchIdAuthenticationAllowableReuseDuration { get; set; }
 

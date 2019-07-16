@@ -17,7 +17,7 @@ namespace GameController {
 	// float_t are 4 bytes (at least for ARM64)
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	[iOS (7,0)]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	public struct GCGamepadSnapShotDataV100 {
 
 		// Standard information

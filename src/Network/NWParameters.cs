@@ -16,7 +16,7 @@ using CoreFoundation;
 using nw_parameters_t=System.IntPtr;
 
 namespace Network {
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public enum NWMultiPathService {
 		Disabled = 0,
 		Handover = 1,
@@ -24,7 +24,7 @@ namespace Network {
 		Aggregate = 3, 
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWParameters : NativeObject {
 		public NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -435,7 +435,7 @@ namespace Network {
 		}
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public enum NWParametersExpiredDnsBehavior {
 		Default = 0,
 		Allow = 1,

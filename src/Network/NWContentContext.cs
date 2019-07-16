@@ -18,7 +18,7 @@ namespace Network {
 	// The content context, there are a few pre-configured content contexts for sending
 	// available as static properties on this class
 	//
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
 	public class NWContentContext : NativeObject {
 		bool global;
 		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)

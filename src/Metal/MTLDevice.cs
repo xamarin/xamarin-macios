@@ -48,22 +48,22 @@ namespace Metal {
 		}
 
 #if MONOMAC
-		[Mac (10,11, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10,11), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
-		[Mac (10,11, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10,11), NoiOS, NoWatch, NoTV]
 		public static IMTLDevice [] GetAllDevices ()
 		{
 			var rv = MTLCopyAllDevices ();
 			return NSArray.ArrayFromHandle<IMTLDevice> (rv);
 		}
 
-		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10, 13), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (ref IntPtr observer, void* handler);
 
-		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10, 13), NoiOS, NoWatch, NoTV]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (ref NSObject observer, MTLDeviceNotificationHandler handler)
 		{
@@ -101,11 +101,11 @@ namespace Metal {
 				del ((IMTLDevice) Runtime.GetNSObject (device), (Foundation.NSString) Runtime.GetNSObject (notifyName));
 		}
 
-		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10, 13), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
 
-		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10, 13), NoiOS, NoWatch, NoTV]
 		public static void RemoveObserver (NSObject observer)
 		{
 			if (observer == null)

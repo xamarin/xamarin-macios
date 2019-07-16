@@ -7,7 +7,7 @@ namespace PushKit
 {
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[Watch (6,0)]
-	[Mac (10,15, onlyOn64: true)]
+	[Mac (10,15)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -21,7 +21,7 @@ namespace PushKit
 
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[Watch (6,0)]
-	[Mac (10,15, onlyOn64: true)]
+	[Mac (10,15)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -35,7 +35,7 @@ namespace PushKit
 
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[Watch (6,0)]
-	[Mac (10,15, onlyOn64: true)]
+	[Mac (10,15)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -79,7 +79,7 @@ namespace PushKit
 		[Introduced (PlatformName.UIKitForMac, 13,0)]
 		[iOS (11,0)]
 		[NoWatch]
-		[Mac (10,15, onlyOn64: true)]
+		[Mac (10,15)]
 		[Field ("PKPushTypeFileProvider")]
 		NSString FileProvider { get; }
 	}
@@ -87,7 +87,7 @@ namespace PushKit
 	[iOS (8,0)]
 	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[Watch (6,0)]
-	[Mac (10,15, onlyOn64: true)]
+	[Mac (10,15)]
 	[Model]
 	[Protocol]
 	[BaseType (typeof (NSObject))]

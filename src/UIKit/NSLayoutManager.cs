@@ -109,7 +109,7 @@ namespace UIKit {
 		}
 #endif // !XAMCORE_4_0
 
-		[Watch (6,0), TV (13,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		public unsafe void ShowGlyphs (
 			short [] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
 			CGPoint [] /* const CGPoint* */ positions,

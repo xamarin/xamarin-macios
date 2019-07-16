@@ -18,7 +18,7 @@ namespace JavaScriptCore {
 		Number,
 		String,
 		Object,
-		[iOS (13,0)][Mac (10,15, onlyOn64: true)]
+		[iOS (13,0)][Mac (10,15)]
 		Symbol,
 	}
 

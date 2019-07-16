@@ -52,14 +52,14 @@ using AUViewControllerBase = UIKit.UIViewController;
 
 namespace ModelIO {
 
-	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac(10,13), TV (11,0)]
 	[Native]
 	enum MDLAnimatedValueInterpolation : ulong {
 		Constant,
 		Linear,
 	}
 
-	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac(10,13), TV (11,0)]
 	[Native]
 	enum MDLTransformOpRotationOrder : ulong {
 		Xyz = 1,
@@ -70,7 +70,7 @@ namespace ModelIO {
 		Zyx,
 	}
 
-	[iOS (11,0), Mac(10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac(10,13), TV (11,0)]
 	[Native]
 	enum MDLDataPrecision : ulong {
 		Undefined,
@@ -80,7 +80,7 @@ namespace ModelIO {
 
 	delegate void MDLObjectHandler (MDLObject mdlObject, ref bool stop);
 
-	[iOS (9,0)][Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac(10,11)]
 	[BaseType (typeof(MDLPhysicallyPlausibleLight))]
 	[DisableDefaultCtor]
 	interface MDLAreaLight
@@ -100,7 +100,7 @@ namespace ModelIO {
 		float Aspect { get; set; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLAsset : NSCopying
 	{
@@ -123,7 +123,7 @@ namespace ModelIO {
 		[Export ("exportAssetToURL:error:")]
 		bool ExportAssetToUrl (NSUrl url, out NSError error);
 
-		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("objectAtPath:")]
 		MDLObject GetObject (string atPath);
 
@@ -164,7 +164,7 @@ namespace ModelIO {
 		[Export ("childObjectsOfClass:")]
 		MDLObject[] GetChildObjects (Class objectClass);
 
-		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("loadTextures")]
 		void LoadTextures ();
 
@@ -187,7 +187,7 @@ namespace ModelIO {
 		[Export ("endTime")]
 		double EndTime { get; set; }
 
-		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("upAxis", ArgumentSemantic.Assign)]
 		NVector3 UpAxis {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -199,7 +199,7 @@ namespace ModelIO {
 		[NullAllowed, Export ("URL", ArgumentSemantic.Retain)]
 		NSUrl Url { get; }
 
-		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("resolver", ArgumentSemantic.Retain)]
 		IMDLAssetResolver Resolver { get; set; }
 
@@ -231,7 +231,7 @@ namespace ModelIO {
 		[Export ("masters", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Masters { get; set; }
 
-		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("animations", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Animations { get; set; }
 
@@ -276,7 +276,7 @@ namespace ModelIO {
 		NSData GetSphericalHarmonicsCoefficients (Vector3 position);
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLObject))]
 	interface MDLCamera
 	{
@@ -406,7 +406,7 @@ namespace ModelIO {
 		MDLCamera FromSceneCamera (SCNCamera sceneCamera);
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLTexture))]
 	[DisableDefaultCtor]
 	interface MDLCheckerboardTexture
@@ -432,7 +432,7 @@ namespace ModelIO {
 		CGColor Color2 { get; set; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLTexture))]
 	[DisableDefaultCtor]
 	interface MDLColorSwatchTexture
@@ -451,7 +451,7 @@ namespace ModelIO {
 	}
 
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLObject))]
 	interface MDLLight
 	{
@@ -479,7 +479,7 @@ namespace ModelIO {
 		MDLLight FromSceneLight (SCNLight sceneLight);
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLLight))]
 	interface MDLLightProbe
 	{
@@ -510,7 +510,7 @@ namespace ModelIO {
 		MDLLightProbe Create (nint textureSize, MDLTransform transform, MDLLight[] lightsToConsider, MDLObject[] objectsToConsider, [NullAllowed] MDLTexture reflectiveCubemap, [NullAllowed] MDLTexture irradianceCubemap);
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLMaterial : MDLNamed, INSFastEnumeration
 	{
@@ -539,11 +539,11 @@ namespace ModelIO {
 		[Export ("removeAllProperties")]
 		void RemoveAllProperties ();
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("resolveTexturesWithResolver:")]
 		void ResolveTextures ([NullAllowed] IMDLAssetResolver resolver);
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("loadTexturesUsingResolver:")]
 		void LoadTextures ([NullAllowed] IMDLAssetResolver resolver);
 
@@ -578,7 +578,7 @@ namespace ModelIO {
 		MDLMaterial FromSceneMaterial (SCNMaterial material);
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MDLMaterialProperty : MDLNamed, NSCopying
@@ -638,7 +638,7 @@ namespace ModelIO {
 		[Export ("type", ArgumentSemantic.Assign)]
 		MDLMaterialPropertyType Type { get; }
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("setType:")]
 		void SetType (MDLMaterialPropertyType type);
 
@@ -755,7 +755,7 @@ namespace ModelIO {
 		MDLMaterialPropertyConnection[] Connections { get; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLObject))]
 	interface MDLMesh
 	{
@@ -849,7 +849,7 @@ namespace ModelIO {
 		[Export ("addTangentBasisForTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:")]
 		void AddTangentBasisWithNormals (string textureCoordinateAttributeName, string normalAttributeName, string tangentAttributeName);
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("addOrthTanBasisForTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:")]
 		void AddOrthTanBasis (string textureCoordinateAttributeName, string normalAttributeName, string tangentAttributeName);
 
@@ -859,7 +859,7 @@ namespace ModelIO {
 		[Export ("addUnwrappedTextureCoordinatesForAttributeNamed:")]
 		void AddUnwrappedTextureCoordinates (string textureCoordinateAttributeName);
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("flipTextureCoordinatesInAttributeNamed:")]
 		void FlipTextureCoordinates (string inTextureCoordinateAttributeNamed);
 
@@ -868,7 +868,7 @@ namespace ModelIO {
 		[Export ("makeVerticesUnique")]
 		void MakeVerticesUnique ();
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("makeVerticesUniqueAndReturnError:")]
 		bool MakeVerticesUnique (out NSError error);
 
@@ -1021,7 +1021,7 @@ namespace ModelIO {
 	}
 
 	interface IMDLMeshBuffer {}
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[Protocol]
 	interface MDLMeshBuffer : NSCopying
 	{
@@ -1047,7 +1047,7 @@ namespace ModelIO {
 	}
 
 	interface IMDLMeshBufferAllocator {}
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[Protocol]
 	interface MDLMeshBufferAllocator
 	{
@@ -1078,14 +1078,14 @@ namespace ModelIO {
 		IMDLMeshBuffer CreateBuffer ([NullAllowed] IMDLMeshBufferZone zone, NSData data, MDLMeshBufferType type);
 	}
 
-	[iOS (9,0),Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0),Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLMeshBufferDataAllocator : MDLMeshBufferAllocator
 	{
 
 	}
 
-	[iOS (9,0),Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0),Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLMeshBufferZoneDefault : MDLMeshBufferZone
 	{
@@ -1097,7 +1097,7 @@ namespace ModelIO {
 		// IMDLMeshBufferAllocator Allocator { get; }
 	}
 
-	[iOS (9,0),Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0),Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLMeshBufferData : MDLMeshBuffer, NSCopying
 	{
@@ -1112,7 +1112,7 @@ namespace ModelIO {
 	}
 
 	interface IMDLMeshBufferZone {}
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[Protocol]
 	interface MDLMeshBufferZone
 	{
@@ -1123,7 +1123,7 @@ namespace ModelIO {
 		IMDLMeshBufferAllocator Allocator { get; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[Protocol]
 	interface MDLNamed {
 		[Abstract]
@@ -1131,7 +1131,7 @@ namespace ModelIO {
 		string Name { get; set; }
 	}
 
-	[iOS (9,0),Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0),Mac(10,11)]
 	[BaseType (typeof(MDLTexture))]
 	[DisableDefaultCtor]
 	interface MDLNoiseTexture
@@ -1156,7 +1156,7 @@ namespace ModelIO {
 		IntPtr InitCellularNoiseWithFrequency (float frequency, [NullAllowed] string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding);
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLTexture))]
 	[DisableDefaultCtor]
 	interface MDLNormalMapTexture
@@ -1169,7 +1169,7 @@ namespace ModelIO {
 		IntPtr Constructor (MDLTexture sourceTexture, [NullAllowed] string name, float smoothness, float contrast);
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLObject : MDLNamed
 	{
@@ -1254,7 +1254,7 @@ namespace ModelIO {
 		MDLObject FromNode (SCNNode node, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
-	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLObjectContainer : MDLObjectContainerComponent
 	{
@@ -1294,13 +1294,13 @@ namespace ModelIO {
 
 	interface IMDLComponent {}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[Protocol]
 	interface MDLComponent
 	{
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLPhysicallyPlausibleLight))]
 	interface MDLPhotometricLight
 	{
@@ -1313,7 +1313,7 @@ namespace ModelIO {
 		[Export ("generateCubemapFromLight:")]
 		void GenerateCubemap (nuint textureSize);
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("generateTexture:")]
 		MDLTexture GenerateTexture (nuint textureSize);
 
@@ -1327,7 +1327,7 @@ namespace ModelIO {
 		NSData SphericalHarmonicsCoefficients { get; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLLight))]
 	interface MDLPhysicallyPlausibleLight
 	{
@@ -1353,7 +1353,7 @@ namespace ModelIO {
 		float AttenuationEndDistance { get; set; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLScatteringFunction))]
 	interface MDLPhysicallyPlausibleScatteringFunction
 	{
@@ -1394,7 +1394,7 @@ namespace ModelIO {
 		MDLMaterialProperty ClearcoatGloss { get; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLScatteringFunction : MDLNamed
 	{
@@ -1423,7 +1423,7 @@ namespace ModelIO {
 		MDLMaterialProperty AmbientOcclusionScale { get; }
 	}
 
-	[iOS (9,0),Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0),Mac(10,11)]
 	[BaseType (typeof(MDLTexture))]
 	[DisableDefaultCtor]
 	interface MDLSkyCubeTexture
@@ -1436,7 +1436,7 @@ namespace ModelIO {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor ([NullAllowed] string name, MDLTextureChannelEncoding channelEncoding, Vector2i textureDimensions, float turbidity, float sunElevation, float upperAtmosphereScattering, float groundAlbedo);
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithName:channelEncoding:textureDimensions:turbidity:sunElevation:sunAzimuth:upperAtmosphereScattering:groundAlbedo:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor ([NullAllowed] string name, MDLTextureChannelEncoding channelEncoding, Vector2i textureDimensions, float turbidity, float sunElevation, float sunAzimuth, float upperAtmosphereScattering, float groundAlbedo);
@@ -1450,7 +1450,7 @@ namespace ModelIO {
 		[Export ("sunElevation")]
 		float SunElevation { get; set; }
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("sunAzimuth")]
 		float SunAzimuth { get; set; }
 
@@ -1489,7 +1489,7 @@ namespace ModelIO {
 		}
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(MDLCamera))]
 	interface MDLStereoscopicCamera
 	{
@@ -1578,7 +1578,7 @@ namespace ModelIO {
 #endif
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLSubmesh : MDLNamed
 	{
@@ -1633,7 +1633,7 @@ namespace ModelIO {
 		MDLSubmesh FromGeometryElement (SCNGeometryElement element, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // designated
 	interface MDLTexture : MDLNamed
@@ -1664,7 +1664,7 @@ namespace ModelIO {
 		[Export ("textureNamed:bundle:")]
 		MDLTexture CreateTexture (string name, [NullAllowed] NSBundle bundleOrNil);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("textureNamed:assetResolver:")]
 		[return: NullAllowed]
@@ -1696,14 +1696,14 @@ namespace ModelIO {
 		[Export ("writeToURL:")]
 		bool WriteToUrl (NSUrl url);
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("writeToURL:level:")]
 		bool WriteToUrl (NSUrl url, nuint level);
 
 		[Export ("writeToURL:type:")]
 		bool WriteToUrl (NSUrl url, string type);
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("writeToURL:type:level:")]
 		bool WriteToUrl (NSUrl nsurl, string type, nuint level);
 
@@ -1711,7 +1711,7 @@ namespace ModelIO {
 		[return: NullAllowed]
 		CGImage GetImageFromTexture ();
 
-		[TV (11,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("imageFromTextureAtLevel:")]
 		[return: NullAllowed]
 		CGImage GetImageFromTexture (nuint level);
@@ -1759,7 +1759,7 @@ namespace ModelIO {
 		bool HasAlphaValues { get; set; }
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLTextureFilter {
 		[Export ("sWrapMode", ArgumentSemantic.Assign)]
@@ -1781,7 +1781,7 @@ namespace ModelIO {
 		MDLMaterialMipMapFilterMode MipFilter { get; set; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLTextureSampler
 	{
@@ -1795,7 +1795,7 @@ namespace ModelIO {
 		MDLTransform Transform { get; set; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	[DesignatedDefaultCtor]
 	interface MDLTransform : MDLTransformComponent, NSCopying {
@@ -1940,7 +1940,7 @@ namespace ModelIO {
 	}
 
 	interface IMDLTransformComponent {}
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[Protocol]
 	interface MDLTransformComponent : MDLComponent
 	{
@@ -1997,7 +1997,7 @@ namespace ModelIO {
 		Matrix4 CreateGlobalTransform (MDLObject obj, double atTime);
 	}
 
-	[iOS (9,0),Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0),Mac(10,11)]
 	[BaseType (typeof(MDLTexture), Name = "MDLURLTexture")]
 	[DisableDefaultCtor]
 	interface MDLUrlTexture
@@ -2013,7 +2013,7 @@ namespace ModelIO {
 		NSUrl Url { get; set; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLVertexAttribute : NSCopying
 	{
@@ -2045,7 +2045,7 @@ namespace ModelIO {
 		}
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // apple headers: created by MDLMesh's vertexAttributeData selector
 	interface MDLVertexAttributeData
@@ -2062,12 +2062,12 @@ namespace ModelIO {
 		[Export ("format", ArgumentSemantic.Assign)]
 		MDLVertexFormat Format { get; set; }
 
-		[iOS (10,3), TV (10,2), Mac (10,12,4, onlyOn64: true)]
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
 		[Export ("bufferSize", ArgumentSemantic.Assign)]
 		nuint BufferSize { get; set; }
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLMeshBufferMap
 	{
@@ -2079,7 +2079,7 @@ namespace ModelIO {
 		IntPtr Bytes { get; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLVertexDescriptor : NSCopying
 	{
@@ -2115,7 +2115,7 @@ namespace ModelIO {
 		void SetPackedOffsets ();
 	}
 
-	[iOS (9,0),Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0),Mac(10,11)]
 	[BaseType (typeof(MDLObject))]
 	[DisableDefaultCtor]
 	interface MDLVoxelArray
@@ -2272,7 +2272,7 @@ namespace ModelIO {
 	}
 
 	[Static]
-	[Mac(10,11, onlyOn64 : true),iOS(9,0)]
+	[Mac(10,11),iOS(9,0)]
 	interface MDLVertexAttributes {
 		[Field ("MDLVertexAttributeAnisotropy")]
 		NSString Anisotropy { get; }
@@ -2320,7 +2320,7 @@ namespace ModelIO {
 		NSString TextureCoordinate { get; }
 	}
 
-	[iOS (9,0),Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0),Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface MDLVertexBufferLayout : NSCopying
 	{
@@ -2334,7 +2334,7 @@ namespace ModelIO {
 		nuint Stride { get; set; }
 	}
 
-	[iOS (9,0)][Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac(10,11)]
 	[BaseType (typeof (NSObject))]
 	interface MDLSubmeshTopology {
 		[iOS (10,2), Mac (10,12,2)]
@@ -2373,7 +2373,7 @@ namespace ModelIO {
 		nuint HoleCount { get; set; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLAnimatedValue : NSCopying {
 
@@ -2407,7 +2407,7 @@ namespace ModelIO {
 		nuint _GetTimes (IntPtr timesArray, nuint maxCount);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (MDLAnimatedValue))]
 	interface MDLAnimatedScalarArray {
 
@@ -2450,7 +2450,7 @@ namespace ModelIO {
 		nuint _GetDoubleArray (IntPtr valuesArray, nuint maxCount);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (MDLAnimatedValue))]
 	interface MDLAnimatedVector3Array {
 
@@ -2493,7 +2493,7 @@ namespace ModelIO {
 		nuint _GetDouble3Array (IntPtr valuesArray, nuint maxCount);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (MDLAnimatedValue))]
 	interface MDLAnimatedQuaternionArray {
 
@@ -2536,7 +2536,7 @@ namespace ModelIO {
 		nuint _GetDoubleQuaternionArray (IntPtr valuesArray, nuint maxCount);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (MDLAnimatedValue))]
 	interface MDLAnimatedScalar {
 
@@ -2569,7 +2569,7 @@ namespace ModelIO {
 		nuint _GetDoubleArray (IntPtr valuesArray, nuint maxCount);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (MDLAnimatedValue))]
 	interface MDLAnimatedVector2 {
 
@@ -2606,7 +2606,7 @@ namespace ModelIO {
 		nuint _GetDouble2Array (IntPtr valuesArray, nuint maxCount);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (MDLAnimatedValue))]
 	interface MDLAnimatedVector3 {
 
@@ -2643,7 +2643,7 @@ namespace ModelIO {
 		nuint _GetDouble3Array (IntPtr valuesArray, nuint maxCount);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (MDLAnimatedValue))]
 	interface MDLAnimatedVector4 {
 
@@ -2680,7 +2680,7 @@ namespace ModelIO {
 		nuint _GetDouble4Array (IntPtr valuesArray, nuint maxCount);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (MDLAnimatedValue))]
 	interface MDLAnimatedMatrix4x4 {
 
@@ -2717,7 +2717,7 @@ namespace ModelIO {
 		nuint _GetDouble4x4Array (IntPtr valuesArray, nuint maxCount);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (MDLObject))]
 	[DisableDefaultCtor]
 	interface MDLSkeleton : NSCopying {
@@ -2728,7 +2728,7 @@ namespace ModelIO {
 		[Export ("jointBindTransforms")]
 		MDLMatrix4x4Array JointBindTransforms { get; }
 
-		[iOS (12,0), Mac (10,14, onlyOn64 : true), TV (12,0)]
+		[iOS (12,0), Mac (10,14), TV (12,0)]
 		[Export ("jointRestTransforms")]
 		MDLMatrix4x4Array JointRestTransforms { get; }
 
@@ -2738,12 +2738,12 @@ namespace ModelIO {
 
 	interface IMDLJointAnimation { }
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[Protocol]
 	interface MDLJointAnimation {
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (MDLObject))]
 	[DisableDefaultCtor]
 	interface MDLPackedJointAnimation : NSCopying, MDLJointAnimation {
@@ -2764,7 +2764,7 @@ namespace ModelIO {
 		IntPtr Constructor (string name, string [] jointPaths);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLAnimationBindComponent : NSCopying, MDLComponent {
 
@@ -2788,7 +2788,7 @@ namespace ModelIO {
 
 	interface IMDLAssetResolver {}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[Protocol]
 	interface MDLAssetResolver {
 
@@ -2801,7 +2801,7 @@ namespace ModelIO {
 		NSUrl ResolveAsset (string name);
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MDLRelativeAssetResolver : MDLAssetResolver {
@@ -2813,7 +2813,7 @@ namespace ModelIO {
 		MDLAsset Asset { get; set; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MDLPathAssetResolver : MDLAssetResolver {
@@ -2825,7 +2825,7 @@ namespace ModelIO {
 		string Path { get; set; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MDLBundleAssetResolver : MDLAssetResolver {
@@ -2839,7 +2839,7 @@ namespace ModelIO {
 
 	interface IMDLTransformOp {}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[Protocol]
 	interface MDLTransformOp {
 
@@ -2862,7 +2862,7 @@ namespace ModelIO {
 		bool IsInverseOp { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTransformRotateXOp : MDLTransformOp {
 
@@ -2874,7 +2874,7 @@ namespace ModelIO {
 		MDLAnimatedScalar AnimatedValue { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTransformRotateYOp : MDLTransformOp {
 
@@ -2886,7 +2886,7 @@ namespace ModelIO {
 		MDLAnimatedScalar AnimatedValue { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTransformRotateZOp : MDLTransformOp {
 
@@ -2898,7 +2898,7 @@ namespace ModelIO {
 		MDLAnimatedScalar AnimatedValue { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTransformRotateOp : MDLTransformOp {
 
@@ -2910,7 +2910,7 @@ namespace ModelIO {
 		MDLAnimatedVector3 AnimatedValue { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTransformTranslateOp : MDLTransformOp {
 
@@ -2922,7 +2922,7 @@ namespace ModelIO {
 		MDLAnimatedVector3 AnimatedValue { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTransformScaleOp : MDLTransformOp {
 
@@ -2934,7 +2934,7 @@ namespace ModelIO {
 		MDLAnimatedVector3 AnimatedValue { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTransformMatrixOp : MDLTransformOp {
 
@@ -2946,7 +2946,7 @@ namespace ModelIO {
 		MDLAnimatedMatrix4x4 AnimatedValue { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTransformStack : NSCopying, MDLTransformComponent {
 
@@ -2993,7 +2993,7 @@ namespace ModelIO {
 		IMDLTransformOp [] TransformOps { get; }
 	}
 
-	[iOS (11,0), Mac (10,13, onlyOn64 : true), TV (11,0)]
+	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MDLMatrix4x4Array : NSCopying {

@@ -70,7 +70,7 @@ namespace AudioToolbox {
 		EnqueueDuringReset   = -66632,
 		InvalidOfflineMode   = -66626,
 		BufferEnqueuedTwice  = -66666,
-		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		[iOS (10,0), Mac (10,12)]
 		CannotStartYet       = -66665,
 		
 		// There is countless of not well documented error codes returned

@@ -20,7 +20,7 @@ namespace MetalKit {
 	interface NSDisplayGamut {}
 #endif
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[Static]
 	interface MTKModel {
 
@@ -31,7 +31,7 @@ namespace MetalKit {
 		NSString ErrorKey { get; }
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[DisableDefaultCtor]
 #if MONOMAC
 	[BaseType (typeof (AppKit.NSView))]
@@ -118,7 +118,7 @@ namespace MetalKit {
 		CGColorSpace ColorSpace { get; set; }
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface MTKViewDelegate {
@@ -131,7 +131,7 @@ namespace MetalKit {
 		void Draw (MTKView view);
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[Static]
 	interface MTKTextureLoaderError {
 
@@ -142,14 +142,14 @@ namespace MetalKit {
 		NSString Key { get; }
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[Static, Internal]
 	interface MTKTextureLoaderKeys {
 
 		[Field ("MTKTextureLoaderOptionAllocateMipmaps")]
 		NSString AllocateMipmapsKey { get; }
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Field ("MTKTextureLoaderOptionGenerateMipmaps")]
 		NSString GenerateMipmapsKey { get; }
@@ -163,30 +163,30 @@ namespace MetalKit {
 		[Field ("MTKTextureLoaderOptionTextureCPUCacheMode")]
 		NSString TextureCpuCacheModeKey { get; }
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Field ("MTKTextureLoaderOptionTextureStorageMode")]
 		NSString TextureStorageModeKey { get; }
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Field ("MTKTextureLoaderOptionCubeLayout")]
 		NSString CubeLayoutKey { get; }
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Field ("MTKTextureLoaderOptionOrigin")]
 		NSString OriginKey { get; }
 	}
 
-	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+	[iOS (10,0)][Mac (10,12)]
 	[TV (10,0)]
 	enum MTKTextureLoaderCubeLayout {
 		[Field ("MTKTextureLoaderCubeLayoutVertical")]
 		Vertical,
 	}
 
-	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+	[iOS (10,0)][Mac (10,12)]
 	[TV (10,0)]
 	enum MTKTextureLoaderOrigin {
 		[Field ("MTKTextureLoaderOriginTopLeft")]
@@ -202,19 +202,19 @@ namespace MetalKit {
 		bool AllocateMipmaps { get; set; }
 
 		[TV (10,0)]
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		bool GenerateMipmaps { get; }
 
 		bool Srgb { get; set; }
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	delegate void MTKTextureLoaderCallback ([NullAllowed] IMTLTexture texture, [NullAllowed] NSError error);
 
-	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+	[iOS (10,0)][Mac (10,12)]
 	delegate void MTKTextureLoaderArrayCallback (IMTLTexture[] textures, [NullAllowed] NSError error);
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MTKTextureLoader {
@@ -253,21 +253,21 @@ namespace MetalKit {
 		[return: NullAllowed]
 		IMTLTexture FromUrl (NSUrl url, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Export ("newTexturesWithContentsOfURLs:options:completionHandler:")]
 		[Async]
 		void FromUrls (NSUrl[] urls, [NullAllowed] NSDictionary options, MTKTextureLoaderArrayCallback completionHandler);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Wrap ("FromUrls (urls, options == null ? null : options.Dictionary, completionHandler)")]
 		[Async]
 		void FromUrls (NSUrl[] urls, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderArrayCallback completionHandler);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Export ("newTexturesWithContentsOfURLs:options:error:")]
 		IMTLTexture[] FromUrls (NSUrl[] urls, [NullAllowed] NSDictionary options, out NSError error);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Wrap ("FromUrls (urls, options == null ? null : options.Dictionary, out error)")]
 		IMTLTexture[] FromUrls (NSUrl[] urls, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
@@ -287,100 +287,100 @@ namespace MetalKit {
 		[return: NullAllowed]
 		IMTLTexture FromCGImage (CGImage cgImage, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Export ("newTextureWithName:scaleFactor:bundle:options:completionHandler:")]
 		[Async]
 		void FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Wrap ("FromName (name, scaleFactor, bundle, options == null ? null : options.Dictionary, completionHandler)")]
 		[Async]
 		void FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
 		[NoiOS]
 		[NoTV]
-		[Mac (10,12, onlyOn64 : true)]
+		[Mac (10,12)]
 		[Export ("newTextureWithName:scaleFactor:displayGamut:bundle:options:completionHandler:")]
 		[Async]
 		void FromName (string name, nfloat scaleFactor, NSDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
 		[NoiOS]
 		[NoTV]
-		[Mac (10,12, onlyOn64 : true)]
+		[Mac (10,12)]
 		[Wrap ("FromName (name, scaleFactor, displayGamut, bundle, options == null ? null : options.Dictionary, completionHandler)")]
 		[Async]
 		void FromName (string name, nfloat scaleFactor, NSDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Export ("newTexturesWithNames:scaleFactor:bundle:options:completionHandler:")]
 		[Async]
 		void FromNames (string[] names, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderArrayCallback completionHandler);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Wrap ("FromNames (names, scaleFactor, bundle, options == null ? null : options.Dictionary, completionHandler)")]
 		[Async]
 		void FromNames (string[] names, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderArrayCallback completionHandler);
 
 		[NoiOS]
 		[NoTV]
-		[Mac (10,12, onlyOn64 : true)]
+		[Mac (10,12)]
 		[Async]
 		[Export ("newTexturesWithNames:scaleFactor:displayGamut:bundle:options:completionHandler:")]
 		void FromNames (string[] names, nfloat scaleFactor, NSDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderArrayCallback completionHandler);
 
 		[NoiOS]
 		[NoTV]
-		[Mac (10,12, onlyOn64 : true)]
+		[Mac (10,12)]
 		[Wrap ("FromNames (names, scaleFactor, displayGamut, bundle, options == null ? null : options.Dictionary, completionHandler)")]
 		[Async]
 		void FromNames (string[] names, nfloat scaleFactor, NSDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderArrayCallback completionHandler);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Export ("newTextureWithMDLTexture:options:completionHandler:")]
 		[Async]
 		void FromTexture (MDLTexture texture, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Wrap ("FromTexture (texture, options == null ? null : options.Dictionary, completionHandler)")]
 		[Async]
 		void FromTexture (MDLTexture texture, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Export ("newTextureWithMDLTexture:options:error:")]
 		[return: NullAllowed]
 		IMTLTexture FromTexture (MDLTexture texture, [NullAllowed] NSDictionary options, out NSError error);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Wrap ("FromTexture (texture, options == null ? null : options.Dictionary, out error)")]
 		[return: NullAllowed]
 		IMTLTexture FromTexture (MDLTexture texture, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Export ("newTextureWithName:scaleFactor:bundle:options:error:")]
 		[return: NullAllowed]
 		IMTLTexture FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, out NSError error);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Wrap ("FromName (name, scaleFactor, bundle, options == null ? null : options.Dictionary, out error)")]
 		[return: NullAllowed]
 		IMTLTexture FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
 		[NoiOS]
 		[NoTV]
-		[Mac (10,12, onlyOn64 : true)]
+		[Mac (10,12)]
 		[Export ("newTextureWithName:scaleFactor:displayGamut:bundle:options:error:")]
 		[return: NullAllowed]
 		IMTLTexture FromName (string name, nfloat scaleFactor, NSDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
 		[NoiOS]
 		[NoTV]
-		[Mac (10,12, onlyOn64 : true)]
+		[Mac (10,12)]
 		[Wrap ("FromName (name, scaleFactor, displayGamut, bundle, options == null ? null : options.Dictionary, out error)")]
 		[return: NullAllowed]
 		IMTLTexture FromName (string name, nfloat scaleFactor, NSDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, [NullAllowed] out NSError error);
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // init is NS_UNAVAILABLE
 	interface MTKMeshBufferAllocator : MDLMeshBufferAllocator {
@@ -391,7 +391,7 @@ namespace MetalKit {
 		IMTLDevice Device { get; }
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MTKMeshBuffer : MDLMeshBuffer, MDLNamed {
@@ -402,7 +402,7 @@ namespace MetalKit {
 		nuint Offset { get; }
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MTKSubmesh {
@@ -425,7 +425,7 @@ namespace MetalKit {
 		string Name { get; set; }
 	}
 
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // init NS_UNAVAILABLE
 	interface MTKMesh {
