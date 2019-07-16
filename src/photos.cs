@@ -1134,10 +1134,12 @@ namespace Photos
 		[Export ("size")]
 		CGSize Size { get; }
 
+		[Mac (10,15)]
 		[Static]
 		[Export ("requestLivePhotoWithResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:")]
 		int RequestLivePhoto (NSUrl[] fileUrls, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, Action<PHLivePhoto, NSDictionary> resultHandler);
 
+		[Mac (10,15)]
 		[Static]
 		[Export ("cancelLivePhotoRequestWithRequestID:")]
 		void CancelLivePhotoRequest (int requestID);
