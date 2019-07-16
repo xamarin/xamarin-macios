@@ -169,7 +169,7 @@ namespace QuickLookUI {
 		[Export ("preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler:")]
 		void PreparePreviewOfSearchableItem (string identifier, string queryString, Action<NSError> ItemLoadingHandler);
 
-		[Mac (10,15, onlyOn64: true)]
+		[Mac (10,15)]
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
 		void PreparePreviewOfFile (NSUrl url, Action<NSError> completionHandler);
 	}
