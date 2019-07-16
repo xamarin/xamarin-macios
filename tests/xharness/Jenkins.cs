@@ -702,6 +702,7 @@ namespace xharness
 				"src/ObjCRuntime/Registrar.cs",
 				"mk/mono.mk",
 				"msbuild",
+				"runtime",
 			};
 			var mmp_prefixes = new string [] {
 				"tests/mmptest",
