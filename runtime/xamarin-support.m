@@ -104,7 +104,7 @@ xamarin_timezone_get_names (int *count)
 //
 // Returns the geopolitical region ID of the local timezone.
 
-const char *
+char *
 xamarin_timezone_get_local_name ()
 {
 	NSTimeZone *tz = nil;
