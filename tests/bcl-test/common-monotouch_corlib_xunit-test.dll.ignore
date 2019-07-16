@@ -140,6 +140,7 @@ System.Reflection.Emit.Tests.FieldBuilderSetOffset.SetOffset_NegativeOffset_Thro
 System.Reflection.Emit.Tests.FieldBuilderSetOffset.SetOffset_TypeCreated_ThrowsInvalidOperationException
 System.Reflection.Emit.Tests.TypeBuilderSetCustomAttribute.SetCustomAttribute
 System.Reflection.Emit.Tests.TypeBuilderSetCustomAttribute.SetCustomAttribute_CustomAttributeBuilder_NullBuilder_ThrowsArgumentNullException
+System.Reflection.Emit.Tests.PropertyBuilderTest.CanRead_NoAccessors_ReturnsFalse
 System.Reflection.Emit.Tests.PropertyBuilderTest.CanRead_PublicStaticGetAccessor_ReturnsTrue
 System.Reflection.Emit.Tests.PropertyBuilderTest.CanRead_OnlyGetAccessor_ReturnsFalse
 System.Reflection.Emit.Tests.PropertyBuilderTest.CanRead_OnlyGetAccessor_ReturnsTrue
@@ -285,6 +286,10 @@ System.Reflection.Emit.Tests.MethodBuilderSetImplementationFlags.SetImplementati
 System.Reflection.Emit.Tests.MethodBuilderSetImplementationFlags.SetImplementationFlags(implementationFlags: PreserveSig)
 System.Reflection.Emit.Tests.MethodBuilderSetImplementationFlags.SetImplementationFlags(implementationFlags: InternalCall)
 System.Reflection.Emit.Tests.MethodBuilderSetImplementationFlags.SetImplementationFlags_TypeCreated_ThrowsInvalidOperationException
+
+# fails only in the simulator with FileNotFoundException
+System.IO.Tests.File_Move.MoveToSameNameDifferentCasing
+System.IO.Tests.FileInfo_MoveTo.MoveToSameNameDifferentCasing
 
 # Assembly:  [monotouch_corlib_xunit-test, Version=0.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756]
 #   Exception messages: Assert.Contains() Failure
