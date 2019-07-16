@@ -28,7 +28,6 @@ using UIKit;
 
 namespace EventKit {
 
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_2_0 || MONOMAC
 	[Abstract]
@@ -50,7 +49,6 @@ namespace EventKit {
 		bool Refresh ();
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (EKObject))]
 #if XAMCORE_4_0	
 	[Abstract] // "The EKCalendarItem class is a an abstract superclass ..." from Apple docs.
@@ -136,7 +134,6 @@ namespace EventKit {
 		string CalendarItemExternalIdentifier { get;  }
 	}
 	
-	[Mac (10,8)]
 	[BaseType (typeof (EKObject))]
 	interface EKSource {
 		[Export ("sourceType")]
@@ -160,7 +157,6 @@ namespace EventKit {
 	}
 
 	[iOS (6,0)]
-	[Mac (10,8)]
 	[BaseType (typeof (EKObject))]
 	interface EKStructuredLocation : NSCopying {
 		[NullAllowed] // by default this property is null
@@ -185,7 +181,6 @@ namespace EventKit {
 #endif
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (EKObject))]
 	[DisableDefaultCtor] // Documentation says to use the static methods FromDate/FromTimeInterval to create instances
 	interface EKAlarm : NSCopying {
@@ -229,7 +224,6 @@ namespace EventKit {
 #endif
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (EKObject))]
 	[DisableDefaultCtor]
 	interface EKCalendar {
@@ -281,7 +275,6 @@ namespace EventKit {
 		EKCalendar Create (EKEntityType entityType, EKEventStore eventStore);
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (EKCalendarItem))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: You must use [EKEvent eventWithStore:] to create an event
 	[DisableDefaultCtor]
@@ -341,7 +334,6 @@ namespace EventKit {
 		string BirthdayContactIdentifier { get; }
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (EKObject))]
 #if XAMCORE_3_0
 	[DisableDefaultCtor]
@@ -384,7 +376,6 @@ namespace EventKit {
 		NSPredicate ContactPredicate { get; }
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface EKRecurrenceEnd : NSCopying, NSSecureCoding {
 		[Export ("endDate")]
@@ -402,7 +393,6 @@ namespace EventKit {
 		EKRecurrenceEnd FromOccurrenceCount (nint occurrenceCount);
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface EKRecurrenceDayOfWeek : NSCopying, NSSecureCoding {
 		[Export ("dayOfTheWeek")]
@@ -445,7 +435,6 @@ namespace EventKit {
 #endif
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (EKObject))]
 	interface EKRecurrenceRule : NSCopying {
 		[Export ("calendarIdentifier")]
@@ -502,7 +491,6 @@ namespace EventKit {
 
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface EKEventStore {
 		[NoiOS, Mac (10,11), NoWatch]
@@ -658,7 +646,6 @@ namespace EventKit {
 	delegate void EKEventSearchCallback (EKEvent theEvent, ref bool stop);
 
 	[iOS (6,0)]
-	[Mac (10,8)]
 	[BaseType (typeof (EKCalendarItem))]
 	interface EKReminder {
 		[Export ("startDateComponents", ArgumentSemantic.Copy)]

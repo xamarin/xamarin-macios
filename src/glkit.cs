@@ -70,7 +70,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface GLKBaseEffect : GLKNamedEffect {
 		[Export ("colorMaterialEnabled", ArgumentSemantic.Assign)]
@@ -128,7 +127,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface GLKEffectProperty {
 	}
@@ -136,7 +134,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyFog {
 		[Export ("mode", ArgumentSemantic.Assign)]
@@ -161,7 +158,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyLight {
 		[Export ("position", ArgumentSemantic.Assign)]
@@ -206,7 +202,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyMaterial {
 		[Export ("diffuseColor", ArgumentSemantic.Assign)]
@@ -228,7 +223,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyTexture {
 		[Export ("target", ArgumentSemantic.Assign)]
@@ -248,7 +242,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyTransform {
 		[Export ("normalMatrix")]
@@ -335,7 +328,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8)]
 	[BaseType (typeof (GLKBaseEffect))]
 	interface GLKReflectionMapEffect : GLKNamedEffect {
 		[Export ("textureCubeMap")]
@@ -348,7 +340,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface GLKSkyboxEffect : GLKNamedEffect {
 		[Export ("center", ArgumentSemantic.Assign)]
@@ -416,7 +407,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface GLKTextureInfo : NSCopying {
 		[Export ("width")]
@@ -461,7 +451,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	interface GLKTextureLoader {
 		[Static]

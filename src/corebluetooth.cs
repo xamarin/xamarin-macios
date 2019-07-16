@@ -112,7 +112,6 @@ namespace CoreBluetooth {
 		[Protocolize]
 		CBCentralManagerDelegate Delegate { get; set; }
 		
-		[Mac (10, 7)]
 		[Export ("initWithDelegate:queue:")]
 		[PostGet ("WeakDelegate")]
 		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue);
@@ -130,13 +129,11 @@ namespace CoreBluetooth {
 		[NoTV]
 		[NoWatch]
 		[Availability (Obsoleted = Platform.iOS_9_0)]
-		[Mac (10, 7)]
 		[Export ("retrievePeripherals:"), Internal]
 		void RetrievePeripherals (NSArray peripheralUUIDs);
 
 		[NoTV]
 		[NoWatch]
-		[Mac (10, 7)]
 		[Export ("retrieveConnectedPeripherals")]
 		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
 		void RetrieveConnectedPeripherals ();
@@ -506,7 +503,6 @@ namespace CoreBluetooth {
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
 		[Export ("isConnected")]
-		[Mac (10, 7)]
 		bool IsConnected { get;  }
 
 		[Export ("services", ArgumentSemantic.Retain)]

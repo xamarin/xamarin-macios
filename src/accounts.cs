@@ -8,7 +8,6 @@ using Foundation;
 
 namespace Accounts {
 	
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccount : NSSecureCoding {
 		[Export ("identifier", ArgumentSemantic.Weak)]
@@ -45,7 +44,6 @@ namespace Accounts {
 		string UserFullName { get; }
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountCredential : NSSecureCoding {
 		[Export ("initWithOAuthToken:tokenSecret:")]
@@ -65,7 +63,6 @@ namespace Accounts {
 	delegate void ACAccountStoreRemoveCompletionHandler (bool success, NSError error);
 	delegate void ACRequestCompletionHandler (bool granted, NSError error);
 	
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountStore {
 		[Export ("accounts", ArgumentSemantic.Weak)]
@@ -118,7 +115,6 @@ namespace Accounts {
 		void RemoveAccount (ACAccount account, ACAccountStoreRemoveCompletionHandler completionHandler);
 	}
 
-	[Mac (10,8)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountType : NSSecureCoding {
 		[Export ("accountTypeDescription")]
@@ -165,7 +161,6 @@ namespace Accounts {
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
 	[iOS (6,0)]
-	[Mac (10,8)]
 	[Static]
 	interface ACFacebookKey {
 		[Field ("ACFacebookAppIdKey")]
@@ -182,7 +177,6 @@ namespace Accounts {
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
 	[iOS (6,0)]
-	[Mac (10,8)]
 	[Static]
 	interface ACFacebookAudienceValue
 	{	

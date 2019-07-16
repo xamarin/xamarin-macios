@@ -21,7 +21,6 @@ using AppKit;
 
 namespace Social {
 	[iOS (6,0)]
-	[Mac (10,8)]
 	[Static]
 	interface SLServiceType {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
@@ -58,7 +57,6 @@ namespace Social {
 	[BaseType (typeof (NSObject))]
 	// init -> Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: SLRequestMultiPart must be obtained through!
 	[DisableDefaultCtor]
-	[Mac (10,8)]
 	interface SLRequest {
 		[Static]
 		[Export ("requestForServiceType:requestMethod:URL:parameters:")]
