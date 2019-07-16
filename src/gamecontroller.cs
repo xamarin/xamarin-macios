@@ -481,7 +481,7 @@ namespace GameController {
 		[Export ("allowsRotation")]
 		bool AllowsRotation { get; set; }
 
-		[TV (13, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("buttonMenu")]
 		GCControllerButtonInput ButtonMenu { get; }
 
@@ -497,7 +497,7 @@ namespace GameController {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.Capture()' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.Capture()' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.Capture()' instead.")]
-	[Mac (10,12)
+	[Mac (10,12)]
 	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (GCMicroGamepad))]
