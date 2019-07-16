@@ -20,10 +20,10 @@ using AppKit;
 using UIKit;
 #endif
 using System;
-// #if WATCH // TODO Will be removed after CoreMedia and AVFoundation are updated
-// using AVMediaSelectionGroup = Foundation.NSObject;
-// using AVMediaSelectionOption = Foundation.NSObject;
-// #endif
+#if WATCH // TODO Will be removed after CoreMedia and AVFoundation are updated
+using AVMediaSelectionGroup = Foundation.NSObject;
+using AVMediaSelectionOption = Foundation.NSObject;
+#endif
 
 namespace MediaPlayer {
 #if XAMCORE_2_0 || !MONOMAC
@@ -2237,7 +2237,7 @@ namespace MediaPlayer {
 	}
 #endif
 	[iOS (9,0)][TV (9,0)]
-	[Mac (10,12,1, onlyOn64: true)]
+	[Mac (10,12,1)]
 	[Watch (6,0)]
 	[Category]
 	[BaseType (typeof (AVMediaSelectionOption))]
@@ -2247,7 +2247,7 @@ namespace MediaPlayer {
 	}
 
 	[iOS (9,0)][TV (9,0)]
-	[Mac (10,12,1, onlyOn64: true)]
+	[Mac (10,12,1)]
 	[Watch (6,0)]
 	[Category]
 	[BaseType (typeof (AVMediaSelectionGroup))]
