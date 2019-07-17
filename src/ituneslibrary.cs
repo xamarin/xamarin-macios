@@ -373,6 +373,7 @@ namespace iTunesLibrary {
 		[Export ("initWithAPIVersion:error:")]
 		IntPtr Constructor (string requestedAPIVersion, [NullAllowed] out NSError error);
 
+		[DesignatedInitializer]
 		[Export ("initWithAPIVersion:options:error:")]
 		IntPtr Constructor (string requestedAPIVersion, ITLibInitOptions options, [NullAllowed] out NSError error);
 
