@@ -658,7 +658,7 @@ namespace CoreFoundation {
 		{
 			CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
 				var proxies = ParseProxies (proxyList);
-				clientCb ((client != IntPtr.Zero)? null : Runtime.GetNSObject<NSObject> (client), proxies, (error == IntPtr.Zero) ? null : Runtime.GetNSObject<NSError> (error));
+				clientCb (Runtime.GetNSObject<NSObject> (client), proxies, Runtime.GetNSObject<NSError> (error));
 			};
 			var loopSourcePtr = factory (cb, ref clientContext);
 			return (loopSourcePtr == IntPtr.Zero) ? null : new CFRunLoopSource (loopSourcePtr);
@@ -671,7 +671,7 @@ namespace CoreFoundation {
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext  clientContext);
 
-		public static CFRunLoopSource ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCb, CFStreamClientContext clientContext)
+		public static CFRunLoopSource ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCallback, CFStreamClientContext clientContext)
 		{
 			if (proxyAutoConfigurationScript == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationScript));
@@ -679,15 +679,15 @@ namespace CoreFoundation {
 			if (targetUrl == null)
 				throw new ArgumentNullException (nameof (targetUrl));
 
-			if (clientCb == null)
-				throw new ArgumentNullException (nameof (clientCb));
+			if (clientCallback == null)
+				throw new ArgumentNullException (nameof (clientCallback));
 			
 			using (var pacScript = new NSString (proxyAutoConfigurationScript)) 
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context) {
 					return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref context);
 				};
-				return ExecutePacCFRunLoopSourceBlocking (factory, clientCb, clientContext);
+				return ExecutePacCFRunLoopSourceBlocking (factory, clientCallback, clientContext);
 			}
 		}	
 
@@ -735,7 +735,7 @@ namespace CoreFoundation {
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
 
-		public static CFRunLoopSource ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCb, CFStreamClientContext clientContext)
+		public static CFRunLoopSource ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCallback, CFStreamClientContext clientContext)
 		{
 			if (proxyAutoConfigurationUrl == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationUrl));
@@ -743,15 +743,15 @@ namespace CoreFoundation {
 			if (targetUrl == null)
 				throw new ArgumentNullException (nameof (targetUrl));
 			
-			if (clientCb == null)
-				throw new ArgumentNullException (nameof (clientCb));
+			if (clientCallback == null)
+				throw new ArgumentNullException (nameof (clientCallback));
 
 			using (var pacUrl = new NSUrl (proxyAutoConfigurationUrl.AbsoluteUri)) // toll free bridge to CFUrl
 			using (var url = new NSUrl (targetUrl.AbsoluteUri)) {
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context) {
 					return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref context);
 				};
-				return ExecutePacCFRunLoopSourceBlocking (factory, clientCb, clientContext);
+				return ExecutePacCFRunLoopSourceBlocking (factory, clientCallback, clientContext);
 			}
 		}
 
