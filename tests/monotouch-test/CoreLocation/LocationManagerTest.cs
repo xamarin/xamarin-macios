@@ -1,5 +1,7 @@
 ﻿// Copyright 2019 Microsoft Corporation
 
+#if __IOS__
+
 using System;
 
 using Foundation;
@@ -24,3 +26,5 @@ namespace MonoTouchFixtures.CoreLocation {
 		}
 	}
 }
+
+#endif
