@@ -30,14 +30,16 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 			$(ImplicitlyExpandDesignTimeFacadesDependsOn);
 			GetReferenceAssemblyPaths
 		</ImplicitlyExpandDesignTimeFacadesDependsOn>
+
+		<_NETBuildExtensionsTaskAssembly>$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll</_NETBuildExtensionsTaskAssembly>
 	</PropertyGroup>
 
 	<!-- Implicitly references all portable design-time facades if the user is referencing a System.Runtime-based portable library -->
 
 	<UsingTask
 		TaskName="GetDependsOnNETStandard"
-		Condition="'$(IsXBuild)' != 'true' and Exists('$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll')"
-		AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll" />
+		Condition="'$(IsXBuild)' != 'true' and Exists('$(_NETBuildExtensionsTaskAssembly)')"
+		AssemblyFile="$(_NETBuildExtensionsTaskAssembly)" />
 
 	<Target Name="ImplicitlyExpandDesignTimeFacades" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
 		<ItemGroup>
@@ -63,8 +65,8 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
 		-->
 		<GetDependsOnNETStandard
-			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(DependsOnNETStandard)' == '' and '@(XM_CandidateNETStandardReferences)' != '' 
-				and Exists('$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll')"
+			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(DependsOnNETStandard)' == '' and '@(XM_CandidateNETStandardReferences)' != ''
+				and Exists('$(_NETBuildExtensionsTaskAssembly)')"
 			References="@(XM_CandidateNETStandardReferences)">
 			<Output TaskParameter="DependsOnNETStandard" PropertyName="XM_DependsOnNETStandard" />
 		</GetDependsOnNETStandard>
