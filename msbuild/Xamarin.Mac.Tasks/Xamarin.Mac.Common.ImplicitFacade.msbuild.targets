@@ -52,6 +52,14 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 			<_HasReferenceToSystemRuntime Condition="'$(DependsOnSystemRuntime)' == 'true' or '%(_ResolvedProjectReferencePaths.TargetPlatformIdentifier)' == 'Portable'">true</_HasReferenceToSystemRuntime>
 
 			<XM_NETStandardInbox Condition="'$(XM_NETStandardInbox)' == '' and Exists('%(XM_InboxNETStandardFolders.Identity)\netstandard.dll')">true</XM_NETStandardInbox>
+
+			<!--
+				This is `true` if any of the references depends on `netstandard`.
+
+				In cases where `ResolveAssemblyReference` task does get run, it populates `$(_DependsOnNETStandard)` property, so we don't
+				need to check this again.
+			-->
+			<XM_DependsOnNETStandard Condition="'$(XM_DependsOnNETStandard)' == ''">$(_DependsOnNETStandard)</XM_DependsOnNETStandard>
 		</PropertyGroup>
 
 		<!--
@@ -65,7 +73,7 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
 		-->
 		<GetDependsOnNETStandard
-			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(DependsOnNETStandard)' == '' and '@(XM_CandidateNETStandardReferences)' != ''
+			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(XM_DependsOnNETStandard)' == '' and '@(XM_CandidateNETStandardReferences)' != ''
 				and Exists('$(_NETBuildExtensionsTaskAssembly)')"
 			References="@(XM_CandidateNETStandardReferences)">
 			<Output TaskParameter="DependsOnNETStandard" PropertyName="XM_DependsOnNETStandard" />
