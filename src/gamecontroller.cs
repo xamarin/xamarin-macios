@@ -52,6 +52,7 @@ namespace GameController {
 		[Export ("value")]
 		float Value { get; } /* float, not CGFloat */
 
+		[Mac (10,15), iOS (13,0)]
 		[Export ("setValue:")]
 		void SetValue (float value);
 	}
@@ -79,6 +80,7 @@ namespace GameController {
 		[Export ("pressed")]
 		bool IsPressed { [Bind ("isPressed")] get; }
 
+		[Mac (10,15), iOS (13,0)]
 		[Export ("setValue:")]
 		void SetValue (float value);
 
@@ -124,6 +126,7 @@ namespace GameController {
 		[Export ("right")]
 		GCControllerButtonInput Right { get; }
 
+		[Mac (10,15), iOS (13,0)]
 		[Export ("setValueForXAxis:yAxis:")]
 		void SetValue (float xAxis, float yAxis);
 	}
