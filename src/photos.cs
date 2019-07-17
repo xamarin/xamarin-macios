@@ -424,9 +424,11 @@ namespace Photos
 		bool ObjectWasDeleted { get; }
 	}
 
-	[iOS (13,0)]
+	[iOS (8,0)] // introduced in iOS (13,0) but has iOS(8,0) since PHCollectionListChangeRequest creates iOS (8,0)
+				// default constructor
 	[TV (13,0)]
-	[Mac (10,15)]
+	[Mac (10,13)] // introduced in Mac (10,15) but has mac(10,13) since PHProjectChangeRequest creates Mac (10,13)
+				  // default constructor
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHChangeRequest {}
