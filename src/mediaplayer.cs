@@ -1280,17 +1280,15 @@ namespace MediaPlayer {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVRoutePickerView instead")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRoutePickerView' instead.")]
 		[Export ("showsRouteButton")]
 		bool ShowsRouteButton { get; set; }
 
-		[Introduced (PlatformName.iOS, 7, 0, message: "Use AVRouteDetector.MultipleRoutesDetected instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVRouteDetector.MultipleRoutesDetected instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
 		[Export ("showsVolumeSlider")]
 		bool ShowsVolumeSlider { get; set; }
 
-		[Introduced (PlatformName.iOS, 7, 0, message: "Use AVPlayer.ExternalPlaybackActive instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVPlayer.ExternalPlaybackActive instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
 		[iOS (6,0)]
 		[Export ("setMinimumVolumeSliderImage:forState:")]
 		void SetMinimumVolumeSliderImage ([NullAllowed] UIImage image, UIControlState state);
@@ -1324,27 +1322,27 @@ namespace MediaPlayer {
 		CGRect GetVolumeThumbRect (CGRect bounds, CGRect columeSliderRect, float /* float, not CGFloat */ value);
 
 		[iOS (6,0)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVRoutePickerView.RoutePickerButtonStyle instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRoutePickerView.RoutePickerButtonStyle' instead.")]
 		[Export ("setRouteButtonImage:forState:")]
 		void SetRouteButtonImage ([NullAllowed] UIImage image, UIControlState state);
 
 		[iOS (6,0)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "See AVRoutePickerView for possible replacements.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
 		[Export ("routeButtonImageForState:")]
 		UIImage GetRouteButtonImage (UIControlState state);
 
 		[iOS (6,0)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "See AVRoutePickerView for possible replacements.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
 		[Export ("routeButtonRectForBounds:")]
 		CGRect GetRouteButtonRect (CGRect bounds);
 
 		[iOS (7,0)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVRouteDetector.MultipleRoutesDetected instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
 		[Export ("wirelessRoutesAvailable")]
 		bool AreWirelessRoutesAvailable { [Bind ("areWirelessRoutesAvailable")] get; }
 
 		[iOS (7,0)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVPlayer.ExternalPlaybackActive instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
 		[Export ("wirelessRouteActive")]
 		bool IsWirelessRouteActive { [Bind ("isWirelessRouteActive")] get; }
 
@@ -1354,13 +1352,13 @@ namespace MediaPlayer {
 		UIImage VolumeWarningSliderImage { get; set; }
 
 		[iOS (7,0)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVRouteDetector.MultipleRoutesDetectedDidChange instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetectedDidChange' instead.")]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRoutesAvailableDidChangeNotification")]
 		NSString WirelessRoutesAvailableDidChangeNotification { get; }
 
 		[iOS (7,0)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use AVPlayer.ExternalPlaybackActive KVO instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' KVO instead.")]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRouteActiveDidChangeNotification")]
 		NSString WirelessRouteActiveDidChangeNotification { get; }
