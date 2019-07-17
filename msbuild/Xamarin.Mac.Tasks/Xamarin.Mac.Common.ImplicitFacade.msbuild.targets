@@ -31,7 +31,7 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 			GetReferenceAssemblyPaths
 		</ImplicitlyExpandDesignTimeFacadesDependsOn>
 
-		<_NETBuildExtensionsTaskAssembly>$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net46\Microsoft.NET.Build.Extensions.Tasks.dll</_NETBuildExtensionsTaskAssembly>
+		<_NETBuildExtensionsTaskAssembly>$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net472\Microsoft.NET.Build.Extensions.Tasks.dll</_NETBuildExtensionsTaskAssembly>
 	</PropertyGroup>
 
 	<!-- Implicitly references all portable design-time facades if the user is referencing a System.Runtime-based portable library -->
