@@ -289,7 +289,7 @@ namespace Contacts {
 		NSString InstantMessageAddresses { get; }
 	}
 
-	[iOS (9,0), Mac (10,11, onlyOn64: true)]
+ 	[iOS (9,0), Mac (10,15, onlyOn64: true), Watch (2,0)]
 	[BaseType (typeof (CNFetchRequest))]
 	[DisableDefaultCtor] // using init raises an exception according to docs
 	interface CNContactFetchRequest : NSSecureCoding {
@@ -1402,7 +1402,7 @@ namespace Contacts {
 		CNGroup Group { get; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+ 	[iOS (9,0), Mac (10,15, onlyOn64: true), Watch (2,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CNFetchRequest {}
