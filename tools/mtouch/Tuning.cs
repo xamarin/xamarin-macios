@@ -78,14 +78,23 @@ namespace MonoTouch.Tuner {
 
 			try {
 				pipeline.Process (context);
-			} catch (FileNotFoundException fnfe) {
+			} catch (Exception e) {
+				HandlePipelineProcessException (e);
+			}
+
+			assemblies = ListAssemblies (context);
+		}
+
+		static void HandlePipelineProcessException (Exception e)
+		{
+			if (e is FileNotFoundException fnfe) {
 				// Cecil throw this if the assembly is not found
 				throw new MonoTouchException (2002, true, fnfe, fnfe.Message);
-			} catch (AggregateException) {
-				throw;
-			} catch (MonoTouchException) {
-				throw;
-			} catch (MarkException me) {
+			} else if (e is AggregateException) {
+				throw e;
+			} else if (e is MonoTouchException) {
+				throw e;
+			} else if (e is MarkException me) {
 				var re = me.InnerException as ResolutionException;
 				if (re == null) {
 					if (me.InnerException != null) {
@@ -98,13 +107,18 @@ namespace MonoTouch.Tuner {
 					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
 					throw ErrorHelper.CreateError (2101, me, "Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.", re.Member, me.Method.FullName, scope);
 				}
-			} catch (ResolutionException re) {
+			} else if (e is ResolutionException re) {
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
 				throw new MonoTouchException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
-			} catch (XmlResolutionException ex) {
+			} else if (e is XmlResolutionException ex) {
 				throw new MonoTouchException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
-			} catch (Exception e) {
+			} else {
+				if (e.InnerException != null) {
+					HandlePipelineProcessException (e.InnerException);
+					return;
+				}
+
 				var message = new StringBuilder ();
 				if (e.Data.Count > 0) {
 					message.AppendLine ();
@@ -121,8 +135,6 @@ namespace MonoTouch.Tuner {
 				message.Append ($"Reason: {e.Message}");
 				throw new MonoTouchException (2001, true, e, "Could not link assemblies. {0}", message);
 			}
-
-			assemblies = ListAssemblies (context);
 		}
 
 		static MonoTouchLinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)

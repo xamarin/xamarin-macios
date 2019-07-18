@@ -86,19 +86,34 @@ namespace MonoMac.Tuner {
 
 			try {
 				pipeline.Process (context);
-			} catch (AssemblyResolutionException fnfe) {
+			}
+			catch (Exception e) {
+				HandlePipelineProcessException (e);
+			}
+
+			assemblies = ListAssemblies (context);
+		}
+
+		static void HandlePipelineProcessException (Exception e)
+		{
+			if (e is AssemblyResolutionException fnfe) {
 				throw new MonoMacException (2002, true, fnfe, fnfe.Message);
-			} catch (AggregateException) {
-				throw;
-			} catch (MonoMacException) {
-				throw;
-			} catch (ResolutionException re) {
+			} else if (e is AggregateException) {
+				throw e;
+			} else if (e is MonoMacException) {
+				throw e;
+			} else if (e is ResolutionException re) {
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
 				throw new MonoMacException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
-			} catch (XmlResolutionException ex) {
+			} else if (e is XmlResolutionException ex) {
 				throw new MonoMacException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
-			} catch (Exception e) {
+			} else {
+				if (e.InnerException != null) {
+					HandlePipelineProcessException (e.InnerException);
+					return;
+				}
+
 				var message = new StringBuilder ();
 				if (e.Data.Count > 0) {
 					message.AppendLine ();
@@ -115,8 +130,6 @@ namespace MonoMac.Tuner {
 				message.Append ($"Reason: {e.Message}");
 				throw new MonoMacException (2001, true, e, "Could not link assemblies. {0}", message);
 			}
-
-			assemblies = ListAssemblies (context);
 		}
 
 		static MonoMacLinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)
