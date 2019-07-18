@@ -1,2 +1,0 @@
-!deprecated-attribute-missing! NFCNDEFPayload::wellKnowTypeTextPayloadWithString:locale: missing a [Deprecated] attribute
-!missing-selector! +NFCNDEFPayload::wellKnownTypeTextPayloadWithString:locale: not bound
