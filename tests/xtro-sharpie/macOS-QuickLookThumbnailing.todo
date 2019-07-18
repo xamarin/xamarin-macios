@@ -1,5 +1,7 @@
+!missing-enum! QLThumbnailError not bound
 !missing-enum! QLThumbnailGenerationRequestRepresentationTypes not bound
 !missing-enum! QLThumbnailRepresentationType not bound
+!missing-field! QLThumbnailErrorDomain not bound
 !missing-selector! +QLThumbnailGenerator::sharedGenerator not bound
 !missing-selector! +QLThumbnailReply::replyWithContextSize:currentContextDrawingBlock: not bound
 !missing-selector! +QLThumbnailReply::replyWithContextSize:drawingBlock: not bound
@@ -30,6 +32,3 @@
 !missing-type! QLThumbnailProvider not bound
 !missing-type! QLThumbnailReply not bound
 !missing-type! QLThumbnailRepresentation not bound
-## appended from unclassified file
-!missing-enum! QLThumbnailError not bound
-!missing-field! QLThumbnailErrorDomain not bound

@@ -7,6 +7,7 @@
 !missing-enum! SCNLightProbeType not bound
 !missing-enum! SCNLightProbeUpdateType not bound
 !missing-field! SCNHitTestOptionIgnoreLightArea not bound
+!missing-field! SCNLightingModelShadowOnly not bound
 !missing-field! SCNLightTypeArea not bound
 !missing-protocol-member! SCNSceneRenderer::currentViewport not found
 !missing-protocol-member! SCNSceneRenderer::isTemporalAntialiasingEnabled not found
@@ -73,5 +74,3 @@
 !missing-selector! SCNTechnique::setLibrary: not bound
 !missing-selector! SCNView::drawableResizesAsynchronously not bound
 !missing-selector! SCNView::setDrawableResizesAsynchronously: not bound
-## appended from unclassified file
-!missing-field! SCNLightingModelShadowOnly not bound

@@ -1949,9 +1949,6 @@ namespace ARKit {
 	[DisableDefaultCtor]
 	interface ARTrackedRaycast {
 
-		[Export ("updateQuery:")]
-		void Update (ARRaycastQuery query);
-
 		[Export ("stopTracking")]
 		void StopTracking ();
 	}

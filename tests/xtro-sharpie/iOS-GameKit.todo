@@ -9,6 +9,5 @@
 !missing-selector! GKMatchRequest::setTournamentForInvitePool: not bound
 !missing-selector! GKMatchRequest::tournamentForInvitePool not bound
 !missing-selector! GKPlayer::gamePlayerID not bound
-!missing-selector! GKPlayer::teamPlayerID not bound
-## appended from unclassified file
 !missing-selector! GKPlayer::scopedIDsArePersistent not bound
+!missing-selector! GKPlayer::teamPlayerID not bound

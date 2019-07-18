@@ -22,6 +22,7 @@
 !missing-selector! NSFileProviderExtension::importDidFinishWithCompletionHandler: not bound
 !missing-selector! NSFileProviderExtension::itemChanged:baseVersion:changedFields:contents:completionHandler: not bound
 !missing-selector! NSFileProviderExtension::materializedItemsDidChangeWithCompletionHandler: not bound
+!missing-selector! NSFileProviderExtension::performActionWithIdentifier:onItemsWithIdentifiers:completionHandler: not bound
 !missing-selector! NSFileProviderItemVersion::contentVersion not bound
 !missing-selector! NSFileProviderItemVersion::initWithContentVersion:metadataVersion: not bound
 !missing-selector! NSFileProviderItemVersion::metadataVersion not bound
@@ -36,5 +37,3 @@
 !missing-type! NSFileProviderItemVersion not bound
 !missing-type! NSFileProviderRequest not bound
 !missing-type! NSFileProviderSearchQuery not bound
-## appended from unclassified file
-!missing-selector! NSFileProviderExtension::performActionWithIdentifier:onItemsWithIdentifiers:completionHandler: not bound
