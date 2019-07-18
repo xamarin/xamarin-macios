@@ -97,7 +97,7 @@ public partial class Generator {
 
 		var library_name = type.Namespace;
 		var error = AttributeManager.GetCustomAttribute<ErrorDomainAttribute> (type);
-		if ((fields.Count > 0) || (error != null)) {
+		if ((fields.Count > 0) || (error != null) || (null_field != null)) {
 			print ("");
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
@@ -128,7 +128,7 @@ public partial class Generator {
 			print ("}");
 		}
 
-		if (fields.Count > 0) {
+		if ((fields.Count > 0) || (null_field != null)) {
 			print ("static IntPtr[] values = new IntPtr [{0}];", fields.Count);
 			print ("");
 
@@ -211,7 +211,7 @@ public partial class Generator {
 			print ("}");
 		}
 			
-		if ((fields.Count > 0) || (error != null)) {
+		if ((fields.Count > 0) || (error != null) || (null_field != null)) {
 			indent--;
 			print ("}");
 		}
