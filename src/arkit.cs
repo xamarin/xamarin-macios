@@ -1656,11 +1656,8 @@ namespace ARKit {
 		[Export ("activatesAutomatically")]
 		bool ActivatesAutomatically { get; set; }
 
-		[Export ("active")]
-		bool Active {
-			[Bind ("isActive")] get;
-			[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetActive' instead.")] set;
-		}
+		[Export ("isActive")]
+		bool IsActive { get; }
 
 		[Export ("setActive:animated:")]
 		void SetActive (bool active, bool animated);
