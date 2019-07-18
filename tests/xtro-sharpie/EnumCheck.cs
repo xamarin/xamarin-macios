@@ -68,6 +68,7 @@ namespace Extrospection {
 			case "NSUInteger":
 			case "CFIndex":
 			case "CFOptionFlags":
+			case "AVAudioInteger":
 				native_size = 8; // in managed code it's always the largest size
 				native = true;
 				break;

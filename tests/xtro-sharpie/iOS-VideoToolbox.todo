@@ -3,6 +3,8 @@
 !missing-field! kVTCompressionPropertyKey_AlphaChannelMode not bound
 !missing-field! kVTCompressionPropertyKey_GammaLevel not bound
 !missing-field! kVTCompressionPropertyKey_TargetQualityForAlpha not bound
+!missing-field! kVTCompressionPropertyKey_UsingGPURegistryID not bound
+!missing-field! kVTDecompressionPropertyKey_UsingGPURegistryID not bound
 !missing-field! kVTPixelTransferPropertyKey_RealTime not bound
 !missing-field! kVTVideoEncoderList_GPURegistryID not bound
 !missing-field! kVTVideoEncoderList_InstanceLimit not bound
@@ -12,6 +14,3 @@
 !missing-field! kVTVideoEncoderList_SupportedSelectionProperties not bound
 !missing-field! kVTVideoEncoderSpecification_PreferredEncoderGPURegistryID not bound
 !missing-field! kVTVideoEncoderSpecification_RequiredEncoderGPURegistryID not bound
-## appended from unclassified file
-!missing-field! kVTCompressionPropertyKey_UsingGPURegistryID not bound
-!missing-field! kVTDecompressionPropertyKey_UsingGPURegistryID not bound

@@ -75,6 +75,8 @@
 !missing-selector! NEFilterSocketFlow::socketFamily not bound
 !missing-selector! NEFilterSocketFlow::socketProtocol not bound
 !missing-selector! NEFilterSocketFlow::socketType not bound
+!missing-selector! NEFilterVerdict::setShouldReport: not bound
+!missing-selector! NEFilterVerdict::shouldReport not bound
 !missing-selector! NEFlowMetaData::sourceAppAuditToken not bound
 !missing-selector! NENetworkRule::initWithDestinationHost:protocol: not bound
 !missing-selector! NENetworkRule::initWithDestinationNetwork:prefix:protocol: not bound
@@ -110,6 +112,3 @@
 !missing-type! NENetworkRule not bound
 !missing-type! NETransparentProxyManager not bound
 !missing-type! NETransparentProxyNetworkSettings not bound
-## appended from unclassified file
-!missing-selector! NEFilterVerdict::setShouldReport: not bound
-!missing-selector! NEFilterVerdict::shouldReport not bound

@@ -3,6 +3,9 @@
 !deprecated-attribute-missing! CLBeaconRegion::initWithProximityUUID:major:identifier: missing a [Deprecated] attribute
 !deprecated-attribute-missing! CLBeaconRegion::initWithProximityUUID:major:minor:identifier: missing a [Deprecated] attribute
 !deprecated-attribute-missing! CLBeaconRegion::proximityUUID missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLLocationManager::allowDeferredLocationUpdatesUntilTraveled:timeout: missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLLocationManager::deferredLocationUpdatesAvailable missing a [Deprecated] attribute
+!deprecated-attribute-missing! CLLocationManager::disallowDeferredLocationUpdates missing a [Deprecated] attribute
 !deprecated-attribute-missing! CLLocationManager::rangedRegions missing a [Deprecated] attribute
 !deprecated-attribute-missing! CLLocationManager::startRangingBeaconsInRegion: missing a [Deprecated] attribute
 !deprecated-attribute-missing! CLLocationManager::stopRangingBeaconsInRegion: missing a [Deprecated] attribute
@@ -28,7 +31,3 @@
 !missing-selector! CLLocationManager::startRangingBeaconsSatisfyingConstraint: not bound
 !missing-selector! CLLocationManager::stopRangingBeaconsSatisfyingConstraint: not bound
 !missing-type! CLBeaconIdentityConstraint not bound
-## appended from unclassified file
-!deprecated-attribute-missing! CLLocationManager::allowDeferredLocationUpdatesUntilTraveled:timeout: missing a [Deprecated] attribute
-!deprecated-attribute-missing! CLLocationManager::deferredLocationUpdatesAvailable missing a [Deprecated] attribute
-!deprecated-attribute-missing! CLLocationManager::disallowDeferredLocationUpdates missing a [Deprecated] attribute
