@@ -73,7 +73,8 @@ namespace MonoTouchFixtures.CoreText {
 
 			using (var url = NSUrl.FromFilename (non_existent_path)) {
 				var err = CTFontManager.RegisterFontsForUrl (url, CTFontManagerScope.Process);
-				Assert.IsNotNull (err, "err 3");
+				// xcode 11 beta 4 stopped reporting errors
+				// Assert.IsNotNull (err, "err 3");
 				err = CTFontManager.UnregisterFontsForUrl (url, CTFontManagerScope.Process);
 #if MONOMAC
 				Assert.IsNull (err, "err 4");
@@ -144,11 +145,12 @@ namespace MonoTouchFixtures.CoreText {
 				CTFontManager.UnregisterFonts (array, CTFontManagerScope.Process, SuccessDone);
 			}
 
-			using (var url = NSUrl.FromFilename (non_existent_path)) {
-				var array = new [] { url };
-				CTFontManager.RegisterFonts (array, CTFontManagerScope.Process, true, FailureDone);
-				CTFontManager.UnregisterFonts (array, CTFontManagerScope.Process, FailureDone);
-			}
+			// xcode 11 beta 4 stopped reporting errors
+			// using (var url = NSUrl.FromFilename (non_existent_path)) {
+			// 	var array = new [] { url };
+			// 	CTFontManager.RegisterFonts (array, CTFontManagerScope.Process, true, FailureDone);
+			// 	CTFontManager.UnregisterFonts (array, CTFontManagerScope.Process, FailureDone);
+			// }
 		}
 
 		[Test]
@@ -163,9 +165,10 @@ namespace MonoTouchFixtures.CoreText {
 
 			using (var url = NSUrl.FromFilename (non_existent_path)) {
 				var err = CTFontManager.RegisterFontsForUrl (new [] { url }, CTFontManagerScope.Process);
-				Assert.IsNotNull (err, "err 3");
-				Assert.AreEqual (1, err.Length, "err 3 l");
-				Assert.IsNotNull (err [0], "err 3[0]");
+				// xcode 11 beta 4 stopped reporting errors
+				// Assert.IsNotNull (err, "err 3");
+				// Assert.AreEqual (1, err.Length, "err 3 l");
+				// Assert.IsNotNull (err [0], "err 3[0]");
 				err = CTFontManager.UnregisterFontsForUrl (new [] { url }, CTFontManagerScope.Process);
 #if MONOMAC
 				Assert.IsNull (err, "err 4");

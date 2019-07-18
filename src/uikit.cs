@@ -6698,7 +6698,7 @@ namespace UIKit {
 	[iOS (7,0)]
 	[BaseType (typeof (UICommand))]
 	[DesignatedDefaultCtor]
-	interface UIKeyCommand : NSMutableCopying {
+	interface UIKeyCommand {
 
 		[iOS (13,0), TV (13,0)]
 		[Export ("title")]

@@ -22,7 +22,6 @@
 !missing-selector! VNCoreMLModel::setInputImageFeatureName: not bound
 !missing-selector! VNDetectFaceLandmarksRequest::constellation not bound
 !missing-selector! VNDetectFaceLandmarksRequest::setConstellation: not bound
-!missing-selector! VNFaceLandmarkRegion2D::occlusionFlagsPerPoint not bound
 !missing-selector! VNFaceLandmarkRegion2D::precisionEstimatesPerPoint not bound
 !missing-selector! VNFaceObservation::faceCaptureQuality not bound
 !missing-selector! VNFeaturePrintObservation::computeDistance:toFeaturePrintObservation:error: not bound

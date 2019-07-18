@@ -3,6 +3,7 @@
 !missing-enum! SCNLightProbeType not bound
 !missing-enum! SCNLightProbeUpdateType not bound
 !missing-field! SCNHitTestOptionIgnoreLightArea not bound
+!missing-field! SCNLightingModelShadowOnly not bound
 !missing-field! SCNLightTypeArea not bound
 !missing-protocol-member! SCNSceneRenderer::currentViewport not found
 !missing-protocol-member! SCNSceneRenderer::isTemporalAntialiasingEnabled not found
@@ -65,5 +66,3 @@
 !missing-selector! SCNScene::setScreenSpaceReflectionStride: not bound
 !missing-selector! SCNScene::setWantsScreenSpaceReflection: not bound
 !missing-selector! SCNScene::wantsScreenSpaceReflection not bound
-## appended from unclassified file
-!missing-field! SCNLightingModelShadowOnly not bound
