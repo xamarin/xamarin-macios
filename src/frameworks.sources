@@ -504,6 +504,7 @@ CORELOCATION_CORE_SOURCES = \
 	CoreLocation/CoreLocation.cs \
 
 CORELOCATION_SOURCES = \
+	CoreLocation/CLBeaconRegion.cs \
 	CoreLocation/CLCompat.cs \
 	CoreLocation/CLLocationManager.cs \
 	CoreLocation/CLLocationManagerDelegate.cs \

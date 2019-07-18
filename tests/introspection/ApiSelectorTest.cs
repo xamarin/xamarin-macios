@@ -874,6 +874,10 @@ namespace Introspection {
 			case "initWithSource:weights:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:":
 			// UISegmentedControl
 			case "initWithItems:":
+			// CLBeaconRegion
+			case "initWithUUID:identifier:":
+			case "initWithUUID:major:identifier:":
+			case "initWithUUID:major:minor:identifier:":
 				var mi = m as MethodInfo;
 				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
 			default:

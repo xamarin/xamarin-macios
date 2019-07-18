@@ -86,12 +86,12 @@ namespace CoreLocation {
 		[Export ("verticalAccuracy")]
 		double VerticalAccuracy { get;  }
 	
-		[NoTV]
+		[TV (13,0)] // API_UNAVAILABLE(tvos) removed in Xcode 11 beta 1
 		[Watch (3,0)] // __WATCHOS_PROHIBITED removed in Xcode 8 beta 3
 		[Export ("course")]
 		double Course { get;  }
-	
-		[NoTV]
+
+		[TV (13,0)] // API_UNAVAILABLE(tvos) removed in Xcode 11 beta 1
 		[Watch (3,0)] // __WATCHOS_PROHIBITED removed in Xcode 8 beta 3
 		[Export ("speed")]
 		double Speed { get;  }
@@ -104,12 +104,6 @@ namespace CoreLocation {
 	
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:timestamp:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, NSDate timestamp);
-
-#if !XAMCORE_2_0
-		[Export ("getDistanceFrom:")]
-		[Availability (Deprecated = Platform.iOS_3_2, Message = "Use 'DistanceFrom' instead.")]
-		double Distancefrom (CLLocation  location);
-#endif
 
 		[Export ("distanceFromLocation:")]
 		double DistanceFrom (CLLocation location);
@@ -144,21 +138,19 @@ namespace CoreLocation {
 		double AccuracyThreeKilometers { get; }
 #endif
 
-#if !MONOMAC
+		[Mac (10,15)]
 		[iOS (8,0)]
 		[Export ("floor", ArgumentSemantic.Copy)]
 		CLFloor Floor { get; }
-#endif        
 	}
 
-#if !MONOMAC
+	[Mac (10,15)]
 	[iOS (8,0)]
 	[BaseType (typeof(NSObject))]
 	partial interface CLFloor : NSSecureCoding, NSCopying {
 	        [Export ("level")]
 	        nint Level { get; }
     }
-#endif
 
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (CLLocationManagerDelegate)})]
 	partial interface CLLocationManager {
@@ -293,11 +285,15 @@ namespace CoreLocation {
 
 		[NoWatch][NoTV]
 		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. Call will not have any effect.")]
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowDeferredLocationUpdatesUntilTraveled:timeout:")]
 		void AllowDeferredLocationUpdatesUntil (double distance, double timeout);
 
 		[NoWatch][NoTV]
 		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. Call will not have any effect.")]
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("disallowDeferredLocationUpdates")]
 		void DisallowDeferredLocationUpdates ();
 #endif
@@ -305,6 +301,8 @@ namespace CoreLocation {
 		[NoWatch][NoTV]
 		[iOS (6,0)]
 		[Mac (10,9)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. It will always return 'false'.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Not used anymore. It will always return 'false'.")]
 		[Static]
 		[Export ("deferredLocationUpdatesAvailable")]
 		bool DeferredLocationUpdatesAvailable { get; }
@@ -321,8 +319,13 @@ namespace CoreLocation {
 
 #if !MONOMAC
 		[NoWatch][NoTV]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'RangedBeaconConstraints' instead.")]
 		[iOS (7,0), Export ("rangedRegions", ArgumentSemantic.Copy)]
 		NSSet RangedRegions { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[Export ("rangedBeaconConstraints", ArgumentSemantic.Copy)]
+		NSSet<CLBeaconIdentityConstraint> RangedBeaconConstraints { get; }
 #endif
 
 		[Mac (10,10)]
@@ -332,12 +335,24 @@ namespace CoreLocation {
 
 #if !MONOMAC
 		[NoWatch][NoTV]
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'StartRangingBeacons(CLBeaconIdentityConstraint)' instead.")]
 		[iOS (7,0), Export ("startRangingBeaconsInRegion:")]
 		void StartRangingBeacons (CLBeaconRegion region);
 
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[Export ("startRangingBeaconsSatisfyingConstraint:")]
+		void StartRangingBeacons (CLBeaconIdentityConstraint constraint);
+
 		[NoWatch][NoTV]
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'StopRangingBeacons(CLBeaconIdentityConstraint)' instead.")]
 		[iOS (7,0), Export ("stopRangingBeaconsInRegion:")]
 		void StopRangingBeacons (CLBeaconRegion region);
+
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[Export ("stopRangingBeaconsSatisfyingConstraint:")]
+		void StopRangingBeacons (CLBeaconIdentityConstraint constraint);
 
 		[NoWatch][NoTV]
 		[iOS (7,0)]
@@ -348,12 +363,15 @@ namespace CoreLocation {
 		[iOS (8,0)]
 		[Export ("requestWhenInUseAuthorization")]
 		void RequestWhenInUseAuthorization ();
+#endif
 
 		[NoTV]
 		[iOS (8,0)]
+		[Mac (10,15)]
 		[Export ("requestAlwaysAuthorization")]
 		void RequestAlwaysAuthorization ();
 
+#if !MONOMAC
 		[NoWatch][NoTV]
 		[iOS (8,0)]
 		[Export ("startMonitoringVisits")]
@@ -428,12 +446,24 @@ namespace CoreLocation {
 
 #if !MONOMAC
 		[NoWatch][NoTV]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'DidRangeBeaconsSatisfyingConstraint' instead.")]
 		[iOS (7,0), Export ("locationManager:didRangeBeacons:inRegion:"), EventArgs ("CLRegionBeaconsRanged")]
 		void DidRangeBeacons (CLLocationManager manager, CLBeacon [] beacons, CLBeaconRegion region);
 
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[Export ("locationManager:didRangeBeacons:satisfyingConstraint:")]
+		[EventArgs ("CLRegionBeaconsConstraintRanged")]
+		void DidRangeBeaconsSatisfyingConstraint (CLLocationManager manager, CLBeacon[] beacons, CLBeaconIdentityConstraint beaconConstraint);
+
 		[NoWatch][NoTV]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'DidFailRangingBeacons' instead.")]
 		[iOS (7,0), Export ("locationManager:rangingBeaconsDidFailForRegion:withError:"), EventArgs ("CLRegionBeaconsFailed")]
 		void RangingBeaconsDidFailForRegion (CLLocationManager manager, CLBeaconRegion region, NSError error);
+
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[Export ("locationManager:didFailRangingBeaconsForConstraint:error:")]
+		[EventArgs ("CLRegionBeaconsConstraintFailed")]
+		void DidFailRangingBeacons (CLLocationManager manager, CLBeaconIdentityConstraint beaconConstraint, NSError error);
 
 		[NoWatch][NoTV]
 		[iOS (8,0)]
@@ -615,20 +645,47 @@ namespace CoreLocation {
 	[DisableDefaultCtor] // nil-Handle on iOS8 if 'init' is used
 	partial interface CLBeaconRegion {
 
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use the 'Create' method or the constructor using 'CLBeaconIdentityConstraint' instead.")]
 		[Export ("initWithProximityUUID:identifier:")]
 		IntPtr Constructor (NSUuid proximityUuid, string identifier);
 
+		[iOS (13,0)]
+		[Internal] // signature conflict with deprecated API
+		[Export ("initWithUUID:identifier:")]
+		IntPtr _Constructor (NSUuid uuid, string identifier);
+
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use the 'Create' method or the constructor using 'CLBeaconIdentityConstraint' instead.")]
 		[Export ("initWithProximityUUID:major:identifier:")]
 		IntPtr Constructor (NSUuid proximityUuid, ushort major, string identifier);
 
+		[iOS (13,0)]
+		[Internal] // signature conflict with deprecated API
+		[Export ("initWithUUID:major:identifier:")]
+		IntPtr _Constructor (NSUuid uuid, ushort major, string identifier);
+
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use the 'Create' method or the constructor using 'CLBeaconIdentityConstraint' instead.")]
 		[Export ("initWithProximityUUID:major:minor:identifier:")]
 		IntPtr Constructor (NSUuid proximityUuid, ushort major, ushort minor, string identifier);
+
+		[iOS (13,0)]
+		[Internal] // signature conflict with deprecated API
+		[Export ("initWithUUID:major:minor:identifier:")]
+		IntPtr _Constructor (NSUuid uuid, ushort major, ushort minor, string identifier);
+
+		[iOS (13,0)]
+		[Export ("initWithBeaconIdentityConstraint:identifier:")]
+		IntPtr Constructor (CLBeaconIdentityConstraint beaconIdentityConstraint, string identifier);
 
 		[Export ("peripheralDataWithMeasuredPower:")]
 		NSMutableDictionary GetPeripheralData ([NullAllowed] NSNumber measuredPower);
 
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Uuid' instead.")]
 		[Export ("proximityUUID", ArgumentSemantic.Copy)]
 		NSUuid ProximityUuid { get; }
+
+		[iOS (13,0)]
+		[Export ("UUID", ArgumentSemantic.Copy)]
+		NSUuid Uuid { get; }
 
 		[Export ("major", ArgumentSemantic.Copy)]
 		NSNumber Major { get; }
@@ -638,14 +695,23 @@ namespace CoreLocation {
 
 		[Export ("notifyEntryStateOnDisplay", ArgumentSemantic.Assign)]
 		bool NotifyEntryStateOnDisplay { get; set; }
+
+		[iOS (13,0)]
+		[Export ("beaconIdentityConstraint", ArgumentSemantic.Copy)]
+		CLBeaconIdentityConstraint BeaconIdentityConstraint { get; }
 	}
 
 	[NoWatch][NoMac][NoTV]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	partial interface CLBeacon : NSCopying, NSSecureCoding {
 
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Uuid' instead.")]
 		[Export ("proximityUUID", ArgumentSemantic.Copy)]
 		NSUuid ProximityUuid { get; }
+
+		[iOS (13,0)]
+		[Export ("UUID", ArgumentSemantic.Copy)]
+		NSUuid Uuid { get; }
 
 		[Export ("major", ArgumentSemantic.Copy)]
 		NSNumber Major { get; }
@@ -661,6 +727,10 @@ namespace CoreLocation {
 
 		[Export ("rssi")]
 		nint Rssi { get; }
+
+		[iOS (13,0)]
+		[Export ("timestamp", ArgumentSemantic.Copy)]
+		NSDate Timestamp { get; }
 	}
 
 #endif
@@ -736,4 +806,30 @@ namespace CoreLocation {
 		double HorizontalAccuracy { get; }
 	}
 #endif
+
+	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[CLBeaconIdentityConstraint init]: unrecognized selector sent to instance 0x600001930300
+	interface CLBeaconIdentityConstraint : NSCopying, NSSecureCoding {
+
+		[Export ("initWithUUID:")]
+		IntPtr Constructor (NSUuid uuid);
+
+		[Export ("initWithUUID:major:")]
+		IntPtr Constructor (NSUuid uuid, ushort major);
+
+		[Export ("initWithUUID:major:minor:")]
+		IntPtr Constructor (NSUuid uuid, ushort major, ushort minor);
+
+		[Export ("UUID", ArgumentSemantic.Copy)]
+		NSUuid Uuid { get; }
+
+		[NullAllowed, Export ("major", ArgumentSemantic.Copy)]
+		[BindAs (typeof (short?))]
+		NSNumber Major { get; }
+
+		[NullAllowed, Export ("minor", ArgumentSemantic.Copy)]
+		[BindAs (typeof (short?))]
+		NSNumber Minor { get; }
+	}
 }
