@@ -289,7 +289,7 @@ namespace Contacts {
 		NSString InstantMessageAddresses { get; }
 	}
 
- 	[iOS (9,0), Mac (10,15), Watch (2,0)]
+ 	[iOS (9,0), Mac (10,11)]
 	[BaseType (typeof (CNFetchRequest))]
 	[DisableDefaultCtor] // using init raises an exception according to docs
 	interface CNContactFetchRequest : NSSecureCoding {
@@ -399,47 +399,36 @@ namespace Contacts {
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
 	interface CNLabelContactRelationKey {
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationFather")]
 		NSString Father { get; }
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationMother")]
 		NSString Mother { get; }
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationParent")]
 		NSString Parent { get; }
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationBrother")]
 		NSString Brother { get; }
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationSister")]
 		NSString Sister { get; }
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationChild")]
 		NSString Child { get; }
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationFriend")]
 		NSString Friend { get; }
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationSpouse")]
 		NSString Spouse { get; }
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationPartner")]
 		NSString Partner { get; }
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationAssistant")]
 		NSString Assistant { get; }
 
-		[Watch (6,0)]
 		[Field ("CNLabelContactRelationManager")]
 		NSString Manager { get; }
 
