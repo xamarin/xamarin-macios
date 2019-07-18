@@ -49,6 +49,7 @@ namespace ReplayKit {
 		AttemptToStopNonRecording = -5829,
 		AttemptToStartInRecordingState = -5830,
 		PhotoFailure = -5831,
+		RecordingInvalidSession = -5832,
 	}
 
 	[NoiOS]
