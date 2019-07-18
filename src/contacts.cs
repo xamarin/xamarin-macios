@@ -289,7 +289,7 @@ namespace Contacts {
 		NSString InstantMessageAddresses { get; }
 	}
 
- 	[iOS (9,0), Mac (10,15, onlyOn64: true), Watch (2,0)]
+ 	[iOS (9,0), Mac (10,15), Watch (2,0)]
 	[BaseType (typeof (CNFetchRequest))]
 	[DisableDefaultCtor] // using init raises an exception according to docs
 	interface CNContactFetchRequest : NSSecureCoding {
@@ -453,791 +453,791 @@ namespace Contacts {
 		[Field ("CNLabelContactRelationDaughter")]
 		NSString Daughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationColleauge")] // Apple issue: https://feedbackassistant.apple.com/feedback/6623415
 		NSString Colleauge { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationTeacher")]
 		NSString Teacher { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSibling")]
 		NSString Sibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerSibling")]
 		NSString YoungerSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderSibling")]
 		NSString ElderSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerSister")]
 		NSString YoungerSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungestSister")]
 		NSString YoungestSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderSister")]
 		NSString ElderSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationEldestSister")]
 		NSString EldestSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerBrother")]
 		NSString YoungerBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungestBrother")]
 		NSString YoungestBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderBrother")]
 		NSString ElderBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationEldestBrother")]
 		NSString EldestBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationMaleFriend")]
 		NSString MaleFriend { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationFemaleFriend")]
 		NSString FemaleFriend { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationWife")]
 		NSString Wife { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationHusband")]
 		NSString Husband { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationMalePartner")]
 		NSString MalePartner { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationFemalePartner")]
 		NSString FemalePartner { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGirlfriendOrBoyfriend")]
 		NSString GirlfriendOrBoyfriend { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGirlfriend")]
 		NSString Girlfriend { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationBoyfriend")]
 		NSString Boyfriend { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandparent")]
 		NSString Grandparent { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandmother")]
 		NSString Grandmother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandmotherMothersMother")]
 		NSString GrandmotherMothersMother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandmotherFathersMother")]
 		NSString GrandmotherFathersMother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandfather")]
 		NSString Grandfather { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandfatherMothersFather")]
 		NSString GrandfatherMothersFather { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandfatherFathersFather")]
 		NSString GrandfatherFathersFather { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGreatGrandparent")]
 		NSString GreatGrandparent { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGreatGrandmother")]
 		NSString GreatGrandmother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGreatGrandfather")]
 		NSString GreatGrandfather { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandchild")]
 		NSString Grandchild { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGranddaughter")]
 		NSString Granddaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandson")]
 		NSString Grandson { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGreatGrandchild")]
 		NSString GreatGrandchild { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGreatGranddaughter")]
 		NSString GreatGranddaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGreatGrandson")]
 		NSString GreatGrandson { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationParentInLaw")]
 		NSString ParentInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationMotherInLaw")]
 		NSString MotherInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationMotherInLawWifesMother")]
 		NSString MotherInLawWifesMother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationMotherInLawHusbandsMother")]
 		NSString MotherInLawHusbandsMother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationFatherInLaw")]
 		NSString FatherInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationFatherInLawWifesFather")]
 		NSString FatherInLawWifesFather { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationFatherInLawHusbandsFather")]
 		NSString FatherInLawHusbandsFather { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCoParentInLaw")]
 		NSString CoParentInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCoMotherInLaw")]
 		NSString CoMotherInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCoFatherInLaw")]
 		NSString CoFatherInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSiblingInLaw")]
 		NSString SiblingInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerSiblingInLaw")]
 		NSString YoungerSiblingInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderSiblingInLaw")]
 		NSString ElderSiblingInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSisterInLaw")]
 		NSString SisterInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerSisterInLaw")]
 		NSString YoungerSisterInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderSisterInLaw")]
 		NSString ElderSisterInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSisterInLawSpousesSister")]
 		NSString SisterInLawSpousesSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSisterInLawWifesSister")]
 		NSString SisterInLawWifesSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSisterInLawHusbandsSister")]
 		NSString SisterInLawHusbandsSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSisterInLawBrothersWife")]
 		NSString SisterInLawBrothersWife { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSisterInLawYoungerBrothersWife")]
 		NSString SisterInLawYoungerBrothersWife { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSisterInLawElderBrothersWife")]
 		NSString SisterInLawElderBrothersWife { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationBrotherInLaw")]
 		NSString BrotherInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerBrotherInLaw")]
 		NSString YoungerBrotherInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderBrotherInLaw")]
 		NSString ElderBrotherInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationBrotherInLawSpousesBrother")]
 		NSString BrotherInLawSpousesBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationBrotherInLawHusbandsBrother")]
 		NSString BrotherInLawHusbandsBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationBrotherInLawWifesBrother")]
 		NSString BrotherInLawWifesBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationBrotherInLawSistersHusband")]
 		NSString BrotherInLawSistersHusband { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationBrotherInLawYoungerSistersHusband")]
 		NSString BrotherInLawYoungerSistersHusband { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationBrotherInLawElderSistersHusband")]
 		NSString BrotherInLawElderSistersHusband { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSisterInLawWifesBrothersWife")]
 		NSString SisterInLawWifesBrothersWife { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSisterInLawHusbandsBrothersWife")]
 		NSString SisterInLawHusbandsBrothersWife { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationBrotherInLawWifesSistersHusband")]
 		NSString BrotherInLawWifesSistersHusband { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationBrotherInLawHusbandsSistersHusband")]
 		NSString BrotherInLawHusbandsSistersHusband { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCoSiblingInLaw")]
 		NSString CoSiblingInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCoSisterInLaw")]
 		NSString CoSisterInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCoBrotherInLaw")]
 		NSString CoBrotherInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationChildInLaw")]
 		NSString ChildInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationDaughterInLaw")]
 		NSString DaughterInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSonInLaw")]
 		NSString SonInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousin")]
 		NSString Cousin { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousin")]
 		NSString YoungerCousin { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousin")]
 		NSString ElderCousin { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationMaleCousin")]
 		NSString MaleCousin { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationFemaleCousin")]
 		NSString FemaleCousin { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinParentsSiblingsChild")]
 		NSString CousinParentsSiblingsChild { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinParentsSiblingsSon")]
 		NSString CousinParentsSiblingsSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinParentsSiblingsSon")]
 		NSString YoungerCousinParentsSiblingsSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinParentsSiblingsSon")]
 		NSString ElderCousinParentsSiblingsSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinParentsSiblingsDaughter")]
 		NSString CousinParentsSiblingsDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinParentsSiblingsDaughter")]
 		NSString YoungerCousinParentsSiblingsDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinParentsSiblingsDaughter")]
 		NSString ElderCousinParentsSiblingsDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinMothersSistersDaughter")]
 		NSString CousinMothersSistersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinMothersSistersDaughter")]
 		NSString YoungerCousinMothersSistersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinMothersSistersDaughter")]
 		NSString ElderCousinMothersSistersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinMothersSistersSon")]
 		NSString CousinMothersSistersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinMothersSistersSon")]
 		NSString YoungerCousinMothersSistersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinMothersSistersSon")]
 		NSString ElderCousinMothersSistersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinMothersBrothersDaughter")]
 		NSString CousinMothersBrothersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinMothersBrothersDaughter")]
 		NSString YoungerCousinMothersBrothersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinMothersBrothersDaughter")]
 		NSString ElderCousinMothersBrothersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinMothersBrothersSon")]
 		NSString CousinMothersBrothersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinMothersBrothersSon")]
 		NSString YoungerCousinMothersBrothersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinMothersBrothersSon")]
 		NSString ElderCousinMothersBrothersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinFathersSistersDaughter")]
 		NSString CousinFathersSistersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinFathersSistersDaughter")]
 		NSString YoungerCousinFathersSistersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinFathersSistersDaughter")]
 		NSString ElderCousinFathersSistersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinFathersSistersSon")]
 		NSString CousinFathersSistersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinFathersSistersSon")]
 		NSString YoungerCousinFathersSistersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinFathersSistersSon")]
 		NSString ElderCousinFathersSistersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinFathersBrothersDaughter")]
 		NSString CousinFathersBrothersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinFathersBrothersDaughter")]
 		NSString YoungerCousinFathersBrothersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinFathersBrothersDaughter")]
 		NSString ElderCousinFathersBrothersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinFathersBrothersSon")]
 		NSString CousinFathersBrothersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinFathersBrothersSon")]
 		NSString YoungerCousinFathersBrothersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinFathersBrothersSon")]
 		NSString ElderCousinFathersBrothersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinGrandparentsSiblingsChild")]
 		NSString CousinGrandparentsSiblingsChild { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinGrandparentsSiblingsDaughter")]
 		NSString CousinGrandparentsSiblingsDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinGrandparentsSiblingsSon")]
 		NSString CousinGrandparentsSiblingsSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinMothersSiblingsSonOrFathersSistersSon")]
 		NSString YoungerCousinMothersSiblingsSonOrFathersSistersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinMothersSiblingsSonOrFathersSistersSon")]
 		NSString ElderCousinMothersSiblingsSonOrFathersSistersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationYoungerCousinMothersSiblingsDaughterOrFathersSistersDaughter")]
 		NSString YoungerCousinMothersSiblingsDaughterOrFathersSistersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationElderCousinMothersSiblingsDaughterOrFathersSistersDaughter")]
 		NSString ElderCousinMothersSiblingsDaughterOrFathersSistersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationParentsSibling")]
 		NSString ParentsSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationParentsYoungerSibling")]
 		NSString ParentsYoungerSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationParentsElderSibling")]
 		NSString ParentsElderSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationParentsSiblingMothersSibling")]
 		NSString ParentsSiblingMothersSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationParentsSiblingMothersYoungerSibling")]
 		NSString ParentsSiblingMothersYoungerSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationParentsSiblingMothersElderSibling")]
 		NSString ParentsSiblingMothersElderSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationParentsSiblingFathersSibling")]
 		NSString ParentsSiblingFathersSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationParentsSiblingFathersYoungerSibling")]
 		NSString ParentsSiblingFathersYoungerSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationParentsSiblingFathersElderSibling")]
 		NSString ParentsSiblingFathersElderSibling { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAunt")]
 		NSString Aunt { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntParentsSister")]
 		NSString AuntParentsSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntParentsYoungerSister")]
 		NSString AuntParentsYoungerSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntParentsElderSister")]
 		NSString AuntParentsElderSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntFathersSister")]
 		NSString AuntFathersSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntFathersYoungerSister")]
 		NSString AuntFathersYoungerSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntFathersElderSister")]
 		NSString AuntFathersElderSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntFathersBrothersWife")]
 		NSString AuntFathersBrothersWife { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntFathersYoungerBrothersWife")]
 		NSString AuntFathersYoungerBrothersWife { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntFathersElderBrothersWife")]
 		NSString AuntFathersElderBrothersWife { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntMothersSister")]
 		NSString AuntMothersSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntMothersYoungerSister")]
 		NSString AuntMothersYoungerSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntMothersElderSister")]
 		NSString AuntMothersElderSister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationAuntMothersBrothersWife")]
 		NSString AuntMothersBrothersWife { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandaunt")]
 		NSString Grandaunt { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncle")]
 		NSString Uncle { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleParentsBrother")]
 		NSString UncleParentsBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleParentsYoungerBrother")]
 		NSString UncleParentsYoungerBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleParentsElderBrother")]
 		NSString UncleParentsElderBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleMothersBrother")]
 		NSString UncleMothersBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleMothersYoungerBrother")]
 		NSString UncleMothersYoungerBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleMothersElderBrother")]
 		NSString UncleMothersElderBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleMothersSistersHusband")]
 		NSString UncleMothersSistersHusband { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleFathersBrother")]
 		NSString UncleFathersBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleFathersYoungerBrother")]
 		NSString UncleFathersYoungerBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleFathersElderBrother")]
 		NSString UncleFathersElderBrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleFathersSistersHusband")]
 		NSString UncleFathersSistersHusband { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleFathersYoungerSistersHusband")]
 		NSString UncleFathersYoungerSistersHusband { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationUncleFathersElderSistersHusband")]
 		NSString UncleFathersElderSistersHusband { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGranduncle")]
 		NSString Granduncle { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSiblingsChild")]
 		NSString SiblingsChild { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNiece")]
 		NSString Niece { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNieceSistersDaughter")]
 		NSString NieceSistersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNieceBrothersDaughter")]
 		NSString NieceBrothersDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNieceSistersDaughterOrWifesSiblingsDaughter")]
 		NSString NieceSistersDaughterOrWifesSiblingsDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNieceBrothersDaughterOrHusbandsSiblingsDaughter")]
 		NSString NieceBrothersDaughterOrHusbandsSiblingsDaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNephew")]
 		NSString Nephew { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNephewSistersSon")]
 		NSString NephewSistersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNephewBrothersSon")]
 		NSString NephewBrothersSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNephewBrothersSonOrHusbandsSiblingsSon")]
 		NSString NephewBrothersSonOrHusbandsSiblingsSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNephewSistersSonOrWifesSiblingsSon")]
 		NSString NephewSistersSonOrWifesSiblingsSon { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandniece")]
 		NSString Grandniece { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandnieceSistersGranddaughter")]
 		NSString GrandnieceSistersGranddaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandnieceBrothersGranddaughter")]
 		NSString GrandnieceBrothersGranddaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandnephew")]
 		NSString Grandnephew { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandnephewSistersGrandson")]
 		NSString GrandnephewSistersGrandson { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandnephewBrothersGrandson")]
 		NSString GrandnephewBrothersGrandson { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationStepparent")]
 		NSString Stepparent { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationStepfather")]
 		NSString Stepfather { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationStepmother")]
 		NSString Stepmother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationStepchild")]
 		NSString Stepchild { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationStepson")]
 		NSString Stepson { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationStepdaughter")]
 		NSString Stepdaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationStepbrother")]
 		NSString Stepbrother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationStepsister")]
 		NSString Stepsister { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationMotherInLawOrStepmother")]
 		NSString MotherInLawOrStepmother { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationFatherInLawOrStepfather")]
 		NSString FatherInLawOrStepfather { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationDaughterInLawOrStepdaughter")]
 		NSString DaughterInLawOrStepdaughter { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSonInLawOrStepson")]
 		NSString SonInLawOrStepson { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationCousinOrSiblingsChild")]
 		NSString CousinOrSiblingsChild { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNieceOrCousin")]
 		NSString NieceOrCousin { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationNephewOrCousin")]
 		NSString NephewOrCousin { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandchildOrSiblingsChild")]
 		NSString GrandchildOrSiblingsChild { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGreatGrandchildOrSiblingsGrandchild")]
 		NSString GreatGrandchildOrSiblingsGrandchild { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationDaughterInLawOrSisterInLaw")]
 		NSString DaughterInLawOrSisterInLaw { get; }
 
-		[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationSonInLawOrBrotherInLaw")]
 		NSString SonInLawOrBrotherInLaw { get; }
 
@@ -1251,7 +1251,7 @@ namespace Contacts {
 
 	interface ICNChangeHistoryEventVisitor {}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[Protocol]
 	interface CNChangeHistoryEventVisitor {
 		[Abstract]
@@ -1292,7 +1292,7 @@ namespace Contacts {
 		void RemoveSubgroupFromGroup (CNChangeHistoryRemoveSubgroupFromGroupEvent @event);
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryEvent : NSCopying, NSSecureCoding {
@@ -1300,11 +1300,11 @@ namespace Contacts {
 		void AcceptEventVisitor (ICNChangeHistoryEventVisitor visitor);
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	interface CNChangeHistoryDropEverythingEvent {}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryAddContactEvent {
@@ -1315,7 +1315,7 @@ namespace Contacts {
 		string ContainerIdentifier { get; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryUpdateContactEvent {
@@ -1323,7 +1323,7 @@ namespace Contacts {
 		CNContact Contact { get; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryDeleteContactEvent {
@@ -1331,7 +1331,7 @@ namespace Contacts {
 		string ContactIdentifier { get; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryAddGroupEvent {
@@ -1342,7 +1342,7 @@ namespace Contacts {
 		string ContainerIdentifier { get; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryUpdateGroupEvent {
@@ -1350,7 +1350,7 @@ namespace Contacts {
 		CNGroup Group { get; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryDeleteGroupEvent {
@@ -1358,7 +1358,7 @@ namespace Contacts {
 		string GroupIdentifier { get; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryAddMemberToGroupEvent {
@@ -1369,7 +1369,7 @@ namespace Contacts {
 		CNGroup Group { get; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryRemoveMemberFromGroupEvent {
@@ -1380,7 +1380,7 @@ namespace Contacts {
 		CNGroup Group { get; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryAddSubgroupToGroupEvent {
@@ -1391,7 +1391,7 @@ namespace Contacts {
 		CNGroup Group { get; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNChangeHistoryEvent))]
 	[DisableDefaultCtor]
 	interface CNChangeHistoryRemoveSubgroupFromGroupEvent {
@@ -1404,12 +1404,12 @@ namespace Contacts {
 
 	// this type is new in Xcode11 but is decorated with earlier versions since it's used as a
 	// base type for older types (and that confuse the generator for 32bits availability)
- 	[iOS (9,0), Mac (10,15, onlyOn64: true), Watch (2,0)]
+ 	[iOS (9,0), Mac (10,15), Watch (2,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CNFetchRequest {}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (CNFetchRequest))]
 	interface CNChangeHistoryFetchRequest : NSSecureCoding {
 		[NullAllowed, Export ("startingToken", ArgumentSemantic.Copy)]
@@ -1431,7 +1431,7 @@ namespace Contacts {
 		string[] ExcludedTransactionAuthors { get; set; }
 	}
 
-	[Watch (6,0), Mac (10,15, onlyOn64: true), iOS (13,0)]
+	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CNFetchResult {
@@ -1442,7 +1442,7 @@ namespace Contacts {
 		NSData CurrentHistoryToken { get; }
 	}
 
-	[iOS (9,0), Mac (10,11, onlyOn64: true)]
+	[iOS (9,0), Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	interface CNContactStore {
 
@@ -1504,7 +1504,7 @@ namespace Contacts {
 		[return: NullAllowed]
 		bool ExecuteSaveRequest (CNSaveRequest saveRequest, [NullAllowed] out NSError error);
 #endif
-		[Watch (6, 0), Mac (10, 15, onlyOn64: true), iOS (13, 0)]
+		[Watch (6, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("currentHistoryToken", ArgumentSemantic.Copy)]
 		NSData CurrentHistoryToken { get; }
 
