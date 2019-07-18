@@ -20,7 +20,7 @@ using AppKit;
 using UIKit;
 #endif
 using System;
-#if WATCH // TODO Will be removed after CoreMedia and AVFoundation are updated
+#if WATCH
 using AVMediaSelectionGroup = Foundation.NSObject;
 using AVMediaSelectionOption = Foundation.NSObject;
 #endif
