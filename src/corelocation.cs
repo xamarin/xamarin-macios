@@ -301,8 +301,8 @@ namespace CoreLocation {
 		[NoWatch][NoTV]
 		[iOS (6,0)]
 		[Mac (10,9)]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. It will always return .false'.")]
-		[Deprecated (PlatformName.MacOSX, 10,15, message: "Not used anymore. It will always return .false'.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. It will always return 'false'.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Not used anymore. It will always return 'false'.")]
 		[Static]
 		[Export ("deferredLocationUpdatesAvailable")]
 		bool DeferredLocationUpdatesAvailable { get; }
