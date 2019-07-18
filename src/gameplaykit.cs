@@ -1385,7 +1385,7 @@ namespace GameplayKit {
 		IGKRandom RandomSource { get; set; }
 
 		[Abstract]
-		[NullAllowed, Export ("bestMoveForActivePlayer")]
+		[Export ("bestMoveForActivePlayer")]
 		IGKGameModelUpdate GetBestMoveForActivePlayer ();
 	}
 
@@ -1985,11 +1985,6 @@ namespace GameplayKit {
 		[Export ("queryDataForQuad:quadSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NSObject[] QueryData (Vector2 quadOrigin, Vector2 quadSize);
-
-		[Deprecated (PlatformName.iOS, 10, 0)]
-		[Deprecated (PlatformName.TvOS, 10, 0)]
-		[Export ("removeData:")]
-		bool RemoveData (NSObject data);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]

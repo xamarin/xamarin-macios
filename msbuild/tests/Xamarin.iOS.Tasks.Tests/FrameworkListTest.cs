@@ -13,33 +13,47 @@ namespace Xamarin.iOS.Tasks
 	[TestFixture]
 	public class FrameworkListTests
 	{
-		[TestCase ("Xamarin.iOS-FrameworkList.xml.in", false)]
-		[TestCase ("Xamarin.TVOS-FrameworkList.xml.in", false)]
-		[TestCase ("Xamarin.WatchOS-FrameworkList.xml.in", false)]
-		[TestCase ("FrameworkList.xml.in", true)] // Xamarin.Mac
-		public void CheckFrameworkListFile (string frameworkListFile, bool isMac)
+		[TestCase ("Xamarin.iOS-FrameworkList.xml.in")]
+		[TestCase ("Xamarin.TVOS-FrameworkList.xml.in")]
+		[TestCase ("Xamarin.WatchOS-FrameworkList.xml.in")]
+		[TestCase ("Xamarin.Mac-Full-FrameworkList.xml.in")]
+		[TestCase ("Xamarin.Mac-Mobile-FrameworkList.xml.in")]
+		public void CheckFrameworkListFile (string frameworkListFile)
+		{
+			var fameworkListFileParts = frameworkListFile.Split ('-');
+			string frameworkName = fameworkListFileParts[0];
+			var isMac = frameworkName == "Xamarin.Mac";
+			var isFull = fameworkListFileParts[1] == "Full";
+			var frameworkListAssemblies = ScanFrameworkListXml (frameworkListFile, isMac);
+			var installedAssemblies = ScanAssemblyDirectory (frameworkName, isMac, isFull);
+
+			foreach (var assembly in frameworkListAssemblies) {
+				if (!installedAssemblies.Any (a => a.Name == assembly.Name))
+					ReportAssemblies (assembly, $"One or more assemblies listed in '{frameworkListFile}' were not found in the final SDK root folder. Update the list if an assembly was intentionally removed.");
+			}
+
+			foreach (var assembly in installedAssemblies) {
+				if (!frameworkListAssemblies.Any (a => a.Name == assembly.Name))
+					ReportAssemblies (assembly, $"One or more assemblies in the the SDK root folder are not listed in '{frameworkListFile}'. Update the list if an assembly was intentionally added.");
+			}
+		}
+
+		void ReportAssemblies (AssemblyInfo assembly, string message)
 		{
 			var errorCount = 0;
-			var frameworkListAssemblies = ScanFrameworkListXml (frameworkListFile, isMac);
-			var frameworkName = isMac ? "Xamarin.Mac" : frameworkListFile.Split ('-')[0];
-			var installedAssemblies = ScanAssemblyDirectory (frameworkName, isMac);
 			using (var sw = new StringWriter ()) {
 				using (var writer = XmlWriter.Create (sw, new XmlWriterSettings { Encoding = Encoding.UTF8, ConformanceLevel = ConformanceLevel.Fragment, Indent = true })) {
-					foreach (var assembly in installedAssemblies) {
-						if (!frameworkListAssemblies.Any (a => a.Name == assembly.Name)) {
-							writer.WriteStartElement ("File");
-							writer.WriteAttributeString ("AssemblyName", assembly.Name);
-							WriteNonEmptyAttribute ("Version", assembly.Version);
-							WriteNonEmptyAttribute ("PublicKeyToken", assembly.PublicKeyToken);
-							WriteNonEmptyAttribute ("Culture", assembly.Culture);
-							if (assembly.ProcessorArchitecture != ProcessorArchitecture.None)
-								writer.WriteAttributeString ("ProcessorArchitecture", assembly.ProcessorArchitecture.ToString ());
-							if (assembly.InGac)
-								writer.WriteAttributeString ("InGac", "true");
-							writer.WriteEndElement ();
-							errorCount++;
-						}
-					}
+					writer.WriteStartElement ("File");
+					writer.WriteAttributeString ("AssemblyName", assembly.Name);
+					WriteNonEmptyAttribute ("Version", assembly.Version);
+					WriteNonEmptyAttribute ("PublicKeyToken", assembly.PublicKeyToken);
+					WriteNonEmptyAttribute ("Culture", assembly.Culture);
+					if (assembly.ProcessorArchitecture != ProcessorArchitecture.None)
+						writer.WriteAttributeString ("ProcessorArchitecture", assembly.ProcessorArchitecture.ToString ());
+					if (assembly.InGac)
+						writer.WriteAttributeString ("InGac", "true");
+					writer.WriteEndElement ();
+					errorCount++;
 
 					void WriteNonEmptyAttribute (string name, string val)
 					{
@@ -47,7 +61,7 @@ namespace Xamarin.iOS.Tasks
 							writer.WriteAttributeString (name, val);
 					}
 				}
-				Assert.AreEqual (0, errorCount, $"Missing assemblies in '{frameworkListFile}'\n{sw.ToString ()}");
+				Assert.AreEqual (0, errorCount, $"{message}\n{sw.ToString ()}");
 			}
 		}
 
@@ -69,10 +83,10 @@ namespace Xamarin.iOS.Tasks
 			return assemblies;
 		}
 
-		List<AssemblyInfo> ScanAssemblyDirectory (string frameworkName, bool isMac)
+		List<AssemblyInfo> ScanAssemblyDirectory (string frameworkName, bool isMac, bool isFull)
 		{
 			var assemblies = new List<AssemblyInfo> ();
-			var assembliesPath = Path.GetFullPath (Path.Combine (isMac ? Configuration.SdkRootXM : Configuration.MonoTouchRootDirectory, "lib", "mono", frameworkName));
+			var assembliesPath = Path.GetFullPath (Path.Combine (isMac ? Configuration.SdkRootXM : Configuration.MonoTouchRootDirectory, "lib", "mono", isFull ? "4.5" : frameworkName));
 			AddAssemblies (assembliesPath);
 			AddAssemblies (Path.Combine (assembliesPath, "Facades"));
 

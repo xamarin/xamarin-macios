@@ -44,17 +44,27 @@ namespace ObjCRuntime {
 		public BindAsAttribute (Type type)
 		{
 			Type = type;
-#if BGENERATOR
-			var nullable = type.IsArray ? TypeManager.GetUnderlyingNullableType (type.GetElementType ()) : TypeManager.GetUnderlyingNullableType (type);
-			IsNullable = nullable != null;
-			IsValueType = IsNullable ? nullable.IsValueType : type.IsValueType;
-#endif
 		}
 		public Type Type;
 		public Type OriginalType;
 #if BGENERATOR
-		internal readonly bool IsNullable;
-		internal readonly bool IsValueType;
+		Type nullable;
+		Type GetNullable (Generator generator)
+		{
+			if (nullable == null)
+				nullable = Type.IsArray ? generator.TypeManager.GetUnderlyingNullableType (Type.GetElementType ()) : generator.TypeManager.GetUnderlyingNullableType (Type);
+			return nullable;
+		}
+
+		internal bool IsNullable (Generator generator)
+		{
+			return GetNullable (generator) != null;
+		}
+		internal bool IsValueType (Generator generator)
+		{
+			return IsNullable (generator) ? GetNullable (generator).IsValueType : Type.IsValueType;
+
+		}
 #endif
 	}
 }

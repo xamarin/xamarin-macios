@@ -1,6 +1,4 @@
-../external/mono/mcs/class/System.Drawing/System.Drawing/Color.cs
-../external/mono/mcs/class/System.Drawing/System.Drawing/KnownColor.cs
-../external/mono/mcs/class/System.Drawing/System.Drawing/KnownColors.cs
+System.Drawing/ColorKnownColorTypeForwarders.cs
 OpenGLES/OpenTK/Audio/AudioContext.cs
 OpenGLES/OpenTK/Audio/AudioContextException.cs
 OpenGLES/OpenTK/Audio/AudioDeviceEnumerator.cs

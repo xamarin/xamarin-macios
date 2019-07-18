@@ -225,6 +225,7 @@ namespace MediaPlayer {
 		NSString IsCloudItemProperty { get; }
 
 		[iOS (9,2)]
+		[TV (9,2)]
 		[Field ("MPMediaItemPropertyHasProtectedAsset")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString HasProtectedAssetProperty { get; }
@@ -235,6 +236,7 @@ namespace MediaPlayer {
 		NSString DateAddedProperty { get; }
 
 		[iOS (10,3)]
+		[TV (10,3)]
 		[Field ("MPMediaItemPropertyPlaybackStoreID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PlaybackStoreIDProperty { get; }
@@ -1623,7 +1625,7 @@ namespace MediaPlayer {
 		MPPlayableContentManagerContext Context { get; }
 
 		[iOS (10,0)]
-		[Export ("nowPlayingIdentifiers", ArgumentSemantic.Strong)]
+		[Export ("nowPlayingIdentifiers", ArgumentSemantic.Copy)]
 		string[] NowPlayingIdentifiers { get; set; }
 	}
 
@@ -2214,11 +2216,11 @@ namespace MediaPlayer {
 	[TV (10,0,1)][iOS (10,1)]
 	[NoWatch][NoMac]
 	interface NSUserActivity_MediaPlayerAdditions {
-		[NullAllowed, Export ("externalMediaContentIdentifier")]
+		[Export ("externalMediaContentIdentifier")]
 		NSString GetExternalMediaContentIdentifier ();
 
-		[NullAllowed, Export ("setExternalMediaContentIdentifier:")]
-		void SetExternalMediaContentIdentifier (NSString identifier);
+		[Export ("setExternalMediaContentIdentifier:")]
+		void SetExternalMediaContentIdentifier ([NullAllowed] NSString identifier);
 	}
 #endif
 	[iOS (9,0)][TV (9,0)]
@@ -2227,7 +2229,7 @@ namespace MediaPlayer {
 	[Category]
 	[BaseType (typeof (AVMediaSelectionOption))]
 	interface AVMediaSelectionOption_MPNowPlayingInfoLanguageOptionAdditions {
-		[NullAllowed, Export ("makeNowPlayingInfoLanguageOption")]
+		[Export ("makeNowPlayingInfoLanguageOption")]
 		MPNowPlayingInfoLanguageOption CreateNowPlayingInfoLanguageOption ();
 	}
 

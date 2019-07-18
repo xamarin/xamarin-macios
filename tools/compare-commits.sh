@@ -16,6 +16,16 @@ if df -t apfs / >/dev/null 2>&1; then
 	CP="cp -c"
 fi
 
+function report_error_line ()
+{
+	echo "$@"
+	if test -n "$FAILURE_FILE"; then
+		# remove color codes when writing to failure file
+		# shellcheck disable=SC2001
+		echo "$@" | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g' >> "$FAILURE_FILE"
+	fi
+}
+
 function show_help ()
 {
 	echo "$(basename "$0"): Compare the managed API and generate a diff for the generated code between the currently built assemblies and a specific hash."
@@ -30,6 +40,7 @@ function show_help ()
 }
 
 ORIGINAL_ARGS=("$@")
+FAILURE_FILE=
 while ! test -z "$1"; do
 	case "$1" in
 		--help|-\?|-h)
@@ -56,15 +67,23 @@ while ! test -z "$1"; do
 			WORKING_DIR="${1#*=}"
 			shift
 			;;
+		--failure-file=*)
+			FAILURE_FILE="${1#*=}"
+			shift
+			;;
+		--failure-file)
+			FAILURE_FILE="$2"
+			shift 2
+			;;
 		*)
-			echo "Unknown argument: $1"
+			echo "Error: Unknown argument: $1"
 			exit 1
 			;;
 	esac
 done
 
 if test -z "$BASE_HASH"; then
-	echo "${RED}It's required to specify the hash to compare against (--base=HASH).${CLEAR}"
+	report_error_line "${RED}Error: It's required to specify the hash to compare against (--base=HASH).${CLEAR}"
 	exit 1
 fi
 
@@ -93,8 +112,8 @@ if test -z "$BUILD_REVISION"; then
 fi
 
 if [ -n "$(git status --porcelain --ignore-submodule)" ]; then
-	echo "${RED}Working directory isn't clean:${CLEAR}"
-	git $GIT_COLOR_P status --ignore-submodule | sed 's/^/    /'
+	report_error_line "${RED}** Error: Working directory isn't clean:${CLEAR}"
+	git $GIT_COLOR_P status --ignore-submodule | sed 's/^/    /' | while read line; do report_error_line "$line"; done
 	exit 1
 fi
 
@@ -112,9 +131,12 @@ CURRENT_HASH=$(git log -1 --pretty=%H)
 GENERATOR_DIFF_FILE=
 APIDIFF_FILE=
 
-function upon_exit ()
+HASH_RESTORED=
+function restore_hash ()
 {
-	if test -z "$CURRENT_BRANCH"; then
+	if test -n "$HASH_RESTORED"; then
+		echo "Previous hash/branch already restored."
+	elif test -z "$CURRENT_BRANCH"; then
 		echo "Restoring the previous hash ${BLUE}${CURRENT_HASH}${CLEAR} (there was no previous branch; probably because HEAD was detached)"
 		git checkout --force "$CURRENT_HASH"
 		echo "Previous hash restored successfully."
@@ -124,6 +146,12 @@ function upon_exit ()
 		git reset --hard "$CURRENT_HASH"
 		echo "Previous branch restored successfully."
 	fi
+	HASH_RESTORED=1
+}
+
+function upon_exit ()
+{
+	restore_hash
 
 	if ! test -z "$GENERATOR_DIFF_FILE"; then
 		echo "Generator diff: $GENERATOR_DIFF_FILE"
@@ -174,20 +202,26 @@ git checkout --quiet --force --detach "$BASE_HASH"
 touch "$OUTPUT_DIR/stamp"
 
 echo "${BLUE}Building src/...${CLEAR}"
-make -C "$ROOT_DIR/src" BUILD_DIR=../tools/comparison/build PROJECT_DIR="$OUTPUT_DIR/project-files" "IOS_DESTDIR=$OUTPUT_DIR/_ios-build" "MAC_DESTDIR=$OUTPUT_DIR/_mac-build" -j8
+if ! make -C "$ROOT_DIR/src" BUILD_DIR=../tools/comparison/build PROJECT_DIR="$OUTPUT_DIR/project-files" "IOS_DESTDIR=$OUTPUT_DIR/_ios-build" "MAC_DESTDIR=$OUTPUT_DIR/_mac-build" -j8; then
+	EC=$?
+	report_error_line "${RED}Failed to build src/${CLEAR}"
+	exit "$EC"
+fi
 
 #
 # API diff
 #
+#   First we calculate the apidiff references for the hash we're comparing against
+#   Then we restore the original hash, and finally we calculate the api diff.
+#
 
 # Calculate apidiff references according to the temporary build
 echo "${BLUE}Updating apidiff references...${CLEAR}"
-make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_DIR/_ios-build" MAC_DESTDIR="$OUTPUT_DIR/_mac-build"
-
-# Now compare the current build against those references
-echo "${BLUE}Running apidiff...${CLEAR}"
-APIDIFF_FILE=$OUTPUT_DIR/apidiff/api-diff.html
-make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"
+if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_DIR/_ios-build" MAC_DESTDIR="$OUTPUT_DIR/_mac-build"; then
+	EC=$?
+	report_error_line "${RED}Failed to update apidiff references${CLEAR}"
+	exit "$EC"
+fi
 
 # 
 # Generator diff
@@ -216,7 +250,18 @@ MODIFIED_FILES=$(find \
 if test -n "$MODIFIED_FILES"; then
 	# If this list files, it means something's wrong with the build process
 	# (the logic to build/work in a different directory is incomplete/broken)
-	echo "${RED}The following files were modified, and they shouldn't have been:${CLEAR}"
-	echo "$MODIFIED_FILES" | sed 's/^/    /'
+	report_error_line "${RED}** Error: The following files were modified, and they shouldn't have been:${CLEAR}"
+	echo "$MODIFIED_FILES" | sed 's/^/    /' | while read line; do report_error_line "$line"; done
 	exit 1
+fi
+
+restore_hash
+
+# Now compare the current build against those references
+echo "${BLUE}Running apidiff...${CLEAR}"
+APIDIFF_FILE=$OUTPUT_DIR/apidiff/api-diff.html
+if ! make all-local -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff"; then
+	EC=$?
+	report_error_line "${RED}Failed to run apidiff${CLEAR}"
+	exit "$EC"
 fi

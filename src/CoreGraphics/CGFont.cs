@@ -108,7 +108,7 @@ namespace CoreGraphics {
 			if (name == null)
 				return null;
 			using (CFString s = name){
-				return new CGFont (CGFontCreateWithFontName (s.handle), true);
+				return new CGFont (CGFontCreateWithFontName (s.Handle), true);
 			}
 		}
 		
@@ -247,7 +247,7 @@ namespace CoreGraphics {
 		{
 			// note: the API is marked to accept a null CFStringRef but it currently (iOS9 beta 4) crash when provided one
 			using (var cs = new CFString (s)){
-				return CGFontGetGlyphWithGlyphName (handle, cs.handle);
+				return CGFontGetGlyphWithGlyphName (handle, cs.Handle);
 			}
 		}
 		

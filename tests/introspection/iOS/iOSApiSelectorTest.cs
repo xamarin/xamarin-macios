@@ -320,6 +320,19 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "UIPreviewInteraction":
+				switch (name) {
+				// Selectors do not respond anymore in Xcode 10.2 beta 1.
+				case "cancelInteraction":
+				case "locationInCoordinateSpace:":
+				case "delegate":
+				case "setDelegate:":
+				case "view":
+					if (TestRuntime.CheckXcodeVersion (10, 2))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (name) {
@@ -672,6 +685,11 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				case "HMLocationEvent":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
+#if __WATCHOS__
+				case "INParameter":
+					// NSCopying conformance added in Xcode 10
+					return !TestRuntime.CheckXcodeVersion (10, 0);
+#endif
 				}
 				break;
 

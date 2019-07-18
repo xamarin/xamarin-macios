@@ -28,6 +28,7 @@
 using System;
 using System.Runtime.InteropServices;
 
+using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
@@ -52,28 +53,23 @@ namespace CoreGraphics {
 	}
 
 	// CGPattern.h
-	public class CGPattern : INativeObject
-#if !COREBUILD
-		, IDisposable
-#endif
+	public class CGPattern : NativeObject
 	{
 #if !COREBUILD
-		internal IntPtr handle;
-
 		/* invoked by marshallers */
 		public CGPattern (IntPtr handle)
+			: base (handle, false)
 		{
-			this.handle = handle;
-			CGPatternRetain (this.handle);
 		}
 
 		[Preserve (Conditional=true)]
 		internal CGPattern (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-			if (!owns)
-				CGPatternRetain (this.handle);
 		}
+
+		protected override void Retain () => CGPatternRetain (Handle);
+		protected override void Release () => CGPatternRelease (Handle);
 		
 		// This is what we expose on the API
 		public delegate void DrawPattern (CGContext ctx);
@@ -83,20 +79,20 @@ namespace CoreGraphics {
 			/* CGFloat */ nfloat xStep, /* CGFloat */ nfloat yStep, CGPatternTiling tiling, bool isColored,
 			/* const CGPatternCallbacks* */ ref CGPatternCallbacks callbacks);
 
-		CGPatternCallbacks callbacks;
+		static CGPatternCallbacks callbacks = new CGPatternCallbacks () {
+			version = 0,
+			draw = DrawCallback,
+			release = ReleaseCallback,
+		};
 		GCHandle gch;
 		
 		public CGPattern (CGRect bounds, CGAffineTransform matrix, nfloat xStep, nfloat yStep, CGPatternTiling tiling, bool isColored, DrawPattern drawPattern)
 		{
 			if (drawPattern == null)
-				throw new ArgumentNullException ("drawPattern");
-
-			callbacks.draw = DrawCallback;
-			callbacks.release = ReleaseCallback;
-			callbacks.version = 0;
+				throw new ArgumentNullException (nameof (drawPattern));
 
 			gch = GCHandle.Alloc (drawPattern);
-			handle = CGPatternCreate (GCHandle.ToIntPtr (gch) , bounds, matrix, xStep, yStep, tiling, isColored, ref callbacks);
+			Handle = CGPatternCreate (GCHandle.ToIntPtr (gch), bounds, matrix, xStep, yStep, tiling, isColored, ref callbacks);
 		}
 
 #if !MONOMAC
@@ -118,35 +114,12 @@ namespace CoreGraphics {
 			GCHandle gch = GCHandle.FromIntPtr (voidptr);
 			gch.Free ();
 		}
-		
-		~CGPattern ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
 
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPatternRelease (/* CGPatternRef */ IntPtr pattern);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPatternRef */ IntPtr CGPatternRetain (/* CGPatternRef */ IntPtr pattern);
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CGPatternRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
 #endif // !COREBUILD
 	}
 }

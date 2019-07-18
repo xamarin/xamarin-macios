@@ -46,7 +46,7 @@ function quit ()
 		   window.close ();
 		}
 	};
-	xhttp.open("GET", "quit", true);
+	xhttp.open("GET", "/quit", true);
 	xhttp.send();
 }
 
@@ -92,19 +92,19 @@ function keyhandler(event)
 	}
 }
 
-function runalltests()
+function buildtest(id)
 {
-	sendrequest ("runalltests");
+	sendrequest ("/build?" + id);
 }
 
 function runtest(id)
 {
-	sendrequest ("runtest?id=" + id);
+	sendrequest ("/run?" + id);
 }
 
 function stoptest(id)
 {
-	sendrequest ("stoptest?id=" + id);
+	sendrequest ("/stop?" + id);
 }
 
 function sendrequest(url, callback)
@@ -124,6 +124,11 @@ function sendrequest(url, callback)
 
 function autorefresh()
 {
+	if (window.location.protocol == "file:") {
+		console.log ("Can't autorefresh from file:// urls");
+		return;
+	}
+
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4) {

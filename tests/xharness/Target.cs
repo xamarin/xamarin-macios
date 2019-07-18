@@ -38,6 +38,7 @@ namespace xharness
 		public virtual string Suffix { get { throw new NotImplementedException (); } }
 		public virtual string MakefileWhereSuffix { get { return string.Empty; } }
 		public virtual string ProjectFileSuffix { get { return Suffix; } }
+		public virtual string ExtraLinkerDefsSuffix {  get { return Suffix; } }
 		protected virtual string ProjectTypeGuids { get { throw new NotImplementedException (); } }
 		protected virtual string BindingsProjectTypeGuids { get { throw new NotImplementedException (); } }
 		protected virtual string TargetFrameworkIdentifier { get { throw new NotImplementedException (); } }
@@ -114,7 +115,7 @@ namespace xharness
 			} else {
 				inputProject.FixArchitectures (SimulatorArchitectures, DeviceArchitectures);
 				inputProject.FixInfoPListInclude (Suffix);
-				inputProject.SetExtraLinkerDefs ("extra-linker-defs" + Suffix + ".xml");
+				inputProject.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			}
 			Harness.Save (inputProject, ProjectPath);
 
@@ -165,7 +166,15 @@ namespace xharness
 			targetDirectory = Path.GetDirectoryName(TemplateProjectPath);
 			CalculateName ();
 
-			ProjectPath = Path.Combine (targetDirectory, Path.GetFileNameWithoutExtension (TemplateProjectPath) + ProjectFileSuffix + "." + ProjectFileExtension);
+			var templateName = Path.GetFileName (TemplateProjectPath);
+			if (templateName.EndsWith (".template", StringComparison.OrdinalIgnoreCase))
+				templateName = Path.GetFileNameWithoutExtension (templateName);
+			templateName = Path.GetFileNameWithoutExtension (templateName);
+
+			if (templateName.Equals ("mono-native-mac"))
+				templateName = "mono-native";
+
+			ProjectPath = Path.Combine (targetDirectory, templateName + ProjectFileSuffix + "." + ProjectFileExtension);
 
 			if (!ShouldSkipProjectGeneration)
 			{

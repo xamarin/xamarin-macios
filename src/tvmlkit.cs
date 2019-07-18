@@ -86,10 +86,17 @@ namespace TVMLKit {
 	public enum TVElementUpdateType : long {
 		None,
 		Subtree,
+#if XAMCORE_4_0
+		[TV (10,0)]
+		Styles,
+		Children,
+		Self,
+#else
 		Children,
 		Self,
 		[TV (10,0)]
 		Styles,
+#endif
 	}
 
 	[TV (9,0)]
@@ -819,8 +826,9 @@ namespace TVMLKit {
 			set;
 		}
 
+		[Internal][Sealed]
 		[Export ("updateType")]
-		TVElementUpdateType UpdateType { get; }
+		TVElementUpdateType _UpdateType { get; }
 
 		[Export ("resetProperty:")]
 		void Reset (TVElementResettableProperty resettableProperty);

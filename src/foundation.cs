@@ -1475,12 +1475,19 @@ namespace Foundation
 
 	[BaseType (typeof (NSRegularExpression))]
 	interface NSDataDetector : NSCopying, NSCoding {
-		// Invalid parent ctor: -[NSDataDetector initWithPattern:options:error:]: Not valid for NSDataDetector
-//		[Export ("initWithPattern:options:error:")]
-//		IntPtr Constructor (NSString pattern, NSRegularExpressionOptions options, out NSError error);
+		[DesignatedInitializer]
+		[Export ("initWithTypes:error:")]
+		IntPtr Constructor (NSTextCheckingTypes options, out NSError error);
+
+		[Wrap ("this ((NSTextCheckingTypes) options, out error)")]
+		IntPtr Constructor (NSTextCheckingType options, out NSError error);
 
 		[Export ("dataDetectorWithTypes:error:"), Static]
 		NSDataDetector Create (NSTextCheckingTypes checkingTypes, out NSError error);
+
+		[Static]
+		[Wrap ("Create ((NSTextCheckingTypes) checkingTypes, out error)")]
+		NSDataDetector Create (NSTextCheckingType checkingTypes, out NSError error);
 
 		[Export ("checkingTypes")]
 		NSTextCheckingTypes CheckingTypes { get; }
@@ -2188,6 +2195,7 @@ namespace Foundation
 #if XAMCORE_2_0
 		[Abstract]
 #endif
+		[return: Release]
 		[Export ("copyWithZone:")]
 		NSObject Copy ([NullAllowed] NSZone zone);
 	}
@@ -4575,6 +4583,10 @@ namespace Foundation
 		[Export ("initWithPattern:options:error:")]
 		IntPtr Constructor (NSString pattern, NSRegularExpressionOptions options, out NSError error);
 
+		[Static]
+		[Export ("regularExpressionWithPattern:options:error:")]
+		NSRegularExpression Create (NSString pattern, NSRegularExpressionOptions options, out NSError error);
+
 		[Export ("pattern")]
 		NSString Pattern { get; }
 
@@ -4588,21 +4600,37 @@ namespace Foundation
 		[Static]
 		NSString GetEscapedPattern (NSString str);
 
+		/* From the NSMatching category */
+
 		[Export ("enumerateMatchesInString:options:range:usingBlock:")]
 		void EnumerateMatches (NSString str, NSMatchingOptions options, NSRange range, NSMatchEnumerator enumerator);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GetMatches2' instead, this method has the wrong return type.")]
 		[Export ("matchesInString:options:range:")]
 		NSString [] GetMatches (NSString str, NSMatchingOptions options, NSRange range);
+#endif
+
+		[Export ("matchesInString:options:range:")]
+#if XAMCORE_4_0
+		NSTextCheckingResult [] GetMatches (NSString str, NSMatchingOptions options, NSRange range);
+#else
+		[Sealed]
+		NSTextCheckingResult [] GetMatches2 (NSString str, NSMatchingOptions options, NSRange range);
+#endif
 
 		[Export ("numberOfMatchesInString:options:range:")]
 		nuint GetNumberOfMatches (NSString str, NSMatchingOptions options, NSRange range);
 		
 		[Export ("firstMatchInString:options:range:")]
+		[return: NullAllowed]
 		NSTextCheckingResult FindFirstMatch (string str, NSMatchingOptions options, NSRange range);
 		
 		[Export ("rangeOfFirstMatchInString:options:range:")]
 		NSRange GetRangeOfFirstMatch (string str, NSMatchingOptions options, NSRange range);
 		
+		/* From the NSReplacement category */
+
 		[Export ("stringByReplacingMatchesInString:options:range:withTemplate:")]
 		string ReplaceMatches (string sourceString, NSMatchingOptions options, NSRange range, string template);
 		
@@ -5386,6 +5414,7 @@ namespace Foundation
 		NSString RegistrationDomain { get; }
 
 		[iOS (9,3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[NoMac][NoTV]
 		[Notification]
 		[Field ("NSUserDefaultsSizeLimitExceededNotification")]
@@ -5397,12 +5426,14 @@ namespace Foundation
 		NSString NoCloudAccountNotification { get; }
 
 		[iOS (9,3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[NoMac][NoTV]
 		[Notification]
 		[Field ("NSUbiquitousUserDefaultsDidChangeAccountsNotification")]
 		NSString DidChangeAccountsNotification { get; }
 
 		[iOS (9,3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[NoMac][NoTV]
 		[Notification]
 		[Field ("NSUbiquitousUserDefaultsCompletedInitialSyncNotification")]
@@ -5474,6 +5505,9 @@ namespace Foundation
 
 		[Export ("isFileURL")]
 		bool IsFileUrl { get; }
+		
+		[Export ("isFileReferenceURL")]
+		bool IsFileReferenceUrl { get; }
 
 		[Export ("parameterString")]
 		string ParameterString { get;}
@@ -8554,21 +8588,11 @@ namespace Foundation
 		// NSPlaceholders (informal) protocol
 		[Static]
 		[Export ("defaultPlaceholderForMarker:withBinding:")]
-#if XAMCORE_4_0 && MONOMAC
-		// When XAMCORE_4_0 occurs review - NSBindingSelectionMarker is 10.14 only type but GetDefaultPlaceholder is before, does it matter now?
-		NSObject GetDefaultPlaceholder (NSBindingSelectionMarker marker, NSString binding);
-#else
 		NSObject GetDefaultPlaceholder (NSObject marker, NSString binding);
-#endif
 
 		[Static]
 		[Export ("setDefaultPlaceholder:forMarker:withBinding:")]
-#if XAMCORE_4_0 && MONOMAC
-		// When XAMCORE_4_0 occurs review - NSBindingSelectionMarker is 10.14 only type but SetDefaultPlaceholder is before, does it matter now?
-		void SetDefaultPlaceholder (NSObject placeholder, NSBindingSelectionMarker marker, NSString binding);
-#else
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
-#endif
 
 		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("objectDidEndEditing:")]
@@ -10745,18 +10769,21 @@ namespace Foundation
 
 #if IOS && !XAMCORE_4_0
 		[iOS (9, 3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[Notification]
 		[Obsolete ("Use 'NSUserDefaults.SizeLimitExceededNotification' instead.")]
 		[Field ("NSUserDefaultsSizeLimitExceededNotification")]
 		NSString SizeLimitExceededNotification { get; }
 
 		[iOS (9, 3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[Notification]
 		[Obsolete ("Use 'NSUserDefaults.DidChangeAccountsNotification' instead.")]
 		[Field ("NSUbiquitousUserDefaultsDidChangeAccountsNotification")]
 		NSString DidChangeAccountsNotification { get; }
 
 		[iOS (9, 3)]
+		[Watch (2,2)] // Headers say watchOS 2.0, but they're lying.
 		[Notification]
 		[Obsolete ("Use 'NSUserDefaults.CompletedInitialSyncNotification' instead.")]
 		[Field ("NSUbiquitousUserDefaultsCompletedInitialSyncNotification")]
@@ -13235,7 +13262,8 @@ namespace Foundation
 		bool LockBeforeDate (NSDate limit);
 
 		[Export ("name")]
-		string Name { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Name { get; set; }
 	}
 
 	[BaseType (typeof(NSObject))]
@@ -13267,7 +13295,8 @@ namespace Foundation
 		bool LockWhenCondition (nint condition, NSDate limit);
 
 		[Export ("name")]
-		string Name { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Name { get; set; }
 	}
 
 	[BaseType (typeof(NSObject))]
@@ -13280,7 +13309,8 @@ namespace Foundation
 		bool LockBeforeDate (NSDate limit);
 
 		[Export ("name")]
-		string Name { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Name { get; set; }
 	}
 
 	[BaseType (typeof(NSObject))]
@@ -13299,7 +13329,8 @@ namespace Foundation
 		void Broadcast ();
 
 		[Export ("name")]
-		string Name { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Name { get; set; }
 	}
 
 // Not yet, the IntPtr[] argument isn't handled correctly by the generator (it tries to convert to NSArray, while the native method expects a C array).

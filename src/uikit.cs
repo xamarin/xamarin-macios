@@ -117,6 +117,24 @@ namespace UIKit {
 		Error
 	}
 
+	[Native]
+	[ErrorDomain ("UIGuidedAccessErrorDomain")]
+	[NoWatch, NoTV, iOS (12,2)]
+	public enum UIGuidedAccessErrorCode : long {
+		PermissionDenied,
+		Failed = long.MaxValue,
+	}
+
+	[Flags, NoWatch, NoTV, iOS (12,2)]
+	[Native]
+	public enum UIGuidedAccessAccessibilityFeature : ulong {
+		VoiceOver = 1uL << 0,
+		Zoom = 1uL << 1,
+		AssistiveTouch = 1uL << 2,
+		InvertColors = 1uL << 3,
+		GrayscaleDisplay = 1uL << 4,
+	}
+
 #if WATCH
 	// hacks to ease compilation
 	interface CIColor {}
@@ -591,7 +609,7 @@ namespace UIKit {
 		IntPtr _FirstAnchor<AnchorType> ();
 	
 		[iOS (10,0), TV (10,0)]
-		[NullAllowed, Export ("secondAnchor", ArgumentSemantic.Copy)]
+		[Export ("secondAnchor", ArgumentSemantic.Copy)]
 		[Internal]
 		IntPtr _SecondAnchor<AnchorType> ();
 #endif
@@ -3690,7 +3708,8 @@ namespace UIKit {
 		UICollectionViewDataSource DataSource { get; set; }
 
 		[Export ("backgroundView", ArgumentSemantic.Retain)]
-		UIView BackgroundView { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIView BackgroundView { get; set; }
 
 		[Export ("allowsSelection")]
 		bool AllowsSelection { get; set;  }
@@ -4540,6 +4559,7 @@ namespace UIKit {
 		UIColor FromCGColor (CGColor color);
 
 		[iOS (11,0), TV (11,0)]
+		[Watch (4,0)]
 		[Static]
 		[Export ("colorNamed:")]
 		[return: NullAllowed]
@@ -5464,7 +5484,20 @@ namespace UIKit {
 
 		[Export ("fontDescriptorWithSymbolicTraits:")]
 		UIFontDescriptor CreateWithTraits (UIFontDescriptorSymbolicTraits symbolicTraits);
-		
+
+		[NoiOS][NoTV]
+		[Watch (5,2)]
+		[Export ("fontDescriptorWithDesign:")]
+		[return: NullAllowed]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		UIFontDescriptor CreateWithDesign (NSString design);
+
+		[NoiOS][NoTV]
+		[Watch (5,2)]
+		[return: NullAllowed]
+		[Wrap ("CreateWithDesign (design.GetConstant ())")]
+		UIFontDescriptor CreateWithDesign (UIFontDescriptorSystemDesign design);
+
 		[Export ("fontDescriptorWithSize:")]
 		UIFontDescriptor CreateWithSize (nfloat newPointSize);
 		
@@ -7359,7 +7392,8 @@ namespace UIKit {
 		UIBezierPath FromRoundedRect (CGRect rect, nfloat cornerRadius);
 
 		[Export ("CGPath")]
-		CGPath CGPath { get; [NullAllowed] set; }
+		[NullAllowed]
+		CGPath CGPath { get; set; }
 
 		[Export ("moveToPoint:")]
 		void MoveTo (CGPoint point);
@@ -7760,13 +7794,16 @@ namespace UIKit {
 		UIDatePickerMode Mode { get; set; }
 
 		[Export ("locale", ArgumentSemantic.Retain)]
-		NSLocale Locale { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSLocale Locale { get; set; }
 
 		[Export ("timeZone", ArgumentSemantic.Retain)]
-		NSTimeZone TimeZone { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSTimeZone TimeZone { get; set; }
 
 		[Export ("calendar", ArgumentSemantic.Copy)]
-		NSCalendar Calendar { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSCalendar Calendar { get; set; }
 
 		// not fully clear from docs but null is not allowed:
 		// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Invalid parameter not satisfying: date
@@ -7774,10 +7811,12 @@ namespace UIKit {
 		NSDate Date { get; set; }
 		
 		[Export ("minimumDate", ArgumentSemantic.Retain)]
-		NSDate MinimumDate { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSDate MinimumDate { get; set; }
 		
 		[Export ("maximumDate", ArgumentSemantic.Retain)]
-		NSDate MaximumDate { get; [NullAllowed] set; }
+		[NullAllowed]
+		NSDate MaximumDate { get; set; }
 
 		[Export ("countDownDuration")]
 		double CountDownDuration { get; set; }
@@ -8414,7 +8453,7 @@ namespace UIKit {
 		UIBarButtonItem BackBarButtonItem { get; set; }
 
 		[Export ("titleView", ArgumentSemantic.Retain), NullAllowed]
-		UIView TitleView { get; [NullAllowed] set; }
+		UIView TitleView { get; set; }
 
 		[NoTV]
 		[Export ("prompt", ArgumentSemantic.Copy), NullAllowed]
@@ -10181,12 +10220,19 @@ namespace UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController))]
-	partial interface UISearchController : UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+	[DisableDefaultCtor] // designated
+	partial interface UISearchController : UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning
+	{
+		[Export ("init")]
+		[Advice ("It's recommended to use the constructor that takes a 'UIViewController searchResultsController' in order to create/initialize an attached 'UISearchBar'.")]
+		IntPtr Constructor ();
+
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("initWithSearchResultsController:")]
+		[Advice ("You can pass a null 'UIViewController' to display the search results in the same view.")]
 		IntPtr Constructor ([NullAllowed] UIViewController searchResultsController);
 		
 		[NullAllowed] // by default this property is null
@@ -10890,7 +10936,8 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("customizableViewControllers", ArgumentSemantic.Copy)]
-		UIViewController [] CustomizableViewControllers { get; [NullAllowed]  set; }
+		[NullAllowed]
+		UIViewController [] CustomizableViewControllers { get; set; }
 
 		[Export ("tabBar")]
 		UITabBar TabBar { get; }
@@ -11685,7 +11732,7 @@ namespace UIKit {
 		UITableViewCellAccessory Accessory { get; set; }
 
 		[Export ("accessoryView", ArgumentSemantic.Retain)][NullAllowed]
-		UIView AccessoryView { get; [NullAllowed] set; }
+		UIView AccessoryView { get; set; }
 		
 		[Export ("editingAccessoryType")]
 		UITableViewCellAccessory EditingAccessory { get; set; }
@@ -12030,13 +12077,16 @@ namespace UIKit {
 		IntPtr Constructor (CGRect frame);
 
 		[Export ("text", ArgumentSemantic.Copy)]
-		string Text { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Text { get; set; }
 
 		[Export ("textColor", ArgumentSemantic.Retain)]
-		UIColor TextColor { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIColor TextColor { get; set; }
 
 		[Export ("font", ArgumentSemantic.Retain)]
-		UIFont Font { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIFont Font { get; set; }
 
 		[Export ("textAlignment")]
 		UITextAlignment TextAlignment { get; set; }
@@ -12045,7 +12095,8 @@ namespace UIKit {
 		UITextBorderStyle BorderStyle { get; set; }
 
 		[Export ("placeholder", ArgumentSemantic.Copy)]
-		string Placeholder { get; [NullAllowed] set; }
+		[NullAllowed]
+		string Placeholder { get; set; }
 
 		[Export ("clearsOnBeginEditing")]
 		bool ClearsOnBeginEditing { get; set; }
@@ -12057,17 +12108,19 @@ namespace UIKit {
 		nfloat MinimumFontSize { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
-		NSObject WeakDelegate { get; [NullAllowed] set; }
+		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
-		UITextFieldDelegate Delegate { get; [NullAllowed] set; }
+		UITextFieldDelegate Delegate { get; set; }
 
 		[Export ("background", ArgumentSemantic.Retain)]
-		UIImage Background { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIImage Background { get; set; }
 
 		[Export ("disabledBackground", ArgumentSemantic.Retain)]
-		UIImage DisabledBackground { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIImage DisabledBackground { get; set; }
 
 		[Export ("isEditing")]
 		bool IsEditing { get; }
@@ -13473,7 +13526,8 @@ namespace UIKit {
 
 		// These come from @interface UIViewController (UINavigationControllerContextualToolbarItems)
 		[Export ("toolbarItems", ArgumentSemantic.Retain)]
-		UIBarButtonItem [] ToolbarItems { get; [NullAllowed] set; }
+		[NullAllowed]
+		UIBarButtonItem [] ToolbarItems { get; set; }
 
 		[NoTV]
 		[Export ("setToolbarItems:animated:")][PostGet ("ToolbarItems")]
@@ -16278,7 +16332,8 @@ namespace UIKit {
 		NSAttributedString GetAccessibilityAttributedContent (nint lineNumber);
 
 		[TV (11,0), iOS (11,0)]
-		[NullAllowed, Export ("accessibilityAttributedPageContent")]
+		[Export ("accessibilityAttributedPageContent")]
+		[return: NullAllowed]
 		NSAttributedString GetAccessibilityAttributedPageContent ();
 	}
 
@@ -18156,4 +18211,14 @@ namespace UIKit {
 		void DidTap (UIPencilInteraction interaction);
 	}
 #endif // !WATCH
+
+	[NoiOS][NoTV]
+	[Watch (5,2)]
+	/* NS_TYPED_ENUM */ enum UIFontDescriptorSystemDesign {
+		[DefaultEnumValue]
+		[Field ("UIFontDescriptorSystemDesignDefault")]
+		Default,
+		[Field ("UIFontDescriptorSystemDesignRounded")]
+		Rounded,
+	}
 }

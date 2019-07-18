@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
@@ -17,7 +18,11 @@ namespace Xamarin.MMP.Tests
 					TestCode = "System.Drawing.RectangleF f = new System.Drawing.RectangleF ();",
 					XM45 = true
 				};
-				TI.TestUnifiedExecutable (test, shouldFail: true);
+				TI.TestUnifiedExecutable (test);
+				var allAssembliesInBundle = Directory.GetFiles (test.BundlePath, "*.dll", SearchOption.AllDirectories).Select (Path.GetFileName);
+				Assert.That (allAssembliesInBundle, Does.Contain ("mscorlib.dll"), "mscorlib.dll");
+				Assert.That (allAssembliesInBundle, Does.Contain ("System.Drawing.Common.dll"), "System.Drawing.Common.dll");
+				Assert.That (allAssembliesInBundle, Does.Not.Contain ("System.Drawing.dll"), "System.Drawing.dll");
 			});
 		}
 
@@ -45,13 +50,13 @@ namespace Xamarin.MMP.Tests
 				sb.Clear ();
 				sb.AppendFormat ("-target:library -out:{0}/b.dll {0}/b.cs", tmpDir);
 				File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public class B { }");
-				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mcs", sb, "b");
+				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", sb, "b");
 
 				// build a.dll
 				sb.Clear ();
 				sb.AppendFormat ("-target:library -out:{0}/a.dll {0}/a.cs -r:{0}/b.dll", tmpDir);
 				File.WriteAllText (Path.Combine (tmpDir, "a.cs"), "public class A { public A () { System.Console.WriteLine (typeof (B)); }}");
-				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mcs", sb, "a");
+				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", sb, "a");
 
 				File.Delete (Path.Combine (tmpDir, "b.dll"));
 

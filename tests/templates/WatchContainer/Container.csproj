@@ -26,7 +26,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchProfiling>true</MtouchProfiling>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' Or '$(Configuration)|$(Platform)' == 'Release32|iPhone' Or '$(Configuration)|$(Platform)' == 'Release64_32|iPhone' ">
     <OutputPath>bin\iPhone\$(Configuration)-watchos</OutputPath>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
@@ -48,7 +48,7 @@
     <MtouchLink>None</MtouchLink>
     <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' Or  '$(Configuration)|$(Platform)' == 'Debug32|iPhone' Or  '$(Configuration)|$(Platform)' == 'Debug64_32|iPhone' ">
     <OutputPath>bin\iPhone\$(Configuration)-watchos</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -79,7 +79,7 @@
     <InterfaceDefinition Include="%CONTAINER_PATH%Main.storyboard" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Info-watchos.plist">
+    <None Include="Info.plist">
       <LogicalName>Info.plist</LogicalName>
     </None>
     <None Include="%CONTAINER_PATH%Entitlements.plist" />

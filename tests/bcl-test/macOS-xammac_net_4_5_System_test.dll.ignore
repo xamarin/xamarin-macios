@@ -1,0 +1,8 @@
+# Expected: null
+# But was: <AppKit.AppKitSynchronizationContext>
+ MonoTests.System.ComponentModel.AsyncOperationManagerTest.SyncContext
+
+# System.NullReferenceException : Object reference not set to an instance of an object
+MonoTests.System.Net.NetworkInformation.PingTest.SendAsyncIPV4Fails
+MonoTests.System.Net.NetworkInformation.PingTest.SendAsyncIPV4Succeeds
+ 

@@ -183,6 +183,7 @@ namespace AVFoundation {
 		Metadata = 9,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVMediaTypeDepthData")]
 		DepthData = 10,
 	}
@@ -502,26 +503,32 @@ namespace AVFoundation {
 		EnhancedAC3 = 14,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeJPEG")]
 		Jpeg = 15,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeDNG")]
 		Dng = 16,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeHEIC")]
 		Heic = 17,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeAVCI")]
 		Avci = 18,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeHEIF")]
 		Heif = 19,
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVFileTypeTIFF")]
 		Tiff = 20,
 	}
@@ -2250,6 +2257,10 @@ namespace AVFoundation {
 		[Watch (5,0), NoTV, NoMac, NoiOS]
 		[Export ("activateWithOptions:completionHandler:")]
 		void Activate (AVAudioSessionActivationOptions options, Action<bool, NSError> handler);
+
+		[Watch (5, 2), TV (12, 2), NoMac, iOS (12, 2)]
+		[Export ("promptStyle")]
+		AVAudioSessionPromptStyle PromptStyle { get; }
 	}
 	
 	[iOS (6,0)]
@@ -3812,8 +3823,9 @@ namespace AVFoundation {
 
 		// note: we cannot use [Bind] here as it would break compatibility with iOS 6.x
 		// `isFinished` was only added in iOS 7.0 SDK and cannot be called in earlier versions
-		[Export ("finished")]
-		bool Finished { /* [Bind ("isFinished")] */ get;  }
+		[Export ("isFinished")]
+		[iOS (7,0)] // on iOS 6 it was `finished` but it's now rejected by Apple
+		bool Finished { get; }
 
 		[Export ("finishLoadingWithResponse:data:redirect:")]
 		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Message = "Use the 'Response', 'Redirect' properties and the 'AVAssetResourceLoadingDataRequest.Responds' and 'AVAssetResourceLoadingRequest.FinishLoading' methods instead.")]
@@ -5535,6 +5547,7 @@ namespace AVFoundation {
 		NSString KeySpaceHlsDateRange { get; }
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVMetadataKeySpaceAudioFile")]
 		NSString KeySpaceAudioFile { get; }
 	}
@@ -7567,10 +7580,12 @@ namespace AVFoundation {
 		NSString PresetHighestQuality { get; }
 
 		[iOS (11, 0), Mac (10,13)]
+		[TV (11, 0)]
 		[Field ("AVAssetExportPresetHEVCHighestQuality")]
 		NSString PresetHevcHighestQuality { get; }
 
 		[iOS (11, 0), Mac (10,13)]
+		[TV (11, 0)]
 		[Field ("AVAssetExportPresetHEVC3840x2160")]
 		NSString PresetHevc3840x2160 { get; }
 
@@ -7592,6 +7607,7 @@ namespace AVFoundation {
 		NSString Preset3840x2160 { get; }
 
 		[iOS (11, 0), Mac (10,13)]
+		[TV (11, 0)]
 		[Field ("AVAssetExportPresetHEVC1920x1080")]
 		NSString PresetHevc1920x1080 { get; }
 
@@ -8283,6 +8299,7 @@ namespace AVFoundation {
 		[Export ("initWithInputPort:videoPreviewLayer:")]
 		IntPtr Constructor (AVCaptureInputPort inputPort, AVCaptureVideoPreviewLayer layer);
 
+		[NullAllowed]
 		[Export ("output")]
 		AVCaptureOutput Output { get;  }
 
@@ -8331,6 +8348,7 @@ namespace AVFoundation {
 		nfloat VideoScaleAndCropFactor { get; set;  }
 #endif
 		[iOS (6,0)]
+		[NullAllowed]
 		[Export ("videoPreviewLayer")]
 		AVCaptureVideoPreviewLayer VideoPreviewLayer { get;  }
 
@@ -11771,6 +11789,12 @@ namespace AVFoundation {
 		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
+
+		// AVSampleBufferDisplayLayerImageProtection
+
+		[TV (12,2), NoWatch, Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		[Export ("preventsCapture")]
+		bool PreventsCapture { get; set; }
 	}
 
 	[NoWatch]
@@ -12176,10 +12200,12 @@ namespace AVFoundation {
 		NSString _Preset3840x2160 { get; }
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Internal, Field ("AVOutputSettingsPresetHEVC1920x1080")]
 		NSString _PresetHevc1920x1080 { get; }
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Internal, Field ("AVOutputSettingsPresetHEVC3840x2160")]
 		NSString _PresetHevc3840x2160 { get; }
 	}
@@ -12642,6 +12668,26 @@ namespace AVFoundation {
 		[Export ("makeSecureTokenForExpirationDateOfPersistableContentKey:completionHandler:")]
 		void MakeSecureToken (NSData persistableContentKeyData, Action<NSData, NSError> handler);
 
+		[Async]
+		[NoTV, NoMac, iOS (12,2)]
+		[Export ("invalidatePersistableContentKey:options:completionHandler:")]
+		void InvalidatePersistableContentKey (NSData persistableContentKeyData, [NullAllowed] NSDictionary options, Action<NSData, NSError> handler);
+
+		[Async]
+		[NoTV, NoMac, iOS (12, 2)]
+		[Wrap ("InvalidatePersistableContentKey (persistableContentKeyData, options?.Dictionary, handler)")]
+		void InvalidatePersistableContentKey (NSData persistableContentKeyData, [NullAllowed] AVContentKeySessionServerPlaybackContextOptions options, Action<NSData, NSError> handler);
+
+		[Async]
+		[NoTV, NoMac, iOS (12,2)]
+		[Export ("invalidateAllPersistableContentKeysForApp:options:completionHandler:")]
+		void InvalidateAllPersistableContentKeys (NSData appIdentifier, [NullAllowed] NSDictionary options, Action<NSData, NSError> handler);
+
+		[Async]
+		[NoTV, NoMac, iOS (12, 2)]
+		[Wrap ("InvalidateAllPersistableContentKeys (appIdentifier, options?.Dictionary, handler)")]
+		void InvalidateAllPersistableContentKeys (NSData appIdentifier, [NullAllowed] AVContentKeySessionServerPlaybackContextOptions options, Action<NSData, NSError> handler);
+
 		#region AVContentKeySession_AVContentKeySessionPendingExpiredSessionReports
 
 		// binded because they are static and from a category.
@@ -12654,6 +12700,24 @@ namespace AVFoundation {
 		void RemovePendingExpiredSessionReports (NSDictionary[] expiredSessionReports, NSData appIdentifier, NSUrl storageUrl);
 
 		#endregion
+	}
+
+	[Static][Internal]
+	[NoWatch, NoTV, NoMac, iOS (12,2)]
+	interface AVContentKeySessionServerPlaybackContextOptionKeys {
+		[Field ("AVContentKeySessionServerPlaybackContextOptionProtocolVersions")]
+		NSString ProtocolVersionsKey { get; }
+
+		[Field ("AVContentKeySessionServerPlaybackContextOptionServerChallenge")]
+		NSString ServerChallengeKey { get; }
+	}
+
+	[StrongDictionary ("AVContentKeySessionServerPlaybackContextOptionKeys")]
+	[NoWatch, NoTV, NoMac, iOS (12,2)]
+	interface AVContentKeySessionServerPlaybackContextOptions {
+		NSNumber[] ProtocolVersions { get; }
+
+		NSData ServerChallenge { get; }
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
@@ -12692,6 +12756,10 @@ namespace AVFoundation {
 
 		[Export ("canProvidePersistableContentKey")]
 		bool CanProvidePersistableContentKey { get; }
+
+		[TV (12,2), Mac (10,14,4, onlyOn64: true), iOS (12,2)]
+		[Export ("options", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> Options { get; }
 
 		[Async]
 		[Export ("makeStreamingContentKeyRequestDataForApp:contentIdentifier:options:completionHandler:")]

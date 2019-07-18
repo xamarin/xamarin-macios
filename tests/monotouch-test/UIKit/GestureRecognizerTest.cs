@@ -28,6 +28,14 @@ namespace MonoTouchFixtures.UIKit {
 	public class GestureRecognizerTest {
 
 		[Test]
+		public void DoubleDispose ()
+		{
+			using (var gr = new UIGestureRecognizer ()) {
+				gr.Dispose ();
+			}
+		}
+
+		[Test]
 		public void Null ()
 		{
 			using (var gr = new UIGestureRecognizer (Null)) {
@@ -40,6 +48,7 @@ namespace MonoTouchFixtures.UIKit {
 		}
 
 		[Test]
+		[Ignore ("Issue: https://github.com/xamarin/maccore/issues/1345 && WIP PR: https://github.com/xamarin/xamarin-macios/pull/5462")]
 		public void NoStrongCycles ()
 		{
 			bool finalizedAnyCtor = false;

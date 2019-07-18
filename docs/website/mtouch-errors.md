@@ -221,6 +221,8 @@ The executable assembly's name and the application's name can't match the name o
 
 ### MT0028: Cannot enable PIE (-pie) when targeting iOS 4.1 or earlier. Please disable PIE (-pie:false) or set the deployment target to at least iOS 4.2
 
+This error is no longer shown (it's not possible to target iOS 4.1 or earlier anymore, iOS 6.0 is the minimum).
+
 <a name="MT0029" />
 
 ### MT0029: REPL (--enable-repl) is only supported in the simulator (--sim).
@@ -862,7 +864,7 @@ A failure occurred when touching a file (which is done to ensure partial builds 
 
 This warning can most likely be ignored; in case of any problems file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) and it will be investigated.
 
-<a name="MT0129"/>
+<a name="MT0129" />
 
 ### MT0129: Debugging symbol file for '*' does not match the assembly and is ignored.
 
@@ -874,18 +876,18 @@ This warning won't affect the application being built, however you might not be 
 
 Please report this issue to the publisher of the assembly package (e.g. nuget author) so this can be fixed in their future releases.
 
-<a name="MT0130"/>
+<a name="MT0130" />
 
 ### MT0130: No root assemblies found. You should provide at least one root assembly.
 When running --runregistrar, at least one root assembly should be provided.
 
-<a name="MT0131"/>
+<a name="MT0131" />
 
 ### MT0131: Product assembly '{0}' not found in assembly list: '{1}'
 
 When running --runregistrar, the assembly list should include the product assembly, Xamarin.iOS, Xamarin.WatchOS, Xamarin.TVOS.
 
-<a name="MT0132"/>
+<a name="MT0132" />
 
 ### MT0132: Unknown optimization: *. Valid values are: *
 
@@ -895,7 +897,7 @@ The accepted format is `[+|-]optimization-name`, where `optimization-name` is on
 
 See [Build optimizations](https://developer.xamarin.com/guides/cross-platform/macios/build-optimization/) for a complete description of each optimization.
 
-<a name="MT0133"/>
+<a name="MT0133" />
 
 ### MT0133: Found more than 1 assembly matching '{0}' choosing first: '{1}'
 
@@ -915,7 +917,7 @@ Alternatively, enable the managed [linker](https://docs.microsoft.com/en-us/xama
 
 As a last-straw solution, use an older version of Xamarin.iOS that does not require these new SDKs to be present during the build process.
 
-<a name="MT0136"/>
+<a name="MT0136" />
 
 ### MT0136: Cannot find the assembly {assembly} referenced from {assembly}.
 
@@ -937,7 +939,7 @@ means that if the build otherwise succeeds, this warning can be ignored.
 
 <!-- 0138-0139: used by mmp -->
 
-<a name="MT0140"/>
+<a name="MT0140" />
 
 ### MT0140: File '{framework_filename}' is not a valid framework.
 
@@ -945,14 +947,23 @@ This error occurs when `mtouch` reads a binary in a `.framework` directory that 
 
 It might be a broken file or a broken symlink (after decompressing an archive) to a valid file. The native framework should be removed and replaced with a valid one. 
 
-<a name="MT0141"/>
+<a name="MT0141" />
 
-### MT0141: The interpreter is not supported in the simulator. Do not pass --interpreter when building for the simulator.
+### MT0141: The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator.
 
-This error occurs when enabling the interpreter on a simulator build.
+This warning is shown when enabling the interpreter on a simulator build.
 
 The interpreter is only available for device builds as an complete or partial alternative to the ahead-of-time (AOT) compilation.
 In contrast simulator builds are using just-in-time compilation which negates most advantages of the interpreter.
+
+However it is possible to test features such as `dynamic` and `System.Reflection.Emit `on the simulator using the existing REPL (read–eval–print loop) support on the simulator. This feature is automatically enabled when `--interpreter` is used on simulator builds. However the JIT remains the only option available on the simulator, while AOT and interpreter are for devices only.
+
+<a name="MT0142" />
+
+### MT0142: Cannot find the assembly '{assembly}', passed as an argument to --interpreter.
+
+This warning is shown if the assemblies names given to the `--interpreter` option (either to interpret them or not) cannot be found.
+
 
 # MT1xxx: Project related error messages
 
@@ -1587,6 +1598,16 @@ The format of a file can be verified using the `file` command from a terminal:
 
     file -arch all -l /path/to/file
 
+### MT1605: Invalid entry * in the static library *: *
+
+An error occurred while processing the MachO file in question.
+
+Please make sure the file is a valid Mach-O static library.
+
+The format of a file can be verified using the `file` command from a terminal:
+
+    file -arch all -l /path/to/file
+
 ## MT2xxx: Linker error messages
 
 <!--
@@ -1687,7 +1708,16 @@ The assembly mentioned in the error message is loaded from multiple locations. M
 
 The root assembly could not be loaded. Please verify that the path in the error message refers to an existing file, and that it's a valid .NET assembly.
 
-<a name="MT202x" />
+<a name="MT2020" />
+<a name="MT2021" />
+<a name="MT2022" />
+<a name="MT2023" />
+<a name="MT2024" />
+<a name="MT2025" />
+<a name="MT2026" />
+<a name="MT2027" />
+<a name="MT2028" />
+<a name="MT2029" />
 
 ### MT202x: Binding Optimizer failed processing `...`.
 
@@ -1698,9 +1728,20 @@ The last digit `x` will be:
 * `1` for a type name;
 * `3` for a method name;
 
-<a name="MT2030" />
+<!-- MT2020 - MT2029 used by the above error -->
 
-### MT2030: Remove User Resources failed processing `...`.
+<a name="MT2030" />
+<a name="MT2031" />
+<a name="MT2032" />
+<a name="MT2033" />
+<a name="MT2034" />
+<a name="MT2035" />
+<a name="MT2036" />
+<a name="MT2037" />
+<a name="MT2038" />
+<a name="MT2039" />
+
+### MT203x: Remove User Resources failed processing `...`.
 
 Something unexpected occured when trying to remove user resources. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
@@ -1709,51 +1750,113 @@ User resources are files included inside assemblies (as resources) that needs to
 * `__monotouch_content_*` and `__monotouch_pages_*` resources; and
 * Native libraries embedded inside a binding assembly;
 
-<a name="MT2040" />
+<!-- MT2030 - MT2039 used by the above error -->
 
-### MT2040: Default HttpMessageHandler setter failed processing `...`.
+<a name="MT2040" />
+<a name="MT2041" />
+<a name="MT2042" />
+<a name="MT2043" />
+<a name="MT2044" />
+<a name="MT2045" />
+<a name="MT2046" />
+<a name="MT2047" />
+<a name="MT2048" />
+<a name="MT2049" />
+
+### MT204x: Default HttpMessageHandler setter failed processing `...`.
 
 Something unexpected occured when trying to set the default `HttpMessageHandler` for the application. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-<a name="MT2050" />
+<!-- MT2040 - MT2049 used by the above error -->
 
-### MT2050: Code Remover failed processing `...`.
+<a name="MT2050" />
+<a name="MT2051" />
+<a name="MT2052" />
+<a name="MT2053" />
+<a name="MT2054" />
+<a name="MT2055" />
+<a name="MT2056" />
+<a name="MT2057" />
+<a name="MT2058" />
+<a name="MT2059" />
+
+### MT205x: Code Remover failed processing `...`.
 
 Something unexpected occured when trying to remove code from BCL shipping with the application. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-<a name="MT2060" />
+<!-- MT2050 - MT2059 used by the above error -->
 
-### MT2060: Sealer failed processing `...`.
+<a name="MT2060" />
+<a name="MT2061" />
+<a name="MT2062" />
+<a name="MT2063" />
+<a name="MT2064" />
+<a name="MT2065" />
+<a name="MT2066" />
+<a name="MT2067" />
+<a name="MT2068" />
+<a name="MT2069" />
+
+### MT206x: Sealer failed processing `...`.
 
 Something unexpected occured when trying to seal types or methods (final) or when devirtualizing some methods. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-<a name="MT2070" />
+<!-- MT2060 - MT2069 used by the above error -->
 
-### MT2070: Metadata Reducer failed processing `...`.
+<a name="MT2070" />
+<a name="MT2071" />
+<a name="MT2072" />
+<a name="MT2073" />
+<a name="MT2074" />
+<a name="MT2075" />
+<a name="MT2076" />
+<a name="MT2077" />
+<a name="MT2078" />
+<a name="MT2079" />
+
+### MT207x: Metadata Reducer failed processing `...`.
 
 Something unexpected occured when trying to reduce the metadata from the application. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-<a name="MT2080" />
+<!-- MT2070 - MT2079 used by the above error -->
 
-### MT2080: MarkNSObjects failed processing `...`.
+<a name="MT2080" />
+<a name="MT2081" />
+<a name="MT2082" />
+<a name="MT2083" />
+<a name="MT2084" />
+<a name="MT2085" />
+<a name="MT2086" />
+<a name="MT2087" />
+<a name="MT2088" />
+<a name="MT2089" />
+
+### MT208x: MarkNSObjects failed processing `...`.
 
 Something unexpected occured when trying to mark `NSObject` subclasses from the application. The assembly causing the issue is named in the error message. To fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
-<a name="MT2090" />
+<!-- MT2080 - MT2089 used by the above error -->
 
-### MT2090: Inliner failed processing `...`.
+<a name="MT2090" />
+<a name="MT2091" />
+<a name="MT2092" />
+<a name="MT2093" />
+<a name="MT2094" />
+<a name="MT2095" />
+<a name="MT2096" />
+<a name="MT2097" />
+<a name="MT2098" />
+<a name="MT2099" />
+
+### MT209x: Inliner failed processing `...`.
 
 Something unexpected occured when trying to inline code from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<!-- MT2090 - MT2099 used by the above error -->
 
 <!-- MT21xx: more linker errors -->
 
 <!--- 2100 used by mmp -->
-
-<a name="MT2100" />
-
-### MT2100: Smart Enum Conversion Preserver failed processing `...`.
-
-Something unexpected occured when trying to mark the conversion methods for smart enums from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
 
 <a name="MT2101" />
 
@@ -1786,6 +1889,85 @@ The assembly causing the issue is named in the error message. To fix this issue 
 Mixed-mode assemblies can not be processed by the linker.
 
 See https://msdn.microsoft.com/en-us/library/x0w2664k.aspx for more information on mixed-mode assemblies.
+
+<a name="MT2105" />
+
+### MT2105: The method {method} contains a '{handlerType}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.
+
+Currently Xamarin.iOS does not support the 'filter' exception clauses when
+compiling to bitcode. Any methods containing such code will throw a
+NotSupportedException exception when the method is executed (the exception
+will be thrown at method entry, even if execution would follow a path that did
+not involve the 'filter' exception clause).
+
+This is an example of code that's not supported:
+
+```csharp
+void MyMethod ()
+{
+	try {
+		throw new Exception ("FilterMe");
+	} catch (Exception e)
+		when (e.Message == "FilterMe") // <- This is the filter clause.
+	{
+		Console.WriteLine ("filtered");
+	}
+}
+```
+
+This method will behave like the following example, throwing an exception at
+method entry:
+
+```csharp
+void MyMethod ()
+{
+	throw new NotSupportedException ("This method contains IL not supported when compiled to bitcode.");
+}
+```
+
+<a name="MT2200" />
+<a name="MT2201" />
+<a name="MT2202" />
+<a name="MT2203" />
+<a name="MT2204" />
+<a name="MT2205" />
+<a name="MT2206" />
+<a name="MT2207" />
+<a name="MT2208" />
+<a name="MT2209" />
+
+### MT220x: Smart Enum Conversion Preserver failed processing `...`.
+
+Something unexpected occured when trying to mark the conversion methods for smart enums from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<!-- MT2200 - MT2209 used by the above error -->
+
+<a name="MT2210" />
+<a name="MT2211" />
+<a name="MT2212" />
+<a name="MT2213" />
+<a name="MT2214" />
+<a name="MT2215" />
+<a name="MT2216" />
+<a name="MT2217" />
+<a name="MT2218" />
+<a name="MT2219" />
+
+### MT221x: Incompatible Code For Bitcode Remover failed processing `...`.
+
+Something unexpected occured when trying to remove incompatible code for
+bitcode from the application. The assembly causing the issue is named in the
+error message. In order to fix this issue the assembly will need to be
+provided in a new issue on
+[github](https://github.com/xamarin/xamarin-macios/issues/new) along with a
+complete build log with verbosity enabled (i.e. `-v -v -v -v` in the
+**Additional mtouch arguments** in the project's watchOS Build options).
+
+It's usually possible to work around this by adding
+`--optimize=-remove-unsupported-il-for-bitcode` to the **Additional mtouch arguments**
+in the project's watchOS Build options.
+
+<!-- MT2210 - MT2219 used by the above error -->
 
 ## MT3xxx: AOT error messages
 
@@ -2643,6 +2825,8 @@ There are two main reasons for this:
 * The symbol is correct, but it's a symbol that's already preserved by normal
   means (some build options causes the exact list of dynamic symbols to vary).
 
+<!-- 5219 and 5220 used by mmp -->
+
 ### MT53xx: Other tools
 
 <!--
@@ -3307,7 +3491,29 @@ It's possible to force the linker to keep the dynamic registrar by adding
 `--optimize=-remove-dynamic-registrar` to the additional mtouch arguments in
 the project's iOS Build options.
 
-### <a name="MM8027"/>MM8027: Failed to marshal the Objective-C object {handle} (type: {managed_type}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance.
+<a name="MT8025" />
+
+#### MT8025: Failed to compute the token reference for the type '{type.AssemblyQualifiedName}' because {reasons}
+
+This indicates a bug in Xamarin.iOS. Please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new).
+
+A potential workaround would be to disable the `register-protocols`
+optimization, by passing `--optimize:-register-protocols` as an additional mmp
+argument in the project's Mac Build options.
+
+<a name="MT8026" />
+
+#### MT8026: * is not supported when the dynamic registrar has been linked away.
+ 
+This usually indicates a bug in Xamarin.iOS, because the dynamic registrar should not be linked away if it's needed. Please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new).
+ 
+It's possible to force the linker to keep the dynamic registrar by adding
+`--optimize=-remove-dynamic-registrar` to the additional mtouch arguments in
+the project's iOS Build options.
+
+<a name="MT8027" />
+
+### MT8027: Failed to marshal the Objective-C object {handle} (type: {managed_type}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance.
 
 This occurs when the Xamarin.iOS runtime finds an Objective-C object without a
 corresponding managed wrapper object, and when trying to create that managed
@@ -3335,6 +3541,75 @@ There are a few reasons this may happen:
 
 * This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
-### <a name="MT8028"/>MT8028: The runtime function {function} has been linked away.
+<a name="MT8028" />
+
+### MT8028: The runtime function {function} has been linked away.
 
 This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
+
+<a name="MT8029" />
+
+### MT8029: Unable to marshal the {byref?} parameter {index} whose managed type is {type} to managed.
+
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.iOS, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MT8030" />
+
+### MT8030: Unable to marshal the {byref?} parameter {index} whose managed type is {type} to Objective-C.
+
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.iOS, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MT8031" />
+
+### MT8031: Unable to convert from an NSArray to a managed array of {type}.
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.iOS, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MT8032" />
+
+### MT8032: Unable to convert from a managed array of {type} to an NSArray.
+
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.iOS, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MT8033" />
+
+### MT8033: Unable to marshal the return value of type {type} to Objective-C.
+
+This usually indicates a bug in Objective-C binding code.
+
+If the managed binding is from a third-party vendor, please contact the vendor.
+
+If the managed binding is shipped with Xamarin.iOS, please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
+
+<a name="MT8034" />
+
+### MT8034: Failed to lookup the required marshalling information.
+
+This exception will have an inner exception which gives the reason for the failure.
+
+<a name="MT8035" />
+
+### MT8035: Failed to get the 'this' instance in a method call to {method}.
+
+This exception will have an inner exception which gives the reason for the failure.
+
+<a name="MT8036" />
+
+### MT8036: Failed to convert the value at index {index} from {type} to {type}.
+
+This exception will have an inner exception which gives the reason for the failure.

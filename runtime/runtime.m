@@ -274,17 +274,17 @@ xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 }
 
 MonoObject *
-xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle)
+xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
 	int32_t created;
-	return xamarin_get_nsobject_with_type_for_ptr_created (self, owns, type, &created, selector, managed_method, exception_gchandle);
+	return xamarin_get_nsobject_with_type_for_ptr_created (self, owns, type, &created, exception_gchandle);
 }
 
 MonoObject *
-xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, SEL selector, MonoMethod *managed_method, guint32 *exception_gchandle)
+xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -305,7 +305,7 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 			return mobj;
 	}
 
-	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, selector, managed_method == NULL ? NULL : mono_method_get_object (mono_domain_get (), managed_method, NULL), exception_gchandle);
+	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, exception_gchandle);
 }
 
 MonoObject *
@@ -864,10 +864,6 @@ gc_toggleref_callback (MonoObject *object)
 	return res;
 }
 
-typedef struct {
-	int dummy;
-} NRCProfiler;
-
 static void
 gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
 {
@@ -896,12 +892,9 @@ gc_enable_new_refcount (void)
 	pthread_mutex_init (&framework_peer_release_lock, &attr);
 	pthread_mutexattr_destroy (&attr);
 
-	NRCProfiler *prof = (NRCProfiler *) malloc (sizeof (NRCProfiler));
-
 	mono_gc_toggleref_register_callback (gc_toggleref_callback);
 
 	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::RegisterToggleRef" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
-	mono_profiler_install ((MonoProfiler *) prof, NULL);
 	mono_profiler_install_gc (gc_event_callback, NULL);
 }
 
@@ -913,6 +906,19 @@ get_class_from_name (MonoImage* image, const char *nmspace, const char *name, bo
 	if (!rv && !optional)
 		xamarin_assertion_message ("Fatal error: failed to load the class '%s.%s'\n.", nmspace, name);
 	return rv;
+}
+
+struct _MonoProfiler {
+	int dummy;
+};
+
+static void
+xamarin_install_mono_profiler ()
+{
+	static _MonoProfiler profiler = { 0 };
+	// This must be done before any other mono_profiler_install_* functions are called
+	// (currently gc_enable_new_refcount and xamarin_install_nsautoreleasepool_hooks).
+	mono_profiler_install (&profiler, NULL);
 }
 
 bool
@@ -1405,6 +1411,8 @@ xamarin_initialize ()
 
 	if (!register_assembly (assembly, &exception_gchandle))
 		xamarin_process_managed_exception_gchandle (exception_gchandle);
+
+	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or gc_enable_new_refcount
 
 	xamarin_install_nsautoreleasepool_hooks ();
 
@@ -2497,13 +2505,18 @@ xamarin_throw_product_exception (int code, const char *message)
 guint32
 xamarin_create_product_exception (int code, const char *message)
 {
+	return xamarin_create_product_exception_with_inner_exception (code, 0, message);
+}
+
+guint32
+xamarin_create_product_exception_with_inner_exception (int code, guint32 inner_exception_gchandle, const char *message)
+{
 	guint32 exception_gchandle = 0;
-	guint32 handle = xamarin_create_product_exception_for_error (code, message, &exception_gchandle);
+	guint32 handle = xamarin_create_product_exception_for_error (code, inner_exception_gchandle, message, &exception_gchandle);
 	if (exception_gchandle != 0)
 		return exception_gchandle;
 	return handle;
 }
-
 void
 xamarin_insert_dllmap ()
 {

@@ -34,6 +34,7 @@ namespace MonoMac.Tuner {
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 		public bool SkipExportedSymbolsInSdkAssemblies { get; set; }
+		public MonoMacLinkContext LinkContext { get; set; }
 		public Target Target { get; set; }
 		public Application Application { get { return Target.App; } }
 
@@ -72,7 +73,7 @@ namespace MonoMac.Tuner {
 
 	class Linker {
 
-		public static void Process (LinkerOptions options, out LinkContext context, out List<string> assemblies)
+		public static void Process (LinkerOptions options, out MonoMacLinkContext context, out List<string> assemblies)
 		{
 			var pipeline = CreatePipeline (options);
 
@@ -118,7 +119,7 @@ namespace MonoMac.Tuner {
 			assemblies = ListAssemblies (context);
 		}
 
-		static LinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)
+		static MonoMacLinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)
 		{
 			var context = new MonoMacLinkContext (pipeline, options.Resolver);
 			context.CoreAction = AssemblyAction.Link;
@@ -130,6 +131,7 @@ namespace MonoMac.Tuner {
 			context.OutputDirectory = options.OutputDirectory;
 			context.StaticRegistrar = options.Target.StaticRegistrar;
 			context.Target = options.Target;
+			options.LinkContext = context;
 			return context;
 		}
 
@@ -158,19 +160,7 @@ namespace MonoMac.Tuner {
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.AppendStep (new CoreTypeMapStep ());
 
-				var subdispatcher = new SubStepDispatcher {
-					new ApplyPreserveAttribute (),
-					new OptimizeGeneratedCodeSubStep (options),
-					new RemoveUserResourcesSubStep (),
-					new CoreRemoveAttributes (),
-					new CoreHttpMessageHandler (options),
-					new MarkNSObjects (),
-				};
-				// CoreRemoveSecurity can modify non-linked assemblies
-				// but the conditions for this cannot happen if only the platform assembly is linked
-				if (options.LinkMode != LinkMode.Platform)
-					subdispatcher.Add (new CoreRemoveSecurity ());
-				pipeline.AppendStep (subdispatcher);
+				pipeline.AppendStep (GetSubSteps (options));
 
 				pipeline.AppendStep (new MonoMacPreserveCode (options));
 				pipeline.AppendStep (new PreserveCrypto ());
@@ -196,6 +186,27 @@ namespace MonoMac.Tuner {
 			pipeline.AppendStep (new OutputStep ());
 
 			return pipeline;
+		}
+
+		static SubStepDispatcher GetSubSteps (LinkerOptions options)
+		{
+			SubStepDispatcher sub = new SubStepDispatcher ();
+			sub.Add (new ApplyPreserveAttribute ());
+			sub.Add (new OptimizeGeneratedCodeSubStep (options));
+			sub.Add (new RemoveUserResourcesSubStep ());
+			// OptimizeGeneratedCodeSubStep and RemoveUserResourcesSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
+			if (options.Application.Optimizations.CustomAttributesRemoval == true)
+				sub.Add (new CoreRemoveAttributes ());
+
+			sub.Add (new CoreHttpMessageHandler (options));
+			sub.Add (new MarkNSObjects ());
+
+			// CoreRemoveSecurity can modify non-linked assemblies
+			// but the conditions for this cannot happen if only the platform assembly is linked
+			if (options.LinkMode != LinkMode.Platform)
+				sub.Add (new CoreRemoveSecurity ());
+
+			return sub;
 		}
 
 		static List<string> ListAssemblies (LinkContext context)
@@ -283,10 +294,10 @@ namespace MonoMac.Tuner {
 
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
-			ProcessReferences (assembly);
+			ProcessAssemblyReferences (assembly);
 		}
 
-		void ProcessReferences (AssemblyDefinition assembly)
+		void ProcessAssemblyReferences (AssemblyDefinition assembly)
 		{
 			if (_references.Contains (assembly.Name))
 				return;

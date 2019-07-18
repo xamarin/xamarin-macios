@@ -35,3 +35,6 @@
 !missing-selector! NSObject::imageTitle not bound
 !missing-selector! NSObject::imageUID not bound
 !missing-selector! NSObject::imageVersion not bound
+
+# Initial result from new rule missing-release-attribute-on-return-value
+!missing-release-attribute-on-return-value! ImageKit.IKImageBrowserCell ImageKit.IKImageBrowserView::NewCell(ImageKit.IIKImageBrowserItem)'s selector's ('newCellForRepresentedItem:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

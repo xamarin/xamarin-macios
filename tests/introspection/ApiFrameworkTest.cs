@@ -78,10 +78,10 @@ namespace Introspection {
 			// not a framework, largely p/invokes to /usr/lib/libSystem.dylib
 			case "Darwin":
 				return true;
+#endif
 			// not directly bindings
 			case "System.Net.Http":
 				return true;
-#endif
 			default:
 				return false;
 			}
@@ -121,6 +121,16 @@ namespace Introspection {
 					Console.WriteLine ($"Namespace candidate '{ns}'");
 				if (frameworks.TryGetValue (ns, out var f))
 					continue;
+				// skip System.Net.Http handlers (since we moved them out of the BCL)
+				switch (ns) {
+				case "System.Net.Http":
+					switch (t.Name) {
+					case "CFNetworkHandler":
+					case "NSUrlSessionHandler":
+						continue;
+					}
+					break;
+				}
 				// Either Skip method or Frameworks.cs needs to be updated
 				ReportError ("Unknown framework '{0}'", ns);
 			}

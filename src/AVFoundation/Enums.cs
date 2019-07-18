@@ -839,10 +839,12 @@ namespace AVFoundation {
 		Passthrough = 9, // AVAssetExportPresetPassthrough
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVOutputSettingsPresetHEVC1920x1080")]
 		PresetHevc1920x1080 = 11, 
 
 		[iOS (11, 0), Mac (10, 13)]
+		[TV (11, 0)]
 		[Field ("AVOutputSettingsPresetHEVC3840x2160")]
 		PresetHevc3840x2160 = 12,
 	}
@@ -998,5 +1000,13 @@ namespace AVFoundation {
 	public enum AVAudioSessionActivationOptions : ulong
 	{
 		None = 0x0,
+	}
+
+	[Native]
+	public enum AVAudioSessionPromptStyle : ulong
+	{
+		None = 0x6e6f6e65, // 1852796517 - 'none'
+		Short = 0x73687274, // 1936224884 - 'shrt'
+		Normal = 0x6e726d6c, //1852992876 - 'nrml'
 	}
 }

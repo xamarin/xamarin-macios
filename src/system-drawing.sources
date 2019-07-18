@@ -1,11 +1,6 @@
-SHARED_SYSTEM_DRAWING_SOURCES =  \
-	$(MONO_PATH)/mcs/build/common/Locale.cs                            \
-	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/Point.cs      \
-	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/PointF.cs     \
-	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/Rectangle.cs  \
-	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/RectangleF.cs \
-	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/Size.cs       \
-	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/SizeF.cs      \
+SHARED_SYSTEM_DRAWING_SOURCES = System.Drawing/PointSizeRectangleTypeForwarders.cs
+
+
 
 IOS_SYSTEM_DRAWING_SOURCES = \
 	$(TOP)/sysdrawing-coregraphics/System.Drawing/Brush.cs \

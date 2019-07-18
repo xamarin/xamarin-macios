@@ -75,7 +75,7 @@ public partial class Generator {
 			var fa = AttributeManager.GetCustomAttribute<FieldAttribute> (f);
 			if (fa == null)
 				continue;
-			if (f.IsUnavailable ())
+			if (f.IsUnavailable (this))
 				continue;
 			if (fa.SymbolName == null)
 				null_field = new Tuple<FieldInfo, FieldAttribute> (f, fa);

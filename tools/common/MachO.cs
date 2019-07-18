@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
 
 #if MLAUNCH
 using Xamarin.Launcher;
+#elif XAMARIN_HOSTING
+using Xamarin.Hosting;
 #else
 using Xamarin.Bundler;
 #endif
@@ -63,7 +66,7 @@ namespace Xamarin
 			ARM64_32 = 1024,
 		}
 
-		internal enum LoadCommands : uint
+		public enum LoadCommands : uint
 		{
 			//#define LC_REQ_DYLD 0x80000000
 			ReqDyld = 0x80000000,
@@ -118,8 +121,8 @@ namespace Xamarin
 			//#define	LC_DYLD_INFO 	0x22	/* compressed dyld information */
 			//#define	LC_DYLD_INFO_ONLY (0x22|LC_REQ_DYLD)	/* compressed dyld information only */
 			//#define	LC_LOAD_UPWARD_DYLIB (0x23 | LC_REQ_DYLD) /* load upward dylib */
-			//#define LC_VERSION_MIN_MACOSX 0x24   /* build for MacOSX min OS version */
-			//#define LC_VERSION_MIN_IPHONEOS 0x25 /* build for iPhoneOS min OS version */
+			MinMacOSX = 0x24, //#define LC_VERSION_MIN_MACOSX 0x24   /* build for MacOSX min OS version */
+			MiniPhoneOS = 0x25,//#define LC_VERSION_MIN_IPHONEOS 0x25 /* build for iPhoneOS min OS version */
 			//#define LC_FUNCTION_STARTS 0x26 /* compressed table of function start addresses */
 			//#define LC_DYLD_ENVIRONMENT 0x27 /* string for dyld to treat
 			//			like environment variable */
@@ -129,6 +132,22 @@ namespace Xamarin
 			//#define LC_DYLIB_CODE_SIGN_DRS 0x2B /* Code signing DRs copied from linked dylibs */
 			//#define	LC_ENCRYPTION_INFO_64 0x2C /* 64-bit encrypted segment information */
 			//#define LC_LINKER_OPTION 0x2D /* linker options in MH_OBJECT files */
+			//#define LC_LINKER_OPTIMIZATION_HINT 0x2E /* optimization hints in MH_OBJECT files */
+			MintvOS = 0x2f,//#define LC_VERSION_MIN_TVOS 0x2F /* build for AppleTV min OS version */
+			MinwatchOS = 0x30,//#define LC_VERSION_MIN_WATCHOS 0x30 /* build for Watch min OS version */
+			//#define LC_NOTE 0x31 /* arbitrary data included within a Mach-O file */
+			BuildVersion = 0x32,//#define LC_BUILD_VERSION 0x32 /* build for platform min OS version */
+		}
+
+		public enum Platform : uint {
+			MacOS = 1,
+			IOS = 2,
+			TvOS = 3,
+			WatchOS = 4,
+			BridgeOS = 5,
+			IOSSimulator = 7,
+			TvOSSimulator = 8,
+			WatchOSSimulator = 9,
 		}
 
 		internal static uint FromBigEndian (uint number)
@@ -183,7 +202,7 @@ namespace Xamarin
 			default:
 				if (StaticLibrary.IsStaticLibrary (reader)) {
 					var sl = new StaticLibrary ();
-					sl.Read (reader);
+					sl.Read (filename, reader, reader.BaseStream.Length);
 					return sl;
 				}
 				throw new Exception (string.Format ("File format not recognized: {0} (magic: 0x{1})", filename, magic.ToString ("X")));
@@ -204,8 +223,13 @@ namespace Xamarin
 			var file = ReadFile (filename);
 			var fatfile = file as FatFile;
 			if (fatfile != null) {
-				foreach (var ff in fatfile.entries)
-					yield return ff.entry;
+				foreach (var ff in fatfile.entries) {
+					if (ff.entry != null)
+						yield return ff.entry;
+					if (ff.static_library != null)
+						foreach (var obj in ff.static_library.ObjectFiles)
+							yield return obj;
+				}
 			} else {
 				var mf = file as MachOFile;
 				if (mf != null)
@@ -450,9 +474,73 @@ namespace Xamarin
 
 	public class StaticLibrary
 	{
-		internal void Read (BinaryReader reader)
+		List<MachOFile> object_files = new List<MachOFile> ();
+
+		public IEnumerable<MachOFile> ObjectFiles { get { return object_files; } }
+
+		static string ReadString (BinaryReader reader, int length)
+		{
+			var bytes = reader.ReadBytes (length);
+			for (var i = 0; i < bytes.Length; i++) {
+				if (bytes [i] == 0) {
+					length = i;
+					break;
+				}
+			}
+			return Encoding.ASCII.GetString (bytes, 0, length);
+		}
+
+		static long ReadDecimal (BinaryReader reader, int length)
+		{
+			var str = ReadString (reader, length);
+			str = str.TrimEnd (' ');
+			return long.Parse (str);
+		}
+
+		static long ReadOctal (BinaryReader reader, int length)
+		{
+			var str = ReadString (reader, length);
+			str = str.TrimEnd (' ');
+			return Convert.ToInt64 (str, 8);
+		}
+
+		internal void Read (string filename, BinaryReader reader, long size)
 		{
 			IsStaticLibrary (reader, throw_if_error: true);
+
+			var pos = reader.BaseStream.Position;
+			reader.BaseStream.Position += 8; // header
+
+			byte [] bytes;
+			while (reader.BaseStream.Position < pos + size) {
+				var fileIdentifier = ReadString (reader, 16);
+				var fileModificationTimestamp = ReadDecimal (reader, 12);
+				var ownerId = ReadDecimal (reader, 6);
+				var groupId = ReadDecimal (reader, 6);
+				var fileMode = ReadOctal (reader, 8);
+				var fileSize = ReadDecimal (reader, 10);
+				bytes = reader.ReadBytes (2); // ending characters
+				if (bytes [0] != 0x60 && bytes [1] != 0x0A)
+					throw ErrorHelper.CreateError (1605, $"Invalid entry '{fileIdentifier}' in the static library '{filename}', entry header doesn't end with 0x60 0x0A (found '0x{bytes [0].ToString ("x")} 0x{bytes [1].ToString ("x")}')");
+
+				if (fileIdentifier.StartsWith ("#1/", StringComparison.Ordinal)) {
+					var nameLength = int.Parse (fileIdentifier.Substring (3).TrimEnd (' '));
+					fileIdentifier = ReadString (reader, nameLength);
+					fileSize -= nameLength;
+				}
+
+				var nextPosition = reader.BaseStream.Position + fileSize;
+				if (MachOFile.IsMachOLibrary (null, reader)) {
+					var file = new MachOFile (fileIdentifier);
+					file.Read (reader);
+					object_files.Add (file);
+				}
+				// byte position is always even after each file.
+				if (nextPosition % 1 == 1)
+					nextPosition++;
+				reader.BaseStream.Position = nextPosition;
+			}
+
 		}
 
 		public static bool IsStaticLibrary (BinaryReader reader, bool throw_if_error = false)
@@ -464,7 +552,7 @@ namespace Xamarin
 			reader.BaseStream.Position = pos;
 
 			if (throw_if_error && !rv)
-				throw ErrorHelper.CreateError (1601, "Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.", System.Text.Encoding.ASCII.GetString (bytes, 0, 7));
+				throw ErrorHelper.CreateError (1601, "Not a Mach-O static library (unknown header '{0}', expected '!<arch>').", System.Text.Encoding.ASCII.GetString (bytes, 0, 7));
 
 			return rv;
 		}
@@ -495,6 +583,8 @@ namespace Xamarin
 		public uint reserved { get { return is_big_endian ? MachO.ToBigEndian (_reserved) : _reserved; } }
 
 		public List<LoadCommand> load_commands;
+
+		public string Filename { get { return filename; } }
 
 		public MachOFile (FatEntry parent)
 		{
@@ -639,6 +729,34 @@ namespace Xamarin
 					uuidCmd.cmdsize = reader.ReadUInt32 ();
 					uuidCmd.uuid = reader.ReadBytes (16); // defined in the header as uint8_t uuid [16]
 					lc = uuidCmd;
+					break;
+				case MachO.LoadCommands.MintvOS:
+				case MachO.LoadCommands.MinMacOSX:
+				case MachO.LoadCommands.MiniPhoneOS:
+				case MachO.LoadCommands.MinwatchOS:
+					var minCmd = new MinCommand ();
+					minCmd.cmd = reader.ReadUInt32 ();
+					minCmd.cmdsize = reader.ReadUInt32 ();
+					minCmd.version = reader.ReadUInt32 ();
+					minCmd.sdk = reader.ReadUInt32 ();
+					lc = minCmd;
+					break;
+				case MachO.LoadCommands.BuildVersion:
+					var buildVer = new BuildVersionCommand ();
+					buildVer.cmd = reader.ReadUInt32 ();
+					buildVer.cmdsize = reader.ReadUInt32 ();
+					buildVer.platform = reader.ReadUInt32 ();
+					buildVer.minos = reader.ReadUInt32 ();
+					buildVer.sdk = reader.ReadUInt32 ();
+					buildVer.ntools = reader.ReadUInt32 ();
+					buildVer.tools = new BuildVersionCommand.BuildToolVersion[buildVer.ntools];
+					for (int j = 0; j < buildVer.ntools; j++) {
+						var buildToolVer = new BuildVersionCommand.BuildToolVersion ();
+						buildToolVer.tool = reader.ReadUInt32 ();
+						buildToolVer.version = reader.ReadUInt32 ();
+						buildVer.tools[j] = buildToolVer;
+					}
+					lc = buildVer;
 					break;
 				default:
 					lc = new LoadCommand ();
@@ -795,7 +913,7 @@ namespace Xamarin
 				entry.Read (reader);
 			} else if (StaticLibrary.IsStaticLibrary (reader)) {
 				static_library = new StaticLibrary ();
-				static_library.Read (reader);
+				static_library.Read (parent?.Filename, reader, size);
 			} else {
 				throw ErrorHelper.CreateError (1603, "Unknown format for fat entry at position {0} in {1}.", offset, parent.Filename);
 			}
@@ -805,6 +923,10 @@ namespace Xamarin
 	public class LoadCommand {
 		public uint cmd;
 		public uint cmdsize;
+
+		public MachO.LoadCommands Command {
+			get { return (MachO.LoadCommands) cmd; }
+		}
 
 #if DEBUG
 		public virtual void Dump ()
@@ -844,5 +966,53 @@ namespace Xamarin
 			Console.WriteLine ("    uuid: {0}", uuid);
 		}
 #endif
+	}
+
+	public class MinCommand : LoadCommand {
+		public uint version; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
+		public uint sdk; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
+
+		Version DeNibble (uint value)
+		{
+			return new Version ((int)(value >> 16), (int)((value >> 8) & 0xFF), (int)(value & 0xFF));
+		}
+
+		public Version Version {
+			get { return DeNibble (version); }
+		}
+
+		public Version Sdk {
+			get { return DeNibble (sdk); }
+		}
+	}
+
+	public class BuildVersionCommand : LoadCommand {
+		public uint platform;
+		public uint minos; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
+		public uint sdk; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
+		public uint ntools;
+		public BuildToolVersion[] tools;
+
+		public class BuildToolVersion {
+			public uint tool;
+			public uint version;
+		}
+
+		Version DeNibble (uint value)
+		{
+			return new Version ((int)(value >> 16), (int)((value >> 8) & 0xFF), (int)(value & 0xFF));
+		}
+
+		public Version MinOS {
+			get { return DeNibble (minos); }
+		}
+
+		public Version Sdk {
+			get { return DeNibble (sdk); }
+		}
+
+		public MachO.Platform Platform {
+			get { return (MachO.Platform)platform; }
+		}
 	}
 }

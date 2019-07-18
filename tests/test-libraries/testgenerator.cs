@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -139,9 +140,9 @@ static class C {
 		case 'c':
 		case 's':
 		case 'i':
-		case 'l': return ((i + 1) * multiplier).ToString ();
-		case 'f': return (3.14f * (i + 1) * multiplier) + "f";
-		case 'd': return (1.23f * (i + 1) * multiplier).ToString ();
+		case 'l': return ((i + 1) * multiplier).ToString (CultureInfo.InvariantCulture);
+		case 'f': return (3.14f * (i + 1) * multiplier).ToString (CultureInfo.InvariantCulture) + "f";
+		case 'd': return (1.23f * (i + 1) * multiplier).ToString (CultureInfo.InvariantCulture);
 		default:
 			throw new NotImplementedException ();
 		}
@@ -156,7 +157,8 @@ static class C {
 			for (int i = 0; i < s.Length; i++) {
 				w.Append (GetNativeName (s [i])).Append (" x").Append (i).Append ("; ");
 			}
-			w.AppendLine ($"}} S{s};");
+			w.AppendLine ($"}};");
+			w.AppendLine ($"typedef struct S{s} S{s};");
 		}
 
 		File.WriteAllText ("libtest.structs.h", w.ToString ());
@@ -769,6 +771,7 @@ namespace Bindings.Test
 
 	static void WriteAsserts (StringBuilder w, BindAsData v)
 	{
+		w.AppendLine ($"\t\t\tAssertIfIgnored ();");
 		if (v.MinXcodeVersion != null) {
 			w.AppendLine ($"\t\t\tTestRuntime.AssertXcodeVersion ({v.MinXcodeVersion.Major}, {v.MinXcodeVersion.Minor});");
 			w.AppendLine ();
@@ -828,12 +831,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class RegistrarTestGenerated {");
+	public partial class RegistrarTestGenerated {");
 
 		foreach (var s in structs) {
 			w.AppendLine ("\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void Test_{s} ()");
 			w.AppendLine ("\t\t{");
+			w.AppendLine ($"\t\t\tAssertIfIgnored ();");
 			w.AppendLine ("\t\t\tusing (var tc = new ObjCRegistrarTest ()) {");
 			w.AppendLine ($"\t\t\t\tvar s = tc.PS{s};");
 			for (int i = 0; i < s.Length; i++)
@@ -1461,7 +1465,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class TrampolineTestGenerated {");
+	public partial class TrampolineTestGenerated {");
 		w.AppendLine ("\t\tconst string LIBOBJC_DYLIB = \"/usr/lib/libobjc.dylib\";");
 		w.AppendLine ();
 
@@ -1517,14 +1521,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		w.AppendLine ("\t\t}");
 
 		foreach (var s in structs) {
-			if (s.Length == 1 || s.Contains ('c'))
-				continue; // our trampolines don't currently like structs with a single member, nor char members
-
 			bool never;
 			w.AppendLine ();
 			w.AppendLine ($"\t\t[Test]");
 			w.AppendLine ($"\t\tpublic void Test_{s} ()");
 			w.AppendLine ($"\t\t{{");
+			w.AppendLine ($"\t\t\tAssertIfIgnored ();");
 			w.AppendLine ($"\t\t\tIntPtr class_ptr = Class.GetHandle (typeof (GeneratedStretTrampolines));");
 			w.AppendLine ($"\t\t\tS{s} rv = new S{s} ();");
 			w.AppendLine ($"\t\t\tdouble rvd;");

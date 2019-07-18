@@ -6,6 +6,13 @@
 #include "xamarin/mono-runtime.h"
 #include "xamarin/runtime.h"
 
+//#define TRACE
+#ifdef TRACE
+#define LOGZ(...) fprintf (stderr, __VA_ARGS__);
+#else
+#define LOGZ(...) ;
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -42,6 +49,7 @@ typedef void (*marshal_return_value_func) (void *context, const char *type, size
 void xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_func iterator, marshal_return_value_func marshal_return_value, void *context);
 
 int xamarin_get_frame_length (id self, SEL sel);
+const char * xamarin_skip_type_name (const char *ptr);
 
 #ifdef __cplusplus
 } /* extern "C" */

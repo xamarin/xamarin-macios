@@ -259,6 +259,7 @@ namespace ObjCRuntime {
 #if !XAMMAC_SYSTEM_MONO
 			UseAutoreleasePoolInThreadPool = true;
 #endif
+			IsARM64CallingConvention = GetIsARM64CallingConvention (); // Can only be done after Runtime.Arch is set (i.e. InitializePlatform has been called).
 
 			objc_exception_mode = options->MarshalObjectiveCExceptionMode;
 			managed_exception_mode = options->MarshalManagedExceptionMode;
@@ -656,12 +657,7 @@ namespace ObjCRuntime {
 
 		static unsafe IntPtr GetMethodFromToken (uint token_ref)
 		{
-			var method = Class.ResolveTokenReference (token_ref, 0x06000000);
-
-			var mb = method as MethodBase;
-			if (method != null && mb == null)
-				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
-			
+			var method = Class.ResolveMethodTokenReference (token_ref);
 			if (method != null)
 				return ObjectWrapper.Convert (method);
 
@@ -670,19 +666,15 @@ namespace ObjCRuntime {
 
 		static unsafe IntPtr GetGenericMethodFromToken (IntPtr obj, uint token_ref)
 		{
-			var method = Class.ResolveTokenReference (token_ref, 0x06000000);
+			var method = Class.ResolveMethodTokenReference (token_ref);
 			if (method == null)
 				return IntPtr.Zero;
 
-			var mb = method as MethodBase;
-			if (mb == null)
-				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
-
 			var nsobj = ObjectWrapper.Convert (obj) as NSObject;
 			if (nsobj == null)
-				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {method.DeclaringType.FullName}.{method.Name} (token reference: 0x{token_ref:X}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
-			return ObjectWrapper.Convert (FindClosedMethod (nsobj.GetType (), mb));
+			return ObjectWrapper.Convert (FindClosedMethod (nsobj.GetType (), method));
 		}
 
 		static IntPtr TryGetOrConstructNSObjectWrapped (IntPtr ptr)
@@ -700,22 +692,22 @@ namespace ObjCRuntime {
 			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, type));
 		}
 			
-		static IntPtr GetINativeObject_Static (IntPtr ptr, bool owns, string typename, string ifacename)
+		static IntPtr GetINativeObject_Static (IntPtr ptr, bool owns, uint iface_token, uint implementation_token)
 		{
 			/* 
 			 * This method is called from generated code from the static registrar.
 			 */
 
-			var iface = Type.GetType (ifacename, true);
-			var type = Type.GetType (typename, true);
+			var iface = Class.ResolveTypeTokenReference (iface_token);
+			var type = Class.ResolveTypeTokenReference (implementation_token);
 			return ObjectWrapper.Convert (GetINativeObject (ptr, owns, iface, type));
 		}
 
-		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created, IntPtr selector, IntPtr method)
+		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created)
 		{
 			// It doesn't work to use System.Type in the signature, we get garbage.
 			var type = (System.Type) ObjectWrapper.Convert (type_ptr);
-			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created, selector, method));
+			return ObjectWrapper.Convert (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created));
 		}
 
 		static void Dispose (IntPtr mobj)
@@ -752,9 +744,21 @@ namespace ObjCRuntime {
 			Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, is_static, obj, ref mthis, desc);
 		}
 
-		static int CreateProductException (int code, string msg)
+		// If inner_exception_gchandle is provided, it will be freed.
+		static int CreateProductException (int code, uint inner_exception_gchandle, string msg)
 		{
-			var ex = ErrorHelper.CreateError (code, msg);
+			Exception inner_exception = null;
+			if (inner_exception_gchandle != 0) {
+				GCHandle gchandle = GCHandle.FromIntPtr (new IntPtr (inner_exception_gchandle));
+				inner_exception = (Exception) gchandle.Target;
+				gchandle.Free ();
+			}
+			Exception ex;
+			if (inner_exception != null) {
+				ex = ErrorHelper.CreateError (code, inner_exception, msg);
+			} else {
+				ex = ErrorHelper.CreateError (code, msg);
+			}
 			return GCHandle.ToIntPtr (GCHandle.Alloc (ex, GCHandleType.Normal)).ToInt32 ();
 		}
 
@@ -1068,7 +1072,7 @@ namespace ObjCRuntime {
 			Ignore,
 		}
 
-		static void MissingCtor (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr))
+		static void MissingCtor (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution)
 		{
 			string msg;
 
@@ -1093,26 +1097,15 @@ namespace ObjCRuntime {
 				return;
 			}
 
-			if (selector != IntPtr.Zero || method != IntPtr.Zero)
-				msg += "\nAdditional information:\n";
-
-			if (selector != IntPtr.Zero)
-				msg += $"\tSelector: {Selector.GetName (selector)}\n";
-			if (method != IntPtr.Zero) {
-				var mi = ObjectWrapper.Convert (method) as MethodBase;
-				if (mi != null)
-					msg += $"\tMethod: {mi.FullName}\n";
-			}
-
 			throw ErrorHelper.CreateError (8027, string.Format (msg, ptr.ToString ("x"), new Class (klass).Name, type.FullName));
 		}
 
-		static NSObject ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr))
+		static NSObject ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution)
 		{
 			Type type = Class.Lookup (klass);
 
 			if (type != null) {
-				return ConstructNSObject<NSObject> (ptr, type, missingCtorResolution, selector, method);
+				return ConstructNSObject<NSObject> (ptr, type, missingCtorResolution);
 			} else {
 				return new NSObject (ptr);
 			}
@@ -1125,7 +1118,7 @@ namespace ObjCRuntime {
 
 		// The generic argument T is only used to cast the return value.
 		// The 'selector' and 'method' arguments are only used in error messages.
-		static T ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) where T: class, INativeObject
+		static T ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T: class, INativeObject
 		{
 			if (type == null)
 				throw new ArgumentNullException ("type");
@@ -1133,7 +1126,7 @@ namespace ObjCRuntime {
 			var ctor = GetIntPtrConstructor (type);
 
 			if (ctor == null) {
-				MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution, selector, method);
+				MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution);
 				return null;
 			}
 
@@ -1236,7 +1229,7 @@ namespace ObjCRuntime {
 			return GetNSObject (ptr, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
-		internal static NSObject GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) {
+		internal static NSObject GetNSObject (IntPtr ptr, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue = false) {
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -1245,7 +1238,7 @@ namespace ObjCRuntime {
 			if (o != null)
 				return o;
 
-			return ConstructNSObject (ptr, Class.GetClassForObject (ptr), missingCtorResolution, selector, method);
+			return ConstructNSObject (ptr, Class.GetClassForObject (ptr), missingCtorResolution);
 		}
 
 		static public T GetNSObject<T> (IntPtr ptr) where T : NSObject
@@ -1316,7 +1309,7 @@ namespace ObjCRuntime {
 		//
 
 		// The 'selector' and 'method' arguments are only used in error messages.
-		static NSObject GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, out bool created, IntPtr selector = default (IntPtr), IntPtr method = default (IntPtr)) {
+		static NSObject GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, out bool created) {
 			created = false;
 
 			if (ptr == IntPtr.Zero)
@@ -1348,7 +1341,7 @@ namespace ObjCRuntime {
 			}
 
 			created = true;
-			return ConstructNSObject<NSObject> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound, selector, method);
+			return ConstructNSObject<NSObject> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
 		static Type LookupINativeObjectImplementation (IntPtr ptr, Type target_type, Type implementation = null)
@@ -1479,7 +1472,7 @@ namespace ObjCRuntime {
 					if (token != INVALID_TOKEN_REF) {
 						var wrapper_token = xamarin_find_protocol_wrapper_type (token);
 						if (wrapper_token != INVALID_TOKEN_REF)
-							return (Type)Class.ResolveTokenReference (wrapper_token, 0x02000000 /* TypeDef */);
+							return Class.ResolveTypeTokenReference (wrapper_token);
 					}
 				}
 			}
@@ -1580,17 +1573,18 @@ namespace ObjCRuntime {
 		extern static void NSLog (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
 #endif
 
-#if !MONOMAC && !WATCHOS
+#if !MONOMAC
 		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
 		extern static void NSLog_arm64 (IntPtr format, IntPtr p2, IntPtr p3, IntPtr p4, IntPtr p5, IntPtr p6, IntPtr p7, IntPtr p8, [MarshalAs (UnmanagedType.LPStr)] string s);
 #endif
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static void NSLog (string format, params object[] args)
 		{
 			var fmt = NSString.CreateNative ("%s");
 			var val = (args == null || args.Length == 0) ? format : string.Format (format, args);
-#if !MONOMAC && !WATCHOS
-			if (IntPtr.Size == 8 && Arch == Arch.DEVICE)
+#if !MONOMAC
+			if (IsARM64CallingConvention)
 				NSLog_arm64 (fmt, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, val);
 			else
 #endif
@@ -1691,8 +1685,75 @@ namespace ObjCRuntime {
 		[DllImport ("__Internal", EntryPoint = "xamarin_release_block_on_main_thread")]
 		public static extern void ReleaseBlockOnMainThread (IntPtr block);
 #endif
+
+		// Throws an ArgumentNullException if 'obj' is null.
+		// This method is particularly helpful when calling another constructor from a constructor, where you can't add any statements before calling the other constructor:
+		//
+		//     Foo (object obj)
+		//         : base (Runtime.ThrowOnNull (obj, nameof (obj)).Handle)
+		//     {
+		//     }
+		//
+		internal static T ThrowOnNull<T> (T obj, string name, string message = null) where T : class
+		{
+			if (obj == null) {
+				if (message == null)
+					throw new ArgumentNullException (name);
+				else
+					throw new ArgumentNullException (name, message);
+			}
+			return obj;
+		}
+
+
+		enum NXByteOrder /* unspecified in header, means most likely int */ {
+			Unknown,
+			LittleEndian,
+			BigEndian,
+		}
+
+		[StructLayout (LayoutKind.Sequential)]
+		struct NXArchInfo {
+			IntPtr name; // const char *
+			public int CpuType; // cpu_type_t -> integer_t -> int
+			public int CpuSubType; // cpu_subtype_t -> integer_t -> int
+			public NXByteOrder ByteOrder;
+			IntPtr description; // const char *
+
+			public string Name {
+				get { return Marshal.PtrToStringUTF8 (name); }
+			}
+
+			public string Description {
+				get { return Marshal.PtrToStringUTF8 (description); }
+			}
+		}
+
+		[DllImport (Constants.libSystemLibrary)]
+		static unsafe extern NXArchInfo* NXGetLocalArchInfo ();
+
+		public static bool IsARM64CallingConvention;
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		static bool GetIsARM64CallingConvention ()
+		{
+#if MONOMAC
+			return false;
+#elif __IOS__ || __TVOS__
+			return IntPtr.Size == 8 && Arch == Arch.DEVICE;
+#elif __WATCHOS__
+			if (Arch != Arch.DEVICE)
+				return false;
+			unsafe {
+				// We're assuming Apple will only release arm64-based watch cpus from now on (i.e. only non-arm64 cpu is armv7k).
+				return NXGetLocalArchInfo ()->Name != "armv7k";
+			}
+#else
+#error Unknown platform
+#endif
+		}
 	}
-		
+	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>
 	{
 		public bool Equals (IntPtr x, IntPtr y)

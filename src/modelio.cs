@@ -124,7 +124,7 @@ namespace ModelIO {
 		bool ExportAssetToUrl (NSUrl url, out NSError error);
 
 		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
-		[Export ("objectAtPath:"), NullAllowed]
+		[Export ("objectAtPath:")]
 		MDLObject GetObject (string atPath);
 
 		[Static]
@@ -532,6 +532,7 @@ namespace ModelIO {
 		MDLMaterialProperty GetProperty (MDLMaterialSemantic semantic);
 
 		[iOS (10,2), Mac (10,12,2)]
+		[TV (11,0)] // This is what apple's headers say (today)
 		[Export ("propertiesWithSemantic:")]
 		MDLMaterialProperty[] GetProperties (MDLMaterialSemantic semantic);
 
@@ -1715,10 +1716,12 @@ namespace ModelIO {
 		[return: NullAllowed]
 		CGImage GetImageFromTexture (nuint level);
 
-		[NullAllowed, Export ("texelDataWithTopLeftOrigin")]
+		[Export ("texelDataWithTopLeftOrigin")]
+		[return: NullAllowed]
 		NSData GetTexelDataWithTopLeftOrigin ();
 
-		[NullAllowed, Export ("texelDataWithBottomLeftOrigin")]
+		[Export ("texelDataWithBottomLeftOrigin")]
+		[return: NullAllowed]
 		NSData GetTexelDataWithBottomLeftOrigin ();
 
 		[Export ("texelDataWithTopLeftOriginAtMipLevel:create:")]
@@ -2335,6 +2338,7 @@ namespace ModelIO {
 	[BaseType (typeof (NSObject))]
 	interface MDLSubmeshTopology {
 		[iOS (10,2), Mac (10,12,2)]
+		[TV (10,1)]
 		[Export ("initWithSubmesh:")]
 		IntPtr Constructor (MDLSubmesh submesh);
 

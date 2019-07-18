@@ -3,10 +3,7 @@
 
 THISDIR=$(TOP)/mk
 
-COLOR_GRAY:=$(shell tput setaf 250 2>/dev/null)
-COLOR_GREEN:=$(shell tput setaf 120 2>/dev/null)
-COLOR_RED:=$(shell tput setaf 1 2>/dev/null)
-COLOR_CLEAR:=$(shell tput sgr0 2>/dev/null)
+include $(THISDIR)/colors.mk
 
 define CheckSubmoduleTemplate
 #$(eval NEEDED_$(2)_VERSION:=$(shell git --git-dir $(abspath $($(2)_PATH)/../..)/.git --work-tree $(abspath $($(2)_PATH)/../..) ls-tree HEAD --full-tree -- external/$(1) | awk -F' ' '{printf "%s",$$3}'))
@@ -66,19 +63,15 @@ endef
 
 
 $(shell rm -f .check-versions-failure)
-$(eval $(call CheckSubmoduleTemplate,mono,MONO))
+
 $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
 $(eval $(call CheckSubmoduleTemplate,opentk,OPENTK))
 $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
 $(eval $(call CheckSubmoduleTemplate,guiunit,GUI_UNIT))
 $(eval $(call CheckSubmoduleTemplate,macios-binaries,MACIOS_BINARIES))
 
+include $(TOP)/mk/mono.mk
 include $(TOP)/mk/xamarin.mk
-
-# some hackish reset-* targets to deal with what needs to happen in various parts of the build tree when you reset a module
-
-reset-mono::
-	$(Q) rm -f $(TOP)/.stamp-build* $(MONO_PATH)/configure
 
 check-versions::
 	@if test -e .check-versions-failure; then  \

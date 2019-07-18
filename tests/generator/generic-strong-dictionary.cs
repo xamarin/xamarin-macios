@@ -1,5 +1,6 @@
 using Foundation;
 using ObjCRuntime;
+using CoreBluetooth;
 
 namespace Test
 {

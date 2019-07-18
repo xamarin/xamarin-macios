@@ -135,6 +135,7 @@ namespace Registrar {
 			public CategoryAttribute CategoryAttribute;
 			public TType Type;
 			public ObjCType BaseType;
+			// This only contains the leaf protocols implemented by this type.
 			public ObjCType [] Protocols;
 			public string [] AdoptedProtocols;
 			public bool IsModel;
@@ -158,6 +159,44 @@ namespace Registrar {
 			ObjCType superType;
 
 			public bool IsCategory { get { return CategoryAttribute != null; } }
+
+#if MTOUCH || MMP
+			HashSet<ObjCType> all_protocols;
+			// This contains all protocols in the type hierarchy.
+			// Given a type T that implements a protocol with super protocols:
+			// class T : NSObject, IProtocol2 {}
+			// [Protocol]
+			// interface IP1 {}
+			// [Protocol]
+			// interface IP2 : IP1 {}
+			// This property will contain both IP1 and IP2. The Protocols property only contains IP2.
+			public IEnumerable<ObjCType> AllProtocols {
+				get {
+					if (Protocols == null || Protocols.Length == 0)
+						return null;
+
+					if (all_protocols == null) {
+						var queue = new Queue<ObjCType> (Protocols);
+						var rv = new HashSet<ObjCType> ();
+						while (queue.Count > 0) {
+							var type = queue.Dequeue ();
+							if (rv.Add (type)) {
+								foreach (var iface in type.Type.Resolve ().Interfaces) {
+									if (!Registrar.Types.TryGetValue (iface.InterfaceType, out var superIface)) {
+										// This is not an interface that corresponds to a protocol.
+										continue;
+									}
+									queue.Enqueue (superIface);
+								}
+							}
+						}
+						all_protocols = rv;
+					}
+
+					return all_protocols;
+				}
+			}
+#endif
 
 			public void VerifyRegisterAttribute (ref List<Exception> exceptions)
 			{
@@ -822,17 +861,17 @@ namespace Registrar {
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
 #if __WATCHOS__
-					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (NativeReturnType) : Stret.X86NeedStret (NativeReturnType);
+					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
 #elif MONOMAC
-					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType) : Stret.X86NeedStret (NativeReturnType);
+					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
 #elif __IOS__
 					if (Runtime.Arch == Arch.DEVICE) {
-						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (NativeReturnType);
+						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (NativeReturnType, null);
 					} else {
-						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType) : Stret.X86_64NeedStret (NativeReturnType);
+						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType, null) : Stret.X86_64NeedStret (NativeReturnType, null);
 					}
 #elif __TVOS__
-					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (NativeReturnType);
+					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (NativeReturnType, null);
 #else
 	#error unknown architecture
 #endif
@@ -1289,7 +1328,7 @@ namespace Registrar {
 				internal const string INativeObject           =	"INativeObject";
 		}
 
-		internal string PlatformAssembly {
+		public string PlatformAssembly {
 			get {
 				return IsDualBuild ? DualAssemblyName : CompatAssemblyName;
 			}

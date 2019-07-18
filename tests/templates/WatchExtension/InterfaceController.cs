@@ -71,7 +71,7 @@ namespace monotouchtestWatchKitExtension
 		void LoadTests ()
 		{
 			runner = new WatchOSRunner ();
-			var categoryFilter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter,RequiresBSDSockets").Filter);
+			var categoryFilter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter,RequiresBSDSockets,BitcodeNotSupported").Filter);
 			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("NUNIT_FILTER_START"))) {
 				var firstChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_START") [0];
 				var lastChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_END") [0];
@@ -105,15 +105,23 @@ namespace monotouchtestWatchKitExtension
 			}
 			running = true;
 			cmdRun.SetEnabled (false);
-			lblStatus.SetText ("Running");
-			BeginInvokeOnMainThread (() => {
+			lblStatus.SetText ("Running in background");
+
+			var timer = NSTimer.CreateRepeatingScheduledTimer (TimeSpan.FromSeconds (1), (v) => RenderResults ());
+			var runnerThread = new Thread (() => {
 				runner.Run ();
 
-				cmdRun.SetEnabled (true);
-				lblStatus.SetText ("Done");
-				running = false;
-				RenderResults ();
-			});
+				InvokeOnMainThread (() => {
+					cmdRun.SetEnabled (true);
+					lblStatus.SetText ("Done");
+					running = false;
+					timer.Dispose ();
+					RenderResults ();
+				});
+			}) {
+				IsBackground = true,
+			};
+			runnerThread.Start ();
 		}
 
 		void RenderResults ()

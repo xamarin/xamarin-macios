@@ -259,7 +259,7 @@ namespace ObjCRuntime {
 			baseMethod = null;
 
 			if (token_ref != Runtime.INVALID_TOKEN_REF)
-				return (Type) Class.ResolveTokenReference (token_ref, 0x02000000 /* TypeDef */);
+				return Class.ResolveTypeTokenReference (token_ref);
 
 			baseMethod = minfo.GetBaseDefinition ();
 			var delegateProxies = baseMethod.ReturnTypeCustomAttributes.GetCustomAttributes (typeof (DelegateProxyAttribute), false);
@@ -341,7 +341,13 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
-		static extern IntPtr _Block_copy (ref BlockLiteral block);
+		internal static extern IntPtr _Block_copy (ref BlockLiteral block);
+
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		internal static extern IntPtr _Block_copy (IntPtr block);
+
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		internal static extern void _Block_release (IntPtr block);
 
 		//
 		// Simple method that we can use to wrap methods that need to call a block

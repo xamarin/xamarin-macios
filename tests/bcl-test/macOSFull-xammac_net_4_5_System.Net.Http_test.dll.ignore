@@ -1,0 +1,9 @@
+# Expected: True
+#  But was:  False
+MonoTests.System.Net.WebClientTest.UploadDataAsyncCancelEvent
+MonoTests.System.Net.WebClientTest.OpenReadTaskAsyncOnFile
+MonoTests.System.Net.WebClientTest.UploadStringAsyncCancelEvent
+MonoTests.System.Net.WebClientTest.UploadValuesAsyncCancelEvent
+MonoTests.System.Net.WebSockets.ClientWebSocketTest.ServerHandshakeReturnWrongConnectionHeader
+MonoTests.System.Net.WebSockets.ClientWebSocketTest.ServerHandshakeReturnWrongUpgradeHeader
+MonoTests.System.Net.WebClientTest.UploadFileAsyncCancelEvent

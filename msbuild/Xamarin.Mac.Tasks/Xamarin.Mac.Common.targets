@@ -31,6 +31,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.Archive" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.ACTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.CodesignVerify" AssemblyFile="Xamarin.Mac.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.CompileAppManifest" AssemblyFile="Xamarin.Mac.Tasks.dll" />
@@ -75,12 +76,18 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_CanArchive Condition="'$(OutputType)' == 'Exe'">true</_CanArchive>
 
 		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
-		<_RequireProvisioningProfile Condition="'$(CodesignEntitlements)' != ''">True</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(CodeSignProvision)' != ''">True</_RequireProvisioningProfile>
 
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
 
 		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
+	</PropertyGroup>
+		
+	<PropertyGroup>
+		<!-- actool output caches -->
+		<_ACTool_PartialAppManifestCache>$(IntermediateOutputPath)actool\_PartialAppManifest.items</_ACTool_PartialAppManifestCache>
+		<_ACTool_BundleResourceCache>$(IntermediateOutputPath)actool\_BundleResourceWithLogicalName.items</_ACTool_BundleResourceCache>
 	</PropertyGroup>
 		
 	<PropertyGroup>
@@ -103,6 +110,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_CreateAppBundle;
 			Codesign;
 			_CreateInstaller;
+			Archive;
 		</BuildDependsOn>
 	</PropertyGroup>
 
@@ -178,6 +186,13 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<RemoveDir Directories="$(IntermediateOutputPath)" />
 	</Target>
 
+	<Target Name="_AddExtraReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(DisableExtraReferences)' != 'true'">
+		<ItemGroup>
+			<!-- https://github.com/mono/mono/issues/13483 -->
+			<Reference Include="System.Drawing.Common.dll" />
+		</ItemGroup>
+	</Target>
+
 	<PropertyGroup>
 		<_CollectBundleResourcesDependsOn>
 			_CompileImageAssets;
@@ -201,6 +216,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			IsAppExtension="$(IsAppExtension)"
+			UseSecureTimestamp="$(UseHardenedRuntime)"
 			>
 		</Codesign>
 	</Target>
@@ -249,6 +265,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			IsAppExtension="$(IsAppExtension)"
+			UseHardenedRuntime="$(UseHardenedRuntime)"
+			UseSecureTimestamp="$(UseHardenedRuntime)"
 			>
 		</Codesign>
 	</Target>
@@ -800,6 +818,31 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 		<Warning Text="Referenced Mac App Extension Project %(_AppExtensionReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
 			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
+	</Target>
+	
+	<PropertyGroup>
+		<ArchiveDependsOn>
+			_CoreArchive
+		</ArchiveDependsOn>
+	</PropertyGroup>
+	
+	<Target Name="Archive" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(ArchiveDependsOn)" />
+	
+	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="$(Codesign)">
+		<Error Text="Code signing must be enabled to create an Xcode archive." Condition="'$(_CodeSigningKey)' == ''" />
+
+		<Archive
+			SessionId="$(BuildSessionId)"
+			AppBundleDir="$(AppBundleDir)"
+			InsightsApiKey="$(XamarinInsightsApiKey)"
+			SigningKey="$(_CodeSigningKey)"
+			ProjectName="$(MSBuildProjectName)"
+			ProjectGuid="$(ProjectGuid)"
+			ProjectTypeGuids="$(ProjectTypeGuids)"
+			OutputPath="$(OutputPath)"
+			>
+			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir" />
+		</Archive>
 	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"

@@ -210,6 +210,7 @@ namespace Introspection
 			"Emagic",
 			"Emaili",
 			"Embd",
+			"Emsg",	// 4cc
 			"Enc",
 			"Eppc",
 			"Eftpos", // Electronic funds transfer at point of sale
@@ -238,6 +239,7 @@ namespace Introspection
 			"Gps",
 			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
+			"Gru",
 			"Greeking",
 			"Gtin",
 			"Hardlink",
@@ -278,8 +280,10 @@ namespace Introspection
 			"Interframe",
 			"Interitem",
 			"Intermenstrual",
+			"Intersector",
 			"Intoi",
 			"Ios",
+			"Iou",
 			"Ipa",
 			"Ipp",
 			"Iptc",
@@ -301,6 +305,7 @@ namespace Introspection
 			"Kiloamperes",
 			"Kiloohms",
 			"Kilopascals",
+			"Kullback", // Kullback-Leibler Divergence
 			"Langauges",
 			"Lacunarity",
 			"Ldaps",
@@ -312,10 +317,12 @@ namespace Introspection
 			"Lod",
 			"Lopass",
 			"Lowlevel",
+			"Lstm",
 			"Lun",
 			"Luma",
 			"Lzfse", // acronym
 			"Lzma", // acronym
+			"Mada", // payment system
 			"Mapbuffer",
 			"Matchingcoalesce",
 			"Megaampere",
@@ -350,6 +357,7 @@ namespace Introspection
 			"Nai",
 			"Nanograms",
 			"Nanowatts",
+			"Nestrov",
 			"nfloat",
 			"Nfnt",
 			"nint",
@@ -405,6 +413,7 @@ namespace Introspection
 			"Psk",
 			"Ptp",
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
+			"Qos",
 			"Quaterniond",
 			"Quadding",
 			"Qura",
@@ -1104,6 +1113,12 @@ namespace Introspection
 #endif
 				default:
 					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
+#if __IOS__
+						// NFC is currently not available on iPad
+						if (fi.Name == "CoreNFCLibrary" && UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
+							continue;
+#endif
+
 						Assert.True (CheckLibrary (s), fi.Name);
 					} else {
 						Assert.Fail ($"Unknown '{fi.Name}' field cannot be verified - please fix me!");

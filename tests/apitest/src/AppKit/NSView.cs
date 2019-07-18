@@ -85,5 +85,55 @@ namespace Xamarin.Mac.Tests
 			// NSStateBarItem can't be created via default constructor
 			NSStatusBar.SystemStatusBar.CreateStatusItem (10).Menu = null;
 		}
+
+#if XAMCORE_2_0
+		[Test]
+		public void SubviewSort ()
+		{
+			using (var containerView = new NSView ())
+			using (var a = new NSTextView () { Value = "a" })
+			using (var b = new NSTextView () { Value = "b" })
+			using (var c = new NSTextView () { Value = "c" }) {
+
+				containerView.AddSubview (b);
+				containerView.AddSubview (c);
+				containerView.AddSubview (a);
+
+				Assert.Throws<ArgumentNullException> (() => containerView.SortSubviews (null), "ANE");
+
+				Assert.AreEqual (3, containerView.Subviews.Length, "Presort Length");
+				Assert.AreEqual ("b", ((NSTextView) containerView.Subviews [0]).Value, "Presort Value 0");
+				Assert.AreEqual ("c", ((NSTextView) containerView.Subviews [1]).Value, "Presort Value 1");
+				Assert.AreEqual ("a", ((NSTextView) containerView.Subviews [2]).Value, "Presort Value 2");
+
+				containerView.SortSubviews ((x, y) => {
+					var viewX = (NSTextView) x;
+					var viewY = (NSTextView) y;
+					var rv = string.Compare (viewX.Value, viewY.Value);
+					if (rv == 0)
+						return NSComparisonResult.Same;
+					else if (rv < 0)
+						return NSComparisonResult.Ascending;
+					else
+						return NSComparisonResult.Descending;
+				});
+
+				Assert.AreEqual (3, containerView.Subviews.Length, "Postsort Length");
+				Assert.AreEqual ("a", ((NSTextView) containerView.Subviews [0]).Value, "Postsort Value 0");
+				Assert.AreEqual ("b", ((NSTextView) containerView.Subviews [1]).Value, "Postsort Value 1");
+				Assert.AreEqual ("c", ((NSTextView) containerView.Subviews [2]).Value, "Postsort Value 2");
+
+				try {
+					containerView.SortSubviews ((x, y) => {
+						throw new ApplicationException ("Something went wrong");
+					});
+					Assert.Fail ("No exception thrown");
+				} catch (Exception e) {
+					Assert.AreEqual ("An exception occurred during sorting.", e.Message, "Exception Message");
+					Assert.AreEqual ("Something went wrong", e.InnerException.Message, "InnerException Message");
+				}
+			}
+		}
+#endif
 	}
 }

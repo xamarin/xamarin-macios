@@ -1,6 +1,7 @@
 // Copyright 2012-2013, 2016 Xamarin Inc. All rights reserved.
 
 using System;
+using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Linker;
@@ -44,9 +45,39 @@ namespace Xamarin.Linker {
 		// This is per assembly, so we set it in 'void Process (AssemblyDefinition)'
 		bool InlineIntPtrSize { get; set; }
 
+		bool? is_arm64_calling_convention;
+
 		public CoreOptimizeGeneratedCode (LinkerOptions options)
 		{
 			Options = options;
+
+			if (Optimizations.InlineIsARM64CallingConvention == true) { 
+				if (options.Target.Abis.Count == 1) {
+					// We can usually inline Runtime.InlineIsARM64CallingConvention if the generated code will execute on a single architecture
+					switch ((options.Target.Abis [0] & Abi.ArchMask)) {
+					case Abi.i386:
+					case Abi.ARMv7:
+					case Abi.ARMv7s:
+					case Abi.x86_64:
+						is_arm64_calling_convention = false;
+						break;
+					case Abi.ARM64:
+					case Abi.ARM64e:
+					case Abi.ARM64_32:
+						is_arm64_calling_convention = true;
+						break;
+					case Abi.ARMv7k:
+						// ARMv7k binaries can run on ARM64_32, so this can't be inlined :/
+						break;
+					default:
+						options.LinkContext.Exceptions.Add (ErrorHelper.CreateWarning (99, $"Internal error: unknown abi: {options.Target.Abis [0]}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new)."));
+						break;
+					}
+				} else if (options.Target.Abis.Count == 2 && options.Target.Is32Build && options.Target.Abis.Contains (Abi.ARMv7) && options.Target.Abis.Contains (Abi.ARMv7s)) {
+					// We know we won't be running on arm64 if we're building for armv7+armv7s.
+					is_arm64_calling_convention = false;
+				}
+			}
 		}
 
 		public override SubStepTargets Targets {
@@ -601,6 +632,15 @@ namespace Xamarin.Linker {
 				return; // nothing else to do here.
 			}
 
+			if (Optimizations.InlineIsARM64CallingConvention == true && is_arm64_calling_convention.HasValue && method.Name == "GetIsARM64CallingConvention" && method.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime")) {
+				// Rewrite to return the constant value
+				var instr = method.Body.Instructions;
+				instr.Clear ();
+				instr.Add (Instruction.Create (is_arm64_calling_convention.Value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0));
+				instr.Add (Instruction.Create (OpCodes.Ret));
+				return; // nothing else to do here.
+			}
+
 			var instructions = method.Body.Instructions;
 			for (int i = 0; i < instructions.Count; i++) {
 				var ins = instructions [i];
@@ -644,6 +684,12 @@ namespace Xamarin.Linker {
 
 		protected virtual void ProcessLoadStaticField (MethodDefinition caller, Instruction ins)
 		{
+			FieldReference fr = ins.Operand as FieldReference;
+			switch (fr?.Name) {
+			case "IsARM64CallingConvention":
+				ProcessIsARM64CallingConvention (caller, ins);
+				break;
+			}
 		}
 
 		void ProcessEnsureUIThread (MethodDefinition caller, Instruction ins)
@@ -848,6 +894,31 @@ namespace Xamarin.Linker {
 
 			//Driver.Log (4, "Optimized call to BlockLiteral.SetupBlock in {0} at offset {1} with delegate type {2} and signature {3}", caller, ins.Offset, delegateType.FullName, signature);
 			return 2;
+		}
+
+		int ProcessIsARM64CallingConvention (MethodDefinition caller, Instruction ins)
+		{
+			const string operation = "inline Runtime.IsARM64CallingConvention";
+
+			if (Optimizations.InlineIsARM64CallingConvention != true)
+				return 0;
+
+			if (!is_arm64_calling_convention.HasValue)
+				return 0;
+
+			// Verify we're checking the right IsARM64CallingConvention field
+			var fr = ins.Operand as FieldReference;
+			if (!fr.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime"))
+				return 0;
+
+			if (!ValidateInstruction (caller, ins, operation, Code.Ldsfld))
+				return 0;
+
+			// We're fine, inline the Runtime.IsARM64CallingConvention value
+			ins.OpCode = is_arm64_calling_convention.Value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
+			ins.Operand = null;
+
+			return 0;
 		}
 
 		// Returns the type of the value pushed on the stack by the given instruction.

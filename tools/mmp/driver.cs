@@ -70,7 +70,7 @@ namespace Xamarin.Bundler {
 		internal const string NAME = "mmp";
 		const string PRODUCT = "Xamarin.Mac";
 		internal static Application App = new Application (Environment.GetCommandLineArgs ());
-		static Target BuildTarget = new Target (App);
+		static Target BuildTarget;
 		static List<string> references = new List<string> ();
 		static List<string> resources = new List<string> ();
 		static List<string> resolved_assemblies = new List<string> ();
@@ -136,6 +136,7 @@ namespace Xamarin.Bundler {
 		public static bool IsUnifiedMobile { get; private set; }
 		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedMobile || IsUnifiedFullXamMacFramework; } }
 		public static bool IsClassic { get { return !IsUnified; } }
+		public static bool LinkProhibitedFrameworks { get; private set; }
 
 		public static bool Is64Bit { 
 			get {
@@ -352,6 +353,7 @@ namespace Xamarin.Bundler {
 						aotOptions = new AOTOptions (v);
 					}
 				},
+				{ "link-prohibited-frameworks", "Natively link against prohibited (rejected by AppStore) frameworks", v => { LinkProhibitedFrameworks = true; } },
 			};
 
 			AddSharedOptions (App, os);
@@ -374,6 +376,9 @@ namespace Xamarin.Bundler {
 					aotOptions = new AOTOptions (forceAotVariable);
 			}
 
+			if (!targetFramework.HasValue)
+				targetFramework = TargetFramework.Default;
+
 			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
 
 			ErrorHelper.Verbosity = verbose;
@@ -388,9 +393,6 @@ namespace Xamarin.Bundler {
 			}
 
 			bool force45From40UnifiedSystemFull = false;
-
-			if (!targetFramework.HasValue)
-				targetFramework = TargetFramework.Default;
 
 			// At least once instance of a TargetFramework of Xamarin.Mac,v2.0,(null) was found already. Assume any v2.0 implies a desire for Modern.
 			if (TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile || TargetFramework.Version == TargetFramework.Xamarin_Mac_2_0_Mobile.Version) {
@@ -500,6 +502,8 @@ namespace Xamarin.Bundler {
 			else
 				Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
 
+			BuildTarget = new Target (App);
+			App.Targets.Add (BuildTarget);
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}.{1}", Constants.Version, Constants.Revision);
@@ -739,6 +743,35 @@ namespace Xamarin.Bundler {
 			}
 
 			CreateDirectoriesIfNeeded ();
+
+			switch (arch) {
+			case "i386":
+				break;
+			case "x86_64":
+				if (IsClassic)
+					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported on non-Classic profiles.");
+				break;
+			default:
+				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
+			}
+
+			if (IsUnified && !arch_set)
+				arch = "x86_64";
+
+			if (arch != "x86_64")
+				ErrorHelper.Warning (134, "32-bit applications should be migrated to 64-bit.");
+
+			switch (arch) {
+			case "x86_64":
+				BuildTarget.Abis = new List<Abi> { Abi.x86_64 };
+				break;
+			case "i386":
+				BuildTarget.Abis = new List<Abi> { Abi.i386 };
+				break;
+			default:
+				throw ErrorHelper.CreateError (99, $"Internal error: unknown architecture '{arch}'.");
+			}
+
 			Watch ("Setup", 1);
 
 			if (!no_executable) {
@@ -765,8 +798,6 @@ namespace Xamarin.Bundler {
 			Watch ("Copy Configuration", 1);
 
 			ExtractNativeLinkInfo ();
-
-			BuildTarget.StaticRegistrar = new StaticRegistrar (BuildTarget);
 
 			BuildTarget.ValidateAssembliesBeforeLink ();
 
@@ -797,6 +828,8 @@ namespace Xamarin.Bundler {
 			BuildTarget.CollectAllSymbols ();
 			BuildTarget.ComputeLinkerFlags ();
 			BuildTarget.GatherFrameworks ();
+
+			CopyMonoNative ();
 
 			CopyDependencies (native_libs);
 			Watch ("Copy Dependencies", 1);
@@ -838,6 +871,44 @@ namespace Xamarin.Bundler {
 			if (!string.IsNullOrEmpty (certificate_name)) {
 				CodeSign ();
 				Watch ("Code Sign", 1);
+			}
+		}
+
+		static void CopyMonoNative ()
+		{
+			string name;
+			if (File.Exists (Path.Combine (MonoDirectory, "lib", "libmono-system-native.dylib"))) {
+				// legacy libmono-system-native.a needs to be included if it exists in the mono in question
+				name = "libmono-system-native";
+			} else {
+				// use modern libmono-native
+				switch (BuildTarget.MonoNativeMode) {
+				case MonoNativeMode.Unified:
+					name = "libmono-native-unified";
+					break;
+				case MonoNativeMode.Compat:
+					name = "libmono-native-compat";
+					break;
+				default:
+					throw ErrorHelper.CreateError (99, $"Internal error: Invalid mono native type: '{BuildTarget.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+				}
+			}
+
+			var src = Path.Combine (MonoDirectory, "lib", name + ".dylib");
+			var dest = Path.Combine (mmp_dir, "libmono-native.dylib");
+			Watch ($"Adding mono-native library {name} for {BuildTarget.MonoNativeMode}.", 1);
+
+			if (App.Optimizations.TrimArchitectures == true) {
+				// copy to temp directory and lipo there to avoid touching the final dest file if it's up to date
+				var temp_dest = Path.Combine (App.Cache.Location, "libmono-native.dylib");
+
+				if (Application.UpdateFile (src, temp_dest))
+					LipoLibrary (name, temp_dest);
+				Application.UpdateFile (temp_dest, dest);
+			}
+			else {
+				// we can directly update the dest
+				Application.UpdateFile (src, dest);
 			}
 		}
 
@@ -999,7 +1070,11 @@ namespace Xamarin.Bundler {
 			var sb = new StringBuilder ();
 			using (var sw = new StringWriter (sb)) {
 				sw.WriteLine ("#define MONOMAC 1");
-				sw.WriteLine ("#include <xamarin/xamarin.h>");
+				if (IsClassic) {
+					sw.WriteLine ("#include <xamarin-classic/xamarin.h>");
+				} else {
+					sw.WriteLine ("#include <xamarin/xamarin.h>");
+				}
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
 				if (Driver.Registrar == RegistrarMode.PartialStatic)
@@ -1135,23 +1210,6 @@ namespace Xamarin.Bundler {
 			if (!File.Exists (libxammac))
 				throw new MonoMacException (5203, true, "Can't find {0}, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.", libxammac);
 
-			switch (arch) {
-			case "i386":
-				break;
-			case "x86_64":
-				if (IsClassic)
-					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported on non-Classic profiles.");
-				break;
-			default:
-				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
-			}
-
-			if (IsUnified && !arch_set)
-				arch = "x86_64";
-
-			if (arch != "x86_64")
-				ErrorHelper.Warning (134, "32-bit applications should be migrated to 64-bit.");
-
 			try {
 				var args = new StringBuilder ();
 				if (App.EnableDebug)
@@ -1262,15 +1320,31 @@ namespace Xamarin.Bundler {
 					string libmono = Path.Combine (libdir, "libmonosgen-2.0.a");
 
 					if (!File.Exists (libmono))
-						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from http://mono-project.com/Downloads");
+						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from https://www.mono-project.com/download/");
 
 					args.Append (StringUtils.Quote (libmono)).Append (' ');
 
-					// libmono-system-native.a needs to be included if it exists in the mono in question
-					string libmonoNative =  Path.Combine (libdir, "libmono-system-native.a");
-					if (File.Exists (libmonoNative)) {
-						args.Append (StringUtils.Quote (libmonoNative)).Append (' ');
+					string libmonoSystemNative = Path.Combine (libdir, "libmono-system-native.a");
+					if (File.Exists (libmonoSystemNative)) {
+						// legacy libmono-system-native.a needs to be included if it exists in the mono in question
+						args.Append (StringUtils.Quote (libmonoSystemNative)).Append (' ');
 						args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
+					} else {
+						// add modern libmono-native
+						string libmono_native_name;
+						switch (BuildTarget.MonoNativeMode) {
+						case MonoNativeMode.Unified:
+							libmono_native_name = "libmono-native-unified";
+							break;
+						case MonoNativeMode.Compat:
+							libmono_native_name = "libmono-native-compat";
+							break;
+						default:
+							throw ErrorHelper.CreateError (99, $"Invalid error: Invalid mono native type: '{BuildTarget.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+						}
+
+						args.Append (StringUtils.Quote (Path.Combine (libdir, libmono_native_name + ".a"))).Append (' ');
+						args.Append ("-framework GSS ");
 					}
 
 					if (profiling.HasValue && profiling.Value) {
@@ -1284,7 +1358,7 @@ namespace Xamarin.Bundler {
 					args.Append (" -framework Quartz ");
 				}
 
-				args.Append ("-liconv -x objective-c++ ");
+				args.Append ("-liconv -lc++ -x objective-c++ ");
 				if (XcodeVersion.Major >= 10) {
 					// Xcode 10 doesn't ship with libstdc++
 					args.Append ("-stdlib=libc++ ");
@@ -1408,8 +1482,9 @@ namespace Xamarin.Bundler {
 
 			linker_options = options;
 
-			Mono.Linker.LinkContext context;
-			MonoMac.Tuner.Linker.Process (options, out context, out resolved_assemblies);
+			MonoMac.Tuner.Linker.Process (options, out var context, out resolved_assemblies);
+
+			ErrorHelper.Show (context.Exceptions);
 
 			// Idealy, this would be handled by Linker.Process above. However in the non-linking case
 			// we do not run MobileMarkStep which generates the pinvoke list. Hack around this for now
@@ -1543,10 +1618,13 @@ namespace Xamarin.Bundler {
 			case "gamin-1.so.0":	// msvcrt pulled in
 			case "asound.so.2":	// msvcrt pulled in
 			case "oleaut32": // referenced by System.Runtime.InteropServices.Marshal._[S|G]etErrorInfo
+			case "system.native":	// handled by CopyMonoNative()
+			case "system.security.cryptography.native.apple": // same
+			case "system.net.security.native": // same
 				return true;
 			}
 			// Shutup the warning until we decide on bug: 36478
-			if (shortendName.ToLowerInvariant () == "intl" && IsUnifiedFullXamMacFramework)
+			if (shortendName.ToLowerInvariant () == "intl" && !native_references.Any (x => x.Contains ("libintl.dylib")) && IsUnifiedFullXamMacFramework)
 				return true;
 			return false;
 		}
@@ -1667,7 +1745,7 @@ namespace Xamarin.Bundler {
 			int ret = XcodeRun ("lipo", $"{StringUtils.Quote (dest)} -thin {arch} -output {StringUtils.Quote (dest)}");
 			if (ret != 0)
 				throw new MonoMacException (5311, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
-			if (name != "MonoPosixHelper")
+			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
 				ErrorHelper.Warning (2108, $"{name} was stripped of architectures except {arch} to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
 		}
 

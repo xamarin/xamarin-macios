@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,6 +20,10 @@ namespace xharness
 		public bool GenerateVariations = true;
 		public string [] Configurations;
 		public Func<Task> Dependency;
+		public string FailureMessage;
+		public bool RestoreNugetsInProject;
+		public string MTouchExtraArgs;
+		public double TimeoutMultiplier = 1;
 
 		public IEnumerable<TestProject> ProjectReferences;
 
@@ -44,7 +48,8 @@ namespace xharness
 		public TestProject AsWatchOSProject ()
 		{
 			var clone = Clone ();
-			clone.Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (Path), System.IO.Path.GetFileNameWithoutExtension (Path) + "-watchos" + System.IO.Path.GetExtension (Path));
+			var fileName = System.IO.Path.GetFileNameWithoutExtension (Path);
+			clone.Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (Path), fileName + (fileName.Contains("-watchos")?"":"-watchos") + System.IO.Path.GetExtension (Path));
 			return clone;
 		}
 
@@ -91,7 +96,10 @@ namespace xharness
 			rv.Path = Path;
 			rv.IsExecutableProject = IsExecutableProject;
 			rv.GenerateVariations = GenerateVariations;
+			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
+			rv.MTouchExtraArgs = MTouchExtraArgs;
+			rv.TimeoutMultiplier = TimeoutMultiplier;
 			return rv;
 		}
 
@@ -145,12 +153,17 @@ namespace xharness
 	public class iOSTestProject : TestProject
 	{
 		public bool SkipiOSVariation;
-		public bool SkipwatchOSVariation;
+		public bool SkipwatchOSVariation; // skip both
+		public bool SkipwatchOSARM64_32Variation;
+		public bool SkipwatchOS32Variation;
 		public bool SkiptvOSVariation;
 		public bool BuildOnly;
 
 		// Optional
 		public BCLTestInfo BCLInfo { get; set; }
+
+		// Optional
+		public MonoNativeInfo MonoNativeInfo { get; set; }
 
 		public iOSTestProject ()
 		{
@@ -170,6 +183,9 @@ namespace xharness
 
 		// Optional
 		public MacBCLTestInfo BCLInfo { get; set; }
+
+		// Optional
+		public MacMonoNativeInfo MonoNativeInfo { get; set; }
 
 		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.NonSystem || TargetFrameworkFlavor == MacFlavors.Modern;
 		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.NonSystem || TargetFrameworkFlavor == MacFlavors.Full;

@@ -22,6 +22,12 @@ using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
 
 namespace Xamarin.Bundler {
 
+	public enum MonoNativeMode {
+		None,
+		Compat,
+		Unified,
+	}
+
 	[Flags]
 	public enum RegistrarOptions {
 		Default = 0,
@@ -80,6 +86,8 @@ namespace Xamarin.Bundler {
 		public Version SdkVersion;
 	
 		public bool Embeddinator { get; set; }
+
+		public List<Target> Targets = new List<Target> ();
 
 		public Application (string[] arguments)
 		{
@@ -154,7 +162,11 @@ namespace Xamarin.Bundler {
 				main.ReadSymbols (provider.GetSymbolReader (main, main.FileName));
 			}
 
-			var wp = new WriterParameters () { WriteSymbols = symbols };
+			var wp = new WriterParameters () {
+				WriteSymbols = symbols,
+				SymbolWriterProvider = symbols ? new CustomSymbolWriterProvider () : null,
+			};
+
 			// re-write symbols, if available, so the new tokens will match
 			assembly.Write (destination, wp);
 
@@ -192,12 +204,17 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static void UpdateFile (string source, string target, bool check_contents = false)
+		// Returns true if the source file was copied to the target or false if it was already up to date.
+		public static bool UpdateFile (string source, string target, bool check_contents = false)
 		{
-			if (!Application.IsUptodate (source, target, check_contents))
+			if (!Application.IsUptodate (source, target, check_contents)) {
 				CopyFile (source, target);
-			else
+				return true;
+			}
+			else {
 				Driver.Log (3, "Target '{0}' is up-to-date", target);
+				return false;
+			}
 		}
 
 		// Checks if any of the source files have a time stamp later than any of the target files.
@@ -304,6 +321,8 @@ namespace Xamarin.Bundler {
 		{
 			Namespaces.Initialize ();
 			SelectRegistrar ();
+			foreach (var target in Targets)
+				target.SelectMonoNative ();
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
 				throw ErrorHelper.CreateError (91, "This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).", ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
@@ -446,7 +465,16 @@ namespace Xamarin.Bundler {
 #if MONOTOUCH
 			BuildTarget = BuildTarget.Simulator;
 #endif
-			var registrar = new Registrar.StaticRegistrar (this);
+			Registrar.IStaticRegistrar registrar;
+#if MMP
+			if (Driver.IsClassic) {
+				registrar = new Registrar.ClassicStaticRegistrar (this);
+			} else {
+				registrar = new Registrar.StaticRegistrar (this);
+			}
+#else
+			registrar = new Registrar.StaticRegistrar (this);
+#endif
 			if (RootAssemblies.Count == 1)
 				registrar.GenerateSingleAssembly (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else

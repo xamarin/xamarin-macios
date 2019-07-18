@@ -601,6 +601,7 @@ namespace PdfKit {
 		[Export ("contents")]
 		string Contents { get; set; }
 		
+		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("toolTip")]
 		string ToolTip { get; }
@@ -1063,12 +1064,6 @@ namespace PdfKit {
 
 		[Export ("lineWidth")]
 		nfloat LineWidth { get; set; }
-
-		[Export ("horizontalCornerRadius")]
-		nfloat HorizontalCornerRadius { get; set; }
-
-		[Export ("verticalCornerRadius")]
-		nfloat VerticalCornerRadius { get; set; }
 
 		[Export ("dashPattern", ArgumentSemantic.Assign), NullAllowed]
 #if XAMCORE_2_0
@@ -1771,10 +1766,12 @@ namespace PdfKit {
 		[Export ("displaysRTL")]
 		bool DisplaysRtl { get; set; }
 
+		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("shouldAntiAlias")]
 		bool ShouldAntiAlias { get; set; }
 
+		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("greekingThreshold")]
 		nfloat GreekingThreshold { get; set; }

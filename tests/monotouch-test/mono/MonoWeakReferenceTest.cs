@@ -84,7 +84,11 @@ namespace MonoTouchFixtures {
 				Assert.That (t.Obj3, Is.Not.Null, "'t.Obj3' should not be null");
 
 				//overflow the nursery, make sure we fill it
+#if __WATCHOS__
+				for (int i = 0; i < 1000 * 100; ++i) // the apple watch doesn't have much memory, so try to not run into OOMs either. The nursery is 512k, so 100k objects should be more than enough to fill it.
+#else
 				for (int i = 0; i < 1000 * 1000 * 10; ++i)
+#endif
 					new OneField ();
 
 				Exception ex = null;

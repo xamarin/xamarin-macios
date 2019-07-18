@@ -1339,9 +1339,6 @@ namespace Vision {
 		[Export ("preferBackgroundProcessing")]
 		bool PreferBackgroundProcessing { get; set; }
 
-		[NullAllowed, Export ("preferredMetalContext", ArgumentSemantic.Retain)]
-		IMTLDevice PreferredMetalContext { get; set; }
-
 		// From docs: VNObservation subclasses specific to the VNRequest subclass
 		// Since downcasting is not easy we are exposing
 		// this property as a generic method 'GetResults'.

@@ -12,9 +12,9 @@ endif
 
 APIDIFF_DIR=.
 
-MONO_API_INFO = $(MONO_PATH)/mcs/class/lib/build/mono-api-info.exe
-MONO_API_HTML = $(MONO_PATH)/mcs/class/lib/build/mono-api-html.exe
-MONO_BUILD = MONO_PATH=$(MONO_PATH)/mcs/class/lib/build $(TOP)/builds/tools64/mono/mini/mono
+MONO_API_INFO = $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tools/mono-api-info.exe
+MONO_API_HTML = $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tools/mono-api-html.exe
+MONO_BUILD = $(SYSTEM_MONO)
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
@@ -32,7 +32,6 @@ MONO_ASSEMBLIES = mscorlib System System.Core System.Numerics\
 IOS_SRC_ASSEMBLIES     = \
 	Xamarin.iOS/MonoTouch.Dialog-1 Xamarin.iOS/MonoTouch.NUnitLite Xamarin.iOS/OpenTK-1.0 Xamarin.iOS/System.Net.Http Xamarin.iOS/Xamarin.iOS
 MAC_SRC_ASSEMBLIES     = \
-	XamMac XamMac.CFNetwork \
 	Xamarin.Mac/Xamarin.Mac Xamarin.Mac/OpenTK \
 	4.5/Xamarin.Mac 4.5/OpenTK
 WATCHOS_SRC_ASSEMBLIES = Xamarin.WatchOS/Xamarin.WatchOS Xamarin.WatchOS/MonoTouch.NUnitLite Xamarin.WatchOS/System.Net.Http
@@ -46,22 +45,35 @@ TVOS_ASSEMBLIES    = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.TVOS/$(file))    
 IOS_ARCH_ASSEMBLIES = native-32/Xamarin.iOS native-64/Xamarin.iOS
 MAC_ARCH_ASSEMBLIES = native-32/Xamarin.Mac native-64/Xamarin.Mac
 
+APIDIFF_IGNORE = -i 'INSObjectProtocol'
+
+$(APIDIFF_DIR)/.download-$(MONO_HASH).stamp:
+	$(MAKE) -C $(TOP)/builds download
+	$(Q) mkdir -p $(dir $@)
+	$(Q) touch $@
+
+$(MONO_API_INFO) $(MONO_API_HTML): $(APIDIFF_DIR)/.download-$(MONO_HASH).stamp
+
 # create api info. Directory hierarchy is based on installed hierarchy
 # (XM goes into temp/xm, and XI goes into temp/xi)
 
-$(APIDIFF_DIR)/temp/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll
+$(APIDIFF_DIR)/temp/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
 
-$(APIDIFF_DIR)/temp/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $< -o $@
-
-$(APIDIFF_DIR)/temp/native-%/Xamarin.Mac.xml: $(TOP)/src/build/mac/mobile-%/Xamarin.Mac.dll
+$(APIDIFF_DIR)/temp/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $< -o $@
 
-$(APIDIFF_DIR)/temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xamarin.iOS.dll
+$(APIDIFF_DIR)/temp/xm/4.5/Xamarin.Mac.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll $(MONO_API_INFO)
+	$(Q) mkdir -p $(dir $@)
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $< -o $@
+
+$(APIDIFF_DIR)/temp/native-%/Xamarin.Mac.xml: $(TOP)/src/build/mac/mobile-%/Xamarin.Mac.dll $(MONO_API_INFO)
+	$(Q) mkdir -p $(dir $@)
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $< -o $@
+
+$(APIDIFF_DIR)/temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xamarin.iOS.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
 
@@ -71,13 +83,13 @@ $(APIDIFF_DIR)/temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xama
 # to run mono-api-html every time even if none of the
 # dependencies changed)
 
-$(APIDIFF_DIR)/diff/%.html: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml
+$(APIDIFF_DIR)/diff/%.html: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml -i 'INSObjectProtocol' $@
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml $(APIDIFF_IGNORE) $@
 	$(Q) touch $@
 
 # this is a hack to show the difference between iOS and tvOS
-$(APIDIFF_DIR)/diff/ios-to-tvos.html: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml
+$(APIDIFF_DIR)/diff/ios-to-tvos.html: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
 	$(Q) sed -e 's_<assembly name="Xamarin.TVOS" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml > $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $< $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml $@
@@ -159,22 +171,52 @@ endif
 
 all-local:: $(APIDIFF_DIR)/api-diff.html
 
-# Rules to re-create the reference infos. The rules target the updated-references
-# directory, so that they're only invoked manually (otherwise the reference infos
-# would be updated every time the assemblies change, which is not what we want).
+# Rules to re-create the reference infos from the curretn stable 'bundle.zip. assemblies
+
+# split the URL in words based on the path separator, and then chose the 6th word (the hash) in the bundle zip filename
+APIDIFF_HASH ?= $(word 6,$(subst /, ,$(APIDIFF_REFERENCES)))
+BUNDLE_ZIP ?= $(APIDIFF_DIR)/bundle-$(APIDIFF_HASH).zip
+$(BUNDLE_ZIP):
+	# download to a temporary filename so interrupted downloads won't prevent re-downloads.
+	$(Q) if test -f ~/Library/Caches/xamarin-macios/$(notdir $@); then \
+		echo "Found a cached version of $(APIDIFF_REFERENCES)) in ~/Library/Caches/xamarin-macios/$(notdir $@)."; \
+		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
+	else \
+		curl -L $(APIDIFF_REFERENCES) > $@.tmp; \
+	fi
+	$(Q) mv $@.tmp $@
+
+UNZIP_STAMP=$(APIDIFF_DIR)/.unzip.$(APIDIFF_HASH).stamp
+UNZIP_DIR=temp/downloads/$(APIDIFF_HASH)
+$(UNZIP_STAMP): $(BUNDLE_ZIP)
+	$(Q) rm -Rf $(UNZIP_DIR)
+	$(Q) mkdir -p $(dir $(UNZIP_DIR))
+	$(Q_GEN) unzip -q -d $(UNZIP_DIR) $(BUNDLE_ZIP)
+	$(Q) touch $@
+
+# the semi-colon at the end means an empty recipe, and is required for make to consider pattern rules
+$(UNZIP_DIR)/%.dll: $(UNZIP_STAMP) ;
 
 IOS_REFS     = $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xm/$(file).xml)
 WATCHOS_REFS = $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 
+$(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR)/%.dll $(MONO_API_INFO)
+	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
+	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
+
 $(APIDIFF_DIR)/updated-references/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
 
-$(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/xm/%.xml: $(UNZIP_DIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
 	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
+
+$(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll $(MONO_API_INFO)
+	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
+	$(QF_GEN) mono --debug $(MONO_API_INFO) -d $(dir $<) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
 
 update-tvos-refs: $(TVOS_REFS)
 update-watchos-refs: $(WATCHOS_REFS)
@@ -194,8 +236,8 @@ verify-reference-assemblies-mac: $(APIDIFF_DIR)/temp/native-32/Xamarin.Mac.xml $
 	@echo Mac reference assemblies are identical
 
 clean-local::
-	rm -rf temp updated-references diff *.exe* api-diff.html
-	rm -rf *.dll*
+	rm -rf temp references diff *.exe* api-diff.html
+	rm -rf *.dll* bundle-*.zip $(UNZIP_STAMP)
 	rm -rf ios-*.md tvos-*.md watchos-*.md macos-*.md
 
 DIRS += $(APIDIFF_DIR)/temp $(APIDIFF_DIR)/diff
@@ -205,11 +247,8 @@ $(DIRS):
 	$(Q) mkdir -p $@
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
-# marking those files as .SECONDARY will prevent that deletion.
-.SECONDARY: $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
-.SECONDARY: $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/temp/xm/$(file).xml)
-.SECONDARY: $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
-.SECONDARY: $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/temp/xi/$(file).xml)
+# defining a .SECONDARY rule will prevent that deletion.
+.SECONDARY:
 
 merger.exe: merger.cs
 	$(Q) $(SYSTEM_CSC) -debug $< -out:$@
@@ -243,7 +282,7 @@ macos-markdown: ; @true
 endif
 
 $(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml -i 'INSObjectProtocol' --md $@
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml $(APIDIFF_IGNORE) --md $@
 
 wrench-api-diff:
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.iOS"
@@ -265,6 +304,7 @@ ifdef INCLUDE_TVOS
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/diff/ios-to-tvos.html"
 endif
 endif
+	$(Q) $(MAKE) $(UNZIP_STAMP)
 	$(Q) $(MAKE) all -j8
 	$(Q) $(MAKE) -j8 ios-markdown tvos-markdown watchos-markdown macos-markdown
 	$(Q) $(CP) api-diff.html index.html

@@ -1,0 +1,8 @@
+# Expected string length 23 but was 0. Strings differ at index 0.
+# Expected: "Test-appSettings.config"
+# But was:  <string.Empty>
+MonoTests.System.Configuration.AppSettingsSectionTest.TestFile
+
+# Expected: not null
+# But was:  null
+MonoTests.System.Configuration.ConfigurationManagerTest.TestConnectionStringRetrieval

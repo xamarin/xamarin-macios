@@ -49,7 +49,6 @@ Review
 * trampolines-x86_64.m [DONE]
 * trampolines.m [FIRST PASS DONE]
 * xamarin-support.m [DONE]
-* zlib-helper.c [NO MANAGED CODE AT ALL]
 
 StaticRegistrar.cs [FIRST PASS DONE; SEE PENDING NOTE BELOW]
 
