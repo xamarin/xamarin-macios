@@ -424,7 +424,7 @@ namespace Photos
 		bool ObjectWasDeleted { get; }
 	}
 
-	[iOS (8,0)] // introduced in iOS (13,0) but has iOS(8,0) since PHCollectionListChangeRequest supports iOS (8,0)
+	[iOS (8,0)] // introduced in iOS (13,0) but is decorated with iOS(8,0) since PHCollectionListChangeRequest supports iOS (8,0)
 				// and iOS (13,0) only supports 64 bit, not 32 bit
 	[TV (13,0)]
 	[Mac (10,15)]
