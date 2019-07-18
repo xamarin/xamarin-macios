@@ -676,7 +676,7 @@ namespace CoreAnimation {
 		IMTLDevice PreferredDevice { get; }
 
 		[NoWatch][NoiOS][NoTV]
-		[Mac (10, 14, 6)]
+		[Mac (10,15)]
 		[NullAllowed, Export ("EDRMetadata", ArgumentSemantic.Strong)]
 		CAEdrMetadata EdrMetadata { get; set; }
 	}
