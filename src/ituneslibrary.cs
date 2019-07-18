@@ -331,6 +331,7 @@ namespace iTunesLibrary {
 
 	[Mac (10,14, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface ITLibrary
 	{
 		[Export ("applicationVersion")]
