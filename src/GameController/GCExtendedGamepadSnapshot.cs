@@ -51,8 +51,6 @@ namespace GameController {
 		// Buttons in the range [0.0, 1.0]
 		public float /* float_t = float */ LeftTrigger;
 		public float /* float_t = float */ RightTrigger;
-		
-		
 
 		// radar: https://trello.com/c/7FoGTORD (GCExtendedGamepadSnapShotDataV100 struct size / alignment not backward compatible)
 		// [TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
