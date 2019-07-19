@@ -1,5 +1,3 @@
-!missing-selector! +UIImage::checkmarkImage not bound
-!missing-selector! +UIImage::strokedCheckmarkImage not bound
 !missing-selector! NSDiffableDataSourceSnapshot::appendItemsWithIdentifiers: not bound
 !missing-selector! NSDiffableDataSourceSnapshot::appendItemsWithIdentifiers:intoSectionWithIdentifier: not bound
 !missing-selector! NSDiffableDataSourceSnapshot::appendSectionsWithIdentifiers: not bound
