@@ -465,6 +465,15 @@ namespace AuthenticationServices {
 
 	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
+	enum ASAuthorizationProviderAuthorizationOperation {
+		// no value yet - but we must handle `nil` as a default value
+		[DefaultEnumValue]
+		[Field (null)]
+		None,
+	}
+
+	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface ASAuthorizationProviderExtensionAuthorizationRequest {
 
@@ -493,8 +502,11 @@ namespace AuthenticationServices {
 		[Export ("url")]
 		NSUrl Url { get; }
 
+		[Wrap ("ASAuthorizationProviderAuthorizationOperationExtensions.GetValue (WeakRequestedOperation)")]
+		ASAuthorizationProviderAuthorizationOperation RequestedOperation { get; }
+
 		[Export ("requestedOperation")]
-		string RequestedOperation { get; }
+		NSString WeakRequestedOperation { get; }
 
 		[Export ("httpHeaders")]
 		NSDictionary<NSString, NSString> HttpHeaders { get; }
@@ -578,9 +590,9 @@ namespace AuthenticationServices {
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 	[Native]
 	enum ASAuthorizationAppleIdButtonType : long {
-		Default = 0,
-		SignUp = 1,
-		Continue = 2,
+		SignIn,
+		Continue,
+		Default = SignIn,
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
@@ -594,7 +606,11 @@ namespace AuthenticationServices {
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (UIControl), Name = "ASAuthorizationAppleIDButton")]
 	[DisableDefaultCtor]
+#if MONOMAC
+	interface ASAuthorizationAppleIdButton : NSAccessibilityButton {
+#else
 	interface ASAuthorizationAppleIdButton {
+#endif
 
 		[Static]
 		[Export ("buttonWithType:style:")]
