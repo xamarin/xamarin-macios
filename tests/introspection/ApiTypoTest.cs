@@ -216,6 +216,9 @@ namespace Introspection
 			"Eppc",
 			"Eftpos", // Electronic funds transfer at point of sale
 			"Eotf", // DisplayP3_PQ_Eotf
+			"Exabits",
+			"Exbibits",
+			"Exbibytes",
 			"Exhange",
 			"Exp",
 			"Expr",
@@ -236,6 +239,8 @@ namespace Introspection
 			"Gbrg",	// acronym for Green-Blue-Reg-Green
 			"Geocoder",
 			"Gigapascals",
+			"Gibibits",
+			"Gibibytes",
 			"Gop", // acronym for Group Of Pictures
 			"Gpp",
 			"Gps",
@@ -304,6 +309,8 @@ namespace Introspection
 			"Keypoints",
 			"Keyspace",
 			"ks",
+			"Kibibits",
+			"Kibibytes",
 			"Kiloampere",
 			"Kiloamperes",
 			"Kiloohms",
@@ -330,6 +337,8 @@ namespace Introspection
 			"Mada", // payment system
 			"Mapbuffer",
 			"Matchingcoalesce",
+			"Mebibits",
+			"Mebibytes",
 			"Megaampere",
 			"Megaamperes",
 			"Megaliters",
@@ -391,6 +400,9 @@ namespace Introspection
 			"Palettize",
 			"Parms", // short for Parameters
 			"Peap",
+			"Pebibits",
+			"Pebibytes",
+			"Petabits",
 			"Perlin",
 			"Persistable",
 			"Pausable",
@@ -493,6 +505,8 @@ namespace Introspection
 			"Synchronizable",
 			"Symbologies",
 			"Tanh",
+			"Tebibits",
+			"Tebibytes",
 			"Tensorflow",
 			"Tessellator",
 			"Texcoord",
@@ -553,6 +567,9 @@ namespace Introspection
 			"xy",
 			"Xyz",
 			"Xzy",
+			"Yobibits",
+			"Yobibytes",
+			"Yottabits",
 			"Yxz",
 			"Yzx",
 			"Zxy",
@@ -563,6 +580,9 @@ namespace Introspection
 			"yx",
 			"yy",
 			"Yyy",
+			"Zebibits",
+			"Zebibytes",
+			"Zettabits",
 			"Zlib",
 #if !XAMCORE_2_0
 			// classic only mistakes - that should not change anymore

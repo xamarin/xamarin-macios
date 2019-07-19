@@ -8962,19 +8962,19 @@ namespace Foundation
 		[Export ("awakeFromNib")]
 		void AwakeFromNib ();
 
-		[NoWatch, TV (13,0), iOS (13,0), Mac (10,15)]
+		[NoWatch, TV (13,0), iOS (13,0), NoMac]
 		[Export ("accessibilityRespondsToUserInteraction")]
 		bool AccessibilityRespondsToUserInteraction { get; set; }
 
-		[NoWatch, TV (13,0), iOS (13,0), Mac (10,15)]
+		[NoWatch, TV (13,0), iOS (13,0), NoMac]
 		[Export ("accessibilityUserInputLabels", ArgumentSemantic.Strong)]
 		string [] AccessibilityUserInputLabels { get; set; }
 
-		[NoWatch, TV (13,0), iOS (13,0), Mac (10,15)]
+		[NoWatch, TV (13,0), iOS (13,0), NoMac]
 		[Export ("accessibilityAttributedUserInputLabels", ArgumentSemantic.Copy)]
 		NSAttributedString[] AccessibilityAttributedUserInputLabels { get; set; }
 
-		[NoWatch, TV (13,0), iOS (13,0), Mac (10,15)]
+		[NoWatch, TV (13,0), iOS (13,0), NoMac]
 		[NullAllowed, Export ("accessibilityTextualContext", ArgumentSemantic.Strong)]
 		string AccessibilityTextualContext { get; set; }
 	}
