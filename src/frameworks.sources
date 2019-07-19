@@ -213,6 +213,12 @@ AUDIOUNIT_SOURCES = \
 	AudioUnit/AUParameter.cs \
 	AudioUnit/AUParameterNode.cs \
 
+# AuthenticationServices
+
+AUTHENTICATIONSERVICES_SOURCES = \
+	AuthenticationServices/ASAuthorization.cs \
+	AuthenticationServices/ASAuthorizationRequest.cs \
+
 # AVFoundation
 
 AVFOUNDATION_API_SOURCES = \

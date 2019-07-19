@@ -242,11 +242,19 @@ namespace AuthenticationServices {
 	[DisableDefaultCtor]
 	interface ASAuthorization {
 
+		// Unfortunately Apple returns an internal wrapper type that can quack, bark and moo
+		// depending on context of the request and all objects that implement IASAuthorizationProvider
+		// are not related between them.
+		[Internal]
 		[Export ("provider", ArgumentSemantic.Strong)]
-		IASAuthorizationProvider Provider { get; }
+		IntPtr _Provider { get; }
 
+		// Unfortunately Apple returns an internal wrapper type that can quack, bark and moo
+		// depending on context of the request and all objects that implement IASAuthorizationCredential
+		// are not related between them.
+		[Internal]
 		[Export ("credential", ArgumentSemantic.Strong)]
-		IASAuthorizationCredential Credential { get; }
+		IntPtr _Credential { get; }
 	}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
@@ -532,8 +540,12 @@ namespace AuthenticationServices {
 	[DisableDefaultCtor]
 	interface ASAuthorizationRequest : NSCopying, NSSecureCoding {
 
+		// Unfortunately Apple returns an internal wrapper type that can quack, bark and moo
+		// depending on context of the request and all objects that implement IASAuthorizationProvider
+		// are not related between them.
+		[Internal]
 		[Export ("provider", ArgumentSemantic.Strong)]
-		IASAuthorizationProvider Provider { get; }
+		IntPtr _Provider { get; }
 	}
 
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
