@@ -52,15 +52,14 @@ namespace GameController {
 		public float /* float_t = float */ LeftTrigger;
 		public float /* float_t = float */ RightTrigger;
 
-		// radar: https://trello.com/c/7FoGTORD (GCExtendedGamepadSnapShotDataV100 struct size / alignment not backward compatible)
-		// [TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
-		// public bool LeftThumbstickButton;
-		// [TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
-		// public bool RightThumbstickButton;
-		
-		// additional struct addition that would not be backward compatible
-		// [iOS (12,2), Mac (10,14,4), TV (12,2)]
-		// public bool SupportsClickableThumbsticks;
+		// Apple inserted these in the middle of the struct previously so it broke the struct for backwards compatibility,
+		// but now they are at the end of the struct so they are allowed and do not prevent backwards compatibility
+		[iOS (12,2), Mac (10,14,4), TV (12,2)]
+		public bool SupportsClickableThumbsticks;
+		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
+		public bool LeftThumbstickButton;
+		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
+		public bool RightThumbstickButton;
 
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
