@@ -7826,6 +7826,16 @@ namespace UIKit {
 		[Static]
 		[Export ("removeImage", ArgumentSemantic.Strong)]
 		UIImage RemoveImage { get; }
+
+		[Watch (6,0), TV (13,0), iOS (13,0)]
+		[Static]
+		[Export ("checkmarkImage", ArgumentSemantic.Strong)]
+		UIImage CheckmarkImage { get; }
+
+		[Watch (6,0), TV (13,0), iOS (13,0)]
+		[Static]
+		[Export ("strokedCheckmarkImage", ArgumentSemantic.Strong)]
+		UIImage StrokedCheckmarkImage { get; }
 	}
 
 	[Watch (6,0), TV (13,0), iOS (13,0)]
@@ -19358,6 +19368,10 @@ namespace UIKit {
 		string[] AllowedContentTypes { get; }
 
 		[iOS (13,0)]
+		[Export ("recentDocumentsContentTypes", ArgumentSemantic.Copy)]
+		string [] RecentDocumentsContentTypes { get; }
+
+		[iOS (13,0)]
 		[Export ("shouldShowFileExtensions")]
 		bool ShouldShowFileExtensions { get; set; }
 
@@ -19379,7 +19393,7 @@ namespace UIKit {
 		[Export ("transitionControllerForDocumentURL:")]
 		UIDocumentBrowserTransitionController _DeprecatedGetTransitionController (NSUrl documentUrl);
 
-		[Export ("customActions", ArgumentSemantic.Strong)]
+		[Export ("customActions", ArgumentSemantic.Copy)]
 		UIDocumentBrowserAction[] CustomActions { get; set; }
 
 		[Export ("browserUserInterfaceStyle", ArgumentSemantic.Assign)]
@@ -20970,7 +20984,6 @@ namespace UIKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
-		[Introduced (PlatformName.UIKitForMac, 13, 0)]
 		[Static]
 		[Export ("fontPanelVisible")]
 		bool FontPanelVisible { [Bind ("isFontPanelVisible")] get; }
@@ -20986,7 +20999,6 @@ namespace UIKit {
 		[Export ("setSelectedAttributes:isMultiple:")]
 		void SetSelectedAttributes (NSDictionary attributes, bool flag);
 
-		[Introduced (PlatformName.UIKitForMac, 13, 0)]
 		[Static]
 		[Export ("toggleFontPanel:")]
 		void ToggleFontPanel (NSObject sender);
@@ -21262,6 +21274,10 @@ namespace UIKit {
 	// 	[Export ("applySnapshot:animatingDifferences:")]
 	// 	void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences);
 
+	// 	[Async]
+	// 	[Export ("applySnapshot:animatingDifferences:completion:")]
+	// 	void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences, [NullAllowed] Action completion);
+
 	// 	[Export ("itemIdentifierForIndexPath:")]
 	// 	[return: NullAllowed]
 	// 	ItemIdentifierType GetItemIdentifier (NSIndexPath indexPath);
@@ -21289,6 +21305,10 @@ namespace UIKit {
 
 	// 	[Export ("applySnapshot:animatingDifferences:")]
 	// 	void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences);
+
+	// 	[Async]
+	// 	[Export ("applySnapshot:animatingDifferences:completion:")]
+	// 	void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences, [NullAllowed] Action completion);
 
 	// 	[Export ("itemIdentifierForIndexPath:")]
 	// 	[return: NullAllowed]
