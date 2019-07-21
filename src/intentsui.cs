@@ -41,6 +41,8 @@ namespace IntentsUI {
 		WhiteOutline,
 		Black,
 		BlackOutline,
+		Automatic, // how to handle the fact this 2 are available since iOS 13.0 ?
+		AutomaticOutLine 
 	}
 
 	[iOS (11,0)]
@@ -164,9 +166,6 @@ namespace IntentsUI {
 	[DisableDefaultCtor]
 	interface INUIAddVoiceShortcutButton {
 
-		[Export ("initWithStyle:")]
-		IntPtr Constructor (INUIAddVoiceShortcutButtonStyle style);
-
 		[Export ("style")]
 		INUIAddVoiceShortcutButtonStyle Style { get; }
 
@@ -183,6 +182,10 @@ namespace IntentsUI {
 		[iOS (12,2)]
 		[Export ("cornerRadius", ArgumentSemantic.Assign)]
 		nfloat CornerRadius { get; set; }
+		
+		[iOS (13,0)]
+		[Export ("setStyle:")]
+		void SetStyle (INUIAddVoiceShortcutButtonStyle style);
 	}
 
 	interface IINUIAddVoiceShortcutButtonDelegate {}
