@@ -84,7 +84,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				cbClient = c;
 				runLoop.Stop ();
 			};
-			var source = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, cb, new CFStreamClientContext ());
+			var source = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, cb, null);
 			using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
 				runLoop.AddSource (source, mode);
 				// block until cb is called
@@ -96,6 +96,46 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Assert.AreEqual (1, proxies.Length, "Length");
 				// assert the data of the proxy, although we are really testing the js used
 				Assert.AreEqual (8080, proxies [0].Port, "Port");
+			}
+		}
+
+		[Test]
+		public void TestPACParsingScriptRunLoopNoNullClient ()
+		{
+			// get the path for the pac file, try to parse it and ensure that 
+			// our cb was called
+			CFProxy [] proxies = null;
+			NSError error = null;
+			NSObject cbClient = null;
+
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+
+			var script = File.ReadAllText (pacPath);
+			var targetUri = new Uri ("http://docs.xamarin.com");
+			using (var clientData = new NSObject ()) {
+				var runLoop = CFRunLoop.Current;
+
+				// get source, execute run loop in a diff thread
+
+				CFNetwork.CFProxyAutoConfigurationResultCallback cb = delegate (NSObject c, CFProxy [] l, NSError e) {
+					proxies = l;
+					error = e;
+					cbClient = c;
+					runLoop.Stop ();
+				};
+				var source = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, cb, clientData);
+				using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
+					runLoop.AddSource (source, mode);
+					// block until cb is called
+					runLoop.RunInMode (mode, double.MaxValue, false);
+					runLoop.RemoveSource (source, mode);
+					Assert.IsNotNull (cbClient, "Null client");
+					Assert.IsNull (error, "Null error");
+					Assert.IsNotNull (proxies, "Not null proxies");
+					Assert.AreEqual (1, proxies.Length, "Length");
+					// assert the data of the proxy, although we are really testing the js used
+					Assert.AreEqual (8080, proxies [0].Port, "Port");
+				}
 			}
 		}
 
@@ -171,7 +211,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				cbClient = c;
 				runLoop.Stop ();
 			};
-			var source = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, cb, new CFStreamClientContext ());
+			var source = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, cb, null);
 			using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
 				runLoop.AddSource (source, mode);
 				// block until cb is called

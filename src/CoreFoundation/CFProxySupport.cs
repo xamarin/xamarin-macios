@@ -591,7 +591,8 @@ namespace CoreFoundation {
 		{
 			CFProxy[] proxies = null;
 			if (proxyList != IntPtr.Zero) {
-				using (var array = new CFArray (proxyList, false)) {
+				// it was retained in the cbs.
+				using (var array = new CFArray (proxyList, true)) {
 					proxies = new CFProxy [array.Count];
 					for (int i = 0; i < proxies.Length; i++) {
 						var dict = new NSDictionary (array.GetValue (i));
@@ -602,6 +603,53 @@ namespace CoreFoundation {
 			return proxies;
 		}
 
+		// helper struct to contain all the data that was used in the callback
+		struct PACProxyCallbackData
+		{
+			public IntPtr ProxyListPtr; // Pointer to a CFArray to later be parsed
+			public IntPtr ErrorPtr; // Pointer to the Error
+			public IntPtr CFRunLoopPtr; // Pointer to the runloop, needed to be stoped
+
+			public CFProxy [] ProxyList {
+				get {
+					if (ProxyListPtr != IntPtr.Zero)
+						return ParseProxies (ProxyListPtr);
+					return null;
+				}
+			}
+
+			public NSError Error {
+				get {
+					if (ErrorPtr != IntPtr.Zero) 
+						return Runtime.GetNSObject<NSError> (ErrorPtr);
+					return null;
+				}
+			}
+		}
+
+		// callback that will sent the client info
+		[MonoPInvokeCallback (typeof (CFProxyAutoConfigurationResultCallbackInternal))]
+		static void ExecutePacCallback (IntPtr client, IntPtr proxyList, IntPtr error)
+		{
+			// grab the required structure and set the data, according apple docs:
+			// client
+			// The client reference originally passed in the clientContext parameter of the 
+			// CFNetworkExecuteProxyAutoConfigurationScript or CFNetworkExecuteProxyAutoConfigurationURL call
+			// that triggered this callback.
+			// Well, that is NOT TRUE, the client passed is the client.Info pointer not the client.
+			var pacCbData =  (PACProxyCallbackData) Marshal.PtrToStructure (client, typeof (PACProxyCallbackData));
+			// make sure is not released, will be released by the parsing method.
+			if (proxyList != IntPtr.Zero) {
+				CFObject.CFRetain (proxyList);
+				pacCbData.ProxyListPtr = proxyList;
+			}
+			pacCbData.ErrorPtr = error;
+			// stop the CFRunLoop
+			var runLoop = new CFRunLoop (pacCbData.CFRunLoopPtr);
+			Marshal.StructureToPtr (pacCbData, client, false);
+			runLoop.Stop ();
+		}
+
 		static async Task<(CFProxy[] proxies, NSError error)> ExecutePacCFRunLoopSourceAsync (CreatePACCFRunLoopSource factory, CancellationToken cancellationToken)
 		{
 			CFProxy[] proxies = null;
@@ -609,20 +657,31 @@ namespace CoreFoundation {
 			await Task.Run (() => {
 				// we need the runloop of THIS thread, so it is important to get it in the correct context
 				var runLoop = CFRunLoop.Current;
-				CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
-					if (error != IntPtr.Zero)
-						outError = new NSError (error);
-					else
-						proxies = ParseProxies (proxyList);
-					runLoop.Stop ();
-				};
-				var clientContext = new CFStreamClientContext ();
-				using (var loopSource = new CFRunLoopSource (factory (cb, ref clientContext)))
-				using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
-					runLoop.AddSource (loopSource, mode);
-					// blocks until stop is called, will be done in the cb set previously
-					runLoop.RunInMode (mode, double.MaxValue, false);
-					runLoop.RemoveSource (loopSource, mode);
+
+				// build a struct that will have all the needed info for the callback
+				var pacCbData = new PACProxyCallbackData ();
+				pacCbData.CFRunLoopPtr = runLoop.Handle;
+				var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf(pacCbData));
+				try {
+					Marshal.StructureToPtr (pacCbData, pacDataPtr, false); 
+
+					var clientContext = new CFStreamClientContext ();
+					clientContext.Info = pacDataPtr;
+
+					using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext)))
+					using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
+						runLoop.AddSource (loopSource, mode);
+						// blocks until stop is called, will be done in the cb set previously
+						runLoop.RunInMode (mode, double.MaxValue, false);
+						runLoop.RemoveSource (loopSource, mode);
+					}
+					pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure(pacDataPtr, typeof (PACProxyCallbackData));
+					// get data from the struct
+					proxies = pacCbData.ProxyList;
+					outError = pacCbData.Error;
+				} finally {
+					// clean resources
+					Marshal.FreeHGlobal (pacDataPtr); 
 				}
 			}, cancellationToken).ConfigureAwait (false);
 
@@ -631,36 +690,88 @@ namespace CoreFoundation {
 
 		static CFProxy[] ExecutePacCFRunLoopSourceBlocking (CreatePACCFRunLoopSource factory, out NSError outError)
 		{
-			outError = null;
-			IntPtr cbError = IntPtr.Zero;
-			CFProxy[] proxies = null;
-
 			var runLoop = CFRunLoop.Current;
-			CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
-				proxies = ParseProxies (proxyList);
-				cbError = error;
-				runLoop.Stop ();
-			};
+			CFProxy [] proxies = null;
+			outError = null;
 
-			var clientContext = new CFStreamClientContext ();
-			using (var loopSource = new CFRunLoopSource (factory (cb, ref clientContext)))
-			using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
-				runLoop.AddSource (loopSource, mode);
-				runLoop.RunInMode (mode, double.MaxValue, false);
-				runLoop.RemoveSource (loopSource, mode);
-				if (cbError != IntPtr.Zero)
-					outError = new NSError (cbError);
+			// build a struct that will have all the needed info for the callback
+			var pacCbData = new PACProxyCallbackData ();
+			pacCbData.CFRunLoopPtr = runLoop.Handle;
+			var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf(pacCbData));
+			try {
+				Marshal.StructureToPtr (pacCbData, pacDataPtr, false); 
+
+				var clientContext = new CFStreamClientContext ();
+				clientContext.Info = pacDataPtr;
+
+				using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext)))
+				using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
+					runLoop.AddSource (loopSource, mode);
+					runLoop.RunInMode (mode, double.MaxValue, false);
+					runLoop.RemoveSource (loopSource, mode);
+				}
+				pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure(pacDataPtr, typeof (PACProxyCallbackData));
+				// get data from the struct
+				if (pacCbData.Error != null)
+					outError = pacCbData.Error;
+				else 
+					proxies = pacCbData.ProxyList;
+				// clean resources
 				return proxies;
+			} finally {
+				Marshal.FreeHGlobal (pacDataPtr); 
 			}
 		}
 
-		static CFRunLoopSource ExecutePacCFRunLoopSourceBlocking (CreatePACCFRunLoopSource factory, CFProxyAutoConfigurationResultCallback clientCb, CFStreamClientContext clientContext)
+		// helper struct to contain all the data that is needed to execute the user cb
+		struct PACProxyUserCallbackData
 		{
-			CFProxyAutoConfigurationResultCallbackInternal cb = delegate (IntPtr client, IntPtr proxyList, IntPtr error) {
-				var proxies = ParseProxies (proxyList);
-				clientCb (Runtime.GetNSObject<NSObject> (client), proxies, Runtime.GetNSObject<NSError> (error));
-			};
-			var loopSourcePtr = factory (cb, ref clientContext);
+			public CFProxyAutoConfigurationResultCallback UserCallback; // Pointer to the user callback
+			public IntPtr UserClientDataPtr; // Pointer to the passed objc from the user
+		}
+
+		[MonoPInvokeCallback (typeof (CFProxyAutoConfigurationResultCallbackInternal))]
+		static void ExecutePacUserCallback (IntPtr client, IntPtr proxyListPtr, IntPtr errorPtr)
+		{
+			// grab the required structure and set the data, according apple docs:
+			// client
+			// The client reference originally passed in the clientContext parameter of the 
+			// CFNetworkExecuteProxyAutoConfigurationScript or CFNetworkExecuteProxyAutoConfigurationURL call
+			// that triggered this callback.
+			// Well, that is NOT TRUE, the client passed is the client.Info pointer not the client.
+			var pacCbData =  (PACProxyUserCallbackData) Marshal.PtrToStructure (client, typeof (PACProxyUserCallbackData));
+			// convert the data to be used for the user
+			CFProxy [] proxies = null;
+			NSError error = null;
+			if (errorPtr != IntPtr.Zero) {
+				error = Runtime.GetNSObject<NSError> (errorPtr);
+			} else {
+				// retain so that is nore released
+				CFObject.CFRetain (proxyListPtr);
+				proxies = ParseProxies (proxyListPtr);
+			}
+			// get the callback to be executed
+			pacCbData.UserCallback (Runtime.GetNSObject<NSObject> (pacCbData.UserClientDataPtr), proxies, error);
+			// we have to free the pointer here, else, if done in the caller, we will get garbage in this cb.
+			Marshal.FreeHGlobal(client);
+		}
+
+		static CFRunLoopSource ExecutePacCFRunLoopSourceBlocking (CreatePACCFRunLoopSource factory, CFProxyAutoConfigurationResultCallback clientCb, NSObject userContext)
+		{
+			// build a struct that will have all the needed info for the callback
+			var pacCbData = new PACProxyUserCallbackData ();
+
+			if (userContext != null)
+				pacCbData.UserClientDataPtr = userContext.Handle;
+			pacCbData.UserCallback = clientCb;
+
+			// this pointer will be cleaned in the wrapper cb
+			var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf(pacCbData));
+			Marshal.StructureToPtr (pacCbData, pacDataPtr, false);
+			var clientContext = new CFStreamClientContext ();
+			clientContext.Info = pacDataPtr;
+
+			var loopSourcePtr = factory (ExecutePacUserCallback, ref clientContext);
 			return (loopSourcePtr == IntPtr.Zero) ? null : new CFRunLoopSource (loopSourcePtr);
 		}
 
@@ -671,7 +782,7 @@ namespace CoreFoundation {
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext  clientContext);
 
-		public static CFRunLoopSource ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCallback, CFStreamClientContext clientContext)
+		public static CFRunLoopSource ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCallback, NSObject clientContext)
 		{
 			if (proxyAutoConfigurationScript == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationScript));
@@ -735,7 +846,7 @@ namespace CoreFoundation {
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
 
-		public static CFRunLoopSource ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCallback, CFStreamClientContext clientContext)
+		public static CFRunLoopSource ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCallback, NSObject clientContext)
 		{
 			if (proxyAutoConfigurationUrl == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationUrl));
