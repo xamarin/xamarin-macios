@@ -1,4 +1,4 @@
-// Copyright 2018, Microsoft, Corp.
+// Copyright 2018-2019, Microsoft, Corp.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -331,6 +331,7 @@ namespace iTunesLibrary {
 
 	[Mac (10,14)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface ITLibrary
 	{
 		[Export ("applicationVersion")]
@@ -373,6 +374,7 @@ namespace iTunesLibrary {
 		[Export ("initWithAPIVersion:error:")]
 		IntPtr Constructor (string requestedAPIVersion, [NullAllowed] out NSError error);
 
+		[DesignatedInitializer]
 		[Export ("initWithAPIVersion:options:error:")]
 		IntPtr Constructor (string requestedAPIVersion, ITLibInitOptions options, [NullAllowed] out NSError error);
 
