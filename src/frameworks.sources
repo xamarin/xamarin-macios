@@ -967,7 +967,9 @@ IOSURFACE_SOURCES = \
 
 ITUNESLIBRARY_API_SOURCES = \
 	iTunesLibrary/Enums.cs \
-	
+
+ITUNESLIBRARY_SOURCES = \
+	iTunesLibrary/ITCompat.cs \
 
 # JavaScriptCore
 
