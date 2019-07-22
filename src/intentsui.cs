@@ -41,8 +41,10 @@ namespace IntentsUI {
 		WhiteOutline,
 		Black,
 		BlackOutline,
-		Automatic, // how to handle the fact this 2 are available since iOS 13.0 ?
-		AutomaticOutLine 
+		[iOS (13,0)]
+		Automatic,
+		[iOS (13,0)]
+		AutomaticOutLine,
 	}
 
 	[iOS (11,0)]
