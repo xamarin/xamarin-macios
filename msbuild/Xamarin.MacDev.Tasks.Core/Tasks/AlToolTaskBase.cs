@@ -59,6 +59,8 @@ namespace Xamarin.MacDev.Tasks
             args.AddQuoted (Username);
             args.Add ("--password");
             args.AddQuoted (Password);
+            args.Add ("--output-format");
+            args.Add ("xml");
 
 			return args.ToString ();
 		}
