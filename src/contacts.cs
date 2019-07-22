@@ -579,9 +579,25 @@ namespace Contacts {
 		NSString Granddaughter { get; }
 
 		[Watch (6,0), Mac (10,15), iOS (13,0)]
+		[Field ("CNLabelContactRelationGranddaughterDaughtersDaughter")]
+		NSString GranddaughterDaughtersDaughter { get; }
+
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
+		[Field ("CNLabelContactRelationGranddaughterSonsDaughter")]
+		NSString GranddaughterSonsDaughter { get; }
+
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGrandson")]
 		NSString Grandson { get; }
 
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
+		[Field ("CNLabelContactRelationGrandsonDaughtersSon")]
+		NSString GrandsonDaughtersSon { get; }
+
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
+		[Field ("CNLabelContactRelationGrandsonSonsSon")]
+		NSString GrandsonSonsSon { get; }
+		
 		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationGreatGrandchild")]
 		NSString GreatGrandchild { get; }
