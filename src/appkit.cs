@@ -13125,6 +13125,11 @@ namespace AppKit {
 		[Mac (10,12)]
 		[Export ("canRepresentDisplayGamut:")]
 		bool CanRepresentDisplayGamut (NSDisplayGamut displayGamut);
+
+		// Inlined from unnamed category.
+		[Mac (10,11)]
+		[Export ("maximumExtendedDynamicRangeColorComponentValue")]
+		nfloat MaximumExtendedDynamicRangeColorComponentValue { get; }
 	}
 
 	[BaseType (typeof (NSControl))]
