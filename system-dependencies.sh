@@ -164,13 +164,14 @@ COLOR_RED=$(tput setaf 1 2>/dev/null || true)
 COLOR_ORANGE=$(tput setaf 3 2>/dev/null || true)
 COLOR_MAGENTA=$(tput setaf 5 2>/dev/null || true)
 COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
+COLOR_RESET=uniquesearchablestring
 function fail () {
-	echo "    ${COLOR_RED}$1${COLOR_CLEAR}"
+	echo "    ${COLOR_RED}${1//${COLOR_RESET}/${COLOR_RED}}${COLOR_CLEAR}"
 	FAIL=1
 }
 
 function warn () {
-	echo "    ${COLOR_ORANGE}$1${COLOR_CLEAR}"
+	echo "    ${COLOR_ORANGE}${1//${COLOR_RESET}/${COLOR_ORANGE}}${COLOR_CLEAR}"
 }
 
 function ok () {
@@ -930,14 +931,21 @@ function check_simulators ()
 	done
 
 	if ! FAILED_SIMULATORS=$(mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" --only-check "${SIMS[@]}"); then
-		if ! test -z $PROVISION_SIMULATORS; then
-			mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"
-			ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
+		local action=warn
+		if test -z $OPTIONAL_SIMULATORS; then
+			action=fail
+		fi
+		if [[ "$FAILED_SIMULATORS" =~ "Unknown simulators:" ]]; then
+			$action "${FAILED_SIMULATORS}"
+			$action "    If you just updated the Xcode version, it's likely Apple stopped shipping these simulators with the new version of Xcode."
+			$action "    If that's the case, you can list the available simulators with ${COLOR_MAGENTA}make -C tools/siminstaller print-simulators${COLOR_RESET},"
+			$action "    and then update the ${COLOR_MAGENTA}MIN_<OS>_SIMULATOR_VERSION${COLOR_RESET} and ${COLOR_MAGENTA}EXTRA_SIMULATORS${COLOR_RESET} variables in Make.config to the earliest available simulators."
 		else
-			if test -z $OPTIONAL_SIMULATORS; then
-				fail "The simulators '${FAILED_SIMULATORS//$'\n'/', '}' are not installed or need to be upgraded."
+			if ! test -z $PROVISION_SIMULATORS; then
+				mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"
+				ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
 			else
-				warn "The simulators '${FAILED_SIMULATORS//$'\n'/', '}' are not installed or should be upgraded."
+				$action "The simulators '${FAILED_SIMULATORS//$'\n'/', '}' are not installed or need to be upgraded."
 			fi
 		fi
 	else
