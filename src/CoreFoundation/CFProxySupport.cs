@@ -661,7 +661,7 @@ namespace CoreFoundation {
 				// build a struct that will have all the needed info for the callback
 				var pacCbData = new PACProxyCallbackData ();
 				pacCbData.CFRunLoopPtr = runLoop.Handle;
-				var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf(pacCbData));
+				var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf (pacCbData));
 				try {
 					Marshal.StructureToPtr (pacCbData, pacDataPtr, false); 
 
