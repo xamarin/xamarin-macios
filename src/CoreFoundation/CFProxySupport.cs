@@ -739,7 +739,7 @@ namespace CoreFoundation {
 			// CFNetworkExecuteProxyAutoConfigurationScript or CFNetworkExecuteProxyAutoConfigurationURL call
 			// that triggered this callback.
 			// Well, that is NOT TRUE, the client passed is the client.Info pointer not the client.
-			var pacCbData =  (PACProxyUserCallbackData) Marshal.PtrToStructure (client, typeof (PACProxyUserCallbackData));
+			var pacCbData = (PACProxyUserCallbackData) Marshal.PtrToStructure (client, typeof (PACProxyUserCallbackData));
 			// convert the data to be used for the user
 			CFProxy [] proxies = null;
 			NSError error = null;
