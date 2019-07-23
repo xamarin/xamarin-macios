@@ -700,11 +700,20 @@ namespace Metal {
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v3 = 10003,
 
+		[Mac (10,14), NoiOS, NoTV, NoWatch]
+		macOS_GPUFamily1_v4 = 10004,
+
+		[Mac (10,14), NoiOS, NoTV, NoWatch]
+		macOS_GPUFamily2_v1 = 10005,
+
 		[TV (9,0)]
 		TVOS_GPUFamily1_v1 = 30000,
 
 		[NoiOS, TV (10,0), NoWatch, NoMac]
 		tvOS_GPUFamily1_v2 = 30001,
+
+		[NoiOS, TV (11,0), NoWatch, NoMac]
+		tvOS_GPUFamily1_v3 = 30002,
 
 		[NoiOS, TV (11,0), NoWatch, NoMac]
 		tvOS_GPUFamily2_v1 = 30003,
