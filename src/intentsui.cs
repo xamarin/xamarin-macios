@@ -107,6 +107,8 @@ namespace IntentsUI {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("initWithShortcut:")]
 		IntPtr Constructor (INShortcut shortcut);
 	}
@@ -139,6 +141,8 @@ namespace IntentsUI {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("initWithVoiceShortcut:")]
 		IntPtr Constructor (INVoiceShortcut voiceShortcut);
 	}
@@ -168,6 +172,11 @@ namespace IntentsUI {
 	[DisableDefaultCtor]
 	interface INUIAddVoiceShortcutButton {
 
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("initWithStyle:")]
+		IntPtr Constructor (INUIAddVoiceShortcutButtonStyle style);
+		
 		[Export ("style")]
 		INUIAddVoiceShortcutButtonStyle Style { get; }
 

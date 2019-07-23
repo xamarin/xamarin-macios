@@ -955,11 +955,6 @@ INTENTS_SOURCES = \
 	Intents/INRelativeReferenceResolutionResult.watchOS.cs \
 	Intents/INRelativeSettingResolutionResult.watchOS.cs \
 
-# IntentsUI
-
-INTENTSUI_SOURCES = \
-	IntentsUI/INUICompat.cs \
-
 # IOSurface
 IOSURFACE_CORE_SOURCES = \
 	IOSurface/IODefs.cs
