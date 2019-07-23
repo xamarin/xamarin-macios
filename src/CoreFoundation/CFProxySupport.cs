@@ -595,7 +595,7 @@ namespace CoreFoundation {
 				using (var array = new CFArray (proxyList, true)) {
 					proxies = new CFProxy [array.Count];
 					for (int i = 0; i < proxies.Length; i++) {
-						var dict = new NSDictionary (array.GetValue (i));
+						var dict = Runtime.GetNSObject<NSDictionary> (array.GetValue (i));
 						proxies[i] = new CFProxy (dict);
 					}
 				}
@@ -691,7 +691,6 @@ namespace CoreFoundation {
 		static CFProxy[] ExecutePacCFRunLoopSourceBlocking (CreatePACCFRunLoopSource factory, out NSError outError)
 		{
 			var runLoop = CFRunLoop.Current;
-			CFProxy [] proxies = null;
 			outError = null;
 
 			// build a struct that will have all the needed info for the callback
@@ -712,12 +711,8 @@ namespace CoreFoundation {
 				}
 				pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (pacDataPtr, typeof (PACProxyCallbackData));
 				// get data from the struct
-				if (pacCbData.Error != null)
-					outError = pacCbData.Error;
-				else 
-					proxies = pacCbData.ProxyList;
-				// clean resources
-				return proxies;
+				outError = pacCbData.Error;
+				return pacCbData.ProxyList;
 			} finally {
 				Marshal.FreeHGlobal (pacDataPtr); 
 			}
@@ -741,17 +736,14 @@ namespace CoreFoundation {
 			// Well, that is NOT TRUE, the client passed is the client.Info pointer not the client.
 			var pacCbData = (PACProxyUserCallbackData) Marshal.PtrToStructure (client, typeof (PACProxyUserCallbackData));
 			// convert the data to be used for the user
-			CFProxy [] proxies = null;
-			NSError error = null;
-			if (errorPtr != IntPtr.Zero) {
-				error = Runtime.GetNSObject<NSError> (errorPtr);
-			} else {
-				// retain so that is nore released
-				CFObject.CFRetain (proxyListPtr);
-				proxies = ParseProxies (proxyListPtr);
-			}
+			// retain so that is nore released
+			CFObject.CFRetain (proxyListPtr);
+			var proxies = ParseProxies (proxyListPtr);
+			var error = Runtime.GetNSObject<NSError> (errorPtr);
+
 			// get the callback to be executed
 			pacCbData.UserCallback (Runtime.GetNSObject<NSObject> (pacCbData.UserClientDataPtr), proxies, error);
+
 			// we have to free the pointer here, else, if done in the caller, we will get garbage in this cb.
 			Marshal.FreeHGlobal (client);
 		}
