@@ -444,7 +444,7 @@ namespace Contacts {
 
 		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationColleauge")] // Apple issue: https://feedbackassistant.apple.com/feedback/6623415
-		NSString Colleauge { get; }
+		NSString Colleague { get; }
 
 		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Field ("CNLabelContactRelationTeacher")]
