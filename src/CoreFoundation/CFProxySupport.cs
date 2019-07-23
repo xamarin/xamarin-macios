@@ -608,7 +608,7 @@ namespace CoreFoundation {
 		{
 			public IntPtr ProxyListPtr; // Pointer to a CFArray to later be parsed
 			public IntPtr ErrorPtr; // Pointer to the Error
-			public IntPtr CFRunLoopPtr; // Pointer to the runloop, needed to be stoped
+			public IntPtr CFRunLoopPtr; // Pointer to the runloop, needed to be stopped
 
 			public CFProxy [] ProxyList {
 				get {
