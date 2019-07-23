@@ -1,0 +1,4 @@
+!missing-field! kCGColorSpaceExtendedLinearDisplayP3 not bound
+!missing-field! kCGColorSpaceExtendedLinearITUR_2020 not bound
+!missing-field! kCGColorSpaceITUR_2020_PQ_EOTF not bound
+!missing-pinvoke! CGColorConversionInfoCreateWithOptions is not bound
