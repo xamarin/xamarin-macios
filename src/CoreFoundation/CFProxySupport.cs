@@ -592,7 +592,7 @@ namespace CoreFoundation {
 			CFProxy[] proxies = null;
 			if (proxyList != IntPtr.Zero) {
 				// it was retained in the cbs.
-				using (var array = new CFArray (proxyList, true)) {
+				using (var array = new CFArray (proxyList, false)) {
 					proxies = new CFProxy [array.Count];
 					for (int i = 0; i < proxies.Length; i++) {
 						var dict = Runtime.GetNSObject<NSDictionary> (array.GetValue (i));
@@ -681,6 +681,7 @@ namespace CoreFoundation {
 					outError = pacCbData.Error;
 				} finally {
 					// clean resources
+					CFObject.CFRelease (pacCbData.ProxyListPtr);
 					Marshal.FreeHGlobal (pacDataPtr); 
 				}
 			}, cancellationToken).ConfigureAwait (false);
@@ -714,6 +715,7 @@ namespace CoreFoundation {
 				outError = pacCbData.Error;
 				return pacCbData.ProxyList;
 			} finally {
+				CFObject.CFRelease (pacCbData.ProxyListPtr);
 				Marshal.FreeHGlobal (pacDataPtr); 
 			}
 		}
@@ -739,6 +741,7 @@ namespace CoreFoundation {
 			// retain so that is nore released
 			CFObject.CFRetain (proxyListPtr);
 			var proxies = ParseProxies (proxyListPtr);
+			CFObject.CFRelease (proxyListPtr);
 			var error = Runtime.GetNSObject<NSError> (errorPtr);
 
 			// get the callback to be executed
