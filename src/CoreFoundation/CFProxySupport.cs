@@ -753,7 +753,7 @@ namespace CoreFoundation {
 			// get the callback to be executed
 			pacCbData.UserCallback (Runtime.GetNSObject<NSObject> (pacCbData.UserClientDataPtr), proxies, error);
 			// we have to free the pointer here, else, if done in the caller, we will get garbage in this cb.
-			Marshal.FreeHGlobal(client);
+			Marshal.FreeHGlobal (client);
 		}
 
 		static CFRunLoopSource ExecutePacCFRunLoopSourceBlocking (CreatePACCFRunLoopSource factory, CFProxyAutoConfigurationResultCallback clientCb, NSObject userContext)
