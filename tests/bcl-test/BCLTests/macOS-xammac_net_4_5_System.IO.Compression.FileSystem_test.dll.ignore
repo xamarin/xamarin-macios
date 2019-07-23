@@ -1,0 +1,5 @@
+# files are missing in the test dlls
+MonoTests.System.IO.Compression.FileSystem.ZipArchiveTests.ZipCreateFromEntryChangeTimestamp
+MonoTests.System.IO.Compression.FileSystem.ZipArchiveTests.ZipCreateFromDirectory
+MonoTests.System.IO.Compression.FileSystem.ZipArchiveTests.ZipCreateFromDirectoryIncludeBase
+MonoTests.System.IO.Compression.FileSystem.ZipArchiveTests.ZipExtractToDirectory
