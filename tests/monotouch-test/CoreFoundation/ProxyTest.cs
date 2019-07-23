@@ -64,6 +64,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPACParsingScriptRunLoop ()
 		{
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Inconclusive ("Using delegates without MonoPInvokeCallback only  works ont he simulator, which makes the test hard to write");
 			// get the path for the pac file, try to parse it and ensure that 
 			// our cb was called
 			CFProxy [] proxies = null;
@@ -102,6 +104,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPACParsingScriptRunLoopNoNullClient ()
 		{
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Inconclusive ("Using delegates without MonoPInvokeCallback only  works ont he simulator, which makes the test hard to write");
 			// get the path for the pac file, try to parse it and ensure that 
 			// our cb was called
 			CFProxy [] proxies = null;
@@ -192,6 +196,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPACParsingUrlRunLoop ()
 		{
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Inconclusive ("Using delegates without MonoPInvokeCallback only  works ont he simulator, which makes the test hard to write");
 			// get the path for the pac file, try to parse it and ensure that 
 			// our cb was called
 			CFProxy [] proxies = null;
