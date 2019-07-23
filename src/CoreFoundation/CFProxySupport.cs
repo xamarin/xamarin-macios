@@ -766,7 +766,7 @@ namespace CoreFoundation {
 			pacCbData.UserCallback = clientCb;
 
 			// this pointer will be cleaned in the wrapper cb
-			var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf(pacCbData));
+			var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf (pacCbData));
 			Marshal.StructureToPtr (pacCbData, pacDataPtr, false);
 			var clientContext = new CFStreamClientContext ();
 			clientContext.Info = pacDataPtr;
