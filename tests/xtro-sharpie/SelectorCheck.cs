@@ -110,9 +110,7 @@ namespace Extrospection {
 				var category = decl.DeclContext as ObjCCategoryDecl;
 				if (category != null) {
 					var cname = category.Name;
-					if (cname == null)
-						name = GetCategoryBase (category) + name;
-					else
+					if (cname != null)
 						name = name.ReplaceFirstInstance (cname, GetCategoryBase (category));
 					found = qualified_selectors.Contains (name);
 				}
