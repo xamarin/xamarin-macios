@@ -710,7 +710,7 @@ namespace CoreFoundation {
 					runLoop.RunInMode (mode, double.MaxValue, false);
 					runLoop.RemoveSource (loopSource, mode);
 				}
-				pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure(pacDataPtr, typeof (PACProxyCallbackData));
+				pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (pacDataPtr, typeof (PACProxyCallbackData));
 				// get data from the struct
 				if (pacCbData.Error != null)
 					outError = pacCbData.Error;
