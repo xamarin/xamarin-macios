@@ -945,12 +945,10 @@ Example:
 
 ```csharp
 public interface UIToolbar {
-    [Since (5,0)]
     [Export ("setBackgroundImage:forToolbarPosition:barMetrics:")]
     [Appearance]
     void SetBackgroundImage (UIImage backgroundImage, UIToolbarPosition position, UIBarMetrics barMetrics);
 
-    [Since (5,0)]
     [Export ("backgroundImageForToolbarPosition:barMetrics:")]
     [Appearance]
     UIImage GetBackgroundImage (UIToolbarPosition position, UIBarMetrics barMetrics);
@@ -1707,7 +1705,6 @@ Example:
 
 ```csharp
 [BaseType (typeof (NSObject))]
-[Since (4,0)]
 public interface NSOperation {
     [Export ("addDependency:")][PostGet ("Dependencies")]
     void AddDependency (NSOperation op);
@@ -2270,8 +2267,7 @@ If no `null` value is present then an `ArgumentNullException` will be thrown.
 
 Global attributes are either applied using the `[assembly:]` attribute modifier
 like the [`[LinkWithAttribute]`](#LinkWithAttribute) or can be used anywhere, 
-like the [`[Lion]`](#SinceAndLionAttributes) and [`[Since]`](#SinceAndLionAttributes) 
-attributes.
+like the availability attributes.
 
 <a name="LinkWithAttribute" />
 
@@ -2425,59 +2421,6 @@ information on weak linking, see Apple's documentation on [Weak Linking](http://
 Good candidates for weak linking would be `Frameworks` like Accounts,
 `CoreBluetooth`, `CoreImage`, `GLKit`, `NewsstandKit` and `Twitter` since they are only
 available in iOS 5.
-
-<a name="SinceAndLionAttributes" />
-
-### SinceAttribute (iOS) and LionAttribute (macOS)
-
-You use the `[Since]` attribute to flag APIs as having being introduced at a
-certain point in time. The attribute should only be used to flag types and
-methods that could cause a runtime problem if the underlying class, method or
-property is not available.
-
-Syntax:
-
-```csharp
-public SinceAttribute : Attribute {
-     public SinceAttribute (byte major, byte minor);
-     public byte Major, Minor;
-}
-```
-
-It should in general not be applied to enumerations, constraints or new
-structures as those would not cause a runtime error if they are executed on a
-device with an older version of the operating system.
-
-Example when applied to a type:
-
-```csharp
-// Type introduced with iOS 4.2
-[Since (4,2)]
-[BaseType (typeof (UIPrintFormatter))]
-interface UIViewPrintFormatter {
-    [Export ("view")]
-    UIView View { get; }
-}
-```
-
-Example when applied to a new member:
-
-```csharp
-[BaseType (typeof (UIViewController))]
-public interface UITableViewController {
-    [Export ("tableView", ArgumentSemantic.Retain)]
-    UITableView TableView { get; set; }
-
-    [Since (3,2)]
-    [Export ("clearsSelectionOnViewWillAppear")]
-    bool ClearsSelectionOnViewWillAppear { get; set; }
-```
-
-The `[Lion]` attribute is applied in the same way but for types introduced with
-Lion. The reason to use `[Lion]` versus the more specific version number that is
-used in iOS is that iOS is revised very often, while major OS X releases happen
-rarely and it is easier to remember the operating system by their codename than
-by their version number
 
 ### AdviceAttribute
 

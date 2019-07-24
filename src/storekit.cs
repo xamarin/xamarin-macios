@@ -480,7 +480,7 @@ namespace StoreKit {
 		uint AdNetworkTimestamp { get; set; }
 	}
 
-	[Since (6,0)]
+	[NoMac]
 	[Static]
 	interface SKStoreProductParameterKey
 	{
