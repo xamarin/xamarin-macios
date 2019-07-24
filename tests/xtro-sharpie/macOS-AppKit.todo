@@ -257,7 +257,6 @@
 !missing-selector! NSPickerTouchBarItem::target not bound
 !missing-selector! NSResponder::changeModeWithEvent: not bound
 !missing-selector! NSScreen::localizedName not bound
-!missing-selector! NSScreenNSScreen::maximumExtendedDynamicRangeColorComponentValue not bound
 !missing-selector! NSScreenNSScreen::maximumPotentialExtendedDynamicRangeColorComponentValue not bound
 !missing-selector! NSScreenNSScreen::maximumReferenceExtendedDynamicRangeColorComponentValue not bound
 !missing-selector! NSSliderTouchBarItem::doubleValue not bound
