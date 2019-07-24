@@ -8,7 +8,7 @@
 // Copyright 2019 Microsoft Corporation.
 //
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 using System;
 using NUnit.Framework;
 using Foundation;
@@ -49,4 +49,4 @@ namespace MonoTouchFixtures.UIKit {
 		}
 	}
 }
-#endif //!__WATCHOS__
+#endif // !__WATCHOS__ && !MONOMAC
