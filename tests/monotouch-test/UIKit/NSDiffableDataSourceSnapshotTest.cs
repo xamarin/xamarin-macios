@@ -20,6 +20,12 @@ namespace MonoTouchFixtures.UIKit {
 	[Preserve (AllMembers = true)]
 	public class NSDiffableDataSourceSnapshotTest {
 
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+		}
+
 		// https://github.com/xamarin/xamarin-macios/issues/6567
 		[Test]
 		public void GHIssue6567Test ()
