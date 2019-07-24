@@ -188,6 +188,10 @@ namespace VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_EncoderID")]
 		[Mac (10,13), iOS (11,0), TV (11,0)]
 		NSString EncoderId { get; }
+		
+		[Field ("kVTCompressionPropertyKey_UsingGPURegistryID")]
+		[Mac (10,15)]
+		NSString UsingGPURegistryID { get; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -666,6 +670,10 @@ namespace VideoToolbox {
 
 		[Field ("kVTDecompressionPropertyKey_PixelFormatsWithReducedResolutionSupport")]
 		NSString PixelFormatsWithReducedResolutionSupport { get; }
+		
+		[Field ("kVTDecompressionPropertyKey_UsingGPURegistryID")]
+		[Mac (10,15)]
+		NSString UsingGPURegistryID { get; }
 
 		//Post-decompression processing
 
