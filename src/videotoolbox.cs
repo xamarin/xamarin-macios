@@ -164,7 +164,7 @@ namespace VideoToolbox {
 		[Field ("kVTAlphaChannelMode_PremultipliedAlpha")]
 		NSString PremultipliedAlpha { get; } 
 		
-		[Mac (10,9)]
+		[iOS (10,9)]
 		[Field ("kVTCompressionPropertyKey_GammaLevel")]
 		NSString GammaLevel { get; } 
 		
