@@ -93,7 +93,15 @@ namespace HealthKit
 	[Native]
 	public enum HKQuantityAggregationStyle : long {
 		Cumulative = 0,
-		Discrete
+		[iOS (13, 0), Watch (6, 0)]
+		DiscreteArithmetic,
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'HKQuantityAggregationStyle.DiscreteArithmetic'.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'HKQuantityAggregationStyle.DiscreteArithmetic'.")]
+		Discrete = DiscreteArithmetic,
+		[iOS (13, 0), Watch (6, 0)]
+		DiscreteTemporallyWeighted,
+		[iOS (13, 0), Watch (6, 0)]
+		DiscreteEquivalentContinuousLevel,
 	}
 
 	// NSInteger -> HKObjectType.h
@@ -129,7 +137,14 @@ namespace HealthKit
 		DiscreteAverage           = 1 << 1,
 		DiscreteMin               = 1 << 2,
 		DiscreteMax               = 1 << 3,
-		CumulativeSum             = 1 << 4
+		CumulativeSum             = 1 << 4,
+		[iOS (13, 0), Watch (6, 0)]
+		MostRecent                = 1 << 5,
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'HKStatisticsOptions.MostRecent'.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'HKStatisticsOptions.MostRecent'.")]
+		DiscreteMostRecent        = MostRecent,
+		[iOS (13, 0), Watch (6, 0)]
+		Duration                  = 1 << 6,
 	}
 
 	// NSInteger -> HKUnit.h
@@ -149,7 +164,9 @@ namespace HealthKit
 		Kilo,
 		Mega,
 		Giga,
-		Tera
+		Tera,
+		[iOS (13, 0), Watch (6, 0)]
+		Femto,
 	}
 
 	[Native]
@@ -251,6 +268,10 @@ namespace HealthKit
 		MixedCardio,
 		[iOS (11, 0), Watch (4, 0)]
 		HandCycling,
+		[iOS (13, 0), Watch (6, 0)]
+		DiscSports,
+		[iOS (13, 0), Watch (6, 0)]
+		FitnessGaming,
 		[iOS (8,2)]
 		Other = 3000
 	}
@@ -311,8 +332,14 @@ namespace HealthKit
 	public enum HKCategoryValueOvulationTestResult : long {
 		NotApplicable = 0,
 		Negative = 1,
-		Positive,
-		Indeterminate
+		[iOS (13, 0), Watch (6, 0)]
+		LuteinizingHormoneSurge = 2,
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'HKCategoryValueOvulationTestResult.LuteinizingHormoneSurge' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'HKCategoryValueOvulationTestResult.LuteinizingHormoneSurge' instead.")]
+		Positive = LuteinizingHormoneSurge,
+		Indeterminate = 3,
+		[iOS (13, 0), Watch (6, 0)]
+		EstrogenSurge = 4,
 	}
 
 	[Watch (2,0)]
@@ -321,6 +348,13 @@ namespace HealthKit
 	public enum HKCategoryValueAppleStandHour : long {
 		Stood = 0,
 		Idle
+	}
+
+	[iOS (13,0)]
+	[Watch (6,0)]
+	[Native]
+	public enum HKCategoryValueAudioExposureEvent : long {
+		AudioExposureEventLoudEnvironment = 1,
 	}
 
 	[Watch (2,0)]
