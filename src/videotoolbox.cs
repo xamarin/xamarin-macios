@@ -164,7 +164,7 @@ namespace VideoToolbox {
 		[Field ("kVTAlphaChannelMode_PremultipliedAlpha")]
 		NSString PremultipliedAlpha { get; } 
 		
-		[iOS (10,9)]
+		[Mac (10,9), iOS (13,0), TV (13,0)]
 		[Field ("kVTCompressionPropertyKey_GammaLevel")]
 		NSString GammaLevel { get; } 
 		
@@ -195,7 +195,7 @@ namespace VideoToolbox {
 		
 		[Field ("kVTCompressionPropertyKey_UsingGPURegistryID")]
 		[Mac (10,15)]
-		NSString UsingGPURegistryID { get; }
+		NSString UsingGpuRegistryID { get; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -533,11 +533,11 @@ namespace VideoToolbox {
 		
 		[Mac (10,14)]
 		[Field ("kVTVideoEncoderSpecification_RequiredEncoderGPURegistryID")]
-		NSString RequiredEncoderGPURegistryID { get; }
+		NSString RequiredEncoderGpuRegistryId { get; }
 		
 		[Mac (10,14)]
 		[Field ("kVTVideoEncoderSpecification_PreferredEncoderGPURegistryID")]
-		NSString PreferredEncoderGPURegistryID { get; }
+		NSString PreferredEncoderGpuRegistryId { get; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -677,7 +677,7 @@ namespace VideoToolbox {
 		
 		[Field ("kVTDecompressionPropertyKey_UsingGPURegistryID")]
 		[Mac (10,15)]
-		NSString UsingGPURegistryID { get; }
+		NSString UsingGpuRegistryID { get; }
 
 		//Post-decompression processing
 
@@ -908,7 +908,7 @@ namespace VideoToolbox {
 		
 		[Mac (10,14)]
 		[Field ("kVTVideoEncoderList_GPURegistryID")]
-		NSString GPURegistryID { get; }
+		NSString GpuRegistryId { get; }
 		
 		[Mac (10,14), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderList_SupportedSelectionProperties")]
