@@ -121,6 +121,9 @@ namespace GameController {
 
 	[iOS (7,0)]
 	[Mac (10,9, onlyOn64: true)]
+	[Deprecated (PlatformName.MacOSX, 10, 12)]
+	[Deprecated (PlatformName.iOS, 10, 0)]
+	[Deprecated (PlatformName.TvOS, 10, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCGamepad {
