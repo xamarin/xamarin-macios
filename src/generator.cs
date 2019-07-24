@@ -1712,7 +1712,7 @@ public partial class Generator : IMemberGatherer {
 					var refname = $"__xamarin_pref{pi.Position}";
 					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({pname}, false);");
 					pars.Append ($"ref IntPtr {pname}");
-					postConvert.Append ($"error = {refname}.GetHandle ();");
+					postConvert.Append ($"{pname} = {refname} == null ? IntPtr.Zero : {refname}.Handle;");
 					invoke.Append ($"ref {refname}");
 					continue;
 				}
