@@ -561,6 +561,7 @@ namespace Introspection
 			"Wpa",
 			"Warpable",
 			"Whitespaces",
+			"Wifes",
 			"Writeability",
 			"Xnor",
 			"Xpc",
