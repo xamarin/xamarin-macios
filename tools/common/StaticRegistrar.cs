@@ -244,11 +244,7 @@ namespace Registrar {
 
 		public static bool IsPlatformType (TypeReference type, string @namespace, string name)
 		{
-			if (Registrar.IsDualBuild) {
-				return type.Is (@namespace, name);
-			} else {
-				return type.Is (Registrar.CompatNamespace + "." + @namespace, name);
-			}
+			return type.Is (@namespace, name);
 		}
 
 		public static bool ParametersMatch (IList<ParameterDefinition> a, TypeReference [] b)
@@ -493,8 +489,8 @@ namespace Registrar {
 			case "System.Boolean": return "BOOL";
 			case "System.Void": return "void";
 			case "System.String": return "NSString";
-			case Registrar.CompatNamespace + ".ObjCRuntime.Selector": return "SEL";
-			case Registrar.CompatNamespace + ".ObjCRuntime.Class": return "Class";
+			case "ObjCRuntime.Selector": return "SEL";
+			case "ObjCRuntime.Class": return "Class";
 			}
 
 			if (IsNativeObject (type))
@@ -795,16 +791,6 @@ namespace Registrar {
 			}
 		}
 
-		protected override bool IsDualBuildImpl {
-			get {
-#if MMP
-				return Xamarin.Bundler.Driver.IsUnified;
-#else
-				return true;
-#endif
-			}
-		}
-
 		protected override Exception CreateException (int code, Exception innerException, MethodDefinition method, string message, params object[] args)
 		{
 			return ErrorHelper.CreateError (App, code, innerException, method, message, args);
@@ -1056,7 +1042,7 @@ namespace Registrar {
 
 		bool IsNativeEnum (TypeDefinition td)
 		{
-			return IsDualBuild && HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
+			return HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
 		}
 
 		protected override bool IsNullable (TypeReference type)
@@ -2066,11 +2052,7 @@ namespace Registrar {
 			if (aname != PlatformAssembly)
 				return false;
 				
-			if (IsDualBuild) {
-				return Driver.GetFrameworks (App).ContainsKey (type.Namespace);
-			} else {
-				return type.Namespace.StartsWith (CompatNamespace + ".", StringComparison.Ordinal);
-			}
+			return Driver.GetFrameworks (App).ContainsKey (type.Namespace);
 		}
 
 		static bool IsLinkedAway (TypeReference tr)
@@ -2113,10 +2095,6 @@ namespace Registrar {
 				}
 			}
 
-			// Strip off the 'MonoTouch.' prefix
-			if (!IsDualBuild)
-				ns = type.Namespace.Substring (ns.IndexOf ('.') + 1);
-			
 			CheckNamespace (ns, exceptions);
 		}
 
@@ -2437,11 +2415,9 @@ namespace Registrar {
 				CheckNamespace ("CoreGraphics", exceptions);
 				return "CGFloat";
 			case "System.DateTime":
-				throw ErrorHelper.CreateError (4102, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", IsDualBuild ? "Foundation.NSDate" : CompatNamespace + ".Foundation.NSDate", descriptiveMethodName);
-			case "ObjCRuntime.Selector":
-			case CompatNamespace + ".ObjCRuntime.Selector": return "SEL";
-			case "ObjCRuntime.Class":
-			case CompatNamespace + ".ObjCRuntime.Class": return "Class";
+				throw ErrorHelper.CreateError (4102, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", "Foundation.NSDate", descriptiveMethodName);
+			case "ObjCRuntime.Selector": return "SEL";
+			case "ObjCRuntime.Class": return "Class";
 			default:
 				if (IsNSObject (td)) {
 					if (!IsPlatformType (td))
@@ -2453,7 +2429,7 @@ namespace Registrar {
 						return GetExportedTypeName (td) + " *";
 					}
 				} else if (td.IsEnum) {
-					if (IsDualBuild && HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute)) {
+					if (HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute)) {
 						switch (GetEnumUnderlyingType (td).FullName) {
 						case "System.Int64":
 							return "NSInteger";
@@ -2640,9 +2616,6 @@ namespace Registrar {
 		bool IsTypeAllowedInSimulator (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
-			if (!IsDualBuild)
-				ns = ns.Substring (CompatNamespace.Length + 1);
-
 			return Driver.IsFrameworkAvailableInSimulator (App, ns);
 		}
 #endif
@@ -2664,25 +2637,8 @@ namespace Registrar {
 		protected override void OnSkipType (TypeReference type, ObjCType registered_type)
 		{
 			base.OnSkipType (type, registered_type);
-
-#if MONOMAC
-			if (!Is64Bits && IsOnly64Bits (type))
-				return; 
-#endif
-
 			skipped_types.Add (new SkippedType { Skipped = type, Actual = registered_type } );
 		}
-
-#if MONOMAC
-		bool IsOnly64Bits (TypeReference type)
-		{
-			var attributes = GetAvailabilityAttributes (type); // Can return null list
-			if (attributes == null)
-				return false;
-
-			return attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64);
-		}
-#endif
 
 		void Specialize (AutoIndentStringBuilder sb)
 		{
@@ -2704,7 +2660,7 @@ namespace Registrar {
 			// or if we're not registering protocols.
 			if (App.Optimizations.RegisterProtocols == true) {
 				var asm = input_assemblies.FirstOrDefault ((v) => v.Name.Name == PlatformAssembly);
-				needs_protocol_map = asm?.MainModule.GetType (!IsDualBuild ? (CompatNamespace + ".ObjCRuntime") : "ObjCRuntime", "Runtime")?.Methods.Any ((v) => v.Name == "GetProtocolForType") == true;
+				needs_protocol_map = asm?.MainModule.GetType ("ObjCRuntime", "Runtime")?.Methods.Any ((v) => v.Name == "GetProtocolForType") == true;
 			}
 
 			map.AppendLine ("static MTClassMap __xamarin_class_map [] = {");
@@ -2727,17 +2683,8 @@ namespace Registrar {
 					continue; // Some types are not supported in the simulator.
 				}
 #else
-				// Don't register 64-bit only API on 32-bit XM
-				if (!Is64Bits && IsOnly64Bits (@class.Type))
-					continue;
-
 				if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
 					continue; // QTKit header was removed in 10.12 SDK
-
-				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do
-				// if the header doesn't declare them. So hack it away, since they are useless in 64-bit anyway
-				if (!Is64Bits && (IsMapKitType (@class) || IsIntentsType (@class) || IsExternalAccessoryType (@class)))
-					continue;
 #endif
 
 				
@@ -3438,7 +3385,7 @@ namespace Registrar {
 					objctype = ToObjCParameterType (type, descriptiveMethodName, exceptions, method.Method) + "*";
 				} else if (td.IsEnum) {
 					type = GetEnumUnderlyingType (td);
-					isNativeEnum = IsDualBuild && HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
+					isNativeEnum = HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
 					td = type.Resolve ();
 				}
 
@@ -3505,7 +3452,6 @@ namespace Registrar {
 					}
 					break;
 				case "ObjCRuntime.Selector":
-				case CompatNamespace + ".ObjCRuntime.Selector":
 					if (isRef) {
 						body_setup.AppendLine ("MonoObject *a{0} = NULL;", i);
 						if (!isOut) {
@@ -3521,7 +3467,6 @@ namespace Registrar {
 					}
 					break;
 				case "ObjCRuntime.Class":
-				case CompatNamespace + ".ObjCRuntime.Class":
 					if (isRef) {
 						body_setup.AppendLine ("MonoObject *a{0} = NULL;", i);
 						if (!isOut) {
@@ -4378,12 +4323,6 @@ namespace Registrar {
 		{
 			var underlyingTypeName = managedType.FullName;
 
-#if MMP
-			// Remove 'MonoMac.' namespace prefix to make switch smaller
-			if (!Registrar.IsDualBuild && underlyingTypeName.StartsWith ("MonoMac.", StringComparison.Ordinal))
-				underlyingTypeName = underlyingTypeName.Substring ("MonoMac.".Length);
-#endif
-
 			switch (underlyingTypeName) {
 			case "Foundation.NSRange": nativeType = "NSRange"; return "xamarin_nsvalue_to_nsrange";
 			case "CoreGraphics.CGAffineTransform": nativeType = "CGAffineTransform"; return "xamarin_nsvalue_to_cgaffinetransform";
@@ -4411,12 +4350,6 @@ namespace Registrar {
 		string GetManagedToNSValueFunc (TypeReference managedType, TypeReference inputType, TypeReference outputType, string descriptiveMethodName)
 		{
 			var underlyingTypeName = managedType.FullName;
-
-#if MMP
-			// Remove 'MonoMac.' namespace prefix to make switch smaller
-			if (!Registrar.IsDualBuild && underlyingTypeName.StartsWith ("MonoMac.", StringComparison.Ordinal))
-				underlyingTypeName = underlyingTypeName.Substring ("MonoMac.".Length);
-#endif
 
 			switch (underlyingTypeName) {
 			case "Foundation.NSRange": return "xamarin_nsrange_to_nsvalue";

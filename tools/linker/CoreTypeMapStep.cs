@@ -45,10 +45,6 @@ namespace MonoTouch.Tuner {
 		// If certain conditions are met, we can optimize away the code for the dynamic registrar.
 		bool RequiresDynamicRegistrar (AssemblyDefinition assembly, bool warnIfRequired)
 		{
-			// Disable removing the dynamic registrar for XM/Classic to simplify the code a little bit.
-			if (!Driver.IsUnified)
-				return true;
-
 			// We know that the SDK assemblies we ship don't use the methods we're looking for.
 			if (Profile.IsSdkAssembly (assembly))
 				return false;

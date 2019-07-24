@@ -217,9 +217,6 @@
     <Compile Include="linker\MonoMac.Tuner\MonoMacMarkStep.cs">
       <Link>MonoMac.Tuner\MonoMacMarkStep.cs</Link>
     </Compile>
-    <Compile Include="linker\MonoMac.Tuner\MonoMacProfile.cs">
-      <Link>MonoMac.Tuner\MonoMacProfile.cs</Link>
-    </Compile>
     <Compile Include="linker\MonoMac.Tuner\MonoMacNamespaces.cs">
       <Link>MonoMac.Tuner\MonoMacNamespaces.cs</Link>
     </Compile>
@@ -405,9 +402,6 @@
     </Compile>
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\common\ClassicStaticRegistrar.cs">
-      <Link>external\ClassicStaticRegistrar.cs</Link>
     </Compile>
     <Compile Include="Target.mmp.cs" />
   </ItemGroup>

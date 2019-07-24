@@ -109,11 +109,11 @@ namespace Registrar {
 		{
 			var aname = assembly.GetName ().Name;
 
-			if (aname == CompatAssemblyName || aname == DualAssemblyName)
+			if (aname == AssemblyName)
 				return true;
 
 			foreach (var ar in assembly.GetReferencedAssemblies ()) {
-				if (ar.Name == CompatAssemblyName || ar.Name == DualAssemblyName)
+				if (ar.Name == AssemblyName)
 					return true;
 			}
 			return false;
@@ -141,24 +141,6 @@ namespace Registrar {
 		protected override bool Is64Bits {
 			get {
 				return IntPtr.Size == 8;
-			}
-		}
-
-		protected override bool IsDualBuildImpl {
-			get {
-				return NSObject.PlatformAssembly.GetName ().Name == 
-#if MONOMAC
-					"Xamarin.Mac";
-#elif TVOS
-					"Xamarin.TVOS";
-#elif WATCH
-					"Xamarin.WatchOS";
-#elif IOS
-					"Xamarin.iOS";
-#else
-	#error unknown platform
-					"unknown platform";
-#endif
 			}
 		}
 
@@ -626,7 +608,7 @@ namespace Registrar {
 		{
 			isNativeEnum = false;
 			if (type.IsEnum)
-				isNativeEnum = IsDualBuildImpl && type.IsDefined (typeof (NativeAttribute), false);
+				isNativeEnum = type.IsDefined (typeof (NativeAttribute), false);
 			return type.IsEnum;
 		}
 
