@@ -196,9 +196,9 @@ namespace MonoTouchFixtures.CoreText {
 			Assert.Throws<ArgumentException> (() => CTFontManager.UnregisterFontDescriptors (new CTFontDescriptor [] { null }, CTFontManagerScope.Process, null), "null element");
 		}
 
-#if !__TVOS__ && !__WATCHOS__
-		// crash (timeout) on tvOS
+#if !__WATCHOS__
 		[Test]
+		[Ignore ("https://github.com/xamarin/maccore/issues/1898")]
 		public void RegisterFontDescriptors_NoCallback ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
@@ -214,7 +214,9 @@ namespace MonoTouchFixtures.CoreText {
 			}
 		}
 
-		// fail on tvOS with undocumented error code 'The operation couldn’t be completed. (com.apple.CoreText.CTFontManagerErrorDomain error 500.'
+#if __TVOS__
+		[Ignore ("Fails on tvOS with undocumented error code 'The operation couldn’t be completed. (com.apple.CoreText.CTFontManagerErrorDomain error 500.'")]
+#endif
 		[Test]
 		public void RegisterFontDescriptors_WithCallback ()
 		{
