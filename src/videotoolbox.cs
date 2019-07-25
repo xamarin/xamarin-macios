@@ -316,6 +316,10 @@ namespace VideoToolbox {
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Export ("AlphaChannelMode")]
 		string AlphaChannelMode { get; set; }
+		
+		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Export ("UsingGpuRegistryId")]
+		uint UsingGpuRegistryId { get; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -780,6 +784,10 @@ namespace VideoToolbox {
 		[iOS (9,0)]
 		[Export ("PixelTransferProperties")]
 		VTPixelTransferProperties PixelTransferSettings { get; set; }
+		
+		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Export ("UsingGpuRegistryId")]
+		uint UsingGpuRegistryId { get; }
 	}
 
 	[Mac (10,9), iOS (8,0), TV (10,2)]
