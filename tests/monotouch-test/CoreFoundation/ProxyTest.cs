@@ -64,13 +64,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPACParsingScriptRunLoop ()
 		{
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Inconclusive ("Using delegates without MonoPInvokeCallback only  works on the simulator, which makes the test hard to write");
 			// get the path for the pac file, try to parse it and ensure that 
 			// our cb was called
 			CFProxy [] proxies = null;
 			NSError error = null;
-			NSObject cbClient = null;
 
 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
 
@@ -80,65 +77,24 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 			// get source, execute run loop in a diff thread
 
-			CFNetwork.CFProxyAutoConfigurationResultCallback cb = delegate (NSObject c, CFProxy [] l, NSError e) {
+			CFNetwork.CFProxyAutoConfigurationResultCallback cb = delegate (CFProxy [] l, NSError e) {
 				proxies = l;
 				error = e;
-				cbClient = c;
 				runLoop.Stop ();
 			};
-			var source = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, cb, null);
+			var result = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, cb, null);
 			using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
-				runLoop.AddSource (source, mode);
+				runLoop.AddSource (result.source, mode);
 				// block until cb is called
 				runLoop.RunInMode (mode, double.MaxValue, false);
-				runLoop.RemoveSource (source, mode);
-				Assert.IsNull (cbClient, "Null client");
+				runLoop.RemoveSource (result.source, mode);
 				Assert.IsNull (error, "Null error");
 				Assert.IsNotNull (proxies, "Not null proxies");
 				Assert.AreEqual (1, proxies.Length, "Length");
 				// assert the data of the proxy, although we are really testing the js used
 				Assert.AreEqual (8080, proxies [0].Port, "Port");
-			}
-		}
-
-		[Test]
-		public void TestPACParsingScriptRunLoopNoNullClient ()
-		{
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Inconclusive ("Using delegates without MonoPInvokeCallback only  works on the simulator, which makes the test hard to write");
-			// get the path for the pac file, try to parse it and ensure that 
-			// our cb was called
-			CFProxy [] proxies = null;
-			NSError error = null;
-			NSObject cbClient = null;
-
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
-
-			var script = File.ReadAllText (pacPath);
-			var targetUri = new Uri ("http://docs.xamarin.com");
-			using (var clientData = new NSObject ()) {
-				var runLoop = CFRunLoop.Current;
-
-				// get source, execute run loop in a diff thread
-
-				CFNetwork.CFProxyAutoConfigurationResultCallback cb = delegate (NSObject c, CFProxy [] l, NSError e) {
-					proxies = l;
-					error = e;
-					cbClient = c;
-					runLoop.Stop ();
-				};
-				var source = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, cb, clientData);
-				using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
-					runLoop.AddSource (source, mode);
-					// block until cb is called
-					runLoop.RunInMode (mode, double.MaxValue, false);
-					runLoop.RemoveSource (source, mode);
-					Assert.IsNotNull (cbClient, "Null client");
-					Assert.IsNull (error, "Null error");
-					Assert.IsNotNull (proxies, "Not null proxies");
-					Assert.AreEqual (1, proxies.Length, "Length");
-					// assert the data of the proxy, although we are really testing the js used
-					Assert.AreEqual (8080, proxies [0].Port, "Port");
+				if (result.context.HasValue) {
+					result.context.Value.Release ();
 				}
 			}
 		}
@@ -196,13 +152,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPACParsingUrlRunLoop ()
 		{
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Inconclusive ("Using delegates without MonoPInvokeCallback only  works on the simulator, which makes the test hard to write");
 			// get the path for the pac file, try to parse it and ensure that 
 			// our cb was called
 			CFProxy [] proxies = null;
 			NSError error = null;
-			NSObject cbClient = null;
 
 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
 			var pacUri = new Uri (pacPath);
@@ -211,24 +164,25 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 			// get source, execute run loop in a diff thread
 
-			CFNetwork.CFProxyAutoConfigurationResultCallback cb = delegate (NSObject c, CFProxy [] l, NSError e) {
+			CFNetwork.CFProxyAutoConfigurationResultCallback cb = delegate (CFProxy [] l, NSError e) {
 				proxies = l;
 				error = e;
-				cbClient = c;
 				runLoop.Stop ();
 			};
-			var source = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, cb, null);
+			var result = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, cb);
 			using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
-				runLoop.AddSource (source, mode);
+				runLoop.AddSource (result.source, mode);
 				// block until cb is called
 				runLoop.RunInMode (mode, double.MaxValue, false);
-				runLoop.RemoveSource (source, mode);
-				Assert.IsNull (cbClient, "Null client");
+				runLoop.RemoveSource (result.source, mode);
 				Assert.IsNull (error, "Null error");
 				Assert.IsNotNull (proxies, "Not null proxies");
 				Assert.AreEqual (1, proxies.Length, "Length");
 				// assert the data of the proxy, although we are really testing the js used
 				Assert.AreEqual (8080, proxies [0].Port, "Port");
+				if (result.context.HasValue) {
+					result.context.Value.Release ();
+				}
 			}
 		}
 

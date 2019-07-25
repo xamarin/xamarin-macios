@@ -583,7 +583,9 @@ namespace CoreFoundation {
 		}
 
 		delegate void CFProxyAutoConfigurationResultCallbackInternal (IntPtr client, IntPtr proxyList, IntPtr error);
-		public delegate void CFProxyAutoConfigurationResultCallback (NSObject client, CFProxy[] proxyList, NSError error);
+		delegate void CFProryAutoConfigurationReleaseCallbackInternal (IntPtr clien);
+		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		public delegate void CFProxyAutoConfigurationResultCallback (CFProxy[] proxyList, NSError error);
 		// helper delegate to reuse code
 		delegate IntPtr CreatePACCFRunLoopSource (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context);
 
@@ -654,6 +656,9 @@ namespace CoreFoundation {
 		{
 			CFProxy[] proxies = null;
 			NSError outError = null;
+			if (cancellationToken.IsCancellationRequested)
+				throw new OperationCanceledException ("Operation was cancelled.");
+
 			await Task.Run (() => {
 				// we need the runloop of THIS thread, so it is important to get it in the correct context
 				var runLoop = CFRunLoop.Current;
@@ -670,11 +675,26 @@ namespace CoreFoundation {
 
 					using (var loopSource = new CFRunLoopSource (factory (ExecutePacCallback, ref clientContext)))
 					using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
+
+						if (cancellationToken.IsCancellationRequested)
+							throw new OperationCanceledException ("Operation was cancelled.");
+
+						cancellationToken.Register (() => {
+							//if user cancels, we invalidte the source, stop the runloop and remove the source
+							loopSource.Invalidate ();
+							runLoop.RemoveSource (loopSource, mode);
+							runLoop.Stop ();
+						});
 						runLoop.AddSource (loopSource, mode);
 						// blocks until stop is called, will be done in the cb set previously
 						runLoop.RunInMode (mode, double.MaxValue, false);
+						// does not raise an error if source is not longer present, so no need to worry
 						runLoop.RemoveSource (loopSource, mode);
 					}
+
+					if (cancellationToken.IsCancellationRequested)
+						throw new OperationCanceledException ("Operation was cancelled.");
+
 					pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (pacDataPtr, typeof (PACProxyCallbackData));
 					// get data from the struct
 					proxies = pacCbData.ProxyList;
@@ -686,6 +706,8 @@ namespace CoreFoundation {
 				}
 			}, cancellationToken).ConfigureAwait (false);
 
+			if (cancellationToken.IsCancellationRequested)
+				throw new OperationCanceledException ("Operation was cancelled.");
 			return (proxies: proxies, error: outError);
 		}
 
@@ -723,8 +745,18 @@ namespace CoreFoundation {
 		// helper struct to contain all the data that is needed to execute the user cb
 		struct PACProxyUserCallbackData
 		{
-			public CFProxyAutoConfigurationResultCallback UserCallback; // Pointer to the user callback
-			public IntPtr UserClientDataPtr; // Pointer to the passed objc from the user
+			public IntPtr UserCallback; // Pointer to the user callback
+		}
+
+		static CFStreamClientContext.ReleaseDelegate ReleaseDelegate = (CFStreamClientContext.ReleaseDelegate) ReleaseCallback;
+
+		[MonoPInvokeCallback (typeof (CFStreamClientContext.ReleaseDelegate))]
+		static void ReleaseCallback (IntPtr client)
+		{
+			if (client != IntPtr.Zero) {
+				// we have to free the pointer here, this will be executed when the source is not longer needed
+				Marshal.FreeHGlobal (client);
+			}
 		}
 
 		[MonoPInvokeCallback (typeof (CFProxyAutoConfigurationResultCallbackInternal))]
@@ -743,31 +775,33 @@ namespace CoreFoundation {
 			var proxies = ParseProxies (proxyListPtr);
 			CFObject.CFRelease (proxyListPtr);
 			var error = Runtime.GetNSObject<NSError> (errorPtr);
+			var userCb = Marshal.GetDelegateForFunctionPointer <CFProxyAutoConfigurationResultCallback> (pacCbData.UserCallback);
 
 			// get the callback to be executed
-			pacCbData.UserCallback (Runtime.GetNSObject<NSObject> (pacCbData.UserClientDataPtr), proxies, error);
-
-			// we have to free the pointer here, else, if done in the caller, we will get garbage in this cb.
-			Marshal.FreeHGlobal (client);
+			userCb (proxies, error);
 		}
 
-		static CFRunLoopSource ExecutePacCFRunLoopSourceBlocking (CreatePACCFRunLoopSource factory, CFProxyAutoConfigurationResultCallback clientCb, NSObject userContext)
+		static (CFRunLoopSource source, CFStreamClientContext? context) ExecutePacCFRunLoopSourceBlocking (CreatePACCFRunLoopSource factory, CFProxyAutoConfigurationResultCallback clientCb)
 		{
 			// build a struct that will have all the needed info for the callback
 			var pacCbData = new PACProxyUserCallbackData ();
+			pacCbData.UserCallback = Marshal.GetFunctionPointerForDelegate (clientCb);
 
-			if (userContext != null)
-				pacCbData.UserClientDataPtr = userContext.Handle;
-			pacCbData.UserCallback = clientCb;
-
-			// this pointer will be cleaned in the wrapper cb
+			// this pointer will be cleaned in the released cb passed to the stream
 			var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf (pacCbData));
 			Marshal.StructureToPtr (pacCbData, pacDataPtr, false);
 			var clientContext = new CFStreamClientContext ();
 			clientContext.Info = pacDataPtr;
+			clientContext.ReleaseCbPtr = Marshal.GetFunctionPointerForDelegate (ReleaseDelegate);
 
 			var loopSourcePtr = factory (ExecutePacUserCallback, ref clientContext);
-			return (loopSourcePtr == IntPtr.Zero) ? null : new CFRunLoopSource (loopSourcePtr);
+			var source = (loopSourcePtr == IntPtr.Zero) ? null : new CFRunLoopSource (loopSourcePtr);
+			if (source == null) {
+				clientContext.Release ();
+				return (source: null, context: null);
+			}
+
+			return (source: source, context: new Nullable<CFStreamClientContext> (clientContext));
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -777,7 +811,7 @@ namespace CoreFoundation {
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext  clientContext);
 
-		public static CFRunLoopSource ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCallback, NSObject clientContext)
+		public static (CFRunLoopSource source, CFStreamClientContext? context) ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCallback, NSObject clientContext)
 		{
 			if (proxyAutoConfigurationScript == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationScript));
@@ -793,7 +827,7 @@ namespace CoreFoundation {
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context) {
 					return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, ref context);
 				};
-				return ExecutePacCFRunLoopSourceBlocking (factory, clientCallback, clientContext);
+				return ExecutePacCFRunLoopSourceBlocking (factory, clientCallback);
 			}
 		}	
 
@@ -841,7 +875,7 @@ namespace CoreFoundation {
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
 
-		public static CFRunLoopSource ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCallback, NSObject clientContext)
+		public static (CFRunLoopSource source, CFStreamClientContext? context) ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, CFProxyAutoConfigurationResultCallback clientCallback)
 		{
 			if (proxyAutoConfigurationUrl == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationUrl));
@@ -857,7 +891,7 @@ namespace CoreFoundation {
 				CreatePACCFRunLoopSource factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context) {
 					return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, ref context);
 				};
-				return ExecutePacCFRunLoopSourceBlocking (factory, clientCallback, clientContext);
+				return ExecutePacCFRunLoopSourceBlocking (factory, clientCallback);
 			}
 		}
 
