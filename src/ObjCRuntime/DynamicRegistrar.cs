@@ -500,7 +500,20 @@ namespace Registrar {
 					constrs [i] = constr;
 				}
 				constrained_type = type.MakeGenericType (constrs);
-				return true;
+				return rv;
+			}
+
+			if (type.IsGenericType) {
+				var rv = true;
+				var args = type.GetGenericArguments ();
+				var constrs = new Type [args.Length];
+				for (int i = 0; i < args.Length; i++) {
+					Type constr;
+					rv &= VerifyIsConstrainedToNSObject (args [i], out constr);
+					constrs [i] = constr;
+				}
+				constrained_type = type.GetGenericTypeDefinition ().MakeGenericType (constrs);
+				return rv;
 			}
 
 			return false;

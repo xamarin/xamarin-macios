@@ -21163,163 +21163,160 @@ namespace UIKit {
 		UITabBarItemStateAppearance Focused { get; }
 	}
 
-	// TODO: The following break the registrar:
-	// https://github.com/xamarin/xamarin-macios/issues/6567
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> : NSCopying
+		where SectionIdentifierType : NSObject
+		where ItemIdentifierType : NSObject {
 
-	// [Watch (6,0), TV (13,0), iOS (13,0)]
-	// [BaseType (typeof (NSObject))]
-	// interface NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> : NSCopying
-	// 	where SectionIdentifierType : NSObject
-	// 	where ItemIdentifierType : NSObject {
+		[Export ("numberOfItems")]
+		nint NumberOfItems { get; }
 
-	// 	[Export ("numberOfItems")]
-	// 	nint NumberOfItems { get; }
+		[Export ("numberOfSections")]
+		nint NumberOfSections { get; }
 
-	// 	[Export ("numberOfSections")]
-	// 	nint NumberOfSections { get; }
+		[Export ("sectionIdentifiers")]
+		SectionIdentifierType [] SectionIdentifiers { get; }
 
-	// 	[Export ("sectionIdentifiers")]
-	// 	SectionIdentifierType [] SectionIdentifiers { get; }
+		[Export ("itemIdentifiers")]
+		ItemIdentifierType [] ItemIdentifiers { get; }
 
-	// 	[Export ("itemIdentifiers")]
-	// 	ItemIdentifierType [] ItemIdentifiers { get; }
+		[Export ("numberOfItemsInSection:")]
+		nint GetNumberOfItems (SectionIdentifierType sectionIdentifier);
 
-	// 	[Export ("numberOfItemsInSection:")]
-	// 	nint GetNumberOfItems (SectionIdentifierType sectionIdentifier);
+		[Export ("itemIdentifiersInSectionWithIdentifier:")]
+		ItemIdentifierType [] GetItemIdentifiersInSection (SectionIdentifierType sectionIdentifier);
 
-	// 	[Export ("itemIdentifiersInSectionWithIdentifier:")]
-	// 	ItemIdentifierType [] GetItemIdentifiersInSection (SectionIdentifierType sectionIdentifier);
+		[Export ("sectionIdentifierForSectionContainingItemIdentifier:")]
+		[return: NullAllowed]
+		SectionIdentifierType GetSectionIdentifierForSection (ItemIdentifierType itemIdentifier);
 
-	// 	[Export ("sectionIdentifierForSectionContainingItemIdentifier:")]
-	// 	[return: NullAllowed]
-	// 	SectionIdentifierType GetSectionIdentifierForSection (ItemIdentifierType itemIdentifier);
+		[Export ("indexOfItemIdentifier:")]
+		nint GetIndex (ItemIdentifierType itemIdentifier);
 
-	// 	[Export ("indexOfItemIdentifier:")]
-	// 	nint GetIndex (ItemIdentifierType itemIdentifier);
+		[Export ("indexOfSectionIdentifier:")]
+		nint GetIndex (SectionIdentifierType sectionIdentifier);
 
-	// 	[Export ("indexOfSectionIdentifier:")]
-	// 	nint GetIndex (SectionIdentifierType sectionIdentifier);
+		[Export ("appendItemsWithIdentifiers:")]
+		void AppendItems (ItemIdentifierType [] identifiers);
 
-	// 	[Export ("appendItemsWithIdentifiers:")]
-	// 	void AppendItems (ItemIdentifierType [] identifiers);
+		[Export ("appendItemsWithIdentifiers:intoSectionWithIdentifier:")]
+		void AppendItems (ItemIdentifierType [] identifiers, SectionIdentifierType sectionIdentifier);
 
-	// 	[Export ("appendItemsWithIdentifiers:intoSectionWithIdentifier:")]
-	// 	void AppendItems (ItemIdentifierType [] identifiers, SectionIdentifierType sectionIdentifier);
+		[Export ("insertItemsWithIdentifiers:beforeItemWithIdentifier:")]
+		void InsertItemsBefore (ItemIdentifierType [] identifiers, ItemIdentifierType itemIdentifier);
 
-	// 	[Export ("insertItemsWithIdentifiers:beforeItemWithIdentifier:")]
-	// 	void InsertItemsBefore (ItemIdentifierType [] identifiers, ItemIdentifierType itemIdentifier);
+		[Export ("insertItemsWithIdentifiers:afterItemWithIdentifier:")]
+		void InsertItemsAfter (ItemIdentifierType [] identifiers, ItemIdentifierType itemIdentifier);
 
-	// 	[Export ("insertItemsWithIdentifiers:afterItemWithIdentifier:")]
-	// 	void InsertItemsAfter (ItemIdentifierType [] identifiers, ItemIdentifierType itemIdentifier);
+		[Export ("deleteItemsWithIdentifiers:")]
+		void DeleteItems (ItemIdentifierType [] identifiers);
 
-	// 	[Export ("deleteItemsWithIdentifiers:")]
-	// 	void DeleteItems (ItemIdentifierType [] identifiers);
+		[Export ("deleteAllItems")]
+		void DeleteAllItems ();
 
-	// 	[Export ("deleteAllItems")]
-	// 	void DeleteAllItems ();
+		[Export ("moveItemWithIdentifier:beforeItemWithIdentifier:")]
+		void MoveItemBefore (ItemIdentifierType fromIdentifier, ItemIdentifierType toIdentifier);
 
-	// 	[Export ("moveItemWithIdentifier:beforeItemWithIdentifier:")]
-	// 	void MoveItemBefore (ItemIdentifierType fromIdentifier, ItemIdentifierType toIdentifier);
+		[Export ("moveItemWithIdentifier:afterItemWithIdentifier:")]
+		void MoveItemAfter (ItemIdentifierType fromIdentifier, ItemIdentifierType toIdentifier);
 
-	// 	[Export ("moveItemWithIdentifier:afterItemWithIdentifier:")]
-	// 	void MoveItemAfter (ItemIdentifierType fromIdentifier, ItemIdentifierType toIdentifier);
+		[Export ("reloadItemsWithIdentifiers:")]
+		void ReloadItems (ItemIdentifierType [] identifiers);
 
-	// 	[Export ("reloadItemsWithIdentifiers:")]
-	// 	void ReloadItems (ItemIdentifierType [] identifiers);
+		[Export ("appendSectionsWithIdentifiers:")]
+		void AppendSections (SectionIdentifierType [] sectionIdentifiers);
 
-	// 	[Export ("appendSectionsWithIdentifiers:")]
-	// 	void AppendSections (SectionIdentifierType [] sectionIdentifiers);
+		[Export ("insertSectionsWithIdentifiers:beforeSectionWithIdentifier:")]
+		void InsertSectionsBefore (SectionIdentifierType [] sectionIdentifiers, SectionIdentifierType toSectionIdentifier);
 
-	// 	[Export ("insertSectionsWithIdentifiers:beforeSectionWithIdentifier:")]
-	// 	void InsertSectionsBefore (SectionIdentifierType [] sectionIdentifiers, SectionIdentifierType toSectionIdentifier);
+		[Export ("insertSectionsWithIdentifiers:afterSectionWithIdentifier:")]
+		void InsertSectionsAfter (SectionIdentifierType [] sectionIdentifiers, SectionIdentifierType toSectionIdentifier);
 
-	// 	[Export ("insertSectionsWithIdentifiers:afterSectionWithIdentifier:")]
-	// 	void InsertSectionsAfter (SectionIdentifierType [] sectionIdentifiers, SectionIdentifierType toSectionIdentifier);
+		[Export ("deleteSectionsWithIdentifiers:")]
+		void DeleteSections (SectionIdentifierType [] sectionIdentifiers);
 
-	// 	[Export ("deleteSectionsWithIdentifiers:")]
-	// 	void DeleteSections (SectionIdentifierType [] sectionIdentifiers);
+		[Export ("moveSectionWithIdentifier:beforeSectionWithIdentifier:")]
+		void MoveSectionBefore (SectionIdentifierType fromSectionIdentifier, SectionIdentifierType toSectionIdentifier);
 
-	// 	[Export ("moveSectionWithIdentifier:beforeSectionWithIdentifier:")]
-	// 	void MoveSectionBefore (SectionIdentifierType fromSectionIdentifier, SectionIdentifierType toSectionIdentifier);
+		[Export ("moveSectionWithIdentifier:afterSectionWithIdentifier:")]
+		void MoveSectionAfter (SectionIdentifierType fromSectionIdentifier, SectionIdentifierType toSectionIdentifier);
 
-	// 	[Export ("moveSectionWithIdentifier:afterSectionWithIdentifier:")]
-	// 	void MoveSectionAfter (SectionIdentifierType fromSectionIdentifier, SectionIdentifierType toSectionIdentifier);
+		[Export ("reloadSectionsWithIdentifiers:")]
+		void ReloadSections (SectionIdentifierType [] sectionIdentifiers);
+	}
 
-	// 	[Export ("reloadSectionsWithIdentifiers:")]
-	// 	void ReloadSections (SectionIdentifierType [] sectionIdentifiers);
-	// }
+	[NoWatch, TV (13,0), iOS (13,0)]
+	delegate UICollectionViewCell UICollectionViewDiffableDataSourceCellProvider (UICollectionView collectionView, NSIndexPath indexPath, NSObject obj);
 
-	// [NoWatch, TV (13,0), iOS (13,0)]
-	// delegate UICollectionViewCell UICollectionViewDiffableDataSourceCellProvider (UICollectionView collectionView, NSIndexPath indexPath, NSObject obj);
+	[NoWatch, TV (13,0), iOS (13,0)]
+	delegate UICollectionReusableView UICollectionViewDiffableDataSourceSupplementaryViewProvider (UICollectionView collectionView, string str, NSIndexPath indexPath);
 
-	// [NoWatch, TV (13,0), iOS (13,0)]
-	// delegate UICollectionReusableView UICollectionViewDiffableDataSourceSupplementaryViewProvider (UICollectionView collectionView, string str, NSIndexPath indexPath);
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UICollectionViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType> : UICollectionViewDataSource
+		where SectionIdentifierType : NSObject
+		where ItemIdentifierType : NSObject {
 
-	// [NoWatch, TV (13,0), iOS (13,0)]
-	// [BaseType (typeof (NSObject))]
-	// [DisableDefaultCtor]
-	// interface UICollectionViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType> : UICollectionViewDataSource
-	// 	where SectionIdentifierType : NSObject
-	// 	where ItemIdentifierType : NSObject {
+		[Export ("initWithCollectionView:cellProvider:")]
+		IntPtr Constructor (UICollectionView collectionView, UICollectionViewDiffableDataSourceCellProvider cellProvider);
 
-	// 	[Export ("initWithCollectionView:cellProvider:")]
-	// 	IntPtr Constructor (UICollectionView collectionView, UICollectionViewDiffableDataSourceCellProvider cellProvider);
+		[NullAllowed, Export ("supplementaryViewProvider", ArgumentSemantic.Copy)]
+		UICollectionViewDiffableDataSourceSupplementaryViewProvider SupplementaryViewProvider { get; set; }
 
-	// 	[NullAllowed, Export ("supplementaryViewProvider", ArgumentSemantic.Copy)]
-	// 	UICollectionViewDiffableDataSourceSupplementaryViewProvider SupplementaryViewProvider { get; set; }
+		[Export ("snapshot")]
+		NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> Snapshot { get; }
 
-	// 	[Export ("snapshot")]
-	// 	NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> Snapshot { get; }
+		[Export ("applySnapshot:animatingDifferences:")]
+		void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences);
 
-	// 	[Export ("applySnapshot:animatingDifferences:")]
-	// 	void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences);
+		[Async]
+		[Export ("applySnapshot:animatingDifferences:completion:")]
+		void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences, [NullAllowed] Action completion);
 
-	// 	[Async]
-	// 	[Export ("applySnapshot:animatingDifferences:completion:")]
-	// 	void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences, [NullAllowed] Action completion);
+		[Export ("itemIdentifierForIndexPath:")]
+		[return: NullAllowed]
+		ItemIdentifierType GetItemIdentifier (NSIndexPath indexPath);
 
-	// 	[Export ("itemIdentifierForIndexPath:")]
-	// 	[return: NullAllowed]
-	// 	ItemIdentifierType GetItemIdentifier (NSIndexPath indexPath);
+		[Export ("indexPathForItemIdentifier:")]
+		[return: NullAllowed]
+		NSIndexPath GetIndexPath (ItemIdentifierType identifier);
+	}
 
-	// 	[Export ("indexPathForItemIdentifier:")]
-	// 	[return: NullAllowed]
-	// 	NSIndexPath GetIndexPath (ItemIdentifierType identifier);
-	// }
+	[NoWatch, TV (13,0), iOS (13,0)]
+	delegate UITableViewCell UITableViewDiffableDataSourceCellProvider (UITableView tableView, NSIndexPath indexPath, NSObject obj);
 
-	// [NoWatch, TV (13,0), iOS (13,0)]
-	// delegate UITableViewCell UITableViewDiffableDataSourceCellProvider (UITableView tableView, NSIndexPath indexPath, NSObject obj);
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UITableViewDiffableDataSource<SectionIdentifierType,ItemIdentifierType> : UITableViewDataSource
+		where SectionIdentifierType : NSObject
+		where ItemIdentifierType : NSObject {
 
-	// [NoWatch, TV (13,0), iOS (13,0)]
-	// [BaseType (typeof (NSObject))]
-	// [DisableDefaultCtor]
-	// interface UITableViewDiffableDataSource<SectionIdentifierType,ItemIdentifierType> : UITableViewDataSource
-	// 	where SectionIdentifierType : NSObject
-	// 	where ItemIdentifierType : NSObject {
+		[Export ("initWithTableView:cellProvider:")]
+		IntPtr Constructor (UITableView tableView, UITableViewDiffableDataSourceCellProvider cellProvider);
 
-	// 	[Export ("initWithTableView:cellProvider:")]
-	// 	IntPtr Constructor (UITableView tableView, UITableViewDiffableDataSourceCellProvider cellProvider);
+		[Export ("snapshot")]
+		NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> Snapshot { get; }
 
-	// 	[Export ("snapshot")]
-	// 	NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> Snapshot { get; }
+		[Export ("applySnapshot:animatingDifferences:")]
+		void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences);
 
-	// 	[Export ("applySnapshot:animatingDifferences:")]
-	// 	void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences);
+		[Async]
+		[Export ("applySnapshot:animatingDifferences:completion:")]
+		void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences, [NullAllowed] Action completion);
 
-	// 	[Async]
-	// 	[Export ("applySnapshot:animatingDifferences:completion:")]
-	// 	void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences, [NullAllowed] Action completion);
+		[Export ("itemIdentifierForIndexPath:")]
+		[return: NullAllowed]
+		ItemIdentifierType GetItemIdentifier (NSIndexPath indexPath);
 
-	// 	[Export ("itemIdentifierForIndexPath:")]
-	// 	[return: NullAllowed]
-	// 	ItemIdentifierType GetItemIdentifier (NSIndexPath indexPath);
+		[Export ("indexPathForItemIdentifier:")]
+		[return: NullAllowed]
+		NSIndexPath GetIndexPath (ItemIdentifierType identifier);
 
-	// 	[Export ("indexPathForItemIdentifier:")]
-	// 	[return: NullAllowed]
-	// 	NSIndexPath GetIndexPath (ItemIdentifierType identifier);
-
-	// 	[Export ("defaultRowAnimation", ArgumentSemantic.Assign)]
-	// 	UITableViewRowAnimation DefaultRowAnimation { get; set; }
-	// }
+		[Export ("defaultRowAnimation", ArgumentSemantic.Assign)]
+		UITableViewRowAnimation DefaultRowAnimation { get; set; }
+	}
 
 }
