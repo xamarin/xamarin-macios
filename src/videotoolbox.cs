@@ -304,6 +304,18 @@ namespace VideoToolbox {
 		[Mac (10,13), iOS (11,0), TV (11,0)]
 		[Export ("EncoderId")]
 		string EncoderId { get; set; }
+		
+		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Export ("TargetQualityForAlpha")]
+		float TargetQualityForAlpha { get; set; }
+		
+		[Mac (10,9), iOS (13,0), TV (13,0)]
+		[Export ("GammaLevel")]
+		float GammaLevel { get; set; }
+		
+		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Export ("AlphaChannelMode")]
+		string AlphaChannelMode { get; set; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -514,6 +526,14 @@ namespace VideoToolbox {
 
 		[Export ("EncoderID")]
 		string EncoderID { get; set; }
+		
+		[Mac (10,14), iOS (13,0), TV (13,0)]
+		[Export ("RequiredEncoderGpuRegistryId")]
+		uint RequiredEncoderGpuRegistryId { get; set; }
+		
+		[Mac (10,14), iOS (13,0), TV (13,0)]
+		[Export ("PreferredEncoderGpuRegistryId")]
+		uint PreferredEncoderGpuRegistryId { get; set; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -961,6 +981,10 @@ namespace VideoToolbox {
 		[iOS (10,0)]
 		[Export ("DestinationICCProfile")]
 		NSData DestinationICCProfile { get; set; }
+		
+		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Export ("RealTime")]
+		bool RealTime { get; set; }
 	}
 
 	// VTPixelTransferProperties are available in iOS 9 radar://22614931 https://trello.com/c/bTl6hRu9
