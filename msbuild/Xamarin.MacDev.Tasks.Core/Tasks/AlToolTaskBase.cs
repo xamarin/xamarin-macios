@@ -20,12 +20,13 @@ namespace Xamarin.MacDev.Tasks
         public string FilePath { get ;set; }
 
         [Required]
-        public PlatformName FileType { get ; set; }
+        public virtual PlatformName FileType { get ; set; }
 
         protected override string ToolName {
 			get { return "altool"; }
 		}
 
+        [Required]
         public string SdkDevPath {
 			get { return sdkDevPath; }
 			set {
@@ -63,6 +64,16 @@ namespace Xamarin.MacDev.Tasks
             args.Add ("xml");
 
 			return args.ToString ();
+		}
+
+        protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
+		{
+			try { // We first try to use the base logic, which shows up nicely in XS.
+				base.LogEventsFromTextOutput (singleLine, messageImportance);
+			}
+			catch { // But when that fails, just output the message to the command line and XS will output it raw
+				Log.LogMessage (messageImportance, "{0}", singleLine);
+			}
 		}
 
         string GetFileTypeValue ()

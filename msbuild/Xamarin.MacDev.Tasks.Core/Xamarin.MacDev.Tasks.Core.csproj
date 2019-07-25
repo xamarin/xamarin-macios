@@ -117,7 +117,7 @@
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="StringParserService.cs" />
     <Compile Include="../../tools/common/FileCopier.cs" />
-    <Compile Include="Tasks\AlToolTaskBase.cs" />
+    <Compile Include="Tasks\ALToolTaskBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

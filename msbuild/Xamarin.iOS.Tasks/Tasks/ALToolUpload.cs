@@ -3,11 +3,11 @@ using System.Text;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.Mac.Tasks
+namespace Xamarin.iOS.Tasks
 {
 	public class ALToolUpload : ALToolTaskBase
 	{
-		public override PlatformName FileType => PlatformName.MacOSX;
+        public override PlatformName FileType => PlatformName.iOS;
 		
 		protected override string GenerateCommandLineCommands ()
 		{

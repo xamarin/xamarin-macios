@@ -3,16 +3,16 @@ using System.Text;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.Mac.Tasks
+namespace Xamarin.iOS.Tasks
 {
-	public class ALToolUpload : ALToolTaskBase
+	public class ALToolVerify : ALToolTaskBase
 	{
-		public override PlatformName FileType => PlatformName.MacOSX;
-		
+        public override PlatformName FileType => PlatformName.iOS;
+
 		protected override string GenerateCommandLineCommands ()
 		{
 			var sb = new StringBuilder ();
-			sb.Append ("--upload-app ");
+			sb.Append ("--validate-app ");
 			sb.Append (base.GenerateCommandLineCommands ());
 
 			return sb.ToString ();
