@@ -682,18 +682,9 @@ all-local:: install-ios-common
 IOS_COMMON_DIRECTORIES = \
 	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) \
-	$(IOS_DESTDIR)/Developer/MonoTouch \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono \
 
 IOS_COMMON_TARGETS = \
 	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr/bin \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/2.1 \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/Xamarin.iOS \
-	$(IOS_DESTDIR)/Developer/MonoTouch/updateinfo \
-	$(IOS_DESTDIR)/Developer/MonoTouch/Version \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr/share \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo \
@@ -701,24 +692,6 @@ IOS_COMMON_TARGETS = \
 
 $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current: | $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions
 	$(Q_LN) ln -hfs $(IOS_INSTALL_VERSION) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/usr/bin: | $(IOS_DESTDIR)/Developer/MonoTouch/usr
-	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/2.1: | $(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono
-	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/Xamarin.iOS: | $(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono
-	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/updateinfo: | $(IOS_DESTDIR)/Developer/MonoTouch
-	$(Q_LN) ln -fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/updateinfo) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/Version: | $(IOS_DESTDIR)/Developer/MonoTouch
-	$(Q_LN) ln -fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/Version) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/usr/share: | $(IOS_DESTDIR)/Developer/MonoTouch/usr
-	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/share) $@
 
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: $(TOP)/Make.config.inc $(TOP)/.git/index | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 	$(Q_GEN) echo "Version: $(IOS_PACKAGE_VERSION)" > $@
