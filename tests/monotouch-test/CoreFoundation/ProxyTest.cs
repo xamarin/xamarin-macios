@@ -62,44 +62,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 
 		[Test]
-		public void TestPACParsingScriptRunLoop ()
-		{
-			// get the path for the pac file, try to parse it and ensure that 
-			// our cb was called
-			CFProxy [] proxies = null;
-			NSError error = null;
-
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
-
-			var script = File.ReadAllText (pacPath);
-			var targetUri = new Uri ("http://docs.xamarin.com");
-			var runLoop = CFRunLoop.Current;
-
-			// get source, execute run loop in a diff thread
-
-			CFNetwork.CFProxyAutoConfigurationResultCallback cb = delegate (CFProxy [] l, NSError e) {
-				proxies = l;
-				error = e;
-				runLoop.Stop ();
-			};
-			var result = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, cb, null);
-			using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
-				runLoop.AddSource (result.source, mode);
-				// block until cb is called
-				runLoop.RunInMode (mode, double.MaxValue, false);
-				runLoop.RemoveSource (result.source, mode);
-				Assert.IsNull (error, "Null error");
-				Assert.IsNotNull (proxies, "Not null proxies");
-				Assert.AreEqual (1, proxies.Length, "Length");
-				// assert the data of the proxy, although we are really testing the js used
-				Assert.AreEqual (8080, proxies [0].Port, "Port");
-				if (result.context.HasValue) {
-					result.context.Value.Release ();
-				}
-			}
-		}
-
-		[Test]
 		public void TestPACParsingAsync ()
 		{
 			CFProxy [] proxies = null;
@@ -147,43 +109,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Assert.AreEqual (1, proxies.Length, "Length");
 			// assert the data of the proxy, although we are really testing the js used
 			Assert.AreEqual (8080, proxies [0].Port, "Port");
-		}
-
-		[Test]
-		public void TestPACParsingUrlRunLoop ()
-		{
-			// get the path for the pac file, try to parse it and ensure that 
-			// our cb was called
-			CFProxy [] proxies = null;
-			NSError error = null;
-
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
-			var pacUri = new Uri (pacPath);
-			var targetUri = new Uri ("http://docs.xamarin.com");
-			var runLoop = CFRunLoop.Current;
-
-			// get source, execute run loop in a diff thread
-
-			CFNetwork.CFProxyAutoConfigurationResultCallback cb = delegate (CFProxy [] l, NSError e) {
-				proxies = l;
-				error = e;
-				runLoop.Stop ();
-			};
-			var result = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, cb);
-			using (var mode = new NSString ("Xamarin.iOS.Proxy")) {
-				runLoop.AddSource (result.source, mode);
-				// block until cb is called
-				runLoop.RunInMode (mode, double.MaxValue, false);
-				runLoop.RemoveSource (result.source, mode);
-				Assert.IsNull (error, "Null error");
-				Assert.IsNotNull (proxies, "Not null proxies");
-				Assert.AreEqual (1, proxies.Length, "Length");
-				// assert the data of the proxy, although we are really testing the js used
-				Assert.AreEqual (8080, proxies [0].Port, "Port");
-				if (result.context.HasValue) {
-					result.context.Value.Release ();
-				}
-			}
 		}
 
 		[Test]

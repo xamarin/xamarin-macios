@@ -65,30 +65,30 @@ namespace CoreFoundation {
 	public struct CFStreamClientContext {
 		public nint Version; // CFIndex
 		public /* void*/ IntPtr Info;
-		internal IntPtr RetainCbPtr;
-		internal IntPtr ReleaseCbPtr;
-		internal IntPtr CopyDescriptionCbPtr;
+		IntPtr retain;
+		IntPtr release;
+		IntPtr copyDescription;
 		
 		public void Retain ()
 		{
-			if (RetainCbPtr == IntPtr.Zero || Info == IntPtr.Zero)
+			if (retain == IntPtr.Zero || Info == IntPtr.Zero)
 				return;
 			
-			CFReadStreamRef_InvokeRetain (RetainCbPtr, Info);
+			CFReadStreamRef_InvokeRetain (retain, Info);
 		}
 		
 		public void Release ()
 		{
-			if (ReleaseCbPtr == IntPtr.Zero || Info == IntPtr.Zero)
+			if (release == IntPtr.Zero || Info == IntPtr.Zero)
 				return;
 			
-			CFReadStreamRef_InvokeRelease (ReleaseCbPtr, Info);
+			CFReadStreamRef_InvokeRelease (release, Info);
 		}
 		
 		public override string ToString ()
 		{
-			if (CopyDescriptionCbPtr != IntPtr.Zero) {
-				var ptr = CFReadStreamRef_InvokeCopyDescription (CopyDescriptionCbPtr, Info);
+			if (copyDescription != IntPtr.Zero) {
+				var ptr = CFReadStreamRef_InvokeCopyDescription (copyDescription, Info);
 				if (ptr != IntPtr.Zero) {
 					// Copy* -> so we must not retain again
 					using (var s = new CFString (ptr, true))
@@ -107,7 +107,7 @@ namespace CoreFoundation {
 		}
 		
 		[MonoNativeFunctionWrapper]
-		internal delegate IntPtr RetainDelegate (IntPtr info);
+		delegate IntPtr RetainDelegate (IntPtr info);
 
 		static IntPtr CFReadStreamRef_InvokeRetain (IntPtr retain, IntPtr info)
 		{
@@ -115,7 +115,7 @@ namespace CoreFoundation {
 		}
 		
 		[MonoNativeFunctionWrapper]
-		internal delegate void ReleaseDelegate (IntPtr info);
+		delegate void ReleaseDelegate (IntPtr info);
 
 		static void CFReadStreamRef_InvokeRelease (IntPtr release, IntPtr info)
 		{
@@ -123,7 +123,7 @@ namespace CoreFoundation {
 		}
 		
 		[MonoNativeFunctionWrapper]
-		internal delegate IntPtr CopyDescriptionDelegate (IntPtr info);
+		delegate IntPtr CopyDescriptionDelegate (IntPtr info);
 
 		static IntPtr CFReadStreamRef_InvokeCopyDescription (IntPtr copyDescription, IntPtr info)
 		{
