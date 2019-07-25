@@ -39,6 +39,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 
 	<UsingTask TaskName="Xamarin.iOS.Tasks.ACTool" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.ALToolVerify" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.ACTool" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Archive" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.CodesignNativeLibraries" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.CodesignVerify" AssemblyFile="Xamarin.iOS.Tasks.dll" />
@@ -400,6 +402,15 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CoreArchive
 		</ArchiveDependsOn>
 	</PropertyGroup>
+
+	<Target Name="VerifyAppStoreBundle" DependsOnTargets="_DetectSdkLocations">
+		<ALToolVerify
+			Username="$(Username)"
+			Password="$(Password)"
+			FilePath="$(FilePath)"
+			SdkDevPath="$(_SdkDevPath)"
+		/>
+	</Target>
 
 	<Target Name="Archive" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(ArchiveDependsOn)" />
 
