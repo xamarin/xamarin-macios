@@ -178,6 +178,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 								or '%(ReferenceDependencyPaths.Filename)' == 'System.Runtime'">true</_HasReferenceToSystemRuntime>
 
 			<XI_NETStandardInbox Condition="'$(XI_NETStandardInbox)' == '' and Exists('%(XI_InboxNETStandardFolders.Identity)\netstandard.dll')">true</XI_NETStandardInbox>
+
+			<!--
+				This is `true` if any of the references depends on `netstandard`.
+
+				In cases where `ResolveAssemblyReference` task does get run, it populates `$(_DependsOnNETStandard)` property, so we don't
+				need to check this again.
+			-->
+			<XI_DependsOnNETStandard Condition="'$(XI_DependsOnNETStandard)' == ''">$(_DependsOnNETStandard)</XI_DependsOnNETStandard>
 		</PropertyGroup>
 
 		<!--
@@ -191,7 +199,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
 		-->
 		<GetDependsOnNETStandard
-			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''"
+			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(XI_DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''"
 			References="@(XI_CandidateNETStandardReferences)">
 			<Output TaskParameter="DependsOnNETStandard" PropertyName="XI_DependsOnNETStandard" />
 		</GetDependsOnNETStandard>
