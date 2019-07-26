@@ -8,6 +8,8 @@
 //
 
 using System;
+using System.Threading;
+using System.IO;
 #if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
@@ -42,5 +44,215 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Dlfcn.dlclose (lib);
 			}
 		}
+#if !__WATCHOS__ && !MONOMAC
+		[Test]
+		public void TestPACParsingScript ()
+		{
+			// get the path for the pac file, try to parse it and ensure that 
+			// our cb was called
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			NSError error = null;
+			var script = File.ReadAllText (pacPath);
+			var targetUri = new Uri ("http://docs.xamarin.com");
+			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+			Assert.IsNull (error, "Null error");
+			Assert.AreEqual (1, proxies.Length, "Length");
+			// assert the data of the proxy, although we are really testing the js used
+			Assert.AreEqual (8080, proxies [0].Port, "Port");
+		}
+
+		[Test]
+		public void TestPACParsingScriptNoProxy ()
+		{
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			NSError error = null;
+			var script = File.ReadAllText (pacPath);
+			var targetUri = new Uri ("http://google.com");
+			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+			Assert.IsNull (error, "Null error");
+			Assert.IsNotNull (proxies, "Not null proxies");
+			Assert.AreEqual (1, proxies.Length, "Proxies length");
+			Assert.AreEqual (CFProxyType.None, proxies [0].ProxyType);
+		}
+
+		[Test]
+		public void TestPACParsingScriptError ()
+		{
+			NSError error = null;
+			var script = "Not VALID js";
+			var targetUri = new Uri ("http://google.com");
+			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+			Assert.IsNotNull (error, "Not null error");
+			Assert.IsNull (proxies, "Null proxies");
+		}
+
+		[Test]
+		public void TestPACParsingAsync ()
+		{
+			CFProxy [] proxies = null;
+			NSError error = null;
+			NSObject cbClient = null;
+			bool done = false;
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+
+			var script = File.ReadAllText (pacPath);
+			var targetUri = new Uri ("http://docs.xamarin.com");
+			
+			Exception ex;
+			bool foundProxies;
+			// similar to the other tests, but we want to ensure that the async/await API works
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+					CancellationTokenSource cancelSource = new CancellationTokenSource ();
+					CancellationToken cancelToken = cancelSource.Token;
+					var result = await CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+					proxies = result.proxies;
+					error = result.error;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+			Assert.IsNull (cbClient, "Null client");
+			Assert.IsNull (error, "Null error");
+			Assert.IsNotNull (proxies, "Not null proxies");
+			Assert.AreEqual (1, proxies.Length, "Length");
+			// assert the data of the proxy, although we are really testing the js used
+			Assert.AreEqual (8080, proxies [0].Port, "Port");
+		}
+
+		[Test]
+		public void TestPACParsingAsyncNoProxy ()
+		{
+			CFProxy [] proxies = null;
+			NSError error = null;
+			NSObject cbClient = null;
+			bool done = false;
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+
+			var script = File.ReadAllText (pacPath);
+			var targetUri = new Uri ("http://docs.xamarin.com");
+
+			Exception ex;
+			bool foundProxies;
+			// similar to the other tests, but we want to ensure that the async/await API works
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+					CancellationTokenSource cancelSource = new CancellationTokenSource ();
+					CancellationToken cancelToken = cancelSource.Token;
+					var result = await CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+					proxies = result.proxies;
+					error = result.error;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+			Assert.IsNull (cbClient, "Null client");
+			Assert.IsNull (error, "Null error");
+			Assert.IsNotNull (proxies, "Not null proxies");
+			Assert.AreEqual (1, proxies.Length, "Proxies length");
+			Assert.AreEqual (CFProxyType.None, proxies [0].ProxyType);
+		}
+
+		[Test]
+		public void TestPACParsingUrl ()
+		{
+			NSError error;
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			var pacUri = new Uri (pacPath);
+			var targetUri = new Uri ("http://docs.xamarin.com");
+			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
+			Assert.IsNull (error, "Null error");
+			Assert.AreEqual (1, proxies.Length, "Length");
+			// assert the data of the proxy, although we are really testing the js used
+			Assert.AreEqual (8080, proxies [0].Port, "Port");
+		}
+
+		[Test]
+		public void TestPacParsingUrlNoProxy ()
+		{
+			NSError error;
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			var pacUri = new Uri (pacPath);
+			var targetUri = new Uri ("http://google.com");
+			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
+			Assert.IsNull (error, "Null error");
+			Assert.IsNotNull (proxies, "Not null proxies");
+			Assert.AreEqual (1, proxies.Length, "Proxies length");
+			Assert.AreEqual (CFProxyType.None, proxies [0].ProxyType);
+		}
+
+		[Test]
+		public void TestPACParsingUrlAsync ()
+		{
+			CFProxy [] proxies = null;
+			NSError error = null;
+			NSObject cbClient = null;
+			bool done = false;
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			var pacUri = new Uri (pacPath);
+			var targetUri = new Uri ("http://docs.xamarin.com");
+
+			Exception ex;
+			bool foundProxies;
+			// similar to the other tests, but we want to ensure that the async/await API works
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+					CancellationTokenSource cancelSource = new CancellationTokenSource ();
+					CancellationToken cancelToken = cancelSource.Token;
+					var result = await CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+					proxies = result.proxies;
+					error = result.error;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+			Assert.IsNull (cbClient, "Null client");
+			Assert.IsNull (error, "Null error");
+			Assert.IsNotNull (proxies, "Not null proxies");
+			Assert.AreEqual (1, proxies.Length, "Length");
+			// assert the data of the proxy, although we are really testing the js used
+			Assert.AreEqual (8080, proxies [0].Port, "Port");
+		}
+
+		[Test]
+		public void TestPACParsingUrlAsyncNoProxy ()
+		{
+			CFProxy [] proxies = null;
+			NSError error = null;
+			NSObject cbClient = null;
+			bool done = false;
+			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			var pacUri = new Uri (pacPath);
+			var targetUri = new Uri ("http://docs.google.com");
+
+			Exception ex;
+			bool foundProxies;
+			// similar to the other tests, but we want to ensure that the async/await API works
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+					CancellationTokenSource cancelSource = new CancellationTokenSource ();
+					CancellationToken cancelToken = cancelSource.Token;
+					var result = await CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+					proxies = result.proxies;
+					error = result.error;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+			Assert.IsNull (cbClient, "Null client");
+			Assert.IsNull (error, "Null error");
+			Assert.IsNotNull (proxies, "Not null proxies");
+			Assert.AreEqual (1, proxies.Length, "Proxies length");
+			Assert.AreEqual (CFProxyType.None, proxies [0].ProxyType);
+		}
+#endif
 	}
 }
