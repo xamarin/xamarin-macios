@@ -289,7 +289,7 @@ namespace Introspection {
 				case "UIFontPickerViewControllerConfiguration": // Conformance not in headers
 				case "HKAudiogramSample": // Conformance not in headers
 				case "HKAudiogramSensitivityPoint": // Conformance not in headers
-                            return true;
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -515,7 +515,7 @@ namespace Introspection {
 				case "ARCollaborationData":  // Conformance not in headers
 				case "UIFontPickerViewControllerConfiguration":  // Conformance not in headers
 				case "HKAudiogramSensitivityPoint":  // Conformance not in headers
-                            return true;
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -665,7 +665,7 @@ namespace Introspection {
                 case "HKCumulativeQuantitySample": // Conformance not in headers
                 case "HKDiscreteQuantitySample": // Conformance not in headers
                 case "HKAudiogramSample": // Conformance not in headers
-                            return true;
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
