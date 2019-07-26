@@ -2545,6 +2545,22 @@ If this is not the case, please file a [bug report](https://github.com/xamarin/x
 
 The name of an Objective-C protocol can't contain certain characters which means that the `Adopts` attribute on the corresponding managed class can't have the `ProtocolType` parameter containing them. Please refer to the provided error message and fix accordingly.
 
+### MT4178: The registrar found the abstract type '{type}' in the signature for '{member}'. Abstract types should not be used in the signature for a member exported to Objective-C.
+
+This is a warning, indicating a potential problem where a method or property
+has a parameter or return type which is abstract. The potential problem occurs
+at runtime, when the Xamarin.iOS runtime may need to create an instance of
+such a type, which will fail if the type is abstract.
+
+Possible solutions:
+
+* Modify the signature in question to not use an abstract type.
+* Make the type not abstract.
+
+If this is an API exposed by Xamarin, please file a new issue on
+[github](https://github.com/xamarin/xamarin-macios/issues/new), if it's a
+third-party binding, please contact the vendor.
+
 # MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation

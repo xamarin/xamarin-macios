@@ -583,6 +583,22 @@ complicated to get it right when doing it manually.
 
 If this is not the case, please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
+### MM4178: The registrar found the abstract type '{type}' in the signature for '{member}'. Abstract types should not be used in the signature for a member exported to Objective-C.
+
+This is a warning, indicating a potential problem where a method or property
+has a parameter or return type which is abstract. The potential problem occurs
+at runtime, when the Xamarin.Mac runtime may need to create an instance of
+such a type, which will fail if the type is abstract.
+
+Possible solutions:
+
+* Modify the signature in question to not use an abstract type.
+* Make the type not abstract.
+
+If this is an API exposed by Xamarin, please file a new issue on
+[github](https://github.com/xamarin/xamarin-macios/issues/new), if it's a
+third-party binding, please contact the vendor.
+
 ## MM5xxx: GCC and toolchain
 
 ### MM51xx: compilation

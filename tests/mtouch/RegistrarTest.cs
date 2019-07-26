@@ -1794,6 +1794,55 @@ class CTP4 : CTP3 {
 				}
 			}
 		}
+
+		[Test]
+		public void MT4178 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+using System;
+
+using Foundation;
+using ObjCRuntime;
+
+abstract class SomeNativeObject : INativeObject
+{
+	public IntPtr Handle { get; set; }
+	SomeNativeObject (IntPtr handle, bool owns) { }
+}
+
+class C : NSObject {
+	[Export (""M1:"")]
+	public void M1 (SomeNativeObject obj)
+	{
+	}
+
+	[Export (""M2"")]
+	public SomeNativeObject M2 ()
+	{
+		return null;
+	}
+
+	[Export (""M3"")]
+	public SomeNativeObject M3 {
+		get;
+		set;
+	}
+	static void Main () {}
+}
+";
+
+				mtouch.CreateTemporaryApp (code: code, extraArg: "-debug");
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningCount (4);
+				mtouch.AssertWarning (4178, $"The registrar found the abstract type 'SomeNativeObject' in the signature for 'C.get_M3'. Abstract types should not be used in the signature for a member exported to Objective-C.", "testApp.cs", 27);
+				mtouch.AssertWarning (4178, $"The registrar found the abstract type 'SomeNativeObject' in the signature for 'C.set_M3'. Abstract types should not be used in the signature for a member exported to Objective-C.", "testApp.cs", 28);
+				mtouch.AssertWarning (4178, $"The registrar found the abstract type 'SomeNativeObject' in the signature for 'C.M1'. Abstract types should not be used in the signature for a member exported to Objective-C.", "testApp.cs", 16);
+				mtouch.AssertWarning (4178, $"The registrar found the abstract type 'SomeNativeObject' in the signature for 'C.M2'. Abstract types should not be used in the signature for a member exported to Objective-C.", "testApp.cs", 21);
+			}
+		}
 	}
 }
 
