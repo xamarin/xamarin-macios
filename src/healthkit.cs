@@ -894,7 +894,7 @@ namespace HealthKit {
 
 		[Watch (6, 0), iOS (13, 0)]
 		[Field ("HKMetadataKeyAverageMETs")]
-		NSString AverageMETs { get; } // should this be AverageMets???
+		NSString AverageMets { get; }
 
 		[Watch (6, 0), iOS (13, 0)]
 		[Field ("HKMetadataKeyAudioExposureLevel")]
@@ -1042,15 +1042,19 @@ namespace HealthKit {
 	[Abstract] // The HKSampleType class is an abstract subclass of the HKObjectType class, used to represent data samples. Never instantiate an HKSampleType object directly. Instead, you should always work with one of its concrete subclasses [...]
 #endif
 	interface HKSampleType {
+		[iOS (13,0), Watch (6,0)]
 		[Export ("isMaximumDurationRestricted")]
 		bool IsMaximumDurationRestricted { get; }
 
+		[iOS (13,0), Watch (6,0)]
 		[Export ("maximumAllowedDuration")]
 		double MaximumAllowedDuration { get; }
 
+		[iOS (13,0), Watch (6,0)]
 		[Export ("isMinimumDurationRestricted")]
 		bool IsMinimumDurationRestricted { get; }
 
+		[iOS (13,0), Watch (6,0)]
 		[Export ("minimumAllowedDuration")]
 		double MinimumAllowedDuration { get; }
 	}
@@ -1762,7 +1766,6 @@ namespace HealthKit {
 		[Field ("HKQuantityTypeIdentifierDistanceDownhillSnowSports")]
 		DistanceDownhillSnowSports,
 
-
 		[iOS (11,0), Watch (4,0)]
 		[Field ("HKQuantityTypeIdentifierInsulinDelivery")]
 		InsulinDelivery,
@@ -2156,25 +2159,25 @@ namespace HealthKit {
 		[Watch (6,0), iOS (13,0)]
 		[Static]
 		[Export ("decibelAWeightedSoundPressureLevelUnit")]
-		HKUnit DecibelAWeightedSoundPressureLevelUnit ();
+		HKUnit DecibelAWeightedSoundPressureLevelUnit { get; }
 
 		// HKUnit (HearingSensitivity) Category
 		[Watch (6,0), iOS (13,0)]
 		[Static]
 		[Export ("decibelHearingLevelUnit")]
-		HKUnit DecibelHearingLevelUnit ();
+		HKUnit DecibelHearingLevelUnit { get; }
 
 		// HKUnit (Frequency) Category
 
 		[Watch (6,0), iOS (13,0)]
 		[Static]
 		[Export ("hertzUnitWithMetricPrefix:")]
-		HKUnit HertzUnit (HKMetricPrefix prefix);
+		HKUnit GetHertzUnit (HKMetricPrefix prefix);
 
 		[Watch (6,0), iOS (13,0)]
 		[Static]
 		[Export ("hertzUnit")]
-		HKUnit HertzUnit ();
+		HKUnit HertzUnit { get; }
 	}
 
 	[Watch (2,0)]
@@ -2686,7 +2689,7 @@ namespace HealthKit {
 		[Watch (6,0), iOS (13,0)]
 		[Static]
 		[Export ("heartbeatSeriesType")]
-		HKSeriesType HeartbeatSeriesType ();
+		HKSeriesType HeartbeatSeriesType { get; }
 	}
 
 	[iOS (11,0)]
@@ -2876,10 +2879,19 @@ namespace HealthKit {
 		[Export ("finishSeriesWithMetadata:completion:")]
 		void FinishSeries ([NullAllowed] NSDictionary metadata, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
 
+		[Async]
+		[Wrap ("FinishSeries (metadata?.Dictionary, completionHandler)")]
+		void FinishSeries ([NullAllowed] HKMetadata metadata, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
+
 		[Watch (6,0), iOS (13,0)]
 		[Async]
 		[Export ("finishSeriesWithMetadata:endDate:completion:")]
-		void FinishSeriesWithMetadata ([NullAllowed] NSDictionary metadata, [NullAllowed] NSDate endDate, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
+		void FinishSeries ([NullAllowed] NSDictionary metadata, [NullAllowed] NSDate endDate, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
+
+		[Watch (6,0), iOS (13,0)]
+		[Async]
+		[Wrap ("FinishSeries (metadata?.Dictionary, endDate, completionHandler)")]
+		void FinishSeries ([NullAllowed] HKMetadata metadata, [NullAllowed] NSDate endDate, HKQuantitySeriesSampleBuilderFinishSeriesDelegate completionHandler);
 
 
 		[Export ("discard")]
@@ -2934,7 +2946,7 @@ namespace HealthKit {
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use HKCumulativeQuantitySample instead.")]
 	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use HKCumulativeQuantitySample instead.")]
 	[DisableDefaultCtor]
-	[BaseType (typeof(HKCumulativeQuantitySample))]
+	[BaseType (typeof (HKCumulativeQuantitySample))]
 	interface HKCumulativeQuantitySeriesSample
 	{
 		[Export ("sum", ArgumentSemantic.Copy)]
@@ -2942,7 +2954,7 @@ namespace HealthKit {
 	}
 
 	[Watch (6,0), iOS (13,0)]
-	[BaseType (typeof(HKQuantitySample))]
+	[BaseType (typeof (HKQuantitySample))]
 	[DisableDefaultCtor]
 	interface HKCumulativeQuantitySample
 	{
@@ -3006,7 +3018,7 @@ namespace HealthKit {
 	}
 
 	[Watch (6,0), iOS (13,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HKAudiogramSensitivityPoint
 	{
@@ -3022,11 +3034,11 @@ namespace HealthKit {
 		[Static]
 		[Export ("sensitivityPointWithFrequency:leftEarSensitivity:rightEarSensitivity:error:")]
 		[return: NullAllowed]
-		HKAudiogramSensitivityPoint SensitivityPoint (HKQuantity frequency, [NullAllowed] HKQuantity leftEarSensitivity, [NullAllowed] HKQuantity rightEarSensitivity, [NullAllowed] out NSError error);
+		HKAudiogramSensitivityPoint GetSensitivityPoint (HKQuantity frequency, [NullAllowed] HKQuantity leftEarSensitivity, [NullAllowed] HKQuantity rightEarSensitivity, [NullAllowed] out NSError error);
 	}
 
 	[Watch (6,0), iOS (13,0)]
-	[BaseType (typeof(HKSample))]
+	[BaseType (typeof (HKSample))]
 	[DisableDefaultCtor]
 	interface HKAudiogramSample
 	{
@@ -3035,11 +3047,11 @@ namespace HealthKit {
 
 		[Static]
 		[Export ("audiogramSampleWithSensitivityPoints:startDate:endDate:metadata:")]
-		HKAudiogramSample AudiogramSample (HKAudiogramSensitivityPoint[] sensitivityPoints, NSDate startDate, NSDate endDate, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
+		HKAudiogramSample GetAudiogramSample (HKAudiogramSensitivityPoint[] sensitivityPoints, NSDate startDate, NSDate endDate, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
 	}
 
 	[Watch (6,0), iOS (13,0)]
-	[BaseType (typeof(HKQuantitySample))]
+	[BaseType (typeof (HKQuantitySample))]
 	[DisableDefaultCtor]
 	interface HKDiscreteQuantitySample
 	{
@@ -3068,7 +3080,7 @@ namespace HealthKit {
 	delegate void HKHeartbeatSeriesBuilderCompletionHandler (bool success, NSError error);
 
 	[Watch (6,0), iOS (13,0)]
-	[BaseType (typeof(HKSeriesBuilder))]
+	[BaseType (typeof (HKSeriesBuilder))]
 	[DisableDefaultCtor]
 	interface HKHeartbeatSeriesBuilder
 	{
@@ -3096,7 +3108,7 @@ namespace HealthKit {
 	delegate void HKHeartbeatSeriesQueryDataHandler (HKHeartbeatSeriesQuery query, double timeSinceSeriesStart, bool precededByGap, bool done, NSError error);
 
 	[Watch (6,0), iOS (13,0)]
-	[BaseType (typeof(HKQuery))]
+	[BaseType (typeof (HKQuery))]
 	interface HKHeartbeatSeriesQuery
 	{
 		[Export ("initWithHeartbeatSeries:dataHandler:")]

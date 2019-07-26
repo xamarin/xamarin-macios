@@ -140,9 +140,6 @@ namespace HealthKit
 		CumulativeSum             = 1 << 4,
 		[iOS (13, 0), Watch (6, 0)]
 		MostRecent                = 1 << 5,
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'HKStatisticsOptions.MostRecent'.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'HKStatisticsOptions.MostRecent'.")]
-		DiscreteMostRecent        = MostRecent,
 		[iOS (13, 0), Watch (6, 0)]
 		Duration                  = 1 << 6,
 	}
