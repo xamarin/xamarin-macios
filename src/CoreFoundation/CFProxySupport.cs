@@ -642,7 +642,10 @@ namespace CoreFoundation {
 				CFObject.CFRetain (proxyList);
 				pacCbData.ProxyListPtr = proxyList;
 			}
-			pacCbData.ErrorPtr = error;
+			if (error != IntPtr.Zero) {
+				NSObject.DangerousRetain (error);
+				pacCbData.ErrorPtr = error;
+			}
 			// stop the CFRunLoop
 			var runLoop = new CFRunLoop (pacCbData.CFRunLoopPtr);
 			Marshal.StructureToPtr (pacCbData, client, false);
@@ -698,7 +701,10 @@ namespace CoreFoundation {
 					outError = pacCbData.Error;
 				} finally {
 					// clean resources
-					CFObject.CFRelease (pacCbData.ProxyListPtr);
+					if (pacCbData.ProxyListPtr != IntPtr.Zero)
+						CFObject.CFRelease (pacCbData.ProxyListPtr);
+					if (pacCbData.ErrorPtr != IntPtr.Zero)
+						NSObject.DangerousRelease (pacCbData.ErrorPtr);
 					Marshal.FreeHGlobal (pacDataPtr); 
 				}
 			}, cancellationToken).ConfigureAwait (false);
@@ -734,7 +740,10 @@ namespace CoreFoundation {
 				outError = pacCbData.Error;
 				return pacCbData.ProxyList;
 			} finally {
-				CFObject.CFRelease (pacCbData.ProxyListPtr);
+				if (pacCbData.ProxyListPtr != IntPtr.Zero)
+					CFObject.CFRelease (pacCbData.ProxyListPtr);
+				if (pacCbData.ErrorPtr != IntPtr.Zero)
+					NSObject.DangerousRelease (pacCbData.ErrorPtr);
 				Marshal.FreeHGlobal (pacDataPtr); 
 			}
 		}
@@ -749,7 +758,6 @@ namespace CoreFoundation {
 		public static CFProxy[] ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, out NSError outError)
 		{
 			outError = null;
-			IntPtr cbError = IntPtr.Zero;
 			if (proxyAutoConfigurationScript == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationScript));
 
@@ -793,7 +801,6 @@ namespace CoreFoundation {
 		public static CFProxy[] ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, out NSError outError)
 		{ 
 			outError = null;
-			IntPtr cbError = IntPtr.Zero;
 			if (proxyAutoConfigurationUrl == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationUrl));
 
