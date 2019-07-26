@@ -2525,6 +2525,7 @@ namespace HealthKit {
 		HKQueryAnchor Create (nuint value);
 	}
 
+
 	[NoiOS]
 	[Watch (2,0)]
 	[BaseType (typeof(NSObject))]
