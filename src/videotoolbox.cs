@@ -311,7 +311,7 @@ namespace VideoToolbox {
 		
 		[Mac (10,9), iOS (13,0), TV (13,0)]
 		[Export ("GammaLevel")]
-		float GammaLevel { get; set; }
+		double GammaLevel { get; set; }
 		
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Export ("AlphaChannelMode")]
