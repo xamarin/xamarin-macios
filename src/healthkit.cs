@@ -1793,14 +1793,6 @@ namespace HealthKit {
 		[Watch (6, 0), iOS (13, 0)]
 		[Field ("HKQuantityTypeIdentifierHeadphoneAudioExposure")]
 		HeadphoneAudioExposure,
-
-		[Watch (6, 0), iOS (13, 0)]
-		[Field ("HKCategoryTypeIdentifierAudioExposureEvent")]
-		AudioExposureEvent,
-
-		[Watch (6, 0), iOS (13, 0)]
-		[Field ("HKCategoryTypeIdentifierToothbrushingEvent")]
-	 	ToothbrushingEvent,
 	}
 
 	[Watch (2,0)]
@@ -1868,6 +1860,14 @@ namespace HealthKit {
 		[Watch (5,2), iOS (12,2)]
 		[Field ("HKCategoryTypeIdentifierIrregularHeartRhythmEvent")]
 		IrregularHeartRhythmEvent,
+
+		[Watch (6, 0), iOS (13, 0)]
+		[Field ("HKCategoryTypeIdentifierAudioExposureEvent")]
+		AudioExposureEvent,
+
+		[Watch (6, 0), iOS (13, 0)]
+		[Field ("HKCategoryTypeIdentifierToothbrushingEvent")]
+	 	ToothbrushingEvent,
 	}
 
 	[Watch (2,0)]
