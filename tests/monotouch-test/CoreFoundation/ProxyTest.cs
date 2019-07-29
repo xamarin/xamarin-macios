@@ -125,6 +125,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPACParsingAsyncNoProxy ()
 		{
+			TestRuntime.IgnoreInCI ("CI bots might have proxies setup and will mean that the test will fail when trying to assert they are empty.");
+
 			CFProxy [] proxies = null;
 			NSError error = null;
 			NSObject cbClient = null;
@@ -223,6 +225,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPACParsingUrlAsyncNoProxy ()
 		{
+			TestRuntime.IgnoreInCI ("CI bots might have proxies setup and will mean that the test will fail when trying to assert they are empty.");
 			CFProxy [] proxies = null;
 			NSError error = null;
 			NSObject cbClient = null;
