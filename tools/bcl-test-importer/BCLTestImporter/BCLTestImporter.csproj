@@ -45,6 +45,7 @@
     <Compile Include="BCLTestProjectDefinition.cs" />
     <Compile Include="BCLTestAssemblyDefinition.cs" />
     <Compile Include="ConsoleWriter.cs" />
+    <Compile Include="BCLPathManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties" />

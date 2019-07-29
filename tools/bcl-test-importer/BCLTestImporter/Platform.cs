@@ -9,4 +9,9 @@ namespace BCLTestImporter {
 		MacOSFull,
 		MacOSModern,
 	}
+	
+	public enum WatchAppType {
+		App,
+		Extension
+	}
 }

@@ -122,7 +122,8 @@ namespace xharness
 				project_guid = mt_nunitlite_project.GetProjectGuid ();
 				project_guids [mt_nunitlite_project_path] = project_guid;
 			}
-			inputProject.CreateProjectReferenceValue ("MonoTouch.NUnitLite", mt_nunitlite_project_path, project_guid, "MonoTouch.NUnitLite");
+			if (!IsBCLProject)
+				inputProject.CreateProjectReferenceValue ("MonoTouch.NUnitLite", mt_nunitlite_project_path, project_guid, "MonoTouch.NUnitLite");
 
 			inputProject.AddExtraMtouchArgs ("--bitcode:asmonly", "iPhone", "Release");
 			inputProject.SetMtouchUseLlvm (true, "iPhone", "Release");

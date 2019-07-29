@@ -125,7 +125,10 @@ namespace xharness
 			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0;FEATURE_NO_BSD_SOCKETS;MONOTOUCH_WATCH;");
 			csproj.RemoveReferences ("OpenTK-1.0");
 			var ext = IsFSharp ? "fs" : "cs";
-			csproj.AddCompileInclude ("InterfaceController." + ext, Path.Combine (Harness.WatchOSExtensionTemplate, "InterfaceController." + ext));
+			if (IsBCLProject)
+				csproj.AddCompileInclude ("InterfaceController." + ext, Path.Combine (Harness.RootDirectory, "bcl-test", "templates", "watchOS", "Extension", "InterfaceController." + ext));
+			else 
+				csproj.AddCompileInclude ("InterfaceController." + ext, Path.Combine (Harness.WatchOSExtensionTemplate, "InterfaceController." + ext));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.SetMtouchUseBitcode (true, "iPhone", "Release");
 			csproj.SetMtouchUseLlvm (true, "iPhone", "Release");
@@ -153,7 +156,7 @@ namespace xharness
 
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, $"Info{Suffix}-extension.plist");
-			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
+			info_plist.LoadWithoutNetworkAccess (TargetDirectory.Contains ("bcl-test") ? Path.Combine (Harness.RootDirectory, "bcl-test", "Info.plist") :Path.Combine (TargetDirectory, "Info.plist"));
 			BundleIdentifier = info_plist.GetCFBundleIdentifier () + "_watch";
 			if (BundleIdentifier.Length >= 58)
 				BundleIdentifier = BundleIdentifier.Substring (0, 57); // If the main app's bundle id is 58 characters (or sometimes more), then the watch extension crashes at launch. radar #29847128.
