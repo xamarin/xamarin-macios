@@ -54,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Tasks\ACToolTaskBase.cs" />
+    <Compile Include="Tasks\ALToolUploadTaskBase.cs" />
+    <Compile Include="Tasks\ALToolVerifyTaskBase.cs" />
     <Compile Include="Tasks\ArchiveTaskBase.cs" />
     <Compile Include="Tasks\CodesignVerifyTaskBase.cs" />
     <Compile Include="Tasks\CollectITunesArtworkTaskBase.cs" />
