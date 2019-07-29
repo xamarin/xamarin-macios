@@ -53,9 +53,9 @@ namespace GameController {
 		public float /* float_t = float */ RightTrigger;
 
 		// radar: https://trello.com/c/7FoGTORD (GCExtendedGamepadSnapShotDataV100 struct size / alignment not backward compatible)
-		// [TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
+		// [TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
 		// public bool LeftThumbstickButton;
-		// [TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
+		// [TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
 		// public bool RightThumbstickButton;
 
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
