@@ -52,18 +52,15 @@ namespace GameController {
 		public float /* float_t = float */ LeftTrigger;
 		public float /* float_t = float */ RightTrigger;
 
-		// Apple inserted these in the middle of the struct previously so it broke the struct for backwards compatibility,
-		// but now they are at the end of the struct so they are allowed and do not prevent backwards compatibility
-		[iOS (12,2), Mac (10,14,4), TV (12,2)]
-		public bool SupportsClickableThumbsticks;
-		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
-		public bool LeftThumbstickButton;
-		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
-		public bool RightThumbstickButton;
+		// radar: https://trello.com/c/7FoGTORD (GCExtendedGamepadSnapShotDataV100 struct size / alignment not backward compatible)
+		// [TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
+		// public bool LeftThumbstickButton;
+		// [TV (12, 1), Mac (10, 14, 1, onlyOn64: true), iOS (12, 1)]
+		// public bool RightThumbstickButton;
 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapShotDataV100 (
 			/* GCExtendedGamepadSnapShotDataV100 * __nullable */ ref GCExtendedGamepadSnapShotDataV100 snapshotData);
@@ -75,9 +72,9 @@ namespace GameController {
 		}
 	}
 	
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
-	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
-	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 	// float_t are 4 bytes (at least for ARM64)
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	public struct GCExtendedGamepadSnapshotData {
@@ -109,15 +106,18 @@ namespace GameController {
 		public float /* float_t = float */ LeftTrigger;
 		public float /* float_t = float */ RightTrigger;
 
+		[iOS (12, 2), Mac (10, 14, 4), TV (12, 2)]
+		public bool SupportsClickableThumbsticks;
+
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		bool LeftThumbstickButton;
 		
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		bool RightThumbstickButton;
 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapshotData (
@@ -134,18 +134,18 @@ namespace GameController {
 	public partial class GCExtendedGamepadSnapshot {
 		
 		// GCExtendedGamepadSnapshot.h
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
 		static extern bool GCExtendedGamepadSnapShotDataV100FromNSData (
 			/* GCExtendedGamepadSnapShotDataV100 * __nullable */ out GCExtendedGamepadSnapShotDataV100 snapshotData, 
 			/* NSData * __nullable */ IntPtr data);
 		
 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.ControllerWithExtendedGamepad()' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		static extern bool GCExtendedGamepadSnapshotDataFromNSData (
