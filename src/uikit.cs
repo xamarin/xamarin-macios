@@ -7819,11 +7819,6 @@ namespace UIKit {
 
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Static]
-		[Export ("closeImage", ArgumentSemantic.Strong)]
-		UIImage CloseImage { get; }
-
-		[Watch (6,0), TV (13,0), iOS (13,0)]
-		[Static]
 		[Export ("removeImage", ArgumentSemantic.Strong)]
 		UIImage RemoveImage { get; }
 
