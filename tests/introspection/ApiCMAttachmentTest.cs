@@ -173,6 +173,7 @@ namespace Introspection {
 			if (nativeName.StartsWith ("CGPDF", StringComparison.Ordinal))  // all those types crash the app
 				return true;
 			switch (nativeName) {
+			case "ABRecord": // abstract class
 			case "CFMachPort":
 			case "CFMessagePort":
 			case "DispatchIO": // no way to instantiate it
