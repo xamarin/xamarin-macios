@@ -877,7 +877,7 @@ namespace BCLTestImporter {
 				result = result.Replace (PlistKey, paths.WatchOSProjectPaths.GetPListPath (WatchAppType.Extension));
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (paths.RegisterTypePath));
 				result = result.Replace (ReferencesKey, sb.ToString ());
-				result = result.Replace (ContentKey, contentFiles.ToString ());
+				result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, templatePath, Platform.WatchOS));
 				using (var file = new StreamWriter (paths.WatchOSProjectPaths.GetProjectPath (WatchAppType.Extension), false)) { // false is do not append
 					file.Write (result);
 				}
