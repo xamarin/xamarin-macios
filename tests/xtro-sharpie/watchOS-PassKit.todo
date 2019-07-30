@@ -1,0 +1,4 @@
+!missing-selector! PKPaymentMethod::billingAddress not bound
+!missing-selector! PKPaymentRequestPaymentMethodUpdate::errors not bound
+!missing-selector! PKPaymentRequestPaymentMethodUpdate::initWithErrors:paymentSummaryItems: not bound
+!missing-selector! PKPaymentRequestPaymentMethodUpdate::setErrors: not bound

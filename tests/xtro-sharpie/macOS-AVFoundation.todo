@@ -223,3 +223,7 @@
 !missing-type! AVSpeechSynthesizer not bound
 !missing-type! AVSpeechUtterance not bound
 !missing-type! AVVideoCompositionRenderHint not bound
+!missing-field! AVAudioUnitComponentManagerRegistrationsChangedNotification not bound
+!missing-field! AVPlayerEligibleForHDRPlaybackDidChangeNotification not bound
+!missing-field! AVPlayerItemMediaSelectionDidChangeNotification not bound
+!missing-selector! +AVPlayer::eligibleForHDRPlayback not bound

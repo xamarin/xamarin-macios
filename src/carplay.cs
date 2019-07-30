@@ -75,7 +75,7 @@ namespace CarPlay {
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
 	[Flags]
 	[Native]
-	enum CPAmbientLightStatus : ulong {
+	enum CPContentStyle : ulong {
 		Light = 1uL << 0,
 		Dark = 1uL << 1,
 	}
@@ -681,10 +681,6 @@ namespace CarPlay {
 		[Export ("limitedUserInterfaces")]
 		CPLimitableUserInterface LimitedUserInterfaces { get; }
 
-		[iOS (13,0)]
-		[Export ("ambientLightStatus")]
-		CPAmbientLightStatus AmbientLightStatus { get; }
-
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ICPSessionConfigurationDelegate Delegate { get; set; }
@@ -706,8 +702,8 @@ namespace CarPlay {
 		void LimitedUserInterfacesChanged (CPSessionConfiguration sessionConfiguration, CPLimitableUserInterface limitedUserInterfaces);
 
 		[iOS (13,0)]
-		[Export ("sessionConfiguration:ambientLightStatusChanged:")]
-		void AmbientLightStatusChanged (CPSessionConfiguration sessionConfiguration, CPAmbientLightStatus ambientLightStatus);
+		[Export ("sessionConfiguration:contentStyleChanged:")]
+		void ContentStyleChanged (CPSessionConfiguration sessionConfiguration, CPContentStyle contentStyle);
 	}
 
 	[Abstract]

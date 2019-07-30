@@ -372,3 +372,11 @@
 !missing-type! NSSwitch not bound
 !missing-type! NSTextCheckingController not bound
 !missing-type! NSWorkspaceOpenConfiguration not bound
+!deprecated-attribute-missing! NSCollectionViewDelegate::collectionView:writeItemsAtIndexes:toPasteboard: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSCollectionViewDelegate::collectionView:writeItemsAtIndexPaths:toPasteboard: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSOutlineViewDataSource::outlineView:writeItems:toPasteboard: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSTableViewDataSource::tableView:writeRowsWithIndexes:toPasteboard: missing a [Deprecated] attribute
+!missing-protocol! NSSharingServicePickerToolbarItemDelegate not bound
+!missing-selector! NSSharingServicePickerToolbarItem::delegate not bound
+!missing-selector! NSSharingServicePickerToolbarItem::setDelegate: not bound
+!missing-type! NSSharingServicePickerToolbarItem not bound

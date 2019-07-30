@@ -875,6 +875,7 @@ namespace Introspection {
 				case "UISegmentedControl":
 				case "UITableView":
 				case "UITabBar":
+				case "UITabBarItem": // As https://github.com/xamarin/xamarin-macios/commit/e1873169f2d3b2b034d36f844909b6eb4e8abcca points out works as expected on both sim and device
 				case "UIAlertController":
 				case "PKPaymentButton":
 				case "PKAddPassButton":

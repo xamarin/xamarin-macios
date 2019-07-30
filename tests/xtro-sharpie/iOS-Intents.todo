@@ -393,3 +393,4 @@
 !missing-type! INURLResolutionResult not bound
 !missing-type! INUserContext not bound
 !missing-type! INVolumeResolutionResult not bound
+!missing-selector! INMediaSearch::initWithMediaType:sortOrder:mediaName:artistName:albumName:genreNames:moodNames:releaseDate:reference:mediaIdentifier: not bound

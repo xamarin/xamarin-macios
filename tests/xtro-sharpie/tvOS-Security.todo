@@ -17,3 +17,6 @@
 !missing-pinvoke! sec_protocol_options_set_max_tls_protocol_version is not bound
 !missing-pinvoke! sec_protocol_options_set_min_tls_protocol_version is not bound
 !missing-pinvoke! SecTrustEvaluateAsyncWithError is not bound
+!missing-pinvoke! sec_protocol_metadata_access_pre_shared_keys is not bound
+!missing-pinvoke! sec_protocol_options_set_pre_shared_key_selection_block is not bound
+!missing-pinvoke! sec_protocol_options_set_tls_pre_shared_key_identity_hint is not bound

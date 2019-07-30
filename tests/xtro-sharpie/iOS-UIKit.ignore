@@ -76,4 +76,3 @@
 !missing-enum! UIDirectionalRectEdge not bound
 !missing-selector! UIGestureRecognizer::initWithCoder: not bound
 !missing-selector! UIKeyCommand::action not bound
-!missing-type! UIMutableKeyCommand not bound
