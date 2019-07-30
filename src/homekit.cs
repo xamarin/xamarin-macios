@@ -1675,8 +1675,8 @@ namespace HomeKit {
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessorySetupPayload {
-		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl setupPayloadUrl);
+		[NullAllowed, Export ("initWithURL:")]
+		IntPtr Constructor (NullAllowed NSUrl setupPayloadUrl);
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
