@@ -19,6 +19,9 @@ using Registrar;
 
 namespace ObjCRuntime {
 	public partial class Class : INativeObject
+#if !COREBUILD
+	, IEquatable<Class>
+#endif
 	{
 #if !COREBUILD
 		public static bool ThrowOnInitFailure = true;
@@ -98,6 +101,24 @@ namespace ObjCRuntime {
 		public static IntPtr GetHandle (string name)
 		{
 			return objc_getClass (name);
+		}
+
+		public override bool Equals (object right)
+		{
+			return Equals (right as Class);
+		}
+
+		public bool Equals (Class right)
+		{
+			if (right == null)
+				return false;
+
+			return handle == right.handle;
+		}
+
+		public override int GetHashCode ()
+		{
+			return handle.GetHashCode ();
 		}
 
 		// This method is treated as an intrinsic operation by
@@ -347,11 +368,7 @@ namespace ObjCRuntime {
 
 			// Resolve the map entry we found to a managed type
 			var type_reference = map->map [mapIndex].type_reference;
-			var member = ResolveTokenReference (type_reference, 0x02000000);
-			type = member as Type;
-
-			if (type == null && member != null)
-				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{type_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+			type = ResolveTypeTokenReference (type_reference);
 
 #if LOG_TYPELOAD
 			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
@@ -379,7 +396,29 @@ namespace ObjCRuntime {
 			return ResolveToken (module, token);
 		}
 
-		internal unsafe static MemberInfo ResolveTokenReference (uint token_reference, uint implicit_token_type)
+		internal static Type ResolveTypeTokenReference (uint token_reference)
+		{
+			var member = ResolveTokenReference (token_reference, 0x02000000 /* TypeDef */);
+			if (member == null)
+				return null;
+			if (member is Type type)
+				return type;
+
+			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+		}
+
+		internal static MethodBase ResolveMethodTokenReference (uint token_reference)
+		{
+			var member = ResolveTokenReference (token_reference, 0x06000000 /* Method */);
+			if (member == null)
+				return null;
+			if (member is MethodBase method)
+				return method;
+
+			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a method, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+		}
+
+		unsafe static MemberInfo ResolveTokenReference (uint token_reference, uint implicit_token_type)
 		{
 			var map = Runtime.options->RegistrationMap;
 
@@ -418,7 +457,7 @@ namespace ObjCRuntime {
 #endif
 				return method;
 			default:
-				throw ErrorHelper.CreateError (8021, $"Unknown implicit token type: 0x{token_type}.");
+				throw ErrorHelper.CreateError (8021, $"Unknown implicit token type: 0x{token_type:X}.");
 			}
 		}
 
@@ -445,7 +484,7 @@ namespace ObjCRuntime {
 					continue;
 
 #if LOG_TYPELOAD
-				Console.WriteLine ($"ResolveAssembly (\"{assembly_name}\"): {asm.FullName}.");
+				Console.WriteLine ($"ResolveAssembly (0x{assembly_name:X}): {asm.FullName}.");
 #endif
 				return asm;
 			}

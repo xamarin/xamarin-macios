@@ -12,6 +12,9 @@ namespace Xamarin.iOS.Tasks
 {
 	public class ArchiveTaskBase : Xamarin.MacDev.Tasks.ArchiveTaskBase
 	{
+		[Required]
+		public ITaskItem[] ITunesSourceFiles { get; set; }
+
 		public ITaskItem[] AppExtensionReferences { get; set; }
 
 		public ITaskItem[] WatchAppReferences { get; set; }

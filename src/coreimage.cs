@@ -204,8 +204,8 @@ namespace CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIContext {
-		// marked iOS5 but it's not working in iOS7.1
-		[iOS (8,0)]
+		// marked iOS5 but it's not working in iOS8.0
+		[iOS (9,0)]
 		[Export ("init")]
 		IntPtr Constructor ();
 

@@ -894,7 +894,7 @@ namespace Foundation  {
 		Background,
 		Voice,
 		[Mac (10,14)][iOS (12,0)][Watch (5,0)][TV (12,0)]
-		ResponsiveData,
+		ResponsiveData = 6,
 		[Mac (10,12)][iOS (10,0)][Watch (3,0)][TV (10,0)]
 		CallSignaling = 11,
 	}
@@ -986,6 +986,8 @@ namespace Foundation  {
 		ShortGeneric
 	}
 
+	[iOS (8,0)]
+	[Mac (10,10)]
 	[Native]
 	public enum NSItemProviderErrorCode : long {
 		Unknown = -1,
@@ -1064,6 +1066,8 @@ namespace Foundation  {
 		Long
 	}
 
+	[iOS (8,0)]
+	[Mac (10,10)]
 	[Native]
 	public enum NSMassFormatterUnit : long {
 		Gram = 11,
@@ -1073,6 +1077,8 @@ namespace Foundation  {
 		Stone = (6 << 8) + 3
 	}
 
+	[iOS (8,0)]
+	[Mac (10,10)]
 	[Native]
 	public enum NSLengthFormatterUnit : long {
 		Millimeter = 8,
@@ -1164,6 +1170,7 @@ namespace Foundation  {
 		IgnoreMetacharacters        = 1 << 2,
 		DotMatchesLineSeparators    = 1 << 3,
 		AnchorsMatchLines           = 1 << 4,
+		UseUnixLineSeparators       = 1 << 5,
 		UseUnicodeWordBoundaries    = 1 << 6
 	}
 

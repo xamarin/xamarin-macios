@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,8 +42,8 @@ namespace xharness
 		}
 
 		// This is the maccore/tests directory.
-		string root_directory;
-		public string RootDirectory {
+		static string root_directory;
+		public static string RootDirectory {
 			get {
 				if (root_directory == null) {
 					var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
@@ -77,6 +78,7 @@ namespace xharness
 		public string WatchOSExtensionTemplate { get; set; }
 		public string TodayContainerTemplate { get; set; }
 		public string TodayExtensionTemplate { get; set; }
+		public string BCLTodayExtensionTemplate { get; set; }
 		public string MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string TVOS_MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public bool INCLUDE_IOS { get; set; }
@@ -86,7 +88,8 @@ namespace xharness
 		public string JENKINS_RESULTS_DIRECTORY { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; set; }
 		public string IOS_DESTDIR { get; set; }
-		public string MONO_SDK_DESTDIR { get; set; }
+		public string MONO_IOS_SDK_DESTDIR { get; set; }
+		public string MONO_MAC_SDK_DESTDIR { get; set; }
 		public bool IncludeMac32 { get; set; }
 		public bool ENABLE_XAMARIN { get; set; }
 
@@ -97,7 +100,7 @@ namespace xharness
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
-		public double Timeout { get; set; } = 10; // in minutes
+		public double Timeout { get; set; } = 15; // in minutes
 		public double LaunchTimeout { get; set; } // in minutes
 		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
 		public string JenkinsConfiguration { get; set; }
@@ -227,7 +230,8 @@ namespace xharness
 				SdkRoot = make_config ["XCODE_DEVELOPER_ROOT"];
 			if (string.IsNullOrEmpty (SdkRoot94))
 				SdkRoot94 = make_config ["XCODE94_DEVELOPER_ROOT"];
-			MONO_SDK_DESTDIR = make_config ["MONO_SDK_DESTDIR"];
+			MONO_IOS_SDK_DESTDIR = make_config ["MONO_IOS_SDK_DESTDIR"];
+			MONO_MAC_SDK_DESTDIR = make_config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = make_config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (make_config ["ENABLE_XAMARIN"]);
 		}
 		 
@@ -264,28 +268,6 @@ namespace xharness
 			}
 
 			var bcl_suites = new string[] {
-				"mscorlib",
-				"System",
-				"System.Core",
-				"System.Data",
-				"System.Net.Http",
-				"System.Numerics",
-				"System.Runtime.Serialization",
-				"System.Transactions", "System.Web.Services",
-				"System.Xml",
-				"System.Xml.Linq",
-				"Mono.Security",
-				"System.ComponentModel.DataAnnotations",
-				"System.Json",
-				"System.ServiceModel.Web",
-				"Mono.Data.Sqlite",
-				"Mono.Data.Tds",
-				"System.IO.Compression",
-				"System.IO.Compression.FileSystem",
-				"Mono.CSharp",
-				"System.Security",
-				"System.ServiceModel",
-				"System.IdentityModel",
 			};
 			foreach (var p in bcl_suites) {
 				foreach (var flavor in new MacFlavors [] { MacFlavors.Full, MacFlavors.Modern }) {
@@ -299,50 +281,34 @@ namespace xharness
 					MacTestProjects.Add (bclTestProject);
 				}
 			}
-			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			foreach (var target in monoImportTestFactory.GetMacBclTargets ()) {
-				MacTestProjects.Add (target);
+
+			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+				foreach (var macFlavor in new MacFlavors[] { MacFlavors.Full, MacFlavors.Modern }) {
+					var monoNativeInfo = new MacMonoNativeInfo (this, flavor, macFlavor);
+					var macTestProject = new MacTestProject (monoNativeInfo.ProjectPath, targetFrameworkFlavor: macFlavor, generateVariations: true) {
+						MonoNativeInfo = monoNativeInfo,
+						Name = monoNativeInfo.ProjectName,
+						Platform = "AnyCPU"
+					};
+
+					MacTestProjects.Add (macTestProject);
+				}
 			}
+
+			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
+			MacTestProjects.AddRange (monoImportTestFactory.GetMacBclTargets ());
 		}
 
 		void AutoConfigureIOS ()
 		{
-			var test_suites = new string [] { "monotouch-test", "framework-test", "mini", "interdependent-binding-projects" };
+			var test_suites = new string [] { "monotouch-test", "framework-test", "interdependent-binding-projects" };
 			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-test2", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 			var bcl_suites = new string [] {
-				"mscorlib",
-				"System",
-				"System.Core",
-				"System.Data",
-				"System.Net.Http",
-				"System.Numerics",
-				"System.Runtime.Serialization",
-				"System.Transactions",
-				"System.Web.Services",
-				"System.Xml",
-				"System.Xml.Linq",
-				"Mono.Security",
-				"System.ComponentModel.DataAnnotations",
-				"System.Json",
-				"System.ServiceModel.Web",
-				"Mono.Data.Sqlite",
-				"Mono.Data.Tds",
-				"System.IO.Compression",
-				"System.IO.Compression.FileSystem",
-				"Mono.CSharp",
-				"System.Security",
-				"System.ServiceModel",
-				"System.IdentityModel",
 			};
 			var bcl_skip_watchos = new string [] {
-				"Mono.Security",
-				"Mono.Data.Tds",
-				"Mono.CSharp",
 			};
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-0.csproj")), false));
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/mscorlib/mscorlib-1.csproj")), false));
 			foreach (var p in test_suites)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))) { Name = p });
 			foreach (var p in fsharp_test_suites)
@@ -366,11 +332,20 @@ namespace xharness
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
 
+			foreach (var flavor in new MonoNativeFlavor[] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
+				var monoNativeInfo = new MonoNativeInfo (this, flavor);
+				var iosTestProject = new iOSTestProject (monoNativeInfo.ProjectPath, generateVariations: false) {
+					MonoNativeInfo = monoNativeInfo,
+					Name = monoNativeInfo.ProjectName,
+					SkipwatchOSARM64_32Variation = monoNativeInfo.ProjectName.Contains ("compat"),
+				};
+
+				IOSTestProjects.Add (iosTestProject);
+			}
+
 			// add all the tests that are using the precompiled mono assemblies
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			foreach (var target in monoImportTestFactory.GetiOSBclTargets ()) {
-				IOSTestProjects.Add (target);
-			}
+			IOSTestProjects.AddRange (monoImportTestFactory.GetiOSBclTargets ());
 
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
@@ -378,6 +353,7 @@ namespace xharness
 
 			TodayContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayContainer"));
 			TodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates", "TodayExtension"));
+			BCLTodayExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test", "templates", "today"));
 		}
 
 		Dictionary<string, string> make_config = new Dictionary<string, string> ();
@@ -422,15 +398,13 @@ namespace xharness
 
 		public int Configure ()
 		{
-			if (Mac)
-				ConfigureMac ();
-			else
-				ConfigureIOS ();
-			return 0;
+			return Mac ? ConfigureMac () : ConfigureIOS ();
 		}
 
-		void ConfigureMac ()
+		int ConfigureMac ()
 		{
+			int rv = 0;
+
 			var classic_targets = new List<MacClassicTarget> ();
 			var unified_targets = new List<MacUnifiedTarget> ();
 			var hardcoded_unified_targets = new List<MacUnifiedTarget> ();
@@ -449,22 +423,33 @@ namespace xharness
 
 			foreach (var bclTestInfo in MacTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
 				bclTestInfo.Convert ();
- 
+			foreach (var monoNativeInfo in MacTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+				monoNativeInfo.Convert ();
+
 			foreach (var proj in MacTestProjects.Where ((v) => v.GenerateVariations)) {
 				var file = Path.ChangeExtension (proj.Path, "csproj");
- 				if (!File.Exists (file))
- 					throw new FileNotFoundException (file);
+
+				if (proj.MonoNativeInfo != null)
+					file = proj.MonoNativeInfo.TemplatePath;
+
+				if (!File.Exists (file)) {
+					Console.WriteLine ($"Can't find the project file {file}.");
+					rv = 1;
+					continue;
+				}
 
 				foreach (bool thirtyTwoBit in new bool[] { false, true })
 				{
 					if (proj.GenerateModern) {
 						var modern = new MacUnifiedTarget (true, thirtyTwoBit);
+						modern.MonoNativeInfo = proj.MonoNativeInfo;
 						configureTarget (modern, file, proj.IsNUnitProject);
 						unified_targets.Add (modern);
 					}
 
 					if (proj.GenerateFull) {
 						var full = new MacUnifiedTarget (false, thirtyTwoBit);
+						full.MonoNativeInfo = proj.MonoNativeInfo;
 						configureTarget (full, file, proj.IsNUnitProject);
 						unified_targets.Add (full);
 					}
@@ -477,9 +462,11 @@ namespace xharness
 					unified_targets.Add (system);
 				}
 
-				var classic = new MacClassicTarget ();
-				configureTarget (classic, file, false);
-				classic_targets.Add (classic);
+				if (proj.MonoNativeInfo == null) {
+					var classic = new MacClassicTarget ();
+					configureTarget (classic, file, false);
+					classic_targets.Add (classic);
+				}
 			}
  
 			foreach (var proj in MacTestProjects.Where (v => !v.GenerateVariations)) {
@@ -491,10 +478,13 @@ namespace xharness
  			}
  
 			MakefileGenerator.CreateMacMakefile (this, classic_targets.Union<MacTarget> (unified_targets).Union (hardcoded_unified_targets));
+
+			return rv;
 		}
 
-		void ConfigureIOS ()
+		int ConfigureIOS ()
 		{
+			var rv = 0;
 			var unified_targets = new List<UnifiedTarget> ();
 			var tvos_targets = new List<TVOSTarget> ();
 			var watchos_targets = new List<WatchOSTarget> ();
@@ -507,11 +497,20 @@ namespace xharness
 
 			foreach (var bclTestInfo in IOSTestProjects.Where (x => x.BCLInfo != null).Select (x => x.BCLInfo))
 				bclTestInfo.Convert ();
+			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
+				monoNativeInfo.Convert ();
 
 			foreach (var proj in IOSTestProjects) {
 				var file = proj.Path;
-				if (!File.Exists (file))
-					throw new FileNotFoundException (file);
+
+				if (proj.MonoNativeInfo != null)
+					file = proj.MonoNativeInfo.TemplatePath;
+
+				if (!File.Exists (file)) {
+					Console.WriteLine ($"Can't find the project file {file}.");
+					rv = 1;
+					continue;
+				}
 
 				if (!proj.SkipwatchOSVariation) {
 					var watchos = new WatchOSTarget () {
@@ -556,6 +555,8 @@ namespace xharness
 			SolutionGenerator.CreateSolution (this, tvos_targets, "tvos");
 			SolutionGenerator.CreateSolution (this, today_targets, "today");
 			MakefileGenerator.CreateMakefile (this, unified_targets, tvos_targets, watchos_targets, today_targets);
+
+			return rv;
 		}
 
 		public int Install ()
@@ -569,9 +570,11 @@ namespace xharness
 					ProjectFile = project.Path,
 					MainLog = HarnessLog,
 				};
-				var rv = runner.InstallAsync ().Result;
-				if (!rv.Succeeded)
-					return rv.ExitCode;
+				using (var install_log = new AppInstallMonitorLog (runner.MainLog)) {
+					var rv = runner.InstallAsync (install_log.CancellationToken).Result;
+					if (!rv.Succeeded)
+						return rv.ExitCode;
+				}
 			}
 			return 0;
 		}
@@ -667,6 +670,20 @@ namespace xharness
 			get {
 				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
 				return !string.IsNullOrEmpty (buildRev) && buildRev == "jenkins";
+			}
+		}
+		
+		public bool InCI {
+			get {
+				// We use the 'BUILD_REVISION' variable to detect whether we're running CI or not.
+				return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+			}
+		}
+
+		public bool UseGroupedApps {
+			get {
+				var groupApps = Environment.GetEnvironmentVariable ("BCL_GROUPED_APPS");
+				return string.IsNullOrEmpty (groupApps) || groupApps == "grouped";
 			}
 		}
 
@@ -765,10 +782,17 @@ namespace xharness
 		// Nothing really breaks when the sequence isn't identical from run to run, so
 		// this is just a best minimal effort.
 		static Random guid_generator = new Random (unchecked ((int) 0xdeadf00d));
-		public Guid NewStableGuid ()
+		public Guid NewStableGuid (string seed = null)
 		{
 			var bytes = new byte [16];
-			guid_generator.NextBytes (bytes);
+			if (seed == null) {
+				guid_generator.NextBytes (bytes);
+			} else {
+				using (var provider = MD5.Create ()) {
+					var inputBytes = Encoding.UTF8.GetBytes (seed);
+					bytes = provider.ComputeHash (inputBytes);
+				}
+			}
 			return new Guid (bytes);
 		}
 
@@ -803,7 +827,7 @@ namespace xharness
 			}
 
 			var name = Path.GetFileName (report.Path);
-			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}");
+			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, StringUtils.Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;
@@ -841,14 +865,6 @@ namespace xharness
 
 			return rv;
 		}
-
-		Task<ProcessExecutionResult> build_bcl_tests;
- 		public Task<ProcessExecutionResult> BuildBclTests ()
- 		{
- 			if (build_bcl_tests == null)
- 				build_bcl_tests = ProcessHelper.ExecuteCommandAsync ("make", $".stamp-build-mono-unit-tests -C {StringUtils.Quote (Path.GetFullPath (RootDirectory))}", HarnessLog, TimeSpan.FromMinutes (30));
- 			return build_bcl_tests;
- 		}
 
 	}
 
@@ -894,7 +910,7 @@ namespace xharness
 						var downloaded_crash_reports = new List<LogFile> ();
 						foreach (var file in end_crashes) {
 							var name = Path.GetFileName (file);
-							var crash_report_target = Logs.Create (name, $"Crash report: {name}");
+							var crash_report_target = Logs.Create (name, $"Crash report: {name}", timestamp: false);
 							var sb = new StringBuilder ();
 							sb.Append (" --download-crash-report=").Append (StringUtils.Quote (file));
 							sb.Append (" --download-crash-report-to=").Append (StringUtils.Quote (crash_report_target.Path));

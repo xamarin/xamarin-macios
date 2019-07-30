@@ -179,6 +179,10 @@ namespace IntentsUI {
 
 		[NullAllowed, Export ("shortcut", ArgumentSemantic.Strong)]
 		INShortcut Shortcut { get; set; }
+
+		[iOS (12,2)]
+		[Export ("cornerRadius", ArgumentSemantic.Assign)]
+		nfloat CornerRadius { get; set; }
 	}
 
 	interface IINUIAddVoiceShortcutButtonDelegate {}

@@ -225,6 +225,7 @@ namespace MediaPlayer {
 		NSString IsCloudItemProperty { get; }
 
 		[iOS (9,2)]
+		[TV (9,2)]
 		[Field ("MPMediaItemPropertyHasProtectedAsset")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString HasProtectedAssetProperty { get; }
@@ -235,6 +236,7 @@ namespace MediaPlayer {
 		NSString DateAddedProperty { get; }
 
 		[iOS (10,3)]
+		[TV (10,3)]
 		[Field ("MPMediaItemPropertyPlaybackStoreID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PlaybackStoreIDProperty { get; }
@@ -1623,7 +1625,7 @@ namespace MediaPlayer {
 		MPPlayableContentManagerContext Context { get; }
 
 		[iOS (10,0)]
-		[Export ("nowPlayingIdentifiers", ArgumentSemantic.Strong)]
+		[Export ("nowPlayingIdentifiers", ArgumentSemantic.Copy)]
 		string[] NowPlayingIdentifiers { get; set; }
 	}
 

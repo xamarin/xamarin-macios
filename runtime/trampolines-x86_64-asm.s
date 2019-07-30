@@ -4,8 +4,9 @@
 #   %rdi, %rsi, %rdx, %rcx, %r8, %r9
 #   %xmm0-%xmm7
 #   an unknown amount of stack space, but we can pass a pointer to the start of this area.
-# in total we need 6*64bits registers + 8*128bits registers + 1*64bit ptr = 184 bytes.
-# additionally we'll use %r11 to specify the type of trampoline was called, so 192 bytes.
+# in total we need 7*64bits registers + 8*128bits registers + 1*64bit ptr = 192 bytes.
+# additionally we'll use %r11 to specify the type of trampoline was called, so 200 bytes.
+# and finally we need to align the long double fields on a 16-byte boundary, so 208 bytes.
 #
 #
 # upon return we may need to write to:
@@ -26,36 +27,37 @@ _xamarin_x86_64_common_trampoline:
 .cfi_offset %rbp, -16
 	movq	%rsp, %rbp
 .cfi_def_cfa_register %rbp
-	subq	$0xC0, %rsp	# allocate 192 bytes from the stack
+	subq	$0xD0, %rsp	# allocate 208 bytes from the stack
 	# todo: verify alignment.
 	movq	%r11,   (%rsp)
 	movq	%rdi,  8(%rsp)
 	movq	%rsi, 16(%rsp)
 	movq	%rdx, 24(%rsp)
+	movq	%rdx, 72(%rsp) # store a copy of rdx where we read the rdx return value from.
 	movq	%rcx, 32(%rsp)
 	movq	%r8,  40(%rsp)
 	movq	%r9,  48(%rsp)
 	movq	%rbp, 56(%rsp)
-	movaps	%xmm0, 64(%rsp)
-	movaps	%xmm1, 80(%rsp)
-	movaps	%xmm2, 96(%rsp)
-	movaps	%xmm3, 112(%rsp)
-	movaps	%xmm4, 128(%rsp)
-	movaps	%xmm5, 144(%rsp)
-	movaps	%xmm6, 160(%rsp)
-	movaps	%xmm7, 176(%rsp)
+	movaps	%xmm0, 80(%rsp)
+	movaps	%xmm1, 96(%rsp)
+	movaps	%xmm2, 112(%rsp)
+	movaps	%xmm3, 128(%rsp)
+	movaps	%xmm4, 144(%rsp)
+	movaps	%xmm5, 160(%rsp)
+	movaps	%xmm6, 176(%rsp)
+	movaps	%xmm7, 192(%rsp)
 
 	movq	%rsp, %rdi
 	callq	_xamarin_arch_trampoline
 
 	# get return value(s)
 
-	movq	16(%rsp), %rax # offset 16 is used for %rsi on entry and %rax on exit.
-	movq	24(%rsp), %rdx
-	movaps	64(%rsp), %xmm0
-	movaps	80(%rsp), %xmm1
+	movq	64(%rsp), %rax
+	movq	72(%rsp), %rdx
+	movaps	80(%rsp), %xmm0
+	movaps	96(%rsp), %xmm1
 	
-	addq	$0xC0, %rsp	# deallocate 192 bytes from the stack
+	addq	$0xD0, %rsp	# deallocate 208 bytes from the stack
 	popq	%rbp
 		
 	ret

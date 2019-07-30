@@ -38,7 +38,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
 
-#if UNIFIED
+#if XAMCORE_2_0
 using CoreFoundation;
 using Foundation;
 using Security;
@@ -51,11 +51,17 @@ using nint = System.Int32;
 using nuint = System.UInt32;
 #endif
 
-#if SYSTEM_NET_HTTP
+#if !MONOMAC
+using UIKit;
+#endif
+
+#if !MONOMAC
 namespace System.Net.Http {
 #else
 namespace Foundation {
 #endif
+
+	public delegate bool NSUrlSessionHandlerTrustOverrideCallback (NSUrlSessionHandler sender, SecTrust trust);
 
 	// useful extensions for the class in order to set it in a header
 	static class NSHttpCookieExtensions
@@ -120,6 +126,10 @@ namespace Foundation {
 		readonly NSUrlSession session;
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
+#if !MONOMAC && !__WATCHOS__
+		readonly bool isBackgroundSession = false;
+		NSObject notificationToken;  // needed to make sure we do not hang if not using a background session
+#endif
 
 		static NSUrlSessionConfiguration CreateConfig ()
 		{
@@ -142,6 +152,12 @@ namespace Foundation {
 			if (configuration == null)
 				throw new ArgumentNullException (nameof (configuration));
 
+#if !MONOMAC  && !__WATCHOS__ 
+			// if the configuration has an identifier, we are dealing with a background session, 
+			// therefore, we do not have to listen to the notifications.
+			isBackgroundSession = !string.IsNullOrEmpty (configuration.Identifier);
+#endif
+
 			AllowAutoRedirect = true;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
@@ -154,17 +170,56 @@ namespace Foundation {
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_1;
 			else if ((sp & SecurityProtocolType.Tls12) != 0)
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;
-
+			else if ((sp & (SecurityProtocolType) 12288) != 0) // Tls13 value not yet in monno
+				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_3;
+				
 			session = NSUrlSession.FromConfiguration (configuration, (INSUrlSessionDelegate) new NSUrlSessionHandlerDelegate (this), null);
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
+
+#if !MONOMAC  && !__WATCHOS__
+
+		void AddNotification ()
+		{
+			if (!isBackgroundSession && notificationToken == null)
+				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+		}
+
+		void RemoveNotification ()
+		{
+			if (notificationToken != null) {
+				NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
+				notificationToken = null;
+			}
+		}
+
+		void BackgroundNotificationCb (NSNotification obj)
+		{
+			// we do not need to call the lock, we call cancel on the source, that will trigger all the needed code to 
+			// clean the resources and such
+			foreach (var r in inflightRequests.Values) {
+				r.CompletionSource.TrySetCanceled ();
+			}
+		}
+#endif
 
 		public long MaxInputInMemory { get; set; } = long.MaxValue;
 
 		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
-			lock (inflightRequestsLock)
-				inflightRequests.Remove (task);
+			lock (inflightRequestsLock) {
+				if (inflightRequests.TryGetValue (task, out var data)) {
+					if (cancel)
+						data.CancellationTokenSource.Cancel ();
+					data.Dispose ();
+					inflightRequests.Remove (task);
+				}
+#if !MONOMAC  && !__WATCHOS__
+				// do we need to be notified? If we have not inflightData, we do not
+				if (inflightRequests.Count == 0)
+					RemoveNotification ();
+#endif
+			}
 
 			if (cancel)
 				task?.Cancel ();
@@ -174,15 +229,19 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
+#if !MONOMAC  && !__WATCHOS__
+			// remove the notification if present, method checks against null
+			RemoveNotification ();
+#endif
 			lock (inflightRequestsLock) {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
 					pair.Key?.Dispose ();
+					pair.Value?.Dispose ();
 				}
 
 				inflightRequests.Clear ();
 			}
-
 			base.Dispose (disposing);
 		}
 
@@ -197,6 +256,92 @@ namespace Foundation {
 				disableCaching = value;
 			}
 		}
+
+		bool allowAutoRedirect;
+
+		public bool AllowAutoRedirect {
+			get {
+				return allowAutoRedirect;
+			}
+			set {
+				EnsureModifiability ();
+				allowAutoRedirect = value;
+			}
+		}
+
+		bool allowsCellularAccess;
+
+		public bool AllowsCellularAccess {
+			get {
+				return allowsCellularAccess;
+			}
+			set {
+				EnsureModifiability ();
+				allowsCellularAccess = value;
+			}
+		}
+
+		ICredentials credentials;
+
+		public ICredentials Credentials {
+			get {
+				return credentials;
+			}
+			set {
+				EnsureModifiability ();
+				credentials = value;
+			}
+		}
+
+		NSUrlSessionHandlerTrustOverrideCallback trustOverride;
+
+		public NSUrlSessionHandlerTrustOverrideCallback TrustOverride {
+			get {
+				return trustOverride;
+			}
+			set {
+				EnsureModifiability ();
+				trustOverride = value;
+			}
+		}
+
+		bool sentRequest;
+
+		internal void EnsureModifiability ()
+		{
+			if (sentRequest)
+				throw new InvalidOperationException (
+					"This instance has already started one or more requests. " +
+					"Properties can only be modified before sending the first request.");
+		}
+
+		static Exception createExceptionForNSError(NSError error)
+		{
+			var innerException = new NSErrorException(error);
+
+			// errors that exists in both share the same error code, so we can use a single switch/case
+			// this also ease watchOS integration as if does not expose CFNetwork but (I would not be 
+			// surprised if it)could return some of it's error codes
+#if __WATCHOS__
+			if (error.Domain == NSError.NSUrlErrorDomain) {
+#else
+			if ((error.Domain == NSError.NSUrlErrorDomain) || (error.Domain == NSError.CFNetworkErrorDomain)) {
+#endif
+				// Apple docs: https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/URL_Loading_System_Error_Codes
+				// .NET docs: http://msdn.microsoft.com/en-us/library/system.net.webexceptionstatus(v=vs.110).aspx
+				switch ((NSUrlError) (long) error.Code) {
+				case NSUrlError.Cancelled:
+				case NSUrlError.UserCancelledAuthentication:
+#if !__WATCHOS__
+				case (NSUrlError) NSNetServicesStatus.CancelledError:
+#endif
+					// No more processing is required so just return.
+					return new OperationCanceledException(error.LocalizedDescription, innerException);
+				}
+			}
+
+			return new HttpRequestException (error.LocalizedDescription, innerException);
+ 		}
 
 		string GetHeaderSeparator (string name)
 		{
@@ -213,11 +358,11 @@ namespace Foundation {
 
 			if (request.Content != null) {
 				stream = await request.Content.ReadAsStreamAsync ().ConfigureAwait (false);
-				headers = headers.Union (request.Content.Headers).ToArray ();
+				headers = System.Linq.Enumerable.ToArray(headers.Union (request.Content.Headers));
 			}
 
 			var nsrequest = new NSMutableUrlRequest {
-				AllowsCellularAccess = true,
+				AllowsCellularAccess = allowsCellularAccess,
 				CachePolicy = DisableCaching ? NSUrlRequestCachePolicy.ReloadIgnoringCacheData : NSUrlRequestCachePolicy.UseProtocolCachePolicy,
 				HttpMethod = request.Method.ToString ().ToUpperInvariant (),
 				Url = NSUrl.FromString (request.RequestUri.AbsoluteUri),
@@ -249,30 +394,46 @@ namespace Foundation {
 
 			var tcs = new TaskCompletionSource<HttpResponseMessage> ();
 
+			lock (inflightRequestsLock) {
+#if !MONOMAC  && !__WATCHOS__
+				// Add the notification whenever needed
+				AddNotification ();
+#endif
+				inflightRequests.Add (dataTask, new InflightData {
+					RequestUrl = request.RequestUri.AbsoluteUri,
+					CompletionSource = tcs,
+					CancellationToken = cancellationToken,
+					CancellationTokenSource = new CancellationTokenSource (),
+					Stream = new NSUrlSessionDataTaskStream (),
+					Request = request
+				});
+			}
+
+			if (dataTask.State == NSUrlSessionTaskState.Suspended)
+				dataTask.Resume ();
+
+			// as per documentation: 
+			// If this token is already in the canceled state, the 
+			// delegate will be run immediately and synchronously.
+			// Any exception the delegate generates will be 
+			// propagated out of this method call.
+			//
+			// The execution of the register ensures that if we 
+			// receive a already cancelled token or it is cancelled
+			// just before this call, we will cancel the task. 
+			// Other approaches are harder, since querying the state
+			// of the token does not guarantee that in the next
+			// execution a threads cancels it.
 			cancellationToken.Register (() => {
 				RemoveInflightData (dataTask);
 				tcs.TrySetCanceled ();
 			});
 
-			lock (inflightRequestsLock)
-				inflightRequests.Add (dataTask, new InflightData {
-					RequestUrl = request.RequestUri.AbsoluteUri,
-					CompletionSource = tcs,
-					CancellationToken = cancellationToken,
-					Stream = new NSUrlSessionDataTaskStream (),
-					Request = request
-				});
-
-			if (dataTask.State == NSUrlSessionTaskState.Suspended)
-				dataTask.Resume ();
-
 			return await tcs.Task.ConfigureAwait (false);
 		}
 
-#if MONOMAC
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-#endif
 		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
 		{
 			readonly NSUrlSessionHandler sessionHandler;
@@ -319,7 +480,7 @@ namespace Foundation {
 						inflight.Stream.TrySetException (new ObjectDisposedException ("The content stream was disposed."));
 
 						sessionHandler.RemoveInflightData (dataTask);
-					}, inflight.CancellationToken);
+					}, inflight.CancellationTokenSource.Token);
 
 					// NB: The double cast is because of a Xamarin compiler bug
 					var httpResponse = new HttpResponseMessage ((HttpStatusCode)status) {
@@ -383,9 +544,11 @@ namespace Foundation {
 
 					// send the error or send the response back
 					if (error != null) {
+						// got an error, cancel the stream operatios before we do anything
+						inflight.CancellationTokenSource.Cancel (); 
 						inflight.Errored = true;
 
-						var exc = createExceptionForNSError (error);
+						var exc = inflight.Exception ?? createExceptionForNSError (error);
 						inflight.CompletionSource.TrySetException (exc);
 						inflight.Stream.TrySetException (exc);
 					} else {
@@ -401,6 +564,9 @@ namespace Foundation {
 			{
 				lock (inflight.Lock) {
 					if (inflight.ResponseSent)
+						return;
+
+					if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
 						return;
 
 					if (inflight.CompletionSource.Task.IsCompleted)
@@ -432,6 +598,22 @@ namespace Foundation {
 				if (inflight == null)
 					return;
 
+				// ToCToU for the callback
+				var trustCallback = sessionHandler.TrustOverride;
+				if (trustCallback != null && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
+					if (trustCallback (sessionHandler, challenge.ProtectionSpace.ServerSecTrust)) {
+						var credential = new NSUrlCredential (challenge.ProtectionSpace.ServerSecTrust);
+						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+					} else {
+						// user callback rejected the certificate, we want to set the exception, else the user will
+						// see as if the request was cancelled.
+						lock (inflight.Lock) {
+							inflight.Exception = new HttpRequestException ("An error occurred while sending the request.", new WebException ("Error: TrustFailure"));
+						}
+						completionHandler (NSUrlSessionAuthChallengeDisposition.CancelAuthenticationChallenge, null);
+					}
+					return;
+				}
 				// case for the basic auth failing up front. As per apple documentation:
 				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
 				// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
@@ -444,7 +626,7 @@ namespace Foundation {
 				// but we are hiding such a situation from our users, we can nevertheless know if the header was added and deal with it. The idea is as follows,
 				// check if we are in the first attempt, if we are (PreviousFailureCount == 0), we check the headers of the request and if we do have the Auth 
 				// header, it means that we do not have the correct credentials, in any other case just do what it is expected.
-				
+
 				if (challenge.PreviousFailureCount == 0) {
 					var authHeader = inflight.Request?.Headers?.Authorization;
 					if (!(string.IsNullOrEmpty (authHeader?.Scheme) && string.IsNullOrEmpty (authHeader?.Parameter))) {
@@ -496,33 +678,49 @@ namespace Foundation {
 			}
 		}
 
-#if MONOMAC
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-#endif
-		class InflightData
+		class InflightData : IDisposable
 		{
 			public readonly object Lock = new object ();
 			public string RequestUrl { get; set; }
 
 			public TaskCompletionSource<HttpResponseMessage> CompletionSource { get; set; }
 			public CancellationToken CancellationToken { get; set; }
+			public CancellationTokenSource CancellationTokenSource { get; set; }
 			public NSUrlSessionDataTaskStream Stream { get; set; }
 			public HttpRequestMessage Request { get; set; }
 			public HttpResponseMessage Response { get; set; }
 
+			public Exception Exception { get; set; }
 			public bool ResponseSent { get; set; }
 			public bool Errored { get; set; }
 			public bool Disposed { get; set; }
 			public bool Completed { get; set; }
 			public bool Done { get { return Errored || Disposed || Completed || CancellationToken.IsCancellationRequested; } }
+
+			public void Dispose()
+			{
+				Dispose (true);
+				GC.SuppressFinalize(this);
+			}
+
+			// The bulk of the clean-up code is implemented in Dispose(bool)
+			protected virtual void Dispose (bool disposing)
+			{
+				if (disposing) {
+					if (CancellationTokenSource != null) {
+						CancellationTokenSource.Dispose ();
+						CancellationTokenSource = null;
+					}
+				}
+			}
+
 		}
 
-#if MONOMAC
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-#endif
-		class NSUrlSessionDataTaskStreamContent : StreamContent
+		class NSUrlSessionDataTaskStreamContent : MonoStreamContent
 		{
 			Action disposed;
 
@@ -540,10 +738,100 @@ namespace Foundation {
 			}
 		}
 
-#if MONOMAC
+		//
+		// Copied from https://github.com/mono/mono/blob/2019-02/mcs/class/System.Net.Http/System.Net.Http/StreamContent.cs.
+		//
+		// This is not a perfect solution, but the most robust and risk-free approach.
+		//
+		// The implementation depends on Mono-specific behavior, which makes SerializeToStreamAsync() cancellable.
+		// Unfortunately, the CoreFX implementation of HttpClient does not support this.
+		//
+		// By copying Mono's old implementation here, we ensure that we're compatible with both HttpClient implementations,
+		// so when we eventually adopt the CoreFX version in all of Mono's profiles, we don't regress here.
+		//
+		class MonoStreamContent : HttpContent
+		{
+			readonly Stream content;
+			readonly int bufferSize;
+			readonly CancellationToken cancellationToken;
+			readonly long startPosition;
+			bool contentCopied;
+
+			public MonoStreamContent (Stream content)
+				: this (content, 16 * 1024)
+			{
+			}
+
+			public MonoStreamContent (Stream content, int bufferSize)
+			{
+				if (content == null)
+					throw new ArgumentNullException ("content");
+
+				if (bufferSize <= 0)
+					throw new ArgumentOutOfRangeException ("bufferSize");
+
+				this.content = content;
+				this.bufferSize = bufferSize;
+
+				if (content.CanSeek) {
+					startPosition = content.Position;
+				}
+			}
+
+			//
+			// Workarounds for poor .NET API
+			// Instead of having SerializeToStreamAsync with CancellationToken as public API. Only LoadIntoBufferAsync
+			// called internally from the send worker can be cancelled and user cannot see/do it
+			//
+			internal MonoStreamContent (Stream content, CancellationToken cancellationToken)
+				: this (content)
+			{
+				// We don't own the token so don't worry about disposing it
+				this.cancellationToken = cancellationToken;
+			}
+
+			protected override Task<Stream> CreateContentReadStreamAsync ()
+			{
+				return Task.FromResult (content);
+			}
+
+			protected override void Dispose (bool disposing)
+			{
+				if (disposing) {
+					content.Dispose ();
+				}
+
+				base.Dispose (disposing);
+			}
+
+			protected internal override Task SerializeToStreamAsync (Stream stream, TransportContext context)
+			{
+				if (contentCopied) {
+					if (!content.CanSeek) {
+						throw new InvalidOperationException ("The stream was already consumed. It cannot be read again.");
+					}
+
+					content.Seek (startPosition, SeekOrigin.Begin);
+				} else {
+					contentCopied = true;
+				}
+
+				return content.CopyToAsync (stream, bufferSize, cancellationToken);
+			}
+
+			protected internal override bool TryComputeLength (out long length)
+			{
+				if (!content.CanSeek) {
+					length = 0;
+					return false;
+				}
+				length = content.Length - startPosition;
+				return true;
+			}
+		}
+
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-#endif
 		class NSUrlSessionDataTaskStream : Stream
 		{
 			readonly Queue<NSData> data;
@@ -612,7 +900,13 @@ namespace Foundation {
 						}
 					}
 
-					await Task.Delay (50).ConfigureAwait (false);
+					try {
+						await Task.Delay (50, cancellationToken).ConfigureAwait (false);
+					} catch (TaskCanceledException ex) {
+						// add a nicer exception for the user to catch, add the cancelation exception
+						// to have a decent stack
+						throw new TimeoutException ("The request timed out.", ex);
+					}
 				}
 
 				// try to throw again before read
@@ -683,10 +977,8 @@ namespace Foundation {
 			}
 		}
 
-#if MONOMAC
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-#endif
 		class WrappedNSInputStream : NSInputStream
 		{
 			NSStreamStatus status;

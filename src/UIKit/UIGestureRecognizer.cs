@@ -43,6 +43,9 @@ namespace UIKit {
 			var savedHandle = Handle;
 			recognizers = null;
 			
+			if (copyOfRecognizers == null)
+				return;
+
 			DangerousRetain (savedHandle);
 			NSRunLoop.Main.BeginInvokeOnMainThread (() => {
 				foreach (var kv in copyOfRecognizers)

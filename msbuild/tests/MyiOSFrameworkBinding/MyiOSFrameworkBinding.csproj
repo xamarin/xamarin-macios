@@ -18,7 +18,6 @@
     <DefineConstants>DEBUG;__UNIFIED__;XAMCORE_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -27,7 +26,6 @@
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -46,12 +44,12 @@
       <Kind>Framework</Kind>
       <Link>XStaticObjectTest.framework</Link>
       <LinkerFlags>-lz</LinkerFlags>
-      <Frameworks>Foundation ModelIO</Frameworks>
+      <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
     </NativeReference>
     <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios\XStaticArTest.framework">
       <Kind>Framework</Kind>
       <Link>XStaticArTest.framework</Link>
-      <Frameworks>Foundation ModelIO</Frameworks>
+      <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
     </NativeReference>
   </ItemGroup>
   <ItemGroup>

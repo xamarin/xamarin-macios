@@ -18,6 +18,7 @@ namespace CloudKit {
 		IntPtr Constructor (NSUrl fileUrl);
 
 		[Export ("fileURL", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSUrl FileUrl { get; }
 	}
 	
@@ -1105,6 +1106,7 @@ namespace CloudKit {
 
 		[Static]
 		[Export ("notificationFromRemoteNotificationDictionary:")]
+		[return: NullAllowed]
 		CKNotification FromRemoteNotificationDictionary (NSDictionary notificationDictionary);
 
 		[iOS (9,0)][Mac (10,11)]
@@ -1242,12 +1244,6 @@ namespace CloudKit {
 		[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'CKOperationConfiguration' instead.")]
 		[NullAllowed, Export ("container", ArgumentSemantic.Retain)]
 		CKContainer Container { get; set; }
-
-		[NoWatch]
-		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'QualityOfService' property.")]
-		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'QualityOfService' property.")]
-		[Export ("usesBackgroundSession", ArgumentSemantic.UnsafeUnretained)]
-		bool UsesBackgroundSession { get; set; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'CKOperationConfiguration' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'CKOperationConfiguration' instead.")]

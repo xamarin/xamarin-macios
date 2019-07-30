@@ -59,6 +59,52 @@ namespace Foundation {
 			return FromNativeObjects (items, count);
 		}
 
+		public static NSArray FromNSObjects<T> (params T [] items) where T: class, INativeObject
+		{
+			return FromNativeObjects (items);
+		}
+		public static NSArray FromNSObjects<T> (params T [][] items) where T: class, INativeObject
+		{
+			if (items == null)
+				return null;
+			
+			var ret = new NSMutableArray ((nuint)items.Length);
+			for (var i = 0; i < items.Length; i++) {
+				var row = items [i];
+				if (row == null)
+					throw new ArgumentNullException (nameof (items), $"Element [{i}] is null");
+				for (var j = 0; j < row.Length; j++) {
+					var element = row [j];
+					if (element == null)
+						throw new ArgumentNullException (nameof (items), $"Element [{i}][{j}] is null");
+				}
+				ret.Add (NSArray.FromNSObjects (row));
+			}
+
+			return ret;
+		}
+		public static NSArray FromNSObjects<T> (T [,] items) where T: class, INativeObject
+		{
+			if (items == null)
+				return null;
+			
+			var width = items.GetLength (0);
+			var height = items.GetLength (1);
+			var ret = new T [height][];
+			for (var y = 0; y < height; y++) {
+				var row = new T [width];
+				for (var x = 0; x < width; x++) {
+					row [x] = items [x, y];
+				}
+				ret [y] = row;
+			}
+			return FromNSObjects (ret);
+		}
+		public static NSArray FromNSObjects<T> (int count, params T [] items) where T: class, INativeObject
+		{
+			return FromNativeObjects (items, count);
+		}
+
 		public static NSArray FromNSObjects<T> (Func<T, NSObject> nsobjectificator, params T [] items)
 		{
 			if (nsobjectificator == null)
@@ -104,15 +150,15 @@ namespace Foundation {
 			return FromNSObjects (nsoa);
 		}
 		
-		internal static NSArray FromNativeObjects (INativeObject[] items)
+		internal static NSArray FromNativeObjects<T> (T[] items) where T: class, INativeObject
 		{
 			if (items == null)
 				return new NSArray ();
 
-			return FromNativeObjects (items, items.Length);
+			return FromNativeObjects<T> (items, items.Length);
 		}
 
-		internal static NSArray FromNativeObjects (INativeObject [] items, nint count)
+		internal static NSArray FromNativeObjects<T> (T [] items, nint count) where T: class, INativeObject
 		{
 			if (items == null)
 				return new NSArray ();
@@ -152,25 +198,18 @@ namespace Foundation {
 			
 			IntPtr buf = Marshal.AllocHGlobal (items.Length * IntPtr.Size);
 			try {
-				NSString [] strings = new NSString [items.Length];
-				
 				for (int i = 0; i < items.Length; i++){
 					IntPtr val;
 					
 					if (items [i] == null)
 						val = NSNull.Null.Handle;
 					else {
-						strings [i] = new NSString (items [i]);
-						val = strings [i].Handle;
+						val = NSString.CreateNative (items [i], true);
 					}
 	
 					Marshal.WriteIntPtr (buf, i * IntPtr.Size, val);
 				}
 				NSArray arr = Runtime.GetNSObject<NSArray> (NSArray.FromObjects (buf, items.Length));
-				foreach (NSString ns in strings) {
-					if (ns != null)
-						ns.Dispose ();
-				}
 				return arr;
 			} finally {
 				Marshal.FreeHGlobal (buf);

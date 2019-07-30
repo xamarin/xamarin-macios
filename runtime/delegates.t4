@@ -170,8 +170,8 @@
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_inative_object_static",
 			"id", "IntPtr", "obj",
 			"bool", "bool", "owns",
-			"const char *", "string", "type_name",
-			"const char *", "string", "iface_name"
+			"unsigned int", "uint", "iface_token_ref",
+			"unsigned int", "uint", "implementation_token_ref"
 		) {
 			WrappedManagedFunction = "GetINativeObject_Static",
 			OnlyDynamicUsage = false,
@@ -180,9 +180,7 @@
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject_with_type",
 			"id", "IntPtr", "obj",
 			"void *", "IntPtr", "type",
-			"int32_t *", "out bool", "created",
-			"SEL", "IntPtr", "selector",
-			"MonoReflectionMethod *", "IntPtr", "method"
+			"int32_t *", "out bool", "created"
 		) {
 			WrappedManagedFunction = "GetNSObjectWithType",
 			OnlyDynamicUsage = false,
@@ -225,6 +223,7 @@
 
 		new XDelegate ("guint32", "int", "xamarin_create_product_exception_for_error",
 			"int", "int", "code",
+			"guint32", "uint", "inner_exception_gchandle",
 			"const char *", "string", "message"
 		) {
 			WrappedManagedFunction = "CreateProductException",

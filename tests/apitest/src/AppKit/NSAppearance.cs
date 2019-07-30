@@ -54,5 +54,16 @@ namespace Xamarin.Mac.Tests
 
 			Assert.AreNotEqual (appearance, NSAppearance.CurrentAppearance, "NSAppearanceShouldChangeCurrentAppearance - Failed to change appearance.");
 		}
+
+#if XAMCORE_2_0
+		[Test]
+		public void NSAppearanceCustomizationNull ()
+		{
+			Asserts.EnsureYosemite ();
+
+			using (NSButton b = new NSButton ())
+				b.SetAppearance (null);
+		}
+#endif
 	}
 }

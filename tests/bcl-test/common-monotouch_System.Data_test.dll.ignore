@@ -1,0 +1,3 @@
+# System.NotSupportedException : Encoding 1252 data could not be found. Make sure you have correct international codeset assembly installed and enabled.
+MonoTests.System.Data.SqlTypes.SqlStringTest.UnicodeBytes
+MonoTests.System.Data.SqlTypes.SqlStringTest.Create

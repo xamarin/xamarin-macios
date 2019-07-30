@@ -30,7 +30,9 @@ using UIKit;
 #endif
 using ObjCRuntime;
 #else
+using nint=global::System.Int32;
 #if MONOMAC
+using MonoMac;
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
@@ -44,6 +46,10 @@ using MonoTouch.UIKit;
 
 partial class TestRuntime
 {
+
+	[DllImport (Constants.CoreFoundationLibrary)]
+	public extern static nint CFGetRetainCount (IntPtr handle);
+
 	[DllImport ("/usr/lib/system/libdyld.dylib")]
 	static extern int dyld_get_program_sdk_version ();
 
@@ -95,6 +101,14 @@ partial class TestRuntime
 		var minor = (v >> 8) & 0xFF;
 		var build = v & 0xFF;
 		return new Version (major, minor, build);
+	}
+
+	public static void IgnoreInCI (string message)
+	{
+		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+		if (!in_ci)
+			return;
+		NUnit.Framework.Assert.Ignore (message);
 	}
 
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)
@@ -185,6 +199,30 @@ partial class TestRuntime
 				return CheckiOSSystemVersion (12, 0);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 14, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 1:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (5, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (12, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (12, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 14, 3);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 2:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (5, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (12, 2);
+#elif __IOS__
+				return CheckiOSSystemVersion (12, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 14, 4);
 #else
 				throw new NotImplementedException ();
 #endif

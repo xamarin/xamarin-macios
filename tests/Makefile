@@ -11,7 +11,7 @@ include $(TOP)/mk/rules.mk
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 UNIT_SERVER_DIR=$(TOUCH_UNIT_PATH)/Touch.Server
 UNIT_SERVER=$(UNIT_SERVER_DIR)/bin/Debug/Touch.Server.exe
-TEST_SUITES=monotouch-test link\ sdk link\ all dont\ link framework-test mini
+TEST_SUITES=monotouch-test link\ sdk link\ all dont\ link framework-test mini mono-native
 BCL_TEST_SUITES=mscorlib \
 	System \
 	System.Core \
@@ -84,7 +84,7 @@ endif
 package-tests:
 	$(MAKE) qa-test-dependencies.zip mac-test-package.zip
 
-test.config: Makefile $(TOP)/Make.config
+test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(abspath $(MONOTOUCH_PREFIX))" >> $@
 	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
@@ -92,17 +92,19 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 	@echo "XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)" >> $@
-	@echo "MONO_SDK_DESTDIR=$(MONO_SDK_DESTDIR)" >> $@
+	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
+	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
 	@echo "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
 
-test-system.config:
+test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
 	@echo "IOS_DESTDIR=/" >> $@
 	@echo "MAC_DESTDIR=/" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
-	@echo "MONO_SDK_DESTDIR=$(MONO_SDK_DESTDIR)" >> $@
+	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
+	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -196,15 +198,8 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-.stamp-build-mono-unit-tests: $(TOP)/.git/modules/external/mono/HEAD
-	make -j8 -C $(TOP)/external/mono/mcs/class -i do-test PROFILE=xammac_net_4_5 # TODO: This should not be needed and we should get the dlls from the SDK.
-	make -j8 -C $(TOP)/external/mono/mcs/class -i do-xunit-test PROFILE=xammac_net_4_5 # TODO: This should not be needed and we should get the dlls from the SDK.
-	nuget restore bcl-test/BCLTests/BCLTests.csproj
-	$(Q) touch $@
-
-xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
-	nuget restore xharness/xharness.csproj
-	$(Q_GEN) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+xharness/xharness.exe: $(wildcard xharness/*.cs) $(wildcard $(TOP)/tools/bcl-test-importer/BCLTestImporter/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
+	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:
 	@killall "iPhone Simulator" >/dev/null 2>&1 || true
@@ -358,7 +353,7 @@ wrench-%:
 
 wrench-jenkins: xharness/xharness.exe
 	$(Q) rm -f $@-failed.stamp
-	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --trace=E:all --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-ios-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) || echo "$$?" > $@-failed.stamp
+	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --trace=E:all --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) || echo "$$?" > $@-failed.stamp
 	@echo "@MonkeyWrench: SetSummary: <br/>`cat $(abspath $(CURDIR))/TestSummary.md | awk 1 ORS='<br/>'`"
 	@echo "@MonkeyWrench: AddFile: $(abspath $(CURDIR))/TestSummary.md"
 	$(Q) if test -e $@-failed.stamp; then EC=`cat $@-failed.stamp`; rm -f $@-failed.stamp; exit $$EC; fi
@@ -377,7 +372,8 @@ runner: xharness/xharness.exe
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
 vsts-device-tests: xharness/xharness.exe
-	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-mac-tests,skip-ios-simulator-tests,skip-ios-msbuild-tests,skip-system-permission-tests,run-ios-device-tests,run-bcl-tests,run-ios-extensions-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_PERIODIC_COMMAND)
+	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir downloads -j
+	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 ifdef ENABLE_XAMARIN
 wrench-launch-external wrench-report-external:

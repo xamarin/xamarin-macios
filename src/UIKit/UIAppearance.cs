@@ -105,11 +105,12 @@ namespace UIKit {
 		const string selAppearanceWhenContainedIn = "appearanceWhenContainedIn:";
 		const string selAppearanceForTraitCollectionWhenContainedIn = "appearanceForTraitCollection:whenContainedIn:";
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IntPtr GetAppearance (IntPtr class_ptr, params Type [] whenFoundIn)
 		{
 			IntPtr[] ptrs = TypesToPointers (whenFoundIn);
 
-			if (IntPtr.Size == 8 && Runtime.Arch == Arch.DEVICE) {
+			if (Runtime.IsARM64CallingConvention) {
 				// The native function takes a variable number of arguments ('appearanceWhenContainedIn:'), terminated with a nil value.
 				// Unfortunately iOS/ARM64 (not the general ARM64 ABI as published by ARM) has a different calling convention for varargs methods
 				// than regular methods: all variable arguments are passed on the stack, no matter how many normal arguments there are.
@@ -133,6 +134,7 @@ namespace UIKit {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IntPtr GetAppearance (IntPtr class_ptr, UITraitCollection traits, params Type [] whenFoundIn)
 		{
 			if (traits == null)
@@ -140,7 +142,7 @@ namespace UIKit {
 
 			IntPtr[] ptrs = TypesToPointers (whenFoundIn);
 
-			if (IntPtr.Size == 8 && Runtime.Arch == Arch.DEVICE) {
+			if (Runtime.IsARM64CallingConvention) {
 				// The native function takes a variable number of arguments ('appearanceWhenContainedIn:'), terminated with a nil value.
 				// Unfortunately iOS/ARM64 (not the general ARM64 ABI as published by ARM) has a different calling convention for varargs methods
 				// than regular methods: all variable arguments are passed on the stack, no matter how many normal arguments there are.

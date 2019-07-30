@@ -45,6 +45,10 @@ namespace Xamarin.MacDev.Tasks
 
 		public bool IsAppExtension { get; set; }
 
+		public bool UseHardenedRuntime { get; set; }
+		
+		public bool UseSecureTimestamp { get; set; }
+
 		public string ToolExe {
 			get { return toolExe ?? ToolName; }
 			set { toolExe = value; }
@@ -92,6 +96,14 @@ namespace Xamarin.MacDev.Tasks
 
 			if (IsAppExtension)
 				args.Add ("--deep");
+
+			if (UseHardenedRuntime)
+				args.Add ("-o runtime");
+
+			if (UseSecureTimestamp)
+				args.Add ("--timestamp");
+			else
+				args.Add ("--timestamp=none");
 
 			args.Add ("--sign");
 			args.AddQuoted (SigningKey);
@@ -169,7 +181,9 @@ namespace Xamarin.MacDev.Tasks
 			Parallel.ForEach (Resources, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
 				Codesign (item);
 
-				codesignedFiles.AddRange (GetCodesignedFiles (item));
+				var files = GetCodesignedFiles (item);
+				lock (codesignedFiles)
+					codesignedFiles.AddRange (files);
 			});
 
 			CodesignedFiles = codesignedFiles.ToArray ();

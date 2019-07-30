@@ -455,13 +455,13 @@ namespace Xamarin
 			return MTouch.CompileTestAppLibrary (asm_dir, "class X {}", appName: Path.GetFileNameWithoutExtension (asm_name));
 		}
 
-		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = false)
+		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = true)
 		{
 			Profile = profile;
 			CreateTemporaryApp (appName: appName, code: code, extraArg: extraArg, extraCode: extraCode, usings: usings, use_csc: use_csc);
 		}
 
-		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = false)
+		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = true)
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -621,7 +621,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 				File.WriteAllText (plist_path, info_plist);
 		}
 
-		public void CreateTemporaryWatchKitExtension (string code = null)
+		public void CreateTemporaryWatchKitExtension (string code = null, string extraCode = null, string extraArg = "")
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -641,9 +641,12 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 }";
 			}
 
+			if (extraCode != null)
+				code += extraCode;
+
 			AppPath = app;
 			Extension = true;
-			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, extraArg: extraArg, profile: Profile);
 
 			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
@@ -800,10 +803,10 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 			}
 		}
 
-		public static IEnumerable<string> GetNativeSymbolsInExecutable (string executable)
+		public static IEnumerable<string> GetNativeSymbolsInExecutable (string executable, string arch = null)
 		{
-			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", $"-gUj {StringUtils.Quote (executable)}", hide_output: true).Split ('\n');
-
+			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", $"{(arch == null ? string.Empty : $"-arch {arch} ")}-gUj {StringUtils.Quote (executable)}", hide_output: true).Split ('\n');
+			
 			rv = rv.Where ((v) => {
 				if (string.IsNullOrEmpty (v))
 					return false;

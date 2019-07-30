@@ -120,7 +120,10 @@ namespace xharness
 				return true;
 				
 			var conditionValue = condition.Value;
-			conditionValue = conditionValue.Replace ("$(Configuration)", configuration).Replace ("$(Platform)", platform);
+			if (configuration != null)
+				conditionValue = conditionValue.Replace ("$(Configuration)", configuration);
+			if (platform != null)
+				conditionValue = conditionValue.Replace ("$(Platform)", platform);
 
 			var orsplits = conditionValue.Split (orsplitter, StringSplitOptions.None);
 			foreach (var orsplit in orsplits) {
@@ -191,8 +194,7 @@ namespace xharness
 				return;
 			
 			// Make sure there's a top-level version too.
-			var project = csproj.ChildNodes [1];
-			var property_group = project.ChildNodes [0];
+			var property_group = csproj.SelectSingleNode("/*/*[local-name() = 'PropertyGroup' and not(@Condition)]");
 
 			var intermediateOutputPath = csproj.CreateElement ("IntermediateOutputPath", MSBuild_Namespace);
 			intermediateOutputPath.InnerText = value;
@@ -227,7 +229,11 @@ namespace xharness
 
 		public static void RemoveTargetFrameworkIdentifier (this XmlDocument csproj)
 		{
-			RemoveNode (csproj, "TargetFrameworkIdentifier");
+			try {
+				RemoveNode (csproj, "TargetFrameworkIdentifier");
+			} catch {
+				// ignore exceptions, if not present, we are not worried
+			}
 		}
 
 		public static void SetAssemblyName (this XmlDocument csproj, string value)
@@ -350,7 +356,9 @@ namespace xharness
 				if (!IsNodeApplicable (mea, platform, configuration))
 					continue;
 
-				mea.InnerText += " " + value;
+				if (mea.InnerText.Length > 0 && mea.InnerText [mea.InnerText.Length - 1] != ' ')
+					mea.InnerText += " ";
+				mea.InnerText += value;
 				found = true;
 			}
 
@@ -496,12 +504,24 @@ namespace xharness
 			}
 		}
 
-		public static void FixArchitectures (this XmlDocument csproj, string simulator_arch, string device_arch)
+		public static void SetArchitecture (this XmlDocument csproj, string platform, string configuration, string architecture)
+		{
+			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'MtouchArch']");
+			foreach (XmlNode n in nodes) {
+				if (!IsNodeApplicable (n, platform, configuration))
+					continue;
+				n.InnerText = architecture;
+			}
+		}
+
+		public static void FixArchitectures (this XmlDocument csproj, string simulator_arch, string device_arch, string platform = null, string configuration = null)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'MtouchArch']");
 			if (nodes.Count == 0)
 				throw new Exception (string.Format ("Could not find MtouchArch at all"));
 			foreach (XmlNode n in nodes) {
+				if (platform != null && configuration != null && !IsNodeApplicable (n, platform, configuration))
+					continue;
 				switch (n.InnerText.ToLower ()) {
 				case "i386":
 				case "x86_64":
@@ -511,11 +531,14 @@ namespace xharness
 				case "armv7":
 				case "armv7s":
 				case "arm64":
+				case "arm64_32":
+				case "armv7k":
 				case "armv7, arm64":
+				case "armv7k, arm64_32":
 					n.InnerText = device_arch;
 					break;
 				default:
-					throw new NotImplementedException (string.Format ("Unhandled architecture: {0}", n.Value));
+					throw new NotImplementedException (string.Format ("Unhandled architecture: {0}", n.InnerText));
 
 				}
 			}
@@ -546,16 +569,21 @@ namespace xharness
 				FindAndReplace (node, find, replace);
 		}
 
-		public static void FixInfoPListInclude (this XmlDocument csproj, string suffix)
+		public static void FixInfoPListInclude (this XmlDocument csproj, string suffix, string fullPath = null)
 		{
 			var import = csproj.SelectSingleNode ("/*/*/*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
-			import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace("Info.plist", $"Info{suffix}.plist");
-			var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
-			if (logicalName == null) {
-				logicalName = csproj.CreateElement ("LogicalName", MSBuild_Namespace);
-				import.AppendChild (logicalName);
+			if (import != null) {
+				if (string.IsNullOrEmpty (fullPath))
+					import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace ("Info.plist", $"Info{suffix}.plist");
+				else 
+					import.Attributes ["Include"].Value = import.Attributes ["Include"].Value.Replace ("Info.plist", $"{fullPath}\\Info{suffix}.plist");
+				var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
+				if (logicalName == null) {
+					logicalName = csproj.CreateElement ("LogicalName", MSBuild_Namespace);
+					import.AppendChild (logicalName);
+				}
+				logicalName.InnerText = "Info.plist";
 			}
-			logicalName.InnerText = "Info.plist";
 		}
 
 		public static string GetInfoPListInclude (this XmlDocument csproj)
@@ -592,6 +620,17 @@ namespace xharness
 					yield return node.Attributes ["Include"].Value;
 			}
 		}
+
+		public static IEnumerable<string> GetNunitAndXunitTestReferences (this XmlDocument csproj)
+		{
+			var nodes = csproj.SelectNodes ("//*[local-name() = 'Reference']");
+			foreach (XmlNode node in nodes) {
+				var includeValue = node.Attributes ["Include"].Value;
+				if (includeValue.EndsWith ("_test.dll", StringComparison.Ordinal) || includeValue.EndsWith ("_xunit-test.dll", StringComparison.Ordinal))
+					yield return includeValue;
+			}
+		}
+
 		public static void SetProjectReferenceValue (this XmlDocument csproj, string projectInclude, string node, string value)
 		{
 			var nameNode = csproj.SelectSingleNode ("//*[local-name() = 'ProjectReference' and @Include = '" + projectInclude + "']/*[local-name() = '" + node + "']");
@@ -751,13 +790,8 @@ namespace xharness
 
 		public static void CloneConfiguration (this XmlDocument csproj, string platform, string configuration, string new_configuration)
 		{
-			var projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']");
+			var projnode = csproj.GetPropertyGroups (platform, configuration);
 			foreach (XmlNode xmlnode in projnode) {
-				if (xmlnode.Attributes ["Condition"] == null)
-					continue;
-				if (!IsNodeApplicable (xmlnode, platform, configuration))
-					continue;
-				
 				var clone = xmlnode.Clone ();
 				var condition = clone.Attributes ["Condition"];
 				condition.InnerText = condition.InnerText.Replace (configuration, new_configuration);
@@ -765,23 +799,14 @@ namespace xharness
 				return;
 			}
 
-			throw new Exception ("Configuration not found.");
+			throw new Exception ($"Configuration {platform}|{configuration} not found.");
 		}
 
 		public static void DeleteConfiguration (this XmlDocument csproj, string platform, string configuration)
 		{
-			var projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']");
-			foreach (XmlNode xmlnode in projnode) {
-				if (xmlnode.Attributes ["Condition"] == null)
-					continue;
-				if (!IsNodeApplicable (xmlnode, platform, configuration))
-					continue;
+			var projnode = csproj.GetPropertyGroups (platform, configuration);
+			foreach (XmlNode xmlnode in projnode)
 				xmlnode.ParentNode.RemoveChild (xmlnode);
-
-				return;
-			}
-
-			throw new Exception ($"Configuration not found: {platform}:{configuration}");
 		}
 
 		static IEnumerable<XmlNode> SelectElementNodes (this XmlNode node, string name)
@@ -827,7 +852,7 @@ namespace xharness
 				new string [] { "ObjcBindingCoreSource", "Include" },
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
-				new string [] { "Import", "Project", "CustomBuildActions.targets", "../SyncTestResources.targets" },
+				new string [] { "Import", "Project", "CustomBuildActions.targets" },
 				new string [] { "FilesToCopy", "Include" },
 				new string [] { "FilesToCopyFoo", "Include" },
 				new string [] { "FilesToCopyFooBar", "Include" },
@@ -836,6 +861,8 @@ namespace xharness
 				new string [] { "FilesToCopyResources", "Include" },
 				new string [] { "FilesToCopyXMLFiles", "Include" },
 				new string [] { "FilesToCopyChannels", "Include" },
+				new string [] { "CustomMetalSmeltingInput", "Include" },
+				new string [] { "Metal", "Include" },
 			};
 			var nodes_with_variables = new string []
 			{

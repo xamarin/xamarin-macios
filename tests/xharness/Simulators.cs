@@ -13,9 +13,14 @@ using Xamarin.Utils;
 
 namespace xharness
 {
-	public class Simulators
+	interface ILoadAsync {
+		Task LoadAsync (Log log, bool include_locked, bool force);
+		Harness Harness { get; set; }
+	}
+
+	public class Simulators : ILoadAsync
 	{
-		public Harness Harness;
+		public Harness Harness { get; set; }
 
 		bool loaded;
 		SemaphoreSlim semaphore = new SemaphoreSlim (1);
@@ -30,7 +35,7 @@ namespace xharness
 		public IEnumerable<SimDevice> AvailableDevices => available_devices;
 		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
 
-		public async Task LoadAsync (Log log, bool force = false)
+		public async Task LoadAsync (Log log, bool include_locked = false, bool force = false)
 		{
 			await semaphore.WaitAsync ();
 			if (loaded) {
@@ -94,13 +99,18 @@ namespace xharness
 							});
 						}
 
-						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair")) {
+
+						var sim_device_pairs = simulator_data.
+							SelectNodes ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair").
+							Cast<XmlNode> ().
+							// There can be duplicates, so remove those.
+							Distinct (new SimulatorXmlNodeComparer ());
+						foreach (XmlNode sim in sim_device_pairs) {
 							available_device_pairs.Add (new SimDevicePair ()
 							{
 								UDID = sim.Attributes ["UDID"].Value,
 								Companion = sim.SelectSingleNode ("Companion").InnerText,
 								Gizmo = sim.SelectSingleNode ("Gizmo").InnerText,
-
 							});
 						}
 					}
@@ -227,7 +237,7 @@ namespace xharness
 			return pairs.FirstOrDefault ();
 		}
 
-		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log, bool create_if_needed = true)
+		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log, bool create_if_needed = true, bool min_version = false)
 		{
 			SimDevice [] simulators = null;
 
@@ -239,25 +249,25 @@ namespace xharness
 			switch (target) {
 			case AppRunnerTarget.Simulator_iOS32:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-10-3";
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MiniOSSimulator : "10-3").Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_iOS64:
-				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-X";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "iPhone-6" : "iPhone-X");
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MiniOSSimulator : Xamarin.SdkVersions.iOS).Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_iOS:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MiniOSSimulator : Xamarin.SdkVersions.iOS).Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_tvOS:
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + Xamarin.SdkVersions.TVOS.Replace ('.', '-');
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + (min_version ? Xamarin.SdkVersions.MinTVOSSimulator : Xamarin.SdkVersions.TVOS).Replace ('.', '-');
 				break;
 			case AppRunnerTarget.Simulator_watchOS:
-				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-3-38mm";
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + Xamarin.SdkVersions.WatchOS.Replace ('.', '-');
-				companion_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-X";
-				companion_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "Apple-Watch-38mm" : "Apple-Watch-Series-3-38mm");
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + (min_version ? Xamarin.SdkVersions.MinWatchOSSimulator : Xamarin.SdkVersions.WatchOS).Replace ('.', '-');
+				companion_devicetype = "com.apple.CoreSimulator.SimDeviceType." + (min_version ? "iPhone-6" : "iPhone-X");
+				companion_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + (min_version ? Xamarin.SdkVersions.MinWatchOSCompanionSimulator : Xamarin.SdkVersions.iOS).Replace ('.', '-');
 				break;
 			default:
 				throw new Exception (string.Format ("Unknown simulator target: {0}", target));
@@ -309,23 +319,43 @@ namespace xharness
 			return available_devices.Single ((v) => v.UDID == pair.Companion);
 		}
 
-		public IEnumerable<SimDevice> SelectDevices (AppRunnerTarget target, Log log)
+		public IEnumerable<SimDevice> SelectDevices (AppRunnerTarget target, Log log, bool min_version)
 		{
 			return new SimulatorEnumerable
 			{
 				Simulators = this,
 				Target = target,
+				MinVersion = min_version,
 				Log = log,
 			};
+		}
+
+		class SimulatorXmlNodeComparer : IEqualityComparer<XmlNode>
+		{
+			public bool Equals (XmlNode a, XmlNode b)
+			{
+				return a["Gizmo"].InnerText == b["Gizmo"].InnerText && a["Companion"].InnerText == b["Companion"].InnerText;
+			}
+
+			public int GetHashCode (XmlNode node)
+			{
+				return node["Gizmo"].InnerText.GetHashCode () ^ node["Companion"].InnerText.GetHashCode ();
+			}
 		}
 
 		class SimulatorEnumerable : IEnumerable<SimDevice>, IAsyncEnumerable
 		{
 			public Simulators Simulators;
 			public AppRunnerTarget Target;
+			public bool MinVersion;
 			public Log Log;
 			object lock_obj = new object ();
 			Task<SimDevice []> findTask;
+
+			public override string ToString ()
+			{
+				return $"Simulators for {Target} (MinVersion: {MinVersion})";
+			}
 
 			public IEnumerator<SimDevice> GetEnumerator ()
 			{
@@ -344,7 +374,7 @@ namespace xharness
 			{
 				lock (lock_obj) {
 					if (findTask == null)
-						findTask = Simulators.FindAsync (Target, Log);
+						findTask = Simulators.FindAsync (Target, Log, min_version: MinVersion);
 					return findTask;
 				}
 			}
@@ -429,6 +459,14 @@ namespace xharness
 		public Harness Harness;
 
 		public bool IsWatchSimulator { get { return SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS", StringComparison.Ordinal); } }
+
+		public string OSVersion {
+			get {
+				var v = SimRuntime.Substring ("com.apple.CoreSimulator.SimRuntime.".Length);
+				var dash = v.IndexOf ('-');
+				return v.Substring (0, dash) + " " + v.Substring (dash + 1).Replace ('-', '.');
+			}
+		}
 
 		public async Task EraseAsync (Log log)
 		{
@@ -640,9 +678,9 @@ namespace xharness
 		public SimDevice Companion; // the phone for watch devices
 	}
 
-	public class Devices
+	public class Devices : ILoadAsync
 	{
-		public Harness Harness;
+		public Harness Harness { get; set; }
 
 		bool loaded;
 
@@ -652,7 +690,19 @@ namespace xharness
 		public IEnumerable<Device> Connected64BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports64Bit);
 		public IEnumerable<Device> Connected32BitIOS => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.iOS && x.Supports32Bit);
 		public IEnumerable<Device> ConnectedTV => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.tvOS);
-		public IEnumerable<Device> ConnectedWatch => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.watchOS);
+		public IEnumerable<Device> ConnectedWatch => connected_devices.Where (x => x.DevicePlatform == DevicePlatform.watchOS && x.Architecture == Architecture.ARMv7k);
+		public IEnumerable<Device> ConnectedWatch32_64 {
+			get {
+				return connected_devices.Where ((x) => {
+					return x.DevicePlatform == DevicePlatform.watchOS && x.Architecture == Architecture.ARM64_32;
+				});
+			}
+		}
+
+		Task ILoadAsync.LoadAsync (Log log, bool include_locked, bool force)
+		{
+			return LoadAsync (log, extra_data: false, removed_locked: !include_locked, force: force);
+		}
 
 		public async Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false, bool force = false)
 		{
@@ -677,6 +727,7 @@ namespace xharness
 							throw new Exception ("Failed to list devices.");
 						log.WriteLine ("Result:");
 						log.WriteLine (File.ReadAllText (tmpfile));
+						log.Flush ();
 
 						var doc = new XmlDocument ();
 						doc.LoadWithoutNetworkAccess (tmpfile);
@@ -710,6 +761,7 @@ namespace xharness
 				} finally {
 					connected_devices.SetCompleted ();
 					File.Delete (tmpfile);
+					log.Flush ();
 				}
 			});
 		}
@@ -734,6 +786,7 @@ namespace xharness
 		ARMv7k,
 		ARMv7s,
 		ARM64,
+		ARM64_32,
 		i386,
 		x86_64,
 	}
@@ -760,6 +813,12 @@ namespace xharness
 		public bool IsLocked;
 
 		public string UDID { get { return DeviceIdentifier; } set { DeviceIdentifier = value; } }
+
+		public string OSVersion {
+			get {
+				return ProductVersion;
+			}
+		}
 
 		// Add a speed property that can be used to sort a list of devices according to speed.
 		public int DebugSpeed {
@@ -812,6 +871,14 @@ namespace xharness
 					throw new NotImplementedException ();
 				}
 			}
+		}
+
+		public bool IsSupported (iOSTestProject project)
+		{
+			if (project.MonoNativeInfo == null)
+				return true;
+			var min_version = MonoNativeHelper.GetMinimumOSVersion (DevicePlatform, project.MonoNativeInfo.Flavor);
+			return Version.Parse (ProductVersion) >= Version.Parse (min_version);
 		}
 
 		public Architecture Architecture {
@@ -879,8 +946,20 @@ namespace xharness
 				}
 
 				// https://www.theiphonewiki.com/wiki/List_of_Apple_Watches
-				if (model.StartsWith ("Watch", StringComparison.Ordinal))
-					return Architecture.ARMv7k;
+				if (model.StartsWith ("Watch", StringComparison.Ordinal)) {
+					var identifier = model.Substring ("Watch".Length);
+					var values = identifier.Split (',');
+					switch (values [0]) {
+						case "1": // Apple Watch (1st gen)
+						case "2": // Apple Watch Series 1 and Series 2
+						case "3": // Apple Watch Series 3
+							return Architecture.ARMv7k;
+
+						case "4": // Apple Watch Series 4
+						default:
+							return Architecture.ARM64_32;
+					}
+				}
 
 				// https://www.theiphonewiki.com/wiki/List_of_Apple_TVs
 				if (model.StartsWith ("AppleTV", StringComparison.Ordinal))
@@ -895,6 +974,7 @@ namespace xharness
 	{
 		string Name { get; set; }
 		string UDID { get; set; }
+		string OSVersion { get; }
 	}
 
 

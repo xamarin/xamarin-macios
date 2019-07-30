@@ -34,4 +34,27 @@ namespace GameKit {
 		public static NSString GetDomain (this GKGameSessionErrorCode self) => null;
 	}
 #endif
+
+#if !XAMCORE_4_0 && !WATCH
+	public partial class GKGameSession {
+
+		[Obsolete ("Empty stub (GKGameSessionEventListenerPrivate category members are not public API).")]
+		public static void DidAddPlayer (GKGameSession session, GKCloudPlayer player) {}
+
+		[Obsolete ("Empty stub (GKGameSessionEventListenerPrivate category members are not public API).")]
+		public static void DidChangeConnectionState (GKGameSession session, GKCloudPlayer player, GKConnectionState newState) {}
+
+		[Obsolete ("Empty stub (GKGameSessionEventListenerPrivate category members are not public API).")]
+		public static void DidReceiveData (GKGameSession session, Foundation.NSData data, GKCloudPlayer player) {}
+
+		[Obsolete ("Empty stub (GKGameSessionEventListenerPrivate category members are not public API).")]
+		public static void DidReceiveMessage (GKGameSession session, string message, Foundation.NSData data, GKCloudPlayer player) {}
+
+		[Obsolete ("Empty stub (GKGameSessionEventListenerPrivate category members are not public API).")]
+		public static void DidRemovePlayer (GKGameSession session, GKCloudPlayer player) {}
+
+		[Obsolete ("Empty stub (GKGameSessionEventListenerPrivate category members are not public API).")]
+		public static void DidSaveData (GKGameSession session, GKCloudPlayer player, Foundation.NSData data) {}
+	}
+#endif
 }

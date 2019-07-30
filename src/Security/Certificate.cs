@@ -268,10 +268,12 @@ namespace Security {
 		}
 #else
 		[iOS (10,3)]
+		[TV (10,3)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable SecKeyRef */ IntPtr SecCertificateCopyPublicKey (IntPtr /* SecCertificateRef */ certificate);
 
 		[iOS (10,3)]
+		[TV (10,3)]
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'GetKey' instead.")]
 		[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GetKey' instead.")]
 		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'GetKey' instead.")]
@@ -293,10 +295,14 @@ namespace Security {
 		}
 
 		[iOS (10,3)] // [Mac (10,5)]
+		[TV (10,3)]
+		[Watch (3,3)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SecCertificateCopyCommonName (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFStringRef * __nonnull CF_RETURNS_RETAINED */ commonName);
 
 		[iOS (10,3)]
+		[TV (10,3)]
+		[Watch (3,3)]
 		public string GetCommonName ()
 		{
 			IntPtr cn;
@@ -306,10 +312,14 @@ namespace Security {
 		}
 
 		[iOS (10,3)] // [Mac (10,5)]
+		[TV (10,3)]
+		[Watch (3,3)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SecCertificateCopyEmailAddresses (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFArrayRef * __nonnull CF_RETURNS_RETAINED */ emailAddresses);
 
 		[iOS (10,3)]
+		[TV (10,3)]
+		[Watch (3,3)]
 		public string[] GetEmailAddresses ()
 		{
 			string[] results = null;
@@ -324,11 +334,15 @@ namespace Security {
 
 		[iOS (10,3)]
 		[Mac (10,12,4)]
+		[TV (10,3)]
+		[Watch (3,3)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopyNormalizedIssuerSequence (IntPtr /* SecCertificateRef */ certificate);
 
 		[iOS (10,3)]
 		[Mac (10,12,4)]
+		[TV (10,3)]
+		[Watch (3,3)]
 		public NSData GetNormalizedIssuerSequence ()
 		{
 			IntPtr data = SecCertificateCopyNormalizedIssuerSequence (handle);
@@ -337,11 +351,15 @@ namespace Security {
 
 		[iOS (10,3)]
 		[Mac (10,12,4)]
+		[TV (10,3)]
+		[Watch (3,3)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopyNormalizedSubjectSequence (IntPtr /* SecCertificateRef */ certificate);
 
 		[iOS (10,3)]
 		[Mac (10,12,4)]
+		[TV (10,3)]
+		[Watch (3,3)]
 		public NSData GetNormalizedSubjectSequence ()
 		{
 			IntPtr data = SecCertificateCopyNormalizedSubjectSequence (handle);

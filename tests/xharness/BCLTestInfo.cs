@@ -35,7 +35,9 @@ namespace xharness
 			{ "System.Data.Odbc", null },
 			{ "System.Data.OleDb", null },
 			// System.Web.Services
-			{ "System.Web.Services.Configuration", null }
+			{ "System.Web.Services.Configuration", null },
+			// handle manually via templates
+			{ "test-helpers", null },
 		};
 
 		public BCLTestInfo (Harness harness, string testName)
@@ -122,6 +124,8 @@ namespace xharness
 		{
 			var testName = TestName == "mscorlib" ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
+			if (!File.Exists (main_test_sources)) // TODO: revert this
+				return;
 			var main_test_files = File.ReadAllLines (main_test_sources);
 			var watch_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
 			var watch_test_files = File.ReadAllLines (watch_test_sources).Where ((arg) => !string.IsNullOrEmpty (arg));
@@ -218,6 +222,8 @@ namespace xharness
 		{
 			var testName = TestName == "mscorlib" ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
+			if (!File.Exists (main_test_sources))  // TODO: revert this
+				return "";
 			var main_test_files = File.ReadAllLines (main_test_sources);
 
 			var sb = new StringBuilder[2] { new StringBuilder (), new StringBuilder () };

@@ -1,4 +1,4 @@
-﻿//
+//
 // MessageHandlers.cs
 //
 
@@ -53,14 +53,14 @@ namespace MonoTests.System.Net.Http
 			PrintHandlerToTest ();
 
 			bool done = false;
+			string response = null;
 			Exception ex = null;
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
 			{
 				try {
 					HttpClient client = new HttpClient (GetHandler (handlerType));
-					var s = await client.GetStringAsync ("http://doesnotexist.xamarin.com");
-					Console.WriteLine (s);
+					response = await client.GetStringAsync ("http://doesnotexist.xamarin.com");
 				} catch (Exception e) {
 					ex = e;
 				} finally {
@@ -69,8 +69,8 @@ namespace MonoTests.System.Net.Http
 			}, () => done);
 
 			Assert.IsTrue (done, "Did not time out");
-			Assert.IsNotNull (ex, "Exception");
-			// The handlers throw different types of exceptions, so we can't assert much more than that something went wrong.			
+			Assert.IsNull (response, $"Response is not null {response}");
+			Assert.IsInstanceOfType (typeof (HttpRequestException), ex, "Exception");
 		}
 
 #if !__WATCHOS__
@@ -149,10 +149,128 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
-			Assert.IsTrue (done, "Request timedout.");
-			Assert.IsTrue (containsHeaders, "Request did not reach final destination.");
-			Assert.IsFalse (containsAuthorizarion, $"Authorization header did reach the final destination. {json}");
-			Assert.IsNull (ex, $"Exception {ex} for {json}");
+			if (!done) { // timeouts happen in the bost due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else if (!containsHeaders) {
+				Assert.Inconclusive ("Response from httpbin does not contain headers, therefore we cannot ensure that if the authoriation is present.");
+			} else {
+				Assert.IsFalse (containsAuthorizarion, $"Authorization header did reach the final destination. {json}");
+				Assert.IsNull (ex, $"Exception {ex} for {json}");
+			}
+		}
+
+#if !__WATCHOS__
+		[TestCase (typeof (HttpClientHandler))]
+#endif
+		[TestCase (typeof (NSUrlSessionHandler))]
+		public void RejectSslCertificatesServicePointManager (Type handlerType)
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+
+#if __MACOS__
+			if (handlerType == typeof (NSUrlSessionHandler) && TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10, 0) && !TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11, 0))
+				Assert.Ignore ("Fails on macOS 10.10: https://github.com/xamarin/maccore/issues/1645");
+#endif
+
+			bool servicePointManagerCbWasExcuted = false;
+			bool done = false;
+			Exception ex = null;
+			HttpResponseMessage result = null;
+
+			var handler = GetHandler (handlerType);
+			if (handler is NSUrlSessionHandler ns) {
+				ns.TrustOverride += (a,b) => {
+					servicePointManagerCbWasExcuted = true;
+					// return false, since we want to test that the exception is raised
+					return false;
+				};
+			} else {
+				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
+					servicePointManagerCbWasExcuted = true;
+					// return false, since we want to test that the exception is raised
+					return false;
+				};
+			}
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
+			{
+				try {
+					HttpClient client = new HttpClient (handler);
+					client.BaseAddress = new Uri ("https://httpbin.org");
+					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
+					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
+					result = await client.GetAsync ("https://httpbin.org/redirect/3");
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+					ServicePointManager.ServerCertificateValidationCallback = null;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				// assert the exception type
+				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
+				Assert.IsInstanceOfType (typeof (HttpRequestException), ex);
+				Assert.IsNotNull (ex.InnerException);
+				Assert.IsInstanceOfType (typeof (WebException), ex.InnerException);
+			}
+		}
+
+#if !__WATCHOS__
+		[TestCase (typeof (HttpClientHandler))]
+#endif
+		[TestCase (typeof (NSUrlSessionHandler))]
+		public void AcceptSslCertificatesServicePointManager (Type handlerType)
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+
+			bool servicePointManagerCbWasExcuted = false;
+			bool done = false;
+			Exception ex = null;
+
+			var handler = GetHandler (handlerType);
+			if (handler is NSUrlSessionHandler ns) {
+				ns.TrustOverride += (a,b) => {
+					servicePointManagerCbWasExcuted = true;
+					return true;
+				};
+			} else {
+				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
+					servicePointManagerCbWasExcuted = true;
+					return true;
+				};
+			}
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
+			{
+				try {
+					HttpClient client = new HttpClient (handler);
+					client.BaseAddress = new Uri ("https://httpbin.org");
+					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
+					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
+					var result = await client.GetAsync ("https://httpbin.org/redirect/3");
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+					ServicePointManager.ServerCertificateValidationCallback = null;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				// assert that we did not get an exception
+				if (ex != null && ex.InnerException != null) {
+					// we could get here.. if we have a diff issue, in that case, lets get the exception message and assert is not the trust issue
+					Assert.AreNotEqual (ex.InnerException.Message, "Error: TrustFailure");
+				}
+			}
 		}
 	}
 }

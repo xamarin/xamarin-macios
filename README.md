@@ -2,13 +2,6 @@
 
 # Xamarin.iOS & Xamarin.Mac #
 
-|              | Status                                    |
-|--------------|-------------------------------------------|
-| master       | [![xamarin-macios-builds-master][1]][2]   |
-
-[1]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds-master/badge/icon
-[2]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds-master
-
 ## Welcome!
 
 This module is the main repository for both **Xamarin.iOS** and **Xamarin.Mac**.

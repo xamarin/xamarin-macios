@@ -36,29 +36,34 @@ using Mono.Options;
 
 using ObjCRuntime;
 using Foundation;
+
+using Xamarin.Bundler;
 using Xamarin.Utils;
 
-class BindingTouch {
-	static TargetFramework? target_framework;
-	public static PlatformName CurrentPlatform;
-	public static bool Unified;
-	public static bool skipSystemDrawing;
-	public static string outfile;
+public class BindingTouch {
+	TargetFramework? target_framework;
+	public PlatformName CurrentPlatform;
+	public bool BindThirdPartyLibrary = true;
+	public bool Unified;
+	public bool skipSystemDrawing;
+	public string outfile;
 
-	static string baselibdll;
-	static string attributedll;
-	static string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+	string baselibdll;
+	string attributedll;
 
-	static List<string> libs = new List<string> ();
+	List<string> libs = new List<string> ();
 
-	public static Universe universe;
+	public Universe universe;
+	public TypeManager TypeManager = new TypeManager ();
+	public Frameworks Frameworks;
+	public AttributeManager AttributeManager;
 
-	public static TargetFramework TargetFramework {
+	public TargetFramework TargetFramework {
 		get { return target_framework.Value; }
 	}
 
 	public static string ToolName {
-		get { return Path.GetFileNameWithoutExtension (System.Reflection.Assembly.GetEntryAssembly ().Location); }
+		get { return "bgen"; }
 	}
 
 	static void ShowHelp (OptionSet os)
@@ -69,17 +74,17 @@ class BindingTouch {
 		os.WriteOptionDescriptions (Console.Out);
 	}
 	
-	static int Main (string [] args)
+	public static int Main (string [] args)
 	{
 		try {
 			return Main2 (args);
 		} catch (Exception ex) {
-			ErrorHelper.Show (ex);
+			ErrorHelper.Show (ex, false);
 			return 1;
 		}
 	}
 
-	static string GetAttributeLibraryPath ()
+	string GetAttributeLibraryPath ()
 	{
 		if (!string.IsNullOrEmpty (attributedll))
 			return attributedll;
@@ -112,7 +117,7 @@ class BindingTouch {
 		}
 	}
 
-	static IEnumerable<string> GetLibraryDirectories ()
+	IEnumerable<string> GetLibraryDirectories ()
 	{
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -147,7 +152,7 @@ class BindingTouch {
 			yield return lib;
 	}
 
-	static string LocateAssembly (string name)
+	string LocateAssembly (string name)
 	{
 		foreach (var asm in universe.GetAssemblies ()) {
 			if (asm.GetName ().Name == name)
@@ -166,7 +171,7 @@ class BindingTouch {
 		throw new FileNotFoundException ($"Could not find the assembly '{name}' in any of the directories: {string.Join (", ", GetLibraryDirectories ())}");
 	}
 
-	static string GetSDKRoot ()
+	string GetSDKRoot ()
 	{
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -186,7 +191,7 @@ class BindingTouch {
 		}
 	}
 
-	static void SetTargetFramework (string fx)
+	void SetTargetFramework (string fx)
 	{
 		TargetFramework tf;
 		if (!TargetFramework.TryParse (fx, out tf))
@@ -197,7 +202,7 @@ class BindingTouch {
 			throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
-	public static string NamespacePlatformPrefix {
+	public string NamespacePlatformPrefix {
 		get {
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
@@ -212,6 +217,12 @@ class BindingTouch {
 	}
 
 	static int Main2 (string [] args)
+	{
+		var touch = new BindingTouch ();
+		return touch.Main3 (args);
+	}
+
+	int Main3 (string [] args)
 	{
 		bool show_help = false;
 		bool zero_copy = false;
@@ -235,6 +246,9 @@ class BindingTouch {
 		var defines = new List<string> ();
 		string generate_file_list = null;
 		bool process_enums = false;
+		string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+
+		ErrorHelper.ClearWarningLevels ();
 
 		var os = new OptionSet () {
 			{ "h|?|help", "Displays the help", v => show_help = true },
@@ -246,7 +260,7 @@ class BindingTouch {
 			{ "sourceonly=", "Only generates the source", v => generate_file_list = v },
 			{ "ns=", "Sets the namespace for storing helper classes", v => ns = v },
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
-			{ "core", "Use this to build product assemblies", v => Generator.BindThirdPartyLibrary = false },
+			{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (StringUtils.Quote (v)) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
@@ -263,7 +277,7 @@ class BindingTouch {
 			{ "attributelib=", "Sets the attribute library", v => attributedll = v },
 			{ "use-zero-copy", v=> zero_copy = true },
 			{ "nostdlib", "Does not reference mscorlib.dll library", l => nostdlib = true },
-			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { } },
+			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { }, true },
 			{ "native-exception-marshalling", "Enable the marshalling support for Objective-C exceptions", (v) => { /* no-op */} },
 			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)",
 				v => inline_selectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
@@ -339,6 +353,7 @@ class BindingTouch {
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/2.1/monotouch.dll");
 			Path.Combine (GetSDKRoot (), "bin/smcs");
+			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/2.1/", references);
 			break;
 		case "xamarin.ios":
@@ -347,6 +362,7 @@ class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.iOS", references);
 			break;
 		case "xamarin.tvos":
@@ -355,6 +371,7 @@ class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
+			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.TVOS", references);
 			break;
 		case "xamarin.watchos":
@@ -363,6 +380,7 @@ class BindingTouch {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
+			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
 			break;
 		case "xammac":
@@ -370,6 +388,7 @@ class BindingTouch {
 			Unified = false;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "XamMac.dll");
+			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references);
 			break;
 		case "xamarin.mac":
@@ -386,9 +405,11 @@ class BindingTouch {
 			}
 			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				skipSystemDrawing = true;
+				references.Add ("Facades/System.Drawing.Common");
 				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.Mac", references);
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
 				skipSystemDrawing = true;
+				references.Add ("Facades/System.Drawing.Common");
 				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/4.5", references);
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				skipSystemDrawing = false;
@@ -462,24 +483,9 @@ class BindingTouch {
 				cargs.Append (cs).Append (' ');
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Append ("-lib:").Append (Path.GetDirectoryName (baselibdll)).Append (' ');
-			
 
-			var si = new ProcessStartInfo (compiler, cargs.ToString ()) {
-				UseShellExecute = false,
-			};
-				
-			// HACK: We are calling btouch with forced 2.1 path but we need working mono for compiler
-			si.EnvironmentVariables.Remove ("MONO_PATH");
-
-			if (verbose)
-				Console.WriteLine ("{0} {1}", si.FileName, si.Arguments);
-			
-			var p = Process.Start (si);
-			p.WaitForExit ();
-			if (p.ExitCode != 0){
-				Console.WriteLine ("{0}: API binding contains errors.", ToolName);
-				return 1;
-			}
+			if (Driver.RunCommand (compiler, cargs.ToString (), null, out var compile_output, true, verbose ? 1 : 0) != 0)
+				throw ErrorHelper.CreateError (2, "Could not compile the API bindings.\n\t" + compile_output.ToString ().Replace ("\n", "\n\t"));
 
 			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
 
@@ -505,11 +511,14 @@ class BindingTouch {
 				return 1;
 			}
 
+			AttributeManager = new AttributeManager (this);
+			Frameworks = new Frameworks (CurrentPlatform);
+
 			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
 			Assembly platform_assembly = baselib;
 			Assembly system_assembly = universe.LoadFile (LocateAssembly ("System"));
 			Assembly binding_assembly = universe.LoadFile (GetAttributeLibraryPath ());
-			TypeManager.Initialize (api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
+			TypeManager.Initialize (this, api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {
@@ -523,7 +532,7 @@ class BindingTouch {
 					try {
 						universe.LoadFile (r);
 					} catch (Exception ex) {
-						ErrorHelper.Show (new BindingException (1104, false, "Could not load the referenced library '{0}': {1}.", r, ex.Message));
+						ErrorHelper.Warning (1104, "Could not load the referenced library '{0}': {1}.", r, ex.Message);
 					}
 				}
 			}
@@ -542,18 +551,19 @@ class BindingTouch {
 			}
 
 			var nsManager = new NamespaceManager (
+				this,
 				NamespacePlatformPrefix,
 				ns == null ? firstApiDefinitionName : ns,
 				skipSystemDrawing
 			);
 
-			var g = new Generator (nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
+			var g = new Generator (this, nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors ?? (Unified && CurrentPlatform != PlatformName.MacOSX),
 			};
 
-			if (!Unified && !Generator.BindThirdPartyLibrary) {
+			if (!Unified && !BindThirdPartyLibrary) {
 				foreach (var mi in baselib.GetType (nsManager.CoreObjCRuntime + ".Messaging").GetMethods ()){
 					if (mi.Name.IndexOf ("_objc_msgSend", StringComparison.Ordinal) != -1)
 						g.RegisterMethodName (mi.Name);
@@ -593,23 +603,9 @@ class BindingTouch {
 			}
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Append ("-lib:").Append (Path.GetDirectoryName (baselibdll)).Append (' ');
-				
-			si = new ProcessStartInfo (compiler, cargs.ToString ()) {
-				UseShellExecute = false,
-			};
 
-			// HACK: We are calling btouch with forced 2.1 path but we need working mono for compiler
-			si.EnvironmentVariables.Remove ("MONO_PATH");
-
-			if (verbose)
-				Console.WriteLine ("{0} {1}", si.FileName, si.Arguments);
-
-			p = Process.Start (si);
-			p.WaitForExit ();
-			if (p.ExitCode != 0){
-				Console.WriteLine ("{0}: API binding contains errors.", ToolName);
-				return 1;
-			}
+			if (Driver.RunCommand (compiler, cargs.ToString (), null, out var generated_compile_output, true, verbose ? 1 : 0) != 0)
+				throw ErrorHelper.CreateError (1000, "Could not compile the generated API bindings.\n\t" + generated_compile_output.ToString ().Replace ("\n", "\n\t"));
 		} finally {
 			if (delete_temp)
 				Directory.Delete (tmpdir, true);

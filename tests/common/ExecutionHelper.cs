@@ -9,6 +9,7 @@ using System.Threading;
 using System.Diagnostics;
 
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace Xamarin.Tests
 {
@@ -97,7 +98,7 @@ namespace Xamarin.Tests
 		bool IndexOfAny (string line, out int start, out int end, params string [] values)
 		{
 			foreach (var value in values) {
-				start = line.IndexOf (value);
+				start = line.IndexOf (value, StringComparison.Ordinal);
 				if (start >= 0) {
 					end = start + value.Length;
 					return true;
@@ -110,8 +111,8 @@ namespace Xamarin.Tests
 
 		string RemovePathAtEnd (string line)
 		{
-			if (line.TrimEnd ().EndsWith ("]")) {
-				var start = line.LastIndexOf ("[");
+			if (line.TrimEnd ().EndsWith ("]", StringComparison.Ordinal)) {
+				var start = line.LastIndexOf ("[", StringComparison.Ordinal);
 				if (start >= 0) {
 					// we want to get the space before `[` too.
 					if (start > 0 && line [start - 1] == ' ')
@@ -379,22 +380,137 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static void Build (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null)
+		public static void BuildXM (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null)
 		{
-			ExecutionHelper.Execute (ToolPath, string.Format ("-- /p:Configuration={0} /p:Platform={1} {2} \"{3}\"", configuration, platform, verbosity == null ? string.Empty : "/verbosity:" + verbosity, project), timeout: timeout);
+			Build (project,
+				new Dictionary<string, string> {
+					{ "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (Configuration.xcode_root)) },
+					{ "TargetFrameworkFallbackSearchPaths", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks") },
+					{ "MSBuildExtensionsPathFallbackPathsOverride", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Mono.framework", "External", "xbuild") },
+					{ "XamarinMacFrameworkRoot", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current") },
+					{ "XAMMAC_FRAMEWORK_PATH", Path.Combine (Configuration.TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current") },
+				}, configuration, platform, verbosity, timeout, arguments);
+		}
+
+		public static void BuildXI (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null)
+		{
+			Build (project,
+				new Dictionary<string, string> {
+					{ "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (Configuration.xcode_root)) },
+					{ "TargetFrameworkFallbackSearchPaths", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks") },
+					{ "MSBuildExtensionsPathFallbackPathsOverride", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Mono.framework", "External", "xbuild") },
+					{ "MD_MTOUCH_SDK_ROOT", Path.Combine (Configuration.TargetDirectoryXI, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current") },
+				}, configuration, platform, verbosity, timeout, arguments);
+		}
+
+		static void Build (string project, Dictionary<string, string> environmentVariables, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null)
+		{
+			ExecutionHelper.Execute (ToolPath,
+				new string [] {
+					"--",
+					$"/p:Configuration={configuration}",
+					$"/p:Platform={platform}",
+					$"/verbosity:{(string.IsNullOrEmpty (verbosity) ? "normal" : verbosity)}",
+					"/r:True", // restore nuget packages which are used in some test cases
+					"/t:Clean,Build", // clean and then build, in case we left something behind in a shared dir
+					project
+				}.Union (arguments ?? new string [] { }).ToArray (),
+				environmentVariables: environmentVariables,
+				timeout: timeout);
 		}
 	}
 
 	static class ExecutionHelper {
+		static int Execute (string fileName, string[] arguments, StringBuilder stdout, StringBuilder stderr, TimeSpan? timeout = null)
+		{
+			var psi = new ProcessStartInfo (fileName, string.Join (" ", arguments.Select ((v) => StringUtils.Quote (v))));
+			return Execute (psi, (line) => {
+				lock (stdout)
+					stdout.AppendLine (line);
+			}, (line) => {
+				lock (stderr)
+					stderr.AppendLine (line);
+			}, timeout);
+		}
+
 		static int Execute (ProcessStartInfo psi, StringBuilder stdout, StringBuilder stderr, TimeSpan? timeout = null)
+		{
+			return Execute (psi, (line) => {
+				lock (stdout)
+					stdout.AppendLine (line);
+			}, (line) => {
+				lock (stderr)
+					stderr.AppendLine (line);
+			}, timeout);
+		}
+
+		public static int Execute (string fileName, string [] arguments, Action<string> stdout_callback = null, Action<string> stderr_callback = null, TimeSpan? timeout = null)
+		{
+			return Execute (fileName, arguments, null, stdout_callback, stderr_callback, timeout);
+		}
+
+		public static int Execute (string fileName, string [] arguments, string working_directory = null, Action<string> stdout_callback = null, Action<string> stderr_callback = null, TimeSpan? timeout = null)
+		{
+			var psi = new ProcessStartInfo (fileName, string.Join (" ", arguments.Select ((v) => StringUtils.Quote (v))));
+			psi.WorkingDirectory = working_directory;
+			return Execute (psi, stdout_callback, stderr_callback, timeout);
+		}
+
+		public static int Execute (string fileName, string [] arguments, out StringBuilder output, string working_directory = null, TimeSpan? timeout = null)
+		{
+			output = new StringBuilder ();
+			var psi = new ProcessStartInfo (fileName, string.Join (" ", arguments.Select ((v) => StringUtils.Quote (v))));
+			psi.WorkingDirectory = working_directory;
+			var capturedOutput = output;
+			var callback = new Action<string> ((v) => {
+				lock (psi)
+					capturedOutput.AppendLine (v);
+			});
+			return Execute (psi, callback, callback, timeout);
+		}
+
+		public static int Execute (string fileName, string [] arguments, out bool timed_out, Dictionary<string, string> environment_variables = null, Action<string> stdout_callback = null, Action<string> stderr_callback = null, TimeSpan? timeout = null)
+		{
+			var psi = new ProcessStartInfo (fileName, string.Join (" ", StringUtils.Quote (arguments)));
+			if (environment_variables != null) {
+				foreach (var ev in environment_variables)
+					psi.EnvironmentVariables [ev.Key] = ev.Value;
+			}
+			return Execute (psi, out timed_out, stdout_callback, stderr_callback, timeout);
+		}
+
+		public static int Execute (string fileName, string [] arguments, out bool timed_out, string working_directory = null, Dictionary<string, string> environment_variables = null, Action<string> stdout_callback = null, Action<string> stderr_callback = null, TimeSpan? timeout = null)
+		{
+			var psi = new ProcessStartInfo (fileName, string.Join (" ", StringUtils.Quote (arguments)));
+			psi.WorkingDirectory = working_directory;
+			if (environment_variables != null) {
+				foreach (var ev in environment_variables)
+					psi.EnvironmentVariables [ev.Key] = ev.Value;
+			}
+			return Execute (psi, out timed_out, stdout_callback, stderr_callback, timeout);
+		}
+
+		public static int Execute (ProcessStartInfo psi, Action<string> stdout_callback = null, Action<string> stderr_callback = null, TimeSpan? timeout = null)
+		{
+			return Execute (psi, out var _, stdout_callback, stderr_callback, timeout);
+		}
+
+		public static int Execute (ProcessStartInfo psi, out bool timed_out, Action<string> stdout_callback = null, Action<string> stderr_callback = null, TimeSpan? timeout = null)
 		{
 			var watch = new Stopwatch ();
 			watch.Start ();
+
+			if (stdout_callback == null)
+				stdout_callback = Console.WriteLine;
+			if (stderr_callback == null)
+				stderr_callback = Console.Error.WriteLine;
 
 			try {
 				psi.UseShellExecute = false;
 				psi.RedirectStandardError = true;
 				psi.RedirectStandardOutput = true;
+				if (!string.IsNullOrEmpty (psi.WorkingDirectory))
+					Console.Write ($"cd {StringUtils.Quote (psi.WorkingDirectory)} && ");
 				Console.WriteLine ("{0} {1}", psi.FileName, psi.Arguments);
 				using (var p = new Process ()) {
 					p.StartInfo = psi;
@@ -409,8 +525,7 @@ namespace Xamarin.Tests
 						{
 							string l;
 							while ((l = p.StandardOutput.ReadLine ()) != null) {
-								lock (stdout)
-									stdout.AppendLine (l);
+								stdout_callback (l);
 							}
 						})
 					{
@@ -422,8 +537,7 @@ namespace Xamarin.Tests
 						{
 							string l;
 							while ((l = p.StandardError.ReadLine ()) != null) {
-								lock (stderr)
-									stderr.AppendLine (l);
+								stderr_callback (l);
 							}
 						})
 					{
@@ -434,6 +548,7 @@ namespace Xamarin.Tests
 					if (timeout == null)
 						timeout = TimeSpan.FromMinutes (5);
 					if (!p.WaitForExit ((int) timeout.Value.TotalMilliseconds)) {
+						timed_out = true;
 						Console.WriteLine ("Command didn't finish in {0} minutes:", timeout.Value.TotalMinutes);
 						Console.WriteLine ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
 						Console.WriteLine ("Will now kill the process");
@@ -442,6 +557,8 @@ namespace Xamarin.Tests
 							Console.WriteLine ("Kill failed to kill in 1 second !?");
 							return 1;
 						}
+					} else {
+						timed_out = false;
 					}
 
 					outReader.Join (TimeSpan.FromSeconds (1));
@@ -463,6 +580,12 @@ namespace Xamarin.Tests
 			var rv = Execute (psi, sb, sb, timeout);
 			output = sb.ToString ();
 			return rv;
+		}
+
+		// The arguments are automatically quoted.
+		public static int Execute (string fileName, string[] arguments, Dictionary<string, string> environmentVariables, StringBuilder stdout, StringBuilder stderr, TimeSpan? timeout = null, string workingDirectory = null)
+		{
+			return Execute (fileName, string.Join (" ", Xamarin.Utils.StringUtils.Quote (arguments)), environmentVariables, stdout, stderr, timeout, workingDirectory);
 		}
 
 		public static int Execute (string fileName, string arguments, Dictionary<string, string> environmentVariables, StringBuilder stdout, StringBuilder stderr, TimeSpan? timeout = null, string workingDirectory = null)
@@ -489,20 +612,25 @@ namespace Xamarin.Tests
 
 		[DllImport ("libc")]
 		private static extern void kill (int pid, int sig);
+		public static string Execute (string fileName, string[] arguments, bool throwOnError = true, Dictionary<string, string> environmentVariables = null, bool hide_output = false, TimeSpan? timeout = null)
+		{
+			return Execute (fileName, string.Join (" ", StringUtils.Quote (arguments)), throwOnError, environmentVariables, hide_output, timeout);
+		}
 
-		public static string Execute (string fileName, string arguments, bool throwOnError = true, Dictionary<string,string> environmentVariables = null,
+		public static string Execute (string fileName, string arguments, bool throwOnError = true, Dictionary<string, string> environmentVariables = null,
 			bool hide_output = false, TimeSpan? timeout = null
 		)
 		{
 			StringBuilder output = new StringBuilder ();
 			int exitCode = Execute (fileName, arguments, environmentVariables, output, output, timeout);
-			if (!hide_output) {
+			var throw_exc = throwOnError && exitCode != 0;
+			if (!hide_output || throw_exc) {
 				Console.WriteLine ("{0} {1}", fileName, arguments);
 				Console.WriteLine (output);
 				Console.WriteLine ("Exit code: {0}", exitCode);
 			}
-			if (throwOnError && exitCode != 0)
-				throw new TestExecutionException (output.ToString ());
+			if (throw_exc)
+				throw new TestExecutionException ($"Execution failed (exit code: {exitCode}) for '{fileName} {arguments}'");
 			return output.ToString ();
 		}
 	}

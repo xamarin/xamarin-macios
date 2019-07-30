@@ -86,6 +86,16 @@ namespace InstallSourcesTests
 			Assert.AreEqual (result, expectedPath);
 		}
 
+		[TestCase ("/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/src/Xamarin.iOS/tools/common/StringUtils.cs",
+		           "/Users/test/xamarin-macios/tools/common/StringUtils.cs")]
+		public void TestGetSourcePathToolsCommon (string path, string expectedPath)
+		{
+			var result = mangler.GetSourcePath (path);
+			var toolsPath = System.IO.Path.GetFullPath (System.IO.Path.Combine (xamarinSourcePath, "..", "tools"));
+			Assert.IsTrue (result.StartsWith (toolsPath, StringComparison.InvariantCulture), "Path does not start with the XamarinPath '{0}'", toolsPath);
+			Assert.AreEqual (result, expectedPath);
+		}
+
 		[TestCase ("/Users/test/xamarin-macios/src/build/ios/native/AVFoundation/AVMutableMetadataItem.g.cs", "/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/src/Xamarin.iOS/AVFoundation/AVMutableMetadataItem.g.cs")]
 		[TestCase ("/Users/test/xamarin-macios/src/AVFoundation/AVCaptureDeviceInput.cs", "/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/src/Xamarin.iOS/AVFoundation/AVCaptureDeviceInput.cs")]
 		[TestCase ("/Users/test/xamarin-macios/src/NativeTypes/NMath.cs", "/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/src/Xamarin.iOS/NativeTypes/NMath.cs")]

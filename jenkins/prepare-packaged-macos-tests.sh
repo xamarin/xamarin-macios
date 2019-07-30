@@ -50,17 +50,22 @@ if test -f ~/.jenkins-profile; then
 	source ~/.jenkins-profile;
 fi
 
+# Install 7z. We can't do this from the system-dependencies.sh script, because
+# we need 7z to decompress the file where the system-dependencies.sh script
+# resides.
+brew install p7zip
+
 env
-rm -f -- ./*.zip
-curl -fL "$URL" --output mac-test-package.zip
+rm -f -- ./*.7z
+curl -fL "$URL" --output mac-test-package.7z
 rm -rf mac-test-package
-unzip -o mac-test-package.zip
+7z x mac-test-package.7z
 cd mac-test-package
 
 COUNTER=0
 while [[ $COUNTER -lt 5 ]]; do
 	EC=0
-	./system-dependencies.sh --provision-mono --ignore-autotools --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake || EC=$?
+	./system-dependencies.sh --provision-mono --ignore-autotools --ignore-xamarin-studio --ignore-xcode --ignore-osx --ignore-cmake --ignore-simulators --ignore-7z || EC=$?
 	if [[ $EC -eq 56 ]]; then
 		# Sometimes we get spurious "curl: (56) SSLRead() return error -9806" errors. Trying again usually works, so lets try again a few more times.
 		# https://github.com/xamarin/maccore/issues/1098
@@ -90,4 +95,4 @@ fi
 git reset --hard "$MACCORE_HASH"
 cd ..
 
-./maccore/tools/install-qa-provisioning-profiles.sh
+./maccore/tools/install-qa-provisioning-profiles.sh --only-create-keychain -v

@@ -19,7 +19,6 @@
     <DefineConstants>DEBUG;MSBUILD_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -27,7 +26,6 @@
     <OutputPath>..\bin</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -72,6 +70,7 @@
     <Compile Include="ProjectsTests\ProjectWithFrameworks.cs" />
     <Compile Include="ProjectsTests\NativeReferences.cs" />
     <Compile Include="ProjectsTests\ProjectTest.cs" />
+    <Compile Include="ProjectsTests\XamarinForms.cs" />
     <Compile Include="ProjectsTests\Extensions\WatchKit2.cs" />
     <Compile Include="..\..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>

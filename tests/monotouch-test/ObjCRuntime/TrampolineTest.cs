@@ -62,10 +62,16 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 #endif
 
+		public static bool IsArm64CallingConvention {
+			get {
+				return Runtime.IsARM64CallingConvention;
+			}
+		}
+
 		public static bool IsArmv7k {
 			get {
 #if __WATCHOS__
-				return Runtime.Arch == Arch.DEVICE;
+				return Runtime.Arch == Arch.DEVICE && !IsArm64CallingConvention;
 #else
 				return false;
 #endif
@@ -78,7 +84,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			CMTimeRange tr;
 			using (var obj = new StretTrampolines ()) {
-				if (IsArm64) {
+				if (IsArm64CallingConvention) {
 					tr = CMTimeRange_objc_msgSend (obj.Handle, Selector.GetHandle ("myTimeRange"));
 				} else {
 					CMTimeRange_objc_msgSend (out tr, obj.Handle, Selector.GetHandle ("myTimeRange"));
@@ -221,21 +227,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			int i;
 
 			rect2 = new RectangleF (1.2f, 2.3f, 3.4f, 4.5f);
-			if (IsArm64 ||  IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = RectangleF_objc_msgSend_IntPtr_IntPtr_RectangleF (obj.Handle, new Selector ("testRectangleF_string_string_RectangleF:b:c:").Handle, new NSString ("a").Handle, new NSString ("b").Handle, rect2);
 			} else {
 				RectangleF_objc_msgSend_stret_IntPtr_IntPtr_RectangleF (out rect, obj.Handle, new Selector ("testRectangleF_string_string_RectangleF:b:c:").Handle, new NSString ("a").Handle, new NSString ("b").Handle, rect2);
 			}
 			Assert.That (rect == new RectangleF (rect2.X * pi, rect2.Y * pi, rect2.Width * pi, rect2.Height * pi), "#testRectangleF_string_string_RectangleF:b:c:");
 
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend (obj.Handle, new Selector ("testRectangleF").Handle);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret (out rect, obj.Handle, new Selector ("testRectangleF").Handle);
 			}
 			Assert.That (rect == new RectangleF (1.2f, 2.3f, 3.4f, 4.5f), "#testRectangleF");
 
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend (class_ptr, new Selector ("staticTestRectangleF").Handle);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret (out rect, class_ptr, new Selector ("staticTestRectangleF").Handle);
@@ -243,14 +249,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (rect == new RectangleF (1.2f, 2.3f, 3.4f, 4.5f), "#static testRectangleF");
 
 			i = 152;
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend_int (obj.Handle, new Selector ("testRectangleF_int:").Handle, 152);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret_int (out rect, obj.Handle, new Selector ("testRectangleF_int:").Handle, 152);
 			}
 			Assert.That (rect == new RectangleF (i + .1f, i + .2f, i + .3f, i + .4f), "#ret RectF-int", "#testRectangleF_int:");
 
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend_IntPtr (obj.Handle, new Selector ("testRectangleF_IntPtr:").Handle, tmp_obj.Handle);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret_IntPtr (out rect, obj.Handle, new Selector ("testRectangleF_IntPtr:").Handle, tmp_obj.Handle);
@@ -259,7 +265,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 #if !__TVOS__
 			mkregion = new MKCoordinateRegion (new CLLocationCoordinate2D (123.456, 345.678), new MKCoordinateSpan (987.654, 654.321));
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend_MKCoordinateRegion_IntPtr (obj.Handle, new Selector ("testRectangleF_MCCoordinateRegion_IntPtr:str:").Handle, mkregion, tmp_obj.Handle);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret_MKCoordinateRegion_IntPtr (out rect, obj.Handle, new Selector ("testRectangleF_MCCoordinateRegion_IntPtr:str:").Handle, mkregion, tmp_obj.Handle);
@@ -267,7 +273,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (rect == new RectangleF (123.456f+pi, 345.678f-pi, 987.654f*pi, 654.321f/pi), "#testRectangleF_MCCoordinateRegion_IntPtr:str:");
 
 			mkmaprect = new MKMapRect (111.1, 222.2, 333.3, 444.4);
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend_MKMapRect (obj.Handle, new Selector ("testRectangleF_MKMapRect:").Handle, mkmaprect);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret_MKMapRect (out rect, obj.Handle, new Selector ("testRectangleF_MKMapRect:").Handle, mkmaprect);
@@ -276,7 +282,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif // !__TVOS__
 
 			rect2 = new RectangleF (9.9f, 8.8f, 7.7f, 6.6f);
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend_RectangleF (obj.Handle, new Selector ("testRectangleF_RectangleF:").Handle, rect2);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret_RectangleF (out rect, obj.Handle, new Selector ("testRectangleF_RectangleF:").Handle, rect2);
@@ -285,7 +291,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			rect2 = new RectangleF (5.44f, 4.33f, 3.22f, 2.11f);
 			i = 8;
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend_RectangleF_int (obj.Handle, new Selector ("testRectangleF_RectangleF_int:i:").Handle, rect2, 8);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret_RectangleF_int (out rect, obj.Handle, new Selector ("testRectangleF_RectangleF_int:i:").Handle, rect2, 8);
@@ -293,7 +299,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			AreAlmostEqual (rect, new RectangleF (5.44f*i, 4.33f+i, 3.22f-i, 2.11f/i), "testRectangleF_RectangleF_int:i:");
 
 			rect2 = new RectangleF (5.4f, 4.3f, 3.2f, 2.1f);
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend_RectangleF_IntPtr (obj.Handle, new Selector ("testRectangleF_RectangleF_IntPtr:str:").Handle, rect2, tmp_obj.Handle);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret_RectangleF_IntPtr (out rect, obj.Handle, new Selector ("testRectangleF_RectangleF_IntPtr:str:").Handle, rect2, tmp_obj.Handle);
@@ -302,7 +308,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			rect2 = new RectangleF (1, 2, 3, 4);
 			rect3 = new RectangleF (9, 8, 7, 6);
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend_RectangleF_RectangleF_float ( obj.Handle, new Selector ("testRectangleF_RectangleF_RectangleF_float:b:c:").Handle, rect2, rect3, (float) pi);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret_RectangleF_RectangleF_float (out rect, obj.Handle, new Selector ("testRectangleF_RectangleF_RectangleF_float:b:c:").Handle, rect2, rect3, (float) pi);
@@ -312,7 +318,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			rect2 = new RectangleF (1, 2, 3, 4);
 			rect3 = new RectangleF (9, 8, 7, 6);
 			rect4 = new RectangleF (10, 20, 30, 40);
-			if (IsArm64 || IsArmv7k) {
+			if (IsArm64CallingConvention || IsArmv7k) {
 				rect = Messaging.RectangleF_objc_msgSend_RectangleF_RectangleF_RectangleF (obj.Handle, new Selector ("testRectangleF_RectangleF_RectangleF_RectangleF:b:c:").Handle, rect2, rect3, rect4);
 			} else {
 				Messaging.RectangleF_objc_msgSend_stret_RectangleF_RectangleF_RectangleF (out rect, obj.Handle, new Selector ("testRectangleF_RectangleF_RectangleF_RectangleF:b:c:").Handle, rect2, rect3, rect4);
@@ -320,21 +326,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (rect == new RectangleF (20, 30, 40, 50), "#testRectangleF_RectangleF_RectangleF_RectangleF:b:c:");
 
 #if !__WATCHOS__
-			if (IsArm64) {
+			if (IsArm64CallingConvention) {
 				matrix3 = Messaging.Matrix3_objc_msgSend (obj.Handle, new Selector ("testMatrix3").Handle);
 			} else {
 				Messaging.Matrix3_objc_msgSend_stret (out matrix3, obj.Handle, new Selector ("testMatrix3").Handle);
 			}
 			Assert.That (matrix3.Equals (new Matrix3 (1, 2, 3, 4, 5, 6, 7, 8, 9)), "#testMatrix3");
 
-			if (IsArm64) {
+			if (IsArm64CallingConvention) {
 				matrix4 = Matrix4_objc_msgSend (obj.Handle, new Selector ("testMatrix4").Handle);
 			} else {
 				Matrix4_objc_msgSend_stret (out matrix4, obj.Handle, new Selector ("testMatrix4").Handle);
 			}
 			Assert.That (matrix4.Equals (new Matrix4 (9, 8, 7, 6, 5, 4, 3, 2, 1, 9, 8, 7, 6, 5, 4, 3)), "#testMatrix4");
 
-			if (IsArm64) {
+			if (IsArm64CallingConvention) {
 				catransform3d = Messaging.CATransform3D_objc_msgSend (obj.Handle, new Selector ("testCATransform3D").Handle);
 			} else {
 				Messaging.CATransform3D_objc_msgSend_stret (out catransform3d, obj.Handle, new Selector ("testCATransform3D").Handle);

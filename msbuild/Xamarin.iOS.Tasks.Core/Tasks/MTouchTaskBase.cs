@@ -24,6 +24,7 @@ namespace Xamarin.iOS.Tasks
 		ARMv7s       = 16,
 		ARMv7k       = 32,
 		ARM64        = 64,
+		ARM64_32     = 128,
 
 		// Note: needed for backwards compatability
 		ARMv6_ARMv7  = ARMv6 | ARMv7,
@@ -176,7 +177,6 @@ namespace Xamarin.iOS.Tasks
 
 		// This property is required for VS to write the output native executable files
 		// and ensure the Inputs/Outputs of the msbuild target works correcly
-		[Required]
 		[Output]
 		public ITaskItem NativeExecutable { get; set; }
 
@@ -408,7 +408,7 @@ namespace Xamarin.iOS.Tasks
 				args.AddLine ("--sgen-conc");
 
 			if (!string.IsNullOrEmpty (Interpreter))
-				args.Add ($"--interpreter={Interpreter}");
+				args.AddLine ($"--interpreter={Interpreter}");
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.AddLine ("--linksdkonly"); break;
@@ -486,6 +486,9 @@ namespace Xamarin.iOS.Tasks
 
 				if (architectures.HasFlag (TargetArchitecture.ARMv7k))
 					abi += (abi.Length > 0 ? "," : "") + "armv7k" + llvm;
+
+				if (architectures.HasFlag (TargetArchitecture.ARM64_32))
+					abi += (abi.Length > 0 ? "," : "") + "arm64_32" + llvm;
 
 				if (string.IsNullOrEmpty (abi))
 					abi = "armv7" + llvm + thumb;
@@ -684,9 +687,18 @@ namespace Xamarin.iOS.Tasks
 
 			Directory.CreateDirectory (AppBundleDir);
 
+			var executableLastWriteTime = default (DateTime);
+			var executable = Path.Combine (AppBundleDir, ExecutableName);
+
+			if (File.Exists (executable))
+				executableLastWriteTime = File.GetLastWriteTimeUtc (executable);
+
 			var result = base.Execute ();
 
 			CopiedFrameworks = GetCopiedFrameworks ();
+
+			if (File.Exists (executable) && File.GetLastWriteTimeUtc (executable) != executableLastWriteTime)
+				NativeExecutable = new TaskItem (executable);
 
 			return result;
 		}

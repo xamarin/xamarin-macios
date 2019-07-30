@@ -117,6 +117,24 @@ namespace UIKit {
 		Error
 	}
 
+	[Native]
+	[ErrorDomain ("UIGuidedAccessErrorDomain")]
+	[NoWatch, NoTV, iOS (12,2)]
+	public enum UIGuidedAccessErrorCode : long {
+		PermissionDenied,
+		Failed = long.MaxValue,
+	}
+
+	[Flags, NoWatch, NoTV, iOS (12,2)]
+	[Native]
+	public enum UIGuidedAccessAccessibilityFeature : ulong {
+		VoiceOver = 1uL << 0,
+		Zoom = 1uL << 1,
+		AssistiveTouch = 1uL << 2,
+		InvertColors = 1uL << 3,
+		GrayscaleDisplay = 1uL << 4,
+	}
+
 #if WATCH
 	// hacks to ease compilation
 	interface CIColor {}
@@ -4541,6 +4559,7 @@ namespace UIKit {
 		UIColor FromCGColor (CGColor color);
 
 		[iOS (11,0), TV (11,0)]
+		[Watch (4,0)]
 		[Static]
 		[Export ("colorNamed:")]
 		[return: NullAllowed]
@@ -5465,7 +5484,20 @@ namespace UIKit {
 
 		[Export ("fontDescriptorWithSymbolicTraits:")]
 		UIFontDescriptor CreateWithTraits (UIFontDescriptorSymbolicTraits symbolicTraits);
-		
+
+		[NoiOS][NoTV]
+		[Watch (5,2)]
+		[Export ("fontDescriptorWithDesign:")]
+		[return: NullAllowed]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		UIFontDescriptor CreateWithDesign (NSString design);
+
+		[NoiOS][NoTV]
+		[Watch (5,2)]
+		[return: NullAllowed]
+		[Wrap ("CreateWithDesign (design.GetConstant ())")]
+		UIFontDescriptor CreateWithDesign (UIFontDescriptorSystemDesign design);
+
 		[Export ("fontDescriptorWithSize:")]
 		UIFontDescriptor CreateWithSize (nfloat newPointSize);
 		
@@ -7584,7 +7616,7 @@ namespace UIKit {
 
 		[iOS (6,0)]
 		[Export ("setAttributedTitle:forState:")]
-		void SetAttributedTitle (NSAttributedString title, UIControlState state);
+		void SetAttributedTitle ([NullAllowed] NSAttributedString title, UIControlState state);
 
 		[iOS (6,0)]
 		[Export ("attributedTitleForState:")]
@@ -10188,12 +10220,19 @@ namespace UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController))]
-	partial interface UISearchController : UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+	[DisableDefaultCtor] // designated
+	partial interface UISearchController : UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning
+	{
+		[Export ("init")]
+		[Advice ("It's recommended to use the constructor that takes a 'UIViewController searchResultsController' in order to create/initialize an attached 'UISearchBar'.")]
+		IntPtr Constructor ();
+
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("initWithSearchResultsController:")]
+		[Advice ("You can pass a null 'UIViewController' to display the search results in the same view.")]
 		IntPtr Constructor ([NullAllowed] UIViewController searchResultsController);
 		
 		[NullAllowed] // by default this property is null
@@ -18172,4 +18211,14 @@ namespace UIKit {
 		void DidTap (UIPencilInteraction interaction);
 	}
 #endif // !WATCH
+
+	[NoiOS][NoTV]
+	[Watch (5,2)]
+	/* NS_TYPED_ENUM */ enum UIFontDescriptorSystemDesign {
+		[DefaultEnumValue]
+		[Field ("UIFontDescriptorSystemDesignDefault")]
+		Default,
+		[Field ("UIFontDescriptorSystemDesignRounded")]
+		Rounded,
+	}
 }

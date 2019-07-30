@@ -55,7 +55,7 @@ public partial class Generator {
 		var intptrctor_visibility = filter.IntPtrCtorVisibility;
 		if (intptrctor_visibility == MethodAttributes.PrivateScope) {
 			// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
-			if (Generator.XamcoreVersion >= 3) {
+			if (XamcoreVersion >= 3) {
 				intptrctor_visibility = MethodAttributes.FamORAssem;
 			} else {
 				intptrctor_visibility = MethodAttributes.Public;
@@ -106,7 +106,7 @@ public partial class Generator {
 
 		// properties
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
-			if (p.IsUnavailable ())
+			if (p.IsUnavailable (this))
 				continue;
 			
 			print ("");

@@ -392,7 +392,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MediaPlayer", "MediaPlayer", 9 },
 					{ "MediaToolbox", "MediaToolbox", 9 },
 					{ "Metal", "Metal", 9 },
-					{ "MetalKit", "MetalKit", 9 },
+					{ "MetalKit", "MetalKit", new Version (9, 0), new Version (10, 0) },
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", new Version (9, 0), NotAvailableInSimulator /* not available in the simulator */ },
 					{ "CoreServices", "CFNetwork", 9 },
 					{ "MobileCoreServices", "MobileCoreServices", 9 },
@@ -446,6 +446,16 @@ public class Frameworks : Dictionary <string, Framework>
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
 		foreach (var nspace in namespaces) {
+			switch (nspace) {
+			case "QTKit":
+				if (Driver.LinkProhibitedFrameworks) {
+					ErrorHelper.Warning (5219, $"Linking against framework '{nspace}'. It is prohibited (rejected) by the Mac App Store");
+				}  else {
+					ErrorHelper.Warning (5220, $"Skipping framework '{nspace}'. It is prohibited (rejected) by the Mac App Store");
+					continue;
+				}
+				break;
+			}
 			if (Driver.GetFrameworks (app).TryGetValue (nspace, out var framework)) {
 				if (app.SdkVersion >= framework.Version) {
 					var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;

@@ -259,6 +259,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "SKAttribute":
+			case "SKAttributeValue":
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
+						return true;
+					break;
+				}
+				break;
 			case "SKUniform":
 				switch (selectorName) {
 				// New selectors
@@ -592,6 +601,14 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MPSImageLaplacianPyramid":
+			case "MPSImageLaplacianPyramidSubtract":
+			case "MPSImageLaplacianPyramidAdd":
+				switch (selectorName) {
+				case "initWithDevice:kernelWidth:kernelHeight:weights:":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake
@@ -794,6 +811,8 @@ namespace Introspection {
 			case "initWithProfileNumber:profileLabel:defaultProfile:":
 			case "initWithProfileNumber:profileName:":
 			case "initWithProfileNumber:profileLabel:":
+			// MPSCnnBinaryConvolutionNode and MPSCnnBinaryFullyConnectedNode
+			case "initWithSource:weights:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags:":
 			// UISegmentedControl
 			case "initWithItems:":
 				var mi = m as MethodInfo;

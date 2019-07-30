@@ -23,11 +23,12 @@ SHIPPED_HEADERS +=         \
 SHARED_SOURCES += mono-runtime.m bindings.m bindings-generated.m shared.m runtime.m trampolines.m trampolines-invoke.m xamarin-support.m nsstring-localization.m trampolines-varargs.m
 SHARED_I386_SOURCES += trampolines-i386.m trampolines-i386-asm.s trampolines-i386-objc_msgSend.s trampolines-i386-objc_msgSendSuper.s trampolines-i386-objc_msgSend_stret.s trampolines-i386-objc_msgSendSuper_stret.s
 SHARED_X86_64_SOURCES += trampolines-x86_64.m trampolines-x86_64-asm.s trampolines-x86_64-objc_msgSend.s trampolines-x86_64-objc_msgSendSuper.s trampolines-x86_64-objc_msgSend_stret.s trampolines-x86_64-objc_msgSendSuper_stret.s
+SHARED_ARM64_SOURCES += trampolines-arm64.m trampolines-arm64-asm.s
 SHARED_HEADERS += shared.h product.h delegates.h runtime-internal.h $(SHARED_INC) $(SHIPPED_HEADERS) trampolines-internal.h slinked-list.h
 
-SHARED_FILES = $(SHARED_SOURCES) $(SHARED_HEADERS) $(SHARED_I386_SOURCES) $(SHARED_X86_64_SOURCES)
+SHARED_FILES = $(SHARED_SOURCES) $(SHARED_HEADERS) $(SHARED_I386_SOURCES) $(SHARED_X86_64_SOURCES) $(SHARED_ARM64_SOURCES)
 
-EXTRA_DEPENDENCIES = $(SHARED_HEADERS) $(TOP)/Make.config
+EXTRA_DEPENDENCIES = $(SHARED_HEADERS) $(TOP)/Make.config $(TOP)/mk/mono.mk
 
 xamarin/mono-runtime.h: mono-runtime.h.t4 exports.t4
 	$(Q_GEN) $(TT) $< -o $@
@@ -83,6 +84,7 @@ MONOTOUCH_FRAMEWORKS =  \
 MONOTOUCH_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_SOURCES) $(MONOTOUCH_SOURCES)))
 MONOTOUCH_I386_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_I386_SOURCES)))
 MONOTOUCH_X86_64_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_X86_64_SOURCES)))
+MONOTOUCH_ARM64_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_ARM64_SOURCES)))
 
 #
 # PlatformTemplate contains the install targets and sets up some variables
@@ -95,6 +97,7 @@ $(2)_HEADERS       = $(MONOTOUCH_HEADERS)
 $(2)_SOURCE_STEMS  = $(MONOTOUCH_SOURCE_STEMS)
 $(2)_X86_64_SOURCE_STEMS = $(MONOTOUCH_X86_64_SOURCE_STEMS)
 $(2)_I386_SOURCE_STEMS = $(MONOTOUCH_I386_SOURCE_STEMS)
+$(2)_ARM64_SOURCE_STEMS = $(MONOTOUCH_ARM64_SOURCE_STEMS)
 $(2)_LIBRARIES     = $(MONOTOUCH_LIBS)
 ifdef INCLUDE_DEVICE
 $(2)_DEVICE_ARCHITECTURES = $(3)
@@ -194,7 +197,7 @@ $(eval $(call PlatformTemplate,ios,IOS,armv7 armv7s arm64,x86 x86_64,IOS,IPHONE)
 endif
 
 ifdef INCLUDE_WATCH
-$(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k,x86,WATCH,WATCH))
+$(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k arm64_32,x86,WATCH,WATCH))
 endif
 
 ifdef INCLUDE_TVOS
@@ -309,20 +312,6 @@ $(eval $(call LibTemplate,ios,IOS))
 $(eval $(call LibTemplate,watchos,WATCHOS))
 $(eval $(call LibTemplate,tvos,TVOS))
 
-SDK_BUILDDIR=$(MONO_PATH)/sdks/builds
-
-ZLIB_HELPER_IOS_armv7      = $(SDK_BUILDDIR)/ios-target32-release/support/zlib-helper.o
-ZLIB_HELPER_IOS_armv7s     = $(SDK_BUILDDIR)/ios-target32s-release/support/zlib-helper.o
-ZLIB_HELPER_IOS_arm64      = $(SDK_BUILDDIR)/ios-target64-release/support/zlib-helper.o
-ZLIB_HELPER_IOS_x86        = $(SDK_BUILDDIR)/ios-sim32-release/support/zlib-helper.o
-ZLIB_HELPER_IOS_x86_64     = $(SDK_BUILDDIR)/ios-sim64-release/support/zlib-helper.o
-
-ZLIB_HELPER_WATCHOS_armv7k = $(SDK_BUILDDIR)/ios-targetwatch-release/support/zlib-helper.o
-ZLIB_HELPER_WATCHOS_x86    = $(SDK_BUILDDIR)/ios-simwatch-release/support/zlib-helper.o
-
-ZLIB_HELPER_TVOS_arm64     = $(SDK_BUILDDIR)/ios-targettv-release/support/zlib-helper.o
-ZLIB_HELPER_TVOS_x86_64    = $(SDK_BUILDDIR)/ios-simtv-release/support/zlib-helper.o
-
 #
 # LibXamarinTemplate (and LibXamarinArchTemplate) builds libxamarin.a
 #
@@ -339,12 +328,13 @@ define LibXamarinTemplate
 $(1)$(3)_COMMON_DYLIB_FLAGS = -lmonosgen-2.0 -Wl,-install_name,libxamarin$(4).dylib -framework Foundation -framework CFNetwork -framework UIKit -lz
 $(1)$(3)_COMMON_FRAMEWORK_FLAGS = -framework Mono -Wl,-install_name,@rpath/Xamarin$(4).framework/Xamarin$(4) -framework Foundation -framework CFNetwork -framework UIKit -lz
 
-x86_$(1)$(3)_OBJECTS    = $(ZLIB_HELPER_$(2)_x86)    $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_SOURCE_STEMS))    $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_I386_SOURCE_STEMS))
-x86_64_$(1)$(3)_OBJECTS = $(ZLIB_HELPER_$(2)_x86_64) $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_SOURCE_STEMS)) $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_X86_64_SOURCE_STEMS))
-armv7_$(1)$(3)_OBJECTS  = $(ZLIB_HELPER_$(2)_armv7)  $$(patsubst %,.libs/$(1)/%$(4).armv7.o,$$($(2)_SOURCE_STEMS))
-armv7s_$(1)$(3)_OBJECTS = $(ZLIB_HELPER_$(2)_armv7s) $$(patsubst %,.libs/$(1)/%$(4).armv7s.o,$$($(2)_SOURCE_STEMS))
-armv7k_$(1)$(3)_OBJECTS = $(ZLIB_HELPER_$(2)_armv7k) $$(patsubst %,.libs/$(1)/%$(4).armv7k.o,$$($(2)_SOURCE_STEMS))
-arm64_$(1)$(3)_OBJECTS  = $(ZLIB_HELPER_$(2)_arm64)  $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_SOURCE_STEMS))
+x86_$(1)$(3)_OBJECTS    = $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_SOURCE_STEMS))    $$(patsubst %,.libs/$(1)/%$(4).x86.o,$$($(2)_I386_SOURCE_STEMS))
+x86_64_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_SOURCE_STEMS)) $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_X86_64_SOURCE_STEMS))
+armv7_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).armv7.o,$$($(2)_SOURCE_STEMS))
+armv7s_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).armv7s.o,$$($(2)_SOURCE_STEMS))
+armv7k_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).armv7k.o,$$($(2)_SOURCE_STEMS))
+arm64_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_SOURCE_STEMS))  $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_ARM64_SOURCE_STEMS))
+arm64_32_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).arm64_32.o,$$($(2)_SOURCE_STEMS))
 
 $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(1),$(2),$(3),$(4),$$(arch))))
 
@@ -370,6 +360,9 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(
 .libs/$(1)/libxamarin$(4).armv7k.dylib: EXTRA_FLAGS=$$($(1)$(3)_COMMON_DYLIB_FLAGS)
 .libs/$(1)/libxamarin$(4).armv7k.dylib: $$(armv7k_$(1)$(3)_OBJECTS)
 
+.libs/$(1)/libxamarin$(4).arm64_32.dylib: EXTRA_FLAGS=$$($(1)$(3)_COMMON_DYLIB_FLAGS)
+.libs/$(1)/libxamarin$(4).arm64_32.dylib: $$(arm64_32_$(1)$(3)_OBJECTS)
+
 .libs/$(1)/Xamarin$(4).x86.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS)
 .libs/$(1)/Xamarin$(4).x86.framework: $$(x86_$(1)$(3)_OBJECTS)
 
@@ -387,6 +380,9 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(
 
 .libs/$(1)/Xamarin$(4).armv7k.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS)
 .libs/$(1)/Xamarin$(4).armv7k.framework: $$(armv7k_$(1)$(3)_OBJECTS)
+
+.libs/$(1)/Xamarin$(4).arm64_32.framework: EXTRA_FLAGS=$$($(1)$(3)_COMMON_FRAMEWORK_FLAGS)
+.libs/$(1)/Xamarin$(4).arm64_32.framework: $$(arm64_32_$(1)$(3)_OBJECTS)
 endef
 
 $(eval $(call LibXamarinTemplate,ios,IOS))
@@ -407,13 +403,13 @@ MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC) -mmacosx-version-min
 MAC32_CLANG = DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) $(MAC32_CC) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 MAC64_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 
-MAC_SHIPPED_HEADERS = xamarin/launch.h
+MAC_SHIPPED_HEADERS = xamarin/launch.h xamarin-classic/launch.h $(subst xamarin/,xamarin-classic/,$(SHIPPED_HEADERS))
 
 MAC_OBJC_CFLAGS=-ObjC++ -std=c++0x -fno-exceptions -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
 MAC_CFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -Wall -DMONOMAC -g -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
 MAC_LDFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -framework AppKit
 
-MAC_STATIC_CFLAGS = $(MAC_CFLAGS) -I$(TOP)/builds/$(BUILD_DESTDIR)/install/mac32/include/mono-2.0
+MAC_STATIC_CFLAGS = $(MAC_CFLAGS)
 
 MAC_SOURCES = $(SHARED_SOURCES) $(SHARED_I386_SOURCES) $(SHARED_X86_64_SOURCES) launcher.m
 
@@ -538,6 +534,7 @@ RUNTIME_MAC_TARGETS_DIRS +=                                    \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono        \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin-classic \
 
 RUNTIME_MAC_TARGETS +=                                                                                \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/XamMacLauncher                                     \
@@ -556,7 +553,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/%: .libs/mac/% | $(MAC_DESTDIR)$(
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMacLauncher: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
 	$(Q) ln -sF ../XamMacLauncher $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/%.h: %.h | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/%.h: %.h | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin-classic
 	$(Q) install -m 0644 $< $@
 
 $(RUNTIME_MAC_TARGETS_DIRS):

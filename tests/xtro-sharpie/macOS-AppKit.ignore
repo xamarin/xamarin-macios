@@ -1019,7 +1019,6 @@
 !missing-selector! NSView::setWantsExtendedDynamicRangeOpenGLSurface: not bound
 !missing-selector! NSView::showDefinitionForAttributedString:atPoint: not bound
 !missing-selector! NSView::showDefinitionForAttributedString:range:options:baselineOriginProvider: not bound
-!missing-selector! NSView::sortSubviewsUsingFunction:context: not bound
 !missing-selector! NSView::wantsExtendedDynamicRangeOpenGLSurface not bound
 !missing-selector! NSWindow::anchorAttributeForOrientation: not bound
 !missing-selector! NSWindow::dragImage:at:offset:event:pasteboard:source:slideBack: not bound
@@ -1205,3 +1204,12 @@
 !missing-selector! NSWorkspace::noteFileSystemChanged not bound
 !missing-selector! NSWorkspace::noteUserDefaultsChanged not bound
 !missing-selector! NSWorkspace::userDefaultsChanged not bound
+
+## Added in Xcode 10.2 Final but deprecated
+!missing-selector! NSOpenGLView::setWantsBestResolutionOpenGLSurface: not bound
+!missing-selector! NSOpenGLView::setWantsExtendedDynamicRangeOpenGLSurface: not bound
+!missing-selector! NSOpenGLView::wantsBestResolutionOpenGLSurface not bound
+!missing-selector! NSOpenGLView::wantsExtendedDynamicRangeOpenGLSurface not bound
+
+!missing-release-attribute-on-return-value! AppKit.NSDictionaryControllerKeyValuePair AppKit.NSDictionaryController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject AppKit.NSObjectController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

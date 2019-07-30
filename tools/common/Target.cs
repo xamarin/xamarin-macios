@@ -44,12 +44,17 @@ namespace Xamarin.Bundler {
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 
-		internal StaticRegistrar StaticRegistrar { get; set; }
+		internal IStaticRegistrar StaticRegistrar { get; set; }
 
 		// If we didn't link because the existing (cached) assemblyes are up-to-date.
 		bool cached_link = false;
 
 		Symbols dynamic_symbols;
+
+		// Note that each 'Target' can have multiple abis: armv7+armv7s for instance.
+		public List<Abi> Abis;
+
+		public MonoNativeMode MonoNativeMode { get; set; }
 
 #if MONOMAC
 		public bool Is32Build { get { return !Driver.Is64Bit; } }
@@ -59,7 +64,15 @@ namespace Xamarin.Bundler {
 		public Target (Application app)
 		{
 			this.App = app;
+#if MMP
+			if (Driver.IsClassic) {
+				this.StaticRegistrar = new ClassicStaticRegistrar (this);
+			} else {
+				this.StaticRegistrar = new StaticRegistrar (this);
+			}
+#else
 			this.StaticRegistrar = new StaticRegistrar (this);
+#endif
 		}
 
 		// This will find the link context, possibly looking in container targets.
@@ -163,8 +176,14 @@ namespace Xamarin.Bundler {
 					Framework framework;
 					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
 						// framework specific processing
-#if !MONOMAC
 						switch (framework.Name) {
+#if MONOMAC
+						case "QTKit":
+							// we already warn in Frameworks.cs Gather method
+							if (!Driver.LinkProhibitedFrameworks)
+								continue;
+							break;
+#else
 						case "CoreAudioKit":
 							// CoreAudioKit seems to be functional in the iOS 9 simulator.
 							if (App.IsSimulatorBuild && App.SdkVersion.Major < 9)
@@ -188,8 +207,8 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
-						}
 #endif
+						}
 
 						if (App.SdkVersion >= framework.Version) {
 							var add_to = framework.AlwaysWeakLinked || App.DeploymentTarget < framework.Version ? asm.WeakFrameworks : asm.Frameworks;

@@ -173,6 +173,7 @@ namespace Introspection {
 			if (nativeName.StartsWith ("CGPDF", StringComparison.Ordinal))  // all those types crash the app
 				return true;
 			switch (nativeName) {
+			case "ABRecord": // abstract class
 			case "CFMachPort":
 			case "CFMessagePort":
 			case "DispatchIO": // no way to instantiate it
@@ -282,6 +283,8 @@ namespace Introspection {
 				return af;
 			case "CFHTTPMessage":
 				return CFHTTPMessage.CreateEmpty (false);
+			case "CFMutableString":
+				return new CFMutableString ("xamarin");
 			case "CGBitmapContext":
 				byte[] data = new byte [400];
 				using (CGColorSpace space = CGColorSpace.CreateDeviceRGB ()) {
@@ -399,6 +402,8 @@ namespace Introspection {
 				return VTMultiPassStorage.Create ();
 			case "CFString":
 				return new CFString ("test");
+			case "DispatchBlock":
+				return new DispatchBlock (() => { });
 			case "DispatchQueue":
 				return new DispatchQueue ("com.example.subsystem.taskXYZ");
 			case "DispatchGroup":

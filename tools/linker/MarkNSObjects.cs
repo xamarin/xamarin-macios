@@ -101,8 +101,8 @@ namespace Xamarin.Linker.Steps {
 			if (overrides == null || overrides.Count == 0)
 				return false;
 
-			foreach (MethodDefinition @override in overrides)
-				if (!IsProductMethod (@override))
+			foreach (var @override in overrides)
+				if (!IsProductMethod (@override.Override))
 					return true;
 
 			return false;

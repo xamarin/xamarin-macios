@@ -25,6 +25,10 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 ### <a name='BI0001'/>BI0001: The .NET runtime could not load the {mi.ReturnType.Name} type. Message: {ex.Message}
 
+### <a name='BI0002'/>BI0002: Could not compile the API bindings.
+
+This error is shown when the generator failed to compile the API bindings.
+
 ### <a name='BI0026'/>BI0026: Could not parse the command line argument '{argument}': {message}
 
 ### <a name='BI0068'/>BI0068: Invalid value for target framework: *.
@@ -39,10 +43,20 @@ An invalid target framework was passed using the --target-framework argument. Pl
 
 This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
+### <a name='BI0099'/>BI0099: Internal error *. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+
+This error message is reported when an internal consistency check fails.
+
+This usually indicates a bug in the binding generator; please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+
 # BI1xxx: code generation
 
 <!-- 1xxx: code generation -->
 <!-- 10xx: errors -->
+
+### <a name='BI1000/>'BI1000: Could not compile the generated API bindings.
+
+This indicates a bug in Xamarin.iOS/Xamarin.Mac; please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
 
 ### <a name='BI1001'/>BI1001: Do not know how to make a trampoline for *
 
@@ -178,6 +192,12 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1063'/>BI1063: The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '*'.
 
+### <a name='BI1064'/>BI1064: Unsupported ref/out parameter type '{type}' for the parameter '{name}' in {method}.
+
+### <a name='BI1065'/>BI1065: Unsupported parameter type '{type}' for the parameter '{name}' in {method}.
+
+### <a name='BI1066'/>BI1066: Unsupported return type '{type}' in {method}.
+
 # BI11xx: warnings
 
 <!-- 11xx: warnings -->
@@ -215,6 +235,14 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 ### <a name='BI1116'/>BI1116: The parameter '*' in the delegate '*' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.
 
 ### <a name='BI1117'/>BI1117: The member '*' is decorated with [Static] and its container class * is decorated with [Category] this leads to hard to use code. Please inline * into * class.
+
+### <a name='BI1118'/>[NullAllowed] should not be used on methods, like '*', but only on properties, parameters and return values.
+
+The `[NullAllowed]` attribute should not be allowed on methods but it could break existing binding projects.
+
+Historically it was used on property setters. However using the attribute on _other_ methods can be misleading, e.g. should it apply to all parameters, the return value... and its presence/action can be misinterpreted in code reviews leading to binding bugs.
+
+To fix this warning use the `[NullAllowed]` attribute only on parameters, properties or return values.
 
 <!-- 2xxx: reserved -->
 <!-- 3xxx: reserved -->

@@ -54,12 +54,20 @@ namespace Introspection {
 			case "MTKMetalVertexFormatFromModelIO":
 			case "CVPixelBufferGetIOSurface":
 			case "CVPixelBufferCreateWithIOSurface":
+			case "MPSImageBatchIncrementReadCount":
+			case "MPSImageBatchSynchronize":
+			case "MPSImageBatchResourceSize":
+			case "MPSStateBatchIncrementReadCount":
+			case "MPSStateBatchSynchronize":
+			case "MPSStateBatchResourceSize":
+			case "MPSHintTemporaryMemoryHighWaterMark":
+			case "MPSSetHeapCacheDuration":
 				return simulator;
 
-			// it's not needed for ARM64 and Apple does not have stubs for them in libobjc.dylib
+			// it's not needed for ARM64/ARM64_32 and Apple does not have stubs for them in libobjc.dylib
 			case "objc_msgSend_stret":
 			case "objc_msgSendSuper_stret":
-				return IntPtr.Size == 8 && !simulator;
+				return !simulator;
 
 			default:
 				return base.Skip (symbolName);

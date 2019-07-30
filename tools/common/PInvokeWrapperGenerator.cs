@@ -42,7 +42,15 @@ namespace Xamarin.Bundler
 				hdr.WriteLine ("#define DEBUG 1");
 
 			hdr.WriteLine ("#include <stdarg.h>");
+#if MMP
+			if (Driver.IsClassic) {
+				hdr.WriteLine ("#include <xamarin-classic/xamarin.h>");
+			} else {
+				hdr.WriteLine ("#include <xamarin/xamarin.h>");
+			}
+#else
 			hdr.WriteLine ("#include <xamarin/xamarin.h>");
+#endif
 			hdr.WriteLine ("#include <objc/objc.h>");
 			hdr.WriteLine ("#include <objc/runtime.h>");
 			hdr.WriteLine ("#include <objc/message.h>");
@@ -52,6 +60,13 @@ namespace Xamarin.Bundler
 			mthds.WriteLine ($"#include \"{Path.GetFileName (HeaderPath)}\"");
 
 			sb.WriteLine ("extern \"C\" {");
+
+			// Disable "control reaches end of non-void function"
+			// we throw exceptions in many code paths, which clang doesn't know about, triggering this warning.
+			sb.WriteLine ("#pragma clang diagnostic ignored \"-Wreturn-type\"");
+
+			// Disable "warning: 'X' is only available on xOS Y.Z or newer"
+			sb.WriteLine ("#pragma clang diagnostic ignored \"-Wunguarded-availability-new\"");
 		}
 
 		public void End ()

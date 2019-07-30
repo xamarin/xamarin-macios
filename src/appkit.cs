@@ -431,6 +431,7 @@ namespace AppKit {
 	interface NSAppearanceCustomization {
 
 		[Mac (10,9)]
+		[NullAllowed]
 		[Export ("appearance", ArgumentSemantic.Strong)]
 		NSAppearance Appearance { get; set; }
 
@@ -588,8 +589,16 @@ namespace AppKit {
 		[Availability (Deprecated = Platform.Mac_10_12, Message = "Use EnumerateWindows instead.")]
 		NSWindow MakeWindowsPerform (Selector aSelector, bool inOrder);
 	
-		[Export ("windows")]
+#if !XAMCORE_4_0
+		[Obsolete ("Remove usage or use 'DangerousWindows' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Wrap ("DangerousWindows", IsVirtual = true)] 
 		NSWindow [] Windows { get; }
+#endif
+
+		[Advice ("Use of DangerousWindows can prevent windows from leaving memory.")]
+		[Export ("windows")]
+		NSArray<NSWindow> DangerousWindows { get; }
 	
 		[Export ("setWindowsNeedUpdate:")]
 		void SetWindowsNeedUpdate (bool needUpdate);
@@ -2396,7 +2405,7 @@ namespace AppKit {
 		[Export ("keyEquivalent")]
 		string KeyEquivalent { get; }
 	
-		[Export ("formatter", ArgumentSemantic.Retain)]
+		[Export ("formatter", ArgumentSemantic.Retain), NullAllowed]
 		NSFormatter Formatter { get; set; }
 	
 		[Export ("objectValue", ArgumentSemantic.Copy), NullAllowed]
@@ -4786,8 +4795,12 @@ namespace AppKit {
 		[Export ("font")]
 		NSFont Font { get; set; }
 
-		[Export ("formatter", ArgumentSemantic.Retain)]
+		[Export ("formatter", ArgumentSemantic.Retain), NullAllowed]
+#if XAMCORE_4_0
+		NSFormatter Formatter { get; set; }
+#else
 		NSObject Formatter { get; set; }
+#endif
 
 		[Export ("objectValue", ArgumentSemantic.Copy)]
 		NSObject ObjectValue { get; set; }
@@ -5336,69 +5349,69 @@ namespace AppKit {
 	[BaseType (typeof (NSObject))]
 	partial interface NSDocument /* : NSUserActivityRestoring radar://42781537 */ {
 		[Export ("initWithType:error:")]
-		IntPtr Constructor (string typeName, out NSError outError);
+		IntPtr Constructor (string typeName, [NullAllowed] out NSError outError);
 
 		[Static]
 		[Export ("canConcurrentlyReadDocumentsOfType:")]
 		bool CanConcurrentlyReadDocumentsOfType (string typeName);
 
 		[Export ("initWithContentsOfURL:ofType:error:")]
-		IntPtr Constructor (NSUrl url, string typeName, out NSError outError);
+		IntPtr Constructor (NSUrl url, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("initForURL:withContentsOfURL:ofType:error:")]
-		IntPtr Constructor ([NullAllowed] NSUrl documentUrl, NSUrl documentContentsUrl, string typeName, out NSError outError);
+		IntPtr Constructor ([NullAllowed] NSUrl documentUrl, NSUrl documentContentsUrl, string typeName, [NullAllowed] out NSError outError);
 
-		 [Export ("revertDocumentToSaved:")]
-		 void RevertDocumentToSaved (NSObject sender);
+		[Export ("revertDocumentToSaved:")]
+		void RevertDocumentToSaved ([NullAllowed] NSObject sender);
 
-		 [Export ("revertToContentsOfURL:ofType:error:")]
-		 bool RevertToContentsOfUrl (NSUrl url, string typeName, out NSError outError);
+		[Export ("revertToContentsOfURL:ofType:error:")]
+		bool RevertToContentsOfUrl (NSUrl url, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("readFromURL:ofType:error:")]
-		bool ReadFromUrl (NSUrl url, string typeName, out NSError outError);
+		bool ReadFromUrl (NSUrl url, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("readFromFileWrapper:ofType:error:")]
 		bool ReadFromFileWrapper (NSFileWrapper fileWrapper, string typeName, out NSError outError);
 
 		[Export ("readFromData:ofType:error:")]
-		bool ReadFromData (NSData data, string typeName, out NSError outError);
+		bool ReadFromData (NSData data, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("writeToURL:ofType:error:")]
-		bool WriteToUrl (NSUrl url, string typeName, out NSError outError);
+		bool WriteToUrl (NSUrl url, string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("fileWrapperOfType:error:")]
-		NSFileWrapper GetAsFileWrapper (string typeName, out NSError outError);
+		NSFileWrapper GetAsFileWrapper (string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("dataOfType:error:")]
-		NSData GetAsData (string typeName, out NSError outError);
+		NSData GetAsData (string typeName, [NullAllowed] out NSError outError);
 
 		[Export ("writeSafelyToURL:ofType:forSaveOperation:error:")]
-		bool WriteSafelyToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, out NSError outError);
+		bool WriteSafelyToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, [NullAllowed] out NSError outError);
 
 		[Export ("writeToURL:ofType:forSaveOperation:originalContentsURL:error:")]
-		bool WriteToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, NSUrl absoluteOriginalContentsUrl, out NSError outError);
+		bool WriteToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, [NullAllowed] NSUrl absoluteOriginalContentsUrl, [NullAllowed] out NSError outError);
 
 		[Export ("fileAttributesToWriteToURL:ofType:forSaveOperation:originalContentsURL:error:")]
-		NSDictionary FileAttributesToWrite (NSUrl toUrl, string typeName, NSSaveOperationType saveOperation, NSUrl absoluteOriginalContentsUrl, out NSError outError);
+		NSDictionary FileAttributesToWrite (NSUrl toUrl, string typeName, NSSaveOperationType saveOperation, [NullAllowed] NSUrl absoluteOriginalContentsUrl, [NullAllowed] out NSError outError);
 
 		[Export ("keepBackupFile")]
 		bool KeepBackupFile ();
 
 		[Export ("saveDocument:")]
-		void SaveDocument (NSObject sender);
+		void SaveDocument ([NullAllowed] NSObject sender);
 
 		[Export ("saveDocumentAs:")]
-		void SaveDocumentAs (NSObject sender);
+		void SaveDocumentAs ([NullAllowed] NSObject sender);
 
 		[Export ("saveDocumentTo:")]
-		void SaveDocumentTo (NSObject sender);
+		void SaveDocumentTo ([NullAllowed] NSObject sender);
 
 		[Export ("saveDocumentWithDelegate:didSaveSelector:contextInfo:")]
-		void SaveDocument (NSObject delegateObject, Selector didSaveSelector, IntPtr contextInfo);
+		void SaveDocument ([NullAllowed] NSObject delegateObject, [NullAllowed] Selector didSaveSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Mac (10,9)]
 		[Export ("saveDocumentToPDF:")]
-		void SaveDocumentAsPdf (NSObject sender);
+		void SaveDocumentAsPdf ([NullAllowed] NSObject sender);
 
 		[Mac (10,9)]
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -5406,7 +5419,7 @@ namespace AppKit {
 		NSPrintOperation PDFPrintOperation { get; }
 
 		[Export ("runModalSavePanelForSaveOperation:delegate:didSaveSelector:contextInfo:")]
-		void RunModalSavePanelForSaveOperation (NSSaveOperationType saveOperation, NSObject delegateObject, Selector didSaveSelector, IntPtr contextInfo);
+		void RunModalSavePanelForSaveOperation (NSSaveOperationType saveOperation, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didSaveSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("shouldRunSavePanelWithAccessoryView")]
 		bool ShouldRunSavePanelWithAccessoryView { get; }
@@ -5421,31 +5434,32 @@ namespace AppKit {
 		string FileTypeFromLastRunSavePanel { get; }
 
 		[Export ("saveToURL:ofType:forSaveOperation:delegate:didSaveSelector:contextInfo:")]
-		void SaveToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, NSObject delegateObject, Selector didSaveSelector, IntPtr contextInfo);
+		void SaveToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didSaveSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("saveToURL:ofType:forSaveOperation:error:")]
-		bool SaveToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, out NSError outError);
+		[Deprecated (PlatformName.MacOSX, 10, 6, message: "Use a 'SaveToUrl' overload accepting a completion handler instead.")]
+		bool SaveToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, [NullAllowed] out NSError outError);
 
 		[Export ("hasUnautosavedChanges")]
 		bool HasUnautosavedChanges { get; }
 
 		[Export ("autosaveDocumentWithDelegate:didAutosaveSelector:contextInfo:")]
-		void AutosaveDocument (NSObject delegateObject, Selector didAutosaveSelector, IntPtr contextInfo);
+		void AutosaveDocument ([NullAllowed] NSObject delegateObject, [NullAllowed] Selector didAutosaveSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("autosavingFileType")]
 		string AutosavingFileType { get; }
 
 		[Export ("canCloseDocumentWithDelegate:shouldCloseSelector:contextInfo:")]
-		void CanCloseDocument (NSObject delegateObject, Selector shouldCloseSelector, IntPtr contextInfo);
+		void CanCloseDocument (NSObject delegateObject, [NullAllowed] Selector shouldCloseSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("close")]
 		void Close ();
 
 		[Export ("runPageLayout:")]
-		void RunPageLayout (NSObject sender);
+		void RunPageLayout ([NullAllowed] NSObject sender);
 
 		[Export ("runModalPageLayoutWithPrintInfo:delegate:didRunSelector:contextInfo:")]
-		void RunModalPageLayout (NSPrintInfo printInfo, NSObject delegateObject, Selector didRunSelector, IntPtr contextInfo);
+		void RunModalPageLayout (NSPrintInfo printInfo, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didRunSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("preparePageLayout:")]
 		bool PreparePageLayout (NSPageLayout pageLayout);
@@ -5454,16 +5468,16 @@ namespace AppKit {
 		bool ShouldChangePrintInfo (NSPrintInfo newPrintInfo);
 
 		[Export ("printDocument:")]
-		void PrintDocument (NSObject sender);
+		void PrintDocument ([NullAllowed] NSObject sender);
 
 		[Export ("printDocumentWithSettings:showPrintPanel:delegate:didPrintSelector:contextInfo:")]
-		void PrintDocument (NSDictionary printSettings, bool showPrintPanel, NSObject delegateObject, Selector didPrintSelector, IntPtr contextInfo);
+		void PrintDocument (NSDictionary printSettings, bool showPrintPanel, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didPrintSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("printOperationWithSettings:error:")]
-		NSPrintOperation PrintOperation (NSDictionary printSettings, out NSError outError);
+		NSPrintOperation PrintOperation (NSDictionary printSettings, [NullAllowed] out NSError outError);
 
 		[Export ("runModalPrintOperation:delegate:didRunSelector:contextInfo:")]
-		void RunModalPrintOperation (NSPrintOperation printOperation, NSObject delegateObject, Selector didRunSelector, IntPtr contextInfo);
+		void RunModalPrintOperation (NSPrintOperation printOperation, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didRunSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("isDocumentEdited")]
 		bool IsDocumentEdited { get; }
@@ -5472,7 +5486,7 @@ namespace AppKit {
 		void UpdateChangeCount (NSDocumentChangeType change);
 
 		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
-		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
+		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didPresentSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("presentError:")]
 		bool PresentError (NSError error);
@@ -5493,7 +5507,7 @@ namespace AppKit {
 		void WindowControllerDidLoadNib (NSWindowController windowController);
 
 		[Export ("setWindow:")]
-		void SetWindow (NSWindow window);
+		void SetWindow ([NullAllowed] NSWindow window);
 
 		[Export ("addWindowController:")]
 		[PostGet ("WindowControllers")]
@@ -5510,7 +5524,7 @@ namespace AppKit {
 		NSWindowController [] WindowControllers { get; }
 
 		[Export ("shouldCloseWindowController:delegate:shouldCloseSelector:contextInfo:")]
-		void ShouldCloseWindowController (NSWindowController windowController, NSObject delegateObject, Selector shouldCloseSelector, IntPtr contextInfo);
+		void ShouldCloseWindowController (NSWindowController windowController, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector shouldCloseSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("displayName")]
 		[NullAllowed]
@@ -5604,7 +5618,7 @@ namespace AppKit {
 		bool CanWriteAsynchronously (NSUrl toUrl, string typeName, NSSaveOperationType saveOperation);
 
 		[Export ("checkAutosavingSafetyAndReturnError:")]
-		bool CheckAutosavingSafety (out NSError outError);
+		bool CheckAutosavingSafety ([NullAllowed] out NSError outError);
 
 		[Export ("scheduleAutosaving")]
 		void ScheduleAutosaving ();
@@ -5621,13 +5635,13 @@ namespace AppKit {
 		bool PreservesVersions ();
 
 		[Export ("duplicateDocument:")]
-		void DuplicateDocument (NSObject sender);
+		void DuplicateDocument ([NullAllowed] NSObject sender);
 
 		[Export ("duplicateDocumentWithDelegate:didDuplicateSelector:contextInfo:"), Internal]
-		void _DuplicateDocument ([NullAllowed] NSObject cbackobject, [NullAllowed] Selector didDuplicateSelector, IntPtr contextInfo);
+		void _DuplicateDocument ([NullAllowed] NSObject cbackobject, [NullAllowed] Selector didDuplicateSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("duplicateAndReturnError:")]
-		NSDocument Duplicate (out NSError outError);
+		NSDocument Duplicate ([NullAllowed] out NSError outError);
 
 		[Export ("isInViewingMode")]
 		bool IsInViewingMode { get; }
@@ -5692,7 +5706,7 @@ namespace AppKit {
 		[Mac (10,12)]
 		[Export ("stopBrowsingVersionsWithCompletionHandler:")]
 		[Async]
-		void StopBrowsingVersions (Action completionHandler);
+		void StopBrowsingVersions ([NullAllowed] Action completionHandler);
 
 		[Mac (10, 13)]
 		[Export ("allowsDocumentSharing")]
@@ -6193,28 +6207,33 @@ namespace AppKit {
 	[DisableDefaultCtor] // crash at runtime (e.g. description). Documentation state: "You don’t create NSFont objects using the alloc and init methods."
 	partial interface NSFont : NSSecureCoding, NSCopying {
 		[Static]
+		[Internal]
 		[Export ("fontWithName:size:")]
-		NSFont FromFontName (string fontName, nfloat fontSize);
+		IntPtr _FromFontName (string fontName, nfloat fontSize);
 
 		//[Static]
 		//[Export ("fontWithName:matrix:")]
 		//NSFont FromFontName (string fontName, float [] fontMatrix);
 
 		[Static]
+		[Internal]
 		[Export ("fontWithDescriptor:size:")]
-		NSFont FromDescription (NSFontDescriptor fontDescriptor, nfloat fontSize);
+		IntPtr _FromDescription (NSFontDescriptor fontDescriptor, nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("fontWithDescriptor:textTransform:")]
-		NSFont FromDescription (NSFontDescriptor fontDescriptor, [NullAllowed] NSAffineTransform textTransform);
+		IntPtr _FromDescription (NSFontDescriptor fontDescriptor, [NullAllowed] NSAffineTransform textTransform);
 
 		[Static]
+		[Internal]
 		[Export ("userFontOfSize:")]
-		NSFont UserFontOfSize (nfloat fontSize);
+		IntPtr _UserFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("userFixedPitchFontOfSize:")]
-		NSFont UserFixedPitchFontOfSize (nfloat fontSize);
+		IntPtr _UserFixedPitchFontOfSize (nfloat fontSize);
 
 		[Static]
 		[Export ("setUserFont:")]
@@ -6225,44 +6244,54 @@ namespace AppKit {
 		void SetUserFixedPitchFont ([NullAllowed] NSFont aFont);
 
 		[Static]
+		[Internal]
 		[Export ("systemFontOfSize:")]
-		NSFont SystemFontOfSize (nfloat fontSize);
+		IntPtr _SystemFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("boldSystemFontOfSize:")]
-		NSFont BoldSystemFontOfSize (nfloat fontSize);
+		IntPtr _BoldSystemFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("labelFontOfSize:")]
-		NSFont LabelFontOfSize (nfloat fontSize);
+		IntPtr _LabelFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("titleBarFontOfSize:")]
-		NSFont TitleBarFontOfSize (nfloat fontSize);
+		IntPtr _TitleBarFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("menuFontOfSize:")]
-		NSFont MenuFontOfSize (nfloat fontSize);
+		IntPtr _MenuFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export("menuBarFontOfSize:")]
-		NSFont MenuBarFontOfSize (nfloat fontSize);
+		IntPtr _MenuBarFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export("messageFontOfSize:")]
-		NSFont MessageFontOfSize (nfloat fontSize);
+		IntPtr _MessageFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("paletteFontOfSize:")]
-		NSFont PaletteFontOfSize (nfloat fontSize);
+		IntPtr _PaletteFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("toolTipsFontOfSize:")]
-		NSFont ToolTipsFontOfSize (nfloat fontSize);
+		IntPtr _ToolTipsFontOfSize (nfloat fontSize);
 
 		[Static]
+		[Internal]
 		[Export ("controlContentFontOfSize:")]
-		NSFont ControlContentFontOfSize (nfloat fontSize);
+		IntPtr _ControlContentFontOfSize (nfloat fontSize);
 
 		[Static]
 		[Export ("systemFontSize")]
@@ -6364,15 +6393,18 @@ namespace AppKit {
 
 		[Export ("printerFont")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		NSFont PrinterFont { get; }
+		[Internal]
+		IntPtr _PrinterFont { get; }
 
 		[Export ("screenFont")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		NSFont ScreenFont { get; }
+		[Internal]
+		IntPtr _ScreenFont { get; }
 
 		[Export ("screenFontWithRenderingMode:")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
-		NSFont ScreenFontWithRenderingMode (NSFontRenderingMode renderingMode);
+		[Internal]
+		IntPtr _ScreenFontWithRenderingMode (NSFontRenderingMode renderingMode);
 
 		[Export ("renderingMode")]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
@@ -6385,7 +6417,8 @@ namespace AppKit {
 		// Not a property because this causes the creation of a new font on request in the specified configuration.
 		//
 		[Export ("verticalFont")]
-		NSFont GetVerticalFont ();
+		[Internal]
+		IntPtr _GetVerticalFont ();
 
 		[Field ("NSFontFamilyAttribute")]
 		NSString FamilyAttribute { get; }
@@ -6459,12 +6492,14 @@ namespace AppKit {
 		[Mac (10,11)]
 		[Static]
 		[Export ("systemFontOfSize:weight:")]
-		NSFont SystemFontOfSize (nfloat fontSize, nfloat weight);
+		[Internal]
+		IntPtr _SystemFontOfSize (nfloat fontSize, nfloat weight);
 
 		[Mac (10,11)]
 		[Static]
 		[Export ("monospacedDigitSystemFontOfSize:weight:")]
-		NSFont MonospacedDigitSystemFontOfSize (nfloat fontSize, nfloat weight);
+		[Internal]
+		IntPtr _MonospacedDigitSystemFontOfSize (nfloat fontSize, nfloat weight);
 
 		[Mac (10,13)]
 		[Export ("boundingRectForCGGlyph:")]
@@ -7181,10 +7216,22 @@ namespace AppKit {
 		[Static]
 		[Export ("gridViewWithNumberOfColumns:rows:")]
 		NSGridView Create (nint columnCount, nint rowCount);
+		
+#if !XAMCORE_4_0
+		[Static]
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		[Obsolete ("You should use either 'NSGridView.Create(NSView [][] rowsAndColumns)' or 'NSGridView.Create(NSView [,] rowsAndColumns)'.")]
+		[Export ("gridViewWithViews:")]
+		NSGridView Create (NSView [] rows);
+#endif
+		
+		[Static]
+		[Export ("gridViewWithViews:")]
+		NSGridView Create (NSView [][] rowsAndColumns);
 
 		[Static]
 		[Export ("gridViewWithViews:")]
-		NSGridView Create (NSView [] rows);
+		NSGridView Create (NSView [,] rowsAndColumns);
 
 		[Export ("numberOfRows")]
 		nint RowCount { get; }
@@ -8179,7 +8226,7 @@ namespace AppKit {
 		[Export ("hidden")]
 		bool Hidden { [Bind ("isHidden")] get; set; }
 
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
 		[Mac (10, 13)]
@@ -8602,6 +8649,7 @@ namespace AppKit {
 		void SetTextureImage (NSOpenGLPixelBuffer pixelBuffer, NSGLColorBuffer source);
 
 		//Detected properties
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 		[Export ("view")]
 		NSView View { get; set; }
 
@@ -8629,12 +8677,15 @@ namespace AppKit {
 		[Export ("clearGLContext")]
 		void ClearGLContext ();
 
+		[RequiresSuper]
 		[Export ("update")]
 		void Update ();
 
+		[RequiresSuper]
 		[Export ("reshape")]
 		void Reshape ();
 
+		[RequiresSuper]
 		[Export ("prepareOpenGL")]
 		void PrepareOpenGL ();
 
@@ -8877,7 +8928,7 @@ namespace AppKit {
 		void DidDragTableColumn (NSOutlineView outlineView, NSTableColumn tableColumn);
 		
 		[Export ("outlineView:toolTipForCell:rect:tableColumn:item:mouseLocation:")]
-		string ToolTipForCell (NSOutlineView outlineView, NSCell cell, ref CGRect rect, NSTableColumn tableColumn, NSObject item, CGPoint mouseLocation);
+		string ToolTipForCell (NSOutlineView outlineView, NSCell cell, ref CGRect rect, [NullAllowed] NSTableColumn tableColumn, NSObject item, CGPoint mouseLocation);
 	
 		[Export ("outlineView:heightOfRowByItem:"), NoDefaultValue]
 		nfloat GetRowHeight (NSOutlineView outlineView, NSObject item);
@@ -10257,9 +10308,10 @@ namespace AppKit {
 		void ResetCursorRects ();
 
 		[Export ("setToolTip:forCell:")]
-		void SetToolTipForCell (string toolTipString, NSCell cell);
+		void SetToolTipForCell ([NullAllowed] string toolTipString, NSCell cell);
 
 		[Export ("toolTipForCell:")]
+		[return: NullAllowed]
 		string ToolTipForCell (NSCell cell);
 
 		//Detected properties
@@ -13215,7 +13267,7 @@ namespace AppKit {
 		void ScrollWheel (NSEvent theEvent);
 
 		//Detected properties
-		[Export ("documentView")]
+		[Export ("documentView", ArgumentSemantic.Retain), NullAllowed]
 		NSObject DocumentView { get; set; }
 
 		[Export ("contentView", ArgumentSemantic.Retain)]
@@ -13503,7 +13555,7 @@ namespace AppKit {
 		NSImageScaling GetImageScaling (nint segment);
 
 		[Export ("setLabel:forSegment:")]
-		void SetLabel (string label, nint segment);
+		void SetLabel ([NullAllowed] string label, nint segment);
 
 		[Export ("labelForSegment:")]
 		string GetLabel (nint segment);
@@ -13662,9 +13714,10 @@ namespace AppKit {
 		NSMenu GetMenu (nint forSegment);
 
 		[Export ("setToolTip:forSegment:")]
-		void SetToolTip (string toolTip, nint forSegment);
+		void SetToolTip ([NullAllowed] string toolTip, nint forSegment);
 
 		[Export ("toolTipForSegment:")]
+		[return: NullAllowed]
 		string GetToolTip (nint forSegment);
 
 		[Export ("setTag:forSegment:")]
@@ -14804,7 +14857,7 @@ namespace AppKit {
 		bool Enabled { [Bind ("isEnabled")]get; set; }
 
 		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
 		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
@@ -15717,7 +15770,7 @@ namespace AppKit {
 		[Export ("postsBoundsChangedNotifications")]
 		bool PostsBoundsChangedNotifications { get; set; }
 
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 				
 		[Export ("registerForDraggedTypes:")]
@@ -15776,6 +15829,7 @@ namespace AppKit {
 		[Notification, Field ("NSViewBoundsDidChangeNotification")]
 		NSString BoundsChangedNotification { get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 		[Notification, Field ("NSViewGlobalFrameDidChangeNotification")]
 		NSString GlobalFrameChangedNotification { get; }
 
@@ -16151,6 +16205,10 @@ namespace AppKit {
 		[Mac (10,14, onlyOn64: true)]
 		[Export ("viewDidChangeEffectiveAppearance")]
 		void ViewDidChangeEffectiveAppearance ();
+
+		[Internal]
+		[Export ("sortSubviewsUsingFunction:context:")]
+		void SortSubviews (IntPtr function_pointer, IntPtr context);
 	}
 
 	[BaseType (typeof (NSAnimation))]
@@ -16525,7 +16583,7 @@ namespace AppKit {
 		[Export ("resizingMask")]
 		NSTableColumnResizing ResizingMask { get; set; }
 	
-		[Export ("headerToolTip")]
+		[Export ("headerToolTip"), NullAllowed]
 		string HeaderToolTip { get; set; }
 	
 		[Export ("hidden")]
@@ -17419,7 +17477,10 @@ namespace AppKit {
 		[Export ("removeTabViewItem:")][PostGet ("Items")]
 		void Remove (NSTabViewItem tabViewItem);
 
-		[Export ("delegate",  ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate", IsVirtual = true)]
 		[Protocolize]
 		NSTabViewDelegate Delegate { get; set; }
 
@@ -17576,7 +17637,7 @@ namespace AppKit {
 		[Export ("sizeOfLabel:")]
 		CGSize SizeOfLabel (bool computeMin);
 
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
 		[Mac (10,10)]
@@ -19293,6 +19354,7 @@ namespace AppKit {
 		void DidChangeTypingAttributes (NSNotification notification);
 
 		[Export ("textView:willDisplayToolTip:forCharacterAtIndex:"), DelegateName ("NSTextViewTooltip"), DefaultValueFromArgument ("tooltip")]
+		[return: NullAllowed]
 		string WillDisplayToolTip (NSTextView textView, string tooltip, nuint characterIndex);
 
 		[Export ("textView:completions:forPartialWordRange:indexOfSelectedItem:"), DelegateName ("NSTextViewCompletion"), DefaultValue (null)]
@@ -19591,7 +19653,7 @@ namespace AppKit {
 		[Export ("paletteLabel")]
 		string PaletteLabel { get; set; }
 
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
 		[Export ("menuFormRepresentation", ArgumentSemantic.Retain)]
@@ -23163,7 +23225,7 @@ namespace AppKit {
 	partial interface NSTableViewDelegate {
 
 		[Export ("tableView:toolTipForCell:rect:tableColumn:row:mouseLocation:"), DelegateName ("NSTableViewToolTip"), DefaultValue ("null")]
-		NSString GetToolTip (NSTableView tableView, NSCell cell, ref CGRect rect, NSTableColumn tableColumn, nint row, CGPoint mouseLocation);
+		NSString GetToolTip (NSTableView tableView, NSCell cell, ref CGRect rect, [NullAllowed] NSTableColumn tableColumn, nint row, CGPoint mouseLocation);
 	}
 
 	partial interface NSBrowser {
@@ -25576,7 +25638,8 @@ namespace AppKit {
 	}
 
 	[Mac (10,12)]
-	[Protocol]
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
 	interface NSFilePromiseProviderDelegate
 	{
 		[Abstract]
@@ -26575,7 +26638,7 @@ namespace AppKit {
 		[NullAllowed, Export ("attributedTitle", ArgumentSemantic.Copy)]
 		NSAttributedString AttributedTitle { get; set; }
 
-		[Export ("toolTip")]
+		[Export ("toolTip"), NullAllowed]
 		string ToolTip { get; set; }
 
 		[NullAllowed, Export ("accessoryView", ArgumentSemantic.Strong)]

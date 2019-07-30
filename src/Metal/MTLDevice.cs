@@ -128,16 +128,18 @@ namespace Metal {
 			}
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload that takes an IntPtr instead. The 'data' parameter must be page-aligned and allocated using vm_allocate or mmap, which won't be the case for managed arrays, so this method will always fail.")]
 		public static IMTLBuffer CreateBufferNoCopy<T> (this IMTLDevice This, T [] data, MTLResourceOptions options, MTLDeallocator deallocator) where T : struct
 		{
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
-			try {
-				IntPtr ptr = handle.AddrOfPinnedObject ();
-				return This.CreateBufferNoCopy (ptr, (nuint)(data.Length * Marshal.SizeOf (typeof (T))), options, deallocator);
-			} finally {
+			IntPtr ptr = handle.AddrOfPinnedObject ();
+			return This.CreateBufferNoCopy (ptr, (nuint)(data.Length * Marshal.SizeOf (typeof (T))), options, (pointer, length) => {
 				handle.Free ();
-			}
+				deallocator (pointer, length);
+			});
 		}
+#endif
 
 		public unsafe static void GetDefaultSamplePositions (this IMTLDevice This, MTLSamplePosition [] positions, nuint count)
 		{
@@ -146,6 +148,28 @@ namespace Metal {
 			fixed (void * handle = positions)
 				GetDefaultSamplePositions (This, (IntPtr)handle, count);
 		}
+
+#if !XAMCORE_4_0
+		[return: Release]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static IMTLLibrary CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError error)
+		{
+			if (data == null)
+				throw new ArgumentNullException ("data");
+			IntPtr errorValue = IntPtr.Zero;
+
+			IMTLLibrary ret;
+			ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
+			error = Runtime.GetNSObject<NSError> (errorValue);
+
+			return ret;
+		}
+
+		public static IMTLLibrary CreateDefaultLibrary (this IMTLDevice This, NSBundle bundle, out NSError error)
+		{
+			return MTLDevice_Extensions.CreateLibrary (This, bundle, out error);
+		}
+#endif
 	}
 }
 #endif

@@ -604,3 +604,154 @@ It is always enabled by default (as long as the static registrar is enabled).
 
 The default behavior can be overridden by passing
 `--optimize=[+|-]static-delegate-to-block-lookup` to mtouch/mmp.
+
+## Remove unsupported IL for bitcode
+
+Removes unsupported IL for bitcode, and replaces it with a `NotSupportedException`.
+
+There are certain types of IL that Xamarin.iOS doesn't support when compiling
+to bitcode. This optimization will replace the unsupported IL with an
+`NotSupportedException`, and will emit a warning at build time.
+
+This ensures that any unsupported IL will be detected at runtime even when not
+compiling to bitcode (in particular it will mean that the behavior between
+Debug and Release device builds is identical, since Debug builds do not
+compile to bitcode, while Release builds do).
+
+This optimization will change the following code:
+
+```csharp
+void Method ()
+{
+	try {
+		throw new Exception ("FilterMe");
+	} catch (Exception e) when (e.Message == "FilterMe") {
+		Console.WriteLine ("filtered");
+	}
+}
+```
+
+into the following:
+
+```csharp
+void Method ()
+{
+	throw new NotSupportedException ("This method contains IL not supported when compiled to bitcode.");
+}
+```
+
+This optimization does not require the linker to be enabled, it will process
+all assemblies, even those not linked.
+
+It is only applicable to watchOS, and then it's enabled by default when
+building for device.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]remove-unsupported-il-for-bitcode` to mtouch/mmp.
+
+## Inline Runtime.IsARM64CallingConvention
+
+Inlines the value of `Runtime.IsARM64CallingConvention` as determined at
+build time.
+
+It's usually possible to determine at build time if we'll be running on an
+ARM64 cpu at runtime, and in that case we can inline the value of this
+property to a constant `true` or `false` value.
+
+This optimization will change the following type of code:
+
+```csharp
+if (Runtime.IsARM64CallingConvention) {
+	Console.WriteLine ("Running on ARM64");
+} else {
+	Console.WriteLine ("Not running on ARM64");
+}
+```
+
+into the following when running on ARM64:
+
+```csharp
+if (true) {
+	Console.WriteLine ("Running on ARM64");
+} else {
+	Console.WriteLine ("Not running on ARM64");
+}
+```
+
+or into the following when not running on ARM64:
+
+```csharp
+if (false) {
+	Console.WriteLine ("Running on ARM64");
+} else {
+	Console.WriteLine ("Not running on ARM64");
+}
+
+```
+
+This optimization requires the linker to be enabled, and is only applied to
+methods with the `[BindingImpl (BindingImplOptions.Optimizable)]` attribute.
+
+It is always enabled by default (when the linker is enabled).
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]inline-is-arm64-calling-convention` to mtouch/mmp.
+
+## Seal and Devirtualize
+
+This optimization requires the linker to be enabled and is applied globally
+on all code inside the application.
+
+When the linker _knows_ all the code inside an application it can do global
+optimization like:
+* seal types (if not subclassed);
+* mark method as final (if not overriden in subclasses); and
+* devirtualize methods (if never overriden)
+
+The changes allow the AOT compiler to apply further optimizations when 
+generating native code.
+
+This optimization is not safe when dynamically loading code. As such it does
+not exist for Xamarin.Mac. For Xamarin.iOS it is enabled, by default,
+unless the interpreter is used.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]seal-and-devirtualize` to `mtouch`.
+
+## Static constructors for BeforeFieldInit removal
+
+This optimization requires the linker to be enabled and is applied globally
+on all code inside the application.
+
+This optimization allows the linker not to mark every `.cctor` when a type
+is preserved, e.g. whenever the class/static constructor `.cctor` is only
+used for field initialization and those fields are not marked themselves 
+then it is possible to remove the `.cctor`.
+
+This optimization is enabled, by default, on both Xamarin.iOS and 
+Xamarin.Mac. However it represent a change from older versions of the linker. 
+It is possible that some existing code depend on this side effect (i.e. 
+those `.cctor` not being removed). In such case the optimization can be 
+disabled  until the correct linker annotations (e.g. 
+`[Preserve (Conditional=true)]`) are added.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]cctor-beforefieldinit` to `mtouch` or `mmp`.
+
+## Custom Attributes Removal
+
+This optimization requires the linker to be enabled and is applied globally
+on all assemblies inside the application.
+
+This optimization removes a number of, rarely used, custom attributes from
+assemblies. In turn this allows the linker to later remove the associated
+code from the base class libraries (BCL). This help reduce both the
+metadata and code size for your application.
+
+This optimization is enabled, by default, on both Xamarin.iOS and
+Xamarin.Mac. If some of the removed custom attributes are required for
+your application you can disable this optimization, without totally
+disabling the managed linker.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]custom-attributes-removal` to `mtouch` or `mmp`.

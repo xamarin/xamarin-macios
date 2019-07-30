@@ -11,6 +11,16 @@ namespace GeneratorTests
 	public class ErrorTests
 	{
 		[Test]
+		public void BI0002 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding ("InvalidCodeHere");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (2, "Could not compile the API bindings.");
+		}
+
+		[Test]
 		public void BI0086 ()
 		{
 			var bgen = new BGenTool ();
@@ -576,6 +586,117 @@ namespace BI1063Tests {
 }");
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1063, "The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: 'BI1063Tests.Wrappers.PresenceType'");
+		}
+
+		[Test]
+		public void BI1064 ()
+		{
+			var bgen = new BGenTool {
+				Profile = Profile.iOS,
+				ProcessEnums = true
+			};
+			bgen.CreateTemporaryBinding (@"
+using System;
+using ObjCRuntime;
+using Foundation;
+
+namespace BI1064Errors
+{
+	[BaseType (typeof (NSObject))]
+	interface C
+	{
+		[Export (""testINativeObjectArray:a:b:"")]
+		void TestINativeObjectArray (int action, ref INativeObject[] refValues, out INativeObject[] outValues);
+
+		[Export (""invalid1:a:"")]
+		void TestInvalid1 (ref DateTime[] refInvalid, out DateTime[] outInvalid);
+
+		[Export (""invalid2:a:"")]
+		void TestInvalid2 (ref object[] refInvalid, out object[] outInvalid);
+
+		[Export (""invalid3:a:"")]
+		void TestInvalid3 (ref int[] refInvalid, out int[] outInvalid);
+
+		[Export (""invalid4:a:"")]
+		void TestInvalid4 (ref object refInvalid, out object outInvalid);
+
+		[Export (""testINativeObject:a:b:"")]
+		void TestINativeObject (int action, ref INativeObject refValue, out INativeObject outValue);
+
+		[Export (""testSelectorArray:a:b:"")] // Can't put SEL into NSArray (SEL isn't an NSObject)
+		void TestSelectorArray (int action, ref Selector[] refValues, out Selector[] outValues);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'ObjCRuntime.INativeObject' for the parameter 'refValue' in BI1064Errors.C.TestINativeObject.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'ObjCRuntime.INativeObject' for the parameter 'outValue' in BI1064Errors.C.TestINativeObject.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'ObjCRuntime.INativeObject[]' for the parameter 'refValues' in BI1064Errors.C.TestINativeObjectArray.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'ObjCRuntime.INativeObject[]' for the parameter 'outValues' in BI1064Errors.C.TestINativeObjectArray.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'System.DateTime[]' for the parameter 'refInvalid' in BI1064Errors.C.TestInvalid1.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'System.DateTime[]' for the parameter 'outInvalid' in BI1064Errors.C.TestInvalid1.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'System.Object[]' for the parameter 'refInvalid' in BI1064Errors.C.TestInvalid2.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'System.Object[]' for the parameter 'refInvalid' in BI1064Errors.C.TestInvalid2.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'System.Int32[]' for the parameter 'outInvalid' in BI1064Errors.C.TestInvalid3.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'System.Int32[]' for the parameter 'outInvalid' in BI1064Errors.C.TestInvalid3.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'System.Object' for the parameter 'refInvalid' in BI1064Errors.C.TestInvalid4.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'System.Object' for the parameter 'refInvalid' in BI1064Errors.C.TestInvalid4.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'ObjCRuntime.Selector[]' for the parameter 'refValues' in BI1064Errors.C.TestSelectorArray.");
+			bgen.AssertError (1064, "Unsupported ref/out parameter type 'ObjCRuntime.Selector[]' for the parameter 'outValues' in BI1064Errors.C.TestSelectorArray.");
+			bgen.AssertErrorCount (14);
+		}
+
+		[Test]
+		public void BI1065 ()
+		{
+			var bgen = new BGenTool {
+				Profile = Profile.iOS,
+				ProcessEnums = true
+			};
+			bgen.CreateTemporaryBinding (@"
+using System;
+using ObjCRuntime;
+using Foundation;
+
+namespace BI1065Errors
+{
+	[BaseType (typeof (NSObject))]
+	interface C
+	{
+		// Can't put SEL into NSArray (SEL isn't an NSObject), so a Selector[] parameter/return value doesn't make sense
+		[Export (""testSelectorArray:"")]
+		void TestSelectorArray (Selector[] values);
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1065, "Unsupported parameter type 'ObjCRuntime.Selector[]' for the parameter 'values' in BI1065Errors.C.TestSelectorArray.");
+			bgen.AssertErrorCount (1);
+		}
+
+		[Test]
+		public void BI1066 ()
+		{
+			var bgen = new BGenTool {
+				Profile = Profile.iOS,
+				ProcessEnums = true
+			};
+			bgen.CreateTemporaryBinding (@"
+using System;
+using ObjCRuntime;
+using Foundation;
+
+namespace BI1066Errors
+{
+	[BaseType (typeof (NSObject))]
+	interface C
+	{
+		// Can't put SEL into NSArray (SEL isn't an NSObject), so a Selector[] parameter/return value doesn't make sense
+		[Export (""testSelectorArrayReturnValue"")]
+		Selector[] TestSelectorArrayReturnValue ();
+	}
+}");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1066, "Unsupported return type 'ObjCRuntime.Selector[]' in BI1066Errors.C.TestSelectorArrayReturnValue.");
+			bgen.AssertErrorCount (2); // We show the same error twice.
 		}
 
 		[Test]

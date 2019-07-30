@@ -40,17 +40,14 @@ namespace Xamarin.Bundler
 		public string BuildDirectory;
 		public string LinkDirectory;
 
-		// Note that each 'Target' can have multiple abis: armv7+armv7s for instance.
-		public List<Abi> Abis;
-
 		public Dictionary<string, BundleFileInfo> BundleFiles = new Dictionary<string, BundleFileInfo> ();
 
 		Dictionary<Abi, CompileTask> pinvoke_tasks = new Dictionary<Abi, CompileTask> ();
 		List<CompileTask> link_with_task_output = new List<CompileTask> ();
 		List<AOTTask> aot_dependencies = new List<AOTTask> ();
 		List<LinkTask> embeddinator_tasks = new List<LinkTask> ();
-		CompilerFlags linker_flags;
-		NativeLinkTask link_task;
+		Dictionary<Abi, CompilerFlags> linker_flags_by_abi = new Dictionary<Abi, CompilerFlags> ();
+		Dictionary<Abi, NativeLinkTask> link_tasks = new Dictionary<Abi, NativeLinkTask> ();
 
 		// If the assemblies were symlinked.
 		public bool Symlinked;
@@ -72,16 +69,6 @@ namespace Xamarin.Bundler
 				if (!is64bits.HasValue)
 					is64bits = Application.IsArchEnabled (Abis, Abi.Arch64Mask);
 				return is64bits.Value;
-			}
-		}
-
-		// If we didn't link the final executable because the existing binary is up-to-date.
-		public bool CachedExecutable {
-			get {
-				if (link_task == null)
-					return false;
-				
-				return !link_task.Rebuilt;
 			}
 		}
 
@@ -109,6 +96,38 @@ namespace Xamarin.Bundler
 				}
 				return all_architectures;
 			}
+		}
+
+		public void SelectMonoNative ()
+		{
+			switch (App.Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				MonoNativeMode = App.DeploymentTarget.Major >= 10 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				break;
+			case ApplePlatform.WatchOS:
+				if (Application.IsArchEnabled (Abis, Abi.ARM64_32)) {
+					MonoNativeMode = MonoNativeMode.Unified;
+				} else {
+					MonoNativeMode = App.DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
+				}
+				break;
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
+			}
+		}
+
+		public string GetLibNativeName ()
+		{
+			switch (MonoNativeMode) {
+			case MonoNativeMode.Unified:
+				return "libmono-native-unified";
+			case MonoNativeMode.Compat:
+				return "libmono-native-compat";
+			default:
+				throw ErrorHelper.CreateError (99, "Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", MonoNativeMode);
+			}
+
 		}
 
 		List<Abi> GetArchitectures (AssemblyBuildTarget build_target)
@@ -170,9 +189,9 @@ namespace Xamarin.Bundler
 		public void LinkWithTaskOutput (CompileTask task)
 		{
 			if (task.SharedLibrary) {
-				LinkWithDynamicLibrary (task.OutputFile);
+				LinkWithDynamicLibrary (task.Abi, task.OutputFile);
 			} else {
-				LinkWithStaticLibrary (task.OutputFile);
+				LinkWithStaticLibrary (task.Abi, task.OutputFile);
 			}
 			link_with_task_output.Add (task);
 		}
@@ -183,24 +202,24 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (t);
 		}
 
-		public void LinkWithStaticLibrary (string path)
+		public void LinkWithStaticLibrary (Abi abi, string path)
 		{
-			linker_flags.AddLinkWith (path);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddLinkWith (path);
 		}
 
-		public void LinkWithStaticLibrary (IEnumerable<string> paths)
+		public void LinkWithStaticLibrary (Abi abi, IEnumerable<string> paths)
 		{
-			linker_flags.AddLinkWith (paths);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddLinkWith (paths);
 		}
 
-		public void LinkWithFramework (string path)
+		public void LinkWithFramework (Abi abi, string path)
 		{
-			linker_flags.AddFramework (path);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddFramework (path);
 		}
 
-		public void LinkWithDynamicLibrary (string path)
+		public void LinkWithDynamicLibrary (Abi abi, string path)
 		{
-			linker_flags.AddLinkWith (path);
+			linker_flags_by_abi [abi & Abi.ArchMask].AddLinkWith (path);
 		}
 
 		PInvokeWrapperGenerator pinvoke_state;
@@ -223,9 +242,24 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public string Executable {
+		Dictionary<Abi, string> executables;
+		public IDictionary<Abi, string> Executables {
 			get {
-				return Path.Combine (TargetDirectory, App.ExecutableName);
+				if (executables == null) {
+					executables = new Dictionary<Abi, string> ();
+					if (App.IsSimulatorBuild) {
+						// When using simlauncher, we copy the executable directly to the target directory.
+						// When not using the simlauncher, but still building for the simulator, we write the executable to a arch-specific app directory (if building for both 32-bit and 64-bit), or just the app directory (if building for a single architecture)
+						if (Abis.Count != 1)
+							throw ErrorHelper.CreateError (99, $"Internal error: expected exactly one abi for a simulator architecture, found: {string.Join (", ", Abis.Select ((v) => v.ToString ()))}");
+						executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
+					} else {
+						foreach (var abi in Abis)
+							executables.Add (abi, Path.Combine (Path.Combine (App.Cache.Location, abi.AsArchString (), App.ExecutableName)));
+					}
+
+				}
+				return executables;
 			}
 		}
 
@@ -265,11 +299,19 @@ namespace Xamarin.Bundler
 					ErrorHelper.Show (new MonoTouchException (11, false, "{0} was built against a more recent runtime ({1}) than Xamarin.iOS supports.", Path.GetFileName (reference), ad.MainModule.Runtime));
 
 				// Figure out if we're referencing Xamarin.iOS or monotouch.dll
-				if (Path.GetFileNameWithoutExtension (ad.MainModule.FileName) == Driver.GetProductAssembly (App))
+				var filename = ad.MainModule.FileName;
+				if (Path.GetFileNameWithoutExtension (filename) == Driver.GetProductAssembly (App))
 					ProductAssembly = ad;
 
-				if (ad != ProductAssembly && GetRealPath (ad.MainModule.FileName) != GetRealPath (reference) && !ad.MainModule.FileName.EndsWith (".resources.dll", StringComparison.Ordinal))
-					ErrorHelper.Show (ErrorHelper.CreateWarning (109, "The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).", Path.GetFileName (reference), reference, ad.MainModule.FileName));
+				// repl / interpreter is a special case where some assemblies can switch location
+				if (ManifestResolver.EnableRepl) {
+					// in that case just tweak it before testing for mixed paths - since it's not a problem and should no warning should be in the logs
+					if (filename.StartsWith (Path.Combine (Resolver.FrameworkDirectory, "repl"), StringComparison.Ordinal))
+						filename = Path.Combine (Resolver.FrameworkDirectory, Path.GetFileName (filename));
+				}
+
+				if (ad != ProductAssembly && GetRealPath (filename) != GetRealPath (reference) && !filename.EndsWith (".resources.dll", StringComparison.Ordinal))
+					ErrorHelper.Show (ErrorHelper.CreateWarning (109, "The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).", Path.GetFileName (reference), reference, filename));
 			}
 
 			ComputeListOfAssemblies ();
@@ -282,11 +324,12 @@ namespace Xamarin.Bundler
 					throw ErrorHelper.CreateError (123, $"The executable assembly {App.RootAssemblies [0]} does not reference {Driver.GetProductAssembly (App)}.dll.");
 			}
 
-			linker_flags = new CompilerFlags (this);
+			foreach (var abi in Abis)
+				linker_flags_by_abi [abi & Abi.ArchMask] = new CompilerFlags (this);
 
 			// Verify that there are no entries in our list of intepreted assemblies that doesn't match
 			// any of the assemblies we know about.
-			if (App.UseInterpreter) {
+			if (App.InterpretedAssemblies.Count > 0) {
 				var exceptions = new List<Exception> ();
 				foreach (var entry in App.InterpretedAssemblies) {
 					var assembly = entry;
@@ -302,7 +345,7 @@ namespace Xamarin.Bundler
 					if (Assemblies.ContainsKey (assembly))
 						continue;
 
-					exceptions.Add (ErrorHelper.CreateWarning (138, $"Cannot find the assembly '{assembly}', passed as an argument to --interpreter."));
+					exceptions.Add (ErrorHelper.CreateWarning (142, $"Cannot find the assembly '{assembly}', passed as an argument to --interpreter."));
 				}
 				ErrorHelper.ThrowIfErrors (exceptions);
 			}
@@ -543,6 +586,8 @@ namespace Xamarin.Bundler
 			};
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out LinkContext, out assemblies);
+
+			ErrorHelper.Show (LinkContext.Exceptions);
 
 			Driver.Watch ("Link Assemblies", 1);
 		}
@@ -1053,13 +1098,29 @@ namespace Xamarin.Bundler
 						aot_dependencies.AddRange (aottasks);
 					}
 
+					// Compile any .bc files to .o
+					foreach (var info in infos) {
+						foreach (var bc in info.BitcodeFiles) {
+							var compile_task = new CompileTask {
+								Target = this,
+								SharedLibrary = false,
+								InputFile = bc,
+								OutputFile = bc + ".o",
+								Abi = abi,
+							};
+							if (!string.IsNullOrEmpty (App.UserGccFlags))
+								compile_task.CompilerFlags.AddOtherFlag (App.UserGccFlags);
+							compile_task.AddDependency (info.Task);
+							link_dependencies.Add (compile_task);
+						}
+					}
+
 					var arch = abi.AsArchString ();
 					switch (build_target) {
 					case AssemblyBuildTarget.StaticObject:
 						LinkWithTaskOutput (link_dependencies); // Any .s or .ll files from the AOT compiler (compiled to object files)
 						foreach (var info in infos) {
-							LinkWithStaticLibrary (info.ObjectFiles);
-							LinkWithStaticLibrary (info.BitcodeFiles);
+							LinkWithStaticLibrary (abi, info.ObjectFiles);
 						}
 						continue; // no linking to do here.
 					case AssemblyBuildTarget.DynamicLibrary:
@@ -1080,7 +1141,6 @@ namespace Xamarin.Bundler
 
 					foreach (var info in infos) {
 						compiler_flags.AddLinkWith (info.ObjectFiles);
-						compiler_flags.AddLinkWith (info.BitcodeFiles);
 					}
 
 					foreach (var task in link_dependencies)
@@ -1109,10 +1169,8 @@ namespace Xamarin.Bundler
 							}
 						}
 					}
-					if (App.Embeddinator) {
-						if (!string.IsNullOrEmpty (App.UserGccFlags))
-							compiler_flags.AddOtherFlag (App.UserGccFlags);
-					}
+					if (App.Embeddinator)
+						compiler_flags.AddOtherFlag (App.UserGccFlags);
 					compiler_flags.LinkWithMono ();
 					compiler_flags.LinkWithXamarin ();
 					if (GetAllSymbols ().Contains ("UIApplicationMain"))
@@ -1130,6 +1188,8 @@ namespace Xamarin.Bundler
 							throw ErrorHelper.CreateError (107, "The assemblies '{0}' have different custom LLVM optimizations ('{1}'), which is not allowed when they are all compiled to a single binary.", string.Join (", ", assemblies.Select ((v) => v.Identity)), string.Join ("', '", optimizations));
 						}
 					}
+
+					HandleMonoNative (App, compiler_flags);
 
 					var link_task = new LinkTask ()
 					{
@@ -1320,7 +1380,7 @@ namespace Xamarin.Bundler
 				registration_methods.Add ("xamarin_create_classes");
 			}
 
-			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None) {
+			if (App.Registrar == RegistrarMode.Dynamic && App.LinkMode == LinkMode.None) {
 				string method;
 				string library;
 				switch (App.Platform) {
@@ -1343,7 +1403,8 @@ namespace Xamarin.Bundler
 				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
 				if (File.Exists (lib)) {
 					registration_methods.Add (method);
-					LinkWithStaticLibrary (lib);
+					foreach (var abi in Abis)
+						LinkWithStaticLibrary (abi, lib);
 				}
 			}
 
@@ -1381,17 +1442,28 @@ namespace Xamarin.Bundler
 			Driver.Watch ("Compile", 1);
 		}
 
-		public void NativeLink (BuildTasks build_tasks)
+		public IEnumerable<NativeLinkTask> NativeLink (BuildTasks build_tasks)
 		{
 			if (App.Embeddinator && App.IsDeviceBuild) {
 				build_tasks.AddRange (embeddinator_tasks);
-				return;
+				return Array.Empty<NativeLinkTask> ();
 			}
 
+			foreach (var abi in Abis) {
+				var link_task = NativeLink (build_tasks, abi, Executables [abi]);
+				link_tasks [abi] = link_task;
+			}
+			return link_tasks.Values;
+		}
+
+		public NativeLinkTask NativeLink (BuildTasks build_tasks, Abi abi, string output_file)
+		{
 			if (!string.IsNullOrEmpty (App.UserGccFlags))
 				App.DeadStrip = false;
 			if (App.EnableLLVMOnlyBitCode)
 				App.DeadStrip = false;
+
+			var linker_flags = linker_flags_by_abi [abi & Abi.ArchMask];
 
 			// Get global frameworks
 			linker_flags.AddFrameworks (App.Frameworks, App.WeakFrameworks);
@@ -1405,13 +1477,10 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlags (a.LinkerFlags);
 
 				if (a.BuildTarget == AssemblyBuildTarget.StaticObject) {
-					foreach (var abi in GetArchitectures (a.BuildTarget)) {
-						AotInfo info;
-						if (!a.AotInfos.TryGetValue (abi, out info))
-							continue;
-						linker_flags.AddLinkWith (info.BitcodeFiles);
-						linker_flags.AddLinkWith (info.ObjectFiles);
-					}
+					AotInfo info;
+					if (!a.AotInfos.TryGetValue (abi, out info))
+						continue;
+					linker_flags.AddLinkWith (info.ObjectFiles);
 				}
 			}
 
@@ -1419,21 +1488,18 @@ namespace Xamarin.Bundler
 			if (bitcode)
 				linker_flags.AddOtherFlag (App.EnableMarkerOnlyBitCode ? "-fembed-bitcode-marker" : "-fembed-bitcode");
 			
-			if (App.EnablePie.HasValue && App.EnablePie.Value && (App.DeploymentTarget < new Version (4, 2)))
-				ErrorHelper.Error (28, "Cannot enable PIE (-pie) when targeting iOS 4.1 or earlier. Please disable PIE (-pie:false) or set the deployment target to at least iOS 4.2");
-
 			if (!App.EnablePie.HasValue)
 				App.EnablePie = true;
 
 			if (App.Platform == ApplePlatform.iOS) {
-				if (App.EnablePie.Value && (App.DeploymentTarget >= new Version (4, 2))) {
+				if (App.EnablePie.Value) {
 					linker_flags.AddOtherFlag ("-Wl,-pie");
 				} else {
 					linker_flags.AddOtherFlag ("-Wl,-no_pie");
 				}
 			}
 
-			CompileTask.GetArchFlags (linker_flags, Abis);
+			CompileTask.GetArchFlags (linker_flags, abi);
 			if (App.IsDeviceBuild) {
 				linker_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
 				linker_flags.AddOtherFlag ($"-isysroot {StringUtils.Quote (Driver.GetFrameworkDirectory (App))}");
@@ -1447,7 +1513,7 @@ namespace Xamarin.Bundler
 			if (App.LibXamarinLinkMode != AssemblyBuildTarget.StaticObject)
 				AddToBundle (App.GetLibXamarin (App.LibXamarinLinkMode));
 
-			linker_flags.AddOtherFlag ($"-o {StringUtils.Quote (Executable)}");
+			linker_flags.AddOtherFlag ($"-o {StringUtils.Quote (output_file)}");
 
 			bool need_libcpp = false;
 			if (App.EnableBitCode)
@@ -1522,8 +1588,7 @@ namespace Xamarin.Bundler
 				linker_flags.AddLinkWith (libilgen);
 			}
 
-			if (!string.IsNullOrEmpty (App.UserGccFlags))
-				linker_flags.AddOtherFlag (App.UserGccFlags);
+			linker_flags.AddOtherFlag (App.UserGccFlags);
 
 			if (App.DeadStrip)
 				linker_flags.AddOtherFlag ("-dead_strip");
@@ -1536,15 +1601,102 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
 
-			link_task = new NativeLinkTask
+			HandleMonoNative (App, linker_flags);
+
+			var link_task = new NativeLinkTask
 			{
 				Target = this,
-				OutputFile = Executable,
+				OutputFile = output_file,
 				CompilerFlags = linker_flags,
 			};
 			link_task.AddDependency (link_with_task_output);
 			link_task.AddDependency (aot_dependencies);
 			build_tasks.Add (link_task);
+			return link_task;
+		}
+
+		public class MonoNativeInfo
+		{
+			public bool RequireMonoNative { get; set; }
+
+			public void Load (string filename)
+			{
+				using (var reader = new StreamReader (filename)) {
+					string line;
+					while ((line = reader.ReadLine ()) != null) {
+						if (line.Length == 0)
+							continue;
+						var eq = line.IndexOf ('=');
+						var typestr = line.Substring (0, eq);
+						var valstr = line.Substring (eq + 1);
+						bool value = Convert.ToBoolean (valstr);
+						switch (typestr) {
+							case "RequireMonoNative":
+								RequireMonoNative = value;
+								break;
+							default:
+								throw ErrorHelper.CreateError (99, $"Internal error: invalid type string while loading cached Mono.Native info: {typestr}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+						}
+					}
+				}
+			}
+
+			public void Save (string filename)
+			{
+				using (var writer = new StreamWriter (filename)) {
+					writer.WriteLine ("RequireMonoNative={0}", RequireMonoNative);
+				}
+			}
+		}
+
+		MonoNativeInfo mono_native_info;
+
+		public MonoNativeInfo MonoNative
+		{
+			get {
+				if (mono_native_info != null)
+					return mono_native_info;
+
+				mono_native_info = new MonoNativeInfo ();
+				var cache_location = Path.Combine (App.Cache.Location, "mono-native-info.txt");
+				if (cached_link) {
+					mono_native_info.Load (cache_location);
+				} else {
+					mono_native_info.RequireMonoNative = LinkContext?.RequireMonoNative ?? true;
+					mono_native_info.Save (cache_location);
+				}
+
+				return mono_native_info;
+			}
+		}
+
+		void HandleMonoNative (Application app, CompilerFlags compiler_flags)
+		{
+			if (MonoNativeMode == MonoNativeMode.None)
+				return;
+			if (!MonoNative.RequireMonoNative)
+				return;
+			var libnative = GetLibNativeName ();
+			var libdir = Driver.GetMonoTouchLibDirectory (app);
+			Driver.Log (3, "Adding mono-native library {0} for {1}.", libnative, app);
+			switch (app.LibMonoNativeLinkMode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+				libnative = Path.Combine (libdir, libnative + ".dylib");
+				compiler_flags.AddLinkWith (libnative);
+				break;
+			case AssemblyBuildTarget.StaticObject:
+				libnative = Path.Combine (libdir, libnative + ".a");
+				compiler_flags.AddLinkWith (libnative);
+				switch (app.Platform) {
+				case ApplePlatform.iOS:
+					Driver.Log (3, "Adding GSS framework reference.");
+					compiler_flags.AddFramework ("GSS");
+					break;
+				}
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new.", app.LibMonoLinkMode);
+			}
 		}
 
 		public static void AdjustDylibs (string output)
@@ -1581,7 +1733,10 @@ namespace Xamarin.Bundler
 			foreach (var a in Assemblies)
 				a.Symlink ();
 
-			var targetExecutable = Executable;
+			if (Abis.Count != 1)
+				throw ErrorHelper.CreateError (99, $"Internal error: expected exactly one abi for a simulator architecture, found: {string.Join (", ", Abis.Select ((v) => v.ToString ()))}");
+
+			var targetExecutable = Executables.Values.First ();
 
 			Application.TryDelete (targetExecutable);
 
@@ -1593,8 +1748,10 @@ namespace Xamarin.Bundler
 				else if (Is64Build)
 					launcher.Append ("64");
 				launcher.Append ("-sgen");
-				File.Copy (launcher.ToString (), Executable);
-				File.SetLastWriteTime (Executable, DateTime.Now);
+				if (Directory.Exists (targetExecutable))
+					throw new ArgumentException ($"{targetExecutable} is a directory.");
+				File.Copy (launcher.ToString (), targetExecutable);
+				File.SetLastWriteTime (targetExecutable, DateTime.Now);
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception ex) {
@@ -1602,6 +1759,15 @@ namespace Xamarin.Bundler
 			}
 
 			Symlinked = true;
+
+			if (MonoNativeMode != MonoNativeMode.None) {
+				var lib_native_target = Path.Combine (TargetDirectory, "libmono-native.dylib");
+
+				var lib_native_name = GetLibNativeName () + ".dylib";
+				var lib_native_path = Path.Combine (Driver.GetMonoTouchLibDirectory (App), lib_native_name);
+				Application.UpdateFile (lib_native_path, lib_native_target);
+				Driver.Log (3, "Added mono-native library {0} for {1}.", lib_native_name, MonoNativeMode);
+			}
 
 			if (Driver.Verbosity > 0)
 				Console.WriteLine ("Application ({0}) was built using fast-path for simulator.", string.Join (", ", Abis.ToArray ()));
