@@ -2850,7 +2850,6 @@ namespace HealthKit {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use Constructor that takes NSDateInterval instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use Constructor that takes NSDateInterval instead.")]
 		[Export ("initWithSample:quantityHandler:")]
-		[DesignatedInitializer]
 		IntPtr Constructor (HKQuantitySample quantitySample, HKQuantitySeriesSampleQueryQuantityDelegate quantityHandler);
 	}
 

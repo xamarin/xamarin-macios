@@ -48,6 +48,10 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (10, 2))
 						continue;
 					break;
+                case HKCategoryTypeIdentifier.AudioExposureEvent:
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;

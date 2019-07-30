@@ -67,7 +67,11 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (9, 2))
 						continue;
 					break;
-				}
+                case HKQuantityTypeIdentifier.AppleStandTime:
+                    if (!TestRuntime.CheckXcodeVersion(13, 0))
+                        continue;
+                    break;
+                }
 
 				try {
 					using (var ct = HKQuantityType.Create (value)) {
