@@ -143,6 +143,26 @@ namespace LinkAll {
 			Assert.True (default_value, "DefaultValue");
 		}
 
+		public enum CertificateProblem : long {
+			CertEXPIRED = 0x800B0101,
+			CertVALIDITYPERIODNESTING = 0x800B0102,
+			CertROLE = 0x800B0103,
+			CertPATHLENCONST = 0x800B0104,
+			CertCRITICAL = 0x800B0105,
+			CertPURPOSE = 0x800B0106,
+			CertISSUERCHAINING = 0x800B0107,
+			CertMALFORMED = 0x800B0108,
+			CertUNTRUSTEDROOT = 0x800B0109,
+			CertCHAINING = 0x800B010A,
+			CertREVOKED = 0x800B010C,
+			CertUNTRUSTEDTESTROOT = 0x800B010D,
+			CertREVOCATION_FAILURE = 0x800B010E,
+			CertCN_NO_MATCH = 0x800B010F,
+			CertWRONG_USAGE = 0x800B0110,
+			CertUNTRUSTEDCA = 0x800B0112,
+			CertTRUSTEFAIL = 0x800B010B,
+		}
+
 		class TestPolicy : ICertificatePolicy {
 
 			const int RecoverableTrustFailure = 5; // SecTrustResult
@@ -156,9 +176,18 @@ namespace LinkAll {
 
 			public bool CheckValidationResult (ServicePoint srvPoint, X509Certificate certificate, WebRequest request, int certificateProblem)
 			{
-				Assert.That (certificateProblem, Is.EqualTo (0), "certificateProblem");
+				Assert.That (certificateProblem, Is.EqualTo (0), GetProblemMessage ((CertificateProblem) certificateProblem));
 				CheckCount++;
 				return true;
+			}
+
+			string GetProblemMessage (CertificateProblem problem)
+			{
+				var problemMessage = "";
+				CertificateProblem problemList = new CertificateProblem ();
+				var problemCodeName = Enum.GetName (problemList.GetType (), problem);
+				problemMessage = problemCodeName != null ? problemMessage + "-Certificateproblem:" + problemCodeName : "Unknown Certificate Problem";
+				return problemMessage;
 			}
 		}
 
@@ -177,12 +206,11 @@ namespace LinkAll {
 			try {
 				ServicePointManager.CertificatePolicy = test_policy;
 				WebClient wc = new WebClient ();
-				Assert.IsNotNull (wc.DownloadString ("https://www.microsoft.com/en-us/"));
+				Assert.IsNotNull (wc.DownloadString ("https://xamarin.com"));
 				// caching means it will be called at least for the first run, but it might not
 				// be called again in subsequent requests (unless it expires)
 				Assert.That (test_policy.CheckCount, Is.GreaterThan (0), "policy checked");
-			}
-			finally {
+			} finally {
 				ServicePointManager.CertificatePolicy = old;
 			}
 		}
