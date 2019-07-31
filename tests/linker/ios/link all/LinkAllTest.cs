@@ -177,7 +177,7 @@ namespace LinkAll {
 			try {
 				ServicePointManager.CertificatePolicy = test_policy;
 				WebClient wc = new WebClient ();
-				Assert.IsNotNull (wc.DownloadString ("https://wrench.internalx.com/Wrench/Login.aspx"));
+				Assert.IsNotNull (wc.DownloadString ("https://www.microsoft.com/en-us/"));
 				// caching means it will be called at least for the first run, but it might not
 				// be called again in subsequent requests (unless it expires)
 				Assert.That (test_policy.CheckCount, Is.GreaterThan (0), "policy checked");
