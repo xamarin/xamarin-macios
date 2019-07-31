@@ -234,11 +234,11 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
+			lock (inflightRequestsLock) {
 #if !MONOMAC  && !__WATCHOS__
 			// remove the notification if present, method checks against null
 			RemoveNotification ();
 #endif
-			lock (inflightRequestsLock) {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
 					pair.Key?.Dispose ();
