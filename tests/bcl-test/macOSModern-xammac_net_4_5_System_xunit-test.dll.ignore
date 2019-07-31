@@ -55,14 +55,6 @@ System.Net.Security.Tests.CertificateValidationClientServer.CertificateValidatio
 System.Net.Security.Tests.SslStreamNetworkStreamTest.SslStream_SendReceiveOverNetworkStream_Ok
 System.Net.Security.Tests.ServerRequireEncryptionTest.ServerRequireEncryption_ClientAllowNoEncryption_ConnectWithEncryption
 System.Net.Security.Tests.ServerRequireEncryptionTest.ServerRequireEncryption_ClientRequireEncryption_ConnectWithEncryption
-System.Net.Security.Tests.SslStreamSniTest.SslStream_ServerCallbackNotSet_UsesLocalCertificateSelection(hostName: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"...)
-System.Net.Security.Tests.SslStreamSniTest.SslStream_ServerCallbackNotSet_UsesLocalCertificateSelection(hostName: "test")
-System.Net.Security.Tests.SslStreamSniTest.SslStream_ServerCallbackNotSet_UsesLocalCertificateSelection(hostName: "a")
-System.Net.Security.Tests.SslStreamSniTest.SslStream_ServerCallbackNotSet_UsesLocalCertificateSelection(hostName: "???? g??l? ja??. ??. ????")
-System.Net.Security.Tests.SslStreamSniTest.SslStream_ClientSendsSNIServerReceives_Ok(hostName: "test")
-System.Net.Security.Tests.SslStreamSniTest.SslStream_ClientSendsSNIServerReceives_Ok(hostName: "a")
-System.Net.Security.Tests.SslStreamSniTest.SslStream_ClientSendsSNIServerReceives_Ok(hostName: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"...)
-System.Net.Security.Tests.SslStreamSniTest.SslStream_ClientSendsSNIServerReceives_Ok(hostName: "???? g??l? ja??. ??. ????")
 System.Net.Security.Tests.SslStreamStreamToStreamTest_Sync.SslStream_StreamToStream_Dispose_Throws
 System.Net.Security.Tests.SslStreamStreamToStreamTest_Sync.SslStream_StreamToStream_EOFDuringFrameRead_ThrowsIOException
 System.Net.Security.Tests.SslStreamStreamToStreamTest_Sync.SslStream_StreamToStream_Authentication_Success
@@ -122,3 +114,5 @@ System.Net.Security.Tests.ApmSslStreamSystemDefaultTest.ClientAndServer_OneOrBot
 System.Net.Security.Tests.ApmSslStreamSystemDefaultTest.ClientAndServer_OneOrBothUseDefault_Ok(clientProtocols: null, serverProtocols: null)
 System.Net.Security.Tests.ClientDefaultEncryptionTest.ClientDefaultEncryption_ServerRequireEncryption_ConnectWithEncryption
 System.Net.Security.Tests.ClientDefaultEncryptionTest.ClientDefaultEncryption_ServerAllowNoEncryption_ConnectWithEncryption
+System.Net.Security.Tests.ServerAllowNoEncryptionTest.ServerAllowNoEncryption_ClientAllowNoEncryption_ConnectWithEncryption
+KLASS:System.Net.Security.Tests.SslStreamSniTest
