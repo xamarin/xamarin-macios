@@ -19868,8 +19868,9 @@ namespace UIKit {
 		[NullAllowed, Export ("scene")]
 		UIScene Scene { get; }
 
+		[BindAs (typeof (UIWindowSceneSessionRole))]
 		[Export ("role")]
-		string Role { get; }
+		NSString Role { get; }
 
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		UISceneConfiguration Configuration { get; }
