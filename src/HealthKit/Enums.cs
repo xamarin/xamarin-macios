@@ -351,7 +351,7 @@ namespace HealthKit
 	[Watch (6,0)]
 	[Native]
 	public enum HKCategoryValueAudioExposureEvent : long {
-		AudioExposureEventLoudEnvironment = 1,
+		LoudEnvironment = 1,
 	}
 
 	[Watch (2,0)]
