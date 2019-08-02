@@ -82,11 +82,11 @@ namespace HomeKit {
 
 		[iOS(13, 0), NoWatch, NoTV, NoMac]
 		[Export("homeManager:didReceiveAddAccessoryRequest:")]
-		void DidReceiveAddAccessoryRequest(HMHomeManager manager, HMAddAccessoryRequest request);
+		void DidReceiveAddAccessoryRequest (HMHomeManager manager, HMAddAccessoryRequest request);
 		
 		[iOS(13, 0), NoWatch, NoTV, NoMac]
 		[Export("homeManager:didUpdateAuthorizationStatus:")]
-		void DidUpdateAuthorizationStatus(HMHomeManager manager, HMHomeManagerAuthorizationStatus status);
+		void DidUpdateAuthorizationStatus (HMHomeManager manager, HMHomeManagerAuthorizationStatus status);
 	}
 
 	[TV (10,0)]
@@ -1710,10 +1710,10 @@ namespace HomeKit {
 		bool RequiresOwnershipToken { get; [NotImplemented] set; }
 
 		[NullAllowed, Export("payloadWithOwnershipToken:")]
-		HMAccessorySetupPayload GetPayloadWithOwnershipToken(HMAccessoryOwnershipToken ownershipToken);
+		HMAccessorySetupPayload GetPayloadWithOwnershipToken (HMAccessoryOwnershipToken ownershipToken);
 		
 		[NullAllowed, Export("payloadWithURL:ownershipToken:")]
-		HMAccessorySetupPayload GetPayloadWithUrlAndOwnershipToken(NSUrl setupPayloadUrl, HMAccessoryOwnershipToken ownershipToken);
+		HMAccessorySetupPayload GetPayloadWithUrlAndOwnershipToken (NSUrl setupPayloadUrl, HMAccessoryOwnershipToken ownershipToken);
 	}
 
 	[iOS (13,0), Watch (6,0), TV (13,0), NoMac]
