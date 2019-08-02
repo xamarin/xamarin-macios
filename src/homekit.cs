@@ -1692,6 +1692,7 @@ namespace HomeKit {
 	}
 
 	[iOS (13,0), NoWatch, NoMac, NoTV]
+	[DisableDefaultCtor]
 	interface HMAddAccessoryRequest
 	{
 		[Export ("home")] 
