@@ -70,7 +70,7 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKQuantityTypeIdentifier.AppleStandTime:
 				case HKQuantityTypeIdentifier.EnvironmentalAudioExposure:
 				case HKQuantityTypeIdentifier.HeadphoneAudioExposure:
-					if (!TestRuntime.CheckXcodeVersion(13, 0))
+					if (!TestRuntime.CheckXcodeVersion(11, 0))
 						continue;
 					break;
 				}
