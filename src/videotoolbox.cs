@@ -154,20 +154,12 @@ namespace VideoToolbox {
 		
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Field ("kVTCompressionPropertyKey_AlphaChannelMode")]
-		NSString AlphaChannelMode { get; } 
-		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
-		[Field ("kVTAlphaChannelMode_StraightAlpha")]
-		NSString StraightAlpha { get; } 
-		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
-		[Field ("kVTAlphaChannelMode_PremultipliedAlpha")]
-		NSString PremultipliedAlpha { get; } 
-		
+		NSString AlphaChannelMode { get; }
+
 		[Mac (10,9), iOS (13,0), TV (13,0)]
 		[Field ("kVTCompressionPropertyKey_GammaLevel")]
 		NSString GammaLevel { get; } 
-		
+
 		[Mac (10,13), iOS (11,0), TV (11,0)]
 		[Field ("kVTCompressionPropertyKey_MasteringDisplayColorVolume")]
 		NSString MasteringDisplayColorVolume { get; }
@@ -195,7 +187,16 @@ namespace VideoToolbox {
 		
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Field ("kVTCompressionPropertyKey_UsingGPURegistryID")]
-		NSString UsingGpuRegistryID { get; }
+		NSString UsingGpuRegistryId { get; }
+	}
+
+	[Mac (10,15), iOS (13,0), TV (13,0)]
+	enum VTAlphaChannelMode {
+		[Field ("kVTAlphaChannelMode_StraightAlpha")]
+		StraightAlpha,
+		[DefaultEnumValue]
+		[Field ("kVTAlphaChannelMode_PremultipliedAlpha")]
+		PremultipliedAlpha,
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -312,10 +313,6 @@ namespace VideoToolbox {
 		[Mac (10,9), iOS (13,0), TV (13,0)]
 		[Export ("GammaLevel")]
 		double GammaLevel { get; set; }
-		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
-		[Export ("AlphaChannelMode")]
-		string AlphaChannelMode { get; set; }
 		
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Export ("UsingGpuRegistryId")]
@@ -701,7 +698,7 @@ namespace VideoToolbox {
 		
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Field ("kVTDecompressionPropertyKey_UsingGPURegistryID")]
-		NSString UsingGpuRegistryID { get; }
+		NSString UsingGpuRegistryId { get; }
 
 		//Post-decompression processing
 
