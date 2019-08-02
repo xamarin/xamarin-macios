@@ -287,6 +287,8 @@ namespace Introspection {
 				case "ARSkeleton2D": // Conformance not in headers
 				case "ARCollaborationData":  // Conformance not in headers
 				case "UIFontPickerViewControllerConfiguration": // Conformance not in headers
+				case "HKAudiogramSample": // Conformance not in headers
+				case "HKAudiogramSensitivityPoint": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -512,6 +514,7 @@ namespace Introspection {
 				case "ARSkeleton2D": // Conformance not in headers
 				case "ARCollaborationData":  // Conformance not in headers
 				case "UIFontPickerViewControllerConfiguration":  // Conformance not in headers
+				case "HKAudiogramSensitivityPoint":  // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -659,6 +662,9 @@ namespace Introspection {
 				case "HMAction":
 				case "HMCharacteristicWriteAction":
 				case "MLPredictionOptions":
+                case "HKCumulativeQuantitySample": // Conformance not in headers
+                case "HKDiscreteQuantitySample": // Conformance not in headers
+                case "HKAudiogramSample": // Conformance not in headers
 					return true;
 				}
 				break;
