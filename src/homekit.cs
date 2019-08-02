@@ -80,11 +80,11 @@ namespace HomeKit {
 		[Export ("homeManager:didRemoveHome:"), EventArgs ("HMHomeManager")]
 		void DidRemoveHome (HMHomeManager manager, HMHome home);
 
-		[iOS(13, 0), NoWatch, NoTV, NoMac]
+		[iOS (13,0), NoWatch, NoTV, NoMac]
 		[Export("homeManager:didReceiveAddAccessoryRequest:")]
 		void DidReceiveAddAccessoryRequest (HMHomeManager manager, HMAddAccessoryRequest request);
 		
-		[iOS(13, 0), NoWatch, NoTV, NoMac]
+		[iOS (13,0), NoWatch, NoTV, NoMac]
 		[Export("homeManager:didUpdateAuthorizationStatus:")]
 		void DidUpdateAuthorizationStatus (HMHomeManager manager, HMHomeManagerAuthorizationStatus status);
 	}
@@ -1694,7 +1694,7 @@ namespace HomeKit {
 	[iOS (13,0), NoWatch, NoMac, NoTV]
 	interface HMAddAccessoryRequest
 	{
-		[Export("home")] 
+		[Export ("home")] 
 		HMHome Home { get; [NotImplemented] set; }
 		
 		[Export ("accessoryCategory")]
@@ -1709,10 +1709,10 @@ namespace HomeKit {
 		[Export ("requiresOwnershipToken")]
 		bool RequiresOwnershipToken { get; [NotImplemented] set; }
 
-		[NullAllowed, Export("payloadWithOwnershipToken:")]
+		[NullAllowed, Export ("payloadWithOwnershipToken:")]
 		HMAccessorySetupPayload GetPayloadWithOwnershipToken (HMAccessoryOwnershipToken ownershipToken);
 		
-		[NullAllowed, Export("payloadWithURL:ownershipToken:")]
+		[NullAllowed, Export ("payloadWithURL:ownershipToken:")]
 		HMAccessorySetupPayload GetPayloadWithUrlAndOwnershipToken (NSUrl setupPayloadUrl, HMAccessoryOwnershipToken ownershipToken);
 	}
 
