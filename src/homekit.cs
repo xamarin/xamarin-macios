@@ -1737,8 +1737,8 @@ namespace HomeKit {
 	[DisableDefaultCtor]
 	interface HMAccessorySetupPayload {
 		[NullAllowed, Export ("initWithURL:")]
-		IntPtr Constructor (NullAllowed NSUrl setupPayloadUrl);
-
+		IntPtr Constructor ([NullAllowed] NSUrl setupPayloadUrl);
+		
 		[NullAllowed, Export ("initWithURL:ownershipToken:")]
 		IntPtr Constructor (NSUrl setupPayloadUrl, [NullAllowed] HMAccessoryOwnershipToken ownershipToken);
 	}
