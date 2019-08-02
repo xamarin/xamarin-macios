@@ -18,3 +18,6 @@
 
 ## type was marked as available in 3.0 - but it's now iOS 11 only (even if members are marked with 10.0)
 !unknown-type! HKCDADocument bound
+
+## type was marked as available in 6.0 - but doesn't exist https://github.com/xamarin/maccore/issues/1899
+!missing-field! HKCharacteristicTypeIdentifierActivityMoveMode not bound
