@@ -2899,7 +2899,7 @@ namespace HealthKit {
 
 		[Watch (6,0), iOS (13,0)]
 		[Export ("insertQuantity:dateInterval:error:")]
-		bool InsertQuantity (HKQuantity quantity, NSDateInterval dateInterval, [NullAllowed] out NSError error);
+		bool Insert (HKQuantity quantity, NSDateInterval dateInterval, [NullAllowed] out NSError error);
 	}
 
 	[Watch (5,0), NoiOS]
