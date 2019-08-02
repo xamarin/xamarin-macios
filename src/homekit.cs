@@ -56,6 +56,10 @@ namespace HomeKit {
 		[Async]
 		[Export ("removeHome:completionHandler:")]
 		void RemoveHome (HMHome home, Action<NSError> completion);
+		
+		[iOS (13,0), Watch (6,0), TV (13,0), NoMac]
+		[Export ("authorizationStatus")]
+		HMHomeManagerAuthorizationStatus AuthorizationStatus { get; [NotImplemented] set; }
 	}
 
 	[TV (10,0)]
@@ -75,6 +79,14 @@ namespace HomeKit {
 
 		[Export ("homeManager:didRemoveHome:"), EventArgs ("HMHomeManager")]
 		void DidRemoveHome (HMHomeManager manager, HMHome home);
+
+		[iOS(13, 0), NoWatch, NoTV, NoMac]
+		[Export("homeManager:didReceiveAddAccessoryRequest:")]
+		void DidReceiveAddAccessoryRequest(HMHomeManager manager, HMAddAccessoryRequest request);
+		
+		[iOS(13, 0), NoWatch, NoTV, NoMac]
+		[Export("homeManager:didUpdateAuthorizationStatus:")]
+		void DidUpdateAuthorizationStatus(HMHomeManager manager, HMHomeManagerAuthorizationStatus status);
 	}
 
 	[TV (10,0)]
@@ -1671,12 +1683,64 @@ namespace HomeKit {
 		NSNumber Max { get; }
 	}
 
+	[iOS (13,0), NoWatch, NoMac, NoTV]
+	[DisableDefaultCtor]
+	interface HMAccessoryOwnershipToken
+	{
+		[Export("initWithData:")]
+		IntPtr Constructor(NSData data);
+	}
+
+	[iOS (13,0), NoWatch, NoMac, NoTV]
+	interface HMAddAccessoryRequest
+	{
+		[Export("home")] 
+		HMHome Home { get; [NotImplemented] set; }
+		
+		[Export ("accessoryCategory")]
+		HMAccessoryCategory AccessoryCategory { get; [NotImplemented] set; }
+		
+		[Export ("accessoryName")]
+		NSString AccessoryName { get; [NotImplemented] set; }
+		
+		[Export ("requiresSetupPayloadURL")]
+		bool RequiresSetupPayloadURL { get; [NotImplemented] set; }
+		
+		[Export ("requiresOwnershipToken")]
+		bool RequiresOwnershipToken { get; [NotImplemented] set; }
+
+		[NullAllowed, Export("payloadWithOwnershipToken:")]
+		HMAccessorySetupPayload GetPayloadWithOwnershipToken(HMAccessoryOwnershipToken ownershipToken);
+		
+		[NullAllowed, Export("payloadWithURL:ownershipToken:")]
+		HMAccessorySetupPayload GetPayloadWithUrlAndOwnershipToken(NSUrl setupPayloadUrl, HMAccessoryOwnershipToken ownershipToken);
+	}
+
+	[iOS (13,0), Watch (6,0), TV (13,0), NoMac]
+	[DisableDefaultCtor]
+	interface HMNetworkConfigurationProfile : HMAccessoryProfile {
+		[Export ("delegate"), ArgumentSemantic.Weak)]
+		[NullAllowed]
+		HMNetworkConfigurationProfileDelegate WeakDelegate { get; set; }
+		
+		[Export ("isNetworkAccessRestricted")]
+		bool NetworkAccessRestricted { get; [NotImplemented] set; }
+	}
+
+	[iOS (13,0), Watch (6,0), TV (13,0), NoMac]
+	interface HMNetworkConfigurationProfileDelegate {
+		
+	}
+	
 	[NoWatch, NoTV, iOS (11,3)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessorySetupPayload {
 		[NullAllowed, Export ("initWithURL:")]
 		IntPtr Constructor (NullAllowed NSUrl setupPayloadUrl);
+
+		[NullAllowed, Export ("initWithURL:ownershipToken:")]
+		IntPtr Constructor (NSUrl setupPayloadUrl, [NullAllowed] HMAccessoryOwnershipToken ownershipToken);
 	}
 
 	[Watch (4,0), TV (11,0), iOS (11,0)]
