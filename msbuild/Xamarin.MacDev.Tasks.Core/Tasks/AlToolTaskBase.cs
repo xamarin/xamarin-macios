@@ -10,6 +10,8 @@ namespace Xamarin.MacDev.Tasks
 	{
         string sdkDevPath;
 
+        public string SessionId { get; set; }
+
         [Required]
         public string Username { get ;set; }
 
@@ -68,12 +70,7 @@ namespace Xamarin.MacDev.Tasks
 
         protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
 		{
-			try { // We first try to use the base logic, which shows up nicely in XS.
-				base.LogEventsFromTextOutput (singleLine, messageImportance);
-			}
-			catch { // But when that fails, just output the message to the command line and XS will output it raw
-				Log.LogMessage (messageImportance, "{0}", singleLine);
-			}
+			Log.LogMessage (messageImportance, "{0}", singleLine);
 		}
 
         string GetFileTypeValue ()
