@@ -1696,7 +1696,7 @@ namespace HomeKit {
 	interface HMAddAccessoryRequest
 	{
 		[Export ("home")] 
-		HMHome Home { get; [NotImplemented] set; }
+		HMHome Home { get; }
 		
 		[Export ("accessoryCategory")]
 		HMAccessoryCategory AccessoryCategory { get; [NotImplemented] set; }
