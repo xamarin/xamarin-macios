@@ -30,6 +30,8 @@ namespace EmbeddedResources {
 		[Test]
 		public void Embedded ()
 		{
+			TestRuntime.IgnoreOnTVOS (); // Randomly crashed on tvOS -> https://github.com/xamarin/maccore/issues/1909
+
 #if MONOMAC
 			var manager = new ResourceManager ("xammac_tests.EmbeddedResources.Welcome", typeof (ResourcesTest).Assembly);
 #else
