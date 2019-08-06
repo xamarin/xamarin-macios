@@ -4,9 +4,9 @@ using Xamarin.MacDev;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class ALToolValidateTaskBase : Xamarin.MacDev.Tasks.ALToolTaskBase
+	public class ALToolValidateTaskBase : MacDev.Tasks.ALToolTaskBase
 	{
-        public override PlatformName FileType => PlatformName.iOS;
+		public override PlatformName FileType => PlatformName.iOS;
 
 		protected override string GenerateCommandLineCommands ()
 		{

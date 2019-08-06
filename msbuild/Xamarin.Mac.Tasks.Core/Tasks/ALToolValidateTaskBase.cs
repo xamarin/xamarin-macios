@@ -4,10 +4,10 @@ using Xamarin.MacDev;
 
 namespace Xamarin.Mac.Tasks
 {
-	public class ALToolValidateTaskBase : Xamarin.MacDev.Tasks.ALToolTaskBase
+	public class ALToolValidateTaskBase : MacDev.Tasks.ALToolTaskBase
 	{
-        public override PlatformName FileType => PlatformName.MacOSX;
-		
+		public override PlatformName FileType => PlatformName.MacOSX;
+
 		protected override string GenerateCommandLineCommands ()
 		{
 			var sb = new StringBuilder ();

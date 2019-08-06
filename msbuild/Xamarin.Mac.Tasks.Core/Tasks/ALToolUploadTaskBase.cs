@@ -6,8 +6,8 @@ namespace Xamarin.Mac.Tasks
 {
 	public class ALToolUploadTaskBase : Xamarin.MacDev.Tasks.ALToolTaskBase
 	{
-        public override PlatformName FileType => PlatformName.MacOSX;
-		
+		public override PlatformName FileType => PlatformName.MacOSX;
+
 		protected override string GenerateCommandLineCommands ()
 		{
 			var sb = new StringBuilder ();

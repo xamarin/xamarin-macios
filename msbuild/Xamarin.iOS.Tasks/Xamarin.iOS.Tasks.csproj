@@ -76,7 +76,7 @@
     <Compile Include="Tasks\CodesignNativeLibraries.cs" />
     <Compile Include="Tasks\CreateBindingResourcePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\ALToolVerify.cs" />
+    <Compile Include="Tasks\ALToolValidate.cs" />
     <Compile Include="Tasks\ALToolUpload.cs" />
   </ItemGroup>
   <ItemGroup>

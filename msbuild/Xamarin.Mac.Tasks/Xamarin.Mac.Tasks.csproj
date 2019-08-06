@@ -30,7 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Tasks\ALToolUpload.cs" />
-    <Compile Include="Tasks\ALToolVerify.cs" />
+    <Compile Include="Tasks\ALToolValidate.cs" />
     <Compile Include="Tasks\ACTool.cs" />
     <Compile Include="Tasks\BTouch.cs" />
     <Compile Include="Tasks\CreateBindingResourcePackage.cs" />
