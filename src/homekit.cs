@@ -1699,7 +1699,7 @@ namespace HomeKit {
 		HMHome Home { get; }
 		
 		[Export ("accessoryCategory")]
-		HMAccessoryCategory AccessoryCategory { get; [NotImplemented] set; }
+		HMAccessoryCategory AccessoryCategory { get; }
 		
 		[Export ("accessoryName")]
 		NSString AccessoryName { get; [NotImplemented] set; }
