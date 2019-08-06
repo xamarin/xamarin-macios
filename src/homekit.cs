@@ -1685,16 +1685,14 @@ namespace HomeKit {
 
 	[iOS (13,0), NoWatch, NoMac, NoTV]
 	[DisableDefaultCtor]
-	interface HMAccessoryOwnershipToken
-	{
+	interface HMAccessoryOwnershipToken {
 		[Export("initWithData:")]
 		IntPtr Constructor (NSData data);
 	}
 
 	[iOS (13,0), NoWatch, NoMac, NoTV]
 	[DisableDefaultCtor]
-	interface HMAddAccessoryRequest
-	{
+	interface HMAddAccessoryRequest {
 		[Export ("home")] 
 		HMHome Home { get; }
 		
