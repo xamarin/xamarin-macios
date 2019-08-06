@@ -1743,7 +1743,7 @@ namespace HomeKit {
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface HMAccessorySetupPayload {
-		[NullAllowed, Export ("initWithURL:")]
+		[Export ("initWithURL:")]
 		IntPtr Constructor ([NullAllowed] NSUrl setupPayloadUrl);
 		
 		[iOS (13,0)]
