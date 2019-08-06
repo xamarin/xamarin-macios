@@ -1688,7 +1688,7 @@ namespace HomeKit {
 	interface HMAccessoryOwnershipToken
 	{
 		[Export("initWithData:")]
-		IntPtr Constructor(NSData data);
+		IntPtr Constructor (NSData data);
 	}
 
 	[iOS (13,0), NoWatch, NoMac, NoTV]
