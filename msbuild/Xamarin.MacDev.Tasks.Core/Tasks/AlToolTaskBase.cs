@@ -79,7 +79,7 @@ namespace Xamarin.MacDev.Tasks
 				case PlatformName.MacOSX: return "osx";
 				case PlatformName.TvOS: return "appletvos";
 				case PlatformName.iOS: return "ios";
-				default: throw new NotSupportedException ("Provided file type is not supported by altool");
+				default: throw new NotSupportedException ($"Provided file type '{FileType}' is not supported by altool");
 			}
 		}
 	}
