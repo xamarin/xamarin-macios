@@ -1149,7 +1149,7 @@ namespace HomeKit {
 		Restricted = 1,
 		
 		[Field ("HMHomeManagerAuthorizationStatusAuthorized")]
-		Authorized = 2
+		Authorized = 2,
 	}
 
 	[iOS (9,0)]
