@@ -13,7 +13,6 @@ using Contacts;
 using ObjCRuntime;
 using Foundation;
 using UIKit;
-using Contacts;
 #if !WATCH
 using AddressBook;
 #else
