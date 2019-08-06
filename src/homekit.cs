@@ -1746,7 +1746,8 @@ namespace HomeKit {
 		[NullAllowed, Export ("initWithURL:")]
 		IntPtr Constructor ([NullAllowed] NSUrl setupPayloadUrl);
 		
-		[NullAllowed, Export ("initWithURL:ownershipToken:")]
+		[iOS (13,0)]
+		[Export ("initWithURL:ownershipToken:")]
 		IntPtr Constructor (NSUrl setupPayloadUrl, [NullAllowed] HMAccessoryOwnershipToken ownershipToken);
 	}
 
