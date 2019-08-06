@@ -109,7 +109,6 @@ namespace HomeKit {
 		IncompatibleAccessory = 93,
 		ObjectWithSimilarNameExists = 95,
 		OwnershipFailure = 96,
-		[iOS (13,0)]
 		MaximumAccessoriesOfTypeInHome = 97,
 		[iOS (13,0)]
 		WiFiCredentialGenerationFailed = 98,
