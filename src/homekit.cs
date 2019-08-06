@@ -1712,7 +1712,7 @@ namespace HomeKit {
 		HMAccessorySetupPayload GetPayload (HMAccessoryOwnershipToken ownershipToken);
 		
 		[NullAllowed, Export ("payloadWithURL:ownershipToken:")]
-		HMAccessorySetupPayload GetPayloadWithUrlAndOwnershipToken (NSUrl setupPayloadUrl, HMAccessoryOwnershipToken ownershipToken);
+		HMAccessorySetupPayload GetPayload (NSUrl setupPayloadUrl, HMAccessoryOwnershipToken ownershipToken);
 	}
 
 	[iOS (13,0), Watch (6,0), TV (13,0), NoMac]
