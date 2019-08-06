@@ -108,7 +108,6 @@ namespace HomeKit {
 		IncompatibleHomeHub = 92, // HMErrorCodeNoCompatibleHomeHub introduced and deprecated on iOS 11. HMErrorCodeIncompatibleHomeHub = HMErrorCodeNoCompatibleHomeHub.
 		IncompatibleAccessory = 93,
 		ObjectWithSimilarNameExists = 95,
-		[iOS (13,0)]
 		OwnershipFailure = 96,
 		[iOS (13,0)]
 		MaximumAccessoriesOfTypeInHome = 97,
