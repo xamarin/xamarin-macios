@@ -81,7 +81,7 @@ namespace HomeKit {
 		void DidRemoveHome (HMHomeManager manager, HMHome home);
 
 		[iOS (13,0), NoWatch, NoTV, NoMac]
-		[Export("homeManager:didReceiveAddAccessoryRequest:")]
+		[Export("homeManager:didReceiveAddAccessoryRequest:"), EventArgs ("HMHomeManager")]
 		void DidReceiveAddAccessoryRequest (HMHomeManager manager, HMAddAccessoryRequest request);
 		
 		[iOS (13,0), NoWatch, NoTV, NoMac]
