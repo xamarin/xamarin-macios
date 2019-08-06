@@ -1709,7 +1709,7 @@ namespace HomeKit {
 		bool RequiresOwnershipToken { get; }
 
 		[NullAllowed, Export ("payloadWithOwnershipToken:")]
-		HMAccessorySetupPayload GetPayloadWithOwnershipToken (HMAccessoryOwnershipToken ownershipToken);
+		HMAccessorySetupPayload GetPayload (HMAccessoryOwnershipToken ownershipToken);
 		
 		[NullAllowed, Export ("payloadWithURL:ownershipToken:")]
 		HMAccessorySetupPayload GetPayloadWithUrlAndOwnershipToken (NSUrl setupPayloadUrl, HMAccessoryOwnershipToken ownershipToken);
