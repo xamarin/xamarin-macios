@@ -85,7 +85,7 @@ namespace HomeKit {
 		void DidReceiveAddAccessoryRequest (HMHomeManager manager, HMAddAccessoryRequest request);
 		
 		[iOS (13,0), NoWatch, NoTV, NoMac]
-		[Export("homeManager:didUpdateAuthorizationStatus:")]
+		[Export("homeManager:didUpdateAuthorizationStatus:"), EventArgs ("HMHomeManager")]
 		void DidUpdateAuthorizationStatus (HMHomeManager manager, HMHomeManagerAuthorizationStatus status);
 	}
 
