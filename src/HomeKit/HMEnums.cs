@@ -1141,7 +1141,6 @@ namespace HomeKit {
 	}
 
 	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
-	[Native]
 	public enum HMHomeManagerAuthorizationStatus : long {
 		[Field ("HMHomeManagerAuthorizationStatusDetermined")]
 		Determined = 0,
