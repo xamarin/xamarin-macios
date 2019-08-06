@@ -2155,9 +2155,188 @@ namespace AppKit {
 	}
 
 	public static class NSFileTypeForHFSTypeCode {
-		public static readonly string ComputerIcon = "root";
-		public static readonly string DesktopIcon = "desk";
-		public static readonly string FinderIcon = "FNDR";
+		/* Generic Finder icons */
+		public static readonly string ClipboardIcon                = "CLIP";
+		public static readonly string ClippingUnknownTypeIcon      = "clpu";
+		public static readonly string ClippingPictureTypeIcon      = "clpp";
+		public static readonly string ClippingTextTypeIcon         = "clpt";
+		public static readonly string ClippingSoundTypeIcon        = "clps";
+		public static readonly string DesktopIcon                  = "desk";
+		public static readonly string FinderIcon                   = "FNDR";
+		public static readonly string ComputerIcon                 = "root";
+		public static readonly string FontSuitcaseIcon             = "FFIL";
+		public static readonly string FullTrashIcon                = "ftrh";
+		public static readonly string GenericApplicationIcon       = "APPL";
+		public static readonly string GenericCDROMIcon             = "cddr";
+		public static readonly string GenericControlPanelIcon      = "APPC";
+		public static readonly string GenericControlStripModuleIcon = "sdev";
+		public static readonly string GenericComponentIcon         = "thng";
+		public static readonly string GenericDeskAccessoryIcon     = "APPD";
+		public static readonly string GenericDocumentIcon          = "docu";
+		public static readonly string GenericEditionFileIcon       = "edtf";
+		public static readonly string GenericExtensionIcon         = "INIT";
+		public static readonly string GenericFileServerIcon        = "srvr";
+		public static readonly string GenericFontIcon              = "ffil";
+		public static readonly string GenericFontScalerIcon        = "sclr";
+		public static readonly string GenericFloppyIcon            = "flpy";
+		public static readonly string GenericHardDiskIcon          = "hdsk";
+		public static readonly string GenericIDiskIcon             = "idsk";
+		public static readonly string GenericRemovableMediaIcon    = "rmov";
+		public static readonly string GenericMoverObjectIcon       = "movr";
+		public static readonly string GenericPCCardIcon            = "pcmc";
+		public static readonly string GenericPreferencesIcon       = "pref";
+		public static readonly string GenericQueryDocumentIcon     = "qery";
+		public static readonly string GenericRAMDiskIcon           = "ramd";
+		public static readonly string GenericSharedLibaryIcon      = "shlb";
+		public static readonly string GenericStationeryIcon        = "sdoc";
+		public static readonly string GenericSuitcaseIcon          = "suit";
+		public static readonly string GenericURLIcon               = "gurl";
+		public static readonly string GenericWORMIcon              = "worm";
+		public static readonly string InternationalResourcesIcon   = "ifil";
+		public static readonly string KeyboardLayoutIcon           = "kfil";
+		public static readonly string SoundFileIcon                = "sfil";
+		public static readonly string SystemSuitcaseIcon           = "zsys";
+		public static readonly string TrashIcon                    = "trsh";
+		public static readonly string TrueTypeFontIcon             = "tfil";
+		public static readonly string TrueTypeFlatFontIcon         = "sfnt";
+		public static readonly string TrueTypeMultiFlatFontIcon    = "ttcf";
+		public static readonly string UserIDiskIcon                = "udsk";
+		public static readonly string UnknownFSObjectIcon          = "unfs";
+
+		/* Internet locations */
+		public static readonly string InternetLocationHTTPIcon     = "ilht";
+		public static readonly string InternetLocationFTPIcon      = "ilft";
+		public static readonly string InternetLocationAppleShareIcon = "ilaf";
+		public static readonly string InternetLocationAppleTalkZoneIcon = "ilat";
+		public static readonly string InternetLocationFileIcon     = "ilfi";
+		public static readonly string InternetLocationMailIcon     = "ilma";
+		public static readonly string InternetLocationNewsIcon     = "ilnw";
+		public static readonly string InternetLocationNSLNeighborhoodIcon = "ilns";
+		public static readonly string InternetLocationGenericIcon  = "ilge";
+
+		/* Folders */
+		public static readonly string GenericFolderIcon            = "fldr";
+		public static readonly string DropFolderIcon               = "dbox";
+		public static readonly string MountedFolderIcon            = "mntd";
+		public static readonly string OpenFolderIcon               = "ofld";
+		public static readonly string OwnedFolderIcon              = "ownd";
+		public static readonly string PrivateFolderIcon            = "prvf";
+		public static readonly string SharedFolderIcon             = "shfl";
+
+		/* Sharingprivileges icons */
+		public static readonly string SharingPrivsNotApplicableIcon = "shna";
+		public static readonly string SharingPrivsReadOnlyIcon     = "shro";
+		public static readonly string SharingPrivsReadWriteIcon    = "shrw";
+		public static readonly string SharingPrivsUnknownIcon      = "shuk";
+		public static readonly string SharingPrivsWritableIcon     = "writ";
+
+		/* Users and Groups icons */
+		public static readonly string UserFolderIcon               = "ufld";
+		public static readonly string WorkgroupFolderIcon          = "wfld";
+		public static readonly string GuestUserIcon                = "gusr";
+		public static readonly string UserIcon                     = "user";
+		public static readonly string OwnerIcon                    = "susr";
+		public static readonly string GroupIcon                    = "grup";
+
+		/* Special folders */
+		public static readonly string AppearanceFolderIcon         = "appr";
+		public static readonly string AppleMenuFolderIcon          = "amnu";
+		public static readonly string ApplicationsFolderIcon       = "apps";
+		public static readonly string ApplicationSupportFolderIcon = "asup";
+		public static readonly string ColorSyncFolderIcon          = "prof";
+		public static readonly string ContextualMenuItemsFolderIcon = "cmnu";
+		public static readonly string ControlPanelDisabledFolderIcon = "ctrD";
+		public static readonly string ControlPanelFolderIcon       = "ctrl";
+		public static readonly string DocumentsFolderIcon          = "docs";
+		public static readonly string ExtensionsDisabledFolderIcon = "extD";
+		public static readonly string ExtensionsFolderIcon         = "extn";
+		public static readonly string FavoritesFolderIcon          = "favs";
+		public static readonly string FontsFolderIcon              = "font";
+		public static readonly string InternetSearchSitesFolderIcon = "issf";
+		public static readonly string PublicFolderIcon             = "pubf";
+		public static readonly string PrinterDescriptionFolderIcon = "ppdf";
+		public static readonly string PrintMonitorFolderIcon       = "prnt";
+		public static readonly string RecentApplicationsFolderIcon = "rapp";
+		public static readonly string RecentDocumentsFolderIcon    = "rdoc";
+		public static readonly string RecentServersFolderIcon      = "rsrv";
+		public static readonly string ShutdownItemsDisabledFolderIcon = "shdD";
+		public static readonly string ShutdownItemsFolderIcon      = "shdf";
+		public static readonly string SpeakableItemsFolder         = "spki";
+		public static readonly string StartupItemsDisabledFolderIcon = "strD";
+		public static readonly string StartupItemsFolderIcon       = "strt";
+		public static readonly string SystemExtensionDisabledFolderIcon = "macD";
+		public static readonly string SystemFolderIcon             = "macs";
+		public static readonly string VoicesFolderIcon             = "fvoc";
+
+		/* Badges */
+		public static readonly string AppleScriptBadgeIcon         = "scrp";
+		public static readonly string LockedBadgeIcon              = "lbdg";
+		public static readonly string MountedBadgeIcon             = "mbdg";
+		public static readonly string SharedBadgeIcon              = "sbdg";
+		public static readonly string AliasBadgeIcon               = "abdg";
+		public static readonly string AlertCautionBadgeIcon        = "cbdg";
+
+		/* Alert icons */
+		public static readonly string AlertNoteIcon                = "note";
+		public static readonly string AlertCautionIcon             = "caut";
+		public static readonly string AlertStopIcon                = "stop";
+
+		/* Networking icons */
+		public static readonly string AppleTalkIcon                = "atlk";
+		public static readonly string AppleTalkZoneIcon            = "atzn";
+		public static readonly string AFPServerIcon                = "afps";
+		public static readonly string FTPServerIcon                = "ftps";
+		public static readonly string HTTPServerIcon               = "htps";
+		public static readonly string GenericNetworkIcon           = "gnet";
+		public static readonly string IPFileServerIcon             = "isrv";
+
+		/* Toolbar icons */
+		public static readonly string ToolbarCustomizeIcon         = "tcus";
+		public static readonly string ToolbarDeleteIcon            = "tdel";
+		public static readonly string ToolbarFavoritesIcon         = "tfav";
+		public static readonly string ToolbarHomeIcon              = "thom";
+		public static readonly string ToolbarAdvancedIcon          = "tbav";
+		public static readonly string ToolbarInfoIcon              = "tbin";
+		public static readonly string ToolbarLabelsIcon            = "tblb";
+		public static readonly string ToolbarApplicationsFolderIcon = "tAps";
+		public static readonly string ToolbarDocumentsFolderIcon   = "tDoc";
+		public static readonly string ToolbarMovieFolderIcon       = "tMov";
+		public static readonly string ToolbarMusicFolderIcon       = "tMus";
+		public static readonly string ToolbarPicturesFolderIcon    = "tPic";
+		public static readonly string ToolbarPublicFolderIcon      = "tPub";
+		public static readonly string ToolbarDesktopFolderIcon     = "tDsk";
+		public static readonly string ToolbarDownloadsFolderIcon   = "tDwn";
+		public static readonly string ToolbarLibraryFolderIcon     = "tLib";
+		public static readonly string ToolbarUtilitiesFolderIcon   = "tUtl";
+		public static readonly string ToolbarSitesFolderIcon       = "tSts";
+
+		/* Other icons */
+		public static readonly string AppleLogoIcon                = "capl";
+		public static readonly string AppleMenuIcon                = "sapl";
+		public static readonly string BackwardArrowIcon            = "baro";
+		public static readonly string FavoriteItemsIcon            = "favr";
+		public static readonly string ForwardArrowIcon             = "faro";
+		public static readonly string GridIcon                     = "grid";
+		public static readonly string HelpIcon                     = "help";
+		public static readonly string KeepArrangedIcon             = "arng";
+		public static readonly string LockedIcon                   = "lock";
+		public static readonly string NoFilesIcon                  = "nfil";
+		public static readonly string NoFolderIcon                 = "nfld";
+		public static readonly string NoWriteIcon                  = "nwrt";
+		public static readonly string ProtectedApplicationFolderIcon = "papp";
+		public static readonly string ProtectedSystemFolderIcon    = "psys";
+		public static readonly string RecentItemsIcon              = "rcnt";
+		public static readonly string ShortcutIcon                 = "shrt";
+		public static readonly string SortAscendingIcon            = "asnd";
+		public static readonly string SortDescendingIcon           = "dsnd";
+		public static readonly string UnlockedIcon                 = "ulck";
+		public static readonly string ConnectToIcon                = "cnct";
+		public static readonly string GenericWindowIcon            = "gwin";
+		public static readonly string QuestionMarkIcon             = "ques";
+		public static readonly string DeleteAliasIcon              = "dali";
+		public static readonly string EjectMediaIcon               = "ejec";
+		public static readonly string BurningIcon                  = "burn";
+		public static readonly string RightContainerArrowIcon      = "rcar";
 	}
 	
 	// These constants specify the possible states of a drawer.

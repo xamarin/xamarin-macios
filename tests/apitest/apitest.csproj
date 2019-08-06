@@ -113,6 +113,7 @@
     <Compile Include="src\DerivedEventTest.cs" />
     <Compile Include="src\EveryFrameworkSmokeTest.cs" />
     <Compile Include="src\Foundation\AppleScript.cs" />
+    <Compile Include="src\Foundation\NSFileTypeForHFSTypeCodeTest.cs" />
     <Compile Include="src\Foundation\NSFormatter.cs" />
     <Compile Include="src\Foundation\NSIndexSet.cs" />
     <Compile Include="src\Foundation\NSLayoutConstraint.cs" />

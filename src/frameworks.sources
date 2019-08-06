@@ -101,6 +101,7 @@ APPKIT_SOURCES = \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
 	AppKit/NSEvent.cs \
+	AppKit/NSFileTypeForHFSTypeCode.cs \
 	AppKit/NSFont.cs \
 	AppKit/NSGestureRecognizer.cs \
 	AppKit/NSGradient.cs \
