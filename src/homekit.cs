@@ -1700,7 +1700,7 @@ namespace HomeKit {
 		HMAccessoryCategory AccessoryCategory { get; }
 		
 		[Export ("accessoryName")]
-		NSString AccessoryName { get; }
+		string AccessoryName { get; }
 		
 		[Export ("requiresSetupPayloadURL")]
 		bool RequiresSetupPayloadUrl { get; }
