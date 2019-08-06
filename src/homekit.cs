@@ -1725,7 +1725,7 @@ namespace HomeKit {
 		HMNetworkConfigurationProfileDelegate WeakDelegate { get; set; }
 		
 		[Export ("networkAccessRestricted")]
-		bool NetworkAccessRestricted { get; [NotImplemented] set; }
+		bool NetworkAccessRestricted { [Bind ("isNetworkAccessRestricted")] get; }
 	}
 
 	[iOS (13,0), Watch (6,0), TV (13,0), NoMac]
