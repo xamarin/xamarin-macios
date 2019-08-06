@@ -59,7 +59,7 @@ namespace HomeKit {
 		
 		[iOS (13,0), Watch (6,0), TV (13,0), NoMac]
 		[Export ("authorizationStatus")]
-		HMHomeManagerAuthorizationStatus AuthorizationStatus { get; [NotImplemented] set; }
+		HMHomeManagerAuthorizationStatus AuthorizationStatus { get; }
 	}
 
 	[TV (10,0)]
