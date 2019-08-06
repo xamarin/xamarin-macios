@@ -1705,7 +1705,7 @@ namespace HomeKit {
 		NSString AccessoryName { get; }
 		
 		[Export ("requiresSetupPayloadURL")]
-		bool RequiresSetupPayloadURL { get; [NotImplemented] set; }
+		bool RequiresSetupPayloadUrl { get; }
 		
 		[Export ("requiresOwnershipToken")]
 		bool RequiresOwnershipToken { get; [NotImplemented] set; }
