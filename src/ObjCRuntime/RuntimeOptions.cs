@@ -74,7 +74,7 @@ namespace ObjCRuntime {
 			content.AppendLine ("</plist>");
 
 			var file_name = GetFileName (app_dir);
-			File.WriteAllText (file_name, content.ToString ());
+			Xamarin.Bundler.Driver.WriteIfDifferent (file_name, content.ToString ());
 		}
 
 		// Called from CoreHttpMessageHandler
