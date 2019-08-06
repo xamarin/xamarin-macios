@@ -1724,7 +1724,7 @@ namespace HomeKit {
 		[NullAllowed]
 		HMNetworkConfigurationProfileDelegate WeakDelegate { get; set; }
 		
-		[Export ("isNetworkAccessRestricted")]
+		[Export ("networkAccessRestricted")]
 		bool NetworkAccessRestricted { get; [NotImplemented] set; }
 	}
 
