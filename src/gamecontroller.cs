@@ -50,11 +50,11 @@ namespace GameController {
 		GCControllerAxisValueChangedHandler ValueChangedHandler { get; set; }
 
 		[Export ("value")]
-		float Value { get; } /* float, not CGFloat */
-
-		[Mac (10,15), iOS (13,0)]
-		[Export ("setValue:")]
-		void SetValue (float value);
+		float Value {  /* float, not CGFloat */
+			get;
+			[Mac (10,15)][iOS (13,0)][TV (13,0)]
+			set;
+		}
 	}
 
 	delegate void GCControllerButtonValueChanged (GCControllerButtonInput button, float /* float, not CGFloat */ buttonValue, bool pressed);
@@ -75,14 +75,14 @@ namespace GameController {
 		GCControllerButtonValueChanged ValueChangedHandler { get; set; }
 
 		[Export ("value")]
-		float Value { get; } /* float, not CGFloat */
+		float Value {  /* float, not CGFloat */
+			get;
+			[Mac (10,15)][iOS (13,0)][TV (13,0)]
+			set;
+		}
 
 		[Export ("pressed")]
 		bool IsPressed { [Bind ("isPressed")] get; }
-
-		[Mac (10,15), iOS (13,0)]
-		[Export ("setValue:")]
-		void SetValue (float value);
 
 #if !XAMCORE_4_0
 		[iOS (8,0), Mac (10,10)]
@@ -91,7 +91,7 @@ namespace GameController {
 		void SetPressedChangedHandler (GCControllerButtonValueChanged handler);
 #endif
 
-		[iOS (8,0), Mac (10,10), TV (13,0)]
+		[iOS (8,0), Mac (10,10)]
 		[NullAllowed]
 		[Export ("pressedChangedHandler", ArgumentSemantic.Copy)]
 		GCControllerButtonValueChanged PressedChangedHandler { get; set; }
@@ -127,6 +127,7 @@ namespace GameController {
 		GCControllerButtonInput Right { get; }
 
 		[Mac (10,15), iOS (13,0)]
+		[TV (13,0)]
 		[Export ("setValueForXAxis:yAxis:")]
 		void SetValue (float xAxis, float yAxis);
 	}
@@ -336,7 +337,6 @@ namespace GameController {
 
 		[Mac (10,12)]
 		[iOS (10,0)]
-		[TV (13,0)]
 		[NullAllowed, Export ("microGamepad", ArgumentSemantic.Retain)]
 		GCMicroGamepad MicroGamepad { get; }
 
@@ -356,7 +356,7 @@ namespace GameController {
 		[Notification, Field ("GCControllerDidDisconnectNotification")]
 		NSString DidDisconnectNotification { get; }
 
-		[iOS (8,0), Mac (10,10), TV(13,0)]
+		[iOS (8,0), Mac (10,10)]
 		[Export ("motion", ArgumentSemantic.Retain)]
 		GCMotion Motion { get; }
 
@@ -387,7 +387,7 @@ namespace GameController {
 		GCController GetExtendedGamepadController ();
 	}
 
-	[iOS (8,0), Mac (10,10), TV (13,0)]
+	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // access thru GCController.Motion - returns a nil Handle
 	partial interface GCMotion {
