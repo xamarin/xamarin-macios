@@ -1712,6 +1712,31 @@ namespace CoreText {
 				return CreateFont (CTFontCreateForString (handle, v.Handle, range));
 		}
 
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern /* CTFontRef */ IntPtr CTFontCreateForStringWithLanguage (
+			/* CTFontRef */ IntPtr currentFont,
+			/* CFStringRef */ IntPtr @string,
+			NSRange range,
+			/* CFStringRef _Nullable */ IntPtr language);
+
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		public CTFont ForString (string value, NSRange range, string language)
+		{
+			if (value == null)
+				throw new ArgumentNullException (nameof (value));
+
+			var v = NSString.CreateNative (value);
+			var l = NSString.CreateNative (language);
+			try {
+				return CreateFont (CTFontCreateForStringWithLanguage (handle, v, range, l));
+			}
+			finally {
+				NSString.ReleaseNative (l);
+				NSString.ReleaseNative (v);
+			}
+		}
+
 #endregion
 
 #region Font Accessors

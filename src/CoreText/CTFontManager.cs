@@ -401,17 +401,20 @@ namespace CoreText {
 			}
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if __IOS__
+		[iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CFArrayRef */ IntPtr CTFontManagerCopyRegisteredFontDescriptors (CTFontManagerScope scope, bool enabled);
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[iOS (13,0)]
+		[NoWatch][NoTV][NoMac]
 		public static CTFontDescriptor[] GetRegisteredFontDescriptors (CTFontManagerScope scope, bool enabled)
 		{
 			var p = CTFontManagerCopyRegisteredFontDescriptors (scope, enabled);
 			// Copy/Create rule - we must release the CFArrayRef
 			return ArrayFromHandle<CTFontDescriptor> (p, releaseAfterUse: true);
 		}
+#endif
 
 		// [Watch (2,0), TV (9,0), Mac (10,7), iOS (7,0)]
 		[DllImport (Constants.CoreTextLibrary)]
