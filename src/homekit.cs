@@ -81,11 +81,11 @@ namespace HomeKit {
 		void DidRemoveHome (HMHomeManager manager, HMHome home);
 
 		[iOS (13,0), NoWatch, NoTV, NoMac]
-		[Export("homeManager:didReceiveAddAccessoryRequest:"), EventArgs ("HMHomeManager")]
+		[Export("homeManager:didReceiveAddAccessoryRequest:"), EventArgs ("HMHomeManagerAddAccessoryRequest")]
 		void DidReceiveAddAccessoryRequest (HMHomeManager manager, HMAddAccessoryRequest request);
 		
 		[iOS (13,0), NoWatch, NoTV, NoMac]
-		[Export("homeManager:didUpdateAuthorizationStatus:"), EventArgs ("HMHomeManager")]
+		[Export("homeManager:didUpdateAuthorizationStatus:"), EventArgs ("HMHomeManagerAuthorizationStatus")]
 		void DidUpdateAuthorizationStatus (HMHomeManager manager, HMHomeManagerAuthorizationStatus status);
 	}
 
