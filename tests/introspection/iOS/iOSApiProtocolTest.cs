@@ -289,6 +289,8 @@ namespace Introspection {
 				case "UIFontPickerViewControllerConfiguration": // Conformance not in headers
 				case "HKAudiogramSample": // Conformance not in headers
 				case "HKAudiogramSensitivityPoint": // Conformance not in headers
+				case "HMAccessoryOwnershipToken": // Conformance not in headers
+				case "HMAddAccessoryRequest": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -515,6 +517,8 @@ namespace Introspection {
 				case "ARCollaborationData":  // Conformance not in headers
 				case "UIFontPickerViewControllerConfiguration":  // Conformance not in headers
 				case "HKAudiogramSensitivityPoint":  // Conformance not in headers
+				case "HMAccessoryOwnershipToken":  // Conformance not in headers
+				case "HMAddAccessoryRequest":  // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":

@@ -1141,15 +1141,12 @@ namespace HomeKit {
 	}
 
 	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
-	public enum HMHomeManagerAuthorizationStatus {
-		[Field ("HMHomeManagerAuthorizationStatusDetermined")]
-		Determined = 0,
-		
-		[Field ("HMHomeManagerAuthorizationStatusRestricted")]
-		Restricted = 1,
-		
-		[Field ("HMHomeManagerAuthorizationStatusAuthorized")]
-		Authorized = 2,
+	[Flags]
+	[Native]
+	public enum HMHomeManagerAuthorizationStatus : ulong {
+		Determined = 1 << 0,
+		Restricted = 1 << 1,
+		Authorized = 1 << 2,
 	}
 
 	[iOS (9,0)]
