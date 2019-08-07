@@ -95,7 +95,9 @@ namespace UIKit {
 		Undo,
 		Redo,
 		[Deprecated (PlatformName.iOS, 11, 0)]
-		PageCurl
+		PageCurl,
+		[iOS (13,0), NoTV]
+		Close,
 	} 
 
 	// NSUInteger -> UIControl.h
@@ -294,6 +296,8 @@ namespace UIKit {
 		ContactAdd,
 		[TV (11,0)][NoiOS]
 		Plain,
+		[NoTV, iOS (13,0)]
+		Close,
 		System = RoundedRect,
 	}
 
@@ -1250,6 +1254,12 @@ namespace UIKit {
 		DefaultHigh = 750,
 		DefaultLow = 250,
 		FittingSizeLevel = 50,
+		[iOS (13,0)]
+		DragThatCanResizeScene = 510,
+		[iOS (13,0)]
+		SceneSizeStayPut = 500,
+		[iOS (13,0)]
+		DragThatCannotResizeScene = 490,
 	}
 
 	// NSInteger -> NSLayoutConstraint.h
@@ -2504,6 +2514,8 @@ namespace UIKit {
 		WritingDirection,
 		[Field ("UIMenuAlignment")]
 		Alignment,
+		[Field ("UIMenuToolbar")]
+		Toolbar,
 		[Field ("UIMenuFullscreen")]
 		Fullscreen,
 		[Field ("UIMenuMinimizeAndZoom")]
@@ -2647,5 +2659,19 @@ namespace UIKit {
 		Standard = 1,
 		Commit = 2,
 		Decline = 3,
+	}
+
+	[NoWatch, NoTV, iOS (13,0)]
+	public enum UIActivityItemsConfigurationInteraction {
+		[Field ("UIActivityItemsConfigurationInteractionShare")]
+		Share,
+	}
+
+	[NoWatch, NoTV, iOS (13,0)]
+	public enum UIActivityItemsConfigurationPreviewIntent {
+		[Field ("UIActivityItemsConfigurationPreviewIntentFullSize")]
+		FullSize,
+		[Field ("UIActivityItemsConfigurationPreviewIntentThumbnail")]
+		Thumbnail,
 	}
 }

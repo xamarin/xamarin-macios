@@ -310,6 +310,7 @@ namespace AuthenticationServices {
 		Revoked,
 		Authorized,
 		NotFound,
+		Transferred,
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -432,6 +433,9 @@ namespace AuthenticationServices {
 
 		[NullAllowed, Export ("state")]
 		string State { get; set; }
+
+		[NullAllowed, Export ("nonce")]
+		string Nonce { get; set; }
 
 		[Export ("requestedOperation")]
 		[BindAs (typeof (ASAuthorizationOperation))]

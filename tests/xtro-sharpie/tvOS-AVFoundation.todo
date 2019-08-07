@@ -77,7 +77,6 @@
 !missing-selector! AVSemanticSegmentationMatte::semanticSegmentationMatteByReplacingSemanticSegmentationMatteWithPixelBuffer:error: not bound
 !missing-selector! AVSpeechSynthesisVoice::audioFileSettings not bound
 !missing-selector! AVSpeechSynthesisVoice::gender not bound
-!missing-selector! AVSpeechSynthesizer::synthesizerAudioSession not bound
 !missing-selector! AVSpeechSynthesizer::writeUtterance:toBufferCallback: not bound
 !missing-selector! AVVideoCompositionRenderHint::endCompositionTime not bound
 !missing-selector! AVVideoCompositionRenderHint::startCompositionTime not bound
@@ -86,3 +85,7 @@
 !missing-type! AVCompositionTrackFormatDescriptionReplacement not bound
 !missing-type! AVSemanticSegmentationMatte not bound
 !missing-type! AVVideoCompositionRenderHint not bound
+!missing-field! AVAudioUnitComponentManagerRegistrationsChangedNotification not bound
+!missing-selector! AVSpeechSynthesizer::setUsesApplicationAudioSession: not bound
+!missing-selector! AVSpeechSynthesizer::usesApplicationAudioSession not bound
+
