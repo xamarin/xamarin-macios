@@ -48,5 +48,6 @@ namespace CoreText {
 		InsufficientInfo = 303,
 		CancelledByUser = 304,
 		DuplicatedName = 305,
+		InvalidFilePath = 306,
 	}
 }
