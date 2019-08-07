@@ -55,5 +55,16 @@ namespace MonoTouchFixtures.NaturalLanguage {
 				Assert.That (hypo.Count, Is.GreaterThan (0), "GetLanguageHypotheses");
 			}
 		}
+
+		[Test]
+		public void HandelNumbers()
+		{
+			using (var recognizer = new NLLanguageRecognizer ()) {
+				Assert.That (recognizer.DominantLanguage, Is.EqualTo (NLLanguage.Unevaluated), "DominantLanguage/Pre-Process");
+				var text = "2";
+				recognizer.Process (text);
+				Assert.That (recognizer.DominantLanguage, Is.EqualTo (NLLanguage.Unevaluated), "DominantLanguage/Post-Process");
+			}
+		}
 	}
 }
