@@ -1025,7 +1025,6 @@ MEDIALIBRARY_API_SOURCES = \
 # MediaToolbox
 
 MEDIATOOLBOX_CORE_SOURCES = \
-	MediaToolbox/MTAudioProcessingTap-Unified.cs\
 	MediaToolbox/MTAudioProcessingTap.cs\
 
 MEDIATOOLBOX_SOURCES = \

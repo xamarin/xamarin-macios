@@ -1,14 +1,5 @@
-#if IOS || MONOMAC
-#if !XAMCORE_2_0
-// NOTICE: 32-bit only implementation 
-//
-// There were a bunch of assumptions in nested callbacks that used the wrong
-// public type definition, which makes it possible, but annoying to supprot with
-// the Unified API.  We would pay a price that we do not need to pay with too
-// many casts.
-//
-// For now, i am applying a band aid to this, and fixing the result in
-// XAMCORE_2_0 in a separate file.
+#if IOS || TVOS || MONOMAC
+#if XAMCORE_2_0
 //
 // MTAudioProcessingTap.cs: Type wrapper for MTAudioProcessingTap
 //
@@ -53,12 +44,12 @@ using CoreMedia;
 
 namespace MediaToolbox
 {
-	[iOS (6,0)][Mac (10, 9)]
+	[iOS (6,0)][Mac (10,9)]
 	public class MTAudioProcessingTap : INativeObject
 #if !COREBUILD
-		, IDisposable
+, IDisposable
 #endif
-		{
+	{
 #if !COREBUILD
 		// MTAudioProcessingTapCallbacks
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -79,10 +70,10 @@ namespace MediaToolbox
 		unsafe delegate void MTAudioProcessingTapInitCallbackProxy (/* MTAudioProcessingTapRef */ IntPtr tap, /* void* */ IntPtr clientInfo, /* void** */ out void* tapStorageOut);
 
 		delegate void MTAudioProcessingTapProcessCallbackProxy (/* MTAudioProcessingTapRef */ IntPtr tap, 
-			int numberFrames, MTAudioProcessingTapFlags flags, /* AudioBufferList* */ IntPtr bufferListInOut, 
-			out int numberFramesOut, out MTAudioProcessingTapFlags flagsOut);
+			IntPtr numberFrames, MTAudioProcessingTapFlags flags, /* AudioBufferList* */ IntPtr bufferListInOut, 
+			out IntPtr numberFramesOut, out MTAudioProcessingTapFlags flagsOut);
 
-		delegate void MTAudioProcessingTapPrepareCallbackProxy (/* MTAudioProcessingTapRef */ IntPtr tap, int maxFrames, ref AudioStreamBasicDescription processingFormat);
+		delegate void MTAudioProcessingTapPrepareCallbackProxy (/* MTAudioProcessingTapRef */ IntPtr tap, IntPtr maxFrames, ref AudioStreamBasicDescription processingFormat);
 
 		static readonly Dictionary<IntPtr, MTAudioProcessingTap> handles = new Dictionary<IntPtr, MTAudioProcessingTap> (Runtime.IntPtrEqualityComparer);
 
@@ -183,46 +174,22 @@ namespace MediaToolbox
 		{
 			return MTAudioProcessingTapGetStorage (handle);
 		}
-			
-		[Obsolete]
-		[DllImport (Constants.MediaToolboxLibrary)]
-		extern static /* OSStatus */ MTAudioProcessingTapError MTAudioProcessingTapGetSourceAudio (
-			/* MTAudioProcessingTapRef */ IntPtr tap, int numberFrames, 
-			/* AudioBufferList* */ ref AudioBufferList bufferListInOut,
-			out MTAudioProcessingTapFlags flagsOut, out CMTimeRange timeRangeOut, out int numberFramesOut);
-
-		[Obsolete ("Use overload with 'AudioBuffers'.")]
-		public MTAudioProcessingTapError GetSourceAudio (long frames, ref AudioBufferList bufferList, out MTAudioProcessingTapFlags flags,
-			out CMTimeRange timeRange, long framesProvided)
-		{
-			int outFp;
-			return MTAudioProcessingTapGetSourceAudio (handle, (int) frames, ref bufferList, out flags, out timeRange, out outFp);
-		}
 
 		[DllImport (Constants.MediaToolboxLibrary)]
 		extern static /* OSStatus */ MTAudioProcessingTapError MTAudioProcessingTapGetSourceAudio (
-			/* MTAudioProcessingTapRef */ IntPtr tap, int numberFrames, 
+			/* MTAudioProcessingTapRef */ IntPtr tap, IntPtr numberFrames, 
 			/* AudioBufferList* */ IntPtr bufferListInOut,
-			out MTAudioProcessingTapFlags flagsOut, out CMTimeRange timeRangeOut, out int numberFramesOut);
-			
-		[Obsolete ("Use 'GetSourceAudio(int,AudioBuffers,out MTAudioProcessingTapFlags, out CMTimeRange, out int)' instead.")]
-		public MTAudioProcessingTapError GetSourceAudio (long frames, AudioBuffers bufferList, out MTAudioProcessingTapFlags flags,
-			out CMTimeRange timeRange, long framesProvided)
+			out MTAudioProcessingTapFlags flagsOut, out CMTimeRange timeRangeOut, out IntPtr numberFramesOut);
+
+		public MTAudioProcessingTapError GetSourceAudio (nint frames, AudioBuffers bufferList, out MTAudioProcessingTapFlags flags, out CMTimeRange timeRange, out nint framesProvided)
 		{
 			if (bufferList == null)
 				throw new ArgumentNullException ("bufferList");
 
-			int result;
-			var r = MTAudioProcessingTapGetSourceAudio (handle, (int) frames, (IntPtr) bufferList, out flags, out timeRange, out result);
+			IntPtr result;
+			var r = MTAudioProcessingTapGetSourceAudio (handle, (IntPtr) frames, (IntPtr) bufferList, out flags, out timeRange, out result);
+			framesProvided = (nint) result;
 			return r;
-		}
-
-		public MTAudioProcessingTapError GetSourceAudio (int frames, AudioBuffers bufferList, out MTAudioProcessingTapFlags flags, out CMTimeRange timeRange, out int framesProvided)
-		{
-			if (bufferList == null)
-				throw new ArgumentNullException ("bufferList");
-
-			return MTAudioProcessingTapGetSourceAudio (handle, frames, (IntPtr) bufferList, out flags, out timeRange, out framesProvided);
 		}
 			
 
@@ -232,21 +199,24 @@ namespace MediaToolbox
 		[MonoPInvokeCallback (typeof (MTAudioProcessingTapInitCallbackProxy))]
 		unsafe static void InitializeProxy (IntPtr tap, IntPtr /*void**/ clientInfo, out void* tapStorage)
 		{
+			// at this stage the handle is not yet known (or part of the `handles` dictionary
+			// so we track back the managed MTAudioProcessingTap instance from the GCHandle
 			var apt = (MTAudioProcessingTap) GCHandle.FromIntPtr (clientInfo).Target;
 			apt.callbacks.Initialize (apt, out tapStorage);
 		}	
 
 		[MonoPInvokeCallback (typeof (MTAudioProcessingTapProcessCallbackProxy))]
-		static void ProcessProxy (IntPtr tap, int numberFrames, MTAudioProcessingTapFlags flags,
-			IntPtr bufferList, out int numberFramesOut, out MTAudioProcessingTapFlags flagsOut)
+		static void ProcessProxy (IntPtr tap, IntPtr numberFrames, MTAudioProcessingTapFlags flags,
+			IntPtr bufferList, out IntPtr numberFramesOut, out MTAudioProcessingTapFlags flagsOut)
 		{
-			long numberOut;
+			// from here we do not have access to `clientInfo` so it's not possible to use the GCHandle to get the
+			// MTAudioProcessingTap managed instance. Instead we get it from a static Dictionary
+			nint numberOut;
 			MTAudioProcessingTap apt;
 			lock (handles)
 				apt = handles [tap];
-
-			apt.callbacks.Processing (apt, (long) numberFrames, flags, new AudioBuffers (bufferList), out numberOut, out flagsOut);
-			numberFramesOut = (int) numberOut;
+			apt.callbacks.Processing (apt, (nint) numberFrames, flags, new AudioBuffers (bufferList), out numberOut, out flagsOut);
+			numberFramesOut = (IntPtr) numberOut;
 		}
 
 		[MonoPInvokeCallback (typeof (Action<IntPtr>))]
@@ -259,12 +229,12 @@ namespace MediaToolbox
 		}
 
 		[MonoPInvokeCallback (typeof (MTAudioProcessingTapPrepareCallbackProxy))]
-		static void PrepareProxy (IntPtr tap, int maxFrames, ref AudioStreamBasicDescription processingFormat)
+		static void PrepareProxy (IntPtr tap, IntPtr maxFrames, ref AudioStreamBasicDescription processingFormat)
 		{
 			MTAudioProcessingTap apt;
 			lock (handles)
 				apt = handles [tap];
-			apt.callbacks.Prepare (apt, (long) maxFrames, ref processingFormat);
+			apt.callbacks.Prepare (apt, (nint) maxFrames, ref processingFormat);
 		}
 
 		[MonoPInvokeCallback (typeof (Action<IntPtr>))]
@@ -304,12 +274,6 @@ namespace MediaToolbox
 
 	public class MTAudioProcessingTapCallbacks
 	{
-		[Obsolete ("Use constructor with MTAudioProcessingTapProcessDelegate", true)]
-		public MTAudioProcessingTapCallbacks (MTAudioProcessingTapProcessCallback process)
-		{
-			throw new NotSupportedException ();
-		}
-
 		public MTAudioProcessingTapCallbacks (MTAudioProcessingTapProcessDelegate process)
 		{
 			if (process == null)
@@ -322,26 +286,18 @@ namespace MediaToolbox
 		public Action<MTAudioProcessingTap> Finalize { get; set; }
 		public MTAudioProcessingTapPrepareCallback Prepare { get; set; }
 		public Action<MTAudioProcessingTap> Unprepare { get; set; }
-
-		[Obsolete ("Use 'Processing' property instead.")]
-		public MTAudioProcessingTapProcessCallback Process { get; private set; }
-
 		public MTAudioProcessingTapProcessDelegate Processing { get; private set; }
 	}
 
 	public unsafe delegate void MTAudioProcessingTapInitCallback (MTAudioProcessingTap tap, out void* tapStorage);
-	public delegate void MTAudioProcessingTapPrepareCallback (MTAudioProcessingTap tap, long maxFrames, ref AudioStreamBasicDescription processingFormat);
+	public delegate void MTAudioProcessingTapPrepareCallback (MTAudioProcessingTap tap, nint maxFrames, ref AudioStreamBasicDescription processingFormat);
 
-	[Obsolete ("Use 'MTAudioProcessingTapProcessDelegate' instead.")]
-	public delegate void MTAudioProcessingTapProcessCallback (MTAudioProcessingTap tap, long numberFrames, MTAudioProcessingTapFlags flags,
-			ref AudioBufferList bufferList, out long numberFramesOut, out MTAudioProcessingTapFlags flagsOut);
-
-	public delegate void MTAudioProcessingTapProcessDelegate (MTAudioProcessingTap tap, long numberFrames, MTAudioProcessingTapFlags flags,
-			AudioBuffers bufferList, out long numberFramesOut, out MTAudioProcessingTapFlags flagsOut);
+	public delegate void MTAudioProcessingTapProcessDelegate (MTAudioProcessingTap tap, nint numberFrames, MTAudioProcessingTapFlags flags,
+								  AudioBuffers bufferList, out nint numberFramesOut, out MTAudioProcessingTapFlags flagsOut);
 
 #if COREBUILD
 	public class AudioBufferList {}
 #endif
 }
-#endif // !XAMCORE_2_0
-#endif // IOS
+#endif // XAMCORE_2_0
+#endif // IOS || TVOS
