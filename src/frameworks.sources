@@ -1133,7 +1133,12 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 NATURALLANGUAGE_API_SOURCES = \
 	NaturalLanguage/Enums.cs \
 
+NATURALLANGUAGE_CORE_SOURCES = \
+	NaturalLanguage/NLStrongDictionary.cs \
+	NaturalLanguage/NLVectorDictionary.cs \
+
 NATURALLANGUAGE_SOURCES = \
+	NaturalLanguage/NLEmbedding.cs \
 	NaturalLanguage/NLLanguageRecognizer.cs \
 
 # Network

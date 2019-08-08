@@ -1,4 +1,4 @@
-// Copyright 2018, Microsoft Corp.
+// Copyright 2018-2019 Microsoft Corp.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -201,5 +201,8 @@ namespace NaturalLanguage {
 		Language,
 		[Field ("NLTagSchemeScript")]
 		Script,
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[Field ("NLTagSchemeSentimentScore")]
+		SentimentScore,
 	}
 }
