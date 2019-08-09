@@ -18,6 +18,8 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		[Test]
 		public void Dictionary ()
 		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+
 			var sd = new NLStrongDictionary ();
 			sd ["a"] = new [] { "Allo" };
 			sd [new NSString ("b")] = new [] { "Bonjour" };

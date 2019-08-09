@@ -19,7 +19,10 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		[Test]
 		public void Vector ()
 		{
-			using (var e = NLEmbedding.GetWordEmbedding (NLLanguage.French)) {
+			TestRuntime.AssertXcodeVersion (11, 0);
+
+			using (var e = NLEmbedding.GetWordEmbedding (NLLanguage.English)) {
+				Assert.NotNull (e, "GetWordEmbedding");
 				Assert.Null (e.GetVector ("Xamarin"), "GetVector");
 				Assert.False (e.TryGetVector ("Xamarin", out var vector), "TryGetVector");
 				Assert.Null (vector, "vector");
@@ -29,6 +32,8 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		[Test]
 		public void Write ()
 		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+
 			var temp = Path.Combine (Path.GetTempPath (), "NLEmbedding.Test");
 			File.Delete (temp);
 
