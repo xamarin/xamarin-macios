@@ -70,6 +70,14 @@ namespace AVKit {
 		[Static]
 		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
 		UIImage CreateStopButton ([NullAllowed] UITraitCollection traitCollection);
+		
+		[Static]
+		[Export ("pictureInPictureButtonStartImageCompatibleWithTraitCollection:")]
+		UIImage PictureInPictureButtonStartImageCompatible ([NullAllowed] UITraitCollection traitCollection);
+		
+		[Static]
+		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
+		UIImage PictureInPictureButtonStopImageCompatible ([NullAllowed] UITraitCollection traitCollection);
 	}
 
 	[NoTV]
@@ -208,6 +216,10 @@ namespace AVKit {
 		[NoiOS, TV (11,2), NoMac, NoWatch]
 		[Export ("appliesPreferredDisplayCriteriaAutomatically")]
 		bool AppliesPreferredDisplayCriteriaAutomatically { get; set; }
+		
+		[iOS (9, 0)]
+		[NullAllowed, Export ("pixelBufferAttributes", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> PixelBufferAttributes { get; set; }
 	}
 
 	[Protocol, Model]
@@ -309,6 +321,32 @@ namespace AVKit {
 		[NoiOS, TV (11,0), NoWatch, NoMac]
 		[Export ("playerViewController:willTransitionToVisibilityOfTransportBar:withAnimationCoordinator:")]
 		void WillTransitionToVisibilityOfTransportBar ([NullAllowed] AVPlayerViewController playerViewController, bool visible, [NullAllowed] IAVPlayerViewControllerAnimationCoordinator coordinator);
+		
+		[iOS (12,0)]
+		[Export ("playerViewController:willBeginFullScreenPresentationWithAnimationCoordinator:")]
+		void PlayerViewController (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
+		
+		[iOS (12,0)]
+		[Export ("playerViewController:willEndFullScreenPresentationWithAnimationCoordinator:")]
+		void PlayerViewController (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
+	}
+	
+	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[Category]
+	[BaseType (typeof(AVAudioSession))]
+	interface AVAudioSession_AVPlaybackRouteSelecting
+	{
+		[Export ("prepareRouteSelectionForPlaybackWithCompletionHandler:")]
+		void PrepareRouteSelectionForPlayback (Action<bool, AVAudioSessionRouteSelection> completionHandler);
+	}
+	
+	[Category]
+	[BaseType (typeof(AVPlayerItem))]
+	interface AVPlayerItem_AVKitAdditions
+	{
+		[iOS (12, 0)]
+		[Export ("externalMetadata", ArgumentSemantic.Copy)]
+		AVMetadataItem[] ExternalMetadata { get; set; }
 	}
 
 	interface IAVPlayerViewControllerAnimationCoordinator { }
@@ -534,6 +572,10 @@ namespace AVKit {
 		[NoiOS]
 		[Export ("routePickerButtonStyle", ArgumentSemantic.Assign)]
 		AVRoutePickerViewButtonStyle RoutePickerButtonStyle { get; set; }
+		
+		[TV (13, 0), iOS (13, 0)]
+		[Export ("prioritizesVideoDevices")]
+		bool PrioritizesVideoDevices { get; set; }
 	}
 
 	[TV (11,0), NoiOS]

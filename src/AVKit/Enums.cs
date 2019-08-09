@@ -42,6 +42,15 @@ namespace AVKit {
 		Unknown = -1000,
 		PictureInPictureStartFailed = -1001
 	}
+	
+	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[Native]
+	public enum AVAudioSessionRouteSelection : long
+	{
+		None = 0,
+		Local = 1,
+		External = 2
+	}
 #endif
 
 }	
