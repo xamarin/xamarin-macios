@@ -433,7 +433,7 @@ namespace NaturalLanguage {
 		void EnumerateNeighbors ([BindAs (typeof (float[]))] NSNumber[] vector, nuint maxCount, NLDistanceType distanceType, NLEnumerateNeighborsHandler block);
 
 		[Export ("enumerateNeighborsForVector:maximumCount:maximumDistance:distanceType:usingBlock:")]
-		void EnumerateNeighbors ([BindAs (typeof (float[]))] NSNumber[] vector, nuint maxCount, double maxDistance, NLDistanceType distanceType, NLEnumerateNeighborsHandler block);
+		void EnumerateNeighbors ([BindAs (typeof (float[]))] NSNumber[] vector, nuint maxCount, double maxDistance, NLDistanceType distanceType, NLEnumerateNeighborsHandler handler);
 
 		[Export ("neighborsForVector:maximumCount:distanceType:")]
 		string[] GetNeighbors ([BindAs (typeof (float[]))] NSNumber[] vector, nuint maxCount, NLDistanceType distanceType);
