@@ -410,7 +410,7 @@ namespace NaturalLanguage {
 		void EnumerateNeighbors (string @string, nuint maxCount, NLDistanceType distanceType, NLEnumerateNeighborsHandler handler);
 
 		[Export ("enumerateNeighborsForString:maximumCount:maximumDistance:distanceType:usingBlock:")]
-		void EnumerateNeighbors (string @string, nuint maxCount, double maxDistance, NLDistanceType distanceType, NLEnumerateNeighborsHandler block);
+		void EnumerateNeighbors (string @string, nuint maxCount, double maxDistance, NLDistanceType distanceType, NLEnumerateNeighborsHandler handler);
 
 		[Export ("neighborsForString:maximumCount:distanceType:")]
 		[return: NullAllowed]
