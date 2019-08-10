@@ -322,13 +322,22 @@ namespace AVKit {
 		[Export ("playerViewController:willTransitionToVisibilityOfTransportBar:withAnimationCoordinator:")]
 		void WillTransitionToVisibilityOfTransportBar ([NullAllowed] AVPlayerViewController playerViewController, bool visible, [NullAllowed] IAVPlayerViewControllerAnimationCoordinator coordinator);
 		
-		[iOS (12,0)]
+		[iOS (12,0), NoTV, NoWatch, NoMac]
 		[Export ("playerViewController:willBeginFullScreenPresentationWithAnimationCoordinator:")]
-		void PlayerViewController (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
+		void PlayerViewControllerWillBeginFullScreenPresentation (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
 		
-		[iOS (12,0)]
+		[iOS (12,0), NoTV, NoWatch, NoMac]
 		[Export ("playerViewController:willEndFullScreenPresentationWithAnimationCoordinator:")]
-		void PlayerViewController (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
+		void PlayerViewControllerWillEndFullScreenPresentation (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
+	}
+	
+	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[Native]
+	public enum AVAudioSessionRouteSelection : long
+	{
+		None = 0,
+		Local = 1,
+		External = 2
 	}
 	
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -338,15 +347,6 @@ namespace AVKit {
 	{
 		[Export ("prepareRouteSelectionForPlaybackWithCompletionHandler:")]
 		void PrepareRouteSelectionForPlayback (Action<bool, AVAudioSessionRouteSelection> completionHandler);
-	}
-	
-	[Category]
-	[BaseType (typeof(AVPlayerItem))]
-	interface AVPlayerItem_AVKitAdditions
-	{
-		[iOS (12, 0)]
-		[Export ("externalMetadata", ArgumentSemantic.Copy)]
-		AVMetadataItem[] ExternalMetadata { get; set; }
 	}
 
 	interface IAVPlayerViewControllerAnimationCoordinator { }

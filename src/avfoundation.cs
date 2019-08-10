@@ -10871,6 +10871,7 @@ namespace AVFoundation {
 
 		[NoiOS][NoMac]
 		[TV (9,0)]
+		[iOS (12,0)]
 		[Export ("externalMetadata", ArgumentSemantic.Copy)]
 		AVMetadataItem[] ExternalMetadata { get; set; }
 
