@@ -246,11 +246,11 @@ namespace AVKit {
 		
 		[iOS (12,0), NoTV, NoWatch, NoMac]
 		[Export ("playerViewController:willBeginFullScreenPresentationWithAnimationCoordinator:")]
-		void PlayerViewControllerWillBeginFullScreenPresentation (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
+		void WillBeginFullScreenPresentation (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
 		
 		[iOS (12,0), NoTV, NoWatch, NoMac]
 		[Export ("playerViewController:willEndFullScreenPresentationWithAnimationCoordinator:")]
-		void PlayerViewControllerWillEndFullScreenPresentation (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
+		void WillEndFullScreenPresentation (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
 		
 		[TV (13,0)]
 		[Export ("nextChannelInterstitialViewControllerForPlayerViewController:")]
