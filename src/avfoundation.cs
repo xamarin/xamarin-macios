@@ -10869,7 +10869,7 @@ namespace AVFoundation {
 		[Export ("navigationMarkerGroups", ArgumentSemantic.Copy)]
 		AVNavigationMarkersGroup[] NavigationMarkerGroups { get; set; }
 
-		[NoiOS][NoMac]
+		[NoMac]
 		[TV (9,0)]
 		[iOS (12,0)]
 		[Export ("externalMetadata", ArgumentSemantic.Copy)]
