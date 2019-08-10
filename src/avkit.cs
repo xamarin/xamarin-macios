@@ -135,9 +135,13 @@ namespace AVKit {
 		[Export ("appliesPreferredDisplayCriteriaAutomatically")]
 		bool AppliesPreferredDisplayCriteriaAutomatically { get; set; }
 		
-		[iOS (9, 0)]
+		[iOS (9, 0), TV (13,0)]
 		[NullAllowed, Export ("pixelBufferAttributes", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> PixelBufferAttributes { get; set; }
+		
+		[NoiOS, TV (13,0), NoMac, NoWatch]
+		[NullAllowed, Export ("customOverlayViewController", ArgumentSemantic.Strong)]
+		UIViewController CustomOverlayViewController { get; set; }
 	}
 
 	[Protocol, Model]
@@ -247,6 +251,22 @@ namespace AVKit {
 		[iOS (12,0), NoTV, NoWatch, NoMac]
 		[Export ("playerViewController:willEndFullScreenPresentationWithAnimationCoordinator:")]
 		void PlayerViewControllerWillEndFullScreenPresentation (AVPlayerViewController playerViewController, UIViewControllerTransitionCoordinator coordinator);
+		
+		[TV (13,0)]
+		[Export ("nextChannelInterstitialViewControllerForPlayerViewController:")]
+		UIViewController NextChannelInterstitialViewController (AVPlayerViewController playerViewController);
+		
+		[TV (13,0)]
+		[Export ("playerViewController:skipToNextChannel:")]
+		void SkipToNextChannel (AVPlayerViewController playerViewController, Action<bool> completion);
+		
+		[TV (13,0)]
+		[Export ("playerViewController:skipToPreviousChannel:")]
+		void SkipToPreviousChannel (AVPlayerViewController playerViewController, Action<bool> completion);
+		
+		[TV (13,0)]
+		[Export ("previousChannelInterstitialViewControllerForPlayerViewController:")]
+		UIViewController PreviousChannelInterstitialViewController (AVPlayerViewController playerViewController);
 	}
 	
 	[NoWatch, NoTV, NoMac, iOS (13,0)]

@@ -43,14 +43,20 @@ namespace AVKit {
 	}
 #endif
 
-#if !TVOS && (!MONOMAC || !XAMCORE_4_0)
-	[iOS (9,0)]
+#if !MONOMAC || !XAMCORE_4_0
+	[iOS (9,0), TV (13,0)]
 	[Native]
 	[ErrorDomain ("AVKitErrorDomain")]
 	public enum AVKitError : long {
 		None = 0,
 		Unknown = -1000,
-		PictureInPictureStartFailed = -1001
+		PictureInPictureStartFailed = -1001,
+		[TV (13,0)]
+		ContentRatingUnknown = -1100,
+		[TV (13,0)]
+		ContentDisallowedByPasscode = -1101,
+		[TV (13,0)]
+		ContentDisallowedByProfile = -1102,
 	}
 #endif
 
