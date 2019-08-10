@@ -135,11 +135,11 @@ namespace AVKit {
 		[Export ("appliesPreferredDisplayCriteriaAutomatically")]
 		bool AppliesPreferredDisplayCriteriaAutomatically { get; set; }
 		
-		[iOS (9, 0), TV (13,0)]
+		[iOS (9, 0), TV (13,0), NoWatch]
 		[NullAllowed, Export ("pixelBufferAttributes", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> PixelBufferAttributes { get; set; }
 		
-		[NoiOS, TV (13,0), NoMac, NoWatch]
+		[NoiOS, TV (13,0), NoWatch]
 		[NullAllowed, Export ("customOverlayViewController", ArgumentSemantic.Strong)]
 		UIViewController CustomOverlayViewController { get; set; }
 	}
