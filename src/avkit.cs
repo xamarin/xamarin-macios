@@ -252,19 +252,19 @@ namespace AVKit {
 		[Export ("playerViewController:willEndFullScreenPresentationWithAnimationCoordinator:")]
 		void WillEndFullScreenPresentation (AVPlayerViewController playerViewController, IUIViewControllerTransitionCoordinator coordinator);
 		
-		[TV (13,0)]
+		[TV (13,0), NoiOS, NoWatch, NoMac]
 		[Export ("nextChannelInterstitialViewControllerForPlayerViewController:")]
 		UIViewController NextChannelInterstitialViewController (AVPlayerViewController playerViewController);
 		
-		[TV (13,0)]
+		[TV (13,0), NoiOS, NoWatch, NoMac]
 		[Export ("playerViewController:skipToNextChannel:")]
 		void SkipToNextChannel (AVPlayerViewController playerViewController, Action<bool> completion);
 		
-		[TV (13,0)]
+		[TV (13,0), NoiOS, NoWatch, NoMac]
 		[Export ("playerViewController:skipToPreviousChannel:")]
 		void SkipToPreviousChannel (AVPlayerViewController playerViewController, Action<bool> completion);
 		
-		[TV (13,0)]
+		[TV (13,0), NoiOS, NoWatch, NoMac]
 		[Export ("previousChannelInterstitialViewControllerForPlayerViewController:")]
 		UIViewController PreviousChannelInterstitialViewController (AVPlayerViewController playerViewController);
 	}
