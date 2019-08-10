@@ -16,104 +16,12 @@ using UIKit;
 #else
 using AppKit;
 #endif
+#if MONOMAC
+using UIImage=AppKit.NSImage;
+#endif
 
 namespace AVKit {
 #if !MONOMAC
-	[NoTV]
-	[iOS (9,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-#if XAMCORE_4_0
-	[Sealed] // Apple docs: Do not subclass AVPictureInPictureController. Overriding this class’s methods is unsupported and results in undefined behavior.
-#endif
-	interface AVPictureInPictureController
-	{
-		[Static]
-		[Export ("isPictureInPictureSupported")]
-		bool IsPictureInPictureSupported { get; }
-	
-		[Export ("initWithPlayerLayer:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (AVPlayerLayer playerLayer);
-	
-		[Export ("playerLayer")]
-		AVPlayerLayer PlayerLayer { get; }
-	
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		[Protocolize]
-		AVPictureInPictureControllerDelegate Delegate { get; set; }
-	
-		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; set; }
-	
-		[Export ("startPictureInPicture")]
-		void StartPictureInPicture ();
-	
-		[Export ("stopPictureInPicture")]
-		void StopPictureInPicture ();
-	
-		[Export ("pictureInPicturePossible")]
-		bool PictureInPicturePossible { [Bind ("isPictureInPicturePossible")] get; }
-	
-		[Export ("pictureInPictureActive")]
-		bool PictureInPictureActive { [Bind ("isPictureInPictureActive")] get; }
-	
-		[Export ("pictureInPictureSuspended")]
-		bool PictureInPictureSuspended { [Bind ("isPictureInPictureSuspended")] get; }
-
-		
-		[Static]
-		[Export ("pictureInPictureButtonStartImageCompatibleWithTraitCollection:")]
-		UIImage CreateStartButton ([NullAllowed] UITraitCollection traitCollection);
-
-		[Static]
-		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
-		UIImage CreateStopButton ([NullAllowed] UITraitCollection traitCollection);
-		
-		[Static]
-		[Export ("pictureInPictureButtonStartImageCompatibleWithTraitCollection:")]
-		UIImage PictureInPictureButtonStartImageCompatible ([NullAllowed] UITraitCollection traitCollection);
-		
-		[Static]
-		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
-		UIImage PictureInPictureButtonStopImageCompatible ([NullAllowed] UITraitCollection traitCollection);
-		
-		[iOS (13, 0)]
-		[Static]
-		[Export ("pictureInPictureButtonStartImage")]
-		UIImage PictureInPictureButtonStartImage { get; }
-		
-		[iOS (13, 0)]
-		[Static]
-		[Export ("pictureInPictureButtonStopImage")]
-		UIImage PictureInPictureButtonStopImage { get; }
-	}
-
-	[NoTV]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface AVPictureInPictureControllerDelegate
-	{
-		[Export ("pictureInPictureControllerWillStartPictureInPicture:")]
-		void WillStartPictureInPicture (AVPictureInPictureController pictureInPictureController);
-	
-		[Export ("pictureInPictureControllerDidStartPictureInPicture:")]
-		void DidStartPictureInPicture (AVPictureInPictureController pictureInPictureController);
-	
-		[Export ("pictureInPictureController:failedToStartPictureInPictureWithError:")]
-		void FailedToStartPictureInPicture (AVPictureInPictureController pictureInPictureController, NSError error);
-	
-		[Export ("pictureInPictureControllerWillStopPictureInPicture:")]
-		void WillStopPictureInPicture (AVPictureInPictureController pictureInPictureController);
-	
-		[Export ("pictureInPictureControllerDidStopPictureInPicture:")]
-		void DidStopPictureInPicture (AVPictureInPictureController pictureInPictureController);
-	
-		[Export ("pictureInPictureController:restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:")]
-		void RestoreUserInterfaceForPictureInPicture (AVPictureInPictureController pictureInPictureController, Action<bool> completionHandler);
-	}
-	
 
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController))]
@@ -371,44 +279,6 @@ namespace AVKit {
 	}
 
 #else
-
-	[Mac (10,15)]
-	[BaseType (typeof(NSView))]
-	interface AVRoutePickerView
-	{
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		IAVRoutePickerViewDelegate Delegate { get; set; }
-		
-		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; set; }
-		
-		[Export ("routePickerButtonColorForState:")]
-		NSColor RoutePickerButtonColorForState (AVRoutePickerViewButtonState state);
-		
-		[Export ("setRoutePickerButtonColor:forState:")]
-		void SetRoutePickerButtonColor ([NullAllowed] NSColor color, AVRoutePickerViewButtonState state);
-		
-		[Export ("routePickerButtonBordered")]
-		bool RoutePickerButtonBordered { [Bind ("isRoutePickerButtonBordered")] get; set; }
-		
-		[NullAllowed, Export ("player", ArgumentSemantic.Assign)]
-		AVPlayer Player { get; set; }
-	}
-	
-	interface IAVRoutePickerViewDelegate { }
-	
-	[Mac (10,15)]
-	[Protocol, Model]
-	[BaseType (typeof (NSObject))]
-	interface AVRoutePickerViewDelegate {
-
-		[Export ("routePickerViewWillBeginPresentingRoutes:")]
-		void WillBeginPresentingRoutes (AVRoutePickerView routePickerView);
-
-		[Export ("routePickerViewDidEndPresentingRoutes:")]
-		void DidEndPresentingRoutes (AVRoutePickerView routePickerView);
-	}
 	
 	[Mac (10,9)]
 	[BaseType (typeof (NSView))]
@@ -516,77 +386,9 @@ namespace AVKit {
 		bool PlayerViewShouldAutomaticallyDismissAtPictureInPictureStart (AVPlayerView playerView);
 	}
 
-	[NoWatch, NoTV, Mac (10,15)]
-	[BaseType (typeof(NSObject))]
-	interface AVPictureInPictureController
-	{
-		[Static]
-		[Export ("isPictureInPictureSupported")]
-		bool IsPictureInPictureSupported { get; }
-		
-		[Static]
-		[Export ("pictureInPictureButtonStartImage")]
-		NSImage PictureInPictureButtonStartImage { get; }
-		
-		[Static]
-		[Export ("pictureInPictureButtonStopImage")]
-		NSImage PictureInPictureButtonStopImage { get; }
-		
-		[Export ("initWithPlayerLayer:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (AVPlayerLayer playerLayer);
-		
-		[Export ("playerLayer")]
-		AVPlayerLayer PlayerLayer { get; }
-
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		IAVPictureInPictureControllerDelegate Delegate { get; set; }
-		
-		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; set; }
-		
-		[Export ("startPictureInPicture")]
-		void StartPictureInPicture ();
-		
-		[Export ("stopPictureInPicture")]
-		void StopPictureInPicture ();
-		
-		[Export ("pictureInPicturePossible")]
-		bool PictureInPicturePossible { [Bind ("isPictureInPicturePossible")] get; }
-		
-		[Export ("pictureInPictureActive")]
-		bool PictureInPictureActive { [Bind ("isPictureInPictureActive")] get; }
-		
-		[Export ("pictureInPictureSuspended")]
-		bool PictureInPictureSuspended { [Bind ("isPictureInPictureSuspended")] get; }
-	}
-
-	interface IAVPictureInPictureControllerDelegate {}
 	
-	[Mac (10,15)]
-	[Protocol, Model (AutoGeneratedName = true)]
-	[BaseType (typeof(NSObject))]
-	interface AVPictureInPictureControllerDelegate
-	{
-		[Export ("pictureInPictureControllerWillStartPictureInPicture:")]
-		void PictureInPictureControllerWillStartPictureInPicture (AVPictureInPictureController pictureInPictureController);
-		
-		[Export ("pictureInPictureControllerDidStartPictureInPicture:")]
-		void PictureInPictureControllerDidStartPictureInPicture (AVPictureInPictureController pictureInPictureController);
-		
-		[Export ("pictureInPictureController:failedToStartPictureInPictureWithError:")]
-		void PictureInPictureController (AVPictureInPictureController pictureInPictureController, NSError error);
-		
-		[Export ("pictureInPictureControllerWillStopPictureInPicture:")]
-		void PictureInPictureControllerWillStopPictureInPicture (AVPictureInPictureController pictureInPictureController);
-		
-		[Export ("pictureInPictureControllerDidStopPictureInPicture:")]
-		void PictureInPictureControllerDidStopPictureInPicture (AVPictureInPictureController pictureInPictureController);
-		
-		[Export ("pictureInPictureController:restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:")]
-		void PictureInPictureController (AVPictureInPictureController pictureInPictureController, Action<bool> completionHandler);
-	}
+
+	
 	
 	[Mac (10,10)]
 	[BaseType (typeof (NSView))]
@@ -721,27 +523,7 @@ namespace AVKit {
 		NSString ServiceIdentifier { get; }
 	}
 
-	[TV (11,0), iOS (11,0)]
-	[BaseType (typeof (UIView))]
-	interface AVRoutePickerView {
-
-		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
-
-		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		IAVRoutePickerViewDelegate Delegate { get; set; }
-
-		[Export ("activeTintColor", ArgumentSemantic.Assign), NullAllowed]
-		UIColor ActiveTintColor { get; set; }
-
-		[NoiOS]
-		[Export ("routePickerButtonStyle", ArgumentSemantic.Assign)]
-		AVRoutePickerViewButtonStyle RoutePickerButtonStyle { get; set; }
-		
-		[TV (13, 0), iOS (13, 0)]
-		[Export ("prioritizesVideoDevices")]
-		bool PrioritizesVideoDevices { get; set; }
-	}
+	
 
 	[TV (11,0), NoiOS]
 	[Native]
@@ -751,19 +533,6 @@ namespace AVKit {
 		Custom,
 	}
 
-	interface IAVRoutePickerViewDelegate { }
-
-	[TV (11,0), iOS (11,0)]
-	[Protocol, Model]
-	[BaseType (typeof (NSObject))]
-	interface AVRoutePickerViewDelegate {
-
-		[Export ("routePickerViewWillBeginPresentingRoutes:")]
-		void WillBeginPresentingRoutes (AVRoutePickerView routePickerView);
-
-		[Export ("routePickerViewDidEndPresentingRoutes:")]
-		void DidEndPresentingRoutes (AVRoutePickerView routePickerView);
-	}
 
 	[TV (11,2), NoiOS, NoMac, NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -805,4 +574,164 @@ namespace AVKit {
 		AVDisplayManager GetAVDisplayManager ();
 	}
 #endif
+
+	[TV(11, 0), iOS(11, 0), Mac(10, 15)]
+#if !MONOMAC
+	[BaseType (typeof (UIView))]
+#else
+	[BaseType(typeof(NSView))]
+#endif
+	interface AVRoutePickerView
+	{
+#if !MONOMAC
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+#endif
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IAVRoutePickerViewDelegate Delegate { get; set; }
+		
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+		
+#if !MONOMAC
+		[Export ("activeTintColor", ArgumentSemantic.Assign), NullAllowed]
+		UIColor ActiveTintColor { get; set; }
+
+		[NoiOS]
+		[Export ("routePickerButtonStyle", ArgumentSemantic.Assign)]
+		AVRoutePickerViewButtonStyle RoutePickerButtonStyle { get; set; }
+		
+		[TV (13, 0), iOS (13, 0)]
+		[Export ("prioritizesVideoDevices")]
+		bool PrioritizesVideoDevices { get; set; }
+#else
+		[Export ("routePickerButtonColorForState:")]
+		NSColor RoutePickerButtonColorForState (AVRoutePickerViewButtonState state);
+		
+		[Export ("setRoutePickerButtonColor:forState:")]
+		void SetRoutePickerButtonColor ([NullAllowed] NSColor color, AVRoutePickerViewButtonState state);
+		
+		[Export ("routePickerButtonBordered")]
+		bool RoutePickerButtonBordered { [Bind ("isRoutePickerButtonBordered")] get; set; }
+		
+		[NullAllowed, Export ("player", ArgumentSemantic.Assign)]
+		AVPlayer Player { get; set; }
+#endif
+	}
+	
+	interface IAVRoutePickerViewDelegate { }
+
+	[TV (11,0), iOS (11,0), Mac (10,15)]
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
+	interface AVRoutePickerViewDelegate {
+
+		[Export ("routePickerViewWillBeginPresentingRoutes:")]
+		void WillBeginPresentingRoutes (AVRoutePickerView routePickerView);
+
+		[Export ("routePickerViewDidEndPresentingRoutes:")]
+		void DidEndPresentingRoutes (AVRoutePickerView routePickerView);
+	}
+	
+	
+
+	[NoTV]
+	[iOS(9, 0)]
+	[Mac (10,15)]
+	[BaseType(typeof(NSObject))]
+	[DisableDefaultCtor]
+#if XAMCORE_4_0
+	[Sealed] // Apple docs: Do not subclass AVPictureInPictureController. Overriding this class’s methods is unsupported and results in undefined behavior.
+#endif
+	interface AVPictureInPictureController
+	{
+		[Static]
+		[Export ("isPictureInPictureSupported")]
+		bool IsPictureInPictureSupported { get; }
+		
+		[Export ("initWithPlayerLayer:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (AVPlayerLayer playerLayer);
+		
+		[Export ("playerLayer")]
+		AVPlayerLayer PlayerLayer { get; }
+		
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IAVPictureInPictureControllerDelegate Delegate { get; set; }
+		
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+		
+		[Export ("startPictureInPicture")]
+		void StartPictureInPicture ();
+	
+		[Export ("stopPictureInPicture")]
+		void StopPictureInPicture ();
+		
+		[Export ("pictureInPicturePossible")]
+		bool PictureInPicturePossible { [Bind ("isPictureInPicturePossible")] get; }
+	
+		[Export ("pictureInPictureActive")]
+		bool PictureInPictureActive { [Bind ("isPictureInPictureActive")] get; }
+	
+		[Export ("pictureInPictureSuspended")]
+		bool PictureInPictureSuspended { [Bind ("isPictureInPictureSuspended")] get; }
+
+		[iOS (13, 0)]
+		[Static]
+		[Export ("pictureInPictureButtonStartImage")]
+		UIImage PictureInPictureButtonStartImage { get; }
+		
+		[iOS (13, 0)]
+		[Static]
+		[Export ("pictureInPictureButtonStopImage")]
+		UIImage PictureInPictureButtonStopImage { get; }
+		
+#if !MONOMAC
+		[Static]
+		[Export ("pictureInPictureButtonStartImageCompatibleWithTraitCollection:")]
+		UIImage CreateStartButton ([NullAllowed] UITraitCollection traitCollection);
+
+		[Static]
+		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
+		UIImage CreateStopButton ([NullAllowed] UITraitCollection traitCollection);
+		
+		[Static]
+		[Export ("pictureInPictureButtonStartImageCompatibleWithTraitCollection:")]
+		UIImage PictureInPictureButtonStartImageCompatible ([NullAllowed] UITraitCollection traitCollection);
+		
+		[Static]
+		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
+		UIImage PictureInPictureButtonStopImageCompatible ([NullAllowed] UITraitCollection traitCollection);
+#endif
+		
+	}
+	
+	interface IAVPictureInPictureControllerDelegate {}
+
+	[iOS(9, 0), Mac(10, 15), NoTV]
+	[Protocol, Model(AutoGeneratedName = true)]
+	[BaseType(typeof(NSObject))]
+	interface AVPictureInPictureControllerDelegate
+	{
+		[Export ("pictureInPictureControllerWillStartPictureInPicture:")]
+		void WillStartPictureInPicture (AVPictureInPictureController pictureInPictureController);
+	
+		[Export ("pictureInPictureControllerDidStartPictureInPicture:")]
+		void DidStartPictureInPicture (AVPictureInPictureController pictureInPictureController);
+	
+		[Export ("pictureInPictureController:failedToStartPictureInPictureWithError:")]
+		void FailedToStartPictureInPicture (AVPictureInPictureController pictureInPictureController, NSError error);
+	
+		[Export ("pictureInPictureControllerWillStopPictureInPicture:")]
+		void WillStopPictureInPicture (AVPictureInPictureController pictureInPictureController);
+	
+		[Export ("pictureInPictureControllerDidStopPictureInPicture:")]
+		void DidStopPictureInPicture (AVPictureInPictureController pictureInPictureController);
+	
+		[Export ("pictureInPictureController:restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:")]
+		void RestoreUserInterfaceForPictureInPicture (AVPictureInPictureController pictureInPictureController, Action<bool> completionHandler);
+	}
 }
