@@ -599,7 +599,7 @@ namespace AVKit {
 #if !MONOMAC
 	[BaseType (typeof (UIView))]
 #else
-	[BaseType(typeof(NSView))]
+	[BaseType (typeof (NSView))]
 #endif
 	interface AVRoutePickerView
 	{
