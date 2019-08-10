@@ -31,6 +31,16 @@ namespace AVKit {
 		OKButton,
 		CancelButton
 	}
+	
+	[Mac (10,15)]
+	[Native]
+	public enum AVRoutePickerViewButtonState : long
+	{
+		Normal,
+		NormalHighlighted,
+		Active,
+		ActiveHighlighted,
+	}
 #endif
 
 #if !TVOS && (!MONOMAC || !XAMCORE_4_0)
