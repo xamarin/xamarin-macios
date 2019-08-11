@@ -1,4 +1,0 @@
-!missing-selector! EKCalendar::CGColor not bound
-!missing-selector! EKCalendar::setCGColor: not bound
-!missing-selector! EKEventStore::removeEvent:span:error: not bound
-!missing-selector! EKEventStore::saveEvent:span:error: not bound
