@@ -118,7 +118,7 @@ Anything we do not check but for which data is available, e.g.
 
 * NullAllowed;
 * Enum member values;
-* Generic updates to existing API (need to find a way to avoid braking changes first)
+* Generic updates to existing API (need to find a way to avoid breaking changes first)
 
 
 ## Notes
