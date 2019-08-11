@@ -89,7 +89,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			var ident = new string (' ', indentation + 4);
 			if (obj is CGPDFArray array) {
-				Console.WriteLine ($"{ident}Array with {array.Count} elements (0x{array.Handle.ToString ("x")})");
+				//Console.WriteLine ($"{ident}Array with {array.Count} elements (0x{array.Handle.ToString ("x")})");
 				if (processed.Contains (array.Handle)) {
 					sb.AppendLine ($"{ident}Already procesed CGPDFArray with handle 0x{array.Handle.ToString ("x")}");
 					return;

@@ -600,6 +600,9 @@ namespace GeneratorTests
 			BuildFile (Profile.iOS, "tests/return-release.cs");
 		}
 
+		[Test]
+		public void GHIssue6626 () => BuildFile (Profile.iOS, "ghissue6626.cs");
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

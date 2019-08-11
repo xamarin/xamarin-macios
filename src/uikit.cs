@@ -7616,7 +7616,7 @@ namespace UIKit {
 
 		[iOS (6,0)]
 		[Export ("setAttributedTitle:forState:")]
-		void SetAttributedTitle (NSAttributedString title, UIControlState state);
+		void SetAttributedTitle ([NullAllowed] NSAttributedString title, UIControlState state);
 
 		[iOS (6,0)]
 		[Export ("attributedTitleForState:")]

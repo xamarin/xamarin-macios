@@ -321,7 +321,7 @@ namespace Xamarin.Linker {
 			// Run LLVM on every assembly we ship in watchOS, using the arguments we usually use when done from mtouch.
 			var aot_compiler = Path.Combine (Configuration.BinDirXI, "armv7k-unknown-darwin-mono-sgen");
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-			var llvm_path = Path.Combine (Configuration.SdkRootXI, "LLVM36", "bin");
+			var llvm_path = Path.Combine (Configuration.SdkRootXI, "LLVM", "bin");
 			var env = new Dictionary<string, string> {
 				{ "MONO_PATH", watchOSPath }
 			};
@@ -347,6 +347,8 @@ namespace Xamarin.Linker {
 
 			int expected_exit_code = 0;
 			if (known_llvm_failures.TryGetValue (asm, out var known_failures)) {
+				expected_exit_code = known_failures.Item1;
+				Assert.AreEqual (expected_exit_code, rv, "AOT compilation");
 				if (known_failures.Item2 != null) {
 					// Check if there are known failures for failures we've fixed
 					var known_inexistent_failures = known_failures.Item2.Where ((v) => !llvm_failed.Contains (v));
@@ -354,11 +356,10 @@ namespace Xamarin.Linker {
 					// Filter the known failures from the failed llvm lines.
 					llvm_failed = llvm_failed.Where ((v) => !known_failures.Item2.Contains (v));
 				}
-				expected_exit_code = known_failures.Item1;
 			}
 
-			Assert.IsEmpty (string.Join ("\n", llvm_failed), "LLVM failed");
 			Assert.AreEqual (expected_exit_code, rv, "AOT compilation");
+			Assert.IsEmpty (string.Join ("\n", llvm_failed), "LLVM failed");
 		}
 	}
 }
