@@ -75,6 +75,16 @@ namespace EventKit {
 		ProcedureAlarmsNotMutable,
 		EventStoreNotAuthorized,
 		OSNotSupported,
+		[iOS (13,0), Mac (10,15)]
+		InvalidInviteReplyCalendar,
+		[iOS (13,0), Mac (10,15)]
+		NotificationsCollectionFlagNotSet,
+		[iOS (13,0), Mac (10,15)]
+		SourceMismatch,
+		[iOS (13,0), Mac (10,15)]
+		NotificationCollectionMismatch,
+		[iOS (13,0), Mac (10,15)]
+		NotificationSavedWithoutCollection,
 	}
 
 	// untyped enum -> EKTypes.h
