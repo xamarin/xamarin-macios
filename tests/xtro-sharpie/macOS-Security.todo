@@ -1,6 +1,5 @@
 !missing-enum! tls_ciphersuite_group_t not bound
 !missing-enum! tls_ciphersuite_t not bound
-!missing-enum! tls_protocol_version_t not bound
 !missing-field! kSecPropertyTypeArray not bound
 !missing-field! kSecPropertyTypeNumber not bound
 !missing-field! kSecUseDataProtectionKeychain not bound
