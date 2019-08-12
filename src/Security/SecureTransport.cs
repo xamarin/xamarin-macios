@@ -39,7 +39,7 @@ namespace Security {
 		Tls12 = 771,
 		Tls13 = 772,
 		Dtls10 = 65279,
-		Dtls12 = 65277
+		Dtls12 = 65277,
 	}
 
 	// subset of OSStatus (int)
