@@ -16,6 +16,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 	[Preserve (AllMembers = true)]
 	public class EmbeddingTest {
 
+#if __IOS__ || __MACOS__
 		[Test]
 		public void Vector ()
 		{
@@ -28,6 +29,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 				Assert.Null (vector, "vector");
 			}
 		}
+#endif
 
 		[Test]
 		public void Write ()
