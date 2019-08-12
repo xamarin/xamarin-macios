@@ -373,7 +373,7 @@ namespace AVKit {
 	[BaseType (typeof(AVAudioSession))]
 	interface AVAudioSession_AVPlaybackRouteSelecting
 	{
-		[Async]
+		[Async (ResultTypeName="PreparingRouteSelectionForPlayback")]
 		[Export ("prepareRouteSelectionForPlaybackWithCompletionHandler:")]
 		void PrepareRouteSelectionForPlayback (Action<bool, AVAudioSessionRouteSelection> completionHandler);
 	}
