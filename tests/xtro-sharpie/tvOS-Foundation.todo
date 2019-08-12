@@ -28,12 +28,3 @@
 !missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
 !missing-type! NSOrderedCollectionChange not bound
 !missing-type! NSOrderedCollectionDifference not bound
-!deprecated-attribute-missing! NSURLSessionConfiguration::setTLSMaximumSupportedProtocol: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSURLSessionConfiguration::setTLSMinimumSupportedProtocol: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSURLSessionConfiguration::TLSMaximumSupportedProtocol missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSURLSessionConfiguration::TLSMinimumSupportedProtocol missing a [Deprecated] attribute
-!missing-selector! NSProcessInfo::isMacCatalystApp not bound
-!missing-selector! NSURLSessionConfiguration::setTLSMaximumSupportedProtocolVersion: not bound
-!missing-selector! NSURLSessionConfiguration::setTLSMinimumSupportedProtocolVersion: not bound
-!missing-selector! NSURLSessionConfiguration::TLSMaximumSupportedProtocolVersion not bound
-!missing-selector! NSURLSessionConfiguration::TLSMinimumSupportedProtocolVersion not bound
