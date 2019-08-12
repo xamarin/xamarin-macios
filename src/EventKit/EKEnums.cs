@@ -75,15 +75,10 @@ namespace EventKit {
 		ProcedureAlarmsNotMutable,
 		EventStoreNotAuthorized,
 		OSNotSupported,
-		[iOS (13,0), Mac (10,15), Watch (6,0)]
 		InvalidInviteReplyCalendar,
-		[iOS (13,0), Mac (10,15), Watch (6,0)]
 		NotificationsCollectionFlagNotSet,
-		[iOS (13,0), Mac (10,15), Watch (6,0)]
 		SourceMismatch,
-		[iOS (13,0), Mac (10,15), Watch (6,0)]
 		NotificationCollectionMismatch,
-		[iOS (13,0), Mac (10,15), Watch (6,0)]
 		NotificationSavedWithoutCollection,
 	}
 
