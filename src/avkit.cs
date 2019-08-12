@@ -454,6 +454,7 @@ namespace AVKit {
 		[Export ("allowsPictureInPicturePlayback")]
 		bool AllowsPictureInPicturePlayback { get; set; }
 		
+		[Mac (10, 15)]
 		[Wrap ("WeakPictureInPictureDelegate")]
 		[NullAllowed]
 		IAVPlayerViewPictureInPictureDelegate PictureInPictureDelegate { get; set; }
