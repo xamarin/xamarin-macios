@@ -82,16 +82,7 @@ namespace AVKit {
 		[Static]
 		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
 		UIImage CreateStopButton ([NullAllowed] UITraitCollection traitCollection);
-		
-		[Static]
-		[Export ("pictureInPictureButtonStartImageCompatibleWithTraitCollection:")]
-		UIImage PictureInPictureButtonStartImageCompatible ([NullAllowed] UITraitCollection traitCollection);
-		
-		[Static]
-		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
-		UIImage PictureInPictureButtonStopImageCompatible ([NullAllowed] UITraitCollection traitCollection);
 #endif
-		
 	}
 	
 	interface IAVPictureInPictureControllerDelegate {}
