@@ -34,8 +34,7 @@ namespace AVKit {
 	
 	[Mac (10,15)]
 	[Native]
-	public enum AVRoutePickerViewButtonState : long
-	{
+	public enum AVRoutePickerViewButtonState : long {
 		Normal,
 		NormalHighlighted,
 		Active,
