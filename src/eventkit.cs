@@ -509,11 +509,11 @@ namespace EventKit {
 		[Export ("defaultCalendarForNewEvents"), NullAllowed]
 		EKCalendar DefaultCalendarForNewEvents { get;  }
 		
-		[NoWatch, Mac (10,14)]
+		[NoWatch, Mac (10,15)]
 		[Export ("saveEvent:span:error:")]
 		bool SaveEvent (EKEvent theEvent, EKSpan span, out NSError error);
 
-		[NoWatch, Mac (10,14)]
+		[NoWatch, Mac (10,15)]
 		[Export ("removeEvent:span:error:")]
 		bool RemoveEvents (EKEvent theEvent, EKSpan span, out NSError error);
 
