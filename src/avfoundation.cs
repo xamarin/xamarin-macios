@@ -10933,7 +10933,7 @@ namespace AVFoundation {
 
 	[TV (13,0), NoWatch, NoMac, NoiOS]
 	[Category]
-	[BaseType (typeof(AVPlayerItem))]
+	[BaseType (typeof (AVPlayerItem))]
 	interface AVPlayerItem_AVPlaybackRestrictions
 	{
 		[Export ("requestPlaybackRestrictionsAuthorization:")]
