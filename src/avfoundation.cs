@@ -10930,12 +10930,12 @@ namespace AVFoundation {
 		[Export ("contentAuthorizationRequestStatus")]
 		AVContentAuthorizationStatus GetContentAuthorizationRequestStatus ();
 	}
-
-	[Async]
+	
 	[TV (13,0), NoWatch, NoMac, NoiOS]
 	[Category]
 	[BaseType (typeof (AVPlayerItem))]
 	interface AVPlayerItem_AVPlaybackRestrictions {
+		[Async]
 		[Export ("requestPlaybackRestrictionsAuthorization:")]
 		void RequestPlaybackRestrictionsAuthorization (Action<bool, NSError> completion);
 		
