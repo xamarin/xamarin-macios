@@ -368,6 +368,7 @@ namespace AVKit {
 		External = 2
 	}
 	
+	[Async]
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
 	[Category]
 	[BaseType (typeof(AVAudioSession))]
