@@ -335,11 +335,11 @@ namespace AVKit {
 		void WillTransitionToVisibilityOfTransportBar ([NullAllowed] AVPlayerViewController playerViewController, bool visible, [NullAllowed] IAVPlayerViewControllerAnimationCoordinator coordinator);
 		
 		[iOS (12,0), NoTV, NoWatch, NoMac]
-		[Export ("playerViewController:willBeginFullScreenPresentationWithAnimationCoordinator:")]
+		[Export ("playerViewController:willBeginFullScreenPresentationWithAnimationCoordinator:"), EventArgs ("AVPlayerViewFullScreenPresentationWillBegin")]
 		void WillBeginFullScreenPresentation (AVPlayerViewController playerViewController, IUIViewControllerTransitionCoordinator coordinator);
 		
 		[iOS (12,0), NoTV, NoWatch, NoMac]
-		[Export ("playerViewController:willEndFullScreenPresentationWithAnimationCoordinator:")]
+		[Export ("playerViewController:willEndFullScreenPresentationWithAnimationCoordinator:"), EventArgs ("AVPlayerViewFullScreenPresentationWillEnd")]
 		void WillEndFullScreenPresentation (AVPlayerViewController playerViewController, IUIViewControllerTransitionCoordinator coordinator);
 		
 		[TV (13,0), NoiOS, NoWatch, NoMac]
@@ -347,11 +347,11 @@ namespace AVKit {
 		UIViewController NextChannelInterstitialViewController (AVPlayerViewController playerViewController);
 		
 		[TV (13,0), NoiOS, NoWatch, NoMac]
-		[Export ("playerViewController:skipToNextChannel:")]
+		[Export ("playerViewController:skipToNextChannel:"), EventArgs ("AVPlayerViewSkipToNextChannel")]
 		void SkipToNextChannel (AVPlayerViewController playerViewController, Action<bool> completion);
 		
 		[TV (13,0), NoiOS, NoWatch, NoMac]
-		[Export ("playerViewController:skipToPreviousChannel:")]
+		[Export ("playerViewController:skipToPreviousChannel:"), EventArgs ("AVPlayerViewSkipToPreviousChannel")]
 		void SkipToPreviousChannel (AVPlayerViewController playerViewController, Action<bool> completion);
 		
 		[TV (13,0), NoiOS, NoWatch, NoMac]
@@ -477,25 +477,25 @@ namespace AVKit {
 	interface AVPlayerViewPictureInPictureDelegate
 	{
 		[Export ("playerViewWillStartPictureInPicture:")]
-		void PlayerViewWillStartPictureInPicture (AVPlayerView playerView);
+		void WillStart (AVPlayerView playerView);
 
 		[Export ("playerViewDidStartPictureInPicture:")]
-		void PlayerViewDidStartPictureInPicture (AVPlayerView playerView);
+		void DidStart (AVPlayerView playerView);
 
-		[Export ("playerView:failedToStartPictureInPictureWithError:")]
-		void PlayerView (AVPlayerView playerView, NSError error);
+		[Export ("playerView:failedToStartPictureInPictureWithError:"), EventArgs ("AVPlayerViewFailedToStart")]
+		void FailedToStart (AVPlayerView playerView, NSError error);
 
 		[Export ("playerViewWillStopPictureInPicture:")]
-		void PlayerViewWillStopPictureInPicture (AVPlayerView playerView);
+		void WillStop (AVPlayerView playerView);
 
 		[Export ("playerViewDidStopPictureInPicture:")]
-		void PlayerViewDidStopPictureInPicture (AVPlayerView playerView);
+		void DidStop (AVPlayerView playerView);
 
-		[Export ("playerView:restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:")]
-		void PlayerView (AVPlayerView playerView, Action<bool> completionHandler);
+		[Export ("playerView:restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:"), EventArgs ("AVPlayerViewRestoreUserInterface")]
+		void RestoreUserInterface (AVPlayerView playerView, Action<bool> completionHandler);
 
 		[Export ("playerViewShouldAutomaticallyDismissAtPictureInPictureStart:")]
-		bool PlayerViewShouldAutomaticallyDismissAtPictureInPictureStart (AVPlayerView playerView);
+		bool ShouldAutomaticallyDismiss (AVPlayerView playerView);
 	}
 
 	[Mac (10,10)]
