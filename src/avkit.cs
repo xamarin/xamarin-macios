@@ -45,7 +45,7 @@ namespace AVKit {
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		IAVPictureInPictureControllerDelegate Delegate { get; set; }
-
+	
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 	
@@ -647,7 +647,7 @@ namespace AVKit {
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		IAVRoutePickerViewDelegate Delegate { get; set; }
-		
+
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 		
