@@ -58,15 +58,17 @@ namespace Extrospection {
 				Log.On (framework).Add ($"!missing-enum! {name} not bound");
 				return;
 			} else {
-				var missingEnums = type.Fields.Select (e => e.Name).Except (decl.Values.Select (e => e.Name));
-				if (missingEnums.Any ()) {
-					foreach (var missingEnum in missingEnums) {
-						Log.On (framework).Add ($"!missing-enum-member! {name} : {missingEnum} not bound");
-					}
-					return;
-				}
-				enums.Remove (mname);
-			}
+            	var enumMemberInPreviousLib = type.Fields.Select (e => name.Replace ("Code","") + e.Name);
+            	var enumMemberInNewAppleLib = decl.Values.Select (e => e.Name);
+            	var missingEnums = enumMemberInNewAppleLib.Except (enumMemberInPreviousLib);
+            	if (missingEnums.Any ()) {
+            		foreach (var missingEnum in missingEnums) {
+            			Log.On (framework).Add ($"!missing-enum-member! {name} : {missingEnum.Replace (name.Replace ("Code",""),"")} not bound");
+            		}
+            		return;
+            	}
+            	enums.Remove (mname);
+            }
 
 			int native_size = 4;
 			bool native = false;
