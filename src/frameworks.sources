@@ -810,6 +810,7 @@ FOUNDATION_SOURCES = \
 GAMECONTROLLER_CORE_SOURCES = \
 	GameController/Enums.cs \
 	GameController/GCController.cs \
+	GameController/GCMotion.cs \
 
 GAMECONTROLLER_SOURCES = \
 	GameController/Compat.cs \
@@ -1132,7 +1133,12 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 NATURALLANGUAGE_API_SOURCES = \
 	NaturalLanguage/Enums.cs \
 
+NATURALLANGUAGE_CORE_SOURCES = \
+	NaturalLanguage/NLStrongDictionary.cs \
+	NaturalLanguage/NLVectorDictionary.cs \
+
 NATURALLANGUAGE_SOURCES = \
+	NaturalLanguage/NLEmbedding.cs \
 	NaturalLanguage/NLLanguageRecognizer.cs \
 
 # Network

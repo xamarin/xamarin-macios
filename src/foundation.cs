@@ -5457,17 +5457,20 @@ namespace Foundation
 		[Export ("eligibleForPrediction")]
 		bool EligibleForPrediction { [Bind ("isEligibleForPrediction")] get; set; }
 
-		[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+		[Watch (5, 0), NoTV, iOS (12, 0)]
+		[Mac (10,15)]
 		[NullAllowed, Export ("persistentIdentifier")]
 		string PersistentIdentifier { get; set; }
 
-		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[Watch (5,0), NoTV, iOS (12,0)]
+		[Mac (10,15)]
 		[Static]
 		[Async]
 		[Export ("deleteSavedUserActivitiesWithPersistentIdentifiers:completionHandler:")]
 		void DeleteSavedUserActivities (string[] persistentIdentifiers, Action handler);
 
-		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[Watch (5,0), NoTV, iOS (12,0)]
+		[Mac (10,15)]
 		[Static]
 		[Async]
 		[Export ("deleteAllSavedUserActivitiesWithCompletionHandler:")]
@@ -7420,12 +7423,28 @@ namespace Foundation
 		[Export ("connectionProxyDictionary", ArgumentSemantic.Copy)]
 		NSDictionary ConnectionProxyDictionary { get; set; }
 	
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsMinimumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsMinimumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsMinimumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsMinimumSupportedProtocolVersion' instead.")]
 		[Export ("TLSMinimumSupportedProtocol")]
 		SslProtocol TLSMinimumSupportedProtocol { get; set; }
 	
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("TLSMinimumSupportedProtocolVersion", ArgumentSemantic.Assign)]
+		TlsProtocolVersion TlsMinimumSupportedProtocolVersion { get; set; }
+
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsMaximumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsMaximumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsMaximumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsMaximumSupportedProtocolVersion' instead.")]
 		[Export ("TLSMaximumSupportedProtocol")]
 		SslProtocol TLSMaximumSupportedProtocol { get; set; }
-	
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("TLSMaximumSupportedProtocolVersion", ArgumentSemantic.Assign)]
+		TlsProtocolVersion TlsMaximumSupportedProtocolVersion { get; set; }
+
 		[Export ("HTTPShouldUsePipelining")]
 		bool HttpShouldUsePipelining { get; set; }
 	
@@ -11993,6 +12012,12 @@ namespace Foundation
 		[iOS (11,0)]
 		[Notification]
 		NSString ThermalStateDidChangeNotification { get; }
+
+#region NSProcessInfoPlatform (NSProcessInfo)
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Export ("macCatalystApp")]
+		bool IsMacCatalystApplication { [Bind ("isMacCatalystApp")] get; }
+#endregion
 	}
 
 	[NoWatch][NoTV][NoiOS]

@@ -67,6 +67,7 @@
     <Compile Include="MsBuildTasks\TouchBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\ACToolTaskBase.cs" />
+    <Compile Include="Tasks\ALToolTaskBase.cs" />
     <Compile Include="Tasks\ArchiveTaskBase.cs" />
     <Compile Include="Tasks\ArToolTaskBase.cs" />
     <Compile Include="Tasks\BTouchTaskBase.cs" />

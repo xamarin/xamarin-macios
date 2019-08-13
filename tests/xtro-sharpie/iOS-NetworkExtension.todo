@@ -12,3 +12,6 @@
 !missing-selector! NEHotspotConfiguration::setHidden: not bound
 !missing-selector! NEVPNProtocolIKEv2::enableFallback not bound
 !missing-selector! NEVPNProtocolIKEv2::setEnableFallback: not bound
+!missing-selector! NEHotspotConfiguration::initWithSSIDPrefix: not bound
+!missing-selector! NEHotspotConfiguration::initWithSSIDPrefix:passphrase:isWEP: not bound
+!missing-selector! NEHotspotConfiguration::SSIDPrefix not bound

@@ -54,6 +54,7 @@ using UITableViewDataSource = Foundation.NSObjectProtocol;
 using IUITextInput = Foundation.NSObjectProtocol;
 using IUICoordinateSpace = Foundation.NSObjectProtocol;
 
+using UIActivity = Foundation.NSObject;
 using UICollectionViewLayout = Foundation.NSObject;
 using UITraitCollection = Foundation.NSObject;
 using UIBlurEffect = Foundation.NSObject;
@@ -867,7 +868,7 @@ namespace UIKit {
 		NSString ColumnTerminatorsAttributeName { get; }
 	}
 
-#if !WATCH
+	[Watch (6,0)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	[iOS (6,0)]
@@ -882,6 +883,7 @@ namespace UIKit {
 		UIColor ShadowColor { get; set;  }
 	}
 
+#if !WATCH
 	[Model]
 	[Protocol]
 	[BaseType (typeof (NSObject))]
@@ -7819,11 +7821,6 @@ namespace UIKit {
 
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Static]
-		[Export ("closeImage", ArgumentSemantic.Strong)]
-		UIImage CloseImage { get; }
-
-		[Watch (6,0), TV (13,0), iOS (13,0)]
-		[Static]
 		[Export ("removeImage", ArgumentSemantic.Strong)]
 		UIImage RemoveImage { get; }
 
@@ -8110,6 +8107,10 @@ namespace UIKit {
 		[iOS (13,0), TV (13,0)]
 		[NullAllowed, Export ("windowScene", ArgumentSemantic.Weak)]
 		UIWindowScene WindowScene { get; set; }
+
+		[iOS (13,0), TV (13,0)]
+		[NullAllowed, Export ("canResizeToFitContent")]
+		bool CanResizeToFitContent { get; [Bind ("setCanResizeToFitContent:")] set; }
 
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -10633,6 +10634,12 @@ namespace UIKit {
 		[iOS (9,1)]
 		[Export ("touchesEstimatedPropertiesUpdated:")]
 		void TouchesEstimatedPropertiesUpdated (NSSet touches);
+
+		// from UIResponder (UIActivityItemsConfiguration)
+
+		[NoWatch, NoTV, iOS (13, 0)]
+		[NullAllowed, Export ("activityItemsConfiguration", ArgumentSemantic.Strong)]
+		IUIActivityItemsConfigurationReading ActivityItemsConfiguration { get; set; }
 	}
 	
 	[Category, BaseType (typeof (UIResponder))]
@@ -10689,6 +10696,10 @@ namespace UIKit {
 		[iOS (10,3), TV (10,2)]
 		[Export ("maximumFramesPerSecond")]
 		nint MaximumFramesPerSecond { get; }
+
+		[iOS (13,0), TV (13,0)]
+		[Export ("calibratedLatency")]
+		double CalibratedLatency { get; }
 
 		[NoTV]
 		[Export ("brightness")]
@@ -15231,6 +15242,12 @@ namespace UIKit {
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Export ("modalInPresentation")]
 		bool ModalInPresentation { [Bind ("isModalInPresentation")] get; set; }
+
+		// From UIViewController (UIPerformsActions)
+
+		[TV (13,0), NoWatch, iOS (13,0)]
+		[Export ("performsActionsWhilePresentingModally")]
+		bool PerformsActionsWhilePresentingModally { get; }
 	}
 
 	[iOS (7,0)]
@@ -19873,8 +19890,9 @@ namespace UIKit {
 		[NullAllowed, Export ("scene")]
 		UIScene Scene { get; }
 
+		[BindAs (typeof (UIWindowSceneSessionRole))]
 		[Export ("role")]
-		string Role { get; }
+		NSString Role { get; }
 
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		UISceneConfiguration Configuration { get; }
@@ -19882,8 +19900,8 @@ namespace UIKit {
 		[Export ("persistentIdentifier")]
 		string PersistentIdentifier { get; }
 
-		[NullAllowed, Export ("stateRestorationActivity")]
-		NSUserActivity StateRestorationActivity { get; }
+		[NullAllowed, Export ("stateRestorationActivity", ArgumentSemantic.Strong)]
+		NSUserActivity StateRestorationActivity { get; set; }
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> UserInfo { get; set; }
@@ -21096,6 +21114,9 @@ namespace UIKit {
 		[Export ("traitCollection")]
 		UITraitCollection TraitCollection { get; }
 
+		[NullAllowed, Export ("sizeRestrictions")]
+		UISceneSizeRestrictions SizeRestrictions { get; }
+
 		[Export ("windows")]
 		UIWindow [] Windows { get; }
 
@@ -21317,6 +21338,105 @@ namespace UIKit {
 
 		[Export ("defaultRowAnimation", ArgumentSemantic.Assign)]
 		UITableViewRowAnimation DefaultRowAnimation { get; set; }
+	}
+
+	[Static]
+	[NoWatch, NoTV, iOS (13,0)]
+	interface UIActivityItemsConfigurationMetadataKey {
+		[Field ("UIActivityItemsConfigurationMetadataKeyTitle")]
+		NSString Title { get; }
+
+		[Field ("UIActivityItemsConfigurationMetadataKeyMessageBody")]
+		NSString MessageBody { get; }
+	}
+
+	delegate NSObject UIActivityItemsConfigurationMetadataProviderHandler (NSString activityItemsConfigurationMetadataKey);
+	delegate NSObject UIActivityItemsConfigurationPerItemMetadataProviderHandler (nint index, NSString activityItemsConfigurationMetadataKey);
+	delegate NSObject UIActivityItemsConfigurationPreviewProviderHandler (nint index, NSString activityItemsConfigurationPreviewIntent, CGSize suggestedSize);
+
+	[NoWatch, NoTV, iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIActivityItemsConfiguration : UIActivityItemsConfigurationReading {
+
+		[NullAllowed, Export ("localObject", ArgumentSemantic.Strong)]
+		NSObject LocalObject { get; set; }
+
+		[Export ("supportedInteractions", ArgumentSemantic.Copy)]
+		NSString [] WeakSupportedInteractions { get; set; }
+
+		[Advice ("Uses 'UIActivityItemsConfigurationMetadataKey' constants in the function handler.")]
+		[NullAllowed, Export ("metadataProvider", ArgumentSemantic.Strong)]
+		UIActivityItemsConfigurationMetadataProviderHandler MetadataProvider { get; set; }
+
+		[Advice ("Uses 'UIActivityItemsConfigurationMetadataKey' constants in the function handler.")]
+		[NullAllowed, Export ("perItemMetadataProvider", ArgumentSemantic.Strong)]
+		UIActivityItemsConfigurationPerItemMetadataProviderHandler PerItemMetadataProvider { get; set; }
+
+		[Advice ("Uses 'UIActivityItemsConfigurationPreviewIntent' enum constants in the function handler.")]
+		[NullAllowed, Export ("previewProvider", ArgumentSemantic.Strong)]
+		UIActivityItemsConfigurationPreviewProviderHandler PreviewProvider { get; set; }
+
+		[NullAllowed, Export ("applicationActivitiesProvider", ArgumentSemantic.Strong)]
+		Func<UIActivity []> ApplicationActivitiesProvider { get; set; }
+
+		[Static]
+		[Export ("activityItemsConfigurationWithObjects:")]
+		UIActivityItemsConfiguration Create (INSItemProviderWriting [] objects);
+
+		[Static]
+		[Export ("activityItemsConfigurationWithItemProviders:")]
+		UIActivityItemsConfiguration Create (NSItemProvider [] itemProviders);
+
+		[Export ("initWithObjects:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INSItemProviderWriting[] objects);
+
+		[Export ("initWithItemProviders:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSItemProvider[] itemProviders);
+	}
+
+	interface IUIActivityItemsConfigurationReading { }
+
+	[NoWatch, NoTV, iOS (13,0)]
+	[Protocol]
+	interface UIActivityItemsConfigurationReading {
+
+		[Abstract]
+		[Export ("itemProvidersForActivityItemsConfiguration", ArgumentSemantic.Copy)]
+		NSItemProvider [] ItemProvidersForActivityItemsConfiguration { get; }
+
+		[Export ("activityItemsConfigurationSupportsInteraction:")]
+		bool GetActivityItemsConfigurationSupportsInteraction (NSString activityItemsConfigurationInteraction);
+
+		[Export ("activityItemsConfigurationMetadataForKey:")]
+		[return: NullAllowed]
+		NSObject GetActivityItemsConfigurationMetadata (NSString activityItemsConfigurationMetadataKey);
+
+		[Export ("activityItemsConfigurationMetadataForItemAtIndex:key:")]
+		[return: NullAllowed]
+		NSObject GetActivityItemsConfigurationMetadata (nint index, NSString activityItemsConfigurationMetadataKey);
+
+		[Export ("activityItemsConfigurationPreviewForItemAtIndex:intent:suggestedSize:")]
+		[return: NullAllowed]
+		NSItemProvider GetActivityItemsConfigurationPreview (nint index, NSString activityItemsConfigurationPreviewIntent, CGSize suggestedSize);
+
+		[return: NullAllowed]
+		[Export ("applicationActivitiesForActivityItemsConfiguration")]
+		UIActivity [] GetApplicationActivitiesForActivityItemsConfiguration ();
+	}
+
+	[iOS (13,0), TV (13,0), NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UISceneSizeRestrictions {
+
+		[Export ("minimumSize", ArgumentSemantic.Assign)]
+		CGSize MinimumSize { get; set; }
+
+		[Export ("maximumSize", ArgumentSemantic.Assign)]
+		CGSize MaximumSize { get; set; }
 	}
 
 }

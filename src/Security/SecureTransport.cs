@@ -7,6 +7,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsProtocolVersion' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsProtocolVersion' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsProtocolVersion' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsProtocolVersion' instead.")]
 	public enum SslProtocol {
 		Unknown = 0,
 		Ssl_3_0 = 2,
@@ -26,6 +30,16 @@ namespace Security {
 		Ssl_3_0_only = 3,         
 		Tls_1_0_only = 5,         
 		All = 6,                
+	}
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	public enum TlsProtocolVersion : /* uint16_t */ ushort {
+		Tls10 = 769,
+		Tls11 = 770,
+		Tls12 = 771,
+		Tls13 = 772,
+		Dtls10 = 65279,
+		Dtls12 = 65277,
 	}
 
 	// subset of OSStatus (int)

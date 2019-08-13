@@ -764,6 +764,10 @@ namespace PassKit {
 
 		[NullAllowed, Export ("paymentPass", ArgumentSemantic.Copy)]
 		PKPaymentPass PaymentPass { get; }
+
+		[Watch (6, 0), iOS (13, 0)]
+		[NullAllowed, Export ("billingAddress", ArgumentSemantic.Copy)]
+		CNContact BillingAddress { get; }
 	}
 
 	[iOS (8,0)]
@@ -1160,6 +1164,15 @@ namespace PassKit {
 	[BaseType (typeof (PKPaymentRequestUpdate))]
 	[DisableDefaultCtor]
 	interface PKPaymentRequestPaymentMethodUpdate {
+
+		[Watch (6,0), iOS (13,0)]
+		[Export ("initWithErrors:paymentSummaryItems:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem [] paymentSummaryItems);
+
+		[Watch (6,0), iOS (13,0)]
+		[Export ("errors", ArgumentSemantic.Copy)]
+		NSError [] Errors { get; set; }
 
 		// inlined
 		[Export ("initWithPaymentSummaryItems:")]

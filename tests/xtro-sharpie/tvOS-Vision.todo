@@ -8,7 +8,6 @@
 !missing-protocol-conformance! VNFaceLandmarkRegion should conform to VNRequestRevisionProviding
 !missing-protocol-conformance! VNFaceLandmarks should conform to VNRequestRevisionProviding
 !missing-selector! +VNClassifyImageRequest::knownClassificationsForRevision:error: not bound
-!missing-selector! +VNDetectAnimalRectanglesRequest::knownAnimalDetectorsForRevision: not bound
 !missing-selector! +VNDetectFaceLandmarksRequest::revision:supportsConstellation: not bound
 !missing-selector! +VNRecognizeTextRequest::supportedRecognitionLanguagesForTextRecognitionLevel:revision:error: not bound
 !missing-selector! +VNRectangleObservation::rectangleObservationWithRequestRevision:topLeft:bottomLeft:bottomRight:topRight: not bound
@@ -48,7 +47,6 @@
 !missing-selector! VNRequest::cancel not bound
 !missing-selector! VNSaliencyImageObservation::salientObjects not bound
 !missing-type! VNClassifyImageRequest not bound
-!missing-type! VNDetectAnimalRectanglesRequest not bound
 !missing-type! VNDetectFaceCaptureQualityRequest not bound
 !missing-type! VNDetectHumanRectanglesRequest not bound
 !missing-type! VNFeaturePrintObservation not bound
@@ -59,3 +57,7 @@
 !missing-type! VNRecognizedTextObservation not bound
 !missing-type! VNRecognizeTextRequest not bound
 !missing-type! VNSaliencyImageObservation not bound
+!missing-field! VNAnimalIdentifierCat not bound
+!missing-field! VNAnimalIdentifierDog not bound
+!missing-selector! +VNRecognizeAnimalsRequest::knownAnimalIdentifiersForRevision:error: not bound
+!missing-type! VNRecognizeAnimalsRequest not bound
