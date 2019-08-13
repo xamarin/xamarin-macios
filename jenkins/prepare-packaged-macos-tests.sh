@@ -53,7 +53,8 @@ fi
 # Install 7z. We can't do this from the system-dependencies.sh script, because
 # we need 7z to decompress the file where the system-dependencies.sh script
 # resides.
-brew install p7zip
+# Also ignore any failures, brew may fail if 7z is already installed.
+brew install p7zip || true
 
 env
 rm -f -- ./*.7z
