@@ -50,7 +50,7 @@ using CoreSpotlight;
 #endif
 using SceneKit;
 using Security;
-#if IOS && XAMCORE_2_0
+#if IOS || MONOMAC
 using FileProvider;
 #endif
 
@@ -4132,19 +4132,27 @@ namespace Foundation
 		[return: NullAllowed]
 		NSErrorUserInfoValueProvider GetUserInfoValueProvider (string errorDomain);
 
-#if XAMCORE_2_0 && IOS
+#if IOS || MONOMAC
 
 		// From NSError (NSFileProviderError) Category to avoid static category uglyness
 
 		[iOS (11,0)]
+		[Mac (10,15)]
 		[Static]
 		[Export ("fileProviderErrorForCollisionWithItem:")]
 		NSError GetFileProviderError (INSFileProviderItem existingItem);
 
 		[iOS (11,0)]
+		[Mac (10,15)]
 		[Static]
 		[Export ("fileProviderErrorForNonExistentItemWithIdentifier:")]
 		NSError GetFileProviderError (string nonExistentItemIdentifier);
+
+		[iOS (13,0)]
+		[Mac (10,15)]
+		[Static]
+		[Export ("fileProviderErrorForOutOfDateItem:")]
+		NSError fileProviderErrorForOutOfDateItem (INSFileProviderItem updatedVersion);
 #endif
 		
 #if false
