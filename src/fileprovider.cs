@@ -268,6 +268,8 @@ namespace FileProvider {
 		InsufficientQuota = -1003,
 		ServerUnreachable = -1004,
 		NoSuchItem = -1005,
+		VersionOutOfDate = -1006,
+		DirectoryNotEmpty = -1007,
 	}
 
 	[iOS (11,0)]
@@ -568,6 +570,7 @@ namespace FileProvider {
 	[DisableDefaultCtor]
 	interface NSFileProviderManager {
 
+		[NoMac]
 		[Static]
 		[Export ("defaultManager", ArgumentSemantic.Strong)]
 		NSFileProviderManager DefaultManager { get; }

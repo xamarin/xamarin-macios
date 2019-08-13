@@ -4152,7 +4152,7 @@ namespace Foundation
 		[Mac (10,15)]
 		[Static]
 		[Export ("fileProviderErrorForOutOfDateItem:")]
-		NSError fileProviderErrorForOutOfDateItem (INSFileProviderItem updatedVersion);
+		NSError GetFileProviderErrorForOutOfDateItem (INSFileProviderItem updatedVersion);
 #endif
 		
 #if false
