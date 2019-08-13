@@ -585,6 +585,7 @@ namespace Xamarin
 		public List<LoadCommand> load_commands;
 
 		public string Filename { get { return filename; } }
+		public FatEntry Parent { get { return fat_parent; } }
 
 		public MachOFile (FatEntry parent)
 		{
