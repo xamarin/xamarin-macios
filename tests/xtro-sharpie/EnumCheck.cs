@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Mono.Cecil;
 
 using Clang.Ast;
@@ -57,8 +57,16 @@ namespace Extrospection {
 			if (!enums.TryGetValue (mname, out var type)) {
 				Log.On (framework).Add ($"!missing-enum! {name} not bound");
 				return;
-			} else
+			} else {
+				var missingEnums = type.Fields.Select (e => e.Name).Except (decl.Values.Select (e => e.Name));
+				if (missingEnums.Any ()) {
+					foreach (var missingEnum in missingEnums) {
+						Log.On (framework).Add ($"!missing-enum-member! {name} : {missingEnum} not bound");
+					}
+					return;
+				}
 				enums.Remove (mname);
+			}
 
 			int native_size = 4;
 			bool native = false;
