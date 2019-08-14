@@ -109,10 +109,8 @@ namespace GameKit {
 		InvalidPlayer,
 		ScoreNotSet,
 		ParentalControlsBlocked,
-#if !MONOMAC
 		PlayerStatusExceedsMaximumLength,
 		PlayerStatusInvalid,
-#endif
 		MatchRequestInvalid = 13,
 		Underage,
 		GameUnrecognized,
@@ -125,15 +123,17 @@ namespace GameKit {
 		TurnBasedInvalidParticipant,
 		TurnBasedInvalidTurn,
 		TurnBasedInvalidState,
-#if MONOMAC
+#if MONOMAC && !XAMCORE_4_0
+		[Obsolete ("This value was re-used on macOS only and removed later.")]
 		Offline = 25,
-#else
+#endif
 		InvitationsDisabled = 25, // iOS 7.0
 		PlayerPhotoFailure = 26,  // iOS 8.0
 		UbiquityContainerUnavailable = 27, // iOS 8.0
-#endif
 		MatchNotConnected = 28,
 		GameSessionRequestInvalid = 29,
+		RestrictedToAutomatch = 30,
+		ApiNotAvailable = 31,
 	}
 
 	[Native]
