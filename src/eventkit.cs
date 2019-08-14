@@ -239,11 +239,11 @@ namespace EventKit {
 #if MONOMAC
 		[Export ("color", ArgumentSemantic.Copy)]
 		NSColor Color { get; set; }
-#else
+#endif
+		[Mac (10, 15)]
 		[Export ("CGColor")]
 		CGColor CGColor { get; set; }
-#endif
-
+		
 		[Export ("supportedEventAvailabilities")]
 		EKCalendarEventAvailability SupportedEventAvailabilities { get; }
 
@@ -508,16 +508,14 @@ namespace EventKit {
 
 		[Export ("defaultCalendarForNewEvents"), NullAllowed]
 		EKCalendar DefaultCalendarForNewEvents { get;  }
-
-#if !MONOMAC
-		[NoWatch]
+		
+		[NoWatch, Mac (10,15)]
 		[Export ("saveEvent:span:error:")]
 		bool SaveEvent (EKEvent theEvent, EKSpan span, out NSError error);
 
-		[NoWatch]
+		[NoWatch, Mac (10,15)]
 		[Export ("removeEvent:span:error:")]
 		bool RemoveEvents (EKEvent theEvent, EKSpan span, out NSError error);
-#endif
 
 		[Export ("eventWithIdentifier:")]
 		EKEvent EventFromIdentifier (string identifier);
@@ -625,11 +623,11 @@ namespace EventKit {
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("initWithAccessToEntityTypes:")]
 		IntPtr Constructor (EKEntityMask accessToEntityTypes);
-
-		[Mac (10,11)]
+#endif
+		[Mac (10,11), Watch (5,0), iOS (12,0)]
 		[Export ("delegateSources")]
 		EKSource[] DelegateSources { get; }
-#endif
+
 		[iOS (6,0)]
 		[Mac (10,9)]
 		[Export ("requestAccessToEntityType:completion:")]
