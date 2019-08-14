@@ -645,6 +645,7 @@ namespace EventKit {
 
 	[iOS (6,0)]
 	[BaseType (typeof (EKCalendarItem))]
+	[DisableDefaultCtor]
 	interface EKReminder {
 		[Export ("startDateComponents", ArgumentSemantic.Copy)]
 		[NullAllowed]
