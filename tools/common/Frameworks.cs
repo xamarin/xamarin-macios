@@ -179,6 +179,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AuthenticationServices", "AuthenticationServices", 10,15 },
 					{ "CoreMotion", "CoreMotion", 10,15 },
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
+					{ "ExecutionPolicy", "ExecutionPolicy", 10,15 },
 					{ "FileProvider", "FileProvider", 10,15 },
 					{ "FileProviderUI", "FileProviderUI", 10,15 },
 					{ "PushKit", "PushKit", 10,15 },

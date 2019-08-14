@@ -1797,6 +1797,7 @@ MAC_FRAMEWORKS =            \
 	CoreWlan                \
 	DeviceCheck             \
 	EventKit                \
+	ExecutionPolicy		\
 	ExternalAccessory 	\
 	FileProvider	\
 	FileProviderUI	\
