@@ -1615,6 +1615,29 @@ WATCHKIT_CORE_SOURCES = \
 WATCHKIT_SOURCES = \
 	WatchKit/WKAccessibility.cs \
 	WatchKit/WKInterfaceDevice.cs \
+	WatchKit/iOS/WKAccessibility.cs \
+	WatchKit/iOS/WKAccessibilityImageRegion.cs \
+	WatchKit/iOS/WKErrorCode.cs \
+	WatchKit/iOS/WKImageAnimatable.cs \
+	WatchKit/iOS/WKInterfaceButton.cs \
+	WatchKit/iOS/WKInterfaceController.cs \
+	WatchKit/iOS/WKInterfaceDate.cs \
+	WatchKit/iOS/WKInterfaceDevice.cs \
+	WatchKit/iOS/WKInterfaceGroup.cs \
+	WatchKit/iOS/WKInterfaceImage.cs \
+	WatchKit/iOS/WKInterfaceLabel.cs \
+	WatchKit/iOS/WKInterfaceMap.cs \
+	WatchKit/iOS/WKInterfaceMapPinColor.cs \
+	WatchKit/iOS/WKInterfaceObject.cs \
+	WatchKit/iOS/WKInterfaceSeparator.cs \
+	WatchKit/iOS/WKInterfaceSlider.cs \
+	WatchKit/iOS/WKInterfaceSwitch.cs \
+	WatchKit/iOS/WKInterfaceTable.cs \
+	WatchKit/iOS/WKInterfaceTimer.cs \
+	WatchKit/iOS/WKMenuItemIcon.cs \
+	WatchKit/iOS/WKTextInputMode.cs \
+	WatchKit/iOS/WKUserNotificationInterfaceController.cs \
+	WatchKit/iOS/WKUserNotificationInterfaceType.cs \
 
 # WebKit (Mac version)
 

@@ -140,12 +140,6 @@ namespace Xamarin.Tests
 				var msg = new ToolMessage ();
 				var origin = string.Empty;
 
-				// FIXME: remove this warning check once WatchKit is back with us again.
-				if (l.Contains ("warning MT0099: Not linking with WatchKit because Xcode 11 beta 1 does not ship with the WatchKit framework")) {
-					// Ignore this line since it's confusing all our tests that asserts the exact number of warnings we get.
-					continue;
-				}
-
 				if (IndexOfAny (line, out var idxError, out var endError, ": error ", ":  error ")) {
 					msg.IsError = true;
 					origin = line.Substring (0, idxError);

@@ -17,6 +17,10 @@ namespace Extrospection {
 			if (!type.IsEnum || type.IsNested)
 				return;
 			
+			// exclude obsolete enums, presumably we already know there's something wrong with them if they've been obsoleted.
+			if (type.IsObsolete ())
+				return;
+
 			var name = type.Name;
 			// e.g. WatchKit.WKErrorCode and WebKit.WKErrorCode :-(
 			if (!enums.TryGetValue (name, out var td))
