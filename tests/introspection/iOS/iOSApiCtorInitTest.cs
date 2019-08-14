@@ -235,9 +235,6 @@ namespace Introspection {
 				return Runtime.Arch == Arch.SIMULATOR;
 			case "ICNotificationManagerConfiguration": // This works on device but not on simulator, and docs explicitly says it is user creatable
 				return Runtime.Arch == Arch.SIMULATOR;
-			// xcode 11 beta 3
-			case "EKReminder": // https://github.com/xamarin/maccore/issues/1832
-				return TestRuntime.CheckXcodeVersion (11, 0);
 			default:
 				return base.Skip (type);
 			}
