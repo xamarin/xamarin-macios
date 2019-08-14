@@ -216,10 +216,12 @@ namespace StoreKit {
 		ISKPaymentQueueDelegate Delegate { get; set; }
 
 		[Mac (10, 15), iOS (13, 0)]
+		[TV (13,0)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
 		[Mac (10, 15), iOS (13, 0)]
+		[TV (13,0)]
 		[NullAllowed, Export ("storefront")]
 		SKStorefront Storefront { get; }
 	}
