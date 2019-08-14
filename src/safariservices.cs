@@ -6,6 +6,8 @@
 //   Sebastien Pouliot  <sebastien@xamarin.com>
 //
 // Copyright 2013 Xamarin Inc.
+// Copyright 2019 Microsoft Corporation
+//
 
 using System;
 
@@ -21,6 +23,7 @@ namespace SafariServices {
 	delegate void SFExtensionValidationHandler (bool shouldHide, NSString text);
 
 	[Mac (10,12)][iOS (10,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof(NSObject))]
 	interface SFContentBlockerState
 	{
@@ -29,6 +32,7 @@ namespace SafariServices {
 	}
 
 	[iOS (9,0)][Mac (10,12)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	interface SFContentBlockerManager {
 		[Async]
@@ -43,6 +47,7 @@ namespace SafariServices {
 
 #if !MONOMAC
 	[iOS (7,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Misuse of SSReadingList interface. Use class method defaultReadingList.
 	partial interface SSReadingList {
@@ -266,6 +271,14 @@ namespace SafariServices {
 		[Mac (10,13,4)]
 		[Export ("additionalRequestHeadersForURL:completionHandler:")]
 		void AdditionalRequestHeaders (NSUrl url, Action<NSDictionary<NSString, NSString>> completionHandler);
+
+		[Mac (10,15)]
+		[Export ("contentBlockerWithIdentifier:blockedResourcesWithURLs:onPage:")]
+		void ContentBlocker (string contentBlockerIdentifier, NSUrl[] urls, SFSafariPage page);
+
+		[Mac (10,15)]
+		[Export ("page:willNavigateToURL:")]
+		void WillNavigate (SFSafariPage page, [NullAllowed] NSUrl url);
 	}
 
 	[Mac (10,14,4)]
@@ -418,5 +431,23 @@ namespace SafariServices {
 // 		[Export ("enabled")]
 // 		bool Enabled { [Bind ("isEnabled")] get; }
 // 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFUniversalLink {
+
+		[Export ("initWithWebpageURL:")]
+		IntPtr Constructor (NSUrl url);
+
+		[Export ("webpageURL")]
+		NSUrl WebpageUrl { get; }
+
+		[Export ("applicationURL")]
+		NSUrl ApplicationUrl { get; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+	}
 #endif
 }
