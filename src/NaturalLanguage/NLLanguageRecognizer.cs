@@ -33,11 +33,9 @@ namespace NaturalLanguage {
 		{
 			var nsstring = NSString.CreateNative (@string);
 			var nslang = _GetDominantLanguage (nsstring);
-			var lang =  NLLanguage.Undetermined;
-			if (nslang != null)
-				lang = NLLanguageExtensions.GetValue (nslang);
+			var lang = NLLanguageExtensions.GetValue (nslang);
+			nslang?.Dispose ();
 			NSString.ReleaseNative (nsstring);
-			nslang.Dispose ();
 			return lang;
 		}
 	
