@@ -97,16 +97,16 @@ namespace CoreML {
 		Running = 2,
 		Cancelling = 3,
 		Completed = 4,
-		Failed = 5
+		Failed = 5,
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[Flags]
 	[Native]
-	public enum MLUpdateProgressEvent : long {
+	public enum MLUpdateProgressEvent : ulong {
 		TrainingBegin = 1L << 0,
 		EpochEnd = 1L << 1,
-		MiniBatchEnd = 1L << 2
+		MiniBatchEnd = 1L << 2,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -243,13 +243,13 @@ namespace CoreML {
 		[Static]
 		[Export ("featureValueWithImageAtURL:pixelsWide:pixelsHigh:pixelFormatType:options:error:")]
 		[return: NullAllowed]
-		MLFeatureValue Create (NSUrl url, nint pixelsWide, nint pixelsHigh, uint pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
+		MLFeatureValue Create (NSUrl url, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
 		[Wrap ("Create (url, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
 		[return: NullAllowed]
-		MLFeatureValue Create (NSUrl url, nint pixelsWide, nint pixelsHigh, uint pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
+		MLFeatureValue Create (NSUrl url, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
@@ -267,13 +267,13 @@ namespace CoreML {
 		[Static]
 		[Export ("featureValueWithCGImage:pixelsWide:pixelsHigh:pixelFormatType:options:error:")]
 		[return: NullAllowed]
-		MLFeatureValue Create (CGImage image, nint pixelsWide, nint pixelsHigh, uint pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
+		MLFeatureValue Create (CGImage image, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
 		[Wrap ("Create (image, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
 		[return: NullAllowed]
-		MLFeatureValue Create (CGImage image, nint pixelsWide, nint pixelsHigh, uint pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
+		MLFeatureValue Create (CGImage image, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
@@ -291,13 +291,13 @@ namespace CoreML {
 		[Static]
 		[Export ("featureValueWithImageAtURL:orientation:pixelsWide:pixelsHigh:pixelFormatType:options:error:")]
 		[return: NullAllowed]
-		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, uint pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
+		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
 		[Wrap ("Create (url, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
 		[return: NullAllowed]
-		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, uint pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
+		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
@@ -315,13 +315,13 @@ namespace CoreML {
 		[Static]
 		[Export ("featureValueWithCGImage:orientation:pixelsWide:pixelsHigh:pixelFormatType:options:error:")]
 		[return: NullAllowed]
-		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, uint pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
+		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
 		[Wrap ("Create (image, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
 		[return: NullAllowed]
-		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, uint pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
+		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
@@ -804,6 +804,7 @@ namespace CoreML {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface MLNumericConstraint : NSSecureCoding {
 
 		[Export ("minNumber")]
@@ -818,6 +819,7 @@ namespace CoreML {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface MLParameterDescription : NSSecureCoding {
 
 		[Export ("key")]
