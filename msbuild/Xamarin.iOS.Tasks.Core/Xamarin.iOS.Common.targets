@@ -356,7 +356,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
+	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppDistribution)' != 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
 
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn>
@@ -376,44 +376,30 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CodesignVerify;
 		</_CoreCodesignDependsOn>
 
-		<_BeforeCodeSignForBuildDependsOn>
-			_CreateAppBundle;
-			BeforeCodeSign;
-			CoreCodeSign;
-			AfterCodeSign
-		</_BeforeCodeSignForBuildDependsOn>
-
-		<_BeforeCodeSignForDistributionDependsOn>
+		<CodesignDependsOn>
 			BeforeCodeSign;
 			CoreCodeSign;
 			AfterCodeSign;
-		</_BeforeCodeSignForDistributionDependsOn>
+		</CodesignDependsOn>
 	</PropertyGroup>
 
 	<Target Name="BeforeCodesign" />
 	<Target Name="CoreCodesign" DependsOnTargets="$(_CoreCodesignDependsOn)" />
 	<Target Name="AfterCodesign" />
 
-	<Target Name="_BeforeCodeSignForBuild" Condition="'$(IsAppDistribution)' != 'True'" BeforeTargets="Codesign" DependsOnTargets="$(_BeforeCodeSignForBuildDependsOn)" />
-	<Target Name="_BeforeCodeSignForDistribution" Condition="'$(IsAppDistribution)' == 'True'" BeforeTargets="Codesign" DependsOnTargets="$(_BeforeCodeSignForDistributionDependsOn)" />
-	
-	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" />
+	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_CreateAppBundle;$(CodesignDependsOn)" />
 
 	<PropertyGroup>
-		<_BeforeCreateIpaDependsOn>
+		<!-- Extensibility point for VS Publishing Workflow -->
+		<_BeforeCreateIpaForDistributionDependsOn />
+		
+		<CreateIpaDependsOn>
+			_BeforeCreateIpaForDistribution;
 			_CoreCreateIpa;
 			_PackageOnDemandResources;
 			_ZipIpa
-		</_BeforeCreateIpaDependsOn>
-		
-		<_BeforeCreateIpaForBuildDependsOn>
-			$(_BeforeCreateIpaDependsOn)
-		</_BeforeCreateIpaForBuildDependsOn>
+		</CreateIpaDependsOn>
 
-		<_BeforeCreateIpaForDistributionDependsOn>
-			$(_BeforeCreateIpaDependsOn)
-		</_BeforeCreateIpaForDistributionDependsOn>
-		
 		<ArchiveDependsOn>
 			_CoreArchive
 		</ArchiveDependsOn>
@@ -421,10 +407,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="Archive" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(ArchiveDependsOn)" />
 
-	<Target Name="_BeforeCreateIpaForBuild" Condition="'$(IsAppDistribution)' != 'True'" BeforeTargets="CreateIpa" DependsOnTargets="$(_BeforeCreateIpaForBuildDependsOn)" />
-	<Target Name="_BeforeCreateIpaForDistribution" Condition="'$(IsAppDistribution)' == 'True'" BeforeTargets="CreateIpa" DependsOnTargets="$(_BeforeCreateIpaForDistributionDependsOn)" />
+	<Target Name="_BeforeCreateIpaForDistribution" Condition="'$(IsAppDistribution)' == 'true'" DependsOnTargets="$(_BeforeCreateIpaForDistributionDependsOn)" />
 	
-	<Target Name="CreateIpa" Condition="'$(_CanArchive)' == 'true'" />
+	<Target Name="CreateIpa" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(CreateIpaDependsOn)" />
 
 	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)" />
@@ -701,8 +686,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	
 	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
 		<PropertyGroup>
-			<AppBundleDir Condition="'$(IsAppDistribution)' != 'True'">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
-			<AppBundleDir Condition="'$(IsAppDistribution)' == 'True'">$(ArchivePath)\Products\Applications\$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+			<AppBundleDir Condition="'$(IsAppDistribution)' != 'true'">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+			<AppBundleDir Condition="'$(IsAppDistribution)' == 'true'">$(ArchivePath)\Products\Applications\$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
 		</PropertyGroup>
 	</Target>
@@ -812,6 +797,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
+		Condition = "'$(IsAppDistribution)' != 'true'"
 		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
 
@@ -1784,15 +1770,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<PropertyGroup>
-		<_BeforeCollectFrameworksForBuildDependsOn>
-			_CompileToNative
-		</_BeforeCollectFrameworksForBuildDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_BeforeCollectFrameworksForBuild" Condition="'$(IsAppDistribution)' != 'True'" BeforeTargets="_CollectFrameworks" DependsOnTargets="$(_BeforeCollectFrameworksForBuildDependsOn)" />
-	
-	<Target Name="_CollectFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true'">
+	<Target Name="_CollectFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_CompileToNative">
 		<CollectFrameworks
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -1802,16 +1780,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CollectFrameworks>
 	</Target>
 
-	<PropertyGroup>
-		<_BeforeCodesignNativeLibrariesForBuildDependsOn>
-			_CompileToNative
-		</_BeforeCodesignNativeLibrariesForBuildDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_BeforeCodesignNativeLibrariesForBuild" Condition="'$(IsAppDistribution)' != 'True'" BeforeTargets="_CodesignNativeLibraries" DependsOnTargets="$(_BeforeCodesignNativeLibrariesForBuildDependsOn)" />
-
 	<!-- Note: Always codesign *.dylibs even for Simulator builds. We use $(_CanOutputAppBundle) because dylibs can exist in app extensions as well. -->
-	<Target Name="_CodesignNativeLibraries" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectSigningIdentity">
+	<Target Name="_CodesignNativeLibraries" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CompileToNative">
 
 		<PropertyGroup>
 			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
