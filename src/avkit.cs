@@ -645,8 +645,12 @@ namespace AVKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 #endif
-		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
 		IAVRoutePickerViewDelegate Delegate { get; set; }
+		
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
 #if !MONOMAC
 		[Export ("activeTintColor", ArgumentSemantic.Assign), NullAllowed]
 		UIColor ActiveTintColor { get; set; }
