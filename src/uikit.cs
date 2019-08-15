@@ -3040,6 +3040,7 @@ namespace UIKit {
 
 #if XAMCORE_2_0
 #if IOS // This is inside ContactsUI.framework
+		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Static, Export ("iconWithContact:")]
 		UIApplicationShortcutIcon FromContact (CNContact contact);
 #endif // IOS
