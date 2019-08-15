@@ -647,11 +647,6 @@ namespace AVKit {
 #endif
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IAVRoutePickerViewDelegate Delegate { get; set; }
-
-		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		[Sealed]
-		NSObject WeakDelegate { get; set; }
-		
 #if !MONOMAC
 		[Export ("activeTintColor", ArgumentSemantic.Assign), NullAllowed]
 		UIColor ActiveTintColor { get; set; }
