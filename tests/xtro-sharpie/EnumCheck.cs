@@ -58,9 +58,9 @@ namespace Extrospection {
 				Log.On (framework).Add ($"!missing-enum! {name} not bound");
 				return;
 			} else {
-            	var enumMemberInPreviousLib = type.Fields.Select (e => name.Replace ("Code","") + e.Name);
-            	var enumMemberInNewAppleLib = decl.Values.Select (e => e.Name);
-            	var missingEnums = enumMemberInNewAppleLib.Except (enumMemberInPreviousLib);
+            	var enumMembersInXamarin = type.Fields.Select (e => name.Replace ("Code","") + e.Name);
+            	var enumMembersInNewAppleLib = decl.Values.Select (e => e.Name);
+            	var missingEnums = enumMembersInNewAppleLib.Except (enumMembersInXamarin);
             	if (missingEnums.Any ()) {
             		foreach (var missingEnum in missingEnums) {
             			Log.On (framework).Add ($"!missing-enum-member! {name} : {missingEnum.Replace (name.Replace ("Code",""),"")} not bound");
