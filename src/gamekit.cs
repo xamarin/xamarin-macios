@@ -449,6 +449,10 @@ namespace GameKit {
 	[BaseType (typeof (GKBasePlayer))]
 	// note: NSSecureCoding conformity is undocumented - but since it's a runtime check (on ObjC) we still need it
 	interface GKPlayer : NSSecureCoding {
+
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TeamPlayerId' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TeamPlayerId' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TeamPlayerId' instead.")]
 		[Export ("playerID", ArgumentSemantic.Retain)]
 		string PlayerID { get;  }
 
@@ -492,6 +496,21 @@ namespace GameKit {
 		[Mac (10, 11)]
 		[Export ("guestIdentifier")]
 		string GuestIdentifier { get; }
+
+		[NoWatch]
+		[TV (12,4)][Mac (10,14,6)][iOS (12,4)]
+		[Export ("gamePlayerID", ArgumentSemantic.Retain)]
+		string GamePlayerId { get; }
+
+		[NoWatch]
+		[TV (12,4)][Mac (10,14,6)][iOS (12,4)]
+		[Export ("teamPlayerID", ArgumentSemantic.Retain)]
+		string TeamPlayerId { get; }
+
+		[NoWatch]
+		[TV (13,0)][Mac (10,15)][iOS (13,0)]
+		[Export ("scopedIDsArePersistent")]
+		bool ScopedIdsArePersistent { get; }
 	}
 
 	[Watch (3,0)]
@@ -653,7 +672,7 @@ namespace GameKit {
 	interface GKLeaderboardViewController : UIAppearance 
 #endif
 	{
-		[Export ("leaderboardDelegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("leaderboardDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
@@ -819,6 +838,22 @@ namespace GameKit {
 		[Mac (10,10)]
 		[Export ("resolveConflictingSavedGames:withData:completionHandler:")]
 		void ResolveConflictingSavedGames (GKSavedGame [] conflictingSavedGames, NSData data, [NullAllowed] Action<GKSavedGame[], NSError> handler);
+
+		[NoWatch]
+		[TV (13,0)][Mac (10,15)][iOS (13,0)]
+		[Export ("multiplayerGamingRestricted")]
+		bool MultiplayerGamingRestricted { [Bind ("isMultiplayerGamingRestricted")] get; }
+
+		[TV (13,0)][Mac (10,15)][iOS (13,0)][Watch (6,0)]
+		[Export ("loadChallengableFriendsWithCompletionHandler:")]
+		[Async]
+		void LoadChallengableFriends ([NullAllowed] Action<GKPlayer [], NSError> completionHandler);
+
+		[NoWatch]
+		[TV (13,0)][Mac (10,15)][iOS (13,0)]
+		[Static]
+		[Export ("local")]
+		GKLocalPlayer Local { get; }
 	}
 
 	[NoWatch]
@@ -1090,6 +1125,11 @@ namespace GameKit {
 		[NullAllowed] // by default this property is null
 		[Export ("recipients", ArgumentSemantic.Retain)]
 		GKPlayer [] Recipients { get; set; }
+
+		[NoWatch]
+		[TV (13,0)][Mac (10,15)][iOS (13,0)]
+		[Export ("restrictToAutomatch")]
+		bool RestrictToAutomatch { get; set; }
 	}
 
 	[NoWatch]
@@ -1228,7 +1268,7 @@ namespace GameKit {
 		[Protocolize]
 		GKMatchmakerViewControllerDelegate MatchmakerDelegate { get; set;  }
 
-		[Export ("matchRequest", ArgumentSemantic.Retain)]
+		[Export ("matchRequest", ArgumentSemantic.Strong)]
 		GKMatchRequest MatchRequest { get;  }
 
 		[Export ("hosted", ArgumentSemantic.Assign)]
@@ -1562,7 +1602,7 @@ namespace GameKit {
 	interface GKAchievementViewController : UIAppearance 
 #endif
 	{
-		[Export ("achievementDelegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("achievementDelegate", ArgumentSemantic.Weak), NullAllowed]
 #if !MONOMAC
 		[Override]
 #endif
@@ -1576,7 +1616,7 @@ namespace GameKit {
 #if MONOMAC
 	[BaseType (typeof (NSResponder))]
 	interface GKDialogController {
-		[Export ("parentWindow", ArgumentSemantic.Assign)]
+		[Export ("parentWindow", ArgumentSemantic.Weak)]
 		NSWindow ParentWindow { get; set; }
 
 		[Export ("presentViewController:")]
@@ -1959,7 +1999,7 @@ namespace GameKit {
 		[Export ("initWithMatchRequest:")]
 		IntPtr Constructor (GKMatchRequest request);
 
-		[Export ("turnBasedMatchmakerDelegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("turnBasedMatchmakerDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
@@ -2081,7 +2121,7 @@ namespace GameKit {
 		[Export ("initWithNibName:bundle:")]
 		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 		
-		[Export ("gameCenterDelegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("gameCenterDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
@@ -2100,7 +2140,7 @@ namespace GameKit {
 
 		[NoTV]
 		[NullAllowed] // by default this property is null
-		[Export ("leaderboardCategory", ArgumentSemantic.Retain)]
+		[Export ("leaderboardCategory", ArgumentSemantic.Strong)]
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LeaderboardIdentifier' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'LeaderboardIdentifier' instead.")]
 		string LeaderboardCategory { get; set; }
@@ -2108,7 +2148,7 @@ namespace GameKit {
 		[NoTV]
 		[iOS (7,0)][Mac (10,10)] // Marked 10.9 in header, apple 17612948
 		[NullAllowed] // by default this property is null
-		[Export ("leaderboardIdentifier")]
+		[Export ("leaderboardIdentifier", ArgumentSemantic.Strong)]
 		string LeaderboardIdentifier { get; set; }
 	}
 
