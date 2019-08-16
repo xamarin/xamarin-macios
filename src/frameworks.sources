@@ -1173,6 +1173,7 @@ NETWORKEXTENSION_SOURCES = \
 	NetworkExtension/NECompat.cs \
 	NetworkExtension/NEFilterFlow.cs \
 	NetworkExtension/NEFilterProvider.cs \
+	NetworkExtension/NEHotspotConfiguration.cs \
 	NetworkExtension/NEHotspotEapSettings.cs \
 	NetworkExtension/NEVpnManager.cs \
 

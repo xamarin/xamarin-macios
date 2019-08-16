@@ -780,6 +780,8 @@ public class NamespaceManager
 			ImplicitNamespaces.Add (Get ("SpriteKit"));
 		if (Frameworks.HaveFileProvider)
 			ImplicitNamespaces.Add (Get ("FileProvider"));
+		if (Frameworks.HaveNetworkExtension)
+			ImplicitNamespaces.Add (Get ("NetworkExtension"));
 
 		// These are both types and namespaces
 		NamespacesThatConflictWithTypes = new HashSet<string> {

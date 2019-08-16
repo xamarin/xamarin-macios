@@ -878,6 +878,11 @@ namespace Introspection {
 			case "initWithUUID:identifier:":
 			case "initWithUUID:major:identifier:":
 			case "initWithUUID:major:minor:identifier:":
+			// NEHotspotConfiguration
+			case "initWithSSID:":
+			case "initWithSSID:passphrase:isWEP:":
+			case "initWithSSIDPrefix:":
+			case "initWithSSIDPrefix:passphrase:isWEP:":
 				var mi = m as MethodInfo;
 				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
 			default:
