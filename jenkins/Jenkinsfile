@@ -513,7 +513,7 @@ timestamps {
                                 if (notarize_ios)
                                     pkgs = pkgs + xiPackages
                                 withCredentials([string(credentialsId: 'team_id', variable: 'TEAM_ID'), string(credentialsId: 'application_id', variable: 'APP_ID'), string(credentialsId: 'installer_id', variable: 'INSTALL_ID'), usernamePassword(credentialsId: 'apple_account', passwordVariable: 'APPLE_PASS', usernameVariable: 'APPLE_ACCOUNT')]) {
-                                    sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} " + pkgs.join(" "))
+                                    sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} " + pkgs.flatten().join(" "))
                                 }
                             } else {
                                 withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
