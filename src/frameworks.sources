@@ -1839,6 +1839,7 @@ MAC_FRAMEWORKS =            \
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \
+	QuickLookThumbnailing	\
 	QuickLookUI             \
 	SafariServices          \
 	ScriptingBridge         \
@@ -1933,6 +1934,7 @@ IOS_FRAMEWORKS =         \
 	PhotosUI \
 	PushKit \
 	QuickLook \
+	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
 	Security \

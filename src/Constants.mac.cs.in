@@ -162,6 +162,7 @@ namespace MonoMac {
 		public const string FileProviderLibrary = "/System/Library/Frameworks/FileProvider.framework/FileProvider";
 		public const string FileProviderUILibrary = "/System/Library/Frameworks/FileProviderUI.framework/FileProviderUI";
 		public const string PushKitLibrary = "/System/Library/Frameworks/PushKit.framework/PushKit";
+		public const string QuickLookThumbnailingLibrary = "/System/Library/Frameworks/QuickLookThumbnailing.framework/QuickLookThumbnailing";
 		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
 		public const string PencilKitLibrary = "/System/Library/Frameworks/PencilKit.framework/PencilKit";
 		public const string SpeechLibrary = "/System/Library/Frameworks/Speech.framework/Speech";
