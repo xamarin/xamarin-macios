@@ -26,6 +26,7 @@ using AddressBook;
 #if !__WATCHOS__
 using MediaPlayer;
 #endif
+using CoreBluetooth;
 using UIKit;
 #endif
 using ObjCRuntime;
@@ -645,6 +646,24 @@ partial class TestRuntime
 	{
 		return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_SYSTEM_PERMISSION_TESTS"));
 	}
+
+#if !MONOMAC
+	public static void CheckBluetoothPermission (bool assert_granted = false)
+	{
+		var centralManager = new CBCentralManager ();
+		switch (centralManager.Authorization) {
+		case CBManagerAuthorization.NotDetermined:
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to use bluetooth.");
+			break;
+		case CBManagerAuthorization.Denied:
+		case CBManagerAuthorization.Restricted:
+			if (assert_granted)
+				NUnit.Framework.Assert.Fail ("This test requires permission to use bluetooth.");
+			break;
+		}
+	}
+#endif // !!MONOMAC
 
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
 	public static void RequestCameraPermission (NSString mediaTypeToken, bool assert_granted = false)
