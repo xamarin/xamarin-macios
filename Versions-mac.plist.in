@@ -43,6 +43,7 @@
 		<string>link-platform</string>
 		<string>hybrid-aot</string>
 		<string>64-bit-only</string>
+		<string>altool</string>
 	</array>
 	<key>Optimizations</key>
 	<dict>
