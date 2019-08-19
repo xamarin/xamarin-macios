@@ -12,9 +12,9 @@ namespace Xamarin.Mac.Tasks
 {
 	public class DetectSigningIdentity : DetectSigningIdentityTaskBase
 	{
-		static readonly string[] appStoreDistributionPrefixes = { "3rd Party Mac Developer Application" };
+		static readonly string[] appStoreDistributionPrefixes = { "3rd Party Mac Developer Application", "Apple Distribution" };
 		static readonly string[] directDistributionPrefixes = { "Developer ID Application" };
-		static readonly string[] developmentPrefixes = { "Mac Developer" };
+		static readonly string[] developmentPrefixes = { "Mac Developer", "Apple Development" };
 
 		protected override string[] DevelopmentPrefixes { get { return developmentPrefixes; } }
 		protected override string[] DirectDistributionPrefixes { get { return directDistributionPrefixes; } }
