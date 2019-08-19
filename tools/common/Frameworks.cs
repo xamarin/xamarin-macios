@@ -183,6 +183,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "FileProvider", "FileProvider", 10,15 },
 					{ "FileProviderUI", "FileProviderUI", 10,15 },
 					{ "PushKit", "PushKit", 10,15 },
+					{ "QuickLookThumbnailing", "QuickLookThumbnailing", 10,15 },
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
 					{ "PencilKit", "PencilKit", 10,15 },
 					{ "Speech", "Speech", 10,15 },
@@ -315,6 +316,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 				{ "PencilKit", "PencilKit", 13, 0 },
+				{ "QuickLookThumbnailing", "QuickLookThumbnailing", 13,0 },
 				{ "LinkPresentation", "LinkPresentation", 13, 0 },
 			};
 		}

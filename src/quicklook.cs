@@ -176,48 +176,6 @@ namespace QuickLook {
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
 		void PreparePreviewOfFile (NSUrl url, Action<NSError> handler);
 	}
-
-	[iOS (11,0)]
-	[BaseType (typeof (NSObject))]
-	interface QLThumbnailProvider {
-		[Export ("provideThumbnailForFileRequest:completionHandler:")]
-		void ProvideThumbnail (QLFileThumbnailRequest request, Action<QLThumbnailReply, NSError> handler);
-	}
-
-	[ThreadSafe] // Members get called inside 'QLThumbnailProvider.ProvideThumbnail' which runs on a background thread.
-	[iOS (11,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface QLThumbnailReply {
-		[Static]
-		[Export ("replyWithContextSize:drawingBlock:")]
-		QLThumbnailReply CreateReply (CGSize contextSize, Func<CGContext, bool> drawingBlock);
-
-		[Static]
-		[Export ("replyWithContextSize:currentContextDrawingBlock:")]
-		QLThumbnailReply CreateReply (CGSize contextSize, Func<bool> drawingBlock);
-
-		[Static]
-		[Export ("replyWithImageFileURL:")]
-		QLThumbnailReply CreateReply (NSUrl fileUrl);
-	}
-
-	[ThreadSafe]
-	[iOS (11,0)]
-	[BaseType (typeof (NSObject))]
-	interface QLFileThumbnailRequest {
-		[Export ("maximumSize")]
-		CGSize MaximumSize { get; }
-
-		[Export ("minimumSize")]
-		CGSize MinimumSize { get; }
-
-		[Export ("scale")]
-		nfloat Scale { get; }
-
-		[Export ("fileURL", ArgumentSemantic.Copy)]
-		NSUrl FileUrl { get; }
-	}
 #else
 	[Static]
 	interface QLThumbnailImage {
