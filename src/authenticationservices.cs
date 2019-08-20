@@ -636,6 +636,7 @@ namespace AuthenticationServices {
 		[DesignatedInitializer]
 		IntPtr Constructor (ASAuthorizationAppleIdButtonType type, ASAuthorizationAppleIdButtonStyle style);
 
+		[NoTV]
 		[Export ("cornerRadius")]
 		nfloat CornerRadius { get; set; }
 	}
