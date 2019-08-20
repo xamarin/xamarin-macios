@@ -32,17 +32,11 @@ namespace EmbeddedResources {
 		[Test]
 		public void Embedded ()
 		{
+
 #if __TVOS__
-			bool in_interpreter = false;
-			try {
-				AssemblyName aName = new AssemblyName ("DynamicAssemblyExample");
-				AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly (aName, AssemblyBuilderAccess.RunAndSave);
-				in_interpreter = true;
-			} catch (PlatformNotSupportedException) {
-				// we do not have the interpreter, lets continue
-			}
-			if (in_interpreter)
+			if (TestRuntime.CheckExecutingWithInterpreter ())
 				Assert.Ignore ("This test is disabled on TVOS."); // Randomly crashed on tvOS -> https://github.com/xamarin/maccore/issues/1909
+
 #endif
 
 #if MONOMAC
