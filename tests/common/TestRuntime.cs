@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Reflection;
+using System.Reflection.Emit;
 
 #if XAMCORE_2_0
 using AVFoundation;
@@ -107,6 +109,24 @@ partial class TestRuntime
 	{
 		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
 		if (!in_ci)
+			return;
+		NUnit.Framework.Assert.Ignore (message);
+	}
+
+	public static void IgnoreInInterpreter (string message)
+	{
+		// until System.Runtime.CompilerServices.RuntimeFeature.IsSupported("IsDynamicCodeCompiled") returns a valid result, atm it
+		// always return true, try to build an object of a class that should fail without introspection, and catch the exception to do the
+		// right thing
+		bool in_interpreter = false;
+		try {
+			AssemblyName aName = new AssemblyName ("DynamicAssemblyExample");
+			AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly (aName, AssemblyBuilderAccess.RunAndSave);
+			in_interpreter = true;
+		} catch (PlatformNotSupportedException) {
+			// we do not have the interpreter, lets continue
+		}
+		if (!in_interpreter)
 			return;
 		NUnit.Framework.Assert.Ignore (message);
 	}

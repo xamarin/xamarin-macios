@@ -11,6 +11,8 @@ using System;
 using System.IO;
 using System.Resources;
 using System.Globalization;
+using System.Reflection;
+using System.Reflection.Emit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
@@ -31,7 +33,16 @@ namespace EmbeddedResources {
 		public void Embedded ()
 		{
 #if __TVOS__
-			Assert.Ignore ("This test is disabled on TVOS."); // Randomly crashed on tvOS -> https://github.com/xamarin/maccore/issues/1909
+			bool in_interpreter = false;
+			try {
+				AssemblyName aName = new AssemblyName ("DynamicAssemblyExample");
+				AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly (aName, AssemblyBuilderAccess.RunAndSave);
+				in_interpreter = true;
+			} catch (PlatformNotSupportedException) {
+				// we do not have the interpreter, lets continue
+			}
+			if (in_interpreter)
+				Assert.Ignore ("This test is disabled on TVOS."); // Randomly crashed on tvOS -> https://github.com/xamarin/maccore/issues/1909
 #endif
 
 #if MONOMAC
