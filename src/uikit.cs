@@ -3285,7 +3285,7 @@ namespace UIKit {
 		UITargetedPreview GetPreviewForDismissingMenu (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration);
 
 		[Export ("contextMenuInteraction:willPerformPreviewActionForMenuWithConfiguration:animator:")]
-		void WillPerformPreviewActionForMenu (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
+		void WillPerformPreviewAction (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 
 		[Export ("contextMenuInteraction:willDisplayMenuForConfiguration:animator:")]
 		void WillDisplayMenu (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, [NullAllowed] IUIContextMenuInteractionAnimating animator);
@@ -4256,7 +4256,7 @@ namespace UIKit {
 
 		[NoWatch, NoTV, iOS (13,0)]
 		[Export ("collectionView:willPerformPreviewActionForMenuWithConfiguration:animator:")]
-		void WillPerformPreviewActionForMenu (UICollectionView collectionView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
+		void WillPerformPreviewAction (UICollectionView collectionView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 	}
 
 	[iOS (6,0)]
