@@ -169,11 +169,6 @@ namespace Xamarin.Tests
 					case "_objc_msgSend_stret":
 					case "_objc_msgSendSuper_stret":
 						return false;
-					// networkable AOT profiler - see https://github.com/mono/mono/pull/14936
-					case "_add_to_fd_set":
-					case "_close_socket_fd":
-					case "_setup_command_server":
-						return false;
 					}
 
 					// Be a bit more lenient with symbols from the static registrar
