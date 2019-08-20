@@ -266,3 +266,7 @@
 !missing-field! AVAudioUnitComponentManagerRegistrationsChangedNotification not bound
 !missing-selector! AVSpeechSynthesizer::setUsesApplicationAudioSession: not bound
 !missing-selector! AVSpeechSynthesizer::usesApplicationAudioSession not bound
+## appended from unclassified file
+!missing-selector! AVCaptureDevice::isGlobalToneMappingEnabled not bound
+!missing-selector! AVCaptureDevice::setGlobalToneMappingEnabled: not bound
+!missing-selector! AVCaptureDeviceFormat::isGlobalToneMappingSupported not bound

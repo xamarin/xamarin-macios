@@ -666,9 +666,10 @@ namespace Introspection {
 				case "HMAction":
 				case "HMCharacteristicWriteAction":
 				case "MLPredictionOptions":
-                case "HKCumulativeQuantitySample": // Conformance not in headers
-                case "HKDiscreteQuantitySample": // Conformance not in headers
-                case "HKAudiogramSample": // Conformance not in headers
+				case "HKCumulativeQuantitySample": // Conformance not in headers
+				case "HKDiscreteQuantitySample": // Conformance not in headers
+				case "HKAudiogramSample": // Conformance not in headers
+				case "UIImage": // only complains on tvOS beta 6
 					return true;
 				}
 				break;

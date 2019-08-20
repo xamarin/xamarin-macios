@@ -1,0 +1,13 @@
+## appended from unclassified file
+!deprecated-attribute-missing! UIContextMenuInteractionDelegate::contextMenuInteraction:willCommitWithAnimator: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIContextMenuInteractionDelegate::contextMenuInteractionDidEnd: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIContextMenuInteractionDelegate::contextMenuInteractionWillPresent: missing a [Deprecated] attribute
+!extra-protocol-member! unexpected selector UIContextMenuInteractionCommitAnimating::addAnimations: found
+!extra-protocol-member! unexpected selector UIContextMenuInteractionCommitAnimating::addCompletion: found
+!extra-protocol-member! unexpected selector UIContextMenuInteractionCommitAnimating::previewViewController found
+!missing-protocol! UIContextMenuInteractionAnimating not bound
+!missing-protocol-member! UICollectionViewDelegate::collectionView:willPerformPreviewActionForMenuWithConfiguration:animator: not found
+!missing-protocol-member! UIContextMenuInteractionDelegate::contextMenuInteraction:willDisplayMenuForConfiguration:animator: not found
+!missing-protocol-member! UIContextMenuInteractionDelegate::contextMenuInteraction:willEndForConfiguration:animator: not found
+!missing-protocol-member! UIContextMenuInteractionDelegate::contextMenuInteraction:willPerformPreviewActionForMenuWithConfiguration:animator: not found
+!missing-protocol-member! UITableViewDelegate::tableView:willPerformPreviewActionForMenuWithConfiguration:animator: not found
