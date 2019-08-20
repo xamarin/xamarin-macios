@@ -12609,7 +12609,7 @@ namespace UIKit {
 
 		[NoWatch, NoTV, iOS (13,0)]
 		[Export ("tableView:willPerformPreviewActionForMenuWithConfiguration:animator:")]
-		void WillPerformPreviewActionForMenu (UITableView tableView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
+		void WillPerformPreviewAction (UITableView tableView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 
 		// WARNING: If you add more methods here, add them to UITableViewController as well.
 	}
