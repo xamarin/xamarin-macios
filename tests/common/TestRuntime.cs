@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 
 #if XAMCORE_2_0
 using AVFoundation;
+using CoreBluetooth;
 using Foundation;
 #if !__TVOS__
 using Contacts;
@@ -26,7 +27,6 @@ using AddressBook;
 #if !__WATCHOS__
 using MediaPlayer;
 #endif
-using CoreBluetooth;
 using UIKit;
 #endif
 using ObjCRuntime;
@@ -647,9 +647,9 @@ partial class TestRuntime
 		return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_SYSTEM_PERMISSION_TESTS"));
 	}
 
-#if !MONOMAC
 	public static void CheckBluetoothPermission (bool assert_granted = false)
 	{
+		// New in Xcode11
 		var centralManager = new CBCentralManager ();
 		switch (centralManager.Authorization) {
 		case CBManagerAuthorization.NotDetermined:
@@ -663,7 +663,6 @@ partial class TestRuntime
 			break;
 		}
 	}
-#endif // !!MONOMAC
 
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
 	public static void RequestCameraPermission (NSString mediaTypeToken, bool assert_granted = false)
