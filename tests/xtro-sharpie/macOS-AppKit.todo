@@ -380,3 +380,6 @@
 !missing-selector! NSSharingServicePickerToolbarItem::delegate not bound
 !missing-selector! NSSharingServicePickerToolbarItem::setDelegate: not bound
 !missing-type! NSSharingServicePickerToolbarItem not bound
+## appended from unclassified file
+!missing-selector! NSWorkspaceOpenConfiguration::allowsRunningApplicationSubstitution not bound
+!missing-selector! NSWorkspaceOpenConfiguration::setAllowsRunningApplicationSubstitution: not bound
