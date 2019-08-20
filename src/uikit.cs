@@ -3291,7 +3291,7 @@ namespace UIKit {
 		void WillDisplayMenu (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, [NullAllowed] IUIContextMenuInteractionAnimating animator);
 
 		[Export ("contextMenuInteraction:willEndForConfiguration:animator:")]
-		void WillEndForConfiguration (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, [NullAllowed] IUIContextMenuInteractionAnimating animator);
+		void WillEnd (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, [NullAllowed] IUIContextMenuInteractionAnimating animator);
 	}
 
 	[NoWatch, NoTV, iOS (13,0)]
