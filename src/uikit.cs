@@ -12611,7 +12611,7 @@ namespace UIKit {
 		[Export ("tableView:willPerformPreviewActionForMenuWithConfiguration:animator:")]
 		void WillPerformPreviewAction (UITableView tableView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 
-		// WARNING: If you add more methods here, add them to UITableViewController as well.
+		// WARNING: If you add more methods here, add them to UITableViewControllerDelegate as well.
 	}
 	
 	[BaseType (typeof (UIView))]
