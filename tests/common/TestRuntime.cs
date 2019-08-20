@@ -117,7 +117,6 @@ partial class TestRuntime
 		// until System.Runtime.CompilerServices.RuntimeFeature.IsSupported("IsDynamicCodeCompiled") returns a valid result, atm it
 		// always return true, try to build an object of a class that should fail without introspection, and catch the exception to do the
 		// right thing
-		bool in_interpreter = false;
 		try {
 			AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly (null, AssemblyBuilderAccess.RunAndSave);
 			return true;
