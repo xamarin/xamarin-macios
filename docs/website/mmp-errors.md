@@ -631,6 +631,9 @@ If this is not the case, please file a [bug report](https://github.com/xamarin/x
 
 <a name="MM5218" />
 
+<!-- 5107 is used by mtouch-->
+<!-- 5108 is used by mtouch-->
+
 #### MM5218: Can't ignore the dynamic symbol {symbol} (--ignore-dynamic-symbol={symbol}) because it was not detected as a dynamic symbol.
 
 See the [equivalent mtouch warning](~/ios/troubleshooting/mtouch-errors.md#MT5218).

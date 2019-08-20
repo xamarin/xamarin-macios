@@ -37,6 +37,15 @@ namespace Xamarin.Bundler
 			return Task.Run (() => Start ());
 		}
 
+		// both stdout and stderr will be sent to this function.
+		// null will be sent when there's no more output
+		// calls to this function will be synchronized (no need to lock in here).
+		protected virtual void OutputReceived (string line)
+		{
+			if (line != null)
+				Output.AppendLine (line);
+		}
+
 		protected int Start ()
 		{
 			if (Driver.Verbosity > 0)
@@ -45,6 +54,7 @@ namespace Xamarin.Bundler
 			var info = ProcessStartInfo;
 			var stdout_completed = new ManualResetEvent (false);
 			var stderr_completed = new ManualResetEvent (false);
+			var lockobj = new object ();
 
 			Output = new StringBuilder ();
 
@@ -52,8 +62,8 @@ namespace Xamarin.Bundler
 				p.OutputDataReceived += (sender, e) =>
 				{
 					if (e.Data != null) {
-						lock (Output)
-							Output.AppendLine (e.Data);
+						lock (lockobj)
+							OutputReceived (e.Data);
 					} else {
 						stdout_completed.Set ();
 					}
@@ -62,8 +72,8 @@ namespace Xamarin.Bundler
 				p.ErrorDataReceived += (sender, e) =>
 				{
 					if (e.Data != null) {
-						lock (Output)
-							Output.AppendLine (e.Data);
+						lock (lockobj)
+							OutputReceived (e.Data);
 					} else {
 						stderr_completed.Set ();
 					}
@@ -76,6 +86,8 @@ namespace Xamarin.Bundler
 
 				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
 				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
+
+				OutputReceived (null);
 
 				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
 
@@ -181,6 +193,8 @@ namespace Xamarin.Bundler
 		public string AssemblyPath; // path to the .s file.
 		List<string> inputs;
 		public AotInfo AotInfo;
+		List<Exception> exceptions = new List<Exception> ();
+		List<string> output_lines = new List<string> ();
 
 		public override IEnumerable<string> Outputs {
 			get {
@@ -226,6 +240,24 @@ namespace Xamarin.Bundler
 			}
 		}
 
+		bool reported_5107;
+		protected override void OutputReceived (string line)
+		{
+			if (line == null)
+				return;
+
+			if (line.StartsWith ("AOT restriction: Method '", StringComparison.Ordinal) && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
+				exceptions.Add (ErrorHelper.CreateError (3002, line));
+			} else if (line.Contains ("can not encode offset") && line.Contains ("in resulting scattered relocation")) {
+				if (!reported_5107) {
+					// There can be thousands of these, but we only need one.
+					reported_5107 = true;
+					exceptions.Add (ErrorHelper.CreateError (5107, $"The assembly '{AssemblyName}' can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture."));
+				}
+			}
+			output_lines.Add (line);
+		}
+
 		protected async override Task ExecuteAsync ()
 		{
 			var exit_code = await StartAsync ();
@@ -241,19 +273,19 @@ namespace Xamarin.Bundler
 				return;
 			}
 
-			Console.Error.WriteLine ("AOT Compilation exited with code {0}, command:\n{1}{2}", exit_code, Command, Output.Length > 0 ? ("\n" + Output.ToString ()) : string.Empty);
-			if (Output.Length > 0) {
-				List<Exception> exceptions = new List<Exception> ();
-				foreach (var line in Output.ToString ().Split ('\n')) {
-					if (line.StartsWith ("AOT restriction: Method '", StringComparison.Ordinal) && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
-						exceptions.Add (new MonoTouchException (3002, true, line));
-					}
-				}
-				if (exceptions.Count > 0)
-					throw new AggregateException (exceptions.ToArray ());
+			IEnumerable<string> lines = output_lines;
+			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
+				lines = lines.Take (1000); // Limit the output so that we don't overload VSfM.
+				exceptions.Add (ErrorHelper.CreateWarning (5108, "The compiler output is too long, it's been limited to 1000 lines."));
 			}
+			// Construct the entire message before writing anything, so that there's a better chance the message isn't
+			// mixed up with output from other threads.
+			var msg = $"AOT Compilation exited with code {exit_code}, command:\n{Command}\n{string.Join ("\n", lines)}";
+			Console.Error.WriteLine (msg);
+			
+			exceptions.Add (ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", AssemblyName));
 
-			throw new MonoTouchException (3001, true, "Could not AOT the assembly '{0}'", AssemblyName);
+			throw new AggregateException (exceptions);
 		}
 
 		public override string ToString ()
@@ -545,10 +577,42 @@ namespace Xamarin.Bundler
 
 			Directory.CreateDirectory (Path.GetDirectoryName (OutputFile));
 
-			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToString (), null, null);
+			var exceptions = new List<Exception> ();
+			var output = new List<string> ();
+			var output_received = new Action<string> ((string line) => {
+				if (line == null)
+					return;
+				output.Add (line);
+				if (line.Contains ("can not encode offset") && line.Contains ("in resulting scattered relocation")) {
+					if (!reported_5107) {
+						// There can be thousands of these, but we only need one.
+						reported_5107 = true;
+						exceptions.Add (ErrorHelper.CreateError (5107, "The assembly '{0}' can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture.", Path.GetFileNameWithoutExtension (OutputFile)));
+					}
+				}
+			});
+
+			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToString (), null, output_received, suppressPrintOnErrors: true);
+
+			IEnumerable<string> lines = output;
+			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
+				lines = lines.Take (1000); // Limit the output so that we don't overload VSfM.
+				exceptions.Add (ErrorHelper.CreateWarning (5108, "The compiler output is too long, it's been limited to 1000 lines."));
+			}
+			// Construct the entire message before writing anything, so that there's a better chance the message isn't
+			// mixed up with output from other threads.
+			string msg = string.Empty;
+			if (rv != 0)
+				msg = $"Compilation failed with code {rv}, command:\n{App.CompilerPath} {CompilerFlags.ToString ()}";
+			if (lines.Any ())
+				msg += $"\n{string.Join ("\n", lines)}";
+			Console.Error.WriteLine (msg);
+
+			ErrorHelper.Show (exceptions);
 
 			return rv;
 		}
+		bool reported_5107;
 
 		public override string ToString ()
 		{

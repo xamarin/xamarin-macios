@@ -2587,6 +2587,46 @@ Reference: https://github.com/xamarin/xamarin-macios/issues/6492
 
 This usually indicates a bug in Xamarin.iOS; please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
 
+### MT5107: The assembly {assembly} can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture.
+
+The object file format for 32-bit ARM architectures (armv7 and armv7s) has
+certain size restrictions for the native code. This error will be shown when
+the limit is hit.
+
+Possible solutions:
+
+* Only build for ARM64. This can be changed in the project's iOS Build
+  options, and it's by far the easiest solution. Apple is on its way to
+  removing the 32-bit ARM architectures, so this will eventually be the
+  final solution too.
+* Enable the linker for all assemblies (or review any custom linker
+  arguments, such as linker definition files, to avoid skipping the
+  linker). The idea is for the linker to remove more unused code, and if
+  enough unused code is removed, then the size limit won't be reached.
+* Disable debugging. Debugging support makes the AOT compiler produce more
+  code, which can be enough to hit the limit. This can be changed in the
+  project's iOS Debug options (but the downside is of course that
+  debugging won't work).
+* Enable LLVM. The LLVM compiler can sometimes produce smaller code, which
+  can be enough to get below the size limit. The downside is that
+  debugging won't work, and the build will be much slower.
+* There's usually a particularly big assembly that's causing problems;
+  sometimes it can help to split such assemblies into smaller assemblies.
+  This can be a significant amount of work though, and there's no
+  guarantee it would eventually work.
+* Remove code from the app that isn't needed/used.
+
+Reference: https://github.com/xamarin/xamarin-macios/issues/6787
+
+### MT5108: The {linker/compiler} output is too long, it's been limited to 1000 lines.
+
+This is a warning indicating that the output from the linker or compiler was
+truncated because it was too long.
+
+To get the complete output, you can either manually run the command from the
+command line, or alternatively add `-v -v -v -v -v -v` (six or more -v's) to
+the additional mtouch argument in the project's iOS Build options.
+
 ### MT52xx: Linking
 
 <!--
