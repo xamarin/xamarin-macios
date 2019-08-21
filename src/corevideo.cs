@@ -258,6 +258,10 @@ namespace CoreVideo {
 		[iOS (11,0), Mac (10,13), TV (11,0)]
 		[Field ("kCVImageBufferContentLightLevelInfoKey")]
 		NSString ContentLightLevelInfoKey { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("kCVImageBufferAlphaChannelModeKey")]
+		NSString AlphaChannelModeKey { get; }
 	}
 
 	[Watch (4,0)]
@@ -441,13 +445,17 @@ namespace CoreVideo {
 		NSString MaximumBufferAgeKey { get; }
 	}
 
-#if !MONOMAC
 	[NoWatch]
 	[Partial]
 	interface CVMetalTextureCache {
+		[NoMac]
 		[Internal]
 		[Field ("kCVMetalTextureCacheMaximumTextureAgeKey")]
 		IntPtr MaxTextureAge { get; }
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Field ("kCVMetalTextureStorageMode")]
+		NSString StorageMode { get; }
 	}
 
 	// CVOpenGLESTextureCache is bound (manually) in OpenTK[-1.0].dll.
@@ -457,7 +465,6 @@ namespace CoreVideo {
 	// 	[Field ("kCVOpenGLESTextureCacheMaximumTextureAgeKey")]
 	// 	IntPtr MaxTextureAge { get; }
 	// }
-#endif
 
 	[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 	[Static, Internal]
