@@ -25,8 +25,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !WATCH
-
 using System;
 
 using Foundation;
@@ -35,6 +33,7 @@ using ObjCRuntime;
 
 namespace AVFoundation {
 
+	[Watch (6,0)]
 	public class AVUrlAssetOptions : DictionaryContainer
 	{
 #if !COREBUILD
@@ -68,5 +67,3 @@ namespace AVFoundation {
 #endif
 	}
 }
-
-#endif
