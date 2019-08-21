@@ -1105,5 +1105,13 @@ namespace LinkSdk {
 			Assert.IsNotNull (mta.GetInterface ("ObjCRuntime.INativeObject"), "INativeObject");
 		}
 #endif
+
+		[Test]
+		// https://github.com/xamarin/xamarin-macios/issues/6346
+		public void AsQueryable_Enumerable ()
+		{
+			var list = new List<string> { "hello hello" };
+			Assert.NotNull (list.AsQueryable ().GroupBy (x => x).FirstOrDefault ()?.FirstOrDefault (), "Enumerable");
+		}
 	}
 }

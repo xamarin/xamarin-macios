@@ -123,6 +123,16 @@ namespace Xamarin.Linker.Steps {
 			return base.MarkMethods (type);
 		}
 
+		protected void MarkStaticMethods (TypeDefinition type)
+		{
+			if ((type == null) || !type.HasMethods)
+				return;
+			foreach (MethodDefinition m in type.Methods) {
+				if (m.IsStatic)
+					MarkMethod (m);
+			}
+		}
+
 		protected void MarkConstructors (TypeDefinition type)
 		{
 			if ((type == null) || !type.HasMethods)
@@ -399,6 +409,11 @@ namespace Xamarin.Linker.Steps {
 					// reflection is used and the generic version might not be used elsewhere in the app, ref: #37563
 					TypeDefinition enumquery = GetType ("System.Core", "System.Linq.EnumerableQuery`1");
 					MarkConstructors (enumquery);
+					// corefx/src/System.Linq.Queryable/src/System/Linq/EnumerableRewriter.cs relies on reflection
+					// and assume that <quote>All static methods with arguments on Queryable have equivalents on Enumerable.</quote>
+					// ref: https://github.com/xamarin/xamarin-macios/issues/6346
+					TypeDefinition enumerable = GetType ("System.Core", "System.Linq.Enumerable");
+					MarkStaticMethods (enumerable);
 					break;
 				}
 				break;
