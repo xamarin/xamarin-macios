@@ -11,6 +11,8 @@ using System;
 using System.IO;
 using System.Resources;
 using System.Globalization;
+using System.Reflection;
+using System.Reflection.Emit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
@@ -30,8 +32,11 @@ namespace EmbeddedResources {
 		[Test]
 		public void Embedded ()
 		{
+
 #if __TVOS__
-			Assert.Ignore ("This test is disabled on TVOS."); // Randomly crashed on tvOS -> https://github.com/xamarin/maccore/issues/1909
+			if (TestRuntime.CheckExecutingWithInterpreter ())
+				Assert.Ignore ("This test is disabled on TVOS."); // Randomly crashed on tvOS -> https://github.com/xamarin/maccore/issues/1909
+
 #endif
 
 #if MONOMAC
