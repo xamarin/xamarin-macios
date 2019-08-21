@@ -409,6 +409,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations">
 		<ALToolValidate
+			SessionId="$(BuildSessionId)"
 			Username="$(Username)"
 			Password="$(Password)"
 			FilePath="$(FilePath)"
@@ -418,6 +419,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="UploadAppStoreBundle" DependsOnTargets="_DetectSdkLocations">
 		<ALToolUpload
+			SessionId="$(BuildSessionId)"
 			Username="$(Username)"
 			Password="$(Password)"
 			FilePath="$(FilePath)"
