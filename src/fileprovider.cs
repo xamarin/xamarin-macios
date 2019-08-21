@@ -61,29 +61,24 @@ namespace FileProvider {
 		NSUrl GetUrlForItem (string persistentIdentifier);
 
 		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
 		[Export ("persistentIdentifierForItemAtURL:")]
 		string GetPersistentIdentifier (NSUrl itemUrl);
 
 		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
 		[Export ("providePlaceholderAtURL:completionHandler:")]
 		[Async]
 		void ProvidePlaceholderAtUrl (NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 
 		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
 		[Export ("startProvidingItemAtURL:completionHandler:")]
 		[Async]
 		void StartProvidingItemAtUrl (NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 
 		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
 		[Export ("itemChangedAtURL:")]
 		void ItemChangedAtUrl (NSUrl url);
 
 		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
 		[Export ("stopProvidingItemAtURL:")]
 		void StopProvidingItemAtUrl (NSUrl url);
 
@@ -164,22 +159,22 @@ namespace FileProvider {
 		[Export ("setFavoriteRank:forItemIdentifier:completionHandler:")]
 		void SetFavoriteRank ([NullAllowed] NSNumber favoriteRank, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Async]
 		[Export ("performActionWithIdentifier:onItemsWithIdentifiers:completionHandler:")]
 		NSProgress PerformAction (NSString actionIdentifier, NSString[] itemIdentifiers, Action<NSError> completionHandler);
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Async (ResultTypeName = "NSFileProviderExtensionFetchResult")]
 		[Export ("fetchContentsForItemWithIdentifier:version:completionHandler:")]
 		NSProgress FetchContents (NSString itemIdentifier, [NullAllowed] NSFileProviderItemVersion requestedVersion, NSFileProviderExtensionFetchHandler completionHandler);
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Async (ResultTypeName = "NSFileProviderExtensionFetchResult")]
 		[Export ("fetchContentsForItemWithIdentifier:version:usingExistingContentsAtURL:existingVersion:completionHandler:")]
 		NSProgress FetchContents (NSString itemIdentifier, [NullAllowed] NSFileProviderItemVersion requestedVersion, NSUrl existingContents, NSFileProviderItemVersion existingVersion, NSFileProviderExtensionFetchHandler completionHandler);
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Async]
 		[Export ("itemChanged:baseVersion:changedFields:contents:completionHandler:")]
 		void ItemChanged (INSFileProviderItem item, NSFileProviderItemVersion version, NSFileProviderItemField changedFields, [NullAllowed] NSUrl newContents, Action<INSFileProviderItem, NSError> completionHandler);
@@ -190,7 +185,7 @@ namespace FileProvider {
 		[return: NullAllowed]
 		INSFileProviderEnumerator GetEnumerator (string containerItemIdentifier, out NSError error);
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("enumeratorForSearchQuery:error:")]
 		[return: NullAllowed]
 		INSFileProviderEnumerator GetEnumerator (NSFileProviderSearchQuery searchQuery, [NullAllowed] out NSError error);
@@ -217,35 +212,35 @@ namespace FileProvider {
 		NSFileProviderDomain Domain { get; }
 
 #region CreateItem (NSFileProviderExtension)
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("createItemBasedOnTemplate:fields:contents:options:completionHandler:")]
 		[Async]
 		void CreateItem (INSFileProviderItem itemTemplate, NSFileProviderItemField fields, [NullAllowed] NSUrl url, NSFileProviderCreateItemOptions options, Action<INSFileProviderItem, NSError> completionHandler);
 #endregion
 
 #region DeleteItem (NSFileProviderExtension)
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("deleteItemWithIdentifier:baseVersion:options:completionHandler:")]
 		[Async]
 		void DeleteItem (NSString itemIdentifier, NSFileProviderItemVersion version, NSFileProviderDeleteItemOptions options, Action<NSError> completionHandler);
 #endregion
 
 #region Import (NSFileProviderExtension)
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("importDidFinishWithCompletionHandler:")]
 		[Async]
 		void ImportDidFinish (Action completionHandler);
 #endregion
 
 #region MaterializedSet (NSFileProviderExtension)
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("materializedItemsDidChangeWithCompletionHandler:")]
 		[Async]
 		void MaterializedItemsDidChange (Action completionHandler);
 #endregion
 
 #region Request (NSFileProviderExtension)
-		[iOS (13,0)]
+		[NoiOS]
 		[NullAllowed, Export ("currentRequest")]
 		NSFileProviderRequest CurrentRequest { get; }
 #endregion
@@ -268,7 +263,9 @@ namespace FileProvider {
 		InsufficientQuota = -1003,
 		ServerUnreachable = -1004,
 		NoSuchItem = -1005,
+		[NoiOS]
 		VersionOutOfDate = -1006,
+		[NoiOS]
 		DirectoryNotEmpty = -1007,
 	}
 
@@ -285,7 +282,7 @@ namespace FileProvider {
 		[Field ("NSFileProviderErrorNonExistentItemIdentifierKey")]
 		NSString NonExistentItemIdentifierKey { get; }
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Field ("NSFileProviderErrorItemKey")]
 		NSString ItemKey { get; }
 	}
@@ -367,7 +364,7 @@ namespace FileProvider {
 		[Export ("pathRelativeToDocumentStorage")]
 		string PathRelativeToDocumentStorage { get; }
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("disconnected")]
 		bool Disconnected { [Bind ("isDisconnected")] get; set; }
 	}
@@ -436,10 +433,6 @@ namespace FileProvider {
 
 		[Export ("currentSyncAnchorWithCompletionHandler:")]
 		void CurrentSyncAnchor (Action<NSData> completionHandler);
-
-		[NoiOS]
-		[Export ("didPresentEnumeratorInWindow:frontmost:")]
-		void DidPresentEnumerator (uint window, bool frontmost);
 	}
 
 	interface INSFileProviderItem { }
@@ -546,20 +539,20 @@ namespace FileProvider {
 		[Export ("userInfo")]
 		NSDictionary GetUserInfo ();
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("excludedFromSync")]
 		bool ExcludedFromSync { [Bind ("isExcludedFromSync")] get; }
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("flags", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		INSFileProviderItemFlags Flags { get; }
 
-		[iOS (13,0)]
+		[NoiOS]
 		[NullAllowed, Export ("extendedAttributes", ArgumentSemantic.Strong)]
 		NSDictionary<NSString, NSData> ExtendedAttributes { get; }
 
-		[iOS (13,0)]
+		[NoiOS]
 		[NullAllowed, Export ("itemVersion", ArgumentSemantic.Strong)]
 		NSFileProviderItemVersion ItemVersion { get; }
 	}
@@ -622,56 +615,46 @@ namespace FileProvider {
 		[return: NullAllowed]
 		NSFileProviderManager FromDomain (NSFileProviderDomain domain);
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Static]
 		[Async (ResultTypeName = "NSFileProviderGetIdentifierResult")]
 		[Export ("getIdentifierForUserVisibleFileAtURL:completionHandler:")]
 		void GetIdentifierForUserVisibleFile (NSUrl url, NSFileProviderGetIdentifierHandler completionHandler);
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Async]
 		[Export ("getUserVisibleURLForItemIdentifier:completionHandler:")]
 		void GetUserVisibleUrl (NSString itemIdentifier, Action<NSUrl, NSError> completionHandler);
 
 #region Import (NSFileProviderManager)
-		[iOS (13,0)]
+		[NoiOS]
 		[Static]
 		[Async]
 		[Export ("importDomain:fromDirectoryAtURL:completionHandler:")]
 		void Import (NSFileProviderDomain domain, NSUrl url, Action<NSError> completionHandler);
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Async]
 		[Export ("reimportItemsBelowItemWithIdentifier:completionHandler:")]
 		void ReimportItemsBelowItem (NSString itemIdentifier, Action<NSError> completionHandler);
 #endregion
 
 #region MaterializedSet (NSFileProviderManager)
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("enumeratorForMaterializedItems")]
 		INSFileProviderEnumerator GetMaterializedItemsEnumerator ();
 #endregion
 
 #region DownloadAndEviction (NSFileProviderManager)
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("evictItemWithIdentifier:completionHandler:")]
 		[Async]
 		void EvictItem (NSString itemIdentifier, Action<NSError> completionHandler);
 
-		[iOS (13,0)]
+		[NoiOS]
 		[Export ("setDownloadPolicy:forItemWithIdentifier:completionHandler:")]
 		[Async]
 		void SetDownloadPolicy (NSFileProviderDownloadPolicy downloadPolicy, NSString itemIdentifier, Action<NSError> completionHandler);
-#endregion
-
-#region Presence (NSFileProviderManager)
-		[NoiOS]
-		[Export ("presenceAuthorizationStatus", ArgumentSemantic.Assign)]
-		NSFileProviderPresenceAuthorizationStatus PresenceAuthorizationStatus { get; }
-
-		[NoiOS]
-		[Export ("requestPresenceAuthorization")]
-		void RequestPresenceAuthorization ();
 #endregion
 	}
 
@@ -695,7 +678,7 @@ namespace FileProvider {
 		NSXpcListenerEndpoint MakeListenerEndpoint (out NSError error);
 	}
 
-	[iOS (13,0)]
+	[NoiOS]
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // the `init*` and properties don't allow null
@@ -711,20 +694,16 @@ namespace FileProvider {
 		NSData MetadataVersion { get; }
 	}
 
-	[iOS (13,0)]
+	[NoiOS]
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject))]
 	interface NSFileProviderRequest {
 
 		[Export ("requestingApplicationIdentifier", ArgumentSemantic.Strong)]
 		NSUuid RequestingApplicationIdentifier { get; }
-
-		[NoiOS]
-		[NullAllowed, Export ("requestingExecutable", ArgumentSemantic.Copy)]
-		NSUrl RequestingExecutable { get; }
 	}
 
-	[iOS (13,0)]
+	[NoiOS]
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -746,7 +725,7 @@ namespace FileProvider {
 		NSString SearchContainerItemIdentifier { get; }
 	}
 
-	[iOS (13,0)]
+	[NoiOS]
 	[Mac (10,15)]
 	[Flags]
 	[Native]
@@ -755,7 +734,7 @@ namespace FileProvider {
 		ItemMayAlreadyExist = 1,
 	}
 
-	[iOS (13,0)]
+	[NoiOS]
 	[Mac (10,15)]
 	[Flags]
 	[Native]
@@ -764,7 +743,7 @@ namespace FileProvider {
 		Recursive = 1,
 	}
 
-	[iOS (13,0)]
+	[NoiOS]
 	[Mac (10,15)]
 	[Flags]
 	[Native]
@@ -774,7 +753,7 @@ namespace FileProvider {
 		KeepDownloaded = 2,
 	}
 
-	[iOS (13,0)]
+	[NoiOS]
 	[Mac (10,15)]
 	[Flags]
 	[Native]
@@ -794,19 +773,10 @@ namespace FileProvider {
 
 	[iOS (13,0)]
 	[Mac (10,15)]
-	[Native]
-	enum NSFileProviderPresenceAuthorizationStatus : ulong {
-		NotDetermined,
-		Restricted,
-		Denied,
-		Allowed,
-	}
-
-	[iOS (13,0)]
-	[Mac (10,15)]
 	[Protocol]
 	interface NSFileProviderItemDecorating : NSFileProviderItem {
 
+		[NoiOS]
 		[Abstract]
 		[NullAllowed, Export ("decorations", ArgumentSemantic.Strong)]
 		string[] Decorations { get; }

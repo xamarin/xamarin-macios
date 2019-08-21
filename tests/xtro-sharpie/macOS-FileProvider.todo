@@ -1,2 +1,0 @@
-!extra-protocol-member! unexpected selector NSFileProviderEnumerator::didPresentEnumeratorInWindow:frontmost: found
-!unknown-native-enum! NSFileProviderPresenceAuthorizationStatus bound
