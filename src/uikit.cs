@@ -3284,14 +3284,14 @@ namespace UIKit {
 		[return: NullAllowed]
 		UITargetedPreview GetPreviewForDismissingMenu (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration);
 
-		[Export ("contextMenuInteraction:willCommitWithAnimator:")]
-		void WillCommit (UIContextMenuInteraction interaction, IUIContextMenuInteractionCommitAnimating animator);
+		[Export ("contextMenuInteraction:willPerformPreviewActionForMenuWithConfiguration:animator:")]
+		void WillPerformPreviewAction (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 
-		[Export ("contextMenuInteractionWillPresent:")]
-		void WillPresent (UIContextMenuInteraction interaction);
+		[Export ("contextMenuInteraction:willDisplayMenuForConfiguration:animator:")]
+		void WillDisplayMenu (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, [NullAllowed] IUIContextMenuInteractionAnimating animator);
 
-		[Export ("contextMenuInteractionDidEnd:")]
-		void DidEnd (UIContextMenuInteraction interaction);
+		[Export ("contextMenuInteraction:willEndForConfiguration:animator:")]
+		void WillEnd (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, [NullAllowed] IUIContextMenuInteractionAnimating animator);
 	}
 
 	[NoWatch, NoTV, iOS (13,0)]
@@ -3317,22 +3317,10 @@ namespace UIKit {
 
 	[NoWatch, NoTV, iOS (13,0)]
 	[Protocol]
-	interface UIContextMenuInteractionCommitAnimating {
+	interface UIContextMenuInteractionCommitAnimating : UIContextMenuInteractionAnimating {
 		[Abstract]
 		[Export ("preferredCommitStyle", ArgumentSemantic.Assign)]
 		UIContextMenuInteractionCommitStyle PreferredCommitStyle { get; set; }
-
-		[Abstract]
-		[NullAllowed, Export ("previewViewController")]
-		UIViewController PreviewViewController { get; }
-
-		[Abstract]
-		[Export ("addAnimations:")]
-		void AddAnimations (Action animations);
-
-		[Abstract]
-		[Export ("addCompletion:")]
-		void AddCompletion (Action completion);
 	}
 
 	interface IUICoordinateSpace {}
@@ -4267,8 +4255,8 @@ namespace UIKit {
 		UITargetedPreview GetPreviewForDismissingContextMenu (UICollectionView collectionView, UIContextMenuConfiguration configuration);
 
 		[NoWatch, NoTV, iOS (13,0)]
-		[Export ("collectionView:willCommitMenuWithAnimator:")]
-		void WillCommitMenu (UICollectionView collectionView, IUIContextMenuInteractionCommitAnimating animator);
+		[Export ("collectionView:willPerformPreviewActionForMenuWithConfiguration:animator:")]
+		void WillPerformPreviewAction (UICollectionView collectionView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 	}
 
 	[iOS (6,0)]
@@ -12620,10 +12608,10 @@ namespace UIKit {
 		UITargetedPreview GetPreviewForDismissingContextMenu (UITableView tableView, UIContextMenuConfiguration configuration);
 
 		[NoWatch, NoTV, iOS (13,0)]
-		[Export ("tableView:willCommitMenuWithAnimator:")]
-		void WillCommitMenu (UITableView tableView, IUIContextMenuInteractionCommitAnimating animator);
+		[Export ("tableView:willPerformPreviewActionForMenuWithConfiguration:animator:")]
+		void WillPerformPreviewAction (UITableView tableView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 
-		// WARNING: If you add more methods here, add them to UITableViewController as well.
+		// WARNING: If you add more methods here, add them to UITableViewControllerDelegate as well.
 	}
 	
 	[BaseType (typeof (UIView))]
@@ -13002,8 +12990,8 @@ namespace UIKit {
 		UITargetedPreview GetPreviewForDismissingContextMenu (UITableView tableView, UIContextMenuConfiguration configuration);
 
 		[NoWatch, NoTV, iOS (13,0)]
-		[Export ("tableView:willCommitMenuWithAnimator:")]
-		void WillCommitMenu (UITableView tableView, IUIContextMenuInteractionCommitAnimating animator);
+		[Export ("tableView:willPerformPreviewActionForMenuWithConfiguration:animator:")]
+		void WillPerformPreviewAction (UITableView tableView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 	}
 
 	[iOS (6,0)]
@@ -21272,6 +21260,25 @@ namespace UIKit {
 
 		[Export ("maximumSize", ArgumentSemantic.Assign)]
 		CGSize MaximumSize { get; set; }
+	}
+
+	interface IUIContextMenuInteractionAnimating { }
+
+	[NoWatch, NoTV, iOS (13,0)]
+	[Protocol]
+	interface UIContextMenuInteractionAnimating	{
+
+		[Abstract]
+		[NullAllowed, Export ("previewViewController")]
+		UIViewController PreviewViewController { get; }
+
+		[Abstract]
+		[Export ("addAnimations:")]
+		void AddAnimations (Action animations);
+
+		[Abstract]
+		[Export ("addCompletion:")]
+		void AddCompletion (Action completion);
 	}
 
 }
