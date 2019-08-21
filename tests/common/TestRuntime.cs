@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 
 #if XAMCORE_2_0
 using AVFoundation;
+using CoreBluetooth;
 using Foundation;
 #if !__TVOS__
 using Contacts;
@@ -652,6 +653,23 @@ partial class TestRuntime
 	public static bool IgnoreTestThatRequiresSystemPermissions ()
 	{
 		return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_SYSTEM_PERMISSION_TESTS"));
+	}
+
+	public static void CheckBluetoothPermission (bool assert_granted = false)
+	{
+		// New in Xcode11
+		var centralManager = new CBCentralManager ();
+		switch (centralManager.Authorization) {
+		case CBManagerAuthorization.NotDetermined:
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to use bluetooth.");
+			break;
+		case CBManagerAuthorization.Denied:
+		case CBManagerAuthorization.Restricted:
+			if (assert_granted)
+				NUnit.Framework.Assert.Fail ("This test requires permission to use bluetooth.");
+			break;
+		}
 	}
 
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
