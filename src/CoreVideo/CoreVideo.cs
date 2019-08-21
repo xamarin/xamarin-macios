@@ -196,13 +196,15 @@ namespace CoreVideo {
 	[iOS (9,0)][Mac (10,11)]
 	public enum CVPixelBufferPoolFlushFlags : ulong {
 		FlushExcessBuffers = 1,
-	}
+	} 
 
-	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if !WATCH
+	[TV (13,0), Mac (10,15), iOS (13,0)]
 	public enum CVImageBufferAlphaChannelMode {
 		[Field ("kCVImageBufferAlphaChannelMode_StraightAlpha")]
 		Straight,
 		[Field ("kCVImageBufferAlphaChannelMode_PremultipliedAlpha")]
 		Premultiplied, 
 	}
+#endif
 }
