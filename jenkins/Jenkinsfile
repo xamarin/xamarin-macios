@@ -499,6 +499,10 @@ timestamps {
                             if (bundleZip.length > 0)
                                 bundleZipFilename = bundleZip [0].name
 
+                            withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
+                                    sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
+                            }
+
                             if (notarize_mac || notarize_ios) {
                                 pkgs = []
                                 if (fileExists('release-scripts')) {
@@ -516,10 +520,6 @@ timestamps {
                                     sh (returnStatus: true, script: "security create-keychain -p ${env.KEYCHAIN_PASS} login.keychain") // needed to repopulate the keychain
                                     sh ("security unlock-keychain -p ${env.KEYCHAIN_PASS} login.keychain")
                                     sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} -k login.keychain " + pkgs.flatten().join(" "))
-                                }
-                            } else {
-                                withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
-                                    sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
                                 }
                             }
                         }
@@ -555,6 +555,7 @@ timestamps {
 
                             sh ("ls -la package")
                             uploadFiles ("package/*", "wrench", virtualPath)
+                            uploadFiles ("package/notarized/*", "jenkins-internal", virtualPath)
                             uploadFiles ("package-internal/*", "jenkins-internal", virtualPath)
 
                             // Also upload manifest to a predictable url (without the build number)
