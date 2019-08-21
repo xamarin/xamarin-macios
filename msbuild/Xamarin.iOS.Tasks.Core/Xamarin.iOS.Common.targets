@@ -397,6 +397,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		
 		<CreateIpaDependsOn>
 			_BeforeCreateIpaForDistribution;
+			_CompileEntitlements;
 			_CoreCreateIpa;
 			_PackageOnDemandResources;
 			_ZipIpa
