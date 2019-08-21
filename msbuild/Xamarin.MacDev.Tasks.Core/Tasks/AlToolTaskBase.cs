@@ -100,7 +100,7 @@ namespace Xamarin.MacDev.Tasks
 		void LogErrorsFromOutput (string output)
 		{
 			try {
-				if (string.IsNullOrEmpty(output))
+				if (string.IsNullOrEmpty (output))
 					return;
 
 				var plist = PObject.FromString (output) as PDictionary;
@@ -116,8 +116,8 @@ namespace Xamarin.MacDev.Tasks
 					}
 				}
 			} catch (Exception ex) {
-				Log.LogWarning ("Failed to parse altool output: {0}", ex.Message);
+				Log.LogWarning ($"Failed to parse altool output: {ex.Message}. \nOutput: {output}");
 			}
 		}
 	}
-}	
+}
