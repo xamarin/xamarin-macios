@@ -118,7 +118,8 @@ partial class TestRuntime
 		// always return true, try to build an object of a class that should fail without introspection, and catch the exception to do the
 		// right thing
 		try {
-			AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly (null, AssemblyBuilderAccess.RunAndSave);
+			AssemblyName aName = new AssemblyName ("DynamicAssemblyExample");
+			AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly (aName, AssemblyBuilderAccess.RunAndSave);
 			return true;
 		} catch (PlatformNotSupportedException) {
 			// we do not have the interpreter, lets continue
