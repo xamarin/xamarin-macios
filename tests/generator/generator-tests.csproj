@@ -71,6 +71,7 @@
     <None Include="packages.config" />
     <None Include="tests\ref-out-parameters.cs" />
     <None Include="tests\return-release.cs" />
+    <None Include="tests\vsts-970507.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="tests\" />
