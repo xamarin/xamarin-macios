@@ -1596,6 +1596,7 @@ VISION_SOURCES = \
 	Vision/VNCompat.cs \
 	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
+	Vision/VNFeaturePrintObservation.cs \
 	Vision/VNRequest.cs \
 	Vision/VNRequestRevision.cs \
 	Vision/VNUtils.cs \
