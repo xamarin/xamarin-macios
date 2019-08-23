@@ -3,12 +3,14 @@ using System.IO;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
+using System.Text;
 
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class ALToolTaskBase : ToolTask
 	{
 		string sdkDevPath;
+		StringBuilder toolOutput;
 
 		public string SessionId { get; set; }
 
@@ -38,6 +40,17 @@ namespace Xamarin.MacDev.Tasks
 
 		string DevicePlatformBinDir {
 			get { return Path.Combine (SdkDevPath, "usr", "bin"); }
+		}
+
+		public override bool Execute ()
+		{
+			toolOutput = new StringBuilder ();
+
+			base.Execute ();
+
+			LogErrorsFromOutput (toolOutput.ToString ());
+
+			return !HasLoggedErrors;
 		}
 
 		protected override string GenerateFullPathToTool ()
@@ -70,6 +83,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
 		{
+			toolOutput.Append (singleLine);
 			Log.LogMessage (messageImportance, "{0}", singleLine);
 		}
 
@@ -80,6 +94,29 @@ namespace Xamarin.MacDev.Tasks
 				case PlatformName.TvOS: return "appletvos";
 				case PlatformName.iOS: return "ios";
 				default: throw new NotSupportedException ($"Provided file type '{FileType}' is not supported by altool");
+			}
+		}
+
+		void LogErrorsFromOutput (string output)
+		{
+			try {
+				if (string.IsNullOrEmpty (output))
+					return;
+
+				var plist = PObject.FromString (output) as PDictionary;
+				var errors = PObject.Create (PObjectType.Array) as PArray;
+				var message = PObject.Create (PObjectType.String) as PString;
+
+				if ((plist?.TryGetValue ("product-errors", out errors) == true)) {
+					foreach (var error in errors) {
+						var dict = error as PDictionary;
+						if (dict?.TryGetValue ("message", out message) == true) {
+							Log.LogError (ToolName, null, null, null, 0, 0, 0, 0, "{0}", message.Value);
+						}
+					}
+				}
+			} catch (Exception ex) {
+				Log.LogWarning ($"Failed to parse altool output: {ex.Message}. \nOutput: {output}");
 			}
 		}
 	}
