@@ -4,7 +4,7 @@
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
 //
-// Copyright 2019 Xamarin Inc. All rights reserved.
+// Copyright 2019 Microsoft Corporation. All rights reserved.
 //
 
 using System;

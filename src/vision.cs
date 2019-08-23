@@ -145,6 +145,7 @@ namespace Vision {
 		Unspecified = 0,
 		One = 1,
 		Two = 2,
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		Three = 3,
 	}
 
@@ -470,7 +471,7 @@ namespace Vision {
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
 		[Export ("revision:supportsConstellation:")]
-		bool SupportsConstellation (VNDetectFaceLandmarksRequestRevision requestRevision, VNRequestFaceLandmarksConstellation constellation);
+		bool SupportsConstellation (VNDetectFaceLandmarksRequestRevision revision, VNRequestFaceLandmarksConstellation constellation);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("constellation", ArgumentSemantic.Assign)]
@@ -1929,7 +1930,7 @@ namespace Vision {
 		[Static]
 		[Export ("knownClassificationsForRevision:error:")]
 		[return: NullAllowed]
-		VNClassificationObservation [] GetKnownClassifications (VNClassifyImageRequestRevision requestRevision, [NullAllowed] out NSError error);
+		VNClassificationObservation [] GetKnownClassifications (VNClassifyImageRequestRevision revision, [NullAllowed] out NSError error);
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2203,7 +2204,7 @@ namespace Vision {
 		[Export ("knownAnimalIdentifiersForRevision:error:")]
 		[return: NullAllowed]
 		[return: BindAs (typeof (VNAnimalIdentifier []))]
-		NSString [] GetKnownAnimalIdentifiers (VNRecognizeAnimalsRequestRevision requestRevision, [NullAllowed] out NSError error);
+		NSString [] GetKnownAnimalIdentifiers (VNRecognizeAnimalsRequestRevision revision, [NullAllowed] out NSError error);
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
@@ -2241,7 +2242,7 @@ namespace Vision {
 		[Static]
 		[Export ("supportedRecognitionLanguagesForTextRecognitionLevel:revision:error:")]
 		[return: NullAllowed]
-		string [] GetSupportedRecognitionLanguages (VNRequestTextRecognitionLevel recognitionLevel, VNRecognizeTextRequestRevision requestRevision, [NullAllowed] out NSError error);
+		string [] GetSupportedRecognitionLanguages (VNRequestTextRecognitionLevel textRecognitionLevel, VNRecognizeTextRequestRevision revision, [NullAllowed] out NSError error);
 
 		[Export ("recognitionLanguages", ArgumentSemantic.Copy)]
 		string [] RecognitionLanguages { get; set; }
