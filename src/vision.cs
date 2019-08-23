@@ -331,7 +331,7 @@ namespace Vision {
 	enum VNElementType : ulong {
 		Unknown = 0,
 		Float = 1,
-		Double = 2
+		Double = 2,
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1259,7 +1259,7 @@ namespace Vision {
 		VNFaceObservation FromBoundingBox (VNFaceObservationRequestRevision requestRevision, CGRect boundingBox, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber roll, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber yaw);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-		[BindAs (typeof (nfloat?))]
+		[BindAs (typeof (float?))]
 		[NullAllowed, Export ("faceCaptureQuality", ArgumentSemantic.Strong)]
 		NSNumber FaceCaptureQuality { get; }
 

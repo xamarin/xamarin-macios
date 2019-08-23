@@ -288,6 +288,17 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "VNRequestRevisionProviding":
+				switch (type.Name) {
+				case "VNFaceLandmarks":
+				case "VNFaceLandmarks2D":
+				case "VNFaceLandmarkRegion":
+				case "VNFaceLandmarkRegion2D":
+					if (!TestRuntime.CheckXcodeVersion (11,0))
+						return true;
+					break;
+				}
+				break;
 			}
 			return false;
 		}

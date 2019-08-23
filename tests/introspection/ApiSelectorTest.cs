@@ -616,6 +616,7 @@ namespace Introspection {
 				switch (selectorName) {
 				case "copyWithZone:":
 				case "encodeWithCoder:":
+				case "requestRevision":
 					// Conformance added in Xcode 11
 					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						return true;

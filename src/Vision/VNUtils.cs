@@ -63,11 +63,11 @@ namespace Vision {
 		}
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-		[DllImport (Constants.VisionLibrary, EntryPoint = "VNElementTypeSize")]
-		static extern nuint _GetElementTypeSize (nuint elementType);
+		[DllImport (Constants.VisionLibrary)]
+		static extern nuint VNElementTypeSize (nuint elementType);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-		public static nuint GetElementTypeSize (VNElementType elementType) => _GetElementTypeSize ((nuint) (ulong) elementType);
+		public static nuint GetElementTypeSize (VNElementType elementType) => VNElementTypeSize ((nuint) (ulong) elementType);
 	}
 }
 #endif
