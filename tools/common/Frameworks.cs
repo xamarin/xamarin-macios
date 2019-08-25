@@ -318,6 +318,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "PencilKit", "PencilKit", 13, 0 },
 				{ "QuickLookThumbnailing", "QuickLookThumbnailing", 13,0 },
 				{ "LinkPresentation", "LinkPresentation", 13, 0 },
+				{ "VisionKit", "VisionKit", 13, 0 },
 			};
 		}
 		return ios_frameworks;
