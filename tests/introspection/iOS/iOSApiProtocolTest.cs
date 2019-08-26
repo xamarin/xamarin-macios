@@ -97,6 +97,19 @@ namespace Introspection {
 				return true;
 			case "SNClassifySoundRequest": // Class is not being created properly
 				return true;
+#if __IOS__
+			// new types - but marked as iOS 8/9 since they are new base types and
+			// we need 32bits bindings to work (generator would not produce them for iOS 13)
+			case "CNFetchRequest":
+			case "PHChangeRequest":
+			case "PHAssetChangeRequest": // subclass of PHChangeRequest
+			case "PHAssetCollectionChangeRequest": // subclass of PHChangeRequest
+			case "PHAssetCreationRequest": // subclass of PHAssetChangeRequest
+			case "PHCollectionListChangeRequest": // subclass of PHChangeRequest
+				if (!TestRuntime.CheckXcodeVersion (11,0))
+					return true;
+				break;
+#endif
 			}
 
 			return base.Skip (type);
@@ -142,6 +155,17 @@ namespace Introspection {
 			case "UIImagePickerControllerDelegate":
 			case "UIVideoEditorControllerDelegate":
 				if (protocolName == "UINavigationControllerDelegate")
+					return true;
+				break;
+#if __IOS__
+			case "ARSCNView":
+			case "ARSKView":
+				if (protocolName == "ARSessionProviding")
+					return true;
+				break;
+#endif
+			case "UIAccessibilityElement":
+				if (protocolName == "UIUserActivityRestoring")
 					return true;
 				break;
 			}

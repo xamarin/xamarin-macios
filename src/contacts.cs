@@ -1409,7 +1409,7 @@ namespace Contacts {
 
 	// this type is new in Xcode11 but is decorated with earlier versions since it's used as a
 	// base type for older types (and that confuse the generator for 32bits availability)
- 	[iOS (9,0), Mac (10,15), Watch (2,0)]
+	[iOS (9,0), Mac (10,15), Watch (6,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CNFetchRequest {}

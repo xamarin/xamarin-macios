@@ -552,11 +552,11 @@ namespace VideoToolbox {
 		[Field ("kVTVideoEncoderSpecification_EncoderID")]
 		NSString EncoderID { get; }
 		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Mac (10,14), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderSpecification_RequiredEncoderGPURegistryID")]
 		NSString RequiredEncoderGpuRegistryId { get; }
 		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Mac (10,14), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderSpecification_PreferredEncoderGPURegistryID")]
 		NSString PreferredEncoderGpuRegistryId { get; }
 	}
@@ -931,27 +931,27 @@ namespace VideoToolbox {
 		[Field ("kVTVideoEncoderList_EncoderName")]
 		NSString EncoderName { get; }
 		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderList_GPURegistryID")]
 		NSString GpuRegistryId { get; }
 		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderList_SupportedSelectionProperties")]
 		NSString SupportedSelectionProperties { get; }
 		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderList_PerformanceRating")]
 		NSString PerformanceRating { get; }
 		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderList_QualityRating")]
 		NSString QualityRating { get; }
 		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderList_InstanceLimit")]
 		NSString InstanceLimit { get; }
 		
-		[Mac (10,15), iOS (13,0), TV (13,0)]
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderList_IsHardwareAccelerated")]
 		NSString IsHardwareAccelerated { get; }
 	}
