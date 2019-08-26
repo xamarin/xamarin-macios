@@ -35,6 +35,7 @@ using CoreLocation;
 #if !__TVOS__
 using Contacts;
 #endif
+using WebKit;
 #else
 using MonoTouch;
 using MonoTouch.AddressBook;
@@ -5246,6 +5247,44 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 
 		}
+
+#if !__WATCHOS__ && !__TVOS__ // No WebKit on watchOS/tvOS
+		[Test]
+		public void GenericClassWithUnrelatedGenericDelegate ()
+		{
+			using (var obj = new GenericWebViewController<NSObject> ()) {
+				var handler_called = false;
+				Action<WKNavigationActionPolicy> handler = new Action<WKNavigationActionPolicy> ((v) => {
+					handler_called = true;
+				});
+				var block = new BlockLiteral ();
+				var tramp = new DActionArity1V3 (SDActionArity1V3.Invoke);
+				if (Runtime.DynamicRegistrationSupported) {
+					block.SetupBlock (tramp, handler);
+					Messaging.void_objc_msgSend_IntPtr_IntPtr_BlockLiteral (obj.Handle, Selector.GetHandle ("webView:decidePolicyForNavigationAction:decisionHandler:"), IntPtr.Zero, IntPtr.Zero, ref block);
+					block.CleanupBlock ();
+					Assert.IsTrue (handler_called, "Handler called");
+				} else {
+					Assert.Throws<RuntimeException> (() => block.SetupBlock (tramp, handler));
+				}
+			}
+		}
+
+		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
+		internal delegate void DActionArity1V3 (IntPtr block, nint value);
+		static internal class SDActionArity1V3 {
+			static internal readonly DActionArity1V3 Handler = Invoke;
+
+			[MonoPInvokeCallback (typeof (DActionArity1V3))]
+			public static unsafe void Invoke (IntPtr block, nint value)
+			{
+				var del = BlockLiteral.GetTarget<Action<WKNavigationActionPolicy>> (block);
+				if (del != null)
+					del ((WKNavigationActionPolicy) (long) value);
+			}
+		}
+#endif // !__WATCHOS__ && !__TVOS__
+
 	}
 
 #if !__WATCHOS__
@@ -5382,6 +5421,18 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	public class SomeConsumer : NSObject, ISomeDelegate
 	{
 	}
+
+#if !__WATCHOS__ && !__TVOS__ // No WebKit on watchOS/tvOS
+	[Preserve]
+	public class GenericWebViewController<WebViewModel> : UIViewController, IWKNavigationDelegate {
+		[Export ("webView:decidePolicyForNavigationAction:decisionHandler:")]
+		public void DecidePolicy (WKWebView webView, WKNavigationAction navigationAction, Action<WKNavigationActionPolicy> decisionHandler)
+		{
+			decisionHandler (WKNavigationActionPolicy.Allow);
+		}
+	}
+#endif
+
 #if !__WATCHOS__ // no MetalKit on watchOS
 	// These classes implement Metal* protocols, so that the generated registrar code includes the corresponding Metal* headers.
 	// https://github.com/xamarin/xamarin-macios/issues/4422
