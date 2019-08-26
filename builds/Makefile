@@ -28,6 +28,10 @@ clean-locals::
 .stamp-download-%: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $(MONO_MAC_FILENAME))
 	$(Q) touch $@
 
+X86_64_SLICE=$(abspath $(CURDIR)/x86-64-slice.dylib)
+$(X86_64_SLICE): Makefile
+	echo "void x86_64_function_for_notarization_workaround () {}" | $(MAC_CC) -shared -x c -o$@ -
+
 ifeq ($(MONO_BUILD_FROM_SOURCE),)
 all-local:: download
 endif
@@ -1181,6 +1185,12 @@ $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2
 
 endef
 
+TARGET_SHAREDLIBLOGPROFILER+=$(X86_64_SLICE)
+TARGET_SHAREDMONOSGEN+=$(X86_64_SLICE)
+TARGET_SHAREDLIBMONONATIVEUNIFIED+=$(X86_64_SLICE)
+TARGET_SHAREDLIBMONONATIVECOMPAT+=$(X86_64_SLICE)
+TARGET_MONOFRAMEWORK+=$(X86_64_SLICE)
+
 ARM_ARCH_CONFIGURE_FLAGS=--host=arm-apple-darwin10 --disable-boehm
 ARM64_ARCH_CONFIGURE_FLAGS=--host=aarch64-apple-darwin10 --disable-boehm
 
@@ -1344,6 +1354,7 @@ WATCHOS_TARGET_LIBMONOSGEN = \
 	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.a
 
 WATCHOS_TARGET_SHAREDMONOSGEN = \
+	$(X86_64_SLICE) \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib \
 	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.dylib
 
@@ -1364,6 +1375,7 @@ WATCHOS_TARGET_LIBMONOILGEN = \
 	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-ilgen.a
 
 WATCHOS_TARGET_SHAREDLIBLOGPROFILER = \
+	$(X86_64_SLICE) \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib \
 	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-profiler-log.0.dylib
 
@@ -1375,13 +1387,16 @@ WATCHOS_TARGET_LIBMONONATIVEUNIFIED       = \
 	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.a \
 
 WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = \
+	$(X86_64_SLICE) \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.dylib \
 
 WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED = \
+	$(X86_64_SLICE) \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib \
 	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.dylib \
 
 WATCHOS_TARGET_MONOFRAMEWORK = \
+	$(X86_64_SLICE) \
 	$(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono \
 	$(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/Mono
 
@@ -1424,7 +1439,7 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.a: $(WATCHOS_TARGET
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib: $(WATCHOS_TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmonosgen-2.0.dylib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmonosgen-2.0.dylib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmonosgen-2.0.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmonosgen-2.0.dylib -create -output $@
+	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmonosgen-2.0.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmonosgen-2.0.dylib $(X86_64_SLICE) -create -output $@
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
@@ -1443,7 +1458,7 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-ilgen.a: $(WATCHOS_TARGET_L
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-profiler-log.0.dylib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-profiler-log.0.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-profiler-log.0.dylib
-	$(Q) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-profiler-log.0.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-profiler-log.0.dylib -create -output $@
+	$(Q) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-profiler-log.0.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-profiler-log.0.dylib $(X86_64_SLICE) -create -output $@
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
@@ -1457,14 +1472,16 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.a: $(WATCHOS
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBMONONATIVEUNIFIED) -create -output $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
-	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT) -m -o $@
+	$(Q) lipo $(WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT) -create -output $@.tmp
+	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $@.tmp -m -o $@
+	$(Q) rm -f $@.tmp
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-compat.dylib @rpath/libmono-native-compat.dylib -change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 	$(Q) dsymutil -t 4 -o $@.dSYM $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib -create -output $@
+	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib $(X86_64_SLICE) -create -output $@
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmono-native.dylib @rpath/libmono-native-unified.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
@@ -1529,16 +1546,16 @@ build-tvos: build-targettv
 clean-tvos: clean-targettv
 
 TVOS_TARGET_LIBMONOSGEN                = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.a
-TVOS_TARGET_SHAREDMONOSGEN             = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.dylib
+TVOS_TARGET_SHAREDMONOSGEN             = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.dylib $(X86_64_SLICE)
 TVOS_TARGET_LIBLOGPROFILER             = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log-static.a
 TVOS_TARGET_LIBMONOEEINTERP            = $(BUILD_DESTDIR)/targettv/lib/libmono-ee-interp.a
 TVOS_TARGET_LIBMONOICALLTABLE          = $(BUILD_DESTDIR)/targettv/lib/libmono-icall-table.a
 TVOS_TARGET_LIBMONOILGEN               = $(BUILD_DESTDIR)/targettv/lib/libmono-ilgen.a
-TVOS_TARGET_SHAREDLIBLOGPROFILER       = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log.0.dylib
+TVOS_TARGET_SHAREDLIBLOGPROFILER       = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log.0.dylib $(X86_64_SLICE)
 TVOS_TARGET_LIBMONONATIVECOMPAT        = $(BUILD_DESTDIR)/targettv/lib/libmono-native-compat.a
 TVOS_TARGET_LIBMONONATIVEUNIFIED       = $(BUILD_DESTDIR)/targettv/lib/libmono-native-unified.a
-TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = $(BUILD_DESTDIR)/targettv/lib/libmono-native-compat.dylib
-TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED = $(BUILD_DESTDIR)/targettv/lib/libmono-native-unified.dylib
+TVOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = $(BUILD_DESTDIR)/targettv/lib/libmono-native-compat.dylib $(X86_64_SLICE)
+TVOS_TARGET_SHAREDLIBMONONATIVEUNIFIED = $(BUILD_DESTDIR)/targettv/lib/libmono-native-unified.dylib $(X86_64_SLICE)
 
 $(TVOS_TARGET_LIBMONOSGEN): .stamp-build-targettv
 $(TVOS_TARGET_SHAREDMONOSGEN): .stamp-build-targettv
@@ -1617,8 +1634,9 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-native-unified.dylib: $(TVOS_T
 $(TVOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: $(BUILD_DESTDIR)/targettv/tmp-lib/Mono | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
-	$(Q) $(CP) $< $@
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: $(BUILD_DESTDIR)/targettv/tmp-lib/Mono $(X86_64_SLICE) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework
+	#$(Q) $(CP) $< $@
+	$(Q) lipo $(BUILD_DESTDIR)/targettv/tmp-lib/Mono $(X86_64_SLICE) -create -output $@
 	$(Q) dsymutil -t 4 -o $(patsubst %/,%,$(dir $@)).dSYM $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-tvos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework

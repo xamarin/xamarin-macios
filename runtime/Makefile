@@ -29,6 +29,10 @@ SHARED_FILES = $(SHARED_SOURCES) $(SHARED_HEADERS) $(SHARED_I386_SOURCES) $(SHAR
 
 EXTRA_DEPENDENCIES = $(SHARED_HEADERS) $(TOP)/Make.config
 
+X86_64_SLICE=$(abspath $(CURDIR)/x86-64-slice.dylib)
+$(X86_64_SLICE): Makefile
+	echo "void x86_64_function_for_notarization_workaround_v2 () {}" | $(MAC_CC) -shared -x c -o$@ -
+
 xamarin/mono-runtime.h: mono-runtime.h.t4 exports.t4
 	$(Q_GEN) $(TT) $< -o $@
 
@@ -258,41 +262,41 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/tvextension-main.$$(arch).o): 
 	$(Q) install_name_tool -id @rpath/libxamarin-debug.dylib $$@
 	$(Q) install_name_tool -change @rpath/ @rpath/libmonosgen-2.0.dylib $$@
 
-.libs/$(1)/libxamarin-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib)
+.libs/$(1)/libxamarin-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib) $(X86_64_SLICE)
 	$(Q) rm -f $$@
-ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) $(CP) $$^ $$@
-else
+#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
+#	$(Q) $(CP) $$^ $$@
+#else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-endif
+#endif
 	$(Q) install_name_tool -id @rpath/libxamarin.dylib $$@
 	$(Q) install_name_tool -change @rpath/ @rpath/libmonosgen-2.0.dylib $$@
 
-.libs/$(1)/libxamarin-debug-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib)
+.libs/$(1)/libxamarin-debug-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib) $(X86_64_SLICE)
 	$(Q) rm -f $$@
-ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) $(CP) $$^ $$@
-else
+#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
+#	$(Q) $(CP) $$^ $$@
+#else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-endif
+#endif
 	$(Q) install_name_tool -id @rpath/libxamarin-debug.dylib $$@
 	$(Q) install_name_tool -change @rpath/ @rpath/libmonosgen-2.0.dylib $$@
 
-.libs/$(1)/Xamarin-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework)
+.libs/$(1)/Xamarin-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework) $(X86_64_SLICE)
 	$(Q) rm -f $$@
-ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) $(CP) $$^ $$@
-else
+#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
+#	$(Q) $(CP) $$^ $$@
+#else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-endif
+#endif
 
-.libs/$(1)/Xamarin-debug-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin-debug.$$(arch).framework)
+.libs/$(1)/Xamarin-debug-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin-debug.$$(arch).framework) $(X86_64_SLICE)
 	$(Q) rm -f $$@
-ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) $(CP) $$^ $$@
-else
+#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
+#	$(Q) $(CP) $$^ $$@
+#else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-endif
+#endif
 
 .libs/$(1)/Xamarin-sim.framework:  $$(foreach arch,$$($(2)_SIM_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework)
 	$(Q) rm -f $$@

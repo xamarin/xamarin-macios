@@ -70,6 +70,8 @@ namespace Xamarin.Tests
 			foreach (var machoFile in machoFiles) {
 				var fatfile = MachO.Read (machoFile);
 				foreach (var slice in fatfile) {
+					if (slice.IsDynamicLibrary && slice.Architecture == MachO.Architectures.x86_64 && slice.Parent.size < 10240 /* this is the dummy x86_64 slice to appease Apple's notarization tooling */)
+						continue;
 					var any_load_command = false;
 					foreach (var lc in slice.load_commands) {
 
