@@ -670,7 +670,7 @@ namespace AVKit {
 
 		[NoiOS, NoTV, NoWatch]
 		[Export ("routePickerButtonColorForState:")]
-		NSColor RoutePickerButtonColorForState (AVRoutePickerViewButtonState state);
+		NSColor GetRoutePickerButtonColor (AVRoutePickerViewButtonState state);
 
 		[NoiOS, NoTV, NoWatch]
 		[Export ("setRoutePickerButtonColor:forState:")]
