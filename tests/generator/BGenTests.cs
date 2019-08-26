@@ -598,6 +598,12 @@ namespace GeneratorTests
 		[Test]
 		public void StrongDictsNativeEnums () => BuildFile (Profile.iOS, "strong-dict-native-enum.cs");
 
+		[Test]
+		public void VSTS970507 ()
+		{
+			BuildFile (Profile.iOS, "tests/vsts-970507.cs");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);
