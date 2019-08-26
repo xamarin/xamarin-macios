@@ -10932,7 +10932,8 @@ namespace AVFoundation {
 		AVContentAuthorizationStatus GetContentAuthorizationRequestStatus ();
 	}
 
-	[TV (13,0), NoWatch, NoMac, NoiOS]
+	[NoWatch, NoMac, NoiOS]
+	[TV (13,0)]
 	[Category]
 	[BaseType (typeof (AVPlayerItem))]
 	interface AVPlayerItem_AVPlaybackRestrictions {

@@ -43,7 +43,8 @@ namespace AVKit {
 #endif
 
 #if !MONOMAC || !XAMCORE_4_0
-	[iOS (9,0), TV (13,0)]
+	[iOS (9,0)]
+	[TV (13,0)]
 	[Native]
 	[ErrorDomain ("AVKitErrorDomain")]
 	public enum AVKitError : long {
