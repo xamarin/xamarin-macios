@@ -22,4 +22,5 @@ target64
 targettv
 targetwatch
 watchbcl
-
+*.dylib
+*.o
