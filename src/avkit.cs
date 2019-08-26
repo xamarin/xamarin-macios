@@ -647,7 +647,7 @@ namespace AVKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
-		[Wrap ("WeakDelegate")]
+		[Wrap ("WeakDelegate", IsVirtual = true)]
 		[NullAllowed]
 		IAVRoutePickerViewDelegate Delegate { get; set; }
 		
