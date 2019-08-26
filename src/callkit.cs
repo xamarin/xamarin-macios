@@ -481,11 +481,6 @@ namespace CallKit {
 
 		[Export ("pendingCallActionsOfClass:withCallUUID:")]
 		CXCallAction [] GetPendingCallActions (Class callActionClass, NSUuid callUuid);
-
-		[iOS (13,0)]
-		[Static]
-		[Export ("supported")]
-		bool Supported { [Bind ("isSupported")] get; }
 	}
 
 	[iOS (10, 0)]

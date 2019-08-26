@@ -333,172 +333,6 @@ namespace UIKit {
 		bool ContainsAttachments (NSRange range);
 	}
 
-	delegate void NSFileProviderExtensionFetchThumbnailsHandler (NSString identifier, [NullAllowed] NSData imageData, [NullAllowed] NSError error);
-
-	[NoWatch]
-	[NoTV]
-	[iOS (8,0)]
-	[ThreadSafe]
-	[BaseType (typeof (NSObject))]
-	partial interface NSFileProviderExtension {
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'NSFileProviderManager' instead.")]
-	    [Static, Export ("writePlaceholderAtURL:withMetadata:error:")]
-	    bool WritePlaceholder (NSUrl placeholderUrl, NSDictionary metadata, ref NSError error);
-	
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider::NSFileProviderManager.GetPlaceholderUrl (NSUrl)' instead.")]
-	    [Static, Export ("placeholderURLForURL:")]
-	    NSUrl GetPlaceholderUrl (NSUrl url);
-	
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider::NSFileProviderManager.ProviderIdentifier' instead.")]
-	    [Export ("providerIdentifier")]
-	    string ProviderIdentifier { get; }
-	
-		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'FileProvider::NSFileProviderManager.DocumentStorageUrl' instead.")]
-	    [Export ("documentStorageURL")]
-	    NSUrl DocumentStorageUrl { get; }
-	
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
-		[Export ("URLForItemWithPersistentIdentifier:")]
-		NSUrl GetUrlForItem (string persistentIdentifier);
-	
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
-		[Export ("persistentIdentifierForItemAtURL:")]
-		string GetPersistentIdentifier (NSUrl itemUrl);
-	
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
-		[Export ("providePlaceholderAtURL:completionHandler:")]
-		[Async]
-		void ProvidePlaceholderAtUrl (NSUrl url, [NullAllowed] Action<NSError> completionHandler);
-	
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
-		[Export ("startProvidingItemAtURL:completionHandler:")]
-		[Async]
-		void StartProvidingItemAtUrl (NSUrl url, [NullAllowed] Action<NSError> completionHandler);
-	
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
-		[Export ("itemChangedAtURL:")]
-		void ItemChangedAtUrl (NSUrl url);
-	
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
-		[Export ("stopProvidingItemAtURL:")]
-		void StopProvidingItemAtUrl (NSUrl url);
-
-		// TODO: Enable with new iOS 13 FileProvider bindings.
-		// [NoWatch, NoTV, Mac (10,15), iOS (13,0)]
-		// [Async]
-		// [Export ("fetchContentsForItemWithIdentifier:version:completionHandler:")]
-		// NSProgress FetchContents (string itemIdentifier, [NullAllowed] NSFileProviderItemVersion requestedVersion, Action<NSURL, NSFileProviderItem, NSError> completionHandler);
-
-		// [NoWatch, NoTV, Mac (10,15), iOS (13,0)]
-		// [Async]
-		// [Export ("fetchContentsForItemWithIdentifier:version:usingExistingContentsAtURL:existingVersion:completionHandler:")]
-		// NSProgress FetchContents (string itemIdentifier, [NullAllowed] NSFileProviderItemVersion requestedVersion, NSUrl existingContents, NSFileProviderItemVersion existingVersion, Action<NSURL, NSFileProviderItem, NSError> completionHandler);
-
-		// [NoWatch, NoTV, Mac (10,15), iOS (13,0)]
-		// [Async]
-		// [Export ("itemChanged:baseVersion:changedFields:contents:completionHandler:")]
-		// void ItemChanged (NSFileProviderItem item, NSFileProviderItemVersion version, NSFileProviderItemField changedFields, [NullAllowed] NSUrl newContents, Action<NSFileProviderItem, NSError> completionHandler);
-
-#if XAMCORE_2_0 && IOS
-
-		[iOS (11,0)]
-		[Export ("itemForIdentifier:error:")]
-		[return: NullAllowed]
-		INSFileProviderItem GetItem (NSString identifier, out NSError error);
-
-		// Inlining NSFileProviderExtension (NSFileProviderActions) so we get asyncs
-
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NSFileProviderExtension' APIs instead.")]
-		[iOS (11,0)]
-		[Async]
-		[Export ("importDocumentAtURL:toParentItemIdentifier:completionHandler:")]
-		void ImportDocument (NSUrl fileUrl, string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
-
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NSFileProviderExtension' APIs instead.")]
-		[iOS (11,0)]
-		[Async]
-		[Export ("createDirectoryWithName:inParentItemIdentifier:completionHandler:")]
-		void CreateDirectory (string directoryName, string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
-
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' APIs instead.")]
-		[iOS (11,0)]
-		[Async]
-		[Export ("renameItemWithIdentifier:toName:completionHandler:")]
-		void RenameItem (string itemIdentifier, string itemName, Action<INSFileProviderItem, NSError> completionHandler);
-
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' APIs instead.")]
-		[iOS (11,0)]
-		[Async]
-		[Export ("reparentItemWithIdentifier:toParentItemWithIdentifier:newName:completionHandler:")]
-		void ReparentItem (string itemIdentifier, string parentItemIdentifier, [NullAllowed] string newName, Action<INSFileProviderItem, NSError> completionHandler);
-
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' APIs instead.")]
-		[iOS (11,0)]
-		[Async]
-		[Export ("trashItemWithIdentifier:completionHandler:")]
-		void TrashItem (string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
-
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' APIs instead.")]
-		[iOS (11,0)]
-		[Async]
-		[Export ("untrashItemWithIdentifier:toParentItemIdentifier:completionHandler:")]
-		void UntrashItem (string itemIdentifier, [NullAllowed] string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
-
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NSFileProviderExtension' APIs instead.")]
-		[iOS (11,0)]
-		[Async]
-		[Export ("deleteItemWithIdentifier:completionHandler:")]
-		void DeleteItem (string itemIdentifier, Action<NSError> completionHandler);
-
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' APIs instead.")]
-		[iOS (11,0)]
-		[Async]
-		[Export ("setLastUsedDate:forItemIdentifier:completionHandler:")]
-		void SetLastUsedDate ([NullAllowed] NSDate lastUsedDate, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
-
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' APIs instead.")]
-		[iOS (11,0)]
-		[Async]
-		[Export ("setTagData:forItemIdentifier:completionHandler:")]
-		void SetTagData ([NullAllowed] NSData tagData, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
-
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ItemChanged' APIs instead.")]
-		[iOS (11,0)]
-		[Async]
-		[Export ("setFavoriteRank:forItemIdentifier:completionHandler:")]
-		void SetFavoriteRank ([NullAllowed] NSNumber favoriteRank, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
-
-		[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
-		[Async]
-		[Export ("performActionWithIdentifier:onItemsWithIdentifiers:completionHandler:")]
-		NSProgress PerformAction (string actionIdentifier, string[] itemIdentifiers, Action<NSError> completionHandler);
-
-		[iOS (11,0)]
-		[Export ("enumeratorForContainerItemIdentifier:error:")]
-		[return: NullAllowed]
-		FileProvider.INSFileProviderEnumerator GetEnumerator (string containerItemIdentifier, out NSError error);
-
-		// From NSFileProviderExtension (NSFileProviderThumbnailing)
-
-		[iOS (11,0)]
-		[Export ("fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:")]
-		[Async]
-		NSProgress FetchThumbnails (NSString [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
-
-		// From NSFileProviderExtension (NSFileProviderService)
-
-		[iOS (11,0)]
-		[Export ("supportedServiceSourcesForItemIdentifier:error:")]
-		[return: NullAllowed]
-		INSFileProviderServiceSource [] GetSupportedServiceSources (string itemIdentifier, out NSError error);
-
-		// From NSFileProviderExtension (NSFileProviderDomain)
-
-		[iOS (11,0)]
-		[NullAllowed, Export ("domain")]
-		NSFileProviderDomain Domain { get; }
-#endif
-	}
 #endif // !WATCH
 
 	[Category, BaseType (typeof (NSMutableAttributedString))]
@@ -3206,6 +3040,7 @@ namespace UIKit {
 
 #if XAMCORE_2_0
 #if IOS // This is inside ContactsUI.framework
+		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Static, Export ("iconWithContact:")]
 		UIApplicationShortcutIcon FromContact (CNContact contact);
 #endif // IOS
@@ -3449,14 +3284,14 @@ namespace UIKit {
 		[return: NullAllowed]
 		UITargetedPreview GetPreviewForDismissingMenu (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration);
 
-		[Export ("contextMenuInteraction:willCommitWithAnimator:")]
-		void WillCommit (UIContextMenuInteraction interaction, IUIContextMenuInteractionCommitAnimating animator);
+		[Export ("contextMenuInteraction:willPerformPreviewActionForMenuWithConfiguration:animator:")]
+		void WillPerformPreviewAction (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 
-		[Export ("contextMenuInteractionWillPresent:")]
-		void WillPresent (UIContextMenuInteraction interaction);
+		[Export ("contextMenuInteraction:willDisplayMenuForConfiguration:animator:")]
+		void WillDisplayMenu (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, [NullAllowed] IUIContextMenuInteractionAnimating animator);
 
-		[Export ("contextMenuInteractionDidEnd:")]
-		void DidEnd (UIContextMenuInteraction interaction);
+		[Export ("contextMenuInteraction:willEndForConfiguration:animator:")]
+		void WillEnd (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, [NullAllowed] IUIContextMenuInteractionAnimating animator);
 	}
 
 	[NoWatch, NoTV, iOS (13,0)]
@@ -3482,22 +3317,10 @@ namespace UIKit {
 
 	[NoWatch, NoTV, iOS (13,0)]
 	[Protocol]
-	interface UIContextMenuInteractionCommitAnimating {
+	interface UIContextMenuInteractionCommitAnimating : UIContextMenuInteractionAnimating {
 		[Abstract]
 		[Export ("preferredCommitStyle", ArgumentSemantic.Assign)]
 		UIContextMenuInteractionCommitStyle PreferredCommitStyle { get; set; }
-
-		[Abstract]
-		[NullAllowed, Export ("previewViewController")]
-		UIViewController PreviewViewController { get; }
-
-		[Abstract]
-		[Export ("addAnimations:")]
-		void AddAnimations (Action animations);
-
-		[Abstract]
-		[Export ("addCompletion:")]
-		void AddCompletion (Action completion);
 	}
 
 	interface IUICoordinateSpace {}
@@ -4432,8 +4255,8 @@ namespace UIKit {
 		UITargetedPreview GetPreviewForDismissingContextMenu (UICollectionView collectionView, UIContextMenuConfiguration configuration);
 
 		[NoWatch, NoTV, iOS (13,0)]
-		[Export ("collectionView:willCommitMenuWithAnimator:")]
-		void WillCommitMenu (UICollectionView collectionView, IUIContextMenuInteractionCommitAnimating animator);
+		[Export ("collectionView:willPerformPreviewActionForMenuWithConfiguration:animator:")]
+		void WillPerformPreviewAction (UICollectionView collectionView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 	}
 
 	[iOS (6,0)]
@@ -12785,10 +12608,10 @@ namespace UIKit {
 		UITargetedPreview GetPreviewForDismissingContextMenu (UITableView tableView, UIContextMenuConfiguration configuration);
 
 		[NoWatch, NoTV, iOS (13,0)]
-		[Export ("tableView:willCommitMenuWithAnimator:")]
-		void WillCommitMenu (UITableView tableView, IUIContextMenuInteractionCommitAnimating animator);
+		[Export ("tableView:willPerformPreviewActionForMenuWithConfiguration:animator:")]
+		void WillPerformPreviewAction (UITableView tableView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 
-		// WARNING: If you add more methods here, add them to UITableViewController as well.
+		// WARNING: If you add more methods here, add them to UITableViewControllerDelegate as well.
 	}
 	
 	[BaseType (typeof (UIView))]
@@ -13167,8 +12990,8 @@ namespace UIKit {
 		UITargetedPreview GetPreviewForDismissingContextMenu (UITableView tableView, UIContextMenuConfiguration configuration);
 
 		[NoWatch, NoTV, iOS (13,0)]
-		[Export ("tableView:willCommitMenuWithAnimator:")]
-		void WillCommitMenu (UITableView tableView, IUIContextMenuInteractionCommitAnimating animator);
+		[Export ("tableView:willPerformPreviewActionForMenuWithConfiguration:animator:")]
+		void WillPerformPreviewAction (UITableView tableView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 	}
 
 	[iOS (6,0)]
@@ -21437,6 +21260,25 @@ namespace UIKit {
 
 		[Export ("maximumSize", ArgumentSemantic.Assign)]
 		CGSize MaximumSize { get; set; }
+	}
+
+	interface IUIContextMenuInteractionAnimating { }
+
+	[NoWatch, NoTV, iOS (13,0)]
+	[Protocol]
+	interface UIContextMenuInteractionAnimating	{
+
+		[Abstract]
+		[NullAllowed, Export ("previewViewController")]
+		UIViewController PreviewViewController { get; }
+
+		[Abstract]
+		[Export ("addAnimations:")]
+		void AddAnimations (Action animations);
+
+		[Abstract]
+		[Export ("addCompletion:")]
+		void AddCompletion (Action completion);
 	}
 
 }

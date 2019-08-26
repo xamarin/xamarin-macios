@@ -25,6 +25,7 @@ using System.ComponentModel;
 
 namespace WatchKit {
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>To use this class, subclass it</quote> 
 	[DisableDefaultCtor] // DesignatedInitializer below
@@ -223,11 +224,12 @@ namespace WatchKit {
 
 		[Export ("pickerDidSettle:")]
 		void PickerDidSettle (WKInterfacePicker picker);
-#endif
+
 		[NoiOS]
 		[Export ("presentMediaPlayerControllerWithURL:options:completion:")]
 		[Async (ResultType = typeof (WKPresentMediaPlayerResult))]
 		void PresentMediaPlayerController (NSUrl url, [NullAllowed] NSDictionary options, Action<bool, double, NSError> completion);
+#endif
 
 		[Watch (3,0)][NoiOS]
 		[Export ("crownSequencer", ArgumentSemantic.Strong)]
@@ -263,6 +265,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (WKInterfaceController))]
 	[DisableDefaultCtor] // DesignatedInitializer below
 	interface WKUserNotificationInterfaceController {
@@ -324,6 +327,7 @@ namespace WatchKit {
 	}
 	
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	// just like we inlined UIAccessibility into UIViewm UIImage and UIBarItem instead of stuffing it all into NSObject
@@ -375,6 +379,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[Category]
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKAccessibility {
@@ -411,6 +416,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // does not make sense to create, it should only be used thru the singleton
 	interface WKInterfaceDevice {
@@ -507,6 +513,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKInterfaceButton {
@@ -533,6 +540,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfaceGroup : WKImageAnimatable {
@@ -557,6 +565,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfaceImage : WKImageAnimatable {
@@ -574,6 +583,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKInterfaceLabel {
@@ -589,6 +599,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKInterfaceDate {
@@ -603,6 +614,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKInterfaceTimer {
@@ -621,6 +633,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKInterfaceTable {
@@ -659,6 +672,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKInterfaceMap {
@@ -683,6 +697,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKInterfaceSeparator {
@@ -691,6 +706,7 @@ namespace WatchKit {
 	}
 	
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKInterfaceSlider {
@@ -708,6 +724,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKInterfaceSwitch {
@@ -729,6 +746,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (NSObject))]
 	interface WKAccessibilityImageRegion {
 
@@ -743,6 +761,7 @@ namespace WatchKit {
 	interface IWKImageAnimatable {}
 
 	[iOS (9,0)]
+	[Unavailable (PlatformName.iOS)]
 	[Protocol]
 	interface WKImageAnimatable {
 		[iOS (8,2)]

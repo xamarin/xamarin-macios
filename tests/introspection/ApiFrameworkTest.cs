@@ -58,6 +58,7 @@ namespace Introspection {
 			// Some CF* types that requires CFNetwork which we always link with
 			// ref: tools/common/CompilerFlags.cs
 			case "CoreServices":
+			case "WatchKit": // Apple removed WatchKit from iOS
 				return true;
 #elif __TVOS__ && !XAMCORE_4_0
 			// mistakes (can't be fixed without breaking binary compatibility)

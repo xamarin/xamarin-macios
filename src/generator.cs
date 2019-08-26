@@ -780,6 +780,8 @@ public class NamespaceManager
 			ImplicitNamespaces.Add (Get ("SpriteKit"));
 		if (Frameworks.HaveFileProvider)
 			ImplicitNamespaces.Add (Get ("FileProvider"));
+		if (Frameworks.HaveNetworkExtension)
+			ImplicitNamespaces.Add (Get ("NetworkExtension"));
 
 		// These are both types and namespaces
 		NamespacesThatConflictWithTypes = new HashSet<string> {
@@ -1066,8 +1068,13 @@ public partial class Generator : IMemberGatherer {
 		if (type.IsSubclassOf (TypeManager.NSObject))
 			return true;
 
-		if (BindThirdPartyLibrary)
+		if (BindThirdPartyLibrary) {
+			var bta = ReflectionExtensions.GetBaseTypeAttribute (type, this);
+			if (bta?.BaseType != null)
+				return IsNSObject (bta.BaseType);
+
 			return false;
+		}
 
 		return type.IsInterface;
 	}
@@ -2762,11 +2769,13 @@ public partial class Generator : IMemberGatherer {
 					Type fetchType = pi.PropertyType;
 					string castToUnderlying = "";
 					string castToEnum = "";
+					bool isNativeEnum = false;
 
 					if (pi.PropertyType.IsEnum){
 						fetchType = TypeManager.GetUnderlyingEnumType (pi.PropertyType);
 						castToUnderlying = "(" + fetchType + "?)";
 						castToEnum = "(" + FormatType (dictType, pi.PropertyType) + "?)";
+						isNativeEnum = IsNativeEnum (pi.PropertyType);
 					}
 					if (pi.PropertyType.IsValueType){
 						if (pi.PropertyType == TypeManager.System_Boolean){
@@ -2805,6 +2814,12 @@ public partial class Generator : IMemberGatherer {
 						} else if (Frameworks.HaveCoreMedia && fetchType == TypeManager.CMTime){
 							getter = "{1} GetCMTimeValue ({0})";
 							setter = "SetCMTimeValue ({0}, {1}value)";
+						} else if (isNativeEnum && fetchType == TypeManager.System_Int64) {
+							getter = "{1} (long?) GetNIntValue ({0})";
+							setter = "SetNumberValue ({0}, {1}value)";
+						} else if (isNativeEnum && fetchType == TypeManager.System_UInt64) {
+							getter = "{1} (ulong?) GetNUIntValue ({0})";
+							setter = "SetNumberValue ({0}, {1}value)";
 						} else {
 							throw new BindingException (1031, true,
 										    "Limitation: can not automatically create strongly typed dictionary for " +

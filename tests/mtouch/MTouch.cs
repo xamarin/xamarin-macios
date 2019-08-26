@@ -2755,7 +2755,7 @@ public class TestApp {
 				mtouch.TargetVer = "10.3"; // otherwise 32-bit build isn't possible
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build a");
 				if (Configuration.XcodeVersion.Major >= 11) {
-					mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, building for iOS Simulator-i386 but attempting to link with file built for unknown-archive");
+					mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, building for iOS Simulator-i386 but attempting to link with file built for iOS Simulator-x86_64");
 				} else {
 					mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, file was built for archive which is not the architecture being linked (i386): {lib}");
 				}

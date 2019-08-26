@@ -1,9 +1,3 @@
-## unfortunate (but required for API compatibility) the name exists in both WatchKit and WebKit namespaces
-## it's reported as missing here because it's removed from the list when processing WatchKit
-### not reported due to lack of WatchKit headers in xcode 11 beta 1
-!duplicate-type-name! WKErrorCode enum exists as both WebKit.WKErrorCode and WatchKit.WKErrorCode
-###!missing-enum! WKErrorCode not bound
-
 # Moved into a *deprecated* category that is now visible from iOS (but were only on macOS before)
 !missing-selector! WKPreferences::javaEnabled not bound
 !missing-selector! WKPreferences::plugInsEnabled not bound

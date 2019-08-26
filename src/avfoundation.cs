@@ -3243,6 +3243,7 @@ namespace AVFoundation {
 
 	[NoMac, NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(AVCaptureSynchronizedData))]
+	[DisableDefaultCtor]
 	interface AVCaptureSynchronizedDepthData
 	{
 		[Export ("depthData")]

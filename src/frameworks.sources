@@ -638,7 +638,7 @@ COREVIDEO_SOURCES = \
 
 # CoreWlan
 
-COREWLAN_CORE_SOURCES = \
+COREWLAN_API_SOURCES = \
 	CoreWlan/Enums.cs \
 
 COREWLAN_SOURCES = \
@@ -1133,7 +1133,12 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 NATURALLANGUAGE_API_SOURCES = \
 	NaturalLanguage/Enums.cs \
 
+NATURALLANGUAGE_CORE_SOURCES = \
+	NaturalLanguage/NLStrongDictionary.cs \
+	NaturalLanguage/NLVectorDictionary.cs \
+
 NATURALLANGUAGE_SOURCES = \
+	NaturalLanguage/NLEmbedding.cs \
 	NaturalLanguage/NLLanguageRecognizer.cs \
 
 # Network
@@ -1168,6 +1173,7 @@ NETWORKEXTENSION_SOURCES = \
 	NetworkExtension/NECompat.cs \
 	NetworkExtension/NEFilterFlow.cs \
 	NetworkExtension/NEFilterProvider.cs \
+	NetworkExtension/NEHotspotConfiguration.cs \
 	NetworkExtension/NEHotspotEapSettings.cs \
 	NetworkExtension/NEVpnManager.cs \
 
@@ -1590,6 +1596,7 @@ VISION_SOURCES = \
 	Vision/VNCompat.cs \
 	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
+	Vision/VNFeaturePrintObservation.cs \
 	Vision/VNRequest.cs \
 	Vision/VNRequestRevision.cs \
 	Vision/VNUtils.cs \
@@ -1610,6 +1617,29 @@ WATCHKIT_CORE_SOURCES = \
 WATCHKIT_SOURCES = \
 	WatchKit/WKAccessibility.cs \
 	WatchKit/WKInterfaceDevice.cs \
+	WatchKit/iOS/WKAccessibility.cs \
+	WatchKit/iOS/WKAccessibilityImageRegion.cs \
+	WatchKit/iOS/WKErrorCode.cs \
+	WatchKit/iOS/WKImageAnimatable.cs \
+	WatchKit/iOS/WKInterfaceButton.cs \
+	WatchKit/iOS/WKInterfaceController.cs \
+	WatchKit/iOS/WKInterfaceDate.cs \
+	WatchKit/iOS/WKInterfaceDevice.cs \
+	WatchKit/iOS/WKInterfaceGroup.cs \
+	WatchKit/iOS/WKInterfaceImage.cs \
+	WatchKit/iOS/WKInterfaceLabel.cs \
+	WatchKit/iOS/WKInterfaceMap.cs \
+	WatchKit/iOS/WKInterfaceMapPinColor.cs \
+	WatchKit/iOS/WKInterfaceObject.cs \
+	WatchKit/iOS/WKInterfaceSeparator.cs \
+	WatchKit/iOS/WKInterfaceSlider.cs \
+	WatchKit/iOS/WKInterfaceSwitch.cs \
+	WatchKit/iOS/WKInterfaceTable.cs \
+	WatchKit/iOS/WKInterfaceTimer.cs \
+	WatchKit/iOS/WKMenuItemIcon.cs \
+	WatchKit/iOS/WKTextInputMode.cs \
+	WatchKit/iOS/WKUserNotificationInterfaceController.cs \
+	WatchKit/iOS/WKUserNotificationInterfaceType.cs \
 
 # WebKit (Mac version)
 
@@ -1769,7 +1799,10 @@ MAC_FRAMEWORKS =            \
 	CoreWlan                \
 	DeviceCheck             \
 	EventKit                \
+	ExecutionPolicy		\
 	ExternalAccessory 	\
+	FileProvider	\
+	FileProviderUI	\
 	FinderSync		\
 	GameController          \
 	GameplayKit             \
@@ -1808,6 +1841,7 @@ MAC_FRAMEWORKS =            \
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \
+	QuickLookThumbnailing	\
 	QuickLookUI             \
 	SafariServices          \
 	ScriptingBridge         \
@@ -1902,6 +1936,7 @@ IOS_FRAMEWORKS =         \
 	PhotosUI \
 	PushKit \
 	QuickLook \
+	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
 	Security \

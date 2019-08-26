@@ -146,6 +146,7 @@
 		<string>mono-symbol-archive</string>
 		<string>sgen-concurrent-gc</string>
 		<string>arm64_32</string>
+		<string>altool</string>
 	</array>
 	<key>Optimizations</key>
 	<dict>

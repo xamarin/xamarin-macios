@@ -134,6 +134,13 @@ namespace Introspection {
 				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
 			}
 
+#if __IOS__
+			switch (type.Namespace) {
+			case "WatchKit":
+				return true; // WatchKit has been removed from iOS.
+			}
+#endif
+
 			return SkipDueToAttribute (type);
 		}
 

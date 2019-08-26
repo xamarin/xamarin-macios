@@ -258,6 +258,7 @@ namespace iAd {
 		void LookupAdConversionDetails (ADConversionDetails onCompleted);
 
 		[iOS (8,0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
 		[Export ("addClientToSegments:replaceExisting:")]
 		void AddClientToSegments ([NullAllowed] string [] segmentIdentifiers, bool replaceExisting);
 
@@ -298,6 +299,7 @@ namespace iAd {
 	}
 
 	[iOS (12,0)]
+	[Deprecated (PlatformName.iOS, 13,0)]
 	[NoWatch]
 	[DisableDefaultCtor]
 	[BaseType (typeof (UIViewController))]

@@ -452,8 +452,8 @@ namespace AuthenticationServices {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (ASAuthorizationRequest))]
-	[Abstract] // see documentation
 	// Name: NSInvalidArgumentException Reason: -[ASAuthorizationPasswordRequest init]: unrecognized selector sent to instance 0x6000005f2dc0
+	[DisableDefaultCtor]
 	interface ASAuthorizationPasswordRequest { }
 
 	interface IASAuthorizationProvider { }
@@ -636,6 +636,7 @@ namespace AuthenticationServices {
 		[DesignatedInitializer]
 		IntPtr Constructor (ASAuthorizationAppleIdButtonType type, ASAuthorizationAppleIdButtonStyle style);
 
+		[NoTV]
 		[Export ("cornerRadius")]
 		nfloat CornerRadius { get; set; }
 	}

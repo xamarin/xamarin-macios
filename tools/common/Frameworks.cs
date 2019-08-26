@@ -179,7 +179,11 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AuthenticationServices", "AuthenticationServices", 10,15 },
 					{ "CoreMotion", "CoreMotion", 10,15 },
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
+					{ "ExecutionPolicy", "ExecutionPolicy", 10,15 },
+					{ "FileProvider", "FileProvider", 10,15 },
+					{ "FileProviderUI", "FileProviderUI", 10,15 },
 					{ "PushKit", "PushKit", 10,15 },
+					{ "QuickLookThumbnailing", "QuickLookThumbnailing", 10,15 },
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
 					{ "PencilKit", "PencilKit", 10,15 },
 					{ "Speech", "Speech", 10,15 },
@@ -266,7 +270,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "WebKit", "WebKit", 8 },
 				{ "NetworkExtension", "NetworkExtension", 8 },
 				{ "VideoToolbox", "VideoToolbox", 8 },
-				{ "WatchKit", "WatchKit", 8,2 },
+				// { "WatchKit", "WatchKit", 8,2 }, // Removed in Xcode 11
 
 				{ "ReplayKit", "ReplayKit", 9 },
 				{ "Contacts", "Contacts", 9 },
@@ -312,6 +316,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 				{ "PencilKit", "PencilKit", 13, 0 },
+				{ "QuickLookThumbnailing", "QuickLookThumbnailing", 13,0 },
 				{ "LinkPresentation", "LinkPresentation", 13, 0 },
 			};
 		}

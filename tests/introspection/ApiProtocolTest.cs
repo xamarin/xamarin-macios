@@ -107,6 +107,9 @@ namespace Introspection {
 				case "UISceneActivationConditions":
 				case "UISceneSession":
 					return true;
+				// Xcode 11
+				case "NSFileProviderSearchQuery":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -164,6 +167,10 @@ namespace Introspection {
 				case "ICNotification":
 				case "ICNotificationManagerConfiguration":
 				case "MPSNNNeuronDescriptor":
+				// Xcode 11
+				case "NSFileProviderItemVersion":
+				case "NSFileProviderRequest":
+				case "NSFileProviderSearchQuery":
 					return true;
 				}
 				break;
@@ -217,6 +224,11 @@ namespace Introspection {
 				case "ICNotification":
 				case "ICNotificationManagerConfiguration":
 				case "MPSNNNeuronDescriptor":
+					return true;
+				// Xcode 11
+				case "NSFileProviderItemVersion":
+				case "NSFileProviderRequest":
+				case "NSFileProviderSearchQuery":
 					return true;
 				}
 				break;
@@ -274,6 +286,17 @@ namespace Introspection {
 				switch (type.Name) {
 				case "SCNLight":
 					return true;
+				}
+				break;
+			case "VNRequestRevisionProviding":
+				switch (type.Name) {
+				case "VNFaceLandmarks":
+				case "VNFaceLandmarks2D":
+				case "VNFaceLandmarkRegion":
+				case "VNFaceLandmarkRegion2D":
+					if (!TestRuntime.CheckXcodeVersion (11,0))
+						return true;
+					break;
 				}
 				break;
 			}
