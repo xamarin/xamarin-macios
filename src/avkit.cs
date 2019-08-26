@@ -11,14 +11,21 @@ using CoreMedia;
 using CoreVideo;
 using AVFoundation;
 #if !MONOMAC
+using NSColor = UIKit.UIColor;
 using OpenGLES;
 using UIKit;
 #else
 using AppKit;
-#endif
-#if MONOMAC
-using UIImage=AppKit.NSImage;
-#endif
+using AVContentProposal = Foundation.NSObject;
+using AVPlayerViewController = Foundation.NSObject;
+using UIColor = AppKit.NSColor;
+using UIImage = AppKit.NSImage;
+using UILayoutGuide = Foundation.NSObject;
+using UITraitCollection = Foundation.NSObject;
+using UIView = AppKit.NSView;
+using UIViewController = Foundation.NSObject;
+using UIWindow = Foundation.NSObject;
+#endif // !MONOMAC
 
 namespace AVKit {
 	[NoTV]
@@ -74,15 +81,15 @@ namespace AVKit {
 		[Export ("pictureInPictureButtonStopImage")]
 		UIImage PictureInPictureButtonStopImage { get; }
 		
-#if !MONOMAC
+		[NoMac]
 		[Static]
 		[Export ("pictureInPictureButtonStartImageCompatibleWithTraitCollection:")]
 		UIImage CreateStartButton ([NullAllowed] UITraitCollection traitCollection);
 
+		[NoMac]
 		[Static]
 		[Export ("pictureInPictureButtonStopImageCompatibleWithTraitCollection:")]
 		UIImage CreateStopButton ([NullAllowed] UITraitCollection traitCollection);
-#endif
 	}
 	
 	interface IAVPictureInPictureControllerDelegate {}
@@ -359,16 +366,7 @@ namespace AVKit {
 		[Export ("previousChannelInterstitialViewControllerForPlayerViewController:")]
 		UIViewController PreviousChannelInterstitialViewController (AVPlayerViewController playerViewController);
 	}
-	
-	[NoWatch, NoTV, NoMac, iOS (13,0)]
-	[Native]
-	public enum AVAudioSessionRouteSelection : long
-	{
-		None = 0,
-		Local = 1,
-		External = 2,
-	}
-	
+
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
 	[Category]
 	[BaseType (typeof(AVAudioSession))]
@@ -572,7 +570,7 @@ namespace AVKit {
 		AVDateRangeMetadataGroup[] DateRangeNavigationMarkers { get; }
 	}
 	
-#if !MONOMAC
+	[NoMac]
 	[NoiOS, TV (10,0), NoWatch]
 	[BaseType (typeof(UIViewController))]
 	interface AVContentProposalViewController
@@ -601,6 +599,7 @@ namespace AVKit {
 	}
 
 	[Static]
+	[NoMac]
 	[NoiOS, TV (10,1), NoWatch]
 	interface AVKitMetadataIdentifier {
 
@@ -632,54 +631,50 @@ namespace AVKit {
 		NSString ServiceIdentifier { get; }
 	}
 
-	#endif
-	
 	[TV (11,0), iOS (11,0), Mac (10,15)]
-#if !MONOMAC
 	[BaseType (typeof (UIView))]
-#else
-	[BaseType (typeof (NSView))]
-#endif
-	interface AVRoutePickerView
-	{
-#if !MONOMAC
+	interface AVRoutePickerView {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
-#endif
+
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		IAVRoutePickerViewDelegate Delegate { get; set; }
 		
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
-#if !MONOMAC
+
+		[NoMac]
 		[Export ("activeTintColor", ArgumentSemantic.Assign), NullAllowed]
 		UIColor ActiveTintColor { get; set; }
 
-		[NoiOS]
+		[NoMac, NoiOS, NoWatch]
 		[Export ("routePickerButtonStyle", ArgumentSemantic.Assign)]
 		AVRoutePickerViewButtonStyle RoutePickerButtonStyle { get; set; }
-		
-		[TV (13, 0), iOS (13, 0)]
+
+		[NoMac]
+		[TV (13,0), iOS (13,0)]
 		[Export ("prioritizesVideoDevices")]
 		bool PrioritizesVideoDevices { get; set; }
-#else
+
+		[NoiOS, NoTV, NoWatch]
 		[Export ("routePickerButtonColorForState:")]
 		NSColor RoutePickerButtonColorForState (AVRoutePickerViewButtonState state);
-		
+
+		[NoiOS, NoTV, NoWatch]
 		[Export ("setRoutePickerButtonColor:forState:")]
 		void SetRoutePickerButtonColor ([NullAllowed] NSColor color, AVRoutePickerViewButtonState state);
-		
+
+		[NoiOS, NoTV, NoWatch]
 		[Export ("routePickerButtonBordered")]
 		bool RoutePickerButtonBordered { [Bind ("isRoutePickerButtonBordered")] get; set; }
-		
+
+		[NoiOS, NoTV, NoWatch]
 		[NullAllowed, Export ("player", ArgumentSemantic.Assign)]
 		AVPlayer Player { get; set; }
-#endif
 	}
-	
-#if !MONOMAC
 
+	[NoMac]
 	[TV (11,0), NoiOS]
 	[Native]
 	public enum AVRoutePickerViewButtonStyle : long {
@@ -688,7 +683,6 @@ namespace AVKit {
 		Custom,
 	}
 
-#endif
 	interface IAVRoutePickerViewDelegate { }
 
 	[TV (11,0), iOS (11,0)]
@@ -703,7 +697,6 @@ namespace AVKit {
 		[Export ("routePickerViewDidEndPresentingRoutes:")]
 		void DidEndPresentingRoutes (AVRoutePickerView routePickerView);
 	}
-#if !MONOMAC
 
 	[TV (11,2), NoiOS, NoMac, NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -744,5 +737,4 @@ namespace AVKit {
 		[Export ("avDisplayManager")]
 		AVDisplayManager GetAVDisplayManager ();
 	}
-#endif
 }

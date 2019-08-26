@@ -31,15 +31,6 @@ namespace AVKit {
 		OKButton,
 		CancelButton
 	}
-	
-	[Mac (10,15)]
-	[Native]
-	public enum AVRoutePickerViewButtonState : long {
-		Normal,
-		NormalHighlighted,
-		Active,
-		ActiveHighlighted,
-	}
 #endif
 
 #if !MONOMAC || !XAMCORE_4_0
@@ -56,5 +47,24 @@ namespace AVKit {
 		ContentDisallowedByProfile = -1102,
 	}
 #endif
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (13,0)]
+	[Native]
+	public enum AVAudioSessionRouteSelection : long {
+		None = 0,
+		Local = 1,
+		External = 2,
+	}
+
+	[NoiOS, NoWatch, NoTV]
+	[Mac (10,15)]
+	[Native]
+	public enum AVRoutePickerViewButtonState : long {
+		Normal,
+		NormalHighlighted,
+		Active,
+		ActiveHighlighted,
+	}
 
 }	
