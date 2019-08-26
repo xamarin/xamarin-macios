@@ -1068,8 +1068,13 @@ public partial class Generator : IMemberGatherer {
 		if (type.IsSubclassOf (TypeManager.NSObject))
 			return true;
 
-		if (BindThirdPartyLibrary)
+		if (BindThirdPartyLibrary) {
+			var bta = ReflectionExtensions.GetBaseTypeAttribute (type, this);
+			if (bta?.BaseType != null)
+				return IsNSObject (bta.BaseType);
+
 			return false;
+		}
 
 		return type.IsInterface;
 	}
