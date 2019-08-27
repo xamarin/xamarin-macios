@@ -7188,7 +7188,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor]
 	interface AVFragmentedMovieTrack
 	{
-#if !XAMCORE_4_
+#if !XAMCORE_4_0
 		[Mac (10, 10), NoiOS, NoWatch]
 		[Field ("AVFragmentedMovieTrackTimeRangeDidChangeNotification")]
 		NSString ATimeRangeDidChangeNotification { get; }
