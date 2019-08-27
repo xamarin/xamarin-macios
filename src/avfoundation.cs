@@ -6970,7 +6970,7 @@ namespace AVFoundation {
 		NSUrl URL { get; }
 	}
 
-	[Mac (10,11), Watch (6,0), iOS (13,0), NoTV]
+	[Mac (10,10), Watch (6,0), iOS (13,0), NoTV]
 	[DisableDefaultCtor]
 	[BaseType (typeof(AVMovie))]
 	interface AVFragmentedMovie : AVFragmentMinding
@@ -7741,10 +7741,12 @@ namespace AVFoundation {
 		[Advice ("This property cannot be set after the export has started.")]
 		NSUrl DirectoryForTemporaryFiles { get; set; }
 
+		[Async]
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Export ("estimateMaximumDurationWithCompletionHandler:")]
 		void EstimateMaximumDuration (Action<CMTime, NSError> handler);
 
+		[Async]
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Export ("estimateOutputFileLengthWithCompletionHandler:")]
 		void EstimateOutputFileLength (Action<long, NSError> handler);

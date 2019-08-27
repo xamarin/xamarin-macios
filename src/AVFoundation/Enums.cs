@@ -1077,7 +1077,7 @@ namespace AVFoundation {
 	public enum AVSpeechSynthesisVoiceGender : long {
 		Unspecified,
 		Male,
-		Female
+		Female,
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
