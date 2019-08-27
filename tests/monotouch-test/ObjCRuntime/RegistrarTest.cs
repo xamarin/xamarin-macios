@@ -5252,7 +5252,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void GenericClassWithUnrelatedGenericDelegate ()
 		{
-			using (var obj = new GenericWebViewController<NSObject> ()) {
+			using (var obj = new GenericWebNavigationThingie<NSObject> ()) {
 				var handler_called = false;
 				Action<WKNavigationActionPolicy> handler = new Action<WKNavigationActionPolicy> ((v) => {
 					handler_called = true;
@@ -5424,7 +5424,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 #if !__WATCHOS__ && !__TVOS__ // No WebKit on watchOS/tvOS
 	[Preserve]
-	public class GenericWebViewController<WebViewModel> : UIViewController, IWKNavigationDelegate {
+	public class GenericWebNavigationThingie<WebViewModel> : NSObject, IWKNavigationDelegate {
 		[Export ("webView:decidePolicyForNavigationAction:decisionHandler:")]
 		public void DecidePolicy (WKWebView webView, WKNavigationAction navigationAction, Action<WKNavigationActionPolicy> decisionHandler)
 		{
