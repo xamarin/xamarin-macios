@@ -363,6 +363,30 @@ namespace CoreMedia {
 
 			return CMTimebaseSetTimerToFireImmediately (Handle, timer.Handle);
 		}
+
+		[DllImport(Constants.CoreMediaLibrary)]
+		extern static CMTimebaseError CMTimebaseSetMasterTimebase (/* CMTimebaseRef* */ IntPtr timebase, /* CMTimebaseRef* */ IntPtr newMasterTimebase);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		public CMTimebaseError SetMasterTimebase (CMTimebase newMasterTimebase)
+		{
+			if (newMasterTimebase == null)
+				throw new ArgumentNullException (nameof (newMasterTimebase));
+
+			return CMTimebaseSetMasterTimebase (Handle, newMasterTimebase.Handle);
+		}
+
+		[Watch (6,0), TV (9,0), Mac (10,8), iOS (6,0)]
+		[DllImport(Constants.CoreMediaLibrary)]
+		extern static CMTimebaseError CMTimebaseSetMasterClock (/* CMTimebaseRef* */ IntPtr timebase, /* CMClockRef* */ IntPtr newMasterClock);
+
+		public CMTimebaseError SetMasterClock (CMClock newMasterClock)
+		{
+			if (newMasterClock == null)
+				throw new ArgumentNullException (nameof (newMasterClock));
+
+			return CMTimebaseSetMasterClock (Handle, newMasterClock.Handle);
+		}
 #endif
 
 #if !COREBUILD
