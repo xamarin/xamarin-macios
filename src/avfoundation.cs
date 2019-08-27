@@ -1270,12 +1270,16 @@ namespace AVFoundation {
 		Vector3 Position { get; set; }
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("sourceMode", ArgumentSemantic.Assign)]
 		AVAudio3DMixingSourceMode SourceMode { get; set; }
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("pointSourceInHeadMode", ArgumentSemantic.Assign)]
 		AVAudio3DMixingPointSourceInHeadMode PointSourceInHeadMode { get; set; }
 	}
