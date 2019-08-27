@@ -240,7 +240,6 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		bool reported_5107;
 		protected override void OutputReceived (string line)
 		{
 			if (line == null)
@@ -248,12 +247,8 @@ namespace Xamarin.Bundler
 
 			if (line.StartsWith ("AOT restriction: Method '", StringComparison.Ordinal) && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
 				exceptions.Add (ErrorHelper.CreateError (3002, line));
-			} else if (line.Contains ("can not encode offset") && line.Contains ("in resulting scattered relocation")) {
-				if (!reported_5107) {
-					// There can be thousands of these, but we only need one.
-					reported_5107 = true;
-					exceptions.Add (ErrorHelper.CreateError (5107, $"The assembly '{AssemblyName}' can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture."));
-				}
+			} else {
+				CheckFor5107 (AssemblyName, line, exceptions);
 			}
 			output_lines.Add (line);
 		}
@@ -273,16 +268,8 @@ namespace Xamarin.Bundler
 				return;
 			}
 
-			IEnumerable<string> lines = output_lines;
-			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
-				lines = lines.Take (1000); // Limit the output so that we don't overload VSfM.
-				exceptions.Add (ErrorHelper.CreateWarning (5108, "The compiler output is too long, it's been limited to 1000 lines."));
-			}
-			// Construct the entire message before writing anything, so that there's a better chance the message isn't
-			// mixed up with output from other threads.
-			var msg = $"AOT Compilation exited with code {exit_code}, command:\n{Command}\n{string.Join ("\n", lines)}";
-			Console.Error.WriteLine (msg);
-			
+			WriteLimitedOutput ($"AOT Compilation exited with code {exit_code}, command:\n{Command}", output_lines, exceptions);
+
 			exceptions.Add (ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", AssemblyName));
 
 			throw new AggregateException (exceptions);
@@ -579,40 +566,22 @@ namespace Xamarin.Bundler
 
 			var exceptions = new List<Exception> ();
 			var output = new List<string> ();
+			var assembly_name = Path.GetFileNameWithoutExtension (OutputFile);
 			var output_received = new Action<string> ((string line) => {
 				if (line == null)
 					return;
 				output.Add (line);
-				if (line.Contains ("can not encode offset") && line.Contains ("in resulting scattered relocation")) {
-					if (!reported_5107) {
-						// There can be thousands of these, but we only need one.
-						reported_5107 = true;
-						exceptions.Add (ErrorHelper.CreateError (5107, "The assembly '{0}' can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture.", Path.GetFileNameWithoutExtension (OutputFile)));
-					}
-				}
+				CheckFor5107 (assembly_name, line, exceptions);
 			});
 
 			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToString (), null, output_received, suppressPrintOnErrors: true);
 
-			IEnumerable<string> lines = output;
-			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
-				lines = lines.Take (1000); // Limit the output so that we don't overload VSfM.
-				exceptions.Add (ErrorHelper.CreateWarning (5108, "The compiler output is too long, it's been limited to 1000 lines."));
-			}
-			// Construct the entire message before writing anything, so that there's a better chance the message isn't
-			// mixed up with output from other threads.
-			string msg = string.Empty;
-			if (rv != 0)
-				msg = $"Compilation failed with code {rv}, command:\n{App.CompilerPath} {CompilerFlags.ToString ()}";
-			if (lines.Any ())
-				msg += $"\n{string.Join ("\n", lines)}";
-			Console.Error.WriteLine (msg);
+			WriteLimitedOutput (rv != 0 ? $"Compilation failed with code {rv}, command:\n{App.CompilerPath} {CompilerFlags.ToString ()}" : null, output, exceptions);
 
 			ErrorHelper.Show (exceptions);
 
 			return rv;
 		}
-		bool reported_5107;
 
 		public override string ToString ()
 		{

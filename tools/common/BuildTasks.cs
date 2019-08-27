@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -292,6 +293,37 @@ namespace Xamarin.Bundler
 		public override string ToString ()
 		{
 			return GetType ().Name;
+		}
+
+		bool reported_5107;
+		protected void CheckFor5107 (string assembly_name, string line, List<Exception> exceptions)
+		{
+			if (line.Contains ("can not encode offset") && line.Contains ("in resulting scattered relocation")) {
+				if (!reported_5107) {
+					// There can be thousands of these, but we only need one.
+					reported_5107 = true;
+					exceptions.Add (ErrorHelper.CreateError (5107, "The assembly '{0}' can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture.", assembly_name));
+				}
+			}
+		}
+
+		// Writes a list of lines to stderr, writing only a limited number of lines if there are too many of them.
+		protected void WriteLimitedOutput (string first, IEnumerable<string> lines, List<Exception> exceptions)
+		{
+			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
+				lines = lines.Take (1000); // Limit the output so that we don't overload VSfM.
+				exceptions.Add (ErrorHelper.CreateWarning (5108, "The compiler output is too long, it's been limited to 1000 lines."));
+			}
+
+			// Construct the entire message before writing anything, so that there's a better chance the message isn't
+			// mixed up with output from other threads.
+			var sb = new StringBuilder ();
+			if (first != null && first.Length > 0)
+				sb.AppendLine (first);
+			foreach (var line in lines)
+				sb.AppendLine (line);
+			sb.Length -= Environment.NewLine.Length;
+			Console.Error.WriteLine (sb);
 		}
 	}
 

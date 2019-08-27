@@ -301,10 +301,13 @@ namespace Xamarin.Bundler {
 					// note: this repeat the failing command line. However we can't avoid this since we're often
 					// running commands in parallel (so the last one printed might not be the one failing)
 					if (!suppressPrintOnErrors) {
-						var msg = $"Process exited with code {p.ExitCode}, command:\n{path}";
-						if (output != null && output.Length > 0)
-							msg += $"\n{output}";
-						Console.Error.WriteLine (msg);
+						// We re-use the stringbuilder so that we avoid duplicating the amount of required memory,
+						// while only calling Console.WriteLine once to make it less probable that other threads
+						// also write to the Console, confusing the output.
+						if (output == null)
+							output = new StringBuilder ();
+						output.Insert (0, $"Process exited with code {p.ExitCode}, command:\n{path}\n");
+						Console.Error.WriteLine (output);
 					}
 					return p.ExitCode;
 				} else if (verbose > 0 && output != null && output.Length > 0 && !suppressPrintOnErrors) {
