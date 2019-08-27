@@ -603,6 +603,12 @@ namespace GeneratorTests
 		[Test]
 		public void GHIssue6626 () => BuildFile (Profile.iOS, "ghissue6626.cs");
 
+		[Test]
+		public void VSTS970507 ()
+		{
+			BuildFile (Profile.iOS, "tests/vsts-970507.cs");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

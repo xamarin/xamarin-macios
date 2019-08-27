@@ -409,3 +409,9 @@ System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestDebuggerAttrib
 System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestDebuggerAttributes
 System.SpanTests.ReadOnlySpanTests.BinarySearch_UInt
 System.SpanTests.ReadOnlySpanTests.BinarySearch_Double
+
+# device failures, reported at: https://github.com/mono/mono/issues/15983
+System.Reflection.Tests.MethodBaseTests.Test_GetCurrentMethod_Inlineable
+
+# device issues, it was reported here: https://github.com/mono/mono/issues/14761
+System.Text.Tests.StringBuilderTests.Append_CharPointer_Null_ThrowsNullReferenceException
