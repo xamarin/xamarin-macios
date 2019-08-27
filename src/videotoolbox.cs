@@ -552,11 +552,11 @@ namespace VideoToolbox {
 		[Field ("kVTVideoEncoderSpecification_EncoderID")]
 		NSString EncoderID { get; }
 		
-		[Mac (10,14), iOS (13,0), TV (13,0)]
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderSpecification_RequiredEncoderGPURegistryID")]
 		NSString RequiredEncoderGpuRegistryId { get; }
 		
-		[Mac (10,14), iOS (13,0), TV (13,0)]
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderSpecification_PreferredEncoderGPURegistryID")]
 		NSString PreferredEncoderGpuRegistryId { get; }
 	}
