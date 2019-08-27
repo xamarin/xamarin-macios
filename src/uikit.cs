@@ -14365,7 +14365,7 @@ namespace UIKit {
 		[Export ("overrideUserInterfaceStyle", ArgumentSemantic.Assign)]
 		UIUserInterfaceStyle OverrideUserInterfaceStyle { get; set; }
 
-		[NoWatch, TV (12,0), iOS (12,0)] // Yes, 12 and intro is happy on 12 device.
+		[NoWatch, TV (13,0), iOS (13,0)]
 		[Export ("transform3D", ArgumentSemantic.Assign)]
 		CATransform3D Transform3D { get; set; }
 

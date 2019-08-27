@@ -633,7 +633,7 @@ namespace PassKit {
 		PKAddPaymentPassStyle Style { get; set; }
 
 		[NoWatch] // https://feedbackassistant.apple.com/feedback/6301809 https://github.com/xamarin/maccore/issues/1819
-		[iOS (13,0)]
+		[iOS (12,3)]
 		[Export ("productIdentifiers", ArgumentSemantic.Copy)]
 		NSSet<NSString> ProductIdentifiers { get; set; }
 	}
