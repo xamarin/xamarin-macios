@@ -1776,6 +1776,10 @@ namespace Xamarin.Bundler {
 						}
 						if (LibMonoLinkMode == AssemblyBuildTarget.Framework)
 							Driver.XcodeRun ("install_name_tool", "-change @rpath/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + StringUtils.Quote (targetPath));
+
+						// Remove architectures we don't care about.
+						if (IsDeviceBuild)
+							MachO.SelectArchitectures (targetPath, AllArchitectures);
 					} else {
 						Driver.Log (3, "Target '{0}' is up-to-date.", targetPath);
 					}

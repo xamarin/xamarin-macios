@@ -290,6 +290,10 @@ namespace NetworkExtension {
 		[NullAllowed, Export ("URLAppendStringMap", ArgumentSemantic.Copy)]
 		NSDictionary<NSString,NSString> UrlAppendStringMap { get; set; }
 	
+		[iOS (11,0)] // also in base type - but only on iOS13+ (so we rre-define it here)
+		[Export ("handleReport:")]
+		void HandleReport (NEFilterReport report);
+
 		[Export ("handleRemediationForFlow:completionHandler:")]
 		[Async]
 		void HandleRemediationForFlow (NEFilterFlow flow, Action<NEFilterControlVerdict> completionHandler);
@@ -514,7 +518,7 @@ namespace NetworkExtension {
 		[Async]
 		void StopFilter (NEProviderStopReason reason, Action completionHandler);
 
-		[iOS (11,0)]
+		[iOS (13,0)] // new in this (base) type
 		[Export ("handleReport:")]
 		void HandleReport (NEFilterReport report);
 	

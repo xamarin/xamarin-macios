@@ -866,6 +866,7 @@ namespace CarPlay {
 		[Export ("mapButtonSafeAreaLayoutGuide")]
 		UILayoutGuide MapButtonSafeAreaLayoutGuide { get; }
 
+		[iOS (13,0)]
 		[NullAllowed, Export ("templateApplicationScene", ArgumentSemantic.Weak)]
 		CPTemplateApplicationScene TemplateApplicationScene { get; set; }
 	}
