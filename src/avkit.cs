@@ -349,17 +349,17 @@ namespace AVKit {
 		[Export ("playerViewController:willTransitionToVisibilityOfTransportBar:withAnimationCoordinator:")]
 		void WillTransitionToVisibilityOfTransportBar ([NullAllowed] AVPlayerViewController playerViewController, bool visible, [NullAllowed] IAVPlayerViewControllerAnimationCoordinator coordinator);
 		
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (13,0), NoTV, NoWatch, NoMac]
 		[Export ("playerViewController:willBeginFullScreenPresentationWithAnimationCoordinator:"), EventArgs ("AVPlayerViewFullScreenPresentationWillBegin")]
 		void WillBeginFullScreenPresentation (AVPlayerViewController playerViewController, IUIViewControllerTransitionCoordinator coordinator);
 		
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (13,0), NoTV, NoWatch, NoMac]
 		[Export ("playerViewController:willEndFullScreenPresentationWithAnimationCoordinator:"), EventArgs ("AVPlayerViewFullScreenPresentationWillEnd")]
 		void WillEndFullScreenPresentation (AVPlayerViewController playerViewController, IUIViewControllerTransitionCoordinator coordinator);
 		
 		[TV (13,0), NoiOS, NoWatch, NoMac]
 		[Export ("nextChannelInterstitialViewControllerForPlayerViewController:")]
-		UIViewController NextChannelInterstitialViewController (AVPlayerViewController playerViewController);
+		UIViewController GetNextChannelInterstitialViewController (AVPlayerViewController playerViewController);
 		
 		[TV (13,0), NoiOS, NoWatch, NoMac]
 		[Export ("playerViewController:skipToNextChannel:"), EventArgs ("AVPlayerViewSkipToNextChannel")]
@@ -371,7 +371,7 @@ namespace AVKit {
 		
 		[TV (13,0), NoiOS, NoWatch, NoMac]
 		[Export ("previousChannelInterstitialViewControllerForPlayerViewController:")]
-		UIViewController PreviousChannelInterstitialViewController (AVPlayerViewController playerViewController);
+		UIViewController GetPreviousChannelInterstitialViewController (AVPlayerViewController playerViewController);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
