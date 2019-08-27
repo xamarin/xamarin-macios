@@ -7280,7 +7280,7 @@ namespace AVFoundation {
 		[Export ("segments", ArgumentSemantic.Copy)]
 		AVCompositionTrackSegment [] Segments { get; }
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("formatDescriptionReplacements")]
 		AVCompositionTrackFormatDescriptionReplacement[] FormatDescriptionReplacements { get; }
 	}
@@ -7341,7 +7341,7 @@ namespace AVFoundation {
 		[Export ("removeTrackAssociationToTrack:type:")]
 		void RemoveTrackAssociation (AVCompositionTrack compositionTrack, string trackAssociationType);
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("replaceFormatDescription:withFormatDescription:")]
 		void ReplaceFormatDescription (CMFormatDescription originalFormatDescription, [NullAllowed] CMFormatDescription replacementFormatDescription);
 
@@ -9238,6 +9238,7 @@ namespace AVFoundation {
 		[Export ("flashMode", ArgumentSemantic.Assign)]
 		AVCaptureFlashMode FlashMode { get; set; }
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'PhotoQualityPrioritization' instead.")]
 		[Export ("autoStillImageStabilizationEnabled")]
 		bool IsAutoStillImageStabilizationEnabled { [Bind ("isAutoStillImageStabilizationEnabled")] get; set; }
@@ -9436,7 +9437,7 @@ namespace AVFoundation {
 
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("dimensionsForSemanticSegmentationMatteOfType:")]
-		CMVideoDimensions GetDimensions ([BindAs (typeof (MatteType))]NSString semanticSegmentationMatteType);
+		CMVideoDimensions GetDimensions ([BindAs (typeof (AVSemanticSegmentationMatteType))]NSString semanticSegmentationMatteType);
 
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("photoProcessingTimeRange")]
@@ -9657,12 +9658,12 @@ namespace AVFoundation {
 		[Export ("autoRedEyeReductionSupported")]
 		bool AutoRedEyeReductionSupported { [Bind ("isAutoRedEyeReductionSupported")] get; }
 
-		[BindAs (typeof (MatteType []))]
+		[BindAs (typeof (AVSemanticSegmentationMatteType []))]
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("availableSemanticSegmentationMatteTypes")]
 		NSString[] AvailableSemanticSegmentationMatteTypes { get; }
 
-		[BindAs (typeof (MatteType []))]
+		[BindAs (typeof (AVSemanticSegmentationMatteType []))]
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("enabledSemanticSegmentationMatteTypes", ArgumentSemantic.Assign)]
 		NSString[] EnabledSemanticSegmentationMatteTypes { get; set; }
@@ -10774,11 +10775,12 @@ namespace AVFoundation {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("initWithPrincipalMediaCharacteristics:preferredLanguages:preferredMediaCharacteristics:")]
-		IntPtr Constructor ([NullAllowed] string[] principalMediaCharacteristics, [NullAllowed] string[] preferredLanguages, [NullAllowed] string[] preferredMediaCharacteristics);
+		IntPtr Constructor ([NullAllowed] [BindAs (typeof (AVMediaCharacteristics []))]NSString[] principalMediaCharacteristics, [NullAllowed] [BindAs (typeof (AVMediaCharacteristics []))] NSString[] preferredLanguages, [NullAllowed] string[] preferredMediaCharacteristics);
 
+		[BindAs (typeof (AVMediaCharacteristics []))]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[NullAllowed, Export ("principalMediaCharacteristics")]
-		string[] PrincipalMediaCharacteristics { get; }
+		NSString[] PrincipalMediaCharacteristics { get; }
 	}
 
 	[NoWatch]
@@ -10958,9 +10960,9 @@ namespace AVFoundation {
 		[Export ("loadedTimeRanges")]
 		NSValue [] LoadedTimeRanges { get;  }
 
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use the class 'AVPlayerItemMetadataOutput' instead to get the time metadata info..")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use the class 'AVPlayerItemMetadataOutput' instead to get the time metadata info..")]
-		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use the class 'AVPlayerItemMetadataOutput' instead to get the time metadata info..")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use the class 'AVPlayerItemMetadataOutput' instead to get the time metadata info.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use the class 'AVPlayerItemMetadataOutput' instead to get the time metadata info.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use the class 'AVPlayerItemMetadataOutput' instead to get the time metadata info.")]
 		[Export ("timedMetadata"), NullAllowed]
 		NSObject [] TimedMetadata { get;  }
 
@@ -12400,7 +12402,7 @@ namespace AVFoundation {
 		[Field ("AVAssetDownloadTaskMediaSelectionKey")]
 		NSString MediaSelectionKey { get; }
 
-		[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
+		[NoWatch, NoTV, iOS (13,0)]
 		[Field ("AVAssetDownloadTaskMediaSelectionPrefersMultichannelKey")]
 		NSString MediaSelectionPrefersMultichannelKey { get; }
 	}
@@ -12412,7 +12414,7 @@ namespace AVFoundation {
 	interface AVAssetDownloadOptions {
 		NSNumber MinimumRequiredMediaBitrate { get; set; }
 		AVMediaSelection MediaSelection { get; set; }
-		[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
+		[NoWatch, NoTV, iOS (13,0)]
 		bool MediaSelectionPrefersMultichannel  { get; set;}
 	}
 
@@ -13327,7 +13329,7 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("semanticSegmentationMatteForType:")]
 		[return: NullAllowed]
-		AVSemanticSegmentationMatte GetSemanticSegmentationMatte ([BindAs (typeof (MatteType))] NSString semanticSegmentationMatteType);
+		AVSemanticSegmentationMatte GetSemanticSegmentationMatte ([BindAs (typeof (AVSemanticSegmentationMatteType))] NSString semanticSegmentationMatteType);
 	}
 
 	[Watch (6,0), TV (12,0), Mac (10,14), iOS (12,0)]
@@ -13368,7 +13370,7 @@ namespace AVFoundation {
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-	enum MatteType {
+	enum AVSemanticSegmentationMatteType {
 		[DefaultEnumValue]
 		[Field ("AVSemanticSegmentationMatteTypeSkin")]
 		Skin,
@@ -13388,7 +13390,7 @@ namespace AVFoundation {
 		[return: NullAllowed]
 		AVSemanticSegmentationMatte Create (NSString imageSourceAuxiliaryDataType, NSDictionary imageSourceAuxiliaryDataInfoDictionary, out NSError outError);
 
-		[BindAs (typeof (MatteType))]
+		[BindAs (typeof (AVSemanticSegmentationMatteType))]
 		[Export ("matteType")]
 		NSString MatteType { get; }
 
@@ -13404,7 +13406,7 @@ namespace AVFoundation {
 		NSDictionary GetDictionaryRepresentation ([NullAllowed] out string outAuxDataType);
 
 		[Export ("pixelFormatType")]
-		uint PixelFormatType { get; }
+		CVPixelFormatType PixelFormatType { get; }
 
 		[Export ("mattingImage")]
 		CVPixelBuffer MattingImage { get; }
@@ -13412,6 +13414,7 @@ namespace AVFoundation {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface AVCompositionTrackFormatDescriptionReplacement : NSSecureCoding
 	{
 		[Export ("originalFormatDescription")]

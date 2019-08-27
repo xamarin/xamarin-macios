@@ -807,10 +807,10 @@ namespace AVFoundation {
 
 		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
 		[Field ("AVContentKeySystemClearKey")]
-		SystemClearKey = 1,
+		ClearKey = 1,
 
 		[Obsolete ("Use 'AVContentKeySystem.SystemClearKey' instead.")]
-		AVContentKeySystemClearKey = SystemClearKey,
+		AVContentKeySystemClearKey = ClearKey,
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Field ("AVContentKeySystemAuthorizationToken")]
