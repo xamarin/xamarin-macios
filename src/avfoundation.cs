@@ -9434,7 +9434,7 @@ namespace AVFoundation {
 
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("dimensionsForSemanticSegmentationMatteOfType:")]
-		CMVideoDimensions GetDimensionsForSemanticSegmentationMatte ([BindAs (typeof (MatteType))]NSString semanticSegmentationMatteType);
+		CMVideoDimensions GetDimensions ([BindAs (typeof (MatteType))]NSString semanticSegmentationMatteType);
 
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("photoProcessingTimeRange")]
