@@ -8624,7 +8624,7 @@ namespace AVFoundation {
 
 		[NoMac, iOS (13,0)]
 		[Export ("portsWithMediaType:sourceDeviceType:sourceDevicePosition:")]
-		AVCaptureInputPort[] GetPortsWithMediaType ([BindAs (typeof (AVMediaTypes))] [NullAllowed] NSString mediaType, [BindAs (typeof (AVCaptureDeviceType))][NullAllowed] NSString sourceDeviceType, AVCaptureDevicePosition sourceDevicePosition);
+		AVCaptureInputPort[] GetPorts ([BindAs (typeof (AVMediaTypes))] [NullAllowed] NSString mediaType, [BindAs (typeof (AVCaptureDeviceType))][NullAllowed] NSString sourceDeviceType, AVCaptureDevicePosition sourceDevicePosition);
 
 		[NoMac, iOS (13,0)]
 		[Export ("videoMinFrameDurationOverride", ArgumentSemantic.Assign)]
