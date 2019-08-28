@@ -1,9 +1,9 @@
 
 //
-// Copyright 2014 Xamarin Inc
+// Copyright 2019 Microsoft Corp
 //
 // Authors:
-//   Miguel de Icaza (miguel@xamarin.com)
+//   Manuel de la Pena mandel@microsoft.com 
 //
 using Foundation;
 using ObjCRuntime;
