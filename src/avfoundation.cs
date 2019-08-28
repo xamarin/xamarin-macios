@@ -13476,7 +13476,7 @@ namespace AVFoundation {
 		CMFormatDescription ReplacementFormatDescription { get; }
 	}
 
-	delegate /* OSStatus */ int AVAudioSourceNodeRenderBlock (bool isSilence, AudioTimeStamp timestamp, uint frameCunt, ref AudioBuffers outputData);
+	delegate /* OSStatus */ int AVAudioSourceNodeRenderHandler (bool isSilence, AudioTimeStamp timestamp, uint frameCunt, ref AudioBuffers outputData);
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVAudioNode))]
@@ -13485,14 +13485,14 @@ namespace AVFoundation {
 	{
 		[Export ("initWithRenderBlock:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioSourceNodeRenderBlock renderBlock);
+		IntPtr Constructor (AVAudioSourceNodeRenderHandler renderHandler);
 
 		[Export ("initWithFormat:renderBlock:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderBlock renderBlock);
+		IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler);
 	}
 
-	delegate int AVAudioSinkNodeReceiverBlock (AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers inputData);
+	delegate int AVAudioSinkNodeReceiverHandler (AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers inputData);
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVAudioNode))]
@@ -13501,7 +13501,7 @@ namespace AVFoundation {
 	{
 		[Export ("initWithReceiverBlock:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioSinkNodeReceiverBlock block);
+		IntPtr Constructor (AVAudioSinkNodeReceiverHandler receiverHandler);
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
