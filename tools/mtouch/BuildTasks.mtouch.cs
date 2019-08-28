@@ -37,6 +37,15 @@ namespace Xamarin.Bundler
 			return Task.Run (() => Start ());
 		}
 
+		// both stdout and stderr will be sent to this function.
+		// null will be sent when there's no more output
+		// calls to this function will be synchronized (no need to lock in here).
+		protected virtual void OutputReceived (string line)
+		{
+			if (line != null)
+				Output.AppendLine (line);
+		}
+
 		protected int Start ()
 		{
 			if (Driver.Verbosity > 0)
@@ -45,6 +54,7 @@ namespace Xamarin.Bundler
 			var info = ProcessStartInfo;
 			var stdout_completed = new ManualResetEvent (false);
 			var stderr_completed = new ManualResetEvent (false);
+			var lockobj = new object ();
 
 			Output = new StringBuilder ();
 
@@ -52,8 +62,8 @@ namespace Xamarin.Bundler
 				p.OutputDataReceived += (sender, e) =>
 				{
 					if (e.Data != null) {
-						lock (Output)
-							Output.AppendLine (e.Data);
+						lock (lockobj)
+							OutputReceived (e.Data);
 					} else {
 						stdout_completed.Set ();
 					}
@@ -62,8 +72,8 @@ namespace Xamarin.Bundler
 				p.ErrorDataReceived += (sender, e) =>
 				{
 					if (e.Data != null) {
-						lock (Output)
-							Output.AppendLine (e.Data);
+						lock (lockobj)
+							OutputReceived (e.Data);
 					} else {
 						stderr_completed.Set ();
 					}
@@ -76,6 +86,8 @@ namespace Xamarin.Bundler
 
 				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
 				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
+
+				OutputReceived (null);
 
 				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
 
@@ -181,6 +193,8 @@ namespace Xamarin.Bundler
 		public string AssemblyPath; // path to the .s file.
 		List<string> inputs;
 		public AotInfo AotInfo;
+		List<Exception> exceptions = new List<Exception> ();
+		List<string> output_lines = new List<string> ();
 
 		public override IEnumerable<string> Outputs {
 			get {
@@ -226,6 +240,19 @@ namespace Xamarin.Bundler
 			}
 		}
 
+		protected override void OutputReceived (string line)
+		{
+			if (line == null)
+				return;
+
+			if (line.StartsWith ("AOT restriction: Method '", StringComparison.Ordinal) && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
+				exceptions.Add (ErrorHelper.CreateError (3002, line));
+			} else {
+				CheckFor5107 (AssemblyName, line, exceptions);
+			}
+			output_lines.Add (line);
+		}
+
 		protected async override Task ExecuteAsync ()
 		{
 			var exit_code = await StartAsync ();
@@ -241,19 +268,11 @@ namespace Xamarin.Bundler
 				return;
 			}
 
-			Console.Error.WriteLine ("AOT Compilation exited with code {0}, command:\n{1}{2}", exit_code, Command, Output.Length > 0 ? ("\n" + Output.ToString ()) : string.Empty);
-			if (Output.Length > 0) {
-				List<Exception> exceptions = new List<Exception> ();
-				foreach (var line in Output.ToString ().Split ('\n')) {
-					if (line.StartsWith ("AOT restriction: Method '", StringComparison.Ordinal) && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
-						exceptions.Add (new MonoTouchException (3002, true, line));
-					}
-				}
-				if (exceptions.Count > 0)
-					throw new AggregateException (exceptions.ToArray ());
-			}
+			WriteLimitedOutput ($"AOT Compilation exited with code {exit_code}, command:\n{Command}", output_lines, exceptions);
 
-			throw new MonoTouchException (3001, true, "Could not AOT the assembly '{0}'", AssemblyName);
+			exceptions.Add (ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", AssemblyName));
+
+			throw new AggregateException (exceptions);
 		}
 
 		public override string ToString ()
@@ -542,7 +561,21 @@ namespace Xamarin.Bundler
 
 			Directory.CreateDirectory (Path.GetDirectoryName (OutputFile));
 
-			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToString (), null, null);
+			var exceptions = new List<Exception> ();
+			var output = new List<string> ();
+			var assembly_name = Path.GetFileNameWithoutExtension (OutputFile);
+			var output_received = new Action<string> ((string line) => {
+				if (line == null)
+					return;
+				output.Add (line);
+				CheckFor5107 (assembly_name, line, exceptions);
+			});
+
+			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToString (), null, output_received, suppressPrintOnErrors: true);
+
+			WriteLimitedOutput (rv != 0 ? $"Compilation failed with code {rv}, command:\n{App.CompilerPath} {CompilerFlags.ToString ()}" : null, output, exceptions);
+
+			ErrorHelper.Show (exceptions);
 
 			return rv;
 		}

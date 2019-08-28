@@ -1969,6 +1969,7 @@ namespace NetworkExtension {
 	[NoiOS]
 	[Mac (10,15)]
 	[BaseType (typeof (NEFilterProvider))]
+	[DisableDefaultCtor] // returns `nil`
 	interface NEFilterPacketProvider {
 		[NullAllowed, Export ("packetHandler", ArgumentSemantic.Strong)]
 		NEFilterPacketHandler PacketHandler { get; set; }

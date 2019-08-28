@@ -489,10 +489,6 @@ namespace GameController {
 		GCControllerButtonInput ButtonMenu { get; }
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-		[Export ("setStateFromExtendedGamepad:")]
-		void SetState (GCExtendedGamepad extendedGamepad);
-
-		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("setStateFromMicroGamepad:")]
 		void SetState (GCMicroGamepad microGamepad);
 	}
