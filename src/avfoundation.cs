@@ -13437,7 +13437,7 @@ namespace AVFoundation {
 	{
 		[Export ("initWithRenderBlock:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioSourceNodeRenderBlock renderBlock);
+		IntPtr Constructor (AVAudioSourceNodeRenderHandler renderHandler);
 
 		[Export ("initWithFormat:renderBlock:")]
 		[DesignatedInitializer]
