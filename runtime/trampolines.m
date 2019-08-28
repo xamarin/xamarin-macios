@@ -383,7 +383,8 @@ xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl)
 	// COOP: does not access managed memory: any mode
 	struct objc_super sup;
 	find_objc_method_implementation (&sup, self, sel, xamarin_impl);
-	return objc_msgSendSuper (&sup, sel);
+	typedef id (*func_objc_msgSendSuper) (struct objc_super *sup, SEL sel);
+	return ((func_objc_msgSendSuper) objc_msgSendSuper) (&sup, sel);
 }
 
 #if MONOMAC
