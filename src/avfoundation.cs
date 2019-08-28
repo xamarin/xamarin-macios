@@ -13444,7 +13444,7 @@ namespace AVFoundation {
 		IntPtr Constructor (AVAudioFormat format, AVAudioSourceNodeRenderBlock renderBlock);
 	}
 
-	delegate int AVAudioSinkNodeReceiverBlock (AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers inputData);
+	delegate int AVAudioSinkNodeReceiverHandler (AudioTimeStamp timestamp, uint frameCount, ref AudioBuffers inputData);
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVAudioNode))]
