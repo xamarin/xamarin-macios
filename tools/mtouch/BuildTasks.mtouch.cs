@@ -432,10 +432,7 @@ namespace Xamarin.Bundler
 				flags.AddOtherFlag ("-gdwarf-2");
 
 			if (!is_assembler) {
-				if (string.IsNullOrEmpty (language) || !language.Contains ("++")) {
-					// error: invalid argument '-std=c99' not allowed with 'C++/ObjC++'
-					flags.AddOtherFlag ("-std=c99");
-				}
+				flags.AddOtherFlag ("-std=c++14");
 				flags.AddOtherFlag ($"-I{StringUtils.Quote (Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include"))}");
 			}
 			flags.AddOtherFlag ($"-isysroot {StringUtils.Quote (Driver.GetFrameworkDirectory (app))}");
