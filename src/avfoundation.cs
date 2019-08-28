@@ -1845,8 +1845,7 @@ namespace AVFoundation {
 #endif
 	}
 
-#if !MONOMAC
-
+	[NoMac]
 	interface AVAudioSessionSecondaryAudioHintEventArgs {
 		[Export ("AVAudioSessionSilenceSecondaryAudioHintNotification")]
 		AVAudioSessionSilenceSecondaryAudioHintType Hint { get; }
@@ -1857,6 +1856,7 @@ namespace AVFoundation {
 
 	delegate void AVPermissionGranted (bool granted);
 
+	[NoMac]
 	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // for binary compatibility this is added in AVAudioSession.cs w/[Obsolete]
@@ -2319,6 +2319,7 @@ namespace AVFoundation {
 		bool AllowHapticsAndSystemSoundsDuringRecording { get; }
 	}
 	
+	[NoMac]
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVAudioSessionDataSourceDescription {
@@ -2370,6 +2371,7 @@ namespace AVFoundation {
 		
 	}
 
+	[NoMac]
 	interface AVAudioSessionInterruptionEventArgs {
 		[Export ("AVAudioSessionInterruptionTypeKey")]
 		AVAudioSessionInterruptionType InterruptionType { get; }
@@ -2383,6 +2385,7 @@ namespace AVFoundation {
 		bool WasSuspended { get; }
 	}
 
+	[NoMac]
 	interface AVAudioSessionRouteChangeEventArgs {
 		[Export ("AVAudioSessionRouteChangeReasonKey")]
 		AVAudioSessionRouteChangeReason Reason { get; }
@@ -2391,6 +2394,7 @@ namespace AVFoundation {
 		AVAudioSessionRouteDescription PreviousRoute { get; }
 	}
 	
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -2410,6 +2414,7 @@ namespace AVFoundation {
 		void EndInterruption (AVAudioSessionInterruptionFlags flags);
 	}
 
+	[NoMac]
 	[Watch (3,0)]
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
@@ -2428,6 +2433,7 @@ namespace AVFoundation {
 		int /* AudioChannelLabel = UInt32 */ ChannelLabel { get; }
 	}
 
+	[NoMac]
 	[Watch (3,0)]
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
@@ -2473,6 +2479,7 @@ namespace AVFoundation {
 		
 	}
 
+	[NoMac]
 	[Watch (3,0)]
 	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
@@ -2484,7 +2491,6 @@ namespace AVFoundation {
 		AVAudioSessionPortDescription [] Outputs { get;  }
 
 	}
-#endif
 
 	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioNode))]
@@ -9056,8 +9062,7 @@ namespace AVFoundation {
 		AVCaptureManualExposureBracketedStillImageSettings Create (CMTime duration, float /* float, not CGFloat */ ISO);
 	}
 
-#if !MONOMAC
-	[NoWatch]
+	[NoWatch, NoMac]
 	[NoTV]
 	[iOS (8,0)]
 	[BaseType (typeof (AVCaptureBracketedStillImageSettings))]
@@ -9068,7 +9073,6 @@ namespace AVFoundation {
 		[Static, Export ("autoExposureSettingsWithExposureTargetBias:")]
 		AVCaptureAutoExposureBracketedStillImageSettings Create (float /* float, not CGFloat */ exposureTargetBias);
 	}
-#endif
 	
 	interface IAVCaptureAudioDataOutputSampleBufferDelegate {}
 
@@ -12333,13 +12337,12 @@ namespace AVFoundation {
 
 		[Export ("continueSpeaking")]
 		bool ContinueSpeaking ();
-#if !MONOMAC		
+
+		[NoMac]
 		[iOS (10, 0)]
 		[TV (10,0)]
 		[NullAllowed, Export ("outputChannels", ArgumentSemantic.Retain)]
 		AVAudioSessionChannelDescription[] OutputChannels { get; set; }
-#endif
-
 	}
 
 	[Mac (10,15)]
