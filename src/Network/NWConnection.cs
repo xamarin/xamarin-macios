@@ -16,6 +16,8 @@ using nw_endpoint_t=System.IntPtr;
 using nw_parameters_t=System.IntPtr;
 
 namespace Network {
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public enum NWConnectionState {
 		Invalid   = 0,
 		Waiting   = 1,
@@ -41,6 +43,7 @@ namespace Network {
 	public delegate void NWConnectionReceiveDispatchDataCompletion (DispatchData data, NWContentContext context, bool isComplete, NWError error);
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public class NWConnection : NativeObject {
 		public NWConnection (IntPtr handle, bool owns) : base (handle, owns) {}
 

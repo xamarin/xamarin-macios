@@ -8,6 +8,7 @@ using CoreFoundation;
 namespace Network {
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public enum NWErrorDomain {
 		Invalid = 0,
 		[Field ("kNWErrorDomainPOSIX")]
@@ -19,6 +20,7 @@ namespace Network {
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	[Static]
 	[Internal]
 	partial interface NWContentContextConstants {
@@ -33,6 +35,7 @@ namespace Network {
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	[Static]
 	[Internal]
 	partial interface NWConnectionConstants {
@@ -42,6 +45,7 @@ namespace Network {
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	[Static]
 	[Internal]
 	partial interface NWParametersConstants {
