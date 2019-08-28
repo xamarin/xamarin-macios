@@ -13435,8 +13435,8 @@ namespace AVFoundation {
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface AVSemanticSegmentationMatte
-	{
+	interface AVSemanticSegmentationMatte {
+
 		[Static]
 		[Export ("semanticSegmentationMatteFromImageSourceAuxiliaryDataType:dictionaryRepresentation:error:")]
 		[return: NullAllowed]
@@ -13467,8 +13467,7 @@ namespace AVFoundation {
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface AVCompositionTrackFormatDescriptionReplacement : NSSecureCoding
-	{
+	interface AVCompositionTrackFormatDescriptionReplacement : NSSecureCoding {
 		[Export ("originalFormatDescription")]
 		CMFormatDescription OriginalFormatDescription { get; }
 
@@ -13481,8 +13480,7 @@ namespace AVFoundation {
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVAudioNode))]
 	[DisableDefaultCtor]
-	interface AVAudioSourceNode : AVAudioMixing
-	{
+	interface AVAudioSourceNode : AVAudioMixing {
 		[Export ("initWithRenderBlock:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (AVAudioSourceNodeRenderHandler renderHandler);
@@ -13497,8 +13495,7 @@ namespace AVFoundation {
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVAudioNode))]
 	[DisableDefaultCtor]
-	interface AVAudioSinkNode
-	{
+	interface AVAudioSinkNode {
 		[Export ("initWithReceiverBlock:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (AVAudioSinkNodeReceiverHandler receiverHandler);
@@ -13506,8 +13503,8 @@ namespace AVFoundation {
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
-	interface AVVideoCompositionRenderHint
-	{
+	interface AVVideoCompositionRenderHint {
+
 		[Export ("startCompositionTime")]
 		CMTime StartCompositionTime { get; }
 
@@ -13517,8 +13514,7 @@ namespace AVFoundation {
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
 	[BaseType (typeof(AVCaptureSession))]
-	interface AVCaptureMultiCamSession
-	{
+	interface AVCaptureMultiCamSession {
 		[Static]
 		[Export ("multiCamSupported")]
 		bool MultiCamSupported { [Bind ("isMultiCamSupported")] get; }
