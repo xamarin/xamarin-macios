@@ -33,6 +33,7 @@ Visual Studio for Mac: Visual Studio > About Visual Studio > Show Details > Copy
 <!--
 1. Place cursor below this comment block.
 2. Attach build log or link to gist (https://gist.github.com/) of the log.
+3. Logs can be found in the Build Output tab of the Errors pad in Visual Studio
 -->
 
 ### Example Project (If Possible)
