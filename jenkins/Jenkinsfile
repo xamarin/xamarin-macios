@@ -478,7 +478,7 @@ timestamps {
 
                         stage ('Signing') {
                             def notarize_mac = true
-                            def notarize_ios = false
+                            def notarize_ios = true
                             def entitlements = "${workspace}/xamarin-macios/mac-entitlements.plist"
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
@@ -555,7 +555,7 @@ timestamps {
 
                             sh ("ls -la package")
                             uploadFiles ("package/*", "wrench", virtualPath)
-                            uploadFiles ("package/notarized/*", "jenkins-internal", virtualPath)
+                            uploadFiles ("package/notarized/*", "wrench", virtualPath)
                             uploadFiles ("package-internal/*", "jenkins-internal", virtualPath)
 
                             // Also upload manifest to a predictable url (without the build number)
