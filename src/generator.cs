@@ -871,6 +871,7 @@ public partial class Generator : IMemberGatherer {
 
 	List<Tuple<string, ParameterInfo[]>> async_result_types = new List<Tuple <string, ParameterInfo[]>> ();
 	HashSet<string> async_result_types_emitted = new HashSet<string> ();
+	HashSet<string> types_that_must_always_be_globally_named = new HashSet<string> ();
 
 	//
 	// This contains delegates that are referenced in the source and need to be generated.
@@ -2280,6 +2281,19 @@ public partial class Generator : IMemberGatherer {
 
 		Array.Sort (types, (a, b) => string.CompareOrdinal (a.FullName, b.FullName));
 
+		foreach (var t in types) {
+			// The generator will create special *Appearance types (these are
+			// nested classes). If we've bound a type with the same
+			// *Appearance name, we can end up in a situation where the csc
+			// compiler uses the the type we don't want due to C#'s resolution
+			// rules - this happens if the bound *Appearance type is
+			// referenced from the containing type of the special *Appearance
+			// type. So always reference the bound *Appearance types using
+			// global:: syntax.
+			if (t.Name.EndsWith ("Appearance", StringComparison.Ordinal))
+				types_that_must_always_be_globally_named.Add (t.Name);
+		}
+
 		foreach (Type t in types){
 			if (SkipGenerationOfType (t))
 				continue;
@@ -3339,11 +3353,13 @@ public partial class Generator : IMemberGatherer {
 
 		var interfaceTag = protocolized == true ? "I" : "";
 		string tname;
-		if ((usedInNamespace != null && type.Namespace == usedInNamespace) || ns.StandardNamespaces.Contains (type.Namespace) || string.IsNullOrEmpty (type.FullName))
+		if (types_that_must_always_be_globally_named.Contains (type.Name))
+			tname = $"global::{type.Namespace}.{interfaceTag}{type.Name}";
+		else if ((usedInNamespace != null && type.Namespace == usedInNamespace) || ns.StandardNamespaces.Contains (type.Namespace) || string.IsNullOrEmpty (type.FullName))
 			tname = interfaceTag + type.Name;
 		else
 			tname = $"global::{type.Namespace}.{interfaceTag}{type.Name}";
-
+		
 		var targs = type.GetGenericArguments ();
 		if (targs.Length > 0) {
 			var isNullable = TypeManager.GetUnderlyingNullableType (type) != null;
