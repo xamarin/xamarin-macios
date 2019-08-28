@@ -16,8 +16,8 @@ const char *   xamarin_GetFolderPath (int folder);
 #endif
 
 #if defined (__arm64__)
-void objc_msgSend_stret (id self, SEL op, ...);
-void objc_msgSendSuper_stret (struct objc_super *super, SEL op, ...);
+void objc_msgSend_stret (void);
+void objc_msgSendSuper_stret (void);
 #endif
 
 #ifdef __cplusplus

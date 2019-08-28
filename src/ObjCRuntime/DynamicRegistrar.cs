@@ -503,20 +503,7 @@ namespace Registrar {
 				return rv;
 			}
 
-			if (type.IsGenericType) {
-				var rv = true;
-				var args = type.GetGenericArguments ();
-				var constrs = new Type [args.Length];
-				for (int i = 0; i < args.Length; i++) {
-					Type constr;
-					rv &= VerifyIsConstrainedToNSObject (args [i], out constr);
-					constrs [i] = constr;
-				}
-				constrained_type = type.GetGenericTypeDefinition ().MakeGenericType (constrs);
-				return rv;
-			}
-
-			return false;
+			return true;
 		}
 
 		protected override Exception CreateException (int code, Exception innerException, MethodBase method, string message, params object[] args)

@@ -11215,8 +11215,9 @@ namespace AVFoundation {
 		[Export ("navigationMarkerGroups", ArgumentSemantic.Copy)]
 		AVNavigationMarkersGroup[] NavigationMarkerGroups { get; set; }
 
-		[NoiOS][NoMac][NoWatch]
+		[NoMac][NoWatch]
 		[TV (9,0)]
+		[iOS (13,0)]
 		[Export ("externalMetadata", ArgumentSemantic.Copy)]
 		AVMetadataItem[] ExternalMetadata { get; set; }
 
@@ -11302,7 +11303,25 @@ namespace AVFoundation {
 		AVContentAuthorizationStatus GetContentAuthorizationRequestStatus ();
 	}
 
+<<<<<<< HEAD
 	[iOS (6,0)][Watch (6,0)]
+=======
+	[NoWatch, NoMac, NoiOS]
+	[TV (13,0)]
+	[Category]
+	[BaseType (typeof (AVPlayerItem))]
+	interface AVPlayerItem_AVPlaybackRestrictions {
+		[Async]
+		[Export ("requestPlaybackRestrictionsAuthorization:")]
+		void RequestPlaybackRestrictionsAuthorization (Action<bool, NSError> completion);
+		
+		[Export ("cancelPlaybackRestrictionsAuthorizationRequest")]
+		void CancelPlaybackRestrictionsAuthorizationRequest ();
+	}
+	
+	[NoWatch]
+	[iOS (6,0)]
+>>>>>>> xcode11
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** initialization method -init cannot be sent to an abstract object of class AVPlayerItemOutput: Create a concrete instance!
 	[DisableDefaultCtor]
