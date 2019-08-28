@@ -1,5 +1,5 @@
 //
-// Vision C# bindings
+// VisionKit C# bindings
 //
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
