@@ -310,6 +310,9 @@ namespace Xamarin.Bundler
 		// Writes a list of lines to stderr, writing only a limited number of lines if there are too many of them.
 		protected void WriteLimitedOutput (string first, IEnumerable<string> lines, List<Exception> exceptions)
 		{
+			if ((first == null || first.Length == 0) && !lines.Any ())
+				return;
+
 			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
 				lines = lines.Take (1000); // Limit the output so that we don't overload VSfM.
 				exceptions.Add (ErrorHelper.CreateWarning (5108, "The compiler output is too long, it's been limited to 1000 lines."));
@@ -322,7 +325,7 @@ namespace Xamarin.Bundler
 				sb.AppendLine (first);
 			foreach (var line in lines)
 				sb.AppendLine (line);
-			sb.Length -= Environment.NewLine.Length;
+			sb.Length -= Environment.NewLine.Length; // strip off the last newline, since we're adding it in the next line
 			Console.Error.WriteLine (sb);
 		}
 	}
