@@ -1184,6 +1184,9 @@ namespace Xamarin.Bundler {
 				if (XcodeVersion >= new Version (9, 0))
 					args.Append ("-Wno-unguarded-availability-new ");
 
+				if (XcodeVersion.Major >= 11)
+					args.Append ("-std=c++14 ");
+
 				bool appendedObjc = false;
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
