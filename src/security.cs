@@ -718,9 +718,13 @@ namespace Security {
 		[Field ("kSecValuePersistentRef")]
 		IntPtr ValuePersistentRef { get; }
 
-		[NoWatch, NoTV, NoiOS]
+		[iOS (13,0)][TV (13,0)][Watch (6,0)]
 		[Field ("kSecUseItemList")]
 		IntPtr UseItemList { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kSecUseDataProtectionKeychain")]
+		IntPtr UseDataProtectionKeychain { get; }
 
 #if !MONOMAC || !XAMCORE_2_0 // Don't break compat API
 		[iOS (8,0)]
