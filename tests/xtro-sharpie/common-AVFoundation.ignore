@@ -46,3 +46,9 @@
 !missing-selector! NSCoder::encodeCMTime:forKey: not bound
 !missing-selector! NSCoder::encodeCMTimeMapping:forKey: not bound
 !missing-selector! NSCoder::encodeCMTimeRange:forKey: not bound
+
+# cannot be done because it will break the API, we have a #if define with the correct implementation
+!incorrect-protocol-member! AVAudio3DMixing::pointSourceInHeadMode is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::setPointSourceInHeadMode: is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::setSourceMode: is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::sourceMode is REQUIRED and should be abstract
