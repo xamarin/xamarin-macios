@@ -13453,7 +13453,7 @@ namespace AVFoundation {
 	{
 		[Export ("initWithReceiverBlock:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (AVAudioSinkNodeReceiverBlock block);
+		IntPtr Constructor (AVAudioSinkNodeReceiverHandler receiverHandler);
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
