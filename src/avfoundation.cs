@@ -13224,19 +13224,21 @@ namespace AVFoundation {
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeyResponse {
+		[Internal]
 		[Static]
 		[Export ("contentKeyResponseWithFairPlayStreamingKeyResponseData:")]
-		AVContentKeyResponse Create (NSData fairPlayStreamingKeyResponseData);
+		AVContentKeyResponse _InitWithFairPlayStreamingKeyResponseData (NSData fairPlayStreamingKeyResponseData);
 
 		[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("contentKeyResponseWithClearKeyData:initializationVector:")]
 		AVContentKeyResponse Create (NSData keyData, [NullAllowed] NSData initializationVector);
 
+		[Internal]
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Static]
 		[Export ("contentKeyResponseWithAuthorizationTokenData:")]
-		AVContentKeyResponse CreateWithAuthorizationToken (NSData authorizationTokenData);
+		AVContentKeyResponse _InitWithAuthorizationToken (NSData authorizationTokenData);
 	}
 
 	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
