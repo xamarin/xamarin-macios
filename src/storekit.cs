@@ -19,7 +19,6 @@ using System;
 
 namespace StoreKit {
 
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKDownload {
 
@@ -194,19 +193,15 @@ namespace StoreKit {
 		//
 		// iOS 6.0
 		//
-		[iOS (6,0)]
 		[Export ("startDownloads:")]
 		void StartDownloads (SKDownload [] downloads);
 
-		[iOS (6,0)]
 		[Export ("pauseDownloads:")]
 		void PauseDownloads (SKDownload [] downloads);
 
-		[iOS (6,0)]
 		[Export ("resumeDownloads:")]
 		void ResumeDownloads (SKDownload [] downloads);
 
-		[iOS (6,0)]
 		[Export ("cancelDownloads:")]
 		void CancelDownloads (SKDownload [] downloads);
 
@@ -248,7 +243,6 @@ namespace StoreKit {
 		[Export ("downloadable")]
 		bool Downloadable { get; }
 #elif !XAMCORE_4_0
-		[iOS (6,0)]
 		[Obsolete ("Use 'IsDownloadable' instead.")]
 		bool Downloadable {
 			[Wrap ("IsDownloadable")]
@@ -256,7 +250,6 @@ namespace StoreKit {
 		}
 #endif
 
-		[iOS (6,0)]
 		[Mac (10,15)]
 		[Export ("isDownloadable")]
 		bool IsDownloadable { get; }
@@ -271,7 +264,7 @@ namespace StoreKit {
 		[Export ("contentLengths")]
 		NSNumber [] ContentLengths { get; }
 
-		[iOS (6,0), Mac (10,14)]
+		[Mac (10,14)]
 		[Export ("downloadContentLengths")]
 		NSNumber [] DownloadContentLengths { get;  }
 
@@ -285,7 +278,7 @@ namespace StoreKit {
 		[Export ("contentVersion")]
 		string ContentVersion { get; }
 
-		[iOS (6,0), Mac (10,14)]
+		[Mac (10,14)]
 		[Export ("downloadContentVersion")]
 		string DownloadContentVersion { get;  }
 
@@ -325,7 +318,6 @@ namespace StoreKit {
 		[Export ("paymentQueueRestoreCompletedTransactionsFinished:")]
 		void RestoreCompletedTransactionsFinished (SKPaymentQueue queue);
 
-		[iOS (6,0)]
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
 
@@ -366,7 +358,6 @@ namespace StoreKit {
 		[Export ("transactionState")]
 		SKPaymentTransactionState TransactionState { get; }
 
-		[iOS (6,0)]
 		[Export ("downloads")]
 		SKDownload [] Downloads { get;  }
 	}
@@ -461,7 +452,6 @@ namespace StoreKit {
 
 #if !MONOMAC
 	[NoTV]
-	[iOS (6,0)]
 	[BaseType (typeof (UIViewController),
 		   Delegates=new string [] { "WeakDelegate" },
 		   Events   =new Type   [] { typeof (SKStoreProductViewControllerDelegate) })]
@@ -489,7 +479,7 @@ namespace StoreKit {
 		void LoadProduct (StoreProductParameters parameters, [NullAllowed] Action<bool,NSError> callback);
 	}
 
-	[iOS (6,0), NoMac]
+	[NoMac]
 	[StrongDictionary ("SKStoreProductParameterKey")]
 	interface StoreProductParameters {
 

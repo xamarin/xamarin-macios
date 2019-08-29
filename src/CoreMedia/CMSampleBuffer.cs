@@ -1009,7 +1009,6 @@ namespace CoreMedia {
 		}
 
 #if !MONOMAC
-		[iOS (6,0)]
 		public string DroppedFrameReason {
 			get {
 				return GetStringValue (CMSampleAttachmentKey.DroppedFrameReason);

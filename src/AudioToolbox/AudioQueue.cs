@@ -1129,7 +1129,6 @@ namespace AudioToolbox {
 			}
 		}
 
-		[iOS (6,0)]
 		public AudioQueueStatus SetChannelAssignments (params AudioQueueChannelAssignment[] channelAssignments)
 		{
 			if (channelAssignments == null)
@@ -1157,7 +1156,6 @@ namespace AudioToolbox {
 		}	
 #endif
 
-		[iOS (6,0)]
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioQueueStatus AudioQueueProcessingTapNew (IntPtr inAQ, AudioQueueProcessingTapCallbackShared inCallback,
 			IntPtr inClientData, AudioQueueProcessingTapFlags inFlags, out uint outMaxFrames,
@@ -1165,7 +1163,6 @@ namespace AudioToolbox {
 
 #if !XAMCORE_2_0
 		[Obsolete ("Use 'CreateProcessingTap (AudioQueueProcessingTapDelegate, AudioQueueProcessingTapFlags, out AudioQueueStatus)' instead.", true)]
-		[iOS (6,0)]
 		public AudioQueueProcessingTap CreateProcessingTap (AudioQueueProcessingTapCallback processingCallback, AudioQueueProcessingTapFlags flags,
 		                                                    out AudioQueueStatus status)
 		{
@@ -1173,7 +1170,6 @@ namespace AudioToolbox {
 		}
 #endif
 
-		[iOS (6,0)]
 		public AudioQueueProcessingTap CreateProcessingTap (AudioQueueProcessingTapDelegate processingCallback, AudioQueueProcessingTapFlags flags,
 		                                                    out AudioQueueStatus status)
 		{		
@@ -1212,7 +1208,6 @@ namespace AudioToolbox {
 	                                                      ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags,
 	                                                      AudioBuffers data);
 
-	[iOS (6,0)]
 	public class AudioQueueProcessingTap : IDisposable
 	{
 		internal static readonly AudioQueueProcessingTapCallbackShared CreateTapCallback = TapCallback;

@@ -49,7 +49,6 @@ namespace PassKit {
 		string SupplementarySubLocality { get; set; }
 	}
 	
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPassLibrary {
 		[Static][Export ("isPassLibraryAvailable")]
@@ -152,7 +151,6 @@ namespace PassKit {
 		void PresentPaymentPass (PKPaymentPass pass);
 	}
 
-	[iOS (6,0)]
 	[Static]
 	interface PKPassLibraryUserInfoKey
 	{
@@ -530,7 +528,6 @@ namespace PassKit {
 	}
 
 #if !WATCH
-	[iOS (6,0)]
 	[BaseType (typeof (UIViewController), Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (PKAddPassesViewControllerDelegate) })]
 	// invalid null handle for default 'init'
 	[DisableDefaultCtor]
@@ -560,7 +557,6 @@ namespace PassKit {
 		PKAddPassesViewControllerDelegate Delegate { get; set;  }
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -681,7 +677,6 @@ namespace PassKit {
 	}
 #endif // !WATCH
 		
-	[iOS (6,0)]
 	[BaseType (typeof (PKObject))]
 	interface PKPass : NSSecureCoding, NSCopying {
 		[Export ("initWithData:error:")]

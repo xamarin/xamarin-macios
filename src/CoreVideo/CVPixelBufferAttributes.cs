@@ -33,7 +33,6 @@ using ObjCRuntime;
 namespace CoreVideo {
 
 	[Watch (4,0)]
-	[iOS (6,0)]
 	public class CVPixelBufferAttributes : DictionaryContainer
 	{
 #if !COREBUILD
@@ -195,7 +194,6 @@ namespace CoreVideo {
 		}
 
 #if !WATCH
-		[iOS (6,0)]
 		public bool? OpenGLESCompatibility {
 			set {
 				SetBooleanValue (CVPixelBuffer.OpenGLESCompatibilityKey, value);

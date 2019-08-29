@@ -9,7 +9,6 @@ namespace PassKit {
 	// untyped enum -> PKError.h
 	// This never seemed to be deprecatd, yet in iOS8 it's obsoleted
 	[Obsoleted (PlatformName.iOS, 8, 0)]
-	[iOS (6,0)]
 	public enum PKErrorCode {
 		None = 0,
 		Unknown = 1,
@@ -18,7 +17,6 @@ namespace PassKit {
 	}
 
 	// NSInteger -> PKPass.h
-	[iOS (6,0)]
 	[ErrorDomain ("PKPassKitErrorDomain")]
 	[Native]
 	public enum PKPassKitErrorCode : long {

@@ -453,7 +453,6 @@ namespace UIKit {
 #endif // XAMCORE_2_0
 
 	[NoWatch]
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSLayoutConstraint {
 		[Static]
@@ -528,7 +527,6 @@ namespace UIKit {
 	}
 #endif // !WATCH
 
-	[iOS (6,0)]
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	interface NSParagraphStyle : NSSecureCoding, NSMutableCopying {
@@ -592,7 +590,6 @@ namespace UIKit {
 		bool AllowsDefaultTighteningForTruncation { get; [NotImplemented] set; }
 	}
 
-	[iOS (6,0)]
 	[ThreadSafe]
 	[BaseType (typeof (NSParagraphStyle))]
 	interface NSMutableParagraphStyle {
@@ -705,7 +702,6 @@ namespace UIKit {
 	[Watch (6,0)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
-	[iOS (6,0)]
 	interface NSShadow : NSSecureCoding, NSCopying {
 		[Export ("shadowOffset", ArgumentSemantic.Assign)]
 		CGSize ShadowOffset { get; set; }
@@ -1062,7 +1058,6 @@ namespace UIKit {
 		[Export ("accessibilityViewIsModal")]
 		bool AccessibilityViewIsModal { get; set; }
 
-		[iOS (6,0)]
 		[Export ("shouldGroupAccessibilityChildren")]
 		bool ShouldGroupAccessibilityChildren { get; set; }
 
@@ -1095,7 +1090,6 @@ namespace UIKit {
 		[Field ("UIAccessibilityTraitLink")]
 		long TraitLink { get; }
 
-		[iOS (6,0)]
 		[Field ("UIAccessibilityTraitHeader")]
 		long TraitHeader { get; }
 
@@ -1142,7 +1136,6 @@ namespace UIKit {
 		[Field ("UIAccessibilityTraitTabBar")]
 		long TraitTabBar { get; }
 	
-		[iOS (6,0)]
 		[Field ("UIAccessibilityAnnouncementDidFinishNotification")]
 		[Notification (typeof (UIAccessibilityAnnouncementFinishedEventArgs))]
 		NSString AnnouncementDidFinishNotification { get; }
@@ -1170,13 +1163,11 @@ namespace UIKit {
 		NSString ClosedCaptioningStatusDidChangeNotification { get; }
 
 		[NoWatch]
-		[iOS (6,0)]
 		[Field ("UIAccessibilityInvertColorsStatusDidChangeNotification")]
 		[Notification]
 		NSString InvertColorsStatusDidChangeNotification { get; }
 
 		[NoWatch]
-		[iOS (6,0)]
 		[Field ("UIAccessibilityGuidedAccessStatusDidChangeNotification")]
 		[Notification]
 		NSString GuidedAccessStatusDidChangeNotification { get; }
@@ -1635,7 +1626,6 @@ namespace UIKit {
 		[Export ("accessibilityPerformEscape")]
 		bool AccessibilityPerformEscape ();
 
-		[iOS (6,0)]
 		[Export ("accessibilityPerformMagicTap")]
 		bool AccessibilityPerformMagicTap ();
 
@@ -1816,7 +1806,6 @@ namespace UIKit {
 	}
 
 	[NoTV]
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface UIActivity {
 		[Export ("activityType")]
@@ -1849,7 +1838,6 @@ namespace UIKit {
 	}
 
 	[NoTV]
-	[iOS (6,0)]
 	[Static]
 	interface UIActivityType
 	{
@@ -1921,7 +1909,6 @@ namespace UIKit {
 	}
 
 	[NoTV]
-	[iOS (6,0)]
 	[BaseType (typeof (NSOperation))]
 	[ThreadSafe]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: Use initWithPlaceholderItem: to instantiate an instance of UIActivityItemProvider
@@ -1945,7 +1932,6 @@ namespace UIKit {
 	interface IUIActivityItemSource { }
 
 	[NoTV]
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1977,7 +1963,6 @@ namespace UIKit {
 	}
 
 	[NoTV]
-	[iOS (6,0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: Use initWithActivityItems:applicationActivities: to instantiate an instance of UIActivityViewController
 	interface UIActivityViewController {
@@ -2217,7 +2202,6 @@ namespace UIKit {
 	}
 		
 	[Static]
-	[iOS (6,0)]
 	interface UIStateRestoration {
 		[Field ("UIStateRestorationViewControllerStoryboardKey")]
 		NSString ViewControllerStoryboardKey { get; }
@@ -2421,7 +2405,6 @@ namespace UIKit {
 	}
 	
 	[Protocol]
-	[iOS (6,0)]
 	interface UIViewControllerRestoration {
 #if false
 		/* we don't generate anything for static members in protocols now, so just keep this out */
@@ -2833,17 +2816,14 @@ namespace UIKit {
 		// 6.0
 		//
 		// from @interface UIApplication (UIStateRestoration)
-		[iOS (6,0)]
 		[Export ("extendStateRestoration")]
 		void ExtendStateRestoration ();
 
 		// from @interface UIApplication (UIStateRestoration)
-		[iOS (6,0)]
 		[Export ("completeStateRestoration")]
 		void CompleteStateRestoration ();
 
 		[NoTV]
-		[iOS (6,0)]
 		[Export ("supportedInterfaceOrientationsForWindow:")]
 		UIInterfaceOrientationMask SupportedInterfaceOrientationsForWindow ([Transient] UIWindow window);
 
@@ -2851,11 +2831,9 @@ namespace UIKit {
 		[Field ("UITrackingRunLoopMode")]
 		NSString UITrackingRunLoopMode { get; }
 
-		[iOS (6,0)]
 		[Field ("UIApplicationStateRestorationBundleVersionKey")]
 		NSString StateRestorationBundleVersionKey { get; }
 
-		[iOS (6,0)]
 		[Field ("UIApplicationStateRestorationUserInterfaceIdiomKey")]
 		NSString StateRestorationUserInterfaceIdiomKey { get; }
 
@@ -3449,32 +3427,25 @@ namespace UIKit {
 		//
 		// 6.0
 		//
-		[iOS (6,0)]
 		[Export ("application:willFinishLaunchingWithOptions:")]
 		bool WillFinishLaunching (UIApplication application, NSDictionary launchOptions);
 
 		[NoTV]
-		[iOS (6,0)]
 		[Export ("application:supportedInterfaceOrientationsForWindow:")]
 		UIInterfaceOrientationMask GetSupportedInterfaceOrientations (UIApplication application, [Transient] UIWindow forWindow);
 
-		[iOS (6,0)]
 		[Export ("application:viewControllerWithRestorationIdentifierPath:coder:")]
 		UIViewController GetViewController (UIApplication application, string [] restorationIdentifierComponents, NSCoder coder);
 
-		[iOS (6,0)]
 		[Export ("application:shouldSaveApplicationState:")]
 		bool ShouldSaveApplicationState (UIApplication application, NSCoder coder);
 
-		[iOS (6,0)]
 		[Export ("application:shouldRestoreApplicationState:")]
 		bool ShouldRestoreApplicationState (UIApplication application, NSCoder coder);
 
-		[iOS (6,0)]
 		[Export ("application:willEncodeRestorableStateWithCoder:")]
 		void WillEncodeRestorableState (UIApplication application, NSCoder coder);
 
-		[iOS (6,0)]
 		[Export ("application:didDecodeRestorableStateWithCoder:")]
 		void DidDecodeRestorableState (UIApplication application, NSCoder coder);		
 
@@ -3483,7 +3454,6 @@ namespace UIKit {
 		// appropriate to implement the accessibilityPerformMagicTap method in your app delegate."
 		// ref: http://developer.apple.com/library/ios/#featuredarticles/ViewControllerPGforiPhoneOS/Accessibility/AccessibilityfromtheViewControllersPerspective.html
 		[NoTV]
-		[iOS (6,0)]
 		[Export ("accessibilityPerformMagicTap")]
 		bool AccessibilityPerformMagicTap ();
 
@@ -3772,12 +3742,10 @@ namespace UIKit {
 		[Appearance]
 		nfloat GetBackButtonBackgroundVerticalPositionAdjustment (UIBarMetrics barMetrics);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("setBackgroundImage:forState:style:barMetrics:")]
 		void SetBackgroundImage ([NullAllowed] 	UIImage backgroundImage, UIControlState state, UIBarButtonItemStyle style, UIBarMetrics barMetrics);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("backgroundImageForState:style:barMetrics:")]
 		UIImage GetBackgroundImage (UIControlState state, UIBarButtonItemStyle style, UIBarMetrics barMetrics);
@@ -3805,7 +3773,6 @@ namespace UIKit {
 		bool DisplayingRepresentativeItem { [Bind ("isDisplayingRepresentativeItem")] get; }
 	}
 	
-	[iOS (6,0)]
 	[BaseType (typeof (UIView))]
 	interface UICollectionReusableView {
 		[Export ("initWithFrame:")]
@@ -3831,7 +3798,6 @@ namespace UIKit {
 		UICollectionViewLayoutAttributes PreferredLayoutAttributesFittingAttributes (UICollectionViewLayoutAttributes layoutAttributes);
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (UIScrollView))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: UICollectionView must be initialized with a non-nil layout parameter
 	[DisableDefaultCtor]
@@ -4089,7 +4055,6 @@ namespace UIKit {
 	//
 	// Combined version of UICollectionViewDataSource, UICollectionViewDelegate
 	//
-	[iOS (6,0)]
 	[Model]
 	[BaseType (typeof (NSObject))]
 	[Protocol (IsInformal = true)]
@@ -4097,7 +4062,6 @@ namespace UIKit {
 		
 	}
 	
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -4135,7 +4099,6 @@ namespace UIKit {
 		NSIndexPath GetIndexPath (UICollectionView collectionView, string title, nint atIndex);
 	}
 
-	[iOS (6,0)]
 	[Model]
 	[Protocol]
 #if XAMCORE_3_0
@@ -4259,7 +4222,6 @@ namespace UIKit {
 		void WillPerformPreviewAction (UICollectionView collectionView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (UICollectionReusableView))]
 	interface UICollectionViewCell {
 		[Export ("initWithFrame:")]
@@ -4288,7 +4250,6 @@ namespace UIKit {
 		void DragStateDidChange (UICollectionViewCellDragState dragState);
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (UIViewController))]
 	interface UICollectionViewController : UICollectionViewSource, NSCoding {
 		[DesignatedInitializer]
@@ -4321,7 +4282,6 @@ namespace UIKit {
 		bool InstallsStandardGestureForInteractiveMovement { get; set; }		
 	}
 	
-	[iOS (6,0)]
 	[BaseType (typeof (UICollectionViewDelegate))]
 	[Model]
 	[Protocol]
@@ -4345,7 +4305,6 @@ namespace UIKit {
 		CGSize GetReferenceSizeForFooter (UICollectionView collectionView, UICollectionViewLayout layout, nint section);
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (UICollectionViewLayout))]
 	interface UICollectionViewFlowLayout {
 		[Export ("minimumLineSpacing")]
@@ -4392,7 +4351,6 @@ namespace UIKit {
 		CGSize AutomaticSize { get; }
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	interface UICollectionViewLayout : NSCoding {
@@ -4552,7 +4510,6 @@ namespace UIKit {
 		bool FlipsHorizontallyInOppositeLayoutDirection { get; }
 	}
 	
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface UICollectionViewLayoutAttributes : UIDynamicItem, NSCopying {
 		[Export ("frame")]
@@ -4697,7 +4654,6 @@ namespace UIKit {
 		nfloat TransitionProgress { get; set; }
 	}
 	
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface UICollectionViewUpdateItem {
 		[NullAllowed]
@@ -4712,7 +4668,6 @@ namespace UIKit {
 		UICollectionUpdateAction UpdateAction { get;  }
 	}
 
-	[iOS (6,0)]
 	[Static]
 	interface UICollectionElementKindSectionKey
 	{
@@ -6797,24 +6752,19 @@ namespace UIKit {
 		[Export ("insertDictationResult:")]
 		void InsertDictationResult (NSArray dictationResult);
 
-		[iOS (6,0)]
 		[Abstract]
 		[Export ("selectionRectsForRange:")]
 		UITextSelectionRect [] GetSelectionRects (UITextRange range);
 
-		[iOS (6,0)]
 		[Export ("shouldChangeTextInRange:replacementText:")]
 		bool ShouldChangeTextInRange (UITextRange inRange, string replacementText);
 
-		[iOS (6,0)]
 		[Export ("frameForDictationResultPlaceholder:")]
 		CGRect GetFrameForDictationResultPlaceholder (NSObject placeholder);
 
-		[iOS (6,0)]
 		[Export ("insertDictationResultPlaceholder")]
 		NSObject InsertDictationResultPlaceholder ();
 
-		[iOS (6,0)]
 		[Export ("removeDictationResultPlaceholder:willInsertResult:")]
 		void RemoveDictationResultPlaceholder (NSObject placeholder, bool willInsertResult);
 
@@ -6936,7 +6886,6 @@ namespace UIKit {
 #endif
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface UITextSelectionRect {
 		[Export ("rect")]
@@ -7148,7 +7097,6 @@ namespace UIKit {
 	// and does not require us to call this with initWithFrame:
 	//
 	[NoTV]
-	[iOS (6,0)]
 	[BaseType (typeof (UIControl))]
 	interface UIRefreshControl : UIAppearance {
 		[Export ("refreshing")]
@@ -7466,54 +7414,45 @@ namespace UIKit {
 		//
 		// 6.0
 		//
-		[iOS (6,0)]
 		[Export ("alignmentRectInsets")]
 		[ThreadSafe]
 		UIEdgeInsets AlignmentRectInsets { get;  }
 
-		[iOS (6,0)]
 		[Static]
 		[Export ("imageWithData:scale:")]
 		[ThreadSafe, Autorelease]
 		UIImage LoadFromData (NSData data, nfloat scale);
 
 #if !WATCH
-		[iOS (6,0)]
 		[Static]
 		[Export ("imageWithCIImage:scale:orientation:")]
 		[ThreadSafe, Autorelease]
 		UIImage FromImage (CIImage ciImage, nfloat scale, UIImageOrientation orientation);
 #endif // !WATCH
 
-		[iOS (6,0)]
 		[Export ("initWithData:scale:")]
 		[ThreadSafe]
 		IntPtr Constructor (NSData data, nfloat scale);
 
 #if !WATCH
-		[iOS (6,0)]
 		[Export ("initWithCIImage:scale:orientation:")]
 		[ThreadSafe]
 		IntPtr Constructor (CIImage ciImage, nfloat scale, UIImageOrientation orientation);
 #endif // !WATCH
 	
-		[iOS (6,0)]
 		[Export ("resizableImageWithCapInsets:resizingMode:")]
 		[ThreadSafe]
 		UIImage CreateResizableImage (UIEdgeInsets capInsets, UIImageResizingMode resizingMode);
 
-		[iOS (6,0)]
 		[Static]
 		[Export ("animatedResizableImageNamed:capInsets:resizingMode:duration:")]
 		[ThreadSafe]
 		UIImage CreateAnimatedImage (string name, UIEdgeInsets capInsets, UIImageResizingMode resizingMode, double duration);
 		
-		[iOS (6,0)]
 		[Export ("imageWithAlignmentRectInsets:")]
 		[ThreadSafe, Autorelease]
 		UIImage ImageWithAlignmentRectInsets (UIEdgeInsets alignmentInsets);
 
-		[iOS (6,0)]
 		[Export ("resizingMode")]
 		[ThreadSafe]
 		UIImageResizingMode ResizingMode { get; }
@@ -8221,7 +8160,6 @@ namespace UIKit {
 		[Export ("addArcWithCenter:radius:startAngle:endAngle:clockwise:")]
 		void AddArc (CGPoint center, nfloat radius, nfloat startAngle, nfloat endAngle, bool clockWise);
 
-		[iOS (6,0)]
 		[Export ("bezierPathByReversingPath")]
 		UIBezierPath BezierPathByReversingPath ();
 	}
@@ -8361,15 +8299,12 @@ namespace UIKit {
 		//
 		// 6.0
 		//
-		[iOS (6,0)]
 		[Export ("currentAttributedTitle", ArgumentSemantic.Retain)]
 		NSAttributedString CurrentAttributedTitle { get;  }
 
-		[iOS (6,0)]
 		[Export ("setAttributedTitle:forState:")]
 		void SetAttributedTitle (NSAttributedString title, UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("attributedTitleForState:")]
 		NSAttributedString GetAttributedTitle (UIControlState state);
 
@@ -8453,22 +8388,18 @@ namespace UIKit {
 		//
 		// 6.0
 		//
-		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("attributedText", ArgumentSemantic.Copy)]
 		NSAttributedString AttributedText { get; set;  }
 
 		[NoTV]
-		[iOS (6,0)]
 		[Export ("adjustsLetterSpacingToFitWidth")]
 		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSKernAttributeName' instead.")]
 		bool AdjustsLetterSpacingToFitWidth { get; set;  }
 
-		[iOS (6,0)]
 		[Export ("minimumScaleFactor")]
 		nfloat MinimumScaleFactor { get; set;  }
 
-		[iOS (6,0)]
 		[Export ("preferredMaxLayoutWidth")]
 		nfloat PreferredMaxLayoutWidth { get; set;  }
 
@@ -8687,7 +8618,6 @@ namespace UIKit {
 		[Export ("playInputClick")]
 		void PlayInputClick ();
 
-		[iOS (6,0)]
 		[Export ("identifierForVendor", ArgumentSemantic.Retain)]
 		NSUuid IdentifierForVendor { get;  }
 	}
@@ -9145,7 +9075,6 @@ namespace UIKit {
 		//
 		// 6.0
 		//
-		[iOS (6,0)]
 		[Appearance]
 		[NullAllowed]
 		[Export ("shadowImage", ArgumentSemantic.Retain)]
@@ -9535,13 +9464,11 @@ namespace UIKit {
 		[Export ("sizeForNumberOfPages:")]
 		CGSize SizeForNumberOfPages (nint pageCount);
 
-		[iOS (6,0)]
 		[Appearance]
 		[NullAllowed]
 		[Export ("pageIndicatorTintColor", ArgumentSemantic.Retain)]
 		UIColor PageIndicatorTintColor { get; set;  }
 
-		[iOS (6,0)]
 		[Appearance]
 		[NullAllowed]
 		[Export ("currentPageIndicatorTintColor", ArgumentSemantic.Retain)]
@@ -9600,7 +9527,6 @@ namespace UIKit {
 		[Field ("UIPageViewControllerOptionSpineLocationKey")]
 		NSString OptionSpineLocationKey { get; }
 
-		[iOS (6,0)]
 		[Internal, Field ("UIPageViewControllerOptionInterPageSpacingKey")]
 		NSString OptionInterPageSpacingKey { get; }
 	}
@@ -9617,7 +9543,6 @@ namespace UIKit {
 		[DefaultValue(UIPageViewControllerSpineLocation.Mid)]
 		UIPageViewControllerSpineLocation GetSpineLocation (UIPageViewController pageViewController, UIInterfaceOrientation orientation);
 
-		[iOS (6,0)]
 		[Export ("pageViewController:willTransitionToViewControllers:"), EventArgs ("UIPageViewControllerTransition")]
 		void WillTransition (UIPageViewController pageViewController, UIViewController [] pendingViewControllers);
 
@@ -9644,11 +9569,9 @@ namespace UIKit {
 		[Export ("pageViewController:viewControllerAfterViewController:"), DelegateName ("UIPageViewGetViewController"), DefaultValue (null)]
 		UIViewController GetNextViewController (UIPageViewController pageViewController, UIViewController referenceViewController);
 
-		[iOS (6,0)]
 		[Export ("presentationCountForPageViewController:"), DelegateName ("UIPageViewGetNumber"), DefaultValue (1)]
 		nint GetPresentationCount (UIPageViewController pageViewController);
 
-		[iOS (6,0)]
 		[Export ("presentationIndexForPageViewController:"), DelegateName ("UIPageViewGetNumber"), DefaultValue (1)]
 		nint GetPresentationIndex (UIPageViewController pageViewController);
 	}
@@ -9951,7 +9874,6 @@ namespace UIKit {
 		[Export ("pickerView:didSelectRow:inComponent:")]
 		void Selected (UIPickerView pickerView, nint row, nint component);
 
-		[iOS (6,0)]
 		[Export ("pickerView:attributedTitleForRow:forComponent:")]
 		NSAttributedString GetAttributedTitle (UIPickerView pickerView, nint row, nint component);
 	}
@@ -10371,15 +10293,12 @@ namespace UIKit {
 		// 6.0
 		//
 
-		[iOS (6,0)]
 		[Export ("toggleBoldface:")]
 		void ToggleBoldface ([NullAllowed] NSObject sender);
 
-		[iOS (6,0)]
 		[Export ("toggleItalics:")]
 		void ToggleItalics ([NullAllowed] NSObject sender);
 
-		[iOS (6,0)]
 		[Export ("toggleUnderline:")]
 		void ToggleUnderline ([NullAllowed] NSObject sender);
 
@@ -10981,7 +10900,6 @@ namespace UIKit {
 		[Export ("positionAdjustmentForSearchBarIcon:")]
 		UIOffset GetPositionAdjustmentForSearchBarIcon (UISearchBarIcon icon);
 
-		[iOS (6,0)]
 		[Export ("inputAccessoryView", ArgumentSemantic.Retain)][NullAllowed]
 		UIView InputAccessoryView { get; set; }
 
@@ -11501,7 +11419,6 @@ namespace UIKit {
 	}
 #endif // !WATCH
 
-	[iOS (6,0)]
 	[Static]
 	interface UIStringAttributeKey {
 		[Field ("NSFontAttributeName")]
@@ -11684,19 +11601,16 @@ namespace UIKit {
 		[NullAllowed]
 		UIColor OnTintColor { get; set; }
 
-		[iOS (6,0)]
 		[Appearance]
 		[NullAllowed]
 		[Export ("thumbTintColor", ArgumentSemantic.Retain)]
 		UIColor ThumbTintColor { get; set;  }
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("onImage", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		UIImage OnImage { get; set;  }
 
-		[iOS (6,0)]
 		[Appearance]
 		[NullAllowed]
 		[Export ("offImage", ArgumentSemantic.Retain)]
@@ -11764,7 +11678,6 @@ namespace UIKit {
 		[Appearance]
 		UIImage SelectionIndicatorImage { get; set;  }
 
-		[iOS (6,0)]
 		[Export ("shadowImage", ArgumentSemantic.Retain)]
 		[Appearance]
 		[NullAllowed]
@@ -12223,39 +12136,31 @@ namespace UIKit {
 		//
 		// 6.0
 		//
-		[iOS (6,0)]
 		[Appearance]
 		[NullAllowed]
 		[Export ("sectionIndexColor", ArgumentSemantic.Retain)]
 		UIColor SectionIndexColor { get; set;  }
 
-		[iOS (6,0)]
 		[Appearance]
 		[NullAllowed]
 		[Export ("sectionIndexTrackingBackgroundColor", ArgumentSemantic.Retain)]
 		UIColor SectionIndexTrackingBackgroundColor { get; set;  }
 
-		[iOS (6,0)]
 		[Export ("headerViewForSection:")]
 		UITableViewHeaderFooterView GetHeaderView (nint section);
 
-		[iOS (6,0)]
 		[Export ("footerViewForSection:")]
 		UITableViewHeaderFooterView GetFooterView (nint section);
 
-		[iOS (6,0)]
 		[Export ("dequeueReusableCellWithIdentifier:forIndexPath:")]
 		UITableViewCell DequeueReusableCell (NSString reuseIdentifier, NSIndexPath indexPath);
 
-		[iOS (6,0)]
 		[Export ("dequeueReusableHeaderFooterViewWithIdentifier:")]
 		UITableViewHeaderFooterView DequeueReusableHeaderFooterView (NSString reuseIdentifier);
 
-		[iOS (6,0)]
 		[Export ("registerClass:forCellReuseIdentifier:"), Internal]
 		void RegisterClassForCellReuse (IntPtr /*Class*/ cellClass, NSString reuseIdentifier);
 
-		[iOS (6,0)]
 		[Export ("registerNib:forHeaderFooterViewReuseIdentifier:")]
 #if XAMCORE_2_0
 		void RegisterNibForHeaderFooterViewReuse (UINib nib, NSString reuseIdentifier);
@@ -12263,7 +12168,6 @@ namespace UIKit {
 		void RegisterNibForHeaderFooterViewReuse (UINib nib, string reuseIdentifier);
 #endif
 
-		[iOS (6,0)]
 		[Export ("registerClass:forHeaderFooterViewReuseIdentifier:"), Internal]
 		void RegisterClassForHeaderFooterViewReuse (IntPtr /*Class*/ aClass, NSString reuseIdentifier);
 
@@ -12496,35 +12400,27 @@ namespace UIKit {
 		[Export ("tableView:performAction:forRowAtIndexPath:withSender:")]
 		void PerformAction (UITableView tableView, Selector action, NSIndexPath indexPath, [NullAllowed] NSObject sender);
 		
-		[iOS (6,0)]
 		[Export ("tableView:willDisplayHeaderView:forSection:")]
 		void WillDisplayHeaderView (UITableView tableView, UIView headerView, nint section);
 
-		[iOS (6,0)]
 		[Export ("tableView:willDisplayFooterView:forSection:")]
 		void WillDisplayFooterView (UITableView tableView, UIView footerView, nint section);
 
-		[iOS (6,0)]
 		[Export ("tableView:didEndDisplayingCell:forRowAtIndexPath:")]
 		void CellDisplayingEnded (UITableView tableView, UITableViewCell cell, NSIndexPath indexPath);
 
-		[iOS (6,0)]
 		[Export ("tableView:didEndDisplayingHeaderView:forSection:")]
 		void HeaderViewDisplayingEnded (UITableView tableView, UIView headerView, nint section);
 
-		[iOS (6,0)]
 		[Export ("tableView:didEndDisplayingFooterView:forSection:")]
 		void FooterViewDisplayingEnded (UITableView tableView, UIView footerView, nint section);
 
-		[iOS (6,0)]
 		[Export ("tableView:shouldHighlightRowAtIndexPath:")]
 		bool ShouldHighlightRow (UITableView tableView, NSIndexPath rowIndexPath);
 
-		[iOS (6,0)]
 		[Export ("tableView:didHighlightRowAtIndexPath:")]
 		void RowHighlighted (UITableView tableView, NSIndexPath rowIndexPath);
 
-		[iOS (6,0)]
 		[Export ("tableView:didUnhighlightRowAtIndexPath:")]
 		void RowUnhighlighted (UITableView tableView, NSIndexPath rowIndexPath);
 
@@ -12749,7 +12645,7 @@ namespace UIKit {
 		[Export ("clearsSelectionOnViewWillAppear")]
 		bool ClearsSelectionOnViewWillAppear { get; set; }
 
-		[NoTV][iOS (6,0)]
+		[NoTV]
 		[NullAllowed, Export ("refreshControl", ArgumentSemantic.Strong)]
 		UIRefreshControl RefreshControl { get; set; }
 	}
@@ -12878,35 +12774,27 @@ namespace UIKit {
 		[Export ("tableView:performAction:forRowAtIndexPath:withSender:")]
 		void PerformAction (UITableView tableView, Selector action, NSIndexPath indexPath, NSObject sender);
 
-		[iOS (6,0)]
 		[Export ("tableView:willDisplayHeaderView:forSection:")]
 		void WillDisplayHeaderView (UITableView tableView, UIView headerView, nint section);
 
-		[iOS (6,0)]
 		[Export ("tableView:willDisplayFooterView:forSection:")]
 		void WillDisplayFooterView (UITableView tableView, UIView footerView, nint section);
 
-		[iOS (6,0)]
 		[Export ("tableView:didEndDisplayingCell:forRowAtIndexPath:")]
 		void CellDisplayingEnded (UITableView tableView, UITableViewCell cell, NSIndexPath indexPath);
 
-		[iOS (6,0)]
 		[Export ("tableView:didEndDisplayingHeaderView:forSection:")]
 		void HeaderViewDisplayingEnded (UITableView tableView, UIView headerView, nint section);
 
-		[iOS (6,0)]
 		[Export ("tableView:didEndDisplayingFooterView:forSection:")]
 		void FooterViewDisplayingEnded (UITableView tableView, UIView footerView, nint section);
 
-		[iOS (6,0)]
 		[Export ("tableView:shouldHighlightRowAtIndexPath:")]
 		bool ShouldHighlightRow (UITableView tableView, NSIndexPath rowIndexPath);
 
-		[iOS (6,0)]
 		[Export ("tableView:didHighlightRowAtIndexPath:")]
 		void RowHighlighted (UITableView tableView, NSIndexPath rowIndexPath);
 
-		[iOS (6,0)]
 		[Export ("tableView:didUnhighlightRowAtIndexPath:")]
 		void RowUnhighlighted (UITableView tableView, NSIndexPath rowIndexPath);		
 
@@ -12994,7 +12882,6 @@ namespace UIKit {
 		void WillPerformPreviewAction (UITableView tableView, UIContextMenuConfiguration configuration, IUIContextMenuInteractionCommitAnimating animator);
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (UIView))]
 	interface UITableViewHeaderFooterView : UIAppearance, NSCoding {
 		[Export ("initWithFrame:")]
@@ -13180,25 +13067,20 @@ namespace UIKit {
 		// 6.0
 		//
 
-		[iOS (6,0)]
 		[NullAllowed] // by default this property is null (on 6.0, not later)
 		[Export ("attributedText", ArgumentSemantic.Copy)]
 		NSAttributedString AttributedText { get; set;  }
 
-		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("attributedPlaceholder", ArgumentSemantic.Copy)]
 		NSAttributedString AttributedPlaceholder { get; set;  }
 
-		[iOS (6,0)]
 		[Export ("allowsEditingTextAttributes")]
 		bool AllowsEditingTextAttributes { get; set;  }
 
-		[iOS (6,0)]
 		[Export ("clearsOnInsertion")]
 		bool ClearsOnInsertion { get; set;  }
 
-		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("typingAttributes", ArgumentSemantic.Copy)]
 		NSDictionary TypingAttributes { get; set; }
@@ -13313,19 +13195,15 @@ namespace UIKit {
 		// 6.0
 		//
 
-		[iOS (6,0)]
 		[Export ("allowsEditingTextAttributes")]
 		bool AllowsEditingTextAttributes { get; set;  }
 
-		[iOS (6,0)]
 		[Export ("attributedText", ArgumentSemantic.Copy)]
 		NSAttributedString AttributedText { get; set;  }
 
-		[iOS (6,0)]
 		[Export ("clearsOnInsertion")]
 		bool ClearsOnInsertion { get; set;  }		
 
-		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("typingAttributes", ArgumentSemantic.Copy)]
 		NSDictionary TypingAttributes {
@@ -13442,12 +13320,10 @@ namespace UIKit {
 		[Appearance]
 		UIImage GetBackgroundImage (UIToolbarPosition position, UIBarMetrics barMetrics);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("setShadowImage:forToolbarPosition:")]
 		void SetShadowImage ([NullAllowed] UIImage shadowImage, UIToolbarPosition topOrBottom);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("shadowImageForToolbarPosition:")]
 		UIImage GetShadowImage (UIToolbarPosition topOrBottom);
@@ -13984,53 +13860,41 @@ namespace UIKit {
 		// 6.0
 		//
 		
-		[iOS (6,0)]
 		[Export ("constraints")]
 		NSLayoutConstraint [] Constraints { get; }
 
-		[iOS (6,0)]
 		[Export ("addConstraint:")]
 		void AddConstraint (NSLayoutConstraint constraint);
 
-		[iOS (6,0)]
 		[Export ("addConstraints:")]
 		void AddConstraints (NSLayoutConstraint [] constraints);
 
-		[iOS (6,0)]
 		[Export ("removeConstraint:")]
 		void RemoveConstraint (NSLayoutConstraint constraint);
 
-		[iOS (6,0)]
 		[Export ("removeConstraints:")]
 		void RemoveConstraints (NSLayoutConstraint [] constraints);
 
-		[iOS (6,0)]
 		[Export ("needsUpdateConstraints")]
 		bool NeedsUpdateConstraints ();
 
-		[iOS (6,0)]
 		[Export ("setNeedsUpdateConstraints")]
 		void SetNeedsUpdateConstraints ();
 
-		[iOS (6,0)]
 		[Static]
 		[Export ("requiresConstraintBasedLayout")]
 		bool RequiresConstraintBasedLayout ();
 
-		[iOS (6,0)]
 		[Export ("alignmentRectForFrame:")]
 		CGRect AlignmentRectForFrame (CGRect frame);
 
-		[iOS (6,0)]
 		[Export ("frameForAlignmentRect:")]
 		CGRect FrameForAlignmentRect (CGRect alignmentRect);
 
-		[iOS (6,0)]
 		[Export ("alignmentRectInsets")]
 		UIEdgeInsets AlignmentRectInsets { get; }
 
 		[NoTV]
-		[iOS (6,0)]
 		[Export ("viewForBaselineLayout")]
 		[Availability (Deprecated = Platform.iOS_9_0, Message="Override 'ViewForFirstBaselineLayout' or 'ViewForLastBaselineLayout'.")]
 		UIView ViewForBaselineLayout { get; }
@@ -14044,85 +13908,65 @@ namespace UIKit {
 		UIView ViewForLastBaselineLayout { get; }
 			
 
-		[iOS (6,0)]
 		[Export ("intrinsicContentSize")]
 		CGSize IntrinsicContentSize { get; }
 
-		[iOS (6,0)]
 		[Export ("invalidateIntrinsicContentSize")]
 		void InvalidateIntrinsicContentSize ();
 
-		[iOS (6,0)]
 		[Export ("contentHuggingPriorityForAxis:")]
 		float ContentHuggingPriority (UILayoutConstraintAxis axis); // This returns a float, not nfloat.
 
-		[iOS (6,0)]
 		[Export ("setContentHuggingPriority:forAxis:")]
 		void SetContentHuggingPriority (float priority /* this is a float, not nfloat */, UILayoutConstraintAxis axis);
 
-		[iOS (6,0)]
 		[Export ("contentCompressionResistancePriorityForAxis:")]
 		float ContentCompressionResistancePriority (UILayoutConstraintAxis axis); // This returns a float, not nfloat.
 
-		[iOS (6,0)]
 		[Export ("setContentCompressionResistancePriority:forAxis:")]
 		void SetContentCompressionResistancePriority (float priority /* this is a float, not nfloat */, UILayoutConstraintAxis axis);
 
-		[iOS (6,0)]
 		[Export ("constraintsAffectingLayoutForAxis:")]
 		NSLayoutConstraint [] GetConstraintsAffectingLayout (UILayoutConstraintAxis axis);
 
-		[iOS (6,0)]
 		[Export ("hasAmbiguousLayout")]
 		bool HasAmbiguousLayout { get; }
 
-		[iOS (6,0)]
 		[Export ("exerciseAmbiguityInLayout")]
 		void ExerciseAmbiguityInLayout ();
 
-		[iOS (6,0)]
 		[Export ("systemLayoutSizeFittingSize:")]
 		CGSize SystemLayoutSizeFittingSize (CGSize size);
 
-		[iOS (6,0)]
 		[Export ("decodeRestorableStateWithCoder:")]
 		void DecodeRestorableState (NSCoder coder);
 
-		[iOS (6,0)]
 		[Export ("encodeRestorableStateWithCoder:")]
 		void EncodeRestorableState (NSCoder coder);
 
-		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("restorationIdentifier", ArgumentSemantic.Copy)]
 		string RestorationIdentifier { get; set; }
 		
-		[iOS (6,0)]
 		[Export ("gestureRecognizerShouldBegin:")]
 		bool GestureRecognizerShouldBegin (UIGestureRecognizer gestureRecognizer);
 
-		[iOS (6,0)]
 		[Export ("translatesAutoresizingMaskIntoConstraints")]
 		bool TranslatesAutoresizingMaskIntoConstraints { get; set; }
 
-		[iOS (6,0)]
 		[Export ("updateConstraintsIfNeeded")]
 		void UpdateConstraintsIfNeeded ();
 		
-		[iOS (6,0)]
 		[Export ("updateConstraints")]
 		[RequiresSuper]
 		void UpdateConstraints ();
 
-		[iOS (6,0)]
 		[Field ("UIViewNoIntrinsicMetric")]
 		nfloat NoIntrinsicMetric { get; }
 		
-		[iOS (6,0)]
 		[Field ("UILayoutFittingCompressedSize")]
 		CGSize UILayoutFittingCompressedSize { get; }
 
-		[iOS (6,0)]
 		[Field ("UILayoutFittingExpandedSize")]
 		CGSize UILayoutFittingExpandedSize { get; }
 
@@ -14728,7 +14572,6 @@ namespace UIKit {
 		//
 		// 6.0
 		//
-		[iOS (6,0)]
 		[Export ("shouldPerformSegueWithIdentifier:sender:")]
 		bool ShouldPerformSegue (string segueIdentifier, NSObject sender);
 
@@ -14739,7 +14582,6 @@ namespace UIKit {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CanPerformUnwind' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CanPerformUnwind' instead.")]
 #endif // !XAMCORE_4_0
-		[iOS (6,0)]
 		[Export ("canPerformUnwindSegueAction:fromViewController:withSender:")]
 		bool
 #if !XAMCORE_4_0
@@ -14761,60 +14603,48 @@ namespace UIKit {
 #endif // !XAMCORE_4_0
 		(Selector segueAction, UIViewController fromViewController, [NullAllowed] NSObject sender);
 
-		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("viewControllerForUnwindSegueAction:fromViewController:withSender:")]
 		UIViewController GetViewControllerForUnwind (Selector segueAction, UIViewController fromViewController, NSObject sender);
 
-		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("segueForUnwindingToViewController:fromViewController:identifier:")]
 		UIStoryboardSegue GetSegueForUnwinding (UIViewController toViewController, UIViewController fromViewController, string identifier);
 
 		[NoTV]
-		[iOS (6,0)]
 		[Export ("supportedInterfaceOrientations")]
 		UIInterfaceOrientationMask GetSupportedInterfaceOrientations ();
 
 		[NoTV]
-		[iOS (6,0)]
 		[Export ("preferredInterfaceOrientationForPresentation")]
 		UIInterfaceOrientation PreferredInterfaceOrientationForPresentation ();
 
 		[NoTV]
-		[iOS (6,0)]
 		[Availability (Deprecated = Platform.iOS_8_0, Message="Use Adaptive View Controllers instead.")]
 		[Export ("shouldAutomaticallyForwardRotationMethods")]
 		bool ShouldAutomaticallyForwardRotationMethods { get; }
 
-		[iOS (6,0)]
 		[Export ("shouldAutomaticallyForwardAppearanceMethods")]
 		bool ShouldAutomaticallyForwardAppearanceMethods { get; }
 
-		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("restorationIdentifier", ArgumentSemantic.Copy)]
 		string RestorationIdentifier { get; set; }
 
 		[NullAllowed]
-		[iOS (6,0)]
 		[Export ("restorationClass")]
 		Class RestorationClass { get; set; }
 
-		[iOS (6,0)]
 		[Export ("encodeRestorableStateWithCoder:")]
 		void EncodeRestorableState (NSCoder coder);
 
-		[iOS (6,0)]
 		[Export ("decodeRestorableStateWithCoder:")]
 		void DecodeRestorableState (NSCoder coder);
 
-		[iOS (6,0)]
 		[Export ("updateViewConstraints")]
 		void UpdateViewConstraints ();
 
 		[NoTV]
-		[iOS (6,0)]
 		[Export ("shouldAutorotate")]
 		bool ShouldAutorotate ();
 
@@ -15601,11 +15431,9 @@ namespace UIKit {
 		[Export ("mediaPlaybackAllowsAirPlay")]
 		bool MediaPlaybackAllowsAirPlay { get; set; }
 
-		[iOS (6,0)]
 		[Export ("suppressesIncrementalRendering")]
 		bool SuppressesIncrementalRendering { get; set; }
 
-		[iOS (6,0)]
 		[Export ("keyboardDisplayRequiresUserAction")]
 		bool KeyboardDisplayRequiresUserAction { get; set; }
 
@@ -15971,42 +15799,34 @@ namespace UIKit {
 		// 6.0
 		//
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("setBackgroundImage:forState:")]
 		void SetBackgroundImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("backgroundImageForState:")]
 		UIImage BackgroundImage (UIControlState state);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("setDividerImage:forLeftSegmentState:rightSegmentState:")]
 		void SetDividerImage ([NullAllowed] UIImage image, UIControlState leftState, UIControlState rightState);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("dividerImageForLeftSegmentState:rightSegmentState:")]
 		UIImage GetDividerImage (UIControlState leftState, UIControlState rightState);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("setIncrementImage:forState:")]
 		void SetIncrementImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("incrementImageForState:")]
 		UIImage GetIncrementImage (UIControlState state);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("setDecrementImage:forState:")]
 		void SetDecrementImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
 		[Appearance]
 		[Export ("decrementImageForState:")]
 		UIImage GetDecrementImage (UIControlState state);
@@ -16075,7 +15895,6 @@ namespace UIKit {
 		[Export ("perform")]
 		void Perform ();
 
-		[iOS (6,0)]
 		[Static]
 		[Export ("segueWithIdentifier:source:destination:performHandler:")]
 		UIStoryboardSegue Create ([NullAllowed] string identifier, UIViewController source, UIViewController destination, Action performHandler);
@@ -16127,7 +15946,6 @@ namespace UIKit {
 #pragma warning restore 618
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Not supported anymore.")]
-		[iOS (6,0)]
 		[Static, Export ("wantsDefaultContentAppearance")]
 		bool WantsDefaultContentAppearance { get; }
 	}
@@ -17521,7 +17339,6 @@ namespace UIKit {
 	// note: used (internally, not exposed) by UITableView and UICollectionView for state restoration
 	// user objects must adopt the protocol
 	[NoWatch]
-	[iOS (6,0)]
 	[Protocol]
 	interface UIDataSourceModelAssociation {
 

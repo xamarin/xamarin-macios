@@ -63,7 +63,7 @@ namespace CoreMedia {
 		public float Alpha { get; private set; }
 	}
 
-	[iOS (6,0), Watch (6,0)]
+	[Watch (6,0)]
 	public class CMTextMarkupAttributes : DictionaryContainer
 	{
 		public CMTextMarkupAttributes ()

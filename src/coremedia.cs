@@ -19,7 +19,7 @@ namespace CoreMedia {
 	}
 
 	[Static][Internal]
-	[Mac (10, 9), iOS (6,0), Watch (6,0)]
+	[Mac (10, 9), Watch (6,0)]
 	interface CMTextMarkupAttributesKeys {
 		[Internal][Field ("kCMTextMarkupAttribute_ForegroundColorARGB")]
 		NSString ForegroundColorARGB { get; }
@@ -125,7 +125,7 @@ namespace CoreMedia {
 		[Field ("kCMSampleBufferAttachmentKey_GradualDecoderRefresh")]
 		NSString GradualDecoderRefreshKey { get; }
 
-		[iOS (6,0)][NoMac]
+		[NoMac]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReason")]
 		NSString DroppedFrameReason { get; }
 

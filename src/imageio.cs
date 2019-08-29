@@ -248,27 +248,27 @@ namespace ImageIO {
 
 		// misdocumented (first 4.3, then 5.0) but the constants were not present until 6.x
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifCameraOwnerName")]
+		[Field ("kCGImagePropertyExifCameraOwnerName")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifCameraOwnerName { get; }
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifBodySerialNumber")]
+		[Field ("kCGImagePropertyExifBodySerialNumber")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifBodySerialNumber { get; }
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifLensSpecification")]
+		[Field ("kCGImagePropertyExifLensSpecification")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifLensSpecification { get; }
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifLensMake")]
+		[Field ("kCGImagePropertyExifLensMake")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifLensMake { get; }
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifLensModel")]
+		[Field ("kCGImagePropertyExifLensModel")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifLensModel { get; }
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifLensSerialNumber")]
+		[Field ("kCGImagePropertyExifLensSerialNumber")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifLensSerialNumber { get; }
 

@@ -49,11 +49,9 @@ namespace Accounts {
 		[Export ("initWithOAuthToken:tokenSecret:")]
 		IntPtr Constructor (string oauthToken, string tokenSecret);
 
-		[iOS (6,0)]
 		[Export ("initWithOAuth2Token:refreshToken:expiryDate:")]
 		IntPtr Constructor (string oauth2Token, string refreshToken, NSDate expiryDate);
 
-		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("oauthToken", ArgumentSemantic.Copy)]
 		string OAuthToken { get; set;  }
@@ -93,23 +91,19 @@ namespace Accounts {
 		[Notification]
 		NSString ChangeNotification { get; }
 		
-		[iOS (6,0)]
 		[Export ("renewCredentialsForAccount:completion:")]
 		[Async]
 		void RenewCredentials (ACAccount account, Action<ACAccountCredentialRenewResult,NSError> completionHandler);
 
-		[iOS (6,0)]
 		[Protected]
 		[Export ("requestAccessToAccountsWithType:options:completion:")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, [NullAllowed] NSDictionary options, ACRequestCompletionHandler completion);
 
-		[iOS (6,0)]
 		[Wrap ("RequestAccess (accountType, options == null ? null : options.Dictionary, completion)")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, [NullAllowed] AccountStoreOptions options, ACRequestCompletionHandler completion);
 
-		[iOS (6,0)]
 		[Export ("removeAccount:withCompletionHandler:")]
 		[Async]
 		void RemoveAccount (ACAccount account, ACAccountStoreRemoveCompletionHandler completionHandler);
@@ -133,13 +127,11 @@ namespace Accounts {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Sina Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Sina Weibo SDK instead.")]
-		[iOS (6,0)]
 		[Field ("ACAccountTypeIdentifierSinaWeibo")]
 		NSString SinaWeibo { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-		[iOS (6,0)]
 		[Field ("ACAccountTypeIdentifierFacebook")]
 		NSString Facebook { get; }
 
@@ -160,7 +152,6 @@ namespace Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-	[iOS (6,0)]
 	[Static]
 	interface ACFacebookKey {
 		[Field ("ACFacebookAppIdKey")]
@@ -176,7 +167,6 @@ namespace Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-	[iOS (6,0)]
 	[Static]
 	interface ACFacebookAudienceValue
 	{	

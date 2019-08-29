@@ -243,7 +243,6 @@ namespace MapKit {
 #endif
 	
 	[TV (9,2)]
-	[iOS (6,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	interface MKDirectionsRequest {
@@ -279,7 +278,6 @@ namespace MapKit {
 #endif // !WATCH
 
 	[BaseType (typeof (NSObject))]
-	[iOS (6,0)]
 	[TV (9,2)]
 	[Mac (10,9)]
 	interface MKMapItem : NSSecureCoding
@@ -1245,7 +1243,6 @@ namespace MapKit {
 	delegate void MKLocalSearchCompletionHandler (MKLocalSearchResponse response, NSError error);
 
 	[TV (9,2)]
-	[iOS (6,1)]
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
@@ -1271,7 +1268,6 @@ namespace MapKit {
 	}
 
 	[TV (9,2)]
-	[iOS (6,1)]
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
@@ -1293,7 +1289,6 @@ namespace MapKit {
 	}
 
 	[TV (9,2)]
-	[iOS (6,1)]
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
