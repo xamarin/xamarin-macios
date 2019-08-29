@@ -119,6 +119,8 @@ namespace Xamarin.Tests
 				"_sdb_options",
 				"_SystemNative_",
 				"_NetSecurityNative_",
+				"_Brotli",
+				"_kStaticDictionaryHash",
 				"_MapHardwareType",
 				"_gateway_from_rtm",
 				"_sgen_",

@@ -345,7 +345,7 @@ def runXamarinMacTests (url, macOS, maccore_hash, xamarin_macios_hash)
             }
         }
     } finally {
-        sh ("rm -rf ${workspace}/mac-test-package ${workspace}/*.zip")
+        sh ("rm -rf ${workspace}/mac-test-package ${workspace}/*.zip ${workspace}/*.7z")
         // Find and upload any crash reports
         sh (script: """
             rm -Rf ${workspace}/crash-reports
@@ -669,7 +669,7 @@ timestamps {
                                     echoError ("Failed to package Xamarin.Mac tests (exit code: ${exitCode}")
                                     failedStages.add (currentStage)
                                 }
-                                uploadFiles ("tests/*.zip", "wrench", virtualPath)
+                                uploadFiles ("tests/*.7z", "wrench", virtualPath)
                             }
 
                             timeout (time: 13, unit: 'HOURS') {
@@ -685,7 +685,7 @@ timestamps {
 
                                     // Add test runs on older macOS versions
                                     if (hasXamarinMacTests) {
-                                        def url = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/tests/mac-test-package.zip"
+                                        def url = "https://bosstoragemirror.blob.core.windows.net/wrench/${virtualPath}/tests/mac-test-package.7z"
                                         def maccore_hash = sh (script: "grep NEEDED_MACCORE_VERSION ${workspace}/xamarin-macios/mk/xamarin.mk | sed 's/NEEDED_MACCORE_VERSION := //'", returnStdout: true).trim ()
                                         // Get the min and current macOS version from Make.config,
                                         // and calculate all the macOS versions in between (including both end points).

@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Reflection;
+using System.Reflection.Emit;
 
 #if XAMCORE_2_0
 using AVFoundation;
@@ -109,6 +111,21 @@ partial class TestRuntime
 		if (!in_ci)
 			return;
 		NUnit.Framework.Assert.Ignore (message);
+	}
+
+	static AssemblyName assemblyName = new AssemblyName ("DynamicAssemblyExample"); 
+	public static bool CheckExecutingWithInterpreter ()
+	{
+		// until System.Runtime.CompilerServices.RuntimeFeature.IsSupported("IsDynamicCodeCompiled") returns a valid result, atm it
+		// always return true, try to build an object of a class that should fail without introspection, and catch the exception to do the
+		// right thing
+		try {
+			AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly (assemblyName, AssemblyBuilderAccess.RunAndSave);
+			return true;
+		} catch (PlatformNotSupportedException) {
+			// we do not have the interpreter, lets continue
+			return false;
+		}
 	}
 
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)

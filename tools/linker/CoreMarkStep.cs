@@ -188,6 +188,17 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
+		protected override bool AlwaysMarkTypeAsInstantiated (TypeDefinition td)
+		{
+			// if we mark a type then it should *always* keep it's `INativeObject` implementation
+			// since it's required at build time (e.g. static registrar) and at runtime - even if the instantiation is not marked
+			// as we have some special cases, e.g. `MTAudioProcessingTap.FromHandle`
+			// ref: https://github.com/xamarin/xamarin-macios/issues/6711
+			if (td.HasInterfaces && td.Implements ("ObjCRuntime.INativeObject"))
+				return true;
+			return base.AlwaysMarkTypeAsInstantiated (td);
+		}
+
 		protected override void ProcessMethod (MethodDefinition method)
 		{
 			// check for generated Dispose methods inside monotouch.dll

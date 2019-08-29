@@ -126,7 +126,7 @@ namespace Xamarin.iOS.Tasks
 
 			var appProject = SetupProjectPaths ("MyiOSAppWithBinding", "../", true, "");
 
-			const string BuildString = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch";
+			string BuildString = Configuration.MtouchPath;
 
 			// First build should create run mtouch
 			BuildProjectNoEmbedding (appProject);

@@ -1077,8 +1077,13 @@ public partial class Generator : IMemberGatherer {
 		if (type.IsSubclassOf (TypeManager.NSObject))
 			return true;
 
-		if (BindThirdPartyLibrary)
+		if (BindThirdPartyLibrary) {
+			var bta = ReflectionExtensions.GetBaseTypeAttribute (type, this);
+			if (bta?.BaseType != null)
+				return IsNSObject (bta.BaseType);
+
 			return false;
+		}
 
 		return type.IsInterface;
 	}
@@ -1712,7 +1717,7 @@ public partial class Generator : IMemberGatherer {
 					var refname = $"__xamarin_pref{pi.Position}";
 					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({pname}, false);");
 					pars.Append ($"ref IntPtr {pname}");
-					postConvert.Append ($"error = {refname}.GetHandle ();");
+					postConvert.Append ($"{pname} = {refname} == null ? IntPtr.Zero : {refname}.Handle;");
 					invoke.Append ($"ref {refname}");
 					continue;
 				}

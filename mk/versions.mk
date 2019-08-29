@@ -70,7 +70,6 @@ $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
 $(eval $(call CheckSubmoduleTemplate,guiunit,GUI_UNIT))
 $(eval $(call CheckSubmoduleTemplate,macios-binaries,MACIOS_BINARIES))
 
-include $(TOP)/mk/mono.mk
 include $(TOP)/mk/xamarin.mk
 
 check-versions::
