@@ -128,7 +128,7 @@ SDK_ARGS= \
 	IOS_VERSION=$(IOS_SDK_VERSION) IOS_VERSION_MIN=$(MIN_IOS_SDK_VERSION) \
 	TVOS_VERSION=$(TVOS_SDK_VERSION) TVOS_VERSION_MIN=$(MIN_TVOS_SDK_VERSION) \
 	WATCHOS_VERSION=$(WATCH_SDK_VERSION) WATCHOS_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) \
-	WATCHOS5_VERSION=$(WATCH_SDK_VERSION) WATCHOS5_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION) \
+	WATCHOS5_VERSION=$(WATCH_SDK_VERSION) WATCHOS5_VERSION_MIN=$(MIN_WATCHOS_SDK_VERSION_ARM64_32) \
 	MACOS_VERSION=$(OSX_SDK_VERSION) MACOS_VERSION_MIN=$(MIN_OSX_SDK_VERSION)
 	IGNORE_PROVISION_LLVM=1
 
@@ -1397,16 +1397,9 @@ WATCHOS_TARGET_SHAREDLIBLOGPROFILER = \
 WATCHOS_TARGET_LIBMONONATIVECOMPAT        = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-compat.a \
 
-
-ifdef MONO_BUILD_FROM_SOURCE
-WATCHOS_ARM6432_LIBMONO_NATIVE_NAME = libmono-native-unified
-else
-WATCHOS_ARM6432_LIBMONO_NATIVE_NAME = libmono-native
-endif
-
 WATCHOS_TARGET_LIBMONONATIVEUNIFIED       = \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.a \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).a \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.a \
 
 WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = \
 	$(X86_64_SLICE) \
@@ -1415,7 +1408,7 @@ WATCHOS_TARGET_SHAREDLIBMONONATIVECOMPAT  = \
 WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED = \
 	$(X86_64_SLICE) \
 	$(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib \
-	$(BUILD_DESTDIR)/targetwatch64_32/lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).dylib \
+	$(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.dylib \
 
 WATCHOS_TARGET_MONOFRAMEWORK = \
 	$(X86_64_SLICE) \
@@ -1504,10 +1497,10 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-compat.dylib: $(WATC
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-native-unified.dylib: $(WATCHOS_TARGET_SHAREDLIBMONONATIVEUNIFIED) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch/lib/libmono-native-unified.dylib -m -o $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib
-	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib
+	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(BUILD_DESTDIR)/targetwatch64_32/lib/libmono-native.dylib -m -o $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/lipo $(BUILD_DESTDIR)/targetwatch/tmp-lib/libmono-native-unified.dylib $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/libmono-native.dylib $(X86_64_SLICE) -create -output $@
 	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-native-unified.dylib \
-		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/$(WATCHOS_ARM6432_LIBMONO_NATIVE_NAME).dylib @rpath/libmono-native-unified.dylib \
+		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmono-native.dylib @rpath/libmono-native-unified.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch64_32-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmono-native-unified.dylib @rpath/libmono-native-unified.dylib \
 		-change $(SDK_DESTDIR)/ios-targetwatch-release/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib \
@@ -1528,7 +1521,7 @@ $(BUILD_DESTDIR)/targetwatch/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch/lib/libm
 	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch armv7k -install_name @rpath/Mono.framework/Mono -mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK) -lc++ -fembed-bitcode
 
 $(BUILD_DESTDIR)/targetwatch64_32/tmp-lib/Mono: $(BUILD_DESTDIR)/targetwatch64_32/lib/libmonosgen-2.0.a
-	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch arm64_32 -install_name @rpath/Mono.framework/Mono -mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -isysroot $(DEVICEWATCH_SDK) -lc++ -fembed-bitcode
+	$(Q_GEN) CC="$(IOS_CC)" ./create-shared-library.sh $< $@ -arch arm64_32 -install_name @rpath/Mono.framework/Mono -mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION_ARM64_32) -isysroot $(DEVICEWATCH_SDK) -lc++ -fembed-bitcode
 
 install-watchos: $(WATCHOS_TARGETS)
 
