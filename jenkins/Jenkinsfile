@@ -19,6 +19,8 @@ manualException = false
 
 xiPackageFilename = null
 xmPackageFilename = null
+xiNotarizedPkgFilename = null
+xmNotarizedPkgFilename = null
 msbuildZipFilename = null
 bundleZipFilename = null
 manifestFilename = null
@@ -522,6 +524,17 @@ timestamps {
                                         sh ("security unlock-keychain -p ${env.KEYCHAIN_PASS} login.keychain")
                                         sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} -k login.keychain " + pkgs.flatten().join(" "))
                                     }
+
+                                    def xiNotarizedPackages = findFiles (glob: "package/notarized/xamarin.ios-*.pkg")
+                                    if (xiNotarizedPackages.length > 0) {
+                                        xiNotarizedPkgFilename = xiNotarizedPackages [0].name
+                                        echo ("Created notarized Xamarin.iOS package: ${xiNotarizedPkgFilename}")
+                                    }
+                                    def xmNotarizedPackages = findFiles (glob: "package/notarized/xamarin.mac-*.pkg")
+                                    if (xmNotarizedPackages.length > 0) {
+                                        xmNotarizedPkgFilename = xmNotarizedPackages [0].name
+                                        echo ("Created notarized Xamarin.Mac package: ${xmNotarizedPkgFilename}")
+                                    }
                                 } catch (ex) {
                                     echo "Notarization failed:\n${ex.getMessage()}"
                                     for (def stack : ex.getStackTrace()) {
@@ -598,6 +611,16 @@ timestamps {
                                 xmPackageUrl = "${packagePrefix}/${xmPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac', "${xmPackageUrl}", 'SUCCESS', "${xmPackageFilename}")
                                 packagesMessage += "[${xmPackageFilename}](${xmPackageUrl})"
+                            }
+                            if (xiNotarizedPkgFilename != null) {
+                                xiNotarizedPackageUrl = "${packagePrefix}/${xiNotarizedPkgFilename}"
+                                utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS-notarized', "${xiNotarizedPackageUrl}", 'SUCCESS', "${xiNotarizedPkgFilename}")
+                                packagesMessage += "[${xiNotarizedPkgFilename}](${xiNotarizedPackageUrl}) "
+                            }
+                            if (xmNotarizedPkgFilename != null) {
+                                xmNotarizedPackageUrl = "${packagePrefix}/${xmNotarizedPkgFilename}"
+                                utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac-notarized', "${xmNotarizedPackageUrl}", 'SUCCESS', "${xmNotarizedPkgFilename}")
+                                packagesMessage += "[${xmNotarizedPkgFilename}](${xmNotarizedPackageUrl})"
                             }
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
