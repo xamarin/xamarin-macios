@@ -195,8 +195,8 @@ namespace Foundation {
 
 		void BackgroundNotificationCb (NSNotification obj)
 		{
-			// the cancelation task of each of the soruces will clean the different resources. Each removal is done
-			// inside a lock, but of course, the .Values collection will not like that because is modify during the
+			// the cancelation task of each of the sources will clean the different resources. Each removal is done
+			// inside a lock, but of course, the .Values collection will not like that because it is modified during the
 			// iteration. We split the operation in two, get all the diff cancelation sources, then try to cancel each of them
 			// which will do the correct lock dance. Note that we could be tempted to do a RemoveAll, that will yield the same
 			// runtime issue, this is dull but safe. 
