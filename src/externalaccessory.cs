@@ -54,6 +54,9 @@ namespace ExternalAccessory {
 		EAAccessoryDelegate Delegate { get; set; }
 
 		[iOS (9,0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
+		[Deprecated (PlatformName.MacOSX, 10,14)]
 		[Export ("dockType")]
 		string DockType { get; }
 	}

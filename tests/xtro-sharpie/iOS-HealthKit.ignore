@@ -1,0 +1,2 @@
+## type was marked as available in 13.0 - but doesn't exist https://github.com/xamarin/maccore/issues/1899
+!missing-field! HKCharacteristicTypeIdentifierActivityMoveMode not bound

@@ -356,3 +356,5 @@
 !missing-selector! CIImage::initWithSemanticSegmentationMatte: not bound
 !missing-selector! CIImage::initWithSemanticSegmentationMatte:options: not bound
 !missing-selector! CIImage::semanticSegmentationMatte not bound
+!missing-selector! +CIContext::contextWithMTLCommandQueue: not bound
+!missing-selector! +CIContext::contextWithMTLCommandQueue:options: not bound

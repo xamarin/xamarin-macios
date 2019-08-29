@@ -287,6 +287,10 @@ namespace Introspection {
 				case "ARSkeleton2D": // Conformance not in headers
 				case "ARCollaborationData":  // Conformance not in headers
 				case "UIFontPickerViewControllerConfiguration": // Conformance not in headers
+				case "HKAudiogramSample": // Conformance not in headers
+				case "HKAudiogramSensitivityPoint": // Conformance not in headers
+				case "HMAccessoryOwnershipToken": // Conformance not in headers
+				case "HMAddAccessoryRequest": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -512,6 +516,9 @@ namespace Introspection {
 				case "ARSkeleton2D": // Conformance not in headers
 				case "ARCollaborationData":  // Conformance not in headers
 				case "UIFontPickerViewControllerConfiguration":  // Conformance not in headers
+				case "HKAudiogramSensitivityPoint":  // Conformance not in headers
+				case "HMAccessoryOwnershipToken":  // Conformance not in headers
+				case "HMAddAccessoryRequest":  // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -659,6 +666,9 @@ namespace Introspection {
 				case "HMAction":
 				case "HMCharacteristicWriteAction":
 				case "MLPredictionOptions":
+                case "HKCumulativeQuantitySample": // Conformance not in headers
+                case "HKDiscreteQuantitySample": // Conformance not in headers
+                case "HKAudiogramSample": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -875,6 +885,7 @@ namespace Introspection {
 				case "UISegmentedControl":
 				case "UITableView":
 				case "UITabBar":
+				case "UITabBarItem": // As https://github.com/xamarin/xamarin-macios/commit/e1873169f2d3b2b034d36f844909b6eb4e8abcca points out works as expected on both sim and device
 				case "UIAlertController":
 				case "PKPaymentButton":
 				case "PKAddPassButton":

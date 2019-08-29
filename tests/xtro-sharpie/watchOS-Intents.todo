@@ -400,3 +400,4 @@
 !missing-type! INVocabulary not bound
 !missing-type! INVolumeResolutionResult not bound
 !unknown-type! INParameter bound
+!missing-selector! INMediaSearch::initWithMediaType:sortOrder:mediaName:artistName:albumName:genreNames:moodNames:releaseDate:reference:mediaIdentifier: not bound

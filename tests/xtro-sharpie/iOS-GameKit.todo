@@ -1,13 +1,9 @@
 !deprecated-attribute-missing! GKPlayer::playerID missing a [Deprecated] attribute
-!missing-enum! GKTournamentErrorCode not bound
-!missing-field! GKTournamentErrorDomain not bound
-!missing-selector! +GKLocalPlayer::local not bound
 !missing-selector! GKLocalPlayer::isMultiplayerGamingRestricted not bound
 !missing-selector! GKLocalPlayer::loadChallengableFriendsWithCompletionHandler: not bound
 !missing-selector! GKMatchRequest::restrictToAutomatch not bound
 !missing-selector! GKMatchRequest::setRestrictToAutomatch: not bound
-!missing-selector! GKMatchRequest::setTournamentForInvitePool: not bound
-!missing-selector! GKMatchRequest::tournamentForInvitePool not bound
 !missing-selector! GKPlayer::gamePlayerID not bound
 !missing-selector! GKPlayer::scopedIDsArePersistent not bound
 !missing-selector! GKPlayer::teamPlayerID not bound
+!missing-selector! +GKLocalPlayer::local not bound
