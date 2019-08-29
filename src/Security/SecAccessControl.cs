@@ -49,7 +49,11 @@ namespace Security {
 		[iOS (9,0), Mac (10,12,1)]
 		BiometryCurrentSet  = 1 << 3,
 
+		[iOS (9,0)][Mac (10,11)]
 		DevicePasscode      = 1 << 4,
+
+		[Mac (10,15)][NoiOS][NoTV][NoWatch]
+		Watch               = 1 << 5,
 
 		[iOS (9,0)][Mac (10,12,1)]
 		Or                  = 1 << 14,

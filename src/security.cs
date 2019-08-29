@@ -718,7 +718,6 @@ namespace Security {
 		[Field ("kSecValuePersistentRef")]
 		IntPtr ValuePersistentRef { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)]
 		[Field ("kSecUseItemList")]
 		IntPtr UseItemList { get; }
 

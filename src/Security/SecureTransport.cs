@@ -153,10 +153,23 @@ namespace Security {
 		SSLCertificateRequired                  = -9863,
 		SSLUnknownPskIdentity                   = -9864,
 		SSLUnrecognizedName                     = -9865,
+
+		// xcode 11
+		SslAtsViolation                             = -9880,
+		SslAtsMinimumVersionViolation               = -9881,
+		SslAtsCiphersuiteViolation                  = -9882,
+		SslAtsMinimumKeySizeViolation               = -9883,
+		SslAtsLeafCertificateHashAlgorithmViolation = -9884,
+		SslAtsCertificateHashAlgorithmViolation     = -9885,
+		SslAtsCertificateTrustViolation             = -9886,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
 	public enum SslSessionOption {
 		BreakOnServerAuth,
 		BreakOnCertRequested,
@@ -185,6 +198,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
 	public enum SslAuthenticate {
 		Never,
 		Always,
@@ -193,6 +210,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
 	public enum SslProtocolSide {
 		Server,
 		Client,
@@ -200,6 +221,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
 	public enum SslConnectionType {
 		Stream,
 		Datagram
@@ -207,6 +232,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
 	public enum SslSessionState {
 		Invalid = -1,
 		Idle,
@@ -218,6 +247,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
 	public enum SslSessionStrengthPolicy {
 		Default,
 		ATSv1,
@@ -226,6 +259,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
 	public enum SslClientCertificateState {
 		None,
 		Requested,
@@ -235,6 +272,10 @@ namespace Security {
 
 	// Security.framework/Headers/CipherSuite.h
 	// 32 bits (uint32_t) on OSX, 16 bits (uint16_t) on iOS
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsCipherSuite' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsCipherSuite' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsCipherSuite' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsCipherSuite' instead.")]
 #if MONOMAC
 	public enum SslCipherSuite : uint {
 #else
@@ -344,6 +385,13 @@ namespace Security {
 		TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA			= 0xC012,
 		TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA			= 0xC013,
 		TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA			= 0xC014,
+
+		TLS_ECDH_anon_WITH_NULL_SHA					= 0xC015,
+		TLS_ECDH_anon_WITH_RC4_128_SHA				= 0xC016,
+		TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA			= 0xC017,
+		TLS_ECDH_anon_WITH_AES_128_CBC_SHA			= 0xC018,
+		TLS_ECDH_anon_WITH_AES_256_CBC_SHA			= 0xC019,
+
 		TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256			= 0xC023,
 		TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384			= 0xC024,
 		TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256			= 0xC025,
@@ -362,9 +410,16 @@ namespace Security {
 		TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256			= 0xC031,	// iOS 9+
 		TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384			= 0xC032,	// iOS 9+
 
+		// rfc 5489
+		TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA				= 0xC035,
+		TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA				= 0xC036,
+
 		// https://tools.ietf.org/html/rfc7905
 		TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256		= 0xCCA8,	// Xcode 9+
 		TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256		= 0xCCA9,	// Xcode 9+
+
+		// rfc 7905
+		TLS_PSK_WITH_CHACHA20_POLY1305_SHA256			= 0xCCAB,
 
 		// https://tools.ietf.org/html/rfc5746 secure renegotiation
 		TLS_EMPTY_RENEGOTIATION_INFO_SCSV         		= 0x00FF,
@@ -384,6 +439,11 @@ namespace Security {
 
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsCipherSuiteGroup' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsCipherSuiteGroup' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsCipherSuiteGroup' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsCipherSuiteGroup' instead.")]
+	// typedef CF_ENUM(int, SSLCiphersuiteGroup)
 	public enum SslCipherSuiteGroup {
 		Default, Compatibility, Legacy, Ats, AtsCompatibility,
 	}

@@ -168,9 +168,17 @@ namespace Security {
 			sec_protocol_options_set_tls_server_name (GetCheckedHandle (), serverName);
 		}
 
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use non-DHE cipher suites instead.")]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_set_tls_diffie_hellman_parameters (IntPtr handle, IntPtr dispatchDataParameter);
 
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use non-DHE cipher suites instead.")]
 		public void SetTlsDiffieHellmanParameters (DispatchData parameters)
 		{
 			if (parameters == null)
