@@ -158,15 +158,15 @@ xamarin_GetFolderPath (int folder)
 // it impossible to disable dlsym and, for example, run dontlink on devices
 // https://bugzilla.xamarin.com/show_bug.cgi?id=36569#c4
 
-void objc_msgSend_stret (id self, SEL op, ...)
+void objc_msgSend_stret (void)
 {
-	PRINT ("Unimplemented objc_msgSend_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSend_stret");
 	abort ();
 }
 
-void objc_msgSendSuper_stret (struct objc_super *super, SEL op, ...)
+void objc_msgSendSuper_stret (void)
 {
-	PRINT ("Unimplemented objc_msgSendSuper_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSendSuper_stret");
 	abort ();
 }
 
