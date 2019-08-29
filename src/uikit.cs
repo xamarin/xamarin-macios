@@ -15283,6 +15283,7 @@ namespace UIKit {
 		[Export ("currentTraitCollection", ArgumentSemantic.Strong)]
 		UITraitCollection CurrentTraitCollection { get; set; }
 
+		[ThreadSafe]
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Export ("performAsCurrentTraitCollection:")]
 		void PerformAsCurrentTraitCollection (Action actions);
