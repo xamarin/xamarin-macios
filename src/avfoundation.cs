@@ -13447,15 +13447,15 @@ namespace AVFoundation {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	enum AVSemanticSegmentationMatteType {
+		[DefaultEnumValue]
+		[Field (null)]
+		None,
 		[Field ("AVSemanticSegmentationMatteTypeSkin")]
 		Skin,
 		[Field ("AVSemanticSegmentationMatteTypeHair")]
 		Hair,
 		[Field ("AVSemanticSegmentationMatteTypeTeeth")]
 		Teeth,
-		[DefaultEnumValue]
-		[Field (null)]
-		None,
 	} 
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
