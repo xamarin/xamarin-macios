@@ -814,7 +814,7 @@ namespace AVFoundation {
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Field ("AVContentKeySystemAuthorizationToken")]
-		SystemAuthorizationToken = 2,
+		AuthorizationToken = 2,
 	}
 
 	// Convience enum for native string values 

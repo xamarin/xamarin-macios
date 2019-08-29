@@ -350,11 +350,15 @@ namespace AVFoundation {
 		[Field ("AVMediaCharacteristicVoiceOverTranslation")]
 		VoiceOverTranslation = 14,
 
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Field ("AVMediaCharacteristicIsOriginalContent")]
+		IsOriginalContent = 15,
+
 	}
 
 #if !XAMCORE_4_0
+	[NoWatch]
 	[Obsolete ("Use AVMediaCharacteristics enum values")]
-	[Watch (6,0)]
 	[BaseType (typeof (NSObject))][Static]
 	interface AVMediaCharacteristic {
 		[Field ("AVMediaCharacteristicVisual")]
@@ -1282,19 +1286,19 @@ namespace AVFoundation {
 	
 #else
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-		[Export ("sourceMode")]
+		[Export ("sourceMode", ArgumentSemantic.Assign)]
 		AVAudio3DMixingSourceMode GetSourceMode ();
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-		[Export ("setSourceMode:", ArgumentSemantic.Assign)]
-		void GetSourceMode (AVAudio3DMixingSourceMode sourceMode);
+		[Export ("setSourceMode:")]
+		void SetSourceMode (AVAudio3DMixingSourceMode sourceMode);
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-		[Export ("pointSourceInHeadMode")]
+		[Export ("pointSourceInHeadMode", ArgumentSemantic.Assign)]
 		AVAudio3DMixingPointSourceInHeadMode GetPointSourceInHeadMode ();
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-		[Export ("setPointSourceInHeadMode:", ArgumentSemantic.Assign)]
+		[Export ("setPointSourceInHeadMode:")]
 		void SetPointSourceInHeadMode (AVAudio3DMixingPointSourceInHeadMode pointSourceInHeadMode);
 #endif
 	}
@@ -3305,6 +3309,7 @@ namespace AVFoundation {
 
 	[NoMac, NoWatch, NoTV, iOS (11,0)]
 	[BaseType (typeof(AVCaptureSynchronizedData))]
+	[DisableDefaultCtor]
 	interface AVCaptureSynchronizedDepthData
 	{
 		[Export ("depthData")]
@@ -7601,9 +7606,9 @@ namespace AVFoundation {
 		[Export ("progress")]
 		float Progress { get;  } // defined as 'float'
 
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'EstimateMaximumDuration' enum instead.")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'EstimateMaximumDuration' enum instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'EstimateMaximumDuration' enum instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'EstimateMaximumDuration' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'EstimateMaximumDuration' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'EstimateMaximumDuration' instead.")]
 		[Export ("maxDuration")]
 		CMTime MaxDuration { get;  }
 
@@ -9643,7 +9648,6 @@ namespace AVFoundation {
 		[Wrap ("Array.ConvertAll (_GetAvailablePhotoFileTypes, s => AVFileTypesExtensions.GetValue (s))")]
 		AVFileTypes[] GetAvailablePhotoFileTypes { get; }
 
-
 		[Internal]
 		[iOS (11, 0), NoMac]
 		[Export ("availableRawPhotoFileTypes")]
@@ -9877,7 +9881,7 @@ namespace AVFoundation {
 		Audio,
 	}
 
-	[NoTV]
+	[NoTV, Watch (6,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: Cannot instantiate a AVCaptureDevice directly.
 	[DisableDefaultCtor]
@@ -10482,7 +10486,7 @@ namespace AVFoundation {
 
 		[iOS (10,0), Mac (10,15)]
 		[Export ("supportedColorSpaces")]
-#if XAMARIN_4_0
+#if XAMCORE_4_0
 		[BindAs (typeof (CGColorSpace []))]
 #endif
 		NSNumber[] SupportedColorSpaces { get; }
@@ -11011,6 +11015,7 @@ namespace AVFoundation {
 		[Export ("loadedTimeRanges")]
 		NSValue [] LoadedTimeRanges { get;  }
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use the class 'AVPlayerItemMetadataOutput' instead to get the time metadata info.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use the class 'AVPlayerItemMetadataOutput' instead to get the time metadata info.")]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use the class 'AVPlayerItemMetadataOutput' instead to get the time metadata info.")]
@@ -11303,9 +11308,6 @@ namespace AVFoundation {
 		AVContentAuthorizationStatus GetContentAuthorizationRequestStatus ();
 	}
 
-<<<<<<< HEAD
-	[iOS (6,0)][Watch (6,0)]
-=======
 	[NoWatch, NoMac, NoiOS]
 	[TV (13,0)]
 	[Category]
@@ -11319,9 +11321,7 @@ namespace AVFoundation {
 		void CancelPlaybackRestrictionsAuthorizationRequest ();
 	}
 	
-	[NoWatch]
-	[iOS (6,0)]
->>>>>>> xcode11
+	[iOS (13,0)][Watch (6,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** initialization method -init cannot be sent to an abstract object of class AVPlayerItemOutput: Create a concrete instance!
 	[DisableDefaultCtor]
@@ -13447,13 +13447,15 @@ namespace AVFoundation {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	enum AVSemanticSegmentationMatteType {
-		[DefaultEnumValue]
 		[Field ("AVSemanticSegmentationMatteTypeSkin")]
 		Skin,
 		[Field ("AVSemanticSegmentationMatteTypeHair")]
 		Hair,
 		[Field ("AVSemanticSegmentationMatteTypeTeeth")]
 		Teeth,
+		[DefaultEnumValue]
+		[Field (null)]
+		None,
 	} 
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]

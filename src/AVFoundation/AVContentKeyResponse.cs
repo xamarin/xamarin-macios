@@ -28,7 +28,7 @@ namespace AVFoundation {
 			case AVContentKeyResponseDataType.AuthorizationTokenData:
 				return AVContentKeyResponse._InitWithAuthorizationToken (data);
 			default:
-			   return AVContentKeyResponse._InitWithFairPlayStreamingKeyResponseData (data);
+				return AVContentKeyResponse._InitWithFairPlayStreamingKeyResponseData (data);
 			}
 		}
 	}
