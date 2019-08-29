@@ -615,12 +615,12 @@ timestamps {
                                 packagesMessage += "[${xmPackageFilename}](${xmPackageUrl})"
                             }
                             if (xiNotarizedPkgFilename != null) {
-                                xiNotarizedPackageUrl = "${packagePrefix}/${xiNotarizedPkgFilename}"
+                                xiNotarizedPackageUrl = "${packagePrefix}/notarized/${xiNotarizedPkgFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS-notarized', "${xiNotarizedPackageUrl}", 'SUCCESS', "${xiNotarizedPkgFilename}")
                                 packagesMessage += "[${xiNotarizedPkgFilename}](${xiNotarizedPackageUrl}) "
                             }
                             if (xmNotarizedPkgFilename != null) {
-                                xmNotarizedPackageUrl = "${packagePrefix}/${xmNotarizedPkgFilename}"
+                                xmNotarizedPackageUrl = "${packagePrefix}/notarized/${xmNotarizedPkgFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac-notarized', "${xmNotarizedPackageUrl}", 'SUCCESS', "${xmNotarizedPkgFilename}")
                                 packagesMessage += "[${xmNotarizedPkgFilename}](${xmNotarizedPackageUrl})"
                             }
