@@ -5,6 +5,7 @@
 //  Sebastien Pouliot  <sebastien@xamarin.com>
 //
 // Copyright 2013-2014 Xamarin Inc.
+// Copyright 2019 Microsoft Corporation
 //
 
 using System;
@@ -19,7 +20,8 @@ using Foundation;
 
 namespace Security {
 
-	delegate void SecTrustCallback (IntPtr trustRef, SecTrustResult trustResult);
+	public delegate void SecTrustCallback (SecTrust trust, SecTrustResult trustResult);
+	public delegate void SecTrustWithErrorCallback (SecTrust trust, bool result, NSError /* CFErrorRef _Nullable */ error);
 
 	public partial class SecTrust {
 
@@ -124,9 +126,88 @@ namespace Security {
 		}
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustEvaluateAsync (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, SecTrustCallback result);
-		// FIXME: no `user data` parameter :( to ease MonoPInvokeCallback use
+		extern static SecStatusCode /* OSStatus */ SecTrustEvaluateAsync (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, ref BlockLiteral block);
+
+		internal delegate void TrustEvaluateHandler (IntPtr block, IntPtr trust, SecTrustResult trustResult);
+		static readonly TrustEvaluateHandler evaluate = TrampolineEvaluate;
+
+		[MonoPInvokeCallback (typeof (TrustEvaluateHandler))]
+		static void TrampolineEvaluate (IntPtr block, IntPtr trust, SecTrustResult trustResult)
+		{
+			var del = BlockLiteral.GetTarget<SecTrustCallback> (block);
+			if (del != null) {
+				var t = trust == IntPtr.Zero ? null : new SecTrust (trust);
+				del (t, trustResult);
+			}
+		}
+
+		[iOS (7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		// not always async (so suffix is removed)
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public SecStatusCode Evaluate (DispatchQueue queue, SecTrustCallback handler)
+		{
+			// headers have `dispatch_queue_t _Nullable queue` but it crashes... don't trust headers, even for SecTrust
+			if (queue == null)
+				throw new ArgumentNullException (nameof (queue));
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			try {
+				block_handler.SetupBlockUnsafe (evaluate, handler);
+				return SecTrustEvaluateAsync (handle, queue.Handle, ref block_handler);
+			}
+			finally {
+				block_handler.CleanupBlock ();
+			}
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern SecStatusCode SecTrustEvaluateAsyncWithError (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, ref BlockLiteral block);
+
+		internal delegate void TrustEvaluateErrorHandler (IntPtr block, IntPtr trust, bool result, IntPtr /* CFErrorRef _Nullable */  error);
+		static readonly TrustEvaluateErrorHandler evaluate_error = TrampolineEvaluateError;
+
+		[MonoPInvokeCallback (typeof (TrustEvaluateErrorHandler))]
+		static void TrampolineEvaluateError (IntPtr block, IntPtr trust, bool result, IntPtr /* CFErrorRef _Nullable */  error)
+		{
+			var del = BlockLiteral.GetTarget<SecTrustWithErrorCallback> (block);
+			if (del != null) {
+				var t = trust == IntPtr.Zero ? null : new SecTrust (trust);
+				var e = error == IntPtr.Zero ? null : new NSError (error);
+				del (t, result, e);
+			}
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		// not always async (so suffix is removed)
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public SecStatusCode Evaluate (DispatchQueue queue, SecTrustWithErrorCallback handler)
+		{
+			if (queue == null)
+				throw new ArgumentNullException (nameof (queue));
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			try {
+				block_handler.SetupBlockUnsafe (evaluate_error, handler);
+				return SecTrustEvaluateAsyncWithError (handle, queue.Handle, ref block_handler);
+			}
+			finally {
+				block_handler.CleanupBlock ();
+			}
+		}
 
 		[iOS (7,0)]
 		[DllImport (Constants.SecurityLibrary)]

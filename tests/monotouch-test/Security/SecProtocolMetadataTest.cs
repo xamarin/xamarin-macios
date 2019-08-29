@@ -68,6 +68,22 @@ namespace MonoTouchFixtures.Security {
 
 					Assert.True (SecProtocolMetadata.ChallengeParametersAreEqual (s, s), "ChallengeParametersAreEqual");
 					Assert.True (SecProtocolMetadata.PeersAreEqual (s, s), "PeersAreEqual");
+
+					if (TestRuntime.CheckXcodeVersion (11, 0)) {
+						using (var d = s.CreateSecret ("Xamarin", 128)) {
+							Assert.That (d.Size, Is.EqualTo (128), "CreateSecret-1");
+						}
+						using (var d = s.CreateSecret ("Microsoft", new byte [1], 256)) {
+							Assert.That (d.Size, Is.EqualTo (256), "CreateSecret-2");
+						}
+
+						Assert.That (s.NegotiatedTlsProtocolVersion, Is.EqualTo (TlsProtocolVersion.Tls12).Or.EqualTo (TlsProtocolVersion.Tls13), "NegotiatedTlsProtocolVersion");
+						// we want to test the binding/API - not the exact value which can vary depending on the negotiation between the client (OS) and server...
+						Assert.That (s.NegotiatedTlsCipherSuite, Is.Not.EqualTo (0), "NegotiatedTlsCipherSuite");
+						Assert.That (s.ServerName, Is.EqualTo ("www.microsoft.com"), "ServerName");
+						// we don't have a TLS-PSK enabled server to test this
+						Assert.False (s.AccessPreSharedKeys ((psk, pskId) => { }), "AccessPreSharedKeys");
+					}
 				}
 
 				connection.Cancel ();
