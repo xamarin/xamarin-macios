@@ -1950,6 +1950,7 @@ IOS_FRAMEWORKS =         \
 	VideoToolbox \
 	VideoSubscriberAccount \
 	Vision \
+	VisionKit \
 	WatchConnectivity \
 	WatchKit \
 	WKWebKit \
