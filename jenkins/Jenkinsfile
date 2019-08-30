@@ -607,22 +607,22 @@ timestamps {
                             if (xiPackageFilename != null) {
                                 xiPackageUrl = "${packagePrefix}/${xiPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS', "${xiPackageUrl}", 'SUCCESS', "${xiPackageFilename}")
-                                packagesMessage += "[${xiPackageFilename}](${xiPackageUrl}) "
+                                packagesMessage += "* [${xiPackageFilename} (Not notarized)](${xiPackageUrl})\n"
                             }
                             if (xmPackageFilename != null) {
                                 xmPackageUrl = "${packagePrefix}/${xmPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac', "${xmPackageUrl}", 'SUCCESS', "${xmPackageFilename}")
-                                packagesMessage += "[${xmPackageFilename}](${xmPackageUrl})"
+                                packagesMessage += "* [${xmPackageFilename} (Not notarized)](${xmPackageUrl})\n"
                             }
                             if (xiNotarizedPkgFilename != null) {
                                 xiNotarizedPackageUrl = "${packagePrefix}/notarized/${xiNotarizedPkgFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS-notarized', "${xiNotarizedPackageUrl}", 'SUCCESS', "${xiNotarizedPkgFilename}")
-                                packagesMessage += "[${xiNotarizedPkgFilename}](${xiNotarizedPackageUrl}) "
+                                packagesMessage += "* [${xiNotarizedPkgFilename} (Notarized)](${xiNotarizedPackageUrl})\n"
                             }
                             if (xmNotarizedPkgFilename != null) {
                                 xmNotarizedPackageUrl = "${packagePrefix}/notarized/${xmNotarizedPkgFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac-notarized', "${xmNotarizedPackageUrl}", 'SUCCESS', "${xmNotarizedPkgFilename}")
-                                packagesMessage += "[${xmNotarizedPkgFilename}](${xmNotarizedPackageUrl})"
+                                packagesMessage += "* [${xmNotarizedPkgFilename} (Notarized)](${xmNotarizedPackageUrl})\n"
                             }
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
@@ -642,7 +642,7 @@ timestamps {
                             }
 
                             if (packagesMessage != "")
-                                appendFileComment ("✅ Packages: ${packagesMessage}\n")
+                                appendFileComment ("✅ Packages: \n${packagesMessage}\n")
                         }
 
                         dir ('xamarin-macios') {
