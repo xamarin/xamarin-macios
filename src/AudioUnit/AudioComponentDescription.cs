@@ -188,7 +188,6 @@ namespace AudioUnit
 	public enum AudioComponentFlag // UInt32 in AudioComponentDescription
 	{
 		Unsearchable				= 1,
-		[iOS (6,0)]
 		SandboxSafe					= 2,
 		IsV3AudioUnit				= 4,
 		RequiresAsyncInstantiation	= 8,

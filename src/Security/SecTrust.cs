@@ -47,7 +47,6 @@ namespace Security {
 			return NSArray.ArrayFromHandle<SecPolicy> (p);
 		}
 
-		[iOS (6,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustSetPolicies (IntPtr /* SecTrustRef */ trust, IntPtr /* CFTypeRef */ policies);
 
@@ -59,7 +58,6 @@ namespace Security {
 				throw new InvalidOperationException (result.ToString ());
 		}
 
-		[iOS (6,0)]
 		public void SetPolicy (SecPolicy policy)
 		{
 			if (policy == null)
@@ -68,7 +66,6 @@ namespace Security {
 			SetPolicies (policy.Handle);
 		}
 
-		[iOS (6,0)]
 		public void SetPolicies (IEnumerable<SecPolicy> policies)
 		{
 			if (policies == null)
@@ -78,7 +75,6 @@ namespace Security {
 				SetPolicies (array.Handle);
 		}
 
-		[iOS (6,0)]
 		public void SetPolicies (NSArray policies)
 		{
 			if (policies == null)

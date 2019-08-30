@@ -603,9 +603,7 @@ namespace UIKit {
 		Center,
 		Right, 
 
-		[iOS (6,0)]
 		Justified,
-		[iOS (6,0)]
 		Natural	
 	}
 

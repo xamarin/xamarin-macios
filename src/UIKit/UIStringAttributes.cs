@@ -39,7 +39,6 @@ using CoreText;
 
 namespace UIKit {
 
-	[iOS (6,0)]
 	public class UIStringAttributes : DictionaryContainer
 	{
 #if !COREBUILD

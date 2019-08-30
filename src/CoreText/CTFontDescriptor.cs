@@ -762,12 +762,12 @@ namespace CoreText {
 			return o;
 		}
 #endregion
-		[Mac (10,9)][iOS (6,0)]
+		[Mac (10,9)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern bool CTFontDescriptorMatchFontDescriptorsWithProgressHandler (IntPtr descriptors, IntPtr mandatoryAttributes,
 			Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler);
 
-		[Mac (10,9)][iOS (6,0)]
+		[Mac (10,9)]
 		public static bool MatchFontDescriptors (CTFontDescriptor[] descriptors, NSSet mandatoryAttributes, Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler)
 		{
 			// FIXME: the P/Invoke used below is wrong, it expects a block, not a function pointer.

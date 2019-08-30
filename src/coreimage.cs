@@ -576,11 +576,9 @@ namespace CoreImage {
 		[Export ("outputImage")]
 		CIImage OutputImage { get; }
 
-		[iOS (6,0)]
 		[Export ("serializedXMPFromFilters:inputImageExtent:"), Static]
 		NSData SerializedXMP (CIFilter[] filters, CGRect extent); 
 
-		[iOS (6,0)]
 		[Export ("filterArrayFromSerializedXMP:inputImageExtent:error:"), Static]
 		CIFilter[] FromSerializedXMP (NSData xmpData, CGRect extent, out NSError error);
 #endif
@@ -848,7 +846,7 @@ namespace CoreImage {
 		[Field ("kCIInputImageKey", "+CoreImage")]
 		NSString Image  { get; }
 
-		[iOS (6,0), Mac(10,11)]
+		[Mac(10,11)]
 		[Field ("kCIInputVersionKey", "+CoreImage")]
 		NSString Version { get; }
 
@@ -1369,7 +1367,6 @@ namespace CoreImage {
 #endif
 		CIImage FromData (NSData bitmapData, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
-		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static]
@@ -1512,7 +1509,6 @@ namespace CoreImage {
 		[Export ("initWithBitmapData:bytesPerRow:size:format:colorSpace:")]
 		IntPtr Constructor (NSData d, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
-		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithTexture:size:flipped:colorSpace:")]
@@ -1626,11 +1622,9 @@ namespace CoreImage {
 		int FormatRGBA16 { get; } /* CIFormat = int */
 
 		[Field ("kCIFormatARGB8")]
-		[iOS (6,0)]
 		int FormatARGB8 { get; } /* CIFormat = int */
 		
 		[Field ("kCIFormatRGBAh")]
-		[iOS (6,0)]
 		int FormatRGBAh { get; } /* CIFormat = int */
 
 		[iOS (8,0)]
@@ -1751,7 +1745,6 @@ namespace CoreImage {
 		[Export ("autoAdjustmentFiltersWithOptions:"), Internal]
 		NSArray _GetAutoAdjustmentFilters ([NullAllowed] NSDictionary opts);
 
-		[iOS (6,0)] // publicly documented in 7.0 but really available since 6.0
 		[Mac (10,12)]
 		[Export ("regionOfInterestForImage:inRect:")]
 		CGRect GetRegionOfInterest (CIImage im, CGRect r);
@@ -2407,11 +2400,9 @@ namespace CoreImage {
 		[Field ("CIDetectorAccuracyHigh"), Internal]
 		NSString AccuracyHigh { get; }
 
-		[iOS (6,0)]
 		[Field ("CIDetectorTracking"), Internal]
 		NSString Tracking { get; }
 
-		[iOS (6,0)]
 		[Field ("CIDetectorMinFeatureSize"), Internal]
 		NSString MinFeatureSize { get; }
 
@@ -2504,19 +2495,15 @@ namespace CoreImage {
 		[Export ("mouthPosition", ArgumentSemantic.Assign)]
 		CGPoint MouthPosition { get; }
 
-		[iOS (6,0)]
 		[Export ("hasTrackingID", ArgumentSemantic.Assign)]
 		bool HasTrackingId { get; }
 		
-		[iOS (6,0)]
 		[Export ("trackingID", ArgumentSemantic.Assign)]
 		int TrackingId { get; } /* int, not NSInteger */
 		
-		[iOS (6,0)]
 		[Export ("hasTrackingFrameCount", ArgumentSemantic.Assign)]
 		bool HasTrackingFrameCount { get; }
 
-		[iOS (6,0)]
 		[Export ("trackingFrameCount", ArgumentSemantic.Assign)]
 		int TrackingFrameCount { get; } /* int, not NSInteger */
 
@@ -2701,13 +2688,11 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIAffineFilter))]
 	interface CIAffineClamp {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIAffineFilter))]
 	interface CIAffineTile {
 	}
@@ -2808,7 +2793,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIBarsSwipeTransition {
 
@@ -2830,7 +2814,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
-	[iOS (6,0)]
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIBlendWithMask {
 
@@ -2840,7 +2823,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIBloom {
 
@@ -2861,7 +2843,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
-	[iOS (6,0)]
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
 	interface CIDistortionFilter {
@@ -2874,7 +2855,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIDistortionFilter ))]
 	interface CIBumpDistortion {
 
@@ -2883,7 +2863,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CIBumpDistortionLinear {
 
@@ -2915,7 +2894,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CICircleSplashDistortion {
 	}
@@ -2936,7 +2914,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIScreenFilter))]
 	interface CICircularScreen {
 	}
@@ -3088,7 +3065,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorMap {
 
@@ -3138,7 +3114,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorPosterize {
 
@@ -3215,7 +3190,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CICopyMachineTransition {
 
@@ -3275,7 +3249,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIDisintegrateWithMaskTransition {
 
@@ -3306,7 +3279,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIDissolveTransition {
 	}
@@ -3319,7 +3291,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIScreenFilter))]
 	interface CIDotScreen {
 		[CoreImageFilterProperty ("inputAngle")]
@@ -3369,7 +3340,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
-	[iOS (6,0)]
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
 	interface CITileFilter {
@@ -3385,7 +3355,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITileFilter))]
 	interface CIEightfoldReflectedTile {
 	}
@@ -3415,7 +3384,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIFlashTransition {
 
@@ -3444,7 +3412,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITileFilter))]
 	interface CIFourfoldReflectedTile {
 
@@ -3453,13 +3420,11 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITileFilter))]
 	interface CIFourfoldRotatedTile {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITileFilter))]
 	interface CIFourfoldTranslatedTile {
 
@@ -3476,7 +3441,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIGaussianBlur {
 
@@ -3535,13 +3499,11 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITileFilter))]
 	interface CIGlideReflectedTile {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIGloom {
 
@@ -3558,7 +3520,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIScreenFilter))]
 	interface CIHatchedScreen {
 		[CoreImageFilterProperty ("inputAngle")]
@@ -3617,7 +3578,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CIHoleDistortion {
 	}
@@ -3651,7 +3611,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CILanczosScaleTransform {
 
@@ -3698,7 +3657,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[Mac (10,11)]
 	[BaseType (typeof (CIFilter))]
 	interface CILightTunnel {
@@ -3773,7 +3731,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIScreenFilter))]
 	interface CILineScreen {
 		[CoreImageFilterProperty ("inputAngle")]
@@ -3786,13 +3743,11 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMaskToAlpha {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMaximumComponent {
 	}
@@ -3809,7 +3764,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMinimumComponent {
 	}
@@ -3820,7 +3774,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIModTransition {
 
@@ -3994,7 +3947,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPerspectiveTile {
 
@@ -4012,7 +3964,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPerspectiveTransform {
 
@@ -4030,7 +3981,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[Mac (10,11)]
 	[BaseType (typeof (CIPerspectiveTransform))]
 	interface CIPerspectiveTransformWithExtent {
@@ -4104,7 +4054,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CIPinchDistortion {
 
@@ -4120,7 +4069,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPixellate {
 
@@ -4174,7 +4122,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIRandomGenerator {
 	}
@@ -4240,7 +4187,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CISharpenLuminance {
 
@@ -4249,19 +4195,16 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITileFilter))]
 	interface CISixfoldReflectedTile {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITileFilter))]
 	interface CISixfoldRotatedTile {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[Mac (10,11)]
 	[BaseType (typeof (CILinearGradient))]
 	interface CISmoothLinearGradient {
@@ -4375,7 +4318,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIStarShineGenerator {
 
@@ -4455,7 +4397,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CISwipeTransition {
 
@@ -4525,7 +4466,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[Mac (10,11)]
 	[BaseType (typeof (CIFilter))]
 	interface CITriangleKaleidoscope {
@@ -4550,7 +4490,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CITileFilter))]
 	interface CITwelvefoldReflectedTile {
 	}
@@ -4564,7 +4503,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIUnsharpMask {
 
@@ -4615,7 +4553,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (6,0)]
 	[BaseType (typeof (CIDistortionFilter))]
 	interface CIVortexDistortion {
 

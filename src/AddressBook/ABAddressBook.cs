@@ -110,11 +110,9 @@ namespace AddressBook {
 			InitConstants.Init ();
 		}
 
-		[iOS (6,0)]
 		[DllImport (Constants.AddressBookLibrary)]
 		internal extern static IntPtr ABAddressBookCreateWithOptions (IntPtr dictionary, out IntPtr cfError);
 
-		[iOS (6,0)]
 		public static ABAddressBook Create (out NSError error)
 		{
 			IntPtr e;
@@ -180,11 +178,9 @@ namespace AddressBook {
 			}
 		}
 
-		[iOS (6,0)]
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static nint ABAddressBookGetAuthorizationStatus ();
 
-		[iOS (6,0)]
 		public static ABAuthorizationStatus GetAuthorizationStatus ()
 		{
 #if ARCH_32			
@@ -194,11 +190,9 @@ namespace AddressBook {
 #endif
 		}
 
-		[iOS (6,0)]
 		[DllImport (Constants.AddressBookLibrary)]
 		extern unsafe static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, void * completion);
 
-		[iOS (6,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void RequestAccess (Action<bool,NSError> onCompleted)
 		{

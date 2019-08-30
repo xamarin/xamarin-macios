@@ -582,11 +582,9 @@ namespace AVFoundation {
 
 	// Convience enum
 	[Flags]
-	[iOS (6,0)]
 	public enum AVMetadataObjectType : ulong {
 		None = 0,
 
-		[iOS (6,0)]
 		Face = 1 << 0,
 
 		[iOS(7,0)]
