@@ -80,7 +80,6 @@ namespace AssetsLibrary {
 			}
 		}
 
-		[iOS (6,0)]
 		public NSUrl AssetUrl {
 			get {
 				// do not show an ArgumentNullException inside the

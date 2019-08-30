@@ -230,7 +230,7 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKChallenge.h
-	[iOS (6,0)][Mac (10,9)]
+	[Mac (10,9)]
 	[Native]
 	public enum GKChallengeState : long	{
 		Invalid = 0,

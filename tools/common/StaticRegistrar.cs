@@ -2679,10 +2679,6 @@ namespace Registrar {
 #endif
 
 				
-				// Photos headers are broken in Xcode 11 beta 1
-				if (IsTypeCore (@class, "Photos") || IsTypeCore (@class, "PhotosUI"))
-					continue;
-
 				// Xcode 11 removed WatchKit for iOS!
 				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS) {
 					exceptions.Add (ErrorHelper.CreateWarning (4178, $"The class '{@class.Type.FullName}' will not be registered because the WatchKit framework has been removed from the iOS SDK."));

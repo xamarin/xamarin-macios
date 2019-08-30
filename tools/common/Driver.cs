@@ -306,7 +306,7 @@ namespace Xamarin.Bundler {
 						// also write to the Console, confusing the output.
 						if (output == null)
 							output = new StringBuilder ();
-						output.Insert (0, $"Process exited with code {p.ExitCode}, command:\n{path}\n");
+						output.Insert (0, $"Process exited with code {p.ExitCode}, command:\n{path} {args}\n");
 						Console.Error.WriteLine (output);
 					}
 					return p.ExitCode;

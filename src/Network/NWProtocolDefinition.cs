@@ -24,6 +24,7 @@ namespace Network {
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public class NWProtocolDefinition : NativeObject {
 		public NWProtocolDefinition (IntPtr handle, bool owns) : base (handle, owns) {}
 

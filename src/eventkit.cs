@@ -125,11 +125,9 @@ namespace EventKit {
 		[Export ("removeRecurrenceRule:")]
 		void RemoveRecurrenceRule (EKRecurrenceRule rule);
 
-		[iOS (6,0)]
 		[Export ("calendarItemIdentifier")]
 		string CalendarItemIdentifier { get;  }
 
-		[iOS (6,0)]
 		[Export ("calendarItemExternalIdentifier")]
 		string CalendarItemExternalIdentifier { get;  }
 	}
@@ -151,12 +149,10 @@ namespace EventKit {
 		[Export ("sourceIdentifier")]
 		string SourceIdentifier { get; }
 
-		[iOS (6, 0)]
 		[Export ("calendarsForEntityType:")]
 		NSSet GetCalendars (EKEntityType entityType);
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (EKObject))]
 	interface EKStructuredLocation : NSCopying {
 		[NullAllowed] // by default this property is null
@@ -199,12 +195,10 @@ namespace EventKit {
 		[Export ("alarmWithRelativeOffset:")]
 		EKAlarm FromTimeInterval (double offsetSeconds);
 
-		[iOS (6,0)]
 		[Export ("structuredLocation", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		EKStructuredLocation StructuredLocation { get; set;  }
 
-		[iOS (6,0)]
 		[Export ("proximity")]
 		EKAlarmProximity Proximity { get; set;  }
 
@@ -265,11 +259,9 @@ namespace EventKit {
 		[Export ("source", ArgumentSemantic.Retain)]
 		EKSource Source { get; set; }
 
-		[iOS (6,0)]
 		[Export ("allowedEntityTypes")]
 		EKEntityMask AllowedEntityTypes { get;  }
 
-		[iOS (6,0)]
 		[Static]
 		[Export ("calendarForEntityType:eventStore:")]
 		EKCalendar Create (EKEntityType entityType, EKEventStore eventStore);
@@ -366,7 +358,6 @@ namespace EventKit {
 #endif // !WATCH
 
 #endif
-		[iOS (6,0)]
 		[Mac (10,9)]
 		[Export ("isCurrentUser")]
 		bool IsCurrentUser { get; }
@@ -570,52 +561,41 @@ namespace EventKit {
 		[Export ("refreshSourcesIfNecessary")]
 		void RefreshSourcesIfNecessary ();
 
-		[iOS (6,0)]
 		[return: NullAllowed]
 		[Export ("calendarItemWithIdentifier:")]
 		EKCalendarItem GetCalendarItem (string identifier);
 
-		[iOS (6,0)]
 		[Export ("calendarItemsWithExternalIdentifier:")]
 		EKCalendarItem[] GetCalendarItems(string externalIdentifier);
 
-		[iOS (6,0)]
 		[Export ("calendarsForEntityType:")]
 		EKCalendar[] GetCalendars (EKEntityType entityType);
 
-		[iOS (6,0)]
 		[NullAllowed]
 		[Export ("defaultCalendarForNewReminders")]
 		EKCalendar DefaultCalendarForNewReminders { get; }
 
-		[iOS (6,0)]
 		[Export ("fetchRemindersMatchingPredicate:completion:")]
 		[Async]
 		IntPtr FetchReminders (NSPredicate predicate, Action<EKReminder[]> completion);
 
-		[iOS (6,0)]
 		[Export ("cancelFetchRequest:")]
 		void CancelFetchRequest (IntPtr fetchIdentifier);
 
-		[iOS (6,0)]
 		[Export ("predicateForIncompleteRemindersWithDueDateStarting:ending:calendars:")]
 		NSPredicate PredicateForIncompleteReminders ([NullAllowed] NSDate startDate, [NullAllowed] NSDate endDate, [NullAllowed] EKCalendar[] calendars);
 
-		[iOS (6,0)]
 		[Export ("predicateForCompletedRemindersWithCompletionDateStarting:ending:calendars:")]
 		NSPredicate PredicateForCompleteReminders ([NullAllowed] NSDate startDate, [NullAllowed] NSDate endDate, [NullAllowed] EKCalendar[] calendars);
 
-		[iOS (6,0)]
 		[Export ("predicateForRemindersInCalendars:")]
 		NSPredicate PredicateForReminders ([NullAllowed] EKCalendar[] calendars);
 
 		[NoWatch]
-		[iOS (6,0)]
 		[Export ("removeReminder:commit:error:")]
 		bool RemoveReminder (EKReminder reminder, bool commit, out NSError error);
 
 		[NoWatch]
-		[iOS (6,0)]
 		[Export ("saveReminder:commit:error:")]
 		bool SaveReminder (EKReminder reminder, bool commit, out NSError error);
 
@@ -628,13 +608,11 @@ namespace EventKit {
 		[Export ("delegateSources")]
 		EKSource[] DelegateSources { get; }
 
-		[iOS (6,0)]
 		[Mac (10,9)]
 		[Export ("requestAccessToEntityType:completion:")]
 		[Async]
 		void RequestAccess (EKEntityType entityType, Action<bool, NSError> completionHandler);
 
-		[iOS (6,0)]
 		[Mac (10,9)]
 		[Static]
 		[Export ("authorizationStatusForEntityType:")]
@@ -643,7 +621,6 @@ namespace EventKit {
 
 	delegate void EKEventSearchCallback (EKEvent theEvent, ref bool stop);
 
-	[iOS (6,0)]
 	[BaseType (typeof (EKCalendarItem))]
 	[DisableDefaultCtor]
 	interface EKReminder {

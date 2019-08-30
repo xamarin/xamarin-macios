@@ -92,11 +92,9 @@ namespace UIKit {
 		}
 		
 		// UIAccessibility.h
-		[iOS (6,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* BOOL */ bool UIAccessibilityIsInvertColorsEnabled ();
 
-		[iOS (6,0)]
 		static public bool IsInvertColorsEnabled {
 			get {
 				return UIAccessibilityIsInvertColorsEnabled ();
@@ -104,11 +102,9 @@ namespace UIKit {
 		}
 		
 		// UIAccessibility.h
-		[iOS (6,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* BOOL */ bool UIAccessibilityIsGuidedAccessEnabled ();
 
-		[iOS (6,0)]
 		static public bool IsGuidedAccessEnabled {
 			get {
 				return UIAccessibilityIsGuidedAccessEnabled ();

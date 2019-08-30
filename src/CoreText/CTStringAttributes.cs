@@ -342,7 +342,6 @@ namespace CoreText {
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.RunDelegate, value);}
 		}
 
-		[iOS (6,0)]
 		public CTBaselineClass? BaselineClass {
 			get {
 				var value = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.BaselineClass.Handle);
@@ -354,13 +353,11 @@ namespace CoreText {
 			}
 		}
 
-		[iOS (6, 0)]
 		public void SetBaselineInfo (CTBaselineClass baselineClass, double offset)
 		{
 			SetBaseline (baselineClass, offset, CTStringAttributeKey.BaselineInfo);
 		}
 
-		[iOS (6, 0)]
 		public void SetBaselineReferenceInfo (CTBaselineClass baselineClass, double offset)
 		{
 			SetBaseline (baselineClass, offset, CTStringAttributeKey.BaselineReferenceInfo);
@@ -378,7 +375,6 @@ namespace CoreText {
 				Adapter.SetNativeValue (Dictionary, infoKey, (INativeObject)dict);
 		}
 
-		[iOS (6, 0)]
 		// 'Value must be a CFArray of CFNumberRefs' - System/Library/Frameworks/CoreText.framework/Headers/CTStringAttributes.h
 		public void SetWritingDirection (params CTWritingDirection[] writingDirections)
 		{

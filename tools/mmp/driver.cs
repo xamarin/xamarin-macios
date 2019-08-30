@@ -1184,7 +1184,11 @@ namespace Xamarin.Bundler {
 				if (XcodeVersion >= new Version (9, 0))
 					args.Append ("-Wno-unguarded-availability-new ");
 
+				if (XcodeVersion.Major >= 11)
+					args.Append ("-std=c++14 ");
+
 				bool appendedObjc = false;
+				var sourceFiles = new List<string> ();
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
 						foreach (var linkWith in assembly.LinkWith) {
@@ -1257,7 +1261,7 @@ namespace Xamarin.Bundler {
 					string reference_m = Path.Combine (App.Cache.Location, "reference.m");
 					reference_m = BuildTarget.GenerateReferencingSource (reference_m, requiredSymbols);
 					if (!string.IsNullOrEmpty (reference_m))
-						args.Append (StringUtils.Quote (reference_m)).Append (' ');
+						sourceFiles.Add (reference_m);
 					break;
 				case SymbolMode.Linker:
 				case SymbolMode.Default:
@@ -1341,7 +1345,10 @@ namespace Xamarin.Bundler {
 
 				var main = Path.Combine (App.Cache.Location, "main.m");
 				File.WriteAllText (main, mainSource);
-				args.Append (StringUtils.Quote (main));
+				sourceFiles.Add (main);
+
+				foreach (var src in sourceFiles)
+					args.Append (StringUtils.Quote (src)).Append (' ');;
 
 				ret = XcodeRun ("clang", args.ToString (), null);
 			} catch (Win32Exception e) {

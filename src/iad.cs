@@ -24,11 +24,9 @@ namespace iAd {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 		
-		[iOS (6,0)]
 		[Export ("adType")]
 		ADAdType AdType { get;  }
 
-		[iOS (6,0)]
 		[Export ("initWithAdType:")]
 		IntPtr Constructor (ADAdType type);
 

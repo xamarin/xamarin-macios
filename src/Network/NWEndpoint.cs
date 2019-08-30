@@ -17,6 +17,8 @@ using OS_nw_endpoint=System.IntPtr;
 
 namespace Network {
 
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public enum NWEndpointType {
 		Invalid = 0,
 		Address = 1,
@@ -25,6 +27,7 @@ namespace Network {
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public class NWEndpoint : NativeObject {
 		public NWEndpoint (IntPtr handle, bool owns) : base (handle, owns) {}
 

@@ -1769,6 +1769,7 @@ COMMON_FRAMEWORKS =         \
 	Compression             \
 	Foundation              \
 	GameKit                 \
+	Network                 \
 	SceneKit                \
 	SoundAnalysis 			\
 	SpriteKit               \
@@ -1828,7 +1829,6 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
-	Network			\
 	NaturalLanguage         \
 	NetworkExtension        \
 	NotificationCenter 	\
@@ -1925,7 +1925,6 @@ IOS_FRAMEWORKS =         \
 	ModelIO \
 	MultipeerConnectivity \
 	NaturalLanguage \
-	Network \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -2020,7 +2019,6 @@ TVOS_FRAMEWORKS =           \
 	ModelIO                 \
 	MultipeerConnectivity   \
 	NaturalLanguage         \
-	Network			\
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \

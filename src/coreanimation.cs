@@ -566,7 +566,6 @@ namespace CoreAnimation {
 		[Export ("rasterizationScale")]
 		nfloat RasterizationScale { get; set; }
 
-		[iOS (6,0)]
 		[Export ("drawsAsynchronously")]
 		bool DrawsAsynchronously { get; set; }
 

@@ -43,6 +43,8 @@ namespace Extrospection {
 			{ "SecTrustResultType", "SecTrustResult" },
 			{ "SKErrorCode", "SKError" },
 			{ "SSReadingListErrorCode", "SSReadingListError" },
+			{ "tls_ciphersuite_group_t", "TlsCipherSuiteGroup" },
+			{ "tls_ciphersuite_t", "TlsCipherSuite" },
 			{ "tls_protocol_version_t", "TlsProtocolVersion" },
 			{ "UIDataDetectorTypes", "UIDataDetectorType" },
 			{ "UIControlEvents", "UIControlEvent" },

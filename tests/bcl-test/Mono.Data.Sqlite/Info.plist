@@ -5,7 +5,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.monodatasqlitetests</string>
 	<key>MinimumOSVersion</key>
-	<string>6.0</string>
+	<string>7.0</string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<true/>
 	<key>UIDeviceFamily</key>
