@@ -1,4 +1,4 @@
-﻿#ifndef __MONOTOUCH_SUPPORT_H__
+#ifndef __MONOTOUCH_SUPPORT_H__
 #define __MONOTOUCH_SUPPORT_H__
 
 #ifdef __cplusplus
@@ -13,6 +13,11 @@ void           xamarin_start_wwan (const char *uri);
 
 #ifdef MONOTOUCH
 const char *   xamarin_GetFolderPath (int folder);
+#endif
+
+#ifdef MONOMAC
+const char *
+xamarin_encode_CGAffineTransform ();
 #endif
 
 #if defined (__arm64__)
