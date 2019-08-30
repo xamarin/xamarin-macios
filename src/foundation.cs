@@ -10879,14 +10879,19 @@ namespace Foundation
 		[Export ("getValue:")]
 		void StoreValueAtAddress (IntPtr value);
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("getValue:size:")]
+		void StoreValueAtAddress (IntPtr value, nuint size);
+
 		[Export ("objCType")][Internal]
 		IntPtr ObjCTypePtr ();
 		
 		//[Export ("initWithBytes:objCType:")][Internal]
 		//NSValue InitFromBytes (IntPtr byte_ptr, IntPtr char_ptr_type);
-		//[Export ("valueWithBytes:objCType:")][Static][Internal]
-		//+ (NSValue *)valueWithBytes:(const void *)value objCType:(const char *)type;
-		//+ (NSValue *)value:(const void *)value withObjCType:(const char *)type;
+
+		[Static][Internal]
+		[Export ("valueWithBytes:objCType:")]
+		NSValue Create (IntPtr bytes, IntPtr objCType);
 
 		[Static]
 		[Export ("valueWithNonretainedObject:")]
