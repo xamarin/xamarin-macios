@@ -190,12 +190,13 @@ namespace Foundation {
 
 		void RemoveNotification ()
 		{
+			NSObject localNotificationToken;
 			lock (notificationTokenLock) {
-				if (notificationToken != null) {
-					NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
-					notificationToken = null;
-				}
-			} // lock
+				localNotificationToken = notificationToken;
+				notificationToken = null;
+			}
+			if (localNotificationToken != null)
+				NSNotificationCenter.DefaultCenter.RemoveObserver (localNotificationToken);
 		}
 
 		void BackgroundNotificationCb (NSNotification obj)
