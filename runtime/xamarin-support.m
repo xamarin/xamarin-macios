@@ -172,3 +172,13 @@ void objc_msgSendSuper_stret (void)
 
 #endif
 
+#ifdef MONOMAC
+// <quote>Do not hard-code this parameter as a C string.</quote>
+// works on iOS (where we don't need it) and crash on macOS
+const char *
+xamarin_encode_CGAffineTransform ()
+{
+    // COOP: no managed memory access: any mode.
+    return @encode (CGAffineTransform);
+}
+#endif
