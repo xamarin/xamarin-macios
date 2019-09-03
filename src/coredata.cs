@@ -2493,12 +2493,8 @@ namespace CoreData
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(NSPersistentStoreRequest))]
-	[DisableDefaultCtor] // designated
+	[DesignatedDefaultCtor]
 	interface NSBatchInsertRequest {
-
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
 
 		[Export ("entityName")]
 		string EntityName { get; }
@@ -2550,21 +2546,21 @@ namespace CoreData
 		IntPtr Constructor (string name, NSManagedObjectModel model);
 
 		[Export ("initializeCloudKitSchemaWithOptions:error:")]
-		bool Create (NSPersistentCloudKitContainerSchemaInitializationOptions options, [NullAllowed] out NSError error);
+		bool Initialize (NSPersistentCloudKitContainerSchemaInitializationOptions options, [NullAllowed] out NSError error);
 
 		[Export ("recordForManagedObjectID:")]
 		[return: NullAllowed]
-		CKRecord GetRecord (NSManagedObjectID managedObjectID);
+		CKRecord GetRecord (NSManagedObjectID managedObjectId);
 
 		[Export ("recordsForManagedObjectIDs:")]
-		NSDictionary<NSManagedObjectID, CKRecord> GetRecords (NSManagedObjectID[] managedObjectIDs);
+		NSDictionary<NSManagedObjectID, CKRecord> GetRecords (NSManagedObjectID[] managedObjectIds);
 
 		[Export ("recordIDForManagedObjectID:")]
 		[return: NullAllowed]
-		CKRecordID GetRecordID (NSManagedObjectID managedObjectID);
+		CKRecordID GetRecordId (NSManagedObjectID managedObjectId);
 
 		[Export ("recordIDsForManagedObjectIDs:")]
-		NSDictionary<NSManagedObjectID, CKRecordID> GetRecordIDs (NSManagedObjectID[] managedObjectIDs);
+		NSDictionary<NSManagedObjectID, CKRecordID> GetRecordIds (NSManagedObjectID[] managedObjectIds);
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]

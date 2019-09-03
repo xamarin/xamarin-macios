@@ -223,20 +223,18 @@ namespace CoreData {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[Native]
-	public enum NSBatchInsertRequestResultType : ulong
-	{
+	public enum NSBatchInsertRequestResultType : ulong {
 		StatusOnly = 0,
-		ObjectIDs = 1,
+		ObjectIds = 1,
 		Count = 2,
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[Flags]
 	[Native]
-	public enum NSPersistentCloudKitContainerSchemaInitializationOptions : ulong
-	{
+	public enum NSPersistentCloudKitContainerSchemaInitializationOptions : ulong {
 		None = 0x0,
-		DryRun = 1uL << 1,
-		PrintSchema = 1uL << 2,
+		DryRun = 1 << 1,
+		PrintSchema = 1 << 2,
 	}
 }
