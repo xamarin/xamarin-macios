@@ -198,10 +198,9 @@ namespace MonoTouchFixtures.CoreText {
 
 #if !__WATCHOS__
 		[Test]
-		[Ignore ("https://github.com/xamarin/maccore/issues/1898")]
 		public void RegisterFontDescriptors_NoCallback ()
 		{
-			TestRuntime.AssertXcodeVersion (11, 0);
+			TestRuntime.AssertXcodeVersion (11, 1); // Introduced in iOS 13.0, but with a bug that makes it crash. Apple fixed it for iOS 13.1
 			CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
 				FamilyName = "Courier",
 				StyleName = "Bold",
