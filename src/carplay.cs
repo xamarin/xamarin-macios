@@ -681,6 +681,10 @@ namespace CarPlay {
 		[Export ("limitedUserInterfaces")]
 		CPLimitableUserInterface LimitedUserInterfaces { get; }
 
+		[iOS (13,0)]
+		[Export ("contentStyle")]
+		CPContentStyle ContentStyle { get; }
+
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ICPSessionConfigurationDelegate Delegate { get; set; }
