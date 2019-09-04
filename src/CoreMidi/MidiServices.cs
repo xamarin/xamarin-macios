@@ -1544,7 +1544,7 @@ namespace CoreMidi {
 			}
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Mac (10,15), iOS (13,0)]
 		public string NameConfigurationDictionary {
 			get {
 				return GetString (kMIDIPropertyNameConfigurationDictionary);
