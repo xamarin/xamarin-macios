@@ -730,6 +730,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSDictionary_2.cs \
 	Foundation/NSDirectoryEnumerator.cs \
 	Foundation/NSDistributedNotificationCenter.cs \
+	Foundation/NSEnumerator_1.cs \
 	Foundation/NSErrorException.cs \
 	Foundation/NSExpression.cs \
 	Foundation/NSExtension.cs \
