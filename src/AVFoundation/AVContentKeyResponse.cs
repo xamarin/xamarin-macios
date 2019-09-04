@@ -23,8 +23,9 @@ namespace AVFoundation {
 
 	public partial class AVContentKeyResponse {
 
-		public static AVContentKeyResponse Create (NSData data) => Create (data, AVContentKeyResponseDataType.FairPlayStreamingKeyResponseData);
+		public static AVContentKeyResponse Create (NSData fairPlayStreamingKeyResponseData) => Create (fairPlayStreamingKeyResponseData, AVContentKeyResponseDataType.FairPlayStreamingKeyResponseData);
 			
+		[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 		public static AVContentKeyResponse Create (NSData data, AVContentKeyResponseDataType dataType = AVContentKeyResponseDataType.FairPlayStreamingKeyResponseData) {
 			switch (dataType) {
 			case AVContentKeyResponseDataType.AuthorizationTokenData:
