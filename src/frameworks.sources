@@ -1762,6 +1762,7 @@ COMMON_FRAMEWORKS =         \
 	AuthenticationServices	\
 	AVFoundation            \
 	CoreBluetooth           \
+	CoreData                \
 	CoreFoundation          \
 	CoreMedia               \
 	CoreML                  \
@@ -1789,7 +1790,6 @@ MAC_FRAMEWORKS =            \
 	ContactsUI              \
 	CoreAnimation           \
 	CoreAudioKit            \
-	CoreData                \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
@@ -1881,7 +1881,6 @@ IOS_FRAMEWORKS =         \
 	ContactsUI \
 	CoreAnimation \
 	CoreAudioKit \
-	CoreData \
 	CoreGraphics \
 	CoreImage \
 	CoreLocation \
@@ -1962,7 +1961,6 @@ WATCHOS_FRAMEWORKS =        \
 	ClockKit                \
 	CloudKit                \
 	Contacts                \
-	CoreData                \
 	CoreGraphics            \
 	CoreLocation            \
 	CoreMotion              \
@@ -1994,7 +1992,6 @@ TVOS_FRAMEWORKS =           \
 	CFNetwork               \
 	CloudKit                \
 	CoreAnimation           \
-	CoreData                \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
