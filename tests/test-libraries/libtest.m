@@ -478,6 +478,23 @@ static UltimateMachine *shared;
 		return self.INSCodingArrayProperty;
 	}
 
+	-(void) methodEncodings:
+			      (inout NSObject **) obj1P
+			obj2: (in NSObject **) obj2P
+			obj3: (out NSObject **) obj3P
+			obj4: (const NSObject **) obj4P
+			obj5: (bycopy NSObject **) obj5P
+			obj6: (byref NSObject **) obj6P
+			obj7: (oneway NSObject **) obj7P
+	{
+		obj1P = NULL;
+		obj2P = NULL;
+		obj3P = NULL;
+		obj4P = NULL;
+		obj5P = NULL;
+		obj6P = NULL;
+		obj7P = NULL;
+	}
 @end
 
 @implementation ProtocolAssigner
@@ -553,6 +570,17 @@ static UltimateMachine *shared;
 
 @implementation ObjCProtocolClassTest
 -(void) idAsIntPtr: (id)p1
+{
+	// Do nothing
+}
+-(void) methodEncodings:
+	(inout NSObject **) obj1P
+	obj2: (in NSObject **) obj2P
+	obj3: (out NSObject **) obj3P
+	obj4: (const NSObject **) obj4P
+	obj5: (bycopy NSObject **) obj5P
+	obj6: (byref NSObject **) obj6P
+	obj7: (oneway NSObject **) obj7P
 {
 	// Do nothing
 }
