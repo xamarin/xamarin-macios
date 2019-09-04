@@ -4863,6 +4863,50 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+		[Test]
+		public void MethodEncodings ()
+		{
+			using (var met = new MethodEncodingsTests ()) {
+				IntPtr obj1 = IntPtr.Zero, obj2 = IntPtr.Zero, obj3 = IntPtr.Zero, obj4 = IntPtr.Zero, obj5 = IntPtr.Zero, obj6 = IntPtr.Zero, obj7 = IntPtr.Zero;
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (met.Handle, Selector.GetHandle ("methodEncodings:obj2:obj3:obj4:obj5:obj6:obj7:"), ref obj1, ref obj2, ref obj3, ref obj4, ref obj5, ref obj6, ref obj7);
+				NSObject o1 = Runtime.GetNSObject (obj1);
+				NSObject o2 = Runtime.GetNSObject (obj2);
+				NSObject o3 = Runtime.GetNSObject (obj3);
+				NSObject o4 = Runtime.GetNSObject (obj4);
+				NSObject o5 = Runtime.GetNSObject (obj5);
+				NSObject o6 = Runtime.GetNSObject (obj6);
+				NSObject o7 = Runtime.GetNSObject (obj7);
+				Assert.IsNotNull (o1, "O1");
+				Assert.IsNotNull (o2, "O2");
+				Assert.IsNotNull (o3, "O3");
+				Assert.IsNotNull (o4, "O4");
+				Assert.IsNotNull (o5, "O5");
+				Assert.IsNotNull (o6, "O6");
+				Assert.IsNotNull (o7, "O7");
+			}
+		}
+		
+		class MethodEncodingsTests : NSObject, IObjCProtocolTest {
+			[Export ("methodEncodings:obj2:obj3:obj4:obj5:obj6:obj7:")]
+			public void GetMethodEncodings (ref NSObject obj1, ref NSObject obj2, ref NSObject obj3, ref NSObject obj4, ref NSObject obj5, ref NSObject obj6, ref NSObject obj7)
+			{
+				Assert.IsNull (obj1, "obj1");
+				Assert.IsNull (obj2, "obj2");
+				Assert.IsNull (obj3, "obj3");
+				Assert.IsNull (obj4, "obj4");
+				Assert.IsNull (obj5, "obj5");
+				Assert.IsNull (obj6, "obj6");
+				Assert.IsNull (obj7, "obj7");
+				obj1 = new NSObject ();
+				obj2 = new NSObject ();
+				obj3 = new NSObject ();
+				obj4 = new NSObject ();
+				obj5 = new NSObject ();
+				obj6 = new NSObject ();
+				obj7 = new NSObject ();
+			}
+		}
+		
 		class RefOutParametersSubclass : BI1064.RefOutParameters
 		{
 			public override void TestCFBundle (int action, ref CFBundle refValue, out CFBundle outValue)

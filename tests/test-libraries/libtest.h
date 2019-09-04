@@ -152,6 +152,17 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 @protocol ObjCProtocolTest
 @required
 	-(void) idAsIntPtr: (id)p1;
+
+@optional
+	-(void) methodEncodings:
+		(inout NSObject **) obj1P
+		obj2: (in NSObject **) obj2P
+		obj3: (out NSObject **) obj3P
+		obj4: (const NSObject **) obj4P
+		obj5: (bycopy NSObject **) obj5P
+		obj6: (byref NSObject **) obj6P
+		obj7: (oneway NSObject **) obj7P
+		;
 @end
 
 // We need this class so that the ObjCProtocolTest protocol
