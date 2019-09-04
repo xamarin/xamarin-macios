@@ -11229,7 +11229,6 @@ namespace AVFoundation {
 		void CancelPlaybackRestrictionsAuthorizationRequest ();
 	}
 	
-	// trick the generator to believe it is present in an earlier version of the OS.
 	[Watch (6,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** initialization method -init cannot be sent to an abstract object of class AVPlayerItemOutput: Create a concrete instance!
