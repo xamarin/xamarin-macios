@@ -183,7 +183,7 @@ namespace Foundation {
 		void AddNotification ()
 		{
 			lock (notificationTokenLock) {
-				if (!isBackgroundSession && notificationToken == null)
+				if (!bypassBackgroundCheck && !isBackgroundSession && notificationToken == null)
 					notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
 			} // lock
 		}
@@ -313,6 +313,22 @@ namespace Foundation {
 			set {
 				EnsureModifiability ();
 				trustOverride = value;
+			}
+		}
+
+		// we do check if a user does a request and the application goes to the background, but
+		// in certain cases the user does that on purpose (BeingBackgroundTask) and wants to be able
+		// to use the network. In those cases, which are few, we want the developer to explicitly 
+		// bypass the check when there are not request in flight 
+		bool bypassBackgroundCheck;
+
+		public bool BypassBackgroundSessionCheck {
+			get {
+				return bypassBackgroundCheck;
+			}
+			set {
+				EnsureModifiability ();
+				bypassBackgroundCheck = value;
 			}
 		}
 
