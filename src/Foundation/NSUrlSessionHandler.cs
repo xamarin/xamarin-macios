@@ -157,7 +157,7 @@ namespace Foundation {
 			// therefore, we do not have to listen to the notifications.
 			isBackgroundSession = !string.IsNullOrEmpty (configuration.Identifier);
 #endif
-
+			allowsCellularAccess = configuration.AllowsCellularAccess;
 			AllowAutoRedirect = true;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
@@ -271,6 +271,18 @@ namespace Foundation {
 			set {
 				EnsureModifiability ();
 				allowAutoRedirect = value;
+			}
+		}
+
+		bool allowsCellularAccess = true;
+
+		public bool AllowsCellularAccess {
+			get {
+				return allowsCellularAccess;
+			}
+			set {
+				EnsureModifiability ();
+				allowsCellularAccess = value;
 			}
 		}
 
@@ -476,7 +488,7 @@ namespace Foundation {
 			}
 
 			var nsrequest = new NSMutableUrlRequest {
-				AllowsCellularAccess = true,
+				AllowsCellularAccess = allowsCellularAccess,
 				CachePolicy = DisableCaching ? NSUrlRequestCachePolicy.ReloadIgnoringCacheData : NSUrlRequestCachePolicy.UseProtocolCachePolicy,
 				HttpMethod = request.Method.ToString ().ToUpperInvariant (),
 				Url = NSUrl.FromString (request.RequestUri.AbsoluteUri),
