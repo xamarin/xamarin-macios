@@ -64,7 +64,12 @@ namespace MonoTouchFixtures.MediaAccessibility {
 
 			var temp = String.Empty;
 			using (NSUrl url = new NSUrl (NSBundle.MainBundle.ResourceUrl.AbsoluteString + "basn3p08.png")) {
-				if (Runtime.Arch == Arch.DEVICE) {
+#if __MACOS__
+				var read_only = false;
+#else
+				var read_only = Runtime.Arch == Arch.DEVICE;
+#endif
+				if (read_only) {
 					Assert.False (MAImageCaptioning.SetCaption (url, "xamarin", out var e), "Set");
 					Assert.NotNull (e, "ro / set / no error"); // weird, it can't be saved back to the file metadata
 
