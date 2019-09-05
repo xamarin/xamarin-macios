@@ -225,6 +225,7 @@ namespace CoreMidi {
 		internal static IntPtr kMIDIDriverPropertyUsesSerial;
 		internal static IntPtr kMIDIPropertyFactoryPatchNameFile;
 		internal static IntPtr kMIDIPropertyUserPatchNameFile;
+		internal static IntPtr kMIDIPropertyNameConfigurationDictionary;
 
 		static MidiObject ()
 		{
@@ -276,6 +277,7 @@ namespace CoreMidi {
 			kMIDIDriverPropertyUsesSerial = Dlfcn.GetIntPtr (midiLibrary, "kMIDIDriverPropertyUsesSerial");
 			kMIDIPropertyFactoryPatchNameFile = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyFactoryPatchNameFile");
 			kMIDIPropertyUserPatchNameFile = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyUserPatchNameFile");
+			kMIDIPropertyNameConfigurationDictionary = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyNameConfigurationDictionary");
 		}
 	
 #if XAMCORE_2_0
@@ -1542,6 +1544,15 @@ namespace CoreMidi {
 			}
 		}
 
+		[Mac (10,15), iOS (13,0)]
+		public string NameConfigurationDictionary {
+			get {
+				return GetString (kMIDIPropertyNameConfigurationDictionary);
+			}
+			set {
+				SetString (kMIDIPropertyNameConfigurationDictionary, value);
+			}
+		}
 
 		public int AdvanceScheduleTimeMuSec {
 			get {
