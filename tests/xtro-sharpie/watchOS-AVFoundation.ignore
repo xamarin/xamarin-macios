@@ -18,9 +18,5 @@
 !unknown-field! AVAudioUnitTypeOutput bound
 !unknown-field! AVAudioUnitTypePanner bound
 
-# added the class to expose a filed and match the other APIs.
-!unknown-type! AVCaptureDevice bound
-!unknown-type! AVContentKeyRequest bound
-
 # headers say it is present, but AVMetadataItemFilter is not
 !missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound

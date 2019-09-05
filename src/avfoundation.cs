@@ -7540,6 +7540,7 @@ namespace AVFoundation {
 		[Export ("progress")]
 		float Progress { get;  } // defined as 'float'
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'EstimateMaximumDuration' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'EstimateMaximumDuration' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'EstimateMaximumDuration' instead.")]
@@ -7662,6 +7663,7 @@ namespace AVFoundation {
 		[Export ("asset", ArgumentSemantic.Retain)]
 		AVAsset Asset { get; }
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'EstimateOutputFileLength' for more precise results.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'EstimateOutputFileLength' for more precise results.")]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'EstimateOutputFileLength' for more precise results.")]
@@ -9373,6 +9375,7 @@ namespace AVFoundation {
 		[Export ("flashEnabled")]
 		bool IsFlashEnabled { [Bind ("isFlashEnabled")] get; }
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AVCaptureResolvedPhotoSettings.PhotoProcessingTimeRange' instead.")]
 		[Export ("stillImageStabilizationEnabled")]
 		bool IsStillImageStabilizationEnabled { [Bind ("isStillImageStabilizationEnabled")] get; }
@@ -9804,6 +9807,9 @@ namespace AVFoundation {
 		Audio,
 	}
 
+#if WATCH
+	[Static]
+#endif
 	[NoTV, Watch (6,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: Cannot instantiate a AVCaptureDevice directly.
@@ -13068,7 +13074,10 @@ namespace AVFoundation {
 		IAVContentKeyRecipient[] GetContentKeyRecipients ();
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (6,0)]
+#if WATCH
+	[Static]
+#endif
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch (6,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeyRequest {

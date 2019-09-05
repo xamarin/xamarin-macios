@@ -323,7 +323,9 @@ namespace AVFoundation {
 		public bool HasUniformFormatDescriptions;
 	}
 
-	[NoTV, NoWatch, NoiOS, Mac (10,15)]
+#if MONOMAC
+
+	[Mac (10,15)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorAudioDependencyInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -331,4 +333,6 @@ namespace AVFoundation {
 
 		public nint PacketRefreshCount;
 	}
+#endif
+
 }
