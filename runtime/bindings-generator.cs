@@ -1510,6 +1510,18 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // Quaterniond func (double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.QuatD,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double },
+					},
+				}
+			);
+
 			// Required for ModelIO
 			data.Add (
 				new FunctionData {
@@ -2748,6 +2760,7 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t}");
 				break;
 			case "Quaternion":
+			case "Quaterniond":
 				writer.WriteLine ("\t{0}{2}vector.a = {1}.vector [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}vector.b = {1}.vector [1];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}vector.c = {1}.vector [2];", managedVariable, nativeVariable, accessor);
@@ -2885,6 +2898,7 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t}");
 				break;
 			case "Quaternion":
+			case "Quaterniond":
 				writer.WriteLine ("\t{0}.vector [0] = {1}{2}vector.a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0}.vector [1] = {1}{2}vector.b;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0}.vector [2] = {1}{2}vector.c;", nativeVariable, managedVariable, accessor);
@@ -3579,6 +3593,14 @@ namespace Xamarin.BindingMethods.Generator
 				NativeType = "simd_quatf",
 				NativeWrapperType = "struct QuatF",
 				RequireMarshal = true,
+			};
+
+			public static TypeData QuatD = new TypeData {
+				ManagedType = "Quaterniond",
+				NativeType = "simd_quatd",
+				NativeWrapperType = "struct QuatD",
+				RequireMarshal = true,
+				IsX64Stret = true,
 			};
 
 			public static TypeData MPSImageHistogramInfo = new TypeData {
