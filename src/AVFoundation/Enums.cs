@@ -387,22 +387,27 @@ namespace AVFoundation {
 
 	[Native]
 	// NSInteger - AVAudioSession.h
+	// typedef CF_ENUM(NSInteger, AVAudioSessionErrorCode) -> CoreAudioTypes.framework/Headers/AudioSessionTypes.h
 	public enum AVAudioSessionErrorCode : long {
 		None = 0,
-		MediaServicesFailed = 0x6D737276,
-		IsBusy = 0x21616374,
-		IncompatibleCategory = 0x21636174,
-		CannotInterruptOthers = 0x21696e74,
-		MissingEntitlement = 0x656e743f,
-		SiriIsRecording = 0x73697269,
-		CannotStartPlaying = 0x21706c61,
-		[iOS (7, 0)]
-		CannotStartRecording = 0x21726563,
+		MediaServicesFailed = 0x6D737276, // 'msrv'
+		IsBusy = 0x21616374, // '!act'
+		IncompatibleCategory = 0x21636174, // 'cat'
+		CannotInterruptOthers = 0x21696e74, // 'int'
+		MissingEntitlement = 0x656e743f, // 'ent?'
+		SiriIsRecording = 0x73697269, // 'siri'
+		CannotStartPlaying = 0x21706c61, // '!pla'
+		CannotStartRecording = 0x21726563, // '!rec'
 		BadParam = -50,
-		Unspecified = 0x77686174,
-		InsufficientPriority = 0x21707269,
-		[iOS (9,0)]
-		CodeResourceNotAvailable = 0x21726573
+		InsufficientPriority = 0x21707269, // '!pri'
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'ResourceNotAvailable' instead.")]
+		CodeResourceNotAvailable = 0x21726573,
+#endif
+		ResourceNotAvailable = 0x21726573, // '!res'
+		Unspecified = 0x77686174, // 'what'
+		ExpiredSession = 0x21736573, // '!ses'
+		SessionNotActive = 0x696e6163, // 'inac'
 	}
 #endif
 
