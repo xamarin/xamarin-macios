@@ -15,6 +15,7 @@ using System.IO;
 using NUnit.Framework;
 using System.Net.Http.Headers;
 using System.Text;
+using Foundation;
 #if MONOMAC
 using Foundation;
 #endif
@@ -269,6 +270,21 @@ namespace MonoTests.System.Net.Http
 				if (ex != null && ex.InnerException != null) {
 					// we could get here.. if we have a diff issue, in that case, lets get the exception message and assert is not the trust issue
 					Assert.AreNotEqual (ex.InnerException.Message, "Error: TrustFailure");
+				}
+			}
+		}
+
+		[Test]
+		public void AssertDefaultValuesNSUrlSessionHandler ()
+		{
+			using (var handler = new NSUrlSessionHandler ()) {
+				Assert.True (handler.AllowAutoRedirect, "Default redirects value");
+				Assert.True (handler.AllowsCellularAccess, "Default cellular data value.");
+			}
+			using (var config = NSUrlSessionConfiguration.DefaultSessionConfiguration) {
+				config.AllowsCellularAccess = false;
+				using (var handler = new NSUrlSessionHandler (config)) {
+					Assert.True (handler.AllowsCellularAccess, "Configuration cellular data value.");
 				}
 			}
 		}
