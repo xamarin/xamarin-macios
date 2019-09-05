@@ -157,7 +157,7 @@ namespace Foundation {
 			// therefore, we do not have to listen to the notifications.
 			isBackgroundSession = !string.IsNullOrEmpty (configuration.Identifier);
 #endif
-
+			allowsCellularAccess = configuration.AllowsCellularAccess;
 			AllowAutoRedirect = true;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
@@ -274,7 +274,7 @@ namespace Foundation {
 			}
 		}
 
-		bool allowsCellularAccess;
+		bool allowsCellularAccess = true;
 
 		public bool AllowsCellularAccess {
 			get {
