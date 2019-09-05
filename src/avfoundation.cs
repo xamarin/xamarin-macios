@@ -4572,9 +4572,11 @@ namespace AVFoundation {
 		[Export ("currentSampleStorageRange")]
 		AVSampleCursorStorageRange CurrentSampleStorageRange { get; }
 
+#if MONOMAC
 		[NoTV, NoWatch, NoiOS, Mac (10,15)]
 		[Export ("currentSampleAudioDependencyInfo")]
 		AVSampleCursorAudioDependencyInfo CurrentSampleAudioDependencyInfo { get; }
+#endif
 	}
 
 	[iOS (7,0), Mac (10, 9), Watch (6,0)]
@@ -13077,7 +13079,7 @@ namespace AVFoundation {
 #if WATCH
 	[Static]
 #endif
-	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch (6,0)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), Watch (6,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeyRequest {
