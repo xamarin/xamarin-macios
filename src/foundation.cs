@@ -3978,6 +3978,8 @@ namespace Foundation
 		NSObject NextObject (); 
 	}
 
+	interface NSEnumerator<T> : NSEnumerator {}
+
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSError : NSSecureCoding, NSCopying {
