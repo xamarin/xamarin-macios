@@ -517,5 +517,16 @@ namespace MetalPerformanceShaders {
 		GruOutputGateBiasTerms,
 		//Count, // must always be last, and because of this it will cause breaking changes.
 	}
+
+	[Flags]
+	[Native]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[TV (12,2), Mac (10,14,4), iOS (12,2)]
+	public enum MPSDeviceOptions : ulong
+	{
+		Default = 0x0,
+		LowPower = 0x1,
+		SkipRemovable = 0x2
+	}
 }
 #endif

@@ -6,7 +6,6 @@
 !missing-enum! MPSRayMaskOperator not bound
 !missing-enum! MPSTemporalWeighting not bound
 !missing-pinvoke! MPSGetImageType is not bound
-!missing-pinvoke! MPSGetPreferredDevice is not bound
 !missing-protocol! MPSCNNGroupNormalizationDataSource not bound
 !missing-protocol! MPSHeapProvider not bound
 !missing-protocol! MPSNDArrayAllocator not bound

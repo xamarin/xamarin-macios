@@ -20,6 +20,18 @@ namespace MetalPerformanceShaders {
 			return MPSSupportsMTLDevice (device == null ? IntPtr.Zero : device.Handle);
 		}
 
+		[DllImport (Constants.MetalPerformanceShadersLibrary)]
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
+		[TV (12,2), Mac (10,14,4), iOS (12,2)]
+		static extern /* id<MTLDevice> _Nullable */ IntPtr MPSGetPreferredDevice (MPSDeviceOptions options);
+		public static IMTLDevice GetPreferredDevice (MPSDeviceOptions options)
+		{
+			var h = MPSGetPreferredDevice (options);
+			if (h == IntPtr.Zero)
+				return null;
+			return new MTLDeviceWrapper (h, false);
+		}
+
 		internal unsafe static float [] GetTransform (IntPtr transform)
 		{
 			var t = (float*) transform;
