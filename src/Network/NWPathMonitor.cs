@@ -22,9 +22,17 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create ();
 
+		public NWPath currentPath;
 		public NWPathMonitor ()
 		{
+			currentPath = null;
 			InitializeHandle (nw_path_monitor_create ());
+			InternalSetUpdatedSnapshotHandler ((path) => {
+				currentPath = path;
+				if (userSnapshotHandler != null) {
+					userSnapshotHandler(currentPath);
+				}
+			});
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -33,6 +41,12 @@ namespace Network {
 		public NWPathMonitor (NWInterfaceType interfaceType)
 		{
 			InitializeHandle (nw_path_monitor_create_with_type (interfaceType));
+			InternalSetUpdatedSnapshotHandler ((path) => {
+				currentPath = path;
+				if (userSnapshotHandler != null) {
+					userSnapshotHandler(currentPath);
+				}
+			});
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -72,7 +86,7 @@ namespace Network {
 		static extern unsafe void nw_path_monitor_set_update_handler (IntPtr handle, void *callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetUpdatedSnapshotHandler (Action<NWPath> callback)
+		void InternalSetUpdatedSnapshotHandler (Action<NWPath> callback)
 		{
 			unsafe {
 				if (callback == null) {
@@ -90,6 +104,12 @@ namespace Network {
 					block_handler.CleanupBlock ();
 				}
 			}
+		}
+		Action<NWPath> userSnapshotHandler;
+
+		public void SetUpdatedSnapshotHandler (Action<NWPath> callback)
+		{
+			userSnapshotHandler = callback;
 		}
 
 		delegate void nw_path_monitor_cancel_handler_t (IntPtr block);
