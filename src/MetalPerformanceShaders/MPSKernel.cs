@@ -29,7 +29,7 @@ namespace MetalPerformanceShaders {
 			var h = MPSGetPreferredDevice (options);
 			if (h == IntPtr.Zero)
 				return null;
-			return new MTLDeviceWrapper (h, false);
+			return Runtime.GetINativeObject<IMTLDevice> (h, false);
 		}
 
 		internal unsafe static float [] GetTransform (IntPtr transform)
