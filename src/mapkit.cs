@@ -4,9 +4,11 @@
 // Authors:
 //   Geoff Norton
 //   Miguel de Icaza
+//   Whitney Schmidt
 //
 // Copyright 2009, Novell, Inc.
 // Copyright 2011-2013 Xamarin Inc.
+// Copyright 2019 Microsoft Corp.
 //
 #if XAMCORE_2_0 || !MONOMAC
 using CoreFoundation;
@@ -16,6 +18,7 @@ using CoreGraphics;
 using CoreLocation;
 #if MONOMAC
 using AppKit;
+using UITraitCollection = System.Int32;
 #else
 using UIKit;
 #endif
@@ -34,6 +37,11 @@ using UIColor=AppKit.NSColor;
 // helper for [NoWatch]
 using MKMapView=Foundation.NSObject;
 using MKAnnotationView=Foundation.NSObject;
+using MKShape = Foundation.NSObject;
+using MKOverlay = Foundation.NSObjectProtocol;
+using MKPolygon = Foundation.NSObject;
+using MKPolyline = Foundation.NSObject;
+using MKOverlayPathRenderer = Foundation.NSObject;
 #endif
 
 namespace MapKit {
@@ -373,6 +381,10 @@ namespace MapKit {
 		[iOS (11,0), Mac (10,13), Watch (4,0), TV (11,0)]
 		[Field ("MKMapItemTypeIdentifier")]
 		NSString TypeIdentifier { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[NullAllowed, Export ("pointOfInterestCategory")]
+		string PointOfInterestCategory { get; set; }
 	}
 
 #if !WATCH
@@ -688,6 +700,26 @@ namespace MapKit {
 		[Export ("showsZoomControls")]
 		bool ShowsZoomControls { get; set; }
 #endif
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Export ("setCameraZoomRange:animated:")]
+		void SetCameraZoomRange ([NullAllowed] MKMapCameraZoomRange cameraZoomRange, bool animated);
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Export ("cameraZoomRange", ArgumentSemantic.Copy)]
+		MKMapCameraZoomRange CameraZoomRange { get; set; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[NullAllowed, Export ("cameraBoundary", ArgumentSemantic.Copy)]
+		MKMapCameraBoundary CameraBoundary { get; set; }
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Export ("setCameraBoundary:animated:")]
+		void SetCameraBoundary ([NullAllowed] MKMapCameraBoundary cameraBoundary, bool animated);
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
+		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
 	}
 
 	[Static]
@@ -1090,7 +1122,15 @@ namespace MapKit {
 	[TV (9,2)]
 	[Mac (10,9)]
 	[BaseType (typeof (MKShape))]
-	interface MKPointAnnotation {
+	interface MKPointAnnotation : MKGeoJsonObject {
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Export ("initWithCoordinate:")]
+		IntPtr Constructor (CLLocationCoordinate2D coordinate);
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Export ("initWithCoordinate:title:subtitle:")]
+		IntPtr Constructor (CLLocationCoordinate2D coordinate, [NullAllowed] string title, [NullAllowed] string subtitle);
+
 		[Export ("coordinate")]
 		CLLocationCoordinate2D Coordinate { get; set; }
 }
@@ -1115,7 +1155,7 @@ namespace MapKit {
 	[TV (9,2)]
 	[Mac (10,9)]
 	[BaseType (typeof (MKMultiPoint))]
-	interface MKPolygon : MKOverlay {
+	interface MKPolygon : MKOverlay, MKGeoJsonObject {
 		[Export ("interiorPolygons")]
 		MKPolygon [] InteriorPolygons { get;  }
 
@@ -1151,7 +1191,7 @@ namespace MapKit {
 	[TV (9,2)]
 	[Mac (10,9)]
 	[BaseType (typeof (MKMultiPoint))]
-	interface MKPolyline : MKOverlay {
+	interface MKPolyline : MKOverlay, MKGeoJsonObject {
 		[Static]
 		[Export ("polylineWithCoordinates:count:")]
 		[Internal]
@@ -1188,7 +1228,7 @@ namespace MapKit {
 	[BaseType (typeof (MKShape))]
 	[TV (9,2)]
 	[Mac (10,9)]
-	interface MKMultiPoint {
+	interface MKMultiPoint : MKGeoJsonObject {
 		[Export ("points"), Internal]
 		IntPtr _Points { get;  }
 
@@ -1278,7 +1318,16 @@ namespace MapKit {
 
 		[TV (9,2)][NoWatch][iOS (9,3)][Mac (10,11,4)]
 		[Export ("initWithCompletion:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (MKLocalSearchCompletion completion);
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Export ("initWithNaturalLanguageQuery:")]
+		IntPtr Constructor (string naturalLanguageQuery);
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Export ("initWithNaturalLanguageQuery:region:")]
+		IntPtr Constructor (string naturalLanguageQuery, MKCoordinateRegion region);
 
 		[Export ("naturalLanguageQuery", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -1286,6 +1335,14 @@ namespace MapKit {
 
 		[Export ("region", ArgumentSemantic.Assign)]
 		MKCoordinateRegion Region { get; set; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Export ("resultTypes", ArgumentSemantic.Assign)]
+		MKLocalSearchResultType ResultTypes { get; set; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
+		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
 	}
 
 	[TV (9,2)]
@@ -1492,6 +1549,9 @@ namespace MapKit {
 		[Export ("pitch")]
 		nfloat Pitch { get; set; }
 
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CenterCoordinateDistance' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'CenterCoordinateDistance' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CenterCoordinateDistance' instead.")]
 		[Export ("altitude")]
 		double Altitude { get; set; }
 
@@ -1506,7 +1566,10 @@ namespace MapKit {
 		[Export ("cameraLookingAtCenterCoordinate:fromDistance:pitch:heading:")]
 		MKMapCamera CameraLookingAtCenterCoordinate (CLLocationCoordinate2D centerCoordinate, double locationDistance, nfloat pitch, double locationDirectionHeading);
 		
-	}
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Export ("centerCoordinateDistance")]
+		double CenterCoordinateDistance { get; set; }
+		}
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
@@ -1548,10 +1611,14 @@ namespace MapKit {
 		CGSize Size { get; set; }
 
 #if !MONOMAC
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use `TraitCollection.displayScale` instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use `TraitCollection.displayScale` instead.")]
 		[Export ("scale", ArgumentSemantic.Assign)]
 		nfloat Scale { get; set; }
 #endif
-
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use `PointOfInterestFilter` instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use `PointOfInterestFilter` instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use `PointOfInterestFilter` instead.")]
 		[Export ("showsPointsOfInterest")]
 		bool ShowsPointsOfInterest { get; set; }
 
@@ -1564,6 +1631,14 @@ namespace MapKit {
 		[NullAllowed, Export ("appearance", ArgumentSemantic.Strong)]
 		NSAppearance Appearance { get; set; }
 #endif
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
+		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
+
+		[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+		[Export ("traitCollection", ArgumentSemantic.Copy)]
+		UITraitCollection TraitCollection { get; set; }
 	}
 
 	[TV (9,2)]
@@ -1649,6 +1724,10 @@ namespace MapKit {
 
 		[Export ("fillPath:inContext:")]
 		void FillPath (CGPath path, CGContext context);
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Export ("shouldRasterize")]
+		bool ShouldRasterize { get; set; }
 	}
 
 	[TV (9,2)]
@@ -1804,6 +1883,9 @@ namespace MapKit {
 		[Export ("region", ArgumentSemantic.Assign)]
 		MKCoordinateRegion Region { get; set; }
 
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ResultTypes' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'ResultTypes' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'ResultTypes' instead.")]
 		[Export ("filterType", ArgumentSemantic.Assign)]
 		MKSearchCompletionFilterType FilterType { get; set; }
 
@@ -1823,6 +1905,14 @@ namespace MapKit {
 
 		[Export ("cancel")]
 		void Cancel ();
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Export ("resultTypes", ArgumentSemantic.Assign)]
+		MKLocalSearchCompleterResultType ResultTypes { get; set; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
+		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
 	}
 
 	[TV (9,2)][NoWatch][iOS (9,3)]
@@ -1973,6 +2063,313 @@ namespace MapKit {
 
 		[NullAllowed, Export ("mapView", ArgumentSemantic.Weak)]
 		MKMapView MapView { get; set; }
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface MKPointOfInterestFilter : NSSecureCoding, NSCopying
+	{
+		[Static]
+		[Export ("filterIncludingAllCategories")]
+		MKPointOfInterestFilter FilterIncludingAllCategories { get; }
+
+		[Static]
+		[Export ("filterExcludingAllCategories")]
+		MKPointOfInterestFilter FilterExcludingAllCategories { get; }
+
+		[Internal]
+		[Export ("initIncludingCategories:")]
+		IntPtr InitIncludingCategories (string[] categories);
+
+		[Internal]
+		[Export ("initExcludingCategories:")]
+		IntPtr InitExcludingCategories (string[] categories);
+
+		[Export ("includesCategory:")]
+		bool IncludesCategory (string category);
+
+		[Export ("excludesCategory:")]
+		bool ExcludesCategory (string category);
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryAirport")]
+		NSString Airport { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryAmusementPark")]
+		NSString AmusementPark { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryAquarium")]
+		NSString Aquarium { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryATM")]
+		NSString ATM { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryBakery")]
+		NSString Bakery { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryBank")]
+		NSString Bank { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryBeach")]
+		NSString Beach { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryBrewery")]
+		NSString Brewery { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryCafe")]
+		NSString Cafe { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryCampground")]
+		NSString Campground { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryCarRental")]
+		NSString CarRental { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryEVCharger")]
+		NSString EVCharger { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryFireStation")]
+		NSString FireStation { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryFitnessCenter")]
+		NSString FitnessCenter { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryFoodMarket")]
+		NSString FoodMarket { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryGasStation")]
+		NSString GasStation { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryHospital")]
+		NSString Hospital { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryHotel")]
+		NSString Hotel { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryLaundry")]
+		NSString Laundry { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryLibrary")]
+		NSString Library { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryMarina")]
+		NSString Marina { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryMovieTheater")]
+		NSString MovieTheater { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryMuseum")]
+		NSString Museum { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryNationalPark")]
+		NSString NationalPark { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryNightlife")]
+		NSString Nightlife { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryPark")]
+		NSString Park { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryParking")]
+		NSString Parking { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryPharmacy")]
+		NSString Pharmacy { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryPolice")]
+		NSString Police { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryPostOffice")]
+		NSString PostOffice { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryPublicTransport")]
+		NSString PublicTransport { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryRestaurant")]
+		NSString Restaurant { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryRestroom")]
+		NSString Restroom { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategorySchool")]
+		NSString School { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryStadium")]
+		NSString Stadium { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryStore")]
+		NSString Store { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryTheater")]
+		NSString Theater { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryUniversity")]
+		NSString University { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryWinery")]
+		NSString Winery { get; }
+
+		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+		[Field ("MKPointOfInterestCategoryZoo")]
+		NSString Zoo { get; }
+	}
+
+	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+	[Protocol (Name = "MKGeoJSONObject")]
+	interface MKGeoJsonObject {}
+
+	interface IMKGeoJsonObject {}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject), Name = "MKGeoJSONDecoder")]
+	interface MKGeoJsonDecoder
+	{
+		[Export ("geoJSONObjectsWithData:error:")]
+		[return: NullAllowed]
+		IMKGeoJsonObject[] GeoJsonObjects (NSData data, [NullAllowed] out NSError error);
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject), Name = "MKGeoJSONFeature")]
+	interface MKGeoJsonFeature : MKGeoJsonObject
+	{
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; }
+
+		[NullAllowed, Export ("properties")]
+		NSData Properties { get; }
+
+		[Export ("geometry")]
+		IMKGeoJsonObject[] Geometry { get; }
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface MKMapCameraZoomRange : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithMinCenterCoordinateDistance:maxCenterCoordinateDistance:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double minDistance, double maxDistance);
+
+		[Internal]
+		[Export ("initWithMinCenterCoordinateDistance:")]
+		IntPtr InitWithMinCenterCoordinateDistance (double minDistance);
+
+		[Internal]
+		[Export ("initWithMaxCenterCoordinateDistance:")]
+		IntPtr InitWithMaxCenterCoordinateDistance (double maxDistance);
+
+		[Export ("minCenterCoordinateDistance")]
+		double MinCenterCoordinateDistance { get; }
+
+		[Export ("maxCenterCoordinateDistance")]
+		double MaxCenterCoordinateDistance { get; }
+
+		[Field ("MKMapCameraZoomDefault")]
+		double MKMapCameraZoomDefault { get; }
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface MKMapCameraBoundary : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithMapRect:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (MKMapRect mapRect);
+
+		[Export ("initWithCoordinateRegion:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (MKCoordinateRegion region);
+
+		[Export ("mapRect")]
+		MKMapRect MapRect { get; }
+
+		[Export ("region")]
+		MKCoordinateRegion Region { get; }
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(MKShape))]
+	interface MKMultiPolygon : MKOverlay, MKGeoJsonObject
+	{
+		[Export ("initWithPolygons:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (MKPolygon[] polygons);
+
+		[Export ("polygons", ArgumentSemantic.Copy)]
+		MKPolygon[] Polygons { get; }
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(MKOverlayPathRenderer))]
+	interface MKMultiPolygonRenderer
+	{
+		[Export ("initWithMultiPolygon:")]
+		IntPtr Constructor (MKMultiPolygon multiPolygon);
+
+		[Export ("multiPolygon")]
+		MKMultiPolygon MultiPolygon { get; }
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(MKShape))]
+	interface MKMultiPolyline : MKOverlay, MKGeoJsonObject
+	{
+		[Export ("initWithPolylines:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (MKPolyline[] polylines);
+
+		[Export ("polylines", ArgumentSemantic.Copy)]
+		MKPolyline[] Polylines { get; }
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(MKOverlayPathRenderer))]
+	interface MKMultiPolylineRenderer
+	{
+		[Export ("initWithMultiPolyline:")]
+		IntPtr Constructor (MKMultiPolyline multiPolyline);
+
+		[Export ("multiPolyline")]
+		MKMultiPolyline MultiPolyline { get; }
 	}
 }
 #endif // XAMCORE_2_0 || !MONOMAC

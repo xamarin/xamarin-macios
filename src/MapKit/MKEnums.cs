@@ -114,6 +114,9 @@ namespace MapKit {
 
 	[TV (9,2)][NoWatch][iOS (9,3)]
 	[Native]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use `MKLocalSearchCompleterResultType` instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use `MKLocalSearchCompleterResultType` instead.")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use `MKLocalSearchCompleterResultType` instead.")]
 	public enum MKSearchCompletionFilterType : long {
 		AndQueries = 0,
 		Only
@@ -140,6 +143,24 @@ namespace MapKit {
 		Hidden,
 		Visible,
 	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[Native]
+	public enum MKLocalSearchCompleterResultType : long
+	{
+		Address = 1 << 0,
+		PointOfInterest = 1 << 1,
+		Query = 1 << 2,
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[Native]
+	public enum MKLocalSearchResultType : ulong
+	{
+		Address = 1 << 0,
+		PointOfInterest = 1 << 1,
+	}
+
 }
 
 #endif
