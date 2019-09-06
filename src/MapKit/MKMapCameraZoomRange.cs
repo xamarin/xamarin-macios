@@ -33,5 +33,3 @@ namespace MapKit {
 }
 #endif
 #endif // !WATCH
-
-MKMapCameraZoomRange

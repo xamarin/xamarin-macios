@@ -1569,7 +1569,7 @@ namespace MapKit {
 		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
 		[Export ("centerCoordinateDistance")]
 		double CenterCoordinateDistance { get; set; }
-		}
+	}
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
@@ -1616,6 +1616,7 @@ namespace MapKit {
 		[Export ("scale", ArgumentSemantic.Assign)]
 		nfloat Scale { get; set; }
 #endif
+
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use `PointOfInterestFilter` instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use `PointOfInterestFilter` instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use `PointOfInterestFilter` instead.")]
