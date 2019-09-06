@@ -10918,27 +10918,27 @@ namespace Foundation
 		[Export ("rangeValue")]
 		NSRange RangeValue { get; }
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Static, Export ("valueWithCMTime:")]
 		NSValue FromCMTime (CMTime time);
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Export ("CMTimeValue")]
 		CMTime CMTimeValue { get; }
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Static, Export ("valueWithCMTimeMapping:")]
 		NSValue FromCMTimeMapping (CMTimeMapping timeMapping);
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Export ("CMTimeMappingValue")]
 		CMTimeMapping CMTimeMappingValue { get; }
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Static, Export ("valueWithCMTimeRange:")]
 		NSValue FromCMTimeRange (CMTimeRange timeRange);
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Export ("CMTimeRangeValue")]
 		CMTimeRange CMTimeRangeValue { get; }
 

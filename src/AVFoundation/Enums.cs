@@ -40,7 +40,7 @@ namespace AVFoundation {
 		Max = 0x7F
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[Native]
 	// NSInteger - AVAssetExportSession.h
 	public enum AVAssetExportSessionStatus : long {
@@ -52,7 +52,7 @@ namespace AVFoundation {
 		Cancelled
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[Native]
 	// NSInteger - AVAssetReader.h
 	public enum AVAssetReaderStatus : long {
@@ -63,7 +63,7 @@ namespace AVFoundation {
 		Cancelled,
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[Native]
 	// NSInteger - AVAssetWriter.h
 	public enum AVAssetWriterStatus : long {
@@ -158,7 +158,7 @@ namespace AVFoundation {
 
 	// Populated in NSError.Code, an NSInteger
 	// anonymous enum - AVError.h
-	[NoWatch]
+	[Watch (6,0)]
 	[Native]
 	public enum AVError : long {
 		Unknown = -11800,
@@ -246,7 +246,7 @@ namespace AVFoundation {
 		NoSourceTrack = -11869,
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
 	public enum AVPlayerActionAtItemEnd : long {
@@ -255,7 +255,7 @@ namespace AVFoundation {
 		None
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[Native]
 	// NSInteger - AVPlayerItem.h
 	public enum AVPlayerItemStatus : long {
@@ -273,14 +273,14 @@ namespace AVFoundation {
 	}
 #endif
 
-	[NoWatch]
+	[Watch (6,0)]
 	[Native]
 	// NSInteger - AVAsynchronousKeyValueLoading.h
 	public enum AVKeyValueStatus : long {
 		Unknown, Loading, Loaded, Failed, Cancelled
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
 	public enum AVPlayerStatus : long {
@@ -289,7 +289,7 @@ namespace AVFoundation {
 		Failed
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[Native]
 	// NSUInteger - AVAsset.h
 	public enum AVAssetReferenceRestrictions : ulong {
@@ -301,7 +301,7 @@ namespace AVFoundation {
 		ForbidAll = 0xFFFF,
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[Native]
 	// NSInteger - AVAssetImageGenerator.h
 	public enum AVAssetImageGeneratorResult : long {
@@ -556,7 +556,7 @@ namespace AVFoundation {
 		Linear = 3
 	}
 
-	[TV (10,2), NoWatch]
+	[TV (10,2), Watch (6,0)]
 	[Native]
 	public enum AVQueuedSampleBufferRenderingStatus : long {
 		Unknown, Rendering, Failed
@@ -640,13 +640,14 @@ namespace AVFoundation {
 		VideoDeviceNotAvailableDueToSystemPressure = 5,
 	}
 
-	[iOS (9,0)]
+#endif
+
+	[iOS (9,0), Mac (10,15)]
 	[Native]
 	public enum AVSpeechSynthesisVoiceQuality : long {
 		Default = 1,
 		Enhanced
 	}
-#endif
 
 	[iOS (9,0), Mac (10,11)]
 	[Native]
@@ -680,7 +681,9 @@ namespace AVFoundation {
 		ChannelsToTracks = (1 << 0)
 	}
 			
-	[NoiOS][NoTV][NoWatch]
+	[NoTV]
+	[iOS (13,0)]
+	[Watch (6,0)]
 	[Mac (10,11)]
 	[Native]
 	public enum AVMovieWritingOptions : ulong
@@ -718,7 +721,7 @@ namespace AVFoundation {
 		Scheduled,
 	}
 
-	[NoTV, NoWatch, NoMac, iOS (10,0)]
+	[NoTV, NoWatch, Mac (10,15), iOS (10,0)]
 	[Native]
 	public enum AVCaptureColorSpace : long
 	{
@@ -733,7 +736,7 @@ namespace AVFoundation {
 		Forever = -1
 	}
 
-	[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
+	[Watch (6,0), iOS (10,0), TV (10,0), Mac (10,12)]
 	[Native]
 	public enum AVPlayerTimeControlStatus : long
 	{
@@ -742,7 +745,7 @@ namespace AVFoundation {
 		Playing
 	}
 
-	[NoWatch, NoTV, iOS (10,0), NoMac]
+	[NoWatch, NoTV, iOS (10,0), Mac (10,15)]
 	[Native]
 	public enum AVAudioSessionIOType : long
 	{
@@ -750,7 +753,7 @@ namespace AVFoundation {
 		Aggregated = 1,
 	}
 
-	[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
+	[Watch (6,0), iOS (10,0), TV (10,0), Mac (10,12)]
 	[Native]
 	public enum AVPlayerLooperStatus : long {
 		Unknown,
@@ -802,7 +805,14 @@ namespace AVFoundation {
 
 		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
 		[Field ("AVContentKeySystemClearKey")]
-		AVContentKeySystemClearKey = 1,
+		ClearKey = 1,
+
+		[Obsolete ("Use 'AVContentKeySystem.SystemClearKey' instead.")]
+		AVContentKeySystemClearKey = ClearKey,
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Field ("AVContentKeySystemAuthorizationToken")]
+		AuthorizationToken = 2,
 	}
 
 	// Convience enum for native string values 
@@ -836,15 +846,52 @@ namespace AVFoundation {
 		[Field ("AVAssetExportPresetPassthrough")]
 		Passthrough = 9, // AVAssetExportPresetPassthrough
 
+		[Obsolete ("Use 'AVOutputSettingsPreset.PresetHevc1920x1080' instead.")]
 		[iOS (11, 0), Mac (10, 13)]
 		[TV (11, 0)]
 		[Field ("AVOutputSettingsPresetHEVC1920x1080")]
 		PresetHevc1920x1080 = 11, 
 
+		[Obsolete ("Use 'AVOutputSettingsPreset.PresetHevc3840x2160' instead.")]
 		[iOS (11, 0), Mac (10, 13)]
 		[TV (11, 0)]
 		[Field ("AVOutputSettingsPresetHEVC3840x2160")]
 		PresetHevc3840x2160 = 12,
+	}
+
+	[TV (9,0), NoWatch, Mac (10,9), iOS (7,0)]
+	public enum AVOutputSettingsPreset {
+		[Field ("AVOutputSettingsPreset640x480")]
+		Preset640x480 = 0,
+
+		[Field ("AVOutputSettingsPreset960x540")]
+		Preset960x540 = 1,
+
+		[Field ("AVOutputSettingsPreset1280x720")]
+		Preset1280x720 = 2,
+
+		[Field ("AVOutputSettingsPreset1920x1080")]
+		Preset1920x1080 = 3,
+
+		[Mac (10,10), iOS (9,0)]
+		[Field ("AVOutputSettingsPreset3840x2160")]
+		Preset3840x2160 = 4,
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("AVOutputSettingsPresetHEVC1920x1080")]
+		PresetHevc1920x1080 = 11, // we added the wrong value in the export enum, we use the same so that they can be swap
+
+		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[Field ("AVOutputSettingsPresetHEVC3840x2160")]
+		PresetHevc3840x2160 = 12, // we added the wrong value in the export enum, we use the same so that they can be swap
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Field ("AVOutputSettingsPresetHEVC1920x1080WithAlpha")]
+		PresetHevc1920x1080WithAlpha = 13,
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Field ("AVOutputSettingsPresetHEVC3840x2160WithAlpha")]
+		PresetHevc3840x2160WithAlpha = 14,
 	}
 
 	[TV (11,0), NoWatch, iOS (11,0)]
@@ -963,6 +1010,21 @@ namespace AVFoundation {
 		[Field ("AVVideoCodecTypeHEVC")]
 		Hevc = 5,
 
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Field ("AVVideoCodecTypeAppleProRes422HQ")]
+		AppleProRes422HQ = 6,
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Field ("AVVideoCodecTypeAppleProRes422LT")]
+		AppleProRes422LT = 7,
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Field ("AVVideoCodecTypeAppleProRes422Proxy")]
+		AppleProRes422Proxy = 8,
+
+		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[Field ("AVVideoCodecTypeHEVCWithAlpha")]
+		HevcWithAlpha = 9,
 	}
 
 	[TV (11,0), NoWatch, iOS (11,0)]
@@ -994,7 +1056,7 @@ namespace AVFoundation {
 
 	[Flags]
 	[Native]
-	[Watch (5,0), TV (12,0), iOS (12,0), NoMac]
+	[Watch (5,0), TV (12,0), iOS (12,0), Mac (10,15)]
 	public enum AVAudioSessionActivationOptions : ulong
 	{
 		None = 0x0,
@@ -1007,4 +1069,46 @@ namespace AVFoundation {
 		Short = 0x73687274, // 1936224884 - 'shrt'
 		Normal = 0x6e726d6c, //1852992876 - 'nrml'
 	}
+
+	[Watch (6,0), iOS (13,0), TV (13,0), Mac (10,15)]
+	[Native]
+	public enum AVSpeechSynthesisVoiceGender : long {
+		Unspecified,
+		Male,
+		Female,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[Native]
+	public enum AVCapturePhotoQualityPrioritization : long {
+		Speed = 1,
+		Balanced = 2,
+		Quality = 3,
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[Native]
+	public enum AVAudioEnvironmentOutputType : long {
+		Auto = 0,
+		Headphones = 1,
+		BuiltInSpeakers = 2,
+		ExternalSpeakers = 3,
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[Native]
+	public enum AVAudio3DMixingSourceMode : long {
+		SpatializeIfMono = 0,
+		Bypass = 1,
+		PointSource = 2,
+		AmbienceBed = 3,
+	}
+
+	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[Native]
+	public enum AVAudio3DMixingPointSourceInHeadMode : long {
+		Mono = 0,
+		Bypass = 1,
+	}
+
 }
