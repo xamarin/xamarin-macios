@@ -43,3 +43,9 @@ Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.ClearTest
 Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.ContainsTests
 Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.GettingByIndexTests
 Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.CountTests
+Platform32:System.Text.Tests.StringBuilderTests.EnsureCapacity
+
+# test fail because they try to create more threands than what the platform can handle. Mono issue: https://github.com/mono/mono/issues/16711 
+Platform32:System.Threading.Tasks.Tests.TaskRtTests_Core.RunLongRunningTaskTests
+Platform32:System.Threading.Tasks.Tests.TaskRtTests_Core.TestTaskTConstruction_tco
+Platform32:Test.TaskContinueWhenAnyTests.RunContinueWhenAnyTests
