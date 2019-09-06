@@ -88,14 +88,17 @@ namespace Introspection
 			"Addl",
 			"Addr",
 			"Adjustmentfor",
+			"Aes", // Advanced Encryption Standard
 			"Aifc",
 			"Aiff",
+			"Agc",
 			"Aio",
 			"Alg", // short for Algorithm
 			"Alpn", // Application-Layer Protocol Negotiation RFC7301
 			"Amete",
 			"Amr",
 			"Anglet",
+			"Apng", // Animated Portable Network Graphics
 			"Aps",
 			"Arraycollation",
 			"Argb",
@@ -107,6 +110,7 @@ namespace Introspection
 			"Attrs", // Attributes (used by Apple for keys)
 			"Audiofile",
 			"Automapping",
+			"Automatch",
 			"Automounted",
 			"Autoredirect",
 			"Autospace",
@@ -144,6 +148,7 @@ namespace Introspection
 			"Characterteristic",
 			"Chapv",
 			"Cholesky",
+			"Chacha",
 			"Chromaticities",
 			"Ciexyz",
 			"Ciff",
@@ -200,6 +205,7 @@ namespace Introspection
 			"Ebu",
 			"Ecc",   // Elliptic Curve Cryptography
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
+			"Ecdhe", // Elliptic Curve Diffie-Hellman Ephemeral
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
 			"Ecn",   // Explicit Congestion Notification
@@ -250,6 +256,7 @@ namespace Introspection
 			"Greeking",
 			"Gtin",
 			"Hardlink",
+			"Heics", // High Efficiency Image File Format (Sequence)
 			"Hdmi",
 			"Hdr",
 			"Hectopascals",
@@ -386,6 +393,7 @@ namespace Introspection
 			"Nyquist",
 			"Oaep", // Optimal asymmetric encryption padding
 			"Objectfor",
+			"Objectness",
 			"Occlussion",
 			"Ocurrences",
 			"Ocsp", // Online Certificate Status Protocol
@@ -514,7 +522,10 @@ namespace Introspection
 			"th",
 			"Threadgroup",
 			"Threadgroups",
+			"Thumbnailing",
 			"Thumbstick",
+			"Thumbsticks",
+			"Timecodes",
 			"Timelapse",
 			"Timelapses",
 			"Tls",

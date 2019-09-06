@@ -40,14 +40,14 @@ namespace Photos {
 #if MONOMAC
 	public partial class PHAssetCollection {
 
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11")]
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
 		public static PHFetchResult FetchMoments (PHFetchOptions options)
 		{
 			return null;
 		}
 
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11")]
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
 		public static PHFetchResult FetchMoments (PHCollectionList momentList, PHFetchOptions options)
 		{
@@ -57,14 +57,14 @@ namespace Photos {
 
 	public partial class PHCollectionList {
 
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11")]
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
 		public static PHFetchResult FetchMomentLists (PHCollectionListSubtype subType, PHFetchOptions options)
 		{
 			return null;
 		}
 
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11")]
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
 		public static PHFetchResult FetchMomentLists (PHCollectionListSubtype subType, PHAssetCollection moment, PHFetchOptions options)
 		{
@@ -74,7 +74,7 @@ namespace Photos {
 
 	public partial class PHContentEditingInput {
 
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11")]
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX, message: "Use 'AudiovisualAsset' instead.")]
 		public virtual AVFoundation.AVAsset AvAsset {
 			get { return AudiovisualAsset; }
@@ -85,7 +85,7 @@ namespace Photos {
 
 	public partial class PHImageManager {
 
-		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11")]
+		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX, message: "Use 'RequestImageDataAndOrientation (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageManagerRequestImageDataHandler resultHandler)' instead.")]
 		public virtual int RequestImageData (PHAsset asset, PHImageRequestOptions options, PHImageDataHandler handler)
 		{
