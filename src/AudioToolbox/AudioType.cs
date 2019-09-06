@@ -70,6 +70,7 @@ namespace AudioToolbox {
 		MPEG4AAC_ELD_V2         = 0x61616367, // 'aacg',    
 		MPEG4AAC_HE_V2          = 0x61616370,
 		MPEG4AAC_Spatial        = 0x61616373,
+		MpegD_Usac              = 0x75736163, // 'usac' (Unified Speech and Audio Coding)
 		AMR                     = 0x73616d72, // 'samr'
 		AMRWideBand             = 0x73617762, // 'sawb'
 		Audible                 = 0x41554442,
@@ -390,6 +391,16 @@ namespace AudioToolbox {
 		CenterSurroundDirect  = 44,
 		Haptic                = 45,
    
+		LeftTopFront          = 46,
+		CenterTopFront        = 47,
+		RightTopFront         = 48,
+		LeftTopMiddle         = 49,
+		CenterTopMiddle       = 50,
+		RightTopMiddle        = 51,
+		LeftTopRear           = 52,
+		CenterTopRear         = 53,
+		RightTopRear          = 54,
+
 		// first order ambisonic channels
 		Ambisonic_W           = 200,
 		Ambisonic_X           = 201,
@@ -491,7 +502,16 @@ namespace AudioToolbox {
 		VerticalHeightRight        = 1<<14,
 		TopBackLeft                = 1<<15,
 		TopBackCenter              = 1<<16,
-		TopBackRight               = 1<<17
+		TopBackRight               = 1<<17,
+		LeftTopFront               = 1<<18,
+		CenterTopFront             = 1<<19,
+		RightTopFront              = 1<<20,
+		LeftTopMiddle              = 1<<21,
+		CenterTopMiddle            = 1<<22,
+		RightTopMiddle             = 1<<23,
+		LeftTopRear                = 1<<24,
+		CenterTopRear              = 1<<25,
+		RightTopRear               = 1<<26,
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -563,6 +583,7 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
+	// CoreAudioTypes.framework/Headers/CoreAudioBaseTypes.h
 	public enum AudioChannelLayoutTag : uint { // UInt32 AudioChannelLayoutTag
 		UseChannelDescriptions   = (0<<16) | 0,     
 		UseChannelBitmap         = (1<<16) | 0,     
@@ -709,8 +730,23 @@ namespace AudioToolbox {
 		DTS_8_1_B                = (181<<16) | 9,                        
 		DTS_6_1_D                = (182<<16) | 7,
 
+		Wave_2_1                 = DVD_4,
+		Wave_3_0                 = MPEG_3_0_A,
+		Wave_4_0_A               = ITU_2_2,
+		Wave_4_0_B               = (185<<16) | 4,
+		Wave_5_0_A               = MPEG_5_0_A,
+		Wave_5_0_B               = (186<<16) | 5,
+		Wave_5_1_A               = MPEG_5_1_A,
+		Wave_5_1_B               = (187<<16) | 6,
+		Wave_6_1                 = (188<<16) | 7,
+		Wave_7_1                 = (189<<16) | 8,
+
 		HOA_ACN_SN3D             = (190U<<16),
 		HOA_ACN_N3D              = (191U<<16),
+
+		Atmos_7_1_4              = (192 << 16) | 12,
+		Atmos_9_1_6              = (193 << 16) | 16,
+		Atmos_5_1_2              = (194 << 16) | 8,
 		
 		DiscreteInOrder          = (147<<16) | 0,                       // needs to be ORed with the actual number of channels  
 		Unknown                  = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
