@@ -289,7 +289,7 @@ public class B : A {}
 				Console.WriteLine ("first build done");
 
 				dt = DateTime.Now;
-				System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older.
+				EnsureFilestampChange ();
 
 				mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
 				Console.WriteLine ("second build done");
@@ -306,7 +306,7 @@ public class B : A {}
 				File.Copy (exe2, mtouch.RootAssembly, true);
 
 				dt = DateTime.Now;
-				System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older.
+				EnsureFilestampChange ();
 
 				mtouch.AssertExecute (MTouchAction.BuildDev, "third build");
 				Console.WriteLine ("third build done");
@@ -314,7 +314,7 @@ public class B : A {}
 
 				// Test that a complete rebuild occurs when command-line options changes
 				dt = DateTime.Now;
-				System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older.
+				EnsureFilestampChange ();
 
 				mtouch.GccFlags = "-v";
 				mtouch.AssertExecute (MTouchAction.BuildDev, "fourth build");
@@ -440,7 +440,7 @@ public class B : A {}
 					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
-					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+					EnsureFilestampChange ();
 
 					mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
 					Console.WriteLine ($"{DateTime.Now} **** SECOND BUILD DONE ****");
@@ -476,7 +476,7 @@ public class B : A {}
 					// changes (there should be no changes in Xamarin.iOS.dll nor mscorlib.dll, even after linking)
 
 					timestamp = DateTime.Now;
-					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+					EnsureFilestampChange ();
 
 					// Rebuild the extension's .exe
 					extension.CreateTemporaryServiceExtension (extraCode: codeB);
@@ -488,7 +488,7 @@ public class B : A {}
 					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
-					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+					EnsureFilestampChange ();
 
 					// Rebuild the main app's .exe
 					mtouch.CreateTemporaryApp (extraCode: codeB);
@@ -500,7 +500,7 @@ public class B : A {}
 					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
-					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+					EnsureFilestampChange ();
 
 					// Add a config file to the extension. This file should be added to the app, and the AOT-compiler re-executed for the root assembly.
 					File.WriteAllText (extension.RootAssembly + ".config", "<configuration></configuration>");
@@ -513,7 +513,7 @@ public class B : A {}
 					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
-					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+					EnsureFilestampChange ();
 
 					// Add a config file to the container. This file should be added to the app, and the AOT-compiler re-executed for the root assembly.
 					File.WriteAllText (mtouch.RootAssembly + ".config", "<configuration></configuration>");
@@ -526,7 +526,7 @@ public class B : A {}
 					assertSupportsDynamicRegistrar ();
 
 					timestamp = DateTime.Now;
-					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+					EnsureFilestampChange ();
 					{
 						// Add a satellite to the extension.
 						var satellite = extension.CreateTemporarySatelliteAssembly ();
@@ -541,7 +541,7 @@ public class B : A {}
 					}
 
 					timestamp = DateTime.Now;
-					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+					EnsureFilestampChange ();
 
 					{
 						// Add a satellite to the container.
@@ -2349,7 +2349,7 @@ public class B
 				tool.CreateTemporaryApp ();
 				tool.Linker = MTouchLinker.DontLink;
 				tool.Debug = true;
-				System.Threading.Thread.Sleep (1000); // HFS does not have sub-second timestamp resolution, so make sure the timestamps actually are different...
+				EnsureFilestampChange ();
 				tool.AssertExecute (MTouchAction.BuildSim);
 				tool.AssertOutputPattern ("was built using fast-path for simulator"); // This is just to ensure we're actually testing fastsim. If this fails, modify the mtouch options to make this test use fastsim again.
 				Assert.That (File.GetLastWriteTimeUtc (tool.RootAssembly), Is.LessThan (File.GetLastWriteTimeUtc (tool.NativeExecutablePath)), "simlauncher timestamp");
@@ -3580,7 +3580,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				var exeStamp = File.GetLastWriteTimeUtc (exePath);
 				var mdbStamp = File.GetLastWriteTimeUtc (mdbPath);
 
-				System.Threading.Thread.Sleep (1000); // HFS does not have sub-second timestamp resolution, so make sure the timestamps actually change...
+				EnsureFilestampChange ();
 				// Recompile the exe, adding only whitespace. This will only change the debug files
 				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", "/debug:full", use_csc: false);
 
@@ -4447,6 +4447,24 @@ public class TestApp {
 					return v;
 				return v.Substring (idx + 2);
 			});
+		}
+		
+		static bool? is_apfs;
+		public static bool IsAPFS {
+			get {
+				if (!is_apfs.HasValue) {
+					var exit_code = ExecutionHelper.Execute ("/bin/df", "-t apfs /", out var output, TimeSpan.FromSeconds (10));
+					is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
+				}
+				return is_apfs.Value;
+			}
+		}
+
+		public static void EnsureFilestampChange ()
+		{
+			if (IsAPFS)
+				return;
+			System.Threading.Thread.Sleep (1000);
 		}
 #endregion
 	}
