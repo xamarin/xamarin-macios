@@ -149,19 +149,11 @@ namespace MonoTouchFixtures.UIKit {
 
 				tb.TintColor = null;
 				if (TestRuntime.IsTVOS) {
-					if (TestRuntime.CheckXcodeVersion (11, 0)) {
-						// Defaults to black in Xcode 11 Beta 5,
-						// but unfortunately while it quacks like a UIColor, the returned object in TintColor
-						// is a UIDynamicSystemColor so IsEqual will fail... so let's peel the onion and compare CGColor instead.
-						Assert.That (tb.TintColor.CGColor, Is.EqualTo (UIColor.Black.CGColor), "3");
-					}
-					else
-						Assert.That (tb.TintColor, Is.EqualTo (UIColor.White), "3");
-				}
-
-				else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false))
+					// we only care that setting `null` gives us back some default OS value
+					Assert.NotNull (tb.TintColor, "3");
+				} else if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
 					Assert.That (tb.TintColor, Is.Not.EqualTo (UIColor.White), "3");
-				else
+				} else
 					Assert.Null (tb.TintColor, "3");
 			}
 		}
