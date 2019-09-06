@@ -57,7 +57,7 @@ clean-local::
 
 X86_64_SLICE=$(abspath $(CURDIR)/x86-64-slice.dylib)
 $(X86_64_SLICE): Makefile
-	echo "void x86_64_function_for_notarization_workaround () {}" | $(MAC_CC) -shared -x c -o$@ -
+	echo "void xamarin_x86_64_function_for_notarization_workaround () {}" | $(MAC_CC) -shared -x c -o$@ -
 
 all-local:: .stamp-download-mono .stamp-mono-ios-sdk-destdir
 
