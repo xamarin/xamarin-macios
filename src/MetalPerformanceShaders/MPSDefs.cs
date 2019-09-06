@@ -526,7 +526,7 @@ namespace MetalPerformanceShaders {
 	{
 		Default = 0x0,
 		LowPower = 0x1,
-		SkipRemovable = 0x2
+		SkipRemovable = 0x2,
 	}
 }
 #endif
