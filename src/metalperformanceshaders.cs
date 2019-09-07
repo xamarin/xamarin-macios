@@ -1888,6 +1888,7 @@ namespace MetalPerformanceShaders {
 
 	// MPSMatrix.h
 
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1908,39 +1909,49 @@ namespace MetalPerformanceShaders {
 		[Static]
 		[Deprecated (PlatformName.TvOS, 11, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Unavailable (PlatformName.MacCatalyst)]
 		[Export ("matrixDescriptorWithDimensions:columns:rowBytes:dataType:")]
 		MPSMatrixDescriptor Create (nuint rows, nuint columns, nuint rowBytes, MPSDataType dataType);
 
 		[Static]
-		[Deprecated (PlatformName.TvOS, 11, 0)]
+		[Introduced (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
+		[Introduced (PlatformName.TvOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 11, 0)]
+		[Unavailable (PlatformName.MacCatalyst)]
 		[Export ("rowBytesFromColumns:dataType:")]
 		nuint GetRowBytesFromColumns (nuint columns, MPSDataType dataType);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("matrices")]
 		nuint Matrices { get; }
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("matrixBytes")]
 		nuint MatrixBytes { get; }
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,0), iOS (11,0)]
 		[Static]
 		[Export ("matrixDescriptorWithRows:columns:rowBytes:dataType:")]
 		MPSMatrixDescriptor GetMatrixDescriptor (nuint rows, nuint columns, nuint rowBytes, MPSDataType dataType);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,0), iOS (11,0)]
 		[Static]
 		[Export ("matrixDescriptorWithRows:columns:matrices:rowBytes:matrixBytes:dataType:")]
 		MPSMatrixDescriptor GetMatrixDescriptor (nuint rows, nuint columns, nuint matrices, nuint rowBytes, nuint matrixBytes, MPSDataType dataType);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,0), iOS (11,0)]
 		[Static]
 		[Export ("rowBytesForColumns:dataType:")]
 		nuint GetRowBytesForColumns (nuint columns, MPSDataType dataType);
 	}
 
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // init NS_UNAVAILABLE;
@@ -1967,22 +1978,32 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithBuffer:descriptor:")]
 		IntPtr Constructor (IMTLBuffer buffer, MPSMatrixDescriptor descriptor);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("initWithBuffer:offset:descriptor:")]
+		IntPtr Constructor (IMTLBuffer buffer, nuint offset, MPSMatrixDescriptor descriptor);
+
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("initWithDevice:descriptor:")]
 		IntPtr Constructor (IMTLDevice device, MPSMatrixDescriptor descriptor);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("synchronizeOnCommandBuffer:")]
 		void Synchronize (IMTLCommandBuffer commandBuffer);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("resourceSize")]
 		nuint ResourceSize { get; }
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("matrices")]
 		nuint Matrices { get; }
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("matrixBytes")]
 		nuint MatrixBytes { get; }
@@ -2130,6 +2151,7 @@ namespace MetalPerformanceShaders {
 		IMTLResource Resource { get; }
 	}
 
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
 	[BaseType (typeof(MPSMatrix))]
 	[DisableDefaultCtor]
@@ -2146,6 +2168,7 @@ namespace MetalPerformanceShaders {
 		nuint ReadCount { get; set; }
 	}
 
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2171,19 +2194,28 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithBuffer:descriptor:")]
 		IntPtr Constructor (IMTLBuffer buffer, MPSVectorDescriptor descriptor);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("initWithBuffer:offset:descriptor:")]
+		IntPtr Constructor (IMTLBuffer buffer, nuint offset, MPSVectorDescriptor descriptor);
+
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("initWithDevice:descriptor:")]
 		IntPtr Constructor (IMTLDevice device, MPSVectorDescriptor descriptor);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("synchronizeOnCommandBuffer:")]
 		void Synchronize (IMTLCommandBuffer commandBuffer);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("resourceSize")]
 		nuint ResourceSize { get; }
 	}
 
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -5555,6 +5587,7 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (MPSNNImageNode left, MPSNNImageNode right);
 	}
 
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11,2), Mac (10,13,2), iOS (11,2)]
 	[BaseType (typeof (MPSVector))]
 	[DisableDefaultCtor]
@@ -5972,6 +6005,154 @@ namespace MetalPerformanceShaders {
 		//[Deprecated (PlatformName.MacOSX, 10, 14)]
 		//[Export ("initForReadingWithData:device:")]
 		//IntPtr Constructor (NSData data, IMTLDevice device);
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface MPSNDArrayDescriptor
+	{
+		[Export ("dataType", ArgumentSemantic.Assign)]
+		MPSDataType DataType { get; set; }
+
+		[Export ("numberOfDimensions")]
+		nuint NumberOfDimensions { get; set; }
+
+		[Export ("lengthOfDimension:")]
+		nuint GetLength (nuint dimensionIndex);
+
+		[Export ("sliceRangeForDimension:")]
+		MPSDimensionSlice GetSliceRange (nuint dimensionIndex);
+
+		[Export ("sliceDimension:withSubrange:")]
+		void Slice (nuint dimensionIndex, MPSDimensionSlice subRange);
+
+		[Export ("transposeDimension:withDimension:")]
+		void Transpose (nuint dimensionIndex, nuint dimensionIndex2);
+
+		// -(vector_uchar16)dimensionOrder;
+		// [Export ("dimensionOrder")]
+		// [Verify (MethodToProperty)]
+		// [unsupported ExtVector: unsigned char __attribute__((ext_vector_type(16)))] DimensionOrder { get; }
+
+		[Static]
+		[Export ("descriptorWithDataType:dimensionCount:dimensionSizes:")]
+		MPSNDArrayDescriptor Create (MPSDataType dataType, nuint numberOfDimensions, IntPtr dimensionSizes);
+
+		[Static]
+		[Export ("descriptorWithDataType:shape:")]
+		MPSNDArrayDescriptor Create (MPSDataType dataType, NSNumber[] shape);
+
+		// This is implemented using params and descriptorWithDataType:dimensionCount:dimensionSizes: in MPSNDArray.cs
+		// [Static, Internal]
+		// [Export ("descriptorWithDataType:dimensionSizes:", IsVariadic = true)]
+		// MPSNDArrayDescriptor Create (MPSDataType dataType, nuint dimension0, IntPtr varArgs);
+
+		[Export ("reshapeWithDimensionCount:dimensionSizes:")]
+		void Reshape (nuint numberOfDimensions, IntPtr dimensionSizes);
+
+		[Export ("reshapeWithShape:")]
+		void Reshape (NSNumber[] shape);
+	}
+
+	interface IMPSNDArrayAllocator { }
+
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	[Model]
+	interface MPSNDArrayAllocator : NSCoding, NSCopying, NSSecureCoding
+	{
+		[Abstract]
+		[Export ("arrayForCommandBuffer:arrayDescriptor:kernel:")]
+		MPSNDArray AllocateArray (IMTLCommandBuffer cmdBuf, MPSNDArrayDescriptor descriptor, MPSKernel kernel);
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface MPSNDArray
+	{
+		[Static]
+		[Export ("defaultAllocator")]
+		IMPSNDArrayAllocator DefaultAllocator { get; }
+
+		[NullAllowed, Export ("label")]
+		string Label { get; set; }
+
+		[Export ("dataType")]
+		MPSDataType DataType { get; }
+
+		[Export ("dataTypeSize")]
+		nuint DataTypeSize { get; }
+
+		[Export ("numberOfDimensions")]
+		nuint NumberOfDimensions { get; }
+
+		[Export ("lengthOfDimension:")]
+		nuint GetLength (nuint dimensionIndex);
+
+		[Export ("device", ArgumentSemantic.Retain)]
+		IMTLDevice Device { get; }
+
+		[Export ("descriptor")]
+		MPSNDArrayDescriptor Descriptor { get; }
+
+		[Export ("initWithDevice:descriptor:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLDevice device, MPSNDArrayDescriptor descriptor);
+
+		[Export ("initWithDevice:scalar:")]
+		IntPtr Constructor (IMTLDevice device, double value);
+
+		[Export ("resourceSize")]
+		nuint ResourceSize { get; }
+
+		[Export ("arrayViewWithCommandBuffer:descriptor:aliasing:")]
+		[return: NullAllowed]
+		MPSNDArray Create (IMTLCommandBuffer cmdBuf, MPSNDArrayDescriptor descriptor, MPSAliasingStrategy aliasing);
+
+		[NullAllowed, Export ("parent", ArgumentSemantic.Retain)]
+		MPSNDArray Parent { get; }
+
+		[Export ("exportDataWithCommandBuffer:toBuffer:destinationDataType:offset:rowStrides:")]
+		void ExportData (IMTLCommandBuffer cmdBuf, IMTLBuffer buffer, MPSDataType destinationDataType, nuint offset, IntPtr rowStrides);
+
+		[Export ("importDataWithCommandBuffer:fromBuffer:sourceDataType:offset:rowStrides:")]
+		void ImportData (IMTLCommandBuffer cmdBuf, IMTLBuffer buffer, MPSDataType sourceDataType, nuint offset, IntPtr rowStrides);
+
+		[Export ("exportDataWithCommandBuffer:toImages:offset:")]
+		void ExportData (IMTLCommandBuffer cmdBuf, MPSImage[] images, MPSImageCoordinate offset);
+
+		[Export ("importDataWithCommandBuffer:fromImages:offset:")]
+		void ImportData (IMTLCommandBuffer cmdBuf, MPSImage[] images, MPSImageCoordinate offset);
+
+		[Export ("readBytes:strideBytes:")]
+		void ReadBytes (IntPtr buffer, IntPtr strideBytesPerDimension);
+
+		[Export ("writeBytes:strideBytes:")]
+		void WriteBytes (IntPtr buffer, IntPtr strideBytesPerDimension);
+
+		[Export ("synchronizeOnCommandBuffer:")]
+		void Synchronize (IMTLCommandBuffer commandBuffer);
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(MPSNDArray))]
+	interface MPSTemporaryNDArray
+	{
+		[Static]
+		[Export ("defaultAllocator")]
+		IMPSNDArrayAllocator DefaultAllocator { get; }
+
+		[Static]
+		[Export ("temporaryNDArrayWithCommandBuffer:descriptor:")]
+		MPSTemporaryNDArray Create (IMTLCommandBuffer commandBuffer, MPSNDArrayDescriptor descriptor);
+
+		[Export ("readCount")]
+		nuint ReadCount { get; set; }
 	}
 
 	[TV (11,0), iOS (11,0), Mac (10,13)]

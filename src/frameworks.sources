@@ -1099,6 +1099,7 @@ METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSCnnNeuron.cs \
 	MetalPerformanceShaders/MPSCnnKernel.cs \
 	MetalPerformanceShaders/MPSMatrixDescriptor.cs \
+	MetalPerformanceShaders/MPSNDArray.cs \
 	MetalPerformanceShaders/MPSImageHistogram.cs \
 	MetalPerformanceShaders/MPSStateBatch.cs \
 	MetalPerformanceShaders/MPSStateResourceList.cs \

@@ -76,7 +76,6 @@ namespace MetalPerformanceShaders {
 		Unorm8 = NormalizedBit | 8,
 	}
 
-	[iOS (13,0)][TV (13,0)][Mac (10,15)][Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[Flags]
 	[Native]
 	public enum MPSAliasingStrategy : ulong
@@ -130,7 +129,6 @@ namespace MetalPerformanceShaders {
 	}
 
 	// uses NSUInteger
-	[iOS (13,0)][TV (13,0)][Mac (10,15)][Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public struct MPSDimensionSlice {
 		public nuint Start;
 		public nuint Length;
