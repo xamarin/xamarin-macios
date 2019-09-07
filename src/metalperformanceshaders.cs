@@ -1858,7 +1858,7 @@ namespace MetalPerformanceShaders {
 		void CommitAndContinue ();
 
 		[Export ("prefetchHeapForWorkloadSize:")]
-		void PrefetchHeapForWorkloadSize (nuint size);
+		void PrefetchHeap (nuint workloadSize);
 	}
 
 
