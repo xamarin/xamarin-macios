@@ -645,7 +645,7 @@ namespace MetalPerformanceShaders {
 
 	// MPSKernel.h
 
-	[iOS (9,0)][Mac (10, 13)]
+	[iOS (9,0)][Mac (10, 13)][Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPSKernel : NSCopying, NSSecureCoding {
@@ -1580,7 +1580,7 @@ namespace MetalPerformanceShaders {
 
 	// MPSImage.h
 
-	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
+	[iOS (10,0)][TV (10,0)][Mac (10, 13)][Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPSImageDescriptor : NSCopying {
@@ -1621,7 +1621,7 @@ namespace MetalPerformanceShaders {
 		MPSImageDescriptor GetImageDescriptor (MPSImageFeatureChannelFormat channelFormat, nuint width, nuint height, nuint featureChannels, nuint numberOfImages, MTLTextureUsage usage);
 	}
 
-	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
+	[iOS (10,0)][TV (10,0)][Mac (10, 13)][Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[Native][Flags]
 	public enum MPSPurgeableState : ulong {
 		AllocationDeferred = 0,
@@ -1631,7 +1631,7 @@ namespace MetalPerformanceShaders {
 		Empty = MTLPurgeableState.Empty
 	}
 
-	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
+	[iOS (10,0)][TV (10,0)][Mac (10, 13)][Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPSImage {
@@ -1667,6 +1667,11 @@ namespace MetalPerformanceShaders {
 
 		[Export ("usage")]
 		MTLTextureUsage Usage { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("featureChannelFormat")]
+		MPSImageFeatureChannelFormat FeatureChannelFormat { get; }
 
 		[Export ("pixelSize")]
 		nuint PixelSize { get; }
@@ -1718,6 +1723,10 @@ namespace MetalPerformanceShaders {
 		[Export ("writeBytes:dataLayout:bytesPerRow:region:featureChannelInfo:imageIndex:")]
 		void WriteBytes (IntPtr /* void* */ dataBytes, MPSDataLayout dataLayout, nuint bytesPerRow, MTLRegion region, MPSImageReadWriteParams featureChannelInfo, nuint imageIndex);
 
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("writeBytes:dataLayout:bytesPerColumn:bytesPerRow:bytesPerImage:region:featureChannelInfo:imageIndex:")]
+		void WriteBytes (IntPtr /* void* */ dataBytes, MPSDataLayout dataLayout, nuint bytesPerColumn, nuint bytesPerRow, nuint bytesPerImage, MTLRegion region, MPSImageReadWriteParams featureChannelInfo, nuint imageIndex);
+
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("readBytes:dataLayout:bytesPerRow:bytesPerImage:region:featureChannelInfo:imageIndex:")]
 		void ReadBytes (IntPtr /* void* */ dataBytes, MPSDataLayout dataLayout, nuint bytesPerRow, nuint bytesPerImage, MTLRegion region, MPSImageReadWriteParams featureChannelInfo, nuint imageIndex);
@@ -1739,7 +1748,7 @@ namespace MetalPerformanceShaders {
 		void Synchronize (IMTLCommandBuffer commandBuffer);
 	}
 
-	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
+	[iOS (10,0)][TV (10,0)][Mac (10, 13)][Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[BaseType (typeof (MPSImage))]
 	[DisableDefaultCtor]
 	interface MPSTemporaryImage {
@@ -1774,6 +1783,84 @@ namespace MetalPerformanceShaders {
 		[Export ("readCount")]
 		nuint ReadCount { get; set; }
 	}
+
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	interface MPSPredicate
+	{
+		[Export ("predicateBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer PredicateBuffer { get; }
+
+		[Export ("predicateOffset")]
+		nuint PredicateOffset { get; }
+
+		[Static]
+		[Export ("predicateWithBuffer:offset:")]
+		MPSPredicate Create (IMTLBuffer buffer, nuint offset);
+
+		[Export ("initWithBuffer:offset:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLBuffer buffer, nuint offset);
+
+		[Export ("initWithDevice:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLDevice device);
+	}
+
+	interface IMPSHeapProvider {}
+
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	[Model]
+	interface MPSHeapProvider
+	{
+		[Abstract]
+		[Export ("newHeapWithDescriptor:")]
+		[return: NullAllowed]
+		IMTLHeap NewHeapWithDescriptor (MTLHeapDescriptor descriptor);
+
+		[Export ("retireHeap:cacheDelay:")]
+		void RetireHeap (IMTLHeap heap, double seconds);
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface MPSCommandBuffer : MTLCommandBuffer
+	{
+		[Export ("commandBuffer", ArgumentSemantic.Retain)]
+		IMTLCommandBuffer CommandBuffer { get; }
+
+		[Export ("rootCommandBuffer", ArgumentSemantic.Retain)]
+		IMTLCommandBuffer RootCommandBuffer { get; }
+
+		[NullAllowed, Export ("predicate", ArgumentSemantic.Retain)]
+		MPSPredicate Predicate { get; set; }
+
+		[NullAllowed, Export ("heapProvider", ArgumentSemantic.Retain)]
+		IMPSHeapProvider HeapProvider { get; set; }
+
+		[Static]
+		[Export ("commandBufferWithCommandBuffer:")]
+		MPSCommandBuffer Create (IMTLCommandBuffer commandBuffer);
+
+		[Static]
+		[Export ("commandBufferFromCommandQueue:")]
+		MPSCommandBuffer Create (IMTLCommandQueue commandQueue);
+
+		[Export ("initWithCommandBuffer:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (IMTLCommandBuffer commandBuffer);
+
+		[Export ("commitAndContinue")]
+		void CommitAndContinue ();
+
+		[Export ("prefetchHeapForWorkloadSize:")]
+		void PrefetchHeapForWorkloadSize (nuint size);
+	}
+
 
 	// MPSImageConversion.h
 
@@ -1943,6 +2030,7 @@ namespace MetalPerformanceShaders {
 		nuint BatchSize { get; set; }
 	}
 
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1975,10 +2063,12 @@ namespace MetalPerformanceShaders {
 		[Export ("initWithResource:")]
 		IntPtr Constructor ([NullAllowed] IMTLResource resource);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("initWithDevice:resourceList:")]
 		IntPtr Constructor (IMTLDevice device, MPSStateResourceList resourceList);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Static]
 		[Export ("temporaryStateWithCommandBuffer:resourceList:")]
@@ -2018,10 +2108,12 @@ namespace MetalPerformanceShaders {
 		[Export ("resourceTypeAtIndex:")]
 		MPSStateResourceType GetResourceType (nuint index);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("synchronizeOnCommandBuffer:")]
 		void Synchronize (IMTLCommandBuffer commandBuffer);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[iOS (11,3), TV (11,3), Mac (10,13,4)]
 		[Export ("resourceSize")]
 		nuint ResourceSize { get; }
@@ -2033,6 +2125,7 @@ namespace MetalPerformanceShaders {
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Please use 'GetResource (nuint, bool)' instead.")]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use 'GetResource (nuint, bool)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, 4, message: "Please use 'GetResource (nuint, bool)' instead.")]
+		[Unavailable (PlatformName.MacCatalyst)]
 		[NullAllowed, Export ("resource", ArgumentSemantic.Retain)]
 		IMTLResource Resource { get; }
 	}
@@ -5806,23 +5899,27 @@ namespace MetalPerformanceShaders {
 		void Append (nuint bufferSize);
 	}
 
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11,3), iOS (11,3), Mac (10,13,4)]
 	[BaseType (typeof (NSKeyedUnarchiver))]
 	[DisableDefaultCtor]
 	interface MPSKeyedUnarchiver : MPSDeviceProvider {
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (12,0), iOS (12,0), Mac (10,14)]
 		[Static]
 		[Export ("unarchivedObjectOfClasses:fromData:device:error:")]
 		[return: NullAllowed]
 		NSObject GetUnarchivedObject (NSSet<Class> classes, NSData data, IMTLDevice device, [NullAllowed] out NSError error);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (12,0), iOS (12,0), Mac (10,14)]
 		[Static]
 		[Export ("unarchivedObjectOfClass:fromData:device:error:")]
 		[return: NullAllowed]
 		NSObject GetUnarchivedObject (Class @class, NSData data, IMTLDevice device, [NullAllowed] out NSError error);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (12,0), iOS (12,0), Mac (10,14)]
 		[Export ("initForReadingFromData:device:error:")]
 		IntPtr Constructor (NSData data, IMTLDevice device, [NullAllowed] out NSError error);

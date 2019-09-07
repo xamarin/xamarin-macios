@@ -58,6 +58,15 @@ namespace MetalPerformanceShaders {
 	}
 
 #if !COREBUILD
+	public partial class MPSImage {
+
+		[DllImport (Constants.MetalPerformanceShadersLibrary)]
+		static extern MPSImageType MPSGetImageType (IntPtr image);
+
+		[iOS (13,0), TV (12,0), Mac (10,15)][Introduced (PlatformName.MacCatalyst, 13, 0)]
+		public MPSImageType ImageType => MPSGetImageType (Handle);
+	}
+
 	public partial class MPSImageDilate {
 
 		[DesignatedInitializer]
