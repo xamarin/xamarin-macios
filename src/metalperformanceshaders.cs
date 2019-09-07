@@ -1818,7 +1818,7 @@ namespace MetalPerformanceShaders {
 		[Abstract]
 		[Export ("newHeapWithDescriptor:")]
 		[return: NullAllowed]
-		IMTLHeap NewHeapWithDescriptor (MTLHeapDescriptor descriptor);
+		IMTLHeap GetNewHeap (MTLHeapDescriptor descriptor);
 
 		[Export ("retireHeap:cacheDelay:")]
 		void RetireHeap (IMTLHeap heap, double seconds);
