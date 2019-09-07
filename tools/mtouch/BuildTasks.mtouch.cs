@@ -306,11 +306,12 @@ namespace Xamarin.Bundler
 			// and very hard to diagnose otherwise when hidden from the build output. Ref: bug #2430
 			var linker_errors = new List<Exception> ();
 			var output = new StringBuilder ();
-			var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToString (), null, output);
+			var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToString (), null, output, suppressPrintOnErrors: true);
 
 			Application.ProcessNativeLinkerOutput (Target, output.ToString (), CompilerFlags.AllLibraries, linker_errors, code != 0);
 
 			if (code != 0) {
+				Console.WriteLine ($"Process exited with code {code}, command:\n{Target.App.CompilerPath} {CompilerFlags.ToString ()}\n{output} ");
 				// if the build failed - it could be because of missing frameworks / libraries we identified earlier
 				foreach (var assembly in Target.Assemblies) {
 					if (assembly.UnresolvedModuleReferences == null)
