@@ -23,10 +23,10 @@ namespace MetalPerformanceShaders {
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (12,2), Mac (10,14,4), iOS (12,2)]
-		static extern /* id<MTLDevice> _Nullable */ IntPtr MPSGetPreferredDevice (MPSDeviceOptions options);
+		static extern /* id<MTLDevice> _Nullable */ IntPtr MPSGetPreferredDevice (nuint options);
 		public static IMTLDevice GetPreferredDevice (MPSDeviceOptions options)
 		{
-			var h = MPSGetPreferredDevice (options);
+			var h = MPSGetPreferredDevice ((nuint)(ulong) options);
 			if (h == IntPtr.Zero)
 				return null;
 			return Runtime.GetINativeObject<IMTLDevice> (h, false);
