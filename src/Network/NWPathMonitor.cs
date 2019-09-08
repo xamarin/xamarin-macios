@@ -22,17 +22,13 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create ();
 
-		public NWPath currentPath;
+		NWPath currentPath;
+		public NWPath CurrentPath => currentPath;
 		public NWPathMonitor ()
 		{
 			currentPath = null;
 			InitializeHandle (nw_path_monitor_create ());
-			InternalSetUpdatedSnapshotHandler ((path) => {
-				currentPath = path;
-				if (userSnapshotHandler != null) {
-					userSnapshotHandler(currentPath);
-				}
-			});
+			_SetUpdatedSnapshotHandler (SetUpdatedSnapshotHandlerWrapper);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -41,12 +37,7 @@ namespace Network {
 		public NWPathMonitor (NWInterfaceType interfaceType)
 		{
 			InitializeHandle (nw_path_monitor_create_with_type (interfaceType));
-			InternalSetUpdatedSnapshotHandler ((path) => {
-				currentPath = path;
-				if (userSnapshotHandler != null) {
-					userSnapshotHandler(currentPath);
-				}
-			});
+			_SetUpdatedSnapshotHandler (SetUpdatedSnapshotHandlerWrapper);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -86,7 +77,7 @@ namespace Network {
 		static extern unsafe void nw_path_monitor_set_update_handler (IntPtr handle, void *callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		void InternalSetUpdatedSnapshotHandler (Action<NWPath> callback)
+		void _SetUpdatedSnapshotHandler (Action<NWPath> callback)
 		{
 			unsafe {
 				if (callback == null) {
@@ -105,11 +96,25 @@ namespace Network {
 				}
 			}
 		}
-		Action<NWPath> userSnapshotHandler;
 
+		Action<NWPath> userSnapshotHandler;
+		public Action<NWPath> SnapshotHandler {
+			get => userSnapshotHandler;
+			set => userSnapshotHandler = value;
+		}
+
+		[Obsolete ("Use the 'SnapshotHandler' property instead.")]
 		public void SetUpdatedSnapshotHandler (Action<NWPath> callback)
 		{
 			userSnapshotHandler = callback;
+		}
+
+		void SetUpdatedSnapshotHandlerWrapper (NWPath path)
+		{
+			currentPath = path;
+			if (userSnapshotHandler != null) {
+				userSnapshotHandler (currentPath);
+			}
 		}
 
 		delegate void nw_path_monitor_cancel_handler_t (IntPtr block);

@@ -24,7 +24,7 @@ namespace monotouchtest.Network {
         [Test]
         public void StatusPropertyTest ()
         {
-            Assert.That (monitor.currentPath, Is.Null);
+            Assert.That (monitor.CurrentPath, Is.Null, "'CurrentPath' property should be null");
 
             NWPath finalPath = null;
             bool isPathUpdated = false;
@@ -32,10 +32,10 @@ namespace monotouchtest.Network {
             TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
             {
 
-                monitor.SetUpdatedSnapshotHandler ((path) =>
+                monitor.SnapshotHandler =  ((path) =>
                 {
                     if (path != null) {
-                        finalPath = monitor.currentPath;
+                        finalPath = monitor.CurrentPath;
                         isPathUpdated = true;
                     }
 
@@ -47,7 +47,7 @@ namespace monotouchtest.Network {
 
             }, () => isPathUpdated);
 
-            Assert.That (finalPath, Is.Not.Null);
+            Assert.That (finalPath, Is.Not.Null, "'CurrentPath' property should not be null");
         }
 
 
