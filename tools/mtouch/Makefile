@@ -147,6 +147,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework NaturalLanguage			\
 	-weak_framework Network				\
 	-weak_framework IdentityLookupUI		\
+	-weak_framework SoundAnalysis \
 	-weak_framework VisionKit		\
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
