@@ -1,0 +1,3 @@
+# addedvia inheritance from CHHapticPatternPlayer 
+!missing-protocol-member! CHHapticAdvancedPatternPlayer::isMuted not found
+!missing-protocol-member! CHHapticAdvancedPatternPlayer::setIsMuted: not found
