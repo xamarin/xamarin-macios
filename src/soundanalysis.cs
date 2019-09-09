@@ -109,7 +109,6 @@ namespace SoundAnalysis {
 		[Export ("classifications")]
 		SNClassification [] Classifications { get; }
 
-		[NoWatch] // TODO: Remove when CoreMedia is enabled on watchOS
 		[Export ("timeRange")]
 		CMTimeRange TimeRange { get; }
 	}
