@@ -184,7 +184,7 @@ public static class Asserts
 			if (actual == null)
 				return;
 			Assert.Fail ($"Expected null, got {actual}. {message}");
-		} else {
+		} else if (actual == null) {
 			Assert.Fail ($"Expected {expected}, got null. {message}");
 		}
 
@@ -200,7 +200,7 @@ public static class Asserts
 			if (actual == null)
 				return;
 			Assert.Fail ($"Expected null, got {actual}. {message}");
-		} else {
+		} else if (actual == null) {
 			Assert.Fail ($"Expected {expected}, got null. {message}");
 		}
 
