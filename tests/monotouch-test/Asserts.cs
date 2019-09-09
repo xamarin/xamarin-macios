@@ -180,6 +180,14 @@ public static class Asserts
 
 	public static void AreEqual (Quaternion [] expected, Quaternion [] actual, string message)
 	{
+		if (expected == null) {
+			if (actual == null)
+				return;
+			Assert.Fail ($"Expected null, got {actual}. {message}");
+		} else {
+			Assert.Fail ($"Expected {expected}, got null. {message}");
+		}
+
 		Assert.AreEqual (expected.Length, actual.Length, message + " array lengths");
 		for (var i = 0; i < expected.Length; i++) {
 			AreEqual (expected [i], actual [i], message + $" [{i}]");
@@ -188,6 +196,14 @@ public static class Asserts
 
 	public static void AreEqual (Quaterniond expected, Quaterniond actual, string message)
 	{
+		if (expected == null) {
+			if (actual == null)
+				return;
+			Assert.Fail ($"Expected null, got {actual}. {message}");
+		} else {
+			Assert.Fail ($"Expected {expected}, got null. {message}");
+		}
+
 		Assert.AreEqual (expected.X, actual.X, message + " (X)");
 		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
 		Assert.AreEqual (expected.Z, actual.Z, message + " (Z)");

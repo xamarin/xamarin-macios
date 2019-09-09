@@ -2947,7 +2947,7 @@ namespace ModelIO {
 		MDLAnimatedMatrix4x4 AnimatedValue { get; }
 	}
 
-	[iOS (12,0), Mac (10,14), TV (12,0)]
+	[iOS (13,0), Mac (10,15), TV (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTransformOrientOp : IMDLTransformOp {
 		[Export ("name")]
@@ -2984,7 +2984,7 @@ namespace ModelIO {
 
 		[iOS (13,0), Mac (10,15), TV (13,0)]
 		[Export ("addOrientOp:inverse:")]
-		MDLTransformMatrixOp AddOrientOp (string animatedValueName, bool inverse);
+		MDLTransformOrientOp AddOrientOp (string animatedValueName, bool inverse);
 
 		[Export ("animatedValueWithName:")]
 		MDLAnimatedValue GetAnimatedValue (string name);
@@ -3042,7 +3042,7 @@ namespace ModelIO {
 		nuint _GetDouble4x4Array (IntPtr valuesArray, nuint maxCount);
 	}
 
-	[iOS (12,0), Mac (10,14), TV (12,0)]
+	[iOS (13,0), Mac (10,15), TV (13,0)]
 	[BaseType (typeof (MDLAnimatedValue))]
 	interface MDLAnimatedQuaternion {
 		[Export ("setFloatQuaternion:atTime:")]
