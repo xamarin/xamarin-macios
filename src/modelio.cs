@@ -2949,9 +2949,11 @@ namespace ModelIO {
 
 	[iOS (13,0), Mac (10,15), TV (13,0)]
 	[BaseType (typeof (NSObject))]
-	interface MDLTransformOrientOp : IMDLTransformOp {
-		[Export ("name")]
-		string Name { get; }
+	interface MDLTransformOrientOp : MDLTransformOp {
+
+		// From MDLTransformOp Protocol
+		// [Export ("name")]
+		// string Name { get; }
 
 		[Export ("animatedValue")]
 		MDLAnimatedQuaternion AnimatedValue { get; }
