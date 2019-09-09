@@ -104,6 +104,7 @@ namespace Introspection
 			"Argb",
 			"Asin",
 			"Atan",
+			"Atmos", // Dolby Atmos
 			"Ats",	// App Transport Security
 			"Attrib",
 			"Attributevalue",
@@ -561,6 +562,7 @@ namespace Introspection
 			"Utf",
 			"Upce",
 			"Uri",
+			"Usac", // Unified Speech and Audio Coding
 			"Uti",
 			"Varispeed",
 			"Vergence",
