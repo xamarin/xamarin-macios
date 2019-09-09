@@ -1349,8 +1349,9 @@ namespace Xamarin.Bundler {
 
 					if (profiling.HasValue && profiling.Value) {
 						args.Append (StringUtils.Quote (Path.Combine (libdir, "libmono-profiler-log.a"))).Append (' ');
-						args.Append ("-u _mono_profiler_init_log -lz ");
+						args.Append ("-u _mono_profiler_init_log ");
 					}
+					args.Append ("-lz ");
 				}
 
 				if (Registrar == RegistrarMode.PartialStatic) {
