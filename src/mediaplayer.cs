@@ -20,10 +20,6 @@ using AppKit;
 using UIKit;
 #endif
 using System;
-#if WATCH
-using AVMediaSelectionGroup = Foundation.NSObject;
-using AVMediaSelectionOption = Foundation.NSObject;
-#endif
 
 namespace MediaPlayer {
 #if XAMCORE_2_0 || !MONOMAC
