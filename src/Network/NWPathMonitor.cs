@@ -26,7 +26,6 @@ namespace Network {
 		public NWPath CurrentPath => currentPath;
 		public NWPathMonitor ()
 		{
-			currentPath = null;
 			InitializeHandle (nw_path_monitor_create ());
 			_SetUpdatedSnapshotHandler (SetUpdatedSnapshotHandlerWrapper);
 		}
