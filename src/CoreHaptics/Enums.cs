@@ -48,7 +48,7 @@ namespace CoreHaptics {
 	[Mac (10, 15), iOS (13, 0)]
 	public enum CHHapticDynamicParameterId {
 		[Field ("CHHapticDynamicParameterIDHapticIntensityControl")]
-		HapticDynamicParameterIDHapticIntensityControl,
+		HapticIntensityControl,
 
 		[Field ("CHHapticDynamicParameterIDHapticSharpnessControl")]
 		HapticSharpnessControl,
@@ -129,7 +129,7 @@ namespace CoreHaptics {
 	[Native]
 	public enum CHHapticEngineFinishedAction : long {
 		StopEngine = 1,
-		LeaveEngineRunning = 2
+		LeaveEngineRunning = 2,
 	}
 
 	[Mac (10,15), iOS (13,0)]

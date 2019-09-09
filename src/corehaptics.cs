@@ -16,6 +16,7 @@ using ObjCRuntime;
 
 namespace CoreHaptics {
 
+// we are not binding the API on Mac OS X yet due to an issue on Apples side: https://github.com/xamarin/maccore/issues/1951
 #if MONOMAC
 	interface AVAudioSession {}
 #endif
@@ -86,7 +87,7 @@ namespace CoreHaptics {
 
 		[Export ("initWithParameterID:controlPoints:relativeTime:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([BindAs (typeof (CHHapticDynamicParameterId))]NSString parameterID, CHHapticParameterCurveControlPoint[] controlPoints, double relativeTime);
+		IntPtr Constructor ([BindAs (typeof (CHHapticDynamicParameterId))]NSString parameterId, CHHapticParameterCurveControlPoint[] controlPoints, double relativeTime);
 	}
 
 	[Mac (10,15), iOS (13,0)]
@@ -119,9 +120,10 @@ namespace CoreHaptics {
 		IntPtr Constructor (nuint resourceId, CHHapticEventParameter[] eventParams, double time, double duration);
 	}
 
+	interface ICHHapticParameterAttributes { }
+
 	[Mac (10,15), iOS (13,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface CHHapticParameterAttributes {
 		[Abstract]
 		[Export ("minValue")]
@@ -138,7 +140,7 @@ namespace CoreHaptics {
 
 	interface ICHHapticDeviceCapability { } 
 
-	[iOS (13,0)]
+	[iOS (13,0)][NoMac]
 	[Protocol]
 	interface CHHapticDeviceCapability {
 		[Abstract]
@@ -153,13 +155,13 @@ namespace CoreHaptics {
 		[Abstract]
 		[Export ("attributesForEventParameter:eventType:error:")]
 		[return: NullAllowed]
-		CHHapticParameterAttributes GetAttributes (string eventParameter, string type, [NullAllowed] out NSError outError);
+		ICHHapticParameterAttributes GetAttributes (NSString eventParameter, string type, [NullAllowed] out NSError outError);
 
 		// Protocols do not like BindAs yet we know is the enum CHHapticEventType
 		[Abstract]
 		[Export ("attributesForDynamicParameter:error:")]
 		[return: NullAllowed]
-		CHHapticParameterAttributes GetAttributes (string eventParameter, [NullAllowed] out NSError outError);
+		ICHHapticParameterAttributes GetAttributes (NSString eventParameter, [NullAllowed] out NSError outError);
 	}
 
 	interface ICHHapticPatternPlayer { }
@@ -226,14 +228,14 @@ namespace CoreHaptics {
 		Action<NSError> CompletionHandler { get; set; }
 	}
 
-	[NoMac, iOS (13,0)]
+	[Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface CHHapticEngine
 	{
 		[Static]
 		[Export ("capabilitiesForHardware")]
-		ICHHapticDeviceCapability CapabilitiesForHardware { get; }
+		ICHHapticDeviceCapability GetHardwareCapabilities ();
 
 		[Export ("currentTime")]
 		double CurrentTime { get; }
@@ -260,6 +262,7 @@ namespace CoreHaptics {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] out NSError error);
 
+		[NoMac]
 		[Export ("initWithAudioSession:error:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] AVAudioSession audioSession, [NullAllowed] out NSError error);
@@ -338,10 +341,10 @@ namespace CoreHaptics {
 		NSString ParameterValueKey { get; }
 
 		[Field ("CHHapticPatternKeyParameterCurve")]
-		NSString ParameterCurveKey { get; }
+		NSString WeakCHHapticParameterCurveKey { get; }
 
 		[Field ("CHHapticPatternKeyParameterCurveControlPoints")]
-		NSString ParameterCurveControlPointsKey { get; }
+		NSString WeakCHHapticParameterCurveControlPointsKey { get; }
 	}
 
 	[Mac (10,15), iOS (13,0)]
@@ -358,11 +361,12 @@ namespace CoreHaptics {
 		NSDictionary Parameter { get; set; }
 		// we need to do a NSString because it can be a CHHapticEventParameterID or a CHHapticDynamicParameterID 
 		// which are two different enums. User will have to do the conversion
+		[Advice ("Value can be either a CHHapticEventParameterId or a CHHapticDynamicParameterId. A check is needed against both enums.")]
 		NSString ParameterId { get; set; }
 		double ParameterValue { get; set; }
 		// we do not have docs or header information about the exact type
-		NSObject ParameterCurve { get; set; }
-		NSObject ParameterCurveControlPoints { get; set; }
+		NSObject WeakCHHapticParameterCurve { get; set; }
+		NSObject WeakCHHapticParameterCurveControlPoints { get; set; }
 	}
 
 	[Mac (10,15), iOS (13,0)]

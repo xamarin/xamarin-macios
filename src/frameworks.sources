@@ -491,7 +491,7 @@ COREGRAPHICS_SOURCES = \
 # CoreHaptics
 
 COREHAPTICS_API_SOURCES = \
-		CoreHaptics/Enums.cs \
+	CoreHaptics/Enums.cs \
 
 # CoreImage
 
