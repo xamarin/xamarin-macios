@@ -53,10 +53,10 @@ namespace Introspection {
 			case "UIViewControllerPreviewingWrapper":
 				return property.Name == "WeakDelegate";
 #endif
-			case "CHHapticPatternDefinition": // special case for a strong dictionary
-				return property.Name == "WeakCHHapticParameterCurve" || property.Name == "WeakCHHapticParameterCurveControlPoints";
-            }
-            return base.Skip (property);
+			case "CHHapticPatternDefinition":
+				return property.Name == "WeakParameterCurve" || property.Name == "WeakParameterCurveControlPoints";
+			}
+			return base.Skip (property);
 		}
 	}
 }

@@ -341,10 +341,10 @@ namespace CoreHaptics {
 		NSString ParameterValueKey { get; }
 
 		[Field ("CHHapticPatternKeyParameterCurve")]
-		NSString WeakCHHapticParameterCurveKey { get; }
+		NSString ParameterCurveKey { get; }
 
 		[Field ("CHHapticPatternKeyParameterCurveControlPoints")]
-		NSString WeakCHHapticParameterCurveControlPointsKey { get; }
+		NSString ParameterCurveControlPointsKey { get; }
 	}
 
 	[Mac (10,15), iOS (13,0)]
@@ -365,8 +365,10 @@ namespace CoreHaptics {
 		NSString ParameterId { get; set; }
 		double ParameterValue { get; set; }
 		// we do not have docs or header information about the exact type
-		NSObject WeakCHHapticParameterCurve { get; set; }
-		NSObject WeakCHHapticParameterCurveControlPoints { get; set; }
+		[Export ("ParameterCurveKey")]
+		NSObject WeakParameterCurve { get; set; }
+		[Export ("ParameterCurveControlPointsKey")]
+		NSObject WeakParameterCurveControlPoints { get; set; }
 	}
 
 	[Mac (10,15), iOS (13,0)]
@@ -388,11 +390,12 @@ namespace CoreHaptics {
 		[Wrap ("this (patternDefinition?.Dictionary, out outError)")]
 		IntPtr Constructor (CHHapticPatternDefinition patternDefinition, [NullAllowed] out NSError outError);
 
+		[Internal]
 		[Export ("exportDictionaryAndReturnError:")]
 		[return: NullAllowed]
 		NSDictionary<NSString, NSObject> _ExportDictionary ([NullAllowed] out NSError outError);
 
 		[Wrap ("new CHHapticPatternDefinition (_ExportDictionary (out outError))")]
-		CHHapticPatternDefinition ExportDictionary ([NullAllowed] out NSError outError);
+		CHHapticPatternDefinition Export ([NullAllowed] out NSError outError);
 	}
 }
