@@ -551,7 +551,7 @@ namespace Registrar {
 			if (gp != null) {
 				if (gp.HasConstraints) {
 					foreach (var constraint in gp.Constraints) {
-						if (IsNativeObject (constraint))
+						if (IsNativeObject (constraint.ConstraintType))
 							return true;
 					}
 				}
@@ -1155,8 +1155,8 @@ namespace Registrar {
 				if (!gp.HasConstraints)
 					return false;
 				foreach (var c in gp.Constraints) {
-					if (IsNSObject (c)) {
-						constrained_type = c;
+					if (IsNSObject (c.ConstraintType)) {
+						constrained_type = c.ConstraintType;
 						return true;
 					}
 				}
@@ -1218,8 +1218,8 @@ namespace Registrar {
 			var gp = tr as GenericParameter;
 			if (gp != null) {
 				foreach (var constr in gp.Constraints) {
-					if (constr.Resolve ().IsClass) {
-						return constr;
+					if (constr.ConstraintType.Resolve ().IsClass) {
+						return constr.ConstraintType;
 					}
 				}
 				return null;
