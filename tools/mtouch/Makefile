@@ -143,6 +143,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework ClassKit				\
 						\
 	-weak_framework AuthenticationServices	\
+	-weak_framework BackgroundTasks \
 	-weak_framework CarPlay					\
 	-weak_framework NaturalLanguage			\
 	-weak_framework Network				\
