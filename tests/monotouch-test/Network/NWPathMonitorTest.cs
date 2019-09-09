@@ -1,5 +1,5 @@
-﻿using System;
-using UIKit;
+﻿#if !__WATCHOS__
+using System;
 using Network;
 using CoreFoundation;
 using Foundation;
@@ -59,3 +59,4 @@ namespace monotouchtest.Network {
 
     }
 }
+#endif
