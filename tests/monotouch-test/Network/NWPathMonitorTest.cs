@@ -11,31 +11,31 @@ using NUnit.Framework;
 namespace monotouchtest.Network
 {
 	[TestFixture]
-	[Preserve(AllMembers = true)]
+	[Preserve (AllMembers = true)]
 	public class NWPathMonitorTest
 	{
 
 		NWPathMonitor monitor;
 
 		[SetUp]
-		public void SetUp()
+		public void SetUp ()
 		{
-			TestRuntime.AssertXcodeVersion(10, 0);
-			monitor = new NWPathMonitor();
+			TestRuntime.AssertXcodeVersion (10, 0);
+			monitor = new NWPathMonitor ();
 		}
 
 		[Test]
-		public void StatusPropertyTest()
+		public void StatusPropertyTest ()
 		{
-			Assert.That(monitor.CurrentPath, Is.Null, "'CurrentPath' property should be null");
+			Assert.That (monitor.CurrentPath, Is.Null, "'CurrentPath' property should be null");
 
 			NWPath finalPath = null;
 			bool isPathUpdated = false;
 
-			TestRuntime.RunAsync(DateTime.Now.AddSeconds(30), async () =>
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
 			{
 
-				monitor.SnapshotHandler = ((path) =>
+				monitor.SnapshotHandler = ( (path) =>
 				{
 					if (path != null)
 					{
@@ -45,71 +45,69 @@ namespace monotouchtest.Network
 
 				});
 
-				var q = new DispatchQueue(label: "monitor");
-				monitor.SetQueue(q);
-				monitor.Start();
+				var q = new DispatchQueue (label: "monitor");
+				monitor.SetQueue (q);
+				monitor.Start ();
 
 			}, () => isPathUpdated);
 
-			Assert.That(finalPath, Is.Not.Null, "'CurrentPath' property should not be null");
+			Assert.That (finalPath, Is.Not.Null, "'CurrentPath' property should not be null");
 		}
 
 		[Test]
-		public void PathIsAlwaysUpdatedWithNewHandlerTest()
+		public void PathIsAlwaysUpdatedWithNewHandlerTest ()
 		{
 			NWPath oldPath = monitor.CurrentPath;
 			NWPath newPath = monitor.CurrentPath;
 			bool isOldPathSet = false;
 			bool isNewPathSet = false;
-			var cbEvent = new AutoResetEvent(false);
+			var cbEvent = new AutoResetEvent (false);
 
-			TestRuntime.RunAsync(DateTime.Now.AddSeconds(30), async () =>
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
 			{
 
-				monitor.SnapshotHandler = ((path) =>
+				monitor.SnapshotHandler = ( (path) =>
 				{
 					if (path != null)
 					{
 						oldPath = monitor.CurrentPath;
 						isOldPathSet = true;
-						Console.WriteLine("oldPath: " + oldPath);
-						cbEvent.Set();
+						cbEvent.Set ();
 					}
 				});
 
-				var q = new DispatchQueue(label: "monitor");
-				monitor.SetQueue(q);
-				monitor.Start();
+				var q = new DispatchQueue (label: "monitor");
+				monitor.SetQueue (q);
+				monitor.Start ();
 
 			}, () => isOldPathSet);
 
 
-			TestRuntime.RunAsync(DateTime.Now.AddSeconds(30), async () =>
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
 			{
-				cbEvent.WaitOne();
-				monitor.SnapshotHandler = ((path) =>
+				cbEvent.WaitOne ();
+				monitor.SnapshotHandler = ( (path) =>
 				{
 					if (path != null)
 					{
 						newPath = monitor.CurrentPath;
-						Console.WriteLine("newPath: " + newPath);
 						isNewPathSet = true;
 					}
 
 				});
 
-				var q = new DispatchQueue(label: "monitor");
-				monitor.SetQueue(q);
-				monitor.Start();
+				var q = new DispatchQueue (label: "monitor");
+				monitor.SetQueue (q);
+				monitor.Start ();
 			}, () => isNewPathSet);
 
-			Assert.AreNotEqual(oldPath, newPath, "'CurrentPath' wasn't updated when a new SnapshotHandler was assigned");
+			Assert.AreNotEqual (oldPath, newPath, "'CurrentPath' wasn't updated when a new SnapshotHandler was assigned");
 		}
 
 		[TearDown]
-		public void TearDown()
+		public void TearDown ()
 		{
-			monitor?.Dispose();
+			monitor?.Dispose ();
 		}
 
 	}
