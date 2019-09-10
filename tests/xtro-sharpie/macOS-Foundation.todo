@@ -28,3 +28,6 @@
 !missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
 !missing-type! NSOrderedCollectionChange not bound
 !missing-type! NSOrderedCollectionDifference not bound
+## appended from unclassified file
+!missing-selector! NSUserActivity::setTargetContentIdentifier: not bound
+!missing-selector! NSUserActivity::targetContentIdentifier not bound

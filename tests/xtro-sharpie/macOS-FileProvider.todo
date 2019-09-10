@@ -1,0 +1,25 @@
+!extra-protocol-member! unexpected selector NSFileProviderItem::extendedAttributes found
+!extra-protocol-member! unexpected selector NSFileProviderItem::flags found
+!extra-protocol-member! unexpected selector NSFileProviderItem::isExcludedFromSync found
+!extra-protocol-member! unexpected selector NSFileProviderItem::itemVersion found
+!extra-protocol-member! unexpected selector NSFileProviderItemDecorating::decorations found
+!unknown-field! NSFileProviderErrorDomain bound
+!unknown-field! NSFileProviderErrorItemKey bound
+!unknown-field! NSFileProviderErrorNonExistentItemIdentifierKey bound
+!unknown-field! NSFileProviderFavoriteRankUnranked bound
+!unknown-field! NSFileProviderInitialPageSortedByDate bound
+!unknown-field! NSFileProviderInitialPageSortedByName bound
+!unknown-field! NSFileProviderRootContainerItemIdentifier bound
+!unknown-field! NSFileProviderWorkingSetContainerItemIdentifier bound
+!unknown-native-enum! NSFileProviderCreateItemOptions bound
+!unknown-native-enum! NSFileProviderDeleteItemOptions bound
+!unknown-native-enum! NSFileProviderDownloadPolicy bound
+!unknown-native-enum! NSFileProviderError bound
+!unknown-native-enum! NSFileProviderItemField bound
+!unknown-protocol! NSFileProviderServiceSource bound
+!unknown-type! NSFileProviderDomain bound
+!unknown-type! NSFileProviderExtension bound
+!unknown-type! NSFileProviderItemVersion bound
+!unknown-type! NSFileProviderManager bound
+!unknown-type! NSFileProviderRequest bound
+!unknown-type! NSFileProviderSearchQuery bound

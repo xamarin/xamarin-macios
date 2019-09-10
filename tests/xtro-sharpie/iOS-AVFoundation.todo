@@ -1,0 +1,47 @@
+!deprecated-attribute-missing! AVCaptureDevice::dualCameraSwitchOverVideoZoomFactor missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCapturePhotoOutput::isDualCameraDualPhotoDeliveryEnabled missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCapturePhotoOutput::isDualCameraDualPhotoDeliverySupported missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCapturePhotoOutput::isDualCameraFusionSupported missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCapturePhotoOutput::setDualCameraDualPhotoDeliveryEnabled: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCapturePhotoSettings::isAutoDualCameraFusionEnabled missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCapturePhotoSettings::isDualCameraDualPhotoDeliveryEnabled missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCapturePhotoSettings::setAutoDualCameraFusionEnabled: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCapturePhotoSettings::setDualCameraDualPhotoDeliveryEnabled: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVCaptureResolvedPhotoSettings::isDualCameraFusionEnabled missing a [Deprecated] attribute
+!missing-field! AVCaptureDeviceTypeBuiltInDualWideCamera not bound
+!missing-field! AVCaptureDeviceTypeBuiltInTripleCamera not bound
+!missing-field! AVCaptureDeviceTypeBuiltInUltraWideCamera not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataAutoLivePhoto not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataDetectedCatBody not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataDetectedDogBody not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataDetectedHumanBody not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataDetectedSalientObject not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScore not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScoringVersion not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScore not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScoringVersion not bound
+!missing-field! AVMetadataObjectTypeCatBody not bound
+!missing-field! AVMetadataObjectTypeDogBody not bound
+!missing-field! AVMetadataObjectTypeHumanBody not bound
+!missing-field! AVMetadataObjectTypeSalientObject not bound
+!missing-selector! AVCaptureDevice::isGeometricDistortionCorrectionEnabled not bound
+!missing-selector! AVCaptureDevice::isGeometricDistortionCorrectionSupported not bound
+!missing-selector! AVCaptureDevice::setGeometricDistortionCorrectionEnabled: not bound
+!missing-selector! AVCaptureDevice::virtualDeviceSwitchOverVideoZoomFactors not bound
+!missing-selector! AVCaptureDeviceFormat::geometricDistortionCorrectedVideoFieldOfView not bound
+!missing-selector! AVCapturePhotoOutput::isVirtualDeviceConstituentPhotoDeliveryEnabled not bound
+!missing-selector! AVCapturePhotoOutput::isVirtualDeviceConstituentPhotoDeliverySupported not bound
+!missing-selector! AVCapturePhotoOutput::isVirtualDeviceFusionSupported not bound
+!missing-selector! AVCapturePhotoOutput::setVirtualDeviceConstituentPhotoDeliveryEnabled: not bound
+!missing-selector! AVCapturePhotoSettings::isAutoVirtualDeviceFusionEnabled not bound
+!missing-selector! AVCapturePhotoSettings::setAutoVirtualDeviceFusionEnabled: not bound
+!missing-selector! AVCapturePhotoSettings::setVirtualDeviceConstituentPhotoDeliveryEnabledDevices: not bound
+!missing-selector! AVCapturePhotoSettings::virtualDeviceConstituentPhotoDeliveryEnabledDevices not bound
+!missing-selector! AVCaptureResolvedPhotoSettings::isVirtualDeviceFusionEnabled not bound
+!missing-selector! AVMetadataBodyObject::bodyID not bound
+!missing-selector! AVMetadataSalientObject::objectID not bound
+!missing-type! AVMetadataBodyObject not bound
+!missing-type! AVMetadataCatBodyObject not bound
+!missing-type! AVMetadataDogBodyObject not bound
+!missing-type! AVMetadataHumanBodyObject not bound
+!missing-type! AVMetadataSalientObject not bound
