@@ -177,7 +177,7 @@ namespace MapKit {
 		Aquarium,
 
 		[Field ("MKPointOfInterestCategoryATM")]
-		ATM,
+		Atm,
 
 		[Field ("MKPointOfInterestCategoryBakery")]
 		Bakery,
