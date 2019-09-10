@@ -60,7 +60,6 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-framework CoreText			\
 	-framework ExternalAccessory		\
 	-framework GameKit				\
-	-framework IOKit			\
 	-framework MapKit			\
 	-framework MediaPlayer			\
 	-framework MessageUI			\
@@ -184,7 +183,7 @@ simlauncher$(5)$(1): simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a $(BUILD
 		$(TOP)/runtime/.libs/ios/libapp.a \
 		-Wl,-w \
 		-lz -liconv $(TOP)/runtime/.libs/ios/libxamarin-debug.a simlauncher.m $(SIMLAUNCHER_FRAMEWORKS) $(SIMULATOR$(4)_OBJC_CFLAGS) -o $$@
-
+	$(Q) xcrun otool -L simlauncher$(5)$(1) > simlauncher$(5)$(1).frameworks
 endef
 
 $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,86,32))
