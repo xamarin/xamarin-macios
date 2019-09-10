@@ -163,12 +163,10 @@ namespace Foundation {
 
 		void ValidateIndex (nint index)
 		{
-			if (index == 0) return;
-			
 			if (index < 0)
 				throw new IndexOutOfRangeException (nameof (index));
 
-			if ((nuint) index >= Count)
+			if ((nuint) index > Count)
 				throw new IndexOutOfRangeException (nameof (index));
 		}
 
