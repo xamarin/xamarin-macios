@@ -248,6 +248,9 @@
     <BundleResource Include="..\xamarin1.png">
       <Link>xamarin1.png</Link>
     </BundleResource>
+    <BundleResource Include="..\..\..\tools\mtouch\simlauncher64-sgen.frameworks">
+      <Link>simlauncher64-sgen.frameworks</Link>
+    </BundleResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
