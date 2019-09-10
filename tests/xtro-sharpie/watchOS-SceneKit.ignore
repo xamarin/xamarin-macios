@@ -9,3 +9,6 @@
 !missing-selector! SCNNode::rendererDelegate not bound
 !missing-selector! SCNNode::setRendererDelegate: not bound
 !missing-selector! SCNTechnique::handleBindingOfSymbol:usingBlock: not bound
+
+## obsoleted (removed from headers) in watchOS 6
+!extra-protocol-member! unexpected selector SCNSceneRenderer::context found
