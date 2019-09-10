@@ -144,10 +144,22 @@ SIMLAUNCHER_FRAMEWORKS =  \
 						\
 	-weak_framework AuthenticationServices	\
 	-weak_framework CarPlay					\
+	-weak_framework IdentityLookupUI		\
 	-weak_framework NaturalLanguage			\
 	-weak_framework Network				\
-	-weak_framework IdentityLookupUI		\
-	-weak_framework VisionKit		\
+						\
+	-weak_framework BackgroundTasks 		\
+	-weak_framework LinkPresentation 		\
+	-weak_framework PencilKit			\
+	-weak_framework QuickLookThumbnailing		\
+	-weak_framework SoundAnalysis			\
+	-weak_framework VisionKit			\
+
+# keep the above list of weak_framework
+# 1. grouped by iOS versions;
+# 2. sorted and
+# 3. in sync with the list inside `tools/common/Frameworks.cs`
+# except it is no a mistake that GameController and MediaAccessibility (#13636) are not built into simlauncher
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)
@@ -156,9 +168,6 @@ SIMLAUNCHER_FRAMEWORKS =  \
 # note 5: Metal* seems to be supported as of some Xcode 7 beta (b2 didn't, but the final release does)
 # note 6: Xcode 11 beta 1 shipped without WatchKit.
 # note 7: Xcode 11 beta 3 documented that shipping without WatchKit was done on purpose (in the release notes).
-
-# keep the above list of weak_framework in sync with mtouch.cs
-# except it is no a mistake that GameController and MediaAccessibility (#13636) are not built into simlauncher
 
 define SimlauncherTemplate
 
