@@ -805,16 +805,16 @@ namespace Registrar {
 			}
 		}
 
-		protected override Exception CreateException (int code, Exception innerException, MethodDefinition method, string message, params object[] args)
+		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, MethodDefinition method, string message, params object[] args)
 		{
-			return ErrorHelper.CreateError (App, code, innerException, method, message, args);
+			return ErrorHelper.Create (App, code, error, innerException, method, message, args);
 		}
 
-		protected override Exception CreateException (int code, Exception innerException, TypeReference type, string message, params object [] args)
+		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, TypeReference type, string message, params object [] args)
 		{
-			return ErrorHelper.CreateError (App, code, innerException, type, message, args);
+			return ErrorHelper.Create (App, code, error, innerException, type, message, args);
 		}
-
+		
 		protected override bool ContainsPlatformReference (AssemblyDefinition assembly)
 		{
 			if (assembly.Name.Name == PlatformAssembly)
@@ -1099,7 +1099,16 @@ namespace Registrar {
 
 		protected override bool IsInterface (TypeReference type)
 		{
-			return type.Resolve ().IsInterface;
+			if (type.IsArray)
+				return false;
+			return type.Resolve ()?.IsInterface == true;
+		}
+
+		protected override bool IsAbstract (TypeReference type)
+		{
+			if (type.IsArray)
+				return false;
+			return type.Resolve ()?.IsAbstract == true;
 		}
 
 		protected override TypeReference[] GetInterfaces (TypeReference type)

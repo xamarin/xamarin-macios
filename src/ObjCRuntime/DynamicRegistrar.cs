@@ -524,18 +524,22 @@ namespace Registrar {
 			return false;
 		}
 
-		protected override Exception CreateException (int code, Exception innerException, MethodBase method, string message, params object[] args)
+		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, MethodBase method, string message, params object[] args)
 		{
 			// There doesn't seem to be a way to find the source code location
 			// for the method using System.Reflection.
-			return ErrorHelper.CreateError (code, innerException, message, args);
+			if (error)
+				return ErrorHelper.CreateError (code, innerException, message, args);
+			return ErrorHelper.CreateWarning (code, innerException, message, args);
 		}
 
-		protected override Exception CreateException (int code, Exception innerException, Type type, string message, params object [] args)
+		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, Type type, string message, params object [] args)
 		{
 			// There doesn't seem to be a way to find the source code location
 			// for the method using System.Reflection.
-			return ErrorHelper.CreateError (code, innerException, message, args);
+			if (error)
+				return ErrorHelper.CreateError (code, innerException, message, args);
+			return ErrorHelper.CreateWarning (code, innerException, message, args);
 		}
 
 		protected override string GetAssemblyQualifiedName (Type type)
@@ -633,6 +637,11 @@ namespace Registrar {
 		protected override bool IsInterface (Type type)
 		{
 			return type.IsInterface;
+		}
+
+		protected override bool IsAbstract (Type type)
+		{
+			return type.IsAbstract;
 		}
 
 		protected override bool IsINativeObject (Type type)
