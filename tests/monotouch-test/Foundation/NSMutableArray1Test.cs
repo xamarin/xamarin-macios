@@ -82,8 +82,6 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Throws<ArgumentNullException> (() => arr.Insert (null, 0), "Insert ANE");
 				Assert.Throws<IndexOutOfRangeException> (() => arr.Insert (v2, -1), "Insert AOORE 1");
 				Assert.Throws<IndexOutOfRangeException> (() => arr.Insert (v2, 3), "Insert AOORE 2");
-				
-			
 				arr.Insert (v2, 1);
 				Assert.AreEqual (3, arr.Count, "Insert 2");
 				Assert.AreSame (v1, arr [0], "[0]");
