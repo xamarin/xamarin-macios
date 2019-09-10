@@ -670,6 +670,9 @@ namespace MapKit {
 		[iOS (7,0), Export ("rendererForOverlay:")]
 		MKOverlayRenderer RendererForOverlay (IMKOverlay overlay);
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use `PointOfInterestFilter` instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use `PointOfInterestFilter` instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use `PointOfInterestFilter` instead.")]
 		[iOS (7,0)]
 		[Export ("showsPointsOfInterest")]
 		bool ShowsPointsOfInterest { get; set; }
@@ -1121,6 +1124,7 @@ namespace MapKit {
 
 	[TV (9,2)]
 	[Mac (10,9)]
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (MKShape))]
 	interface MKPointAnnotation : MKGeoJsonObject {
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
@@ -1311,14 +1315,15 @@ namespace MapKit {
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe]
+	[DesignatedDefaultCtor]
 #if !XAMCORE_2_0 && !MONOMAC
 	[Protocol] // This isn't right
 #endif
 	interface MKLocalSearchRequest : NSCopying {
 
+		[DesignatedInitializer]
 		[TV (9,2)][NoWatch][iOS (9,3)][Mac (10,11,4)]
 		[Export ("initWithCompletion:")]
-		[DesignatedInitializer]
 		IntPtr Constructor (MKLocalSearchCompletion completion);
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
@@ -1588,6 +1593,10 @@ namespace MapKit {
 		[Export ("appearance")]
 		NSAppearance Appearance { get; }
 #endif
+
+		[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
+		[Export ("traitCollection")]
+		UITraitCollection TraitCollection { get; }
 	}
 
 	[TV (9,2)]
