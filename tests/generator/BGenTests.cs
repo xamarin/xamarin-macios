@@ -604,6 +604,12 @@ namespace GeneratorTests
 			BuildFile (Profile.iOS, "tests/vsts-970507.cs");
 		}
 
+		[Test]
+		public void DiamondProtocol ()
+		{
+			BuildFile (Profile.iOS, "tests/diamond-protocol.cs");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);
