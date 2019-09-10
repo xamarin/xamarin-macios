@@ -891,9 +891,9 @@ namespace Introspection {
 			case "initIncludingCategories:":
 				var mi = m as MethodInfo;
 				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
-            default:
+			default:
 				return false;
-            }
+			}
 		}
 		
 		protected virtual void Dispose (NSObject obj, Type type)

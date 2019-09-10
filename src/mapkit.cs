@@ -1611,8 +1611,8 @@ namespace MapKit {
 		CGSize Size { get; set; }
 
 #if !MONOMAC
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use `TraitCollection.displayScale` instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use `TraitCollection.displayScale` instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use `TraitCollection.DisplayScale` instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use `TraitCollection.DisplayScale` instead.")]
 		[Export ("scale", ArgumentSemantic.Assign)]
 		nfloat Scale { get; set; }
 #endif
@@ -2066,6 +2066,10 @@ namespace MapKit {
 		MKMapView MapView { get; set; }
 	}
 
+#if WATCH
+	interface MKPointOfInterestCategory {}
+#endif 
+
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	interface MKPointOfInterestFilter : NSSecureCoding, NSCopying
@@ -2080,177 +2084,17 @@ namespace MapKit {
 
 		[Internal]
 		[Export ("initIncludingCategories:")]
-		IntPtr InitIncludingCategories (string[] categories);
+		IntPtr InitIncludingCategories ([BindAs (typeof (MKPointOfInterestCategory[]))] NSString [] categories);
 
 		[Internal]
 		[Export ("initExcludingCategories:")]
-		IntPtr InitExcludingCategories (string[] categories);
+		IntPtr InitExcludingCategories ([BindAs (typeof (MKPointOfInterestCategory[]))] NSString [] categories);
 
 		[Export ("includesCategory:")]
-		bool IncludesCategory (string category);
+		bool IncludesCategory ([BindAs (typeof (MKPointOfInterestCategory))] NSString category);
 
 		[Export ("excludesCategory:")]
-		bool ExcludesCategory (string category);
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryAirport")]
-		NSString Airport { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryAmusementPark")]
-		NSString AmusementPark { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryAquarium")]
-		NSString Aquarium { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryATM")]
-		NSString ATM { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryBakery")]
-		NSString Bakery { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryBank")]
-		NSString Bank { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryBeach")]
-		NSString Beach { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryBrewery")]
-		NSString Brewery { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryCafe")]
-		NSString Cafe { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryCampground")]
-		NSString Campground { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryCarRental")]
-		NSString CarRental { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryEVCharger")]
-		NSString EVCharger { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryFireStation")]
-		NSString FireStation { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryFitnessCenter")]
-		NSString FitnessCenter { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryFoodMarket")]
-		NSString FoodMarket { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryGasStation")]
-		NSString GasStation { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryHospital")]
-		NSString Hospital { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryHotel")]
-		NSString Hotel { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryLaundry")]
-		NSString Laundry { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryLibrary")]
-		NSString Library { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryMarina")]
-		NSString Marina { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryMovieTheater")]
-		NSString MovieTheater { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryMuseum")]
-		NSString Museum { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryNationalPark")]
-		NSString NationalPark { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryNightlife")]
-		NSString Nightlife { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryPark")]
-		NSString Park { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryParking")]
-		NSString Parking { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryPharmacy")]
-		NSString Pharmacy { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryPolice")]
-		NSString Police { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryPostOffice")]
-		NSString PostOffice { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryPublicTransport")]
-		NSString PublicTransport { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryRestaurant")]
-		NSString Restaurant { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryRestroom")]
-		NSString Restroom { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategorySchool")]
-		NSString School { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryStadium")]
-		NSString Stadium { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryStore")]
-		NSString Store { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryTheater")]
-		NSString Theater { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryUniversity")]
-		NSString University { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryWinery")]
-		NSString Winery { get; }
-
-		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
-		[Field ("MKPointOfInterestCategoryZoo")]
-		NSString Zoo { get; }
+		bool ExcludesCategory ([BindAs (typeof (MKPointOfInterestCategory))] NSString category);
 	}
 
 	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
@@ -2305,7 +2149,7 @@ namespace MapKit {
 		double MaxCenterCoordinateDistance { get; }
 
 		[Field ("MKMapCameraZoomDefault")]
-		double MKMapCameraZoomDefault { get; }
+		double ZoomDefault { get; }
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]

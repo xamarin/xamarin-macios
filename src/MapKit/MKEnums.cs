@@ -144,15 +144,17 @@ namespace MapKit {
 		Visible,
 	}
 
+	[Flags]
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 	[Native]
-	public enum MKLocalSearchCompleterResultType : long
+	public enum MKLocalSearchCompleterResultType : ulong
 	{
 		Address = 1 << 0,
 		PointOfInterest = 1 << 1,
 		Query = 1 << 2,
 	}
 
+	[Flags]
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 	[Native]
 	public enum MKLocalSearchResultType : ulong
@@ -161,6 +163,132 @@ namespace MapKit {
 		PointOfInterest = 1 << 1,
 	}
 
+#if !WATCH
+	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+	public enum MKPointOfInterestCategory {
+
+		[Field ("MKPointOfInterestCategoryAirport")]
+		Airport,
+
+		[Field ("MKPointOfInterestCategoryAmusementPark")]
+		AmusementPark,
+
+		[Field ("MKPointOfInterestCategoryAquarium")]
+		Aquarium,
+
+		[Field ("MKPointOfInterestCategoryATM")]
+		ATM,
+
+		[Field ("MKPointOfInterestCategoryBakery")]
+		Bakery,
+
+		[Field ("MKPointOfInterestCategoryBank")]
+		Bank,
+
+		[Field ("MKPointOfInterestCategoryBeach")]
+		Beach,
+
+		[Field ("MKPointOfInterestCategoryBrewery")]
+		Brewery,
+
+		[Field ("MKPointOfInterestCategoryCafe")]
+		Cafe,
+
+		[Field ("MKPointOfInterestCategoryCampground")]
+		Campground,
+
+		[Field ("MKPointOfInterestCategoryCarRental")]
+		CarRental,
+
+		[Field ("MKPointOfInterestCategoryEVCharger")]
+		EVCharger,
+
+		[Field ("MKPointOfInterestCategoryFireStation")]
+		FireStation,
+
+		[Field ("MKPointOfInterestCategoryFitnessCenter")]
+		FitnessCenter,
+
+		[Field ("MKPointOfInterestCategoryFoodMarket")]
+		FoodMarket,
+
+		[Field ("MKPointOfInterestCategoryGasStation")]
+		GasStation,
+
+		[Field ("MKPointOfInterestCategoryHospital")]
+		Hospital,
+
+		[Field ("MKPointOfInterestCategoryHotel")]
+		Hotel,
+
+		[Field ("MKPointOfInterestCategoryLaundry")]
+		Laundry,
+
+		[Field ("MKPointOfInterestCategoryLibrary")]
+		Library,
+
+		[Field ("MKPointOfInterestCategoryMarina")]
+		Marina,
+
+		[Field ("MKPointOfInterestCategoryMovieTheater")]
+		MovieTheater,
+
+		[Field ("MKPointOfInterestCategoryMuseum")]
+		Museum,
+
+		[Field ("MKPointOfInterestCategoryNationalPark")]
+		NationalPark,
+
+		[Field ("MKPointOfInterestCategoryNightlife")]
+		Nightlife,
+
+		[Field ("MKPointOfInterestCategoryPark")]
+		Park,
+
+		[Field ("MKPointOfInterestCategoryParking")]
+		Parking,
+
+		[Field ("MKPointOfInterestCategoryPharmacy")]
+		Pharmacy,
+
+		[Field ("MKPointOfInterestCategoryPolice")]
+		Police,
+
+		[Field ("MKPointOfInterestCategoryPostOffice")]
+		PostOffice,
+
+		[Field ("MKPointOfInterestCategoryPublicTransport")]
+		PublicTransport,
+
+		[Field ("MKPointOfInterestCategoryRestaurant")]
+		Restaurant,
+
+		[Field ("MKPointOfInterestCategoryRestroom")]
+		Restroom,
+
+		[Field ("MKPointOfInterestCategorySchool")]
+		School,
+
+		[Field ("MKPointOfInterestCategoryStadium")]
+		Stadium,
+
+		[Field ("MKPointOfInterestCategoryStore")]
+		Store,
+
+		[Field ("MKPointOfInterestCategoryTheater")]
+		Theater,
+
+		[Field ("MKPointOfInterestCategoryUniversity")]
+		University,
+
+		[Field ("MKPointOfInterestCategoryWinery")]
+		Winery,
+
+		[Field ("MKPointOfInterestCategoryZoo")]
+		Zoo,
+	}
+
+#endif
 }
 
 #endif

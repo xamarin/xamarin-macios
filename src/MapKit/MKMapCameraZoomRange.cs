@@ -1,13 +1,13 @@
 #if !WATCH // doesn't show up in watch headers
-#if XAMCORE_2_0 || !MONOMAC
+#if !MONOMAC
 using System;
 using ObjCRuntime;
 
 namespace MapKit {
 
-	public enum  MKMapCameraZoomRange {
+	public enum MKMapCameraZoomRangeType {
 		Min,
-        Max,
+		Max,
 	}
 
 	public partial class MKMapCameraZoomRange {
@@ -20,13 +20,13 @@ namespace MapKit {
 			// two different `init*` would share the same C# signature
 			switch (type) {
 			case MKMapCameraZoomRangeType.Min:
-				Handle = InitWithMinCenterCoordinateDistance (distance);
+				InitializeHandle (InitWithMinCenterCoordinateDistance (distance));
 				break;
 			case MKMapCameraZoomRangeType.Max:
-				Handle = InitWithMaxCenterCoordinateDistance (distance);
+				InitializeHandle (InitWithMaxCenterCoordinateDistance (distance));
 				break;
 			default:
-				throw new ArgumentException ("type");
+				throw new ArgumentException (nameof (type));
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 #if !WATCH // doesn't show up in watch headers
-#if XAMCORE_2_0 || !MONOMAC
+#if !MONOMAC
 using System;
 using ObjCRuntime;
 
@@ -7,26 +7,26 @@ namespace MapKit {
 
 	public enum  MKPointOfInterestFilterType {
 		Including,
-        Excluding,
+		Excluding,
 	}
 
 	public partial class MKPointOfInterestFilter {
-		public MKPointOfInterestFilter (string[] categories) : this (categories, MKPointOfInterestFilterType.Including)
+		public MKPointOfInterestFilter (MKPointOfInterestCategory[] categories) : this (categories, MKPointOfInterestFilterType.Including)
 		{
 		}
 
-		public MKPointOfInterestFilter (string[] categories, MKPointOfInterestFilterType type)
+		public MKPointOfInterestFilter (MKPointOfInterestCategory[] categories, MKPointOfInterestFilterType type)
 		{
 			// two different `init*` would share the same C# signature
 			switch (type) {
 			case MKPointOfInterestFilterType.Including:
-				Handle = InitIncludingCategories (categories);
+				InitializeHandle (InitIncludingCategories (categories));
 				break;
 			case MKPointOfInterestFilterType.Excluding:
-				Handle = InitExcludingCategories (categories);
+				InitializeHandle (InitExcludingCategories (categories));
 				break;
 			default:
-				throw new ArgumentException ("type");
+				throw new ArgumentException (nameof (type));
 			}
 		}
 	}
