@@ -17,8 +17,8 @@ namespace monotouchtest.Network
 
 		NWPathMonitor monitor;
 
-		[TestFixtureSetUp]
-		public void Init()
+		[SetUp]
+		public void SetUp()
 		{
 			TestRuntime.AssertXcodeVersion(10, 0);
 			monitor = new NWPathMonitor();
