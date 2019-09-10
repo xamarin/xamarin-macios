@@ -46,7 +46,8 @@ namespace CoreLocation {
 		Far
 	}
 
-	[NoWatch][NoTV]
+	[NoTV]
+	[Watch (6,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	partial interface CLHeading : NSSecureCoding, NSCopying {
@@ -183,19 +184,23 @@ namespace CoreLocation {
 		bool LocationServicesEnabled { get; }
 
 #if !MONOMAC
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("headingFilter", ArgumentSemantic.Assign)]
 		double HeadingFilter { get; set;  }
 	
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("startUpdatingHeading")]
 		void StartUpdatingHeading ();
 	
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("stopUpdatingHeading")]
 		void StopUpdatingHeading ();
 	
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("dismissHeadingCalibrationDisplay")]
 		void DismissHeadingCalibrationDisplay ();
 #endif
@@ -207,7 +212,8 @@ namespace CoreLocation {
 		[Export ("purpose")]
 		string Purpose { get; set; }
 
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("headingAvailable"), Static]
 		bool HeadingAvailable { get; }
 
@@ -228,11 +234,13 @@ namespace CoreLocation {
 		bool RegionMonitoringEnabled { get; }
 
 #if !MONOMAC
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("headingOrientation", ArgumentSemantic.Assign)]
 		CLDeviceOrientation HeadingOrientation { get; set; }
 
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("heading", ArgumentSemantic.Copy)]
 		CLHeading Heading { get; }
 #endif
@@ -402,7 +410,8 @@ namespace CoreLocation {
 		void UpdatedLocation (CLLocationManager  manager, CLLocation newLocation, CLLocation oldLocation);
 	
 #if !MONOMAC
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("locationManager:didUpdateHeading:"), EventArgs ("CLHeadingUpdated")]
 		void UpdatedHeading (CLLocationManager  manager, CLHeading newHeading);
 #endif
@@ -410,7 +419,8 @@ namespace CoreLocation {
 #if XAMCORE_4_0 // Unavailable on macOS
 		[NoMac]
 #endif
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("locationManagerShouldDisplayHeadingCalibration:"), DelegateName ("CLLocationManagerEventArgs"), DefaultValue (true)]
 		bool ShouldDisplayHeadingCalibration (CLLocationManager manager);
 	
