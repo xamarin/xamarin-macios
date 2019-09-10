@@ -474,6 +474,37 @@ namespace MonoTouchFixtures.ModelIO {
 			for (int i = 0; i < retNMatrix4dArr.Length; i++)
 				Asserts.AreEqual (TestMatrices.NMatrix4dArray [i], retNMatrix4dArr [i], $"retNMatrix4dArr iter: {i}");
 		}
+
+		[Test]
+		public void MDLAnimatedQuaternionTest ()
+		{
+			// Quaternion
+			TestRuntime.AssertXcodeVersion (11, 0);
+
+			using (var animatedQuat = new MDLAnimatedQuaternion ()) {
+				var quat = new Quaternion (1.1f, 2.2f, 3.3f, 4.4f);
+
+				animatedQuat.SetQuaternion (quat, 0);
+				Asserts.AreEqual (quat, animatedQuat.GetFloatQuaternion (0), "A");
+				
+				animatedQuat.Reset (TestMatrices.QuaternionArray, TestMatrices.GetTimesArray (TestMatrices.QuaternionArray.Length));
+				var arr = animatedQuat.GetQuaternionValues (20);
+				Asserts.AreEqual (TestMatrices.QuaternionArray, arr, "C1");
+			}
+
+
+			using (var animatedQuat = new MDLAnimatedQuaternion ()) {
+				var quatd = new Quaterniond (10.1, 20.2, 30.3, 40.4);
+
+				animatedQuat.SetQuaternion (quatd, 0);
+				Asserts.AreEqual (quatd, animatedQuat.GetDoubleQuaternion (0), 0.0001, "B");
+
+				animatedQuat.Reset (TestMatrices.QuaterniondArray, TestMatrices.GetTimesArray (TestMatrices.QuaterniondArray.Length));
+				var arrd = animatedQuat.GetQuaterniondValues (20);
+				Asserts.AreEqual (TestMatrices.QuaterniondArray, arrd, "C2");
+			} 
+		}
+
 	}
 
 	[Preserve (AllMembers = true)]
@@ -678,9 +709,9 @@ namespace MonoTouchFixtures.ModelIO {
 			return array;
 		}
 
-		public static double [] GetTimesArray (int lenght)
+		public static double [] GetTimesArray (int length)
 		{
-			return Enumerable.Range (0, lenght).Select (v => (double) v).ToArray ();
+			return Enumerable.Range (0, length).Select (v => (double) v).ToArray ();
 		}
 	}
 }

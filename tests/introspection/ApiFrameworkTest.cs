@@ -1,6 +1,7 @@
 ﻿#if __UNIFIED__
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 using NUnit.Framework;
@@ -137,6 +138,67 @@ namespace Introspection {
 			}
 			AssertIfErrors ($"{Errors} unknown frameworks found:\n{ErrorData}");
 		}
+
+#if __IOS__
+		[Test]
+		public void Simlauncher ()
+		{
+			if (Runtime.Arch != Arch.SIMULATOR)
+				Assert.Ignore ("Only needed on simulator");
+
+			var all = GetFrameworks ();
+
+			var namespaces = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (!t.IsPublic)
+					continue;
+				namespaces.Add (t.Namespace);
+			}
+
+			foreach (var line in File.ReadAllLines ("simlauncher64-sgen.frameworks")) {
+				var c = line.IndexOf (" (compatibility");
+				if (c < 0)
+					continue;
+				var path = line.Substring (1, c - 1);
+				if (!path.StartsWith ("/System/Library/Frameworks/", StringComparison.Ordinal))
+					continue;
+				var fx = Path.GetFileNameWithoutExtension (path);
+
+				// match with mtouch framework list
+				if (!all.TryGetValue (fx, out var framework)) {
+					// special cases
+					switch (fx) {
+					case "CoreAudio": // AudioToolbox, AVFoundation...
+					case "CoreFoundation": // implied (always linked)
+					case "CFNetwork": // implied (StartWWAN) and included (mostly) in CoreServices
+					case "OpenAL": // part of OpenTK
+						break;
+					case "CoreMIDI":
+						// CoreMidi (case) in the fx list
+						break;
+					default:
+						ReportError ($"{fx} is not part of mtouch's GetFrameworks");
+						break;
+					}
+				}
+
+				// match with Xamarin.iOS.dll namespaces
+				if (!namespaces.Contains (fx)) {
+					// special cases
+					switch (fx) {
+					case "CoreAudio": // AudioToolbox, AVFoundation...
+					case "CFNetwork": // implied (StartWWAN) and included (mostly) in CoreServices
+					case "OpenAL": // part of OpenTK
+						break;
+					default:
+						ReportError ($"{fx} is not part of mtouch's GetFrameworks");
+						break;
+					}
+				}
+
+			}
+		}
+#endif
 	}
 }
 #endif

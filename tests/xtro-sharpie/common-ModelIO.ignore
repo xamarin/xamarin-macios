@@ -56,3 +56,8 @@
 !missing-release-attribute-on-return-value! ModelIO.MDLMesh ModelIO.MDLMesh::CreatePlane(OpenTK.Vector2,OpenTK.Vector2i,ModelIO.MDLGeometryType,ModelIO.IMDLMeshBufferAllocator)'s selector's ('newPlaneWithDimensions:segments:geometryType:allocator:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! ModelIO.MDLMesh ModelIO.MDLMesh::CreateSubdividedMesh(ModelIO.MDLMesh,System.nuint,System.nuint)'s selector's ('newSubdividedMesh:submeshIndex:subdivisionLevels:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! ModelIO.MDLMesh ModelIO.MDLMesh::NewBoxWithDimensions(OpenTK.Vector3,OpenTK.Vector3i,ModelIO.MDLGeometryType,System.Boolean,ModelIO.IMDLMeshBufferAllocator)'s selector's ('newBoxWithDimensions:segments:geometryType:inwardNormals:allocator:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+
+# We have tests for these API, and they seem to work fine, so don't add the MarshalDirective attribute for now.
+!wrong-simd-missing-marshaldirective! OpenTK.Quaternion ModelIO.MDLAnimatedQuaternion::GetFloatQuaternion(System.Double): simd type: simd_quatf
+!wrong-simd-missing-marshaldirective! System.Void ModelIO.MDLAnimatedQuaternion::SetQuaternion(OpenTK.Quaternion,System.Double): simd type: simd_quatf
+!wrong-simd-missing-marshaldirective! System.Void ModelIO.MDLAnimatedQuaternion::SetQuaternion(OpenTK.Quaterniond,System.Double): simd type: simd_quatd
