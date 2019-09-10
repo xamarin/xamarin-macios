@@ -7659,7 +7659,7 @@ namespace AVFoundation {
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Field ("AVAssetExportPresetHEVCHighestQualityWithAlpha")]
-		NSString PresetHevchHighestQualityWithAlpha { get; }
+		NSString PresetHevcHighestQualityWithAlpha { get; }
 
 		// 5.0 APIs
 		[Export ("asset", ArgumentSemantic.Retain)]
@@ -13296,7 +13296,7 @@ namespace AVFoundation {
 		[NullAllowed, Export ("fileDataRepresentation")]
 		NSData FileDataRepresentation { get; }
 
-		[iOS (11,0)]
+		[iOS (11,0), NoMac]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'GetFileDataRepresentation' instead.")]
 		[Export ("fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData:")]
 		[return: NullAllowed]

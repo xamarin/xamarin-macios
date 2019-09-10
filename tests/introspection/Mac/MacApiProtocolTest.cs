@@ -83,6 +83,8 @@ namespace Introspection {
 				case "MLPredictionOptions": // Conformance not in headers
 				case "NSUrlSessionTaskMetrics": // Conformance not in headers
 				case "NSUrlSessionTaskTransactionMetrics": // Conformance not in headers
+				case "NSFileProviderDomain": // Conformance not in headers
+				case "FPUIActionExtensionContext": // Conformance not in headers
 					return true;
 #if !UNIFIED
 				// existing classic/old binary is not updated
@@ -118,6 +120,7 @@ namespace Introspection {
 				// Xcode 11 (running on macOS 10.15)
 				case "NSCollectionViewUpdateItem": // Not declared in header file
 				case "MLPredictionOptions": // Not declared in header file
+				case "FPUIActionExtensionContext": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -176,6 +179,8 @@ namespace Introspection {
 				case "MLPredictionOptions": // Conformance not in headers
 				case "NSUrlSessionTaskMetrics": // Conformance not in headers
 				case "NSUrlSessionTaskTransactionMetrics": // Conformance not in headers
+				case "NSFileProviderDomain": // Conformance not in headers
+				case "FPUIActionExtensionContext": // Conformance not in headers
 					return true;
 				}
 				break;

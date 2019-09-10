@@ -487,7 +487,12 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFStream.cs \
 	CoreGraphics/CGPDFString.cs \
 	CoreGraphics/CGShading.cs \
-	
+
+# CoreHaptics
+
+COREHAPTICS_API_SOURCES = \
+	CoreHaptics/Enums.cs \
+
 # CoreImage
 
 COREIMAGE_CORE_SOURCES = \
@@ -1114,6 +1119,7 @@ MODELIO_CORE_SOURCES = \
 	ModelIO/MIEnums.cs \
 
 MODELIO_SOURCES = \
+	ModelIO/MDLAnimatedQuaternion.cs \
 	ModelIO/MDLAnimatedValueTypes.cs \
 	ModelIO/MDLAsset.cs \
 	ModelIO/MDLNoiseTexture.cs \
@@ -1884,6 +1890,7 @@ IOS_FRAMEWORKS =         \
 	CoreAnimation \
 	CoreAudioKit \
 	CoreGraphics \
+	CoreHaptics \
 	CoreImage \
 	CoreLocation \
 	CoreMIDI \

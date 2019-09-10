@@ -31,6 +31,8 @@
 			<string>12.0</string>
 			<string>12.1</string>
 			<string>12.2</string>
+			<string>12.3</string>
+			<string>12.4</string>
 			<string>13.0</string>
 		</array>
 		<key>tvOS</key>
@@ -49,6 +51,8 @@
 			<string>12.0</string>
 			<string>12.1</string>
 			<string>12.2</string>
+			<string>12.3</string>
+			<string>12.4</string>
 			<string>13.0</string>
 		</array>
 		<key>watchOS</key>
@@ -67,6 +71,7 @@
 			<string>5.0</string>
 			<string>5.1</string>
 			<string>5.2</string>
+			<string>5.3</string>
 			<string>6.0</string>
 		</array>
 	</dict>

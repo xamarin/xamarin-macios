@@ -188,6 +188,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "PencilKit", "PencilKit", 10,15 },
 					{ "Speech", "Speech", 10,15 },
 					{ "LinkPresentation", "LinkPresentation", 10,15 },
+					{ "CoreHaptics", "CoreHaptics", 10,15 },
 				};
 			}
 			return mac_frameworks;
@@ -313,12 +314,17 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 				{ "Network", "Network", 12, 0 },
 
-				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
+				{ "CoreHaptics", "CoreHaptics", 13, 0 },
+				{ "LinkPresentation", "LinkPresentation", 13, 0 },
 				{ "PencilKit", "PencilKit", 13, 0 },
 				{ "QuickLookThumbnailing", "QuickLookThumbnailing", 13,0 },
-				{ "LinkPresentation", "LinkPresentation", 13, 0 },
+				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 				{ "VisionKit", "VisionKit", 13, 0 },
+
+				// the above MUST be kept in sync with simlauncher
+				// see tools/mtouch/Makefile
+				// please also keep it sorted to ease comparison
 			};
 		}
 		return ios_frameworks;
