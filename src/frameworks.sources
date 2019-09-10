@@ -1108,6 +1108,9 @@ METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSStateBatch.cs \
 	MetalPerformanceShaders/MPSStateResourceList.cs \
 
+# MetricKit
+
+
 # MobileCoreServices
 
 MOBILECORESERVICES_SOURCES = \
@@ -1929,6 +1932,7 @@ IOS_FRAMEWORKS =         \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
+	MetricKit \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
