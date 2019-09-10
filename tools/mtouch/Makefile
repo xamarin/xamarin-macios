@@ -146,8 +146,11 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework IdentityLookupUI		\
 	-weak_framework NaturalLanguage			\
 	-weak_framework Network				\
+	-weak_framework IdentityLookupUI		\
+	-weak_framework VisionKit		\
 						\
 	-weak_framework BackgroundTasks 		\
+	-weak_framework CoreHaptics \
 	-weak_framework LinkPresentation 		\
 	-weak_framework PencilKit			\
 	-weak_framework QuickLookThumbnailing		\

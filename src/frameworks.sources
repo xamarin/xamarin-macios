@@ -487,7 +487,12 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFStream.cs \
 	CoreGraphics/CGPDFString.cs \
 	CoreGraphics/CGShading.cs \
-	
+
+# CoreHaptics
+
+COREHAPTICS_API_SOURCES = \
+	CoreHaptics/Enums.cs \
+
 # CoreImage
 
 COREIMAGE_CORE_SOURCES = \
@@ -1885,6 +1890,7 @@ IOS_FRAMEWORKS =         \
 	CoreAnimation \
 	CoreAudioKit \
 	CoreGraphics \
+	CoreHaptics \
 	CoreImage \
 	CoreLocation \
 	CoreMIDI \

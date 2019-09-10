@@ -167,5 +167,6 @@ namespace MonoMac {
 		public const string PencilKitLibrary = "/System/Library/Frameworks/PencilKit.framework/PencilKit";
 		public const string SpeechLibrary = "/System/Library/Frameworks/Speech.framework/Speech";
 		public const string LinkPresentationLibrary = "/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation";
+		public const string CoreHapticsLibrary = "/System/Library/Frameworks/CoreHaptics.framework/CoreHaptics";
 	}
 }
