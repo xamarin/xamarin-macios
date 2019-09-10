@@ -129,6 +129,7 @@ namespace Foundation {
 #if !MONOMAC && !__WATCHOS__
 		readonly bool isBackgroundSession = false;
 		NSObject notificationToken;  // needed to make sure we do not hang if not using a background session
+		readonly object notificationTokenLock = new object (); // need to make sure that threads do no step on each other with a dispose and a remove  inflight data
 #endif
 
 		static NSUrlSessionConfiguration CreateConfig ()
@@ -157,7 +158,7 @@ namespace Foundation {
 			// therefore, we do not have to listen to the notifications.
 			isBackgroundSession = !string.IsNullOrEmpty (configuration.Identifier);
 #endif
-
+			allowsCellularAccess = configuration.AllowsCellularAccess;
 			AllowAutoRedirect = true;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
@@ -181,25 +182,35 @@ namespace Foundation {
 
 		void AddNotification ()
 		{
-			if (!isBackgroundSession && notificationToken == null)
-				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+			lock (notificationTokenLock) {
+				if (!bypassBackgroundCheck && !isBackgroundSession && notificationToken == null)
+					notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+			} // lock
 		}
 
 		void RemoveNotification ()
 		{
-			if (notificationToken != null) {
-				NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
+			NSObject localNotificationToken;
+			lock (notificationTokenLock) {
+				localNotificationToken = notificationToken;
 				notificationToken = null;
 			}
+			if (localNotificationToken != null)
+				NSNotificationCenter.DefaultCenter.RemoveObserver (localNotificationToken);
 		}
 
 		void BackgroundNotificationCb (NSNotification obj)
 		{
-			// we do not need to call the lock, we call cancel on the source, that will trigger all the needed code to 
-			// clean the resources and such
+			// the cancelation task of each of the sources will clean the different resources. Each removal is done
+			// inside a lock, but of course, the .Values collection will not like that because it is modified during the
+			// iteration. We split the operation in two, get all the diff cancelation sources, then try to cancel each of them
+			// which will do the correct lock dance. Note that we could be tempted to do a RemoveAll, that will yield the same
+			// runtime issue, this is dull but safe. 
+			var sources = new List <TaskCompletionSource<HttpResponseMessage>> (inflightRequests.Count);
 			foreach (var r in inflightRequests.Values) {
-				r.CompletionSource.TrySetCanceled ();
+				sources.Add (r.CompletionSource);
 			}
+			sources.ForEach (source => { source.TrySetCanceled (); });
 		}
 #endif
 
@@ -229,11 +240,11 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
+			lock (inflightRequestsLock) {
 #if !MONOMAC  && !__WATCHOS__
 			// remove the notification if present, method checks against null
 			RemoveNotification ();
 #endif
-			lock (inflightRequestsLock) {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
 					pair.Key?.Dispose ();
@@ -269,7 +280,7 @@ namespace Foundation {
 			}
 		}
 
-		bool allowsCellularAccess;
+		bool allowsCellularAccess = true;
 
 		public bool AllowsCellularAccess {
 			get {
@@ -302,6 +313,22 @@ namespace Foundation {
 			set {
 				EnsureModifiability ();
 				trustOverride = value;
+			}
+		}
+
+		// we do check if a user does a request and the application goes to the background, but
+		// in certain cases the user does that on purpose (BeingBackgroundTask) and wants to be able
+		// to use the network. In those cases, which are few, we want the developer to explicitly 
+		// bypass the check when there are not request in flight 
+		bool bypassBackgroundCheck;
+
+		public bool BypassBackgroundSessionCheck {
+			get {
+				return bypassBackgroundCheck;
+			}
+			set {
+				EnsureModifiability ();
+				bypassBackgroundCheck = value;
 			}
 		}
 

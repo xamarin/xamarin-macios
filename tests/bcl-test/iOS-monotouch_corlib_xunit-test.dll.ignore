@@ -23,3 +23,31 @@ System.Tests.DecimalTests.Remainder_Invalid(d1: 79228162514264337593543950335, d
 
 # fails on 32b and crashes the test app. Issue https://github.com/xamarin/maccore/issues/1788
 Platform32:System.Threading.Tasks.Tests.ParallelForTests.RunSimpleParallelForeachAddTest_List(count: 16777216)
+
+# tests fail on 32b due to too much memory usage. Issue https://github.com/mono/mono/issues/16671
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_NoArgument_TrimAfterEachBulkAddOrRemove_TrimsToAtLeastCount(initialCount: 1000, numRemove: 400, numAdd: 5000, newCount: 85, newCapacity: 89)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_NoArgument_TrimAfterEachBulkAddOrRemove_TrimsToAtLeastCount(initialCount: 1000, numRemove: 400, numAdd: 500, newCount: 1, newCapacity: 3)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_NoArgument_TrimAfterEachBulkAddOrRemove_TrimsToAtLeastCount(initialCount: 1000, numRemove: 900, numAdd: 500, newCount: 85, newCapacity: 89)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_NoArgument_TrimAfterEachBulkAddOrRemove_TrimsToAtLeastCount(initialCount: 1000, numRemove: 900, numAdd: 5000, newCount: 85, newCapacity: 89)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_NoArgument_TrimAfterEachBulkAddOrRemove_TrimsToAtLeastCount(initialCount: 1000, numRemove: 400, numAdd: 500, newCount: 85, newCapacity: 89)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_WithArguments_OnDictionaryWithManyElementsRemoved_TrimsToAtLeastRequested(finalCount: 85)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_WithArguments_OnDictionaryWithManyElementsRemoved_TrimsToAtLeastRequested(finalCount: 89)
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.CreatingWithDifferentCapacityValues
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.RemoveTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.GettingByKeyTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.ValuesPropertyContainsAllValues
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.RemoveAtTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.PassingCapacityAndIEqualityComparer
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.KeysPropertyContainsAllKeys
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.ClearTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.ContainsTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.GettingByIndexTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.CountTests
+Platform32:System.Text.Tests.StringBuilderTests.EnsureCapacity
+Platform32:System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestRemove1
+Platform32:System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestRemove2
+
+# test fail because they try to create more threands than what the platform can handle. Mono issue: https://github.com/mono/mono/issues/16711 
+Platform32:System.Threading.Tasks.Tests.TaskRtTests_Core.RunLongRunningTaskTests
+Platform32:System.Threading.Tasks.Tests.TaskRtTests_Core.TestTaskTConstruction_tco
+Platform32:Test.TaskContinueWhenAnyTests.RunContinueWhenAnyTests

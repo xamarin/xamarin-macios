@@ -539,6 +539,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			goto exception_handling;
 		for (i = 0; i < num_arg; i++) {
 			const char *type = [sig getArgumentTypeAtIndex: (i+2)];
+
+			type = xamarin_skip_encoding_flags (type);
+
 			int size = xamarin_objc_type_size (type);
 
 			p = mono_signature_get_params (msig, &iter);

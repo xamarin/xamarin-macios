@@ -177,8 +177,8 @@ public event EventHandler<UIImagePickerImagePickedEventArgs> FinishedPickingImag
 
 Model methods that return a value are bound differently. Those require both a
 name for the generated C# delegate (the signature for the method) and also a
-default value to return in case the user does not provide an implementation
-himself. For example, the `ShouldScrollToTop` definition is this:
+default value to return in case the user does not provide an implementation.
+For example, the `ShouldScrollToTop` definition is this:
 
 ```csharp
 [BaseType (typeof (NSObject))]
@@ -546,7 +546,7 @@ public class DefaultValueFromArgumentAttribute : Attribute {
 
 This attribute when provided on a method that returns a value on a model
 class will instruct the generator to return the value of the specified parameter
-if the user did not provide his own method or lambda.
+if the user did not provide their own method or lambda.
 
 Example:
 
@@ -1853,7 +1853,7 @@ interface DemoDelegate {
 This is how the user would use the weakly-typed version of the Delegate:
 
 ```csharp
-// The weak case, user has to roll his own
+// The weak case, user have to roll their own
 class SomeObject : NSObject {
     [Export ("doDemo")]
     void CallbackForDoDemo () {}
@@ -1866,7 +1866,7 @@ demo.WeakDelegate = new SomeObject ();
 
 And this is how the user would use the strongly-typed version, notice that
 the user takes advantage of C#'s type system and is using the override keyword
-to declare his intent and that he does not have to manually decorate the method
+to declare its intent and does not have to manually decorate the method
 with `[Export]`, since we did that work in the binding for the user:
 
 ```csharp
