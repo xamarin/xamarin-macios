@@ -1099,12 +1099,16 @@ namespace Registrar {
 
 		protected override bool IsInterface (TypeReference type)
 		{
-			return type.Resolve ().IsInterface;
+			if (type.IsArray)
+				return false;
+			return type.Resolve ()?.IsInterface == true;
 		}
 
 		protected override bool IsAbstract (TypeReference type)
 		{
-			return type.Resolve ().IsAbstract;
+			if (type.IsArray)
+				return false;
+			return type.Resolve ()?.IsAbstract == true;
 		}
 
 		protected override TypeReference[] GetInterfaces (TypeReference type)
