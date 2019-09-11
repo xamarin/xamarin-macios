@@ -1716,8 +1716,11 @@ namespace xharness
 			var buildingQueuedTests = allTasks.Where ((v) => v.Building && v.Waiting);
 
 			if (markdown_summary != null) {
-				markdown_summary.WriteLine ("# Test results");
-				markdown_summary.WriteLine ();
+				if (unfinishedTests.Any () || failedTests.Any () || deviceNotFound.Any ()) {
+					// Don't print when all tests succeed (cleaner)
+					markdown_summary.WriteLine ("# Test results");
+					markdown_summary.WriteLine ();
+				}
 				var details = failedTests.Any ();
 				if (details) {
 					markdown_summary.WriteLine ("<details>");
@@ -1740,7 +1743,7 @@ namespace xharness
 				} else if (deviceNotFound.Any ()) {
 					markdown_summary.Write ($"{deviceNotFound.Count ()} tests' device not found, {passedTests.Count ()} tests passed.");
 				} else if (passedTests.Any ()) {
-					markdown_summary.Write ($"# All {passedTests.Count ()} tests passed");
+					markdown_summary.Write ($"# :tada: All {passedTests.Count ()} tests passed :tada:");
 				} else {
 					markdown_summary.Write ($"# No tests selected.");
 				}
