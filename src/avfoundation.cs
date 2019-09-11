@@ -13586,6 +13586,7 @@ namespace AVFoundation {
 
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVMetadataObject))]
+	[DisableDefaultCtor]
 	interface AVMetadataBodyObject : NSCopying {
 		[Export ("bodyID")]
 		nint BodyId { get; }
@@ -13593,21 +13594,25 @@ namespace AVFoundation {
 
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVMetadataBodyObject))]
+	[DisableDefaultCtor]
 	interface AVMetadataCatBodyObject : NSCopying {
 	}
 
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVMetadataBodyObject))]
+	[DisableDefaultCtor]
 	interface AVMetadataDogBodyObject : NSCopying {
 	}
 
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVMetadataBodyObject))]
+	[DisableDefaultCtor]
 	interface AVMetadataHumanBodyObject : NSCopying {
 	}
 
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(AVMetadataObject))]
+	[DisableDefaultCtor]
 	interface AVMetadataSalientObject : NSCopying {
 		[Export ("objectID")]
 		nint ObjectId { get; }
