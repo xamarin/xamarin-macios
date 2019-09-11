@@ -30,6 +30,7 @@ using ObjCRuntime;
 namespace MediaLibrary {
 	[Static]
 	[Mac (10,9)]
+	[Deprecated (PlatformName.MacOSX, 10,15)]
 	interface MediaLibraryTypeIdentifierKey {
 		[Field ("MLFolderRootGroupTypeIdentifier")]
 		NSString FolderRootGroupTypeIdentifier { get; }
@@ -419,6 +420,7 @@ namespace MediaLibrary {
 	}
 
 	[Mac (10,9)]
+	[Deprecated (PlatformName.MacOSX, 10,15)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MLMediaLibrary
@@ -453,6 +455,7 @@ namespace MediaLibrary {
 	}
 
 	[Mac (10,9)]
+	[Deprecated (PlatformName.MacOSX, 10,15)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MLMediaSource
@@ -522,6 +525,7 @@ namespace MediaLibrary {
 	}
 
 	[Mac (10,9)]
+	[Deprecated (PlatformName.MacOSX, 10,15)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MLMediaGroup
@@ -564,6 +568,7 @@ namespace MediaLibrary {
 	}
 
 	[Mac (10,9)]
+	[Deprecated (PlatformName.MacOSX, 10,15)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MLMediaObject
