@@ -1,6 +1,3 @@
-## generator issue -> https://github.com/xamarin/xamarin-macios/issues/6366
-!missing-protocol-member! NFCNDEFTag::isAvailable not found
-
 ## deprecated/replaced selector (typo) - will be removed in a future beta
 !missing-selector! +NFCNDEFPayload::wellKnowTypeTextPayloadWithString:locale: not bound
 

@@ -73,6 +73,8 @@
     <None Include="tests\ref-out-parameters.cs" />
     <None Include="tests\return-release.cs" />
     <None Include="tests\vsts-970507.cs" />
+    <None Include="tests\diamond-protocol.cs" />
+    <None Include="tests\diamond-protocol-errors.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="tests\" />
