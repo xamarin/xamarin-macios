@@ -42,6 +42,8 @@ namespace MetricKit {
 		NSMeasurement<NSUnitDuration> CumulativeGpuTime { get; }
 	}
 
+	// NSUnit is added as a parent to ensure that the intermediate tmp dll can be comppiled
+	// since at this stage the compiler does not know about the inheritance of NSDimension.
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
 	[BaseType (typeof(NSDimension))]
 	[DisableDefaultCtor]
@@ -56,6 +58,8 @@ namespace MetricKit {
 		MXUnitSignalBars Bars { get; }
 	}
 
+	// NSUnit is added as a parent to ensure that the intermediate tmp dll can be comppiled
+	// since at this stage the compiler does not know about the inheritance of NSDimension.
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
 	[BaseType (typeof(NSDimension))]
 	[DisableDefaultCtor]
@@ -92,7 +96,7 @@ namespace MetricKit {
 		nuint TotalBucketCount { get; }
 
 		[Export ("bucketEnumerator", ArgumentSemantic.Strong)]
-		NSEnumerator<MXHistogramBucket<NSUnit>> BucketEnumerator { get; }
+		NSEnumerator<MXHistogramBucket<UnitType>> BucketEnumerator { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -109,7 +113,7 @@ namespace MetricKit {
 		string RegionFormat { get; }
 
 		[Export ("osVersion", ArgumentSemantic.Strong)]
-		string OsVersion { get; }
+		string OSVersion { get; }
 
 		[Export ("deviceType", ArgumentSemantic.Strong)]
 		string DeviceType { get; }
@@ -329,6 +333,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface MXMetricManager {
 		[Export ("pastPayloads", ArgumentSemantic.Strong)]
 		MXMetricPayload[] PastPayloads { get; }
