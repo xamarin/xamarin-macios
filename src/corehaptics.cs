@@ -198,7 +198,7 @@ namespace CoreHaptics {
 
 	[Mac (10,15), iOS (13,0)]
 	[Protocol]
-	interface CHHapticAdvancedPatternPlayer : CHHapticPatternPlayer {
+	interface CHHapticAdvancedPatternPlayer {
 		[Abstract]
 		[Export ("pauseAtTime:error:")]
 		bool Pause (double time, [NullAllowed] out NSError outError);
@@ -226,6 +226,10 @@ namespace CoreHaptics {
 		[Abstract]
 		[Export ("completionHandler", ArgumentSemantic.Assign)]
 		Action<NSError> CompletionHandler { get; set; }
+
+		[Abstract]
+		[Export ("isMuted")]
+		bool IsMuted { get; set; }
 	}
 
 	[Mac (10,15), iOS (13,0)]
