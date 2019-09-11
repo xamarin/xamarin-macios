@@ -5984,6 +5984,42 @@ namespace AVFoundation {
 			[iOS (9,0), Mac (10,11)]
 			[Field ("AVMetadataIdentifierQuickTimeMetadataContentIdentifier")]
 			NSString ContentIdentifier { get; }
+
+			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+			[Field ("AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScoringVersion")]
+			NSString SpatialOverCaptureQualityScoringVersion { get; }
+
+			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+			[Field ("AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScore")]
+			NSString SpatialOverCaptureQualityScore { get; }
+
+			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+			[Field ("AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScoringVersion")]
+			NSString LivePhotoVitalityScoringVersion { get; }
+
+			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+			[Field ("AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScore")]
+			NSString LivePhotoVitalityScore { get; }
+
+			[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+			[Field ("AVMetadataIdentifierQuickTimeMetadataDetectedSalientObject")]
+			NSString DetectedSalientObject { get; }
+
+			[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+			[Field ("AVMetadataIdentifierQuickTimeMetadataDetectedHumanBody")]
+			NSString DetectedHumanBody { get; }
+
+			[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+			[Field ("AVMetadataIdentifierQuickTimeMetadataDetectedDogBody")]
+			NSString DetectedDogBody { get; }
+
+			[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+			[Field ("AVMetadataIdentifierQuickTimeMetadataDetectedCatBody")]
+			NSString DetectedCatBody { get; }
+
+			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+			[Field ("AVMetadataIdentifierQuickTimeMetadataAutoLivePhoto")]
+			NSString AutoLivePhoto { get; }
 		}
 
 		[iOS (8,0)][Mac (10,10)][Watch (6,0)]
@@ -6635,6 +6671,22 @@ namespace AVFoundation {
 		[NoTV, iOS (8,0), Mac (10,15)]
 		[Field ("AVMetadataObjectTypeDataMatrixCode")]
 		NSString TypeDataMatrixCode { get; }
+
+		[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+		[Field ("AVMetadataObjectTypeCatBody")]
+		NSString TypeCatBody { get; }
+
+		[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+		[Field ("AVMetadataObjectTypeDogBody")]
+		NSString TypeDogBody { get; }
+
+		[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+		[Field ("AVMetadataObjectTypeHumanBody")]
+		NSString TypeHumanBody { get; }
+
+		[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+		[Field ("AVMetadataObjectTypeSalientObject")]
+		NSString TypeSalientObject { get; }
 	}
 
 	[NoWatch]
@@ -9222,6 +9274,7 @@ namespace AVFoundation {
 		[NullAllowed, Export ("previewPhotoFormat", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> PreviewPhotoFormat { get; set; }
 
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AutoVirtualDeviceFusionEnabled' instead.")]
 		[iOS (10, 2)]
 		[Export ("autoDualCameraFusionEnabled")]
 		bool AutoDualCameraFusionEnabled { [Bind ("isAutoDualCameraFusionEnabled")] get; set; }
@@ -9234,6 +9287,7 @@ namespace AVFoundation {
 		[NullAllowed, Export ("rawFileType")]
 		string RawFileType { get; }
 
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'VirtualDeviceConstituentPhotoDeliveryEnabled' instead.")]
 		[iOS (11, 0)]
 		[Export ("dualCameraDualPhotoDeliveryEnabled")]
 		bool DualCameraDualPhotoDeliveryEnabled { [Bind ("isDualCameraDualPhotoDeliveryEnabled")] get; set; }
@@ -9327,6 +9381,14 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Export ("enabledSemanticSegmentationMatteTypes", ArgumentSemantic.Assign)]
 		NSString[] EnabledSemanticSegmentationMatteTypes { get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Export ("virtualDeviceConstituentPhotoDeliveryEnabledDevices", ArgumentSemantic.Copy)]
+		AVCaptureDevice[] VirtualDeviceConstituentPhotoDeliveryEnabledDevices { get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Export ("autoVirtualDeviceFusionEnabled")]
+		bool AutoVirtualDeviceFusionEnabled { [Bind ("isAutoVirtualDeviceFusionEnabled")] get; set; }
 	}
 	
 #if !MONOMAC
@@ -9382,6 +9444,7 @@ namespace AVFoundation {
 		[Export ("stillImageStabilizationEnabled")]
 		bool IsStillImageStabilizationEnabled { [Bind ("isStillImageStabilizationEnabled")] get; }
 
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'VirtualDeviceFusionEnabled' instead.")]
 		[iOS (10, 2)]
 		[Export ("dualCameraFusionEnabled")]
 		bool DualCameraFusionEnabled { [Bind ("isDualCameraFusionEnabled")] get; }
@@ -9413,6 +9476,10 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("photoProcessingTimeRange")]
 		CMTimeRange PhotoProcessingTimeRange { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (13,0)]
+		[Export ("virtualDeviceFusionEnabled")]
+		bool VirtualDeviceFusionEnabled { [Bind ("isVirtualDeviceFusionEnabled")] get; }
 	}
 
 
@@ -9553,6 +9620,7 @@ namespace AVFoundation {
 		[Async]
 		void SetPreparedPhotoSettings (AVCapturePhotoSettings[] preparedPhotoSettingsArray, [NullAllowed] Action<bool, NSError> completionHandler);
 
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'VirtualDeviceFusionSupported' instead.")]
 		[iOS (10, 2), NoMac]
 		[Export ("dualCameraFusionSupported")]
 		bool DualCameraFusionSupported { [Bind ("isDualCameraFusionSupported")] get; }
@@ -9602,10 +9670,12 @@ namespace AVFoundation {
 		[Export ("supportedRawPhotoPixelFormatTypesForFileType:")]
 		NSNumber[] GetSupportedRawPhotoPixelFormatTypesForFileType (string fileType);
 
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'VirtualDeviceConstituentPhotoDeliverySupported' instead.")]
 		[iOS (11, 0), NoMac]
 		[Export ("dualCameraDualPhotoDeliverySupported")]
 		bool DualCameraDualPhotoDeliverySupported { [Bind ("isDualCameraDualPhotoDeliverySupported")] get; }
 
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'VirtualDeviceConstituentPhotoDeliveryEnabledDevices' instead.")]
 		[iOS (11, 0), NoMac]
 		[Export ("dualCameraDualPhotoDeliveryEnabled")]
 		bool DualCameraDualPhotoDeliveryEnabled { [Bind ("isDualCameraDualPhotoDeliveryEnabled")] get; set; }
@@ -9643,6 +9713,18 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("maxPhotoQualityPrioritization", ArgumentSemantic.Assign)]
 		AVCapturePhotoQualityPrioritization MaxPhotoQualityPrioritization { get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Export ("virtualDeviceFusionSupported")]
+		bool VirtualDeviceFusionSupported { [Bind ("isVirtualDeviceFusionSupported")] get; }
+
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Export ("virtualDeviceConstituentPhotoDeliverySupported")]
+		bool VirtualDeviceConstituentPhotoDeliverySupported { [Bind ("isVirtualDeviceConstituentPhotoDeliverySupported")] get; }
+
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Export ("virtualDeviceConstituentPhotoDeliveryEnabled")]
+		bool VirtualDeviceConstituentPhotoDeliveryEnabled { [Bind ("isVirtualDeviceConstituentPhotoDeliveryEnabled")] get; set; }
 	}
 	
 	[BaseType (typeof (AVCaptureFileOutput))]
@@ -9797,6 +9879,18 @@ namespace AVFoundation {
 		[iOS (11, 1), NoMac]
 		[Field ("AVCaptureDeviceTypeBuiltInTrueDepthCamera")]
 		BuiltInTrueDepthCamera,
+
+		[NoMac, iOS (13, 0)]
+		[Field ("AVCaptureDeviceTypeBuiltInUltraWideCamera")]
+		BuiltInUltraWideCamera,
+
+		[NoMac, iOS (13, 0)]
+		[Field ("AVCaptureDeviceTypeBuiltInTripleCamera")]
+		BuiltInTripleCamera,
+
+		[NoMac, iOS (13, 0)]
+		[Field ("AVCaptureDeviceTypeBuiltInDualWideCamera")]
+		BuiltInDualWideCamera,
 
 		[NoWatch, NoTV, NoiOS]
 		[Field ("AVCaptureDeviceTypeExternalUnknown")]
@@ -10322,6 +10416,7 @@ namespace AVFoundation {
 		[Export ("systemPressureState")]
 		AVCaptureSystemPressureState SystemPressureState { get; }
 
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'VirtualDeviceSwitchOverVideoZoomFactors' instead.")]
 		[iOS (11, 0), NoWatch, NoMac]
 		[Export ("dualCameraSwitchOverVideoZoomFactor")]
 		nfloat DualCameraSwitchOverVideoZoomFactor { get; }
@@ -10364,6 +10459,20 @@ namespace AVFoundation {
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("globalToneMappingEnabled")]
 		bool GlobalToneMappingEnabled { [Bind ("isGlobalToneMappingEnabled")] get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Export ("virtualDeviceSwitchOverVideoZoomFactors")]
+		NSNumber[] VirtualDeviceSwitchOverVideoZoomFactors { get; }
+
+		// from AVCaptureDevice_AVCaptureDeviceGeometricDistortionCorrection
+
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Export ("geometricDistortionCorrectionSupported")]
+		bool GeometricDistortionCorrectionSupported { [Bind ("isGeometricDistortionCorrectionSupported")] get; }
+
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Export ("geometricDistortionCorrectionEnabled")]
+		bool GeometricDistortionCorrectionEnabled { [Bind ("isGeometricDistortionCorrectionEnabled")] get; set; }
 	}
 
 	[NoTV, iOS (11, 1), NoMac, NoWatch]
@@ -10506,6 +10615,11 @@ namespace AVFoundation {
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("globalToneMappingSupported")]
 		bool GlobalToneMappingSupported { [Bind ("isGlobalToneMappingSupported")] get; }
+
+		// from AVCaptureDeviceFormat_AVCaptureDeviceFormatGeometricDistortionCorrection 
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[Export ("geometricDistortionCorrectedVideoFieldOfView")]
+		float GeometricDistortionCorrectedVideoFieldOfView { get; }
 #endif
 	}
 
@@ -13469,4 +13583,34 @@ namespace AVFoundation {
 		[Export ("systemPressureCost")]
 		float SystemPressureCost { get; }
 	}
+
+	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(AVMetadataObject))]
+	interface AVMetadataBodyObject : NSCopying {
+		[Export ("bodyID")]
+		nint BodyId { get; }
+	}
+
+	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(AVMetadataBodyObject))]
+	interface AVMetadataCatBodyObject : NSCopying {
+	}
+
+	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(AVMetadataBodyObject))]
+	interface AVMetadataDogBodyObject : NSCopying {
+	}
+
+	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(AVMetadataBodyObject))]
+	interface AVMetadataHumanBodyObject : NSCopying {
+	}
+
+	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(AVMetadataObject))]
+	interface AVMetadataSalientObject : NSCopying {
+		[Export ("objectID")]
+		nint ObjectId { get; }
+	}
+
 }
