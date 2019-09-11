@@ -1707,8 +1707,12 @@ namespace HomeKit {
 		[Export ("requiresSetupPayloadURL")]
 		bool RequiresSetupPayloadUrl { get; }
 		
+#if false
+		// marked as deprecated in tvOS headers (where the type does not exists)
+		// https://github.com/xamarin/maccore/issues/1959
 		[Export ("requiresOwnershipToken")]
 		bool RequiresOwnershipToken { get; }
+#endif
 
 		[Export ("payloadWithOwnershipToken:")]
 		[return: NullAllowed]
