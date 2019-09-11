@@ -339,7 +339,7 @@ function install_specific_xcode () {
 	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
 	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
 	if test -f "$HOME/Downloads/$XCODE_NAME"; then
-		log "Found Xcode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
+		log "Found $XCODE_NAME in your ~/Downloads folder, copying that version to $XCODE_DMG instead of re-downloading it."
 		cp "$HOME/Downloads/$XCODE_NAME" "$XCODE_DMG"
 	else
 		curl -L $XCODE_URL > $XCODE_DMG
@@ -363,7 +363,7 @@ function install_specific_xcode () {
 		rm -Rf *.app
 		rm -Rf $XCODE_ROOT
 		# extract
-		/System/Library/CoreServices/Applications/Archive\ Utility.app/Contents/MacOS/Archive\ Utility "$XCODE_DMG"
+		xip --expand "$XCODE_DMG"
 		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
 		mv *.app $XCODE_ROOT
 		popd > /dev/null
@@ -373,7 +373,7 @@ function install_specific_xcode () {
 	rm -f $XCODE_DMG
 
 	log "Removing any com.apple.quarantine attributes from the installed Xcode"
-	$SUDO xattr -d -r com.apple.quarantine $XCODE_ROOT
+	$SUDO xattr -s -d -r com.apple.quarantine $XCODE_ROOT
 
 	if is_at_least_version $XCODE_VERSION 5.0; then
 		log "Accepting Xcode license"
@@ -533,7 +533,11 @@ function check_xcode () {
 	# must have latest Xcode in /Applications/Xcode<version>.app
 	check_specific_xcode
 	install_coresimulator
-	check_specific_xcode "94"
+	# Xcode 9,4 does not longer start on catalina
+	local current_os=$(sw_vers -productVersion)
+	if test $current_os != "10.15"; then
+		check_specific_xcode "94"
+	fi
 
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	local IOS_SDK_VERSION=`grep ^IOS_SDK_VERSION= Make.config | sed 's/.*=//'`

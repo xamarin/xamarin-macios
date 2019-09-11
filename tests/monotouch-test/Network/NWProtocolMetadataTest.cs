@@ -28,8 +28,10 @@ namespace MonoTouchFixtures.Network {
 				Assert.False (m.IsTcp, "IsTcp");
 				Assert.False (m.IsUdp, "IsUdp");
 				Assert.NotNull (m.ProtocolDefinition, "ProtocolDefinition");
-				Assert.NotNull (m.SecProtocolMetadata, "SecProtocolMetadata");
+				Assert.Throws<InvalidOperationException> (() => { var x = m.SecProtocolMetadata; }, "SecProtocolMetadata");
+				Assert.Throws<InvalidOperationException> (() => { var x = m.TlsSecProtocolMetadata; }, "TlsSecProtocolMetadata");
 				Assert.That (m.ServiceClass, Is.EqualTo (NWServiceClass.BestEffort), "ServiceClass");
+				Assert.That (m.IPServiceClass, Is.EqualTo (NWServiceClass.BestEffort), "IPServiceClass");
 			}
 		}
 
@@ -37,14 +39,16 @@ namespace MonoTouchFixtures.Network {
 		public void Udp ()
 		{
 			using (var m = NWProtocolMetadata.CreateUdpMetadata ()) {
-				Assert.That (m.IPMetadataEcnFlag, Is.EqualTo (NWIPEcnFlag.NonEct), "IPMetadataEcnFlag");
-				Assert.That (m.IPMetadataReceiveTime, Is.EqualTo (0), "IPMetadataReceiveTime");
+				Assert.Throws<InvalidOperationException> (() => { var x = m.IPMetadataEcnFlag; }, "IPMetadataEcnFlag");
+				Assert.Throws<InvalidOperationException> (() => { var x = m.IPMetadataReceiveTime; }, "IPMetadataReceiveTime");
 				Assert.False (m.IsIP, "IsIP");
 				Assert.False (m.IsTcp, "IsTcp");
 				Assert.True (m.IsUdp, "IsUdp");
 				Assert.NotNull (m.ProtocolDefinition, "ProtocolDefinition");
-				Assert.NotNull (m.SecProtocolMetadata, "SecProtocolMetadata");
-				Assert.That (m.ServiceClass, Is.EqualTo (NWServiceClass.BestEffort), "ServiceClass");
+				Assert.Throws<InvalidOperationException> (() => { var x = m.SecProtocolMetadata; }, "SecProtocolMetadata");
+				Assert.Throws<InvalidOperationException> (() => { var x = m.TlsSecProtocolMetadata; }, "TlsSecProtocolMetadata");
+				Assert.Throws<InvalidOperationException> (() => { var x = m.ServiceClass; }, "ServiceClass");
+				Assert.Throws<InvalidOperationException> (() => { var x = m.IPServiceClass; }, "IPServiceClass");
 			}
 		}
 	}

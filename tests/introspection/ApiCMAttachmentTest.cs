@@ -356,7 +356,7 @@ namespace Introspection {
 						Font = new CTFont ("ArialMT", 24)
 					}));
 			case "CTGlyphInfo":
-				return new CTGlyphInfo ("Zapfino", new CTFont ("ArialMT", 24), "Foo");
+				return new CTGlyphInfo ("copyright", new CTFont ("ArialMY", 24), "Foo");
 			case "CTLine":
 				return new CTLine (new NSAttributedString ("Hello, world",
 					new CTStringAttributes () {

@@ -16,22 +16,9 @@
 !missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
 
 ## unsorted
-!unknown-native-enum! AVAudioSessionCategoryOptions bound
-!unknown-native-enum! AVAudioSessionErrorCode bound
-!unknown-native-enum! AVAudioSessionInterruptionOptions bound
-!unknown-native-enum! AVAudioSessionInterruptionType bound
-!unknown-native-enum! AVAudioSessionPortOverride bound
-!unknown-native-enum! AVAudioSessionRecordPermission bound
-!unknown-native-enum! AVAudioSessionRouteChangeReason bound
-!unknown-native-enum! AVAudioSessionRouteSharingPolicy bound
-!unknown-native-enum! AVAudioSessionSetActiveOptions bound
-!unknown-native-enum! AVAudioSessionSilenceSecondaryAudioHintType bound
 !unknown-native-enum! AVCaptureAutoFocusRangeRestriction bound
-!unknown-native-enum! AVCaptureAutoFocusSystem bound
 !unknown-native-enum! AVCaptureLensStabilizationStatus bound
-!unknown-native-enum! AVCaptureOutputDataDroppedReason bound
 !unknown-native-enum! AVCaptureVideoStabilizationMode bound
-!unknown-native-enum! AVSpeechBoundary bound
 !unknown-type! AVCaptureSynchronizedData bound
 !unknown-type! AVCaptureSynchronizedDataCollection bound
 

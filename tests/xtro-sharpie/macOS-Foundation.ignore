@@ -1,10 +1,14 @@
 ## Only one type currently, which default returns. Currently unneeded unless they extend.
 !missing-selector! +NSDistributedNotificationCenter::notificationCenterForType: not bound
 
+## XPC not supported
+!missing-selector! NSXPCCoder::decodeXPCObjectOfType:forKey: not bound
+!missing-selector! NSXPCCoder::encodeXPCObject:forKey: not bound
+!missing-selector! NSXPCInterface::setXPCType:forSelector:argumentIndex:ofReply: not bound
+!missing-selector! NSXPCInterface::XPCTypeForSelector:argumentIndex:ofReply: not bound
+
 ## unsorted
 
-!duplicate-type-name! NSFileWrapperReadingOptions enum exists as both Foundation.NSFileWrapperReadingOptions and AppKit.NSFileWrapperReadingOptions
-!duplicate-type-name! NSWritingDirection enum exists as both Foundation.NSWritingDirection and AppKit.NSWritingDirection
 !extra-designated-initializer! NSScriptCommand::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
 !extra-protocol-member! unexpected selector NSURLSessionDelegate::URLSessionDidFinishEventsForBackgroundURLSession: found
 !missing-enum! NSBackgroundActivityResult not bound
@@ -57,7 +61,6 @@
 !missing-field! NSHTTPPropertyServerHTTPVersionKey not bound
 !missing-field! NSHTTPPropertyStatusCodeKey not bound
 !missing-field! NSHTTPPropertyStatusReasonKey not bound
-!missing-field! NSInconsistentArchiveException not bound
 !missing-field! NSIntegerHashCallBacks not bound
 !missing-field! NSIntegerMapKeyCallBacks not bound
 !missing-field! NSIntegerMapValueCallBacks not bound
@@ -127,7 +130,6 @@
 !missing-pinvoke! NSUnionRect is not bound
 !missing-protocol! NSSpellServerDelegate not bound
 !missing-protocol! NSURLHandleClient not bound
-!missing-protocol-conformance! NSURL should conform to NSURLHandleClient
 !missing-protocol-member! NSFileManagerDelegate::fileManager:shouldCopyItemAtURL:toURL: not found
 !missing-protocol-member! NSFileManagerDelegate::fileManager:shouldLinkItemAtURL:toURL: not found
 !missing-protocol-member! NSFileManagerDelegate::fileManager:shouldMoveItemAtURL:toURL: not found
@@ -158,7 +160,6 @@
 !missing-selector! +NSMutableCharacterSet::characterSetWithCharactersInString: not bound
 !missing-selector! +NSMutableCharacterSet::characterSetWithContentsOfFile: not bound
 !missing-selector! +NSMutableCharacterSet::characterSetWithRange: not bound
-!missing-selector! +NSPortCoder::portCoderWithReceivePort:sendPort:components: not bound
 !missing-selector! +NSProtocolChecker::protocolCheckerWithTarget:protocol: not bound
 !missing-selector! +NSScriptClassDescription::classDescriptionForClass: not bound
 !missing-selector! +NSScriptObjectSpecifier::objectSpecifierWithDescriptor: not bound
@@ -346,7 +347,6 @@
 !missing-selector! NSPort::addConnection:toRunLoop:forMode: not bound
 !missing-selector! NSPort::removeConnection:fromRunLoop:forMode: not bound
 !missing-selector! NSPortCoder::encodePortObject: not bound
-!missing-selector! NSPortCoder::initWithReceivePort:sendPort:components: not bound
 !missing-selector! NSPositionalSpecifier::initWithPosition:objectSpecifier: not bound
 !missing-selector! NSPositionalSpecifier::insertionContainer not bound
 !missing-selector! NSPositionalSpecifier::insertionIndex not bound
@@ -771,9 +771,7 @@
 !missing-selector! NSGarbageCollector::isCollecting not bound
 !missing-selector! NSGarbageCollector::isEnabled not bound
 !missing-selector! NSGarbageCollector::zone not bound
-!missing-selector! NSPortCoder::connection not bound
 !missing-selector! NSPortCoder::decodePortObject not bound
-!missing-selector! NSPortCoder::dispatch not bound
 !missing-selector! NSPortCoder::isBycopy not bound
 !missing-selector! NSPortCoder::isByref not bound
 !missing-selector! NSPositionalSpecifier::evaluate not bound

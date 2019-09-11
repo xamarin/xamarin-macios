@@ -166,16 +166,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static bool SupportsModernObjectiveC {
-			get {
-#if MONOMAC || MMP
-				return Is64Bit;
-#else
-				return true;
-#endif
-			}
-		}
-
 		public static int Verbosity {
 			get { return verbose; }
 		}
@@ -232,14 +222,114 @@ namespace Xamarin.Bundler {
 #endif
 		}
 
+		public static int RunCommand (string path, string args)
+		{
+			return RunCommand (path, args, null, (Action<string>) null);
+		}
+
 		public static int RunCommand (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
 		{
-			return RunCommand (path, args, env, output, suppressPrintOnErrors, verbose);
+			if (output != null)
+				return RunCommand (path, args, env, (v) => { if (v != null) output.AppendLine (v); }, suppressPrintOnErrors);
+			return RunCommand (path, args, env, (Action<string>) null, suppressPrintOnErrors);
+		}
+
+		public static int RunCommand (string path, string args, string[] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
+		{
+			Exception stdin_exc = null;
+			var info = new ProcessStartInfo (path, args);
+			info.UseShellExecute = false;
+			info.RedirectStandardInput = false;
+			info.RedirectStandardOutput = true;
+			info.RedirectStandardError = true;
+			System.Threading.ManualResetEvent stdout_completed = new System.Threading.ManualResetEvent (false);
+			System.Threading.ManualResetEvent stderr_completed = new System.Threading.ManualResetEvent (false);
+
+			var lockobj = new object ();
+			StringBuilder output = null;
+			if (output_received == null) {
+				output = new StringBuilder ();
+				output_received = (line) => {
+					if (line != null)
+						output.AppendLine (line);
+				};
+			}
+
+			if (env != null){
+				if (env.Length % 2 != 0)
+					throw new Exception ("You passed an environment key without a value");
+
+				for (int i = 0; i < env.Length; i+= 2)
+					info.EnvironmentVariables [env[i]] = env[i+1];
+			}
+
+			if (verbose > 0)
+				Console.WriteLine ("{0} {1}", path, args);
+
+			using (var p = Process.Start (info)) {
+
+				p.OutputDataReceived += (s, e) => {
+					if (e.Data != null) {
+						lock (lockobj)
+							output_received (e.Data);
+					} else {
+						stdout_completed.Set ();
+					}
+				};
+
+				p.ErrorDataReceived += (s, e) => {
+					if (e.Data != null) {
+						lock (lockobj)
+							output_received (e.Data);
+					} else {
+						stderr_completed.Set ();
+					}
+				};
+
+				p.BeginOutputReadLine ();
+				p.BeginErrorReadLine ();
+
+				p.WaitForExit ();
+
+				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
+				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
+
+				output_received (null);
+
+				if (p.ExitCode != 0) {
+					// note: this repeat the failing command line. However we can't avoid this since we're often
+					// running commands in parallel (so the last one printed might not be the one failing)
+					if (!suppressPrintOnErrors) {
+						// We re-use the stringbuilder so that we avoid duplicating the amount of required memory,
+						// while only calling Console.WriteLine once to make it less probable that other threads
+						// also write to the Console, confusing the output.
+						if (output == null)
+							output = new StringBuilder ();
+						output.Insert (0, $"Process exited with code {p.ExitCode}, command:\n{path} {args}\n");
+						Console.Error.WriteLine (output);
+					}
+					return p.ExitCode;
+				} else if (verbose > 0 && output != null && output.Length > 0 && !suppressPrintOnErrors) {
+					Console.WriteLine (output.ToString ());
+				}
+
+				if (stdin_exc != null)
+					throw stdin_exc;
+			}
+
+			return 0;
 		}
 
 		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
 		{
-			return RunCommandAsync (path, args, env, output, suppressPrintOnErrors, verbose);
+			if (output != null)
+				return RunCommandAsync (path, args, env, (v) => { if (v != null) output.AppendLine (v); }, suppressPrintOnErrors);
+			return RunCommandAsync (path, args, env, (Action<string>) null, suppressPrintOnErrors);
+		}
+
+		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
+		{
+			return Task.Run (() => RunCommand (path, args, env, output_received, suppressPrintOnErrors));
 		}
 
 #if !MMP_TEST

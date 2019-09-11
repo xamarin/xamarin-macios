@@ -7,8 +7,6 @@
 !missing-selector! UINavigationBar::tintColor not bound
 !missing-selector! UISearchBar::setTintColor: not bound
 !missing-selector! UISearchBar::tintColor not bound
-!missing-selector! UISegmentedControl::setTintColor: not bound
-!missing-selector! UISegmentedControl::tintColor not bound
 !missing-selector! UITabBar::setTintColor: not bound
 !missing-selector! UITabBar::tintColor not bound
 

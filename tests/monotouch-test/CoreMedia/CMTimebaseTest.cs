@@ -6,9 +6,6 @@
 //
 // Copyright 2012-2014 Xamarin Inc All rights reserved.
 //
-
-#if !__WATCHOS__
-
 using System;
 #if XAMCORE_2_0
 using Foundation;
@@ -27,6 +24,7 @@ namespace MonoTouchFixtures.CoreMedia {
 	[Preserve (AllMembers = true)]
 	public class CMTimebaseTest
 	{
+#if !__WATCHOS__
 		[Test]
 		public void DefaultValues ()
 		{
@@ -46,6 +44,7 @@ namespace MonoTouchFixtures.CoreMedia {
 				Assert.Null (tb.GetMasterTimebase (), "GetMasterTimebase");
 			}
 		}
+#endif
 
 		[Test]
 		public void SetAnchorTime ()
@@ -74,6 +73,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			}
 		}
 
+#if !__WATCHOS__
 		[Test]
 		public void GetMasterTests ()
 		{
@@ -93,6 +93,7 @@ namespace MonoTouchFixtures.CoreMedia {
 				AssertNullOrValidHandle (masterUlt, "GetUltimateMasterClock");
 			}
 		}
+#endif
 
 		[Test]
 		public void CopyMasterTests ()
@@ -124,4 +125,3 @@ namespace MonoTouchFixtures.CoreMedia {
 	}
 }
 
-#endif // !__WATCHOS__

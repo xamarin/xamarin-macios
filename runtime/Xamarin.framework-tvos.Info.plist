@@ -5,7 +5,7 @@
         <key>CFBundleDevelopmentRegion</key>
         <string>en</string>
         <key>CFBundleIdentifier</key>
-        <string>xamarin.ios.xamarin-framework</string>
+        <string>xamarin.tvos.xamarin-framework</string>
         <key>CFBundleInfoDictionaryVersion</key>
         <string>6.0</string>
         <key>CFBundleName</key>

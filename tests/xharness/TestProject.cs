@@ -17,7 +17,6 @@ namespace xharness
 		public string Name;
 		public bool IsExecutableProject;
 		public bool IsNUnitProject;
-		public bool GenerateVariations = true;
 		public string [] Configurations;
 		public Func<Task> Dependency;
 		public string FailureMessage;
@@ -27,15 +26,20 @@ namespace xharness
 
 		public IEnumerable<TestProject> ProjectReferences;
 
+		// Optional
+		public BCLTestInfo BCLInfo { get; set; }
+
+		// Optional
+		public MonoNativeInfo MonoNativeInfo { get; set; }
+
 		public TestProject ()
 		{
 		}
 
-		public TestProject (string path, bool isExecutableProject = true, bool generateVariations = true)
+		public TestProject (string path, bool isExecutableProject = true)
 		{
 			Path = path;
 			IsExecutableProject = isExecutableProject;
-			GenerateVariations = generateVariations;
 		}
 
 		public TestProject AsTvOSProject ()
@@ -95,7 +99,6 @@ namespace xharness
 			TestProject rv = (TestProject) Activator.CreateInstance (GetType ());
 			rv.Path = Path;
 			rv.IsExecutableProject = IsExecutableProject;
-			rv.GenerateVariations = GenerateVariations;
 			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
 			rv.MTouchExtraArgs = MTouchExtraArgs;
@@ -153,43 +156,43 @@ namespace xharness
 	public class iOSTestProject : TestProject
 	{
 		public bool SkipiOSVariation;
-		public bool SkipwatchOSVariation; // skip both
+	public bool SkipwatchOSVariation; // skip both
 		public bool SkipwatchOSARM64_32Variation;
 		public bool SkipwatchOS32Variation;
 		public bool SkiptvOSVariation;
 		public bool BuildOnly;
 
-		// Optional
-		public BCLTestInfo BCLInfo { get; set; }
-
-		// Optional
-		public MonoNativeInfo MonoNativeInfo { get; set; }
-
 		public iOSTestProject ()
 		{
 		}
 
-		public iOSTestProject (string path, bool isExecutableProject = true, bool generateVariations = true)
-			: base (path, isExecutableProject, generateVariations)
+		public iOSTestProject (string path, bool isExecutableProject = true)
+			: base (path, isExecutableProject)
 		{
 		}
 	}
 
-	public enum MacFlavors { All, Modern, Full, System, NonSystem }
+	[Flags]
+	public enum MacFlavors {
+		Modern = 1, // Xamarin.Mac/Modern app
+		Full = 2, // Xamarin.Mac/Full app
+		System = 4, // Xamarin.Mac/System app
+		Console = 8, // Console executable
+	}
 
 	public class MacTestProject : TestProject
 	{
-		public MacFlavors TargetFrameworkFlavor;
+		public MacFlavors TargetFrameworkFlavors;
 
-		// Optional
-		public MacBCLTestInfo BCLInfo { get; set; }
+		public bool GenerateFull => GenerateVariations && (TargetFrameworkFlavors & MacFlavors.Full) == MacFlavors.Full;
+		public bool GenerateSystem => GenerateVariations && (TargetFrameworkFlavors & MacFlavors.System) == MacFlavors.System;
 
-		// Optional
-		public MacMonoNativeInfo MonoNativeInfo { get; set; }
-
-		public bool GenerateModern => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.NonSystem || TargetFrameworkFlavor == MacFlavors.Modern;
-		public bool GenerateFull => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.NonSystem || TargetFrameworkFlavor == MacFlavors.Full;
-		public bool GenerateSystem => TargetFrameworkFlavor == MacFlavors.All || TargetFrameworkFlavor == MacFlavors.System;
+		public bool GenerateVariations {
+			get {
+				// If a bitwise combination of flavors, then we're generating variations
+				return TargetFrameworkFlavors != MacFlavors.Modern && TargetFrameworkFlavors != MacFlavors.Full && TargetFrameworkFlavors != MacFlavors.System && TargetFrameworkFlavors != MacFlavors.Console;
+			}
+		}
 
 		public string Platform = "x86";
 
@@ -197,18 +200,23 @@ namespace xharness
 		{
 		}
 
-		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, MacFlavors targetFrameworkFlavor = MacFlavors.NonSystem) : base (path, isExecutableProject, generateVariations)
+		public MacTestProject (string path, bool isExecutableProject = true, MacFlavors targetFrameworkFlavor = MacFlavors.Full | MacFlavors.Modern) : base (path, isExecutableProject)
 		{
-			TargetFrameworkFlavor = targetFrameworkFlavor;
+			TargetFrameworkFlavors = targetFrameworkFlavor;
 		}
 
 		public override TestProject Clone()
 		{
 			var rv = (MacTestProject) base.Clone ();
-			rv.TargetFrameworkFlavor = TargetFrameworkFlavor;
+			rv.TargetFrameworkFlavors = TargetFrameworkFlavors;
 			rv.BCLInfo = BCLInfo;
 			rv.Platform = Platform;
 			return rv;
+		}
+
+		public override string ToString ()
+		{
+			return base.ToString () + " (" + TargetFrameworkFlavors.ToString () + ")";
 		}
 	}
 }

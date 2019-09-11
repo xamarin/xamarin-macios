@@ -111,9 +111,9 @@ namespace Metal {
 		kCubeArray = 6,
 #endif
 		k3D = 7,
-		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		[iOS (12,0), TV (12,0), Mac (10,14)]
 		k2DMultisampleArray = 8,
-		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		[iOS (12,0), TV (12,0), Mac (10,14)]
 		kTextureBuffer = 9,
 	}
 
@@ -619,8 +619,8 @@ namespace Metal {
 		[NoMac, iOS (11,0), NoTV, NoWatch] Rg11B10Float = 76,
 		[NoMac, iOS (11,0), NoTV, NoWatch] Rgb9E5Float = 77,
 
-		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)] RenderPipeline = 78,
-		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)] IndirectCommandBuffer = 80,
+		[Mac (10,14), iOS (12,0), TV (12,0)] RenderPipeline = 78,
+		[Mac (10,14), iOS (12,0), TV (12,0)] IndirectCommandBuffer = 80,
 	}
 
 	[Native]
@@ -700,11 +700,20 @@ namespace Metal {
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
 		macOS_GPUFamily1_v3 = 10003,
 
+		[Mac (10,14), NoiOS, NoTV, NoWatch]
+		macOS_GPUFamily1_v4 = 10004,
+
+		[Mac (10,14), NoiOS, NoTV, NoWatch]
+		macOS_GPUFamily2_v1 = 10005,
+
 		[TV (9,0)]
 		TVOS_GPUFamily1_v1 = 30000,
 
 		[NoiOS, TV (10,0), NoWatch, NoMac]
 		tvOS_GPUFamily1_v2 = 30001,
+
+		[NoiOS, TV (11,0), NoWatch, NoMac]
+		tvOS_GPUFamily1_v3 = 30002,
 
 		[NoiOS, TV (11,0), NoWatch, NoMac]
 		tvOS_GPUFamily2_v1 = 30003,
@@ -724,7 +733,7 @@ namespace Metal {
 		v1_2 = (1 << 16) + 2,
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
 		v2_0 = (2 << 16),
-		[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0), NoWatch]
+		[Mac (10,14), iOS (12,0), TV (12,0), NoWatch]
 		v2_1 = (2 << 16) + 1,
 	}
 
@@ -957,7 +966,7 @@ namespace Metal {
 		CustomSamplePositions = 1 << 0,
 	}
 
-	[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+	[Mac (10,14), iOS (12,0), TV (12,0)]
 	[Native]
 	public enum MTLDispatchType : ulong
 	{
@@ -965,7 +974,7 @@ namespace Metal {
 		Concurrent,
 	}
 
-	[Flags, Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+	[Flags, Mac (10,14), iOS (12,0), TV (12,0)]
 	[Native]
 	public enum MTLBarrierScope : ulong
 	{
@@ -975,7 +984,7 @@ namespace Metal {
 		RenderTargets = 1 << 2,
 	}
 
-	[Flags, Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+	[Flags, Mac (10,14), iOS (12,0), TV (12,0)]
 	[Native]
 	public enum MTLIndirectCommandType : ulong
 	{
@@ -987,7 +996,7 @@ namespace Metal {
 
 	[iOS (12,0)]
 	[NoTV]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum MTLMultisampleStencilResolveFilter : ulong
 	{

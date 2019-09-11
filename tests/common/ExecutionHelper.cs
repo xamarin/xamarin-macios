@@ -95,7 +95,7 @@ namespace Xamarin.Tests
 			return rv;
 		}
 
-		bool IndexOfAny (string line, out int start, out int end, params string [] values)
+		static bool IndexOfAny (string line, out int start, out int end, params string [] values)
 		{
 			foreach (var value in values) {
 				start = line.IndexOf (value, StringComparison.Ordinal);
@@ -109,7 +109,7 @@ namespace Xamarin.Tests
 			return false;
 		}
 
-		string RemovePathAtEnd (string line)
+		static string RemovePathAtEnd (string line)
 		{
 			if (line.TrimEnd ().EndsWith ("]", StringComparison.Ordinal)) {
 				var start = line.LastIndexOf ("[", StringComparison.Ordinal);
@@ -126,14 +126,20 @@ namespace Xamarin.Tests
 			return line;
 		}
 
-		public void ParseMessages ()
+		public static List<ToolMessage> ParseMessages (string [] lines, string messageToolName)
 		{
-			messages.Clear ();
+			var messages = new List<ToolMessage> ();
+			ParseMessages (messages, lines, messageToolName);
+			return messages;
+		}
 
-			foreach (var l in output.ToString ().Split ('\n')) {
+		public static void ParseMessages (List<ToolMessage> messages, string [] lines, string messageToolName)
+		{
+			foreach (var l in lines) {
 				var line = l;
 				var msg = new ToolMessage ();
 				var origin = string.Empty;
+
 				if (IndexOfAny (line, out var idxError, out var endError, ": error ", ":  error ")) {
 					msg.IsError = true;
 					origin = line.Substring (0, idxError);
@@ -155,13 +161,13 @@ namespace Xamarin.Tests
 				}
 				if (line.Length < 7)
 					continue; // something else
-				
+
 				msg.Prefix = line.Substring (0, 2);
 				if (!int.TryParse (line.Substring (2, 4), out msg.Number))
 					continue; // something else
 
 				line = line.Substring (8);
-				var toolName = MessageToolName;
+				var toolName = messageToolName;
 				if (toolName != null && line.StartsWith (toolName + ": ", StringComparison.Ordinal))
 					line = line.Substring (toolName.Length + 2);
 
@@ -183,6 +189,12 @@ namespace Xamarin.Tests
 
 				messages.Add (msg);
 			}
+		}
+
+		public void ParseMessages ()
+		{
+			messages.Clear ();
+			ParseMessages (messages, output.ToString ().Split ('\n'), MessageToolName);
 		}
 
 		public bool HasErrorPattern (string prefix, int number, string messagePattern)

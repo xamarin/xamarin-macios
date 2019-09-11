@@ -121,8 +121,6 @@ namespace Registrar {
 		TMethod conforms_to_protocol;
 		TMethod invoke_conforms_to_protocol;
 
-		public static bool IsDualBuild { get; private set; }
-
 		public IEnumerable<TAssembly> GetAssemblies ()
 		{
 			return assemblies.Keys;
@@ -737,12 +735,6 @@ namespace Registrar {
 						return Registrar.IsEnum (underlyingOutputType);
 					}
 				} else if (Registrar.Is (underlyingInputType, Foundation, "NSValue")) {
-#if MMP || MONOMAC
-					// Remove 'MonoMac.' namespace prefix to make switch smaller
-					if (!Registrar.IsDualBuild && outputTypeName.StartsWith ("MonoMac.", StringComparison.Ordinal))
-						outputTypeName = outputTypeName.Substring ("MonoMac.".Length);
-#endif
-
 					switch (outputTypeName) {
 					case "CoreAnimation.CATransform3D":
 					case "CoreGraphics.CGAffineTransform":
@@ -1119,7 +1111,6 @@ namespace Registrar {
 		protected abstract bool IsCorlibType (TType type);
 		protected abstract bool IsSimulatorOrDesktop { get; }
 		protected abstract bool Is64Bits { get; }
-		protected abstract bool IsDualBuildImpl { get; }
 		protected abstract Exception CreateException (int code, Exception innerException, TMethod method, string message, params object[] args);
 		protected abstract Exception CreateException (int code, Exception innerException, TType type, string message, params object [] args);
 		protected abstract string PlatformName { get; }
@@ -1142,7 +1133,6 @@ namespace Registrar {
 
 		public Registrar ()
 		{
-			IsDualBuild = IsDualBuildImpl;
 		}
 
 		protected bool IsArray (TType type)
@@ -1257,39 +1247,35 @@ namespace Registrar {
 
 		internal static string Foundation {
 			get {
-				return IsDualBuild ? "Foundation" : CompatNamespace + ".Foundation";
+				return "Foundation";
 			}
 		}
 
 		internal static string ObjCRuntime {
 			get {
-				return IsDualBuild ? "ObjCRuntime" : CompatNamespace + ".ObjCRuntime";
+				return "ObjCRuntime";
 			}
 		}
 
 		internal static string CoreAnimation {
 			get {
-				return IsDualBuild ? "CoreAnimation" : CompatNamespace + ".CoreAnimation";
+				return "CoreAnimation";
 			}
 		}
 
 #if MONOMAC
 		internal static string AppKit {
 			get {
-				return IsDualBuild ? "AppKit" : CompatNamespace + ".AppKit";
+				return "AppKit";
 			}
 		}
 #endif
 
 #if MONOMAC
-		internal const string CompatNamespace = "MonoMac";
-		internal const string CompatAssemblyName = "XamMac";
-		internal const string DualAssemblyName = "Xamarin.Mac";
+		internal const string AssemblyName = "Xamarin.Mac";
 #else
-		internal const string CompatNamespace = "MonoTouch";
-		internal const string CompatAssemblyName = "monotouch";
 #if MTOUCH
-		internal string DualAssemblyName
+		internal string AssemblyName
 		{
 			get {
 				switch (App.Platform) {
@@ -1305,11 +1291,11 @@ namespace Registrar {
 			}
 		}
 #elif WATCH
-		internal const string DualAssemblyName = "Xamarin.WatchOS";
+		internal const string AssemblyName = "Xamarin.WatchOS";
 #elif TVOS
-		internal const string DualAssemblyName = "Xamarin.TVOS";
+		internal const string AssemblyName = "Xamarin.TVOS";
 #elif IOS
-		internal const string DualAssemblyName = "Xamarin.iOS";
+		internal const string AssemblyName = "Xamarin.iOS";
 #else
 #error Unknown platform
 #endif
@@ -1330,7 +1316,7 @@ namespace Registrar {
 
 		public string PlatformAssembly {
 			get {
-				return IsDualBuild ? DualAssemblyName : CompatAssemblyName;
+				return AssemblyName;
 			}
 		}
 
@@ -2604,7 +2590,7 @@ namespace Registrar {
 			case "System.nfloat":
 				return Is64Bits ? "d" : "f";
 			case "System.DateTime":
-				throw CreateException (4102, member, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", IsDualBuild ? "Foundation.NSDate" : CompatNamespace + ".Foundation.NSDate", member.FullName);
+				throw CreateException (4102, member, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", "Foundation.NSDate", member.FullName);
 			}
 
 			if (Is (type, ObjCRuntime, "Selector"))

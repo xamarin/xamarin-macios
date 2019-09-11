@@ -1,6 +1,4 @@
-﻿#if !__WATCHOS__
-
-using System;
+﻿using System;
 #if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
@@ -34,5 +32,3 @@ namespace MonoTouchFixtures.CoreMedia
 
 	}
 }
-
-#endif // !__WATCHOS__

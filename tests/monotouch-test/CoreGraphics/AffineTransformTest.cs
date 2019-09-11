@@ -5,6 +5,7 @@
 //	Rolf Bjarne Kvinge <rolf@xamarin.com>
 //
 // Copyright 2014 Xamarin Inc. All rights reserved.
+// Copyright 2019 Microsoft Corporation
 //
 
 using System;
@@ -333,6 +334,22 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.AreEqual ((nfloat) (-0.5), transform.yy, "yy");
 			Assert.AreEqual ((nfloat) 1.0, transform.x0, "x0");
 			Assert.AreEqual ((nfloat) (-2.0), transform.y0, "y0");
+		}
+
+		[Test]
+		public void NSValueRoundtrip ()
+		{
+			var transform = new CGAffineTransform (1, 2, 3, 4, 5, 6);
+			// looks simplistic but that NSValue logic is implemented by "us" on macOS
+			using (var nsv = NSValue.FromCGAffineTransform (transform)) {
+				var tback = nsv.CGAffineTransformValue;
+				Assert.AreEqual ((nfloat)1, tback.xx, "xx");
+				Assert.AreEqual ((nfloat)2, tback.yx, "yx");
+				Assert.AreEqual ((nfloat)3, tback.xy, "xy");
+				Assert.AreEqual ((nfloat)4, tback.yy, "yy");
+				Assert.AreEqual ((nfloat)5, tback.x0, "x0");
+				Assert.AreEqual ((nfloat)6, tback.y0, "y0");
+			}
 		}
 	}
 

@@ -283,11 +283,11 @@ namespace Security {
 			return (data == IntPtr.Zero) ? null : new SecKey (data, true);
 		}
 #endif
-		[TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)][Watch (5,0)]
+		[TV (12,0)][Mac (10,14)][iOS (12,0)][Watch (5,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef* */ SecCertificateCopyKey (IntPtr /* SecKeyRef* */ key);
 
-		[TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)][Watch (5,0)]
+		[TV (12,0)][Mac (10,14)][iOS (12,0)][Watch (5,0)]
 		public SecKey GetKey ()
 		{
 			var key = SecCertificateCopyKey (handle);
@@ -686,8 +686,13 @@ namespace Security {
 			if (signedData == null)
 				throw new ArgumentNullException ("signedData");
 			unsafe {
-				fixed (byte *sp = signature)
-				fixed (byte *dp = signedData) {
+				// SecKeyRawVerify will try to read from the signedData/signature pointers even if
+				// the corresponding length is 0, which may crash (happens in Xcode 11 beta 1)
+				// so if length is 0, then pass an array with one element.
+				var signatureArray = signature.Length == 0 ? new byte [] { 0 } : signature;
+				var signedDataArray = signedData.Length == 0 ? new byte [] { 0 } : signedData;
+				fixed (byte *sp = signatureArray)
+				fixed (byte *dp = signedDataArray) {
 					return SecKeyRawVerify (handle, padding, (IntPtr) dp, (nint) signedData.Length, (IntPtr) sp, (nint) signature.Length);
 				}
 			}

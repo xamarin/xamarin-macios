@@ -38,7 +38,7 @@
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DYNAMIC_REGISTRAR;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -98,7 +98,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
@@ -112,7 +112,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <MtouchArch>ARMv7</MtouchArch>
@@ -126,7 +126,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <MtouchArch>ARM64</MtouchArch>
@@ -140,7 +140,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v --bitcode:full</MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
@@ -200,6 +200,9 @@
     </Compile>
     <Compile Include="..\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Extensions.cs">
+      <Link>Extensions.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
@@ -277,6 +280,8 @@
     <Folder Include="NaturalLanguage\" />
     <Folder Include="Vision\" />
     <Folder Include="Compression\" />
+    <Folder Include="BackgroundTasks\" />
+    <Folder Include="WebKit\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
@@ -288,6 +293,8 @@
     <Content Include="LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc" />
     <Content Include="drum01.mp3" />
     <Content Include="Model3.arobject" />
+    <Content Include="access-denied.html" />
+    <Content Include="access-granted.html" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="LaunchScreen.storyboard" />
@@ -322,6 +329,9 @@
     <BundleResource Include="compressed_lzma" />
     <BundleResource Include="compressed_zip" />
     <BundleResource Include="example.pac" />
+  </ItemGroup>
+  <ItemGroup>
+    <Metal Include="Resources\metal-sample.metal" Condition="'$(Platform)' != 'iPhoneSimulator' " />
   </ItemGroup>
   <ItemGroup>
     <Metal Include="Resources\metal-sample.metal" Condition="'$(Platform)' != 'iPhoneSimulator' " />

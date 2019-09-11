@@ -29,7 +29,7 @@ namespace Xamarin.Bundler
 
 		static string ObjectiveCPrefix {
 			get {
-				return Driver.SupportsModernObjectiveC ? "OBJC_CLASS_$_" : ".objc_class_name_";
+				return "OBJC_CLASS_$_";
 			}
 		}
 
@@ -54,8 +54,6 @@ namespace Xamarin.Bundler
 
 		public string Prefix {
 			get {
-				if (ObjectiveCName != null && !Driver.SupportsModernObjectiveC)
-					return string.Empty;
 				return "_";
 			}
 		}

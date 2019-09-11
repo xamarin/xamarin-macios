@@ -68,22 +68,6 @@ namespace Xamarin.MMP.Tests
 
 		[TestCase (false)]
 		[TestCase (true)]
-		public void AOT_32Bit_SmokeTest (bool useProjectTags)
-		{
-			Configuration.AssertXcodeSupports32Bit ();
-
-			MMPTests.RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<XamMacArch>i386</XamMacArch>" + GetTestConfig (TestType.Base, useProjectTags)
-				};
-				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-
-				ValidateAOTStatus (tmpDir, f => ShouldBaseFilesBeAOT (f), buildResults);
-			});
-		}
-
-		[TestCase (false)]
-		[TestCase (true)]
 		public void HybridAOT_WithManualStrippingOfAllLibs_SmokeTest (bool useProjectTags)
 		{
 			MMPTests.RunMMPTest (tmpDir => {

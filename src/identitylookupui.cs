@@ -4,7 +4,7 @@
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
 //
-// Copyright 2018 Microsoft Corporation.
+// Copyright 2018-2019 Microsoft Corporation.
 //
 
 #if XAMCORE_2_0
@@ -17,6 +17,7 @@ using IdentityLookup;
 namespace IdentityLookupUI {
 
 	[iOS (12,0)]
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[BaseType (typeof (NSExtensionContext))]
 	interface ILClassificationUIExtensionContext {
 
@@ -25,6 +26,7 @@ namespace IdentityLookupUI {
 	}
 
 	[iOS (12,0)]
+	[Introduced (PlatformName.UIKitForMac, 13,0)]
 	[BaseType (typeof (UIViewController))]
 	interface ILClassificationUIExtensionViewController {
 

@@ -15,9 +15,12 @@ using Foundation;
 namespace GameController {
 	// GCGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCExtendedGamepad' instead.")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
 	[iOS (7,0)]
-	[Mac (10,9, onlyOn64: true)]
+	[Mac (10,9)]
 	public struct GCGamepadSnapShotDataV100 {
 
 		// Standard information
@@ -37,6 +40,9 @@ namespace GameController {
 		public float /* float_t = float */ LeftShoulder;
 		public float /* float_t = float */ RightShoulder;
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCExtendedGamepad' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCGamepadSnapShotDataV100 (
 			/* GCGamepadSnapShotDataV100 * __nullable */ ref GCGamepadSnapShotDataV100 snapshotData);
@@ -51,6 +57,9 @@ namespace GameController {
 	public partial class GCGamepadSnapshot {
 		
 		// GCGamepadSnapshot.h
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCExtendedGamepad' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
 		static extern bool GCGamepadSnapShotDataV100FromNSData (
 			/* GCGamepadSnapShotDataV100 * __nullable */ out GCGamepadSnapShotDataV100 snapshotData,

@@ -315,7 +315,7 @@ namespace MediaPlayer {
 		Legible
 	}
 
-	[Mac (10,14,2, onlyOn64: true)]
+	[Mac (10,14,2)]
 	[NoWatch]
 	[iOS (9,3)]
 	[Native]

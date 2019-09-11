@@ -13,6 +13,8 @@ using Foundation;
 using CoreFoundation;
 
 namespace Network {
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public enum NWListenerState {
 		Invalid = 0,
 		Waiting = 1,
@@ -21,7 +23,8 @@ namespace Network {
 		Cancelled = 4,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public class NWListener : NativeObject {
 		public NWListener (IntPtr handle, bool owns) : base (handle, owns)
 		{

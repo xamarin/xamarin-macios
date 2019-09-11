@@ -26,54 +26,22 @@ namespace xharness
 
 		enum MacTargetNameType { Build, Clean, Exec, Run }
 
-		static string MakeMacTargetName (MacTarget target, MacTargetNameType type)
-		{
-			if (target is MacClassicTarget)
-				return MakeMacClassicTargetName (target, type);
-			else if (target is MacUnifiedTarget)
-				return MakeMacUnifiedTargetName (target, type);
-			else
-				throw new NotImplementedException ();
-		}
-
-		static string MakeMacClassicTargetName (MacTarget target, MacTargetNameType type)
-		{
-			var make_escaped_suffix = "-" + target.Platform.Replace (" ", "\\ ");
-			var make_escaped_name = target.SimplifiedName.Replace (" ", "\\ ");
-
-			switch (type)
-			{
-			case MacTargetNameType.Build:
-				return string.Format ("build{0}-classic-{1}", make_escaped_suffix, make_escaped_name);
-			case MacTargetNameType.Clean:
-				return string.Format ("clean{0}-classic-{1}", make_escaped_suffix, make_escaped_name);
-			case MacTargetNameType.Exec:
-				return string.Format ("exec{0}-classic-{1}", make_escaped_suffix, make_escaped_name);
-			case MacTargetNameType.Run:
-				return string.Format ("run{0}-classic-{1}", make_escaped_suffix, make_escaped_name);
-			default:
-				throw new NotImplementedException ();
-			}
-		}
-
 		static string MakeMacUnifiedTargetName (MacTarget target, MacTargetNameType type)
 		{
-			var make_escaped_suffix = "-" + target.Platform.Replace (" ", "\\ ");
+			var make_escaped_suffix = target.Platform.Replace (" ", "\\ ");
 			var make_escaped_name = target.SimplifiedName.Replace (" ", "\\ ");
 
-			switch (type)
-			{
-				case MacTargetNameType.Build:
-					return string.Format ("build{0}-{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-				case MacTargetNameType.Clean:
-					return string.Format ("clean{0}-{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-				case MacTargetNameType.Exec:
-					return string.Format ("exec{0}-{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-				case MacTargetNameType.Run:
-					return string.Format ("run{0}-{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-				default:
-					throw new NotImplementedException ();
+			var sb = new StringBuilder ();
+			sb.Append (type.ToString ().ToLowerInvariant ());
+			sb.Append ('-');
+			sb.Append (make_escaped_suffix);
+			sb.Append ('-');
+			if (!string.IsNullOrEmpty (target.MakefileWhereSuffix)) {
+				sb.Append (target.MakefileWhereSuffix);
+				sb.Append ('-');
 			}
+			sb.Append (make_escaped_name);
+			return sb.ToString ();
 		}
 
 		static string CreateRelativePath (string path, string relative_to)
@@ -122,64 +90,37 @@ namespace xharness
 						writer.WriteLine ();
 					}
 
-					// build project target
-					if (target is MacClassicTarget) {
-						allTargetNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Build));
-						allTargetCleanNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Clean));
+					allTargetNames.Add (MakeMacUnifiedTargetName (target, MacTargetNameType.Build));
+					allTargetCleanNames.Add (MakeMacUnifiedTargetName (target, MacTargetNameType.Clean));
 
-						// vstool can only find referenced projects if the referenced
-						// projects are included in the solution. This requires us to
-						// build the solution (if it exists), not the project.
-						var slnPath = Path.ChangeExtension (target.ProjectPath, "sln");
-						var fileToBuild = File.Exists (slnPath) ? slnPath : target.ProjectPath;
-						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Build), "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe");
-						writer.WriteLine ("\t$(Q) $(MDTOOL) build \"{0}\"", fileToBuild);
-						writer.WriteLine ();
+					string guiUnitDependency = target.Modern ? "$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe" : "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe";
 
-						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Clean), "");
-						writer.WriteLine ("\t$(Q) $(MDTOOL) build -t:Clean \"{0}\"", fileToBuild);
-						writer.WriteLine ();
+					writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Build), "{0}", target.ProjectPath.Replace (" ", "\\ ") + " "  + guiUnitDependency + " " + nuget_restore_dependency);
+					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+					writer.WriteLine ();
 
-						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Exec), "");
-						writer.WriteLine ("\t$(Q) {0}/bin/x86/$(CONFIG)/{1}.app/Contents/MacOS/{1}", CreateRelativePath (Path.GetDirectoryName (target.ProjectPath).Replace (" ", "\\ "), Path.GetDirectoryName (makefile)), make_escaped_name);
-						writer.WriteLine ();
+					writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Clean), "");
+					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+					writer.WriteLine ();
 
-						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Run), "");
-						writer.WriteLine ("\t$(Q) $(MAKE) {0}", MakeMacClassicTargetName (target, MacTargetNameType.Build));
-						writer.WriteLine ("\t$(Q) $(MAKE) {0}", MakeMacClassicTargetName (target, MacTargetNameType.Exec));
-						writer.WriteLine ();
-					}
-					else {
-						allTargetNames.Add (MakeMacUnifiedTargetName (target, MacTargetNameType.Build));
-						allTargetCleanNames.Add (MakeMacUnifiedTargetName (target, MacTargetNameType.Clean));
+					if (!harness.GetIncludeSystemPermissionTests (TestPlatform.Mac, false))
+						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "export DISABLE_SYSTEM_PERMISSION_TESTS=1");
+					writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
+					if (target.IsNUnitProject) {
+						writer.WriteLine ("\t$(Q)rm -f $(CURDIR)/.{0}-failed.stamp", make_escaped_name);
+						writer.WriteLine ("\t$(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(TOP)/packages/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe \"{1}/bin/$(CONFIG)/mmptest.dll\" \"--result=$(abspath $(CURDIR)/{0}-TestResult.xml);format=nunit2\" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.{0}-failed.stamp", make_escaped_name, Path.GetDirectoryName (target.ProjectPath));
+						writer.WriteLine ("\t$(Q)[[ -z \"$$BUILD_REPOSITORY\" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt {0}-TestResult.xml > {0}-index.html && echo \"@MonkeyWrench: AddFile: $$PWD/{0}-index.html\")", make_escaped_name);
+						writer.WriteLine ("\t$(Q)[[ ! -e .{0}-failed.stamp ]]", make_escaped_name);
+					} else if (target.IsBCLProject)
+						writer.WriteLine ("\t$(Q) {2}/bin/$(CONFIG){1}/{0}Tests.app/Contents/MacOS/{0}Tests", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath).Replace (" ", "\\ "), Path.GetDirectoryName (makefile)));
+					else
+						writer.WriteLine ("\t$(Q) {2}/bin/x86/$(CONFIG){1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath).Replace (" ", "\\ "), Path.GetDirectoryName (makefile)));
+					writer.WriteLine ();
 
-						string guiUnitDependency = ((MacUnifiedTarget)target).Mobile ? "$(GUI_UNIT_PATH)/bin/xammac_mobile/GuiUnit.exe" : "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe";
-
-						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Build), "{0}", target.ProjectPath.Replace (" ", "\\ ") + " "  + guiUnitDependency + " " + nuget_restore_dependency);
-						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
-						writer.WriteLine ();
-
-						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Clean), "");
-						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XIBUILD) -- \"/property:Configuration=$(CONFIG)\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
-						writer.WriteLine ();
-
-						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
-						if (target.IsNUnitProject) {
-							writer.WriteLine ("\t$(Q)rm -f $(CURDIR)/.{0}-failed.stamp", make_escaped_name);
-							writer.WriteLine ("\t$(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(TOP)/packages/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe \"{1}/bin/$(CONFIG)/mmptest.dll\" \"--result=$(abspath $(CURDIR)/{0}-TestResult.xml);format=nunit2\" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.{0}-failed.stamp", make_escaped_name, Path.GetDirectoryName (target.ProjectPath));
-							writer.WriteLine ("\t$(Q)[[ -z \"$$BUILD_REPOSITORY\" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt {0}-TestResult.xml > {0}-index.html && echo \"@MonkeyWrench: AddFile: $$PWD/{0}-index.html\")", make_escaped_name);
-							writer.WriteLine ("\t$(Q)[[ ! -e .{0}-failed.stamp ]]", make_escaped_name);
-						} else if (target.IsBCLProject)
-							writer.WriteLine ("\t$(Q) {2}/bin/$(CONFIG){1}/{0}Tests.app/Contents/MacOS/{0}Tests", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath).Replace (" ", "\\ "), Path.GetDirectoryName (makefile)));
-						else
-							writer.WriteLine ("\t$(Q) {2}/bin/x86/$(CONFIG){1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath).Replace (" ", "\\ "), Path.GetDirectoryName (makefile)));
-						writer.WriteLine ();
-
-						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Run), "");
-						writer.WriteLine ("\t$(Q) $(MAKE) {0}", MakeMacUnifiedTargetName (target, MacTargetNameType.Build));
-						writer.WriteLine ("\t$(Q) $(MAKE) {0}", MakeMacUnifiedTargetName (target, MacTargetNameType.Exec));
-						writer.WriteLine ();
-					}
+					writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Run), "");
+					writer.WriteLine ("\t$(Q) $(MAKE) {0}", MakeMacUnifiedTargetName (target, MacTargetNameType.Build));
+					writer.WriteLine ("\t$(Q) $(MAKE) {0}", MakeMacUnifiedTargetName (target, MacTargetNameType.Exec));
+					writer.WriteLine ();
 
 					writer.WriteLine ();
 				}
@@ -206,8 +147,6 @@ namespace xharness
 				writer.WriteLine ();
 
 				IEnumerable<MacTarget> groupableTargets = allTargets;
-				if (!harness.IncludeMac32)
-					groupableTargets = groupableTargets.Where ((v) => !v.ThirtyTwoBit);
 
 				var grouped = groupableTargets.GroupBy ((target) => target.SimplifiedName);
 				foreach (MacTargetNameType action in Enum.GetValues (typeof (MacTargetNameType))) {
@@ -217,7 +156,7 @@ namespace xharness
 						writer.WriteTarget ("{0}-mac-{1}", actionName == "build" ? nuget_restore_dependency : string.Empty, actionName, targetName);
 						writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
 						foreach (var entry in group)
-							writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacTargetName (entry, action));
+							writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacUnifiedTargetName (entry, action));
 						writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 						writer.WriteLine ();
 					}
@@ -226,12 +165,7 @@ namespace xharness
 				writer.WriteLine ("mac-run run-mac:");
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in groupableTargets) {
-					if (target is MacClassicTarget)
-						writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacClassicTargetName (target, MacTargetNameType.Run));
-					else if (target is MacUnifiedTarget)
-						writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacUnifiedTargetName (target, MacTargetNameType.Run));
-					else
-						throw new NotImplementedException ();					
+					writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacUnifiedTargetName (target, MacTargetNameType.Run));
 				}
 
 				writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
@@ -240,13 +174,7 @@ namespace xharness
 				writer.WriteLine ($"mac-build mac-build-all build-mac: {nuget_restore_dependency}"); // build everything
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in groupableTargets) {
-					if (target is MacClassicTarget)
-						writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacClassicTargetName (target, MacTargetNameType.Build));
-					else if (target is MacUnifiedTarget)
-						writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacUnifiedTargetName (target, MacTargetNameType.Build));
-					else
-						throw new NotImplementedException ();
-
+					writer.WriteLine ("\t$(Q) $(MAKE) {0} || echo \"{0} failed\" >> \".$@-failure.stamp\"", MakeMacUnifiedTargetName (target, MacTargetNameType.Build));
 				}
 				writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 			}

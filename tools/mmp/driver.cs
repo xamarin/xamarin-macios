@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2011-2014 Xamarin Inc. All rights reserved.
  * Copyright 2010 Novell Inc.
@@ -92,8 +93,7 @@ namespace Xamarin.Bundler {
 		static string machine_config_path = null;
 		static bool bypass_linking_checks = false;
 
-		static bool arch_set = false;
-		static string arch = "i386";
+		static string arch = "x86_64";
 		static string contents_dir;
 		static string frameworks_dir;
 		static string macos_dir;
@@ -140,16 +140,13 @@ namespace Xamarin.Bundler {
 
 		public static bool Is64Bit { 
 			get {
-				if (IsUnified && !arch_set)
-					return true;
-
 				return arch == "x86_64";
 			}
 		}
 
 		public static string GetProductAssembly (Application app)
 		{
-			return IsUnified ? "Xamarin.Mac" : "XamMac";
+			return "Xamarin.Mac";
 		}
 
 		public static string GetPlatformFrameworkDirectory (Application app)
@@ -163,10 +160,6 @@ namespace Xamarin.Bundler {
 
 		public static string GetArch32Directory (Application app)
 		{
-			if (IsUnifiedMobile)
-				return Path.Combine (MMPDirectory, "lib", "i386", "mobile");
-			else if (IsUnifiedFullXamMacFramework)
-				return Path.Combine (MMPDirectory, "lib", "i386", "full");
 			throw new InvalidOperationException ("Arch32Directory when not Mobile or Full?");
 		}
 		
@@ -274,7 +267,7 @@ namespace Xamarin.Bundler {
 				{ "i|icon=", "Use the specified file as the bundle icon", v => { icon = v; }},
 				{ "xml=", "Provide an extra XML definition file to the linker", v => App.Definitions.Add (v) },
 				{ "time", v => WatchLevel++ },
-				{ "arch=", "Specify the architecture ('i386' or 'x86_64') of the native runtime (default to 'i386')", v => { arch = v; arch_set = true; } },
+				{ "arch=", "Specify the architecture ('x86_64') of the native runtime (default to 'x86_64', which is the only valid value)", v => { arch = v; } },
 				{ "profile=", "(Obsoleted in favor of --target-framework) Specify the .NET profile to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
 				{ "target-framework=", "Specify the .NET target framework to use (defaults to '" + Xamarin.Utils.TargetFramework.Default + "')", v => SetTargetFramework (v) },
 				{ "force-thread-check", "Keep UI thread checks inside (even release) builds [DEPRECATED, use --optimize=-remove-uithread-checks instead]", v => { App.Optimizations.RemoveUIThreadChecks = false; }, true},
@@ -436,7 +429,7 @@ namespace Xamarin.Bundler {
 
 			}
 
-			if (IsUnifiedFullSystemFramework || IsClassic) {
+			if (IsUnifiedFullSystemFramework) {
 				// With newer Mono builds, the system assemblies passed to us by msbuild are
 				// no longer safe to copy into the bundle. They are stripped "fake" BCL
 				// copies. So we redirect to the "real" ones. Thanks TargetFrameworkDirectories :(
@@ -448,11 +441,11 @@ namespace Xamarin.Bundler {
 			if (targetFramework == TargetFramework.Empty)
 				throw new MonoMacException (1404, true, "Target framework '{0}' is invalid.", userTargetFramework);
 
-			if (IsClassic && App.LinkMode == LinkMode.Platform)
-				throw new MonoMacException (2109, true, "Xamarin.Mac Classic API does not support Platform Linking.");
-
 			if (Registrar == RegistrarMode.PartialStatic && App.LinkMode != LinkMode.None)
 				throw new MonoMacException (2110, true, "Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.");
+
+			if (IsClassic)
+				throw ErrorHelper.CreateError (143, "Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.");
 
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
@@ -466,8 +459,8 @@ namespace Xamarin.Bundler {
 				IsUnifiedCount++;
 			if (IsUnifiedFullXamMacFramework)
 				IsUnifiedCount++;
-			if (IsUnified == IsClassic || (IsUnified && IsUnifiedCount != 1))
-				throw new Exception ("IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
+			if (IsUnifiedCount != 1)
+				throw ErrorHelper.CreateError (99,"Internal error: IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
 			ValidateXamarinMacReference ();
 			if (!bypass_linking_checks && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {
@@ -488,19 +481,14 @@ namespace Xamarin.Bundler {
 			// InitializeCommon needs SdkVersion set to something valid
 			ValidateSDKVersion ();
 
-			if (action != Action.RunRegistrar && XcodeVersion.Major >= 10 && !Is64Bit) {
-				if (IsClassic)
-					throw ErrorHelper.CreateError (138, "Building 32-bit apps is not possible when using Xcode 10. Please migrate project to the Unified API.");
-				throw ErrorHelper.CreateError (139, "Building 32-bit apps is not possible when using Xcode 10. Please change the architecture in the project's Mac Build options to 'x86_64'.");
-			}
+			if (!Is64Bit)
+				throw ErrorHelper.CreateError (144, "Building 32-bit apps is not supported anymore. Please change the architecture in the project's Mac Build options to 'x86_64'.");
 
 			// InitializeCommon needs the current profile
-			if (IsClassic)
-				Profile.Current = new MonoMacProfile ();
-			else if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
-				Profile.Current = new XamarinMacProfile (arch == "x86_64" ? 64 : 32);
+			if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
+				Profile.Current = new XamarinMacProfile ();
 			else
-				Profile.Current = new MacMobileProfile (arch == "x86_64" ? 64 : 32);
+				Profile.Current = new MacMobileProfile ();
 
 			BuildTarget = new Target (App);
 			App.Targets.Add (BuildTarget);
@@ -509,7 +497,7 @@ namespace Xamarin.Bundler {
 			Log ("Xamarin.Mac {0}.{1}", Constants.Version, Constants.Revision);
 
 			if (verbose > 0)
-				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
+				Console.WriteLine ("Selected target framework: {0}; API: Unified", targetFramework);
 
 			Log (1, $"Selected Linking: '{App.LinkMode}'");
 
@@ -667,7 +655,7 @@ namespace Xamarin.Bundler {
 			if (Registrar == RegistrarMode.Default) {
 				if (!App.EnableDebug)
 					Registrar = RegistrarMode.Static;
-				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode && File.Exists (PartialStaticLibrary))
+				else if (App.LinkMode == LinkMode.None && embed_mono && App.IsDefaultMarshalManagedExceptionMode && File.Exists (PartialStaticLibrary))
 					Registrar = RegistrarMode.PartialStatic;
 				else
 					Registrar = RegistrarMode.Dynamic;
@@ -724,7 +712,7 @@ namespace Xamarin.Bundler {
 					throw new MonoMacException (23, true, "Application name '{0}.exe' conflicts with another user assembly.", root_wo_ext);
 
 				string monoFrameworkDirectory = TargetFramework.MonoFrameworkDirectory;
-				if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework || IsClassic)
+				if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
 					monoFrameworkDirectory = "4.5";
 
 				fx_dir = Path.Combine (MonoDirectory, "lib", "mono", monoFrameworkDirectory);
@@ -745,31 +733,11 @@ namespace Xamarin.Bundler {
 			CreateDirectoriesIfNeeded ();
 
 			switch (arch) {
-			case "i386":
-				break;
-			case "x86_64":
-				if (IsClassic)
-					throw new MonoMacException (5204, true, "Invalid architecture. x86_64 is only supported on non-Classic profiles.");
-				break;
-			default:
-				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. Valid architectures are i386 and x86_64 (when --profile=mobile).", arch);
-			}
-
-			if (IsUnified && !arch_set)
-				arch = "x86_64";
-
-			if (arch != "x86_64")
-				ErrorHelper.Warning (134, "32-bit applications should be migrated to 64-bit.");
-
-			switch (arch) {
 			case "x86_64":
 				BuildTarget.Abis = new List<Abi> { Abi.x86_64 };
 				break;
-			case "i386":
-				BuildTarget.Abis = new List<Abi> { Abi.i386 };
-				break;
 			default:
-				throw ErrorHelper.CreateError (99, $"Internal error: unknown architecture '{arch}'.");
+				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. The only valid architectures is x86_64.", arch);
 			}
 
 			Watch ("Setup", 1);
@@ -853,13 +821,11 @@ namespace Xamarin.Bundler {
 				App.RuntimeOptions.Write (resources_dir);
 
 			if (aotOptions != null && aotOptions.IsAOT) {
-				if (!IsUnified)
-					throw new MonoMacException (98, true, "AOT compilation is only available on Unified");
 				AOTCompilerType compilerType;
 				if (IsUnifiedMobile || IsUnifiedFullXamMacFramework)
-					compilerType = Is64Bit ? AOTCompilerType.Bundled64 : AOTCompilerType.Bundled32; 
+					compilerType = AOTCompilerType.Bundled64;
 				else if (IsUnifiedFullSystemFramework)
-					compilerType = Is64Bit ? AOTCompilerType.System64 : AOTCompilerType.System32; 
+					compilerType = AOTCompilerType.System64;
 				else
 					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 
@@ -1070,11 +1036,7 @@ namespace Xamarin.Bundler {
 			var sb = new StringBuilder ();
 			using (var sw = new StringWriter (sb)) {
 				sw.WriteLine ("#define MONOMAC 1");
-				if (IsClassic) {
-					sw.WriteLine ("#include <xamarin-classic/xamarin.h>");
-				} else {
-					sw.WriteLine ("#include <xamarin/xamarin.h>");
-				}
+				sw.WriteLine ("#include <xamarin/xamarin.h>");
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
 				if (Driver.Registrar == RegistrarMode.PartialStatic)
@@ -1110,8 +1072,7 @@ namespace Xamarin.Bundler {
 				else
 					sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"major=marksweep\", 1);");
 
-				if (IsUnified)
-					sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", App.DynamicRegistrationSupported ? "TRUE" : "FALSE");
+				sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", App.DynamicRegistrationSupported ? "TRUE" : "FALSE");
 
 				if (aotOptions != null && aotOptions.IsHybridAOT)
 					sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
@@ -1179,7 +1140,7 @@ namespace Xamarin.Bundler {
 
 			try {
 				string [] env = null;
-				if (IsUnified && !IsUnifiedFullSystemFramework)
+				if (!IsUnifiedFullSystemFramework)
 					env = new [] { "PKG_CONFIG_PATH", Path.Combine (GetXamMacPrefix (), "lib", "pkgconfig") };
 
 				RunCommand (pkg_config, "--cflags mono-2", env, cflagsb);
@@ -1203,8 +1164,6 @@ namespace Xamarin.Bundler {
 			libdir = libdirb.ToString ().Replace (Environment.NewLine, String.Empty);
 
 			var libmain = embed_mono ? "libxammac" : "libxammac-system";
-			if (IsClassic)
-				libmain += "-classic";
 			var libxammac = Path.Combine (GetXamMacPrefix (), "lib", libmain + (App.EnableDebug ? "-debug" : "") + ".a");
 
 			if (!File.Exists (libxammac))
@@ -1226,7 +1185,11 @@ namespace Xamarin.Bundler {
 				if (XcodeVersion >= new Version (9, 0))
 					args.Append ("-Wno-unguarded-availability-new ");
 
+				if (XcodeVersion.Major >= 11)
+					args.Append ("-std=c++14 ");
+
 				bool appendedObjc = false;
+				var sourceFiles = new List<string> ();
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
 						foreach (var linkWith in assembly.LinkWith) {
@@ -1299,7 +1262,7 @@ namespace Xamarin.Bundler {
 					string reference_m = Path.Combine (App.Cache.Location, "reference.m");
 					reference_m = BuildTarget.GenerateReferencingSource (reference_m, requiredSymbols);
 					if (!string.IsNullOrEmpty (reference_m))
-						args.Append (StringUtils.Quote (reference_m)).Append (' ');
+						sourceFiles.Add (reference_m);
 					break;
 				case SymbolMode.Linker:
 				case SymbolMode.Default:
@@ -1383,7 +1346,10 @@ namespace Xamarin.Bundler {
 
 				var main = Path.Combine (App.Cache.Location, "main.m");
 				File.WriteAllText (main, mainSource);
-				args.Append (StringUtils.Quote (main));
+				sourceFiles.Add (main);
+
+				foreach (var src in sourceFiles)
+					args.Append (StringUtils.Quote (src)).Append (' ');;
 
 				ret = XcodeRun ("clang", args.ToString (), null);
 			} catch (Win32Exception e) {
@@ -1405,7 +1371,7 @@ namespace Xamarin.Bundler {
 			return ret;
 		}
 
-		// check that we have a reference to XamMac.dll and not to MonoMac.dll.
+		// check that we have a reference to Xamarin.Mac.dll and not to MonoMac.dll.
 		static void CheckReferences ()
 		{
 			List<Exception> exceptions = new List<Exception> ();
@@ -1416,16 +1382,10 @@ namespace Xamarin.Bundler {
 			foreach (string entry in cache.Keys) {
 				switch (entry) {
 				case "Xamarin.Mac":
-					if (IsUnified)
-						haveValidReference = true;
-					else
-						incompatibleReferences.Add (entry);
+					haveValidReference = true;
 					break;
 				case "XamMac":
-					if (IsClassic)
-						haveValidReference = true;
-					else
-						incompatibleReferences.Add (entry);
+					incompatibleReferences.Add (entry);
 					break;
 				case "MonoMac":
 					incompatibleReferences.Add (entry);
@@ -1435,8 +1395,7 @@ namespace Xamarin.Bundler {
 
 			if (!haveValidReference)
 				exceptions.Add (new MonoMacException (1401, true,
-					"The required '{0}' assembly is missing from the references",
-					IsUnified ? "Xamarin.Mac.dll" : "XamMac.dll"));
+					"The required 'Xamarin.Mac.dll' assembly is missing from the references"));
 
 			foreach (var refName in incompatibleReferences)
 				exceptions.Add (new MonoMacException (1402, true,
@@ -1974,7 +1933,7 @@ namespace Xamarin.Bundler {
 			if (name.Contains ("OpenTK") && Driver.IsUnifiedFullXamMacFramework)
 				return false;
 
-			return Driver.IsUnified && xammac_reference_assemblies_names.Contains (name);
+			return xammac_reference_assemblies_names.Contains (name);
 		}
 
 		public static string GetSwappedAssemblyPath (string path) => GetSwappedPathCore (Path.GetFileNameWithoutExtension (path));
@@ -1984,12 +1943,11 @@ namespace Xamarin.Bundler {
 		{
 			string flavor = (Driver.IsUnifiedFullSystemFramework || Driver.IsUnifiedFullXamMacFramework) ? "full" : "mobile";
 			switch (Driver.Arch) {
-				case "i386":
 				case "x86_64":
 					return Path.Combine (Driver.GetXamMacPrefix (), "lib", Driver.Arch, flavor, name + ".dll");
 				default:
 					throw new MonoMacException (5205, true, "Invalid architecture '{0}'. " + 
-							"Valid architectures are i386 and x86_64 (when --profile=mobile).", Driver.Arch);
+							"The only valid architectures is x86_64.", Driver.Arch);
 			}
 		}
 	}

@@ -40,8 +40,15 @@ namespace CoreText {
 		UnrecognizedFormat = 103,
 		InvalidFontData = 104,
 		AlreadyRegistered = 105,
+		ExceededResourceLimit = 106,
 		NotRegistered = 201,
 		InUse = 202,
-		SystemRequired = 202
+		SystemRequired = 203,
+		RegistrationFailed = 301,
+		MissingEntitlement = 302,
+		InsufficientInfo = 303,
+		CancelledByUser = 304,
+		DuplicatedName = 305,
+		InvalidFilePath = 306,
 	}
 }
