@@ -48,10 +48,10 @@ namespace CoreBluetooth {
 
 /* headers defer from iOS/tvOS/watchOS and MacOS. Feedback: https://github.com/xamarin/maccore/issues/1962 
 		[Static]
+*/
 		[iOS (13,0), TV (13,0), Watch (6,0), Mac (10, 15)]
 		[Export ("authorization", ArgumentSemantic.Assign)]
 		CBManagerAuthorization Authorization { get; }
-*/
 	}
 
 	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
