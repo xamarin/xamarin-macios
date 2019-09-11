@@ -884,6 +884,11 @@ namespace Introspection {
 			case "initWithSSID:passphrase:isWEP:":
 			case "initWithSSIDPrefix:":
 			case "initWithSSIDPrefix:passphrase:isWEP:":
+			// MapKit
+			case "initWithMaxCenterCoordinateDistance:":
+			case "initWithMinCenterCoordinateDistance:":
+			case "initExcludingCategories:":
+			case "initIncludingCategories:":
 				var mi = m as MethodInfo;
 				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
 			default:

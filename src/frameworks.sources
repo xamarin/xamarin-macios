@@ -1013,10 +1013,12 @@ MAPKIT_SOURCES = \
 	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
 	MapKit/MKLocalSearch.cs \
+	MapKit/MKMapCameraZoomRange.cs \
 	MapKit/MKMapItem.cs \
 	MapKit/MKMapView.cs \
 	MapKit/MKMultiPoint.cs \
 	MapKit/MKOverlayView.cs \
+	MapKit/MKPointOfInterestFilter.cs \
 	MapKit/MKPolygon.cs \
 	MapKit/MKPolyline.cs \
 
