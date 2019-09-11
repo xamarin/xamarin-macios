@@ -391,11 +391,15 @@ namespace AudioToolbox {
 		CenterSurroundDirect  = 44,
 		Haptic                = 45,
    
+#if false
+		// with xcode11 GM the tvOS and macOS headers drifted from the iOS ones
+		// https://github.com/xamarin/maccore/issues/1960
 		LeftTopFront          = 46,
 		CenterTopFront        = 47,
 		RightTopFront         = 48,
 		LeftTopMiddle         = 49,
 		CenterTopMiddle       = 50,
+#endif
 		RightTopMiddle        = 51,
 		LeftTopRear           = 52,
 		CenterTopRear         = 53,
@@ -503,11 +507,15 @@ namespace AudioToolbox {
 		TopBackLeft                = 1<<15,
 		TopBackCenter              = 1<<16,
 		TopBackRight               = 1<<17,
+#if false
+		// with xcode11 GM the tvOS and macOS headers drifted from the iOS ones
+		// https://github.com/xamarin/maccore/issues/1960
 		LeftTopFront               = 1<<18,
 		CenterTopFront             = 1<<19,
 		RightTopFront              = 1<<20,
 		LeftTopMiddle              = 1<<21,
 		CenterTopMiddle            = 1<<22,
+#endif
 		RightTopMiddle             = 1<<23,
 		LeftTopRear                = 1<<24,
 		CenterTopRear              = 1<<25,
