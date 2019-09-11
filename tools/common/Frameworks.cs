@@ -317,6 +317,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 				{ "CoreHaptics", "CoreHaptics", 13, 0 },
 				{ "LinkPresentation", "LinkPresentation", 13, 0 },
+				{ "MetricKit", "MetricKit", 13, 0 },
 				{ "PencilKit", "PencilKit", 13, 0 },
 				{ "QuickLookThumbnailing", "QuickLookThumbnailing", 13,0 },
 				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
