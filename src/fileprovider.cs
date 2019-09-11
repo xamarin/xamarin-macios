@@ -31,7 +31,7 @@ namespace FileProvider {
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
-	[Mac (10,15)]
+	[NoMac]
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	partial interface NSFileProviderExtension {
@@ -252,7 +252,7 @@ namespace FileProvider {
 namespace FileProvider {
 
 	[iOS (11,0)]
-	[Mac (10,15)]
+	[NoMac]
 	[ErrorDomain ("NSFileProviderErrorDomain")]
 	[Native]
 	enum NSFileProviderError : long {
@@ -270,7 +270,7 @@ namespace FileProvider {
 	}
 
 	[iOS (11,0)]
-	[Mac (10,15)]
+	[NoMac]
 	[Static]
 	interface NSFileProviderErrorKeys {
 
@@ -288,7 +288,7 @@ namespace FileProvider {
 	}
 
 	[iOS (11,0)]
-	[Mac (10,15)]
+	[NoMac]
 	[Static]
 	interface NSFileProviderFavoriteRank {
 
@@ -297,7 +297,7 @@ namespace FileProvider {
 	}
 
 	[iOS (11,0)]
-	[Mac (10,15)]
+	[NoMac]
 	[Static]
 	interface NSFileProviderItemIdentifier {
 
@@ -325,7 +325,7 @@ namespace FileProvider {
 	}
 
 	[iOS (11,0)]
-	[Mac (10,15)]
+	[NoMac]
 	[Static]
 	interface NSFileProviderPage {
 
@@ -347,7 +347,7 @@ namespace FileProvider {
 	}
 
 	[iOS (11,0)]
-	[Mac (10,15)]
+	[NoMac]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSFileProviderDomain {
@@ -540,25 +540,29 @@ namespace FileProvider {
 		NSDictionary GetUserInfo ();
 
 		[NoiOS]
+		[NoMac]
 		[Export ("excludedFromSync")]
 		bool ExcludedFromSync { [Bind ("isExcludedFromSync")] get; }
 
 		[NoiOS]
+		[NoMac]
 		[Export ("flags", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		INSFileProviderItemFlags Flags { get; }
 
 		[NoiOS]
+		[NoMac]
 		[NullAllowed, Export ("extendedAttributes", ArgumentSemantic.Strong)]
 		NSDictionary<NSString, NSData> ExtendedAttributes { get; }
 
 		[NoiOS]
+		[NoMac]
 		[NullAllowed, Export ("itemVersion", ArgumentSemantic.Strong)]
 		NSFileProviderItemVersion ItemVersion { get; }
 	}
 
 	[iOS (11,0)]
-	[Mac (10,15)]
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSFileProviderManager {
@@ -664,7 +668,7 @@ namespace FileProvider {
 	interface INSFileProviderServiceSource {}
 
 	[iOS (11,0)]
-	[Mac (10,15)]
+	[NoMac]
 	[Protocol]
 	interface NSFileProviderServiceSource {
 
@@ -679,7 +683,7 @@ namespace FileProvider {
 	}
 
 	[NoiOS]
-	[Mac (10,15)]
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // the `init*` and properties don't allow null
 	interface NSFileProviderItemVersion {
@@ -695,7 +699,7 @@ namespace FileProvider {
 	}
 
 	[NoiOS]
-	[Mac (10,15)]
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	interface NSFileProviderRequest {
 
@@ -704,7 +708,7 @@ namespace FileProvider {
 	}
 
 	[NoiOS]
-	[Mac (10,15)]
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSFileProviderSearchQuery {
@@ -726,7 +730,7 @@ namespace FileProvider {
 	}
 
 	[NoiOS]
-	[Mac (10,15)]
+	[NoMac]
 	[Flags]
 	[Native]
 	enum NSFileProviderCreateItemOptions : ulong {
@@ -735,7 +739,7 @@ namespace FileProvider {
 	}
 
 	[NoiOS]
-	[Mac (10,15)]
+	[NoMac]
 	[Flags]
 	[Native]
 	enum NSFileProviderDeleteItemOptions : ulong {
@@ -744,7 +748,7 @@ namespace FileProvider {
 	}
 
 	[NoiOS]
-	[Mac (10,15)]
+	[NoMac]
 	[Flags]
 	[Native]
 	enum NSFileProviderDownloadPolicy : ulong {
@@ -754,7 +758,7 @@ namespace FileProvider {
 	}
 
 	[NoiOS]
-	[Mac (10,15)]
+	[NoMac]
 	[Flags]
 	[Native]
 	enum NSFileProviderItemField : ulong {
@@ -772,7 +776,7 @@ namespace FileProvider {
 	}
 
 	[iOS (13,0)]
-	[Mac (10,15)]
+	[NoMac]
 	[Protocol]
 	interface NSFileProviderItemDecorating : NSFileProviderItem {
 
