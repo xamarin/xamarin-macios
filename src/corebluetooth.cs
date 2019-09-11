@@ -46,9 +46,23 @@ namespace CoreBluetooth {
 		[Export ("state", ArgumentSemantic.Assign)]
 		CBManagerState State { get; }
 
-		[iOS (13,0), TV (13,0), Watch (6,0), Mac (10, 15)]
+#if IOS
+		[Internal]
+		[iOS (13,0)]
+		[Export ("authorization", ArgumentSemantic.Assign)]
+		CBManagerAuthorization _IAuthorization { get; }
+
+		[Internal]
+		[iOS (13,1)]
+		[Static]
+		[Export ("authorization", ArgumentSemantic.Assign)]
+		CBManagerAuthorization _SAuthorization { get; }
+#else
+		[TV (13,0), Watch (6,0), Mac (10, 15)]
+		[Static]
 		[Export ("authorization", ArgumentSemantic.Assign)]
 		CBManagerAuthorization Authorization { get; }
+#endif
 	}
 
 	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
