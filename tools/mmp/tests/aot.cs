@@ -8,6 +8,9 @@ using NUnit.Framework;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
+using Mono.Tuner;
+using MonoMac.Tuner;
+
 namespace Xamarin.MMP.Tests.Unit
 {
 	[TestFixture]
@@ -43,7 +46,12 @@ namespace Xamarin.MMP.Tests.Unit
 				ParallelOptions = new ParallelOptions () { MaxDegreeOfParallelism = 1 },
 				XamarinMacPrefix = Driver.WalkUpDirHierarchyLookingForLocalBuild (), // HACK - AOT test shouldn't need this from driver.cs 
 			};
-			compiler.Compile (files);
+			try {
+				Profile.Current = new XamarinMacProfile ();
+				compiler.Compile (files);
+			} finally {
+				Profile.Current = null;
+			}
 		}
 
 		void ClearCommandsRun ()
@@ -66,12 +74,8 @@ namespace Xamarin.MMP.Tests.Unit
 			switch (compilerType) {
 			case AOTCompilerType.Bundled64:
 				return "bmac-mobile-mono";
-			case AOTCompilerType.Bundled32:
-				return "bmac-mobile-mono-32";
 			case AOTCompilerType.System64:
 				return "mono64";
-			case AOTCompilerType.System32:
-				return "mono32";
 			default:
 				Assert.Fail ("GetMonoPath with invalid option");
 				return "";
@@ -317,7 +321,7 @@ namespace Xamarin.MMP.Tests.Unit
 		[Test]
 		public void DifferentMonoTypes_ShouldInvokeCorrectMono ()
 		{
-			foreach (var compilerType in new List<AOTCompilerType> (){ AOTCompilerType.Bundled64, AOTCompilerType.Bundled32, AOTCompilerType.System32, AOTCompilerType.System64 })
+			foreach (var compilerType in new List<AOTCompilerType> () { AOTCompilerType.Bundled64, AOTCompilerType.System64 })
 			{
 				ClearCommandsRun ();
 				var options = new AOTOptions ("sdk");

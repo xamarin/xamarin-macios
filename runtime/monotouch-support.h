@@ -1,4 +1,4 @@
-﻿#ifndef __MONOTOUCH_SUPPORT_H__
+#ifndef __MONOTOUCH_SUPPORT_H__
 #define __MONOTOUCH_SUPPORT_H__
 
 #ifdef __cplusplus
@@ -16,9 +16,14 @@ void           xamarin_start_wwan (const char *uri);
 const char *   xamarin_GetFolderPath (int folder);
 #endif
 
+#ifdef MONOMAC
+const char *
+xamarin_encode_CGAffineTransform ();
+#endif
+
 #if defined (__arm64__)
-void objc_msgSend_stret (id self, SEL op, ...);
-void objc_msgSendSuper_stret (struct objc_super *super, SEL op, ...);
+void objc_msgSend_stret (void);
+void objc_msgSendSuper_stret (void);
 #endif
 
 #ifdef __cplusplus

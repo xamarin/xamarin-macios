@@ -1,10 +1,6 @@
 ## we do not (need to) redefine the tintColor at every level, it will be dispatched to the right type
 !missing-selector! UIRefreshControl::setTintColor: not bound
 !missing-selector! UIRefreshControl::tintColor not bound
-!missing-selector! UIStepper::setTintColor: not bound
-!missing-selector! UIStepper::tintColor not bound
-!missing-selector! UISwitch::setTintColor: not bound
-!missing-selector! UISwitch::tintColor not bound
 !missing-selector! UIToolbar::setTintColor: not bound
 !missing-selector! UIToolbar::tintColor not bound
 
@@ -55,3 +51,41 @@
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'UIStateRestoring' is restored.
 !missing-protocol-conformance! UIViewController should conform to UIStateRestoring (defined in 'UIStateRestoration' category)
 
+<<<<<<< HEAD
+=======
+# Xcode 11
+
+## Inherited from another protocol
+!missing-protocol-member! NSCollectionLayoutVisibleItem::bounds not found
+!missing-protocol-member! NSCollectionLayoutVisibleItem::center not found
+!missing-protocol-member! NSCollectionLayoutVisibleItem::setCenter: not found
+!missing-protocol-member! NSCollectionLayoutVisibleItem::setTransform: not found
+!missing-protocol-member! NSCollectionLayoutVisibleItem::transform not found
+
+## This is a breaking change
+!incorrect-protocol-member! UITextDocumentProxy::setMarkedText:selectedRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::unmarkText is REQUIRED and should be abstract
+
+## Not really useful to have them exposed
+!missing-pinvoke! UIFontWeightForImageSymbolWeight is not bound
+!missing-pinvoke! UIImageSymbolWeightForFontWeight is not bound
+
+## It got renamed from UITextWritingDirection to NSWritingDirection but it is a breaking change
+## Fixed in XAMCORE_4_0
+!unknown-native-enum! UITextWritingDirection bound
+
+## Introduced and deprecated in Xcode 11 and likely it will be removed in a future beta
+!missing-enum! UIDirectionalRectEdge not bound
+!missing-selector! UIGestureRecognizer::initWithCoder: not bound
+!missing-selector! UIKeyCommand::action not bound
+!missing-protocol-member! UICollectionViewDelegate::collectionView:willCommitMenuWithAnimator: not found
+!missing-protocol-member! UIContextMenuInteractionDelegate::contextMenuInteraction:willCommitWithAnimator: not found
+!missing-protocol-member! UIContextMenuInteractionDelegate::contextMenuInteractionDidEnd: not found
+!missing-protocol-member! UIContextMenuInteractionDelegate::contextMenuInteractionWillPresent: not found
+!missing-protocol-member! UITableViewDelegate::tableView:willCommitMenuWithAnimator: not found
+
+## Introduced in Xcode 11 b5 but unlikely to be there at the end of beta, these usualy get replaced by NSCopying protocol
+!missing-selector! UIBarAppearance::copy not bound
+!missing-selector! UIBarButtonItemAppearance::copy not bound
+!missing-selector! UITabBarItemAppearance::copy not bound
+>>>>>>> origin/xcode11

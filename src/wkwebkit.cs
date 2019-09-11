@@ -22,7 +22,7 @@ using UIKit;
 
 namespace WebKit
 {
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor ()] // Crashes during deallocation in Xcode 6 beta 2. radar 17377712.
 	interface WKBackForwardListItem {
@@ -37,7 +37,7 @@ namespace WebKit
 		NSUrl InitialUrl { get; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor ()] // Crashes during deallocation in Xcode 6 beta 2. radar 17377712.
 	interface WKBackForwardList {
@@ -61,7 +61,7 @@ namespace WebKit
 		WKBackForwardListItem ItemAtIndex (nint index);
 	}
 
-	[Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface WKContentRuleList
 	{
@@ -69,7 +69,7 @@ namespace WebKit
 		string Identifier { get; }
 	}
 
-	[Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface WKContentRuleListStore
 	{
@@ -132,7 +132,7 @@ namespace WebKit
 		void CookiesDidChangeInCookieStore (WKHttpCookieStore cookieStore);
 	}
 	
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKFrameInfo : NSCopying {
 
@@ -142,21 +142,26 @@ namespace WebKit
 		[Export ("request", ArgumentSemantic.Copy)]
 		NSUrlRequest Request { get; }
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[Export ("securityOrigin")]
 		WKSecurityOrigin SecurityOrigin { get; }
 
-		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
+		[iOS (11,0)][Mac (10,13)]
 		[NullAllowed, Export ("webView", ArgumentSemantic.Weak)]
 		WKWebView WebView { get; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKNavigation {
+
+		[Mac (10,15)]
+		[iOS (13,0)]
+		[Export ("effectiveContentMode")]
+		WKContentMode EffectiveContentMode { get; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKNavigationAction {
 
@@ -181,7 +186,7 @@ namespace WebKit
 #endif
 	}
 
-	[Mac (10,10, onlyOn64 : true), iOS (8,0)]
+	[Mac (10,10), iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface WKNavigationDelegate {
@@ -191,6 +196,11 @@ namespace WebKit
 
 		[Export ("webView:decidePolicyForNavigationResponse:decisionHandler:")]
 		void DecidePolicy (WKWebView webView, WKNavigationResponse navigationResponse, Action<WKNavigationResponsePolicy> decisionHandler);
+
+		[Mac (10,15)]
+		[iOS (13,0)]
+		[Export ("webView:decidePolicyForNavigationAction:preferences:decisionHandler:")]
+		void DecidePolicy (WKWebView webView, WKNavigationAction navigationAction, WKWebpagePreferences preferences, Action<WKNavigationActionPolicy, WKWebpagePreferences> decisionHandler);
 
 		[Export ("webView:didStartProvisionalNavigation:")]
 		void DidStartProvisionalNavigation (WKWebView webView, WKNavigation navigation);
@@ -213,12 +223,12 @@ namespace WebKit
 		[Export ("webView:didReceiveAuthenticationChallenge:completionHandler:")]
 		void DidReceiveAuthenticationChallenge (WKWebView webView, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition,NSUrlCredential> completionHandler);
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[Export ("webViewWebContentProcessDidTerminate:")]
 		void ContentProcessDidTerminate (WKWebView webView);
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKNavigationResponse {
 
@@ -232,7 +242,7 @@ namespace WebKit
 		bool CanShowMimeType { get; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKPreferences : NSSecureCoding {
 		[Export ("minimumFontSize")]
@@ -245,20 +255,26 @@ namespace WebKit
 		bool JavaScriptCanOpenWindowsAutomatically { get; set; }
 
 #if MONOMAC
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Feature no longer supported.")]
 		[Export ("javaEnabled")]
 		bool JavaEnabled { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Feature no longer supported.")]
 		[Export ("plugInsEnabled")]
 		bool PlugInsEnabled { get; set; }
 
 		// Headers says 10,12,3 but it is not available likely they meant 10,12,4
-		[Mac (10,12,4, onlyOn64 : true)]
+		[Mac (10,12,4)]
 		[Export ("tabFocusesLinks")]
 		bool TabFocusesLinks { get; set; }
 #endif
+
+		[Mac (10, 15), iOS (13, 0)]
+		[Export ("fraudulentWebsiteWarningEnabled")]
+		bool FraudulentWebsiteWarningEnabled { [Bind ("isFraudulentWebsiteWarningEnabled")] get; set; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKScriptMessage {
 
@@ -277,7 +293,7 @@ namespace WebKit
 		WKFrameInfo FrameInfo { get; }
 	}
 
-	[Mac (10,10, onlyOn64 : true), iOS (8,0)]
+	[Mac (10,10), iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface WKScriptMessageHandler {
@@ -287,7 +303,7 @@ namespace WebKit
 		void DidReceiveScriptMessage (WKUserContentController userContentController, WKScriptMessage message);
 	}
 
-	[iOS (9,0)][Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac(10,11)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface WKSecurityOrigin {
@@ -302,7 +318,7 @@ namespace WebKit
 	}
 
 	
-	[Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface WKSnapshotConfiguration : NSCopying {
 		[Export ("rect")]
@@ -310,6 +326,11 @@ namespace WebKit
 
 		[Export ("snapshotWidth")]
 		NSNumber SnapshotWidth { get; set; }
+
+		[Mac (10,15)]
+		[iOS (13,0)]
+		[Export ("afterScreenUpdates")]
+		bool AfterScreenUpdates { get; set; }
 	}
 
 #if XAMCORE_2_0
@@ -354,7 +375,7 @@ namespace WebKit
 		void DidFailWithError (NSError error);
 	}
 	
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface WKWebsiteDataRecord
 	{
@@ -365,7 +386,7 @@ namespace WebKit
 		NSSet<NSString> DataTypes { get; }
 	}
 
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[Static]
 	interface WKWebsiteDataType {
 		[Field ("WKWebsiteDataTypeDiskCache", "WebKit")]
@@ -392,16 +413,16 @@ namespace WebKit
 		[Field ("WKWebsiteDataTypeIndexedDBDatabases", "WebKit")]
 		NSString IndexedDBDatabases { get; }
 
-		[Mac (10, 13, 4, onlyOn64 : true), iOS (11, 3)]
+		[Mac (10, 13, 4), iOS (11, 3)]
 		[Field ("WKWebsiteDataTypeFetchCache")]
 		NSString FetchCache { get; }
 
-		[Mac (10, 13, 4, onlyOn64 : true), iOS (11, 3)]
+		[Mac (10, 13, 4), iOS (11, 3)]
 		[Field ("WKWebsiteDataTypeServiceWorkerRegistrations")]
 		NSString ServiceWorkerRegistrations { get; }
 	}
 	
-	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
+	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	interface WKWebsiteDataStore : NSSecureCoding {
 
@@ -437,18 +458,18 @@ namespace WebKit
 		WKHttpCookieStore HttpCookieStore { get; }
 	}
 
-	[Mac (10,12, onlyOn64 : true)][NoiOS, NoWatch, NoTV]
+	[Mac (10,12)][NoiOS, NoWatch, NoTV]
 	[BaseType (typeof(NSObject))]
 	interface WKOpenPanelParameters	{
 		[Export ("allowsMultipleSelection")]
 		bool AllowsMultipleSelection { get; }
 
-		[Mac (10, 13, 4, onlyOn64 : true)]
+		[Mac (10, 13, 4)]
 		[Export ("allowsDirectories")]
 		bool AllowsDirectories { get; }
 	}
 	
-	[Mac (10,10, onlyOn64 : true), iOS (8,0)]
+	[Mac (10,10), iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface WKUIDelegate {
@@ -467,31 +488,50 @@ namespace WebKit
 		void RunJavaScriptTextInputPanel (WKWebView webView, string prompt, [NullAllowed] string defaultText,
 			WKFrameInfo frame, Action<string> completionHandler);
 
-		[Mac (10,12, onlyOn64 : true)][NoiOS, NoWatch, NoTV]
+		[Mac (10,12)][NoiOS, NoWatch, NoTV]
 		[Export ("webView:runOpenPanelWithParameters:initiatedByFrame:completionHandler:")]
 		void RunOpenPanel (WKWebView webView, WKOpenPanelParameters parameters, WKFrameInfo frame, Action<NSUrl[]> completionHandler);
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[Export ("webViewDidClose:")]
 		void DidClose (WKWebView webView);
 
 		[iOS (10,0)][NoMac]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetContextMenuConfiguration' instead.")]
 		[Export ("webView:shouldPreviewElement:")]
 		bool ShouldPreviewElement (WKWebView webView, WKPreviewElementInfo elementInfo);
 
 #if !MONOMAC
 		[iOS (10,0)][NoMac]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetContextMenuConfiguration' instead.")]
 		[Export ("webView:previewingViewControllerForElement:defaultActions:")]
 		[return: NullAllowed]
 		UIViewController GetPreviewingViewController (WKWebView webView, WKPreviewElementInfo elementInfo, IWKPreviewActionItem[] previewActions);
 
 		[iOS (10,0)][NoMac]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'WillCommitContextMenu' instead.")]
 		[Export ("webView:commitPreviewingViewController:")]
 		void CommitPreviewingViewController (WKWebView webView, UIViewController previewingViewController);
+
+		[iOS (13,0)][NoMac]
+		[Export ("webView:contextMenuConfigurationForElement:completionHandler:")]
+		void SetContextMenuConfiguration (WKWebView webView, WKContextMenuElementInfo elementInfo, Action<UIContextMenuConfiguration> completionHandler);
+
+		[iOS (13,0)][NoMac]
+		[Export ("webView:contextMenuForElement:willCommitWithAnimator:")]
+		void WillCommitContextMenu (WKWebView webView, WKContextMenuElementInfo elementInfo, IUIContextMenuInteractionCommitAnimating animator);
 #endif
+
+		[iOS (13,0)][NoMac]
+		[Export ("webView:contextMenuWillPresentForElement:")]
+		void ContextMenuWillPresent (WKWebView webView, WKContextMenuElementInfo elementInfo);
+
+		[iOS (13,0)][NoMac]
+		[Export ("webView:contextMenuDidEndForElement:")]
+		void ContextMenuDidEnd (WKWebView webView, WKContextMenuElementInfo elementInfo);
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKUserContentController : NSSecureCoding {
 
@@ -523,7 +563,7 @@ namespace WebKit
 		void RemoveAllContentRuleLists ();
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // all properties are getters
 	interface WKUserScript : NSCopying {
@@ -541,7 +581,7 @@ namespace WebKit
 		bool IsForMainFrameOnly { [Bind ("isForMainFrameOnly")] get; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (
 #if MONOMAC
 		typeof (NSView)
@@ -663,31 +703,31 @@ namespace WebKit
 		UIScrollView ScrollView { get; }
 #endif
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[Export ("loadData:MIMEType:characterEncodingName:baseURL:")]
 		[return: NullAllowed]
 		WKNavigation LoadData (NSData data, string mimeType, string characterEncodingName, NSUrl baseUrl);
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[Export ("loadFileURL:allowingReadAccessToURL:")]
 		[return: NullAllowed]
 		WKNavigation LoadFileUrl (NSUrl url, NSUrl readAccessUrl);
 		
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[Export ("customUserAgent")]
 		string CustomUserAgent { get; set; }
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'ServerTrust' property.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'ServerTrust' property.")]
 		[Export ("certificateChain", ArgumentSemantic.Copy)]
 		SecCertificate[] CertificateChain { get; }
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[Export ("allowsLinkPreview")]
 		bool AllowsLinkPreview { get; set; }
 
-		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac (10,12)]
 		[NullAllowed, Export ("serverTrust")]
 		SecTrust ServerTrust { get; }
 
@@ -711,7 +751,7 @@ namespace WebKit
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKWebViewConfiguration : NSCopying, NSSecureCoding {
 
@@ -766,7 +806,7 @@ namespace WebKit
 		[Export ("dataDetectorTypes", ArgumentSemantic.Assign)]
 		WKDataDetectorTypes DataDetectorTypes { get; set; }
 #endif
-		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[iOS (10,0)][Mac (10,12)]
 		[Export ("mediaTypesRequiringUserActionForPlayback", ArgumentSemantic.Assign)]
 		WKAudiovisualMediaTypes MediaTypesRequiringUserActionForPlayback { get; set; }
 
@@ -785,16 +825,21 @@ namespace WebKit
 		[return: NullAllowed]
 		IWKUrlSchemeHandler GetUrlSchemeHandler (string urlScheme);
 #endif
+
+		[Mac (10,15)]
+		[iOS (13,0)]
+		[Export ("defaultWebpagePreferences", ArgumentSemantic.Copy)]
+		WKWebpagePreferences DefaultWebpagePreferences { get; set; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKProcessPool : NSSecureCoding {
 		// as of Mac 10.10, iOS 8.0 Beta 2,
 		// this interface is completely empty
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	interface WKWindowFeatures {
 		// Filled in from open source headers
@@ -828,6 +873,7 @@ namespace WebKit
 	interface IWKPreviewActionItem {}
 
 	[iOS (10,0)][NoMac]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
 	[Protocol]
 	interface WKPreviewActionItem : UIPreviewActionItem {
 		[Abstract]
@@ -838,6 +884,7 @@ namespace WebKit
 
 	[iOS (10,0)][NoMac]
 	[Static]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TBD' instead.")]
 	interface WKPreviewActionItemIdentifier {
 		[Field ("WKPreviewActionItemIdentifierOpen")]
 		NSString Open { get; }
@@ -853,9 +900,38 @@ namespace WebKit
 	}
 
 	[iOS (10,0)][NoMac]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'WKContextMenuElementInfo' instead.")]
 	[BaseType (typeof (NSObject))]
 	interface WKPreviewElementInfo : NSCopying {
 		[NullAllowed, Export ("linkURL")]
 		NSUrl LinkUrl { get; }
 	}
+
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Native]
+	public enum WKContentMode : long {
+		Recommended,
+		Mobile,
+		Desktop,
+	}
+
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface WKWebpagePreferences {
+
+		[Export ("preferredContentMode", ArgumentSemantic.Assign)]
+		WKContentMode PreferredContentMode { get; set; }
+	}
+
+	[NoMac]
+	[iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface WKContextMenuElementInfo {
+		[NullAllowed, Export ("linkURL")]
+		NSUrl LinkUrl { get; }
+	}
+
 }

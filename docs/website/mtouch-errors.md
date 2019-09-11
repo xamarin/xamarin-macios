@@ -964,6 +964,7 @@ However it is possible to test features such as `dynamic` and `System.Reflection
 
 This warning is shown if the assemblies names given to the `--interpreter` option (either to interpret them or not) cannot be found.
 
+<!-- 0143-0144: used by mmp -->
 
 # MT1xxx: Project related error messages
 
@@ -2545,6 +2546,14 @@ If this is not the case, please file a [bug report](https://github.com/xamarin/x
 
 The name of an Objective-C protocol can't contain certain characters which means that the `Adopts` attribute on the corresponding managed class can't have the `ProtocolType` parameter containing them. Please refer to the provided error message and fix accordingly.
 
+### MT4178: The class '{class}' will not be registered because the WatchKit framework has been removed from the iOS SDK.
+
+Apple removed the WatchKit framework from the iOS SDK, so any code that uses it will not compile anymore.
+
+Any code that uses the WatchKit framework must be removed/rewritten.
+
+Reference: https://github.com/xamarin/xamarin-macios/issues/6492
+
 # MT5xxx: GCC and toolchain error messages
 
 ### MT51xx: Compilation
@@ -2577,6 +2586,46 @@ The name of an Objective-C protocol can't contain certain characters which means
 ### MT5106: Could not compile the file(s) '*'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 
 This usually indicates a bug in Xamarin.iOS; please file a new issue on [github](https://github.com/xamarin/xamarin-macios/issues/new).
+
+### MT5107: The assembly {assembly} can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture.
+
+The object file format for 32-bit ARM architectures (armv7 and armv7s) has
+certain size restrictions for the native code. This error will be shown when
+the limit is hit.
+
+Possible solutions:
+
+* Only build for ARM64. This can be changed in the project's iOS Build
+  options, and it's by far the easiest solution. Apple is on its way to
+  removing the 32-bit ARM architectures, so this will eventually be the
+  final solution too.
+* Enable the linker for all assemblies (or review any custom linker
+  arguments, such as linker definition files, to avoid skipping the
+  linker). The idea is for the linker to remove more unused code, and if
+  enough unused code is removed, then the size limit won't be reached.
+* Disable debugging. Debugging support makes the AOT compiler produce more
+  code, which can be enough to hit the limit. This can be changed in the
+  project's iOS Debug options (but the downside is of course that
+  debugging won't work).
+* Enable LLVM. The LLVM compiler can sometimes produce smaller code, which
+  can be enough to get below the size limit. The downside is that
+  debugging won't work, and the build will be much slower.
+* There's usually a particularly big assembly that's causing problems;
+  sometimes it can help to split such assemblies into smaller assemblies.
+  This can be a significant amount of work though, and there's no
+  guarantee it would eventually work.
+* Remove code from the app that isn't needed/used.
+
+Reference: https://github.com/xamarin/xamarin-macios/issues/6787
+
+### MT5108: The {linker/compiler} output is too long, it's been limited to 1000 lines.
+
+This is a warning indicating that the output from the linker or compiler was
+truncated because it was too long.
+
+To get the complete output, you can either manually run the command from the
+command line, or alternatively add `-v -v -v -v -v -v` (six or more -v's) to
+the additional mtouch argument in the project's iOS Build options.
 
 ### MT52xx: Linking
 
@@ -2826,6 +2875,12 @@ There are two main reasons for this:
   means (some build options causes the exact list of dynamic symbols to vary).
 
 <!-- 5219 and 5220 used by mmp -->
+=======
+### MT5219: Not linking with {framework} because it has been removed from {platform}.
+
+The framework in question has been removed, and Xamarin.iOS can't link with it.
+
+Any code that uses the framework must be removed/rewritten.
 
 ### MT53xx: Other tools
 

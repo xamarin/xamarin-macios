@@ -617,7 +617,7 @@ namespace xharness
 				args.Append ($" -setenv=BUILD_REVISION=${Environment.GetEnvironmentVariable ("BUILD_REVISION")}");
 			}
 
-			if (!Harness.IncludeSystemPermissionTests)
+			if (!Harness.GetIncludeSystemPermissionTests (TestPlatform.iOS, !isSimulator))
 				args.Append (" -setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1");
 
 			if (isSimulator) {

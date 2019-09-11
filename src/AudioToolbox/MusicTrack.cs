@@ -263,7 +263,18 @@ namespace AudioToolbox {
 		{
 			return MusicTrackSetDestMIDIEndpoint (handle, endpoint == null ? MidiObject.InvalidRef : endpoint.MidiHandle);
 		}
-#endif // IOS
+
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetDestMIDIEndpoint (/* MusicTrack */ IntPtr inTrack, out MidiEndpointRef outEndpoint);
+
+		public MusicPlayerStatus GetDestMidiEndpoint (out MidiEndpoint outEndpoint)
+		{
+			MidiEndpointRef midiHandle; 
+			var result = MusicTrackGetDestMIDIEndpoint (handle, out midiHandle);
+			outEndpoint = (result == MusicPlayerStatus.Success)? new MidiEndpoint (midiHandle): null;
+			return result;
+		}
+#endif
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackSetDestNode (/* MusicTrack */ IntPtr inTrack, /* AUNode */ int inNode);

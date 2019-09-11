@@ -157,7 +157,7 @@ namespace Foundation {
 			// therefore, we do not have to listen to the notifications.
 			isBackgroundSession = !string.IsNullOrEmpty (configuration.Identifier);
 #endif
-
+			allowsCellularAccess = configuration.AllowsCellularAccess;
 			AllowAutoRedirect = true;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
@@ -195,11 +195,16 @@ namespace Foundation {
 
 		void BackgroundNotificationCb (NSNotification obj)
 		{
-			// we do not need to call the lock, we call cancel on the source, that will trigger all the needed code to 
-			// clean the resources and such
+			// the cancelation task of each of the sources will clean the different resources. Each removal is done
+			// inside a lock, but of course, the .Values collection will not like that because it is modified during the
+			// iteration. We split the operation in two, get all the diff cancelation sources, then try to cancel each of them
+			// which will do the correct lock dance. Note that we could be tempted to do a RemoveAll, that will yield the same
+			// runtime issue, this is dull but safe. 
+			var sources = new List <TaskCompletionSource<HttpResponseMessage>> (inflightRequests.Count);
 			foreach (var r in inflightRequests.Values) {
-				r.CompletionSource.TrySetCanceled ();
+				sources.Add (r.CompletionSource);
 			}
+			sources.ForEach (source => { source.TrySetCanceled (); });
 		}
 #endif
 
@@ -269,7 +274,7 @@ namespace Foundation {
 			}
 		}
 
-		bool allowsCellularAccess;
+		bool allowsCellularAccess = true;
 
 		public bool AllowsCellularAccess {
 			get {

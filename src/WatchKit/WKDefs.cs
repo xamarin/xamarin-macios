@@ -13,6 +13,7 @@ using ObjCRuntime;
 
 namespace WatchKit {
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[Native]
 	public enum WKInterfaceMapPinColor : long {
 		Red,
@@ -21,6 +22,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[Native]
 	public enum WKMenuItemIcon : long {
 		Accept,
@@ -42,6 +44,7 @@ namespace WatchKit {
 	}
 		
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[Native]
 	public enum WKUserNotificationInterfaceType : long {
 		Default,
@@ -49,6 +52,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[Native]
 	public enum WKTextInputMode : long {
 		Plain,
@@ -57,6 +61,7 @@ namespace WatchKit {
 	}
 
 	[iOS (8,2)]
+	[Unavailable (PlatformName.iOS)]
 	[Native]
 	[ErrorDomain ("WatchKitErrorDomain")]
 	public enum WKErrorCode : long {

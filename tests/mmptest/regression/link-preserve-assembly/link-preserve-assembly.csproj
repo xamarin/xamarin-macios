@@ -6,11 +6,13 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{39DD1BD5-1204-4D9E-A460-3A532DB3A797}</ProjectGuid>
-    <ProjectTypeGuids>{42C0BBD9-55CE-4FC1-8D90-A7348ABAFB23};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>linkpreserveassembly</RootNamespace>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <AssemblyName>link-preserve-assembly</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>True</DebugSymbols>
@@ -20,73 +22,42 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseSGen>true</UseSGen>
     <IncludeMonoRuntime>True</IncludeMonoRuntime>
-    <UseSGen>False</UseSGen>
-    <PlatformTarget>x86</PlatformTarget>
-    <EnableCodeSigning>False</EnableCodeSigning>
-    <ConsolePause>False</ConsolePause>
-    <EnablePackageSigning>False</EnablePackageSigning>
-    <CreatePackage>False</CreatePackage>
-    <CodeSigningKey>Mac Developer</CodeSigningKey>
-    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
-    <I18n>
-    </I18n>
     <LinkMode>Full</LinkMode>
-    <UseRefCounting>false</UseRefCounting>
+    <MonoBundlingExtraArgs></MonoBundlingExtraArgs>
+    <AOTMode>None</AOTMode>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Release</OutputPath>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseSGen>False</UseSGen>
+    <UseSGen>true</UseSGen>
     <IncludeMonoRuntime>True</IncludeMonoRuntime>
-    <PlatformTarget>x86</PlatformTarget>
     <LinkMode>Full</LinkMode>
-    <EnableCodeSigning>True</EnableCodeSigning>
-    <ConsolePause>False</ConsolePause>
-    <EnablePackageSigning>False</EnablePackageSigning>
-    <CreatePackage>True</CreatePackage>
-    <CodeSigningKey>Developer ID Application</CodeSigningKey>
-    <UseRefCounting>false</UseRefCounting>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|x86' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\x86\AppStore</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <UseSGen>False</UseSGen>
-    <IncludeMonoRuntime>True</IncludeMonoRuntime>
-    <PlatformTarget>x86</PlatformTarget>
-    <LinkMode>Full</LinkMode>
-    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
-    <EnableCodeSigning>True</EnableCodeSigning>
-    <ConsolePause>False</ConsolePause>
-    <EnablePackageSigning>True</EnablePackageSigning>
-    <CreatePackage>True</CreatePackage>
-    <CodeSigningKey>3rd Party Mac Developer Application</CodeSigningKey>
-    <UseRefCounting>false</UseRefCounting>
+    <MonoBundlingExtraArgs></MonoBundlingExtraArgs>
+    <AOTMode>None</AOTMode>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="XamMac">
-      <HintPath>..\..\..\..\src\build\compat\XamMac.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
+    <Reference Include="System" />
+    <Reference Include="Xamarin.Mac" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Mono\MonoMac\v0.0\Mono.MonoMac.targets" />
-  <ItemGroup>
-    <InterfaceDefinition Include="..\common\MainMenu.xib">
-      <Link>MainMenu.xib</Link>
-    </InterfaceDefinition>
-  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <ItemGroup>
     <Compile Include="..\common\Test.cs">
       <Link>Test.cs</Link>

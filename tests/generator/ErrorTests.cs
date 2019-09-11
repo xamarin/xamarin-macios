@@ -30,6 +30,16 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void BI0087 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.macOSClassic;
+			bgen.CreateTemporaryBinding ("");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (87, "Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.");
+		}
+
+		[Test]
 		[TestCase (Profile.iOS)]
 		public void BI1036 (Profile profile)
 		{
@@ -45,7 +55,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSClassic)]
 		public void BI1037 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -59,7 +68,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSClassic)]
 		public void BI1038 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -73,7 +81,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSClassic)]
 		public void BI1039 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -87,7 +94,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSClassic)]
 		public void BI1040 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -101,7 +107,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSClassic)]
 		public void BI1041 (Profile profile)
 		{
 			var bgen = new BGenTool ();

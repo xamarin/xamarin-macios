@@ -71,3 +71,40 @@
 
 ## Does not make much sense to have it bound in tvOS
 !missing-field! UIGuidedAccessErrorDomain not bound
+
+# Xcode 11
+
+## Inherited from another protocol
+!missing-protocol-member! NSCollectionLayoutVisibleItem::bounds not found
+!missing-protocol-member! NSCollectionLayoutVisibleItem::center not found
+!missing-protocol-member! NSCollectionLayoutVisibleItem::setCenter: not found
+!missing-protocol-member! NSCollectionLayoutVisibleItem::setTransform: not found
+!missing-protocol-member! NSCollectionLayoutVisibleItem::transform not found
+
+## This is a breaking change
+!incorrect-protocol-member! UITextDocumentProxy::setMarkedText:selectedRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::unmarkText is REQUIRED and should be abstract
+
+## Not really useful to have them exposed
+!missing-pinvoke! UIFontWeightForImageSymbolWeight is not bound
+!missing-pinvoke! UIImageSymbolWeightForFontWeight is not bound
+
+## UITextInteraction is not available in tvOS
+!missing-protocol! UITextInteractionDelegate not bound
+
+## It is deprecated and not of much use to expose it
+!missing-selector! +UIColor::groupTableViewBackgroundColor not bound
+
+## It got renamed from UITextWritingDirection to NSWritingDirection but it is a breaking change
+## Fixed in XAMCORE_4_0
+!unknown-native-enum! UITextWritingDirection bound
+
+## Introduced and deprecated in Xcode 11 and likely it will be removed in a future beta
+!missing-enum! UIDirectionalRectEdge not bound
+!missing-selector! UIGestureRecognizer::initWithCoder: not bound
+!missing-selector! UIKeyCommand::action not bound
+
+## Introduced in Xcode 11 b5 but unlikely to be there at the end of beta, these usualy get replaced by NSCopying protocol
+!missing-selector! UIBarAppearance::copy not bound
+!missing-selector! UIBarButtonItemAppearance::copy not bound
+!missing-selector! UITabBarItemAppearance::copy not bound

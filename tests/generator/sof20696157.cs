@@ -803,7 +803,6 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M349 : IUNNotificationContentExtension {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M350 : IWKUIDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M351 : IUINavigationControllerDelegate {}
-	[Protocol] [BaseType (typeof (NSObject))] interface M352 : IWKImageAnimatable {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M353 : IUIObjectRestoration {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M354 : IUIPickerViewDataSource {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M355 : IVSAccountManagerDelegate {}

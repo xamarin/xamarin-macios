@@ -17,6 +17,10 @@ namespace Extrospection {
 			if (!type.IsEnum || type.IsNested)
 				return;
 			
+			// exclude obsolete enums, presumably we already know there's something wrong with them if they've been obsoleted.
+			if (type.IsObsolete ())
+				return;
+
 			var name = type.Name;
 			// e.g. WatchKit.WKErrorCode and WebKit.WKErrorCode :-(
 			if (!enums.TryGetValue (name, out var td))
@@ -68,6 +72,7 @@ namespace Extrospection {
 			case "NSUInteger":
 			case "CFIndex":
 			case "CFOptionFlags":
+			case "AVAudioInteger":
 				native_size = 8; // in managed code it's always the largest size
 				native = true;
 				break;

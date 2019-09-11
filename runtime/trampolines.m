@@ -456,6 +456,7 @@ xamarin_get_frame_length (id self, SEL sel)
 	// So instead parse the description ourselves.
 
 	int length = 0;
+	[self class]; // There's a bug in the ObjC runtime where we might get an uninitialized Class instance from object_getClass. See #6258. Calling the 'class' selector first makes sure the Class instance is initialized.
 	Class cls = object_getClass (self);
 	const char *method_description = get_method_description (cls, sel);
 	const char *desc = method_description;
@@ -542,7 +543,8 @@ xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl)
 	// COOP: does not access managed memory: any mode
 	struct objc_super sup;
 	find_objc_method_implementation (&sup, self, sel, xamarin_impl);
-	return objc_msgSendSuper (&sup, sel);
+	typedef id (*func_objc_msgSendSuper) (struct objc_super *sup, SEL sel);
+	return ((func_objc_msgSendSuper) objc_msgSendSuper) (&sup, sel);
 }
 
 #if MONOMAC

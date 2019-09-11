@@ -20,6 +20,14 @@ namespace Foundation {
 			WaitUntilFinished ();
 		}
 	}
+
+	public partial class NSNetService {
+
+		[Obsolete ("This constructor does not create a valid instance of the type")]
+		public NSNetService ()
+		{
+		}
+	}
 #endif
 
 #if !XAMCORE_4_0 && (XAMCORE_2_0 || !MONOMAC) && !WATCH

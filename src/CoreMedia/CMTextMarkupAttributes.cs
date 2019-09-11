@@ -36,6 +36,7 @@ using ObjCRuntime;
 namespace CoreMedia {
 
 	// Convenience structure
+	[Watch (6,0)]
 	public struct TextMarkupColor
 	{
 		public TextMarkupColor (float red, float green, float blue, float alpha)
@@ -62,7 +63,7 @@ namespace CoreMedia {
 		public float Alpha { get; private set; }
 	}
 
-	[iOS (6,0)]
+	[Watch (6,0)]
 	public class CMTextMarkupAttributes : DictionaryContainer
 	{
 		public CMTextMarkupAttributes ()

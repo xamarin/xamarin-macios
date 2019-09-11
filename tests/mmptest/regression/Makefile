@@ -4,65 +4,33 @@ include $(TOP)/Make.config
 
 MMP=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin/mmp
 
-export MD_APPLE_SDK_ROOT=$(shell dirname `dirname $(XCODE94_DEVELOPER_ROOT)`)
+export MD_APPLE_SDK_ROOT:=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 export TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
-
-
-TESTS_4_0 = \
-	link-gdiplus-1 \
-	link-gdiplus-2 \
-	link-posix-1 \
-	link-posix-2 \
-	link-system.web-icalls \
-	link-keep-resources-1 \
-	link-preserve-assembly \
-	link-uithread-1 \
-	link-uithread-2 \
-	link-safe-1 \
-	link-frameworks-1 \
-	link-aes-1 \
-	link-blocks-1 \
-	embedded-mono \
-	system-mono \
-	embedded-mono-profile \
-	system-mono-profile \
-
-DISABLED_TESTS_MONO_4_2 =  \
-	link-data-contract-1 \
-	link-webclient-2 \
-	link-xml-serialization \
-
-DISABLED_TESTS_MONO_4_4 =  \
-	link-webclient-1 \
-	link-webclient-3 \
-	link-remove-attributes-1
-
-TESTS_UNIFIED = \
-	custom-bundle-name
-
-TESTS_4_5 = \
-	link-callfilepath-45 \
-
-DISABLED_4_5_TESTS_MONO_4_2 = \
-	link-httpclient-async \
+export XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR))
 
 ALL_TESTS = \
-	$(TESTS_UNIFIED) \
-	$(TESTS_4_0) \
-	$(TESTS_4_5)
+	custom-bundle-name \
+	embedded-mono \
+	embedded-mono-profile \
+	link-frameworks-1 \
+	link-keep-resources-1 \
+	link-keep-resources-2 \
+	link-posix-1 \
+	link-preserve-assembly \
+	link-remove-attributes-1 \
+	link-safe-1 \
+	system-mono \
+	system-mono-profile \
 
 all-local:: run
 
-embedded-mono/bin system-mono/bin embedded-mono-profile/bin system-mono-profile/bin $(foreach test,$(TESTS_UNIFIED),$(test)/bin): dylib/libTest.dylib
-	DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(SYSTEM_XIBUILD) -- $(@D)/$(@D).csproj
-
-%/bin: dylib/libTest.dylib
-	DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(MDTOOL) build $*/$*.csproj
+$(foreach test,$(ALL_TESTS),$(test)/bin): dylib/libTest.dylib
+	$(QF_GEN) if ! $(SYSTEM_XIBUILD) -- $(@D)/$(@D).csproj; then EC=$$?; rm -Rf $@; exit $$EC; fi
 
 dylib/libTest.dylib: dylib/src.c
-	clang $< -o$@ -arch i386 -arch x86_64 -shared
+	$(QF_GEN) $(XCODE_CC) $< -o$@ -arch x86_64 -shared
 
 build: $(foreach test,$(ALL_TESTS),$(test)/bin)
 
@@ -70,6 +38,11 @@ run run-test run-tests:
 	$(MAKE) clean
 	$(MAKE) build
 	$(MAKE) exec
+
+run-test-%:
+	rm -Rf $*/bin
+	$(MAKE) $*/bin
+	$(MAKE) exec-$*
 
 exec-system-mono-profile exec-embedded-mono-profile: export MONO_ENV_OPTIONS=--profile=log:output=output.mlpd
 

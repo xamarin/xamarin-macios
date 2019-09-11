@@ -17,6 +17,7 @@ namespace Xamarin.Utils
 		public HashSet<string> LinkWithLibraries; // X, added to Inputs
 		public HashSet<string> ForceLoadLibraries; // -force_load X, added to Inputs
 		public HashSet<string> OtherFlags; // X
+		public List<string> InitialOtherFlags; // same as OtherFlags, only that they're the first argument(s) to clang (because order matters!). This is a list to preserve order (fifo).
 		public HashSet<string> Defines; // -DX
 		public HashSet<string> UnresolvedSymbols; // -u X
 		public HashSet<string> SourceFiles; // X, added to Inputs
@@ -97,6 +98,13 @@ namespace Xamarin.Utils
 				return;
 			// Xcode 10 doesn't ship with libstdc++, so use libc++ instead.
 			AddOtherFlag ("-stdlib=libc++");
+		}
+
+		public void AddOtherInitialFlag (string flag)
+		{
+			if (InitialOtherFlags == null)
+				InitialOtherFlags = new List<string> ();
+			InitialOtherFlags.Add (flag);
 		}
 
 		public void AddOtherFlag (string flag)
@@ -223,6 +231,16 @@ namespace Xamarin.Utils
 		{
 			Prepare ();
 
+			if (InitialOtherFlags != null) {
+				var idx = 0;
+				foreach (var flag in InitialOtherFlags) {
+					args.Insert (idx, flag);
+					idx += flag.Length;
+					args.Insert (idx, " ");
+					idx++;
+				}
+			}
+
 			ProcessFrameworksForArguments (args);
 
 			if (LinkWithLibraries != null) {
@@ -283,7 +301,7 @@ namespace Xamarin.Utils
 			}
 
 			if (Application.HasAnyDynamicLibraries) {
-				args.Append (" -Xlinker -rpath -Xlinker @executable_path");
+				args.Append (" -Xlinker -rpath -Xlinker @executable_path/");
 				if (Application.IsExtension)
 					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../..");
 			}

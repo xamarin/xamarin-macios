@@ -61,10 +61,11 @@ namespace xharness.BCLTestImporter {
 			else
 				platform = Platform.MacOSModern;
 			var result = new List<MacTestProject> ();
+
 			foreach (var tp in projectGenerator.GenerateAllMacTestProjects (platform)) {
 				var prefix = tp.XUnit ? "xUnit" : "NUnit";
 				var finalName = (tp.Name == "mscorlib") ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
-				result.Add (new MacTestProject (tp.Path, targetFrameworkFlavor: flavor, generateVariations: false) {
+				result.Add (new MacTestProject (tp.Path, targetFrameworkFlavor: flavor) {
 					Name = finalName,
 					Platform = "AnyCPU",
 					IsExecutableProject = true,

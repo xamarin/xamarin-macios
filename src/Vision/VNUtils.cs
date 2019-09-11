@@ -18,7 +18,7 @@ using Foundation;
 using Vector2 = global::OpenTK.Vector2;
 
 namespace Vision {
-	[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[TV (11,0), Mac (10,13), iOS (11,0)]
 	public static partial class VNUtils {
 	
 		[Field ("VNNormalizedIdentityRect", Constants.VisionLibrary)]
@@ -61,6 +61,13 @@ namespace Vision {
 
 			return result;
 		}
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.VisionLibrary)]
+		static extern nuint VNElementTypeSize (nuint elementType);
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		public static nuint GetElementTypeSize (VNElementType elementType) => VNElementTypeSize ((nuint) (ulong) elementType);
 	}
 }
 #endif

@@ -797,6 +797,7 @@ namespace xharness
 		iOS,
 		tvOS,
 		watchOS,
+		macOS,
 	}
 
 	public class Device : IDevice

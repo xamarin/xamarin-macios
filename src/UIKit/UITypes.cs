@@ -201,13 +201,11 @@ namespace UIKit {
 			}
 		}
 
-		[DllImport (Constants.UIKitLibrary)]
-		static extern bool UIFloatRangeIsEqualToRange (UIFloatRange range, UIFloatRange otherRange);
+		// Got replaced by a macro in iOS 13 (Xcode 11)...
+		// [DllImport (Constants.UIKitLibrary)]
+		// static extern bool UIFloatRangeIsEqualToRange (UIFloatRange range, UIFloatRange otherRange);
 
-		public bool Equals (UIFloatRange other)
-		{
-			return UIFloatRangeIsEqualToRange (this, other);
-		}
+		public bool Equals (UIFloatRange other) => this.Minimum == other.Minimum && this.Maximum == other.Maximum;
 
 		public override bool Equals (object other)
 		{

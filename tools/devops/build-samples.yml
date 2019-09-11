@@ -81,9 +81,18 @@ jobs:
   - bash: ./tools/devops/fetch-maccore.sh
     displayName: Fetch maccore
 
-  - task: xamops.azdevex.provisionator-task.provisionator@1
-    displayName: Provision XI/XM/Mono/Xcode/Objective-Sharpie
+  - task: provisionator@2
+    displayName: Xcode
     inputs:
+      provisionator_uri: '$(provisionator-uri)'
+      github_token: '$(github-pat)'
+      provisioning_script: $(System.DefaultWorkingDirectory)/tools/devops/provision-xcode.csx
+
+  - task: provisionator@2
+    displayName: Provision XI/XM/Mono/Objective-Sharpie
+    inputs:
+      provisionator_uri: '$(provisionator-uri)'
+      github_token: '$(github-pat)'
       provisioning_script: $(System.DefaultWorkingDirectory)/tools/devops/build-samples.csx
 
   - bash: ./tools/devops/system-info.sh

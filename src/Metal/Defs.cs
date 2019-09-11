@@ -44,11 +44,11 @@ namespace Metal {
 #if !COREBUILD
 	public static class MTLVertexFormatExtensions {
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MDLVertexFormat */ nuint MTKModelIOVertexFormatFromMetal (/* MTLVertexFormat */ nuint modelIODescriptor);
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,11)]
 		public static MDLVertexFormat ToModelVertexFormat (this MTLVertexFormat vertexFormat)
 		{
 			nuint mdlVertexFormat = MTKModelIOVertexFormatFromMetal ((nuint)(ulong)vertexFormat);
@@ -226,7 +226,7 @@ namespace Metal {
 		public uint ThreadGroupsPerGrid3;
 	}
 
-	[Mac (10,14, onlyOn64: true), iOS (12,0), TV (12,0)]
+	[Mac (10,14), iOS (12,0), TV (12,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLStageInRegionIndirectArguments {
 		public uint StageInOrigin1;
@@ -329,7 +329,7 @@ namespace Metal {
 	}
 #endif // COREBUILD
 #if MONOMAC
-	[NoiOS, NoTV, NoWatch, Mac (10,14, onlyOn64: true)]
+	[NoiOS, NoTV, NoWatch, Mac (10,14)]
 	public struct MTLIndirectCommandBufferExecutionRange
 	{
 		public uint Location;

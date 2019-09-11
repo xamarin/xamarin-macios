@@ -18,6 +18,7 @@ using ObjCRuntime;
 namespace CoreMedia {
 
 	// untyped enum (used as OSStatus) -> CMBlockBuffer.h
+	[Watch (6,0)]
 	public enum CMBlockBufferError : int {
 		None						= 0,
 		StructureAllocationFailed	= -12700,
@@ -33,6 +34,7 @@ namespace CoreMedia {
 
 	// uint32_t -> CMBlockBuffer.h
 	[Flags]
+	[Watch (6,0)]
 	public enum CMBlockBufferFlags : uint {
 		AssureMemoryNow			= (1<<0),
 		AlwaysCopyData			= (1<<1),
@@ -40,6 +42,7 @@ namespace CoreMedia {
 		PermitEmptyReference	= (1<<3)
 	}
 
+	[Watch (6,0)]
 	public class CMBlockBuffer : ICMAttachmentBearer, IDisposable {
 		internal IntPtr handle;
 		internal CMCustomBlockAllocator customAllocator;

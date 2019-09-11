@@ -4,12 +4,11 @@
 
 # It's named `CWErr` in the header file 
 !unknown-native-enum! CWStatus bound
+!missing-enum! CWErr not bound
 
 # Unsorted binding backlog shown by xtro-fix (24f865655ff0070acf6eb8a49fa5a99d28c83ba1)
-!missing-enum! CWErr not bound
 !missing-field! CWBSSIDDidChangeNotification not bound
 !missing-field! CWCountryCodeDidChangeNotification not bound
-!missing-field! CWErrorDomain not bound
 !missing-field! CWLinkDidChangeNotification not bound
 !missing-field! CWLinkQualityDidChangeNotification not bound
 !missing-field! CWLinkQualityNotificationRSSIKey not bound
