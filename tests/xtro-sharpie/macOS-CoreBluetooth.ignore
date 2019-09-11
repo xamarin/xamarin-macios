@@ -7,3 +7,6 @@
 
 ## obsoleted (removed from headers) in iOS 8.4
 !extra-protocol-member! unexpected selector CBPeripheralDelegate::peripheralDidInvalidateServices: found
+
+## apple headers are wrong, feedback created: https://github.com/xamarin/maccore/issues/1962
+!missing-selector! +CBManager::authorization not bound

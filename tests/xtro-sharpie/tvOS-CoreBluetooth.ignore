@@ -1,0 +1,3 @@
+## apple headers are wrong, feedback created: https://github.com/xamarin/maccore/issues/1962
+!deprecated-attribute-missing! CBManager::authorization missing a [Deprecated] attribute
+!missing-selector! +CBManager::authorization not bound
