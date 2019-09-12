@@ -177,16 +177,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Metal Include="..\monotouch-test\Resources\metal-sample.metal">
-      <Link>Resources\metal-sample.metal</Link>
-    </Metal>
-  </ItemGroup>
-  <ItemGroup>
-    <Metal Include="..\monotouch-test\Resources\metal-sample.metal">
-      <Link>Resources\metal-sample.metal</Link>
-    </Metal>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="..\monotouch-test\Security\openssl_crt.der">
       <Link>Security\openssl_crt.der</Link>
     </EmbeddedResource>
