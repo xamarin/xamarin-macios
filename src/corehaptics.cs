@@ -226,6 +226,10 @@ namespace CoreHaptics {
 		[Abstract]
 		[Export ("completionHandler", ArgumentSemantic.Assign)]
 		Action<NSError> CompletionHandler { get; set; }
+
+		[Abstract]
+		[Export ("isMuted")]
+		new bool IsMuted { get; set; }
 	}
 
 	[Mac (10,15), iOS (13,0)]
