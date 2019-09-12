@@ -2875,7 +2875,7 @@ There are two main reasons for this:
   means (some build options causes the exact list of dynamic symbols to vary).
 
 <!-- 5219 and 5220 used by mmp -->
-=======
+
 ### MT5219: Not linking with {framework} because it has been removed from {platform}.
 
 The framework in question has been removed, and Xamarin.iOS can't link with it.
