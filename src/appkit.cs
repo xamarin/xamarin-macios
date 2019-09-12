@@ -21320,7 +21320,7 @@ namespace AppKit {
 		NSImage IconForFiles (string[] fullPaths);
 		
 		[Export ("iconForFileType:"), ThreadSafe]
-		NSImage IconForFileType (string fileType);
+		NSImage IconForFileType (IntPtr fileTypeOrTypeCode);
 		
 		[Export ("setIcon:forFile:options:"), ThreadSafe]
 		bool SetIconforFile (NSImage image, string fullPath, NSWorkspaceIconCreationOptions options);
