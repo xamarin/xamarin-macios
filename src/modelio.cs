@@ -3047,12 +3047,15 @@ namespace ModelIO {
 	[iOS (13,0), Mac (10,15), TV (13,0)]
 	[BaseType (typeof (MDLAnimatedValue))]
 	interface MDLAnimatedQuaternion {
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("setFloatQuaternion:atTime:")]
 		void SetQuaternion (Quaternion value, double atTime);
 
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("setDoubleQuaternion:atTime:")]
 		void SetQuaternion (Quaterniond value, double atTime);
 
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("floatQuaternionAtTime:")]
 		Quaternion GetFloatQuaternion (double atTime);
 
