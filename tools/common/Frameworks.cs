@@ -482,7 +482,7 @@ public class Frameworks : Dictionary <string, Framework>
 			switch (nspace) {
 			case "QTKit":
 				if (Driver.LinkProhibitedFrameworks) {
-					ErrorHelper.Warning (5219, $"Linking against framework '{nspace}'. It is prohibited (rejected) by the Mac App Store");
+					ErrorHelper.Warning (5221, $"Linking against framework '{nspace}'. It is prohibited (rejected) by the Mac App Store");
 				}  else {
 					ErrorHelper.Warning (5220, $"Skipping framework '{nspace}'. It is prohibited (rejected) by the Mac App Store");
 					continue;

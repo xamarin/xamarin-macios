@@ -2874,13 +2874,13 @@ There are two main reasons for this:
 * The symbol is correct, but it's a symbol that's already preserved by normal
   means (some build options causes the exact list of dynamic symbols to vary).
 
-<!-- 5219 and 5220 used by mmp -->
-
 ### MT5219: Not linking with {framework} because it has been removed from {platform}.
 
 The framework in question has been removed, and Xamarin.iOS can't link with it.
 
 Any code that uses the framework must be removed/rewritten.
+
+<!-- 5220 and 5221 used by mmp -->
 
 ### MT53xx: Other tools
 
