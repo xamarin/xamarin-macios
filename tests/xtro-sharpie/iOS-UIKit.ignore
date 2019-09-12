@@ -51,8 +51,6 @@
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'UIStateRestoring' is restored.
 !missing-protocol-conformance! UIViewController should conform to UIStateRestoring (defined in 'UIStateRestoration' category)
 
-<<<<<<< HEAD
-=======
 # Xcode 11
 
 ## Inherited from another protocol
@@ -88,4 +86,3 @@
 !missing-selector! UIBarAppearance::copy not bound
 !missing-selector! UIBarButtonItemAppearance::copy not bound
 !missing-selector! UITabBarItemAppearance::copy not bound
->>>>>>> origin/xcode11
