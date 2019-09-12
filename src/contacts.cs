@@ -437,6 +437,7 @@ namespace Contacts {
 		[Watch (4,0)]
 		NSString Son { get; }
 
+		[iOS (11,0), Mac (10,13)]
 		[Watch (4,0)]
 		[Field ("CNLabelContactRelationDaughter")]
 		NSString Daughter { get; }
