@@ -209,7 +209,6 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
-						}
 #endif
 						}
 
