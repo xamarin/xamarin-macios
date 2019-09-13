@@ -334,9 +334,6 @@
     <Metal Include="Resources\metal-sample.metal" Condition="'$(Platform)' != 'iPhoneSimulator' " />
   </ItemGroup>
   <ItemGroup>
-    <Metal Include="Resources\metal-sample.metal" Condition="'$(Platform)' != 'iPhoneSimulator' " />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
         <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
     </EmbeddedResource>
