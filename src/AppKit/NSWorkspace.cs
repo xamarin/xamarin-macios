@@ -26,9 +26,9 @@ namespace AppKit {
 			return IconForFileType(nsFileType);
 		}
 
-		public virtual NSImage IconForFileType(uint hfsTypeCode)
+		public virtual NSImage IconForFileType(HFSTypeCode typeCode)
 		{
-			var nsFileType = GetNSFileType (hfsTypeCode);
+			var nsFileType = GetNSFileType ((uint)typeCode);
 			return IconForFileType (nsFileType);
 		}
 
