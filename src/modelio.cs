@@ -3050,7 +3050,7 @@ namespace ModelIO {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("setFloatQuaternion:atTime:")]
 		void SetQuaternion (Quaternion value, double atTime);
-		
+
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("setDoubleQuaternion:atTime:")]
 		void SetQuaternion (Quaterniond value, double atTime);
