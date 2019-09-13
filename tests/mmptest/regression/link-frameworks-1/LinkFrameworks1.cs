@@ -35,6 +35,7 @@ namespace Xamarin.Mac.Linker.Test {
 				{ "mk", "MapKit" },
 				{ "bc", "BusinessChat" },
 				{ "un", "UserNotifications" },
+				{ "ck", "CloudKit" },
 			};
 
 			foreach (var field in fields) {

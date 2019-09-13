@@ -26,8 +26,10 @@ ALL_TESTS = \
 
 all-local:: run
 
+CONFIG?=Debug
+
 $(foreach test,$(ALL_TESTS),$(test)/bin): dylib/libTest.dylib
-	$(QF_GEN) if ! $(SYSTEM_XIBUILD) -- $(@D)/$(@D).csproj; then EC=$$?; rm -Rf $@; exit $$EC; fi
+	$(QF_GEN) if ! $(SYSTEM_XIBUILD) -- $(@D)/$(@D).csproj /p:Configuration=$(CONFIG); then EC=$$?; rm -Rf $@; exit $$EC; fi
 
 dylib/libTest.dylib: dylib/src.c
 	$(QF_GEN) $(XCODE_CC) $< -o$@ -arch x86_64 -shared
@@ -46,10 +48,12 @@ run-test-%:
 
 exec-system-mono-profile exec-embedded-mono-profile: export MONO_ENV_OPTIONS=--profile=log:output=output.mlpd
 
+exec-link-frameworks-1 link-frameworks-1/bin: CONFIG=Release
+
 exec-%:
 	@echo Executing $*... | tee $*/$@.log
 	@test -z $(BUILD_REVISION) || echo @MonkeyWrench: AddFile: $(CURDIR)/$*/$@.log
-	@cd $* && if ! bin/Debug/$*.app/Contents/MacOS/$* >> $@.log 2>&1; then echo "CRASHED" >> $@.log; fi
+	@cd $* && if ! bin/$(CONFIG)/$*.app/Contents/MacOS/$* >> $@.log 2>&1; then echo "CRASHED" >> $@.log; fi
 	@if grep -q FAIL $*/exec-$*.log; then echo "Test $* failed"; fi
 	@if grep -q CRASHED $*/exec-$*.log; then echo "Test $* crashed"; fi
 	@echo Executed $* | tee -a $*/$@.log
