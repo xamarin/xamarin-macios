@@ -128,6 +128,16 @@ echo "Configuring the build with: $CONFIGURE_FLAGS"
 # shellcheck disable=SC2086
 ./configure $CONFIGURE_FLAGS
 
+COUNTER=0
+while [[ $COUNTER -lt 10 ]]; do
+	if make -j8; then
+		echo "Successful build after $COUNTER attempts."
+		break
+	else
+		echo "Build attempt #$COUNTER failed."
+		((COUNTER++))
+	fi
+done
 time make -j8
 time make install -j8
 
