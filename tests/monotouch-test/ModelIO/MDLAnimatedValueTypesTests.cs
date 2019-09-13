@@ -485,8 +485,9 @@ namespace MonoTouchFixtures.ModelIO {
 				var quat = new Quaternion (1.1f, 2.2f, 3.3f, 4.4f);
 
 				animatedQuat.SetQuaternion (quat, 0);
-				Asserts.AreEqual (quat, animatedQuat.GetFloatQuaternion (0), "A");
-				
+				var returnedQuat = animatedQuat.GetFloatQuaternion (0);
+				Asserts.AreEqual (quat, returnedQuat, "A");
+
 				animatedQuat.Reset (TestMatrices.QuaternionArray, TestMatrices.GetTimesArray (TestMatrices.QuaternionArray.Length));
 				var arr = animatedQuat.GetQuaternionValues (20);
 				Asserts.AreEqual (TestMatrices.QuaternionArray, arr, "C1");
