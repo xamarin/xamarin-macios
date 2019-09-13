@@ -31,7 +31,7 @@ namespace Xamarin.MMP.Tests {
 
 			string netStandardProject = TI.GenerateNetStandardProject (config);
 			TI.RunAndAssert("/usr/local/share/dotnet/dotnet", $"restore {netStandardProject}", "Restore");
-			TI.BuildProject(netStandardProject, true);
+			TI.BuildProject(netStandardProject);
 
 			config.ItemGroup = $@"
 <ItemGroup>

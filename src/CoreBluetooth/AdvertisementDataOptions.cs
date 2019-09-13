@@ -38,7 +38,6 @@ namespace CoreBluetooth {
 	// are valid in different contexts
 	//
 	[Watch (4,0)]
-	[iOS (6,0)]
 	public class StartAdvertisingOptions : DictionaryContainer
 	{
 #if !COREBUILD

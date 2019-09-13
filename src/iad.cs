@@ -24,11 +24,9 @@ namespace iAd {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 		
-		[iOS (6,0)]
 		[Export ("adType")]
 		ADAdType AdType { get;  }
 
-		[iOS (6,0)]
 		[Export ("initWithAdType:")]
 		IntPtr Constructor (ADAdType type);
 
@@ -258,6 +256,7 @@ namespace iAd {
 		void LookupAdConversionDetails (ADConversionDetails onCompleted);
 
 		[iOS (8,0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
 		[Export ("addClientToSegments:replaceExisting:")]
 		void AddClientToSegments ([NullAllowed] string [] segmentIdentifiers, bool replaceExisting);
 
@@ -298,6 +297,7 @@ namespace iAd {
 	}
 
 	[iOS (12,0)]
+	[Deprecated (PlatformName.iOS, 13,0)]
 	[NoWatch]
 	[DisableDefaultCtor]
 	[BaseType (typeof (UIViewController))]

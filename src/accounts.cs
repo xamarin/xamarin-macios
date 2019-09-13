@@ -8,7 +8,6 @@ using Foundation;
 
 namespace Accounts {
 	
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccount : NSSecureCoding {
 		[Export ("identifier", ArgumentSemantic.Weak)]
@@ -45,17 +44,14 @@ namespace Accounts {
 		string UserFullName { get; }
 	}
 
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountCredential : NSSecureCoding {
 		[Export ("initWithOAuthToken:tokenSecret:")]
 		IntPtr Constructor (string oauthToken, string tokenSecret);
 
-		[iOS (6,0)]
 		[Export ("initWithOAuth2Token:refreshToken:expiryDate:")]
 		IntPtr Constructor (string oauth2Token, string refreshToken, NSDate expiryDate);
 
-		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("oauthToken", ArgumentSemantic.Copy)]
 		string OAuthToken { get; set;  }
@@ -65,7 +61,6 @@ namespace Accounts {
 	delegate void ACAccountStoreRemoveCompletionHandler (bool success, NSError error);
 	delegate void ACRequestCompletionHandler (bool granted, NSError error);
 	
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountStore {
 		[Export ("accounts", ArgumentSemantic.Weak)]
@@ -96,29 +91,24 @@ namespace Accounts {
 		[Notification]
 		NSString ChangeNotification { get; }
 		
-		[iOS (6,0)]
 		[Export ("renewCredentialsForAccount:completion:")]
 		[Async]
 		void RenewCredentials (ACAccount account, Action<ACAccountCredentialRenewResult,NSError> completionHandler);
 
-		[iOS (6,0)]
 		[Protected]
 		[Export ("requestAccessToAccountsWithType:options:completion:")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, [NullAllowed] NSDictionary options, ACRequestCompletionHandler completion);
 
-		[iOS (6,0)]
 		[Wrap ("RequestAccess (accountType, options == null ? null : options.Dictionary, completion)")]
 		[Async]
 		void RequestAccess (ACAccountType accountType, [NullAllowed] AccountStoreOptions options, ACRequestCompletionHandler completion);
 
-		[iOS (6,0)]
 		[Export ("removeAccount:withCompletionHandler:")]
 		[Async]
 		void RemoveAccount (ACAccount account, ACAccountStoreRemoveCompletionHandler completionHandler);
 	}
 
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountType : NSSecureCoding {
 		[Export ("accountTypeDescription")]
@@ -137,13 +127,11 @@ namespace Accounts {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Sina Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Sina Weibo SDK instead.")]
-		[iOS (6,0)]
 		[Field ("ACAccountTypeIdentifierSinaWeibo")]
 		NSString SinaWeibo { get; }
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-		[iOS (6,0)]
 		[Field ("ACAccountTypeIdentifierFacebook")]
 		NSString Facebook { get; }
 
@@ -164,8 +152,6 @@ namespace Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-	[iOS (6,0)]
-	[Mac (10,8, onlyOn64 : true)]
 	[Static]
 	interface ACFacebookKey {
 		[Field ("ACFacebookAppIdKey")]
@@ -181,8 +167,6 @@ namespace Accounts {
 
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Facebook SDK instead.")]
-	[iOS (6,0)]
-	[Mac (10,8, onlyOn64 : true)]
 	[Static]
 	interface ACFacebookAudienceValue
 	{	
@@ -199,7 +183,7 @@ namespace Accounts {
 	[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
 	[iOS (7,0)]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[Static]
 	interface ACTencentWeiboKey {
 		[Field ("ACTencentWeiboAppIdKey")]
@@ -208,7 +192,7 @@ namespace Accounts {
 
 #if MONOMAC
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
-	[Mac (10,9, onlyOn64 : true)]
+	[Mac (10,9)]
 	[Static]
 	interface ACLinkedInKey {
 		[Field ("ACLinkedInAppIdKey")]

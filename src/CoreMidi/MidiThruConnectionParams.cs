@@ -340,6 +340,7 @@ namespace CoreMidi {
 						for (int i = 0; i < connectionParams.NumMaps; i++) {
 							fixed (byte* arrAddr = &Maps[i].Value [0])
 								Runtime.memcpy (bufferEnd, (IntPtr) arrAddr, 128);
+							bufferEnd += 128;
 						}
 					}
 				}

@@ -2887,7 +2887,7 @@ namespace AppKit {
 		FillProportionally,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum NSColorSystemEffect : long {
 		None,
@@ -2897,7 +2897,7 @@ namespace AppKit {
 		Rollover,
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum NSWorkspaceAuthorizationType : long  {
 		CreateSymbolicLink,

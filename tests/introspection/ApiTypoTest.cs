@@ -88,25 +88,30 @@ namespace Introspection
 			"Addl",
 			"Addr",
 			"Adjustmentfor",
+			"Aes", // Advanced Encryption Standard
 			"Aifc",
 			"Aiff",
+			"Agc",
 			"Aio",
 			"Alg", // short for Algorithm
 			"Alpn", // Application-Layer Protocol Negotiation RFC7301
 			"Amete",
 			"Amr",
 			"Anglet",
+			"Apng", // Animated Portable Network Graphics
 			"Aps",
 			"Arraycollation",
 			"Argb",
 			"Asin",
 			"Atan",
+			"Atmos", // Dolby Atmos
 			"Ats",	// App Transport Security
 			"Attrib",
 			"Attributevalue",
 			"Attrs", // Attributes (used by Apple for keys)
 			"Audiofile",
 			"Automapping",
+			"Automatch",
 			"Automounted",
 			"Autoredirect",
 			"Autospace",
@@ -144,6 +149,7 @@ namespace Introspection
 			"Characterteristic",
 			"Chapv",
 			"Cholesky",
+			"Chacha",
 			"Chromaticities",
 			"Ciexyz",
 			"Ciff",
@@ -200,11 +206,13 @@ namespace Introspection
 			"Ebu",
 			"Ecc",   // Elliptic Curve Cryptography
 			"Ecdh",  // Elliptic Curve Diffie–Hellman
+			"Ecdhe", // Elliptic Curve Diffie-Hellman Ephemeral
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Ecies", // Elliptic Curve Integrated Encryption Scheme
 			"Ecn",   // Explicit Congestion Notification
 			"Ect",   // ECN Capable Transport
-			"Editability", 
+			"Editability",
+			"Edr",
 			"Eof", // acronym End-Of-File
 			"Elu",
 			"Emagic",
@@ -214,6 +222,10 @@ namespace Introspection
 			"Enc",
 			"Eppc",
 			"Eftpos", // Electronic funds transfer at point of sale
+			"Eotf", // DisplayP3_PQ_Eotf
+			"Exabits",
+			"Exbibits",
+			"Exbibytes",
 			"Exhange",
 			"Exp",
 			"Expr",
@@ -234,6 +246,8 @@ namespace Introspection
 			"Gbrg",	// acronym for Green-Blue-Reg-Green
 			"Geocoder",
 			"Gigapascals",
+			"Gibibits",
+			"Gibibytes",
 			"Gop", // acronym for Group Of Pictures
 			"Gpp",
 			"Gps",
@@ -243,6 +257,7 @@ namespace Introspection
 			"Greeking",
 			"Gtin",
 			"Hardlink",
+			"Heics", // High Efficiency Image File Format (Sequence)
 			"Hdmi",
 			"Hdr",
 			"Hectopascals",
@@ -291,6 +306,7 @@ namespace Introspection
 			"Iso",
 			"Itf",
 			"Itu",
+			"Itur", // Itur_2020_Hlg
 			"Jcb", // Japanese credit card company
 			"Jfif",
 			"Jis",
@@ -301,6 +317,8 @@ namespace Introspection
 			"Keypoints",
 			"Keyspace",
 			"ks",
+			"Kibibits",
+			"Kibibytes",
 			"Kiloampere",
 			"Kiloamperes",
 			"Kiloohms",
@@ -308,12 +326,14 @@ namespace Introspection
 			"Kullback", // Kullback-Leibler Divergence
 			"Langauges",
 			"Lacunarity",
+			"Latm", //  Low Overhead Audio Transport Multiplex
 			"Ldaps",
 			"Lerp",
 			"Linecap",
 			"Lingustic",
 			"libcompression",
 			"libdispatch",
+			"Loas", // Low Overhead Audio Stream 
 			"Lod",
 			"Lopass",
 			"Lowlevel",
@@ -325,6 +345,8 @@ namespace Introspection
 			"Mada", // payment system
 			"Mapbuffer",
 			"Matchingcoalesce",
+			"Mebibits",
+			"Mebibytes",
 			"Megaampere",
 			"Megaamperes",
 			"Megaliters",
@@ -372,6 +394,7 @@ namespace Introspection
 			"Nyquist",
 			"Oaep", // Optimal asymmetric encryption padding
 			"Objectfor",
+			"Objectness",
 			"Occlussion",
 			"Ocurrences",
 			"Ocsp", // Online Certificate Status Protocol
@@ -383,8 +406,12 @@ namespace Introspection
 			"Orth",
 			"ove",
 			"Paeth", // PNG filter
+			"Palettize",
 			"Parms", // short for Parameters
 			"Peap",
+			"Pebibits",
+			"Pebibytes",
+			"Petabits",
 			"Perlin",
 			"Persistable",
 			"Pausable",
@@ -487,6 +514,8 @@ namespace Introspection
 			"Synchronizable",
 			"Symbologies",
 			"Tanh",
+			"Tebibits",
+			"Tebibytes",
 			"Tensorflow",
 			"Tessellator",
 			"Texcoord",
@@ -494,12 +523,17 @@ namespace Introspection
 			"th",
 			"Threadgroup",
 			"Threadgroups",
+			"Thumbnailing",
 			"Thumbstick",
+			"Thumbsticks",
+			"Timecodes",
 			"Timelapse",
 			"Timelapses",
 			"Tls",
 			"Ttls",
 			"Tlv",
+			"Toc",
+			"Toci",
 			"Toi",
 			"Transceive",
 			"Trc",
@@ -528,22 +562,28 @@ namespace Introspection
 			"Utf",
 			"Upce",
 			"Uri",
+			"Usac", // Unified Speech and Audio Coding
 			"Uti",
 			"Varispeed",
 			"Vergence",
 			"Voronoi",
 			"Vnode",
 			"Vpn",
+			"Warichu",
 			"Wep",
 			"Wpa",
 			"Warpable",
 			"Whitespaces",
+			"Wifes",
 			"Writeability",
 			"Xnor",
 			"Xpc",
 			"xy",
 			"Xyz",
 			"Xzy",
+			"Yobibits",
+			"Yobibytes",
+			"Yottabits",
 			"Yxz",
 			"Yzx",
 			"Zxy",
@@ -554,6 +594,9 @@ namespace Introspection
 			"yx",
 			"yy",
 			"Yyy",
+			"Zebibits",
+			"Zebibytes",
+			"Zettabits",
 			"Zlib",
 #if !XAMCORE_2_0
 			// classic only mistakes - that should not change anymore

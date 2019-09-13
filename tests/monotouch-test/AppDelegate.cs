@@ -11,6 +11,7 @@ using MonoTouch.UIKit;
 #endif
 using MonoTouch.NUnit.UI;
 using NUnit.Framework.Internal;
+using MonoTouchFixtures.BackgroundTasks;
 
 namespace MonoTouchFixtures {
 	
@@ -57,7 +58,10 @@ namespace MonoTouchFixtures {
 			window.RootViewController = new UINavigationController (runner.GetViewController ());
 			// make the window visible
 			window.MakeKeyAndVisible ();
-			
+
+
+			// required for the background tasks tests, we can only register the tasks in this method
+			BGTaskSchedulerTest.RegisterTestTasks ();
 			return true;
 		}
 

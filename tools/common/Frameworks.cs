@@ -52,11 +52,7 @@ public class Frameworks : Dictionary <string, Framework>
 	public void Add (string @namespace, string framework, Version version, Version version_available_in_simulator = null, bool alwaysWeakLink = false)
 	{
 		var fr = new Framework () {
-#if MTOUCH || MMP
-			Namespace = Driver.IsUnified ? @namespace : Registrar.Registrar.CompatNamespace + "." + @namespace,
-#else
 			Namespace = @namespace,
-#endif
 			Name = framework,
 			Version = version,
 			VersionAvailableInSimulator = version_available_in_simulator ?? version,
@@ -179,6 +175,21 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10,14 },
 					{ "UserNotifications", "UserNotifications", 10,14 },
 					{ "iTunesLibrary", "iTunesLibrary", 10,14 },
+
+					{ "AuthenticationServices", "AuthenticationServices", 10,15 },
+					{ "CoreMotion", "CoreMotion", 10,15 },
+					{ "DeviceCheck", "DeviceCheck", 10,15 },
+					{ "ExecutionPolicy", "ExecutionPolicy", 10,15 },
+					{ "FileProvider", "FileProvider", 10,15 },
+					{ "FileProviderUI", "FileProviderUI", 10,15 },
+					{ "PushKit", "PushKit", 10,15 },
+					{ "QuickLookThumbnailing", "QuickLookThumbnailing", 10,15 },
+					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
+					{ "PencilKit", "PencilKit", 10,15 },
+					{ "Speech", "Speech", 10,15 },
+					{ "LinkPresentation", "LinkPresentation", 10,15 },
+					// not sure if the API is available, issue: https://github.com/xamarin/maccore/issues/1951
+					//{ "CoreHaptics", "CoreHaptics", 10,15 },
 				};
 			}
 			return mac_frameworks;
@@ -261,7 +272,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "WebKit", "WebKit", 8 },
 				{ "NetworkExtension", "NetworkExtension", 8 },
 				{ "VideoToolbox", "VideoToolbox", 8 },
-				{ "WatchKit", "WatchKit", 8,2 },
+				// { "WatchKit", "WatchKit", 8,2 }, // Removed in Xcode 11
 
 				{ "ReplayKit", "ReplayKit", 9 },
 				{ "Contacts", "Contacts", 9 },
@@ -285,7 +296,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "ARKit", "ARKit", 11 },
 				{ "CoreNFC", "CoreNFC", 11, true }, /* not always present, e.g. iPad w/iOS 12, so must be weak linked */
-				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
+				{ "DeviceCheck", "DeviceCheck", new Version (11, 0), new Version (13, 0) },
 				{ "IdentityLookup", "IdentityLookup", 11 },
 				{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 				{ "CoreML", "CoreML", 11 },
@@ -303,6 +314,19 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "IdentityLookupUI", "IdentityLookupUI", 12,0 },
 				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 				{ "Network", "Network", 12, 0 },
+
+				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
+				{ "CoreHaptics", "CoreHaptics", 13, 0 },
+				{ "LinkPresentation", "LinkPresentation", 13, 0 },
+				{ "MetricKit", "MetricKit", 13, 0 },
+				{ "PencilKit", "PencilKit", 13, 0 },
+				{ "QuickLookThumbnailing", "QuickLookThumbnailing", 13,0 },
+				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
+				{ "VisionKit", "VisionKit", 13, 0 },
+
+				// the above MUST be kept in sync with simlauncher
+				// see tools/mtouch/Makefile
+				// please also keep it sorted to ease comparison
 			};
 		}
 		return ios_frameworks;
@@ -353,6 +377,13 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "NaturalLanguage", "NaturalLanguage", 5 },
 				{ "MediaPlayer", "MediaPlayer", 5 },
+
+				{ "AuthenticationServices", "AuthenticationServices", 6 },
+				{ "Network", "Network", 6 },
+				{ "PushKit", "PushKit", 6 },
+				{ "SoundAnalysis", "SoundAnalysis", 6 },
+				{ "CoreMedia", "CoreMedia", 6 },
+
 			};
 		}
 		return watch_frameworks;
@@ -419,7 +450,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 					{ "VideoToolbox", "VideoToolbox", 10,2 },
 
-					{ "DeviceCheck", "DeviceCheck", new Version (11, 0), NotAvailableInSimulator /* no headers provided for simulator */ },
+					{ "DeviceCheck", "DeviceCheck", new Version (11, 0), new Version (13, 0) },
 					{ "CoreML", "CoreML", 11 },
 					{ "IOSurface", "IOSurface", new Version (11, 0), NotAvailableInSimulator /* Not available in the simulator (the header is there, but broken) */  },
 					{ "Vision", "Vision", 11 },
@@ -427,6 +458,10 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 					{ "Network", "Network", 12, 0 } ,
 					{ "TVUIKit", "TVUIKit", 12,0 },
+
+					{ "AuthenticationServices", "AuthenticationServices", 13,0 },
+					{ "SoundAnalysis", "SoundAnalysis", 13,0 },
+					{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 				};
 			}
 			return tvos_frameworks;

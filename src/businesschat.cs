@@ -20,7 +20,7 @@ using UIKit;
 
 namespace BusinessChat {
 
-	[Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+	[Mac (10,13,4), iOS (11,3)]
 	[BaseType (typeof(UIControl))]
 	[DisableDefaultCtor]
 	interface BCChatButton {
@@ -30,7 +30,7 @@ namespace BusinessChat {
 	}
 
 
-	[Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+	[Mac (10,13,4), iOS (11,3)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface BCChatAction {

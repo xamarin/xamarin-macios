@@ -19,7 +19,7 @@
     <OutputPath>bin\x86\Debug</OutputPath>
     <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
     <CreatePackage>false</CreatePackage>
     <EnablePackageSigning>false</EnablePackageSigning>
@@ -40,7 +40,7 @@
     <OutputPath>bin\x86\Release</OutputPath>
     <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
     <CreatePackage>false</CreatePackage>
     <EnablePackageSigning>false</EnablePackageSigning>
@@ -68,6 +68,9 @@
     </Compile>
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Extensions.cs">
+      <Link>Extensions.cs</Link>
     </Compile>
     <Compile Include="..\common\mac\MacTestMain.cs">
       <Link>MacTestMain.cs</Link>
@@ -166,6 +169,17 @@
     <Content Include="..\monotouch-test\compressed_zip">
       <Link>compressed_zip</Link>
     </Content>
+    <Content Include="..\monotouch-test\access-denied.html">
+      <Link>access-denied.html</Link>
+    </Content>
+    <Content Include="..\monotouch-test\access-granted.html">
+      <Link>access-granted.html</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Metal Include="..\monotouch-test\Resources\metal-sample.metal">
+      <Link>Resources\metal-sample.metal</Link>
+    </Metal>
   </ItemGroup>
   <ItemGroup>
     <Metal Include="..\monotouch-test\Resources\metal-sample.metal">
@@ -207,7 +221,7 @@
     <BundleResource Include="..\monotouch-test\CoreImage\xamarinmonkey.heic">
       <Link>CoreImage\xamarinmonkey.heic</Link>
     </BundleResource>
-	<BundleResource Include="..\monotouch-test\Resources\Base.lproj\Localizable.strings" >
+	<BundleResource Include="..\monotouch-test\Resources\Base.lproj\Localizable.strings">
       <Link>Base.lproj\Localizable.strings</Link>
     </BundleResource>
   </ItemGroup>

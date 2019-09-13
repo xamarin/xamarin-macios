@@ -35,7 +35,6 @@ using ObjCRuntime;
 
 namespace StoreKit {
 
-	[iOS (6,0)]
 	public partial class StoreProductParameters : DictionaryContainer
 	{
 #if !COREBUILD

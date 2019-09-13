@@ -38,6 +38,11 @@ namespace Xamarin
 			SetPListStringValue (plist, "MinimumOSVersion", value);
 		}
 
+		public static void SetMinimummacOSVersion (this XmlDocument plist, string value)
+		{
+			SetPListStringValue (plist, "LSMinimumSystemVersion", value);
+		}
+
 		public static void SetCFBundleDisplayName (this XmlDocument plist, string value)
 		{
 			SetPListStringValue (plist, "CFBundleDisplayName", value);
@@ -48,6 +53,10 @@ namespace Xamarin
 			return GetPListStringValue (plist, "MinimumOSVersion");
 		}
 
+		public static string GetMinimummacOSVersion (this XmlDocument plist)
+		{
+			return GetPListStringValue (plist, "LSMinimumSystemVersion");
+		}
 		public static void SetCFBundleIdentifier (this XmlDocument plist, string value)
 		{
 			SetPListStringValue (plist, "CFBundleIdentifier", value);

@@ -51,6 +51,27 @@ namespace MonoTouchFixtures.MediaAccessibility {
 
 			Assert.That (MACaptionAppearance.GetDisplayType (MACaptionAppearanceDomain.Default), Is.EqualTo (MACaptionAppearanceDisplayType.Automatic).Or.EqualTo (MACaptionAppearanceDisplayType.AlwaysOn).Or.EqualTo (MACaptionAppearanceDisplayType.ForcedOnly), "Default");
 		}
+
+		[Test]
+		public void DidDisplayCaptions ()
+		{
+			TestRuntime.AssertXcodeVersion (11,0);
+
+			// there's a known bug with UIPasteboard and NSAttributedString - and it makes our tests hang
+			var nsa = new NSAttributedString  [0];
+			MACaptionAppearance.DidDisplayCaptions (nsa);
+			nsa = new [] { new NSAttributedString ("Bonjour") };
+			MACaptionAppearance.DidDisplayCaptions (nsa);
+			nsa = null;
+			MACaptionAppearance.DidDisplayCaptions (nsa);
+
+			var a = new string [0];
+			MACaptionAppearance.DidDisplayCaptions (a);
+			a = new [] { "Hello", "World" };
+			MACaptionAppearance.DidDisplayCaptions (a);
+			a = null;
+			MACaptionAppearance.DidDisplayCaptions (a);
+		}
 	}
 }
 

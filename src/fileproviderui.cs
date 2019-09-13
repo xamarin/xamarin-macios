@@ -12,12 +12,17 @@
 using System;
 using ObjCRuntime;
 using Foundation;
+#if IOS
 using UIKit;
+#else
+using AppKit;
+#endif
 using FileProvider;
 
 namespace FileProviderUI {
 
 	[iOS (11,0)]
+	[Mac (10,15)]
 	[ErrorDomain ("FPUIErrorDomain")]
 	[Native]
 	enum FPUIExtensionErrorCode : ulong {
@@ -26,6 +31,7 @@ namespace FileProviderUI {
 	}
 
 	[iOS (11,0)]
+	[Mac (10,15)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSExtensionContext))]
 	interface FPUIActionExtensionContext {
@@ -41,7 +47,12 @@ namespace FileProviderUI {
 	}
 
 	[iOS (11,0)]
+	[Mac (10,15)]
+#if IOS
 	[BaseType (typeof (UIViewController))]
+#else
+	[BaseType (typeof (NSViewController))]
+#endif
 	interface FPUIActionExtensionViewController {
 
 		[Export ("initWithNibName:bundle:")]

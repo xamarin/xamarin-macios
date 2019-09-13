@@ -19,7 +19,6 @@ using System;
 
 namespace StoreKit {
 
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKDownload {
 
@@ -32,6 +31,7 @@ namespace StoreKit {
 		[Wrap ("State", IsVirtual = true)]
 		SKDownloadState DownloadState { get;  }
 
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'ExpectedContentLength' instead.")]
 		[Export ("contentLength", ArgumentSemantic.Copy)]
 		NSNumber ContentLength { get; }
 #else
@@ -39,9 +39,14 @@ namespace StoreKit {
 		[Export ("downloadState")]
 		SKDownloadState DownloadState { get;  }
 		
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'ExpectedContentLength' instead.")]
 		[Export ("contentLength")]
 		long ContentLength { get;  }
 #endif
+
+		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Export ("expectedContentLength")]
+		long ExpectedContentLength { get; }
 
 		[Export ("contentIdentifier")]
 		string ContentIdentifier { get;  }
@@ -71,7 +76,7 @@ namespace StoreKit {
 		void DeleteContentForProduct (string productId);
 #endif
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Field ("SKDownloadTimeRemainingUnknown")]
 		double TimeRemainingUnknown { get; }
 
@@ -105,13 +110,13 @@ namespace StoreKit {
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		string ApplicationUsername { get; }
 
-		[iOS (8,3), Mac (10,14, onlyOn64: true)]
+		[iOS (8,3), Mac (10,14)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
 
 		[iOS (12,2)]
 		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
 		SKPaymentDiscount PaymentDiscount { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
 	}
@@ -144,13 +149,13 @@ namespace StoreKit {
 		[Export ("applicationUsername", ArgumentSemantic.Copy)][New]
 		string ApplicationUsername { get; set; }
 
-		[iOS (8,3), Mac (10,14, onlyOn64: true)]
+		[iOS (8,3), Mac (10,14)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; set; }
 
 		[iOS (12,2)]
 		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
 		SKPaymentDiscount PaymentDiscount { get; set; }
 	}
@@ -188,23 +193,32 @@ namespace StoreKit {
 		//
 		// iOS 6.0
 		//
-		[iOS (6,0)]
 		[Export ("startDownloads:")]
 		void StartDownloads (SKDownload [] downloads);
 
-		[iOS (6,0)]
 		[Export ("pauseDownloads:")]
 		void PauseDownloads (SKDownload [] downloads);
 
-		[iOS (6,0)]
 		[Export ("resumeDownloads:")]
 		void ResumeDownloads (SKDownload [] downloads);
 
-		[iOS (6,0)]
 		[Export ("cancelDownloads:")]
 		void CancelDownloads (SKDownload [] downloads);
 
+		[Mac (10, 15), iOS (13, 0)]
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		ISKPaymentQueueDelegate Delegate { get; set; }
 
+		[Mac (10, 15), iOS (13, 0)]
+		[TV (13,0)]
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[Mac (10, 15), iOS (13, 0)]
+		[TV (13,0)]
+		[NullAllowed, Export ("storefront")]
+		SKStorefront Storefront { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -224,14 +238,21 @@ namespace StoreKit {
 		[Export ("productIdentifier")]
 		string ProductIdentifier { get; }
 
-		[iOS (6,0)]
+#if MONOMAC
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'IsDownloadable' instead.")]
 		[Export ("downloadable")]
+		bool Downloadable { get; }
+#elif !XAMCORE_4_0
+		[Obsolete ("Use 'IsDownloadable' instead.")]
 		bool Downloadable {
-#if !MONOMAC
-			[Bind ("isDownloadable")]
-#endif
+			[Wrap ("IsDownloadable")]
 			get;
 		}
+#endif
+
+		[Mac (10,15)]
+		[Export ("isDownloadable")]
+		bool IsDownloadable { get; }
 
 		[NoiOS]
 #if XAMCORE_4_0
@@ -243,7 +264,7 @@ namespace StoreKit {
 		[Export ("contentLengths")]
 		NSNumber [] ContentLengths { get; }
 
-		[iOS (6,0), Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("downloadContentLengths")]
 		NSNumber [] DownloadContentLengths { get;  }
 
@@ -257,7 +278,7 @@ namespace StoreKit {
 		[Export ("contentVersion")]
 		string ContentVersion { get; }
 
-		[iOS (6,0), Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("downloadContentVersion")]
 		string DownloadContentVersion { get;  }
 
@@ -269,13 +290,13 @@ namespace StoreKit {
 		[NullAllowed, Export ("introductoryPrice")]
 		SKProductDiscount IntroductoryPrice { get; }
 
-		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		[iOS (12,0), TV (12,0), Mac (10,14)]
 		[NullAllowed, Export ("subscriptionGroupIdentifier")]
 		string SubscriptionGroupIdentifier { get; }
 
 		[iOS (12,2)]
 		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Export ("discounts")]
 		SKProductDiscount [] Discounts { get; }
 	}
@@ -297,13 +318,18 @@ namespace StoreKit {
 		[Export ("paymentQueueRestoreCompletedTransactionsFinished:")]
 		void RestoreCompletedTransactionsFinished (SKPaymentQueue queue);
 
-		[iOS (6,0)]
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
 
 		[iOS (11,0)][TV (11,0)][NoMac]
 		[Export ("paymentQueue:shouldAddStorePayment:forProduct:")]
 		bool ShouldAddStorePayment (SKPaymentQueue queue, SKPayment payment, SKProduct product);
+
+		[Mac (10,15)]
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Export ("paymentQueueDidChangeStorefront:")]
+		void DidChangeStorefront (SKPaymentQueue queue);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -332,7 +358,6 @@ namespace StoreKit {
 		[Export ("transactionState")]
 		SKPaymentTransactionState TransactionState { get; }
 
-		[iOS (6,0)]
 		[Export ("downloads")]
 		SKDownload [] Downloads { get;  }
 	}
@@ -427,7 +452,6 @@ namespace StoreKit {
 
 #if !MONOMAC
 	[NoTV]
-	[iOS (6,0)]
 	[BaseType (typeof (UIViewController),
 		   Delegates=new string [] { "WeakDelegate" },
 		   Events   =new Type   [] { typeof (SKStoreProductViewControllerDelegate) })]
@@ -455,7 +479,7 @@ namespace StoreKit {
 		void LoadProduct (StoreProductParameters parameters, [NullAllowed] Action<bool,NSError> callback);
 	}
 
-	[iOS (6,0), NoMac]
+	[NoMac]
 	[StrongDictionary ("SKStoreProductParameterKey")]
 	interface StoreProductParameters {
 
@@ -480,7 +504,7 @@ namespace StoreKit {
 		uint AdNetworkTimestamp { get; set; }
 	}
 
-	[Since (6,0)]
+	[NoMac]
 	[Static]
 	interface SKStoreProductParameterKey
 	{
@@ -714,7 +738,7 @@ namespace StoreKit {
 	}
 #endif
 
-	[iOS (10,3), Mac (10,14, onlyOn64: true)]
+	[iOS (10,3), Mac (10,14)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Not specified but very likely
@@ -748,7 +772,7 @@ namespace StoreKit {
 
 		[iOS (12,2)]
 		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[NullAllowed, Export ("identifier")]
 		string Identifier { get; }
 
@@ -763,7 +787,7 @@ namespace StoreKit {
 
 		[iOS (12,2)]
 		[TV (12,2)]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Export ("type")]
 		SKProductDiscountType Type { get; }
 	}
@@ -780,7 +804,7 @@ namespace StoreKit {
 
 	[iOS (12,2)]
 	[TV (12,2)]
-	[Mac (10,14,4, onlyOn64: true)]
+	[Mac (10,14,4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SKPaymentDiscount {
@@ -805,10 +829,68 @@ namespace StoreKit {
 
 	[iOS (12,2)]
 	[TV (12,2)]
-	[Mac (10,14,4, onlyOn64: true)]
+	[Mac (10,14,4)]
 	[Native]
 	public enum SKProductDiscountType : long {
 		Introductory,
 		Subscription,
+	}
+
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[TV (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // no `init` but non-null properties
+	interface SKStorefront {
+
+		[Export ("countryCode")]
+		string CountryCode { get; }
+
+		[Export ("identifier")]
+		string Identifier { get; }
+	}
+
+	interface ISKPaymentQueueDelegate {}
+
+	[Mac (10,15), iOS (13,0)]
+	[Protocol]
+	[Model (AutoGeneratedName = true)]
+	[BaseType (typeof(NSObject))]
+	interface SKPaymentQueueDelegate {
+		[Export ("paymentQueue:shouldContinueTransaction:inStorefront:")]
+		bool ShouldContinueTransaction (SKPaymentQueue paymentQueue, SKPaymentTransaction transaction, SKStorefront newStorefront);
+	}
+
+	// SKArcade.h has not been part of the StoreKit.h umbrella header since it was added
+	// in Xcode 11 GM is was added - but only for macOS ?!?
+	// https://feedbackassistant.apple.com/feedback/7017660 - https://github.com/xamarin/maccore/issues/1913
+
+	[NoiOS][NoTV]
+	[Mac (10,15)]
+	delegate void SKArcadeServiceRegisterHandler (NSData randomFromFP, uint /* uint32_t */ randomFromFPLength, NSData cmacOfAppPid, uint /* uint32_t */ cmacOfAppPidLength, NSError error);
+
+	[NoiOS][NoTV]
+	[Mac (10,15)]
+	delegate void SKArcadeServiceSubscriptionHandler (NSData subscriptionStatus, uint /* uint32_t */ subscriptionStatusLength, NSData cmacOfNonce, uint /* uint32_t */ cmacOfNonceLength, NSError error);
+
+	[NoiOS][NoTV]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // all static members so far
+	interface SKArcadeService {
+
+		[Static]
+		// [Async] it'ts not a `completionHandler` and there's not documentation (e.g. number of calls)
+		[Export ("registerArcadeAppWithRandomFromLib:randomFromLibLength:resultHandler:")]
+		void Register (NSData randomFromLib, uint randomFromLibLength, SKArcadeServiceRegisterHandler resultHandler);
+
+		[Static]
+		// [Async] it'ts not a `completionHandler` and there's not documentation (e.g. number of calls)
+		[Export ("arcadeSubscriptionStatusWithNonce:resultHandler:")]
+		void GetSubscriptionStatus (ulong nonce, SKArcadeServiceSubscriptionHandler resultHandler);
+
+		[Static]
+		[Export ("repairArcadeApp")]
+		void Repair ();
 	}
 }

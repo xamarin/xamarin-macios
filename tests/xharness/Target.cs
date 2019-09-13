@@ -51,21 +51,24 @@ namespace xharness
 		protected virtual string GetMinimumOSVersion (string templateMinimumOSVersion) { throw new NotImplementedException (); }
 		protected virtual int[] UIDeviceFamily { get { throw new NotImplementedException (); } }
 		protected virtual string AdditionalDefines { get { return string.Empty; } }
+		protected virtual string RemoveDefines { get { return string.Empty; } }
 		public virtual string Platform { get { throw new NotImplementedException (); } }
 
-		public virtual bool ShouldSkipProjectGeneration { get { return false; } } // Only generate makefile to invoke hard coded csproj
+		public bool ShouldSkipProjectGeneration { get; set; }
 		public virtual bool ShouldSetTargetFrameworkIdentifier { get { return true; } }
 		public virtual string DefaultAssemblyReference { get { return "Xamarin.iOS"; } }
 		public virtual IEnumerable<string> ReferenceToRemove { get { return Enumerable.Empty<string> (); } }
 		public virtual Dictionary<string, string> NewPropertiesToAdd { get { return new Dictionary<string, string> (); } }
+		public virtual HashSet<string> PropertiesToRemove {  get { return null;  } }
 
 		public const string FSharpGuid = "{F2A71F9B-5D33-465A-A702-920D77279786}";
 		public const string CSharpGuid = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
 
 		public string LanguageGuid { get { return IsFSharp ? FSharpGuid : CSharpGuid; } }
 
-		protected virtual bool FixProjectReference (string name)
+		protected virtual bool FixProjectReference (string name, out string fixed_name)
 		{
+			fixed_name = null;
 			return true;
 		}
 
@@ -95,7 +98,13 @@ namespace xharness
 
 			var newProperties = NewPropertiesToAdd;
 			foreach (var k in newProperties.Keys)
-				inputProject.SetTopLevelPropertyGroupValue (k, newProperties[k]);	
+				inputProject.SetTopLevelPropertyGroupValue (k, newProperties[k]);
+
+			var removedProperties = PropertiesToRemove;
+			if (removedProperties != null) {
+				foreach (var p in removedProperties)
+					inputProject.RemoveNode (p, false);
+			}
 
 			inputProject.FixProjectReferences (Suffix, FixProjectReference);
 			inputProject.SetAssemblyReference ("OpenTK", "OpenTK-1.0");
@@ -104,32 +113,25 @@ namespace xharness
 			inputProject.FixTestLibrariesReferences (Platform);
 			if (!string.IsNullOrEmpty (AdditionalDefines))
 				inputProject.AddAdditionalDefines (AdditionalDefines);
+			if (!string.IsNullOrEmpty (RemoveDefines))
+				inputProject.RemoveDefines (RemoveDefines);
 		}
 
 		protected void CreateExecutableProject ()
 		{
 			ProcessProject ();
-			if (Harness.Mac) {
-				ProjectGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
-				inputProject.SetProjectGuid (ProjectGuid);
-			} else {
-				inputProject.FixArchitectures (SimulatorArchitectures, DeviceArchitectures);
-				inputProject.FixInfoPListInclude (Suffix);
-				inputProject.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
-			}
+			PostProcessExecutableProject ();
 			Harness.Save (inputProject, ProjectPath);
 
-			if (!Harness.Mac) {
-				ProjectGuid = inputProject.GetProjectGuid ();
+			UpdateInfoPList ();
+		}
 
-				XmlDocument info_plist = new XmlDocument ();
-				var target_info_plist = Path.Combine (TargetDirectory, "Info" + Suffix + ".plist");
-				info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
-				BundleIdentifier = info_plist.GetCFBundleIdentifier ();
-				info_plist.SetMinimumOSVersion (GetMinimumOSVersion (info_plist.GetMinimumOSVersion ()));
-				info_plist.SetUIDeviceFamily (UIDeviceFamily);
-				Harness.Save (info_plist, target_info_plist);
-			}
+		protected virtual void PostProcessExecutableProject ()
+		{
+		}
+
+		protected virtual void UpdateInfoPList ()
+		{
 		}
 
 		protected void CreateLibraryProject ()

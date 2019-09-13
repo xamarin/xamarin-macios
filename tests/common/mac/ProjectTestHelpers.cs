@@ -250,7 +250,7 @@ namespace Xamarin.MMP.Tests
 			RunAndAssert (Configuration.XIBuildPath, new StringBuilder ("-- " + csprojTarget + " /t:clean"), "Clean");
 		}
 
-		public static string BuildProject (string csprojTarget, bool isUnified, bool shouldFail = false, bool release = false, string[] environment = null, string extraArgs = "")
+		public static string BuildClassicProject (string csprojTarget)
 		{
 			string rootDirectory = FindRootDirectory ();
 
@@ -263,18 +263,32 @@ namespace Xamarin.MMP.Tests
 
 			// This is to force build to use our mmp and not system mmp
 			StringBuilder buildArgs = new StringBuilder ();
-			if (isUnified) {
-				buildArgs.Append (" /verbosity:diagnostic ");
-				buildArgs.Append (" /property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current ");
+			buildArgs.Append (" build ");
+			buildArgs.Append (StringUtils.Quote (csprojTarget));
 
-				if (release)
-					buildArgs.Append ("/property:Configuration=Release ");
-				else
-					buildArgs.Append ("/property:Configuration=Debug ");
+			return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail: true);
+		}
 
-			} else {
-				buildArgs.Append (" build ");
-			}
+		public static string BuildProject (string csprojTarget, bool shouldFail = false, bool release = false, string[] environment = null, string extraArgs = "")
+		{
+			string rootDirectory = FindRootDirectory ();
+
+			// TODO - This is not enough for MSBuild to really work. We need stuff to have it not use system targets!
+			// These are required to have xbuild use are local build instead of system install
+			Environment.SetEnvironmentVariable ("TargetFrameworkFallbackSearchPaths", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild-frameworks");
+			Environment.SetEnvironmentVariable ("MSBuildExtensionsPathFallbackPathsOverride", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
+			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
+
+			// This is to force build to use our mmp and not system mmp
+			StringBuilder buildArgs = new StringBuilder ();
+			buildArgs.Append (" /verbosity:diagnostic ");
+			buildArgs.Append (" /property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current ");
+
+			if (release)
+				buildArgs.Append ("/property:Configuration=Release ");
+			else
+				buildArgs.Append ("/property:Configuration=Debug ");
 
 			if (!string.IsNullOrEmpty (extraArgs))
 				buildArgs.Append (extraArgs);
@@ -288,11 +302,8 @@ namespace Xamarin.MMP.Tests
 				return csprojText + fileList;
 			};
 
-			if (isUnified) {
-				buildArgs.Insert (0, " -- ");
-				return RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
-			} else
-				return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+			buildArgs.Insert (0, " -- ");
+			return RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 		}
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
@@ -324,7 +335,7 @@ namespace Xamarin.MMP.Tests
 
 		public static string GenerateEXEProject (UnifiedTestConfig config)
 		{
-			WriteMainFile (config.TestDecl, config.TestCode, true, config.FSharp, Path.Combine (config.TmpDir, config.FSharp ? "Main.fs" : "Main.cs"));
+			WriteMainFile (config.TestDecl, config.TestCode, config.FSharp, Path.Combine (config.TmpDir, config.FSharp ? "Main.fs" : "Main.cs"));
 
 			string sourceDir = FindSourceDirectory ();
 
@@ -434,7 +445,7 @@ namespace Xamarin.MMP.Tests
 		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, string[] environment = null)
 		{
 			string csprojTarget = GenerateUnifiedExecutableProject (config);
-			return BuildProject (csprojTarget, isUnified: true, shouldFail: shouldFail, release: config.Release, environment: environment);
+			return BuildProject (csprojTarget, shouldFail: shouldFail, release: config.Release, environment: environment);
 		}
 
 		public static string RunGeneratedUnifiedExecutable (UnifiedTestConfig config)
@@ -464,19 +475,6 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		public static OutputText TestClassicExecutable (string tmpDir, string testCode = "", string csprojConfig = "", bool shouldFail = false, bool includeMonoRuntime = false)
-		{
-			Guid guid = Guid.NewGuid ();
-			string csprojTarget = GenerateClassicEXEProject (tmpDir, "ClassicExample.csproj", testCode + GenerateOutputCommand (tmpDir,guid), csprojConfig, includeMonoRuntime: includeMonoRuntime);
-			string buildOutput = BuildProject (csprojTarget, isUnified : false, shouldFail : shouldFail);
-			if (shouldFail)
-				return new OutputText (buildOutput, "");
-
-			string exePath = Path.Combine (tmpDir, "bin/Debug/ClassicExample.app/Contents/MacOS/ClassicExample");
-			string runOutput = RunEXEAndVerifyGUID (tmpDir, guid, exePath);
-			return new OutputText (buildOutput, runOutput);
-		}
-
 		public static OutputText TestSystemMonoExecutable (UnifiedTestConfig config, bool shouldFail = false)
 		{
 			config.guid = Guid.NewGuid ();
@@ -485,26 +483,13 @@ namespace Xamarin.MMP.Tests
 			config.ProjectName = $"{projectName}.csproj";
 			string csprojTarget = GenerateSystemMonoEXEProject (config);
 
-			string buildOutput = BuildProject (csprojTarget, isUnified: true, shouldFail: shouldFail, release: config.Release);
+			string buildOutput = BuildProject (csprojTarget, shouldFail: shouldFail, release: config.Release);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
 			string exePath = Path.Combine (config.TmpDir, "bin", config.Release ? "Release" : "Debug",  projectName + ".app", "Contents", "MacOS", projectName);
 			string runOutput = RunEXEAndVerifyGUID (config.TmpDir, config.guid, exePath);
 			return new OutputText (buildOutput, runOutput);
-		}
-
-		public static string GenerateClassicEXEProject (string tmpDir, string projectName, string testCode, string csprojConfig = "", string references = "", string assemblyName = null, bool includeMonoRuntime = false)
-		{
-			WriteMainFile ("", testCode, false, false, Path.Combine (tmpDir, "Main.cs"));
-
-			string sourceDir = FindSourceDirectory ();
-			File.Copy (Path.Combine (sourceDir, "Info-Classic.plist"), Path.Combine (tmpDir, "Info.plist"), true);
-
-			return CopyFileWithSubstitutions (Path.Combine (sourceDir, projectName), Path.Combine (tmpDir, projectName), text =>
-				{
-					return text.Replace ("%CODE%", csprojConfig).Replace ("%REFERENCES%", references).Replace ("%NAME%", assemblyName ?? Path.GetFileNameWithoutExtension (projectName)).Replace ("%INCLUDE_MONO_RUNTIME%", includeMonoRuntime.ToString ());
-				});
 		}
 
 		static string GetTargetFrameworkValue (UnifiedTestConfig config)
@@ -515,7 +500,7 @@ namespace Xamarin.MMP.Tests
 
 		public static string GenerateSystemMonoEXEProject (UnifiedTestConfig config)
 		{
-			WriteMainFile (config.TestDecl, config.TestCode, true, false, Path.Combine (config.TmpDir, "Main.cs"));
+			WriteMainFile (config.TestDecl, config.TestCode, false, Path.Combine (config.TmpDir, "Main.cs"));
 
 			string sourceDir = FindSourceDirectory ();
 			File.Copy (Path.Combine (sourceDir, "Info-Unified.plist"), Path.Combine (config.TmpDir, "Info.plist"), true);
@@ -549,7 +534,7 @@ namespace Xamarin.MMP.Tests
 			return target;
 		}
 
-		static void WriteMainFile (string decl, string content, bool isUnified, bool fsharp, string location)
+		static void WriteMainFile (string decl, string content, bool fsharp, string location)
 		{
 			const string FSharpMainTemplate = @"
 namespace FSharpUnifiedExample
@@ -566,8 +551,8 @@ module main =
         0";
 
 			const string MainTemplate = @"
-using MonoMac.Foundation;
-using MonoMac.AppKit;
+using Foundation;
+using AppKit;
 
 namespace TestCase
 {
@@ -584,8 +569,6 @@ namespace TestCase
 }";
 			string currentTemplate = fsharp ? FSharpMainTemplate : MainTemplate;
 			string testCase = currentTemplate.Replace ("%CODE%", content).Replace ("%DECL%", decl);
-			if (isUnified)
-				testCase = testCase.Replace ("MonoMac.", string.Empty);
 			using (StreamWriter s = new StreamWriter (location))
 				s.Write(testCase);
 		}

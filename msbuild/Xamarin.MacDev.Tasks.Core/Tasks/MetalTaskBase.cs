@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -31,6 +32,9 @@ namespace Xamarin.MacDev.Tasks
 
 		[Required]
 		public string SdkVersion { get; set; }
+
+		[Required]
+		public string SdkRoot { get; set; }
 
 		[Required]
 		public ITaskItem SourceFile { get; set; }
@@ -64,6 +68,13 @@ namespace Xamarin.MacDev.Tasks
 			var path = Path.Combine (DevicePlatformBinDir, ToolExe);
 
 			return File.Exists (path) ? path : ToolExe;
+		}
+
+		public override bool Execute ()
+		{
+			if (AppleSdkSettings.XcodeVersion.Major >= 11)
+				EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"SDKROOT={SdkRoot}");
+			return base.Execute ();
 		}
 
 		protected override string GenerateCommandLineCommands ()

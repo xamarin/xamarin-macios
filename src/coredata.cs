@@ -10,6 +10,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using CloudKit;
 #if MONOMAC
 using AppKit;
 #endif
@@ -226,6 +227,10 @@ namespace CoreData
 
 		[Export ("allowsExternalBinaryDataStorage")]
 		bool AllowsExternalBinaryDataStorage { get; set; }
+
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Export ("preservesValueInHistoryOnDeletion")]
+		bool PreservesValueInHistoryOnDeletion { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -1482,6 +1487,22 @@ namespace CoreData
 
 		[NullAllowed, Export ("updatedProperties", ArgumentSemantic.Copy)]
 		NSSet<NSPropertyDescription> UpdatedProperties { get; }
+
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Static]
+		[NullAllowed, Export ("entityDescription")]
+		NSEntityDescription EntityDescription { get; }
+
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Static]
+		[NullAllowed, Export ("fetchRequest")]
+		NSFetchRequest FetchRequest { get; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Static]
+		[Export ("entityDescriptionWithContext:")]
+		[return: NullAllowed]
+		NSEntityDescription GetEntityDescription (NSManagedObjectContext context);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1524,6 +1545,15 @@ namespace CoreData
 
 		[NullAllowed, Export ("token", ArgumentSemantic.Strong)]
 		NSPersistentHistoryToken Token { get; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Static]
+		[Export ("fetchHistoryWithFetchRequest:")]
+		NSPersistentHistoryChangeRequest FetchHistory (NSFetchRequest fetchRequest);
+
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[NullAllowed, Export ("fetchRequest", ArgumentSemantic.Strong)]
+		NSFetchRequest FetchRequest { get; set; }
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1572,10 +1602,26 @@ namespace CoreData
 
 		[Export ("objectIDNotification")]
 		NSNotification ObjectIdNotification { get; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Static]
+		[Export ("entityDescriptionWithContext:")]
+		[return: NullAllowed]
+		NSEntityDescription GetEntityDescription (NSManagedObjectContext context);
+
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Static]
+		[NullAllowed, Export ("entityDescription")]
+		NSEntityDescription EntityDescription { get; }
+
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Static]
+		[NullAllowed, Export ("fetchRequest")]
+		NSFetchRequest FetchRequest { get; }
 	}
 
 #if !WATCH
-	[NoWatch, NoTV, Mac (10,13, onlyOn64: true), iOS (11,0)]
+	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 	[BaseType (typeof(NSObject))]
 	interface NSCoreDataCoreSpotlightDelegate
 	{
@@ -1678,13 +1724,33 @@ namespace CoreData
 		NSString SaveConflictsErrorKey { get; }
 
 #if !WATCH
-		[NoWatch, NoTV, Mac (10, 13, onlyOn64: true), iOS (11, 0)]
+		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
 		[Export ("coreSpotlightExporter")]
 		NSCoreDataCoreSpotlightDelegate CoreSpotlightExporter { get; }
 #endif
 
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Field ("NSPersistentStoreRemoteChangeNotificationPostOptionKey")]
+		NSString RemoteChangeNotificationPostOptionKey { get; }
+
+		[Notification (typeof (NSPersistentStoreRemoteChangeEventArgs))]
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Field ("NSPersistentStoreRemoteChangeNotification")]
+		NSString StoreRemoteChangeNotification { get; }
+
 	}
 	
+	interface NSPersistentStoreRemoteChangeEventArgs {
+		[Export ("NSStoreUUIDKey")]
+		NSUuid Uuid { get; }
+
+		[Export ("NSPersistentStoreURLKey")]
+		string Url { get; }
+
+		[Export ("NSPersistentHistoryTokenKey")]
+		NSPersistentHistoryToken PersistentHistoryTracking  {get; }
+	}
+
 	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -1733,6 +1799,11 @@ namespace CoreData
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSUrl url);
+
+		// NSPersistentStoreDescription_NSPersistentCloudKitContainerAdditions category
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[NullAllowed, Export ("cloudKitContainerOptions", ArgumentSemantic.Strong)]
+		NSPersistentCloudKitContainerOptions CloudKitContainerOptions { get; set; }
 	}
 	
 	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
@@ -2087,6 +2158,12 @@ namespace CoreData
 		[iOS (9,0), Mac (10,11)]
 		[Export ("replacePersistentStoreAtURL:destinationOptions:withPersistentStoreFromURL:sourceOptions:storeType:error:")]
 		bool ReplacePersistentStore (NSUrl destinationUrl, [NullAllowed] NSDictionary destinationOptions, NSUrl sourceUrl, [NullAllowed] NSDictionary sourceOptions, string storeType, out NSError error);
+
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("currentPersistentHistoryTokenFromStores:")]
+		[return: NullAllowed]
+		NSPersistentHistoryToken GetCurrentPersistentHistoryToken ([NullAllowed] NSObject[] stores);
 	}
 
 	interface NSPersistentStoreCoordinatorStoreChangeEventArgs {
@@ -2412,5 +2489,89 @@ namespace CoreData
 		[Export ("conflictingSnapshots", ArgumentSemantic.Retain)]
 #endif
 		NSDictionary[] ConflictingSnapshots { get; }
+	}
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSPersistentStoreRequest))]
+	[DesignatedDefaultCtor]
+	interface NSBatchInsertRequest {
+
+		[Export ("entityName")]
+		string EntityName { get; }
+
+		[NullAllowed, Export ("entity", ArgumentSemantic.Strong)]
+		NSEntityDescription Entity { get; }
+
+		[NullAllowed, Export ("objectsToInsert", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject>[] ObjectsToInsert { get; set; }
+
+		[Export ("resultType", ArgumentSemantic.Assign)]
+		NSBatchInsertRequestResultType ResultType { get; set; }
+
+		[Static]
+		[Export ("batchInsertRequestWithEntityName:objects:")]
+		NSBatchInsertRequest BatchInsertRequest (string entityName, NSDictionary<NSString, NSObject>[] dictionaries);
+
+		[Export ("initWithEntityName:objects:")]
+		IntPtr Constructor (string entityName, NSDictionary<NSString, NSObject>[] dictionaries);
+
+		[Export ("initWithEntity:objects:")]
+		IntPtr Constructor (NSEntityDescription entity, NSDictionary<NSString, NSObject>[] dictionaries);
+	}
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSPersistentStoreResult))]
+	interface NSBatchInsertResult {
+		[NullAllowed, Export ("result", ArgumentSemantic.Strong)]
+		NSObject Result { get; }
+
+		[Export ("resultType")]
+		NSBatchInsertRequestResultType ResultType { get; }
+	}
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSAttributeDescription))]
+	interface NSDerivedAttributeDescription : NSSecureCoding {
+		[NullAllowed, Export ("derivationExpression", ArgumentSemantic.Strong)]
+		NSExpression DerivationExpression { get; set; }
+	}
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSPersistentContainer))]
+	[DisableDefaultCtor]
+	interface NSPersistentCloudKitContainer {
+
+		[Export ("initWithName:managedObjectModel:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string name, NSManagedObjectModel model);
+
+		[Export ("initializeCloudKitSchemaWithOptions:error:")]
+		bool Initialize (NSPersistentCloudKitContainerSchemaInitializationOptions options, [NullAllowed] out NSError error);
+
+		[Export ("recordForManagedObjectID:")]
+		[return: NullAllowed]
+		CKRecord GetRecord (NSManagedObjectID managedObjectId);
+
+		[Export ("recordsForManagedObjectIDs:")]
+		NSDictionary<NSManagedObjectID, CKRecord> GetRecords (NSManagedObjectID[] managedObjectIds);
+
+		[Export ("recordIDForManagedObjectID:")]
+		[return: NullAllowed]
+		CKRecordID GetRecordId (NSManagedObjectID managedObjectId);
+
+		[Export ("recordIDsForManagedObjectIDs:")]
+		NSDictionary<NSManagedObjectID, CKRecordID> GetRecordIds (NSManagedObjectID[] managedObjectIds);
+	}
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSPersistentCloudKitContainerOptions {
+		[Export ("containerIdentifier")]
+		string ContainerIdentifier { get; }
+
+		[Export ("initWithContainerIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string containerIdentifier);
 	}
 }
