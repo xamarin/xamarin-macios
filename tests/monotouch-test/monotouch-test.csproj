@@ -156,6 +156,7 @@
     <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Net.Http" />
     <Reference Include="OpenTK-1.0" />
+    <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist">
