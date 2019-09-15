@@ -16086,7 +16086,171 @@ namespace Foundation
 		string ToString (NSUnit unit);
 	}
 
-	[Watch (2,0), TV (9,0)]
+	[Protocol (Name = "NSXPCProxyCreating")]
+	interface NSXpcProxyCreating
+	{
+		[Export ("remoteObjectProxy")]
+		NSObject CreateRemoteObjectProxy ();
+
+		[Export ("remoteObjectProxyWithErrorHandler:")]
+		NSObject CreateRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
+
+		[Mac (10, 11)][iOS (9, 0)][Watch (2, 0)][TV (9, 0)]
+		[Export ("synchronousRemoteObjectProxyWithErrorHandler:")]
+		NSObject CreateSynchronousRemoteObjectProxy([BlockCallback] Action<NSError> errorHandler);
+	}
+
+	[Mac (10, 8)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
+	[BaseType (typeof (NSObject), Name = "NSXPCConnection")]
+	[DisableDefaultCtor]
+	interface NSXpcConnection : NSXpcProxyCreating
+	{
+		[Export ("initWithServiceName:")]
+		[NoiOS][NoWatch][NoTV]
+		IntPtr Constructor (string xpcServiceName);
+
+		[Export ("serviceName")]
+		string ServiceName { get; }
+
+		[Export ("initWithMachServiceName:")]
+		[NoiOS][NoWatch][NoTV]
+		[Internal] // See FIXME in Foundation/NSXpcConnection.cs
+		IntPtr Constructor (string machServiceName, nint options);
+
+		[Export ("initWithListenerEndpoint:")]
+		IntPtr Constructor (NSXpcListenerEndpoint endpoint);
+
+		[Export ("endpoint")]
+		NSXpcListenerEndpoint Endpoint { get; }
+
+		[Export ("exportedInterface", ArgumentSemantic.Retain)]
+		[NullAllowed]
+		NSXpcInterface ExportedInterface { get; set; }
+
+		[Export ("exportedObject", ArgumentSemantic.Retain)]
+		[NullAllowed]
+		NSObject ExportedObject { get; set; }
+
+		[Export ("remoteObjectInterface", ArgumentSemantic.Retain)]
+		[NullAllowed]
+		NSXpcInterface RemoteInterface { get; set; }
+
+		[Export ("remoteObjectProxy")]
+		NSObject RemoteObjectProxy { get; }
+
+		[Export ("remoteObjectProxyWithErrorHandler:")]
+		NSObject GetRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
+
+		[Export ("synchronousRemoteObjectProxyWithErrorHandler:")]
+		[Mac (10, 11)][iOS (9, 0)][Watch (2, 0)][TV (9, 0)]
+		NSObject GetSynchronouRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
+
+		[Export ("interruptionHandler", ArgumentSemantic.Copy)]
+		Action InterruptionHandler { get; set; }
+
+		[Export ("invalidationHandler", ArgumentSemantic.Copy)]
+		Action InvalidationHandler { get; set; }
+
+		[Export ("resume")]
+		void Resume ();
+
+		[Export ("suspend")]
+		void Suspend ();
+
+		[Export ("invalidate")]
+		void Invalidate ();
+
+		// FIXME: How to bind auditSessionIdentifier?
+
+		[Export ("processIdentifier")]
+		int PeerProcessIdentifier { get; }
+
+		[Export ("effectiveUserIdentifier")]
+		int PeerEffectiveUserId { get; }
+
+		[Export ("effectiveGroupIdentifier")]
+		int PeerEffectiveGroupId { get; }
+
+		[Export ("currentConnection")]
+		[Static]
+		[Mac (10, 8)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
+		[return: NullAllowed]
+		NSXpcConnection CurrentConnection { get; }
+
+		[Export ("scheduleSendBarrierBlock:")]
+		[Mac (10, 15)][iOS (13, 0)][Watch (6, 0)][TV (13, 0)]
+		void ScheduleSendBarrier(Action block);
+	}
+
+	[Mac (10, 8)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
+	[BaseType (typeof (NSObject), Name = "NSXPCListener", Delegates = new string[] { "WeakDelegate" })]
+	[DisableDefaultCtor]
+	interface NSXpcListener
+	{
+		[Export ("serviceListener")]
+		[Static]
+		NSXpcListener ServiceListener { get; }
+
+		[Export ("anonymousListener")]
+		[Static]
+		NSXpcListener AnonymousListener { get; }
+
+		[Export ("initWithMachServiceName:")]
+		[NoiOS][NoTV][NoWatch]
+		IntPtr Constructor (string machServiceName);
+
+		[Export ("delegate", ArgumentSemantic.Assign)]
+		[NullAllowed]
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		[Protocolize]
+		NSXpcListenerDelegate Delegate { get; set; }
+
+		[Export ("endpoint")]
+		NSXpcListenerEndpoint Endpoint { get; }
+
+		[Export ("resume")]
+		void Resume ();
+
+		[Export ("suspend")]
+		void Suspend ();
+
+		[Export ("invalidate")]
+		void Invalidate ();
+	}
+
+	[BaseType (typeof (NSObject), Name = "NSXPCListenerDelegate")]
+	[Model, Protocol]
+	interface NSXpcListenerDelegate
+	{
+		[Export ("listener:shouldAcceptNewConnection:")]
+		bool ShouldAcceptConnection (NSXpcListener listener, NSXpcConnection newConnection);
+	}
+
+	[BaseType (typeof (NSObject), Name = "NSXPCInterface")]
+	[Mac (10, 8)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
+	[DisableDefaultCtor]
+	interface NSXpcInterface
+	{
+		[Export ("interfaceWithProtocol:")]
+		[Static]
+		IntPtr CreateForProtocol(Protocol protocol);
+
+		[Export ("protool", ArgumentSemantic.Assign)]
+		Protocol Protocol { get; get; }
+
+		// FIXME: How do I hide the Selector type here?
+		[Export ("setClasses:forSelector:argumentIndex:ofReply:")]
+		void SetAllowedClassesForMethod (NSSet<Class> allowedClasses, Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
+
+		[Export ("classesForSelector:argumentIndex:ofReply:")]
+		NSSet<Class> GetAllowedClassesForMethod(Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
+
+		// Methods taking xpc_type_t have been skipped.
+	}
+
+	[iOS (6,0), Watch (2,0), TV (9,0)]
 	[BaseType (typeof (NSObject), Name = "NSXPCListenerEndpoint")]
 	[DisableDefaultCtor]
 	interface NSXpcListenerEndpoint : NSSecureCoding
