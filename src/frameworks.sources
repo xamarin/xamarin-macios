@@ -389,6 +389,7 @@ COREBLUETOOTH_CORE_SOURCES = \
 
 COREBLUETOOTH_SOURCES = \
 	CoreBluetooth/CBCompat.cs \
+	CoreBluetooth/CBManager.cs \
 	CoreBluetooth/CBPeer.cs \
 	CoreBluetooth/CBUUID.cs \
 	CoreBluetooth/CoreBluetooth.cs \
