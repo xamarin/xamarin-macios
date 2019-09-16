@@ -30,6 +30,8 @@ namespace Foundation {
 	public partial class NSXpcInterface : NSObject {
 		public static NSXpcInterface CreateForType (Type interfaceType)
 		{
+			if (interfaceType == null) throw new ArgumentNullException (nameof (interfaceType));
+
 			if (!interfaceType.IsInterface)
 			{
 				throw new InvalidOperationException ($"Type {interfaceType.FullName} must be an interface type");
