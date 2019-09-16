@@ -97,7 +97,7 @@ BUILDS_MAKEFILE_DEP = Makefile
 endif
 
 .stamp-configure-mono: $(SDK_CONFIG)
-	$(MAKE) -C $(SDK_BUILDDIR) configure-ios configure-mac $(SDK_ARGS)
+	ulimit -n 4096 && $(MAKE) -C $(SDK_BUILDDIR) configure-ios configure-mac $(SDK_ARGS)
 	$(Q) touch $@
 
 .stamp-compile-mono: .stamp-configure-mono $(MONO_DEPENDENCIES) $(BUILDS_MAKEFILE_DEP) $(TOP)/Make.config $(TOP)/mk/mono.mk
