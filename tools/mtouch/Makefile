@@ -184,7 +184,7 @@ simlauncher$(3)-sgen: simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a Makefi
 		$(TOP)/runtime/.libs/ios/libapp.a \
 		-Wl,-w \
 		-lz -liconv $(TOP)/runtime/.libs/ios/libxamarin-debug.a simlauncher.m $(SIMLAUNCHER_FRAMEWORKS) $(SIMULATOR$(2)_OBJC_CFLAGS) -o $$@
-	$(Q) xcrun otool -L simlauncher$(5)$(1) > simlauncher$(5)$(1).frameworks
+	$(Q) xcrun otool -L $$@ > $$@.frameworks
 endef
 
 $(eval $(call SimlauncherTemplate,-DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,86,32))
