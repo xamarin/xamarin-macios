@@ -48,5 +48,35 @@ namespace Foundation {
 
 			return CreateForProtocol (new Protocol (interfaceType));
 		}
+
+		public NSSet<Class> GetAllowedClassesForMethod (MethodInfo method, nuint argumentIndex, bool forReplyBlock)
+		{
+			if (method == null) throw new ArgumentNullException (nameof (method));
+
+			ExportAttribute attribute = method.GetAttribute<ExportAttribute> ();
+			if (attribute == null)
+			{
+				throw new InvalidOperationException ($"Method {method.Name} is not exposed to Objective-C");
+			}
+
+			// The runtime ensures that the Selector property is non-null and a valid selector.
+			Selector sel = new Selector(attribute.Selector);
+			return GetAllowedClassesForMethod (sel, argumentIndex, forReplyBlock);
+		}
+
+		public void SetAllowedClassesForMethod (MethodInfo method, NSSet<Class> allowedClasses, nuint argumentIndex, bool forReplyBlock)
+		{
+			if (method == null) throw new ArgumentNullException (nameof (method));
+
+			ExportAttribute attribute = method.GetAttribute<ExportAttribute> ();
+			if (attribute == null)
+			{
+				throw new InvalidOperationException ($"Method {method.Name} is not exposed to Objective-C");
+			}
+
+			// The runtime ensures that the Selector property is non-null and a valid selector.
+			Selector sel = new Selector(attribute.Selector);
+			SetAllowedClassesForMethod(allowedClasses, sel, argumentIndex, forReplyBlock);
+		}
 	}
 }
