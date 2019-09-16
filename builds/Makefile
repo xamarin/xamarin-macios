@@ -9,7 +9,6 @@ PREFIX=$(abspath $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/)
 ##
 ## Mono download vs. build
 ##
-ifeq ($(MONO_BUILD_FROM_SOURCE),)
 
 download: download-mono
 download-mono: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $(MONO_MAC_FILENAME))
@@ -58,6 +57,8 @@ clean-local::
 X86_64_SLICE=$(abspath $(CURDIR)/x86-64-slice.dylib)
 $(X86_64_SLICE): Makefile
 	echo "void xamarin_x86_64_function_for_notarization_workaround () {}" | $(MAC_CC) -shared -x c -o$@ -
+
+ifeq ($(MONO_BUILD_FROM_SOURCE),)
 
 all-local:: .stamp-download-mono .stamp-mono-ios-sdk-destdir
 
