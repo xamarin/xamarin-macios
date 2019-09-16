@@ -16234,18 +16234,19 @@ namespace Foundation
 	interface NSXpcInterface
 	{
 		[Export ("interfaceWithProtocol:")]
-		[Static]
+		[Static, Internal]
 		IntPtr CreateForProtocol(Protocol protocol);
 
 		[Export ("protocol", ArgumentSemantic.Assign)]
 		Protocol Protocol { get; get; }
 
-		// FIXME: How do I hide the Selector type here?
 		[Export ("setClasses:forSelector:argumentIndex:ofReply:")]
+		[Internal]
 		void SetAllowedClassesForMethod (NSSet<Class> allowedClasses, Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
 
 		[Export ("classesForSelector:argumentIndex:ofReply:")]
-		NSSet<Class> GetAllowedClassesForMethod(Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
+		[Internal]
+		NSSet<Class> GetAllowedClassesForMethod (Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
 
 		// Methods taking xpc_type_t have been skipped.
 	}
