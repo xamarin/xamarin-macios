@@ -16237,7 +16237,7 @@ namespace Foundation
 		[Static]
 		IntPtr CreateForProtocol(Protocol protocol);
 
-		[Export ("protool", ArgumentSemantic.Assign)]
+		[Export ("protocol", ArgumentSemantic.Assign)]
 		Protocol Protocol { get; get; }
 
 		// FIXME: How do I hide the Selector type here?
