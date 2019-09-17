@@ -153,6 +153,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework BackgroundTasks 		\
 	-weak_framework CoreHaptics \
 	-weak_framework LinkPresentation 		\
+	-weak_framework MetricKit		\
 	-weak_framework PencilKit			\
 	-weak_framework QuickLookThumbnailing		\
 	-weak_framework SoundAnalysis			\

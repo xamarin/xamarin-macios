@@ -860,4 +860,37 @@ namespace StoreKit {
 		[Export ("paymentQueue:shouldContinueTransaction:inStorefront:")]
 		bool ShouldContinueTransaction (SKPaymentQueue paymentQueue, SKPaymentTransaction transaction, SKStorefront newStorefront);
 	}
+
+	// SKArcade.h has not been part of the StoreKit.h umbrella header since it was added
+	// in Xcode 11 GM is was added - but only for macOS ?!?
+	// https://feedbackassistant.apple.com/feedback/7017660 - https://github.com/xamarin/maccore/issues/1913
+
+	[NoiOS][NoTV]
+	[Mac (10,15)]
+	delegate void SKArcadeServiceRegisterHandler (NSData randomFromFP, uint /* uint32_t */ randomFromFPLength, NSData cmacOfAppPid, uint /* uint32_t */ cmacOfAppPidLength, NSError error);
+
+	[NoiOS][NoTV]
+	[Mac (10,15)]
+	delegate void SKArcadeServiceSubscriptionHandler (NSData subscriptionStatus, uint /* uint32_t */ subscriptionStatusLength, NSData cmacOfNonce, uint /* uint32_t */ cmacOfNonceLength, NSError error);
+
+	[NoiOS][NoTV]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // all static members so far
+	interface SKArcadeService {
+
+		[Static]
+		// [Async] it'ts not a `completionHandler` and there's not documentation (e.g. number of calls)
+		[Export ("registerArcadeAppWithRandomFromLib:randomFromLibLength:resultHandler:")]
+		void Register (NSData randomFromLib, uint randomFromLibLength, SKArcadeServiceRegisterHandler resultHandler);
+
+		[Static]
+		// [Async] it'ts not a `completionHandler` and there's not documentation (e.g. number of calls)
+		[Export ("arcadeSubscriptionStatusWithNonce:resultHandler:")]
+		void GetSubscriptionStatus (ulong nonce, SKArcadeServiceSubscriptionHandler resultHandler);
+
+		[Static]
+		[Export ("repairArcadeApp")]
+		void Repair ();
+	}
 }

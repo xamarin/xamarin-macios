@@ -1501,6 +1501,30 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // void func (Quaternion, double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.QuatF },
+						new ParameterData { TypeData = Types.Double },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Quaterniond, double)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.QuatD },
+						new ParameterData { TypeData = Types.Double },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // void func (Quaternion)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
@@ -1516,6 +1540,18 @@ namespace Xamarin.BindingMethods.Generator
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.QuatD,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Quaternion func (double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.QuatF,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.Double },
 					},

@@ -684,8 +684,7 @@ partial class TestRuntime
 	public static void CheckBluetoothPermission (bool assert_granted = false)
 	{
 		// New in Xcode11
-		var centralManager = new CBCentralManager ();
-		switch (centralManager.Authorization) {
+		switch (CBManager.Authorization) {
 		case CBManagerAuthorization.NotDetermined:
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to use bluetooth.");

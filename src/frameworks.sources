@@ -390,6 +390,7 @@ COREBLUETOOTH_CORE_SOURCES = \
 
 COREBLUETOOTH_SOURCES = \
 	CoreBluetooth/CBCompat.cs \
+	CoreBluetooth/CBManager.cs \
 	CoreBluetooth/CBPeer.cs \
 	CoreBluetooth/CBUUID.cs \
 	CoreBluetooth/CoreBluetooth.cs \
@@ -1014,10 +1015,12 @@ MAPKIT_SOURCES = \
 	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
 	MapKit/MKLocalSearch.cs \
+	MapKit/MKMapCameraZoomRange.cs \
 	MapKit/MKMapItem.cs \
 	MapKit/MKMapView.cs \
 	MapKit/MKMultiPoint.cs \
 	MapKit/MKOverlayView.cs \
+	MapKit/MKPointOfInterestFilter.cs \
 	MapKit/MKPolygon.cs \
 	MapKit/MKPolyline.cs \
 
@@ -1108,6 +1111,9 @@ METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSImageHistogram.cs \
 	MetalPerformanceShaders/MPSStateBatch.cs \
 	MetalPerformanceShaders/MPSStateResourceList.cs \
+
+# MetricKit
+
 
 # MobileCoreServices
 
@@ -1930,6 +1936,7 @@ IOS_FRAMEWORKS =         \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
+	MetricKit \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
