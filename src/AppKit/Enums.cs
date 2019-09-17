@@ -2155,7 +2155,7 @@ namespace AppKit {
 	}
 
 	// FileType 4cc values to use with NSFileTypeForHFSTypeCode.
-	public enum HfsTypeCode: uint
+	public enum HfsTypeCode : uint
 	{
 		/* Generic Finder icons */
 		ClipboardIcon                 = 0x434C4950,   //'CLIP'
