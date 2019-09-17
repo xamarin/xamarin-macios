@@ -1378,7 +1378,7 @@ namespace Metal {
 #endif
 		[NoiOS, NoTV, Mac (10,15)]
 		[Export ("sampleTimestamps:gpuTimestamp:")]
-		void SampleTimestamps (nuint cpuTimestamp, nuint gpuTimestamp);
+		void GetSampleTimestamps (nuint cpuTimestamp, nuint gpuTimestamp);
 
 #if XAMCORE_4_0
 		[Abstract]
