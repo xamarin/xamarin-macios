@@ -68,3 +68,11 @@
 !incorrect-protocol-member! MTLRenderCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::newRemoteTextureViewForDevice: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::remoteStorageTexture is REQUIRED and should be abstract
+
+# Selectors missing reported by introspection: https://github.com/xamarin/maccore/issues/1978
+!missing-selector! MTLHeapDescriptor::hazardTrackingMode not bound
+!missing-selector! MTLHeapDescriptor::resourceOptions not bound
+!missing-selector! MTLHeapDescriptor::setHazardTrackingMode: not bound
+!missing-selector! MTLHeapDescriptor::setResourceOptions: not bound
+!missing-selector! MTLHeapDescriptor::setType: not bound
+!missing-selector! MTLHeapDescriptor::type not bound

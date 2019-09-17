@@ -352,6 +352,7 @@ namespace Metal {
 		Blue = 4,
 		Alpha = 5,
 	}
+
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTextureSwizzleChannels {
 		public MTLTextureSwizzle Red;

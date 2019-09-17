@@ -199,7 +199,7 @@ namespace Metal {
 		[NoiOS, NoTV, Mac (10,15)]
 		[Export ("newRemoteBufferViewForDevice:")]
 		[return: NullAllowed]
-		IMTLBuffer Create (IMTLDevice device);
+		IMTLBuffer CreateRemoteBuffer (IMTLDevice device);
 	}
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
@@ -1666,7 +1666,7 @@ namespace Metal {
 		[NoiOS, NoTV, Mac (10,15)]
 		[Export ("newRemoteTextureViewForDevice:")]
 		[return: NullAllowed]
-		IMTLTexture Create (IMTLDevice device);
+		IMTLTexture CreateRemoteTexture (IMTLDevice device);
 	}
 	
 
@@ -3130,11 +3130,13 @@ namespace Metal {
 		[Export ("renderTargetHeight")]
 		nuint RenderTargetHeight { get; set; }
 
+/* Selectors reported missing by instrospection: https://github.com/xamarin/maccore/issues/1978
 		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, NoTV, iOS (13, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("maxVertexAmplificationCount")]
 		nuint MaxVertexAmplificationCount { get; set; }
+*/
 
 		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, NoTV, iOS (13, 0)]
@@ -3158,6 +3160,7 @@ namespace Metal {
 		[Export ("cpuCacheMode", ArgumentSemantic.Assign)]
 		MTLCpuCacheMode CpuCacheMode { get; set; }
 
+/* Selectors missing reported by introspection: https://github.com/xamarin/maccore/issues/1978
 		[Mac (10, 15), iOS (13, 0)]
 		[Export ("hazardTrackingMode", ArgumentSemantic.Assign)]
 		MTLHazardTrackingMode HazardTrackingMode { get; set; }
@@ -3169,6 +3172,7 @@ namespace Metal {
 		[Mac (10, 15), iOS (13, 0)]
 		[Export ("type", ArgumentSemantic.Assign)]
 		MTLHeapType Type { get; set; }
+ */
 	}
 	
 	[iOS (10, 0), TV (10,0), NoWatch, Mac (10,13)]
@@ -3800,13 +3804,14 @@ namespace Metal {
 	[Mac (10,14), iOS (12,0)]
 	[Protocol]
 	interface MTLIndirectRenderCommand {
-#if XAMCORE_4_0
+
+#if MONOMAC && !XAMCORE_4_0 
+		[Abstract]
+#endif
+#if XAMCORE_4_0 
 		[Abstract]
 #endif
 		[iOS (13,0), TV (13,0), Mac (10,14)]
-#if MONOMAC
-		[Abstract]
-#endif
 		[Export ("setRenderPipelineState:")]
 		void SetRenderPipelineState (IMTLRenderPipelineState pipelineState);
 
@@ -3859,10 +3864,11 @@ namespace Metal {
 
 		[Export ("maxFragmentBufferBindCount")]
 		nuint MaxFragmentBufferBindCount { get; set; }
-
+/* Fails instrospection issue: https://github.com/xamarin/maccore/issues/1979
 		[NoMac, iOS (13, 0)]
 		[Export ("maxKernelBufferBindCount")]
 		nuint MaxKernelBufferBindCount { get; set; }
+*/
 	}
 
 	interface IMTLIndirectCommandBuffer {}
@@ -3907,10 +3913,10 @@ namespace Metal {
 	[BaseType (typeof(NSObject))]
 	interface MTLRasterizationRateSampleArray {
 		[Export ("objectAtIndexedSubscript:")]
-		NSNumber Get (nuint index);
+		NSNumber GetObject (nuint index);
 
 		[Export ("setObject:atIndexedSubscript:")]
-		void Set (NSNumber value, nuint index);
+		void SetObject (NSNumber value, nuint index);
 	}
 
 	[Unavailable (PlatformName.MacCatalyst)]
@@ -3937,6 +3943,7 @@ namespace Metal {
 		[Export ("setLayer:atIndex:")]
 		void SetLayer ([NullAllowed] MTLRasterizationRateLayerDescriptor layer, nuint layerIndex);
 
+/* Selectors reported as missing by introspection:  https://github.com/xamarin/maccore/issues/1980
 		[Export ("layers")]
 		MTLRasterizationRateLayerArray Layers { get; }
 
@@ -3948,6 +3955,7 @@ namespace Metal {
 
 		[Export ("layerCount")]
 		nuint LayerCount { get; }
+*/
 	}
 
 	[Unavailable (PlatformName.MacCatalyst)]
@@ -3965,6 +3973,7 @@ namespace Metal {
 		[Export ("initWithSampleCount:horizontal:vertical:")]
 		IntPtr Constructor (MTLSize sampleCount, IntPtr horizontal, IntPtr vertical);
 
+/* Selectors reported as not working by instrospection: https://github.com/xamarin/maccore/issues/1976
 		[Export ("sampleCount")]
 		MTLSize SampleCount { get; }
 
@@ -3981,6 +3990,7 @@ namespace Metal {
 
 		[Export ("vertical")]
 		MTLRasterizationRateSampleArray Vertical { get; }
+ */
 	}
 
 	[Unavailable (PlatformName.MacCatalyst)]
@@ -3990,10 +4000,10 @@ namespace Metal {
 	interface MTLRasterizationRateLayerArray {
 		[Export ("objectAtIndexedSubscript:")]
 		[return: NullAllowed]
-		MTLRasterizationRateLayerDescriptor Get (nuint layerIndex);
+		MTLRasterizationRateLayerDescriptor GetObject (nuint layerIndex);
 
 		[Export ("setObject:atIndexedSubscript:")]
-		void Set ([NullAllowed] MTLRasterizationRateLayerDescriptor layer, nuint layerIndex);
+		void SetObject ([NullAllowed] MTLRasterizationRateLayerDescriptor layer, nuint layerIndex);
 	}
 
 	interface IMTLRasterizationRateMap {}
@@ -4001,7 +4011,6 @@ namespace Metal {
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoMac, NoTV, iOS (13,0)]
 	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
-	[BaseType (typeof(NSObject))]
 	interface MTLRasterizationRateMap {
 		[Abstract]
 		[Export ("device")]
@@ -4033,7 +4042,7 @@ namespace Metal {
 
 		[Abstract]
 		[Export ("physicalSizeForLayer:")]
-		MTLSize GetPhysicalSizeForLayer (nuint layerIndex);
+		MTLSize GetPhysicalSize (nuint layerIndex);
 
 		[Abstract]
 		[Export ("mapScreenToPhysicalCoordinates:forLayer:")]
@@ -4097,7 +4106,6 @@ namespace Metal {
 
 	[TV (13,0), iOS (13,0), NoMac]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface MTLIndirectComputeCommand {
 		[Abstract]
 		[Export ("setComputePipelineState:")]

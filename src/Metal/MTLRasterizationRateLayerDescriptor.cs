@@ -9,32 +9,30 @@ using ObjCRuntime;
 namespace Metal {
 	public partial class MTLRasterizationRateLayerDescriptor
 	{
+/*  Selectors reported as not working by instrospection: https://github.com/xamarin/maccore/issues/1976
 		[NoMac, NoTV, iOS (13,0)]
 		public double[] HorizontalSampleStorage { 
 			get {
-				unsafe {
-					var width = (int)SampleCount.Width;
-					var floatArray = new double[width];
-					Marshal.Copy (_HorizontalSampleStorage, floatArray, 0, width);
-					return floatArray;
-				}
+				var width = (int)SampleCount.Width;
+				var floatArray = new double[width];
+				Marshal.Copy (_HorizontalSampleStorage, floatArray, 0, width);
+				return floatArray;
 			}
 		}
 
 		[NoMac, NoTV, iOS (13,0)]
 		public double[] VerticalSampleStorage {
 			get {
-				unsafe {
-					var height = (int)SampleCount.Height;
-					var floatArray = new double[height];
-					Marshal.Copy (_VerticalSampleStorage, floatArray, 0, height);
-					return floatArray;
-				}
+				var height = (int)SampleCount.Height;
+				var floatArray = new double[height];
+				Marshal.Copy (_VerticalSampleStorage, floatArray, 0, height);
+				return floatArray;
 			}
 		}
-
+*/
 		[NoMac, NoTV, iOS (13,0)]
-		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical) {
+		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
+		{
 			unsafe {
 				fixed (void* horizontalHandle = horizontal)
 				fixed (void* verticalHandle = vertical) {

@@ -151,6 +151,11 @@ namespace Metal {
 		[NoMac, NoTV, iOS (13,0)]
 		public static void ConvertSparseTileRegions (this IMTLDevice This, MTLRegion [] tileRegions, MTLRegion [] pixelRegions, MTLSize tileSize, nuint numRegions)
 		{
+			if (tileRegions == null)
+				throw new ArgumentNullException (nameof (tileRegions));
+			if (pixelRegions == null)
+				throw new ArgumentNullException (nameof (pixelRegions));
+
 			var tileRegionsHandle = GCHandle.Alloc (tileRegions, GCHandleType.Pinned);
 			var pixelRegionsHandle = GCHandle.Alloc (pixelRegions, GCHandleType.Pinned);
 			try {
@@ -166,6 +171,11 @@ namespace Metal {
 		[NoMac, NoTV, iOS (13,0)]
 		public static void ConvertSparsePixelRegions (this IMTLDevice This, MTLRegion [] pixelRegions, MTLRegion [] tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions)
 		{
+			if (tileRegions == null)
+				throw new ArgumentNullException (nameof (tileRegions));
+			if (pixelRegions == null)
+				throw new ArgumentNullException (nameof (pixelRegions));
+
 			var tileRegionsHandle = GCHandle.Alloc (tileRegions, GCHandleType.Pinned);
 			var pixelRegionsHandle = GCHandle.Alloc (pixelRegions, GCHandleType.Pinned);
 			try {
