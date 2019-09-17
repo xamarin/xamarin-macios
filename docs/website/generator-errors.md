@@ -198,6 +198,8 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1066'/>BI1066: Unsupported return type '{type}' in {method}.
 
+### <a name='BI1067'/>BI1067: BindAs attribute of the selector \"{selector}\" is missing '[]' in the definition.
+
 # BI11xx: warnings
 
 <!-- 11xx: warnings -->
