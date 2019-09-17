@@ -33,7 +33,7 @@ namespace AppKit {
 
 		public virtual NSImage IconForFileType (HfsTypeCode typeCode)
 		{
-			var nsFileType = GetNSFileType ((uint)typeCode);
+			var nsFileType = GetNSFileType ((uint) typeCode);
 			return IconForFileType (nsFileType);
 		}
 
