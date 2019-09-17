@@ -20,14 +20,10 @@ using AppKit;
 using UIKit;
 #endif
 using System;
-#if WATCH
-using AVMediaSelectionGroup = Foundation.NSObject;
-using AVMediaSelectionOption = Foundation.NSObject;
-#endif
 
 namespace MediaPlayer {
 #if XAMCORE_2_0 || !MONOMAC
-	[Mac (10,12,2, onlyOn64: true)] // type exists only to expose fields
+	[Mac (10,12,2)] // type exists only to expose fields
 	[BaseType (typeof (NSObject))]
 #if IOS || WATCH
 	// introduced in 4.2
@@ -60,7 +56,7 @@ namespace MediaPlayer {
 #if IOS || WATCH
 	}
 #if MONOMAC || TVOS || WATCH
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[Watch (5,0)]
 	[Static]
 #else
@@ -156,7 +152,7 @@ namespace MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString DiscCountProperty { get; }
 
-		[Mac (10,13,1, onlyOn64: true)]
+		[Mac (10,13,1)]
 		[Field ("MPMediaItemPropertyArtwork")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ArtworkProperty { get; }
@@ -214,12 +210,10 @@ namespace MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PodcastTitleProperty { get; }
 
-		[iOS (6,0)]
 		[Field ("MPMediaItemPropertyBookmarkTime")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString BookmarkTimeProperty { get; }
 
-		[iOS (6,0)]
 		[Field ("MPMediaItemPropertyIsCloudItem")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString IsCloudItemProperty { get; }
@@ -242,7 +236,7 @@ namespace MediaPlayer {
 		NSString PlaybackStoreIDProperty { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -391,7 +385,6 @@ namespace MediaPlayer {
 		[Export ("prompt", ArgumentSemantic.Copy)]
 		string Prompt { get; set; }
 
-		[iOS (6,0)]
 		[Export ("showsCloudItems")]
 		bool ShowsCloudItems { get; set; }
 
@@ -1105,13 +1098,11 @@ namespace MediaPlayer {
 		[Notification]
 		NSString MediaPlaybackIsPreparedToPlayDidChangeNotification { get; }
 
-		[iOS (6,0)]
 		[NoWatch]
 		[Export ("readyForDisplay")]
 		bool ReadyForDisplay { get;  }
 
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[iOS (6,0)]
 		[NoWatch]
 		[Field ("MPMoviePlayerReadyForDisplayDidChangeNotification")]
 		[Notification]
@@ -1280,61 +1271,58 @@ namespace MediaPlayer {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRoutePickerView' instead.")]
 		[Export ("showsRouteButton")]
 		bool ShowsRouteButton { get; set; }
 
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
 		[Export ("showsVolumeSlider")]
 		bool ShowsVolumeSlider { get; set; }
 
-		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
 		[Export ("setMinimumVolumeSliderImage:forState:")]
 		void SetMinimumVolumeSliderImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("setMaximumVolumeSliderImage:forState:")]
 		void SetMaximumVolumeSliderImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("setVolumeThumbImage:forState:")]
 		void SetVolumeThumbImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("minimumVolumeSliderImageForState:")]
 		UIImage GetMinimumVolumeSliderImage (UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("maximumVolumeSliderImageForState:")]
 		UIImage GetMaximumVolumeSliderImage (UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("volumeThumbImageForState:")]
 		UIImage GetVolumeThumbImage (UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("volumeSliderRectForBounds:")]
 		CGRect GetVolumeSliderRect (CGRect bounds);
 
-		[iOS (6,0)]
 		[Export ("volumeThumbRectForBounds:volumeSliderRect:value:")]
 		CGRect GetVolumeThumbRect (CGRect bounds, CGRect columeSliderRect, float /* float, not CGFloat */ value);
 
-		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRoutePickerView.RoutePickerButtonStyle' instead.")]
 		[Export ("setRouteButtonImage:forState:")]
 		void SetRouteButtonImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
 		[Export ("routeButtonImageForState:")]
 		UIImage GetRouteButtonImage (UIControlState state);
 
-		[iOS (6,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
 		[Export ("routeButtonRectForBounds:")]
 		CGRect GetRouteButtonRect (CGRect bounds);
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
 		[Export ("wirelessRoutesAvailable")]
 		bool AreWirelessRoutesAvailable { [Bind ("areWirelessRoutesAvailable")] get; }
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
 		[Export ("wirelessRouteActive")]
 		bool IsWirelessRouteActive { [Bind ("isWirelessRouteActive")] get; }
 
@@ -1344,11 +1332,13 @@ namespace MediaPlayer {
 		UIImage VolumeWarningSliderImage { get; set; }
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetectedDidChange' instead.")]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRoutesAvailableDidChangeNotification")]
 		NSString WirelessRoutesAvailableDidChangeNotification { get; }
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' KVO instead.")]
 		[Notification]
 		[Field ("MPVolumeViewWirelessRouteActiveDidChangeNotification")]
 		NSString WirelessRouteActiveDidChangeNotification { get; }
@@ -1369,7 +1359,7 @@ namespace MediaPlayer {
 		string Title { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true), Watch (5,0)]
+	[Mac (10,12,2), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -init is not supported, use +defaultCenter
 	[DisableDefaultCtor]
@@ -1383,6 +1373,7 @@ namespace MediaPlayer {
 
 		[NoiOS]
 		[NoTV]
+		[Introduced (PlatformName.UIKitForMac, 13, 0)]
 		[Export ("playbackState")]
 		MPNowPlayingPlaybackState PlaybackState { get; set; }
 
@@ -1443,7 +1434,7 @@ namespace MediaPlayer {
 
 		[iOS (11,0)]
 		[TV (11,0)]
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		[Watch (5,0)]
 		[Field ("MPNowPlayingInfoPropertyServiceIdentifier")]
 		NSString PropertyServiceIdentifier { get; }
@@ -1465,17 +1456,17 @@ namespace MediaPlayer {
 
 		[iOS (10,3)]
 		[TV (10,2)]
-		[Mac (10,12,3, onlyOn64: true)]
+		[Mac (10,12,3)]
 		[Field ("MPNowPlayingInfoPropertyAssetURL")]
 		NSString PropertyAssetUrl { get; }
 
-		[iOS (11,1), TV (11,1), Mac (10,13,1, onlyOn64: true)]
+		[iOS (11,1), TV (11,1), Mac (10,13,1)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentPlaybackDate")]
 		NSString PropertyCurrentPlaybackDate { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -1654,7 +1645,7 @@ namespace MediaPlayer {
 		bool EndpointAvailable { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommands cannot be initialized externally.
@@ -1676,7 +1667,7 @@ namespace MediaPlayer {
 		void RemoveTarget ([NullAllowed] NSObject target, Selector action);
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommands cannot be initialized externally.
@@ -1686,7 +1677,7 @@ namespace MediaPlayer {
 		NSNumber[] SupportedPlaybackRates { get; set; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (8,0), Watch (5,0)]
 	[BaseType (typeof(MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommand cannot be initialized externally.
@@ -1696,7 +1687,7 @@ namespace MediaPlayer {
 		MPShuffleType CurrentShuffleType { get; set; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (8,0), Watch (5,0)]
 	[BaseType (typeof(MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommand cannot be initialized externally.
@@ -1706,7 +1697,7 @@ namespace MediaPlayer {
 		MPRepeatType CurrentRepeatType { get; set; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPFeedbackCommands cannot be initialized externally.
@@ -1723,7 +1714,7 @@ namespace MediaPlayer {
 		string LocalizedShortTitle { get; set; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommands cannot be initialized externally.
@@ -1736,7 +1727,7 @@ namespace MediaPlayer {
 		float MinimumRating { get; set; } /* float, not CGFloat */
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommands cannot be initialized externally.
@@ -1749,12 +1740,12 @@ namespace MediaPlayer {
 		NSArray _PreferredIntervals { get; set; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPRemoteCommandCenter {
-		[Mac (10,12,2, onlyOn64: true)]
+		[Mac (10,12,2)]
 		[Static]
 		[Export ("sharedCommandCenter")]
 		MPRemoteCommandCenter Shared { get; }
@@ -1825,7 +1816,7 @@ namespace MediaPlayer {
 		MPChangePlaybackPositionCommand ChangePlaybackPositionCommand { get; }
 	}
 	
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommandEvents cannot be initialized externally.
@@ -1838,7 +1829,7 @@ namespace MediaPlayer {
 		double /* NSTimeInterval */ Timestamp { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommandEvents cannot be initialized externally.
@@ -1848,7 +1839,7 @@ namespace MediaPlayer {
 		float PlaybackRate { get; } // float, not CGFloat
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommandEvents cannot be initialized externally.
@@ -1858,7 +1849,7 @@ namespace MediaPlayer {
 		float Rating { get; } // float, not CGFloat
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Name: NSGenericException Reason: MPSeekCommandEvents cannot be initialized externally.
@@ -1868,7 +1859,7 @@ namespace MediaPlayer {
 		MPSeekCommandEventType Type { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommandEvents cannot be initialized externally.
@@ -1878,7 +1869,7 @@ namespace MediaPlayer {
 		double /* NSTimeInterval */ Interval { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (7,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor]
@@ -1888,7 +1879,7 @@ namespace MediaPlayer {
 		bool Negative { [Bind ("isNegative")] get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (9,0), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeLanguageOptionCommandEvents cannot be initialized externally.
@@ -1902,7 +1893,7 @@ namespace MediaPlayer {
 		MPChangeLanguageOptionSetting Setting { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (8,0), Watch (5,0)]
 	[BaseType (typeof(MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommandEvent cannot be initialized externally.
@@ -1917,7 +1908,7 @@ namespace MediaPlayer {
 		bool PreservesShuffleMode { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (8,0), Watch (5,0)]
 	[BaseType (typeof(MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommandEvent cannot be initialized externally.
@@ -1932,7 +1923,7 @@ namespace MediaPlayer {
 		bool PreservesRepeatMode { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (9,0), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // pre-emptive
@@ -1965,7 +1956,7 @@ namespace MediaPlayer {
 		bool IsAutomaticAudibleLanguageOption { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (9,0), Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // pre-emptive
@@ -1983,7 +1974,7 @@ namespace MediaPlayer {
 		bool AllowEmptySelection { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (9,0)]
 	[Watch (5,0)]
 	[Static]
@@ -2020,14 +2011,14 @@ namespace MediaPlayer {
 		NSString VoiceOverTranslation { get; }
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (9,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSGenericException Reason: MPChangePlaybackPositionCommands cannot be initialized externally.
 	interface MPChangePlaybackPositionCommand {
 	}
 
-	[Mac (10,12,2, onlyOn64: true)]
+	[Mac (10,12,2)]
 	[iOS (9,1), Watch (5,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSGenericException Reason: MPChangePlaybackPositionCommandEvents cannot be initialized externally.
@@ -2224,8 +2215,8 @@ namespace MediaPlayer {
 	}
 #endif
 	[iOS (9,0)][TV (9,0)]
-	[Mac (10,12,1, onlyOn64: true)]
-	[NoWatch]
+	[Mac (10,12,1)]
+	[Watch (6,0)]
 	[Category]
 	[BaseType (typeof (AVMediaSelectionOption))]
 	interface AVMediaSelectionOption_MPNowPlayingInfoLanguageOptionAdditions {
@@ -2234,8 +2225,8 @@ namespace MediaPlayer {
 	}
 
 	[iOS (9,0)][TV (9,0)]
-	[Mac (10,12,1, onlyOn64: true)]
-	[NoWatch]
+	[Mac (10,12,1)]
+	[Watch (6,0)]
 	[Category]
 	[BaseType (typeof (AVMediaSelectionGroup))]
 	interface AVMediaSelectionGroup_MPNowPlayingInfoLanguageOptionAdditions {

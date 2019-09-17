@@ -25,7 +25,7 @@ namespace Xamarin.MMP.Tests
 				string main = Path.Combine (tmpDir, "Today/TodayViewController.cs");
 				TI.CopyFileWithSubstitutions (project, project, s => s.Replace ("%ITEMGROUP%", ""));
 				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("%TESTCODE%", ""));
-				TI.BuildProject (project, isUnified: true);
+				TI.BuildProject (project);
 			});
 		}
 
@@ -38,7 +38,7 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir =>
 			{
 				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Finder"), tmpDir);
-				TI.BuildProject (Path.Combine (tmpDir, "Finder/FinderExtensionTest.csproj"), isUnified: true);
+				TI.BuildProject (Path.Combine (tmpDir, "Finder/FinderExtensionTest.csproj"));
 			});
 		}
 
@@ -51,7 +51,7 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir =>
 			{
 				TI.CopyDirectory (Path.Combine (TI.FindSourceDirectory (), @"Share"), tmpDir);
-				TI.BuildProject (Path.Combine (tmpDir, "Share/ShareExtensionTest.csproj"), isUnified: true);
+				TI.BuildProject (Path.Combine (tmpDir, "Share/ShareExtensionTest.csproj"));
 			});
 		}
 	}

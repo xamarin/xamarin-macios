@@ -14,6 +14,10 @@ xamarin_get_locale_country_code ()
 	// COOP: no managed memory access: any mode.
 	NSLocale *locale = [NSLocale currentLocale];
 	NSString *cc = [locale objectForKey: NSLocaleCountryCode];
+	if (cc == NULL) {
+		// Assume the US if the country isn't available.
+		return strdup ("US");
+	}
 	return strdup ([cc UTF8String]);
 }
 
@@ -171,17 +175,27 @@ xamarin_GetFolderPath (int folder)
 // it impossible to disable dlsym and, for example, run dontlink on devices
 // https://bugzilla.xamarin.com/show_bug.cgi?id=36569#c4
 
-void objc_msgSend_stret (id self, SEL op, ...)
+void objc_msgSend_stret (void)
 {
-	PRINT ("Unimplemented objc_msgSend_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSend_stret");
 	abort ();
 }
 
-void objc_msgSendSuper_stret (struct objc_super *super, SEL op, ...)
+void objc_msgSendSuper_stret (void)
 {
-	PRINT ("Unimplemented objc_msgSendSuper_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSendSuper_stret");
 	abort ();
 }
 
 #endif
 
+#ifdef MONOMAC
+// <quote>Do not hard-code this parameter as a C string.</quote>
+// works on iOS (where we don't need it) and crash on macOS
+const char *
+xamarin_encode_CGAffineTransform ()
+{
+    // COOP: no managed memory access: any mode.
+    return @encode (CGAffineTransform);
+}
+#endif

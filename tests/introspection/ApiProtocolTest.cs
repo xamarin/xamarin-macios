@@ -103,6 +103,12 @@ namespace Introspection {
 				case "VSAccountProviderResponse":
 				case "PHEditingExtensionContext":
 				case "HKCumulativeQuantitySeriesSample":
+				// Xcode 11 - Conformance not in headers
+				case "UISceneActivationConditions":
+				case "UISceneSession":
+					return true;
+				// Xcode 11
+				case "NSFileProviderSearchQuery":
 					return true;
 				}
 				break;
@@ -114,6 +120,8 @@ namespace Introspection {
 				// Xcode 10
 				case "UNNotificationCategory":
 				case "UNNotificationSound":
+				// Xcode 11 - Conformance not in headers
+				case "UISceneSession":
 					return true;
 				}
 				break;
@@ -153,6 +161,16 @@ namespace Introspection {
 				case "VSAccountMetadataRequest":
 				case "VSAccountProviderResponse":
 				case "PHEditingExtensionContext":
+					return true;
+				// Xcode 11 (on device only)
+				case "ICHandle":
+				case "ICNotification":
+				case "ICNotificationManagerConfiguration":
+				case "MPSNNNeuronDescriptor":
+				// Xcode 11
+				case "NSFileProviderItemVersion":
+				case "NSFileProviderRequest":
+				case "NSFileProviderSearchQuery":
 					return true;
 				}
 				break;
@@ -201,6 +219,17 @@ namespace Introspection {
 				case "VSAccountProviderResponse":
 				case "PHEditingExtensionContext":
 					return true;
+				// Xcode 11 (on device only)
+				case "ICHandle":
+				case "ICNotification":
+				case "ICNotificationManagerConfiguration":
+				case "MPSNNNeuronDescriptor":
+					return true;
+				// Xcode 11
+				case "NSFileProviderItemVersion":
+				case "NSFileProviderRequest":
+				case "NSFileProviderSearchQuery":
+					return true;
 				}
 				break;
 			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
@@ -218,8 +247,16 @@ namespace Introspection {
 				}
 				break;
 			case "NSProgressReporting":
-				if (!TestRuntime.CheckXcodeVersion (9, 0))
-					return true;
+				switch (type.Name) {
+				case "NSOperationQueue":
+					if (!TestRuntime.CheckXcodeVersion (11,0))
+						return true;
+					break;
+				default:
+					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
+				}
 				break;
 			case "GKSceneRootNodeType":
 				// it's an empty protocol, defined by a category and does not reply as expected
@@ -241,6 +278,25 @@ namespace Introspection {
 				// inherits it from UIDocument
 				case "UIManagedDocument":
 					return true;
+				}
+				break;
+			case "SCNTechniqueSupport":
+				if (!TestRuntime.CheckXcodeVersion (11,0))
+					return false;
+				switch (type.Name) {
+				case "SCNLight":
+					return true;
+				}
+				break;
+			case "VNRequestRevisionProviding":
+				switch (type.Name) {
+				case "VNFaceLandmarks":
+				case "VNFaceLandmarks2D":
+				case "VNFaceLandmarkRegion":
+				case "VNFaceLandmarkRegion2D":
+					if (!TestRuntime.CheckXcodeVersion (11,0))
+						return true;
+					break;
 				}
 				break;
 			}

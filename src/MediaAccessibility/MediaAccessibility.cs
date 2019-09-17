@@ -262,6 +262,34 @@ namespace MediaAccessibility {
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return (MACaptionAppearanceTextEdgeStyle) (int) rv;
 		}
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.MediaAccessibilityLibrary)]
+		static extern void MACaptionAppearanceDidDisplayCaptions (IntPtr /* CFArratRef */ strings);
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		public static void DidDisplayCaptions (string[] strings)
+		{
+			if ((strings == null) || (strings.Length == 0))
+				MACaptionAppearanceDidDisplayCaptions (IntPtr.Zero);
+			else {
+				using (var array = NSArray.FromStrings (strings))
+					MACaptionAppearanceDidDisplayCaptions (array.Handle);
+			}
+		}
+
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		public static void DidDisplayCaptions (NSAttributedString[] strings)
+		{
+			// CFAttributedString is “toll-free bridged” with its Foundation counterpart, NSAttributedString.
+			// https://developer.apple.com/documentation/corefoundation/cfattributedstring?language=objc
+			if ((strings == null) || (strings.Length == 0))
+				MACaptionAppearanceDidDisplayCaptions (IntPtr.Zero);
+			else {
+				using (var array = NSArray.FromNSObjects (strings))
+					MACaptionAppearanceDidDisplayCaptions (array.Handle);
+			}
+		}
 	}
 
 	static partial class MAAudibleMedia {

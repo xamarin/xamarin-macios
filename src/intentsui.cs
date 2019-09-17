@@ -41,6 +41,10 @@ namespace IntentsUI {
 		WhiteOutline,
 		Black,
 		BlackOutline,
+		[iOS (13,0)]
+		Automatic,
+		[iOS (13,0)]
+		AutomaticOutLine,
 	}
 
 	[iOS (11,0)]
@@ -103,6 +107,8 @@ namespace IntentsUI {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("initWithShortcut:")]
 		IntPtr Constructor (INShortcut shortcut);
 	}
@@ -135,6 +141,8 @@ namespace IntentsUI {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("initWithVoiceShortcut:")]
 		IntPtr Constructor (INVoiceShortcut voiceShortcut);
 	}
@@ -164,6 +172,8 @@ namespace IntentsUI {
 	[DisableDefaultCtor]
 	interface INUIAddVoiceShortcutButton {
 
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("initWithStyle:")]
 		IntPtr Constructor (INUIAddVoiceShortcutButtonStyle style);
 
@@ -183,6 +193,10 @@ namespace IntentsUI {
 		[iOS (12,2)]
 		[Export ("cornerRadius", ArgumentSemantic.Assign)]
 		nfloat CornerRadius { get; set; }
+		
+		[iOS (13,0)]
+		[Export ("setStyle:")]
+		void SetStyle (INUIAddVoiceShortcutButtonStyle style);
 	}
 
 	interface IINUIAddVoiceShortcutButtonDelegate {}

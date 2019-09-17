@@ -1,6 +1,6 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved.
 
-#if WATCH || IOS
+#if WATCH
 
 using System;
 using System.Reflection;

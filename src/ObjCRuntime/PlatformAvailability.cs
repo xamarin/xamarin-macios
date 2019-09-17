@@ -567,16 +567,19 @@ namespace ObjCRuntime
 		{
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload that takes '(major, minor)', since iOS is always 64-bit.")]
 		public iOSAttribute (byte major, byte minor, bool onlyOn64 = false)
 			: this (major, minor, 0, onlyOn64)
 		{
 		}
 
-
+		[Obsolete ("Use the overload that takes '(major, minor, subminor)', since iOS is always 64-bit.")]
 		public iOSAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
 			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32) | (onlyOn64 ? Platform.iOS_Arch64 : Platform.None))
 		{
 		}
+#endif
 
 	}
 
@@ -590,10 +593,13 @@ namespace ObjCRuntime
 		{
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload that takes '(major, minor, subminor)', since macOS is always 64-bit.")]
 		public MacAttribute (byte major, byte minor, bool onlyOn64 = false)
 			: this (major, minor, 0, onlyOn64)
 		{
 		}
+#endif
 		
 		public MacAttribute (byte major, byte minor, PlatformArchitecture arch)
 			: this (major, minor, 0, arch)
@@ -605,130 +611,23 @@ namespace ObjCRuntime
 		{
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload that takes '(major, minor, subminor)', since macOS is always 64-bit.")]
 		public MacAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
 			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32) | (onlyOn64 ? Platform.Mac_Arch64 : Platform.None))
 		{
 		}
+#endif
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload that takes '(major, minor, subminor)', since macOS is always 64-bit.")]
 		public MacAttribute (byte major, byte minor, byte subminor, PlatformArchitecture arch)
 			: base ((Platform)((ulong)major << 48 | (ulong)minor << 40 | (ulong)subminor << 32) | (arch == PlatformArchitecture.Arch64 ? Platform.Mac_Arch64 : Platform.None))
 		{
 		}
+#endif
 
 	}
-
-	// !XAMCORE_2_0 -> needed for classic (as public attributes)
-	//
-	// COREBUILD -> required because I'm too lazy to convert the [Since]... from all bindings files. The generator
-	// will convert them into the modern attributes
-	//
-	// MONOMAC -> required to keep them internal in unified. this can be removed once xamcore non-generated code
-	// stops using the old attributes
-
-#if !XAMCORE_2_0 || COREBUILD || MONOMAC
-
-#if !XAMCORE_2_0 || COREBUILD
-	public 
-#endif
-	sealed class SinceAttribute : AvailabilityAttribute
-	{
-		public byte Major;
-		public byte Minor;
-
-		public SinceAttribute (byte major, byte minor) : base ((Platform)(major << 16 | minor << 8))
-		{
-			Major = major;
-			Minor = minor;
-		}
-
-#if !XAMCORE_2_0
-		// we want generated code to use the new attribute for unified
-		public override string ToString ()
-		{
-			return String.Format ("[Since ({0},{1})]", Major, Minor);
-		}
-#endif
-	}
-
-#if !XAMCORE_2_0 || COREBUILD
-	public 
-#endif
-	sealed class LionAttribute : AvailabilityAttribute
-	{
-		public LionAttribute () : base (Platform.Mac_10_7)
-		{
-		}
-
-		public LionAttribute (bool onlyOn64)
-			: base (Platform.Mac_10_7 | (onlyOn64 ? Platform.Mac_Arch64 : Platform.None))
-		{
-		}
-
-#if !XAMCORE_2_0
-		// we want generated code to use the new attribute for unified
-		public override string ToString ()
-		{
-			if (Introduced.ToMacArch () == Platform.Mac_Arch64)
-				return "[Lion (onlyOn64: true)]";
-
-			return "[Lion]";
-		}
-#endif
-	}
-
-#if !XAMCORE_2_0 || COREBUILD
-	public 
-#endif
-	sealed class MountainLionAttribute : AvailabilityAttribute
-	{
-		public MountainLionAttribute () : base (Platform.Mac_10_8)
-		{
-		}
-
-		public MountainLionAttribute (bool onlyOn64)
-			: base (Platform.Mac_10_8 | (onlyOn64 ? Platform.Mac_Arch64 : Platform.None))
-		{
-		}
-
-#if !XAMCORE_2_0
-		// we want generated code to use the new attribute for unified
-		public override string ToString ()
-		{
-			if (Introduced.ToMacArch () == Platform.Mac_Arch64)
-				return "[MountainLion (onlyOn64: true)]";
-
-			return "[MountainLion]";
-		}
-#endif
-	}
-
-#if !XAMCORE_2_0 || COREBUILD
-	public 
-#endif
-	sealed class MavericksAttribute : AvailabilityAttribute
-	{
-		public MavericksAttribute () : base (Platform.Mac_10_9)
-		{
-		}
-
-		public MavericksAttribute (bool onlyOn64)
-			: base (Platform.Mac_10_9 | (onlyOn64 ? Platform.Mac_Arch64 : Platform.None))
-		{
-		}
-
-
-#if !XAMCORE_2_0
-		public override string ToString ()
-		{
-			if (Introduced.ToMacArch () == Platform.Mac_Arch64)
-				return "[Mavericks (onlyOn64: true)]";
-
-			return "[Mavericks]";
-		}
-#endif
-	}
-
-#endif
 }
 
 #endif

@@ -81,5 +81,13 @@ namespace EventKit {
 		public EKAlarm () {}
 #endif
 	}
+
+	partial class EKReminder {
+#if !XAMCORE_4_0
+		// https://github.com/xamarin/maccore/issues/1832
+		[Obsolete ("Use 'Create' instead.")]
+		public EKReminder () {}
+#endif
+	}
 }
 #endif // XAMCORE_2_0 || !MONOMAC

@@ -1510,6 +1510,18 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // Quaterniond func (double)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.QuatD,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Double },
+					},
+				}
+			);
+
 			// Required for ModelIO
 			data.Add (
 				new FunctionData {
@@ -2449,6 +2461,18 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // Vector2 func (IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Vector2,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // void func (NVector3, Double)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
@@ -2580,6 +2604,48 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (NVector3, NVector3, Int64, Int64)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NVector3 },
+						new ParameterData { TypeData = Types.NVector3 },
+						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.Int64 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (NVector3, NVector3, int, int)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NVector3 },
+						new ParameterData { TypeData = Types.NVector3 },
+						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.Int32 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // NMatrix4 func (IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.NMatrix4,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr }
+					}
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
@@ -2694,6 +2760,7 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t}");
 				break;
 			case "Quaternion":
+			case "Quaterniond":
 				writer.WriteLine ("\t{0}{2}vector.a = {1}.vector [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}vector.b = {1}.vector [1];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}vector.c = {1}.vector [2];", managedVariable, nativeVariable, accessor);
@@ -2831,6 +2898,7 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t}");
 				break;
 			case "Quaternion":
+			case "Quaterniond":
 				writer.WriteLine ("\t{0}.vector [0] = {1}{2}vector.a;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0}.vector [1] = {1}{2}vector.b;", nativeVariable, managedVariable, accessor);
 				writer.WriteLine ("\t{0}.vector [2] = {1}{2}vector.c;", nativeVariable, managedVariable, accessor);
@@ -3525,6 +3593,14 @@ namespace Xamarin.BindingMethods.Generator
 				NativeType = "simd_quatf",
 				NativeWrapperType = "struct QuatF",
 				RequireMarshal = true,
+			};
+
+			public static TypeData QuatD = new TypeData {
+				ManagedType = "Quaterniond",
+				NativeType = "simd_quatd",
+				NativeWrapperType = "struct QuatD",
+				RequireMarshal = true,
+				IsX64Stret = true,
 			};
 
 			public static TypeData MPSImageHistogramInfo = new TypeData {

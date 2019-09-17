@@ -17,7 +17,6 @@ namespace Foundation {
 		static IntPtr selSupportsSecureCodingHandle = Selector.GetHandle (selSupportsSecureCoding);
 #endif
 
-		[iOS (6,0)]
 		public static bool SupportsSecureCoding (Type type)
 		{
 			if (type == null)
@@ -38,7 +37,6 @@ namespace Foundation {
 #endif
 		}
 
-		[iOS (6,0)]
 		public static bool SupportsSecureCoding (Class klass)
 		{
 			if (klass == null)

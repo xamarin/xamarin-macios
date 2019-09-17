@@ -59,7 +59,7 @@ namespace Xamarin.iOS.Tasks
 			};
 		}
 
-		[Test]
+		// [Test] - https://github.com/xamarin/xamarin-macios/issues/6970
 		public void TestBasicIBToolFunctionality ()
 		{
 			var tmp = Path.Combine (Path.GetTempPath (), "basic-ibtool");
@@ -107,7 +107,7 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		[Test]
+		// [Test] - https://github.com/xamarin/xamarin-macios/issues/6970
 		public void TestAdvancedIBToolFunctionality ()
 		{
 			var tmp = Path.Combine (Path.GetTempPath (), "advanced-ibtool");
@@ -235,13 +235,13 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		[Test]
+		// [Test] - https://github.com/xamarin/xamarin-macios/issues/6970
 		public void TestGenericAndDeviceSpecificXibsGenericFirst ()
 		{
 			TestGenericAndDeviceSpecificXibsGeneric ("View.xib", "View~ipad.xib");
 		}
 
-		[Test]
+		// [Test] - https://github.com/xamarin/xamarin-macios/issues/6970
 		public void TestGenericAndDeviceSpecificXibsGenericLast ()
 		{
 			TestGenericAndDeviceSpecificXibsGeneric ("View~ipad.xib", "View.xib");

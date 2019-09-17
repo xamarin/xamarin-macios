@@ -81,6 +81,9 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		[SetUp]
 		public void SetUp ()
 		{
+			// iOS 13 and friends require bluetooth permission
+			if (TestRuntime.CheckXcodeVersion (11, 0))
+			    TestRuntime.CheckBluetoothPermission ();
 			// Required API is available in macOS 10.8, but it doesn't work (hangs in 10.8-10.9, randomly crashes in 10.10) on the bots.
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
 			var e = new AutoResetEvent (false);

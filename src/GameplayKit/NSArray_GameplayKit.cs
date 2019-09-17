@@ -13,7 +13,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace GameplayKit {
-	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[iOS (10,0), TV (10,0), Mac (10,12)]
 	public static class NSArray_GameplayKit {
 
 		[Export ("shuffledArrayWithRandomSource:")]

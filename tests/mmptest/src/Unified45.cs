@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.Net45 {
 			if (code != 0)
 				Assert.Fail ("ProtobufShouldSerializeAndDeserialize failed to restore nuget packages");
 
-			TI.BuildProject (testFolder + "/Protobuf_Test.csproj", true);
+			TI.BuildProject (testFolder + "/Protobuf_Test.csproj");
 
 			TI.RunAndAssert (testFolder + "/bin/Debug/Protobuf_Test.app/Contents/MacOS/Protobuf_Test", (string)null, "Run");
 			Assert.True (File.Exists (testResults));
@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.Net45 {
 			if (code != 0)
 				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");
 
-			TI.BuildProject (testFolder + "/ImmutableCollection_Test.csproj", true);
+			TI.BuildProject (testFolder + "/ImmutableCollection_Test.csproj");
 
 			TI.RunAndAssert (testFolder + "/bin/Debug/ImmutableCollection_Test.app/Contents/MacOS/ImmutableCollection_Test", (string)null, "Run");
 		}
@@ -69,7 +69,7 @@ namespace MonoTouchFixtures.Net45 {
 			if (code != 0)
 				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");
 
-			TI.BuildProject (testFolder + "/BasicPCLTest.csproj", true);
+			TI.BuildProject (testFolder + "/BasicPCLTest.csproj");
 
 			TI.RunAndAssert (testFolder + "/bin/Debug/BasicPCLTest.app/Contents/MacOS/BasicPCLTest", (string)null, "Run");
 			Assert.True (File.Exists (testResults));

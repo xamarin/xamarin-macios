@@ -13,6 +13,7 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
+	[Watch (6,0)]
 	[StructLayout(LayoutKind.Sequential)]
 	public partial struct CMTime {
 		// CMTimeFlags -> uint32_t -> CMTime.h
@@ -308,11 +309,11 @@ namespace CoreMedia {
 			return CMTimeMinimum (time1, time2);
 		}
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static CMTime CMTimeFoldIntoRange (CMTime time, CMTimeRange foldRange);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public static CMTime Fold (CMTime time, CMTimeRange foldRange)
 		{
 			return CMTimeFoldIntoRange (time, foldRange);
@@ -375,12 +376,14 @@ namespace CoreMedia {
 		}
 
 #if !XAMCORE_2_0
+#if !WATCH
 		[Obsolete ("Use 'FromDictionary (NSDictionary)' instead.")]
 		public static CMTime FromDictionary (IntPtr dict)
 		{
 			return CMTimeMakeFromDictionary (dict);
 		}
-#endif		
+#endif // !WATCH
+#endif	// !XAMCORE_2_0
 #endif // !COREBUILD
 	}
 }

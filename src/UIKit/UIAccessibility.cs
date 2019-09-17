@@ -92,11 +92,9 @@ namespace UIKit {
 		}
 		
 		// UIAccessibility.h
-		[iOS (6,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* BOOL */ bool UIAccessibilityIsInvertColorsEnabled ();
 
-		[iOS (6,0)]
 		static public bool IsInvertColorsEnabled {
 			get {
 				return UIAccessibilityIsInvertColorsEnabled ();
@@ -104,11 +102,9 @@ namespace UIKit {
 		}
 		
 		// UIAccessibility.h
-		[iOS (6,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* BOOL */ bool UIAccessibilityIsGuidedAccessEnabled ();
 
-		[iOS (6,0)]
 		static public bool IsGuidedAccessEnabled {
 			get {
 				return UIAccessibilityIsGuidedAccessEnabled ();
@@ -287,6 +283,13 @@ namespace UIKit {
 			}
 		}
 
+		[iOS (13,0), TV (13,0)]
+		[DllImport (Constants.UIKitLibrary)]
+		static extern bool UIAccessibilityIsVideoAutoplayEnabled ();
+
+		[iOS (13,0), TV (13,0)]
+		static public bool IsVideoAutoplayEnabled => UIAccessibilityIsVideoAutoplayEnabled ();
+
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		static extern bool UIAccessibilityIsReduceTransparencyEnabled ();
@@ -338,6 +341,20 @@ namespace UIKit {
 				return UIAccessibilityIsAssistiveTouchRunning ();
 			}
 		}
+
+		[iOS (13,0), TV (13,0)]
+		[DllImport (Constants.UIKitLibrary)]
+		static extern bool UIAccessibilityShouldDifferentiateWithoutColor ();
+
+		[iOS (13,0), TV (13,0)]
+		public static bool ShouldDifferentiateWithoutColor => UIAccessibilityShouldDifferentiateWithoutColor ();
+
+		[iOS (13,0), TV (13,0)]
+		[DllImport (Constants.UIKitLibrary)]
+		static extern bool UIAccessibilityIsOnOffSwitchLabelsEnabled ();
+
+		[iOS (13,0), TV (13,0)]
+		public static bool IsOnOffSwitchLabelsEnabled => UIAccessibilityIsOnOffSwitchLabelsEnabled ();
 
 #if !TVOS
 		[iOS (10,0)]
