@@ -5985,39 +5985,39 @@ namespace AVFoundation {
 			[Field ("AVMetadataIdentifierQuickTimeMetadataContentIdentifier")]
 			NSString ContentIdentifier { get; }
 
-			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+			[Watch (6, 0), TV (13, 0), NoMac, iOS (13, 0)]
 			[Field ("AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScoringVersion")]
 			NSString SpatialOverCaptureQualityScoringVersion { get; }
 
-			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+			[Watch (6, 0), TV (13, 0), NoMac, iOS (13, 0)]
 			[Field ("AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScore")]
 			NSString SpatialOverCaptureQualityScore { get; }
 
-			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+			[Watch (6, 0), TV (13, 0), NoMac, iOS (13, 0)]
 			[Field ("AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScoringVersion")]
 			NSString LivePhotoVitalityScoringVersion { get; }
 
-			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+			[Watch (6, 0), TV (13, 0), NoMac, iOS (13, 0)]
 			[Field ("AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScore")]
 			NSString LivePhotoVitalityScore { get; }
 
-			[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+			[NoWatch, NoTV, NoMac, iOS (13, 0)]
 			[Field ("AVMetadataIdentifierQuickTimeMetadataDetectedSalientObject")]
 			NSString DetectedSalientObject { get; }
 
-			[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+			[NoWatch, NoTV, NoMac, iOS (13, 0)]
 			[Field ("AVMetadataIdentifierQuickTimeMetadataDetectedHumanBody")]
 			NSString DetectedHumanBody { get; }
 
-			[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+			[NoWatch, NoTV, NoMac, iOS (13, 0)]
 			[Field ("AVMetadataIdentifierQuickTimeMetadataDetectedDogBody")]
 			NSString DetectedDogBody { get; }
 
-			[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+			[NoWatch, NoTV, NoMac, iOS (13, 0)]
 			[Field ("AVMetadataIdentifierQuickTimeMetadataDetectedCatBody")]
 			NSString DetectedCatBody { get; }
 
-			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+			[Watch (6, 0), TV (13, 0), NoMac, iOS (13, 0)]
 			[Field ("AVMetadataIdentifierQuickTimeMetadataAutoLivePhoto")]
 			NSString AutoLivePhoto { get; }
 		}
@@ -6672,19 +6672,19 @@ namespace AVFoundation {
 		[Field ("AVMetadataObjectTypeDataMatrixCode")]
 		NSString TypeDataMatrixCode { get; }
 
-		[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Field ("AVMetadataObjectTypeCatBody")]
 		NSString TypeCatBody { get; }
 
-		[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Field ("AVMetadataObjectTypeDogBody")]
 		NSString TypeDogBody { get; }
 
-		[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Field ("AVMetadataObjectTypeHumanBody")]
 		NSString TypeHumanBody { get; }
 
-		[NoWatch, NoTV, Mac (10, 15), iOS (13, 0)]
+		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Field ("AVMetadataObjectTypeSalientObject")]
 		NSString TypeSalientObject { get; }
 	}

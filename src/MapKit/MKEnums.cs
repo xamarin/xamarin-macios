@@ -114,9 +114,9 @@ namespace MapKit {
 
 	[TV (9,2)][NoWatch][iOS (9,3)]
 	[Native]
-	[Deprecated (PlatformName.iOS, 13, 0, message: "Use `MKLocalSearchCompleterResultType` instead.")]
-	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use `MKLocalSearchCompleterResultType` instead.")]
-	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use `MKLocalSearchCompleterResultType` instead.")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
 	public enum MKSearchCompletionFilterType : long {
 		AndQueries = 0,
 		Only
