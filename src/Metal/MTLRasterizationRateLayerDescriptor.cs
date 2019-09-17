@@ -33,6 +33,11 @@ namespace Metal {
 		[NoMac, NoTV, iOS (13,0)]
 		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
 		{
+			if (sampleCount.Width != horizontal.Length)
+				throw new ArgumentOutOfRangeException ("horizontal lenght should be equal to the sampleCount.Witdh.");
+			if (sampleCount.Height != vertical.Length)
+				throw new ArgumentOutOfRangeException ("horizontal lenght should be equal to the sampleCount.Witdh.");
+
 			unsafe {
 				fixed (void* horizontalHandle = horizontal)
 				fixed (void* verticalHandle = vertical) {
