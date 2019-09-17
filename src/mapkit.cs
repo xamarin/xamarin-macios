@@ -670,9 +670,9 @@ namespace MapKit {
 		[iOS (7,0), Export ("rendererForOverlay:")]
 		MKOverlayRenderer RendererForOverlay (IMKOverlay overlay);
 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use `PointOfInterestFilter` instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use `PointOfInterestFilter` instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use `PointOfInterestFilter` instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'PointOfInterestFilter' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'PointOfInterestFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'PointOfInterestFilter' instead.")]
 		[iOS (7,0)]
 		[Export ("showsPointsOfInterest")]
 		bool ShowsPointsOfInterest { get; set; }
@@ -1626,9 +1626,9 @@ namespace MapKit {
 		nfloat Scale { get; set; }
 #endif
 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use `PointOfInterestFilter` instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use `PointOfInterestFilter` instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use `PointOfInterestFilter` instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'PointOfInterestFilter' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'PointOfInterestFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'PointOfInterestFilter' instead.")]
 		[Export ("showsPointsOfInterest")]
 		bool ShowsPointsOfInterest { get; set; }
 
