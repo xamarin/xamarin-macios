@@ -1074,7 +1074,7 @@ namespace Metal {
 		BuiltIn = 0,
 		Slot = 1,
 		External = 2,
-		Unspecified = 18446744073709551615,
+		Unspecified = ulong.MaxValue,
 	}
 
 	[NoiOS, NoTV, Mac (10,15)]
