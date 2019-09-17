@@ -204,6 +204,14 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1066'/>BI1066: Unsupported return type '{type}' in {method}.
 
+### <a name='BI1067'/>BI1067: The type '{type}' is trying to inline the property '{property}' from the protocols '{readonly.DeclaringType.FullName}' and '{writeonly.DeclaringType.FullName}', but the inlined properties don't share the same accessors ('{readonly}' is read-only, while '${writeonly}' is write-only).
+
+### <a name='BI1068'/>BI1068: The type '{type}' is trying to inline the property '{property}' from the protocols '{protocol1}' and '{protocol2}', and the inlined properties use different selectors ({protocol1} uses '{selector1}', and {protocol2} uses '{selector2}.
+
+### <a name='BI1069'/>BI1069: The type '{type}' is trying to inline the methods binding the selector '{selector}' from the protocols '{protocol1}' and '{protocol2}', using methods with different signatures ('{signature}' vs '{signature2}').
+
+### <a name='BI1070'/>BI1070: The type '{type}' is trying to inline the property '{property}' from the protocols '{protocol1}' and '{protocol2}', but the inlined properties are of different types ('{property1}' is int, while '{property2}' is int).
+
 # BI11xx: warnings
 
 <!-- 11xx: warnings -->

@@ -5806,8 +5806,104 @@ public partial class Generator : IMemberGatherer {
 		print ("}");
 		print ("");
 		// Methods
+		// First find duplicates and select the best one. We use the selector to determine what's a duplicate.
+		var methodData = requiredInstanceMethods.Select ((v) => {
+			return new MethodData {
+				Method = v,
+				ExportAttribute = GetExportAttribute (v),
+			};
+		}).ToArray ();
+		var methodsGroupedBySelector = methodData.GroupBy ((v) => v.ExportAttribute.Selector);
+		var duplicateMethodsGroupedBySelector = methodsGroupedBySelector.Where ((v) => v.Count () > 1);
+		if (duplicateMethodsGroupedBySelector.Any ()) {
+			// Yes, there are multiple methods with the same selector. Now we must compute the signature for all of them.
+			var computeSignature = new Func<MethodInfo, string> ((MethodInfo minfo) => {
+				var sig = new StringBuilder ();
+				sig.Append (minfo.Name).Append (" (");
+				foreach (var param in minfo.GetParameters ())
+					sig.Append (param.ParameterType.FullName).Append (' ');
+				sig.Append (')');
+				return sig.ToString ();
+			});
+			foreach (var gr in duplicateMethodsGroupedBySelector)
+				foreach (var m in gr)
+					m.Signature = computeSignature (m.Method);
+
+			// Verify that all the duplicate methods have the same signature.
+			// If not, show an error, and if they all have the same signature, remove all but one from the list of methods to generate.
+			foreach (var gr in duplicateMethodsGroupedBySelector) {
+				var distinctMethodsBySignature = gr.GroupBy ((v) => v.Signature).Select ((v) => v.First ()).ToArray ();
+				if (distinctMethodsBySignature.Length > 1) {
+					exceptions.Add (ErrorHelper.CreateError (1069, $"The type '{type.FullName}' is trying to inline the methods binding the selector '{gr.Key}' from the protocols '{distinctMethodsBySignature [0].Method.DeclaringType.FullName}' and '{distinctMethodsBySignature [1].Method.DeclaringType.FullName}'," +
+$" using methods with different signatures ('{distinctMethodsBySignature [0].Method.ToString ()}' vs '{distinctMethodsBySignature [1].Method.ToString ()}')."));
+					continue;
+				}
+
+				// Remove all but the first method from the list required instance methods
+				var exclude = gr.Skip (1).Select ((v) => v.Method).ToArray ();
+				requiredInstanceMethods.RemoveAll ((v) => exclude.Contains (v));
+			}
+
+		}
+		// Go generate code for the methods
 		foreach (var mi in requiredInstanceMethods) {
 			GenerateMethod (type, mi, false, null, false, true, isBaseWrapperProtocolMethod:true);
+		}
+
+		// Properties
+		// First find duplicates and select the best one. Here we use the property name to find duplicates.
+		var propertyDuplicates = requiredInstanceProperties.GroupBy ((v) => v.Name).Where ((v) => v.Count () > 1).ToArray ();
+		if (propertyDuplicates.Any ()) {
+			foreach (var gr in propertyDuplicates) {
+				// Check that all the selectors in the group are identical
+				var properties = gr.ToArray ();
+				var exportAttributes = new ExportAttribute [properties.Length];
+				PropertyInfo readwrite = null;
+				PropertyInfo @readonly = null;
+				PropertyInfo @writeonly = null;
+				for (var i = 0; i < properties.Length; i++) {
+					// Check that all the duplicates use the same selector, and if not show a warning.
+					exportAttributes [i] = GetExportAttribute (properties [i]);
+					if (i > 0 && exportAttributes [i].Selector != exportAttributes [0].Selector) {
+						ErrorHelper.Warning (1068, $"The type '{type.FullName}' is trying to inline the property '{gr.Key}' from the protocols '{properties [0].DeclaringType.FullName}' and '{properties [i].DeclaringType.FullName}'," +
+							$" and the inlined properties use different selectors ({properties [0].DeclaringType.Name}.{properties [0].Name} uses '{exportAttributes [0].Selector}', and {properties [i].DeclaringType.Name}.{properties [i].Name} uses '{exportAttributes [i].Selector}'.");
+					}
+					if (properties [i].CanRead && properties [i].CanWrite) {
+						readwrite = properties [i];
+					} else if (!properties [i].CanRead) {
+						writeonly = properties [i];
+					} else if (!properties [i].CanWrite) {
+						@readonly = properties [i];
+					}
+				}
+
+				// Check that all the duplicates have the same property type
+				var propertyTypes = properties.GroupBy ((v) => v.PropertyType.FullName).Select ((v) => v.First ()).ToArray ();
+				if (propertyTypes.Length > 1) {
+					exceptions.Add (ErrorHelper.CreateError (1070, $"The type '{type.FullName}' is trying to inline the property '{gr.Key}' from the protocols '{propertyTypes [0].DeclaringType.FullName}' and '{propertyTypes [1].DeclaringType.FullName}'," +
+						$" but the inlined properties are of different types ('{propertyTypes [0]}' is {FormatType (type, propertyTypes [0].PropertyType)}, while '{propertyTypes [1]}' is {FormatType (type, propertyTypes [0].PropertyType)})."));
+				}
+
+				// Select the best match of the properties: prefer a read/write property if it exists, otherwise a readonly or writeonly property.
+				PropertyInfo bestMatch;
+				if (readwrite != null) {
+					bestMatch = readwrite;
+				} else if (@readonly != null && writeonly != null) {
+					exceptions.Add (ErrorHelper.CreateError (1067, $"The type '{type.FullName}' is trying to inline the property '{gr.Key}' from the protocols '{@readonly.DeclaringType.FullName}' and '{writeonly.DeclaringType.FullName}'," +
+						$" but the inlined properties don't share the same accessors ('{@readonly}' is read-only, while '${writeonly}' is write-only)."));
+					continue;
+				} else if (@readonly != null) {
+					bestMatch = @readonly;
+				} else if (writeonly != null) {
+					bestMatch = writeonly;
+				} else {
+					exceptions.Add (ErrorHelper.CreateError (99, $"Internal error: property {properties [0]} doesn't have neither a getter nor a setter."));
+					continue;
+				}
+				// Finally remove the properties we don't want to generate.
+				var exclude = properties.Where ((v) => v != bestMatch);
+				requiredInstanceProperties.RemoveAll ((v) => exclude.Contains (v));
+			}
 		}
 		foreach (var pi in requiredInstanceProperties) {
 			GenerateProperty (type, pi, null, false, true);
@@ -5819,6 +5915,13 @@ public partial class Generator : IMemberGatherer {
 			indent--;
 			print ("}");
 		}
+	}
+
+	class MethodData
+	{
+		public MethodInfo Method;
+		public ExportAttribute ExportAttribute;
+		public string Signature;
 	}
 
 	bool ConformToNSCoding (Type type)

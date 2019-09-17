@@ -188,7 +188,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "PencilKit", "PencilKit", 10,15 },
 					{ "Speech", "Speech", 10,15 },
 					{ "LinkPresentation", "LinkPresentation", 10,15 },
-					{ "CoreHaptics", "CoreHaptics", 10,15 },
+					// not sure if the API is available, issue: https://github.com/xamarin/maccore/issues/1951
+					//{ "CoreHaptics", "CoreHaptics", 10,15 },
 				};
 			}
 			return mac_frameworks;
@@ -317,6 +318,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
 				{ "CoreHaptics", "CoreHaptics", 13, 0 },
 				{ "LinkPresentation", "LinkPresentation", 13, 0 },
+				{ "MetricKit", "MetricKit", 13, 0 },
 				{ "PencilKit", "PencilKit", 13, 0 },
 				{ "QuickLookThumbnailing", "QuickLookThumbnailing", 13,0 },
 				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },

@@ -652,11 +652,9 @@ namespace CoreNFC {
 	[Protocol (Name="NFCNDEFTag")]
 	interface NFCNdefTag : NSSecureCoding, NSCopying {
 
-		// FIXME https://github.com/xamarin/xamarin-macios/issues/6366
-		// error CS0102: The type 'NFCFeliCaTagWrapper' already contains a definition for 'Available'
-		// [Abstract]
-		// [Export ("available")]
-		// bool Available { [Bind ("isAvailable")] get; }
+		[Abstract]
+		[Export ("available")]
+		bool Available { [Bind ("isAvailable")] get; }
 
 		[Abstract]
 		[Export ("queryNDEFStatusWithCompletionHandler:")]
