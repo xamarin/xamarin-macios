@@ -198,6 +198,8 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1066'/>BI1066: Unsupported return type '{type}' in {method}.
 
+### <a name='BI1067'/>BI1067: Export attribute of the selector \"{0}\" is missing '[]' in the definition.
+
 # BI11xx: warnings
 
 <!-- 11xx: warnings -->

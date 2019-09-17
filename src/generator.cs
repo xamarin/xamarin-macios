@@ -124,6 +124,7 @@ public static class ReflectionExtensions {
 					bool toadd = true;
 					var modelea = generator.GetExportAttribute (pinfo, out nwrap);
 
+					Console.WriteLine (modelea);
 					if (modelea == null)
 						continue;
 
@@ -3699,6 +3700,9 @@ public partial class Generator : IMemberGatherer {
 				print ("IntPtr retvalarrtmp;");
 				cast_a = "((retvalarrtmp = ";
 				cast_b = ") == IntPtr.Zero ? null : (";
+				if (bindAsT == null) {
+					throw new BindingException (1067, true, "Export selector of \"{0}\" missing '[]' in the definition", minfo.selector);
+				}
 				cast_b += $"NSArray.ArrayFromHandleFunc <{FormatType (bindAsT.DeclaringType, bindAsT)}> (retvalarrtmp, {GetFromBindAsWrapper (minfo, out suffix)})" + suffix;
 				cast_b += "))";
 			} else if (etype == TypeManager.System_String) {
