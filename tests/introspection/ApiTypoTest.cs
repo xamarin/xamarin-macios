@@ -120,6 +120,7 @@ namespace Introspection
 			"Avb", // acronym: Audio Video Bridging
 			"Aliasable",
 			"Arcball",
+			"Atm",
 			"Avg",
 			"Backface",
 			"Bancaire", // french
@@ -429,6 +430,7 @@ namespace Introspection
 			"Pnorm",
 			"Pointillize",
 			"Polyline",
+			"Polylines",
 			"Popularimeter",
 			"Preds", // short for Predicates
 			"Prerolls",
