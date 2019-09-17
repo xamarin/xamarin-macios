@@ -20,13 +20,18 @@ namespace AppKit {
 			return _OpenUrls (urls, bundleIdentifier, options, descriptor, null);
 		}
 
-		public virtual NSImage IconForFileType(string fileType)
+		public virtual NSImage IconForFileType (string fileType)
 		{
 			var nsFileType = NSString.CreateNative (fileType);
-			return IconForFileType(nsFileType);
+			try {
+				return IconForFileType (nsFileType);
+			}
+			finally {
+				NSString.ReleaseNative (nsFileType);
+			}
 		}
 
-		public virtual NSImage IconForFileType(HFSTypeCode typeCode)
+		public virtual NSImage IconForFileType (HfsTypeCode typeCode)
 		{
 			var nsFileType = GetNSFileType ((uint)typeCode);
 			return IconForFileType (nsFileType);
@@ -40,7 +45,7 @@ namespace AppKit {
 
 		private static IntPtr GetNSFileType (uint fourCcTypeCode)
 		{
-			return NSFileTypeForHFSTypeCode(fourCcTypeCode);
+			return NSFileTypeForHFSTypeCode (fourCcTypeCode);
 		}
 
 #if !XAMCORE_4_0

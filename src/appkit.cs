@@ -21319,7 +21319,7 @@ namespace AppKit {
 		[Export ("iconForFiles:"), ThreadSafe]
 		NSImage IconForFiles (string[] fullPaths);
 		
-		[Export ("iconForFileType:"), ThreadSafe]
+		[Export ("iconForFileType:"), ThreadSafe, Internal]
 		NSImage IconForFileType (IntPtr fileTypeOrTypeCode);
 		
 		[Export ("setIcon:forFile:options:"), ThreadSafe]

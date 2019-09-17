@@ -2155,7 +2155,7 @@ namespace AppKit {
 	}
 
 	// FileType 4cc values to use with NSFileTypeForHFSTypeCode.
-	public enum HFSTypeCode: uint
+	public enum HfsTypeCode: uint
 	{
 		/* Generic Finder icons */
 		ClipboardIcon                 = 0x434C4950,   //'CLIP'
@@ -2169,7 +2169,7 @@ namespace AppKit {
 		FontSuitcaseIcon              = 0x4646494C,   //'FFIL'
 		FullTrashIcon                 = 0x66747268,   //'ftrh'
 		GenericApplicationIcon        = 0x4150504C,   //'APPL'
-		GenericCDROMIcon              = 0x63646472,   //'cddr'
+		GenericCdromIcon              = 0x63646472,   //'cddr'
 		GenericControlPanelIcon       = 0x41505043,   //'APPC'
 		GenericControlStripModuleIcon = 0x73646576,   //'sdev'
 		GenericComponentIcon          = 0x74686E67,   //'thng'
@@ -2188,12 +2188,12 @@ namespace AppKit {
 		GenericPCCardIcon             = 0x70636D63,   //'pcmc'
 		GenericPreferencesIcon        = 0x70726566,   //'pref'
 		GenericQueryDocumentIcon      = 0x71657279,   //'qery'
-		GenericRAMDiskIcon            = 0x72616D64,   //'ramd'
+		GenericRamDiskIcon            = 0x72616D64,   //'ramd'
 		GenericSharedLibaryIcon       = 0x73686C62,   //'shlb'
 		GenericStationeryIcon         = 0x73646F63,   //'sdoc'
 		GenericSuitcaseIcon           = 0x73756974,   //'suit'
-		GenericURLIcon                = 0x6775726C,   //'gurl'
-		GenericWORMIcon               = 0x776F726D,   //'worm'
+		GenericUrlIcon                = 0x6775726C,   //'gurl'
+		GenericWormIcon               = 0x776F726D,   //'worm'
 		InternationalResourcesIcon    = 0x6966696C,   //'ifil'
 		KeyboardLayoutIcon            = 0x6B66696C,   //'kfil'
 		SoundFileIcon                 = 0x7366696C,   //'sfil'
@@ -2206,14 +2206,14 @@ namespace AppKit {
 		UnknownFSObjectIcon           = 0x756E6673,   //'unfs'
 
 		/* Internet locations */
-		InternetLocationHTTPIcon            = 0x696C6874,   //'ilht'
-		InternetLocationFTPIcon             = 0x696C6674,   //'ilft'
+		InternetLocationHttpIcon            = 0x696C6874,   //'ilht'
+		InternetLocationFtpIcon             = 0x696C6674,   //'ilft'
 		InternetLocationAppleShareIcon      = 0x696C6166,   //'ilaf'
 		InternetLocationAppleTalkZoneIcon   = 0x696C6174,   //'ilat'
 		InternetLocationFileIcon            = 0x696C6669,   //'ilfi'
 		InternetLocationMailIcon            = 0x696C6D61,   //'ilma'
 		InternetLocationNewsIcon            = 0x696C6E77,   //'ilnw'
-		InternetLocationNSLNeighborhoodIcon = 0x696C6E73,   //'ilns'
+		InternetLocationNslNeighborhoodIcon = 0x696C6E73,   //'ilns'
 		InternetLocationGenericIcon         = 0x696C6765,   //'ilge'
 
 		/* Folders */
@@ -2286,9 +2286,9 @@ namespace AppKit {
 		/* Networking icons */
 		AppleTalkIcon      = 0x61746C6B,   //'atlk'
 		AppleTalkZoneIcon  = 0x61747A6E,   //'atzn'
-		AFPServerIcon      = 0x61667073,   //'afps'
-		FTPServerIcon      = 0x66747073,   //'ftps'
-		HTTPServerIcon     = 0x68747073,   //'htps'
+		AfpServerIcon      = 0x61667073,   //'afps'
+		FtpServerIcon      = 0x66747073,   //'ftps'
+		HttpServerIcon     = 0x68747073,   //'htps'
 		GenericNetworkIcon = 0x676E6574,   //'gnet'
 		IPFileServerIcon   = 0x69737276,   //'isrv'
 
