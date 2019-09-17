@@ -124,7 +124,6 @@ public static class ReflectionExtensions {
 					bool toadd = true;
 					var modelea = generator.GetExportAttribute (pinfo, out nwrap);
 
-					Console.WriteLine (modelea);
 					if (modelea == null)
 						continue;
 
