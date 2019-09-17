@@ -1283,7 +1283,7 @@ namespace Metal {
 		[NoMac, NoTV, iOS (13,0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("sparseTileSizeWithTextureType:pixelFormat:sampleCount:")]
-		MTLSize SparseTileSize (MTLTextureType textureType, MTLPixelFormat pixelFormat, nuint sampleCount);
+		MTLSize GetSparseTileSize (MTLTextureType textureType, MTLPixelFormat pixelFormat, nuint sampleCount);
 
 #if XAMCORE_4_0
 		[Abstract]
