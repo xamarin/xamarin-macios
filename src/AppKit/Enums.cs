@@ -2154,7 +2154,7 @@ namespace AppKit {
 		Bottom
 	}
 
-#if XAMCORE_4_0
+#if !XAMCORE_4_0
 	public static class NSFileTypeForHFSTypeCode
 	{
 		public static readonly string ComputerIcon = "root";
