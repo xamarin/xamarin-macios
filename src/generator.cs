@@ -3694,14 +3694,15 @@ public partial class Generator : IMemberGatherer {
 		} else if (mai.Type.IsArray){
 			Type etype = mai.Type.GetElementType ();
 			if (minfo != null && minfo.is_bindAs) {
-				var bindAsT = GetBindAsAttribute (minfo.mi).Type.GetElementType ();
+				var bindAttrType = GetBindAsAttribute (minfo.mi).Type;
+				if (!bindAttrType.IsArray) {
+					throw new BindingException (1067, true, "BindAs attribute of selector \"{0}\" is missing '[]' in the definition", minfo.selector);
+				}
+				var bindAsT = bindAttrType.GetElementType ();
 				var suffix = string.Empty;
 				print ("IntPtr retvalarrtmp;");
 				cast_a = "((retvalarrtmp = ";
 				cast_b = ") == IntPtr.Zero ? null : (";
-				if (bindAsT == null) {
-					throw new BindingException (1067, true, "BindAs attribute of selector \"{0}\" is missing '[]' in the definition", minfo.selector);
-				}
 				cast_b += $"NSArray.ArrayFromHandleFunc <{FormatType (bindAsT.DeclaringType, bindAsT)}> (retvalarrtmp, {GetFromBindAsWrapper (minfo, out suffix)})" + suffix;
 				cast_b += "))";
 			} else if (etype == TypeManager.System_String) {
