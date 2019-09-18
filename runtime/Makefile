@@ -32,7 +32,7 @@ EXTRA_DEPENDENCIES = $(SHARED_HEADERS) $(TOP)/Make.config $(TOP)/mk/mono.mk
 
 X86_64_SLICE=$(abspath $(CURDIR)/x86-64-slice.dylib)
 $(X86_64_SLICE): Makefile
-	echo "void xamarin_x86_64_function_for_notarization_workaround_v2 () {}" | $(MAC_CC) -shared -x c -o$@ -
+	$(Q) echo "void xamarin_x86_64_function_for_notarization_workaround_v2 () {}" | $(MAC_CC) -shared -x c -o$@ -
 
 xamarin/mono-runtime.h: mono-runtime.h.t4 exports.t4
 	$(Q_GEN) $(TT) $< -o $@
