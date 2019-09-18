@@ -342,6 +342,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
+			SdkRoot="$(_SdkRoot)"
 			SdkVersion="$(MacOSXSdkVersion)"
 			SourceFile="@(Metal)">
 			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
@@ -377,6 +378,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Items="@(_ForgedMetal)"
 			SdkDevPath="$(_SdkDevPath)"
+			SdkRoot="$(_SdkRoot)"
 			OutputLibrary="$(_AppBundlePath)Contents\Resources\default.metallib">
 		</MetalLib>
 

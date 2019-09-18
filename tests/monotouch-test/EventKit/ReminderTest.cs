@@ -33,6 +33,7 @@ using nuint=global::System.UInt32;
 
 namespace MonoTouchFixtures.EventKit {
 	
+	[Ignore ("default EKReminder constructor fails in xcode 11 beta 3 - https://github.com/xamarin/maccore/issues/1832")]
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ReminderTest

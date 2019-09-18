@@ -58,9 +58,9 @@ namespace Intents {
 		Outgoing,
 		Missed,
 		Received,
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		Latest,
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		Voicemail,
 	}
 
@@ -273,7 +273,7 @@ namespace Intents {
 		Success,
 		Failure,
 		DeferredToApplication,
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		UserConfirmationRequired,
 	}
 
@@ -322,7 +322,7 @@ namespace Intents {
 		Unread,
 		Flagged,
 		Unflagged,
-		[iOS (11,0), Mac (10,13, onlyOn64:true), Watch (4,0)]
+		[iOS (11,0), Mac (10,13), Watch (4,0)]
 		Played,
 	}
 
@@ -336,7 +336,7 @@ namespace Intents {
 		Unread = (1 << 1),
 		Flagged = (1 << 2),
 		Unflagged = (1 << 3),
-		[iOS (11,0), Mac (10,13, onlyOn64:true), Watch (4,0)]
+		[iOS (11,0), Mac (10,13), Watch (4,0)]
 		Played = (1UL << 4),
 	}
 
@@ -391,7 +391,7 @@ namespace Intents {
 
 	[Native]
 	public enum INPersonSuggestionType : long {
-		[iOS (12,0), Mac (10,14, onlyOn64: true), Watch (5,0)]
+		[iOS (12,0), Mac (10,14), Watch (5,0)]
 		None = 0,
 		SocialProfile = 1,
 		InstantMessageAddress,
@@ -581,9 +581,9 @@ namespace Intents {
 		[iOS (10, 2)]
 		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
 		FailureAppConfigurationRequired,
-		[iOS (11,0), Mac (10,13, onlyOn64:true), Watch (4,0)]
+		[iOS (11,0), Mac (10,13), Watch (4,0)]
 		InProgress,
-		[iOS (11,0), Mac (10,13, onlyOn64:true), Watch (4,0)]
+		[iOS (11,0), Mac (10,13), Watch (4,0)]
 		Success,
 	}
 
@@ -599,7 +599,7 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureMessageServiceNotAvailable,
-		[iOS (11,0), Mac (10,13, onlyOn64:true), Watch (4,0)]
+		[iOS (11,0), Mac (10,13), Watch (4,0)]
 		FailureMessageTooManyResults,
 	}
 
@@ -778,9 +778,9 @@ namespace Intents {
 		[iOS (10, 2)]
 		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
 		FailureCallingServiceNotAvailable,
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		FailureContactNotSupportedByApp,
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		FailureNoValidNumber,
 	}
 
@@ -1087,7 +1087,7 @@ namespace Intents {
 		Miles,
 	}
 
-	[Watch (3,2), Mac (10,12, onlyOn64:true), iOS (10,0)]
+	[Watch (3,2), Mac (10,12), iOS (10,0)]
 	[Native]
 	public enum INCallCapability : long {
 		Unknown = 0,
@@ -1095,7 +1095,7 @@ namespace Intents {
 		VideoCall,
 	}
 
-	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Watch (4,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum INCallDestinationType : long {
 		Unknown = 0,
@@ -1105,7 +1105,7 @@ namespace Intents {
 		Redial,
 	}
 
-	[Watch (3,2), Mac (10,12, onlyOn64:true), iOS (10,0)]
+	[Watch (3,2), Mac (10,12), iOS (10,0)]
 	[Native]
 	[Flags]
 	public enum INCallRecordTypeOptions : ulong {
@@ -1176,7 +1176,7 @@ namespace Intents {
 		ByLocationTrigger,
 	}
 
-	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Watch (4,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum INMessageType : long {
 		Unspecified = 0,
@@ -1198,19 +1198,19 @@ namespace Intents {
 		MediaVideo,
 		MediaPass,
 		MediaAudio,
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		PaymentSent,
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		PaymentRequest,
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		PaymentNote,
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		Animoji,
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		ActivitySnippet,
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		File,
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		Link,
 	}
 
@@ -1231,7 +1231,7 @@ namespace Intents {
 		Task,
 	}
 
-	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Watch (4,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum INRecurrenceFrequency : long {
 		Unknown = 0,
@@ -1293,7 +1293,7 @@ namespace Intents {
 		FailureRequiringAppLaunch,
 	}
 
-	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Watch (4,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum INSendMessageRecipientUnsupportedReason : long {
 		NoAccount = 1,
@@ -1875,7 +1875,7 @@ namespace Intents {
 	[DisableDefaultCtor]
 	interface INCallRecordTypeResolutionResult {
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedCallRecordType:")]
@@ -1889,7 +1889,7 @@ namespace Intents {
 		[Export ("successWithResolvedValue:")]
 		INCallRecordTypeResolutionResult SuccessWithResolvedValue (INCallRecordType resolvedValue);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithCallRecordTypeToConfirm:")]
@@ -2239,11 +2239,11 @@ namespace Intents {
 		[Export ("initWithStartDateComponents:endDateComponents:")]
 		IntPtr Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithEKRecurrenceRule:")]
 		IntPtr Constructor (EKRecurrenceRule recurrenceRule);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithStartDateComponents:endDateComponents:recurrenceRule:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSDateComponents startDateComponents, [NullAllowed] NSDateComponents endDateComponents, [NullAllowed] INRecurrenceRule recurrenceRule);
@@ -2254,11 +2254,11 @@ namespace Intents {
 		[NullAllowed, Export ("endDateComponents", ArgumentSemantic.Copy)]
 		NSDateComponents EndDateComponents { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("recurrenceRule", ArgumentSemantic.Copy)]
 		INRecurrenceRule RecurrenceRule { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("EKRecurrenceRule")]
 		[NullAllowed]
 		EKRecurrenceRule EKRecurrenceRule { get; }
@@ -2895,7 +2895,7 @@ namespace Intents {
 		[Export ("imageWithURL:")]
 		INImage FromUrl (NSUrl url);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("imageWithURL:width:height:")]
 		[return: NullAllowed]
@@ -2972,7 +2972,7 @@ namespace Intents {
 		[Wrap ("INIntentIdentifierExtensions.GetValue (IdentifierString)")]
 		INIntentIdentifier? Identifier { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("intentDescription")]
 		string IntentDescription { get; }
 
@@ -2980,16 +2980,16 @@ namespace Intents {
 		[NullAllowed, Export ("suggestedInvocationPhrase")]
 		string SuggestedInvocationPhrase { get; set; }
 
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		[Export ("setImage:forParameterNamed:")]
 		void SetImage ([NullAllowed] INImage image, string parameterName);
 
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		[Export ("imageForParameterNamed:")]
 		[return: NullAllowed]
 		INImage GetImage (string parameterName);
 
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		[Export ("keyImage")]
 		INImage GetKeyImage ();
 	}
@@ -3031,7 +3031,7 @@ namespace Intents {
 		NSUserActivity UserActivity {
 			get;
 
-			[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+			[Watch (5,0), Mac (10,14), iOS (12,0)]
 			set;
 		}
 	}
@@ -3169,12 +3169,12 @@ namespace Intents {
 	[DisableDefaultCtor]
 	interface INMessage : NSCopying, NSSecureCoding {
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:messageType:")]
 		IntPtr Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, INMessageType messageType);
 
@@ -3184,7 +3184,7 @@ namespace Intents {
 		[Export ("identifier")]
 		string Identifier { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("conversationIdentifier")]
 		string ConversationIdentifier { get; }
 
@@ -3200,11 +3200,11 @@ namespace Intents {
 		[NullAllowed, Export ("recipients", ArgumentSemantic.Copy)]
 		INPerson [] Recipients { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("groupName", ArgumentSemantic.Copy)]
 		INSpeakableString GroupName { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("messageType")]
 		INMessageType MessageType { get; }
 	}
@@ -3216,7 +3216,7 @@ namespace Intents {
 	[DisableDefaultCtor]
 	interface INMessageAttributeOptionsResolutionResult {
 
-		[Watch (4,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedMessageAttributeOptions:")]
@@ -3230,7 +3230,7 @@ namespace Intents {
 		[Export ("successWithResolvedValue:")]
 		INMessageAttributeOptionsResolutionResult SuccessWithResolvedValue (INMessageAttributeOptions resolvedValue);
 
-		[Watch (4,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithMessageAttributeOptionsToConfirm:")]
@@ -3274,7 +3274,7 @@ namespace Intents {
 	[DisableDefaultCtor]
 	interface INMessageAttributeResolutionResult {
 
-		[Watch (4,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Internal]
 		[Static]
 		[Export ("successWithResolvedMessageAttribute:")]
@@ -3288,7 +3288,7 @@ namespace Intents {
 		[Export ("successWithResolvedValue:")]
 		INMessageAttributeResolutionResult SuccessWithResolvedValue (INMessageAttribute resolvedValue);
 
-		[Watch (4,0), Mac (10,13, onlyOn64: true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Internal]
 		[Static]
 		[Export ("confirmationRequiredWithMessageAttributeToConfirm:")]
@@ -3447,7 +3447,7 @@ namespace Intents {
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:")]
 		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier);
 
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, bool isMe);
@@ -3498,7 +3498,7 @@ namespace Intents {
 		[Export ("siriMatches", ArgumentSemantic.Copy), NullAllowed]
 		INPerson [] SiriMatches { get; }
 
-		[Mac (10,13, onlyOn64:true), iOS (11,0), Watch (4,0)]
+		[Mac (10,13), iOS (11,0), Watch (4,0)]
 		[Export ("isMe")]
 		bool IsMe { get; }
 	}
@@ -4611,12 +4611,12 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSearchCallHistoryIntent {
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithDateCreated:recipient:callCapabilities:callTypes:unseen:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, [NullAllowed] NSNumber unseen);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Wrap ("this (dateCreated, recipient, callCapabilities, callTypes, new NSNumber (unseen))")]
 		IntPtr Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, bool unseen);
 
@@ -4641,12 +4641,12 @@ namespace Intents {
 		[Export ("callCapabilities", ArgumentSemantic.Assign)]
 		INCallCapabilityOptions CallCapabilities { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("callTypes", ArgumentSemantic.Assign)]
 		INCallRecordTypeOptions CallTypes { get; }
 
 		[Protected]
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("unseen", ArgumentSemantic.Copy)]
 		NSNumber WeakUnseen { get; }
 	}
@@ -4682,7 +4682,7 @@ namespace Intents {
 		[Export ("resolveRecipientForSearchCallHistory:withCompletion:")]
 		void ResolveRecipient (INSearchCallHistoryIntent intent, Action<INPersonResolutionResult> completion);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("resolveCallTypesForSearchCallHistory:withCompletion:")]
 		void ResolveCallTypes (INSearchCallHistoryIntent intent, Action<INCallRecordTypeOptionsResolutionResult> completion);
 
@@ -4705,7 +4705,7 @@ namespace Intents {
 		[Export ("code")]
 		INSearchCallHistoryIntentResponseCode Code { get; }
 
-		[Mac (10,13, onlyOn64:true), iOS (11,0), Watch (4,0)]
+		[Mac (10,13), iOS (11,0), Watch (4,0)]
 		[NullAllowed, Export ("callRecords", ArgumentSemantic.Copy)]
 		INCallRecord [] CallRecords { get; set; }
 	}
@@ -4719,11 +4719,11 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
 		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:")]
 		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames);
 
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:conversationIdentifiers:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames, [NullAllowed] string [] conversationIdentifiers);
@@ -4782,19 +4782,19 @@ namespace Intents {
 		[Export ("groupNamesOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator GroupNamesOperator { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("speakableGroupNames", ArgumentSemantic.Copy)]
 		INSpeakableString [] SpeakableGroupNames { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("speakableGroupNamesOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator SpeakableGroupNamesOperator { get; }
 
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		[NullAllowed, Export ("conversationIdentifiers", ArgumentSemantic.Copy)]
 		string [] ConversationIdentifiers { get; }
 
-		[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[Watch (5,0), Mac (10,14), iOS (12,0)]
 		[Export ("conversationIdentifiersOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator ConversationIdentifiersOperator { get; }
 	}
@@ -4836,7 +4836,7 @@ namespace Intents {
 		[Export ("resolveGroupNamesForSearchForMessages:withCompletion:")]
 		void ResolveGroupNames (INSearchForMessagesIntent intent, Action<INStringResolutionResult []> completion);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("resolveSpeakableGroupNamesForSearchForMessages:withCompletion:")]
 		void ResolveSpeakableGroupNames (INSearchForMessagesIntent intent, Action<INSpeakableStringResolutionResult []> completion);
 	}
@@ -4957,7 +4957,7 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSendMessageIntent {
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithRecipients:content:speakableGroupName:conversationIdentifier:serviceName:sender:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender);
@@ -4974,11 +4974,11 @@ namespace Intents {
 		[NullAllowed, Export ("content")]
 		string Content { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("speakableGroupName", ArgumentSemantic.Copy)]
 		INSpeakableString SpeakableGroupName { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("conversationIdentifier")]
 		string ConversationIdentifier { get; }
 
@@ -5020,7 +5020,7 @@ namespace Intents {
 		[Export ("resolveRecipientsForSendMessage:withCompletion:")]
 		void ResolveRecipients (INSendMessageIntent intent, Action<INPersonResolutionResult []> completion);
 
-		[Watch (4,0), iOS (11,0), Mac (10,13, onlyOn64:true)]
+		[Watch (4,0), iOS (11,0), Mac (10,13)]
 		[Export ("resolveRecipientsForSendMessage:completion:")]
 		void ResolveRecipients (INSendMessageIntent intent, Action<INSendMessageRecipientResolutionResult []> completion);
 
@@ -5033,7 +5033,7 @@ namespace Intents {
 		[Export ("resolveGroupNameForSendMessage:withCompletion:")]
 		void ResolveGroupName (INSendMessageIntent intent, Action<INStringResolutionResult> completion);
 
-		[Watch (4,0), iOS (11,0), Mac (10,13, onlyOn64:true)]
+		[Watch (4,0), iOS (11,0), Mac (10,13)]
 		[Export ("resolveSpeakableGroupNameForSendMessage:withCompletion:")]
 		void ResolveSpeakableGroupName (INSendMessageIntent intent, Action<INSpeakableStringResolutionResult> completion);
 	}
@@ -5052,7 +5052,7 @@ namespace Intents {
 		[Export ("code")]
 		INSendMessageIntentResponseCode Code { get; }
 
-		[Watch (4,0), iOS (11,0), Mac (10,13, onlyOn64:true)]
+		[Watch (4,0), iOS (11,0), Mac (10,13)]
 		[NullAllowed, Export ("sentMessage", ArgumentSemantic.Copy)]
 		INMessage SentMessage { get; set; }
 	}
@@ -5749,14 +5749,14 @@ namespace Intents {
 		[NullAllowed, Export ("pronunciationHint")]
 		string PronunciationHint { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[NullAllowed, Export ("vocabularyIdentifier")]
 		string VocabularyIdentifier { get; }
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -5780,7 +5780,7 @@ namespace Intents {
 	[DisableDefaultCtor]
 	interface INSpeakableString : INSpeakable, NSCopying, NSSecureCoding {
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Internal]
 		[Export ("initWithVocabularyIdentifier:spokenPhrase:pronunciationHint:")]
 		IntPtr InitWithVocabularyIdentifier (string vocabularyIdentifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
@@ -5845,12 +5845,12 @@ namespace Intents {
 		[Export ("initWithContacts:")]
 		IntPtr Constructor ([NullAllowed] INPerson [] contacts);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("initWithDestinationType:contacts:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INCallDestinationType destinationType, [NullAllowed] INPerson [] contacts);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("destinationType", ArgumentSemantic.Assign)]
 		INCallDestinationType DestinationType { get; }
 
@@ -5877,7 +5877,7 @@ namespace Intents {
 #endif
 		(INStartAudioCallIntent intent, Action<INStartAudioCallIntentResponse> completion);
 
-		[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+		[Watch (4,0), Mac (10,13), iOS (11,0)]
 		[Export ("resolveDestinationTypeForStartAudioCall:withCompletion:")]
 		void ResolveDestinationType (INStartAudioCallIntent intent, Action<INCallDestinationTypeResolutionResult> completion);
 
@@ -7394,7 +7394,7 @@ namespace Intents {
 		INBalanceTypeResolutionResult Unsupported { get; }
 	}
 
-	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Watch (4,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCallDestinationTypeResolutionResult {
@@ -7426,7 +7426,7 @@ namespace Intents {
 		INCallDestinationTypeResolutionResult Unsupported { get; }
 	}
 
-	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Watch (4,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INCallRecord : NSCopying, NSSecureCoding {
@@ -7459,7 +7459,7 @@ namespace Intents {
 		NSNumber WeakUnseen { get; }
 	}
 
-	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Watch (4,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCallRecordTypeOptionsResolutionResult {
@@ -7935,7 +7935,7 @@ namespace Intents {
 		INNotebookItemTypeResolutionResult Unsupported { get; }
 	}
 
-	[Watch (4,0), Mac (10,14, onlyOn64: true), iOS (11,0)]
+	[Watch (4,0), Mac (10,14), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INParameter : NSCopying, NSSecureCoding {
@@ -7967,7 +7967,7 @@ namespace Intents {
 		nuint GetIndex (string subKeyPath);
 	}
 
-	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Watch (4,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRecurrenceRule : NSCopying, NSSecureCoding {
@@ -8209,7 +8209,7 @@ namespace Intents {
 		INSortType SortType { get; set; }
 	}
 
-	[Watch (4,0), Mac (10,13, onlyOn64:true), iOS (11,0)]
+	[Watch (4,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (INPersonResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSendMessageRecipientResolutionResult {
@@ -9080,7 +9080,7 @@ namespace Intents {
 	}
 
 	// TODO: We need to inline these into NSString once we figure out how the API is used.
-	//[Watch (5,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	//[Watch (5,0), Mac (10,14), iOS (12,0)]
 	//[Category]
 	//[BaseType (typeof (NSString))]
 	//interface NSString_Intents {

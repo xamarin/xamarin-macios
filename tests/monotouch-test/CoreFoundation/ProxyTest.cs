@@ -10,6 +10,8 @@
 using System;
 using System.Threading;
 using System.IO;
+using System.Net;
+
 #if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
@@ -44,7 +46,75 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Dlfcn.dlclose (lib);
 			}
 		}
+
 #if !__WATCHOS__ && !MONOMAC
+		HttpListener listener;
+		int port;
+		Thread listener_thread;
+		[TestFixtureSetUp]
+		public void Setup ()
+		{
+			var listening = new ManualResetEvent (false);
+			listener_thread = new Thread (() => {
+				try {
+					listener = new HttpListener ();
+
+					// Try and find an unused port
+					int attemptsLeft = 50;
+					Random r = new Random ((int) DateTime.Now.Ticks);
+					while (attemptsLeft-- > 0) {
+						var newPort = r.Next (49152, 65535); // The suggested range for dynamic ports is 49152-65535 (IANA)
+						listener.Prefixes.Clear ();
+						listener.Prefixes.Add ("http://*:" + newPort + "/");
+						try {
+							listener.Start ();
+							listening.Set ();
+							port = newPort;
+							break;
+						} catch (Exception ex) {
+							Console.WriteLine ($"    Failed to listen on port {newPort}: {ex.Message}");
+						}
+					}
+
+					try {
+						//Console.WriteLine ($"    Test log server listening on: localhost:{port}");
+						do {
+							var context = listener.GetContext ();
+							var request = context.Request;
+							var pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, request.RawUrl.Substring (1));
+							Console.WriteLine ($"    Serving {pacPath}");
+							var buf = File.ReadAllBytes (pacPath);
+							context.Response.ContentLength64 = buf.Length;
+							context.Response.OutputStream.Write (buf, 0, buf.Length);
+							context.Response.OutputStream.Close ();
+							context.Response.Close ();
+						} while (true);
+					} catch (Exception e) {
+						if (e is HttpListenerException hle && ((uint) hle.HResult) == 0x80004005) {
+							// Console.WriteLine ($"    Listener closed successfully");
+						} else {
+							Console.WriteLine ($"    Exception during request processing: {e}");
+						}
+					}
+				} catch (Exception e) {
+					Console.WriteLine (e);
+				}
+				// Console.WriteLine ("    Listener thread completed");
+			});
+			listener_thread.IsBackground = true;
+			listener_thread.Start ();
+			listening.WaitOne ();
+		}
+
+		[TestFixtureTearDown]
+		public void TearDown ()
+		{
+			listener.Stop ();
+			listener_thread.Join (TimeSpan.FromSeconds (1));
+			listener = null;
+			listener_thread = null;
+		}
+
 		[Test]
 		public void TestPACParsingScript ()
 		{
@@ -163,8 +233,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestPACParsingUrl ()
 		{
 			NSError error;
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
-			var pacUri = new Uri (pacPath);
+			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
 			var targetUri = new Uri ("http://docs.xamarin.com");
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
 			Assert.IsNull (error, "Null error");
@@ -177,8 +246,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestPacParsingUrlNoProxy ()
 		{
 			NSError error;
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
-			var pacUri = new Uri (pacPath);
+			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
 			var targetUri = new Uri ("http://google.com");
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
 			Assert.IsNull (error, "Null error");
@@ -194,8 +262,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error = null;
 			NSObject cbClient = null;
 			bool done = false;
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
-			var pacUri = new Uri (pacPath);
+			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
 			var targetUri = new Uri ("http://docs.xamarin.com");
 
 			Exception ex;
@@ -230,8 +297,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error = null;
 			NSObject cbClient = null;
 			bool done = false;
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
-			var pacUri = new Uri (pacPath);
+			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
 			var targetUri = new Uri ("http://docs.google.com");
 
 			Exception ex;

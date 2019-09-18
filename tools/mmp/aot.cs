@@ -60,9 +60,7 @@ namespace Xamarin.Bundler {
 	public enum AOTCompilerType {
 		Invalid,
 		Bundled64,
-		Bundled32,
 		System64,
-		System32,
 	}
 
 	public enum AOTCompilationType {
@@ -300,12 +298,8 @@ namespace Xamarin.Bundler {
 				switch (compilerType) {
 				case AOTCompilerType.Bundled64:
 					return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono");
-				case AOTCompilerType.Bundled32:
-					return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono-32");
 				case AOTCompilerType.System64:
 					return "/Library/Frameworks/Mono.framework/Commands/mono64";
-				case AOTCompilerType.System32:
-					return "/Library/Frameworks/Mono.framework/Commands/mono32";
 				default:
 					throw ErrorHelper.CreateError (0099, "Internal error \"MonoPath with compilerType: {0}\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", compilerType);
 				}

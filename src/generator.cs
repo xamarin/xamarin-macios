@@ -149,24 +149,24 @@ public static class ReflectionExtensions {
 	public static bool IsInternal (this MemberInfo mi, Generator generator)
 	{
 		return generator.AttributeManager.HasAttribute<InternalAttribute> (mi)
-			|| (generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
+			|| (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
 	}
 
 	public static bool IsUnifiedInternal (this MemberInfo mi, Generator generator)
 	{
-		return (generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
+		return (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
 	}
 
 	public static bool IsInternal (this PropertyInfo pi, Generator generator)
 	{
 		return generator.AttributeManager.HasAttribute<InternalAttribute> (pi)
-			|| (generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (pi));
+			|| (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (pi));
 	}
 
 	public static bool IsInternal (this Type type, Generator generator)
 	{
 		return generator.AttributeManager.HasAttribute<InternalAttribute> (type)
-			|| (generator.UnifiedAPI && generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (type));
+			|| (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (type));
 	}
 	
 	public static List <MethodInfo> GatherMethods (this Type type, BindingFlags flags, Generator generator) {
@@ -478,7 +478,7 @@ public class MemberInformation
 		is_abstract = AttributeManager.HasAttribute<AbstractAttribute> (mi) && mi.DeclaringType == type;
 		is_protected = AttributeManager.HasAttribute<ProtectedAttribute> (mi);
 		is_internal = mi.IsInternal (generator);
-		is_unified_internal = (Generator.UnifiedAPI && AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
+		is_unified_internal = AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi);
 		is_override = AttributeManager.HasAttribute<OverrideAttribute> (mi) || !Generator.MemberBelongsToType (mi.DeclaringType, type);
 		is_new = AttributeManager.HasAttribute<NewAttribute> (mi);
 		is_sealed = AttributeManager.HasAttribute<SealedAttribute> (mi);
@@ -649,10 +649,7 @@ public class NamespaceManager
 {
 	public BindingTouch BindingTouch;
 	PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
-	bool UnifiedAPI { get { return BindingTouch.Unified; } }
 	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
-
-	public string Prefix { get; private set; }
 
 	// Where the core messaging lives
 	public string CoreObjCRuntime { get; private set; }
@@ -667,10 +664,9 @@ public class NamespaceManager
 	public ICollection<string> ImplicitNamespaces { get; private set; }
 	public ICollection<string> NamespacesThatConflictWithTypes { get; private set; }
 
-	public NamespaceManager (BindingTouch binding_touch, string prefix, string customObjCRuntimeNS, bool skipSystemDrawing)
+	public NamespaceManager (BindingTouch binding_touch, string customObjCRuntimeNS, bool skipSystemDrawing)
 	{
 		BindingTouch = binding_touch;
-		Prefix = prefix;
 
 		CoreObjCRuntime = Get ("ObjCRuntime");
 		ObjCRuntime = String.IsNullOrEmpty (customObjCRuntimeNS)
@@ -728,7 +724,7 @@ public class NamespaceManager
 
 		if (Frameworks.HaveAudioUnit)
 			ImplicitNamespaces.Add (Get ("AudioUnit"));
-		if (Frameworks.HaveContacts && UnifiedAPI)
+		if (Frameworks.HaveContacts)
 			ImplicitNamespaces.Add (Get ("Contacts"));
 		if (Frameworks.HaveCoreAnimation)
 			ImplicitNamespaces.Add (Get ("CoreAnimation"));
@@ -765,16 +761,16 @@ public class NamespaceManager
 		if (Frameworks.HaveAddressBook)
 			ImplicitNamespaces.Add (Get ("AddressBook"));
 
-		if (Frameworks.HaveModelIO && !(CurrentPlatform == PlatformName.MacOSX && !UnifiedAPI))
+		if (Frameworks.HaveModelIO)
 			ImplicitNamespaces.Add (Get ("ModelIO"));
-		if (Frameworks.HaveMetal && !(CurrentPlatform == PlatformName.MacOSX && !UnifiedAPI))
+		if (Frameworks.HaveMetal)
 			ImplicitNamespaces.Add (Get ("Metal"));
 
 		if (Frameworks.HaveCoreImage)
 			ImplicitNamespaces.Add (Get ("CoreImage"));
 		if (Frameworks.HavePhotos)
 			ImplicitNamespaces.Add (Get ("Photos"));
-		if (Frameworks.HaveMediaPlayer && UnifiedAPI)
+		if (Frameworks.HaveMediaPlayer)
 			ImplicitNamespaces.Add (Get ("MediaPlayer"));
 		if (Frameworks.HaveMessages)
 			ImplicitNamespaces.Add (Get ("Messages"));
@@ -782,8 +778,10 @@ public class NamespaceManager
 			ImplicitNamespaces.Add (Get ("GameplayKit"));
 		if (Frameworks.HaveSpriteKit)
 			ImplicitNamespaces.Add (Get ("SpriteKit"));
-		if (Frameworks.HaveFileProvider && UnifiedAPI)
+		if (Frameworks.HaveFileProvider)
 			ImplicitNamespaces.Add (Get ("FileProvider"));
+		if (Frameworks.HaveNetworkExtension)
+			ImplicitNamespaces.Add (Get ("NetworkExtension"));
 
 		// These are both types and namespaces
 		NamespacesThatConflictWithTypes = new HashSet<string> {
@@ -797,9 +795,7 @@ public class NamespaceManager
 
 	public string Get (string nsWithoutPrefix)
 	{
-		if (String.IsNullOrEmpty (Prefix))
-			return nsWithoutPrefix;
-		return Prefix + "." + nsWithoutPrefix;
+		return nsWithoutPrefix;
 	}
 
 	public string [] Get (IEnumerable<string> nsWithoutPrefix)
@@ -875,13 +871,12 @@ public partial class Generator : IMemberGatherer {
 
 	List<Tuple<string, ParameterInfo[]>> async_result_types = new List<Tuple <string, ParameterInfo[]>> ();
 	HashSet<string> async_result_types_emitted = new HashSet<string> ();
+	HashSet<string> types_that_must_always_be_globally_named = new HashSet<string> ();
 
 	//
 	// This contains delegates that are referenced in the source and need to be generated.
 	//
 	Dictionary<string,MethodInfo> delegate_types = new Dictionary<string,MethodInfo> ();
-
-	public bool Compat { get { return !UnifiedAPI; } }
 
 	public PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
 
@@ -900,15 +895,12 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	// Static version of the above (!Compat) field, set on each Go invocation, needed because some static
-	// helper methods need to access this.   This is the exact opposite of Compat.
-	public bool UnifiedAPI { get { return BindingTouch.Unified; } }
 	public int XamcoreVersion {
 		get {
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
 			case PlatformName.iOS:
-				return UnifiedAPI ? 2 : 1;
+				return 2;
 			case PlatformName.TvOS:
 			case PlatformName.WatchOS:
 				return 3;
@@ -1098,7 +1090,7 @@ public partial class Generator : IMemberGatherer {
 
 			t = TypeManager.GetUnderlyingEnumType (t);
 
-			if (UnifiedAPI && AttributeManager.HasAttribute<NativeAttribute> (enumType)) {
+			if (AttributeManager.HasAttribute<NativeAttribute> (enumType)) {
 				if (t != TypeManager.System_Int64 && t != TypeManager.System_UInt64)
 					throw new BindingException (1026, true,
 						"`{0}`: Enums attributed with [{1}] must have an underlying type of `long` or `ulong`",
@@ -1312,11 +1304,9 @@ public partial class Generator : IMemberGatherer {
 				nsvalue_create_map [TypeManager.SCNVector3] = "Vector";
 				nsvalue_create_map [TypeManager.SCNVector4] = "Vector";
 
-				if (UnifiedAPI) {
-					nsvalue_create_map [TypeManager.CoreGraphics_CGPoint] = "CGPoint";
-					nsvalue_create_map [TypeManager.CoreGraphics_CGRect] = "CGRect";
-					nsvalue_create_map [TypeManager.CoreGraphics_CGSize] = "CGSize";
-				}
+				nsvalue_create_map [TypeManager.CoreGraphics_CGPoint] = "CGPoint";
+				nsvalue_create_map [TypeManager.CoreGraphics_CGRect] = "CGRect";
+				nsvalue_create_map [TypeManager.CoreGraphics_CGSize] = "CGSize";
 
 				if (Frameworks.HaveUIKit) {
 					nsvalue_create_map [TypeManager.UIEdgeInsets] = "UIEdgeInsets";
@@ -1437,11 +1427,9 @@ public partial class Generator : IMemberGatherer {
 					{ TypeManager.System_UInt32, ".UInt32Value" },
 					{ TypeManager.System_UInt64, ".UInt64Value" },
 				};
-				if (UnifiedAPI) {
-					nsnumber_return_map [TypeManager.System_nfloat] = ".NFloatValue";
-					nsnumber_return_map [TypeManager.System_nint] = ".NIntValue";
-					nsnumber_return_map [TypeManager.System_nuint] = ".NUIntValue";
-				}
+				nsnumber_return_map [TypeManager.System_nfloat] = ".NFloatValue";
+				nsnumber_return_map [TypeManager.System_nint] = ".NIntValue";
+				nsnumber_return_map [TypeManager.System_nuint] = ".NUIntValue";
 			}
 			return nsnumber_return_map;
 		}
@@ -1461,11 +1449,9 @@ public partial class Generator : IMemberGatherer {
 					{ TypeManager.SCNVector4, ".Vector4Value" }
 				};
 
-				if (UnifiedAPI) {
-					nsvalue_return_map [TypeManager.CoreGraphics_CGPoint] = ".CGPointValue";
-					nsvalue_return_map [TypeManager.CoreGraphics_CGRect] = ".CGRectValue";
-					nsvalue_return_map [TypeManager.CoreGraphics_CGSize] = ".CGSizeValue";
-				}
+				nsvalue_return_map [TypeManager.CoreGraphics_CGPoint] = ".CGPointValue";
+				nsvalue_return_map [TypeManager.CoreGraphics_CGRect] = ".CGRectValue";
+				nsvalue_return_map [TypeManager.CoreGraphics_CGSize] = ".CGSizeValue";
 
 				if (Frameworks.HaveUIKit) {
 					nsvalue_return_map [TypeManager.UIEdgeInsets] = ".UIEdgeInsetsValue";
@@ -1674,7 +1660,7 @@ public partial class Generator : IMemberGatherer {
 			if (Frameworks.HaveAudioToolbox) {
 				if (pi.ParameterType == TypeManager.AudioBuffers){
 					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
-					invoke.AppendFormat ("new global::{0}AudioToolbox.AudioBuffers ({1})", UnifiedAPI ? "" : "MonoTouch.", pi.Name.GetSafeParamName ());
+					invoke.AppendFormat ("new global::AudioToolbox.AudioBuffers ({0})", pi.Name.GetSafeParamName ());
 					continue;
 				}
 			}
@@ -1721,7 +1707,7 @@ public partial class Generator : IMemberGatherer {
 					invoke.Append ($"ref {refname}");
 					continue;
 				}
-			} else if (!Compat && IsNativeEnum (pi.ParameterType)) {
+			} else if (IsNativeEnum (pi.ParameterType)) {
 				Type underlyingEnumType = TypeManager.GetUnderlyingEnumType (pi.ParameterType);
 				pars.AppendFormat ("{0} {1}", GetNativeEnumType (pi.ParameterType), pi.Name.GetSafeParamName ());
 				invoke.AppendFormat ("({1}) ({2}) {0}", pi.Name.GetSafeParamName (), FormatType (null, pi.ParameterType), FormatType (null, underlyingEnumType));
@@ -1824,7 +1810,7 @@ public partial class Generator : IMemberGatherer {
 		if (enum_mode != EnumMode.Compat && enum_mode != EnumMode.NativeBits && pi.ParameterType.IsEnum)
 			return "(" + PrimitiveType (pi.ParameterType, enum_mode: enum_mode) + ")" + pi.Name.GetSafeParamName ();
 
-		if (enum_mode == EnumMode.NativeBits && IsNativeEnum (pi.ParameterType) && !Compat)
+		if (enum_mode == EnumMode.NativeBits && IsNativeEnum (pi.ParameterType))
 			return "(" + GetNativeEnumType (pi.ParameterType) + ") (" + PrimitiveType (TypeManager.GetUnderlyingEnumType (pi.ParameterType)) + ") " + pi.Name.GetSafeParamName ();
 		
 		if (IsNativeType (pi.ParameterType))
@@ -1959,7 +1945,7 @@ public partial class Generator : IMemberGatherer {
 	public bool IsTarget (ParameterInfo pi)
 	{
 		var is_target = AttributeManager.HasAttribute<TargetAttribute> (pi);
-		if (is_target && UnifiedAPI) {
+		if (is_target) {
 			throw new BindingException (1031, true,
 				"The [Target] attribute is not supported for the Unified API (found on the member '{0}.{1}'). " +
 				"For Objective-C categories, create an api definition interface with the [Category] attribute instead.",
@@ -2075,9 +2061,6 @@ public partial class Generator : IMemberGatherer {
 
 	bool HasNativeEnumInSignature (MethodInfo mi)
 	{
-		if (Compat)
-			return false;
-
 		if (IsNativeEnum (mi.ReturnType))
 			return true;
 		
@@ -2094,38 +2077,24 @@ public partial class Generator : IMemberGatherer {
 			return;
 
 		try {
-			if (Compat) {
-				var returnType = mi.ReturnType;
-				bool arm_stret = Stret.ArmNeedStret (returnType, this);
-				bool is_aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
-				RegisterMethod (arm_stret, mi, MakeSig (mi, arm_stret, arm_stret && is_aligned), arm_stret && is_aligned);
-				RegisterMethod (arm_stret, mi, MakeSuperSig (mi, arm_stret, arm_stret && is_aligned), arm_stret && is_aligned);
-
-				bool x86_stret = Stret.X86NeedStret (returnType, this);
-				if (x86_stret != arm_stret){
-					RegisterMethod (x86_stret, mi, MakeSig (mi, x86_stret, x86_stret && is_aligned), x86_stret && is_aligned);
-					RegisterMethod (x86_stret, mi, MakeSuperSig (mi, x86_stret, x86_stret && is_aligned), x86_stret && is_aligned);
-				}
+			EnumMode[] modes;
+			if (HasNativeEnumInSignature (mi)) {
+				modes = new EnumMode[] { EnumMode.Bit32, EnumMode.Bit64 };
 			} else {
-				EnumMode[] modes;
-				if (HasNativeEnumInSignature (mi)) {
-					modes = new EnumMode[] { EnumMode.Bit32, EnumMode.Bit64 };
-				} else {
-					modes = new EnumMode[] { EnumMode.Bit32 };
-				}
-				foreach (var mode in modes) {
-					// arm64 never requires stret, so we'll always need the non-stret variants
-					RegisterMethod (false, mi, MakeSig (mi, false, enum_mode: mode), false, mode);
-					RegisterMethod (false, mi, MakeSuperSig (mi, false, enum_mode: mode), false, mode);
+				modes = new EnumMode[] { EnumMode.Bit32 };
+			}
+			foreach (var mode in modes) {
+				// arm64 never requires stret, so we'll always need the non-stret variants
+				RegisterMethod (false, mi, MakeSig (mi, false, enum_mode: mode), false, mode);
+				RegisterMethod (false, mi, MakeSuperSig (mi, false, enum_mode: mode), false, mode);
 
-					if (CheckNeedStret (mi)) {
-						RegisterMethod (true, mi, MakeSig (mi, true, enum_mode: mode), false, mode);
-						RegisterMethod (true, mi, MakeSuperSig (mi, true, enum_mode: mode), false, mode);
+				if (CheckNeedStret (mi)) {
+					RegisterMethod (true, mi, MakeSig (mi, true, enum_mode: mode), false, mode);
+					RegisterMethod (true, mi, MakeSuperSig (mi, true, enum_mode: mode), false, mode);
 
-						if (AttributeManager.HasAttribute<AlignAttribute> (mi)) {
-							RegisterMethod (true, mi, MakeSig (mi, true, true, mode), true, mode);
-							RegisterMethod (true, mi, MakeSuperSig (mi, true, true, mode), true, mode);
-						}
+					if (AttributeManager.HasAttribute<AlignAttribute> (mi)) {
+						RegisterMethod (true, mi, MakeSig (mi, true, true, mode), true, mode);
+						RegisterMethod (true, mi, MakeSuperSig (mi, true, true, mode), true, mode);
 					}
 				}
 			}
@@ -2209,12 +2178,6 @@ public partial class Generator : IMemberGatherer {
 		if (t.IsUnavailable (this))
 			return true;
 
-		if (Compat)
-			return AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (t)
-				.Any (attr => attr.AvailabilityKind == AvailabilityKind.Introduced &&
-					attr.Platform == CurrentPlatform &&
-					attr.Architecture == PlatformArchitecture.Arch64);
-
 		return false;
 	}
 
@@ -2295,7 +2258,7 @@ public partial class Generator : IMemberGatherer {
 		m = GetOutputStream ("ObjCRuntime", "Messaging");
 		Header (m);
 		print (m, "namespace {0} {{", ns.ObjCRuntime);
-		print (m, "\t{0}partial class Messaging {{", Compat ? "public " : String.Empty);
+		print (m, "\tpartial class Messaging {");
 
 		if (BindThirdPartyLibrary){
 			print (m, "\t\tstatic internal System.Reflection.Assembly this_assembly = typeof (Messaging).Assembly;\n");
@@ -2317,6 +2280,19 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		Array.Sort (types, (a, b) => string.CompareOrdinal (a.FullName, b.FullName));
+
+		foreach (var t in types) {
+			// The generator will create special *Appearance types (these are
+			// nested classes). If we've bound a type with the same
+			// *Appearance name, we can end up in a situation where the csc
+			// compiler uses the the type we don't want due to C#'s resolution
+			// rules - this happens if the bound *Appearance type is
+			// referenced from the containing type of the special *Appearance
+			// type. So always reference the bound *Appearance types using
+			// global:: syntax.
+			if (t.Name.EndsWith ("Appearance", StringComparison.Ordinal))
+				types_that_must_always_be_globally_named.Add (t.Name);
+		}
 
 		foreach (Type t in types){
 			if (SkipGenerationOfType (t))
@@ -2532,33 +2508,6 @@ public partial class Generator : IMemberGatherer {
 
 	Type GetCorrectGenericType (Type type)
 	{
-		if (UnifiedAPI)
-			return type;
-
-		if (type != null && type.IsGenericType) {
-			// for compat we expose NSSet/NSDictionary instead of NSSet<TKey>/NSDictionary<TKey,TValue>
-			var bt = type.GetGenericTypeDefinition ();
-
-			switch (bt.FullName) {
-			case "MonoTouch.Foundation.NSDictionary`2":
-			case "MonoMac.Foundation.NSDictionary`2":
-				return bt.Assembly.GetType (bt.Namespace + ".NSDictionary");
-			case "MonoTouch.Foundation.NSMutableDictionary`2":
-			case "MonoMac.Foundation.NSMutableDictionary`2":
-				return bt.Assembly.GetType (bt.Namespace + ".NSMutableDictionary");
-			case "MonoTouch.Foundation.NSSet`1":
-			case "MonoMac.Foundation.NSSet`1":
-				return bt.Assembly.GetType (bt.Namespace + ".NSSet");
-			case "MonoTouch.Foundation.NSMutableSet`1":
-			case "MonoMac.Foundation.NSMutableSet`1":
-				return bt.Assembly.GetType (bt.Namespace + ".NSMutableSet");
-			case "MonoTouch.Foundation.NSMutableArray`1":
-			case "MonoMac.Foundation.NSMutableArray`1":
-				return bt.Assembly.GetType (bt.Namespace + ".NSMutableArray");
-			default:
-				return type;
-			}
-		}
 		return type;
 	}
 
@@ -2834,11 +2783,13 @@ public partial class Generator : IMemberGatherer {
 					Type fetchType = pi.PropertyType;
 					string castToUnderlying = "";
 					string castToEnum = "";
+					bool isNativeEnum = false;
 
 					if (pi.PropertyType.IsEnum){
 						fetchType = TypeManager.GetUnderlyingEnumType (pi.PropertyType);
 						castToUnderlying = "(" + fetchType + "?)";
 						castToEnum = "(" + FormatType (dictType, pi.PropertyType) + "?)";
+						isNativeEnum = IsNativeEnum (pi.PropertyType);
 					}
 					if (pi.PropertyType.IsValueType){
 						if (pi.PropertyType == TypeManager.System_Boolean){
@@ -2865,18 +2816,24 @@ public partial class Generator : IMemberGatherer {
 						} else if (fetchType == TypeManager.System_nuint){
 							getter = "{1} GetNUIntValue ({0})";
 							setter = "SetNumberValue ({0}, {1}value)";
-						} else if (UnifiedAPI && fetchType == TypeManager.CoreGraphics_CGRect){
+						} else if (fetchType == TypeManager.CoreGraphics_CGRect){
 							getter = "{1} GetCGRectValue ({0})";
 							setter = "SetCGRectValue ({0}, {1}value)";
-						} else if (UnifiedAPI && fetchType == TypeManager.CoreGraphics_CGSize){
+						} else if (fetchType == TypeManager.CoreGraphics_CGSize){
 							getter = "{1} GetCGSizeValue ({0})";
 							setter = "SetCGSizeValue ({0}, {1}value)";
-						} else if (UnifiedAPI && fetchType == TypeManager.CoreGraphics_CGPoint){
+						} else if (fetchType == TypeManager.CoreGraphics_CGPoint){
 							getter = "{1} GetCGPointValue ({0})";
 							setter = "SetCGPointValue ({0}, {1}value)";
 						} else if (Frameworks.HaveCoreMedia && fetchType == TypeManager.CMTime){
 							getter = "{1} GetCMTimeValue ({0})";
 							setter = "SetCMTimeValue ({0}, {1}value)";
+						} else if (isNativeEnum && fetchType == TypeManager.System_Int64) {
+							getter = "{1} (long?) GetNIntValue ({0})";
+							setter = "SetNumberValue ({0}, {1}value)";
+						} else if (isNativeEnum && fetchType == TypeManager.System_UInt64) {
+							getter = "{1} (ulong?) GetNUIntValue ({0})";
+							setter = "SetNumberValue ({0}, {1}value)";
 						} else {
 							throw new BindingException (1031, true,
 										    "Limitation: can not automatically create strongly typed dictionary for " +
@@ -3396,11 +3353,13 @@ public partial class Generator : IMemberGatherer {
 
 		var interfaceTag = protocolized == true ? "I" : "";
 		string tname;
-		if ((usedInNamespace != null && type.Namespace == usedInNamespace) || ns.StandardNamespaces.Contains (type.Namespace) || string.IsNullOrEmpty (type.FullName))
+		if (types_that_must_always_be_globally_named.Contains (type.Name))
+			tname = $"global::{type.Namespace}.{interfaceTag}{type.Name}";
+		else if ((usedInNamespace != null && type.Namespace == usedInNamespace) || ns.StandardNamespaces.Contains (type.Namespace) || string.IsNullOrEmpty (type.FullName))
 			tname = interfaceTag + type.Name;
 		else
 			tname = $"global::{type.Namespace}.{interfaceTag}{type.Name}";
-
+		
 		var targs = type.GetGenericArguments ();
 		if (targs.Length > 0) {
 			var isNullable = TypeManager.GetUnderlyingNullableType (type) != null;
@@ -3454,9 +3413,6 @@ public partial class Generator : IMemberGatherer {
 
 	public bool Protocolize (ICustomAttributeProvider provider)
 	{
-		if (!UnifiedAPI)
-			return false;
-
 		var attribs = AttributeManager.GetCustomAttributes<ProtocolizeAttribute> (provider);
 		if (attribs == null || attribs.Length == 0)
 			return false;
@@ -3477,7 +3433,7 @@ public partial class Generator : IMemberGatherer {
 
 		if (!minfo.is_ctor && !is_async){
 			var prefix = "";
-			if (UnifiedAPI && !BindThirdPartyLibrary){
+			if (!BindThirdPartyLibrary){
 				var hasReturnTypeProtocolize = Protocolize (AttributeManager.GetReturnTypeCustomAttributes (minfo.method));
 				if (hasReturnTypeProtocolize) {
 					if (!IsProtocol (minfo.method.ReturnType)) {
@@ -3802,39 +3758,6 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 	
-	void GenerateInvoke (bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string[] args, bool assign_to_temp, Type category_type)
-	{
-		if (!Compat) {
-			GenerateNewStyleInvoke (supercall, mi, minfo, selector, args, assign_to_temp, category_type);
-			return;
-		}
-
-		var returnType = mi.ReturnType;
-		bool arm_stret = Stret.ArmNeedStret (returnType, this);
-		bool x86_stret = Stret.X86NeedStret (returnType, this);
-		bool aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
-
-		if (CurrentPlatform == PlatformName.MacOSX) {
-			GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret);
-			return;
-		}
-		
-		bool need_two_paths = arm_stret != x86_stret;
-		if (need_two_paths){
-			print ("if (Runtime.Arch == Arch.DEVICE){");
-			indent++;
-			GenerateInvoke (arm_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && arm_stret);
-			indent--;
-			print ("} else {");
-			indent++;
-			GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && arm_stret);
-			indent--;
-			print ("}");
-		} else {
-			GenerateInvoke (arm_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && arm_stret);
-		}
-	}
-
 	void GenerateNewStyleInvoke (bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string[] args, bool assign_to_temp, Type category_type)
 	{
 		var returnType = mi.ReturnType;
@@ -4230,7 +4153,7 @@ public partial class Generator : IMemberGatherer {
 			if (!needs_null_check)
 				continue;
 
-			if (UnifiedAPI && !BindThirdPartyLibrary) {
+			if (!BindThirdPartyLibrary) {
 				if (!mi.IsSpecialName && IsModel (pi.ParameterType) && !Protocolize (pi))
 					ErrorHelper.Warning (1106, "The parameter {2} in the method {0}.{1} exposes a model ({3}). Please expose the corresponding protocol type instead ({4}.I{5}).",
 						mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
@@ -4396,7 +4319,7 @@ public partial class Generator : IMemberGatherer {
 			((body_options & BodyOption.NeedsTempReturn) == BodyOption.NeedsTempReturn) ||
 			(mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) ||
 			(AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi))) ||
-			(!Compat && IsNativeEnum (mi.ReturnType)) ||
+			(IsNativeEnum (mi.ReturnType)) ||
 			(mi.Name != "Constructor" && by_ref_processing.Length > 0 && mi.ReturnType != TypeManager.System_Void) ||
 			needsPtrZeroCheck;
 
@@ -4424,7 +4347,7 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.is_virtual_method || mi.Name == "Constructor"){
 			//print ("if (this.GetType () == TypeManager.{0}) {{", type.Name);
 			if (external || minfo.is_interface_impl || minfo.is_extension_method) {
-				GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
+				GenerateNewStyleInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
 			} else {
 				var may_throw = ShouldMarshalNativeExceptions (mi);
 				var null_handle = may_throw && mi.Name == "Constructor";
@@ -4435,8 +4358,8 @@ public partial class Generator : IMemberGatherer {
 
 				WriteIsDirectBindingCondition (sw, ref indent, is_direct_binding,
 							       mi.Name == "Constructor" ? is_direct_binding_value : null, // We only need to print the is_direct_binding value in constructors
-				                               () => { GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type); return null; },
-				                               () => { GenerateInvoke (true, mi, minfo, sel, argsArray, needs_temp, category_type); return null; }
+				                               () => { GenerateNewStyleInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type); return null; },
+				                               () => { GenerateNewStyleInvoke (true, mi, minfo, sel, argsArray, needs_temp, category_type); return null; }
 							      );
 				
 				if (null_handle) {
@@ -4450,7 +4373,7 @@ public partial class Generator : IMemberGatherer {
 				}
 			}
 		} else {
-			GenerateInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
+			GenerateNewStyleInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
 		}
 		
 		if (minfo.is_return_release) {
@@ -4704,25 +4627,23 @@ public partial class Generator : IMemberGatherer {
 		var mod = minfo.GetVisibility ();
 		minfo.protocolize = Protocolize (pi);
 
-		if (UnifiedAPI) { // We have some sub-optimal bindings in compat that trigger this exception, so we just don't fix those
-			// So we don't hide the get or set of a parent property with the same name, we need to see if we have a parent declaring the same property
-			PropertyInfo parentBaseType = GetParentTypeWithSameNamedProperty (ReflectionExtensions.GetBaseTypeAttribute (type, this), pi.Name);
+		// So we don't hide the get or set of a parent property with the same name, we need to see if we have a parent declaring the same property
+		PropertyInfo parentBaseType = GetParentTypeWithSameNamedProperty (ReflectionExtensions.GetBaseTypeAttribute (type, this), pi.Name);
 
-			// If so, we're not static, and we can't both read and write, but they can
-			if (!minfo.is_static && !(pi.CanRead && pi.CanWrite) && (parentBaseType != null && parentBaseType.CanRead && parentBaseType.CanWrite)) {
-				// Make sure the selector matches, sanity check that we aren't hiding something of a different type
-				// We skip this for wrap'ed properties, as those get complicated to resolve the correct export
-				if (wrap == null &&
-					((pi.CanRead && (GetGetterExportAttribute (pi).Selector != GetGetterExportAttribute (parentBaseType).Selector)) ||
-					 pi.CanWrite && (GetSetterExportAttribute (pi).Selector != GetSetterExportAttribute (parentBaseType).Selector))) {
-					throw new BindingException (1035, true, "The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.", pi.Name, type, parentBaseType.DeclaringType);
-				}
-				// Then let's not write out our copy, since we'll reduce visibility
-				return;
+		// If so, we're not static, and we can't both read and write, but they can
+		if (!minfo.is_static && !(pi.CanRead && pi.CanWrite) && (parentBaseType != null && parentBaseType.CanRead && parentBaseType.CanWrite)) {
+			// Make sure the selector matches, sanity check that we aren't hiding something of a different type
+			// We skip this for wrap'ed properties, as those get complicated to resolve the correct export
+			if (wrap == null &&
+				((pi.CanRead && (GetGetterExportAttribute (pi).Selector != GetGetterExportAttribute (parentBaseType).Selector)) ||
+					pi.CanWrite && (GetSetterExportAttribute (pi).Selector != GetSetterExportAttribute (parentBaseType).Selector))) {
+				throw new BindingException (1035, true, "The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.", pi.Name, type, parentBaseType.DeclaringType);
 			}
+			// Then let's not write out our copy, since we'll reduce visibility
+			return;
 		}
 
-		if (UnifiedAPI && !BindThirdPartyLibrary) {
+		if (!BindThirdPartyLibrary) {
 			var elType = pi.PropertyType.IsArray ? pi.PropertyType.GetElementType () : pi.PropertyType;
 
 			if (IsModel (elType) && !minfo.protocolize) {
@@ -4767,7 +4688,7 @@ public partial class Generator : IMemberGatherer {
 				print ("set {");
 				indent++;
 
-				var is_protocol_wrapper = UnifiedAPI && IsProtocolInterface (pi.PropertyType, false);
+				var is_protocol_wrapper = IsProtocolInterface (pi.PropertyType, false);
 
 				if (minfo.protocolize || is_protocol_wrapper){
 					print ("var rvalue = value as NSObject;");
@@ -5067,7 +4988,7 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.is_void_async)
 			return "Task";
 		var ttype = GetAsyncTaskType (minfo);
-		if (UnifiedAPI && minfo.has_nserror && (ttype == "bool"))
+		if (minfo.has_nserror && (ttype == "bool"))
 			ttype = "Tuple<bool,NSError>";
 		return "Task<" + ttype + ">";
 	}
@@ -5171,7 +5092,7 @@ public partial class Generator : IMemberGatherer {
 		var tuple = false;
 		if (!minfo.is_void_async) {
 			ttype = GetAsyncTaskType (minfo);
-			tuple = (UnifiedAPI && minfo.has_nserror && (ttype == "bool"));
+			tuple = (minfo.has_nserror && (ttype == "bool"));
 			if (tuple)
 				ttype = "Tuple<bool,NSError>";
 		}
@@ -5830,11 +5751,7 @@ public partial class Generator : IMemberGatherer {
 
 		// avoid (for unified) all the metadata for empty static classes, we can introduce them later when required
 		bool include_extensions = false;
-		if (UnifiedAPI) {
-			include_extensions = optionalInstanceMethods.Any () || optionalInstanceProperties.Any () || requiredInstanceAsyncMethods.Any ();
-		} else {
-			include_extensions = true;
-		}
+		include_extensions = optionalInstanceMethods.Any () || optionalInstanceProperties.Any () || requiredInstanceAsyncMethods.Any ();
 		if (include_extensions) {
 			// extension methods
 			PrintAttributes (type, preserve:true, advice:true);
@@ -5889,8 +5806,104 @@ public partial class Generator : IMemberGatherer {
 		print ("}");
 		print ("");
 		// Methods
+		// First find duplicates and select the best one. We use the selector to determine what's a duplicate.
+		var methodData = requiredInstanceMethods.Select ((v) => {
+			return new MethodData {
+				Method = v,
+				ExportAttribute = GetExportAttribute (v),
+			};
+		}).ToArray ();
+		var methodsGroupedBySelector = methodData.GroupBy ((v) => v.ExportAttribute.Selector);
+		var duplicateMethodsGroupedBySelector = methodsGroupedBySelector.Where ((v) => v.Count () > 1);
+		if (duplicateMethodsGroupedBySelector.Any ()) {
+			// Yes, there are multiple methods with the same selector. Now we must compute the signature for all of them.
+			var computeSignature = new Func<MethodInfo, string> ((MethodInfo minfo) => {
+				var sig = new StringBuilder ();
+				sig.Append (minfo.Name).Append (" (");
+				foreach (var param in minfo.GetParameters ())
+					sig.Append (param.ParameterType.FullName).Append (' ');
+				sig.Append (')');
+				return sig.ToString ();
+			});
+			foreach (var gr in duplicateMethodsGroupedBySelector)
+				foreach (var m in gr)
+					m.Signature = computeSignature (m.Method);
+
+			// Verify that all the duplicate methods have the same signature.
+			// If not, show an error, and if they all have the same signature, remove all but one from the list of methods to generate.
+			foreach (var gr in duplicateMethodsGroupedBySelector) {
+				var distinctMethodsBySignature = gr.GroupBy ((v) => v.Signature).Select ((v) => v.First ()).ToArray ();
+				if (distinctMethodsBySignature.Length > 1) {
+					exceptions.Add (ErrorHelper.CreateError (1069, $"The type '{type.FullName}' is trying to inline the methods binding the selector '{gr.Key}' from the protocols '{distinctMethodsBySignature [0].Method.DeclaringType.FullName}' and '{distinctMethodsBySignature [1].Method.DeclaringType.FullName}'," +
+$" using methods with different signatures ('{distinctMethodsBySignature [0].Method.ToString ()}' vs '{distinctMethodsBySignature [1].Method.ToString ()}')."));
+					continue;
+				}
+
+				// Remove all but the first method from the list required instance methods
+				var exclude = gr.Skip (1).Select ((v) => v.Method).ToArray ();
+				requiredInstanceMethods.RemoveAll ((v) => exclude.Contains (v));
+			}
+
+		}
+		// Go generate code for the methods
 		foreach (var mi in requiredInstanceMethods) {
 			GenerateMethod (type, mi, false, null, false, true, isBaseWrapperProtocolMethod:true);
+		}
+
+		// Properties
+		// First find duplicates and select the best one. Here we use the property name to find duplicates.
+		var propertyDuplicates = requiredInstanceProperties.GroupBy ((v) => v.Name).Where ((v) => v.Count () > 1).ToArray ();
+		if (propertyDuplicates.Any ()) {
+			foreach (var gr in propertyDuplicates) {
+				// Check that all the selectors in the group are identical
+				var properties = gr.ToArray ();
+				var exportAttributes = new ExportAttribute [properties.Length];
+				PropertyInfo readwrite = null;
+				PropertyInfo @readonly = null;
+				PropertyInfo @writeonly = null;
+				for (var i = 0; i < properties.Length; i++) {
+					// Check that all the duplicates use the same selector, and if not show a warning.
+					exportAttributes [i] = GetExportAttribute (properties [i]);
+					if (i > 0 && exportAttributes [i].Selector != exportAttributes [0].Selector) {
+						ErrorHelper.Warning (1068, $"The type '{type.FullName}' is trying to inline the property '{gr.Key}' from the protocols '{properties [0].DeclaringType.FullName}' and '{properties [i].DeclaringType.FullName}'," +
+							$" and the inlined properties use different selectors ({properties [0].DeclaringType.Name}.{properties [0].Name} uses '{exportAttributes [0].Selector}', and {properties [i].DeclaringType.Name}.{properties [i].Name} uses '{exportAttributes [i].Selector}'.");
+					}
+					if (properties [i].CanRead && properties [i].CanWrite) {
+						readwrite = properties [i];
+					} else if (!properties [i].CanRead) {
+						writeonly = properties [i];
+					} else if (!properties [i].CanWrite) {
+						@readonly = properties [i];
+					}
+				}
+
+				// Check that all the duplicates have the same property type
+				var propertyTypes = properties.GroupBy ((v) => v.PropertyType.FullName).Select ((v) => v.First ()).ToArray ();
+				if (propertyTypes.Length > 1) {
+					exceptions.Add (ErrorHelper.CreateError (1070, $"The type '{type.FullName}' is trying to inline the property '{gr.Key}' from the protocols '{propertyTypes [0].DeclaringType.FullName}' and '{propertyTypes [1].DeclaringType.FullName}'," +
+						$" but the inlined properties are of different types ('{propertyTypes [0]}' is {FormatType (type, propertyTypes [0].PropertyType)}, while '{propertyTypes [1]}' is {FormatType (type, propertyTypes [0].PropertyType)})."));
+				}
+
+				// Select the best match of the properties: prefer a read/write property if it exists, otherwise a readonly or writeonly property.
+				PropertyInfo bestMatch;
+				if (readwrite != null) {
+					bestMatch = readwrite;
+				} else if (@readonly != null && writeonly != null) {
+					exceptions.Add (ErrorHelper.CreateError (1067, $"The type '{type.FullName}' is trying to inline the property '{gr.Key}' from the protocols '{@readonly.DeclaringType.FullName}' and '{writeonly.DeclaringType.FullName}'," +
+						$" but the inlined properties don't share the same accessors ('{@readonly}' is read-only, while '${writeonly}' is write-only)."));
+					continue;
+				} else if (@readonly != null) {
+					bestMatch = @readonly;
+				} else if (writeonly != null) {
+					bestMatch = writeonly;
+				} else {
+					exceptions.Add (ErrorHelper.CreateError (99, $"Internal error: property {properties [0]} doesn't have neither a getter nor a setter."));
+					continue;
+				}
+				// Finally remove the properties we don't want to generate.
+				var exclude = properties.Where ((v) => v != bestMatch);
+				requiredInstanceProperties.RemoveAll ((v) => exclude.Contains (v));
+			}
 		}
 		foreach (var pi in requiredInstanceProperties) {
 			GenerateProperty (type, pi, null, false, true);
@@ -5902,6 +5915,13 @@ public partial class Generator : IMemberGatherer {
 			indent--;
 			print ("}");
 		}
+	}
+
+	class MethodData
+	{
+		public MethodInfo Method;
+		public ExportAttribute ExportAttribute;
+		public string Signature;
 	}
 
 	bool ConformToNSCoding (Type type)
@@ -5920,9 +5940,6 @@ public partial class Generator : IMemberGatherer {
 	StreamWriter GetOutputStream (string @namespace, string name)
 	{
 		var dir = basedir;
-
-		if (!string.IsNullOrEmpty (@namespace))
-			dir = Path.Combine (dir, @namespace.Replace (ns.Prefix + ".", string.Empty));
 
 		var filename = Path.Combine (dir, name + ".g.cs");
 		var counter = 2;
@@ -6078,12 +6095,6 @@ public partial class Generator : IMemberGatherer {
 			throw new BindingException (1042, true, $"Missing '[Field (LibraryName=value)]' for {propertyName} (e.g.\"__Internal\")");
 		} else {
 			library_name = type.Namespace;
-
-			// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
-			if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix, StringComparison.Ordinal)) {
-				library_name = library_name.Substring (ns.Prefix.Length + 1);
-				library_name = library_name.Replace (".", string.Empty); // Remove dots from namespaces
-			}
 		}
 
 		if (!libraries.ContainsKey (library_name))
@@ -6117,7 +6128,7 @@ public partial class Generator : IMemberGatherer {
 
 	public void Generate (Type type)
 	{
-		if (!Compat && ZeroCopyStrings) {
+		if (ZeroCopyStrings) {
 			ErrorHelper.Warning (1027, "Support for ZeroCopy strings is not implemented. Strings will be marshalled as NSStrings.");
 			ZeroCopyStrings = false;
 		}
@@ -6377,7 +6388,7 @@ public partial class Generator : IMemberGatherer {
 				if (TypeName != "NSObject"){
 					var initSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"init\")" : "Selector.Init";
 					var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"initWithCoder:\")" : "Selector.InitWithCoder";
-					string v = UnifiedAPI && class_mod == "abstract " ? "protected" : ctor_visibility;
+					string v = class_mod == "abstract " ? "protected" : ctor_visibility;
 					var is32BitNotSupported = Is64BitiOSOnly (type);
 					if (external) {
 						if (!disable_default_ctor) {
@@ -6432,18 +6443,13 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ("\t\t}");
 							sw.WriteLine ();
 						}
-						// old monotouch.dll (and MonoMac.dll, XamMac.dll) always included this .ctor even if the
-						// type did not conform to NSCopying. That made the .ctor throw a (native) exception and crash
 						var nscoding = ConformToNSCoding (type);
-						if (Compat || nscoding) {
-							// for compatibility we continue to include the .ctor(NSCoder) in the compat assemblies
-							// but we make it throw an InvalidOperationException if the type does not implement NSCoding
-							// because it's easier to catch (and won't crash on devices)
+						if (nscoding) {
 							GeneratedCode (sw, 2);
 							sw.WriteLine ("\t\t[DesignatedInitializer]");
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 							sw.WriteLine ("\t\t[Export (\"initWithCoder:\")]");
-							sw.WriteLine ("\t\t{0} {1} (NSCoder coder) : base (NSObjectFlag.Empty)", UnifiedAPI ? v : "public", TypeName);
+							sw.WriteLine ("\t\t{0} {1} (NSCoder coder) : base (NSObjectFlag.Empty)", v, TypeName);
 							sw.WriteLine ("\t\t{");
 							if (is32BitNotSupported) {
 								sw.WriteLine ("\t\t#if ARCH_32");
@@ -6471,7 +6477,7 @@ public partial class Generator : IMemberGatherer {
 					if (!is_sealed) {
 						GeneratedCode (sw, 2);
 						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-						sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
+						sw.WriteLine ("\t\tprotected {0} (NSObjectFlag t) : base (t)", TypeName);
 						sw.WriteLine ("\t\t{");
 						if (is32BitNotSupported) {
 							sw.WriteLine ("\t\t#if ARCH_32");
@@ -6488,7 +6494,7 @@ public partial class Generator : IMemberGatherer {
 					}
 					GeneratedCode (sw, 2);
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-					sw.WriteLine ("\t\t{0} {1} (IntPtr handle) : base (handle)", UnifiedAPI ? "protected internal" : "public", TypeName);
+					sw.WriteLine ("\t\tprotected internal {0} (IntPtr handle) : base (handle)", TypeName);
 					sw.WriteLine ("\t\t{");
 					if (is32BitNotSupported) {
 						sw.WriteLine ("\t\t#if ARCH_32");
@@ -6696,13 +6702,13 @@ public partial class Generator : IMemberGatherer {
 						   field_pi.PropertyType == TypeManager.AVCaptureWhiteBalanceGains)) {
 						print ("return *(({3} *) Dlfcn.dlsym (Libraries.{2}.Handle, \"{1}\"));", field_pi.Name, fieldAttr.SymbolName, library_name,
 						       FormatType (type, field_pi.PropertyType.Namespace, field_pi.PropertyType.Name));
-					} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nint) {
+					} else if (field_pi.PropertyType == TypeManager.System_nint) {
 						print ("return Dlfcn.GetNInt (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
-					} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nuint) {
+					} else if (field_pi.PropertyType == TypeManager.System_nuint) {
 						print ("return Dlfcn.GetNUInt (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
-					} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nfloat) {
+					} else if (field_pi.PropertyType == TypeManager.System_nfloat) {
 						print ("return Dlfcn.GetNFloat (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
-					} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.CoreGraphics_CGSize){
+					} else if (field_pi.PropertyType == TypeManager.CoreGraphics_CGSize){
 						print ("return Dlfcn.GetCGSize (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType.IsEnum) {
 						var btype = field_pi.PropertyType.GetEnumUnderlyingType ();
@@ -6712,7 +6718,7 @@ public partial class Generator : IMemberGatherer {
 							print ("_{0} = Dlfcn.GetStringConstant (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 							indent--;
 							print ($"return {smartEnumTypeName}Extensions.GetValue (_{field_pi.Name});");
-						} else if (UnifiedAPI && IsNativeEnum (field_pi.PropertyType)) {
+						} else if (IsNativeEnum (field_pi.PropertyType)) {
 							if (btype == TypeManager.System_nint || btype == TypeManager.System_Int64)
 								print ($"return ({fieldTypeName}) (long) Dlfcn.GetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");" );
 							else if (btype == TypeManager.System_nuint || btype == TypeManager.System_UInt64)
@@ -6766,19 +6772,19 @@ public partial class Generator : IMemberGatherer {
 							print ("Dlfcn.SetString (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType.Name == "NSArray"){
 							print ("Dlfcn.SetArray (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
-						} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nint) {
+						} else if (field_pi.PropertyType == TypeManager.System_nint) {
 							print ("Dlfcn.SetNInt (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
-						} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nuint) {
+						} else if (field_pi.PropertyType == TypeManager.System_nuint) {
 							print ("Dlfcn.SetNUInt (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
-						} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nfloat) {
+						} else if (field_pi.PropertyType == TypeManager.System_nfloat) {
 							print ("Dlfcn.SetNFloat (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
-						} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.CoreGraphics_CGSize) {
+						} else if (field_pi.PropertyType == TypeManager.CoreGraphics_CGSize) {
 							print ("Dlfcn.SetCGSize (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType.IsEnum) {
 							var btype = field_pi.PropertyType.GetEnumUnderlyingType ();
 							if (smartEnumTypeName != null)
 								print ($"Dlfcn.SetString (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", value.GetConstant ());");
-							else if (UnifiedAPI && IsNativeEnum (field_pi.PropertyType)) {
+							else if (IsNativeEnum (field_pi.PropertyType)) {
 								if (btype == TypeManager.System_nint || (BindThirdPartyLibrary && btype == TypeManager.System_Int64))
 									print ($"Dlfcn.SetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", (nint) (long) value);");
 								else if (btype == TypeManager.System_nuint || (BindThirdPartyLibrary && btype == TypeManager.System_UInt64))

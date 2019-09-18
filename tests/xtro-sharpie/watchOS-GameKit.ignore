@@ -76,6 +76,3 @@
 !missing-selector! GKVoiceChatService::stopVoiceChatWithParticipantID: not bound
 !missing-selector! +GKVoiceChatService::defaultVoiceChatService not bound
 !missing-selector! +GKVoiceChatService::isVoIPAllowed not bound
-
-## enum removed in Xcode 10 - but it's a breaking change for us
-!unknown-native-enum! GKGameSessionErrorCode bound

@@ -9,7 +9,6 @@ namespace PassKit {
 	// untyped enum -> PKError.h
 	// This never seemed to be deprecatd, yet in iOS8 it's obsoleted
 	[Obsoleted (PlatformName.iOS, 8, 0)]
-	[iOS (6,0)]
 	public enum PKErrorCode {
 		None = 0,
 		Unknown = 1,
@@ -18,7 +17,6 @@ namespace PassKit {
 	}
 
 	// NSInteger -> PKPass.h
-	[iOS (6,0)]
 	[ErrorDomain ("PKPassKitErrorDomain")]
 	[Native]
 	public enum PKPassKitErrorCode : long {
@@ -138,7 +136,7 @@ namespace PassKit {
 		ServicePickup,
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[iOS (9,0)]
 	[Native]
 	public enum PKAddPaymentPassError : long
@@ -200,7 +198,7 @@ namespace PassKit {
 	}
 
 	[iOS (12,0)]
-	[NoWatch]
+	[NoWatch] // https://feedbackassistant.apple.com/feedback/6301809 https://github.com/xamarin/maccore/issues/1819
 	[Native]
 	public enum PKAddPaymentPassStyle : ulong {
 		Payment,

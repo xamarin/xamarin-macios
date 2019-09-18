@@ -56,6 +56,12 @@ while ! test -z $1; do
 			unset IGNORE_AUTOTOOLS
 			shift
 			;;
+		--provision-python3)
+			# building mono from source requires having python3 installed
+			PROVISION_PYTHON3=1
+			unset IGNORE_PYTHON3
+			shift
+			;;
 		--provision-sharpie)
 			PROVISION_SHARPIE=1
 			unset OPTIONAL_SHARPIE
@@ -87,6 +93,8 @@ while ! test -z $1; do
 			unset IGNORE_SHARPIE
 			PROVISION_SIMULATORS=1
 			unset IGNORE_SIMULATORS
+			PROVISION_PYTHON3=1
+			unset IGNORE_PYTHON3
 			shift
 			;;
 		--ignore-all)
@@ -100,6 +108,7 @@ while ! test -z $1; do
 			IGNORE_HOMEBREW=1
 			IGNORE_SHARPIE=1
 			IGNORE_SIMULATORS=1
+			IGNORE_PYTHON3=1
 			shift
 			;;
 		--ignore-osx)
@@ -120,6 +129,10 @@ while ! test -z $1; do
 			;;
 		--ignore-autotools)
 			IGNORE_AUTOTOOLS=1
+			shift
+			;;
+		--ignore-python3)
+			IGNORE_PYTHON3=1
 			shift
 			;;
 		--ignore-cmake)
@@ -163,6 +176,7 @@ done
 COLOR_RED=$(tput setaf 1 2>/dev/null || true)
 COLOR_ORANGE=$(tput setaf 3 2>/dev/null || true)
 COLOR_MAGENTA=$(tput setaf 5 2>/dev/null || true)
+COLOR_BLUE=$(tput setaf 6 2>/dev/null || true)
 COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
 COLOR_RESET=uniquesearchablestring
 function fail () {
@@ -175,11 +189,11 @@ function warn () {
 }
 
 function ok () {
-	echo "    $1"
+	echo "    ${1//${COLOR_RESET}/${COLOR_CLEAR}}"
 }
 
 function log () {
-	echo "        $1"
+	echo "        ${1//${COLOR_RESET}/${COLOR_CLEAR}}"
 }
 
 # $1: the version to check
@@ -340,7 +354,7 @@ function install_specific_xcode () {
 	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
 	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
 	if test -f "$HOME/Downloads/$XCODE_NAME"; then
-		log "Found Xcode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
+		log "Found $XCODE_NAME in your ~/Downloads folder, copying that version to $XCODE_DMG instead of re-downloading it."
 		cp "$HOME/Downloads/$XCODE_NAME" "$XCODE_DMG"
 	else
 		curl -L $XCODE_URL > $XCODE_DMG
@@ -364,7 +378,7 @@ function install_specific_xcode () {
 		rm -Rf *.app
 		rm -Rf $XCODE_ROOT
 		# extract
-		/System/Library/CoreServices/Applications/Archive\ Utility.app/Contents/MacOS/Archive\ Utility "$XCODE_DMG"
+		xip --expand "$XCODE_DMG"
 		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
 		mv *.app $XCODE_ROOT
 		popd > /dev/null
@@ -374,7 +388,7 @@ function install_specific_xcode () {
 	rm -f $XCODE_DMG
 
 	log "Removing any com.apple.quarantine attributes from the installed Xcode"
-	$SUDO xattr -d -r com.apple.quarantine $XCODE_ROOT
+	$SUDO xattr -s -d -r com.apple.quarantine $XCODE_ROOT
 
 	if is_at_least_version $XCODE_VERSION 5.0; then
 		log "Accepting Xcode license"
@@ -534,7 +548,11 @@ function check_xcode () {
 	# must have latest Xcode in /Applications/Xcode<version>.app
 	check_specific_xcode
 	install_coresimulator
-	check_specific_xcode "94"
+	# Xcode 9,4 does not longer start on catalina
+	local current_os=$(sw_vers -productVersion)
+	if test $current_os != "10.15"; then
+		check_specific_xcode "94"
+	fi
 
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	local IOS_SDK_VERSION=`grep ^IOS_SDK_VERSION= Make.config | sed 's/.*=//'`
@@ -629,6 +647,16 @@ function install_autoconf () {
 	brew install autoconf
 }
 
+function install_python3 () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install python3, but brew is not installed."
+		return
+	fi
+
+	ok "Installing ${COLOR_BLUE}python3${COLOR_RESET}..."
+	brew install python3
+}
+
 function install_libtool () {
 	if ! brew --version >& /dev/null; then
 		fail "Asked to install libtool, but brew is not installed."
@@ -684,6 +712,22 @@ IFS='
 IFS=$IFS_tmp
 }
 
+function check_python3 () {
+	if ! test -z $IGNORE_PYTHON3; then return; fi
+
+IFStmp=$IFS
+IFS='
+'
+	if PYTHON3_VERSION=$(python3 --version 2>/dev/null); then
+		ok "Found $PYTHON3_VERSION (no specific version is required)"
+	elif ! test -z $PROVISION_PYTHON3; then
+		install_python3
+	else
+		fail "You must install python3. The easiest way is to use homebrew, and execute ${COLOR_MAGENTA}brew install python3${COLOR_RESET}."
+	fi
+
+IFS=$IFS_tmp
+}
 function check_visual_studio () {
 	if ! test -z $IGNORE_VISUAL_STUDIO; then return; fi
 
@@ -959,6 +1003,7 @@ check_osx_version
 check_xcode
 check_homebrew
 check_autotools
+check_python3
 check_mono
 check_visual_studio
 check_cmake

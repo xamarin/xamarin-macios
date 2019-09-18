@@ -74,6 +74,10 @@ namespace ClockKit {
 		Timer,
 		[Watch (5,0)]
 		NaturalAbbreviated,
+		[Watch (6,0)]
+		OffsetShort,
+		[Watch (6,0)]
+		NaturalFull,
 	}
 
 	[Watch (5,0)]

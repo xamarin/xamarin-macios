@@ -1,4 +1,4 @@
-// Copyright 2018, Microsoft, Corp.
+// Copyright 2018-2019 Microsoft, Corp.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,7 +28,7 @@ using ObjCRuntime;
 
 namespace NaturalLanguage {
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
+	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
 	[DisableDefaultCtor] // designated
 	[BaseType (typeof(NSObject))]
 	interface NLLanguageRecognizer {
@@ -78,7 +78,7 @@ namespace NaturalLanguage {
 		}
 	}
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
+	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
 	[BaseType (typeof(NSObject))]
 	interface NLModelConfiguration : NSCopying, NSSecureCoding {
 		[Export ("type")]
@@ -102,7 +102,7 @@ namespace NaturalLanguage {
 		nuint GetCurrentRevision (NLModelType type);
 	}
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
+	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface NLModel {
@@ -129,7 +129,7 @@ namespace NaturalLanguage {
 
 	delegate void NLTokenizerEnumerateContinuationHandler (NSRange tokenRange, NLTokenizerAttributes flags, out bool stop);
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
+	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface NLTokenizer
@@ -163,7 +163,7 @@ namespace NaturalLanguage {
 
 	delegate void NLTaggerEnumerateTagsContinuationHandler (NSString tag, NSRange tokenRange, out bool stop);
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
+	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface NLTagger
@@ -251,9 +251,40 @@ namespace NaturalLanguage {
 
 		[Wrap ("GetModels (tagScheme.GetConstant ())")]
 		NLModel[] GetModels (NLTagScheme tagScheme);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("setGazetteers:forTagScheme:")]
+		void SetGazetteers (NLGazetteer[] gazetteers, NSString tagScheme);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("SetGazetteers (gazetteers, tagScheme.GetConstant ())")]
+		void SetGazetteers (NLGazetteer[] gazetteers, NLTagScheme tagScheme);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("gazetteersForTagScheme:")]
+		NLGazetteer[] GetGazetteers (NSString tagScheme);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("GetGazetteers (tagScheme.GetConstant ())")]
+		NLGazetteer[] GetGazetteers (NLTagScheme tagScheme);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Static]
+		[Async]
+		[Export ("requestAssetsForLanguage:tagScheme:completionHandler:")]
+		void RequestAssets (NSString language, NSString tagScheme, Action<NLTaggerAssetsResult, NSError> completionHandler);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Static]
+		[Async]
+		[Wrap ("RequestAssets (language.GetConstant (), tagScheme.GetConstant (), completionHandler)")]
+		void RequestAssets (NLLanguage language, NLTagScheme tagScheme, Action<NLTaggerAssetsResult, NSError> completionHandler);
 	}
 
-	[iOS (12,0), Mac (10,14, onlyOn64: true), TV (12,0), Watch (5,0)]
+	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
 	[Static] // only used to compare with NSString not as input/output
 	interface NLTag {
 		[Field ("NLTagWord")]
@@ -318,5 +349,185 @@ namespace NaturalLanguage {
 		NSString PlaceName { get; }
 		[Field ("NLTagOrganizationName")]
 		NSString OrganizationName { get; }
+	}
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum NLDistanceType : long {
+		Cosine,
+	}
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	enum NLTaggerAssetsResult : long {
+		Available,
+		NotAvailable,
+		Error,
+	}
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	delegate void NLEnumerateNeighborsHandler (string neighbor, /* NLDistance */ double distance, ref bool stop);
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NLEmbedding {
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Static]
+		[Export ("wordEmbeddingForLanguage:")]
+		[return: NullAllowed]
+		NLEmbedding GetWordEmbedding (NSString language);
+
+		[Static]
+		[Wrap ("GetWordEmbedding (language.GetConstant ())")]
+		[return: NullAllowed]
+		NLEmbedding GetWordEmbedding (NLLanguage language);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Static]
+		[Export ("wordEmbeddingForLanguage:revision:")]
+		[return: NullAllowed]
+		NLEmbedding GetWordEmbedding (NSString language, nuint revision);
+
+		[Static]
+		[Wrap ("GetWordEmbedding (language.GetConstant ())")]
+		[return: NullAllowed]
+		NLEmbedding GetWordEmbedding (NLLanguage language, nuint revision);
+
+		[Static]
+		[Export ("embeddingWithContentsOfURL:error:")]
+		[return: NullAllowed]
+		NLEmbedding GetEmbedding (NSUrl url, [NullAllowed] out NSError error);
+
+		[Export ("containsString:")]
+		bool Contains (string @string);
+
+		[Export ("distanceBetweenString:andString:distanceType:")]
+		double GetDistance (string firstString, string secondString, NLDistanceType distanceType);
+
+		[Export ("enumerateNeighborsForString:maximumCount:distanceType:usingBlock:")]
+		void EnumerateNeighbors (string @string, nuint maxCount, NLDistanceType distanceType, NLEnumerateNeighborsHandler handler);
+
+		[Export ("enumerateNeighborsForString:maximumCount:maximumDistance:distanceType:usingBlock:")]
+		void EnumerateNeighbors (string @string, nuint maxCount, double maxDistance, NLDistanceType distanceType, NLEnumerateNeighborsHandler handler);
+
+		[Export ("neighborsForString:maximumCount:distanceType:")]
+		[return: NullAllowed]
+		string[] GetNeighbors (string @string, nuint maxCount, NLDistanceType distanceType);
+
+		[Export ("neighborsForString:maximumCount:maximumDistance:distanceType:")]
+		[return: NullAllowed]
+		string[] GetNeighbors (string @string, nuint maxCount, double maxDistance, NLDistanceType distanceType);
+
+		[Export ("vectorForString:")]
+		[return: NullAllowed]
+		[return: BindAs (typeof (float[]))] // doc says "array of double" but other API uses float ?!?
+		NSNumber[] GetVector (string @string);
+
+		[Internal] // can't bind float[] without NSArray but it will be better bound using .net pattern `bool TryGetVector (string, out float[] vector)`
+		[Export ("getVector:forString:")]
+		bool GetVector (IntPtr /* float[] */ vector, string @string);
+
+		[Export ("enumerateNeighborsForVector:maximumCount:distanceType:usingBlock:")]
+		void EnumerateNeighbors ([BindAs (typeof (float[]))] NSNumber[] vector, nuint maxCount, NLDistanceType distanceType, NLEnumerateNeighborsHandler handler);
+
+		[Export ("enumerateNeighborsForVector:maximumCount:maximumDistance:distanceType:usingBlock:")]
+		void EnumerateNeighbors ([BindAs (typeof (float[]))] NSNumber[] vector, nuint maxCount, double maxDistance, NLDistanceType distanceType, NLEnumerateNeighborsHandler handler);
+
+		[Export ("neighborsForVector:maximumCount:distanceType:")]
+		string[] GetNeighbors ([BindAs (typeof (float[]))] NSNumber[] vector, nuint maxCount, NLDistanceType distanceType);
+
+		[Export ("neighborsForVector:maximumCount:maximumDistance:distanceType:")]
+		string[] GetNeighbors ([BindAs (typeof (float[]))] NSNumber[] vector, nuint maxCount, double maxDistance, NLDistanceType distanceType);
+
+		[Export ("dimension")]
+		nuint Dimension { get; }
+
+		[Export ("vocabularySize")]
+		nuint VocabularySize { get; }
+
+		[NullAllowed, Export ("language")]
+		[BindAs (typeof (NLLanguage?))]
+		NSString Language { get; }
+
+		[Export ("revision")]
+		nuint Revision { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Static]
+		[Export ("supportedRevisionsForLanguage:")]
+		NSIndexSet GetSupportedRevisions (NSString language);
+
+		[Static]
+		[Wrap ("GetSupportedRevisions (language.GetConstant ())")]
+		NSIndexSet GetSupportedRevisions (NLLanguage language);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Static]
+		[Export ("currentRevisionForLanguage:")]
+		nuint GetCurrentRevision (NSString language);
+
+		[Static]
+		[Wrap ("GetCurrentRevision (language.GetConstant ())")]
+		nuint GetCurrentRevision (NLLanguage language);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Static]
+		[Export ("writeEmbeddingForDictionary:language:revision:toURL:error:")]
+		bool Write (NSDictionary dictionary, [NullAllowed] NSString language, nuint revision, NSUrl url, [NullAllowed] out NSError error);
+
+		[Static]
+		[Wrap ("Write (dictionary.GetDictionary (), language.HasValue ? language.Value.GetConstant () : null, revision, url, out error)")]
+		bool Write (NLVectorDictionary dictionary, NLLanguage? language, nuint revision, NSUrl url, [NullAllowed] out NSError error);
+	}
+
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NLGazetteer {
+
+		[Static]
+		[Export ("gazetteerWithContentsOfURL:error:")]
+		[return: NullAllowed]
+		NLGazetteer Create (NSUrl url, [NullAllowed] out NSError error);
+
+		[Export ("initWithContentsOfURL:error:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUrl url, [NullAllowed] out NSError error);
+
+		[Export ("initWithData:error:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSData data, [NullAllowed] out NSError error);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("initWithDictionary:language:error:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSDictionary dictionary, [NullAllowed] NSString language, [NullAllowed] out NSError error);
+
+		// sadly `language?.GetConstant ()` does not cut it :(
+		// error CS1929: 'NLLanguage?' does not contain a definition for 'GetConstant' and the best extension method overload 'NLLanguageExtensions.GetConstant(NLLanguage)' requires a receiver of type 'NLLanguage'
+		[Wrap ("this (dictionary.GetDictionary (), language.HasValue ? language.Value.GetConstant () : null, out error)")]
+		IntPtr Constructor (NLStrongDictionary dictionary, NLLanguage? language, [NullAllowed] out NSError error);
+
+		[Export ("labelForString:")]
+		[return: NullAllowed]
+		string GetLabel (string @string);
+
+		[NullAllowed, Export ("language")]
+		[BindAs (typeof (NLLanguage?))]
+		NSString Language { get; }
+
+		[Export ("data", ArgumentSemantic.Copy)]
+		NSData Data { get; }
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Static]
+		[Export ("writeGazetteerForDictionary:language:toURL:error:")]
+		bool Write (NSDictionary dictionary, [NullAllowed] NSString language, NSUrl url, [NullAllowed] out NSError error);
+
+		[Static]
+		[Wrap ("Write (dictionary.GetDictionary (), language.HasValue ? language.Value.GetConstant () : null, url, out error)")]
+		bool Write (NLStrongDictionary dictionary, NLLanguage? language, NSUrl url, [NullAllowed] out NSError error);
 	}
 }

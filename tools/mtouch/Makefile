@@ -61,7 +61,6 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-framework CoreText			\
 	-framework ExternalAccessory		\
 	-framework GameKit				\
-	-framework IOKit			\
 	-framework MapKit			\
 	-framework MediaPlayer			\
 	-framework MessageUI			\
@@ -113,8 +112,6 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework Metal				\
 	-weak_framework CoreAudioKit		\
 						\
-	-weak_framework WatchKit		\
-						\
 	-weak_framework ReplayKit					\
 	-weak_framework Contacts					\
 	-weak_framework ContactsUI					\
@@ -147,18 +144,34 @@ SIMLAUNCHER_FRAMEWORKS =  \
 						\
 	-weak_framework AuthenticationServices	\
 	-weak_framework CarPlay					\
+	-weak_framework IdentityLookupUI		\
 	-weak_framework NaturalLanguage			\
 	-weak_framework Network				\
 	-weak_framework IdentityLookupUI		\
+	-weak_framework VisionKit		\
+						\
+	-weak_framework BackgroundTasks 		\
+	-weak_framework CoreHaptics \
+	-weak_framework LinkPresentation 		\
+	-weak_framework MetricKit		\
+	-weak_framework PencilKit			\
+	-weak_framework QuickLookThumbnailing		\
+	-weak_framework SoundAnalysis			\
+	-weak_framework VisionKit			\
+
+# keep the above list of weak_framework
+# 1. grouped by iOS versions;
+# 2. sorted and
+# 3. in sync with the list inside `tools/common/Frameworks.cs`
+# except it is no a mistake that GameController and MediaAccessibility (#13636) are not built into simlauncher
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)
 # note 3: there's no MetalKit or MetalPerformanceShaders in iOS 9 beta 4 - but other frameworks were added
 # note 4: GameCenter was removed in Xcode 7 beta 5, and GameKit is back.
 # note 5: Metal* seems to be supported as of some Xcode 7 beta (b2 didn't, but the final release does)
-
-# keep the above list of weak_framework in sync with mtouch.cs
-# except it is no a mistake that GameController and MediaAccessibility (#13636) are not built into simlauncher
+# note 6: Xcode 11 beta 1 shipped without WatchKit.
+# note 7: Xcode 11 beta 3 documented that shipping without WatchKit was done on purpose (in the release notes).
 
 define SimlauncherTemplate
 
@@ -171,7 +184,7 @@ simlauncher$(3)-sgen: simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a Makefi
 		$(TOP)/runtime/.libs/ios/libapp.a \
 		-Wl,-w \
 		-lz -liconv $(TOP)/runtime/.libs/ios/libxamarin-debug.a simlauncher.m $(SIMLAUNCHER_FRAMEWORKS) $(SIMULATOR$(2)_OBJC_CFLAGS) -o $$@
-
+	$(Q) xcrun otool -L $$@ > $$@.frameworks
 endef
 
 $(eval $(call SimlauncherTemplate,-DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,86,32))
@@ -240,9 +253,7 @@ $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
 %.registrar.ios.device.a:        %.registrar.ios.arm64.a %.registrar.ios.armv7.a %.registrar.ios.armv7s.a
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
-# In Xcode 10 beta 1 simd/vector.h won't compile as Objective-C++ (can't find 'cmath'), so include a directory that contains the cmath file.
-# This is filed as rdar://40824697
-REGISTRAR_CFLAGS=-stdlib=libc++
+REGISTRAR_CFLAGS=-stdlib=libc++ -std=c++14
 
 %.registrar.ios.i386.a:   %.registrar.ios.i386.m      %.registrar.ios.i386.h
 	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR86_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include

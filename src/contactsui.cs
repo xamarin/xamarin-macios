@@ -53,7 +53,7 @@ namespace ContactsUI {
 	interface ICNContactPickerDelegate {}
 
 #if MONOMAC
-	[Mac (10,11, onlyOn64: true)]
+	[Mac (10,11)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface CNContactPickerDelegate
@@ -94,7 +94,7 @@ namespace ContactsUI {
 #endif // MONOMAC
 
 #if MONOMAC
-	[Mac (10,11, onlyOn64: true)]
+	[Mac (10,11)]
 	[BaseType (typeof(NSViewController))]
 	interface CNContactViewController
 	{
@@ -192,7 +192,7 @@ namespace ContactsUI {
 	}
 
 #if MONOMAC
-	[Mac (10,11, onlyOn64: true)]
+	[Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	interface CNContactPicker
 	{

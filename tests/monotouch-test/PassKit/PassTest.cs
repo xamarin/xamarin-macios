@@ -70,9 +70,9 @@ namespace MonoTouchFixtures.PassKit {
 				Assert.NotNull (pass.Icon, "Icon");
 #endif
 
-				// need to ensure it's english locale
-				Assert.That (string.IsNullOrEmpty (pass.LocalizedDescription), Is.False, "LocalizedName");
-				Assert.That (string.IsNullOrEmpty (pass.LocalizedName), Is.False, "LocalizedName");
+				Assert.That (pass.LocalizedDescription, Is.Not.Null, "LocalizedDescription is not null");
+				Assert.That (pass.LocalizedDescription, Is.Not.Empty, "LocalizedDescription is not empty");
+				Assert.That (string.IsNullOrEmpty (pass.LocalizedName), Is.False, "LocalizedName is false");
 
 				Assert.That (pass.OrganizationName, Is.EqualTo ("Skyport Airways"), "OrganizationName");
 				Assert.That (pass.PassTypeIdentifier, Is.EqualTo ("pass.com.apple.devpubs.example"), "PassTypeIdentifier");

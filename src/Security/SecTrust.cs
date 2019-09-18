@@ -5,6 +5,7 @@
 //  Sebastien Pouliot  <sebastien@xamarin.com>
 //
 // Copyright 2013-2014 Xamarin Inc.
+// Copyright 2019 Microsoft Corporation
 //
 
 using System;
@@ -19,7 +20,8 @@ using Foundation;
 
 namespace Security {
 
-	delegate void SecTrustCallback (IntPtr trustRef, SecTrustResult trustResult);
+	public delegate void SecTrustCallback (SecTrust trust, SecTrustResult trustResult);
+	public delegate void SecTrustWithErrorCallback (SecTrust trust, bool result, NSError /* CFErrorRef _Nullable */ error);
 
 	public partial class SecTrust {
 
@@ -45,7 +47,6 @@ namespace Security {
 			return NSArray.ArrayFromHandle<SecPolicy> (p);
 		}
 
-		[iOS (6,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustSetPolicies (IntPtr /* SecTrustRef */ trust, IntPtr /* CFTypeRef */ policies);
 
@@ -57,7 +58,6 @@ namespace Security {
 				throw new InvalidOperationException (result.ToString ());
 		}
 
-		[iOS (6,0)]
 		public void SetPolicy (SecPolicy policy)
 		{
 			if (policy == null)
@@ -66,7 +66,6 @@ namespace Security {
 			SetPolicies (policy.Handle);
 		}
 
-		[iOS (6,0)]
 		public void SetPolicies (IEnumerable<SecPolicy> policies)
 		{
 			if (policies == null)
@@ -76,7 +75,6 @@ namespace Security {
 				SetPolicies (array.Handle);
 		}
 
-		[iOS (6,0)]
 		public void SetPolicies (NSArray policies)
 		{
 			if (policies == null)
@@ -124,9 +122,88 @@ namespace Security {
 		}
 
 		[iOS (7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustEvaluateAsync (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, SecTrustCallback result);
-		// FIXME: no `user data` parameter :( to ease MonoPInvokeCallback use
+		extern static SecStatusCode /* OSStatus */ SecTrustEvaluateAsync (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, ref BlockLiteral block);
+
+		internal delegate void TrustEvaluateHandler (IntPtr block, IntPtr trust, SecTrustResult trustResult);
+		static readonly TrustEvaluateHandler evaluate = TrampolineEvaluate;
+
+		[MonoPInvokeCallback (typeof (TrustEvaluateHandler))]
+		static void TrampolineEvaluate (IntPtr block, IntPtr trust, SecTrustResult trustResult)
+		{
+			var del = BlockLiteral.GetTarget<SecTrustCallback> (block);
+			if (del != null) {
+				var t = trust == IntPtr.Zero ? null : new SecTrust (trust);
+				del (t, trustResult);
+			}
+		}
+
+		[iOS (7,0)]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		// not always async (so suffix is removed)
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public SecStatusCode Evaluate (DispatchQueue queue, SecTrustCallback handler)
+		{
+			// headers have `dispatch_queue_t _Nullable queue` but it crashes... don't trust headers, even for SecTrust
+			if (queue == null)
+				throw new ArgumentNullException (nameof (queue));
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			try {
+				block_handler.SetupBlockUnsafe (evaluate, handler);
+				return SecTrustEvaluateAsync (handle, queue.Handle, ref block_handler);
+			}
+			finally {
+				block_handler.CleanupBlock ();
+			}
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern SecStatusCode SecTrustEvaluateAsyncWithError (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, ref BlockLiteral block);
+
+		internal delegate void TrustEvaluateErrorHandler (IntPtr block, IntPtr trust, bool result, IntPtr /* CFErrorRef _Nullable */  error);
+		static readonly TrustEvaluateErrorHandler evaluate_error = TrampolineEvaluateError;
+
+		[MonoPInvokeCallback (typeof (TrustEvaluateErrorHandler))]
+		static void TrampolineEvaluateError (IntPtr block, IntPtr trust, bool result, IntPtr /* CFErrorRef _Nullable */  error)
+		{
+			var del = BlockLiteral.GetTarget<SecTrustWithErrorCallback> (block);
+			if (del != null) {
+				var t = trust == IntPtr.Zero ? null : new SecTrust (trust);
+				var e = error == IntPtr.Zero ? null : new NSError (error);
+				del (t, result, e);
+			}
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		// not always async (so suffix is removed)
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public SecStatusCode Evaluate (DispatchQueue queue, SecTrustWithErrorCallback handler)
+		{
+			if (queue == null)
+				throw new ArgumentNullException (nameof (queue));
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			try {
+				block_handler.SetupBlockUnsafe (evaluate_error, handler);
+				return SecTrustEvaluateAsyncWithError (handle, queue.Handle, ref block_handler);
+			}
+			finally {
+				block_handler.CleanupBlock ();
+			}
+		}
 
 		[iOS (7,0)]
 		[DllImport (Constants.SecurityLibrary)]
@@ -142,11 +219,11 @@ namespace Security {
 			return trust_result;
 		}
 
-		[Watch (5,0)][TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)]
+		[Watch (5,0)][TV (12,0)][Mac (10,14)][iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern bool SecTrustEvaluateWithError (/* SecTrustRef */ IntPtr trust, out /* CFErrorRef** */ IntPtr error);
 
-		[Watch (5,0)][TV (12,0)][Mac (10,14, onlyOn64: true)][iOS (12,0)]
+		[Watch (5,0)][TV (12,0)][Mac (10,14)][iOS (12,0)]
 		public bool Evaluate (out NSError error)
 		{
 			var result = SecTrustEvaluateWithError (handle, out var err);
@@ -208,14 +285,14 @@ namespace Security {
 		[iOS (12,1,1)]
 		[Watch (5,1,1)]
 		[TV (12,1,1)]
-		[Mac (10,14,2, onlyOn64: true)]
+		[Mac (10,14,2)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern SecStatusCode /* OSStatus */ SecTrustSetSignedCertificateTimestamps (/* SecTrustRef* */ IntPtr trust, /* CFArrayRef* */ IntPtr sctArray);
 
 		[iOS (12,1,1)]
 		[Watch (5,1,1)]
 		[TV (12,1,1)]
-		[Mac (10,14,2, onlyOn64: true)]
+		[Mac (10,14,2)]
 		public SecStatusCode SetSignedCertificateTimestamps (IEnumerable<NSData> sct)
 		{
 			if (sct == null)
@@ -228,7 +305,7 @@ namespace Security {
 		[iOS (12,1,1)]
 		[Watch (5,1,1)]
 		[TV (12,1,1)]
-		[Mac (10,14,2, onlyOn64: true)]
+		[Mac (10,14,2)]
 		public SecStatusCode SetSignedCertificateTimestamps (NSArray<NSData> sct)
 		{
 			return SecTrustSetSignedCertificateTimestamps (handle, sct.GetHandle ());

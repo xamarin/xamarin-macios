@@ -57,22 +57,14 @@ namespace Xamarin.Bundler {
 		public MonoNativeMode MonoNativeMode { get; set; }
 
 #if MONOMAC
-		public bool Is32Build { get { return !Driver.Is64Bit; } }
-		public bool Is64Build { get { return Driver.Is64Bit; } }
+		public bool Is32Build { get { return false; } }
+		public bool Is64Build { get { return true; } }
 #endif
 
 		public Target (Application app)
 		{
 			this.App = app;
-#if MMP
-			if (Driver.IsClassic) {
-				this.StaticRegistrar = new ClassicStaticRegistrar (this);
-			} else {
-				this.StaticRegistrar = new StaticRegistrar (this);
-			}
-#else
 			this.StaticRegistrar = new StaticRegistrar (this);
-#endif
 		}
 
 		// This will find the link context, possibly looking in container targets.
@@ -193,9 +185,12 @@ namespace Xamarin.Bundler {
 						case "MetalKit":
 						case "MetalPerformanceShaders":
 						case "CoreNFC":
-						case "DeviceCheck":
 							// some frameworks do not exists on simulators and will result in linker errors if we include them
 							if (App.IsSimulatorBuild)
+								continue;
+							break;
+						case "DeviceCheck":
+							if (App.IsSimulatorBuild && App.SdkVersion.Major < 13)
 								continue;
 							break;
 						case "PushKit":
@@ -204,6 +199,13 @@ namespace Xamarin.Bundler {
 							// this was fixed in Xcode 6.2 (6.1 was still buggy) see #29786
 							if ((App.DeploymentTarget < v80) && (Driver.XcodeVersion < new Version (6, 2))) {
 								ErrorHelper.Warning (49, "{0}.framework is supported only if deployment target is 8.0 or later. {0} features might not work correctly.", framework.Name);
+								continue;
+							}
+							break;
+						case "WatchKit":
+							// Xcode 11 doesn't ship WatchKit for iOS
+							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
+								ErrorHelper.Warning (5219, "Not linking with WatchKit because it has been removed from iOS.");
 								continue;
 							}
 							break;

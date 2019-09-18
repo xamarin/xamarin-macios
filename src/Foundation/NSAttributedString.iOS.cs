@@ -25,18 +25,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !MONOMAC
-
 using System;
 
 using ObjCRuntime;
 using Foundation;
-using UIKit;
 using CoreGraphics;
+
+#if !MONOMAC
+using UIKit;
+#endif
 
 namespace Foundation {
 
-#if !COREBUILD
+#if !MONOMAC && !COREBUILD
 	public partial class NSAttributedString {
 		static NSDictionary ignore;
 
@@ -70,7 +71,7 @@ namespace Foundation {
 #endif
 	
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
-#if !COREBUILD
+#if !MONOMAC && !COREBUILD
 		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) {}
 		public NSAttributedStringDocumentAttributes (NSDictionary dictionary) : base (dictionary) {}
 
@@ -277,7 +278,22 @@ namespace Foundation {
 			}
 		}
 #endif
+#if !COREBUILD && !TVOS && !WATCH
+		// documentation is unclear if an NSString or an NSUrl should be used...
+		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`
+		[Mac (10, 15), iOS (13, 0)]
+		public NSUrl ReadAccessUrl {
+			get {
+				Dictionary.TryGetValue (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey, out var value);
+				return value as NSUrl;
+			}
+			set {
+				if (value == null)
+					RemoveValue (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey);
+				else
+					Dictionary [NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey] = value;
+			}
+		}
+#endif
 	}
 }
-
-#endif // !MONOMAC

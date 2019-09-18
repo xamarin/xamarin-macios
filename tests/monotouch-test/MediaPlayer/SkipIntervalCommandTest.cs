@@ -45,7 +45,11 @@ namespace MonoTouchFixtures.MediaPlayer {
 
 			MPSkipIntervalCommand skip = MPRemoteCommandCenter.Shared.SkipBackwardCommand;
 
-			Assert.Null (skip.PreferredIntervals, "PreferredIntervals");
+			if (TestRuntime.CheckXcodeVersion (11, 0)) {
+				Assert.That (skip.PreferredIntervals, Is.EqualTo (new double [] { 10.0d }), "PreferredIntervals");
+			} else {
+				Assert.Null (skip.PreferredIntervals, "PreferredIntervals");
+			}
 			double[] intervals = new [] { 1.0d, 3.14d };
 			skip.PreferredIntervals = intervals;
 

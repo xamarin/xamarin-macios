@@ -17,10 +17,6 @@ namespace MonoMac.Tuner {
 	// XML definition files have their limits, i.e. they are good to keep stuff around unconditionnally
 	// e.g. we do not want to force all/most Socket code around (non-network apps) because some types have unmanaged representation
 	public class MonoMacMarkStep : CoreMarkStep {
-		
-		public static bool IsClassic { get { return Driver.IsClassic; } }
-		public static bool IsUnified { get { return Driver.IsUnified; } }
-
 		List<Exception> Exceptions = new List<Exception> ();
 
 		public override void Process (LinkContext context)

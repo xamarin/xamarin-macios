@@ -37,5 +37,7 @@
 			<key>NSAllowsArbitraryLoads</key>
 			<true/>
 		</dict>
+	<key>MinimumOSVersion</key>
+	<string>7.0</string>
 </dict>
 </plist>
