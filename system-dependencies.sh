@@ -548,11 +548,6 @@ function check_xcode () {
 	# must have latest Xcode in /Applications/Xcode<version>.app
 	check_specific_xcode
 	install_coresimulator
-	# Xcode 9,4 does not longer start on catalina
-	local current_os=$(sw_vers -productVersion)
-	if test $current_os != "10.15"; then
-		check_specific_xcode "94"
-	fi
 
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	local IOS_SDK_VERSION=`grep ^IOS_SDK_VERSION= Make.config | sed 's/.*=//'`
