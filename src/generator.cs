@@ -1392,6 +1392,9 @@ public partial class Generator : IMemberGatherer {
 			temp = isNullable ? $"{parameterName} == null ? null : " : string.Empty;
 			temp += $"{FormatType (retType.DeclaringType, retType)}Extensions.GetConstant ({parameterName}{denullify});";
 		} else if (originalType.IsArray && originalType.GetArrayRank () == 1) {
+			if (!retType.IsArray) {
+				throw new BindingException (1068, true, "BindAs attribute of parameter \"{0}\" is missing '[]' in the definition", parameterName);
+			}
 			var arrType = originalType.GetElementType ();
 			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;

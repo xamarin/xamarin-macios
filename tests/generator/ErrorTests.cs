@@ -145,14 +145,26 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void GH6863 ()
+		public void GH6863_property ()
 		{
 			var bgen = new BGenTool ();
 			bgen.Profile = Profile.iOS;
-			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "ghissue6863.cs")));
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "ghissue6863_property.cs")));
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1067, "BindAs attribute of selector \"stringProp\" is missing '[]' in the definition");
 		}
+
+        
+		[Test]
+		public void GH6863_method ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "ghissue6863_method.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1068, "BindAs attribute of parameter \"id_test\" is missing '[]' in the definition");
+		}
+       
 
 		[Test]
 		public void BI1050_model ()

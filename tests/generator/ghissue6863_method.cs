@@ -4,14 +4,14 @@ using Foundation;
 using CoreMedia;
 using ObjCRuntime;
 
-namespace GH6863 {
+namespace GH6863_method {
 
 	[BaseType (typeof (NSObject))]
 	interface MyFooClass {
 
-		[BindAs (typeof (string))]
-		[Export ("stringProp")]
-		NSString[] StringProp { get; }
+		[Export ("stringMethod:")]
+		void StringMethod ([BindAs (typeof (string))] NSString[] id_test );
+
 		
 	}
 }

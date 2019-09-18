@@ -200,6 +200,8 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1067'/>BI1067: BindAs attribute of the selector \"{selector}\" is missing '[]' in the definition.
 
+### <a name='BI1068'/>BI1068: BindAs attribute of the parameter \"{parameter}\" is missing '[]' in the definition.
+
 # BI11xx: warnings
 
 <!-- 11xx: warnings -->
