@@ -1,0 +1,58 @@
+//
+// NWBrowseDescriptor.cs: Bindings the Network nw_browse_descriptor_t API.
+//
+// Authors:
+//   Manuel de la Pena (mandel@microsoft.com)
+//
+// Copyrigh 2019 Microsoft Inc
+//
+using System;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+
+using OS_nw_browse_descriptor=System.IntPtr;
+
+namespace Network {
+
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+	public class NWBrowserDescriptor: NativeObject {
+
+		public NWBrowserDescriptor (IntPtr handle, bool owns) : base (handle, owns) {}
+
+		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_bonjour_service (string type, string domain);
+
+		public static NWBrowserDescriptor CreateBonjourService (string type, string domain)
+		{
+			// domain can be null, type CANNOT	
+			if (type == null)
+				throw new ArgumentNullException (nameof (type));
+
+			return new NWBrowserDescriptor (nw_browse_descriptor_create_bonjour_service (type, domain), owns: true);
+		}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern bool nw_browse_descriptor_get_include_txt_record (OS_nw_browse_descriptor descriptor);
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_browse_descriptor_set_include_txt_record (OS_nw_browse_descriptor descriptor, bool include_txt_record);
+
+		bool IncludeTxtRecord {
+			get => nw_browse_descriptor_get_include_txt_record (GetCheckedHandle ()); 
+			set => nw_browse_descriptor_set_include_txt_record (GetCheckedHandle (), value); 
+		}
+
+		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+		static extern string nw_browse_descriptor_get_bonjour_service_type (OS_nw_browse_descriptor descriptor);
+
+		string BonjourType => nw_browse_descriptor_get_bonjour_service_type (GetCheckedHandle ()); 
+
+		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+		static extern string nw_browse_descriptor_get_bonjour_service_domain (OS_nw_browse_descriptor descriptor);
+
+		string BonjourDomain => nw_browse_descriptor_get_bonjour_service_domain (GetCheckedHandle ()); 
+	}
+}

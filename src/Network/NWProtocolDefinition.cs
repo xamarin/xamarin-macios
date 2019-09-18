@@ -64,6 +64,6 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ws_definition ();
 
-		public static NWProtocolDefinition WebServiceDefinition => NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
+		public static NWProtocolDefinition WebServiceDefinition => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 	}
 }

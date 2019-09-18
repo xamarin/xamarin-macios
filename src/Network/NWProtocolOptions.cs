@@ -18,6 +18,13 @@ using IntPtr=System.IntPtr;
 
 namespace Network {
 
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	public enum NWIPLocalAddressPreference {
+		Default = 0,
+		Temporary = 1,
+		Stable = 2,
+	}
+
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
 	public class NWProtocolOptions : NativeObject {
@@ -95,6 +102,15 @@ namespace Network {
 			nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), calculateReceiveTime);
 		}
 
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_ip_options_set_local_address_preference (IntPtr options, NWIPLocalAddressPreference preference);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		public NWIPLocalAddressPreference IPLocalAddressPreference {
+			set => nw_ip_options_set_local_address_preference (GetCheckedHandle (), value);
+		}
 //
 // TCP Options
 //
@@ -169,33 +185,23 @@ namespace Network {
 		extern static void nw_tcp_options_set_disable_ecn (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool disableEcn);
 		public void TcpSetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn);
 
-//
-// UDP Options
-//
+		//
+		// UDP Options
+		//
+
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_udp_options_set_prefer_no_checksum (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool preferNoChecksums);
 
 		public void UdpSetPreferNoChecksum (bool preferNoChecksums) => nw_udp_options_set_prefer_no_checksum (GetCheckedHandle (), preferNoChecksums);
 
-//
-// TLS options
-//
+		//
+		// TLS options
+		//
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_tls_copy_sec_protocol_options (IntPtr options);
 
 		public SecProtocolOptions TlsProtocolOptions => new SecProtocolOptions (nw_tls_copy_sec_protocol_options (GetCheckedHandle ()), owns: true);
 
-		//
-		// WebService options
-		//
-
-		[DllImport (Constants.NetworkLibrary)]
-		extern static IntPtr nw_ws_create_options(NWWSVersion version);
-
-		public NWProtocolOptions WebServiceOptions (NWWSVersion version)
-		{
-			new NWProtocolOptions (nw_ws_create_options (version));
-		}
 	}
 }

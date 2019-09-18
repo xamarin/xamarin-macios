@@ -187,5 +187,17 @@ namespace Network {
 			CheckIsTcp ();
 			return nw_tcp_get_available_send_buffer (GetCheckedHandle ());
 		}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern bool nw_protocol_metadata_is_framer_message (OS_nw_protocol_metadata metadata);
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		public bool IsFramerMessage => nw_protocol_metadata_is_framer_message (GetCheckedHandle ());
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern bool nw_protocol_metadata_is_ws (OS_nw_protocol_metadata metadata);
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		public bool IsWebSocket => nw_protocol_metadata_is_ws (GetCheckedHandle ());
 	}
 }

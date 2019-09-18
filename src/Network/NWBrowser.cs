@@ -1,0 +1,152 @@
+//
+// NWBrowser.cs: Bindings the Network nw_browser_t API.
+//
+// Authors:
+//   Manuel de la Pena (mandel@microsoft.com)
+//
+// Copyrigh 2019 Microsoft Inc
+//
+using System;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+
+using OS_nw_browser=System.IntPtr;
+using OS_nw_browse_descriptor=System.IntPtr;
+using OS_nw_parameters=System.IntPtr;
+using dispatch_queue_t =System.IntPtr;
+
+namespace Network {
+
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+	public enum NWBrowserState {
+		Invalid = 0,
+		Ready = 1,
+		Failed = 2,
+		Cancelled = 3,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+	public class NWBrowser : NativeObject {
+
+		public NWBrowser (IntPtr handle, bool owns) : base (handle, owns) {}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_browser nw_browser_create (OS_nw_browse_descriptor descriptor, OS_nw_parameters parameters);
+
+		public NWBrowser (NWBrowserDescriptor descriptor, NWParameters parameters)
+		{
+			if (descriptor == null)
+				throw new ArgumentNullException (nameof (descriptor));
+			var parametersHandler = parameters?.Handle ?? IntPtr.Zero;
+
+			InitializeHandle (nw_browser_create (descriptor.Handle, parameters.Handle));
+		}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_browser_set_queue (OS_nw_browser browser, dispatch_queue_t queue);
+
+		public DispatchQueue DispatchQueue {
+			set {
+				if (value == null)
+					throw new ArgumentNullException (nameof (value));
+				nw_browser_set_queue (GetCheckedHandle (), value.Handle);
+			}
+		}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_browser_start (OS_nw_browser browser);
+
+		public void Start () => nw_browser_start (GetCheckedHandle ());
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_browser_cancel (OS_nw_browser browser);
+
+		public void Cancel () => nw_browser_cancel (GetCheckedHandle ());
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_browse_descriptor nw_browser_copy_browse_descriptor (OS_nw_browser browser);
+
+		public NWBrowserDescriptor Descriptor
+			=> new NWBrowserDescriptor (nw_browser_copy_browse_descriptor (GetCheckedHandle ()), owns: true);
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_parameters nw_browser_copy_parameters (OS_nw_browser browser);
+
+		public NWParameters Parameters
+			=> new NWParameters (nw_browser_copy_parameters (GetCheckedHandle ()), owns: true);
+
+		[DllImport (Constants.NetworkLibrary)]
+		unsafe static extern void nw_browser_set_browse_results_changed_handler (OS_nw_browser browser, void *handler);
+
+		delegate void nw_browser_browse_results_changed_handler_t (IntPtr block, IntPtr oldResult, IntPtr newResult);
+		static nw_browser_browse_results_changed_handler_t static_ChangesHandler = TrampolineChangesHandler;
+
+		[MonoPInvokeCallback (typeof (nw_browser_browse_results_changed_handler_t))]
+		static void TrampolineChangesHandler (IntPtr block, IntPtr oldResult, IntPtr newResult)
+		{
+			var del = BlockLiteral.GetTarget<Action<NWBrowseResult, NWBrowseResult>> (block);
+			if (del != null) {
+				var nwOldResult = new NWBrowseResult (oldResult, owns: false);
+				var nwNewResult = new NWBrowseResult (newResult, owns: false);
+				del (nwOldResult, nwNewResult);
+			}
+		}
+
+		public Action<NWBrowseResult, NWBrowseResult> ChangesHandler {
+			set {
+				unsafe {
+					if (value == null) {
+						nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), null);
+						return;
+					}
+					BlockLiteral block_handler = new BlockLiteral ();
+					BlockLiteral *block_ptr_handler = &block_handler;
+					block_handler.SetupBlockUnsafe (static_ChangesHandler, value);
+					try {
+						nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+					} finally {
+						block_handler.CleanupBlock ();
+					}
+				}
+			}
+		}	
+
+		[DllImport (Constants.NetworkLibrary)]
+		unsafe static extern void nw_browser_set_state_changed_handler (OS_nw_browser browser, void *state_changed_handler);
+
+		delegate void nw_browser_set_state_changed_handler_t (IntPtr block, NWBrowserState state, IntPtr error);
+		static nw_browser_set_state_changed_handler_t static_StateChangesHandler = TrampolineStateChangesHandler;
+
+		[MonoPInvokeCallback (typeof (nw_browser_set_state_changed_handler_t))]
+		static void TrampolineStateChangesHandler (IntPtr block, NWBrowserState state, IntPtr error)
+		{
+			var del = BlockLiteral.GetTarget<Action<NWBrowserState, NWError>> (block);
+			if (del != null) {
+				var nwError = (error == IntPtr.Zero)? null : new NWError (error, owns: false);
+				del (state, nwError);
+			}
+		}
+
+		public Action<NWBrowserState, NWError> StateChangesHandler {
+			set {
+				unsafe {
+					if (value == null) {
+						nw_browser_set_state_changed_handler (GetCheckedHandle (), null);
+						return;
+					}
+					BlockLiteral block_handler = new BlockLiteral ();
+					BlockLiteral *block_ptr_handler = &block_handler;
+					block_handler.SetupBlockUnsafe (static_StateChangesHandler, value);
+					try {
+						nw_browser_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+					} finally {
+						block_handler.CleanupBlock ();
+					}
+				}
+			}
+		}	
+	}
+}

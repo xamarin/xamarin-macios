@@ -14,6 +14,7 @@ using CoreFoundation;
 
 using nw_advertise_descriptor_t=System.IntPtr;
 using OS_nw_advertise_descriptor=System.IntPtr;
+using OS_nw_txt_record=System.IntPtr;
 
 namespace Network {
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -60,6 +61,17 @@ namespace Network {
 		public bool NoAutoRename {
 			set => nw_advertise_descriptor_set_no_auto_rename (GetCheckedHandle (), value);
 			get => nw_advertise_descriptor_get_no_auto_rename (GetCheckedHandle ());
+		}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_txt_record nw_advertise_descriptor_copy_txt_record_object (OS_nw_advertise_descriptor advertise_descriptor);
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_advertise_descriptor_set_txt_record_object (OS_nw_advertise_descriptor advertise_descriptor, OS_nw_txt_record txt_record);
+
+		public NWTxtRecord TxtRecord {
+			get => new NWTxtRecord (nw_advertise_descriptor_copy_txt_record_object (GetCheckedHandle ()), owns: true); 
+			set => nw_advertise_descriptor_set_txt_record_object (GetCheckedHandle (), value?.Handle ?? IntPtr.Zero); 
 		}
 	}
 }

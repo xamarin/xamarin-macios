@@ -1,0 +1,93 @@
+//
+// NWBrowseResult.cs: Bindings the Network nw_browse_result_t API.
+//
+// Authors:
+//   Manuel de la Pena (mandel@microsoft.com)
+//
+// Copyrigh 2019 Microsoft Inc
+//
+using System;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+
+using OS_nw_browse_result=System.IntPtr;
+using OS_nw_endpoint=System.IntPtr;
+using OS_nw_txt_record=System.IntPtr;
+
+namespace Network {
+
+	[Flags, TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+	public enum NWBrowseResultChange : ulong {
+		Invalid = 0x00,
+		Identical = 0x01,
+		ResultAdded = 0x02,
+		ResultRemoved = 0x04,
+		TxtRecordChanged = 0x20,
+		InterfaceAdded = 0x08, 
+		InterfaceRemoved = 0x10,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+	public class NWBrowseResult : NativeObject {
+
+		public NWBrowseResult (IntPtr handle, bool owns) : base (handle, owns) {}
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_endpoint nw_browse_result_copy_endpoint (OS_nw_browse_result result);
+
+		NWEndpoint EndPoint => new NWEndpoint (nw_browse_result_copy_endpoint (GetCheckedHandle ()), owns: true);
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern nuint nw_browse_result_get_interfaces_count (OS_nw_browse_result result);
+
+		nuint InterfacesCount => nw_browse_result_get_interfaces_count (GetCheckedHandle ());
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_txt_record nw_browse_result_copy_txt_record_object (OS_nw_browse_result result);
+
+		NWTxtRecord TxtRecord => new NWTxtRecord (nw_browse_result_copy_txt_record_object (GetCheckedHandle ()), owns: true); 
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern NWBrowseResultChange nw_browse_result_get_changes (OS_nw_browse_result old_result, OS_nw_browse_result new_result);
+
+		public NWBrowseResultChange GetChanges (NWBrowseResult oldResult, NWBrowseResult newResult)
+			=> nw_browse_result_get_changes (oldResult?.Handle ?? IntPtr.Zero, newResult?.Handle ?? IntPtr.Zero);
+
+		[DllImport (Constants.NetworkLibrary)]
+		unsafe static extern void nw_browse_result_enumerate_interfaces (OS_nw_browse_result result, void *enumerator);
+
+		delegate void nw_browse_result_enumerate_interfaces_t (IntPtr block, IntPtr nwInterface);
+		static nw_browse_result_enumerate_interfaces_t static_EnumerateInterfacesHandler = TrampolineEnumerateInterfacesHandler;
+
+		[MonoPInvokeCallback (typeof (nw_browse_result_enumerate_interfaces_t))]
+		static void TrampolineEnumerateInterfacesHandler (IntPtr block, IntPtr inter)
+		{
+			var del = BlockLiteral.GetTarget<Action<NWInterface>> (block);
+			if (del != null) {
+				var nwInterface = new NWInterface (inter, owns: false);
+				del (nwInterface);
+			}
+		}
+
+		public void EnumerateInterfaces (Action<NWInterface> handler)
+		{
+			unsafe {
+				if (handler == null) {
+					nw_browse_result_enumerate_interfaces (GetCheckedHandle (), null);
+					return;
+				}
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_EnumerateInterfacesHandler, handler);
+				try {
+					nw_browse_result_enumerate_interfaces (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
+				}
+			}
+		}
+	}
+}
