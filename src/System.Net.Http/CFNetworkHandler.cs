@@ -299,7 +299,8 @@ namespace System.Net.Http
 			if (!streamBuckets.TryGetValue (stream.Handle, out bucket))
 				return;
 
-			bucket.Response.TrySetException (stream.GetError ());
+			var ex = stream.GetError ();
+			bucket.Response.TrySetException (new HttpRequestException (ex.FailureReason, ex));
 			CloseStream (stream);
 		}
 

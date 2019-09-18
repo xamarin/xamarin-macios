@@ -67,6 +67,11 @@ xamarin_log (const unsigned short *unicodeMessage)
 	[msg release];
 }
 
+// NOTE: The timezone functions are duplicated in mono, so if you're going to modify here, it would be nice
+// if we modify there.
+//
+// See in Mono sdks/ios/runtime/runtime.m
+
 void*
 xamarin_timezone_get_data (const char *name, int *size)
 {
@@ -98,6 +103,18 @@ xamarin_timezone_get_names (int *count)
 		result [i] = strdup (s.UTF8String);
 	}
 	return result;
+}
+
+//
+// Returns the geopolitical region ID of the local timezone.
+
+const char *
+xamarin_timezone_get_local_name ()
+{
+	NSTimeZone *tz = nil;
+	tz = [NSTimeZone localTimeZone];
+	NSString *name = [tz name];
+	return (name != nil) ? strdup ([name UTF8String]) : strdup ("Local");
 }
 
 #if !TARGET_OS_WATCH && !TARGET_OS_TV
@@ -158,17 +175,27 @@ xamarin_GetFolderPath (int folder)
 // it impossible to disable dlsym and, for example, run dontlink on devices
 // https://bugzilla.xamarin.com/show_bug.cgi?id=36569#c4
 
-void objc_msgSend_stret (id self, SEL op, ...)
+void objc_msgSend_stret (void)
 {
-	PRINT ("Unimplemented objc_msgSend_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSend_stret");
 	abort ();
 }
 
-void objc_msgSendSuper_stret (struct objc_super *super, SEL op, ...)
+void objc_msgSendSuper_stret (void)
 {
-	PRINT ("Unimplemented objc_msgSendSuper_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSendSuper_stret");
 	abort ();
 }
 
 #endif
 
+#ifdef MONOMAC
+// <quote>Do not hard-code this parameter as a C string.</quote>
+// works on iOS (where we don't need it) and crash on macOS
+const char *
+xamarin_encode_CGAffineTransform ()
+{
+    // COOP: no managed memory access: any mode.
+    return @encode (CGAffineTransform);
+}
+#endif

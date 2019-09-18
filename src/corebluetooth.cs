@@ -46,9 +46,23 @@ namespace CoreBluetooth {
 		[Export ("state", ArgumentSemantic.Assign)]
 		CBManagerState State { get; }
 
-		[iOS (13,0), TV (13,0), Watch (6,0), Mac (10, 15)]
+#if IOS || WATCH
+		[Internal]
+		[iOS (13,0), Watch (6,0)]
+		[Export ("authorization", ArgumentSemantic.Assign)]
+		CBManagerAuthorization _IAuthorization { get; }
+
+		[Internal]
+		[iOS (13,1), Watch (6,1)]
+		[Static]
+		[Export ("authorization", ArgumentSemantic.Assign)]
+		CBManagerAuthorization _SAuthorization { get; }
+#else
+		[TV (13,0), Mac (10, 15)]
+		[Static]
 		[Export ("authorization", ArgumentSemantic.Assign)]
 		CBManagerAuthorization Authorization { get; }
+#endif
 	}
 
 	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
@@ -70,10 +84,10 @@ namespace CoreBluetooth {
 
 	[StrongDictionary ("CBConnectPeripheralOptionsKeys")]
 	interface CBConnectPeripheralOptions {
-		[Mac (10,13)] [iOS (6,0)]
+		[Mac (10,13)] 
 		bool NotifyOnConnection { get; set; }
 		bool NotifyOnDisconnection { get; set; }
-		[Mac (10,13)][iOS (6,0)]
+		[Mac (10,13)]
 		bool NotifyOnNotification { get; set; }
 		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
 		bool EnableTransportBridging { get; set; }
@@ -84,12 +98,12 @@ namespace CoreBluetooth {
 	[Static]
 	[Internal]
 	interface CBConnectPeripheralOptionsKeys {
-		[Mac (10,13)] [iOS (6,0)]
+		[Mac (10,13)] 
 		[Field ("CBConnectPeripheralOptionNotifyOnConnectionKey")]
 		NSString NotifyOnConnectionKey { get; }
 		[Field ("CBConnectPeripheralOptionNotifyOnDisconnectionKey")]
 		NSString NotifyOnDisconnectionKey { get; }
-		[Mac (10,13)][iOS (6,0)]
+		[Mac (10,13)]
 		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
 		NSString NotifyOnNotificationKey { get; }
 		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
@@ -163,13 +177,11 @@ namespace CoreBluetooth {
 
 		[Obsolete ("Use 'CBConnectPeripheralOptions' instead.")]
 		[Mac (10,13)]
-		[iOS (6,0)]
 		[Field ("CBConnectPeripheralOptionNotifyOnConnectionKey")]
 		NSString OptionNotifyOnConnectionKey { get; }
 
 		[Obsolete ("Use 'CBConnectPeripheralOptions' instead.")]
 		[Mac (10,13)]
-		[iOS (6,0)]
 		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
 		NSString OptionNotifyOnNotificationKey { get; }
 
@@ -377,7 +389,7 @@ namespace CoreBluetooth {
 		[Field ("CBAdvertisementDataServiceDataKey")]
 		NSString DataServiceDataKey { get; }
 
-		[iOS (6,0), Mac (10,9)]
+		[Mac (10,9)]
 		[Field ("CBAdvertisementDataOverflowServiceUUIDsKey")]
 		NSString DataOverflowServiceUUIDsKey { get; }
 
@@ -423,7 +435,7 @@ namespace CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (6, 0), Mac (10,9)]
+	[Mac (10,9)]
 	[BaseType (typeof (CBCharacteristic))]
 	[DisableDefaultCtor]
 	interface CBMutableCharacteristic {
@@ -472,7 +484,7 @@ namespace CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (6, 0), Mac (10,9)]
+	[Mac (10,9)]
 	[BaseType (typeof (CBDescriptor))]
 	[DisableDefaultCtor]
 	interface CBMutableDescriptor {
@@ -626,7 +638,6 @@ namespace CoreBluetooth {
 		[Export ("peripheralDidInvalidateServices:")]
 		void InvalidatedService (CBPeripheral peripheral);	
 
-		[iOS (6, 0)]
 		[Export ("peripheralDidUpdateName:")]
 		void UpdatedName (CBPeripheral peripheral);
 
@@ -648,7 +659,7 @@ namespace CoreBluetooth {
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBService {
-		[iOS (6,0), Mac (10,9)]
+		[Mac (10,9)]
 		[Export ("isPrimary")]
 #if XAMCORE_4_0
 		bool Primary { get; }
@@ -668,7 +679,7 @@ namespace CoreBluetooth {
 	}
 		
 	[Watch (4,0)]
-	[iOS (6, 0), Mac(10,9)]
+	[Mac(10,9)]
 	[BaseType (typeof (CBService))]
 	[DisableDefaultCtor]
 	interface CBMutableService {
@@ -810,7 +821,7 @@ namespace CoreBluetooth {
 	}
 		
 	[Watch (4,0)]
-	[iOS (6,0), Mac(10,9)]
+	[Mac(10,9)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CBATTRequest {
@@ -829,7 +840,6 @@ namespace CoreBluetooth {
 
 	[Mac (10,9)]
 	[Watch (4,0)]
-	[iOS (6,0)]
 	[BaseType (typeof (CBPeer))]
 	// `delloc` a default instance crash applications and a default instance, without the ability to change the UUID, does not make sense
 	[DisableDefaultCtor]
@@ -855,7 +865,7 @@ namespace CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (6, 0), Mac(10,9)]
+	[Mac(10,9)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CBManager), Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
 	interface CBPeripheralManager {
@@ -953,7 +963,7 @@ namespace CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (6, 0), Mac(10,9)]
+	[Mac(10,9)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

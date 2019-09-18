@@ -595,6 +595,21 @@ namespace GeneratorTests
 		[Test]
 		public void GHIssue6626 () => BuildFile (Profile.iOS, "ghissue6626.cs");
 
+		[Test]
+		public void StrongDictsNativeEnums () => BuildFile (Profile.iOS, "strong-dict-native-enum.cs");
+
+		[Test]
+		public void VSTS970507 ()
+		{
+			BuildFile (Profile.iOS, "tests/vsts-970507.cs");
+		}
+
+		[Test]
+		public void DiamondProtocol ()
+		{
+			BuildFile (Profile.iOS, "tests/diamond-protocol.cs");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

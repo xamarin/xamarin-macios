@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 
 #if XAMCORE_2_0
 using AVFoundation;
+using CoreBluetooth;
 using Foundation;
 #if !__TVOS__
 using Contacts;
@@ -30,7 +31,9 @@ using UIKit;
 #endif
 using ObjCRuntime;
 #else
+using nint=global::System.Int32;
 #if MONOMAC
+using MonoMac;
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
@@ -44,6 +47,10 @@ using MonoTouch.UIKit;
 
 partial class TestRuntime
 {
+
+	[DllImport (Constants.CoreFoundationLibrary)]
+	public extern static nint CFGetRetainCount (IntPtr handle);
+
 	[DllImport ("/usr/lib/system/libdyld.dylib")]
 	static extern int dyld_get_program_sdk_version ();
 
@@ -97,6 +104,14 @@ partial class TestRuntime
 		return new Version (major, minor, build);
 	}
 
+	public static void IgnoreInCI (string message)
+	{
+		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+		if (!in_ci)
+			return;
+		NUnit.Framework.Assert.Ignore (message);
+	}
+
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)
 	{
 		if (CheckXcodeVersion (major, minor, build))
@@ -147,12 +162,20 @@ partial class TestRuntime
 			macOS = new { Major = 10, Minor = 15, Build = "?" },
 			watchOS = new { Major = 6, Minor = 0, Build = "?" },
 		};
+		var elevenb6 = new {
+			Xcode = new { Major = 11, Minor = 0, Beta = 6 },
+			iOS = new { Major = 13, Minor = 0, Build = "17A5565b" },
+			tvOS = new { Major = 13, Minor = 0, Build = "?" },
+			macOS = new { Major = 10, Minor = 15, Build = "?" },
+			watchOS = new { Major = 6, Minor = 0, Build = "?" },
+		};
 
 		var versions = new [] {
 			nineb1,
 			nineb2,
 			nineb3,
 			elevenb5,
+			elevenb6,
 		};
 
 		foreach (var v in versions) {
@@ -193,6 +216,18 @@ partial class TestRuntime
 				return CheckiOSSystemVersion (13, 0);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 1: // This is guesswork until Apple actually releases an Xcode 11.1.
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (13, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 1);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -644,6 +679,22 @@ partial class TestRuntime
 	public static bool IgnoreTestThatRequiresSystemPermissions ()
 	{
 		return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_SYSTEM_PERMISSION_TESTS"));
+	}
+
+	public static void CheckBluetoothPermission (bool assert_granted = false)
+	{
+		// New in Xcode11
+		switch (CBManager.Authorization) {
+		case CBManagerAuthorization.NotDetermined:
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to use bluetooth.");
+			break;
+		case CBManagerAuthorization.Denied:
+		case CBManagerAuthorization.Restricted:
+			if (assert_granted)
+				NUnit.Framework.Assert.Fail ("This test requires permission to use bluetooth.");
+			break;
+		}
 	}
 
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__

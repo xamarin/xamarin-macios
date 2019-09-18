@@ -134,6 +134,13 @@ namespace Introspection {
 				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
 			}
 
+#if __IOS__
+			switch (type.Namespace) {
+			case "WatchKit":
+				return true; // WatchKit has been removed from iOS.
+			}
+#endif
+
 			return SkipDueToAttribute (type);
 		}
 
@@ -461,6 +468,7 @@ namespace Introspection {
 			case "GKTurnBasedMatchmakerViewController": // You are meant to use the system provided one
 			case "UIImagePickerController": // You are meant to use the system provided one
 			case "UIVideoEditorController": // You are meant to use the system provided one
+			case "VNDocumentCameraViewController": // Explicitly disabled on the headers
 				if (ctor.ToString () == $"Void .ctor(System.String, {foundation_namespace}.NSBundle)")
 					return true;
 				if (ctor.ToString () == $"Void .ctor(UIKit.UIViewController)")

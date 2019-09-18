@@ -206,7 +206,7 @@ namespace CoreTelephony {
 	delegate void SimAuthenticationCallback (NSDictionary dictionary);
 #endif
 
-	[iOS (6,0), BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	partial interface CTSubscriberInfo {
 		[Deprecated (PlatformName.iOS, 12, 1, message : "Use 'Subscribers' instead.")]
 		[Static]

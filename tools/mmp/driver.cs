@@ -136,6 +136,7 @@ namespace Xamarin.Bundler {
 		public static bool IsUnifiedMobile { get; private set; }
 		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedMobile || IsUnifiedFullXamMacFramework; } }
 		public static bool IsClassic { get { return !IsUnified; } }
+		public static bool LinkProhibitedFrameworks { get; private set; }
 
 		public static bool Is64Bit { 
 			get {
@@ -345,6 +346,7 @@ namespace Xamarin.Bundler {
 						aotOptions = new AOTOptions (v);
 					}
 				},
+				{ "link-prohibited-frameworks", "Natively link against prohibited (rejected by AppStore) frameworks", v => { LinkProhibitedFrameworks = true; } },
 			};
 
 			AddSharedOptions (App, os);
@@ -866,10 +868,9 @@ namespace Xamarin.Bundler {
 				// copy to temp directory and lipo there to avoid touching the final dest file if it's up to date
 				var temp_dest = Path.Combine (App.Cache.Location, "libmono-native.dylib");
 
-				if (Application.UpdateFile (src, temp_dest)) {
+				if (Application.UpdateFile (src, temp_dest))
 					LipoLibrary (name, temp_dest);
-					Application.CopyFile (temp_dest, dest);
-				}
+				Application.UpdateFile (temp_dest, dest);
 			}
 			else {
 				// we can directly update the dest
@@ -1184,7 +1185,11 @@ namespace Xamarin.Bundler {
 				if (XcodeVersion >= new Version (9, 0))
 					args.Append ("-Wno-unguarded-availability-new ");
 
+				if (XcodeVersion.Major >= 11)
+					args.Append ("-std=c++14 ");
+
 				bool appendedObjc = false;
+				var sourceFiles = new List<string> ();
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
 						foreach (var linkWith in assembly.LinkWith) {
@@ -1257,7 +1262,7 @@ namespace Xamarin.Bundler {
 					string reference_m = Path.Combine (App.Cache.Location, "reference.m");
 					reference_m = BuildTarget.GenerateReferencingSource (reference_m, requiredSymbols);
 					if (!string.IsNullOrEmpty (reference_m))
-						args.Append (StringUtils.Quote (reference_m)).Append (' ');
+						sourceFiles.Add (reference_m);
 					break;
 				case SymbolMode.Linker:
 				case SymbolMode.Default:
@@ -1341,7 +1346,10 @@ namespace Xamarin.Bundler {
 
 				var main = Path.Combine (App.Cache.Location, "main.m");
 				File.WriteAllText (main, mainSource);
-				args.Append (StringUtils.Quote (main));
+				sourceFiles.Add (main);
+
+				foreach (var src in sourceFiles)
+					args.Append (StringUtils.Quote (src)).Append (' ');;
 
 				ret = XcodeRun ("clang", args.ToString (), null);
 			} catch (Win32Exception e) {

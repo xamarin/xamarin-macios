@@ -8,15 +8,14 @@ extern "C" {
 struct XamarinCallState {
 	uint64_t type;
 	uint64_t rdi;                        // 1st argument
-	union {
-		uint64_t rsi; // rsi upon entry. // 2nd argument
-		uint64_t rax; // rax upon exit.
-	};
+	uint64_t rsi; // 2nd argument
 	uint64_t rdx; // 3rd argument
 	uint64_t rcx; // 4th argument
 	uint64_t r8; // 5th argument
 	uint64_t r9; // 6th argument
 	uint64_t rbp;
+	uint64_t rax;
+	uint64_t rdx_out; // use this field as a temporary rdx field to store output. It makes the marshalling code a bit easier to have this field just after the rax field (so we can treat rax+rdx as a continuous block of 32 bytes of memory)
 	long double xmm0;
 	long double xmm1;
 	long double xmm2;

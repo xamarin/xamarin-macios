@@ -179,11 +179,17 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AuthenticationServices", "AuthenticationServices", 10,15 },
 					{ "CoreMotion", "CoreMotion", 10,15 },
 					{ "DeviceCheck", "DeviceCheck", 10,15 },
+					{ "ExecutionPolicy", "ExecutionPolicy", 10,15 },
+					{ "FileProvider", "FileProvider", 10,15 },
+					{ "FileProviderUI", "FileProviderUI", 10,15 },
 					{ "PushKit", "PushKit", 10,15 },
+					{ "QuickLookThumbnailing", "QuickLookThumbnailing", 10,15 },
 					{ "SoundAnalysis", "SoundAnalysis", 10,15 },
 					{ "PencilKit", "PencilKit", 10,15 },
 					{ "Speech", "Speech", 10,15 },
 					{ "LinkPresentation", "LinkPresentation", 10,15 },
+					// not sure if the API is available, issue: https://github.com/xamarin/maccore/issues/1951
+					//{ "CoreHaptics", "CoreHaptics", 10,15 },
 				};
 			}
 			return mac_frameworks;
@@ -266,7 +272,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "WebKit", "WebKit", 8 },
 				{ "NetworkExtension", "NetworkExtension", 8 },
 				{ "VideoToolbox", "VideoToolbox", 8 },
-				{ "WatchKit", "WatchKit", 8,2 },
+				// { "WatchKit", "WatchKit", 8,2 }, // Removed in Xcode 11
 
 				{ "ReplayKit", "ReplayKit", 9 },
 				{ "Contacts", "Contacts", 9 },
@@ -309,10 +315,18 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "NaturalLanguage", "NaturalLanguage", 12,0 },
 				{ "Network", "Network", 12, 0 },
 
-				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
 				{ "BackgroundTasks", "BackgroundTasks", 13, 0 },
-				{ "PencilKit", "PencilKit", 13, 0 },
+				{ "CoreHaptics", "CoreHaptics", 13, 0 },
 				{ "LinkPresentation", "LinkPresentation", 13, 0 },
+				{ "MetricKit", "MetricKit", 13, 0 },
+				{ "PencilKit", "PencilKit", 13, 0 },
+				{ "QuickLookThumbnailing", "QuickLookThumbnailing", 13,0 },
+				{ "SoundAnalysis", "SoundAnalysis", 13, 0 },
+				{ "VisionKit", "VisionKit", 13, 0 },
+
+				// the above MUST be kept in sync with simlauncher
+				// see tools/mtouch/Makefile
+				// please also keep it sorted to ease comparison
 			};
 		}
 		return ios_frameworks;
@@ -365,6 +379,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "MediaPlayer", "MediaPlayer", 5 },
 
 				{ "AuthenticationServices", "AuthenticationServices", 6 },
+				{ "Network", "Network", 6 },
 				{ "PushKit", "PushKit", 6 },
 				{ "SoundAnalysis", "SoundAnalysis", 6 },
 				{ "CoreMedia", "CoreMedia", 6 },
@@ -466,6 +481,16 @@ public class Frameworks : Dictionary <string, Framework>
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
 		foreach (var nspace in namespaces) {
+			switch (nspace) {
+			case "QTKit":
+				if (Driver.LinkProhibitedFrameworks) {
+					ErrorHelper.Warning (5221, $"Linking against framework '{nspace}'. It is prohibited (rejected) by the Mac App Store");
+				}  else {
+					ErrorHelper.Warning (5220, $"Skipping framework '{nspace}'. It is prohibited (rejected) by the Mac App Store");
+					continue;
+				}
+				break;
+			}
 			if (Driver.GetFrameworks (app).TryGetValue (nspace, out var framework)) {
 				if (app.SdkVersion >= framework.Version) {
 					var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;

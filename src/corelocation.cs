@@ -46,7 +46,8 @@ namespace CoreLocation {
 		Far
 	}
 
-	[NoWatch][NoTV]
+	[NoTV]
+	[Watch (6,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
 	partial interface CLHeading : NSSecureCoding, NSCopying {
@@ -183,19 +184,23 @@ namespace CoreLocation {
 		bool LocationServicesEnabled { get; }
 
 #if !MONOMAC
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("headingFilter", ArgumentSemantic.Assign)]
 		double HeadingFilter { get; set;  }
 	
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("startUpdatingHeading")]
 		void StartUpdatingHeading ();
 	
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("stopUpdatingHeading")]
 		void StopUpdatingHeading ();
 	
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("dismissHeadingCalibrationDisplay")]
 		void DismissHeadingCalibrationDisplay ();
 #endif
@@ -207,7 +212,8 @@ namespace CoreLocation {
 		[Export ("purpose")]
 		string Purpose { get; set; }
 
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("headingAvailable"), Static]
 		bool HeadingAvailable { get; }
 
@@ -228,11 +234,13 @@ namespace CoreLocation {
 		bool RegionMonitoringEnabled { get; }
 
 #if !MONOMAC
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("headingOrientation", ArgumentSemantic.Assign)]
 		CLDeviceOrientation HeadingOrientation { get; set; }
 
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("heading", ArgumentSemantic.Copy)]
 		CLHeading Heading { get; }
 #endif
@@ -274,24 +282,20 @@ namespace CoreLocation {
 #if !MONOMAC
 		[NoTV]
 		[Watch (4,0)]
-		[iOS (6,0)]
 		[Export ("activityType", ArgumentSemantic.Assign)]
 		CLActivityType ActivityType  { get; set; }
 
 		[NoWatch][NoTV]
-		[iOS (6,0)]
 		[Export ("pausesLocationUpdatesAutomatically", ArgumentSemantic.Assign)]
 		bool PausesLocationUpdatesAutomatically { get; set; }
 
 		[NoWatch][NoTV]
-		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. Call will not have any effect.")]
 		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("allowDeferredLocationUpdatesUntilTraveled:timeout:")]
 		void AllowDeferredLocationUpdatesUntil (double distance, double timeout);
 
 		[NoWatch][NoTV]
-		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. Call will not have any effect.")]
 		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("disallowDeferredLocationUpdates")]
@@ -299,7 +303,6 @@ namespace CoreLocation {
 #endif
 
 		[NoWatch][NoTV]
-		[iOS (6,0)]
 		[Mac (10,9)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. It will always return 'false'.")]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Not used anymore. It will always return 'false'.")]
@@ -307,7 +310,6 @@ namespace CoreLocation {
 		[Export ("deferredLocationUpdatesAvailable")]
 		bool DeferredLocationUpdatesAvailable { get; }
 
-		[iOS (6,0)]
 		[Mac (10,14)]
 		[Field ("CLTimeIntervalMax")]
 		double MaxTimeInterval { get; }
@@ -408,7 +410,8 @@ namespace CoreLocation {
 		void UpdatedLocation (CLLocationManager  manager, CLLocation newLocation, CLLocation oldLocation);
 	
 #if !MONOMAC
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("locationManager:didUpdateHeading:"), EventArgs ("CLHeadingUpdated")]
 		void UpdatedHeading (CLLocationManager  manager, CLHeading newHeading);
 #endif
@@ -416,7 +419,8 @@ namespace CoreLocation {
 #if XAMCORE_4_0 // Unavailable on macOS
 		[NoMac]
 #endif
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (6,0)]
 		[Export ("locationManagerShouldDisplayHeadingCalibration:"), DelegateName ("CLLocationManagerEventArgs"), DefaultValue (true)]
 		bool ShouldDisplayHeadingCalibration (CLLocationManager manager);
 	
@@ -474,7 +478,6 @@ namespace CoreLocation {
 		[Export ("locationManager:didChangeAuthorizationStatus:"), EventArgs ("CLAuthorizationChanged")]
 		void AuthorizationChanged (CLLocationManager manager, CLAuthorizationStatus status);
 
-		[iOS (6,0)]
 		[Export ("locationManager:didUpdateLocations:"), EventArgs ("CLLocationsUpdated")]
 		void LocationsUpdated (CLLocationManager manager, CLLocation[] locations);
 
@@ -482,7 +485,6 @@ namespace CoreLocation {
 		[NoMac]
 #endif
 		[NoWatch][NoTV]
-		[iOS (6,0)]
 		[Export ("locationManagerDidPauseLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesPaused (CLLocationManager manager);
 
@@ -490,12 +492,10 @@ namespace CoreLocation {
 		[NoMac]
 #endif
 		[NoWatch][NoTV]
-		[iOS (6,0)]
 		[Export ("locationManagerDidResumeLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesResumed (CLLocationManager manager);
 
 		[NoWatch][NoTV]
-		[iOS (6,0)]
 		[Export ("locationManager:didFinishDeferredUpdatesWithError:"), EventArgs ("NSError", true)]
 		void DeferredUpdatesFinished (CLLocationManager manager, NSError error);
 	}
@@ -504,7 +504,6 @@ namespace CoreLocation {
 	partial interface CLLocationDistance {
 
 		[Mac (10,14)]
-		[iOS (6,0)]
 		[Field ("CLLocationDistanceMax")]
 		double MaxDistance { get; }
 

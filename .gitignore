@@ -19,6 +19,13 @@ jenkins-results
 .vs
 *.raw
 bcl-test-importer
-tests/bcl-test/BCLTests/generated
 tests/xharness/System.ValueTuple.xml
 provisionator.msbuild.props
+# bcl auto-generated tests to be ignored until 6680 is completed
+tests/bcl-test/BCLTests/generated
+tests/bcl-test/generated
+tests/bcl-test/BCL\ tests\ group*.csproj
+tests/bcl-test/Mac\ OS\ X\ BCL\ \tests*.csproj
+tests/bcl-test/mscorlib-mac-full.csproj
+tests/bcl-test/mscorlib-mac-modern.csproj
+tests/bcl-test/mscorlib.csproj

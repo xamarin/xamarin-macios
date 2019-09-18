@@ -1,4 +1,6 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved.
+// Copyright 2019 Microsoft Corporation
+
 #if XAMCORE_2_0 || !MONOMAC
 using System;
 using CoreFoundation;
@@ -9,7 +11,8 @@ using Security;
 namespace NetworkExtension {
 
 	[ErrorDomain ("NEDNSProxyErrorDomain")]
-	[iOS (11,0), NoMac]
+	[iOS (11,0)]
+	[Mac (10,15)]
 	[Native]
 	enum NEDnsProxyManagerError : long {
 		Invalid = 1,
@@ -18,7 +21,8 @@ namespace NetworkExtension {
 		CannotBeRemoved = 4,
 	}
 
-	[iOS (11,0), NoMac]
+	[iOS (11,0)]
+	[Mac (10,15)]
 	[Native]
 	enum NEFilterAction : long {
 		Invalid = 0,
@@ -66,6 +70,7 @@ namespace NetworkExtension {
 
 	[iOS (11,0), NoMac]
 	[Native]
+	[ErrorDomain ("NEHotspotConfigurationErrorDomain")]
 	public enum NEHotspotConfigurationError : long {
 		Invalid = 0,
 		InvalidSsid = 1,
@@ -82,6 +87,49 @@ namespace NetworkExtension {
 		JoinOnceNotSupported = 12,
 		AlreadyAssociated = 13,
 		ApplicationIsNotInForeground = 14,
+		InvalidSsidPrefix = 15,
+	}
+
+	[NoiOS]
+	[Mac (10,15)]
+	[Native]
+	enum NEFilterManagerGrade : long {
+		Firewall = 1,
+		Inspector = 2,
+	}
+
+	[Mac (10,15)][iOS (13,0)]
+	[Native]
+	enum NETrafficDirection : long {
+		Any = 0,
+		Inbound = 1,
+		Outbound = 2,
+	}
+
+	[NoiOS]
+	[Mac (10,15)]
+	[Native]
+	enum NENetworkRuleProtocol : long {
+		Any = 0,
+		Tcp = 1,
+		Udp = 2,
+	}
+
+	[NoiOS]
+	[Mac (10,15)]
+	[Native]
+	enum NEFilterPacketProviderVerdict : long {
+		Allow = 0,
+		Drop = 1,
+		Delay = 2,
+	}
+
+	[Mac (10,15)][iOS (13,0)]
+	[Native]
+	enum NEFilterReportEvent : long {
+		NewFlow = 1,
+		DataDecision = 2,
+		FlowClosed = 3,
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -126,6 +174,10 @@ namespace NetworkExtension {
 	
 		[Export ("handleNewFlow:")]
 		bool HandleNewFlow (NEAppProxyFlow flow);
+
+		[Mac (10,15)][ iOS (13,0)]
+		[Export ("handleNewUDPFlow:initialRemoteEndpoint:")]
+		bool HandleNewUdpFlow (NEAppProxyUdpFlow flow, NWEndpoint remoteEndpoint);
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -226,8 +278,8 @@ namespace NetworkExtension {
 		bool MatchDomainsNoSearch { get; set; }
 	}
 
-#if !MONOMAC
 	[iOS (9,0)]
+	[NoMac]
 	[BaseType (typeof(NEFilterProvider))]
 	[DisableDefaultCtor] // no valid handle when `init` is called
 	interface NEFilterControlProvider
@@ -238,6 +290,10 @@ namespace NetworkExtension {
 		[NullAllowed, Export ("URLAppendStringMap", ArgumentSemantic.Copy)]
 		NSDictionary<NSString,NSString> UrlAppendStringMap { get; set; }
 	
+		[iOS (11,0)] // also in base type - but only on iOS13+ (so we rre-define it here)
+		[Export ("handleReport:")]
+		void HandleReport (NEFilterReport report);
+
 		[Export ("handleRemediationForFlow:completionHandler:")]
 		[Async]
 		void HandleRemediationForFlow (NEFilterFlow flow, Action<NEFilterControlVerdict> completionHandler);
@@ -248,13 +304,10 @@ namespace NetworkExtension {
 	
 		[Export ("notifyRulesChanged")]
 		void NotifyRulesChanged ();
-
-		[iOS (11,0)]
-		[Export ("handleReport:")]
-		void HandleReport (NEFilterReport report);
 	}
 
 	[iOS (9,0)]
+	[NoMac]
 	[BaseType (typeof(NEFilterNewFlowVerdict))]
 	interface NEFilterControlVerdict : NSSecureCoding, NSCopying
 	{
@@ -272,6 +325,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (9,0)]
+	[Mac (10,15)]
 	[BaseType (typeof(NEFilterProvider))]
 	[DisableDefaultCtor] // no valid handle when `init` is called
 	interface NEFilterDataProvider
@@ -291,14 +345,26 @@ namespace NetworkExtension {
 		[Export ("handleOutboundDataCompleteForFlow:")]
 		NEFilterDataVerdict HandleOutboundDataCompleteForFlow (NEFilterFlow flow);
 	
+		[NoMac]
 		[Export ("handleRemediationForFlow:")]
 		NEFilterRemediationVerdict HandleRemediationForFlow (NEFilterFlow flow);
 	
+		[NoMac]
 		[Export ("handleRulesChanged")]
 		void HandleRulesChanged ();
+
+		[NoiOS]
+		[Export ("applySettings:completionHandler:")]
+		[Async]
+		void ApplySettings ([NullAllowed] NEFilterSettings settings, Action<NSError> completionHandler);
+
+		[NoiOS]
+		[Export ("resumeFlow:withVerdict:")]
+		void ResumeFlow (NEFilterFlow flow, NEFilterVerdict verdict);
 	}
 
 	[iOS (9,0)]
+	[Mac (10,15)]
 	[BaseType (typeof(NEFilterVerdict))]
 	interface NEFilterDataVerdict : NSSecureCoding, NSCopying
 	{
@@ -321,9 +387,15 @@ namespace NetworkExtension {
 		[Static]
 		[Export ("needRulesVerdict")]
 		NEFilterDataVerdict NeedRulesVerdict ();
+
+		[NoiOS]
+		[Static]
+		[Export ("pauseVerdict")]
+		NEFilterDataVerdict PauseVerdict ();
 	}
 		
 	[iOS (9,0)]
+	[Mac (10,15)]
 	[BaseType (typeof(NSObject))]
 	interface NEFilterFlow : NSSecureCoding, NSCopying
 	{
@@ -341,8 +413,15 @@ namespace NetworkExtension {
 		[iOS (11,0)]
 		[NullAllowed, Export ("sourceAppVersion")]
 		string SourceAppVersion { get; }
+
+		[iOS (13,0)]
+		[Export ("direction")]
+		NETrafficDirection Direction { get; }
+
+		[NoiOS]
+		[NullAllowed, Export ("sourceAppAuditToken")]
+		NSData SourceAppAuditToken { get; }
 	}
-#endif
 
 	// according to Xcode7 SDK this was available (in parts) in iOS8
 	[iOS (8,0)][Mac (10,10)]
@@ -379,14 +458,19 @@ namespace NetworkExtension {
 		[Notification]
 		NSString ConfigurationDidChangeNotification { get; }
 
+		[NoiOS]
+		[Mac (10,15)]
+		[Export ("grade", ArgumentSemantic.Assign)]
+		NEFilterManagerGrade Grade { get; set; }
+
 #if !XAMCORE_4_0
 		[Field ("NEFilterErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
 	}
 
-#if !MONOMAC
 	[iOS (9,0)]
+	[Mac (10,15)]
 	[BaseType (typeof(NEFilterVerdict))]
 	interface NEFilterNewFlowVerdict : NSSecureCoding, NSCopying
 	{
@@ -413,15 +497,14 @@ namespace NetworkExtension {
 		[Static]
 		[Export ("filterDataVerdictWithFilterInbound:peekInboundBytes:filterOutbound:peekOutboundBytes:")]
 		NEFilterNewFlowVerdict FilterDataVerdict (bool filterInbound, nuint peekInboundBytes, bool filterOutbound, nuint peekOutboundBytes);
+
+		[NoiOS]
+		[Static]
+		[Export ("pauseVerdict")]
+		NEFilterDataVerdict PauseVerdict ();
 	}
-#endif
 		
-#if XAMCORE_4_0
-	[NoMac] // Not available on mac
-#elif MONOMAC
-	[Obsolete ("'NEFilterProvider' is not available on macOS and will be removed in a future version.")]
-	[Mac (10,11)]
-#endif
+	[Mac (10,15)]
 	[iOS (9,0)]
 	[BaseType (typeof(NEProvider))]
 	[Abstract] // documented as such
@@ -434,6 +517,10 @@ namespace NetworkExtension {
 		[Export ("stopFilterWithReason:completionHandler:")]
 		[Async]
 		void StopFilter (NEProviderStopReason reason, Action completionHandler);
+
+		[iOS (13,0)] // new in this (base) type
+		[Export ("handleReport:")]
+		void HandleReport (NEFilterReport report);
 	
 		[Export ("filterConfiguration")]
 		NEFilterProviderConfiguration FilterConfiguration { get; }
@@ -449,6 +536,7 @@ namespace NetworkExtension {
 	[BaseType (typeof(NSObject))]
 	interface NEFilterProviderConfiguration : NSSecureCoding, NSCopying
 	{
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Not supported on the platform.")]
 		[Export ("filterBrowsers")]
 		bool FilterBrowsers { get; set; }
 	
@@ -472,10 +560,25 @@ namespace NetworkExtension {
 	
 		[NullAllowed, Export ("identityReference", ArgumentSemantic.Copy)]
 		NSData IdentityReference { get; set; }
+
+		[NoiOS]
+		[Mac (10,15)]
+		[Export ("filterPackets")]
+		bool FilterPackets { get; set; }
+
+		[NoiOS]
+		[Mac (10,15)]
+		[NullAllowed, Export ("filterDataProviderBundleIdentifier")]
+		string FilterDataProviderBundleIdentifier { get; set; }
+
+		[NoiOS]
+		[Mac (10,15)]
+		[NullAllowed, Export ("filterPacketProviderBundleIdentifier")]
+		string FilterPacketProviderBundleIdentifier { get; set; }
 	}
 
-#if !MONOMAC
 	[iOS (9,0)]
+	[NoMac]
 	[BaseType (typeof(NEFilterVerdict))]
 	interface NEFilterRemediationVerdict : NSSecureCoding, NSCopying
 	{
@@ -493,6 +596,7 @@ namespace NetworkExtension {
 	}
 
 	[iOS (9,0)]
+	[Mac (10,15)]
 	[BaseType (typeof(NSObject))]
 	interface NEFilterVerdict : NSSecureCoding, NSCopying
 	{
@@ -500,7 +604,6 @@ namespace NetworkExtension {
 		[Export ("shouldReport")]
 		bool ShouldReport { get; set; }
 	}
-#endif
 		
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
@@ -511,6 +614,11 @@ namespace NetworkExtension {
 	
 		[Export ("sourceAppSigningIdentifier")]
 		string SourceAppSigningIdentifier { get; }
+
+		[NoiOS]
+		[Mac (10,15)]
+		[NullAllowed, Export ("sourceAppAuditToken")]
+		NSData SourceAppAuditToken { get; }
 	}
 
 #if !MONOMAC
@@ -732,6 +840,12 @@ namespace NetworkExtension {
 		[Export ("displayMessage:completionHandler:")]
 		[Async]
 		void DisplayMessage (string message, Action<bool> completionHandler);
+
+		[NoiOS]
+		[Mac (10,15)]
+		[Static]
+		[Export ("startSystemExtensionMode")]
+		void StartSystemExtensionMode ();
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -1003,6 +1117,16 @@ namespace NetworkExtension {
 		[iOS (9,0)]
 		[NullAllowed, Export ("proxySettings", ArgumentSemantic.Copy)]
 		NEProxySettings ProxySettings { get; set; }
+
+		[NoiOS]
+		[Mac (10,15)]
+		[Export ("includeAllNetworks")]
+		bool IncludeAllNetworks { get; set; }
+
+		[NoiOS]
+		[Mac (10,15)]
+		[Export ("excludeLocalNetworks")]
+		bool ExcludeLocalNetworks { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,10)]
@@ -1101,6 +1225,11 @@ namespace NetworkExtension {
 		[iOS (11,0), Mac (10,13)]
 		[Export ("maximumTLSVersion", ArgumentSemantic.Assign)]
 		NEVpnIkev2TlsVersion MaximumTlsVersion { get; set; }
+
+		[NoMac]
+		[iOS (13,0)]
+		[Export ("enableFallback")]
+		bool EnableFallback { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,10)]
@@ -1371,8 +1500,8 @@ namespace NetworkExtension {
 		void Cancel ();
 	}
 
-#if !MONOMAC
 	[iOS (9,0)]
+	[NoMac]
 	[BaseType (typeof (NEFilterFlow))]
 	interface NEFilterBrowserFlow {
 
@@ -1390,6 +1519,7 @@ namespace NetworkExtension {
 	}
 		
 	[iOS (9,0)]
+	[Mac (10,15)]
 	[BaseType (typeof (NEFilterFlow))]
 	interface NEFilterSocketFlow {
 		[NullAllowed]
@@ -1404,13 +1534,24 @@ namespace NetworkExtension {
 		int SocketFamily { get; set; }
 
 		[Export ("socketType")]
-		int SocketType { get; set; }
+		int SocketType {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented] set;
+#endif
+		}
 
 		[Export ("socketProtocol")]
-		int SocketProtocol { get; set; }
+		int SocketProtocol {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented] set;
+#endif
+		}
 	}
 
-	[iOS (11,0), NoMac]
+	[iOS (11,0)]
+	[Mac (10,15)]
 	[BaseType (typeof (NSObject))]
 	interface NEFilterReport : NSSecureCoding, NSCopying {
 
@@ -1419,8 +1560,19 @@ namespace NetworkExtension {
 
 		[Export ("action")]
 		NEFilterAction Action { get; }
+
+		[iOS (13, 0)]
+		[Export ("event")]
+		NEFilterReportEvent Event { get; }
+
+		[iOS (13, 0)]
+		[Export ("bytesInboundCount")]
+		nuint BytesInboundCount { get; }
+
+		[iOS (13, 0)]
+		[Export ("bytesOutboundCount")]
+		nuint BytesOutboundCount { get; }
 	}
-#endif
 				
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NETunnelNetworkSettings))]
@@ -1527,9 +1679,15 @@ namespace NetworkExtension {
 
 		[NullAllowed, Export ("metadata")]
 		NEFlowMetaData Metadata { get; }
+
+		[NoiOS]
+		[Mac (10,15)]
+		[Export ("direction")]
+		NETrafficDirection Direction { get; }
 	}
 
-	[iOS (11,0), NoMac]
+	[iOS (11,0)]
+	[Mac (10,15)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "NEDNSProxyManager")]
 	interface NEDnsProxyManager {
@@ -1564,7 +1722,8 @@ namespace NetworkExtension {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
-	[iOS (11,0), NoMac]
+	[iOS (11,0)]
+	[Mac (10,15)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NEProvider), Name = "NEDNSProxyProvider")]
 	interface NEDnsProxyProvider {
@@ -1585,6 +1744,10 @@ namespace NetworkExtension {
 
 		[NullAllowed, Export ("systemDNSSettings")]
 		NEDnsSettings [] SystemDnsSettings { get; }
+
+		[iOS (13,0)]
+		[Export ("handleNewUDPFlow:initialRemoteEndpoint:")]
+		bool HandleNewUdpFlow (NEAppProxyUdpFlow flow, NWEndpoint remoteEndpoint);
 	}
 
 	[iOS (11,0), Mac (10,13)]
@@ -1671,17 +1834,37 @@ namespace NetworkExtension {
 		[Export ("lifeTimeInDays", ArgumentSemantic.Copy)]
 		NSNumber LifeTimeInDays { get; set; }
 
+		[Internal]
 		[Export ("initWithSSID:")]
-		IntPtr Constructor (string ssid);
+		IntPtr initWithSsid (string ssid);
 
+		[Internal]
 		[Export ("initWithSSID:passphrase:isWEP:")]
-		IntPtr Constructor (string ssid, string passphrase, bool isWep);
+		IntPtr initWithSsid (string ssid, string passphrase, bool isWep);
 
 		[Export ("initWithSSID:eapSettings:")]
 		IntPtr Constructor (string ssid, NEHotspotEapSettings eapSettings);
 
 		[Export ("initWithHS20Settings:eapSettings:")]
 		IntPtr Constructor (NEHotspotHS20Settings hs20Settings, NEHotspotEapSettings eapSettings);
+	
+		[Internal]
+		[iOS (13,0)]
+		[Export ("initWithSSIDPrefix:")]
+		IntPtr initWithSsidPrefix (string ssidPrefix);
+
+		[Internal]
+		[iOS (13,0)]
+		[Export ("initWithSSIDPrefix:passphrase:isWEP:")]
+		IntPtr initWithSsidPrefix (string ssidPrefix, string passphrase, bool isWep);
+
+		[iOS (13,0)]
+		[Export ("hidden")]
+		bool Hidden { get; set; }
+
+		[iOS (13,0)]
+		[Export ("SSIDPrefix")]
+		string SsidPrefix { get; }
 	}
 
 	[iOS (11,0), NoMac]
@@ -1707,6 +1890,119 @@ namespace NetworkExtension {
 		void GetConfiguredSsids (Action<string []> completionHandler);
 	}
 
+	[NoiOS]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NENetworkRule : NSSecureCoding, NSCopying {
 
+		[Export ("initWithDestinationNetwork:prefix:protocol:")]
+		IntPtr Constructor (NWHostEndpoint networkEndpoint, nuint destinationPrefix, NENetworkRuleProtocol protocol);
+
+		[Export ("initWithDestinationHost:protocol:")]
+		IntPtr Constructor (NWHostEndpoint hostEndpoint, NENetworkRuleProtocol protocol);
+
+		[Export ("initWithRemoteNetwork:remotePrefix:localNetwork:localPrefix:protocol:direction:")]
+		IntPtr Constructor ([NullAllowed] NWHostEndpoint remoteNetwork, nuint remotePrefix, [NullAllowed] NWHostEndpoint localNetwork, nuint localPrefix, NENetworkRuleProtocol protocol, NETrafficDirection direction);
+
+		[NullAllowed, Export ("matchRemoteEndpoint")]
+		NWHostEndpoint MatchRemoteEndpoint { get; }
+
+		[Export ("matchRemotePrefix")]
+		nuint MatchRemotePrefix { get; }
+
+		[NullAllowed, Export ("matchLocalNetwork")]
+		NWHostEndpoint MatchLocalNetwork { get; }
+
+		[Export ("matchLocalPrefix")]
+		nuint MatchLocalPrefix { get; }
+
+		[Export ("matchProtocol")]
+		NENetworkRuleProtocol MatchProtocol { get; }
+
+		[Export ("matchDirection")]
+		NETrafficDirection MatchDirection { get; }
+	}
+
+	[NoiOS]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NEFilterRule : NSSecureCoding, NSCopying {
+
+		[Export ("initWithNetworkRule:action:")]
+		IntPtr Constructor (NENetworkRule networkRule, NEFilterAction action);
+
+		[Export ("networkRule", ArgumentSemantic.Copy)]
+		NENetworkRule NetworkRule { get; }
+
+		[Export ("action")]
+		NEFilterAction Action { get; }
+	}
+
+	[NoiOS]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NEFilterSettings : NSSecureCoding, NSCopying {
+
+		[Export ("initWithRules:defaultAction:")]
+		IntPtr Constructor (NEFilterRule[] rules, NEFilterAction defaultAction);
+
+		[Export ("rules", ArgumentSemantic.Copy)]
+		NEFilterRule[] Rules { get; }
+
+		[Export ("defaultAction")]
+		NEFilterAction DefaultAction { get; }
+	}
+
+	[NoiOS]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	interface NEFilterPacketContext {
+	}
+
+	[NoiOS]
+	[Mac (10,15)]
+	delegate NEFilterPacketProviderVerdict NEFilterPacketHandler (NEFilterPacketContext context, IntPtr @interface, NETrafficDirection directiom, IntPtr packetBytes, nuint packetLength);
+
+	[NoiOS]
+	[Mac (10,15)]
+	[BaseType (typeof (NEFilterProvider))]
+	[DisableDefaultCtor] // returns `nil`
+	interface NEFilterPacketProvider {
+		[NullAllowed, Export ("packetHandler", ArgumentSemantic.Strong)]
+		NEFilterPacketHandler PacketHandler { get; set; }
+
+		[Export ("delayCurrentPacket:")]
+		NEPacket DelayCurrentPacket (NEFilterPacketContext context);
+
+		[Export ("allowPacket:")]
+		void AllowPacket (NEPacket packet);
+	}
+
+	[NoiOS]
+	[Mac (10,15)]
+	[BaseType (typeof (NEVpnManager))]
+	[DisableDefaultCtor]
+	interface NETransparentProxyManager {
+
+		[Static]
+		[Async]
+		[Export ("loadAllFromPreferencesWithCompletionHandler:")]
+		void LoadAllFromPreferences (Action<NETransparentProxyManager [], NSError> completionHandler);
+	}
+
+	[NoiOS]
+	[Mac (10,15)]
+	[BaseType (typeof (NETunnelNetworkSettings))]
+	interface NETransparentProxyNetworkSettings {
+
+		[NullAllowed, Export ("includedNetworkRules", ArgumentSemantic.Copy)]
+		NENetworkRule[] IncludedNetworkRules { get; set; }
+
+		[NullAllowed, Export ("excludedNetworkRules", ArgumentSemantic.Copy)]
+		NENetworkRule[] ExcludedNetworkRules { get; set; }
+	}
 }
 #endif

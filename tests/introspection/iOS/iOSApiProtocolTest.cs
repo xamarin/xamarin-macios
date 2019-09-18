@@ -97,6 +97,19 @@ namespace Introspection {
 				return true;
 			case "SNClassifySoundRequest": // Class is not being created properly
 				return true;
+#if __IOS__
+			// new types - but marked as iOS 8/9 since they are new base types and
+			// we need 32bits bindings to work (generator would not produce them for iOS 13)
+			case "CNFetchRequest":
+			case "PHChangeRequest":
+			case "PHAssetChangeRequest": // subclass of PHChangeRequest
+			case "PHAssetCollectionChangeRequest": // subclass of PHChangeRequest
+			case "PHAssetCreationRequest": // subclass of PHAssetChangeRequest
+			case "PHCollectionListChangeRequest": // subclass of PHChangeRequest
+				if (!TestRuntime.CheckXcodeVersion (11,0))
+					return true;
+				break;
+#endif
 			}
 
 			return base.Skip (type);
@@ -142,6 +155,17 @@ namespace Introspection {
 			case "UIImagePickerControllerDelegate":
 			case "UIVideoEditorControllerDelegate":
 				if (protocolName == "UINavigationControllerDelegate")
+					return true;
+				break;
+#if __IOS__
+			case "ARSCNView":
+			case "ARSKView":
+				if (protocolName == "ARSessionProviding")
+					return true;
+				break;
+#endif
+			case "UIAccessibilityElement":
+				if (protocolName == "UIUserActivityRestoring")
 					return true;
 				break;
 			}
@@ -287,6 +311,10 @@ namespace Introspection {
 				case "ARSkeleton2D": // Conformance not in headers
 				case "ARCollaborationData":  // Conformance not in headers
 				case "UIFontPickerViewControllerConfiguration": // Conformance not in headers
+				case "HKAudiogramSample": // Conformance not in headers
+				case "HKAudiogramSensitivityPoint": // Conformance not in headers
+				case "HMAccessoryOwnershipToken": // Conformance not in headers
+				case "HMAddAccessoryRequest": // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -512,6 +540,9 @@ namespace Introspection {
 				case "ARSkeleton2D": // Conformance not in headers
 				case "ARCollaborationData":  // Conformance not in headers
 				case "UIFontPickerViewControllerConfiguration":  // Conformance not in headers
+				case "HKAudiogramSensitivityPoint":  // Conformance not in headers
+				case "HMAccessoryOwnershipToken":  // Conformance not in headers
+				case "HMAddAccessoryRequest":  // Conformance not in headers
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -659,6 +690,10 @@ namespace Introspection {
 				case "HMAction":
 				case "HMCharacteristicWriteAction":
 				case "MLPredictionOptions":
+				case "HKCumulativeQuantitySample": // Conformance not in headers
+				case "HKDiscreteQuantitySample": // Conformance not in headers
+				case "HKAudiogramSample": // Conformance not in headers
+				case "UIImage": // only complains on tvOS beta 6
 					return true;
 				}
 				break;

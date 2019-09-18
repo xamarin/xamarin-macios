@@ -198,10 +198,9 @@ namespace MonoTouchFixtures.CoreText {
 
 #if !__WATCHOS__
 		[Test]
-		[Ignore ("https://github.com/xamarin/maccore/issues/1898")]
 		public void RegisterFontDescriptors_NoCallback ()
 		{
-			TestRuntime.AssertXcodeVersion (11, 0);
+			TestRuntime.AssertXcodeVersion (11, 1); // Introduced in iOS 13.0, but with a bug that makes it crash. Apple fixed it for iOS 13.1
 			CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
 				FamilyName = "Courier",
 				StyleName = "Bold",
@@ -216,14 +215,13 @@ namespace MonoTouchFixtures.CoreText {
 
 #if __TVOS__
 		[Ignore ("Fails on tvOS with undocumented error code 'The operation couldn’t be completed. (com.apple.CoreText.CTFontManagerErrorDomain error 500.'")]
+#elif __IOS__
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/6690. This began failing for no aparent reason in iOS 13 Beta 5. Check back with GM.")]
 #endif
 		[Test]
 		public void RegisterFontDescriptors_WithCallback ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
-
-			if (TestRuntime.CheckExactXcodeVersion (11, 0, beta: 5))
-				Assert.Ignore ("This began failing for no aparent reason in Beta 5, check back on a later beta.");
 
 			CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
 				FamilyName = "Courier",

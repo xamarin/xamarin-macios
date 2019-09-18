@@ -27,7 +27,7 @@ namespace CoreMedia {
 	}
 
 	// CMSync.h
-	[iOS (6,0), Watch (6,0)]
+	[Watch (6,0)]
 	public class CMClock : CMClockOrTimebase
 	{
 		public CMClock (IntPtr handle) : base (handle)
@@ -124,7 +124,7 @@ namespace CoreMedia {
 		ReadOnly					= -12757,
 	}
 
-	[iOS (6,0), Watch (6,0)]
+	[Watch (6,0)]
 	public class CMTimebase : CMClockOrTimebase
 	{
 		public CMTimebase (IntPtr handle)
@@ -215,7 +215,6 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMTimebaseRef */ IntPtr CMTimebaseGetMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMasterTimebase' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMasterTimebase' instead.")]
 		public CMTimebase GetMasterTimebase ()
@@ -230,7 +229,6 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMasterClock' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMasterClock' instead.")]
 		public CMClock GetMasterClock ()
@@ -245,7 +243,6 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockOrTimebaseRef */ IntPtr CMTimebaseGetMaster (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyMaster' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyMaster' instead.")]
 		public CMClockOrTimebase GetMaster ()
@@ -260,7 +257,6 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (6, 0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'CopyUltimateMasterClock' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'CopyUltimateMasterClock' instead.")]
 		public CMClock GetUltimateMasterClock ()
@@ -362,6 +358,32 @@ namespace CoreMedia {
 				throw new ArgumentNullException ("timer");
 
 			return CMTimebaseSetTimerToFireImmediately (Handle, timer.Handle);
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport(Constants.CoreMediaLibrary)]
+		extern static CMTimebaseError CMTimebaseSetMasterTimebase (/* CMTimebaseRef* */ IntPtr timebase, /* CMTimebaseRef* */ IntPtr newMasterTimebase);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		public CMTimebaseError SetMasterTimebase (CMTimebase newMasterTimebase)
+		{
+			if (newMasterTimebase == null)
+				throw new ArgumentNullException (nameof (newMasterTimebase));
+
+			return CMTimebaseSetMasterTimebase (Handle, newMasterTimebase.Handle);
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport(Constants.CoreMediaLibrary)]
+		extern static CMTimebaseError CMTimebaseSetMasterClock (/* CMTimebaseRef* */ IntPtr timebase, /* CMClockRef* */ IntPtr newMasterClock);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		public CMTimebaseError SetMasterClock (CMClock newMasterClock)
+		{
+			if (newMasterClock == null)
+				throw new ArgumentNullException (nameof (newMasterClock));
+
+			return CMTimebaseSetMasterClock (Handle, newMasterClock.Handle);
 		}
 #endif
 
@@ -486,7 +508,7 @@ namespace CoreMedia {
 		RateMustBeNonZero			= -12755,
 	}
 
-	[iOS (6,0), Watch (6,0)]
+	[Watch (6,0)]
 	public class CMClockOrTimebase : IDisposable, INativeObject
 	{
 		internal IntPtr handle;

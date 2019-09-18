@@ -1,0 +1,36 @@
+<linker>
+	<assembly fullname="System">
+		<type fullname="System.Text.RegularExpressions.CollectionDebuggerProxy`1" preserve="all" />
+	</assembly>
+	<assembly fullname="System.Core">
+		<type fullname="System.Dynamic.BindingRestrictions/BindingRestrictionsProxy" preserve="all" />
+		<type fullname="System.Dynamic.ExpandoObject/KeyCollectionDebugView" preserve="all" />
+		<type fullname="System.Dynamic.ExpandoObject/ValueCollectionDebugView" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/BinaryExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/BlockExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/CatchBlockProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/ConditionalExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/ConstantExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/DebugInfoExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/DefaultExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/GotoExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/IndexExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/InvocationExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/LabelExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/LambdaExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/ListInitExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/LoopExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/MemberExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/MemberInitExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/MethodCallExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/NewArrayExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/NewExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/ParameterExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/RuntimeVariablesExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/SwitchCaseProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/SwitchExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/TryExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/TypeBinaryExpressionProxy" preserve="all" />
+		<type fullname="System.Linq.Expressions.Expression/UnaryExpressionProxy" preserve="all" />
+	</assembly>
+</linker>

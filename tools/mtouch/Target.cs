@@ -1169,10 +1169,8 @@ namespace Xamarin.Bundler
 							}
 						}
 					}
-					if (App.Embeddinator) {
-						if (!string.IsNullOrEmpty (App.UserGccFlags))
-							compiler_flags.AddOtherFlag (App.UserGccFlags);
-					}
+					if (App.Embeddinator)
+						compiler_flags.AddOtherFlag (App.UserGccFlags);
 					compiler_flags.LinkWithMono ();
 					compiler_flags.LinkWithXamarin ();
 					if (GetAllSymbols ().Contains ("UIApplicationMain"))
@@ -1382,7 +1380,7 @@ namespace Xamarin.Bundler
 				registration_methods.Add ("xamarin_create_classes");
 			}
 
-			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None) {
+			if (App.Registrar == RegistrarMode.Dynamic && App.LinkMode == LinkMode.None) {
 				string method;
 				string library;
 				switch (App.Platform) {
@@ -1596,8 +1594,7 @@ namespace Xamarin.Bundler
 				linker_flags.AddLinkWith (libilgen);
 			}
 
-			if (!string.IsNullOrEmpty (App.UserGccFlags))
-				linker_flags.AddOtherFlag (App.UserGccFlags);
+			linker_flags.AddOtherFlag (App.UserGccFlags);
 
 			if (App.DeadStrip)
 				linker_flags.AddOtherFlag ("-dead_strip");

@@ -289,7 +289,7 @@ namespace Contacts {
 		NSString InstantMessageAddresses { get; }
 	}
 
- 	[iOS (9,0), Mac (10,11)]
+	[iOS (9,0), Mac (10,11)]
 	[BaseType (typeof (CNFetchRequest))]
 	[DisableDefaultCtor] // using init raises an exception according to docs
 	interface CNContactFetchRequest : NSSecureCoding {
@@ -1409,7 +1409,7 @@ namespace Contacts {
 
 	// this type is new in Xcode11 but is decorated with earlier versions since it's used as a
 	// base type for older types (and that confuse the generator for 32bits availability)
- 	[iOS (9,0), Mac (10,15), Watch (2,0)]
+	[iOS (9,0), Mac (10,15), Watch (6,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CNFetchRequest {}
@@ -1439,7 +1439,7 @@ namespace Contacts {
 	[Watch (6,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CNFetchResult {
+	interface CNFetchResult<T> {
 		[Export ("value", ArgumentSemantic.Strong)]
 		NSObject Value { get; }
 
@@ -1475,15 +1475,15 @@ namespace Contacts {
 		[return: NullAllowed]
 		NSObject GetUnifiedMeContact (NSArray keys, [NullAllowed] out NSError error);
 
-		/* Unable to bind due to generic type errors: https://github.com/xamarin/xamarin-macios/issues/6561
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Export ("enumeratorForContactFetchRequest:error:")]
 		[return: NullAllowed]
-		CNFetchResult<NSEnumerator<CNContact>> GetEnumeratorForContact (CNContactFetchRequest request, [NullAllowed] out NSError error);*/
+		CNFetchResult<NSEnumerator<CNContact>> GetEnumeratorForContact (CNContactFetchRequest request, [NullAllowed] out NSError error);
 
-		/* Unable to bind due to generic type errors: https://github.com/xamarin/xamarin-macios/issues/6561
+		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Export ("enumeratorForChangeHistoryFetchRequest:error:")]
 		[return: NullAllowed]
-		CNFetchResult<NSEnumerator<CNChangeHistoryEvent>> GetEnumeratorForChangeHistory (CNChangeHistoryFetchRequest request, [NullAllowed] out NSError error);*/
+		CNFetchResult<NSEnumerator<CNChangeHistoryEvent>> GetEnumeratorForChangeHistory (CNChangeHistoryFetchRequest request, [NullAllowed] out NSError error);
 
 
 #if !XAMCORE_4_0 && !WATCH

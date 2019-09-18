@@ -1093,5 +1093,17 @@ namespace LinkSdk {
 		{
 			return Type.GetType (name, throwOnError);
 		}
+
+#if !__WATCHOS__
+		[Test]
+		// https://github.com/xamarin/xamarin-macios/issues/6711
+		public void PreserveINativeObject ()
+		{
+			// linker will keep the MTAudioProcessingTap type
+			var mta = typeof (MediaToolbox.MTAudioProcessingTap);
+			// and we check that it still implement INativeObject
+			Assert.IsNotNull (mta.GetInterface ("ObjCRuntime.INativeObject"), "INativeObject");
+		}
+#endif
 	}
 }

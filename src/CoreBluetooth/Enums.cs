@@ -40,7 +40,6 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
-	[iOS (6, 0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[NoWatch]
 	[Native]

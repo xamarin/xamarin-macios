@@ -38,6 +38,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 
+	<UsingTask TaskName="Xamarin.iOS.Tasks.ALToolValidate" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.ALToolUpload" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.ACTool" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Archive" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.CodesignNativeLibraries" AssemblyFile="Xamarin.iOS.Tasks.dll" />
@@ -176,6 +178,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 								or '%(ReferenceDependencyPaths.Filename)' == 'System.Runtime'">true</_HasReferenceToSystemRuntime>
 
 			<XI_NETStandardInbox Condition="'$(XI_NETStandardInbox)' == '' and Exists('%(XI_InboxNETStandardFolders.Identity)\netstandard.dll')">true</XI_NETStandardInbox>
+
+			<!--
+				This is `true` if any of the references depends on `netstandard`.
+
+				In cases where `ResolveAssemblyReference` task does get run, it populates `$(_DependsOnNETStandard)` property, so we don't
+				need to check this again.
+			-->
+			<XI_DependsOnNETStandard Condition="'$(XI_DependsOnNETStandard)' == ''">$(_DependsOnNETStandard)</XI_DependsOnNETStandard>
 		</PropertyGroup>
 
 		<!--
@@ -189,7 +199,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
 		-->
 		<GetDependsOnNETStandard
-			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''"
+			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(XI_DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''"
 			References="@(XI_CandidateNETStandardReferences)">
 			<Output TaskParameter="DependsOnNETStandard" PropertyName="XI_DependsOnNETStandard" />
 		</GetDependsOnNETStandard>
@@ -356,7 +366,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
+	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppDistribution)' != 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
 
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn>
@@ -390,7 +400,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_CreateAppBundle;$(CodesignDependsOn)" />
 
 	<PropertyGroup>
+		<!-- Extensibility point for VS Publishing Workflow -->
+		<_BeforeCreateIpaForDistributionDependsOn />
+		
 		<CreateIpaDependsOn>
+			_BeforeCreateIpaForDistribution;
+			_CompileEntitlements;
 			_CoreCreateIpa;
 			_PackageOnDemandResources;
 			_ZipIpa
@@ -401,8 +416,30 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ArchiveDependsOn>
 	</PropertyGroup>
 
+	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations">
+		<ALToolValidate
+			SessionId="$(BuildSessionId)"
+			Username="$(Username)"
+			Password="$(Password)"
+			FilePath="$(FilePath)"
+			SdkDevPath="$(_SdkDevPath)"
+		/>
+	</Target>
+
+	<Target Name="UploadAppStoreBundle" DependsOnTargets="_DetectSdkLocations">
+		<ALToolUpload
+			SessionId="$(BuildSessionId)"
+			Username="$(Username)"
+			Password="$(Password)"
+			FilePath="$(FilePath)"
+			SdkDevPath="$(_SdkDevPath)"
+		/>
+	</Target>
+
 	<Target Name="Archive" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(ArchiveDependsOn)" />
 
+	<Target Name="_BeforeCreateIpaForDistribution" Condition="'$(IsAppDistribution)' == 'true'" DependsOnTargets="$(_BeforeCreateIpaForDistributionDependsOn)" />
+	
 	<Target Name="CreateIpa" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(CreateIpaDependsOn)" />
 
 	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
@@ -680,7 +717,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	
 	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
 		<PropertyGroup>
-			<AppBundleDir>$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+			<AppBundleDir Condition="'$(IsAppDistribution)' != 'true'">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+			<AppBundleDir Condition="'$(IsAppDistribution)' == 'true'">$(ArchivePath)\Products\Applications\$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
 		</PropertyGroup>
 	</Target>
@@ -784,16 +822,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_GetCompileToNativeInputs">
 		<ItemGroup>
-			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName)" />
-			<_CompileToNativeInput Condition="'@(_ResolvedAppExtensionReferences)' != ''" Include="%(_ResolvedAppExtensionReferences.Identity)\..\mtouch.stamp" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
-		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
-		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
-
-		<ItemGroup>
 			<!-- Skip the reference assemblies. There is currently no scenario where it is valid to pass them to 'mtouch'. They are impossible to AOT. Fixes: https://github.com/xamarin/xamarin-macios/issues/3199 -->
 			<!-- Remove exact references, such as if a package had a framework reference to 'System' that we already have -->
 			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
@@ -801,7 +829,15 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<!-- This requires nuget libraries to be copied locally, which by default only happens for executable projects, so we set 'CopyNuGetImplementations' to true for extensions (see comment in Xamarin.iOS.AppExtension.CSharp.targets for more info) -->
 			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
 			<MTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName);@(ReferencePath);@(MTouchReferencePath)" />
+			<_CompileToNativeInput Condition="'@(_ResolvedAppExtensionReferences)' != ''" Include="%(_ResolvedAppExtensionReferences.Identity)\..\mtouch.stamp" />
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
+		Condition = "'$(IsAppDistribution)' != 'true'"
+		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
+		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
 
 		<MTouch
 			SessionId="$(BuildSessionId)"
@@ -1162,6 +1198,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CollectColladaAssets">
 		<CollectBundleResources
 			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			BundleResources="@(Collada)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(IPhoneResourcePrefix)">
@@ -2016,7 +2053,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CodesignVerify>
 	</Target>
 
-	<Target Name="_CoreCreateIpa" Condition="'$(BuildIpa)' == 'true'" DependsOnTargets="$(Codesign)">
+	<Target Name="_CoreCreateIpa" Condition="'$(BuildIpa)' == 'true'" DependsOnTargets="Codesign">
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(DeviceSpecificIntermediateOutputPath)ipa" />
 
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(DeviceSpecificIntermediateOutputPath)ipa\Payload" />
@@ -2241,7 +2278,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</Zip>
 	</Target>
 
-	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="$(Codesign)">
+	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="Codesign">
 		<CollectITunesSourceFiles
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' == ''"

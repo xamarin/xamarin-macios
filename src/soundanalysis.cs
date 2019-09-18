@@ -30,6 +30,7 @@ namespace SoundAnalysis {
 		OperationFailed,
 		InvalidFormat,
 		InvalidModel,
+		InvalidFile,
 	}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
@@ -108,7 +109,6 @@ namespace SoundAnalysis {
 		[Export ("classifications")]
 		SNClassification [] Classifications { get; }
 
-		[NoWatch] // TODO: Remove when CoreMedia is enabled on watchOS
 		[Export ("timeRange")]
 		CMTimeRange TimeRange { get; }
 	}

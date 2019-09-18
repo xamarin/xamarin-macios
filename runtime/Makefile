@@ -23,11 +23,16 @@ SHIPPED_HEADERS +=         \
 SHARED_SOURCES += mono-runtime.m bindings.m bindings-generated.m shared.m runtime.m trampolines.m trampolines-invoke.m xamarin-support.m nsstring-localization.m trampolines-varargs.m
 SHARED_I386_SOURCES += trampolines-i386.m trampolines-i386-asm.s trampolines-i386-objc_msgSend.s trampolines-i386-objc_msgSendSuper.s trampolines-i386-objc_msgSend_stret.s trampolines-i386-objc_msgSendSuper_stret.s
 SHARED_X86_64_SOURCES += trampolines-x86_64.m trampolines-x86_64-asm.s trampolines-x86_64-objc_msgSend.s trampolines-x86_64-objc_msgSendSuper.s trampolines-x86_64-objc_msgSend_stret.s trampolines-x86_64-objc_msgSendSuper_stret.s
+SHARED_ARM64_SOURCES += trampolines-arm64.m trampolines-arm64-asm.s
 SHARED_HEADERS += shared.h product.h delegates.h runtime-internal.h $(SHARED_INC) $(SHIPPED_HEADERS) trampolines-internal.h slinked-list.h
 
-SHARED_FILES = $(SHARED_SOURCES) $(SHARED_HEADERS) $(SHARED_I386_SOURCES) $(SHARED_X86_64_SOURCES)
+SHARED_FILES = $(SHARED_SOURCES) $(SHARED_HEADERS) $(SHARED_I386_SOURCES) $(SHARED_X86_64_SOURCES) $(SHARED_ARM64_SOURCES)
 
-EXTRA_DEPENDENCIES = $(SHARED_HEADERS) $(TOP)/Make.config
+EXTRA_DEPENDENCIES = $(SHARED_HEADERS) $(TOP)/Make.config $(TOP)/mk/mono.mk
+
+X86_64_SLICE=$(abspath $(CURDIR)/x86-64-slice.dylib)
+$(X86_64_SLICE): Makefile
+	echo "void xamarin_x86_64_function_for_notarization_workaround_v2 () {}" | $(MAC_CC) -shared -x c -o$@ -
 
 xamarin/mono-runtime.h: mono-runtime.h.t4 exports.t4
 	$(Q_GEN) $(TT) $< -o $@
@@ -83,6 +88,7 @@ MONOTOUCH_FRAMEWORKS =  \
 MONOTOUCH_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_SOURCES) $(MONOTOUCH_SOURCES)))
 MONOTOUCH_I386_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_I386_SOURCES)))
 MONOTOUCH_X86_64_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_X86_64_SOURCES)))
+MONOTOUCH_ARM64_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_ARM64_SOURCES)))
 
 #
 # PlatformTemplate contains the install targets and sets up some variables
@@ -95,6 +101,7 @@ $(2)_HEADERS       = $(MONOTOUCH_HEADERS)
 $(2)_SOURCE_STEMS  = $(MONOTOUCH_SOURCE_STEMS)
 $(2)_X86_64_SOURCE_STEMS = $(MONOTOUCH_X86_64_SOURCE_STEMS)
 $(2)_I386_SOURCE_STEMS = $(MONOTOUCH_I386_SOURCE_STEMS)
+$(2)_ARM64_SOURCE_STEMS = $(MONOTOUCH_ARM64_SOURCE_STEMS)
 $(2)_LIBRARIES     = $(MONOTOUCH_LIBS)
 ifdef INCLUDE_DEVICE
 $(2)_DEVICE_ARCHITECTURES = $(3)
@@ -258,41 +265,41 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/tvextension-main.$$(arch).o): 
 	$(Q) install_name_tool -id @rpath/libxamarin-debug.dylib $$@
 	$(Q) install_name_tool -change @rpath/ @rpath/libmonosgen-2.0.dylib $$@
 
-.libs/$(1)/libxamarin-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib)
+.libs/$(1)/libxamarin-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib) $(X86_64_SLICE)
 	$(Q) rm -f $$@
-ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) $(CP) $$^ $$@
-else
+#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
+#	$(Q) $(CP) $$^ $$@
+#else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-endif
+#endif
 	$(Q) install_name_tool -id @rpath/libxamarin.dylib $$@
 	$(Q) install_name_tool -change @rpath/ @rpath/libmonosgen-2.0.dylib $$@
 
-.libs/$(1)/libxamarin-debug-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib)
+.libs/$(1)/libxamarin-debug-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib) $(X86_64_SLICE)
 	$(Q) rm -f $$@
-ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) $(CP) $$^ $$@
-else
+#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
+#	$(Q) $(CP) $$^ $$@
+#else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-endif
+#endif
 	$(Q) install_name_tool -id @rpath/libxamarin-debug.dylib $$@
 	$(Q) install_name_tool -change @rpath/ @rpath/libmonosgen-2.0.dylib $$@
 
-.libs/$(1)/Xamarin-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework)
+.libs/$(1)/Xamarin-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework) $(X86_64_SLICE)
 	$(Q) rm -f $$@
-ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) $(CP) $$^ $$@
-else
+#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
+#	$(Q) $(CP) $$^ $$@
+#else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-endif
+#endif
 
-.libs/$(1)/Xamarin-debug-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin-debug.$$(arch).framework)
+.libs/$(1)/Xamarin-debug-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin-debug.$$(arch).framework) $(X86_64_SLICE)
 	$(Q) rm -f $$@
-ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-	$(Q) $(CP) $$^ $$@
-else
+#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
+#	$(Q) $(CP) $$^ $$@
+#else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-endif
+#endif
 
 .libs/$(1)/Xamarin-sim.framework:  $$(foreach arch,$$($(2)_SIM_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework)
 	$(Q) rm -f $$@
@@ -308,8 +315,6 @@ endef
 $(eval $(call LibTemplate,ios,IOS))
 $(eval $(call LibTemplate,watchos,WATCHOS))
 $(eval $(call LibTemplate,tvos,TVOS))
-
-SDK_BUILDDIR=$(MONO_PATH)/sdks/builds
 
 #
 # LibXamarinTemplate (and LibXamarinArchTemplate) builds libxamarin.a
@@ -332,7 +337,7 @@ x86_64_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).x86_64.o,$$($(2)_SOURCE
 armv7_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).armv7.o,$$($(2)_SOURCE_STEMS))
 armv7s_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).armv7s.o,$$($(2)_SOURCE_STEMS))
 armv7k_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).armv7k.o,$$($(2)_SOURCE_STEMS))
-arm64_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_SOURCE_STEMS))
+arm64_$(1)$(3)_OBJECTS  = $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_SOURCE_STEMS))  $$(patsubst %,.libs/$(1)/%$(4).arm64.o,$$($(2)_ARM64_SOURCE_STEMS))
 arm64_32_$(1)$(3)_OBJECTS = $$(patsubst %,.libs/$(1)/%$(4).arm64_32.o,$$($(2)_SOURCE_STEMS))
 
 $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(1),$(2),$(3),$(4),$$(arch))))
@@ -404,11 +409,11 @@ MAC64_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC) -mmacosx-version-m
 
 MAC_SHIPPED_HEADERS = xamarin/launch.h
 
-MAC_OBJC_CFLAGS=-ObjC++ -std=c++0x -fno-exceptions -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
+MAC_OBJC_CFLAGS=-ObjC++ -std=c++14 -fno-exceptions -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
 MAC_CFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -Wall -DMONOMAC -g -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
 MAC_LDFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -framework AppKit
 
-MAC_STATIC_CFLAGS = $(MAC_CFLAGS) -I$(TOP)/builds/$(BUILD_DESTDIR)/install/mac64/include/mono-2.0
+MAC_STATIC_CFLAGS = $(MAC_CFLAGS)
 
 MAC_SOURCES = $(SHARED_SOURCES) $(SHARED_X86_64_SOURCES) launcher.m
 
@@ -478,8 +483,8 @@ SYSTEM_LAUNCHER$(2)_OBJECTS = $$(foreach src,$$(MAC_SOURCES),.libs/mac/$$(basena
 
 endef
 
-$(eval $(call ObjTemplate,x86_64,64,,-DOBJC_OLD_DISPATCH_PROTOTYPES=1,64))
-$(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG -DOBJC_OLD_DISPATCH_PROTOTYPES=1,64))
+$(eval $(call ObjTemplate,x86_64,64,,,64))
+$(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG,64))
 
 $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_DEFINES=-DEXTENSION
 

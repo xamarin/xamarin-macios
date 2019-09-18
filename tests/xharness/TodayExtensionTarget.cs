@@ -44,7 +44,7 @@ namespace xharness
 				Name = Name + MonoNativeInfo.FlavorSuffix;
 		}
 		
-		bool IsGeneratedBclTest { get => IsBCLProject && TargetDirectory.Contains ("BCLTests"); }
+		bool IsGeneratedBclTest { get => IsBCLProject; }
 		
 		string GeneratedPath { get => Path.Combine (TargetDirectory, "generated", AppName.Replace (" Today", ""), "ios"); }
 		string GeneratedTemplatePath { get => Path.Combine (TargetDirectory, "templates", "today"); } 

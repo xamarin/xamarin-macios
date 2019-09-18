@@ -168,8 +168,14 @@ namespace Xamarin.Bundler {
 					Framework framework;
 					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
 						// framework specific processing
-#if !MONOMAC
 						switch (framework.Name) {
+#if MONOMAC
+						case "QTKit":
+							// we already warn in Frameworks.cs Gather method
+							if (!Driver.LinkProhibitedFrameworks)
+								continue;
+							break;
+#else
 						case "CoreAudioKit":
 							// CoreAudioKit seems to be functional in the iOS 9 simulator.
 							if (App.IsSimulatorBuild && App.SdkVersion.Major < 9)
@@ -197,14 +203,14 @@ namespace Xamarin.Bundler {
 							}
 							break;
 						case "WatchKit":
-							// Xcode 11 beta 1 doesn't ship WatchKit for iOS
+							// Xcode 11 doesn't ship WatchKit for iOS
 							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
-								ErrorHelper.Warning (99, "Not linking with WatchKit because Xcode 11 beta 1 does not ship with the WatchKit framework.");
+								ErrorHelper.Warning (5219, "Not linking with WatchKit because it has been removed from iOS.");
 								continue;
 							}
 							break;
-						}
 #endif
+						}
 
 						if (App.SdkVersion >= framework.Version) {
 							var add_to = framework.AlwaysWeakLinked || App.DeploymentTarget < framework.Version ? asm.WeakFrameworks : asm.Frameworks;

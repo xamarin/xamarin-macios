@@ -40,7 +40,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_identity_create_with_certificates (IntPtr secidentityHandle, IntPtr arrayHandle);
 
-		public SecIdentity2 (SecIdentity identity, SecCertificate [] certificates)
+		public SecIdentity2 (SecIdentity identity, params SecCertificate [] certificates)
 		{
 			if (identity == null)
 				throw new ArgumentNullException (nameof (identity));
@@ -67,6 +67,39 @@ namespace Security {
 					ret [i] = new SecCertificate (NSArray.GetAtIndex (certArray, (nuint) i), owns: false);
 				CFObject.CFRelease (certArray);
 				return ret;
+			}
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern bool sec_identity_access_certificates (IntPtr identity, ref BlockLiteral block);
+
+		internal delegate void AccessCertificatesHandler (IntPtr block, IntPtr cert);
+		static readonly AccessCertificatesHandler access = TrampolineAccessCertificates;
+
+		[MonoPInvokeCallback (typeof (AccessCertificatesHandler))]
+		static void TrampolineAccessCertificates (IntPtr block, IntPtr cert)
+		{
+			var del = BlockLiteral.GetTarget<Action<SecCertificate2>> (block);
+			if (del != null)
+				del (new SecCertificate2 (cert, false));
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		// no [Async] as it can be called multiple times
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public bool AccessCertificates (Action</* sec_identity_t */SecCertificate2> handler)
+		{
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			try {
+				block_handler.SetupBlockUnsafe (access, handler);
+				return sec_identity_access_certificates (GetCheckedHandle (), ref block_handler);
+			}
+			finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 #endif

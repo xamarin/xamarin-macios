@@ -12,13 +12,6 @@
 #include "delegates.h"
 #include "product.h"
 
-//#define TRACE
-#ifdef TRACE
-#define LOGZ(...) fprintf (stderr, __VA_ARGS__);
-#else
-#define LOGZ(...)
-#endif
-
 static guint32
 xamarin_get_exception_for_method (int code, guint32 inner_exception_gchandle, const char *reason, SEL sel, id self)
 {

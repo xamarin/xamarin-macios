@@ -675,6 +675,25 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "AVFoundation":
+				switch (type.Name) {
+				case "AVCapturePhoto":
+					switch (selectorName) {
+					case "fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData:":
+						// This method was mistakenly bound in macOS.
+						return true;
+					}
+					break;
+				case "AVSpeechSynthesisVoice":
+					switch (selectorName) {
+					case "gender":
+						// Selector not there: https://github.com/xamarin/maccore/issues/1949
+						return true;
+					}
+					break;
+				break;
+				}
+				break;
 			}
 			return base.Skip (type, selectorName);
 		}

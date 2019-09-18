@@ -8,9 +8,14 @@
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 WORKSPACE=$(pwd)
 
+export FAILURE_REASON_PATH="$WORKSPACE/jenkins/build-failure.md"
+
 report_error ()
 {
 	printf "🔥 [Build failed](%s/console) 🔥\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+	if test -f "$FAILURE_REASON_PATH"; then
+		sed 's/^/* /' "$FAILURE_REASON_PATH" >> "$WORKSPACE/jenkins/pr-comments.md"
+	fi
 }
 trap report_error ERR
 
@@ -81,14 +86,11 @@ else
 	if git diff-tree --no-commit-id --name-only -r "origin/pr/$ghprbPullId/merge^..origin/pr/$ghprbPullId/merge" > .tmp-files; then
 		echo "Modified files found":
 		sed 's/^/    /' .tmp-files || true
-		if grep 'external/mono' .tmp-files > /dev/null; then
+		if grep 'mk/mono.mk' .tmp-files > /dev/null; then
 			echo "Enabling device build because mono was bumped."
 			ENABLE_DEVICE_BUILD=1
-		elif grep 'external/llvm' .tmp-files > /dev/null; then
-			echo "Enabling device build because llvm was bumped."
-			ENABLE_DEVICE_BUILD=1
 		else
-			echo "Not enabling device build; neither mono nor llvm was bumped."
+			echo "Not enabling device build; mono wasn't bumped."
 		fi
 	fi
 	rm -f .tmp-files
@@ -105,6 +107,11 @@ else
 	if ./jenkins/fetch-pr-labels.sh --check=run-sample-tests; then
 		echo "The sample tests won't be triggered from public jenkins even if the 'run-sample-tests' label is set (build on internal Jenkins instead)."
 		printf "ℹ️ The sample tests won't be triggered from public jenkins even if the 'run-sample-tests' label is set (build on internal Jenkins instead)." >> "$WORKSPACE/jenkins/pr-comments.md"
+	fi
+
+	if ./jenkins/fetch-pr-labels.sh --check=disable-packaged-mono; then
+		echo "Building mono from source because the label 'disable-packaged-mono' was found."
+		CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-packaged-mono"
 	fi
 fi
 

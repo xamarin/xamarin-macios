@@ -12,6 +12,7 @@ namespace BCLTestImporter {
 	public partial struct BCLTestProjectDefinition {
 		public string Name { get; set; }
 		public List<BCLTestAssemblyDefinition> TestAssemblies {get; private set;}
+		public string ExtraArgs { get; private set; }
 		public bool IsXUnit {
 			get {
 				if (TestAssemblies.Count > 0)
@@ -20,21 +21,23 @@ namespace BCLTestImporter {
 			}
 		}
 
-		public BCLTestProjectDefinition (string name, string[] assemblies)
+		public BCLTestProjectDefinition (string name, string[] assemblies, string extraArgs)
 		{
 			if (assemblies.Length == 0)
 				throw new ArgumentException ("Most provide at least an assembly.");
 			Name = name;
 			TestAssemblies = new List<BCLTestAssemblyDefinition> (assemblies.Length);
+			ExtraArgs = extraArgs;
 			foreach (var assembly in assemblies) {
 				TestAssemblies.Add (new BCLTestAssemblyDefinition (assembly));
 			}
 		}
 		
-		public BCLTestProjectDefinition (string name, List<BCLTestAssemblyDefinition> assemblies)
+		public BCLTestProjectDefinition (string name, List<BCLTestAssemblyDefinition> assemblies, string extraArgs)
 		{
 			Name = name;
 			TestAssemblies = assemblies;
+			ExtraArgs = extraArgs;
 		}
 		
 		static (string FailureMessage, IEnumerable<string> References) GetAssemblyReferences (string assemblyPath) {
@@ -97,12 +100,12 @@ namespace BCLTestImporter {
 					if (!types.Any ()) {
 						continue;
 					}
-					dict[Path.GetFileName (path)] = types.First (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")));
+					dict[Path.GetFileName (path)] = types.First (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
 				} catch (ReflectionTypeLoadException e) { // ReflectionTypeLoadException
 					// we did get an exception, possible reason, the type comes from an assebly not loaded, but 
 					// nevertheless we can do something about it, get all the not null types in the exception
 					// and use one of them
-					var types = e.Types.Where (t => t != null).Where (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")));
+					var types = e.Types.Where (t => t != null).Where (t => !t.IsGenericType && (t.FullName.EndsWith ("Test") || t.FullName.EndsWith ("Tests")) && t.Namespace != null);
 					if (types.Any()) {
 						dict[Path.GetFileName (path)] = types.First ();
 					}
@@ -129,7 +132,7 @@ namespace BCLTestImporter {
 				return (references.FailureMessage, null);
 			var asm = references.References.Select (
 					a => (assembly: a, 
-						hintPath: BCLTestAssemblyDefinition.GetHintPathForRefenreceAssembly (a, monoRootPath, platform))).Union (
+						hintPath: BCLTestAssemblyDefinition.GetHintPathForRefenreceAssembly (a, monoRootPath, platform, wasDownloaded))).Union (
 					TestAssemblies.Select (
 						definition => (assembly: definition.GetName (platform),
 							hintPath: definition.GetPath (monoRootPath, platform, wasDownloaded))))

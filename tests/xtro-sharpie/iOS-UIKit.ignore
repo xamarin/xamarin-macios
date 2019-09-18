@@ -76,3 +76,13 @@
 !missing-enum! UIDirectionalRectEdge not bound
 !missing-selector! UIGestureRecognizer::initWithCoder: not bound
 !missing-selector! UIKeyCommand::action not bound
+!missing-protocol-member! UICollectionViewDelegate::collectionView:willCommitMenuWithAnimator: not found
+!missing-protocol-member! UIContextMenuInteractionDelegate::contextMenuInteraction:willCommitWithAnimator: not found
+!missing-protocol-member! UIContextMenuInteractionDelegate::contextMenuInteractionDidEnd: not found
+!missing-protocol-member! UIContextMenuInteractionDelegate::contextMenuInteractionWillPresent: not found
+!missing-protocol-member! UITableViewDelegate::tableView:willCommitMenuWithAnimator: not found
+
+## Introduced in Xcode 11 b5 but unlikely to be there at the end of beta, these usualy get replaced by NSCopying protocol
+!missing-selector! UIBarAppearance::copy not bound
+!missing-selector! UIBarButtonItemAppearance::copy not bound
+!missing-selector! UITabBarItemAppearance::copy not bound

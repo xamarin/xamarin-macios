@@ -63,6 +63,10 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyExifAuxDictionary")]
 		NSString ExifAuxDictionary { get; }
 
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyHEICSDictionary")]
+		NSString HeicsDictionary { get; }
+
 		// Camera-Maker Dictionaries
 		[Field ("kCGImagePropertyMakerCanonDictionary")]
 		NSString MakerCanonDictionary { get; }
@@ -248,27 +252,27 @@ namespace ImageIO {
 
 		// misdocumented (first 4.3, then 5.0) but the constants were not present until 6.x
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifCameraOwnerName")]
+		[Field ("kCGImagePropertyExifCameraOwnerName")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifCameraOwnerName { get; }
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifBodySerialNumber")]
+		[Field ("kCGImagePropertyExifBodySerialNumber")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifBodySerialNumber { get; }
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifLensSpecification")]
+		[Field ("kCGImagePropertyExifLensSpecification")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifLensSpecification { get; }
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifLensMake")]
+		[Field ("kCGImagePropertyExifLensMake")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifLensMake { get; }
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifLensModel")]
+		[Field ("kCGImagePropertyExifLensModel")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifLensModel { get; }
 
-		[iOS (6,0)][Field ("kCGImagePropertyExifLensSerialNumber")]
+		[Field ("kCGImagePropertyExifLensSerialNumber")]
 		[Mac (10,9)] // Really introduced in 10.8 (according to header), but as a private symbol in the framework (nm shows it as 's'), so we can't access it.
 		NSString ExifLensSerialNumber { get; }
 
@@ -305,6 +309,18 @@ namespace ImageIO {
 		NSString GIFHasGlobalColorMap { get; }
 		[Field ("kCGImagePropertyGIFUnclampedDelayTime")]
 		NSString GIFUnclampedDelayTime { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyGIFCanvasPixelWidth")]
+		NSString GifCanvasPixelWidth { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyGIFCanvasPixelHeight")]
+		NSString GifCanvasPixelHeight { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyGIFFrameInfoArray")]
+		NSString GifFrameInfoArray { get; }
 
 		// GPS Dictionary Keys
 
@@ -554,6 +570,18 @@ namespace ImageIO {
 		[iOS (8,0)][Mac (10,10)]
 		[Field ("kCGImagePropertyAPNGUnclampedDelayTime")]
 		NSString PNGUnclampedDelayTime { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyAPNGFrameInfoArray")]
+		NSString ApngFrameInfoArray { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyAPNGCanvasPixelWidth")]
+		NSString ApngCanvasPixelWidth { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyAPNGCanvasPixelHeight")]
+		NSString ApngCanvasPixelHeight { get; }
 
 		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 		[Field ("kCGImagePropertyPNGComment")]
@@ -1064,6 +1092,32 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyCIFFMeasuredEV")]
 		NSString CIFFMeasuredEV { get; }
 
+		// HEICS
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyHEICSLoopCount")]
+		NSString HeicsLoopCount { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyHEICSDelayTime")]
+		NSString HeicsDelayTime { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyHEICSUnclampedDelayTime")]
+		NSString HeicsSUnclampedDelayTime { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyHEICSCanvasPixelWidth")]
+		NSString HeicsCanvasPixelWidth { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyHEICSCanvasPixelHeight")]
+		NSString HeicsCanvasPixelHeight { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyHEICSFrameInfoArray")]
+		NSString HeicsFrameInfoArray { get; }
+
 		// Nikon Camera Dictionary Keys
 
 		[Field ("kCGImagePropertyMakerNikonISOSetting")]
@@ -1140,6 +1194,18 @@ namespace ImageIO {
 		[iOS (7,0), Mac (10, 9)]
 		[Field ("kCGImagePropertyExifStandardOutputSensitivity")]
 		NSString ExifStandardOutputSensitivity { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyExifOffsetTime")]
+		NSString ExifOffsetTime { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyExifOffsetTimeOriginal")]
+		NSString ExifOffsetTimeOriginal { get; }
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImagePropertyExifOffsetTimeDigitized")]
+		NSString ExifOffsetTimeDigitized { get; }
 
 #if !MONOMAC
 		[iOS (7,0)]
@@ -2255,6 +2321,18 @@ namespace ImageIO {
 		[Watch (5, 0), Mac (10, 14), iOS (12, 0), TV (12,0)]
 		[Field ("kCGImageAuxiliaryDataTypePortraitEffectsMatte")]
 		PortraitEffectsMatte,
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationHairMatte")]
+		SemanticSegmentationHairMatte,
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationSkinMatte")]
+		SemanticSegmentationSkinMatte,
+
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationTeethMatte")]
+		SemanticSegmentationTeethMatte,
 	}
 
 	[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]

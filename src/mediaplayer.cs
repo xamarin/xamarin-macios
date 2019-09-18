@@ -20,10 +20,6 @@ using AppKit;
 using UIKit;
 #endif
 using System;
-#if WATCH
-using AVMediaSelectionGroup = Foundation.NSObject;
-using AVMediaSelectionOption = Foundation.NSObject;
-#endif
 
 namespace MediaPlayer {
 #if XAMCORE_2_0 || !MONOMAC
@@ -214,12 +210,10 @@ namespace MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PodcastTitleProperty { get; }
 
-		[iOS (6,0)]
 		[Field ("MPMediaItemPropertyBookmarkTime")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString BookmarkTimeProperty { get; }
 
-		[iOS (6,0)]
 		[Field ("MPMediaItemPropertyIsCloudItem")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString IsCloudItemProperty { get; }
@@ -391,7 +385,6 @@ namespace MediaPlayer {
 		[Export ("prompt", ArgumentSemantic.Copy)]
 		string Prompt { get; set; }
 
-		[iOS (6,0)]
 		[Export ("showsCloudItems")]
 		bool ShowsCloudItems { get; set; }
 
@@ -1105,13 +1098,11 @@ namespace MediaPlayer {
 		[Notification]
 		NSString MediaPlaybackIsPreparedToPlayDidChangeNotification { get; }
 
-		[iOS (6,0)]
 		[NoWatch]
 		[Export ("readyForDisplay")]
 		bool ReadyForDisplay { get;  }
 
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
-		[iOS (6,0)]
 		[NoWatch]
 		[Field ("MPMoviePlayerReadyForDisplayDidChangeNotification")]
 		[Notification]
@@ -1289,49 +1280,38 @@ namespace MediaPlayer {
 		bool ShowsVolumeSlider { get; set; }
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
-		[iOS (6,0)]
 		[Export ("setMinimumVolumeSliderImage:forState:")]
 		void SetMinimumVolumeSliderImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("setMaximumVolumeSliderImage:forState:")]
 		void SetMaximumVolumeSliderImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("setVolumeThumbImage:forState:")]
 		void SetVolumeThumbImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("minimumVolumeSliderImageForState:")]
 		UIImage GetMinimumVolumeSliderImage (UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("maximumVolumeSliderImageForState:")]
 		UIImage GetMaximumVolumeSliderImage (UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("volumeThumbImageForState:")]
 		UIImage GetVolumeThumbImage (UIControlState state);
 
-		[iOS (6,0)]
 		[Export ("volumeSliderRectForBounds:")]
 		CGRect GetVolumeSliderRect (CGRect bounds);
 
-		[iOS (6,0)]
 		[Export ("volumeThumbRectForBounds:volumeSliderRect:value:")]
 		CGRect GetVolumeThumbRect (CGRect bounds, CGRect columeSliderRect, float /* float, not CGFloat */ value);
 
-		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRoutePickerView.RoutePickerButtonStyle' instead.")]
 		[Export ("setRouteButtonImage:forState:")]
 		void SetRouteButtonImage ([NullAllowed] UIImage image, UIControlState state);
 
-		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
 		[Export ("routeButtonImageForState:")]
 		UIImage GetRouteButtonImage (UIControlState state);
 
-		[iOS (6,0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
 		[Export ("routeButtonRectForBounds:")]
 		CGRect GetRouteButtonRect (CGRect bounds);

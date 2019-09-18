@@ -701,6 +701,11 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8, 0);
 				case "HMLocationEvent":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
+#if __WATCHOS__
+				case "INParameter":
+					// NSCopying conformance added in Xcode 10
+					return !TestRuntime.CheckXcodeVersion (10, 0);
+#endif
 				}
 				break;
 

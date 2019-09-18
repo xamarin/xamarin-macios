@@ -49,7 +49,6 @@ namespace PassKit {
 		string SupplementarySubLocality { get; set; }
 	}
 	
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPassLibrary {
 		[Static][Export ("isPassLibraryAvailable")]
@@ -152,7 +151,6 @@ namespace PassKit {
 		void PresentPaymentPass (PKPaymentPass pass);
 	}
 
-	[iOS (6,0)]
 	[Static]
 	interface PKPassLibraryUserInfoKey
 	{
@@ -530,7 +528,6 @@ namespace PassKit {
 	}
 
 #if !WATCH
-	[iOS (6,0)]
 	[BaseType (typeof (UIViewController), Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (PKAddPassesViewControllerDelegate) })]
 	// invalid null handle for default 'init'
 	[DisableDefaultCtor]
@@ -560,7 +557,6 @@ namespace PassKit {
 		PKAddPassesViewControllerDelegate Delegate { get; set;  }
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -633,7 +629,7 @@ namespace PassKit {
 		PKAddPaymentPassStyle Style { get; set; }
 
 		[NoWatch] // https://feedbackassistant.apple.com/feedback/6301809 https://github.com/xamarin/maccore/issues/1819
-		[iOS (13,0)]
+		[iOS (12,3)]
 		[Export ("productIdentifiers", ArgumentSemantic.Copy)]
 		NSSet<NSString> ProductIdentifiers { get; set; }
 	}
@@ -681,7 +677,6 @@ namespace PassKit {
 	}
 #endif // !WATCH
 		
-	[iOS (6,0)]
 	[BaseType (typeof (PKObject))]
 	interface PKPass : NSSecureCoding, NSCopying {
 		[Export ("initWithData:error:")]
@@ -764,6 +759,10 @@ namespace PassKit {
 
 		[NullAllowed, Export ("paymentPass", ArgumentSemantic.Copy)]
 		PKPaymentPass PaymentPass { get; }
+
+		[Watch (6, 0), iOS (13, 0)]
+		[NullAllowed, Export ("billingAddress", ArgumentSemantic.Copy)]
+		CNContact BillingAddress { get; }
 	}
 
 	[iOS (8,0)]
@@ -1160,6 +1159,15 @@ namespace PassKit {
 	[BaseType (typeof (PKPaymentRequestUpdate))]
 	[DisableDefaultCtor]
 	interface PKPaymentRequestPaymentMethodUpdate {
+
+		[Watch (6,0), iOS (13,0)]
+		[Export ("initWithErrors:paymentSummaryItems:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem [] paymentSummaryItems);
+
+		[Watch (6,0), iOS (13,0)]
+		[Export ("errors", ArgumentSemantic.Copy)]
+		NSError [] Errors { get; set; }
 
 		// inlined
 		[Export ("initWithPaymentSummaryItems:")]

@@ -6,7 +6,7 @@ COLOR_GREEN:=$(shell tput setaf 120 2>/dev/null)
 COLOR_CLEAR:=$(shell tput sgr0 2>/dev/null)
 
 ifdef ENABLE_XAMARIN
-all-local install-local::
+all-local install-local clean-local::
 	$(MAKE) -C $(MACCORE_PATH)/tools/mlaunch $@
 else
 all-local install-local::

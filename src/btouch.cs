@@ -36,6 +36,8 @@ using Mono.Options;
 
 using ObjCRuntime;
 using Foundation;
+
+using Xamarin.Bundler;
 using Xamarin.Utils;
 
 public class BindingTouch {
@@ -251,7 +253,7 @@ public class BindingTouch {
 			{ "attributelib=", "Sets the attribute library", v => attributedll = v },
 			{ "use-zero-copy", v=> zero_copy = true },
 			{ "nostdlib", "Does not reference mscorlib.dll library", l => nostdlib = true },
-			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { } },
+			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { }, true },
 			{ "native-exception-marshalling", "Enable the marshalling support for Objective-C exceptions", (v) => { /* no-op */} },
 			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)",
 				v => inline_selectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
@@ -431,24 +433,9 @@ public class BindingTouch {
 				cargs.Append (cs).Append (' ');
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Append ("-lib:").Append (Path.GetDirectoryName (baselibdll)).Append (' ');
-			
 
-			var si = new ProcessStartInfo (compiler, cargs.ToString ()) {
-				UseShellExecute = false,
-			};
-				
-			// HACK: We are calling btouch with forced 2.1 path but we need working mono for compiler
-			si.EnvironmentVariables.Remove ("MONO_PATH");
-
-			if (verbose)
-				Console.WriteLine ("{0} {1}", si.FileName, si.Arguments);
-			
-			var p = Process.Start (si);
-			p.WaitForExit ();
-			if (p.ExitCode != 0){
-				Console.WriteLine ("{0}: API binding contains errors.", ToolName);
-				return 1;
-			}
+			if (Driver.RunCommand (compiler, cargs.ToString (), null, out var compile_output, true, verbose ? 1 : 0) != 0)
+				throw ErrorHelper.CreateError (2, "Could not compile the API bindings.\n\t" + compile_output.ToString ().Replace ("\n", "\n\t"));
 
 			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
 
@@ -558,23 +545,9 @@ public class BindingTouch {
 			}
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Append ("-lib:").Append (Path.GetDirectoryName (baselibdll)).Append (' ');
-				
-			si = new ProcessStartInfo (compiler, cargs.ToString ()) {
-				UseShellExecute = false,
-			};
 
-			// HACK: We are calling btouch with forced 2.1 path but we need working mono for compiler
-			si.EnvironmentVariables.Remove ("MONO_PATH");
-
-			if (verbose)
-				Console.WriteLine ("{0} {1}", si.FileName, si.Arguments);
-
-			p = Process.Start (si);
-			p.WaitForExit ();
-			if (p.ExitCode != 0){
-				Console.WriteLine ("{0}: API binding contains errors.", ToolName);
-				return 1;
-			}
+			if (Driver.RunCommand (compiler, cargs.ToString (), null, out var generated_compile_output, true, verbose ? 1 : 0) != 0)
+				throw ErrorHelper.CreateError (1000, "Could not compile the generated API bindings.\n\t" + generated_compile_output.ToString ().Replace ("\n", "\n\t"));
 		} finally {
 			if (delete_temp)
 				Directory.Delete (tmpdir, true);

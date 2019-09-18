@@ -145,7 +145,8 @@ APPKIT_SOURCES = \
 	AppKit/NSMutableFontCollection.cs \
 	AppKit/NSCollectionViewLayout.cs \
 	AppKit/NSColorPickerTouchBarItem.cs \
-	AppKit/NSSliderTouchBarItem.cs
+	AppKit/NSSliderTouchBarItem.cs \
+	AppKit/NSView.cs \
 
 # ARKit
 
@@ -255,9 +256,11 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCaptureFileOutput.cs \
 	AVFoundation/AVCaptureMetadataOutput.cs \
 	AVFoundation/AVCaptureSynchronizedDataCollection.cs \
+	AVFoundation/AVCaptureSynchronizedDepthData.cs \
 	AVFoundation/AVCaptureVideoDataOutput.cs \
 	AVFoundation/AVCaptureVideoPreviewLayer.cs \
 	AVFoundation/AVCompat.cs \
+	AVFoundation/AVContentKeyResponse.cs \
 	AVFoundation/AVDepthData.cs \
 	AVFoundation/AVFragmentedAsset.cs \
 	AVFoundation/AVFragmentedAssetTrack.cs \
@@ -387,6 +390,7 @@ COREBLUETOOTH_CORE_SOURCES = \
 
 COREBLUETOOTH_SOURCES = \
 	CoreBluetooth/CBCompat.cs \
+	CoreBluetooth/CBManager.cs \
 	CoreBluetooth/CBPeer.cs \
 	CoreBluetooth/CBUUID.cs \
 	CoreBluetooth/CoreBluetooth.cs \
@@ -485,7 +489,12 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFStream.cs \
 	CoreGraphics/CGPDFString.cs \
 	CoreGraphics/CGShading.cs \
-	
+
+# CoreHaptics
+
+COREHAPTICS_API_SOURCES = \
+	CoreHaptics/Enums.cs \
+
 # CoreImage
 
 COREIMAGE_CORE_SOURCES = \
@@ -638,7 +647,7 @@ COREVIDEO_SOURCES = \
 
 # CoreWlan
 
-COREWLAN_CORE_SOURCES = \
+COREWLAN_API_SOURCES = \
 	CoreWlan/Enums.cs \
 
 COREWLAN_SOURCES = \
@@ -730,6 +739,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSDictionary_2.cs \
 	Foundation/NSDirectoryEnumerator.cs \
 	Foundation/NSDistributedNotificationCenter.cs \
+	Foundation/NSEnumerator_1.cs \
 	Foundation/NSErrorException.cs \
 	Foundation/NSExpression.cs \
 	Foundation/NSExtension.cs \
@@ -810,6 +820,7 @@ FOUNDATION_SOURCES = \
 GAMECONTROLLER_CORE_SOURCES = \
 	GameController/Enums.cs \
 	GameController/GCController.cs \
+	GameController/GCMotion.cs \
 
 GAMECONTROLLER_SOURCES = \
 	GameController/Compat.cs \
@@ -1004,10 +1015,12 @@ MAPKIT_SOURCES = \
 	MapKit/MKFeatureDisplayPriority.cs \
 	MapKit/MKGeodesicPolyline.cs \
 	MapKit/MKLocalSearch.cs \
+	MapKit/MKMapCameraZoomRange.cs \
 	MapKit/MKMapItem.cs \
 	MapKit/MKMapView.cs \
 	MapKit/MKMultiPoint.cs \
 	MapKit/MKOverlayView.cs \
+	MapKit/MKPointOfInterestFilter.cs \
 	MapKit/MKPolygon.cs \
 	MapKit/MKPolyline.cs \
 
@@ -1099,6 +1112,9 @@ METALPERFORMANCESHADERS_SOURCES = \
 	MetalPerformanceShaders/MPSStateBatch.cs \
 	MetalPerformanceShaders/MPSStateResourceList.cs \
 
+# MetricKit
+
+
 # MobileCoreServices
 
 MOBILECORESERVICES_SOURCES = \
@@ -1110,6 +1126,7 @@ MODELIO_CORE_SOURCES = \
 	ModelIO/MIEnums.cs \
 
 MODELIO_SOURCES = \
+	ModelIO/MDLAnimatedQuaternion.cs \
 	ModelIO/MDLAnimatedValueTypes.cs \
 	ModelIO/MDLAsset.cs \
 	ModelIO/MDLNoiseTexture.cs \
@@ -1132,7 +1149,12 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 NATURALLANGUAGE_API_SOURCES = \
 	NaturalLanguage/Enums.cs \
 
+NATURALLANGUAGE_CORE_SOURCES = \
+	NaturalLanguage/NLStrongDictionary.cs \
+	NaturalLanguage/NLVectorDictionary.cs \
+
 NATURALLANGUAGE_SOURCES = \
+	NaturalLanguage/NLEmbedding.cs \
 	NaturalLanguage/NLLanguageRecognizer.cs \
 
 # Network
@@ -1167,6 +1189,7 @@ NETWORKEXTENSION_SOURCES = \
 	NetworkExtension/NECompat.cs \
 	NetworkExtension/NEFilterFlow.cs \
 	NetworkExtension/NEFilterProvider.cs \
+	NetworkExtension/NEHotspotConfiguration.cs \
 	NetworkExtension/NEHotspotEapSettings.cs \
 	NetworkExtension/NEVpnManager.cs \
 
@@ -1589,6 +1612,7 @@ VISION_SOURCES = \
 	Vision/VNCompat.cs \
 	Vision/VNDetectBarcodesRequest.cs \
 	Vision/VNFaceLandmarkRegion2D.cs \
+	Vision/VNFeaturePrintObservation.cs \
 	Vision/VNRequest.cs \
 	Vision/VNRequestRevision.cs \
 	Vision/VNUtils.cs \
@@ -1609,6 +1633,29 @@ WATCHKIT_CORE_SOURCES = \
 WATCHKIT_SOURCES = \
 	WatchKit/WKAccessibility.cs \
 	WatchKit/WKInterfaceDevice.cs \
+	WatchKit/iOS/WKAccessibility.cs \
+	WatchKit/iOS/WKAccessibilityImageRegion.cs \
+	WatchKit/iOS/WKErrorCode.cs \
+	WatchKit/iOS/WKImageAnimatable.cs \
+	WatchKit/iOS/WKInterfaceButton.cs \
+	WatchKit/iOS/WKInterfaceController.cs \
+	WatchKit/iOS/WKInterfaceDate.cs \
+	WatchKit/iOS/WKInterfaceDevice.cs \
+	WatchKit/iOS/WKInterfaceGroup.cs \
+	WatchKit/iOS/WKInterfaceImage.cs \
+	WatchKit/iOS/WKInterfaceLabel.cs \
+	WatchKit/iOS/WKInterfaceMap.cs \
+	WatchKit/iOS/WKInterfaceMapPinColor.cs \
+	WatchKit/iOS/WKInterfaceObject.cs \
+	WatchKit/iOS/WKInterfaceSeparator.cs \
+	WatchKit/iOS/WKInterfaceSlider.cs \
+	WatchKit/iOS/WKInterfaceSwitch.cs \
+	WatchKit/iOS/WKInterfaceTable.cs \
+	WatchKit/iOS/WKInterfaceTimer.cs \
+	WatchKit/iOS/WKMenuItemIcon.cs \
+	WatchKit/iOS/WKTextInputMode.cs \
+	WatchKit/iOS/WKUserNotificationInterfaceController.cs \
+	WatchKit/iOS/WKUserNotificationInterfaceType.cs \
 
 # WebKit (Mac version)
 
@@ -1730,6 +1777,7 @@ COMMON_FRAMEWORKS =         \
 	AuthenticationServices	\
 	AVFoundation            \
 	CoreBluetooth           \
+	CoreData                \
 	CoreFoundation          \
 	CoreMedia               \
 	CoreML                  \
@@ -1737,6 +1785,7 @@ COMMON_FRAMEWORKS =         \
 	Compression             \
 	Foundation              \
 	GameKit                 \
+	Network                 \
 	SceneKit                \
 	SoundAnalysis 			\
 	SpriteKit               \
@@ -1756,7 +1805,6 @@ MAC_FRAMEWORKS =            \
 	ContactsUI              \
 	CoreAnimation           \
 	CoreAudioKit            \
-	CoreData                \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
@@ -1768,7 +1816,10 @@ MAC_FRAMEWORKS =            \
 	CoreWlan                \
 	DeviceCheck             \
 	EventKit                \
+	ExecutionPolicy		\
 	ExternalAccessory 	\
+	FileProvider	\
+	FileProviderUI	\
 	FinderSync		\
 	GameController          \
 	GameplayKit             \
@@ -1793,7 +1844,6 @@ MAC_FRAMEWORKS =            \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity	\
-	Network			\
 	NaturalLanguage         \
 	NetworkExtension        \
 	NotificationCenter 	\
@@ -1807,6 +1857,7 @@ MAC_FRAMEWORKS =            \
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \
+	QuickLookThumbnailing	\
 	QuickLookUI             \
 	SafariServices          \
 	ScriptingBridge         \
@@ -1845,8 +1896,8 @@ IOS_FRAMEWORKS =         \
 	ContactsUI \
 	CoreAnimation \
 	CoreAudioKit \
-	CoreData \
 	CoreGraphics \
+	CoreHaptics \
 	CoreImage \
 	CoreLocation \
 	CoreMIDI \
@@ -1885,11 +1936,11 @@ IOS_FRAMEWORKS =         \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
+	MetricKit \
 	MobileCoreServices \
 	ModelIO \
 	MultipeerConnectivity \
 	NaturalLanguage \
-	Network \
 	NetworkExtension \
 	NewsstandKit \
 	NotificationCenter \
@@ -1901,6 +1952,7 @@ IOS_FRAMEWORKS =         \
 	PhotosUI \
 	PushKit \
 	QuickLook \
+	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
 	Security \
@@ -1915,6 +1967,7 @@ IOS_FRAMEWORKS =         \
 	VideoToolbox \
 	VideoSubscriberAccount \
 	Vision \
+	VisionKit \
 	WatchConnectivity \
 	WatchKit \
 	WKWebKit \
@@ -1925,7 +1978,6 @@ WATCHOS_FRAMEWORKS =        \
 	ClockKit                \
 	CloudKit                \
 	Contacts                \
-	CoreData                \
 	CoreGraphics            \
 	CoreLocation            \
 	CoreMotion              \
@@ -1957,7 +2009,6 @@ TVOS_FRAMEWORKS =           \
 	CFNetwork               \
 	CloudKit                \
 	CoreAnimation           \
-	CoreData                \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
@@ -1983,7 +2034,6 @@ TVOS_FRAMEWORKS =           \
 	ModelIO                 \
 	MultipeerConnectivity   \
 	NaturalLanguage         \
-	Network			\
 	OpenGLES                \
 	Photos                  \
 	PhotosUI                \

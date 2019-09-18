@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "monotouch-test", "monotouch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "framework-test", "framework-test\framework-test.csproj", "{2ECCE3D0-AAD1-46B9-B190-B567249DCF9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mini", "mini\mini.csproj", "{5BDBB8B4-5D6B-43E8-9664-C4D5CA3C9B11}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fsharp", "fsharp\fsharp.fsproj", "{7862FE5A-530A-4651-825F-C80836B0A3A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BundledResources", "BundledResources\BundledResources.csproj", "{FE6EDEE9-ADF6-4F42-BCF2-B68C0A44EC3D}"

@@ -1,4 +1,4 @@
-﻿//
+//
 // MessageHandlers.cs
 //
 
@@ -15,6 +15,7 @@ using System.IO;
 using NUnit.Framework;
 using System.Net.Http.Headers;
 using System.Text;
+using Foundation;
 #if MONOMAC
 using Foundation;
 #endif
@@ -70,8 +71,7 @@ namespace MonoTests.System.Net.Http
 
 			Assert.IsTrue (done, "Did not time out");
 			Assert.IsNull (response, $"Response is not null {response}");
-			Assert.IsNotNull (ex, "Exception");
-			// The handlers throw different types of exceptions, so we can't assert much more than that something went wrong.			
+			Assert.IsInstanceOfType (typeof (HttpRequestException), ex, "Exception");
 		}
 
 #if !__WATCHOS__
@@ -177,6 +177,7 @@ namespace MonoTests.System.Net.Http
 			bool servicePointManagerCbWasExcuted = false;
 			bool done = false;
 			Exception ex = null;
+			HttpResponseMessage result = null;
 
 			var handler = GetHandler (handlerType);
 			if (handler is NSUrlSessionHandler ns) {
@@ -200,7 +201,7 @@ namespace MonoTests.System.Net.Http
 					client.BaseAddress = new Uri ("https://httpbin.org");
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
-					var result = await client.GetAsync ("https://httpbin.org/redirect/3");
+					result = await client.GetAsync ("https://httpbin.org/redirect/3");
 				} catch (Exception e) {
 					ex = e;
 				} finally {
@@ -209,10 +210,11 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
-			if (!done) { // timeouts happen in the bost due to dns issues, connection issues etc.. we do not want to fail
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				// assert the exception type
+				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
 				Assert.IsInstanceOfType (typeof (HttpRequestException), ex);
 				Assert.IsNotNull (ex.InnerException);
 				Assert.IsInstanceOfType (typeof (WebException), ex.InnerException);
@@ -261,13 +263,28 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
-			if (!done) { // timeouts happen in the bost due to dns issues, connection issues etc.. we do not want to fail
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				// assert that we did not get an exception
 				if (ex != null && ex.InnerException != null) {
 					// we could get here.. if we have a diff issue, in that case, lets get the exception message and assert is not the trust issue
 					Assert.AreNotEqual (ex.InnerException.Message, "Error: TrustFailure");
+				}
+			}
+		}
+
+		[Test]
+		public void AssertDefaultValuesNSUrlSessionHandler ()
+		{
+			using (var handler = new NSUrlSessionHandler ()) {
+				Assert.True (handler.AllowAutoRedirect, "Default redirects value");
+				Assert.True (handler.AllowsCellularAccess, "Default cellular data value.");
+			}
+			using (var config = NSUrlSessionConfiguration.DefaultSessionConfiguration) {
+				config.AllowsCellularAccess = false;
+				using (var handler = new NSUrlSessionHandler (config)) {
+					Assert.False (handler.AllowsCellularAccess, "Configuration cellular data value.");
 				}
 			}
 		}

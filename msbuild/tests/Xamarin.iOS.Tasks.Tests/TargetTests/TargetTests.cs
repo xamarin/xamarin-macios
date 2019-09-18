@@ -173,7 +173,7 @@ namespace Xamarin.iOS.Tasks
 			CollectionAssert.AreEquivalent (expected_references, actual_references, "References");
 		}
 
-		[Test]
+		// [Test] - https://github.com/xamarin/xamarin-macios/issues/6970
 		public void BuildExecutable ()
 		{
 			var expectedFiles = ExpectedExecutableFiles;
@@ -440,7 +440,7 @@ namespace Xamarin.iOS.Tasks
 			Assert.AreEqual (11, bundleResources.Length, "#1");
 		}
 
-		[Test]
+		// [Test] - https://github.com/xamarin/xamarin-macios/issues/6970
 		public void BundleResources ()
 		{
 			var actool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "actool", "bundle");

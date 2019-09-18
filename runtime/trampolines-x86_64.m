@@ -15,13 +15,6 @@
 #include "runtime-internal.h"
 #include "trampolines-x86_64.h"
 
-//#define TRACE
-#ifdef TRACE
-#define LOGZ(...) fprintf (stderr, __VA_ARGS__);
-#else
-#define LOGZ(...) ;
-#endif
-
 /*
  * Standard x86_64 calling convention:
  * Input:
@@ -39,48 +32,12 @@
  *   0(%rbp): previous %rbp value
  */
 
-static guint32
-create_mt_exception (char *msg)
-{
-	MonoException *ex = xamarin_create_exception (msg);
-	xamarin_free (msg);
-	return mono_gchandle_new ((MonoObject *) ex, FALSE);
-}
-
-static size_t
-get_primitive_size (char type)
-{
-	switch (type) {
-	case _C_ID: return sizeof (id);
-	case _C_CLASS: return sizeof (Class);
-	case _C_SEL: return sizeof (SEL);
-	case _C_CHR: return sizeof (char);
-	case _C_UCHR: return sizeof (unsigned char);
-	case _C_SHT: return sizeof (short);
-	case _C_USHT: return sizeof (unsigned short);
-	case _C_INT: return sizeof (int);
-	case _C_UINT: return sizeof (unsigned int);
-	case _C_LNG: return sizeof (long);
-	case _C_ULNG: return sizeof (unsigned long);
-	case _C_LNG_LNG: return sizeof (long long);
-	case _C_ULNG_LNG: return sizeof (unsigned long long);
-	case _C_FLT: return sizeof (float);
-	case _C_DBL: return sizeof (double);
-	case _C_BOOL: return sizeof (BOOL);
-	case _C_VOID: return 0;
-	case _C_PTR: return sizeof (void *);
-	case _C_CHARPTR: return sizeof (char *);
-	default:
-		return 0;
-	}
-}
-
 #ifdef TRACE
 static void
 dump_state (struct XamarinCallState *state)
 {
-	fprintf (stderr, "type: %llu is_stret: %i self: %p SEL: %s rdi: 0x%llx rsi: 0x%llx rdx: 0x%llx rcx: 0x%llx r8: 0x%llx r9: 0x%llx rbp: 0x%llx -- xmm0: %Lf xmm1: %Lf xmm2: %Lf xmm3: %Lf xmm4: %Lf xmm5: %Lf xmm6: %Lf xmm7: %Lf\n",
-		state->type, state->is_stret (), state->self (), sel_getName (state->sel ()), state->rdi, state->rsi, state->rdx, state->rcx, state->r8, state->r9, state->rbp,
+	fprintf (stderr, "type: %llu is_stret: %i self: %p SEL: %s rdi: 0x%llx rsi: 0x%llx rdx: 0x%llx rcx: 0x%llx r8: 0x%llx r9: 0x%llx rbp: 0x%llx rax: 0x%llx rdx out: 0x%llx -- xmm0: %Lf xmm1: %Lf xmm2: %Lf xmm3: %Lf xmm4: %Lf xmm5: %Lf xmm6: %Lf xmm7: %Lf\n",
+		state->type, state->is_stret (), state->self (), sel_getName (state->sel ()), state->rdi, state->rsi, state->rdx, state->rcx, state->r8, state->r9, state->rbp, state->rax, state->rdx_out,
 		state->xmm0, state->xmm1, state->xmm2, state->xmm3, state->xmm4, state->xmm5, state->xmm6, state->xmm7);
 }
 #else
@@ -90,21 +47,6 @@ dump_state (struct XamarinCallState *state)
 #ifdef TRACE
 static const char* registers[] =  { "rdi", "rsi", "rdx", "rcx", "r8", "r9", "err"  };
 #endif
-
-static const char *
-skip_type_name (const char *ptr)
-{
-	const char *t = ptr;
-	do {
-		if (*t == '=') {
-			t++;
-			return t;
-		}
-		t++;
-	} while (*t != 0);
-
-	return ptr;
-}
 
 static int
 param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *target, size_t total_size, guint32 *exception_gchandle)
@@ -170,7 +112,7 @@ param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *tar
 		// fallthrough
 	}
 	default: {
-		size_t size = get_primitive_size (type);
+		size_t size = xamarin_get_primitive_size (type);
 
 		if (size == 0)
 			return 0;
@@ -224,7 +166,7 @@ param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *tar
 			LOGZ ("0x%x = %u = '%c'\n", (int) * (uint8_t *) target, (int) * (uint8_t *) target, (char) * (uint8_t *) target);
 			break;
 		default:
-			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal parameter type %c (size: %i): invalid size.\n", type, (int) size));
+			*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal parameter type %c (size: %i): invalid size.\n", type, (int) size));
 			return 0;
 		}
 
@@ -406,14 +348,14 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 				v[1] = 0; // theoretically impossible, but it silences static analysis, and if the real world proves the theory wrong, then we still get consistent behavior.
 			}
 			// figure out where to put the values.
-			const char *t = skip_type_name (type);
+			const char *t = xamarin_skip_type_name (type);
 			int acc = 0;
 			int stores = 0;
 
 			while (true) {
 				if (*t == 0) {
 					if (stores >= 2 && acc > 0) {
-						*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i): more than 2 64-bit values found.\n", type, (int) size));
+						*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i): more than 2 64-bit values found.\n", type, (int) size));
 						return;
 					} else if (stores < 2) {
 						*reg_ptr = v [stores];
@@ -422,7 +364,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 				}
 					
 				bool is_float = *t == _C_FLT || *t == _C_DBL;
-				int s = get_primitive_size (*t);
+				int s = xamarin_get_primitive_size (*t);
 
 				t++;
 
@@ -448,7 +390,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 				}
 
 				if (stores >= 2) {
-					*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i): more than 2 64-bit values found.\n", type, (int) size));
+					*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i): more than 2 64-bit values found.\n", type, (int) size));
 					return;
 				}
 
@@ -469,7 +411,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 
 			};
 		} else if (size == 8) {
-			type = skip_type_name (type);
+			type = xamarin_skip_type_name (type);
 			if (!strncmp (type, "ff}", 3) || !strncmp (type, "d}", 2)) {
 				// the only two fully fp combinations are: ff and d
 				memcpy (&it->state->xmm0, mono_object_unbox (value), 8);
@@ -478,9 +420,14 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 				it->state->rax = *(uint64_t *) mono_object_unbox (value);
 			}
 		} else if (size < 8) {
-			memcpy (&it->state->rax, mono_object_unbox (value), size);
+			type = xamarin_skip_type_name (type);
+			if (!strncmp (type, "f}", 2)) {
+				memcpy (&it->state->xmm0, mono_object_unbox (value), 4);
+			} else {
+				memcpy (&it->state->rax, mono_object_unbox (value), size);
+			}
 		} else {
-			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
+			*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
 			return;
 		}
 		break;
@@ -525,7 +472,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		if (size == 8) {
 			it->state->rax = (uint64_t) value;
 		} else {
-			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i)\n", type, (int) size));
+			*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i)\n", type, (int) size));
 		}
 		break;
 	}

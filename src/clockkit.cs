@@ -43,6 +43,10 @@ namespace ClockKit {
 		[Export ("getTimelineAnimationBehaviorForComplication:withHandler:")]
 		void GetTimelineAnimationBehavior (CLKComplication complication, Action<CLKComplicationTimelineAnimationBehavior> handler);
 
+		[Watch (6,0)]
+		[Export ("getAlwaysOnTemplateForComplication:withHandler:")]
+		void GetAlwaysOnTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
+
 		[Abstract]
 		[Export ("getCurrentTimelineEntryForComplication:withHandler:")]
 		void GetCurrentTimelineEntry (CLKComplication complication, Action<CLKComplicationTimelineEntry> handler);

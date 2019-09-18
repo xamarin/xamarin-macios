@@ -50,7 +50,7 @@ using CoreSpotlight;
 #endif
 using SceneKit;
 using Security;
-#if IOS && XAMCORE_2_0
+#if IOS || MONOMAC
 using FileProvider;
 #endif
 
@@ -522,23 +522,18 @@ namespace Foundation
 		[Wrap ("this.GetDocFormat (range, options == null ? null : options.Dictionary)")]
 		NSData GetDocFormat (NSRange range, NSAttributedStringDocumentAttributes options);
 #else
-		[iOS (6,0)]
 		[Export ("size")]
 		CGSize Size { get; }
 
-		[iOS (6,0)]
 		[Export ("drawAtPoint:")]
 		void DrawString (CGPoint point);
 
-		[iOS (6,0)]
 		[Export ("drawInRect:")]
 		void DrawString (CGRect rect);
 
-		[iOS (6,0)]
 		[Export ("drawWithRect:options:context:")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
 
-		[iOS (6,0)]
 		[Export ("boundingRectWithSize:options:context:")]
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
 #endif
@@ -1364,11 +1359,9 @@ namespace Foundation
 		[Export ("decodeBytesWithReturnedLength:")]
 		IntPtr DecodeBytes (out nuint length);
 
-		[iOS (6,0)]
 		[Export ("allowedClasses")]
 		NSSet AllowedClasses { get; }
 
-		[iOS (6,0)]
 		[Export ("requiresSecureCoding")]
 		bool RequiresSecureCoding ();
 
@@ -1656,7 +1649,6 @@ namespace Foundation
 		[Export ("yearForWeekOfYear")]
 		nint YearForWeekOfYear { get; set; }
 
-		[iOS(6,0)]
 		[Export ("leapMonth")]
 		bool IsLeapMonth { [Bind ("isLeapMonth")] get; set; }
 
@@ -1677,7 +1669,6 @@ namespace Foundation
 		nint GetValueForComponent (NSCalendarUnit unit);
 	}
 	
-	[iOS (6,0)]
 	[BaseType (typeof (NSFormatter))]
 	interface NSByteCountFormatter {
 		[Export ("allowsNonnumericFormatting")]
@@ -2515,11 +2506,9 @@ namespace Foundation
 		[Field ("NSKeyedArchiveRootObjectKey")]
 		NSString RootObjectKey { get; }
 
-		[iOS (6,0)] // Yup, right, this is being "back-supported" to iOS 6
 		[Export ("setRequiresSecureCoding:")]
 		void SetRequiresSecureCoding (bool requireSecureEncoding);
 
-		[iOS (6,0)] // Yup, right, this is being back-supported to iOS 6
 		[Export ("requiresSecureCoding")]
 		bool GetRequiresSecureCoding ();
 
@@ -2611,11 +2600,9 @@ namespace Foundation
 		[Export ("classForClassName:")]
 		Class GetClass (string codedName);
 
-		[iOS (6,0)] // Yup, right, this is being "back-supported" to iOS 6
 		[Export ("setRequiresSecureCoding:")]
 		void SetRequiresSecureCoding (bool requireSecureEncoding);
 
-		[iOS (6,0)] // Yup, right, this is being back-supported to iOS 6
 		[Export ("requiresSecureCoding")]
 		bool GetRequiresSecureCoding ();
 
@@ -3977,7 +3964,6 @@ namespace Foundation
 		[Export ("writeToURL:atomically:")]
 		bool WriteToUrl (NSUrl url, bool atomically);
 
-		[iOS (6,0)]
 		[Static]
 		[Export ("sharedKeySetForKeys:")]
 		NSObject GetSharedKeySetForKeys (NSObject [] keys);
@@ -3991,6 +3977,8 @@ namespace Foundation
 		[Export ("nextObject")]
 		NSObject NextObject (); 
 	}
+
+	interface NSEnumerator<T> : NSEnumerator {}
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -4065,7 +4053,6 @@ namespace Foundation
 #if !XAMCORE_3_0
 		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
 		[NoMac, NoTV, NoWatch]
-		[iOS (6,0)]
 		[NoTV]
 		[Field ("EABluetoothAccessoryPickerErrorDomain", "ExternalAccessory")]
 		NSString EABluetoothAccessoryPickerErrorDomain { get; }
@@ -4079,6 +4066,7 @@ namespace Foundation
 		// now exposed with the corresponding WKErrorCode enum
 		[NoMac, NoTV]
 		[iOS (8,2)]
+		[Unavailable (PlatformName.iOS)]
 		[Field ("WatchKitErrorDomain", "WatchKit")]
 		NSString WatchKitErrorDomain { get; }
 #endif
@@ -4132,19 +4120,27 @@ namespace Foundation
 		[return: NullAllowed]
 		NSErrorUserInfoValueProvider GetUserInfoValueProvider (string errorDomain);
 
-#if XAMCORE_2_0 && IOS
+#if IOS || MONOMAC
 
 		// From NSError (NSFileProviderError) Category to avoid static category uglyness
 
 		[iOS (11,0)]
+		[Mac (10,15)]
 		[Static]
 		[Export ("fileProviderErrorForCollisionWithItem:")]
 		NSError GetFileProviderError (INSFileProviderItem existingItem);
 
 		[iOS (11,0)]
+		[Mac (10,15)]
 		[Static]
 		[Export ("fileProviderErrorForNonExistentItemWithIdentifier:")]
 		NSError GetFileProviderError (string nonExistentItemIdentifier);
+
+		[NoiOS]
+		[Mac (10,15)]
+		[Static]
+		[Export ("fileProviderErrorForOutOfDateItem:")]
+		NSError GetFileProviderErrorForOutOfDateItem (INSFileProviderItem updatedVersion);
 #endif
 		
 #if false
@@ -5308,7 +5304,6 @@ namespace Foundation
 		NSString ChangedKeysKey { get; }
 	}
 
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject), Name="NSUUID")]
 	[DesignatedDefaultCtor]
 	interface NSUuid : NSSecureCoding, NSCopying {
@@ -5457,17 +5452,20 @@ namespace Foundation
 		[Export ("eligibleForPrediction")]
 		bool EligibleForPrediction { [Bind ("isEligibleForPrediction")] get; set; }
 
-		[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+		[Watch (5, 0), NoTV, iOS (12, 0)]
+		[Mac (10,15)]
 		[NullAllowed, Export ("persistentIdentifier")]
 		string PersistentIdentifier { get; set; }
 
-		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[Watch (5,0), NoTV, iOS (12,0)]
+		[Mac (10,15)]
 		[Static]
 		[Async]
 		[Export ("deleteSavedUserActivitiesWithPersistentIdentifiers:completionHandler:")]
 		void DeleteSavedUserActivities (string[] persistentIdentifiers, Action handler);
 
-		[Watch (5,0), NoTV, NoMac, iOS (12,0)]
+		[Watch (5,0), NoTV, iOS (12,0)]
+		[Mac (10,15)]
 		[Static]
 		[Async]
 		[Export ("deleteAllSavedUserActivitiesWithCompletionHandler:")]
@@ -6210,7 +6208,6 @@ namespace Foundation
 		IntPtr Constructor (NSData bookmarkData, NSUrlBookmarkResolutionOptions resolutionOptions, [NullAllowed] NSUrl relativeUrl, out bool bookmarkIsStale, out NSError error);
 
 		[Field ("NSURLPathKey")]
-		[iOS (6,0)]
 		NSString PathKey { get; }
 
 		[iOS (7,0), Mac (10, 9)]
@@ -7420,12 +7417,28 @@ namespace Foundation
 		[Export ("connectionProxyDictionary", ArgumentSemantic.Copy)]
 		NSDictionary ConnectionProxyDictionary { get; set; }
 	
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsMinimumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsMinimumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsMinimumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsMinimumSupportedProtocolVersion' instead.")]
 		[Export ("TLSMinimumSupportedProtocol")]
 		SslProtocol TLSMinimumSupportedProtocol { get; set; }
 	
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("TLSMinimumSupportedProtocolVersion", ArgumentSemantic.Assign)]
+		TlsProtocolVersion TlsMinimumSupportedProtocolVersion { get; set; }
+
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsMaximumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsMaximumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsMaximumSupportedProtocolVersion' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsMaximumSupportedProtocolVersion' instead.")]
 		[Export ("TLSMaximumSupportedProtocol")]
 		SslProtocol TLSMaximumSupportedProtocol { get; set; }
-	
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("TLSMaximumSupportedProtocolVersion", ArgumentSemantic.Assign)]
+		TlsProtocolVersion TlsMaximumSupportedProtocolVersion { get; set; }
+
 		[Export ("HTTPShouldUsePipelining")]
 		bool HttpShouldUsePipelining { get; set; }
 	
@@ -7858,7 +7871,6 @@ namespace Foundation
 		[Export ("networkServiceType")]
 		NSUrlRequestNetworkServiceType NetworkServiceType { get; }
 
-		[iOS (6,0)]
 		[Export ("allowsCellularAccess")]
 		bool AllowsCellularAccess { get; }
 
@@ -7951,7 +7963,6 @@ namespace Foundation
 		[Export ("setObject:forKey:"), Internal]
 		void SetObject (NSObject obj, NSObject key);
 
-		[iOS (6,0)]
 		[Static]
 		[Export ("dictionaryWithSharedKeySet:")]
 		NSDictionary FromSharedKeySet (NSObject sharedKeyToken);
@@ -8053,7 +8064,6 @@ namespace Foundation
 		[Export ("networkServiceType")]
 		NSUrlRequestNetworkServiceType NetworkServiceType { set; get; }
 
-		[iOS (6,0)]
 		[New] [Export ("allowsCellularAccess")]
 		bool AllowsCellularAccess { get; set; }
 
@@ -8392,15 +8402,12 @@ namespace Foundation
 
 		// end methods from NSStringPathExtensions category
 
-		[iOS (6,0)]
 		[Export ("capitalizedStringWithLocale:")]
 		string Capitalize ([NullAllowed] NSLocale locale);
 		
-		[iOS (6,0)]
 		[Export ("lowercaseStringWithLocale:")]
 		string ToLower (NSLocale locale);
 		
-		[iOS (6,0)]
 		[Export ("uppercaseStringWithLocale:")]
 		string ToUpper (NSLocale locale);
 
@@ -8609,7 +8616,6 @@ namespace Foundation
 	
 #if !MONOMAC
 	// This comes from UIKit.framework/Headers/NSStringDrawing.h
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSStringDrawingContext {
 		[Export ("minimumScaleFactor")]
@@ -10056,13 +10062,13 @@ namespace Foundation
 
 		[NoWatch]
 		[Static]
-		[iOS (6,0)][Mac (10,11)]
+		[Mac (10,11)]
 		[Export ("indexPathForItem:inSection:")]
 		NSIndexPath FromItemSection (nint item, nint section);
 
 		[NoWatch]
 		[Export ("item")]
-		[iOS (6,0)][Mac (10,11)]
+		[Mac (10,11)]
 		nint Item { get; }
 	}
 
@@ -10875,14 +10881,19 @@ namespace Foundation
 		[Export ("getValue:")]
 		void StoreValueAtAddress (IntPtr value);
 
+		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+		[Export ("getValue:size:")]
+		void StoreValueAtAddress (IntPtr value, nuint size);
+
 		[Export ("objCType")][Internal]
 		IntPtr ObjCTypePtr ();
 		
 		//[Export ("initWithBytes:objCType:")][Internal]
 		//NSValue InitFromBytes (IntPtr byte_ptr, IntPtr char_ptr_type);
-		//[Export ("valueWithBytes:objCType:")][Static][Internal]
-		//+ (NSValue *)valueWithBytes:(const void *)value objCType:(const char *)type;
-		//+ (NSValue *)value:(const void *)value withObjCType:(const char *)type;
+
+		[Static][Internal]
+		[Export ("valueWithBytes:objCType:")]
+		NSValue Create (IntPtr bytes, IntPtr objCType);
 
 		[Static]
 		[Export ("valueWithNonretainedObject:")]
@@ -10907,27 +10918,27 @@ namespace Foundation
 		[Export ("rangeValue")]
 		NSRange RangeValue { get; }
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Static, Export ("valueWithCMTime:")]
 		NSValue FromCMTime (CMTime time);
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Export ("CMTimeValue")]
 		CMTime CMTimeValue { get; }
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Static, Export ("valueWithCMTimeMapping:")]
 		NSValue FromCMTimeMapping (CMTimeMapping timeMapping);
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Export ("CMTimeMappingValue")]
 		CMTimeMapping CMTimeMappingValue { get; }
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Static, Export ("valueWithCMTimeRange:")]
 		NSValue FromCMTimeRange (CMTimeRange timeRange);
 
-		[NoWatch]
+		[Watch (6,0)]
 		[Export ("CMTimeRangeValue")]
 		CMTimeRange CMTimeRangeValue { get; }
 
@@ -11025,25 +11036,21 @@ namespace Foundation
 
 		// Maybe we should include this inside mapkit.cs instead (it's a partial interface, so that's trivial)?
 		[TV (9,2)]
-		[iOS (6,0)]
 		[Mac (10,9)] // The header doesn't say, but the rest of the API from the same file (MKGeometry.h) was introduced in 10.9
 		[Static, Export ("valueWithMKCoordinate:")]
 		NSValue FromMKCoordinate (CoreLocation.CLLocationCoordinate2D coordinate);
 
 		[TV (9,2)]
-		[iOS (6,0)]
 		[Mac (10,9)] // The header doesn't say, but the rest of the API from the same file (MKGeometry.h) was introduced in 10.9
 		[Static, Export ("valueWithMKCoordinateSpan:")]
 		NSValue FromMKCoordinateSpan (MapKit.MKCoordinateSpan coordinateSpan);
 
 		[TV (9,2)]
-		[iOS (6,0)]
 		[Mac (10, 9)]
 		[Export ("MKCoordinateValue")]
 		CoreLocation.CLLocationCoordinate2D CoordinateValue { get; }
 
 		[TV (9,2)]
-		[iOS (6,0)]
 		[Mac (10, 9)]
 		[Export ("MKCoordinateSpanValue")]
 		MapKit.MKCoordinateSpan CoordinateSpanValue { get; }
@@ -11993,6 +12000,12 @@ namespace Foundation
 		[iOS (11,0)]
 		[Notification]
 		NSString ThermalStateDidChangeNotification { get; }
+
+#region NSProcessInfoPlatform (NSProcessInfo)
+		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Export ("macCatalystApp")]
+		bool IsMacCatalystApplication { [Bind ("isMacCatalystApp")] get; }
+#endregion
 	}
 
 	[NoWatch][NoTV][NoiOS]
@@ -12304,7 +12317,6 @@ namespace Foundation
 		[Export ("cancel")]
 		void Cancel ();
 
-		[iOS (6,0)]
 		[Export ("itemAtURL:willMoveToURL:")]
 		void WillMove (NSUrl oldUrl, NSUrl newUrl);
 
@@ -12610,11 +12622,9 @@ namespace Foundation
                 [Export ("URLForPublishingUbiquitousItemAtURL:expirationDate:error:")]
                 NSUrl GetUrlForPublishingUbiquitousItem (NSUrl url, out NSDate expirationDate, out NSError error);
 
-		[iOS (6,0)]
 		[Export ("ubiquityIdentityToken")]
 		NSObject UbiquityIdentityToken { get; }
 
-		[iOS (6,0)]
 		[Field ("NSUbiquityIdentityDidChangeNotification")]
 		[Notification]
 		NSString UbiquityIdentityDidChangeNotification { get; }
@@ -16067,7 +16077,7 @@ namespace Foundation
 		string ToString (NSUnit unit);
 	}
 
-	[iOS (6,0), Watch (2,0), TV (9,0)]
+	[Watch (2,0), TV (9,0)]
 	[BaseType (typeof (NSObject), Name = "NSXPCListenerEndpoint")]
 	[DisableDefaultCtor]
 	interface NSXpcListenerEndpoint : NSSecureCoding

@@ -1452,3 +1452,12 @@
 !missing-pinvoke! SSLSetProtocolVersionEnabled is not bound
 !missing-pinvoke! SSLSetRsaBlinding is not bound
 !missing-pinvoke! SSLSetTrustedRoots is not bound
+
+## new in xcode11
+!missing-field! kSecPropertyTypeArray not bound
+!missing-field! kSecPropertyTypeNumber not bound
+
+## deprecated in Xcode 11 (but never bound because they were, previously, marked as unavailable on macOS)
+!missing-pinvoke! SecTrustedApplicationCopyData is not bound
+!missing-pinvoke! SecTrustedApplicationCreateFromPath is not bound
+!missing-pinvoke! SecTrustedApplicationSetData is not bound

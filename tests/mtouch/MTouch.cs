@@ -279,7 +279,7 @@ public class B : A {}
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Abi = abi;
 				mtouch.Debug = debug;
-				mtouch.TargetVer = "6.0";
+				mtouch.TargetVer = "7.0";
 				mtouch.NoStrip = true;
 				DateTime dt = DateTime.MinValue;
 
@@ -749,19 +749,19 @@ public class B : A {}
 
 				mtouch.Abi = "armv7s,arm64";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
-				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.");
+				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 7.0.. Please select a newer deployment target in your project's Info.plist.");
 
 				mtouch.Abi = "armv7s";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
-				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.");
+				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 7.0.. Please select a newer deployment target in your project's Info.plist.");
 
 				mtouch.Abi = "arm64";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
-				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.");
+				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 7.0.. Please select a newer deployment target in your project's Info.plist.");
 
 				mtouch.Abi = "armv7";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, $"build: {mtouch.Abi}");
-				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.");
+				mtouch.AssertErrorPattern (73, "Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 7.0.. Please select a newer deployment target in your project's Info.plist.");
 			}
 		}
 
@@ -1270,10 +1270,10 @@ public class B : A {}
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.TargetVer = "6.0";
+					app.TargetVer = "7.0";
 					app.WarnAsError = new int [] { 112 };
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (112, "Native code sharing has been disabled because the container app's deployment target is earlier than iOS 8.0 (it's 6.0).");
+					app.AssertError (112, "Native code sharing has been disabled because the container app's deployment target is earlier than iOS 8.0 (it's 7.0).");
 				}
 			}
 		}
@@ -2078,9 +2078,19 @@ public class B
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp ();
 				mtouch.Linker = MTouchLinker.LinkAll;
+				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.AssertExecute (MTouchAction.BuildSim);
 
 				var load_commands = ExecutionHelper.Execute ("otool", $"-l {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true);
+				Asserts.DoesNotContain ("SafariServices", load_commands, "SafariServices");
+				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
+				Asserts.DoesNotContain ("NewsstandKit", load_commands, "NewsstandKit");
+
+				// Try again with the static registrar
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+
+				load_commands = ExecutionHelper.Execute ("otool", $"-l {StringUtils.Quote (mtouch.NativeExecutablePath)}", hide_output: true);
 				Asserts.DoesNotContain ("SafariServices", load_commands, "SafariServices");
 				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
 				Asserts.DoesNotContain ("QuickLook", load_commands, "QuickLook");
@@ -2544,7 +2554,7 @@ public class B
 		[TestCase (Target.Dev, Profile.iOS, "link sdk", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "monotouch-test", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "mscorlib", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "System.Data", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "BCL tests group 1", "Release64")]
 		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
 		{
 			if (target == Target.Dev)
@@ -2564,7 +2574,12 @@ public class B
 				break;
 			}
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
-			var csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
+			string csproj = null;
+			if (subdir == "/bcl-test") { // bcl tests are generated and are not in their own dir
+				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname + GetProjectSuffix (profile) + ".csproj");
+			} else {
+				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
+			}
 			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
@@ -2755,7 +2770,7 @@ public class TestApp {
 				mtouch.TargetVer = "10.3"; // otherwise 32-bit build isn't possible
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build a");
 				if (Configuration.XcodeVersion.Major >= 11) {
-					mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, building for iOS Simulator-i386 but attempting to link with file built for unknown-archive");
+					mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, building for iOS Simulator-i386 but attempting to link with file built for iOS Simulator-x86_64");
 				} else {
 					mtouch.AssertWarning (5203, $"Native linking warning: warning: ignoring file {lib}, file was built for archive which is not the architecture being linked (i386): {lib}");
 				}
@@ -3006,6 +3021,30 @@ class TestClass {
 				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 19);
 				ext.AssertError (2105, "The property TestClass.FilterClauseProperty contains a 'Filter' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.", "testApp.cs", 28);
 				ext.AssertErrorCount (3);
+			}
+		}
+
+		[Test]
+		public void MT5107 ()
+		{
+			AssertDeviceAvailable ();
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.TargetVer = "10.3";
+				mtouch.Profile = Profile.iOS;
+				mtouch.Abi = "armv7";
+				mtouch.Linker = MTouchLinker.DontLink;
+				/* Once the xcode11 branch has been merged into master, we should be able to do the following instead, which will make the test faster
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.CustomArguments = new string [] { "--linkskip=System.Core" };
+				mtouch.CreateTemporaryApp (extraCode: "[Foundation.Preserve] class PreserveMe { void M () { System.Console.WriteLine (typeof (System.Collections.Generic.HashSet<string>)); } }", extraArg: "-r:System.Core.dll");
+				*/
+				mtouch.CreateTemporaryApp ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev);
+				mtouch.AssertError (5107, "The assembly 'Xamarin.iOS.dll' can't be AOT-compiled for 32-bit architectures because the native code is too big for the 32-bit ARM architecture.");
+				mtouch.AssertWarning (5108, "The compiler output is too long, it's been limited to 1000 lines.");
+				mtouch.AssertErrorCount (1);
+				mtouch.AssertWarningCount (1);
 			}
 		}
 

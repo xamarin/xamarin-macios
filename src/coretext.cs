@@ -49,6 +49,14 @@ namespace CoreText {
 
 		[Field ("kCTFontFeatureSelectorSettingKey")]
 		NSString Setting { get; }
+
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[Field ("kCTFontFeatureSampleTextKey")]
+		NSString SampleText { get; }
+
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[Field ("kCTFontFeatureTooltipTextKey")]
+		NSString TooltipText { get; }
 	}
 
 	[Static]

@@ -39,6 +39,7 @@ using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #endif
 using Quaternion = global::OpenTK.Quaternion;
+using Quaterniond = global::OpenTK.Quaterniond;
 using NMatrix4 = global::OpenTK.NMatrix4;
 using NMatrix4d = global::OpenTK.NMatrix4d;
 using MathHelper = global::OpenTK.MathHelper;
@@ -2946,6 +2947,18 @@ namespace ModelIO {
 		MDLAnimatedMatrix4x4 AnimatedValue { get; }
 	}
 
+	[iOS (13,0), Mac (10,15), TV (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface MDLTransformOrientOp : MDLTransformOp {
+
+		// From MDLTransformOp Protocol
+		// [Export ("name")]
+		// string Name { get; }
+
+		[Export ("animatedValue")]
+		MDLAnimatedQuaternion AnimatedValue { get; }
+	}
+
 	[iOS (11,0), Mac (10,13), TV (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface MDLTransformStack : NSCopying, MDLTransformComponent {
@@ -2970,6 +2983,10 @@ namespace ModelIO {
 
 		[Export ("addMatrixOp:inverse:")]
 		MDLTransformMatrixOp AddMatrixOp (string animatedValueName, bool inverse);
+
+		[iOS (13,0), Mac (10,15), TV (13,0)]
+		[Export ("addOrientOp:inverse:")]
+		MDLTransformOrientOp AddOrientOp (string animatedValueName, bool inverse);
 
 		[Export ("animatedValueWithName:")]
 		MDLAnimatedValue GetAnimatedValue (string name);
@@ -3026,5 +3043,42 @@ namespace ModelIO {
 		[Export ("getDouble4x4Array:maxCount:")]
 		nuint _GetDouble4x4Array (IntPtr valuesArray, nuint maxCount);
 	}
+
+	[iOS (13,0), Mac (10,15), TV (13,0)]
+	[BaseType (typeof (MDLAnimatedValue))]
+	interface MDLAnimatedQuaternion {
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("setFloatQuaternion:atTime:")]
+		void SetQuaternion (Quaternion value, double atTime);
+
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("setDoubleQuaternion:atTime:")]
+		void SetQuaternion (Quaterniond value, double atTime);
+
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("floatQuaternionAtTime:")]
+		Quaternion GetFloatQuaternion (double atTime);
+
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("doubleQuaternionAtTime:")]
+		Quaterniond GetDoubleQuaternion (double atTime);
+
+		[Internal]
+		[Export ("resetWithFloatQuaternionArray:atTimes:count:")]
+		void _ResetWithFloatQuaternionArray (IntPtr valuesArray, IntPtr timesArray, nuint times);
+
+		[Internal]
+		[Export ("resetWithDoubleQuaternionArray:atTimes:count:")]
+		void _ResetWithDoubleQuaternionArray (IntPtr valuesArray, IntPtr timesArray, nuint times);
+
+		[Internal]
+		[Export ("getFloatQuaternionArray:maxCount:")]
+		nuint _GetFloatQuaternionArray (IntPtr valuesArray, nuint maxCount);
+
+		[Internal]
+		[Export ("getDoubleQuaternionArray:maxCount:")]
+		nuint _GetDoubleQuaternionArray (IntPtr valuesArray, nuint maxCount);
+	}
+
 }
 #endif

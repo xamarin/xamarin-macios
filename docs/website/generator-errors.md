@@ -25,6 +25,10 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 ### <a name='BI0001'/>BI0001: The .NET runtime could not load the {mi.ReturnType.Name} type. Message: {ex.Message}
 
+### <a name='BI0002'/>BI0002: Could not compile the API bindings.
+
+This error is shown when the generator failed to compile the API bindings.
+
 ### <a name='BI0026'/>BI0026: Could not parse the command line argument '{argument}': {message}
 
 ### <a name='BI0068'/>BI0068: Invalid value for target framework: *.
@@ -55,6 +59,10 @@ This usually indicates a bug in the binding generator; please file a new issue o
 
 <!-- 1xxx: code generation -->
 <!-- 10xx: errors -->
+
+### <a name='BI1000/>'BI1000: Could not compile the generated API bindings.
+
+This indicates a bug in Xamarin.iOS/Xamarin.Mac; please [submit an issue](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions).
 
 ### <a name='BI1001'/>BI1001: Do not know how to make a trampoline for *
 
@@ -195,6 +203,14 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 ### <a name='BI1065'/>BI1065: Unsupported parameter type '{type}' for the parameter '{name}' in {method}.
 
 ### <a name='BI1066'/>BI1066: Unsupported return type '{type}' in {method}.
+
+### <a name='BI1067'/>BI1067: The type '{type}' is trying to inline the property '{property}' from the protocols '{readonly.DeclaringType.FullName}' and '{writeonly.DeclaringType.FullName}', but the inlined properties don't share the same accessors ('{readonly}' is read-only, while '${writeonly}' is write-only).
+
+### <a name='BI1068'/>BI1068: The type '{type}' is trying to inline the property '{property}' from the protocols '{protocol1}' and '{protocol2}', and the inlined properties use different selectors ({protocol1} uses '{selector1}', and {protocol2} uses '{selector2}.
+
+### <a name='BI1069'/>BI1069: The type '{type}' is trying to inline the methods binding the selector '{selector}' from the protocols '{protocol1}' and '{protocol2}', using methods with different signatures ('{signature}' vs '{signature2}').
+
+### <a name='BI1070'/>BI1070: The type '{type}' is trying to inline the property '{property}' from the protocols '{protocol1}' and '{protocol2}', but the inlined properties are of different types ('{property1}' is int, while '{property2}' is int).
 
 # BI11xx: warnings
 

@@ -99,7 +99,7 @@ namespace CoreFoundation {
 				IntPtr handle = CFURLCreateWithFileSystemPath (IntPtr.Zero, str.Handle, (nint)(long)CFUrlPathStyle.POSIX, false);
 				if (handle == IntPtr.Zero)
 					return null;
-				return new CFUrl (handle);
+				return new CFUrl (handle, true);
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace CoreFoundation {
 			IntPtr handle = CFURLCreateWithString (IntPtr.Zero, cfstringHandle, baseurl != null ? baseurl.Handle : IntPtr.Zero);
 			if (handle == IntPtr.Zero)
 				return null;
-			return new CFUrl (handle);
+			return new CFUrl (handle, true);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]

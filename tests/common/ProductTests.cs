@@ -70,6 +70,8 @@ namespace Xamarin.Tests
 			foreach (var machoFile in machoFiles) {
 				var fatfile = MachO.Read (machoFile);
 				foreach (var slice in fatfile) {
+					if (slice.IsDynamicLibrary && slice.Architecture == MachO.Architectures.x86_64 && slice.Parent.size < 10240 /* this is the dummy x86_64 slice to appease Apple's notarization tooling */)
+						continue;
 					var any_load_command = false;
 					foreach (var lc in slice.load_commands) {
 
@@ -127,13 +129,12 @@ namespace Xamarin.Tests
 							break;
 						case MachO.LoadCommands.MintvOS:
 							version = SdkVersions.MinTVOSVersion;
-							mono_native_compat_version = SdkVersions.MinTVOSVersion;
+							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MinwatchOS:
 							version = SdkVersions.MinWatchOSVersion;
-							if (device)
-								alternate_version = new Version (5, 1, 0); // arm64_32 has min OS 5.1
+							alternate_version = new Version (5, 1, 0); // arm64_32 has min OS 5.1
 							mono_native_compat_version = SdkVersions.MinWatchOSVersion;
 							mono_native_unified_version = new Version (5, 0, 0);
 							if (device)

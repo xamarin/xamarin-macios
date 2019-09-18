@@ -5,6 +5,7 @@
 //	Sebastien Pouliot  <sebastien@xamarin.com>
 //
 // Copyright 2012-2013 Xamarin Inc.
+// Coyright 2019 Microsoft Corporation
 //
 
 using System;
@@ -13,32 +14,18 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-#if XAMCORE_2_0
+
 using Foundation;
 #if MONOMAC
 using AppKit;
 #else
 using UIKit;
 #endif
+using CoreFoundation;
 using Security;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-using MonoTouch.UIKit;
-#endif
-using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using NUnit.Framework;
 
 namespace MonoTouchFixtures.Security {
 	
@@ -93,6 +80,32 @@ namespace MonoTouchFixtures.Security {
 				expectedTrust = SecTrustResult.Unspecified;
 #endif
 			Assert.That (Evaluate (trust, true), Is.EqualTo (expectedTrust), "Evaluate");
+
+			using (var queue = new DispatchQueue ("TrustAsync")) {
+				bool assert = false; // we don't want to assert in another queue
+				bool called = false;
+				var err = trust.Evaluate (DispatchQueue.MainQueue, (t, result) => {
+					assert = t.Handle == trust.Handle && result == expectedTrust;
+					called = true;
+				});
+				Assert.That (err, Is.EqualTo (SecStatusCode.Success), "async1/err");
+				TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
+				Assert.True (assert, "async1");
+			}
+
+			if (TestRuntime.CheckXcodeVersion (11, 0)) {
+				using (var queue = new DispatchQueue ("TrustErrorAsync")) {
+					bool assert = false; // we don't want to assert in another queue
+					bool called = false;
+					var err = trust.Evaluate (DispatchQueue.MainQueue, (t, result, error) => {
+						assert = t.Handle == trust.Handle && !result && error != null;
+						called = true;
+					});
+					Assert.That (err, Is.EqualTo (SecStatusCode.Success), "async2/err");
+					TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
+					Assert.True (assert, "async2");
+				}
+			}
 
 #if __MACOS__
 			var hasNetworkFetchAllowed = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9);

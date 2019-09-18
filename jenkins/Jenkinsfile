@@ -10,6 +10,8 @@ packagePrefix = null
 virtualPath = null
 xiPackageUrl = null
 xmPackageUrl = null
+xiNotarizedPackageUrl = null
+xmNotarizedPackageUrl = null
 utils = null
 errorMessage = null
 currentStage = null
@@ -19,6 +21,8 @@ manualException = false
 
 xiPackageFilename = null
 xmPackageFilename = null
+xiNotarizedPkgFilename = null
+xmNotarizedPkgFilename = null
 msbuildZipFilename = null
 bundleZipFilename = null
 manifestFilename = null
@@ -396,7 +400,7 @@ timestamps {
     def mainMacOSVersion = 14
     node ("xamarin-macios && macos-10.${mainMacOSVersion}") {
         try {
-            timeout (time: 9, unit: 'HOURS') {
+            timeout (time: 15, unit: 'HOURS') {
                 // Hard-code a workspace, since branch-based and PR-based
                 // builds would otherwise use different workspaces, which
                 // wastes a lot of disk space.
@@ -477,6 +481,9 @@ timestamps {
                         }
 
                         stage ('Signing') {
+                            def notarize_mac = true
+                            def notarize_ios = true
+                            def entitlements = "${workspace}/xamarin-macios/mac-entitlements.plist"
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
                             def xiPackages = findFiles (glob: "package/xamarin.ios-*.pkg")
@@ -495,8 +502,49 @@ timestamps {
                             def bundleZip = findFiles (glob: "package/bundle.zip")
                             if (bundleZip.length > 0)
                                 bundleZipFilename = bundleZip [0].name
+
                             withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
-                                sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
+                                    sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
+                            }
+
+                            if (notarize_mac || notarize_ios) {
+                                try {
+                                    pkgs = []
+                                    if (fileExists('release-scripts')) {
+                                        dir('release-scripts') {
+                                            sh ('git checkout sign-and-notarized && git pull')
+                                        }
+                                    } else {
+                                        sh ('git clone git@github.com:xamarin/release-scripts -b sign-and-notarized')
+                                    }
+                                    if (notarize_mac)
+                                        pkgs = pkgs + xmPackages
+                                    if (notarize_ios)
+                                        pkgs = pkgs + xiPackages
+                                    withCredentials([string(credentialsId: 'codesign_keychain_pw', variable: 'KEYCHAIN_PASS'), string(credentialsId: 'team_id', variable: 'TEAM_ID'), string(credentialsId: 'application_id', variable: 'APP_ID'), string(credentialsId: 'installer_id', variable: 'INSTALL_ID'), usernamePassword(credentialsId: 'apple_account', passwordVariable: 'APPLE_PASS', usernameVariable: 'APPLE_ACCOUNT')]) {
+                                        sh (returnStatus: true, script: "security create-keychain -p ${env.KEYCHAIN_PASS} login.keychain") // needed to repopulate the keychain
+                                        sh ("security unlock-keychain -p ${env.KEYCHAIN_PASS} login.keychain")
+                                        sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} -k login.keychain " + pkgs.flatten().join(" "))
+                                    }
+
+                                    def xiNotarizedPackages = findFiles (glob: "package/notarized/xamarin.ios-*.pkg")
+                                    if (xiNotarizedPackages.length > 0) {
+                                        xiNotarizedPkgFilename = xiNotarizedPackages [0].name
+                                        echo ("Created notarized Xamarin.iOS package: ${xiNotarizedPkgFilename}")
+                                    }
+                                    def xmNotarizedPackages = findFiles (glob: "package/notarized/xamarin.mac-*.pkg")
+                                    if (xmNotarizedPackages.length > 0) {
+                                        xmNotarizedPkgFilename = xmNotarizedPackages [0].name
+                                        echo ("Created notarized Xamarin.Mac package: ${xmNotarizedPkgFilename}")
+                                    }
+                                } catch (ex) {
+                                    echo "Notarization failed:\n${ex.getMessage()}"
+                                    for (def stack : ex.getStackTrace()) {
+                                        echo "\t${stack}"
+                                    }
+                                    manager.addWarningBadge("PKGs are not notarized")
+
+                                }
                             }
                         }
 
@@ -531,6 +579,7 @@ timestamps {
 
                             sh ("ls -la package")
                             uploadFiles ("package/*", "wrench", virtualPath)
+                            uploadFiles ("package/notarized/*", "wrench", virtualPath)
                             uploadFiles ("package-internal/*", "jenkins-internal", virtualPath)
 
                             // Also upload manifest to a predictable url (without the build number)
@@ -558,12 +607,22 @@ timestamps {
                             if (xiPackageFilename != null) {
                                 xiPackageUrl = "${packagePrefix}/${xiPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS', "${xiPackageUrl}", 'SUCCESS', "${xiPackageFilename}")
-                                packagesMessage += "[${xiPackageFilename}](${xiPackageUrl}) "
+                                packagesMessage += "* [${xiPackageFilename} (Not notarized)](${xiPackageUrl})\n"
                             }
                             if (xmPackageFilename != null) {
                                 xmPackageUrl = "${packagePrefix}/${xmPackageFilename}"
                                 utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac', "${xmPackageUrl}", 'SUCCESS', "${xmPackageFilename}")
-                                packagesMessage += "[${xmPackageFilename}](${xmPackageUrl})"
+                                packagesMessage += "* [${xmPackageFilename} (Not notarized)](${xmPackageUrl})\n"
+                            }
+                            if (xiNotarizedPkgFilename != null) {
+                                xiNotarizedPackageUrl = "${packagePrefix}/notarized/${xiNotarizedPkgFilename}"
+                                utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.iOS-notarized', "${xiNotarizedPackageUrl}", 'SUCCESS', "${xiNotarizedPkgFilename}")
+                                packagesMessage += "* [${xiNotarizedPkgFilename} (Notarized)](${xiNotarizedPackageUrl})\n"
+                            }
+                            if (xmNotarizedPkgFilename != null) {
+                                xmNotarizedPackageUrl = "${packagePrefix}/notarized/${xmNotarizedPkgFilename}"
+                                utils.reportGitHubStatus (gitHash, 'PKG-Xamarin.Mac-notarized', "${xmNotarizedPackageUrl}", 'SUCCESS', "${xmNotarizedPkgFilename}")
+                                packagesMessage += "* [${xmNotarizedPkgFilename} (Notarized)](${xmNotarizedPackageUrl})\n"
                             }
                             if (manifestFilename != null) {
                                 def manifestUrl = "${packagePrefix}/${manifestFilename}"
@@ -583,7 +642,7 @@ timestamps {
                             }
 
                             if (packagesMessage != "")
-                                appendFileComment ("✅ Packages: ${packagesMessage}\n")
+                                appendFileComment ("✅ Packages: \n${packagesMessage}\n")
                         }
 
                         dir ('xamarin-macios') {
@@ -673,7 +732,7 @@ timestamps {
                                 uploadFiles ("tests/*.zip", "wrench", virtualPath)
                             }
 
-                            timeout (time: 8, unit: 'HOURS') {
+                            timeout (time: 13, unit: 'HOURS') {
                                 // We run tests locally and on older macOS bots in parallel.
                                 // The older macOS tests run quickly (and the bots should usually be idle),
                                 // which means that the much longer normal (local) test run should take

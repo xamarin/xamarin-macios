@@ -113,11 +113,9 @@ namespace AVFoundation {
 	partial class AVPlayer
 	{
 		public AVLayerVideoGravity? ExternalPlaybackVideoGravity {
-			[iOS (6,0)]
 			set {
 				WeakExternalPlaybackVideoGravity = value.HasValue ? AVPlayerLayer.EnumToKey (value.Value) : null;
 			}
-			[iOS (6,0)]
 			get {
 				var r = AVPlayerLayer.KeyToEnum (WeakExternalPlaybackVideoGravity, false);
 				if (((int) r) == -1)

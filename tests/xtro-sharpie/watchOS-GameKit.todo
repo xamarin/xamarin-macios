@@ -1,2 +1,0 @@
-!deprecated-attribute-missing! GKPlayer::playerID missing a [Deprecated] attribute
-!missing-selector! GKLocalPlayer::loadChallengableFriendsWithCompletionHandler: not bound

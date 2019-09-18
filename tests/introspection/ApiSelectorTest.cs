@@ -616,6 +616,7 @@ namespace Introspection {
 				switch (selectorName) {
 				case "copyWithZone:":
 				case "encodeWithCoder:":
+				case "requestRevision":
 					// Conformance added in Xcode 11
 					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						return true;
@@ -878,6 +879,16 @@ namespace Introspection {
 			case "initWithUUID:identifier:":
 			case "initWithUUID:major:identifier:":
 			case "initWithUUID:major:minor:identifier:":
+			// NEHotspotConfiguration
+			case "initWithSSID:":
+			case "initWithSSID:passphrase:isWEP:":
+			case "initWithSSIDPrefix:":
+			case "initWithSSIDPrefix:passphrase:isWEP:":
+			// MapKit
+			case "initWithMaxCenterCoordinateDistance:":
+			case "initWithMinCenterCoordinateDistance:":
+			case "initExcludingCategories:":
+			case "initIncludingCategories:":
 				var mi = m as MethodInfo;
 				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
 			default:

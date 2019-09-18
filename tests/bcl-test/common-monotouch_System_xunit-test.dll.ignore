@@ -1,0 +1,6 @@
+
+# blocks the testing app
+System.Net.WebSockets.Tests.WebSocketTests.CreateClientBuffer_InvalidSendValues(size: -1)
+System.Net.WebSockets.Tests.WebSocketTests.CreateClientBuffer_InvalidSendValues(size: 0)
+System.Net.WebSockets.Tests.WebSocketTests.WebSocketProtocol_CreateFromConnectedStream_CanSendReceiveData
+System.Net.WebSockets.Tests.WebSocketTests.ReceiveAsync_ServerSplitHeader_ValidDataReceived

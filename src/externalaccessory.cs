@@ -54,6 +54,9 @@ namespace ExternalAccessory {
 		EAAccessoryDelegate Delegate { get; set; }
 
 		[iOS (9,0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
+		[Deprecated (PlatformName.MacOSX, 10,14)]
 		[Export ("dockType")]
 		string DockType { get; }
 	}
@@ -72,7 +75,6 @@ namespace ExternalAccessory {
 		[Export ("EAAccessoryKey")]
 		EAAccessory Accessory { get; }
 
-		[iOS (6,0)]
 		[Export ("EAAccessorySelectedKey")]
 		EAAccessory Selected { get; }
 	}
@@ -104,13 +106,11 @@ namespace ExternalAccessory {
 
 #if !XAMCORE_3_0 && !MONOMAC
 		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
-		[iOS (6,0)]
 		[Field ("EABluetoothAccessoryPickerErrorDomain")]
 		NSString BluetoothAccessoryPickerErrorDomain { get; }
 #endif
 
 		[NoMac]
-		[iOS (6,0)]
 		[Export ("showBluetoothAccessoryPickerWithNameFilter:completion:")]
 		[Async]
 		void ShowBluetoothAccessoryPicker ([NullAllowed] NSPredicate predicate, [NullAllowed] Action<NSError> completion);
