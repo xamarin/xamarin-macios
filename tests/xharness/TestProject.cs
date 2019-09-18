@@ -21,6 +21,8 @@ namespace xharness
 		public Func<Task> Dependency;
 		public string FailureMessage;
 		public bool RestoreNugetsInProject;
+		public string MTouchExtraArgs;
+		public double TimeoutMultiplier = 1;
 
 		public IEnumerable<TestProject> ProjectReferences;
 
@@ -99,6 +101,8 @@ namespace xharness
 			rv.IsExecutableProject = IsExecutableProject;
 			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
+			rv.MTouchExtraArgs = MTouchExtraArgs;
+			rv.TimeoutMultiplier = TimeoutMultiplier;
 			return rv;
 		}
 
@@ -152,8 +156,9 @@ namespace xharness
 	public class iOSTestProject : TestProject
 	{
 		public bool SkipiOSVariation;
-		public bool SkipwatchOSVariation;
+	public bool SkipwatchOSVariation; // skip both
 		public bool SkipwatchOSARM64_32Variation;
+		public bool SkipwatchOS32Variation;
 		public bool SkiptvOSVariation;
 		public bool BuildOnly;
 

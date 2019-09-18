@@ -2880,6 +2880,8 @@ The framework in question has been removed, and Xamarin.iOS can't link with it.
 
 Any code that uses the framework must be removed/rewritten.
 
+<!-- 5220 and 5221 used by mmp -->
+
 ### MT53xx: Other tools
 
 <!--

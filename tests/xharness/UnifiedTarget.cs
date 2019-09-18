@@ -67,8 +67,8 @@ namespace xharness
 
 		protected override void CalculateName ()
 		{
-			if (TargetDirectory.Contains ("BCLTests"))
-				Name = TestProject.Name.Substring (TestProject.Name.IndexOf ("BCL", StringComparison.Ordinal)); 
+			if (TargetDirectory.Contains ("bcl-test"))
+				Name = (TestProject.Name == "mscorlib")? "mscorlib" : TestProject.Name.Substring (TestProject.Name.IndexOf ("BCL", StringComparison.Ordinal)); 
 			else
 				base.CalculateName ();
 			if (MonoNativeInfo != null)

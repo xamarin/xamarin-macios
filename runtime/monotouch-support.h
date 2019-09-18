@@ -9,6 +9,7 @@ const char *   xamarin_get_locale_country_code ();
 void           xamarin_log (const unsigned short *unicodeMessage);
 void *         xamarin_timezone_get_data (const char *name, int *size);
 char **        xamarin_timezone_get_names (int *count);
+const char *   xamarin_timezone_get_local_name ();
 void           xamarin_start_wwan (const char *uri);
 
 #ifdef MONOTOUCH

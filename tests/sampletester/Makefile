@@ -10,7 +10,7 @@ ifneq ($(TEST_CATEGORY),)
 WHERE_CONDITION=/where "cat == $(TEST_CATEGORY)"
 endif
 
-TEST_RESULT=TestResult-$(shell date "+%Y%m%d-%H%M%S")
+TEST_RESULT:=TestResult-$(shell date "+%Y%m%d-%H%M%S")
 
 build: bin/Debug/sampletester.dll
 

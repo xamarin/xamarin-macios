@@ -67,6 +67,11 @@ xamarin_log (const unsigned short *unicodeMessage)
 	[msg release];
 }
 
+// NOTE: The timezone functions are duplicated in mono, so if you're going to modify here, it would be nice
+// if we modify there.
+//
+// See in Mono sdks/ios/runtime/runtime.m
+
 void*
 xamarin_timezone_get_data (const char *name, int *size)
 {
@@ -98,6 +103,18 @@ xamarin_timezone_get_names (int *count)
 		result [i] = strdup (s.UTF8String);
 	}
 	return result;
+}
+
+//
+// Returns the geopolitical region ID of the local timezone.
+
+const char *
+xamarin_timezone_get_local_name ()
+{
+	NSTimeZone *tz = nil;
+	tz = [NSTimeZone localTimeZone];
+	NSString *name = [tz name];
+	return (name != nil) ? strdup ([name UTF8String]) : strdup ("Local");
 }
 
 #if !TARGET_OS_WATCH && !TARGET_OS_TV

@@ -136,6 +136,7 @@ namespace Xamarin.Bundler {
 		public static bool IsUnifiedMobile { get; private set; }
 		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedMobile || IsUnifiedFullXamMacFramework; } }
 		public static bool IsClassic { get { return !IsUnified; } }
+		public static bool LinkProhibitedFrameworks { get; private set; }
 
 		public static bool Is64Bit { 
 			get {
@@ -345,6 +346,7 @@ namespace Xamarin.Bundler {
 						aotOptions = new AOTOptions (v);
 					}
 				},
+				{ "link-prohibited-frameworks", "Natively link against prohibited (rejected by AppStore) frameworks", v => { LinkProhibitedFrameworks = true; } },
 			};
 
 			AddSharedOptions (App, os);
@@ -866,10 +868,9 @@ namespace Xamarin.Bundler {
 				// copy to temp directory and lipo there to avoid touching the final dest file if it's up to date
 				var temp_dest = Path.Combine (App.Cache.Location, "libmono-native.dylib");
 
-				if (Application.UpdateFile (src, temp_dest)) {
+				if (Application.UpdateFile (src, temp_dest))
 					LipoLibrary (name, temp_dest);
-					Application.CopyFile (temp_dest, dest);
-				}
+				Application.UpdateFile (temp_dest, dest);
 			}
 			else {
 				// we can directly update the dest

@@ -320,11 +320,8 @@ namespace Foundation {
 					"Properties can only be modified before sending the first request.");
 		}
 
-		// almost identical to ModernHttpClient version but it uses the constants from monotouch.dll | Xamarin.[iOS|WatchOS|TVOS].dll
 		static Exception createExceptionForNSError(NSError error)
 		{
-			// var webExceptionStatus = WebExceptionStatus.UnknownError;
-
 			var innerException = new NSErrorException(error);
 
 			// errors that exists in both share the same error code, so we can use a single switch/case
@@ -335,11 +332,6 @@ namespace Foundation {
 #else
 			if ((error.Domain == NSError.NSUrlErrorDomain) || (error.Domain == NSError.CFNetworkErrorDomain)) {
 #endif
-				// Parse the enum into a web exception status or exception. Some
-				// of these values don't necessarily translate completely to
-				// what WebExceptionStatus supports, so made some best guesses
-				// here.  For your reading pleasure, compare these:
-				//
 				// Apple docs: https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/URL_Loading_System_Error_Codes
 				// .NET docs: http://msdn.microsoft.com/en-us/library/system.net.webexceptionstatus(v=vs.110).aspx
 				switch ((NSUrlError) (long) error.Code) {
@@ -350,124 +342,11 @@ namespace Foundation {
 #endif
 					// No more processing is required so just return.
 					return new OperationCanceledException(error.LocalizedDescription, innerException);
-// 				case NSUrlError.BadURL:
-// 				case NSUrlError.UnsupportedURL:
-// 				case NSUrlError.CannotConnectToHost:
-// 				case NSUrlError.ResourceUnavailable:
-// 				case NSUrlError.NotConnectedToInternet:
-// 				case NSUrlError.UserAuthenticationRequired:
-// 				case NSUrlError.InternationalRoamingOff:
-// 				case NSUrlError.CallIsActive:
-// 				case NSUrlError.DataNotAllowed:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.Socks5BadCredentials:
-// 				case (NSUrlError) CFNetworkErrors.Socks5UnsupportedNegotiationMethod:
-// 				case (NSUrlError) CFNetworkErrors.Socks5NoAcceptableMethod:
-// 				case (NSUrlError) CFNetworkErrors.HttpAuthenticationTypeUnsupported:
-// 				case (NSUrlError) CFNetworkErrors.HttpBadCredentials:
-// 				case (NSUrlError) CFNetworkErrors.HttpBadURL:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.ConnectFailure;
-// 					break;
-// 				case NSUrlError.TimedOut:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.NetServiceTimeout:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.Timeout;
-// 					break;
-// 				case NSUrlError.CannotFindHost:
-// 				case NSUrlError.DNSLookupFailed:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.HostNotFound:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceDnsServiceFailure:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.NameResolutionFailure;
-// 					break;
-// 				case NSUrlError.DataLengthExceedsMaximum:
-// 					webExceptionStatus = WebExceptionStatus.MessageLengthLimitExceeded;
-// 					break;
-// 				case NSUrlError.NetworkConnectionLost:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.HttpConnectionLost:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.ConnectionClosed;
-// 					break;
-// 				case NSUrlError.HTTPTooManyRedirects:
-// 				case NSUrlError.RedirectToNonExistentLocation:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.HttpRedirectionLoopDetected:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.ProtocolError;
-// 					break;
-// 				case NSUrlError.RequestBodyStreamExhausted:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.SocksUnknownClientVersion:
-// 				case (NSUrlError) CFNetworkErrors.SocksUnsupportedServerVersion:
-// 				case (NSUrlError) CFNetworkErrors.HttpParseFailure:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.SendFailure;
-// 					break;
-// 				case NSUrlError.BadServerResponse:
-// 				case NSUrlError.ZeroByteResource:
-// 				case NSUrlError.CannotDecodeRawData:
-// 				case NSUrlError.CannotDecodeContentData:
-// 				case NSUrlError.CannotParseResponse:
-// 				case NSUrlError.FileDoesNotExist:
-// 				case NSUrlError.FileIsDirectory:
-// 				case NSUrlError.NoPermissionsToReadFile:
-// 				case NSUrlError.CannotLoadFromNetwork:
-// 				case NSUrlError.CannotCreateFile:
-// 				case NSUrlError.CannotOpenFile:
-// 				case NSUrlError.CannotCloseFile:
-// 				case NSUrlError.CannotWriteToFile:
-// 				case NSUrlError.CannotRemoveFile:
-// 				case NSUrlError.CannotMoveFile:
-// 				case NSUrlError.DownloadDecodingFailedMidStream:
-// 				case NSUrlError.DownloadDecodingFailedToComplete:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.Socks4RequestFailed:
-// 				case (NSUrlError) CFNetworkErrors.Socks4IdentdFailed:
-// 				case (NSUrlError) CFNetworkErrors.Socks4IdConflict:
-// 				case (NSUrlError) CFNetworkErrors.Socks4UnknownStatusCode:
-// 				case (NSUrlError) CFNetworkErrors.Socks5BadState:
-// 				case (NSUrlError) CFNetworkErrors.Socks5BadResponseAddr:
-// 				case (NSUrlError) CFNetworkErrors.CannotParseCookieFile:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceUnknown:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceCollision:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceNotFound:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceInProgress:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceBadArgument:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceInvalid:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.ReceiveFailure;
-// 					break;
-// 				case NSUrlError.SecureConnectionFailed:
-// 					webExceptionStatus = WebExceptionStatus.SecureChannelFailure;
-// 					break;
-// 				case NSUrlError.ServerCertificateHasBadDate:
-// 				case NSUrlError.ServerCertificateHasUnknownRoot:
-// 				case NSUrlError.ServerCertificateNotYetValid:
-// 				case NSUrlError.ServerCertificateUntrusted:
-// 				case NSUrlError.ClientCertificateRejected:
-// 				case NSUrlError.ClientCertificateRequired:
-// 					webExceptionStatus = WebExceptionStatus.TrustFailure;
-// 					break;
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.HttpProxyConnectionFailure:
-// 				case (NSUrlError) CFNetworkErrors.HttpBadProxyCredentials:
-// 				case (NSUrlError) CFNetworkErrors.PacFileError:
-// 				case (NSUrlError) CFNetworkErrors.PacFileAuth:
-// 				case (NSUrlError) CFNetworkErrors.HttpsProxyConnectionFailure:
-// 				case (NSUrlError) CFNetworkErrors.HttpsProxyFailureUnexpectedResponseToConnectMethod:
-// 					webExceptionStatus = WebExceptionStatus.RequestProhibitedByProxy;
-// 					break;
-// #endif
 				}
-			} 
+			}
 
-			// Always create a WebException so that it can be handled by the client.
-			return new WebException(error.LocalizedDescription, innerException); //, webExceptionStatus, response: null);
-		}
+			return new HttpRequestException (error.LocalizedDescription, innerException);
+ 		}
 
 		string GetHeaderSeparator (string name)
 		{
@@ -846,7 +725,7 @@ namespace Foundation {
 
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
-		class NSUrlSessionDataTaskStreamContent : StreamContent
+		class NSUrlSessionDataTaskStreamContent : MonoStreamContent
 		{
 			Action disposed;
 
@@ -861,6 +740,98 @@ namespace Foundation {
 				action?.Invoke ();
 
 				base.Dispose (disposing);
+			}
+		}
+
+		//
+		// Copied from https://github.com/mono/mono/blob/2019-02/mcs/class/System.Net.Http/System.Net.Http/StreamContent.cs.
+		//
+		// This is not a perfect solution, but the most robust and risk-free approach.
+		//
+		// The implementation depends on Mono-specific behavior, which makes SerializeToStreamAsync() cancellable.
+		// Unfortunately, the CoreFX implementation of HttpClient does not support this.
+		//
+		// By copying Mono's old implementation here, we ensure that we're compatible with both HttpClient implementations,
+		// so when we eventually adopt the CoreFX version in all of Mono's profiles, we don't regress here.
+		//
+		class MonoStreamContent : HttpContent
+		{
+			readonly Stream content;
+			readonly int bufferSize;
+			readonly CancellationToken cancellationToken;
+			readonly long startPosition;
+			bool contentCopied;
+
+			public MonoStreamContent (Stream content)
+				: this (content, 16 * 1024)
+			{
+			}
+
+			public MonoStreamContent (Stream content, int bufferSize)
+			{
+				if (content == null)
+					throw new ArgumentNullException ("content");
+
+				if (bufferSize <= 0)
+					throw new ArgumentOutOfRangeException ("bufferSize");
+
+				this.content = content;
+				this.bufferSize = bufferSize;
+
+				if (content.CanSeek) {
+					startPosition = content.Position;
+				}
+			}
+
+			//
+			// Workarounds for poor .NET API
+			// Instead of having SerializeToStreamAsync with CancellationToken as public API. Only LoadIntoBufferAsync
+			// called internally from the send worker can be cancelled and user cannot see/do it
+			//
+			internal MonoStreamContent (Stream content, CancellationToken cancellationToken)
+				: this (content)
+			{
+				// We don't own the token so don't worry about disposing it
+				this.cancellationToken = cancellationToken;
+			}
+
+			protected override Task<Stream> CreateContentReadStreamAsync ()
+			{
+				return Task.FromResult (content);
+			}
+
+			protected override void Dispose (bool disposing)
+			{
+				if (disposing) {
+					content.Dispose ();
+				}
+
+				base.Dispose (disposing);
+			}
+
+			protected internal override Task SerializeToStreamAsync (Stream stream, TransportContext context)
+			{
+				if (contentCopied) {
+					if (!content.CanSeek) {
+						throw new InvalidOperationException ("The stream was already consumed. It cannot be read again.");
+					}
+
+					content.Seek (startPosition, SeekOrigin.Begin);
+				} else {
+					contentCopied = true;
+				}
+
+				return content.CopyToAsync (stream, bufferSize, cancellationToken);
+			}
+
+			protected internal override bool TryComputeLength (out long length)
+			{
+				if (!content.CanSeek) {
+					length = 0;
+					return false;
+				}
+				length = content.Length - startPosition;
+				return true;
 			}
 		}
 

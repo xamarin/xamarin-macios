@@ -39,7 +39,8 @@
 	<array>
 		<string>http-client-handlers</string>
 		<string>mono-symbol-archive</string>
-		<string>sgen-concurrent-gc</string>
+		<string>sgen-concurrent-gc</string> <!-- this means experimental support for the concurrent GC -->
+		<string>sgen-concurrent</string> <!-- this means stable support for the concurrent GC -->
 		<string>link-platform</string>
 		<string>hybrid-aot</string>
 		<string>64-bit-only</string>

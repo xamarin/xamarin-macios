@@ -11,6 +11,16 @@ namespace GeneratorTests
 	public class ErrorTests
 	{
 		[Test]
+		public void BI0002 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding ("InvalidCodeHere");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (2, "Could not compile the API bindings.");
+		}
+
+		[Test]
 		public void BI0086 ()
 		{
 			var bgen = new BGenTool ();

@@ -22,5 +22,6 @@ target64
 targettv
 targetwatch
 watchbcl
+mono-ios-sdk-destdir
 *.dylib
 *.o

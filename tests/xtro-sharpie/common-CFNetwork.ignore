@@ -155,8 +155,6 @@
 !missing-pinvoke! CFNetServiceSetClient is not bound
 !missing-pinvoke! CFNetServiceSetTXTData is not bound
 !missing-pinvoke! CFNetServiceUnscheduleFromRunLoop is not bound
-!missing-pinvoke! CFNetworkExecuteProxyAutoConfigurationScript is not bound
-!missing-pinvoke! CFNetworkExecuteProxyAutoConfigurationURL is not bound
 !missing-pinvoke! CFReadStreamCreateWithFTPURL is not bound
 !missing-pinvoke! CFStreamCreatePairWithSocketToNetService is not bound
 !missing-pinvoke! CFWriteStreamCreateWithFTPURL is not bound

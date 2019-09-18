@@ -129,7 +129,7 @@ namespace Xamarin.Tests
 							break;
 						case MachO.LoadCommands.MintvOS:
 							version = SdkVersions.MinTVOSVersion;
-							mono_native_compat_version = SdkVersions.MinTVOSVersion;
+							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MinwatchOS:

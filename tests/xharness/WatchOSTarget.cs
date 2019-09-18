@@ -239,7 +239,7 @@ namespace xharness
 
 		protected override void CalculateName ()
 		{
-			if (TargetDirectory.Contains ("BCLTests"))
+			if (TargetDirectory.Contains ("bcl-test"))
 				Name = TestProject.Name;
 			else
 				base.CalculateName ();

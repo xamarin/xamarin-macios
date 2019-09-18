@@ -57,7 +57,7 @@ namespace xharness
 
 		public static void CreateMacMakefile (Harness harness, IEnumerable<MacTarget> targets)
 		{
-			var makefile = Path.Combine (harness.RootDirectory, "Makefile-mac.inc");
+			var makefile = Path.Combine (Harness.RootDirectory, "Makefile-mac.inc");
 			using (var writer = new StreamWriter (makefile, false, new UTF8Encoding (false))) {
 				writer.WriteLine (".stamp-configure-projects-mac: Makefile xharness/xharness.exe");
 				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)");
@@ -77,7 +77,7 @@ namespace xharness
 
 				// build/[install/]run targets for specific test projects.
 				foreach (var target in allTargets) {
-					if (target.Name.IndexOf ("BCLTests", StringComparison.Ordinal) != -1) // special case for those targets that are auto generated from the mono assemblies
+					if (target.Name.IndexOf ("bcl-test", StringComparison.Ordinal) != -1) // special case for those targets that are auto generated from the mono assemblies
 						continue;
 					var make_escaped_simplified_name = target.SimplifiedName.Replace (" ", "\\ ");
 					var make_escaped_name = target.Name.Replace (" ", "\\ ");
@@ -212,7 +212,7 @@ namespace xharness
 		public static void CreateMakefile (Harness harness, IEnumerable<UnifiedTarget> unified_targets, IEnumerable<TVOSTarget> tvos_targets, IEnumerable<WatchOSTarget> watchos_targets, IEnumerable<TodayExtensionTarget> today_targets)
 		{
 			var executeSim32 = !harness.InWrench; // Waiting for iOS 10.3 simulator to be installed on wrench
-			var makefile = Path.Combine (harness.RootDirectory, "Makefile.inc");
+			var makefile = Path.Combine (Harness.RootDirectory, "Makefile.inc");
 			using (var writer = new StreamWriter (makefile, false, new UTF8Encoding (false))) {
 				writer.WriteLine (".stamp-configure-projects: Makefile xharness/xharness.exe");
 				writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug $(XIBUILD_EXE_PATH) -t -- $(CURDIR)/xharness/xharness.exe $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)");
@@ -227,7 +227,7 @@ namespace xharness
 
 				// build/[install/]run targets for specific test projects.
 				foreach (var target in allTargets) {
-					if (!target.IsExe || target.Name.IndexOf ("BCLTests", 0, StringComparison.Ordinal) != -1)
+					if (!target.IsExe || target.Name.IndexOf ("bcl-test", 0, StringComparison.Ordinal) != -1)
 						continue;
 
 					var make_escaped_suffix = target.GetMakeSuffix ();
@@ -521,7 +521,7 @@ namespace xharness
 				writer.WriteLine ("run-local:"); // run every single test we have everywhere
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in allTargets) {
-					if (!target.IsExe || target.Name.IndexOf ("BCLTests", 0, StringComparison.Ordinal) != -1)
+					if (!target.IsExe || target.Name.IndexOf ("bcl-test", 0, StringComparison.Ordinal) != -1)
 						continue;
 
 					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-sim-{1}\" || echo \"run{0}-sim-{1} failed\" >> \".$@-failure.stamp\"", target.GetMakeSuffix (false), target.GetMakeName (false));
@@ -533,7 +533,7 @@ namespace xharness
 				writer.WriteLine ("run-sim run-all-sim:"); // run every single test we have in the simulator
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in allTargets) {
-					if (!target.IsExe || target.Name.IndexOf ("BCLTests", 0, StringComparison.Ordinal) != -1)
+					if (!target.IsExe || target.Name.IndexOf ("bcl-test", 0, StringComparison.Ordinal) != -1)
 						continue;
 
 					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-sim-{1}\" || echo \"run{0}-sim-{1} failed\" >> \".$@-failure.stamp\"", target.GetMakeSuffix (false), target.GetMakeName (false));
@@ -544,7 +544,7 @@ namespace xharness
 				writer.WriteLine ("run-dev run-all-dev:"); // run every single test we have on device
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in allTargets) {
-					if (!target.IsExe || target.Name.IndexOf ("BCLTests", 0, StringComparison.Ordinal) != -1)
+					if (!target.IsExe || target.Name.IndexOf ("bcl-test", 0, StringComparison.Ordinal) != -1)
 						continue;
 
 					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-dev-{1}\" || echo \"run{0}-dev-{1} failed\" >> \".$@-failure.stamp\"", target.GetMakeSuffix (false), target.GetMakeName (false));
@@ -561,7 +561,7 @@ namespace xharness
 				writer.WriteLine ("build build-all:"); // build everything
 				writer.WriteLine ("\t$(Q) rm -rf \".$@-failure.stamp\"");
 				foreach (var target in unified_targets) {
-					if (!target.IsExe || target.Name.IndexOf ("BCLTests", 0, StringComparison.Ordinal) != -1)
+					if (!target.IsExe || target.Name.IndexOf ("bcl-test", 0, StringComparison.Ordinal) != -1)
 						continue;
 					
 					writer.WriteLine ("\t$(Q) $(MAKE) \"build-sim-{0}\" \"build-dev-{0}\" || echo \"build-{0} failed\" >> \".$@-failure.stamp\"", target.GetMakeName (false));
@@ -571,7 +571,7 @@ namespace xharness
 				// targets that run all platforms
 				writer.WriteLine ();
 				foreach (var target in unified_targets) {
-					if (!target.IsExe || target.Name.IndexOf ("BCLTests", 0, StringComparison.Ordinal) != -1)
+					if (!target.IsExe || target.Name.IndexOf ("bcl-test", 0, StringComparison.Ordinal) != -1)
 						continue;
 					var make_escaped_name = target.GetMakeName ();
 

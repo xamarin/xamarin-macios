@@ -1004,7 +1004,6 @@
 !missing-selector! NSView::setWantsExtendedDynamicRangeOpenGLSurface: not bound
 !missing-selector! NSView::showDefinitionForAttributedString:atPoint: not bound
 !missing-selector! NSView::showDefinitionForAttributedString:range:options:baselineOriginProvider: not bound
-!missing-selector! NSView::sortSubviewsUsingFunction:context: not bound
 !missing-selector! NSView::wantsExtendedDynamicRangeOpenGLSurface not bound
 !missing-selector! NSWindow::anchorAttributeForOrientation: not bound
 !missing-selector! NSWindow::dragImage:at:offset:event:pasteboard:source:slideBack: not bound

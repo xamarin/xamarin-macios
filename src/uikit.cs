@@ -11012,13 +11012,20 @@ namespace UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController))]
-	partial interface UISearchController : UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+	[DisableDefaultCtor] // designated
+	partial interface UISearchController : UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning
+	{
+		[Export ("init")]
+		[Advice ("It's recommended to use the constructor that takes a 'UIViewController searchResultsController' in order to create/initialize an attached 'UISearchBar'.")]
+		IntPtr Constructor ();
+
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("initWithSearchResultsController:")]
+		[Advice ("You can pass a null 'UIViewController' to display the search results in the same view.")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] UIViewController searchResultsController);
 		

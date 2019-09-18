@@ -16,13 +16,14 @@ namespace xharness.BCLTestImporter {
 		public BCLTestImportTargetFactory (Harness harness)
 		{
 			Harness = harness;
-			var outputDir = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bcl-test", "BCLTests"));
+			var outputDir = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "bcl-test"));
 			var projectTemplatePath = outputDir;
 			var registerTypesTemplatePath = Path.Combine (outputDir, "RegisterType.cs.in");
 			var plistTemplatePath = outputDir;
 
 			projectGenerator = new BCLTestProjectGenerator (outputDir, Harness.MONO_PATH, projectTemplatePath, registerTypesTemplatePath, plistTemplatePath) {
 				iOSMonoSDKPath = Harness.MONO_IOS_SDK_DESTDIR,
+				MacMonoSDKPath = Harness.MONO_MAC_SDK_DESTDIR,
 				Override = true,
 				GuidGenerator = Harness.NewStableGuid,
 				GroupTests = Harness.InJenkins || Harness.UseGroupedApps,
@@ -34,15 +35,19 @@ namespace xharness.BCLTestImporter {
 		{
 			var result = new List<iOSTestProject> ();
 			// generate all projects, then create a new iOSTarget per project
-			foreach (var (name, path, xunit, platforms, failure) in projectGenerator.GenerateAlliOSTestProjects ()) {
-				var prefix = xunit ? "xUnit" : "NUnit";
-				result.Add (new iOSTestProject (path) {
-					Name = $"[{prefix}] Mono {name}",
-					SkipiOSVariation = !platforms.Contains (Platform.iOS),
-					SkiptvOSVariation = !platforms.Contains (Platform.TvOS),
-					SkipwatchOSVariation = !platforms.Contains (Platform.WatchOS),
-					FailureMessage = failure,
+			foreach (var tp in projectGenerator.GenerateAlliOSTestProjects ()) {
+				var prefix = tp.XUnit ? "xUnit" : "NUnit";
+				var finalName = (tp.Name == "mscorlib") ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
+				result.Add (new iOSTestProject (tp.Path) {
+					Name = finalName,
+					SkipiOSVariation = !tp.Platforms.Contains (Platform.iOS),
+					SkiptvOSVariation = !tp.Platforms.Contains (Platform.TvOS),
+					SkipwatchOS32Variation = tp.Name == "mscorlib", // mscorlib is our special test
+					SkipwatchOSVariation = !tp.Platforms.Contains (Platform.WatchOS),
+					FailureMessage = tp.Failure,
 					RestoreNugetsInProject = true,
+					MTouchExtraArgs = tp.ExtraArgs,
+					TimeoutMultiplier = tp.TimeoutMultiplier,
 				});
 			}
 			return result;
@@ -56,19 +61,17 @@ namespace xharness.BCLTestImporter {
 			else
 				platform = Platform.MacOSModern;
 			var result = new List<MacTestProject> ();
-			foreach (var (name, path, xunit, failure) in projectGenerator.GenerateAllMacTestProjects (platform)) {
-				var prefix = xunit ? "xUnit" : "NUnit";
-				result.Add (new MacTestProject (path, targetFrameworkFlavor: flavor) {
-					Name = $"[{prefix}] Mono {name}",
+
+			foreach (var tp in projectGenerator.GenerateAllMacTestProjects (platform)) {
+				var prefix = tp.XUnit ? "xUnit" : "NUnit";
+				var finalName = (tp.Name == "mscorlib") ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
+				result.Add (new MacTestProject (tp.Path, targetFrameworkFlavor: flavor) {
+					Name = finalName,
 					Platform = "AnyCPU",
 					IsExecutableProject = true,
-					FailureMessage = failure,
+					FailureMessage = tp.Failure,
 					RestoreNugetsInProject = true,
-					Dependency = async () => {
-						var rv = await Harness.BuildBclTests ();
-						if (!rv.Succeeded)
-							throw new Exception ($"Failed to build BCL tests, exit code: {rv.ExitCode}. Check the harness log for more details.");
-					}
+					MTouchExtraArgs = tp.ExtraArgs,
 				});
 			}
 			return result;

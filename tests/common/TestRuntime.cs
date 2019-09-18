@@ -31,7 +31,9 @@ using UIKit;
 #endif
 using ObjCRuntime;
 #else
+using nint=global::System.Int32;
 #if MONOMAC
+using MonoMac;
 using MonoMac.ObjCRuntime;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
@@ -45,6 +47,10 @@ using MonoTouch.UIKit;
 
 partial class TestRuntime
 {
+
+	[DllImport (Constants.CoreFoundationLibrary)]
+	public extern static nint CFGetRetainCount (IntPtr handle);
+
 	[DllImport ("/usr/lib/system/libdyld.dylib")]
 	static extern int dyld_get_program_sdk_version ();
 
@@ -96,6 +102,14 @@ partial class TestRuntime
 		var minor = (v >> 8) & 0xFF;
 		var build = v & 0xFF;
 		return new Version (major, minor, build);
+	}
+
+	public static void IgnoreInCI (string message)
+	{
+		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+		if (!in_ci)
+			return;
+		NUnit.Framework.Assert.Ignore (message);
 	}
 
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)

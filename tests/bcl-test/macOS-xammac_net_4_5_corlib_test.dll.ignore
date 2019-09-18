@@ -1,0 +1,50 @@
+# System.Security.SecurityException : No access to the given key
+# ----> System.UnauthorizedAccessException : Access to the path '/Library/Application Support/com.xamarin.bcltests.Mac OS X BCL tests group 3/LocalMachine' is denied.
+# ----> System.IO.IOException : Permission denied 
+MonoTests.Microsoft.Win32.RegistryKeyTest.OpenSubKey
+
+# System.IO.FileNotFoundException : Could not load the file 't81'.
+MonoTests.System.Reflection.Emit.TypeBuilderTest.Ldfld_Encoding_10122
+
+#  #0
+# Expected: True
+# But was: False
+MonoTests.System.Runtime.CompilerServices.AsyncTaskMethodBuilderTest.CallContextFlow 
+
+# An unexpected exception type was thrown
+# Expected: System.ArgumentNullException
+# but was: System.TypeLoadException : Can't create an instance of permission class System.DirectoryServices.DirectoryServicesPermission, System.DirectoryServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a.
+MonoTests.System.Security.Policy.AllMembershipConditionTest.FromXml_SecurityElementNull
+MonoTests.System.Security.Policy.AllMembershipConditionTest.ToXml
+MonoTests.System.Security.Policy.ApplicationDirectoryMembershipConditionTest.FromXml_SecurityElementNull
+MonoTests.System.Security.Policy.ApplicationDirectoryMembershipConditionTest.ToXml
+MonoTests.System.Security.Policy.GetMembershipConditionTest.FromXml_SecurityElementNull
+MonoTests.System.Security.Policy.HashMembershipConditionTest.FromXml_SecurityElementNull
+MonoTests.System.Security.Policy.HashMembershipConditionTest.ToXml
+MonoTests.System.Security.Policy.PolicyStatementTest.FromXml_SecurityElementNull
+MonoTests.System.Security.Policy.GacMembershipConditionTest.FromXml_SecurityElementNull
+MonoTests.System.Security.Policy.GacMembershipConditionTest.ToXml
+
+# System.TypeLoadException : Can't create an instance of permission class System.DirectoryServices.DirectoryServicesPermission, System.DirectoryServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a.
+MonoTests.System.Security.Policy.PolicyLevelTest.CreateAppDomainLevel
+
+# System.TypeLoadException : Can't create an instance of permission class System.DirectoryServices.DirectoryServicesPermission, System.DirectoryServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a.
+MonoTests.System.Security.Policy.PolicyLevelTest.Label
+MonoTests.System.Security.Policy.PolicyLevelTest.Recover_AppDomainLevel
+MonoTests.System.Security.Policy.PolicyLevelTest.Reset
+MonoTests.System.Security.Policy.PolicyLevelTest.ResolveMatchingCodeGroups_Null
+MonoTests.System.Security.Policy.PolicyLevelTest.Resolve_Empty
+MonoTests.System.Security.Policy.PolicyLevelTest.Resolve_InternetUnrestricted
+MonoTests.System.Security.Policy.PolicyLevelTest.Resolve_MyComputerUnrestricted
+MonoTests.System.Security.Policy.PolicyLevelTest.Resolve_Null
+MonoTests.System.Security.Policy.PolicyLevelTest.RootCodeGroup_Null
+MonoTests.System.Security.Policy.PolicyLevelTest.ToXml
+MonoTests.System.Security.Policy.PolicyLevelTest.FromXml_Null
+MonoTests.System.Security.Policy.PolicyLevelTest.ResolveMatchingCodeGroups_Empty
+
+# String lengths are both 19. Strings differ at index 12.
+# Expected: "10/27/2002 03:00:00"
+# But was:  "10/27/2002 02:59:59"
+MonoTests.System.TimeZoneTest.TestCtors
+
+

@@ -45,6 +45,7 @@ $CP -p ../Make.config $DIR
 $CP -p ../mk/subdirs.mk $DIR/mk
 $CP -p ../mk/rules.mk $DIR/mk
 $CP -p ../mk/quiet.mk $DIR/mk
+$CP -p ../mk/mono.mk "$DIR/mk"
 
 # 7za compresses better, because there are many duplicated files
 cd mac-test-package && zip -r ../mac-test-package.zip *

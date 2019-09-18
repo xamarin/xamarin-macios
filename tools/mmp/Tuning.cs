@@ -294,10 +294,10 @@ namespace MonoMac.Tuner {
 
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
-			ProcessReferences (assembly);
+			ProcessAssemblyReferences (assembly);
 		}
 
-		void ProcessReferences (AssemblyDefinition assembly)
+		void ProcessAssemblyReferences (AssemblyDefinition assembly)
 		{
 			if (_references.Contains (assembly.Name))
 				return;

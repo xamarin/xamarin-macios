@@ -36,6 +36,9 @@ int			xamarin_get_gchandle_trampoline (id self, SEL sel);
 void		xamarin_set_gchandle_trampoline (id self, SEL sel, int gc_handle);
 
 int			xamarin_get_frame_length (id self, SEL sel);
+bool		xamarin_collapse_struct_name (const char *type, char struct_name[], int max_char, guint32 *exception_gchandle);
+guint32		xamarin_create_mt_exception (char *msg);
+size_t		xamarin_get_primitive_size (char type);
 
 enum ArgumentSemantic /* Xcode 4.4 doesn't like this ': int' */ {
 	ArgumentSemanticNone   = -1,

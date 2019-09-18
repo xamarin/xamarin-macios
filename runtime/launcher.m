@@ -605,7 +605,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 	@autoreleasepool {
 		int env_argc = 0;
 		char **env_argv = get_mono_env_options (&env_argc);
-		int new_argc = env_argc + 3 /* --use-map-jit --debug executable */ + argc ;
+		int new_argc = env_argc + 2 /* --debug executable */ + argc ;
 		if (xamarin_mac_hybrid_aot)
 			new_argc += 1;
 		if (xamarin_mac_modern)
@@ -615,8 +615,6 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		const char **ptr = (const char **) new_argv;
 		// binary
 		*ptr++ = argv [0];
-		*ptr++ = "--use-map-jit";
-
 		// inject MONO_ENV_OPTIONS
 		for (int i = 0; i < env_argc; i++)
 			*ptr++ = env_argv [i];

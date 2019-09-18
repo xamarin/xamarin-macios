@@ -145,7 +145,8 @@ APPKIT_SOURCES = \
 	AppKit/NSMutableFontCollection.cs \
 	AppKit/NSCollectionViewLayout.cs \
 	AppKit/NSColorPickerTouchBarItem.cs \
-	AppKit/NSSliderTouchBarItem.cs
+	AppKit/NSSliderTouchBarItem.cs \
+	AppKit/NSView.cs \
 
 # ARKit
 
