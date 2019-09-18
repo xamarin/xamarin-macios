@@ -2154,6 +2154,15 @@ namespace AppKit {
 		Bottom
 	}
 
+#if XAMCORE_4_0
+	public static class NSFileTypeForHFSTypeCode
+	{
+		public static readonly string ComputerIcon = "root";
+		public static readonly string DesktopIcon = "desk";
+		public static readonly string FinderIcon = "FNDR";
+	}
+#endif
+
 	// FileType 4cc values to use with NSFileTypeForHFSTypeCode.
 	public enum HfsTypeCode : uint
 	{
