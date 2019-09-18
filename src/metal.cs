@@ -1900,7 +1900,7 @@ namespace Metal {
 		bool SupportIndirectCommandBuffers { get; set; }
 
 		[Unavailable (PlatformName.MacCatalyst)]
-		[NoMac, iOS (13, 0)]
+		[NoMac, NoTV, iOS (13, 0)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("maxVertexAmplificationCount")]
 		nuint MaxVertexAmplificationCount { get; set; }
