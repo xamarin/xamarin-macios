@@ -512,7 +512,7 @@ static inline int
 get_raw_gchandle_safe (id self)
 {
 	// COOP: we call a selector, and that must only be done in SAFE mode.
-	MONO_ASSERT_GC_SAFE;
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	id<XamarinExtendedObject> xself = self;
 	return (int) [xself xamarinGetGCHandle];
 }

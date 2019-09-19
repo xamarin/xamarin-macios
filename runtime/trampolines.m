@@ -676,7 +676,7 @@ id
 xamarin_retain_trampoline (id self, SEL sel)
 {
 	// COOP: safe mode upon entry, switches to unsafe when acccessing managed memory.
-	MONO_ASSERT_GC_SAFE;
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 
 	pthread_mutex_lock (&refcount_mutex);
 
