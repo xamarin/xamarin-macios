@@ -2361,8 +2361,10 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 		exc_handle = [[ns_exception userInfo] objectForKey: @"XamarinManagedExceptionHandle"];
 		if (exc_handle != NULL) {
 			int handle = [exc_handle getHandle];
+			MONO_ENTER_GC_UNSAFE;
 			MonoObject *exc = mono_gchandle_get_target (handle);
 			mono_runtime_set_pending_exception ((MonoException *) exc, false);
+			MONO_EXIT_GC_UNSAFE;
 		} else {
 			int handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
 			if (exception_gchandle != 0) {
