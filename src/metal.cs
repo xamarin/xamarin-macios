@@ -3973,7 +3973,7 @@ namespace Metal {
 		[Export ("initWithSampleCount:horizontal:vertical:")]
 		IntPtr Constructor (MTLSize sampleCount, IntPtr horizontal, IntPtr vertical);
 
-/* Selectors reported as not working by instrospection: https://github.com/xamarin/maccore/issues/1976
+/* Selectors reported as not working by introspection: https://github.com/xamarin/maccore/issues/1976
 		[Export ("sampleCount")]
 		MTLSize SampleCount { get; }
 
