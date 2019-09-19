@@ -34,7 +34,7 @@ namespace Metal {
 		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
 		{
 			if (sampleCount.Width != horizontal.Length)
-				throw new ArgumentOutOfRangeException ("horizontal lenght should be equal to the sampleCount.Witdh.");
+				throw new ArgumentOutOfRangeException ("Horizontal length should be equal to the sampleCount.Width.");
 			if (sampleCount.Height != vertical.Length)
 				throw new ArgumentOutOfRangeException ("Vertical length should be equal to the sampleCount.Height.");
 
