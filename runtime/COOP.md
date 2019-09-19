@@ -120,3 +120,41 @@ Debugging tips
 * Display the current thread state:
 
     display (void *) mono_thread_info_current ()->thread_state
+
+Enable GC Assertions
+====================
+
+Apply this patch to the iOS SDK (here only done for the `arm64_32` runtime):
+```patch
+diff --git a/sdks/builds/ios.mk b/sdks/builds/ios.mk
+index 571dbd797a8..5bbe30040d2 100644
+--- a/sdks/builds/ios.mk
++++ b/sdks/builds/ios.mk
+@@ -155,7 +155,7 @@ watchos64_32_sysroot = -isysroot $(watchos64_32_sysroot_path)
+ # explicitly disable dtrace, since it requires inline assembly, which is disabled on AppleTV (and mono's configure.ac doesn't know that (yet at least))
+ ios-targettv_CONFIGURE_FLAGS =         --enable-dtrace=no --enable-llvm-runtime --with-bitcode=yes
+ ios-targetwatch_CONFIGURE_FLAGS = --enable-cooperative-suspend --enable-llvm-runtime --with-bitcode=yes
+-ios-targetwatch64_32_CONFIGURE_FLAGS = --enable-cooperative-suspend --enable-llvm-runtime --with-bitcode=yes
++ios-targetwatch64_32_CONFIGURE_FLAGS = --enable-cooperative-suspend --enable-llvm-runtime --with-bitcode=yes --enable-checked-build=gc
+
+ ios-target32_SYSROOT = $(ios_sysroot) -miphoneos-version-min=$(IOS_VERSION_MIN)
+ ios-target32s_SYSROOT = $(ios_sysroot) -miphoneos-version-min=$(IOS_VERSION_MIN)
+```
+
+and make sure you build `xamarin-macios` with `MONO_BUILD_FROM_SOURCE=1`. Also modify `mtouch` such that it enables checked-build:
+
+```patch
+diff --git a/tools/mtouch/mtouch.cs b/tools/mtouch/mtouch.cs
+index 1ef159b79..cb2caf426 100644
+--- a/tools/mtouch/mtouch.cs
++++ b/tools/mtouch/mtouch.cs
+@@ -649,6 +654,8 @@ namespace Xamarin.Bundler
+                                                sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"{0}\", 1);", app.MonoGCParams);
+                                        foreach (var kvp in app.EnvironmentVariables)
+                                                sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
++                                       sw.WriteLine ("\tsetenv (\"MONO_CHECK_MODE\", \"gc\", 1);");
++
+                                        sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
+                                        sw.WriteLine ("}");
+                                        sw.WriteLine ();
+```
