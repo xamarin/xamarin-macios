@@ -150,7 +150,7 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
-			if (!done) { // timeouts happen in the bost due to dns issues, connection issues etc.. we do not want to fail
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else if (!containsHeaders) {
 				Assert.Inconclusive ("Response from httpbin does not contain headers, therefore we cannot ensure that if the authoriation is present.");
@@ -214,7 +214,6 @@ namespace MonoTests.System.Net.Http
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				// assert the exception type
-				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
 				Assert.IsInstanceOfType (typeof (HttpRequestException), ex);
 				Assert.IsNotNull (ex.InnerException);
 				Assert.IsInstanceOfType (typeof (WebException), ex.InnerException);

@@ -230,7 +230,6 @@
 !missing-field! NSCategoryDocumentAttribute not bound
 !missing-field! NSAppearanceDocumentAttribute not bound
 !missing-field! NSCharacterEncodingDocumentAttribute not bound
-!missing-field! NSCocoaVersionDocumentAttribute not bound
 !missing-field! NSColorListDidChangeNotification not bound
 !missing-field! NSColorListIOException not bound
 !missing-field! NSColorListNotEditableException not bound
@@ -635,7 +634,6 @@
 !missing-protocol-conformance! NSCollectionViewItem should conform to NSCollectionViewElement
 !missing-protocol-conformance! NSColorPicker should conform to NSColorPickingDefault
 !missing-protocol-conformance! NSFontAssetRequest should conform to NSProgressReporting
-!missing-protocol-conformance! NSLayoutConstraint should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSMenu should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSMenuItem should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSOpenGLContext should conform to NSLocking
@@ -808,19 +806,7 @@
 !missing-selector! NSGradient::initWithColors:atLocations:colorSpace: not bound
 !missing-selector! NSGradient::initWithColorsAndLocations: not bound
 !missing-selector! NSGraphicsContext::setFocusStack: not bound
-!missing-selector! NSImage::compositeToPoint:fromRect:operation: not bound
-!missing-selector! NSImage::compositeToPoint:fromRect:operation:fraction: not bound
-!missing-selector! NSImage::compositeToPoint:operation: not bound
-!missing-selector! NSImage::compositeToPoint:operation:fraction: not bound
-!missing-selector! NSImage::dissolveToPoint:fraction: not bound
-!missing-selector! NSImage::dissolveToPoint:fromRect:fraction: not bound
 !missing-selector! NSImage::initByReferencingURL: not bound
-!missing-selector! NSImage::initWithIconRef: not bound
-!missing-selector! NSImage::lockFocusOnRepresentation: not bound
-!missing-selector! NSImage::setCacheDepthMatchesImageDepth: not bound
-!missing-selector! NSImage::setCachedSeparately: not bound
-!missing-selector! NSImage::setDataRetained: not bound
-!missing-selector! NSImage::setScalesWhenResized: not bound
 !missing-selector! NSInputManager::handleMouseEvent: not bound
 !missing-selector! NSInputManager::initWithName:host: not bound
 !missing-selector! NSInputManager::markedTextAbandoned: not bound
@@ -949,7 +935,6 @@
 !missing-selector! NSResponder::setInterfaceStyle: not bound
 !missing-selector! NSResponder::undoManager not bound
 !missing-selector! NSSavePanel::selectText: not bound
-!missing-selector! NSScreen::maximumExtendedDynamicRangeColorComponentValue not bound
 !missing-selector! NSScroller::setFloatValue:knobProportion: not bound
 !missing-selector! NSSegmentedCell::interiorBackgroundStyleForSegment: not bound
 !missing-selector! NSSegmentedControl::indexOfSelectedItem not bound
@@ -1141,10 +1126,6 @@
 !missing-selector! NSDocumentController::fileNamesFromRunningOpenPanel not bound
 !missing-selector! NSDocumentController::shouldCreateUI not bound
 !missing-selector! NSGraphicsContext::focusStack not bound
-!missing-selector! NSImage::cacheDepthMatchesImageDepth not bound
-!missing-selector! NSImage::isCachedSeparately not bound
-!missing-selector! NSImage::isDataRetained not bound
-!missing-selector! NSImage::scalesWhenResized not bound
 !missing-selector! NSInputManager::image not bound
 !missing-selector! NSInputManager::language not bound
 !missing-selector! NSInputManager::localizedInputManagerName not bound

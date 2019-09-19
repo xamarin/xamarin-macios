@@ -13,11 +13,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 

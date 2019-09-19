@@ -32,7 +32,7 @@ EXTRA_DEPENDENCIES = $(SHARED_HEADERS) $(TOP)/Make.config $(TOP)/mk/mono.mk
 
 X86_64_SLICE=$(abspath $(CURDIR)/x86-64-slice.dylib)
 $(X86_64_SLICE): Makefile
-	echo "void xamarin_x86_64_function_for_notarization_workaround_v2 () {}" | $(MAC_CC) -shared -x c -o$@ -
+	$(Q) echo "void xamarin_x86_64_function_for_notarization_workaround_v2 () {}" | $(MAC_CC) -shared -x c -o$@ -
 
 xamarin/mono-runtime.h: mono-runtime.h.t4 exports.t4
 	$(Q_GEN) $(TT) $< -o $@
@@ -123,6 +123,7 @@ RUNTIME_$(2)_TARGETS_DIRS +=                                        \
 RUNTIME_$(2)_TARGETS +=                                                                                \
 	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/$$(file).framework/$$(file))   \
 	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/$$(file).framework/Info.plist) \
+	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/$$(file).framework.dSYM/Contents/Info.plist) \
 	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/$$(file))   \
 	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/$(file)) \
 
@@ -130,6 +131,7 @@ ifdef INCLUDE_DEVICE
 RUNTIME_$(2)_TARGETS +=                                                                                \
 	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/$$(file).framework/$$(file))   \
 	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/$$(file).framework/Info.plist) \
+	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/$$(file).framework.dSYM/Contents/Info.plist) \
 	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/$$(file))          \
 	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/include/$(file))        \
 
@@ -147,6 +149,12 @@ $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework/X
 $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/%.framework/Info.plist: Xamarin.framework-$(1).Info.plist | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/%.framework
 	$(Q) sed 's/@BUNDLE_EXECUTABLE@/$$*/' $$< > $$@
 
+$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework/Xamarin $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework/Info.plist
+	$$(Q_GEN) dsymutil -j 4 $$< -o $$(abspath $$(dir $$<)/..)/Xamarin.framework.dSYM
+
+$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework/Info.plist
+	$$(Q_GEN) dsymutil -j 4 $$< -o $$(abspath $$(dir $$<)/..)/Xamarin-debug.framework.dSYM
+
 ifdef INCLUDE_DEVICE
 $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
@@ -159,6 +167,12 @@ $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-
 
 $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/%.framework/Info.plist: Xamarin.framework-$(1).Info.plist | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/%.framework
 	$(Q) sed 's/@BUNDLE_EXECUTABLE@/$$*/' $$< > $$@
+
+$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework/Xamarin $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework/Info.plist
+	$$(Q_GEN) dsymutil -j 4 $$(foreach var,$(3),--arch=$$(var) ) $$< -o $$(abspath $$(dir $$<)/..)/Xamarin.framework.dSYM
+
+$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework/Info.plist
+	$$(Q_GEN) dsymutil -j 4 $$(foreach var,$(3),--arch=$$(var) ) $$< -o $$(abspath $$(dir $$<)/..)/Xamarin-debug.framework.dSYM
 endif
 
 $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/%.dylib: .libs/$(1)/%-sim.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib
@@ -400,27 +414,26 @@ $(eval $(call LibXamarinTemplate,tvos,TVOS,_DEBUG,-debug))
 # Xamarin.Mac
 #
 
-MAC_ARCHITECTURES = i386 x86_64
+MAC_ARCHITECTURES = x86_64
 
 CLANG_ARCH = $(addprefix -arch ,$(MAC_ARCHITECTURES))
 MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 MAC32_CLANG = DEVELOPER_DIR=$(XCODE94_DEVELOPER_ROOT) $(MAC32_CC) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 MAC64_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 
-MAC_SHIPPED_HEADERS = xamarin/launch.h xamarin-classic/launch.h $(subst xamarin/,xamarin-classic/,$(SHIPPED_HEADERS))
+MAC_SHIPPED_HEADERS = xamarin/launch.h
 
-MAC_OBJC_CFLAGS=-ObjC++ -std=c++0x -fno-exceptions -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
+MAC_OBJC_CFLAGS=-ObjC++ -std=c++14 -fno-exceptions -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
 MAC_CFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -Wall -DMONOMAC -g -DMIN_XM_MONO_VERSION=\"$(MIN_XM_MONO_VERSION)\"
 MAC_LDFLAGS = -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -framework AppKit
 
 MAC_STATIC_CFLAGS = $(MAC_CFLAGS)
 
-MAC_SOURCES = $(SHARED_SOURCES) $(SHARED_I386_SOURCES) $(SHARED_X86_64_SOURCES) launcher.m
+MAC_SOURCES = $(SHARED_SOURCES) $(SHARED_X86_64_SOURCES) launcher.m
 
 ALLOWED_UNDEFINED_SYMBOLS = _xamarin_enable_debug _xammac_setup
 
 MAC_LIBS =                   \
-	XamMacLauncher           \
 	libextension.a			 \
 	libxammac.a              \
 	libxammac-debug.a        \
@@ -433,10 +446,6 @@ MAC_LIBS =                   \
 	libxammac-system-classic.a       \
 	libxammac-system-classic-debug.a \
 
-#
-# XamMacLauncher: -DDYNAMIC_MONO_RUNTIME -DSYSTEM_LAUNCHER 
-#     This is installed as lib/XamMacLauncher, and is used by the XS plugin as the launcher
-#     when mmp is not used.
 #
 # libxammac[-debug].a: (no defines)
 #    This is linked into the native executable when embedding the Mono runtime.
@@ -488,9 +497,7 @@ SYSTEM_LAUNCHER$(2)_OBJECTS = $$(foreach src,$$(MAC_SOURCES),.libs/mac/$$(basena
 
 endef
 
-$(eval $(call ObjTemplate,i386,32,,,32))
 $(eval $(call ObjTemplate,x86_64,64,,,64))
-$(eval $(call ObjTemplate,i386,DEBUG32,-debug,-DDEBUG,32))
 $(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG,64))
 
 $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_DEFINES=-DEXTENSION
@@ -507,38 +514,32 @@ $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_D
 	$(Q) rm -f $@
 	$(call Q_2,LIPO,  [mac]) $(DEVICE_BIN_PATH)/lipo $^ -create -output $@
 
-.libs/mac/libxammac-debug.dylib: .libs/mac/libxammac-debug.x86_64.dylib .libs/mac/libxammac-debug.i386.dylib
+.libs/mac/libxammac-debug.dylib: .libs/mac/libxammac-debug.x86_64.dylib
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac.dylib: .libs/mac/libxammac.x86_64.dylib .libs/mac/libxammac.i386.dylib
+.libs/mac/libxammac.dylib: .libs/mac/libxammac.x86_64.dylib
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac-debug.a: .libs/mac/libxammac-debug.i386.a .libs/mac/libxammac-debug.x86_64.a
+.libs/mac/libxammac-debug.a: .libs/mac/libxammac-debug.x86_64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac.a: .libs/mac/libxammac.i386.a .libs/mac/libxammac.x86_64.a
+.libs/mac/libxammac.a: .libs/mac/libxammac.x86_64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac-system-debug.a: .libs/mac/libxammac-system-debug.i386.a .libs/mac/libxammac-system-debug.x86_64.a
+.libs/mac/libxammac-system-debug.a: .libs/mac/libxammac-system-debug.x86_64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac-system.a: .libs/mac/libxammac-system.i386.a .libs/mac/libxammac-system.x86_64.a
+.libs/mac/libxammac-system.a: .libs/mac/libxammac-system.x86_64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
-
-.libs/mac/XamMacLauncher: $(MACIOS_BINARIES_PATH)/XamMacLauncher | .libs/mac
-	$(Q) $(CP) $< $@
 
 .libs/mac/libxammac-%.a: $(MACIOS_BINARIES_PATH)/libxammac-%.a | .libs/mac
 	$(Q) $(CP) $< $@
-
-.SECONDARY: .libs/mac/libxammac-classic.a .libs/mac/libxammac-system-classic.a .libs/mac/libxammac-classic-debug.a .libs/mac/libxammac-system-classic-debug.a
 
 RUNTIME_MAC_TARGETS_DIRS +=                                    \
 	.libs/mac                                                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono        \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin-classic \
 
 RUNTIME_MAC_TARGETS +=                                                                                \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/XamMacLauncher                                     \
@@ -547,9 +548,9 @@ RUNTIME_MAC_TARGETS +=                                                          
 	$(foreach file,$(MAC_SHIPPED_HEADERS),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/$(file)) \
 	$(foreach file,$(MAC_LIBS),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$(file))                \
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/XamMacLauncher: .libs/mac/XamMacLauncher | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
-	$(Q) install -m 0755 $< $@
-	$(Q) xcrun strip -S $@
+# The XamMacLauncher file must exist for VSfM to be able to open XM/Classic projects (so that people can use the migration wizard)
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/XamMacLauncher: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
+	$(Q) touch $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/%: .libs/mac/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
 	$(Q) $(CP) $< $@
@@ -557,7 +558,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/%: .libs/mac/% | $(MAC_DESTDIR)$(
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMacLauncher: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
 	$(Q) ln -sF ../XamMacLauncher $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/%.h: %.h | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin-classic
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/%.h: %.h | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include/xamarin
 	$(Q) install -m 0644 $< $@
 
 $(RUNTIME_MAC_TARGETS_DIRS):

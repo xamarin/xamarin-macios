@@ -100,5 +100,44 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null, null), "null NSUrl, null");
 
 		}
+
+		[Test]
+		public void Context_Tag ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			using (var d = new NSDictionary ())
+			using (var url = new NSUrl (filename))
+			using (var ctx = new CGContextPDF (url)) {
+				ctx.BeginPage (PDFInfoTest.GetInfo ());
+				ctx.BeginTag (CGPdfTagType.Header, (NSDictionary) null);
+				ctx.EndTag ();
+				ctx.BeginTag (CGPdfTagType.Caption, d);
+				ctx.SetUrl (url, RectangleF.Empty);
+				ctx.EndTag ();
+				ctx.EndPage ();
+			}
+		}
+
+		[Test]
+		public void Context_Tag_Strong ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			using (var url = new NSUrl (filename))
+			using (var ctx = new CGContextPDF (url)) {
+				var tp = new CGPdfTagProperties () {
+					ActualText = "ActualText",
+					AlternativeText = "AlternativeText",
+					TitleText = "TitleText",
+					LanguageText = "LanguageText",
+				};
+				ctx.BeginPage (PDFInfoTest.GetInfo ());
+				ctx.BeginTag (CGPdfTagType.Header, tp);
+				ctx.EndTag ();
+				ctx.BeginTag (CGPdfTagType.Caption, (CGPdfTagProperties) null);
+				ctx.SetUrl (url, RectangleF.Empty);
+				ctx.EndTag ();
+				ctx.EndPage ();
+			}
+		}
 	}
 }

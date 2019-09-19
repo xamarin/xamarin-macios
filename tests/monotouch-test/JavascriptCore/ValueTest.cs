@@ -81,6 +81,23 @@ namespace MonoTouchFixtures.JavascriptCore {
 				Assert.False (d.IsEqualWithTypeCoercionTo ((NSNumber) 2.0d), "== NSNumber-2");
 			}
 		}
+
+		[Test]
+		public void CreatePromise ()
+		{
+			TestRuntime.AssertXcodeVersion (11,0);
+
+			using (var c = new JSContext ()) {
+				bool called = false;
+				var p = JSValue.CreatePromise (c, (resolve, reject) => {
+					Assert.NotNull (resolve, "resolve");
+					Assert.NotNull (reject, "reject");
+					called = true;
+				});
+				Assert.True (called, "called");
+			}
+
+		}
 	}
 }
 

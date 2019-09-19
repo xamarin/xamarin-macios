@@ -73,7 +73,7 @@ namespace CoreText {
 		Subscript   = -1,
 	}
 
-	public static class CTStringAttributeKey {
+	public static partial class CTStringAttributeKey {
 		public static readonly NSString Font;
 		public static readonly NSString ForegroundColorFromContext;
 		public static readonly NSString KerningAdjustment;
@@ -230,6 +230,12 @@ namespace CoreText {
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.StrokeColor, value);}
 		}
 
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		public float? TrackingAdjustment {
+			get {return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.TrackingAttributeName);}
+			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.TrackingAttributeName, value);}
+		}
+
 		// Documentation says this must be 'CFNumber', doesn't specify exact type
 		public int? UnderlineStyleValue {
 			get {return Adapter.GetInt32Value (Dictionary, CTStringAttributeKey.UnderlineStyle);}
@@ -336,7 +342,6 @@ namespace CoreText {
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.RunDelegate, value);}
 		}
 
-		[iOS (6,0)]
 		public CTBaselineClass? BaselineClass {
 			get {
 				var value = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.BaselineClass.Handle);
@@ -348,13 +353,11 @@ namespace CoreText {
 			}
 		}
 
-		[iOS (6, 0)]
 		public void SetBaselineInfo (CTBaselineClass baselineClass, double offset)
 		{
 			SetBaseline (baselineClass, offset, CTStringAttributeKey.BaselineInfo);
 		}
 
-		[iOS (6, 0)]
 		public void SetBaselineReferenceInfo (CTBaselineClass baselineClass, double offset)
 		{
 			SetBaseline (baselineClass, offset, CTStringAttributeKey.BaselineReferenceInfo);
@@ -372,7 +375,6 @@ namespace CoreText {
 				Adapter.SetNativeValue (Dictionary, infoKey, (INativeObject)dict);
 		}
 
-		[iOS (6, 0)]
 		// 'Value must be a CFArray of CFNumberRefs' - System/Library/Frameworks/CoreText.framework/Headers/CTStringAttributes.h
 		public void SetWritingDirection (params CTWritingDirection[] writingDirections)
 		{

@@ -253,6 +253,18 @@ Change the architecture in the project's Mac Build options to 'x86_64' in order 
 
 <!-- 0140-0142 taken my mtouch -->
 
+#### MM0143: Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.
+
+Xamarin.Mac does not support the Classic API anymore, because the Classic API is 32-bit only, and macOS 10.15+ does not support 32-bit applications.
+
+The project must be [migrated to a Unified project](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/unified/updating-mac-apps) in order to support 64-bit.
+
+#### MM0144: Building 32-bit apps is not supported anymore. Please change the architecture in the project's Mac Build options to 'x86_64'.
+
+This version of Xamarin.Mac does not support building 32-bit applications.
+
+Change the architecture in the project's Mac Build options to 'x86_64' in order to build a 64-bit application.
+
 ## MM1xxx: file copy / symlinks (project related)
 
 <a name="MM1034" />
@@ -583,7 +595,9 @@ complicated to get it right when doing it manually.
 
 If this is not the case, please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
-### MM4178: The registrar found the abstract type '{type}' in the signature for '{member}'. Abstract types should not be used in the signature for a member exported to Objective-C.
+<!-- 4178: used by mtouch -->
+
+### MM4179: The registrar found the abstract type '{type}' in the signature for '{member}'. Abstract types should not be used in the signature for a member exported to Objective-C.
 
 This is a warning, indicating a potential problem where a method or property
 has a parameter or return type which is abstract. The potential problem occurs
@@ -633,9 +647,18 @@ third-party binding, please contact the vendor.
 
 <a name="MM5218" />
 
+<!-- 5107 is used by mtouch-->
+<!-- 5108 is used by mtouch-->
+
 #### MM5218: Can't ignore the dynamic symbol {symbol} (--ignore-dynamic-symbol={symbol}) because it was not detected as a dynamic symbol.
 
 See the [equivalent mtouch warning](~/ios/troubleshooting/mtouch-errors.md#MT5218).
+
+### MM5219: Not linking with {framework} because it has been removed from {platform}.
+
+The framework in question has been removed, and Xamarin.Mac can't link with it.
+
+Any code that uses the framework must be removed/rewritten.
 
 <!-- 5206 used by mtouch -->
 <!-- 5207 used by mtouch -->
@@ -651,16 +674,6 @@ See the [equivalent mtouch warning](~/ios/troubleshooting/mtouch-errors.md#MT521
 <!-- 5217 used by mtouch -->
 <!-- 5218 used by mtouch -->
 
-<a name="MT5219" />
-
-#### MM5219: Linking against framework '{nspace}'. It is prohibited (rejected) by the Mac App Store
-
-The application has references to the `{nspace}` namespace of `Xamarin.Mac.dll`.
-The associated OS framework is known to be **prohibited** in Apple's Mac App Store applications.
-
-However `mmp` was instructed, using `--link-prohibited-framework`, to natively link to the associated framework.
-You can silence this warning by adding `--nowarn=5219` to the **Additional mmp arguments** in your project's options.
-
 <a name="MT5220" />
 
 #### MM5220: Skipping framework '{nspace}'. It is prohibited (rejected) by the Mac App Store
@@ -672,6 +685,16 @@ Any feature that use the mentioned framework will not work and might crash at ru
 
 If needed (e.g. not submitting to the App Store) you can ask `mmp` to link against the framework by adding `--link-prohibited-framework` to the **Additional mmp arguments** in your project's options.
 You can silence this warning by adding `--nowarn=5220` to the **Additional mmp arguments** in your project's options.
+
+<a name="MM5221" />
+
+#### MM5221: Linking against framework '{nspace}'. It is prohibited (rejected) by the Mac App Store
+
+The application has references to the `{nspace}` namespace of `Xamarin.Mac.dll`.
+The associated OS framework is known to be **prohibited** in Apple's Mac App Store applications.
+
+However `mmp` was instructed, using `--link-prohibited-framework`, to natively link to the associated framework.
+You can silence this warning by adding `--nowarn=5221` to the **Additional mmp arguments** in your project's options.
 
 ### MM53xx: other tools
 

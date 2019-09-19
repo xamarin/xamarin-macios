@@ -8,8 +8,6 @@
 	<dict>
 		<key>iOS</key>
 		<array>
-			<string>6.0</string>
-			<string>6.1</string>
 			<string>7.0</string>
 			<string>7.1</string>
 			<string>8.0</string>
@@ -35,6 +33,7 @@
 			<string>12.2</string>
 			<string>12.3</string>
 			<string>12.4</string>
+			<string>13.0</string>
 		</array>
 		<key>tvOS</key>
 		<array>
@@ -54,6 +53,7 @@
 			<string>12.2</string>
 			<string>12.3</string>
 			<string>12.4</string>
+			<string>13.0</string>
 		</array>
 		<key>watchOS</key>
 		<array>
@@ -72,6 +72,7 @@
 			<string>5.1</string>
 			<string>5.2</string>
 			<string>5.3</string>
+			<string>6.0</string>
 		</array>
 	</dict>
 	<key>RecommendedXcodeVersion</key>
@@ -151,6 +152,7 @@
 		<string>sgen-concurrent-gc</string> <!-- this means experimental support for the concurrent GC -->
 		<string>sgen-concurrent</string> <!-- this means stable support for the concurrent GC -->
 		<string>arm64_32</string>
+		<string>altool</string>
 	</array>
 	<key>Optimizations</key>
 	<dict>

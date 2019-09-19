@@ -156,6 +156,16 @@ namespace CoreText {
 		public CTCharacterCollection CharacterCollection {
 			get {return CTGlyphInfoGetCharacterCollection (handle);}
 		}
+
+		[DllImport (Constants.CoreTextLibrary)]
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		static extern ushort /* CGGlyph */ CTGlyphInfoGetGlyph (IntPtr /* CTGlyphInfoRef */ glyphInfo);
+
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		public CGGlyph GetGlyph ()
+		{
+			return CTGlyphInfoGetGlyph (handle);
+		}
 #endregion
 
 		public override string ToString ()

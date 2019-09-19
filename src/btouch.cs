@@ -44,7 +44,6 @@ public class BindingTouch {
 	TargetFramework? target_framework;
 	public PlatformName CurrentPlatform;
 	public bool BindThirdPartyLibrary = true;
-	public bool Unified;
 	public bool skipSystemDrawing;
 	public string outfile;
 
@@ -91,11 +90,7 @@ public class BindingTouch {
 
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
-			if (Unified) {
-				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.iOS.BindingAttributes.dll");
-			} else {
-				return Path.Combine (GetSDKRoot (), "lib", "bgen", "monotouch.BindingAttributes.dll");
-			}
+			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.iOS.BindingAttributes.dll");
 		case PlatformName.WatchOS:
 			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.WatchOS.BindingAttributes.dll");
 		case PlatformName.TvOS:
@@ -107,8 +102,6 @@ public class BindingTouch {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
 			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
-			} else if (target_framework == TargetFramework.XamMac_1_0) {
-				return Path.Combine (GetSDKRoot (), "lib", "bgen", "XamMac.BindingAttributes.dll");
 			} else {
 				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
 			}
@@ -121,7 +114,7 @@ public class BindingTouch {
 	{
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
-			yield return Path.Combine (GetSDKRoot (), "lib", "mono", Unified ? "Xamarin.iOS" : "2.1");
+			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.iOS");
 			break;
 		case PlatformName.WatchOS:
 			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.WatchOS");
@@ -138,9 +131,6 @@ public class BindingTouch {
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
 			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
-			} else if (target_framework == TargetFramework.XamMac_1_0) {
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono");
-				yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
 			} else {
 				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
 			}
@@ -200,20 +190,6 @@ public class BindingTouch {
 
 		if (Array.IndexOf (TargetFramework.ValidFrameworks, target_framework.Value) == -1)
 			throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
-	}
-
-	public string NamespacePlatformPrefix {
-		get {
-			switch (CurrentPlatform) {
-			case PlatformName.MacOSX:
-				return Unified ? null : "MonoMac";
-			case PlatformName.iOS:
-				return Unified ? null : "MonoTouch";
-			default:
-				return null;
-			}
-
-		}
 	}
 
 	static int Main2 (string [] args)
@@ -347,18 +323,8 @@ public class BindingTouch {
 			throw ErrorHelper.CreateError (86, "A target framework (--target-framework) must be specified.");
 
 		switch (target_framework.Value.Identifier.ToLowerInvariant ()) {
-		case "monotouch":
-			CurrentPlatform = PlatformName.iOS;
-			Unified = false;
-			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/2.1/monotouch.dll");
-			Path.Combine (GetSDKRoot (), "bin/smcs");
-			references.Add ("Facades/System.Drawing.Common");
-			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/2.1/", references);
-			break;
 		case "xamarin.ios":
 			CurrentPlatform = PlatformName.iOS;
-			Unified = true;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
@@ -367,7 +333,6 @@ public class BindingTouch {
 			break;
 		case "xamarin.tvos":
 			CurrentPlatform = PlatformName.TvOS;
-			Unified = true;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
@@ -376,24 +341,14 @@ public class BindingTouch {
 			break;
 		case "xamarin.watchos":
 			CurrentPlatform = PlatformName.WatchOS;
-			Unified = true;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
 			references.Add ("Facades/System.Drawing.Common");
 			ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
 			break;
-		case "xammac":
-			CurrentPlatform = PlatformName.MacOSX;
-			Unified = false;
-			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "XamMac.dll");
-			references.Add ("Facades/System.Drawing.Common");
-			ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references);
-			break;
 		case "xamarin.mac":
 			CurrentPlatform = PlatformName.MacOSX;
-			Unified = true;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll)) {
 				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
@@ -421,11 +376,6 @@ public class BindingTouch {
 			break;
 		default:
 			throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
-		}
-
-		if (target_framework == TargetFramework.XamMac_1_0 && !references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "System.Drawing")) {
-			// If we're targeting XM/Classic ensure we have a reference to System.Drawing.dll.
-			references.Add ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll");
 		}
 
 		if (sources.Count > 0) {
@@ -552,7 +502,6 @@ public class BindingTouch {
 
 			var nsManager = new NamespaceManager (
 				this,
-				NamespacePlatformPrefix,
 				ns == null ? firstApiDefinitionName : ns,
 				skipSystemDrawing
 			);
@@ -560,15 +509,8 @@ public class BindingTouch {
 			var g = new Generator (this, nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
-				InlineSelectors = inline_selectors ?? (Unified && CurrentPlatform != PlatformName.MacOSX),
+				InlineSelectors = inline_selectors ?? (CurrentPlatform != PlatformName.MacOSX),
 			};
-
-			if (!Unified && !BindThirdPartyLibrary) {
-				foreach (var mi in baselib.GetType (nsManager.CoreObjCRuntime + ".Messaging").GetMethods ()){
-					if (mi.Name.IndexOf ("_objc_msgSend", StringComparison.Ordinal) != -1)
-						g.RegisterMethodName (mi.Name);
-				}
-			}
 
 			g.Go ();
 

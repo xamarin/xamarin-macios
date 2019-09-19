@@ -58,7 +58,7 @@ namespace CoreServices
 		OwnEvent  = 0x00080000,
 		ItemIsHardlink = 0x00100000,
 		ItemIsLastHardlink = 0x00200000,
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		ItemCloned = 0x00400000,
 	}
 

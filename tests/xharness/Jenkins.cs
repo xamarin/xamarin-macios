@@ -20,10 +20,8 @@ namespace xharness
 
 		public Harness Harness;
 		public bool IncludeAll;
-		public bool IncludeClassicMac = true;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
-		public bool IncludeMac32 = true;
 		public bool IncludeiOS = true;
 		public bool IncludeiOS32 = true;
 		public bool IncludeiOSExtensions;
@@ -74,6 +72,7 @@ namespace xharness
 		Dictionary<string, MakeTask> DependencyTasks = new Dictionary<string, MakeTask> ();
 
 		internal static Resource DesktopResource = new Resource ("Desktop", Environment.ProcessorCount);
+		internal static Resource NugetResource = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
 
 		static Dictionary<string, Resource> device_resources = new Dictionary<string, Resource> ();
 		internal static Resources GetDeviceResources (IEnumerable<Device> devices)
@@ -222,7 +221,7 @@ namespace xharness
 			if (!IncludeBcl && project.IsBclTest)
 				return false;
 
-			if (!Harness.IncludeSystemPermissionTests && project.Name == "introspection")
+			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
 				return false;
 
 			return true;
@@ -297,10 +296,10 @@ namespace xharness
 					}
 					if (supports_interpreter) {
 						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false };
+							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					}
 					break;
 				case "mscorlib":
@@ -391,12 +390,9 @@ namespace xharness
 						var canSymlink = false;
 						switch (task.Platform) {
 						case TestPlatform.Mac:
-						case TestPlatform.Mac_Classic:
-						case TestPlatform.Mac_Unified:
-						case TestPlatform.Mac_Unified32:
-						case TestPlatform.Mac_UnifiedXM45:
-						case TestPlatform.Mac_UnifiedXM45_32:
-						case TestPlatform.Mac_UnifiedSystem:
+						case TestPlatform.Mac_Modern:
+						case TestPlatform.Mac_Full:
+						case TestPlatform.Mac_System:
 							isMac = true;
 							break;
 						case TestPlatform.iOS:
@@ -536,7 +532,7 @@ namespace xharness
 			return rv;
 		}
 
-		IEnumerable<TestTask> CreateRunDeviceTasks ()
+		async Task<IEnumerable<TestTask>> CreateRunDeviceTasksAsync ()
 		{
 			var rv = new List<RunDeviceTask> ();
 			var projectTasks = new List<RunDeviceTask> ();
@@ -796,7 +792,6 @@ namespace xharness
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
 			SetEnabled (labels, "device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
-			SetEnabled (labels, "mac-32", ref IncludeMac32);
 			SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
 			SetEnabled (labels, "all", ref IncludeAll);
 
@@ -806,12 +801,11 @@ namespace xharness
 			SetEnabled (labels, "ios-32", ref IncludeiOS32);
 			SetEnabled (labels, "watchos", ref IncludewatchOS);
 			SetEnabled (labels, "mac", ref IncludeMac);
-			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
-			bool inc_permission_tests = Harness.IncludeSystemPermissionTests;
-			SetEnabled (labels, "system-permission", ref inc_permission_tests);
-			Harness.IncludeSystemPermissionTests = inc_permission_tests;
+			bool inc_permission_tests = false;
+			if (SetEnabled (labels, "system-permission", ref inc_permission_tests))
+				Harness.IncludeSystemPermissionTests = inc_permission_tests;
 
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
@@ -835,6 +829,14 @@ namespace xharness
 					IncludeDocs = false; // could have been enabled by 'run-all-tests', so disable it if we can't run it.
 					MainLog.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
 				}
+			}
+
+			// old simulator tests is also a bit special:
+			// - enabled by default if using a beta Xcode, otherwise disabled by default
+			changed = SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
+			if (!changed && Harness.IsBetaXcode) {
+				IncludeOldSimulatorTests = true;
+				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
 			}
 		}
 
@@ -871,7 +873,10 @@ namespace xharness
 
 			LoadSimulatorsAndDevicesAsync ().DoNotAwait ();
 
-			Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
+			var loadsim = CreateRunSimulatorTasksAsync ()
+				.ContinueWith ((v) => { Console.WriteLine ("Simulator tasks created"); Tasks.AddRange (v.Result); });
+			
+			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
 			var buildiOSMSBuild = new XBuildTask ()
 			{
@@ -917,7 +922,6 @@ namespace xharness
 
 			foreach (var project in Harness.MacTestProjects) {
 				bool ignored = !IncludeMac;
-				bool ignored32 = !IncludeMac || !IncludeMac32;
 				if (!IncludeMmpTest && project.Path.Contains ("mmptest"))
 					ignored = true;
 
@@ -927,21 +931,28 @@ namespace xharness
 				var configurations = project.Configurations;
 				if (configurations == null)
 					configurations = new string [] { "Debug" };
+
+				TestPlatform platform;
+				switch (project.TargetFrameworkFlavors) {
+				case MacFlavors.Console:
+					platform = TestPlatform.Mac;
+					break;
+				case MacFlavors.Full:
+					platform = TestPlatform.Mac_Full;
+					break;
+				case MacFlavors.Modern:
+					platform = TestPlatform.Mac_Modern;
+					break;
+				case MacFlavors.System:
+					platform = TestPlatform.Mac_System;
+					break;
+				default:
+					throw new NotImplementedException (project.TargetFrameworkFlavors.ToString ());
+				}
 				foreach (var config in configurations) {
-					BuildProjectTask build;
-					if (project.MonoNativeInfo != null) {
-						build = new XBuildTask ();
-						build.Platform = TestPlatform.Mac_Unified;
-						build.CloneTestProject (project);
-					} else if (project.GenerateVariations) {
-						build = new MdtoolTask ();
-						build.Platform = TestPlatform.Mac_Classic;
-						build.TestProject = project;
-					} else {
-						build = new XBuildTask ();
-						build.Platform = TestPlatform.Mac;
-						build.CloneTestProject (project);
-					}
+					XBuildTask build = new XBuildTask ();
+					build.Platform = platform;
+					build.CloneTestProject (project);
 					build.Jenkins = this;
 					build.SolutionPath = project.SolutionPath;
 					build.ProjectConfiguration = config;
@@ -952,10 +963,6 @@ namespace xharness
 					RunTestTask exec;
 					IEnumerable<RunTestTask> execs;
 					var ignored_main = ignored;
-					if ((ignored32 || !IncludeClassicMac) && project.GenerateVariations) {
-						ignored_main = true; // Only if generating variations is the main project is an XM Classic app
-						build.RequiresXcode94 = true;
-					}
 					if (project.IsNUnitProject) {
 						var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
 						exec = new NUnitExecuteTask (build) {
@@ -977,21 +984,11 @@ namespace xharness
 						};
 						execs = CreateTestVariations (new [] { exec }, (buildTask, test, candidates) => new MacExecuteTask (buildTask) { IsUnitTest = true } );
 					}
-					exec.Variation = configurations.Length > 1 ? config : project.TargetFrameworkFlavor.ToString ();
+
+					foreach (var e in execs)
+						e.Variation = config;
 
 					Tasks.AddRange (execs);
-					foreach (var e in execs) {
-						if (project.GenerateVariations && project.MonoNativeInfo == null) {
-							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified, "-unified", ignored));
-							Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_Unified32, "-unified" + "-32", ignored32, true));
-							if (project.GenerateFull) {
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45", ignored));
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32", ignored32, true));
-							}
-							if (project.GenerateSystem)
-								Tasks.Add (CloneExecuteTask (e, project, TestPlatform.Mac_UnifiedSystem, "-system", ignored));
-						}
-					}
 				}
 			}
 
@@ -1114,48 +1111,11 @@ namespace xharness
 			};
 			Tasks.Add (runSampleTests);
 
-			Tasks.AddRange (CreateRunDeviceTasks ());
-		}
-
-		RunTestTask CloneExecuteTask (RunTestTask task, TestProject original_project, TestPlatform platform, string suffix, bool ignore, bool requiresXcode94 = false)
-		{
-			var build = new XBuildTask ()
-			{
-				Platform = platform,
-				Jenkins = task.Jenkins,
-				ProjectConfiguration = task.ProjectConfiguration,
-				ProjectPlatform = task.ProjectPlatform,
-				SpecifyPlatform = task.BuildTask.SpecifyPlatform,
-				SpecifyConfiguration = task.BuildTask.SpecifyConfiguration,
-			};
-			var tp = new TestProject (Path.ChangeExtension (AddSuffixToPath (original_project.Path, suffix), "csproj"));
-			build.CloneTestProject (tp);
-			build.RequiresXcode94 = requiresXcode94;
-
-			var macExec = task as MacExecuteTask;
-			if (macExec != null) {
-				return new MacExecuteTask (build) {
-					Ignored = ignore,
-					TestName = task.TestName,
-					IsUnitTest = macExec.IsUnitTest,
-					Variation = task.Variation,
-				};
-			}
-			var nunit = task as NUnitExecuteTask;
-			if (nunit != null) {
-				var project = build.TestProject;
-				var dll = Path.Combine (Path.GetDirectoryName (project.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
-				return new NUnitExecuteTask (build) {
-					Ignored = ignore,
-					TestName = build.TestName,
-					TestLibrary = dll,
-					TestProject = project,
-					WorkingDirectory = Path.GetDirectoryName (dll),
-					Platform = build.Platform,
-					Timeout = TimeSpan.FromMinutes (120),
-				};
-			}
-			throw new NotImplementedException ();
+			var loaddev = CreateRunDeviceTasksAsync ().ContinueWith ((v) => {
+				Console.WriteLine ("Got device tasks completed");
+				Tasks.AddRange (v.Result);
+			});
+			Task.WaitAll (loadsim, loaddev);
 		}
 
 		async Task ExecutePeriodicCommandAsync (Log periodic_loc)
@@ -1344,6 +1304,9 @@ namespace xharness
 							case "?include-permission-tests":
 								Harness.IncludeSystemPermissionTests = true;
 								break;
+							case "?clear-permission-tests":
+								Harness.IncludeSystemPermissionTests = null;
+								break;
 							default:
 								throw new NotImplementedException (request.Url.Query);
 							}
@@ -1411,12 +1374,9 @@ namespace xharness
 									case "?all-mac":
 										switch (task.Platform) {
 										case TestPlatform.Mac:
-										case TestPlatform.Mac_Classic:
-										case TestPlatform.Mac_Unified:
-										case TestPlatform.Mac_Unified32:
-										case TestPlatform.Mac_UnifiedXM45:
-										case TestPlatform.Mac_UnifiedXM45_32:
-										case TestPlatform.Mac_UnifiedSystem:
+										case TestPlatform.Mac_Modern:
+										case TestPlatform.Mac_Full:
+										case TestPlatform.Mac_System:
 											is_match = true;
 											break;
 										default:
@@ -1923,6 +1883,18 @@ namespace xharness
 		</ul>
 	</li>");
 					if (IsServerMode) {
+						var include_system_permission_option = string.Empty;
+						var include_system_permission_icon = string.Empty;
+						if (Harness.IncludeSystemPermissionTests == null) {
+							include_system_permission_option = "include-permission-tests";
+							include_system_permission_icon = "2753";
+						} else if (Harness.IncludeSystemPermissionTests.Value) {
+							include_system_permission_option = "skip-permission-tests";
+							include_system_permission_icon = "2705";
+						} else {
+							include_system_permission_option = "clear-permission-tests";
+							include_system_permission_icon = "274C";
+						}
 						writer.WriteLine ($@"
 	<li>Reload
 		<ul>
@@ -1935,7 +1907,7 @@ namespace xharness
 			<ul>
 				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(CleanSuccessfulTestRuns ? "do-not-clean" : "clean")}"");'>&#x{(CleanSuccessfulTestRuns ? "2705" : "274C")} Clean successful test runs</a></span></li>
 				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(UninstallTestApp ? "do-not-uninstall-test-app" : "uninstall-test-app")}"");'>&#x{(UninstallTestApp ? "2705" : "274C")} Uninstall the app from device before and after the test run</a></span></li>
-				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{(Harness.IncludeSystemPermissionTests ? "skip-permission-tests" : "include-permission-tests")}"");'>&#x{(Harness.IncludeSystemPermissionTests ? "2705" : "274C")} Run tests that require system permissions (might put up permission dialogs)</a></span></li>
+				<li class=""adminitem""><span id='{id_counter++}' class='autorefreshable'><a href='javascript:sendrequest (""/set-option?{include_system_permission_option}"");'>&#x{include_system_permission_icon} Run tests that require system permissions (might put up permission dialogs)</a></span></li>
 			</ul>
 	</li>
 	");
@@ -2318,9 +2290,9 @@ namespace xharness
 						}
 					}
 
-					var resources = device_resources.Values.Concat (new Resource [] { DesktopResource });
+					var resources = device_resources.Values.Concat (new Resource [] { DesktopResource, NugetResource });
 					if (resources.Any ()) {
-						writer.WriteLine ($"<h3>Devices:</h3>");
+						writer.WriteLine ($"<h3>Devices/Resources:</h3>");
 						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
 							writer.WriteLine ($"{dr.Description} - {dr.Users}/{dr.MaxConcurrentUsers} users - {dr.QueuedUsers} in queue<br />");
 						}
@@ -2387,7 +2359,6 @@ namespace xharness
 		public Task InitialTask; // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 
-		public bool RequiresXcode94;
 		public bool BuildOnly;
 		public string KnownFailure;
 
@@ -2509,18 +2480,13 @@ namespace xharness
 					return $"unknown test name ({GetType ().Name}";
 				switch (Platform) {
 				case TestPlatform.Mac:
-				case TestPlatform.Mac_Classic:
 					return rv;
-				case TestPlatform.Mac_Unified:
-					return rv.Substring (0, rv.Length - "-unified".Length);
-				case TestPlatform.Mac_Unified32:
-					return rv.Substring (0, rv.Length - "-unified-32".Length);
-				case TestPlatform.Mac_UnifiedXM45:
-					return rv.Substring (0, rv.Length - "-unifiedXM45".Length);
-				case TestPlatform.Mac_UnifiedXM45_32:
-					return rv.Substring (0, rv.Length - "-unifiedXM45-32".Length);
-				case TestPlatform.Mac_UnifiedSystem:
-					return rv.Substring (0, rv.Length - "-unifiedSystem".Length);
+				case TestPlatform.Mac_Modern:
+					return rv;//.Substring (0, rv.Length - "-unified".Length);
+				case TestPlatform.Mac_Full:
+					return rv.Substring (0, rv.Length - "-full".Length);
+				case TestPlatform.Mac_System:
+					return rv.Substring (0, rv.Length - "-system".Length);
 				default:
 					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 8);
@@ -2676,7 +2642,7 @@ namespace xharness
 
 		protected void SetEnvironmentVariables (Process process)
 		{
-			var xcodeRoot = RequiresXcode94 ? Harness.Xcode94Root : Harness.XcodeRoot;
+			var xcodeRoot = Harness.XcodeRoot;
 			
 			switch (Platform) {
 			case TestPlatform.iOS:
@@ -2694,12 +2660,9 @@ namespace xharness
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 				break;
 			case TestPlatform.Mac:
-			case TestPlatform.Mac_Classic:
-			case TestPlatform.Mac_Unified:
-			case TestPlatform.Mac_Unified32:
-			case TestPlatform.Mac_UnifiedXM45:
-			case TestPlatform.Mac_UnifiedXM45_32:
-			case TestPlatform.Mac_UnifiedSystem:
+			case TestPlatform.Mac_Modern:
+			case TestPlatform.Mac_Full:
+			case TestPlatform.Mac_System:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
@@ -2854,37 +2817,39 @@ namespace xharness
 
 		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, Log log, bool useXIBuild=false)
 		{
-			// we do not want to use xibuild on solutions, we will have some failures with Mac Full
-			var isSolution = projectPath.EndsWith (".sln", StringComparison.Ordinal);
-			if (!File.Exists (projectPath))
-				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
+			using (var resource = await Jenkins.NugetResource.AcquireExclusiveAsync ()) {
+				// we do not want to use xibuild on solutions, we will have some failures with Mac Full
+				var isSolution = projectPath.EndsWith (".sln", StringComparison.Ordinal);
+				if (!File.Exists (projectPath))
+					throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
-			using (var nuget = new Process ()) {
-				nuget.StartInfo.FileName = useXIBuild && !isSolution? Harness.XIBuildPath : 
-					"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
-				var args = new StringBuilder ();
-				args.Append ((useXIBuild && !isSolution? "/" : "") + "restore "); // diff param depending on the tool
-				args.Append (StringUtils.Quote (projectPath));
-				if (useXIBuild && !isSolution)
-					args.Append (" /verbosity:detailed ");
-				else
-					args.Append (" -verbosity detailed ");
-				nuget.StartInfo.Arguments = args.ToString ();
-				SetEnvironmentVariables (nuget);
-				LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
+				using (var nuget = new Process ()) {
+					nuget.StartInfo.FileName = useXIBuild && !isSolution ? Harness.XIBuildPath :
+						"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
+					var args = new StringBuilder ();
+					args.Append ((useXIBuild && !isSolution ? "/" : "") + "restore "); // diff param depending on the tool
+					args.Append (StringUtils.Quote (projectPath));
+					if (useXIBuild && !isSolution)
+						args.Append (" /verbosity:detailed ");
+					else
+						args.Append (" -verbosity detailed ");
+					nuget.StartInfo.Arguments = args.ToString ();
+					SetEnvironmentVariables (nuget);
+					LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
 
-				var timeout = TimeSpan.FromMinutes (15);
-				var result = await nuget.RunAsync (log, true, timeout);
-				if (result.TimedOut) {
-					log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
-					return TestExecutingResult.TimedOut;
-				} else if (!result.Succeeded) {
-					return TestExecutingResult.Failed;
+					var timeout = TimeSpan.FromMinutes (15);
+					var result = await nuget.RunAsync (log, true, timeout);
+					if (result.TimedOut) {
+						log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
+						return TestExecutingResult.TimedOut;
+					} else if (!result.Succeeded) {
+						return TestExecutingResult.Failed;
+					}
 				}
+
+				LogEvent (log, "Restoring nugets completed for {0} ({1}) on path {2}", TestName, Mode, projectPath);
+				return TestExecutingResult.Succeeded;
 			}
-			
-			LogEvent (log, "Restoring nugets completed for {0} ({1}) on path {2}", TestName, Mode, projectPath);
-			return TestExecutingResult.Succeeded;
 		}
 		
 		List<string> GetNestedReferenceProjects (string csproj)
@@ -2928,42 +2893,6 @@ namespace xharness
 
 			// restore for the main project/solution]
 			ExecutionResult = await RestoreNugetsAsync (SolutionPath ?? TestProject.Path, log, useXIBuild);
-		}
-	}
-
-	class MdtoolTask : BuildProjectTask
-	{
-		protected override async Task ExecuteAsync ()
-		{
-			ExecutionResult = TestExecutingResult.Building;
-			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
-				var log = Logs.Create ($"build-{Platform}-{Timestamp}.txt", "Build log");
-				await RestoreNugetsAsync (log, resource);
-				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = "/Applications/Visual Studio.app/Contents/MacOS/vstool";
-					var args = new StringBuilder ();
-					args.Append ("build ");
-					var sln = Path.ChangeExtension (ProjectFile, "sln");
-					args.Append (StringUtils.Quote (File.Exists (sln) ? sln : ProjectFile));
-					xbuild.StartInfo.Arguments = args.ToString ();
-					SetEnvironmentVariables (xbuild);
-					LogEvent (log, "Building {0} ({1})", TestName, Mode);
-					if (!Harness.DryRun) {
-						var timeout = TimeSpan.FromMinutes (5);
-						var result = await xbuild.RunAsync (log, true, timeout);
-						if (result.TimedOut) {
-							ExecutionResult = TestExecutingResult.TimedOut;
-							log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
-						} else if (result.Succeeded) {
-							ExecutionResult = TestExecutingResult.Succeeded;
-						} else {
-							ExecutionResult = TestExecutingResult.Failed;
-						}
-					}
-					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
-				}
-				log.Dispose ();
-			}
 		}
 	}
 
@@ -3262,18 +3191,12 @@ namespace xharness
 				switch (Platform) {
 				case TestPlatform.Mac:
 					return "Mac";
-				case TestPlatform.Mac_Classic:
-					return "Mac Classic";
-				case TestPlatform.Mac_Unified:
-					return "Mac Unified";
-				case TestPlatform.Mac_Unified32:
-					return "Mac Unified 32-bit";
-				case TestPlatform.Mac_UnifiedXM45:
-					return "Mac Unified XM45";
-				case TestPlatform.Mac_UnifiedXM45_32:
-					return "Mac Unified XM45 32-bit";
-				case TestPlatform.Mac_UnifiedSystem:
-					return "Mac Unified System";
+				case TestPlatform.Mac_Modern:
+					return "Mac Modern";
+				case TestPlatform.Mac_Full:
+					return "Mac Full";
+				case TestPlatform.Mac_System:
+					return "Mac System";
 				default:
 					throw new NotImplementedException (Platform.ToString ());
 				}
@@ -3329,20 +3252,14 @@ namespace xharness
 				name = System.IO.Path.GetFileName (System.IO.Path.GetDirectoryName (projectDir));
 			var suffix = string.Empty;
 			switch (Platform) {
-			case TestPlatform.Mac_Unified:
-				suffix = "-unified";
+			case TestPlatform.Mac_Modern:
+				suffix = "-modern";
 				break;
-			case TestPlatform.Mac_Unified32:
-				suffix = "-unified-32";
+			case TestPlatform.Mac_Full:
+				suffix = "-full";
 				break;
-			case TestPlatform.Mac_UnifiedXM45:
-				suffix = "-unifiedXM45";
-				break;
-			case TestPlatform.Mac_UnifiedXM45_32:
-				suffix = "-unifiedXM45-32";
-				break;
-			case TestPlatform.Mac_UnifiedSystem:
-				suffix = "-unifiedSystem";
+			case TestPlatform.Mac_System:
+				suffix = "-system";
 				break;
 			}
 			if (ProjectFile.EndsWith (".sln", StringComparison.Ordinal)) {
@@ -3362,6 +3279,8 @@ namespace xharness
 						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", "NUnit results");
 						proc.StartInfo.Arguments = $"-result={StringUtils.Quote (xml)}";
 					}
+					if (!Harness.GetIncludeSystemPermissionTests (Platform, false))
+						proc.StartInfo.EnvironmentVariables ["DISABLE_SYSTEM_PERMISSION_TESTS"] = "1";
 					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", "Execution log");
@@ -4192,12 +4111,9 @@ namespace xharness
 		watchOS_64_32,
 
 		Mac,
-		Mac_Classic,
-		Mac_Unified,
-		Mac_UnifiedXM45,
-		Mac_Unified32,
-		Mac_UnifiedXM45_32,
-		Mac_UnifiedSystem,
+		Mac_Modern,
+		Mac_Full,
+		Mac_System,
 	}
 
 	[Flags]

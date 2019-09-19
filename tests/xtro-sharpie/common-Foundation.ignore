@@ -181,9 +181,16 @@
 !unknown-type! InternalNSNotificationHandler bound
 
 # Apple internals (we do not expose them)
-!missing-field! _NSConstantStringClassReference not bound
 !missing-type! NSConstantString not bound
 !missing-type! NSSimpleCString not bound
+
+# now (xcode11) marked as deprecated - but never exposed by us
+!missing-selector! NSURLSessionConfiguration::init not bound
+!missing-selector! NSURLSession::init not bound
+!missing-selector! NSURLSessionStreamTask::init not bound
+
+# this is a better named version of `date` which we already bound as `Now` in C#
+!missing-selector! +NSDate::now not bound
 
 
 ## unsorted
@@ -219,6 +226,7 @@
 !missing-field! NSGregorianCalendar not bound
 !missing-field! NSHebrewCalendar not bound
 !missing-field! NSIndianCalendar not bound
+!missing-field! NSInconsistentArchiveException not bound
 !missing-field! NSInternalInconsistencyException not bound
 !missing-field! NSInvalidArchiveOperationException not bound
 !missing-field! NSInvalidArgumentException not bound
@@ -260,6 +268,7 @@
 !missing-field! NSURLErrorFailingURLErrorKey not bound
 !missing-field! NSURLErrorFailingURLPeerTrustErrorKey not bound
 !missing-field! NSURLErrorFailingURLStringErrorKey not bound
+!missing-field! NSURLErrorNetworkUnavailableReasonKey not bound
 !missing-field! NSURLFileScheme not bound
 !missing-field! NSWillBecomeMultiThreadedNotification not bound
 !missing-field! NSXMLParserErrorDomain not bound
@@ -408,7 +417,6 @@
 !missing-selector! +NSURLRequest::requestWithURL:cachePolicy:timeoutInterval: not bound
 !missing-selector! +NSURLRequest::supportsSecureCoding not bound
 !missing-selector! +NSValue::value:withObjCType: not bound
-!missing-selector! +NSValue::valueWithBytes:objCType: not bound
 !missing-selector! +NSXPCInterface::interfaceWithProtocol: not bound
 !missing-selector! NSArray::addObserver:forKeyPath:options:context: not bound
 !missing-selector! NSArray::arrayByAddingObject: not bound
@@ -825,7 +833,6 @@
 !missing-selector! NSURLProtocol::task not bound
 !missing-selector! NSURLRequest::HTTPShouldUsePipelining not bound
 !missing-selector! NSUUID::initWithUUIDBytes: not bound
-!missing-selector! NSValue::getValue:size: not bound
 !missing-selector! NSValue::initWithBytes:objCType: not bound
 !missing-selector! NSXPCConnection::auditSessionIdentifier not bound
 !missing-selector! NSXPCConnection::effectiveGroupIdentifier not bound
@@ -996,9 +1003,18 @@
 !missing-selector! NSUserActivity::init not bound
 !missing-selector! NSXMLParser::abortParsing not bound
 !missing-selector! NSXMLParser::parse not bound
+
+## XPC not supported
 !missing-selector! NSXPCConnection::invalidate not bound
 !missing-selector! NSXPCConnection::resume not bound
 !missing-selector! NSXPCConnection::suspend not bound
 !missing-selector! NSXPCListener::invalidate not bound
 !missing-selector! NSXPCListener::resume not bound
 !missing-selector! NSXPCListener::suspend not bound
+!missing-selector! +NSXPCConnection::currentConnection not bound
+!missing-selector! NSXPCConnection::scheduleSendBarrierBlock: not bound
+### NSXPCCoder
+!missing-type! NSXPCCoder not bound
+!missing-selector! NSXPCCoder::connection not bound
+!missing-selector! NSXPCCoder::setUserInfo: not bound
+!missing-selector! NSXPCCoder::userInfo not bound

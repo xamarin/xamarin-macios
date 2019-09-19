@@ -227,10 +227,6 @@ namespace LinkAll {
 		}
 
 		[Test]
-#if !XAMCORE_2_0
-		// internal (to be removed) in unified
-		[Since (9,9)]
-#endif
 #if !XAMCORE_3_0
 		[Availability ()]
 		[iOS (9,9)]
@@ -338,6 +334,13 @@ namespace LinkAll {
 				using (var cgimg = CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default)) {
 					using (var img = new UIImage (cgimg)) {
 						UIPasteboard.General.Images = new UIImage[] { img };
+						if (TestRuntime.CheckXcodeVersion (8,0))
+							Assert.True (UIPasteboard.General.HasImages, "HasImages");
+
+						// https://github.com/xamarin/xamarin-macios/issues/6254
+						if (TestRuntime.CheckXcodeVersion (11, 0))
+							return;
+
 						Assert.AreEqual (1, UIPasteboard.General.Images.Length, "a - length");
 
 						UIPasteboard.General.Images = new UIImage[] { img, img };

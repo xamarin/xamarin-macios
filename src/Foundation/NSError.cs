@@ -59,6 +59,15 @@ namespace Foundation {
 		{
 			return LocalizedDescription;
 		}
+
+#if __IOS__
+		[Obsolete ("The WatchKit framework has been removed from iOS")]
+		public static NSString WatchKitErrorDomain {
+			get {
+				throw new PlatformNotSupportedException ("The WatchKit framework has been removed from iOS");
+			}
+		}
+#endif // __IOS__
 #endif
 	}
 }

@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using AudioToolbox;
+using Foundation;
 
 namespace AudioUnit
 {
@@ -68,9 +69,10 @@ namespace AudioUnit
 		HAL=0x6168616c, // 'ahal'
 		Default=0x64656620, // 'def'
 		System=0x73797320, // 'sys'
-#else
-		Remote=0x72696f63, // 'rioc'
 #endif
+		[Mac (10, 15)]
+		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		Remote=0x72696f63, // 'rioc'
 		VoiceProcessingIO = 0x7670696f // 'vpio'
 	}
 
@@ -101,6 +103,9 @@ namespace AudioUnit
 #if MONOMAC
 		TimePitch=0x746d7074, // 'tmpt'
 #else
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		AUiPodTime=0x6970746d, // 'iptm'
 #endif
 	}
@@ -130,9 +135,16 @@ namespace AudioUnit
 		NetSend=0x6e736e64, // 'nsnd'
 		RogerBeep=0x726f6772, // 'rogr'
 #else
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 		AUiPodEQ=0x69706571, // 'ipeq'
-		Reverb2=0x72766232, // 'rvb2'
 #endif
+		[Mac (10,15)]
+		[Unavailable (PlatformName.UIKitForMac)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		Reverb2=0x72766232, // 'rvb2'
 		NBandEq=0x6e626571, // 'nbeq'
 	}
 
@@ -176,7 +188,6 @@ namespace AudioUnit
 	public enum AudioComponentFlag // UInt32 in AudioComponentDescription
 	{
 		Unsearchable				= 1,
-		[iOS (6,0)]
 		SandboxSafe					= 2,
 		IsV3AudioUnit				= 4,
 		RequiresAsyncInstantiation	= 8,

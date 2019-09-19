@@ -107,6 +107,10 @@ namespace HomeKit {
 		NoHomeHub = 91,
 		IncompatibleHomeHub = 92, // HMErrorCodeNoCompatibleHomeHub introduced and deprecated on iOS 11. HMErrorCodeIncompatibleHomeHub = HMErrorCodeNoCompatibleHomeHub.
 		IncompatibleAccessory = 93,
+		ObjectWithSimilarNameExists = 95,
+		OwnershipFailure = 96,
+		MaximumAccessoriesOfTypeInHome = 97,
+		WiFiCredentialGenerationFailed = 98,
 	}
 
 	
@@ -1134,6 +1138,15 @@ namespace HomeKit {
 
 		[Field ("HMSignificantEventSunset")]
 		Sunset,
+	}
+
+	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+	[Flags]
+	[Native]
+	public enum HMHomeManagerAuthorizationStatus : ulong {
+		Determined = 1 << 0,
+		Restricted = 1 << 1,
+		Authorized = 1 << 2,
 	}
 
 	[iOS (9,0)]

@@ -97,7 +97,7 @@ public partial class Generator {
 
 		var library_name = type.Namespace;
 		var error = AttributeManager.GetCustomAttribute<ErrorDomainAttribute> (type);
-		if ((fields.Count > 0) || (error != null)) {
+		if ((fields.Count > 0) || (error != null) || (null_field != null)) {
 			print ("");
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
@@ -128,7 +128,7 @@ public partial class Generator {
 			print ("}");
 		}
 
-		if (fields.Count > 0) {
+		if ((fields.Count > 0) || (null_field != null)) {
 			print ("static IntPtr[] values = new IntPtr [{0}];", fields.Count);
 			print ("");
 
@@ -165,20 +165,23 @@ public partial class Generator {
 			print ("{");
 			indent++;
 			print ("IntPtr ptr = IntPtr.Zero;");
-			print ("switch (({0}) self) {{", underlying_type);
-			var default_symbol_name = default_symbol?.Item2.SymbolName;
-			// more than one enum member can share the same numeric value - ref: #46285
-			foreach (var kvp in fields) {
-				print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetRawConstantValue ()), type.Name, kvp.Key.Name);
-				var sn = kvp.Value.SymbolName;
-				if (sn == default_symbol_name)
-					print ("default:");
-				indent++;
-				print ("ptr = {0};", sn);
-				print ("break;");
-				indent--;
+			// can be empty - and the C# compiler emit `warning CS1522: Empty switch block`
+			if (fields.Count > 0) {
+				print ("switch (({0}) self) {{", underlying_type);
+				var default_symbol_name = default_symbol?.Item2.SymbolName;
+				// more than one enum member can share the same numeric value - ref: #46285
+				foreach (var kvp in fields) {
+					print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetRawConstantValue ()), type.Name, kvp.Key.Name);
+					var sn = kvp.Value.SymbolName;
+					if (sn == default_symbol_name)
+						print ("default:");
+					indent++;
+					print ("ptr = {0};", sn);
+					print ("break;");
+					indent--;
+				}
+				print ("}");
 			}
-			print ("}");
 			print ("return (NSString) Runtime.GetNSObject (ptr);");
 			indent--;
 			print ("}");
@@ -211,7 +214,7 @@ public partial class Generator {
 			print ("}");
 		}
 			
-		if ((fields.Count > 0) || (error != null)) {
+		if ((fields.Count > 0) || (error != null) || (null_field != null)) {
 			indent--;
 			print ("}");
 		}

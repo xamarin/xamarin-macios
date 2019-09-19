@@ -110,11 +110,10 @@ namespace Xamarin.Bundler {
 #if MTOUCH
 				if (IsSimulatorBuild)
 					return false;
-#else
-				if (Driver.Is64Bit)
-					return false;
-#endif
 				return MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.ThrowManagedException || MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Abort;
+#else
+				return false;
+#endif
 			}
 		}
 
@@ -465,16 +464,7 @@ namespace Xamarin.Bundler {
 #if MONOTOUCH
 			BuildTarget = BuildTarget.Simulator;
 #endif
-			Registrar.IStaticRegistrar registrar;
-#if MMP
-			if (Driver.IsClassic) {
-				registrar = new Registrar.ClassicStaticRegistrar (this);
-			} else {
-				registrar = new Registrar.StaticRegistrar (this);
-			}
-#else
-			registrar = new Registrar.StaticRegistrar (this);
-#endif
+			var registrar = new Registrar.StaticRegistrar (this);
 			if (RootAssemblies.Count == 1)
 				registrar.GenerateSingleAssembly (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else

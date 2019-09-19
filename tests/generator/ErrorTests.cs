@@ -30,6 +30,16 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void BI0087 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.macOSClassic;
+			bgen.CreateTemporaryBinding ("");
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (87, "Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.");
+		}
+
+		[Test]
 		[TestCase (Profile.iOS)]
 		public void BI1036 (Profile profile)
 		{
@@ -45,7 +55,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSClassic)]
 		public void BI1037 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -59,7 +68,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSClassic)]
 		public void BI1038 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -73,7 +81,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSClassic)]
 		public void BI1039 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -87,7 +94,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSClassic)]
 		public void BI1040 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -101,7 +107,6 @@ namespace GeneratorTests
 		[Test]
 		[TestCase (Profile.macOSFull)]
 		[TestCase (Profile.macOSMobile)]
-		[TestCase (Profile.macOSClassic)]
 		public void BI1041 (Profile profile)
 		{
 			var bgen = new BGenTool ();
@@ -719,6 +724,22 @@ namespace BI1066Errors
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1066, "Unsupported return type 'ObjCRuntime.Selector[]' in BI1066Errors.C.TestSelectorArrayReturnValue.");
 			bgen.AssertErrorCount (2); // We show the same error twice.
+		}
+
+		[Test]
+		public void BI1067_1070 ()
+		{
+			BGenTool bgen = new BGenTool {
+				Profile = Profile.iOS,
+			};
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "diamond-protocol-errors.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1067, "The type 'DiamondProtocol.A.C' is trying to inline the property 'P1' from the protocols 'DiamondProtocol.A.P1' and 'DiamondProtocol.A.P2', but the inlined properties don't share the same accessors ('DiamondProtocol.A.P1 P1' is read-only, while '$DiamondProtocol.A.P2 P1' is write-only).");
+			bgen.AssertWarning (1068, "The type 'DiamondProtocol.D.C' is trying to inline the property 'P1' from the protocols 'DiamondProtocol.D.P1' and 'DiamondProtocol.D.P2', and the inlined properties use different selectors (P1.P1 uses 'pA', and P2.P1 uses 'pB'.");
+			bgen.AssertError (1069, "The type 'DiamondProtocol.Y.C' is trying to inline the methods binding the selector 'm1:' from the protocols 'DiamondProtocol.Y.P1' and 'DiamondProtocol.Y.P2', using methods with different signatures ('Void M1(System.Int32)' vs 'Int32 M1(System.Boolean)').");
+			bgen.AssertError (1070, "The type 'DiamondProtocol.C.C' is trying to inline the property 'P1' from the protocols 'DiamondProtocol.C.P1' and 'DiamondProtocol.C.P2', but the inlined properties are of different types ('DiamondProtocol.C.P1 P1' is int, while 'DiamondProtocol.C.P2 P1' is int).");
+			bgen.AssertErrorCount (3);
+			bgen.AssertWarningCount (1);
 		}
 
 		[Test]

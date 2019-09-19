@@ -43,6 +43,12 @@ An invalid target framework was passed using the --target-framework argument. Pl
 
 This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
+### <a name='BI0087'/>BI0087: Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.
+
+Xamarin.Mac does not support the Classic API anymore, because the Classic API is 32-bit only, and macOS 10.15+ does not support 32-bit applications.
+
+The project must be [migrated to a Unified project](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/unified/updating-mac-apps) in order to support 64-bit.
+
 ### <a name='BI0099'/>BI0099: Internal error *. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 
 This error message is reported when an internal consistency check fails.
@@ -198,9 +204,13 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1066'/>BI1066: Unsupported return type '{type}' in {method}.
 
-### <a name='BI1067'/>BI1067: BindAs attribute of the selector \"{selector}\" is missing '[]' in the definition.
+### <a name='BI1067'/>BI1067: The type '{type}' is trying to inline the property '{property}' from the protocols '{readonly.DeclaringType.FullName}' and '{writeonly.DeclaringType.FullName}', but the inlined properties don't share the same accessors ('{readonly}' is read-only, while '${writeonly}' is write-only).
 
-### <a name='BI1068'/>BI1068: BindAs attribute of the parameter \"{parameter}\" is missing '[]' in the definition.
+### <a name='BI1068'/>BI1068: The type '{type}' is trying to inline the property '{property}' from the protocols '{protocol1}' and '{protocol2}', and the inlined properties use different selectors ({protocol1} uses '{selector1}', and {protocol2} uses '{selector2}.
+
+### <a name='BI1069'/>BI1069: The type '{type}' is trying to inline the methods binding the selector '{selector}' from the protocols '{protocol1}' and '{protocol2}', using methods with different signatures ('{signature}' vs '{signature2}').
+
+### <a name='BI1070'/>BI1070: The type '{type}' is trying to inline the property '{property}' from the protocols '{protocol1}' and '{protocol2}', but the inlined properties are of different types ('{property1}' is int, while '{property2}' is int).
 
 # BI11xx: warnings
 

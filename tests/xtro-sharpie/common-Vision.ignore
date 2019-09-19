@@ -27,6 +27,14 @@
 !unknown-native-enum! VNTrackObjectRequestRevision bound
 !unknown-native-enum! VNTrackRectangleRequestRevision bound
 !unknown-native-enum! VNTranslationalImageRegistrationRequestRevision bound
+!unknown-native-enum! VNClassifyImageRequestRevision bound
+!unknown-native-enum! VNDetectFaceCaptureQualityRequestRevision bound
+!unknown-native-enum! VNDetectHumanRectanglesRequestRevision bound
+!unknown-native-enum! VNGenerateAttentionBasedSaliencyImageRequestRevision bound
+!unknown-native-enum! VNGenerateImageFeaturePrintRequestRevision bound
+!unknown-native-enum! VNGenerateObjectnessBasedSaliencyImageRequestRevision bound
+!unknown-native-enum! VNRecognizeAnimalsRequestRevision bound
+!unknown-native-enum! VNRecognizeTextRequestRevision bound
 
 ## VNRequest is an abstract class so this will be bound in subclasses
 ## matching the return type to the above defined custom enums 
@@ -37,3 +45,7 @@
 !missing-selector! VNRequest::setRevision: not bound
 ## init is available but it's abstract (type) and not a designated initializer (so we don't bind it)
 !missing-selector! VNRequest::init not bound
+
+## Will be removed in future xcode11 beta
+!missing-field! VNAnimalDetectorCat not bound
+!missing-field! VNAnimalDetectorDog not bound
