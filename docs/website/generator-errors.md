@@ -212,7 +212,19 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1070'/>BI1070: The type '{type}' is trying to inline the property '{property}' from the protocols '{protocol1}' and '{protocol2}', but the inlined properties are of different types ('{property1}' is int, while '{property2}' is int).
 
-### <a name='BI1071'/>BI1071: The BindAs type for the member "{type}.{member}" must be an array when the member's type is an array. See src/tests/generator/ghissue6863_method.cs for example.
+### <a name='BI1071'/>BI1071: The BindAs type for the member "{type}.{member}" must be an array when the member's type is an array. See example binding below.
+
+Correct:
+
+[BindAs (typeof (string []))]
+[Export ("stringProp")]
+NSString[] StringProp { get; }
+
+Incorrect:
+
+[BindAs (typeof (string))]
+[Export ("stringProp")]
+NSString[] StringProp { get; }
 
 ### <a name='BI1072'/>BI1072: The BindAs type for the parameter "{parameterName}" in the method "{type}.{method}" must be an array when the parameter's type is an array.
 

@@ -1384,7 +1384,7 @@ public partial class Generator : IMemberGatherer {
 		} else if (originalType.IsArray && originalType.GetArrayRank () == 1) {
 			if (!retType.IsArray) {
 				throw new BindingException (1072, true, "The BindAs type for the parameter \"{0}\" in the method \"{1}.{2}\" must be an array when the parameter's type is an array.",
-					parameterName,mi.ReturnType.Name, mi.Name);
+					parameterName,mi.DeclaringType.FullName, mi.Name);
 			}
 			var arrType = originalType.GetElementType ();
 			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
@@ -3656,7 +3656,7 @@ public partial class Generator : IMemberGatherer {
 			if (minfo != null && minfo.is_bindAs) {
 				var bindAttrType = GetBindAsAttribute (minfo.mi).Type;
 				if (!bindAttrType.IsArray) {
-					throw new BindingException (1071, true, "The BindAs type for the member \"{0}.{1}\" must be an array when the member's type is an array.", mai.Type.Name, minfo.mi.Name);
+					throw new BindingException (1071, true, "The BindAs type for the member \"{0}.{1}\" must be an array when the member's type is an array.", minfo.mi.DeclaringType.FullName, minfo.mi.Name);
 				}
 				var bindAsT = bindAttrType.GetElementType ();
 				var suffix = string.Empty;
