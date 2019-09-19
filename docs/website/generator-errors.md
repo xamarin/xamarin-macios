@@ -216,15 +216,19 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 Correct:
 
+```csharp
 [BindAs (typeof (string []))]
 [Export ("stringProp")]
 NSString[] StringProp { get; }
+```
 
 Incorrect:
 
+```csharp
 [BindAs (typeof (string))]
 [Export ("stringProp")]
 NSString[] StringProp { get; }
+```
 
 ### <a name='BI1072'/>BI1072: The BindAs type for the parameter "{parameterName}" in the method "{type}.{method}" must be an array when the parameter's type is an array.
 
