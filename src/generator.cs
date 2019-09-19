@@ -1330,7 +1330,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	string GetToBindAsWrapper (MemberInformation minfo = null, ParameterInfo pi = null)
+	string GetToBindAsWrapper (MethodInfo mi, MemberInformation minfo = null, ParameterInfo pi = null)
 	{
 		BindAsAttribute attrib = null;
 		Type originalType = null;
@@ -1383,7 +1383,8 @@ public partial class Generator : IMemberGatherer {
 			temp += $"{FormatType (retType.DeclaringType, retType)}Extensions.GetConstant ({parameterName}{denullify});";
 		} else if (originalType.IsArray && originalType.GetArrayRank () == 1) {
 			if (!retType.IsArray) {
-				throw new BindingException (1068, true, "BindAs attribute of parameter \"{0}\" is missing '[]' in the definition", parameterName);
+				throw new BindingException (1068, true, "The BindAs type for the parameter \"{0}\" in the method \"{1}.{2}\" must be an array when the parameter's type is an array.",
+					parameterName,mi.ReturnType.Name, mi.Name);
 			}
 			var arrType = originalType.GetElementType ();
 			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
@@ -3655,7 +3656,7 @@ public partial class Generator : IMemberGatherer {
 			if (minfo != null && minfo.is_bindAs) {
 				var bindAttrType = GetBindAsAttribute (minfo.mi).Type;
 				if (!bindAttrType.IsArray) {
-					throw new BindingException (1067, true, "BindAs attribute of selector \"{0}\" is missing '[]' in the definition", minfo.selector);
+					throw new BindingException (1067, true, "The BindAs type for the member \"{0}.{1}\" must be an array when the member's type is an array.", mai.Type.Name, minfo.mi.Name);
 				}
 				var bindAsT = bindAttrType.GetElementType ();
 				var suffix = string.Empty;
@@ -4013,7 +4014,7 @@ public partial class Generator : IMemberGatherer {
 			} else if (mai.Type.IsArray){
 				Type etype = mai.Type.GetElementType ();
 				if (HasBindAsAttribute (pi)) {
-					convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
+					convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (mi, null, pi)) ;
 					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", pi.Name);
 				} else if (HasBindAsAttribute (propInfo)) {
 					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", propInfo.Name);
@@ -4062,7 +4063,7 @@ public partial class Generator : IMemberGatherer {
 			} else if (pi.ParameterType.IsGenericParameter) {
 //				convs.AppendFormat ("{0}.Handle", pi.Name.GetSafeParamName ());
 			} else if (HasBindAsAttribute (pi)) {
-				convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
+				convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (mi, null, pi));
 			} else {
 				if (mai.Type.IsClass && !mai.Type.IsByRef && 
 					(mai.Type != TypeManager.Selector && mai.Type != TypeManager.Class && mai.Type != TypeManager.System_String && !TypeManager.INativeObject.IsAssignableFrom (mai.Type)))
@@ -4294,7 +4295,7 @@ public partial class Generator : IMemberGatherer {
  		}
 
 		if (propInfo != null && IsSetter (mi) && HasBindAsAttribute (propInfo)) {
-			convs.AppendFormat ("var nsb_{0} = {1}\n", propInfo.Name, GetToBindAsWrapper (minfo));
+			convs.AppendFormat ("var nsb_{0} = {1}\n", propInfo.Name, GetToBindAsWrapper (mi, minfo, null));
 		}
 
 		if (convs.Length > 0)

@@ -156,7 +156,7 @@ namespace GeneratorTests
 			bgen.Profile = Profile.iOS;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "ghissue6863_property.cs")));
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1067, "BindAs attribute of selector \"stringProp\" is missing '[]' in the definition");
+			bgen.AssertError (1067, "The BindAs type for the member \"NSString [].StringProp\" must be an array when the member's type is an array.");
 		}
 
         
@@ -167,7 +167,7 @@ namespace GeneratorTests
 			bgen.Profile = Profile.iOS;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "ghissue6863_method.cs")));
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1068, "BindAs attribute of parameter \"id_test\" is missing '[]' in the definition");
+			bgen.AssertError (1068, "The BindAs type for the parameter \"id_test\" in the method \"Void.StringMethod\" must be an array when the parameter's type is an array.");
 		}
        
 
