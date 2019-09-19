@@ -36,7 +36,7 @@ namespace Metal {
 			if (sampleCount.Width != horizontal.Length)
 				throw new ArgumentOutOfRangeException ("horizontal lenght should be equal to the sampleCount.Witdh.");
 			if (sampleCount.Height != vertical.Length)
-				throw new ArgumentOutOfRangeException ("horizontal lenght should be equal to the sampleCount.Witdh.");
+				throw new ArgumentOutOfRangeException ("Vertical length should be equal to the sampleCount.Height.");
 
 			unsafe {
 				fixed (void* horizontalHandle = horizontal)
