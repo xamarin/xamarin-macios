@@ -613,7 +613,7 @@ void
 xamarin_release_trampoline (id self, SEL sel)
 {
 	// COOP: does not access managed memory: any mode, but it assumes safe mode upon entry (it takes locks, and doesn't switch to safe mode).
-	MONO_ASSERT_GC_SAFE;
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	
 	int ref_count;
 	bool detach = false;
