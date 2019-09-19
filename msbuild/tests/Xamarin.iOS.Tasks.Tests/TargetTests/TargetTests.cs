@@ -116,22 +116,23 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		static bool BundleResourceExists (string path, ref int extra)
+		static void BundleResourceExists (string path)
 		{
 			if (Path.GetExtension (path) == ".nib") {
 				if (Directory.Exists (path)) {
 					// Note: this suggests that things were built with the iOS 8 SDK...
 					var objects8Nib = Path.Combine (path, "objects-8.0+.nib");
+					var objects13Nib = Path.Combine (path, "objects-13.0+.nib");
 					var objectsNib = Path.Combine (path, "objects.nib");
 					var runtimeNib = Path.Combine (path, "runtime.nib");
 
-					extra++;
-
-					return File.Exists (runtimeNib) && (File.Exists (objectsNib) || File.Exists (objects8Nib));
+					Assert.That (File.Exists (runtimeNib), $"File exists: {runtimeNib}");
+					Assert.That (File.Exists (objectsNib) || File.Exists (objects8Nib) || File.Exists (objects13Nib), $"File exists: {objectsNib} || {objects8Nib} || {objects13Nib}");
+					return;
 				}
 			}
 
-			return File.Exists (path);
+			Assert.IsTrue (File.Exists (path), $"Existence of {path}");
 		}
 
 		[Test]
@@ -173,17 +174,22 @@ namespace Xamarin.iOS.Tasks
 			CollectionAssert.AreEquivalent (expected_references, actual_references, "References");
 		}
 
-		// [Test] - https://github.com/xamarin/xamarin-macios/issues/6970
+		[Test]
 		public void BuildExecutable ()
 		{
 			var expectedFiles = ExpectedExecutableFiles;
-			int extra = 0;
 
 			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.Build);
 
 			Assert.IsTrue (Directory.Exists (AppBundlePath), "#1");
+
+			var bundleResources = Directory.GetFileSystemEntries (AppBundlePath, "*", SearchOption.AllDirectories);
+			var inexistentResource = expectedFiles.Except (expectedFiles).ToArray ();
+
+			Assert.That (inexistentResource, Is.Empty, "No missing resources");
+
 			foreach (var file in expectedFiles)
-				Assert.IsTrue (BundleResourceExists (file, ref extra), "#2. " + file);
+				BundleResourceExists (file);
 
 			// Verify that we have not bundled BundleResource or Content items as embedded resources
 			var assemblyDef = AssemblyDefinition.ReadAssembly (Path.Combine (AppBundlePath, "MySingleView.exe"));
@@ -440,7 +446,7 @@ namespace Xamarin.iOS.Tasks
 			Assert.AreEqual (11, bundleResources.Length, "#1");
 		}
 
-		// [Test] - https://github.com/xamarin/xamarin-macios/issues/6970
+		[Test]
 		public void BundleResources ()
 		{
 			var actool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "actool", "bundle");
@@ -467,9 +473,11 @@ namespace Xamarin.iOS.Tasks
 			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "LaunchImage-568h@2x.png") && i.GetMetadataValue ("LogicalName") == "LaunchImage-568h@2x.png"), "#11");
 			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "LaunchImage.png") && i.GetMetadataValue ("LogicalName") == "LaunchImage.png"), "#12");
 			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (actool, "LaunchImage@2x.png") && i.GetMetadataValue ("LogicalName") == "LaunchImage@2x.png"), "#13");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "1-view-2.nib") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/1-view-2.nib"), "#14");
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "1-view-2.nib", "objects-13.0+.nib") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/1-view-2.nib/objects-13.0+.nib"), "#14.1");
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "1-view-2.nib", "runtime.nib") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/1-view-2.nib/runtime.nib"), "#14.2");
 			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "Info.plist") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/Info.plist"), "#15");
-			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "UIViewController-1.nib") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/UIViewController-1.nib"), "#16");
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "UIViewController-1.nib", "objects-13.0+.nib") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/UIViewController-1.nib/objects-13.0+.nib"), "#16.1");
+			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "MainStoryboard.storyboardc", "UIViewController-1.nib", "runtime.nib") && i.GetMetadataValue ("LogicalName") == "MainStoryboard.storyboardc/UIViewController-1.nib/runtime.nib"), "#16.2");
 			if (bundleItems.Length > ExpectedExecutableBundleResources.Length) {
 				Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "en.lproj", "TranslatedView.nib", "runtime.nib") && i.GetMetadataValue ("LogicalName") == "en.lproj/TranslatedView.nib/runtime.nib"), "#17");
 				Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine (ibtool, "FolderView.nib", "runtime.nib") && i.GetMetadataValue ("LogicalName") == "FolderView.nib/runtime.nib"), "#18");
