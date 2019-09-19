@@ -3864,7 +3864,7 @@ namespace Metal {
 
 		[Export ("maxFragmentBufferBindCount")]
 		nuint MaxFragmentBufferBindCount { get; set; }
-/* Fails instrospection issue: https://github.com/xamarin/maccore/issues/1979
+/* Fails introspection issue: https://github.com/xamarin/maccore/issues/1979
 		[NoMac, iOS (13, 0)]
 		[Export ("maxKernelBufferBindCount")]
 		nuint MaxKernelBufferBindCount { get; set; }
