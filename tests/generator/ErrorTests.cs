@@ -156,7 +156,6 @@ namespace GeneratorTests
 			bgen.Profile = Profile.iOS;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "ghissue6863_property.cs")));
 			bgen.AssertExecuteError ("build");
-
 			bgen.AssertError (1071, "The BindAs type for the member \"NSString [].StringProp\" must be an array when the member's type is an array.");
 		}
 
