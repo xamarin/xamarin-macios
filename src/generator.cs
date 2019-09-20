@@ -1330,7 +1330,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	string GetToBindAsWrapper (MethodInfo mi, MemberInformation minfo = null, ParameterInfo pi = null)
+	string GetToBindAsWrapper (MemberInformation minfo = null, ParameterInfo pi = null)
 	{
 		BindAsAttribute attrib = null;
 		Type originalType = null;
@@ -1382,10 +1382,6 @@ public partial class Generator : IMemberGatherer {
 			temp = isNullable ? $"{parameterName} == null ? null : " : string.Empty;
 			temp += $"{FormatType (retType.DeclaringType, retType)}Extensions.GetConstant ({parameterName}{denullify});";
 		} else if (originalType.IsArray && originalType.GetArrayRank () == 1) {
-			if (!retType.IsArray) {
-				throw new BindingException (1072, true, "The BindAs type for the parameter \"{0}\" in the method \"{1}.{2}\" must be an array when the parameter's type is an array.",
-					parameterName,mi.DeclaringType.FullName, mi.Name);
-			}
 			var arrType = originalType.GetElementType ();
 			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;
@@ -3654,11 +3650,7 @@ public partial class Generator : IMemberGatherer {
 		} else if (mai.Type.IsArray){
 			Type etype = mai.Type.GetElementType ();
 			if (minfo != null && minfo.is_bindAs) {
-				var bindAttrType = GetBindAsAttribute (minfo.mi).Type;
-				if (!bindAttrType.IsArray) {
-					throw new BindingException (1071, true, "The BindAs type for the member \"{0}.{1}\" must be an array when the member's type is an array.", minfo.mi.DeclaringType.FullName, minfo.mi.Name);
-				}
-				var bindAsT = bindAttrType.GetElementType ();
+				var bindAsT = GetBindAsAttribute (minfo.mi).Type.GetElementType ();
 				var suffix = string.Empty;
 				print ("IntPtr retvalarrtmp;");
 				cast_a = "((retvalarrtmp = ";
@@ -4014,7 +4006,7 @@ public partial class Generator : IMemberGatherer {
 			} else if (mai.Type.IsArray){
 				Type etype = mai.Type.GetElementType ();
 				if (HasBindAsAttribute (pi)) {
-					convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (mi, null, pi));
+					convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
 					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", pi.Name);
 				} else if (HasBindAsAttribute (propInfo)) {
 					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", propInfo.Name);
@@ -4063,7 +4055,7 @@ public partial class Generator : IMemberGatherer {
 			} else if (pi.ParameterType.IsGenericParameter) {
 //				convs.AppendFormat ("{0}.Handle", pi.Name.GetSafeParamName ());
 			} else if (HasBindAsAttribute (pi)) {
-				convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (mi, null, pi));
+				convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
 			} else {
 				if (mai.Type.IsClass && !mai.Type.IsByRef && 
 					(mai.Type != TypeManager.Selector && mai.Type != TypeManager.Class && mai.Type != TypeManager.System_String && !TypeManager.INativeObject.IsAssignableFrom (mai.Type)))
@@ -4295,7 +4287,7 @@ public partial class Generator : IMemberGatherer {
  		}
 
 		if (propInfo != null && IsSetter (mi) && HasBindAsAttribute (propInfo)) {
-			convs.AppendFormat ("var nsb_{0} = {1}\n", propInfo.Name, GetToBindAsWrapper (mi, minfo, null));
+			convs.AppendFormat ("var nsb_{0} = {1}\n", propInfo.Name, GetToBindAsWrapper (minfo));
 		}
 
 		if (convs.Length > 0)
