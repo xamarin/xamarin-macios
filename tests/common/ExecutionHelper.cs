@@ -435,7 +435,7 @@ namespace Xamarin.Tests
 	static class ExecutionHelper {
 		static int Execute (string fileName, string[] arguments, StringBuilder stdout, StringBuilder stderr, TimeSpan? timeout = null)
 		{
-			var psi = new ProcessStartInfo (fileName, string.Join (" ", arguments.Select ((v) => StringUtils.Quote (v))));
+			var psi = new ProcessStartInfo (fileName, string.Join (" ", arguments.Select ((v) => StringUtils.QuoteForProcess (v))));
 			return Execute (psi, (line) => {
 				lock (stdout)
 					stdout.AppendLine (line);
@@ -463,7 +463,7 @@ namespace Xamarin.Tests
 
 		public static int Execute (string fileName, string [] arguments, string working_directory = null, Action<string> stdout_callback = null, Action<string> stderr_callback = null, TimeSpan? timeout = null)
 		{
-			var psi = new ProcessStartInfo (fileName, string.Join (" ", arguments.Select ((v) => StringUtils.Quote (v))));
+			var psi = new ProcessStartInfo (fileName, string.Join (" ", arguments.Select ((v) => StringUtils.QuoteForProcess (v))));
 			psi.WorkingDirectory = working_directory;
 			return Execute (psi, stdout_callback, stderr_callback, timeout);
 		}
@@ -471,7 +471,7 @@ namespace Xamarin.Tests
 		public static int Execute (string fileName, string [] arguments, out StringBuilder output, string working_directory = null, TimeSpan? timeout = null)
 		{
 			output = new StringBuilder ();
-			var psi = new ProcessStartInfo (fileName, string.Join (" ", arguments.Select ((v) => StringUtils.Quote (v))));
+			var psi = new ProcessStartInfo (fileName, string.Join (" ", arguments.Select ((v) => StringUtils.QuoteForProcess (v))));
 			psi.WorkingDirectory = working_directory;
 			var capturedOutput = output;
 			var callback = new Action<string> ((v) => {
@@ -483,7 +483,7 @@ namespace Xamarin.Tests
 
 		public static int Execute (string fileName, string [] arguments, out bool timed_out, Dictionary<string, string> environment_variables = null, Action<string> stdout_callback = null, Action<string> stderr_callback = null, TimeSpan? timeout = null)
 		{
-			var psi = new ProcessStartInfo (fileName, string.Join (" ", StringUtils.Quote (arguments)));
+			var psi = new ProcessStartInfo (fileName, string.Join (" ", StringUtils.QuoteForProcess (arguments)));
 			if (environment_variables != null) {
 				foreach (var ev in environment_variables)
 					psi.EnvironmentVariables [ev.Key] = ev.Value;
@@ -493,7 +493,7 @@ namespace Xamarin.Tests
 
 		public static int Execute (string fileName, string [] arguments, out bool timed_out, string working_directory = null, Dictionary<string, string> environment_variables = null, Action<string> stdout_callback = null, Action<string> stderr_callback = null, TimeSpan? timeout = null)
 		{
-			var psi = new ProcessStartInfo (fileName, string.Join (" ", StringUtils.Quote (arguments)));
+			var psi = new ProcessStartInfo (fileName, string.Join (" ", StringUtils.QuoteForProcess (arguments)));
 			psi.WorkingDirectory = working_directory;
 			if (environment_variables != null) {
 				foreach (var ev in environment_variables)
@@ -597,7 +597,7 @@ namespace Xamarin.Tests
 		// The arguments are automatically quoted.
 		public static int Execute (string fileName, string[] arguments, Dictionary<string, string> environmentVariables, StringBuilder stdout, StringBuilder stderr, TimeSpan? timeout = null, string workingDirectory = null)
 		{
-			return Execute (fileName, string.Join (" ", Xamarin.Utils.StringUtils.Quote (arguments)), environmentVariables, stdout, stderr, timeout, workingDirectory);
+			return Execute (fileName, string.Join (" ", Xamarin.Utils.StringUtils.QuoteForProcess (arguments)), environmentVariables, stdout, stderr, timeout, workingDirectory);
 		}
 
 		public static int Execute (string fileName, string arguments, Dictionary<string, string> environmentVariables, StringBuilder stdout, StringBuilder stderr, TimeSpan? timeout = null, string workingDirectory = null)
@@ -626,7 +626,7 @@ namespace Xamarin.Tests
 		private static extern void kill (int pid, int sig);
 		public static string Execute (string fileName, string[] arguments, bool throwOnError = true, Dictionary<string, string> environmentVariables = null, bool hide_output = false, TimeSpan? timeout = null)
 		{
-			return Execute (fileName, string.Join (" ", StringUtils.Quote (arguments)), throwOnError, environmentVariables, hide_output, timeout);
+			return Execute (fileName, string.Join (" ", StringUtils.QuoteForProcess (arguments)), throwOnError, environmentVariables, hide_output, timeout);
 		}
 
 		public static string Execute (string fileName, string arguments, bool throwOnError = true, Dictionary<string, string> environmentVariables = null,

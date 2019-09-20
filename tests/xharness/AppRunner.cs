@@ -987,7 +987,7 @@ namespace xharness
 		{
 			if (!string.IsNullOrEmpty (device_name)) {
 				args.Append (" --devname ");
-				args.Append (StringUtils.Quote (device_name));
+				args.Append (StringUtils.QuoteForProcess (device_name));
 			}
 		}
 	}

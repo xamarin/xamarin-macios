@@ -14,6 +14,7 @@ namespace Xamarin.Utils {
 
 		static char shellQuoteChar;
 		static char[] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
+		static char [] mustQuoteCharactersProcess = { ' ', '\\', '"' };
 
 		public static string[] Quote (params string[] array)
 		{
@@ -44,6 +45,40 @@ namespace Xamarin.Utils {
 				s.Append (c);
 			}
 			s.Append (shellQuoteChar);
+
+			return s.ToString ();
+		}
+
+		public static string [] QuoteForProcess (params string [] array)
+		{
+			if (array == null || array.Length == 0)
+				return array;
+
+			var rv = new string [array.Length];
+			for (var i = 0; i < array.Length; i++)
+				rv [i] = QuoteForProcess (array [i]);
+			return rv;
+		}
+
+		// Quote input according to how System.Diagnostics.Process needs it quoted.
+		public static string QuoteForProcess (string f)
+		{
+			if (String.IsNullOrEmpty (f))
+				return f ?? String.Empty;
+
+			if (f.IndexOfAny (mustQuoteCharactersProcess) == -1)
+				return f;
+
+			var s = new StringBuilder ();
+
+			s.Append ('"');
+			foreach (var c in f) {
+				if (c == '"' || c == '\\')
+					s.Append ('\\');
+
+				s.Append (c);
+			}
+			s.Append ('"');
 
 			return s.ToString ();
 		}
