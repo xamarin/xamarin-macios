@@ -18,6 +18,13 @@ using ProductException=BindingException;
 
 public class BindingException : Exception {
 	
+	public BindingException (int code, bool error, string message) :
+		base (message)
+	{
+		Code = code;
+		Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
+	}
+
 	public BindingException (int code, string message, params object[] args) : 
 		this (code, false, message, args)
 	{
@@ -62,9 +69,19 @@ public static class ErrorHelper {
 	[ThreadStatic]
 	static Dictionary<int, WarningLevel> warning_levels;
 	
+	public static ProductException CreateError (int code, string message)
+	{
+		return new ProductException (code, true, message);
+	}
+
 	public static ProductException CreateError (int code, string message, params object[] args)
 	{
 		return new ProductException (code, true, message, args);
+	}
+
+	public static void Warning (int code, string message)
+	{
+		Show (new ProductException (code, false, message));
 	}
 
 	public static void Warning (int code, string message, params object[] args)
