@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 
 using Xamarin.Utils;
+using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests
 {
@@ -59,6 +60,10 @@ namespace Xamarin.MMP.Tests
 		[TestCase (false, false, false)]
 		public void ShouldStripMonoPosixHelper (bool? strip, bool debugStrips, bool releaseStrips)
 		{
+			var posixHelper = Path.Combine (Configuration.SdkRootXM, "lib", "libMonoPosixHelper.dylib");
+			if (Xamarin.MachO.GetArchitectures (posixHelper).Count < 2)
+				Assert.Ignore ($"libMonoPosixHelper.dylib is not a fat library.");
+
 			MMPTests.RunMMPTest (tmpDir =>
 			{
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir);
@@ -90,16 +95,17 @@ namespace Xamarin.MMP.Tests
 		{
 			MMPTests.RunMMPTest (tmpDir =>
 			{
-				string originalLocation = Path.Combine (TI.FindRootDirectory (), MonoPosixOffset);
+				string originalLocation = Path.Combine (Configuration.SourceRoot, "tests", "test-libraries", "libtest-fat.macos.dylib");
 				string newLibraryLocation =  Path.Combine (tmpDir, "libTest.dylib");
 				File.Copy (originalLocation, newLibraryLocation);
 
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir, $" --native-reference=\"{newLibraryLocation}\"");
 				test.Release = true;
 
-				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+				var testOutput = TI.TestUnifiedExecutable (test);
+				string buildOutput = testOutput.BuildOutput;
 				Assert.AreEqual (shouldStrip, DidAnyLipoStrip (buildOutput), "lipo usage did not match expectations");
-				Assert.AreEqual (shouldStrip, buildOutput.Contains ("MM2108"), "Warning did not match expectations");
+				testOutput.Messages.AssertWarning (2108, "libTest.dylib was stripped of architectures except x86_64 to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
 			});
 		}
 
