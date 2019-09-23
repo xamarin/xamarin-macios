@@ -1353,11 +1353,11 @@ namespace Xamarin.Bundler
 				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
 				app.EnableRepl = true;
 			} else {
-				if (app.Platform == ApplePlatform.WatchOS && app.IsArchEnabled (Abi.ARM64_32)) {
+				if (app.Platform == ApplePlatform.WatchOS && app.IsArchEnabled (Abi.ARM64_32) && app.BitCodeMode != BitCodeMode.LLVMOnly) {
 					if (app.IsArchEnabled (Abi.ARMv7k)) {
-						throw ErrorHelper.CreateError (99, "Please use device builds on WatchOS.");
+						throw ErrorHelper.CreateError (145, "Please use device builds on WatchOS.");
 					} else {
-						ErrorHelper.Warning (99, "ARM64_32 Debug mode requires --interpreter[=all], forcing it.");
+						ErrorHelper.Warning (146, "ARM64_32 Debug mode requires --interpreter[=all], forcing it.");
 						app.UseInterpreter = true;
 						app.InterpretedAssemblies.Clear ();
 					}
