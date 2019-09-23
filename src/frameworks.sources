@@ -1083,8 +1083,10 @@ METAL_SOURCES = \
 	Metal/MTLCompat.cs \
 	Metal/MTLDevice.cs \
 	Metal/MTLArrays.cs \
+	Metal/MTLRasterizationRateLayerDescriptor.cs \
 	Metal/MTLRenderCommandEncoder.cs \
 	Metal/MTLRenderPassDescriptor.cs \
+	Metal/MTLResourceStateCommandEncoder.cs \
 	Metal/MTLVertexDescriptor.cs \
 
 # MetalKit

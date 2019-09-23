@@ -29,3 +29,23 @@
 !incorrect-protocol-member! MTLArgumentEncoder::newArgumentEncoderForBufferAtIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffer:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffers:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newSharedTextureWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setRenderPipelineState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setComputePipelineState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setComputePipelineStates:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::isShareable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::newSharedTextureHandle is REQUIRED and should be abstract
+
+# Selectors missing reported by introspection: https://github.com/xamarin/maccore/issues/1978
+!missing-selector! MTLHeapDescriptor::hazardTrackingMode not bound
+!missing-selector! MTLHeapDescriptor::resourceOptions not bound
+!missing-selector! MTLHeapDescriptor::setHazardTrackingMode: not bound
+!missing-selector! MTLHeapDescriptor::setResourceOptions: not bound
+!missing-selector! MTLHeapDescriptor::setType: not bound
+!missing-selector! MTLHeapDescriptor::type not bound
+
+# Fails instrospection issue: https://github.com/xamarin/maccore/issues/1979
+!missing-selector! MTLIndirectCommandBufferDescriptor::maxKernelBufferBindCount not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::setMaxKernelBufferBindCount: not bound
