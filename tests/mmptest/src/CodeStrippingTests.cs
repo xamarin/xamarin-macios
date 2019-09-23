@@ -105,7 +105,11 @@ namespace Xamarin.MMP.Tests
 				var testOutput = TI.TestUnifiedExecutable (test);
 				string buildOutput = testOutput.BuildOutput;
 				Assert.AreEqual (shouldStrip, DidAnyLipoStrip (buildOutput), "lipo usage did not match expectations");
-				testOutput.Messages.AssertWarning (2108, "libTest.dylib was stripped of architectures except x86_64 to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
+				if (shouldStrip) {
+					testOutput.Messages.AssertWarning (2108, "libTest.dylib was stripped of architectures except x86_64 to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
+				} else {
+					testOutput.Messages.AssertWarningCount (0);
+				}
 			});
 		}
 
