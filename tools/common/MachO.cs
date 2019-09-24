@@ -232,10 +232,19 @@ namespace Xamarin
 				}
 			} else {
 				var mf = file as MachOFile;
-				if (mf != null)
+				if (mf != null) {
 					yield return mf;
-				else
-					throw ErrorHelper.CreateError (1604, "File of type {0} is not a MachO file ({1}).", file.GetType ().Name, filename);
+					yield break;
+				}
+
+				var sl = file as StaticLibrary;
+				if (sl != null) {
+					foreach (var obj in sl.ObjectFiles)
+						yield return obj;
+					yield break;
+				}
+				
+				throw ErrorHelper.CreateError (1604, "File of type {0} is not a MachO file ({1}).", file.GetType ().Name, filename);
 			}
 		}
 

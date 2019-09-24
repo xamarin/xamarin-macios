@@ -113,6 +113,9 @@
       <Link>SdkVersions.cs</Link>
     </Compile>
     <Compile Include="src\TargetFrameworkMutateTests.cs" />
+    <Compile Include="..\..\tools\common\MachO.cs">
+      <Link>MachO.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
