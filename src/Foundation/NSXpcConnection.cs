@@ -40,19 +40,19 @@ namespace Foundation {
 		public TProtocol CreateRemoteObjectProxy<TProtocol> ()
 		{
 			IntPtr nativeProxyPtr = _CreateRemoteObjectProxy ();
-			return Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
+			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
 		}
 
 		public TProtocol CreateRemoteObjectProxy<TProtocol> (Action<NSError> errorHandler)
 		{
 			IntPtr nativeProxyPtr = _CreateRemoteObjectProxy (errorHandler);
-			return Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
+			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
 		}
 
 		public TProtocol CreateSynchronousRemoteObjectProxy (Action<NSError> errorHandler)
 		{
 			IntPtr nativeProxyPtr = _CreateSynchronousRemoteObjectProxy (errorHandler);
-			return Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
+			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
 		}
 	}
 }
