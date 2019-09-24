@@ -16086,24 +16086,10 @@ namespace Foundation
 		string ToString (NSUnit unit);
 	}
 
-	[Protocol (Name = "NSXPCProxyCreating")]
-	interface NSXpcProxyCreating
-	{
-		[Export ("remoteObjectProxy")]
-		NSObject CreateRemoteObjectProxy ();
-
-		[Export ("remoteObjectProxyWithErrorHandler:")]
-		NSObject CreateRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
-
-		[Mac (10, 11)][iOS (9, 0)][Watch (2, 0)][TV (9, 0)]
-		[Export ("synchronousRemoteObjectProxyWithErrorHandler:")]
-		NSObject CreateSynchronousRemoteObjectProxy([BlockCallback] Action<NSError> errorHandler);
-	}
-
 	[Mac (10, 8)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
 	[BaseType (typeof (NSObject), Name = "NSXPCConnection")]
 	[DisableDefaultCtor]
-	interface NSXpcConnection : NSXpcProxyCreating
+	interface NSXpcConnection
 	{
 		[Export ("initWithServiceName:")]
 		[NoiOS][NoWatch][NoTV]
@@ -16180,6 +16166,16 @@ namespace Foundation
 		[Export ("scheduleSendBarrierBlock:")]
 		[Mac (10, 15)][iOS (13, 0)][Watch (6, 0)][TV (13, 0)]
 		void ScheduleSendBarrier(Action block);
+
+		[Export ("remoteObjectProxy"), Internal]
+		IntPtr _CreateRemoteObjectProxy ();
+
+		[Export ("remoteObjectProxyWithErrorHandler:"), Internal]
+		IntPtr _CreateRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
+
+		[Mac (10, 11)][iOS (9, 0)][Watch (2, 0)][TV (9, 0)]
+		[Export ("synchronousRemoteObjectProxyWithErrorHandler:"), Internal]
+		NSObject _CreateSynchronousRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
 	}
 
 	[Mac (10, 8)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]

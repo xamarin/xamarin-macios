@@ -22,6 +22,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using ObjCRuntime;
+
 namespace Foundation {
 	public partial class NSXpcConnection : NSObject {
 		private static readonly nint NSXpcConnectionPrivileged = (1 << 12);
@@ -33,6 +35,24 @@ namespace Foundation {
 		public NSXpcConnection (string machServiceName, bool isPrivileged)
 			: this (machServiceName, isPrivileged ? NSXpcConnectionPrivileged : 0)
 		{
+		}
+
+		public TProtocol CreateRemoteObjectProxy<TProtocol> ()
+		{
+			IntPtr nativeProxyPtr = _CreateRemoteObjectProxy ();
+			return Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
+		}
+
+		public TProtocol CreateRemoteObjectProxy<TProtocol> (Action<NSError> errorHandler)
+		{
+			IntPtr nativeProxyPtr = _CreateRemoteObjectProxy (errorHandler);
+			return Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
+		}
+
+		public TProtocol CreateSynchronousRemoteObjectProxy (Action<NSError> errorHandler)
+		{
+			IntPtr nativeProxyPtr = _CreateSynchronousRemoteObjectProxy (errorHandler);
+			return Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
 		}
 	}
 }
