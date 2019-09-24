@@ -207,10 +207,7 @@ public class ListSourceFiles {
 			}
 			if (verbose)
 				Console.WriteLine ($"Original source is {src}");
-			string fixedSource = src;
-
-			if (!File.Exists (fixedSource))
-				fixedSource = mangler.GetSourcePath (src);
+			var fixedSource = mangler.GetSourcePath (src);
 
 			if (String.IsNullOrEmpty (fixedSource)) { 
 				Console.WriteLine ($"Skip path {src}");
