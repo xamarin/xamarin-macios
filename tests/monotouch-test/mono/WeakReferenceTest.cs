@@ -29,7 +29,11 @@ namespace MonoTouchFixtures {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public partial class WeakReferenceTest {
+#if __WATCHOS__
+		const int totalTestObjects = 500;
+#else
 		const int totalTestObjects = 5000;
+#endif
 
 		[SetUp]
 		public void Setup ()
