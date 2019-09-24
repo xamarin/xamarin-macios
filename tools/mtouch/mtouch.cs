@@ -362,7 +362,7 @@ namespace Xamarin.Bundler
 			return ret;
 		}
 
-		public static string GetAotCompiler (Application app, bool is64bits)
+		public static string GetAotCompiler (Application app, Abi abi, bool is64bits)
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
@@ -372,7 +372,12 @@ namespace Xamarin.Bundler
 					return Path.Combine (cross_prefix, "bin", "arm-darwin-mono-sgen");
 				}
 			case ApplePlatform.WatchOS:
-				return Path.Combine (cross_prefix, "bin", "armv7k-unknown-darwin-mono-sgen");
+				/* Use arm64_32 cross only for Debug mode */
+				if (abi == Abi.ARM64_32 && !app.EnableLLVMOnlyBitCode) {
+					return Path.Combine (cross_prefix, "bin", "arm64_32-darwin-mono-sgen");
+				} else {
+					return Path.Combine (cross_prefix, "bin", "armv7k-unknown-darwin-mono-sgen");
+				}
 			case ApplePlatform.TVOS:
 				return Path.Combine (cross_prefix, "bin", "arm64-darwin-mono-sgen");
 			default:
@@ -1339,14 +1344,24 @@ namespace Xamarin.Bundler
 					app.UseInterpreter = false;
 				}
 
-				// FIXME: the interpreter only supports ARM64 right now
+				// FIXME: the interpreter only supports ARM64{,_32} right now
 				// temporary - without a check here the error happens when deploying
-				if (!app.IsSimulatorBuild && !app.IsArchEnabled (Abi.ARM64))
+				if (!app.IsSimulatorBuild && (!app.IsArchEnabled (Abi.ARM64) && !app.IsArchEnabled (Abi.ARM64_32)))
 					throw ErrorHelper.CreateError (99, "Internal error: The interpreter is currently only available for 64 bits.");
 
 				// needs to be set after the argument validations
 				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
 				app.EnableRepl = true;
+			} else {
+				if (app.Platform == ApplePlatform.WatchOS && app.IsArchEnabled (Abi.ARM64_32) && app.BitCodeMode != BitCodeMode.LLVMOnly) {
+					if (app.IsArchEnabled (Abi.ARMv7k)) {
+						throw ErrorHelper.CreateError (145, "Please use device builds on WatchOS.");
+					} else {
+						ErrorHelper.Warning (146, "ARM64_32 Debug mode requires --interpreter[=all], forcing it.");
+						app.UseInterpreter = true;
+						app.InterpretedAssemblies.Clear ();
+					}
+				}
 			}
 
 			if (cross_prefix == null)

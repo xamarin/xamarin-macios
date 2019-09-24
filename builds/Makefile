@@ -958,6 +958,7 @@ install-local:: install-cross
 $(MONO_IOS_SDK_DESTDIR)/ios-cross32-release/bin/arm-darwin-mono-sgen: .stamp-$(MONO_BUILD_MODE)
 $(MONO_IOS_SDK_DESTDIR)/ios-cross64-release/bin/aarch64-darwin-mono-sgen: .stamp-$(MONO_BUILD_MODE)
 $(MONO_IOS_SDK_DESTDIR)/ios-crosswatch-release/bin/armv7k-unknown-darwin-mono-sgen: .stamp-$(MONO_BUILD_MODE)
+$(MONO_IOS_SDK_DESTDIR)/ios-crosswatch-release/bin/aarch64-apple-darwin10_ilp32-mono-sgen: .stamp-$(MONO_BUILD_MODE)
 
 $(PREFIX)/bin/arm-darwin-mono-sgen: $(MONO_IOS_SDK_DESTDIR)/ios-cross32-release/bin/arm-darwin-mono-sgen | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
@@ -968,11 +969,14 @@ $(PREFIX)/bin/arm64-darwin-mono-sgen: $(MONO_IOS_SDK_DESTDIR)/ios-cross64-releas
 $(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen: $(MONO_IOS_SDK_DESTDIR)/ios-crosswatch-release/bin/armv7k-unknown-darwin-mono-sgen | $(PREFIX)/bin
 	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
 
+$(PREFIX)/bin/arm64_32-darwin-mono-sgen: $(MONO_IOS_SDK_DESTDIR)/ios-crosswatch64_32-release/bin/aarch64-apple-darwin10_ilp32-mono-sgen | $(PREFIX)/bin
+	$(call Q_2,INSTALL ,[CROSS]) install -c -m 0755 $(INSTALL_STRIP_FLAG) $^ $@
+
 $(PREFIX)/bin:
 	$(Q) mkdir -p $@
 
 .PHONY: install-cross
-install-cross: $(PREFIX)/bin/arm-darwin-mono-sgen $(PREFIX)/bin/arm64-darwin-mono-sgen $(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen
+install-cross: $(PREFIX)/bin/arm-darwin-mono-sgen $(PREFIX)/bin/arm64-darwin-mono-sgen $(PREFIX)/bin/armv7k-unknown-darwin-mono-sgen $(PREFIX)/bin/arm64_32-darwin-mono-sgen
 
 #
 # LLVM

@@ -966,6 +966,18 @@ This warning is shown if the assemblies names given to the `--interpreter` optio
 
 <!-- 0143-0144: used by mmp -->
 
+<a name="MT0145" />
+
+### MT0145: Please use device builds on WatchOS.
+
+This error occurs if you use combined device builds for a Watch extension project. Per device builds are default in new projects.
+
+<a name="MT0146" />
+
+### MT0146: ARM64_32 Debug mode requires --interpreter[=all], forcing it.
+
+This warning is shown when `--interpreter` isn't specified explicitly for ARM64_32 Debug builds. The AOT compiler can't be used because it doesn't support ARM64_32.
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
