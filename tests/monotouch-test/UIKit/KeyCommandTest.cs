@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if __IOS__
+
+using System;
 
 using Foundation;
 using ObjCRuntime;
@@ -21,3 +23,5 @@ namespace MonoTouchFixtures.UIKit {
 		}
 	}
 }
+
+#endif
