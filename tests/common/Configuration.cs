@@ -315,7 +315,7 @@ namespace Xamarin.Tests
 				// might need tweaking.
 				if (mt_src_root == null)
 #if MONOMAC
-					mt_src_root = Path.GetFullPath (Path.Combine (TestAssemblyDirectory, "../../.."));
+					mt_src_root = RootPath;
 #else
 					mt_src_root = Path.GetFullPath (Path.Combine (TestAssemblyDirectory, "../../../.."));
 #endif
