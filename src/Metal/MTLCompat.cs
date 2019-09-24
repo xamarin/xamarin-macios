@@ -5,7 +5,7 @@ namespace Metal {
 
 	public partial class MTLSharedTextureHandle {
 
-		[Obsolete ("Default constructor was removed. Do not use.")]
+		[Obsolete ("Type is not meant to be created by user code.")]
 		public MTLSharedTextureHandle () {}
 	}
 

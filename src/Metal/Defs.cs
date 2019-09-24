@@ -353,6 +353,7 @@ namespace Metal {
 		Alpha = 5,
 	}
 
+	[Mac (10,15), iOS (13,0), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTextureSwizzleChannels {
 		public MTLTextureSwizzle Red;
