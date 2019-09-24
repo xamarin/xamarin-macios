@@ -6479,16 +6479,9 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 						sw.WriteLine ("\t\tprotected {0} (NSObjectFlag t) : base (t)", TypeName);
 						sw.WriteLine ("\t\t{");
-						if (is32BitNotSupported) {
-							sw.WriteLine ("\t\t#if ARCH_32");
-							sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-							sw.WriteLine ("\t\t#else");
-						}
 						if (is_direct_binding_value != null)
 							sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 						WriteMarkDirtyIfDerived (sw, type);
-						if (is32BitNotSupported)
-							sw.WriteLine ("\t\t#endif");
 						sw.WriteLine ("\t\t}");
 						sw.WriteLine ();
 					}
@@ -6496,15 +6489,8 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					sw.WriteLine ("\t\tprotected internal {0} (IntPtr handle) : base (handle)", TypeName);
 					sw.WriteLine ("\t\t{");
-					if (is32BitNotSupported) {
-						sw.WriteLine ("\t\t#if ARCH_32");
-						sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-						sw.WriteLine ("\t\t#else");
-					}
 					if (is_direct_binding_value != null)
 						sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
-					if (is32BitNotSupported)
-						sw.WriteLine ("\t\t#endif");
 					WriteMarkDirtyIfDerived (sw, type);
 					sw.WriteLine ("\t\t}");
 					sw.WriteLine ();
