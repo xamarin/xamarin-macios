@@ -22,6 +22,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
 using ObjCRuntime;
 
 namespace Foundation {
@@ -38,7 +39,7 @@ namespace Foundation {
 			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
 		}
 
-		public TProtocol CreateSynchronousRemoteObjectProxy (Action<NSError> errorHandler)
+		public TProtocol CreateSynchronousRemoteObjectProxy<TProtocol> (Action<NSError> errorHandler)
 		{
 			IntPtr nativeProxyPtr = _CreateSynchronousRemoteObjectProxy (errorHandler);
 			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
