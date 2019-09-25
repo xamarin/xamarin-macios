@@ -16219,7 +16219,7 @@ namespace Foundation
 	{
 		[Export ("interfaceWithProtocol:")]
 		[Static, Internal]
-		IntPtr CreateForProtocol(Protocol protocol);
+		NSXpcInterface CreateForProtocol (Protocol protocol);
 
 		[Export ("protocol", ArgumentSemantic.Assign)]
 		Protocol Protocol { get; set; }
