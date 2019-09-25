@@ -25500,41 +25500,11 @@ namespace AppKit {
 	[Mac (10,10)]
 	[Protocol]
 	interface NSAccessibilityOutline : NSAccessibilityTable {
-		[Abstract]
-		[NullAllowed, Export ("accessibilityLabel")]
-		new string AccessibilityLabel { get; }
-
-		[Abstract]
-		[NullAllowed, Export ("accessibilityRows")]
-		new INSAccessibilityRow[] AccessibilityRows { get; }
-
-		[Abstract]
-		[Export ("accessibilityFrame")]
-		new CGRect AccessibilityFrame { get; }
-
-		[Abstract]
-		[NullAllowed, Export ("accessibilityParent")]
-		new NSObject AccessibilityParent { get; }
 	}
 
 	[Mac (10,10)]
 	[Protocol]
 	interface NSAccessibilityList : NSAccessibilityTable {
-		[Abstract]
-		[NullAllowed, Export ("accessibilityLabel")]
-		new string AccessibilityLabel { get; }
-
-		[Abstract]
-		[NullAllowed, Export ("accessibilityRows")]
-		new INSAccessibilityRow[] AccessibilityRows { get; }
-
-		[Abstract]
-		[Export ("accessibilityFrame")]
-		new CGRect AccessibilityFrame { get; }
-
-		[Abstract]
-		[NullAllowed, Export ("accessibilityParent")]
-		new NSObject AccessibilityParent { get; }
 	}
 
 	[Mac (10,10)]

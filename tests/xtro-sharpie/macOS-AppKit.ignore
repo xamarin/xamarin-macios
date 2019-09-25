@@ -1190,30 +1190,3 @@
 
 !missing-release-attribute-on-return-value! AppKit.NSDictionaryControllerKeyValuePair AppKit.NSDictionaryController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! Foundation.NSObject AppKit.NSObjectController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
-
-## this protocols are decorated with NS_PROTOCOL_REQUIRES_EXPLICIT_IMPLEMENTATION as per apple documentation:
-## Unlike normal protocols, when you adopt one of the role-specific protocols, Xcode may ask you to reimplement
-## methods that have already been implemented by one of your ancestors.
-##
-## In order to ensure that your control returns accurate and useful information, some methods are tagged with 
-## the NS_PROTOCOL_REQUIRES_EXPLICIT_IMPLEMENTATION attribute. For these methods, you need to override your 
-## superclass’s implementation with your own.
-##
-## To see which methods require explicit implementations, see the specific protocols reference document.
-## In both cases we have:
-##
-## This protocol requires an explicit implementation of all the required methods that it declares (including 
-## all the explicitly required methods of any protocol it inherits from). Any class adopting this protocol must
-## implement all of these methods. You can inherit these methods only from ancestors that also adopt a protocol
-## that explicitly requires them.
-##
-## In practice, this means that the compiler may force you to override some of the methods that your ancestors
-## have already implemented. Simply follow the compiler’s warnings, and reimplement these methods as needed.
-!extra-protocol-member! unexpected selector NSAccessibilityList::accessibilityFrame found
-!extra-protocol-member! unexpected selector NSAccessibilityList::accessibilityLabel found
-!extra-protocol-member! unexpected selector NSAccessibilityList::accessibilityParent found
-!extra-protocol-member! unexpected selector NSAccessibilityList::accessibilityRows found
-!extra-protocol-member! unexpected selector NSAccessibilityOutline::accessibilityFrame found
-!extra-protocol-member! unexpected selector NSAccessibilityOutline::accessibilityLabel found
-!extra-protocol-member! unexpected selector NSAccessibilityOutline::accessibilityParent found
-!extra-protocol-member! unexpected selector NSAccessibilityOutline::accessibilityRows found
