@@ -16159,8 +16159,7 @@ namespace Foundation
 		[Export ("currentConnection")]
 		[Static]
 		[Mac (10, 8)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
-		[return: NullAllowed]
-		NSXpcConnection CurrentConnection { get; }
+		NSXpcConnection CurrentConnection { [return: NullAllowed] get; }
 
 		[Export ("scheduleSendBarrierBlock:")]
 		[Mac (10, 15)][iOS (13, 0)][Watch (6, 0)][TV (13, 0)]
