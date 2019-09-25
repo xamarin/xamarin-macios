@@ -714,7 +714,9 @@ You can silence this warning by adding `--nowarn=5221` to the **Additional mmp a
 
 #### MM5311: lipo failed with an error code '{0}'. Check build log for details.
 
-### <a name="MM5311">MM5311: lipo failed with an error code '{0}'. Check build log for details.
+<a name="MM5312" />
+
+### MM5312: pkg-config failed with an error code '{code}'. Check build log for details.
 
 <!-- MM6xxx: mmp internal tools -->
 <!-- MM7xxx: reserved -->

@@ -784,7 +784,7 @@ namespace Metal {
 		OpaqueWhite = 2
 	}
 
-	[NoTV]
+	[TV (13,0)]
 	[iOS (12,0)]
 	[Mac (10,11)]
 	[Native]
@@ -1003,5 +1003,145 @@ namespace Metal {
 		Sample0 = 0,
 		DepthResolvedSample = 1,
 	}
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[Flags, NoMac, NoTV, iOS (13,0)]
+	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	public enum MTLSparseTextureRegionAlignmentMode : ulong {
+		Outward = 0x0,
+		Inward = 0x1,
+	}
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[Flags, NoMac, NoTV, iOS (13,0)]
+	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	public enum MTLSparseTextureMappingMode : ulong {
+		Map = 0x0,
+		Unmap = 0x1,
+	}
+
+	[Mac (10,15), iOS (13,0)]
+	[Native]
+	public enum MTLHazardTrackingMode : ulong {
+		Default = 0,
+		Untracked = 1,
+		Tracked = 2,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	[ErrorDomain ("MTLCaptureErrorDomain")]
+	public enum MTLCaptureError : long {
+		NotSupported = 1,
+		AlreadyCapturing,
+		InvalidDescriptor,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	public enum MTLGpuFamily : long {
+		Apple1 = 1001,
+		Apple2 = 1002,
+		Apple3 = 1003,
+		Apple4 = 1004,
+		Apple5 = 1005,
+		Mac1 = 2001,
+		Mac2 = 2002,
+		Common1 = 3001,
+		Common2 = 3002,
+		Common3 = 3003,
+		iOSMac1 = 4001,
+		iOSMac2 = 4002,
+	}
+
+	[TV (13,0), Mac (10,15), iOS (13,0)]
+	[Native]
+	public enum MTLHeapType : long {
+		Automatic = 0,
+		Placement = 1,
+	}
+
+	[Mac (10,15), iOS (13,0), TV (13,0)]
+	[Native]
+	public enum MTLCaptureDestination : long {
+		DeveloperTools = 1,
+		GpuTraceDocument,
+	}
+
+	[NoiOS, NoTV, Mac (10,15)]
+	[Native]
+	public enum MTLDeviceLocation : ulong {
+		BuiltIn = 0,
+		Slot = 1,
+		External = 2,
+		Unspecified = ulong.MaxValue,
+	}
+
+	[NoiOS, NoTV, Mac (10,15)]
+	[Native]
+	[ErrorDomain ("MTLCounterErrorDomain")]
+	public enum MTLCounterSampleBufferError : long {
+		OutOfMemory,
+		Internal,
+	}
+#if MONOMAC
+	[NoiOS, NoTV, Mac (10,15)]
+	public enum MTLCommonCounter {
+		[Field ("MTLCommonCounterTimestamp")]
+		Timestamp,
+
+		[Field ("MTLCommonCounterTessellationInputPatches")]
+		TessellationInputPatches,
+
+		[Field ("MTLCommonCounterVertexInvocations")]
+		VertexInvocations,
+
+		[Field ("MTLCommonCounterPostTessellationVertexInvocations")]
+		PostTessellationVertexInvocations,
+
+		[Field ("MTLCommonCounterClipperInvocations")]
+		ClipperInvocations,
+
+		[Field ("MTLCommonCounterClipperPrimitivesOut")]
+		ClipperPrimitivesOut,
+
+		[Field ("MTLCommonCounterFragmentInvocations")]
+		FragmentInvocations,
+
+		[Field ("MTLCommonCounterFragmentsPassed")]
+		FragmentsPassed,
+
+		[Field ("MTLCommonCounterComputeKernelInvocations")]
+		ComputeKernelInvocations,
+
+		[Field ("MTLCommonCounterTotalCycles")]
+		TotalCycles,
+
+		[Field ("MTLCommonCounterVertexCycles")]
+		VertexCycles,
+
+		[Field ("MTLCommonCounterTessellationCycles")]
+		TessellationCycles,
+
+		[Field ("MTLCommonCounterPostTessellationVertexCycles")]
+		PostTessellationVertexCycles,
+
+		[Field ("MTLCommonCounterFragmentCycles")]
+		FragmentCycles,
+
+		[Field ("MTLCommonCounterRenderTargetWriteCycles")]
+		RenderTargetWriteCycles,
+
+		[Field ("MTLCommonCounterSetTimestamp")]
+		SetTimestamp,
+
+		[Field ("MTLCommonCounterSetStageUtilization")]
+		SetStageUtilization,
+
+		[Field ("MTLCommonCounterSetStatistic")]
+		SetStatistic,
+	}
+
+#endif
 }
 #endif
