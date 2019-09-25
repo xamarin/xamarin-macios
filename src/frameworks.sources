@@ -811,6 +811,8 @@ FOUNDATION_SOURCES = \
 	Foundation/NSUrlSession.cs \
 	Foundation/NSUserDefaults.cs \
 	Foundation/NSUuid.cs \
+	Foundation/NSXpcConnection.cs \
+	Foundation/NSXpcInterface.cs \
 	Foundation/ObjCException.cs \
 	Foundation/ToString.cs \
 	Foundation/NSItemProvider.cs \
