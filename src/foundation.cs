@@ -16218,7 +16218,7 @@ namespace Foundation
 	interface NSXpcInterface
 	{
 		[Export ("interfaceWithProtocol:")]
-		[Static, Internal]
+		[Static]
 		NSXpcInterface CreateForProtocol (Protocol protocol);
 
 		[Export ("protocol", ArgumentSemantic.Assign)]
