@@ -1334,7 +1334,7 @@ namespace Foundation  {
 	}
 
 	[Native]
-	public enum NSXpcConnectionOptions {
+	public enum NSXpcConnectionOptions : ulong {
 		Privileged = (1 << 12)
 	}
 }
