@@ -31,24 +31,7 @@ namespace Foundation {
 		public static NSXpcInterface CreateForType (Type interfaceType)
 		{
 			if (interfaceType == null) throw new ArgumentNullException (nameof (interfaceType));
-
-			if (!interfaceType.IsInterface)
-			{
-				throw new ArgumentException ($"Type {interfaceType.FullName} must be an interface type", nameof (interfaceType));
-			}
-
-			ProtocolAttribute attribute = interfaceType.GetCustomAttribute<ProtocolAttribute> ();
-			if (attribute == null)
-			{
-				throw new ArgumentException ($"Type {interfaceType.FullName} is not annotated with ProtocolAttribute", nameof (interfaceType));
-			}
-
-			if (string.IsNullOrEmpty (attribute.Name))
-			{
-				throw new ArgumentException ($"Type {interfaceType.FullName} does not have an explicit protocol name", nameof (interfaceType));
-			}
-
-			return CreateForProtocol (new Protocol (attribute.Name));
+			return CreateForProtocol (new Protocol (interfaceType));
 		}
 
 		public NSSet<Class> GetAllowedClassesForMethod (MethodInfo method, nuint argumentIndex, bool forReplyBlock)
