@@ -36,6 +36,10 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		class ManagerDelegate : CBCentralManagerDelegate {
 			public AutoResetEvent Event { get; private set; }
 
+			public ManagerDelegate (IntPtr handle) : base (handle)
+			{
+			}
+
 			public ManagerDelegate (AutoResetEvent e) : base ()
 			{
 				Event = e;
