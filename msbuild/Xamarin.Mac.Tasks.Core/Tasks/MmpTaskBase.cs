@@ -207,9 +207,11 @@ namespace Xamarin.Mac.Tasks
 				foreach (var nr in NativeReferences)
 					args.AddQuotedLine ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
 			}
-				
-			if (IsAppExtension && !IsXPCService)
+
+			if (IsAppExtension)
 				args.AddQuotedLine ("/extension");
+			if (IsXPCService)
+				args.AddQuotedLine ("/xpc");
 
 			args.AddQuotedLine ("/sdkroot:" + SdkRoot);
 
