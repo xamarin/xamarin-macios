@@ -16232,7 +16232,7 @@ namespace Foundation
 		IntPtr CreateForProtocol(Protocol protocol);
 
 		[Export ("protocol", ArgumentSemantic.Assign)]
-		Protocol Protocol { get; get; }
+		Protocol Protocol { get; set; }
 
 		[Export ("setClasses:forSelector:argumentIndex:ofReply:")]
 		[Internal]
