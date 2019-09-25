@@ -16100,8 +16100,7 @@ namespace Foundation
 
 		[Export ("initWithMachServiceName:")]
 		[NoiOS][NoWatch][NoTV]
-		[Internal] // See FIXME in Foundation/NSXpcConnection.cs
-		IntPtr Constructor (string machServiceName, nint options);
+		IntPtr Constructor (string machServiceName, [BindAs (typeof (NSXpcConnectionOptions))] nint options);
 
 		[Export ("initWithListenerEndpoint:")]
 		IntPtr Constructor (NSXpcListenerEndpoint endpoint);
