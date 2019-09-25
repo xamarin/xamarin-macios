@@ -265,6 +265,8 @@ This version of Xamarin.Mac does not support building 32-bit applications.
 
 Change the architecture in the project's Mac Build options to 'x86_64' in order to build a 64-bit application.
 
+<!-- 0145 and 0146 used by mtouch -->
+
 ## MM1xxx: file copy / symlinks (project related)
 
 <a name="MM1034" />
