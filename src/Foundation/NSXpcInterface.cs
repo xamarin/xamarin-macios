@@ -48,14 +48,14 @@ namespace Foundation {
 				throw new ArgumentException ($"Type {interfaceType.FullName} does not have an explicit protocol name", nameof (interfaceType));
 			}
 
-			return CreateForProtocol (new Protocol (interfaceType));
+			return CreateForProtocol (new Protocol (attribute.Name));
 		}
 
 		public NSSet<Class> GetAllowedClassesForMethod (MethodInfo method, nuint argumentIndex, bool forReplyBlock)
 		{
 			if (method == null) throw new ArgumentNullException (nameof (method));
 
-			ExportAttribute attribute = method.GetAttribute<ExportAttribute> ();
+			ExportAttribute attribute = method.GetCustomAttribute<ExportAttribute> ();
 			if (attribute == null)
 			{
 				throw new ArgumentException ($"Method {method.Name} is not exposed to Objective-C", nameof (method));
@@ -70,7 +70,7 @@ namespace Foundation {
 		{
 			if (method == null) throw new ArgumentNullException (nameof (method));
 
-			ExportAttribute attribute = method.GetAttribute<ExportAttribute> ();
+			ExportAttribute attribute = method.GetCustomAttribute<ExportAttribute> ();
 			if (attribute == null)
 			{
 				throw new ArgumentException ($"Method {method.Name} is not exposed to Objective-C", nameof (method));
