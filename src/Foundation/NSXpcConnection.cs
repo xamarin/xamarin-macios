@@ -28,21 +28,21 @@ using ObjCRuntime;
 namespace Foundation {
 	public partial class NSXpcConnection : NSObject {
 		public TProtocol CreateRemoteObjectProxy<TProtocol> ()
-			where TProtocol : class
+			where TProtocol : class, INativeObject
 		{
 			IntPtr nativeProxyPtr = _CreateRemoteObjectProxy ();
 			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
 		}
 
 		public TProtocol CreateRemoteObjectProxy<TProtocol> (Action<NSError> errorHandler)
-			where TProtocol : class
+			where TProtocol : class, INativeObject
 		{
 			IntPtr nativeProxyPtr = _CreateRemoteObjectProxy (errorHandler);
 			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
 		}
 
 		public TProtocol CreateSynchronousRemoteObjectProxy<TProtocol> (Action<NSError> errorHandler)
-			where TProtocol : class
+			where TProtocol : class, INativeObject
 		{
 			IntPtr nativeProxyPtr = _CreateSynchronousRemoteObjectProxy (errorHandler);
 			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, false);
