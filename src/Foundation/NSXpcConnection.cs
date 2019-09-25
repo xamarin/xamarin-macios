@@ -26,17 +26,6 @@ using ObjCRuntime;
 
 namespace Foundation {
 	public partial class NSXpcConnection : NSObject {
-		private static readonly nint NSXpcConnectionPrivileged = (1 << 12);
-
-		// FIXME: This constructor should go away when I figure out how
-		// to appropriately project the NSXPCConnectionOptions enum.
-		// This enum has only one member currently (NSXpcConnectionPrivileged),
-		// so I have bound it using a boolean for the time being.
-		public NSXpcConnection (string machServiceName, bool isPrivileged)
-			: this (machServiceName, isPrivileged ? NSXpcConnectionPrivileged : 0)
-		{
-		}
-
 		public TProtocol CreateRemoteObjectProxy<TProtocol> ()
 		{
 			IntPtr nativeProxyPtr = _CreateRemoteObjectProxy ();
