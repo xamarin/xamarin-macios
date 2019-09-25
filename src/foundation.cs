@@ -16120,16 +16120,6 @@ namespace Foundation
 		[NullAllowed]
 		NSXpcInterface RemoteInterface { get; set; }
 
-		[Export ("remoteObjectProxy")]
-		NSObject RemoteObjectProxy { get; }
-
-		[Export ("remoteObjectProxyWithErrorHandler:")]
-		NSObject GetRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
-
-		[Export ("synchronousRemoteObjectProxyWithErrorHandler:")]
-		[Mac (10, 11)][iOS (9, 0)][Watch (2, 0)][TV (9, 0)]
-		NSObject GetSynchronouRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
-
 		[Export ("interruptionHandler", ArgumentSemantic.Copy)]
 		Action InterruptionHandler { get; set; }
 
