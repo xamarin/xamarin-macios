@@ -16163,7 +16163,7 @@ namespace Foundation
 
 		[Mac (10, 11)][iOS (9, 0)][Watch (2, 0)][TV (9, 0)]
 		[Export ("synchronousRemoteObjectProxyWithErrorHandler:"), Internal]
-		NSObject _CreateSynchronousRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
+		IntPtr _CreateSynchronousRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
 	}
 
 	[Mac (10, 8)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
