@@ -17,16 +17,17 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<IsAppExtension>True</IsAppExtension>
+		<IsXPCService Condition="'$(IsXPCService)' == ''">false</IsXPCService>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.targets" />
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.AppExtension.Common.props" 
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.AppExtension.Common.props"
 			Condition="'$(_XamarinAppExtensionCommonPropsHasBeenImported)' != 'true'" />
 
-	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
-	
+
 	<!-- Override GetTargetPath, Build, and Rebuild -->
 	<Target Name="GetBundleTargetPath" DependsOnTargets="_GenerateBundleName;$(GetTargetPathDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
 	<Target Name="Build"   Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_EnabledLocalSigning;_GenerateBundleName;$(BuildDependsOn)" Outputs="$(_AppExtensionBundlePath)" />
@@ -42,7 +43,9 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 
 	<Target Name="_GenerateBundleName" DependsOnTargets="_DetectSigningIdentity">
 		<PropertyGroup>
-			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(OutputPath)$(DeviceSpecificOutputPath)$(_AppBundleName).appex</AppBundleDir>
+			<_AppBundleDirExt Condition="'$(IsXPCService)' == 'true'">.xpc</_AppBundleDirExt>
+			<_AppBundleDirExt Condition="'$(_AppBundleDirExt)' == ''">.appex</_AppBundleDirExt>
+			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(OutputPath)$(DeviceSpecificOutputPath)$(_AppBundleName)$(_AppBundleDirExt)</AppBundleDir>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
 
 			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
