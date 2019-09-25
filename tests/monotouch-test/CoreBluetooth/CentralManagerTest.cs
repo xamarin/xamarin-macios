@@ -110,6 +110,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			Assert.NotNull (mgr.Delegate, "Delegate");
 		}
 
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/7108")]
 		[Test, Timeout (5000)]
 		public void ScanForPeripherals ()
 		{
@@ -123,6 +124,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		}
 
 #if !XAMCORE_3_0
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/7108")]
 		[Test, Timeout (5000)]
 		public void RetrievePeripherals ()
 		{
