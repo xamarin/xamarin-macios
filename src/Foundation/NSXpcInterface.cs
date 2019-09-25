@@ -34,18 +34,18 @@ namespace Foundation {
 
 			if (!interfaceType.IsInterface)
 			{
-				throw new InvalidOperationException ($"Type {interfaceType.FullName} must be an interface type");
+				throw new ArgumentException ($"Type {interfaceType.FullName} must be an interface type", nameof (interfaceType));
 			}
 
 			ProtocolAttribute attribute = interfaceType.GetCustomAttribute<ProtocolAttribute> ();
 			if (attribute == null)
 			{
-				throw new InvaidOperationException ($"Type {interfaceType.FullName} is not annotated with ProtocolAttribute");
+				throw new ArgumentException ($"Type {interfaceType.FullName} is not annotated with ProtocolAttribute", nameof (interfaceType));
 			}
 
 			if (string.IsNullOrEmpty (attribute.Name))
 			{
-				throw new InvalidOperationException ($"Type {interfaceType.FullName} does not have an explicit protocol name");
+				throw new ArgumentException ($"Type {interfaceType.FullName} does not have an explicit protocol name", nameof (interfaceType));
 			}
 
 			return CreateForProtocol (new Protocol (interfaceType));
@@ -58,7 +58,7 @@ namespace Foundation {
 			ExportAttribute attribute = method.GetAttribute<ExportAttribute> ();
 			if (attribute == null)
 			{
-				throw new InvalidOperationException ($"Method {method.Name} is not exposed to Objective-C");
+				throw new ArgumentException ($"Method {method.Name} is not exposed to Objective-C", nameof (method));
 			}
 
 			// The runtime ensures that the Selector property is non-null and a valid selector.
@@ -73,7 +73,7 @@ namespace Foundation {
 			ExportAttribute attribute = method.GetAttribute<ExportAttribute> ();
 			if (attribute == null)
 			{
-				throw new InvalidOperationException ($"Method {method.Name} is not exposed to Objective-C");
+				throw new ArgumentException ($"Method {method.Name} is not exposed to Objective-C", nameof (method));
 			}
 
 			// The runtime ensures that the Selector property is non-null and a valid selector.
