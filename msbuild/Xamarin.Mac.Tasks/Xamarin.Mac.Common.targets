@@ -503,6 +503,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AssemblyName="$(TargetName)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			IsAppExtension="$(IsAppExtension)"
+			IsXPCService="$(IsXPCService)"
 			PartialAppManifests="@(_PartialAppManifest)" />
 	</Target>
 	
