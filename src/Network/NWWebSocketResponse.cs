@@ -60,7 +60,7 @@ namespace Network {
 			}
 		}
 
-		public bool EnumerateAditionalHeaders (Action<string, string> handler)
+		public bool EnumerateAdditionalHeaders (Action<string, string> handler)
 		{
 			unsafe {
 				if (handler == null) {

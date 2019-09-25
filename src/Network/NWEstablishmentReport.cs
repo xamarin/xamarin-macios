@@ -5,7 +5,7 @@
 // Authors:
 //   Manuel de la Pena (mandel@microsoft.com)
 //
-// Copyrigh 2019 Microsoft Inc
+// Copyright 2019 Microsoft Inc
 //
 using System;
 using System.Runtime.InteropServices;
@@ -75,7 +75,7 @@ namespace Network {
 			}
 		}
 
-		public void ResolutionEnumeration (Action<NWReportResolutionSource, nuint, int, NWEndpoint, NWEndpoint> handler)
+		public void EnumerateResolutions (Action<NWReportResolutionSource, nuint, int, NWEndpoint, NWEndpoint> handler)
 		{
 			unsafe {
 				if (handler == null) {

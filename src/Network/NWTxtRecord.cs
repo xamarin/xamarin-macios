@@ -4,7 +4,7 @@
 // Authors:
 //   Miguel de Icaza (miguel@microsoft.com)
 //
-// Copyrigh 2019 Microsoft Inc
+// Copyright 2019 Microsoft Inc
 //
 using System;
 using System.Runtime.InteropServices;
@@ -27,7 +27,7 @@ namespace Network {
 		NotPresent = 1,
 		NoValue = 2,
 		EmptyValue = 3,
-		NonEmptyValue = 4
+		NonEmptyValue = 4,
 	}
 	
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
@@ -87,11 +87,9 @@ namespace Network {
 		{
 			if (value == null)
 				return nw_txt_record_set_key (Handle, key, IntPtr.Zero, 0) != 0;
-			else {
-				unsafe {
-					fixed (void *pv = value)
-						return nw_txt_record_set_key (Handle, key, (IntPtr) pv, (nuint) value.Length) != 0;
-				}
+			unsafe {
+				fixed (void *pv = value)
+					return nw_txt_record_set_key (Handle, key, (IntPtr) pv, (nuint) value.Length) != 0;
 			}
 		}
 		

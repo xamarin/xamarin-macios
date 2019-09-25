@@ -4,7 +4,7 @@
 // Authors:
 //   Manuel de la Pena (mandel@microsoft.com)
 //
-// Copyrigh 2019 Microsoft Inc
+// Copyright 2019 Microsoft Inc
 //
 using System;
 using System.Runtime.InteropServices;
@@ -38,17 +38,17 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_endpoint nw_browse_result_copy_endpoint (OS_nw_browse_result result);
 
-		NWEndpoint EndPoint => new NWEndpoint (nw_browse_result_copy_endpoint (GetCheckedHandle ()), owns: true);
+		public NWEndpoint EndPoint => new NWEndpoint (nw_browse_result_copy_endpoint (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nuint nw_browse_result_get_interfaces_count (OS_nw_browse_result result);
 
-		nuint InterfacesCount => nw_browse_result_get_interfaces_count (GetCheckedHandle ());
+		public nuint InterfacesCount => nw_browse_result_get_interfaces_count (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_txt_record nw_browse_result_copy_txt_record_object (OS_nw_browse_result result);
 
-		NWTxtRecord TxtRecord => new NWTxtRecord (nw_browse_result_copy_txt_record_object (GetCheckedHandle ()), owns: true); 
+		public NWTxtRecord TxtRecord => new NWTxtRecord (nw_browse_result_copy_txt_record_object (GetCheckedHandle ()), owns: true); 
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWBrowseResultChange nw_browse_result_get_changes (OS_nw_browse_result old_result, OS_nw_browse_result new_result);

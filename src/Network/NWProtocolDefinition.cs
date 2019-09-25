@@ -64,6 +64,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ws_definition ();
 
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 		public static NWProtocolDefinition WebServiceDefinition => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 	}
 }
