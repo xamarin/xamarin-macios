@@ -2460,17 +2460,18 @@ public class B
 		}
 
 		[Test]
-		[TestCase (Target.Dev, null, "ARMv7k")]
-		[TestCase (Target.Dev, "arm64_32+llvm", "ARM64_32")]
-		[TestCase (Target.Dev, "armv7k+llvm,arm64_32+llvm", "ARMv7k,ARM64_32")]
-		[TestCase (Target.Sim, null, "i386")]
-		public void Architectures_WatchOS (Target target, string abi, string expected_abi)
+		[TestCase (Target.Dev, null, "ARMv7k", MTouchBitcode.Unspecified)]
+		[TestCase (Target.Dev, "arm64_32+llvm", "ARM64_32", MTouchBitcode.Unspecified)]
+		[TestCase (Target.Dev, "armv7k+llvm,arm64_32+llvm", "ARMv7k,ARM64_32", MTouchBitcode.Full)]
+		[TestCase (Target.Sim, null, "i386", MTouchBitcode.Unspecified)]
+		public void Architectures_WatchOS (Target target, string abi, string expected_abi, MTouchBitcode bitcode)
 		{
 			AssertDeviceAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.watchOS;
 				mtouch.Abi = abi;
+				mtouch.Bitcode = bitcode;
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.CreateTemporaryWatchKitExtension ();
 				mtouch.Action = target == Target.Dev ? MTouchAction.BuildDev : MTouchAction.BuildSim;

@@ -1355,7 +1355,7 @@ namespace Xamarin.Bundler
 			} else {
 				if (app.Platform == ApplePlatform.WatchOS && app.IsArchEnabled (Abi.ARM64_32) && app.BitCodeMode != BitCodeMode.LLVMOnly) {
 					if (app.IsArchEnabled (Abi.ARMv7k)) {
-						throw ErrorHelper.CreateError (145, "Please use device builds on WatchOS.");
+						throw ErrorHelper.CreateError (145, "Please use device specific builds on WatchOS when building for Debug.");
 					} else {
 						ErrorHelper.Warning (146, "ARM64_32 Debug mode requires --interpreter[=all], forcing it.");
 						app.UseInterpreter = true;
