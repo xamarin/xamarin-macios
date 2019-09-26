@@ -36,7 +36,7 @@ namespace Network {
 			=> InitializeHandle (nw_ws_response_create (status, subprotocol));
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern unsafe string nw_ws_response_get_selected_subprotocol (OS_nw_ws_response response);
+		static extern string nw_ws_response_get_selected_subprotocol (OS_nw_ws_response response);
 
 		public string SelectedSubprotocol => nw_ws_response_get_selected_subprotocol (GetCheckedHandle ()); 
 
