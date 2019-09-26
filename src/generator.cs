@@ -5966,8 +5966,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 
 	public void PrintXpcInterfaceAttribute (ICustomAttributeProvider mi)
 	{
-		var p = AttributeManager.GetCustomAttribute<XpcInterfaceAttribute> (mi);
-		if (p == null)
+		if (!AttributeManager.HasAttribute<XpcInterfaceAttribute> (mi))
 			return;
 
 		print ("[XpcInterface]");
