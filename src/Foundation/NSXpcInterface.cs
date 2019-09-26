@@ -35,7 +35,7 @@ namespace Foundation {
 			return CreateForProtocol (new Protocol (interfaceType));
 		}
 
-		public NSSet<Class> GetAllowedClassesForMethod (MethodInfo method, nuint argumentIndex, bool forReplyBlock)
+		public NSSet<Class> GetAllowedClasses (MethodInfo method, nuint argumentIndex, bool forReplyBlock)
 		{
 			if (method == null)
 				throw new ArgumentNullException (nameof (method));
@@ -49,7 +49,7 @@ namespace Foundation {
 			return GetAllowedClassesForMethod (sel, argumentIndex, forReplyBlock);
 		}
 
-		public void SetAllowedClassesForMethod (MethodInfo method, NSSet<Class> allowedClasses, nuint argumentIndex, bool forReplyBlock)
+		public void SetAllowedClasses (MethodInfo method, NSSet<Class> allowedClasses, nuint argumentIndex, bool forReplyBlock)
 		{
 			if (method == null)
 				throw new ArgumentNullException (nameof (method));
