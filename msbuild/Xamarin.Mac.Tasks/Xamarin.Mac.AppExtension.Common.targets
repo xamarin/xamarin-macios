@@ -21,12 +21,12 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.targets" />
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.AppExtension.Common.props"
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.AppExtension.Common.props" 
 			Condition="'$(_XamarinAppExtensionCommonPropsHasBeenImported)' != 'true'" />
 
-	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
-
+  
 	<!-- Override GetTargetPath, Build, and Rebuild -->
 	<Target Name="GetBundleTargetPath" DependsOnTargets="_GenerateBundleName;$(GetTargetPathDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
 	<Target Name="Build"   Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_EnabledLocalSigning;_GenerateBundleName;$(BuildDependsOn)" Outputs="$(_AppExtensionBundlePath)" />
