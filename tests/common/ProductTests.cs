@@ -126,6 +126,13 @@ namespace Xamarin.Tests
 							}
 							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);
+
+							// This condition and everything inside it is a workaround for https://github.com/xamarin/maccore/issues/1996.
+							if (alternate_version == null || (alternate_version.Major == 7 && version.Major == 7)) {
+								alternate_version = new Version (6, 0, 0);
+								if (!slice.IsDynamicLibrary)
+									mono_native_compat_version = alternate_version;
+							}
 							break;
 						case MachO.LoadCommands.MintvOS:
 							version = SdkVersions.MinTVOSVersion;
