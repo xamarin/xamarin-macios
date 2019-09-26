@@ -166,7 +166,7 @@ namespace Network {
 			block_handler.SetupBlockUnsafe (static_Enumerator, callback);
 
 			try {
-				nw_path_enumerate_interfaces (GetCheckedHandle (), ref block_handler);
+				nw_path_enumerate_gateways (GetCheckedHandle (), ref block_handler);
 			} finally {
 				block_handler.CleanupBlock ();
 			}
