@@ -46,7 +46,7 @@ namespace Foundation {
 
 			// The runtime ensures that the Selector property is non-null and a valid selector.
 			Selector sel = new Selector (attribute.Selector);
-			return GetAllowedClassesForMethod (sel, argumentIndex, forReplyBlock);
+			return GetAllowedClasses (sel, argumentIndex, forReplyBlock);
 		}
 
 		public void SetAllowedClasses (MethodInfo method, NSSet<Class> allowedClasses, nuint argumentIndex, bool forReplyBlock)
@@ -60,7 +60,7 @@ namespace Foundation {
 
 			// The runtime ensures that the Selector property is non-null and a valid selector.
 			Selector sel = new Selector (attribute.Selector);
-			SetAllowedClassesForMethod (allowedClasses, sel, argumentIndex, forReplyBlock);
+			SetAllowedClasses (allowedClasses, sel, argumentIndex, forReplyBlock);
 		}
 	}
 }
