@@ -28,11 +28,11 @@ using ObjCRuntime;
 
 namespace Foundation {
 	public partial class NSXpcInterface : NSObject {
-		public static NSXpcInterface CreateForType (Type interfaceType)
+		public static NSXpcInterface Create (Type interfaceType)
 		{
 			if (interfaceType == null)
 				throw new ArgumentNullException (nameof (interfaceType));
-			return CreateForProtocol (new Protocol (interfaceType));
+			return Create (new Protocol (interfaceType));
 		}
 
 		public NSSet<Class> GetAllowedClasses (MethodInfo method, nuint argumentIndex, bool forReplyBlock)
