@@ -471,7 +471,7 @@ namespace Registrar {
 			return "void *";
 		}
 
-		public string ToObjCType (TypeDefinition type)
+		public string ToObjCType (TypeDefinition type, bool delegateToBlockType = false)
 		{
 			switch (type.FullName) {
 			case "System.IntPtr": return "void *";
@@ -496,8 +496,22 @@ namespace Registrar {
 			if (IsNativeObject (type))
 				return "id";
 
-			if (IsDelegate (type))
-				return "id";
+			if (IsDelegate (type)) {
+				if (!delegateToBlockType)
+					return "id";
+
+				MethodDefinition invokeMethod = type.Methods.Single (method => method.Name == "Invoke");
+
+				StringBuilder builder = new StringBuilder ();
+				builder.Append (ToObjCType (invokeMethod.ReturnType));
+				builder.Append (" (^)(");
+
+				var argumentTypes = invokeMethod.Parameters.Select (param => ToObjCType (param.ParameterType));
+				builder.Append (string.Join (", ", argumentTypes));
+
+				builder.Append (")");
+				return builder.ToString ();
+			}
 
 			if (type.IsEnum)
 				return ToObjCType (GetEnumUnderlyingType (type));
@@ -2339,7 +2353,7 @@ namespace Registrar {
 			return ToObjCParameterType (type, descriptiveMethodName, exceptions, inMethod);
 		}
 
-		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod)
+		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod, bool delegateToBlockType = false)
 		{
 			TypeDefinition td = ResolveType (type);
 			var reftype = type as ByReferenceType;
@@ -2462,7 +2476,7 @@ namespace Registrar {
 					}
 					return CheckStructure (td, descriptiveMethodName, inMethod);
 				} else {
-					return ToObjCType (td);
+					return ToObjCType (td, delegateToBlockType: delegateToBlockType);
 				}
 			}
 		}
@@ -2534,7 +2548,7 @@ namespace Registrar {
 					sb.Append (split [i]);
 					sb.Append (':');
 					sb.Append ('(');
-					sb.Append (ToObjCParameterType (method.NativeParameters [i + indexOffset], method.DescriptiveMethodName, exceptions, method.Method));
+					sb.Append (ToObjCParameterType (method.NativeParameters [i + indexOffset], method.DescriptiveMethodName, exceptions, method.Method, delegateToBlockType: true));
 					sb.Append (')');
 					sb.AppendFormat ("p{0}", i);
 				}
