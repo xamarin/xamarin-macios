@@ -40,7 +40,7 @@ namespace Network {
 		{
 			if (descriptor == null)
 				throw new ArgumentNullException (nameof (descriptor));
-			var parametersHandler = parameters?.Handle ?? IntPtr.Zero;
+			var parametersHandler = parameters.GetHandle ();
 
 			InitializeHandle (nw_browser_create (descriptor.Handle, parameters.Handle));
 		}
