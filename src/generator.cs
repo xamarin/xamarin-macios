@@ -2428,6 +2428,7 @@ public partial class Generator : IMemberGatherer {
 						case "ManualAttribute":
 						case "MarshalDirectiveAttribute":
 						case "BindingImplAttribute":
+						case "XpcInterfaceAttribute":
 							continue;
 						default:
 							throw new BindingException (1007, true, "Unknown attribute {0} on {1}.{2}", attr.GetType (), mi.DeclaringType, mi.Name);
@@ -5652,6 +5653,7 @@ public partial class Generator : IMemberGatherer {
 			print (sb.ToString ());
 		}
 
+		PrintXpcInterfaceAttribute (type);
 		print ("{0} interface I{1} : INativeObject, IDisposable{2}", class_visibility, TypeName, ifaces.Count () > 0 ? ", " : string.Empty);
 		indent++;
 		sb.Clear ();
@@ -5960,6 +5962,15 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 		if (type.Name == "CALayer" && ns.Get ("CoreAnimation") == type.Namespace) {
 			sw.WriteLine ("\t\t\tMarkDirtyIfDerived ();");
 		}
+	}
+
+	public void PrintXpcInterfaceAttribute (ICustomAttributeProvider mi)
+	{
+		var p = AttributeManager.GetCustomAttribute<XpcInterfaceAttribute> (mi);
+		if (p == null)
+			return;
+
+		print ("[XpcInterface]");
 	}
 
 	// Function to check if PreserveAttribute is present and
