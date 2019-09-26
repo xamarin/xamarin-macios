@@ -1753,9 +1753,12 @@ namespace Xamarin.Bundler {
 				macos_dir = contents_dir;
 			} else {
 				string bundle_ext;
-				if (is_extension && is_xpc_service) bundle_ext = "xpc";
-				else if (is_extension) bundle_ext = "appex";
-				else bundle_ext = "app";
+				if (is_extension && is_xpc_service)
+					bundle_ext = "xpc";
+				else if (is_extension)
+					bundle_ext = "appex";
+				else
+					bundle_ext = "app";
 
 				App.AppDirectory = Path.Combine (output_dir, string.Format ("{0}.{1}", app_name, bundle_ext));
 				contents_dir = Path.Combine (App.AppDirectory, "Contents");
