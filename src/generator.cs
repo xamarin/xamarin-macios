@@ -2605,7 +2605,7 @@ public partial class Generator : IMemberGatherer {
 			// Now generate the class that allows us to invoke a Objective-C block from C#
 			//
 			print ("");
-			print ("internal class {0} : TrampolineBlockBase {{", ti.NativeInvokerName);
+			print ($"internal sealed class {ti.NativeInvokerName} : TrampolineBlockBase {{");
 			indent++;
 			print ("{0} invoker;", ti.DelegateName);
 			print ("");
