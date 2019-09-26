@@ -90,7 +90,7 @@ namespace Network {
 			else {
 				unsafe {
 					fixed (void *pv = value)
-						return nw_txt_record_set_key (Handle, key, (IntPtr) pv, (nuint) value.Length) != 0;
+						return nw_txt_record_set_key (Handle, key, value, (nuint) value.Length) != 0;
 				}
 			}
 		}
