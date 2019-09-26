@@ -2,10 +2,13 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace ObjCRuntime {
 
+	// infrastucture code - not intended to be used directly by user code
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	public abstract class TrampolineBlockBase {
 
 		readonly IntPtr blockPtr;
