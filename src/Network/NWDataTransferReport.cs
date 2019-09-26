@@ -103,7 +103,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_data_transfer_report_get_transport_smoothed_rtt_milliseconds (OS_nw_data_transfer_report report, uint path_index);
 
-		public ulong GetTransportSmootherRoundTripTime (uint pathIndex)
+		public ulong GetTransportSmoothedRoundTripTime (uint pathIndex)
 			=> nw_data_transfer_report_get_transport_smoothed_rtt_milliseconds (GetCheckedHandle (), pathIndex);
 
 		[DllImport (Constants.NetworkLibrary)]
