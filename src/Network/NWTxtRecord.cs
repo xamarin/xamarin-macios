@@ -52,7 +52,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern IntPtr nw_txt_record_create_dictionary();
+		static extern IntPtr nw_txt_record_create_dictionary ();
 
 		public static NWTxtRecord CreateDictionary ()
 		{
