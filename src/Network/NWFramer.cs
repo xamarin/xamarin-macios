@@ -39,7 +39,7 @@ namespace Network {
 		{
 			if (data == null)
 				throw new ArgumentNullException (nameof (data));
-			nw_framer_write_output_data (GetCheckedHandle(), data.Handle);
+			nw_framer_write_output_data (GetCheckedHandle (), data.Handle);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
