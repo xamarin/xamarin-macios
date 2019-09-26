@@ -33,10 +33,16 @@ public partial class Generator {
 		// internal static CIFilter FromName (string filterName, IntPtr handle)
 		filters.Add (type_name);
 
+		// filters are now exposed as protocols so we need to conform to them
+		var interfaces = String.Empty;
+		foreach (var i in type.GetInterfaces ()) {
+				interfaces += $", {i.FullName}";
+		}
+
 		// type declaration
-		print ("public{0} partial class {1} : {2} {{", 
+		print ("public{0} partial class {1} : {2}{3} {{",
 			is_abstract ? " abstract" : String.Empty,
-			type_name, base_name);
+			type_name, base_name, interfaces);
 		print ("");
 		indent++;
 
@@ -174,6 +180,12 @@ public partial class Generator {
 		case "CIBarcodeDescriptor":
 			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
 			break;
+		case "CGPoint":
+			print ("return GetPoint (\"{0}\");", propertyName);
+			break;
+		case "CGRect":
+			print ("return GetRect (\"{0}\");", propertyName);
+			break;
 		case "CIColor":
 			print ("return GetColor (\"{0}\");", propertyName);
 			break;
@@ -188,6 +200,9 @@ public partial class Generator {
 			break;
 		case "int":
 			print ("return GetInt (\"{0}\");", propertyName);
+			break;
+		case "nint":
+			print ("return GetNInt (\"{0}\");", propertyName);
 			break;
 		case "MLModel":
 		case "NSAttributedString":
@@ -229,12 +244,17 @@ public partial class Generator {
 		case "int":
 			print ("SetInt (\"{0}\", value);", propertyName);
 			break;
+		case "nint":
+			print ("SetNInt (\"{0}\", value);", propertyName);
+			break;
 		// NSObject should not be added
 		case "AVCameraCalibrationData":
 		case "CGColorSpace":
 		case "CIBarcodeDescriptor":
 			print ("SetHandle (\"{0}\", value == null ? IntPtr.Zero : value.Handle);", propertyName);
 			break;
+		case "CGPoint":
+		case "CGRect":
 		case "CIColor":
 		case "CIImage":
 		case "CIVector":
