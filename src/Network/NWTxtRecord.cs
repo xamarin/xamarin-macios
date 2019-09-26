@@ -110,7 +110,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern long nw_txt_record_get_key_count(IntPtr handle);
+		static extern long nw_txt_record_get_key_count (IntPtr handle);
 		
 		public long KeyCount {
 			get {
