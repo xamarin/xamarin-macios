@@ -16135,7 +16135,8 @@ namespace Foundation
 		[Export ("invalidate")]
 		void Invalidate ();
 
-		// FIXME: How to bind auditSessionIdentifier?
+		[Export ("auditSessionIdentifier")]
+		int AuditSessionIdentifier { get; }
 
 		[Export ("processIdentifier")]
 		int PeerProcessIdentifier { get; }
