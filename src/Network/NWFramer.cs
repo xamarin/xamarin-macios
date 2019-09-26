@@ -51,7 +51,7 @@ namespace Network {
 				throw new ArgumentNullException (nameof (data));
 			unsafe {
 				fixed (void* dataHandle = data)
-					nw_framer_write_output (GetCheckedHandle (), (IntPtr) dataHandle, (nuint)data.Length);
+					nw_framer_write_output (GetCheckedHandle (), data, (nuint) data.Length);
 			}
 		}
 
