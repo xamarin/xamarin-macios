@@ -2780,7 +2780,7 @@ namespace Registrar {
 					if (token_ref == uint.MaxValue)
 						token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
 					protocol_wrapper_map.Add (token_ref, new Tuple<ObjCType, uint> (@class, CreateTokenReference (@class.ProtocolWrapperType, TokenType.TypeDef)));
-					if (needs_protocol_map) {
+					if (needs_protocol_map || TryGetAttribute (@class.Type, "Foundation", "XpcInterfaceAttribute", out var xpcAttr)) {
 						protocols.Add (new ProtocolInfo { TokenReference = token_ref, Protocol = @class });
 						CheckNamespace (@class, exceptions);
 					}
@@ -3047,7 +3047,7 @@ namespace Registrar {
 				map.AppendLine ("};");
 				map.AppendLine ();
 			}
-			if (needs_protocol_map && protocols.Count > 0) {
+			if (protocols.Count > 0) {
 				var ordered = protocols.OrderBy ((v) => v.TokenReference);
 				map.AppendLine ("static const uint32_t __xamarin_protocol_tokens [] = {");
 				foreach (var p in ordered)
