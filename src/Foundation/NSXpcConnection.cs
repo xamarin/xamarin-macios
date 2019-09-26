@@ -31,21 +31,21 @@ namespace Foundation {
 			where TProtocol : class, INativeObject
 		{
 			IntPtr nativeProxyPtr = _CreateRemoteObjectProxy ();
-			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, true);
+			return Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, true);
 		}
 
 		public TProtocol CreateRemoteObjectProxy<TProtocol> (Action<NSError> errorHandler)
 			where TProtocol : class, INativeObject
 		{
 			IntPtr nativeProxyPtr = _CreateRemoteObjectProxy (errorHandler);
-			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, true);
+			return Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, true);
 		}
 
 		public TProtocol CreateSynchronousRemoteObjectProxy<TProtocol> (Action<NSError> errorHandler)
 			where TProtocol : class, INativeObject
 		{
 			IntPtr nativeProxyPtr = _CreateSynchronousRemoteObjectProxy (errorHandler);
-			return (TProtocol)Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, true);
+			return Runtime.GetINativeObject<TProtocol> (nativeProxyPtr, true);
 		}
 	}
 }
