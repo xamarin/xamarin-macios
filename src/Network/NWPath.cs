@@ -140,7 +140,7 @@ namespace Network {
 
 		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_path_enumerate_gateways (IntPtr path, void *enumerate_block);
+		static extern void nw_path_enumerate_gateways (IntPtr path, ref BlockLiteral enumerate_block);
 
 		delegate void nw_path_enumerate_gateways_t (IntPtr block, IntPtr endpoint);
 		static nw_path_enumerate_gateways_t static_EnumerateGatewaysHandler = TrampolineGatewaysHandler;
