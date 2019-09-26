@@ -16153,7 +16153,7 @@ namespace Foundation
 
 		[Export ("scheduleSendBarrierBlock:")]
 		[Mac (10, 15)][iOS (13, 0)][Watch (6, 0)][TV (13, 0)]
-		void ScheduleSendBarrier(Action block);
+		void ScheduleSendBarrier (Action block);
 
 		[Export ("remoteObjectProxy"), Internal]
 		IntPtr _CreateRemoteObjectProxy ();
