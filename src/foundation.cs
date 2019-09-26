@@ -16226,11 +16226,9 @@ namespace Foundation
 		Protocol Protocol { get; set; }
 
 		[Export ("setClasses:forSelector:argumentIndex:ofReply:")]
-		[Internal]
 		void SetAllowedClasses (NSSet<Class> allowedClasses, Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
 
 		[Export ("classesForSelector:argumentIndex:ofReply:")]
-		[Internal]
 		NSSet<Class> GetAllowedClasses (Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
 
 		// Methods taking xpc_type_t have been skipped.
