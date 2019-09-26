@@ -43,7 +43,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_framer_write_output (OS_nw_framer framer, IntPtr output_buffer, nuint output_length);
+		static extern void nw_framer_write_output (OS_nw_framer framer, byte[] output_buffer, nuint output_length);
 
 		public void WriteOutput (byte[] data)
 		{
