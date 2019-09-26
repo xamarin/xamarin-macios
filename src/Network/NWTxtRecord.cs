@@ -81,7 +81,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern byte nw_txt_record_set_key(IntPtr handle, string key, IntPtr value, nuint valueLen);
+		static extern byte nw_txt_record_set_key (IntPtr handle, string key, byte[] value, nuint valueLen);
 
 		public bool SetKey (string key, byte [] value)
 		{
