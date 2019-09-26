@@ -456,7 +456,7 @@ namespace Network {
 		static extern IntPtr nw_framer_message_copy_object_value (OS_nw_protocol_metadata message, string key);
 
 		public NSObject GetValue (string key)
-			=> new NSObject (nw_framer_message_copy_object_value (GetCheckedHandle (), key));
+			=> new Runtime.GetNSObject (nw_framer_message_copy_object_value (GetCheckedHandle (), key));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_framer_deliver_input (OS_nw_framer framer, IntPtr input_buffer, nuint input_length, OS_nw_protocol_metadata message, bool is_complete);
