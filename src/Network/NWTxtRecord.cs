@@ -119,7 +119,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern byte nw_txt_record_is_dictionary(IntPtr handle);
+		static extern byte nw_txt_record_is_dictionary (IntPtr handle);
 
 		public bool IsDictionary {
 			get => nw_txt_record_is_dictionary (Handle) != 0;
