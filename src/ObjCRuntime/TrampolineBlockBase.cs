@@ -26,7 +26,9 @@ namespace ObjCRuntime {
 			Runtime.ReleaseBlockOnMainThread (blockPtr);
 		}
 
-		protected IntPtr BlockPointer { get; }
+		protected IntPtr BlockPointer {
+			get { return blockPtr; }
+		}
 
 		protected unsafe static object GetExistingManagedDelegate (IntPtr block)
 		{
