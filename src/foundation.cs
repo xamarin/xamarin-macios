@@ -16220,18 +16220,18 @@ namespace Foundation
 	{
 		[Export ("interfaceWithProtocol:")]
 		[Static]
-		NSXpcInterface CreateForProtocol (Protocol protocol);
+		NSXpcInterface Create (Protocol protocol);
 
 		[Export ("protocol", ArgumentSemantic.Assign)]
 		Protocol Protocol { get; set; }
 
 		[Export ("setClasses:forSelector:argumentIndex:ofReply:")]
 		[Internal]
-		void SetAllowedClassesForMethod (NSSet<Class> allowedClasses, Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
+		void SetAllowedClasses (NSSet<Class> allowedClasses, Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
 
 		[Export ("classesForSelector:argumentIndex:ofReply:")]
 		[Internal]
-		NSSet<Class> GetAllowedClassesForMethod (Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
+		NSSet<Class> GetAllowedClasses (Selector methodSelector, nuint argumentIndex, bool forReplyBlock);
 
 		// Methods taking xpc_type_t have been skipped.
 	}
