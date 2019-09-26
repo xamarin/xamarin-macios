@@ -35,15 +35,13 @@ namespace Network {
 		public NWTxtRecord (IntPtr handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern IntPtr nw_txt_record_create_with_bytes (byte[] txtBytes, nuint len);
+		unsafe static extern IntPtr nw_txt_record_create_with_bytes (byte *txtBytes, nuint len);
 
-		public static NWTxtRecord FromBytes (byte [] bytes)
+		public static NWTxtRecord FromBytes (ReadOnlyMemory<byte> bytes)
 		{
-			if (bytes == null || bytes.Length == 0)
-				return null;
 			unsafe {
-				fixed (byte *p = &bytes[0]){
-					var x = nw_txt_record_create_with_bytes (bytes, (nuint) bytes.Length);
+				using (var mh = bytes.Pin ())  {
+					var x = nw_txt_record_create_with_bytes ((byte*)mh.Pointer, (nuint) bytes.Length);
 					if (x == IntPtr.Zero)
 						return null;
 					return new NWTxtRecord (x, owns: true);
@@ -65,63 +63,50 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_txt_record_copy (IntPtr other);
 		
-		public NWTxtRecord Clone ()
-		{
-			if (Handle == IntPtr.Zero)
-				return null;
-			return new NWTxtRecord (nw_txt_record_copy (Handle), owns: true);
-		}
+		public NWTxtRecord Clone () => new NWTxtRecord (nw_txt_record_copy (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWTxtRecordFindKey nw_txt_record_find_key (IntPtr handle, string key);
 		
-		public NWTxtRecordFindKey FindKey (string key)
-		{
-			return nw_txt_record_find_key (Handle, key);
-		}
+		public NWTxtRecordFindKey FindKey (string key) => nw_txt_record_find_key (GetCheckedHandle (), key);
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern byte nw_txt_record_set_key (IntPtr handle, string key, byte[] value, nuint valueLen);
+		unsafe static extern byte nw_txt_record_set_key (IntPtr handle, string key, byte *value, nuint valueLen);
 
-		public bool SetKey (string key, byte [] value)
+		public bool SetValue (string key, ReadOnlyMemory<byte> value)
 		{
-			if (value == null)
-				return nw_txt_record_set_key (Handle, key, null, 0) != 0;
 			unsafe {
-				fixed (void *pv = value)
-					return nw_txt_record_set_key (Handle, key, value, (nuint) value.Length) != 0;
+				using (var mh = value.Pin ())
+					return nw_txt_record_set_key (GetCheckedHandle (), key, (byte*)mh.Pointer, (nuint) value.Length) != 0;
+			}
+		}
+
+		public bool SetValue (string key) {
+			unsafe {
+					return nw_txt_record_set_key (GetCheckedHandle (), key, null, 0) != 0;
 			}
 		}
 		
-		public bool SetKey (string key, string value)
+		public bool SetValue (string key, string value)
 		{
 			var utf8 = new UTF8Encoding();
-			return SetKey (key, value == null ? null : utf8.GetBytes (value));
+			return SetValue (key, value == null ? null : utf8.GetBytes (value));
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern byte nw_txt_record_remove_key (IntPtr handle, string key);
 
-		public bool RemoveKey (string key)
-		{
-			return nw_txt_record_remove_key (Handle, key) != 0;
-		}
+		public bool RemoveValue (string key) => nw_txt_record_remove_key (GetCheckedHandle (), key) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern long nw_txt_record_get_key_count (IntPtr handle);
 		
-		public long KeyCount {
-			get {
-				return nw_txt_record_get_key_count (Handle);
-			}
-		}
+		public long KeyCount => nw_txt_record_get_key_count (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern byte nw_txt_record_is_dictionary (IntPtr handle);
 
-		public bool IsDictionary {
-			get => nw_txt_record_is_dictionary (Handle) != 0;
-		}
+		public bool IsDictionary => nw_txt_record_is_dictionary (GetCheckedHandle ()) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_txt_record_is_equal (OS_nw_txt_record left, OS_nw_txt_record right);
@@ -134,7 +119,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern bool nw_txt_record_apply (OS_nw_txt_record txt_record, void *applier);
+		unsafe static extern bool nw_txt_record_apply (OS_nw_txt_record txt_record, ref BlockLiteral applier);
 
 		delegate void nw_txt_record_apply_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen); 
 		static nw_txt_record_apply_t static_ApplyHandler = TrampolineApplyHandler;
@@ -142,33 +127,31 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_txt_record_apply_t))]
 		static void TrampolineApplyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
 		{
-			var del = BlockLiteral.GetTarget<Action<string, NWTxtRecordFindKey, byte[]>> (block);
+			var del = BlockLiteral.GetTarget<Action<string, NWTxtRecordFindKey, ReadOnlyMemory<byte>>> (block);
 			if (del != null) {
 				var bValue = new byte[valueLen];
 				Marshal.Copy (value, bValue, 0, (int)valueLen);
-				del (key, found, bValue);
+				var mValue = new ReadOnlyMemory<byte>(bValue);
+				del (key, found, mValue);
 			}
 		}
 
-		public bool Apply (Action<string, NWTxtRecordFindKey, byte[]> handler)
+		public bool Apply (Action<string, NWTxtRecordFindKey, ReadOnlyMemory<byte>> handler)
 		{
-			unsafe {
-				if (handler == null) {
-					return nw_txt_record_apply (GetCheckedHandle (), null);
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ApplyHandler, handler);
-				try {
-					return nw_txt_record_apply (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ApplyHandler, handler);
+			try {
+				return nw_txt_record_apply (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe bool nw_txt_record_access_key (OS_nw_txt_record txt_record, string key, void *access_value);
+		static extern unsafe bool nw_txt_record_access_key (OS_nw_txt_record txt_record, string key, ref BlockLiteral access_value);
 
 		delegate void nw_txt_record_access_key_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
 		static nw_txt_record_access_key_t static_AccessKeyHandler = TrampolineAccessKeyHandler;
@@ -176,33 +159,32 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_txt_record_access_key_t))]
 		static void TrampolineAccessKeyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
 		{
-			var del = BlockLiteral.GetTarget<Action<string, NWTxtRecordFindKey, byte[]>> (block);
+			var del = BlockLiteral.GetTarget<Action<string, NWTxtRecordFindKey, ReadOnlyMemory<byte>>> (block);
 			if (del != null) {
 				var bValue = new byte[valueLen];
-				Marshal.Copy (value, bValue, 0, (int)valueLen);
-				del (key, found, bValue);
+				if (found == NWTxtRecordFindKey.NonEmptyValue)
+					Marshal.Copy (value, bValue, 0, (int)valueLen);
+				var mValue = new ReadOnlyMemory<byte>(bValue);
+				del (key, found, mValue);
 			}
 		}
 
-		public bool GetValue (string key, Action<string, NWTxtRecordFindKey, byte[]> handler)
+		public bool GetValue (string key, Action<string, NWTxtRecordFindKey, ReadOnlyMemory<byte>> handler)
 		{
-			unsafe {
-				if (handler == null) {
-					return nw_txt_record_access_key (GetCheckedHandle (),key,  null);
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_AccessKeyHandler, handler);
-				try {
-					return nw_txt_record_access_key (GetCheckedHandle (), key, (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_AccessKeyHandler, handler);
+			try {
+				return nw_txt_record_access_key (GetCheckedHandle (), key, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern bool nw_txt_record_access_bytes (OS_nw_txt_record txt_record, void *access_bytes);
+		unsafe static extern bool nw_txt_record_access_bytes (OS_nw_txt_record txt_record, ref BlockLiteral access_bytes);
 
 		delegate void nw_txt_record_access_bytes_t (IntPtr block, IntPtr value, nuint valueLen);
 		static nw_txt_record_access_bytes_t static_RawBytesHandler = TrampolineRawBytesHandler;
@@ -210,28 +192,26 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_txt_record_access_bytes_t))]
 		static void TrampolineRawBytesHandler (IntPtr block, IntPtr value, nuint valueLen)
 		{
-			var del = BlockLiteral.GetTarget<Action<byte[]>> (block);
+			var del = BlockLiteral.GetTarget<Action<ReadOnlyMemory<byte>>> (block);
 			if (del != null) {
 				var bValue = new byte[valueLen];
 				Marshal.Copy (value, bValue, 0, (int)valueLen);
-				del (bValue);
+				var mValue = new ReadOnlyMemory<byte>(bValue);
+				del (mValue);
 			}
 		}
 
-		public bool GetRawBytes (Action<byte[]> handler)
+		public bool GetRawBytes (Action<ReadOnlyMemory<byte>> handler)
 		{
-			unsafe {
-				if (handler == null) {
-					return nw_txt_record_access_bytes (GetCheckedHandle (), null);
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_RawBytesHandler, handler);
-				try {
-					return nw_txt_record_access_bytes (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_RawBytesHandler, handler);
+			try {
+				return nw_txt_record_access_bytes (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 	}
