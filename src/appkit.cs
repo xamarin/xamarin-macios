@@ -25338,6 +25338,15 @@ namespace AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
+	interface NSAccessibilityCheckBox : NSAccessibilityButton
+	{
+		[Abstract]
+		[NullAllowed, Export ("accessibilityValue")]
+		NSNumber AccessibilityValue { get; }
+	}
+
+	[Mac (10,10)]
+	[Protocol]
 	interface NSAccessibilityStaticText : NSAccessibilityElementProtocol {
 		[Abstract]
 		[NullAllowed, Export ("accessibilityValue")]
@@ -25489,10 +25498,12 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[Protocol]
 	interface NSAccessibilityOutline : NSAccessibilityTable {
 	}
 
 	[Mac (10,10)]
+	[Protocol]
 	interface NSAccessibilityList : NSAccessibilityTable {
 	}
 
