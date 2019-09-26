@@ -2653,7 +2653,7 @@ public partial class Generator : IMemberGatherer {
 
 			if (convs.Length > 0)
 				print (convs.ToString ());
-			print ("{0}{1}invoker (blockPtr{2}){3};",
+			print ("{0}{1}invoker (BlockPointer{2}){3};",
 			       use_temp_return ? "var ret = " : "",
 			       cast_a,
 			       args.ToString (),

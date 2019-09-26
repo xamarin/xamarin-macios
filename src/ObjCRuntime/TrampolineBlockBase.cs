@@ -7,7 +7,8 @@ using System.Runtime.InteropServices;
 namespace ObjCRuntime {
 
 	public abstract class TrampolineBlockBase {
-		protected IntPtr blockPtr;
+
+		readonly IntPtr blockPtr;
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		static extern IntPtr _Block_copy (IntPtr ptr);
@@ -21,6 +22,8 @@ namespace ObjCRuntime {
 		{
 			Runtime.ReleaseBlockOnMainThread (blockPtr);
 		}
+
+		protected IntPtr BlockPointer { get; }
 
 		protected unsafe static object GetExistingManagedDelegate (IntPtr block)
 		{
