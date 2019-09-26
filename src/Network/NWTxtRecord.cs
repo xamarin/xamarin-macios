@@ -35,7 +35,7 @@ namespace Network {
 		public NWTxtRecord (IntPtr handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern IntPtr nw_txt_record_create_with_bytes (IntPtr txtBytes, nuint len);
+		static extern IntPtr nw_txt_record_create_with_bytes (byte[] txtBytes, nuint len);
 
 		public static NWTxtRecord FromBytes (byte [] bytes)
 		{
