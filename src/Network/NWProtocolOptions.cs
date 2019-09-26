@@ -185,23 +185,21 @@ namespace Network {
 		extern static void nw_tcp_options_set_disable_ecn (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool disableEcn);
 		public void TcpSetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn);
 
-		//
-		// UDP Options
-		//
-
+//
+// UDP Options
+//
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_udp_options_set_prefer_no_checksum (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool preferNoChecksums);
 
 		public void UdpSetPreferNoChecksum (bool preferNoChecksums) => nw_udp_options_set_prefer_no_checksum (GetCheckedHandle (), preferNoChecksums);
 
-		//
-		// TLS options
-		//
+//
+// TLS options
+//
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_tls_copy_sec_protocol_options (IntPtr options);
 
 		public SecProtocolOptions TlsProtocolOptions => new SecProtocolOptions (nw_tls_copy_sec_protocol_options (GetCheckedHandle ()), owns: true);
-
 	}
 }
