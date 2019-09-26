@@ -153,7 +153,7 @@ namespace CoreImage {
 				SetValueForKey (value, nskey);
 			}
 		}
-		
+
 		internal static IntPtr CreateFilter (string name)
 		{
 			using (var nsname = new NSString (name))
@@ -173,10 +173,32 @@ namespace CoreImage {
 				SetValueForKey (new NSNumber (value), nskey);
 		}
 
+		internal void SetNInt (string key, nint value)
+		{
+			using (var nskey = new NSString (key))
+				SetValueForKey (new NSNumber (value), nskey);
+		}
+
 		internal void SetBool (string key, bool value)
 		{
 			using (var nskey = new NSString (key))
 				SetValueForKey (new NSNumber (value ? 1 : 0), nskey);
+		}
+
+		internal void SetValue (string key, CGPoint value)
+		{
+			using (var nskey = new NSString (key))
+			using (var nsv = new CIVector (value.X, value.Y)) {
+				SetValueForKey (nsv, nskey);
+			}
+		}
+
+		internal void SetValue (string key, CGRect value)
+		{
+			using (var nskey = new NSString (key))
+			using (var nsv = new CIVector (value.X, value.Y, value.Width, value.Height)) {
+				SetValueForKey (nsv, nskey);
+			}
 		}
 
 		internal float GetFloat (string key)
@@ -195,6 +217,16 @@ namespace CoreImage {
 				var v = ValueForKey (nskey);
 				if (v is NSNumber)
 					return (v as NSNumber).Int32Value;
+				return 0;
+			}
+		}
+
+		internal nint GetNInt (string key)
+		{
+			using (var nskey = new NSString (key)){
+				var v = ValueForKey (nskey);
+				if (v is NSNumber)
+					return (v as NSNumber).NIntValue;
 				return 0;
 			}
 		}
@@ -237,7 +269,18 @@ namespace CoreImage {
 			return ret;
 		}
 		
-		
+		internal CGPoint GetPoint (string key)
+		{
+			var v = ValueForKey (key) as CIVector;
+			return new CGPoint (v.X, v.Y);
+		}
+
+		internal CGRect GetRect (string key)
+		{
+			var v = ValueForKey (key) as CIVector;
+			return new CGRect (v.X, v.Y, v.Z, v.W);
+		}
+
 		internal CIVector GetVector (string key)
 		{
 			return ValueForKey (key) as CIVector;
@@ -676,7 +719,7 @@ namespace CoreImage {
 		// not every CIFilter supports inputImage, i.e.
 		// NSUnknownKeyException [<CICheckerboardGenerator 0x1648cb20> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputImage.
 		// and those will crash (on devices) if the property is called - and that includes displaying it in the debugger
-		public CIImage Image {
+		public CIImage InputImage {
 			get {
 				return SupportsInputImage ? GetInputImage () : null;
 			}
@@ -686,6 +729,14 @@ namespace CoreImage {
 				SetInputImage (value);
 			}
 		}
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputImage' instead.")]
+		public CIImage Image {
+			get { return InputImage; }
+			set { InputImage = value; }
+		}
+#endif
 
 		bool SupportsInputImage {
 			get {
