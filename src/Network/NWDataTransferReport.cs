@@ -115,7 +115,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_data_transfer_report_get_transport_rtt_variance (OS_nw_data_transfer_report report, uint path_index);
 
-		public ulong GetTransportMinimumRoundTripVariance (uint pathIndex)
+		public ulong GetTransportRoundTripTimeVariance (uint pathIndex)
 			=> nw_data_transfer_report_get_transport_rtt_variance (GetCheckedHandle (), pathIndex);
 
 		[DllImport (Constants.NetworkLibrary)]
