@@ -42,7 +42,7 @@ namespace Network {
 				throw new ArgumentNullException (nameof (descriptor));
 			var parametersHandler = parameters.GetHandle ();
 
-			InitializeHandle (nw_browser_create (descriptor.Handle, parameters.Handle));
+			InitializeHandle (nw_browser_create (descriptor.Handle, parametersHandler));
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
