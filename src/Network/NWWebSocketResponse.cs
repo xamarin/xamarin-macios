@@ -46,7 +46,7 @@ namespace Network {
 		public NWWebSocketResponseStatus Status => nw_ws_response_get_status (GetCheckedHandle ()); 
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, void *enumerator);
+	static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, void *enumerator);
 
 		delegate void nw_ws_response_enumerate_additional_headers_t (IntPtr block, string header, string value);
 		static nw_ws_response_enumerate_additional_headers_t static_EnumerateHeadersHandler = TrampolineEnumerateHeadersHandler;
