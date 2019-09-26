@@ -449,7 +449,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_framer_message_set_object_value (OS_nw_protocol_metadata message, string key, IntPtr value);
 
-		public void SetKey (string key, NSObject value)
+		public void SetObject (string key, NSObject value)
 			=> nw_framer_message_set_object_value (GetCheckedHandle (), key, value?.Handle ?? IntPtr.Zero); 
 
 		[DllImport (Constants.NetworkLibrary)]
