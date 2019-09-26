@@ -43,7 +43,7 @@ namespace Network {
 				return null;
 			unsafe {
 				fixed (byte *p = &bytes[0]){
-					var x = nw_txt_record_create_with_bytes ((IntPtr) p, (nuint) bytes.Length);
+					var x = nw_txt_record_create_with_bytes (bytes, (nuint) bytes.Length);
 					if (x == IntPtr.Zero)
 						return null;
 					return new NWTxtRecord (x, owns: true);
