@@ -74,7 +74,7 @@ namespace Network {
 		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 		public NWTxtRecord TxtRecord {
 			get => new NWTxtRecord (nw_advertise_descriptor_copy_txt_record_object (GetCheckedHandle ()), owns: true); 
-			set => nw_advertise_descriptor_set_txt_record_object (GetCheckedHandle (), value?.Handle ?? IntPtr.Zero); 
+			set => nw_advertise_descriptor_set_txt_record_object (GetCheckedHandle (), value.GetHandle ()); 
 		}
 	}
 }

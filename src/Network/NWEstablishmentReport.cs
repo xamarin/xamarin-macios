@@ -100,7 +100,7 @@ namespace Network {
 		static nw_establishment_report_enumerate_protocols_t static_EnumerateProtocolsHandler = TrampolineEnumerateProtocolsHandler;
 
 		[MonoPInvokeCallback (typeof (nw_establishment_report_enumerate_protocols_t))]
-		static void TrampolineEnumerateProtocolsHandler(IntPtr block, nw_protocol_definition_t protocol, nuint handshake_milliseconds, nuint handshake_rtt_milliseconds)
+		static void TrampolineEnumerateProtocolsHandler (IntPtr block, nw_protocol_definition_t protocol, nuint handshake_milliseconds, nuint handshake_rtt_milliseconds)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition, nuint, nuint>> (block);
 			if (del != null) {

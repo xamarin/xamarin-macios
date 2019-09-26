@@ -39,11 +39,11 @@ namespace Network {
 		{
 			if (data == null)
 				throw new ArgumentNullException (nameof (data));
-			nw_framer_write_output_data (GetCheckedHandle(), data.Handle);
+			nw_framer_write_output_data (GetCheckedHandle (), data.Handle);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_framer_write_output (OS_nw_framer framer, IntPtr output_buffer, nuint output_length);
+		static extern void nw_framer_write_output (OS_nw_framer framer, byte[] output_buffer, nuint output_length);
 
 		public void WriteOutput (byte[] data)
 		{
@@ -51,7 +51,7 @@ namespace Network {
 				throw new ArgumentNullException (nameof (data));
 			unsafe {
 				fixed (void* dataHandle = data)
-					nw_framer_write_output (GetCheckedHandle (), (IntPtr) dataHandle, (nuint)data.Length);
+					nw_framer_write_output (GetCheckedHandle (), data, (nuint) data.Length);
 			}
 		}
 
@@ -449,14 +449,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_framer_message_set_object_value (OS_nw_protocol_metadata message, string key, IntPtr value);
 
-		public void SetKey (string key, NSObject value)
-			=> nw_framer_message_set_object_value (GetCheckedHandle (), key, value?.Handle ?? IntPtr.Zero); 
+		public void SetObject (string key, NSObject value)
+			=> nw_framer_message_set_object_value (GetCheckedHandle (), key, value.GetHandle ()); 
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_framer_message_copy_object_value (OS_nw_protocol_metadata message, string key);
 
 		public NSObject GetValue (string key)
-			=> new NSObject (nw_framer_message_copy_object_value (GetCheckedHandle (), key));
+			=> Runtime.GetNSObject (nw_framer_message_copy_object_value (GetCheckedHandle (), key));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_framer_deliver_input (OS_nw_framer framer, IntPtr input_buffer, nuint input_length, OS_nw_protocol_metadata message, bool is_complete);

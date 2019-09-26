@@ -1,5 +1,5 @@
 //
-// NWTxtRecord.cs: Bindings the Netowrk nw_txt_record_t API
+// NWTxtRecord.cs: Bindings the Network nw_txt_record_t API
 //
 // Authors:
 //   Miguel de Icaza (miguel@microsoft.com)
@@ -35,7 +35,7 @@ namespace Network {
 		public NWTxtRecord (IntPtr handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern IntPtr nw_txt_record_create_with_bytes (IntPtr txtBytes, nuint len);
+		static extern IntPtr nw_txt_record_create_with_bytes (byte[] txtBytes, nuint len);
 
 		public static NWTxtRecord FromBytes (byte [] bytes)
 		{
@@ -43,7 +43,7 @@ namespace Network {
 				return null;
 			unsafe {
 				fixed (byte *p = &bytes[0]){
-					var x = nw_txt_record_create_with_bytes ((IntPtr) p, (nuint) bytes.Length);
+					var x = nw_txt_record_create_with_bytes (bytes, (nuint) bytes.Length);
 					if (x == IntPtr.Zero)
 						return null;
 					return new NWTxtRecord (x, owns: true);
@@ -52,7 +52,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern IntPtr nw_txt_record_create_dictionary();
+		static extern IntPtr nw_txt_record_create_dictionary ();
 
 		public static NWTxtRecord CreateDictionary ()
 		{
@@ -81,15 +81,15 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern byte nw_txt_record_set_key(IntPtr handle, string key, IntPtr value, nuint valueLen);
+		static extern byte nw_txt_record_set_key (IntPtr handle, string key, byte[] value, nuint valueLen);
 
 		public bool SetKey (string key, byte [] value)
 		{
 			if (value == null)
-				return nw_txt_record_set_key (Handle, key, IntPtr.Zero, 0) != 0;
+				return nw_txt_record_set_key (Handle, key, null, 0) != 0;
 			unsafe {
 				fixed (void *pv = value)
-					return nw_txt_record_set_key (Handle, key, (IntPtr) pv, (nuint) value.Length) != 0;
+					return nw_txt_record_set_key (Handle, key, value, (nuint) value.Length) != 0;
 			}
 		}
 		
@@ -108,7 +108,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern long nw_txt_record_get_key_count(IntPtr handle);
+		static extern long nw_txt_record_get_key_count (IntPtr handle);
 		
 		public long KeyCount {
 			get {
@@ -117,7 +117,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern byte nw_txt_record_is_dictionary(IntPtr handle);
+		static extern byte nw_txt_record_is_dictionary (IntPtr handle);
 
 		public bool IsDictionary {
 			get => nw_txt_record_is_dictionary (Handle) != 0;

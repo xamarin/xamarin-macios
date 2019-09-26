@@ -22,7 +22,7 @@ namespace Network {
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public enum NWDataTransferReportState {
 		Collecting = 1,
-		Collected = 2
+		Collected = 2,
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
@@ -103,7 +103,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_data_transfer_report_get_transport_smoothed_rtt_milliseconds (OS_nw_data_transfer_report report, uint path_index);
 
-		public ulong GetTransportSmootherRoundTripTime (uint pathIndex)
+		public ulong GetTransportSmoothedRoundTripTime (uint pathIndex)
 			=> nw_data_transfer_report_get_transport_smoothed_rtt_milliseconds (GetCheckedHandle (), pathIndex);
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -115,7 +115,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_data_transfer_report_get_transport_rtt_variance (OS_nw_data_transfer_report report, uint path_index);
 
-		public ulong GetTransportMinimumRoundTripVariance (uint pathIndex)
+		public ulong GetTransportRoundTripTimeVariance (uint pathIndex)
 			=> nw_data_transfer_report_get_transport_rtt_variance (GetCheckedHandle (), pathIndex);
 
 		[DllImport (Constants.NetworkLibrary)]
