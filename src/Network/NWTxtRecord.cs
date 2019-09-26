@@ -1,5 +1,5 @@
 //
-// NWTxtRecord.cs: Bindings the Netowrk nw_txt_record_t API
+// NWTxtRecord.cs: Bindings the Network nw_txt_record_t API
 //
 // Authors:
 //   Miguel de Icaza (miguel@microsoft.com)
