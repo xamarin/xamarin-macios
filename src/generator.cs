@@ -2533,10 +2533,6 @@ public partial class Generator : IMemberGatherer {
 		print_generated_code ();
 		print ("static partial class Trampolines {"); indent++;
 
-		print ("");
-		print ("[DllImport (\"/usr/lib/libobjc.dylib\")]");
-		print ("static extern IntPtr _Block_copy (IntPtr ptr);");
-
 		while (trampolines.Count > 0){
 			var queue = trampolines.Values.ToArray ();
 			trampolines.Clear ();
@@ -2609,24 +2605,14 @@ public partial class Generator : IMemberGatherer {
 			// Now generate the class that allows us to invoke a Objective-C block from C#
 			//
 			print ("");
-			print ("internal class {0} {{", ti.NativeInvokerName);
+			print ($"internal sealed class {ti.NativeInvokerName} : TrampolineBlockBase {{");
 			indent++;
-			print ("IntPtr blockPtr;");
 			print ("{0} invoker;", ti.DelegateName);
 			print ("");
-			print ("[Preserve (Conditional=true)]");
 			print_generated_code ();
-			print ("public unsafe {0} (BlockLiteral *block)", ti.NativeInvokerName);
+			print ("public unsafe {0} (BlockLiteral *block) : base (block)", ti.NativeInvokerName);
 			print ("{"); indent++;
-			print ("blockPtr = _Block_copy ((IntPtr) block);", ns.CoreObjCRuntime);
 			print ("invoker = block->GetDelegateForBlock<{0}> ();", ti.DelegateName);
-			indent--; print ("}");
-			print ("");
-			print ("[Preserve (Conditional=true)]");
-			print_generated_code ();
-			print ("~{0} ()", ti.NativeInvokerName);
-			print ("{"); indent++;
-			print ("Runtime.ReleaseBlockOnMainThread (blockPtr);", ns.CoreObjCRuntime);
 			indent--; print ("}");
 			print ("");
 			print ("[Preserve (Conditional=true)]");
@@ -2634,17 +2620,12 @@ public partial class Generator : IMemberGatherer {
 			print ("public unsafe static {0} Create (IntPtr block)\n{{", ti.UserDelegate); indent++;
 			print ("if (block == IntPtr.Zero)"); indent++;
 			print ("return null;"); indent--;
-			print ("if (BlockLiteral.IsManagedBlock (block)) {"); indent++;
-			print ("var existing_delegate = ((BlockLiteral *) block)->Target as {0};", ti.UserDelegate);
-			print ("if (existing_delegate != null)"); indent++;
-			print ("return existing_delegate;"); indent--;
-			indent--; print ("}"); 
-			print ("return new {0} ((BlockLiteral *) block).Invoke;", ti.NativeInvokerName);
+			print ($"var del = ({ti.UserDelegate}) GetExistingManagedDelegate (block);");
+			print ($"return del ?? new {ti.NativeInvokerName} ((BlockLiteral *) block).Invoke;");
 			indent--;print ("}");
 			print ("");
 			var string_pars = new StringBuilder ();
 			MakeSignatureFromParameterInfo (false, string_pars, mi, declaringType: null, parameters: parameters);
-			print ("[Preserve (Conditional=true)]");
 			print_generated_code ();
 			print ("unsafe {0} Invoke ({1})", FormatType (null, mi.ReturnType), string_pars.ToString ());
 			print ("{"); indent++;
@@ -2672,7 +2653,7 @@ public partial class Generator : IMemberGatherer {
 
 			if (convs.Length > 0)
 				print (convs.ToString ());
-			print ("{0}{1}invoker (blockPtr{2}){3};",
+			print ("{0}{1}invoker (BlockPointer{2}){3};",
 			       use_temp_return ? "var ret = " : "",
 			       cast_a,
 			       args.ToString (),
