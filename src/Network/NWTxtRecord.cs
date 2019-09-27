@@ -73,7 +73,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern byte nw_txt_record_set_key (IntPtr handle, string key, byte *value, nuint valueLen);
 
-		public bool SetValue (string key, ReadOnlyMemory<byte> value)
+		public bool Add (string key, ReadOnlyMemory<byte> value)
 		{
 			unsafe {
 				using (var mh = value.Pin ())
@@ -81,22 +81,22 @@ namespace Network {
 			}
 		}
 
-		public bool SetValue (string key) {
+		public bool Add (string key) {
 			unsafe {
-					return nw_txt_record_set_key (GetCheckedHandle (), key, null, 0) != 0;
+				return nw_txt_record_set_key (GetCheckedHandle (), key, null, 0) != 0;
 			}
 		}
 		
-		public bool SetValue (string key, string value)
+		public bool Add (string key, string value)
 		{
 			var utf8 = new UTF8Encoding();
-			return SetValue (key, value == null ? null : utf8.GetBytes (value));
+			return Add (key, value == null ? null : utf8.GetBytes (value));
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern byte nw_txt_record_remove_key (IntPtr handle, string key);
 
-		public bool RemoveValue (string key) => nw_txt_record_remove_key (GetCheckedHandle (), key) != 0;
+		public bool Remove (string key) => nw_txt_record_remove_key (GetCheckedHandle (), key) != 0;
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern long nw_txt_record_get_key_count (IntPtr handle);

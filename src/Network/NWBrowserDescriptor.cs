@@ -34,6 +34,8 @@ namespace Network {
 			return new NWBrowserDescriptor (nw_browse_descriptor_create_bonjour_service (type, domain), owns: true);
 		}
 
+		public static NWBrowserDescriptor CreateBonjourService (string type) => CreateBonjourService (type, null);
+
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_browse_descriptor_get_include_txt_record (OS_nw_browse_descriptor descriptor);
 
@@ -46,13 +48,15 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern string nw_browse_descriptor_get_bonjour_service_type (OS_nw_browse_descriptor descriptor);
+		static extern IntPtr nw_browse_descriptor_get_bonjour_service_type (OS_nw_browse_descriptor descriptor);
 
-		public string BonjourType => nw_browse_descriptor_get_bonjour_service_type (GetCheckedHandle ()); 
+		public string BonjourType
+			=> Marshal.PtrToStringAnsi (nw_browse_descriptor_get_bonjour_service_type (GetCheckedHandle ())); 
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern string nw_browse_descriptor_get_bonjour_service_domain (OS_nw_browse_descriptor descriptor);
+		static extern IntPtr nw_browse_descriptor_get_bonjour_service_domain (OS_nw_browse_descriptor descriptor);
 
-		public string BonjourDomain => nw_browse_descriptor_get_bonjour_service_domain (GetCheckedHandle ()); 
+		public string BonjourDomain
+			=> Marshal.PtrToStringAnsi (nw_browse_descriptor_get_bonjour_service_domain (GetCheckedHandle ())); 
 	}
 }

@@ -507,7 +507,7 @@ namespace Network {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, void *access_block);
+		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, ref BlockLiteral access_block);
 
 		delegate void nw_establishment_report_access_block_t (IntPtr block, nw_establishment_report_t report); 
 		static nw_establishment_report_access_block_t static_GetEstablishmentReportHandler = TrampolineGetEstablishmentReportHandler;
@@ -527,20 +527,15 @@ namespace Network {
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
 
-			unsafe {
-				if (handler == null) {
-					nw_connection_access_establishment_report (GetCheckedHandle (), queue.Handle, null);
-					return;
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_GetEstablishmentReportHandler, handler);
-				try {
-					nw_connection_access_establishment_report (GetCheckedHandle (), queue.Handle, (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_GetEstablishmentReportHandler, handler);
+			try {
+				nw_connection_access_establishment_report (GetCheckedHandle (), queue.Handle, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 	}

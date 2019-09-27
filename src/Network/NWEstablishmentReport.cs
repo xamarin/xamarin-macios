@@ -51,15 +51,15 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_establishment_report_get_duration_milliseconds (OS_nw_establishment_report report);
 
-		public ulong Duration => nw_establishment_report_get_duration_milliseconds (GetCheckedHandle ());
+		public TimeSpan Duration => TimeSpan.FromMilliseconds (nw_establishment_report_get_duration_milliseconds (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_establishment_report_get_attempt_started_after_milliseconds (OS_nw_establishment_report report);
 
-		public ulong ConnectionSetupTime => nw_establishment_report_get_attempt_started_after_milliseconds (GetCheckedHandle ());
+		public TimeSpan ConnectionSetupTime => TimeSpan.FromMilliseconds (nw_establishment_report_get_attempt_started_after_milliseconds (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_establishment_report_enumerate_resolutions (OS_nw_establishment_report report, void *enumerate_block);
+		static extern void nw_establishment_report_enumerate_resolutions (OS_nw_establishment_report report, ref BlockLiteral enumerate_block);
 
 		delegate void nw_report_resolution_enumerator_t (IntPtr block, NWReportResolutionSource source, nuint milliseconds, int endpoint_count, nw_endpoint_t successful_endpoint, nw_endpoint_t preferred_endpoint);
 		static nw_report_resolution_enumerator_t static_ResolutionEnumeratorHandler = TrampolineResolutionEnumeratorHandler;
@@ -67,34 +67,30 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_report_resolution_enumerator_t))]
 		static void TrampolineResolutionEnumeratorHandler (IntPtr block, NWReportResolutionSource source, nuint milliseconds, int endpoint_count, nw_endpoint_t successful_endpoint, nw_endpoint_t preferred_endpoint)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWReportResolutionSource, nuint, int, NWEndpoint, NWEndpoint>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWReportResolutionSource, TimeSpan, int, NWEndpoint, NWEndpoint>> (block);
 			if (del != null) {
 				var nwSuccesfulEndpoint = new NWEndpoint (successful_endpoint, owns: false);
 				var nwPreferredEndpoint = new NWEndpoint (preferred_endpoint, owns: false);
-				del (source, milliseconds, endpoint_count, nwSuccesfulEndpoint, nwPreferredEndpoint);
+				del (source,TimeSpan.FromMilliseconds (milliseconds), endpoint_count, nwSuccesfulEndpoint, nwPreferredEndpoint);
 			}
 		}
 
-		public void EnumerateResolutions (Action<NWReportResolutionSource, nuint, int, NWEndpoint, NWEndpoint> handler)
+		public void EnumerateResolutions (Action<NWReportResolutionSource, TimeSpan, int, NWEndpoint, NWEndpoint> handler)
 		{
-			unsafe {
-				if (handler == null) {
-					nw_establishment_report_enumerate_resolutions (GetCheckedHandle (), null);
-					return;
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_ResolutionEnumeratorHandler, handler);
-				try {
-					nw_establishment_report_enumerate_resolutions (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ResolutionEnumeratorHandler, handler);
+			try {
+				nw_establishment_report_enumerate_resolutions (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_establishment_report_enumerate_protocols (OS_nw_establishment_report report, void *enumerate_block);
+		static extern void nw_establishment_report_enumerate_protocols (OS_nw_establishment_report report, ref BlockLiteral enumerate_block);
 
 		delegate void nw_establishment_report_enumerate_protocols_t (IntPtr block, nw_protocol_definition_t protocol, nuint handshake_milliseconds, nuint handshake_rtt_milliseconds);
 		static nw_establishment_report_enumerate_protocols_t static_EnumerateProtocolsHandler = TrampolineEnumerateProtocolsHandler;
@@ -102,34 +98,35 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_establishment_report_enumerate_protocols_t))]
 		static void TrampolineEnumerateProtocolsHandler (IntPtr block, nw_protocol_definition_t protocol, nuint handshake_milliseconds, nuint handshake_rtt_milliseconds)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition, nuint, nuint>> (block);
+			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition, TimeSpan, TimeSpan>> (block);
 			if (del != null) {
 				var nwProtocolDefinition = new NWProtocolDefinition (protocol, owns: false);
-				del (nwProtocolDefinition, handshake_milliseconds, handshake_rtt_milliseconds); 
+				del (nwProtocolDefinition, TimeSpan.FromMilliseconds (handshake_milliseconds), TimeSpan.FromMilliseconds (handshake_rtt_milliseconds)); 
 			}
 		}
 
-		public void EnumerateProtocols (Action<NWProtocolDefinition, nuint, nuint> handler)
+		public void EnumerateProtocols (Action<NWProtocolDefinition, TimeSpan, TimeSpan> handler)
 		{
-			unsafe {
-				if (handler == null) {
-					nw_establishment_report_enumerate_protocols (GetCheckedHandle (), null);
-					return;
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_EnumerateProtocolsHandler, handler);
-				try {
-					nw_establishment_report_enumerate_protocols (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			if (handler == null) 
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_EnumerateProtocolsHandler, handler);
+			try {
+				nw_establishment_report_enumerate_protocols (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_endpoint_t nw_establishment_report_copy_proxy_endpoint (OS_nw_establishment_report report);
 
-		public NWEndpoint ProxyEndpoint => new NWEndpoint (nw_establishment_report_copy_proxy_endpoint (GetCheckedHandle ()), owns:true);
+		public NWEndpoint ProxyEndpoint {
+			get {
+				var ptr = nw_establishment_report_copy_proxy_endpoint (GetCheckedHandle ());
+				return (ptr == IntPtr.Zero)? null : new NWEndpoint (ptr, owns:true);
+			}
+		}
 	}
 }

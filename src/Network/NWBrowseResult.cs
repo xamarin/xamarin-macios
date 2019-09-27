@@ -57,7 +57,7 @@ namespace Network {
 			=> nw_browse_result_get_changes (oldResult.GetHandle (), newResult.GetHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_browse_result_enumerate_interfaces (OS_nw_browse_result result, void *enumerator);
+		static extern void nw_browse_result_enumerate_interfaces (OS_nw_browse_result result, ref BlockLiteral enumerator);
 
 		delegate void nw_browse_result_enumerate_interfaces_t (IntPtr block, IntPtr nwInterface);
 		static nw_browse_result_enumerate_interfaces_t static_EnumerateInterfacesHandler = TrampolineEnumerateInterfacesHandler;
@@ -74,19 +74,15 @@ namespace Network {
 
 		public void EnumerateInterfaces (Action<NWInterface> handler)
 		{
-			unsafe {
-				if (handler == null) {
-					nw_browse_result_enumerate_interfaces (GetCheckedHandle (), null);
-					return;
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_EnumerateInterfacesHandler, handler);
-				try {
-					nw_browse_result_enumerate_interfaces (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_EnumerateInterfacesHandler, handler);
+			try {
+				nw_browse_result_enumerate_interfaces (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 	}

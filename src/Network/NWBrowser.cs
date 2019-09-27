@@ -31,6 +31,10 @@ namespace Network {
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWBrowser : NativeObject {
 
+		bool started = false;
+		bool queueSet = false;
+		object startLock = new Object ();
+
 		public NWBrowser (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -40,10 +44,11 @@ namespace Network {
 		{
 			if (descriptor == null)
 				throw new ArgumentNullException (nameof (descriptor));
-			var parametersHandler = parameters.GetHandle ();
 
-			InitializeHandle (nw_browser_create (descriptor.Handle, parametersHandler));
+			InitializeHandle (nw_browser_create (descriptor.Handle, parameters?.Handle ?? IntPtr.Zero));
 		}
+
+		public NWBrowser (NWBrowserDescriptor descriptor) : this (descriptor, null) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_browser_set_queue (OS_nw_browser browser, dispatch_queue_t queue);
@@ -52,19 +57,44 @@ namespace Network {
 			set {
 				if (value == null)
 					throw new ArgumentNullException (nameof (value));
-				nw_browser_set_queue (GetCheckedHandle (), value.Handle);
+				lock (startLock) {
+					nw_browser_set_queue (GetCheckedHandle (), value.Handle);
+					queueSet = true;
+				}
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_browser_start (OS_nw_browser browser);
 
-		public void Start () => nw_browser_start (GetCheckedHandle ());
+		public void Start ()
+		{
+			lock (startLock) {
+				if (!queueSet) {
+					throw new InvalidOperationException ("Cannot start the browser without a DispatchQueue.");
+				}
+				nw_browser_start (GetCheckedHandle ());
+				started = true;
+			}
+		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_browser_cancel (OS_nw_browser browser);
 
-		public void Cancel () => nw_browser_cancel (GetCheckedHandle ());
+		public void Cancel ()
+		{
+			lock (startLock) {
+				nw_browser_cancel (GetCheckedHandle ());
+				started = false;
+			}
+		}
+
+		public bool Started  {
+			get {
+				lock (startLock) 
+					return started;
+			}
+		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_browse_descriptor nw_browser_copy_browse_descriptor (OS_nw_browser browser);

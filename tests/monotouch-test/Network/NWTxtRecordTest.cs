@@ -25,11 +25,16 @@ namespace MonoTouchFixtures.Network
 	{
 		NWTxtRecord record;
 		string randomKey = "MyData";
+
+		[TestFixtureSetUp]
+		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
+
+
 		[SetUp]
 		public void SetUp ()
 		{
 			record = NWTxtRecord.CreateDictionary ();
-            record.SetValue (randomKey, new byte[3] { 0, 0, 0 });
+			record.Add (randomKey, new byte[3] { 0, 0, 0 });
 		}
 
 		[Test]
@@ -42,10 +47,10 @@ namespace MonoTouchFixtures.Network
 					rawData = d;
 				}
 			);
-            Assert.AreNotEqual (0, rawData.Length, "Raw data length.");
+			Assert.AreNotEqual (0, rawData.Length, "Raw data length.");
 			// do the required conversion
 			using (var otherRecord = NWTxtRecord.FromBytes (rawData))
-	            Assert.IsTrue (record.Equals (otherRecord), "Equals");
+				Assert.IsTrue (record.Equals (otherRecord), "Equals");
 		}
 
 		[TearDown]
@@ -61,47 +66,47 @@ namespace MonoTouchFixtures.Network
 		public void TestPresentKey () => Assert.AreEqual (NWTxtRecordFindKey.NonEmptyValue, record.FindKey (randomKey));
 
 		[Test]
-		public void TestSetValueByteValue ()
+		public void TestAddByteValue ()
 		{
 			var data = new byte [] {10, 20, 30, 40};
 			var mySecondKey = "secondKey";
-			Assert.True (record.SetValue (mySecondKey, data), "SetValue");
+			Assert.True (record.Add (mySecondKey, data), "Add");
 			Assert.AreEqual (NWTxtRecordFindKey.NonEmptyValue, record.FindKey (mySecondKey));
 		}
 
 		[Test]
-		public void TestSetValueNoValue ()
+		public void TestAddNoValue ()
 		{
 			var mySecondKey = "secondLKey";
-			Assert.True (record.SetValue (mySecondKey), "SetValue");
+			Assert.True (record.Add (mySecondKey), "Add");
 			Assert.AreEqual (NWTxtRecordFindKey.NoValue, record.FindKey (mySecondKey));
 		}
 
 		[Test]
-		public void TestSetValueStringValue ()
+		public void TestAddStringValue ()
 		{
 			var data = "hello";
 			var mySecondKey = "secondLKey";
-			Assert.True (record.SetValue (mySecondKey, data), "SetValue");
+			Assert.True (record.Add (mySecondKey, data), "Add");
 			Assert.AreEqual (NWTxtRecordFindKey.NonEmptyValue, record.FindKey (mySecondKey));
 		}
 
 		[Test]
-		public void TestSetValueNullStringValue ()
+		public void TestAddNullStringValue ()
 		{
 			string data = null;
 			var mySecondKey = "secondLKey";
-			Assert.True (record.SetValue (mySecondKey, data), "SetValue");
+			Assert.True (record.Add (mySecondKey, data), "Add");
 			Assert.AreEqual (NWTxtRecordFindKey.NoValue, record.FindKey (mySecondKey));
 		}
 
 		[Test]
-		public void TestRemoveMissingKey () => Assert.IsFalse (record.RemoveValue ("NotPresentKey"));
+		public void TestRemoveMissingKey () => Assert.IsFalse (record.Remove ("NotPresentKey"));
 
 		[Test]
 		public void TestRemovePresentKey ()
 		{
-			Assert.True (record.RemoveValue (randomKey), "Remove");
+			Assert.True (record.Remove (randomKey), "Remove");
 			Assert.AreEqual (NWTxtRecordFindKey.NotPresent, record.FindKey (randomKey), "FindKey");
 		}
 
@@ -120,7 +125,7 @@ namespace MonoTouchFixtures.Network
 			// fill the txt with several keys to be iterated
 			var keys = new List<string> {"first", "second", "third", randomKey};
 			foreach (var key in keys) {
-				record.SetValue (key, key);
+				record.Add (key, key);
 			}
 			// apply and ensure that we do get all the keys
 			var keyCount = 0;
