@@ -116,6 +116,7 @@ public partial class Generator {
 				continue;
 			
 			print ("");
+			PrintPropertyAttributes (p);
 			print_generated_code ();
 			var ptype = p.PropertyType.Name;
 			// keep C# names as they are reserved keywords (e.g. Boolean also exists in OpenGL for Mac)
