@@ -101,7 +101,6 @@
 !missing-pinvoke! NSEqualPoints is not bound
 !missing-pinvoke! NSEqualRects is not bound
 !missing-pinvoke! NSEqualSizes is not bound
-!missing-pinvoke! NSFileTypeForHFSTypeCode is not bound
 !missing-pinvoke! NSFrameAddress is not bound
 !missing-pinvoke! NSHFSTypeCodeFromFileType is not bound
 !missing-pinvoke! NSHFSTypeOfFile is not bound
