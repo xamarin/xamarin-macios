@@ -35,7 +35,7 @@
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <sys/shm.h>
-#include <libkern/OSAtomic.h>
+#include <stdatomic.h>
 
 #include "xamarin/xamarin.h"
 #include "runtime-internal.h"
@@ -185,7 +185,7 @@ static volatile int http_connect_counter = 0;
 @interface XamarinHttpConnection : NSObject<NSURLSessionDelegate> {
 	NSURLSession *http_session;
 	int http_sockets[2];
-	volatile int http_send_counter;
+	int _Atomic http_send_counter;
 }
 	@property (copy) void (^completion_handler)(bool);
 	@property (copy) NSString* ip;
@@ -306,7 +306,7 @@ xamarin_http_send (void *c)
 
 -(void) sendData: (void *) buffer length: (int) length
 {
-	int c = OSAtomicIncrement32Barrier (&http_send_counter);
+	int c = atomic_fetch_add (&http_send_counter, 1);
 
 	NSURL *uploadURL = [NSURL URLWithString: [NSString stringWithFormat: @"http://%@:%i/upload?pid=%i&id=%i&upload-id=%i", self.ip, monodevelop_port, getpid (), self.id, c]];
 	LOG_HTTP ("%i sendData length: %i url: %@", self.id, length, uploadURL);
