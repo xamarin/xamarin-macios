@@ -1171,7 +1171,6 @@ namespace CoreImage {
 	[Protocol]
 	interface CIFilterConstructor
 	{
-		// @required -(CIFilter * __nullable)filterWithName:(NSString * __nonnull)name;
 		[Abstract]
 		[Export ("filterWithName:")]
 		[return: NullAllowed]
@@ -1383,6 +1382,7 @@ namespace CoreImage {
 		CIImage FromCGImage (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithCGImageSource:index:options:")]
 		CIImage FromCGImageSource (CGImageSource source, nuint index, [NullAllowed] NSDictionary options);
@@ -2791,7 +2791,7 @@ namespace CoreImage {
 	interface CIAccordionFoldTransition : ICIAccordionFoldTransitionProtocol {
 
 #if !XAMCORE_4_0
-		[Obsolete ("")]
+		[Obsolete ("Use 'FoldCount' instead.")]
 		[CoreImageFilterProperty ("inputNumberOfFolds")]
 		int NumberOfFolds { get; set; }
 #endif
@@ -2918,17 +2918,23 @@ namespace CoreImage {
 	[BaseType (typeof (CICodeGenerator))]
 	interface CIAztecCodeGenerator : ICIAztecCodeGeneratorProtocol {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCompactStyle' instead.")]
 		[CoreImageFilterProperty ("inputCompactStyle")]
 		bool CompactStyle { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCompactStyle")]
-		float FCompactStyle { get; set; }
+		float InputCompactStyle { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputLayers' instead.")]
 		[CoreImageFilterProperty ("inputLayers")]
 		int Layers { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputLayers")]
-		float FLayers { get; set; }
+		float InputLayers { get; set; }
 
 		[CoreImageFilterProperty ("inputCorrectionLevel")]
 		float CorrectionLevel { get; set; }
@@ -3043,11 +3049,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputSharpness")]
 		float Sharpness { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputColor1")]
 		CIColor Color1 { get; set; }
@@ -3069,11 +3078,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputSharpness")]
 		float Sharpness { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputWidth")]
 		float Width { get; set; }
@@ -3126,11 +3138,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -3414,11 +3429,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputRadius")]
 		float Radius { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -3539,11 +3557,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputWidth")]
 		float Width { get; set; }
@@ -3584,6 +3605,7 @@ namespace CoreImage {
 
 #if !XAMCORE_4_0
 		// for some reason we prefixed all Striation* with Max - API compatibility
+		[Obsolete ("Use 'StriationContrast' instead.")]
 		[CoreImageFilterProperty ("inputStriationContrast")]
 		float MaxStriationContrast { get; set; }
 #endif
@@ -3599,17 +3621,23 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputMaxStriationRadius")]
 		float MaxStriationRadius { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputExtent")]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 #if !XAMCORE_4_0
 		// for some reason we prefixed all Striation* with Max - API compatibility
@@ -3665,11 +3693,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputRadius")]
 		float Radius { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputColor1")]
 		CIColor Color1 { get; set; }
@@ -3753,11 +3784,14 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIHexagonalPixellate : ICIHexagonalPixellateProtocol {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputScale")]
 		float Scale { get; set; }
@@ -3819,17 +3853,23 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCount' instead.")]
 		[CoreImageFilterProperty ("inputCount")]
 		float Count { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCount")]
-		nint NCount { get; set; }
+		nint InputCount { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -3860,11 +3900,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputHaloRadius")]
 		float HaloRadius { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputHaloOverlap")]
 		float HaloOverlap { get; set; }
@@ -3914,17 +3957,21 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CILinearGradient : ICILinearGradientProtocol {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputPoint1' instead.")]
 		[CoreImageFilterProperty ("inputPoint1")]
 		CIVector Point1 { get; set; }
 
+		[Obsolete ("Use 'InputPoint0' instead.")]
 		[CoreImageFilterProperty ("inputPoint0")]
 		CIVector Point0 { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputPoint1")]
-		CGPoint CGPoint1 { get; set; }
+		CGPoint InputPoint1 { get; set; }
 
 		[CoreImageFilterProperty ("inputPoint0")]
-		CGPoint CGPoint0 { get; set; }
+		CGPoint InputPoint0 { get; set; }
 
 		[CoreImageFilterProperty ("inputColor1")]
 		CIColor Color1 { get; set; }
@@ -4017,11 +4064,13 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
 
+#if !XAMCORE_4_0
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4083,11 +4132,13 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
 
+#if !XAMCORE_4_0
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputExtent")]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 
 		[CoreImageFilterProperty ("inputBacksideImage")]
 		CIImage BacksideImage { get; set; }
@@ -4101,9 +4152,12 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputShadowSize")]
 		float ShadowSize { get; set; }
 
+#if !XAMCORE_4_0
 		// prefixed for API compatibility
+		[Obsolete ("Use 'Time' instead.")]
 		[CoreImageFilterProperty ("inputTime")]
 		float InputTime { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputTime")]
 		float Time { get; set; }
@@ -4111,11 +4165,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputRadius")]
 		float Radius { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputShadowExtent' instead.")]
 		[CoreImageFilterProperty ("inputShadowExtent")]
 		CIVector ShadowExtent { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputShadowExtent")]
-		CGRect ShadowExtentRect { get; set; }
+		CGRect InputShadowExtent { get; set; }
 
 		[CoreImageFilterProperty ("inputShadowAmount")]
 		float ShadowAmount { get; set; }
@@ -4123,11 +4180,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
+	#endif
 
 		[CoreImageFilterProperty ("inputExtent")]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 
 		[CoreImageFilterProperty ("inputTargetImage")]
 		CIImage TargetImage { get; set; }
@@ -4151,44 +4211,59 @@ namespace CoreImage {
 	[BaseType (typeof (CICodeGenerator), Name="CIPDF417BarcodeGenerator")]
 	interface CIPdf417BarcodeGenerator : ICIPdf417BarcodeGeneratorProtocol {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCorrectionLevel' instead.")]
 		[CoreImageFilterProperty ("inputCorrectionLevel")]
 		int CorrectionLevel { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCorrectionLevel")]
-		float FCorrectionLevel { get; set; }
+		float InputCorrectionLevel { get; set; }
 
 		[CoreImageFilterProperty ("inputMinHeight")]
 		float MinHeight { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputAlwaysSpecifyCompaction' instead.")]
 		[CoreImageFilterProperty ("inputAlwaysSpecifyCompaction")]
 		bool AlwaysSpecifyCompaction { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputAlwaysSpecifyCompaction")]
-		float FAlwaysSpecifyCompaction { get; set; }
+		float InputAlwaysSpecifyCompaction { get; set; }
 
 		[CoreImageFilterProperty ("inputPreferredAspectRatio")]
 		float PreferredAspectRatio { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCompactStyle' instead.")]
 		[CoreImageFilterProperty ("inputCompactStyle")]
 		bool CompactStyle { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCompactStyle")]
-		float FCompactStyle { get; set; }
+		float InputCompactStyle { get; set; }
 
 		[CoreImageFilterProperty ("inputMaxWidth")]
 		float MaxWidth { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCompactStyle' instead.")]
 		[CoreImageFilterProperty ("inputDataColumns")]
 		int DataColumns { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputDataColumns")]
-		float FDataColumns { get; set; }
+		float InputDataColumns { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCompactionMode' instead.")]
 		[CoreImageFilterProperty ("inputCompactionMode")]
 		int CompactionMode { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCompactionMode")]
-		float FCompactionMode { get; set; }
+		float InputCompactionMode { get; set; }
 
 		[CoreImageFilterProperty ("inputMinWidth")]
 		float MinWidth { get; set; }
@@ -4196,11 +4271,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputMaxHeight")]
 		float MaxHeight { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputRows' instead.")]
 		[CoreImageFilterProperty ("inputRows")]
 		int Rows { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputRows")]
-		float FRows { get; set; }
+		float InputRows { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4217,58 +4295,70 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIPerspectiveTile : ICIPerspectiveTileProtocol {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputBottomLeft' instead.")]
 		[CoreImageFilterProperty ("inputBottomLeft")]
 		CIVector BottomLeft { get; set; }
 
+		[Obsolete ("Use 'InputTopRight' instead.")]
 		[CoreImageFilterProperty ("inputTopRight")]
 		CIVector TopRight { get; set; }
 
+		[Obsolete ("Use 'InputTopLeft' instead.")]
 		[CoreImageFilterProperty ("inputTopLeft")]
 		CIVector TopLeft { get; set; }
 
+		[Obsolete ("Use 'InputBottomRight' instead.")]
 		[CoreImageFilterProperty ("inputBottomRight")]
 		CIVector BottomRight { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputBottomLeft")]
-		CGPoint BottomLeftPoint { get; set; }
+		CGPoint InputBottomLeft { get; set; }
 
 		[CoreImageFilterProperty ("inputTopRight")]
-		CGPoint TopRightPoint { get; set; }
+		CGPoint InputTopRight { get; set; }
 
 		[CoreImageFilterProperty ("inputTopLeft")]
-		CGPoint TopLeftPoint { get; set; }
+		CGPoint InputTopLeft { get; set; }
 
 		[CoreImageFilterProperty ("inputBottomRight")]
-		CGPoint BottomRightPoint { get; set; }
+		CGPoint InputBottomRight { get; set; }
 	}
 
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPerspectiveTransform : ICIPerspectiveTransformProtocol {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputBottomLeft' instead.")]
 		[CoreImageFilterProperty ("inputBottomLeft")]
 		CIVector BottomLeft { get; set; }
 
+		[Obsolete ("Use 'InputTopRight' instead.")]
 		[CoreImageFilterProperty ("inputTopRight")]
 		CIVector TopRight { get; set; }
 
+		[Obsolete ("Use 'InputTopLeft' instead.")]
 		[CoreImageFilterProperty ("inputTopLeft")]
 		CIVector TopLeft { get; set; }
 
+		[Obsolete ("Use 'InputBottomRight' instead.")]
 		[CoreImageFilterProperty ("inputBottomRight")]
 		CIVector BottomRight { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputBottomLeft")]
-		CGPoint BottomLeftPoint { get; set; }
+		CGPoint InputBottomLeft { get; set; }
 
 		[CoreImageFilterProperty ("inputTopRight")]
-		CGPoint TopRightPoint { get; set; }
+		CGPoint InputTopRight { get; set; }
 
 		[CoreImageFilterProperty ("inputTopLeft")]
-		CGPoint TopLeftPoint { get; set; }
+		CGPoint InputTopLeft { get; set; }
 
 		[CoreImageFilterProperty ("inputBottomRight")]
-		CGPoint BottomRightPoint { get; set; }
+		CGPoint InputBottomRight { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4276,11 +4366,14 @@ namespace CoreImage {
 	[BaseType (typeof (CIPerspectiveTransform))]
 	interface CIPerspectiveTransformWithExtent : ICIPerspectiveTransformWithExtentProtocol {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputExtent")]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 	}
 
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
@@ -4366,11 +4459,14 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIPixellate : ICIPixellateProtocol {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputScale")]
 		float Scale { get; set; }
@@ -4384,11 +4480,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputRadius")]
 		float Radius { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4411,11 +4510,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputRadius1")]
 		float Radius1 { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputColor1")]
 		CIColor Color1 { get; set; }
@@ -4440,14 +4542,23 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputShadingImage")]
 		CIImage ShadingImage { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputExtent")]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
+		[CoreImageFilterProperty ("inputCenter")]
+		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputScale")]
 		float Scale { get; set; }
@@ -4518,23 +4629,27 @@ namespace CoreImage {
 	[BaseType (typeof (CILinearGradient))]
 	interface CISmoothLinearGradient : ICISmoothLinearGradientProtocol {
 
-		// [CoreImageFilterProperty ("inputPoint1")]
-		// CIVector Point1 { get; set; }
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputPoint1' instead.")]
+		[CoreImageFilterProperty ("inputPoint1")]
+		CIVector Point1 { get; set; }
 
-		// [CoreImageFilterProperty ("inputPoint0")]
-		// CIVector Point0 { get; set; }
+		[Obsolete ("Use 'InputPoint0' instead.")]
+		[CoreImageFilterProperty ("inputPoint0")]
+		CIVector Point0 { get; set; }
+#endif
 
-		// [CoreImageFilterProperty ("inputPoint1")]
-		// CGPoint CGPoint1 { get; set; }
+		[CoreImageFilterProperty ("inputPoint1")]
+		CGPoint InputPoint1 { get; set; }
 
-		// [CoreImageFilterProperty ("inputPoint0")]
-		// CGPoint CGPoint0 { get; set; }
+		[CoreImageFilterProperty ("inputPoint0")]
+		CGPoint InputPoint0 { get; set; }
 
-		// [CoreImageFilterProperty ("inputColor1")]
-		// CIColor Color1 { get; set; }
+		[CoreImageFilterProperty ("inputColor1")]
+		CIColor Color1 { get; set; }
 
-		// [CoreImageFilterProperty ("inputColor0")]
-		// CIColor Color0 { get; set; }
+		[CoreImageFilterProperty ("inputColor0")]
+		CIColor Color0 { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4654,11 +4769,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputCrossWidth")]
 		float CrossWidth { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputEpsilon")]
 		float Epsilon { get; set; }
@@ -4697,11 +4815,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputSharpness")]
 		float Sharpness { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputColor1")]
 		CIColor Color1 { get; set; }
@@ -4752,35 +4873,42 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIToneCurve : ICIToneCurveProtocol {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputPoint0' instead.")]
 		[CoreImageFilterProperty ("inputPoint0")]
 		CIVector Point0 { get; set; }
 
+		[Obsolete ("Use 'InputPoint1' instead.")]
 		[CoreImageFilterProperty ("inputPoint1")]
 		CIVector Point1 { get; set; }
 
+		[Obsolete ("Use 'InputPoint2' instead.")]
 		[CoreImageFilterProperty ("inputPoint2")]
 		CIVector Point2 { get; set; }
 
+		[Obsolete ("Use 'InputPoint3' instead.")]
 		[CoreImageFilterProperty ("inputPoint3")]
 		CIVector Point3 { get; set; }
 
+		[Obsolete ("Use 'InputPoint4' instead.")]
 		[CoreImageFilterProperty ("inputPoint4")]
 		CIVector Point4 { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputPoint0")]
-		CGPoint CGPoint0 { get; set; }
+		CGPoint InputPoint0 { get; set; }
 
 		[CoreImageFilterProperty ("inputPoint1")]
-		CGPoint CGPoint1 { get; set; }
+		CGPoint InputPoint1 { get; set; }
 
 		[CoreImageFilterProperty ("inputPoint2")]
-		CGPoint CGPoint2 { get; set; }
+		CGPoint InputPoint2 { get; set; }
 
 		[CoreImageFilterProperty ("inputPoint3")]
-		CGPoint CGPoint3 { get; set; }
+		CGPoint InputPoint3 { get; set; }
 
 		[CoreImageFilterProperty ("inputPoint4")]
-		CGPoint CGPoint4 { get; set; }
+		CGPoint InputPoint4 { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4812,11 +4940,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputSize")]
 		float Size { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputPoint0' instead.")]
 		[CoreImageFilterProperty ("inputPoint")]
 		CIVector Point { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputPoint")]
-		CGPoint CGPoint { get; set; }
+		CGPoint InputPoint { get; set; }
 
 		[CoreImageFilterProperty ("inputDecay")]
 		float Decay { get; set; }
@@ -4884,11 +5015,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputRadius")]
 		float Radius { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputIntensity")]
 		float Intensity { get; set; }
@@ -4918,11 +5052,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAmount")]
 		float Amount { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4938,23 +5075,23 @@ namespace CoreImage {
 
 #if !XAMCORE_4_0
 		// renamed 1 vs 0 for API compatibility
-		[Obsolete ("Use 'CGPoint0' instead.")]
+		[Obsolete ("Use 'InputPoint0' instead.")]
 		[CoreImageFilterProperty ("inputPoint0")]
 		CIVector Point1 { get; set; }
 #endif
 
 		[CoreImageFilterProperty ("inputPoint0")]
-		CGPoint CGPoint0 { get; set; }
+		CGPoint InputPoint0 { get; set; }
 
 #if !XAMCORE_4_0
 		// renamed 2 vs 1 for API compatibility
-		[Obsolete ("Use 'CGPoint1' instead.")]
+		[Obsolete ("Use 'InputPoint1' instead.")]
 		[CoreImageFilterProperty ("inputPoint1")]
 		CIVector Point2 { get; set; }
 #endif
 
 		[CoreImageFilterProperty ("inputPoint1")]
-		CGPoint CGPoint1 { get; set; }
+		CGPoint InputPoint1 { get; set; }
 
 		[CoreImageFilterProperty ("inputUnsharpMaskRadius")]
 		float UnsharpMaskRadius { get; set; }
@@ -4980,11 +5117,14 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputMaxStriationRadius")]
 		float MaxStriationRadius { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputCenter")]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[CoreImageFilterProperty ("inputSunRadius")]
 		float SunRadius { get; set; }
@@ -5006,7 +5146,6 @@ namespace CoreImage {
 
 	[iOS (9,3)]
 	[TV (9,2)]
-//	[Availability (Introduced = Platform.Mac_10_10, Obsoleted = Platform.Mac_10_11)]  // FIXME: Is htis actually deprecated?  Seems to be missing in El Capitan
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIMaskedVariableBlur : ICIMaskedVariableBlurProtocol {
@@ -6008,17 +6147,21 @@ namespace CoreImage {
 	[Abstract]
 	interface CIMorphologyRectangle {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputHeight' instead.")]
 		[CoreImageFilterProperty ("inputHeight")]
 		int Height { get; set; }
 
+		[Obsolete ("Use 'InputWidth' instead.")]
 		[CoreImageFilterProperty ("inputWidth")]
 		int Width { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputHeight")]
-		float FHeight { get; set; }
+		float InputHeight { get; set; }
 
 		[CoreImageFilterProperty ("inputWidth")]
-		float FWidth { get; set; }
+		float InputWidth { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -6076,29 +6219,35 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputFocalLength")]
 		float FocalLength { get; set; }
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputTopRight' instead.")]
 		[CoreImageFilterProperty ("inputTopRight")]
 		CIVector TopRight { get; set; }
 
+		[Obsolete ("Use 'InputBottomRight' instead.")]
 		[CoreImageFilterProperty ("inputBottomRight")]
 		CIVector BottomRight { get; set; }
 
+		[Obsolete ("Use 'InputTopLeft' instead.")]
 		[CoreImageFilterProperty ("inputTopLeft")]
 		CIVector TopLeft { get; set; }
 
+		[Obsolete ("Use 'InputBottomLeft' instead.")]
 		[CoreImageFilterProperty ("inputBottomLeft")]
 		CIVector BottomLeft { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputTopRight")]
-		CGPoint TopRightPoint { get; set; }
+		CGPoint InputTopRight { get; set; }
 
 		[CoreImageFilterProperty ("inputBottomRight")]
-		CGPoint BottomRightPoint { get; set; }
+		CGPoint InputBottomRight { get; set; }
 
 		[CoreImageFilterProperty ("inputTopLeft")]
-		CGPoint TopLeftPoint { get; set; }
+		CGPoint InputTopLeft { get; set; }
 
 		[CoreImageFilterProperty ("inputBottomLeft")]
-		CGPoint BottomLeftPoint { get; set; }
+		CGPoint InputBottomLeft { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -6160,11 +6309,14 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIRoundedRectangleGenerator : ICIRoundedRectangleGeneratorProtocol {
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputExtent")]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 
 		[CoreImageFilterProperty ("inputRadius")]
 		float Radius { get; set; }
@@ -6305,11 +6457,11 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("layers")]
-		float FLayers { get; set; }
+		float InputLayers { get; set; }
 
 		[Abstract]
 		[Export ("compactStyle")]
-		float FCompactStyle { get; set; }
+		float InputCompactStyle { get; set; }
 	}
 
 	interface ICIBarcodeGeneratorProtocol {}
@@ -6473,7 +6625,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("color0", ArgumentSemantic.Retain)]
@@ -6506,7 +6658,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("width")]
@@ -6531,7 +6683,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("width")]
@@ -6608,17 +6760,14 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 
-		// @required @property (nonatomic) float saturation;
 		[Abstract]
 		[Export ("saturation")]
 		float Saturation { get; set; }
 
-		// @required @property (nonatomic) float brightness;
 		[Abstract]
 		[Export ("brightness")]
 		float Brightness { get; set; }
 
-		// @required @property (nonatomic) float contrast;
 		[Abstract]
 		[Export ("contrast")]
 		float Contrast { get; set; }
@@ -7006,7 +7155,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 	}
 
 	interface ICIDepthOfFieldProtocol {}
@@ -7023,11 +7172,11 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("point0", ArgumentSemantic.Assign)]
-		CGPoint CGPoint0 { get; set; }
+		CGPoint InputPoint0 { get; set; }
 
 		[Abstract]
 		[Export ("point1", ArgumentSemantic.Assign)]
-		CGPoint CGPoint1 { get; set; }
+		CGPoint InputPoint1 { get; set; }
 
 		[Abstract]
 		[Export ("saturation")]
@@ -7171,7 +7320,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -7259,7 +7408,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -7318,11 +7467,11 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("extent", ArgumentSemantic.Assign)]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 
 		[Abstract]
 		[Export ("color", ArgumentSemantic.Retain)]
@@ -7359,19 +7508,19 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("topLeft", ArgumentSemantic.Assign)]
-		CGPoint TopLeftPoint { get; set; }
+		CGPoint InputTopLeft { get; set; }
 
 		[Abstract]
 		[Export ("topRight", ArgumentSemantic.Assign)]
-		CGPoint TopRightPoint { get; set; }
+		CGPoint InputTopRight { get; set; }
 
 		[Abstract]
 		[Export ("bottomRight", ArgumentSemantic.Assign)]
-		CGPoint BottomRightPoint { get; set; }
+		CGPoint InputBottomRight { get; set; }
 
 		[Abstract]
 		[Export ("bottomLeft", ArgumentSemantic.Assign)]
-		CGPoint BottomLeftPoint { get; set; }
+		CGPoint InputBottomLeft { get; set; }
 	}
 
 	interface ICIFourfoldReflectedTileProtocol {}
@@ -7388,7 +7537,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -7417,7 +7566,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -7442,7 +7591,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -7514,7 +7663,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("color0", ArgumentSemantic.Retain)]
@@ -7543,7 +7692,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -7589,7 +7738,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -7635,7 +7784,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("scale")]
@@ -7727,11 +7876,11 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("count")]
-		nint NCount { get; set; }
+		nint InputCount { get; set; }
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -7825,7 +7974,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("color", ArgumentSemantic.Retain)]
@@ -7866,11 +8015,11 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("point0", ArgumentSemantic.Assign)]
-		CGPoint CGPoint0 { get; set; }
+		CGPoint InputPoint0 { get; set; }
 
 		[Abstract]
 		[Export ("point1", ArgumentSemantic.Assign)]
-		CGPoint CGPoint1 { get; set; }
+		CGPoint InputPoint1 { get; set; }
 
 		[Abstract]
 		[Export ("color0", ArgumentSemantic.Retain)]
@@ -7941,7 +8090,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -8081,7 +8230,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -8161,11 +8310,11 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("width")]
-		float FWidth { get; set; }
+		float InputWidth { get; set; }
 
 		[Abstract]
 		[Export ("height")]
-		float FHeight { get; set; }
+		float InputHeight { get; set; }
 	}
 
 	interface ICIMorphologyRectangleMinimumProtocol {}
@@ -8182,11 +8331,11 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("width")]
-		float FWidth { get; set; }
+		float InputWidth { get; set; }
 
 		[Abstract]
 		[Export ("height")]
-		float FHeight { get; set; }
+		float InputHeight { get; set; }
 	}
 
 	interface ICIMotionBlurProtocol {}
@@ -8245,7 +8394,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("scale")]
@@ -8278,7 +8427,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("extent", ArgumentSemantic.Assign)]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -8303,7 +8452,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("extent", ArgumentSemantic.Assign)]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -8323,7 +8472,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("shadowExtent", ArgumentSemantic.Assign)]
-		CGRect ShadowExtentRect { get; set; }
+		CGRect InputShadowExtent { get; set; }
 	}
 
 	interface ICIPaletteCentroidProtocol {}
@@ -8382,7 +8531,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -8427,11 +8576,11 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("dataColumns")]
-		float FDataColumns { get; set; }
+		float InputDataColumns { get; set; }
 
 		[Abstract]
 		[Export ("rows")]
-		float FRows { get; set; }
+		float InputRows { get; set; }
 
 		[Abstract]
 		[Export ("preferredAspectRatio")]
@@ -8439,19 +8588,19 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("compactionMode")]
-		float FCompactionMode { get; set; }
+		float InputCompactionMode { get; set; }
 
 		[Abstract]
 		[Export ("compactStyle")]
-		float FCompactStyle { get; set; }
+		float InputCompactStyle { get; set; }
 
 		[Abstract]
 		[Export ("correctionLevel")]
-		float FCorrectionLevel { get; set; }
+		float InputCorrectionLevel { get; set; }
 
 		[Abstract]
 		[Export ("alwaysSpecifyCompaction")]
-		float FAlwaysSpecifyCompaction { get; set; }
+		float InputAlwaysSpecifyCompaction { get; set; }
 	}
 
 	interface ICIPerspectiveCorrectionProtocol {}
@@ -8510,19 +8659,19 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("topLeft", ArgumentSemantic.Assign)]
-		CGPoint TopLeftPoint { get; set; }
+		CGPoint InputTopLeft { get; set; }
 
 		[Abstract]
 		[Export ("topRight", ArgumentSemantic.Assign)]
-		CGPoint TopRightPoint { get; set; }
+		CGPoint InputTopRight { get; set; }
 
 		[Abstract]
 		[Export ("bottomRight", ArgumentSemantic.Assign)]
-		CGPoint BottomRightPoint { get; set; }
+		CGPoint InputBottomRight { get; set; }
 
 		[Abstract]
 		[Export ("bottomLeft", ArgumentSemantic.Assign)]
-		CGPoint BottomLeftPoint { get; set; }
+		CGPoint InputBottomLeft { get; set; }
 	}
 
 	interface ICIPerspectiveTransformProtocol {}
@@ -8544,7 +8693,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("extent", ArgumentSemantic.Assign)]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 	}
 
 	interface ICIPhotoEffectProtocol {}
@@ -8574,7 +8723,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("scale")]
@@ -8599,7 +8748,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 	}
 
 	interface ICIQRCodeGeneratorProtocol {}
@@ -8629,7 +8778,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("radius0")]
@@ -8671,11 +8820,11 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("extent", ArgumentSemantic.Assign)]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 
 		[Abstract]
 		[Export ("width")]
@@ -8696,7 +8845,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("extent", ArgumentSemantic.Assign)]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 
 		[Abstract]
 		[Export ("radius")]
@@ -8793,7 +8942,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -8818,7 +8967,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -8835,15 +8984,17 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[Protocol (Name = "CISmoothLinearGradient")]
-	interface CISmoothLinearGradientProtocol : CIFilterProtocol {
+	// `CILinearGradientProtocol` is a bit of a lie - but it would not compile (registrar) otherwise
+	interface CISmoothLinearGradientProtocol : CILinearGradientProtocol {
 
+		/* we get those from ICILinearGradientProtocol
 		[Abstract]
 		[Export ("point0", ArgumentSemantic.Assign)]
-		CGPoint CGPoint0 { get; set; }
+		CGPoint InputPoint0 { get; set; }
 
 		[Abstract]
 		[Export ("point1", ArgumentSemantic.Assign)]
-		CGPoint CGPoint1 { get; set; }
+		CGPoint InputPoint1 { get; set; }
 
 		[Abstract]
 		[Export ("color0", ArgumentSemantic.Retain)]
@@ -8852,6 +9003,7 @@ namespace CoreImage {
 		[Abstract]
 		[Export ("color1", ArgumentSemantic.Retain)]
 		CIColor Color1 { get; set; }
+		*/
 	}
 
 	interface ICISpotColorProtocol {}
@@ -8971,7 +9123,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("color", ArgumentSemantic.Retain)]
@@ -9029,7 +9181,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("color0", ArgumentSemantic.Retain)]
@@ -9058,7 +9210,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("color", ArgumentSemantic.Retain)]
@@ -9095,7 +9247,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("extent", ArgumentSemantic.Assign)]
-		CGRect ExtentRect { get; set; }
+		CGRect InputExtent { get; set; }
 
 		[Abstract]
 		[Export ("color", ArgumentSemantic.Retain)]
@@ -9187,23 +9339,23 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("point0", ArgumentSemantic.Assign)]
-		CGPoint CGPoint0 { get; set; }
+		CGPoint InputPoint0 { get; set; }
 
 		[Abstract]
 		[Export ("point1", ArgumentSemantic.Assign)]
-		CGPoint CGPoint1 { get; set; }
+		CGPoint InputPoint1 { get; set; }
 
 		[Abstract]
 		[Export ("point2", ArgumentSemantic.Assign)]
-		CGPoint CGPoint2 { get; set; }
+		CGPoint InputPoint2 { get; set; }
 
 		[Abstract]
 		[Export ("point3", ArgumentSemantic.Assign)]
-		CGPoint CGPoint3 { get; set; }
+		CGPoint InputPoint3 { get; set; }
 
 		[Abstract]
 		[Export ("point4", ArgumentSemantic.Assign)]
-		CGPoint CGPoint4 { get; set; }
+		CGPoint InputPoint4 { get; set; }
 	}
 
 	interface ICITriangleKaleidoscopeProtocol {}
@@ -9220,7 +9372,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("point", ArgumentSemantic.Assign)]
-		CGPoint CGPoint { get; set; }
+		CGPoint InputPoint { get; set; }
 
 		[Abstract]
 		[Export ("size")]
@@ -9249,7 +9401,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -9274,7 +9426,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("angle")]
@@ -9358,7 +9510,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("radius")]
@@ -9417,7 +9569,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint CenterPoint { get; set; }
+		CGPoint InputCenter { get; set; }
 
 		[Abstract]
 		[Export ("amount")]
