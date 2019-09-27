@@ -36,7 +36,7 @@ public partial class Generator {
 		// filters are now exposed as protocols so we need to conform to them
 		var interfaces = String.Empty;
 		foreach (var i in type.GetInterfaces ()) {
-				interfaces += $", {i.FullName}";
+			interfaces += $", {i.FullName}";
 		}
 
 		// type declaration
