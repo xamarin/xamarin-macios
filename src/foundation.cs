@@ -16167,6 +16167,8 @@ namespace Foundation
 		IntPtr _CreateSynchronousRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
 	}
 
+	interface INSXpcListenerDelegate {}
+
 	[Mac (10, 8)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
 	[BaseType (typeof (NSObject), Name = "NSXPCListener", Delegates = new string[] { "WeakDelegate" })]
 	[DisableDefaultCtor]
@@ -16189,8 +16191,7 @@ namespace Foundation
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSXpcListenerDelegate Delegate { get; set; }
+		INSXpcListenerDelegate Delegate { get; set; }
 
 		[Export ("endpoint")]
 		NSXpcListenerEndpoint Endpoint { get; }
