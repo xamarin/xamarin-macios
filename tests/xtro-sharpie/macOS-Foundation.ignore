@@ -4,8 +4,6 @@
 ## XPC not supported
 !missing-selector! NSXPCCoder::decodeXPCObjectOfType:forKey: not bound
 !missing-selector! NSXPCCoder::encodeXPCObject:forKey: not bound
-!missing-selector! NSXPCInterface::setXPCType:forSelector:argumentIndex:ofReply: not bound
-!missing-selector! NSXPCInterface::XPCTypeForSelector:argumentIndex:ofReply: not bound
 
 ## unsorted
 
@@ -656,9 +654,6 @@
 !missing-selector! NSXMLNode::XMLString not bound
 !missing-selector! NSXMLNode::XMLStringWithOptions: not bound
 !missing-selector! NSXMLNode::XPath not bound
-!missing-selector! NSXPCConnection::initWithMachServiceName:options: not bound
-!missing-selector! NSXPCConnection::initWithServiceName: not bound
-!missing-selector! NSXPCListener::initWithMachServiceName: not bound
 !missing-type! NSArchiver not bound
 !missing-type! NSBackgroundActivityScheduler not bound
 !missing-type! NSClassDescription not bound
