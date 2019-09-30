@@ -50,6 +50,21 @@ namespace MonoTouchFixtures.Network {
 				Assert.AreNotEqual (IntPtr.Zero, options.Handle);
 			}
 		}
+
+		[Test]
+		public void SetIPLocalAddressPreference ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+
+			foreach (var ipOption in new [] { NWIPLocalAddressPreference.Default, NWIPLocalAddressPreference.Stable, NWIPLocalAddressPreference.Temporary}) {
+				using (var options = NWProtocolOptions.CreateTls ())
+					Assert.DoesNotThrow (() => options.IPLocalAddressPreference = ipOption);
+				using (var options = NWProtocolOptions.CreateTcp ())
+					Assert.DoesNotThrow (() => options.IPLocalAddressPreference = ipOption);
+				using (var options = NWProtocolOptions.CreateUdp ())
+					Assert.DoesNotThrow (() => options.IPLocalAddressPreference = ipOption);
+			}
+		}
 	}
 }
 #endif

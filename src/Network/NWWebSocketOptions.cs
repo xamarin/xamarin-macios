@@ -31,7 +31,7 @@ namespace Network {
 	public class NWWebSocketOptions : NWProtocolOptions {
 		bool autoReplyPing = false;
 		bool skipHandShake = false;
-		nuint maximumMessageSize;
+		nuint maximumMessageSize = -1;
 
 		public NWWebSocketOptions (IntPtr handle, bool owns) : base (handle, owns) {}
 

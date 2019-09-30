@@ -160,7 +160,7 @@ namespace Network {
 		public void EnumerateGateways (Action<NWEndpoint> callback)
 		{
 			if (callback == null)
-				return;
+				throw new ArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_Enumerator, callback);

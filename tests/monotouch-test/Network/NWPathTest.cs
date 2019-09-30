@@ -159,6 +159,26 @@ namespace MonoTouchFixtures.Network {
 			path.EnumerateInterfaces (EnumerateInterfacesHandler);
 			Assert.That (interfaces.Count, Is.GreaterThan (0), "interfaces.Count");
 		}
+
+		[Test]
+		public void EnumerateGatewayNullCallbackTest ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+
+			Assert.Throws<ArgumentNullException> (() => { path.EnumerateGateways (null); });
+		}
+
+		[Test]
+		public void EnumerateGatewayTest ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			var e = new AutoResetEvent (false);
+			path.EnumerateGateways ((endPoint) => {
+				Assert.IsNotNull (endPoint);
+				e.Set ();
+			});
+			e.WaitOne ();
+		}
 	}
 }
 

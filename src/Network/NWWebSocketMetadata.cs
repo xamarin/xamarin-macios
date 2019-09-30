@@ -20,7 +20,7 @@ using dispatch_queue_t =System.IntPtr;
 namespace Network {
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWWebSocketOpCode : long {
+	public enum NWWebSocketOpCode : int {
 		Cont = 0x0,
 		Text = 0x1,
 		Binary = 0x2,
@@ -31,7 +31,7 @@ namespace Network {
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWWebSocketCloseCode : long {
+	public enum NWWebSocketCloseCode : int {
 		NormalClosure = 1000,
 		GoingAway = 1001,
 		ProtocolError = 1002,
@@ -94,11 +94,10 @@ namespace Network {
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
 
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
 			unsafe {
-				if (handler == null) {
-					nw_ws_metadata_set_pong_handler (GetCheckedHandle (), queue.Handle, null);
-					return;
-				}
 				BlockLiteral block_handler = new BlockLiteral ();
 				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_PongHandler, handler);
@@ -113,6 +112,11 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_ws_response nw_ws_metadata_copy_server_response (OS_nw_protocol_metadata metadata);
 
-		public NWWebSocketResponse ServerResponse => new NWWebSocketResponse (nw_ws_metadata_copy_server_response (GetCheckedHandle ()), owns: true);
+		public NWWebSocketResponse ServerResponse {
+			get {
+				var reponsePtr = nw_ws_metadata_copy_server_response (GetCheckedHandle ());
+				return (reponsePtr == IntPtr.Zero) ? null :  new NWWebSocketResponse (reponsePtr, owns: true);
+			}
+		} 
 	}
 }

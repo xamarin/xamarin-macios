@@ -130,9 +130,9 @@ namespace Network {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-		static extern string nw_endpoint_get_url (OS_nw_endpoint endpoint);
+		static extern IntPtr nw_endpoint_get_url (OS_nw_endpoint endpoint);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-		public string Url => nw_endpoint_get_url (GetCheckedHandle ());
+		public string Url => Marshal.PtrToStringAnsi (nw_endpoint_get_url (GetCheckedHandle ()));
 	}
 }
