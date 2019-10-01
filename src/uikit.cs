@@ -9103,14 +9103,17 @@ namespace UIKit {
 		[Export ("backIndicatorTransitionMaskImage", ArgumentSemantic.Retain)]
 		UIImage BackIndicatorTransitionMaskImage { get; set;  }
 
+		[Appearance]
 		[TV (13,0), iOS (13,0)]
 		[Export ("standardAppearance", ArgumentSemantic.Copy)]
 		UINavigationBarAppearance StandardAppearance { get; set; }
 
+		[Appearance]
 		[TV (13,0), iOS (13,0)]
 		[NullAllowed, Export ("compactAppearance", ArgumentSemantic.Copy)]
 		UINavigationBarAppearance CompactAppearance { get; set; }
 
+		[Appearance]
 		[TV (13,0), iOS (13,0)]
 		[NullAllowed, Export ("scrollEdgeAppearance", ArgumentSemantic.Copy)]
 		UINavigationBarAppearance ScrollEdgeAppearance { get; set; }
@@ -11722,6 +11725,7 @@ namespace UIKit {
 		[NullAllowed, Export ("unselectedItemTintColor", ArgumentSemantic.Copy)]
 		UIColor UnselectedItemTintColor { get; set; }
 
+		[Appearance]
 		[TV (13,0), iOS (13,0), NoWatch]
 		[Export ("standardAppearance", ArgumentSemantic.Copy)]
 		UITabBarAppearance StandardAppearance { get; set; }
@@ -11940,6 +11944,7 @@ namespace UIKit {
 		[Wrap ("new UIStringAttributes (_GetBadgeTextAttributes(state))")]
 		UIStringAttributes GetBadgeTextAttributes (UIControlState state);
 
+		[Appearance]
 		[TV (13, 0), iOS (13, 0)]
 		[NullAllowed, Export ("standardAppearance", ArgumentSemantic.Copy)]
 		UITabBarAppearance StandardAppearance { get; set; }
