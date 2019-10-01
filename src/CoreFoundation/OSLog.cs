@@ -31,7 +31,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
 namespace CoreFoundation {
-	public sealed class OSLog : IDisposable, INativeObject {
+	public sealed class OSLog : NativeObject {
 		static OSLog _default;
 
 		public static OSLog Default {
@@ -42,34 +42,23 @@ namespace CoreFoundation {
 			}
 		}
 
-		bool disposed;
-		IntPtr handle;
-		public IntPtr Handle { get { return handle; } }
-
-		public void Dispose ()
+		protected override void Retain ()
 		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
+			if (Handle != IntPtr.Zero)
+				os_retain (Handle);
 		}
 
-		~OSLog ()
+		protected override void Release ()
 		{
-			Dispose (false);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (!disposed) {
-				if (handle != IntPtr.Zero)
-					os_release (handle);
-
-				disposed = true;
-				handle = IntPtr.Zero;
-			}
+			if (Handle != IntPtr.Zero)
+				os_release (Handle);
 		}
 
 		[DllImport (Constants.SystemLibrary)]
 		extern static IntPtr os_log_create (string subsystem, string category);
+
+		[DllImport (Constants.SystemLibrary)]
+		extern static IntPtr os_retain (IntPtr handle);
 
 		[DllImport (Constants.SystemLibrary)]
 		extern static void os_release (IntPtr handle);
