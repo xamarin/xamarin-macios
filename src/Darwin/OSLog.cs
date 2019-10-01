@@ -31,7 +31,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
 namespace Darwin {
-	public class OSLog : IDisposable, INativeObject {
+	public sealed class OSLog : IDisposable, INativeObject {
 		static OSLog _default;
 
 		public static OSLog Default {
@@ -94,10 +94,7 @@ namespace Darwin {
 
 		public void Log (string message)
 		{
-			if (message == null)
-				throw new ArgumentNullException (nameof (message));
-
-			xamarin_os_log (handle, OSLogLevel.Default, message);
+			Log (OSLogLevel.Default, message);
 		}
 
 		public void Log (OSLogLevel level, string message)
@@ -109,13 +106,13 @@ namespace Darwin {
 		}
 	}
 
-	public enum OSLogLevel
+	public enum OSLogLevel : byte
 	{
 		// These values must match the os_log_type_t enum in <os/log.h>.
 		Default = 0x00,
 		Info    = 0x01,
 		Debug   = 0x02,
 		Error   = 0x10,
-		Fault   = 0x11
+		Fault   = 0x11,
 	}
 }
