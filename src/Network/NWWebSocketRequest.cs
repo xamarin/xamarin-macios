@@ -22,7 +22,7 @@ namespace Network {
 		public NWWebSocketRequest (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern bool nw_ws_request_enumerate_additional_headers (OS_nw_ws_request request, void* enumerator);
+		unsafe static extern bool nw_ws_request_enumerate_additional_headers (OS_nw_ws_request request, ref BlockLiteral enumerator);
 
 		delegate void nw_ws_request_enumerate_additional_headers_t (IntPtr block, string header, string value);
 		static nw_ws_request_enumerate_additional_headers_t static_EnumerateHeaderHandler = TrampolineEnumerateHeaderHandler;
@@ -38,24 +38,20 @@ namespace Network {
 
 		public void EnumerateAdditionalHeaders (Action<string, string> handler)
 		{
-			unsafe {
-				if (handler == null) {
-					nw_ws_request_enumerate_additional_headers (GetCheckedHandle (), null);
-					return;
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_EnumerateHeaderHandler, handler);
-				try {
-					nw_ws_request_enumerate_additional_headers (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_EnumerateHeaderHandler, handler);
+			try {
+				nw_ws_request_enumerate_additional_headers (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern bool nw_ws_request_enumerate_subprotocols (OS_nw_ws_request request, void *enumerator);
+		static extern bool nw_ws_request_enumerate_subprotocols (OS_nw_ws_request request, ref BlockLiteral enumerator);
 
 		delegate void nw_ws_request_enumerate_subprotocols_t (IntPtr block, string subprotocol);
 		static nw_ws_request_enumerate_subprotocols_t static_EnumerateSubprotocolHandler = TrampolineEnumerateSubprotocolHandler;
@@ -71,19 +67,15 @@ namespace Network {
 
 		public void EnumerateSubprotocols (Action<string> handler)
 		{
-			unsafe {
-				if (handler == null) {
-					nw_ws_request_enumerate_subprotocols (GetCheckedHandle (), null);
-					return;
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_EnumerateSubprotocolHandler, handler);
-				try {
-					nw_ws_request_enumerate_subprotocols (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_EnumerateSubprotocolHandler, handler);
+			try {
+				nw_ws_request_enumerate_subprotocols (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 	}

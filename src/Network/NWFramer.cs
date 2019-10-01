@@ -239,18 +239,18 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_protocol_create_message (OS_nw_protocol_definition definition);
 
-		public static NWProtocolMetadata CreateMessage (NWProtocolDefinition protocolDefinition)
+		public static NWFramer CreateMessage (NWProtocolDefinition protocolDefinition)
 		{
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));
-			return new NWProtocolMetadata (nw_framer_protocol_create_message (protocolDefinition.Handle), owns: true);
+			return new NWFramer (nw_framer_protocol_create_message (protocolDefinition.Handle), owns: true);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_message_create (OS_nw_framer framer);
 
-		public NWProtocolMetadata CreateMessage ()
-			=> new NWProtocolMetadata (nw_framer_message_create (GetCheckedHandle ()), owns: true);
+		public NWFramer CreateMessage ()
+			=> new NWFramer (nw_framer_message_create (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_framer_prepend_application_protocol (OS_nw_framer framer, OS_nw_protocol_options protocol_options);
