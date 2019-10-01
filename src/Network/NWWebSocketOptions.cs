@@ -31,7 +31,7 @@ namespace Network {
 	public class NWWebSocketOptions : NWProtocolOptions {
 		bool autoReplyPing = false;
 		bool skipHandShake = false;
-		nuint maximumMessageSize = -1;
+		nuint maximumMessageSize = (nuint) 0;
 
 		public NWWebSocketOptions (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -43,12 +43,22 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern void nw_ws_options_add_additional_header (OS_nw_protocol_options options, string name, string value);
 
-		public void SetHeader (string header, string value) => nw_ws_options_add_additional_header (GetCheckedHandle(), header, value); 
+		public void SetHeader (string header, string value) 
+		{
+			if (header == null)
+				throw new ArgumentNullException (header);
+			nw_ws_options_add_additional_header (GetCheckedHandle(), header, value); 
+		}
 
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern void nw_ws_options_add_subprotocol (OS_nw_protocol_options options, string subprotocol);
 
-		public void AddSubprotocol (string subprotocol) => nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocol);
+		public void AddSubprotocol (string subprotocol)
+		{
+			if (subprotocol == null)
+				throw new ArgumentNullException (nameof (subprotocol));
+			nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocol);
+		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ws_options_set_auto_reply_ping (OS_nw_protocol_options options, bool auto_reply_ping);
@@ -84,7 +94,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_ws_options_set_client_request_handler (OS_nw_protocol_options options, IntPtr client_queue, void *handler);
+		static extern void nw_ws_options_set_client_request_handler (OS_nw_protocol_options options, IntPtr client_queue, ref BlockLiteral handler);
 
 		delegate void nw_ws_options_set_client_request_handler_t (IntPtr block, nw_ws_request_t request);
 		static nw_ws_options_set_client_request_handler_t static_ClientRequestHandler = TrampolineClientRequestHandler;
@@ -103,16 +113,13 @@ namespace Network {
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (handler));
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
 			unsafe {
-				if (handler == null) {
-					nw_ws_options_set_client_request_handler (GetCheckedHandle (), queue.Handle, null);
-					return;
-				}
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ClientRequestHandler, handler);
 				try {
-					nw_ws_options_set_client_request_handler (GetCheckedHandle (), queue.Handle, (void*) block_ptr_handler);
+					nw_ws_options_set_client_request_handler (GetCheckedHandle (), queue.Handle, ref block_handler);
 				} finally {
 					block_handler.CleanupBlock ();
 				}

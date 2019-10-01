@@ -47,13 +47,10 @@ namespace MonoTouchFixtures.Network {
 				using (var otherOptions = new NWWebSocketOptions (NWWebSocketVersion.Invalid))
 					Assert.AreNotEqual (IntPtr.Zero, otherOptions.Handle);
 			});
-		}
+  		}
 
 		[Test]
-		public void TestSetHeader ()
-		{
-
-		}
+		public void TestSetHeader () => Assert.DoesNotThrow (() => options.SetHeader ("CustomHeader", "hola"));
 
 		[Test]
 		public void TestSetHeaderNullName () => Assert.Throws<ArgumentNullException> (() => options.SetHeader (null, "hola"));
@@ -63,10 +60,7 @@ namespace MonoTouchFixtures.Network {
 		public void TestSetHeaderNullValue () => Assert.DoesNotThrow (() => options.SetHeader ("CustomHeader", null));
 
 		[Test]
-		public void TestAddSubprotocol ()
-		{
-
-		}
+		public void TestAddSubprotocol () => Assert.DoesNotThrow (() => options.AddSubprotocol ("Protobuf"));
 
 		[Test]
 		public void TestAddSubprotocolNullValue () => Assert.Throws<ArgumentNullException> (() => options.AddSubprotocol (null));
@@ -84,7 +78,7 @@ namespace MonoTouchFixtures.Network {
 		public void TestMaxMessageSize ()
 		{
 			var defaultValue = options.MaximumMessageSize;
-			Assert.AreEqual (defaultValue, -1, "defaultValue");
+			Assert.AreEqual (defaultValue, 0, "defaultValue");
 			nuint newValue = 40;
 			options.MaximumMessageSize = newValue;
 			Assert.AreEqual (newValue, options.MaximumMessageSize, "new value");
