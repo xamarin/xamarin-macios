@@ -471,6 +471,7 @@ namespace Registrar {
 			return "void *";
 		}
 
+		const string InvalidAbstractDelegateTypeMsg = "Delegate and MulticastDelegate cannot be used as parameters in ObjC methods because they do not have a signature";
 		public string ToObjCType (TypeDefinition type, bool delegateToBlockType = false)
 		{
 			switch (type.FullName) {
@@ -491,6 +492,11 @@ namespace Registrar {
 			case "System.String": return "NSString";
 			case "ObjCRuntime.Selector": return "SEL";
 			case "ObjCRuntime.Class": return "Class";
+			case "System.Delegate":
+			case "System.MulticastDelegate":
+				if (delegateToBlockType)
+					throw new InvalidCastException (InvalidAbstractDelegateTypeMsg);
+				break;
 			}
 
 			if (IsNativeObject (type))
@@ -2963,6 +2969,10 @@ namespace Registrar {
 						} catch (ProductException ex) {
 							skip.Add (method);
 							exceptions.Add (ex);
+						} catch (InvalidCastException ex) when (ex.Message == InvalidAbstractDelegateTypeMsg) {
+							skip.Add (method);
+							exceptions.Add (ErrorHelper.CreateError (App, 4105, method.Method, "The registrar cannot marshal an untyped delegate parameter in signature for method `{0}`",
+								method.Method.Name));
 						} catch (Exception ex) {
 							skip.Add (method);
 							exceptions.Add (ErrorHelper.CreateError (4114, ex, "Unexpected error in the registrar for the method '{0}.{1}' - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", method.DeclaringType.Type.FullName, method.Method.Name));
