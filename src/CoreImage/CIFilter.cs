@@ -716,10 +716,12 @@ namespace CoreImage {
 			}
 		}
 
+#if !XAMCORE_4_0
 		// not every CIFilter supports inputImage, i.e.
 		// NSUnknownKeyException [<CICheckerboardGenerator 0x1648cb20> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputImage.
 		// and those will crash (on devices) if the property is called - and that includes displaying it in the debugger
-		public CIImage InputImage {
+		[Obsolete ("Use 'InputImage' instead. If not available then the filter does not support it.")]
+		public CIImage Image {
 			get {
 				return SupportsInputImage ? GetInputImage () : null;
 			}
@@ -729,22 +731,15 @@ namespace CoreImage {
 				SetInputImage (value);
 			}
 		}
-
-#if !XAMCORE_4_0
-		[Obsolete ("Use 'InputImage' instead.")]
-		public CIImage Image {
-			get { return InputImage; }
-			set { InputImage = value; }
-		}
 #endif
 
-		bool SupportsInputImage {
+		bool? supportsInputImage;
+
+		public bool SupportsInputImage {
 			get {
-				foreach (var key in InputKeys) {
-					if (key == "inputImage")
-						return true;
-				}
-				return false;
+				if (!supportsInputImage.HasValue)
+					supportsInputImage = Array.IndexOf (InputKeys, "inputImage") >= 0;
+				return supportsInputImage.Value;
 			}
 		}
 	}
