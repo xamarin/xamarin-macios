@@ -2971,8 +2971,8 @@ namespace Registrar {
 							exceptions.Add (ex);
 						} catch (InvalidCastException ex) when (ex.Message == InvalidAbstractDelegateTypeMsg) {
 							skip.Add (method);
-							exceptions.Add (ErrorHelper.CreateError (App, 4105, method.Method, "The registrar cannot marshal an untyped delegate parameter in signature for method `{0}`",
-								method.Method.Name));
+							exceptions.Add (ErrorHelper.CreateError (App, 4105, method.Method, "The registrar cannot marshal an untyped delegate parameter in signature for method `{0}.{1}`.",
+								method.DeclaringType.Type.FullName, method.Method.Name));
 						} catch (Exception ex) {
 							skip.Add (method);
 							exceptions.Add (ErrorHelper.CreateError (4114, ex, "Unexpected error in the registrar for the method '{0}.{1}' - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", method.DeclaringType.Type.FullName, method.Method.Name));
