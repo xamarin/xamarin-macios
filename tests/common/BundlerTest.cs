@@ -254,8 +254,8 @@ class D : NSObject {
 				bundler.Optimize = new string [] { "blockliteral-setupblock" };
 				bundler.Registrar = RegistrarOption.Static;
 				bundler.AssertExecuteFailure ();
-				bundler.AssertError (4105, "The registrar cannot marshal the parameter of type `System.Delegate` in signature for method `D.D1`.");
-				bundler.AssertError (4105, "The registrar cannot marshal the parameter of type `System.MulticastDelegate` in signature for method `D.D2`.");
+				bundler.AssertError (4105, "The registrar cannot marshal an untyped delegate parameter in signature for method `D.D1`.");
+				bundler.AssertError (4105, "The registrar cannot marshal an untyped delegate parameter in signature for method `D.D2`.");
 				bundler.AssertWarning (4173, "The registrar can't compute the block signature for the delegate of type System.Delegate in the method D.D4 because System.Delegate doesn't have a specific signature.", "testApp.cs", 24);
 				bundler.AssertWarning (4173, "The registrar can't compute the block signature for the delegate of type System.MulticastDelegate in the method D.D5 because System.MulticastDelegate doesn't have a specific signature.", "testApp.cs", 30);
 				bundler.AssertWarning (4174, "Unable to locate the block to delegate conversion method for the method D.D3's parameter #1.", "testApp.cs", 18);
