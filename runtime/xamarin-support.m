@@ -2,11 +2,26 @@
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
+#include <os/log.h>
 #include <iconv.h>
 
 #include "xamarin/xamarin.h"
 #include "runtime-internal.h"
 #include "monotouch-support.h"
+
+void
+xamarin_os_log (os_log_t logger, os_log_type_t type, const char *message)
+{
+	// Logging a dynamic string as-is using %{public}s is, strictly speaking,
+	// an antipattern. However, there is no way to call os_log directly from
+	// C#. It can only be called from Objective-C, and even then it requires
+	// that the format string be compiled into the binary. This really is
+	// our only option to pass a string from C# into os_log.
+	if (logger == NULL)
+		logger = OS_LOG_DEFAULT;
+
+	os_log_with_type (logger, type, "%{public}s", message);
+}
 
 const char *
 xamarin_get_locale_country_code ()
