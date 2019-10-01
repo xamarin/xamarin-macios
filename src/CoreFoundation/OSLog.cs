@@ -30,7 +30,7 @@ using ObjCRuntime;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-namespace Darwin {
+namespace CoreFoundation {
 	public sealed class OSLog : IDisposable, INativeObject {
 		static OSLog _default;
 
