@@ -47,13 +47,13 @@ namespace CoreFoundation {
 				os_release (Handle);
 		}
 
-		[DllImport (Constants.SystemLibrary)]
+		[DllImport (Constants.libSystemLibrary)]
 		extern static IntPtr os_log_create (string subsystem, string category);
 
-		[DllImport (Constants.SystemLibrary)]
+		[DllImport (Constants.libSystemLibrary)]
 		extern static IntPtr os_retain (IntPtr handle);
 
-		[DllImport (Constants.SystemLibrary)]
+		[DllImport (Constants.libSystemLibrary)]
 		extern static void os_release (IntPtr handle);
 
 		[DllImport ("__Internal")]
