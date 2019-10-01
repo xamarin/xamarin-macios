@@ -175,7 +175,7 @@ ifdef INCLUDE_IOS
 ifdef INCLUDE_DEVICE
 $(eval $(call PlatformTemplate,iphoneos,IPHONEOS,armv7 armv7s arm64))
 endif
-$(eval $(call PlatformTemplate,iphonesimulator,IPHONESIMULATOR,x86 x86_64))
+$(eval $(call PlatformTemplate,iphonesimulator,IOSSIMULATOR,x86 x86_64))
 endif
 
 ifdef INCLUDE_WATCH
