@@ -1,11 +1,6 @@
 //
 // OSLog.cs: Bindings to the os_log(3) API from Apple
 //
-// Authors:
-//  William Kent
-//
-// Copyright 2019, Xamarin Inc.
-//
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
