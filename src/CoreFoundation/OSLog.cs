@@ -31,6 +31,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
 namespace CoreFoundation {
+	[Mac (10,12), iOS (10,0)]
 	public sealed class OSLog : NativeObject {
 		public static OSLog Default { get; } = new OSLog (IntPtr.Zero);
 
