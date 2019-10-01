@@ -445,6 +445,7 @@ COREFOUNDATION_SOURCES = \
 	CoreFoundation/DispatchIO.cs \
 	CoreFoundation/DispatchQueueSynchronizationContext.cs \
 	CoreFoundation/DispatchSource.cs \
+	CoreFoundation/OSLog.cs \
 
 # CoreGraphics
 
