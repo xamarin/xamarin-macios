@@ -1,6 +1,8 @@
 #ifndef __MONOTOUCH_SUPPORT_H__
 #define __MONOTOUCH_SUPPORT_H__
 
+#include <os/log.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -11,6 +13,7 @@ void *         xamarin_timezone_get_data (const char *name, int *size);
 char **        xamarin_timezone_get_names (int *count);
 char *         xamarin_timezone_get_local_name ();
 void           xamarin_start_wwan (const char *uri);
+void           xamarin_os_log (os_log_t logger, os_log_type_t type, const char *mesage);
 
 #ifdef MONOTOUCH
 const char *   xamarin_GetFolderPath (int folder);
