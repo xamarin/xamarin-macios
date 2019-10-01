@@ -1031,11 +1031,8 @@ compare_mtclassmap (const void *a, const void *b)
 {
 	MTClassMap *mapa = (MTClassMap *) a;
 	MTClassMap *mapb = (MTClassMap *) b;
-	if (mapa->handle == mapb->handle)
-		return 0;
-	if ((intptr_t) mapa->handle < (intptr_t) mapb->handle)
-		return -1;
-	return 1;
+
+	return (intptr_t)mapa->handle - (intptr_t)mapb->handle;
 }
 
 void
