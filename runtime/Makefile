@@ -131,10 +131,10 @@ $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-de
 $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/%.framework/Info.plist: Xamarin.framework-$(1).Info.plist | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/%.framework
 	$(Q) sed 's/@BUNDLE_EXECUTABLE@/$$*/' $$< > $$@
 
-$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework/Xamarin $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework/Info.plist
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework/Xamarin $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework/Info.plist
 	$$(Q_GEN) dsymutil -j 4 $$< -o $$(abspath $$(dir $$<)/..)/Xamarin.framework.dSYM
 
-$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework/Info.plist
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework/Info.plist
 	$$(Q_GEN) dsymutil -j 4 $$< -o $$(abspath $$(dir $$<)/..)/Xamarin-debug.framework.dSYM
 
 $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib
@@ -261,7 +261,7 @@ endif
 endef
 
 $(eval $(call LibTemplate,iphoneos,IPHONEOS))
-$(eval $(call LibTemplate,iphonesimulator,IPHONESIMULATOR))
+$(eval $(call LibTemplate,iphonesimulator,IOSSIMULATOR))
 $(eval $(call LibTemplate,watchos,WATCHOS))
 $(eval $(call LibTemplate,watchsimulator,WATCHSIMULATOR))
 $(eval $(call LibTemplate,tvos,TVOS))
@@ -342,8 +342,8 @@ endef
 
 $(eval $(call LibXamarinTemplate,iphoneos,IPHONEOS))
 $(eval $(call LibXamarinTemplate,iphoneos,IPHONEOS,_DEBUG,-debug))
-$(eval $(call LibXamarinTemplate,iphonesimulator,IPHONESIMULATOR))
-$(eval $(call LibXamarinTemplate,iphonesimulator,IPHONESIMULATOR,_DEBUG,-debug))
+$(eval $(call LibXamarinTemplate,iphonesimulator,IOSSIMULATOR))
+$(eval $(call LibXamarinTemplate,iphonesimulator,IOSSIMULATOR,_DEBUG,-debug))
 $(eval $(call LibXamarinTemplate,watchos,WATCHOS))
 $(eval $(call LibXamarinTemplate,watchos,WATCHOS,_DEBUG,-debug))
 $(eval $(call LibXamarinTemplate,watchsimulator,WATCHSIMULATOR))
