@@ -33,7 +33,7 @@ using System.Collections.Generic;
 namespace CoreFoundation {
 	[Mac (10,12), iOS (10,0)]
 	public sealed class OSLog : NativeObject {
-		public static OSLog Default { get; } = new OSLog (IntPtr.Zero);
+		public static OSLog Default { get; } = new OSLog (IntPtr.Zero, false);
 
 		protected override void Retain ()
 		{
@@ -59,9 +59,9 @@ namespace CoreFoundation {
 		[DllImport ("__Internal")]
 		extern static void xamarin_os_log (IntPtr logHandle, OSLogLevel level, string message);
 
-		OSLog (IntPtr handle)
+		OSLog (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
 		}
 
 		public OSLog (string subsystem, string category)
@@ -71,7 +71,7 @@ namespace CoreFoundation {
 			if (category == null)
 				throw new ArgumentNullException (nameof (category));
 
-			handle = os_log_create (subsystem, category);
+			Handle = os_log_create (subsystem, category);
 		}
 
 		public void Log (string message)
@@ -84,7 +84,7 @@ namespace CoreFoundation {
 			if (message == null)
 				throw new ArgumentNullException (nameof (message));
 
-			xamarin_os_log (handle, level, message);
+			xamarin_os_log (Handle, level, message);
 		}
 	}
 
