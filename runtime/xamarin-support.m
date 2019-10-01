@@ -2,7 +2,6 @@
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
-#include <os/log.h>
 #include <iconv.h>
 
 #include "xamarin/xamarin.h"
