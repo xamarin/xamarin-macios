@@ -17,6 +17,7 @@
   <File AssemblyName="System.ComponentModel.Composition" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.ComponentModel.DataAnnotations" Version="2.0.5.0" PublicKeyToken="31bf3856ad364e35" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.Core" Version="2.0.5.0" PublicKeyToken="7cec85d7bea7798e" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="System.Data.DataSetExtensions" Version="4.0.0.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.Data.Services.Client" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.Data" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.IO.Compression.FileSystem" Version="2.0.5.0" PublicKeyToken="b77a5c561934e089" ProcessorArchitecture="MSIL" />
