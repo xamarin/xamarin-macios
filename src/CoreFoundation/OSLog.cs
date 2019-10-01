@@ -32,15 +32,7 @@ using System.Collections.Generic;
 
 namespace CoreFoundation {
 	public sealed class OSLog : NativeObject {
-		static OSLog _default;
-
-		public static OSLog Default {
-			get {
-				if (_default == null)
-					_default = new OSLog (IntPtr.Zero);
-				return _default;
-			}
-		}
+		public static OSLog Default { get; } = new OSLog (IntPtr.Zero);
 
 		protected override void Retain ()
 		{
