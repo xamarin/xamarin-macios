@@ -369,6 +369,38 @@ namespace Introspection {
 			}
 			Assert.AreEqual (0, Errors, "{0} potential errors found{1}", Errors, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
+
+		[Test]
+		// not every CIFilter supports 'inputImage' so we want to expose it **only** when it's available (without missing any)
+		public void InputImage ()
+		{
+			ContinueOnFailure = true;
+			var nspace = CIFilterType.Namespace;
+			var types = CIFilterType.Assembly.GetTypes ();
+			foreach (Type t in types) {
+				if (t.Namespace != nspace)
+					continue;
+
+				if (t.IsAbstract || !CIFilterType.IsAssignableFrom (t))
+					continue;
+
+				// we need to skip the filters that are not supported by the executing version of iOS
+				if (Skip (t))
+					continue;
+
+				var ctor = t.GetConstructor (Type.EmptyTypes);
+				if ((ctor == null) || ctor.IsAbstract)
+					continue;
+
+				CIFilter f = ctor.Invoke (null) as CIFilter;
+				var p = t.GetProperty ("InputImage", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy) != null;
+				if (p != f.SupportsInputImage) {
+					var s = p ? "a" : "NO";
+					ReportError ($"Managed CIFilter '{t.Name}' SupportsInputImage is `{f.SupportsInputImage}` while there is {s} `InputImage` property defined.");
+				}
+			}
+			Assert.AreEqual (0, Errors, "{0} potential errors found{1}", Errors, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
+		}
 	}
 }
 
