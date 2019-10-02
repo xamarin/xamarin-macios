@@ -103,7 +103,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.IsTrue (custom_url_protocol_instance.Called_DidReceiveResponse, "DidReceiveResponse");
 			Assert.IsTrue (custom_url_protocol_instance.Called_StartLoading, "StartLoading");
 			Assert.IsTrue (custom_url_protocol_instance.Called_StopLoading, "StopLoading");
-			Assert.IsTrue (custom_url_protocol_instance.Called_WillPerformHttpRedirection, "WillPerformHttpRedirection");
+			Assert.IsFalse (custom_url_protocol_instance.Called_WillPerformHttpRedirection, "WillPerformHttpRedirection");
 
 			Assert.IsTrue (CustomUrlProtocol.Called_CanInitWithRequest, "CanInitWithRequest");
 			Assert.IsTrue (CustomUrlProtocol.Called_GetCanonicalRequest, "GetCanonicalRequest");
@@ -144,7 +144,7 @@ namespace MonoTouchFixtures.Foundation {
 				var config = NSUrlSession.SharedSession.Configuration;
 				var session = NSUrlSession.FromConfiguration (config, this, new NSOperationQueue ());
 
-				var task = session.CreateDataTask (new NSUrlRequest (new NSUrl ("https://microsoft.com")));
+				var task = session.CreateDataTask (new NSUrlRequest (new NSUrl ("https://example.com")));
 				task.Resume ();
 			}
 			public bool Called_StartLoading;
