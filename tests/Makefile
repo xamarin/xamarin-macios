@@ -228,18 +228,26 @@ qa-test-dependencies.zip:
 	$(Q) rm -rf $@ $@.tmpdir
 ifdef INCLUDE_TVOS
 	@# TVOS
-	$(Q) mkdir -p $@.tmpdir/tvos
+	$(Q) mkdir -p $@.tmpdir/tvos $@.tmpdir/tvsimulator
 	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll* $@.tmpdir/tvos
 	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll* $@.tmpdir/tvos
 	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvos/libtest.a $@.tmpdir/tvos
 	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvos/libtest.dylib $@.tmpdir/tvos
 	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/tvos/XTest.framework $@.tmpdir/tvos
+	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll* $@.tmpdir/tvsimulator
+	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll* $@.tmpdir/tvsimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvsimulator/libtest.a $@.tmpdir/tvsimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvsimulator/libtest.dylib $@.tmpdir/tvsimulator
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/tvsimulator/XTest.framework $@.tmpdir/tvsimulator
 endif
 	@# iOS
-	$(Q) mkdir -p $@.tmpdir/ios
-	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/ios/libtest.a $@.tmpdir/ios
-	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/ios/libtest.dylib $@.tmpdir/ios
-	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/ios/XTest.framework $@.tmpdir/ios
+	$(Q) mkdir -p $@.tmpdir/iphoneos $@.tmpdir/iphonesimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphoneos/libtest.a $@.tmpdir/iphoneos
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphoneos/libtest.dylib $@.tmpdir/iphoneos
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/iphoneos/XTest.framework $@.tmpdir/iphoneos
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphonesimulator/libtest.a $@.tmpdir/iphonesimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphonesimulator/libtest.dylib $@.tmpdir/iphonesimulator
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/iphonesimulator/XTest.framework $@.tmpdir/iphonesimulator
 	$(Q) printf '#!/bin/bash -e\n\n/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch "$$@"\n' > $@.tmpdir/mlaunch
 	$(Q) chmod +x $@.tmpdir/mlaunch
 	@# Generate zip
