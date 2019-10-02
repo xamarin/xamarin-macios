@@ -5210,7 +5210,7 @@ namespace CoreImage {
 		float Size { get; set; }
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use 'InputPoint0' instead.")]
+		[Obsolete ("Use 'InputPoint' instead.")]
 		[CoreImageFilterProperty ("inputPoint")]
 		CIVector Point { get; set; }
 #endif
