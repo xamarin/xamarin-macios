@@ -43,15 +43,13 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_framer_write_output (OS_nw_framer framer, byte[] output_buffer, nuint output_length);
+		unsafe static extern void nw_framer_write_output (OS_nw_framer framer, byte *output_buffer, nuint output_length);
 
-		public void WriteOutput (byte[] data)
+		public void WriteOutput (ReadOnlyMemory<byte> data)
 		{
-			if (data == null)
-				throw new ArgumentNullException (nameof (data));
 			unsafe {
-				fixed (void* dataHandle = data)
-					nw_framer_write_output (GetCheckedHandle (), data, (nuint) data.Length);
+				using (var mh = data.Pin ())
+					nw_framer_write_output (GetCheckedHandle (), (byte*)mh.Pointer, (nuint) data.Length);
 			}
 		}
 
@@ -249,7 +247,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_message_create (OS_nw_framer framer);
 
-		public NWFramer CreateMessage ()
+		public NWProtocolMetadata CreateMessage ()
 			=> new NWFramer (nw_framer_message_create (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -351,7 +349,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe bool nw_framer_parse_output (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, IntPtr temp_buffer, void* parse);
+		static extern unsafe bool nw_framer_parse_output (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte *temp_buffer, ref BlockLiteral parse);
 
 		delegate void nw_framer_parse_output_t (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete);
 		static nw_framer_parse_output_t static_ParseOutputHandler = TrampolineParseOutputHandler;
@@ -359,33 +357,25 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_framer_parse_output_t))]
 		static void TrampolineParseOutputHandler (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete)
 		{
-			var del = BlockLiteral.GetTarget<Action<byte[], bool>> (block);
+			var del = BlockLiteral.GetTarget<Action<Memory<byte>, bool>> (block);
 			if (del != null) {
 				var bBuffer = new byte[buffer_length];
 				Marshal.Copy (buffer, bBuffer, 0, (int)buffer_length);
-				del (bBuffer, is_complete);
+				var mValue = new Memory<byte>(bBuffer);
+				del (mValue, is_complete);
 			}
 		}
 
-		public bool ParseOutput (nuint minimumIncompleteLength, nuint maximumLength, byte[] tempBuffer, Action<byte[], bool> handler)
+		public bool ParseOutput (nuint minimumIncompleteLength, nuint maximumLength, Memory<byte> tempBuffer, Action<Memory<byte>, bool> handler)
 		{
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
 			unsafe {
-				if (handler == null) {
-					if (tempBuffer == null)
-						return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, IntPtr.Zero, null);
-					else
-						fixed (void* tmpBufferPtr = tempBuffer)
-							return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (IntPtr)tmpBufferPtr, null);
-				}
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ParseOutputHandler, handler);
 				try {
-					if (tempBuffer == null)
-						return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, IntPtr.Zero, (void*) block_ptr_handler);
-					else
-						fixed (void* tmpBufferPtr = tempBuffer)
-						return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (IntPtr)tmpBufferPtr, (void*) block_ptr_handler);
+					using (var mh = tempBuffer.Pin ())
+						return nw_framer_parse_output (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*)mh.Pointer, ref block_handler);
 				} finally {
 					block_handler.CleanupBlock ();
 				}
@@ -393,7 +383,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe bool nw_framer_parse_input (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, IntPtr temp_buffer, void* parse);
+		static extern unsafe bool nw_framer_parse_input (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte *temp_buffer, ref BlockLiteral parse);
 
 		delegate void nw_framer_parse_input_t (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete);
 		static nw_framer_parse_input_t static_ParseInputHandler = TrampolineParseInputHandler;
@@ -401,33 +391,25 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_framer_parse_input_t))]
 		static void TrampolineParseInputHandler (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete)
 		{
-			var del = BlockLiteral.GetTarget<Action<byte[], bool>> (block);
+			var del = BlockLiteral.GetTarget<Action<Memory<byte>, bool>> (block);
 			if (del != null) {
 				var bBuffer = new byte[buffer_length];
 				Marshal.Copy (buffer, bBuffer, 0, (int)buffer_length);
-				del (bBuffer, is_complete);
+				var mValue = new Memory<byte>(bBuffer);
+				del (mValue, is_complete);
 			}
 		}
 
-		public bool ParseInput (nuint minimumIncompleteLength, nuint maximumLength, byte[] tempBuffer, Action<byte[], bool> handler)
+		public bool ParseInput (nuint minimumIncompleteLength, nuint maximumLength, Memory<byte> tempBuffer, Action<Memory<byte>, bool> handler)
 		{
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
 			unsafe {
-				if (handler == null) {
-					if (tempBuffer == null)
-						return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, IntPtr.Zero, null);
-					else
-						fixed (void* tmpBufferPtr = tempBuffer)
-							return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (IntPtr)tmpBufferPtr, null);
-				}
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_ParseInputHandler, handler);
 				try {
-					if (tempBuffer == null)
-						return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, IntPtr.Zero, (void*) block_ptr_handler);
-					else
-						fixed (void* tmpBufferPtr = tempBuffer)
-						return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (IntPtr)tmpBufferPtr, (void*) block_ptr_handler);
+					using (var mh = tempBuffer.Pin ())
+						return nw_framer_parse_input (GetCheckedHandle (), minimumIncompleteLength, maximumLength, (byte*)mh.Pointer, ref block_handler);
 				} finally {
 					block_handler.CleanupBlock ();
 				}
@@ -435,14 +417,17 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_framer_message_set_value (OS_nw_protocol_metadata message, string key, IntPtr value, void *dispose_value);
+		static extern unsafe void nw_framer_message_set_value (OS_nw_protocol_metadata message, string key, byte *value, void *dispose_value);
 
-		public void SetKey (string key, byte[] value)
+		public void SetKey (string key, ReadOnlyMemory<byte> value)
 		{
 			// the method takes a callback to cleanup the data, but we do not need that since we are managed
+			if (key == null)
+				throw new ArgumentNullException (nameof (key));
+
 			unsafe {
-				fixed (void* valuePtr = value)
-					nw_framer_message_set_value (GetCheckedHandle (), key, (IntPtr) valuePtr, null);
+				using (var mh = value.Pin ())
+					nw_framer_message_set_value (GetCheckedHandle (), key,  (byte*)mh.Pointer, null);
 			}
 		}
 
@@ -459,15 +444,15 @@ namespace Network {
 			=> Runtime.GetNSObject (nw_framer_message_copy_object_value (GetCheckedHandle (), key));
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_framer_deliver_input (OS_nw_framer framer, IntPtr input_buffer, nuint input_length, OS_nw_protocol_metadata message, bool is_complete);
+		unsafe static extern void nw_framer_deliver_input (OS_nw_framer framer, byte *input_buffer, nuint input_length, OS_nw_protocol_metadata message, bool is_complete);
 
-		public void DeliverInput (byte[] buffer, NWProtocolMetadata message, bool isComplete)
+		public void DeliverInput (ReadOnlyMemory<byte> buffer, NWProtocolMetadata message, bool isComplete)
 		{
 			if (message == null)
 				throw new ArgumentNullException (nameof (message));
 			unsafe {
-				fixed (void * bufferPtr = buffer)
-					nw_framer_deliver_input (GetCheckedHandle (),(IntPtr) bufferPtr, (nuint)buffer.Length, message.Handle, isComplete);
+				using (var mh = buffer.Pin ())
+					nw_framer_deliver_input (GetCheckedHandle (),(byte*)mh.Pointer, (nuint)buffer.Length, message.Handle, isComplete);
 			}
 		}
 	}
