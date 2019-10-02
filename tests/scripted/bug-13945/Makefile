@@ -8,20 +8,20 @@ bug-13945:
 	@echo "void foo () {}" > nativeA.m
 	@echo "void bar () {}" > nativeB.m
 	@mkdir -p .libs
-	@$(MAKE) .libs/ios/nativeA.arm64.o
-	@$(MAKE) .libs/ios/nativeB.arm64.o
+	@$(MAKE) .libs/iphoneos/nativeA.arm64.o
+	@$(MAKE) .libs/iphoneos/nativeB.arm64.o
 	@rm -Rf TheApp.app cache cache-first
 	@mkdir -p TheApp.app
 	@mkdir -p cache
 
-	@cp .libs/ios/nativeA.arm64.o libNative.a
+	@cp .libs/iphoneos/nativeA.arm64.o libNative.a
 	@$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/btouch-native binding.cs --link-with=libNative.a,Native -s:managed.cs -o:binding.dll
 	@$(SYSTEM_CSC) app.cs -r:$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll -r:binding.dll -out:app.exe
 	@$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch -r:binding.dll app.exe --abi=arm64  -sdk "$(IOS_SDK_VERSION)"  -dev:TheApp.app -sdkroot $(XCODE_DEVELOPER_ROOT) --cache=$(shell pwd)/cache -r:$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll
 
 	@cp -Rp cache cache-first
 
-	@cp .libs/ios/nativeB.arm64.o libNative.a
+	@cp .libs/iphoneos/nativeB.arm64.o libNative.a
 	@$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/btouch-native binding.cs --link-with=libNative.a,Native -s:managed.cs -o:binding.dll
 	# do not rebuild the .exe
 	@$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch -r:binding.dll app.exe --abi=arm64  -sdk "$(IOS_SDK_VERSION)"  -dev:TheApp.app -sdkroot $(XCODE_DEVELOPER_ROOT) --cache=$(shell pwd)/cache -r:$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll

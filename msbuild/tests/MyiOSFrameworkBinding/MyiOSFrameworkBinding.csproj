@@ -36,17 +36,17 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios\XTest.framework">
+    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios-fat\XTest.framework">
       <Kind>Framework</Kind>
       <Link>XTest.framework</Link>
     </NativeReference>
-    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios\XStaticObjectTest.framework">
+    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios-fat\XStaticObjectTest.framework">
       <Kind>Framework</Kind>
       <Link>XStaticObjectTest.framework</Link>
       <LinkerFlags>-lz</LinkerFlags>
       <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
     </NativeReference>
-    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios\XStaticArTest.framework">
+    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios-fat\XStaticArTest.framework">
       <Kind>Framework</Kind>
       <Link>XStaticArTest.framework</Link>
       <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
@@ -65,7 +65,7 @@
       <Link>libframework.h</Link>
     </None>
   </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="..\..\..\tests\test-libraries\libframework.m" Outputs="..\..\..\tests\test-libraries\.libs\ios\XTest.framework ..\..\..\tests\test-libraries\.libs\ios\XSharedObjectTest.framework ..\..\..\tests\test-libraries\.libs\ios\XSharedArTest.framework">
+  <Target Name="BeforeBuild" Inputs="..\..\..\tests\test-libraries\libframework.m" Outputs="..\..\..\tests\test-libraries\.libs\ios-fat\XTest.framework ..\..\..\tests\test-libraries\.libs\ios-fat\XSharedObjectTest.framework ..\..\..\tests\test-libraries\.libs\ios-fat\XSharedArTest.framework">
     <Exec Command="make -j8 -C ..\..\..\tests\test-libraries" />
   </Target>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets" />
