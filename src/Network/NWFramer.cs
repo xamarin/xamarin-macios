@@ -27,6 +27,7 @@ namespace Network {
 	public class NWFramer : NWProtocolMetadata {
 		public NWFramer (IntPtr handle, bool owns) : base (handle, owns) {}
 
+/*
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_framer_write_output_no_copy (OS_nw_framer framer, nuint output_length);
 
@@ -455,5 +456,6 @@ namespace Network {
 					nw_framer_deliver_input (GetCheckedHandle (),(byte*)mh.Pointer, (nuint)buffer.Length, message.Handle, isComplete);
 			}
 		}
+*/
 	}
 }
