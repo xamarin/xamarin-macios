@@ -150,6 +150,7 @@ IOS_ASSEMBLIES =  \
 	System.Core \
 	System.Data \
 	System.Data.Services.Client \
+	System.Data.DataSetExtensions \
 	System.IdentityModel \
 	System.IO.Compression \
 	System.IO.Compression.FileSystem \
@@ -190,6 +191,7 @@ MAC_ASSEMBLIES = \
 	System.ComponentModel.DataAnnotations \
 	System.Core \
 	System.Data.Services.Client \
+	System.Data.DataSetExtensions \
 	System.Data \
 	System.IdentityModel \
 	System.IO.Compression.FileSystem \
