@@ -46,7 +46,7 @@ namespace Network {
 		public NWWebSocketResponseStatus Status => nw_ws_response_get_status (GetCheckedHandle ()); 
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, void *enumerator);
+		unsafe static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, ref BlockLiteral enumerator);
 
 		delegate void nw_ws_response_enumerate_additional_headers_t (IntPtr block, string header, string value);
 		static nw_ws_response_enumerate_additional_headers_t static_EnumerateHeadersHandler = TrampolineEnumerateHeadersHandler;
@@ -62,19 +62,15 @@ namespace Network {
 
 		public bool EnumerateAdditionalHeaders (Action<string, string> handler)
 		{
-			unsafe {
-				if (handler == null) {
-					nw_ws_response_enumerate_additional_headers (GetCheckedHandle (), null);
-					return false;
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_EnumerateHeadersHandler, handler);
-				try {
-					return nw_ws_response_enumerate_additional_headers (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_EnumerateHeadersHandler, handler);
+			try {
+				return nw_ws_response_enumerate_additional_headers (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 

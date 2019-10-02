@@ -49,7 +49,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_data_transfer_report_get_duration_milliseconds (OS_nw_data_transfer_report report);
 
-		public ulong Duration => nw_data_transfer_report_get_duration_milliseconds (GetCheckedHandle ());
+		public TimeSpan Duration => TimeSpan.FromMilliseconds (nw_data_transfer_report_get_duration_milliseconds (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_interface nw_data_transfer_report_copy_path_interface (OS_nw_data_transfer_report report, uint path_index);
@@ -103,14 +103,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_data_transfer_report_get_transport_smoothed_rtt_milliseconds (OS_nw_data_transfer_report report, uint path_index);
 
-		public ulong GetTransportSmoothedRoundTripTime (uint pathIndex)
-			=> nw_data_transfer_report_get_transport_smoothed_rtt_milliseconds (GetCheckedHandle (), pathIndex);
+		public TimeSpan GetTransportSmoothedRoundTripTime (uint pathIndex)
+			=> TimeSpan.FromMilliseconds (nw_data_transfer_report_get_transport_smoothed_rtt_milliseconds (GetCheckedHandle (), pathIndex));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_data_transfer_report_get_transport_minimum_rtt_milliseconds (OS_nw_data_transfer_report report, uint path_index);
 
-		public ulong GetTransportMinimumRoundTripTime (uint pathIndex)
-			=> nw_data_transfer_report_get_transport_minimum_rtt_milliseconds (GetCheckedHandle (), pathIndex);
+		public TimeSpan GetTransportMinimumRoundTripTime (uint pathIndex)
+			=> TimeSpan.FromMilliseconds (nw_data_transfer_report_get_transport_minimum_rtt_milliseconds (GetCheckedHandle (), pathIndex));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_data_transfer_report_get_transport_rtt_variance (OS_nw_data_transfer_report report, uint path_index);
@@ -131,7 +131,7 @@ namespace Network {
 			=> nw_data_transfer_report_get_sent_ip_packet_count (GetCheckedHandle (), pathIndex);
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_data_transfer_report_collect (OS_nw_data_transfer_report report, IntPtr queue, void *collect_block);
+		unsafe static extern void nw_data_transfer_report_collect (OS_nw_data_transfer_report report, IntPtr queue, ref BlockLiteral collect_block);
 
 		delegate void nw_data_transfer_report_collect_t (IntPtr block, IntPtr report);
 		static nw_data_transfer_report_collect_t static_CollectHandler = TrampolineCollectHandler;
@@ -150,19 +150,14 @@ namespace Network {
 		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
-			unsafe {
-				if (handler == null) {
-					nw_data_transfer_report_collect (GetCheckedHandle (), queue.Handle, null);
-					return;
-				}
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_CollectHandler, handler);
-				try {
-					nw_data_transfer_report_collect (GetCheckedHandle (), queue.Handle, (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_CollectHandler, handler);
+			try {
+				nw_data_transfer_report_collect (GetCheckedHandle (), queue.Handle, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 
