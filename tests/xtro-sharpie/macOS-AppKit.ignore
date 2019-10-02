@@ -617,9 +617,6 @@
 !missing-pinvoke! NSUpdateDynamicServices is not bound
 !missing-pinvoke! NSWindowList is not bound
 !missing-pinvoke! NSWindowListForContext is not bound
-!missing-protocol! NSAccessibilityCheckBox not bound
-!missing-protocol! NSAccessibilityList not bound
-!missing-protocol! NSAccessibilityOutline not bound
 !missing-protocol! NSAnimatablePropertyContainer not bound
 !missing-protocol! NSChangeSpelling not bound
 !missing-protocol! NSColorPickingCustom not bound
@@ -637,7 +634,6 @@
 !missing-protocol-conformance! NSMenu should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSMenuItem should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSOpenGLContext should conform to NSLocking
-!missing-protocol-conformance! NSOutlineView should conform to NSAccessibilityOutline
 !missing-protocol-conformance! NSPageController should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSPathCell should conform to NSOpenSavePanelDelegate
 !missing-protocol-conformance! NSSplitViewItem should conform to NSAnimatablePropertyContainer
