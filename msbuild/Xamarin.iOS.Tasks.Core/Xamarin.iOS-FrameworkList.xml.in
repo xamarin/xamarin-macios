@@ -187,5 +187,5 @@
   <File AssemblyName="System.Xml.XmlDocument" Version="4.0.1.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.Xml.XmlSerializer" Version="4.0.10.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
   <File AssemblyName="System.Xml.Xsl.Primitives" Version="4.0.0.0" PublicKeyToken="b03f5f7f11d50a3a" ProcessorArchitecture="MSIL" />
-  <File AssemblyName="netstandard" Version="2.0.0.0" PublicKeyToken="cc7b13ffcd2ddd51" ProcessorArchitecture="MSIL" />
+  <File AssemblyName="netstandard" Version="2.1.0.0" PublicKeyToken="cc7b13ffcd2ddd51" ProcessorArchitecture="MSIL" />
 </FileList>
