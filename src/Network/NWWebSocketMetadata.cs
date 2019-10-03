@@ -74,7 +74,7 @@ namespace Network {
 		public NWWebSocketOpCode OpCode => nw_ws_metadata_get_opcode (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_ws_metadata_set_pong_handler (OS_nw_protocol_metadata metadata, dispatch_queue_t client_queue, void *pong_handler);
+		static extern void nw_ws_metadata_set_pong_handler (OS_nw_protocol_metadata metadata, dispatch_queue_t client_queue, ref BlockLiteral pong_handler);
 
 		delegate void nw_ws_metadata_set_pong_handler_t (IntPtr block, IntPtr error);
 		static nw_ws_metadata_set_pong_handler_t static_PongHandler = TrampolinePongHandler;
@@ -99,10 +99,9 @@ namespace Network {
 
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_PongHandler, handler);
 				try {
-					nw_ws_metadata_set_pong_handler (GetCheckedHandle (), queue.Handle, (void*) block_ptr_handler);
+					nw_ws_metadata_set_pong_handler (GetCheckedHandle (), queue.Handle, ref block_handler);
 				} finally {
 					block_handler.CleanupBlock ();
 				}
