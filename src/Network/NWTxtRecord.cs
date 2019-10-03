@@ -90,7 +90,7 @@ namespace Network {
 		public bool Add (string key, string value)
 		{
 			var utf8 = new UTF8Encoding();
-			return Add (key, value == null ? null : utf8.GetBytes (value));
+			return Add (key, value == null ? null : Encoding.UTF8.GetBytes (value));
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
