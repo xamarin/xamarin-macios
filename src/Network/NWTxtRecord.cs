@@ -88,10 +88,7 @@ namespace Network {
 		}
 		
 		public bool Add (string key, string value)
-		{
-			var utf8 = new UTF8Encoding();
-			return Add (key, value == null ? null : Encoding.UTF8.GetBytes (value));
-		}
+			=> Add (key, value == null ? null : Encoding.UTF8.GetBytes (value));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern byte nw_txt_record_remove_key (IntPtr handle, string key);
