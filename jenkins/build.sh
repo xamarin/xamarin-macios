@@ -132,3 +132,7 @@ time make -j8
 time make install -j8
 
 printf "✅ [Build succeeded](%s/console)\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+
+if grep MONO_BUILD_FROM_SOURCE=. configure.inc Make.config.inc >& /dev/null; then
+	printf "    ⚠️ Mono built from source\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
+fi
