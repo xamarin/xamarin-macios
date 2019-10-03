@@ -504,7 +504,7 @@ namespace xharness
 				var includeAttribute = node.Attributes ["Include"];
 				if (includeAttribute != null) {
 					foreach (var tl in test_libraries)
-						includeAttribute.Value = includeAttribute.Value.Replace ($"test-libraries\\.libs\\ios\\{tl}", $"test-libraries\\.libs\\{platform}\\{tl}");
+						includeAttribute.Value = includeAttribute.Value.Replace ($"test-libraries\\.libs\\ios-fat\\{tl}", $"test-libraries\\.libs\\{platform}-fat\\{tl}");
 				}
 			}
 			nodes = csproj.SelectNodes ("//*[local-name() = 'Target' and @Name = 'BeforeBuild']");
@@ -512,7 +512,7 @@ namespace xharness
 				var outputsAttribute = node.Attributes ["Outputs"];
 				if (outputsAttribute != null) {
 					foreach (var tl in test_libraries)
-						outputsAttribute.Value = outputsAttribute.Value.Replace ($"test-libraries\\.libs\\ios\\${tl}", $"test-libraries\\.libs\\{platform}\\${tl}");
+						outputsAttribute.Value = outputsAttribute.Value.Replace ($"test-libraries\\.libs\\ios-fat\\${tl}", $"test-libraries\\.libs\\{platform}-fat\\${tl}");
 				}
 			}
 		}
