@@ -52,18 +52,6 @@ namespace Introspection {
 			case "MonoMac.AudioToolbox.AudioSession": // These are iOS APIs that were mistakenly pulled into OSX. Removed in unified but not classic
 			case "MonoMac.AudioUnit.AudioUnitUtils":
 				return !IsUnified; // If these are in unified, don't skip, we want to scream
-			// all the following ones are tested in the unit tests and work
-			case "nw_protocol_copy_ws_definition":
-			case "nw_protocol_metadata_is_framer_message":
-			case "nw_protocol_metadata_is_ws":
-			case "nw_ws_create_options":
-			case "nw_ws_options_add_additional_header":
-			case "nw_ws_options_add_subprotocol":
-			case "nw_ws_options_set_auto_reply_ping":
-			case "nw_ws_options_set_maximum_message_size":
-			case "nw_ws_options_set_skip_handshake":
-			case "nw_ws_options_set_client_request_handler":
-				return true;
 			}
 
 			return base.Skip(type);
