@@ -128,6 +128,9 @@ echo "Configuring the build with: $CONFIGURE_FLAGS"
 # shellcheck disable=SC2086
 ./configure $CONFIGURE_FLAGS
 
+# If we're building mono from source, we might not have it cloned yet
+make reset
+
 time make -j8
 time make install -j8
 
