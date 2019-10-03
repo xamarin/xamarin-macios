@@ -153,7 +153,16 @@ namespace Xamarin.Linker.Steps {
 
 		static bool IsProductType (TypeDefinition type)
 		{
-			return type.Module.Assembly.Name.Name == ProductAssembly;
+			var name = type.Module.Assembly.Name.Name;
+			switch (name) {
+			case "Xamarin.Forms.Core":
+			case "Xamarin.Forms.Platform":
+			case "Xamarin.Forms.Platform.iOS":
+			case "Xamarin.Forms.Xaml":
+				return true;
+			default:
+				return name == ProductAssembly;
+			}
 		}
 	}
 }
