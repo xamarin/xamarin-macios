@@ -25,6 +25,9 @@ namespace MonoTouchFixtures.Network {
 		NWListener listener;
 		NWParameters parameters;
 
+		[TestFixtureSetUp]
+		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
+
 		[SetUp]
 		public void SetUp ()
 		{

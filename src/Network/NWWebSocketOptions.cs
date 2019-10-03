@@ -26,8 +26,7 @@ namespace Network {
 		Version13 = 1,
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
+	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWWebSocketOptions : NWProtocolOptions {
 		bool autoReplyPing = false;
 		bool skipHandShake = false;

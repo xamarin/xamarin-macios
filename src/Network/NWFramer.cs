@@ -26,7 +26,6 @@ namespace Network {
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWFramer : NWProtocolMetadata {
 		public NWFramer (IntPtr handle, bool owns) : base (handle, owns) {}
-
 /*
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_framer_write_output_no_copy (OS_nw_framer framer, nuint output_length);
@@ -46,11 +45,11 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_framer_write_output (OS_nw_framer framer, byte *output_buffer, nuint output_length);
 
-		public void WriteOutput (ReadOnlyMemory<byte> data)
+		public void WriteOutput (ReadOnlySpan<byte> data)
 		{
 			unsafe {
-				using (var mh = data.Pin ())
-					nw_framer_write_output (GetCheckedHandle (), (byte*)mh.Pointer, (nuint) data.Length);
+				fixed (byte *mh = data)
+					nw_framer_write_output (GetCheckedHandle (), mh, (nuint) data.Length);
 			}
 		}
 
@@ -420,15 +419,15 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe void nw_framer_message_set_value (OS_nw_protocol_metadata message, string key, byte *value, void *dispose_value);
 
-		public void SetKey (string key, ReadOnlyMemory<byte> value)
+		public void SetKey (string key, ReadOnlySpan<byte> value)
 		{
 			// the method takes a callback to cleanup the data, but we do not need that since we are managed
 			if (key == null)
 				throw new ArgumentNullException (nameof (key));
 
 			unsafe {
-				using (var mh = value.Pin ())
-					nw_framer_message_set_value (GetCheckedHandle (), key,  (byte*)mh.Pointer, null);
+				fixed (byte* mh = value)
+					nw_framer_message_set_value (GetCheckedHandle (), key,  mh, null);
 			}
 		}
 
@@ -447,15 +446,15 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_framer_deliver_input (OS_nw_framer framer, byte *input_buffer, nuint input_length, OS_nw_protocol_metadata message, bool is_complete);
 
-		public void DeliverInput (ReadOnlyMemory<byte> buffer, NWProtocolMetadata message, bool isComplete)
+		public void DeliverInput (ReadOnlySpan<byte> buffer, NWProtocolMetadata message, bool isComplete)
 		{
 			if (message == null)
 				throw new ArgumentNullException (nameof (message));
 			unsafe {
-				using (var mh = buffer.Pin ())
-					nw_framer_deliver_input (GetCheckedHandle (),(byte*)mh.Pointer, (nuint)buffer.Length, message.Handle, isComplete);
+				fixed (byte *mh = buffer)
+					nw_framer_deliver_input (GetCheckedHandle (),mh, (nuint)buffer.Length, message.Handle, isComplete);
 			}
 		}
-*/
+ */
 	}
 }

@@ -41,16 +41,16 @@ namespace MonoTouchFixtures.Network
 		public void TestFromBytes ()
 		{
 			// get the raw data from the dictionary create txt record, and recreate a new one
-			ReadOnlyMemory<byte> rawData = null;
+			var e = new AutoResetEvent (false);
 			record.GetRawBytes (
 				(d) => {
-					rawData = d;
+					Assert.AreNotEqual (0, d.Length, "Raw data length.");
+					using (var otherRecord = NWTxtRecord.FromBytes (d)) 
+						Assert.IsTrue (record.Equals (otherRecord), "Equals");
+					e.Set ();
 				}
 			);
-			Assert.AreNotEqual (0, rawData.Length, "Raw data length.");
-			// do the required conversion
-			using (var otherRecord = NWTxtRecord.FromBytes (rawData))
-				Assert.IsTrue (record.Equals (otherRecord), "Equals");
+			e.WaitOne ();
 		}
 
 		[TearDown]
@@ -160,13 +160,15 @@ namespace MonoTouchFixtures.Network
 		[Test]
 		public void TestGetRaw ()
 		{
-			ReadOnlyMemory<byte> rawData = null;
+			var e = new AutoResetEvent (false);
 			record.GetRawBytes (
 				(d) => {
-					rawData = d;
+					Assert.AreNotEqual (0, d.Length);
+					e.Set ();
 				}
 			);
-			Assert.AreNotEqual (0, rawData.Length);
+			e.WaitOne ();
+			
 		}
 	}
 }
