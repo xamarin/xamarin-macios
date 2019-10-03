@@ -596,7 +596,7 @@ namespace Registrar {
 					return is_ctor.Value;
 				}
 				set {
-					is_ctor = false;
+					is_ctor = value;
 				}
 			}
 
