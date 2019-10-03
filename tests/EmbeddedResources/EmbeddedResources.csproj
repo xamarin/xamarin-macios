@@ -37,12 +37,16 @@
   <ItemGroup>
     <Reference Include="Xamarin.iOS" />
     <Reference Include="MonoTouch.NUnitLite" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ResourcesTest.cs" />
+     <Compile Include="..\common\TestRuntime.cs">
+       <Link>TestRuntime.cs</Link>
+     </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Welcome.resx">

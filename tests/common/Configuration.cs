@@ -93,6 +93,8 @@ namespace Xamarin.Tests
 				var version = Version.Parse (xcode_version);
 				if (version >= max_version)
 					continue;
+				if (version.Major == max_version.Major)
+					continue;
 				if (min_version != null && version < min_version)
 					continue;
 				with_versions.Add (new Tuple<Version, string> (version, path));
@@ -315,7 +317,7 @@ namespace Xamarin.Tests
 				// might need tweaking.
 				if (mt_src_root == null)
 #if MONOMAC
-					mt_src_root = Path.GetFullPath (Path.Combine (TestAssemblyDirectory, "../../.."));
+					mt_src_root = RootPath;
 #else
 					mt_src_root = Path.GetFullPath (Path.Combine (TestAssemblyDirectory, "../../../.."));
 #endif
