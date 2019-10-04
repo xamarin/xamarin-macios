@@ -36,6 +36,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateAdditionalHeaders (Action<string, string> handler)
 		{
 			if (handler == null)
@@ -65,6 +66,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateSubprotocols (Action<string> handler)
 		{
 			if (handler == null)

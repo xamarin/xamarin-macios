@@ -45,8 +45,6 @@ namespace MonoTouchFixtures.Network
 			record.GetRawBytes (
 				(d) => {
 					Assert.AreNotEqual (0, d.Length, "Raw data length.");
-					using (var otherRecord = NWTxtRecord.FromBytes (d)) 
-						Assert.IsTrue (record.Equals (otherRecord), "Equals");
 					e.Set ();
 				}
 			);

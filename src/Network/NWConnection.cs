@@ -523,6 +523,7 @@ namespace Network {
 		}
 
 		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void GetEstablishmentReport (DispatchQueue queue, Action<NWEstablishmentReport> handler)
 		{
 			if (queue == null)

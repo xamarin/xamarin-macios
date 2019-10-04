@@ -60,6 +60,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool EnumerateAdditionalHeaders (Action<string, string> handler)
 		{
 			if (handler == null)

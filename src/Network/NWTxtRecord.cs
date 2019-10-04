@@ -71,19 +71,19 @@ namespace Network {
 		public NWTxtRecordFindKey FindKey (string key) => nw_txt_record_find_key (GetCheckedHandle (), key);
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern byte nw_txt_record_set_key (IntPtr handle, string key, byte *value, nuint valueLen);
+		unsafe static extern byte nw_txt_record_set_key (IntPtr handle, string key, IntPtr value, nuint valueLen);
 
 		public bool Add (string key, ReadOnlySpan<byte> value)
 		{
 			unsafe {
 				fixed (byte* mh = value)
-					return nw_txt_record_set_key (GetCheckedHandle (), key, mh, (nuint) value.Length) != 0;
+					return nw_txt_record_set_key (GetCheckedHandle (), key, (IntPtr)mh, (nuint) value.Length) != 0;
 			}
 		}
 
 		public bool Add (string key) {
 			unsafe {
-				return nw_txt_record_set_key (GetCheckedHandle (), key, null, 0) != 0;
+				return nw_txt_record_set_key (GetCheckedHandle (), key, IntPtr.Zero, 0) != 0;
 			}
 		}
 		
@@ -112,27 +112,28 @@ namespace Network {
 		{
 			if (other == null)
 				return false;
-			return nw_txt_record_is_equal (GetCheckedHandle (), other.Handle);
+			return nw_txt_record_is_equal (GetCheckedHandle (), other.GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern bool nw_txt_record_apply (OS_nw_txt_record txt_record, ref BlockLiteral applier);
 
-		unsafe delegate void nw_txt_record_apply_t (IntPtr block, string key, NWTxtRecordFindKey found, void *value, nuint valueLen); 
+		unsafe delegate void nw_txt_record_apply_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen); 
 		unsafe static nw_txt_record_apply_t static_ApplyHandler = TrampolineApplyHandler;
 
 		public delegate void NWTxtRecordApplyDelegate (string key, NWTxtRecordFindKey rersult, ReadOnlySpan<byte> value);
 
 		[MonoPInvokeCallback (typeof (nw_txt_record_apply_t))]
-		unsafe static void TrampolineApplyHandler (IntPtr block, string key, NWTxtRecordFindKey found, void* value, nuint valueLen)
+		unsafe static void TrampolineApplyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
 		{
 			var del = BlockLiteral.GetTarget<NWTxtRecordApplyDelegate> (block);
 			if (del != null) {
-				var mValue = new ReadOnlySpan<byte>(value, (int)valueLen);
+				var mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
 				del (key, found, mValue);
 			}
 		}
  
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (NWTxtRecordApplyDelegate handler)
 		{
 			if (handler == null)
@@ -150,25 +151,26 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe bool nw_txt_record_access_key (OS_nw_txt_record txt_record, string key, ref BlockLiteral access_value);
 
-		unsafe delegate void nw_txt_record_access_key_t (IntPtr block, string key, NWTxtRecordFindKey found, void *value, nuint valueLen);
+		unsafe delegate void nw_txt_record_access_key_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
 		unsafe static nw_txt_record_access_key_t static_AccessKeyHandler = TrampolineAccessKeyHandler;
 
 		public delegate void NWTxtRecordGetValueDelegete (string key, NWTxtRecordFindKey result, ReadOnlySpan<byte> value);
 
 		[MonoPInvokeCallback (typeof (nw_txt_record_access_key_t))]
-		unsafe static void TrampolineAccessKeyHandler (IntPtr block, string key, NWTxtRecordFindKey found, void *value, nuint valueLen)
+		unsafe static void TrampolineAccessKeyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
 		{
 			var del = BlockLiteral.GetTarget<NWTxtRecordGetValueDelegete> (block);
 			if (del != null) {
 				ReadOnlySpan<byte> mValue;
 				if (found == NWTxtRecordFindKey.NonEmptyValue)
-					mValue = new ReadOnlySpan<byte>(value, (int)valueLen);
+					mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
 				else	
 					mValue = new byte[0];
 				del (key, found, mValue);
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool GetValue (string key, NWTxtRecordGetValueDelegete handler)
 		{
 			if (handler == null)
@@ -186,21 +188,22 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern bool nw_txt_record_access_bytes (OS_nw_txt_record txt_record, ref BlockLiteral access_bytes);
 
-		unsafe delegate void nw_txt_record_access_bytes_t (IntPtr block, void *value, nuint valueLen);
+		unsafe delegate void nw_txt_record_access_bytes_t (IntPtr block, IntPtr value, nuint valueLen);
 		unsafe static nw_txt_record_access_bytes_t static_RawBytesHandler = TrampolineRawBytesHandler;
 
 		public delegate void NWTxtRecordGetRawByteDelegate (ReadOnlySpan<byte> value);
 
 		[MonoPInvokeCallback (typeof (nw_txt_record_access_bytes_t))]
-		unsafe static void TrampolineRawBytesHandler (IntPtr block, void *value, nuint valueLen)
+		unsafe static void TrampolineRawBytesHandler (IntPtr block, IntPtr value, nuint valueLen)
 		{
 			var del = BlockLiteral.GetTarget<NWTxtRecordGetRawByteDelegate> (block);
 			if (del != null) {
-				var mValue = new ReadOnlySpan<byte>(value, (int)valueLen);
+				var mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
 				del (mValue);
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool GetRawBytes (NWTxtRecordGetRawByteDelegate handler)
 		{
 			if (handler == null)

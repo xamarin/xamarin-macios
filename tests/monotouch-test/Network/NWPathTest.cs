@@ -177,7 +177,7 @@ namespace MonoTouchFixtures.Network {
 				Assert.IsNotNull (endPoint);
 				e.Set ();
 			});
-			e.WaitOne ();
+			e.WaitOne (10000);
 		}
 	}
 }

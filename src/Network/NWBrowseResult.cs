@@ -72,6 +72,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateInterfaces (Action<NWInterface> handler)
 		{
 			if (handler == null)

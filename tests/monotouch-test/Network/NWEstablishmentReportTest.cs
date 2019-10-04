@@ -82,8 +82,8 @@ namespace MonoTouchFixtures.Network {
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-			report?.Dispose ();
 			connection?.Cancel ();
+			report?.Dispose ();
 		}
 
 		[Test]

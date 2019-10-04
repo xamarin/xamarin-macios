@@ -89,6 +89,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetPongHandler (DispatchQueue queue, Action<NWError> handler)
 		{
 			if (queue == null)

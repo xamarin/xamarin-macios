@@ -125,6 +125,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public Action<NWBrowseResult, NWBrowseResult> ChangesHandler {
 			set {
 				unsafe {
@@ -160,6 +161,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public Action<NWBrowserState, NWError> StateChangesHandler {
 			set {
 				unsafe {

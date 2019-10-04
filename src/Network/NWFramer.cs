@@ -69,6 +69,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public Action<NWFramer> WakeupHandler {
 			set {
 				unsafe {
@@ -104,6 +105,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public Action<NWFramer> StopHandler {
 			set {
 				unsafe {
@@ -140,6 +142,7 @@ namespace Network {
 			}
 		}
 		
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public Action<NWFramer, NWProtocolMetadata, nuint, bool> OutputHandler {
 			set {
 				unsafe {
@@ -175,6 +178,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public Action<NWFramer> InputHandler {
 			set {
 				unsafe {
@@ -210,6 +214,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public Action<NWFramer> CleanupHandler {
 			set {
 				unsafe {
@@ -330,6 +335,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ScheduleAsync (Action handler)
 		{
 			unsafe {
@@ -366,6 +372,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool ParseOutput (nuint minimumIncompleteLength, nuint maximumLength, Memory<byte> tempBuffer, Action<Memory<byte>, bool> handler)
 		{
 			if (handler == null)
@@ -400,6 +407,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool ParseInput (nuint minimumIncompleteLength, nuint maximumLength, Memory<byte> tempBuffer, Action<Memory<byte>, bool> handler)
 		{
 			if (handler == null)

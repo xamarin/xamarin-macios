@@ -146,6 +146,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void Collect (DispatchQueue queue, Action<NWDataTransferReport> handler)
 		{
 			if (queue == null)
