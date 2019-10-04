@@ -28,7 +28,7 @@ namespace Network {
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWDataTransferReport : NativeObject {
 
-		public NWDataTransferReport (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWDataTransferReport (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_data_transfer_report nw_connection_create_new_data_transfer_report (OS_nw_connection connection);
@@ -141,8 +141,8 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWDataTransferReport>> (block);
 			if (del != null) {
-				var nwReport = new NWDataTransferReport (report, owns: false);
-				del (nwReport);
+				using (var nwReport = new NWDataTransferReport (report, owns: false))
+					del (nwReport);
 			}
 		}
 

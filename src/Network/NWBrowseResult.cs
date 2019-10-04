@@ -33,7 +33,7 @@ namespace Network {
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWBrowseResult : NativeObject {
 
-		public NWBrowseResult (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWBrowseResult (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_endpoint nw_browse_result_copy_endpoint (OS_nw_browse_result result);
@@ -53,7 +53,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWBrowseResultChange nw_browse_result_get_changes (OS_nw_browse_result old_result, OS_nw_browse_result new_result);
 
-		public NWBrowseResultChange GetChanges (NWBrowseResult oldResult, NWBrowseResult newResult)
+		public static NWBrowseResultChange GetChanges (NWBrowseResult oldResult, NWBrowseResult newResult)
 			=> nw_browse_result_get_changes (oldResult.GetHandle (), newResult.GetHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]

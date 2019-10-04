@@ -20,7 +20,7 @@ namespace Network {
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWBrowserDescriptor: NativeObject {
 
-		public NWBrowserDescriptor (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWBrowserDescriptor (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_browse_descriptor nw_browse_descriptor_create_bonjour_service (string type, string domain);

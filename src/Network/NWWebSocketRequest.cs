@@ -19,7 +19,7 @@ namespace Network {
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWWebSocketRequest : NativeObject {
-		public NWWebSocketRequest (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWWebSocketRequest (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern bool nw_ws_request_enumerate_additional_headers (OS_nw_ws_request request, ref BlockLiteral enumerator);

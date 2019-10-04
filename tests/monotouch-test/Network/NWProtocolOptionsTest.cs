@@ -58,11 +58,11 @@ namespace MonoTouchFixtures.Network {
 
 			foreach (var ipOption in new [] { NWIPLocalAddressPreference.Default, NWIPLocalAddressPreference.Stable, NWIPLocalAddressPreference.Temporary}) {
 				using (var options = NWProtocolOptions.CreateTls ())
-					Assert.DoesNotThrow (() => options.IPLocalAddressPreference = ipOption);
+					Assert.DoesNotThrow (() => options.IPLocalAddressPreference = ipOption, "Tls");
 				using (var options = NWProtocolOptions.CreateTcp ())
-					Assert.DoesNotThrow (() => options.IPLocalAddressPreference = ipOption);
+					Assert.DoesNotThrow (() => options.IPLocalAddressPreference = ipOption, "Tcp");
 				using (var options = NWProtocolOptions.CreateUdp ())
-					Assert.DoesNotThrow (() => options.IPLocalAddressPreference = ipOption);
+					Assert.DoesNotThrow (() => options.IPLocalAddressPreference = ipOption, "Udp");
 			}
 		}
 	}

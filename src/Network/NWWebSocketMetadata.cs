@@ -49,7 +49,7 @@ namespace Network {
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWWebSocketMetadata : NativeObject {
 
-		public NWWebSocketMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWWebSocketMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_ws_create_metadata (NWWebSocketOpCode opcode);

@@ -32,7 +32,7 @@ namespace Network {
 	
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWTxtRecord : NativeObject {
-		public NWTxtRecord (IntPtr handle, bool owns) : base (handle, owns) { }
+		internal NWTxtRecord (IntPtr handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern IntPtr nw_txt_record_create_with_bytes (byte *txtBytes, nuint len);
@@ -165,7 +165,7 @@ namespace Network {
 				if (found == NWTxtRecordFindKey.NonEmptyValue)
 					mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
 				else	
-					mValue = new byte[0];
+					mValue = Array.Empty<byte> ();
 				del (key, found, mValue);
 			}
 		}

@@ -35,7 +35,7 @@ namespace Network {
 		bool queueSet = false;
 		object startLock = new Object ();
 
-		public NWBrowser (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWBrowser (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_browser nw_browser_create (OS_nw_browse_descriptor descriptor, OS_nw_parameters parameters);
@@ -45,7 +45,7 @@ namespace Network {
 			if (descriptor == null)
 				throw new ArgumentNullException (nameof (descriptor));
 
-			InitializeHandle (nw_browser_create (descriptor.Handle, parameters?.Handle ?? IntPtr.Zero));
+			InitializeHandle (nw_browser_create (descriptor.Handle, parameters?.GetHandle () ?? IntPtr.Zero));
 		}
 
 		public NWBrowser (NWBrowserDescriptor descriptor) : this (descriptor, null) {}
@@ -53,14 +53,12 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_browser_set_queue (OS_nw_browser browser, dispatch_queue_t queue);
 
-		public DispatchQueue DispatchQueue {
-			set {
-				if (value == null)
-					throw new ArgumentNullException (nameof (value));
-				lock (startLock) {
-					nw_browser_set_queue (GetCheckedHandle (), value.Handle);
-					queueSet = true;
-				}
+		public void SetDispatchQueue (DispatchQueue queue){
+			if (queue == null)
+				throw new ArgumentNullException (nameof (queue));
+			lock (startLock) {
+				nw_browser_set_queue (GetCheckedHandle (), queue.Handle);
+				queueSet = true;
 			}
 		}
 
@@ -84,12 +82,15 @@ namespace Network {
 		public void Cancel ()
 		{
 			lock (startLock) {
-				nw_browser_cancel (GetCheckedHandle ());
-				started = false;
+				try {
+					nw_browser_cancel (GetCheckedHandle ());
+				} finally {
+					started = false;
+				}
 			}
 		}
 
-		public bool Started  {
+		public bool IsActive {
 			get {
 				lock (startLock) 
 					return started;
@@ -119,28 +120,26 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWBrowseResult, NWBrowseResult>> (block);
 			if (del != null) {
-				var nwOldResult = new NWBrowseResult (oldResult, owns: false);
-				var nwNewResult = new NWBrowseResult (newResult, owns: false);
-				del (nwOldResult, nwNewResult);
+				using (var nwOldResult = new NWBrowseResult (oldResult, owns: false))
+				using (var nwNewResult = new NWBrowseResult (newResult, owns: false))
+					del (nwOldResult, nwNewResult);
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public Action<NWBrowseResult, NWBrowseResult> ChangesHandler {
-			set {
-				unsafe {
-					if (value == null) {
-						nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), null);
-						return;
-					}
-					BlockLiteral block_handler = new BlockLiteral ();
-					BlockLiteral *block_ptr_handler = &block_handler;
-					block_handler.SetupBlockUnsafe (static_ChangesHandler, value);
-					try {
-						nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-					} finally {
-						block_handler.CleanupBlock ();
-					}
+		public void SetChangesHandler (Action<NWBrowseResult, NWBrowseResult> handler) {
+			unsafe {
+				if (handler == null) {
+					nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), null);
+					return;
+				}
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_ChangesHandler, handler);
+				try {
+					nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
 				}
 			}
 		}	
@@ -162,21 +161,20 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public Action<NWBrowserState, NWError> StateChangesHandler {
-			set {
-				unsafe {
-					if (value == null) {
-						nw_browser_set_state_changed_handler (GetCheckedHandle (), null);
-						return;
-					}
-					BlockLiteral block_handler = new BlockLiteral ();
-					BlockLiteral *block_ptr_handler = &block_handler;
-					block_handler.SetupBlockUnsafe (static_StateChangesHandler, value);
-					try {
-						nw_browser_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-					} finally {
-						block_handler.CleanupBlock ();
-					}
+		public void SetStateChangesHandler (Action<NWBrowserState, NWError> handler)
+		{
+			unsafe {
+				if (handler == null) {
+					nw_browser_set_state_changed_handler (GetCheckedHandle (), null);
+					return;
+				}
+				BlockLiteral block_handler = new BlockLiteral ();
+				BlockLiteral *block_ptr_handler = &block_handler;
+				block_handler.SetupBlockUnsafe (static_StateChangesHandler, handler);
+				try {
+					nw_browser_set_state_changed_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+				} finally {
+					block_handler.CleanupBlock ();
 				}
 			}
 		}	

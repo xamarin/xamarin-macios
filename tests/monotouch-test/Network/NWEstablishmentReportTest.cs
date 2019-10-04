@@ -83,7 +83,7 @@ namespace MonoTouchFixtures.Network {
 		public void Dispose()
 		{
 			connection?.Cancel ();
-			report?.Dispose ();
+			report.Dispose ();
 		}
 
 		[Test]

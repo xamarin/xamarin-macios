@@ -36,14 +36,14 @@ namespace MonoTouchFixtures.Network {
 		{
 			descriptor = NWBrowserDescriptor.CreateBonjourService (type, domain);
 			browser = new NWBrowser (descriptor);
-			browser.DispatchQueue = DispatchQueue.DefaultGlobalQueue;
+			browser.SetDispatchQueue (DispatchQueue.DefaultGlobalQueue);
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
-			descriptor?.Dispose ();
-			browser?.Dispose ();
+			descriptor.Dispose ();
+			browser.Dispose ();
 		}
 
 		[Test]
@@ -57,13 +57,14 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
-		public void TestDispatchQueuPropertyNull () => Assert.Throws<ArgumentNullException> (() => { browser.DispatchQueue = null; });
+		public void TestDispatchQueuPropertyNull () => Assert.Throws<ArgumentNullException> (() => { browser.SetDispatchQueue (null); });
 
 		[Test]
 		public void TestStart ()
 		{
+			Assert.IsFalse (browser.IsActive, "Idle");
 			browser.Start ();
-			Assert.IsTrue (browser.Started);
+			Assert.IsTrue (browser.IsActive, "Active");
 			browser.Cancel ();
 		}
 
@@ -77,11 +78,11 @@ namespace MonoTouchFixtures.Network {
 		public void TestStateChangesHandler ()
 		{
 			var e = new AutoResetEvent (false);
-			browser.StateChangesHandler = (st, er) => {
+			browser.SetStateChangesHandler ((st, er) => {
 				Assert.IsNotNull (st, "State");
 				Assert.IsNull (er, "Error");
 				e.Set ();
-			};
+			});
 			browser.Start ();
 			e.WaitOne ();
 			browser.Cancel ();

@@ -31,7 +31,7 @@ namespace Network {
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWEstablishmentReport : NativeObject {
 
-		public NWEstablishmentReport (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWEstablishmentReport (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_establishment_report_get_used_proxy (OS_nw_establishment_report report);
@@ -69,9 +69,9 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWReportResolutionSource, TimeSpan, int, NWEndpoint, NWEndpoint>> (block);
 			if (del != null) {
-				var nwSuccesfulEndpoint = new NWEndpoint (successful_endpoint, owns: false);
-				var nwPreferredEndpoint = new NWEndpoint (preferred_endpoint, owns: false);
-				del (source,TimeSpan.FromMilliseconds (milliseconds), endpoint_count, nwSuccesfulEndpoint, nwPreferredEndpoint);
+				using (var nwSuccesfulEndpoint = new NWEndpoint (successful_endpoint, owns: false))
+				using (var nwPreferredEndpoint = new NWEndpoint (preferred_endpoint, owns: false))
+					del (source,TimeSpan.FromMilliseconds (milliseconds), endpoint_count, nwSuccesfulEndpoint, nwPreferredEndpoint);
 			}
 		}
 
@@ -101,8 +101,8 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition, TimeSpan, TimeSpan>> (block);
 			if (del != null) {
-				var nwProtocolDefinition = new NWProtocolDefinition (protocol, owns: false);
-				del (nwProtocolDefinition, TimeSpan.FromMilliseconds (handshake_milliseconds), TimeSpan.FromMilliseconds (handshake_rtt_milliseconds)); 
+				using (var nwProtocolDefinition = new NWProtocolDefinition (protocol, owns: false))
+					del (nwProtocolDefinition, TimeSpan.FromMilliseconds (handshake_milliseconds), TimeSpan.FromMilliseconds (handshake_rtt_milliseconds)); 
 			}
 		}
 
@@ -127,7 +127,7 @@ namespace Network {
 		public NWEndpoint ProxyEndpoint {
 			get {
 				var ptr = nw_establishment_report_copy_proxy_endpoint (GetCheckedHandle ());
-				return (ptr == IntPtr.Zero)? null : new NWEndpoint (ptr, owns:true);
+				return (ptr == IntPtr.Zero) ? null : new NWEndpoint (ptr, owns:true);
 			}
 		}
 	}

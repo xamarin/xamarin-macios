@@ -517,6 +517,7 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWEstablishmentReport>> (block);
 			if (del != null) {
+				// the ownerthip of the object is for the caller
 				var nwReport = new NWEstablishmentReport (report, owns: true);
 				del (nwReport);
 			}

@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.Network {
 		[TearDown]
 		public void TearDown ()
 		{
-			options?.Dispose ();
+			options.Dispose ();
 		}
 
 		[Test]

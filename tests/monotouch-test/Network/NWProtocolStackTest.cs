@@ -56,7 +56,7 @@ namespace MonoTouchFixtures.Network {
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-			connection?.Cancel ();
+			connection.Cancel ();
 		}
 
 		[SetUp]

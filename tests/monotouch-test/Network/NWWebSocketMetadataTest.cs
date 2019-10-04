@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.Network {
 		[TearDown]
 		public void TearDown ()
 		{
-			metadata?.Dispose ();
+			metadata.Dispose ();
 		}
 
 		[Test]
@@ -49,12 +49,6 @@ namespace MonoTouchFixtures.Network {
 					newMetadata.Dispose ();
 				});
 			}
-		}
-
-		[Test]
-		public void TestCloseCodeProperty ()
-		{
-
 		}
 
 		[Test]

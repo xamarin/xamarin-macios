@@ -32,7 +32,7 @@ namespace Network {
 		bool skipHandShake = false;
 		nuint maximumMessageSize = (nuint) 0;
 
-		public NWWebSocketOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		internal NWWebSocketOptions (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_ws_create_options (NWWebSocketVersion version);
