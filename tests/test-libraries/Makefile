@@ -82,7 +82,7 @@ EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES) rename.h
 
 COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@ -Wall -framework Foundation -lz
 .libs/$(1)/libtest.%.dylib: libframework.m | .libs/$(1)
-	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch $$(if $$(filter x86,$$*),i386,$$*) $(8) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/$(4).platform/Developer/SDKs/$(4)$$($(6)_SDK_VERSION).sdk
+	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch $$(if $$(filter x86,$$*),i386,$$*) $(5) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/$(4).platform/Developer/SDKs/$(4)$$($(6)_SDK_VERSION).sdk
 	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
 
 .libs/$(1)/libtest.dylib: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).dylib)
@@ -116,7 +116,6 @@ endef
 # 4: platform name
 # 5: min version
 # 6: os
-# 7: architectures as as passed to clang
 $(eval $(call Template,iphonesimulator,IOSSIMULATOR,x86 x86_64,iPhoneSimulator,-mios-simulator-version-min=8.0,IOS))
 $(eval $(call Template,iphoneos,IPHONEOS,armv7 armv7s arm64,iPhoneOS,-miphoneos-version-min=8.0,IOS))
 ifdef INCLUDE_TVOS
