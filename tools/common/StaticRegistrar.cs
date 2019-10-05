@@ -500,7 +500,9 @@ namespace Registrar {
 				if (!delegateToBlockType)
 					return "id";
 
-				MethodDefinition invokeMethod = type.Methods.Single (method => method.Name == "Invoke");
+				MethodDefinition invokeMethod = type.Methods.SingleOrDefault (method => method.Name == "Invoke");
+				if (invokeMethod == null)
+					return "id";
 
 				StringBuilder builder = new StringBuilder ();
 				builder.Append (ToObjCType (invokeMethod.ReturnType));
