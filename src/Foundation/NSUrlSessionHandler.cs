@@ -129,6 +129,7 @@ namespace Foundation {
 #if !MONOMAC && !__WATCHOS__
 		readonly bool isBackgroundSession = false;
 		NSObject notificationToken;  // needed to make sure we do not hang if not using a background session
+		readonly object notificationTokenLock = new object (); // need to make sure that threads do no step on each other with a dispose and a remove  inflight data
 #endif
 
 		static NSUrlSessionConfiguration CreateConfig ()
@@ -181,16 +182,21 @@ namespace Foundation {
 
 		void AddNotification ()
 		{
-			if (!isBackgroundSession && notificationToken == null)
-				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+			lock (notificationTokenLock) {
+				if (!isBackgroundSession && notificationToken == null)
+					notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+			} // lock
 		}
 
 		void RemoveNotification ()
 		{
-			if (notificationToken != null) {
-				NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
+			NSObject localNotificationToken;
+			lock (notificationTokenLock) {
+				localNotificationToken = notificationToken;
 				notificationToken = null;
 			}
+			if (localNotificationToken != null)
+				NSNotificationCenter.DefaultCenter.RemoveObserver (localNotificationToken);
 		}
 
 		void BackgroundNotificationCb (NSNotification obj)
@@ -234,11 +240,11 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
+			lock (inflightRequestsLock) {
 #if !MONOMAC  && !__WATCHOS__
 			// remove the notification if present, method checks against null
 			RemoveNotification ();
 #endif
-			lock (inflightRequestsLock) {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
 					pair.Key?.Dispose ();
