@@ -235,6 +235,15 @@ namespace Introspection {
 			case "NWProtocolStack":       // Only ever surfaced, not created from usercode
 			case "NWProtocolMetadata":    // While technically it can be created and the header files claim the methods exists, the library is missing the methods (radar: 42443077)
 			case "NWBrowseResult": // API to be consumed, create a new instance requires a network connection, which is not ideal for this tests. Aslo, the class does not support the API.
+			case "NWBrowser": // same as above
+			case "NWDataTransferReport": // same as above
+			case "NWEstablishmentReport": // same as above
+			case "NWFramer": // same as above
+			case "NWTxtRecord": // same as above
+			case "NWWebSocketMetadata": // same as above
+			case "NWWebSocketOptions": // same as above
+			case "NWWebSocketRequest": // same as above
+			case "NWWebSocketResponse": // same as above
 			case "ABSource": // not skipped when running on iOS 6.1
 			// type was removed in iOS 10 (and replaced) and never consumed by other API
 			case "CGColorConverter":
