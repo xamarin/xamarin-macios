@@ -17,12 +17,6 @@ using OS_nw_protocol_definition=System.IntPtr;
 
 namespace Network {
 
-	public enum NWIPVersion {
-		Any = 0,
-		Version4 = 1,
-		Version6 = 2,
-	}
-
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
 	public class NWProtocolDefinition : NativeObject {

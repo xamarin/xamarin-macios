@@ -93,7 +93,7 @@ namespace Network {
 		public NWProtocolOptions InternetProtocol {
 			get {
 				var pHandle = nw_protocol_stack_copy_internet_protocol (GetCheckedHandle ());
-				return (pHandle == IntPtr.Zero) ? null : new NWProtocolOptions (pHandle, owns: true);
+				return (pHandle == IntPtr.Zero) ? null : new NWProtocolIPOptions (pHandle, owns: true);
 			}
 		}
 	}
