@@ -26698,7 +26698,7 @@ namespace AppKit {
 	public enum NSTextScalingType : long
 	{
 		Standard = 0,
-		iOS
+		iOS,
 	}
 
 	[Mac (10,15)]
@@ -26712,15 +26712,15 @@ namespace AppKit {
 
 		[Static]
 		[Export ("buttonTouchBarItemWithIdentifier:title:target:action:")]
-		NSButtonTouchBarItem GetButtonTouchBarItem (string identifier, string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButtonTouchBarItem Create (string identifier, string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Static]
 		[Export ("buttonTouchBarItemWithIdentifier:image:target:action:")]
-		NSButtonTouchBarItem GetButtonTouchBarItem (string identifier, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButtonTouchBarItem Create (string identifier, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Static]
 		[Export ("buttonTouchBarItemWithIdentifier:title:image:target:action:")]
-		NSButtonTouchBarItem GetButtonTouchBarItem (string identifier, string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButtonTouchBarItem Create (string identifier, string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Export ("title")]
 		string Title { get; set; }
