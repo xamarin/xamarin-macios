@@ -26692,4 +26692,47 @@ namespace AppKit {
 		[Export ("removeWindow:")]
 		void Remove (NSWindow window);
 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSButtonTouchBarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Static]
+		[Export ("buttonTouchBarItemWithIdentifier:title:target:action:")]
+		NSButtonTouchBarItem ButtonTouchBarItemWithIdentifier (string identifier, string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Static]
+		[Export ("buttonTouchBarItemWithIdentifier:image:target:action:")]
+		NSButtonTouchBarItem ButtonTouchBarItemWithIdentifier (string identifier, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Static]
+		[Export ("buttonTouchBarItemWithIdentifier:title:image:target:action:")]
+		NSButtonTouchBarItem ButtonTouchBarItemWithIdentifier (string identifier, string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Export ("title")]
+		string Title { get; set; }
+
+		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
+		NSImage Image { get; set; }
+
+		[NullAllowed, Export ("bezelColor", ArgumentSemantic.Copy)]
+		NSColor BezelColor { get; set; }
+
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
+		Selector Action { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
 }
