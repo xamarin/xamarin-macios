@@ -26694,6 +26694,14 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
+	[Native]
+	public enum NSTextScalingType : long
+	{
+		Standard = 0,
+		iOS
+	}
+
+	[Mac (10,15)]
 	[BaseType (typeof(NSTouchBarItem))]
 	[DisableDefaultCtor]
 	interface NSButtonTouchBarItem
@@ -26704,15 +26712,15 @@ namespace AppKit {
 
 		[Static]
 		[Export ("buttonTouchBarItemWithIdentifier:title:target:action:")]
-		NSButtonTouchBarItem ButtonTouchBarItemWithIdentifier (string identifier, string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButtonTouchBarItem GetButtonTouchBarItem (string identifier, string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Static]
 		[Export ("buttonTouchBarItemWithIdentifier:image:target:action:")]
-		NSButtonTouchBarItem ButtonTouchBarItemWithIdentifier (string identifier, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButtonTouchBarItem GetButtonTouchBarItem (string identifier, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Static]
 		[Export ("buttonTouchBarItemWithIdentifier:title:image:target:action:")]
-		NSButtonTouchBarItem ButtonTouchBarItemWithIdentifier (string identifier, string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButtonTouchBarItem GetButtonTouchBarItem (string identifier, string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Export ("title")]
 		string Title { get; set; }

@@ -21,7 +21,6 @@
 !missing-enum! NSPickerTouchBarItemSelectionMode not bound
 !missing-enum! NSRectAlignment not bound
 !missing-enum! NSTextInputTraitType not bound
-!missing-enum! NSTextScalingType not bound
 !missing-enum! NSToolbarItemGroupControlRepresentation not bound
 !missing-enum! NSToolbarItemGroupSelectionMode not bound
 !missing-field! NSDirectionalEdgeInsetsZero not bound
