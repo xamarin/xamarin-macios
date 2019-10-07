@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -22,11 +23,12 @@ namespace xharness
 
 			process = new Process ();
 			process.StartInfo.FileName = Harness.MlaunchPath;
-			var sb = new StringBuilder ();
-			sb.Append ("--logdev ");
-			sb.Append ("--sdkroot ").Append (StringUtils.Quote (Harness.XcodeRoot)).Append (' ');
+			var sb = new List<string> ();
+			sb.Add ("--logdev");
+			sb.Add ("--sdkroot");
+			sb.Add (Harness.XcodeRoot);
 			AppRunner.AddDeviceName (sb, DeviceName);
-			process.StartInfo.Arguments = sb.ToString ();
+			process.StartInfo.Arguments = StringUtils.FormatArguments (sb);
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;

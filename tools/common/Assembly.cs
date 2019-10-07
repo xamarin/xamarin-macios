@@ -366,7 +366,7 @@ namespace Xamarin.Bundler {
 				if (!Directory.Exists (path))
 					Directory.CreateDirectory (path);
 
-				if (Driver.RunCommand ("/usr/bin/unzip", string.Format ("-u -o -d {0} {1}", StringUtils.Quote (path), StringUtils.Quote (zipPath))) != 0)
+				if (Driver.RunCommand ("/usr/bin/unzip", "-u", "-o", "-d", path, zipPath) != 0)
 					throw ErrorHelper.CreateError (1303, "Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.", metadata.LibraryName, zipPath);
 			}
 

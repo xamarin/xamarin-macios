@@ -78,7 +78,7 @@ public class Cache {
 		}
 
 		var diff = new StringBuilder ();
-		if (Driver.RunCommand ("diff", $"-ur {StringUtils.Quote (a)} {StringUtils.Quote (b)}", output: diff, suppressPrintOnErrors: true) != 0) {
+		if (Driver.RunCommand ("diff", new string [] { "-ur", a, b, }, output: diff, suppressPrintOnErrors: true) != 0) {
 			Driver.Log (1, "Directories {0} and {1} are considered different because diff said so:\n{2}", a, b, diff);
 			return false;
 		}

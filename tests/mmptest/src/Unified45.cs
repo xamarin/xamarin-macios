@@ -18,14 +18,14 @@ namespace MonoTouchFixtures.Net45 {
 				File.Delete (testResults);
 
 			StringBuilder restoreOutput = new StringBuilder ();
-			int code = Driver.RunCommand ("mono", String.Format ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore {0}/packages.config -PackagesDirectory {1}", testFolder, Configuration.NuGetPackagesDirectory), output: restoreOutput);
+			int code = Driver.RunCommand ("mono", new string [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
 
 			if (code != 0)
 				Assert.Fail ("ProtobufShouldSerializeAndDeserialize failed to restore nuget packages");
 
 			TI.BuildProject (testFolder + "/Protobuf_Test.csproj");
 
-			TI.RunAndAssert (testFolder + "/bin/Debug/Protobuf_Test.app/Contents/MacOS/Protobuf_Test", (string)null, "Run");
+			TI.RunAndAssert (testFolder + "/bin/Debug/Protobuf_Test.app/Contents/MacOS/Protobuf_Test", Array.Empty<string> (), "Run");
 			Assert.True (File.Exists (testResults));
 
 			using (TextReader reader = File.OpenText (testResults)) {
@@ -44,14 +44,14 @@ namespace MonoTouchFixtures.Net45 {
 
 			StringBuilder restoreOutput = new StringBuilder ();
 
-			int code = Driver.RunCommand ("mono", String.Format ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore {0}/packages.config -PackagesDirectory {1}", testFolder, Configuration.NuGetPackagesDirectory), output: restoreOutput);
+			int code = Driver.RunCommand ("mono", new string [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
 
 			if (code != 0)
 				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");
 
 			TI.BuildProject (testFolder + "/ImmutableCollection_Test.csproj");
 
-			TI.RunAndAssert (testFolder + "/bin/Debug/ImmutableCollection_Test.app/Contents/MacOS/ImmutableCollection_Test", (string)null, "Run");
+			TI.RunAndAssert (testFolder + "/bin/Debug/ImmutableCollection_Test.app/Contents/MacOS/ImmutableCollection_Test", Array.Empty<string> (), "Run");
 		}
 
 		[Test]
@@ -64,14 +64,14 @@ namespace MonoTouchFixtures.Net45 {
 
 			StringBuilder restoreOutput = new StringBuilder ();
 
-			int code = Driver.RunCommand ("mono", String.Format ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore {0}/../MyLibrary/packages.config -PackagesDirectory {1}", testFolder, Configuration.NuGetPackagesDirectory), output: restoreOutput);
+			int code = Driver.RunCommand ("mono", new string [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/../MyLibrary/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
 
 			if (code != 0)
 				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");
 
 			TI.BuildProject (testFolder + "/BasicPCLTest.csproj");
 
-			TI.RunAndAssert (testFolder + "/bin/Debug/BasicPCLTest.app/Contents/MacOS/BasicPCLTest", (string)null, "Run");
+			TI.RunAndAssert (testFolder + "/bin/Debug/BasicPCLTest.app/Contents/MacOS/BasicPCLTest", Array.Empty<string> (), "Run");
 			Assert.True (File.Exists (testResults));
 
 			using (TextReader reader = File.OpenText (testResults)) {

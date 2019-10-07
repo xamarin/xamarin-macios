@@ -127,7 +127,7 @@ class T {
 ";
 				bundler.Profile = profile;
 				bundler.CreateTemporaryCacheDirectory ();
-				bundler.CreateTemporaryApp (profile, code: code, extraArg: "/debug:full");
+				bundler.CreateTemporaryApp (profile, code: code, extraArgs: new string [] { "/debug:full" });
 				bundler.Linker = LinkerOption.LinkAll;
 				bundler.Optimize = new string [] { "blockliteral-setupblock" };
 				bundler.AssertExecute ();
@@ -168,7 +168,7 @@ class T {
 ";
 				bundler.Profile = profile;
 				bundler.CreateTemporaryCacheDirectory ();
-				bundler.CreateTemporaryApp (profile, code: code, extraArg: "/debug:full");
+				bundler.CreateTemporaryApp (profile, code: code, extraArgs: new string [] { "/debug:full" });
 				bundler.Linker = LinkerOption.LinkSdk;
 				bundler.Registrar = RegistrarOption.Static;
 				bundler.Optimize = new string [] { "remove-dynamic-registrar" };
@@ -250,7 +250,7 @@ class D : NSObject {
 ";
 				bundler.Profile = profile;
 				bundler.CreateTemporaryCacheDirectory ();
-				bundler.CreateTemporaryApp (profile, code: code, extraArg: "/debug:full");
+				bundler.CreateTemporaryApp (profile, code: code, extraArgs: new string [] { "/debug:full" });
 				bundler.Optimize = new string [] { "blockliteral-setupblock" };
 				bundler.Registrar = RegistrarOption.Static;
 				bundler.AssertExecuteFailure ();
@@ -298,7 +298,7 @@ class Issue4072Session : NSUrlSession {
 			using (var bundler = new BundlerTool ()) {
 				bundler.Profile = profile;
 				bundler.CreateTemporaryCacheDirectory ();
-				bundler.CreateTemporaryApp (profile, code: code, extraArg: "/debug:full");
+				bundler.CreateTemporaryApp (profile, code: code, extraArgs: new string [] { "/debug:full" });
 				bundler.Registrar = RegistrarOption.Static;
 				bundler.Linker = LinkerOption.DontLink;
 				bundler.AssertExecute ();
@@ -314,7 +314,7 @@ class Issue4072Session : NSUrlSession {
 			using (var bundler = new BundlerTool ()) {
 				bundler.Profile = profile;
 				bundler.CreateTemporaryCacheDirectory ();
-				bundler.CreateTemporaryApp (profile, code: code, extraArg: "/debug-"); // Build without debug info so that the source code location isn't available.
+				bundler.CreateTemporaryApp (profile, code: code, extraArgs: new string [] { "/debug-" }); // Build without debug info so that the source code location isn't available.
 				bundler.Registrar = RegistrarOption.Static;
 #if !__MACOS__
 				bundler.Linker = LinkerOption.LinkAll; // This will remove the parameter name in Xamarin.iOS (the parameter name removal optimization (MetadataReducerSubStep) isn't implemented for Xamarin.Mac).

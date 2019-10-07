@@ -988,6 +988,8 @@ can build for both ARMv7k and ARM64_32 at the same time.
 
 This warning is shown when `--interpreter` isn't specified explicitly for ARM64_32 Debug builds. The AOT compiler can't be used because it doesn't support ARM64_32.
 
+<!-- 0147 used by mmp -->
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch

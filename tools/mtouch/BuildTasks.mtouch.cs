@@ -307,7 +307,7 @@ namespace Xamarin.Bundler
 			// and very hard to diagnose otherwise when hidden from the build output. Ref: bug #2430
 			var linker_errors = new List<Exception> ();
 			var output = new StringBuilder ();
-			var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToString (), null, output, suppressPrintOnErrors: true);
+			var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToArray (), null, output, suppressPrintOnErrors: true);
 
 			Application.ProcessNativeLinkerOutput (Target, output.ToString (), CompilerFlags.AllLibraries, linker_errors, code != 0);
 
@@ -325,15 +325,16 @@ namespace Xamarin.Bundler
 					}
 				}
 				// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
-				if (!String.IsNullOrEmpty (Target.App.UserGccFlags))
-					linker_errors.Add (new MonoTouchException (5201, true, "Native linking failed. Please review the build log and the user flags provided to gcc: {0}", Target.App.UserGccFlags));
-				linker_errors.Add (new MonoTouchException (5202, true, "Native linking failed. Please review the build log.", Target.App.UserGccFlags));
+				if (Target.App.UserGccFlags?.Count > 0)
+					linker_errors.Add (new MonoTouchException (5201, true, "Native linking failed. Please review the build log and the user flags provided to gcc: {0}", StringUtils.FormatArguments (Target.App.UserGccFlags)));
+				else
+					linker_errors.Add (new MonoTouchException (5202, true, "Native linking failed. Please review the build log."));
 
 				if (code == 255) {
 					// check command length
 					// getconf ARG_MAX
 					StringBuilder getconf_output = new StringBuilder ();
-					if (Driver.RunCommand ("getconf", "ARG_MAX", output: getconf_output, suppressPrintOnErrors: true) == 0) {
+					if (Driver.RunCommand ("getconf", new string [] { "ARG_MAX" }, output: getconf_output, suppressPrintOnErrors: true) == 0) {
 						int arg_max;
 						if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
 							var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;
@@ -438,7 +439,7 @@ namespace Xamarin.Bundler
 
 			foreach (var abi in abis) {
 				var arch = abi.AsArchString ();
-				flags.AddOtherFlag ($"-arch {arch}");
+				flags.AddOtherFlag ($"-arch", arch);
 
 				enable_thumb |= (abi & Abi.Thumb) != 0;
 			}
@@ -458,9 +459,9 @@ namespace Xamarin.Bundler
 					flags.AddOtherFlag ("-std=c++14");
 				}
 
-				flags.AddOtherFlag ($"-I{StringUtils.Quote (Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include"))}");
+				flags.AddOtherFlag ($"-I{Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include")}");
 			}
-			flags.AddOtherFlag ($"-isysroot {StringUtils.Quote (Driver.GetFrameworkDirectory (app))}");
+			flags.AddOtherFlag ($"-isysroot", Driver.GetFrameworkDirectory (app));
 			flags.AddOtherFlag ("-Qunused-arguments"); // don't complain about unused arguments (clang reports -std=c99 and -Isomething as unused).
 		}
 
@@ -509,11 +510,11 @@ namespace Xamarin.Bundler
 
 			flags.AddOtherFlag ("-shared");
 			if (!App.EnableBitCode && !Target.Is64Build)
-				flags.AddOtherFlag ("-read_only_relocs suppress");
+				flags.AddOtherFlag ("-read_only_relocs", "suppress");
 			if (App.EnableBitCode)
 				flags.AddOtherFlag ("-lc++");
 			flags.LinkWithMono ();
-			flags.AddOtherFlag ("-install_name " + StringUtils.Quote (install_name));
+			flags.AddOtherFlag ("-install_name", install_name);
 			flags.AddOtherFlag ("-fapplication-extension"); // fixes this: warning MT5203: Native linking warning: warning: linking against dylib not safe for use in application extensions: [..]/actionextension.dll.arm64.dylib
 		}
 
@@ -560,10 +561,10 @@ namespace Xamarin.Bundler
 			if (App.EnableDebug)
 				CompilerFlags.AddDefine ("DEBUG");
 
-			CompilerFlags.AddOtherFlag ($"-o {StringUtils.Quote (OutputFile)}");
+			CompilerFlags.AddOtherFlag ("-o", OutputFile);
 
 			if (!string.IsNullOrEmpty (Language))
-				CompilerFlags.AddOtherFlag ($"-x {Language}");
+				CompilerFlags.AddOtherFlag ("-x", Language);
 
 			Directory.CreateDirectory (Path.GetDirectoryName (OutputFile));
 
@@ -577,7 +578,7 @@ namespace Xamarin.Bundler
 				CheckFor5107 (assembly_name, line, exceptions);
 			});
 
-			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToString (), null, output_received, suppressPrintOnErrors: true);
+			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToArray (), null, output_received, suppressPrintOnErrors: true);
 
 			WriteLimitedOutput (rv != 0 ? $"Compilation failed with code {rv}, command:\n{App.CompilerPath} {CompilerFlags.ToString ()}" : null, output, exceptions);
 

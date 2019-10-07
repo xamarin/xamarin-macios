@@ -55,7 +55,7 @@ namespace Xamarin.Bundler {
 		}
 	}
 
-	public delegate int RunCommandDelegate (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false);
+	public delegate int RunCommandDelegate (string path, IList<string> args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false);
 
 	public enum AOTCompilerType {
 		Invalid,
@@ -206,14 +206,18 @@ namespace Xamarin.Bundler {
 
 			List<string> filesToAOT = GetFilesToAOT (files);
 			Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-				string command = String.Format ("--aot{0} {1}{2}", options.IsHybridAOT ? "=hybrid" : "", IsModern ? "--runtime=mobile " : "", StringUtils.Quote (file));
-				if (RunCommand (MonoPath, command, monoEnv) != 0)
+				var cmd = new List<string> ();
+				cmd.Add (options.IsHybridAOT ? "--aot=hybrid" : "--aot");
+				if (IsModern)
+					cmd.Add ("--runtime=mobile");
+				cmd.Add (file);
+				if (RunCommand (MonoPath, cmd, monoEnv) != 0)
 					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
 			});
 
 			if (IsRelease && options.IsHybridAOT) {
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-					if (RunCommand (StripCommand, StringUtils.Quote (file)) != 0)
+					if (RunCommand (StripCommand, new string [] { file }) != 0)
 						throw ErrorHelper.CreateError (3001, "Could not strip the assembly '{0}'", file);
 				});
 			}
@@ -222,7 +226,7 @@ namespace Xamarin.Bundler {
 				// mono --aot creates .dll.dylib.dSYM directories for each assembly AOTed
 				// There isn't an easy was to disable this behavior, so clean up under release
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-					if (RunCommand (DeleteDebugSymbolCommand, "-r " + StringUtils.Quote (file + ".dylib.dSYM/"), monoEnv) != 0)
+					if (RunCommand (DeleteDebugSymbolCommand, new string [] { "-r", file + ".dylib.dSYM/" }, monoEnv) != 0)
 						throw ErrorHelper.CreateError (3001, "Could not delete debug info from assembly '{0}'", file);
 				});
 			}

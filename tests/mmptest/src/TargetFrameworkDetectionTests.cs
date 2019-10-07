@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -16,14 +17,27 @@ namespace Xamarin.MMP.Tests
 		{
 			string path = Path.Combine (tmpDir, "b.exe");
 			File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public static class EntryPoint { public static void Main () {} }");
-			TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", string.Format ("-out:{0} {1}/b.cs", path, tmpDir), "CreateTestExe");
+			TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", new string [] { $"-out:{path}", $"{tmpDir}/b.cs" }, "CreateTestExe");
 			return path;
 		}
 
-		string GetTestMMPInvocation (string tmpDir, string libPath, TargetFramework targetFramework, bool correctReference = true)
+		IList<string> GetTestMMPInvocation (string tmpDir, string libPath, TargetFramework targetFramework, bool correctReference = true)
 		{
 			string xmReference = correctReference ? GetXMReference (targetFramework) : GetWrongXMReference (targetFramework);
-			return $"-v -v -v -v -v --output={tmpDir} --arch=x86_64 --sdkroot {Configuration.xcode_root} --minos 10.9 {libPath} --sdk {Configuration.macos_sdk_version} --nolink -p --profile:{targetFramework} -a:{xmReference}";
+			return new string [] {
+				"-v", "-v", "-v", "-v", "-v",
+				$"--output={tmpDir}",
+				"--arch=x86_64","" +
+				"--sdkroot",
+				Configuration.xcode_root,
+				"--minos", "10.9",
+				libPath,
+				"--sdk", Configuration.macos_sdk_version,
+				"--nolink",
+				"-p",
+				$"--profile:{targetFramework}",
+				$"-a:{xmReference}"
+			};
 		}
 
 		string GetWrongXMReference (TargetFramework target)
@@ -55,7 +69,7 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir => {
 				foreach (var targetProfile in XMTargetFrameworks) {
 					string libPath = CreateTestExe (tmpDir);
-					string args = GetTestMMPInvocation (tmpDir, libPath, targetProfile);
+					var args = GetTestMMPInvocation (tmpDir, libPath, targetProfile);
 					string mmpOutput = TI.RunAndAssert (MMPPath, args, "mmp invoke");
 
 					bool mobile = targetProfile.Profile == "Mobile";
@@ -72,7 +86,7 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir => {
 				foreach (var targetProfile in XMTargetFrameworks) {
 					string libPath = CreateTestExe (tmpDir);
-					string args = GetTestMMPInvocation (tmpDir, libPath, targetProfile, false);
+					var args = GetTestMMPInvocation (tmpDir, libPath, targetProfile, false);
 					string buildResults = TI.RunAndAssert (MMPPath, args, "mmp invoke with wrong XM", shouldFail:true);
 					Assert.IsTrue (buildResults.Contains ("1407"), "Did not contains 1407 error expected");
 				}

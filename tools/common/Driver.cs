@@ -222,19 +222,29 @@ namespace Xamarin.Bundler {
 #endif
 		}
 
-		public static int RunCommand (string path, string args)
+		public static int RunCommand (string path, params string [] args)
 		{
 			return RunCommand (path, args, null, (Action<string>) null);
 		}
 
-		public static int RunCommand (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, IList<string> args)
+		{
+			return RunCommand (path, args, null, (Action<string>) null);
+		}
+
+		public static int RunCommand (string path, IList<string> args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
 		{
 			if (output != null)
 				return RunCommand (path, args, env, (v) => { if (v != null) output.AppendLine (v); }, suppressPrintOnErrors);
 			return RunCommand (path, args, env, (Action<string>) null, suppressPrintOnErrors);
 		}
 
-		public static int RunCommand (string path, string args, string[] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, IList<string> args, string [] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
+		{
+			return RunCommand (path, StringUtils.FormatArguments (args), env, output_received, suppressPrintOnErrors);
+		}
+
+		static int RunCommand (string path, string args, string[] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
 		{
 			Exception stdin_exc = null;
 			var info = new ProcessStartInfo (path, args);
@@ -259,8 +269,13 @@ namespace Xamarin.Bundler {
 				if (env.Length % 2 != 0)
 					throw new Exception ("You passed an environment key without a value");
 
-				for (int i = 0; i < env.Length; i+= 2)
-					info.EnvironmentVariables [env[i]] = env[i+1];
+				for (int i = 0; i < env.Length; i += 2) {
+					if (env [i + 1] == null) {
+						info.EnvironmentVariables.Remove (env [i]);
+					} else {
+						info.EnvironmentVariables [env [i]] = env [i + 1];
+					}
+				}
 			}
 
 			if (verbose > 0)
@@ -320,14 +335,14 @@ namespace Xamarin.Bundler {
 			return 0;
 		}
 
-		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		public static Task<int> RunCommandAsync (string path, string[] args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
 		{
 			if (output != null)
 				return RunCommandAsync (path, args, env, (v) => { if (v != null) output.AppendLine (v); }, suppressPrintOnErrors);
 			return RunCommandAsync (path, args, env, (Action<string>) null, suppressPrintOnErrors);
 		}
 
-		public static Task<int> RunCommandAsync (string path, string args, string [] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
+		public static Task<int> RunCommandAsync (string path, string[] args, string [] env = null, Action<string> output_received = null, bool suppressPrintOnErrors = false)
 		{
 			return Task.Run (() => RunCommand (path, args, env, output_received, suppressPrintOnErrors));
 		}
@@ -542,7 +557,7 @@ namespace Xamarin.Bundler {
 		static string FindSystemXcode ()
 		{
 			var output = new StringBuilder ();
-			if (Driver.RunCommand ("xcode-select", "-p", output: output) != 0) {
+			if (Driver.RunCommand ("xcode-select", new string [] { "-p" }, output: output) != 0) {
 				ErrorHelper.Warning (59, "Could not find the currently selected Xcode on the system: {0}", output.ToString ());
 				return null;
 			}
@@ -623,5 +638,28 @@ namespace Xamarin.Bundler {
 
 			Driver.Log (1, "Using Xcode {0} ({2}) found in {1}", XcodeVersion, sdk_root, XcodeProductVersion);
 		}
+
+		public static int XcodeRun (string command, params string [] arguments)
+		{
+			return XcodeRun (command, (IList<string>) arguments, null);
+		}
+
+		public static int XcodeRun (string command, IList<string> arguments, StringBuilder output = null)
+		{
+			string [] env = DeveloperDirectory != String.Empty ? new string [] { "DEVELOPER_DIR", DeveloperDirectory } : null;
+			var args = new List<string> ();
+			args.Add ("-sdk");
+			args.Add ("macosx");
+			args.Add (command);
+			args.AddRange (arguments);
+			int ret = RunCommand ("xcrun", args, env, output);
+			if (ret != 0 && verbose > 1) {
+				StringBuilder debug = new StringBuilder ();
+				RunCommand ("xcrun", new string [] { "--find", command }, env, debug);
+				Console.WriteLine ("failed using `{0}` from: {1}", command, debug);
+			}
+			return ret;
+		}
+
 	}
 }

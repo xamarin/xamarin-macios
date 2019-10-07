@@ -101,7 +101,7 @@ namespace Xamarin.MMP.Tests
 				Assert.True (Directory.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/Frameworks/iTunesLibrary.framework")));
 
 				string binaryPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample");
-				string otoolText = TI.RunAndAssert ("/usr/bin/otool", new StringBuilder ("-l " + binaryPath), "Unified_WithNativeReferences_InMainProjectWorks - rpath");
+				string otoolText = TI.RunAndAssert ("/usr/bin/otool", new string [] { "-l", binaryPath }, "Unified_WithNativeReferences_InMainProjectWorks - rpath");
 				Assert.True (otoolText.Contains ("path @loader_path/../Frameworks"));
 			});
 		}

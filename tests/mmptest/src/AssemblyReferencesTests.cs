@@ -44,17 +44,15 @@ namespace Xamarin.MMP.Tests
 		public void AllowsUnresolvableReferences ()
 		{
 			MMPTests.RunMMPTest (tmpDir => {
-				var sb = new StringBuilder ();
+				string [] sb;
 
 				// build b.dll
-				sb.Clear ();
-				sb.AppendFormat ("-target:library -out:{0}/b.dll {0}/b.cs", tmpDir);
+				sb = new string [] { "-target:library", $"-out:{tmpDir}/b.dll", $"{tmpDir}/b.cs" };
 				File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public class B { }");
 				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", sb, "b");
 
 				// build a.dll
-				sb.Clear ();
-				sb.AppendFormat ("-target:library -out:{0}/a.dll {0}/a.cs -r:{0}/b.dll", tmpDir);
+				sb = new string [] { "-target:library", $"-out:{tmpDir}/a.dll", $"{tmpDir}/a.cs", $"-r:{tmpDir}/b.dll" };
 				File.WriteAllText (Path.Combine (tmpDir, "a.cs"), "public class A { public A () { System.Console.WriteLine (typeof (B)); }}");
 				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", sb, "a");
 

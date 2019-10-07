@@ -113,7 +113,7 @@ namespace Xamarin.Bundler {
 		public string CompilerPath;
 
 		public string AotArguments = "static,asmonly,direct-icalls,";
-		public string AotOtherArguments = string.Empty;
+		public List<string> AotOtherArguments = null;
 		public bool? LLVMAsmWriter;
 		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
 		public bool UseInterpreter;
@@ -194,7 +194,7 @@ namespace Xamarin.Bundler {
 
 		bool RequiresXcodeHeaders => LinkMode == LinkMode.None;
 
-		public string UserGccFlags;
+		public List<string> UserGccFlags;
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
 		bool cached_executable {
@@ -1082,8 +1082,8 @@ namespace Xamarin.Bundler {
 					continue;
 				}
 
-				if (AotOtherArguments != appex.AotOtherArguments) {
-					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the other arguments to the AOT compiler are different between the container app ({AotOtherArguments}) and the extension ({appex.AotOtherArguments}).");
+				if (!CompareLists (AotOtherArguments, appex.AotOtherArguments)) {
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the other arguments to the AOT compiler are different between the container app ({StringUtils.FormatArguments (AotOtherArguments)}) and the extension ({StringUtils.FormatArguments (appex.AotOtherArguments)}).");
 					continue;
 				}
 
@@ -1184,6 +1184,20 @@ namespace Xamarin.Bundler {
 			if (candidates.Count > 0)
 				SharedCodeApps.AddRange (candidates);
 			Driver.Watch ("Detect Code Sharing", 1);
+		}
+
+		static bool CompareLists (List<string> a, List<string> b)
+		{
+			if (a == b)
+				return true;
+			if (a == null ^ b == null)
+				return false;
+			if (a.Count != b.Count)
+				return false;
+			for (var i = 0; i < a.Count; i++)
+				if (a [i] != b [i])
+					return false;
+			return true;
 		}
 
 		void Initialize ()
@@ -1775,7 +1789,7 @@ namespace Xamarin.Bundler {
 							Driver.RunLipo (targetPath, files);
 						}
 						if (LibMonoLinkMode == AssemblyBuildTarget.Framework)
-							Driver.XcodeRun ("install_name_tool", "-change @rpath/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + StringUtils.Quote (targetPath));
+							Driver.XcodeRun ("install_name_tool", "-change", "@rpath/libmonosgen-2.0.dylib", "@rpath/Mono.framework/Mono", targetPath);
 
 						// Remove architectures we don't care about.
 						if (IsDeviceBuild)
@@ -1811,23 +1825,23 @@ namespace Xamarin.Bundler {
 
 		public void StripBitcode (string macho_file)
 		{
-			var sb = new StringBuilder ();
-			sb.Append (StringUtils.Quote (macho_file)).Append (" ");
+			var sb = new List<string> ();
+			sb.Add (macho_file);
 			switch (BitCodeMode) {
 			case BitCodeMode.ASMOnly:
 			case BitCodeMode.LLVMOnly:
 				// do nothing, since we don't know neither if bitcode is needed (if we're publishing) or if native code is needed (not publishing).
 				return;
 			case BitCodeMode.MarkerOnly:
-				sb.Append ("-m ");
+				sb.Add ("-m");
 				break;
 			case BitCodeMode.None:
-				sb.Append ("-r ");
+				sb.Add ("-r");
 				break;
 			}
-			sb.Append ("-o ");
-			sb.Append (StringUtils.Quote (macho_file));
-			Driver.XcodeRun ("bitcode_strip", sb.ToString ());
+			sb.Add ("-o");
+			sb.Add (macho_file);
+			Driver.XcodeRun ("bitcode_strip", sb);
 		}
 
 		// Returns true if is up-to-date
@@ -2197,15 +2211,16 @@ namespace Xamarin.Bundler {
 		{
 			if (NativeStrip && IsDeviceBuild && !EnableDebug && string.IsNullOrEmpty (SymbolList)) {
 				string symbol_file = Path.Combine (Cache.Location, "symbol-file");
-				var args = new StringBuilder ();
+				var args = new List<string> ();
 				if (WriteSymbolList (symbol_file)) {
-					args.Append ("-i ");
-					args.Append ("-s ").Append (StringUtils.Quote (symbol_file)).Append (" ");
+					args.Add ("-i");
+					args.Add ("-s");
+					args.Add (symbol_file);
 				}
 				if (Embeddinator)
-					args.Append ("-ux ");
-				args.Append (StringUtils.Quote (Executable));
-				Driver.RunStrip (args.ToString ());
+					args.Add ("-ux");
+				args.Add (Executable);
+				Driver.RunStrip (args);
 				Driver.Watch ("Native Strip", 1);
 			}
 

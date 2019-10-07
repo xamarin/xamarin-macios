@@ -78,7 +78,7 @@ namespace Xamarin.MMP.Tests
 
 				foreach (var file in GetOutputDirInfo (tmpDir).EnumerateFiles ()) {
 					if (IsFileManagedCode (file))
-						TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", file.ToString (), "Manually strip IL");
+						TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", new string [] { file.ToString () }, "Manually strip IL");
 
 				}
 
@@ -98,7 +98,7 @@ namespace Xamarin.MMP.Tests
 				};
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 
-				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", Path.Combine (GetOutputBundlePath (tmpDir), "UnifiedExample.exe"), "Manually strip IL");
+				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", new string [] { Path.Combine (GetOutputBundlePath (tmpDir), "UnifiedExample.exe") }, "Manually strip IL");
 
 				ValidateAOTStatus (tmpDir, IsFileManagedCode, buildResults);
 

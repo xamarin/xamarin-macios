@@ -30,7 +30,14 @@ namespace Xamarin.MMP.Tests {
 			TI.UnifiedTestConfig config = new TI.UnifiedTestConfig (tmpDir);
 
 			string netStandardProject = TI.GenerateNetStandardProject (config);
-			TI.RunAndAssert("/usr/local/share/dotnet/dotnet", $"restore {netStandardProject}", "Restore");
+
+			var environment = new string [] {
+				"MSBUILD_EXE_PATH", null,
+				"MSBuildExtensionsPathFallbackPathsOverride", null,
+				"MSBuildSDKsPath", null,
+			};
+
+			TI.RunAndAssert("/usr/local/share/dotnet/dotnet", new string [] { "restore", netStandardProject }, "Restore", environment: environment);
 			TI.BuildProject(netStandardProject);
 
 			config.ItemGroup = $@"

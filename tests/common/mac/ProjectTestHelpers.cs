@@ -96,18 +96,18 @@ namespace Xamarin.MMP.Tests
 			File.WriteAllText (f ("foo.c"), "int Answer () { return 42; }");
 			File.WriteAllText (f ("Info.plist"), PListText);
 
-			TI.RunAndAssert ($"clang -m32 -c -o {f ("foo_32.o")} {f ("foo.c")}");
-			TI.RunAndAssert ($"clang -m64 -c -o {f ("foo_64.o")} {f ("foo.c")}");
-			TI.RunAndAssert ($"clang -m32 -dynamiclib -o {f ("foo_32.dylib")} {f ("foo_32.o")}");
-			TI.RunAndAssert ($"clang -m64 -dynamiclib -o {f ("foo_64.dylib")} {f ("foo_64.o")}");
-			TI.RunAndAssert ($"lipo -create {f ("foo_32.dylib")} {f ("foo_64.dylib")} -output {f ("Foo")}");
-			TI.RunAndAssert ($"install_name_tool -id @rpath/Foo.framework/Foo {f ("Foo")}");
-			TI.RunAndAssert ($"mkdir -p {f ("Foo.framework/Versions/A/Resources")}");
-			TI.RunAndAssert ($"cp {f ("Foo")} {f ("Foo.framework/Versions/A/Foo")}");
-			TI.RunAndAssert ($"cp {f ("Info.plist")} {f ("Foo.framework/Versions/A/Resources/")}");
-			TI.RunAndAssert ($"ln -s Versions/A/Foo {f ("Foo.framework/Foo")}");
-			TI.RunAndAssert ($"ln -s Versions/A/Resources  {f ("Foo.framework/Resources")}");
-			TI.RunAndAssert ($"ln -s Versions/A  {f ("Foo.framework/Current")}");
+			TI.RunAndAssert ($"clang", "-m32", "-c", "-o", $"{f ("foo_32.o")}", $"{f ("foo.c")}");
+			TI.RunAndAssert ($"clang", "-m64", "-c", "-o", $"{f ("foo_64.o")}", $"{f ("foo.c")}");
+			TI.RunAndAssert ($"clang", "-m32", "-dynamiclib", "-o", $"{f ("foo_32.dylib")}", $"{f ("foo_32.o")}");
+			TI.RunAndAssert ($"clang", "-m64", "-dynamiclib", "-o", $"{f ("foo_64.dylib")}", $"{f ("foo_64.o")}");
+			TI.RunAndAssert ($"lipo", "-create", $"{f ("foo_32.dylib")}", $"{f ("foo_64.dylib")}", "-output", $"{f ("Foo")}");
+			TI.RunAndAssert ($"install_name_tool", "-id", "@rpath/Foo.framework/Foo", $"{f ("Foo")}");
+			TI.RunAndAssert ($"mkdir", "-p", $"{f ("Foo.framework/Versions/A/Resources")}");
+			TI.RunAndAssert ($"cp", $"{f ("Foo")}", $"{f ("Foo.framework/Versions/A/Foo")}");
+			TI.RunAndAssert ($"cp", $"{f ("Info.plist")}", $"{f ("Foo.framework/Versions/A/Resources/")}");
+			TI.RunAndAssert ($"ln", "-s", "Versions/A/Foo", $"{f ("Foo.framework/Foo")}");
+			TI.RunAndAssert ($"ln", "-s", "Versions/A/Resources", $"{f ("Foo.framework/Resources")}");
+			TI.RunAndAssert ($"ln", "-s", "Versions/A", $"{f ("Foo.framework/Current")}");
 			return f ("Foo.framework");
 		}
 
@@ -118,15 +118,15 @@ namespace Xamarin.MMP.Tests
 			File.WriteAllText (f ("Info.plist"), PListText);
 
 			string bitnessArg = sixtyFourBits ? "-m64" : "-m32";
-			TI.RunAndAssert ($"clang {bitnessArg} -c -o {f ("foo.o")} {f ("foo.c")}");
-			TI.RunAndAssert ($"clang {bitnessArg} -dynamiclib -o {f ("Foo")} {f ("foo.o")}");
-			TI.RunAndAssert ($"install_name_tool -id @rpath/Foo.framework/Foo {f ("Foo")}");
-			TI.RunAndAssert ($"mkdir -p {f ("Foo.framework/Versions/A/Resources")}");
-			TI.RunAndAssert ($"cp {f ("Foo")} {f ("Foo.framework/Versions/A/Foo")}");
-			TI.RunAndAssert ($"cp {f ("Info.plist")} {f ("Foo.framework/Versions/A/Resources/")}");
-			TI.RunAndAssert ($"ln -s Versions/A/Foo {f ("Foo.framework/Foo")}");
-			TI.RunAndAssert ($"ln -s Versions/A/Resources  {f ("Foo.framework/Resources")}");
-			TI.RunAndAssert ($"ln -s Versions/A  {f ("Foo.framework/Current")}");
+			TI.RunAndAssert ($"clang", bitnessArg, "-c", "-o", $"{f ("foo.o")}", $"{f ("foo.c")}");
+			TI.RunAndAssert ($"clang", bitnessArg, "-dynamiclib", "-o", $"{f ("Foo")}", $"{f ("foo.o")}");
+			TI.RunAndAssert ($"install_name_tool", "-id", "@rpath/Foo.framework/Foo", $"{f ("Foo")}");
+			TI.RunAndAssert ($"mkdir", "-p", $"{f ("Foo.framework/Versions/A/Resources")}");
+			TI.RunAndAssert ($"cp", $"{f ("Foo")}", $"{f ("Foo.framework/Versions/A/Foo")}");
+			TI.RunAndAssert ($"cp", $"{f ("Info.plist")}", $"{f ("Foo.framework/Versions/A/Resources/")}");
+			TI.RunAndAssert ($"ln", "-s", "Versions/A/Foo", $"{f ("Foo.framework/Foo")}");
+			TI.RunAndAssert ($"ln", "-s", "Versions/A/Resources", $"{f ("Foo.framework/Resources")}");
+			TI.RunAndAssert ($"ln", "-s", "Versions/A", $"{f ("Foo.framework/Current")}");
 			return f ("Foo.framework");
 		}
 	}
@@ -198,33 +198,29 @@ namespace Xamarin.MMP.Tests
 
 		public static Version FindMonoVersion ()
 		{
-			string output = RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono", new StringBuilder ("--version"), "FindMonoVersion");
+			string output = RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono", new string [] { "--version" }, "FindMonoVersion");
 
 			Regex versionRegex = new Regex("compiler version \\d+.\\d+.\\d+(.\\d+)?", RegexOptions.IgnoreCase);
 			return new Version (versionRegex.Match (output).Value.Split (' ')[2]);
 		}
 
-		public static string RunAndAssert (string exe)
+		public static string RunAndAssert (string exe, params string [] args)
 		{
-			var parts = exe.Split (new char [] { ' ' }, 2);
-			if (parts.Length == 1)
-				return RunAndAssert (exe, "", "Command: " + exe);
-			else
-				return RunAndAssert (parts[0], parts[1], "Command: " + exe);
+			return RunAndAssert (exe, args, "Command: " + exe);
 		}
 
-		public static string RunAndAssert (string exe, string args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null, string[] environment = null)
+		public static string RunAndAssert (string exe, IList<string> args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null, string[] environment = null)
 		{
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
-			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString () : string.Empty, environment, output, suppressPrintOnErrors: shouldFail);
+			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args, environment, output, suppressPrintOnErrors: shouldFail);
 			if (!shouldFail && compileResult != 0 && Xamarin.Bundler.Driver.Verbosity < 1) {
 				Console.WriteLine ($"Execution failed; exit code: {compileResult}");
 			}
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo () : "";
 			bool passed = shouldFail ? compileResult != 0 : compileResult == 0;
 			if (!passed) {
-				string outputLine = PrintRedirectIfLong ($"{exe}{args} Output: {output} {getInfo ()}");
+				string outputLine = PrintRedirectIfLong ($"{exe} {StringUtils.FormatArguments (args)} Output: {output} {getInfo ()}");
 				Assert.Fail ($@"{stepName} {(shouldFail ? "passed" : "failed")} unexpectedly: {outputLine}");
 			}
 			return output.ToString ();
@@ -239,15 +235,10 @@ namespace Xamarin.MMP.Tests
 			return outputLine;
 		}
 
-		public static string RunAndAssert (string exe, StringBuilder args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null, string[] environment = null)
-		{
-			return RunAndAssert (exe, args.ToString (), stepName, shouldFail, getAdditionalFailInfo, environment);
-		}
-
 		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
 		public static void CleanUnifiedProject (string csprojTarget)
 		{
-			RunAndAssert (Configuration.XIBuildPath, new StringBuilder ("-- " + csprojTarget + " /t:clean"), "Clean");
+			RunAndAssert (Configuration.XIBuildPath, new string [] { "--", csprojTarget, "/t:clean" }, "Clean");
 		}
 
 		public static string BuildClassicProject (string csprojTarget)
@@ -262,14 +253,14 @@ namespace Xamarin.MMP.Tests
 			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
 			// This is to force build to use our mmp and not system mmp
-			StringBuilder buildArgs = new StringBuilder ();
-			buildArgs.Append (" build ");
-			buildArgs.Append (StringUtils.Quote (csprojTarget));
+			var buildArgs = new List<string> ();
+			buildArgs.Add ("build");
+			buildArgs.Add (csprojTarget);
 
 			return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail: true);
 		}
 
-		public static string BuildProject (string csprojTarget, bool shouldFail = false, bool release = false, string[] environment = null, string extraArgs = "")
+		public static string BuildProject (string csprojTarget, bool shouldFail = false, bool release = false, string[] environment = null, IList<string> extraArgs = null)
 		{
 			string rootDirectory = FindRootDirectory ();
 
@@ -281,19 +272,19 @@ namespace Xamarin.MMP.Tests
 			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
 			// This is to force build to use our mmp and not system mmp
-			StringBuilder buildArgs = new StringBuilder ();
-			buildArgs.Append (" /verbosity:diagnostic ");
-			buildArgs.Append (" /property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current ");
+			var buildArgs = new List<string> ();
+			buildArgs.Add ("/verbosity:diagnostic");
+			buildArgs.Add ("/property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
 			if (release)
-				buildArgs.Append ("/property:Configuration=Release ");
+				buildArgs.Add ("/property:Configuration=Release");
 			else
-				buildArgs.Append ("/property:Configuration=Debug ");
+				buildArgs.Add ("/property:Configuration=Debug");
 
-			if (!string.IsNullOrEmpty (extraArgs))
-				buildArgs.Append (extraArgs);
+			if (extraArgs?.Count > 0)
+				buildArgs.AddRange (extraArgs);
 
-			buildArgs.Append (StringUtils.Quote (csprojTarget));
+			buildArgs.Add (csprojTarget);
 
 			Func <string> getBuildProjectErrorInfo = () => {
 				string csprojText = "\n\n\n\tCSProj: \n" + File.ReadAllText (csprojTarget);
@@ -302,7 +293,7 @@ namespace Xamarin.MMP.Tests
 				return csprojText + fileList;
 			};
 
-			buildArgs.Insert (0, " -- ");
+			buildArgs.Insert (0, "--");
 			return RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 		}
 
@@ -323,7 +314,7 @@ namespace Xamarin.MMP.Tests
 		{
 			// Assert that the program actually runs and returns our guid
 			Assert.IsTrue (File.Exists (path), string.Format ("{0} did not generate an exe?", path));
-			string output = RunAndAssert (path, (string)null, "Run");
+			string output = RunAndAssert (path, Array.Empty<string> (), "Run");
 
 			string guidPath = Path.Combine (tmpDir, guid.ToString ());
 			Assert.IsTrue(File.Exists (guidPath), "Generated program did not create expected guid file: " + output);
@@ -341,7 +332,7 @@ namespace Xamarin.MMP.Tests
 
 			if (config.AssetIcons) 
 			{
-				RunAndAssert ("/bin/cp", $"-R {Path.Combine (sourceDir, "Icons/Assets.xcassets")} {config.TmpDir}", "Copy Asset Icons");
+				RunAndAssert ("/bin/cp", new string [] { "-R", Path.Combine (sourceDir, "Icons/Assets.xcassets"), config.TmpDir }, "Copy Asset Icons");
 				config.ItemGroup += @"<ItemGroup>
     <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\Contents.json"" />
     <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\AppIcon-128.png"" />
@@ -524,7 +515,7 @@ namespace Xamarin.MMP.Tests
 
 		public static void CopyDirectory (string src, string target)
 		{
-			Xamarin.Bundler.Driver.RunCommand ("/bin/cp", $"-r {src} {target}");
+			Xamarin.Bundler.Driver.RunCommand ("/bin/cp", new string [] { "-r", src, target });
 		}
 
 		public static string CopyFileWithSubstitutions (string src, string target, Func<string, string > replacementAction)
@@ -597,7 +588,7 @@ namespace TestCase
 			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
-			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, $"-- /restore {StringUtils.Quote (project)}", out var output);
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new string [] { $"--", "/restore", project}, out var output);
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);
@@ -646,10 +637,10 @@ namespace Xamarin.Bundler {
 	{
 		public static int verbose { get { return 0; } }
 		public static int Verbosity {  get { return verbose; }}
-		public static int RunCommand (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, IList<string> args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
 		{
 			Exception stdin_exc = null;
-			var info = new ProcessStartInfo (path, args);
+			var info = new ProcessStartInfo (path, StringUtils.FormatArguments (args));
 			info.UseShellExecute = false;
 			info.RedirectStandardInput = false;
 			info.RedirectStandardOutput = true;
@@ -664,8 +655,13 @@ namespace Xamarin.Bundler {
 				if (env.Length % 2 != 0)
 					throw new Exception ("You passed an environment key without a value");
 
-				for (int i = 0; i < env.Length; i+= 2)
-					info.EnvironmentVariables [env[i]] = env[i+1];
+				for (int i = 0; i < env.Length; i += 2) {
+					if (env [i + 1] == null) {
+						info.EnvironmentVariables.Remove (env [i]);
+					} else {
+						info.EnvironmentVariables [env [i]] = env [i + 1];
+					}
+				}
 			}
 
 			if (verbose > 0)

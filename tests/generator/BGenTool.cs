@@ -169,7 +169,7 @@ namespace Xamarin.Tests
 				ParseMessages ();
 				return rv;
 			}
-			return Execute (string.Join (" ", StringUtils.Quote (arguments)), always_show_output: true);
+			return Execute (arguments, always_show_output: true);
 		}
 
 		public void AssertApiCallsMethod (string caller_namespace, string caller_type, string caller_method, string @called_method, string message)
