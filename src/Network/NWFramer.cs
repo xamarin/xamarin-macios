@@ -24,7 +24,7 @@ using OS_nw_parameters=System.IntPtr;
 namespace Network {
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public class NWFramer : NativeObject /* : NWProtocolMetadata */ {
+	public class NWFramer : NativeObject {
 		internal NWFramer (IntPtr handle, bool owns) : base (handle, owns) {}
 /*
 		[DllImport (Constants.NetworkLibrary)]

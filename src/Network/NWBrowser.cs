@@ -45,7 +45,7 @@ namespace Network {
 			if (descriptor == null)
 				throw new ArgumentNullException (nameof (descriptor));
 
-			InitializeHandle (nw_browser_create (descriptor.Handle, parameters?.GetHandle () ?? IntPtr.Zero));
+			InitializeHandle (nw_browser_create (descriptor.Handle, parameters.GetHandle ()));
 		}
 
 		public NWBrowser (NWBrowserDescriptor descriptor) : this (descriptor, null) {}
@@ -53,7 +53,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_browser_set_queue (OS_nw_browser browser, dispatch_queue_t queue);
 
-		public void SetDispatchQueue (DispatchQueue queue){
+		public void SetDispatchQueue (DispatchQueue queue)
+		{
 			if (queue == null)
 				throw new ArgumentNullException (nameof (queue));
 			lock (startLock) {
@@ -127,7 +128,8 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetChangesHandler (Action<NWBrowseResult, NWBrowseResult> handler) {
+		public void SetChangesHandler (Action<NWBrowseResult, NWBrowseResult> handler)
+		{
 			unsafe {
 				if (handler == null) {
 					nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), null);

@@ -66,6 +66,7 @@ namespace MonoTouchFixtures.Network {
 			browser.Start ();
 			Assert.IsTrue (browser.IsActive, "Active");
 			browser.Cancel ();
+			Assert.IsFalse (browser.IsActive, "Cancel");
 		}
 
 		[Test]
