@@ -4197,7 +4197,7 @@ namespace Foundation
 	[DisableDefaultCtor]
 	interface NSExpression : NSSecureCoding, NSCopying {
 		[Static, Export ("expressionForConstantValue:")]
-		NSExpression FromConstant ([NullAllowed]NSObject obj);
+		NSExpression FromConstant ([NullAllowed] NSObject obj);
 
 		[Static, Export ("expressionForEvaluatedObject")]
 		NSExpression ExpressionForEvaluatedObject { get; }

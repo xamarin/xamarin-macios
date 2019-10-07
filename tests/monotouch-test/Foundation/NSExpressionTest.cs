@@ -45,22 +45,21 @@ namespace MonoTouchFixtures.Foundation
 			}
 		}
 
-		[TestCase("Foo", Result = "Foo")]
-		[TestCase(null, Result = null)]
+		[TestCase ("Foo", Result = "Foo")]
+		[TestCase (null, Result = null)]
 		public object FromConstant (object input)
 		{
-            NSObject value = null;
+			NSObject value = null;
 
-            switch (input)
-            {
-                case String stringValue:
-                    value = new NSString(stringValue);
-                    break;
-            }
+			switch (input) {
+				case String stringValue:
+					value = new NSString (stringValue);
+					break;
+			}
 
-            using (var expression = NSExpression.FromConstant(value))
-            using (var result = expression.EvaluateWith(null, null) as NSObject)
-                return result?.ToString();
+			using (var expression = NSExpression.FromConstant (value))
+			using (var result = expression.EvaluateWith (null, null) as NSObject)
+				return result?.ToString ();
 		}
 
 		[Test]
