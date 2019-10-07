@@ -16093,6 +16093,7 @@ namespace Foundation
 	{
 		[Export ("initWithServiceName:")]
 		[NoiOS][NoWatch][NoTV]
+		[DesignatedInitializer]
 		IntPtr Constructor (string xpcServiceName);
 
 		[Export ("serviceName")]
