@@ -16093,7 +16093,6 @@ namespace Foundation
 	{
 		[Export ("initWithServiceName:")]
 		[NoiOS][NoWatch][NoTV]
-		[DesignatedInitializer]
 		IntPtr Constructor (string xpcServiceName);
 
 		[Export ("serviceName")]
@@ -16183,6 +16182,7 @@ namespace Foundation
 		NSXpcListener AnonymousListener { get; }
 
 		[Export ("initWithMachServiceName:")]
+		[DesignatedInitializer]
 		[NoiOS][NoTV][NoWatch]
 		IntPtr Constructor (string machServiceName);
 
