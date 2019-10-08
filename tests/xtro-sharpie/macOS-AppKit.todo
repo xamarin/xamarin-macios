@@ -1,8 +1,3 @@
-!deprecated-attribute-missing! NSButtonCell::keyEquivalentFont missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSButtonCell::setKeyEquivalentFont: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSButtonCell::setKeyEquivalentFont:size: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSClipView::copiesOnScroll missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSClipView::setCopiesOnScroll: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSSplitViewDelegate::splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSWorkspace::absolutePathForAppBundleWithIdentifier: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSWorkspace::fullPathForApplication: missing a [Deprecated] attribute
@@ -15,14 +10,6 @@
 !deprecated-attribute-missing! NSWorkspace::openFile:withApplication:andDeactivate: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSWorkspace::openURL:options:configuration:error: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSWorkspace::openURLs:withApplicationAtURL:options:configuration:error: missing a [Deprecated] attribute
-!missing-enum! NSCollectionLayoutSectionOrthogonalScrollingBehavior not bound
-!missing-enum! NSDirectionalRectEdge not bound
-!missing-enum! NSPickerTouchBarItemControlRepresentation not bound
-!missing-enum! NSPickerTouchBarItemSelectionMode not bound
-!missing-enum! NSRectAlignment not bound
-!missing-enum! NSTextInputTraitType not bound
-!missing-enum! NSToolbarItemGroupControlRepresentation not bound
-!missing-enum! NSToolbarItemGroupSelectionMode not bound
 !missing-field! NSDirectionalEdgeInsetsZero not bound
 !missing-field! NSFontDescriptorSystemDesignDefault not bound
 !missing-field! NSFontDescriptorSystemDesignMonospaced not bound

@@ -26754,4 +26754,87 @@ namespace AppKit {
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSCollectionLayoutSectionOrthogonalScrollingBehavior : long
+	{
+		None,
+		Continuous,
+		ContinuousGroupLeadingBoundary,
+		Paging,
+		GroupPaging,
+		GroupPagingCentered,
+	}
+
+	[Flags, Mac (10,15)]
+	[Native]
+	public enum NSDirectionalRectEdge : ulong
+	{
+		None = 0x0,
+		Top = 1uL << 0,
+		Leading = 1uL << 1,
+		Bottom = 1uL << 2,
+		Trailing = 1uL << 3,
+		All = Top | Leading | Bottom | Trailing,
+	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSPickerTouchBarItemControlRepresentation : long
+	{
+		Automatic = 0,
+		Expanded = 1,
+		Collapsed = 2,
+	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSPickerTouchBarItemSelectionMode : long
+	{
+		SelectOne = 0,
+		SelectAny = 1,
+		Momentary = 2,
+	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSRectAlignment : long
+	{
+		None = 0,
+		Top,
+		TopLeading,
+		Leading,
+		BottomLeading,
+		Bottom,
+		BottomTrailing,
+		Trailing,
+		TopTrailing,
+	}
+
+	[Native]
+	public enum NSTextInputTraitType : long
+	{
+		Default,
+		No,
+		Yes,
+	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSToolbarItemGroupControlRepresentation : long
+	{
+		Automatic,
+		Expanded,
+		Collapsed,
+	}
+
+	[Mac (10,15), iOS (13,0)]
+	[Native]
+	public enum NSToolbarItemGroupSelectionMode : long
+	{
+		SelectOne = 0,
+		SelectAny = 1,
+		Momentary = 2,
+	}	
 }
