@@ -14541,6 +14541,7 @@ namespace AppKit {
 		// 'new' since it's inlined from NSSplitViewDelegate as this instance needs [RequiresSuper]
 		[RequiresSuper]
 		[Export ("splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex:")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "NSSplitView no longer supports collapsing sections via double-click. This delegate method is never called, and NSSplitViewController's implementation always returns NO.")]
 		new bool ShouldCollapseForDoubleClick (NSSplitView splitView, NSView subview, nint doubleClickAtDividerIndex);
 	}
 
@@ -14608,6 +14609,7 @@ namespace AppKit {
 		bool CanCollapse (NSSplitView splitView, NSView subview);
 
 		[Export ("splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex:")] [DefaultValue (true)]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "NSSplitView no longer supports collapsing sections via double-click. This delegate method is never called.")]
 		bool ShouldCollapseForDoubleClick (NSSplitView splitView, NSView subview, nint doubleClickAtDividerIndex);
 
 		[Export ("splitView:constrainMinCoordinate:ofSubviewAt:")]
@@ -21286,12 +21288,15 @@ namespace AppKit {
 		NSNotificationCenter NotificationCenter { get; }
 		
 		[Export ("openFile:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use OpenURL instead.")]
 		bool OpenFile (string fullPath);
 		
 		[Export ("openFile:withApplication:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 100000, 0)]
 		bool OpenFile (string fullPath, [NullAllowed] string appName);
 		
 		[Export ("openFile:withApplication:andDeactivate:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 100000, 0)]
 		bool OpenFile (string fullPath, [NullAllowed] string appName, bool deactivate);
 		
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSWorkspace.OpenUrl' instead.")]
@@ -21302,15 +21307,20 @@ namespace AppKit {
 		bool OpenUrl (NSUrl url);
 		
 		[Export ("launchApplication:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 100000, 0)]
 		bool LaunchApplication (string appName);
 		
 		[Export ("launchApplicationAtURL:options:configuration:error:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 100000, 0)]
 		NSRunningApplication LaunchApplication (NSUrl url, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
 		
 		[Export ("launchApplication:showIcon:autolaunch:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 100000, 0)]
 		bool LaunchApplication (string appName, bool showIcon, bool autolaunch);
 		
 		[Export ("fullPathForApplication:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use UrlForApplication instead.")]
+		[return: NullAllowed]
 		string FullPathForApplication (string appName);
 		
 		[Export ("selectFile:inFileViewerRootedAtPath:"), ThreadSafe]
@@ -21389,9 +21399,12 @@ namespace AppKit {
 		NSUrl UrlForApplication (NSUrl url );
 		
 		[Export ("absolutePathForAppBundleWithIdentifier:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use UrlForApplication instead.")]
+		[return: NullAllowed]
 		string AbsolutePathForAppBundle (string bundleIdentifier);
 		
 		[Export ("launchAppWithBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifier:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 100000, 0)]
 		bool LaunchApp (string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor, IntPtr identifier);
 		
 		[Internal]
@@ -21560,10 +21573,14 @@ namespace AppKit {
 
 		[Mac (10,10)]
 		[Export ("openURL:options:configuration:error:")]
+		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[return: NullAllowed]
 		NSRunningApplication OpenURL (NSUrl url, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
 
 		[Mac (10,10)]
 		[Export ("openURLs:withApplicationAtURL:options:configuration:error:")]
+		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[return: NullAllowed]
 		NSRunningApplication OpenURLs (NSUrl [] urls, NSUrl applicationURL, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
 
 		[Mac (10, 10)]

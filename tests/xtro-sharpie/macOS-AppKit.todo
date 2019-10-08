@@ -1,15 +1,3 @@
-!deprecated-attribute-missing! NSSplitViewDelegate::splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::absolutePathForAppBundleWithIdentifier: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::fullPathForApplication: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::launchApplication: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::launchApplication:showIcon:autolaunch: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::launchApplicationAtURL:options:configuration:error: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::launchAppWithBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifier: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::openFile: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::openFile:withApplication: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::openFile:withApplication:andDeactivate: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::openURL:options:configuration:error: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::openURLs:withApplicationAtURL:options:configuration:error: missing a [Deprecated] attribute
 !missing-field! NSDirectionalEdgeInsetsZero not bound
 !missing-field! NSFontDescriptorSystemDesignDefault not bound
 !missing-field! NSFontDescriptorSystemDesignMonospaced not bound
