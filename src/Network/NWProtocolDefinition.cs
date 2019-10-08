@@ -61,5 +61,11 @@ namespace Network {
 
 		public static NWProtocolDefinition TlsDefinition => new NWProtocolDefinition (nw_protocol_copy_tls_definition (), owns: true);
 
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_protocol_definition nw_protocol_copy_ws_definition ();
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		public static NWProtocolDefinition WebSocketDefinition => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 	}
 }

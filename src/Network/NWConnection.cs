@@ -14,6 +14,7 @@ using CoreFoundation;
 using nw_connection_t=System.IntPtr;
 using nw_endpoint_t=System.IntPtr;
 using nw_parameters_t=System.IntPtr;
+using nw_establishment_report_t=System.IntPtr;
 
 namespace Network {
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -502,6 +503,42 @@ namespace Network {
 		public void Batch (Action method)
 		{
 			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetCheckedHandle (), arg));
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, ref BlockLiteral access_block);
+
+		delegate void nw_establishment_report_access_block_t (IntPtr block, nw_establishment_report_t report); 
+		static nw_establishment_report_access_block_t static_GetEstablishmentReportHandler = TrampolineGetEstablishmentReportHandler;
+
+		[MonoPInvokeCallback (typeof (nw_establishment_report_access_block_t))]
+		static void TrampolineGetEstablishmentReportHandler (IntPtr block, nw_establishment_report_t report)
+		{
+			var del = BlockLiteral.GetTarget<Action<NWEstablishmentReport>> (block);
+			if (del != null) {
+				// the ownerthip of the object is for the caller
+				var nwReport = new NWEstablishmentReport (report, owns: true);
+				del (nwReport);
+			}
+		}
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void GetEstablishmentReport (DispatchQueue queue, Action<NWEstablishmentReport> handler)
+		{
+			if (queue == null)
+				throw new ArgumentNullException (nameof (queue));
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_GetEstablishmentReportHandler, handler);
+			try {
+				nw_connection_access_establishment_report (GetCheckedHandle (), queue.Handle, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
 		}
 	}
 }
