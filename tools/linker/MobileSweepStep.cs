@@ -49,12 +49,12 @@ namespace Xamarin.Linker {
 			// or they can point to nothing which will break later (e.g. when re-loading for stripping IL)
 			// reference: https://bugzilla.xamarin.com/show_bug.cgi?id=36577
 			if (main.HasExportedTypes)
-				SweepCollectionNonAttributable (main.ExportedTypes);
+				SweepCollectionMetadata (main.ExportedTypes);
 			// only when linking should we remove module references, if we (re)save the assembly then
 			// the entrypoints (for p/invokes) will be required later
 			// reference: https://bugzilla.xamarin.com/show_bug.cgi?id=35372
 			if (main.HasModuleReferences && (CurrentAction == AssemblyAction.Link))
-				SweepCollectionNonAttributable (main.ModuleReferences);
+				SweepCollectionMetadata (main.ModuleReferences);
 		}
 	}
 }
