@@ -297,12 +297,12 @@ namespace Foundation
 			set { SetNumberValue (NSStringAttributeKey.NSTimeoutDocumentOption, (float?)value); }
 		}
 
-		public long SourceTextScaling {
-			get { return NSTextScalingType; }
+		public NSTextScalingType SourceTextScaling {
+			get { return (NSTextScalingType)GetLongValue (NSStringAttributeKey.NSSourceTextScalingDocumentOption); }
 		}
 
-		public long TargetTextScaling {
-			get { return NSTextScalingType; }
+		public NSTextScalingType TargetTextScaling {
+			get { return (NSTextScalingType)GetLongValue (NSStringAttributeKey.NSTargetTextScalingDocumentOption); }
 		}
 	}
 }
