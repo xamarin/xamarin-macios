@@ -214,6 +214,7 @@ namespace MonoTests.System.Net.Http
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				// assert the exception type
+				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
 				Assert.IsInstanceOfType (typeof (HttpRequestException), ex);
 				Assert.IsNotNull (ex.InnerException);
 				Assert.IsInstanceOfType (typeof (WebException), ex.InnerException);

@@ -897,7 +897,7 @@ namespace Xamarin.Bundler {
 						mono_dir = GetXamMacPrefix ();
 					} else {
 						var dir = new StringBuilder ();
-						RunCommand (pkg_config, "--variable=prefix mono-2", null, dir);
+						RunPkgConfig ("--variable=prefix mono-2", null, dir);
 						mono_dir = Path.GetFullPath (dir.ToString ().Replace (Environment.NewLine, String.Empty));
 					}
 				}
@@ -1143,13 +1143,14 @@ namespace Xamarin.Bundler {
 				if (!IsUnifiedFullSystemFramework)
 					env = new [] { "PKG_CONFIG_PATH", Path.Combine (GetXamMacPrefix (), "lib", "pkgconfig") };
 
-				RunCommand (pkg_config, "--cflags mono-2", env, cflagsb);
-				RunCommand (pkg_config, "--variable=libdir mono-2", env, libdirb);
+				RunPkgConfig ("--cflags mono-2", env, cflagsb);
+				RunPkgConfig ("--variable=libdir mono-2", env, libdirb);
+
 				var versionFile = "/Library/Frameworks/Mono.framework/Versions/Current/VERSION";
 				if (File.Exists (versionFile)) {
 					mono_version.Append (File.ReadAllText (versionFile));
 				} else {
-					RunCommand (pkg_config, "--modversion mono-2", env, mono_version);
+					RunPkgConfig ("--modversion mono-2", env, mono_version);
 				}
 			} catch (Win32Exception e) {
 				throw new MonoMacException (5301, true, e, "pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads");
@@ -1358,6 +1359,14 @@ namespace Xamarin.Bundler {
 			}
 			
 			return ret;
+		}
+
+		static void RunPkgConfig (string args, string [] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		{
+			var rv = RunCommand (pkg_config, args, env, output, suppressPrintOnErrors);
+			if (rv != 0)
+				throw ErrorHelper.CreateError (5312, $"pkg-config failed with an error code '{rv}'. Check build log for details.");
+
 		}
 
 		static int XcodeRun (string command, string args, StringBuilder output = null)
