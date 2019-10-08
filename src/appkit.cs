@@ -2109,10 +2109,12 @@ namespace AppKit {
 		[Export ("keyEquivalentModifierMask")]
 		NSEventModifierMask KeyEquivalentModifierMask { get; set; }
 	
-		[Export ("keyEquivalentFont", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("keyEquivalentFont", ArgumentSemantic.Strong)]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "The keyEquivalentFont property is no longer used. It always returns the NSButtonCell's font, and setting it has no effect.")]
 		NSFont KeyEquivalentFont { get; set; }
 	
 		[Export ("setKeyEquivalentFont:size:")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "The keyEquivalentFont property is no longer used. Setting it has no effect.")]
 		void SetKeyEquivalentFont (string  fontName, nfloat fontSize);
 	
 		[Export ("performClick:")]
