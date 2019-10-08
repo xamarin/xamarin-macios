@@ -2719,6 +2719,7 @@ namespace AppKit {
 		void ViewBoundsChanged (NSNotification  notification);
 	
 		[Export ("copiesOnScroll")]
+		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "NSClipView will always minimize the area of the document view that is invalidated. To force invalidation of the document view, use SetNeedsDisplayInRect.")]
 		bool CopiesOnScroll { get; set; }
 	
 		[Export ("autoscroll:")]
