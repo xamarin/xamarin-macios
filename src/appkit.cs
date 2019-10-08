@@ -3065,6 +3065,7 @@ namespace AppKit {
 		bool CanDragItems (NSCollectionView collectionView, NSIndexSet indexes, NSEvent evt);
 
 		[Export ("collectionView:writeItemsAtIndexes:toPasteboard:")]
+		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use GetPasteboardWriter instead")]
 		bool WriteItems (NSCollectionView collectionView, NSIndexSet indexes, NSPasteboard toPasteboard);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
@@ -3090,6 +3091,7 @@ namespace AppKit {
 
 		[Mac (10,11)]
 		[Export ("collectionView:writeItemsAtIndexPaths:toPasteboard:")]
+		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use GetPasteboardWriter instead")]
 		bool WriteItems (NSCollectionView collectionView, NSSet indexPaths, NSPasteboard pasteboard);
 
 		[Mac (10,11)]
@@ -9042,6 +9044,7 @@ namespace AppKit {
 		void SortDescriptorsChanged (NSOutlineView outlineView, NSSortDescriptor [] oldDescriptors);
 	
 		[Export ("outlineView:writeItems:toPasteboard:")]
+		[Deprecated (PlatformName.MacOSX, 100000, 0)]
 		bool OutlineViewwriteItemstoPasteboard (NSOutlineView outlineView, NSArray items, NSPasteboard pboard);
 	
 		[Export ("outlineView:validateDrop:proposedItem:proposedChildIndex:")]
@@ -17195,6 +17198,7 @@ namespace AppKit {
 		void SortDescriptorsChanged (NSTableView tableView, NSSortDescriptor [] oldDescriptors);
 	
 		[Export ("tableView:writeRowsWithIndexes:toPasteboard:")]
+		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use GetPasteboardWriterForRow instead")]
 		bool WriteRows (NSTableView tableView, NSIndexSet rowIndexes, NSPasteboard pboard );
 	
 		[Export ("tableView:validateDrop:proposedRow:proposedDropOperation:")]
