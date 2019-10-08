@@ -15065,6 +15065,14 @@ namespace AppKit {
 		[Mac (10,11)]
 		[Internal, Field ("NSDefaultAttributesDocumentAttribute")]
 		NSString NSDefaultAttributesDocumentAttribute { get; }
+
+		[Mac (10, 15)]
+		[Field ("NSTargetTextScalingDocumentOption")]
+		NSString NSTargetTextScalingDocumentOption { get; }
+
+		[Mac (10, 15)]
+		[Field ("NSSourceTextScalingDocumentOption")]
+		NSString NSSourceTextScalingDocumentOption { get; }
 	}
 
 	[Mac (10,10)]

@@ -296,6 +296,14 @@ namespace Foundation
 			get { return GetFloatValue (NSStringAttributeKey.NSTimeoutDocumentOption); }
 			set { SetNumberValue (NSStringAttributeKey.NSTimeoutDocumentOption, (float?)value); }
 		}
+
+		public long SourceTextScaling {
+			get { return NSTextScalingType; }
+		}
+
+		public long TargetTextScaling {
+			get { return NSTextScalingType; }
+		}
 	}
 }
 
