@@ -1,0 +1,6 @@
+!missing-enum! CGImageAnimationStatus not bound
+!missing-field! kCGImageAnimationDelayTime not bound
+!missing-field! kCGImageAnimationLoopCount not bound
+!missing-field! kCGImageAnimationStartIndex not bound
+!missing-pinvoke! CGAnimateImageAtURLWithBlock is not bound
+!missing-pinvoke! CGAnimateImageDataWithBlock is not bound
