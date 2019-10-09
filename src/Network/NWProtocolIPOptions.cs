@@ -4,7 +4,7 @@
 // Authors:
 //   Manuel de la Pena <mandel@microsoft.com>
 //
-// Copyrigh 2018 Microsoft Inc
+// Copyrigh 2019 Microsoft Inc
 //
 using System;
 using System.Runtime.InteropServices;
@@ -33,83 +33,44 @@ namespace Network {
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWProtocolIPOptions : NWProtocolOptions {
-		// default values, same are uset ins swift
-		NWIPVersion version = NWIPVersion.Any;
-		nuint hopLimit = (nuint) 0;
-		bool useMinimumMtu = false;
-		bool disableFragmentation = false;
-		bool shouldCalculateReceiveTime = false;
-		NWIPLocalAddressPreference localAddressPreference = NWIPLocalAddressPreference.Default;
-
-
 		internal NWProtocolIPOptions (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_options_set_version (IntPtr options, NWIPVersion version);
 
-		public NWIPVersion Version {
-			get => version;
-			set {
-				version = value;
-				nw_ip_options_set_version (GetCheckedHandle (), value);
-			}
-		}
+		public void SetVersion (NWIPVersion version)
+			=> nw_ip_options_set_version (GetCheckedHandle (), version);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_options_set_hop_limit (IntPtr options, nuint hop_limit);
 
-		public nuint HopLimit {
-			get => hopLimit;
-			set {
-				hopLimit = value;
-				nw_ip_options_set_hop_limit (GetCheckedHandle (), value);
-			}
-		} 
+		public void SetHopLimit (nuint hopLimit)
+			=> nw_ip_options_set_hop_limit (GetCheckedHandle (), hopLimit);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_options_set_use_minimum_mtu (IntPtr options, [MarshalAs (UnmanagedType.I1)] bool use_minimum_mtu);
 
-		public bool UseMinimumMtu {
-			get => useMinimumMtu;
-			set {
-				useMinimumMtu = value;
-				nw_ip_options_set_use_minimum_mtu (GetCheckedHandle (), value);
-			}
-		}
+		public void SetUseMinimumMtu (bool useMinimumMtu)
+			=> nw_ip_options_set_use_minimum_mtu (GetCheckedHandle (), useMinimumMtu);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_options_set_disable_fragmentation (IntPtr options, [MarshalAs (UnmanagedType.I1)] bool disable_fragmentation);
 
-		public bool DisableFragmentation {
-			get => disableFragmentation;
-			set {
-				disableFragmentation = value;
-				nw_ip_options_set_disable_fragmentation (GetCheckedHandle (), disableFragmentation);
-			}
-		} 
+		public void SetDisableFragmentation (bool disableFragmentation)
+			=> nw_ip_options_set_disable_fragmentation (GetCheckedHandle (), disableFragmentation);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_options_set_calculate_receive_time (IntPtr options, bool calculateReceiveTime);
 
-		public bool CalculateReceiveTime {
-			get => shouldCalculateReceiveTime;
-			set {
-				shouldCalculateReceiveTime = value;
-				nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), value);
-			}
-		} 
+		public void SetCalculateReceiveTime (bool shouldCalculateReceiveTime)
+			=> nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), shouldCalculateReceiveTime);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ip_options_set_local_address_preference (IntPtr options, NWIPLocalAddressPreference preference);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
-		public NWIPLocalAddressPreference IPLocalAddressPreference {
-			get => localAddressPreference;
-			set {
-				localAddressPreference = value;
-				nw_ip_options_set_local_address_preference (GetCheckedHandle (), value);
-			}
-		}
+		public void SetIPLocalAddressPreference (NWIPLocalAddressPreference localAddressPreference)
+			=> nw_ip_options_set_local_address_preference (GetCheckedHandle (), localAddressPreference);
 	}
 }

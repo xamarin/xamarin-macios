@@ -81,54 +81,30 @@ namespace MonoTouchFixtures.Network {
 			Assert.NotNull (options, "options"); 
 		}
 
+		// we cannot assert that the C code those the right thing, BUT we do know
+		// that if we call the property with the wrong pointer we will get an exception
+		// from the runtime because the C lib does check the pointer that is used for the call
 
 		[Test]
-		public void SetIPVersionTest ()
-		{
-			Assert.AreEqual (options.Version, NWIPVersion.Any, "defaulf");
-			options.Version = NWIPVersion.Version6;
-			Assert.AreEqual (options.Version, NWIPVersion.Version6, "new");
-		}
+		public void SetIPVersionTest () => Assert.DoesNotThrow (() => options.SetVersion (NWIPVersion.Version6));
 
 		[Test]
-		public void SetHopLimitTest ()
-		{
-			Assert.AreEqual (0, options.HopLimit, "default");
-			options.HopLimit = 1;
-			Assert.AreEqual (1, options.HopLimit, "new");
-		}
+		public void SetHopLimitTest () => Assert.DoesNotThrow (() => options.SetHopLimit (1));
+
 
 		[Test]
-		public void SetUseMinimumMtu ()
-		{
-			Assert.IsFalse (options.UseMinimumMtu, "default");
-			options.UseMinimumMtu = true;
-			Assert.IsTrue (options.UseMinimumMtu, "new");
-		}
+		public void SetUseMinimumMtu () => Assert.DoesNotThrow (() => options.SetUseMinimumMtu (true));
+
 
 		[Test]
-		public void SetDisableFragmentation ()
-		{
-			Assert.IsFalse (options.DisableFragmentation, "default");
-			options.DisableFragmentation = true;
-			Assert.IsTrue (options.DisableFragmentation, "new");
-		}
+		public void SetDisableFragmentation () => Assert.DoesNotThrow (() => options.SetDisableFragmentation (true));
+
 
 		[Test]
-		public void SetCaculateReceiveTimeTest ()
-		{
-			Assert.IsFalse (options.CalculateReceiveTime, "default");
-			options.CalculateReceiveTime = true;
-			Assert.IsTrue (options.CalculateReceiveTime, "new");
-		}
+		public void SetCaculateReceiveTimeTest () => Assert.DoesNotThrow (() => options.SetCalculateReceiveTime (true));
 
 		[Test]
-		public void SetIPLocalAddressPreference ()
-		{
-			Assert.AreEqual (NWIPLocalAddressPreference.Default, options.IPLocalAddressPreference, "default");
-			options.IPLocalAddressPreference = NWIPLocalAddressPreference.Temporary;
-			Assert.AreEqual (NWIPLocalAddressPreference.Temporary, options.IPLocalAddressPreference, "new");
-		}
+		public void SetIPLocalAddressPreference () => Assert.DoesNotThrow (() => options.SetIPLocalAddressPreference (NWIPLocalAddressPreference.Temporary));
 	}
 }
 #endif

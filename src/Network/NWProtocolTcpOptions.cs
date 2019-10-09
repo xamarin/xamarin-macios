@@ -4,7 +4,7 @@
 // Authors:
 //   Manuel de la Pena <mandel@microsoft.com>
 //
-// Copyrigh 2018 Microsoft Inc
+// Copyrigh 2019 Microsoft Inc
 //
 using System;
 using System.Runtime.InteropServices;
@@ -20,7 +20,7 @@ namespace Network {
 
 	[TV (12,0), Mac (10,14), iOS (12,0), Watch (6,0)]
 	public class NWProtocolTcpOptions : NWProtocolOptions {
-		// default values, same are uset ins swift
+		// default values, same are used in swift
 		bool noDelay = false;
 		bool noPush = false;
 		bool noOptions = false;

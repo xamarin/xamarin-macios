@@ -4,7 +4,7 @@
 // Authors:
 //   Manuel de la Pena <mandel@microsoft.com>
 //
-// Copyrigh 2018 Microsoft Inc
+// Copyrigh 2019 Microsoft Inc
 //
 using System;
 using System.Runtime.InteropServices;
