@@ -26744,15 +26744,15 @@ namespace AppKit {
 
 		[Static]
 		[Export ("buttonTouchBarItemWithIdentifier:title:target:action:")]
-		NSButtonTouchBarItem Create (string identifier, string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButtonTouchBarItem Create (NSTouchBarItemIdentifier identifier, string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Static]
 		[Export ("buttonTouchBarItemWithIdentifier:image:target:action:")]
-		NSButtonTouchBarItem Create (string identifier, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButtonTouchBarItem Create (NSTouchBarItemIdentifier identifier, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Static]
 		[Export ("buttonTouchBarItemWithIdentifier:title:image:target:action:")]
-		NSButtonTouchBarItem Create (string identifier, string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButtonTouchBarItem Create (NSTouchBarItemIdentifier identifier, string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Export ("title")]
 		string Title { get; set; }
