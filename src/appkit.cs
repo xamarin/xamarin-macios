@@ -2110,11 +2110,11 @@ namespace AppKit {
 		NSEventModifierMask KeyEquivalentModifierMask { get; set; }
 	
 		[NullAllowed, Export ("keyEquivalentFont", ArgumentSemantic.Strong)]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "KeyEquivalentFont property is deprecated. It returns the NSButtonCell's font.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "It always returns the NSButtonCell's font.")]
 		NSFont KeyEquivalentFont { get; set; }
 	
 		[Export ("setKeyEquivalentFont:size:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "KeyEquivalentFont property is deprecated.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		void SetKeyEquivalentFont (string  fontName, nfloat fontSize);
 	
 		[Export ("performClick:")]
@@ -2719,7 +2719,7 @@ namespace AppKit {
 		void ViewBoundsChanged (NSNotification  notification);
 	
 		[Export ("copiesOnScroll")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "NSClipView minimizes area of the document view that is invalidated. To force invalidation, use SetNeedsDisplayInRect.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "'NSClipView' minimizes area of the document view that is invalidated. Use the 'SetNeedsDisplayInRect' method to force invalidation.")]
 		bool CopiesOnScroll { get; set; }
 	
 		[Export ("autoscroll:")]
@@ -3065,7 +3065,7 @@ namespace AppKit {
 		bool CanDragItems (NSCollectionView collectionView, NSIndexSet indexes, NSEvent evt);
 
 		[Export ("collectionView:writeItemsAtIndexes:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use GetPasteboardWriter instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead")]
 		bool WriteItems (NSCollectionView collectionView, NSIndexSet indexes, NSPasteboard toPasteboard);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
@@ -3091,7 +3091,7 @@ namespace AppKit {
 
 		[Mac (10,11)]
 		[Export ("collectionView:writeItemsAtIndexPaths:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use GetPasteboardWriter instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead")]
 		bool WriteItems (NSCollectionView collectionView, NSSet indexPaths, NSPasteboard pasteboard);
 
 		[Mac (10,11)]
@@ -14544,7 +14544,7 @@ namespace AppKit {
 		// 'new' since it's inlined from NSSplitViewDelegate as this instance needs [RequiresSuper]
 		[RequiresSuper]
 		[Export ("splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "NSSplitView no longer supports collapsing sections via double-click. This delegate method is never called, and NSSplitViewController's implementation always returns NO.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "This delegate method is never called, and NSSplitViewController's implementation always returns NO.")]
 		new bool ShouldCollapseForDoubleClick (NSSplitView splitView, NSView subview, nint doubleClickAtDividerIndex);
 	}
 
@@ -14612,7 +14612,7 @@ namespace AppKit {
 		bool CanCollapse (NSSplitView splitView, NSView subview);
 
 		[Export ("splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex:")] [DefaultValue (true)]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "NSSplitView no longer supports collapsing sections via double-click. This delegate method is never called.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "This delegate method is never called.")]
 		bool ShouldCollapseForDoubleClick (NSSplitView splitView, NSView subview, nint doubleClickAtDividerIndex);
 
 		[Export ("splitView:constrainMinCoordinate:ofSubviewAt:")]
@@ -17198,7 +17198,7 @@ namespace AppKit {
 		void SortDescriptorsChanged (NSTableView tableView, NSSortDescriptor [] oldDescriptors);
 	
 		[Export ("tableView:writeRowsWithIndexes:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use GetPasteboardWriterForRow instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriterForRow' method instead")]
 		bool WriteRows (NSTableView tableView, NSIndexSet rowIndexes, NSPasteboard pboard );
 	
 		[Export ("tableView:validateDrop:proposedRow:proposedDropOperation:")]
@@ -21292,7 +21292,7 @@ namespace AppKit {
 		NSNotificationCenter NotificationCenter { get; }
 		
 		[Export ("openFile:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use OpenURL instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'OpenURL' method instead.")]
 		bool OpenFile (string fullPath);
 		
 		[Export ("openFile:withApplication:"), ThreadSafe]
@@ -21323,7 +21323,7 @@ namespace AppKit {
 		bool LaunchApplication (string appName, bool showIcon, bool autolaunch);
 		
 		[Export ("fullPathForApplication:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use UrlForApplication instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'UrlForApplication' method instead.")]
 		[return: NullAllowed]
 		string FullPathForApplication (string appName);
 		
@@ -21403,7 +21403,7 @@ namespace AppKit {
 		NSUrl UrlForApplication (NSUrl url );
 		
 		[Export ("absolutePathForAppBundleWithIdentifier:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use UrlForApplication instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'UrlForApplication' method instead.")]
 		[return: NullAllowed]
 		string AbsolutePathForAppBundle (string bundleIdentifier);
 		
