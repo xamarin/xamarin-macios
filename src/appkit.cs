@@ -26857,5 +26857,35 @@ namespace AppKit {
 		SelectOne = 0,
 		SelectAny = 1,
 		Momentary = 2,
-	}	
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutAnchor : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("layoutAnchorWithEdges:")]
+		NSCollectionLayoutAnchor LayoutAnchorWithEdges (NSDirectionalRectEdge edges);
+
+		[Static]
+		[Export ("layoutAnchorWithEdges:absoluteOffset:")]
+		NSCollectionLayoutAnchor LayoutAnchorWithEdgesAbsoluteOffset (NSDirectionalRectEdge edges, CGPoint absoluteOffset);
+
+		[Static]
+		[Export ("layoutAnchorWithEdges:fractionalOffset:")]
+		NSCollectionLayoutAnchor LayoutAnchorWithEdgesFractionalOffset (NSDirectionalRectEdge edges, CGPoint fractionalOffset);
+
+		[Export ("edges")]
+		NSDirectionalRectEdge Edges { get; }
+
+		[Export ("offset")]
+		CGPoint Offset { get; }
+
+		[Export ("isAbsoluteOffset")]
+		bool IsAbsoluteOffset { get; }
+
+		[Export ("isFractionalOffset")]
+		bool IsFractionalOffset { get; }
+	}
 }
