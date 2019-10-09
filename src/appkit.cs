@@ -2110,11 +2110,11 @@ namespace AppKit {
 		NSEventModifierMask KeyEquivalentModifierMask { get; set; }
 	
 		[NullAllowed, Export ("keyEquivalentFont", ArgumentSemantic.Strong)]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "The keyEquivalentFont property is no longer used. It always returns the NSButtonCell's font, and setting it has no effect.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "KeyEquivalentFont property is deprecated. It returns the NSButtonCell's font.")]
 		NSFont KeyEquivalentFont { get; set; }
 	
 		[Export ("setKeyEquivalentFont:size:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "The keyEquivalentFont property is no longer used. Setting it has no effect.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "KeyEquivalentFont property is deprecated.")]
 		void SetKeyEquivalentFont (string  fontName, nfloat fontSize);
 	
 		[Export ("performClick:")]
@@ -2719,7 +2719,7 @@ namespace AppKit {
 		void ViewBoundsChanged (NSNotification  notification);
 	
 		[Export ("copiesOnScroll")]
-		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "NSClipView will always minimize the area of the document view that is invalidated. To force invalidation of the document view, use SetNeedsDisplayInRect.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "NSClipView minimizes area of the document view that is invalidated. To force invalidation, use SetNeedsDisplayInRect.")]
 		bool CopiesOnScroll { get; set; }
 	
 		[Export ("autoscroll:")]
@@ -3065,7 +3065,7 @@ namespace AppKit {
 		bool CanDragItems (NSCollectionView collectionView, NSIndexSet indexes, NSEvent evt);
 
 		[Export ("collectionView:writeItemsAtIndexes:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use GetPasteboardWriter instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use GetPasteboardWriter instead")]
 		bool WriteItems (NSCollectionView collectionView, NSIndexSet indexes, NSPasteboard toPasteboard);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
@@ -3091,7 +3091,7 @@ namespace AppKit {
 
 		[Mac (10,11)]
 		[Export ("collectionView:writeItemsAtIndexPaths:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use GetPasteboardWriter instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use GetPasteboardWriter instead")]
 		bool WriteItems (NSCollectionView collectionView, NSSet indexPaths, NSPasteboard pasteboard);
 
 		[Mac (10,11)]
@@ -9044,7 +9044,7 @@ namespace AppKit {
 		void SortDescriptorsChanged (NSOutlineView outlineView, NSSortDescriptor [] oldDescriptors);
 	
 		[Export ("outlineView:writeItems:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool OutlineViewwriteItemstoPasteboard (NSOutlineView outlineView, NSArray items, NSPasteboard pboard);
 	
 		[Export ("outlineView:validateDrop:proposedItem:proposedChildIndex:")]
@@ -17198,7 +17198,7 @@ namespace AppKit {
 		void SortDescriptorsChanged (NSTableView tableView, NSSortDescriptor [] oldDescriptors);
 	
 		[Export ("tableView:writeRowsWithIndexes:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use GetPasteboardWriterForRow instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use GetPasteboardWriterForRow instead")]
 		bool WriteRows (NSTableView tableView, NSIndexSet rowIndexes, NSPasteboard pboard );
 	
 		[Export ("tableView:validateDrop:proposedRow:proposedDropOperation:")]
@@ -21292,15 +21292,15 @@ namespace AppKit {
 		NSNotificationCenter NotificationCenter { get; }
 		
 		[Export ("openFile:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use OpenURL instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use OpenURL instead.")]
 		bool OpenFile (string fullPath);
 		
 		[Export ("openFile:withApplication:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool OpenFile (string fullPath, [NullAllowed] string appName);
 		
 		[Export ("openFile:withApplication:andDeactivate:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool OpenFile (string fullPath, [NullAllowed] string appName, bool deactivate);
 		
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSWorkspace.OpenUrl' instead.")]
@@ -21311,19 +21311,19 @@ namespace AppKit {
 		bool OpenUrl (NSUrl url);
 		
 		[Export ("launchApplication:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool LaunchApplication (string appName);
 		
 		[Export ("launchApplicationAtURL:options:configuration:error:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		NSRunningApplication LaunchApplication (NSUrl url, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
 		
 		[Export ("launchApplication:showIcon:autolaunch:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool LaunchApplication (string appName, bool showIcon, bool autolaunch);
 		
 		[Export ("fullPathForApplication:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use UrlForApplication instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use UrlForApplication instead.")]
 		[return: NullAllowed]
 		string FullPathForApplication (string appName);
 		
@@ -21403,12 +21403,12 @@ namespace AppKit {
 		NSUrl UrlForApplication (NSUrl url );
 		
 		[Export ("absolutePathForAppBundleWithIdentifier:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 100000, 0, message: "Use UrlForApplication instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use UrlForApplication instead.")]
 		[return: NullAllowed]
 		string AbsolutePathForAppBundle (string bundleIdentifier);
 		
 		[Export ("launchAppWithBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifier:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool LaunchApp (string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor, IntPtr identifier);
 		
 		[Internal]
@@ -21577,13 +21577,13 @@ namespace AppKit {
 
 		[Mac (10,10)]
 		[Export ("openURL:options:configuration:error:")]
-		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[return: NullAllowed]
 		NSRunningApplication OpenURL (NSUrl url, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
 
 		[Mac (10,10)]
 		[Export ("openURLs:withApplicationAtURL:options:configuration:error:")]
-		[Deprecated (PlatformName.MacOSX, 100000, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		[return: NullAllowed]
 		NSRunningApplication OpenURLs (NSUrl [] urls, NSUrl applicationURL, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
 
