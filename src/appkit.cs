@@ -26893,4 +26893,41 @@ namespace AppKit {
 		[Export ("isFractionalOffset")]
 		bool IsFractionalOffset { get; }
 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutDimension : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("fractionalWidthDimension:")]
+		NSCollectionLayoutDimension CreateFractionalWidthDimension (nfloat fractionalWidth);
+
+		[Static]
+		[Export ("fractionalHeightDimension:")]
+		NSCollectionLayoutDimension CreateFractionalHeightDimension (nfloat fractionalHeight);
+
+		[Static]
+		[Export ("absoluteDimension:")]
+		NSCollectionLayoutDimension CreateAbsoluteDimension (nfloat absoluteDimension);
+
+		[Static]
+		[Export ("estimatedDimension:")]
+		NSCollectionLayoutDimension CreateEstimatedDimension (nfloat estimatedDimension);
+
+		[Export ("isFractionalWidth")]
+		bool IsFractionalWidth { get; }
+
+		[Export ("isFractionalHeight")]
+		bool IsFractionalHeight { get; }
+
+		[Export ("isAbsolute")]
+		bool IsAbsolute { get; }
+
+		[Export ("isEstimated")]
+		bool IsEstimated { get; }
+
+		[Export ("dimension")]
+		nfloat Dimension { get; }
+	}
 }
