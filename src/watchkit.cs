@@ -723,7 +723,7 @@ namespace WatchKit {
 
 		[Watch (6,1)]
 		[Export ("setUserTrackingMode:animated:")]
-		void SetShowsUserLocation (WKInterfaceMapUserTrackingMode mode, bool animated);
+		void SetUserTrackingMode (WKInterfaceMapUserTrackingMode mode, bool animated);
 	}
 
 	[iOS (8,2)]
@@ -1003,7 +1003,7 @@ namespace WatchKit {
 
 		[Watch (4,0)]
 		[Export ("enableWaterLock")]
-		[Deprecated (PlatformName.WatchOS, 6,1, message: "Use WKInterfaceDevice.enableWaterLock")]
+		[Deprecated (PlatformName.WatchOS, 6,1, message: "Use WKInterfaceDevice.EnableWaterLock ()")]
 		void EnableWaterLock ();
 
 		[Watch (6,0)]
@@ -1599,7 +1599,7 @@ namespace WatchKit {
 
 	[Watch (6,1), NoiOS]
 	[Native]
-	enum WKInterfaceAuthorizationAppleIDButtonStyle: long {
+	enum WKInterfaceAuthorizationAppleIdButtonStyle: long {
 		Default,
 		White,
 	}
@@ -1673,12 +1673,12 @@ namespace WatchKit {
 	[DisableDefaultCtor] // Handle is `nil`
 	interface WKInterfaceAuthorizationAppleIdButton {
 		[Export ("initWithTarget:action:")]
-		[Deprecated (PlatformName.WatchOS, 6,1, message: "Use initWithStyle:target:action:")]
+		[Deprecated (PlatformName.WatchOS, 6,1, message: "Use 'new WKInterfaceAuthorizationAppleIdButton (WKInterfaceVolumeControlOrigin,NSObject,Selector)' instead.")]
 		IntPtr Constructor ([NullAllowed] NSObject target, Selector action);
 
 		[Watch (6,1)]
 		[Export ("initWithStyle:target:action:")]
-		IntPtr Constructor (WKInterfaceVolumeControlOrigin style, [NullAllowed] NSObject target, Selector action);
+		IntPtr Constructor (WKInterfaceAuthorizationAppleIdButtonStyle style, [NullAllowed] NSObject target, Selector action);
 	}
 
 	[Watch (6,0), NoiOS]
