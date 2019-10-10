@@ -45,13 +45,21 @@ namespace MonoTouchFixtures.Foundation
 			}
 		}
 
-
-		[Test]
-		public void FromConstant ()
+		[TestCase ("Foo", Result = "Foo")]
+		[TestCase (null, Result = null)]
+		public object FromConstant (object input)
 		{
-			using (var expression = NSExpression.FromConstant (new NSString ("Foo")))
-			using (var result = expression.EvaluateWith (null, null) as NSString)
-				Assert.AreEqual ("Foo", result.ToString ());
+			NSObject value = null;
+
+			switch (input) {
+				case String stringValue:
+					value = new NSString (stringValue);
+					break;
+			}
+
+			using (var expression = NSExpression.FromConstant (value))
+			using (var result = expression.EvaluateWith (null, null) as NSObject)
+				return result?.ToString ();
 		}
 
 		[Test]

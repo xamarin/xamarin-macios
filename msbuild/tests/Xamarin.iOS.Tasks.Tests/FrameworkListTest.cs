@@ -35,6 +35,8 @@ namespace Xamarin.iOS.Tasks
 			foreach (var assembly in installedAssemblies) {
 				if (!frameworkListAssemblies.Any (a => a.Name == assembly.Name))
 					ReportAssemblies (assembly, $"One or more assemblies in the the SDK root folder are not listed in '{frameworkListFile}'. Update the list if an assembly was intentionally added.");
+				else if (!frameworkListAssemblies.Single (a => a.Name == assembly.Name).Equals (assembly))
+					ReportAssemblies (assembly, $"One or more assemblies in the the SDK root folder do not match the entry in '{frameworkListFile}'. Update the list if an assembly was intentionally modified.");
 			}
 		}
 
@@ -157,6 +159,14 @@ namespace Xamarin.iOS.Tasks
 			int j = fn.IndexOf (',', i);
 			if (j == -1) j = fn.Length;
 			PublicKeyToken = fn.Substring (i, j - i);
+		}
+
+		public bool Equals (AssemblyInfo other) {
+			// ignore Culture and InGac for equality since those are not mentioned in the FrameworkList.xml
+			return other.Name == this.Name &&
+				other.Version == this.Version &&
+				other.PublicKeyToken == this.PublicKeyToken &&
+				other.ProcessorArchitecture == this.ProcessorArchitecture;
 		}
 	}
 }
