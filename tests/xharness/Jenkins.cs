@@ -2830,7 +2830,7 @@ namespace xharness
 					args.Add ((useXIBuild && !isSolution ? "/" : "") + "restore"); // diff param depending on the tool
 					args.Add (projectPath);
 					if (useXIBuild && !isSolution)
-						args.Add ("/verbosity:detailed ");
+						args.Add ("/verbosity:detailed");
 					else {
 						args.Add ("-verbosity");
 						args.Add ("detailed");
