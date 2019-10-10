@@ -26930,4 +26930,71 @@ namespace AppKit {
 		[Export ("dimension")]
 		nfloat Dimension { get; }
 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSTouchBarItem))]
+	interface NSPickerTouchBarItem
+	{
+		[Static]
+		[Export ("pickerTouchBarItemWithIdentifier:labels:selectionMode:target:action:")]
+		NSPickerTouchBarItem Create (NSTouchBarItemIdentifier identifier, string[] labels, NSPickerTouchBarItemSelectionMode selectionMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Static]
+		[Export ("pickerTouchBarItemWithIdentifier:images:selectionMode:target:action:")]
+		NSPickerTouchBarItem Create (NSTouchBarItemIdentifier identifier, NSImage[] images, NSPickerTouchBarItemSelectionMode selectionMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Export ("controlRepresentation", ArgumentSemantic.Assign)]
+		NSPickerTouchBarItemControlRepresentation ControlRepresentation { get; set; }
+
+		[Export ("collapsedRepresentationLabel")]
+		string CollapsedRepresentationLabel { get; set; }
+
+		[NullAllowed, Export ("collapsedRepresentationImage", ArgumentSemantic.Strong)]
+		NSImage CollapsedRepresentationImage { get; set; }
+
+		[Export ("selectedIndex")]
+		nint SelectedIndex { get; set; }
+
+		[NullAllowed, Export ("selectionColor", ArgumentSemantic.Copy)]
+		NSColor SelectionColor { get; set; }
+
+		[Export ("selectionMode", ArgumentSemantic.Assign)]
+		NSPickerTouchBarItemSelectionMode SelectionMode { get; set; }
+
+		[Export ("numberOfOptions")]
+		nint NumberOfOptions { get; set; }
+
+		[Export ("setImage:atIndex:")]
+		void SetImage ([NullAllowed] NSImage image, nint index);
+
+		[Export ("imageAtIndex:")]
+		[return: NullAllowed]
+		NSImage ImageAtIndex (nint index);
+
+		[Export ("setLabel:atIndex:")]
+		void SetLabel (string label, nint index);
+
+		[Export ("labelAtIndex:")]
+		[return: NullAllowed]
+		string LabelAtIndex (nint index);
+
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
+		Selector Action { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Export ("setEnabled:atIndex:")]
+		void SetEnabled (bool enabled, nint index);
+
+		[Export ("isEnabledAtIndex:")]
+		bool IsEnabledAtIndex (nint index);
+
+		// @property (readwrite, copy) NSString * _Null_unspecified customizationLabel;
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
 }
