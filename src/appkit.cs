@@ -27013,4 +27013,27 @@ namespace AppKit {
 		[Export ("heightDimension")]
 		NSCollectionLayoutDimension Height { get; }
 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSpacing : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("flexibleSpacing:")]
+		NSCollectionLayoutSpacing CreateFlexibleSpacing (nfloat flexibleSpacing);
+
+		[Static]
+		[Export ("fixedSpacing:")]
+		NSCollectionLayoutSpacing CreateFixedSpacing (nfloat fixedSpacing);
+
+		[Export ("spacing")]
+		nfloat Spacing { get; }
+
+		[Export ("isFlexibleSpacing")]
+		bool IsFlexibleSpacing { get; }
+
+		[Export ("isFixedSpacing")]
+		bool IsFixedSpacing { get; }
+	}
 }
