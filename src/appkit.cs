@@ -27036,4 +27036,26 @@ namespace AppKit {
 		[Export ("isFixedSpacing")]
 		bool IsFixedSpacing { get; }
 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutEdgeSpacing : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("spacingForLeading:top:trailing:bottom:")]
+		NSCollectionLayoutEdgeSpacing CreateSpacing ([NullAllowed] NSCollectionLayoutSpacing leading, [NullAllowed] NSCollectionLayoutSpacing top, [NullAllowed] NSCollectionLayoutSpacing trailing, [NullAllowed] NSCollectionLayoutSpacing bottom);
+
+		[NullAllowed, Export ("leading")]
+		NSCollectionLayoutSpacing Leading { get; }
+
+		[NullAllowed, Export ("top")]
+		NSCollectionLayoutSpacing Top { get; }
+
+		[NullAllowed, Export ("trailing")]
+		NSCollectionLayoutSpacing Trailing { get; }
+
+		[NullAllowed, Export ("bottom")]
+		NSCollectionLayoutSpacing Bottom { get; }
+	}
 }
