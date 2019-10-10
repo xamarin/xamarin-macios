@@ -86,11 +86,8 @@ namespace UIKit {
 			return Top.GetHashCode () ^ Leading.GetHashCode () ^ Trailing.GetHashCode () ^ Bottom.GetHashCode ();
 		}
 
-#if MONOMAC
-		[DllImport (Constants.AppKitLibrary)]
-#else
+#if !MONOMAC
 		[DllImport (Constants.UIKitLibrary)]
-#endif
 		extern static NSDirectionalEdgeInsets NSDirectionalEdgeInsetsFromString (IntPtr /* NSString */ s);
 
 		static public NSDirectionalEdgeInsets FromString (string s)
@@ -101,11 +98,10 @@ namespace UIKit {
 			NSString.ReleaseNative (ptr);
 			return value;
 		}
-#if MONOMAC
-		[DllImport (Constants.AppKitLibrary)]
-#else
-		[DllImport (Constants.UIKitLibrary)]
 #endif
+
+#if !MONOMAC
+		[DllImport (Constants.UIKitLibrary)]
 		extern static IntPtr /* NSString */ NSStringFromDirectionalEdgeInsets (NSDirectionalEdgeInsets insets);
 
 		// note: ensure we can roundtrip ToString into FromString
@@ -114,6 +110,7 @@ namespace UIKit {
 			using (var ns = new NSString (NSStringFromDirectionalEdgeInsets (this)))
 				return ns.ToString ();
 		}
+#endif
 #endif
 	}
 }
