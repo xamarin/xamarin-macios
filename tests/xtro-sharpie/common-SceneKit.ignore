@@ -19,6 +19,11 @@
 !incorrect-protocol-member! SCNSceneRenderer::depthPixelFormat is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::device is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::stencilPixelFormat is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::currentViewport is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::isTemporalAntialiasingEnabled is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::setTemporalAntialiasingEnabled: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::setUsesReverseZ: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::usesReverseZ is REQUIRED and should be abstract
 
 ## same for SCNActionable, it is required member of a protocol added to XAMCORE_4_0
 !incorrect-protocol-member! SCNActionable::actionKeys is REQUIRED and should be abstract
@@ -80,6 +85,11 @@
 !missing-selector! SCNNode::simdWorldRight not bound
 !missing-selector! SCNNode::simdWorldTransform not bound
 !missing-selector! SCNNode::simdWorldUp not bound
+!missing-selector! SCNHitTestResult::simdLocalCoordinates not bound
+!missing-selector! SCNHitTestResult::simdLocalNormal not bound
+!missing-selector! SCNHitTestResult::simdModelTransform not bound
+!missing-selector! SCNHitTestResult::simdWorldCoordinates not bound
+!missing-selector! SCNHitTestResult::simdWorldNormal not bound
 
 ## untyped enum (SceneKitTypes.h) but described as the value of `code` for `NSError` which is an NSInteger
 !unknown-native-enum! SCNErrorCode bound
