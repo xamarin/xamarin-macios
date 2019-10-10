@@ -2198,7 +2198,11 @@ namespace AppKit {
 		GenericPreferencesIcon        = 0x70726566,   //'pref'
 		GenericQueryDocumentIcon      = 0x71657279,   //'qery'
 		GenericRamDiskIcon            = 0x72616D64,   //'ramd'
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GenericSharedLibraryIcon' instead.")]
 		GenericSharedLibaryIcon       = 0x73686C62,   //'shlb'
+#endif
+		GenericSharedLibraryIcon      = 0x73686C62,   //'shlb'
 		GenericStationeryIcon         = 0x73646F63,   //'sdoc'
 		GenericSuitcaseIcon           = 0x73756974,   //'suit'
 		GenericUrlIcon                = 0x6775726C,   //'gurl'
