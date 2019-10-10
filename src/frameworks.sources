@@ -916,11 +916,13 @@ IMAGECAPTURECORE_API_SOURCES = \
 IMAGEIO_API_SOURCES = \
 	ImageIO/Enums.cs \
 
+IMAGEIO_CORE_SOURCES = \
+	ImageIO/CGImageSource.cs \
+
 IMAGEIO_SOURCES = \
 	ImageIO/CGImageDestination.cs \
 	ImageIO/CGImageMetadata.cs \
 	ImageIO/CGImageMetadataTag.cs \
-	ImageIO/CGImageSource.cs \
 	ImageIO/CGImageSource.iOS.cs \
 	ImageIO/CGMutableImageMetadata.cs \
 

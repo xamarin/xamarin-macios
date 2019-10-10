@@ -173,10 +173,32 @@ namespace CoreImage {
 				SetValueForKey (new NSNumber (value), nskey);
 		}
 
+		internal void SetNInt (string key, nint value)
+		{
+			using (var nskey = new NSString (key))
+				SetValueForKey (new NSNumber (value), nskey);
+		}
+
 		internal void SetBool (string key, bool value)
 		{
 			using (var nskey = new NSString (key))
 				SetValueForKey (new NSNumber (value ? 1 : 0), nskey);
+		}
+
+		internal void SetValue (string key, CGPoint value)
+		{
+			using (var nskey = new NSString (key))
+			using (var nsv = new CIVector (value.X, value.Y)) {
+				SetValueForKey (nsv, nskey);
+			}
+		}
+
+		internal void SetValue (string key, CGRect value)
+		{
+			using (var nskey = new NSString (key))
+			using (var nsv = new CIVector (value.X, value.Y, value.Width, value.Height)) {
+				SetValueForKey (nsv, nskey);
+			}
 		}
 
 		internal float GetFloat (string key)
@@ -195,6 +217,16 @@ namespace CoreImage {
 				var v = ValueForKey (nskey);
 				if (v is NSNumber)
 					return (v as NSNumber).Int32Value;
+				return 0;
+			}
+		}
+
+		internal nint GetNInt (string key)
+		{
+			using (var nskey = new NSString (key)){
+				var v = ValueForKey (nskey);
+				if (v is NSNumber)
+					return (v as NSNumber).NIntValue;
 				return 0;
 			}
 		}
@@ -237,31 +269,16 @@ namespace CoreImage {
 			return ret;
 		}
 		
-		
-		internal CIVector GetVector (string key)
+		internal CGPoint GetPoint (string key)
 		{
-			return ValueForKey (key) as CIVector;
+			var v = ValueForKey (key) as CIVector;
+			return new CGPoint (v.X, v.Y);
 		}
 
-		internal CIColor GetColor (string key)
+		internal CGRect GetRect (string key)
 		{
-			return ValueForKey (key) as CIColor;
-		}
-		
-		internal CIImage GetInputImage ()
-		{
-			return ValueForKey (CIFilterInputKey.Image) as CIImage;
-		}
-
-		internal void SetInputImage (CIImage value)
-		{
-			SetValueForKey (value, CIFilterInputKey.Image);
-		}
-
-		internal CIImage GetImage (string key)
-		{
-			using (var nsstr = new NSString (key))
-				return ValueForKey (nsstr) as CIImage;
+			var v = ValueForKey (key) as CIVector;
+			return new CGRect (v.X, v.Y, v.Z, v.W);
 		}
 
 #if MONOMAC
@@ -673,29 +690,32 @@ namespace CoreImage {
 			}
 		}
 
+#if !XAMCORE_4_0
 		// not every CIFilter supports inputImage, i.e.
 		// NSUnknownKeyException [<CICheckerboardGenerator 0x1648cb20> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputImage.
 		// and those will crash (on devices) if the property is called - and that includes displaying it in the debugger
+		[Obsolete ("Use 'InputImage' instead. If not available then the filter does not support it.")]
 		public CIImage Image {
 			get {
-				return SupportsInputImage ? GetInputImage () : null;
+				return SupportsInputImage ? ValueForKey (CIFilterInputKey.Image) as CIImage : null;
 			}
 			set {
 				if (!SupportsInputImage)
 					throw new ArgumentException ("inputImage is not supported by this filter");
-				SetInputImage (value);
+				SetValueForKey (value, CIFilterInputKey.Image);
 			}
 		}
 
+		bool? supportsInputImage;
+
 		bool SupportsInputImage {
 			get {
-				foreach (var key in InputKeys) {
-					if (key == "inputImage")
-						return true;
-				}
-				return false;
+				if (!supportsInputImage.HasValue)
+					supportsInputImage = Array.IndexOf (InputKeys, "inputImage") >= 0;
+				return supportsInputImage.Value;
 			}
 		}
+#endif
 	}
 
 #if MONOMAC && !XAMCORE_3_0

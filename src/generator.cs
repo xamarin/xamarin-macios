@@ -1214,14 +1214,21 @@ public partial class Generator : IMemberGatherer {
 
 	bool IsProtocolInterface (Type type, bool checkPrefix = true)
 	{
+		return IsProtocolInterface (type, checkPrefix, out var _);
+	}
+
+	bool IsProtocolInterface (Type type, bool checkPrefix, out Type protocol)
+	{
+		protocol = null;
 		// for subclassing the type (from the binding files) is not yet prefixed by an `I`
 		if (checkPrefix && type.Name [0] != 'I')
 			return false;
 
+		protocol = type;
 		if (AttributeManager.HasAttribute<ProtocolAttribute> (type))
 			return true;
 
-		var protocol = type.Assembly.GetType (type.Namespace + "." + type.Name.Substring (1), false);
+		protocol = type.Assembly.GetType (type.Namespace + "." + type.Name.Substring (1), false);
 		if (protocol == null)
 			return false;
 
@@ -2200,6 +2207,7 @@ public partial class Generator : IMemberGatherer {
 		marshal_types.Add (TypeManager.Class);
 		marshal_types.Add (TypeManager.CFRunLoop);
 		marshal_types.Add (TypeManager.CGColorSpace);
+		marshal_types.Add (TypeManager.CGImageSource);
 		marshal_types.Add (TypeManager.DispatchData);
 		marshal_types.Add (TypeManager.DispatchQueue);
 		marshal_types.Add (TypeManager.Protocol);
@@ -2883,6 +2891,9 @@ public partial class Generator : IMemberGatherer {
 							getter = "Dictionary [{0}] as " + pi.PropertyType;
 							setter = "SetNativeValue ({0}, value)";
 						} else if (pi.PropertyType.Name == "CGColorSpace") {
+							getter = "GetNativeValue<" + pi.PropertyType +"> ({0})";
+							setter = "SetNativeValue ({0}, value)";
+						} else if (pi.PropertyType.Name == "CGImageSource") {
 							getter = "GetNativeValue<" + pi.PropertyType +"> ({0})";
 							setter = "SetNativeValue ({0}, value)";
 						} else {
