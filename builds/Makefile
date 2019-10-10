@@ -54,9 +54,22 @@ downloads/%: downloads/%.7z
 clean-local::
 	$(Q) rm -Rf downloads .stamp-download-mono
 
-X86_64_SLICE=$(abspath $(CURDIR)/x86-64-slice.dylib)
-$(X86_64_SLICE): Makefile
-	echo "void xamarin_x86_64_function_for_notarization_workaround () {}" | $(MAC_CC) -shared -x c -o$@ -
+x86-64-slice.c: Makefile
+	echo "void xamarin_x86_64_function_for_notarization_workaround () {}" > $@
+
+x86-64-slice.o: x86-64-slice.c
+	$(MAC_CC) -c -ggdb3 $< -o $@
+
+X86_64_SLICE_BASE=$(abspath $(CURDIR)/x86-64-slice)
+X86_64_SLICE_DYLIB=$(X86_64_SLICE_BASE).dylib
+X86_64_SLICE_A=$(X86_64_SLICE_BASE).a
+X86_64_SLICE:=$(X86_64_SLICE)$(suffix $@)
+
+$(X86_64_SLICE_DYLIB): x86-64-slice.o
+	$(MAC_CC) -shared -o$@ $<
+
+$(X86_64_SLICE_A): x86-64-slice.o
+	$(AR) -rv $@ $<
 
 ifeq ($(MONO_BUILD_FROM_SOURCE),)
 
