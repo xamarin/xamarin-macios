@@ -1192,7 +1192,7 @@ namespace Xamarin.Bundler {
 				args.Add ("-arch");
 				args.Add (arch);
 				if (arch == "x86_64")
-					args.Add ("-fobjc-runtime=macosx");
+					args.Add ($"-fobjc-runtime=macosx-{App.DeploymentTarget.ToString ()}");
 				if (!embed_mono)
 					args.Add ("-DDYNAMIC_MONO_RUNTIME");
 
