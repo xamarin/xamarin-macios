@@ -14544,7 +14544,7 @@ namespace AppKit {
 		// 'new' since it's inlined from NSSplitViewDelegate as this instance needs [RequiresSuper]
 		[RequiresSuper]
 		[Export ("splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "This delegate method is never called, and NSSplitViewController's implementation always returns NO.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "This delegate method is never called, and NSSplitViewController's implementation always returns false.")]
 		new bool ShouldCollapseForDoubleClick (NSSplitView splitView, NSView subview, nint doubleClickAtDividerIndex);
 	}
 
@@ -15075,11 +15075,11 @@ namespace AppKit {
 		NSString NSDefaultAttributesDocumentAttribute { get; }
 
 		[Mac (10, 15)]
-		[Field ("NSTargetTextScalingDocumentOption")]
+		[Internal, Field ("NSTargetTextScalingDocumentOption")]
 		NSString NSTargetTextScalingDocumentOption { get; }
 
 		[Mac (10, 15)]
-		[Field ("NSSourceTextScalingDocumentOption")]
+		[Internal, Field ("NSSourceTextScalingDocumentOption")]
 		NSString NSSourceTextScalingDocumentOption { get; }
 	}
 
@@ -21292,7 +21292,7 @@ namespace AppKit {
 		NSNotificationCenter NotificationCenter { get; }
 		
 		[Export ("openFile:"), ThreadSafe]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'OpenURL' method instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'OpenUrl' method instead.")]
 		bool OpenFile (string fullPath);
 		
 		[Export ("openFile:withApplication:"), ThreadSafe]
