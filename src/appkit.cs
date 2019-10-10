@@ -19800,6 +19800,11 @@ namespace AppKit {
 
 		[NullAllowed, Export ("escapeKeyReplacementItemIdentifier")]
 		string EscapeKeyReplacementItemIdentifier { get; set; }
+
+		[Mac (10, 15)]
+		[Static]
+		[Export ("automaticCustomizeTouchBarMenuItemEnabled")]
+		bool AutomaticCustomizeTouchBarMenuItemEnabled { [Bind ("isAutomaticCustomizeTouchBarMenuItemEnabled")] get; set; }
 	}
 
 	interface INSTouchBarDelegate { }
