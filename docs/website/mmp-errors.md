@@ -269,6 +269,8 @@ Change the architecture in the project's Mac Build options to 'x86_64' in order 
 
 #### MM0147: Unable to parse the cflags '{cflags} from pkg-config: {exception}
 
+#### MM0148: Unable to parse the linker flags '{linker_flags}' from the LinkWith attribute for the library {library} in {assembly} : {exception}
+
 ## MM1xxx: file copy / symlinks (project related)
 
 <a name="MM1034" />

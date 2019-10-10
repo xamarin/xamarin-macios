@@ -292,7 +292,9 @@ namespace Xamarin.Bundler {
 			if (!string.IsNullOrEmpty (metadata.LinkerFlags)) {
 				if (LinkerFlags == null)
 					LinkerFlags = new List<string> ();
-				LinkerFlags.Add (metadata.LinkerFlags);
+				if (!StringUtils.TryParseArguments (metadata.LinkerFlags, out string [] args, out var ex))
+					throw ErrorHelper.CreateError (148, ex, "Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}", metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
+				LinkerFlags.AddRange (args);
 			}
 
 			if (!string.IsNullOrEmpty (metadata.Frameworks)) {

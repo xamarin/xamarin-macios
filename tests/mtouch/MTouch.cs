@@ -1861,6 +1861,36 @@ public class B
 		}
 
 		[Test]
+		public void MT0148 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryAppDirectory ();
+
+
+				mtouch.CreateTemporaryApp (code: @"
+using System.Runtime.InteropServices;
+using Foundation;
+using ObjCRuntime;
+
+[assembly: LinkWith (""dummylib.a"", LinkerFlags = ""'"")]
+
+[Preserve (AllMembers = true)]
+public class TestApp {
+	static void Main ()
+	{
+		System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ());
+	}
+}
+");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (148, "Unable to parse the linker flags ''' from the LinkWith attribute for the library 'dummylib.a' in testApp.exe : No matching quote found.");
+				mtouch.AssertErrorCount (1);
+			}
+		}
+
+		[Test]
 		[TestCase ("all")]
 		[TestCase ("-all")]
 		[TestCase ("remove-uithread-checks,dead-code-elimination,inline-isdirectbinding,inline-intptr-size,inline-runtime-arch,register-protocols")]

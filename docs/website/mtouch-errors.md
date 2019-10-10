@@ -990,6 +990,8 @@ This warning is shown when `--interpreter` isn't specified explicitly for ARM64_
 
 <!-- 0147 used by mmp -->
 
+#### MM0148: Unable to parse the linker flags '{linker_flags}' from the LinkWith attribute for the library {library} in {assembly} : {exception}
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
