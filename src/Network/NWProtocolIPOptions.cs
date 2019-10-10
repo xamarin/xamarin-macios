@@ -25,6 +25,7 @@ namespace Network {
 		Stable = 2,
 	}
 
+	[Watch (6,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	public enum NWIPVersion {
 		Any = 0,
 		Version4 = 1,
