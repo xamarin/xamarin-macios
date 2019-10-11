@@ -392,12 +392,12 @@ namespace CoreImage {
 		[Field ("kCIContextCacheIntermediates", "+CoreImage")]
 		NSString CacheIntermediates { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("contextWithMTLCommandQueue:")]
 		CIContext Create (IMTLCommandQueue commandQueue);
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("contextWithMTLCommandQueue:options:")]
 		CIContext Create (IMTLCommandQueue commandQueue, [NullAllowed] NSDictionary<NSString, NSObject> options);
@@ -503,7 +503,7 @@ namespace CoreImage {
 		[return: NullAllowed]
 		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:orientation:options:")]
 		[return: NullAllowed]
 		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, [NullAllowed] CIImage hairSemanticSegmentation, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
@@ -1321,6 +1321,15 @@ namespace CoreImage {
 
 		[TV (12, 0), iOS (12, 0), Mac (10, 14)]
 		bool AuxiliaryPortraitEffectsMatte { get; }
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		bool AuxiliarySemanticSegmentationSkinMatte { get; }
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		bool AuxiliarySemanticSegmentationHairMatte { get; }
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		bool AuxiliarySemanticSegmentationTeethMatte { get; }
 	}
 
 	[Internal]
@@ -1352,15 +1361,15 @@ namespace CoreImage {
 		[Field ("kCIImageAuxiliaryPortraitEffectsMatte")]
 		NSString AuxiliaryPortraitEffectsMatteKey { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageAuxiliarySemanticSegmentationSkinMatte")]
 		NSString AuxiliarySemanticSegmentationSkinMatteKey { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageAuxiliarySemanticSegmentationHairMatte")]
 		NSString AuxiliarySemanticSegmentationHairMatteKey { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageAuxiliarySemanticSegmentationTeethMatte")]
 		NSString AuxiliarySemanticSegmentationTeethMatteKey { get; }
 	}
@@ -1381,13 +1390,13 @@ namespace CoreImage {
 		[Wrap ("FromCGImage (image, options == null ? null : options.Dictionary)")]
 		CIImage FromCGImage (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithCGImageSource:index:options:")]
 		CIImage FromCGImageSource (CGImageSource source, nuint index, [NullAllowed] NSDictionary options);
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Wrap ("FromCGImageSource (source, index, options == null ? null : options.Dictionary)")]
 		CIImage FromCGImageSource (CGImageSource source, nuint index, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
@@ -1529,12 +1538,12 @@ namespace CoreImage {
 		[Wrap ("this (image, options == null ? null : options.Dictionary)")]
 		IntPtr Constructor (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithCGImageSource:index:options:")]
 		IntPtr Constructor (CGImageSource source, nuint index, [NullAllowed] NSDictionary options);
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Wrap ("this (source, index, options == null ? null : options.Dictionary)")]
 		IntPtr Constructor (CGImageSource source, nuint index, CIImageInitializationOptionsWithMetadata options);
 
@@ -1656,7 +1665,7 @@ namespace CoreImage {
 		[Export ("imageByApplyingTransform:")]
 		CIImage ImageByApplyingTransform (CGAffineTransform matrix);
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Export ("imageByApplyingTransform:highQualityDownsample:")]
 		CIImage ImageByApplyingTransform (CGAffineTransform matrix, bool highQualityDownsample);
 
@@ -2036,52 +2045,52 @@ namespace CoreImage {
 
 		// colors
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("blackImage", ArgumentSemantic.Strong)]
 		CIImage BlackImage { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("whiteImage", ArgumentSemantic.Strong)]
 		CIImage WhiteImage { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("grayImage", ArgumentSemantic.Strong)]
 		CIImage GrayImage { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("redImage", ArgumentSemantic.Strong)]
 		CIImage RedImage { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("greenImage", ArgumentSemantic.Strong)]
 		CIImage GreenImage { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("blueImage", ArgumentSemantic.Strong)]
 		CIImage BlueImage { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("cyanImage", ArgumentSemantic.Strong)]
 		CIImage CyanImage { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("magentaImage", ArgumentSemantic.Strong)]
 		CIImage MagentaImage { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("yellowImage", ArgumentSemantic.Strong)]
 		CIImage YellowImage { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
 		[Export ("clearImage", ArgumentSemantic.Strong)]
 		CIImage ClearImage { get; }
@@ -4948,7 +4957,7 @@ namespace CoreImage {
 		[return: NullAllowed]
 		CIImage Apply (CIImage foreground, CIImage background);
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Export ("applyWithForeground:background:colorSpace:")]
 		[return: NullAllowed]
 		CIImage Apply (CIImage foreground, CIImage background, CGColorSpace colorSpace);
@@ -5253,19 +5262,19 @@ namespace CoreImage {
 		[Field ("kCIImageRepresentationPortraitEffectsMatteImage")]
 		NSString PortraitEffectsMatteImageKey { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageRepresentationAVSemanticSegmentationMattes")]
 		NSString AVSemanticSegmentationMattesKey { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageRepresentationSemanticSegmentationSkinMatteImage")]
 		NSString SemanticSegmentationSkinMatteImageKey { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageRepresentationSemanticSegmentationHairMatteImage")]
 		NSString SemanticSegmentationHairMatteImageKey { get; }
 
-		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageRepresentationSemanticSegmentationTeethMatteImage")]
 		NSString SemanticSegmentationTeethMatteImageKey { get; }
 	}
