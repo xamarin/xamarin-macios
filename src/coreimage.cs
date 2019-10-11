@@ -1320,16 +1320,16 @@ namespace CoreImage {
 		bool AuxiliaryDisparity { get; set; }
 
 		[TV (12, 0), iOS (12, 0), Mac (10, 14)]
-		bool AuxiliaryPortraitEffectsMatte { get; }
+		bool AuxiliaryPortraitEffectsMatte { get; set; }
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
-		bool AuxiliarySemanticSegmentationSkinMatte { get; }
+		bool AuxiliarySemanticSegmentationSkinMatte { get; set; }
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
-		bool AuxiliarySemanticSegmentationHairMatte { get; }
+		bool AuxiliarySemanticSegmentationHairMatte { get; set; }
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
-		bool AuxiliarySemanticSegmentationTeethMatte { get; }
+		bool AuxiliarySemanticSegmentationTeethMatte { get; set; }
 	}
 
 	[Internal]
@@ -5264,7 +5264,7 @@ namespace CoreImage {
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageRepresentationAVSemanticSegmentationMattes")]
-		NSString AVSemanticSegmentationMattesKey { get; }
+		NSString SemanticSegmentationMattesKey { get; }
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageRepresentationSemanticSegmentationSkinMatteImage")]
@@ -5287,17 +5287,29 @@ namespace CoreImage {
 
 		float LossyCompressionQuality { get; set; }
 
-#if false // keys lack documentation (or sample) to expose properly - https://bugzilla.xamarin.com/show_bug.cgi?id=59296
-		bool AVDepthData { get; set; }
+		AVDepthData AVDepthData { get; set; }
 
-		bool DepthImage { get; set; }
+		CIImage DepthImage { get; set; }
 
-		bool DisparityImage { get; set; }
+		CIImage DisparityImage { get; set; }
 
-		bool PortraitEffectsMatteImage { get; set; } 
-#endif
+		[TV (12, 0), iOS (12, 0), Mac (10, 14)]
+		CIImage PortraitEffectsMatteImage { get; set; }
+
 		[TV (12, 0), iOS (12, 0), Mac (10, 14)]
 		AVPortraitEffectsMatte AVPortraitEffectsMatte { get; set; } 
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		AVSemanticSegmentationMatte[] SemanticSegmentationMattes { get; set; }
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		CIImage SemanticSegmentationSkinMatteImage { get; set; }
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		CIImage SemanticSegmentationHairMatteImage { get; set; }
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		CIImage SemanticSegmentationTeethMatteImage { get; set; }
 	}
 
 	[CoreImageFilter]
