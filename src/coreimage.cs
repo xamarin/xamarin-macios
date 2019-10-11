@@ -1387,7 +1387,7 @@ namespace CoreImage {
 		CIImage FromCGImage (CGImage image, [NullAllowed] NSDictionary d);
 
 		[Static]
-		[Wrap ("FromCGImage (image, options == null ? null : options.Dictionary)")]
+		[Wrap ("FromCGImage (image, options?.Dictionary)")]
 		CIImage FromCGImage (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
@@ -1398,7 +1398,7 @@ namespace CoreImage {
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
-		[Wrap ("FromCGImageSource (source, index, options == null ? null : options.Dictionary)")]
+		[Wrap ("FromCGImageSource (source, index, options?.Dictionary)")]
 		CIImage FromCGImageSource (CGImageSource source, nuint index, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 #if MONOMAC
@@ -1438,7 +1438,7 @@ namespace CoreImage {
 		CIImage FromUrl (NSUrl url, [NullAllowed] NSDictionary d);
 
 		[Static]
-		[Wrap ("FromUrl (url, options == null ? null : options.Dictionary)")]
+		[Wrap ("FromUrl (url, options?.Dictionary)")]
 		CIImage FromUrl (NSUrl url, [NullAllowed] CIImageInitializationOptions options);
 
 		[Static]
@@ -1451,7 +1451,7 @@ namespace CoreImage {
 		CIImage FromData (NSData data, [NullAllowed] NSDictionary d);
 
 		[Static]
-		[Wrap ("FromData (data, options == null ? null : options.Dictionary)")]
+		[Wrap ("FromData (data, options?.Dictionary)")]
 		CIImage FromData (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[Static]
@@ -1481,7 +1481,7 @@ namespace CoreImage {
 #endif
 
 		[Static][iOS(9,0)]
-		[Wrap ("FromImageBuffer (imageBuffer, options == null ? null : options.Dictionary)")]
+		[Wrap ("FromImageBuffer (imageBuffer, options?.Dictionary)")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, CIImageInitializationOptions options);
 		
 #if !MONOMAC
@@ -1495,7 +1495,7 @@ namespace CoreImage {
 		CIImage FromImageBuffer (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
 
 		[Static]
-		[Wrap ("FromImageBuffer (buffer, options == null ? null : options.Dictionary)")]
+		[Wrap ("FromImageBuffer (buffer, options?.Dictionary)")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer, [NullAllowed] CIImageInitializationOptions options);
 #endif
 		[iOS (11,0)]
@@ -1517,7 +1517,7 @@ namespace CoreImage {
 		[TV (11,0)]
 		[Mac (10,13)]
 		[Static]
-		[Wrap ("FromSurface (surface, options == null ? null : options.Dictionary)")]
+		[Wrap ("FromSurface (surface, options?.Dictionary)")]
 		CIImage FromSurface (IOSurface.IOSurface surface, CIImageInitializationOptions options);
 
 		[Static]
@@ -1535,7 +1535,7 @@ namespace CoreImage {
 		[Export ("initWithCGImage:options:")]
 		IntPtr Constructor (CGImage image, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (image, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (image, options?.Dictionary)")]
 		IntPtr Constructor (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
@@ -1544,7 +1544,7 @@ namespace CoreImage {
 		IntPtr Constructor (CGImageSource source, nuint index, [NullAllowed] NSDictionary options);
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
-		[Wrap ("this (source, index, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (source, index, options?.Dictionary)")]
 		IntPtr Constructor (CGImageSource source, nuint index, CIImageInitializationOptionsWithMetadata options);
 
 #if MONOMAC
@@ -1557,7 +1557,7 @@ namespace CoreImage {
 		[Export ("initWithCGLayer:options:")]
 		IntPtr Constructor (CGLayer layer, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (layer, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (layer, options?.Dictionary)")]
 		IntPtr Constructor (CGLayer layer, [NullAllowed] CIImageInitializationOptions options);
 #endif
 
@@ -1567,7 +1567,7 @@ namespace CoreImage {
 		[Export ("initWithData:options:")]
 		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (data, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (data, options?.Dictionary)")]
 		IntPtr Constructor (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[Export ("initWithBitmapData:bytesPerRow:size:format:colorSpace:")]
@@ -1584,7 +1584,7 @@ namespace CoreImage {
 		[Export ("initWithContentsOfURL:options:")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (url, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (url, options?.Dictionary)")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] CIImageInitializationOptions options);
 
 		[iOS (11,0)] // IOSurface was not exposed before Xcode 9
@@ -1602,7 +1602,7 @@ namespace CoreImage {
 		[iOS (11,0)] // IOSurface was not exposed before Xcode 9
 		[TV (11,0)]
 		[Mac (10,13)]
-		[Wrap ("this (surface, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (surface, options?.Dictionary)")]
 		IntPtr Constructor (IOSurface.IOSurface surface, [NullAllowed] CIImageInitializationOptions options);
 
 		[iOS(9,0)]
@@ -1627,7 +1627,7 @@ namespace CoreImage {
 #endif
 
 		[iOS(9,0)]
-		[Wrap ("this (imageBuffer, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (imageBuffer, options?.Dictionary)")]
 		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] CIImageInitializationOptions options);
 
 		[Mac (10,11)]
@@ -1639,7 +1639,7 @@ namespace CoreImage {
 		IntPtr Constructor (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
 
 		[Mac (10,11)]
-		[Wrap ("this (buffer, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (buffer, options?.Dictionary)")]
 		IntPtr Constructor (CVPixelBuffer buffer, [NullAllowed] CIImageInitializationOptions options);
 
 		[Export ("initWithColor:")]
@@ -1797,7 +1797,7 @@ namespace CoreImage {
 		[Export ("initWithImage:options:")]
 		IntPtr Constructor (UIImage image, [NullAllowed] NSDictionary options);
 
-		[Wrap ("this (image, options == null ? null : options.Dictionary)")]
+		[Wrap ("this (image, options?.Dictionary)")]
 		IntPtr Constructor (UIImage image, [NullAllowed] CIImageInitializationOptions options);
 #endif
 	
