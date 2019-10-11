@@ -2326,6 +2326,19 @@ namespace Registrar {
 			return suggestion;
 		}
 
+		// Some declarations can be generalized to NSObject for its subclasses
+		// (and System.String too as we convert it into an NSString)
+		// since the generated code, except the function signature, is identical anyway
+		string ToSimpleObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod)
+		{
+			var byref = type.IsByReference;
+			var t = byref ? type.GetElementType () : type;
+			if (t.Inherits ("Foundation", "NSObject") || t.Is ("System", "String"))
+				return byref ? "id*" : "id";
+
+			return ToObjCParameterType (type, descriptiveMethodName, exceptions, inMethod);
+		}
+
 		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod)
 		{
 			TypeDefinition td = ResolveType (type);
@@ -3215,7 +3228,7 @@ namespace Registrar {
 					rettype = "double";
 					break;
 				default:
-					rettype = ToObjCParameterType (method.NativeReturnType, descriptiveMethodName, exceptions, method.Method);
+					rettype = ToSimpleObjCParameterType (method.NativeReturnType, descriptiveMethodName, exceptions, method.Method);
 					break;
 				}
 				break;
@@ -3962,7 +3975,7 @@ namespace Registrar {
 			var objc_signature = new StringBuilder ().Append (rettype).Append (":");
 			if (method.Method.HasParameters) {
 				for (int i = 0; i < method.NativeParameters.Length; i++)
-					objc_signature.Append (ToObjCParameterType (method.NativeParameters [i], descriptiveMethodName, exceptions, method.Method)).Append (":");
+					objc_signature.Append (ToSimpleObjCParameterType (method.NativeParameters [i], descriptiveMethodName, exceptions, method.Method)).Append (":");
 			}
 
 			Body existing;
@@ -3985,7 +3998,7 @@ namespace Registrar {
 					methods.Append (rettype).Append (" ").Append (b.Name).Append (" (id self, SEL _cmd, MonoMethod **managed_method_ptr");
 					var pcount = method.Method.HasParameters ? method.NativeParameters.Length : 0;
 					for (int i = (isInstanceCategory ? 1 : 0); i < pcount; i++) {
-						methods.Append (", ").Append (ToObjCParameterType (method.NativeParameters [i], descriptiveMethodName, exceptions, method.Method));
+						methods.Append (", ").Append (ToSimpleObjCParameterType (method.NativeParameters [i], descriptiveMethodName, exceptions, method.Method));
 						methods.Append (" ").Append ("p").Append (i.ToString ());
 					}
 					if (isCtor)
