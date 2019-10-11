@@ -15076,11 +15076,11 @@ namespace AppKit {
 
 		[Mac (10, 15)]
 		[Internal, Field ("NSTargetTextScalingDocumentOption")]
-		NSString NSTargetTextScalingDocumentOption { get; }
+		NSString TargetTextScalingDocumentOption { get; }
 
 		[Mac (10, 15)]
 		[Internal, Field ("NSSourceTextScalingDocumentOption")]
-		NSString NSSourceTextScalingDocumentOption { get; }
+		NSString SourceTextScalingDocumentOption { get; }
 	}
 
 	[Mac (10,10)]
