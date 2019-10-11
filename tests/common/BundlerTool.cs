@@ -156,7 +156,6 @@ namespace Xamarin.Tests
 			if (I18N != I18N.None) {
 				sb.Add ("--i18n");
 				var i18n = new List<string> ();
-				int count = 0;
 				if ((I18N & I18N.CJK) == I18N.CJK)
 					i18n.Add ("cjk");
 				if ((I18N & I18N.MidEast) == I18N.MidEast)
