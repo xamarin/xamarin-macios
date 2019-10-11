@@ -191,7 +191,7 @@ public partial class Generator {
 			// we can skip the name when it's identical to a protocol selector
 			if (name == null) {
 				if (export == null)
-					throw new BindingException (9999, true, $"Missing [CoreImageFilterProperty] attribute on {type.Name} property {ptype}");
+					throw new BindingException (1072, true, $"Missing [CoreImageFilterProperty] attribute on {0} property {1}", type.Name, p.Name);
 
 				var sel = export.Selector;
 				if (sel.StartsWith ("input", StringComparison.Ordinal))
