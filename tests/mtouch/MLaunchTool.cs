@@ -28,7 +28,7 @@ namespace Xamarin
 		public MLaunchAction Action = MLaunchAction.Sim;
 		public Profile Profile = Profile.iOS;
 
-		void GetVerbosity (IList<string> args)
+		void AddVerbosity (IList<string> args)
 		{
 			if (Verbosity == 0) {
 				// do nothing
@@ -71,7 +71,7 @@ namespace Xamarin
 				sb.Add (Configuration.xcode_root);
 			}
 
-			GetVerbosity (sb);
+			AddVerbosity (sb);
 
 			if (Sdk == None) {
 				// do nothing

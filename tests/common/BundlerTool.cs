@@ -87,7 +87,7 @@ namespace Xamarin.Tests
 			}
 		}
 
-		protected void GetVerbosity (IList<string> args)
+		protected void AddVerbosity (IList<string> args)
 		{
 			if (Verbosity == 0) {
 				// do nothing
@@ -287,7 +287,7 @@ namespace Xamarin.Tests
 				sb.Add (TargetVer);
 			}
 
-			GetVerbosity (sb);
+			AddVerbosity (sb);
 
 			if (WarnAsError != null) {
 				if (WarnAsError.Length > 0) {

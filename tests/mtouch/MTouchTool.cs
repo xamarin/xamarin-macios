@@ -97,7 +97,7 @@ namespace Xamarin
 					$"--wait-for-exit:{(waitForExit ? "yes" : "no")}",
 				}
 			);
-			GetVerbosity (args);
+			AddVerbosity (args);
 			return Execute (args);
 		}
 
@@ -110,7 +110,7 @@ namespace Xamarin
 					"--installdev", AppPath,
 					"--sdkroot", Configuration.xcode_root,
 			});
-			GetVerbosity (args);
+			AddVerbosity (args);
 			if (devicetype != null) {
 				args.Add ("--device");
 				args.Add (devicetype);
