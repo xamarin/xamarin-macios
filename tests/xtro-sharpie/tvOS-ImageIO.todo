@@ -4,3 +4,7 @@
 !missing-field! kCGImageAnimationStartIndex not bound
 !missing-pinvoke! CGAnimateImageAtURLWithBlock is not bound
 !missing-pinvoke! CGAnimateImageDataWithBlock is not bound
+## appended from unclassified file
+!missing-field! kCGImagePropertyExifCompositeImage not bound
+!missing-field! kCGImagePropertyExifSourceExposureTimesOfCompositeImage not bound
+!missing-field! kCGImagePropertyExifSourceImageNumberOfCompositeImage not bound
