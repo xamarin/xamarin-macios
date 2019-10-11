@@ -866,7 +866,7 @@ $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86
 	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $(X86_64_SLICE) -create -output $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) $(X64_64_SLICE) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
+$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios/Mono.framework $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 	@# inject x86-64 slice
