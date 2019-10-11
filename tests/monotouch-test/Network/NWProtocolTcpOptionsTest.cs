@@ -33,117 +33,53 @@ namespace MonoTouchFixtures.Network {
 		[TearDown]
 		public void TearDown () => options.Dispose ();
 
-		[Test]
-		public void NoDelayTest ()
-		{
-			Assert.IsFalse (options.NoDelay, "default");
-			options.NoDelay = true;
-			Assert.IsTrue (options.NoDelay, "new");
-		}
+		// proeprties do not have getters, but we know that if we call
+		// the setter with the wrong pointer we do have a exception
+		// thrown
 
 		[Test]
-		public void NoPushTest ()
-		{
-			Assert.IsFalse (options.NoPush, "default");
-			options.NoPush = true;
-			Assert.IsTrue (options.NoPush, "new");
-		}
+		public void NoDelayTest () => Assert.DoesNotThrow (() => options.SetNoDelay (true));
 
 		[Test]
-		public void NoOptionsTest ()
-		{
-			Assert.IsFalse (options.NoOptions, "default");
-			options.NoOptions = true;
-			Assert.IsTrue (options.NoOptions, "new");
-		}
+		public void NoPushTest () => Assert.DoesNotThrow (() => options.SetNoPush (true));
 
 		[Test]
-		public void EnableKeepAliveTest ()
-		{
-			Assert.IsFalse (options.EnableKeepAlive, "default");
-			options.EnableKeepAlive = true;
-			Assert.IsTrue (options.EnableKeepAlive, "new");
-		}
+		public void NoOptionsTest ()=> Assert.DoesNotThrow (() => options.SetNoOptions (true));
 
 		[Test]
-		public void KeepAliveCountTest ()
-		{
-			Assert.AreEqual (0, options.KeepAliveCount, "default");
-			options.KeepAliveCount = 10;
-			Assert.AreEqual (10, options.KeepAliveCount, "new");
-		}
+		public void EnableKeepAliveTest () => Assert.DoesNotThrow (() => options.SetEnableKeepAlive (true));
 
 		[Test]
-		public void KeepAliveIdleTimeTest ()
-		{
-			Assert.AreEqual (TimeSpan.Zero, options.KeepAliveIdleTime, "default");
-			options.KeepAliveIdleTime = TimeSpan.FromSeconds (10);
-			Assert.AreEqual (TimeSpan.FromSeconds (10), options.KeepAliveIdleTime, "new");
-		}
+		public void KeepAliveCountTest () => Assert.DoesNotThrow (() => options.SetKeepAliveCount (10));
 
 		[Test]
-		public void MaximumSegmentSizeTest ()
-		{
-			Assert.AreEqual (0, options.MaximumSegmentSize, "default");
-			options.MaximumSegmentSize = 10;
-			Assert.AreEqual (10, options.MaximumSegmentSize, "new");
-		}
+		public void KeepAliveIdleTimeTest () => Assert.DoesNotThrow (() => options.SetKeepAliveIdleTime (TimeSpan.FromSeconds (10)));
 
 		[Test]
-		public void ConnectionTimeoutTest ()
-		{
-			Assert.AreEqual (TimeSpan.Zero, options.ConnectionTimeout, "default");
-			options.ConnectionTimeout = TimeSpan.FromSeconds (10);
-			Assert.AreEqual (TimeSpan.FromSeconds (10), options.ConnectionTimeout, "new");
-		}
+		public void MaximumSegmentSizeTest () => Assert.DoesNotThrow (() => options.SetMaximumSegmentSize (10));
 
 		[Test]
-		public void PersistTimeoutTest ()
-		{
-			Assert.AreEqual (TimeSpan.Zero, options.PersistTimeout, "default");
-			options.PersistTimeout = TimeSpan.FromSeconds (10);
-			Assert.AreEqual (TimeSpan.FromSeconds (10), options.PersistTimeout, "new");
-		}
+		public void ConnectionTimeoutTest () => Assert.DoesNotThrow (() => options.SetConnectionTimeout (TimeSpan.FromSeconds (10)));
+
+		[Test]
+		public void PersistTimeoutTest () => Assert.DoesNotThrow (() => options.SetPersistTimeout (TimeSpan.FromSeconds (10)));
 
 		[Test]
 		public void RetransmitConnectionDropTimeTest ()
-		{
-			Assert.AreEqual (TimeSpan.Zero, options.RetransmitConnectionDropTime, "default");
-			options.RetransmitConnectionDropTime = TimeSpan.FromSeconds (10);
-			Assert.AreEqual (TimeSpan.FromSeconds (10), options.RetransmitConnectionDropTime, "new");
-		}
+			=> Assert.DoesNotThrow (() => options.SetRetransmitConnectionDropTime (TimeSpan.FromSeconds (10)));
 
 		[Test]
-		public void RetransmitFinDropTest ()
-		{
-			Assert.IsFalse (options.RetransmitFinDrop, "default");
-			options.RetransmitFinDrop = true;
-			Assert.IsTrue (options.RetransmitFinDrop, "new");
-		}
+		public void RetransmitFinDropTest () => Assert.DoesNotThrow (() => options.SetRetransmitFinDrop (true));
 
 		[Test]
-		public void DisableAckStretchingTest ()
-		{
-			Assert.IsFalse (options.DisableAckStretching, "default");
-			options.DisableAckStretching = true;
-			Assert.IsTrue (options.DisableAckStretching, "new");
-		}
+		public void DisableAckStretchingTest () => Assert.DoesNotThrow (() => options.SetDisableAckStretching (true));
 
 		[Test]
-		public void EnableFastOpenTest ()
-		{
-			Assert.IsFalse (options.EnableFastOpen, "default");
-			options.EnableFastOpen = true;
-			Assert.IsTrue (options.EnableFastOpen);
-		}
+		public void EnableFastOpenTest () => Assert.DoesNotThrow (() => options.SetEnableFastOpen (true));
 
 		[Test]
-		public void DisableEcnTest ()
-		{
-			Assert.IsFalse (options.DisableEcn, "default");
-			options.DisableEcn = true;
-			Assert.IsTrue (options.DisableEcn);
-		}
+		public void DisableEcnTest () => Assert.DoesNotThrow (() => options.SetDisableEcn (true));
+
 	}
 }
 #endif

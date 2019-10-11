@@ -33,13 +33,13 @@ namespace MonoTouchFixtures.Network {
 		[TearDown]
 		public void TearDown () => options.Dispose ();
 
+		// proeprties do not have getters, but we know that if we call
+		// the setter with the wrong pointer we do have a exception
+		// thrown
+
 		[Test]
-		public void PreferNoChecksumTest ()
-		{
-			Assert.IsFalse (options.PreferNoChecksum, "default");
-			options.PreferNoChecksum = true;
-			Assert.IsTrue (options.PreferNoChecksum, "new");
-		}
+		public void PreferNoChecksumTest () => Assert.DoesNotThrow (() => options.SetPreferNoChecksum (true));
+
 	}
 }
 #endif

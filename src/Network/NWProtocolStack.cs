@@ -51,9 +51,28 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
 			if (del != null) {
-				var x = new NWProtocolOptions (options, owns: false);
-				del (x);
-				x.Dispose ();
+				NWProtocolOptions castedOptions;
+				using (var tempOptions = new NWProtocolOptions (options, owns: false)) 
+				using (var definition = tempOptions.ProtocolDefinition) {
+					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+						castedOptions = new NWProtocolTcpOptions (options, owns: false);
+					}
+					if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+						castedOptions = new NWProtocolUdpOptions (options, owns: false);
+					} 
+					if (definition.Equals (NWProtocolDefinition.TlsDefinition)) {
+						castedOptions = new NWProtocolTlsOptions (options, owns: false);
+					}
+					if (definition.Equals (NWProtocolDefinition.IPDefinition)) {
+						castedOptions = new NWProtocolIPOptions (options, owns: false);
+					}
+					if (definition.Equals (NWProtocolDefinition.WebSocketDefinition)) {
+						castedOptions = new NWWebSocketOptions (options, owns: false);
+					}
+					castedOptions = null;
+				}
+				del (castedOptions);
+				castedOptions.Dispose ();
 			}
 		}
 
@@ -82,7 +101,18 @@ namespace Network {
 		public NWProtocolOptions TransportProtocol {
 			get {
 				var pHandle = nw_protocol_stack_copy_transport_protocol (GetCheckedHandle ());
-				return (pHandle == IntPtr.Zero)? null : new NWProtocolOptions (pHandle, owns: true);
+				if (pHandle == IntPtr.Zero)
+					return null;
+				using (var tempOptions = new NWProtocolOptions (pHandle, owns: false)) 
+				using (var definition = tempOptions.ProtocolDefinition) {
+					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+						return new NWProtocolTcpOptions (pHandle, owns: true);
+					}
+					if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+						return new NWProtocolUdpOptions (pHandle, owns: true);
+					} 
+					return null;
+				}
 			}
 			set => nw_protocol_stack_set_transport_protocol (GetCheckedHandle (), value.GetHandle ());
 		}

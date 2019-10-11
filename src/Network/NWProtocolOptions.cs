@@ -34,7 +34,7 @@ namespace Network {
 		[Obsolete ("Use the 'NWProptocolTlsOptions' class methods and constructors instead.")]
 		public static NWProtocolOptions CreateTls ()
 		{
-			return new NWProtocolOptions (nw_tls_create_options (), owns: true);
+			return new NWProtocolTlsOptions (nw_tls_create_options (), owns: true);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -43,7 +43,7 @@ namespace Network {
 		[Obsolete ("Use the 'NWProptocolTcpOptions' class methods and constructors instead.")]
 		public static NWProtocolOptions CreateTcp ()
 		{
-			return new NWProtocolOptions (nw_tcp_create_options (), owns: true);
+			return new NWProtocolTcpOptions (nw_tcp_create_options (), owns: true);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -52,7 +52,7 @@ namespace Network {
 		[Obsolete ("Use the 'NWProptocolUdpOptions' class methods and constructors instead.")]
 		public static NWProtocolOptions CreateUdp ()
 		{
-			return new NWProtocolOptions (nw_udp_create_options (), owns: true);
+			return new NWProtocolUdpOptions (nw_udp_create_options (), owns: true);
 		}
 
 //

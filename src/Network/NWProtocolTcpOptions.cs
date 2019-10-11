@@ -20,23 +20,6 @@ namespace Network {
 
 	[TV (12,0), Mac (10,14), iOS (12,0), Watch (6,0)]
 	public class NWProtocolTcpOptions : NWProtocolOptions {
-		// default values, same are used in swift
-		bool noDelay = false;
-		bool noPush = false;
-		bool noOptions = false;
-		bool enableKeepAlive = false;
-		uint keepAliveCount = 0;
-		TimeSpan keepAliveIdleTime = TimeSpan.Zero;
-		TimeSpan keepAliveInterval = TimeSpan.Zero;
-		uint maximumSegmentSize = 0;
-		TimeSpan connectionTimeout = TimeSpan.Zero;
-		TimeSpan persistTimeout = TimeSpan.Zero;
-		TimeSpan connectionDropTime = TimeSpan.Zero;
-		bool retransmitFinDrop = false;
-		bool disableAckStretching = false;
-		bool enableFastOpen = false;
-		bool disableEcn = false;
-
 		
 		internal NWProtocolTcpOptions (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -48,165 +31,83 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_no_delay (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool noDelay);
 
-		public bool NoDelay {
-			get => noDelay;
-			set {
-				noDelay = value;
-				nw_tcp_options_set_no_delay (GetCheckedHandle (), value);
-			}
-		} 
+		public void SetNoDelay (bool noDelay) => nw_tcp_options_set_no_delay (GetCheckedHandle (), noDelay);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_no_push (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool noPush);
 
-		public bool NoPush {
-			get => noPush;
-			set {
-				noPush = value;
-				nw_tcp_options_set_no_push (GetCheckedHandle (), value);
-			}
-		} 
+		public void SetNoPush (bool noPush) => nw_tcp_options_set_no_push (GetCheckedHandle (), noPush);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_no_options (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool noOptions);
 
-		public bool NoOptions {
-			get => noOptions;
-			set {
-				noOptions = value;
-				nw_tcp_options_set_no_options (GetCheckedHandle (), value);
-			}
-		} 
+		public void SetNoOptions (bool noOptions) => nw_tcp_options_set_no_options (GetCheckedHandle (), noOptions);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_enable_keepalive (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool enableKeepAlive);
 
-		public bool EnableKeepAlive {
-			get => enableKeepAlive;
-			set {
-				enableKeepAlive = value;
-				nw_tcp_options_set_enable_keepalive (GetCheckedHandle (), value);
-			}
-		} 
+		public void SetEnableKeepAlive (bool enableKeepAlive) =>  nw_tcp_options_set_enable_keepalive (GetCheckedHandle (), enableKeepAlive);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_keepalive_count (IntPtr handle, uint keepaliveCount);
 
-		public uint KeepAliveCount {
-			get => keepAliveCount;
-			set {
-				keepAliveCount = value;
-				nw_tcp_options_set_keepalive_count (GetCheckedHandle (), value);
-			}
-		} 
+		public void SetKeepAliveCount (uint keepAliveCount) => nw_tcp_options_set_keepalive_count (GetCheckedHandle (), keepAliveCount);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_keepalive_idle_time (IntPtr handle, uint keepAliveIdleTime);
 
-		public TimeSpan KeepAliveIdleTime {
-			get => keepAliveIdleTime;
-			set {
-				keepAliveIdleTime = value;
-				nw_tcp_options_set_keepalive_idle_time (GetCheckedHandle (), (uint) value.Seconds);
-			}
-		} 
+		public void SetKeepAliveIdleTime (TimeSpan keepAliveIdleTime)
+			=> nw_tcp_options_set_keepalive_idle_time (GetCheckedHandle (), (uint) keepAliveIdleTime.Seconds);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_keepalive_interval (IntPtr handle, uint keepaliveInterval);
 
-		public TimeSpan KeepAliveInterval {
-			get => keepAliveInterval;
-			set {
-				keepAliveInterval = value;
-				nw_tcp_options_set_keepalive_interval (GetCheckedHandle (), (uint) value.Seconds);
-			}
-		} 
+		public void SetKeepAliveInterval (TimeSpan keepAliveInterval)
+			=> nw_tcp_options_set_keepalive_interval (GetCheckedHandle (), (uint) keepAliveInterval.Seconds);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_maximum_segment_size (IntPtr handle, uint maximumSegmentSize);
 
-		public uint MaximumSegmentSize {
-			get => maximumSegmentSize;
-			set {
-				maximumSegmentSize = value;
-				nw_tcp_options_set_maximum_segment_size (GetCheckedHandle (), value);
-			}
-		} 
+		public void SetMaximumSegmentSize (uint maximumSegmentSize)
+			=> nw_tcp_options_set_maximum_segment_size (GetCheckedHandle (), maximumSegmentSize);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_connection_timeout (IntPtr handle, uint connectionTimeout);
 
-		public TimeSpan ConnectionTimeout {
-			get => connectionTimeout;
-			set {
-				connectionTimeout = value;
-				nw_tcp_options_set_connection_timeout (GetCheckedHandle (), (uint) value.Seconds);
-			}
-		} 
+		public void SetConnectionTimeout (TimeSpan connectionTimeout)
+			=> nw_tcp_options_set_connection_timeout (GetCheckedHandle (), (uint) connectionTimeout.Seconds);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_persist_timeout (IntPtr handle, uint persistTimeout);
 
-		public TimeSpan PersistTimeout {
-			get => persistTimeout;
-			set {
-				persistTimeout = value;
-				nw_tcp_options_set_persist_timeout (GetCheckedHandle (), (uint) value.Seconds);
-			}
-		} 
+		public void SetPersistTimeout (TimeSpan persistTimeout)
+			=> nw_tcp_options_set_persist_timeout (GetCheckedHandle (), (uint) persistTimeout.Seconds);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_retransmit_connection_drop_time (IntPtr handle, uint retransmitConnectionDropTime);
 
-		public TimeSpan RetransmitConnectionDropTime {
-			get => connectionDropTime;
-			set {
-				connectionDropTime = value;
-				nw_tcp_options_set_retransmit_connection_drop_time (GetCheckedHandle (), (uint) value.Seconds);
-			}
-		} 
+		public void SetRetransmitConnectionDropTime (TimeSpan connectionDropTime)
+			=> nw_tcp_options_set_retransmit_connection_drop_time (GetCheckedHandle (), (uint) connectionDropTime.Seconds);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_retransmit_fin_drop (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool retransmitFinDrop);
 
-		public bool RetransmitFinDrop {
-			get => retransmitFinDrop;
-			set {
-				retransmitFinDrop = value;
-				nw_tcp_options_set_retransmit_fin_drop (GetCheckedHandle (), value);
-			}
-		} 
+		public void SetRetransmitFinDrop (bool retransmitFinDrop) => nw_tcp_options_set_retransmit_fin_drop (GetCheckedHandle (), retransmitFinDrop);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_disable_ack_stretching (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool disableAckStretching);
 
-		public bool DisableAckStretching {
-			get => disableAckStretching;
-			set {
-				disableAckStretching = value;
-				nw_tcp_options_set_disable_ack_stretching (GetCheckedHandle (), value);
-			}
-		} 
+		public void SetDisableAckStretching (bool disableAckStretching)
+			=> nw_tcp_options_set_disable_ack_stretching (GetCheckedHandle (), disableAckStretching);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_enable_fast_open (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool enableFastOpen);
-		public bool EnableFastOpen {
-			get => enableFastOpen;
-			set {
-				enableFastOpen = value;
-				nw_tcp_options_set_enable_fast_open (GetCheckedHandle (), enableFastOpen);
-			}
-		} 
+
+		public void SetEnableFastOpen (bool enableFastOpen) => nw_tcp_options_set_enable_fast_open (GetCheckedHandle (), enableFastOpen);
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_tcp_options_set_disable_ecn (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool disableEcn);
 
-		public bool DisableEcn {
-			get => disableEcn;
-			set {
-				disableEcn = value;
-				nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn);
-			}
-		} 
+		public void SetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn);
 	}
 }
