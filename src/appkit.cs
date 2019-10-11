@@ -27059,4 +27059,56 @@ namespace AppKit {
 		[NullAllowed, Export ("bottom")]
 		NSCollectionLayoutSpacing Bottom { get; }
 	}
+
+	[NoiOS, Mac (10,15)]
+	[BaseType (typeof(NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSupplementaryItem : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:")]
+		NSCollectionLayoutSupplementaryItem CreateSupplementaryItem (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor);
+
+		[Static]
+		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:itemAnchor:")]
+		NSCollectionLayoutSupplementaryItem CreateSupplementaryItem (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor, NSCollectionLayoutAnchor itemAnchor);
+
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Export ("elementKind")]
+		string ElementKind { get; }
+
+		[Export ("containerAnchor")]
+		NSCollectionLayoutAnchor ContainerAnchor { get; }
+
+		[NullAllowed, Export ("itemAnchor")]
+		NSCollectionLayoutAnchor ItemAnchor { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutItem : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("itemWithLayoutSize:")]
+		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize);
+
+		[Static]
+		[Export ("itemWithLayoutSize:supplementaryItems:")]
+		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize, NSCollectionLayoutSupplementaryItem[] supplementaryItems);
+
+		[Export ("contentInsets", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets ContentInsets { get; set; }
+
+		[NullAllowed, Export ("edgeSpacing", ArgumentSemantic.Copy)]
+		NSCollectionLayoutEdgeSpacing EdgeSpacing { get; set; }
+
+		[Export ("layoutSize")]
+		NSCollectionLayoutSize LayoutSize { get; }
+
+		[Export ("supplementaryItems")]
+		NSCollectionLayoutSupplementaryItem[] SupplementaryItems { get; }
+	}
 }
