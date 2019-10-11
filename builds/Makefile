@@ -63,13 +63,17 @@ x86-64-slice.o: x86-64-slice.c
 X86_64_SLICE_BASE=$(abspath $(CURDIR)/x86-64-slice)
 X86_64_SLICE_DYLIB=$(X86_64_SLICE_BASE).dylib
 X86_64_SLICE_A=$(X86_64_SLICE_BASE).a
-X86_64_SLICE:=$(X86_64_SLICE)$(suffix $@)
+X86_64_SLICE_NOEXT=$(X86_64_SLICE_BASE)
+X86_64_SLICE=$(X86_64_SLICE_BASE)$(suffix $@)
 
 $(X86_64_SLICE_DYLIB): x86-64-slice.o
 	$(MAC_CC) -shared -o$@ $<
 
 $(X86_64_SLICE_A): x86-64-slice.o
 	$(AR) -rv $@ $<
+
+$(X86_64_SLICE_NOEXT): $(X86_64_SLICE_DYLIB)
+	cp $< $@
 
 ifeq ($(MONO_BUILD_FROM_SOURCE),)
 
@@ -862,7 +866,7 @@ $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/usr/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86
 	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $(X86_64_SLICE) -create -output $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
+$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) $(X64_64_SLICE) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios/Mono.framework $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 	@# inject x86-64 slice
