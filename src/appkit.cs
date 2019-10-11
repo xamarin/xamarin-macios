@@ -27153,4 +27153,38 @@ namespace AppKit {
 		[Export ("elementKind")]
 		string ElementKind { get; }
 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutGroupCustomItem : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("customItemWithFrame:")]
+		NSCollectionLayoutGroupCustomItem CreateCustomItem (CGRect frame);
+
+		[Static]
+		[Export ("customItemWithFrame:zIndex:")]
+		NSCollectionLayoutGroupCustomItem CreateCustomItem (CGRect frame, nint zIndex);
+
+		[Export ("frame")]
+		CGRect Frame { get; }
+
+		[Export ("zIndex")]
+		nint ZIndex { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	interface NSCollectionViewCompositionalLayoutConfiguration : NSCopying, INSCopying
+	{
+		[Export ("scrollDirection", ArgumentSemantic.Assign)]
+		NSCollectionViewScrollDirection ScrollDirection { get; set; }
+
+		[Export ("interSectionSpacing")]
+		nfloat InterSectionSpacing { get; set; }
+
+		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutBoundarySupplementaryItem[] BoundarySupplementaryItems { get; set; }
+	}
 }
