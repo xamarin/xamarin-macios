@@ -5563,8 +5563,10 @@ namespace CoreImage {
 	[BaseType (typeof (CIKeystoneCorrection))]
 	interface CIKeystoneCorrectionVertical : ICIKeystoneCorrectionVerticalProtocol {
 
+#if false // no documentation about the type
 		[CoreImageFilterProperty ("outputRotationFilter")]
 		CGAffineTransform OutputRotationFilter { get; }
+#endif
 
 		[CoreImageFilterProperty ("outputTransform")]
 		CGAffineTransform OutputTransform { get; }
@@ -5615,6 +5617,7 @@ namespace CoreImage {
 	interface CIFilterProtocol {
 
 		[Abstract]
+		[CoreImageFilterProperty ("outputImage")]
 		[NullAllowed, Export ("outputImage")]
 		CIImage OutputImage { get; }
 
@@ -8267,10 +8270,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[Protocol (Name = "CISmoothLinearGradient")]
-	// `CILinearGradientProtocol` is a bit of a lie - but it would not compile (registrar) otherwise
-	interface CISmoothLinearGradientProtocol : CILinearGradientProtocol {
-
-		/* we get those from ICILinearGradientProtocol
+	interface CISmoothLinearGradientProtocol : CIFilterProtocol {
 		[Abstract]
 		[Export ("point0", ArgumentSemantic.Assign)]
 		CGPoint InputPoint0 { get; set; }
@@ -8286,7 +8286,6 @@ namespace CoreImage {
 		[Abstract]
 		[Export ("color1", ArgumentSemantic.Retain)]
 		CIColor Color1 { get; set; }
-		*/
 	}
 
 	interface ICISpotColorProtocol {}
