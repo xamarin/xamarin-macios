@@ -26933,8 +26933,13 @@ namespace AppKit {
 
 	[Mac (10,15)]
 	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
 	interface NSPickerTouchBarItem
 	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
 		[Static]
 		[Export ("pickerTouchBarItemWithIdentifier:labels:selectionMode:target:action:")]
 		NSPickerTouchBarItem Create (NSTouchBarItemIdentifier identifier, string[] labels, NSPickerTouchBarItemSelectionMode selectionMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
