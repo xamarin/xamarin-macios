@@ -201,44 +201,31 @@ namespace CoreImage {
 			}
 		}
 
+		internal T Get<T> (string key) where T : class
+		{
+			using (var nskey = new NSString (key)) {
+				return ValueForKey (nskey) as T;
+			}
+		}
+
 		internal float GetFloat (string key)
 		{
-			using (var nskey = new NSString (key)){
-				var v = ValueForKey (nskey);
-				if (v is NSNumber)
-					return (v as NSNumber).FloatValue;
-				return 0;
-			}
+			return Get<NSNumber> (key)?.FloatValue ?? default (float);
 		}
 
 		internal int GetInt (string key)
 		{
-			using (var nskey = new NSString (key)){
-				var v = ValueForKey (nskey);
-				if (v is NSNumber)
-					return (v as NSNumber).Int32Value;
-				return 0;
-			}
+			return Get<NSNumber> (key)?.Int32Value ?? default (int);
 		}
 
 		internal nint GetNInt (string key)
 		{
-			using (var nskey = new NSString (key)){
-				var v = ValueForKey (nskey);
-				if (v is NSNumber)
-					return (v as NSNumber).NIntValue;
-				return 0;
-			}
+			return Get<NSNumber> (key)?.NIntValue ?? default (nint);
 		}
 
 		internal bool GetBool (string key)
 		{
-			using (var nskey = new NSString (key)){
-				var v = ValueForKey (nskey);
-				if (v is NSNumber)
-					return (v as NSNumber).BoolValue;
-				return false;
-			}
+			return Get<NSNumber> (key)?.BoolValue ?? default (bool);
 		}
 
 		internal void SetHandle (string key, IntPtr handle)
@@ -271,14 +258,14 @@ namespace CoreImage {
 		
 		internal CGPoint GetPoint (string key)
 		{
-			var v = ValueForKey (key) as CIVector;
-			return new CGPoint (v.X, v.Y);
+			var v = Get<CIVector> (key);
+			return v != null ? new CGPoint (v.X, v.Y) : default (CGPoint);
 		}
 
 		internal CGRect GetRect (string key)
 		{
-			var v = ValueForKey (key) as CIVector;
-			return new CGRect (v.X, v.Y, v.Z, v.W);
+			var v = Get<CIVector> (key);
+			return v != null ? new CGRect (v.X, v.Y, v.Z, v.W) : default (CGRect);
 		}
 
 #if MONOMAC
