@@ -1192,12 +1192,7 @@ namespace Xamarin.Bundler {
 				return true;
 			if (a == null ^ b == null)
 				return false;
-			if (a.Count != b.Count)
-				return false;
-			for (var i = 0; i < a.Count; i++)
-				if (a [i] != b [i])
-					return false;
-			return true;
+			return a.SequenceEqual (b);
 		}
 
 		void Initialize ()
