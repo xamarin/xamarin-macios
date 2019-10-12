@@ -2864,6 +2864,11 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("outputImageNonMPS")]
 		CIImage OutputImageNonMps { get; }
+
+#if MONOMAC
+		[CoreImageFilterProperty ("outputImageMPS")]
+		CIImage OutputImageMps { get; }
+#endif
 	}
 
 	[CoreImageFilter]
@@ -2885,6 +2890,11 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("outputImageNonMPS")]
 		CIImage OutputImageNonMps { get; }
+
+#if MONOMAC
+		[CoreImageFilterProperty ("outputImageMPS")]
+		CIImage OutputImageMps { get; }
+#endif
 
 		[CoreImageFilterProperty ("outputData")]
 		NSData OutputData { get; }
@@ -5321,6 +5331,11 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("outputImageNonMPS")]
 		CIImage OutputImageNonMps { get; }
+
+#if MONOMAC
+		[CoreImageFilterProperty ("outputImageMPS")]
+		CIImage OutputImageMps { get; }
+#endif
 	}
 
 	[CoreImageFilter]
@@ -7919,6 +7934,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("crop")]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)] // repeated so it's inlined (new property in existing filter)
 		bool Crop { get; set; }
 	}
 
@@ -8232,6 +8248,7 @@ namespace CoreImage {
 
 		[Abstract]
 		[Export ("radius")]
+		[iOS (13,0)][TV (13,0)][Mac (10,15)] // repeated so it's inlined (new property in existing filter)
 		float Radius { get; set; }
 	}
 

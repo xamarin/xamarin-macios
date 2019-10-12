@@ -398,6 +398,10 @@ namespace Introspection {
 					var pt = p.DeclaringType;
 					if (!CIFilterType.IsAssignableFrom (pt) || (pt == CIFilterType))
 						continue;
+
+					if (SkipDueToAttribute (p))
+						continue;
+
 					var getter = p.GetGetMethod ();
 					var ea = getter.GetCustomAttribute<ExportAttribute> (false);
 					// only properties coming (inlined) from protocols have an [Export] attribute
@@ -483,6 +487,9 @@ namespace Introspection {
 					switch (t.Name) {
 					case "CIKeystoneCorrectionCombined":
 					case "CIKeystoneCorrectionHorizontal":
+#if MONOMAC
+					case "CIKeystoneCorrectionVertical":
+#endif
 						switch (key) {
 						case "outputRotationFilter":
 							continue; // lack of documentation about the returned type
@@ -493,6 +500,14 @@ namespace Introspection {
 						// ref: https://github.com/xamarin/xamarin-macios/issues/7209
 						case "outputImageNewScaleX:scaleY:":
 						case "outputImageOldScaleX:scaleY:":
+							continue;
+						}
+						break;
+					case "CIDiscBlur":
+						switch (key) {
+						// existed in iOS 10.3 but not in iOS 13 - we're not adding them
+						case "outputImageOriginal":
+						case "outputImageEnhanced":
 							continue;
 						}
 						break;
