@@ -16,17 +16,6 @@
 ## stub using 'autoAdjustmentFiltersWithOptions:'. Now it's back (in headers but can be ignored)
 !missing-selector! CIImage::autoAdjustmentFilters not bound
 
-## CISmoothLinearGradient[Protocol] inherits from CILinearGradient[Protocol] that already have the same members
-## and the registrar does not like duplicates too
-!missing-protocol-member! CISmoothLinearGradient::color0 not found
-!missing-protocol-member! CISmoothLinearGradient::color1 not found
-!missing-protocol-member! CISmoothLinearGradient::point0 not found
-!missing-protocol-member! CISmoothLinearGradient::point1 not found
-!missing-protocol-member! CISmoothLinearGradient::setColor0: not found
-!missing-protocol-member! CISmoothLinearGradient::setColor1: not found
-!missing-protocol-member! CISmoothLinearGradient::setPoint0: not found
-!missing-protocol-member! CISmoothLinearGradient::setPoint1: not found
-
 ## we already provide alternative API to create the filters
 !missing-selector! +CIFilter::accordionFoldTransitionFilter not bound
 !missing-selector! +CIFilter::additionCompositingFilter not bound
