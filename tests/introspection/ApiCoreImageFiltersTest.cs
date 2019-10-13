@@ -487,9 +487,7 @@ namespace Introspection {
 					switch (t.Name) {
 					case "CIKeystoneCorrectionCombined":
 					case "CIKeystoneCorrectionHorizontal":
-#if MONOMAC
 					case "CIKeystoneCorrectionVertical":
-#endif
 						switch (key) {
 						case "outputRotationFilter":
 							continue; // lack of documentation about the returned type
