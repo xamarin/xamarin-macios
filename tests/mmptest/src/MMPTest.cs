@@ -737,5 +737,18 @@ namespace Xamarin.MMP.Tests
 
 			// TODO: Add something to validate the archive is loadable by Xcode
 		}
+
+		[Test]
+		public void BuildWithObjcArcFlag ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<MonoBundlingExtraArgs>-link_flags=-fobjc-arc</MonoBundlingExtraArgs>"
+				};
+				TI.TestUnifiedExecutable (test);
+				var output = TI.BuildProject (Path.Combine (tmpDir, "UnifiedExample.csproj"));
+			});
+
+		}
 	}
 }
