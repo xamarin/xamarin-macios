@@ -75,7 +75,7 @@ $(X86_64_SLICE_A): x86-64-slice.o
 	$(AR) -rv $@ $<
 
 $(X86_64_SLICE_NOEXT): $(X86_64_SLICE_DYLIB)
-	cp $< $@
+	$(Q) $(CP) $< $@
 
 ifeq ($(MONO_BUILD_FROM_SOURCE),)
 
