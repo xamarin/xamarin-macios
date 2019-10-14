@@ -27187,4 +27187,29 @@ namespace AppKit {
 		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
 		NSCollectionLayoutBoundarySupplementaryItem[] BoundarySupplementaryItems { get; set; }
 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	interface NSColorSampler
+	{
+		[Export ("showSamplerWithSelectionHandler:")]
+		void ShowSampler (Action<NSColor> selectionHandler);
+	}
+
+	[Mac (10,13)]
+	public enum NSControlStateValue
+	{
+		Mixed,
+		Off,
+		On,
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSControl))]
+	[DesignatedDefaultCtor]
+	interface NSSwitch : NSAccessibilitySwitch
+	{
+		[Export ("state")]
+		NSControlStateValue State { get; set; } // keep NSControlStateValue as nint? or use self defined enum?
+	}
 }
