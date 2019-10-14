@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Mono.Options;
+using Xamarin.Utils;
 
 namespace xibuild {
 	class MainClass {
@@ -103,13 +104,11 @@ namespace xibuild {
 				if (no_logo)
 					remaining.Add ("/nologo");
 			}
-
+			var arguments = remaining.Skip (runMSBuild ? 0 : 1).ToArray ();
 			return RunTool (
 					toolPath: runMSBuild ? "msbuild" : remaining [0],
-					combinedArgs: BuildQuotedCommandLine (remaining, runMSBuild ? 0 : 1),
+					combinedArgs: StringUtils.FormatArguments (arguments),
 					baseConfigFile: runMSBuild ? null : baseConfigFile);
-
-			string BuildQuotedCommandLine (List<string> a, int skip) => String.Join (" ", a.Skip (skip).Select (arg => $"\"{arg}\""));
 		}
 
 		static int RunTool (string toolPath, string combinedArgs, string baseConfigFile)

@@ -350,18 +350,6 @@ namespace Xamarin.Bundler
 			return Path.Combine (PlatformsDirectory, GetPlatform (app) + ".platform");
 		}
 
-		public static int XcodeRun (string command, string args, StringBuilder output = null)
-		{
-			string [] env = DeveloperDirectory != String.Empty ? new string [] { "DEVELOPER_DIR", DeveloperDirectory } : null;
-			int ret = RunCommand ("xcrun", String.Concat ("-sdk macosx ", command, " ", args), env, output);
-			if (ret != 0 && verbose > 1) {
-				StringBuilder debug = new StringBuilder ();
-				RunCommand ("xcrun", String.Concat ("--find ", command), env, debug);
-				Console.WriteLine ("failed using `{0}` from: {1}", command, debug);
-			}
-			return ret;
-		}
-
 		public static string GetAotCompiler (Application app, Abi abi, bool is64bits)
 		{
 			switch (app.Platform) {
@@ -385,10 +373,10 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string GetAotArguments (Application app, string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
+		public static IList<string> GetAotArguments (Application app, string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
 		{
 			string fname = Path.GetFileName (filename);
-			StringBuilder args = new StringBuilder ();
+			var args = new List<string> ();
 			bool enable_llvm = (abi & Abi.LLVM) != 0;
 			bool enable_thumb = (abi & Abi.Thumb) != 0;
 			bool enable_debug = app.EnableDebug;
@@ -399,67 +387,70 @@ namespace Xamarin.Bundler
 			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
-			args.Append ("--debug ");
+			args.Add ("--debug");
 
 			if (enable_llvm)
-				args.Append ("--llvm ");
+				args.Add ("--llvm");
 
 			if (!llvm_only && !interp)
-				args.Append ("-O=gsharedvt ");
-			args.Append (app.AotOtherArguments).Append (" ");
-			args.Append ("--aot=mtriple=");
-			args.Append (enable_thumb ? arch.Replace ("arm", "thumb") : arch);
-			args.Append ("-ios,");
-			args.Append ("data-outfile=").Append (StringUtils.Quote (dataFile)).Append (",");
-			args.Append (app.AotArguments);
+				args.Add ("-O=gsharedvt");
+			if (app.AotOtherArguments != null)
+				args.AddRange (app.AotOtherArguments);
+			var aot = new StringBuilder ();
+			aot.Append ("--aot=mtriple=");
+			aot.Append (enable_thumb ? arch.Replace ("arm", "thumb") : arch);
+			aot.Append ("-ios,");
+			aot.Append ("data-outfile=").Append (dataFile).Append (",");
+			aot.Append (app.AotArguments);
 			if (llvm_only)
-				args.Append ("llvmonly,");
+				aot.Append ("llvmonly,");
 			else if (interp) {
 				if (fname != "mscorlib.dll")
 					throw ErrorHelper.CreateError (99, $"Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {fname}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.");
-				args.Append ("interp,");
+				aot.Append ("interp,");
 			} else if (interp_full) {
-				args.Append ("interp,full,");
+				aot.Append ("interp,full,");
 			} else
-				args.Append ("full,");
+				aot.Append ("full,");
 
 			var aname = Path.GetFileNameWithoutExtension (fname);
 			var sdk_or_product = Profile.IsSdkAssembly (aname) || Profile.IsProductAssembly (aname);
 
 			if (enable_llvm)
-				args.Append ("nodebug,");
+				aot.Append ("nodebug,");
 			else if (!(enable_debug || enable_debug_symbols))
-				args.Append ("nodebug,");
+				aot.Append ("nodebug,");
 			else if (app.DebugAll || app.DebugAssemblies.Contains (fname) || !sdk_or_product)
-				args.Append ("soft-debug,");
+				aot.Append ("soft-debug,");
 
-			args.Append ("dwarfdebug,");
+			aot.Append ("dwarfdebug,");
 
 			/* Needed for #4587 */
 			if (enable_debug && !enable_llvm)
-				args.Append ("no-direct-calls,");
+				aot.Append ("no-direct-calls,");
 
 			if (!app.UseDlsym (filename))
-				args.Append ("direct-pinvoke,");
+				aot.Append ("direct-pinvoke,");
 
 			if (app.EnableMSym) {
-				var msymdir = StringUtils.Quote (Path.Combine (outputDir, "Msym"));
-				args.Append ($"msym-dir={msymdir},");
+				var msymdir = Path.Combine (outputDir, "Msym");
+				aot.Append ($"msym-dir={msymdir},");
 			}
 
 			if (enable_llvm)
-				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
+				aot.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");
 
-			args.Append ("outfile=").Append (StringUtils.Quote (outputFile));
+			aot.Append ("outfile=").Append (outputFile);
 			if (enable_llvm)
-				args.Append (",llvm-outfile=").Append (StringUtils.Quote (llvmOutputFile));
-			args.Append (" \"").Append (filename).Append ("\"");
-			return args.ToString ();
+				aot.Append (",llvm-outfile=").Append (llvmOutputFile);
+			args.Add (aot.ToString ());
+			args.Add (filename);
+			return args;
 		}
 
-		public static ProcessStartInfo CreateStartInfo (Application app, string file_name, string arguments, string mono_path, string mono_debug = null)
+		public static ProcessStartInfo CreateStartInfo (Application app, string file_name, IList<string> arguments, string mono_path, string mono_debug = null)
 		{
-			var info = new ProcessStartInfo (file_name, arguments);
+			var info = new ProcessStartInfo (file_name, StringUtils.FormatArguments (arguments));
 			info.UseShellExecute = false;
 			info.RedirectStandardOutput = true;
 			info.RedirectStandardError = true;
@@ -818,7 +809,7 @@ namespace Xamarin.Bundler
 				return false;
 
 			//Custom gcc flags requires us to build template.m
-			if (!string.IsNullOrEmpty (app.UserGccFlags))
+			if (app.UserGccFlags?.Count > 0)
 				return false;
 
 			// Setting environment variables is done in the generated main.m, so we can't symlink in this case.
@@ -950,7 +941,11 @@ namespace Xamarin.Bundler
 				v => {
 					if (v.Contains ("--profile") || v.Contains ("--attach"))
 						throw new Exception ("Unsupported flag to -aot-options");
-					app.AotOtherArguments = v + " " + app.AotOtherArguments;
+					if (!StringUtils.TryParseArguments (v, out var aot_options, out var ex))
+						throw ErrorHelper.CreateError (26, ex, "Could not parse the command line argument '--aot-options={0}': {1}", v, ex.Message);
+					if (app.AotOtherArguments == null)
+						app.AotOtherArguments = new List<string> ();
+					app.AotOtherArguments.AddRange (aot_options);
 				}
 			},
 			{ "gsharedvt:", "Generic sharing for value-types - always enabled [Deprecated]", v => {} },
@@ -982,7 +977,15 @@ namespace Xamarin.Bundler
 			{ "dsym:", "Turn on (default for device) or off (default for simulator) .dSYM symbols.", v => app.BuildDSym = ParseBool (v, "dsym") },
 			{ "dlsym:", "Use dlsym to resolve pinvokes in AOT compiled assemblies", v => app.ParseDlsymOptions (v) },
 			{ "r|ref=", "Add an assembly to the resolver", v => app.References.Add (v) },
-			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v => app.UserGccFlags = v },
+			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v =>
+				{
+					if (!StringUtils.TryParseArguments (v, out var gcc_flags, out var ex))
+						throw ErrorHelper.CreateError (26, ex, "Could not parse the command line argument '--gcc-flags={0}': {1}", v, ex.Message);
+					if (app.UserGccFlags == null)
+						app.UserGccFlags = new List<string> ();
+					app.UserGccFlags.AddRange (gcc_flags);
+				}
+			},
 			{ "framework=", "Link with the specified framework. This can either be a system framework (like 'UIKit'), or it can be a path to a custom framework ('/path/to/My.framework'). In the latter case the entire 'My.framework' directory is copied into the app as well.", (v) => app.Frameworks.Add (v) },
 			{ "weak-framework=", "Weak link with the specified framework. This can either be a system framework (like 'UIKit'), or it can be a path to a custom framework ('/path/to/My.framework'). In the latter case the entire 'My.framework' directory is copied into the app as well.", (v) => app.Frameworks.Add (v) },	
 
@@ -1438,13 +1441,8 @@ namespace Xamarin.Bundler
 				p.StartInfo.RedirectStandardOutput = true;
 				p.StartInfo.FileName = MlaunchPath;
 
-				var sb = new StringBuilder ();
-				foreach (var str in Environment.GetCommandLineArgs ().Skip (1)) {
-					if (sb.Length > 0)
-						sb.Append (' ');
-					sb.Append (StringUtils.Quote (str));
-				}
-				p.StartInfo.Arguments = sb.ToString ();
+				var sb = Environment.GetCommandLineArgs ().Skip (1).ToList ();
+				p.StartInfo.Arguments = StringUtils.FormatArguments (sb);
 				p.Start ();
 
 				RedirectStream (new StreamReader (Console.OpenStandardInput ()), p.StandardInput);
@@ -1535,7 +1533,7 @@ namespace Xamarin.Bundler
 		// workaround issues like:
 		// * Xcode 4.x versus 4.3 (location of /Developer); and 
 		// * the (optional) installation of "Command-Line Tools" by Xcode
-		public static void RunStrip (string options)
+		public static void RunStrip (IList<string> options)
 		{
 			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
 			string strip = FindTool ("strip");
@@ -1568,25 +1566,21 @@ namespace Xamarin.Bundler
 
 		public static void CreateDsym (string output_dir, string appname, string dsym_dir)
 		{
-			string quoted_app_path = StringUtils.Quote (Path.Combine (output_dir, appname));
-			string quoted_dsym_dir = StringUtils.Quote (dsym_dir);
-			RunDsymUtil (string.Format ("{0} -t 4 -z -o {1}", quoted_app_path, quoted_dsym_dir));
-			RunCommand ("/usr/bin/mdimport", quoted_dsym_dir);
+			RunDsymUtil (Path.Combine (output_dir, appname), "-t", "4", "-z", "-o", dsym_dir);
+			RunCommand ("/usr/bin/mdimport", dsym_dir);
 		}
 
 		public static void RunLipo (string output, IEnumerable<string> inputs)
 		{
-			var sb = new StringBuilder ();
-			foreach (var lib in inputs) {
-				sb.Append (StringUtils.Quote (lib));
-				sb.Append (' ');
-			}
-			sb.Append ("-create -output ");
-			sb.Append (StringUtils.Quote (output));
-			RunLipo (sb.ToString ());
+			var sb = new List<string> ();
+			sb.AddRange (inputs);
+			sb.Add ("-create");
+			sb.Add ("-output");
+			sb.Add (output);
+			RunLipo (sb);
 		}
 
-		public static void RunLipo (string options)
+		public static void RunLipo (IList<string> options)
 		{
 			string lipo = FindTool ("lipo");
 			if (lipo == null)
@@ -1595,7 +1589,7 @@ namespace Xamarin.Bundler
 				throw new MonoTouchException (5306, true, "Failed to create the a fat library. Please review the build log.");
 		}
 
-		static void RunDsymUtil (string options)
+		static void RunDsymUtil (params string[] options)
 		{
 			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
 			string dsymutil = FindTool ("dsymutil");

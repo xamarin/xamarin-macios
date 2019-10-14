@@ -341,7 +341,7 @@ namespace Xamarin.iOS.Tasks
 		public static bool IsAPFS {
 			get {
 				if (!is_apfs.HasValue) {
-					var exit_code = ExecutionHelper.Execute ("/bin/df", "-t apfs /", out var output, TimeSpan.FromSeconds (10));
+					var exit_code = ExecutionHelper.Execute ("/bin/df", new string[] { "-t", "apfs", "/" }, out var output, TimeSpan.FromSeconds (10));
 					is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
 				}
 				return is_apfs.Value;
@@ -391,7 +391,7 @@ namespace Xamarin.iOS.Tasks
 
 		public static void NugetRestore (string project)
 		{
-			var rv = ExecutionHelper.Execute ("nuget", $"restore {StringUtils.Quote (project)}", out var output);
+			var rv = ExecutionHelper.Execute ("nuget", new string[] { "restore", project }, out var output);
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);
