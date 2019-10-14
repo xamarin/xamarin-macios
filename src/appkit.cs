@@ -27380,4 +27380,27 @@ namespace AppKit {
 		[Export ("decorationItems", ArgumentSemantic.Copy)]
 		NSCollectionLayoutDecorationItem[] DecorationItems { get; set; }
 	}
+
+	delegate NSCollectionLayoutSection NSCollectionViewCompositionalLayoutSectionProvider (nint section, NSCollectionLayoutEnvironment layout);
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSCollectionViewLayout))]
+	[DisableDefaultCtor]
+	interface NSCollectionViewCompositionalLayout
+	{
+		[Export ("initWithSection:")]
+		IntPtr Constructor (NSCollectionLayoutSection section);
+
+		[Export ("initWithSection:configuration:")]
+		IntPtr Constructor (NSCollectionLayoutSection section, NSCollectionViewCompositionalLayoutConfiguration configuration);
+
+		[Export ("initWithSectionProvider:")]
+		IntPtr Constructor (NSCollectionViewCompositionalLayoutSectionProvider sectionProvider);
+
+		[Export ("initWithSectionProvider:configuration:")]
+		IntPtr Constructor (NSCollectionViewCompositionalLayoutSectionProvider sectionProvider, NSCollectionViewCompositionalLayoutConfiguration configuration);
+
+		[Export ("configuration", ArgumentSemantic.Copy)]
+		NSCollectionViewCompositionalLayoutConfiguration Configuration { get; set; }
+	}
 }
