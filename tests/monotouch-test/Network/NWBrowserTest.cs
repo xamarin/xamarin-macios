@@ -80,6 +80,17 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void TestStateChangesHandler ()
 		{
+			// In the test we are doing the following:
+			//
+			// 1. Start a browser. At this point, we have no listeners (unless someone is exposing it in the lab)
+			// and therefore the browser cannot find any services/listeners.
+			// 2. Start a listener that is using the same type/domain pair that the browser expects.
+			// 3. Browser picks up the new listener, and sends an event (service found).
+			// 4. Listener stops, and the service disappears.
+			// 5. The browser is not yet canceled, so it picks up that the service/listener is not longer then and returns it.
+			// 
+			// The test will block until the different events are set by the callbacks that are executed in a diff thread.
+
 			bool firstRun = true;
 			bool eventsDone = false;
 			bool listeningDone = false;
@@ -111,9 +122,6 @@ namespace MonoTouchFixtures.Network {
 				});
 				browser.Start ();
 				browserReady.WaitOne (30000);
-				// we are going to start a browser, which will not pick any results, because
-				// we have not listeners, in another thread, the listener will be started and
-				// changes will get the changes for a new service
 				using (var advertiser = NWAdvertiseDescriptor.CreateBonjourService ("MonoTouchFixtures.Network", type))
 				using (var tcpOptions = NWProtocolOptions.CreateTcp ())
 				using (var tlsOptions = NWProtocolOptions.CreateTls ())
