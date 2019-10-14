@@ -29,6 +29,10 @@ namespace Network {
 		Cancelled = 3,
 	}
 
+	public delegate void NWBrowserChangesDelegate (NWBrowseResult oldResult, NWBrowseResult newResult, bool completed);
+
+	public delegate void NWBrowserCompleteChangesDelegate (List<(NWBrowseResult result, NWBrowseResultChange change)> changes);
+
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWBrowser : NativeObject {
 
@@ -126,17 +130,15 @@ namespace Network {
 			var del = BlockLiteral.GetTarget<NWBrowserChangesDelegate> (block);
 			if (del != null) {
 				// we do the cleanup of the objs in the internal handlers
-				var nwOldResult = new NWBrowseResult (oldResult, owns: false);
-				var nwNewResult = new NWBrowseResult (newResult, owns: false);
+				NWBrowseResult nwOldResult = (oldResult == IntPtr.Zero)? null : new NWBrowseResult (oldResult, owns: false);
+				NWBrowseResult nwNewResult = (newResult == IntPtr.Zero)? null : new NWBrowseResult (newResult, owns: false);
 				del (nwOldResult, nwNewResult, completed);
 			}
 		}
 
-		public delegate void NWBrowserChangesDelegate (NWBrowseResult oldResult, NWBrowseResult newResult, bool completed);
 		public Action<NWBrowseResult, NWBrowseResult> IndividualChangesDelegate { get; set; }
 
 		// syntactic sugar for the user, nicer to get all the changes at once
-		public delegate void NWBrowserCompleteChangesDelegate (List<(NWBrowseResult result, NWBrowseResultChange change)> changes);
 		public NWBrowserCompleteChangesDelegate CompleteChangesDelegate { get; set; }
 		object changesLock = new object ();
 		List<(NWBrowseResult result, NWBrowseResultChange change)> changes = new List<(NWBrowseResult result, NWBrowseResultChange change)> ();
@@ -151,22 +153,24 @@ namespace Network {
 				var completeCb = CompleteChangesDelegate;
 				if (completeCb == null) {
 					// we do not want to keep a list of the new results if the user does not care, dipose and move on
-					oldResult.Dispose ();
-					newResult.Dispose ();
+					// results can be null, since we could have a not old one
+					oldResult?.Dispose ();
+					newResult?.Dispose ();
 					return; 
 				}
 				// get the change, add it to the list
 				var change = NWBrowseResult.GetChanges (oldResult, newResult);
 				var result = (result: newResult, change: change);
 				// at this point, we do not longer need the old result
-				oldResult.Dispose ();
+				// results can be null
+				oldResult?.Dispose ();
 				changes.Add (result);
 				// only call when we know we are done
 				if (completed)  {
 					completeCb.Invoke (changes);
 					// clean resources, we never cleaned the new results, therefore we need to dispose them at this stage
 					foreach (var c in changes) {
-						c.result.Dispose ();
+						c.result?.Dispose ();
 					}
 					// be ready for the next collection
 					changes.Clear ();
@@ -194,7 +198,9 @@ namespace Network {
 		}	
 
 		// let to not change the API, but would be nice to remove it in the following releases.
+#if !XAMCORE_4_0
 		public void SetChangesHandler (Action<NWBrowseResult, NWBrowseResult> handler) => IndividualChangesDelegate = handler;
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_browser_set_state_changed_handler (OS_nw_browser browser, void *state_changed_handler);

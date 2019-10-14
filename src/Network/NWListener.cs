@@ -26,6 +26,8 @@ namespace Network {
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
 	public class NWListener : NativeObject {
+		bool connectionHandlerWasSet = false;
+		object connectionHandlerLock = new object ();
 		public NWListener (IntPtr handle, bool owns) : base (handle, owns)
 		{
 		}
@@ -99,7 +101,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_listener_start (IntPtr handle);
 
-		public void Start () => nw_listener_start (GetCheckedHandle ());
+		public void Start () {
+			lock (connectionHandlerLock) {
+				// we will get a sigabort if the handler is not set, lets be nicer.
+				if (!connectionHandlerWasSet)
+					throw new InvalidOperationException ("A connection handler should be set before starting a NWListener.");
+				nw_listener_start (GetCheckedHandle ());
+			}
+		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_listener_cancel (IntPtr handle);
@@ -163,20 +172,23 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetNewConnectionHandler (Action<NWConnection> callback)
 		{
-			unsafe {
-				if (callback == null){
-					nw_listener_set_new_connection_handler (GetCheckedHandle (), null);
-					return;
-				}
+			lock (connectionHandlerLock) {
+				unsafe {
+					if (callback == null){
+						nw_listener_set_new_connection_handler (GetCheckedHandle (), null);
+						return;
+					}
 
-				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
-				block_handler.SetupBlockUnsafe (static_NewConnection, callback);
+					BlockLiteral block_handler = new BlockLiteral ();
+					BlockLiteral *block_ptr_handler = &block_handler;
+					block_handler.SetupBlockUnsafe (static_NewConnection, callback);
 
-				try {
-					nw_listener_set_new_connection_handler (GetCheckedHandle (), (void*) block_ptr_handler);
-				} finally {
-					block_handler.CleanupBlock ();
+					try {
+						nw_listener_set_new_connection_handler (GetCheckedHandle (), (void*) block_ptr_handler);
+						connectionHandlerWasSet = true;
+					} finally {
+						block_handler.CleanupBlock ();
+					}
 				}
 			}
 		}
