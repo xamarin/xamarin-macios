@@ -27212,4 +27212,77 @@ namespace AppKit {
 		[Export ("state")]
 		NSControlStateValue State { get; set; } // keep NSControlStateValue as nint? or use self defined enum?
 	}
+
+	[Mac (10,15)]
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	interface NSCollectionLayoutContainer
+	{
+		[Abstract]
+		[Export ("contentSize")]
+		CGSize ContentSize { get; }
+
+		[Abstract]
+		[Export ("effectiveContentSize")]
+		CGSize EffectiveContentSize { get; }
+
+		[Abstract]
+		[Export ("contentInsets")]
+		NSDirectionalEdgeInsets ContentInsets { get; }
+
+		[Abstract]
+		[Export ("effectiveContentInsets")]
+		NSDirectionalEdgeInsets EffectiveContentInsets { get; }
+	}
+
+	[Mac (10,15)]
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	interface NSCollectionLayoutEnvironment
+	{
+		[Abstract]
+		[Export ("container")]
+		NSCollectionLayoutContainer Container { get; }
+	}
+
+	delegate NSCollectionLayoutGroupCustomItem[] NSCollectionLayoutGroupCustomItemProvider (NSCollectionLayoutEnvironment layout);
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutGroup : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("horizontalGroupWithLayoutSize:subitem:count:")]
+		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+
+		[Static]
+		[Export ("horizontalGroupWithLayoutSize:subitems:")]
+		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem[] subitems);
+
+		[Static]
+		[Export ("verticalGroupWithLayoutSize:subitem:count:")]
+		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+
+		[Static]
+		[Export ("verticalGroupWithLayoutSize:subitems:")]
+		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem[] subitems);
+
+		[Static]
+		[Export ("customGroupWithLayoutSize:itemProvider:")]
+		NSCollectionLayoutGroup CreateCustomGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutGroupCustomItemProvider itemProvider);
+
+		[Export ("supplementaryItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSupplementaryItem[] SupplementaryItems { get; set; }
+
+		[NullAllowed, Export ("interItemSpacing", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSpacing InterItemSpacing { get; set; }
+
+		[Export ("subitems")]
+		NSCollectionLayoutItem[] Subitems { get; }
+
+		[Export ("visualDescription")]
+		// [Verify (MethodToProperty)]
+		string VisualDescription { get; }
+	}
 }
