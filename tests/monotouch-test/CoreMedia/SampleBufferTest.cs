@@ -46,6 +46,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.AreEqual (CMSampleBufferError.None, sbe, "#2");
 		}
 
+		[Ignore ("https://github.com/xamarin/maccore/issues/2023")]
 		[Test]
 		public void CreateReadyWithPacketDescriptions ()
 		{
