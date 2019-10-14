@@ -39,14 +39,31 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
+		[Required]
+		public string TargetFrameworkIdentifier { get; set; }
+
 		#endregion
 
 		string DevicePlatformBinDir {
 			get { return Path.Combine (SdkDevPath, "usr", "bin"); }
 		}
 
-		protected abstract string OperatingSystem {
-			get;
+		protected virtual string OperatingSystem {
+			get {
+				switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
+				case PlatformFramework.WatchOS:
+					return "watchos";
+				case PlatformFramework.TVOS:
+					return "tvos";
+				case PlatformFramework.MacOS:
+					return "osx";
+				case PlatformFramework.iOS:
+					return "ios";
+				default:
+					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					return string.Empty;
+				}
+			}
 		}
 
 		protected override string ToolName {

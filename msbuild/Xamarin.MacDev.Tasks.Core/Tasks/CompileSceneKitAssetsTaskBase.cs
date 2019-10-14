@@ -47,6 +47,9 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string SdkVersion { get; set; }
 
+		[Required]
+		public string TargetFrameworkIdentifier { get; set; }
+
 		public string ToolExe {
 			get { return toolExe ?? ToolName; }
 			set { toolExe = value; }
@@ -67,8 +70,22 @@ namespace Xamarin.MacDev.Tasks
 			get { return "copySceneKitAssets"; }
 		}
 
-		protected abstract string OperatingSystem {
-			get;
+		protected virtual string OperatingSystem {
+			get {
+				switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
+				case PlatformFramework.WatchOS:
+					return "watchos";
+				case PlatformFramework.TVOS:
+					return "tvos";
+				case PlatformFramework.MacOS:
+					return "osx";
+				case PlatformFramework.iOS:
+					return "ios";
+				default:
+					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					return string.Empty;
+				}
+			}
 		}
 
 		string DeveloperRootBinDir {
