@@ -27285,4 +27285,99 @@ namespace AppKit {
 		// [Verify (MethodToProperty)]
 		string VisualDescription { get; }
 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSToolbarItem))]
+	[DisableDefaultCtor]
+	interface NSMenuToolbarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Export ("menu", ArgumentSemantic.Strong)]
+		NSMenu Menu { get; set; }
+
+		[Export ("showsIndicator")]
+		bool ShowsIndicator { get; set; }
+	}
+
+	[Mac (10,15)]
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	interface NSCollectionLayoutVisibleItem
+	{
+		[Abstract]
+		[Export ("alpha")]
+		nfloat Alpha { get; set; }
+
+		[Abstract]
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Abstract]
+		[Export ("hidden")]
+		bool Hidden { [Bind ("isHidden")] get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint Center { get; set; }
+
+		[Abstract]
+		[Export ("name")]
+		string Name { get; }
+
+		[Abstract]
+		[Export ("indexPath")]
+		NSIndexPath IndexPath { get; }
+
+		[Abstract]
+		[Export ("frame")]
+		CGRect Frame { get; }
+
+		[Abstract]
+		[Export ("bounds")]
+		CGRect Bounds { get; }
+
+		[Abstract]
+		[Export ("representedElementCategory")]
+		NSCollectionElementCategory RepresentedElementCategory { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("representedElementKind")]
+		string RepresentedElementKind { get; }
+	}
+
+	delegate void NSCollectionLayoutSectionVisibleItemsInvalidationHandler (NSCollectionLayoutVisibleItem[] items, CGPoint point, NSCollectionLayoutEnvironment layout);
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSection : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("sectionWithGroup:")]
+		NSCollectionLayoutSection CreateSection (NSCollectionLayoutGroup group);
+
+		[Export ("contentInsets", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets ContentInsets { get; set; }
+
+		[Export ("interGroupSpacing")]
+		nfloat InterGroupSpacing { get; set; }
+
+		[Export ("orthogonalScrollingBehavior", ArgumentSemantic.Assign)]
+		NSCollectionLayoutSectionOrthogonalScrollingBehavior OrthogonalScrollingBehavior { get; set; }
+
+		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutBoundarySupplementaryItem[] BoundarySupplementaryItems { get; set; }
+
+		[Export ("supplementariesFollowContentInsets")]
+		bool SupplementariesFollowContentInsets { get; set; }
+
+		[NullAllowed, Export ("visibleItemsInvalidationHandler", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSectionVisibleItemsInvalidationHandler VisibleItemsInvalidationHandler { get; set; }
+
+		[Export ("decorationItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutDecorationItem[] DecorationItems { get; set; }
+	}
 }
