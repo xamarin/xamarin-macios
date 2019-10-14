@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Xamarin.Tests;
@@ -25,32 +26,32 @@ namespace Xamarin
 			// Nothing to do here yet
 		}
 
-		protected override void BuildArguments (StringBuilder sb)
+		protected override void BuildArguments (IList<string> sb)
 		{
 			base.BuildArguments (sb);
 
 			if (!string.IsNullOrEmpty (ApplicationName))
-				sb.Append (" --name=").Append (StringUtils.Quote (ApplicationName));
+				sb.Add ($"--name={ApplicationName}");
 
 			if (!string.IsNullOrEmpty (OutputPath))
-				sb.Append (" --output=").Append (StringUtils.Quote (OutputPath));
+				sb.Add ($"--output={OutputPath}");
 
 			switch (Profile) {
 			case Profile.macOSMobile:
-				sb.Append (" --profile=Xamarin.Mac,Version=v2.0,Profile=Mobile");
+				sb.Add ("--profile=Xamarin.Mac,Version=v2.0,Profile=Mobile");
 				break;
 			case Profile.macOSFull:
-				sb.Append (" --profile=Xamarin.Mac,Version=v4.5,Profile=Full");
+				sb.Add ("--profile=Xamarin.Mac,Version=v4.5,Profile=Full");
 				break;
 			case Profile.macOSSystem:
-				sb.Append (" --profile=Xamarin.Mac,Version=v4.5,Profile=System");
+				sb.Add ("--profile=Xamarin.Mac,Version=v4.5,Profile=System");
 				break;
 			default:
 				throw new NotImplementedException (Profile.ToString ());
 			}
 		}
 
-		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = true)
+		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true)
 		{
 			if (RootAssembly == null) {
 				OutputPath = CreateTemporaryDirectory ();
@@ -61,7 +62,7 @@ namespace Xamarin
 			ApplicationName = appName;
 			var app = Path.Combine (OutputPath, appName + ".app");
 			Directory.CreateDirectory (app);
-			RootAssembly = CompileTestAppExecutable (OutputPath, code, extraArg, profile, appName, extraCode, usings, use_csc);
+			RootAssembly = CompileTestAppExecutable (OutputPath, code, extraArgs, profile, appName, extraCode, usings, use_csc);
 		}
 
 		public override string GetAppAssembliesDirectory()

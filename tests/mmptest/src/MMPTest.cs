@@ -188,13 +188,12 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void Dontlink_Allow_ReadonlyAssembly ()
 		{
-			var sb = new StringBuilder ();
+			string [] sb;
 			RunMMPTest (tmpDir =>
 			{
 				// build b.dll
-				sb.Clear ();
 				string assemblyPath = string.Format ("{0}/b.dll", tmpDir);
-				sb.AppendFormat ("-target:library -debug -out:{0} {1}/b.cs", assemblyPath, tmpDir);
+				sb = new [] { "-target:library", "-debug", $"-out:{assemblyPath}", $"{tmpDir}/b.cs" };
 				File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public class B { }");
 				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", sb, "b");
 
@@ -373,7 +372,7 @@ namespace Xamarin.MMP.Tests
 
 				string libPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/UnifiedLibrary.dll");
 				Assert.True (File.Exists (libPath));
-				string monoDisResults = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", new StringBuilder ("--presources " + libPath), "monodis");
+				string monoDisResults = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", new [] { "--presources", libPath }, "monodis");
 				Assert.IsFalse (monoDisResults.Contains ("foo.xml"));
 			});
 		}
@@ -386,7 +385,7 @@ namespace Xamarin.MMP.Tests
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"ConsoleXMApp.csproj");
 				TI.BuildProject (testPath);
 				string exePath = Path.Combine (TI.FindSourceDirectory (), @"bin/Debug/ConsoleXMApp.exe");
-				var output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono64", new StringBuilder (exePath), "RunSideBySizeXamMac");
+				var output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono64", new [] { exePath }, "RunSideBySizeXamMac");
 				Assert.IsTrue (output.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("True")), "Unified_SideBySideXamMac_ConsoleTest run"); 
 			});
 		}
@@ -549,7 +548,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = "<DebugSymbols>True</DebugSymbols>", // This makes the msbuild tasks pass /debug to mmp
 				};
-				TI.TestUnifiedExecutable (test, shouldFail: false, environment: new string [] { "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (oldXcode)) });
+				TI.TestUnifiedExecutable (test, shouldFail: false, environment: new [] { "MD_APPLE_SDK_ROOT", Path.GetDirectoryName (Path.GetDirectoryName (oldXcode)) });
 			});
 		}
 
@@ -671,7 +670,7 @@ namespace Xamarin.MMP.Tests
 				buildOutput = TI.BuildProject (project);
 				Assert.False (buildOutput.Contains ("actool execution started with arguments"), $"Second build should not run actool");
 
-				TI.RunAndAssert ("touch", Path.Combine (tmpDir, "Assets.xcassets/AppIcon.appiconset/AppIcon-256@2x.png"), "touch icon");
+				TI.RunAndAssert ("touch", new [] { Path.Combine (tmpDir, "Assets.xcassets/AppIcon.appiconset/AppIcon-256@2x.png") }, "touch icon");
 
 				buildOutput = TI.BuildProject (project);
 				Assert.True (buildOutput.Contains ("actool execution started with arguments"), $"Build after touching icon must run actool");
@@ -732,7 +731,7 @@ namespace Xamarin.MMP.Tests
 					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>"
 				};
 				TI.TestUnifiedExecutable (test);
-				var output = TI.BuildProject (Path.Combine (tmpDir, full ? "XM45Example.csproj" : "UnifiedExample.csproj"), release: true, extraArgs: "/p:ArchiveOnBuild=true ");
+				var output = TI.BuildProject (Path.Combine (tmpDir, full ? "XM45Example.csproj" : "UnifiedExample.csproj"), release: true, extraArgs: new [] { "/p:ArchiveOnBuild=true" });
 			});
 
 			// TODO: Add something to validate the archive is loadable by Xcode

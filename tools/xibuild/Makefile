@@ -3,7 +3,7 @@ TOP = ../..
 include $(TOP)/Make.config
 
 CONFIGURATION=Debug
-SRC_FILES=Main.cs
+SRC_FILES=Main.cs $(TOP)/tools/common/StringUtils.cs
 
 all: bin/$(CONFIGURATION)/xibuild.exe
 

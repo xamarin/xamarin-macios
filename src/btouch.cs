@@ -238,15 +238,15 @@ public class BindingTouch {
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
 			{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
-			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (StringUtils.Quote (v)) },
+			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (v) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
 			{ "sdk=", "Sets the .NET SDK to use (Obsolete)", v => {}, true },
 			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
-			{ "api=", "Adds a API definition source file", v => api_sources.Add (StringUtils.Quote (v)) },
-			{ "s=", "Adds a source file required to build the API", v => core_sources.Add (StringUtils.Quote (v)) },
+			{ "api=", "Adds a API definition source file", v => api_sources.Add (v) },
+			{ "s=", "Adds a source file required to build the API", v => core_sources.Add (v) },
 			{ "v", "Sets verbose mode", v => verbose = true },
-			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => extra_sources.Add (StringUtils.Quote (v)) },
+			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => extra_sources.Add (v) },
 			{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => external = true },
 			{ "p", "Sets private mode", v => public_mode = false },
 			{ "baselib=", "Sets the base library", v => baselibdll = v },
@@ -379,9 +379,9 @@ public class BindingTouch {
 		}
 
 		if (sources.Count > 0) {
-			api_sources.Insert (0, StringUtils.Quote (sources [0]));
+			api_sources.Insert (0, sources [0]);
 			for (int i = 1; i < sources.Count; i++)
-				core_sources.Insert (i - 1, StringUtils.Quote (sources [i]));
+				core_sources.Insert (i - 1, sources [i]);
 		}
 
 		if (api_sources.Count == 0) {
@@ -393,48 +393,44 @@ public class BindingTouch {
 		if (tmpdir == null)
 			tmpdir = GetWorkDir ();
 
-		string firstApiDefinitionName = Path.GetFileNameWithoutExtension (StringUtils.Unquote (api_sources [0]));
+		string firstApiDefinitionName = Path.GetFileNameWithoutExtension (api_sources [0]);
 		firstApiDefinitionName = firstApiDefinitionName.Replace ('-', '_'); // This is not exhaustive, but common.
 		if (outfile == null)
 			outfile = firstApiDefinitionName + ".dll";
 
-		string refs = string.Empty;
-		foreach (var r in references) {
-			if (refs != string.Empty)
-				refs += " ";
-			refs += "-r:" + StringUtils.Quote (r);
-		}
-		string paths = (libs.Count > 0 ? "-lib:" + String.Join (" -lib:", libs.ToArray ()) : "");
+		var refs = references.Select ((v) => "-r:" + v);
+		var paths = libs.Select ((v) => "-lib:" + v);
 
 		try {
 			var tmpass = Path.Combine (tmpdir, "temp.dll");
 
 			// -nowarn:436 is to avoid conflicts in definitions between core.dll and the sources
 			// Keep source files at the end of the command line - csc will create TWO assemblies if any sources preceed the -out parameter
-			var cargs = new StringBuilder ();
+			var cargs = new List<string> ();
 
-			cargs.Append ("-debug -unsafe -target:library -nowarn:436").Append (' ');
-			cargs.Append ("-out:").Append (StringUtils.Quote (tmpass)).Append (' ');
-			cargs.Append ("-r:").Append (StringUtils.Quote (GetAttributeLibraryPath ())).Append (' ');
-			cargs.Append (refs).Append (' ');
+			cargs.Add ("-debug");
+			cargs.Add ("-unsafe");
+			cargs.Add ("-target:library");
+			cargs.Add ("-nowarn:436");
+			cargs.Add ("-out:" + tmpass);
+			cargs.Add ("-r:" + GetAttributeLibraryPath ());
+			cargs.AddRange (refs);
 			if (unsafef)
-				cargs.Append ("-unsafe ");
-			cargs.Append ("-r:").Append (StringUtils.Quote (baselibdll)).Append (' ');
+				cargs.Add ("-unsafe");
+			cargs.Add ("-r:" + baselibdll);
 			foreach (var def in defines)
-				cargs.Append ("-define:").Append (def).Append (' ');
-			cargs.Append (paths).Append (' ');
+				cargs.Add ("-define:" + def);
+			cargs.AddRange (paths);
 			if (nostdlib) {
-				cargs.Append ("-nostdlib ");
-				cargs.Append ("-noconfig ");
+				cargs.Add ("-nostdlib");
+				cargs.Add ("-noconfig");
 			}
-			foreach (var qs in api_sources)
-				cargs.Append (qs).Append (' ');
-			foreach (var cs in core_sources)
-				cargs.Append (cs).Append (' ');
+			cargs.AddRange (api_sources);
+			cargs.AddRange (core_sources);
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
-				cargs.Append ("-lib:").Append (Path.GetDirectoryName (baselibdll)).Append (' ');
+				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			if (Driver.RunCommand (compiler, cargs.ToString (), null, out var compile_output, true, verbose ? 1 : 0) != 0)
+			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, verbose ? 1 : 0) != 0)
 				throw ErrorHelper.CreateError (2, "Could not compile the API bindings.\n\t" + compile_output.ToString ().Replace ("\n", "\n\t"));
 
 			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
@@ -524,29 +520,25 @@ public class BindingTouch {
 
 			cargs.Clear ();
 			if (unsafef)
-				cargs.Append ("-unsafe ");
-			cargs.Append ("-target:library ");
-			cargs.Append ("-out:").Append (StringUtils.Quote (outfile)).Append (' ');
+				cargs.Add ("-unsafe");
+			cargs.Add ("-target:library");
+			cargs.Add ("-out:" + outfile);
 			foreach (var def in defines)
-				cargs.Append ("-define:").Append (def).Append (' ');
-			foreach (var gf in g.GeneratedFiles)
-				cargs.Append (gf).Append (' ');
-			foreach (var cs in core_sources)
-				cargs.Append (cs).Append (' ');
-			foreach (var es in extra_sources)
-				cargs.Append (es).Append (' ');
-			cargs.Append (refs).Append (' ');
-			cargs.Append ("-r:").Append (StringUtils.Quote (baselibdll)).Append (' ');
-			foreach (var res in resources)
-				cargs.Append (res).Append (' ');
+				cargs.Add ("-define:" + def);
+			cargs.AddRange (g.GeneratedFiles);
+			cargs.AddRange (core_sources);
+			cargs.AddRange (extra_sources);
+			cargs.AddRange (refs);
+			cargs.Add ("-r:" + baselibdll);
+			cargs.AddRange (resources);
 			if (nostdlib) {
-				cargs.Append ("-nostdlib ");
-				cargs.Append ("-noconfig ");
+				cargs.Add ("-nostdlib");
+				cargs.Add ("-noconfig");
 			}
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
-				cargs.Append ("-lib:").Append (Path.GetDirectoryName (baselibdll)).Append (' ');
+				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			if (Driver.RunCommand (compiler, cargs.ToString (), null, out var generated_compile_output, true, verbose ? 1 : 0) != 0)
+			if (Driver.RunCommand (compiler, cargs, null, out var generated_compile_output, true, verbose ? 1 : 0) != 0)
 				throw ErrorHelper.CreateError (1000, "Could not compile the generated API bindings.\n\t" + generated_compile_output.ToString ().Replace ("\n", "\n\t"));
 		} finally {
 			if (delete_temp)

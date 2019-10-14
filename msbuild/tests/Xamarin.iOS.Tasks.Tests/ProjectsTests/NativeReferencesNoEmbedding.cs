@@ -61,7 +61,7 @@ namespace Xamarin.iOS.Tasks
 			string libPath = Path.Combine (Directory.GetCurrentDirectory (), bindingApp.ProjectBinPath, "MyiOSBinding.dll");
 			Assert.True (File.Exists (libPath), $"Did not find expected library: {libPath}");
 
-			int returnValue = ExecutionHelper.Execute ("/Library/Frameworks/Mono.framework/Commands/monodis", "--presources " + libPath, out string monoDisResults);
+			int returnValue = ExecutionHelper.Execute ("/Library/Frameworks/Mono.framework/Commands/monodis", new [] { "--presources", libPath }, out string monoDisResults);
 			Assert.AreEqual (0, returnValue);
 			Assert.IsFalse (monoDisResults.Contains ("XTest.framework"), $"Binding Library contained embedded resource: {monoDisResults}");
 
