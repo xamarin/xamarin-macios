@@ -174,7 +174,7 @@ namespace Network {
 		{
 			lock (connectionHandlerLock) {
 				unsafe {
-					if (callback == null){
+					if (callback == null) {
 						nw_listener_set_new_connection_handler (GetCheckedHandle (), null);
 						return;
 					}
