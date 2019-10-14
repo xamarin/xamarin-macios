@@ -124,7 +124,7 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "prebuilt-apps";
 		const string CATEGORY = "prebuiltapps"; // categories can't contain dashes
-		const string HASH = "40da1283722df96e81efb5c62364d05e5bd3dd76";
+		const string HASH = "f111672bc6915ceb402abb47dedfe3480e111720";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Known failures
