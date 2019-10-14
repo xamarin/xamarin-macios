@@ -34,7 +34,7 @@ public static class ProcessHelper
 
 		Action<string> output_callback = (v) => {
 			lock (output)
-				output.Add (v);
+				output.Add ($"{DateTime.Now.ToString ("HH:mm:ss.fffffff")}: {v}");
 		};
 
 		if (environment_variables == null)
@@ -42,7 +42,11 @@ public static class ProcessHelper
 		environment_variables ["XCODE_DEVELOPER_DIR_PATH"] = null;
 		environment_variables ["DEVELOPER_DIR"] = Configuration.XcodeLocation;
 
+		var watch = Stopwatch.StartNew ();
 		exitCode = ExecutionHelper.Execute (filename, arguments, out var timed_out, workingDirectory, environment_variables, output_callback, output_callback, timeout);
+		watch.Stop ();
+
+		output_callback ($"Exit code: {exitCode} Timed out: {timed_out} Total duration: {watch.Elapsed.ToString ()}");
 
 		// Write execution log to disk (and print the path)
 		var logfile = Path.Combine (LogDirectory, $"{filename}-{Interlocked.Increment (ref counter)}.log");
