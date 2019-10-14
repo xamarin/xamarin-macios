@@ -27403,4 +27403,43 @@ namespace AppKit {
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		NSCollectionViewCompositionalLayoutConfiguration Configuration { get; set; }
 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSStepperTouchBarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+		
+		[Static]
+		[Export ("stepperTouchBarItemWithIdentifier:formatter:")]
+		NSStepperTouchBarItem CreateStepperTouchBarItem (NSTouchBarItemIdentifier identifier, NSFormatter formatter);
+
+		[Static]
+		[Export ("stepperTouchBarItemWithIdentifier:drawingHandler:")]
+		NSStepperTouchBarItem CreateStepperTouchBarItem (NSTouchBarItemIdentifier identifier, Action<CGRect, double> drawingHandler);
+
+		[Export ("maxValue")]
+		double MaxValue { get; set; }
+
+		[Export ("minValue")]
+		double MinValue { get; set; }
+
+		[Export ("increment")]
+		double Increment { get; set; }
+
+		[Export ("value")]
+		double Value { get; set; }
+
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
+		Selector Action { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
 }
