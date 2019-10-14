@@ -14,7 +14,7 @@ namespace Xamarin.MMP.Tests
 	{
 		int GetNumberOfTypesInLibrary (string path)
 		{
-			string output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new string [] { "-r:" + path }, "GetNumberOfTypesInLibrary");
+			string output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new [] { "-r:" + path }, "GetNumberOfTypesInLibrary");
 			string[] splitBuildOutput = output.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
 			string outputLine = splitBuildOutput.First (x => x.StartsWith ("Total:"));
 			string numberSize = outputLine.Split (':')[1];

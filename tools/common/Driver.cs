@@ -557,7 +557,7 @@ namespace Xamarin.Bundler {
 		static string FindSystemXcode ()
 		{
 			var output = new StringBuilder ();
-			if (Driver.RunCommand ("xcode-select", new string [] { "-p" }, output: output) != 0) {
+			if (Driver.RunCommand ("xcode-select", new [] { "-p" }, output: output) != 0) {
 				ErrorHelper.Warning (59, "Could not find the currently selected Xcode on the system: {0}", output.ToString ());
 				return null;
 			}
@@ -655,7 +655,7 @@ namespace Xamarin.Bundler {
 			int ret = RunCommand ("xcrun", args, env, output);
 			if (ret != 0 && verbose > 1) {
 				StringBuilder debug = new StringBuilder ();
-				RunCommand ("xcrun", new string [] { "--find", command }, env, debug);
+				RunCommand ("xcrun", new [] { "--find", command }, env, debug);
 				Console.WriteLine ("failed using `{0}` from: {1}", command, debug);
 			}
 			return ret;

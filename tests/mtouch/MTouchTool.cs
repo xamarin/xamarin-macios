@@ -89,7 +89,7 @@ namespace Xamarin
 		{
 			var args = new List<string> ();
 			args.AddRange (
-				new string [] {
+				new [] {
 					"--devname", device.Name,
 					"--launchdev", AppPath,
 					"--sdkroot", Configuration.xcode_root,
@@ -105,7 +105,7 @@ namespace Xamarin
 		{
 			var args = new List<string> ();
 			args.AddRange (
-				new string [] {
+				new [] {
 					"--devname", device.Name,
 					"--installdev", AppPath,
 					"--sdkroot", Configuration.xcode_root,
@@ -370,7 +370,7 @@ namespace Xamarin
 			if (device_list_cache == null || !allowCache) {
 				var output_file = Path.GetTempFileName ();
 				try {
-					if (Execute (new string [] { "--listdev", output_file, "--sdkroot", Configuration.xcode_root }) != 0)
+					if (Execute (new [] { "--listdev", output_file, "--sdkroot", Configuration.xcode_root }) != 0)
 						throw new Exception ("Failed to list devices.");
 					device_list_cache = new XmlDocument ();
 					device_list_cache.Load (output_file);

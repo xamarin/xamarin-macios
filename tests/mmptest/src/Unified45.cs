@@ -18,7 +18,7 @@ namespace MonoTouchFixtures.Net45 {
 				File.Delete (testResults);
 
 			StringBuilder restoreOutput = new StringBuilder ();
-			int code = Driver.RunCommand ("mono", new string [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
+			int code = Driver.RunCommand ("mono", new [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
 
 			if (code != 0)
 				Assert.Fail ("ProtobufShouldSerializeAndDeserialize failed to restore nuget packages");
@@ -44,7 +44,7 @@ namespace MonoTouchFixtures.Net45 {
 
 			StringBuilder restoreOutput = new StringBuilder ();
 
-			int code = Driver.RunCommand ("mono", new string [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
+			int code = Driver.RunCommand ("mono", new [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
 
 			if (code != 0)
 				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");
@@ -64,7 +64,7 @@ namespace MonoTouchFixtures.Net45 {
 
 			StringBuilder restoreOutput = new StringBuilder ();
 
-			int code = Driver.RunCommand ("mono", new string [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/../MyLibrary/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
+			int code = Driver.RunCommand ("mono", new [] { "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe", "restore", $"{testFolder}/../MyLibrary/packages.config", "-PackagesDirectory", Configuration.NuGetPackagesDirectory }, output: restoreOutput);
 
 			if (code != 0)
 				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");

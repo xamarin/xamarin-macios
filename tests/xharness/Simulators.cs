@@ -146,7 +146,7 @@ namespace xharness
 					return devices;
 			}
 			
-			var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", new string [] { "create", CreateName (devicetype, runtime), devicetype, runtime }, log, TimeSpan.FromMinutes (1));
+			var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "create", CreateName (devicetype, runtime), devicetype, runtime }, log, TimeSpan.FromMinutes (1));
 			if (!rv.Succeeded) {
 				log.WriteLine ($"Could not create device for runtime={runtime} and device type={devicetype}.");
 				return null;
@@ -183,7 +183,7 @@ namespace xharness
 				log.WriteImpl (value);
 				capturedLog.Append (value);
 			});
-			var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", new string [] { "pair", device.UDID, companion_device.UDID }, pairLog, TimeSpan.FromMinutes (1));
+			var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "pair", device.UDID, companion_device.UDID }, pairLog, TimeSpan.FromMinutes (1));
 			if (!rv.Succeeded) {
 				if (!create_device) {
 					var try_creating_device = false;
@@ -472,22 +472,22 @@ namespace xharness
 		{
 			// here we don't care if execution fails.
 			// erase the simulator (make sure the device isn't running first)
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new string [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new string [] { "erase " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "erase " + UDID }, log, TimeSpan.FromMinutes (1));
 
 			// boot & shutdown to make sure it actually works
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new string [] { "boot " + UDID }, log, TimeSpan.FromMinutes (1));
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new string [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "boot " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
 		public async Task ShutdownAsync (Log log)
 		{
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new string [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
 		public static async Task KillEverythingAsync (Log log)
 		{
-			await ProcessHelper.ExecuteCommandAsync ("launchctl", new string [] { "remove com.apple.CoreSimulator.CoreSimulatorService" }, log, TimeSpan.FromSeconds (10));
+			await ProcessHelper.ExecuteCommandAsync ("launchctl", new [] { "remove com.apple.CoreSimulator.CoreSimulatorService" }, log, TimeSpan.FromSeconds (10));
 
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };
 
@@ -612,7 +612,7 @@ namespace xharness
 			}
 
 			log.WriteLine ("Current TCC database contents:");
-			await ProcessHelper.ExecuteCommandAsync ("sqlite3", new string [] { TCC_db, ".dump" }, log, TimeSpan.FromSeconds (5));
+			await ProcessHelper.ExecuteCommandAsync ("sqlite3", new [] { TCC_db, ".dump" }, log, TimeSpan.FromSeconds (5));
 		}
 
 		async Task OpenSimulator (Log log)
@@ -627,7 +627,7 @@ namespace xharness
 					simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
 			}
 
-			await ProcessHelper.ExecuteCommandAsync ("open", new string [] { "-a ", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
+			await ProcessHelper.ExecuteCommandAsync ("open", new [] { "-a ", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
 		}
 
 		public async Task PrepareSimulatorAsync (Log log, params string[] bundle_identifiers)

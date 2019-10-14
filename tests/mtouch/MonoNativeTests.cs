@@ -140,7 +140,7 @@ namespace Xamarin
 				var mono_native_path = Path.Combine (mtouch.AppPath, mono_native_dylib);
 
 				var symbols = MTouch.GetNativeSymbols (mono_native_path);
-				var otool_dylib = ExecutionHelper.Execute ("otool", new string [] { "-L", mono_native_path }, hide_output: true);
+				var otool_dylib = ExecutionHelper.Execute ("otool", new [] { "-L", mono_native_path }, hide_output: true);
 
 				Assert.That (symbols, Does.Contain ("_mono_native_initialize"));
 				Assert.That (otool_dylib, Does.Contain ($"@rpath/{mono_native_dylib}"));
@@ -154,7 +154,7 @@ namespace Xamarin
 					Assert.That (otool_dylib, Does.Not.Contain ("/System/Library/Frameworks/GSS.framework/GSS"));
 				}
 
-				var otool_exe = ExecutionHelper.Execute ("otool", new string [] { "-L", mtouch.NativeExecutablePath }, hide_output: true);
+				var otool_exe = ExecutionHelper.Execute ("otool", new [] { "-L", mtouch.NativeExecutablePath }, hide_output: true);
 				Assert.That (otool_exe, Does.Not.Contain ("GSS"));
 				Assert.That (otool_exe, Does.Contain ($"@rpath/{mono_native_dylib}"));
 			}
@@ -189,7 +189,7 @@ namespace Xamarin
 				Assert.That (symbols, Does.Contain ("_mono_native_initialize"));
 				Assert.That (symbols, Does.Contain ("_NetSecurityNative_ImportUserName"));
 
-				var otool_exe = ExecutionHelper.Execute ("otool", new string [] { "-L", mtouch.NativeExecutablePath }, hide_output: true);
+				var otool_exe = ExecutionHelper.Execute ("otool", new [] { "-L", mtouch.NativeExecutablePath }, hide_output: true);
 				Assert.That (otool_exe, Does.Contain ("/System/Library/Frameworks/GSS.framework/GSS"));
 			}
 		}

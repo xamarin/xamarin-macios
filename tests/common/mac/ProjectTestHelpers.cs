@@ -198,7 +198,7 @@ namespace Xamarin.MMP.Tests
 
 		public static Version FindMonoVersion ()
 		{
-			string output = RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono", new string [] { "--version" }, "FindMonoVersion");
+			string output = RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono", new [] { "--version" }, "FindMonoVersion");
 
 			Regex versionRegex = new Regex("compiler version \\d+.\\d+.\\d+(.\\d+)?", RegexOptions.IgnoreCase);
 			return new Version (versionRegex.Match (output).Value.Split (' ')[2]);
@@ -238,7 +238,7 @@ namespace Xamarin.MMP.Tests
 		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
 		public static void CleanUnifiedProject (string csprojTarget)
 		{
-			RunAndAssert (Configuration.XIBuildPath, new string [] { "--", csprojTarget, "/t:clean" }, "Clean");
+			RunAndAssert (Configuration.XIBuildPath, new [] { "--", csprojTarget, "/t:clean" }, "Clean");
 		}
 
 		public static string BuildClassicProject (string csprojTarget)
@@ -332,7 +332,7 @@ namespace Xamarin.MMP.Tests
 
 			if (config.AssetIcons) 
 			{
-				RunAndAssert ("/bin/cp", new string [] { "-R", Path.Combine (sourceDir, "Icons/Assets.xcassets"), config.TmpDir }, "Copy Asset Icons");
+				RunAndAssert ("/bin/cp", new [] { "-R", Path.Combine (sourceDir, "Icons/Assets.xcassets"), config.TmpDir }, "Copy Asset Icons");
 				config.ItemGroup += @"<ItemGroup>
     <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\Contents.json"" />
     <ImageAsset Include=""Assets.xcassets\AppIcon.appiconset\AppIcon-128.png"" />
@@ -515,7 +515,7 @@ namespace Xamarin.MMP.Tests
 
 		public static void CopyDirectory (string src, string target)
 		{
-			Xamarin.Bundler.Driver.RunCommand ("/bin/cp", new string [] { "-r", src, target });
+			Xamarin.Bundler.Driver.RunCommand ("/bin/cp", new [] { "-r", src, target });
 		}
 
 		public static string CopyFileWithSubstitutions (string src, string target, Func<string, string > replacementAction)
@@ -588,7 +588,7 @@ namespace TestCase
 			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 			Environment.SetEnvironmentVariable ("XamarinMacFrameworkRoot", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
-			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new string [] { $"--", "/restore", project}, out var output);
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/restore", project}, out var output);
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);

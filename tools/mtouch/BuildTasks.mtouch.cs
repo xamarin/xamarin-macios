@@ -334,7 +334,7 @@ namespace Xamarin.Bundler
 					// check command length
 					// getconf ARG_MAX
 					StringBuilder getconf_output = new StringBuilder ();
-					if (Driver.RunCommand ("getconf", new string [] { "ARG_MAX" }, output: getconf_output, suppressPrintOnErrors: true) == 0) {
+					if (Driver.RunCommand ("getconf", new [] { "ARG_MAX" }, output: getconf_output, suppressPrintOnErrors: true) == 0) {
 						int arg_max;
 						if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
 							var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;

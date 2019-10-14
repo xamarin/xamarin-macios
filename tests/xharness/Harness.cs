@@ -826,7 +826,7 @@ namespace xharness
 
 		public async Task ShowSimulatorList (Log log)
 		{
-			await ExecuteXcodeCommandAsync ("simctl", new string [] { "list" }, log, TimeSpan.FromSeconds (10));
+			await ExecuteXcodeCommandAsync ("simctl", new [] { "list" }, log, TimeSpan.FromSeconds (10));
 		}
 
 		public async Task<LogFile> SymbolicateCrashReportAsync (Logs logs, Log log, LogFile report)
@@ -843,7 +843,7 @@ namespace xharness
 			var name = Path.GetFileName (report.Path);
 			var symbolicated = logs.Create (Path.ChangeExtension (name, ".symbolicated.log"), $"Symbolicated crash report: {name}", timestamp: false);
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
-			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, new string [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
+			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, new [] { report.Path }, symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;
 				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
 				return symbolicated;

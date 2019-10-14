@@ -37,7 +37,7 @@ namespace Xamarin.MMP.Tests {
 				"MSBuildSDKsPath", null,
 			};
 
-			TI.RunAndAssert("/usr/local/share/dotnet/dotnet", new string [] { "restore", netStandardProject }, "Restore", environment: environment);
+			TI.RunAndAssert("/usr/local/share/dotnet/dotnet", new [] { "restore", netStandardProject }, "Restore", environment: environment);
 			TI.BuildProject(netStandardProject);
 
 			config.ItemGroup = $@"

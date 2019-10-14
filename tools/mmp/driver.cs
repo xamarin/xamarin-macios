@@ -903,7 +903,7 @@ namespace Xamarin.Bundler {
 						mono_dir = GetXamMacPrefix ();
 					} else {
 						var dir = new StringBuilder ();
-						RunCommand (pkg_config, new string [] { "--variable=prefix", "mono-2" }, null, dir);
+						RunCommand (pkg_config, new [] { "--variable=prefix", "mono-2" }, null, dir);
 						mono_dir = Path.GetFullPath (dir.ToString ().Replace (Environment.NewLine, String.Empty));
 					}
 				}
@@ -1151,13 +1151,13 @@ namespace Xamarin.Bundler {
 				if (!IsUnifiedFullSystemFramework)
 					env = new [] { "PKG_CONFIG_PATH", Path.Combine (GetXamMacPrefix (), "lib", "pkgconfig") };
 
-				RunCommand (pkg_config, new string [] { "--cflags", "mono-2" }, env, cflagsb);
-				RunCommand (pkg_config, new string [] { "--variable=libdir", "mono-2" }, env, libdirb);
+				RunCommand (pkg_config, new [] { "--cflags", "mono-2" }, env, cflagsb);
+				RunCommand (pkg_config, new [] { "--variable=libdir", "mono-2" }, env, libdirb);
 				var versionFile = "/Library/Frameworks/Mono.framework/Versions/Current/VERSION";
 				if (File.Exists (versionFile)) {
 					mono_version.Append (File.ReadAllText (versionFile));
 				} else {
-					RunCommand (pkg_config, new string [] { "--modversion", "mono-2" }, env, mono_version);
+					RunCommand (pkg_config, new [] { "--modversion", "mono-2" }, env, mono_version);
 				}
 			} catch (Win32Exception e) {
 				throw new MonoMacException (5301, true, e, "pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads");
@@ -1522,7 +1522,7 @@ namespace Xamarin.Bundler {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					Application.UpdateFile (linkWith, finalLibPath);
-					int ret = XcodeRun ("install_name_tool", new string [] { "-id", "@executable_path/../" + BundleName + "/" + libName, finalLibPath });
+					int ret = XcodeRun ("install_name_tool", new [] { "-id", "@executable_path/../" + BundleName + "/" + libName, finalLibPath });
 					if (ret != 0)
 						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 					native_libraries_copied_in.Add (libName);
@@ -1694,7 +1694,7 @@ namespace Xamarin.Bundler {
 
 			if (native_references.Contains (real_src)) {
 				if (!isStaticLib) {
-					int ret = XcodeRun ("install_name_tool", new string [] { "-id", "@executable_path/../" + BundleName + "/" + name, dest });
+					int ret = XcodeRun ("install_name_tool", new [] { "-id", "@executable_path/../" + BundleName + "/" + name, dest });
 					if (ret != 0)
 						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 				}
@@ -1729,7 +1729,7 @@ namespace Xamarin.Bundler {
 			if (existingArchs.Count () < 2)
 				return;
 
-			int ret = XcodeRun ("lipo", new string [] { dest, "-thin", arch, "-output", dest });
+			int ret = XcodeRun ("lipo", new [] { dest, "-thin", arch, "-output", dest });
 			if (ret != 0)
 				throw new MonoMacException (5311, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
 			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")

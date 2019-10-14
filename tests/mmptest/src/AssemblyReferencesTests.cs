@@ -47,12 +47,12 @@ namespace Xamarin.MMP.Tests
 				string [] sb;
 
 				// build b.dll
-				sb = new string [] { "-target:library", $"-out:{tmpDir}/b.dll", $"{tmpDir}/b.cs" };
+				sb = new [] { "-target:library", $"-out:{tmpDir}/b.dll", $"{tmpDir}/b.cs" };
 				File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public class B { }");
 				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", sb, "b");
 
 				// build a.dll
-				sb = new string [] { "-target:library", $"-out:{tmpDir}/a.dll", $"{tmpDir}/a.cs", $"-r:{tmpDir}/b.dll" };
+				sb = new [] { "-target:library", $"-out:{tmpDir}/a.dll", $"{tmpDir}/a.cs", $"-r:{tmpDir}/b.dll" };
 				File.WriteAllText (Path.Combine (tmpDir, "a.cs"), "public class A { public A () { System.Console.WriteLine (typeof (B)); }}");
 				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", sb, "a");
 

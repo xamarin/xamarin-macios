@@ -17,14 +17,14 @@ namespace Xamarin.MMP.Tests
 		{
 			string path = Path.Combine (tmpDir, "b.exe");
 			File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public static class EntryPoint { public static void Main () {} }");
-			TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", new string [] { $"-out:{path}", $"{tmpDir}/b.cs" }, "CreateTestExe");
+			TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/csc", new [] { $"-out:{path}", $"{tmpDir}/b.cs" }, "CreateTestExe");
 			return path;
 		}
 
 		IList<string> GetTestMMPInvocation (string tmpDir, string libPath, TargetFramework targetFramework, bool correctReference = true)
 		{
 			string xmReference = correctReference ? GetXMReference (targetFramework) : GetWrongXMReference (targetFramework);
-			return new string [] {
+			return new [] {
 				"-v", "-v", "-v", "-v", "-v",
 				$"--output={tmpDir}",
 				"--arch=x86_64","" +

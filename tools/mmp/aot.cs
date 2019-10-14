@@ -217,7 +217,7 @@ namespace Xamarin.Bundler {
 
 			if (IsRelease && options.IsHybridAOT) {
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-					if (RunCommand (StripCommand, new string [] { file }) != 0)
+					if (RunCommand (StripCommand, new [] { file }) != 0)
 						throw ErrorHelper.CreateError (3001, "Could not strip the assembly '{0}'", file);
 				});
 			}
@@ -226,7 +226,7 @@ namespace Xamarin.Bundler {
 				// mono --aot creates .dll.dylib.dSYM directories for each assembly AOTed
 				// There isn't an easy was to disable this behavior, so clean up under release
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-					if (RunCommand (DeleteDebugSymbolCommand, new string [] { "-r", file + ".dylib.dSYM/" }, monoEnv) != 0)
+					if (RunCommand (DeleteDebugSymbolCommand, new [] { "-r", file + ".dylib.dSYM/" }, monoEnv) != 0)
 						throw ErrorHelper.CreateError (3001, "Could not delete debug info from assembly '{0}'", file);
 				});
 			}

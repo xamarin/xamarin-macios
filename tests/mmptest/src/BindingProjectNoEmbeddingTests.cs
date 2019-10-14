@@ -16,7 +16,7 @@ namespace Xamarin.MMP.Tests
 		{
 			string bindingName = BindingProjectTests.RemoveCSProj (projectName);
 			string bindingLibraryPath = Path.Combine (tmpDir, $"bin/Debug/{bindingName}.dll");
-			string resourceOutput = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", new string [] { "--presources", bindingLibraryPath }, "monodis");
+			string resourceOutput = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", new [] { "--presources", bindingLibraryPath }, "monodis");
 			Assert.False (resourceOutput.Contains (resourceName), "Binding project output contained embedded library");
 		}
 
