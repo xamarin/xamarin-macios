@@ -40,7 +40,8 @@ namespace Network {
 		bool queueSet = false;
 		object startLock = new Object ();
 
-		internal NWBrowser (IntPtr handle, bool owns) : base (handle, owns) {
+		internal NWBrowser (IntPtr handle, bool owns) : base (handle, owns)
+		{
 			SetChangesHandler (InternalChangesHandler);
 		}
 
@@ -130,8 +131,8 @@ namespace Network {
 			var del = BlockLiteral.GetTarget<NWBrowserChangesDelegate> (block);
 			if (del != null) {
 				// we do the cleanup of the objs in the internal handlers
-				NWBrowseResult nwOldResult = (oldResult == IntPtr.Zero)? null : new NWBrowseResult (oldResult, owns: false);
-				NWBrowseResult nwNewResult = (newResult == IntPtr.Zero)? null : new NWBrowseResult (newResult, owns: false);
+				NWBrowseResult nwOldResult = (oldResult == IntPtr.Zero) ? null : new NWBrowseResult (oldResult, owns: false);
+				NWBrowseResult nwNewResult = (newResult == IntPtr.Zero) ? null : new NWBrowseResult (newResult, owns: false);
 				del (nwOldResult, nwNewResult, completed);
 			}
 		}
@@ -149,32 +150,33 @@ namespace Network {
 			// call the cb, completed, we need to get a collection and call the cb when completed
 			var individualCb = IndividualChangesDelegate;
 			individualCb?.Invoke (oldResult, newResult);
-			lock (changesLock) {
-				var completeCb = CompleteChangesDelegate;
-				if (completeCb == null) {
-					// we do not want to keep a list of the new results if the user does not care, dipose and move on
-					// results can be null, since we could have a not old one
-					oldResult?.Dispose ();
-					newResult?.Dispose ();
-					return; 
-				}
-				// get the change, add it to the list
-				var change = NWBrowseResult.GetChanges (oldResult, newResult);
-				var result = (result: newResult, change: change);
-				// at this point, we do not longer need the old result
-				// results can be null
+			var completeCb = CompleteChangesDelegate;
+			if (completeCb == null) {
+				// we do not want to keep a list of the new results if the user does not care, dispose and move on
+				// results can be null, since we could have a not old one
 				oldResult?.Dispose ();
+				newResult?.Dispose ();
+				return; 
+			}
+			// get the change, add it to the list
+			var change = NWBrowseResult.GetChanges (oldResult, newResult);
+			var result = (result: newResult, change: change);
+			// at this point, we do not longer need the old result
+			// results can be null
+			oldResult?.Dispose ();
+			List<(NWBrowseResult result, NWBrowseResultChange change)> tmp_changes = null;
+			lock (changesLock) {
 				changes.Add (result);
 				// only call when we know we are done
 				if (completed)  {
-					completeCb.Invoke (changes);
-					// clean resources, we never cleaned the new results, therefore we need to dispose them at this stage
-					foreach (var c in changes) {
-						c.result?.Dispose ();
-					}
-					// be ready for the next collection
-					changes.Clear ();
+					tmp_changes = changes;
+					changes = new List<(NWBrowseResult result, NWBrowseResultChange change)> ();
 				}
+			}
+			if (completed) {
+				completeCb.Invoke (tmp_changes);
+				foreach (var c in tmp_changes)
+					c.result?.Dispose ();
 			}
 		}
 
@@ -199,6 +201,7 @@ namespace Network {
 
 		// let to not change the API, but would be nice to remove it in the following releases.
 #if !XAMCORE_4_0
+		[Obsolete ("Uset the 'IndividualChangesDelegate' instead.")]
 		public void SetChangesHandler (Action<NWBrowseResult, NWBrowseResult> handler) => IndividualChangesDelegate = handler;
 #endif
 
