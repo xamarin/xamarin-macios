@@ -930,7 +930,7 @@ namespace xharness
 							var crash_report_target = Logs.Create (name, $"Crash report: {name}", timestamp: false);
 							var sb = new List<string> ();
 							sb.Add ($"--download-crash-report={file}");
-							sb.Add ($" --download-crash-report-to={crash_report_target.Path}");
+							sb.Add ($"--download-crash-report-to={crash_report_target.Path}");
 							sb.Add ("--sdkroot");
 							sb.Add (Harness.XcodeRoot);
 							if (!string.IsNullOrEmpty (DeviceName)) {
