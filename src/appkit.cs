@@ -2109,10 +2109,12 @@ namespace AppKit {
 		[Export ("keyEquivalentModifierMask")]
 		NSEventModifierMask KeyEquivalentModifierMask { get; set; }
 	
-		[Export ("keyEquivalentFont", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("keyEquivalentFont", ArgumentSemantic.Strong)]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "It always returns the NSButtonCell's font.")]
 		NSFont KeyEquivalentFont { get; set; }
 	
 		[Export ("setKeyEquivalentFont:size:")]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		void SetKeyEquivalentFont (string  fontName, nfloat fontSize);
 	
 		[Export ("performClick:")]
@@ -2717,6 +2719,7 @@ namespace AppKit {
 		void ViewBoundsChanged (NSNotification  notification);
 	
 		[Export ("copiesOnScroll")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "'NSClipView' minimizes area of the document view that is invalidated. Use the 'SetNeedsDisplayInRect' method to force invalidation.")]
 		bool CopiesOnScroll { get; set; }
 	
 		[Export ("autoscroll:")]
@@ -3062,6 +3065,7 @@ namespace AppKit {
 		bool CanDragItems (NSCollectionView collectionView, NSIndexSet indexes, NSEvent evt);
 
 		[Export ("collectionView:writeItemsAtIndexes:toPasteboard:")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead")]
 		bool WriteItems (NSCollectionView collectionView, NSIndexSet indexes, NSPasteboard toPasteboard);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
@@ -3087,6 +3091,7 @@ namespace AppKit {
 
 		[Mac (10,11)]
 		[Export ("collectionView:writeItemsAtIndexPaths:toPasteboard:")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead")]
 		bool WriteItems (NSCollectionView collectionView, NSSet indexPaths, NSPasteboard pasteboard);
 
 		[Mac (10,11)]
@@ -9039,6 +9044,7 @@ namespace AppKit {
 		void SortDescriptorsChanged (NSOutlineView outlineView, NSSortDescriptor [] oldDescriptors);
 	
 		[Export ("outlineView:writeItems:toPasteboard:")]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool OutlineViewwriteItemstoPasteboard (NSOutlineView outlineView, NSArray items, NSPasteboard pboard);
 	
 		[Export ("outlineView:validateDrop:proposedItem:proposedChildIndex:")]
@@ -14538,6 +14544,7 @@ namespace AppKit {
 		// 'new' since it's inlined from NSSplitViewDelegate as this instance needs [RequiresSuper]
 		[RequiresSuper]
 		[Export ("splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex:")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "This delegate method is never called, and NSSplitViewController's implementation always returns false.")]
 		new bool ShouldCollapseForDoubleClick (NSSplitView splitView, NSView subview, nint doubleClickAtDividerIndex);
 	}
 
@@ -14605,6 +14612,7 @@ namespace AppKit {
 		bool CanCollapse (NSSplitView splitView, NSView subview);
 
 		[Export ("splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex:")] [DefaultValue (true)]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "This delegate method is never called.")]
 		bool ShouldCollapseForDoubleClick (NSSplitView splitView, NSView subview, nint doubleClickAtDividerIndex);
 
 		[Export ("splitView:constrainMinCoordinate:ofSubviewAt:")]
@@ -15065,6 +15073,14 @@ namespace AppKit {
 		[Mac (10,11)]
 		[Internal, Field ("NSDefaultAttributesDocumentAttribute")]
 		NSString NSDefaultAttributesDocumentAttribute { get; }
+
+		[Mac (10, 15)]
+		[Internal, Field ("NSTargetTextScalingDocumentOption")]
+		NSString TargetTextScalingDocumentOption { get; }
+
+		[Mac (10, 15)]
+		[Internal, Field ("NSSourceTextScalingDocumentOption")]
+		NSString SourceTextScalingDocumentOption { get; }
 	}
 
 	[Mac (10,10)]
@@ -17182,6 +17198,7 @@ namespace AppKit {
 		void SortDescriptorsChanged (NSTableView tableView, NSSortDescriptor [] oldDescriptors);
 	
 		[Export ("tableView:writeRowsWithIndexes:toPasteboard:")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriterForRow' method instead")]
 		bool WriteRows (NSTableView tableView, NSIndexSet rowIndexes, NSPasteboard pboard );
 	
 		[Export ("tableView:validateDrop:proposedRow:proposedDropOperation:")]
@@ -21275,12 +21292,15 @@ namespace AppKit {
 		NSNotificationCenter NotificationCenter { get; }
 		
 		[Export ("openFile:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'OpenUrl' method instead.")]
 		bool OpenFile (string fullPath);
 		
 		[Export ("openFile:withApplication:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool OpenFile (string fullPath, [NullAllowed] string appName);
 		
 		[Export ("openFile:withApplication:andDeactivate:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool OpenFile (string fullPath, [NullAllowed] string appName, bool deactivate);
 		
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSWorkspace.OpenUrl' instead.")]
@@ -21291,15 +21311,20 @@ namespace AppKit {
 		bool OpenUrl (NSUrl url);
 		
 		[Export ("launchApplication:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool LaunchApplication (string appName);
 		
 		[Export ("launchApplicationAtURL:options:configuration:error:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		NSRunningApplication LaunchApplication (NSUrl url, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
 		
 		[Export ("launchApplication:showIcon:autolaunch:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool LaunchApplication (string appName, bool showIcon, bool autolaunch);
 		
 		[Export ("fullPathForApplication:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'UrlForApplication' method instead.")]
+		[return: NullAllowed]
 		string FullPathForApplication (string appName);
 		
 		[Export ("selectFile:inFileViewerRootedAtPath:"), ThreadSafe]
@@ -21378,9 +21403,12 @@ namespace AppKit {
 		NSUrl UrlForApplication (NSUrl url );
 		
 		[Export ("absolutePathForAppBundleWithIdentifier:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'UrlForApplication' method instead.")]
+		[return: NullAllowed]
 		string AbsolutePathForAppBundle (string bundleIdentifier);
 		
 		[Export ("launchAppWithBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifier:"), ThreadSafe]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
 		bool LaunchApp (string bundleIdentifier, NSWorkspaceLaunchOptions options, NSAppleEventDescriptor descriptor, IntPtr identifier);
 		
 		[Internal]
@@ -21549,10 +21577,14 @@ namespace AppKit {
 
 		[Mac (10,10)]
 		[Export ("openURL:options:configuration:error:")]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
+		[return: NullAllowed]
 		NSRunningApplication OpenURL (NSUrl url, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
 
 		[Mac (10,10)]
 		[Export ("openURLs:withApplicationAtURL:options:configuration:error:")]
+		[Deprecated (PlatformName.MacOSX, 10, 15)]
+		[return: NullAllowed]
 		NSRunningApplication OpenURLs (NSUrl [] urls, NSUrl applicationURL, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
 
 		[Mac (10, 10)]
@@ -26692,4 +26724,138 @@ namespace AppKit {
 		[Export ("removeWindow:")]
 		void Remove (NSWindow window);
 	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSTextScalingType : long
+	{
+		Standard = 0,
+		iOS,
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSButtonTouchBarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Static]
+		[Export ("buttonTouchBarItemWithIdentifier:title:target:action:")]
+		NSButtonTouchBarItem Create ([BindAs (typeof (NSTouchBarItemIdentifier))] NSString identifier, string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Static]
+		[Export ("buttonTouchBarItemWithIdentifier:image:target:action:")]
+		NSButtonTouchBarItem Create ([BindAs (typeof (NSTouchBarItemIdentifier))] NSString identifier, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Static]
+		[Export ("buttonTouchBarItemWithIdentifier:title:image:target:action:")]
+		NSButtonTouchBarItem Create ([BindAs (typeof (NSTouchBarItemIdentifier))] NSString identifier, string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Export ("title")]
+		string Title { get; set; }
+
+		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
+		NSImage Image { get; set; }
+
+		[NullAllowed, Export ("bezelColor", ArgumentSemantic.Copy)]
+		NSColor BezelColor { get; set; }
+
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
+		Selector Action { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSCollectionLayoutSectionOrthogonalScrollingBehavior : long
+	{
+		None,
+		Continuous,
+		ContinuousGroupLeadingBoundary,
+		Paging,
+		GroupPaging,
+		GroupPagingCentered,
+	}
+
+	[Flags, Mac (10,15)]
+	[Native]
+	public enum NSDirectionalRectEdge : ulong
+	{
+		None = 0x0,
+		Top = 1uL << 0,
+		Leading = 1uL << 1,
+		Bottom = 1uL << 2,
+		Trailing = 1uL << 3,
+		All = Top | Leading | Bottom | Trailing,
+	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSPickerTouchBarItemControlRepresentation : long
+	{
+		Automatic = 0,
+		Expanded = 1,
+		Collapsed = 2,
+	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSPickerTouchBarItemSelectionMode : long
+	{
+		SelectOne = 0,
+		SelectAny = 1,
+		Momentary = 2,
+	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSRectAlignment : long
+	{
+		None = 0,
+		Top,
+		TopLeading,
+		Leading,
+		BottomLeading,
+		Bottom,
+		BottomTrailing,
+		Trailing,
+		TopTrailing,
+	}
+
+	[Native]
+	public enum NSTextInputTraitType : long
+	{
+		Default,
+		No,
+		Yes,
+	}
+
+	[Mac (10,15)]
+	[Native]
+	public enum NSToolbarItemGroupControlRepresentation : long
+	{
+		Automatic,
+		Expanded,
+		Collapsed,
+	}
+
+	[Mac (10,15), iOS (13,0)]
+	[Native]
+	public enum NSToolbarItemGroupSelectionMode : long
+	{
+		SelectOne = 0,
+		SelectAny = 1,
+		Momentary = 2,
+	}	
 }

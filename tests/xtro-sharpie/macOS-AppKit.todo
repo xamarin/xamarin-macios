@@ -1,36 +1,8 @@
-!deprecated-attribute-missing! NSButtonCell::keyEquivalentFont missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSButtonCell::setKeyEquivalentFont: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSButtonCell::setKeyEquivalentFont:size: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSClipView::copiesOnScroll missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSClipView::setCopiesOnScroll: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSSplitViewDelegate::splitView:shouldCollapseSubview:forDoubleClickOnDividerAtIndex: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::absolutePathForAppBundleWithIdentifier: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::fullPathForApplication: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::launchApplication: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::launchApplication:showIcon:autolaunch: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::launchApplicationAtURL:options:configuration:error: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::launchAppWithBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifier: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::openFile: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::openFile:withApplication: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::openFile:withApplication:andDeactivate: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::openURL:options:configuration:error: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWorkspace::openURLs:withApplicationAtURL:options:configuration:error: missing a [Deprecated] attribute
-!missing-enum! NSCollectionLayoutSectionOrthogonalScrollingBehavior not bound
-!missing-enum! NSDirectionalRectEdge not bound
-!missing-enum! NSPickerTouchBarItemControlRepresentation not bound
-!missing-enum! NSPickerTouchBarItemSelectionMode not bound
-!missing-enum! NSRectAlignment not bound
-!missing-enum! NSTextInputTraitType not bound
-!missing-enum! NSTextScalingType not bound
-!missing-enum! NSToolbarItemGroupControlRepresentation not bound
-!missing-enum! NSToolbarItemGroupSelectionMode not bound
 !missing-field! NSDirectionalEdgeInsetsZero not bound
 !missing-field! NSFontDescriptorSystemDesignDefault not bound
 !missing-field! NSFontDescriptorSystemDesignMonospaced not bound
 !missing-field! NSFontDescriptorSystemDesignRounded not bound
 !missing-field! NSFontDescriptorSystemDesignSerif not bound
-!missing-field! NSSourceTextScalingDocumentOption not bound
-!missing-field! NSTargetTextScalingDocumentOption not bound
 !missing-protocol! NSCollectionLayoutContainer not bound
 !missing-protocol! NSCollectionLayoutEnvironment not bound
 !missing-protocol! NSCollectionLayoutVisibleItem not bound
@@ -42,9 +14,6 @@
 !missing-protocol-conformance! NSTextList should conform to NSSecureCoding
 !missing-selector! +NSBindingSelectionMarker::defaultPlaceholderForMarker:onClass:withBinding: not bound
 !missing-selector! +NSBindingSelectionMarker::setDefaultPlaceholder:forMarker:onClass:withBinding: not bound
-!missing-selector! +NSButtonTouchBarItem::buttonTouchBarItemWithIdentifier:image:target:action: not bound
-!missing-selector! +NSButtonTouchBarItem::buttonTouchBarItemWithIdentifier:title:image:target:action: not bound
-!missing-selector! +NSButtonTouchBarItem::buttonTouchBarItemWithIdentifier:title:target:action: not bound
 !missing-selector! +NSCollectionLayoutAnchor::layoutAnchorWithEdges: not bound
 !missing-selector! +NSCollectionLayoutAnchor::layoutAnchorWithEdges:absoluteOffset: not bound
 !missing-selector! +NSCollectionLayoutAnchor::layoutAnchorWithEdges:fractionalOffset: not bound
@@ -84,20 +53,6 @@
 !missing-selector! +NSTouchBar::isAutomaticCustomizeTouchBarMenuItemEnabled not bound
 !missing-selector! +NSTouchBar::setAutomaticCustomizeTouchBarMenuItemEnabled: not bound
 !missing-selector! +NSWorkspaceOpenConfiguration::configuration not bound
-!missing-selector! NSButtonTouchBarItem::action not bound
-!missing-selector! NSButtonTouchBarItem::bezelColor not bound
-!missing-selector! NSButtonTouchBarItem::customizationLabel not bound
-!missing-selector! NSButtonTouchBarItem::image not bound
-!missing-selector! NSButtonTouchBarItem::isEnabled not bound
-!missing-selector! NSButtonTouchBarItem::setAction: not bound
-!missing-selector! NSButtonTouchBarItem::setBezelColor: not bound
-!missing-selector! NSButtonTouchBarItem::setCustomizationLabel: not bound
-!missing-selector! NSButtonTouchBarItem::setEnabled: not bound
-!missing-selector! NSButtonTouchBarItem::setImage: not bound
-!missing-selector! NSButtonTouchBarItem::setTarget: not bound
-!missing-selector! NSButtonTouchBarItem::setTitle: not bound
-!missing-selector! NSButtonTouchBarItem::target not bound
-!missing-selector! NSButtonTouchBarItem::title not bound
 !missing-selector! NSCollectionLayoutAnchor::edges not bound
 !missing-selector! NSCollectionLayoutAnchor::isAbsoluteOffset not bound
 !missing-selector! NSCollectionLayoutAnchor::isFractionalOffset not bound
@@ -348,7 +303,6 @@
 !missing-selector! NSWorkspaceOpenConfiguration::setHidesOthers: not bound
 !missing-selector! NSWorkspaceOpenConfiguration::setPromptsUserIfNeeded: not bound
 !missing-selector! NSWorkspaceOpenConfiguration::setRequiresUniversalLinks: not bound
-!missing-type! NSButtonTouchBarItem not bound
 !missing-type! NSCollectionLayoutAnchor not bound
 !missing-type! NSCollectionLayoutBoundarySupplementaryItem not bound
 !missing-type! NSCollectionLayoutDecorationItem not bound
@@ -372,10 +326,6 @@
 !missing-type! NSSwitch not bound
 !missing-type! NSTextCheckingController not bound
 !missing-type! NSWorkspaceOpenConfiguration not bound
-!deprecated-attribute-missing! NSCollectionViewDelegate::collectionView:writeItemsAtIndexes:toPasteboard: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSCollectionViewDelegate::collectionView:writeItemsAtIndexPaths:toPasteboard: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSOutlineViewDataSource::outlineView:writeItems:toPasteboard: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSTableViewDataSource::tableView:writeRowsWithIndexes:toPasteboard: missing a [Deprecated] attribute
 !missing-protocol! NSSharingServicePickerToolbarItemDelegate not bound
 !missing-selector! NSSharingServicePickerToolbarItem::delegate not bound
 !missing-selector! NSSharingServicePickerToolbarItem::setDelegate: not bound
