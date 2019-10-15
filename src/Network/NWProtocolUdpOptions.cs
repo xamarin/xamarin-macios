@@ -22,13 +22,7 @@ namespace Network {
 	public class NWProtocolUdpOptions : NWProtocolOptions {
 		internal NWProtocolUdpOptions (IntPtr handle, bool owns) : base (handle, owns) {}
 
-		[DllImport (Constants.NetworkLibrary)]
-		static extern IntPtr nw_udp_create_options ();
-
 		public NWProtocolUdpOptions () : this (nw_udp_create_options (), owns: true) {}
-
-		[DllImport (Constants.NetworkLibrary)]
-		extern static void nw_udp_options_set_prefer_no_checksum (IntPtr handle, [MarshalAs (UnmanagedType.U1)] bool preferNoChecksums);
 
 		public void SetPreferNoChecksum (bool preferNoChecksum) => nw_udp_options_set_prefer_no_checksum (GetCheckedHandle (), preferNoChecksum);
 	}

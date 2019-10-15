@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.Network {
 		[TearDown]
 		public void TearDown () => options.Dispose ();
 
-		// proeprties do not have getters, but we know that if we call
+		// properties do not have getters, but we know that if we call
 		// the setter with the wrong pointer we do have a exception
 		// thrown
 

@@ -42,28 +42,25 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
 			if (del != null) {
-				NWProtocolOptions castedOptions;
 				using (var tempOptions = new NWProtocolOptions (iface, owns: false)) 
 				using (var definition = tempOptions.ProtocolDefinition) {
+					NWProtocolOptions castedOptions = null;
+
 					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
 						castedOptions = new NWProtocolTcpOptions (iface, owns: false);
-					}
-					if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
 						castedOptions = new NWProtocolUdpOptions (iface, owns: false);
-					} 
-					if (definition.Equals (NWProtocolDefinition.TlsDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.TlsDefinition)) {
 						castedOptions = new NWProtocolTlsOptions (iface, owns: false);
-					}
-					if (definition.Equals (NWProtocolDefinition.IPDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.IPDefinition)) {
 						castedOptions = new NWProtocolIPOptions (iface, owns: false);
-					}
-					if (definition.Equals (NWProtocolDefinition.WebSocketDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.WebSocketDefinition)) {
 						castedOptions = new NWWebSocketOptions (iface, owns: false);
-					}
-					castedOptions = null;
+					} 
+
+					del (castedOptions ?? tempOptions);
+					castedOptions?.Dispose ();
 				}
-				del (castedOptions);
-				castedOptions?.Dispose ();
 			}
 		}
 

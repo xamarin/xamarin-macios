@@ -22,13 +22,7 @@ namespace Network {
 	public class NWProtocolTlsOptions : NWProtocolOptions {
 		internal NWProtocolTlsOptions (IntPtr handle, bool owns) : base (handle, owns) {}
 
-		[DllImport (Constants.NetworkLibrary)]
-		static extern IntPtr nw_tls_create_options ();
-		
 		public NWProtocolTlsOptions () : this (nw_tls_create_options (), owns: true) {}
-
-		[DllImport (Constants.NetworkLibrary)]
-		extern static IntPtr nw_tls_copy_sec_protocol_options (IntPtr options);
 
 		public SecProtocolOptions ProtocolOptions => new SecProtocolOptions (nw_tls_copy_sec_protocol_options (GetCheckedHandle ()), owns: true);
 	}
