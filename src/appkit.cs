@@ -27462,6 +27462,8 @@ namespace AppKit {
 		NSTextInputTraitType TextCompletionType { get; set; }
 	}
 
+	interface INSTextCheckingClient { }
+
 	[Protocol]
 	interface NSTextCheckingClient : NSTextInputTraits, NSTextInputClient
 	{
@@ -27547,5 +27549,71 @@ namespace AppKit {
 
 		[Export ("requiresUniversalLinks")]
 		bool RequiresUniversalLinks { get; set; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSTextCheckingController
+	{
+		[Export ("initWithClient:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INSTextCheckingClient client);
+
+		[Export ("client")]
+		INSTextCheckingClient Client { get; }
+
+		[Export ("invalidate")]
+		void Invalidate ();
+
+		[Export ("didChangeTextInRange:")]
+		void DidChangeText (NSRange range);
+
+		[Export ("insertedTextInRange:")]
+		void InsertedText (NSRange range);
+
+		[Export ("didChangeSelectedRange")]
+		void DidChangeSelectedRange ();
+
+		[Export ("considerTextCheckingForRange:")]
+		void ConsiderTextChecking (NSRange range);
+
+		[Export ("checkTextInRange:types:options:")]
+		void CheckText (NSRange range, NSTextCheckingTypes checkingTypes, NSDictionary<NSString, NSObject> options);
+
+		[Export ("checkTextInSelection:")]
+		void CheckTextInSelection ([NullAllowed] NSObject sender);
+
+		[Export ("checkTextInDocument:")]
+		void CheckTextInDocument ([NullAllowed] NSObject sender);
+
+		[Export ("orderFrontSubstitutionsPanel:")]
+		void OrderFrontSubstitutionsPanel ([NullAllowed] NSObject sender);
+
+		[Export ("checkSpelling:")]
+		void CheckSpelling ([NullAllowed] NSObject sender);
+
+		[Export ("showGuessPanel:")]
+		void ShowGuessPanel ([NullAllowed] NSObject sender);
+
+		[Export ("changeSpelling:")]
+		void ChangeSpelling ([NullAllowed] NSObject sender);
+
+		[Export ("ignoreSpelling:")]
+		void IgnoreSpelling ([NullAllowed] NSObject sender);
+
+		[Export ("updateCandidates")]
+		void UpdateCandidates ();
+
+		[Export ("validAnnotations")]
+		// [Verify (MethodToProperty)]
+		string[] ValidAnnotations { get; }
+
+		[Export ("menuAtIndex:clickedOnSelection:effectiveRange:")]
+		[return: NullAllowed]
+		unsafe NSMenu MenuAtIndex (nuint location, bool clickedOnSelection, NSRange effectiveRange); //unsafe why? Convert NSRangePointer to NSRange or use Intptr
+
+		[Export ("spellCheckerDocumentTag")]
+		nint SpellCheckerDocumentTag { get; set; }
 	}
 }
