@@ -50,19 +50,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected virtual string OperatingSystem {
 			get {
-				switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
-				case PlatformFramework.WatchOS:
-					return "watchos";
-				case PlatformFramework.TVOS:
-					return "tvos";
-				case PlatformFramework.MacOS:
-					return "osx";
-				case PlatformFramework.iOS:
-					return "ios";
-				default:
-					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
-					return string.Empty;
-				}
+				return PlatformFrameworkHelper.GetOperatingSystem (TargetFrameworkIdentifier);
 			}
 		}
 

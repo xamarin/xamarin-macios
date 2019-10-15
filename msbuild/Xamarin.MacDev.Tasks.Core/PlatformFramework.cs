@@ -54,5 +54,22 @@ namespace Xamarin.MacDev.Tasks
 				throw new InvalidOperationException ("Unknown TargetFrameworkIdentifier: " + targetFrameworkIdentifier);
 			}
 		}
+
+		public static string GetOperatingSystem (string targetFrameworkIdentifier)
+		{
+			var framework = PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier);
+			switch (framework) {
+			case PlatformFramework.WatchOS:
+				return "watchos";
+			case PlatformFramework.TVOS:
+				return "tvos";
+			case PlatformFramework.MacOS:
+				return "osx";
+			case PlatformFramework.iOS:
+				return "ios";
+			default:
+				throw new InvalidOperationException (string.Format ("Unknown target framework {0} for target framework identifier {2}.", framework, targetFrameworkIdentifier));
+			}
+		}
 	}
 }
