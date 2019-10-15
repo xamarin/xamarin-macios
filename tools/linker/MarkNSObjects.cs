@@ -29,7 +29,6 @@
 //
 
 using System;
-using System.Collections.Generic;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -154,8 +153,7 @@ namespace Xamarin.Linker.Steps {
 
 		static bool IsProductType (TypeDefinition type)
 		{
-			var name = type.Module.Assembly.Name.Name;
-			return name == ProductAssembly || name == "System.Net.Http";
+			return type.Module.Assembly.Name.Name == ProductAssembly;
 		}
 	}
 }

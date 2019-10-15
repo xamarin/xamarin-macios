@@ -459,8 +459,6 @@ namespace Foundation {
 			return await tcs.Task.ConfigureAwait (false);
 		}
 
-		// Needed since we strip during linking since we're inside a product assembly.
-		[Preserve (AllMembers = true)]
 		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
 		{
 			readonly NSUrlSessionHandler sessionHandler;
@@ -487,6 +485,7 @@ namespace Foundation {
 				return null;
 			}
 
+			[Preserve (Conditional = true)]
 			public override void DidReceiveResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler)
 			{
 				var inflight = GetInflightData (dataTask);
@@ -549,6 +548,7 @@ namespace Foundation {
 				completionHandler (NSUrlSessionResponseDisposition.Allow);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void DidReceiveData (NSUrlSession session, NSUrlSessionDataTask dataTask, NSData data)
 			{
 				var inflight = GetInflightData (dataTask);
@@ -560,6 +560,7 @@ namespace Foundation {
 				SetResponse (inflight);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error)
 			{
 				var inflight = GetInflightData (task);
@@ -608,16 +609,19 @@ namespace Foundation {
 				}
 			}
 
+			[Preserve (Conditional = true)]
 			public override void WillCacheResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler)
 			{
 				completionHandler (sessionHandler.DisableCaching ? null : proposedResponse);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void WillPerformHttpRedirection (NSUrlSession session, NSUrlSessionTask task, NSHttpUrlResponse response, NSUrlRequest newRequest, Action<NSUrlRequest> completionHandler)
 			{
 				completionHandler (sessionHandler.AllowAutoRedirect ? newRequest : null);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void DidReceiveChallenge (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
 			{
 				var inflight = GetInflightData (task);
@@ -705,8 +709,6 @@ namespace Foundation {
 			}
 		}
 
-		// Needed since we strip during linking since we're inside a product assembly.
-		[Preserve (AllMembers = true)]
 		class InflightData : IDisposable
 		{
 			public readonly object Lock = new object ();
@@ -745,8 +747,6 @@ namespace Foundation {
 
 		}
 
-		// Needed since we strip during linking since we're inside a product assembly.
-		[Preserve (AllMembers = true)]
 		class NSUrlSessionDataTaskStreamContent : MonoStreamContent
 		{
 			Action disposed;
@@ -857,8 +857,6 @@ namespace Foundation {
 			}
 		}
 
-		// Needed since we strip during linking since we're inside a product assembly.
-		[Preserve (AllMembers = true)]
 		class NSUrlSessionDataTaskStream : Stream
 		{
 			readonly Queue<NSData> data;
@@ -1004,8 +1002,6 @@ namespace Foundation {
 			}
 		}
 
-		// Needed since we strip during linking since we're inside a product assembly.
-		[Preserve (AllMembers = true)]
 		class WrappedNSInputStream : NSInputStream
 		{
 			NSStreamStatus status;

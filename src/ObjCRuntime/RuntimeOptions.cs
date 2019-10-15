@@ -150,7 +150,6 @@ namespace ObjCRuntime {
 			}
 		}
 
-		[Preserve] // always present but re-written by the linker
 		internal static HttpMessageHandler GetHttpMessageHandler ()
 		{
 			var options = RuntimeOptions.Read ();
