@@ -1,0 +1,5 @@
+## appended from unclassified file
+!deprecated-attribute-missing! UIApplicationDelegate::application:shouldRestoreApplicationState: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UIApplicationDelegate::application:shouldSaveApplicationState: missing a [Deprecated] attribute
+!missing-protocol-member! UIApplicationDelegate::application:shouldRestoreSecureApplicationState: not found
+!missing-protocol-member! UIApplicationDelegate::application:shouldSaveSecureApplicationState: not found
