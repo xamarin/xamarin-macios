@@ -69,7 +69,30 @@
 !incorrect-protocol-member! MTLResource::makeAliasable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::iosurface is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::iosurfacePlane is REQUIRED and should be abstract
-
+!incorrect-protocol-member! MTLHeap::hazardTrackingMode is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLHeap::newBufferWithLength:options:offset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLHeap::newTextureWithDescriptor:offset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLHeap::resourceOptions is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLHeap::type is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectCommandBuffer::indirectComputeCommandAtIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::setRenderPipelineState: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::hazardTrackingMode is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::heapOffset is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::resourceOptions is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useHeap:stages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useHeaps:count:stages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useResource:usage:stages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::useResources:count:usage:stages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::newTextureViewWithPixelFormat:textureType:levels:slices:swizzle: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::swizzle is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::copyFromTexture:sourceSlice:sourceLevel:toTexture:destinationSlice:destinationLevel:sliceCount:levelCount: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::copyFromTexture:toTexture: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::executeCommandsInBuffer:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::executeCommandsInBuffer:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newSharedTextureWithHandle: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsFamily: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setRenderPipelineStates:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::hasUnifiedMemory is REQUIRED and should be abstract
 
 ## unsorted
 
