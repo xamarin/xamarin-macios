@@ -27427,4 +27427,125 @@ namespace AppKit {
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
+
+	[Protocol]
+	interface NSTextInputTraits
+	{
+		[Export ("autocorrectionType", ArgumentSemantic.Assign)]
+		NSTextInputTraitType AutocorrectionType { get; set; }
+
+		[Export ("spellCheckingType", ArgumentSemantic.Assign)]
+		NSTextInputTraitType SpellCheckingType { get; set; }
+
+		[Export ("grammarCheckingType", ArgumentSemantic.Assign)]
+		NSTextInputTraitType GrammarCheckingType { get; set; }
+
+		[Export ("smartQuotesType", ArgumentSemantic.Assign)]
+		NSTextInputTraitType SmartQuotesType { get; set; }
+
+		[Export ("smartDashesType", ArgumentSemantic.Assign)]
+		NSTextInputTraitType SmartDashesType { get; set; }
+
+		[Export ("smartInsertDeleteType", ArgumentSemantic.Assign)]
+		NSTextInputTraitType SmartInsertDeleteType { get; set; }
+
+		[Export ("textReplacementType", ArgumentSemantic.Assign)]
+		NSTextInputTraitType TextReplacementType { get; set; }
+
+		[Export ("dataDetectionType", ArgumentSemantic.Assign)]
+		NSTextInputTraitType DataDetectionType { get; set; }
+
+		[Export ("linkDetectionType", ArgumentSemantic.Assign)]
+		NSTextInputTraitType LinkDetectionType { get; set; }
+
+		[Export ("textCompletionType", ArgumentSemantic.Assign)]
+		NSTextInputTraitType TextCompletionType { get; set; }
+	}
+
+	[Protocol]
+	interface NSTextCheckingClient : NSTextInputTraits, NSTextInputClient
+	{
+		[Abstract]
+		[Export ("annotatedSubstringForProposedRange:actualRange:")]
+		[return: NullAllowed]
+		unsafe NSAttributedString AnnotatedSubstring (NSRange range, [NullAllowed] NSRange actualRange); //unsafe?
+
+		[Abstract]
+		[Export ("setAnnotations:range:")]
+		void SetAnnotations (NSDictionary<NSString, NSString> annotations, NSRange range);
+
+		[Abstract]
+		[Export ("addAnnotations:range:")]
+		void AddAnnotations (NSDictionary<NSString, NSString> annotations, NSRange range);
+
+		[Abstract]
+		[Export ("removeAnnotation:range:")]
+		void RemoveAnnotation (string annotationName, NSRange range);
+
+		[Abstract]
+		[Export ("replaceCharactersInRange:withAnnotatedString:")]
+		void ReplaceCharacters (NSRange range, NSAttributedString annotatedString);
+
+		[Abstract]
+		[Export ("selectAndShowRange:")]
+		void SelectAndShow (NSRange range);
+
+		[Abstract]
+		[Export ("viewForRange:firstRect:actualRange:")]
+		[return: NullAllowed]
+		unsafe NSView View (NSRange range, [NullAllowed] CGRect firstRect, [NullAllowed] NSRange actualRange); //unsafe?
+
+		[Abstract]
+		[NullAllowed, Export ("candidateListTouchBarItem")]
+		// [Verify (MethodToProperty)]
+		NSCandidateListTouchBarItem CandidateListTouchBarItem { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	interface NSWorkspaceOpenConfiguration : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("configuration")]
+		NSWorkspaceOpenConfiguration Configuration ();
+
+		[Export ("promptsUserIfNeeded")]
+		bool PromptsUserIfNeeded { get; set; }
+
+		[Export ("addsToRecentItems")]
+		bool AddsToRecentItems { get; set; }
+
+		[Export ("activates")]
+		bool Activates { get; set; }
+
+		[Export ("hides")]
+		bool Hides { get; set; }
+
+		[Export ("hidesOthers")]
+		bool HidesOthers { get; set; }
+
+		[Export ("forPrinting")]
+		bool ForPrinting { [Bind ("isForPrinting")] get; set; }
+
+		[Export ("createsNewApplicationInstance")]
+		bool CreatesNewApplicationInstance { get; set; }
+
+		[Export ("allowsRunningApplicationSubstitution")]
+		bool AllowsRunningApplicationSubstitution { get; set; }
+
+		[Export ("arguments", ArgumentSemantic.Copy)]
+		string[] Arguments { get; set; }
+
+		[Export ("environment", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSString> Environment { get; set; }
+
+		[NullAllowed, Export ("appleEvent", ArgumentSemantic.Strong)]
+		NSAppleEventDescriptor AppleEvent { get; set; }
+
+		[Export ("architecture")]
+		int Architecture { get; set; }
+
+		[Export ("requiresUniversalLinks")]
+		bool RequiresUniversalLinks { get; set; }
+	}
 }
