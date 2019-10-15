@@ -136,8 +136,6 @@ namespace Xamarin.MacDev.Tasks
 
 			args.Add (string.Format ("-m{0}-version-min={1}", OperatingSystem, minimumDeploymentTarget));
 
-			Console.WriteLine ("OPERATING SYSTEM: {0} in {1}", OperatingSystem, GetType ());
-
 			args.AddQuoted (SourceFile.ItemSpec);
 
 			return args.ToString ();
