@@ -27616,4 +27616,37 @@ namespace AppKit {
 		[Export ("spellCheckerDocumentTag")]
 		nint SpellCheckerDocumentTag { get; set; }
 	}
+
+	delegate NSCollectionViewItem NSCollectionViewDiffableDataSourceItemProvider (NSCollectionView collectionView, NSIndexPath indexPath, NSObject arg2);
+
+	delegate NSView NSCollectionViewDiffableDataSourceSupplementaryViewProvider (NSCollectionView collectionView, string arg1, NSIndexPath indexPath);
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType> : NSCollectionViewDataSource
+		where SectionIdentifierType : NSObject
+		where ItemIdentifierType : NSObject {
+
+		[Export ("initWithCollectionView:itemProvider:")]
+		IntPtr Constructor (NSCollectionView collectionView, NSCollectionViewDiffableDataSourceItemProvider itemProvider);
+
+		[Export ("snapshot")]
+		// [Verify (MethodToProperty)]
+		NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> Snapshot { get; }
+
+		[Export ("applySnapshot:animatingDifferences:")]
+		void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences);
+
+		[Export ("itemIdentifierForIndexPath:")]
+		[return: NullAllowed]
+		ItemIdentifierType GetItemIdentifier (NSIndexPath indexPath);
+
+		[Export ("indexPathForItemIdentifier:")]
+		[return: NullAllowed]
+		NSIndexPath GetIndexPath (ItemIdentifierType identifier);
+
+		[NullAllowed, Export ("supplementaryViewProvider", ArgumentSemantic.Copy)]
+		NSCollectionViewDiffableDataSourceSupplementaryViewProvider SupplementaryViewProvider { get; set; }
+	}
 }
