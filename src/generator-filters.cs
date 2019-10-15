@@ -38,7 +38,7 @@ public partial class Generator {
 		// filters are now exposed as protocols so we need to conform to them
 		var interfaces = String.Empty;
 		foreach (var i in type.GetInterfaces ()) {
-			interfaces += $", {i.FullName}";
+			interfaces += $", I{i.Name}";
 		}
 
 		// type declaration
@@ -115,8 +115,8 @@ public partial class Generator {
 		// properties
 		GenerateProperties (type);
 
-		// protocols (on the type it will be an interface starting with `I`)
-		GenerateProtocolProperties (type, new HashSet<string> (), checkPrefix: true);
+		// protocols
+		GenerateProtocolProperties (type, new HashSet<string> ());
 
 		indent--;
 		print ("}");
@@ -128,24 +128,24 @@ public partial class Generator {
 		}
 	}
 
-	void GenerateProtocolProperties (Type type, HashSet<string> processed, bool checkPrefix)
+	void GenerateProtocolProperties (Type type, HashSet<string> processed)
 	{
 		foreach (var i in type.GetInterfaces ()) {
-			if (!IsProtocolInterface (i, checkPrefix, out var protocol))
+			if (!IsProtocolInterface (i, false, out var protocol))
 				continue;
 
 			// the same protocol can be included more than once (interfaces) - but we must generate only once
-			var pname = protocol.Name;
+			var pname = i.Name;
 			if (processed.Contains (pname))
 				continue;
 			processed.Add (pname);
 
 			print ("");
 			print ($"// {pname} protocol members ");
-			GenerateProperties (protocol);
+			GenerateProperties (i);
 
-			// also include base interfaces/protocols (won't start with an `I`)
-			GenerateProtocolProperties (protocol, processed, checkPrefix: false);
+			// also include base interfaces/protocols
+			GenerateProtocolProperties (i, processed);
 		}
 	}
 

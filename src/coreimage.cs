@@ -1165,8 +1165,6 @@ namespace CoreImage {
 		NSString FilterGenerator  { get; }
 	}
 
-	interface ICIFilterConstructor {}
-
 	[iOS (9,0)]
 	[Protocol]
 	interface CIFilterConstructor
@@ -2797,7 +2795,7 @@ namespace CoreImage {
 	[iOS (8,0)]
 	[Mac (10,10)]
 	[BaseType (typeof (CIFilter))]
-	interface CIAccordionFoldTransition : ICIAccordionFoldTransitionProtocol {
+	interface CIAccordionFoldTransition : CIAccordionFoldTransitionProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'FoldCount' instead.")]
@@ -2826,7 +2824,7 @@ namespace CoreImage {
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
-	interface CIAffineFilter : ICIFilterProtocol {
+	interface CIAffineFilter : CIFilterProtocol {
 
 #if !XAMCORE_4_0
 		[NoMac]
@@ -2838,12 +2836,12 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIAffineFilter))]
-	interface CIAffineClamp : ICIAffineClampProtocol {
+	interface CIAffineClamp : CIAffineClampProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIAffineFilter))]
-	interface CIAffineTile : ICIAffineTileProtocol {
+	interface CIAffineTile : CIAffineTileProtocol {
 	}
 
 	[CoreImageFilter]
@@ -2949,7 +2947,7 @@ namespace CoreImage {
 	[iOS (8,0)]
 	[Mac (10,10)]
 	[BaseType (typeof (CICodeGenerator))]
-	interface CIAztecCodeGenerator : ICIAztecCodeGeneratorProtocol {
+	interface CIAztecCodeGenerator : CIAztecCodeGeneratorProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCompactStyle' instead.")]
@@ -2968,7 +2966,7 @@ namespace CoreImage {
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
-	interface CITransitionFilter : ICITransitionFilterProtocol {
+	interface CITransitionFilter : CITransitionFilterProtocol {
 	}
 
 	[CoreImageFilter]
@@ -2994,7 +2992,7 @@ namespace CoreImage {
 
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIBlendFilter))]
-	interface CIBlendWithMask : ICIBlendWithMaskProtocol {
+	interface CIBlendWithMask : CIBlendWithMaskProtocol {
 
 #if !XAMCORE_4_0
 		// renamed for API compatibility
@@ -3006,13 +3004,13 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIBloom : ICIBloomProtocol {
+	interface CIBloom : CIBloomProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIBoxBlur : ICIBoxBlurProtocol {
+	interface CIBoxBlur : CIBoxBlurProtocol {
 	}
 
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
@@ -3051,7 +3049,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CICheckerboardGenerator : ICICheckerboardGeneratorProtocol {
+	interface CICheckerboardGenerator : CICheckerboardGeneratorProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
@@ -3088,7 +3086,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIScreenFilter))]
-	interface CICircularScreen : ICICircularScreenProtocol {
+	interface CICircularScreen : CICircularScreenProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3112,7 +3110,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter), Name="CICMYKHalftone")]
-	interface CICmykHalftone : ICICmykHalftoneProtocol {
+	interface CICmykHalftone : CICmykHalftoneProtocol {
 
 #if !XAMCORE_4_0
 		// renamed for API compatibility
@@ -3130,7 +3128,7 @@ namespace CoreImage {
 	[iOS (8,0)]
 	[Mac (10,10)]
 	[BaseType (typeof (CICodeGenerator))]
-	interface CICode128BarcodeGenerator : ICICode128BarcodeGeneratorProtocol {
+	interface CICode128BarcodeGenerator : CICode128BarcodeGeneratorProtocol {
 
 		[CoreImageFilterProperty ("outputCGImage")]
 		CIImage OutputCGImage { get; }
@@ -3162,7 +3160,7 @@ namespace CoreImage {
 	[iOS (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (CIFilter))]
-	interface CIColorClamp : ICIColorClampProtocol {
+	interface CIColorClamp : CIColorClampProtocol {
 
 #if !XAMCORE_4_0
 		// here the prefix was not removed, edited to keep API compatibility
@@ -3179,26 +3177,26 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIColorControls : ICIColorControlsProtocol {
+	interface CIColorControls : CIColorControlsProtocol {
 	}
 
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[iOS (7,0)]		// not part of the attributes dictionary -> [NoiOS] is generated
 	[Mac (10,9)]	// not part of the attributes dictionary -> [NoMac] is generated
 	[BaseType (typeof (CIFilter))]
-	interface CIColorCrossPolynomial : ICIColorCrossPolynomialProtocol {
+	interface CIColorCrossPolynomial : CIColorCrossPolynomialProtocol {
 	}
 
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIFilter))]
-	interface CIColorCube : ICIColorCubeProtocol {
+	interface CIColorCube : CIColorCubeProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (CIColorCube))]
-	interface CIColorCubeWithColorSpace : ICIColorCubeWithColorSpaceProtocol {
+	interface CIColorCubeWithColorSpace : CIColorCubeWithColorSpaceProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3208,34 +3206,34 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIColorInvert : ICIColorInvertProtocol {
+	interface CIColorInvert : CIColorInvertProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIColorMap : ICIColorMapProtocol {
+	interface CIColorMap : CIColorMapProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIColorMatrix : ICIColorMatrixProtocol  {
+	interface CIColorMatrix : CIColorMatrixProtocol  {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIColorMonochrome : ICIColorMonochromeProtocol {
+	interface CIColorMonochrome : CIColorMonochromeProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (CIColorCrossPolynomial))]
-	interface CIColorPolynomial : ICIColorPolynomialProtocol {
+	interface CIColorPolynomial : CIColorPolynomialProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIColorPosterize : ICIColorPosterizeProtocol {
+	interface CIColorPosterize : CIColorPosterizeProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3248,7 +3246,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIComicEffect : ICIComicEffectProtocol {
+	interface CIComicEffect : CIComicEffectProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3343,7 +3341,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CICrystallize : ICICrystallizeProtocol {
+	interface CICrystallize : CICrystallizeProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
@@ -3365,12 +3363,12 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIDiscBlur : ICIDiscBlurProtocol {
+	interface CIDiscBlur : CIDiscBlurProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITransitionFilter))]
-	interface CIDisintegrateWithMaskTransition : ICIDisintegrateWithMaskTransitionProtocol {
+	interface CIDisintegrateWithMaskTransition : CIDisintegrateWithMaskTransitionProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'MaskImage' instead.")]
@@ -3412,7 +3410,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIScreenFilter))]
-	interface CIDotScreen : ICIDotScreenProtocol {
+	interface CIDotScreen : CIDotScreenProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3445,13 +3443,13 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIEdges : ICIEdgesProtocol {
+	interface CIEdges : CIEdgesProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIEdgeWork : ICIEdgeWorkProtocol {
+	interface CIEdgeWork : CIEdgeWorkProtocol {
 	}
 
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
@@ -3477,7 +3475,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
-	interface CIEightfoldReflectedTile : ICIEightfoldReflectedTileProtocol {
+	interface CIEightfoldReflectedTile : CIEightfoldReflectedTileProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3487,17 +3485,17 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIExposureAdjust : ICIExposureAdjustProtocol {
+	interface CIExposureAdjust : CIExposureAdjustProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIFalseColor : ICIFalseColorProtocol {
+	interface CIFalseColor : CIFalseColorProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITransitionFilter))]
-	interface CIFlashTransition : ICIFlashTransitionProtocol {
+	interface CIFlashTransition : CIFlashTransitionProtocol {
 
 #if !XAMCORE_4_0
 		// for some reason we prefixed all Striation* with Max - API compatibility
@@ -3522,32 +3520,32 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
-	interface CIFourfoldReflectedTile : ICIFourfoldReflectedTileProtocol {
+	interface CIFourfoldReflectedTile : CIFourfoldReflectedTileProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
-	interface CIFourfoldRotatedTile : ICIFourfoldRotatedTileProtocol {
+	interface CIFourfoldRotatedTile : CIFourfoldRotatedTileProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
-	interface CIFourfoldTranslatedTile : ICIFourfoldTranslatedTileProtocol {
+	interface CIFourfoldTranslatedTile : CIFourfoldTranslatedTileProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIGammaAdjust : ICIGammaAdjustProtocol {
+	interface CIGammaAdjust : CIGammaAdjustProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIGaussianBlur : ICIGaussianBlurProtocol {
+	interface CIGaussianBlur : CIGaussianBlurProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIGaussianGradient : ICIGaussianGradientProtocol {
+	interface CIGaussianGradient : CIGaussianGradientProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
@@ -3597,12 +3595,12 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
-	interface CIGlideReflectedTile : ICIGlideReflectedTileProtocol {
+	interface CIGlideReflectedTile : CIGlideReflectedTileProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIGloom : ICIGloomProtocol {
+	interface CIGloom : CIGloomProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3612,19 +3610,19 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIScreenFilter))]
-	interface CIHatchedScreen : ICIHatchedScreenProtocol {
+	interface CIHatchedScreen : CIHatchedScreenProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIHeightFieldFromMask : ICIHeightFieldFromMaskProtocol {
+	interface CIHeightFieldFromMask : CIHeightFieldFromMaskProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIHexagonalPixellate : ICIHexagonalPixellateProtocol {
+	interface CIHexagonalPixellate : CIHexagonalPixellateProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
@@ -3635,7 +3633,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIHighlightShadowAdjust : ICIHighlightShadowAdjustProtocol {
+	interface CIHighlightShadowAdjust : CIHighlightShadowAdjustProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3664,7 +3662,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIHueAdjust : ICIHueAdjustProtocol {
+	interface CIHueAdjust : CIHueAdjustProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3675,7 +3673,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIKaleidoscope : ICIKaleidoscopeProtocol {
+	interface CIKaleidoscope : CIKaleidoscopeProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCount' instead.")]
@@ -3690,13 +3688,13 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CILanczosScaleTransform : ICILanczosScaleTransformProtocol {
+	interface CILanczosScaleTransform : CILanczosScaleTransformProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CILenticularHaloGenerator : ICILenticularHaloGeneratorProtocol {
+	interface CILenticularHaloGenerator : CILenticularHaloGeneratorProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
@@ -3744,7 +3742,7 @@ namespace CoreImage {
 
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIFilter))]
-	interface CILinearGradient : ICILinearGradientProtocol {
+	interface CILinearGradient : CILinearGradientProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputPoint1' instead.")]
@@ -3761,18 +3759,18 @@ namespace CoreImage {
 	[iOS (7,0)]
 	[Mac (10,10)]
 	[BaseType (typeof (CIFilter))]
-	interface CILinearToSRGBToneCurve : ICILinearToSrgbToneCurveProtocol {
+	interface CILinearToSRGBToneCurve : CILinearToSrgbToneCurveProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CILineOverlay : ICILineOverlayProtocol {
+	interface CILineOverlay : CILineOverlayProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIScreenFilter))]
-	interface CILineScreen : ICILineScreenProtocol {
+	interface CILineScreen : CILineScreenProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3782,12 +3780,12 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIMaskToAlpha : ICIMaskToAlphaProtocol {
+	interface CIMaskToAlpha : CIMaskToAlphaProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIMaximumComponent : ICIMaximumComponentProtocol {
+	interface CIMaximumComponent : CIMaximumComponentProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3798,12 +3796,12 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIMedianFilter : ICIMedianProtocol {
+	interface CIMedianFilter : CIMedianProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIMinimumComponent : ICIMinimumComponentProtocol {
+	interface CIMinimumComponent : CIMinimumComponentProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3813,7 +3811,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITransitionFilter))]
-	interface CIModTransition : ICIModTransitionProtocol {
+	interface CIModTransition : CIModTransitionProtocol {
 
 #if !XAMCORE_4_0
 		[CoreImageFilterProperty ("inputCenter")]
@@ -3824,7 +3822,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (8,3)]
 	[BaseType (typeof (CILinearBlur))]
-	interface CIMotionBlur : ICIMotionBlurProtocol {
+	interface CIMotionBlur : CIMotionBlurProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3840,13 +3838,13 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CINoiseReduction : ICINoiseReductionProtocol {
+	interface CINoiseReduction : CINoiseReductionProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CITileFilter))]
-	interface CIOpTile : ICIOpTileProtocol {
+	interface CIOpTile : CIOpTileProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3857,7 +3855,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CITransitionFilter))]
-	interface CIPageCurlTransition : ICIPageCurlTransitionProtocol {
+	interface CIPageCurlTransition : CIPageCurlTransitionProtocol {
 
 #if !XAMCORE_4_0
 		[CoreImageFilterProperty ("inputExtent")]
@@ -3868,7 +3866,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIPageCurlWithShadowTransition : ICIPageCurlWithShadowTransitionProtocol {
+	interface CIPageCurlWithShadowTransition : CIPageCurlWithShadowTransitionProtocol {
 
 #if !XAMCORE_4_0
 		// prefixed for API compatibility
@@ -3889,14 +3887,14 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CITileFilter))]
-	interface CIParallelogramTile : ICIParallelogramTileProtocol {
+	interface CIParallelogramTile : CIParallelogramTileProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[Mac (10,11)]
 	[BaseType (typeof (CICodeGenerator), Name="CIPDF417BarcodeGenerator")]
-	interface CIPdf417BarcodeGenerator : ICIPdf417BarcodeGeneratorProtocol {
+	interface CIPdf417BarcodeGenerator : CIPdf417BarcodeGeneratorProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCorrectionLevel' instead.")]
 		[CoreImageFilterProperty ("inputCorrectionLevel")]
@@ -3931,12 +3929,12 @@ namespace CoreImage {
 	[iOS (8,0)]
 	[Mac (10,10)]
 	[BaseType (typeof (CIPerspectiveTransform))]
-	interface CIPerspectiveCorrection : ICIPerspectiveCorrectionProtocol {
+	interface CIPerspectiveCorrection : CIPerspectiveCorrectionProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIPerspectiveTile : ICIPerspectiveTileProtocol {
+	interface CIPerspectiveTile : CIPerspectiveTileProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputBottomLeft' instead.")]
 		[CoreImageFilterProperty ("inputBottomLeft")]
@@ -3958,7 +3956,7 @@ namespace CoreImage {
 
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIFilter))]
-	interface CIPerspectiveTransform : ICIPerspectiveTransformProtocol {
+	interface CIPerspectiveTransform : CIPerspectiveTransformProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputBottomLeft' instead.")]
 		[CoreImageFilterProperty ("inputBottomLeft")]
@@ -3984,7 +3982,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[Mac (10,11)]
 	[BaseType (typeof (CIPerspectiveTransform))]
-	interface CIPerspectiveTransformWithExtent : ICIPerspectiveTransformWithExtentProtocol {
+	interface CIPerspectiveTransformWithExtent : CIPerspectiveTransformWithExtentProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
@@ -3997,7 +3995,7 @@ namespace CoreImage {
 	[Mac (10,9)]
 	[Abstract]
 	[BaseType (typeof (CIFilter))]
-	interface CIPhotoEffect : ICIPhotoEffectProtocol {
+	interface CIPhotoEffect : CIPhotoEffectProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4073,7 +4071,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIPixellate : ICIPixellateProtocol {
+	interface CIPixellate : CIPixellateProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
@@ -4084,7 +4082,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIPointillize : ICIPointillizeProtocol {
+	interface CIPointillize : CIPointillizeProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
@@ -4096,7 +4094,7 @@ namespace CoreImage {
 	[iOS (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (CICodeGenerator))]
-	interface CIQRCodeGenerator : ICIQRCodeGeneratorProtocol {
+	interface CIQRCodeGenerator : CIQRCodeGeneratorProtocol {
 
 		[CoreImageFilterProperty ("outputCGImage")]
 		CGImage OutputCGImage { get; }
@@ -4104,7 +4102,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIRadialGradient : ICIRadialGradientProtocol {
+	interface CIRadialGradient : CIRadialGradientProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
@@ -4115,13 +4113,13 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIRandomGenerator : ICIRandomGeneratorProtocol {
+	interface CIRandomGenerator : CIRandomGeneratorProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CITransitionFilter))]
-	interface CIRippleTransition : ICIRippleTransitionProtocol {
+	interface CIRippleTransition : CIRippleTransitionProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
@@ -4157,34 +4155,34 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CISepiaTone : ICISepiaToneProtocol {
+	interface CISepiaTone : CISepiaToneProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIShadedMaterial : ICIShadedMaterialProtocol {
+	interface CIShadedMaterial : CIShadedMaterialProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CISharpenLuminance : ICISharpenLuminanceProtocol {
+	interface CISharpenLuminance : CISharpenLuminanceProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
-	interface CISixfoldReflectedTile : ICISixfoldReflectedTileProtocol {
+	interface CISixfoldReflectedTile : CISixfoldReflectedTileProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
-	interface CISixfoldRotatedTile : ICISixfoldRotatedTileProtocol {
+	interface CISixfoldRotatedTile : CISixfoldRotatedTileProtocol {
 	}
 
 	[CoreImageFilter]
 	[Mac (10,11)]
 	[BaseType (typeof (CILinearGradient))]
-	interface CISmoothLinearGradient : ICISmoothLinearGradientProtocol {
+	interface CISmoothLinearGradient : CISmoothLinearGradientProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputPoint1' instead.")]
 		[CoreImageFilterProperty ("inputPoint1")]
@@ -4224,25 +4222,25 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CISpotColor : ICISpotColorProtocol {
+	interface CISpotColor : CISpotColorProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CISpotLight : ICISpotLightProtocol {
+	interface CISpotLight : CISpotLightProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (7,0)]
 	[Mac (10,10)]
 	[BaseType (typeof (CIFilter))]
-	interface CISRGBToneCurveToLinear : ICISrgbToneCurveToLinearProtocol {
+	interface CISRGBToneCurveToLinear : CISrgbToneCurveToLinearProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIStarShineGenerator : ICIStarShineGeneratorProtocol {
+	interface CIStarShineGenerator : CIStarShineGeneratorProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
@@ -4252,7 +4250,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIStraightenFilter : ICIStraightenProtocol {
+	interface CIStraightenFilter : CIStraightenProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4275,7 +4273,7 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIStripesGenerator : ICIStripesGeneratorProtocol {
+	interface CIStripesGenerator : CIStripesGeneratorProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
@@ -4312,12 +4310,12 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CITemperatureAndTint : ICITemperatureAndTintProtocol {
+	interface CITemperatureAndTint : CITemperatureAndTintProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIToneCurve : ICIToneCurveProtocol {
+	interface CIToneCurve : CIToneCurveProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputPoint0' instead.")]
 		[CoreImageFilterProperty ("inputPoint0")]
@@ -4365,7 +4363,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[Mac (10,11)]
 	[BaseType (typeof (CIFilter))]
-	interface CITriangleKaleidoscope : ICITriangleKaleidoscopeProtocol {
+	interface CITriangleKaleidoscope : CITriangleKaleidoscopeProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputPoint' instead.")]
 		[CoreImageFilterProperty ("inputPoint")]
@@ -4376,12 +4374,12 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CITileFilter))]
-	interface CITriangleTile : ICITriangleTileProtocol {
+	interface CITriangleTile : CITriangleTileProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CITileFilter))]
-	interface CITwelvefoldReflectedTile : ICITwelvefoldReflectedTileProtocol {
+	interface CITwelvefoldReflectedTile : CITwelvefoldReflectedTileProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4394,25 +4392,25 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIUnsharpMask : ICIUnsharpMaskProtocol {
+	interface CIUnsharpMask : CIUnsharpMaskProtocol {
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIVibrance : ICIVibranceProtocol {
+	interface CIVibrance : CIVibranceProtocol {
 	}
 
 	[CoreImageFilter]
 	[Mac (10,9)]
 	[BaseType (typeof (CIFilter))]
-	interface CIVignette : ICIVignetteProtocol {
+	interface CIVignette : CIVignetteProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (CIFilter))]
-	interface CIVignetteEffect : ICIVignetteEffectProtocol {
+	interface CIVignetteEffect : CIVignetteEffectProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
@@ -4431,13 +4429,13 @@ namespace CoreImage {
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIWhitePointAdjust : ICIWhitePointAdjustProtocol {
+	interface CIWhitePointAdjust : CIWhitePointAdjustProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (8,3)]
 	[BaseType (typeof (CIFilter))]
-	interface CIZoomBlur : ICIZoomBlurProtocol {
+	interface CIZoomBlur : CIZoomBlurProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
@@ -4448,7 +4446,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIDepthOfField : ICIDepthOfFieldProtocol {
+	interface CIDepthOfField : CIDepthOfFieldProtocol {
 
 #if !XAMCORE_4_0
 		// renamed 1 vs 0 for API compatibility
@@ -4466,7 +4464,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CISunbeamsGenerator : ICISunbeamsGeneratorProtocol {
+	interface CISunbeamsGenerator : CISunbeamsGeneratorProtocol {
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
@@ -4489,7 +4487,7 @@ namespace CoreImage {
 	[TV (9,2)]
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
-	interface CIMaskedVariableBlur : ICIMaskedVariableBlurProtocol {
+	interface CIMaskedVariableBlur : CIMaskedVariableBlurProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4511,7 +4509,7 @@ namespace CoreImage {
 	[Mac (10,12)]
 	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIHueSaturationValueGradient : ICIHueSaturationValueGradientProtocol {
+	interface CIHueSaturationValueGradient : CIHueSaturationValueGradientProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4562,7 +4560,7 @@ namespace CoreImage {
 	[Mac (10,12)] // filter says 10.11 but it fails when I run it on El Capitan
 	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIThermal : ICIThermalProtocol {
+	interface CIThermal : CIThermalProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4570,7 +4568,7 @@ namespace CoreImage {
 	[Mac (10,12)] // filter says 10.11 but it fails when I run it on El Capitan
 	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIXRay : ICIXRayProtocol {
+	interface CIXRay : CIXRayProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4599,7 +4597,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIImageGenerator))]
-	interface CIAttributedTextImageGenerator : ICIAttributedTextImageGeneratorProtocol {
+	interface CIAttributedTextImageGenerator : CIAttributedTextImageGeneratorProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4607,7 +4605,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIBarcodeGenerator : ICIBarcodeGeneratorProtocol {
+	interface CIBarcodeGenerator : CIBarcodeGeneratorProtocol {
 
 		[CoreImageFilterProperty ("outputCGImageForQRCodeDescriptor")]
 		CGImage OutputCGImageForQRCodeDescriptor { get; }
@@ -4632,7 +4630,7 @@ namespace CoreImage {
 	// Maybe 'typeof (CIScaleTransform)' (shared 'Scale' and 'AspectRatio' property).
 	// It's possible to add ours but it can bite us back in the future if Apple introduce the same with different properties.
 	[BaseType (typeof (CIFilter))]
-	interface CIBicubicScaleTransform : ICIBicubicScaleTransformProtocol {
+	interface CIBicubicScaleTransform : CIBicubicScaleTransformProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'ParameterB' instead.")]
@@ -4658,7 +4656,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CILinearBlur))]
-	interface CIBokehBlur : ICIBokehBlurProtocol {
+	interface CIBokehBlur : CIBokehBlurProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4666,7 +4664,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))] // Could almost be typeof 'CIColorCube' but property is 'inputCube0Data' not 'inputCubeData'
-	interface CIColorCubesMixedWithMask : ICIColorCubesMixedWithMaskProtocol {
+	interface CIColorCubesMixedWithMask : CIColorCubesMixedWithMaskProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4674,7 +4672,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIColorCurves : ICIColorCurvesProtocol {
+	interface CIColorCurves : CIColorCurvesProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4748,7 +4746,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIDepthDisparityConverter))]
-	interface CIDepthToDisparity : ICIDepthToDisparityProtocol {
+	interface CIDepthToDisparity : CIDepthToDisparityProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4756,7 +4754,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIDepthDisparityConverter))]
-	interface CIDisparityToDepth : ICIDisparityToDepthProtocol {
+	interface CIDisparityToDepth : CIDisparityToDepthProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4764,7 +4762,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIEdgePreserveUpsampleFilter : ICIEdgePreserveUpsampleProtocol {
+	interface CIEdgePreserveUpsampleFilter : CIEdgePreserveUpsampleProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4772,7 +4770,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CILabDeltaE : ICILabDeltaEProtocol {
+	interface CILabDeltaE : CILabDeltaEProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4780,7 +4778,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIImageGenerator))]
-	interface CITextImageGenerator : ICITextImageGeneratorProtocol {
+	interface CITextImageGenerator : CITextImageGeneratorProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4799,7 +4797,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIMorphology))]
-	interface CIMorphologyGradient : ICIMorphologyGradientProtocol {
+	interface CIMorphologyGradient : CIMorphologyGradientProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4807,7 +4805,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIMorphology))]
-	interface CIMorphologyMaximum : ICIMorphologyMaximumProtocol {
+	interface CIMorphologyMaximum : CIMorphologyMaximumProtocol {
 	}
 
 	[CoreImageFilter]
@@ -4815,7 +4813,7 @@ namespace CoreImage {
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIMorphology))]
-	interface CIMorphologyMinimum : ICIMorphologyMinimumProtocol {
+	interface CIMorphologyMinimum : CIMorphologyMinimumProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5343,7 +5341,7 @@ namespace CoreImage {
 	[TV (12,0)]
 	[Mac (10,14)]
 	[BaseType (typeof (CIFilter))]
-	interface CIDither : ICIDitherProtocol {
+	interface CIDither : CIDitherProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5371,7 +5369,7 @@ namespace CoreImage {
 	[TV (12,0)]
 	[Mac (10,14)]
 	[BaseType (typeof (CIFilter))]
-	interface CIMeshGenerator : ICIMeshGeneratorProtocol {
+	interface CIMeshGenerator : CIMeshGeneratorProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5379,7 +5377,7 @@ namespace CoreImage {
 	[TV (12,0)]
 	[Mac (10,14)]
 	[BaseType (typeof (CIFilter))]
-	interface CIMix : ICIMixProtocol {
+	interface CIMix : CIMixProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5435,7 +5433,7 @@ namespace CoreImage {
 	[TV (12,0)]
 	[Mac (10,14)]
 	[BaseType (typeof (CIFilter))]
-	interface CISaliencyMapFilter : ICISaliencyMapProtocol {
+	interface CISaliencyMapFilter : CISaliencyMapProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5443,7 +5441,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIFilter))]
-	interface CIDocumentEnhancer : ICIDocumentEnhancerProtocol {
+	interface CIDocumentEnhancer : CIDocumentEnhancerProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5496,7 +5494,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIMorphologyRectangle))]
-	interface CIMorphologyRectangleMaximum : ICIMorphologyRectangleMaximumProtocol {
+	interface CIMorphologyRectangleMaximum : CIMorphologyRectangleMaximumProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5504,7 +5502,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIMorphologyRectangle))]
-	interface CIMorphologyRectangleMinimum : ICIMorphologyRectangleMinimumProtocol {
+	interface CIMorphologyRectangleMinimum : CIMorphologyRectangleMinimumProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5512,7 +5510,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIFilter))]
-	interface CIPaletteCentroid : ICIPaletteCentroidProtocol {
+	interface CIPaletteCentroid : CIPaletteCentroidProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5520,7 +5518,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIFilter))]
-	interface CIPalettize : ICIPalettizeProtocol {
+	interface CIPalettize : CIPalettizeProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5570,7 +5568,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIKeystoneCorrection))]
-	interface CIKeystoneCorrectionCombined : ICIKeystoneCorrectionCombinedProtocol {
+	interface CIKeystoneCorrectionCombined : CIKeystoneCorrectionCombinedProtocol {
 
 		[CoreImageFilterProperty ("outputTransform")]
 		CGAffineTransform OutputTransform { get; }
@@ -5581,7 +5579,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIKeystoneCorrection))]
-	interface CIKeystoneCorrectionHorizontal : ICIKeystoneCorrectionHorizontalProtocol {
+	interface CIKeystoneCorrectionHorizontal : CIKeystoneCorrectionHorizontalProtocol {
 
 #if false // no documentation about the type
 		[CoreImageFilterProperty ("outputRotationFilter")]
@@ -5597,7 +5595,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIKeystoneCorrection))]
-	interface CIKeystoneCorrectionVertical : ICIKeystoneCorrectionVerticalProtocol {
+	interface CIKeystoneCorrectionVertical : CIKeystoneCorrectionVerticalProtocol {
 
 #if false // no documentation about the type
 		[CoreImageFilterProperty ("outputRotationFilter")]
@@ -5613,7 +5611,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIFilter))]
-	interface CIPerspectiveRotate : ICIPerspectiveRotateProtocol {
+	interface CIPerspectiveRotate : CIPerspectiveRotateProtocol {
 
 		[CoreImageFilterProperty ("outputTransform")]
 		CGAffineTransform OutputTransform { get; }
@@ -5624,7 +5622,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIFilter))]
-	interface CIGaborGradients : ICIGaborGradientsProtocol {
+	interface CIGaborGradients : CIGaborGradientsProtocol {
 	}
 
 	[CoreImageFilter]
@@ -5632,7 +5630,7 @@ namespace CoreImage {
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIFilter))]
-	interface CIRoundedRectangleGenerator : ICIRoundedRectangleGeneratorProtocol {
+	interface CIRoundedRectangleGenerator : CIRoundedRectangleGeneratorProtocol {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'InputExtent' instead.")]
@@ -5642,8 +5640,6 @@ namespace CoreImage {
 	}
 
 #region Protocols
-
-	interface ICIFilterProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -5661,8 +5657,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("customAttributes")]
 		NSDictionary<NSString, NSObject> CustomAttributes { get; }
 	}
-
-	interface ICITransitionFilterProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -5682,8 +5676,6 @@ namespace CoreImage {
 		[Export ("time")]
 		float Time { get; set; }
 	}
-
-	interface ICIAccordionFoldTransitionProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -5705,8 +5697,6 @@ namespace CoreImage {
 		float FoldShadowAmount { get; set; }
 	}
 
-	interface ICIAffineClampProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -5721,8 +5711,6 @@ namespace CoreImage {
 		[Export ("transform", ArgumentSemantic.Assign)]
 		CGAffineTransform Transform { get; set; }
 	}
-
-	interface ICIAffineTileProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -5739,8 +5727,6 @@ namespace CoreImage {
 		CGAffineTransform Transform { get; set; }
 	}
 
-	interface ICIAttributedTextImageGeneratorProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -5755,8 +5741,6 @@ namespace CoreImage {
 		[Export ("scaleFactor")]
 		float ScaleFactor { get; set; }
 	}
-
-	interface ICIAztecCodeGeneratorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -5781,8 +5765,6 @@ namespace CoreImage {
 		float InputCompactStyle { get; set; }
 	}
 
-	interface ICIBarcodeGeneratorProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -5793,8 +5775,6 @@ namespace CoreImage {
 		[Export ("barcodeDescriptor", ArgumentSemantic.Retain)]
 		CIBarcodeDescriptor BarcodeDescriptor { get; set; }
 	}
-
-	interface ICIBarsSwipeTransitionProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -5814,8 +5794,6 @@ namespace CoreImage {
 		[Export ("barOffset")]
 		float BarOffset { get; set; }
 	}
-
-	interface ICIBicubicScaleTransformProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -5846,8 +5824,6 @@ namespace CoreImage {
 		float ParameterC { get; set; }
 	}
 
-	interface ICIBlendWithMaskProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -5867,8 +5843,6 @@ namespace CoreImage {
 		CIImage MaskImage { get; set; }
 	}
 
-	interface ICIBloomProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -5887,8 +5861,6 @@ namespace CoreImage {
 		[Export ("intensity")]
 		float Intensity { get; set; }
 	}
-
-	interface ICIBokehBlurProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -5917,8 +5889,6 @@ namespace CoreImage {
 		float Softness { get; set; }
 	}
 
-	interface ICIBoxBlurProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -5933,8 +5903,6 @@ namespace CoreImage {
 		[Export ("radius")]
 		float Radius { get; set; }
 	}
-
-	interface ICICheckerboardGeneratorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -5963,8 +5931,6 @@ namespace CoreImage {
 		float Sharpness { get; set; }
 	}
 
-	interface ICICircularScreenProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -5987,8 +5953,6 @@ namespace CoreImage {
 		[Export ("sharpness")]
 		float Sharpness { get; set; }
 	}
-
-	interface ICICmykHalftoneProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6027,8 +5991,6 @@ namespace CoreImage {
 		float UnderColorRemoval { get; set; }
 	}
 
-	interface ICICode128BarcodeGeneratorProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6048,8 +6010,6 @@ namespace CoreImage {
 		float BarcodeHeight { get; set; }
 	}
 
-	interface ICIColorClampProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6068,8 +6028,6 @@ namespace CoreImage {
 		[Export ("maxComponents", ArgumentSemantic.Retain)]
 		CIVector MaxComponents { get; set; }
 	}
-
-	interface ICIColorControlsProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6094,8 +6052,6 @@ namespace CoreImage {
 		float Contrast { get; set; }
 	}
 
-	interface ICIColorCrossPolynomialProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6119,8 +6075,6 @@ namespace CoreImage {
 		CIVector BlueCoefficients { get; set; }
 	}
 
-	interface ICIColorCubeProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6139,8 +6093,6 @@ namespace CoreImage {
 		[Export ("cubeData", ArgumentSemantic.Retain)]
 		NSData CubeData { get; set; }
 	}
-
-	interface ICIColorCubesMixedWithMaskProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6173,8 +6125,6 @@ namespace CoreImage {
 		CGColorSpace ColorSpace { get; set; }
 	}
 
-	interface ICIColorCubeWithColorSpaceProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6197,8 +6147,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("colorSpace", ArgumentSemantic.Assign)]
 		CGColorSpace ColorSpace { get; set; }
 	}
-
-	interface ICIColorCurvesProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6223,8 +6171,6 @@ namespace CoreImage {
 		CGColorSpace ColorSpace { get; set; }
 	}
 
-	interface ICIColorInvertProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6235,8 +6181,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICIColorMapProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6252,8 +6196,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("gradientImage", ArgumentSemantic.Retain)]
 		CIImage GradientImage { get; set; }
 	}
-
-	interface ICIColorMatrixProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6286,8 +6228,6 @@ namespace CoreImage {
 		CIVector BiasVector { get; set; }
 	}
 
-	interface ICIColorMonochromeProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6306,8 +6246,6 @@ namespace CoreImage {
 		[Export ("intensity")]
 		float Intensity { get; set; }
 	}
-
-	interface ICIColorPolynomialProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6336,8 +6274,6 @@ namespace CoreImage {
 		CIVector AlphaCoefficients { get; set; }
 	}
 
-	interface ICIColorPosterizeProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6353,8 +6289,6 @@ namespace CoreImage {
 		float Levels { get; set; }
 	}
 
-	interface ICIComicEffectProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6365,8 +6299,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICICompositeOperationProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6382,8 +6314,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("backgroundImage", ArgumentSemantic.Retain)]
 		CIImage BackgroundImage { get; set; }
 	}
-
-	interface ICIConvolutionProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6403,8 +6333,6 @@ namespace CoreImage {
 		[Export ("bias")]
 		float Bias { get; set; }
 	}
-
-	interface ICICopyMachineTransitionProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6433,8 +6361,6 @@ namespace CoreImage {
 		float Opacity { get; set; }
 	}
 
-	interface ICICoreMLModelProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6458,8 +6384,6 @@ namespace CoreImage {
 		bool SoftmaxNormalization { get; set; }
 	}
 
-	interface ICICrystallizeProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6478,8 +6402,6 @@ namespace CoreImage {
 		[Export ("center", ArgumentSemantic.Assign)]
 		CGPoint InputCenter { get; set; }
 	}
-
-	interface ICIDepthOfFieldProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6516,8 +6438,6 @@ namespace CoreImage {
 		float Radius { get; set; }
 	}
 
-	interface ICIDepthToDisparityProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6528,8 +6448,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICIDiscBlurProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6545,8 +6463,6 @@ namespace CoreImage {
 		[Export ("radius")]
 		float Radius { get; set; }
 	}
-
-	interface ICIDisintegrateWithMaskTransitionProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6571,8 +6487,6 @@ namespace CoreImage {
 		CGPoint InputShadowOffset { get; set; }
 	}
 
-	interface ICIDisparityToDepthProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6584,16 +6498,12 @@ namespace CoreImage {
 		CIImage InputImage { get; set; }
 	}
 
-	interface ICIDissolveTransitionProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
 	[Protocol (Name = "CIDissolveTransition")]
 	interface CIDissolveTransitionProtocol : CIFilterProtocol {
 	}
-
-	interface ICIDitherProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6610,8 +6520,6 @@ namespace CoreImage {
 		float Intensity { get; set; }
 	}
 
-	interface ICIDocumentEnhancerProtocol {}
-	
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6626,8 +6534,6 @@ namespace CoreImage {
 		[Export ("amount")]
 		float Amount { get; set; }
 	}
-
-	interface ICIDotScreenProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6656,8 +6562,6 @@ namespace CoreImage {
 		float Sharpness { get; set; }
 	}
 
-	interface ICIEdgePreserveUpsampleProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6681,8 +6585,6 @@ namespace CoreImage {
 		float LumaSigma { get; set; }
 	}
 
-	interface ICIEdgesProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6698,8 +6600,6 @@ namespace CoreImage {
 		float Intensity { get; set; }
 	}
 
-	interface ICIEdgeWorkProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6714,8 +6614,6 @@ namespace CoreImage {
 		[Export ("radius")]
 		float Radius { get; set; }
 	}
-
-	interface ICIEightfoldReflectedTileProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6740,8 +6638,6 @@ namespace CoreImage {
 		float Width { get; set; }
 	}
 
-	interface ICIExposureAdjustProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6756,8 +6652,6 @@ namespace CoreImage {
 		[Export ("EV")]
 		float EV { get; set; }
 	}
-
-	interface ICIFalseColorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6777,8 +6671,6 @@ namespace CoreImage {
 		[Export ("color1", ArgumentSemantic.Retain)]
 		CIColor Color1 { get; set; }
 	}
-
-	interface ICIFlashTransitionProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6815,8 +6707,6 @@ namespace CoreImage {
 		float FadeThreshold { get; set; }
 	}
 
-	interface ICIFourCoordinateGeometryFilterProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6843,8 +6733,6 @@ namespace CoreImage {
 		[Export ("bottomLeft", ArgumentSemantic.Assign)]
 		CGPoint InputBottomLeft { get; set; }
 	}
-
-	interface ICIFourfoldReflectedTileProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6873,8 +6761,6 @@ namespace CoreImage {
 		float AcuteAngle { get; set; }
 	}
 
-	interface ICIFourfoldRotatedTileProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6897,8 +6783,6 @@ namespace CoreImage {
 		[Export ("width")]
 		float Width { get; set; }
 	}
-
-	interface ICIFourfoldTranslatedTileProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6927,8 +6811,6 @@ namespace CoreImage {
 		float AcuteAngle { get; set; }
 	}
 
-	interface ICIGaborGradientsProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6939,8 +6821,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICIGammaAdjustProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6957,8 +6837,6 @@ namespace CoreImage {
 		float Power { get; set; }
 	}
 
-	interface ICIGaussianBlurProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -6973,8 +6851,6 @@ namespace CoreImage {
 		[Export ("radius")]
 		float Radius { get; set; }
 	}
-
-	interface ICIGaussianGradientProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -6999,8 +6875,6 @@ namespace CoreImage {
 		float Radius { get; set; }
 	}
 
-	interface ICIGlideReflectedTileProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7024,8 +6898,6 @@ namespace CoreImage {
 		float Width { get; set; }
 	}
 
-	interface ICIGloomProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7044,8 +6916,6 @@ namespace CoreImage {
 		[Export ("intensity")]
 		float Intensity { get; set; }
 	}
-
-	interface ICIHatchedScreenProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7074,8 +6944,6 @@ namespace CoreImage {
 		float Sharpness { get; set; }
 	}
 
-	interface ICIHeightFieldFromMaskProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7090,8 +6958,6 @@ namespace CoreImage {
 		[Export ("radius")]
 		float Radius { get; set; }
 	}
-
-	interface ICIHexagonalPixellateProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7111,8 +6977,6 @@ namespace CoreImage {
 		[Export ("scale")]
 		float Scale { get; set; }
 	}
-
-	interface ICIHighlightShadowAdjustProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7137,8 +7001,6 @@ namespace CoreImage {
 		float HighlightAmount { get; set; }
 	}
 
-	interface ICIHueAdjustProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7153,8 +7015,6 @@ namespace CoreImage {
 		[Export ("angle")]
 		float Angle { get; set; }
 	}
-
-	interface ICIHueSaturationValueGradientProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7183,8 +7043,6 @@ namespace CoreImage {
 		CGColorSpace ColorSpace { get; set; }
 	}
 
-	interface ICIKaleidoscopeProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7208,8 +7066,6 @@ namespace CoreImage {
 		float Angle { get; set; }
 	}
 
-	interface ICIKeystoneCorrectionCombinedProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7220,8 +7076,6 @@ namespace CoreImage {
 		[Export ("focalLength")]
 		float FocalLength { get; set; }
 	}
-
-	interface ICIKeystoneCorrectionHorizontalProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7234,8 +7088,6 @@ namespace CoreImage {
 		float FocalLength { get; set; }
 	}
 
-	interface ICIKeystoneCorrectionVerticalProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7246,8 +7098,6 @@ namespace CoreImage {
 		[Export ("focalLength")]
 		float FocalLength { get; set; }
 	}
-
-	interface ICILabDeltaEProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7263,8 +7113,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("image2", ArgumentSemantic.Retain)]
 		CIImage Image2 { get; set; }
 	}
-
-	interface ICILanczosScaleTransformProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7284,8 +7132,6 @@ namespace CoreImage {
 		[Export ("aspectRatio")]
 		float AspectRatio { get; set; }
 	}
-
-	interface ICILenticularHaloGeneratorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7326,8 +7172,6 @@ namespace CoreImage {
 		float Time { get; set; }
 	}
 
-	interface ICILinearGradientProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7351,8 +7195,6 @@ namespace CoreImage {
 		CIColor Color1 { get; set; }
 	}
 
-	interface ICILinearToSrgbToneCurveProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7363,8 +7205,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICILineOverlayProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7397,8 +7237,6 @@ namespace CoreImage {
 		float Contrast { get; set; }
 	}
 
-	interface ICILineScreenProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7426,8 +7264,6 @@ namespace CoreImage {
 		float Sharpness { get; set; }
 	}
 
-	interface ICIMaskedVariableBlurProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7447,8 +7283,6 @@ namespace CoreImage {
 		float Radius { get; set; }
 	}
 
-	interface ICIMaskToAlphaProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7459,8 +7293,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICIMaximumComponentProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7473,8 +7305,6 @@ namespace CoreImage {
 		CIImage InputImage { get; set; }
 	}
 
-	interface ICIMedianProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7485,8 +7315,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICIMeshGeneratorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7507,8 +7335,6 @@ namespace CoreImage {
 		CIVector[] Mesh { get; set; }
 	}
 
-	interface ICIMinimumComponentProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7519,8 +7345,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICIMixProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7540,8 +7364,6 @@ namespace CoreImage {
 		[Export ("amount")]
 		float Amount { get; set; }
 	}
-
-	interface ICIModTransitionProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7566,8 +7388,6 @@ namespace CoreImage {
 		float Compression { get; set; }
 	}
 
-	interface ICIMorphologyGradientProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7582,8 +7402,6 @@ namespace CoreImage {
 		[Export ("radius")]
 		float Radius { get; set; }
 	}
-
-	interface ICIMorphologyMaximumProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7600,8 +7418,6 @@ namespace CoreImage {
 		float Radius { get; set; }
 	}
 
-	interface ICIMorphologyMinimumProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7616,8 +7432,6 @@ namespace CoreImage {
 		[Export ("radius")]
 		float Radius { get; set; }
 	}
-
-	interface ICIMorphologyRectangleMaximumProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7638,8 +7452,6 @@ namespace CoreImage {
 		float InputHeight { get; set; }
 	}
 
-	interface ICIMorphologyRectangleMinimumProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7658,8 +7470,6 @@ namespace CoreImage {
 		[Export ("height")]
 		float InputHeight { get; set; }
 	}
-
-	interface ICIMotionBlurProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7680,8 +7490,6 @@ namespace CoreImage {
 		float Angle { get; set; }
 	}
 
-	interface ICINoiseReductionProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7700,8 +7508,6 @@ namespace CoreImage {
 		[Export ("sharpness")]
 		float Sharpness { get; set; }
 	}
-
-	interface ICIOpTileProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7730,8 +7536,6 @@ namespace CoreImage {
 		float Width { get; set; }
 	}
 
-	interface ICIPageCurlTransitionProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7758,8 +7562,6 @@ namespace CoreImage {
 		[Export ("radius")]
 		float Radius { get; set; }
 	}
-
-	interface ICIPageCurlWithShadowTransitionProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7796,8 +7598,6 @@ namespace CoreImage {
 		CGRect InputShadowExtent { get; set; }
 	}
 
-	interface ICIPaletteCentroidProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7817,8 +7617,6 @@ namespace CoreImage {
 		bool Perceptual { get; set; }
 	}
 
-	interface ICIPalettizeProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7837,8 +7635,6 @@ namespace CoreImage {
 		[Export ("perceptual")]
 		bool Perceptual { get; set; }
 	}
-
-	interface ICIParallelogramTileProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7866,8 +7662,6 @@ namespace CoreImage {
 		[Export ("width")]
 		float Width { get; set; }
 	}
-
-	interface ICIPdf417BarcodeGeneratorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7924,8 +7718,6 @@ namespace CoreImage {
 		float InputAlwaysSpecifyCompaction { get; set; }
 	}
 
-	interface ICIPerspectiveCorrectionProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7937,8 +7729,6 @@ namespace CoreImage {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)] // repeated so it's inlined (new property in existing filter)
 		bool Crop { get; set; }
 	}
-
-	interface ICIPerspectiveRotateProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -7967,8 +7757,6 @@ namespace CoreImage {
 		float Roll { get; set; }
 	}
 
-	interface ICIPerspectiveTileProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -7996,16 +7784,12 @@ namespace CoreImage {
 		CGPoint InputBottomLeft { get; set; }
 	}
 
-	interface ICIPerspectiveTransformProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
 	[Protocol (Name = "CIPerspectiveTransform")]
 	interface CIPerspectiveTransformProtocol : CIFourCoordinateGeometryFilterProtocol {
 	}
-
-	interface ICIPerspectiveTransformWithExtentProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8018,8 +7802,6 @@ namespace CoreImage {
 		CGRect InputExtent { get; set; }
 	}
 
-	interface ICIPhotoEffectProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8030,8 +7812,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICIPixellateProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8052,8 +7832,6 @@ namespace CoreImage {
 		float Scale { get; set; }
 	}
 
-	interface ICIPointillizeProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8073,8 +7851,6 @@ namespace CoreImage {
 		CGPoint InputCenter { get; set; }
 	}
 
-	interface ICIQRCodeGeneratorProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8089,8 +7865,6 @@ namespace CoreImage {
 		[Export ("correctionLevel", ArgumentSemantic.Retain)]
 		string CorrectionLevel { get; set; }
 	}
-
-	interface ICIRadialGradientProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8119,16 +7893,12 @@ namespace CoreImage {
 		CIColor Color1 { get; set; }
 	}
 
-	interface ICIRandomGeneratorProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
 	[Protocol (Name = "CIRandomGenerator")]
 	interface CIRandomGeneratorProtocol : CIFilterProtocol {
 	}
-
-	interface ICIRippleTransitionProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8157,8 +7927,6 @@ namespace CoreImage {
 		float Scale { get; set; }
 	}
 
-	interface ICIRoundedRectangleGeneratorProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8178,8 +7946,6 @@ namespace CoreImage {
 		CIColor Color { get; set; }
 	}
 
-	interface ICISaliencyMapProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8191,8 +7957,6 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputImage")]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICISepiaToneProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8208,8 +7972,6 @@ namespace CoreImage {
 		[Export ("intensity")]
 		float Intensity { get; set; }
 	}
-
-	interface ICIShadedMaterialProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8230,8 +7992,6 @@ namespace CoreImage {
 		float Scale { get; set; }
 	}
 
-	interface ICISharpenLuminanceProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8251,8 +8011,6 @@ namespace CoreImage {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)] // repeated so it's inlined (new property in existing filter)
 		float Radius { get; set; }
 	}
-
-	interface ICISixfoldReflectedTileProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8277,8 +8035,6 @@ namespace CoreImage {
 		float Width { get; set; }
 	}
 
-	interface ICISixfoldRotatedTileProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8302,8 +8058,6 @@ namespace CoreImage {
 		float Width { get; set; }
 	}
 
-	interface ICISmoothLinearGradientProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8325,8 +8079,6 @@ namespace CoreImage {
 		[Export ("color1", ArgumentSemantic.Retain)]
 		CIColor Color1 { get; set; }
 	}
-
-	interface ICISpotColorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8387,8 +8139,6 @@ namespace CoreImage {
 		float Contrast3 { get; set; }
 	}
 
-	interface ICISpotLightProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8420,8 +8170,6 @@ namespace CoreImage {
 		CIColor Color { get; set; }
 	}
 
-	interface ICISrgbToneCurveToLinearProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8432,8 +8180,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICIStarShineGeneratorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8474,8 +8220,6 @@ namespace CoreImage {
 		float Epsilon { get; set; }
 	}
 
-	interface ICIStraightenProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8490,8 +8234,6 @@ namespace CoreImage {
 		[Export ("angle")]
 		float Angle { get; set; }
 	}
-
-	interface ICIStripesGeneratorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8519,8 +8261,6 @@ namespace CoreImage {
 		[Export ("sharpness")]
 		float Sharpness { get; set; }
 	}
-
-	interface ICISunbeamsGeneratorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8557,8 +8297,6 @@ namespace CoreImage {
 		float Time { get; set; }
 	}
 
-	interface ICISwipeTransitionProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8586,8 +8324,6 @@ namespace CoreImage {
 		float Opacity { get; set; }
 	}
 
-	interface ICITemperatureAndTintProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8606,8 +8342,6 @@ namespace CoreImage {
 		[Export ("targetNeutral", ArgumentSemantic.Retain)]
 		CIVector TargetNeutral { get; set; }
 	}
-
-	interface ICITextImageGeneratorProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8632,8 +8366,6 @@ namespace CoreImage {
 		float ScaleFactor { get; set; }
 	}
 
-	interface ICIThermalProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8644,8 +8376,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICIToneCurveProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8678,8 +8408,6 @@ namespace CoreImage {
 		CGPoint InputPoint4 { get; set; }
 	}
 
-	interface ICITriangleKaleidoscopeProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8707,8 +8435,6 @@ namespace CoreImage {
 		float Decay { get; set; }
 	}
 
-	interface ICITriangleTileProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8731,8 +8457,6 @@ namespace CoreImage {
 		[Export ("width")]
 		float Width { get; set; }
 	}
-
-	interface ICITwelvefoldReflectedTileProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8757,8 +8481,6 @@ namespace CoreImage {
 		float Width { get; set; }
 	}
 
-	interface ICIUnsharpMaskProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8778,8 +8500,6 @@ namespace CoreImage {
 		float Intensity { get; set; }
 	}
 
-	interface ICIVibranceProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8794,8 +8514,6 @@ namespace CoreImage {
 		[Export ("amount")]
 		float Amount { get; set; }
 	}
-
-	interface ICIVignetteProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8815,8 +8533,6 @@ namespace CoreImage {
 		[Export ("radius")]
 		float Radius { get; set; }
 	}
-
-	interface ICIVignetteEffectProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
@@ -8845,8 +8561,6 @@ namespace CoreImage {
 		float Falloff { get; set; }
 	}
 
-	interface ICIWhitePointAdjustProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8862,8 +8576,6 @@ namespace CoreImage {
 		CIColor Color { get; set; }
 	}
 
-	interface ICIXRayProtocol {}
-
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -8874,8 +8586,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 	}
-
-	interface ICIZoomBlurProtocol {}
 
 	[iOS (13,0)]
 	[TV (13,0)]
