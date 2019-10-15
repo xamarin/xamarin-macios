@@ -63,7 +63,7 @@ namespace Network {
 					castedOptions = null;
 				}
 				del (castedOptions);
-				castedOptions.Dispose ();
+				castedOptions?.Dispose ();
 			}
 		}
 
