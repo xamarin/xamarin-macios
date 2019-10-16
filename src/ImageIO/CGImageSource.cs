@@ -37,6 +37,7 @@ using CoreGraphics;
 
 namespace ImageIO {
 
+#if !COREBUILD
 	// untyped enum -> CGImageSource.h
 	public enum CGImageSourceStatus {
 		Complete      = 0,
@@ -109,9 +110,11 @@ namespace ImageIO {
 			return dict;
 		}
 	}
-	
+#endif
+
 	public partial class CGImageSource : INativeObject, IDisposable
 	{
+#if !COREBUILD
 		[DllImport (Constants.ImageIOLibrary, EntryPoint="CGImageSourceGetTypeID")]
 		public extern static nint GetTypeID ();
 
@@ -126,7 +129,7 @@ namespace ImageIO {
 				return array;
 			}
 		}
-		
+#endif
 		internal IntPtr handle;
 
 		// invoked by marshallers
@@ -165,7 +168,8 @@ namespace ImageIO {
 				handle = IntPtr.Zero;
 			}
 		}
-				
+
+#if !COREBUILD
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static /* CGImageSourceRef __nullable */ IntPtr CGImageSourceCreateWithURL (
 			/* CFURLRef __nonnull */ IntPtr url, /* CFDictionaryRef __nullable */ IntPtr options);
@@ -403,5 +407,6 @@ namespace ImageIO {
 		{
 			return CGImageSourceGetPrimaryImageIndex (handle);
 		}
+#endif
 	}
 }

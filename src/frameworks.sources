@@ -918,11 +918,13 @@ IMAGECAPTURECORE_API_SOURCES = \
 IMAGEIO_API_SOURCES = \
 	ImageIO/Enums.cs \
 
+IMAGEIO_CORE_SOURCES = \
+	ImageIO/CGImageSource.cs \
+
 IMAGEIO_SOURCES = \
 	ImageIO/CGImageDestination.cs \
 	ImageIO/CGImageMetadata.cs \
 	ImageIO/CGImageMetadataTag.cs \
-	ImageIO/CGImageSource.cs \
 	ImageIO/CGImageSource.iOS.cs \
 	ImageIO/CGMutableImageMetadata.cs \
 
@@ -1165,10 +1167,16 @@ NATURALLANGUAGE_SOURCES = \
 
 NETWORK_SOURCES = \
 	Network/NWAdvertiseDescriptor.cs	\
+	Network/NWBrowserDescriptor.cs	\
+	Network/NWBrowseResult.cs	\
+	Network/NWBrowser.cs	\
 	Network/NWConnection.cs			\
 	Network/NWContentContext.cs		\
+	Network/NWDataTransferReport.cs 	\
+	Network/NWEstablishmentReport.cs	\
 	Network/NWEndpoint.cs			\
 	Network/NWError.cs			\
+	Network/NWFramer.cs			\
 	Network/NWInterface.cs			\
 	Network/NWListener.cs			\
 	Network/NWParameters.cs			\
@@ -1178,6 +1186,11 @@ NETWORK_SOURCES = \
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
+	Network/NWTxtRecord.cs	\
+	Network/NWWebSocketMetadata.cs	\
+	Network/NWWebSocketOptions.cs	\
+	Network/NWWebSocketRequest.cs	\
+	Network/NWWebSocketResponse.cs	\
 	
 # NetworkExtension
 

@@ -1,53 +1,4 @@
 !missing-field! _nw_data_transfer_report_all_paths not bound
-!missing-pinvoke! nw_advertise_descriptor_copy_txt_record_object is not bound
-!missing-pinvoke! nw_advertise_descriptor_set_txt_record_object is not bound
-!missing-pinvoke! nw_browse_descriptor_create_bonjour_service is not bound
-!missing-pinvoke! nw_browse_descriptor_get_bonjour_service_domain is not bound
-!missing-pinvoke! nw_browse_descriptor_get_bonjour_service_type is not bound
-!missing-pinvoke! nw_browse_descriptor_get_include_txt_record is not bound
-!missing-pinvoke! nw_browse_descriptor_set_include_txt_record is not bound
-!missing-pinvoke! nw_browse_result_copy_endpoint is not bound
-!missing-pinvoke! nw_browse_result_copy_txt_record_object is not bound
-!missing-pinvoke! nw_browse_result_enumerate_interfaces is not bound
-!missing-pinvoke! nw_browse_result_get_changes is not bound
-!missing-pinvoke! nw_browse_result_get_interfaces_count is not bound
-!missing-pinvoke! nw_browser_cancel is not bound
-!missing-pinvoke! nw_browser_copy_browse_descriptor is not bound
-!missing-pinvoke! nw_browser_copy_parameters is not bound
-!missing-pinvoke! nw_browser_create is not bound
-!missing-pinvoke! nw_browser_set_browse_results_changed_handler is not bound
-!missing-pinvoke! nw_browser_set_queue is not bound
-!missing-pinvoke! nw_browser_set_state_changed_handler is not bound
-!missing-pinvoke! nw_browser_start is not bound
-!missing-pinvoke! nw_connection_access_establishment_report is not bound
-!missing-pinvoke! nw_connection_create_new_data_transfer_report is not bound
-!missing-pinvoke! nw_data_transfer_report_collect is not bound
-!missing-pinvoke! nw_data_transfer_report_copy_path_interface is not bound
-!missing-pinvoke! nw_data_transfer_report_get_duration_milliseconds is not bound
-!missing-pinvoke! nw_data_transfer_report_get_path_count is not bound
-!missing-pinvoke! nw_data_transfer_report_get_received_application_byte_count is not bound
-!missing-pinvoke! nw_data_transfer_report_get_received_ip_packet_count is not bound
-!missing-pinvoke! nw_data_transfer_report_get_received_transport_byte_count is not bound
-!missing-pinvoke! nw_data_transfer_report_get_received_transport_duplicate_byte_count is not bound
-!missing-pinvoke! nw_data_transfer_report_get_received_transport_out_of_order_byte_count is not bound
-!missing-pinvoke! nw_data_transfer_report_get_sent_application_byte_count is not bound
-!missing-pinvoke! nw_data_transfer_report_get_sent_ip_packet_count is not bound
-!missing-pinvoke! nw_data_transfer_report_get_sent_transport_byte_count is not bound
-!missing-pinvoke! nw_data_transfer_report_get_sent_transport_retransmitted_byte_count is not bound
-!missing-pinvoke! nw_data_transfer_report_get_state is not bound
-!missing-pinvoke! nw_data_transfer_report_get_transport_minimum_rtt_milliseconds is not bound
-!missing-pinvoke! nw_data_transfer_report_get_transport_rtt_variance is not bound
-!missing-pinvoke! nw_data_transfer_report_get_transport_smoothed_rtt_milliseconds is not bound
-!missing-pinvoke! nw_endpoint_create_url is not bound
-!missing-pinvoke! nw_endpoint_get_url is not bound
-!missing-pinvoke! nw_establishment_report_copy_proxy_endpoint is not bound
-!missing-pinvoke! nw_establishment_report_enumerate_protocols is not bound
-!missing-pinvoke! nw_establishment_report_enumerate_resolutions is not bound
-!missing-pinvoke! nw_establishment_report_get_attempt_started_after_milliseconds is not bound
-!missing-pinvoke! nw_establishment_report_get_duration_milliseconds is not bound
-!missing-pinvoke! nw_establishment_report_get_previous_attempt_count is not bound
-!missing-pinvoke! nw_establishment_report_get_proxy_configured is not bound
-!missing-pinvoke! nw_establishment_report_get_used_proxy is not bound
 !missing-pinvoke! nw_ethernet_channel_cancel is not bound
 !missing-pinvoke! nw_ethernet_channel_create is not bound
 !missing-pinvoke! nw_ethernet_channel_send is not bound
@@ -55,17 +6,18 @@
 !missing-pinvoke! nw_ethernet_channel_set_receive_handler is not bound
 !missing-pinvoke! nw_ethernet_channel_set_state_changed_handler is not bound
 !missing-pinvoke! nw_ethernet_channel_start is not bound
+!missing-pinvoke! nw_framer_create_definition is not bound
+!missing-pinvoke! nw_framer_message_access_value is not bound
+!missing-pinvoke! nw_parameters_create_custom_ip is not bound
 !missing-pinvoke! nw_framer_async is not bound
 !missing-pinvoke! nw_framer_copy_local_endpoint is not bound
 !missing-pinvoke! nw_framer_copy_parameters is not bound
 !missing-pinvoke! nw_framer_copy_remote_endpoint is not bound
-!missing-pinvoke! nw_framer_create_definition is not bound
 !missing-pinvoke! nw_framer_create_options is not bound
 !missing-pinvoke! nw_framer_deliver_input is not bound
 !missing-pinvoke! nw_framer_deliver_input_no_copy is not bound
 !missing-pinvoke! nw_framer_mark_failed_with_error is not bound
 !missing-pinvoke! nw_framer_mark_ready is not bound
-!missing-pinvoke! nw_framer_message_access_value is not bound
 !missing-pinvoke! nw_framer_message_copy_object_value is not bound
 !missing-pinvoke! nw_framer_message_create is not bound
 !missing-pinvoke! nw_framer_message_set_object_value is not bound
@@ -85,56 +37,3 @@
 !missing-pinvoke! nw_framer_write_output is not bound
 !missing-pinvoke! nw_framer_write_output_data is not bound
 !missing-pinvoke! nw_framer_write_output_no_copy is not bound
-!missing-pinvoke! nw_ip_options_set_local_address_preference is not bound
-!missing-pinvoke! nw_listener_get_new_connection_limit is not bound
-!missing-pinvoke! nw_listener_set_new_connection_limit is not bound
-!missing-pinvoke! nw_parameters_create_custom_ip is not bound
-!missing-pinvoke! nw_parameters_get_prohibit_constrained is not bound
-!missing-pinvoke! nw_parameters_set_prohibit_constrained is not bound
-!missing-pinvoke! nw_path_enumerate_gateways is not bound
-!missing-pinvoke! nw_path_is_constrained is not bound
-!missing-pinvoke! nw_protocol_copy_ws_definition is not bound
-!missing-pinvoke! nw_protocol_metadata_is_framer_message is not bound
-!missing-pinvoke! nw_protocol_metadata_is_ws is not bound
-!missing-pinvoke! nw_txt_record_access_bytes is not bound
-!missing-pinvoke! nw_txt_record_access_key is not bound
-!missing-pinvoke! nw_txt_record_apply is not bound
-!missing-pinvoke! nw_txt_record_copy is not bound
-!missing-pinvoke! nw_txt_record_create_dictionary is not bound
-!missing-pinvoke! nw_txt_record_create_with_bytes is not bound
-!missing-pinvoke! nw_txt_record_find_key is not bound
-!missing-pinvoke! nw_txt_record_get_key_count is not bound
-!missing-pinvoke! nw_txt_record_is_dictionary is not bound
-!missing-pinvoke! nw_txt_record_is_equal is not bound
-!missing-pinvoke! nw_txt_record_remove_key is not bound
-!missing-pinvoke! nw_txt_record_set_key is not bound
-!missing-pinvoke! nw_ws_create_metadata is not bound
-!missing-pinvoke! nw_ws_create_options is not bound
-!missing-pinvoke! nw_ws_metadata_copy_server_response is not bound
-!missing-pinvoke! nw_ws_metadata_get_close_code is not bound
-!missing-pinvoke! nw_ws_metadata_get_opcode is not bound
-!missing-pinvoke! nw_ws_metadata_set_close_code is not bound
-!missing-pinvoke! nw_ws_metadata_set_pong_handler is not bound
-!missing-pinvoke! nw_ws_options_add_additional_header is not bound
-!missing-pinvoke! nw_ws_options_add_subprotocol is not bound
-!missing-pinvoke! nw_ws_options_set_auto_reply_ping is not bound
-!missing-pinvoke! nw_ws_options_set_client_request_handler is not bound
-!missing-pinvoke! nw_ws_options_set_maximum_message_size is not bound
-!missing-pinvoke! nw_ws_options_set_skip_handshake is not bound
-!missing-pinvoke! nw_ws_request_enumerate_additional_headers is not bound
-!missing-pinvoke! nw_ws_request_enumerate_subprotocols is not bound
-!missing-pinvoke! nw_ws_response_add_additional_header is not bound
-!missing-pinvoke! nw_ws_response_create is not bound
-!missing-pinvoke! nw_ws_response_enumerate_additional_headers is not bound
-!missing-pinvoke! nw_ws_response_get_selected_subprotocol is not bound
-!missing-pinvoke! nw_ws_response_get_status is not bound
-!missing-protocol! OS_nw_browse_descriptor not bound
-!missing-protocol! OS_nw_browse_result not bound
-!missing-protocol! OS_nw_browser not bound
-!missing-protocol! OS_nw_data_transfer_report not bound
-!missing-protocol! OS_nw_establishment_report not bound
-!missing-protocol! OS_nw_ethernet_channel not bound
-!missing-protocol! OS_nw_framer not bound
-!missing-protocol! OS_nw_txt_record not bound
-!missing-protocol! OS_nw_ws_request not bound
-!missing-protocol! OS_nw_ws_response not bound

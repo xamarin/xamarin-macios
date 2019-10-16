@@ -1,0 +1,2 @@
+!missing-protocol-member! HMHomeDelegate::homeDidUpdateSupportedFeatures: not found
+!missing-selector! HMHome::supportsAddingNetworkRouter not bound

@@ -396,6 +396,18 @@ namespace MonoTouchFixtures.Network {
 				Assert.True (parameters.IncludePeerToPeer, "New value was not stored.");
 			}
 		}
+
+		[Test]
+		public void TestProhibitConstrained ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			using (var parameters = new NWParameters ()) {
+				var defaultValue = false;
+				Assert.False (defaultValue, "Default value changed.");
+				parameters.ProhibitConstrained = true;
+				Assert.True (parameters.ProhibitConstrained, "New value was not stored.");
+			}
+		}
 	}
 }
 #endif

@@ -2129,9 +2129,6 @@ namespace Registrar {
 				header.WriteLine ("#import <IOBluetooth/IOBluetooth.h>");
 				header.WriteLine ("#import <CoreBluetooth/CoreBluetooth.h>");
 				return;
-			case "CoreImage":
-				h = "<QuartzCore/QuartzCore.h>";
-				break;
 			case "PdfKit":
 			case "ImageKit":
 			case "QuartzComposer":
@@ -2192,6 +2189,10 @@ namespace Registrar {
 			case "IOSurface": // There is no IOSurface.h
 				h = "<IOSurface/IOSurfaceObjC.h>";
 				break;
+			case "CoreImage":
+				header.WriteLine ("#import <CoreImage/CoreImage.h>");
+				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
+				return;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;

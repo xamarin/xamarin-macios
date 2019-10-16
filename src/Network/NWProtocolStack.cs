@@ -80,13 +80,21 @@ namespace Network {
 		extern static void nw_protocol_stack_set_transport_protocol (nw_protocol_stack_t stack, IntPtr value);
 
 		public NWProtocolOptions TransportProtocol {
-			get => new NWProtocolOptions (nw_protocol_stack_copy_transport_protocol (GetCheckedHandle ()), owns: true);
+			get {
+				var pHandle = nw_protocol_stack_copy_transport_protocol (GetCheckedHandle ());
+				return (pHandle == IntPtr.Zero)? null : new NWProtocolOptions (pHandle, owns: true);
+			}
 			set => nw_protocol_stack_set_transport_protocol (GetCheckedHandle (), value.GetHandle ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_protocol_stack_copy_internet_protocol (nw_protocol_stack_t stack);
 
-		public NWProtocolOptions InternetProtocol => new NWProtocolOptions (nw_protocol_stack_copy_internet_protocol (GetCheckedHandle ()), owns: true);
+		public NWProtocolOptions InternetProtocol {
+			get {
+				var pHandle = nw_protocol_stack_copy_internet_protocol (GetCheckedHandle ());
+				return (pHandle == IntPtr.Zero) ? null : new NWProtocolOptions (pHandle, owns: true);
+			}
+		}
 	}
 }
