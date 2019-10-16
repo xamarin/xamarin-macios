@@ -57,7 +57,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public static string GetOperatingSystem (string targetFrameworkIdentifier)
 		{
-			var framework = PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier);
+			var framework = PlatformFrameworkHelper.GetFramework (targetFrameworkIdentifier);
 			switch (framework) {
 			case PlatformFramework.WatchOS:
 				return "watchos";
