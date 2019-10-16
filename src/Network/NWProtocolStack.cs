@@ -108,7 +108,7 @@ namespace Network {
 					if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
 						return new NWProtocolUdpOptions (pHandle, owns: true);
 					} 
-					return null;
+					return tempOptions;
 				}
 			}
 			set => nw_protocol_stack_set_transport_protocol (GetCheckedHandle (), value.GetHandle ());
@@ -117,7 +117,11 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_protocol_stack_copy_internet_protocol (nw_protocol_stack_t stack);
 
+#if XAMCORE_4_0 
+		public NWProtocolIPOptions InternetProtocol {
+#else
 		public NWProtocolOptions InternetProtocol {
+#endif
 			get {
 				var pHandle = nw_protocol_stack_copy_internet_protocol (GetCheckedHandle ());
 				return (pHandle == IntPtr.Zero) ? null : new NWProtocolIPOptions (pHandle, owns: true);

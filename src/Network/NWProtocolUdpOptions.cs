@@ -7,14 +7,10 @@
 // Copyrigh 2019 Microsoft Inc
 //
 using System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using Security;
-using OS_nw_protocol_definition=System.IntPtr;
-using IntPtr=System.IntPtr;
 
 namespace Network {
 
