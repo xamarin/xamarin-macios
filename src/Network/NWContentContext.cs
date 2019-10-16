@@ -126,6 +126,16 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
+		public T GetProtocolMetadata<T> (NWProtocolDefinition protocolDefinition) where T : NWProtocolMetadata
+		{
+			if (protocolDefinition == null)
+				throw new ArgumentNullException (nameof (protocolDefinition));
+			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
+			if (x == IntPtr.Zero)
+				return null;
+			return Runtime.GetINativeObject<T> (x, owns: true);
+		}
+
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_content_context_set_metadata_for_protocol (IntPtr handle, IntPtr protocolMetadata);
 
