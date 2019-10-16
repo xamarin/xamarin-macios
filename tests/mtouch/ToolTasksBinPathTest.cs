@@ -14,8 +14,10 @@ namespace Xamarin.MacDev.Tasks {
 
 	public abstract class MetalTaskBase {
 
-		protected abstract string OperatingSystem {
-			get;
+		protected virtual string OperatingSystem {
+			get {
+				throw new NotImplementedException ();
+			}
 		}
 
 		protected abstract string DevicePlatformBinDir {
@@ -82,6 +84,7 @@ namespace Xamarin.Mac.Tasks {
 				RedirectStandardError = true,
 			};
 			psi.EnvironmentVariables.Add ("DEVELOPER_DIR", Configuration.xcode_root);
+			psi.EnvironmentVariables.Remove ("XCODE_DEVELOPER_DIR_PATH"); // VSfM sets XCODE_DEVELOPER_DIR_PATH, which confuses the command-line tools if it doesn't match xcode-select, so just unset it.
 			var proc = Process.Start (psi);
 
 			string output = proc.StandardOutput.ReadToEnd ();
