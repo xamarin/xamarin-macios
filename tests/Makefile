@@ -380,7 +380,9 @@ runner: xharness/xharness.exe
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
 vsts-device-tests: xharness/xharness.exe
-	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir download -j
+	#$(Q) git clone --recursive $(MONO_MODULE) $(MONO_PATH)
+	$(MAKE) -C $(TOP) reset-mono
+	#$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir download -j
 	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 ifdef ENABLE_XAMARIN
