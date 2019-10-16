@@ -100,15 +100,22 @@ namespace Network {
 				var pHandle = nw_protocol_stack_copy_transport_protocol (GetCheckedHandle ());
 				if (pHandle == IntPtr.Zero)
 					return null;
-				using (var tempOptions = new NWProtocolOptions (pHandle, owns: false)) 
+				var tempOptions = new NWProtocolOptions (pHandle, owns: true); 
+
 				using (var definition = tempOptions.ProtocolDefinition) {
+					NWProtocolOptions castedOptions = null;
 					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
-						return new NWProtocolTcpOptions (pHandle, owns: true);
+						castedOptions = new NWProtocolTcpOptions (pHandle, owns: true);
 					}
 					if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
-						return new NWProtocolUdpOptions (pHandle, owns: true);
+						castedOptions = new NWProtocolUdpOptions (pHandle, owns: true);
 					} 
-					return tempOptions;
+					if (castedOptions == null) {
+						return tempOptions;
+					} else {
+						tempOptions.Dispose ();
+						return castedOptions;
+					}
 				}
 			}
 			set => nw_protocol_stack_set_transport_protocol (GetCheckedHandle (), value.GetHandle ());
