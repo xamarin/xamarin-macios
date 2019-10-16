@@ -145,6 +145,7 @@ namespace Introspection
 			"Cartes", // french
 			"Cavlc",
 			"Cda", // acronym: Clinical Document Architecture
+			"Cdrom",
 			"Cfa", // acronym: Color Filter Array
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
@@ -386,6 +387,7 @@ namespace Introspection
 			"nint",
 			"Nntps",
 			"Ntlm",
+			"Nsl", // InternetLocationNslNeighborhoodIcon
 			"Ntsc",
 			"nuint",
 			"Ndef",
@@ -436,6 +438,7 @@ namespace Introspection
 			"Prerolls",
 			"Preseti",
 			"Prev",
+			"Privs", // SharingPrivsNotApplicableIcon
 			"Propogate",
 			"Psec",
 			"Psm", // Protocol/Service Multiplexer
@@ -865,6 +868,7 @@ namespace Introspection
 			"Attributest",
 			"Failwith",
 			"Imageimage",
+			"Libary",
 			"Musthold",
 			"Olus", // Typo, should be 'Bolus', fixed in 'HKInsulinDeliveryReason'
 			"Ostprandial", // Typo, should be 'Postprandial', fixed in 'HKBloodGlucoseMealTime'
