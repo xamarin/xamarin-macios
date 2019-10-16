@@ -39,6 +39,9 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public ITaskItem SourceFile { get; set; }
 
+		[Required]
+		public string TargetFrameworkIdentifier { get; set; }
+
 		#endregion
 
 		[Output]
@@ -48,8 +51,22 @@ namespace Xamarin.MacDev.Tasks
 			get;
 		}
 
-		protected abstract string OperatingSystem {
-			get;
+		protected virtual string OperatingSystem {
+			get {
+				switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
+				case PlatformFramework.WatchOS:
+					return "watchos";
+				case PlatformFramework.TVOS:
+					return "tvos";
+				case PlatformFramework.MacOS:
+					return "macosx";
+				case PlatformFramework.iOS:
+					return "ios";
+				default:
+					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					return string.Empty;
+				}
+			}
 		}
 
 		protected abstract string DevicePlatformBinDir {

@@ -603,6 +603,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			AppManifest="$(_AppManifest)"
 			ProjectDir="$(MSBuildProjectDirectory)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			ResourcePrefix="$(IPhoneResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkRoot="$(_SdkRoot)"
@@ -1220,6 +1221,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkRoot="$(_SdkRoot)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkVersion="$(MtouchSdkVersion)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
 			OutputScene="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)">
@@ -1333,6 +1335,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolPath="$(CopySceneKitAssetsPath)"
 			SceneKitAssets="@(SceneKitAsset)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(IPhoneResourcePrefix)"
 			IsWatchApp="$(IsWatchApp)"
