@@ -61,7 +61,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern void nw_ip_options_set_version (IntPtr options, NWIPVersion version);
 
-		[Obsolete ("Use the 'NWProptocolIPOptions' class instead.")]
+		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		public void IPSetVersion (NWIPVersion version)
 		{
 			nw_ip_options_set_version (GetCheckedHandle (), version);
@@ -70,7 +70,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern void nw_ip_options_set_hop_limit (IntPtr options, byte hop_limit);
 
-		[Obsolete ("Use the 'NWProptocolIPOptions' class instead.")]
+		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		public void IPSetHopLimit (byte hopLimit)
 		{
 			nw_ip_options_set_hop_limit (GetCheckedHandle (), hopLimit);
@@ -79,7 +79,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern void nw_ip_options_set_use_minimum_mtu (IntPtr options, [MarshalAs (UnmanagedType.I1)] bool use_minimum_mtu);
 
-		[Obsolete ("Use the 'NWProptocolIPOptions' class instead.")]
+		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		public void IPSetUseMinimumMtu (bool useMinimumMtu)
 		{
 			nw_ip_options_set_use_minimum_mtu (GetCheckedHandle (), useMinimumMtu);
@@ -88,7 +88,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern void nw_ip_options_set_disable_fragmentation (IntPtr options, [MarshalAs (UnmanagedType.I1)] bool disable_fragmentation);
 
-		[Obsolete ("Use the 'NWProptocolIPOptions' class instead.")]
+		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		public void IPSetDisableFragmentation (bool disableFragmentation)
 		{
 			nw_ip_options_set_disable_fragmentation (GetCheckedHandle (), disableFragmentation);
@@ -97,7 +97,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern void nw_ip_options_set_calculate_receive_time (IntPtr options, bool calculateReceiveTime);
 
-		[Obsolete ("Use the 'NWProptocolIPOptions' class instead.")]
+		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		public void IPSetCalculateReceiveTime (bool calculateReceiveTime)
 		{
 			nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), calculateReceiveTime);
@@ -108,7 +108,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern void nw_ip_options_set_local_address_preference (IntPtr options, NWIPLocalAddressPreference preference);
 
-		[Obsolete ("Use the 'NWProptocolIPOptions' class instead.")]
+		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		public NWIPLocalAddressPreference IPLocalAddressPreference {
 			set => nw_ip_options_set_local_address_preference (GetCheckedHandle (), value);
