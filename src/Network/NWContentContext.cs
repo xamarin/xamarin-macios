@@ -131,8 +131,6 @@ namespace Network {
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));
 			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
-			if (x == IntPtr.Zero)
-				return null;
 			return Runtime.GetINativeObject<T> (x, owns: true);
 		}
 
