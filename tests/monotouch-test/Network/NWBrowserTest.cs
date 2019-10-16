@@ -75,6 +75,8 @@ namespace MonoTouchFixtures.Network {
 				Assert.Throws<InvalidOperationException> (() => newBrowser.Start ());
 		}
 
+		// ATTENTION!!! This ignore has to be removed when the Xcode11.2 branch is merged, the test there if fixed and should ne executed.
+		[Ignore ("This tests crashes because the API is missused. This has been fixed in PR: https://github.com/xamarin/xamarin-macios/pull/7214")]
 		[Test]
 		public void TestStateChangesHandler ()
 		{
