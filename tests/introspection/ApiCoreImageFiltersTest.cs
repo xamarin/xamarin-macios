@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 using NUnit.Framework;
 
@@ -214,6 +215,313 @@ namespace Introspection {
 			writer.WriteLine ("}");
 			writer.WriteLine ();
 			writer.Flush ();
+		}
+
+		[Test]
+		public void Protocols ()
+		{
+			var to_confirm_manually = new StringBuilder ();
+			ContinueOnFailure = true;
+			var nspace = CIFilterType.Namespace;
+			var types = CIFilterType.Assembly.GetTypes ();
+			foreach (Type t in types) {
+				if (t.Namespace != nspace)
+					continue;
+
+				// e.g. FooProtocolWrapper
+				if (!t.IsPublic)
+					continue;
+
+				switch (t.Name) {
+				// we are interested in subclasses (real) filters
+				case "CIFilter":
+					continue;
+				// no protocol has been added (yet?) you can confirm with `grep` that it does not report anything in the terminal
+				case "CIAdditionCompositing":
+				case "CIAreaAverage":
+				case "CIAreaHistogram":
+				case "CIAreaMaximum":
+				case "CIAreaMaximumAlpha":
+				case "CIAreaMinimum":
+				case "CIAreaMinimumAlpha":
+				case "CIAreaMinMax":
+				case "CIAreaMinMaxRed":
+				case "CIBlendFilter":
+				case "CIBumpDistortion":
+				case "CIBumpDistortionLinear":
+				case "CICameraCalibrationLensCorrection":
+				case "CICircleSplashDistortion":
+				case "CICircularWrap":
+				case "CIClamp":
+				case "CICodeGenerator":
+				case "CIColorBlendMode":
+				case "CIColorBurnBlendMode":
+				case "CIColorDodgeBlendMode":
+				case "CIColumnAverage":
+				case "CICompositingFilter":
+				case "CIConstantColorGenerator":
+				case "CIConvolution3X3":
+				case "CIConvolution5X5":
+				case "CIConvolution7X7":
+				case "CIConvolution9Horizontal":
+				case "CIConvolution9Vertical":
+				case "CIConvolutionCore":
+				case "CICoreMLModelFilter":
+				case "CICrop":
+				case "CIDarkenBlendMode":
+				case "CIDepthBlurEffect":
+				case "CIDepthDisparityConverter":
+				case "CIDifferenceBlendMode":
+				case "CIDisplacementDistortion":
+				case "CIDistortionFilter":
+				case "CIDivideBlendMode":
+				case "CIDroste":
+				case "CIExclusionBlendMode":
+				case "CIFaceBalance":
+				case "CIGlassDistortion":
+				case "CIGlassLozenge":
+				case "CIGuidedFilter":
+				case "CIHardLightBlendMode":
+				case "CIHistogramDisplayFilter":
+				case "CIHoleDistortion":
+				case "CIHueBlendMode":
+				case "CIImageGenerator":
+				case "CIKeystoneCorrection":
+				case "CIKMeans":
+				case "CILightenBlendMode":
+				case "CILightTunnel":
+				case "CILinearBlur":
+				case "CILinearBurnBlendMode":
+				case "CILinearDodgeBlendMode":
+				case "CILuminosityBlendMode":
+				case "CIMaximumCompositing":
+				case "CIMinimumCompositing":
+				case "CIMorphology":
+				case "CIMorphologyRectangle":
+				case "CIMultiplyBlendMode":
+				case "CIMultiplyCompositing":
+				case "CINinePartStretched":
+				case "CINinePartTiled":
+				case "CIOverlayBlendMode":
+				case "CIPinchDistortion":
+				case "CIPinLightBlendMode":
+				case "CIReductionFilter":
+				case "CIRowAverage":
+				case "CISampleNearest":
+				case "CISaturationBlendMode":
+				case "CIScreenBlendMode":
+				case "CIScreenFilter":
+				case "CISoftLightBlendMode":
+				case "CISourceAtopCompositing":
+				case "CISourceInCompositing":
+				case "CISourceOutCompositing":
+				case "CISourceOverCompositing":
+				case "CIStretchCrop":
+				case "CISubtractBlendMode":
+				case "CITileFilter":
+				case "CITorusLensDistortion":
+				case "CITwirlDistortion":
+				case "CIVortexDistortion":
+					// this list is likely to change with newer Xcode - uncomment if you want to the script to check the list
+					//to_confirm_manually.AppendLine ($"grep {t.Name} `xcode-select -p`/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreImage.framework/Headers/*.h");
+					// since xtro will report the missing protocols this is a 2nd layer of safety :)
+					continue;
+				}
+
+				bool assign = typeof (ICIFilterProtocol).IsAssignableFrom (t);
+				bool suffix = t.Name.EndsWith ("Protocol", StringComparison.Ordinal);
+
+				if (t.IsInterface) {
+					if (assign) {
+						// check that `IFooProtocol` has a [Protocol (Name = "Foo")] attribute
+						var ca = t.GetCustomAttribute<ProtocolAttribute> (false);
+						if (ca == null) {
+							ReportError ($"Managed {t.Name} should have a '[Protocol (Name=\"{t.Name.Replace ("Protocol", "")}\")]' attribute");
+						}
+						// check that the managed name ends with Protocol, so we can have the _normal_ name to be a concrete type (like our historic, strongly typed filters)
+						if (!suffix) {
+							ReportError ($"Managed {t.Name} should have a 'Protocol' suffix");
+						}
+					} else if (suffix) {
+						ReportError ($"Managed {t.Name} should implement 'ICIFilterProtocol' interface.");
+					}
+				} else if (suffix) {
+					ReportError ($"Managed {t.Name} should be an interface since it represent a protocol");
+				} else if (assign) {
+					// all CIFilter should map to a `ICI*Protocol` interface / protocol
+					bool found = false;
+					foreach (var inft in t.GetInterfaces ()) {
+						if (inft.Namespace == nspace && inft.Name.EndsWith ("Protocol", StringComparison.Ordinal)) {
+							found = true;
+							break;
+						}
+					}
+					if (!found)
+						ReportError ($"Managed CIFilter '{t.Name}' does not conform to any CoreImage filter protocol.");
+				} else if (CIFilterType.IsAssignableFrom (t)) {
+					// missing ICIFilterProtocol
+					to_confirm_manually.AppendLine ($"grep \"protocol {t.Name} \" `xcode-select -p`/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreImage.framework/Headers/*.h");
+					ReportError ($"Managed CIFilter '{t.Name}' does not conform to 'ICIFilterProtocol' protocol. Confirm with generated `grep` script on console.");
+				}
+			}
+			if (to_confirm_manually.Length > 0) {
+				Console.WriteLine (to_confirm_manually);
+			}
+			Assert.AreEqual (0, Errors, "{0} potential errors found{1}", Errors, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
+		}
+
+		[Test]
+		public void Keys ()
+		{
+			ContinueOnFailure = true;
+			var nspace = CIFilterType.Namespace;
+			var types = CIFilterType.Assembly.GetTypes ();
+			foreach (Type t in types) {
+				if (t.Namespace != nspace)
+					continue;
+
+				if (t.IsAbstract || !CIFilterType.IsAssignableFrom (t))
+					continue;
+
+				// we need to skip the filters that are not supported by the executing version of iOS
+				if (Skip (t))
+					continue;
+
+				var ctor = t.GetConstructor (Type.EmptyTypes);
+				if ((ctor == null) || ctor.IsAbstract)
+					continue;
+
+				CIFilter f = ctor.Invoke (null) as CIFilter;
+
+				// first check that every property can be mapped to an input key - except if it starts with "Output"
+				foreach (var p in t.GetProperties (BindingFlags.Public | BindingFlags.Instance)) {
+					var pt = p.DeclaringType;
+					if (!CIFilterType.IsAssignableFrom (pt) || (pt == CIFilterType))
+						continue;
+
+					if (SkipDueToAttribute (p))
+						continue;
+
+					var getter = p.GetGetMethod ();
+					var ea = getter.GetCustomAttribute<ExportAttribute> (false);
+					// only properties coming (inlined) from protocols have an [Export] attribute
+					if (ea == null)
+						continue;
+					var key = ea.Selector;
+					// 'output' is always explicit
+					if (key.StartsWith ("output", StringComparison.Ordinal)) {
+						if (Array.IndexOf (f.OutputKeys, key) < 0) {
+							ReportError ($"{t.Name}: Property `{p.Name}` mapped to key `{key}` is not part of `OutputKeys`.");
+							//GenerateBinding (f, Console.Out);
+						}
+					} else {
+						// special cases (protocol names are better)
+						switch (t.Name) {
+						case "CIBicubicScaleTransform":
+							switch (key) {
+							case "parameterB":
+								key = "inputB";
+								break;
+							case "parameterC":
+								key = "inputC";
+								break;
+							}
+							break;
+						case "CICmykHalftone":
+							switch (key) {
+							case "grayComponentReplacement":
+								key = "inputGCR";
+								break;
+							case "underColorRemoval":
+								key = "inputUCR";
+								break;
+							}
+							break;
+						}
+						// 'input' is implied (generally) and explicit (in a few cases)
+						if (!key.StartsWith ("input", StringComparison.Ordinal))
+							key = "input" + Char.ToUpperInvariant (key [0]) + key.Substring (1);
+
+						if (Array.IndexOf (f.InputKeys, key) < 0) {
+							ReportError ($"{t.Name}: Property `{p.Name}` mapped to key `{key}` is not part of `InputKeys`.");
+							//GenerateBinding (f, Console.Out);
+						}
+					}
+				}
+
+				// second check that every input key is mapped to an property
+				foreach (var key in f.InputKeys) {
+					string cap = Char.ToUpperInvariant (key [0]) + key.Substring (1);
+					// special cases (protocol names are better)
+					switch (t.Name) {
+					case "CICmykHalftone":
+						switch (key) {
+						case "inputGCR":
+							cap = "GrayComponentReplacement";
+							break;
+						case "inputUCR":
+							cap = "UnderColorRemoval";
+							break;
+						}
+						break;
+					}
+					// IgnoreCase because there are acronyms (more than 2 letters) that naming convention force us to change
+					var pi = t.GetProperty (cap, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+					if (pi == null) {
+						// 2nd chance: some, but not all, property are prefixed by `Input`
+						if (key.StartsWith ("input", StringComparison.Ordinal)) {
+							cap = Char.ToUpperInvariant (key [5]) + key.Substring (6);
+							pi = t.GetProperty (cap, BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+						}
+					}
+					if (pi == null) {
+						ReportError ($"{t.Name}: Input Key `{key}` is NOT mapped to a `{cap}` property.");
+						//GenerateBinding (f, Console.Out);
+					} else if (pi.GetSetMethod () == null)
+						ReportError ($"{t.Name}: Property `{pi.Name}` MUST have a setter.");
+				}
+
+				// third check that every output key is mapped to an property
+				foreach (var key in f.OutputKeys) {
+					// special cases
+					switch (t.Name) {
+					case "CIKeystoneCorrectionCombined":
+					case "CIKeystoneCorrectionHorizontal":
+					case "CIKeystoneCorrectionVertical":
+						switch (key) {
+						case "outputRotationFilter":
+							continue; // lack of documentation about the returned type
+						}
+						break;
+					case "CILanczosScaleTransform":
+						switch (key) {
+						// ref: https://github.com/xamarin/xamarin-macios/issues/7209
+						case "outputImageNewScaleX:scaleY:":
+						case "outputImageOldScaleX:scaleY:":
+							continue;
+						}
+						break;
+					case "CIDiscBlur":
+						switch (key) {
+						// existed in iOS 10.3 but not in iOS 13 - we're not adding them
+						case "outputImageOriginal":
+						case "outputImageEnhanced":
+							continue;
+						}
+						break;
+					}
+
+					var cap = Char.ToUpperInvariant (key [0]) + key.Substring (1);
+					// IgnoreCase because there are acronyms (more than 2 letters) that naming convention force us to change
+					var po = t.GetProperty (cap, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+					if (po == null) {
+						ReportError ($"{t.Name}: Output Key `{key}` is NOT mapped to a `{cap}` property.");
+						//GenerateBinding (f, Console.Out);
+					} else if (po.GetSetMethod () != null)
+						ReportError ($"{t.Name}: Property `{po.Name}` should NOT have a setter.");
+				}
+			}
+			Assert.AreEqual (0, Errors, "{0} potential errors found{1}", Errors, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 	}
 }

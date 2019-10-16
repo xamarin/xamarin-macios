@@ -212,6 +212,35 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 ### <a name='BI1070'/>BI1070: The type '{type}' is trying to inline the property '{property}' from the protocols '{protocol1}' and '{protocol2}', but the inlined properties are of different types ('{property1}' is int, while '{property2}' is int).
 
+<!-- 1071 used in master -->
+
+### <a name='BI1072'/>BI1072: Missing [CoreImageFilterProperty] attribute on {type} property {name}
+
+This error happens when a binding type, decorated with `[CoreImageFilter]` attribute, has properties that are not decorated with a `[CoreImageFilterProperty]` attribute. E.g.
+
+```csharp
+[CoreImageFilter]
+[BaseType (typeof (CIFilter))]
+interface CICustomFilter  {
+
+	CGAffineTransform Transform { get; }
+}
+```
+
+To solve this error you need to tell the `CIFilter` key that you want to map to the property, e.g.
+
+```csharp
+[CoreImageFilter]
+[BaseType (typeof (CIFilter))]
+interface CICustomFilter  {
+
+	[CoreImageFilterProperty ("inputTransform")]
+	CGAffineTransform Transform { get; }
+}
+```
+
+If the property is inlined from a protocol then the `[Export]` value, prefixed with `input`, will be used by default. You can override this with by adding the `[CoreImageFilterProperty]` attribute (e.g. for `output*` keys).
+
 # BI11xx: warnings
 
 <!-- 11xx: warnings -->
