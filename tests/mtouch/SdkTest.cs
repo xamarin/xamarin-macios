@@ -303,6 +303,7 @@ namespace Xamarin.Linker {
 				"LLVM failed for '<ReceiveAsyncPrivate>d__61`2.MoveNext': non-finally/catch/fault clause.",
 				"LLVM failed for '<ReceiveAsyncPrivate>d__61`2.MoveNext': non-finally/catch/fault clause.",
 				"LLVM failed for 'NetworkStream.Read': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.Write': non-finally/catch/fault clause.",
 			}) },
 			{ "System.Core.dll", new Tuple<int, string[]> (0, new string [] {
 				"LLVM failed for 'EnterTryCatchFinallyInstruction.Run': non-finally/catch/fault clause.",
