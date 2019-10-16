@@ -148,6 +148,7 @@ APPKIT_SOURCES = \
 	AppKit/NSColorPickerTouchBarItem.cs \
 	AppKit/NSSliderTouchBarItem.cs \
 	AppKit/NSView.cs \
+	AppKit/NSCollectionLayoutAnchor.cs \
 
 # ARKit
 

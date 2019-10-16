@@ -3065,7 +3065,7 @@ namespace AppKit {
 		bool CanDragItems (NSCollectionView collectionView, NSIndexSet indexes, NSEvent evt);
 
 		[Export ("collectionView:writeItemsAtIndexes:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead.")]
 		bool WriteItems (NSCollectionView collectionView, NSIndexSet indexes, NSPasteboard toPasteboard);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
@@ -3091,7 +3091,7 @@ namespace AppKit {
 
 		[Mac (10,11)]
 		[Export ("collectionView:writeItemsAtIndexPaths:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead.")]
 		bool WriteItems (NSCollectionView collectionView, NSSet indexPaths, NSPasteboard pasteboard);
 
 		[Mac (10,11)]
@@ -17198,7 +17198,7 @@ namespace AppKit {
 		void SortDescriptorsChanged (NSTableView tableView, NSSortDescriptor [] oldDescriptors);
 	
 		[Export ("tableView:writeRowsWithIndexes:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriterForRow' method instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriterForRow' method instead.")]
 		bool WriteRows (NSTableView tableView, NSIndexSet rowIndexes, NSPasteboard pboard );
 	
 		[Export ("tableView:validateDrop:proposedRow:proposedDropOperation:")]
@@ -26838,6 +26838,7 @@ namespace AppKit {
 		TopTrailing,
 	}
 
+	[Mac (10,15)]
 	[Native]
 	public enum NSTextInputTraitType : long
 	{
@@ -26855,7 +26856,7 @@ namespace AppKit {
 		Collapsed,
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15)]
 	[Native]
 	public enum NSToolbarItemGroupSelectionMode : long
 	{
@@ -26871,15 +26872,15 @@ namespace AppKit {
 	{
 		[Static]
 		[Export ("layoutAnchorWithEdges:")]
-		NSCollectionLayoutAnchor LayoutAnchorWithEdges (NSDirectionalRectEdge edges);
+		NSCollectionLayoutAnchor GetLayoutAnchor (NSDirectionalRectEdge edges);
 
 		[Static]
-		[Export ("layoutAnchorWithEdges:absoluteOffset:")]
-		NSCollectionLayoutAnchor LayoutAnchorWithEdgesAbsoluteOffset (NSDirectionalRectEdge edges, CGPoint absoluteOffset);
+		[Export ("layoutAnchorWithEdges:absoluteOffset:"), Internal]
+		NSCollectionLayoutAnchor _LayoutAnchorWithEdgesAbsoluteOffset (NSDirectionalRectEdge edges, CGPoint absoluteOffset);
 
 		[Static]
-		[Export ("layoutAnchorWithEdges:fractionalOffset:")]
-		NSCollectionLayoutAnchor LayoutAnchorWithEdgesFractionalOffset (NSDirectionalRectEdge edges, CGPoint fractionalOffset);
+		[Export ("layoutAnchorWithEdges:fractionalOffset:"), Internal]
+		NSCollectionLayoutAnchor _LayoutAnchorWithEdgesFractionalOffset (NSDirectionalRectEdge edges, CGPoint fractionalOffset);
 
 		[Export ("edges")]
 		NSDirectionalRectEdge Edges { get; }
@@ -26974,14 +26975,14 @@ namespace AppKit {
 
 		[Export ("imageAtIndex:")]
 		[return: NullAllowed]
-		NSImage ImageAtIndex (nint index);
+		NSImage GetImage (nint index);
 
 		[Export ("setLabel:atIndex:")]
 		void SetLabel (string label, nint index);
 
 		[Export ("labelAtIndex:")]
 		[return: NullAllowed]
-		string LabelAtIndex (nint index);
+		string GetLabel (nint index);
 
 		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
 		NSObject Target { get; set; }
@@ -26996,10 +26997,9 @@ namespace AppKit {
 		void SetEnabled (bool enabled, nint index);
 
 		[Export ("isEnabledAtIndex:")]
-		bool IsEnabledAtIndex (nint index);
+		bool GetEnabled (nint index);
 
-		// @property (readwrite, copy) NSString * _Null_unspecified customizationLabel;
-		[Export ("customizationLabel")]
+		[Export ("customizationLabel", ArgumentSemantic.Copy)]
 		string CustomizationLabel { get; set; }
 	}
 
@@ -27013,10 +27013,10 @@ namespace AppKit {
 		NSCollectionLayoutSize Create (NSCollectionLayoutDimension width, NSCollectionLayoutDimension height);
 
 		[Export ("widthDimension")]
-		NSCollectionLayoutDimension Width { get; }
+		NSCollectionLayoutDimension WidthDimension { get; }
 
 		[Export ("heightDimension")]
-		NSCollectionLayoutDimension Height { get; }
+		NSCollectionLayoutDimension HeightDimension { get; }
 	}
 
 	[Mac (10,15)]
