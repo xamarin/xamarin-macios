@@ -14,7 +14,7 @@ namespace AppKit {
 	}
 
 	public partial class NSCollectionLayoutAnchor {
-		public static NSCollectionLayoutAnchor GetLayoutAnchor (NSDirectionalRectEdge edges, NSCollectionLayoutAnchorOffsetType offsetType, CGPoint offset) =>
+		public static NSCollectionLayoutAnchor Create (NSDirectionalRectEdge edges, NSCollectionLayoutAnchorOffsetType offsetType, CGPoint offset) =>
 		    offsetType switch
 		    {
 			    NSCollectionLayoutAnchorOffsetType.Absolute => _LayoutAnchorWithEdgesAbsoluteOffset (edges, offset),

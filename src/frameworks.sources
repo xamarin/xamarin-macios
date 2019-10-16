@@ -1514,7 +1514,7 @@ UIKIT_CORE_SOURCES = \
     UIKit/UIPrintInteractionController.cs \
     UIKit/UIStringAttributes.cs \
     UIKit/UITypes.cs \
-	XKit/Types.cs \
+    XKit/Types.cs \
 
 UIKIT_SOURCES = \
 	UIKit/Compat.cs \

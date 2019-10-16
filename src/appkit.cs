@@ -26872,7 +26872,7 @@ namespace AppKit {
 	{
 		[Static]
 		[Export ("layoutAnchorWithEdges:")]
-		NSCollectionLayoutAnchor GetLayoutAnchor (NSDirectionalRectEdge edges);
+		NSCollectionLayoutAnchor Create (NSDirectionalRectEdge edges);
 
 		[Static]
 		[Export ("layoutAnchorWithEdges:absoluteOffset:"), Internal]
