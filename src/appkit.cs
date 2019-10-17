@@ -4098,6 +4098,16 @@ namespace AppKit {
 		[Export ("systemGrayColor", ArgumentSemantic.Strong)]
 		NSColor SystemGrayColor { get; }
 
+		[Mac (10, 15)]
+		[Static]
+		[Export ("systemIndigoColor", ArgumentSemantic.Strong)]
+		NSColor SystemIndigoColor { get; }
+
+		[Mac (10, 12)]
+		[Static]
+		[Export ("systemTealColor", ArgumentSemantic.Strong)]
+		NSColor SystemTealColor { get; }
+
 		[Mac (10, 14)]
 		[Static]
 		[Export ("separatorColor", ArgumentSemantic.Strong)]
@@ -4146,6 +4156,11 @@ namespace AppKit {
 		[Static]
 		[Export ("placeholderTextColor", ArgumentSemantic.Strong)]
 		NSColor PlaceholderTextColor { get; }
+
+		[Mac (10,15)]
+		[Static]
+		[Export ("colorWithName:dynamicProvider:")]
+		NSColor GetColor ([NullAllowed] string colorName, Func<NSAppearance, NSColor> dynamicProvider);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -19716,6 +19731,16 @@ namespace AppKit {
 
 		[Export ("autovalidates")]
 		bool Autovalidates { get; set; }
+
+		// @property (copy) NSString * _Nonnull title __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0)));
+		[Mac (10, 15)]
+		[Export ("title")]
+		string Title { get; set; }
+
+		// @property (getter = isBordered) BOOL bordered __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0)));
+		[Mac (10, 15)]
+		[Export ("bordered")]
+		bool Bordered { [Bind ("isBordered")] get; set; }
 	}
 
 	[BaseType (typeof (NSToolbarItem))]
@@ -19727,6 +19752,36 @@ namespace AppKit {
 
 		[Export ("subitems", ArgumentSemantic.Copy)]
 		NSToolbarItem[] Subitems { get; set; }
+
+		[Mac (10,15)]
+		[Static]
+		[Export ("groupWithItemIdentifier:titles:selectionMode:labels:target:action:")]
+		NSToolbarItemGroup CreateGroup (string itemIdentifier, string[] titles, NSToolbarItemGroupSelectionMode selectionMode, [NullAllowed] string[] labels, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Mac (10,15)]
+		[Static]
+		[Export ("groupWithItemIdentifier:images:selectionMode:labels:target:action:")]
+		NSToolbarItemGroup CreateGroup (string itemIdentifier, NSImage[] images, NSToolbarItemGroupSelectionMode selectionMode, [NullAllowed] string[] labels, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Mac (10, 15)]
+		[Export ("controlRepresentation", ArgumentSemantic.Assign)]
+		NSToolbarItemGroupControlRepresentation ControlRepresentation { get; set; }
+
+		[Mac (10, 15)]
+		[Export ("selectionMode", ArgumentSemantic.Assign)]
+		NSToolbarItemGroupSelectionMode SelectionMode { get; set; }
+
+		[Mac (10, 15)]
+		[Export ("selectedIndex")]
+		nint SelectedIndex { get; set; }
+
+		[Mac (10,15)]
+		[Export ("setSelected:atIndex:")]
+		void SetSelected (bool selected, nint index);
+
+		[Mac (10,15)]
+		[Export ("isSelectedAtIndex:")]
+		bool GetSelected (nint index);
 	}
 
 	[DisableDefaultCtor]
@@ -27648,5 +27703,24 @@ namespace AppKit {
 
 		[NullAllowed, Export ("supplementaryViewProvider", ArgumentSemantic.Copy)]
 		NSCollectionViewDiffableDataSourceSupplementaryViewProvider SupplementaryViewProvider { get; set; }
+	}
+
+	public enum NSFontDescriptorSystemDesign 
+	{
+		[Mac (10, 15)]
+		[Field ("NSFontDescriptorSystemDesignDefault")]
+		Default,
+
+		[Mac (10, 15)]
+		[Field ("NSFontDescriptorSystemDesignSerif")]
+		Serif,
+
+		[Mac (10, 15)]
+		[Field ("NSFontDescriptorSystemDesignMonospaced")]
+		Monospaced,
+
+		[Mac (10, 15)]
+		[Field ("NSFontDescriptorSystemDesignRounded")]
+		Rounded,
 	}
 }

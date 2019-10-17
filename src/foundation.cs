@@ -9000,6 +9000,17 @@ namespace Foundation
 		[Static]
 		[Export ("notApplicableSelectionMarker", ArgumentSemantic.Strong)]
 		NSBindingSelectionMarker NotApplicableSelectionMarker { get; }
+
+		[Mac (10,15)]
+		[Static]
+		[Export ("setDefaultPlaceholder:forMarker:onClass:withBinding:")]
+		void SetDefaultPlaceholder ([NullAllowed] NSObject placeholder, [NullAllowed] NSBindingSelectionMarker marker, Class objectClass, string binding);
+
+		[Mac (10,15)]
+		[Static]
+		[Export ("defaultPlaceholderForMarker:onClass:withBinding:")]
+		[return: NullAllowed]
+		NSObject GetDefaultPlaceholder ([NullAllowed] NSBindingSelectionMarker marker, Class objectClass, string binding);
 	}
 
 	[Protocol (Name = "NSObject")] // exists both as a type and a protocol in ObjC, Swift uses NSObjectProtocol

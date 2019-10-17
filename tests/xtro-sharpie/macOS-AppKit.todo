@@ -1,20 +1,9 @@
-!missing-field! NSFontDescriptorSystemDesignDefault not bound
-!missing-field! NSFontDescriptorSystemDesignMonospaced not bound
-!missing-field! NSFontDescriptorSystemDesignRounded not bound
-!missing-field! NSFontDescriptorSystemDesignSerif not bound
 !missing-protocol! NSSharingServicePickerToolbarItemDelegate not bound
 !missing-protocol-conformance! NSTextAlternatives should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextAttachment should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextBlock should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextList should conform to NSSecureCoding
-!missing-selector! +NSBindingSelectionMarker::defaultPlaceholderForMarker:onClass:withBinding: not bound
-!missing-selector! +NSBindingSelectionMarker::setDefaultPlaceholder:forMarker:onClass:withBinding: not bound
-!missing-selector! +NSColor::colorWithName:dynamicProvider: not bound
-!missing-selector! +NSColor::systemIndigoColor not bound
-!missing-selector! +NSColor::systemTealColor not bound
 !missing-selector! +NSFont::monospacedSystemFontOfSize:weight: not bound
-!missing-selector! +NSToolbarItemGroup::groupWithItemIdentifier:images:selectionMode:labels:target:action: not bound
-!missing-selector! +NSToolbarItemGroup::groupWithItemIdentifier:titles:selectionMode:labels:target:action: not bound
 !missing-selector! NSEvent::charactersByApplyingModifiers: not bound
 !missing-selector! NSFontDescriptor::fontDescriptorWithDesign: not bound
 !missing-selector! NSMovie::init not bound
@@ -35,18 +24,6 @@
 !missing-selector! NSStoryboard::instantiateInitialControllerWithCreator: not bound
 !missing-selector! NSTextView::setUsesAdaptiveColorMappingForDarkAppearance: not bound
 !missing-selector! NSTextView::usesAdaptiveColorMappingForDarkAppearance not bound
-!missing-selector! NSToolbarItem::isBordered not bound
-!missing-selector! NSToolbarItem::setBordered: not bound
-!missing-selector! NSToolbarItem::setTitle: not bound
-!missing-selector! NSToolbarItem::title not bound
-!missing-selector! NSToolbarItemGroup::controlRepresentation not bound
-!missing-selector! NSToolbarItemGroup::isSelectedAtIndex: not bound
-!missing-selector! NSToolbarItemGroup::selectedIndex not bound
-!missing-selector! NSToolbarItemGroup::selectionMode not bound
-!missing-selector! NSToolbarItemGroup::setControlRepresentation: not bound
-!missing-selector! NSToolbarItemGroup::setSelected:atIndex: not bound
-!missing-selector! NSToolbarItemGroup::setSelectedIndex: not bound
-!missing-selector! NSToolbarItemGroup::setSelectionMode: not bound
 !missing-selector! NSView::isHorizontalContentSizeConstraintActive not bound
 !missing-selector! NSView::isVerticalContentSizeConstraintActive not bound
 !missing-selector! NSView::setHorizontalContentSizeConstraintActive: not bound
