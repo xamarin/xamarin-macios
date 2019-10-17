@@ -372,7 +372,7 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void ReceiveData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveReadOnlySpanCompletion callback)
+		public void ReceiveReadOnlyData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveReadOnlySpanCompletion callback)
 		{
 			if (callback == null)
 				throw new ArgumentNullException (nameof (callback));
@@ -423,7 +423,7 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void ReceiveMessageData (NWConnectionReceiveReadOnlySpanCompletion callback)
+		public void ReceiveMessageReadOnlyData (NWConnectionReceiveReadOnlySpanCompletion callback)
 		{
 			if (callback == null)
 				throw new ArgumentNullException (nameof (callback));
