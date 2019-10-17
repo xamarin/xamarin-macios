@@ -13168,6 +13168,14 @@ namespace AppKit {
 		[Mac (10,11)]
 		[Export ("maximumExtendedDynamicRangeColorComponentValue")]
 		nfloat MaximumExtendedDynamicRangeColorComponentValue { get; }
+
+		[Mac (10, 15)]
+		[Export ("maximumPotentialExtendedDynamicRangeColorComponentValue")]
+		nfloat MaximumPotentialExtendedDynamicRangeColorComponentValue { get; }
+
+		[Mac (10, 15)]
+		[Export ("maximumReferenceExtendedDynamicRangeColorComponentValue")]
+		nfloat MaximumReferenceExtendedDynamicRangeColorComponentValue { get; }
 	}
 
 	[BaseType (typeof (NSControl))]
@@ -16259,6 +16267,14 @@ namespace AppKit {
 		[Internal]
 		[Export ("sortSubviewsUsingFunction:context:")]
 		void SortSubviews (IntPtr function_pointer, IntPtr context);
+
+		[Mac (10, 15)]
+		[Export ("horizontalContentSizeConstraintActive")]
+		bool HorizontalContentSizeConstraintActive { [Bind ("isHorizontalContentSizeConstraintActive")] get; set; }
+
+		[Mac (10, 15)]
+		[Export ("verticalContentSizeConstraintActive")]
+		bool VerticalContentSizeConstraintActive { [Bind ("isVerticalContentSizeConstraintActive")] get; set; }
 	}
 
 	[BaseType (typeof (NSAnimation))]
@@ -21667,6 +21683,18 @@ namespace AppKit {
 		[Mac (10,14)]
 		[Export ("requestAuthorizationOfType:completionHandler:")]
 		void RequestAuthorization (NSWorkspaceAuthorizationType type, Action<NSWorkspaceAuthorization, NSError> completionHandler);
+
+		[Mac (10,15)]
+		[Export ("openApplicationAtURL:configuration:completionHandler:")]
+		void OpenApplication (NSUrl applicationURL, NSWorkspaceOpenConfiguration configuration, [NullAllowed] Action<NSRunningApplication, NSError> completionHandler);
+
+		[Mac (10,15)]
+		[Export ("openURL:configuration:completionHandler:")]
+		void OpenURL (NSUrl url, NSWorkspaceOpenConfiguration configuration, [NullAllowed] Action<NSRunningApplication, NSError> completionHandler);
+
+		[Mac (10,15)]
+		[Export ("openURLs:withApplicationAtURL:configuration:completionHandler:")]
+		void OpenURLs (NSUrl[] urls, NSUrl applicationURL, NSWorkspaceOpenConfiguration configuration, [NullAllowed] Action<NSRunningApplication, NSError> completionHandler);
 	}
 	
 	[Mac (10,14)]
@@ -22999,6 +23027,10 @@ namespace AppKit {
 
 		[Notification, Field ("NSTextViewDidChangeTypingAttributesNotification")]
 		NSString DidChangeTypingAttributesNotification { get; }
+
+		[Mac (10, 14)]
+		[Export ("usesAdaptiveColorMappingForDarkAppearance")]
+		bool UsesAdaptiveColorMappingForDarkAppearance { get; set; }
 	}
 
 	partial interface NSView {
