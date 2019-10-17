@@ -23,6 +23,18 @@ using OS_nw_parameters=System.IntPtr;
 
 namespace Network {
 
+	// from System/Library/Frameworks/Network.framework/Headers/framer_options.h:
+	public enum NWFramerCreateFlags : uint {
+		Default = 0x00,
+	}
+
+	// from System/Library/Frameworks/Network.framework/Headers/framer_options.h:
+	public enum NWFramerStartResult {
+		Unknown = 0,
+		Ready = 1,
+		WillMarkReady = 2,
+	}
+
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWFramer : NativeObject {
 		internal NWFramer (IntPtr handle, bool owns) : base (handle, owns) {}
@@ -238,23 +250,25 @@ namespace Network {
 		static extern void nw_framer_schedule_wakeup (OS_nw_framer framer, ulong milliseconds);
 
 		public void ScheduleWakeup (ulong milliseconds) => nw_framer_schedule_wakeup (GetCheckedHandle (), milliseconds);
+		*/
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_protocol_create_message (OS_nw_protocol_definition definition);
 
-		public static NWFramer CreateMessage (NWProtocolDefinition protocolDefinition)
+		public static NWFramerMessage CreateMessage (NWProtocolDefinition protocolDefinition)
 		{
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));
-			return new NWFramer (nw_framer_protocol_create_message (protocolDefinition.Handle), owns: true);
+			return new NWFramerMessage (nw_framer_protocol_create_message (protocolDefinition.Handle), owns: true);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_message_create (OS_nw_framer framer);
 
-		public NWProtocolMetadata CreateMessage ()
-			=> new NWFramer (nw_framer_message_create (GetCheckedHandle ()), owns: true);
+		public NWFramerMessage CreateMessage ()
+			=> new NWFramerMessage (nw_framer_message_create (GetCheckedHandle ()), owns: true);
 
+		/*
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_framer_prepend_application_protocol (OS_nw_framer framer, OS_nw_protocol_options protocol_options);
 

@@ -1175,6 +1175,7 @@ NETWORK_SOURCES = \
 	Network/NWEndpoint.cs			\
 	Network/NWError.cs			\
 	Network/NWFramer.cs			\
+	Network/NWFramerMessage.cs			\
 	Network/NWInterface.cs			\
 	Network/NWListener.cs			\
 	Network/NWParameters.cs			\
