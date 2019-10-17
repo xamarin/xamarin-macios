@@ -34,12 +34,15 @@ namespace MonoTouchFixtures.MediaAccessibility {
 				Assert.Null (e, "remote / no error"); // weird should be an "image on disk"
 			}
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
+			file = file.Replace(" ", "%20");
 			using (NSUrl url = new NSUrl (file)) {
 				var s = MAImageCaptioning.GetCaption (url, out var e);
 				Assert.Null (s, "local / return value");
 				Assert.NotNull (e, "local / error"); // does not like the URL (invalid)
 			}
-			using (NSUrl url = new NSUrl (NSBundle.MainBundle.ResourceUrl.AbsoluteString + "basn3p08.png")) {
+			file = NSBundle.MainBundle.ResourceUrl.AbsoluteString + "basn3p08.png";
+			file = file.Replace(" ", "%20");
+			using (NSUrl url = new NSUrl (file)) {
 				var s = MAImageCaptioning.GetCaption (url, out var e);
 				Assert.Null (s, "local / return value");
 				Assert.Null (e, "local / no error");
