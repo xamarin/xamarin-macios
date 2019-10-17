@@ -13998,6 +13998,18 @@ namespace AppKit {
 		[Mac (10,13)]
 		[Export ("view")]
 		INSUserInterfaceCompression View { get; }
+
+		[Mac (10, 15)]
+		[Export ("doubleValue")]
+		double DoubleValue { get; set; }
+
+		[Mac (10, 15)]
+		[Export ("minimumSliderWidth")]
+		nfloat MinimumSliderWidth { get; set; }
+
+		[Mac (10, 15)]
+		[Export ("maximumSliderWidth")]
+		nfloat MaximumSliderWidth { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject))]
