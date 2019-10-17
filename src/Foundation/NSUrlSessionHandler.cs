@@ -831,7 +831,11 @@ namespace Foundation {
 				base.Dispose (disposing);
 			}
 
+#if __WATCHOS__
+			protected override Task SerializeToStreamAsync (Stream stream, TransportContext context)
+#else			
 			protected internal override Task SerializeToStreamAsync (Stream stream, TransportContext context)
+#endif
 			{
 				if (contentCopied) {
 					if (!content.CanSeek) {
