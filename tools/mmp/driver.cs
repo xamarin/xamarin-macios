@@ -1179,7 +1179,7 @@ namespace Xamarin.Bundler {
 				args.Append ("-mmacosx-version-min=").Append (App.DeploymentTarget.ToString ()).Append (' ');
 				args.Append ("-arch ").Append (arch).Append (' ');
 				if (arch == "x86_64")
-					args.Append ("-fobjc-runtime=macosx ");
+					args.Append ($"-fobjc-runtime=macosx-{App.DeploymentTarget.ToString ()} ");
 				if (!embed_mono)
 					args.Append ("-DDYNAMIC_MONO_RUNTIME ");
 
