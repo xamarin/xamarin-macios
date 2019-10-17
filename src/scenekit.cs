@@ -1213,7 +1213,7 @@ namespace SceneKit {
 
 #if MONOMAC
 	[iOS (8,0)]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message: "OpenGL API deprecated, please use Metal instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
 	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (CAOpenGLLayer))]
 	interface SCNLayer : SCNSceneRenderer, SCNTechniqueSupport {
@@ -3507,16 +3507,16 @@ namespace SceneKit {
 		bool AllowsCameraControl { get; set;  }
 
 #if MONOMAC
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "OpenGL API deprecated, please use Metal instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("openGLContext", ArgumentSemantic.Retain)]
 		NSOpenGLContext	OpenGLContext { get; set;  }
 
-		[Deprecated (PlatformName.MacOSX, 10, 14, message: "OpenGL API deprecated, please use Metal instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("pixelFormat", ArgumentSemantic.Retain)]
 		NSOpenGLPixelFormat PixelFormat { get; set;  }
 #elif !WATCH
-		[Deprecated (PlatformName.iOS, 12, 0, message: "OpenGL API deprecated, please use Metal instead.")]
-		[Deprecated (PlatformName.TvOS, 12, 0, message: "OpenGL API deprecated, please use Metal instead.")]
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use Metal instead of OpenGL API.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("eaglContext", ArgumentSemantic.Retain)]
 #if XAMCORE_2_0
 		EAGLContext EAGLContext { get; set; }
