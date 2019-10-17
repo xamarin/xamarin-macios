@@ -2,6 +2,8 @@
 using System.Text;
 using System.Collections.Generic;
 
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev
 {
 	/// <summary>
@@ -155,93 +157,9 @@ namespace Xamarin.MacDev
 			return builder.ToString ();
 		}
 
-		static string GetArgument (StringBuilder builder, string buf, int startIndex, out int endIndex, out Exception ex)
-		{
-			bool escaped = false;
-			char qchar, c = '\0';
-			int i = startIndex;
-
-			builder.Clear ();
-			switch (buf[startIndex]) {
-			case '\'': qchar = '\''; i++; break;
-			case '"': qchar = '"'; i++; break;
-			default: qchar = '\0'; break;
-			}
-
-			while (i < buf.Length) {
-			c = buf[i];
-
-			if (c == qchar && !escaped) {
-				// unescaped qchar means we've reached the end of the argument
-				i++;
-				break;
-			}
-
-			if (c == '\\') {
-				escaped = true;
-			} else if (escaped) {
-				builder.Append (c);
-				escaped = false;
-			} else if (qchar == '\0' && (c == ' ' || c == '\t')) {
-				break;
-			} else if (qchar == '\0' && (c == '\'' || c == '"')) {
-				string sofar = builder.ToString ();
-				string embedded;
-
-				if ((embedded = GetArgument (builder, buf, i, out endIndex, out ex)) == null)
-					return null;
-
-				i = endIndex;
-				builder.Clear ();
-				builder.Append (sofar);
-				builder.Append (embedded);
-				continue;
-			} else {
-				builder.Append (c);
-			}
-
-			i++;
-			}
-
-			if (escaped || (qchar != '\0' && c != qchar)) {
-				ex = new FormatException (escaped ? "Incomplete escape sequence." : "No matching quote found.");
-				endIndex = -1;
-				return null;
-			}
-
-			endIndex = i;
-			ex = null;
-
-			return builder.ToString ();
-		}
-
 		static bool TryParse (string commandline, out string[] argv, out Exception ex)
 		{
-			var builder = new StringBuilder ();
-			var args = new List<string> ();
-			string argument;
-			int i = 0, j;
-			char c;
-
-			while (i < commandline.Length) {
-				c = commandline[i];
-				if (c != ' ' && c != '\t') {
-					if ((argument = GetArgument (builder, commandline, i, out j, out ex)) == null) {
-						argv =  null;
-						return false;
-					}
-
-					args.Add (argument);
-					i = j;
-				}
-
-				i++;
-			}
-
-			argv = args.ToArray ();
-			ex = null;
-
-			return true;
+			return StringUtils.TryParseArguments (commandline, out argv, out ex);
 		}
 
 		public static bool TryParse (string commandline, out string[] argv)

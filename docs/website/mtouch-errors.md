@@ -988,6 +988,10 @@ can build for both ARMv7k and ARM64_32 at the same time.
 
 This warning is shown when `--interpreter` isn't specified explicitly for ARM64_32 Debug builds. The AOT compiler can't be used because it doesn't support ARM64_32.
 
+<!-- 0147 used by mmp -->
+
+#### MM0148: Unable to parse the linker flags '{linker_flags}' from the LinkWith attribute for the library {library} in {assembly} : {exception}
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
@@ -2966,6 +2970,7 @@ An error occurred when signing the application. Please review the build log to s
 <!-- 5309 is used by mmp -->
 <!-- 5310 is used by mmp -->
 <!-- 5311 is used by mmp -->
+<!-- 5312 is used by mmp -->
 
 ## MT6xxx: mtouch internal tools error messages
 

@@ -22,11 +22,18 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
 
-			using (var e = NLEmbedding.GetWordEmbedding (NLLanguage.English)) {
-				Assert.NotNull (e, "GetWordEmbedding");
-				Assert.Null (e.GetVector ("Xamarin"), "GetVector");
-				Assert.False (e.TryGetVector ("Xamarin", out var vector), "TryGetVector");
-				Assert.Null (vector, "vector");
+			foreach (NLLanguage v in Enum.GetValues (typeof (NLLanguage))) {
+				if (v == NLLanguage.Unevaluated)
+					continue; // this is not a value provided by Apple.
+
+				NLEmbedding e = null;
+				Assert.DoesNotThrow (() => e = NLEmbedding.GetWordEmbedding (v), $"Throws: {v}");
+				if (e != null) {
+					Assert.NotNull (e, "GetWordEmbedding");
+					Assert.Null (e.GetVector ("Xamarin"), "GetVector");
+					Assert.False (e.TryGetVector ("Xamarin", out var vector), "TryGetVector");
+					Assert.Null (vector, "vector");
+				}
 			}
 		}
 #endif

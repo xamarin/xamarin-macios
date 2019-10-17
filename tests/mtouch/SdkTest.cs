@@ -330,20 +330,20 @@ namespace Xamarin.Linker {
 			var arch = "armv7k";
 			var arch_dir = Path.Combine (tmpdir, arch);
 			Directory.CreateDirectory (arch_dir);
-			var args = new StringBuilder ();
-			args.Append ("--debug ");
-			args.Append ("--llvm ");
-			args.Append ("-O=float32 ");
-			args.Append ($"--aot=mtriple={arch}-ios");
-			args.Append ($",data-outfile={Path.Combine (arch_dir, Path.GetFileNameWithoutExtension (asm) + ".aotdata." + arch)}");
-			args.Append ($",static,asmonly,direct-icalls,llvmonly,nodebug,dwarfdebug,direct-pinvoke");
-			args.Append ($",msym-dir={Path.Combine (arch_dir, Path.GetFileNameWithoutExtension (asm) + ".mSYM")}");
-			args.Append ($",llvm-path={llvm_path}");
-			args.Append ($",llvm-outfile={Path.Combine (arch_dir, Path.GetFileName (asm) + ".bc")} ");
-			args.Append (Path.Combine (watchOSPath, asm));
+			var args = new List<string> ();
+			args.Add ("--debug");
+			args.Add ("--llvm");
+			args.Add ("-O=float32");
+			args.Add ($"--aot=mtriple={arch}-ios" +
+				$",data-outfile={Path.Combine (arch_dir, Path.GetFileNameWithoutExtension (asm) + ".aotdata." + arch)}" +
+				$",static,asmonly,direct-icalls,llvmonly,nodebug,dwarfdebug,direct-pinvoke" +
+				$",msym-dir={Path.Combine (arch_dir, Path.GetFileNameWithoutExtension (asm) + ".mSYM")}" +
+				$",llvm-path={llvm_path}" +
+				$",llvm-outfile={Path.Combine (arch_dir, Path.GetFileName (asm) + ".bc")}");
+			args.Add (Path.Combine (watchOSPath, asm));
 
 			StringBuilder output = new StringBuilder ();
-			var rv = ExecutionHelper.Execute (aot_compiler, args.ToString (), stdout: output, stderr: output, environmentVariables: env, timeout: TimeSpan.FromMinutes (5));
+			var rv = ExecutionHelper.Execute (aot_compiler, args, stdout: output, stderr: output, environmentVariables: env, timeout: TimeSpan.FromMinutes (5));
 			var llvm_failed = output.ToString ().Split ('\n').Where ((v) => v.Contains ("LLVM failed"));
 			Console.WriteLine (output);
 

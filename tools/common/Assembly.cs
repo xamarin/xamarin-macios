@@ -292,7 +292,9 @@ namespace Xamarin.Bundler {
 			if (!string.IsNullOrEmpty (metadata.LinkerFlags)) {
 				if (LinkerFlags == null)
 					LinkerFlags = new List<string> ();
-				LinkerFlags.Add (metadata.LinkerFlags);
+				if (!StringUtils.TryParseArguments (metadata.LinkerFlags, out string [] args, out var ex))
+					throw ErrorHelper.CreateError (148, ex, "Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}", metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
+				LinkerFlags.AddRange (args);
 			}
 
 			if (!string.IsNullOrEmpty (metadata.Frameworks)) {
@@ -366,7 +368,7 @@ namespace Xamarin.Bundler {
 				if (!Directory.Exists (path))
 					Directory.CreateDirectory (path);
 
-				if (Driver.RunCommand ("/usr/bin/unzip", string.Format ("-u -o -d {0} {1}", StringUtils.Quote (path), StringUtils.Quote (zipPath))) != 0)
+				if (Driver.RunCommand ("/usr/bin/unzip", "-u", "-o", "-d", path, zipPath) != 0)
 					throw ErrorHelper.CreateError (1303, "Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.", metadata.LibraryName, zipPath);
 			}
 

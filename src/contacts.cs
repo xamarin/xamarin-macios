@@ -289,7 +289,7 @@ namespace Contacts {
 		NSString InstantMessageAddresses { get; }
 	}
 
- 	[iOS (9,0), Mac (10,11)]
+	[iOS (9,0), Mac (10,11)]
 	[BaseType (typeof (CNFetchRequest))]
 	[DisableDefaultCtor] // using init raises an exception according to docs
 	interface CNContactFetchRequest : NSSecureCoding {

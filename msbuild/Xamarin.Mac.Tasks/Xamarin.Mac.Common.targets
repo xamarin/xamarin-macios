@@ -340,6 +340,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			AppManifest="$(_AppManifest)"
 			ProjectDir="$(MSBuildProjectDirectory)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkRoot="$(_SdkRoot)"
@@ -588,6 +589,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			SdkRoot="$(_SdkRoot)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkVersion="$(MacOSXSdkVersion)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
 			OutputScene="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)">
@@ -675,6 +677,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ToolPath="$(CopySceneKitAssetsPath)"
 			SceneKitAssets="@(SceneKitAsset)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
 			SdkPlatform="MacOSX"

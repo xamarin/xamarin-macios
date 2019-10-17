@@ -87,7 +87,7 @@ namespace Xamarin.Bundler {
 		static bool no_executable;
 		static bool embed_mono = true;
 		static bool? profiling = false;
-		static string link_flags = null;
+		static List<string> link_flags;
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
 		static string machine_config_path = null;
@@ -310,7 +310,13 @@ namespace Xamarin.Bundler {
 					}
 				},
 				{ "link_flags=", "Specifies additional arguments to the native linker.",
-					v => { link_flags = v; }
+					v => {
+						if (!StringUtils.TryParseArguments (v, out var lf, out var ex))
+							throw ErrorHelper.CreateError (26, ex, "Could not parse the command line argument '--link_flags={0}': {1}", v, ex.Message);
+						if (link_flags == null)
+							link_flags = new List<string> ();
+						link_flags.AddRange (lf);
+					}
 				},
 				{ "ignore-native-library=", "Add a native library to be ignored during assembly scanning and packaging",
 					v => ignored_assemblies.Add (v)
@@ -897,7 +903,7 @@ namespace Xamarin.Bundler {
 						mono_dir = GetXamMacPrefix ();
 					} else {
 						var dir = new StringBuilder ();
-						RunCommand (pkg_config, "--variable=prefix mono-2", null, dir);
+						RunCommand (pkg_config, new [] { "--variable=prefix", "mono-2" }, null, dir);
 						mono_dir = Path.GetFullPath (dir.ToString ().Replace (Environment.NewLine, String.Empty));
 					}
 				}
@@ -1088,14 +1094,16 @@ namespace Xamarin.Bundler {
 			return sb.ToString ();
 		}
 
-		static void HandleFramework (StringBuilder args, string framework, bool weak)
+		static void HandleFramework (IList<string> args, string framework, bool weak)
 		{
 			string name = Path.GetFileName (framework);
 			if (name.Contains ('.'))
-				name = name.Remove (name.IndexOf("."));
+				name = name.Remove (name.IndexOf (".", StringComparison.Ordinal));
 			string path = Path.GetDirectoryName (framework);
-			if (!string.IsNullOrEmpty (path))
-				args.Append ("-F ").Append (StringUtils.Quote (path)).Append (' ');
+			if (!string.IsNullOrEmpty (path)) {
+				args.Add ("-F");
+				args.Add (path);
+			}
 		
 			if (weak)
 				BuildTarget.WeakFrameworks.Add (name);
@@ -1120,7 +1128,7 @@ namespace Xamarin.Bundler {
 		{
 			int ret = 1;
 
-			string cflags;
+			string [] cflags = Array.Empty<string> ();
 			string libdir;
 			StringBuilder cflagsb = new StringBuilder ();
 			StringBuilder libdirb = new StringBuilder ();
@@ -1143,13 +1151,13 @@ namespace Xamarin.Bundler {
 				if (!IsUnifiedFullSystemFramework)
 					env = new [] { "PKG_CONFIG_PATH", Path.Combine (GetXamMacPrefix (), "lib", "pkgconfig") };
 
-				RunCommand (pkg_config, "--cflags mono-2", env, cflagsb);
-				RunCommand (pkg_config, "--variable=libdir mono-2", env, libdirb);
+				RunCommand (pkg_config, new [] { "--cflags", "mono-2" }, env, cflagsb);
+				RunCommand (pkg_config, new [] { "--variable=libdir", "mono-2" }, env, libdirb);
 				var versionFile = "/Library/Frameworks/Mono.framework/Versions/Current/VERSION";
 				if (File.Exists (versionFile)) {
 					mono_version.Append (File.ReadAllText (versionFile));
 				} else {
-					RunCommand (pkg_config, "--modversion mono-2", env, mono_version);
+					RunCommand (pkg_config, new [] { "--modversion", "mono-2" }, env, mono_version);
 				}
 			} catch (Win32Exception e) {
 				throw new MonoMacException (5301, true, e, "pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads");
@@ -1159,8 +1167,10 @@ namespace Xamarin.Bundler {
 			if (Version.TryParse (mono_version.ToString ().TrimEnd (), out mono_ver) && mono_ver < MonoVersions.MinimumMonoVersion)
 				throw new MonoMacException (1, true, "This version of Xamarin.Mac requires Mono {0} (the current Mono version is {1}). Please update the Mono.framework from http://mono-project.com/Downloads", 
 					MonoVersions.MinimumMonoVersion, mono_version.ToString ().TrimEnd ());
-			
-			cflags = cflagsb.ToString ().Replace (Environment.NewLine, String.Empty);
+
+			var str_cflags = cflagsb.ToString ().Replace (Environment.NewLine, String.Empty);
+			if (!StringUtils.TryParseArguments (str_cflags, out cflags, out var ex))
+				throw ErrorHelper.CreateError (147, ex, "Unable to parse the cflags '{0} from pkg-config: {1}", str_cflags, ex.Message);
 			libdir = libdirb.ToString ().Replace (Environment.NewLine, String.Empty);
 
 			var libmain = embed_mono ? "libxammac" : "libxammac-system";
@@ -1170,23 +1180,27 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (5203, true, "Can't find {0}, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.", libxammac);
 
 			try {
-				var args = new StringBuilder ();
+				var args = new List<string> ();
 				if (App.EnableDebug)
-					args.Append ("-g ");
-				if (App.Embeddinator)
-					args.Append ($"-shared -install_name \"@loader_path/../Frameworks/{App.Name}.framework/{App.Name}\" ");
-				args.Append ("-mmacosx-version-min=").Append (App.DeploymentTarget.ToString ()).Append (' ');
-				args.Append ("-arch ").Append (arch).Append (' ');
+					args.Add ("-g");
+				if (App.Embeddinator) {
+					args.Add ("-shared");
+					args.Add ("-install_name");
+					args.Add ($"@loader_path/../Frameworks/{App.Name}.framework/{App.Name}");
+				}
+				args.Add ($"-mmacosx-version-min={App.DeploymentTarget.ToString ()}");
+				args.Add ("-arch");
+				args.Add (arch);
 				if (arch == "x86_64")
-					args.Append ("-fobjc-runtime=macosx ");
+					args.Add ($"-fobjc-runtime=macosx-{App.DeploymentTarget.ToString ()}");
 				if (!embed_mono)
-					args.Append ("-DDYNAMIC_MONO_RUNTIME ");
+					args.Add ("-DDYNAMIC_MONO_RUNTIME");
 
 				if (XcodeVersion >= new Version (9, 0))
-					args.Append ("-Wno-unguarded-availability-new ");
+					args.Add ("-Wno-unguarded-availability-new");
 
 				if (XcodeVersion.Major >= 11)
-					args.Append ("-std=c++14 ");
+					args.Add ("-std=c++14");
 
 				bool appendedObjc = false;
 				var sourceFiles = new List<string> ();
@@ -1199,20 +1213,20 @@ namespace Xamarin.Bundler {
 								// Link against the version copied into MonoBudle, since we install_name_tool'd it already
 								string libName = Path.GetFileName (linkWith);
 								string finalLibPath = Path.Combine (mmp_dir, libName);
-								args.Append (StringUtils.Quote (finalLibPath)).Append (' ');
+								args.Add (finalLibPath);
 							}
 							else {
-								args.Append (StringUtils.Quote (linkWith)).Append (' ');
+								args.Add (linkWith);
 							}
 						}
 						if (!appendedObjc) {
 							appendedObjc = true;
-							args.Append ("-ObjC").Append (' ');
+							args.Add ("-ObjC");
 						}
 					}
 					if (assembly.LinkerFlags != null)
 						foreach (var linkFlag in assembly.LinkerFlags)
-							args.Append (linkFlag).Append (' ');
+							args.Add (linkFlag);
 					if (assembly.Frameworks != null) {
 						foreach (var f in assembly.Frameworks) {
 							if (verbose > 1)
@@ -1237,21 +1251,33 @@ namespace Xamarin.Bundler {
 					// Link against the version copied into MonoBudle, since we install_name_tool'd it already
 					string libName = Path.GetFileName (lib);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
-					args.Append (StringUtils.Quote (finalLibPath)).Append (' ');
+					args.Add (finalLibPath);
 				}
 
-				if (frameworks_copied_to_bundle_dir)
-					args.Append ("-rpath @loader_path/../Frameworks ");
-				if (dylibs_copied_to_bundle_dir)
-					args.Append ($"-rpath @loader_path/../{BundleName} ");
+				if (frameworks_copied_to_bundle_dir) {
+					args.Add ("-rpath");
+					args.Add ("@loader_path/../Frameworks");
+				}
+				if (dylibs_copied_to_bundle_dir) {
+					args.Add ("-rpath");
+					args.Add ($"@loader_path/../{BundleName}");
+				}
 
-				if (is_extension)
-					args.Append ("-e _xamarin_mac_extension_main -framework NotificationCenter").Append(' ');
+				if (is_extension) {
+					args.Add ("-e");
+					args.Add ("_xamarin_mac_extension_main");
+					args.Add ("-framework");
+					args.Add ("NotificationCenter");
+				}
 
-				foreach (var f in BuildTarget.Frameworks)
-					args.Append ("-framework ").Append (f).Append (' ');
-				foreach (var f in BuildTarget.WeakFrameworks)
-					args.Append ("-weak_framework ").Append (f).Append (' ');
+				foreach (var f in BuildTarget.Frameworks) {
+					args.Add ("-framework");
+					args.Add (f);
+				}
+				foreach (var f in BuildTarget.WeakFrameworks) {
+					args.Add ("-weak_framework");
+					args.Add (f);
+				}
 
 				var requiredSymbols = BuildTarget.GetRequiredSymbols ();
 				Driver.WriteIfDifferent (Path.Combine (App.Cache.Location, "exported-symbols-list"), string.Join ("\n", requiredSymbols.Select ((symbol) => symbol.Prefix + symbol.Name).ToArray ()));
@@ -1266,8 +1292,10 @@ namespace Xamarin.Bundler {
 					break;
 				case SymbolMode.Linker:
 				case SymbolMode.Default:
-					foreach (var symbol in requiredSymbols)
-						args.Append ("-u ").Append (StringUtils.Quote (symbol.Prefix + symbol.Name)).Append (' ');
+					foreach (var symbol in requiredSymbols) {
+						args.Add ("-u");
+						args.Add (symbol.Prefix + symbol.Name);
+					}
 					break;
 				default:
 					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
@@ -1275,23 +1303,25 @@ namespace Xamarin.Bundler {
 
 				bool linkWithRequiresForceLoad = BuildTarget.Assemblies.Any (x => x.ForceLoad);
 				if (no_executable || linkWithRequiresForceLoad)
-					args.Append ("-force_load "); // make sure nothing is stripped away if we don't have a root assembly, since anything can end up being used.
-				args.Append (StringUtils.Quote (libxammac)).Append (' ');
-				args.Append ("-o ").Append (StringUtils.Quote (AppPath)).Append (' ');
-				args.Append (cflags).Append (' ');
+					args.Add ("-force_load"); // make sure nothing is stripped away if we don't have a root assembly, since anything can end up being used.
+				args.Add (libxammac);
+				args.Add ("-o");
+				args.Add (AppPath);
+				args.AddRange (cflags);
 				if (embed_mono) {
 					string libmono = Path.Combine (libdir, "libmonosgen-2.0.a");
 
 					if (!File.Exists (libmono))
 						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from https://www.mono-project.com/download/");
 
-					args.Append (StringUtils.Quote (libmono)).Append (' ');
+					args.Add (libmono);
 
 					string libmonoSystemNative = Path.Combine (libdir, "libmono-system-native.a");
 					if (File.Exists (libmonoSystemNative)) {
 						// legacy libmono-system-native.a needs to be included if it exists in the mono in question
-						args.Append (StringUtils.Quote (libmonoSystemNative)).Append (' ');
-						args.Append ("-u ").Append ("_SystemNative_RealPath").Append (' '); // This keeps libmono_system_native_la-pal_io.o symbols
+						args.Add (libmonoSystemNative);
+						args.Add ("-u");
+						args.Add ("_SystemNative_RealPath"); // This keeps libmono_system_native_la-pal_io.o symbols
 					} else {
 						// add modern libmono-native
 						string libmono_native_name;
@@ -1306,69 +1336,64 @@ namespace Xamarin.Bundler {
 							throw ErrorHelper.CreateError (99, $"Invalid error: Invalid mono native type: '{BuildTarget.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 						}
 
-						args.Append (StringUtils.Quote (Path.Combine (libdir, libmono_native_name + ".a"))).Append (' ');
-						args.Append ("-framework GSS ");
+						args.Add (Path.Combine (libdir, libmono_native_name + ".a"));
+						args.Add ("-framework");
+						args.Add ("GSS");
 					}
 
 					if (profiling.HasValue && profiling.Value) {
-						args.Append (StringUtils.Quote (Path.Combine (libdir, "libmono-profiler-log.a"))).Append (' ');
-						args.Append ("-u _mono_profiler_init_log ");
+						args.Add (Path.Combine (libdir, "libmono-profiler-log.a"));
+						args.Add ("-u");
+						args.Add ("_mono_profiler_init_log");
 					}
-					args.Append ("-lz ");
+					args.Add ("-lz");
 				}
 
 				if (Registrar == RegistrarMode.PartialStatic) {
-					args.Append (PartialStaticLibrary);
-					args.Append (" -framework Quartz ");
+					args.Add (PartialStaticLibrary);
+					args.Add ("-framework");
+					args.Add ("Quartz");
 				}
 
-				args.Append ("-liconv -lc++ -x objective-c++ ");
+				args.Add ("-liconv");
+				args.Add ("-lc++");
+				args.Add ("-x");
+				args.Add ("objective-c++");
 				if (XcodeVersion.Major >= 10) {
 					// Xcode 10 doesn't ship with libstdc++
-					args.Append ("-stdlib=libc++ ");
+					args.Add ("-stdlib=libc++");
 				}
-				args.Append ("-I").Append (StringUtils.Quote (Path.Combine (GetXamMacPrefix (), "include"))).Append (' ');
+				args.Add ($"-I{Path.Combine (GetXamMacPrefix (), "include")}");
 				if (registrarPath != null)
-					args.Append (StringUtils.Quote (registrarPath)).Append (' ');
-				args.Append ("-fno-caret-diagnostics -fno-diagnostics-fixit-info ");
+					args.Add (registrarPath);
+				args.Add ("-fno-caret-diagnostics");
+				args.Add ("-fno-diagnostics-fixit-info");
 				if (link_flags != null)
-					args.Append (link_flags + " ");
+					args.AddRange (link_flags);
 				if (!string.IsNullOrEmpty (DeveloperDirectory))
 				{
 					var sysRootSDKVersion = new Version (App.SdkVersion.Major, App.SdkVersion.Minor); // Sys Root SDKs do not have X.Y.Z, just X.Y 
-					args.Append ("-isysroot ").Append (StringUtils.Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"))).Append (' ');
+					args.Add ("-isysroot");
+					args.Add (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"));
 				}
 
 				if (App.RequiresPInvokeWrappers) {
 					var state = linker_options.MarshalNativeExceptionsState;
 					state.End ();
-					args.Append (StringUtils.Quote (state.SourcePath)).Append (' ');
+					args.Add (state.SourcePath);
 				}
 
 				var main = Path.Combine (App.Cache.Location, "main.m");
 				File.WriteAllText (main, mainSource);
 				sourceFiles.Add (main);
+				args.AddRange (sourceFiles);
 
-				foreach (var src in sourceFiles)
-					args.Append (StringUtils.Quote (src)).Append (' ');;
 
-				ret = XcodeRun ("clang", args.ToString (), null);
+				ret = XcodeRun ("clang", args, null);
 			} catch (Win32Exception e) {
 				throw new MonoMacException (5103, true, e, "Failed to compile the file '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", "driver");
 			}
 			
-			return ret;
-		}
-
-		static int XcodeRun (string command, string args, StringBuilder output = null)
-		{
-			string [] env = DeveloperDirectory != string.Empty ? new string [] { "DEVELOPER_DIR", DeveloperDirectory } : null;
-			int ret = RunCommand ("xcrun", String.Concat ("-sdk macosx ", command, " ", args), env, output);
-			if (ret != 0 && verbose > 1) {
-				StringBuilder debug = new StringBuilder ();
-				RunCommand ("xcrun", String.Concat ("--find ", command), env, debug);
-				Console.WriteLine ("failed using `{0}` from: {1}", command, debug);
-			}
 			return ret;
 		}
 
@@ -1497,7 +1522,7 @@ namespace Xamarin.Bundler {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					Application.UpdateFile (linkWith, finalLibPath);
-					int ret = XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", StringUtils.Quote("@executable_path/../" + BundleName + "/" + libName), StringUtils.Quote (finalLibPath)));
+					int ret = XcodeRun ("install_name_tool", new [] { "-id", "@executable_path/../" + BundleName + "/" + libName, finalLibPath });
 					if (ret != 0)
 						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 					native_libraries_copied_in.Add (libName);
@@ -1510,7 +1535,7 @@ namespace Xamarin.Bundler {
 
 			// .dylibs might refers to specific paths (e.g. inside Mono framework directory) and/or
 			// refer to a symlink (pointing to a more specific version of the library)
-			StringBuilder sb = new StringBuilder ();
+			var sb = new List<string> ();
 			foreach (string library in Directory.GetFiles (mmp_dir, "*.dylib")) {
 				foreach (string lib in Xamarin.MachO.GetNativeDependencies (library)) {
 					if (lib.StartsWith ("/Library/Frameworks/Mono.framework/Versions/", StringComparison.Ordinal)) {
@@ -1520,13 +1545,15 @@ namespace Xamarin.Bundler {
 						// if a symlink was specified then re-create it inside the .app
 						if (libname != real_libname)
 							CreateSymLink (mmp_dir, real_libname, libname);
-						sb.Append (" -change ").Append (lib).Append (" @executable_path/../" + BundleName + "/").Append (libname);
+						sb.Add ("-change");
+						sb.Add (lib);
+						sb.Add ("@executable_path/../" + BundleName + "/" + libname);
 					}
 				}
 				// if required update the paths inside the .dylib that was copied
-				if (sb.Length > 0) {
-					sb.Append (' ').Append (StringUtils.Quote (library));
-					int ret = XcodeRun ("install_name_tool", sb.ToString ());
+				if (sb.Count > 0) {
+					sb.Add (library);
+					int ret = XcodeRun ("install_name_tool", sb);
 					if (ret != 0)
 						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 					sb.Clear ();
@@ -1667,7 +1694,7 @@ namespace Xamarin.Bundler {
 
 			if (native_references.Contains (real_src)) {
 				if (!isStaticLib) {
-					int ret = XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", StringUtils.Quote("@executable_path/../" + BundleName + "/" + name), StringUtils.Quote(dest)));
+					int ret = XcodeRun ("install_name_tool", new [] { "-id", "@executable_path/../" + BundleName + "/" + name, dest });
 					if (ret != 0)
 						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 				}
@@ -1702,7 +1729,7 @@ namespace Xamarin.Bundler {
 			if (existingArchs.Count () < 2)
 				return;
 
-			int ret = XcodeRun ("lipo", $"{StringUtils.Quote (dest)} -thin {arch} -output {StringUtils.Quote (dest)}");
+			int ret = XcodeRun ("lipo", new [] { dest, "-thin", arch, "-output", dest });
 			if (ret != 0)
 				throw new MonoMacException (5311, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
 			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")

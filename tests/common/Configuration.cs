@@ -93,6 +93,8 @@ namespace Xamarin.Tests
 				var version = Version.Parse (xcode_version);
 				if (version >= max_version)
 					continue;
+				if (version.Major == max_version.Major)
+					continue;
 				if (min_version != null && version < min_version)
 					continue;
 				with_versions.Add (new Tuple<Version, string> (version, path));
@@ -155,7 +157,7 @@ namespace Xamarin.Tests
 				if (tests_dir == null)
 					throw new Exception ($"Could not find the directory 'tests'. Please run 'make' in the tests/ directory.");
 				// Run make
-				ExecutionHelper.Execute ("make", $"-C {StringUtils.Quote (tests_dir)} test.config");
+				ExecutionHelper.Execute ("make", new string[] { "-C", tests_dir }, "test.config");
 				test_config = FindConfigFiles ("test.config");
 			}
 			ParseConfigFiles (test_config);
@@ -224,7 +226,7 @@ namespace Xamarin.Tests
 				File.Copy (path, tmpfile, true);
 				using (var process = new System.Diagnostics.Process ()) {
 					process.StartInfo.FileName = "plutil";
-					process.StartInfo.Arguments = $"-convert xml1 {Xamarin.Utils.StringUtils.Quote (tmpfile)}";
+					process.StartInfo.Arguments = StringUtils.FormatArguments ("-convert", "xml1", tmpfile);
 					process.Start ();
 					process.WaitForExit ();
 					return File.ReadAllText (tmpfile);
@@ -535,9 +537,9 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = true)
+		public static string GetCompiler (Profile profile, IList<string> args, bool use_csc = true)
 		{
-			args.Append (" -lib:").Append (Path.GetDirectoryName (GetBaseLibrary (profile))).Append (' ');
+			args.Add ($"-lib:{Path.GetDirectoryName (GetBaseLibrary (profile))}");
 			if (use_csc) {
 				return "/Library/Frameworks/Mono.framework/Commands/csc";
 			} else {
