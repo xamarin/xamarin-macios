@@ -477,7 +477,7 @@ namespace Introspection {
 			case "UICollectionViewCompositionalLayout":
 				// Explicitly disabled ctors - (instancetype)init NS_UNAVAILABLE;
 				return true;
-			case "NSPickerTouchBarItem":
+			case "NSPickerTouchBarItem": // You are meant to use the static factory methods
 				if (ctor.ToString () == $"Void .ctor(System.String)")
 					return true;
 				break;
