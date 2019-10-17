@@ -46,7 +46,8 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[TestFixtureSetUp]
-		public void Init () {
+		public void Init ()
+		{
 			TestRuntime.AssertXcodeVersion (11, 0);
 			// we want to use a single connection, since it is expensive
 			connectedEvent = new AutoResetEvent(false);
