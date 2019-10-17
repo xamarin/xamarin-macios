@@ -2,6 +2,7 @@
 !missing-field! NSFontDescriptorSystemDesignMonospaced not bound
 !missing-field! NSFontDescriptorSystemDesignRounded not bound
 !missing-field! NSFontDescriptorSystemDesignSerif not bound
+!missing-protocol! NSSharingServicePickerToolbarItemDelegate not bound
 !missing-protocol-conformance! NSTextAlternatives should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextAttachment should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextBlock should conform to NSSecureCoding
@@ -22,6 +23,8 @@
 !missing-selector! NSScreen::localizedName not bound
 !missing-selector! NSScreenNSScreen::maximumPotentialExtendedDynamicRangeColorComponentValue not bound
 !missing-selector! NSScreenNSScreen::maximumReferenceExtendedDynamicRangeColorComponentValue not bound
+!missing-selector! NSSharingServicePickerToolbarItem::delegate not bound
+!missing-selector! NSSharingServicePickerToolbarItem::setDelegate: not bound
 !missing-selector! NSSliderTouchBarItem::doubleValue not bound
 !missing-selector! NSSliderTouchBarItem::maximumSliderWidth not bound
 !missing-selector! NSSliderTouchBarItem::minimumSliderWidth not bound
@@ -51,7 +54,4 @@
 !missing-selector! NSWorkspace::openApplicationAtURL:configuration:completionHandler: not bound
 !missing-selector! NSWorkspace::openURL:configuration:completionHandler: not bound
 !missing-selector! NSWorkspace::openURLs:withApplicationAtURL:configuration:completionHandler: not bound
-!missing-protocol! NSSharingServicePickerToolbarItemDelegate not bound
-!missing-selector! NSSharingServicePickerToolbarItem::delegate not bound
-!missing-selector! NSSharingServicePickerToolbarItem::setDelegate: not bound
 !missing-type! NSSharingServicePickerToolbarItem not bound
