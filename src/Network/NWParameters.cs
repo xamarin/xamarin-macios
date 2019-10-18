@@ -42,9 +42,25 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
 			if (del != null) {
-				var x = new NWProtocolOptions (iface, owns: false);
-				del (x);
-				x.Dispose ();
+				using (var tempOptions = new NWProtocolOptions (iface, owns: false)) 
+				using (var definition = tempOptions.ProtocolDefinition) {
+					NWProtocolOptions castedOptions = null;
+
+					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+						castedOptions = new NWProtocolTcpOptions (iface, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+						castedOptions = new NWProtocolUdpOptions (iface, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.TlsDefinition)) {
+						castedOptions = new NWProtocolTlsOptions (iface, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.IPDefinition)) {
+						castedOptions = new NWProtocolIPOptions (iface, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.WebSocketDefinition)) {
+						castedOptions = new NWWebSocketOptions (iface, owns: false);
+					} 
+
+					del (castedOptions ?? tempOptions);
+					castedOptions?.Dispose ();
+				}
 			}
 		}
 

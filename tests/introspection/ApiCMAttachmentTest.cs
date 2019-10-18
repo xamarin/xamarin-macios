@@ -244,6 +244,7 @@ namespace Introspection {
 			case "NWWebSocketOptions": // same as above
 			case "NWWebSocketRequest": // same as above
 			case "NWWebSocketResponse": // same as above
+			case "NWProtocolIPOptions": // same as above
 			case "ABSource": // not skipped when running on iOS 6.1
 			// type was removed in iOS 10 (and replaced) and never consumed by other API
 			case "CGColorConverter":
