@@ -28,17 +28,38 @@ namespace Network {
 		internal NWFramerMessage (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_framer_message_set_value (OS_nw_protocol_metadata message, string key, byte *value, void *dispose_value);
+		static extern void nw_framer_message_set_value (OS_nw_protocol_metadata message, string key, IntPtr value, ref BlockLiteral dispose_value);
+		delegate void nw_framer_message_set_value_t (IntPtr block, IntPtr data);
+		static nw_framer_message_set_value_t static_SetDataHandler = TrampolineSetDataHandler;
 
-		public void SetData (string key, ReadOnlySpan<byte> value)
+		[MonoPInvokeCallback (typeof (nw_framer_message_access_value_t))]
+		static void TrampolineSetDataHandler (IntPtr block, IntPtr data)
+		{
+			// get and call, this is internal and we are trying to do all the magic in the call
+			var del = BlockLiteral.GetTarget<Action<IntPtr>> (block);
+			if (del != null) {
+				del (data);
+			}
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void SetData (string key, byte[] value)
 		{
 			// the method takes a callback to cleanup the data, but we do not need that since we are managed
 			if (key == null)
 				throw new ArgumentNullException (nameof (key));
 
-			unsafe {
-				fixed (byte* mh = value)
-					nw_framer_message_set_value (GetCheckedHandle (), key,  mh, null);
+			// pin the handle so that is not collected,  let our callback release it
+			var pinned = GCHandle.Alloc (value, GCHandleType.Pinned);
+			Action<IntPtr> callback = (_) => {
+				pinned.Free ();
+			};
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_SetDataHandler, callback);
+			try {
+				nw_framer_message_set_value (GetCheckedHandle (), key,  pinned.AddrOfPinnedObject (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
 			}
 		}
 

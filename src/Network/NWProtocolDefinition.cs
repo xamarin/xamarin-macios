@@ -44,32 +44,40 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ip_definition ();
 
+#if !XAMCORE_4_0
 		[Obsolete ("Use 'CreateIPDefinition' method instead.")]
 		public static NWProtocolDefinition IPDefinition => new NWProtocolDefinition (nw_protocol_copy_ip_definition (), owns: true);
+#endif
 
 		public static NWProtocolDefinition CreateIPDefinition () => new NWProtocolDefinition (nw_protocol_copy_ip_definition (), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_tcp_definition ();
 
+#if !XAMCORE_4_0
 		[Obsolete ("Use 'CreateTcpDefinition' method instead.")]
 		public static NWProtocolDefinition TcpDefinition => new NWProtocolDefinition (nw_protocol_copy_tcp_definition (), owns: true);
+#endif
 
 		public static NWProtocolDefinition CreateTcpDefinition () => new NWProtocolDefinition (nw_protocol_copy_tcp_definition (), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_udp_definition ();
 
+#if !XAMCORE_4_0
 		[Obsolete ("Use 'CreateUdpDefinition' method instead.")]
 		public static NWProtocolDefinition UdpDefinition => new NWProtocolDefinition (nw_protocol_copy_udp_definition (), owns: true);
+#endif
 
 		public static NWProtocolDefinition CreateUdpDefinition () => new NWProtocolDefinition (nw_protocol_copy_udp_definition (), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_tls_definition ();
 
+#if !XAMCORE_4_0
 		[Obsolete ("Use 'CreateTlsDefinition' method instead.")]
 		public static NWProtocolDefinition TlsDefinition => new NWProtocolDefinition (nw_protocol_copy_tls_definition (), owns: true);
+#endif
 
 		public static NWProtocolDefinition CreateTlsDefinition () => new NWProtocolDefinition (nw_protocol_copy_tls_definition (), owns: true);
 
@@ -77,9 +85,11 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_definition nw_protocol_copy_ws_definition ();
 
+#if !XAMCORE_4_0
 		[Obsolete ("Use 'CreateWebSocketDefinition' method instead.")]
 		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 		public static NWProtocolDefinition WebSocketDefinition => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
+#endif
 
 		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 		public static NWProtocolDefinition CreateWebSocketDefinition () => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
