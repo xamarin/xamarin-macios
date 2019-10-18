@@ -1,4 +1,3 @@
-!missing-protocol! NSSharingServicePickerToolbarItemDelegate not bound
 !missing-protocol-conformance! NSTextAlternatives should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextAttachment should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextBlock should conform to NSSecureCoding
@@ -21,8 +20,5 @@
 !missing-selector! NSImageNSImage::setScalesWhenResized: not bound
 !missing-selector! NSMovie::init not bound
 !missing-selector! NSMovie::initWithCoder: not bound
-!missing-selector! NSSharingServicePickerToolbarItem::delegate not bound
-!missing-selector! NSSharingServicePickerToolbarItem::setDelegate: not bound
 !missing-selector! NSStoryboard::instantiateControllerWithIdentifier:creator: not bound
 !missing-selector! NSStoryboard::instantiateInitialControllerWithCreator: not bound
-!missing-type! NSSharingServicePickerToolbarItem not bound

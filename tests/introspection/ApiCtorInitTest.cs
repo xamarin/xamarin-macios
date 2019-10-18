@@ -489,6 +489,10 @@ namespace Introspection {
 				if (ctor.ToString () == $"Void .ctor(System.String)")
 					return true;
 				break;
+			case "NSSharingServicePickerToolbarItem": // This type doesn't have .ctors
+				if (ctor.ToString () == $"Void .ctor(System.String)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();
