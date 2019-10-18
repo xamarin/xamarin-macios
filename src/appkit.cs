@@ -6538,6 +6538,11 @@ namespace AppKit {
 		[Internal]
 		[Export ("getAdvancements:forCGGlyphs:count:")]
 		void _GetAdvancements (IntPtr advancements, IntPtr glyphs, nuint glyphCount);
+
+		[Mac (10,15)]
+		[Static]
+		[Export ("monospacedSystemFontOfSize:weight:")]
+		NSFont MonospacedSystemFontOfSize (nfloat fontSize, double weight);
 	}
 
 	interface NSFontCollectionChangedEventArgs {
@@ -6760,6 +6765,11 @@ namespace AppKit {
 		[Mac (10, 13)]
 		[Export ("requiresFontAssetRequest")]
 		bool RequiresFontAssetRequest { get; }
+
+		[Mac (10,15)]
+		[Export ("fontDescriptorWithDesign:")]
+		[return: NullAllowed]
+		NSFontDescriptor FontDescriptorWithDesign (string design);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -7765,6 +7775,27 @@ namespace AppKit {
 		[Mac (10,12,2)]
 		[Export ("coalescedTouchesForTouch:")]
 		NSTouch[] GetCoalescedTouches (NSTouch touch);
+
+		[Mac (10,15)]
+		[Export ("charactersByApplyingModifiers:")]
+		[return: NullAllowed]
+		string GetCharacters (NSEventModifierFlags modifiers);
+	}
+
+	[Flags]
+	[Native]
+	[Mac (10,10)]
+	public enum NSEventModifierFlags : ulong
+	{
+		CapsLock = 1uL << 16,
+		Shift = 1uL << 17,
+		Control = 1uL << 18,
+		Option = 1uL << 19,
+		Command = 1uL << 20,
+		NumericPad = 1uL << 21,
+		Help = 1uL << 22,
+		Function = 1uL << 23,
+		DeviceIndependentFlagsMask = 0xffff0000L
 	}
 
 	[Mac (10,10)]
@@ -13176,6 +13207,10 @@ namespace AppKit {
 		[Mac (10, 15)]
 		[Export ("maximumReferenceExtendedDynamicRangeColorComponentValue")]
 		nfloat MaximumReferenceExtendedDynamicRangeColorComponentValue { get; }
+
+		[Mac (10, 15)]
+		[Export ("localizedName", ArgumentSemantic.Copy)]
+		string LocalizedName { get; }
 	}
 
 	[BaseType (typeof (NSControl))]
@@ -22875,6 +22910,10 @@ namespace AppKit {
 		// From  NSControlEditingSupport category. Needs to be here to make the API easier to be used. issue 4837
 		[Export ("validateProposedFirstResponder:forEvent:")]
 		bool ValidateProposedFirstResponder (NSResponder responder, [NullAllowed] NSEvent forEvent);
+
+		[Mac (10,15)]
+		[Export ("changeModeWithEvent:")]
+		void ChangeMode (NSEvent withEvent);
 	}
 
 	[Category, BaseType (typeof (NSResponder))]

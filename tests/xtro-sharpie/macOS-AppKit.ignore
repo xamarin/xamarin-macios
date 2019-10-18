@@ -156,7 +156,6 @@
 !missing-enum! NSBackingStoreType not bound
 !missing-enum! NSCellHitResult not bound
 !missing-enum! NSColorPanelOptions not bound
-!missing-enum! NSEventModifierFlags not bound
 !missing-enum! NSFindPanelAction not bound
 !missing-enum! NSFindPanelSubstringMatchType not bound
 !missing-enum! NSFontAction not bound

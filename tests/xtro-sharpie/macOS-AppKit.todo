@@ -3,13 +3,24 @@
 !missing-protocol-conformance! NSTextAttachment should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextBlock should conform to NSSecureCoding
 !missing-protocol-conformance! NSTextList should conform to NSSecureCoding
-!missing-selector! +NSFont::monospacedSystemFontOfSize:weight: not bound
-!missing-selector! NSEvent::charactersByApplyingModifiers: not bound
-!missing-selector! NSFontDescriptor::fontDescriptorWithDesign: not bound
+!missing-selector! NSImageNSImage::cacheDepthMatchesImageDepth not bound
+!missing-selector! NSImageNSImage::compositeToPoint:fromRect:operation: not bound
+!missing-selector! NSImageNSImage::compositeToPoint:fromRect:operation:fraction: not bound
+!missing-selector! NSImageNSImage::compositeToPoint:operation: not bound
+!missing-selector! NSImageNSImage::compositeToPoint:operation:fraction: not bound
+!missing-selector! NSImageNSImage::dissolveToPoint:fraction: not bound
+!missing-selector! NSImageNSImage::dissolveToPoint:fromRect:fraction: not bound
+!missing-selector! NSImageNSImage::initWithIconRef: not bound
+!missing-selector! NSImageNSImage::isCachedSeparately not bound
+!missing-selector! NSImageNSImage::isDataRetained not bound
+!missing-selector! NSImageNSImage::lockFocusOnRepresentation: not bound
+!missing-selector! NSImageNSImage::scalesWhenResized not bound
+!missing-selector! NSImageNSImage::setCacheDepthMatchesImageDepth: not bound
+!missing-selector! NSImageNSImage::setCachedSeparately: not bound
+!missing-selector! NSImageNSImage::setDataRetained: not bound
+!missing-selector! NSImageNSImage::setScalesWhenResized: not bound
 !missing-selector! NSMovie::init not bound
 !missing-selector! NSMovie::initWithCoder: not bound
-!missing-selector! NSResponder::changeModeWithEvent: not bound
-!missing-selector! NSScreen::localizedName not bound
 !missing-selector! NSSharingServicePickerToolbarItem::delegate not bound
 !missing-selector! NSSharingServicePickerToolbarItem::setDelegate: not bound
 !missing-selector! NSStoryboard::instantiateControllerWithIdentifier:creator: not bound
