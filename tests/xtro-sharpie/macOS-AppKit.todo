@@ -1,7 +1,3 @@
-!missing-protocol-conformance! NSTextAlternatives should conform to NSSecureCoding
-!missing-protocol-conformance! NSTextAttachment should conform to NSSecureCoding
-!missing-protocol-conformance! NSTextBlock should conform to NSSecureCoding
-!missing-protocol-conformance! NSTextList should conform to NSSecureCoding
 !missing-selector! NSImageNSImage::cacheDepthMatchesImageDepth not bound
 !missing-selector! NSImageNSImage::compositeToPoint:fromRect:operation: not bound
 !missing-selector! NSImageNSImage::compositeToPoint:fromRect:operation:fraction: not bound

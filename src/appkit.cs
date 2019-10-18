@@ -17995,7 +17995,7 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface NSTextAttachment : NSCoding {
+	interface NSTextAttachment : NSCoding, NSSecureCoding {
 		[Export ("initWithFileWrapper:")]
 		IntPtr Constructor (NSFileWrapper fileWrapper);
 
@@ -18045,7 +18045,7 @@ namespace AppKit {
 
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface NSTextBlock : NSCoding, NSCopying {
+	interface NSTextBlock : NSCoding, NSCopying, NSSecureCoding {
 		[Export ("setValue:type:forDimension:")]
 		void SetValue (nfloat val, NSTextBlockValueType type, NSTextBlockDimension dimension);
 
@@ -18464,7 +18464,7 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface NSTextList : NSCoding, NSCopying {
+	interface NSTextList : NSCoding, NSCopying, NSSecureCoding {
 		[Export ("initWithMarkerFormat:options:")]
 		IntPtr Constructor (
 #if XAMCORE_4_0
@@ -23360,7 +23360,7 @@ namespace AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	partial interface NSTextAlternatives {
+	partial interface NSTextAlternatives : NSSecureCoding {
 
 		[Export ("initWithPrimaryString:alternativeStrings:")]
 		IntPtr Constructor (string primaryString, NSArray alternativeStrings);
