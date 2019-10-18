@@ -1207,3 +1207,5 @@
 !missing-selector! NSImageNSImage::setCachedSeparately: not bound
 !missing-selector! NSImageNSImage::setDataRetained: not bound
 !missing-selector! NSImageNSImage::setScalesWhenResized: not bound
+!missing-selector! NSMovie::init not bound
+!missing-selector! NSMovie::initWithCoder: not bound
