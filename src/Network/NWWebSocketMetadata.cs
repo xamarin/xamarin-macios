@@ -54,8 +54,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_ws_create_metadata (NWWebSocketOpCode opcode);
 
-		public NWWebSocketMetadata (NWWebSocketOpCode opcode) 
-			=> InitializeHandle (nw_ws_create_metadata (opcode));
+		public NWWebSocketMetadata (NWWebSocketOpCode opcode) : this (nw_ws_create_metadata (opcode), owns: true) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWWebSocketCloseCode nw_ws_metadata_get_close_code (OS_nw_protocol_metadata metadata);
