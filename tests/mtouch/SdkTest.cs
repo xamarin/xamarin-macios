@@ -304,9 +304,20 @@ namespace Xamarin.Linker {
 				"LLVM failed for '<ReceiveAsyncPrivate>d__61`2.MoveNext': non-finally/catch/fault clause.",
 				"LLVM failed for 'NetworkStream.Read': non-finally/catch/fault clause.",
 				"LLVM failed for 'NetworkStream.Write': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.BeginRead': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.EndRead': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.BeginWrite': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.EndWrite': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.ReadAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.WriteAsync': non-finally/catch/fault clause.",
 			}) },
 			{ "System.Core.dll", new Tuple<int, string[]> (0, new string [] {
 				"LLVM failed for 'EnterTryCatchFinallyInstruction.Run': non-finally/catch/fault clause.",
+			}) },
+			{ "System.Net.Http.dll", new Tuple<int, string[]> (0, new string [] {
+				"LLVM failed for 'HttpContent.CopyToAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'HttpContent.LoadIntoBufferAsync': non-finally/catch/fault clause.",
+				"LLVM failed for '<CopyToAsyncCore>d__47.MoveNext': non-finally/catch/fault clause.",
 			}) },
 			{ "mscorlib.dll", new Tuple<int, string[]> (0, new string [] {
 				"LLVM failed for 'Console.Write': opcode arglist",
