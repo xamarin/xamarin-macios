@@ -4,7 +4,7 @@
 // Authors:
 //   Manuel de la Pena (mandel@microsoft.com)
 //
-// Copyright 2019 Microsoft Inc
+// Copyright 2019 Microsoft
 //
 using System;
 using System.Runtime.InteropServices;
@@ -103,7 +103,7 @@ namespace Network {
 						outData = new ReadOnlySpan<byte>((void*)outPointer, dataLength);
 					}
 				} else {
-					outData = new ReadOnlySpan<byte> (Array.Empty<byte> ());
+					outData = ReadOnlySpan<byte>.Empty; 
 				}
 				return found;
 			} finally {
