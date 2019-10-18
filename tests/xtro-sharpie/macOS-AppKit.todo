@@ -20,5 +20,3 @@
 !missing-selector! NSImageNSImage::setScalesWhenResized: not bound
 !missing-selector! NSMovie::init not bound
 !missing-selector! NSMovie::initWithCoder: not bound
-!missing-selector! NSStoryboard::instantiateControllerWithIdentifier:creator: not bound
-!missing-selector! NSStoryboard::instantiateInitialControllerWithCreator: not bound

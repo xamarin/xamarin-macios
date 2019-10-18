@@ -15153,6 +15153,8 @@ namespace AppKit {
 		NSString SourceTextScalingDocumentOption { get; }
 	}
 
+	delegate NSObject NSStoryboardControllerCreator (NSCoder coder);
+
 	[Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	interface NSStoryboard {
@@ -15169,6 +15171,15 @@ namespace AppKit {
 		[Static]
 		[NullAllowed, Export ("mainStoryboard", ArgumentSemantic.Strong)]
 		NSStoryboard MainStoryboard { get; }
+
+		[Mac (10,15)]
+		[Export ("instantiateInitialControllerWithCreator:")]
+		[return: NullAllowed]
+		NSObject InstantiateInitialController ([NullAllowed] NSStoryboardControllerCreator block);
+
+		[Mac (10,15)]
+		[Export ("instantiateControllerWithIdentifier:creator:")]
+		NSObject InstantiateController (string identifier, [NullAllowed] NSStoryboardControllerCreator block);
 	}
 
 	[Mac (10,10)]
