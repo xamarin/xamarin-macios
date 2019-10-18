@@ -60,7 +60,7 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public bool GetData (string key, int dataLenght, out ReadOnlySpan<byte> outData) {
+		public bool GetData (string key, int dataLength, out ReadOnlySpan<byte> outData) {
 			IntPtr outPointer = IntPtr.Zero;
 			// create a function that will get the data, and the data length passed and will set the out param returning the value
 			Func<IntPtr,bool> callback = (inData) => {
@@ -79,7 +79,7 @@ namespace Network {
 				var found = nw_framer_message_access_value (GetCheckedHandle (), key, ref block_handler);
 				if (found) {
 					unsafe {
-						outData = new ReadOnlySpan<byte>((void*)outPointer, dataLenght);
+						outData = new ReadOnlySpan<byte>((void*)outPointer, dataLength);
 					}
 				} else {
 					outData = new ReadOnlySpan<byte> (Array.Empty<byte> ());
