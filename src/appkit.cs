@@ -27210,7 +27210,7 @@ namespace AppKit {
 	interface NSSwitch : NSAccessibilitySwitch
 	{
 		[Export ("state")]
-		NSControlStateValue State { get; set; } // keep NSControlStateValue as nint? or use self defined enum?
+		NSControlStateValue State { get; set; }
 	}
 
 	[Mac (10,15)]
@@ -27282,19 +27282,13 @@ namespace AppKit {
 		NSCollectionLayoutItem[] Subitems { get; }
 
 		[Export ("visualDescription")]
-		// [Verify (MethodToProperty)]
 		string VisualDescription { get; }
 	}
 
 	[Mac (10,15)]
 	[BaseType (typeof(NSToolbarItem))]
-	[DisableDefaultCtor]
 	interface NSMenuToolbarItem
 	{
-		[Export ("initWithIdentifier:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
-
 		[Export ("menu", ArgumentSemantic.Strong)]
 		NSMenu Menu { get; set; }
 
@@ -27406,13 +27400,8 @@ namespace AppKit {
 
 	[Mac (10,15)]
 	[BaseType (typeof(NSTouchBarItem))]
-	[DisableDefaultCtor]
 	interface NSStepperTouchBarItem
-	{
-		[Export ("initWithIdentifier:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
-		
+	{	
 		[Static]
 		[Export ("stepperTouchBarItemWithIdentifier:formatter:")]
 		NSStepperTouchBarItem CreateStepperTouchBarItem (NSTouchBarItemIdentifier identifier, NSFormatter formatter);
