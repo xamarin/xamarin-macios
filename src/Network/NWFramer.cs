@@ -256,16 +256,6 @@ namespace Network {
 		*/
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern OS_nw_protocol_metadata nw_framer_protocol_create_message (OS_nw_protocol_definition definition);
-
-		public static NWFramerMessage CreateMessage (NWProtocolDefinition protocolDefinition)
-		{
-			if (protocolDefinition == null)
-				throw new ArgumentNullException (nameof (protocolDefinition));
-			return new NWFramerMessage (nw_framer_protocol_create_message (protocolDefinition.Handle), owns: true);
-		}
-
-		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_message_create (OS_nw_framer framer);
 
 		public NWFramerMessage CreateMessage ()

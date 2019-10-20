@@ -28,6 +28,16 @@ namespace Network {
 		internal NWFramerMessage (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_protocol_metadata nw_framer_protocol_create_message (OS_nw_protocol_definition definition);
+
+		public static NWFramerMessage CreateMessage (NWProtocolDefinition protocolDefinition)
+		{
+			if (protocolDefinition == null)
+				throw new ArgumentNullException (nameof (protocolDefinition));
+			return new NWFramerMessage (nw_framer_protocol_create_message (protocolDefinition.Handle), owns: true);
+		}
+
+		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_framer_message_set_value (OS_nw_protocol_metadata message, string key, IntPtr value, ref BlockLiteral dispose_value);
 		delegate void nw_framer_message_set_value_t (IntPtr block, IntPtr data);
 		static nw_framer_message_set_value_t static_SetDataHandler = TrampolineSetDataHandler;
