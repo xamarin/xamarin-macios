@@ -560,6 +560,15 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
+		public T GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
+		{
+			if (definition == null)
+				throw new ArgumentNullException (nameof (definition));
+
+			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.Handle);
+			return Runtime.GetINativeObject<T> (x, owns: true);
+		}
+
 		[DllImport (Constants.NetworkLibrary)]
 		extern static /* uint32_t */ uint nw_connection_get_maximum_datagram_size (IntPtr handle);
 
