@@ -27060,18 +27060,18 @@ namespace AppKit {
 		NSCollectionLayoutSpacing Bottom { get; }
 	}
 
-	[NoiOS, Mac (10,15)]
-	[BaseType (typeof(NSCollectionLayoutItem))]
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutItem))]
 	[DisableDefaultCtor]
-	interface NSCollectionLayoutSupplementaryItem : NSCopying, INSCopying
+	interface NSCollectionLayoutSupplementaryItem : NSCopying
 	{
 		[Static]
 		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:")]
-		NSCollectionLayoutSupplementaryItem CreateSupplementaryItem (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor);
+		NSCollectionLayoutSupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor);
 
 		[Static]
 		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:itemAnchor:")]
-		NSCollectionLayoutSupplementaryItem CreateSupplementaryItem (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor, NSCollectionLayoutAnchor itemAnchor);
+		NSCollectionLayoutSupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor, NSCollectionLayoutAnchor itemAnchor);
 
 		[Export ("zIndex")]
 		nint ZIndex { get; set; }
@@ -27087,9 +27087,9 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSCollectionLayoutItem : NSCopying, INSCopying
+	interface NSCollectionLayoutItem : NSCopying
 	{
 		[Static]
 		[Export ("itemWithLayoutSize:")]
@@ -27113,17 +27113,17 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSCollectionLayoutSupplementaryItem))]
+	[BaseType (typeof (NSCollectionLayoutSupplementaryItem))]
 	[DisableDefaultCtor]
-	interface NSCollectionLayoutBoundarySupplementaryItem : NSCopying, INSCopying
+	interface NSCollectionLayoutBoundarySupplementaryItem : NSCopying
 	{
 		[Static]
 		[Export ("boundarySupplementaryItemWithLayoutSize:elementKind:alignment:")]
-		NSCollectionLayoutBoundarySupplementaryItem CreateBoundarySupplementaryItem (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment);
+		NSCollectionLayoutBoundarySupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment);
 
 		[Static]
 		[Export ("boundarySupplementaryItemWithLayoutSize:elementKind:alignment:absoluteOffset:")]
-		NSCollectionLayoutBoundarySupplementaryItem CreateBoundarySupplementaryItem (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment, CGPoint absoluteOffset);
+		NSCollectionLayoutBoundarySupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment, CGPoint absoluteOffset);
 
 		[Export ("extendsBoundary")]
 		bool ExtendsBoundary { get; set; }
@@ -27139,13 +27139,13 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSCollectionLayoutItem))]
+	[BaseType (typeof (NSCollectionLayoutItem))]
 	[DisableDefaultCtor]
-	interface NSCollectionLayoutDecorationItem : NSCopying, INSCopying
+	interface NSCollectionLayoutDecorationItem : NSCopying
 	{
 		[Static]
 		[Export ("backgroundDecorationItemWithElementKind:")]
-		NSCollectionLayoutDecorationItem CreateBackgroundDecorationItem (string elementKind);
+		NSCollectionLayoutDecorationItem Create (string elementKind);
 
 		[Export ("zIndex")]
 		nint ZIndex { get; set; }
@@ -27155,17 +27155,17 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSCollectionLayoutGroupCustomItem : NSCopying, INSCopying
+	interface NSCollectionLayoutGroupCustomItem : NSCopying
 	{
 		[Static]
 		[Export ("customItemWithFrame:")]
-		NSCollectionLayoutGroupCustomItem CreateCustomItem (CGRect frame);
+		NSCollectionLayoutGroupCustomItem Create (CGRect frame);
 
 		[Static]
 		[Export ("customItemWithFrame:zIndex:")]
-		NSCollectionLayoutGroupCustomItem CreateCustomItem (CGRect frame, nint zIndex);
+		NSCollectionLayoutGroupCustomItem Create (CGRect frame, nint zIndex);
 
 		[Export ("frame")]
 		CGRect Frame { get; }
@@ -27175,8 +27175,8 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
-	interface NSCollectionViewCompositionalLayoutConfiguration : NSCopying, INSCopying
+	[BaseType (typeof (NSObject))]
+	interface NSCollectionViewCompositionalLayoutConfiguration : NSCopying
 	{
 		[Export ("scrollDirection", ArgumentSemantic.Assign)]
 		NSCollectionViewScrollDirection ScrollDirection { get; set; }
@@ -27189,33 +27189,26 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface NSColorSampler
 	{
 		[Export ("showSamplerWithSelectionHandler:")]
 		void ShowSampler (Action<NSColor> selectionHandler);
 	}
 
-	[Mac (10,13)]
-	public enum NSControlStateValue
-	{
-		Mixed,
-		Off,
-		On,
-	}
-
 	[Mac (10,15)]
-	[BaseType (typeof(NSControl))]
+	[BaseType (typeof (NSControl))]
 	[DesignatedDefaultCtor]
 	interface NSSwitch : NSAccessibilitySwitch
 	{
 		[Export ("state")]
-		NSControlStateValue State { get; set; }
+		nint State { get; set; }
 	}
+
+	interface INSCollectionLayoutContainer { }
 
 	[Mac (10,15)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface NSCollectionLayoutContainer
 	{
 		[Abstract]
@@ -27237,20 +27230,21 @@ namespace AppKit {
 
 	[Mac (10,15)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface NSCollectionLayoutEnvironment
 	{
 		[Abstract]
 		[Export ("container")]
-		NSCollectionLayoutContainer Container { get; }
+		INSCollectionLayoutContainer Container { get; }
 	}
 
-	delegate NSCollectionLayoutGroupCustomItem[] NSCollectionLayoutGroupCustomItemProvider (NSCollectionLayoutEnvironment layout);
+	interface INSCollectionLayoutEnvironment { }
+
+	delegate NSCollectionLayoutGroupCustomItem[] NSCollectionLayoutGroupCustomItemProvider (INSCollectionLayoutEnvironment layout);
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSCollectionLayoutItem))]
+	[BaseType (typeof (NSCollectionLayoutItem))]
 	[DisableDefaultCtor]
-	interface NSCollectionLayoutGroup : NSCopying, INSCopying
+	interface NSCollectionLayoutGroup : NSCopying
 	{
 		[Static]
 		[Export ("horizontalGroupWithLayoutSize:subitem:count:")]
@@ -27286,7 +27280,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSToolbarItem))]
+	[BaseType (typeof (NSToolbarItem))]
 	interface NSMenuToolbarItem
 	{
 		[Export ("menu", ArgumentSemantic.Strong)]
@@ -27298,7 +27292,6 @@ namespace AppKit {
 
 	[Mac (10,15)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface NSCollectionLayoutVisibleItem
 	{
 		[Abstract]
@@ -27342,16 +27335,18 @@ namespace AppKit {
 		string RepresentedElementKind { get; }
 	}
 
-	delegate void NSCollectionLayoutSectionVisibleItemsInvalidationHandler (NSCollectionLayoutVisibleItem[] items, CGPoint point, NSCollectionLayoutEnvironment layout);
+	interface INSCollectionLayoutVisibleItem { }
+
+	delegate void NSCollectionLayoutSectionVisibleItemsInvalidationHandler (INSCollectionLayoutVisibleItem[] items, CGPoint point, INSCollectionLayoutEnvironment layout);
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSCollectionLayoutSection : NSCopying, INSCopying
+	interface NSCollectionLayoutSection : NSCopying
 	{
 		[Static]
 		[Export ("sectionWithGroup:")]
-		NSCollectionLayoutSection CreateSection (NSCollectionLayoutGroup group);
+		NSCollectionLayoutSection Create (NSCollectionLayoutGroup group);
 
 		[Export ("contentInsets", ArgumentSemantic.Assign)]
 		NSDirectionalEdgeInsets ContentInsets { get; set; }
@@ -27375,10 +27370,10 @@ namespace AppKit {
 		NSCollectionLayoutDecorationItem[] DecorationItems { get; set; }
 	}
 
-	delegate NSCollectionLayoutSection NSCollectionViewCompositionalLayoutSectionProvider (nint section, NSCollectionLayoutEnvironment layout);
+	delegate NSCollectionLayoutSection NSCollectionViewCompositionalLayoutSectionProvider (nint section, INSCollectionLayoutEnvironment layout);
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSCollectionViewLayout))]
+	[BaseType (typeof (NSCollectionViewLayout))]
 	[DisableDefaultCtor]
 	interface NSCollectionViewCompositionalLayout
 	{
@@ -27399,16 +27394,16 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSTouchBarItem))]
+	[BaseType (typeof (NSTouchBarItem))]
 	interface NSStepperTouchBarItem
 	{	
 		[Static]
 		[Export ("stepperTouchBarItemWithIdentifier:formatter:")]
-		NSStepperTouchBarItem CreateStepperTouchBarItem (NSTouchBarItemIdentifier identifier, NSFormatter formatter);
+		NSStepperTouchBarItem Create (NSTouchBarItemIdentifier identifier, NSFormatter formatter);
 
 		[Static]
 		[Export ("stepperTouchBarItemWithIdentifier:drawingHandler:")]
-		NSStepperTouchBarItem CreateStepperTouchBarItem (NSTouchBarItemIdentifier identifier, Action<CGRect, double> drawingHandler);
+		NSStepperTouchBarItem Create (NSTouchBarItemIdentifier identifier, Action<CGRect, double> drawingHandler);
 
 		[Export ("maxValue")]
 		double MaxValue { get; set; }
