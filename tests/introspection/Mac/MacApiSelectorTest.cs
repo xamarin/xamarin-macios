@@ -694,6 +694,14 @@ namespace Introspection {
 				break;
 				}
 				break;
+			case "Metal":
+				switch (type.Name) {
+				case "MTLCounterSampleBufferDescriptor":
+					// This whole type is implemented using a different (internal) type,
+					// and it's the internal type who knows how to respond to the selectors.
+					return true;
+				}
+				break;
 			}
 			return base.Skip (type, selectorName);
 		}
