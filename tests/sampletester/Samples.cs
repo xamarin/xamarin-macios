@@ -8,7 +8,7 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "ios-samples"; // monotouch-samples redirects to ios-samples
 		const string CATEGORY = "iossamples"; // categories can't contain dashes
-		const string HASH = "1d0f3270c394e9c15c014813e804972b17ce3e48";
+		const string HASH = "bffa511ecb8f74b2d4a42418a130d0c83c9723cf";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj
@@ -124,7 +124,7 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "prebuilt-apps";
 		const string CATEGORY = "prebuiltapps"; // categories can't contain dashes
-		const string HASH = "40da1283722df96e81efb5c62364d05e5bd3dd76";
+		const string HASH = "f111672bc6915ceb402abb47dedfe3480e111720";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Known failures
@@ -142,7 +142,7 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "xamarin-forms-samples";
 		const string CATEGORY = "xamarinformssamples"; // categories can't contain dashes
-		const string HASH = "206f4c3a2be1e988eda2ad9130a37019c60f1c7e";
+		const string HASH = "d196d3f7ba418d06ef799074eb4f6120e26a9cf4";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj.
