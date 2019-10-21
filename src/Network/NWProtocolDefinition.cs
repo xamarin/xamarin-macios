@@ -114,7 +114,7 @@ namespace Network {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public static NWProtocolDefinition CreateFramerDefinition (string identifier, NWFramerCreateFlags flags, Func<NWFramer,NWFramerStartResult> startCallback)
+		public static NWProtocolDefinition CreateFramerDefinition (string identifier, NWFramerCreateFlags flags, Func<NWFramer, NWFramerStartResult> startCallback)
 		{
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_CreateFramerHandler, startCallback);

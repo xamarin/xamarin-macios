@@ -94,7 +94,7 @@ namespace Network {
 		public bool GetData (string key, int dataLength, out ReadOnlySpan<byte> outData) {
 			IntPtr outPointer = IntPtr.Zero;
 			// create a function that will get the data, and the data length passed and will set the out param returning the value
-			Func<IntPtr,bool> callback = (inData) => {
+			Func<IntPtr, bool> callback = (inData) => {
 				if (inData != IntPtr.Zero) {
 					outPointer = inData; 
 					return true;
@@ -110,7 +110,7 @@ namespace Network {
 				var found = nw_framer_message_access_value (GetCheckedHandle (), key, ref block_handler);
 				if (found) {
 					unsafe {
-						outData = new ReadOnlySpan<byte>((void*)outPointer, dataLength);
+						outData = new ReadOnlySpan<byte>((void*) outPointer, dataLength);
 					}
 				} else {
 					outData = ReadOnlySpan<byte>.Empty; 
