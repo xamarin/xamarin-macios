@@ -30,7 +30,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_protocol_create_message (OS_nw_protocol_definition definition);
 
-		public static NWFramerMessage CreateMessage (NWProtocolDefinition protocolDefinition)
+		public static NWFramerMessage Create (NWProtocolDefinition protocolDefinition)
 		{
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));

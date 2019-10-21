@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.Network {
 		public void SetUp ()
 		{
 			using (var definition = NWProtocolDefinition.CreateFramerDefinition (identifier, NWFramerCreateFlags.Default, StartCallback)) {
-				message = NWFramerMessage.CreateMessage (definition);
+				message = NWFramerMessage.Create (definition);
 			}
 		}
 
