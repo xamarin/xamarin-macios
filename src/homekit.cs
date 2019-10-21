@@ -750,6 +750,10 @@ namespace HomeKit {
 
 		[Field ("HMUserFailedAccessoriesKey")]
 		NSString UserFailedAccessoriesKey { get; }
+
+		[Watch (6, 1), TV (13, 2), iOS (13, 2)]
+		[Export ("supportsAddingNetworkRouter")]
+		bool SupportsAddingNetworkRouter { get; }
 	}
 
 	[TV (10,0)]
@@ -852,6 +856,10 @@ namespace HomeKit {
 		[Watch (4,0), TV (11,0), iOS (11,0)]
 		[Export ("home:didUpdateHomeHubState:"), EventArgs ("HMHomeHubState")]
 		void DidUpdateHomeHubState (HMHome home, HMHomeHubState homeHubState);
+
+		[Watch (6,1), TV (13,2), iOS (13,2)]
+		[Export ("homeDidUpdateSupportedFeatures:")]
+		void DidUpdateSupportedFeatures (HMHome home);
 	}
 
 	[TV (10,0)]
