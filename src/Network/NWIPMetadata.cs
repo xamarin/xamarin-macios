@@ -26,7 +26,7 @@ namespace Network {
 		}
 
 		// A single tick represents one hundred nanoseconds, API returns: the time at which a packet was received, in nanoseconds
-		// so we get nanoseconds, divicde by 100 and use from ticks
+		// so we get nanoseconds, divide by 100 and use from ticks
 		public TimeSpan ReceiveTime {
 			get {
 				var time = nw_ip_metadata_get_receive_time (GetCheckedHandle ());
