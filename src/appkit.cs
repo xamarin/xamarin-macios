@@ -27395,6 +27395,7 @@ namespace AppKit {
 
 	[Mac (10,15)]
 	[BaseType (typeof (NSTouchBarItem))]
+	[DisableDefaultCtor]
 	interface NSStepperTouchBarItem
 	{	
 		[Static]
