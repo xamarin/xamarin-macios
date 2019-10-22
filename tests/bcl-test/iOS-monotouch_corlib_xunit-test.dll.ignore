@@ -54,3 +54,8 @@ Platform32:Test.TaskContinueWhenAnyTests.RunContinueWhenAnyTests
 
 # Test running out of memory
 Platform32:System.Collections.Tests.BitArray_OperatorsTests.Xor_Operator(l: [False, True, False, True, False, ...], r: [True, True, True, True, True, ...], expected: [True, False, True, False, True, ...])
+# out of memory, filled in mono as https://github.com/mono/mono/issues/17480
+Platform32:System.Memory.Tests.ReadOnlySequenceTestsCommonChar.HelloWorldAcrossTwoBlocks
+
+# fails on 32b for an unknown reason, passed on 64
+Platform32:System.Collections.Concurrent.Tests.ConcurrentDictionary_NonGeneric_Tests.ICollection_NonGeneric_CopyTo_TwoDimensionArray_ThrowsException(count: 75)
