@@ -57,6 +57,7 @@ namespace Xamarin.Mac.Tasks
 		public string SdkVersion { get; set; }
 
 		public bool IsAppExtension { get; set; }
+		public bool IsXPCService { get; set; }
 
 		[Required]
 		public bool EnableSGenConc { get; set; }
@@ -209,6 +210,8 @@ namespace Xamarin.Mac.Tasks
 				
 			if (IsAppExtension)
 				args.AddQuotedLine ("/extension");
+			if (IsXPCService)
+				args.AddQuotedLine ("/xpc");
 
 			args.AddQuotedLine ("/sdkroot:" + SdkRoot);
 

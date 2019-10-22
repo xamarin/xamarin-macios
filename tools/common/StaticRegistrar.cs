@@ -471,7 +471,7 @@ namespace Registrar {
 			return "void *";
 		}
 
-		public string ToObjCType (TypeDefinition type)
+		public string ToObjCType (TypeDefinition type, bool delegateToBlockType = false)
 		{
 			switch (type.FullName) {
 			case "System.IntPtr": return "void *";
@@ -496,8 +496,24 @@ namespace Registrar {
 			if (IsNativeObject (type))
 				return "id";
 
-			if (IsDelegate (type))
-				return "id";
+			if (IsDelegate (type)) {
+				if (!delegateToBlockType)
+					return "id";
+
+				MethodDefinition invokeMethod = type.Methods.SingleOrDefault (method => method.Name == "Invoke");
+				if (invokeMethod == null)
+					return "id";
+
+				StringBuilder builder = new StringBuilder ();
+				builder.Append (ToObjCType (invokeMethod.ReturnType));
+				builder.Append (" (^)(");
+
+				var argumentTypes = invokeMethod.Parameters.Select (param => ToObjCType (param.ParameterType));
+				builder.Append (string.Join (", ", argumentTypes));
+
+				builder.Append (")");
+				return builder.ToString ();
+			}
 
 			if (type.IsEnum)
 				return ToObjCType (GetEnumUnderlyingType (type));
@@ -2339,7 +2355,7 @@ namespace Registrar {
 			return ToObjCParameterType (type, descriptiveMethodName, exceptions, inMethod);
 		}
 
-		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod)
+		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod, bool delegateToBlockType = false)
 		{
 			TypeDefinition td = ResolveType (type);
 			var reftype = type as ByReferenceType;
@@ -2462,7 +2478,7 @@ namespace Registrar {
 					}
 					return CheckStructure (td, descriptiveMethodName, inMethod);
 				} else {
-					return ToObjCType (td);
+					return ToObjCType (td, delegateToBlockType: delegateToBlockType);
 				}
 			}
 		}
@@ -2534,7 +2550,7 @@ namespace Registrar {
 					sb.Append (split [i]);
 					sb.Append (':');
 					sb.Append ('(');
-					sb.Append (ToObjCParameterType (method.NativeParameters [i + indexOffset], method.DescriptiveMethodName, exceptions, method.Method));
+					sb.Append (ToObjCParameterType (method.NativeParameters [i + indexOffset], method.DescriptiveMethodName, exceptions, method.Method, delegateToBlockType: true));
 					sb.Append (')');
 					sb.AppendFormat ("p{0}", i);
 				}
@@ -2780,7 +2796,7 @@ namespace Registrar {
 					if (token_ref == uint.MaxValue)
 						token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
 					protocol_wrapper_map.Add (token_ref, new Tuple<ObjCType, uint> (@class, CreateTokenReference (@class.ProtocolWrapperType, TokenType.TypeDef)));
-					if (needs_protocol_map) {
+					if (needs_protocol_map || TryGetAttribute (@class.Type, "Foundation", "XpcInterfaceAttribute", out var xpcAttr)) {
 						protocols.Add (new ProtocolInfo { TokenReference = token_ref, Protocol = @class });
 						CheckNamespace (@class, exceptions);
 					}
@@ -3047,7 +3063,7 @@ namespace Registrar {
 				map.AppendLine ("};");
 				map.AppendLine ();
 			}
-			if (needs_protocol_map && protocols.Count > 0) {
+			if (protocols.Count > 0) {
 				var ordered = protocols.OrderBy ((v) => v.TokenReference);
 				map.AppendLine ("static const uint32_t __xamarin_protocol_tokens [] = {");
 				foreach (var p in ordered)

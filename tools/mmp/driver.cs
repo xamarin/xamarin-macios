@@ -115,7 +115,7 @@ namespace Xamarin.Bundler {
 		static int verbose = 0;
 		public static bool Force;
 
-		static bool is_extension;
+		static bool is_extension, is_xpc_service;
 		static bool frameworks_copied_to_bundle_dir;    // Have we copied any frameworks to Foo.app/Contents/Frameworks?
 		static bool dylibs_copied_to_bundle_dir => native_libraries_copied_in.Count > 0;
 
@@ -333,6 +333,7 @@ namespace Xamarin.Bundler {
 				{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
 				{ "extension", "Specifies an app extension", v => is_extension = true },
+				{ "xpc", "Specifies an XPC service", v => { is_extension = true; is_xpc_service = true; }},
 				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
 				{ "force-unsupported-linker", "Bypass safety checkes preventing unsupported linking options.", v => bypass_linking_checks = true , true }, // Undocumented option for a reason, You get to keep the pieces when it breaks
 				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => disable_lldb_attach = ParseBool (v, "disable-lldb-attach")},
@@ -1263,7 +1264,7 @@ namespace Xamarin.Bundler {
 					args.Add ($"@loader_path/../{BundleName}");
 				}
 
-				if (is_extension) {
+				if (is_extension && !is_xpc_service) {
 					args.Add ("-e");
 					args.Add ("_xamarin_mac_extension_main");
 					args.Add ("-framework");
@@ -1751,7 +1752,15 @@ namespace Xamarin.Bundler {
 				contents_dir = Path.Combine (App.AppDirectory, "Versions", "A");
 				macos_dir = contents_dir;
 			} else {
-				App.AppDirectory = Path.Combine (output_dir, string.Format ("{0}.{1}", app_name, is_extension ? "appex" : "app"));
+				string bundle_ext;
+				if (is_extension && is_xpc_service)
+					bundle_ext = "xpc";
+				else if (is_extension)
+					bundle_ext = "appex";
+				else
+					bundle_ext = "app";
+
+				App.AppDirectory = Path.Combine (output_dir, string.Format ("{0}.{1}", app_name, bundle_ext));
 				contents_dir = Path.Combine (App.AppDirectory, "Contents");
 				macos_dir = Path.Combine (contents_dir, "MacOS");
 			}
