@@ -73,6 +73,7 @@ namespace Photos
 		[Export ("hidden")]
 		bool Hidden { [Bind ("isHidden")] get; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "No longer supported.")]
 		[NoTV][NoiOS]
 		[Export ("syncFailureHidden")]
 		bool SyncFailureHidden { [Bind ("isSyncFailureHidden")] get; }
