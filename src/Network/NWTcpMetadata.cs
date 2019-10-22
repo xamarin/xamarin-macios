@@ -18,8 +18,8 @@ namespace Network {
 
 		internal NWTcpMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
 
-		public uint AvailableReceiveBuffer () => nw_tcp_get_available_receive_buffer (GetCheckedHandle ());
+		public uint AvailableReceiveBuffer => nw_tcp_get_available_receive_buffer (GetCheckedHandle ());
 
-		public uint AvailableSendBuffer () => nw_tcp_get_available_send_buffer (GetCheckedHandle ());
+		public uint AvailableSendBuffer => nw_tcp_get_available_send_buffer (GetCheckedHandle ());
 	}
 }

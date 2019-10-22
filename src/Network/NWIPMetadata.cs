@@ -30,7 +30,7 @@ namespace Network {
 		public TimeSpan ReceiveTime {
 			get {
 				var time = nw_ip_metadata_get_receive_time (GetCheckedHandle ());
-				return (time == 0) ? TimeSpan.Zero : TimeSpan.FromTicks ((long) time / 100);
+				return TimeSpan.FromTicks ((long) time / 100);
 			}
 		}
 
