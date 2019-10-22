@@ -1178,6 +1178,7 @@ NETWORK_SOURCES = \
 	Network/NWError.cs			\
 	Network/NWFramer.cs			\
 	Network/NWInterface.cs			\
+	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWParameters.cs			\
@@ -1187,10 +1188,13 @@ NETWORK_SOURCES = \
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
+	Network/NWTcpMetadata.cs \
+	Network/NWTlsMetadata.cs \
 	Network/NWTxtRecord.cs	\
 	Network/NWProtocolTcpOptions.cs	\
 	Network/NWProtocolTlsOptions.cs	\
 	Network/NWProtocolUdpOptions.cs	\
+	Network/NWUdpMetadata.cs \
 	Network/NWWebSocketMetadata.cs	\
 	Network/NWWebSocketOptions.cs	\
 	Network/NWWebSocketRequest.cs	\
