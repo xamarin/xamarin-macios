@@ -19,7 +19,7 @@ namespace AppKit {
 		    {
 			    NSCollectionLayoutAnchorOffsetType.Absolute   => _LayoutAnchorWithEdgesAbsoluteOffset (edges, offset),
 			    NSCollectionLayoutAnchorOffsetType.Fractional => _LayoutAnchorWithEdgesFractionalOffset (edges, offset),
-			    _                                             => throw new ArgumentException(message: "Invalid enum value", paramName: nameof(offsetType)),
+			    _                                             => throw new ArgumentException (message: "Invalid enum value", paramName: nameof (offsetType)),
 		    };
 	}
 }
