@@ -43,6 +43,12 @@ namespace Network {
 	//
 	public delegate void NWConnectionReceiveDispatchDataCompletion (DispatchData data, NWContentContext context, bool isComplete, NWError error);
 
+	//
+	// Signature for a method invoked on data received, same as NWConnectionReceiveCompletion,
+	// but they receive ReadOnlySpan rather than a data + dataSize
+	//
+	public delegate void NWConnectionReceiveReadOnlySpanCompletion (ReadOnlySpan<byte> data, NWContentContext context, bool isComplete, NWError error);
+
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
 	public class NWConnection : NativeObject {
@@ -252,6 +258,7 @@ namespace Network {
 
 		static nw_connection_receive_completion_t static_ReceiveCompletion = TrampolineReceiveCompletion;
 		static nw_connection_receive_completion_t static_ReceiveCompletionDispatchData = TrampolineReceiveCompletionData;
+		static nw_connection_receive_completion_t static_ReceiveCompletionDispatchReadnOnlyData = TrampolineReceiveCompletionReadOnlyData;
 
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
 		static void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
@@ -301,6 +308,35 @@ namespace Network {
 			}
 		}
 
+		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
+		static void TrampolineReceiveCompletionReadOnlyData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		{
+			var del = BlockLiteral.GetTarget<NWConnectionReceiveReadOnlySpanCompletion> (block);
+			if (del != null) {
+				DispatchData dispatchData = null, dataCopy = null;
+				IntPtr bufferAddress = IntPtr.Zero;
+				nuint bufferSize = 0;
+
+				if (dispatchDataPtr != IntPtr.Zero) {
+					dispatchData = new DispatchData (dispatchDataPtr, owns: false);
+					dataCopy = dispatchData.CreateMap (out bufferAddress, out bufferSize);
+				}
+
+				unsafe {
+					var spanData = new ReadOnlySpan<byte> ((void*)bufferAddress, (int)bufferSize);
+					del (spanData,
+						contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
+						isComplete,
+						error == IntPtr.Zero ? null : new NWError (error, owns: false));
+				}
+
+				if (dispatchData != null) {
+					dataCopy.Dispose ();
+					dispatchData.Dispose ();
+				}
+			}
+		}
+
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_receive (IntPtr handle, /* uint32_t */ uint minimumIncompleteLength, /* uint32_t */ uint maximumLength, ref BlockLiteral callback);
 
@@ -327,6 +363,22 @@ namespace Network {
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+
+			try {
+				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void ReceiveReadOnlyData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveReadOnlySpanCompletion callback)
+		{
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
 
 			try {
 				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, ref block_handler);
@@ -362,6 +414,22 @@ namespace Network {
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+
+			try {
+				nw_connection_receive_message (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void ReceiveMessageReadOnlyData (NWConnectionReceiveReadOnlySpanCompletion callback)
+		{
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
 
 			try {
 				nw_connection_receive_message (GetCheckedHandle (), ref block_handler);

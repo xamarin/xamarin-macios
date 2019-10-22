@@ -3065,7 +3065,7 @@ namespace AppKit {
 		bool CanDragItems (NSCollectionView collectionView, NSIndexSet indexes, NSEvent evt);
 
 		[Export ("collectionView:writeItemsAtIndexes:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead.")]
 		bool WriteItems (NSCollectionView collectionView, NSIndexSet indexes, NSPasteboard toPasteboard);
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSFilePromiseReceiver' objects instead.")]
@@ -3091,7 +3091,7 @@ namespace AppKit {
 
 		[Mac (10,11)]
 		[Export ("collectionView:writeItemsAtIndexPaths:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriter' method instead.")]
 		bool WriteItems (NSCollectionView collectionView, NSSet indexPaths, NSPasteboard pasteboard);
 
 		[Mac (10,11)]
@@ -17198,7 +17198,7 @@ namespace AppKit {
 		void SortDescriptorsChanged (NSTableView tableView, NSSortDescriptor [] oldDescriptors);
 	
 		[Export ("tableView:writeRowsWithIndexes:toPasteboard:")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriterForRow' method instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'GetPasteboardWriterForRow' method instead.")]
 		bool WriteRows (NSTableView tableView, NSIndexSet rowIndexes, NSPasteboard pboard );
 	
 		[Export ("tableView:validateDrop:proposedRow:proposedDropOperation:")]
@@ -19800,6 +19800,11 @@ namespace AppKit {
 
 		[NullAllowed, Export ("escapeKeyReplacementItemIdentifier")]
 		string EscapeKeyReplacementItemIdentifier { get; set; }
+
+		[Mac (10, 15)]
+		[Static]
+		[Export ("automaticCustomizeTouchBarMenuItemEnabled")]
+		bool AutomaticCustomizeTouchBarMenuItemEnabled { [Bind ("isAutomaticCustomizeTouchBarMenuItemEnabled")] get; set; }
 	}
 
 	interface INSTouchBarDelegate { }
@@ -26833,6 +26838,7 @@ namespace AppKit {
 		TopTrailing,
 	}
 
+	[Mac (10,15)]
 	[Native]
 	public enum NSTextInputTraitType : long
 	{
@@ -26850,12 +26856,207 @@ namespace AppKit {
 		Collapsed,
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15)]
 	[Native]
 	public enum NSToolbarItemGroupSelectionMode : long
 	{
 		SelectOne = 0,
 		SelectAny = 1,
 		Momentary = 2,
-	}	
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutAnchor : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("layoutAnchorWithEdges:")]
+		NSCollectionLayoutAnchor Create (NSDirectionalRectEdge edges);
+
+		[Static]
+		[Export ("layoutAnchorWithEdges:absoluteOffset:"), Internal]
+		NSCollectionLayoutAnchor _LayoutAnchorWithEdgesAbsoluteOffset (NSDirectionalRectEdge edges, CGPoint absoluteOffset);
+
+		[Static]
+		[Export ("layoutAnchorWithEdges:fractionalOffset:"), Internal]
+		NSCollectionLayoutAnchor _LayoutAnchorWithEdgesFractionalOffset (NSDirectionalRectEdge edges, CGPoint fractionalOffset);
+
+		[Export ("edges")]
+		NSDirectionalRectEdge Edges { get; }
+
+		[Export ("offset")]
+		CGPoint Offset { get; }
+
+		[Export ("isAbsoluteOffset")]
+		bool IsAbsoluteOffset { get; }
+
+		[Export ("isFractionalOffset")]
+		bool IsFractionalOffset { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutDimension : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("fractionalWidthDimension:")]
+		NSCollectionLayoutDimension CreateFractionalWidthDimension (nfloat fractionalWidth);
+
+		[Static]
+		[Export ("fractionalHeightDimension:")]
+		NSCollectionLayoutDimension CreateFractionalHeightDimension (nfloat fractionalHeight);
+
+		[Static]
+		[Export ("absoluteDimension:")]
+		NSCollectionLayoutDimension CreateAbsoluteDimension (nfloat absoluteDimension);
+
+		[Static]
+		[Export ("estimatedDimension:")]
+		NSCollectionLayoutDimension CreateEstimatedDimension (nfloat estimatedDimension);
+
+		[Export ("isFractionalWidth")]
+		bool IsFractionalWidth { get; }
+
+		[Export ("isFractionalHeight")]
+		bool IsFractionalHeight { get; }
+
+		[Export ("isAbsolute")]
+		bool IsAbsolute { get; }
+
+		[Export ("isEstimated")]
+		bool IsEstimated { get; }
+
+		[Export ("dimension")]
+		nfloat Dimension { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSPickerTouchBarItem
+	{
+		[Static]
+		[Export ("pickerTouchBarItemWithIdentifier:labels:selectionMode:target:action:")]
+		NSPickerTouchBarItem Create (NSTouchBarItemIdentifier identifier, string[] labels, NSPickerTouchBarItemSelectionMode selectionMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Static]
+		[Export ("pickerTouchBarItemWithIdentifier:images:selectionMode:target:action:")]
+		NSPickerTouchBarItem Create (NSTouchBarItemIdentifier identifier, NSImage[] images, NSPickerTouchBarItemSelectionMode selectionMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Export ("controlRepresentation", ArgumentSemantic.Assign)]
+		NSPickerTouchBarItemControlRepresentation ControlRepresentation { get; set; }
+
+		[Export ("collapsedRepresentationLabel")]
+		string CollapsedRepresentationLabel { get; set; }
+
+		[NullAllowed, Export ("collapsedRepresentationImage", ArgumentSemantic.Strong)]
+		NSImage CollapsedRepresentationImage { get; set; }
+
+		[Export ("selectedIndex")]
+		nint SelectedIndex { get; set; }
+
+		[NullAllowed, Export ("selectionColor", ArgumentSemantic.Copy)]
+		NSColor SelectionColor { get; set; }
+
+		[Export ("selectionMode", ArgumentSemantic.Assign)]
+		NSPickerTouchBarItemSelectionMode SelectionMode { get; set; }
+
+		[Export ("numberOfOptions")]
+		nint NumberOfOptions { get; set; }
+
+		[Export ("setImage:atIndex:")]
+		void SetImage ([NullAllowed] NSImage image, nint index);
+
+		[Export ("imageAtIndex:")]
+		[return: NullAllowed]
+		NSImage GetImage (nint index);
+
+		[Export ("setLabel:atIndex:")]
+		void SetLabel (string label, nint index);
+
+		[Export ("labelAtIndex:")]
+		[return: NullAllowed]
+		string GetLabel (nint index);
+
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
+		Selector Action { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Export ("setEnabled:atIndex:")]
+		void SetEnabled (bool enabled, nint index);
+
+		[Export ("isEnabledAtIndex:")]
+		bool GetEnabled (nint index);
+
+		[Export ("customizationLabel", ArgumentSemantic.Copy)]
+		string CustomizationLabel { get; set; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSize : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("sizeWithWidthDimension:heightDimension:")]
+		NSCollectionLayoutSize Create (NSCollectionLayoutDimension width, NSCollectionLayoutDimension height);
+
+		[Export ("widthDimension")]
+		NSCollectionLayoutDimension WidthDimension { get; }
+
+		[Export ("heightDimension")]
+		NSCollectionLayoutDimension HeightDimension { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSpacing : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("flexibleSpacing:")]
+		NSCollectionLayoutSpacing CreateFlexibleSpacing (nfloat flexibleSpacing);
+
+		[Static]
+		[Export ("fixedSpacing:")]
+		NSCollectionLayoutSpacing CreateFixedSpacing (nfloat fixedSpacing);
+
+		[Export ("spacing")]
+		nfloat Spacing { get; }
+
+		[Export ("isFlexibleSpacing")]
+		bool IsFlexibleSpacing { get; }
+
+		[Export ("isFixedSpacing")]
+		bool IsFixedSpacing { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutEdgeSpacing : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("spacingForLeading:top:trailing:bottom:")]
+		NSCollectionLayoutEdgeSpacing CreateSpacing ([NullAllowed] NSCollectionLayoutSpacing leading, [NullAllowed] NSCollectionLayoutSpacing top, [NullAllowed] NSCollectionLayoutSpacing trailing, [NullAllowed] NSCollectionLayoutSpacing bottom);
+
+		[NullAllowed, Export ("leading")]
+		NSCollectionLayoutSpacing Leading { get; }
+
+		[NullAllowed, Export ("top")]
+		NSCollectionLayoutSpacing Top { get; }
+
+		[NullAllowed, Export ("trailing")]
+		NSCollectionLayoutSpacing Trailing { get; }
+
+		[NullAllowed, Export ("bottom")]
+		NSCollectionLayoutSpacing Bottom { get; }
+	}
 }

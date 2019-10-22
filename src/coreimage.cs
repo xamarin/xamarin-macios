@@ -4485,6 +4485,7 @@ namespace CoreImage {
 
 	[iOS (9,3)]
 	[TV (9,2)]
+	[Mac (10,10)]
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIMaskedVariableBlur : CIMaskedVariableBlurProtocol {
@@ -6005,6 +6006,12 @@ namespace CoreImage {
 		[Export ("quietSpace")]
 		float QuietSpace { get; set; }
 
+		// The availability attributes here look redundant because they're already on the type,
+		// but it makes a difference when this member is inlined into another type, in which case
+		// these attributes are copied as well (while the type's attributes aren't).
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
 		[Abstract]
 		[Export ("barcodeHeight")]
 		float BarcodeHeight { get; set; }

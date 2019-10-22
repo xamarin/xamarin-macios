@@ -509,6 +509,13 @@ namespace Introspection {
 							continue;
 						}
 						break;
+					case "CIGaussianBlur":
+						switch (key) {
+						case "outputImageV1":
+							// existed briefly in macOS 10.11, but neither before nor after.
+							continue;
+						}
+						break;
 					}
 
 					var cap = Char.ToUpperInvariant (key [0]) + key.Substring (1);

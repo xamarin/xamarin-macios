@@ -1190,3 +1190,21 @@
 
 !missing-release-attribute-on-return-value! AppKit.NSDictionaryControllerKeyValuePair AppKit.NSDictionaryController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! Foundation.NSObject AppKit.NSObjectController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+
+## Deprecated in Xcode 11
+!missing-selector! NSImageNSImage::cacheDepthMatchesImageDepth not bound
+!missing-selector! NSImageNSImage::compositeToPoint:fromRect:operation: not bound
+!missing-selector! NSImageNSImage::compositeToPoint:fromRect:operation:fraction: not bound
+!missing-selector! NSImageNSImage::compositeToPoint:operation: not bound
+!missing-selector! NSImageNSImage::compositeToPoint:operation:fraction: not bound
+!missing-selector! NSImageNSImage::dissolveToPoint:fraction: not bound
+!missing-selector! NSImageNSImage::dissolveToPoint:fromRect:fraction: not bound
+!missing-selector! NSImageNSImage::initWithIconRef: not bound
+!missing-selector! NSImageNSImage::isCachedSeparately not bound
+!missing-selector! NSImageNSImage::isDataRetained not bound
+!missing-selector! NSImageNSImage::lockFocusOnRepresentation: not bound
+!missing-selector! NSImageNSImage::scalesWhenResized not bound
+!missing-selector! NSImageNSImage::setCacheDepthMatchesImageDepth: not bound
+!missing-selector! NSImageNSImage::setCachedSeparately: not bound
+!missing-selector! NSImageNSImage::setDataRetained: not bound
+!missing-selector! NSImageNSImage::setScalesWhenResized: not bound
