@@ -3940,9 +3940,9 @@ public class HandlerTest
 	public void Test ()
 	{{
 		var client = new System.Net.Http.HttpClient ();
-		var field = client.GetType ().BaseType.GetField (""handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+		var field = client.GetType ().BaseType.GetField (""_handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 		if (field == null)
-			throw new System.Exception (""Could not find the field 'handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
+			throw new System.Exception (""Could not find the field '_handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
 		var fieldValue = field.GetValue (client);
 		if (fieldValue == null)
 			throw new System.Exception (""Unexpected null value found in 'HttpMessageInvoker.handler' field."");

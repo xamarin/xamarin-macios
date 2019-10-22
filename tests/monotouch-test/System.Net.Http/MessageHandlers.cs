@@ -14,6 +14,7 @@ using System.IO;
 
 using NUnit.Framework;
 using System.Net.Http.Headers;
+using System.Security.Authentication;
 using System.Text;
 using Foundation;
 #if MONOMAC
@@ -169,29 +170,35 @@ namespace MonoTests.System.Net.Http
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
-#if __MACOS__
-			if (handlerType == typeof (NSUrlSessionHandler) && TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10, 0) && !TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11, 0))
-				Assert.Ignore ("Fails on macOS 10.10: https://github.com/xamarin/maccore/issues/1645");
-#endif
-
-			bool servicePointManagerCbWasExcuted = false;
+			bool validationCbWasExecuted = false;
+			bool customValidationCbWasExecuted = false;
+			bool invalidServicePointManagerCbWasExcuted = false;
 			bool done = false;
 			Exception ex = null;
+			Type expectedExceptionType = null;
 			HttpResponseMessage result = null;
 
 			var handler = GetHandler (handlerType);
-			if (handler is NSUrlSessionHandler ns) {
+			if (handler is HttpClientHandler ch) {
+				expectedExceptionType = typeof (AuthenticationException);
+				ch.ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => {
+					validationCbWasExecuted = true;
+					// return false, since we want to test that the exception is raised
+					return false;
+				};
+				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
+					invalidServicePointManagerCbWasExcuted = true;
+					return false;
+				};
+			} else if (handler is NSUrlSessionHandler ns) {
+				expectedExceptionType = typeof (WebException);
 				ns.TrustOverride += (a,b) => {
-					servicePointManagerCbWasExcuted = true;
+					validationCbWasExecuted = true;
 					// return false, since we want to test that the exception is raised
 					return false;
 				};
 			} else {
-				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
-					servicePointManagerCbWasExcuted = true;
-					// return false, since we want to test that the exception is raised
-					return false;
-				};
+				Assert.Fail ($"Invalid HttpMessageHandler: '{handler.GetType ()}'.");
 			}
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
@@ -213,11 +220,14 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
+				// the ServicePointManager.ServerCertificateValidationCallback will never be executed.
+				Assert.False(invalidServicePointManagerCbWasExcuted);
+				Assert.True(validationCbWasExecuted);
 				// assert the exception type
 				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
 				Assert.IsInstanceOfType (typeof (HttpRequestException), ex);
 				Assert.IsNotNull (ex.InnerException);
-				Assert.IsInstanceOfType (typeof (WebException), ex.InnerException);
+				Assert.IsInstanceOfType (expectedExceptionType, ex.InnerException);
 			}
 		}
 
