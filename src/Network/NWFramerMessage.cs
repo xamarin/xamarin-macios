@@ -30,6 +30,9 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_protocol_create_message (OS_nw_protocol_definition definition);
 
+		// nw_framer_protocol can be condisered to be a nw_framer which is a protocol and is mapped to NWFramer, for a
+		// detailed explanation of the reasoning behind the naming please read the following discussion:
+		// https://github.com/xamarin/xamarin-macios/pull/7256#discussion_r337066971
 		public static NWFramerMessage Create (NWProtocolDefinition protocolDefinition)
 		{
 			if (protocolDefinition == null)
