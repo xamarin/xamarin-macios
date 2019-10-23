@@ -40,6 +40,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string ExtraArgs { get; set; }
 
+		public int Verbosity { get; set; }
+
 		public string GeneratedSourcesDir { get; set; }
 
 		public string GeneratedSourcesFileList { get; set; }
@@ -219,6 +221,10 @@ namespace Xamarin.MacDev.Tasks {
 					cmd.AppendTextUnquoted (StringParserService.Parse (argument, customTags));
 				}
 			}
+
+			var v = VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity);
+			if (v.Length > 0)
+				cmd.AppendTextUnquoted (v);
 
 			return cmd.ToString ();
 		}
