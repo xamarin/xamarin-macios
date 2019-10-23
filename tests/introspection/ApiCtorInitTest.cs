@@ -481,7 +481,14 @@ namespace Introspection {
 				if (ctor.ToString () == $"Void .ctor(System.String)")
 					return true;
 				break;
-
+			case "NSMenuToolbarItem": // No ctor specified
+				if (ctor.ToString () == $"Void .ctor(System.String)")
+					return true;
+				break;
+			case "NSStepperTouchBarItem": // You are meant to use the static factory methods
+				if (ctor.ToString () == $"Void .ctor(System.String)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

@@ -27059,4 +27059,372 @@ namespace AppKit {
 		[NullAllowed, Export ("bottom")]
 		NSCollectionLayoutSpacing Bottom { get; }
 	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSupplementaryItem : NSCopying
+	{
+		[Static]
+		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:")]
+		NSCollectionLayoutSupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor);
+
+		[Static]
+		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:itemAnchor:")]
+		NSCollectionLayoutSupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor, NSCollectionLayoutAnchor itemAnchor);
+
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Export ("elementKind")]
+		string ElementKind { get; }
+
+		[Export ("containerAnchor")]
+		NSCollectionLayoutAnchor ContainerAnchor { get; }
+
+		[NullAllowed, Export ("itemAnchor")]
+		NSCollectionLayoutAnchor ItemAnchor { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutItem : NSCopying
+	{
+		[Static]
+		[Export ("itemWithLayoutSize:")]
+		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize);
+
+		[Static]
+		[Export ("itemWithLayoutSize:supplementaryItems:")]
+		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize, NSCollectionLayoutSupplementaryItem[] supplementaryItems);
+
+		[Export ("contentInsets", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets ContentInsets { get; set; }
+
+		[NullAllowed, Export ("edgeSpacing", ArgumentSemantic.Copy)]
+		NSCollectionLayoutEdgeSpacing EdgeSpacing { get; set; }
+
+		[Export ("layoutSize")]
+		NSCollectionLayoutSize LayoutSize { get; }
+
+		[Export ("supplementaryItems")]
+		NSCollectionLayoutSupplementaryItem[] SupplementaryItems { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutSupplementaryItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutBoundarySupplementaryItem : NSCopying
+	{
+		[Static]
+		[Export ("boundarySupplementaryItemWithLayoutSize:elementKind:alignment:")]
+		NSCollectionLayoutBoundarySupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment);
+
+		[Static]
+		[Export ("boundarySupplementaryItemWithLayoutSize:elementKind:alignment:absoluteOffset:")]
+		NSCollectionLayoutBoundarySupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment, CGPoint absoluteOffset);
+
+		[Export ("extendsBoundary")]
+		bool ExtendsBoundary { get; set; }
+
+		[Export ("pinToVisibleBounds")]
+		bool PinToVisibleBounds { get; set; }
+
+		[Export ("alignment")]
+		NSRectAlignment Alignment { get; }
+
+		[Export ("offset")]
+		CGPoint Offset { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutDecorationItem : NSCopying
+	{
+		[Static]
+		[Export ("backgroundDecorationItemWithElementKind:")]
+		NSCollectionLayoutDecorationItem Create (string elementKind);
+
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Export ("elementKind")]
+		string ElementKind { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutGroupCustomItem : NSCopying
+	{
+		[Static]
+		[Export ("customItemWithFrame:")]
+		NSCollectionLayoutGroupCustomItem Create (CGRect frame);
+
+		[Static]
+		[Export ("customItemWithFrame:zIndex:")]
+		NSCollectionLayoutGroupCustomItem Create (CGRect frame, nint zIndex);
+
+		[Export ("frame")]
+		CGRect Frame { get; }
+
+		[Export ("zIndex")]
+		nint ZIndex { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	interface NSCollectionViewCompositionalLayoutConfiguration : NSCopying
+	{
+		[Export ("scrollDirection", ArgumentSemantic.Assign)]
+		NSCollectionViewScrollDirection ScrollDirection { get; set; }
+
+		[Export ("interSectionSpacing")]
+		nfloat InterSectionSpacing { get; set; }
+
+		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutBoundarySupplementaryItem[] BoundarySupplementaryItems { get; set; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	interface NSColorSampler
+	{
+		[Export ("showSamplerWithSelectionHandler:")]
+		void ShowSampler (Action<NSColor> selectionHandler);
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSControl))]
+	[DesignatedDefaultCtor]
+	interface NSSwitch : NSAccessibilitySwitch
+	{
+		[Export ("state")]
+		nint State { get; set; }
+	}
+
+	interface INSCollectionLayoutContainer { }
+
+	[Mac (10,15)]
+	[Protocol]
+	interface NSCollectionLayoutContainer
+	{
+		[Abstract]
+		[Export ("contentSize")]
+		CGSize ContentSize { get; }
+
+		[Abstract]
+		[Export ("effectiveContentSize")]
+		CGSize EffectiveContentSize { get; }
+
+		[Abstract]
+		[Export ("contentInsets")]
+		NSDirectionalEdgeInsets ContentInsets { get; }
+
+		[Abstract]
+		[Export ("effectiveContentInsets")]
+		NSDirectionalEdgeInsets EffectiveContentInsets { get; }
+	}
+
+	[Mac (10,15)]
+	[Protocol]
+	interface NSCollectionLayoutEnvironment
+	{
+		[Abstract]
+		[Export ("container")]
+		INSCollectionLayoutContainer Container { get; }
+	}
+
+	interface INSCollectionLayoutEnvironment { }
+
+	delegate NSCollectionLayoutGroupCustomItem[] NSCollectionLayoutGroupCustomItemProvider (INSCollectionLayoutEnvironment layout);
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutGroup : NSCopying
+	{
+		[Static]
+		[Export ("horizontalGroupWithLayoutSize:subitem:count:")]
+		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+
+		[Static]
+		[Export ("horizontalGroupWithLayoutSize:subitems:")]
+		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem[] subitems);
+
+		[Static]
+		[Export ("verticalGroupWithLayoutSize:subitem:count:")]
+		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+
+		[Static]
+		[Export ("verticalGroupWithLayoutSize:subitems:")]
+		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem[] subitems);
+
+		[Static]
+		[Export ("customGroupWithLayoutSize:itemProvider:")]
+		NSCollectionLayoutGroup CreateCustomGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutGroupCustomItemProvider itemProvider);
+
+		[Export ("supplementaryItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSupplementaryItem[] SupplementaryItems { get; set; }
+
+		[NullAllowed, Export ("interItemSpacing", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSpacing InterItemSpacing { get; set; }
+
+		[Export ("subitems")]
+		NSCollectionLayoutItem[] Subitems { get; }
+
+		[Export ("visualDescription")]
+		string VisualDescription { get; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSToolbarItem))]
+	interface NSMenuToolbarItem
+	{
+		[Export ("menu", ArgumentSemantic.Strong)]
+		NSMenu Menu { get; set; }
+
+		[Export ("showsIndicator")]
+		bool ShowsIndicator { get; set; }
+	}
+
+	[Mac (10,15)]
+	[Protocol]
+	interface NSCollectionLayoutVisibleItem
+	{
+		[Abstract]
+		[Export ("alpha")]
+		nfloat Alpha { get; set; }
+
+		[Abstract]
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Abstract]
+		[Export ("hidden")]
+		bool Hidden { [Bind ("isHidden")] get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint Center { get; set; }
+
+		[Abstract]
+		[Export ("name")]
+		string Name { get; }
+
+		[Abstract]
+		[Export ("indexPath")]
+		NSIndexPath IndexPath { get; }
+
+		[Abstract]
+		[Export ("frame")]
+		CGRect Frame { get; }
+
+		[Abstract]
+		[Export ("bounds")]
+		CGRect Bounds { get; }
+
+		[Abstract]
+		[Export ("representedElementCategory")]
+		NSCollectionElementCategory RepresentedElementCategory { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("representedElementKind")]
+		string RepresentedElementKind { get; }
+	}
+
+	interface INSCollectionLayoutVisibleItem { }
+
+	delegate void NSCollectionLayoutSectionVisibleItemsInvalidationHandler (INSCollectionLayoutVisibleItem[] items, CGPoint point, INSCollectionLayoutEnvironment layout);
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSection : NSCopying
+	{
+		[Static]
+		[Export ("sectionWithGroup:")]
+		NSCollectionLayoutSection Create (NSCollectionLayoutGroup group);
+
+		[Export ("contentInsets", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets ContentInsets { get; set; }
+
+		[Export ("interGroupSpacing")]
+		nfloat InterGroupSpacing { get; set; }
+
+		[Export ("orthogonalScrollingBehavior", ArgumentSemantic.Assign)]
+		NSCollectionLayoutSectionOrthogonalScrollingBehavior OrthogonalScrollingBehavior { get; set; }
+
+		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutBoundarySupplementaryItem[] BoundarySupplementaryItems { get; set; }
+
+		[Export ("supplementariesFollowContentInsets")]
+		bool SupplementariesFollowContentInsets { get; set; }
+
+		[NullAllowed, Export ("visibleItemsInvalidationHandler", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSectionVisibleItemsInvalidationHandler VisibleItemsInvalidationHandler { get; set; }
+
+		[Export ("decorationItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutDecorationItem[] DecorationItems { get; set; }
+	}
+
+	delegate NSCollectionLayoutSection NSCollectionViewCompositionalLayoutSectionProvider (nint section, INSCollectionLayoutEnvironment layout);
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionViewLayout))]
+	[DisableDefaultCtor]
+	interface NSCollectionViewCompositionalLayout
+	{
+		[Export ("initWithSection:")]
+		IntPtr Constructor (NSCollectionLayoutSection section);
+
+		[Export ("initWithSection:configuration:")]
+		IntPtr Constructor (NSCollectionLayoutSection section, NSCollectionViewCompositionalLayoutConfiguration configuration);
+
+		[Export ("initWithSectionProvider:")]
+		IntPtr Constructor (NSCollectionViewCompositionalLayoutSectionProvider sectionProvider);
+
+		[Export ("initWithSectionProvider:configuration:")]
+		IntPtr Constructor (NSCollectionViewCompositionalLayoutSectionProvider sectionProvider, NSCollectionViewCompositionalLayoutConfiguration configuration);
+
+		[Export ("configuration", ArgumentSemantic.Copy)]
+		NSCollectionViewCompositionalLayoutConfiguration Configuration { get; set; }
+	}
+
+	[Mac (10,15)]
+	[BaseType (typeof (NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSStepperTouchBarItem
+	{	
+		[Static]
+		[Export ("stepperTouchBarItemWithIdentifier:formatter:")]
+		NSStepperTouchBarItem Create (NSTouchBarItemIdentifier identifier, NSFormatter formatter);
+
+		[Static]
+		[Export ("stepperTouchBarItemWithIdentifier:drawingHandler:")]
+		NSStepperTouchBarItem Create (NSTouchBarItemIdentifier identifier, Action<CGRect, double> drawingHandler);
+
+		[Export ("maxValue")]
+		double MaxValue { get; set; }
+
+		[Export ("minValue")]
+		double MinValue { get; set; }
+
+		[Export ("increment")]
+		double Increment { get; set; }
+
+		[Export ("value")]
+		double Value { get; set; }
+
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
+		Selector Action { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
 }
