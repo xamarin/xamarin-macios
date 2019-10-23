@@ -3437,11 +3437,25 @@ namespace UIKit {
 		[Export ("application:viewControllerWithRestorationIdentifierPath:coder:")]
 		UIViewController GetViewController (UIApplication application, string [] restorationIdentifierComponents, NSCoder coder);
 
+		[Deprecated (PlatformName.iOS, 13, 2, message: "Use 'ShouldSaveSecureApplicationState' instead")]
+		[Deprecated (PlatformName.TvOS, 13, 2, message: "Use 'ShouldSaveSecureApplicationState' instead")]
 		[Export ("application:shouldSaveApplicationState:")]
 		bool ShouldSaveApplicationState (UIApplication application, NSCoder coder);
 
+		[iOS (13,2)]
+		[TV (13,2)]
+		[Export ("application:shouldSaveSecureApplicationState:")]
+		bool ShouldSaveSecureApplicationState (UIApplication application, NSCoder coder);
+
+		[Deprecated (PlatformName.iOS, 13, 2, message: "Use 'ShouldRestoreSecureApplicationState' instead")]
+		[Deprecated (PlatformName.TvOS, 13, 2, message: "Use 'ShouldRestoreSecureApplicationState' instead")]
 		[Export ("application:shouldRestoreApplicationState:")]
 		bool ShouldRestoreApplicationState (UIApplication application, NSCoder coder);
+
+		[iOS (13,2)]
+		[TV (13,2)]
+		[Export ("application:shouldRestoreSecureApplicationState:")]
+		bool ShouldRestoreSecureApplicationState (UIApplication application, NSCoder coder);
 
 		[Export ("application:willEncodeRestorableStateWithCoder:")]
 		void WillEncodeRestorableState (UIApplication application, NSCoder coder);
