@@ -32,14 +32,9 @@ namespace MonoTouchFixtures.Network {
 
 		void ConnectionStateHandler (NWConnectionState state, NWError error)
 		{
-			Console.WriteLine ($"State is {state} and error {error}");
 			switch (state){
 			case NWConnectionState.Ready:
 				connectedEvent.Set ();
-				break;
-			case NWConnectionState.Cancelled:
-				connection?.Dispose ();
-				connection = null;
 				break;
 			case NWConnectionState.Invalid:
 			case NWConnectionState.Failed:
@@ -71,7 +66,6 @@ namespace MonoTouchFixtures.Network {
 				connection.Start (); 
 				Assert.True (connectedEvent.WaitOne (20000), "Connection timed out.");
 				connection.GetEstablishmentReport (DispatchQueue.DefaultGlobalQueue, (r) => {
-					Console.WriteLine ("Got report");
 					report = r;
 					reportEvent.Set ();
 				});
@@ -82,8 +76,8 @@ namespace MonoTouchFixtures.Network {
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-			connection?.Cancel ();
 			report.Dispose ();
+			connection.Dispose ();
 		}
 
 		[Test]

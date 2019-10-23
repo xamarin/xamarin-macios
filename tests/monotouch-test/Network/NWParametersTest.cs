@@ -58,7 +58,9 @@ namespace MonoTouchFixtures.Network {
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-			connection?.Cancel ();
+			connection.Dispose ();
+			foreach (var i in interfaces)
+				i.Dispose ();
 		}
 
 		[SetUp]
@@ -77,10 +79,6 @@ namespace MonoTouchFixtures.Network {
  				connectedEvent.Set ();
  				break;
  			case NWConnectionState.Cancelled:
- 				connection?.Dispose ();
- 				connection = null;
-				foreach (var i in interfaces)
-					i.Dispose ();
 				break;
  			case NWConnectionState.Invalid:
  			case NWConnectionState.Failed:
@@ -131,7 +129,6 @@ namespace MonoTouchFixtures.Network {
 				connection.Start ();
 				secureEvent.WaitOne ();
 				configureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
 			}
@@ -148,7 +145,6 @@ namespace MonoTouchFixtures.Network {
 				connection.SetQueue (DispatchQueue.MainQueue);
 				connection.Start ();
 				secureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.False (protocolConfigured, "Protocol configure handler was called.");
 			}
@@ -165,7 +161,6 @@ namespace MonoTouchFixtures.Network {
 				connection.SetQueue (DispatchQueue.MainQueue);
 				connection.Start ();
 				configureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.False (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
 			}
@@ -184,7 +179,6 @@ namespace MonoTouchFixtures.Network {
 				connection.Start ();
 				secureEvent.WaitOne ();
 				configureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
 			}
@@ -202,7 +196,6 @@ namespace MonoTouchFixtures.Network {
 				connection.SetQueue (DispatchQueue.MainQueue);
 				connection.Start ();
 				secureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.False (protocolConfigured, "Protocol configure handler was called.");
 			}
@@ -219,7 +212,6 @@ namespace MonoTouchFixtures.Network {
 				connection.SetQueue (DispatchQueue.MainQueue);
 				connection.Start ();
 				configureEvent.WaitOne ();
-				connection.Cancel ();
 				Assert.False (secureConnectionWasSet, "Configure TLS handler was called.");
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
 			}

@@ -32,12 +32,6 @@ namespace MonoTouchFixtures.Network {
 			case NWConnectionState.Ready:
 				connectedEvent.Set ();
 				break;
-			case NWConnectionState.Cancelled:
-				connection?.Dispose ();
-				connection = null;
-				stack?.Dispose ();
-				stack = null;
-				break;
 			case NWConnectionState.Invalid:
 			case NWConnectionState.Failed:
 				Assert.Inconclusive ("Network connection could not be performed.");
@@ -72,7 +66,8 @@ namespace MonoTouchFixtures.Network {
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-			connection.Cancel ();
+			connection.Dispose ();
+			stack.Dispose ();
 		}
 
 		[SetUp]
