@@ -481,8 +481,6 @@ timestamps {
                         }
 
                         stage ('Signing') {
-                            def notarize_mac = true
-                            def notarize_ios = true
                             def entitlements = "${workspace}/xamarin-macios/mac-entitlements.plist"
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
@@ -503,13 +501,13 @@ timestamps {
                             if (bundleZip.length > 0)
                                 bundleZipFilename = bundleZip [0].name
 
-                            withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
-                                    sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
-                            }
-
-                            if (notarize_mac || notarize_ios) {
+                            if (isPr) {
+                              withCredentials ([string (credentialsId: 'codesign_keychain_pw', variable: 'PRODUCTSIGN_KEYCHAIN_PASSWORD')]) {
+                                sh ("${workspace}/xamarin-macios/jenkins/productsign.sh")
+                              }
+                            } else {
                                 try {
-                                    pkgs = []
+                                    pkgs = xiPackages + xmPackages
                                     if (fileExists('release-scripts')) {
                                         dir('release-scripts') {
                                             sh ('git checkout sign-and-notarized && git pull')
@@ -517,14 +515,12 @@ timestamps {
                                     } else {
                                         sh ('git clone git@github.com:xamarin/release-scripts -b sign-and-notarized')
                                     }
-                                    if (notarize_mac)
-                                        pkgs = pkgs + xmPackages
-                                    if (notarize_ios)
-                                        pkgs = pkgs + xiPackages
                                     withCredentials([string(credentialsId: 'codesign_keychain_pw', variable: 'KEYCHAIN_PASS'), string(credentialsId: 'team_id', variable: 'TEAM_ID'), string(credentialsId: 'application_id', variable: 'APP_ID'), string(credentialsId: 'installer_id', variable: 'INSTALL_ID'), usernamePassword(credentialsId: 'apple_account', passwordVariable: 'APPLE_PASS', usernameVariable: 'APPLE_ACCOUNT')]) {
                                         sh (returnStatus: true, script: "security create-keychain -p ${env.KEYCHAIN_PASS} login.keychain") // needed to repopulate the keychain
                                         sh ("security unlock-keychain -p ${env.KEYCHAIN_PASS} login.keychain")
-                                        sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} -k login.keychain " + pkgs.flatten().join(" "))
+                                        timeout(time: 90, unit: 'MINUTES') {
+                                          sh ("python release-scripts/sign_and_notarize.py -a ${env.APP_ID} -i ${env.INSTALL_ID} -u ${env.APPLE_ACCOUNT} -p ${env.APPLE_PASS} -t ${env.TEAM_ID} -d package/notarized -e ${entitlements} -k login.keychain " + pkgs.flatten ().join (" "))
+                                        }
                                     }
 
                                     def xiNotarizedPackages = findFiles (glob: "package/notarized/xamarin.ios-*.pkg")
@@ -543,7 +539,6 @@ timestamps {
                                         echo "\t${stack}"
                                     }
                                     manager.addWarningBadge("PKGs are not notarized")
-
                                 }
                             }
                         }
