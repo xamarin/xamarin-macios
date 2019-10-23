@@ -23,7 +23,6 @@ namespace MonoTouchFixtures.Network {
 	public class NWListenerTest {
 
 		NWListener listener;
-		NWParameters parameters;
 
 		[TestFixtureSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
@@ -31,15 +30,20 @@ namespace MonoTouchFixtures.Network {
 		[SetUp]
 		public void SetUp ()
 		{
-			parameters = new NWParameters ();
-			listener = NWListener.Create (parameters);
+			using (var tcpOptions = NWProtocolOptions.CreateTcp ())
+			using (var tlsOptions = NWProtocolOptions.CreateTls ())
+			using (var parameters = NWParameters.CreateTcp ()) {
+				parameters.ProtocolStack.PrependApplicationProtocol (tlsOptions);
+				parameters.ProtocolStack.PrependApplicationProtocol (tcpOptions);
+				parameters.IncludePeerToPeer = true;
+				listener = NWListener.Create ("1234", parameters);
+			}
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
 			listener?.Dispose ();
-			parameters?.Dispose ();
 		}
 
 		[Test]
