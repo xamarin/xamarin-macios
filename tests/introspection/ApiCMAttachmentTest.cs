@@ -237,6 +237,7 @@ namespace Introspection {
 			case "ABSource": // not skipped when running on iOS 6.1
 			// type was removed in iOS 10 (and replaced) and never consumed by other API
 			case "CGColorConverter":
+			case "OSLog": // c api, no need to check
 				return true;
 			default:
  				return false;
