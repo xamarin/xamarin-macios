@@ -120,6 +120,7 @@ namespace TVMLKit {
 	[ErrorDomain ("TVMLKitErrorDomain")]
 	public enum TVMLKitError : long {
 		Unknown = 1,
+        InvalidArguments,
 		InternetUnavailable,
 		FailedToLaunch,
 		Last
