@@ -1,4 +1,0 @@
-!missing-selector! +SKArcadeService::arcadeSubscriptionStatusWithNonce:resultHandler: not bound
-!missing-selector! +SKArcadeService::registerArcadeAppWithRandomFromLib:randomFromLibLength:resultHandler: not bound
-!missing-selector! +SKArcadeService::repairArcadeApp not bound
-!missing-type! SKArcadeService not bound
