@@ -6542,7 +6542,8 @@ namespace AppKit {
 		[Mac (10,15)]
 		[Static]
 		[Export ("monospacedSystemFontOfSize:weight:")]
-		NSFont MonospacedSystemFontOfSize (nfloat fontSize, double weight);
+		[Internal]
+		IntPtr _MonospacedSystemFont (nfloat fontSize, double weight);
 	}
 
 	interface NSFontCollectionChangedEventArgs {
@@ -6769,7 +6770,7 @@ namespace AppKit {
 		[Mac (10,15)]
 		[Export ("fontDescriptorWithDesign:")]
 		[return: NullAllowed]
-		NSFontDescriptor FontDescriptorWithDesign (string design);
+		NSFontDescriptor FontDescriptorWithDesign (NSFontDescriptorSystemDesign design);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -19806,12 +19807,10 @@ namespace AppKit {
 		[Export ("autovalidates")]
 		bool Autovalidates { get; set; }
 
-		// @property (copy) NSString * _Nonnull title __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0)));
 		[Mac (10, 15)]
 		[Export ("title")]
 		string Title { get; set; }
 
-		// @property (getter = isBordered) BOOL bordered __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0)));
 		[Mac (10, 15)]
 		[Export ("bordered")]
 		bool Bordered { [Bind ("isBordered")] get; set; }
@@ -19830,12 +19829,12 @@ namespace AppKit {
 		[Mac (10,15)]
 		[Static]
 		[Export ("groupWithItemIdentifier:titles:selectionMode:labels:target:action:")]
-		NSToolbarItemGroup CreateGroup (string itemIdentifier, string[] titles, NSToolbarItemGroupSelectionMode selectionMode, [NullAllowed] string[] labels, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSToolbarItemGroup Create (string itemIdentifier, string[] titles, NSToolbarItemGroupSelectionMode selectionMode, [NullAllowed] string[] labels, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,15)]
 		[Static]
 		[Export ("groupWithItemIdentifier:images:selectionMode:labels:target:action:")]
-		NSToolbarItemGroup CreateGroup (string itemIdentifier, NSImage[] images, NSToolbarItemGroupSelectionMode selectionMode, [NullAllowed] string[] labels, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSToolbarItemGroup Create (string itemIdentifier, NSImage[] images, NSToolbarItemGroupSelectionMode selectionMode, [NullAllowed] string[] labels, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10, 15)]
 		[Export ("controlRepresentation", ArgumentSemantic.Assign)]
@@ -27619,7 +27618,7 @@ namespace AppKit {
 		[Abstract]
 		[Export ("annotatedSubstringForProposedRange:actualRange:")]
 		[return: NullAllowed]
-		unsafe NSAttributedString AnnotatedSubstring (NSRange range, [NullAllowed] NSRange actualRange); //unsafe?
+		NSAttributedString AnnotatedSubstring (NSRange range, [NullAllowed] NSRange actualRange);
 
 		[Abstract]
 		[Export ("setAnnotations:range:")]
@@ -27644,17 +27643,16 @@ namespace AppKit {
 		[Abstract]
 		[Export ("viewForRange:firstRect:actualRange:")]
 		[return: NullAllowed]
-		unsafe NSView View (NSRange range, [NullAllowed] CGRect firstRect, [NullAllowed] NSRange actualRange); //unsafe?
+		NSView GetView (NSRange range, [NullAllowed] CGRect firstRect, [NullAllowed] NSRange actualRange);
 
 		[Abstract]
 		[NullAllowed, Export ("candidateListTouchBarItem")]
-		// [Verify (MethodToProperty)]
 		NSCandidateListTouchBarItem CandidateListTouchBarItem { get; }
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
-	interface NSWorkspaceOpenConfiguration : NSCopying, INSCopying
+	[BaseType (typeof (NSObject))]
+	interface NSWorkspaceOpenConfiguration : NSCopying
 	{
 		[Static]
 		[Export ("configuration")]
@@ -27701,7 +27699,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTextCheckingController
 	{
@@ -27755,23 +27753,22 @@ namespace AppKit {
 		void UpdateCandidates ();
 
 		[Export ("validAnnotations")]
-		// [Verify (MethodToProperty)]
 		string[] ValidAnnotations { get; }
 
 		[Export ("menuAtIndex:clickedOnSelection:effectiveRange:")]
 		[return: NullAllowed]
-		unsafe NSMenu MenuAtIndex (nuint location, bool clickedOnSelection, NSRange effectiveRange); //unsafe why? Convert NSRangePointer to NSRange or use Intptr
+		NSMenu MenuAtIndex (nuint location, bool clickedOnSelection, NSRange effectiveRange);
 
 		[Export ("spellCheckerDocumentTag")]
 		nint SpellCheckerDocumentTag { get; set; }
 	}
 
-	delegate NSCollectionViewItem NSCollectionViewDiffableDataSourceItemProvider (NSCollectionView collectionView, NSIndexPath indexPath, NSObject arg2);
+	delegate NSCollectionViewItem NSCollectionViewDiffableDataSourceItemProvider (NSCollectionView collectionView, NSIndexPath indexPath, NSObject itemIdentifierType);
 
-	delegate NSView NSCollectionViewDiffableDataSourceSupplementaryViewProvider (NSCollectionView collectionView, string arg1, NSIndexPath indexPath);
+	delegate NSView NSCollectionViewDiffableDataSourceSupplementaryViewProvider (NSCollectionView collectionView, string str, NSIndexPath indexPath);
 
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSCollectionViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType> : NSCollectionViewDataSource
 		where SectionIdentifierType : NSObject
@@ -27781,7 +27778,6 @@ namespace AppKit {
 		IntPtr Constructor (NSCollectionView collectionView, NSCollectionViewDiffableDataSourceItemProvider itemProvider);
 
 		[Export ("snapshot")]
-		// [Verify (MethodToProperty)]
 		NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> Snapshot { get; }
 
 		[Export ("applySnapshot:animatingDifferences:")]
@@ -27819,7 +27815,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,15), iOS (10,13)]
-	[BaseType (typeof(NSToolbarItem))]
+	[BaseType (typeof (NSToolbarItem))]
 	interface NSSharingServicePickerToolbarItem
 	{
 		[Wrap ("WeakDelegate")]
@@ -27833,7 +27829,7 @@ namespace AppKit {
 	public interface INSSharingServicePickerToolbarItemDelegate { }
 
 	[Protocol, Model (AutoGeneratedName = true)]
-	[BaseType (typeof(NSSharingServicePickerDelegate))]
+	[BaseType (typeof (NSSharingServicePickerDelegate))]
 	interface NSSharingServicePickerToolbarItemDelegate
 	{
 		[Abstract]
