@@ -389,7 +389,7 @@ wrench-launch-external wrench-report-external:
 
 # This will schedule a manual device test run for the current commit. The current commit must already have packages.
 launch-manual-device-tests:
-	$(MAKE) -C $(MACCORE_PATH)/tests/external wrench-launch-device-builds BUILD_LANE=$(shell git rev-parse --abbrev-ref HEAD) BUILD_REVISION=$(shell git log -1 --pretty=format:%H) BUILD_WORK_HOST=bot WRENCH_URL=https://github.com/xamarin/xamarin-macios/commit/$(shell git log -1 --pretty=format:%H)
+	./launch-manual-device-tests.sh
 
 else
 wrench-launch-external wrench-report-external:
