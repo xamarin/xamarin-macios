@@ -148,6 +148,48 @@ namespace Metal {
 			fixed (void * handle = positions)
 				GetDefaultSamplePositions (This, (IntPtr)handle, count);
 		}
+#if IOS
+
+		[NoMac, NoTV, iOS (13,0)]
+		public static void ConvertSparseTileRegions (this IMTLDevice This, MTLRegion [] tileRegions, MTLRegion [] pixelRegions, MTLSize tileSize, nuint numRegions)
+		{
+			if (tileRegions == null)
+				throw new ArgumentNullException (nameof (tileRegions));
+			if (pixelRegions == null)
+				throw new ArgumentNullException (nameof (pixelRegions));
+
+			var tileRegionsHandle = GCHandle.Alloc (tileRegions, GCHandleType.Pinned);
+			var pixelRegionsHandle = GCHandle.Alloc (pixelRegions, GCHandleType.Pinned);
+			try {
+				IntPtr tilePtr = tileRegionsHandle.AddrOfPinnedObject ();
+				IntPtr pixelPtr = pixelRegionsHandle.AddrOfPinnedObject ();
+				This.ConvertSparseTileRegions (tilePtr, pixelPtr, tileSize, numRegions);
+			} finally {
+				tileRegionsHandle.Free ();
+				pixelRegionsHandle.Free ();
+			}
+		}
+
+		[NoMac, NoTV, iOS (13,0)]
+		public static void ConvertSparsePixelRegions (this IMTLDevice This, MTLRegion [] pixelRegions, MTLRegion [] tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions)
+		{
+			if (tileRegions == null)
+				throw new ArgumentNullException (nameof (tileRegions));
+			if (pixelRegions == null)
+				throw new ArgumentNullException (nameof (pixelRegions));
+
+			var tileRegionsHandle = GCHandle.Alloc (tileRegions, GCHandleType.Pinned);
+			var pixelRegionsHandle = GCHandle.Alloc (pixelRegions, GCHandleType.Pinned);
+			try {
+				IntPtr tilePtr = tileRegionsHandle.AddrOfPinnedObject ();
+				IntPtr pixelPtr = pixelRegionsHandle.AddrOfPinnedObject ();
+				This.ConvertSparsePixelRegions (pixelPtr, tilePtr, tileSize, mode, numRegions);
+			} finally {
+				tileRegionsHandle.Free ();
+				pixelRegionsHandle.Free ();
+			}
+		}
+#endif
 
 #if !XAMCORE_4_0
 		[return: Release]

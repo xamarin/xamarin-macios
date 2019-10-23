@@ -51,3 +51,6 @@ Platform32:System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestRem
 Platform32:System.Threading.Tasks.Tests.TaskRtTests_Core.RunLongRunningTaskTests
 Platform32:System.Threading.Tasks.Tests.TaskRtTests_Core.TestTaskTConstruction_tco
 Platform32:Test.TaskContinueWhenAnyTests.RunContinueWhenAnyTests
+
+# Test running out of memory
+Platform32:System.Collections.Tests.BitArray_OperatorsTests.Xor_Operator(l: [False, True, False, True, False, ...], r: [True, True, True, True, True, ...], expected: [True, False, True, False, True, ...])

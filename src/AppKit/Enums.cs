@@ -2154,10 +2154,204 @@ namespace AppKit {
 		Bottom
 	}
 
-	public static class NSFileTypeForHFSTypeCode {
+#if !XAMCORE_4_0
+	public static class NSFileTypeForHFSTypeCode
+	{
 		public static readonly string ComputerIcon = "root";
 		public static readonly string DesktopIcon = "desk";
 		public static readonly string FinderIcon = "FNDR";
+	}
+#endif
+
+	// FileType 4cc values to use with NSFileTypeForHFSTypeCode.
+	public enum HfsTypeCode : uint
+	{
+		/* Generic Finder icons */
+		ClipboardIcon                 = 0x434C4950,   //'CLIP'
+		ClippingUnknownTypeIcon       = 0x636C7075,   //'clpu'
+		ClippingPictureTypeIcon       = 0x636C7070,   //'clpp'
+		ClippingTextTypeIcon          = 0x636C7074,   //'clpt'
+		ClippingSoundTypeIcon         = 0x636C7073,   //'clps'
+		DesktopIcon                   = 0x6465736B,   //'desk'
+		FinderIcon                    = 0x464E4452,   //'FNDR'
+		ComputerIcon                  = 0x726F6F74,   //'root'
+		FontSuitcaseIcon              = 0x4646494C,   //'FFIL'
+		FullTrashIcon                 = 0x66747268,   //'ftrh'
+		GenericApplicationIcon        = 0x4150504C,   //'APPL'
+		GenericCdromIcon              = 0x63646472,   //'cddr'
+		GenericControlPanelIcon       = 0x41505043,   //'APPC'
+		GenericControlStripModuleIcon = 0x73646576,   //'sdev'
+		GenericComponentIcon          = 0x74686E67,   //'thng'
+		GenericDeskAccessoryIcon      = 0x41505044,   //'APPD'
+		GenericDocumentIcon           = 0x646F6375,   //'docu'
+		GenericEditionFileIcon        = 0x65647466,   //'edtf'
+		GenericExtensionIcon          = 0x494E4954,   //'INIT'
+		GenericFileServerIcon         = 0x73727672,   //'srvr'
+		GenericFontIcon               = 0x6666696C,   //'ffil'
+		GenericFontScalerIcon         = 0x73636C72,   //'sclr'
+		GenericFloppyIcon             = 0x666C7079,   //'flpy'
+		GenericHardDiskIcon           = 0x6864736B,   //'hdsk'
+		GenericIDiskIcon              = 0x6964736B,   //'idsk'
+		GenericRemovableMediaIcon     = 0x726D6F76,   //'rmov'
+		GenericMoverObjectIcon        = 0x6D6F7672,   //'movr'
+		GenericPCCardIcon             = 0x70636D63,   //'pcmc'
+		GenericPreferencesIcon        = 0x70726566,   //'pref'
+		GenericQueryDocumentIcon      = 0x71657279,   //'qery'
+		GenericRamDiskIcon            = 0x72616D64,   //'ramd'
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'GenericSharedLibraryIcon' instead.")]
+		GenericSharedLibaryIcon       = 0x73686C62,   //'shlb'
+#endif
+		GenericSharedLibraryIcon      = 0x73686C62,   //'shlb'
+		GenericStationeryIcon         = 0x73646F63,   //'sdoc'
+		GenericSuitcaseIcon           = 0x73756974,   //'suit'
+		GenericUrlIcon                = 0x6775726C,   //'gurl'
+		GenericWormIcon               = 0x776F726D,   //'worm'
+		InternationalResourcesIcon    = 0x6966696C,   //'ifil'
+		KeyboardLayoutIcon            = 0x6B66696C,   //'kfil'
+		SoundFileIcon                 = 0x7366696C,   //'sfil'
+		SystemSuitcaseIcon            = 0x7A737973,   //'zsys'
+		TrashIcon                     = 0x74727368,   //'trsh'
+		TrueTypeFontIcon              = 0x7466696C,   //'tfil'
+		TrueTypeFlatFontIcon          = 0x73666E74,   //'sfnt'
+		TrueTypeMultiFlatFontIcon     = 0x74746366,   //'ttcf'
+		UserIDiskIcon                 = 0x7564736B,   //'udsk'
+		UnknownFSObjectIcon           = 0x756E6673,   //'unfs'
+
+		/* Internet locations */
+		InternetLocationHttpIcon            = 0x696C6874,   //'ilht'
+		InternetLocationFtpIcon             = 0x696C6674,   //'ilft'
+		InternetLocationAppleShareIcon      = 0x696C6166,   //'ilaf'
+		InternetLocationAppleTalkZoneIcon   = 0x696C6174,   //'ilat'
+		InternetLocationFileIcon            = 0x696C6669,   //'ilfi'
+		InternetLocationMailIcon            = 0x696C6D61,   //'ilma'
+		InternetLocationNewsIcon            = 0x696C6E77,   //'ilnw'
+		InternetLocationNslNeighborhoodIcon = 0x696C6E73,   //'ilns'
+		InternetLocationGenericIcon         = 0x696C6765,   //'ilge'
+
+		/* Folders */
+		GenericFolderIcon = 0x666C6472,   //'fldr'
+		DropFolderIcon    = 0x64626F78,   //'dbox'
+		MountedFolderIcon = 0x6D6E7464,   //'mntd'
+		OpenFolderIcon    = 0x6F666C64,   //'ofld'
+		OwnedFolderIcon   = 0x6F776E64,   //'ownd'
+		PrivateFolderIcon = 0x70727666,   //'prvf'
+		SharedFolderIcon  = 0x7368666C,   //'shfl'
+
+		/* Sharingprivileges icons */
+		SharingPrivsNotApplicableIcon = 0x73686E61,   //'shna'
+		SharingPrivsReadOnlyIcon      = 0x7368726F,   //'shro'
+		SharingPrivsReadWriteIcon     = 0x73687277,   //'shrw'
+		SharingPrivsUnknownIcon       = 0x7368756B,   //'shuk'
+		SharingPrivsWritableIcon      = 0x77726974,   //'writ'
+
+		/* Users and Groups icons */
+		UserFolderIcon      = 0x75666C64,   //'ufld'
+		WorkgroupFolderIcon = 0x77666C64,   //'wfld'
+		GuestUserIcon       = 0x67757372,   //'gusr'
+		UserIcon            = 0x75736572,   //'user'
+		OwnerIcon           = 0x73757372,   //'susr'
+		GroupIcon           = 0x67727570,   //'grup'
+
+		/* Special folders */
+		AppearanceFolderIcon              = 0x61707072,   //'appr'
+		AppleMenuFolderIcon               = 0x616D6E75,   //'amnu'
+		ApplicationsFolderIcon            = 0x61707073,   //'apps'
+		ApplicationSupportFolderIcon      = 0x61737570,   //'asup'
+		ColorSyncFolderIcon               = 0x70726F66,   //'prof'
+		ContextualMenuItemsFolderIcon     = 0x636D6E75,   //'cmnu'
+		ControlPanelDisabledFolderIcon    = 0x63747244,   //'ctrD'
+		ControlPanelFolderIcon            = 0x6374726C,   //'ctrl'
+		DocumentsFolderIcon               = 0x646F6373,   //'docs'
+		ExtensionsDisabledFolderIcon      = 0x65787444,   //'extD'
+		ExtensionsFolderIcon              = 0x6578746E,   //'extn'
+		FavoritesFolderIcon               = 0x66617673,   //'favs'
+		FontsFolderIcon                   = 0x666F6E74,   //'font'
+		InternetSearchSitesFolderIcon     = 0x69737366,   //'issf'
+		PublicFolderIcon                  = 0x70756266,   //'pubf'
+		PrinterDescriptionFolderIcon      = 0x70706466,   //'ppdf'
+		PrintMonitorFolderIcon            = 0x70726E74,   //'prnt'
+		RecentApplicationsFolderIcon      = 0x72617070,   //'rapp'
+		RecentDocumentsFolderIcon         = 0x72646F63,   //'rdoc'
+		RecentServersFolderIcon           = 0x72737276,   //'rsrv'
+		ShutdownItemsDisabledFolderIcon   = 0x73686444,   //'shdD'
+		ShutdownItemsFolderIcon           = 0x73686466,   //'shdf'
+		SpeakableItemsFolder              = 0x73706B69,   //'spki'
+		StartupItemsDisabledFolderIcon    = 0x73747244,   //'strD'
+		StartupItemsFolderIcon            = 0x73747274,   //'strt'
+		SystemExtensionDisabledFolderIcon = 0x6D616344,   //'macD'
+		SystemFolderIcon                  = 0x6D616373,   //'macs'
+		VoicesFolderIcon                  = 0x66766F63,   //'fvoc'
+
+		/* Badges */
+		AppleScriptBadgeIcon  = 0x73637270,   //'scrp'
+		LockedBadgeIcon       = 0x6C626467,   //'lbdg'
+		MountedBadgeIcon      = 0x6D626467,   //'mbdg'
+		SharedBadgeIcon       = 0x73626467,   //'sbdg'
+		AliasBadgeIcon        = 0x61626467,   //'abdg'
+		AlertCautionBadgeIcon = 0x63626467,   //'cbdg'
+
+		/* Alert icons */
+		AlertNoteIcon    = 0x6E6F7465,   //'note'
+		AlertCautionIcon = 0x63617574,   //'caut'
+		AlertStopIcon    = 0x73746F70,   //'stop'
+
+		/* Networking icons */
+		AppleTalkIcon      = 0x61746C6B,   //'atlk'
+		AppleTalkZoneIcon  = 0x61747A6E,   //'atzn'
+		AfpServerIcon      = 0x61667073,   //'afps'
+		FtpServerIcon      = 0x66747073,   //'ftps'
+		HttpServerIcon     = 0x68747073,   //'htps'
+		GenericNetworkIcon = 0x676E6574,   //'gnet'
+		IPFileServerIcon   = 0x69737276,   //'isrv'
+
+		/* Toolbar icons */
+		ToolbarCustomizeIcon          = 0x74637573,   //'tcus'
+		ToolbarDeleteIcon             = 0x7464656C,   //'tdel'
+		ToolbarFavoritesIcon          = 0x74666176,   //'tfav'
+		ToolbarHomeIcon               = 0x74686F6D,   //'thom'
+		ToolbarAdvancedIcon           = 0x74626176,   //'tbav'
+		ToolbarInfoIcon               = 0x7462696E,   //'tbin'
+		ToolbarLabelsIcon             = 0x74626C62,   //'tblb'
+		ToolbarApplicationsFolderIcon = 0x74417073,   //'tAps'
+		ToolbarDocumentsFolderIcon    = 0x74446F63,   //'tDoc'
+		ToolbarMovieFolderIcon        = 0x744D6F76,   //'tMov'
+		ToolbarMusicFolderIcon        = 0x744D7573,   //'tMus'
+		ToolbarPicturesFolderIcon     = 0x74506963,   //'tPic'
+		ToolbarPublicFolderIcon       = 0x74507562,   //'tPub'
+		ToolbarDesktopFolderIcon      = 0x7444736B,   //'tDsk'
+		ToolbarDownloadsFolderIcon    = 0x7444776E,   //'tDwn'
+		ToolbarLibraryFolderIcon      = 0x744C6962,   //'tLib'
+		ToolbarUtilitiesFolderIcon    = 0x7455746C,   //'tUtl'
+		ToolbarSitesFolderIcon        = 0x74537473,   //'tSts'
+
+		/* Other icons */
+		AppleLogoIcon                  = 0x6361706C,   //'capl'
+		AppleMenuIcon                  = 0x7361706C,   //'sapl'
+		BackwardArrowIcon              = 0x6261726F,   //'baro'
+		FavoriteItemsIcon              = 0x66617672,   //'favr'
+		ForwardArrowIcon               = 0x6661726F,   //'faro'
+		GridIcon                       = 0x67726964,   //'grid'
+		HelpIcon                       = 0x68656C70,   //'help'
+		KeepArrangedIcon               = 0x61726E67,   //'arng'
+		LockedIcon                     = 0x6C6F636B,   //'lock'
+		NoFilesIcon                    = 0x6E66696C,   //'nfil'
+		NoFolderIcon                   = 0x6E666C64,   //'nfld'
+		NoWriteIcon                    = 0x6E777274,   //'nwrt'
+		ProtectedApplicationFolderIcon = 0x70617070,   //'papp'
+		ProtectedSystemFolderIcon      = 0x70737973,   //'psys'
+		RecentItemsIcon                = 0x72636E74,   //'rcnt'
+		ShortcutIcon                   = 0x73687274,   //'shrt'
+		SortAscendingIcon              = 0x61736E64,   //'asnd'
+		SortDescendingIcon             = 0x64736E64,   //'dsnd'
+		UnlockedIcon                   = 0x756C636B,   //'ulck'
+		ConnectToIcon                  = 0x636E6374,   //'cnct'
+		GenericWindowIcon              = 0x6777696E,   //'gwin'
+		QuestionMarkIcon               = 0x71756573,   //'ques'
+		DeleteAliasIcon                = 0x64616C69,   //'dali'
+		EjectMediaIcon                 = 0x656A6563,   //'ejec'
+		BurningIcon                    = 0x6275726E,   //'burn'
+		RightContainerArrowIcon        = 0x72636172,   //'rcar'
 	}
 	
 	// These constants specify the possible states of a drawer.

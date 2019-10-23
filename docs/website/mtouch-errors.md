@@ -966,6 +966,32 @@ This warning is shown if the assemblies names given to the `--interpreter` optio
 
 <!-- 0143-0144: used by mmp -->
 
+<a name="MT0145" />
+
+### MT0145: Please use device specific builds on WatchOS when building for Debug.
+
+This error occurs with Watch extension projects with a Debug configuration
+that is building for both ARMv7k and ARM64_32, and does not have device
+specific builds enabled.
+
+Solutions:
+
+* Enable device-specific build for the Debug configuration.
+* Choose either ARMv7k or ARM64_32 as the architecture.
+
+This restriction is only for the Debug configuration. Release configurations
+can build for both ARMv7k and ARM64_32 at the same time.
+
+<a name="MT0146" />
+
+### MT0146: ARM64_32 Debug mode requires --interpreter[=all], forcing it.
+
+This warning is shown when `--interpreter` isn't specified explicitly for ARM64_32 Debug builds. The AOT compiler can't be used because it doesn't support ARM64_32.
+
+<!-- 0147 used by mmp -->
+
+#### MM0148: Unable to parse the linker flags '{linker_flags}' from the LinkWith attribute for the library {library} in {assembly} : {exception}
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
@@ -2944,6 +2970,7 @@ An error occurred when signing the application. Please review the build log to s
 <!-- 5309 is used by mmp -->
 <!-- 5310 is used by mmp -->
 <!-- 5311 is used by mmp -->
+<!-- 5312 is used by mmp -->
 
 ## MT6xxx: mtouch internal tools error messages
 

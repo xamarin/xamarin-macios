@@ -1193,7 +1193,7 @@ namespace xharness
 
 		void BuildTestLibraries ()
 		{
-			ProcessHelper.ExecuteCommandAsync ("make", $"all -j{Environment.ProcessorCount} -C {StringUtils.Quote (Path.Combine (Harness.RootDirectory, "test-libraries"))}", MainLog, TimeSpan.FromMinutes (10)).Wait ();
+			ProcessHelper.ExecuteCommandAsync ("make", new [] { "all", $"-j{Environment.ProcessorCount}", "-C", Path.Combine (Harness.RootDirectory, "test-libraries") }, MainLog, TimeSpan.FromMinutes (10)).Wait ();
 		}
 
 		Task RunTestServer ()
@@ -2826,14 +2826,16 @@ namespace xharness
 				using (var nuget = new Process ()) {
 					nuget.StartInfo.FileName = useXIBuild && !isSolution ? Harness.XIBuildPath :
 						"/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget";
-					var args = new StringBuilder ();
-					args.Append ((useXIBuild && !isSolution ? "/" : "") + "restore "); // diff param depending on the tool
-					args.Append (StringUtils.Quote (projectPath));
+					var args = new List<string> ();
+					args.Add ((useXIBuild && !isSolution ? "/" : "") + "restore"); // diff param depending on the tool
+					args.Add (projectPath);
 					if (useXIBuild && !isSolution)
-						args.Append (" /verbosity:detailed ");
-					else
-						args.Append (" -verbosity detailed ");
-					nuget.StartInfo.Arguments = args.ToString ();
+						args.Add ("/verbosity:detailed");
+					else {
+						args.Add ("-verbosity");
+						args.Add ("detailed");
+					}
+					nuget.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					SetEnvironmentVariables (nuget);
 					LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
 
@@ -2946,16 +2948,16 @@ namespace xharness
 
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = Harness.XIBuildPath;
-					var args = new StringBuilder ();
-					args.Append ("-- ");
-					args.Append ("/verbosity:diagnostic ");
-					args.Append ($"/bl:\"{binlogPath}\" ");
+					var args = new List<string> ();
+					args.Add ("--");
+					args.Add ("/verbosity:diagnostic");
+					args.Add ($"/bl:{binlogPath}");
 					if (SpecifyPlatform)
-						args.Append ($"/p:Platform={ProjectPlatform} ");
+						args.Add ($"/p:Platform={ProjectPlatform}");
 					if (SpecifyConfiguration)
-						args.Append ($"/p:Configuration={ProjectConfiguration} ");
-					args.Append (StringUtils.Quote (ProjectFile));
-					xbuild.StartInfo.Arguments = args.ToString ();
+						args.Add ($"/p:Configuration={ProjectConfiguration}");
+					args.Add (ProjectFile);
+					xbuild.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					SetEnvironmentVariables (xbuild);
 					if (UseMSBuild)
 						xbuild.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = null;
@@ -2984,16 +2986,16 @@ namespace xharness
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
 				xbuild.StartInfo.FileName = Harness.XIBuildPath;
-				var args = new StringBuilder ();
-				args.Append ("-- ");
-				args.Append ("/verbosity:diagnostic ");
+				var args = new List<string> ();
+				args.Add ("--");
+				args.Add ("/verbosity:diagnostic");
 				if (project_platform != null)
-					args.Append ($"/p:Platform={project_platform} ");
+					args.Add ($"/p:Platform={project_platform}");
 				if (project_configuration != null)
-					args.Append ($"/p:Configuration={project_configuration} ");
-				args.Append (StringUtils.Quote (project_file)).Append (" ");
-				args.Append ("/t:Clean ");
-				xbuild.StartInfo.Arguments = args.ToString ();
+					args.Add ($"/p:Configuration={project_configuration}");
+				args.Add (project_file);
+				args.Add ("/t:Clean");
+				xbuild.StartInfo.Arguments = StringUtils.FormatArguments (args);
 				SetEnvironmentVariables (xbuild);
 				LogEvent (log, "Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				var timeout = TimeSpan.FromMinutes (1);
@@ -3113,20 +3115,21 @@ namespace xharness
 
 					proc.StartInfo.WorkingDirectory = WorkingDirectory;
 					proc.StartInfo.FileName = Harness.XIBuildPath;
-					var args = new StringBuilder ();
-					args.Append ("-t -- ");
-					args.Append (StringUtils.Quote (Path.GetFullPath (TestExecutable))).Append (' ');
-					args.Append (StringUtils.Quote (Path.GetFullPath (TestLibrary))).Append (' ');
+					var args = new List<string> ();
+					args.Add ("-t");
+					args.Add ("--");
+					args.Add (Path.GetFullPath (TestExecutable));
+					args.Add (Path.GetFullPath (TestLibrary));
 					if (IsNUnit3) {
-						args.Append ("-result=").Append (StringUtils.Quote (xmlLog)).Append (";format=nunit2 ");
-						args.Append ("--labels=All ");
+						args.Add ("-result=" + xmlLog + ";format=nunit2");
+						args.Add ("--labels=All");
 						if (InProcess)
-							args.Append ("--inprocess ");
+							args.Add ("--inprocess");
 					} else {
-						args.Append ("-xml=" + StringUtils.Quote (xmlLog)).Append (' ');
-						args.Append ("-labels ");
+						args.Add ("-xml=" + xmlLog);
+						args.Add ("-labels");
 					}
-					proc.StartInfo.Arguments = args.ToString ();
+					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					SetEnvironmentVariables (proc);
 					foreach (DictionaryEntry de in proc.StartInfo.EnvironmentVariables)
 						log.WriteLine ($"export {de.Key}={de.Value}");
@@ -3277,7 +3280,7 @@ namespace xharness
 					proc.StartInfo.FileName = Path;
 					if (IsUnitTest) {
 						var xml = Logs.CreateFile ($"test-{Platform}-{Timestamp}.xml", "NUnit results");
-						proc.StartInfo.Arguments = $"-result={StringUtils.Quote (xml)}";
+						proc.StartInfo.Arguments = StringUtils.FormatArguments ($"-result=" + xml);
 					}
 					if (!Harness.GetIncludeSystemPermissionTests (Platform, false))
 						proc.StartInfo.EnvironmentVariables ["DISABLE_SYSTEM_PERMISSION_TESTS"] = "1";

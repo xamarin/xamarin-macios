@@ -19,7 +19,7 @@ namespace Xamarin.MMP.Tests
 
 			TI.CleanUnifiedProject (projectPath);
 			TI.BuildProject (projectPath);
-			TI.RunAndAssert (Path.Combine (Path.GetDirectoryName (projectPath), $"bin/Debug/{projectName}.app/Contents/MacOS/{projectName}"), new StringBuilder (), "Run");
+			TI.RunAndAssert (Path.Combine (Path.GetDirectoryName (projectPath), $"bin/Debug/{projectName}.app/Contents/MacOS/{projectName}"), Array.Empty<string> (), "Run");
 		}
 	}
 }

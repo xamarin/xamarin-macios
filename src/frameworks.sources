@@ -718,6 +718,7 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/EnumDesktop.cs \
 	Foundation/NSObject.mac.cs \
 	Foundation/NSDateComponents.cs \
+	Foundation/XpcInterfaceAttribute.cs \
 
 FOUNDATION_SOURCES = \
 	Foundation/Additions.cs \
@@ -812,6 +813,8 @@ FOUNDATION_SOURCES = \
 	Foundation/NSUrlSession.cs \
 	Foundation/NSUserDefaults.cs \
 	Foundation/NSUuid.cs \
+	Foundation/NSXpcConnection.cs \
+	Foundation/NSXpcInterface.cs \
 	Foundation/ObjCException.cs \
 	Foundation/ToString.cs \
 	Foundation/NSItemProvider.cs \
@@ -1083,8 +1086,10 @@ METAL_SOURCES = \
 	Metal/MTLCompat.cs \
 	Metal/MTLDevice.cs \
 	Metal/MTLArrays.cs \
+	Metal/MTLRasterizationRateLayerDescriptor.cs \
 	Metal/MTLRenderCommandEncoder.cs \
 	Metal/MTLRenderPassDescriptor.cs \
+	Metal/MTLResourceStateCommandEncoder.cs \
 	Metal/MTLVertexDescriptor.cs \
 
 # MetalKit
@@ -1758,6 +1763,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/SelectorMarshaler.cs \
 	ObjCRuntime/Stret.cs \
 	ObjCRuntime/ThreadSafeAttribute.cs \
+	ObjCRuntime/TrampolineBlockBase.cs \
 	ObjCRuntime/TransientAttribute.cs \
 	ObjCRuntime/TypeConverter.cs \
 	ObjCRuntime/UserDelegateTypeAttribute.cs

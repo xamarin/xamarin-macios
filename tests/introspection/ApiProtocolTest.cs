@@ -299,6 +299,12 @@ namespace Introspection {
 					break;
 				}
 				break;
+#if !XAMCORE_4_0
+			case "MTLCounter":
+			case "MTLCounterSampleBuffer":
+			case "MTLCounterSet":
+				return true; // Incorrectly bound, will be fixed for XAMCORE_4_0.
+#endif
 			}
 			return false;
 		}

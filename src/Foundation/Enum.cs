@@ -1332,4 +1332,9 @@ namespace Foundation  {
 		UseNewRequest = 1,
 		Cancel = 2,
 	}
+
+	[Native]
+	public enum NSXpcConnectionOptions : ulong {
+		Privileged = (1 << 12),
+	}
 }

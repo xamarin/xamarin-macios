@@ -36,6 +36,7 @@ using ObjCRuntime;
 
 using NMatrix4 = global::OpenTK.NMatrix4;
 using NVector3 = global::OpenTK.NVector3;
+using Vector3 = global::OpenTK.NVector3;
 using Vector4 = global::OpenTK.Vector4;
 using Quaternion = global::OpenTK.Quaternion;
 
@@ -597,8 +598,39 @@ namespace SceneKit {
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("screenSpaceAmbientOcclusionNormalThreshold")]
 		nfloat ScreenSpaceAmbientOcclusionNormalThreshold { get; set; }
-
 #endif
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("projectionTransformWithViewportSize:")]
+		SCNMatrix4 GetProjectionTransform (CGSize viewportSize);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("bloomIterationCount")]
+		nint BloomIterationCount { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("bloomIterationSpread")]
+		nfloat BloomIterationSpread { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("grainIntensity")]
+		nfloat GrainIntensity { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("grainScale")]
+		nfloat GrainScale { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("grainIsColored")]
+		bool GrainIsColored { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("whiteBalanceTemperature")]
+		nfloat WhiteBalanceTemperature { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("whiteBalanceTint")]
+		nfloat WhiteBalanceTint { get; set; }
 	}
 
 	interface ISCNCameraControlConfiguration {}
@@ -1135,6 +1167,10 @@ namespace SceneKit {
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Field ("SCNHitTestOptionSearchMode")]
 		NSString SearchModeKey { get; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Field ("SCNHitTestOptionIgnoreLightArea")]
+		NSString IgnoreLightAreaKey { get; }
 	}
 	
 	[Watch (3,0)]
@@ -1177,6 +1213,8 @@ namespace SceneKit {
 
 #if MONOMAC
 	[iOS (8,0)]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (CAOpenGLLayer))]
 	interface SCNLayer : SCNSceneRenderer, SCNTechniqueSupport {
 //		We already pull in the Scene property from the SCNSceneRenderer protocol, no need to redefine it here.
@@ -1340,6 +1378,83 @@ namespace SceneKit {
 		[Export ("lightWithMDLLight:")]
 		SCNLight FromModelLight (MDLLight mdllight);
 #endif
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("probeType", ArgumentSemantic.Assign)]
+		SCNLightProbeType ProbeType { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("probeUpdateType", ArgumentSemantic.Assign)]
+		SCNLightProbeUpdateType ProbeUpdateType { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("probeExtents", ArgumentSemantic.Assign)]
+		Vector3 ProbeExtents {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("probeOffset", ArgumentSemantic.Assign)]
+		Vector3 ProbeOffset {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("parallaxCorrectionEnabled")]
+		bool ParallaxCorrectionEnabled { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("parallaxExtentsFactor", ArgumentSemantic.Assign)]
+		Vector3 ParallaxExtentsFactor {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("parallaxCenterOffset", ArgumentSemantic.Assign)]
+		Vector3 ParallaxCenterOffset {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[NullAllowed, Export ("probeEnvironment")]
+		SCNMaterialProperty ProbeEnvironment { get; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("areaType", ArgumentSemantic.Assign)]
+		SCNLightAreaType AreaType { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("areaExtents", ArgumentSemantic.Assign)]
+		Vector3 AreaExtents {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[NullAllowed, Export ("areaPolygonVertices", ArgumentSemantic.Copy)]
+		NSValue[] AreaPolygonVertices { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("drawsArea")]
+		bool DrawsArea { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("doubleSided")]
+		bool DoubleSided { get; set; }
 	}
 
 	[Watch (3,0)]
@@ -1365,6 +1480,10 @@ namespace SceneKit {
 		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 		[Field ("SCNLightTypeProbe")]
 		NSString Probe { get; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Field ("SCNLightTypeArea")]
+		NSString Area { get; }
 	}
 
 #if MONOMAC
@@ -1413,6 +1532,10 @@ namespace SceneKit {
 		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 		[Field ("SCNLightingModelPhysicallyBased")]
 		NSString PhysicallyBased { get; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Field ("SCNLightingModelShadowOnly")]
+		NSString ShadowOnly { get; }
 	}
 	
 	[Watch (3,0)]
@@ -1525,6 +1648,18 @@ namespace SceneKit {
 		SCNColorMask ColorBufferWriteMask { get; set; }
 
 #endif
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("clearCoat")]
+		SCNMaterialProperty ClearCoat { get; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("clearCoatRoughness")]
+		SCNMaterialProperty ClearCoatRoughness { get; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("clearCoatNormal")]
+		SCNMaterialProperty ClearCoatNormal { get; }
 	}
 
 	[Watch (3,0)]
@@ -1552,6 +1687,7 @@ namespace SceneKit {
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoWatch, NoTV]
 		[NullAllowed, Export ("borderColor", ArgumentSemantic.Retain)]
 		NSObject BorderColor { get; set; }
@@ -1625,6 +1761,8 @@ namespace SceneKit {
 		bool IgnoreHiddenNodes { get; set; }
 		SCNNode RootNode { get; set; }
 		SCNHitTestSearchMode SearchMode { get; set; }
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		bool IgnoreLightArea { get; set; }
 	}
 
 	[Watch (3,0)]
@@ -2362,6 +2500,7 @@ namespace SceneKit {
 		[NoTV, NoWatch]
 	#endif
 		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the SCNProgram's Opaque property instead.")]
+		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("programIsOpaque:")]
 		bool IsProgramOpaque (SCNProgram program);
 #endif
@@ -2418,6 +2557,7 @@ namespace SceneKit {
 		[Export ("render")]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 		void Render ();
 
 		[Mac (10,10)]
@@ -2620,6 +2760,22 @@ namespace SceneKit {
 		[Export ("sceneWithMDLAsset:")]
 		SCNScene FromAsset (MDLAsset asset);
 #endif
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("wantsScreenSpaceReflection")]
+		bool WantsScreenSpaceReflection { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("screenSpaceReflectionSampleCount")]
+		nint ScreenSpaceReflectionSampleCount { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("screenSpaceReflectionMaximumDistance")]
+		nfloat ScreenSpaceReflectionMaximumDistance { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("screenSpaceReflectionStride")]
+		nfloat ScreenSpaceReflectionStride { get; set; }
 	}
 
 	interface ISCNSceneExportDelegate { }
@@ -3082,6 +3238,27 @@ namespace SceneKit {
 		[NullAllowed, Export ("audioListener", ArgumentSemantic.Retain)]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		SCNNode AudioListener { get; set; }
+
+#if XAMCORE_4_0
+		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
+#endif
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("temporalAntialiasingEnabled")]
+		bool TemporalAntialiasingEnabled { [Bind ("isTemporalAntialiasingEnabled")] get; set; }
+
+#if XAMCORE_4_0
+		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
+#endif
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("currentViewport")]
+		CGRect CurrentViewport { get; }
+
+#if XAMCORE_4_0
+		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
+#endif
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("usesReverseZ")]
+		bool UsesReverseZ { get; set; }
 	}
 
 	[Watch (3,0)]
@@ -3287,6 +3464,7 @@ namespace SceneKit {
 	[Internal] // we'll make it public if there's a need for them (beside the strong dictionary we provide)
 	interface SCNRenderingOptionsKeys {
 
+		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 		[Field ("SCNPreferredRenderingAPIKey")]
 		NSString RenderingApiKey { get; }
 
@@ -3329,12 +3507,16 @@ namespace SceneKit {
 		bool AllowsCameraControl { get; set;  }
 
 #if MONOMAC
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("openGLContext", ArgumentSemantic.Retain)]
 		NSOpenGLContext	OpenGLContext { get; set;  }
 
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("pixelFormat", ArgumentSemantic.Retain)]
 		NSOpenGLPixelFormat PixelFormat { get; set;  }
 #elif !WATCH
+		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use Metal instead of OpenGL API.")]
+		[Deprecated (PlatformName.TvOS, 12, 0, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("eaglContext", ArgumentSemantic.Retain)]
 #if XAMCORE_2_0
 		EAGLContext EAGLContext { get; set; }
@@ -3388,6 +3570,10 @@ namespace SceneKit {
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("rendersContinuously")]
 		bool RendersContinuously { get; set; }
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("drawableResizesAsynchronously")]
+		bool DrawableResizesAsynchronously { get; set; }
 	}
 
 #if XAMCORE_4_0
@@ -3894,6 +4080,13 @@ namespace SceneKit {
 		[iOS (9,0)][Mac (10,11)]
 		[Internal, Export ("setObject:forKeyedSubscript:")]
 		void _SetObject ([NullAllowed] NSObject obj, INSCopying key);
+
+#if XAMCORE_2_0 // Metal is 64 bit only
+		[NoWatch]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[NullAllowed, Export ("library", ArgumentSemantic.Strong)]
+		IMTLLibrary Library { get; set; }
+#endif
 	}
 
 	[Watch (3,0)]

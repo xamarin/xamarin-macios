@@ -21326,8 +21326,8 @@ namespace AppKit {
 		[Export ("iconForFiles:"), ThreadSafe]
 		NSImage IconForFiles (string[] fullPaths);
 		
-		[Export ("iconForFileType:"), ThreadSafe]
-		NSImage IconForFileType (string fileType);
+		[Export ("iconForFileType:"), ThreadSafe, Internal]
+		NSImage IconForFileType (IntPtr fileTypeOrTypeCode);
 		
 		[Export ("setIcon:forFile:options:"), ThreadSafe]
 		bool SetIconforFile (NSImage image, string fullPath, NSWorkspaceIconCreationOptions options);
@@ -25338,6 +25338,15 @@ namespace AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
+	interface NSAccessibilityCheckBox : NSAccessibilityButton
+	{
+		[Abstract]
+		[NullAllowed, Export ("accessibilityValue")]
+		NSNumber AccessibilityValue { get; }
+	}
+
+	[Mac (10,10)]
+	[Protocol]
 	interface NSAccessibilityStaticText : NSAccessibilityElementProtocol {
 		[Abstract]
 		[NullAllowed, Export ("accessibilityValue")]
@@ -25489,10 +25498,12 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
+	[Protocol]
 	interface NSAccessibilityOutline : NSAccessibilityTable {
 	}
 
 	[Mac (10,10)]
+	[Protocol]
 	interface NSAccessibilityList : NSAccessibilityTable {
 	}
 

@@ -265,6 +265,12 @@ This version of Xamarin.Mac does not support building 32-bit applications.
 
 Change the architecture in the project's Mac Build options to 'x86_64' in order to build a 64-bit application.
 
+<!-- 0145 and 0146 used by mtouch -->
+
+#### MM0147: Unable to parse the cflags '{cflags} from pkg-config: {exception}
+
+#### MM0148: Unable to parse the linker flags '{linker_flags}' from the LinkWith attribute for the library {library} in {assembly} : {exception}
+
 ## MM1xxx: file copy / symlinks (project related)
 
 <a name="MM1034" />
@@ -730,7 +736,9 @@ You can silence this warning by adding `--nowarn=5221` to the **Additional mmp a
 
 #### MM5311: lipo failed with an error code '{0}'. Check build log for details.
 
-### <a name="MM5311">MM5311: lipo failed with an error code '{0}'. Check build log for details.
+<a name="MM5312" />
+
+### MM5312: pkg-config failed with an error code '{code}'. Check build log for details.
 
 <!-- MM6xxx: mmp internal tools -->
 <!-- MM7xxx: reserved -->

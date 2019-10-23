@@ -2428,6 +2428,7 @@ public partial class Generator : IMemberGatherer {
 						case "ManualAttribute":
 						case "MarshalDirectiveAttribute":
 						case "BindingImplAttribute":
+						case "XpcInterfaceAttribute":
 							continue;
 						default:
 							throw new BindingException (1007, true, "Unknown attribute {0} on {1}.{2}", attr.GetType (), mi.DeclaringType, mi.Name);
@@ -2533,10 +2534,6 @@ public partial class Generator : IMemberGatherer {
 		print_generated_code ();
 		print ("static partial class Trampolines {"); indent++;
 
-		print ("");
-		print ("[DllImport (\"/usr/lib/libobjc.dylib\")]");
-		print ("static extern IntPtr _Block_copy (IntPtr ptr);");
-
 		while (trampolines.Count > 0){
 			var queue = trampolines.Values.ToArray ();
 			trampolines.Clear ();
@@ -2609,24 +2606,14 @@ public partial class Generator : IMemberGatherer {
 			// Now generate the class that allows us to invoke a Objective-C block from C#
 			//
 			print ("");
-			print ("internal class {0} {{", ti.NativeInvokerName);
+			print ($"internal sealed class {ti.NativeInvokerName} : TrampolineBlockBase {{");
 			indent++;
-			print ("IntPtr blockPtr;");
 			print ("{0} invoker;", ti.DelegateName);
 			print ("");
-			print ("[Preserve (Conditional=true)]");
 			print_generated_code ();
-			print ("public unsafe {0} (BlockLiteral *block)", ti.NativeInvokerName);
+			print ("public unsafe {0} (BlockLiteral *block) : base (block)", ti.NativeInvokerName);
 			print ("{"); indent++;
-			print ("blockPtr = _Block_copy ((IntPtr) block);", ns.CoreObjCRuntime);
 			print ("invoker = block->GetDelegateForBlock<{0}> ();", ti.DelegateName);
-			indent--; print ("}");
-			print ("");
-			print ("[Preserve (Conditional=true)]");
-			print_generated_code ();
-			print ("~{0} ()", ti.NativeInvokerName);
-			print ("{"); indent++;
-			print ("Runtime.ReleaseBlockOnMainThread (blockPtr);", ns.CoreObjCRuntime);
 			indent--; print ("}");
 			print ("");
 			print ("[Preserve (Conditional=true)]");
@@ -2634,17 +2621,12 @@ public partial class Generator : IMemberGatherer {
 			print ("public unsafe static {0} Create (IntPtr block)\n{{", ti.UserDelegate); indent++;
 			print ("if (block == IntPtr.Zero)"); indent++;
 			print ("return null;"); indent--;
-			print ("if (BlockLiteral.IsManagedBlock (block)) {"); indent++;
-			print ("var existing_delegate = ((BlockLiteral *) block)->Target as {0};", ti.UserDelegate);
-			print ("if (existing_delegate != null)"); indent++;
-			print ("return existing_delegate;"); indent--;
-			indent--; print ("}"); 
-			print ("return new {0} ((BlockLiteral *) block).Invoke;", ti.NativeInvokerName);
+			print ($"var del = ({ti.UserDelegate}) GetExistingManagedDelegate (block);");
+			print ($"return del ?? new {ti.NativeInvokerName} ((BlockLiteral *) block).Invoke;");
 			indent--;print ("}");
 			print ("");
 			var string_pars = new StringBuilder ();
 			MakeSignatureFromParameterInfo (false, string_pars, mi, declaringType: null, parameters: parameters);
-			print ("[Preserve (Conditional=true)]");
 			print_generated_code ();
 			print ("unsafe {0} Invoke ({1})", FormatType (null, mi.ReturnType), string_pars.ToString ());
 			print ("{"); indent++;
@@ -2672,7 +2654,7 @@ public partial class Generator : IMemberGatherer {
 
 			if (convs.Length > 0)
 				print (convs.ToString ());
-			print ("{0}{1}invoker (blockPtr{2}){3};",
+			print ("{0}{1}invoker (BlockPointer{2}){3};",
 			       use_temp_return ? "var ret = " : "",
 			       cast_a,
 			       args.ToString (),
@@ -5671,6 +5653,7 @@ public partial class Generator : IMemberGatherer {
 			print (sb.ToString ());
 		}
 
+		PrintXpcInterfaceAttribute (type);
 		print ("{0} interface I{1} : INativeObject, IDisposable{2}", class_visibility, TypeName, ifaces.Count () > 0 ? ", " : string.Empty);
 		indent++;
 		sb.Clear ();
@@ -5979,6 +5962,14 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 		if (type.Name == "CALayer" && ns.Get ("CoreAnimation") == type.Namespace) {
 			sw.WriteLine ("\t\t\tMarkDirtyIfDerived ();");
 		}
+	}
+
+	public void PrintXpcInterfaceAttribute (ICustomAttributeProvider mi)
+	{
+		if (!AttributeManager.HasAttribute<XpcInterfaceAttribute> (mi))
+			return;
+
+		print ("[XpcInterface]");
 	}
 
 	// Function to check if PreserveAttribute is present and
@@ -6487,16 +6478,9 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 						sw.WriteLine ("\t\tprotected {0} (NSObjectFlag t) : base (t)", TypeName);
 						sw.WriteLine ("\t\t{");
-						if (is32BitNotSupported) {
-							sw.WriteLine ("\t\t#if ARCH_32");
-							sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-							sw.WriteLine ("\t\t#else");
-						}
 						if (is_direct_binding_value != null)
 							sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 						WriteMarkDirtyIfDerived (sw, type);
-						if (is32BitNotSupported)
-							sw.WriteLine ("\t\t#endif");
 						sw.WriteLine ("\t\t}");
 						sw.WriteLine ();
 					}
@@ -6504,15 +6488,8 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					sw.WriteLine ("\t\tprotected internal {0} (IntPtr handle) : base (handle)", TypeName);
 					sw.WriteLine ("\t\t{");
-					if (is32BitNotSupported) {
-						sw.WriteLine ("\t\t#if ARCH_32");
-						sw.WriteLine ("\t\t\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-						sw.WriteLine ("\t\t#else");
-					}
 					if (is_direct_binding_value != null)
 						sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
-					if (is32BitNotSupported)
-						sw.WriteLine ("\t\t#endif");
 					WriteMarkDirtyIfDerived (sw, type);
 					sw.WriteLine ("\t\t}");
 					sw.WriteLine ();

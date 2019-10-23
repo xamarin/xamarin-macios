@@ -103,123 +103,93 @@ $(2)_X86_64_SOURCE_STEMS = $(MONOTOUCH_X86_64_SOURCE_STEMS)
 $(2)_I386_SOURCE_STEMS = $(MONOTOUCH_I386_SOURCE_STEMS)
 $(2)_ARM64_SOURCE_STEMS = $(MONOTOUCH_ARM64_SOURCE_STEMS)
 $(2)_LIBRARIES     = $(MONOTOUCH_LIBS)
-ifdef INCLUDE_DEVICE
-$(2)_DEVICE_ARCHITECTURES = $(3)
-endif
-$(2)_SIM_ARCHITECTURES = $(4)
-$(2)_ARCHITECTURES = $$($(2)_DEVICE_ARCHITECTURES) $$($(2)_SIM_ARCHITECTURES)
+$(2)_ARCHITECTURES = $(3)
 $(2)_FRAMEWORKS    = $(MONOTOUCH_FRAMEWORKS)
 
 RUNTIME_$(2)_TARGETS_DIRS +=                                        \
-	$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework \
-	$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework \
-	$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib             \
-	$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/xamarin \
-	$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework \
-	$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework \
-	$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib                    \
-	$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/include/xamarin        \
+	$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework \
+	$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework \
+	$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib             \
+	$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/include/xamarin \
 
 RUNTIME_$(2)_TARGETS +=                                                                                \
-	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/$$(file).framework/$$(file))   \
-	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/$$(file).framework/Info.plist) \
-	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/$$(file).framework.dSYM/Contents/Info.plist) \
-	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/$$(file))   \
-	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/$(file)) \
+	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/$$(file).framework/$$(file))   \
+	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/$$(file).framework/Info.plist) \
+	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/$$(file).framework.dSYM/Contents/Info.plist) \
+	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib/$$(file))   \
+	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/include/$(file)) \
 
-ifdef INCLUDE_DEVICE
-RUNTIME_$(2)_TARGETS +=                                                                                \
-	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/$$(file).framework/$$(file))   \
-	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/$$(file).framework/Info.plist) \
-	$$(foreach file,$$($(2)_FRAMEWORKS),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/$$(file).framework.dSYM/Contents/Info.plist) \
-	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/$$(file))          \
-	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/include/$(file))        \
-
-endif
-
-$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
 
-$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework/Xamarin: .libs/$(1)/Xamarin-sim.framework | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework/Xamarin: .libs/$(1)/Xamarin.framework | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework
 	$(Q) $(CP) $$< $$@
 
-$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug: .libs/$(1)/Xamarin-debug-sim.framework | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug: .libs/$(1)/Xamarin-debug.framework | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework
 	$(Q) $(CP) $$< $$@
 
-$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/%.framework/Info.plist: Xamarin.framework-$(1).Info.plist | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/%.framework
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/%.framework/Info.plist: Xamarin.framework-$(1).Info.plist | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/%.framework
 	$(Q) sed 's/@BUNDLE_EXECUTABLE@/$$*/' $$< > $$@
 
-$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework/Xamarin $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin.framework/Info.plist
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework/Xamarin $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin.framework/Info.plist
 	$$(Q_GEN) dsymutil -j 4 $$< -o $$(abspath $$(dir $$<)/..)/Xamarin.framework.dSYM
 
-$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/Frameworks/Xamarin-debug.framework/Info.plist
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/Frameworks/Xamarin-debug.framework/Info.plist
 	$$(Q_GEN) dsymutil -j 4 $$< -o $$(abspath $$(dir $$<)/..)/Xamarin-debug.framework.dSYM
 
-ifdef INCLUDE_DEVICE
-$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib
-	$(Q) install -m 0644 $$< $$@
-
-$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework/Xamarin: .libs/$(1)/Xamarin-dev.framework | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework
-	$(Q) $(CP) $$< $$@
-
-$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug: .libs/$(1)/Xamarin-debug-dev.framework | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework
-	$(Q) $(CP) $$< $$@
-
-$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/%.framework/Info.plist: Xamarin.framework-$(1).Info.plist | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/%.framework
-	$(Q) sed 's/@BUNDLE_EXECUTABLE@/$$*/' $$< > $$@
-
-$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework/Xamarin $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin.framework/Info.plist
-	$$(Q_GEN) dsymutil -j 4 $$(foreach var,$(3),--arch=$$(var) ) $$< -o $$(abspath $$(dir $$<)/..)/Xamarin.framework.dSYM
-
-$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework.dSYM/Contents/Info.plist: $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework/Xamarin-debug $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/Frameworks/Xamarin-debug.framework/Info.plist
-	$$(Q_GEN) dsymutil -j 4 $$(foreach var,$(3),--arch=$$(var) ) $$< -o $$(abspath $$(dir $$<)/..)/Xamarin-debug.framework.dSYM
-endif
-
-$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/%.dylib: .libs/$(1)/%-sim.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib
-	$(Q) install -m 0644 $$< $$@
-
-ifdef INCLUDE_DEVICE
-$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.dylib: .libs/$(1)/%-dev.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib
-ifeq (watchos,$(1))
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/lib
 	$$(Q_STRIP) $(DEVICE_BIN_PATH)/bitcode_strip $$< -m -o $$@
+
+$(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(2)_SDK)/usr/include/xamarin
+	$(Q) install -m 0644 $$< $$@
+
+.libs/$(1)/Xamarin.framework:  $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework)
+	$(Q) rm -f $$@
+ifeq (1,$$(words $$($(2)_ARCHITECTURES)))
+	$(Q) $(CP) $$^ $$@
 else
-	$(Q) install -m 0644 $$< $$@
-endif
+	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
 
-$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/xamarin
-	$(Q) install -m 0644 $$< $$@
-
-ifdef INCLUDE_DEVICE
-$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/include/xamarin
-	$(Q) install -m 0644 $$< $$@
+.libs/$(1)/Xamarin-debug.framework:  $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/Xamarin-debug.$$(arch).framework)
+	$(Q) rm -f $$@
+ifeq (1,$$(words $$($(2)_ARCHITECTURES)))
+	$(Q) $(CP) $$^ $$@
+else
+	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
 
 $$(RUNTIME_$(2)_TARGETS_DIRS):
 	$(Q) mkdir -p $$@
 
-all-$(5): $$(RUNTIME_$(2)_TARGETS)
+all-$(2):: $$(RUNTIME_$(2)_TARGETS)
 all-local:: $$(RUNTIME_$(2)_TARGETS)
 install-local:: $$(RUNTIME_$(2)_TARGETS)
 
 endef
 
-# 1: platform name
+# 1: platform
 # 2: variable prefix
-# 3: device architectures
-# 4: sim architectures
-# 5: simulator variable name used in some places
-# 6: device variable name used in some places
+# 3: architectures
 ifdef INCLUDE_IOS
-$(eval $(call PlatformTemplate,ios,IOS,armv7 armv7s arm64,x86 x86_64,IOS,IPHONE))
+ifdef INCLUDE_DEVICE
+$(eval $(call PlatformTemplate,iphoneos,IPHONEOS,armv7 armv7s arm64))
+endif
+$(eval $(call PlatformTemplate,iphonesimulator,IOSSIMULATOR,x86 x86_64))
 endif
 
 ifdef INCLUDE_WATCH
-$(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k arm64_32,x86,WATCH,WATCH))
+ifdef INCLUDE_DEVICE
+$(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k arm64_32))
+endif
+$(eval $(call PlatformTemplate,watchsimulator,WATCHSIMULATOR,x86))
 endif
 
 ifdef INCLUDE_TVOS
-$(eval $(call PlatformTemplate,tvos,TVOS,arm64,x86_64,TV,TV))
+ifdef INCLUDE_DEVICE
+$(eval $(call PlatformTemplate,tvos,TVOS,arm64))
+endif
+$(eval $(call PlatformTemplate,tvsimulator,TVSIMULATOR,x86_64))
 endif
 
 #
@@ -267,68 +237,35 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/tvextension-main.$$(arch).o): 
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 
-.libs/$(1)/libxamarin-sim.dylib:  $$(foreach arch,$$($(2)_SIM_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib)
+.libs/$(1)/libxamarin.dylib:  $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib)
 	$(Q) rm -f $$@
+ifeq (1,$$(words $$($(2)_ARCHITECTURES)))
+	$(Q) $(CP) $$^ $$@
+else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
+endif
 	$(Q) install_name_tool -id @rpath/libxamarin.dylib $$@
 	$(Q) install_name_tool -change @rpath/ @rpath/libmonosgen-2.0.dylib $$@
 
-.libs/$(1)/libxamarin-debug-sim.dylib:  $$(foreach arch,$$($(2)_SIM_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib)
+.libs/$(1)/libxamarin-debug.dylib:  $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib)
 	$(Q) rm -f $$@
+ifeq (1,$$(words $$($(2)_ARCHITECTURES)))
+	$(Q) $(CP) $$^ $$@
+else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
+endif
 	$(Q) install_name_tool -id @rpath/libxamarin-debug.dylib $$@
 	$(Q) install_name_tool -change @rpath/ @rpath/libmonosgen-2.0.dylib $$@
-
-.libs/$(1)/libxamarin-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib) $(X86_64_SLICE)
-	$(Q) rm -f $$@
-#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-#	$(Q) $(CP) $$^ $$@
-#else
-	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-#endif
-	$(Q) install_name_tool -id @rpath/libxamarin.dylib $$@
-	$(Q) install_name_tool -change @rpath/ @rpath/libmonosgen-2.0.dylib $$@
-
-.libs/$(1)/libxamarin-debug-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib) $(X86_64_SLICE)
-	$(Q) rm -f $$@
-#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-#	$(Q) $(CP) $$^ $$@
-#else
-	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-#endif
-	$(Q) install_name_tool -id @rpath/libxamarin-debug.dylib $$@
-	$(Q) install_name_tool -change @rpath/ @rpath/libmonosgen-2.0.dylib $$@
-
-.libs/$(1)/Xamarin-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework) $(X86_64_SLICE)
-	$(Q) rm -f $$@
-#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-#	$(Q) $(CP) $$^ $$@
-#else
-	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-#endif
-
-.libs/$(1)/Xamarin-debug-dev.framework:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/Xamarin-debug.$$(arch).framework) $(X86_64_SLICE)
-	$(Q) rm -f $$@
-#ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
-#	$(Q) $(CP) $$^ $$@
-#else
-	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-#endif
-
-.libs/$(1)/Xamarin-sim.framework:  $$(foreach arch,$$($(2)_SIM_ARCHITECTURES),.libs/$(1)/Xamarin.$$(arch).framework)
-	$(Q) rm -f $$@
-	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-
-.libs/$(1)/Xamarin-debug-sim.framework:  $$(foreach arch,$$($(2)_SIM_ARCHITECTURES),.libs/$(1)/Xamarin-debug.$$(arch).framework)
-	$(Q) rm -f $$@
-	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 
 .SECONDARY: $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/app-main.$$(arch).o)
 endef
 
-$(eval $(call LibTemplate,ios,IOS))
+$(eval $(call LibTemplate,iphoneos,IPHONEOS))
+$(eval $(call LibTemplate,iphonesimulator,IOSSIMULATOR))
 $(eval $(call LibTemplate,watchos,WATCHOS))
+$(eval $(call LibTemplate,watchsimulator,WATCHSIMULATOR))
 $(eval $(call LibTemplate,tvos,TVOS))
+$(eval $(call LibTemplate,tvsimulator,TVSIMULATOR))
 
 #
 # LibXamarinTemplate (and LibXamarinArchTemplate) builds libxamarin.a
@@ -403,12 +340,18 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),$$(eval $$(call LibXamarinArchTemplate,$(
 .libs/$(1)/Xamarin$(4).arm64_32.framework: $$(arm64_32_$(1)$(3)_OBJECTS)
 endef
 
-$(eval $(call LibXamarinTemplate,ios,IOS))
-$(eval $(call LibXamarinTemplate,ios,IOS,_DEBUG,-debug))
+$(eval $(call LibXamarinTemplate,iphoneos,IPHONEOS))
+$(eval $(call LibXamarinTemplate,iphoneos,IPHONEOS,_DEBUG,-debug))
+$(eval $(call LibXamarinTemplate,iphonesimulator,IOSSIMULATOR))
+$(eval $(call LibXamarinTemplate,iphonesimulator,IOSSIMULATOR,_DEBUG,-debug))
 $(eval $(call LibXamarinTemplate,watchos,WATCHOS))
 $(eval $(call LibXamarinTemplate,watchos,WATCHOS,_DEBUG,-debug))
+$(eval $(call LibXamarinTemplate,watchsimulator,WATCHSIMULATOR))
+$(eval $(call LibXamarinTemplate,watchsimulator,WATCHSIMULATOR,_DEBUG,-debug))
 $(eval $(call LibXamarinTemplate,tvos,TVOS))
 $(eval $(call LibXamarinTemplate,tvos,TVOS,_DEBUG,-debug))
+$(eval $(call LibXamarinTemplate,tvsimulator,TVSIMULATOR))
+$(eval $(call LibXamarinTemplate,tvsimulator,TVSIMULATOR,_DEBUG,-debug))
 
 #
 # Xamarin.Mac
@@ -500,7 +443,7 @@ $(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG,64))
 
 $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_DEFINES=-DEXTENSION
 
-.libs/mac/extension-main.%.o:
+.libs/mac/extension-main.%.o: | .libs/mac
 	$(Q) rm -f $@
 	$(call Q_2,CC,  [mac]) $(MAC_CLANG) -c -DEXTENSION extension-main.m -arch $* -o $@
 

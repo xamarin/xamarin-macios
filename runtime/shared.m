@@ -12,7 +12,6 @@
 #include <objc/runtime.h>
 #include <objc/message.h>
 #include <pthread.h>
-#include <libkern/OSAtomic.h>
 
 #import <Foundation/Foundation.h>
 
@@ -249,7 +248,7 @@ xamarin_dispose_helper (void *a)
 	int handle = GPOINTER_TO_INT (bl->global_handle);
 	mono_gchandle_free (handle);
 	bl->global_handle = GINT_TO_POINTER (-1);
-	if (OSAtomicDecrement32Barrier (&bl->descriptor->ref_count) == 0) {
+	if (atomic_fetch_sub (&bl->descriptor->ref_count, 1) == 0) {
 		free (bl->descriptor); // allocated using Marshal.AllocHGlobal.
 	}
 	bl->descriptor = NULL;
@@ -267,7 +266,7 @@ xamarin_copy_helper (void *dst, void *src)
 	target->global_handle = GINT_TO_POINTER (mono_gchandle_new (mono_gchandle_get_target (GPOINTER_TO_INT (source->local_handle)), FALSE));
 #pragma clang diagnostic pop
 
-	OSAtomicIncrement32 (&source->descriptor->ref_count);
+	atomic_fetch_add (&source->descriptor->ref_count, 1);
 	target->descriptor = source->descriptor;
 }
 
