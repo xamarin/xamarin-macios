@@ -574,7 +574,10 @@ timestamps {
 
                             sh ("ls -la package")
                             uploadFiles ("package/*", "wrench", virtualPath)
-                            uploadFiles ("package/notarized/*", "wrench", virtualPath)
+
+                            def notarized_files = findFiles (glob: "package/notarized/*")
+                            if (notarized_files.size () > 0)
+                              uploadFiles ("package/notarized/*", "wrench", virtualPath)
                             uploadFiles ("package-internal/*", "jenkins-internal", virtualPath)
 
                             // Also upload manifest to a predictable url (without the build number)
