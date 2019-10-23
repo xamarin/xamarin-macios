@@ -131,7 +131,14 @@ namespace MonoTouchFixtures.Network
 				keyCount++;
 				Assert.IsTrue (keys.Contains (k), k);
 			});
+			var keyCount2 = 0;
+			record.Apply ((k, r, v) => {
+				keyCount2++;
+				Assert.IsTrue (keys.Contains (k), k);
+				return true;
+			});
 			Assert.AreEqual (keys.Count, keyCount, "keycount");
+			Assert.AreEqual (keys.Count, keyCount2, "keycount2");
 		}
 
 		[Test]
