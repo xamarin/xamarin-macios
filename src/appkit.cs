@@ -35,6 +35,7 @@ using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
+using CoreFoundation;
 using CoreImage;
 using CoreAnimation;
 using CoreData;
@@ -6543,7 +6544,7 @@ namespace AppKit {
 		[Static]
 		[Export ("monospacedSystemFontOfSize:weight:")]
 		[Internal]
-		IntPtr _MonospacedSystemFont (nfloat fontSize, double weight);
+		IntPtr _MonospacedSystemFont (nfloat fontSize, nfloat weight);
 	}
 
 	interface NSFontCollectionChangedEventArgs {
@@ -6770,7 +6771,7 @@ namespace AppKit {
 		[Mac (10,15)]
 		[Export ("fontDescriptorWithDesign:")]
 		[return: NullAllowed]
-		NSFontDescriptor FontDescriptorWithDesign (NSFontDescriptorSystemDesign design);
+		NSFontDescriptor Create (NSFontDescriptorSystemDesign design);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -7796,7 +7797,7 @@ namespace AppKit {
 		NumericPad = 1uL << 21,
 		Help = 1uL << 22,
 		Function = 1uL << 23,
-		DeviceIndependentFlagsMask = 0xffff0000L
+		DeviceIndependentFlagsMask = 0xffff0000L,
 	}
 
 	[Mac (10,10)]
@@ -15176,11 +15177,11 @@ namespace AppKit {
 		[Mac (10,15)]
 		[Export ("instantiateInitialControllerWithCreator:")]
 		[return: NullAllowed]
-		NSObject InstantiateInitialController ([NullAllowed] NSStoryboardControllerCreator block);
+		NSViewController InstantiateInitialController ([NullAllowed] NSStoryboardControllerCreator handler);
 
 		[Mac (10,15)]
 		[Export ("instantiateControllerWithIdentifier:creator:")]
-		NSObject InstantiateController (string identifier, [NullAllowed] NSStoryboardControllerCreator block);
+		NSViewController InstantiateController (string identifier, [NullAllowed] NSStoryboardControllerCreator handler);
 	}
 
 	[Mac (10,10)]
@@ -21730,16 +21731,19 @@ namespace AppKit {
 		void RequestAuthorization (NSWorkspaceAuthorizationType type, Action<NSWorkspaceAuthorization, NSError> completionHandler);
 
 		[Mac (10,15)]
+		[Async]
 		[Export ("openApplicationAtURL:configuration:completionHandler:")]
-		void OpenApplication (NSUrl applicationURL, NSWorkspaceOpenConfiguration configuration, [NullAllowed] Action<NSRunningApplication, NSError> completionHandler);
+		void OpenApplication (NSUrl applicationUrl, NSWorkspaceOpenConfiguration configuration, [NullAllowed] Action<NSRunningApplication, NSError> completionHandler);
 
 		[Mac (10,15)]
+		[Async]
 		[Export ("openURL:configuration:completionHandler:")]
-		void OpenURL (NSUrl url, NSWorkspaceOpenConfiguration configuration, [NullAllowed] Action<NSRunningApplication, NSError> completionHandler);
+		void OpenUrl (NSUrl url, NSWorkspaceOpenConfiguration configuration, [NullAllowed] Action<NSRunningApplication, NSError> completionHandler);
 
 		[Mac (10,15)]
+		[Async]
 		[Export ("openURLs:withApplicationAtURL:configuration:completionHandler:")]
-		void OpenURLs (NSUrl[] urls, NSUrl applicationURL, NSWorkspaceOpenConfiguration configuration, [NullAllowed] Action<NSRunningApplication, NSError> completionHandler);
+		void OpenUrls (NSUrl[] urls, NSUrl applicationUrl, NSWorkspaceOpenConfiguration configuration, [NullAllowed] Action<NSRunningApplication, NSError> completionHandler);
 	}
 	
 	[Mac (10,14)]
@@ -27577,6 +27581,7 @@ namespace AppKit {
 	}
 
 	[Protocol]
+	[Mac (10,15)]
 	interface NSTextInputTraits
 	{
 		[Export ("autocorrectionType", ArgumentSemantic.Assign)]
@@ -27613,12 +27618,13 @@ namespace AppKit {
 	interface INSTextCheckingClient { }
 
 	[Protocol]
+	[Mac (10,15)]
 	interface NSTextCheckingClient : NSTextInputTraits, NSTextInputClient
 	{
 		[Abstract]
 		[Export ("annotatedSubstringForProposedRange:actualRange:")]
 		[return: NullAllowed]
-		NSAttributedString AnnotatedSubstring (NSRange range, [NullAllowed] NSRange actualRange);
+		NSAttributedString GetAnnotatedSubstring (NSRange range, [NullAllowed] ref NSRange actualRange);
 
 		[Abstract]
 		[Export ("setAnnotations:range:")]
@@ -27643,7 +27649,7 @@ namespace AppKit {
 		[Abstract]
 		[Export ("viewForRange:firstRect:actualRange:")]
 		[return: NullAllowed]
-		NSView GetView (NSRange range, [NullAllowed] CGRect firstRect, [NullAllowed] NSRange actualRange);
+		NSView GetView (NSRange range, [NullAllowed] ref CGRect firstRect, [NullAllowed] ref NSRange actualRange);
 
 		[Abstract]
 		[NullAllowed, Export ("candidateListTouchBarItem")]
@@ -27652,11 +27658,12 @@ namespace AppKit {
 
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface NSWorkspaceOpenConfiguration : NSCopying
 	{
 		[Static]
 		[Export ("configuration")]
-		NSWorkspaceOpenConfiguration Configuration ();
+		NSWorkspaceOpenConfiguration Create ();
 
 		[Export ("promptsUserIfNeeded")]
 		bool PromptsUserIfNeeded { get; set; }
@@ -27691,8 +27698,16 @@ namespace AppKit {
 		[NullAllowed, Export ("appleEvent", ArgumentSemantic.Strong)]
 		NSAppleEventDescriptor AppleEvent { get; set; }
 
+		[Internal]
 		[Export ("architecture")]
-		int Architecture { get; set; }
+		int _LaunchArchitecture { get; set; }
+
+		CFBundle.Architecture LaunchArchitecture {
+			[Wrap ("(CFBundle.Architecture) this._LaunchArchitecture")]
+			get;
+			[Wrap ("this._LaunchArchitecture = (int) value")]
+			set;
+		}
 
 		[Export ("requiresUniversalLinks")]
 		bool RequiresUniversalLinks { get; set; }
@@ -27726,7 +27741,11 @@ namespace AppKit {
 		void ConsiderTextChecking (NSRange range);
 
 		[Export ("checkTextInRange:types:options:")]
-		void CheckText (NSRange range, NSTextCheckingTypes checkingTypes, NSDictionary<NSString, NSObject> options);
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		void CheckText (NSRange range, NSTextCheckingTypes checkingTypes, NSDictionary options);
+
+		[Wrap ("CheckText (range, checkingTypes, options != null ? options.Dictionary : null)")]
+		void CheckText (NSRange range, NSTextCheckingTypes checkingTypes, NSTextCheckingOptions options);
 
 		[Export ("checkTextInSelection:")]
 		void CheckTextInSelection ([NullAllowed] NSObject sender);
@@ -27757,7 +27776,7 @@ namespace AppKit {
 
 		[Export ("menuAtIndex:clickedOnSelection:effectiveRange:")]
 		[return: NullAllowed]
-		NSMenu MenuAtIndex (nuint location, bool clickedOnSelection, NSRange effectiveRange);
+		NSMenu GetMenu (nuint location, bool clickedOnSelection, ref NSRange effectiveRange);
 
 		[Export ("spellCheckerDocumentTag")]
 		nint SpellCheckerDocumentTag { get; set; }
@@ -27781,7 +27800,7 @@ namespace AppKit {
 		NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> Snapshot { get; }
 
 		[Export ("applySnapshot:animatingDifferences:")]
-		void ApplySnapshot (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences);
+		void Apply (NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> snapshot, bool animatingDifferences);
 
 		[Export ("itemIdentifierForIndexPath:")]
 		[return: NullAllowed]
@@ -27795,21 +27814,18 @@ namespace AppKit {
 		NSCollectionViewDiffableDataSourceSupplementaryViewProvider SupplementaryViewProvider { get; set; }
 	}
 
+	[Mac (10, 15)]
 	public enum NSFontDescriptorSystemDesign 
 	{
-		[Mac (10, 15)]
 		[Field ("NSFontDescriptorSystemDesignDefault")]
 		Default,
 
-		[Mac (10, 15)]
 		[Field ("NSFontDescriptorSystemDesignSerif")]
 		Serif,
 
-		[Mac (10, 15)]
 		[Field ("NSFontDescriptorSystemDesignMonospaced")]
 		Monospaced,
 
-		[Mac (10, 15)]
 		[Field ("NSFontDescriptorSystemDesignRounded")]
 		Rounded,
 	}
@@ -27828,12 +27844,13 @@ namespace AppKit {
 
 	public interface INSSharingServicePickerToolbarItemDelegate { }
 
+	[Mac (10,15)]
 	[Protocol, Model (AutoGeneratedName = true)]
 	[BaseType (typeof (NSSharingServicePickerDelegate))]
 	interface NSSharingServicePickerToolbarItemDelegate
 	{
 		[Abstract]
 		[Export ("itemsForSharingServicePickerToolbarItem:")]
-		NSObject[] ItemsForSharingServicePickerToolbarItem (NSSharingServicePickerToolbarItem pickerToolbarItem);
+		NSObject[] GetItems (NSSharingServicePickerToolbarItem pickerToolbarItem);
 	}
 }
