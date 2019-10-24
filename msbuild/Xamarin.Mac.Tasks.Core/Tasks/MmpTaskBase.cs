@@ -242,6 +242,9 @@ namespace Xamarin.Mac.Tasks
 
 			actualArgs.AddQuoted ($"@{responseFile}");
 
+			if (!string.IsNullOrWhiteSpace (ExtraArguments))
+				actualArgs.Add (ExtraArguments);
+
 			var verbosity = VerbosityUtils.Merge (ExtraArguments, (LoggerVerbosity) Verbosity);
 			// for compatibility with earlier versions nothing means one /v
 			args.AddLine (verbosity.Length > 0 ? verbosity : "/verbose");
