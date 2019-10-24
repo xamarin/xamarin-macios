@@ -2711,11 +2711,16 @@ namespace Xamarin.BindingMethods.Generator
 			case "Vector3d":
 			case "Vector3i":
 			case "Vector3":
+				writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{2}c = {1} [2];", managedVariable, nativeVariable, accessor);
+				break;
 			case "NVector3":
 			case "NVector3d":
 				writer.WriteLine ("\t{0}{2}a = {1} [0];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}b = {1} [1];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}c = {1} [2];", managedVariable, nativeVariable, accessor);
+				writer.WriteLine ("\t{0}{1}d = 0;", managedVariable, accessor);
 				break;
 			case "Vector4d":
 			case "Vector4i":
