@@ -3364,12 +3364,18 @@ public partial class Generator : IMemberGatherer {
 
 		var interfaceTag = protocolized == true ? "I" : "";
 		string tname;
+		// we are adding the usage of ReflectedType just for those cases in which we have nested enums/classes, this soluction does not
+		// work with nested/nested/nested classes. But we are not writing a general solution because:
+		// 1. We have only encountered nested classes.
+		// 2. We are not going to complicate the code more than needed if we have never ever faced a situation with a crazy nested hierarchy, 
+		//    so we only solve the problem we have, no more.
+		var parentClass = (type.ReflectedType == null) ? String.Empty : type.ReflectedType.Name + "."; 
 		if (types_that_must_always_be_globally_named.Contains (type.Name))
-			tname = $"global::{type.Namespace}.{interfaceTag}{type.Name}";
+			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
 		else if ((usedInNamespace != null && type.Namespace == usedInNamespace) || ns.StandardNamespaces.Contains (type.Namespace) || string.IsNullOrEmpty (type.FullName))
 			tname = interfaceTag + type.Name;
 		else
-			tname = $"global::{type.Namespace}.{interfaceTag}{type.Name}";
+			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
 		
 		var targs = type.GetGenericArguments ();
 		if (targs.Length > 0) {
