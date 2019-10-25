@@ -1007,7 +1007,7 @@ namespace xharness
 				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "MTouch tests",
-				Timeout = TimeSpan.FromMinutes (120),
+				Timeout = TimeSpan.FromMinutes (180),
 				Ignored = !IncludeMtouch,
 				InProcess = true,
 			};
