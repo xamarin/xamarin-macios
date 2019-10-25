@@ -72,6 +72,7 @@ namespace Xamarin.Mac.Tasks
 		public bool Profiling { get; set; }
 		public string I18n { get; set; }
 		public string ExtraArguments { get; set; }
+		public int Verbosity { get; set; }
 
 		public string AotMode { get; set; }
 		public bool HybridAOT { get; set; }
@@ -104,8 +105,6 @@ namespace Xamarin.Mac.Tasks
 		{
 			var args = new CommandLineArgumentBuilder ();
 			bool msym;
-
-			args.AddLine ("/verbose");
 
 			if (Debug)
 				args.AddLine ("/debug");
@@ -245,6 +244,10 @@ namespace Xamarin.Mac.Tasks
 
 			if (!string.IsNullOrWhiteSpace (ExtraArguments))
 				actualArgs.Add (ExtraArguments);
+
+			var verbosity = VerbosityUtils.Merge (ExtraArguments, (LoggerVerbosity) Verbosity);
+			// for compatibility with earlier versions nothing means one /v
+			actualArgs.AddLine (verbosity.Length > 0 ? verbosity : "/verbose");
 
 			return actualArgs.ToString ();
 		}
