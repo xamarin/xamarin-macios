@@ -1,0 +1,2 @@
+!missing-selector! NSWorkspaceOpenConfiguration::architecture not bound
+!missing-selector! NSWorkspaceOpenConfiguration::setArchitecture: not bound

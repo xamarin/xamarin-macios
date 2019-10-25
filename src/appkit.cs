@@ -27698,16 +27698,17 @@ namespace AppKit {
 		[NullAllowed, Export ("appleEvent", ArgumentSemantic.Strong)]
 		NSAppleEventDescriptor AppleEvent { get; set; }
 
-		[Internal]
-		[Export ("architecture")]
-		int _LaunchArchitecture { get; set; }
+		// // Commenting this till issue #7304 is fixed
+		// [Internal]
+		// [Export ("architecture")]
+		// int _LaunchArchitecture { get; set; }
 
-		CFBundle.Architecture LaunchArchitecture {
-			[Wrap ("(CFBundle.Architecture) this._LaunchArchitecture")]
-			get;
-			[Wrap ("this._LaunchArchitecture = (int) value")]
-			set;
-		}
+		// CFBundle.Architecture LaunchArchitecture {
+		// 	[Wrap ("(CFBundle.Architecture) this._LaunchArchitecture")]
+		// 	get;
+		// 	[Wrap ("this._LaunchArchitecture = (int) value")]
+		// 	set;
+		// }
 
 		[Export ("requiresUniversalLinks")]
 		bool RequiresUniversalLinks { get; set; }
