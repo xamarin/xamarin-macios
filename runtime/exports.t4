@@ -466,6 +466,8 @@
 			"const char *", "msg"
 		),
 
+		new Export ("MonoException *", "mono_get_exception_out_of_memory"),
+
 		#endregion
 
 		#region metadata/gc-internal.h
