@@ -45,7 +45,7 @@ namespace Network {
 		delegate void nw_framer_message_set_value_t (IntPtr block, IntPtr data);
 		static nw_framer_message_set_value_t static_SetDataHandler = TrampolineSetDataHandler;
 
-		[MonoPInvokeCallback (typeof (nw_framer_message_access_value_t))]
+		[MonoPInvokeCallback (typeof (nw_framer_message_set_value_t))]
 		static void TrampolineSetDataHandler (IntPtr block, IntPtr data)
 		{
 			// get and call, this is internal and we are trying to do all the magic in the call
