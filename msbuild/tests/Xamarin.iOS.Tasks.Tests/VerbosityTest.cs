@@ -34,6 +34,9 @@ namespace Xamarin.MacDev.Tasks {
 		[TestCase ("/Library/Frameworks/Mono.framework/Versions/6.6.0/lib/mono/msbuild/15.0/bin/MSBuild.dll -t:clean introspection-ios.csproj -verbosity:diagnostic", LoggerVerbosity.Diagnostic)]
 		[TestCase ("/Library/Frameworks/Mono.framework/Versions/6.6.0/lib/mono/msbuild/15.0/bin/MSBuild.dll -verbosity:diag introspection-ios.csproj", LoggerVerbosity.Diagnostic)]
 
+		[TestCase ("/prev:q", LoggerVerbosity.Normal)]
+		[TestCase ("/evil-command-line-v:diag", LoggerVerbosity.Normal)]
+
 		public void FromString (string commandLine, LoggerVerbosity expected)
 		{
 			var result = VerbosityUtils.GetVerbosityLevel (expected);

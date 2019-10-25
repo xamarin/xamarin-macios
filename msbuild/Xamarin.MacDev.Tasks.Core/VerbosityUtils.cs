@@ -2,6 +2,7 @@
 
 using System;
 using Microsoft.Build.Framework;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 
@@ -40,48 +41,52 @@ namespace Xamarin.MacDev.Tasks {
 		//
 		static public string GetVerbosityLevel (string commandLine)
 		{
-			var verbosity = String.Empty;
-			char sep = ' ';
-			// first chance: short form, case sensitive
-			// note: `-v` (without arguments) is not a valid option
-			var p = commandLine.IndexOf ("v:", StringComparison.Ordinal);
-			if (p > 0) {
-				sep = commandLine[p - 1];
-				p += 2; // skip `v:`
-			} else {
-				// second change: long form, case sensitive
-				p = commandLine.IndexOf ("verbosity:", StringComparison.Ordinal);
-				if (p > 0) {
-					sep = commandLine[p - 1];
-					p += 10;
+			const string shortForm = "v:";
+			const string longForm = "verbosity:";
+
+			if (!StringUtils.TryParseArguments (commandLine, out var args, out _))
+				return GetVerbosityLevel (LoggerVerbosity.Normal);
+
+			foreach (var arg in args) {
+				// the minimum length we're looking for is `/v:q`
+				if (arg.Length < 4)
+					continue;
+				// msbuild accepts two types of argument separator
+				if (arg [0] != '/' && arg [0] != '-')
+					continue;
+
+				var verbosity = String.Empty;
+				// short and long forms are possible, always case sensitive
+				if (arg.IndexOf (shortForm, StringComparison.Ordinal) == 1) {
+					// skip argument prefix (+1) and the (short) argument to get the verbosity level
+					verbosity = arg.Substring (shortForm.Length + 1);
+				} else if (arg.IndexOf (longForm, StringComparison.Ordinal) == 1) {
+					verbosity = arg.Substring (longForm.Length + 1);
+				} else
+					continue;
+
+				// case sensitive
+				switch (verbosity) {
+				case "q":
+				case "quiet":
+					return GetVerbosityLevel (LoggerVerbosity.Quiet);
+				case "m":
+				case "minimal":
+					return GetVerbosityLevel (LoggerVerbosity.Minimal);
+				case "n":
+				case "normal":
+				default:
+					return GetVerbosityLevel (LoggerVerbosity.Normal);
+				case "d":
+				case "detailed":
+					return GetVerbosityLevel (LoggerVerbosity.Detailed);
+				case "diag":
+				case "diagnostic":
+					return GetVerbosityLevel (LoggerVerbosity.Diagnostic);
 				}
 			}
-			// check separator, e.g. `-approv:`
-			if ((p > 0) && (sep == '-' || sep == '/')) {
-				// might (or not) be the last argument provided
-				var end = commandLine.IndexOf (' ', p);
-				verbosity = end == -1 ? commandLine.Substring (p) : commandLine.Substring (p, end - p);
-			}
-
-			// case sensitive
-			switch (verbosity) {
-			case "q":
-			case "quiet":
-				return GetVerbosityLevel (LoggerVerbosity.Quiet);
-			case "m":
-			case "minimal":
-				return GetVerbosityLevel (LoggerVerbosity.Minimal);
-			case "n":
-			case "normal":
-			default:
-				return GetVerbosityLevel (LoggerVerbosity.Normal);
-			case "d":
-			case "detailed":
-				return GetVerbosityLevel (LoggerVerbosity.Detailed);
-			case "diag":
-			case "diagnostic":
-				return GetVerbosityLevel (LoggerVerbosity.Diagnostic);
-			}
+			// nothing is normal
+			return GetVerbosityLevel (LoggerVerbosity.Normal);
 		}
 
 		// The values here come from: https://github.com/mono/monodevelop/blob/143f9b6617123a0841a5cc5a2a4e13b309535792/main/src/core/MonoDevelop.Projects.Formats.MSBuild/MonoDevelop.Projects.MSBuild.Shared/RemoteBuildEngineMessages.cs#L186
