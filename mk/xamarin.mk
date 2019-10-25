@@ -7,7 +7,7 @@ MONO_BRANCH    := $(shell cd $(MONO_PATH) 2> /dev/null && git symbolic-ref --sho
 endif
 
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := 3e141c6779fe3d0d76f6960ed0e3edb729374f78
+NEEDED_MACCORE_VERSION := f56575dcc2ec2d8975ea328feeeea697b7b2194b
 NEEDED_MACCORE_BRANCH := master
 
 MACCORE_DIRECTORY := maccore
