@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.Network {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NWConnection {
+	public class NWConnectionTest {
 
 		AutoResetEvent connectedEvent;  // used to let us know when the connection was established so that we can access the Report
 		string host;
@@ -77,13 +77,46 @@ namespace MonoTouchFixtures.Network {
 		public void TestParametersProperty () => Assert.IsNotNull (connection.Parameters);
 
 		[Test]
-		public void TestSetQPropertyNull () => Assert.Fail ("Not implemented.");
+		public void TestSetQPropertyNull () => Assert.Throws<ArgumentNullException> (() => connection.SetQueue (null));
 
 		[Test]
-		public void TestCancel () => Assert.Fail ("Not implemented");
+		public void TestCancel ()
+		{
+			// call cancel, several times, we should not crash
+			AutoResetEvent cancelled = new AutoResetEvent (false);
+			connection.SetStateChangeHandler ((s, e) => {
+				switch (s) {
+				case NWConnectionState.Cancelled:
+					cancelled.Set ();
+					break;
+				}
+			});
+			connection.Cancel ();
+			Assert.IsTrue (cancelled.WaitOne (3000), "Cancelled");
+			connection.Cancel ();
+			// lib should ignore the second call
+			Assert.IsFalse (cancelled.WaitOne (3000));
+		}
 
 		[Test]
-		public void TestForceCancel () => Assert.Fail ("Not implemented.");
+		public void TestForceCancel ()
+		{
+			// same as cancel, call it several times should be ok
+			// call cancel, several times, we should not crash
+			AutoResetEvent cancelled = new AutoResetEvent (false);
+			connection.SetStateChangeHandler ((s, e) => {
+				switch (s) {
+				case NWConnectionState.Cancelled:
+					cancelled.Set ();
+					break;
+				}
+			});
+			connection.ForceCancel ();
+			Assert.IsTrue (cancelled.WaitOne (3000), "Cancelled");
+			connection.ForceCancel ();
+			// lib should ignore the second call
+			Assert.IsFalse (cancelled.WaitOne (3000));
+		}
 	}
 }
 #endif
