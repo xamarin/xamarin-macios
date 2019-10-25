@@ -98,11 +98,10 @@ void * monotouch_IntPtr_objc_msgSendSuper_IntPtr (struct objc_super *super, SEL 
 
 typedef CGPoint (*vision_func) (vector_float2 faceLandmarkPoint, CGRect faceBoundingBox, size_t imageWidth, size_t imageHeight);
 
-static void* vision_handle;
-
 static vision_func
 get_vision_func (const char *func_name, const char **error_msg)
 {
+	static void* vision_handle;
 	if (vision_handle == NULL) {
 		vision_handle = dlopen ("/System/Library/Frameworks/Vision.framework/Vision", RTLD_LAZY);
 		if (vision_handle == NULL) {
