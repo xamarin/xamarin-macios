@@ -103,10 +103,12 @@ static void* vision_handle;
 static vision_func
 get_vision_func (const char *func_name, const char **error_msg)
 {
-	vision_handle = dlopen ("/System/Library/Frameworks/Vision.framework/Vision", RTLD_LAZY);
 	if (vision_handle == NULL) {
-		*error_msg = "Could not open Vision.framework";
-		return NULL;
+		vision_handle = dlopen ("/System/Library/Frameworks/Vision.framework/Vision", RTLD_LAZY);
+		if (vision_handle == NULL) {
+			*error_msg = "Could not open Vision.framework";
+			return NULL;
+		}
 	}
 	return (vision_func) dlsym (vision_handle, func_name);
 }
