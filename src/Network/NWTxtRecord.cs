@@ -118,21 +118,45 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern bool nw_txt_record_apply (OS_nw_txt_record txt_record, ref BlockLiteral applier);
 
-		unsafe delegate void nw_txt_record_apply_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen); 
+		delegate bool nw_txt_record_apply_t (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen);
 		unsafe static nw_txt_record_apply_t static_ApplyHandler = TrampolineApplyHandler;
 
+#if XAMCORE_4_0
+		public delegate bool NWTxtRecordApplyDelegate (string key, NWTxtRecordFindKey result, ReadOnlySpan<byte> value);
+#else
 		public delegate void NWTxtRecordApplyDelegate (string key, NWTxtRecordFindKey rersult, ReadOnlySpan<byte> value);
+		public delegate bool NWTxtRecordApplyDelegate2 (string key, NWTxtRecordFindKey result, ReadOnlySpan<byte> value);
+#endif
 
 		[MonoPInvokeCallback (typeof (nw_txt_record_apply_t))]
-		unsafe static void TrampolineApplyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
+		unsafe static bool TrampolineApplyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
 		{
+#if XAMCORE_4_0
 			var del = BlockLiteral.GetTarget<NWTxtRecordApplyDelegate> (block);
-			if (del != null) {
-				var mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
-				del (key, found, mValue);
+#else
+			var del = BlockLiteral.GetTarget<MulticastDelegate> (block);
+#endif
+			if (del == null)
+				return false;
+
+			var mValue = new ReadOnlySpan<byte> ((void*)value, (int)valueLen);
+#if XAMCORE_4_0
+			return del (key, found, mValue);
+#else
+			if (del is NWTxtRecordApplyDelegate apply) {
+				apply (key, found, mValue);
+				return true;
 			}
+			if (del is NWTxtRecordApplyDelegate2 apply2)
+				return apply2 (key, found, mValue);
+
+			return false;
+#endif
 		}
- 
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload that takes an NWTxtRecordApplyDelegate2 instead.")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (NWTxtRecordApplyDelegate handler)
 		{
@@ -147,6 +171,23 @@ namespace Network {
 				block_handler.CleanupBlock ();
 			}
 		}
+
+#if !XAMCORE_4_0
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public bool Apply (NWTxtRecordApplyDelegate2 handler)
+		{
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ApplyHandler, handler);
+			try {
+				return nw_txt_record_apply (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
+		}
+#endif
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe bool nw_txt_record_access_key (OS_nw_txt_record txt_record, string key, ref BlockLiteral access_value);
