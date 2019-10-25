@@ -254,6 +254,10 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								needs_writeback = TRUE;
 								arg_copy = (void **) calloc (managed_arg_count, sizeof (void *));
 								writeback = (bool *) calloc (managed_arg_count, sizeof (bool));
+								if (!arg_copy || !writeback) {
+									exception = (MonoObject *) mono_get_exception_out_of_memory ();
+									goto exception_handling;
+								}
 							}
 							arg_frame [ofs] = NULL;
 							arg_ptrs [i + mofs] = &arg_frame [frameofs];
