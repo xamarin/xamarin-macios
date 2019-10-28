@@ -30,7 +30,13 @@ namespace CallKit {
 	[ErrorDomain ("CXErrorDomain")]
 	[Native]
 	public enum CXErrorCode : long {
-		Unknown = 0
+		Unknown = 0,
+		[iOS (13, 2)]
+		[Introduced (PlatformName.UIKitForMac, 13,2)]
+		Unentitled = 1,
+		[iOS (13, 2)]
+		[Introduced (PlatformName.UIKitForMac, 13,2)]
+		InvalidArgument = 2,
 	}
 
 	[iOS (10, 0)]
