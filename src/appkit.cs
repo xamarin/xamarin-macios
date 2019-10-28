@@ -27698,17 +27698,16 @@ namespace AppKit {
 		[NullAllowed, Export ("appleEvent", ArgumentSemantic.Strong)]
 		NSAppleEventDescriptor AppleEvent { get; set; }
 
-		// // Commenting this till issue #7304 is fixed
-		// [Internal]
-		// [Export ("architecture")]
-		// int _LaunchArchitecture { get; set; }
+		[Internal]
+		[Export ("architecture")]
+		int _LaunchArchitecture { get; set; }
 
-		// CFBundle.Architecture LaunchArchitecture {
-		// 	[Wrap ("(CFBundle.Architecture) this._LaunchArchitecture")]
-		// 	get;
-		// 	[Wrap ("this._LaunchArchitecture = (int) value")]
-		// 	set;
-		// }
+		CFBundle.Architecture LaunchArchitecture {
+			[Wrap ("(CFBundle.Architecture) this._LaunchArchitecture")]
+			get;
+			[Wrap ("this._LaunchArchitecture = (int) value")]
+			set;
+		}
 
 		[Export ("requiresUniversalLinks")]
 		bool RequiresUniversalLinks { get; set; }
@@ -27745,7 +27744,7 @@ namespace AppKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void CheckText (NSRange range, NSTextCheckingTypes checkingTypes, NSDictionary options);
 
-		[Wrap ("CheckText (range, checkingTypes, options != null ? options.Dictionary : null)")]
+		[Wrap ("CheckText (range, checkingTypes, options?.Dictionary)")]
 		void CheckText (NSRange range, NSTextCheckingTypes checkingTypes, NSTextCheckingOptions options);
 
 		[Export ("checkTextInSelection:")]
