@@ -420,6 +420,7 @@ COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/Dispatch.cs \
 	CoreFoundation/DispatchData.cs \
 	CoreFoundation/NativeObject.cs \
+	CoreFoundation/Architecture.cs \
 
 COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFAllocator.cs \
