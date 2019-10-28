@@ -607,7 +607,7 @@ namespace AuthenticationServices {
 	[Native]
 	enum ASAuthorizationAppleIdButtonType : long {
 		SignIn,
-		continue,
+		Continue,
 		[TV (13,1), Mac (10,15,1), iOS (13,2)]
 		SignUp,
 		Default = SignIn,
