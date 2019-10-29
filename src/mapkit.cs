@@ -46,6 +46,10 @@ using MKOverlayPathRenderer = Foundation.NSObject;
 
 namespace MapKit {
 
+#if !IOS
+	interface UIScene {}
+#endif
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -326,6 +330,17 @@ namespace MapKit {
 		[Static]
 		[Export ("openMapsWithItems:launchOptions:"), Internal]
 		bool _OpenMaps ([NullAllowed] MKMapItem [] mapItems, [NullAllowed] NSDictionary launchOptions);
+
+		[iOS (13, 2), NoMac, NoTV, NoWatch]
+		[Introduced (PlatformName.UIKitForMac, 13, 2)]
+		[Export ("openInMapsWithLaunchOptions:fromScene:completionHandler:"), Internal]
+		void _OpenInMaps ([NullAllowed] NSDictionary  launchOptions, [NullAllowed] UIScene fromScene, Action<NSError> completionHandler);
+
+		[iOS (13, 2), NoMac, NoTV, NoWatch]
+		[Introduced (PlatformName.UIKitForMac, 13, 2)]
+		[Static]
+		[Export ("openMapsWithItems:launchOptions:fromScene:completionHandler:"), Internal]
+		void _OpenMaps ([NullAllowed] MKMapItem [] mapItems, [NullAllowed] NSDictionary launchOptions, [NullAllowed] UIScene fromScene, Action<NSError> completionHandler);
 
 		[NoTV]
 		[Field ("MKLaunchOptionsDirectionsModeKey"), Internal]
