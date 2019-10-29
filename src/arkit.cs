@@ -67,7 +67,9 @@ namespace ARKit {
 		InvalidReferenceObject = 301,
 		InvalidWorldMap = 302,
 		InvalidConfiguration = 303,
+		[Deprecated (PlatformName.iOS, 13, 2, message : "Please use the 'InvalidCollaborationData' value instead.")]
 		CollaborationDataUnavailable = 304,
+		InvalidCollaborationData = 304,
 		InsufficientFeatures = 400,
 		ObjectMergeFailed = 401,
 		FileIOFailed = 500,
