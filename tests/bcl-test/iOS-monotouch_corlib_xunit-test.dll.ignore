@@ -54,3 +54,5 @@ Platform32:Test.TaskContinueWhenAnyTests.RunContinueWhenAnyTests
 
 # Test running out of memory
 Platform32:System.Collections.Tests.BitArray_OperatorsTests.Xor_Operator(l: [False, True, False, True, False, ...], r: [True, True, True, True, True, ...], expected: [True, False, True, False, True, ...])
+# Test fails because the threadpool cannot create more threads. Mono issue: https://github.com/mono/mono/issues/17588
+Platform32:System.Threading.Tasks.Tests.CancelWait.TaskCancelWaitTestCases.TaskCancelWait16
