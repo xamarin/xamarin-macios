@@ -1900,7 +1900,7 @@ namespace MetalPerformanceShaders {
 		[Export ("matrixBytes")]
 		nuint MatrixBytes { get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), Mac (10, 15), iOS (13, 1)]
 		[Export ("offset")]
 		nuint Offset { get; }
 	}
@@ -2094,7 +2094,7 @@ namespace MetalPerformanceShaders {
 		[Export ("resourceSize")]
 		nuint ResourceSize { get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), Mac (10, 15), iOS (13, 1)]
 		[Export ("offset")]
 		nuint Offset { get; }
 	}
