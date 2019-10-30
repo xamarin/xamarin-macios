@@ -32,6 +32,7 @@ using UIImage=AppKit.NSImage;
 using UIView=AppKit.NSView;
 using UIEdgeInsets=AppKit.NSEdgeInsets;
 using UIColor=AppKit.NSColor;
+using UIScene=AppKit.NSColor;
 #endif
 #if WATCH
 // helper for [NoWatch]
@@ -45,10 +46,6 @@ using MKOverlayPathRenderer = Foundation.NSObject;
 #endif
 
 namespace MapKit {
-
-#if !IOS
-	interface UIScene {}
-#endif
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -324,7 +321,7 @@ namespace MapKit {
 
 		[NoTV]
 		[Export ("openInMapsWithLaunchOptions:"), Internal]
-		bool _OpenInMaps ([NullAllowed] NSDictionary  launchOptions);
+		bool _OpenInMaps ([NullAllowed] NSDictionary launchOptions);
 
 		[NoTV]
 		[Static]
@@ -335,7 +332,7 @@ namespace MapKit {
 		[Introduced (PlatformName.UIKitForMac, 13, 2)]
 		[Async]
 		[Export ("openInMapsWithLaunchOptions:fromScene:completionHandler:")]
-		void OpenInMaps ([NullAllowed] NSDictionary  launchOptions, [NullAllowed] UIScene fromScene, Action<NSError> completionHandler);
+		void OpenInMaps ([NullAllowed] NSDictionary launchOptions, [NullAllowed] UIScene fromScene, Action<NSError> completionHandler);
 
 		[iOS (13, 2), NoMac, NoTV, NoWatch]
 		[Introduced (PlatformName.UIKitForMac, 13, 2)]
