@@ -492,7 +492,7 @@ xamarin_get_frame_length (id self, SEL sel)
 		// skip the return value.
 		desc += rvlength;
 		while (*desc) {
-			int tl = xamarin_objc_type_size (desc);
+			unsigned long tl = xamarin_objc_type_size (desc);
 			// round up to pointer size
 			if (tl % sizeof (void *) != 0)
 				tl += sizeof (void *) - (tl % sizeof (void *));

@@ -119,11 +119,12 @@ param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *tar
 
 		uint8_t *ptr;
 		bool read_register = true;
-		if (it->byte_count >= 48) { // 48 == 6 registers * 8 bytes
+		unsigned long register_size = 48; // 48 == 6 registers * 8 bytes
+		if ((unsigned long)it->byte_count >= register_size) { 
 			read_register = false;
-		} else if (48 - it->byte_count < total_size) {
+		} else if (register_size - it->byte_count < total_size) {
 			read_register = false;
-			LOGZ (" total size (%i) is less that available register size (%i)", (int) total_size, 48 - it->byte_count);
+			LOGZ (" total size (%i) is less that available register size (%i)", (int) total_size, register_size - it->byte_count);
 		}
 
 		if (read_register) {
