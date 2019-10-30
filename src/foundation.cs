@@ -5473,7 +5473,7 @@ namespace Foundation
 
 		// Inlined from NSUserActivity (UISceneActivationConditions)
 
-		[iOS (13,0), TV (13,0), NoMac, NoWatch]
+		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
 		[NullAllowed, Export ("targetContentIdentifier")]
 		string TargetContentIdentifier { get; set; }
 	}
