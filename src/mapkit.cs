@@ -333,14 +333,14 @@ namespace MapKit {
 
 		[iOS (13, 2), NoMac, NoTV, NoWatch]
 		[Introduced (PlatformName.UIKitForMac, 13, 2)]
-		[Export ("openInMapsWithLaunchOptions:fromScene:completionHandler:"), Internal]
-		void _OpenInMaps ([NullAllowed] NSDictionary  launchOptions, [NullAllowed] UIScene fromScene, Action<NSError> completionHandler);
+		[Export ("openInMapsWithLaunchOptions:fromScene:completionHandler:")]
+		void OpenInMaps ([NullAllowed] NSDictionary  launchOptions, [NullAllowed] UIScene fromScene, Action<NSError> completionHandler);
 
 		[iOS (13, 2), NoMac, NoTV, NoWatch]
 		[Introduced (PlatformName.UIKitForMac, 13, 2)]
 		[Static]
-		[Export ("openMapsWithItems:launchOptions:fromScene:completionHandler:"), Internal]
-		void _OpenMaps ([NullAllowed] MKMapItem [] mapItems, [NullAllowed] NSDictionary launchOptions, [NullAllowed] UIScene fromScene, Action<NSError> completionHandler);
+		[Export ("openMapsWithItems:launchOptions:fromScene:completionHandler:")]
+		void OpenMaps ([NullAllowed] MKMapItem [] mapItems, [NullAllowed] NSDictionary launchOptions, [NullAllowed] UIScene fromScene, Action<NSError> completionHandler);
 
 		[NoTV]
 		[Field ("MKLaunchOptionsDirectionsModeKey"), Internal]
