@@ -572,7 +572,7 @@ void monotouch_configure_debugging ()
 	evar = getenv ("__XAMARIN_DEBUG_HOSTS__");
 	if (evar && *evar) {
 		NSArray *ips = [[NSString stringWithUTF8String:evar] componentsSeparatedByString:@";"];
-		for (int i = 0; i < [ips count]; i++) {
+		for (unsigned int i = 0; i < [ips count]; i++) {
 			NSString *ip = [ips objectAtIndex:i];
 			if (![hosts containsObject:ip]) {
 				[hosts addObject:ip];
@@ -828,7 +828,7 @@ xamarin_connect_http (NSMutableArray *ips)
 		pthread_mutex_unlock (&connected_mutex);
 
 		pending_connections = [ips count];
-		for (int i = 0; i < [ips count]; i++) {
+		for (unsigned int i = 0; i < [ips count]; i++) {
 			XamarinHttpConnection *connection = [[[XamarinHttpConnection alloc] init] autorelease];
 			connection.ip = [ips objectAtIndex: i];
 			connection.uniqueRequest = unique_request;
@@ -1184,19 +1184,19 @@ monotouch_dump_objc_api (Class klass)
 	
 	vars = class_copyIvarList (klass, &c);
 	printf ("\t%i instance variables:\n", c);
-	for (int i = 0; i < c; i++)
+	for (unsigned int i = 0; i < c; i++)
 		printf ("\t\t#%i: %s\n", i + 1, ivar_getName (vars [i]));
 	free (vars);
 	
 	methods = class_copyMethodList (klass, &c);
 	printf ("\t%i instance methods:\n", c);
-	for (int i = 0; i < c; i++)
+	for (unsigned int i = 0; i < c; i++)
 		printf ("\t\t#%i: %s\n", i + 1, sel_getName (method_getName (methods [i])));
 	free (methods);
 	
 	props = class_copyPropertyList (klass, &c);
 	printf ("\t%i instance properties:\n", c);
-	for (int i = 0; i < c; i++)
+	for (unsigned int i = 0; i < c; i++)
 		printf ("\t\t#%i: %s\n", i + 1, property_getName (props [i]));
 	free (props);
 	

@@ -169,7 +169,7 @@ void			xamarin_set_bundle_path (const char *path); /* Public API */
 MonoObject *	xamarin_get_managed_object_for_ptr (id self, guint32 *exception_gchandle);
 MonoObject *	xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle);
 void			xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method, guint32 *exception_gchandle);
-int				xamarin_objc_type_size (const char *type);
+unsigned long 	xamarin_objc_type_size (const char *type);
 bool			xamarin_is_class_nsobject (MonoClass *cls);
 bool			xamarin_is_class_inativeobject (MonoClass *cls);
 bool			xamarin_is_class_array (MonoClass *cls);

@@ -1598,7 +1598,7 @@ objc_skip_type (const char *type)
 	}
 }
 
-int
+unsigned long
 xamarin_objc_type_size (const char *type)
 {
 	const char *original_type = type;
@@ -1642,7 +1642,7 @@ xamarin_objc_type_size (const char *type)
 			xamarin_assertion_message ("Unhandled type encoding: %s", type);
 			break;
 		case _C_ARY_B: {
-			int size = 0;
+			unsigned long size = 0;
 			int len = atoi (type+1);
 			do {
 				type++;
@@ -1655,7 +1655,7 @@ xamarin_objc_type_size (const char *type)
 			return len * size;
 		}
 		case _C_UNION_B: {
-			int size = 0;
+			unsigned long size = 0;
 
 			do {
 				type++;
@@ -1670,7 +1670,7 @@ xamarin_objc_type_size (const char *type)
 				if (*type == 0)
 					xamarin_assertion_message ("Unsupported union type: %s", original_type);
 
-				int tsize = xamarin_objc_type_size (type);
+				unsigned long tsize = xamarin_objc_type_size (type);
 				type = objc_skip_type (type);
 
 				tsize = (tsize + (sizeof (void *) - 1)) & ~((sizeof (void *) - 1));
@@ -1680,7 +1680,7 @@ xamarin_objc_type_size (const char *type)
 			return size;
 		}
 		case _C_STRUCT_B: {
-			int size = 0;
+			unsigned long size = 0;
 
 			do {
 				type++;
@@ -1694,7 +1694,7 @@ xamarin_objc_type_size (const char *type)
 			while (*type != _C_STRUCT_E) {
 				if (*type == 0)
 					xamarin_assertion_message ("Unsupported struct type: %s", original_type);
-				int item_size = xamarin_objc_type_size (type);
+				unsigned long item_size = xamarin_objc_type_size (type);
 				
 				size += (item_size + (sizeof (void *) - 1)) & ~((sizeof (void *) - 1));
 
