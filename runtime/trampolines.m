@@ -1308,11 +1308,6 @@ xamarin_get_nsvalue_converter (MonoClass *managedType, MonoMethod *method, bool 
 	if (*exception_gchandle != 0)
 		goto exception_handling;
 
-#if MONOMAC
-	if (xamarin_use_new_assemblies && !strncmp (fullname, "MonoMac.", 8))
-		memmove (fullname, fullname + 8, strlen (fullname) - 7 /* also copy the null char */);
-#endif
-
 	if (!strcmp (fullname, "Foundation.NSRange")) {
 		func = to_managed ? (void *) xamarin_nsvalue_to_nsrange : (void *) xamarin_nsrange_to_nsvalue;
 #if HAVE_UIKIT // yep, these CoreGraphics-looking category methods are defined in UIKit
