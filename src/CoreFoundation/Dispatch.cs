@@ -270,6 +270,11 @@ namespace CoreFoundation {
 		{
 			return new DispatchQueue (dispatch_get_global_queue ((nint) (int) priority, 0), false);
 		}
+		
+		public static DispatchQueue GetGlobalQueue (DispatchQualityOfService identifier)
+		{
+			return new DispatchQueue (dispatch_get_global_queue ((nint) (int) identifier, 0), false);
+		}
 
 		public static DispatchQueue DefaultGlobalQueue {
 			get {
@@ -531,6 +536,10 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		// dispatch_queue_t dispatch_get_global_queue (long priority, unsigned long flags);
 		extern static IntPtr dispatch_get_global_queue (nint priority, nuint flags);
+
+		[DllImport (Constants.libcLibrary)]
+		// dispatch_queue_t dispatch_get_global_queue (long identifier, unsigned long flags);
+		extern static IntPtr dispatch_get_global_queue (nint identifier, nuint flags);
 
 		[DllImport (Constants.libcLibrary)]
 		// this returns a "const char*" so we cannot make a string out of it since it will be freed (and crash)

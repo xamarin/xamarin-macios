@@ -376,14 +376,21 @@ namespace Bindings.Test {
 		void CallOptionalStaticCallback ();
 
 		[Static]
-		[Export ("callAssertMainThreadBlockRelease:")]
-		void CallAssertMainThreadBlockRelease (OuterBlock completionHandler);
+		[Export ("callAssertMainThreadBlockReleasePriority:")]
+		void callAssertMainThreadBlockReleasePriority (OuterBlock completionHandler);
+
+		[Static]
+		[Export ("callAssertMainThreadBlockReleaseQOS:")]
+		void CallAssertMainThreadBlockReleaseQOS (OuterBlock completionHandler);
 
 		[Export ("assertMainThreadBlockReleaseCallback:")]
 		void AssertMainThreadBlockReleaseCallback (InnerBlock completionHandler);
 
-		[Export ("callAssertMainThreadBlockReleaseCallback")]
-		void CallAssertMainThreadBlockReleaseCallback ();
+		[Export ("callAssertMainThreadBlockReleaseCallbackPriority")]
+		void callAssertMainThreadBlockReleaseCallbackPriority ();
+
+		[Export ("callAssertMainThreadBlockReleaseCallbackQOS")]
+		void CallAssertMainThreadBlockReleaseCallbackQOS ();
 
 		[Export ("testFreedBlocks")]
 		void TestFreedBlocks ();

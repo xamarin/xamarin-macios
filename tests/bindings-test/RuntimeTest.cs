@@ -57,19 +57,36 @@ namespace Xamarin.Tests
 		}
 
 		[Test]
-		public void MainThreadDeallocationTest ()
+		public void MainThreadDeallocationTestPriority ()
 		{
 #if OPTIMIZEALL
 			if (!TestRuntime.IsLinkAll)
 				Assert.Ignore ("This test must be processed by the linker if all optimizations are turned on.");
 #endif
 
-			ObjCBlockTester.CallAssertMainThreadBlockRelease ((callback) => {
+			ObjCBlockTester.CallAssertMainThreadBlockReleasePriority ((callback) => {
 				callback (42);
 			});
 
 			using (var main_thread_tester = new MainThreadTest ()) {
-				main_thread_tester.CallAssertMainThreadBlockReleaseCallback ();
+				main_thread_tester.CallAssertMainThreadBlockReleaseCallbackPriority ();
+			}
+		}
+
+		[Test]
+		public void MainThreadDeallocationTestQOS ()
+		{
+#if OPTIMIZEALL
+			if (!TestRuntime.IsLinkAll)
+				Assert.Ignore ("This test must be processed by the linker if all optimizations are turned on.");
+#endif
+
+			ObjCBlockTester.CallAssertMainThreadBlockReleaseQOS ((callback) => {
+				callback (42);
+			});
+
+			using (var main_thread_tester = new MainThreadTest ()) {
+				main_thread_tester.CallAssertMainThreadBlockReleaseCallbackQOS ();
 			}
 		}
 
