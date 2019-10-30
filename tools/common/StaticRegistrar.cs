@@ -3609,7 +3609,8 @@ namespace Registrar {
 							body_setup.AppendLine ("MonoObject *mobj{0} = NULL;", i);
 							if (!isOut) {
 								body_setup.AppendLine ("NSObject *nsobj{0} = NULL;", i);
-								setup_call_stack.AppendLine ("nsobj{0} = *(NSObject **) p{0};", i);
+								setup_call_stack.AppendLine ("if (p{0} != NULL)", i).Indent ();
+								setup_call_stack.AppendLine ("nsobj{0} = *(NSObject **) p{0};", i).Unindent ();
 								setup_call_stack.AppendLine ("if (nsobj{0}) {{", i);
 								body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
 								setup_call_stack.AppendLine ("paramtype{0} = xamarin_get_parameter_type (managed_method, {0});", i);
