@@ -175,7 +175,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 
 define SimlauncherTemplate
 
-simlauncher$(3)-sgen: simlauncher.m $(TOP)/runtime/.libs/iphonesimulator/libxamarin-debug.a Makefile Xamarin.iOS.registrar.ios.simulator.a
+simlauncher$(3)-sgen: simlauncher.mm $(TOP)/runtime/.libs/iphonesimulator/libxamarin-debug.a Makefile Xamarin.iOS.registrar.ios.simulator.a
 	$(QT_CC) $(SIMULATOR_CC) -DDEBUG -DSIMLAUNCHER $(1) -gdwarf-2 \
 		-L$(TOP)/runtime/.libs/iphonesimulator \
 		-I$(TOP)/runtime \
@@ -183,7 +183,7 @@ simlauncher$(3)-sgen: simlauncher.m $(TOP)/runtime/.libs/iphonesimulator/libxama
 		$(foreach u,$(UNREFERENCED_SYMBOLS),-u $u)  \
 		$(TOP)/runtime/.libs/iphonesimulator/libapp.a \
 		-Wl,-w \
-		-lz -liconv $(TOP)/runtime/.libs/iphonesimulator/libxamarin-debug.a simlauncher.m $(SIMLAUNCHER_FRAMEWORKS) $(SIMULATOR$(2)_OBJC_CFLAGS) -o $$@
+		-lz -liconv $(TOP)/runtime/.libs/iphonesimulator/libxamarin-debug.a simlauncher.mm $(SIMLAUNCHER_FRAMEWORKS) $(SIMULATOR$(2)_OBJC_CFLAGS) -o $$@
 	$(Q) xcrun otool -L $$@ > $$@.frameworks
 endef
 
