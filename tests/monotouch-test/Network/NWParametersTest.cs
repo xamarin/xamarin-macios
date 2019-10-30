@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -94,7 +94,7 @@ namespace MonoTouchFixtures.Network {
 			secureConnectionWasSet = false;
 			protocolConfigured = false;
 		}
-
+		
 		void EnumerateInterfacesHandler (NWInterface nwInterface)
 		{
 			interfaces.Add (nwInterface);
@@ -123,10 +123,7 @@ namespace MonoTouchFixtures.Network {
 			var setUpProtocol = CreateConfigureProtocolHandler ();
 
 			using (var parameters = NWParameters.CreateSecureUdp (configureTls: setUpTls, configureUdp: setUpProtocol))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80")) { 
 				secureEvent.WaitOne ();
 				configureEvent.WaitOne ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
@@ -140,10 +137,7 @@ namespace MonoTouchFixtures.Network {
 			var setUpTls = CreateTlsHandler ();
 
 			using (var parameters = NWParameters.CreateSecureUdp (configureTls: setUpTls))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80")) { 
 				secureEvent.WaitOne ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.False (protocolConfigured, "Protocol configure handler was called.");
@@ -156,10 +150,7 @@ namespace MonoTouchFixtures.Network {
 			var setUpProtocol = CreateConfigureProtocolHandler ();
 
 			using (var parameters = NWParameters.CreateSecureUdp (configureTls: null, configureUdp: setUpProtocol))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80")) {
 				configureEvent.WaitOne ();
 				Assert.False (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
@@ -173,10 +164,7 @@ namespace MonoTouchFixtures.Network {
 			var setUpProtocol = CreateConfigureProtocolHandler ();
 
 			using (var parameters = NWParameters.CreateSecureTcp (configureTls: setUpTls, configureTcp: setUpProtocol))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80")) { 
 				secureEvent.WaitOne ();
 				configureEvent.WaitOne ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
@@ -191,10 +179,7 @@ namespace MonoTouchFixtures.Network {
 			var setUpProtocol = CreateConfigureProtocolHandler ();
 
 			using (var parameters = NWParameters.CreateSecureTcp (configureTls: setUpTls))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80")) { 
 				secureEvent.WaitOne ();
 				Assert.True (secureConnectionWasSet, "Configure TLS handler was not called.");
 				Assert.False (protocolConfigured, "Protocol configure handler was called.");
@@ -207,10 +192,7 @@ namespace MonoTouchFixtures.Network {
 			var setUpProtocol = CreateConfigureProtocolHandler ();
 
 			using (var parameters = NWParameters.CreateSecureTcp (configureTls: null, configureTcp: setUpProtocol))
-			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80"))
-			using (var connection = new NWConnection (endpoint, parameters)) {
-				connection.SetQueue (DispatchQueue.MainQueue);
-				connection.Start ();
+			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80")) { 
 				configureEvent.WaitOne ();
 				Assert.False (secureConnectionWasSet, "Configure TLS handler was called.");
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
