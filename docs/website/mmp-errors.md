@@ -512,7 +512,7 @@ Consider using `lipo` to remove the unnecessary archtectures permanently from th
 
 #### MM4162: The type '\*' (used as * {2}) is not available in * * (it was introduced in * *)\* Please build with a newer * SDK (usually done by using the most recent version of Xcode.
 
-To build your application, Xamarin.Mac must link against system libraries, some of which depend upon the SDK version specified in the error message. Since you are using an older version of the SDK, invocations to those APIs may fail at runtime.
+To build your application, Xamarin.Mac must compile against Xcode SDK header files, including new types not available in the SDK version specified in the error message. Since you are using an older version of the SDK, builds using those APIs fails at build time.
 
 The recommended way to fix this error is to upgrade Xcode to get the needed SDK. If you have multiple versions of Xcode installed or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
 

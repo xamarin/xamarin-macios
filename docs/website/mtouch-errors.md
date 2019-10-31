@@ -2407,13 +2407,13 @@ All fields in a structure that is exposed to Objective-C must also be structures
 
 ### MT4162: The type '\*' (used as * {2}) is not available in * * (it was introduced in * *)\* Please build with a newer * SDK (usually done by using the most recent version of Xcode.
 
-To build your application, Xamarin.Mac must link against system libraries, some of which depend upon the SDK version specified in the error message. Since you are using an older version of the SDK, invocations to those APIs may fail at runtime.
+To build your application, Xamarin.iOS must compile against Xcode SDK header files, including new types not available in the SDK version specified in the error message. Since you are using an older version of the SDK, builds using those APIs fails at build time.
 
 The recommended way to fix this error is to upgrade Xcode to get the needed SDK. If you have multiple versions of Xcode installed or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
 
 Alternatively, enable the managed linker to remove unused APIs, including (in most cases) the new ones which require the specified library. However, this will not work if your project requires APIs introduced in a newer SDK than the one your Xcode provides.
 
-As a last-straw solution, use an older version of Xamarin.Mac that does not require these new SDKs to be present during the build process.
+As a last-straw solution, use an older version of Xamarin.iOS that does not require these new SDKs to be present during the build process.
 
 <a name="MT4163" />
 
