@@ -358,7 +358,7 @@ namespace System.Net.Http
 					var key = entry.Key.ToString ();
 					var value = entry.Value == null ? string.Empty : entry.Value.ToString ();
 					HttpHeaders item_headers;
-					if (PlatformHelper.IsContentHeader (key)) {
+					if (HeaderDescriptor.TryGet (key, out var descriptor) && descriptor.HeaderType == HttpHeaderType.Content) {
 						item_headers = response_msg.Content.Headers;
 					} else {
 						item_headers = response_msg.Headers;
