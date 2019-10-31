@@ -1,6 +1,5 @@
 NEEDED_MONO_VERSION := 4847b8e7a721a488c228080a932124337966e5a8
-NEEDED_MONO_BRANCH := 2019-10
-
+NEEDED_MONO_BRANCH := backport-pr-17628-to-2019-10
 
 MONO_DIRECTORY := mono
-MONO_MODULE    := https://github.com/mono/mono
+MONO_MODULE    := https://github.com/monojenkins/mono
