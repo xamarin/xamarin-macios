@@ -9099,5 +9099,38 @@ namespace Intents {
 	//	[Export ("deferredLocalizedIntentsStringWithFormat:fromTable:arguments:", IsVariadic = true)]
 	//	string DeferredLocalizedIntentsStringWithFormat (string format, [NullAllowed] string table, IntPtr arguments);
 	//}
+
+	[Watch (6,0), NoMac, iOS (13,0)]
+	[Native]
+	public enum INCallAudioRoute : long
+	{
+		Unknown = 0,
+		SpeakerphoneAudioRoute,
+		BluetoothAudioRoute,
+	}
+
+	[Watch (6,0), NoMac, iOS (13,0)]
+	[BaseType (typeof (INIntent))]
+	interface INStartCallIntent
+	{
+		[Export ("initWithAudioRoute:destinationType:contacts:recordTypeForRedialing:callCapability:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson[] contacts, INCallRecordType recordTypeForRedialing, INCallCapability callCapability);
+
+		[Export ("audioRoute", ArgumentSemantic.Assign)]
+		INCallAudioRoute AudioRoute { get; }
+
+		[Export ("destinationType", ArgumentSemantic.Assign)]
+		INCallDestinationType DestinationType { get; }
+
+		[NullAllowed, Export ("contacts", ArgumentSemantic.Copy)]
+		INPerson[] Contacts { get; }
+
+		[Export ("recordTypeForRedialing", ArgumentSemantic.Assign)]
+		INCallRecordType RecordTypeForRedialing { get; }
+
+		[Export ("callCapability", ArgumentSemantic.Assign)]
+		INCallCapability CallCapability { get; }
+	}	
 }
 #endif // XAMCORE_2_0
