@@ -1,2 +1,0 @@
-!missing-selector! +MKMapItem::openMapsWithItems:launchOptions:fromScene:completionHandler: not bound
-!missing-selector! MKMapItem::openInMapsWithLaunchOptions:fromScene:completionHandler: not bound
