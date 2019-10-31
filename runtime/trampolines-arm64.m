@@ -40,7 +40,7 @@ dump_state (struct XamarinCallState *state, const char *prefix)
 #define dump_state(...)
 #endif
 
-static int
+static size_t 
 param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *target, size_t total_size, guint32 *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
@@ -182,7 +182,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 	const char *t = struct_name;
 	uint8_t *targ = (uint8_t *) target;
 	do {
-		int c = param_read_primitive (it, t, targ, size, exception_gchandle);
+		size_t c = param_read_primitive (it, t, targ, size, exception_gchandle);
 		if (*exception_gchandle != 0)
 			return;
 		if (targ != NULL)

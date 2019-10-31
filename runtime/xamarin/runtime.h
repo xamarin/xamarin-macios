@@ -129,7 +129,7 @@ typedef struct {
 typedef struct {
 	MonoReflectionMethod *method;
 	int32_t semantic;
-	int32_t bindas_count; // The number of elements available in the bindas_types array.
+	unsigned long bindas_count; // The number of elements available in the bindas_types array.
 	// An array of BindAs original types. Element 0 is for the return value,
 	// the rest are for parameters (parameters start at 1 even for void methods).
 	// The array must contain space for the return value and all the parameters,
@@ -181,7 +181,7 @@ MonoClass *		xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchan
 MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle);
-int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle);
+int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, unsigned long par, void *nativeBlock, guint32 *exception_gchandle);
 id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 token_ref /* INVALID_TOKEN_REF allowed, but requires the dynamic registrar at runtime */, guint32 *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
 void			xamarin_set_nsobject_handle (MonoObject *obj, id handle);
@@ -227,7 +227,7 @@ char *			xamarin_type_get_full_name (MonoType *type, guint32 *exception_gchandle
 char *			xamarin_class_get_full_name (MonoClass *klass, guint32 *exception_gchandle); // return value must be freed with 'mono_free'
 
 #if DEBUG
-void			xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, int index, MonoClass *expected, MonoMethod *method);
+void			xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, unsigned long index, MonoClass *expected, MonoMethod *method);
 void			xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, int index, MonoMethod *method);
 #endif
 
