@@ -9105,8 +9105,8 @@ namespace Intents {
 	public enum INCallAudioRoute : long
 	{
 		Unknown = 0,
-		SpeakerphoneAudioRoute,
-		BluetoothAudioRoute,
+		Speakerphone,
+		Bluetooth,
 	}
 
 	[Watch (6,0), NoMac, iOS (13,0)]
