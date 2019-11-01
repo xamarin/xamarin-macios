@@ -42,7 +42,6 @@
 !missing-protocol! ICDeviceDelegate not bound
 !missing-selector! ICCameraDevice::batteryLevel not bound
 !missing-selector! ICCameraDevice::batteryLevelAvailable not bound
-!missing-selector! ICCameraDevice::cancelDownload not bound
 !missing-selector! ICCameraDevice::contentCatalogPercentCompleted not bound
 !missing-selector! ICCameraDevice::contents not bound
 !missing-selector! ICCameraDevice::filesOfType: not bound
