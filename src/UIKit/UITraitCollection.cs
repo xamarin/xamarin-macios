@@ -14,6 +14,14 @@ using Foundation;
 namespace UIKit {
 #if !WATCH
 	public partial class UITraitCollection {
+#if !XAMCORE_4_0
+		[Obsolete ("Please use the static method instead.")]
+		public UITraitCollection FromPreferredContentSizeCategory (UIContentSizeCategory category)
+		{
+			return FromPreferredContentSizeCategory (category.GetConstant ());
+		}
+#endif
+
 		public static UITraitCollection FromPreferredContentSizeCategory (UIContentSizeCategory category)
 		{
 			return FromPreferredContentSizeCategory (category.GetConstant ());
