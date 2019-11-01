@@ -38,6 +38,9 @@ namespace Network {
 		WillMarkReady = 2,
 	}
 
+	public delegate int NWFramerParseCompletionDelegate (Memory<byte> buffer, bool isCompleted);
+	public delegate int NWFramerInputDelegate (NWFramer framer); 
+
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWFramer : NativeObject {
 		internal NWFramer (IntPtr handle, bool owns) : base (handle, owns) {}
@@ -186,7 +189,7 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_framer_set_input_handler_t))]
 		static int TrampolineInputHandler (IntPtr block, OS_nw_framer framer)
 		{
-			var del = BlockLiteral.GetTarget<Func<NWFramer, int>> (block);
+			var del = BlockLiteral.GetTarget<NWFramerInputDelegate> (block);
 			if (del != null) {
 				var nwFramer = new NWFramer (framer, owns: true);
 				return del (nwFramer);
@@ -195,7 +198,7 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public Func<NWFramer, int> InputHandler {
+		public NWFramerInputDelegate InputHandler {
 			set {
 				unsafe {
 					if (value == null) {
@@ -405,7 +408,7 @@ namespace Network {
 		[MonoPInvokeCallback (typeof (nw_framer_parse_input_t))]
 		static int TrampolineParseInputHandler (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete)
 		{
-			var del = BlockLiteral.GetTarget<Func<Memory<byte>, bool, int>> (block);
+			var del = BlockLiteral.GetTarget<NWFramerParseCompletionDelegate> (block);
 			if (del != null) {
 				var bBuffer = new byte[buffer_length];
 				Marshal.Copy (buffer, bBuffer, 0, (int)buffer_length);
@@ -416,7 +419,7 @@ namespace Network {
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public bool ParseInput (nuint minimumIncompleteLength, nuint maximumLength, Memory<byte> tempBuffer, Func<Memory<byte>, bool, int> handler)
+		public bool ParseInput (nuint minimumIncompleteLength, nuint maximumLength, Memory<byte> tempBuffer, NWFramerParseCompletionDelegate handler)
 		{
 			if (handler == null)
 				throw new ArgumentNullException (nameof (handler));
