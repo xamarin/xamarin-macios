@@ -126,6 +126,7 @@
 !missing-field! kCMMetadataIdentifier_QuickTimeMetadataPreferredAffineTransform not bound
 !missing-field! kCMMetadataIdentifier_QuickTimeMetadataVideoOrientation not bound
 !missing-field! kCMMetadataIdentifier_QuickTimeMetadataLivePhotoStillImageTransform not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataLivePhotoStillImageTransformReferenceDimensions not bound
 !missing-field! kCMMetadataKeySpace_HLSDateRange not bound
 !missing-field! kCMMetadataKeySpace_Icy not bound
 !missing-field! kCMMetadataKeySpace_ID3 not bound

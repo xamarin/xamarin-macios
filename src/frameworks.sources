@@ -70,6 +70,7 @@ APPKIT_CORE_SOURCES = \
 	AppKit/Enums.cs \
 	AppKit/XEnums.cs \
 	AppKit/NSAccessibility.cs \
+	XKit/Types.cs \
 
 APPKIT_SOURCES = \
 	AppKit/ActionDispatcher.cs \
@@ -147,6 +148,7 @@ APPKIT_SOURCES = \
 	AppKit/NSColorPickerTouchBarItem.cs \
 	AppKit/NSSliderTouchBarItem.cs \
 	AppKit/NSView.cs \
+	AppKit/NSCollectionLayoutAnchor.cs \
 
 # ARKit
 
@@ -418,6 +420,7 @@ COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/Dispatch.cs \
 	CoreFoundation/DispatchData.cs \
 	CoreFoundation/NativeObject.cs \
+	CoreFoundation/Architecture.cs \
 
 COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFAllocator.cs \
@@ -916,11 +919,13 @@ IMAGECAPTURECORE_API_SOURCES = \
 IMAGEIO_API_SOURCES = \
 	ImageIO/Enums.cs \
 
+IMAGEIO_CORE_SOURCES = \
+	ImageIO/CGImageSource.cs \
+
 IMAGEIO_SOURCES = \
 	ImageIO/CGImageDestination.cs \
 	ImageIO/CGImageMetadata.cs \
 	ImageIO/CGImageMetadataTag.cs \
-	ImageIO/CGImageSource.cs \
 	ImageIO/CGImageSource.iOS.cs \
 	ImageIO/CGMutableImageMetadata.cs \
 
@@ -1162,12 +1167,21 @@ NATURALLANGUAGE_SOURCES = \
 
 NETWORK_SOURCES = \
 	Network/NWAdvertiseDescriptor.cs	\
+	Network/NWBrowserDescriptor.cs	\
+	Network/NWBrowseResult.cs	\
+	Network/NWBrowser.cs	\
 	Network/NWConnection.cs			\
 	Network/NWContentContext.cs		\
+	Network/NWDataTransferReport.cs 	\
+	Network/NWEstablishmentReport.cs	\
 	Network/NWEndpoint.cs			\
 	Network/NWError.cs			\
+	Network/NWFramer.cs			\
+	Network/NWFramerMessage.cs			\
 	Network/NWInterface.cs			\
+	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
+	Network/NWProtocolIPOptions.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
 	Network/NWPathMonitor.cs		\
@@ -1175,6 +1189,17 @@ NETWORK_SOURCES = \
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
+	Network/NWTcpMetadata.cs \
+	Network/NWTlsMetadata.cs \
+	Network/NWTxtRecord.cs	\
+	Network/NWProtocolTcpOptions.cs	\
+	Network/NWProtocolTlsOptions.cs	\
+	Network/NWProtocolUdpOptions.cs	\
+	Network/NWUdpMetadata.cs \
+	Network/NWWebSocketMetadata.cs	\
+	Network/NWWebSocketOptions.cs	\
+	Network/NWWebSocketRequest.cs	\
+	Network/NWWebSocketResponse.cs	\
 	
 # NetworkExtension
 
@@ -1498,6 +1523,7 @@ UIKIT_CORE_SOURCES = \
     UIKit/UIPrintInteractionController.cs \
     UIKit/UIStringAttributes.cs \
     UIKit/UITypes.cs \
+    XKit/Types.cs \
 
 UIKIT_SOURCES = \
 	UIKit/Compat.cs \

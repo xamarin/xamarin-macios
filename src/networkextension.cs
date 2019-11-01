@@ -421,6 +421,10 @@ namespace NetworkExtension {
 		[NoiOS]
 		[NullAllowed, Export ("sourceAppAuditToken")]
 		NSData SourceAppAuditToken { get; }
+
+		[Mac (10, 15), iOS (13, 1)]
+		[Export ("identifier")]
+		NSUuid Identifier { get; }
 	}
 
 	// according to Xcode7 SDK this was available (in parts) in iOS8

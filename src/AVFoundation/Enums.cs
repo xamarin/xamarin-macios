@@ -630,6 +630,18 @@ namespace AVFoundation {
 
 		[iOS (8,0)]
 		DataMatrixCode = 1 << 13,
+
+		[iOS (13,0)]
+		CatBody = 1 << 14,
+
+		[iOS (13,0)]
+		DogBody = 1 << 15,
+
+		[iOS (13,0)]
+		HumanBody = 1 << 16,
+
+		[iOS (13,0)]
+		SalientObject = 1 << 17,
 	}
 
 #if !MONOMAC

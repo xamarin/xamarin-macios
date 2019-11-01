@@ -39,7 +39,3 @@
 !missing-field! AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScoringVersion not bound
 !missing-field! AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScore not bound
 !missing-field! AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScoringVersion not bound
-!missing-field! AVMetadataObjectTypeCatBody not bound
-!missing-field! AVMetadataObjectTypeDogBody not bound
-!missing-field! AVMetadataObjectTypeHumanBody not bound
-!missing-field! AVMetadataObjectTypeSalientObject not bound

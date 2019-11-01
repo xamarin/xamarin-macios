@@ -5482,7 +5482,7 @@ namespace Foundation
 
 		// Inlined from NSUserActivity (UISceneActivationConditions)
 
-		[iOS (13,0), TV (13,0), NoMac, NoWatch]
+		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
 		[NullAllowed, Export ("targetContentIdentifier")]
 		string TargetContentIdentifier { get; set; }
 	}
@@ -9009,6 +9009,17 @@ namespace Foundation
 		[Static]
 		[Export ("notApplicableSelectionMarker", ArgumentSemantic.Strong)]
 		NSBindingSelectionMarker NotApplicableSelectionMarker { get; }
+
+		[Mac (10,15)]
+		[Static]
+		[Export ("setDefaultPlaceholder:forMarker:onClass:withBinding:")]
+		void SetDefaultPlaceholder ([NullAllowed] NSObject placeholder, [NullAllowed] NSBindingSelectionMarker marker, Class objectClass, string binding);
+
+		[Mac (10,15)]
+		[Static]
+		[Export ("defaultPlaceholderForMarker:onClass:withBinding:")]
+		[return: NullAllowed]
+		NSObject GetDefaultPlaceholder ([NullAllowed] NSBindingSelectionMarker marker, Class objectClass, string binding);
 	}
 
 	[Protocol (Name = "NSObject")] // exists both as a type and a protocol in ObjC, Swift uses NSObjectProtocol

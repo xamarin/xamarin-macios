@@ -873,8 +873,9 @@ namespace StoreKit {
 	[Mac (10,15)]
 	delegate void SKArcadeServiceSubscriptionHandler (NSData subscriptionStatus, uint /* uint32_t */ subscriptionStatusLength, NSData cmacOfNonce, uint /* uint32_t */ cmacOfNonceLength, NSError error);
 
-	[NoiOS][NoTV]
 	[Mac (10,15)]
+	[iOS (13,0)]
+	[TV (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // all static members so far
 	interface SKArcadeService {
