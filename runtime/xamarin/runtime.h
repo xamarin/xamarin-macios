@@ -129,7 +129,7 @@ typedef struct {
 typedef struct {
 	MonoReflectionMethod *method;
 	int32_t semantic;
-	unsigned long bindas_count; // The number of elements available in the bindas_types array.
+	int32_t bindas_count; // The number of elements available in the bindas_types array.
 	// An array of BindAs original types. Element 0 is for the return value,
 	// the rest are for parameters (parameters start at 1 even for void methods).
 	// The array must contain space for the return value and all the parameters,

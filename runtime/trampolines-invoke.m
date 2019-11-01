@@ -149,7 +149,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	unsigned long desc_arg_count = num_arg + 2; /* 1 for the return value + 1 if this is a category instance method */
 	size_t desc_size = desc_arg_count * sizeof (BindAsData) + sizeof (MethodDescription);
 	desc = (MethodDescription *) xamarin_calloc (desc_size);
-	desc->bindas_count = desc_arg_count;
+	desc->bindas_count = (int32_t) desc_arg_count;
 	free_list = s_list_prepend (free_list, desc);
 
 	if (is_ctor || is_static) {
@@ -415,7 +415,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							}
 
 							if (created && obj) {
-								bool is_transient = xamarin_is_parameter_transient (mono_method_get_object (domain, method, NULL), i, &exception_gchandle);
+								bool is_transient = xamarin_is_parameter_transient (mono_method_get_object (domain, method, NULL), (int32_t) i, &exception_gchandle);
 								if (exception_gchandle != 0)
 									goto exception_handling;
 								if (is_transient)
