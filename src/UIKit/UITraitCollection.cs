@@ -14,7 +14,7 @@ using Foundation;
 namespace UIKit {
 #if !WATCH
 	public partial class UITraitCollection {
-		public UITraitCollection FromPreferredContentSizeCategory (UIContentSizeCategory category)
+		public static UITraitCollection FromPreferredContentSizeCategory (UIContentSizeCategory category)
 		{
 			return FromPreferredContentSizeCategory (category.GetConstant ());
 		}
