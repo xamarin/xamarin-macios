@@ -64,6 +64,7 @@ public class TypeManager {
 	public Type CGPDFPage;
 	public Type CGGradient;
 	public Type CGImage;
+	public Type CGImageSource;
 	public Type CGLayer;
 	public Type CGLContext;
 	public Type CGLPixelFormat;
@@ -256,6 +257,7 @@ public class TypeManager {
 		CGPDFPage = Lookup (platform_assembly, "CoreGraphics", "CGPDFPage");
 		CGGradient = Lookup (platform_assembly, "CoreGraphics", "CGGradient");
 		CGImage = Lookup (platform_assembly, "CoreGraphics", "CGImage");
+		CGImageSource = Lookup (platform_assembly, "ImageIO", "CGImageSource");
 		CGLayer = Lookup (platform_assembly, "CoreGraphics", "CGLayer");
 		if (Frameworks.HaveOpenGL) {
 			CGLContext = Lookup (platform_assembly, "OpenGL", "CGLContext");
