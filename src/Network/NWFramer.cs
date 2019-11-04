@@ -38,8 +38,8 @@ namespace Network {
 		WillMarkReady = 2,
 	}
 
-	public delegate int NWFramerParseCompletionDelegate (Memory<byte> buffer, bool isCompleted);
-	public delegate int NWFramerInputDelegate (NWFramer framer); 
+	public delegate nuint NWFramerParseCompletionDelegate (Memory<byte> buffer, bool isCompleted);
+	public delegate nuint NWFramerInputDelegate (NWFramer framer); 
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWFramer : NativeObject {
@@ -183,11 +183,11 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_framer_set_input_handler (OS_nw_framer framer, void *input_handler);
 
-		delegate int nw_framer_set_input_handler_t (IntPtr block, OS_nw_framer framer);
+		delegate nuint nw_framer_set_input_handler_t (IntPtr block, OS_nw_framer framer);
 		static nw_framer_set_input_handler_t static_InputHandler = TrampolineInputHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_set_input_handler_t))]
-		static int TrampolineInputHandler (IntPtr block, OS_nw_framer framer)
+		static nuint TrampolineInputHandler (IntPtr block, OS_nw_framer framer)
 		{
 			var del = BlockLiteral.GetTarget<NWFramerInputDelegate> (block);
 			if (del != null) {
@@ -402,11 +402,11 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe bool nw_framer_parse_input (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte *temp_buffer, ref BlockLiteral parse);
 
-		delegate int nw_framer_parse_input_t (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete);
+		delegate nuint nw_framer_parse_input_t (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete);
 		static nw_framer_parse_input_t static_ParseInputHandler = TrampolineParseInputHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_parse_input_t))]
-		static int TrampolineParseInputHandler (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete)
+		static nuint TrampolineParseInputHandler (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete)
 		{
 			var del = BlockLiteral.GetTarget<NWFramerParseCompletionDelegate> (block);
 			if (del != null) {
