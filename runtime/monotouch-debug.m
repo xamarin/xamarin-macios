@@ -880,7 +880,8 @@ monotouch_connect_wifi (NSMutableArray *ips)
 	struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) sockaddr;
 	struct sockaddr_in *sin = (struct sockaddr_in *) sockaddr;
 	int family, waiting, len, rv;
-	unsigned long i, connected;
+	unsigned long i, connection_port;
+	bool connected;
 	unsigned long ip_count = [ips count];
 	const char *family_str;
 	const char *ip;
@@ -899,7 +900,7 @@ monotouch_connect_wifi (NSMutableArray *ips)
 	// Open a socket and try to establish a connection for each IP
 	do {
 		waiting = 0;
-		connected = -1;
+		connected = false;
 		for (i = 0; i < ip_count; i++) {
 			if (sockets [i] == -1)
 				continue;
@@ -937,7 +938,8 @@ monotouch_connect_wifi (NSMutableArray *ips)
 			// Connect to the host
 			if ((rv = connect (sockets[i], (struct sockaddr *) sockaddr, len)) == 0) {
 				// connection completed, this is our man.
-				connected = i;
+				connection_port = i;
+				connected = true;
 				break;
 			}
 			
@@ -953,7 +955,7 @@ monotouch_connect_wifi (NSMutableArray *ips)
 		}
 	
 		// Wait for async socket connections to become available
-		while (connected == -1lu && waiting > 0) {
+		while (!connected && waiting > 0) {
 			socklen_t optlen = sizeof (int);
 			fd_set rset, wset, xset;
 			struct timeval tv;
@@ -1028,27 +1030,28 @@ monotouch_connect_wifi (NSMutableArray *ips)
 				}
 				
 				// success!
-				connected = i;
+				connected = true;
+				connection_port = i;
 				break;
 			}
 		}
 	
-		if (connected == -1lu) {
+		if (!connected) {
 			free (sockets);
 			return;
 		}
 	
 		// close the remaining sockets
 		for (i = 0; i < ip_count; i++) {
-			if (i == connected || sockets[i] < 0)
+			if (i == connection_port || sockets[i] < 0)
 				continue;
 			
 			close (sockets[i]);
 			sockets[i] = -1;
 		}
 	
-		LOG (PRODUCT ": Established connection with the IDE (fd: %i)\n", sockets [connected]);
-	} while (monotouch_process_connection (sockets [connected]));
+		LOG (PRODUCT ": Established connection with the IDE (fd: %i)\n", sockets [connection_port]);
+	} while (monotouch_process_connection (sockets [connection_port]));
 
 	free (sockets);
 
@@ -1490,7 +1493,8 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 	unsigned long i;
 	unsigned long ip_count = [ips count];
 	const char *family_str;
-	unsigned long connected = -1;
+	bool connected = false;
+	unsigned long connection_port;
 	const char *ip;
 	int *sockets;
 	long flags;
@@ -1540,7 +1544,8 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 		// Connect to the host
 		if ((rv = connect (sockets[i], (struct sockaddr *) sockaddr, len)) == 0) {
 			// connection completed, this is our man.
-			connected = i;
+			connected = false;
+			connection_port = i;
 			break;
 		}
 		
@@ -1556,7 +1561,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 	}
 	
 	// Wait for async socket connections to become available
-	while (connected == -1lu && waiting > 0) {
+	while (!connected && waiting > 0) {
 		socklen_t optlen = sizeof (int);
 		fd_set rset, wset, xset;
 		struct timeval tv;
@@ -1631,30 +1636,31 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 			}
 			
 			// success!
-			connected = i;
+			connected = true;
+			connection_port = i;
 			break;
 		}
 	}
 	
-	if (connected == -1lu) {
+	if (!connected) {
 		free (sockets);
 		return 1;
 	}
 	
 	// make the socket block on reads/writes
-	flags = fcntl (sockets[connected], F_GETFL, NULL);
-	fcntl (sockets[connected], F_SETFL, flags & ~O_NONBLOCK);
+	flags = fcntl (sockets[connection_port], F_GETFL, NULL);
+	fcntl (sockets[connection_port], F_SETFL, flags & ~O_NONBLOCK);
  
 	LOG (PRODUCT ": Connected output to the IDE on %s:%d\n", [[ips objectAtIndex:i] UTF8String], output_port);
 
-	dup2 (sockets[connected], 1);
-	dup2 (sockets[connected], 2);
+	dup2 (sockets[connection_port], 1);
+	dup2 (sockets[connection_port], 2);
 
-	debug_host = strdup ([[ips objectAtIndex:connected] UTF8String]);
+	debug_host = strdup ([[ips objectAtIndex:connection_port] UTF8String]);
 	
 	// close the remaining sockets
 	for (i = 0; i < ip_count; i++) {
-		if (i == connected || sockets[i] < 0)
+		if (i == connection_port || sockets[i] < 0)
 			continue;
 		
 		close (sockets[i]);
