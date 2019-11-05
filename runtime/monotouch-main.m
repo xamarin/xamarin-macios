@@ -94,7 +94,7 @@ assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* us
 
 	// LOG (PRODUCT ": Looking for assembly '%s' (culture: '%s')\n", name, culture);
 
-	int len = strlen (name);
+	size_t len = strlen (name);
 	int has_extension = len > 3 && name [len - 4] == '.' && (!strcmp ("exe", name + (len - 3)) || !strcmp ("dll", name + (len - 3)));
 	bool dual_check = false;
 

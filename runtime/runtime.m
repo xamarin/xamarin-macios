@@ -704,7 +704,7 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 // 
 
 void
-xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, int index, MonoClass *expected, MonoMethod *method)
+xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, unsigned long index, MonoClass *expected, MonoMethod *method)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -2066,7 +2066,7 @@ xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
 
 typedef struct {
 	MonoMethod *method;
-	int par;
+	unsigned long par;
 } MethodAndPar;
 
 static gboolean
@@ -2094,7 +2094,7 @@ static MonoReferenceQueue *block_wrapper_queue;
  * create the method
  */
 static MonoObject *
-get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exception_gchandle)
+get_method_block_wrapper_creator (MonoMethod *method, unsigned long par, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -2162,7 +2162,7 @@ xamarin_release_block_on_main_thread (void *obj)
  * Returns: the instantiated delegate.
  */
 int *
-xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle)
+xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, unsigned long par, void *nativeBlock, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -2511,7 +2511,7 @@ xamarin_vprintf (const char *format, va_list args)
 void
 xamarin_get_assembly_name_without_extension (const char *aname, char *name, int namelen)
 {
-	int len = strlen (aname);
+	size_t len = strlen (aname);
 	strlcpy (name, aname, namelen);
 	if (namelen <= 4 || len <= 4)
 		return;

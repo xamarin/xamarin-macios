@@ -132,10 +132,10 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 }
 
 static guint32
-xamarin_get_exception_for_element_conversion_failure (guint32 inner_exception_gchandle, int index)
+xamarin_get_exception_for_element_conversion_failure (guint32 inner_exception_gchandle, unsigned long index)
 {
 	guint32 exception_gchandle = 0;
-	char *msg = xamarin_strdup_printf ("Failed to marshal the value at index %i.", index);
+	char *msg = xamarin_strdup_printf ("Failed to marshal the value at index %lu.", index);
 	exception_gchandle = xamarin_create_product_exception_with_inner_exception (8036, inner_exception_gchandle, msg);
 	xamarin_free (msg);
 	return exception_gchandle;
@@ -443,7 +443,7 @@ xamarin_collapse_struct_name (const char *type, char struct_name[], int max_char
 	return true;
 }
 
-int
+unsigned long
 xamarin_get_frame_length (id self, SEL sel)
 {
 	if (self == NULL)
@@ -453,7 +453,7 @@ xamarin_get_frame_length (id self, SEL sel)
 	// which NSMethodSignature chokes on: NSInvalidArgumentException Reason: +[NSMethodSignature signatureWithObjCTypes:]: unsupported type encoding spec '{?}'
 	// So instead parse the description ourselves.
 
-	int length = 0;
+	unsigned long length = 0;
 	[self class]; // There's a bug in the ObjC runtime where we might get an uninitialized Class instance from object_getClass. See #6258. Calling the 'class' selector first makes sure the Class instance is initialized.
 	Class cls = object_getClass (self);
 	const char *method_description = get_method_description (cls, sel);
@@ -465,14 +465,14 @@ xamarin_get_frame_length (id self, SEL sel)
 			length = [sig frameLength];
 		} @catch (NSException *ex) {
 			length = sizeof (void *) * 64; // some high-ish number.
-			fprintf (stderr, PRODUCT ": Failed to calculate the frame size for the method [%s %s] (%s). Using a value of %i instead.\n", class_getName (cls), sel_getName (sel), [[ex description] UTF8String], length);
+			fprintf (stderr, PRODUCT ": Failed to calculate the frame size for the method [%s %s] (%s). Using a value of %lu instead.\n", class_getName (cls), sel_getName (sel), [[ex description] UTF8String], length);
 		}
 	} else {
 		// The format of the method type encoding is described here: http://stackoverflow.com/a/11492151/183422
 		// the return type might have a number after it, which is the size of the argument frame
 		// first get this number (if it's there), and use it as a minimum value for the frame length
 		int rvlength = get_type_description_length (desc);
-		int min_length = 0;
+		unsigned long min_length = 0;
 		if (rvlength > 0) {
 			const char *min_start = desc + rvlength;
 			// the number is at the end of the return type encoding, so find any numbers
@@ -613,7 +613,7 @@ xamarin_release_trampoline (id self, SEL sel)
 	// COOP: does not access managed memory: any mode, but it assumes safe mode upon entry (it takes locks, and doesn't switch to safe mode).
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	
-	int ref_count;
+	unsigned long ref_count;
 	bool detach = false;
 
 	pthread_mutex_lock (&refcount_mutex);
@@ -1494,7 +1494,7 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 	if (array == NULL)
 		return NULL;
 
-	int length = mono_array_length (array);
+	unsigned long length = mono_array_length (array);
 	if (length == 0)
 		return [NSArray array];
 
@@ -1505,7 +1505,7 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 		element_size = mono_class_value_size (element_class, NULL);
 		ptr = (char *) mono_array_addr_with_size (array, element_size, 0);
 	}
-	for (int i = 0; i < length; i++) {
+	for (unsigned long i = 0; i < length; i++) {
 		MonoObject *value;
 		if (is_value_type) {
 			value = mono_value_box (mono_domain_get (), element_class, ptr + element_size * i);
@@ -1532,7 +1532,7 @@ xamarin_convert_nsarray_to_managed_with_func (NSArray *array, MonoClass *managed
 	if (array == NULL)
 		return NULL;
 
-	int length = [array count];
+	unsigned long length = [array count];
 	MonoArray *rv = mono_array_new (mono_domain_get (), managedElementType, length);
 
 	if (length == 0)
@@ -1548,7 +1548,7 @@ xamarin_convert_nsarray_to_managed_with_func (NSArray *array, MonoClass *managed
 		element_size = mono_class_value_size (managedElementType, NULL);
 		ptr = (char *) mono_array_addr_with_size (rv, element_size, 0);
 	}
-	for (int i = 0; i < length; i++) {
+	for (unsigned long i = 0; i < length; i++) {
 		if (is_value_type) {
 			valueptr = convert ([array objectAtIndex: i], valueptr, managedElementType, context, exception_gchandle);
 			memcpy (ptr, valueptr, element_size);
