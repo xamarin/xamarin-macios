@@ -1544,7 +1544,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 		// Connect to the host
 		if ((rv = connect (sockets[i], (struct sockaddr *) sockaddr, len)) == 0) {
 			// connection completed, this is our man.
-			connected = false;
+			connected = true;
 			connection_port = i;
 			break;
 		}
