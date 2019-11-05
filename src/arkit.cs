@@ -67,7 +67,11 @@ namespace ARKit {
 		InvalidReferenceObject = 301,
 		InvalidWorldMap = 302,
 		InvalidConfiguration = 303,
-		CollaborationDataUnavailable = 304,
+		#if !XAMCORE_4_0
+		[Obsolete ("Please use the 'InvalidCollaborationData' value instead.")]
+		CollaborationDataUnavailable = InvalidCollaborationData,
+		#endif
+		InvalidCollaborationData = 304,
 		InsufficientFeatures = 400,
 		ObjectMergeFailed = 401,
 		FileIOFailed = 500,

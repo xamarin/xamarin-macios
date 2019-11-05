@@ -1271,12 +1271,6 @@
 !missing-pinvoke! SecEncryptTransformCreate is not bound
 !missing-pinvoke! SecEncryptTransformGetTypeID is not bound
 !missing-pinvoke! SecGroupTransformGetTypeID is not bound
-!missing-pinvoke! SecHostCreateGuest is not bound
-!missing-pinvoke! SecHostRemoveGuest is not bound
-!missing-pinvoke! SecHostSelectedGuest is not bound
-!missing-pinvoke! SecHostSelectGuest is not bound
-!missing-pinvoke! SecHostSetGuestStatus is not bound
-!missing-pinvoke! SecHostSetHostingPort is not bound
 !missing-pinvoke! SecIdentityCopyPreference is not bound
 !missing-pinvoke! SecIdentityCopyPreferred is not bound
 !missing-pinvoke! SecIdentityCopySystemIdentity is not bound

@@ -105,6 +105,14 @@ namespace AVFoundation {
 				return AVMetadataObjectType.ITF14Code;
 			else if (obj == AVMetadataObject.TypeDataMatrixCode)
 				return AVMetadataObjectType.DataMatrixCode;
+			else if (obj == AVMetadataObject.TypeCatBody)
+				return AVMetadataObjectType.CatBody;
+			else if (obj == AVMetadataObject.TypeDogBody)
+				return AVMetadataObjectType.DogBody;
+			else if (obj == AVMetadataObject.TypeHumanBody)
+				return AVMetadataObjectType.HumanBody;
+			else if (obj == AVMetadataObject.TypeSalientObject)
+				return AVMetadataObjectType.SalientObject;
 			else
 				throw new ArgumentOutOfRangeException (string.Format ("Unexpected AVMetadataObjectType: {0}", obj));
 		}

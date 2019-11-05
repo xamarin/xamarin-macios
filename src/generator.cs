@@ -1214,14 +1214,21 @@ public partial class Generator : IMemberGatherer {
 
 	bool IsProtocolInterface (Type type, bool checkPrefix = true)
 	{
+		return IsProtocolInterface (type, checkPrefix, out var _);
+	}
+
+	bool IsProtocolInterface (Type type, bool checkPrefix, out Type protocol)
+	{
+		protocol = null;
 		// for subclassing the type (from the binding files) is not yet prefixed by an `I`
 		if (checkPrefix && type.Name [0] != 'I')
 			return false;
 
+		protocol = type;
 		if (AttributeManager.HasAttribute<ProtocolAttribute> (type))
 			return true;
 
-		var protocol = type.Assembly.GetType (type.Namespace + "." + type.Name.Substring (1), false);
+		protocol = type.Assembly.GetType (type.Namespace + "." + type.Name.Substring (1), false);
 		if (protocol == null)
 			return false;
 
@@ -2204,6 +2211,7 @@ public partial class Generator : IMemberGatherer {
 		marshal_types.Add (TypeManager.Class);
 		marshal_types.Add (TypeManager.CFRunLoop);
 		marshal_types.Add (TypeManager.CGColorSpace);
+		marshal_types.Add (TypeManager.CGImageSource);
 		marshal_types.Add (TypeManager.DispatchData);
 		marshal_types.Add (TypeManager.DispatchQueue);
 		marshal_types.Add (TypeManager.Protocol);
@@ -2871,6 +2879,9 @@ public partial class Generator : IMemberGatherer {
 						} else if (pi.PropertyType.Name == "CGColorSpace") {
 							getter = "GetNativeValue<" + pi.PropertyType +"> ({0})";
 							setter = "SetNativeValue ({0}, value)";
+						} else if (pi.PropertyType.Name == "CGImageSource") {
+							getter = "GetNativeValue<" + pi.PropertyType +"> ({0})";
+							setter = "SetNativeValue ({0}, value)";
 						} else {
 							throw new BindingException (1031, true,
 										    "Limitation: can not automatically create strongly typed dictionary for " +
@@ -3339,12 +3350,18 @@ public partial class Generator : IMemberGatherer {
 
 		var interfaceTag = protocolized == true ? "I" : "";
 		string tname;
+		// we are adding the usage of ReflectedType just for those cases in which we have nested enums/classes, this soluction does not
+		// work with nested/nested/nested classes. But we are not writing a general solution because:
+		// 1. We have only encountered nested classes.
+		// 2. We are not going to complicate the code more than needed if we have never ever faced a situation with a crazy nested hierarchy, 
+		//    so we only solve the problem we have, no more.
+		var parentClass = (type.ReflectedType == null) ? String.Empty : type.ReflectedType.Name + "."; 
 		if (types_that_must_always_be_globally_named.Contains (type.Name))
-			tname = $"global::{type.Namespace}.{interfaceTag}{type.Name}";
+			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
 		else if ((usedInNamespace != null && type.Namespace == usedInNamespace) || ns.StandardNamespaces.Contains (type.Namespace) || string.IsNullOrEmpty (type.FullName))
 			tname = interfaceTag + type.Name;
 		else
-			tname = $"global::{type.Namespace}.{interfaceTag}{type.Name}";
+			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
 		
 		var targs = type.GetGenericArguments ();
 		if (targs.Length > 0) {

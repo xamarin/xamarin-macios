@@ -230,7 +230,32 @@ Incorrect:
 NSString[] StringProp { get; }
 ```
 
-### <a name='BI1072'/>BI1072: The BindAs type for the parameter "{parameterName}" in the method "{type}.{method}" must be an array when the parameter's type is an array.
+### <a name='BI1072'/>BI1072: Missing [CoreImageFilterProperty] attribute on {type} property {name}
+
+This error happens when a binding type, decorated with `[CoreImageFilter]` attribute, has properties that are not decorated with a `[CoreImageFilterProperty]` attribute. E.g.
+
+```csharp
+[CoreImageFilter]
+[BaseType (typeof (CIFilter))]
+interface CICustomFilter  {
+
+	CGAffineTransform Transform { get; }
+}
+```
+
+To solve this error you need to tell the `CIFilter` key that you want to map to the property, e.g.
+
+```csharp
+[CoreImageFilter]
+[BaseType (typeof (CIFilter))]
+interface CICustomFilter  {
+
+	[CoreImageFilterProperty ("inputTransform")]
+	CGAffineTransform Transform { get; }
+}
+```
+
+If the property is inlined from a protocol then the `[Export]` value, prefixed with `input`, will be used by default. You can override this with by adding the `[CoreImageFilterProperty]` attribute (e.g. for `output*` keys).
 
 # BI11xx: warnings
 

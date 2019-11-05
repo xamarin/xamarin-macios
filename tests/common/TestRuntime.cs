@@ -236,13 +236,25 @@ partial class TestRuntime
 #else
 				throw new NotImplementedException ();
 #endif
-			case 1: // This is guesswork until Apple actually releases an Xcode 11.1.
+			case 1:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (13, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 2:
 #if __WATCHOS__
 				return CheckWatchOSSystemVersion (6, 1);
 #elif __TVOS__
-				return ChecktvOSSystemVersion (13, 1);
+				return ChecktvOSSystemVersion (13, 2);
 #elif __IOS__
-				return CheckiOSSystemVersion (13, 1);
+				return CheckiOSSystemVersion (13, 2);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 1);
 #else

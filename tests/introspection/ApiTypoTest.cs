@@ -492,6 +492,7 @@ namespace Introspection
 			"Snapshotter",
 			"Snorm",
 			"Sobel",
+			"Softmax", // get_SoftmaxNormalization
 			"Spacei",
 			"Sqrt",
 			"Srgb",
