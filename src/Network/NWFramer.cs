@@ -38,14 +38,17 @@ namespace Network {
 		WillMarkReady = 2,
 	}
 
+	public delegate nuint NWFramerParseCompletionDelegate (Memory<byte> buffer, bool isCompleted);
+	public delegate nuint NWFramerInputDelegate (NWFramer framer); 
+
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWFramer : NativeObject {
 		internal NWFramer (IntPtr handle, bool owns) : base (handle, owns) {}
-/*
+
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_framer_write_output_no_copy (OS_nw_framer framer, nuint output_length);
 
-		public bool WriteOutput (nuint outputLength) => nw_framer_write_output_no_copy (GetCheckedHandle (), outputLength);
+		public bool WriteOutputNoCopy (nuint outputLength) => nw_framer_write_output_no_copy (GetCheckedHandle (), outputLength);
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_framer_write_output_data (OS_nw_framer framer, OS_dispatch_data output_data);
@@ -152,13 +155,13 @@ namespace Network {
 			var del = BlockLiteral.GetTarget<Action<NWFramer, NWProtocolMetadata, nuint, bool>> (block);
 			if (del != null) {
 				var nwFramer = new NWFramer (framer, owns: true);
-				var nwProtocolMetadata = new NWProtocolMetadata (message, owns: true);
+				var nwProtocolMetadata = new NWFramerMessage (message, owns: true);
 				del (nwFramer, nwProtocolMetadata, message_length, is_complete);
 			}
 		}
 		
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public Action<NWFramer, NWProtocolMetadata, nuint, bool> OutputHandler {
+		public Action<NWFramer, NWFramerMessage, nuint, bool> OutputHandler {
 			set {
 				unsafe {
 					if (value == null) {
@@ -180,21 +183,22 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_framer_set_input_handler (OS_nw_framer framer, void *input_handler);
 
-		delegate void nw_framer_set_input_handler_t (IntPtr block, OS_nw_framer framer);
+		delegate nuint nw_framer_set_input_handler_t (IntPtr block, OS_nw_framer framer);
 		static nw_framer_set_input_handler_t static_InputHandler = TrampolineInputHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_set_input_handler_t))]
-		static void TrampolineInputHandler (IntPtr block, OS_nw_framer framer)
+		static nuint TrampolineInputHandler (IntPtr block, OS_nw_framer framer)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWFramer>> (block);
+			var del = BlockLiteral.GetTarget<NWFramerInputDelegate> (block);
 			if (del != null) {
 				var nwFramer = new NWFramer (framer, owns: true);
-				del (nwFramer);
+				return del (nwFramer);
 			}
+			return 0;
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public Action<NWFramer> InputHandler {
+		public NWFramerInputDelegate InputHandler {
 			set {
 				unsafe {
 					if (value == null) {
@@ -217,9 +221,9 @@ namespace Network {
 		unsafe static extern void nw_framer_set_cleanup_handler (OS_nw_framer framer, void *cleanup_handler);
 
 		delegate void nw_framer_set_cleanup_handler_t (IntPtr block, OS_nw_framer framer);
-		static nw_framer_set_input_handler_t static_CleanupHandler = TrampolineCleanupHandler;
+		static nw_framer_set_cleanup_handler_t static_CleanupHandler = TrampolineCleanupHandler;
 
-		[MonoPInvokeCallback (typeof (nw_framer_set_input_handler_t))]
+		[MonoPInvokeCallback (typeof (nw_framer_set_cleanup_handler_t))]
 		static void TrampolineCleanupHandler (IntPtr block, OS_nw_framer framer)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWFramer>> (block);
@@ -253,7 +257,6 @@ namespace Network {
 		static extern void nw_framer_schedule_wakeup (OS_nw_framer framer, ulong milliseconds);
 
 		public void ScheduleWakeup (ulong milliseconds) => nw_framer_schedule_wakeup (GetCheckedHandle (), milliseconds);
-		*/
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_framer_message_create (OS_nw_framer framer);
@@ -261,7 +264,6 @@ namespace Network {
 		public NWFramerMessage CreateMessage ()
 			=> new NWFramerMessage (nw_framer_message_create (GetCheckedHandle ()), owns: true);
 
-		/*
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_framer_prepend_application_protocol (OS_nw_framer framer, OS_nw_protocol_options protocol_options);
 
@@ -295,7 +297,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_framer_deliver_input_no_copy (OS_nw_framer framer, nuint input_length, OS_nw_protocol_metadata message, bool is_complete);
 
-		public bool DeliverInput (nuint length, NWProtocolMetadata message, bool isComplete)
+		public bool DeliverInputNoCopy (nuint length, NWFramerMessage message, bool isComplete)
 		{
 			if (message == null)
 				throw new ArgumentNullException (nameof (message));
@@ -305,11 +307,12 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_options nw_framer_create_options (OS_nw_protocol_definition framer_definition);
 
-		public static NWProtocolOptions CreateOptions (NWProtocolDefinition protocolDefinition)
+		public static T CreateOptions<T> (NWProtocolDefinition protocolDefinition) where T: NWProtocolOptions
 		{
 			if (protocolDefinition == null)
 				throw new ArgumentNullException (nameof (protocolDefinition));
-			return new NWProtocolOptions (nw_framer_create_options (protocolDefinition.Handle), owns: true);
+			var x = nw_framer_create_options (protocolDefinition.Handle);
+			return Runtime.GetINativeObject<T> (x, owns: true);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -399,23 +402,24 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe bool nw_framer_parse_input (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte *temp_buffer, ref BlockLiteral parse);
 
-		delegate void nw_framer_parse_input_t (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete);
+		delegate nuint nw_framer_parse_input_t (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete);
 		static nw_framer_parse_input_t static_ParseInputHandler = TrampolineParseInputHandler;
 
 		[MonoPInvokeCallback (typeof (nw_framer_parse_input_t))]
-		static void TrampolineParseInputHandler (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete)
+		static nuint TrampolineParseInputHandler (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete)
 		{
-			var del = BlockLiteral.GetTarget<Action<Memory<byte>, bool>> (block);
+			var del = BlockLiteral.GetTarget<NWFramerParseCompletionDelegate> (block);
 			if (del != null) {
 				var bBuffer = new byte[buffer_length];
 				Marshal.Copy (buffer, bBuffer, 0, (int)buffer_length);
 				var mValue = new Memory<byte>(bBuffer);
-				del (mValue, is_complete);
+				return del (mValue, is_complete);
 			}
+			return 0;
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public bool ParseInput (nuint minimumIncompleteLength, nuint maximumLength, Memory<byte> tempBuffer, Action<Memory<byte>, bool> handler)
+		public bool ParseInput (nuint minimumIncompleteLength, nuint maximumLength, Memory<byte> tempBuffer, NWFramerParseCompletionDelegate handler)
 		{
 			if (handler == null)
 				throw new ArgumentNullException (nameof (handler));
@@ -432,36 +436,9 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern unsafe void nw_framer_message_set_value (OS_nw_protocol_metadata message, string key, byte *value, void *dispose_value);
-
-		public void SetKey (string key, ReadOnlySpan<byte> value)
-		{
-			// the method takes a callback to cleanup the data, but we do not need that since we are managed
-			if (key == null)
-				throw new ArgumentNullException (nameof (key));
-
-			unsafe {
-				fixed (byte* mh = value)
-					nw_framer_message_set_value (GetCheckedHandle (), key,  mh, null);
-			}
-		}
-
-		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_framer_message_set_object_value (OS_nw_protocol_metadata message, string key, IntPtr value);
-
-		public void SetObject (string key, NSObject value)
-			=> nw_framer_message_set_object_value (GetCheckedHandle (), key, value.GetHandle ()); 
-
-		[DllImport (Constants.NetworkLibrary)]
-		static extern IntPtr nw_framer_message_copy_object_value (OS_nw_protocol_metadata message, string key);
-
-		public NSObject GetValue (string key)
-			=> Runtime.GetNSObject (nw_framer_message_copy_object_value (GetCheckedHandle (), key));
-
-		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_framer_deliver_input (OS_nw_framer framer, byte *input_buffer, nuint input_length, OS_nw_protocol_metadata message, bool is_complete);
 
-		public void DeliverInput (ReadOnlySpan<byte> buffer, NWProtocolMetadata message, bool isComplete)
+		public void DeliverInput (ReadOnlySpan<byte> buffer, NWFramerMessage message, bool isComplete)
 		{
 			if (message == null)
 				throw new ArgumentNullException (nameof (message));
@@ -470,6 +447,5 @@ namespace Network {
 					nw_framer_deliver_input (GetCheckedHandle (),mh, (nuint)buffer.Length, message.Handle, isComplete);
 			}
 		}
- */
 	}
 }
