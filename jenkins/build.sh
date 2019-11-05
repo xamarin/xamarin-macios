@@ -124,9 +124,9 @@ make reset
 make git-clean-all
 make print-versions
 
-echo "Configuring the build with: $CONFIGURE_FLAGS"
+echo "Configuring Martin's disabled packaged mono build with: $CONFIGURE_FLAGS"
 # shellcheck disable=SC2086
-./configure $CONFIGURE_FLAGS
+./configure $CONFIGURE_FLAGS --disable-packaged-mono
 
 # If we're building mono from source, we might not have it cloned yet
 make reset
