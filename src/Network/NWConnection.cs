@@ -14,6 +14,7 @@ using CoreFoundation;
 using nw_connection_t=System.IntPtr;
 using nw_endpoint_t=System.IntPtr;
 using nw_parameters_t=System.IntPtr;
+using nw_establishment_report_t=System.IntPtr;
 
 namespace Network {
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -41,6 +42,12 @@ namespace Network {
 	// but they receive DispatchData instead of data + dataSize
 	//
 	public delegate void NWConnectionReceiveDispatchDataCompletion (DispatchData data, NWContentContext context, bool isComplete, NWError error);
+
+	//
+	// Signature for a method invoked on data received, same as NWConnectionReceiveCompletion,
+	// but they receive ReadOnlySpan rather than a data + dataSize
+	//
+	public delegate void NWConnectionReceiveReadOnlySpanCompletion (ReadOnlySpan<byte> data, NWContentContext context, bool isComplete, NWError error);
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
@@ -251,6 +258,7 @@ namespace Network {
 
 		static nw_connection_receive_completion_t static_ReceiveCompletion = TrampolineReceiveCompletion;
 		static nw_connection_receive_completion_t static_ReceiveCompletionDispatchData = TrampolineReceiveCompletionData;
+		static nw_connection_receive_completion_t static_ReceiveCompletionDispatchReadnOnlyData = TrampolineReceiveCompletionReadOnlyData;
 
 		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
 		static void TrampolineReceiveCompletion (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
@@ -300,6 +308,35 @@ namespace Network {
 			}
 		}
 
+		[MonoPInvokeCallback (typeof (nw_connection_receive_completion_t))]
+		static void TrampolineReceiveCompletionReadOnlyData (IntPtr block, IntPtr dispatchDataPtr, IntPtr contentContext, bool isComplete, IntPtr error)
+		{
+			var del = BlockLiteral.GetTarget<NWConnectionReceiveReadOnlySpanCompletion> (block);
+			if (del != null) {
+				DispatchData dispatchData = null, dataCopy = null;
+				IntPtr bufferAddress = IntPtr.Zero;
+				nuint bufferSize = 0;
+
+				if (dispatchDataPtr != IntPtr.Zero) {
+					dispatchData = new DispatchData (dispatchDataPtr, owns: false);
+					dataCopy = dispatchData.CreateMap (out bufferAddress, out bufferSize);
+				}
+
+				unsafe {
+					var spanData = new ReadOnlySpan<byte> ((void*)bufferAddress, (int)bufferSize);
+					del (spanData,
+						contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
+						isComplete,
+						error == IntPtr.Zero ? null : new NWError (error, owns: false));
+				}
+
+				if (dispatchData != null) {
+					dataCopy.Dispose ();
+					dispatchData.Dispose ();
+				}
+			}
+		}
+
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_connection_receive (IntPtr handle, /* uint32_t */ uint minimumIncompleteLength, /* uint32_t */ uint maximumLength, ref BlockLiteral callback);
 
@@ -326,6 +363,22 @@ namespace Network {
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+
+			try {
+				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void ReceiveReadOnlyData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveReadOnlySpanCompletion callback)
+		{
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
 
 			try {
 				nw_connection_receive (GetCheckedHandle (), minimumIncompleteLength, maximumLength, ref block_handler);
@@ -361,6 +414,22 @@ namespace Network {
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
+
+			try {
+				nw_connection_receive_message (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void ReceiveMessageReadOnlyData (NWConnectionReceiveReadOnlySpanCompletion callback)
+		{
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
 
 			try {
 				nw_connection_receive_message (GetCheckedHandle (), ref block_handler);
@@ -491,6 +560,15 @@ namespace Network {
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
+		public T GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
+		{
+			if (definition == null)
+				throw new ArgumentNullException (nameof (definition));
+
+			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.Handle);
+			return Runtime.GetINativeObject<T> (x, owns: true);
+		}
+
 		[DllImport (Constants.NetworkLibrary)]
 		extern static /* uint32_t */ uint nw_connection_get_maximum_datagram_size (IntPtr handle);
 
@@ -502,6 +580,42 @@ namespace Network {
 		public void Batch (Action method)
 		{
 			BlockLiteral.SimpleCall (method, (arg)=> nw_connection_batch (GetCheckedHandle (), arg));
+		}
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		unsafe static extern void nw_connection_access_establishment_report (IntPtr connection, IntPtr queue, ref BlockLiteral access_block);
+
+		delegate void nw_establishment_report_access_block_t (IntPtr block, nw_establishment_report_t report); 
+		static nw_establishment_report_access_block_t static_GetEstablishmentReportHandler = TrampolineGetEstablishmentReportHandler;
+
+		[MonoPInvokeCallback (typeof (nw_establishment_report_access_block_t))]
+		static void TrampolineGetEstablishmentReportHandler (IntPtr block, nw_establishment_report_t report)
+		{
+			var del = BlockLiteral.GetTarget<Action<NWEstablishmentReport>> (block);
+			if (del != null) {
+				// the ownerthip of the object is for the caller
+				var nwReport = new NWEstablishmentReport (report, owns: true);
+				del (nwReport);
+			}
+		}
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void GetEstablishmentReport (DispatchQueue queue, Action<NWEstablishmentReport> handler)
+		{
+			if (queue == null)
+				throw new ArgumentNullException (nameof (queue));
+			if (handler == null)
+				throw new ArgumentNullException (nameof (handler));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_GetEstablishmentReportHandler, handler);
+			try {
+				nw_connection_access_establishment_report (GetCheckedHandle (), queue.Handle, ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
 		}
 	}
 }

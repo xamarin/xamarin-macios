@@ -477,6 +477,22 @@ namespace Introspection {
 			case "UICollectionViewCompositionalLayout":
 				// Explicitly disabled ctors - (instancetype)init NS_UNAVAILABLE;
 				return true;
+			case "NSPickerTouchBarItem": // You are meant to use the static factory methods
+				if (ctor.ToString () == $"Void .ctor(System.String)")
+					return true;
+				break;
+			case "NSMenuToolbarItem": // No ctor specified
+				if (ctor.ToString () == $"Void .ctor(System.String)")
+					return true;
+				break;
+			case "NSStepperTouchBarItem": // You are meant to use the static factory methods
+				if (ctor.ToString () == $"Void .ctor(System.String)")
+					return true;
+				break;
+			case "NSSharingServicePickerToolbarItem": // This type doesn't have .ctors
+				if (ctor.ToString () == $"Void .ctor(System.String)")
+					return true;
+				break;
 			}
 
 			var ep = ctor.GetParameters ();

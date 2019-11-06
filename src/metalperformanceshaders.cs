@@ -1899,6 +1899,10 @@ namespace MetalPerformanceShaders {
 		[TV (11, 0), iOS (11, 0)]
 		[Export ("matrixBytes")]
 		nuint MatrixBytes { get; }
+
+		[TV (13, 0), Mac (10, 15), iOS (13, 1)]
+		[Export ("offset")]
+		nuint Offset { get; }
 	}
 
 	// MPSMatrixMultiplication.h
@@ -2089,6 +2093,10 @@ namespace MetalPerformanceShaders {
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("resourceSize")]
 		nuint ResourceSize { get; }
+
+		[TV (13, 0), Mac (10, 15), iOS (13, 1)]
+		[Export ("offset")]
+		nuint Offset { get; }
 	}
 
 	[TV (11,0), Mac (10, 13), iOS (11,0)]

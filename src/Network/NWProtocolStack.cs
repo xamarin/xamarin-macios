@@ -51,9 +51,25 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
 			if (del != null) {
-				var x = new NWProtocolOptions (options, owns: false);
-				del (x);
-				x.Dispose ();
+				using (var tempOptions = new NWProtocolOptions (options, owns: false)) 
+				using (var definition = tempOptions.ProtocolDefinition) {
+					NWProtocolOptions castedOptions = null;
+
+					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+						castedOptions = new NWProtocolTcpOptions (options, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+						castedOptions = new NWProtocolUdpOptions (options, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.TlsDefinition)) {
+						castedOptions = new NWProtocolTlsOptions (options, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.IPDefinition)) {
+						castedOptions = new NWProtocolIPOptions (options, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.WebSocketDefinition)) {
+						castedOptions = new NWWebSocketOptions (options, owns: false);
+					} 
+
+					del (castedOptions ?? tempOptions);
+					castedOptions?.Dispose ();
+				}
 			}
 		}
 
@@ -80,13 +96,43 @@ namespace Network {
 		extern static void nw_protocol_stack_set_transport_protocol (nw_protocol_stack_t stack, IntPtr value);
 
 		public NWProtocolOptions TransportProtocol {
-			get => new NWProtocolOptions (nw_protocol_stack_copy_transport_protocol (GetCheckedHandle ()), owns: true);
+			get {
+				var pHandle = nw_protocol_stack_copy_transport_protocol (GetCheckedHandle ());
+				if (pHandle == IntPtr.Zero)
+					return null;
+				var tempOptions = new NWProtocolOptions (pHandle, owns: true); 
+
+				using (var definition = tempOptions.ProtocolDefinition) {
+					NWProtocolOptions castedOptions = null;
+					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+						castedOptions = new NWProtocolTcpOptions (pHandle, owns: true);
+					}
+					if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+						castedOptions = new NWProtocolUdpOptions (pHandle, owns: true);
+					} 
+					if (castedOptions == null) {
+						return tempOptions;
+					} else {
+						tempOptions.Dispose ();
+						return castedOptions;
+					}
+				}
+			}
 			set => nw_protocol_stack_set_transport_protocol (GetCheckedHandle (), value.GetHandle ());
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_protocol_stack_copy_internet_protocol (nw_protocol_stack_t stack);
 
-		public NWProtocolOptions InternetProtocol => new NWProtocolOptions (nw_protocol_stack_copy_internet_protocol (GetCheckedHandle ()), owns: true);
+#if XAMCORE_4_0 
+		public NWProtocolIPOptions InternetProtocol {
+#else
+		public NWProtocolOptions InternetProtocol {
+#endif
+			get {
+				var pHandle = nw_protocol_stack_copy_internet_protocol (GetCheckedHandle ());
+				return (pHandle == IntPtr.Zero) ? null : new NWProtocolIPOptions (pHandle, owns: true);
+			}
+		}
 	}
 }
