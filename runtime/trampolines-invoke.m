@@ -26,7 +26,7 @@ xamarin_get_exception_for_method (int code, guint32 inner_exception_gchandle, co
 }
 
 guint32
-xamarin_get_exception_for_parameter (int code, guint32 inner_exception_gchandle, const char *reason, SEL sel, MonoMethod *method, MonoType *p, int i, bool to_managed)
+xamarin_get_exception_for_parameter (int code, guint32 inner_exception_gchandle, const char *reason, SEL sel, MonoMethod *method, MonoType *p, unsigned long i, bool to_managed)
 {
 	guint32 exception_gchandle = 0;
 	char *to_name = xamarin_type_get_full_name (p, &exception_gchandle);
@@ -114,8 +114,8 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	// pre-prolog
 	SList *dispose_list = NULL;
 	SList *free_list = NULL;
-	int num_arg;
-	int managed_arg_count;
+	unsigned long num_arg;
+	unsigned long managed_arg_count;
 	NSMethodSignature *sig;
 
 	if (is_static) {
@@ -134,7 +134,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	bool isCategoryInstance;
 
 	// setup callstack
-	int frame_length;
+	unsigned long frame_length;
 	void **arg_frame;
 	void **arg_ptrs;
 	void **arg_copy = NULL; // used to detect if ref/out parameters were changed.
@@ -143,13 +143,13 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	gboolean needs_writeback = FALSE; // determines if there are any ref/out parameters.
 	MonoType *p;
 	int ofs;
-	int i;
+	unsigned long i;
 	int mofs = 0;
 
-	int desc_arg_count = num_arg + 2; /* 1 for the return value + 1 if this is a category instance method */
+	unsigned long desc_arg_count = num_arg + 2; /* 1 for the return value + 1 if this is a category instance method */
 	size_t desc_size = desc_arg_count * sizeof (BindAsData) + sizeof (MethodDescription);
 	desc = (MethodDescription *) xamarin_calloc (desc_size);
-	desc->bindas_count = desc_arg_count;
+	desc->bindas_count = (int32_t) desc_arg_count;
 	free_list = s_list_prepend (free_list, desc);
 
 	if (is_ctor || is_static) {
@@ -193,7 +193,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 	for (i = 0, ofs = 0; i < num_arg; i++) {
 		const char *type = xamarin_skip_encoding_flags ([sig getArgumentTypeAtIndex: (i+2)]);
-		int size = xamarin_objc_type_size (type);
+		unsigned long size = xamarin_objc_type_size (type);
 		int frameofs = ofs;
 		p = mono_signature_get_params (msig, &iter);
 		
@@ -254,6 +254,10 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								needs_writeback = TRUE;
 								arg_copy = (void **) calloc (managed_arg_count, sizeof (void *));
 								writeback = (bool *) calloc (managed_arg_count, sizeof (bool));
+								if (!arg_copy || !writeback) {
+									exception = (MonoObject *) mono_get_exception_out_of_memory ();
+									goto exception_handling;
+								}
 							}
 							arg_frame [ofs] = NULL;
 							arg_ptrs [i + mofs] = &arg_frame [frameofs];
@@ -411,7 +415,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							}
 
 							if (created && obj) {
-								bool is_transient = xamarin_is_parameter_transient (mono_method_get_object (domain, method, NULL), i, &exception_gchandle);
+								bool is_transient = xamarin_is_parameter_transient (mono_method_get_object (domain, method, NULL), (int32_t) i, &exception_gchandle);
 								if (exception_gchandle != 0)
 									goto exception_handling;
 								if (is_transient)
@@ -542,7 +546,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 			type = xamarin_skip_encoding_flags (type);
 
-			int size = xamarin_objc_type_size (type);
+			unsigned long size = xamarin_objc_type_size (type);
 
 			p = mono_signature_get_params (msig, &iter);
 

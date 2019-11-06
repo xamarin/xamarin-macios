@@ -508,6 +508,18 @@ Consider using `lipo` to remove the unnecessary archtectures permanently from th
 
 #### MM4134: Your application is using the '{0}' framework, which isn't included in the MacOS SDK you're using to build your app (this framework was introduced in OSX {2}, while you're building with the MacOS {1} SDK.) This configuration is not supported with the static registrar (pass --registrar:dynamic as an additional mmp argument in your project's Mac Build option to select). Alternatively select a newer SDK in your app's Mac Build options.
 
+<a name="MM4162" />
+
+#### MM4162: The type '\*' (used as * {2}) is not available in * * (it was introduced in * *)\* Please build with a newer * SDK (usually done by using the most recent version of Xcode.
+
+To build your application, Xamarin.Mac must compile against Xcode SDK header files, including new types not available in the SDK version specified in the error message. Since you are using an older version of the SDK, builds using those APIs fails at build time.
+
+The recommended way to fix this error is to upgrade Xcode to get the needed SDK. If you have multiple versions of Xcode installed or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
+
+Alternatively, enable the managed linker to remove unused APIs, including (in most cases) the new ones which require the specified library. However, this will not work if your project requires APIs introduced in a newer SDK than the one your Xcode provides.
+
+As a last-straw solution, use an older version of Xamarin.Mac that does not require these new SDKs to be present during the build process.
+
 <a name="MM4173" />
 
 #### MM4173: The registrar can't compute the block signature for the delegate of type {delegate-type} in the method {method} because *.

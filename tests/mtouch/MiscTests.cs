@@ -134,6 +134,8 @@ namespace Xamarin.Tests
 				"___block_descriptor_",
 				"___copy_helper_block_",
 				"___destroy_helper_block_",
+				// compiler-generated helper methods
+				"___os_log_helper_",
 			};
 
 			paths.RemoveWhere ((v) => {

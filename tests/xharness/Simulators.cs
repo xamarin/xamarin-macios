@@ -487,7 +487,7 @@ namespace xharness
 
 		public static async Task KillEverythingAsync (Log log)
 		{
-			await ProcessHelper.ExecuteCommandAsync ("launchctl", new [] { "remove com.apple.CoreSimulator.CoreSimulatorService" }, log, TimeSpan.FromSeconds (10));
+			await ProcessHelper.ExecuteCommandAsync ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, log, TimeSpan.FromSeconds (10));
 
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };
 

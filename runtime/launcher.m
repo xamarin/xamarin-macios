@@ -669,6 +669,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		}
 
 		free (new_argv);
+		free (env_argv);
 	}
 
 	return rv;

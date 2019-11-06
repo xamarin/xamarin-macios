@@ -40,7 +40,7 @@ dump_state (struct XamarinCallState *state, const char *prefix)
 #define dump_state(...)
 #endif
 
-static int
+static size_t 
 param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *target, size_t total_size, guint32 *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
@@ -182,7 +182,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 	const char *t = struct_name;
 	uint8_t *targ = (uint8_t *) target;
 	do {
-		int c = param_read_primitive (it, t, targ, size, exception_gchandle);
+		size_t c = param_read_primitive (it, t, targ, size, exception_gchandle);
 		if (*exception_gchandle != 0)
 			return;
 		if (targ != NULL)
@@ -230,7 +230,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			(size == 8 && !strncmp (struct_name, "d", 1))) {
 			LOGZ ("        marshalling as %i doubles (struct name: %s)\n", (int) size / 8, struct_name);
 			double* ptr = (double *) mono_object_unbox (value);
-			for (int i = 0; i < size / 8; i++) {
+			for (unsigned long i = 0; i < size / 8; i++) {
 				LOGZ ("        #%i: %f\n", i, ptr [i]);
 				it->q [i].d = ptr [i];
 			}
@@ -240,7 +240,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 				   (size == 4 && !strncmp (struct_name, "f", 1))) {
 			LOGZ ("        marshalling as %i floats (struct name: %s)\n", (int) size / 4, struct_name);
 			float* ptr = (float *) mono_object_unbox (value);
-			for (int i = 0; i < size / 4; i++) {
+			for (unsigned long i = 0; i < size / 4; i++) {
 				LOGZ ("        #%i: %f\n", i, ptr [i]);
 				it->q [i].f.f1 = ptr [i];
 			}

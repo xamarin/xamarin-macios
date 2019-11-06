@@ -934,10 +934,10 @@ public class B : A {}
 				}, "error MT0051: Xamarin.iOS .* requires Xcode 6.0 or later. The current Xcode version [(]found in /Applications/Xcode44.app/Contents/Developer[)] is 4.*");
 			}
 
-			if (Directory.Exists (Configuration.xcode5_root)) {
+			if (Directory.Exists ("/Applications/Xcode511.app/Contents/Developer")) {
 				Asserts.ThrowsPattern<TestExecutionException> (() => {
 					ExecutionHelper.Execute (TestTarget.ToolPath, new [] { "-sdkroot", "/Applications/Xcode511.app/Contents/Developer", "-sim", "/tmp/foo" });
-				}, "error MT0051: Xamarin.iOS .* requires Xcode 6.0 or later. The current Xcode version [(]found in " + Configuration.xcode5_root + "[)] is 6.0");
+				}, "error MT0051: Xamarin.iOS .* requires Xcode 6.0 or later. The current Xcode version [(]found in /Applications/Xcode511.app/Contents/Developer[)] is 6.0");
 			}
 		}
 

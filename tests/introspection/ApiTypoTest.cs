@@ -180,6 +180,7 @@ namespace Introspection
 			"Descendents",
 			"Descrete",
 			"Dhe", // Diffie–Hellman key exchange
+			"Diffable", // that you can diff it.. made up word from apple
 			"Differental",
 			"Diffie",
 			"Directionfor",
@@ -492,6 +493,7 @@ namespace Introspection
 			"Snapshotter",
 			"Snorm",
 			"Sobel",
+			"Softmax", // get_SoftmaxNormalization
 			"Spacei",
 			"Sqrt",
 			"Srgb",

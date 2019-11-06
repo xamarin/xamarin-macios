@@ -883,6 +883,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
 			Verbosity="$(MtouchVerbosity)"
+			StandardOutputImportance="High"
 			>
 			<Output TaskParameter="CompiledArchitectures" PropertyName="_CompiledArchitectures" />
 		</MTouch>

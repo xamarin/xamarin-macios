@@ -401,3 +401,6 @@
 !missing-type! INVolumeResolutionResult not bound
 !unknown-type! INParameter bound
 !missing-selector! INMediaSearch::initWithMediaType:sortOrder:mediaName:artistName:albumName:genreNames:moodNames:releaseDate:reference:mediaIdentifier: not bound
+## appended from unclassified file
+!missing-selector! INMessage::initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:serviceName: not bound
+!missing-selector! INMessage::serviceName not bound

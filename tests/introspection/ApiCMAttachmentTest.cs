@@ -162,9 +162,18 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type)
 		{
-			return Skip (type.Name) || SkipDueToAttribute (type);
+			return SkipNameSpace (type.Namespace) || Skip (type.Name) || SkipDueToAttribute (type);
 		}
 
+		protected virtual bool SkipNameSpace (string nameSpace)
+		{
+			switch (nameSpace) {
+			case "Network": // none of the classes support it and they require a lot of setup to confirm it
+				return true;
+			default:
+				return false;
+			}
+		}
 		protected virtual bool Skip (string nativeName)
 		{
 			if (nativeName.Contains ("`")) {
@@ -229,14 +238,10 @@ namespace Introspection {
 			case "ABMutableMultiValue":
 			case "SecProtocolMetadata": // Read-only object that is surfaced during TLS negotiation callbacks, can not be created from user code.
 			case "SecProtocolOptions":  // Read-only object that is surfaced during TLS negotiation callbacks, can not be created from user code.
-			case "NWError":               // Only ever surfaced, not created from usercode
-			case "NWInterface":           // Only ever surfaced, not created from usercode
-			case "NWPath":                // Only ever surfaced, not created from usercode
-			case "NWProtocolStack":       // Only ever surfaced, not created from usercode
-			case "NWProtocolMetadata":    // While technically it can be created and the header files claim the methods exists, the library is missing the methods (radar: 42443077)
 			case "ABSource": // not skipped when running on iOS 6.1
 			// type was removed in iOS 10 (and replaced) and never consumed by other API
 			case "CGColorConverter":
+			case "OSLog": // c api, no need to check
 				return true;
 			default:
  				return false;
@@ -436,26 +441,6 @@ namespace Introspection {
 					new CVPixelBufferPoolSettings (),
 					new CVPixelBufferAttributes (CVPixelFormatType.CV24RGB, 100, 50)
 				);
-			case "NWAdvertiseDescriptor":
-				return NWAdvertiseDescriptor.CreateBonjourService ("sampleName" + DateTime.Now, "_nfs._tcp");
-			case "NWConnection": {
-				var endpoint = NWEndpoint.Create ("www.microsoft.com", "https");
-				var parameters = NWParameters.CreateTcp (configureTcp: null);
-				return new NWConnection (endpoint, parameters);
-			}
-			case "NWContentContext":
-				return new NWContentContext ("contentContext" + DateTime.Now);
-			case "NWEndpoint":
-				return NWEndpoint.Create ("www.microsoft.com", "https");
-			case "NWListener":
-				return NWListener.Create (NWParameters.CreateTcp (configureTcp: null));
-			case "NWParameters":
-				return NWParameters.CreateTcp (configureTcp: null);
-			case "NWProtocolDefinition":
-				// Makes a new instance every time
-				return NWProtocolDefinition.TcpDefinition;
-			case "NWProtocolOptions":
-				return NWProtocolOptions.CreateTcp ();
 			case "SecCertificate":
 				using (var cdata = NSData.FromArray (mail_google_com))
 					return new SecCertificate (cdata);

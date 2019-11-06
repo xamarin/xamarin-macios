@@ -57,6 +57,7 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="VerbosityUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MsBuildTasks\CopyBase.cs" />

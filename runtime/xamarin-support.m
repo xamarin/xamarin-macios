@@ -8,6 +8,20 @@
 #include "runtime-internal.h"
 #include "monotouch-support.h"
 
+void
+xamarin_os_log (os_log_t logger, os_log_type_t type, const char *message)
+{
+	// Logging a dynamic string as-is using %{public}s is, strictly speaking,
+	// an antipattern. However, there is no way to call os_log directly from
+	// C#. It can only be called from Objective-C, and even then it requires
+	// that the format string be compiled into the binary. This really is
+	// our only option to pass a string from C# into os_log.
+	if (logger == NULL)
+		logger = OS_LOG_DEFAULT;
+
+	os_log_with_type (logger, type, "%{public}s", message);
+}
+
 const char *
 xamarin_get_locale_country_code ()
 {
@@ -43,10 +57,10 @@ xamarin_log (const unsigned short *unicodeMessage)
 		// Write in chunks of max 4096 characters; older versions of iOS seems to have a bug where NSLog may hang with long strings (!).
 		// https://github.com/xamarin/maccore/issues/1014
 		const char *utf8 = [msg UTF8String];
-		int len = strlen (utf8);
-		const int max_size = 4096;
+		size_t len = strlen (utf8);
+		const size_t max_size = 4096;
 		while (len > 0) {
-			int chunk_size = len > max_size ? max_size : len;
+			size_t chunk_size = len > max_size ? max_size : len;
 
 			// Try to not break in the middle of a line, by looking backwards for a newline
 			while (chunk_size > 0 && utf8 [chunk_size] != 0 && utf8 [chunk_size] != '\n')
@@ -55,7 +69,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 				// No newline found, break in the middle.
 				chunk_size = len > max_size ? max_size : len;
 			}
-			NSLog (@"%.*s", chunk_size, utf8);
+			NSLog (@"%.*s", (int) chunk_size, utf8);
 
 			len -= chunk_size;
 			utf8 += chunk_size;
@@ -73,7 +87,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 // See in Mono sdks/ios/runtime/runtime.m
 
 void*
-xamarin_timezone_get_data (const char *name, int *size)
+xamarin_timezone_get_data (const char *name, unsigned long *size)
 {
 	// COOP: no managed memory access: any mode.
 	NSTimeZone *tz = nil;
@@ -92,13 +106,13 @@ xamarin_timezone_get_data (const char *name, int *size)
 }
 
 char**
-xamarin_timezone_get_names (int *count)
+xamarin_timezone_get_names (unsigned long *count)
 {
 	// COOP: no managed memory access: any mode.
 	NSArray *array = [NSTimeZone knownTimeZoneNames];
 	*count = array.count;
 	char** result = (char**) malloc (sizeof (char*) * (*count));
-	for (int i = 0; i < *count; i++) {
+	for (unsigned long i = 0; i < *count; i++) {
 		NSString *s = [array objectAtIndex: i];
 		result [i] = strdup (s.UTF8String);
 	}
