@@ -3,4 +3,4 @@ NEEDED_MONO_BRANCH := 2019-10
 
 
 MONO_DIRECTORY := mono
-MONO_MODULE    := https://github.com/mono/mono
+MONO_MODULE    := https://github.com/monojenkins/mono
