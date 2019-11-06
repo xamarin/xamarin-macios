@@ -1,0 +1,236 @@
+resources:
+  repositories:
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/device-tests-yaml
+    endpoint: xamarin
+
+jobs:
+- job: macOS
+  displayName: xamarin macios
+  timeoutInMinutes: 1000
+
+  pool:
+    name: VSEng-Xamarin-Mac-Devices
+    demands: sh
+
+  steps:
+  - checkout: self
+  - checkout: maccore
+
+  - bash: ./xamarin-macios/tools/devops/system-info.sh
+    displayName: System info
+
+  - bash: cd xamarin-macios && ./configure --enable-xamarin
+    displayName: 'Enable Xamarin'
+
+  - script: |
+     set -x
+     set -e
+
+     rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
+     rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
+
+     ./maccore/tools/install-qa-provisioning-profiles.sh -v
+    displayName: 'Add provisioning profiles'
+    env:
+      LOGIN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
+
+  - script: |
+     set -x
+     set -e
+
+     CONFIGURE_ARGS="--provision-xcode --provision-xamarin-studio --provision-mono --ignore-osx --ignore-autotools --ignore-cmake"
+     if grep ignore-7z xamarin-macios/system-dependencies.sh 2>&1 > /dev/null; then
+         CONFIGURE_ARGS="$CONFIGURE_ARGS --provision-7z"
+     fi
+     if grep ignore-python3 xamarin-macios/system-dependencies.sh 2>&1 > /dev/null; then
+         CONFIGURE_ARGS="$CONFIGURE_ARGS --ignore-python3"
+     fi
+     ./xamarin-macios/system-dependencies.sh $CONFIGURE_ARGS
+    displayName: 'Provision dependencies'
+    timeoutInMinutes: 240
+
+  - task: ms-devlabs.utilitytasks.task-Shellpp.Shell++@0
+    displayName: 'Install XI PKG'
+    inputs:
+      type: InlineScript
+      script: |
+       #!/bin/bash -ex
+
+       set -e
+       set -x
+
+       # Install XI
+
+       XI_PKG=$XI_PACKAGE
+
+       XI_NAME=$(basename $XI_PKG)
+
+       if test -z "$XI_NAME"; then
+           echo "No XI_NAME. XI_PACKAGE: $XI_PACKAGE"
+           exit 1
+       fi
+
+       RETRIES=10
+       while true; do
+           RV=0
+           curl -LO --fail $XI_PKG || RV=$?
+
+           if [[ $RV == 0 ]]; then
+               # Yay, download succeeded
+               break;
+           fi
+
+           # Sometimes this happens:
+           #
+           # [...]
+           # 2017-08-15T07:29:26.7901630Z  59  454M   59  270M    0     0  5919k      0  0:01:18  0:00:46  0:00:32 2462k
+           # 2017-08-15T07:29:26.7923300Z curl: (56) SSLRead() return error -36
+           # 2017-08-15T07:29:26.8258480Z /bin/bash failed with return code: 56
+           #
+           # This is random, and if trying again it works.
+           # So if curl exits with exit code 56, we try again a few times.
+           #
+           if [[ ( $RV == 56 ) && ( $RETRIES > 0 )]]; then
+               echo "A hopefully transient error occurred. Trying again."
+
+               # Wait a little bit before trying again. Wait a little bit longer each time.
+               sleep 0.$(echo "10 - $RETRIES" | bc)
+
+               # Make sure nothing is left to interfere with the next download attempt
+               rm -f $XI_PKG
+
+               # Make sure we don't loop forever if the internet goes down
+               let RETRIES--;
+               continue
+           fi
+
+           # All hope is lost.
+           echo "Failed to download $XI_NAME from $XI_PACKAGE."
+           exit $RV
+       done
+
+       sudo /usr/sbin/installer -pkg "$XI_NAME"   -target / -verbose -dumplog
+
+       # Print versions
+       /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch --version
+       /Library/Frameworks/Mono.framework/Versions/Current/bin/mono --version
+       cat /Library/Frameworks/Mono.framework/Versions/Current/updateinfo
+
+    timeoutInMinutes: 15
+
+  - script: |
+     set -x
+     set +e # Don't care about errors here
+
+     pkill -9 mlaunch
+     pkill -9 -f mono.*xharness.exe
+     pkill -9 -f ssh.*rsync.*xamarin-storage
+
+     exit 0
+    displayName: 'Process cleanup'
+
+  - task: CmdLine@1
+    displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
+    inputs:
+      filename: security
+      arguments: ' set-key-partition-list -S apple-tool:,apple: -s -k $(OSX_KEYCHAIN_PASS) login.keychain'
+    timeoutInMinutes: 1
+
+  - task: ms-devlabs.utilitytasks.task-Shellpp.Shell++@0
+    displayName: 'Make mlaunch verbose'
+    inputs:
+      type: InlineScript
+      script: |
+       #!/bin/bash -ex
+
+       echo 1234567890 > ~/.mlaunch-verbosity
+
+  - task: ms-devlabs.utilitytasks.task-Shellpp.Shell++@0
+    displayName: 'Fix device discovery (reset launchctl)'
+    inputs:
+      type: InlineScript
+      script: |
+       #!/bin/bash -ex
+
+       sudo launchctl stop com.apple.usbmuxd
+
+  - task: Bash@3
+    displayName: 'Set GitHub status (start)'
+    inputs:
+      targetType: filePath
+      filePath: './xamarin-macios/jenkins/vsts-device-tests-set-status.sh'
+      arguments: '--start --token=$(GitHub.Token) --device=iOS-DDFun'
+    continueOnError: true
+
+  - script: |
+     set -x
+     set -e
+
+     P=$(cat tmp.p)
+
+     if grep ios-64 xamarin-macios/tests/xharness/Jenkins.cs 2>&1 > /dev/null; then
+         export TESTS_EXTRA_ARGUMENTS="--label=run-ios-64-tests"
+     else
+         export TESTS_EXTRA_ARGUMENTS="--label=run-ios-tests"
+     fi
+
+     make -C xamarin-macios/builds download -j || true
+     make -C xamarin-macios/builds downloads -j || true
+     make -C xamarin-macios/builds .stamp-mono-ios-sdk-destdir -j || true
+     make -C xamarin-macios/tests vsts-device-tests
+    displayName: 'Run tests'
+    timeoutInMinutes: 600
+
+  - task: Bash@3
+    displayName: 'Set GitHub status (end)'
+    inputs:
+      targetType: filePath
+      filePath: './xamarin-macios/jenkins/vsts-device-tests-set-status.sh'
+      arguments: '--token=$(GitHub.Token) --device=iOS-DDFun'
+    continueOnError: true
+    condition: succeededOrFailed()
+
+  - task: ms-devlabs.utilitytasks.task-Shellpp.Shell++@0
+    displayName: 'Add summaries'
+    inputs:
+      type: InlineScript
+      script: |
+       #!/bin/bash -e
+
+       set +x
+
+       X="#vso"
+       echo help
+
+       FILE=$PWD/xamarin-macios/tests/TestSummary.md
+       if ! test -f $FILE; then
+       echo ":fire: Tests failed catastrophically (no summary found)" > $FILE
+       fi
+
+       echo "#$X[task.addattachment type=Distributedtask.Core.Summary;name=Test results;]$FILE"
+
+       echo "[Jenkins build]($WRENCH_URL)" > Wrench.md
+       echo "#$X[task.addattachment type=Distributedtask.Core.Summary;name=Jenkins;]$PWD/Wrench.md"
+    continueOnError: true
+    condition: succeededOrFailed()
+    timeoutInMinutes: 1
+
+  - task: ArchiveFiles@1
+    displayName: 'Archive HtmlReport'
+    inputs:
+      rootFolder: 'xamarin-macios/jenkins-results'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport-$(Build.BuildId).zip'
+    continueOnError: true
+    condition: succeededOrFailed()
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: HtmlReport'
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)/HtmlReport-$(Build.BuildId).zip'
+      artifactName: HtmlReport
+    continueOnError: true
+    condition: succeededOrFailed()
