@@ -1,6 +1,6 @@
 NEEDED_MONO_VERSION := 1f45bc58eba487724b8457d1d9db25e3e2a42652
-NEEDED_MONO_BRANCH := 2019-10
+ NEEDED_MONO_BRANCH := 2019-10
 
 
 MONO_DIRECTORY := mono
-MONO_MODULE    := https://github.com/monojenkins/mono
+MONO_MODULE    := https://github.com/mono/mono
