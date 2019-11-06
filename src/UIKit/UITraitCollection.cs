@@ -14,18 +14,15 @@ using Foundation;
 namespace UIKit {
 #if !WATCH
 	public partial class UITraitCollection {
+
 #if !XAMCORE_4_0
-		[Obsolete ("Please use the static method instead.")]
+		[Obsolete ("Please use the static 'Create' method instead.")]
 		public UITraitCollection FromPreferredContentSizeCategory (UIContentSizeCategory category)
-		{
-			return FromPreferredContentSizeCategory (category.GetConstant ());
-		}
+			=> Create (category);
 #endif
 
-		public static UITraitCollection FromPreferredContentSizeCategory (UIContentSizeCategory category)
-		{
-			return FromPreferredContentSizeCategory (category.GetConstant ());
-		}
+		public static UITraitCollection Create (UIContentSizeCategory category)
+			=> FromPreferredContentSizeCategory (category.GetConstant ());
 	}
 #endif
 }
