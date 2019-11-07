@@ -386,6 +386,11 @@ vsts-device-tests: xharness/xharness.exe
 ifdef ENABLE_XAMARIN
 wrench-launch-external wrench-report-external:
 	$(MAKE) -C $(MACCORE_PATH)/tests/external $@
+
+# This will schedule a manual device test run for the current commit. The current commit must already have packages.
+launch-manual-device-tests:
+	./launch-manual-device-tests.sh
+
 else
 wrench-launch-external wrench-report-external:
 	@echo "External tests have been disabled"
