@@ -415,3 +415,7 @@ System.Reflection.Tests.MethodBaseTests.Test_GetCurrentMethod_Inlineable
 
 # device issues, it was reported here: https://github.com/mono/mono/issues/14761
 System.Text.Tests.StringBuilderTests.Append_CharPointer_Null_ThrowsNullReferenceException
+
+# mono issue: https://github.com/mono/mono/issues/17752
+# Exception messages: System.OutOfMemoryException : Insufficient memory to continue the execution of the program.
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeMethod
