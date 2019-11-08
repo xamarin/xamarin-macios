@@ -120,9 +120,18 @@ namespace CoreFoundation {
 		
 		public static CFBundle[] GetAll ()
 		{
+			// as per apple documentation: 
+			// CFBundleGetAllBundles
+			//
+			// 	'This function is potentially expensive and not thread-safe'
+			//
+			// This means, that we should not trust the size of the array, since is a get and
+			// might be modified by a diff thread. We just use the size returned by the first
+			// count to avoid a System.IndexOutOfRangeException when looping
 			using (var cfBundles = new CFArray (CFBundleGetAllBundles ())) {
-				var managedBundles = new CFBundle [cfBundles.Count];
-				for (int index = 0; index < cfBundles.Count; index++) {
+				var bundleCount = cfBundles.Count;
+				var managedBundles = new CFBundle [bundleCount];
+				for (int index = 0; index < bundleCount; index++) {
 					// follow the get rule, we do not own the object
 					managedBundles [index] = new CFBundle (cfBundles.GetValue (index), false);
 				}
