@@ -28,7 +28,8 @@ namespace InstallSources
 					monoMangler = new MonoPathMangler {
 						InstallDir = InstallDir,
 						DestinationDir = DestinationDir,
-						MonoSourcePath = MonoSourcePath
+						MonoSourcePath = MonoSourcePath,
+						XamarinSourcePath = XamarinSourcePath,
 					};
 				return monoMangler;
 			}
