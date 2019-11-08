@@ -96,7 +96,7 @@ void * monotouch_IntPtr_objc_msgSendSuper_IntPtr (struct objc_super *super, SEL 
  * the code can be simplified once we require to remove dlsym or xcode 9 becomes the minimum supported version
  */
 
-typedef CGPoint (*vision_func) (vector_float2 faceLandmarkPoint, CGRect faceBoundingBox, size_t imageWidth, size_t imageHeight);
+typedef CGPoint (*vision_func) (vector_float2 faceLandmarkPoint, CGRect faceBoundingBox, xm_nuint_t imageWidth, xm_nuint_t imageHeight);
 
 static vision_func
 get_vision_func (const char *func_name, const char **error_msg)

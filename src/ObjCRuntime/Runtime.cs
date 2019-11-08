@@ -445,7 +445,7 @@ namespace ObjCRuntime {
 			}
 		}
 
-		static IntPtr GetBlockWrapperCreator (IntPtr method, int parameter)
+		static IntPtr GetBlockWrapperCreator (IntPtr method, uint parameter)
 		{
 			return ObjectWrapper.Convert (GetBlockWrapperCreator ((MethodInfo) ObjectWrapper.Convert (method), parameter));
 		}
@@ -727,7 +727,7 @@ namespace ObjCRuntime {
 			return parameters [parameter].IsDefined (typeof(TransientAttribute), false);
 		}
 
-		static bool IsParameterOut (IntPtr info, int parameter)
+		static bool IsParameterOut (IntPtr info, uint parameter)
 		{
 			var minfo = ObjectWrapper.Convert (info) as MethodInfo;
 			if (minfo == null)
@@ -773,7 +773,7 @@ namespace ObjCRuntime {
 		}
 #endregion
 
-		static MethodInfo GetBlockProxyAttributeMethod (MethodInfo method, int parameter)
+		static MethodInfo GetBlockProxyAttributeMethod (MethodInfo method, uint parameter)
 		{
 			var attrs = method.GetParameters () [parameter].GetCustomAttributes (typeof (BlockProxyAttribute), true);
 			if (attrs.Length == 1) {
@@ -840,7 +840,7 @@ namespace ObjCRuntime {
 #else
 		public 
 #endif
-		static MethodInfo GetBlockWrapperCreator (MethodInfo method, int parameter)
+		static MethodInfo GetBlockWrapperCreator (MethodInfo method, uint parameter)
 		{
 			// A mirror of this method is also implemented in StaticRegistrar:FindBlockProxyCreatorMethod
 			// If this method is changed, that method will probably have to be updated too (tests!!!)

@@ -48,7 +48,7 @@ dump_state (struct XamarinCallState *state)
 static const char* registers[] =  { "rdi", "rsi", "rdx", "rcx", "r8", "r9", "err"  };
 #endif
 
-static int
+static unsigned long 
 param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *target, size_t total_size, guint32 *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
@@ -119,11 +119,12 @@ param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *tar
 
 		uint8_t *ptr;
 		bool read_register = true;
-		if (it->byte_count >= 48) { // 48 == 6 registers * 8 bytes
+		unsigned long register_size = 48; // 48 == 6 registers * 8 bytes
+		if ((unsigned long)it->byte_count >= register_size) { 
 			read_register = false;
-		} else if (48 - it->byte_count < total_size) {
+		} else if (register_size - it->byte_count < total_size) {
 			read_register = false;
-			LOGZ (" total size (%i) is less that available register size (%i)", (int) total_size, 48 - it->byte_count);
+			LOGZ (" total size (%i) is less that available register size (%i)", (int) total_size, register_size - it->byte_count);
 		}
 
 		if (read_register) {
@@ -226,7 +227,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 		if (*t == 0)
 			break;
 
-		int c = param_read_primitive (it, &t, targ, size, exception_gchandle);
+		unsigned long c = param_read_primitive (it, &t, targ, size, exception_gchandle);
 		if (*exception_gchandle != 0)
 			return;
 		if (targ != NULL)
@@ -349,7 +350,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			}
 			// figure out where to put the values.
 			const char *t = xamarin_skip_type_name (type);
-			int acc = 0;
+			unsigned long acc = 0;
 			int stores = 0;
 
 			while (true) {
@@ -364,7 +365,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 				}
 					
 				bool is_float = *t == _C_FLT || *t == _C_DBL;
-				int s = xamarin_get_primitive_size (*t);
+				unsigned long s = xamarin_get_primitive_size (*t);
 
 				t++;
 

@@ -27,9 +27,6 @@ namespace Xamarin.Tests
 		public static string macos_sdk_version;
 		public static string xcode_root;
 		public static string XcodeVersionString;
-		public static string xcode5_root;
-		public static string xcode6_root;
-		public static string xcode72_root;
 		public static string xcode83_root;
 		public static string xcode94_root;
 #if MONOMAC
@@ -249,9 +246,6 @@ namespace Xamarin.Tests
 			tvos_sdk_version = GetVariable ("TVOS_SDK_VERSION", "9.0");
 			macos_sdk_version = GetVariable ("OSX_SDK_VERSION", "10.12");
 			xcode_root = GetVariable ("XCODE_DEVELOPER_ROOT", "/Applications/Xcode.app/Contents/Developer");
-			xcode5_root = GetVariable ("XCODE5_DEVELOPER_ROOT", "/Applications/Xcode511.app/Contents/Developer");
-			xcode6_root = GetVariable ("XCODE6_DEVELOPER_ROOT", "/Applications/Xcode601.app/Contents/Developer");
-			xcode72_root = GetVariable ("XCODE72_DEVELOPER_ROOT", "/Applications/Xcode72.app/Contents/Developer");
 			xcode83_root = GetVariable ("XCODE83_DEVELOPER_ROOT", "/Applications/Xcode83.app/Contents/Developer");
 			xcode94_root = GetVariable ("XCODE94_DEVELOPER_ROOT", "/Applications/Xcode94.app/Contents/Developer");
 			include_ios = !string.IsNullOrEmpty (GetVariable ("INCLUDE_IOS", ""));
@@ -280,8 +274,6 @@ namespace Xamarin.Tests
 			Console.WriteLine ("  MAC_DESTDIR={0}", mac_destdir);
 			Console.WriteLine ("  SDK_VERSION={0}", sdk_version);
 			Console.WriteLine ("  XCODE_ROOT={0}", xcode_root);
-			Console.WriteLine ("  XCODE5_ROOT={0}", xcode5_root);
-			Console.WriteLine ("  XCODE6_ROOT={0} Exists={1}", xcode6_root, Directory.Exists (xcode6_root));
 #if MONOMAC
 			Console.WriteLine ("  MAC_XCODE_ROOT={0}", mac_xcode_root);
 #endif

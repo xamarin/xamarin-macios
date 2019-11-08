@@ -6672,19 +6672,19 @@ namespace AVFoundation {
 		[Field ("AVMetadataObjectTypeDataMatrixCode")]
 		NSString TypeDataMatrixCode { get; }
 
-		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[NoWatch, NoTV, iOS (13, 0), Mac (10, 15)]
 		[Field ("AVMetadataObjectTypeCatBody")]
 		NSString TypeCatBody { get; }
 
-		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[NoWatch, NoTV, iOS (13, 0), Mac (10, 15)]
 		[Field ("AVMetadataObjectTypeDogBody")]
 		NSString TypeDogBody { get; }
 
-		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[NoWatch, NoTV, iOS (13, 0), Mac (10, 15)]
 		[Field ("AVMetadataObjectTypeHumanBody")]
 		NSString TypeHumanBody { get; }
 
-		[NoWatch, NoTV, NoMac, iOS (13, 0)]
+		[NoWatch, NoTV, iOS (13, 0), Mac (10, 15)]
 		[Field ("AVMetadataObjectTypeSalientObject")]
 		NSString TypeSalientObject { get; }
 	}

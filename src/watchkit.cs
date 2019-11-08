@@ -515,6 +515,14 @@ namespace WatchKit {
 		[Watch (6,0)][NoiOS]
 		[Export ("supportsAudioStreaming")]
 		bool SupportsAudioStreaming { get; }
+        
+		[Watch (6,1)][NoiOS]
+		[Export ("enableWaterLock")]
+		void EnableWaterLock ();
+
+		[Watch (6,1)][NoiOS]
+		[Export ("isWaterLockEnabled")]
+		bool IsWaterLockEnabled { get; }
 	}
 
 	[iOS (8,2)]
@@ -704,6 +712,18 @@ namespace WatchKit {
 
 		[Export ("removeAllAnnotations")]
 		void RemoveAllAnnotations ();
+
+		[Watch (6,1)]
+		[Export ("setShowsUserHeading:")]
+		void SetShowsUserHeading (bool showsUserHeading);
+
+		[Watch (6,1)]
+		[Export ("setShowsUserLocation:")]
+		void SetShowsUserLocation (bool showsUserLocation);
+
+		[Watch (6,1)]
+		[Export ("setUserTrackingMode:animated:")]
+		void SetUserTrackingMode (WKInterfaceMapUserTrackingMode mode, bool animated);
 	}
 
 	[iOS (8,2)]
@@ -983,6 +1003,7 @@ namespace WatchKit {
 
 		[Watch (4,0)]
 		[Export ("enableWaterLock")]
+		[Deprecated (PlatformName.WatchOS, 6,1, message: "Use WKInterfaceDevice.EnableWaterLock ()")]
 		void EnableWaterLock ();
 
 		[Watch (6,0)]
@@ -1576,6 +1597,20 @@ namespace WatchKit {
 		Companion,
 	}
 
+	[Watch (6,1), NoiOS]
+	[Native]
+	enum WKInterfaceAuthorizationAppleIdButtonStyle: long {
+		Default,
+		White,
+	}
+
+	[Watch (6,1), NoiOS]
+	[Native]
+	enum WKInterfaceMapUserTrackingMode: long {
+		None,
+		Follow,
+	}
+
 	interface IWKExtendedRuntimeSessionDelegate {}
 
 	[Watch (6,0), NoiOS]
@@ -1637,9 +1672,13 @@ namespace WatchKit {
 	[BaseType (typeof (WKInterfaceObject), Name = "WKInterfaceAuthorizationAppleIDButton")]
 	[DisableDefaultCtor] // Handle is `nil`
 	interface WKInterfaceAuthorizationAppleIdButton {
-
 		[Export ("initWithTarget:action:")]
+		[Deprecated (PlatformName.WatchOS, 6,1, message: "Use 'new WKInterfaceAuthorizationAppleIdButton (WKInterfaceVolumeControlOrigin,NSObject,Selector)' instead.")]
 		IntPtr Constructor ([NullAllowed] NSObject target, Selector action);
+
+		[Watch (6,1)]
+		[Export ("initWithStyle:target:action:")]
+		IntPtr Constructor (WKInterfaceAuthorizationAppleIdButtonStyle style, [NullAllowed] NSObject target, Selector action);
 	}
 
 	[Watch (6,0), NoiOS]

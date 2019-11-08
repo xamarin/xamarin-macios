@@ -237,6 +237,8 @@ namespace Introspection {
 				return Runtime.Arch == Arch.SIMULATOR;
 			case "VNDocumentCameraViewController": // Name: NSGenericException Reason: Document camera is not available on simulator
 				return Runtime.Arch == Arch.SIMULATOR;
+			case "AVAudioRecorder": // Stopped working with Xcode 11.2 beta 2
+				return TestRuntime.CheckXcodeVersion (11, 2);
 			default:
 				return base.Skip (type);
 			}
