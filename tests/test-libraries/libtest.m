@@ -665,7 +665,7 @@ static Class _TestClass = NULL;
 	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
 	__block bool success = false;
 
-	dispatch_sync (dispatch_get_global_queue_priority (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
+	dispatch_sync (dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
 		completionHandler (^(int magic_number)
 		{
 			assert (magic_number == 42);
@@ -682,7 +682,7 @@ static Class _TestClass = NULL;
 	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
 	__block bool success = false;
 
-	dispatch_sync (dispatch_get_global_queue_qos (QOS_CLASS_DEFAULT, 0ul), ^{
+	dispatch_sync (dispatch_get_global_queue (QOS_CLASS_DEFAULT, 0ul), ^{
 		completionHandler (^(int magic_number)
 		{
 			assert (magic_number == 42);
@@ -699,7 +699,7 @@ static Class _TestClass = NULL;
 	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
 	__block bool success = false;
 
-	dispatch_sync (dispatch_get_global_queue_priority (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
+	dispatch_sync (dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
 		[self assertMainThreadBlockReleaseCallback: ^(int magic_number)
 		{
 			assert (magic_number == 42);
@@ -716,7 +716,7 @@ static Class _TestClass = NULL;
 	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
 	__block bool success = false;
 
-	dispatch_sync (dispatch_get_global_queue_qos (QOS_CLASS_DEFAULT, 0ul), ^{
+	dispatch_sync (dispatch_get_global_queue (QOS_CLASS_DEFAULT, 0ul), ^{
 		[self assertMainThreadBlockReleaseCallback: ^(int magic_number)
 		{
 			assert (magic_number == 42);

@@ -268,17 +268,17 @@ namespace CoreFoundation {
 
 		public static DispatchQueue GetGlobalQueue (DispatchQueuePriority priority)
 		{
-			return new DispatchQueue (dispatch_get_global_queue_priority ((nint) (int) priority, 0), false);
+			return new DispatchQueue (dispatch_get_global_queue ((nint) (int) priority, 0), false);
 		}
 		
-		public static DispatchQueue GetGlobalQueue (DispatchQualityOfService identifier)
+		public static DispatchQueue GetGlobalQueue (DispatchQualityOfService service)
 		{
-			return new DispatchQueue (dispatch_get_global_queue_qos ((nint) (int) identifier, 0), false);
+			return new DispatchQueue (dispatch_get_global_queue ((nint) (int) service, 0), false);
 		}
 
 		public static DispatchQueue DefaultGlobalQueue {
 			get {
-				return new DispatchQueue (dispatch_get_global_queue_priority ((nint) (int) DispatchQueuePriority.Default, 0), false);
+				return new DispatchQueue (dispatch_get_global_queue ((nint) (int) DispatchQueuePriority.Default, 0), false);
 			}
 		}
 
@@ -534,12 +534,8 @@ namespace CoreFoundation {
 		extern static IntPtr dispatch_get_current_queue ();
 
 		[DllImport (Constants.libcLibrary)]
-		// dispatch_queue_t dispatch_get_global_queue (long priority, unsigned long flags);
-		extern static IntPtr dispatch_get_global_queue_priority (nint priority, nuint flags);
-
-		[DllImport (Constants.libcLibrary)]
 		// dispatch_queue_t dispatch_get_global_queue (long identifier, unsigned long flags);
-		extern static IntPtr dispatch_get_global_queue_qos (nint identifier, nuint flags);
+		extern static IntPtr dispatch_get_global_queue (nint identifier, nuint flags);
 
 		[DllImport (Constants.libcLibrary)]
 		// this returns a "const char*" so we cannot make a string out of it since it will be freed (and crash)

@@ -935,8 +935,7 @@
 !unknown-pinvoke! dispatch_data_get_size bound
 !unknown-pinvoke! dispatch_get_context bound
 !unknown-pinvoke! dispatch_get_current_queue bound
-!unknown-pinvoke! dispatch_get_global_queue_priority bound
-!unknown-pinvoke! dispatch_get_global_queue_qos bound
+!unknown-pinvoke! dispatch_get_global_queue bound
 !unknown-pinvoke! dispatch_group_async_f bound
 !unknown-pinvoke! dispatch_group_create bound
 !unknown-pinvoke! dispatch_group_enter bound
