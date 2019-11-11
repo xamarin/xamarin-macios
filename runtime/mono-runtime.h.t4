@@ -30,7 +30,7 @@ typedef guint    (*GHashFunc)      (gconstpointer key);
 typedef gboolean (*GEqualFunc)     (gconstpointer a, gconstpointer b);
 
 #ifndef GPOINTER_TO_INT
-#define GPOINTER_TO_INT(p) ((int)  (long) (p))
+#define GPOINTER_TO_INT(p) ((uint32_t)  (long) (p))
 #endif
 
 #ifndef GINT_TO_POINTER

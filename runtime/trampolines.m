@@ -41,6 +41,9 @@
 #include "runtime-internal.h"
 //#define DEBUG_REF_COUNTING
 
+// TODO: temp ignore to minimize diff
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
 static pthread_mutex_t refcount_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
 size_t
@@ -1632,3 +1635,5 @@ xamarin_skip_type_name (const char *ptr)
 
 	return ptr;
 }
+
+#pragma clang diagnostic pop

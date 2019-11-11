@@ -9,6 +9,10 @@
 // Copyright 2011-2013 Xamarin Inc. 
 //
 
+// TODO: temp ignore to minimize diff
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
+
 #ifdef DEBUG
 
 //#define LOG_HTTP(...) do { NSLog (@ __VA_ARGS__); } while (0);
@@ -747,7 +751,7 @@ static gboolean send_uninterrupted (int fd, const void *buf, int len)
 
 static int recv_uninterrupted (int fd, void *buf, int len)
 {
-	long res;
+	ssize_t res;
 	int total = 0;
 	int flags = 0;
 
@@ -1723,3 +1727,5 @@ xamarin_is_native_debugger_attached ()
 int xamarin_fix_ranlib_warning_about_no_symbols_v2;
 #endif /* DEBUG */
 
+
+#pragma clang diagnostic pop
