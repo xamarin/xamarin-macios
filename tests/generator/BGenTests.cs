@@ -581,6 +581,9 @@ namespace GeneratorTests
 		public void GHIssue5692 () => BuildFile (Profile.iOS, "ghissue5692.cs");
 
 		[Test]
+		public void GHIssue7304 () => BuildFile (Profile.macOSFull, "ghissue7304.cs");
+
+		[Test]
 		public void RefOutParameters ()
 		{
 			BuildFile (Profile.macOSMobile, true, "tests/ref-out-parameters.cs");

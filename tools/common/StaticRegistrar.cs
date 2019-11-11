@@ -2154,9 +2154,6 @@ namespace Registrar {
 				header.WriteLine ("#import <IOBluetooth/IOBluetooth.h>");
 				header.WriteLine ("#import <CoreBluetooth/CoreBluetooth.h>");
 				return;
-			case "CoreImage":
-				h = "<QuartzCore/QuartzCore.h>";
-				break;
 			case "PdfKit":
 			case "ImageKit":
 			case "QuartzComposer":
@@ -2217,6 +2214,10 @@ namespace Registrar {
 			case "IOSurface": // There is no IOSurface.h
 				h = "<IOSurface/IOSurfaceObjC.h>";
 				break;
+			case "CoreImage":
+				header.WriteLine ("#import <CoreImage/CoreImage.h>");
+				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
+				return;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
@@ -3609,7 +3610,8 @@ namespace Registrar {
 							body_setup.AppendLine ("MonoObject *mobj{0} = NULL;", i);
 							if (!isOut) {
 								body_setup.AppendLine ("NSObject *nsobj{0} = NULL;", i);
-								setup_call_stack.AppendLine ("nsobj{0} = *(NSObject **) p{0};", i);
+								setup_call_stack.AppendLine ("if (p{0} != NULL)", i).Indent ();
+								setup_call_stack.AppendLine ("nsobj{0} = *(NSObject **) p{0};", i).Unindent ();
 								setup_call_stack.AppendLine ("if (nsobj{0}) {{", i);
 								body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
 								setup_call_stack.AppendLine ("paramtype{0} = xamarin_get_parameter_type (managed_method, {0});", i);

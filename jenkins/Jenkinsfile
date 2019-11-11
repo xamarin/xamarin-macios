@@ -585,6 +585,8 @@ timestamps {
                             uploadFiles ("package/manifest", "wrench", "jenkins/${branchName}/${gitHash}")
                             // And also create a 'latest' version (which really means 'latest built', not 'latest hash', but it will hopefully be good enough)
                             uploadFiles ("package/manifest", "wrench", "jenkins/${branchName}/latest")
+                            // And finally create a per-hash manifest (which will be overwritten in rebuilds of the same hash)
+                            uploadFiles ("package/manifest", "wrench", "jenkins/${gitHash}")
 
                             manifestFilename = "manifest"
                         }

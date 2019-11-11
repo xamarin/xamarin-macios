@@ -54,7 +54,6 @@ namespace ObjCRuntime {
 		}
 			
 		delegate void initialize_func ();
-		delegate void set_bool_func (bool value);
 		unsafe delegate sbyte *get_sbyteptr_func ();
 
 		static volatile bool originalWorkingDirectoryIsSet;
@@ -116,7 +115,6 @@ namespace ObjCRuntime {
 
 			VerifyMonoVersion ();
 
-			LookupInternalFunction<set_bool_func> ("xamarin_set_is_unified") (IsUnifiedBuild);
 			LookupInternalFunction<initialize_func> ("xamarin_initialize") ();
 		}
 

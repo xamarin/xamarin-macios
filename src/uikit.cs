@@ -3437,11 +3437,25 @@ namespace UIKit {
 		[Export ("application:viewControllerWithRestorationIdentifierPath:coder:")]
 		UIViewController GetViewController (UIApplication application, string [] restorationIdentifierComponents, NSCoder coder);
 
+		[Deprecated (PlatformName.iOS, 13, 2, message: "Use 'ShouldSaveSecureApplicationState' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 2, message: "Use 'ShouldSaveSecureApplicationState' instead.")]
 		[Export ("application:shouldSaveApplicationState:")]
 		bool ShouldSaveApplicationState (UIApplication application, NSCoder coder);
 
+		[iOS (13,2)]
+		[TV (13,2)]
+		[Export ("application:shouldSaveSecureApplicationState:")]
+		bool ShouldSaveSecureApplicationState (UIApplication application, NSCoder coder);
+
+		[Deprecated (PlatformName.iOS, 13, 2, message: "Use 'ShouldRestoreSecureApplicationState' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 2, message: "Use 'ShouldRestoreSecureApplicationState' instead.")]
 		[Export ("application:shouldRestoreApplicationState:")]
 		bool ShouldRestoreApplicationState (UIApplication application, NSCoder coder);
+
+		[iOS (13,2)]
+		[TV (13,2)]
+		[Export ("application:shouldRestoreSecureApplicationState:")]
+		bool ShouldRestoreSecureApplicationState (UIApplication application, NSCoder coder);
 
 		[Export ("application:willEncodeRestorableStateWithCoder:")]
 		void WillEncodeRestorableState (UIApplication application, NSCoder coder);
@@ -20836,89 +20850,6 @@ namespace UIKit {
 
 		[Export ("focused", ArgumentSemantic.Strong)]
 		UITabBarItemStateAppearance Focused { get; }
-	}
-
-	[NoWatch, TV (13,0), iOS (13,0)]
-	[BaseType (typeof (NSObject))]
-	interface NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> : NSCopying
-		where SectionIdentifierType : NSObject
-		where ItemIdentifierType : NSObject {
-
-		[Export ("numberOfItems")]
-		nint NumberOfItems { get; }
-
-		[Export ("numberOfSections")]
-		nint NumberOfSections { get; }
-
-		[Export ("sectionIdentifiers")]
-		SectionIdentifierType [] SectionIdentifiers { get; }
-
-		[Export ("itemIdentifiers")]
-		ItemIdentifierType [] ItemIdentifiers { get; }
-
-		[Export ("numberOfItemsInSection:")]
-		nint GetNumberOfItems (SectionIdentifierType sectionIdentifier);
-
-		[Export ("itemIdentifiersInSectionWithIdentifier:")]
-		ItemIdentifierType [] GetItemIdentifiersInSection (SectionIdentifierType sectionIdentifier);
-
-		[Export ("sectionIdentifierForSectionContainingItemIdentifier:")]
-		[return: NullAllowed]
-		SectionIdentifierType GetSectionIdentifierForSection (ItemIdentifierType itemIdentifier);
-
-		[Export ("indexOfItemIdentifier:")]
-		nint GetIndex (ItemIdentifierType itemIdentifier);
-
-		[Export ("indexOfSectionIdentifier:")]
-		nint GetIndex (SectionIdentifierType sectionIdentifier);
-
-		[Export ("appendItemsWithIdentifiers:")]
-		void AppendItems (ItemIdentifierType [] identifiers);
-
-		[Export ("appendItemsWithIdentifiers:intoSectionWithIdentifier:")]
-		void AppendItems (ItemIdentifierType [] identifiers, SectionIdentifierType sectionIdentifier);
-
-		[Export ("insertItemsWithIdentifiers:beforeItemWithIdentifier:")]
-		void InsertItemsBefore (ItemIdentifierType [] identifiers, ItemIdentifierType itemIdentifier);
-
-		[Export ("insertItemsWithIdentifiers:afterItemWithIdentifier:")]
-		void InsertItemsAfter (ItemIdentifierType [] identifiers, ItemIdentifierType itemIdentifier);
-
-		[Export ("deleteItemsWithIdentifiers:")]
-		void DeleteItems (ItemIdentifierType [] identifiers);
-
-		[Export ("deleteAllItems")]
-		void DeleteAllItems ();
-
-		[Export ("moveItemWithIdentifier:beforeItemWithIdentifier:")]
-		void MoveItemBefore (ItemIdentifierType fromIdentifier, ItemIdentifierType toIdentifier);
-
-		[Export ("moveItemWithIdentifier:afterItemWithIdentifier:")]
-		void MoveItemAfter (ItemIdentifierType fromIdentifier, ItemIdentifierType toIdentifier);
-
-		[Export ("reloadItemsWithIdentifiers:")]
-		void ReloadItems (ItemIdentifierType [] identifiers);
-
-		[Export ("appendSectionsWithIdentifiers:")]
-		void AppendSections (SectionIdentifierType [] sectionIdentifiers);
-
-		[Export ("insertSectionsWithIdentifiers:beforeSectionWithIdentifier:")]
-		void InsertSectionsBefore (SectionIdentifierType [] sectionIdentifiers, SectionIdentifierType toSectionIdentifier);
-
-		[Export ("insertSectionsWithIdentifiers:afterSectionWithIdentifier:")]
-		void InsertSectionsAfter (SectionIdentifierType [] sectionIdentifiers, SectionIdentifierType toSectionIdentifier);
-
-		[Export ("deleteSectionsWithIdentifiers:")]
-		void DeleteSections (SectionIdentifierType [] sectionIdentifiers);
-
-		[Export ("moveSectionWithIdentifier:beforeSectionWithIdentifier:")]
-		void MoveSectionBefore (SectionIdentifierType fromSectionIdentifier, SectionIdentifierType toSectionIdentifier);
-
-		[Export ("moveSectionWithIdentifier:afterSectionWithIdentifier:")]
-		void MoveSectionAfter (SectionIdentifierType fromSectionIdentifier, SectionIdentifierType toSectionIdentifier);
-
-		[Export ("reloadSectionsWithIdentifiers:")]
-		void ReloadSections (SectionIdentifierType [] sectionIdentifiers);
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]

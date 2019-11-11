@@ -29,15 +29,6 @@
  * the simlauncher binaries).
  */
 
-#if MONOMAC
-bool xamarin_detect_unified_build = true;
-#else
-// no automatic detection for XI, mtouch should do the right thing in the generated main.
-bool xamarin_detect_unified_build = false;
-#endif
-#if MONOMAC
-bool xamarin_use_new_assemblies = false;
-#endif
 #if DEBUG
 bool xamarin_gc_pump = false;
 #endif
@@ -713,7 +704,7 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 // 
 
 void
-xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, int index, MonoClass *expected, MonoMethod *method)
+xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, unsigned long index, MonoClass *expected, MonoMethod *method)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -894,7 +885,7 @@ gc_enable_new_refcount (void)
 
 	mono_gc_toggleref_register_callback (gc_toggleref_callback);
 
-	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::RegisterToggleRef" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
+	xamarin_add_internal_call ("Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
 	mono_profiler_install_gc (gc_event_callback, NULL);
 }
 
@@ -1212,35 +1203,6 @@ pump_gc (void *context)
 }
 #endif /* DEBUG */
 
-#if MONOMAC
-static void
-detect_product_assembly ()
-{
-	// COOP: Function only called at startup, I believe the mode here doesn't matter
-	if (!xamarin_detect_unified_build)
-		return;
-
-	char path [1024];
-	bool unified;
-	bool compat;
-
-	snprintf (path, sizeof (path), "%s/" ARCH_SUBDIR "/%s", xamarin_get_bundle_path (), PRODUCT_DUAL_ASSEMBLY);
-	unified = xamarin_file_exists (path);
-	snprintf (path, sizeof (path), "%s/" ARCH_SUBDIR "/%s", xamarin_get_bundle_path (), PRODUCT_COMPAT_ASSEMBLY);
-	compat = xamarin_file_exists (path);
-
-	if (unified && compat) {
-		xamarin_assertion_message ("Found both " PRODUCT_COMPAT_ASSEMBLY " and " PRODUCT_DUAL_ASSEMBLY " in the app. Only one can be present");
-	} else if (!unified && !compat) {
-		xamarin_assertion_message ("Found neither " PRODUCT_COMPAT_ASSEMBLY " nor " PRODUCT_DUAL_ASSEMBLY " in the app.");
-	} else if (unified) {
-		xamarin_use_new_assemblies = true;
-	} else {
-		xamarin_use_new_assemblies = false;
-	}
-}
-#endif
-
 static void
 log_callback (const char *log_domain, const char *log_level, const char *message, mono_bool fatal, void *user_data)
 {
@@ -1329,7 +1291,6 @@ xamarin_initialize ()
 	MonoAssembly *assembly = NULL;
 	MonoMethod *runtime_initialize;
 	void* params[2];
-	const char *product_dll = NULL;
 	guint32 exception_gchandle = 0;
 	MonoObject *exc = NULL;
 
@@ -1347,10 +1308,6 @@ xamarin_initialize ()
 
 	xamarin_install_log_callbacks ();
 
-#if MONOMAC
-	detect_product_assembly ();
-#endif
-
 	MonoGCFinalizerCallbacks gc_callbacks;
 	gc_callbacks.version = MONO_GC_FINALIZER_EXTENSION_VERSION;
 	gc_callbacks.is_class_finalization_aware = is_class_finalization_aware;
@@ -1365,16 +1322,14 @@ xamarin_initialize ()
 		NSSetUncaughtExceptionHandler (exception_handler);
 	}
 
-	product_dll = xamarin_use_new_assemblies ? PRODUCT_DUAL_ASSEMBLY : PRODUCT_COMPAT_ASSEMBLY;
-
-	assembly = xamarin_open_assembly (product_dll);
+	assembly = xamarin_open_assembly (PRODUCT_DUAL_ASSEMBLY);
 
 	if (!assembly)
-		xamarin_assertion_message ("Failed to load %s.", product_dll);
+		xamarin_assertion_message ("Failed to load %s.", PRODUCT_DUAL_ASSEMBLY);
 	platform_image = mono_assembly_get_image (assembly);
 
-	const char *objcruntime = xamarin_use_new_assemblies ? "ObjCRuntime" : PRODUCT_COMPAT_NAMESPACE ".ObjCRuntime";
-	const char *foundation = xamarin_use_new_assemblies ? "Foundation" : PRODUCT_COMPAT_NAMESPACE ".Foundation";
+	const char *objcruntime = "ObjCRuntime";
+	const char *foundation = "Foundation";
 
 	runtime_class = get_class_from_name (platform_image, objcruntime, "Runtime");
 	inativeobject_class = get_class_from_name (platform_image, objcruntime, "INativeObject");
@@ -1383,8 +1338,8 @@ xamarin_initialize ()
 	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue", true);
 	nsstring_class = get_class_from_name (platform_image, foundation, "NSString", true);
 
-	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_release_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
-	xamarin_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_create_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
+	xamarin_add_internal_call ("Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
+	xamarin_add_internal_call ("Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
 
 	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
 
@@ -1598,7 +1553,7 @@ objc_skip_type (const char *type)
 	}
 }
 
-int
+unsigned long
 xamarin_objc_type_size (const char *type)
 {
 	const char *original_type = type;
@@ -1642,7 +1597,7 @@ xamarin_objc_type_size (const char *type)
 			xamarin_assertion_message ("Unhandled type encoding: %s", type);
 			break;
 		case _C_ARY_B: {
-			int size = 0;
+			unsigned long size = 0;
 			int len = atoi (type+1);
 			do {
 				type++;
@@ -1655,7 +1610,7 @@ xamarin_objc_type_size (const char *type)
 			return len * size;
 		}
 		case _C_UNION_B: {
-			int size = 0;
+			unsigned long size = 0;
 
 			do {
 				type++;
@@ -1670,7 +1625,7 @@ xamarin_objc_type_size (const char *type)
 				if (*type == 0)
 					xamarin_assertion_message ("Unsupported union type: %s", original_type);
 
-				int tsize = xamarin_objc_type_size (type);
+				unsigned long tsize = xamarin_objc_type_size (type);
 				type = objc_skip_type (type);
 
 				tsize = (tsize + (sizeof (void *) - 1)) & ~((sizeof (void *) - 1));
@@ -1680,7 +1635,7 @@ xamarin_objc_type_size (const char *type)
 			return size;
 		}
 		case _C_STRUCT_B: {
-			int size = 0;
+			unsigned long size = 0;
 
 			do {
 				type++;
@@ -1694,7 +1649,7 @@ xamarin_objc_type_size (const char *type)
 			while (*type != _C_STRUCT_E) {
 				if (*type == 0)
 					xamarin_assertion_message ("Unsupported struct type: %s", original_type);
-				int item_size = xamarin_objc_type_size (type);
+				unsigned long item_size = xamarin_objc_type_size (type);
 				
 				size += (item_size + (sizeof (void *) - 1)) & ~((sizeof (void *) - 1));
 
@@ -2111,7 +2066,7 @@ xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
 
 typedef struct {
 	MonoMethod *method;
-	int par;
+	unsigned long par;
 } MethodAndPar;
 
 static gboolean
@@ -2139,7 +2094,7 @@ static MonoReferenceQueue *block_wrapper_queue;
  * create the method
  */
 static MonoObject *
-get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exception_gchandle)
+get_method_block_wrapper_creator (MonoMethod *method, unsigned long par, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -2207,7 +2162,7 @@ xamarin_release_block_on_main_thread (void *obj)
  * Returns: the instantiated delegate.
  */
 int *
-xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle)
+xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, unsigned long par, void *nativeBlock, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -2264,26 +2219,6 @@ bool
 xamarin_get_use_sgen ()
 {
 	return true;
-}
-
-#if MONOMAC
-void
-xamarin_set_is_unified (bool value)
-{
-	// COOP: no managed memory access: any mode.
-	if (initialize_started)
-		xamarin_assertion_message ("Fatal error: xamarin_set_is_unified called after xamarin_initialize.\n");
-
-	xamarin_use_new_assemblies = value;
-	xamarin_detect_unified_build = false;
-}
-#endif
-
-bool
-xamarin_get_is_unified ()
-{
-	// COOP: no managed memory access: any mode.
-	return xamarin_use_new_assemblies;
 }
 
 void
@@ -2576,7 +2511,7 @@ xamarin_vprintf (const char *format, va_list args)
 void
 xamarin_get_assembly_name_without_extension (const char *aname, char *name, int namelen)
 {
-	int len = strlen (aname);
+	size_t len = strlen (aname);
 	strlcpy (name, aname, namelen);
 	if (namelen <= 4 || len <= 4)
 		return;
