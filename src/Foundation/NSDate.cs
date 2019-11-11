@@ -42,10 +42,19 @@ namespace Foundation {
 		public static explicit operator DateTime (NSDate d)
 		{
 			double secs = d.SecondsSinceReferenceDate;
-			if ((secs < -63113904000) || (secs > 252423993599))
-				throw new ArgumentOutOfRangeException ("Value is outside the range of NSDate");
 
-			return new DateTime ((long)(secs * TimeSpan.TicksPerSecond + NSDATE_TICKS), DateTimeKind.Utc);
+			if ((secs < -63114076800) || (secs > 252423993599))
+				throw new ArgumentOutOfRangeException ($"Value is outside the range of NSDate {secs}");
+
+			var calendar = new NSCalendar (NSCalendarType.Gregorian);
+			calendar.TimeZone = NSTimeZone.FromName ("UTC");
+			NSDateComponents components = calendar.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day | NSCalendarUnit.Hour |
+				NSCalendarUnit.Minute | NSCalendarUnit.Second | NSCalendarUnit.Nanosecond | NSCalendarUnit.Calendar, d);
+
+			var retDate = new DateTime ((int) components.Year, (int) components.Month, (int) components.Day, (int) components.Hour,
+				(int) components.Minute, (int) (components.Second), Convert.ToInt32 (components.Nanosecond / 1000000.0), DateTimeKind.Utc);
+
+			return retDate;
 		}
 
 		// now explicit since data can be lost for DateTimeKind.Unspecified
@@ -54,7 +63,20 @@ namespace Foundation {
 			if (dt.Kind == DateTimeKind.Unspecified)
 				throw new ArgumentException ("DateTimeKind.Unspecified cannot be safely converted");
 
-			return FromTimeIntervalSinceReferenceDate ((dt.ToUniversalTime ().Ticks - NSDATE_TICKS) / (double) TimeSpan.TicksPerSecond);
+			var dtUnv = dt.ToUniversalTime ();
+
+			var calendar = new NSCalendar (NSCalendarType.Gregorian);
+			calendar.TimeZone = NSTimeZone.FromName ("UTC");
+			var components = new NSDateComponents {
+				Day = dtUnv.Day, Month = dtUnv.Month, Year = dtUnv.Year, Hour = dtUnv.Hour,
+					Minute = dtUnv.Minute, Second = dtUnv.Second, Nanosecond = dtUnv.Millisecond * 1000000
+			};
+
+			var retDate = calendar.DateFromComponents (components);
+			if (retDate == null)
+				throw new ArgumentOutOfRangeException ($"Value is outside the range of NSDate {dt}");
+
+			return retDate;
 		}
 #else
 		public static implicit operator DateTime (NSDate d)
