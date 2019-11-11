@@ -207,9 +207,9 @@ typedef void (^simple_callback)();
 +(void) callOptionalStaticCallback;
 typedef void (^innerBlock) (int magic_number);
 typedef void (^outerBlock) (innerBlock callback);
-+(void) callAssertMainThreadBlockReleasePriority: (outerBlock) completionHandler;
++(void) callAssertMainThreadBlockRelease: (outerBlock) completionHandler;
 +(void) callAssertMainThreadBlockReleaseQOS: (outerBlock) completionHandler;
--(void) callAssertMainThreadBlockReleaseCallbackPriority;
+-(void) callAssertMainThreadBlockReleaseCallback;
 -(void) callAssertMainThreadBlockReleaseCallbackQOS;
 -(void) assertMainThreadBlockReleaseCallback: (innerBlock) completionHandler;
 

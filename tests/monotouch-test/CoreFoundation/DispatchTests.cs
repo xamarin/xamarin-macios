@@ -56,7 +56,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 #if !MONOMAC // UIKitThreadAccessException and NSStringDrawing.WeakDrawString don't exist on mac
 		[Test]
-		public void MainQueueDispatchPriority ()
+		public void MainQueueDispatch ()
 		{
 #if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
@@ -272,7 +272,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 #if !MONOMAC // UIKitThreadAccessException and NSStringDrawing.WeakDrawString don't exist on mac
 		[Test]
-		public void EverAfterPriority ()
+		public void EverAfter ()
 		{
 #if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");

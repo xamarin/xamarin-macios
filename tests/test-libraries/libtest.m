@@ -660,7 +660,7 @@ static Class _TestClass = NULL;
 	assert (called);
 }
 
-+(void) callAssertMainThreadBlockReleasePriority: (outerBlock) completionHandler
++(void) callAssertMainThreadBlockRelease: (outerBlock) completionHandler
 {
 	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
 	__block bool success = false;
@@ -694,7 +694,7 @@ static Class _TestClass = NULL;
     [obj release];
 }
 
--(void) callAssertMainThreadBlockReleaseCallbackPriority
+-(void) callAssertMainThreadBlockReleaseCallback
 {
 	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
 	__block bool success = false;
