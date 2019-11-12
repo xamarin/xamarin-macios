@@ -31,7 +31,7 @@ namespace LinkAnyTest {
 		{
 			// do not use GetStringAsync, we are going to miss useful data, such as the resul code
 			using (var client = new HttpClient ()) {
-				HttpResponseMessage response = await client.GetAsync ("http://msdn.microsoft.com"); 
+				HttpResponseMessage response = await client.GetAsync ("http://example.com"); 
 				if(!response.IsSuccessStatusCode) {
 					requestError = true;
 					statusCode = response.StatusCode;
