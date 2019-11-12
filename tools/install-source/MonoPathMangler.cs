@@ -7,6 +7,9 @@ namespace InstallSources
 	{
 		public static readonly string iOSFramework = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/src/Xamarin.iOS/";
 		public static readonly string MacFramework = "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/src/Xamarin.Mac/";
+		string monoSubmodulePath;
+		string xamarinSourcePath;
+
 		/// <summary>
 		/// Gets and sets the location of the mono sources.
 		/// </summary>
@@ -20,10 +23,27 @@ namespace InstallSources
 		public string DestinationDir { get; set; }
 
 		/// <summary>
+		/// Gets and sets the path to the xamarin source.
+		/// </summary>
+		/// <value>The xamarin source path.</value>
+		public string XamarinSourcePath {
+			get {
+				return xamarinSourcePath;
+			}
+			set {
+				xamarinSourcePath = value;
+				monoSubmodulePath = Path.Combine (value.Replace ("src/", ""), "external", "mono") + "/";
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the install dir.
 		/// </summary>
 		/// <value>The install dir.</value>
 		public string InstallDir { get; set; }
+
+		bool IsCheckout (string path)
+			=> path.StartsWith (monoSubmodulePath, StringComparison.Ordinal);
 
 		public string GetSourcePath (string path)
 		{
@@ -40,7 +60,7 @@ namespace InstallSources
 
 		public string GetTargetPath (string path)
 		{
-			var relativePath = path.Substring (MonoSourcePath.Length);
+			var relativePath = path.Substring (IsCheckout (path) ? monoSubmodulePath.Length : MonoSourcePath.Length);
 			if (relativePath.StartsWith ("/", StringComparison.Ordinal))
 				relativePath = relativePath.Remove (0, 1);
 			var target = Path.Combine (DestinationDir, "src", (InstallDir.Contains("Xamarin.iOS")?"Xamarin.iOS":"Xamarin.Mac"), relativePath);
