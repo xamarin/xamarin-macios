@@ -2818,6 +2818,8 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t{0}{2}maxPixelValue.b = {1}.maxPixelValue [1];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}maxPixelValue.c = {1}.maxPixelValue [2];", managedVariable, nativeVariable, accessor);
 				writer.WriteLine ("\t{0}{2}maxPixelValue.d = {1}.maxPixelValue [3];", managedVariable, nativeVariable, accessor);
+				// this is not exposed (under normal circumstance) to managed code - but if something gets wrong it won't be random data
+				writer.WriteLine ("\tmemset ({0}{1}dummy, 0, sizeof ({0}{1}dummy));", managedVariable, accessor);
 				break;
 			case "MDLVoxelIndexExtent2":
 				writer.WriteLine ("\t{0}{2}minimumExtent.a = {1}.minimumExtent [0];", managedVariable, nativeVariable, accessor);
