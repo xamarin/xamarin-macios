@@ -762,7 +762,7 @@ xamarin_get_gchandle_trampoline (id self, SEL sel)
 	int gc_handle = 0;
 	pthread_mutex_lock (&gchandle_hash_lock);
 	if (gchandle_hash != NULL)
-		gc_handle = GPOINTER_TO_INT (CFDictionaryGetValue (gchandle_hash, self));
+		gc_handle = GPOINTER_TO_UINT (CFDictionaryGetValue (gchandle_hash, self));
 	pthread_mutex_unlock (&gchandle_hash_lock);
 	return gc_handle;
 }
@@ -1395,7 +1395,7 @@ xamarin_get_managed_to_nsvalue_func (MonoClass *managedType, MonoMethod *method,
 void *
 xamarin_smart_enum_to_nsstring (MonoObject *value, void *context /* token ref */, guint32 *exception_gchandle)
 {
-	guint32 context_ref = GPOINTER_TO_INT (context);
+	guint32 context_ref = GPOINTER_TO_UINT (context);
 	if (context_ref == INVALID_TOKEN_REF) {
 		// This requires the dynamic registrar to invoke the correct conversion function
 		int handle = mono_gchandle_new (value, FALSE);
@@ -1432,7 +1432,7 @@ xamarin_smart_enum_to_nsstring (MonoObject *value, void *context /* token ref */
 void *
 xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle)
 {
-	guint32 context_ref = GPOINTER_TO_INT (context);
+	guint32 context_ref = GPOINTER_TO_UINT (context);
 	int gc_handle = 0;
 	MonoObject *obj;
 
@@ -1441,7 +1441,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 		void *rv = xamarin_convert_nsstring_to_smart_enum (value, mono_type_get_object (mono_domain_get (), mono_class_get_type (managedType)), exception_gchandle);
 		if (*exception_gchandle != 0)
 			return ptr;
-		gc_handle = GPOINTER_TO_INT (rv);
+		gc_handle = GPOINTER_TO_UINT (rv);
 		obj = mono_gchandle_get_target (gc_handle);
 	} else {
 		// The static registrar found the correct conversion function, and provided a token ref we can use
