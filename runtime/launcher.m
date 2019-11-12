@@ -42,12 +42,16 @@ redirect_io (int from_fd, const char *to_path)
 		return -1;
 	}
 
-	return 0;
+	return fd;
 }
 
 static void
 init_logdir (void)
 {
+	// If redirected we will not be closing the returned file descriptors anywhere.
+	// That's "by design" so they will keep logging as long as the app is alive.
+	static int redirected_stdout = -1;
+	static int redirected_stderr = -1;
 	const char *env;
 	size_t dirlen;
 	char *path;
@@ -72,12 +76,14 @@ init_logdir (void)
 			path[dirlen++] = '/';
 
 		strcpy (path + dirlen, "stdout.log");
-		if (redirect_io (STDOUT_FILENO, path) == -1)
-			fprintf (stderr, PRODUCT ": Could not redirect stdout to `%s': %s\n", path, strerror (errno));
+		redirected_stdout = redirect_io (STDOUT_FILENO, path);
+		if (redirected_stdout == -1)
+			fprintf (stderr, PRODUCT ": Could not redirect %s to `%s': %s\n", "stdout", path, strerror (errno));
 
 		strcpy (path + dirlen, "stderr.log");
-		if (redirect_io (STDERR_FILENO, path) == -1)
-			fprintf (stderr, PRODUCT ": Could not redirect stderr to `%s': %s\n", path, strerror (errno));
+		redirected_stderr = redirect_io (STDERR_FILENO, path);
+		if (redirected_stderr == -1)
+			fprintf (stderr, PRODUCT ": Could not redirect %s to `%s': %s\n", "stderr", path, strerror (errno));
 
 		free (path);
 	}
