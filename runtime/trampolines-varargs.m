@@ -22,7 +22,6 @@
 #include "runtime-internal.h"
 #include "trampolines-varargs.h"
 
-
 #ifdef TRACE
 static void
 dump_state (struct XamarinCallState *state)

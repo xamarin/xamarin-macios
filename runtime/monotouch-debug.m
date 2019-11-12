@@ -751,7 +751,7 @@ static gboolean send_uninterrupted (int fd, const void *buf, int len)
 
 static int recv_uninterrupted (int fd, void *buf, int len)
 {
-	ssize_t res;
+	long res;
 	int total = 0;
 	int flags = 0;
 
