@@ -80,7 +80,7 @@ patch_sigaction ()
 	}
 
 	// allocate executable memory
-	uint64_t pagesize = getpagesize ();
+	uint64_t pagesize = (uint64_t) getpagesize ();
 	void *exec = mmap (NULL, pagesize, PROT_EXEC | PROT_WRITE | PROT_READ, MAP_ANON | MAP_PRIVATE, -1, 0);
 	if (exec == NULL) {
 		fprintf (stderr, "MonoTouch: Could not allocate memory for sigaction override: %s\n", strerror (errno));
