@@ -13,6 +13,8 @@ using MonoTouch.CoreFoundation;
 #endif
 
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
+
 
 namespace MonoTouchFixtures.Network {
 
@@ -45,7 +47,7 @@ namespace MonoTouchFixtures.Network {
 			TestRuntime.AssertXcodeVersion (11, 0);
 			// we want to use a single connection, since it is expensive
 			connectedEvent = new AutoResetEvent(false);
-			host = "www.google.com";
+			host = NetworkResources.MicrosoftUri.Host;
 			using (var parameters = NWParameters.CreateTcp ())
 			using (var endpoint = NWEndpoint.Create (host, "80")) {
 				connection = new NWConnection (endpoint, parameters);

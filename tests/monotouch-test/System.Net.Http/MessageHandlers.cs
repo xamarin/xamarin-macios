@@ -88,10 +88,10 @@ namespace MonoTests.System.Net.Http
 			{
 				try {
 					var managedClient = new HttpClient (new HttpClientHandler ());
-					var managedResponse = await managedClient.GetAsync ("https://google.com");
+					var managedResponse = await managedClient.GetAsync (NetworkResources.MicrosoftUrl);
 					if (managedResponse.Headers.TryGetValues ("Set-Cookie", out var managedCookies)) {
 						var nativeClient = new HttpClient (new NSUrlSessionHandler ());
-						var nativeResponse = await nativeClient.GetAsync ("https://google.com");
+						var nativeResponse = await nativeClient.GetAsync (NetworkResources.MicrosoftUrl);
 						if (managedResponse.Headers.TryGetValues ("Set-Cookie", out var nativeCookies)) {
 							manageCount = managedCookies.Count ();
 							nativeCount = nativeCookies.Count ();
@@ -135,10 +135,10 @@ namespace MonoTests.System.Net.Http
 			{
 				try {
 					HttpClient client = new HttpClient (GetHandler (handlerType));
-					client.BaseAddress = new Uri ("https://httpbin.org");
+					client.BaseAddress = NetworkResources.Httpbin.Uri;
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
-					var result = await client.GetAsync ("https://httpbin.org/redirect/3");
+					var result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
 					// get the data returned from httpbin which contains the details of the requested performed.
 					json = await result.Content.ReadAsStringAsync ();
 					containsAuthorizarion = json.Contains ("Authorization");
@@ -198,10 +198,10 @@ namespace MonoTests.System.Net.Http
 			{
 				try {
 					HttpClient client = new HttpClient (handler);
-					client.BaseAddress = new Uri ("https://httpbin.org");
+					client.BaseAddress = NetworkResources.Httpbin.Uri;
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
-					result = await client.GetAsync ("https://httpbin.org/redirect/3");
+					result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
 				} catch (Exception e) {
 					ex = e;
 				} finally {
@@ -251,10 +251,10 @@ namespace MonoTests.System.Net.Http
 			{
 				try {
 					HttpClient client = new HttpClient (handler);
-					client.BaseAddress = new Uri ("https://httpbin.org");
+					client.BaseAddress = NetworkResources.Httpbin.Uri;
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
-					var result = await client.GetAsync ("https://httpbin.org/redirect/3");
+					var result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
 				} catch (Exception e) {
 					ex = e;
 				} finally {

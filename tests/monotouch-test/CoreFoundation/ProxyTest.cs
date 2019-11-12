@@ -23,6 +23,8 @@ using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
 #endif
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
+
 
 namespace MonoTouchFixtures.CoreFoundation {
 	
@@ -123,7 +125,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
 			NSError error = null;
 			var script = File.ReadAllText (pacPath);
-			var targetUri = new Uri ("http://docs.xamarin.com");
+			var targetUri = NetworkResources.XamarinUri;
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
 			Assert.IsNull (error, "Null error");
 			Assert.AreEqual (1, proxies.Length, "Length");
@@ -137,7 +139,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
 			NSError error = null;
 			var script = File.ReadAllText (pacPath);
-			var targetUri = new Uri ("http://google.com");
+			var targetUri = NetworkResources.MicrosoftUri;
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
 			Assert.IsNull (error, "Null error");
 			Assert.IsNotNull (proxies, "Not null proxies");
@@ -150,7 +152,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			NSError error = null;
 			var script = "Not VALID js";
-			var targetUri = new Uri ("http://google.com");
+			var targetUri = NetworkResources.MicrosoftUri;
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
 			Assert.IsNotNull (error, "Not null error");
 			Assert.IsNull (proxies, "Null proxies");
@@ -166,7 +168,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
 
 			var script = File.ReadAllText (pacPath);
-			var targetUri = new Uri ("http://docs.xamarin.com");
+			var targetUri = NetworkResources.XamarinUri;
 			
 			Exception ex;
 			bool foundProxies;
@@ -204,7 +206,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
 
 			var script = File.ReadAllText (pacPath);
-			var targetUri = new Uri ("http://docs.xamarin.com");
+			var targetUri = NetworkResources.XamarinUri;
 
 			Exception ex;
 			bool foundProxies;
@@ -234,7 +236,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			NSError error;
 			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
-			var targetUri = new Uri ("http://docs.xamarin.com");
+			var targetUri = NetworkResources.XamarinUri;
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
 			Assert.IsNull (error, "Null error");
 			Assert.AreEqual (1, proxies.Length, "Length");
@@ -247,7 +249,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			NSError error;
 			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
-			var targetUri = new Uri ("http://google.com");
+			var targetUri = NetworkResources.MicrosoftUri;
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
 			Assert.IsNull (error, "Null error");
 			Assert.IsNotNull (proxies, "Not null proxies");
@@ -263,7 +265,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSObject cbClient = null;
 			bool done = false;
 			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
-			var targetUri = new Uri ("http://docs.xamarin.com");
+			var targetUri = NetworkResources.XamarinUri;
 
 			Exception ex;
 			bool foundProxies;
@@ -298,7 +300,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSObject cbClient = null;
 			bool done = false;
 			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
-			var targetUri = new Uri ("http://docs.google.com");
+			var targetUri = NetworkResources.MicrosoftUri;
 
 			Exception ex;
 			bool foundProxies;

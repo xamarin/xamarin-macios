@@ -16,6 +16,8 @@ using MonoTouch.Security;
 #endif
 
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
+
 
 namespace MonoTouchFixtures.Network {
 
@@ -36,7 +38,7 @@ namespace MonoTouchFixtures.Network {
 			// we want to use a single connection, since it is expensive
 			connectedEvent = new AutoResetEvent(false);
 			interfaces = new List<NWInterface> ();
-			host = "www.google.com";
+			host = NetworkResources.MicrosoftUri.Host;
 			// we create a connection which we are going to use to get the availabe
 			// interfaces, that way we can later test protperties of the NWParameters class.
 			using (var parameters = NWParameters.CreateUdp ())
