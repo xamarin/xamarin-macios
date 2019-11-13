@@ -4,7 +4,7 @@ using CoreFoundation;
 using System;
 
 namespace OSLog {
-	// @interface OSLogEntry : NSObject
+
 	[Mac (10,15)]
 	[BaseType (typeof(NSObject))]
 	interface OSLogEntry
