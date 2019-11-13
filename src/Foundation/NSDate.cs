@@ -35,7 +35,17 @@ using ObjCRuntime;
 namespace Foundation {
 
 	public partial class NSDate {
-		const long NSDATE_TICKS = 631139040000000000;
+		const double NANOSECS_PER_MILLISEC = 1000000.0;
+
+		private static readonly NSCalendar calendar;
+		private static readonly NSDateComponents components;
+
+		static NSDate()
+		{
+			components = new NSDateComponents();
+			calendar = new NSCalendar(NSCalendarType.Gregorian);
+			calendar.TimeZone = NSTimeZone.FromName("UTC");
+		}
 
 #if XAMCORE_2_0
 		// now explicit since data can be lost for small/large values of DateTime
@@ -44,17 +54,16 @@ namespace Foundation {
 			double secs = d.SecondsSinceReferenceDate;
 
 			if ((secs < -63114076800) || (secs > 252423993599))
-				throw new ArgumentOutOfRangeException ($"Value is outside the range of NSDate {secs}");
+				throw new ArgumentOutOfRangeException (nameof(d), d, $"{nameof(d)} is outside the range of NSDate {secs} seconds");
 
-			var calendar = new NSCalendar (NSCalendarType.Gregorian);
-			calendar.TimeZone = NSTimeZone.FromName ("UTC");
-			NSDateComponents components = calendar.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day | NSCalendarUnit.Hour |
-				NSCalendarUnit.Minute | NSCalendarUnit.Second | NSCalendarUnit.Nanosecond | NSCalendarUnit.Calendar, d);
+			using (NSDateComponents calComponents = calendar.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day | NSCalendarUnit.Hour |
+				NSCalendarUnit.Minute | NSCalendarUnit.Second | NSCalendarUnit.Nanosecond | NSCalendarUnit.Calendar, d))
+			{
+				var retDate = new DateTime ((int) calComponents.Year, (int) calComponents.Month, (int) calComponents.Day, (int) calComponents.Hour,
+				(int) calComponents.Minute, (int) (calComponents.Second), Convert.ToInt32 (calComponents.Nanosecond / NANOSECS_PER_MILLISEC), DateTimeKind.Utc);
 
-			var retDate = new DateTime ((int) components.Year, (int) components.Month, (int) components.Day, (int) components.Hour,
-				(int) components.Minute, (int) (components.Second), Convert.ToInt32 (components.Nanosecond / 1000000.0), DateTimeKind.Utc);
-
-			return retDate;
+				return retDate;
+			}
 		}
 
 		// now explicit since data can be lost for DateTimeKind.Unspecified
@@ -65,41 +74,19 @@ namespace Foundation {
 
 			var dtUnv = dt.ToUniversalTime ();
 
-			var calendar = new NSCalendar (NSCalendarType.Gregorian);
-			calendar.TimeZone = NSTimeZone.FromName ("UTC");
-			var components = new NSDateComponents {
-				Day = dtUnv.Day, Month = dtUnv.Month, Year = dtUnv.Year, Hour = dtUnv.Hour,
-					Minute = dtUnv.Minute, Second = dtUnv.Second, Nanosecond = dtUnv.Millisecond * 1000000
-			};
+			components.Day = dtUnv.Day;
+			components.Month = dtUnv.Month;
+			components.Year = dtUnv.Year;
+			components.Hour = dtUnv.Hour;
+			components.Minute = dtUnv.Minute;
+			components.Second = dtUnv.Second;
+			components.Nanosecond = Convert.ToInt32 (dtUnv.Millisecond * NANOSECS_PER_MILLISEC);
 
 			var retDate = calendar.DateFromComponents (components);
 			if (retDate == null)
-				throw new ArgumentOutOfRangeException ($"Value is outside the range of NSDate {dt}");
+				throw new ArgumentOutOfRangeException (nameof(dt), dt, $"{nameof(dt)} is outside the range of NSDate");
 
 			return retDate;
-		}
-#else
-		public static implicit operator DateTime (NSDate d)
-		{
-			double secs = d.SecondsSinceReferenceDate;
-
-			if (secs < -63113904000)
-				return DateTime.MinValue;
-
-			if (secs > 252423993599)
-				return DateTime.MaxValue;
-
-			return new DateTime ((long)(secs * TimeSpan.TicksPerSecond + NSDATE_TICKS), DateTimeKind.Utc);
-		}
-
-		public static implicit operator NSDate (DateTime dt)
-		{
-			return FromTimeIntervalSinceReferenceDate ((dt.ToUniversalTime ().Ticks - NSDATE_TICKS) / (double) TimeSpan.TicksPerSecond);
-		}
-
-		public override string ToString ()
-		{
-			return Description;
 		}
 #endif
 	}
