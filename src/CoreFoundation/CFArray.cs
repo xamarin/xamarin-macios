@@ -35,6 +35,8 @@ using Foundation;
 using ObjCRuntime;
 
 using CFIndex = System.nint;
+using CFArrayRef = System.IntPtr;
+using CFAllocatorRef = System.IntPtr;
 
 namespace CoreFoundation {
 	
@@ -149,6 +151,11 @@ namespace CoreFoundation {
 		{
 			return CFArrayGetCount (array);
 		}
+
+		[DllImport (Constants.CoreFoundationLibrary)]
+		extern static CFArrayRef CFArrayCreateCopy (CFAllocatorRef allocator, CFArrayRef theArray);
+
+		public CFArray Clone () => new CFArray (CFArrayCreateCopy (IntPtr.Zero, this.Handle), true);
 	}
 }
 
