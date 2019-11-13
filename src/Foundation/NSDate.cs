@@ -80,7 +80,7 @@ namespace Foundation {
 			components.Hour = dtUnv.Hour;
 			components.Minute = dtUnv.Minute;
 			components.Second = dtUnv.Second;
-			components.Nanosecond = Convert.ToInt32 (dtUnv.Millisecond * NANOSECS_PER_MILLISEC);
+			components.Nanosecond = (int) (dtUnv.Millisecond * NANOSECS_PER_MILLISEC);
 
 			var retDate = calendar.DateFromComponents (components);
 			if (retDate == null)
