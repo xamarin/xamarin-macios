@@ -334,7 +334,6 @@
 !missing-pinvoke! CFArrayApplyFunction is not bound
 !missing-pinvoke! CFArrayBSearchValues is not bound
 !missing-pinvoke! CFArrayContainsValue is not bound
-!missing-pinvoke! CFArrayCreateCopy is not bound
 !missing-pinvoke! CFArrayCreateMutable is not bound
 !missing-pinvoke! CFArrayCreateMutableCopy is not bound
 !missing-pinvoke! CFArrayExchangeValuesAtIndices is not bound

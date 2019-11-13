@@ -1,4 +1,8 @@
 
+// TODO: temp ignore to minimize diff
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
+
 #if defined(__x86_64__)
 
 #include <stdint.h>
@@ -494,3 +498,5 @@ xamarin_arch_trampoline (struct XamarinCallState *state)
 }
 
 #endif /* __x86_64__ */
+
+#pragma clang diagnostic pop

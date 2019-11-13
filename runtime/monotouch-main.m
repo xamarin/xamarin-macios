@@ -28,6 +28,9 @@
 #include "../tools/mtouch/monotouch-fixes.c"
 #endif
 
+// TODO: temp ignore to minimize diff
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
 static unsigned char *
 xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle)
 {
@@ -493,3 +496,5 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	
 	return rv;
 }
+
+#pragma clang diagnostic pop

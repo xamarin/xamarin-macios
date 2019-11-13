@@ -17,6 +17,10 @@
 #include "runtime-internal.h"
 #include "xamarin/xamarin.h"
 
+// TODO: temp ignore to minimize diff
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
+
 #if defined (DEBUG)
 //extern BOOL NSZombieEnabled;
 #endif
@@ -2892,3 +2896,5 @@ xamarin_is_managed_exception_marshaling_disabled ()
 	return handle;
 }
 @end
+
+#pragma clang diagnostic pop

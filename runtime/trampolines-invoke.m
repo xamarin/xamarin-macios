@@ -12,6 +12,9 @@
 #include "delegates.h"
 #include "product.h"
 
+// TODO: temp ignore to minimize diff
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
 static guint32
 xamarin_get_exception_for_method (int code, guint32 inner_exception_gchandle, const char *reason, SEL sel, id self)
 {
@@ -675,3 +678,5 @@ exception_handling:
 		xamarin_process_managed_exception (exception);
 	}
 }
+
+#pragma clang diagnostic pop
