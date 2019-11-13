@@ -1,4 +1,4 @@
-﻿// Exmaple PAC file that returns a proxy for the urls that have the
+﻿// Example PAC file that returns a proxy for the urls that have the
 // xamarin domain name.
 function FindProxyForURL(url, host) {
 	if (dnsDomainIs(host, "xamarin.com"))

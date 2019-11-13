@@ -19,7 +19,7 @@ namespace MonoTests.System.Net.Http
 		public static readonly string MicrosoftRobotsUrl = "https://www.microsoft.com/robots.txt";
 		public static readonly string XamarinRobotsUrl = "https://www.xamarin.com/robots.txt";
 		public static readonly string BingRobotsUrl = "http://www.bing.com/robots.txt";
-		public static readonly string XboxRobtosUrl = "https://www.xbox.com/robots.txt";
+		public static readonly string XboxRobotsUrl = "https://www.xbox.com/robots.txt";
 		public static readonly string MSNRobotsUrl = "https://www.msn.com/robots.txt";
 		public static readonly string VisualStudioRobotsUrl = "https://visualstudio.microsoft.com/robots.txt";
 
@@ -27,7 +27,7 @@ namespace MonoTests.System.Net.Http
 			MicrosoftRobotsUrl,
 			XamarinRobotsUrl,
 			BingRobotsUrl,
-			XboxRobtosUrl,
+			XboxRobotsUrl,
 			MSNRobotsUrl,
 			VisualStudioRobotsUrl,
 		};
@@ -41,7 +41,7 @@ namespace MonoTests.System.Net.Http
 			public static readonly string PostUrl = "https://httpbin.org/post";
 			public static readonly string PutUrl = "https://httpbin.org/put";
 
-			public static string GetAbsolureRedirectUrl (int count) => $"https://httpbin.org/absolute-redirect/{count}";
+			public static string GetAbsoluteRedirectUrl (int count) => $"https://httpbin.org/absolute-redirect/{count}";
 			public static string GetRedirectUrl (int count) => $"https://httpbin.org/redirect/{count}";
 			public static string GetRelativeRedirectUrl (int count) => $"http://httpbin.org/relative-redirect/{count}";
 
