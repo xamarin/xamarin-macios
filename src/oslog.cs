@@ -4,6 +4,7 @@ using CoreFoundation;
 using System;
 
 namespace OSLog {
+	// @interface OSLogEntry : NSObject
 	[Mac (10,15)]
 	[BaseType (typeof(NSObject))]
 	interface OSLogEntry
@@ -15,7 +16,7 @@ namespace OSLog {
 		NSDate Date { get; }
 
 		[Export ("storeCategory")]
-		EntryStoreCategory StoreCategory { get; }
+		EntryCategory StoreCategory { get; }
 	}
 
 	[Mac (10,15)]
@@ -66,7 +67,7 @@ namespace OSLog {
 
 	[Mac (10,15)]
 	[BaseType (typeof(OSLogEntry))]
-	interface OSLogEntryActivity : IOSLogEntryFromProcess
+	interface OSLogEntryActivity : OSLogEntryFromProcess
 	{
 		[Export ("parentActivityIdentifier")]
 		ulong ParentActivityIdentifier { get; }
@@ -75,15 +76,16 @@ namespace OSLog {
 
 	[Mac (10,15)]
 	[BaseType (typeof(OSLogEntry))]
-	interface OSLogEntryLog : IOSLogEntryFromProcess, IOSLogEntryWithPayload
+	interface OSLogEntryLog : OSLogEntryFromProcess, OSLogEntryWithPayload
 	{
 		[Export ("level")]
-		EntryLogLevel Level { get; }
+		LogLevel Level { get; }
 	}
+
 
 	[Mac (10,15)]
 	[BaseType (typeof(OSLogEntry))]
-	interface OSLogEntrySignpost : IOSLogEntryFromProcess, IOSLogEntryWithPayload
+	interface OSLogEntrySignpost : OSLogEntryFromProcess, OSLogEntryWithPayload
 	{
 		[Export ("signpostIdentifier")]
 		ulong SignpostIdentifier { get; }
@@ -94,7 +96,6 @@ namespace OSLog {
 		[Export ("signpostType")]
 		EntrySignpostType SignpostType { get; }
 	}
-
 
 
 	[Mac (10,15)]
@@ -108,7 +109,7 @@ namespace OSLog {
 		string Placeholder { get; }
 
 		[Export ("argumentCategory")]
-		MessageComponentArgumentCategory ArgumentCategory { get; }
+		ComponentArgumentCategory ArgumentCategory { get; }
 
 		[NullAllowed, Export ("argumentDataValue")]
 		NSData ArgumentDataValue { get; }
@@ -145,21 +146,19 @@ namespace OSLog {
 
 		[Export ("entriesEnumeratorWithOptions:position:predicate:error:")]
 		[return: NullAllowed]
-		OSLogEnumerator EntriesEnumeratorWithOptions (EnumeratorOptions options, [NullAllowed] OSLogPosition position, [NullAllowed] NSPredicate predicate, [NullAllowed] out NSError error);
+		NSEnumerator EntriesEnumeratorWithOptions (EnumeratorOptions options, [NullAllowed] NSObject position, [NullAllowed] NSPredicate predicate, [NullAllowed] out NSError error);
 
-		[Unavailable (PlatformName.Swift)]
 		[Export ("entriesEnumeratorAndReturnError:")]
 		[return: NullAllowed]
-		OSLogEnumerator EntriesEnumeratorAndReturnError ([NullAllowed] out NSError error);
+		NSEnumerator EntriesEnumeratorAndReturnError ([NullAllowed] out NSError error);
 
 		[Export ("positionWithDate:")]
-		OSLogPosition PositionWithDate (NSDate date);
+		NSObject PositionWithDate (NSDate date);
 
 		[Export ("positionWithTimeIntervalSinceEnd:")]
-		OSLogPosition PositionWithTimeIntervalSinceEnd (double seconds);
+		NSObject PositionWithTimeIntervalSinceEnd (double seconds);
 
 		[Export ("positionWithTimeIntervalSinceLatestBoot:")]
-		OSLogPosition PositionWithTimeIntervalSinceLatestBoot (double seconds);
+		NSObject PositionWithTimeIntervalSinceLatestBoot (double seconds);
 	}
 }
-

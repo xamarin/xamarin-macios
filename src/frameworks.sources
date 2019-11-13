@@ -1287,7 +1287,7 @@ OPENGLES_SOURCES = \
 
 # OSLog
 
-OSLOG_SOURCES = \
+OSLOG_API_SOURCES = \
 	OSLog/Enums.cs \
 
 # PassKit

@@ -6,7 +6,7 @@ using System;
 namespace OSLog {
 	[Mac (10,15)]
 	[Native]
-	public enum EntryStoreCategory : long
+	public enum EntryCategory : long
 	{
 		Undefined,
 		Metadata,
@@ -21,7 +21,7 @@ namespace OSLog {
 
 	[Mac (10,15)]
 	[Native]
-	public enum EntryLogLevel : long
+	public enum LogLevel : long
 	{
 		Undefined,
 		Debug,
@@ -43,7 +43,7 @@ namespace OSLog {
 
 	[Mac (10,15)]
 	[Native]
-	public enum MessageComponentArgumentCategory : long
+	public enum ComponentArgumentCategory : long
 	{
 		Undefined,
 		Data,
@@ -59,4 +59,5 @@ namespace OSLog {
 	{
 		Reverse = 0x1
 	}
+
 }
