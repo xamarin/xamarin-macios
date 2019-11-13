@@ -1285,6 +1285,11 @@ OPENGLES_SOURCES = \
 	OpenGLES/EAGLConsts.cs \
 	OpenGLES/EAGLContext.cs \
 
+# OSLog
+
+OSLOG_SOURCES = \
+	OSLog/Enums.cs \
+
 # PassKit
 
 PASSKIT_API_SOURCES = \
@@ -1876,6 +1881,7 @@ MAC_FRAMEWORKS =            \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
+	OSLog                   \
 	PdfKit                  \
 	PencilKit               \
 	Photos                  \
