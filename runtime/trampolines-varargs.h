@@ -16,7 +16,7 @@ struct XamarinCallState {
 	union {  // floating point return value
 		double double_ret;
 		float float_ret;
-		long long longlong_ret;
+		uint64_t ulonglong_ret;
 		void *ptr_ret;
 	};
 };

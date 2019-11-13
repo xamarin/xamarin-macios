@@ -1,7 +1,3 @@
-// TODO: temp ignore to minimize diff
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
-
 #if !defined (__i386__) && !defined (__x86_64__) && !(defined (__arm64__) && !defined(__ILP32__))
 #define __VARARGS_TRAMPOLINES__ 1
 #endif
@@ -26,9 +22,9 @@
 static void
 dump_state (struct XamarinCallState *state)
 {
-	PRINT ("type: %u is_stret: %i self: %p SEL: %s -- double_ret: %f float_ret: %f longlong_ret: %llu ptr_ret: %p\n",
+	PRINT ("type: %u is_stret: %i self: %p SEL: %s -- double_ret: %f float_ret: %f ulonglong_ret: %llu ptr_ret: %p\n",
 		state->type, (state->type & Tramp_Stret) == Tramp_Stret, state->self, sel_getName (state->sel),
-		state->double_ret, state->float_ret, state->longlong_ret, state->ptr_ret);
+		state->double_ret, state->float_ret, state->ulonglong_ret, state->ptr_ret);
 }
 #else
 #define dump_state(...)
@@ -107,8 +103,8 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		if (size <= sizeof (void *)) {
 			state->ptr_ret = *(void **) mono_object_unbox (value);
 		} else if (size <= 8) {
-			state->longlong_ret = 0;
-			memcpy (&state->longlong_ret + 8 - size, mono_object_unbox (value), size);
+			state->ulonglong_ret = 0;
+			memcpy (&state->ulonglong_ret + 8 - size, mono_object_unbox (value), size);
 		} else {
 			*exception_gchandle = xamarin_create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
 		}
@@ -132,7 +128,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 	case _C_ULNG:
 	case _C_LNG_LNG:
 	case _C_ULNG_LNG:
-		state->longlong_ret = *(uint64_t *) mono_object_unbox (value);
+		state->ulonglong_ret = *(uint64_t *) mono_object_unbox (value);
 		break;
 	
 	// For pointer types we get the value itself.
@@ -199,7 +195,7 @@ xamarin_fpret_single_trampoline (id self, SEL sel, ...)
 	return state.float_ret;
 }
 
-long long
+unsigned long long
 xamarin_longret_trampoline (id self, SEL sel, ...)
 {
 	struct XamarinCallState state;
@@ -210,7 +206,7 @@ xamarin_longret_trampoline (id self, SEL sel, ...)
 	va_start (state.ap, sel);
 	xamarin_varargs_trampoline (&state);
 	va_end (state.ap);
-	return state.longlong_ret;
+	return state.ulonglong_ret;
 }
 
 void
@@ -296,7 +292,7 @@ xamarin_static_fpret_double_trampoline (id self, SEL sel, ...)
 	return state.double_ret;
 }
 
-long long
+unsigned long long
 xamarin_static_longret_trampoline (id self, SEL sel, ...)
 {
 	struct XamarinCallState state;
@@ -307,7 +303,7 @@ xamarin_static_longret_trampoline (id self, SEL sel, ...)
 	va_start (state.ap, sel);
 	xamarin_varargs_trampoline (&state);
 	va_end (state.ap);
-	return state.longlong_ret;
+	return state.ulonglong_ret;
 }
 
 void
@@ -324,5 +320,3 @@ xamarin_static_stret_trampoline (void *buffer, id self, SEL sel, ...)
 }
 
 #endif /* __VARARGS_TRAMPOLINES__ */
-
-#pragma clang diagnostic pop
