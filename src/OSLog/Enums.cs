@@ -53,11 +53,5 @@ namespace OSLog {
 		UInt64
 	}
 
-	[Flags, Mac (10,15)]
-	[Native]
-	public enum EnumeratorOptions : ulong
-	{
-		Reverse = 0x1
-	}
 
 }

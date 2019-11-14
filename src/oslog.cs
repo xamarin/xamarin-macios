@@ -4,7 +4,15 @@ using CoreFoundation;
 using System;
 
 namespace OSLog {
-
+	
+	/* [Flags, Mac (10,15)] */
+	[Mac (10,15)]
+	[Native]
+	public enum OSLogEnumeratorOptions : ulong
+	{
+		Reverse = 0x1
+	}
+	
 	[Mac (10,15)]
 	[BaseType (typeof(NSObject))]
 	interface OSLogEntry
@@ -131,7 +139,18 @@ namespace OSLog {
 	}
 
 	[Mac (10,15)]
+	[BaseType (typeof(NSEnumerator))]
+	[DisableDefaultCtor]
+	interface OSLogEnumerator { }
+
+	[Mac (10,15)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface OSLogPosition { }
+
+	[Mac (10,15)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface OSLogStore
 	{
 		[Static]
@@ -146,19 +165,19 @@ namespace OSLog {
 
 		[Export ("entriesEnumeratorWithOptions:position:predicate:error:")]
 		[return: NullAllowed]
-		NSEnumerator EntriesEnumeratorWithOptions (EnumeratorOptions options, [NullAllowed] NSObject position, [NullAllowed] NSPredicate predicate, [NullAllowed] out NSError error);
+		OSLogEnumerator EntriesEnumeratorWithOptions (OSLogEnumeratorOptions options, [NullAllowed] NSObject position, [NullAllowed] NSPredicate predicate, [NullAllowed] out NSError error);
 
 		[Export ("entriesEnumeratorAndReturnError:")]
 		[return: NullAllowed]
-		NSEnumerator EntriesEnumeratorAndReturnError ([NullAllowed] out NSError error);
+		OSLogEnumerator EntriesEnumeratorAndReturnError ([NullAllowed] out NSError error);
 
 		[Export ("positionWithDate:")]
-		NSObject PositionWithDate (NSDate date);
+		OSLogPosition PositionWithDate (NSDate date);
 
 		[Export ("positionWithTimeIntervalSinceEnd:")]
-		NSObject PositionWithTimeIntervalSinceEnd (double seconds);
+		OSLogPosition PositionWithTimeIntervalSinceEnd (double seconds);
 
 		[Export ("positionWithTimeIntervalSinceLatestBoot:")]
-		NSObject PositionWithTimeIntervalSinceLatestBoot (double seconds);
+		OSLogPosition PositionWithTimeIntervalSinceLatestBoot (double seconds);
 	}
 }
