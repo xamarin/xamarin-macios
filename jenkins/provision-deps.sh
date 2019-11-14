@@ -16,7 +16,7 @@ if test -n "$ghprbPullId" && ./jenkins/fetch-pr-labels.sh --check=skip-public-je
 	exit 0
 fi
 
-./system-dependencies.sh --provision-all
+./system-dependencies.sh --provision-all -v
 
 sudo rm -Rf /Developer/MonoTouch
 sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
