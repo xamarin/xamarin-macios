@@ -1,7 +1,3 @@
-// TODO: temp ignore to minimize diff
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
-
 #if !defined (__i386__) && !defined (__x86_64__) && !(defined (__arm64__) && !defined(__ILP32__))
 #define __VARARGS_TRAMPOLINES__ 1
 #endif
@@ -324,5 +320,3 @@ xamarin_static_stret_trampoline (void *buffer, id self, SEL sel, ...)
 }
 
 #endif /* __VARARGS_TRAMPOLINES__ */
-
-#pragma clang diagnostic pop
