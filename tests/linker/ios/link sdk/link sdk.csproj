@@ -196,6 +196,10 @@
       <Link>CommonLinkAnyTest.cs</Link>
     </Compile>
     <Compile Include="BitcodeTest.cs" />
+    <Compile Include="..\..\..\monotouch-test\System.Net.Http\NetworkResources.cs">
+      <Link>NetworkResources.cs</Link>
+    </Compile>
+    <Compile Include="HttpClientTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />

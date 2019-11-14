@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Foundation;
 
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
 
 namespace LinkAnyTest {
 	// This test is included in both the LinkAll and LinkSdk projects.
@@ -64,10 +65,9 @@ namespace LinkAnyTest {
 
 		[Test]
 		public void WebClientTest ()
-		{
-			var url = "http://www.microsoft.com";
+		{;
 			var wc = new WebClient ();
-			var data = wc.DownloadString (url);
+			var data = wc.DownloadString (NetworkResources.MicrosoftUrl);
 
 			Assert.That (data, Is.Not.Empty, "Downloaded content");
 		}
@@ -75,9 +75,8 @@ namespace LinkAnyTest {
 		[Test]
 		public void WebClientTest_Https ()
 		{
-			var url = "https://www.microsoft.com";
 			var wc = new WebClient ();
-			var data = wc.DownloadString (url);
+			var data = wc.DownloadString (NetworkResources.MicrosoftUrl);
 
 			Assert.That (data, Is.Not.Empty, "Downloaded content");
 		}
@@ -99,7 +98,7 @@ namespace LinkAnyTest {
 					data = await task;
 				}
 
-				GetWebPage ("http://www.microsoft.com").Wait ();
+				GetWebPage (NetworkResources.MicrosoftUrl).Wait ();
 				Assert.That (data, Is.Not.Empty, "Downloaded content");
 			} finally {
 				SynchronizationContext.SetSynchronizationContext (current_sc);
