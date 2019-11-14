@@ -29,13 +29,16 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			// .NET can represent this date just fine
 			Assert.AreEqual (new DateTime (4001, 01, 01), (DateTime)NSDate.DistantFuture, "distant future");
+			Assert.AreEqual (DateTime.MinValue, (DateTime)NSDate.DistantPast, "distant past");
 
 			Assert.AreEqual (DateTime.MinValue.AddSeconds (1), (DateTime)NSDate.FromTimeIntervalSinceReferenceDate (-63114076799), "-63114076799");
 			Assert.AreEqual (DateTime.MinValue, (DateTime)NSDate.FromTimeIntervalSinceReferenceDate (-63114076800), "-63114076800");
 
-			// NSDate doesn't seem to store the 'TimeIntervalSinceReferenceDate' as a double, causing a slight time warp. Round a bit to rewarp back.
-			Assert.AreEqual (new DateTime (9999, 12, 31, 23, 59, 58), new DateTime ((((DateTime)NSDate.FromTimeIntervalSinceReferenceDate (252423993598)).Ticks / 10000) * 10000, DateTimeKind.Utc), "252423993598");
-			Assert.AreEqual (new DateTime (9999, 12, 31, 23, 59, 59), new DateTime ((((DateTime)NSDate.FromTimeIntervalSinceReferenceDate (252423993599)).Ticks / 10000) * 10000, DateTimeKind.Utc), "252423993599");
+			// Converting NSDate -> DateTime limits precision to .001
+			Assert.AreEqual (new DateTime ((DateTime.MaxValue.Ticks) / 10000 * 10000), (DateTime)NSDate.FromTimeIntervalSinceReferenceDate (252423993599.999));
+
+			Assert.AreEqual (new DateTime (9999, 12, 31, 23, 59, 58), (DateTime)NSDate.FromTimeIntervalSinceReferenceDate (252423993598), "252423993598");
+			Assert.AreEqual (new DateTime (9999, 12, 31, 23, 59, 59), (DateTime)NSDate.FromTimeIntervalSinceReferenceDate (252423993599), "252423993599");
 		}
 
 		[Test]
@@ -49,14 +52,6 @@ namespace MonoTouchFixtures.Foundation {
 			// [Min|Max]Value are DateTimeKind.Unspecified
 			Assert.Throws<ArgumentException> (() => { var tmp = (NSDate) DateTime.MinValue; }, "MinValue");
 			Assert.Throws<ArgumentException> (() => { var tmp = (NSDate) DateTime.MaxValue; }, "MaxValue");
-#else
-			Assert.AreEqual (DateTime.MinValue, (DateTime)NSDate.DistantPast, "distant past");
-			Assert.AreEqual (DateTime.MinValue, (DateTime)NSDate.FromTimeIntervalSinceReferenceDate (-63113904001), "-63113904001");
-
-			Assert.AreEqual (DateTime.MaxValue, (DateTime)NSDate.FromTimeIntervalSinceReferenceDate (252423993600), "252423993600");
-
-			Assert.DoesNotThrow (() => { var tmp = (NSDate) DateTime.MinValue; }, "MinValue");
-			Assert.DoesNotThrow (() => { var tmp = (NSDate) DateTime.MaxValue; }, "MaxValue");
 #endif
 		}
 
@@ -85,5 +80,19 @@ namespace MonoTouchFixtures.Foundation {
 
 			Assert.AreEqual (date, (DateTime) (NSDate) date, "DateTime -> NSDate -> DateTime conversion");
 		}
+
+		[Test]
+		public void LocalTime ()
+		{
+			// [Min][Max] DateTimeKind.Unspecified cannot be converted
+			DateTime minDt = DateTime.MinValue.ToLocalTime ();
+			DateTime maxDt = DateTime.MaxValue.ToLocalTime ();
+
+			// NSDate -> DateTime conversion always returns DateTimeKind.Utc (Universal)
+			// NSDate -> DateTime limits precision to .001
+			Assert.AreEqual (new DateTime (minDt.ToUniversalTime ().Ticks / 10000 * 10000), (DateTime) (NSDate) minDt, "-63114076800");
+			Assert.AreEqual (new DateTime (maxDt.ToUniversalTime ().Ticks / 10000 * 10000), (DateTime)(NSDate) maxDt, "252423993599.999");
+		}
+
 	}
 }

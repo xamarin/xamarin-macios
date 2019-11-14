@@ -29,7 +29,7 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-
+using System.Threading;
 using ObjCRuntime;
 
 namespace Foundation {
@@ -38,13 +38,12 @@ namespace Foundation {
 		const double NANOSECS_PER_MILLISEC = 1000000.0;
 
 		private static readonly NSCalendar calendar;
-		private static readonly NSDateComponents components;
+		private static readonly ThreadLocal<NSDateComponents> threadComponents = new ThreadLocal<NSDateComponents>(() => new NSDateComponents ());
 
-		static NSDate()
+		static NSDate ()
 		{
-			components = new NSDateComponents();
-			calendar = new NSCalendar(NSCalendarType.Gregorian);
-			calendar.TimeZone = NSTimeZone.FromName("UTC");
+			calendar = new NSCalendar (NSCalendarType.Gregorian);
+			calendar.TimeZone = NSTimeZone.FromName ("UTC");
 		}
 
 #if XAMCORE_2_0
@@ -53,8 +52,8 @@ namespace Foundation {
 		{
 			double secs = d.SecondsSinceReferenceDate;
 
-			if ((secs < -63114076800) || (secs > 252423993599))
-				throw new ArgumentOutOfRangeException (nameof(d), d, $"{nameof(d)} is outside the range of NSDate {secs} seconds");
+			if ((secs < -63114076800) || (secs > 252423993599.9994)) // we round to the nearest .001 in the conversion from ns to ms
+				throw new ArgumentOutOfRangeException (nameof (d), d, $"{nameof (d)} is outside the range of NSDate {secs} seconds");
 
 			using (NSDateComponents calComponents = calendar.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day | NSCalendarUnit.Hour |
 				NSCalendarUnit.Minute | NSCalendarUnit.Second | NSCalendarUnit.Nanosecond | NSCalendarUnit.Calendar, d))
@@ -74,17 +73,17 @@ namespace Foundation {
 
 			var dtUnv = dt.ToUniversalTime ();
 
-			components.Day = dtUnv.Day;
-			components.Month = dtUnv.Month;
-			components.Year = dtUnv.Year;
-			components.Hour = dtUnv.Hour;
-			components.Minute = dtUnv.Minute;
-			components.Second = dtUnv.Second;
-			components.Nanosecond = (int) (dtUnv.Millisecond * NANOSECS_PER_MILLISEC);
+			threadComponents.Value.Day = dtUnv.Day;
+			threadComponents.Value.Month = dtUnv.Month;
+			threadComponents.Value.Year = dtUnv.Year;
+			threadComponents.Value.Hour = dtUnv.Hour;
+			threadComponents.Value.Minute = dtUnv.Minute;
+			threadComponents.Value.Second = dtUnv.Second;
+			threadComponents.Value.Nanosecond = (int) (dtUnv.Millisecond * NANOSECS_PER_MILLISEC);
 
-			var retDate = calendar.DateFromComponents (components);
+			var retDate = calendar.DateFromComponents (threadComponents.Value);
 			if (retDate == null)
-				throw new ArgumentOutOfRangeException (nameof(dt), dt, $"{nameof(dt)} is outside the range of NSDate");
+				throw new ArgumentOutOfRangeException (nameof (dt), dt, $"{nameof (dt)} is outside the range of NSDate");
 
 			return retDate;
 		}
