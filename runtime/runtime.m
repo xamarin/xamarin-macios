@@ -1840,7 +1840,7 @@ xamarin_switch_gchandle (id self, bool to_weak)
 }
 
 void
-xamarin_free_gchandle (id self, int gchandle)
+xamarin_free_gchandle (id self, uint32_t gchandle)
 {
 	// COOP: no managed memory access, but calls mono function mono_gc_handle_free. Assuming that function can be called with any mode: this function can be called with any mode as well
 	if (gchandle) {

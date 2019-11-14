@@ -41,9 +41,6 @@
 #include "runtime-internal.h"
 //#define DEBUG_REF_COUNTING
 
-// TODO: temp ignore to minimize diff
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
 static pthread_mutex_t refcount_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
 size_t
@@ -484,7 +481,7 @@ xamarin_get_frame_length (id self, SEL sel)
 				min_start--;
 			if (min_start < desc + rvlength) {
 				for (int i = 0; i < desc + rvlength - min_start; i++)
-					min_length = min_length * 10 + (min_start [i] - '0');
+					min_length = min_length * 10ul + (unsigned long)(min_start [i] - '0');
 			}
 		}
 
@@ -648,7 +645,7 @@ xamarin_release_trampoline (id self, SEL sel)
 }
 
 void
-xamarin_notify_dealloc (id self, int gchandle)
+xamarin_notify_dealloc (id self, uint32_t gchandle)
 {
 	guint32 exception_gchandle = 0;
 
@@ -751,7 +748,7 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, int gc_handle)
 	pthread_mutex_unlock (&gchandle_hash_lock);
 }
 
-int
+uint32_t
 xamarin_get_gchandle_trampoline (id self, SEL sel)
 {
 	// COOP: Called by ObjC (when the getGCHandle selector is called on an object).
@@ -759,7 +756,7 @@ xamarin_get_gchandle_trampoline (id self, SEL sel)
 	MONO_ASSERT_GC_SAFE;
 	
 	/* This is for types registered using the dynamic registrar */
-	int gc_handle = 0;
+	uint32_t gc_handle = 0;
 	pthread_mutex_lock (&gchandle_hash_lock);
 	if (gchandle_hash != NULL)
 		gc_handle = GPOINTER_TO_UINT (CFDictionaryGetValue (gchandle_hash, self));
@@ -1398,7 +1395,7 @@ xamarin_smart_enum_to_nsstring (MonoObject *value, void *context /* token ref */
 	guint32 context_ref = GPOINTER_TO_UINT (context);
 	if (context_ref == INVALID_TOKEN_REF) {
 		// This requires the dynamic registrar to invoke the correct conversion function
-		int handle = mono_gchandle_new (value, FALSE);
+		uint32_t handle = mono_gchandle_new (value, FALSE);
 		NSString *rv = xamarin_convert_smart_enum_to_nsstring (GINT_TO_POINTER (handle), exception_gchandle);
 		mono_gchandle_free (handle);
 		return rv;
@@ -1433,7 +1430,7 @@ void *
 xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle)
 {
 	guint32 context_ref = GPOINTER_TO_UINT (context);
-	int gc_handle = 0;
+	uint32_t gc_handle = 0;
 	MonoObject *obj;
 
 	if (context_ref == INVALID_TOKEN_REF) {
@@ -1464,7 +1461,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 		}
 	}
 
-	int size = mono_class_value_size (managedType, NULL);
+	size_t size = (size_t) mono_class_value_size (managedType, NULL);
 	if (!ptr)
 		ptr = xamarin_calloc (size);
 	void *value_ptr = mono_object_unbox (obj);
@@ -1491,7 +1488,7 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 {
 	id *buf = NULL;
 	NSArray *rv = NULL;
-	int element_size = 0;
+	size_t element_size = 0;
 	char *ptr = NULL;
 
 	if (array == NULL)
@@ -1505,8 +1502,8 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 	MonoClass *element_class = mono_class_get_element_class (mono_object_get_class ((MonoObject *) array));
 	bool is_value_type = mono_class_is_valuetype (element_class);
 	if (is_value_type) {
-		element_size = mono_class_value_size (element_class, NULL);
-		ptr = (char *) mono_array_addr_with_size (array, element_size, 0);
+		element_size = (size_t) mono_class_value_size (element_class, NULL);
+		ptr = (char *) mono_array_addr_with_size (array, (int) element_size, 0);
 	}
 	for (unsigned long i = 0; i < length; i++) {
 		MonoObject *value;
@@ -1544,12 +1541,12 @@ xamarin_convert_nsarray_to_managed_with_func (NSArray *array, MonoClass *managed
 	bool is_value_type = mono_class_is_valuetype (managedElementType);
 	MonoObject *mobj;
 	void *valueptr = NULL;
-	int element_size = 0;
+	size_t element_size = 0;
 	char *ptr = NULL;
 
 	if (is_value_type) {
-		element_size = mono_class_value_size (managedElementType, NULL);
-		ptr = (char *) mono_array_addr_with_size (rv, element_size, 0);
+		element_size = (size_t) mono_class_value_size (managedElementType, NULL);
+		ptr = (char *) mono_array_addr_with_size (rv, (int) element_size, 0);
 	}
 	for (unsigned long i = 0; i < length; i++) {
 		if (is_value_type) {
@@ -1635,5 +1632,3 @@ xamarin_skip_type_name (const char *ptr)
 
 	return ptr;
 }
-
-#pragma clang diagnostic pop
