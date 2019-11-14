@@ -132,7 +132,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 	case _C_ULNG:
 	case _C_LNG_LNG:
 	case _C_ULNG_LNG:
-		state->longlong_ret = *(uint64_t *) mono_object_unbox (value);
+		state->longlong_ret = *(int64_t *) mono_object_unbox (value);
 		break;
 	
 	// For pointer types we get the value itself.
