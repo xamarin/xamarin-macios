@@ -2771,7 +2771,11 @@ xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gcha
 XamarinObject::~XamarinObject ()
 {
 	// COOP: no managed memory access: any mode.
-	xamarin_notify_dealloc (native_object, gc_handle & ~GCHANDLE_MASK);
+	@try {
+		xamarin_notify_dealloc (native_object, gc_handle & ~GCHANDLE_MASK);
+	} @catch (NSException *ex) {
+		NSLog (@"%@", ex);
+	}
 	native_object = NULL;
 	gc_handle = 0;
 }
