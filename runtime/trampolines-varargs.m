@@ -1,7 +1,3 @@
-// TODO: temp ignore to minimize diff
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
-
 #if !defined (__i386__) && !defined (__x86_64__) && !(defined (__arm64__) && !defined(__ILP32__))
 #define __VARARGS_TRAMPOLINES__ 1
 #endif
@@ -132,7 +128,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 	case _C_ULNG:
 	case _C_LNG_LNG:
 	case _C_ULNG_LNG:
-		state->longlong_ret = *(uint64_t *) mono_object_unbox (value);
+		state->longlong_ret = *(int64_t *) mono_object_unbox (value);
 		break;
 	
 	// For pointer types we get the value itself.
@@ -324,5 +320,3 @@ xamarin_static_stret_trampoline (void *buffer, id self, SEL sel, ...)
 }
 
 #endif /* __VARARGS_TRAMPOLINES__ */
-
-#pragma clang diagnostic pop
