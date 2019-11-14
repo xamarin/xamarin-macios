@@ -179,8 +179,11 @@ COLOR_MAGENTA=$(tput setaf 5 2>/dev/null || true)
 COLOR_BLUE=$(tput setaf 6 2>/dev/null || true)
 COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
 COLOR_RESET=uniquesearchablestring
+FAILURE_PREFIX=
+if test -z "$COLOR_RED"; then FAILURE_PREFIX="** failure ** "; fi
+
 function fail () {
-	echo "    ${COLOR_RED}${1//${COLOR_RESET}/${COLOR_RED}}${COLOR_CLEAR}"
+	echo "    $FAILURE_PREFIX${COLOR_RED}${1//${COLOR_RESET}/${COLOR_RED}}${COLOR_CLEAR}"
 	FAIL=1
 }
 
