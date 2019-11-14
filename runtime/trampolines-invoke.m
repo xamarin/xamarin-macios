@@ -12,9 +12,6 @@
 #include "delegates.h"
 #include "product.h"
 
-// TODO: temp ignore to minimize diff
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
 static guint32
 xamarin_get_exception_for_method (int code, guint32 inner_exception_gchandle, const char *reason, SEL sel, id self)
 {
@@ -104,7 +101,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 		if (has_nsobject) {
 			self = xamarin_invoke_objc_method_implementation (self, sel, (IMP) xamarin_ctor_trampoline);
-			marshal_return_value (context, "|", sizeof (id), self, NULL, false, NULL, NULL, &exception_gchandle);
+			marshal_return_value (context, "|", __SIZEOF_POINTER__, self, NULL, false, NULL, NULL, &exception_gchandle);
 			xamarin_process_managed_exception_gchandle (exception_gchandle);
 			return;
 		}
@@ -147,7 +144,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	MonoType *p;
 	int ofs;
 	unsigned long i;
-	int mofs = 0;
+	unsigned long mofs = 0;
 
 	unsigned long desc_arg_count = num_arg + 2; /* 1 for the return value + 1 if this is a category instance method */
 	size_t desc_size = desc_arg_count * sizeof (BindAsData) + sizeof (MethodDescription);
@@ -623,7 +620,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	ret_type = [sig methodReturnType];
 	ret_type = xamarin_skip_encoding_flags (ret_type);
 	if (is_ctor) {
-		marshal_return_value (context, "|", sizeof (id), self, mono_signature_get_return_type (msig), (desc->semantic & ArgumentSemanticRetainReturnValue) != 0, method, desc, &exception_gchandle);
+		marshal_return_value (context, "|", __SIZEOF_POINTER__, self, mono_signature_get_return_type (msig), (desc->semantic & ArgumentSemanticRetainReturnValue) != 0, method, desc, &exception_gchandle);
 	} else if (*ret_type != 'v') {
 		marshal_return_value (context, ret_type, [sig methodReturnLength], retval, mono_signature_get_return_type (msig), (desc->semantic & ArgumentSemanticRetainReturnValue) != 0, method, desc, &exception_gchandle);
 	}
@@ -678,5 +675,3 @@ exception_handling:
 		xamarin_process_managed_exception (exception);
 	}
 }
-
-#pragma clang diagnostic pop

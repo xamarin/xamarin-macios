@@ -26,6 +26,8 @@ using MonoTouch.ObjCRuntime;
 using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
+
 
 namespace MonoTouchFixtures.Foundation {
 	
@@ -144,7 +146,7 @@ namespace MonoTouchFixtures.Foundation {
 				var config = NSUrlSession.SharedSession.Configuration;
 				var session = NSUrlSession.FromConfiguration (config, this, new NSOperationQueue ());
 
-				var task = session.CreateDataTask (new NSUrlRequest (new NSUrl ("https://example.com")));
+				var task = session.CreateDataTask (new NSUrlRequest (new NSUrl (NetworkResources.MicrosoftRobotsUrl)));
 				task.Resume ();
 			}
 			public bool Called_StartLoading;

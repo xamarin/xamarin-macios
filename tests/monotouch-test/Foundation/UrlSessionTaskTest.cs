@@ -22,6 +22,7 @@ using MonoTouch.ObjCRuntime;
 using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -82,14 +83,14 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.IsInstanceOfType (typeof (NSUrlSessionDownloadTask), task, "task should be an instance of NSUrlSessionDownloadTask 2");
 			}
 
-			using (var ur = new NSUrl ("https://www.microsoft.com")) {
+			using (var ur = new NSUrl (NetworkResources.MicrosoftUrl)) {
 				NSUrlSessionDownloadTask task = null;
 				Assert.DoesNotThrow (() => task = NSUrlSession.SharedSession.CreateDownloadTask (ur), "Should not throw InvalidCastException 3");
 				Assert.IsNotNull (task, "task should not be null 3");
 				Assert.IsInstanceOfType (typeof (NSUrlSessionDownloadTask), task, "task should be an instance of NSUrlSessionDownloadTask 3");
 			}
 
-			using (var ur = new NSUrl ("https://www.microsoft.com")) {
+			using (var ur = new NSUrl (NetworkResources.MicrosoftUrl)) {
 				NSUrlSessionDownloadTask task = null;
 				Assert.DoesNotThrow (() => task = NSUrlSession.SharedSession.CreateDownloadTask (ur, null), "Should not throw InvalidCastException 4");
 				Assert.IsNotNull (task, "task should not be null 4");
@@ -116,14 +117,14 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.IsInstanceOfType (typeof (NSUrlSessionDataTask), task, "task should be an instance of NSUrlSessionDataTask 2");
 			}
 
-			using (var ur = new NSUrl ("https://www.microsoft.com")) {
+			using (var ur = new NSUrl (NetworkResources.MicrosoftUrl)) {
 				NSUrlSessionDataTask task = null;
 				Assert.DoesNotThrow (() => task = NSUrlSession.SharedSession.CreateDataTask (ur), "Should not throw InvalidCastException 3");
 				Assert.IsNotNull (task, "task should not be null 3");
 				Assert.IsInstanceOfType (typeof (NSUrlSessionDataTask), task, "task should be an instance of NSUrlSessionDataTask 3");
 			}
 
-			using (var ur = new NSUrl ("https://www.microsoft.com")) {
+			using (var ur = new NSUrl (NetworkResources.MicrosoftUrl)) {
 				NSUrlSessionDataTask task = null;
 				Assert.DoesNotThrow (() => task = NSUrlSession.SharedSession.CreateDataTask (ur, null), "Should not throw InvalidCastException 4");
 				Assert.IsNotNull (task, "task should not be null 4");
@@ -152,7 +153,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 
 			using (var ur = new NSUrlRequest ())
-			using (var url = new NSUrl ("https://www.microsoft.com")) {
+			using (var url = new NSUrl (NetworkResources.MicrosoftUrl)) {
 				NSUrlSessionUploadTask task = null;
 				Assert.DoesNotThrow (() => task = NSUrlSession.SharedSession.CreateUploadTask (ur, url), "Should not throw InvalidCastException 3");
 				Assert.IsNotNull (task, "task should not be null 3");
@@ -160,7 +161,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 
 			using (var ur = new NSUrlRequest ())
-			using (var url = new NSUrl ("https://www.microsoft.com")) {
+			using (var url = new NSUrl (NetworkResources.MicrosoftUrl)) {
 				NSUrlSessionUploadTask task = null;
 				Assert.DoesNotThrow (() => task = NSUrlSession.SharedSession.CreateUploadTask (ur, url, (data, response, error) => { }), "Should not throw InvalidCastException 4");
 				Assert.IsNotNull (task, "task should not be null 4");
