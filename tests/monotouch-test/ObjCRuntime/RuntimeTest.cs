@@ -33,6 +33,7 @@ using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
+using MonoTests.System.Net.Http;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -144,7 +145,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			NSUrlSession session = NSUrlSession.SharedSession;
-			using (var request = new NSUrlRequest (new NSUrl ("http://www.example.com"))) {
+			using (var request = new NSUrlRequest (new NSUrl (NetworkResources.MicrosoftUrl))) {
 				// In iOS 8 the native CreateDownloadTask function returns an instance of a
 				// __NSCFLocalDownloadTask, which does not derive from 
 				// NSUrlSessionDownloadTask (which is the documented/expected return type from
