@@ -656,6 +656,22 @@ partial class TestRuntime
 #endif
 	}
 
+	// This method returns true if:
+	// system version >= specified version
+	// AND
+	// sdk version >= specified version
+	static bool CheckWatchOSSystemVersion (int major, int minor, int build, bool throwIfOtherPlatform = true)
+	{
+#if __WATCHOS__
+		return WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (major, minor, build);
+#else
+		if (throwIfOtherPlatform)
+			throw new Exception ("Can't get watchOS System version on iOS/tvOS.");
+		// This is both iOS and tvOS
+		return true;
+#endif
+	}
+
 	static void AssertWatchOSSystemVersion (int major, int minor, bool throwIfOtherPlatform = true)
 	{
 		if (CheckWatchOSSystemVersion (major, minor, throwIfOtherPlatform))
