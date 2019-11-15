@@ -430,7 +430,7 @@ namespace ObjCRuntime {
 			return GCHandle.ToIntPtr (GCHandle.Alloc (ex)).ToInt32 ();
 		}
 
-		static IntPtr UnwrapNSException (int exc_handle)
+		static IntPtr UnwrapNSException (uint exc_handle)
 		{
 			var obj = GCHandle.FromIntPtr (new IntPtr (exc_handle)).Target;
 #if MONOMAC
