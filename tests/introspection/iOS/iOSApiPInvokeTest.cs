@@ -41,6 +41,7 @@ namespace Introspection {
 #endif
 			// still most Metal helpers are not available on the simulator (even when the framework is present, it's missing symbols)
 			case "MPSSupportsMTLDevice":
+			case "MPSGetPreferredDevice":
 			// neither are the CoreVideo extensions for Metal
 			case "CVMetalTextureGetTexture":
 			case "CVMetalTextureIsFlipped":

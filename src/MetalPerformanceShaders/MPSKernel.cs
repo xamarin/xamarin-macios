@@ -20,6 +20,21 @@ namespace MetalPerformanceShaders {
 			return MPSSupportsMTLDevice (device == null ? IntPtr.Zero : device.Handle);
 		}
 
+		[DllImport (Constants.MetalPerformanceShadersLibrary)]
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		static extern /* id<MTLDevice> _Nullable */ IntPtr MPSGetPreferredDevice (nuint options);
+
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
+		public static IMTLDevice GetPreferredDevice (MPSDeviceOptions options)
+		{
+			var h = MPSGetPreferredDevice ((nuint)(ulong) options);
+			if (h == IntPtr.Zero)
+				return null;
+			return Runtime.GetINativeObject<IMTLDevice> (h, false);
+		}
+
 		internal unsafe static float [] GetTransform (IntPtr transform)
 		{
 			var t = (float*) transform;
@@ -58,6 +73,15 @@ namespace MetalPerformanceShaders {
 	}
 
 #if !COREBUILD
+	public partial class MPSImage {
+
+		[DllImport (Constants.MetalPerformanceShadersLibrary)]
+		static extern MPSImageType MPSGetImageType (IntPtr image);
+
+		[iOS (13,0), TV (12,0), Mac (10,15)][Introduced (PlatformName.MacCatalyst, 13, 0)]
+		public MPSImageType ImageType => MPSGetImageType (Handle);
+	}
+
 	public partial class MPSImageDilate {
 
 		[DesignatedInitializer]
