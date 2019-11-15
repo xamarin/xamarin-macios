@@ -32,7 +32,7 @@ long long	xamarin_longret_trampoline (id self, SEL sel, ...);
 long long	xamarin_static_longret_trampoline (id self, SEL sel, ...);
 id			xamarin_copyWithZone_trampoline1 (id self, SEL sel, NSZone *zone);
 id			xamarin_copyWithZone_trampoline2 (id self, SEL sel, NSZone *zone);
-int			xamarin_get_gchandle_trampoline (id self, SEL sel);
+uint32_t	xamarin_get_gchandle_trampoline (id self, SEL sel);
 void		xamarin_set_gchandle_trampoline (id self, SEL sel, int gc_handle);
 
 unsigned long	xamarin_get_frame_length (id self, SEL sel);

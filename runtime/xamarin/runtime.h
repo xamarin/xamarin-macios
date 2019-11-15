@@ -212,14 +212,14 @@ bool			xamarin_has_managed_ref (id self);
 bool			xamarin_has_managed_ref_safe (id self);
 void			xamarin_switch_gchandle (id self, bool to_weak);
 int				xamarin_get_gchandle (id self);
-void			xamarin_free_gchandle (id self, int gchandle);
+void			xamarin_free_gchandle (id self, uint32_t gchandle);
 void			xamarin_clear_gchandle (id self);
 int				xamarin_get_gchandle_with_flags (id self);
 void			xamarin_set_gchandle (id self, int gchandle);
 void			xamarin_create_gchandle (id self, void *managed_object, int flags, bool force_weak);
 void			xamarin_create_managed_ref (id self, void * managed_object, bool retain);
 void            xamarin_release_managed_ref (id self, MonoObject *managed_obj);
-void			xamarin_notify_dealloc (id self, int gchandle);
+void			xamarin_notify_dealloc (id self, uint32_t gchandle);
 
 int				xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode);
 
