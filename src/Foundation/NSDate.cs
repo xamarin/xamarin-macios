@@ -37,14 +37,8 @@ namespace Foundation {
 	public partial class NSDate {
 		const double NANOSECS_PER_MILLISEC = 1000000.0;
 
-		private static readonly NSCalendar calendar;
+		private static readonly NSCalendar calendar = new NSCalendar (NSCalendarType.Gregorian) { TimeZone = NSTimeZone.FromName ("UTC") };
 		private static readonly ThreadLocal<NSDateComponents> threadComponents = new ThreadLocal<NSDateComponents>(() => new NSDateComponents ());
-
-		static NSDate ()
-		{
-			calendar = new NSCalendar (NSCalendarType.Gregorian);
-			calendar.TimeZone = NSTimeZone.FromName ("UTC");
-		}
 
 #if XAMCORE_2_0
 		// now explicit since data can be lost for small/large values of DateTime
