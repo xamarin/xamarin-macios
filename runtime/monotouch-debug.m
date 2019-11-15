@@ -9,10 +9,6 @@
 // Copyright 2011-2013 Xamarin Inc. 
 //
 
-// TODO: temp ignore to minimize diff
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
-
 #ifdef DEBUG
 
 //#define LOG_HTTP(...) do { NSLog (@ __VA_ARGS__); } while (0);
@@ -203,7 +199,7 @@ static volatile int http_connect_counter = 0;
 	-(void) reportCompletion: (bool) success;
 
 	-(void) connect: (NSString *) ip port: (unsigned long) port completionHandler: (void (^)(bool)) completionHandler;
-	-(void) sendData: (void *) buffer length: (long) length;
+	-(void) sendData: (void *) buffer length: (unsigned int) length;
 
 	/* NSURLSessionDelegate */
 	-(void) URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error;
@@ -230,7 +226,7 @@ xamarin_http_send (void *c)
 			long rv = read (fd, buf, 1024);
 			LOG_HTTP ("%i http send read %i bytes from fd=%i; %i=%s", connection.id, rv, fd, errno, strerror (errno));
 			if (rv > 0) {
-				[connection sendData: buf length: rv];
+				[connection sendData: buf length: (unsigned int) rv];
 			} else if (rv == -1) {
 				if (errno == EINTR)
 					continue;
@@ -308,7 +304,7 @@ xamarin_http_send (void *c)
 	LOG_HTTP ("%i Connecting to: %@:%i downloadTask: %@", self.id, ip, port, [[downloadTask currentRequest] URL]);
 }
 
--(void) sendData: (void *) buffer length: (long) length
+-(void) sendData: (void *) buffer length: (unsigned int) length
 {
 	int c = atomic_fetch_add (&http_send_counter, 1);
 
@@ -356,7 +352,7 @@ xamarin_http_send (void *c)
 				wr = write (fd, bytes, left);
 			} while (wr == -1 && errno == EINTR);
 			if (wr > 0) {
-				left -= wr;
+				left -= (NSUInteger) wr;
 				LOG_HTTP ("%i didReceiveData wrote %i/%lu bytes to %i; %lu bytes left", self.id, wr, (unsigned long) total, fd, (unsigned long) left);
 			} else if (wr == 0) {
 				LOG_HTTP ("%i didReceiveData no data written.", self.id);
@@ -595,7 +591,7 @@ void monotouch_configure_debugging ()
 	} else if ((shmkey = ftok ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch", 0)) == -1) {
 		LOG (PRODUCT ": Could not create shared memory key: %s\n", strerror (errno));
 	} else {
-		int shmsize = 1024;
+		size_t shmsize = 1024;
 		int shmid = shmget (shmkey, shmsize, 0);
 		if (shmid == -1) {
 			LOG (PRODUCT ": Could not get shared memory id: %s\n", strerror (errno));
@@ -738,33 +734,33 @@ static void sdb_close2 (void)
 	shutdown (sdb_fd, SHUT_RDWR);
 }
 
-static gboolean send_uninterrupted (int fd, const void *buf, int len)
+static gboolean send_uninterrupted (int fd, const void *buf, size_t len)
 {
-	long res;
+	ssize_t res;
 
 	do {
 		res = send (fd, buf, len, 0);
 	} while (res == -1 && errno == EINTR);
 
-	return res == len;
+	return (size_t) res == len;
 }
 
-static int recv_uninterrupted (int fd, void *buf, int len)
+static ssize_t recv_uninterrupted (int fd, void *buf, size_t len)
 {
-	long res;
-	int total = 0;
+	ssize_t res;
+	ssize_t total = 0;
 	int flags = 0;
 
 	do { 
-		res = recv (fd, (char *) buf + total, len - total, flags); 
+		res = recv (fd, (char *) buf + total, len - (size_t) total, flags); 
 		if (res > 0)
 			total += res;
-	} while ((res > 0 && total < len) || (res == -1 && errno == EINTR));
+	} while ((res > 0 && (size_t) total < len) || (res == -1 && errno == EINTR));
 
 	return total;
 }
 
-static gboolean sdb_send (void *buf, int len)
+static gboolean sdb_send (void *buf, size_t len)
 {
 	gboolean rv;
 
@@ -780,9 +776,9 @@ static gboolean sdb_send (void *buf, int len)
 }
 
 
-static int sdb_recv (void *buf, int len)
+static ssize_t sdb_recv (void *buf, size_t len)
 {
-	int rv;
+	ssize_t rv;
 
 	if (debugging_configured) {
 		MONO_ENTER_GC_SAFE;
@@ -837,7 +833,8 @@ xamarin_connect_http (NSMutableArray *ips)
 			connection.ip = [ips objectAtIndex: i];
 			connection.uniqueRequest = unique_request;
 			[connections addObject: connection];
-			[connection connect: [ips objectAtIndex: i] port: monodevelop_port completionHandler: ^void (bool success)
+			assert (monodevelop_port > 0); // Make sure we do have a valid port 
+			[connection connect: [ips objectAtIndex: i] port: (unsigned long) monodevelop_port completionHandler: ^void (bool success)
 			{
 				LOG_HTTP ("Connected: %@: %i", connection, success);
 				pthread_mutex_lock (&connected_mutex);
@@ -940,7 +937,7 @@ monotouch_connect_wifi (NSMutableArray *ips)
 			fcntl (sockets[i], F_SETFL, flags | O_NONBLOCK);
 			
 			// Connect to the host
-			if ((rv = connect (sockets[i], (struct sockaddr *) sockaddr, len)) == 0) {
+			if ((rv = connect (sockets[i], (struct sockaddr *) sockaddr, (socklen_t) len)) == 0) {
 				// connection completed, this is our man.
 				connection_port = i;
 				connected = true;
@@ -1268,7 +1265,7 @@ monotouch_process_connection (int fd)
 
 	while (true) {
 		char command [257];
-		int rv;
+		ssize_t rv;
 		unsigned char cmd_len;
 
 		rv = recv_uninterrupted (fd, &cmd_len, 1);
@@ -1518,7 +1515,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 		ip = [[ips objectAtIndex:i] UTF8String];
 		
 		memset (sockaddr, 0, sizeof (sockaddr));
-		
+
 		// Parse the host IP, assuming IPv4 and falling back to IPv6
 		if ((rv = inet_pton (AF_INET, ip, &sin->sin_addr)) == 1) {
 			len = sin->sin_len = sizeof (struct sockaddr_in);
@@ -1546,7 +1543,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 		fcntl (sockets[i], F_SETFL, flags | O_NONBLOCK);
 		
 		// Connect to the host
-		if ((rv = connect (sockets[i], (struct sockaddr *) sockaddr, len)) == 0) {
+		if ((rv = connect (sockets[i], (struct sockaddr *) sockaddr, (socklen_t) len)) == 0) {
 			// connection completed, this is our man.
 			connected = true;
 			connection_port = i;
@@ -1726,6 +1723,3 @@ xamarin_is_native_debugger_attached ()
 #else
 int xamarin_fix_ranlib_warning_about_no_symbols_v2;
 #endif /* DEBUG */
-
-
-#pragma clang diagnostic pop
