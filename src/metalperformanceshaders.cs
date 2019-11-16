@@ -2509,7 +2509,7 @@ namespace MetalPerformanceShaders {
 
 		[Static]
 		[Export ("defaultDistributionDescriptor")]
-		MPSMatrixRandomDistributionDescriptor Default { get; }
+		MPSMatrixRandomDistributionDescriptor CreateDefault ();
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
