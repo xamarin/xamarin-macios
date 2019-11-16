@@ -30,8 +30,6 @@ namespace MetalPerformanceShaders {
 		public static IMTLDevice GetPreferredDevice (MPSDeviceOptions options)
 		{
 			var h = MPSGetPreferredDevice ((nuint)(ulong) options);
-			if (h == IntPtr.Zero)
-				return null;
 			return Runtime.GetINativeObject<IMTLDevice> (h, false);
 		}
 
