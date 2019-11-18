@@ -1107,7 +1107,6 @@ METALPERFORMANCESHADERS_CORE_SOURCES = \
 	MetalPerformanceShaders/MPSKernel.cs \
 
 METALPERFORMANCESHADERS_SOURCES = \
-	MetalPerformanceShaders/MPSCompat.cs \
 	MetalPerformanceShaders/MPSImageBatch.cs \
 	MetalPerformanceShaders/MPSImageScale.cs \
 	MetalPerformanceShaders/MPSCnnConvolutionDescriptor.cs \

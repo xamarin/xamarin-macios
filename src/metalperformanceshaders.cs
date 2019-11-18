@@ -3903,15 +3903,18 @@ namespace MetalPerformanceShaders {
 		IntPtr InitWithSource (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, [NullAllowed] IntPtr outputBiasTerms, [NullAllowed] IntPtr outputScaleTerms, [NullAllowed] IntPtr inputBiasTerms, [NullAllowed] IntPtr inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags);
 	}
 
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11,0), Mac (10, 13), iOS (11,0)]
 	[BaseType (typeof (MPSCnnConvolutionNode), Name = "MPSCNNConvolutionTransposeNode")]
 	[DisableDefaultCtor] // 'init' is unavailable
 	interface MPSCnnConvolutionTransposeNode {
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Static]
 		[Export ("nodeWithSource:convolutionGradientState:weights:")]
 		MPSCnnConvolutionTransposeNode Create (MPSNNImageNode sourceNode, [NullAllowed] MPSCnnConvolutionGradientStateNode convolutionGradientState, IMPSCnnConvolutionDataSource weights);
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("initWithSource:convolutionGradientState:weights:")]
 		IntPtr Constructor (MPSNNImageNode sourceNode, [NullAllowed] MPSCnnConvolutionGradientStateNode convolutionGradientState, IMPSCnnConvolutionDataSource weights);
