@@ -833,7 +833,11 @@ xamarin_connect_http (NSMutableArray *ips)
 			connection.ip = [ips objectAtIndex: i];
 			connection.uniqueRequest = unique_request;
 			[connections addObject: connection];
-			assert (monodevelop_port > 0); // Make sure we do have a valid port 
+			if (monodevelop_port > 0) {
+				// Make sure we do have a valid port
+				NSLog (@"Could not find a valid port to connect to the IDE.");
+				return;
+			}
 			[connection connect: [ips objectAtIndex: i] port: (unsigned long) monodevelop_port completionHandler: ^void (bool success)
 			{
 				LOG_HTTP ("Connected: %@: %i", connection, success);
@@ -1515,7 +1519,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 		ip = [[ips objectAtIndex:i] UTF8String];
 		
 		memset (sockaddr, 0, sizeof (sockaddr));
-
+		
 		// Parse the host IP, assuming IPv4 and falling back to IPv6
 		if ((rv = inet_pton (AF_INET, ip, &sin->sin_addr)) == 1) {
 			len = sin->sin_len = sizeof (struct sockaddr_in);
