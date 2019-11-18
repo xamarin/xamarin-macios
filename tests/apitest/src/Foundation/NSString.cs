@@ -66,9 +66,9 @@ namespace Xamarin.Mac.Tests
 
 				Array.Sort (tests);
 
-				Assert.AreSame (a, tests[0]);
-				Assert.AreSame (b, tests[1]);
-				Assert.AreSame (c, tests[2]);
+				Assert.AreSame (a, tests[0], "0");
+				Assert.AreSame (b, tests[1], "1");
+				Assert.AreSame (c, tests[2], "2");
 			}
 		}
 	}
