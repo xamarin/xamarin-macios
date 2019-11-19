@@ -833,7 +833,7 @@ xamarin_connect_http (NSMutableArray *ips)
 			connection.ip = [ips objectAtIndex: i];
 			connection.uniqueRequest = unique_request;
 			[connections addObject: connection];
-			if (monodevelop_port > 0) {
+			if (monodevelop_port <= 0) {
 				// Make sure we do have a valid port
 				NSLog (@"Could not find a valid port to connect to the IDE.");
 				return;
