@@ -29,7 +29,7 @@ using ObjCRuntime;
 
 namespace Foundation {
 
-	public partial class NSString {
+	public partial class NSString : IComparable<NSString> {
 		const string selDataUsingEncodingAllow = "dataUsingEncoding:allowLossyConversion:";
 
 #if MONOMAC
@@ -89,6 +89,11 @@ namespace Foundation {
 			
 			}
 			return ret;
+		}
+
+		public int CompareTo (NSString other)
+		{
+			return (int)Compare (other);
 		}
 
 		// [Export ("initWithContentsOfURL:encoding:error")]
