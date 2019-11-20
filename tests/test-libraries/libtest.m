@@ -506,7 +506,7 @@ static UltimateMachine *shared;
 
 -(void) completedSetProtocol: (id<ProtocolAssignerProtocol>) value
 {
-	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+	assert (false); // "THIS FUNCTION SHOULD BE OVERRIDDEN";
 }
 @end
 
@@ -602,7 +602,7 @@ static Class _TestClass = NULL;
 
 -(void) classCallback: (void (^)(int32_t magic_number))completionHandler
 {
-	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+	assert (false); //!"THIS FUNCTION SHOULD BE OVERRIDDEN"
 }
 
 -(void) callClassCallback
@@ -730,7 +730,7 @@ static Class _TestClass = NULL;
 
 -(void) assertMainThreadBlockReleaseCallback: (innerBlock) completionHandler
 {
-	assert (!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+	assert (false); //!"THIS FUNCTION SHOULD BE OVERRIDDEN");
 }
 
 -(void) testFreedBlocks
@@ -756,7 +756,10 @@ static Class _TestClass = NULL;
 
 static void block_called ()
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	OSAtomicIncrement32 (&called_blocks);
+#pragma clang diagnostic pop
 }
 
 +(void) callProtocolWithBlockProperties: (id<ProtocolWithBlockProperties>) obj required: (bool) required instance: (bool) instance;
@@ -821,7 +824,10 @@ static void block_called ()
 @implementation FreedNotifier
 -(void) dealloc
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	OSAtomicIncrement32 (&freed_blocks);
+#pragma clang diagnostic pop
 	[super dealloc];
 }
 @end

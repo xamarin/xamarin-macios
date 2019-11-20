@@ -495,7 +495,7 @@ xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchandle)
 // The XamarinExtendedObject protocol is just to avoid a 
 // compiler warning (no 'xamarinGetGChandle' selector found).
 @protocol XamarinExtendedObject
--(int) xamarinGetGCHandle;
+-(uint32_t) xamarinGetGCHandle;
 -(void) xamarinSetGCHandle: (uint32_t) gc_handle;
 @end
 
@@ -2809,7 +2809,7 @@ XamarinObject::~XamarinObject ()
  */
 
 @implementation NSObject (NonXamarinObject)
--(int) xamarinGetGCHandle
+-(uint32_t) xamarinGetGCHandle
 {
 	// COOP: no managed memory access: any mode.
 	return 0;

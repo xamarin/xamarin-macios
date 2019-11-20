@@ -2523,9 +2523,9 @@ namespace Registrar {
 			else if (method.CurrentTrampoline == Trampoline.Release)
 				return "-(void) release";
 			else if (method.CurrentTrampoline == Trampoline.GetGCHandle)
-				return "-(int) xamarinGetGCHandle";
+				return "-(uint32_t) xamarinGetGCHandle";
 			else if (method.CurrentTrampoline == Trampoline.SetGCHandle)
-				return "-(void) xamarinSetGCHandle: (int) gchandle";
+				return "-(void) xamarinSetGCHandle: (uint32_t) gchandle";
 #if MONOMAC
 			else if (method.CurrentTrampoline == Trampoline.CopyWithZone1 || method.CurrentTrampoline == Trampoline.CopyWithZone2)
 				return "-(id) copyWithZone: (NSZone *)zone";
@@ -3154,14 +3154,14 @@ namespace Registrar {
 				sb.WriteLine ();
 				return;
 			case Trampoline.GetGCHandle:
-				sb.WriteLine ("-(int) xamarinGetGCHandle");
+				sb.WriteLine ("-(uint32_t) xamarinGetGCHandle");
 				sb.WriteLine ("{");
 				sb.WriteLine ("return __monoObjectGCHandle.gc_handle;");
 				sb.WriteLine ("}");
 				sb.WriteLine ();
 				return;
 			case Trampoline.SetGCHandle:
-				sb.WriteLine ("-(void) xamarinSetGCHandle: (int) gc_handle");
+				sb.WriteLine ("-(void) xamarinSetGCHandle: (uint32_t) gc_handle");
 				sb.WriteLine ("{");
 				sb.WriteLine ("__monoObjectGCHandle.gc_handle = gc_handle;");
 				sb.WriteLine ("__monoObjectGCHandle.native_object = self;");
