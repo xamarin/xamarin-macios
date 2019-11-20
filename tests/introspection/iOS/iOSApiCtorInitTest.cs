@@ -239,6 +239,8 @@ namespace Introspection {
 				return Runtime.Arch == Arch.SIMULATOR;
 			case "AVAudioRecorder": // Stopped working with Xcode 11.2 beta 2
 				return TestRuntime.CheckXcodeVersion (11, 2);
+			case "UIMenuController": // Stopped working with Xcode 11.3 beta 1
+				return TestRuntime.CheckXcodeVersion (11, 3);
 			default:
 				return base.Skip (type);
 			}
