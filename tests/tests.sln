@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 3", "bcl-te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 4", "bcl-test\BCL tests group 4.csproj", "{96EB9D05-2635-0FB3-43F9-9B74640CFE18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 6", "bcl-test\BCL tests group 4.csproj", "{A47E9448-F269-CE74-8539-EF920B6F0836}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 6", "bcl-test\BCL tests group 6.csproj", "{A47E9448-F269-CE74-8539-EF920B6F0836}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
