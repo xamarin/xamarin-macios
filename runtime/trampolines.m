@@ -717,7 +717,7 @@ static pthread_mutex_t gchandle_hash_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static const char *associated_key = "x"; // the string value doesn't matter, only the pointer value.
 void
-xamarin_set_gchandle_trampoline (id self, SEL sel, int gc_handle)
+xamarin_set_gchandle_trampoline (id self, SEL sel, uint32_t gc_handle)
 {
 	// COOP: Called by ObjC (when the setGCHandle: selector is called on an object).
 	// COOP: Safe mode upon entry, and doesn't access managed memory, so no need to change.
