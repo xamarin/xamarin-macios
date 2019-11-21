@@ -17,10 +17,6 @@
 #include "runtime-internal.h"
 #include "xamarin/xamarin.h"
 
-// TODO: temp ignore to minimize diff
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
-
 #if defined (DEBUG)
 //extern BOOL NSZombieEnabled;
 #endif
@@ -492,43 +488,43 @@ xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchandle)
 	return rv;
 }
 
-#define MANAGED_REF_BIT (1 << 31)
-#define GCHANDLE_WEAK (1 << 30)
+#define MANAGED_REF_BIT (1u << 31u)
+#define GCHANDLE_WEAK (1u << 30u)
 #define GCHANDLE_MASK (MANAGED_REF_BIT | GCHANDLE_WEAK)
 
 // The XamarinExtendedObject protocol is just to avoid a 
 // compiler warning (no 'xamarinGetGChandle' selector found).
 @protocol XamarinExtendedObject
 -(int) xamarinGetGCHandle;
--(void) xamarinSetGCHandle: (int) gc_handle;
+-(void) xamarinSetGCHandle: (uint32_t) gc_handle;
 @end
 
-static inline int
+static inline uint32_t
 get_raw_gchandle_safe (id self)
 {
 	// COOP: we call a selector, and that must only be done in SAFE mode.
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	id<XamarinExtendedObject> xself = self;
-	return (int) [xself xamarinGetGCHandle];
+	return (uint32_t) [xself xamarinGetGCHandle];
 }
 
-static inline int
+static inline uint32_t
 get_raw_gchandle (id self)
 {
 	// COOP: we call a selector, and that must only be done in SAFE mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
-	int rv;
+	uint32_t rv;
 	MONO_ENTER_GC_SAFE;
 	id<XamarinExtendedObject> xself = self;
-	rv = (int) [xself xamarinGetGCHandle];
+	rv = (uint32_t) [xself xamarinGetGCHandle];
 	MONO_EXIT_GC_SAFE;
 	
 	return rv;
 }
 
 static inline void
-set_raw_gchandle (id self, int gc_handle)
+set_raw_gchandle (id self, uint32_t gc_handle)
 {
 	// COOP: we call a selector, and that must only be done in SAFE mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -539,21 +535,21 @@ set_raw_gchandle (id self, int gc_handle)
 	MONO_EXIT_GC_SAFE;
 }
 
-static inline int
+static inline uint32_t
 get_gchandle (id self)
 {
 	// COOP: does not access managed memory: any mode
 	return get_raw_gchandle (self) & ~GCHANDLE_MASK;
 }
 
-int
+uint32_t
 xamarin_get_gchandle (id self)
 {
 	// COOP: does not access managed memory: any mode
 	return get_gchandle (self);
 }
 
-int
+uint32_t
 xamarin_get_gchandle_with_flags (id self)
 {
 	// COOP: does not access managed memory: any mode
@@ -684,7 +680,7 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 	char *type_name = xamarin_lookup_managed_type_name ([self class], exception_gchandle);
 	if (*exception_gchandle == 0) {
 		char *msg = xamarin_strdup_printf (m, self, object_getClassName (self), type_name, sel_getName (sel), method_full_name);
-		guint32 ex_handle = xamarin_create_runtime_exception (8027, msg, exception_gchandle);
+		guint32 ex_handle = (guint32) xamarin_create_runtime_exception (8027, msg, exception_gchandle);
 		xamarin_free (msg);
 		if (*exception_gchandle == 0)
 			*exception_gchandle = ex_handle;
@@ -1042,7 +1038,7 @@ xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial)
 		options.flags = (InitializationFlags) (options.flags | InitializationFlagsIsPartialStaticRegistrar);
 
 	// Sort the type map according to Class
-	qsort (map->map, map->map_count, sizeof (MTClassMap), compare_mtclassmap);
+	qsort (map->map, (size_t) map->map_count, sizeof (MTClassMap), compare_mtclassmap);
 }
 
 /*
@@ -1238,7 +1234,7 @@ xamarin_find_protocol_wrapper_type (uint32_t token_ref)
 	if (options.RegistrationData == NULL || options.RegistrationData->protocol_wrappers == NULL)
 		return INVALID_TOKEN_REF;
 
-	void* ptr = bsearch (&token_ref, options.RegistrationData->protocol_wrappers, options.RegistrationData->protocol_wrapper_count, sizeof (MTProtocolWrapperMap), xamarin_compare_ints);
+	void* ptr = bsearch (&token_ref, options.RegistrationData->protocol_wrappers, (size_t) options.RegistrationData->protocol_wrapper_count, sizeof (MTProtocolWrapperMap), xamarin_compare_ints);
 	if (ptr == NULL)
 		return INVALID_TOKEN_REF;
 
@@ -1585,10 +1581,10 @@ xamarin_objc_type_size (const char *type)
 		case _C_CHARPTR: return sizeof (char *);
 		case _C_BFLD: {
 			// Example: [NSDecimalNumberPlaceholder initWithDecimal:] = @28@0:4{?=b8b4b1b1b18[8S]}8
-			int bits = 0;
+			unsigned long bits = 0;
 			int bc = 1;
 			while (type [bc] >= '0' && type [bc] <= '9') {
-				bits = bits * 10 + (type [bc] - '0');
+				bits = bits * 10ul + (unsigned long) (type [bc] - '0');
 				bc++;
 			}
 			if (bits % sizeof (void *) == 0)
@@ -1602,7 +1598,7 @@ xamarin_objc_type_size (const char *type)
 			break;
 		case _C_ARY_B: {
 			unsigned long size = 0;
-			int len = atoi (type+1);
+			unsigned long len = (unsigned long) atol (type+1);
 			do {
 				type++;
 			} while (isdigit (*type));
@@ -1743,7 +1739,7 @@ xamarin_objc_type_size (const char *type)
  */
 //#define DEBUG_REF_COUNTING
 void
-xamarin_create_gchandle (id self, void *managed_object, int flags, bool force_weak)
+xamarin_create_gchandle (id self, void *managed_object, uint32_t flags, bool force_weak)
 {
 	// COOP: reads managed memory: unsafe mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -1751,7 +1747,7 @@ xamarin_create_gchandle (id self, void *managed_object, int flags, bool force_we
 	// force_weak is to avoid calling retainCount unless needed, since some classes (UIWebView in iOS 5)
 	// will crash if retainCount is called before init. See bug #9261.
 	bool weak = force_weak || ([self retainCount] == 1);
-	int gchandle;
+	uint32_t gchandle;
 
 	if (weak) {
 		gchandle = mono_gchandle_new_weakref ((MonoObject *) managed_object, TRUE);
@@ -1773,11 +1769,11 @@ xamarin_switch_gchandle (id self, bool to_weak)
 	// COOP: reads managed memory: unsafe mode
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	
-	int new_gchandle;
-	int old_gchandle;
-	int old_gchandle_raw;
+	uint32_t new_gchandle;
+	uint32_t old_gchandle;
+	uint32_t old_gchandle_raw;
 	MonoObject *managed_object;
-	int flags = MANAGED_REF_BIT;
+	uint32_t flags = MANAGED_REF_BIT;
 
 	old_gchandle_raw = get_raw_gchandle_safe (self);
 	old_gchandle = old_gchandle_raw & ~GCHANDLE_MASK;
@@ -1840,7 +1836,7 @@ xamarin_switch_gchandle (id self, bool to_weak)
 }
 
 void
-xamarin_free_gchandle (id self, int gchandle)
+xamarin_free_gchandle (id self, uint32_t gchandle)
 {
 	// COOP: no managed memory access, but calls mono function mono_gc_handle_free. Assuming that function can be called with any mode: this function can be called with any mode as well
 	if (gchandle) {
@@ -1865,7 +1861,7 @@ xamarin_clear_gchandle (id self)
 }
 
 void
-xamarin_set_gchandle (id self, int gchandle)
+xamarin_set_gchandle (id self, uint32_t gchandle)
 {
 	// COOP: no managed memory access: any mode
 	set_raw_gchandle (self, gchandle);
@@ -1896,7 +1892,7 @@ is_user_type (id self)
 
 	if (options.RegistrationData != NULL && options.RegistrationData->map_count > 0) {
 		MTClassMap *map = options.RegistrationData->map;
-		int idx = find_user_type_index (map, 0, options.RegistrationData->map_count - 1, cls);
+		int idx = find_user_type_index (map, 0, (int) options.RegistrationData->map_count - 1, cls);
 		if (idx >= 0)
 			return (map [idx].flags & MTTypeFlagsUserType) == MTTypeFlagsUserType;
 		// If using the partial static registrar, we need to continue
@@ -2035,7 +2031,7 @@ xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
 	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
 	MONO_ASSERT_GC_UNSAFE;
 	
-	int gchandle;
+	uint32_t gchandle;
 	bool user_type = is_user_type (self);
 	
 #if defined(DEBUG_REF_COUNTING)
@@ -2289,13 +2285,13 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 	case MarshalObjectiveCExceptionModeThrowManagedException:
 		exc_handle = [[ns_exception userInfo] objectForKey: @"XamarinManagedExceptionHandle"];
 		if (exc_handle != NULL) {
-			int handle = [exc_handle getHandle];
+			uint32_t handle = [exc_handle getHandle];
 			MONO_ENTER_GC_UNSAFE;
 			MonoObject *exc = mono_gchandle_get_target (handle);
 			mono_runtime_set_pending_exception ((MonoException *) exc, false);
 			MONO_EXIT_GC_UNSAFE;
 		} else {
-			int handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
+			uint32_t handle = (uint32_t) xamarin_create_ns_exception (ns_exception, &exception_gchandle);
 			if (exception_gchandle != 0) {
 				PRINT (PRODUCT ": Got an exception while creating a managed NSException wrapper (will throw this exception instead):");
 				PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
@@ -2325,8 +2321,8 @@ xamarin_process_managed_exception (MonoObject *exception)
 	MarshalManagedExceptionMode mode;
 	guint32 exception_gchandle = 0;
 
-	int handle = mono_gchandle_new (exception, false);
-	mode = xamarin_on_marshal_managed_exception (handle, &exception_gchandle);
+	uint32_t handle = mono_gchandle_new (exception, false);
+	mode = xamarin_on_marshal_managed_exception ((int) handle, &exception_gchandle);
 	mono_gchandle_free (handle);
 
 	if (exception_gchandle != 0) {
@@ -2373,7 +2369,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 
 		break;
 	case MarshalManagedExceptionModeThrowObjectiveCException: {
-		int handle = mono_gchandle_new (exception, false);
+		uint32_t handle = mono_gchandle_new (exception, false);
 		NSException *ns_exc = xamarin_unwrap_ns_exception (handle, &exception_gchandle);
 		
 		if (exception_gchandle != 0) {
@@ -2483,7 +2479,7 @@ xamarin_vprintf (const char *format, va_list args)
 	
 #if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
 	const char *msg = [message UTF8String];
-	int len = strlen (msg);
+	size_t len = strlen (msg);
 	fwrite (msg, 1, len, stdout);
 	if (len == 0 || msg [len - 1] != '\n')
 		fwrite ("\n", 1, 1, stdout);
@@ -2513,7 +2509,7 @@ xamarin_vprintf (const char *format, va_list args)
  */
 
 void
-xamarin_get_assembly_name_without_extension (const char *aname, char *name, int namelen)
+xamarin_get_assembly_name_without_extension (const char *aname, char *name, size_t namelen)
 {
 	size_t len = strlen (aname);
 	strlcpy (name, aname, namelen);
@@ -2525,7 +2521,7 @@ xamarin_get_assembly_name_without_extension (const char *aname, char *name, int 
 }
 
 static bool
-xamarin_locate_assembly_resource_for_root (const char *root, const char *culture, const char *resource, char *path, int pathlen)
+xamarin_locate_assembly_resource_for_root (const char *root, const char *culture, const char *resource, char *path, size_t pathlen)
 {
 	if (culture != NULL && *culture != 0) {
 		// culture-specific directory
@@ -2575,7 +2571,7 @@ xamarin_locate_assembly_resource_for_root (const char *root, const char *culture
 }
 
 bool
-xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, const char *resource, char *path, int pathlen)
+xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, const char *resource, char *path, size_t pathlen)
 {
 	const char *culture = mono_assembly_name_get_culture (assembly_name);
 	const char *aname = mono_assembly_name_get_name (assembly_name);
@@ -2587,7 +2583,7 @@ xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, cons
 
 
 bool
-xamarin_locate_assembly_resource (const char *assembly_name, const char *culture, const char *resource, char *path, int pathlen)
+xamarin_locate_assembly_resource (const char *assembly_name, const char *culture, const char *resource, char *path, size_t pathlen)
 {
 	char root [1024];
 	char aname [256];
@@ -2881,7 +2877,7 @@ xamarin_is_managed_exception_marshaling_disabled ()
  * XamarinGCHandle
  */
 @implementation XamarinGCHandle
-+(XamarinGCHandle *) createWithHandle: (int) h
++(XamarinGCHandle *) createWithHandle: (uint32_t) h
 {
 	XamarinGCHandle *rv = [[XamarinGCHandle alloc] init];
 	rv->handle = h;
@@ -2895,10 +2891,8 @@ xamarin_is_managed_exception_marshaling_disabled ()
 	[super dealloc];
 }
 
--(int) getHandle
+-(uint32_t) getHandle
 {
 	return handle;
 }
 @end
-
-#pragma clang diagnostic pop
