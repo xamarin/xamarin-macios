@@ -180,7 +180,6 @@ namespace Network {
 					return;
 				}
 				BlockLiteral block_handler = new BlockLiteral ();
-				BlockLiteral *block_ptr_handler = &block_handler;
 				block_handler.SetupBlockUnsafe (static_StateChangesHandler, handler);
 				try {
 					nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), &block_handler);
