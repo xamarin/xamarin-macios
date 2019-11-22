@@ -1,9 +1,0 @@
-!missing-field! _nw_data_transfer_report_all_paths not bound
-!missing-pinvoke! nw_ethernet_channel_cancel is not bound
-!missing-pinvoke! nw_ethernet_channel_create is not bound
-!missing-pinvoke! nw_ethernet_channel_send is not bound
-!missing-pinvoke! nw_ethernet_channel_set_queue is not bound
-!missing-pinvoke! nw_ethernet_channel_set_receive_handler is not bound
-!missing-pinvoke! nw_ethernet_channel_set_state_changed_handler is not bound
-!missing-pinvoke! nw_ethernet_channel_start is not bound
-!missing-pinvoke! nw_parameters_create_custom_ip is not bound

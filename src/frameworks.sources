@@ -1173,6 +1173,7 @@ NETWORK_SOURCES = \
 	Network/NWConnection.cs			\
 	Network/NWContentContext.cs		\
 	Network/NWDataTransferReport.cs 	\
+	Network/NWEthernetChannel.cs 	\
 	Network/NWEstablishmentReport.cs	\
 	Network/NWEndpoint.cs			\
 	Network/NWError.cs			\
