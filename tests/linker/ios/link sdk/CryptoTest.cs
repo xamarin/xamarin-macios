@@ -116,7 +116,7 @@ namespace LinkSdk {
 				};
 				ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 				WebClient wc = new WebClient ();
-				Assert.IsNotNull (wc.DownloadString (NetworkResources.MicrosoftRobotsUrl));
+				Assert.IsNotNull (wc.DownloadString (NetworkResources.StatsUrl));
 			}
 			catch (WebException we) {
 				// failing to get data does not mean the SSL/TLS session was not established

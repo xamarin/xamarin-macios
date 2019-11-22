@@ -65,7 +65,7 @@ namespace LinkAnyTest {
 
 		[Test]
 		public void WebClientTest ()
-		{;
+		{
 			var wc = new WebClient ();
 			var data = wc.DownloadString (NetworkResources.MicrosoftUrl);
 
