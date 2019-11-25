@@ -40,7 +40,7 @@ void xamarin_setup_impl ()
 int
 main (int argc, char** argv)
 {
-	// There's a potentially uncaugth exception here, it
+	// There's a potentially uncaught exception here, which:
 	// 1. only happens when/if `xamarin_initialize / ObjCRuntime.Initialize` throw an native exception.
 	//    This should not happen (nor be ignored) since the runtime would not be fully initialized;
 	// 2. only happens when (non default) `MarshalManagedExceptionModeThrowObjectiveCException` is used,
