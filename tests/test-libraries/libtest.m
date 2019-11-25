@@ -602,7 +602,7 @@ static Class _TestClass = NULL;
 
 -(void) classCallback: (void (^)(int32_t magic_number))completionHandler
 {
-	assert (false); //!"THIS FUNCTION SHOULD BE OVERRIDDEN"
+	assert (false); // THIS FUNCTION SHOULD BE OVERRIDDEN
 }
 
 -(void) callClassCallback
@@ -730,7 +730,7 @@ static Class _TestClass = NULL;
 
 -(void) assertMainThreadBlockReleaseCallback: (innerBlock) completionHandler
 {
-	assert (false); //!"THIS FUNCTION SHOULD BE OVERRIDDEN");
+	assert (false); // THIS FUNCTION SHOULD BE OVERRIDDEN
 }
 
 -(void) testFreedBlocks
