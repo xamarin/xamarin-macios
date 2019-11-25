@@ -297,7 +297,7 @@ public:
 @end
 
 @interface NSObject (NonXamarinObject)
--(int) xamarinGetGCHandle;
+-(uint32_t) xamarinGetGCHandle;
 @end
 #endif
 
