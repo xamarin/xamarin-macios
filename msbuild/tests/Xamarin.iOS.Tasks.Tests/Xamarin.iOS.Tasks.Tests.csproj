@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Xamarin.iOS.Tasks</RootNamespace>
     <AssemblyName>Xamarin.iOS.Tasks.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,6 +70,7 @@
     <Compile Include="ProjectsTests\ProjectWithFrameworks.cs" />
     <Compile Include="ProjectsTests\NativeReferences.cs" />
     <Compile Include="ProjectsTests\ProjectTest.cs" />
+    <Compile Include="ProjectsTests\XamarinForms.cs" />
     <Compile Include="ProjectsTests\Extensions\WatchKit2.cs" />
     <Compile Include="..\..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
@@ -94,9 +95,6 @@
     <Compile Include="ProjectsTests\CodesignAppBundle.cs" />
     <Compile Include="ProjectsTests\BindingReferences.cs" />
     <Compile Include="ProjectsTests\CoreMLCompiler.cs" />
-    <Compile Include="..\..\..\tools\common\StringUtils.cs">
-      <Link>StringUtils.cs</Link>
-    </Compile>
     <Compile Include="ProjectsTests\Bug60536.cs" />
     <Compile Include="..\..\..\tests\common\Profile.cs">
       <Link>Profile.cs</Link>
@@ -110,6 +108,7 @@
     <Compile Include="ProjectsTests\CompileSceneKitAssetsTest.cs" />
     <Compile Include="ProjectsTests\NativeReferencesNoEmbedding.cs" />
     <Compile Include="FrameworkListTest.cs" />
+    <Compile Include="VerbosityTest.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

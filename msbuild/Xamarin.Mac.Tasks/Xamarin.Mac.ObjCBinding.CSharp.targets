@@ -112,7 +112,9 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			FrameworkRoot="$(XamarinMacFrameworkRoot)"
 			BTouchToolPath="$(BTouchToolPath)"
-			BTouchToolExe="$(BTouchToolExe)">
+			BTouchToolExe="$(BTouchToolExe)"
+			StandardOutputImportance="High"
+			>
 		</BTouch>
 	</Target>
 

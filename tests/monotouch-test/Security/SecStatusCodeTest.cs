@@ -25,6 +25,7 @@ namespace MonoTouchFixtures.Security {
 	public class SecStatusCodeTest {
 
 		[Test]
+		[Culture ("en")]
 		public void ErrorDescriptionTest ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 3);
@@ -32,7 +33,6 @@ namespace MonoTouchFixtures.Security {
 			var desc = SecStatusCode.Success.GetStatusDescription ();
 			Assert.NotNull (desc, $"{nameof (desc)} not null");
 
-			// This value generated from objc enum documentation and very unlikely to change.
 			var noErr = "No error.";
 			Assert.That (desc, Is.EqualTo (noErr), $"{nameof (desc)} == {noErr}");
 		}

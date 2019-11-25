@@ -15,7 +15,7 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-	[iOS (6,0)]
+	[Watch (6,0)]
 	public partial class CMMemoryPool : IDisposable, INativeObject
 	{
 		IntPtr handle;

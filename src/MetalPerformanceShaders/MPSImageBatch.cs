@@ -14,7 +14,7 @@ using Foundation;
 using Metal;
 
 namespace MetalPerformanceShaders {
-	[iOS (11,3), TV (11,3), Mac (10,13,4, onlyOn64: true)]
+	[iOS (11,3), TV (11,3), Mac (10,13,4)]
 	public static partial class MPSImageBatch {
 
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
@@ -43,12 +43,12 @@ namespace MetalPerformanceShaders {
 			MPSImageBatchSynchronize (imageBatch.Handle, commandBuffer.Handle);
 		}
 
-		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		[iOS (12,0), TV (12,0), Mac (10,14)]
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern nuint MPSImageBatchResourceSize (IntPtr batch);
 
 		// Using 'NSArray<MPSImage>' instead of `MPSImage[]` because image array 'Handle' matters.
-		[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		[iOS (12,0), TV (12,0), Mac (10,14)]
 		public static nuint GetResourceSize (NSArray<MPSImage> imageBatch)
 		{
 			if (imageBatch == null)
@@ -58,11 +58,11 @@ namespace MetalPerformanceShaders {
 		}
 
 		// TODO: Disabled due to 'MPSImageBatchIterate' is not in the native library rdar://47282304.
-		//[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		//[iOS (12,0), TV (12,0), Mac (10,14)]
 		//[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		//static extern nint MPSImageBatchIterate (IntPtr batch, IntPtr iterator);
 
-		//[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		//[iOS (12,0), TV (12,0), Mac (10,14)]
 		//public delegate nint MPSImageBatchIterator (MPSImage image, nuint index);
 
 		//[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
@@ -85,7 +85,7 @@ namespace MetalPerformanceShaders {
 		//	}
 		//}
 
-		//[iOS (12,0), TV (12,0), Mac (10,14, onlyOn64: true)]
+		//[iOS (12,0), TV (12,0), Mac (10,14)]
 		//[BindingImpl (BindingImplOptions.Optimizable)]
 		//public static nint Iterate (NSArray<MPSImage> imageBatch, MPSImageBatchIterator iterator)
 		//{

@@ -129,6 +129,7 @@ namespace Foundation {
 #if !MONOMAC && !__WATCHOS__
 		readonly bool isBackgroundSession = false;
 		NSObject notificationToken;  // needed to make sure we do not hang if not using a background session
+		readonly object notificationTokenLock = new object (); // need to make sure that threads do no step on each other with a dispose and a remove  inflight data
 #endif
 
 		static NSUrlSessionConfiguration CreateConfig ()
@@ -157,7 +158,7 @@ namespace Foundation {
 			// therefore, we do not have to listen to the notifications.
 			isBackgroundSession = !string.IsNullOrEmpty (configuration.Identifier);
 #endif
-
+			allowsCellularAccess = configuration.AllowsCellularAccess;
 			AllowAutoRedirect = true;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
@@ -181,25 +182,35 @@ namespace Foundation {
 
 		void AddNotification ()
 		{
-			if (!isBackgroundSession && notificationToken == null)
-				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+			lock (notificationTokenLock) {
+				if (!bypassBackgroundCheck && !isBackgroundSession && notificationToken == null)
+					notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
+			} // lock
 		}
 
 		void RemoveNotification ()
 		{
-			if (notificationToken != null) {
-				NSNotificationCenter.DefaultCenter.RemoveObserver (notificationToken);
+			NSObject localNotificationToken;
+			lock (notificationTokenLock) {
+				localNotificationToken = notificationToken;
 				notificationToken = null;
 			}
+			if (localNotificationToken != null)
+				NSNotificationCenter.DefaultCenter.RemoveObserver (localNotificationToken);
 		}
 
 		void BackgroundNotificationCb (NSNotification obj)
 		{
-			// we do not need to call the lock, we call cancel on the source, that will trigger all the needed code to 
-			// clean the resources and such
+			// the cancelation task of each of the sources will clean the different resources. Each removal is done
+			// inside a lock, but of course, the .Values collection will not like that because it is modified during the
+			// iteration. We split the operation in two, get all the diff cancelation sources, then try to cancel each of them
+			// which will do the correct lock dance. Note that we could be tempted to do a RemoveAll, that will yield the same
+			// runtime issue, this is dull but safe. 
+			var sources = new List <TaskCompletionSource<HttpResponseMessage>> (inflightRequests.Count);
 			foreach (var r in inflightRequests.Values) {
-				r.CompletionSource.TrySetCanceled ();
+				sources.Add (r.CompletionSource);
 			}
+			sources.ForEach (source => { source.TrySetCanceled (); });
 		}
 #endif
 
@@ -229,11 +240,11 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
+			lock (inflightRequestsLock) {
 #if !MONOMAC  && !__WATCHOS__
 			// remove the notification if present, method checks against null
 			RemoveNotification ();
 #endif
-			lock (inflightRequestsLock) {
 				foreach (var pair in inflightRequests) {
 					pair.Key?.Cancel ();
 					pair.Key?.Dispose ();
@@ -269,7 +280,7 @@ namespace Foundation {
 			}
 		}
 
-		bool allowsCellularAccess;
+		bool allowsCellularAccess = true;
 
 		public bool AllowsCellularAccess {
 			get {
@@ -305,6 +316,22 @@ namespace Foundation {
 			}
 		}
 
+		// we do check if a user does a request and the application goes to the background, but
+		// in certain cases the user does that on purpose (BeingBackgroundTask) and wants to be able
+		// to use the network. In those cases, which are few, we want the developer to explicitly 
+		// bypass the check when there are not request in flight 
+		bool bypassBackgroundCheck;
+
+		public bool BypassBackgroundSessionCheck {
+			get {
+				return bypassBackgroundCheck;
+			}
+			set {
+				EnsureModifiability ();
+				bypassBackgroundCheck = value;
+			}
+		}
+
 		bool sentRequest;
 
 		internal void EnsureModifiability ()
@@ -315,11 +342,8 @@ namespace Foundation {
 					"Properties can only be modified before sending the first request.");
 		}
 
-		// almost identical to ModernHttpClient version but it uses the constants from monotouch.dll | Xamarin.[iOS|WatchOS|TVOS].dll
 		static Exception createExceptionForNSError(NSError error)
 		{
-			// var webExceptionStatus = WebExceptionStatus.UnknownError;
-
 			var innerException = new NSErrorException(error);
 
 			// errors that exists in both share the same error code, so we can use a single switch/case
@@ -330,11 +354,6 @@ namespace Foundation {
 #else
 			if ((error.Domain == NSError.NSUrlErrorDomain) || (error.Domain == NSError.CFNetworkErrorDomain)) {
 #endif
-				// Parse the enum into a web exception status or exception. Some
-				// of these values don't necessarily translate completely to
-				// what WebExceptionStatus supports, so made some best guesses
-				// here.  For your reading pleasure, compare these:
-				//
 				// Apple docs: https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Constants/index.html#//apple_ref/doc/constant_group/URL_Loading_System_Error_Codes
 				// .NET docs: http://msdn.microsoft.com/en-us/library/system.net.webexceptionstatus(v=vs.110).aspx
 				switch ((NSUrlError) (long) error.Code) {
@@ -345,124 +364,11 @@ namespace Foundation {
 #endif
 					// No more processing is required so just return.
 					return new OperationCanceledException(error.LocalizedDescription, innerException);
-// 				case NSUrlError.BadURL:
-// 				case NSUrlError.UnsupportedURL:
-// 				case NSUrlError.CannotConnectToHost:
-// 				case NSUrlError.ResourceUnavailable:
-// 				case NSUrlError.NotConnectedToInternet:
-// 				case NSUrlError.UserAuthenticationRequired:
-// 				case NSUrlError.InternationalRoamingOff:
-// 				case NSUrlError.CallIsActive:
-// 				case NSUrlError.DataNotAllowed:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.Socks5BadCredentials:
-// 				case (NSUrlError) CFNetworkErrors.Socks5UnsupportedNegotiationMethod:
-// 				case (NSUrlError) CFNetworkErrors.Socks5NoAcceptableMethod:
-// 				case (NSUrlError) CFNetworkErrors.HttpAuthenticationTypeUnsupported:
-// 				case (NSUrlError) CFNetworkErrors.HttpBadCredentials:
-// 				case (NSUrlError) CFNetworkErrors.HttpBadURL:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.ConnectFailure;
-// 					break;
-// 				case NSUrlError.TimedOut:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.NetServiceTimeout:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.Timeout;
-// 					break;
-// 				case NSUrlError.CannotFindHost:
-// 				case NSUrlError.DNSLookupFailed:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.HostNotFound:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceDnsServiceFailure:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.NameResolutionFailure;
-// 					break;
-// 				case NSUrlError.DataLengthExceedsMaximum:
-// 					webExceptionStatus = WebExceptionStatus.MessageLengthLimitExceeded;
-// 					break;
-// 				case NSUrlError.NetworkConnectionLost:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.HttpConnectionLost:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.ConnectionClosed;
-// 					break;
-// 				case NSUrlError.HTTPTooManyRedirects:
-// 				case NSUrlError.RedirectToNonExistentLocation:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.HttpRedirectionLoopDetected:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.ProtocolError;
-// 					break;
-// 				case NSUrlError.RequestBodyStreamExhausted:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.SocksUnknownClientVersion:
-// 				case (NSUrlError) CFNetworkErrors.SocksUnsupportedServerVersion:
-// 				case (NSUrlError) CFNetworkErrors.HttpParseFailure:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.SendFailure;
-// 					break;
-// 				case NSUrlError.BadServerResponse:
-// 				case NSUrlError.ZeroByteResource:
-// 				case NSUrlError.CannotDecodeRawData:
-// 				case NSUrlError.CannotDecodeContentData:
-// 				case NSUrlError.CannotParseResponse:
-// 				case NSUrlError.FileDoesNotExist:
-// 				case NSUrlError.FileIsDirectory:
-// 				case NSUrlError.NoPermissionsToReadFile:
-// 				case NSUrlError.CannotLoadFromNetwork:
-// 				case NSUrlError.CannotCreateFile:
-// 				case NSUrlError.CannotOpenFile:
-// 				case NSUrlError.CannotCloseFile:
-// 				case NSUrlError.CannotWriteToFile:
-// 				case NSUrlError.CannotRemoveFile:
-// 				case NSUrlError.CannotMoveFile:
-// 				case NSUrlError.DownloadDecodingFailedMidStream:
-// 				case NSUrlError.DownloadDecodingFailedToComplete:
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.Socks4RequestFailed:
-// 				case (NSUrlError) CFNetworkErrors.Socks4IdentdFailed:
-// 				case (NSUrlError) CFNetworkErrors.Socks4IdConflict:
-// 				case (NSUrlError) CFNetworkErrors.Socks4UnknownStatusCode:
-// 				case (NSUrlError) CFNetworkErrors.Socks5BadState:
-// 				case (NSUrlError) CFNetworkErrors.Socks5BadResponseAddr:
-// 				case (NSUrlError) CFNetworkErrors.CannotParseCookieFile:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceUnknown:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceCollision:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceNotFound:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceInProgress:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceBadArgument:
-// 				case (NSUrlError) CFNetworkErrors.NetServiceInvalid:
-// #endif
-// 					webExceptionStatus = WebExceptionStatus.ReceiveFailure;
-// 					break;
-// 				case NSUrlError.SecureConnectionFailed:
-// 					webExceptionStatus = WebExceptionStatus.SecureChannelFailure;
-// 					break;
-// 				case NSUrlError.ServerCertificateHasBadDate:
-// 				case NSUrlError.ServerCertificateHasUnknownRoot:
-// 				case NSUrlError.ServerCertificateNotYetValid:
-// 				case NSUrlError.ServerCertificateUntrusted:
-// 				case NSUrlError.ClientCertificateRejected:
-// 				case NSUrlError.ClientCertificateRequired:
-// 					webExceptionStatus = WebExceptionStatus.TrustFailure;
-// 					break;
-// #if !__WATCHOS__
-// 				case (NSUrlError) CFNetworkErrors.HttpProxyConnectionFailure:
-// 				case (NSUrlError) CFNetworkErrors.HttpBadProxyCredentials:
-// 				case (NSUrlError) CFNetworkErrors.PacFileError:
-// 				case (NSUrlError) CFNetworkErrors.PacFileAuth:
-// 				case (NSUrlError) CFNetworkErrors.HttpsProxyConnectionFailure:
-// 				case (NSUrlError) CFNetworkErrors.HttpsProxyFailureUnexpectedResponseToConnectMethod:
-// 					webExceptionStatus = WebExceptionStatus.RequestProhibitedByProxy;
-// 					break;
-// #endif
 				}
-			} 
+			}
 
-			// Always create a WebException so that it can be handled by the client.
-			return new WebException(error.LocalizedDescription, innerException); //, webExceptionStatus, response: null);
-		}
+			return new HttpRequestException (error.LocalizedDescription, innerException);
+ 		}
 
 		string GetHeaderSeparator (string name)
 		{
@@ -553,8 +459,6 @@ namespace Foundation {
 			return await tcs.Task.ConfigureAwait (false);
 		}
 
-		// Needed since we strip during linking since we're inside a product assembly.
-		[Preserve (AllMembers = true)]
 		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
 		{
 			readonly NSUrlSessionHandler sessionHandler;
@@ -581,6 +485,7 @@ namespace Foundation {
 				return null;
 			}
 
+			[Preserve (Conditional = true)]
 			public override void DidReceiveResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler)
 			{
 				var inflight = GetInflightData (dataTask);
@@ -643,6 +548,7 @@ namespace Foundation {
 				completionHandler (NSUrlSessionResponseDisposition.Allow);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void DidReceiveData (NSUrlSession session, NSUrlSessionDataTask dataTask, NSData data)
 			{
 				var inflight = GetInflightData (dataTask);
@@ -654,6 +560,7 @@ namespace Foundation {
 				SetResponse (inflight);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error)
 			{
 				var inflight = GetInflightData (task);
@@ -702,16 +609,19 @@ namespace Foundation {
 				}
 			}
 
+			[Preserve (Conditional = true)]
 			public override void WillCacheResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler)
 			{
 				completionHandler (sessionHandler.DisableCaching ? null : proposedResponse);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void WillPerformHttpRedirection (NSUrlSession session, NSUrlSessionTask task, NSHttpUrlResponse response, NSUrlRequest newRequest, Action<NSUrlRequest> completionHandler)
 			{
 				completionHandler (sessionHandler.AllowAutoRedirect ? newRequest : null);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void DidReceiveChallenge (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
 			{
 				var inflight = GetInflightData (task);
@@ -799,8 +709,6 @@ namespace Foundation {
 			}
 		}
 
-		// Needed since we strip during linking since we're inside a product assembly.
-		[Preserve (AllMembers = true)]
 		class InflightData : IDisposable
 		{
 			public readonly object Lock = new object ();
@@ -839,9 +747,7 @@ namespace Foundation {
 
 		}
 
-		// Needed since we strip during linking since we're inside a product assembly.
-		[Preserve (AllMembers = true)]
-		class NSUrlSessionDataTaskStreamContent : StreamContent
+		class NSUrlSessionDataTaskStreamContent : MonoStreamContent
 		{
 			Action disposed;
 
@@ -859,8 +765,98 @@ namespace Foundation {
 			}
 		}
 
-		// Needed since we strip during linking since we're inside a product assembly.
-		[Preserve (AllMembers = true)]
+		//
+		// Copied from https://github.com/mono/mono/blob/2019-02/mcs/class/System.Net.Http/System.Net.Http/StreamContent.cs.
+		//
+		// This is not a perfect solution, but the most robust and risk-free approach.
+		//
+		// The implementation depends on Mono-specific behavior, which makes SerializeToStreamAsync() cancellable.
+		// Unfortunately, the CoreFX implementation of HttpClient does not support this.
+		//
+		// By copying Mono's old implementation here, we ensure that we're compatible with both HttpClient implementations,
+		// so when we eventually adopt the CoreFX version in all of Mono's profiles, we don't regress here.
+		//
+		class MonoStreamContent : HttpContent
+		{
+			readonly Stream content;
+			readonly int bufferSize;
+			readonly CancellationToken cancellationToken;
+			readonly long startPosition;
+			bool contentCopied;
+
+			public MonoStreamContent (Stream content)
+				: this (content, 16 * 1024)
+			{
+			}
+
+			public MonoStreamContent (Stream content, int bufferSize)
+			{
+				if (content == null)
+					throw new ArgumentNullException ("content");
+
+				if (bufferSize <= 0)
+					throw new ArgumentOutOfRangeException ("bufferSize");
+
+				this.content = content;
+				this.bufferSize = bufferSize;
+
+				if (content.CanSeek) {
+					startPosition = content.Position;
+				}
+			}
+
+			//
+			// Workarounds for poor .NET API
+			// Instead of having SerializeToStreamAsync with CancellationToken as public API. Only LoadIntoBufferAsync
+			// called internally from the send worker can be cancelled and user cannot see/do it
+			//
+			internal MonoStreamContent (Stream content, CancellationToken cancellationToken)
+				: this (content)
+			{
+				// We don't own the token so don't worry about disposing it
+				this.cancellationToken = cancellationToken;
+			}
+
+			protected override Task<Stream> CreateContentReadStreamAsync ()
+			{
+				return Task.FromResult (content);
+			}
+
+			protected override void Dispose (bool disposing)
+			{
+				if (disposing) {
+					content.Dispose ();
+				}
+
+				base.Dispose (disposing);
+			}
+
+			protected internal override Task SerializeToStreamAsync (Stream stream, TransportContext context)
+			{
+				if (contentCopied) {
+					if (!content.CanSeek) {
+						throw new InvalidOperationException ("The stream was already consumed. It cannot be read again.");
+					}
+
+					content.Seek (startPosition, SeekOrigin.Begin);
+				} else {
+					contentCopied = true;
+				}
+
+				return content.CopyToAsync (stream, bufferSize, cancellationToken);
+			}
+
+			protected internal override bool TryComputeLength (out long length)
+			{
+				if (!content.CanSeek) {
+					length = 0;
+					return false;
+				}
+				length = content.Length - startPosition;
+				return true;
+			}
+		}
+
 		class NSUrlSessionDataTaskStream : Stream
 		{
 			readonly Queue<NSData> data;
@@ -1006,8 +1002,6 @@ namespace Foundation {
 			}
 		}
 
-		// Needed since we strip during linking since we're inside a product assembly.
-		[Preserve (AllMembers = true)]
 		class WrappedNSInputStream : NSInputStream
 		{
 			NSStreamStatus status;

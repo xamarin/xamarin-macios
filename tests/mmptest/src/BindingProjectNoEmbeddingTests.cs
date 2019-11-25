@@ -16,7 +16,7 @@ namespace Xamarin.MMP.Tests
 		{
 			string bindingName = BindingProjectTests.RemoveCSProj (projectName);
 			string bindingLibraryPath = Path.Combine (tmpDir, $"bin/Debug/{bindingName}.dll");
-			string resourceOutput = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", "--presources " + bindingLibraryPath, "monodis");
+			string resourceOutput = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", new [] { "--presources", bindingLibraryPath }, "monodis");
 			Assert.False (resourceOutput.Contains (resourceName), "Binding project output contained embedded library");
 		}
 
@@ -114,7 +114,7 @@ namespace Xamarin.MMP.Tests
 				BindingProjectTests.SetNoEmbedding (binding);
 
 				TI.GenerateBindingLibraryProject (binding);
-				TI.BuildProject (Path.Combine (tmpDir, "MobileBinding.csproj"), true);
+				TI.BuildProject (Path.Combine (tmpDir, "MobileBinding.csproj"));
 
 
 				TI.UnifiedTestConfig library = new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedLibrary" };
@@ -126,7 +126,7 @@ namespace Xamarin.MMP.Tests
 					library.References = $@"<Reference Include=""MobileBinding""><HintPath>{Path.Combine (tmpDir, "bin/Debug", "MobileBinding.dll")}</HintPath></Reference>";
 
 				TI.GenerateUnifiedLibraryProject (library);
-				TI.BuildProject (Path.Combine (tmpDir, "UnifiedLibrary.csproj"), true);
+				TI.BuildProject (Path.Combine (tmpDir, "UnifiedLibrary.csproj"));
 
 				TI.UnifiedTestConfig project = new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj" };
 				project.TestCode = "MyClass.Go ();";
@@ -137,7 +137,7 @@ namespace Xamarin.MMP.Tests
 					project.References = $@"<Reference Include=""UnifiedLibrary""><HintPath>{Path.Combine (tmpDir, "bin/Debug", "UnifiedLibrary.dll")}</HintPath></Reference>";
 
 				TI.GenerateUnifiedExecutableProject (project);
-				TI.BuildProject (Path.Combine (tmpDir, "UnifiedExample.csproj"), true);
+				TI.BuildProject (Path.Combine (tmpDir, "UnifiedExample.csproj"));
 			});
 		}
 

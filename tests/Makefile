@@ -84,7 +84,7 @@ endif
 package-tests:
 	$(MAKE) qa-test-dependencies.zip mac-test-package.zip
 
-test.config: Makefile $(TOP)/Make.config
+test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(abspath $(MONOTOUCH_PREFIX))" >> $@
 	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
@@ -96,7 +96,7 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
 	@echo "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
 
-test-system.config:
+test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@rm -f $@
 	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
 	@echo "IOS_DESTDIR=/" >> $@
@@ -199,8 +199,7 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@touch $@
 
 xharness/xharness.exe: $(wildcard xharness/*.cs) $(wildcard $(TOP)/tools/bcl-test-importer/BCLTestImporter/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
-	nuget restore xharness/xharness.csproj
-	$(Q_GEN) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:
 	@killall "iPhone Simulator" >/dev/null 2>&1 || true
@@ -229,18 +228,26 @@ qa-test-dependencies.zip:
 	$(Q) rm -rf $@ $@.tmpdir
 ifdef INCLUDE_TVOS
 	@# TVOS
-	$(Q) mkdir -p $@.tmpdir/tvos
+	$(Q) mkdir -p $@.tmpdir/tvos $@.tmpdir/tvsimulator
 	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll* $@.tmpdir/tvos
 	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll* $@.tmpdir/tvos
 	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvos/libtest.a $@.tmpdir/tvos
 	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvos/libtest.dylib $@.tmpdir/tvos
 	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/tvos/XTest.framework $@.tmpdir/tvos
+	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.Dialog-1.dll* $@.tmpdir/tvsimulator
+	$(Q) $(CP) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.dll* $@.tmpdir/tvsimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvsimulator/libtest.a $@.tmpdir/tvsimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/tvsimulator/libtest.dylib $@.tmpdir/tvsimulator
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/tvsimulator/XTest.framework $@.tmpdir/tvsimulator
 endif
 	@# iOS
-	$(Q) mkdir -p $@.tmpdir/ios
-	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/ios/libtest.a $@.tmpdir/ios
-	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/ios/libtest.dylib $@.tmpdir/ios
-	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/ios/XTest.framework $@.tmpdir/ios
+	$(Q) mkdir -p $@.tmpdir/iphoneos $@.tmpdir/iphonesimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphoneos/libtest.a $@.tmpdir/iphoneos
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphoneos/libtest.dylib $@.tmpdir/iphoneos
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/iphoneos/XTest.framework $@.tmpdir/iphoneos
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphonesimulator/libtest.a $@.tmpdir/iphonesimulator
+	$(Q) $(CP) $(TOP)/tests/test-libraries/.libs/iphonesimulator/libtest.dylib $@.tmpdir/iphonesimulator
+	$(Q) $(CP) -a $(TOP)/tests/test-libraries/.libs/iphonesimulator/XTest.framework $@.tmpdir/iphonesimulator
 	$(Q) printf '#!/bin/bash -e\n\n/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch "$$@"\n' > $@.tmpdir/mlaunch
 	$(Q) chmod +x $@.tmpdir/mlaunch
 	@# Generate zip
@@ -373,11 +380,17 @@ runner: xharness/xharness.exe
 # This makefile target will run the device tests using the Xamarin.iOS version
 # installed on the system.
 vsts-device-tests: xharness/xharness.exe
+	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir download -j
 	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 ifdef ENABLE_XAMARIN
 wrench-launch-external wrench-report-external:
 	$(MAKE) -C $(MACCORE_PATH)/tests/external $@
+
+# This will schedule a manual device test run for the current commit. The current commit must already have packages.
+launch-manual-device-tests:
+	./launch-manual-device-tests.sh
+
 else
 wrench-launch-external wrench-report-external:
 	@echo "External tests have been disabled"

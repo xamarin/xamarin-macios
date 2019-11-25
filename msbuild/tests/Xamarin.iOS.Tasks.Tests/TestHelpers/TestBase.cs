@@ -341,7 +341,7 @@ namespace Xamarin.iOS.Tasks
 		public static bool IsAPFS {
 			get {
 				if (!is_apfs.HasValue) {
-					var exit_code = ExecutionHelper.Execute ("/bin/df", "-t apfs /", out var output, TimeSpan.FromSeconds (10));
+					var exit_code = ExecutionHelper.Execute ("/bin/df", new string[] { "-t", "apfs", "/" }, out var output, TimeSpan.FromSeconds (10));
 					is_apfs = exit_code == 0 && output.Trim ().Split ('\n').Length >= 2;
 				}
 				return is_apfs.Value;
@@ -391,12 +391,33 @@ namespace Xamarin.iOS.Tasks
 
 		public static void NugetRestore (string project)
 		{
-			var rv = ExecutionHelper.Execute ("nuget", $"restore {StringUtils.Quote (project)}", out var output);
+			var rv = ExecutionHelper.Execute ("nuget", new string[] { "restore", project }, out var output);
 			if (rv != 0) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);
 				Assert.Fail ($"'nuget restore' failed for {project}");
 			}
+		}
+
+		/// <summary>
+		/// Returns true if a target was skipped.
+		/// Originally from: https://github.com/xamarin/xamarin-android/blob/320cb0f66730e7107cc17310b99cd540605a234d/src/Xamarin.Android.Build.Tasks/Tests/Xamarin.ProjectTools/Common/BuildOutput.cs#L48-L62
+		/// </summary>
+		public bool IsTargetSkipped (string target)
+		{
+			foreach (var line in Engine.Logger.MessageEvents.Select (m => m.Message)) {
+				if (line.Contains ($"Building target \"{target}\" completely")
+					|| line.Contains ($"Done building target \"{target}\""))
+					return false;
+				if (line.Contains ($"Target {target} skipped due to ")
+					|| line.Contains ($"Skipping target \"{target}\" because it has no ") //NOTE: message can say `inputs` or `outputs`
+					|| line.Contains ($"Target \"{target}\" skipped, due to")
+					|| line.Contains ($"Skipping target \"{target}\" because its outputs are up-to-date")
+					|| line.Contains ($"target {target}, skipping")
+					|| line.Contains ($"Skipping target \"{target}\" because all output files are up-to-date"))
+					return true;
+			}
+			return false;
 		}
 	}
 

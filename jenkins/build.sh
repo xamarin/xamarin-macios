@@ -8,9 +8,14 @@
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 WORKSPACE=$(pwd)
 
+export FAILURE_REASON_PATH="$WORKSPACE/jenkins/build-failure.md"
+
 report_error ()
 {
 	printf "🔥 [Build failed](%s/console) 🔥\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+	if test -f "$FAILURE_REASON_PATH"; then
+		sed 's/^/* /' "$FAILURE_REASON_PATH" >> "$WORKSPACE/jenkins/pr-comments.md"
+	fi
 }
 trap report_error ERR
 
@@ -81,14 +86,11 @@ else
 	if git diff-tree --no-commit-id --name-only -r "origin/pr/$ghprbPullId/merge^..origin/pr/$ghprbPullId/merge" > .tmp-files; then
 		echo "Modified files found":
 		sed 's/^/    /' .tmp-files || true
-		if grep 'external/mono' .tmp-files > /dev/null; then
+		if grep 'mk/mono.mk' .tmp-files > /dev/null; then
 			echo "Enabling device build because mono was bumped."
 			ENABLE_DEVICE_BUILD=1
-		elif grep 'external/llvm' .tmp-files > /dev/null; then
-			echo "Enabling device build because llvm was bumped."
-			ENABLE_DEVICE_BUILD=1
 		else
-			echo "Not enabling device build; neither mono nor llvm was bumped."
+			echo "Not enabling device build; mono wasn't bumped."
 		fi
 	fi
 	rm -f .tmp-files
@@ -126,7 +128,14 @@ echo "Configuring the build with: $CONFIGURE_FLAGS"
 # shellcheck disable=SC2086
 ./configure $CONFIGURE_FLAGS
 
+# If we're building mono from source, we might not have it cloned yet
+make reset
+
 time make -j8
 time make install -j8
 
 printf "✅ [Build succeeded](%s/console)\\n" "$BUILD_URL" >> "$WORKSPACE/jenkins/pr-comments.md"
+
+if grep MONO_BUILD_FROM_SOURCE=. configure.inc Make.config.inc >& /dev/null; then
+	printf "    ⚠️ Mono built from source\\n" >> "$WORKSPACE/jenkins/pr-comments.md"
+fi

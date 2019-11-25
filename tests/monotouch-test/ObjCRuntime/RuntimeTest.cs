@@ -33,6 +33,7 @@ using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
+using MonoTests.System.Net.Http;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -144,7 +145,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			NSUrlSession session = NSUrlSession.SharedSession;
-			using (var request = new NSUrlRequest (new NSUrl ("http://www.example.com"))) {
+			using (var request = new NSUrlRequest (new NSUrl (NetworkResources.MicrosoftUrl))) {
 				// In iOS 8 the native CreateDownloadTask function returns an instance of a
 				// __NSCFLocalDownloadTask, which does not derive from 
 				// NSUrlSessionDownloadTask (which is the documented/expected return type from
@@ -699,5 +700,24 @@ Additional information:
 			}
 #endif
 		} 
+
+		[Test]
+		public void GetINativeObject_ForcedType ()
+		{
+			using (var str = new NSString ("hello world")) {
+				NSDate date;
+
+				Assert.Throws<InvalidCastException> (() => Runtime.GetINativeObject<NSDate> (str.Handle, false), "EX1"); //
+				Assert.Throws<InvalidCastException> (() => Runtime.GetINativeObject<NSDate> (str.Handle, false, false), "EX2"); //
+
+				// Making a string quack like a date.
+				// This is a big hack, but hopefully it works well enough for this particular test case.
+				// Just don't inspect the date variable in a debugger (it will most likely crash the app).
+				date = Runtime.GetINativeObject<NSDate> (str.Handle, true, false);
+				Assert.AreEqual (date.Handle, str.Handle, "Same native pointer");
+				date.Dispose ();
+				date = null;
+			}
+		}
 	}
 }

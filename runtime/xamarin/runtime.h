@@ -155,7 +155,7 @@ struct AssemblyLocation {
 };
 
 struct AssemblyLocations {
-	int length;
+	size_t length;
 	struct AssemblyLocation *locations;
 };
 
@@ -169,7 +169,7 @@ void			xamarin_set_bundle_path (const char *path); /* Public API */
 MonoObject *	xamarin_get_managed_object_for_ptr (id self, guint32 *exception_gchandle);
 MonoObject *	xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle);
 void			xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method, guint32 *exception_gchandle);
-int				xamarin_objc_type_size (const char *type);
+unsigned long 	xamarin_objc_type_size (const char *type);
 bool			xamarin_is_class_nsobject (MonoClass *cls);
 bool			xamarin_is_class_inativeobject (MonoClass *cls);
 bool			xamarin_is_class_array (MonoClass *cls);
@@ -181,7 +181,7 @@ MonoClass *		xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchan
 MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle);
-int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle);
+int *			xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, unsigned long par, void *nativeBlock, guint32 *exception_gchandle);
 id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 token_ref /* INVALID_TOKEN_REF allowed, but requires the dynamic registrar at runtime */, guint32 *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
 void			xamarin_set_nsobject_handle (MonoObject *obj, id handle);
@@ -211,15 +211,15 @@ void			xamarin_release_block_on_main_thread (void *obj);
 bool			xamarin_has_managed_ref (id self);
 bool			xamarin_has_managed_ref_safe (id self);
 void			xamarin_switch_gchandle (id self, bool to_weak);
-int				xamarin_get_gchandle (id self);
-void			xamarin_free_gchandle (id self, int gchandle);
+uint32_t		xamarin_get_gchandle (id self);
+void			xamarin_free_gchandle (id self, uint32_t gchandle);
 void			xamarin_clear_gchandle (id self);
-int				xamarin_get_gchandle_with_flags (id self);
-void			xamarin_set_gchandle (id self, int gchandle);
-void			xamarin_create_gchandle (id self, void *managed_object, int flags, bool force_weak);
+uint32_t		xamarin_get_gchandle_with_flags (id self);
+void			xamarin_set_gchandle (id self, uint32_t gchandle);
+void			xamarin_create_gchandle (id self, void *managed_object, uint32_t flags, bool force_weak);
 void			xamarin_create_managed_ref (id self, void * managed_object, bool retain);
 void            xamarin_release_managed_ref (id self, MonoObject *managed_obj);
-void			xamarin_notify_dealloc (id self, int gchandle);
+void			xamarin_notify_dealloc (id self, uint32_t gchandle);
 
 int				xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode);
 
@@ -227,7 +227,7 @@ char *			xamarin_type_get_full_name (MonoType *type, guint32 *exception_gchandle
 char *			xamarin_class_get_full_name (MonoClass *klass, guint32 *exception_gchandle); // return value must be freed with 'mono_free'
 
 #if DEBUG
-void			xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, int index, MonoClass *expected, MonoMethod *method);
+void			xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, unsigned long index, MonoClass *expected, MonoMethod *method);
 void			xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, int index, MonoMethod *method);
 #endif
 
@@ -252,9 +252,9 @@ bool			xamarin_is_managed_exception_marshaling_disabled ();
 
 const char *	xamarin_find_assembly_directory (const char *assembly_name);
 void			xamarin_set_assembly_directories (struct AssemblyLocations *directories);
-void			xamarin_get_assembly_name_without_extension (const char *aname, char *name, int namelen);
-bool			xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, const char *resource, char *path, int pathlen);
-bool			xamarin_locate_assembly_resource (const char *assembly_name, const char *culture, const char *resource, char *path, int pathlen);
+void			xamarin_get_assembly_name_without_extension (const char *aname, char *name, size_t namelen);
+bool			xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, const char *resource, char *path, size_t pathlen);
+bool			xamarin_locate_assembly_resource (const char *assembly_name, const char *culture, const char *resource, char *path, size_t pathlen);
 
 // this functions support NSLog/NSString-style format specifiers.
 void			xamarin_printf (const char *format, ...);
@@ -281,7 +281,7 @@ extern xamarin_register_assemblies_callback xamarin_register_assemblies;
 class XamarinObject {
 public:
 	id native_object;
-	int gc_handle;
+	uint32_t gc_handle;
 
 	~XamarinObject ();
 };
@@ -291,7 +291,7 @@ public:
 @interface XamarinAssociatedObject : NSObject {
 @public
 	id native_object;
-	int gc_handle;
+	uint32_t gc_handle;
 }
 -(void) dealloc;
 @end

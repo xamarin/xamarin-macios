@@ -23,7 +23,7 @@ void monotouch_start_debugging ();
 void monotouch_start_profiling ();
 
 void monotouch_set_connection_mode (const char *mode);
-void monotouch_set_monodevelop_port (int port);
+void monotouch_set_monodevelop_port (long port);
 
 
 typedef struct {
@@ -31,8 +31,8 @@ typedef struct {
 	void (*connect) (const char *address);
 	void (*close1) (void);
 	void (*close2) (void);
-	gboolean (*send) (void *buf, int len);
-	int (*recv) (void *buf, int len);
+	gboolean (*send) (void *buf, size_t len);
+	ssize_t (*recv) (void *buf, size_t len);
 } DebuggerTransport;
 
 void mono_debugger_agent_parse_options (const char *options); 

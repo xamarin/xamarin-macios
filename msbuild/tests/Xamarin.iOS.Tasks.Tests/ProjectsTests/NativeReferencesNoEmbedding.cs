@@ -61,7 +61,7 @@ namespace Xamarin.iOS.Tasks
 			string libPath = Path.Combine (Directory.GetCurrentDirectory (), bindingApp.ProjectBinPath, "MyiOSBinding.dll");
 			Assert.True (File.Exists (libPath), $"Did not find expected library: {libPath}");
 
-			int returnValue = ExecutionHelper.Execute ("/Library/Frameworks/Mono.framework/Commands/monodis", "--presources " + libPath, out string monoDisResults);
+			int returnValue = ExecutionHelper.Execute ("/Library/Frameworks/Mono.framework/Commands/monodis", new [] { "--presources", libPath }, out string monoDisResults);
 			Assert.AreEqual (0, returnValue);
 			Assert.IsFalse (monoDisResults.Contains ("XTest.framework"), $"Binding Library contained embedded resource: {monoDisResults}");
 
@@ -113,7 +113,7 @@ namespace Xamarin.iOS.Tasks
 			ClearMessages ();
 
 			// Touching native library should
-			Touch (Path.Combine (Path.GetDirectoryName (bindingLib.ProjectCSProjPath), @"../../../tests/test-libraries/.libs/ios/XTest.framework/XTest"));
+			Touch (Path.Combine (Path.GetDirectoryName (bindingLib.ProjectCSProjPath), @"../../../tests/test-libraries/.libs/ios-fat/XTest.framework/XTest"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
 			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding build did not create package?");
 		}
@@ -126,7 +126,7 @@ namespace Xamarin.iOS.Tasks
 
 			var appProject = SetupProjectPaths ("MyiOSAppWithBinding", "../", true, "");
 
-			const string BuildString = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch";
+			string BuildString = Configuration.MtouchPath;
 
 			// First build should create run mtouch
 			BuildProjectNoEmbedding (appProject);

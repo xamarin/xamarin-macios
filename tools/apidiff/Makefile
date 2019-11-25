@@ -12,8 +12,8 @@ endif
 
 APIDIFF_DIR=.
 
-MONO_API_INFO = $(MONO_IOS_SDK_BUILDDIR)/ios-bcl/monotouch_tools/mono-api-info.exe
-MONO_API_HTML = $(MONO_IOS_SDK_BUILDDIR)/ios-bcl/monotouch_tools/mono-api-html.exe
+MONO_API_INFO = $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tools/mono-api-info.exe
+MONO_API_HTML = $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tools/mono-api-html.exe
 MONO_BUILD = $(SYSTEM_MONO)
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
@@ -43,15 +43,16 @@ WATCHOS_ASSEMBLIES = $(foreach file,$(filter-out Mono.Data.Tds Mono.Security,$(M
 TVOS_ASSEMBLIES    = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.TVOS/$(file))    $(TVOS_SRC_ASSEMBLIES)
 
 IOS_ARCH_ASSEMBLIES = native-32/Xamarin.iOS native-64/Xamarin.iOS
-MAC_ARCH_ASSEMBLIES = native-32/Xamarin.Mac native-64/Xamarin.Mac
+MAC_ARCH_ASSEMBLIES =                       native-64/Xamarin.Mac
 
 APIDIFF_IGNORE = -i 'INSObjectProtocol'
 
-.download-$(MONO_HASH).stamp:
+$(APIDIFF_DIR)/.download-$(MONO_HASH).stamp:
 	$(MAKE) -C $(TOP)/builds download
+	$(Q) mkdir -p $(dir $@)
 	$(Q) touch $@
 
-$(MONO_API_INFO) $(MONO_API_HTML): .download-$(MONO_HASH).stamp
+$(MONO_API_INFO) $(MONO_API_HTML): $(APIDIFF_DIR)/.download-$(MONO_HASH).stamp
 
 # create api info. Directory hierarchy is based on installed hierarchy
 # (XM goes into temp/xm, and XI goes into temp/xi)
@@ -230,10 +231,6 @@ verify-reference-assemblies-ios: $(APIDIFF_DIR)/temp/native-32/Xamarin.iOS.xml $
 	$(Q) diff $(APIDIFF_DIR)/temp/native-32/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/native-64/Xamarin.iOS.xml -u
 	@echo iOS reference assemblies are identical
 
-verify-reference-assemblies-mac: $(APIDIFF_DIR)/temp/native-32/Xamarin.Mac.xml $(APIDIFF_DIR)/temp/native-64/Xamarin.Mac.xml
-	$(Q) diff $(APIDIFF_DIR)/temp/native-32/Xamarin.Mac.xml $(APIDIFF_DIR)/temp/native-64/Xamarin.Mac.xml -u
-	@echo Mac reference assemblies are identical
-
 clean-local::
 	rm -rf temp references diff *.exe* api-diff.html
 	rm -rf *.dll* bundle-*.zip $(UNZIP_STAMP)
@@ -313,9 +310,6 @@ endif
 	@-find $(CURDIR)/diff -size 0 | xargs rm
 ifdef INCLUDE_IOS
 	$(MAKE) verify-reference-assemblies-ios -j8
-endif
-ifdef INCLUDE_MAC
-	$(MAKE) verify-reference-assemblies-mac -j8
 endif
 
 jenkins-api-diff:

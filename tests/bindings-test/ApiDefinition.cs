@@ -302,6 +302,9 @@ namespace Bindings.Test {
 	{
 		[Export ("idAsIntPtr:")]
 		void IdAsIntPtr (IntPtr p1);
+
+		[Export ("methodEncodings:obj2:obj3:obj4:obj5:obj6:obj7:")]
+		void GetMethodEncodings (ref NSObject obj1, ref NSObject obj2, ref NSObject obj3, ref NSObject obj4, ref NSObject obj5, ref NSObject obj6, ref NSObject obj7);
 	}
 
 	[Protocol]
@@ -376,11 +379,18 @@ namespace Bindings.Test {
 		[Export ("callAssertMainThreadBlockRelease:")]
 		void CallAssertMainThreadBlockRelease (OuterBlock completionHandler);
 
+		[Static]
+		[Export ("callAssertMainThreadBlockReleaseQOS:")]
+		void CallAssertMainThreadBlockReleaseQOS (OuterBlock completionHandler);
+
 		[Export ("assertMainThreadBlockReleaseCallback:")]
 		void AssertMainThreadBlockReleaseCallback (InnerBlock completionHandler);
 
 		[Export ("callAssertMainThreadBlockReleaseCallback")]
 		void CallAssertMainThreadBlockReleaseCallback ();
+
+		[Export ("callAssertMainThreadBlockReleaseCallbackQOS")]
+		void CallAssertMainThreadBlockReleaseCallbackQOS ();
 
 		[Export ("testFreedBlocks")]
 		void TestFreedBlocks ();

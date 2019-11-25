@@ -14,7 +14,7 @@ namespace Xamarin.MMP.Tests
 	{
 		int GetNumberOfTypesInLibrary (string path)
 		{
-			string output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new StringBuilder ("-r:" + path), "GetNumberOfTypesInLibrary");
+			string output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new [] { "-r:" + path }, "GetNumberOfTypesInLibrary");
 			string[] splitBuildOutput = output.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
 			string outputLine = splitBuildOutput.First (x => x.StartsWith ("Total:"));
 			string numberSize = outputLine.Split (':')[1];
@@ -63,14 +63,6 @@ namespace Xamarin.MMP.Tests
 				int typesInOutputPlatform = GetNumberOfTypesInLibrary (GetOutputBundlePath (tmpDir, "Xamarin.Mac", false));
 				Assert.AreNotEqual (typesInBasePlatform, typesInOutputPlatform, $"We linked a linkskip - Xamarin.Mac with config ({typesInBasePlatform} vs {typesInOutputPlatform}):\n {PlatformProjectConfig}");
 
-			});
-		}
-
-		[Test]
-		public void PlatformSDKOnClassic_ShouldNotBeSupported ()
-		{
-			MMPTests.RunMMPTest (tmpDir => {
-				TI.TestClassicExecutable (tmpDir, csprojConfig: "<MonoBundlingExtraArgs>--linkplatform</MonoBundlingExtraArgs>\n", includeMonoRuntime:true, shouldFail: true);
 			});
 		}
 

@@ -42,12 +42,16 @@ redirect_io (int from_fd, const char *to_path)
 		return -1;
 	}
 
-	return 0;
+	return fd;
 }
 
 static void
 init_logdir (void)
 {
+	// If redirected we will not be closing the returned file descriptors anywhere.
+	// That's "by design" so they will keep logging as long as the app is alive.
+	static int redirected_stdout = -1;
+	static int redirected_stderr = -1;
 	const char *env;
 	size_t dirlen;
 	char *path;
@@ -72,12 +76,14 @@ init_logdir (void)
 			path[dirlen++] = '/';
 
 		strcpy (path + dirlen, "stdout.log");
-		if (redirect_io (STDOUT_FILENO, path) == -1)
-			fprintf (stderr, PRODUCT ": Could not redirect stdout to `%s': %s\n", path, strerror (errno));
+		redirected_stdout = redirect_io (STDOUT_FILENO, path);
+		if (redirected_stdout == -1)
+			fprintf (stderr, PRODUCT ": Could not redirect %s to `%s': %s\n", "stdout", path, strerror (errno));
 
 		strcpy (path + dirlen, "stderr.log");
-		if (redirect_io (STDERR_FILENO, path) == -1)
-			fprintf (stderr, PRODUCT ": Could not redirect stderr to `%s': %s\n", path, strerror (errno));
+		redirected_stderr = redirect_io (STDERR_FILENO, path);
+		if (redirected_stderr == -1)
+			fprintf (stderr, PRODUCT ": Could not redirect %s to `%s': %s\n", "stderr", path, strerror (errno));
 
 		free (path);
 	}
@@ -147,7 +153,7 @@ get_mono_env_options (int *count)
 	inptr = (unsigned char *) env;
 
 	while (*inptr) {
-		while (isblank ((int) *inptr))
+		while (isblank ((int) *inptr & 0xff))
 			inptr++;
 
 		if (*inptr == '\0')
@@ -160,7 +166,7 @@ get_mono_env_options (int *count)
 			value = decode_qstring (&inptr, *start);
 			break;
 		default:
-			while (*inptr && !isblank ((int) *inptr))
+			while (*inptr && !isblank ((int) *inptr & 0xff))
 				inptr++;
 
 			// Note: Mac OS X <= 10.6.8 do not have strndup()
@@ -669,6 +675,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		}
 
 		free (new_argv);
+		free (env_argv);
 	}
 
 	return rv;

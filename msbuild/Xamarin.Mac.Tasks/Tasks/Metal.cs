@@ -6,10 +6,6 @@ namespace Xamarin.Mac.Tasks
 {
 	public class Metal : MetalTaskBase
 	{
-		protected override string OperatingSystem {
-			get { return "macosx"; }
-		}
-
 #if !MTOUCH_TESTS
 		protected override string MinimumDeploymentTargetKey {
 			get { return ManifestKeys.LSMinimumSystemVersion; }

@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -33,7 +34,13 @@ namespace Xamarin.MacDev.Tasks
 		public string SdkVersion { get; set; }
 
 		[Required]
+		public string SdkRoot { get; set; }
+
+		[Required]
 		public ITaskItem SourceFile { get; set; }
+
+		[Required]
+		public string TargetFrameworkIdentifier { get; set; }
 
 		#endregion
 
@@ -44,8 +51,22 @@ namespace Xamarin.MacDev.Tasks
 			get;
 		}
 
-		protected abstract string OperatingSystem {
-			get;
+		protected virtual string OperatingSystem {
+			get {
+				switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
+				case PlatformFramework.WatchOS:
+					return "watchos";
+				case PlatformFramework.TVOS:
+					return "tvos";
+				case PlatformFramework.MacOS:
+					return "macosx";
+				case PlatformFramework.iOS:
+					return "ios";
+				default:
+					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					return string.Empty;
+				}
+			}
 		}
 
 		protected abstract string DevicePlatformBinDir {
@@ -64,6 +85,13 @@ namespace Xamarin.MacDev.Tasks
 			var path = Path.Combine (DevicePlatformBinDir, ToolExe);
 
 			return File.Exists (path) ? path : ToolExe;
+		}
+
+		public override bool Execute ()
+		{
+			if (AppleSdkSettings.XcodeVersion.Major >= 11)
+				EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"SDKROOT={SdkRoot}");
+			return base.Execute ();
 		}
 
 		protected override string GenerateCommandLineCommands ()

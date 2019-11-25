@@ -151,17 +151,25 @@ namespace Xamarin.Tests
 			var in_process = InProcess && Profile != Profile.macOSClassic;
 			if (in_process) {
 				int rv;
+				var previous_environment = new Dictionary<string, string> ();
+				foreach (var kvp in EnvironmentVariables) {
+					previous_environment [kvp.Key] = Environment.GetEnvironmentVariable (kvp.Key);
+					Environment.SetEnvironmentVariable (kvp.Key, kvp.Value);
+				}
 				ThreadStaticTextWriter.ReplaceConsole (Output);
 				try {
 					rv = BindingTouch.Main (arguments);
 				} finally {
 					ThreadStaticTextWriter.RestoreConsole ();
+					foreach (var kvp in previous_environment) {
+						Environment.SetEnvironmentVariable (kvp.Key, kvp.Value);
+					}
 				}
 				Console.WriteLine (Output);
 				ParseMessages ();
 				return rv;
 			}
-			return Execute (string.Join (" ", StringUtils.Quote (arguments)), always_show_output: true);
+			return Execute (arguments, always_show_output: true);
 		}
 
 		public void AssertApiCallsMethod (string caller_namespace, string caller_type, string caller_method, string @called_method, string message)

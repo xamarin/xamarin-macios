@@ -20,6 +20,10 @@ namespace Security {
 
 	delegate SslStatus SslWriteFunc (IntPtr connection, IntPtr data, /* size_t* */ ref nint dataLength);
 
+	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
 	public abstract class SslConnection : IDisposable {
 
 		GCHandle handle;

@@ -57,7 +57,7 @@ xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, voi
 		return NULL;
 	}
 
-	void *ptr = mmap (NULL, size, PROT_READ, MAP_FILE | MAP_PRIVATE, fd, 0);
+	void *ptr = mmap (NULL, (size_t) size, PROT_READ, MAP_FILE | MAP_PRIVATE, fd, 0);
 	if (ptr == MAP_FAILED) {
 		LOG (PRODUCT ": Could not map the aot file for %s: %s\n", aname, strerror (errno));
 		close (fd);
@@ -77,7 +77,7 @@ static void
 xamarin_free_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void *handle)
 {
 	// COOP: This is a callback called by the AOT runtime, I belive we don't have to change the GC mode here.
-	munmap (handle, size);
+	munmap (handle, (size_t) size);
 }
 
 /*
@@ -94,7 +94,7 @@ assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* us
 
 	// LOG (PRODUCT ": Looking for assembly '%s' (culture: '%s')\n", name, culture);
 
-	int len = strlen (name);
+	size_t len = strlen (name);
 	int has_extension = len > 3 && name [len - 4] == '.' && (!strcmp ("exe", name + (len - 3)) || !strcmp ("dll", name + (len - 3)));
 	bool dual_check = false;
 
@@ -236,7 +236,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 	xamarin_launch_mode = launch_mode;
 
-	memset (managed_argv, 0, sizeof (char*) * (argc + 2));
+	memset (managed_argv, 0, sizeof (char*) * (unsigned long) (argc + 2));
 	managed_argv [0] = "monotouch";
 
 	DEBUG_LAUNCH_TIME_PRINT ("Main entered");
@@ -321,7 +321,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 			
 			while (*++value) {
 				if (*value == '=' || *value == ':') {
-					name = strndup (arg, value - arg);
+					name = strndup (arg, (size_t) (value - arg));
 					value++;
 					break;
 				}

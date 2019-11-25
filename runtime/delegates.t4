@@ -44,7 +44,7 @@
 		},
 
 		new XDelegate ("NSException *", "IntPtr", "xamarin_unwrap_ns_exception",
-			"int", "int", "exc_handle"
+			"uint32_t", "uint", "exc_handle"
 		) {
 			WrappedManagedFunction = "UnwrapNSException",
 			OnlyDynamicUsage = false,
@@ -52,7 +52,7 @@
 
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_block_wrapper_creator",
 			"MonoObject *", "IntPtr", "method",
-			"int", "int", "parameter"
+			"unsigned long", "uint", "parameter"
 		) {
 			WrappedManagedFunction = "GetBlockWrapperCreator",
 			OnlyDynamicUsage = true,
@@ -203,7 +203,7 @@
 
 		new XDelegate ("bool", "bool", "xamarin_is_parameter_out",
 			"MonoReflectionMethod *", "IntPtr", "method",
-			"int", "int", "parameter"
+			"unsigned long", "uint", "parameter"
 		) {
 			WrappedManagedFunction = "IsParameterOut",
 			OnlyDynamicUsage = true,

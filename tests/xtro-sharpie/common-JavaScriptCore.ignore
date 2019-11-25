@@ -100,4 +100,10 @@
 !missing-pinvoke! JSValueToObject is not bound
 !missing-pinvoke! JSValueToStringCopy is not bound
 !missing-pinvoke! JSValueUnprotect is not bound
+!missing-pinvoke! JSObjectDeletePropertyForKey is not bound
+!missing-pinvoke! JSObjectGetPropertyForKey is not bound
+!missing-pinvoke! JSObjectHasPropertyForKey is not bound
+!missing-pinvoke! JSObjectMakeDeferredPromise is not bound
+!missing-pinvoke! JSObjectSetPropertyForKey is not bound
+!missing-pinvoke! JSValueIsSymbol is not bound
 !missing-pinvoke! JSValueMakeSymbol is not bound

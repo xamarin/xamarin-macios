@@ -48,22 +48,22 @@ namespace Metal {
 		}
 
 #if MONOMAC
-		[Mac (10,11, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10,11), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
-		[Mac (10,11, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10,11), NoiOS, NoWatch, NoTV]
 		public static IMTLDevice [] GetAllDevices ()
 		{
 			var rv = MTLCopyAllDevices ();
 			return NSArray.ArrayFromHandle<IMTLDevice> (rv);
 		}
 
-		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10, 13), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (ref IntPtr observer, void* handler);
 
-		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10, 13), NoiOS, NoWatch, NoTV]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (ref NSObject observer, MTLDeviceNotificationHandler handler)
 		{
@@ -101,11 +101,11 @@ namespace Metal {
 				del ((IMTLDevice) Runtime.GetNSObject (device), (Foundation.NSString) Runtime.GetNSObject (notifyName));
 		}
 
-		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10, 13), NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
 
-		[Mac (10, 13, onlyOn64: true), NoiOS, NoWatch, NoTV]
+		[Mac (10, 13), NoiOS, NoWatch, NoTV]
 		public static void RemoveObserver (NSObject observer)
 		{
 			if (observer == null)
@@ -128,16 +128,18 @@ namespace Metal {
 			}
 		}
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload that takes an IntPtr instead. The 'data' parameter must be page-aligned and allocated using vm_allocate or mmap, which won't be the case for managed arrays, so this method will always fail.")]
 		public static IMTLBuffer CreateBufferNoCopy<T> (this IMTLDevice This, T [] data, MTLResourceOptions options, MTLDeallocator deallocator) where T : struct
 		{
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
-			try {
-				IntPtr ptr = handle.AddrOfPinnedObject ();
-				return This.CreateBufferNoCopy (ptr, (nuint)(data.Length * Marshal.SizeOf (typeof (T))), options, deallocator);
-			} finally {
+			IntPtr ptr = handle.AddrOfPinnedObject ();
+			return This.CreateBufferNoCopy (ptr, (nuint)(data.Length * Marshal.SizeOf (typeof (T))), options, (pointer, length) => {
 				handle.Free ();
-			}
+				deallocator (pointer, length);
+			});
 		}
+#endif
 
 		public unsafe static void GetDefaultSamplePositions (this IMTLDevice This, MTLSamplePosition [] positions, nuint count)
 		{
@@ -146,6 +148,70 @@ namespace Metal {
 			fixed (void * handle = positions)
 				GetDefaultSamplePositions (This, (IntPtr)handle, count);
 		}
+#if IOS
+
+		[NoMac, NoTV, iOS (13,0)]
+		public static void ConvertSparseTileRegions (this IMTLDevice This, MTLRegion [] tileRegions, MTLRegion [] pixelRegions, MTLSize tileSize, nuint numRegions)
+		{
+			if (tileRegions == null)
+				throw new ArgumentNullException (nameof (tileRegions));
+			if (pixelRegions == null)
+				throw new ArgumentNullException (nameof (pixelRegions));
+
+			var tileRegionsHandle = GCHandle.Alloc (tileRegions, GCHandleType.Pinned);
+			var pixelRegionsHandle = GCHandle.Alloc (pixelRegions, GCHandleType.Pinned);
+			try {
+				IntPtr tilePtr = tileRegionsHandle.AddrOfPinnedObject ();
+				IntPtr pixelPtr = pixelRegionsHandle.AddrOfPinnedObject ();
+				This.ConvertSparseTileRegions (tilePtr, pixelPtr, tileSize, numRegions);
+			} finally {
+				tileRegionsHandle.Free ();
+				pixelRegionsHandle.Free ();
+			}
+		}
+
+		[NoMac, NoTV, iOS (13,0)]
+		public static void ConvertSparsePixelRegions (this IMTLDevice This, MTLRegion [] pixelRegions, MTLRegion [] tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions)
+		{
+			if (tileRegions == null)
+				throw new ArgumentNullException (nameof (tileRegions));
+			if (pixelRegions == null)
+				throw new ArgumentNullException (nameof (pixelRegions));
+
+			var tileRegionsHandle = GCHandle.Alloc (tileRegions, GCHandleType.Pinned);
+			var pixelRegionsHandle = GCHandle.Alloc (pixelRegions, GCHandleType.Pinned);
+			try {
+				IntPtr tilePtr = tileRegionsHandle.AddrOfPinnedObject ();
+				IntPtr pixelPtr = pixelRegionsHandle.AddrOfPinnedObject ();
+				This.ConvertSparsePixelRegions (pixelPtr, tilePtr, tileSize, mode, numRegions);
+			} finally {
+				tileRegionsHandle.Free ();
+				pixelRegionsHandle.Free ();
+			}
+		}
+#endif
+
+#if !XAMCORE_4_0
+		[return: Release]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static IMTLLibrary CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError error)
+		{
+			if (data == null)
+				throw new ArgumentNullException ("data");
+			IntPtr errorValue = IntPtr.Zero;
+
+			IMTLLibrary ret;
+			ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
+			error = Runtime.GetNSObject<NSError> (errorValue);
+
+			return ret;
+		}
+
+		public static IMTLLibrary CreateDefaultLibrary (this IMTLDevice This, NSBundle bundle, out NSError error)
+		{
+			return MTLDevice_Extensions.CreateLibrary (This, bundle, out error);
+		}
+#endif
 	}
 }
 #endif

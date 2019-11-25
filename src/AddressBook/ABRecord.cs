@@ -60,13 +60,14 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public abstract class ABRecord : INativeObject, IDisposable {
+	public class ABRecord : INativeObject, IDisposable {
 
 		public const int InvalidRecordId = -1;
 		public const int InvalidPropertyId = -1;
 
 		IntPtr handle;
 
+		[Preserve (Conditional = true)]
 		internal ABRecord (IntPtr handle, bool owns)
 		{
 			if (!owns)

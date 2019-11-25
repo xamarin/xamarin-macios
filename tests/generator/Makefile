@@ -5,8 +5,8 @@ include $(TOP)/Make.config
 all-local:: run-unit-tests
 
 build-unit-tests:
-	$(Q) $(SYSTEM_MONO) /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore $(TOP)/src/generator.sln
-	$(SYSTEM_XIBUILD) -- generator-tests.csproj $(XBUILD_VERBOSITY)
+	$(Q_XBUILD) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore $(TOP)/src/generator.sln
+	$(SYSTEM_MSBUILD) generator-tests.csproj $(XBUILD_VERBOSITY)
 
 run-unit-tests: build-unit-tests
 	rm -f .failed-stamp

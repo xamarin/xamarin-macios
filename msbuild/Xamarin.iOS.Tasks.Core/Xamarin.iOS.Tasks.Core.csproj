@@ -9,7 +9,7 @@
     <AssemblyName>Xamarin.iOS.Tasks.Core</AssemblyName>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Tasks\ACToolTaskBase.cs" />
+    <Compile Include="Tasks\ALToolUploadTaskBase.cs" />
+    <Compile Include="Tasks\ALToolValidateTaskBase.cs" />
     <Compile Include="Tasks\ArchiveTaskBase.cs" />
     <Compile Include="Tasks\CodesignVerifyTaskBase.cs" />
     <Compile Include="Tasks\CollectITunesArtworkTaskBase.cs" />

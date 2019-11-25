@@ -156,7 +156,6 @@
 !missing-enum! NSBackingStoreType not bound
 !missing-enum! NSCellHitResult not bound
 !missing-enum! NSColorPanelOptions not bound
-!missing-enum! NSEventModifierFlags not bound
 !missing-enum! NSFindPanelAction not bound
 !missing-enum! NSFindPanelSubstringMatchType not bound
 !missing-enum! NSFontAction not bound
@@ -230,7 +229,6 @@
 !missing-field! NSCategoryDocumentAttribute not bound
 !missing-field! NSAppearanceDocumentAttribute not bound
 !missing-field! NSCharacterEncodingDocumentAttribute not bound
-!missing-field! NSCocoaVersionDocumentAttribute not bound
 !missing-field! NSColorListDidChangeNotification not bound
 !missing-field! NSColorListIOException not bound
 !missing-field! NSColorListNotEditableException not bound
@@ -618,9 +616,6 @@
 !missing-pinvoke! NSUpdateDynamicServices is not bound
 !missing-pinvoke! NSWindowList is not bound
 !missing-pinvoke! NSWindowListForContext is not bound
-!missing-protocol! NSAccessibilityCheckBox not bound
-!missing-protocol! NSAccessibilityList not bound
-!missing-protocol! NSAccessibilityOutline not bound
 !missing-protocol! NSAnimatablePropertyContainer not bound
 !missing-protocol! NSChangeSpelling not bound
 !missing-protocol! NSColorPickingCustom not bound
@@ -635,11 +630,9 @@
 !missing-protocol-conformance! NSCollectionViewItem should conform to NSCollectionViewElement
 !missing-protocol-conformance! NSColorPicker should conform to NSColorPickingDefault
 !missing-protocol-conformance! NSFontAssetRequest should conform to NSProgressReporting
-!missing-protocol-conformance! NSLayoutConstraint should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSMenu should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSMenuItem should conform to NSAccessibilityElement
 !missing-protocol-conformance! NSOpenGLContext should conform to NSLocking
-!missing-protocol-conformance! NSOutlineView should conform to NSAccessibilityOutline
 !missing-protocol-conformance! NSPageController should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSPathCell should conform to NSOpenSavePanelDelegate
 !missing-protocol-conformance! NSSplitViewItem should conform to NSAnimatablePropertyContainer
@@ -808,19 +801,7 @@
 !missing-selector! NSGradient::initWithColors:atLocations:colorSpace: not bound
 !missing-selector! NSGradient::initWithColorsAndLocations: not bound
 !missing-selector! NSGraphicsContext::setFocusStack: not bound
-!missing-selector! NSImage::compositeToPoint:fromRect:operation: not bound
-!missing-selector! NSImage::compositeToPoint:fromRect:operation:fraction: not bound
-!missing-selector! NSImage::compositeToPoint:operation: not bound
-!missing-selector! NSImage::compositeToPoint:operation:fraction: not bound
-!missing-selector! NSImage::dissolveToPoint:fraction: not bound
-!missing-selector! NSImage::dissolveToPoint:fromRect:fraction: not bound
 !missing-selector! NSImage::initByReferencingURL: not bound
-!missing-selector! NSImage::initWithIconRef: not bound
-!missing-selector! NSImage::lockFocusOnRepresentation: not bound
-!missing-selector! NSImage::setCacheDepthMatchesImageDepth: not bound
-!missing-selector! NSImage::setCachedSeparately: not bound
-!missing-selector! NSImage::setDataRetained: not bound
-!missing-selector! NSImage::setScalesWhenResized: not bound
 !missing-selector! NSInputManager::handleMouseEvent: not bound
 !missing-selector! NSInputManager::initWithName:host: not bound
 !missing-selector! NSInputManager::markedTextAbandoned: not bound
@@ -949,7 +930,6 @@
 !missing-selector! NSResponder::setInterfaceStyle: not bound
 !missing-selector! NSResponder::undoManager not bound
 !missing-selector! NSSavePanel::selectText: not bound
-!missing-selector! NSScreen::maximumExtendedDynamicRangeColorComponentValue not bound
 !missing-selector! NSScroller::setFloatValue:knobProportion: not bound
 !missing-selector! NSSegmentedCell::interiorBackgroundStyleForSegment: not bound
 !missing-selector! NSSegmentedControl::indexOfSelectedItem not bound
@@ -1019,7 +999,6 @@
 !missing-selector! NSView::setWantsExtendedDynamicRangeOpenGLSurface: not bound
 !missing-selector! NSView::showDefinitionForAttributedString:atPoint: not bound
 !missing-selector! NSView::showDefinitionForAttributedString:range:options:baselineOriginProvider: not bound
-!missing-selector! NSView::sortSubviewsUsingFunction:context: not bound
 !missing-selector! NSView::wantsExtendedDynamicRangeOpenGLSurface not bound
 !missing-selector! NSWindow::anchorAttributeForOrientation: not bound
 !missing-selector! NSWindow::dragImage:at:offset:event:pasteboard:source:slideBack: not bound
@@ -1142,10 +1121,6 @@
 !missing-selector! NSDocumentController::fileNamesFromRunningOpenPanel not bound
 !missing-selector! NSDocumentController::shouldCreateUI not bound
 !missing-selector! NSGraphicsContext::focusStack not bound
-!missing-selector! NSImage::cacheDepthMatchesImageDepth not bound
-!missing-selector! NSImage::isCachedSeparately not bound
-!missing-selector! NSImage::isDataRetained not bound
-!missing-selector! NSImage::scalesWhenResized not bound
 !missing-selector! NSInputManager::image not bound
 !missing-selector! NSInputManager::language not bound
 !missing-selector! NSInputManager::localizedInputManagerName not bound
@@ -1211,3 +1186,26 @@
 !missing-selector! NSOpenGLView::setWantsExtendedDynamicRangeOpenGLSurface: not bound
 !missing-selector! NSOpenGLView::wantsBestResolutionOpenGLSurface not bound
 !missing-selector! NSOpenGLView::wantsExtendedDynamicRangeOpenGLSurface not bound
+
+!missing-release-attribute-on-return-value! AppKit.NSDictionaryControllerKeyValuePair AppKit.NSDictionaryController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+!missing-release-attribute-on-return-value! Foundation.NSObject AppKit.NSObjectController::get_NewObject()'s selector's ('newObject') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+
+## Deprecated in Xcode 11
+!missing-selector! NSImageNSImage::cacheDepthMatchesImageDepth not bound
+!missing-selector! NSImageNSImage::compositeToPoint:fromRect:operation: not bound
+!missing-selector! NSImageNSImage::compositeToPoint:fromRect:operation:fraction: not bound
+!missing-selector! NSImageNSImage::compositeToPoint:operation: not bound
+!missing-selector! NSImageNSImage::compositeToPoint:operation:fraction: not bound
+!missing-selector! NSImageNSImage::dissolveToPoint:fraction: not bound
+!missing-selector! NSImageNSImage::dissolveToPoint:fromRect:fraction: not bound
+!missing-selector! NSImageNSImage::initWithIconRef: not bound
+!missing-selector! NSImageNSImage::isCachedSeparately not bound
+!missing-selector! NSImageNSImage::isDataRetained not bound
+!missing-selector! NSImageNSImage::lockFocusOnRepresentation: not bound
+!missing-selector! NSImageNSImage::scalesWhenResized not bound
+!missing-selector! NSImageNSImage::setCacheDepthMatchesImageDepth: not bound
+!missing-selector! NSImageNSImage::setCachedSeparately: not bound
+!missing-selector! NSImageNSImage::setDataRetained: not bound
+!missing-selector! NSImageNSImage::setScalesWhenResized: not bound
+!missing-selector! NSMovie::init not bound
+!missing-selector! NSMovie::initWithCoder: not bound

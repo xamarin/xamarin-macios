@@ -10,7 +10,7 @@ namespace xharness
 	{
 		public Logs Logs { get; private set; }
 		public string Description;
-		public bool Timestamp;
+		public bool Timestamp = true;
 
 		protected Log (Logs logs)
 		{

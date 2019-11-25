@@ -166,7 +166,7 @@ namespace Foundation {
 			if (index < 0)
 				throw new IndexOutOfRangeException (nameof (index));
 
-			if ((nuint) index >= Count)
+			if ((nuint) index > Count)
 				throw new IndexOutOfRangeException (nameof (index));
 		}
 

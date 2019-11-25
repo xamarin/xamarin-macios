@@ -29,7 +29,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj" });
-				TI.BuildProject (projectPath, isUnified : true);
+				TI.BuildProject (projectPath);
 			});
 		}
 
@@ -38,7 +38,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "XM45Example.csproj" });
-				TI.BuildProject (projectPath, isUnified : true);
+				TI.BuildProject (projectPath);
 			});
 		}
 
@@ -48,7 +48,7 @@ namespace Xamarin.MMP.Tests
 			string reference = "<Reference Include=\"System.Collections.Immutable\"><HintPath>System.Collections.Immutable.dll</HintPath></Reference>";
 			string testCode = "var v = System.Collections.Immutable.ImmutableArray.CreateRange (new int [] { 42 });";
 			string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = projectName, References = reference, TestCode = testCode });
-			TI.BuildProject (projectPath, isUnified : true);
+			TI.BuildProject (projectPath);
 		}
 
 		[Test]
@@ -72,7 +72,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { FSharp = true, ProjectName = "FSharpUnifiedExample.fsproj" });
-				TI.BuildProject (projectPath, isUnified : true);
+				TI.BuildProject (projectPath);
 			});
 		}
 
@@ -81,7 +81,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { FSharp = true, ProjectName = "FSharpXM45Example.fsproj" });
-				TI.BuildProject (projectPath, isUnified : true);
+				TI.BuildProject (projectPath);
 			});
 		}
 
@@ -90,7 +90,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateUnifiedLibraryProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedLibrary" });
-				TI.BuildProject (projectPath, isUnified : true);
+				TI.BuildProject (projectPath);
 			});
 		}
 
@@ -99,7 +99,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateUnifiedLibraryProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "XM45Library" });
-				TI.BuildProject (projectPath, isUnified : true);
+				TI.BuildProject (projectPath);
 			});
 		}
 
@@ -108,7 +108,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateUnifiedLibraryProject (new TI.UnifiedTestConfig (tmpDir) { FSharp = true, ProjectName = "FSharpUnifiedLibrary" });
-				TI.BuildProject (projectPath, isUnified : true);
+				TI.BuildProject (projectPath);
 			});
 		}
 
@@ -117,7 +117,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateUnifiedLibraryProject (new TI.UnifiedTestConfig (tmpDir) { FSharp = true, ProjectName = "FSharpXM45Library" });
-				TI.BuildProject (projectPath, isUnified : true);
+				TI.BuildProject (projectPath);
 			});
 		}
 
@@ -130,12 +130,12 @@ namespace Xamarin.MMP.Tests
 				File.Copy (Path.Combine (TI.AssemblyDirectory, TI.TestDirectory + "mac-binding-project/bin/SimpleClassDylib.dylib"), Path.Combine (dylibPath, "SimpleClassDylib.dylib"));
 				string itemGroup = "<ItemGroup><NativeReference Include=\".\\dll\\SimpleClassDylib.dylib\"> <IsCxx>False</IsCxx><Kind>Dynamic</Kind> </NativeReference> </ItemGroup>";
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj", ItemGroup = itemGroup });
-				string buildResults = TI.BuildProject (projectPath, isUnified : true);
+				string buildResults = TI.BuildProject (projectPath);
 				Assert.IsFalse (buildResults.Contains ("MM2006"), "BuildUnifiedProject_WittJustNativeRefNoLinkWith_Builds found 2006 warning: " + buildResults);
 				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/SimpleClassDylib.dylib")));
 
 				StringBuilder output = new StringBuilder ();
-				Xamarin.Bundler.Driver.RunCommand ("/usr/bin/otool", "-L " + Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample"), null, output);
+				Xamarin.Bundler.Driver.RunCommand ("/usr/bin/otool", new [] { "-L", Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample") }, null, output);
 				Assert.IsTrue (output.ToString ().Contains ("SimpleClassDylib.dylib"));
 			});
 		}
@@ -147,7 +147,7 @@ namespace Xamarin.MMP.Tests
 				foreach (string projectName in new []{"XM45Binding.csproj", "MobileBinding.csproj", "BindingProjectWithNoTag.csproj"}) {
 					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ProjectName = projectName };
 					string projectPath = TI.GenerateBindingLibraryProject (test);
-					TI.BuildProject (projectPath, isUnified : true);
+					TI.BuildProject (projectPath);
 				}
 			});
 		}
@@ -163,10 +163,10 @@ namespace Xamarin.MMP.Tests
 				{
 					var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project, ItemGroup = nativeRefItemGroup };
 					string projectPath = TI.GenerateBindingLibraryProject (config);
-					string buildOutput = TI.BuildProject (projectPath, isUnified: true);
+					string buildOutput = TI.BuildProject (projectPath);
 					Assert.IsTrue (buildOutput.Contains (@"Building target ""CoreCompile"""));
 
-					string secondBuildOutput = TI.BuildProject (projectPath, isUnified: true);
+					string secondBuildOutput = TI.BuildProject (projectPath);
 					Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""CoreCompile"""));
 				}
 			});
@@ -181,10 +181,10 @@ namespace Xamarin.MMP.Tests
 				{
 					var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project };
 					string projectPath = TI.GenerateEXEProject (config);
-					string buildOutput = TI.BuildProject (projectPath, isUnified: true);
+					string buildOutput = TI.BuildProject (projectPath);
 					Assert.IsTrue (buildOutput.Contains (@"Building target ""_CompileToNative"""));
 
-					string secondBuildOutput = TI.BuildProject (projectPath, isUnified: true);
+					string secondBuildOutput = TI.BuildProject (projectPath);
 					Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""_CompileToNative"""));
 				}
 			});

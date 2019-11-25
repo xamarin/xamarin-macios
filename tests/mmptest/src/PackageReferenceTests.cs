@@ -26,7 +26,7 @@ namespace Xamarin.MMP.Tests
 
 				string project = TI.GenerateUnifiedExecutableProject (config);
 				TI.NugetRestore (project);
-				TI.BuildProject (project, true);
+				TI.BuildProject (project);
 				TI.RunGeneratedUnifiedExecutable (config);
 			});
 		}
@@ -44,7 +44,7 @@ namespace Xamarin.MMP.Tests
 				TI.CopyFileWithSubstitutions (main, main, s => s.Replace ("%TESTCODE%", TestCode));
 
 				TI.NugetRestore (project);
-				string output = TI.BuildProject (Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj"), isUnified: true);
+				string output = TI.BuildProject (Path.Combine (tmpDir, "Today/TodayExtensionTest.csproj"));
 				Assert.IsTrue (!output.Contains ("MM2013"));
 			});
 		}

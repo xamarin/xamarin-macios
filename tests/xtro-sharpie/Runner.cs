@@ -18,6 +18,7 @@ namespace Extrospection {
 		public void Execute (string pchFile, IEnumerable<string> assemblyNames)
 		{
 			var managed_reader = new AssemblyReader () {
+				new ReleaseAttributeCheck (),
 				new DesignatedInitializerCheck (),
 				new DllImportCheck (),
 				new EnumCheck (),

@@ -15,7 +15,7 @@ clean-local::
 	rm -rf *os*.pch*
 
 bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe build:
-	$(Q) nuget restore xtro-sharpie.sln
+	$(Q) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore xtro-sharpie.sln
 	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln
 
 XIOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll
@@ -48,7 +48,7 @@ XMAC_ARCH = x86_64
 XMAC_PCH = macosx$(OSX_SDK_VERSION)-$(XMAC_ARCH).pch
 
 $(XMAC_PCH): .stamp-check-sharpie
-	sharpie sdk-db --xcode $(XCODE) -s macosx$(OSX_SDK_VERSION) -a $(XMAC_ARCH)
+	sharpie sdk-db --xcode $(XCODE) -s macosx$(OSX_SDK_VERSION) -a $(XMAC_ARCH) -exclude DriverKit -exclude IOUSBHost -exclude NetworkingDriverKit -exclude USBDriverKit -exclude USBSerialDriverKit -exclude HIDDriverKit -exclude PDFKit
 
 
 

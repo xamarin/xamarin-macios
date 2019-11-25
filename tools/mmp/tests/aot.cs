@@ -8,6 +8,9 @@ using NUnit.Framework;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
+using Mono.Tuner;
+using MonoMac.Tuner;
+
 namespace Xamarin.MMP.Tests.Unit
 {
 	[TestFixture]
@@ -26,13 +29,13 @@ namespace Xamarin.MMP.Tests.Unit
 			}
 		}
 
-		List<Tuple<string, string>> commandsRun;
+		List<Tuple<string, IList<string>>> commandsRun;
 
 		[SetUp]
 		public void Init ()
 		{
 			// Make sure this is cleared between every test
-			commandsRun = new List<Tuple<string, string>> ();
+			commandsRun = new List<Tuple<string, IList<string>>> ();
 		}
 
 		void Compile (AOTOptions options, TestFileEnumerator files, AOTCompilerType compilerType = AOTCompilerType.Bundled64, RunCommandDelegate onRunDelegate = null, bool isRelease = false, bool isModern = false)
@@ -43,7 +46,12 @@ namespace Xamarin.MMP.Tests.Unit
 				ParallelOptions = new ParallelOptions () { MaxDegreeOfParallelism = 1 },
 				XamarinMacPrefix = Driver.WalkUpDirHierarchyLookingForLocalBuild (), // HACK - AOT test shouldn't need this from driver.cs 
 			};
-			compiler.Compile (files);
+			try {
+				Profile.Current = new XamarinMacProfile ();
+				compiler.Compile (files);
+			} finally {
+				Profile.Current = null;
+			}
 		}
 
 		void ClearCommandsRun ()
@@ -51,9 +59,9 @@ namespace Xamarin.MMP.Tests.Unit
 			commandsRun.Clear ();
 		}
 
-		int OnRunCommand (string path, string args, string [] env, StringBuilder output, bool suppressPrintOnErrors)
+		int OnRunCommand (string path, IList<string> args, string [] env, StringBuilder output, bool suppressPrintOnErrors)
 		{
-			commandsRun.Add (Tuple.Create <string, string>(path, args));
+			commandsRun.Add (Tuple.Create <string, IList<string>>(path, args));
 			if (path != AOTCompiler.StripCommand && path != AOTCompiler.DeleteDebugSymbolCommand) {
 				Assert.IsTrue (env[0] == "MONO_PATH", "MONO_PATH should be first env set");
 				Assert.IsTrue (env[1] == TestRootDir, "MONO_PATH should be set to our expected value");
@@ -66,12 +74,8 @@ namespace Xamarin.MMP.Tests.Unit
 			switch (compilerType) {
 			case AOTCompilerType.Bundled64:
 				return "bmac-mobile-mono";
-			case AOTCompilerType.Bundled32:
-				return "bmac-mobile-mono-32";
 			case AOTCompilerType.System64:
 				return "mono64";
-			case AOTCompilerType.System32:
-				return "mono32";
 			default:
 				Assert.Fail ("GetMonoPath with invalid option");
 				return "";
@@ -88,7 +92,7 @@ namespace Xamarin.MMP.Tests.Unit
 				if (expectSymbolDeletion && command.Item1 == AOTCompiler.DeleteDebugSymbolCommand)
 					continue;
 				Assert.IsTrue (command.Item1.EndsWith (GetExpectedMonoCommand (compilerType)), "Unexpected command: " + command.Item1);
-				string [] argParts = command.Item2.Split (' ');
+				var argParts = command.Item2;
 
 				if (kind == AOTKind.Hybrid)
 					Assert.AreEqual (argParts[0], "--aot=hybrid", "First arg should be --aot=hybrid");
@@ -101,35 +105,34 @@ namespace Xamarin.MMP.Tests.Unit
 					Assert.AreNotEqual (argParts[1], "--runtime=mobile", "Second arg should not be --runtime=mobile");
 
 
-				int fileNameBeginningIndex = command.Item2.IndexOf(' ') + 1;
+				var fileName = command.Item2 [1];
 				if (isModern)
-					fileNameBeginningIndex = command.Item2.IndexOf(' ', fileNameBeginningIndex) + 1;
+					fileName = command.Item2 [2];
 
-				string fileName = command.Item2.Substring (fileNameBeginningIndex).Replace ("\'", "");
 				filesAOTed.Add (fileName);
 			}
 			return filesAOTed;
 		}
 
-		List<string> GetFilesStripped ()
+		IEnumerable<string> GetFilesStripped ()
 		{
-			return commandsRun.Where (x => x.Item1 == AOTCompiler.StripCommand).Select (x => x.Item2.Replace ("\'", "")).ToList ();
+			return commandsRun.Where (x => x.Item1 == AOTCompiler.StripCommand).SelectMany (x => x.Item2);
 		}
 		
 		void AssertFilesStripped (IEnumerable <string> expectedFiles)
 		{
-			List<string> filesStripped = GetFilesStripped ();
+			var filesStripped = GetFilesStripped ();
 
 			Func<string> getErrorDetails = () => $"\n {FormatDebugList (filesStripped)} \nvs\n {FormatDebugList (expectedFiles)}\n{AllCommandsRun}";
 
-			Assert.AreEqual (filesStripped.Count, expectedFiles.Count (), "Different number of files stripped than expected: " + getErrorDetails ());
+			Assert.AreEqual (filesStripped.Count (), expectedFiles.Count (), "Different number of files stripped than expected: " + getErrorDetails ());
 			Assert.IsTrue (filesStripped.All (x => expectedFiles.Contains (x)), "Different files stripped than expected: "  + getErrorDetails ());
 		}
 		
 		List<string> GetDeletedSymbols ()
 		{
 			// Chop off -r prefix and quotes around filename
-			return commandsRun.Where (x => x.Item1 == AOTCompiler.DeleteDebugSymbolCommand).Select (x => x.Item2.Substring(3).Replace ("\'", "")).ToList ();
+			return commandsRun.Where (x => x.Item1 == AOTCompiler.DeleteDebugSymbolCommand).Select (x => x.Item2 [1]).ToList ();
 		}
 
 		string AllCommandsRun => "\nCommands Run:\n\t" + String.Join ("\n\t", commandsRun.Select (x => $"{x.Item1} {x.Item2}"));
@@ -295,17 +298,6 @@ namespace Xamarin.MMP.Tests.Unit
 		}
 
 		[Test]
-		public void AssemblyWithSpaces_ShouldAOTWithQuotes ()
-		{
-			var options = new AOTOptions ("+Foo Bar.dll");
-			Assert.IsTrue (options.IsAOT, "Should be IsAOT");
-
-			Compile (options, new TestFileEnumerator (new string [] { "Foo Bar.dll", "Xamarin.Mac.dll" }));
-			AssertFilesAOTed (new string [] {"Foo Bar.dll"});
-			Assert.IsTrue (commandsRun.Where (x => x.Item2.Contains ("Foo Bar.dll")).All (x => x.Item2.EndsWith ("\'Foo Bar.dll\'", StringComparison.InvariantCulture)), "Should end with quoted filename");
-		}
-
-		[Test]
 		public void WhenAOTFails_ShouldReturnError ()
 		{
 			RunCommandDelegate runThatErrors = (path, args, env, output, suppressPrintOnErrors) => 42;
@@ -317,7 +309,7 @@ namespace Xamarin.MMP.Tests.Unit
 		[Test]
 		public void DifferentMonoTypes_ShouldInvokeCorrectMono ()
 		{
-			foreach (var compilerType in new List<AOTCompilerType> (){ AOTCompilerType.Bundled64, AOTCompilerType.Bundled32, AOTCompilerType.System32, AOTCompilerType.System64 })
+			foreach (var compilerType in new List<AOTCompilerType> () { AOTCompilerType.Bundled64, AOTCompilerType.System64 })
 			{
 				ClearCommandsRun ();
 				var options = new AOTOptions ("sdk");
@@ -391,19 +383,6 @@ namespace Xamarin.MMP.Tests.Unit
 			AssertFilesAOTed (expectedFiles, expectStripping : false, expectSymbolDeletion : true);
 			AssertFilesStripped (new string [] {});
 			AssertSymbolsDeleted (expectedFiles);
-		}
-
-		[Test]
-		public void AssemblyWithSpaces_ShouldStripWithQuotes ()
-		{
-			var options = new AOTOptions ("all|hybrid,+Foo Bar.dll");
-
-			var files = new string [] { "Foo Bar.dll", "Xamarin.Mac.dll" };
-			Compile (options, new TestFileEnumerator (files), isRelease : true);
-			AssertFilesStripped (files);
-			AssertSymbolsDeleted (files);
-			// We don't check end quote here, since we might have .dylib.dSYM suffix
-			Assert.IsTrue (commandsRun.Where (x => x.Item2.Contains ("Foo Bar.dll")).All (x => x.Item2.Contains ("\'Foo Bar.dll")), "Should contain quoted filename");
 		}
 
 		[Test]

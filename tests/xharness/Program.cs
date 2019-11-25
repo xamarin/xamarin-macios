@@ -19,7 +19,7 @@ namespace xharness
 				{ "mac", "Configure for Xamarin.Mac instead of iOS.", (v) => harness.Mac = true },
 				{ "configure", "Creates project files and makefiles.", (v) => harness.Action = HarnessAction.Configure },
 				{ "autoconf", "Automatically decide what to configure.", (v) => harness.AutoConf = true },
-				{ "rootdir=", "The root directory for the tests.", (v) => harness.RootDirectory = v },
+				{ "rootdir=", "The root directory for the tests.", (v) => Harness.RootDirectory = v },
 				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => harness.IOSTestProjects.Add (new iOSTestProject (v)) },
 				{ "watchos-container-template=", "The directory to use as a template for a watchos container app.", (v) => harness.WatchOSContainerTemplate = v },
 				{ "watchos-app-template=", "The directory to use as a template for a watchos app.", (v) => harness.WatchOSAppTemplate = v },
@@ -43,7 +43,7 @@ namespace xharness
 					}
 				},
 				{ "sdkroot=", "Where Xcode is", (v) => harness.SdkRoot = v },
-				{ "sdkroot94=", "Where Xcode 9.4 is", (v) => harness.SdkRoot94 = v },
+				{ "sdkroot94=", "Where Xcode 9.4 is", (v) => Console.WriteLine ("--sdkroot94 is deprecated"), true },
 				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => harness.Target = v.ParseAsAppRunnerTarget () },
 				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => harness.Configuration = v },
 				{ "logdirectory=", "Where to store logs.", (v) => harness.LogDirectory = v },

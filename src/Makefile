@@ -115,7 +115,6 @@ $(BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources
 		-tmpdir=$(IOS_BUILD_DIR)/native \
 		-baselib=$(IOS_BUILD_DIR)/native/core.dll \
 		-attributelib=$(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll \
-		-r=$(MONO_PATH)/mcs/class/lib/monotouch/System.dll \
 		-native-exception-marshalling \
 		--ns=ObjCRuntime \
 		--target-framework=Xamarin.iOS,v1.0 \
@@ -179,7 +178,7 @@ $(IOS_BUILD_DIR)/reference/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-64/Xamarin.i
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/% : $(MACIOS_BINARIES_PATH)/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 	$(Q) $(CP) $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/% : $(MACIOS_BINARIES_PATH)/Facades/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/% : $(MACIOS_BINARIES_PATH)/Facades/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades
 	$(Q) $(CP) $< $@
 
 $(IOS_BUILD_DIR)/compat/%: $(MACIOS_BINARIES_PATH)/% | $(IOS_BUILD_DIR)/compat
@@ -201,6 +200,7 @@ IOS_TARGETS_DIRS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1             \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades     \
 
 IOS_TARGETS += \
 	$(PROJECT_DIR)/xamios.csproj                                                   \
@@ -232,10 +232,7 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.dll                   \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.pdb               \
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%.dll: $(IOS_BUILD_DIR)/compat/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-	$(Q) install -m 0755 $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/%.dll: $(IOS_BUILD_DIR)/compat/Facades/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%.dll: $(IOS_BUILD_DIR)/compat/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades
 	$(Q) install -m 0755 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%.pdb: $(IOS_BUILD_DIR)/compat/%.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
@@ -251,10 +248,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/MonoTouch/%: api-diffs/% | $(IOS_DES
 	$(Q) install -m 0644 $< $@
 
 # reference assemblies, this is just for compilation with XS
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.dll: $(IOS_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
-	$(Q) install -m 0755 $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades/%.dll: $(IOS_BUILD_DIR)/reference/Facades/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.dll: $(IOS_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades
 	$(Q) install -m 0755 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.pdb: $(IOS_BUILD_DIR)/reference/%.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
@@ -282,7 +276,7 @@ $(IOS_TARGETS_DIRS):
 $(PROJECT_DIR)/xamios.csproj: xamios.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(IOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(IOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-$(PROJECT_DIR)/MonoTouch.NUnitLite.csproj: MonoTouch.NUnitLite.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.NUnitLite.csproj: MonoTouch.NUnitLite.templ.csproj Makefile touch-unit.sources $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(IOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
 PROJECT_FILES += $(PROJECT_DIR)/xamios.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.csproj
@@ -429,9 +423,7 @@ $(MAC_BUILD_DIR)/$(1)/$(2:.dll=.pdb): $(MAC_BUILD_DIR)/$(1)/$(2)
 
 endef
 
-$(eval $(call MAC_TARGETS_template,mobile-32,Xamarin.Mac.dll,mobile,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-32,32))
 $(eval $(call MAC_TARGETS_template,mobile-64,Xamarin.Mac.dll,mobile,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-64,64))
-$(eval $(call MAC_TARGETS_template,full-32,Xamarin.Mac.dll,full,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-32,32))
 $(eval $(call MAC_TARGETS_template,full-64,Xamarin.Mac.dll,full,$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-64,64))
 
 $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.dll
@@ -442,23 +434,11 @@ $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.
 	@mkdir -p $(@D)
 	$(Q) $(CP) $^ $@
 
-$(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll: $(MACIOS_BINARIES_PATH)/XamMac.CFNetwork.dll | $(MAC_BUILD_DIR)/compat
-	$(Q) $(CP) $< $@
-	$(Q) $(CP) $<.mdb $@.mdb
-
-$(MAC_BUILD_DIR)/compat/XamMac.dll: $(MACIOS_BINARIES_PATH)/XamMac.dll | $(MAC_BUILD_DIR)/compat
-	$(Q) $(CP) $< $@
-	$(Q) $(CP) $<.mdb $@.mdb
-
 MAC_VARIANTS_TARGETS = \
-	$(MAC_BUILD_DIR)/compat/XamMac.dll \
-	$(MAC_BUILD_DIR)/mobile-32/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/mobile-64/Xamarin.Mac.dll \
-	$(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/full-64/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll \
-	$(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll
 
 INSTALL_TARGETS+=install-mac
 ALL_TARGETS+=all-mac
@@ -469,8 +449,6 @@ MAC_TARGETS_DIRS += \
 	$(MAC_BUILD_DIR)/mobile/Facades \
 	$(MAC_BUILD_DIR)/full \
 	$(MAC_BUILD_DIR)/compat \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile      \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full        \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile    \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full      \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile \
@@ -492,22 +470,17 @@ MAC_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/Xamarin.Mac.pdb       \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.dll        \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.pdb        \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.dll          \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.pdb          \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.dll          \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.pdb          \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.dll            \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.pdb            \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.CFNetwork.dll            \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.pdb     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.pdb             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/xammac.pc
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll: $(MAC_BUILD_DIR)/compat/XamMac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
+# The XamMac.dll file must exist for VSfM to be able to open XM/Classic projects (so that people can use the migration wizard)
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll: $(MACIOS_BINARIES_PATH)/XamMac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
 	$(Q) install -m 0755 $< $@
-	$(Q) install -m 0644 $<.mdb $@.mdb
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile
 	$(Q) install -m 0755 $< $@
@@ -521,12 +494,6 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.dll: $(
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/mobile-64/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile
 	$(Q) install -m 0644 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/mobile-32/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile
-	$(Q) install -m 0755 $< $@
-	
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/mobile-32/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile
-	$(Q) install -m 0644 $< $@
-
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full
 	$(Q) install -m 0755 $< $@
 
@@ -538,16 +505,6 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.dll: $(MA
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.pdb: $(MAC_BUILD_DIR)/full-64/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full
 	$(Q) install -m 0644 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full
-	$(Q) install -m 0755 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.pdb : $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full
-	$(Q) install -m 0644 $< $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.CFNetwork.dll: $(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
-	$(Q) install -m 0755 $< $@
-	$(Q) install -m 0644 $< $(@:.dll=.pdb)
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.pdb: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac
 	$(Q) ln -sF ../../reference/mobile/$(@F) $@
@@ -575,7 +532,6 @@ WATCH_BMONO = MONO_PATH=$(WATCH_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/b
 WATCH_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 WATCH_GENERATE=$(SYSTEM_MONO) --debug $(WATCH_GENERATOR)
 WATCH_GENERATED_DEFINES= -d:WATCH -d:XAMCORE_3_0 -d:XAMCORE_2_0 -d:__UNIFIED__
-WATCH_BCL_DIR = $(MONO_PATH)/mcs/class/lib/monotouch_watch
 
 WATCHOS_EXTRA_CORE_SOURCES = \
     $(WATCH_BUILD_DIR)/Constants.cs    \
@@ -583,6 +539,7 @@ WATCHOS_EXTRA_CORE_SOURCES = \
     $(IOS_OPENTK_1_0_CORE_SOURCES)     \
     AudioToolbox/AudioBuffers.cs       \
     AudioToolbox/AudioType.cs          \
+    AudioToolbox/AudioFormat.cs          \
     $(SHARED_SYSTEM_DRAWING_SOURCES)   \
     System.Drawing/ColorKnownColorTypeForwarders.cs \
 
@@ -641,7 +598,6 @@ $(BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.sources
 		-tmpdir=$(WATCH_BUILD_DIR)/watch                         \
 		-baselib=$(WATCH_BUILD_DIR)/watch/core.dll               \
 		-attributelib=$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll \
-		-r=$(MONO_PATH)/mcs/class/lib/monotouch_watch/System.dll \
 		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
 		$(WATCH_GENERATED_DEFINES)				\
@@ -676,7 +632,7 @@ $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(WATCH_BUILD_DIR)/referenc
 $(PROJECT_DIR)/xamwatch.csproj: xamwatch.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(WATCHOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(WATCHOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-$(PROJECT_DIR)/MonoTouch.NUnitLite.watchos.csproj: MonoTouch.NUnitLite.watchos.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.NUnitLite.watchos.csproj: MonoTouch.NUnitLite.watchos.templ.csproj Makefile touch-unit.sources $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(WATCHOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
 PROJECT_FILES += $(PROJECT_DIR)/xamwatch.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.watchos.csproj
@@ -705,10 +661,7 @@ WATCH_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.pdb
 
 # reference assemblies, this is just for compilation with XS
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.dll: $(WATCH_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS
-	$(Q) install -m 0755 $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Facades/%.dll: $(WATCH_BUILD_DIR)/reference/Facades/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Facades
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.dll: $(WATCH_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Facades
 	$(Q) install -m 0755 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.pdb: $(WATCH_BUILD_DIR)/reference/%.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS
@@ -810,7 +763,6 @@ $(BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources
 		-tmpdir=$(TVOS_BUILD_DIR)/tvos                         \
 		-baselib=$(TVOS_BUILD_DIR)/tvos/core.dll               \
 		-attributelib=$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll \
-		-r=$(MONO_PATH)/mcs/class/lib/monotouch_tv/System.dll \
 		$(TVOS_GENERATED_DEFINES)				\
 		-ns=MonoTouch.ObjCRuntime                                \
 		-native-exception-marshalling                            \
@@ -852,7 +804,7 @@ $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.pdb: $(MACIOS_BINARIES_PATH)/Mono
 $(PROJECT_DIR)/xamtvos.csproj: xamtvos.tmpl.csproj Makefile $(wildcard $(TOP)/*.sources)
 	@sed -e 's*<!--%FILES%-->*$(foreach file,$(TVOS_SOURCES),<Compile Include="$(file)"/>)*' -e 's*<!--%APIS%-->*$(foreach file,$(TVOS_APIS),<None Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-$(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj: MonoTouch.NUnitLite.tvos.templ.csproj Makefile touch-unit.sources
+$(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj: MonoTouch.NUnitLite.tvos.templ.csproj Makefile touch-unit.sources $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(TVOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
 PROJECT_FILES += $(PROJECT_DIR)/xamtvos.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj
@@ -888,10 +840,7 @@ TVOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/MonoTouch.NUnitLite.pdb
 
 # reference assemblies, this is just for compilation with XS
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.dll: $(TVOS_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
-	$(Q) install -m 0755 $< $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades/%.dll: $(TVOS_BUILD_DIR)/reference/Facades/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.dll: $(TVOS_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades
 	$(Q) install -m 0755 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.pdb: $(TVOS_BUILD_DIR)/reference/%.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS

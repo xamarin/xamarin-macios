@@ -63,11 +63,11 @@ namespace AudioUnit
 		Initialized = -10849,
 		InvalidOfflineRender = -10848,
 		Unauthorized = -10847,
-		[iOS (11,0), Mac (10,13, onlyOn64: true), TV (11,0), NoWatch]
+		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 		MidiOutputBufferFull = -66753,
-		[iOS (11,3), Mac (10,13,4, onlyOn64: true), TV (11,3), NoWatch]
+		[iOS (11,3), Mac (10,13,4), TV (11,3), NoWatch]
 		InvalidParameterValue = -66743,
-		[iOS (11,0), Mac (10,13, onlyOn64: true), TV (11,0), NoWatch]
+		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 		ExtensionNotFound = -66744,
 	}
 
@@ -80,7 +80,7 @@ namespace AudioUnit
 		NotPermitted			= -66748,
 		InitializationTimedOut	= -66747,
 		InvalidFormat			= -66746,
-		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		[iOS (10,0), Mac (10,12)]
 		RenderTimeout			= -66745,
 	}
 
@@ -1306,7 +1306,7 @@ namespace AudioUnit
 		ClassInfoFromDocument = 50,
 		RequestViewController = 56,
 		ParametersForOverview = 57,
-		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		[iOS (10,0), Mac (10,12)]
 		SupportsMpe = 58,
 
 #if MONOMAC
@@ -1394,7 +1394,7 @@ namespace AudioUnit
 		MatrixLevels = 3006,
 		MatrixDimensions = 3009,
 		MeterClipping = 3011,
-		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		[iOS (10,0), Mac (10,12)]
 		InputAnchorTimeStamp = 3016,
 
 		// SpatialMixer
@@ -2058,7 +2058,7 @@ namespace AudioUnit
 		DistanceAttenuation = (1 << 2)
 	}
 
-	[iOS (10,0), Mac (10,12, onlyOn64: true)]
+	[iOS (10,0), Mac (10,12)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AUParameterAutomationEvent {
 		public ulong HostTime;
@@ -2068,7 +2068,7 @@ namespace AudioUnit
 		ulong Reserved;
 	}
 
-	[iOS (10,0), Mac (10,12, onlyOn64: true)]
+	[iOS (10,0), Mac (10,12)]
 	public enum AUParameterAutomationEventType : uint {
 		Value = 0,
 		Touch = 1,

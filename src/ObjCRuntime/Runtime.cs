@@ -430,7 +430,7 @@ namespace ObjCRuntime {
 			return GCHandle.ToIntPtr (GCHandle.Alloc (ex)).ToInt32 ();
 		}
 
-		static IntPtr UnwrapNSException (int exc_handle)
+		static IntPtr UnwrapNSException (uint exc_handle)
 		{
 			var obj = GCHandle.FromIntPtr (new IntPtr (exc_handle)).Target;
 #if MONOMAC
@@ -445,7 +445,7 @@ namespace ObjCRuntime {
 			}
 		}
 
-		static IntPtr GetBlockWrapperCreator (IntPtr method, int parameter)
+		static IntPtr GetBlockWrapperCreator (IntPtr method, uint parameter)
 		{
 			return ObjectWrapper.Convert (GetBlockWrapperCreator ((MethodInfo) ObjectWrapper.Convert (method), parameter));
 		}
@@ -727,7 +727,7 @@ namespace ObjCRuntime {
 			return parameters [parameter].IsDefined (typeof(TransientAttribute), false);
 		}
 
-		static bool IsParameterOut (IntPtr info, int parameter)
+		static bool IsParameterOut (IntPtr info, uint parameter)
 		{
 			var minfo = ObjectWrapper.Convert (info) as MethodInfo;
 			if (minfo == null)
@@ -773,7 +773,7 @@ namespace ObjCRuntime {
 		}
 #endregion
 
-		static MethodInfo GetBlockProxyAttributeMethod (MethodInfo method, int parameter)
+		static MethodInfo GetBlockProxyAttributeMethod (MethodInfo method, uint parameter)
 		{
 			var attrs = method.GetParameters () [parameter].GetCustomAttributes (typeof (BlockProxyAttribute), true);
 			if (attrs.Length == 1) {
@@ -840,7 +840,7 @@ namespace ObjCRuntime {
 #else
 		public 
 #endif
-		static MethodInfo GetBlockWrapperCreator (MethodInfo method, int parameter)
+		static MethodInfo GetBlockWrapperCreator (MethodInfo method, uint parameter)
 		{
 			// A mirror of this method is also implemented in StaticRegistrar:FindBlockProxyCreatorMethod
 			// If this method is changed, that method will probably have to be updated too (tests!!!)
@@ -1423,6 +1423,11 @@ namespace ObjCRuntime {
 		// this method is identical in behavior to the non-generic one.
 		public static T GetINativeObject<T> (IntPtr ptr, bool owns) where T : class, INativeObject
 		{
+			return GetINativeObject<T> (ptr, false, owns);
+		}
+
+		public static T GetINativeObject<T> (IntPtr ptr, bool forced_type, bool owns) where T : class, INativeObject
+		{
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -1433,7 +1438,10 @@ namespace ObjCRuntime {
 				return t;
 			}
 
-			if (o != null) {
+			// If forced type is true, we ignore any existing instances if the managed type of the existing instance isn't compatible with T.
+			// This may end up creating multiple managed wrapper instances for the same native handle,
+			// which is not optimal, but sometimes the alternative can be worse :/
+			if (o != null && !forced_type) {
 				// found an existing object, but with an incompatible type.
 				if (!typeof (T).IsInterface && typeof(NSObject).IsAssignableFrom (typeof (T))) {
 					// if the target type is another NSObject subclass, there's nothing we can do.
@@ -1445,7 +1453,7 @@ namespace ObjCRuntime {
 			var implementation = LookupINativeObjectImplementation (ptr, typeof (T));
 
 			if (implementation.IsSubclassOf (typeof (NSObject))) {
-				if (o != null) {
+				if (o != null && !forced_type) {
 					// We already have an instance of an NSObject-subclass for this ptr.
 					// Creating another will break the one-to-one assumption we have between
 					// native objects and NSObject instances.

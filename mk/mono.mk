@@ -1,0 +1,5 @@
+NEEDED_MONO_VERSION := 062f0ab8cae60d1d347e4d722884c065c9f34484
+NEEDED_MONO_BRANCH := 2019-08
+
+MONO_DIRECTORY := mono
+MONO_MODULE    := https://github.com/mono/mono

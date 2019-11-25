@@ -126,7 +126,7 @@ namespace MonoTouchFixtures.Vision {
 
 			// Tests 'VNRequestRevision.Unspecified' given to APIs.
 			var rect = new CGRect (0, 0, 10, 10);
-			Assert.DoesNotThrow (() => {
+			{
 				var detectedObjectObservation = VNDetectedObjectObservation.FromBoundingBox (VNDetectedObjectObservationRequestRevision.Unspecified, rect);
 				Assert.NotNull (detectedObjectObservation, "detectedObjectObservation is null");
 				Assert.That (detectedObjectObservation.BoundingBox, Is.EqualTo (rect));
@@ -136,8 +136,12 @@ namespace MonoTouchFixtures.Vision {
 				Assert.That (faceObservation.BoundingBox, Is.EqualTo (rect));
 
 				var recognizedObjectObservation = VNRecognizedObjectObservation.FromBoundingBox (VNRecognizedObjectObservationRequestRevision.Unspecified, rect);
-				Assert.NotNull (recognizedObjectObservation, "recognizedObjectObservation is null");
-				Assert.That (recognizedObjectObservation.BoundingBox, Is.EqualTo (rect));
+				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+					Assert.IsNull (recognizedObjectObservation, "recognizedObjectObservation is null");
+				} else {
+					Assert.NotNull (recognizedObjectObservation, "recognizedObjectObservation is null");
+					Assert.That (recognizedObjectObservation.BoundingBox, Is.EqualTo (rect));
+				}
 
 				var rectangleObservation = VNRectangleObservation.FromBoundingBox (VNRectangleObservationRequestRevision.Unspecified, rect);
 				Assert.NotNull (rectangleObservation, "rectangleObservation is null");
@@ -150,10 +154,10 @@ namespace MonoTouchFixtures.Vision {
 				var barcodeObservation = VNBarcodeObservation.FromBoundingBox (VNBarcodeObservationRequestRevision.Unspecified, rect);
 				Assert.NotNull (barcodeObservation, "barcodeObservation is null");
 				Assert.That (barcodeObservation.BoundingBox, Is.EqualTo (rect));
-			}, "VNRequestRevision.Unspecified throw");
+			}
 
 			// Tests random request revision
-			Assert.DoesNotThrow (() => {
+			{
 				var detectedObjectObservation = VNDetectedObjectObservation.FromBoundingBox ((VNDetectedObjectObservationRequestRevision) 5000, rect);
 				Assert.NotNull (detectedObjectObservation, "randomRevision detectedObjectObservation is null");
 				Assert.That (detectedObjectObservation.BoundingBox, Is.EqualTo (rect));
@@ -163,8 +167,12 @@ namespace MonoTouchFixtures.Vision {
 				Assert.That (faceObservation.BoundingBox, Is.EqualTo (rect));
 
 				var recognizedObjectObservation = VNRecognizedObjectObservation.FromBoundingBox ((VNRecognizedObjectObservationRequestRevision) 5000, rect);
-				Assert.NotNull (recognizedObjectObservation, "randomRevision recognizedObjectObservation is null");
-				Assert.That (recognizedObjectObservation.BoundingBox, Is.EqualTo (rect));
+				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+					Assert.IsNull (recognizedObjectObservation, "randomRevision recognizedObjectObservation is null");
+				} else {
+					Assert.NotNull (recognizedObjectObservation, "randomRevision recognizedObjectObservation is null");
+					Assert.That (recognizedObjectObservation.BoundingBox, Is.EqualTo (rect));
+				}
 
 				var rectangleObservation = VNRectangleObservation.FromBoundingBox ((VNRectangleObservationRequestRevision) 5000, rect);
 				Assert.NotNull (rectangleObservation, "randomRevision rectangleObservation is null");
@@ -177,7 +185,7 @@ namespace MonoTouchFixtures.Vision {
 				var barcodeObservation = VNBarcodeObservation.FromBoundingBox ((VNBarcodeObservationRequestRevision) 5000, rect);
 				Assert.NotNull (barcodeObservation, "randomRevision barcodeObservation is null");
 				Assert.That (barcodeObservation.BoundingBox, Is.EqualTo (rect));
-			}, "randomRevision throw");
+			}
 		}
 
 		[Test]
@@ -185,7 +193,7 @@ namespace MonoTouchFixtures.Vision {
 		{
 			// Tests '*RequestRevision.Two' given to APIs.
 			var rect = new CGRect (0, 0, 10, 10);
-			Assert.DoesNotThrow (() => {
+			{
 				var detectedObjectObservation = VNDetectedObjectObservation.FromBoundingBox (VNDetectedObjectObservationRequestRevision.Two, rect);
 				Assert.NotNull (detectedObjectObservation, "detectedObjectObservation is null");
 				Assert.That (detectedObjectObservation.BoundingBox, Is.EqualTo (rect));
@@ -195,8 +203,12 @@ namespace MonoTouchFixtures.Vision {
 				Assert.That (faceObservation.BoundingBox, Is.EqualTo (rect));
 
 				var recognizedObjectObservation = VNRecognizedObjectObservation.FromBoundingBox (VNRecognizedObjectObservationRequestRevision.Two, rect);
-				Assert.NotNull (recognizedObjectObservation, "recognizedObjectObservation is null");
-				Assert.That (recognizedObjectObservation.BoundingBox, Is.EqualTo (rect));
+				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+					Assert.Null (recognizedObjectObservation, "recognizedObjectObservation is null");
+				} else {
+					Assert.NotNull (recognizedObjectObservation, "recognizedObjectObservation is null");
+					Assert.That (recognizedObjectObservation.BoundingBox, Is.EqualTo (rect));
+				}
 
 				var rectangleObservation = VNRectangleObservation.FromBoundingBox (VNRectangleObservationRequestRevision.Two, rect);
 				Assert.NotNull (rectangleObservation, "rectangleObservation is null");
@@ -209,7 +221,7 @@ namespace MonoTouchFixtures.Vision {
 				var barcodeObservation = VNBarcodeObservation.FromBoundingBox (VNBarcodeObservationRequestRevision.Two, rect);
 				Assert.NotNull (barcodeObservation, "barcodeObservation is null");
 				Assert.That (barcodeObservation.BoundingBox, Is.EqualTo (rect));
-			}, "*RequestRevision.Two throw");
+			}
 		}
 	}
 }

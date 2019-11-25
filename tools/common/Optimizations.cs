@@ -42,6 +42,7 @@ namespace Xamarin.Bundler
 #endif
 			"cctor-beforefieldinit",
 			"custom-attributes-removal",
+			"experimental-xforms-product-type",
 		};
 
 		enum Opt
@@ -62,6 +63,7 @@ namespace Xamarin.Bundler
 			SealAndDevirtualize,
 			StaticConstructorBeforeFieldInit,
 			CustomAttributesRemoval,
+			ExperimentalFormsProductType,
 		}
 
 		bool? all;
@@ -145,6 +147,11 @@ namespace Xamarin.Bundler
 			set { values [(int) Opt.CustomAttributesRemoval] = value; }
 		}
 
+		public bool? ExperimentalFormsProductType {
+			get { return values [(int) Opt.ExperimentalFormsProductType]; }
+			set { values [(int) Opt.ExperimentalFormsProductType] = value; }
+		}
+
 		public Optimizations ()
 		{
 			values = new bool? [opt_names.Length];
@@ -224,12 +231,7 @@ namespace Xamarin.Bundler
 
 			// We try to optimize calls to BlockLiteral.SetupBlock if the static registrar is enabled
 			if (!OptimizeBlockLiteralSetupBlock.HasValue) {
-#if MONOMAC
-				// Restrict to Unified, since XamMac.dll doesn't have the new managed block API (SetupBlockImpl) to make the block optimization work.
-				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static && Driver.IsUnified;
-#else
 				OptimizeBlockLiteralSetupBlock = app.Registrar == RegistrarMode.Static;
-#endif
 			}
 
 			// We will register protocols if the static registrar is enabled and loading assemblies is not possible

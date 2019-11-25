@@ -9,9 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Reflection;
+using System.Reflection.Emit;
 
 #if XAMCORE_2_0
 using AVFoundation;
+using CoreBluetooth;
 using Foundation;
 #if !__TVOS__
 using Contacts;
@@ -103,6 +106,29 @@ partial class TestRuntime
 		return new Version (major, minor, build);
 	}
 
+	public static void IgnoreInCI (string message)
+	{
+		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+		if (!in_ci)
+			return;
+		NUnit.Framework.Assert.Ignore (message);
+	}
+
+	static AssemblyName assemblyName = new AssemblyName ("DynamicAssemblyExample"); 
+	public static bool CheckExecutingWithInterpreter ()
+	{
+		// until System.Runtime.CompilerServices.RuntimeFeature.IsSupported("IsDynamicCodeCompiled") returns a valid result, atm it
+		// always return true, try to build an object of a class that should fail without introspection, and catch the exception to do the
+		// right thing
+		try {
+			AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly (assemblyName, AssemblyBuilderAccess.RunAndSave);
+			return true;
+		} catch (PlatformNotSupportedException) {
+			// we do not have the interpreter, lets continue
+			return false;
+		}
+	}
+
 	public static void AssertXcodeVersion (int major, int minor, int build = 0)
 	{
 		if (CheckXcodeVersion (major, minor, build))
@@ -146,11 +172,27 @@ partial class TestRuntime
 			macOS = new { Major = 10, Minor = 13, Build = "?" },
 			watchOS = new { Major = 4, Minor = 0, Build = "?" },
 		};
+		var elevenb5 = new {
+			Xcode = new { Major = 11, Minor = 0, Beta = 5 },
+			iOS = new { Major = 13, Minor = 0, Build = "17A5547" },
+			tvOS = new { Major = 13, Minor = 0, Build = "?" },
+			macOS = new { Major = 10, Minor = 15, Build = "?" },
+			watchOS = new { Major = 6, Minor = 0, Build = "?" },
+		};
+		var elevenb6 = new {
+			Xcode = new { Major = 11, Minor = 0, Beta = 6 },
+			iOS = new { Major = 13, Minor = 0, Build = "17A5565b" },
+			tvOS = new { Major = 13, Minor = 0, Build = "?" },
+			macOS = new { Major = 10, Minor = 15, Build = "?" },
+			watchOS = new { Major = 6, Minor = 0, Build = "?" },
+		};
 
 		var versions = new [] {
 			nineb1,
 			nineb2,
 			nineb3,
+			elevenb5,
+			elevenb6,
 		};
 
 		foreach (var v in versions) {
@@ -180,6 +222,47 @@ partial class TestRuntime
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
+		case 11:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (13, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 1:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (13, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 2:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 2);
+#elif __IOS__
+				return CheckiOSSystemVersion (13, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 1);
+#else
+				throw new NotImplementedException ();
+#endif
+			default:
+				throw new NotImplementedException ();
+			}
 		case 10:
 			switch (minor) {
 			case 0:
@@ -234,7 +317,7 @@ partial class TestRuntime
 				return CheckMacSystemVersion (10, 13, 0);
 #else
 				throw new NotImplementedException ();
-				#endif
+#endif
 			case 2:
 #if __WATCHOS__
 				return CheckWatchOSSystemVersion (4, 2);
@@ -627,6 +710,22 @@ partial class TestRuntime
 		return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_SYSTEM_PERMISSION_TESTS"));
 	}
 
+	public static void CheckBluetoothPermission (bool assert_granted = false)
+	{
+		// New in Xcode11
+		switch (CBManager.Authorization) {
+		case CBManagerAuthorization.NotDetermined:
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to use bluetooth.");
+			break;
+		case CBManagerAuthorization.Denied:
+		case CBManagerAuthorization.Restricted:
+			if (assert_granted)
+				NUnit.Framework.Assert.Fail ("This test requires permission to use bluetooth.");
+			break;
+		}
+	}
+
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
 	public static void RequestCameraPermission (NSString mediaTypeToken, bool assert_granted = false)
 	{
@@ -667,6 +766,26 @@ partial class TestRuntime
 			break;
 		}
 	}
+
+	public static void RequestContactsPermission (bool assert_granted = false)
+	{
+		switch (CNContactStore.GetAuthorizationStatus (CNEntityType.Contacts)) {
+		case CNAuthorizationStatus.NotDetermined:
+			if (IgnoreTestThatRequiresSystemPermissions ())
+				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the contacts.");
+
+			// There's a static method to check for permission, but an instance method to ask for permission
+			using (var store = new CNContactStore ()) {
+				store.RequestAccess (CNEntityType.Contacts, (granted, error) => {
+					Console.WriteLine ("Contacts permission {0} (error: {1})", granted ? "granted" : "denied", error);
+				});
+			}
+			break;
+		}
+
+		CheckContactsPermission (assert_granted);
+	}
+
 #endif // XAMCORE_2_0
 
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__

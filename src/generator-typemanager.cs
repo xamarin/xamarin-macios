@@ -64,6 +64,7 @@ public class TypeManager {
 	public Type CGPDFPage;
 	public Type CGGradient;
 	public Type CGImage;
+	public Type CGImageSource;
 	public Type CGLayer;
 	public Type CGLContext;
 	public Type CGLPixelFormat;
@@ -137,18 +138,11 @@ public class TypeManager {
 	Type Lookup (Assembly assembly, string @namespace, string @typename, bool inexistentOK = false)
 	{
 		string fullname;
-		string nsManagerPrefix = null;
-
-		if (assembly == platform_assembly || assembly == api_assembly)
-			nsManagerPrefix = BindingTouch.NamespacePlatformPrefix;
-		
-		if (!string.IsNullOrEmpty (nsManagerPrefix))
-			nsManagerPrefix += ".";
 
 		if (string.IsNullOrEmpty (@namespace)) {
-			fullname = nsManagerPrefix + @typename;
+			fullname = @typename;
 		} else {
-			fullname = nsManagerPrefix + @namespace + "." + @typename;
+			fullname = @namespace + "." + @typename;
 		}
 
 		var rv = assembly.GetType (fullname);
@@ -215,11 +209,9 @@ public class TypeManager {
 		System_UInt64 = Lookup (corlib_assembly, "System", "UInt64");
 		System_Void = Lookup (corlib_assembly, "System", "Void");
 
-		if (BindingTouch.Unified) {
-			System_nint = Lookup (platform_assembly, "System", "nint");
-			System_nuint = Lookup (platform_assembly, "System", "nuint");
-			System_nfloat = Lookup (platform_assembly, "System", "nfloat");
-		}
+		System_nint = Lookup (platform_assembly, "System", "nint");
+		System_nuint = Lookup (platform_assembly, "System", "nuint");
+		System_nfloat = Lookup (platform_assembly, "System", "nfloat");
 
 		/* fundamental */
 		NSObject = Lookup (platform_assembly, "Foundation", "NSObject");
@@ -231,11 +223,7 @@ public class TypeManager {
 		Protocol = Lookup (platform_assembly, "ObjCRuntime", "Protocol");
 		Selector = Lookup (platform_assembly, "ObjCRuntime", "Selector");
 
-		if (BindingTouch.Unified) {
-			Constants = Lookup (platform_assembly, "ObjCRuntime", "Constants");
-		} else {
-			Constants = Lookup (platform_assembly, "", "Constants");
-		}
+		Constants = Lookup (platform_assembly, "ObjCRuntime", "Constants");
 
 		/* Different binding types */
 
@@ -269,6 +257,7 @@ public class TypeManager {
 		CGPDFPage = Lookup (platform_assembly, "CoreGraphics", "CGPDFPage");
 		CGGradient = Lookup (platform_assembly, "CoreGraphics", "CGGradient");
 		CGImage = Lookup (platform_assembly, "CoreGraphics", "CGImage");
+		CGImageSource = Lookup (platform_assembly, "ImageIO", "CGImageSource");
 		CGLayer = Lookup (platform_assembly, "CoreGraphics", "CGLayer");
 		if (Frameworks.HaveOpenGL) {
 			CGLContext = Lookup (platform_assembly, "OpenGL", "CGLContext");
@@ -323,10 +312,8 @@ public class TypeManager {
 			NSDirectionalEdgeInsets = Lookup (platform_assembly, "UIKit", "NSDirectionalEdgeInsets");
 		}
 
-		if (BindingTouch.Unified) {
-			CoreGraphics_CGRect = Lookup (platform_assembly, "CoreGraphics", "CGRect");
-			CoreGraphics_CGPoint = Lookup (platform_assembly, "CoreGraphics", "CGPoint");
-			CoreGraphics_CGSize = Lookup (platform_assembly, "CoreGraphics", "CGSize");
-		}
+		CoreGraphics_CGRect = Lookup (platform_assembly, "CoreGraphics", "CGRect");
+		CoreGraphics_CGPoint = Lookup (platform_assembly, "CoreGraphics", "CGPoint");
+		CoreGraphics_CGSize = Lookup (platform_assembly, "CoreGraphics", "CGSize");
 	}
 }

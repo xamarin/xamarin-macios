@@ -80,8 +80,6 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 	/* Any changes in this method probably need to be reflected in the static registrar as well */
 	switch (type [0]) {
 		case _C_CLASS:
-			return xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
-
 		case _C_SEL:
 			return xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
 
@@ -134,10 +132,10 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 }
 
 static guint32
-xamarin_get_exception_for_element_conversion_failure (guint32 inner_exception_gchandle, int index)
+xamarin_get_exception_for_element_conversion_failure (guint32 inner_exception_gchandle, unsigned long index)
 {
 	guint32 exception_gchandle = 0;
-	char *msg = xamarin_strdup_printf ("Failed to marshal the value at index %i.", index);
+	char *msg = xamarin_strdup_printf ("Failed to marshal the value at index %lu.", index);
 	exception_gchandle = xamarin_create_product_exception_with_inner_exception (8036, inner_exception_gchandle, msg);
 	xamarin_free (msg);
 	return exception_gchandle;
@@ -297,6 +295,9 @@ get_type_description_length (const char *desc)
 			length = 1;
 			break;
 		case _C_UNDEF:
+			// Example: [NSView sortSubviewsUsingFunction:context:] = '^?16^v24'
+			length = 1;
+			break;
 		case _C_ATOM:
 		case _C_VECTOR:
 			xamarin_assertion_message ("Unhandled type encoding: %s", desc);
@@ -442,7 +443,7 @@ xamarin_collapse_struct_name (const char *type, char struct_name[], int max_char
 	return true;
 }
 
-int
+unsigned long
 xamarin_get_frame_length (id self, SEL sel)
 {
 	if (self == NULL)
@@ -452,7 +453,8 @@ xamarin_get_frame_length (id self, SEL sel)
 	// which NSMethodSignature chokes on: NSInvalidArgumentException Reason: +[NSMethodSignature signatureWithObjCTypes:]: unsupported type encoding spec '{?}'
 	// So instead parse the description ourselves.
 
-	int length = 0;
+	unsigned long length = 0;
+	[self class]; // There's a bug in the ObjC runtime where we might get an uninitialized Class instance from object_getClass. See #6258. Calling the 'class' selector first makes sure the Class instance is initialized.
 	Class cls = object_getClass (self);
 	const char *method_description = get_method_description (cls, sel);
 	const char *desc = method_description;
@@ -463,14 +465,14 @@ xamarin_get_frame_length (id self, SEL sel)
 			length = [sig frameLength];
 		} @catch (NSException *ex) {
 			length = sizeof (void *) * 64; // some high-ish number.
-			fprintf (stderr, PRODUCT ": Failed to calculate the frame size for the method [%s %s] (%s). Using a value of %i instead.\n", class_getName (cls), sel_getName (sel), [[ex description] UTF8String], length);
+			fprintf (stderr, PRODUCT ": Failed to calculate the frame size for the method [%s %s] (%s). Using a value of %lu instead.\n", class_getName (cls), sel_getName (sel), [[ex description] UTF8String], length);
 		}
 	} else {
 		// The format of the method type encoding is described here: http://stackoverflow.com/a/11492151/183422
 		// the return type might have a number after it, which is the size of the argument frame
 		// first get this number (if it's there), and use it as a minimum value for the frame length
 		int rvlength = get_type_description_length (desc);
-		int min_length = 0;
+		unsigned long min_length = 0;
 		if (rvlength > 0) {
 			const char *min_start = desc + rvlength;
 			// the number is at the end of the return type encoding, so find any numbers
@@ -479,7 +481,7 @@ xamarin_get_frame_length (id self, SEL sel)
 				min_start--;
 			if (min_start < desc + rvlength) {
 				for (int i = 0; i < desc + rvlength - min_start; i++)
-					min_length = min_length * 10 + (min_start [i] - '0');
+					min_length = min_length * 10ul + (unsigned long)(min_start [i] - '0');
 			}
 		}
 
@@ -488,7 +490,7 @@ xamarin_get_frame_length (id self, SEL sel)
 		// skip the return value.
 		desc += rvlength;
 		while (*desc) {
-			int tl = xamarin_objc_type_size (desc);
+			unsigned long tl = xamarin_objc_type_size (desc);
 			// round up to pointer size
 			if (tl % sizeof (void *) != 0)
 				tl += sizeof (void *) - (tl % sizeof (void *));
@@ -539,7 +541,8 @@ xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl)
 	// COOP: does not access managed memory: any mode
 	struct objc_super sup;
 	find_objc_method_implementation (&sup, self, sel, xamarin_impl);
-	return objc_msgSendSuper (&sup, sel);
+	typedef id (*func_objc_msgSendSuper) (struct objc_super *sup, SEL sel);
+	return ((func_objc_msgSendSuper) objc_msgSendSuper) (&sup, sel);
 }
 
 #if MONOMAC
@@ -608,9 +611,9 @@ void
 xamarin_release_trampoline (id self, SEL sel)
 {
 	// COOP: does not access managed memory: any mode, but it assumes safe mode upon entry (it takes locks, and doesn't switch to safe mode).
-	MONO_ASSERT_GC_SAFE;
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	
-	int ref_count;
+	unsigned long ref_count;
 	bool detach = false;
 
 	pthread_mutex_lock (&refcount_mutex);
@@ -642,7 +645,7 @@ xamarin_release_trampoline (id self, SEL sel)
 }
 
 void
-xamarin_notify_dealloc (id self, int gchandle)
+xamarin_notify_dealloc (id self, uint32_t gchandle)
 {
 	guint32 exception_gchandle = 0;
 
@@ -671,7 +674,7 @@ id
 xamarin_retain_trampoline (id self, SEL sel)
 {
 	// COOP: safe mode upon entry, switches to unsafe when acccessing managed memory.
-	MONO_ASSERT_GC_SAFE;
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 
 	pthread_mutex_lock (&refcount_mutex);
 
@@ -714,7 +717,7 @@ static pthread_mutex_t gchandle_hash_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static const char *associated_key = "x"; // the string value doesn't matter, only the pointer value.
 void
-xamarin_set_gchandle_trampoline (id self, SEL sel, int gc_handle)
+xamarin_set_gchandle_trampoline (id self, SEL sel, uint32_t gc_handle)
 {
 	// COOP: Called by ObjC (when the setGCHandle: selector is called on an object).
 	// COOP: Safe mode upon entry, and doesn't access managed memory, so no need to change.
@@ -745,7 +748,7 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, int gc_handle)
 	pthread_mutex_unlock (&gchandle_hash_lock);
 }
 
-int
+uint32_t
 xamarin_get_gchandle_trampoline (id self, SEL sel)
 {
 	// COOP: Called by ObjC (when the getGCHandle selector is called on an object).
@@ -753,10 +756,10 @@ xamarin_get_gchandle_trampoline (id self, SEL sel)
 	MONO_ASSERT_GC_SAFE;
 	
 	/* This is for types registered using the dynamic registrar */
-	int gc_handle = 0;
+	uint32_t gc_handle = 0;
 	pthread_mutex_lock (&gchandle_hash_lock);
 	if (gchandle_hash != NULL)
-		gc_handle = GPOINTER_TO_INT (CFDictionaryGetValue (gchandle_hash, self));
+		gc_handle = GPOINTER_TO_UINT (CFDictionaryGetValue (gchandle_hash, self));
 	pthread_mutex_unlock (&gchandle_hash_lock);
 	return gc_handle;
 }
@@ -1303,11 +1306,6 @@ xamarin_get_nsvalue_converter (MonoClass *managedType, MonoMethod *method, bool 
 	if (*exception_gchandle != 0)
 		goto exception_handling;
 
-#if MONOMAC
-	if (xamarin_use_new_assemblies && !strncmp (fullname, "MonoMac.", 8))
-		memmove (fullname, fullname + 8, strlen (fullname) - 7 /* also copy the null char */);
-#endif
-
 	if (!strcmp (fullname, "Foundation.NSRange")) {
 		func = to_managed ? (void *) xamarin_nsvalue_to_nsrange : (void *) xamarin_nsrange_to_nsvalue;
 #if HAVE_UIKIT // yep, these CoreGraphics-looking category methods are defined in UIKit
@@ -1394,10 +1392,10 @@ xamarin_get_managed_to_nsvalue_func (MonoClass *managedType, MonoMethod *method,
 void *
 xamarin_smart_enum_to_nsstring (MonoObject *value, void *context /* token ref */, guint32 *exception_gchandle)
 {
-	guint32 context_ref = GPOINTER_TO_INT (context);
+	guint32 context_ref = GPOINTER_TO_UINT (context);
 	if (context_ref == INVALID_TOKEN_REF) {
 		// This requires the dynamic registrar to invoke the correct conversion function
-		int handle = mono_gchandle_new (value, FALSE);
+		uint32_t handle = mono_gchandle_new (value, FALSE);
 		NSString *rv = xamarin_convert_smart_enum_to_nsstring (GINT_TO_POINTER (handle), exception_gchandle);
 		mono_gchandle_free (handle);
 		return rv;
@@ -1431,8 +1429,8 @@ xamarin_smart_enum_to_nsstring (MonoObject *value, void *context /* token ref */
 void *
 xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, void *context, guint32 *exception_gchandle)
 {
-	guint32 context_ref = GPOINTER_TO_INT (context);
-	int gc_handle = 0;
+	guint32 context_ref = GPOINTER_TO_UINT (context);
+	uint32_t gc_handle = 0;
 	MonoObject *obj;
 
 	if (context_ref == INVALID_TOKEN_REF) {
@@ -1440,7 +1438,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 		void *rv = xamarin_convert_nsstring_to_smart_enum (value, mono_type_get_object (mono_domain_get (), mono_class_get_type (managedType)), exception_gchandle);
 		if (*exception_gchandle != 0)
 			return ptr;
-		gc_handle = GPOINTER_TO_INT (rv);
+		gc_handle = GPOINTER_TO_UINT (rv);
 		obj = mono_gchandle_get_target (gc_handle);
 	} else {
 		// The static registrar found the correct conversion function, and provided a token ref we can use
@@ -1463,7 +1461,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 		}
 	}
 
-	int size = mono_class_value_size (managedType, NULL);
+	size_t size = (size_t) mono_class_value_size (managedType, NULL);
 	if (!ptr)
 		ptr = xamarin_calloc (size);
 	void *value_ptr = mono_object_unbox (obj);
@@ -1490,13 +1488,13 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 {
 	id *buf = NULL;
 	NSArray *rv = NULL;
-	int element_size = 0;
+	size_t element_size = 0;
 	char *ptr = NULL;
 
 	if (array == NULL)
 		return NULL;
 
-	int length = mono_array_length (array);
+	unsigned long length = mono_array_length (array);
 	if (length == 0)
 		return [NSArray array];
 
@@ -1504,10 +1502,10 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 	MonoClass *element_class = mono_class_get_element_class (mono_object_get_class ((MonoObject *) array));
 	bool is_value_type = mono_class_is_valuetype (element_class);
 	if (is_value_type) {
-		element_size = mono_class_value_size (element_class, NULL);
-		ptr = (char *) mono_array_addr_with_size (array, element_size, 0);
+		element_size = (size_t) mono_class_value_size (element_class, NULL);
+		ptr = (char *) mono_array_addr_with_size (array, (int) element_size, 0);
 	}
-	for (int i = 0; i < length; i++) {
+	for (unsigned long i = 0; i < length; i++) {
 		MonoObject *value;
 		if (is_value_type) {
 			value = mono_value_box (mono_domain_get (), element_class, ptr + element_size * i);
@@ -1534,7 +1532,7 @@ xamarin_convert_nsarray_to_managed_with_func (NSArray *array, MonoClass *managed
 	if (array == NULL)
 		return NULL;
 
-	int length = [array count];
+	unsigned long length = [array count];
 	MonoArray *rv = mono_array_new (mono_domain_get (), managedElementType, length);
 
 	if (length == 0)
@@ -1543,14 +1541,14 @@ xamarin_convert_nsarray_to_managed_with_func (NSArray *array, MonoClass *managed
 	bool is_value_type = mono_class_is_valuetype (managedElementType);
 	MonoObject *mobj;
 	void *valueptr = NULL;
-	int element_size = 0;
+	size_t element_size = 0;
 	char *ptr = NULL;
 
 	if (is_value_type) {
-		element_size = mono_class_value_size (managedElementType, NULL);
-		ptr = (char *) mono_array_addr_with_size (rv, element_size, 0);
+		element_size = (size_t) mono_class_value_size (managedElementType, NULL);
+		ptr = (char *) mono_array_addr_with_size (rv, (int) element_size, 0);
 	}
-	for (int i = 0; i < length; i++) {
+	for (unsigned long i = 0; i < length; i++) {
 		if (is_value_type) {
 			valueptr = convert ([array objectAtIndex: i], valueptr, managedElementType, context, exception_gchandle);
 			memcpy (ptr, valueptr, element_size);

@@ -244,11 +244,7 @@ namespace Registrar {
 
 		public static bool IsPlatformType (TypeReference type, string @namespace, string name)
 		{
-			if (Registrar.IsDualBuild) {
-				return type.Is (@namespace, name);
-			} else {
-				return type.Is (Registrar.CompatNamespace + "." + @namespace, name);
-			}
+			return type.Is (@namespace, name);
 		}
 
 		public static bool ParametersMatch (IList<ParameterDefinition> a, TypeReference [] b)
@@ -475,7 +471,7 @@ namespace Registrar {
 			return "void *";
 		}
 
-		public string ToObjCType (TypeDefinition type)
+		public string ToObjCType (TypeDefinition type, bool delegateToBlockType = false)
 		{
 			switch (type.FullName) {
 			case "System.IntPtr": return "void *";
@@ -493,15 +489,31 @@ namespace Registrar {
 			case "System.Boolean": return "BOOL";
 			case "System.Void": return "void";
 			case "System.String": return "NSString";
-			case Registrar.CompatNamespace + ".ObjCRuntime.Selector": return "SEL";
-			case Registrar.CompatNamespace + ".ObjCRuntime.Class": return "Class";
+			case "ObjCRuntime.Selector": return "SEL";
+			case "ObjCRuntime.Class": return "Class";
 			}
 
 			if (IsNativeObject (type))
 				return "id";
 
-			if (IsDelegate (type))
-				return "id";
+			if (IsDelegate (type)) {
+				if (!delegateToBlockType)
+					return "id";
+
+				MethodDefinition invokeMethod = type.Methods.SingleOrDefault (method => method.Name == "Invoke");
+				if (invokeMethod == null)
+					return "id";
+
+				StringBuilder builder = new StringBuilder ();
+				builder.Append (ToObjCType (invokeMethod.ReturnType));
+				builder.Append (" (^)(");
+
+				var argumentTypes = invokeMethod.Parameters.Select (param => ToObjCType (param.ParameterType));
+				builder.Append (string.Join (", ", argumentTypes));
+
+				builder.Append (")");
+				return builder.ToString ();
+			}
 
 			if (type.IsEnum)
 				return ToObjCType (GetEnumUnderlyingType (type));
@@ -551,7 +563,7 @@ namespace Registrar {
 			if (gp != null) {
 				if (gp.HasConstraints) {
 					foreach (var constraint in gp.Constraints) {
-						if (IsNativeObject (constraint))
+						if (IsNativeObject (constraint.ConstraintType))
 							return true;
 					}
 				}
@@ -795,26 +807,16 @@ namespace Registrar {
 			}
 		}
 
-		protected override bool IsDualBuildImpl {
-			get {
-#if MMP
-				return Xamarin.Bundler.Driver.IsUnified;
-#else
-				return true;
-#endif
-			}
-		}
-
-		protected override Exception CreateException (int code, Exception innerException, MethodDefinition method, string message, params object[] args)
+		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, MethodDefinition method, string message, params object[] args)
 		{
-			return ErrorHelper.CreateError (App, code, innerException, method, message, args);
+			return ErrorHelper.Create (App, code, error, innerException, method, message, args);
 		}
 
-		protected override Exception CreateException (int code, Exception innerException, TypeReference type, string message, params object [] args)
+		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, TypeReference type, string message, params object [] args)
 		{
-			return ErrorHelper.CreateError (App, code, innerException, type, message, args);
+			return ErrorHelper.Create (App, code, error, innerException, type, message, args);
 		}
-
+		
 		protected override bool ContainsPlatformReference (AssemblyDefinition assembly)
 		{
 			if (assembly.Name.Name == PlatformAssembly)
@@ -1056,7 +1058,7 @@ namespace Registrar {
 
 		bool IsNativeEnum (TypeDefinition td)
 		{
-			return IsDualBuild && HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
+			return HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
 		}
 
 		protected override bool IsNullable (TypeReference type)
@@ -1099,7 +1101,16 @@ namespace Registrar {
 
 		protected override bool IsInterface (TypeReference type)
 		{
-			return type.Resolve ().IsInterface;
+			if (type.IsArray)
+				return false;
+			return type.Resolve ()?.IsInterface == true;
+		}
+
+		protected override bool IsAbstract (TypeReference type)
+		{
+			if (type.IsArray)
+				return false;
+			return type.Resolve ()?.IsAbstract == true;
 		}
 
 		protected override TypeReference[] GetInterfaces (TypeReference type)
@@ -1155,8 +1166,8 @@ namespace Registrar {
 				if (!gp.HasConstraints)
 					return false;
 				foreach (var c in gp.Constraints) {
-					if (IsNSObject (c)) {
-						constrained_type = c;
+					if (IsNSObject (c.ConstraintType)) {
+						constrained_type = c.ConstraintType;
 						return true;
 					}
 				}
@@ -1218,8 +1229,8 @@ namespace Registrar {
 			var gp = tr as GenericParameter;
 			if (gp != null) {
 				foreach (var constr in gp.Constraints) {
-					if (constr.Resolve ().IsClass) {
-						return constr;
+					if (constr.ConstraintType.Resolve ().IsClass) {
+						return constr.ConstraintType;
 					}
 				}
 				return null;
@@ -2066,11 +2077,7 @@ namespace Registrar {
 			if (aname != PlatformAssembly)
 				return false;
 				
-			if (IsDualBuild) {
-				return Driver.GetFrameworks (App).ContainsKey (type.Namespace);
-			} else {
-				return type.Namespace.StartsWith (CompatNamespace + ".", StringComparison.Ordinal);
-			}
+			return Driver.GetFrameworks (App).ContainsKey (type.Namespace);
 		}
 
 		static bool IsLinkedAway (TypeReference tr)
@@ -2113,10 +2120,6 @@ namespace Registrar {
 				}
 			}
 
-			// Strip off the 'MonoTouch.' prefix
-			if (!IsDualBuild)
-				ns = type.Namespace.Substring (ns.IndexOf ('.') + 1);
-			
 			CheckNamespace (ns, exceptions);
 		}
 
@@ -2151,9 +2154,6 @@ namespace Registrar {
 				header.WriteLine ("#import <IOBluetooth/IOBluetooth.h>");
 				header.WriteLine ("#import <CoreBluetooth/CoreBluetooth.h>");
 				return;
-			case "CoreImage":
-				h = "<QuartzCore/QuartzCore.h>";
-				break;
 			case "PdfKit":
 			case "ImageKit":
 			case "QuartzComposer":
@@ -2205,15 +2205,6 @@ namespace Registrar {
 				}
 				goto default;
 #endif
-			case "WatchKit":
-				// There's a bug in Xcode 7 beta 2 headers where the build fails with
-				// ObjC++ files if WatchKit.h is included before UIKit.h (radar 21651022).
-				// Workaround this by manually include UIKit.h before WatchKit.h.
-				if (!namespaces.Contains ("UIKit"))
-					header.WriteLine ("#import <UIKit/UIKit.h>");
-				header.WriteLine ("#import <WatchKit/WatchKit.h>");
-				namespaces.Add ("UIKit");
-				return;
 			case "QTKit":
 #if MONOMAC
 				if (App.SdkVersion >= MacOSTenTwelveVersion)
@@ -2223,6 +2214,10 @@ namespace Registrar {
 			case "IOSurface": // There is no IOSurface.h
 				h = "<IOSurface/IOSurfaceObjC.h>";
 				break;
+			case "CoreImage":
+				header.WriteLine ("#import <CoreImage/CoreImage.h>");
+				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
+				return;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
@@ -2348,7 +2343,20 @@ namespace Registrar {
 			return suggestion;
 		}
 
-		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod)
+		// Some declarations can be generalized to NSObject for its subclasses
+		// (and System.String too as we convert it into an NSString)
+		// since the generated code, except the function signature, is identical anyway
+		string ToSimpleObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod)
+		{
+			var byref = type.IsByReference;
+			var t = byref ? type.GetElementType () : type;
+			if (t.Inherits ("Foundation", "NSObject") || t.Is ("System", "String"))
+				return byref ? "id*" : "id";
+
+			return ToObjCParameterType (type, descriptiveMethodName, exceptions, inMethod);
+		}
+
+		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod, bool delegateToBlockType = false)
 		{
 			TypeDefinition td = ResolveType (type);
 			var reftype = type as ByReferenceType;
@@ -2437,11 +2445,9 @@ namespace Registrar {
 				CheckNamespace ("CoreGraphics", exceptions);
 				return "CGFloat";
 			case "System.DateTime":
-				throw ErrorHelper.CreateError (4102, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", IsDualBuild ? "Foundation.NSDate" : CompatNamespace + ".Foundation.NSDate", descriptiveMethodName);
-			case "ObjCRuntime.Selector":
-			case CompatNamespace + ".ObjCRuntime.Selector": return "SEL";
-			case "ObjCRuntime.Class":
-			case CompatNamespace + ".ObjCRuntime.Class": return "Class";
+				throw ErrorHelper.CreateError (4102, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", "Foundation.NSDate", descriptiveMethodName);
+			case "ObjCRuntime.Selector": return "SEL";
+			case "ObjCRuntime.Class": return "Class";
 			default:
 				if (IsNSObject (td)) {
 					if (!IsPlatformType (td))
@@ -2453,7 +2459,7 @@ namespace Registrar {
 						return GetExportedTypeName (td) + " *";
 					}
 				} else if (td.IsEnum) {
-					if (IsDualBuild && HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute)) {
+					if (HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute)) {
 						switch (GetEnumUnderlyingType (td).FullName) {
 						case "System.Int64":
 							return "NSInteger";
@@ -2473,7 +2479,7 @@ namespace Registrar {
 					}
 					return CheckStructure (td, descriptiveMethodName, inMethod);
 				} else {
-					return ToObjCType (td);
+					return ToObjCType (td, delegateToBlockType: delegateToBlockType);
 				}
 			}
 		}
@@ -2545,7 +2551,7 @@ namespace Registrar {
 					sb.Append (split [i]);
 					sb.Append (':');
 					sb.Append ('(');
-					sb.Append (ToObjCParameterType (method.NativeParameters [i + indexOffset], method.DescriptiveMethodName, exceptions, method.Method));
+					sb.Append (ToObjCParameterType (method.NativeParameters [i + indexOffset], method.DescriptiveMethodName, exceptions, method.Method, delegateToBlockType: true));
 					sb.Append (')');
 					sb.AppendFormat ("p{0}", i);
 				}
@@ -2640,9 +2646,6 @@ namespace Registrar {
 		bool IsTypeAllowedInSimulator (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
-			if (!IsDualBuild)
-				ns = ns.Substring (CompatNamespace.Length + 1);
-
 			return Driver.IsFrameworkAvailableInSimulator (App, ns);
 		}
 #endif
@@ -2664,25 +2667,8 @@ namespace Registrar {
 		protected override void OnSkipType (TypeReference type, ObjCType registered_type)
 		{
 			base.OnSkipType (type, registered_type);
-
-#if MONOMAC
-			if (!Is64Bits && IsOnly64Bits (type))
-				return; 
-#endif
-
 			skipped_types.Add (new SkippedType { Skipped = type, Actual = registered_type } );
 		}
-
-#if MONOMAC
-		bool IsOnly64Bits (TypeReference type)
-		{
-			var attributes = GetAvailabilityAttributes (type); // Can return null list
-			if (attributes == null)
-				return false;
-
-			return attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64);
-		}
-#endif
 
 		void Specialize (AutoIndentStringBuilder sb)
 		{
@@ -2704,7 +2690,7 @@ namespace Registrar {
 			// or if we're not registering protocols.
 			if (App.Optimizations.RegisterProtocols == true) {
 				var asm = input_assemblies.FirstOrDefault ((v) => v.Name.Name == PlatformAssembly);
-				needs_protocol_map = asm?.MainModule.GetType (!IsDualBuild ? (CompatNamespace + ".ObjCRuntime") : "ObjCRuntime", "Runtime")?.Methods.Any ((v) => v.Name == "GetProtocolForType") == true;
+				needs_protocol_map = asm?.MainModule.GetType ("ObjCRuntime", "Runtime")?.Methods.Any ((v) => v.Name == "GetProtocolForType") == true;
 			}
 
 			map.AppendLine ("static MTClassMap __xamarin_class_map [] = {");
@@ -2727,20 +2713,17 @@ namespace Registrar {
 					continue; // Some types are not supported in the simulator.
 				}
 #else
-				// Don't register 64-bit only API on 32-bit XM
-				if (!Is64Bits && IsOnly64Bits (@class.Type))
-					continue;
-
 				if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
 					continue; // QTKit header was removed in 10.12 SDK
-
-				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do
-				// if the header doesn't declare them. So hack it away, since they are useless in 64-bit anyway
-				if (!Is64Bits && (IsMapKitType (@class) || IsIntentsType (@class) || IsExternalAccessoryType (@class)))
-					continue;
 #endif
 
 				
+				// Xcode 11 removed WatchKit for iOS!
+				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS) {
+					exceptions.Add (ErrorHelper.CreateWarning (4178, $"The class '{@class.Type.FullName}' will not be registered because the WatchKit framework has been removed from the iOS SDK."));
+					continue;
+				}
+
 				if (@class.IsFakeProtocol)
 					continue;
 
@@ -2814,7 +2797,7 @@ namespace Registrar {
 					if (token_ref == uint.MaxValue)
 						token_ref = CreateTokenReference (@class.Type, TokenType.TypeDef);
 					protocol_wrapper_map.Add (token_ref, new Tuple<ObjCType, uint> (@class, CreateTokenReference (@class.ProtocolWrapperType, TokenType.TypeDef)));
-					if (needs_protocol_map) {
+					if (needs_protocol_map || TryGetAttribute (@class.Type, "Foundation", "XpcInterfaceAttribute", out var xpcAttr)) {
 						protocols.Add (new ProtocolInfo { TokenReference = token_ref, Protocol = @class });
 						CheckNamespace (@class, exceptions);
 					}
@@ -3081,7 +3064,7 @@ namespace Registrar {
 				map.AppendLine ("};");
 				map.AppendLine ();
 			}
-			if (needs_protocol_map && protocols.Count > 0) {
+			if (protocols.Count > 0) {
 				var ordered = protocols.OrderBy ((v) => v.TokenReference);
 				map.AppendLine ("static const uint32_t __xamarin_protocol_tokens [] = {");
 				foreach (var p in ordered)
@@ -3262,7 +3245,7 @@ namespace Registrar {
 					rettype = "double";
 					break;
 				default:
-					rettype = ToObjCParameterType (method.NativeReturnType, descriptiveMethodName, exceptions, method.Method);
+					rettype = ToSimpleObjCParameterType (method.NativeReturnType, descriptiveMethodName, exceptions, method.Method);
 					break;
 				}
 				break;
@@ -3430,7 +3413,7 @@ namespace Registrar {
 					objctype = ToObjCParameterType (type, descriptiveMethodName, exceptions, method.Method) + "*";
 				} else if (td.IsEnum) {
 					type = GetEnumUnderlyingType (td);
-					isNativeEnum = IsDualBuild && HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
+					isNativeEnum = HasAttribute (td, ObjCRuntime, StringConstants.NativeAttribute);
 					td = type.Resolve ();
 				}
 
@@ -3497,7 +3480,6 @@ namespace Registrar {
 					}
 					break;
 				case "ObjCRuntime.Selector":
-				case CompatNamespace + ".ObjCRuntime.Selector":
 					if (isRef) {
 						body_setup.AppendLine ("MonoObject *a{0} = NULL;", i);
 						if (!isOut) {
@@ -3513,7 +3495,6 @@ namespace Registrar {
 					}
 					break;
 				case "ObjCRuntime.Class":
-				case CompatNamespace + ".ObjCRuntime.Class":
 					if (isRef) {
 						body_setup.AppendLine ("MonoObject *a{0} = NULL;", i);
 						if (!isOut) {
@@ -3629,7 +3610,8 @@ namespace Registrar {
 							body_setup.AppendLine ("MonoObject *mobj{0} = NULL;", i);
 							if (!isOut) {
 								body_setup.AppendLine ("NSObject *nsobj{0} = NULL;", i);
-								setup_call_stack.AppendLine ("nsobj{0} = *(NSObject **) p{0};", i);
+								setup_call_stack.AppendLine ("if (p{0} != NULL)", i).Indent ();
+								setup_call_stack.AppendLine ("nsobj{0} = *(NSObject **) p{0};", i).Unindent ();
 								setup_call_stack.AppendLine ("if (nsobj{0}) {{", i);
 								body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
 								setup_call_stack.AppendLine ("paramtype{0} = xamarin_get_parameter_type (managed_method, {0});", i);
@@ -3911,7 +3893,7 @@ namespace Registrar {
 			if (App.Embeddinator)
 				body.WriteLine ("xamarin_embeddinator_initialize ();");
 
-			body.WriteLine ("MONO_ASSERT_GC_SAFE;");
+			body.WriteLine ("MONO_ASSERT_GC_SAFE_OR_DETACHED;");
 			body.WriteLine ("MONO_THREAD_ATTACH;"); // COOP: this will switch to GC_UNSAFE
 			body.WriteLine ();
 
@@ -4011,7 +3993,7 @@ namespace Registrar {
 			var objc_signature = new StringBuilder ().Append (rettype).Append (":");
 			if (method.Method.HasParameters) {
 				for (int i = 0; i < method.NativeParameters.Length; i++)
-					objc_signature.Append (ToObjCParameterType (method.NativeParameters [i], descriptiveMethodName, exceptions, method.Method)).Append (":");
+					objc_signature.Append (ToSimpleObjCParameterType (method.NativeParameters [i], descriptiveMethodName, exceptions, method.Method)).Append (":");
 			}
 
 			Body existing;
@@ -4034,7 +4016,7 @@ namespace Registrar {
 					methods.Append (rettype).Append (" ").Append (b.Name).Append (" (id self, SEL _cmd, MonoMethod **managed_method_ptr");
 					var pcount = method.Method.HasParameters ? method.NativeParameters.Length : 0;
 					for (int i = (isInstanceCategory ? 1 : 0); i < pcount; i++) {
-						methods.Append (", ").Append (ToObjCParameterType (method.NativeParameters [i], descriptiveMethodName, exceptions, method.Method));
+						methods.Append (", ").Append (ToSimpleObjCParameterType (method.NativeParameters [i], descriptiveMethodName, exceptions, method.Method));
 						methods.Append (" ").Append ("p").Append (i.ToString ());
 					}
 					if (isCtor)
@@ -4129,10 +4111,11 @@ namespace Registrar {
 			}
 
 			// Might be an implementation of an optional protocol member.
-			if (obj_method.DeclaringType.Protocols != null) {
+			var allProtocols = obj_method.DeclaringType.AllProtocols;
+			if (allProtocols != null) {
 				string selector = null;
 
-				foreach (var proto in obj_method.DeclaringType.Protocols) {
+				foreach (var proto in allProtocols) {
 					// We store the DelegateProxy type in the ProtocolMemberAttribute, so check those.
 					if (selector == null)
 						selector = obj_method.Selector ?? string.Empty;
@@ -4175,10 +4158,11 @@ namespace Registrar {
 			}
 
 			// Might be an implementation of an optional protocol member.
-			if (obj_method.DeclaringType.Protocols != null) {
+			var allProtocols = obj_method.DeclaringType.AllProtocols;
+			if (allProtocols != null) {
 				string selector = null;
 
-				foreach (var proto in obj_method.DeclaringType.Protocols) {
+				foreach (var proto in allProtocols) {
 					// We store the BlockProxy type in the ProtocolMemberAttribute, so check those.
 					// We may run into binding assemblies built with earlier versions of the generator,
 					// which means we can't rely on finding the BlockProxy attribute in the ProtocolMemberAttribute.
@@ -4368,12 +4352,6 @@ namespace Registrar {
 		{
 			var underlyingTypeName = managedType.FullName;
 
-#if MMP
-			// Remove 'MonoMac.' namespace prefix to make switch smaller
-			if (!Registrar.IsDualBuild && underlyingTypeName.StartsWith ("MonoMac.", StringComparison.Ordinal))
-				underlyingTypeName = underlyingTypeName.Substring ("MonoMac.".Length);
-#endif
-
 			switch (underlyingTypeName) {
 			case "Foundation.NSRange": nativeType = "NSRange"; return "xamarin_nsvalue_to_nsrange";
 			case "CoreGraphics.CGAffineTransform": nativeType = "CGAffineTransform"; return "xamarin_nsvalue_to_cgaffinetransform";
@@ -4401,12 +4379,6 @@ namespace Registrar {
 		string GetManagedToNSValueFunc (TypeReference managedType, TypeReference inputType, TypeReference outputType, string descriptiveMethodName)
 		{
 			var underlyingTypeName = managedType.FullName;
-
-#if MMP
-			// Remove 'MonoMac.' namespace prefix to make switch smaller
-			if (!Registrar.IsDualBuild && underlyingTypeName.StartsWith ("MonoMac.", StringComparison.Ordinal))
-				underlyingTypeName = underlyingTypeName.Substring ("MonoMac.".Length);
-#endif
 
 			switch (underlyingTypeName) {
 			case "Foundation.NSRange": return "xamarin_nsrange_to_nsvalue";

@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "monotouch-test", "monotouch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "framework-test", "framework-test\framework-test.csproj", "{2ECCE3D0-AAD1-46B9-B190-B567249DCF9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mini", "mini\mini.csproj", "{5BDBB8B4-5D6B-43E8-9664-C4D5CA3C9B11}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fsharp", "fsharp\fsharp.fsproj", "{7862FE5A-530A-4651-825F-C80836B0A3A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BundledResources", "BundledResources\BundledResources.csproj", "{FE6EDEE9-ADF6-4F42-BCF2-B68C0A44EC3D}"
@@ -18,18 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-framework-test", "bindings-framework-test\bindings-framework-test.csproj", "{E40B0B77-3467-4891-9117-7AF8F248E306}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fsharplibrary", "fsharplibrary\fsharplibrary.fsproj", "{C7212169-BA46-413B-91CD-A32C52AD5E0D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mscorlib", "bcl-test\mscorlib\mscorlib.csproj", "{34CB1751-E445-4E32-BFA7-03E6831C11EE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data", "bcl-test\System.Data\System.Data.csproj", "{BEF0140A-A6A6-4074-B55F-03856A6B5862}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Net.Http", "bcl-test\System.Net.Http\System.Net.Http.csproj", "{D7212E3D-CD1B-4E58-A11D-C7B7898168AA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Web.Services", "bcl-test\System.Web.Services\System.Web.Services.csproj", "{DA061019-04C3-4221-AF04-63F2BFB5DA42}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Xml", "bcl-test\System.Xml\System.Xml.csproj", "{93268FFB-571C-4402-8899-027A7778D2C0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Data.Sqlite", "bcl-test\Mono.Data.Sqlite\Mono.Data.Sqlite.csproj", "{1ADF4F27-7610-4501-A62E-1157273AED7E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "introspection-ios", "introspection\iOS\introspection-ios.csproj", "{208744BD-504E-47D7-9A98-1CF02454A6DA}"
 EndProject
@@ -43,83 +29,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoTouch.NUnitLite", "..\s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mtouch", "mtouch\mtouch.csproj", "{9A1177F5-16E6-45DE-AA69-DC9924EC39B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mscorlib-0", "bcl-test\mscorlib\mscorlib-0.csproj", "{6F47C092-2F85-43D6-1111-E687426F6BF3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mscorlib-1", "bcl-test\mscorlib\mscorlib-1.csproj", "{6F47C092-2F85-43D6-2222-E687426F6BF3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testgenerator", "test-libraries\testgenerator.csproj", "{CD430449-8E59-4ECD-ADD9-ACF79E9E660B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemXunit", "bcl-test\BCLTests\SystemXunit.csproj", "{3A835432-B054-32FD-07CB-F9A8FFCFB44D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemXmlXunit", "bcl-test\BCLTests\SystemXmlXunit.csproj", "{E5B0BF8F-128E-8C1F-5A10-99D26AA71E76}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemXmlTests", "bcl-test\BCLTests\SystemXmlTests.csproj", "{387EAD7C-3E00-6BEC-8914-586A0BE31907}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemXmlLinqTests", "bcl-test\BCLTests\SystemXmlLinqTests.csproj", "{274328F1-9A35-ED63-A95C-D995076011DA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemWebServicesTests", "bcl-test\BCLTests\SystemWebServicesTests.csproj", "{36263A92-DACE-4BB0-063E-CD7107CF788A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemTransactionsTests", "bcl-test\BCLTests\SystemTransactionsTests.csproj", "{F8CFE6AE-81B3-C1D5-B6E3-881EFB19D8B6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemTests", "bcl-test\BCLTests\SystemTests.csproj", "{022B4AF2-F62F-8EF3-9375-7CCE2820C54C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemServiceModelWebTests", "bcl-test\BCLTests\SystemServiceModelWebTests.csproj", "{ECFE62D9-1BC5-C44F-4D47-9BBA5B2C7F36}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemServiceModelTests", "bcl-test\BCLTests\SystemServiceModelTests.csproj", "{569FFC00-3699-63C0-E0B7-9C2DA8F015D9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemSecurityXunit", "bcl-test\BCLTests\SystemSecurityXunit.csproj", "{7017DF4C-80ED-A7C3-7D44-F3A9CA5B4DF4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemSecurityTests", "bcl-test\BCLTests\SystemSecurityTests.csproj", "{ABACCDE0-14CC-8C9F-7044-CE101CA9D818}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemRuntimeSerializationXunit", "bcl-test\BCLTests\SystemRuntimeSerializationXunit.csproj", "{E44B6A87-C5AF-DF76-B514-841F9DF59CDF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemRuntimeSerializationTests", "bcl-test\BCLTests\SystemRuntimeSerializationTests.csproj", "{E76564D2-12A8-219F-F69C-6FE35B8BCDFC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemRuntimeCompilerServicesUnsafeXunit", "bcl-test\BCLTests\SystemRuntimeCompilerServicesUnsafeXunit.csproj", "{3D2B8C63-52B0-C706-B745-95453F8B90D3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemNumericsXunit", "bcl-test\BCLTests\SystemNumericsXunit.csproj", "{0477B067-9914-2C4F-14C4-CBDFDC0653CF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemNumericsTests", "bcl-test\BCLTests\SystemNumericsTests.csproj", "{44F02498-1AF8-CB2B-5F52-83C74B4F8F9F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemNetHttpTests", "bcl-test\BCLTests\SystemNetHttpTests.csproj", "{0D2AC6C4-5EC1-0927-876B-0658DEC4FF94}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemLinqXunit", "bcl-test\BCLTests\SystemLinqXunit.csproj", "{C63F3DD4-EC06-1CE5-BA87-1D038C5A0BBD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemJsonXunit", "bcl-test\BCLTests\SystemJsonXunit.csproj", "{797B6029-DEFB-CEA8-B5D3-BDA6E5EC7B35}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemJsonTests", "bcl-test\BCLTests\SystemJsonTests.csproj", "{5A2B9BB6-B845-92E1-B036-677BECEABD46}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemIOCompressionTests", "bcl-test\BCLTests\SystemIOCompressionTests.csproj", "{ADF8645F-3737-8342-704B-006A887760CF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemIOCompressionFileSystemTests", "bcl-test\BCLTests\SystemIOCompressionFileSystemTests.csproj", "{CDD9B9BA-6E8C-CE0F-DF98-F198484EDAC6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemDataXunit", "bcl-test\BCLTests\SystemDataXunit.csproj", "{0E046C2E-0261-F92B-20AB-8E27CDC8F859}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemDataTests", "bcl-test\BCLTests\SystemDataTests.csproj", "{CB000449-11E5-37D7-C757-4180FA74275D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemCoreXunit", "bcl-test\BCLTests\SystemCoreXunit.csproj", "{FB0374D9-4A15-4F14-BC79-A88406FC4966}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemCoreTests", "bcl-test\BCLTests\SystemCoreTests.csproj", "{D348AA85-B644-2187-C237-34DA88BFCA77}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemComponentModelDataAnnotationsTests", "bcl-test\BCLTests\SystemComponentModelDataAnnotationsTests.csproj", "{2FD12269-09D5-AD2C-9E59-6A18FCB2241F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemComponentModelCompositionXunit", "bcl-test\BCLTests\SystemComponentModelCompositionXunit.csproj", "{D4AF3416-BC36-1522-41E9-43C85DB18D84}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoSecurityTests", "bcl-test\BCLTests\MonoSecurityTests.csproj", "{BA08B246-1AE4-F419-926F-2EA9ED5DAF90}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDataTdsTests", "bcl-test\BCLTests\MonoDataTdsTests.csproj", "{EA3885C2-6A88-1007-BE44-29E6997B9856}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoDataSqliteTests", "bcl-test\BCLTests\MonoDataSqliteTests.csproj", "{C761790B-0C12-72AA-D4E3-671F2AA1719E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoCSharpTests", "bcl-test\BCLTests\MonoCSharpTests.csproj", "{01D5D6F0-C210-0165-D4AC-85B038CCC1D8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftCSharpXunit", "bcl-test\BCLTests\MicrosoftCSharpXunit.csproj", "{89B53407-2C05-975F-A09F-F131D5312DAA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorlibXunit", "bcl-test\BCLTests\CorlibXunit.csproj", "{A823F088-0836-20BB-D955-8B26BD9057BC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorlibTests", "bcl-test\BCLTests\CorlibTests.csproj", "{3D440BA8-29F8-EB17-6858-209114E79FD3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sampletester", "sampletester\sampletester.csproj", "{7340A1C6-61A5-42D2-9DBC-6688D2E70F62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mscorlib", "bcl-test\mscorlib.csproj", "{8DE7D61C-03C1-AF93-F83A-30F620EB2229}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 1", "bcl-test\BCL tests group 1.csproj", "{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 2", "bcl-test\BCL tests group 2.csproj", "{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 3", "bcl-test\BCL tests group 3.csproj", "{03953BD6-975D-9196-D46E-402AED4663EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 4", "bcl-test\BCL tests group 4.csproj", "{96EB9D05-2635-0FB3-43F9-9B74640CFE18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL tests group 6", "bcl-test\BCL tests group 6.csproj", "{A47E9448-F269-CE74-8539-EF920B6F0836}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -330,24 +254,114 @@ Global
 		{C7212169-BA46-413B-91CD-A32C52AD5E0D}.Release32|iPhone.Build.0 = Release|Any CPU
 		{C7212169-BA46-413B-91CD-A32C52AD5E0D}.Release64|iPhone.ActiveCfg = Release|Any CPU
 		{C7212169-BA46-413B-91CD-A32C52AD5E0D}.Release64|iPhone.Build.0 = Release|Any CPU
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Debug|iPhone.ActiveCfg = Debug|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Debug|iPhone.Build.0 = Debug|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Release|iPhone.ActiveCfg = Release|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Release|iPhone.Build.0 = Release|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Release-bitcode|iPhone.ActiveCfg = Release-bitcode|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Release-bitcode|iPhone.Build.0 = Release-bitcode|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Debug32|iPhone.ActiveCfg = Debug32|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Debug64|iPhone.ActiveCfg = Debug64|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Debug32|iPhone.Build.0 = Debug32|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Debug64|iPhone.Build.0 = Debug64|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Release32|iPhone.ActiveCfg = Release32|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Release32|iPhone.Build.0 = Release32|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Release64|iPhone.ActiveCfg = Release64|iPhone
-		{34CB1751-E445-4E32-BFA7-03E6831C11EE}.Release64|iPhone.Build.0 = Release64|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Debug|iPhone.Build.0 = Debug|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Release|iPhone.ActiveCfg = Release|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Release|iPhone.Build.0 = Release|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Release-bitcode|iPhone.ActiveCfg = Release-bitcode|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Release-bitcode|iPhone.Build.0 = Release-bitcode|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Debug32|iPhone.ActiveCfg = Debug32|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Debug64|iPhone.ActiveCfg = Debug64|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Debug32|iPhone.Build.0 = Debug32|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Debug64|iPhone.Build.0 = Debug64|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Release32|iPhone.ActiveCfg = Release32|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Release32|iPhone.Build.0 = Release32|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Release64|iPhone.ActiveCfg = Release64|iPhone
+		{8DE7D61C-03C1-AF93-F83A-30F620EB2229}.Release64|iPhone.Build.0 = Release64|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Debug|iPhone.Build.0 = Debug|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Release|iPhone.ActiveCfg = Release|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Release|iPhone.Build.0 = Release|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Release-bitcode|iPhone.ActiveCfg = Release-bitcode|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Release-bitcode|iPhone.Build.0 = Release-bitcode|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Debug32|iPhone.ActiveCfg = Debug32|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Debug64|iPhone.ActiveCfg = Debug64|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Debug32|iPhone.Build.0 = Debug32|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Debug64|iPhone.Build.0 = Debug64|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Release32|iPhone.ActiveCfg = Release32|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Release32|iPhone.Build.0 = Release32|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Release64|iPhone.ActiveCfg = Release64|iPhone
+		{3DACCAFC-72B5-4092-A7E6-95777B9FF2BB}.Release64|iPhone.Build.0 = Release64|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Debug|iPhone.Build.0 = Debug|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Release|iPhone.ActiveCfg = Release|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Release|iPhone.Build.0 = Release|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Release-bitcode|iPhone.ActiveCfg = Release-bitcode|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Release-bitcode|iPhone.Build.0 = Release-bitcode|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Debug32|iPhone.ActiveCfg = Debug32|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Debug64|iPhone.ActiveCfg = Debug64|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Debug32|iPhone.Build.0 = Debug32|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Debug64|iPhone.Build.0 = Debug64|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Release32|iPhone.ActiveCfg = Release32|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Release32|iPhone.Build.0 = Release32|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Release64|iPhone.ActiveCfg = Release64|iPhone
+		{03953BD6-975D-9196-D46E-402AED4663EC}.Release64|iPhone.Build.0 = Release64|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Debug|iPhone.Build.0 = Debug|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Release|iPhone.ActiveCfg = Release|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Release|iPhone.Build.0 = Release|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Release-bitcode|iPhone.ActiveCfg = Release-bitcode|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Release-bitcode|iPhone.Build.0 = Release-bitcode|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Debug32|iPhone.ActiveCfg = Debug32|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Debug64|iPhone.ActiveCfg = Debug64|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Debug32|iPhone.Build.0 = Debug32|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Debug64|iPhone.Build.0 = Debug64|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Release32|iPhone.ActiveCfg = Release32|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Release32|iPhone.Build.0 = Release32|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Release64|iPhone.ActiveCfg = Release64|iPhone
+		{96EB9D05-2635-0FB3-43F9-9B74640CFE18}.Release64|iPhone.Build.0 = Release64|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Debug|iPhone.Build.0 = Debug|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Release|iPhone.ActiveCfg = Release|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Release|iPhone.Build.0 = Release|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Release-bitcode|iPhone.ActiveCfg = Release-bitcode|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Release-bitcode|iPhone.Build.0 = Release-bitcode|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Debug32|iPhone.ActiveCfg = Debug32|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Debug64|iPhone.ActiveCfg = Debug64|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Debug32|iPhone.Build.0 = Debug32|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Debug64|iPhone.Build.0 = Debug64|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Release32|iPhone.ActiveCfg = Release32|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Release32|iPhone.Build.0 = Release32|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Release64|iPhone.ActiveCfg = Release64|iPhone
+		{A47E9448-F269-CE74-8539-EF920B6F0836}.Release64|iPhone.Build.0 = Release64|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Debug|iPhone.Build.0 = Debug|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Release|iPhone.ActiveCfg = Release|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Release|iPhone.Build.0 = Release|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Release-bitcode|iPhone.ActiveCfg = Release-bitcode|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Release-bitcode|iPhone.Build.0 = Release-bitcode|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Debug32|iPhone.ActiveCfg = Debug32|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Debug64|iPhone.ActiveCfg = Debug64|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Debug32|iPhone.Build.0 = Debug32|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Debug64|iPhone.Build.0 = Debug64|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Release32|iPhone.ActiveCfg = Release32|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Release32|iPhone.Build.0 = Release32|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Release64|iPhone.ActiveCfg = Release64|iPhone
+		{CB005E01-C7E1-7045-FCEF-C82DC9A35A49}.Release64|iPhone.Build.0 = Release64|iPhone
 		{BEF0140A-A6A6-4074-B55F-03856A6B5862}.Debug|iPhone.ActiveCfg = Debug|iPhone
 		{BEF0140A-A6A6-4074-B55F-03856A6B5862}.Debug|iPhone.Build.0 = Debug|iPhone
 		{BEF0140A-A6A6-4074-B55F-03856A6B5862}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator

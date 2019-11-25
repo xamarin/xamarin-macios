@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Mono.Options;
+using Xamarin.Utils;
 
 namespace xibuild {
 	class MainClass {
@@ -92,7 +93,7 @@ namespace xibuild {
 			bool runMSBuild = !runTool && !configGenerationOnly;
 
 			if (!runTool && !runMSBuild) {
-				GenerateAppConfig (remaining [0] + ".config", baseConfigFile);
+				GenerateAppConfig (remaining [0] + ".config", baseConfigFile, out string _);
 				return 0;
 			}
 
@@ -103,13 +104,11 @@ namespace xibuild {
 				if (no_logo)
 					remaining.Add ("/nologo");
 			}
-
+			var arguments = remaining.Skip (runMSBuild ? 0 : 1).ToArray ();
 			return RunTool (
 					toolPath: runMSBuild ? "msbuild" : remaining [0],
-					combinedArgs: BuildQuotedCommandLine (remaining, runMSBuild ? 0 : 1),
+					combinedArgs: StringUtils.FormatArguments (arguments),
 					baseConfigFile: runMSBuild ? null : baseConfigFile);
-
-			string BuildQuotedCommandLine (List<string> a, int skip) => String.Join (" ", a.Skip (skip).Select (arg => $"\"{arg}\""));
 		}
 
 		static int RunTool (string toolPath, string combinedArgs, string baseConfigFile)
@@ -117,22 +116,25 @@ namespace xibuild {
 			var tmpMSBuildExePathForConfig = Path.GetTempFileName ();
 			var configFilePath = tmpMSBuildExePathForConfig + ".config";
 
-			GenerateAppConfig (configFilePath, baseConfigFile);
+			GenerateAppConfig (configFilePath, baseConfigFile, out string MSBuildSdksPath);
 
-			// Required so that msbuild can read the correct config file
-			Environment.SetEnvironmentVariable ("MSBUILD_EXE_PATH", tmpMSBuildExePathForConfig, EnvironmentVariableTarget.Process);
-
-			var p = Process.Start (new ProcessStartInfo {
+			var psi = new ProcessStartInfo {
 				FileName = toolPath,
 				Arguments = combinedArgs,
 				UseShellExecute = false,
-			});
+			};
+			// Required so that msbuild can read the correct config file
+			psi.EnvironmentVariables ["MSBUILD_EXE_PATH"] = tmpMSBuildExePathForConfig;
+			// MSBuildSDKsPath only works via an env var
+			psi.EnvironmentVariables ["MSBuildSDKsPath"] = MSBuildSdksPath;
+
+			var p = Process.Start (psi);
 
 			p.WaitForExit ();
 			return p.ExitCode;
 		}
 
-		static void GenerateAppConfig (string targetConfigFile, string baseConfigFile)
+		static void GenerateAppConfig (string targetConfigFile, string baseConfigFile, out string MSBuildSdksPath)
 		{
 			bool IsMacOS = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (System.Runtime.InteropServices.OSPlatform.OSX);
 
@@ -144,7 +146,7 @@ namespace xibuild {
 			string MSBuildConfig = Path.Combine (MSBuildBin, "MSBuild.dll.config");
 			string MSBuildExtensionsPath = Path.Combine (mono, "xbuild");
 			string FrameworksDirectory = Path.Combine (mono, "xbuild-frameworks");
-			string MSBuildSdksPath = Path.Combine (MSBuildBin, "Sdks");
+			MSBuildSdksPath = Path.Combine (MSBuildBin, "Sdks");
 
 			var dstXml = new XmlDocument ();
 
@@ -206,7 +208,6 @@ namespace xibuild {
 			SetToolsetProperty ("MSBuildExtensionsPath32", MSBuildExtensionsPath);
 			SetToolsetProperty ("MSBuildExtensionsPath64", MSBuildExtensionsPath);
 			SetToolsetProperty ("RoslynTargetsPath", Path.Combine (MSBuildBin, "Roslyn"));
-			SetToolsetProperty ("MSBuildSdksPath", MSBuildSdksPath);
 
 			dstXml.Save (targetConfigFile);
 			return;
@@ -228,7 +229,8 @@ namespace xibuild {
 				if (string.IsNullOrEmpty (value))
 					return;
 
-				var valueAttribute = toolsets.SelectSingleNode ($"property[@name='{name}']/@value");
+				// MSBuild property names are case insensitive
+				var valueAttribute = toolsets.SelectSingleNode ($"property[translate(@name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='{name.ToLowerInvariant()}']/@value");
 				if (valueAttribute != null) {
 					valueAttribute.Value = value;
 				} else {

@@ -42,15 +42,16 @@ sdk=$(echo $sdk | tr '[:upper:]' '[:lower:]')
 
 case $sdk in
 xammac)
-	refs="--target-framework=XamMac,v1.0"
-	bgen_path=$BIN_DIR/bgen-classic
+	echo "error BI0087: bgen-classic: Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project."
+	exit 1
 	;;
 mobile|xamarin.mac)
 	refs="--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile"
 	;;
 *)
 	if [[ -z "$new_style" ]]; then
-		refs="--target-framework=XamMac,v1.0"
+		echo "error BI0087: bgen-classic: Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project."
+		exit 1
 	else
 		if [[ "$full_profile" -eq 1 ]]; then
 			refs="--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full"

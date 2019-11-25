@@ -29,6 +29,7 @@ UNREFERENCED_SYMBOLS = 							\
 	_xamarin_start_wwan							\
 	_xamarin_timezone_get_data					\
 	_xamarin_timezone_get_names					\
+	_xamarin_timezone_get_local_name			\
 	_xamarin_IntPtr_objc_msgSend_IntPtr			\
 	_xamarin_IntPtr_objc_msgSendSuper_IntPtr	\
 	_xamarin_release_managed_ref				\
@@ -60,7 +61,6 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-framework CoreText			\
 	-framework ExternalAccessory		\
 	-framework GameKit				\
-	-framework IOKit			\
 	-framework MapKit			\
 	-framework MediaPlayer			\
 	-framework MessageUI			\
@@ -112,8 +112,6 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework Metal				\
 	-weak_framework CoreAudioKit		\
 						\
-	-weak_framework WatchKit		\
-						\
 	-weak_framework ReplayKit					\
 	-weak_framework Contacts					\
 	-weak_framework ContactsUI					\
@@ -146,39 +144,51 @@ SIMLAUNCHER_FRAMEWORKS =  \
 						\
 	-weak_framework AuthenticationServices	\
 	-weak_framework CarPlay					\
+	-weak_framework IdentityLookupUI		\
 	-weak_framework NaturalLanguage			\
 	-weak_framework Network				\
 	-weak_framework IdentityLookupUI		\
+	-weak_framework VisionKit		\
+						\
+	-weak_framework BackgroundTasks 		\
+	-weak_framework CoreHaptics \
+	-weak_framework LinkPresentation 		\
+	-weak_framework MetricKit		\
+	-weak_framework PencilKit			\
+	-weak_framework QuickLookThumbnailing		\
+	-weak_framework SoundAnalysis			\
+	-weak_framework VisionKit			\
+
+# keep the above list of weak_framework
+# 1. grouped by iOS versions;
+# 2. sorted and
+# 3. in sync with the list inside `tools/common/Frameworks.cs`
+# except it is no a mistake that GameController and MediaAccessibility (#13636) are not built into simlauncher
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)
 # note 3: there's no MetalKit or MetalPerformanceShaders in iOS 9 beta 4 - but other frameworks were added
 # note 4: GameCenter was removed in Xcode 7 beta 5, and GameKit is back.
 # note 5: Metal* seems to be supported as of some Xcode 7 beta (b2 didn't, but the final release does)
-
-# keep the above list of weak_framework in sync with mtouch.cs
-# except it is no a mistake that GameController and MediaAccessibility (#13636) are not built into simlauncher
+# note 6: Xcode 11 beta 1 shipped without WatchKit.
+# note 7: Xcode 11 beta 3 documented that shipping without WatchKit was done on purpose (in the release notes).
 
 define SimlauncherTemplate
 
-simlauncher$(5)$(1): simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a $(BUILD_DESTDIR)/simulator$(4)/lib/libmono$(3)-2.0.a Makefile Xamarin.iOS.registrar.ios.simulator.a
-	$(QT_CC) $(SIMULATOR_CC) -DDEBUG -DSIMLAUNCHER $(2) -gdwarf-2 \
-		-L$(TOP)/runtime/.libs/ios \
-		-L$(BUILD_DESTDIR)/simulator$(4)/lib/ \
+simlauncher$(3)-sgen: simlauncher.mm $(TOP)/runtime/.libs/iphonesimulator/libxamarin-debug.a Makefile Xamarin.iOS.registrar.ios.simulator.a
+	$(QT_CC) $(SIMULATOR_CC) -DDEBUG -DSIMLAUNCHER $(1) -gdwarf-2 \
+		-L$(TOP)/runtime/.libs/iphonesimulator \
 		-I$(TOP)/runtime \
-		-I$(BUILD_DESTDIR)/simulator$(4)/include/mono-2.0 \
-		-I$(TOP)/builds/simulator$(4)/mono/eglib \
-		-I$(MONO_PATH)/mono/eglib \
-		$(BUILD_DESTDIR)/simulator$(4)/lib/libmono$(3)-2.0.a \
+		$(MONO_IOS_SDK_DESTDIR)/ios-libs/ios-sim/libmonosgen-2.0.a \
 		$(foreach u,$(UNREFERENCED_SYMBOLS),-u $u)  \
-		$(TOP)/runtime/.libs/ios/libapp.a \
+		$(TOP)/runtime/.libs/iphonesimulator/libapp.a \
 		-Wl,-w \
-		-lz -liconv $(TOP)/runtime/.libs/ios/libxamarin-debug.a simlauncher.m $(SIMLAUNCHER_FRAMEWORKS) $(SIMULATOR$(4)_OBJC_CFLAGS) -o $$@
-
+		-lz -liconv $(TOP)/runtime/.libs/iphonesimulator/libxamarin-debug.a simlauncher.mm $(SIMLAUNCHER_FRAMEWORKS) $(SIMULATOR$(2)_OBJC_CFLAGS) -o $$@
+	$(Q) xcrun otool -L $$@ > $$@.frameworks
 endef
 
-$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,sgen,86,32))
-$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono-profiler-log.a -u _mono_profiler_init_log -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,sgen,64,64))
+$(eval $(call SimlauncherTemplate,-DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,86,32))
+$(eval $(call SimlauncherTemplate,-DXAMCORE_2_0 Xamarin.iOS.registrar.ios.simulator.a,64,64))
 
 #
 # mtouch
@@ -189,7 +199,7 @@ MTOUCH_DIR=bin/$(MTOUCH_CONF)
 LOCAL_MTOUCH=$(MTOUCH_DIR)/mtouch.exe
 
 # mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch needs to be rebuilt or not.
-mtouch.csproj.inc: Makefile ../common/create-makefile-fragment.sh
+mtouch.csproj.inc: Makefile ../common/create-makefile-fragment.sh $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(Q_GEN) ../common/create-makefile-fragment.sh $(CURDIR)/mtouch.csproj
 
 -include mtouch.csproj.inc
@@ -243,9 +253,7 @@ $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
 %.registrar.ios.device.a:        %.registrar.ios.arm64.a %.registrar.ios.armv7.a %.registrar.ios.armv7s.a
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
-# In Xcode 10 beta 1 simd/vector.h won't compile as Objective-C++ (can't find 'cmath'), so include a directory that contains the cmath file.
-# This is filed as rdar://40824697
-REGISTRAR_CFLAGS=-stdlib=libc++
+REGISTRAR_CFLAGS=-stdlib=libc++ -std=c++14
 
 %.registrar.ios.i386.a:   %.registrar.ios.i386.m      %.registrar.ios.i386.h
 	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR86_CFLAGS)    $(REGISTRAR_CFLAGS) -x objective-c++ -o $@ -c $< -Wall -Wno-unguarded-availability-new -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include

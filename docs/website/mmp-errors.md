@@ -253,6 +253,24 @@ Change the architecture in the project's Mac Build options to 'x86_64' in order 
 
 <!-- 0140-0142 taken my mtouch -->
 
+#### MM0143: Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.
+
+Xamarin.Mac does not support the Classic API anymore, because the Classic API is 32-bit only, and macOS 10.15+ does not support 32-bit applications.
+
+The project must be [migrated to a Unified project](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/unified/updating-mac-apps) in order to support 64-bit.
+
+#### MM0144: Building 32-bit apps is not supported anymore. Please change the architecture in the project's Mac Build options to 'x86_64'.
+
+This version of Xamarin.Mac does not support building 32-bit applications.
+
+Change the architecture in the project's Mac Build options to 'x86_64' in order to build a 64-bit application.
+
+<!-- 0145 and 0146 used by mtouch -->
+
+#### MM0147: Unable to parse the cflags '{cflags} from pkg-config: {exception}
+
+#### MM0148: Unable to parse the linker flags '{linker_flags}' from the LinkWith attribute for the library {library} in {assembly} : {exception}
+
 ## MM1xxx: file copy / symlinks (project related)
 
 <a name="MM1034" />
@@ -490,6 +508,18 @@ Consider using `lipo` to remove the unnecessary archtectures permanently from th
 
 #### MM4134: Your application is using the '{0}' framework, which isn't included in the MacOS SDK you're using to build your app (this framework was introduced in OSX {2}, while you're building with the MacOS {1} SDK.) This configuration is not supported with the static registrar (pass --registrar:dynamic as an additional mmp argument in your project's Mac Build option to select). Alternatively select a newer SDK in your app's Mac Build options.
 
+<a name="MM4162" />
+
+#### MM4162: The type '\*' (used as * {2}) is not available in * * (it was introduced in * *)\* Please build with a newer * SDK (usually done by using the most recent version of Xcode.
+
+To build your application, Xamarin.Mac must compile against Xcode SDK header files, including new types not available in the SDK version specified in the error message. Since you are using an older version of the SDK, builds using those APIs fails at build time.
+
+The recommended way to fix this error is to upgrade Xcode to get the needed SDK. If you have multiple versions of Xcode installed or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
+
+Alternatively, enable the managed linker to remove unused APIs, including (in most cases) the new ones which require the specified library. However, this will not work if your project requires APIs introduced in a newer SDK than the one your Xcode provides.
+
+As a last-straw solution, use an older version of Xamarin.Mac that does not require these new SDKs to be present during the build process.
+
 <a name="MM4173" />
 
 #### MM4173: The registrar can't compute the block signature for the delegate of type {delegate-type} in the method {method} because *.
@@ -583,6 +613,24 @@ complicated to get it right when doing it manually.
 
 If this is not the case, please file a [bug report](https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 
+<!-- 4178: used by mtouch -->
+
+### MM4179: The registrar found the abstract type '{type}' in the signature for '{member}'. Abstract types should not be used in the signature for a member exported to Objective-C.
+
+This is a warning, indicating a potential problem where a method or property
+has a parameter or return type which is abstract. The potential problem occurs
+at runtime, when the Xamarin.Mac runtime may need to create an instance of
+such a type, which will fail if the type is abstract.
+
+Possible solutions:
+
+* Modify the signature in question to not use an abstract type.
+* Make the type not abstract.
+
+If this is an API exposed by Xamarin, please file a new issue on
+[github](https://github.com/xamarin/xamarin-macios/issues/new), if it's a
+third-party binding, please contact the vendor.
+
 ## MM5xxx: GCC and toolchain
 
 ### MM51xx: compilation
@@ -617,9 +665,18 @@ If this is not the case, please file a [bug report](https://github.com/xamarin/x
 
 <a name="MM5218" />
 
+<!-- 5107 is used by mtouch-->
+<!-- 5108 is used by mtouch-->
+
 #### MM5218: Can't ignore the dynamic symbol {symbol} (--ignore-dynamic-symbol={symbol}) because it was not detected as a dynamic symbol.
 
 See the [equivalent mtouch warning](~/ios/troubleshooting/mtouch-errors.md#MT5218).
+
+### MM5219: Not linking with {framework} because it has been removed from {platform}.
+
+The framework in question has been removed, and Xamarin.Mac can't link with it.
+
+Any code that uses the framework must be removed/rewritten.
 
 <!-- 5206 used by mtouch -->
 <!-- 5207 used by mtouch -->
@@ -633,6 +690,29 @@ See the [equivalent mtouch warning](~/ios/troubleshooting/mtouch-errors.md#MT521
 <!-- 5215 used by mtouch -->
 <!-- 5216 used by mtouch -->
 <!-- 5217 used by mtouch -->
+<!-- 5218 used by mtouch -->
+
+<a name="MT5220" />
+
+#### MM5220: Skipping framework '{nspace}'. It is prohibited (rejected) by the Mac App Store
+
+The application has references to the `{nspace}` namespace of `Xamarin.Mac.dll`.
+The associated OS framework is known to be **prohibited** in Apple's Mac App Store applications.
+To avoid rejections `mmp` will not, by default, natively link with the mentioned framework.
+Any feature that use the mentioned framework will not work and might crash at runtime.
+
+If needed (e.g. not submitting to the App Store) you can ask `mmp` to link against the framework by adding `--link-prohibited-framework` to the **Additional mmp arguments** in your project's options.
+You can silence this warning by adding `--nowarn=5220` to the **Additional mmp arguments** in your project's options.
+
+<a name="MM5221" />
+
+#### MM5221: Linking against framework '{nspace}'. It is prohibited (rejected) by the Mac App Store
+
+The application has references to the `{nspace}` namespace of `Xamarin.Mac.dll`.
+The associated OS framework is known to be **prohibited** in Apple's Mac App Store applications.
+
+However `mmp` was instructed, using `--link-prohibited-framework`, to natively link to the associated framework.
+You can silence this warning by adding `--nowarn=5221` to the **Additional mmp arguments** in your project's options.
 
 ### MM53xx: other tools
 
@@ -668,7 +748,9 @@ See the [equivalent mtouch warning](~/ios/troubleshooting/mtouch-errors.md#MT521
 
 #### MM5311: lipo failed with an error code '{0}'. Check build log for details.
 
-### <a name="MM5311">MM5311: lipo failed with an error code '{0}'. Check build log for details.
+<a name="MM5312" />
+
+### MM5312: pkg-config failed with an error code '{code}'. Check build log for details.
 
 <!-- MM6xxx: mmp internal tools -->
 <!-- MM7xxx: reserved -->

@@ -34,6 +34,7 @@ using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
+using MonoTests.System.Net.Http;
 
 namespace MonoTouchFixtures.Foundation {
 	
@@ -155,10 +156,19 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Ignore ("NSData.FromUrl doesn't seem to work in watchOS");
 			}
 #endif
-			using (var url = new NSUrl ("https://www.microsoft.com/robots.txt"))
-			using (var x = NSData.FromUrl (url)) {
-				Assert.That ((x != null) && (x.Length > 0));
+			// we have network issues, try several urls, if one works, be happy, else fail
+			for (var i = 0; i < NetworkResources.RobotsUrls.Length; i++) {
+				NSError error;
+				using (var nsUrl = new NSUrl (NetworkResources.RobotsUrls [i]))
+				using (var x = NSData.FromUrl (nsUrl, NSDataReadingOptions.Uncached, out error)) {
+					if (error != null)
+						continue;
+					Assert.That (x != null);
+					Assert.That (x.Length > 0);
+					return;
+				}
 			}
+			Assert.Fail ("None of the urls could be fetch.");
 		}
 
 		[Test]

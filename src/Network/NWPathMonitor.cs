@@ -15,16 +15,20 @@ using CoreFoundation;
 
 namespace Network {
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public class NWPathMonitor : NativeObject {
 		public NWPathMonitor (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create ();
 
+		NWPath currentPath;
+		public NWPath CurrentPath => currentPath;
 		public NWPathMonitor ()
 		{
 			InitializeHandle (nw_path_monitor_create ());
+			_SetUpdatedSnapshotHandler (SetUpdatedSnapshotHandlerWrapper);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -33,6 +37,7 @@ namespace Network {
 		public NWPathMonitor (NWInterfaceType interfaceType)
 		{
 			InitializeHandle (nw_path_monitor_create_with_type (interfaceType));
+			_SetUpdatedSnapshotHandler (SetUpdatedSnapshotHandlerWrapper);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -72,7 +77,7 @@ namespace Network {
 		static extern unsafe void nw_path_monitor_set_update_handler (IntPtr handle, void *callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetUpdatedSnapshotHandler (Action<NWPath> callback)
+		void _SetUpdatedSnapshotHandler (Action<NWPath> callback)
 		{
 			unsafe {
 				if (callback == null) {
@@ -89,6 +94,26 @@ namespace Network {
 				} finally {
 					block_handler.CleanupBlock ();
 				}
+			}
+		}
+
+		Action<NWPath> userSnapshotHandler;
+		public Action<NWPath> SnapshotHandler {
+			get => userSnapshotHandler;
+			set => userSnapshotHandler = value;
+		}
+
+		[Obsolete ("Use the 'SnapshotHandler' property instead.")]
+		public void SetUpdatedSnapshotHandler (Action<NWPath> callback)
+		{
+			userSnapshotHandler = callback;
+		}
+
+		void SetUpdatedSnapshotHandlerWrapper (NWPath path)
+		{
+			currentPath = path;
+			if (userSnapshotHandler != null) {
+				userSnapshotHandler (currentPath);
 			}
 		}
 

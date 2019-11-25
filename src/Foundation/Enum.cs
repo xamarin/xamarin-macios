@@ -376,6 +376,15 @@ namespace Foundation  {
 		CloudSharingErrorMinimum = 5120,
 		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingErrorMaximum = 5375,
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		CompressionFailedError = 5376,
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		DecompressionFailedError = 5377,
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		CompressionErrorMinimum = 5376,
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		CompressionErrorMaximum = 5503,
 	}
 	
 	// note: Make sure names are identical/consistent with CFNetworkErrors.*
@@ -548,6 +557,10 @@ namespace Foundation  {
 		SkipsSubdirectoryDescendants = 1 << 0,
 		SkipsPackageDescendants      = 1 << 1,
 		SkipsHiddenFiles             = 1 << 2,
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		IncludesDirectoriesPostOrder = 1 << 3,
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		ProducesRelativePathUrls     = 1 << 4,
 	}
 
 	[Flags]
@@ -582,6 +595,7 @@ namespace Foundation  {
 		PrinterDescriptionDirectory = 20,
 		SharedPublicDirectory = 21,
 		PreferencePanesDirectory = 22,
+		[NoWatch][NoiOS][NoTV]
 		ApplicationScriptsDirectory = 23,
 		ItemReplacementDirectory = 99,
 		AllApplicationsDirectory = 100,
@@ -702,7 +716,11 @@ namespace Foundation  {
 	public enum NSJsonReadingOptions : ulong {
 		MutableContainers = 1,
 		MutableLeaves = 2,
-		AllowFragments = 4
+		FragmentsAllowed = 4,
+#if !XAMCORE_4_0
+		[Obsolete ("Use 'FragmentsAllowed. instead.")]
+		AllowFragments = FragmentsAllowed,
+#endif
 	}
 
 	[Flags]
@@ -711,6 +729,10 @@ namespace Foundation  {
 		PrettyPrinted = 1,
 		[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
 		SortedKeys = (1 << 1),
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		FragmentsAllowed = (1 << 2),
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		WithoutEscapingSlashes = (1 << 3),
 	}
 
 	[Native]
@@ -889,12 +911,20 @@ namespace Foundation  {
 	[Native]
 	public enum NSUrlRequestNetworkServiceType : ulong {
 		Default,
+		[Deprecated (PlatformName.MacOSX, 10, 15, message : "Use 'PushKit' framework instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message : "Use 'PushKit' framework instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message : "Use 'PushKit' framework instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message : "Use 'PushKit' framework instead.")]
 		VoIP,
 		Video,
 		Background,
 		Voice,
 		[Mac (10,14)][iOS (12,0)][Watch (5,0)][TV (12,0)]
 		ResponsiveData = 6,
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		AVStreaming = 8,
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		ResponsiveAV = 9,
 		[Mac (10,12)][iOS (10,0)][Watch (3,0)][TV (10,0)]
 		CallSignaling = 11,
 	}
@@ -1301,5 +1331,10 @@ namespace Foundation  {
 		ContinueLoading = 0,
 		UseNewRequest = 1,
 		Cancel = 2,
+	}
+
+	[Native]
+	public enum NSXpcConnectionOptions : ulong {
+		Privileged = (1 << 12),
 	}
 }
