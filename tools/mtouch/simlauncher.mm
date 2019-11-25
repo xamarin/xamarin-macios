@@ -41,7 +41,7 @@ int
 main (int argc, char** argv)
 {
 	// There's a potentially uncaught exception here, which:
-	// 1. only happens when/if `xamarin_initialize / ObjCRuntime.Initialize` throw an native exception.
+	// 1. only happens when/if `xamarin_initialize / ObjCRuntime.Initialize` throws a native exception.
 	//    This should not happen (nor be ignored) since the runtime would not be fully initialized;
 	// 2. only happens when (non default) `MarshalManagedExceptionModeThrowObjectiveCException` is used,
 	//    specifically asking for the native exception to be thrown; and
