@@ -36,6 +36,7 @@ using MonoTouch.StoreKit;
 using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
 
 namespace LinkAll {
 	
@@ -206,7 +207,7 @@ namespace LinkAll {
 			try {
 				ServicePointManager.CertificatePolicy = test_policy;
 				WebClient wc = new WebClient ();
-				Assert.IsNotNull (wc.DownloadString ("https://xamarin.com"));
+				Assert.IsNotNull (wc.DownloadString (NetworkResources.XamarinUrl));
 				// caching means it will be called at least for the first run, but it might not
 				// be called again in subsequent requests (unless it expires)
 				Assert.That (test_policy.CheckCount, Is.GreaterThan (0), "policy checked");

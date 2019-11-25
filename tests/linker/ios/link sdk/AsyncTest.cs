@@ -7,6 +7,7 @@ using Foundation;
 using MonoTouch.Foundation;
 #endif
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
 
 namespace LinkSdk {
 
@@ -16,7 +17,7 @@ namespace LinkSdk {
 
 		public Task<string> LoadCategories ()
 		{
-			return Task.Run (async () => await (new HttpClient ()).GetStringAsync ("https://google.com"));
+			return Task.Run (async () => await (new HttpClient ()).GetStringAsync (NetworkResources.MicrosoftUrl));
 		}
 
 		[Test]

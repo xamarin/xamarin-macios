@@ -7,6 +7,8 @@ using Foundation;
 using MonoTouch.Foundation;
 #endif
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
+
 
 namespace LinkSdk.Net.Http {
 
@@ -16,7 +18,7 @@ namespace LinkSdk.Net.Http {
 
 		async Task<string> Get (HttpClient client)
 		{
-			return await client.GetStringAsync ("http://xamarin.com");
+			return await client.GetStringAsync (NetworkResources.XamarinUrl);
 		}
 
 		string Get (HttpMessageHandler handler)
@@ -38,12 +40,6 @@ namespace LinkSdk.Net.Http {
 		public void NSSimple ()
 		{
 			Assert.NotNull (Get (new NSUrlSessionHandler ()), "NSUrlSessionHandler");
-		}
-
-		//[Test]
-		public void CFSimple ()
-		{
-			Assert.NotNull (Get (new CFNetworkHandler ()), "CFNetworkHandler");
 		}
 
 		// same HttpClient and handler doing two simultaneous calls
@@ -77,7 +73,7 @@ namespace LinkSdk.Net.Http {
 
 		Task<string> Get302 (HttpClient client)
 		{
-			return Task.Run (async () => await client.GetStringAsync ("https://greenbytes.de/tech/tc/httpredirects/t302loc.asis"));
+			return Task.Run (async () => await client.GetStringAsync (NetworkResources.Httpbin.GetRedirectUrl (1)));
 		}
 
 		void Get302 (HttpClient client, bool allowRedirect)
@@ -133,6 +129,13 @@ namespace LinkSdk.Net.Http {
 			Get302 (client, allowRedirect: handler.AllowAutoRedirect);
 		}
 
+#if !__WATCHOS__
+		//[Test]
+		public void CFSimple ()
+		{
+			Assert.NotNull (Get (new CFNetworkHandler ()), "CFNetworkHandler");
+		}
+
 		[Test]
 		public void CF302_Allowed ()
 		{
@@ -150,5 +153,6 @@ namespace LinkSdk.Net.Http {
 			var client = new HttpClient (handler);
 			Get302 (client, allowRedirect: handler.AllowAutoRedirect);
 		}
+#endif
 	}
 }
