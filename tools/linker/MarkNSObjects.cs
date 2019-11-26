@@ -33,6 +33,7 @@ using System;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
+using Xamarin.Bundler;
 
 namespace Xamarin.Linker.Steps {
 
@@ -151,9 +152,15 @@ namespace Xamarin.Linker.Steps {
 			return (method.DeclaringType.Module.Assembly.Name.Name == ProductAssembly);
 		}
 
-		static bool IsProductType (TypeDefinition type)
+		bool IsProductType (TypeDefinition type)
 		{
-			return type.Module.Assembly.Name.Name == ProductAssembly;
+			var name = type.Module.Assembly.Name.Name;
+			switch (name) {
+			case "Xamarin.Forms.Platform.iOS":
+				return LinkContext.App.Optimizations.ExperimentalFormsProductType == true;
+			default:
+				return name == ProductAssembly;
+			}
 		}
 	}
 }

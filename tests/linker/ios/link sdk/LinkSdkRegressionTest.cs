@@ -54,6 +54,8 @@ using MonoTouch.OpenGLES;
 using MonoTouch.WebKit;
 #endif
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
+
 
 namespace LinkSdk {
 
@@ -651,7 +653,7 @@ namespace LinkSdk {
 #endif
 			WebClient wc = new WebClient ();
 			// note: needs to be executed under Instrument to verify it does not leak
-			string s = wc.DownloadString ("https://developers.google.com");
+			string s = wc.DownloadString (NetworkResources.MicrosoftUrl);
 			Assert.NotNull (s);
 		}
 

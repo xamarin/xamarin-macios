@@ -150,6 +150,14 @@ namespace AVFoundation {
 				return AVMetadataObject.TypeITF14Code;
 			case AVMetadataObjectType.DataMatrixCode:
 				return AVMetadataObject.TypeDataMatrixCode;
+			case AVMetadataObjectType.CatBody:
+				return AVMetadataObject.TypeCatBody;
+			case AVMetadataObjectType.DogBody:
+				return AVMetadataObject.TypeDogBody;
+			case AVMetadataObjectType.HumanBody:
+				return AVMetadataObject.TypeHumanBody;
+			case AVMetadataObjectType.SalientObject:
+				return AVMetadataObject.TypeSalientObject;
 			default:
 				throw new ArgumentOutOfRangeException (string.Format ("Unexpected AVMetadataObjectType: {0}", val));
 			}
