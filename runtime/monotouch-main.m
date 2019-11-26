@@ -373,6 +373,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 						*v = 0;
 						v++;
 						LOG ("MonoTouch: Setting %s=%s", k, v);
+						// arguments comes from mtouch (and developer), i.e. a trusted source
 						setenv (k, v, 1);
 					}
 					free (k);
