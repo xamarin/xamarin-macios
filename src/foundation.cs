@@ -16594,4 +16594,49 @@ namespace Foundation
 		Expensive = 1,
 		Constrained = 2,
 	}
+
+	[NoWatch, NoTV, NoiOS, Mac (10,10)]
+	[Native]
+	public enum NSBackgroundActivityResult : long
+	{
+		Finished = 1,
+		Deferred = 2,
+	}
+
+	delegate void NSBackgroundActivityCompletionHandler (NSBackgroundActivityResult result);
+
+	delegate void NSBackgroundActivityCompletionAction ([BlockCallback] NSBackgroundActivityCompletionHandler handler);
+
+	[NoWatch, NoTV, NoiOS, Mac (10,10)]
+	[BaseType (typeof (NSObject))]
+	interface NSBackgroundActivityScheduler
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("qualityOfService", ArgumentSemantic.Assign)]
+		NSQualityOfService QualityOfService { get; set; }
+
+		[Export ("repeats")]
+		bool Repeats { get; set; }
+
+		[Export ("interval")]
+		double Interval { get; set; }
+
+		[Export ("tolerance")]
+		double Tolerance { get; set; }
+
+		[Export ("scheduleWithBlock:")]
+		void Schedule (NSBackgroundActivityCompletionAction action);
+
+		[Export ("invalidate")]
+		void Invalidate ();
+
+		[Export ("shouldDefer")]
+		bool ShouldDefer { get; }
+	}
 }
