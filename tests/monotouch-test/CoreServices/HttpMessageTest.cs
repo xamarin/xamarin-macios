@@ -92,7 +92,7 @@ namespace MonoTouchFixtures.CoreServices {
 					request.SetBody (Array.Empty<byte> ()); // empty body, we are not interested
 					using (var stream = CFStream.CreateForHTTPRequest (request)) {
 						Assert.IsNotNull (stream, "Null stream");
-						// we are nonly interested in the completed event
+						// we are only interested in the completed event
 						stream.ClosedEvent += (sender, e) => {
 							taskCompletionSource.SetResult (stream.GetResponseHeader ());
 							done = true;
