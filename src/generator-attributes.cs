@@ -676,7 +676,7 @@ public class CategoryAttribute : Attribute {
 // to spot binding mistakes and implement correct subclassing of ObjC types
 // from the IDE
 //
-[AttributeUsage (AttributeTargets.Constructor | AttributeTargets.Method)]
+[AttributeUsage (AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false)]
 public class DesignatedInitializerAttribute : Attribute {
 	public DesignatedInitializerAttribute ()
 	{
@@ -690,7 +690,7 @@ public class DesignatedInitializerAttribute : Attribute {
 // The generator will produce a `[DesignatedInitializer]` when generating the
 // default constructor when `[DesignatedDefaultCtor]` is present on the type
 //
-[AttributeUsage (AttributeTargets.Interface)]
+[AttributeUsage (AttributeTargets.Interface, AllowMultiple = false)]
 public class DesignatedDefaultCtorAttribute : Attribute {
 	public DesignatedDefaultCtorAttribute ()
 	{

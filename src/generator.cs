@@ -5191,10 +5191,9 @@ public partial class Generator : IMemberGatherer {
 			PrintPlatformAttributes (minfo.method.DeclaringType);
 		}
 
-		foreach (var di in AttributeManager.GetCustomAttributes<DesignatedInitializerAttribute> (mi)) {
+		// in theory we could check for `minfo.is_ctor` but some manual bindings are using methods for `init*`
+		if (AttributeManager.GetCustomAttribute<DesignatedInitializerAttribute> (mi) != null)
 			print ("[DesignatedInitializer]");
-			break;
-		}
 	}
 
 
@@ -6409,10 +6408,8 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					if (external) {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
-							foreach (var ta in AttributeManager.GetCustomAttributes<DesignatedDefaultCtorAttribute> (type)) {
+							if (AttributeManager.GetCustomAttributes<DesignatedDefaultCtorAttribute> (type) != null)
 								sw.WriteLine ("\n\n[DesignatedInitializer]");
-								break;
-							}
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
@@ -6435,10 +6432,8 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					} else {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
-							foreach (var ta in AttributeManager.GetCustomAttributes<DesignatedDefaultCtorAttribute> (type)) {
-								sw.WriteLine ("\t\t[DesignatedInitializer]");
-								break;
-							}
+							if (AttributeManager.GetCustomAttributes<DesignatedDefaultCtorAttribute> (type) != null)
+								sw.WriteLine ("\n\n[DesignatedInitializer]");
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
