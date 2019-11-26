@@ -39,44 +39,40 @@ namespace Foundation {
 		const long NSDATE_TICKS = 631139040000000000;
 
 		private static readonly NSCalendar calendar = new NSCalendar (NSCalendarType.Gregorian) { TimeZone = NSTimeZone.FromName ("UTC") };
-		private static readonly ThreadLocal<NSDateComponents> threadComponents = new ThreadLocal<NSDateComponents>(() => new NSDateComponents ());
+		private static readonly ThreadLocal<NSDateComponents> threadComponents = new ThreadLocal<NSDateComponents> (() => new NSDateComponents ());
 
 #if XAMCORE_2_0
 		// now explicit since data can be lost for small/large values of DateTime
-		public static explicit operator DateTime (NSDate d)
-		{
+		public static explicit operator DateTime (NSDate d) {
 			double secs = d.SecondsSinceReferenceDate;
 
-            if (IntPtr.Size == 4)
-            {
+			if (IntPtr.Size == 4) {
 				if ((secs < -63113904000) || (secs > 252423993599))
 					throw new ArgumentOutOfRangeException (nameof (d), d, $"{nameof (d)} is outside the range of NSDate {secs} seconds");
 
-				return new DateTime ((long)(secs * TimeSpan.TicksPerSecond + NSDATE_TICKS), DateTimeKind.Utc);
-            }
+				return new DateTime ((long) (secs * TimeSpan.TicksPerSecond + NSDATE_TICKS), DateTimeKind.Utc);
+			}
 
 			if ((secs < -63114076800) || (secs > 252423993599.9994)) // we round to the nearest .001 in the conversion from ns to ms
 				throw new ArgumentOutOfRangeException (nameof (d), d, $"{nameof (d)} is outside the range of NSDate {secs} seconds");
 
 			using (NSDateComponents calComponents = calendar.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day | NSCalendarUnit.Hour |
-				NSCalendarUnit.Minute | NSCalendarUnit.Second | NSCalendarUnit.Nanosecond | NSCalendarUnit.Calendar, d))
-			{
+				NSCalendarUnit.Minute | NSCalendarUnit.Second | NSCalendarUnit.Nanosecond | NSCalendarUnit.Calendar, d)) {
 				var retDate = new DateTime ((int) calComponents.Year, (int) calComponents.Month, (int) calComponents.Day, (int) calComponents.Hour,
-				(int) calComponents.Minute, (int) (calComponents.Second), Convert.ToInt32 (calComponents.Nanosecond / NANOSECS_PER_MILLISEC), DateTimeKind.Utc);
+					(int) calComponents.Minute, (int) (calComponents.Second), Convert.ToInt32 (calComponents.Nanosecond / NANOSECS_PER_MILLISEC), DateTimeKind.Utc);
 
 				return retDate;
 			}
 		}
 
 		// now explicit since data can be lost for DateTimeKind.Unspecified
-		public static explicit operator NSDate (DateTime dt)
-		{
+		public static explicit operator NSDate (DateTime dt) {
 			if (dt.Kind == DateTimeKind.Unspecified)
 				throw new ArgumentException ("DateTimeKind.Unspecified cannot be safely converted");
 
 			var dtUnv = dt.ToUniversalTime ();
 
-            if (IntPtr.Size == 4)
+			if (IntPtr.Size == 4)
 				return FromTimeIntervalSinceReferenceDate ((dtUnv.Ticks - NSDATE_TICKS) / (double) TimeSpan.TicksPerSecond);
 
 			threadComponents.Value.Day = dtUnv.Day;
