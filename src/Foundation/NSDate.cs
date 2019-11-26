@@ -36,6 +36,7 @@ namespace Foundation {
 
 	public partial class NSDate {
 		const double NANOSECS_PER_MILLISEC = 1000000.0;
+		const long NSDATE_TICKS = 631139040000000000;
 
 		private static readonly NSCalendar calendar = new NSCalendar (NSCalendarType.Gregorian) { TimeZone = NSTimeZone.FromName ("UTC") };
 		private static readonly ThreadLocal<NSDateComponents> threadComponents = new ThreadLocal<NSDateComponents>(() => new NSDateComponents ());
@@ -45,6 +46,14 @@ namespace Foundation {
 		public static explicit operator DateTime (NSDate d)
 		{
 			double secs = d.SecondsSinceReferenceDate;
+
+            if (IntPtr.Size == 4)
+            {
+				if ((secs < -63113904000) || (secs > 252423993599))
+					throw new ArgumentOutOfRangeException (nameof (d), d, $"{nameof (d)} is outside the range of NSDate {secs} seconds");
+
+				return new DateTime ((long)(secs * TimeSpan.TicksPerSecond + NSDATE_TICKS), DateTimeKind.Utc);
+            }
 
 			if ((secs < -63114076800) || (secs > 252423993599.9994)) // we round to the nearest .001 in the conversion from ns to ms
 				throw new ArgumentOutOfRangeException (nameof (d), d, $"{nameof (d)} is outside the range of NSDate {secs} seconds");
@@ -66,6 +75,9 @@ namespace Foundation {
 				throw new ArgumentException ("DateTimeKind.Unspecified cannot be safely converted");
 
 			var dtUnv = dt.ToUniversalTime ();
+
+            if (IntPtr.Size == 4)
+				return FromTimeIntervalSinceReferenceDate ((dtUnv.Ticks - NSDATE_TICKS) / (double) TimeSpan.TicksPerSecond);
 
 			threadComponents.Value.Day = dtUnv.Day;
 			threadComponents.Value.Month = dtUnv.Month;
