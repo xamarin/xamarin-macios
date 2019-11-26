@@ -5192,7 +5192,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		// in theory we could check for `minfo.is_ctor` but some manual bindings are using methods for `init*`
-		if (AttributeManager.GetCustomAttribute<DesignatedInitializerAttribute> (mi) != null)
+		if (AttributeManager.HasAttribute<DesignatedInitializerAttribute> (mi))
 			print ("[DesignatedInitializer]");
 	}
 
@@ -6408,7 +6408,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					if (external) {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
-							if (AttributeManager.GetCustomAttributes<DesignatedDefaultCtorAttribute> (type) != null)
+							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
 								sw.WriteLine ("\n\n[DesignatedInitializer]");
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 							sw.WriteLine ("\t\t[Export (\"init\")]");
@@ -6432,7 +6432,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					} else {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
-							if (AttributeManager.GetCustomAttributes<DesignatedDefaultCtorAttribute> (type) != null)
+							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
 								sw.WriteLine ("\n\n[DesignatedInitializer]");
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 							sw.WriteLine ("\t\t[Export (\"init\")]");
