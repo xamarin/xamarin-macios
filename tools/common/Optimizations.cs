@@ -42,6 +42,7 @@ namespace Xamarin.Bundler
 #endif
 			"cctor-beforefieldinit",
 			"custom-attributes-removal",
+			"experimental-xforms-product-type",
 		};
 
 		enum Opt
@@ -62,6 +63,7 @@ namespace Xamarin.Bundler
 			SealAndDevirtualize,
 			StaticConstructorBeforeFieldInit,
 			CustomAttributesRemoval,
+			ExperimentalFormsProductType,
 		}
 
 		bool? all;
@@ -143,6 +145,11 @@ namespace Xamarin.Bundler
 		public bool? CustomAttributesRemoval {
 			get { return values [(int) Opt.CustomAttributesRemoval]; }
 			set { values [(int) Opt.CustomAttributesRemoval] = value; }
+		}
+
+		public bool? ExperimentalFormsProductType {
+			get { return values [(int) Opt.ExperimentalFormsProductType]; }
+			set { values [(int) Opt.ExperimentalFormsProductType] = value; }
 		}
 
 		public Optimizations ()
