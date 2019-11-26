@@ -16609,6 +16609,7 @@ namespace Foundation
 
 	[NoWatch, NoTV, NoiOS, Mac (10,10)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface NSBackgroundActivityScheduler
 	{
 		[Export ("initWithIdentifier:")]
