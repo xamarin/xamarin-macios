@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using Foundation;
 
 namespace MonoTests.System.Net.Http
@@ -44,7 +45,8 @@ namespace MonoTests.System.Net.Http
 
 			public static string GetAbsoluteRedirectUrl (int count) => $"https://httpbin.org/absolute-redirect/{count}";
 			public static string GetRedirectUrl (int count) => $"https://httpbin.org/redirect/{count}";
-			public static string GetRelativeRedirectUrl (int count) => $"http://httpbin.org/relative-redirect/{count}";
+			public static string GetRelativeRedirectUrl (int count) => $"https://httpbin.org/relative-redirect/{count}";
+			public static string GetStatusCodeUrl (HttpStatusCode status) => $"http://httpbin.org/status/{(int)status}";
 
 		}
 	}
