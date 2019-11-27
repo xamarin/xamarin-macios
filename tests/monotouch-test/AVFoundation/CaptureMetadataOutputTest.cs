@@ -99,20 +99,23 @@ namespace MonoTouchFixtures.AVFoundation {
 			Assert.That (back.Length, Is.EqualTo (1), "l 1");
 			Assert.That (back [0], Is.EqualTo (flags.GetConstant ()), "e2a 1");
 
-			// multiple (flags)
-			flags = AVMetadataObjectType.CatBody | AVMetadataObjectType.DogBody | AVMetadataObjectType.HumanBody;
-			var array = new NSString [] {
-				AVMetadataObjectType.CatBody.GetConstant (),
-				AVMetadataObjectType.DogBody.GetConstant (),
-				AVMetadataObjectType.HumanBody.GetConstant ()
-			};
-			result = (AVMetadataObjectType)array_to_enum.Invoke (null, new [] { array });
-			Assert.AreEqual (flags, result, "a2e 3");
-			back = (NSString [])enum_to_array.Invoke (null, new object [] { result });
-			Assert.That (back.Length, Is.EqualTo (3), "l 3");
-			Assert.That (back [0], Is.EqualTo (array [0]), "e2a 3a");
-			Assert.That (back [1], Is.EqualTo (array [1]), "e2a 3b");
-			Assert.That (back [2], Is.EqualTo (array [2]), "e2a 3c");
+			// constants are only available in recent xcode (and not on any 32bits OS)
+			if (TestRuntime.CheckXcodeVersion (11,0)) {
+				// multiple (flags)
+				flags = AVMetadataObjectType.CatBody | AVMetadataObjectType.DogBody | AVMetadataObjectType.HumanBody;
+				var array = new NSString [] {
+					AVMetadataObjectType.CatBody.GetConstant (),
+					AVMetadataObjectType.DogBody.GetConstant (),
+					AVMetadataObjectType.HumanBody.GetConstant ()
+				};
+				result = (AVMetadataObjectType)array_to_enum.Invoke (null, new [] { array });
+				Assert.AreEqual (flags, result, "a2e 3");
+				back = (NSString [])enum_to_array.Invoke (null, new object [] { result });
+				Assert.That (back.Length, Is.EqualTo (3), "l 3");
+				Assert.That (back [0], Is.EqualTo (array [0]), "e2a 3a");
+				Assert.That (back [1], Is.EqualTo (array [1]), "e2a 3b");
+				Assert.That (back [2], Is.EqualTo (array [2]), "e2a 3c");
+			}
 		}
 
 #if XAMCORE_2_0
