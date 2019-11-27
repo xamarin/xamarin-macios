@@ -199,6 +199,30 @@ namespace CoreServices
 		{
 		}
 
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern IntPtr FSEventStreamCreateRelativeToDevice (IntPtr allocator, FSEventStreamCallback callback, 
+		IntPtr context, ulong deviceToWatch, IntPtr pathsToWatchRelativeToDevice, 
+		ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
+
+		public FSEventStream (CFAllocator allocator, ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
+			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags)
+		{
+			if (pathsToWatchRelativeToDevice == null) {
+				throw new ArgumentNullException ("pathsToWatchRelativeToDevice");
+			}
+
+			eventsCallback = new FSEventStreamCallback (EventsCallback);
+
+			handle =  FSEventStreamCreateRelativeToDevice (
+				allocator ==  null ? IntPtr.Zero : allocator.Handle,
+				eventsCallback, IntPtr.Zero, deviceToWatch, pathsToWatchRelativeToDevice.Handle,
+				sinceWhen, latency.TotalSeconds, flags);
+			
+			if (handle == IntPtr.Zero) {
+				throw new Exception ("Unable to create FSEventStream");
+			}
+		}
+
 		void EventsCallback (IntPtr handle, IntPtr userData, nint numEvents,
 			IntPtr eventPaths, IntPtr eventFlags, IntPtr eventIds)
 		{
@@ -308,6 +332,31 @@ namespace CoreServices
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
+		static extern void FSEventStreamUnscheduleFromRunLoop (IntPtr handle,
+			IntPtr runLoop, IntPtr runLoopMode);
+
+		public void UnscheduleWithRunLoop (CFRunLoop runLoop, NSString runLoopMode)
+		{
+			CheckDisposed ();
+			FSEventStreamUnscheduleFromRunLoop (handle, runLoop.Handle, runLoopMode.Handle);
+		}
+
+		public void UnscheduleWithRunLoop (CFRunLoop runLoop)
+		{
+			UnscheduleWithRunLoop (runLoop, CFRunLoop.ModeDefault);
+		}
+
+		public void UnscheduleWithRunLoop (NSRunLoop runLoop, NSString runLoopMode)
+		{
+			UnscheduleWithRunLoop (runLoop.GetCFRunLoop (), runLoopMode);
+		}
+
+		public void UnscheduleWithRunLoop (NSRunLoop runLoop)
+		{
+			UnscheduleWithRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
+		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr FSEventStreamCopyPathsBeingWatched (IntPtr handle);
 
 		public string [] PathsBeingWatched {
@@ -359,6 +408,39 @@ namespace CoreServices
 				CheckDisposed ();
 				return FSEventStreamGetLatestEventId (handle);
 			}
+		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern ulong FSEventStreamGetDeviceBeingWatched (IntPtr handle);
+
+		public ulong GetDevice ()
+		{
+			CheckDisposed ();
+			return FSEventStreamGetDeviceBeingWatched (handle);
+		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern bool FSEventStreamSetExclusionPaths (IntPtr handle, IntPtr pathsToExclude);
+
+		public bool SetExclusionPaths (NSArray pathsToExclude)
+		{
+			if (pathsToExclude == null) {
+				throw new ArgumentNullException ("pathsToExclude");
+			}
+			CheckDisposed ();
+			return FSEventStreamSetExclusionPaths (handle, pathsToExclude.Handle);
+		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern bool FSEventStreamSetDispatchQueue (IntPtr handle, DispatchQueue queue);
+
+		public bool SetDispatchQueue (DispatchQueue queue)
+		{
+			if (queue == null) {
+				throw new ArgumentNullException ("queue");
+			}
+			CheckDisposed ();
+			return FSEventStreamSetDispatchQueue (handle, queue);
 		}
 	}
 }
