@@ -6691,8 +6691,10 @@ namespace AVFoundation {
 #endif
 	}
 
+#if XAMCORE_4_0
 	[NoWatch]
 	[NoTV]
+#endif
 	[Mac (10,10)]
 	[Flags]
 	enum AVMetadataObjectType : ulong {
