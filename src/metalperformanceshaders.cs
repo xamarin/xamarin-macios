@@ -2538,8 +2538,8 @@ namespace MetalPerformanceShaders {
 
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (13,0), Mac (10,15), iOS (13,0)]
-	[BaseType (typeof(MPSMatrixRandom))]
-	interface MPSMatrixRandomMTGP32
+	[BaseType (typeof (MPSMatrixRandom), Name = "MPSMatrixRandomMTGP32")]
+	interface MPSMatrixRandomMtgp32
 	{
 		[Export ("initWithDevice:")]
 		IntPtr Constructor (IMTLDevice device);
