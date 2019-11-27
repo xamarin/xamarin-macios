@@ -2512,6 +2512,7 @@ namespace MetalPerformanceShaders {
 		MPSMatrixRandomDistributionDescriptor CreateDefault ();
 	}
 
+	[DisableDefaultCtor]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(MPSKernel))]
@@ -2536,6 +2537,7 @@ namespace MetalPerformanceShaders {
 		void EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSMatrix destinationMatrix);
 	}
 
+	[DisableDefaultCtor]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (MPSMatrixRandom), Name = "MPSMatrixRandomMTGP32")]
@@ -2559,6 +2561,7 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (NSCoder decoder, IMTLDevice device);
 	}
 
+	[DisableDefaultCtor]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(MPSMatrixRandom))]
@@ -5331,6 +5334,7 @@ namespace MetalPerformanceShaders {
 		float GetScalarWeight (MPSImage sourceImage, MPSImage destinationImage);
 	}
 
+	[DisableDefaultCtor]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(MPSNNFilterNode))]
@@ -5394,6 +5398,7 @@ namespace MetalPerformanceShaders {
 		MPSNNLossGradientNode[] GetFilters (MPSNNImageNode sourceGradient);
 	}
 
+	[DisableDefaultCtor]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (13,0), Mac (10,15,0), iOS (13,0)]
 	[BaseType (typeof(MPSNNGradientFilterNode))]
@@ -5448,6 +5453,7 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (MPSNNImageNode[] sourceNodes, [NullAllowed] MPSNNGradientStateNode gradientState, MPSCnnLossDescriptor descriptor, bool isLabelsGradientFilter);
 	}
 
+	[DisableDefaultCtor]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (13,0), Mac (10,15,0), iOS (13,0)]
 	[BaseType (typeof(MPSNNFilterNode))]
@@ -6397,6 +6403,7 @@ namespace MetalPerformanceShaders {
 		void Synchronize (IMTLCommandBuffer commandBuffer);
 	}
 
+	[DisableDefaultCtor]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(MPSNDArray))]

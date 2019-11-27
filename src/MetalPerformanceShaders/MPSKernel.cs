@@ -73,6 +73,7 @@ namespace MetalPerformanceShaders {
 #if !COREBUILD
 	public partial class MPSImage {
 
+		[iOS (13,0), TV (12,0), Mac (10,15)][Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern MPSImageType MPSGetImageType (IntPtr image);
 

@@ -61,6 +61,7 @@ namespace Introspection {
 			case "MPSStateBatchResourceSize":
 			case "MPSHintTemporaryMemoryHighWaterMark":
 			case "MPSSetHeapCacheDuration":
+			case "MPSGetImageType":
 				return simulator;
 			case "CVPixelBufferGetIOSurface":
 			case "CVPixelBufferCreateWithIOSurface":

@@ -456,8 +456,13 @@ namespace Introspection {
 			case "MPSNNOptimizer": // Not meant to be used, only subclasses
 			case "MPSNNReduceBinary": // Not meant to be used, only subclasses
 			case "MPSNNReduceUnary": // Not meant to be used, only subclasses
+			case "MPSMatrixRandom": // Not meant to be used, only subclasses
 				var cstr = ctor.ToString ();
 				if (cstr == "Void .ctor(Metal.IMTLDevice)" || cstr == $"Void .ctor({foundation_namespace}.NSCoder, Metal.IMTLDevice)")
+					return true;
+				break;
+			case "MPSTemporaryNDArray": // NS_UNAVAILABLE
+				if (ctor.ToString () == $"Void .ctor(Metal.IMTLDevice, MetalPerformanceShaders.MPSNDArrayDescriptor)")
 					return true;
 				break;
 			case "MFMailComposeViewController": // You are meant to use the system provided one
