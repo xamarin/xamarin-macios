@@ -6433,7 +6433,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
 							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
-								sw.WriteLine ("\n\n[DesignatedInitializer]");
+								sw.WriteLine ("\t\t[DesignatedInitializer]");
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
