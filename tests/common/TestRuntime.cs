@@ -260,6 +260,18 @@ partial class TestRuntime
 #else
 				throw new NotImplementedException ();
 #endif
+			case 3:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (6, 1, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (13, 3);
+#elif __IOS__
+				return CheckiOSSystemVersion (13, 3);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 2);
+#else
+				throw new NotImplementedException ();
+#endif
 			default:
 				throw new NotImplementedException ();
 			}
@@ -636,6 +648,22 @@ partial class TestRuntime
 	{
 #if __WATCHOS__
 		return WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (major, minor);
+#else
+		if (throwIfOtherPlatform)
+			throw new Exception ("Can't get watchOS System version on iOS/tvOS.");
+		// This is both iOS and tvOS
+		return true;
+#endif
+	}
+
+	// This method returns true if:
+	// system version >= specified version
+	// AND
+	// sdk version >= specified version
+	static bool CheckWatchOSSystemVersion (int major, int minor, int build, bool throwIfOtherPlatform = true)
+	{
+#if __WATCHOS__
+		return WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (major, minor, build);
 #else
 		if (throwIfOtherPlatform)
 			throw new Exception ("Can't get watchOS System version on iOS/tvOS.");

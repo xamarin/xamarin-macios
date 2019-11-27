@@ -1423,6 +1423,11 @@ namespace ObjCRuntime {
 		// this method is identical in behavior to the non-generic one.
 		public static T GetINativeObject<T> (IntPtr ptr, bool owns) where T : class, INativeObject
 		{
+			return GetINativeObject<T> (ptr, false, owns);
+		}
+
+		public static T GetINativeObject<T> (IntPtr ptr, bool forced_type, bool owns) where T : class, INativeObject
+		{
 			if (ptr == IntPtr.Zero)
 				return null;
 
@@ -1433,7 +1438,10 @@ namespace ObjCRuntime {
 				return t;
 			}
 
-			if (o != null) {
+			// If forced type is true, we ignore any existing instances if the managed type of the existing instance isn't compatible with T.
+			// This may end up creating multiple managed wrapper instances for the same native handle,
+			// which is not optimal, but sometimes the alternative can be worse :/
+			if (o != null && !forced_type) {
 				// found an existing object, but with an incompatible type.
 				if (!typeof (T).IsInterface && typeof(NSObject).IsAssignableFrom (typeof (T))) {
 					// if the target type is another NSObject subclass, there's nothing we can do.
@@ -1445,7 +1453,7 @@ namespace ObjCRuntime {
 			var implementation = LookupINativeObjectImplementation (ptr, typeof (T));
 
 			if (implementation.IsSubclassOf (typeof (NSObject))) {
-				if (o != null) {
+				if (o != null && !forced_type) {
 					// We already have an instance of an NSObject-subclass for this ptr.
 					// Creating another will break the one-to-one assumption we have between
 					// native objects and NSObject instances.
@@ -1595,8 +1603,14 @@ namespace ObjCRuntime {
 
 		static int MajorVersion = -1;
 		static int MinorVersion = -1;
+		static int BuildVersion = -1;
 
 		internal static bool CheckSystemVersion (int major, int minor, string systemVersion)
+		{
+			return CheckSystemVersion (major, minor, 0, systemVersion);
+		}
+
+		internal static bool CheckSystemVersion (int major, int minor, int build, string systemVersion)
 		{
 			if (MajorVersion == -1) {
 				string[] version = systemVersion.Split (new char[] { '.' });
@@ -1606,9 +1620,25 @@ namespace ObjCRuntime {
 				
 				if (version.Length < 2 || !int.TryParse (version[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out MinorVersion))
 					MinorVersion = 0;
+
+				if (version.Length < 3 || !int.TryParse (version[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out BuildVersion))
+					BuildVersion = 0;
 			}
 			
-			return MajorVersion > major || (MajorVersion == major && MinorVersion >= minor);
+			if (MajorVersion > major)
+				return true;
+			else if (MajorVersion < major)
+				return false;
+
+			if (MinorVersion > minor)
+				return true;
+			else if (MinorVersion < minor)
+				return false;
+
+			if (BuildVersion < build)
+				return false;
+
+			return true;
 		}
 
 		internal static IntPtr CloneMemory (IntPtr source, nint length)

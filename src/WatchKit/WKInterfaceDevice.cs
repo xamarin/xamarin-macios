@@ -31,6 +31,11 @@ namespace WatchKit {
 		{
 			return Runtime.CheckSystemVersion (major, minor, SystemVersion);
 		}
+
+		public bool CheckSystemVersion (int major, int minor, int build)
+		{
+			return Runtime.CheckSystemVersion (major, minor, build, SystemVersion);
+		}
 	}
 }
 
