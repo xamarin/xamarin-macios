@@ -176,8 +176,14 @@ namespace MonoTouch.Tuner {
 			case "System.Runtime.Remoting.Proxies":
 				return true;
 			case "System.Runtime.Remoting.Messaging":
-				return type.Name != "AsyncResult" && type.Name != "LogicalCallContext"
-					&& type.Name != "MonoMethodMessage";
+				switch (type.Name) {
+				case "AsyncResult":
+				case "CallContextSecurityData":
+				case "LogicalCallContext":
+				case "MonoMethodMessage":
+					return false;
+				}
+				return true;
 			case "System.Security.AccessControl":
 			case "System.Security.Permissions":
 			case "System.Security.Policy":
