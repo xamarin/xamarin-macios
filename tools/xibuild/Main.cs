@@ -115,23 +115,27 @@ namespace xibuild {
 		{
 			var tmpMSBuildExePathForConfig = Path.GetTempFileName ();
 			var configFilePath = tmpMSBuildExePathForConfig + ".config";
+			try {
+				GenerateAppConfig (configFilePath, baseConfigFile, out string MSBuildSdksPath);
 
-			GenerateAppConfig (configFilePath, baseConfigFile, out string MSBuildSdksPath);
+				var psi = new ProcessStartInfo {
+					FileName = toolPath,
+					Arguments = combinedArgs,
+					UseShellExecute = false,
+				};
+				// Required so that msbuild can read the correct config file
+				psi.EnvironmentVariables ["MSBUILD_EXE_PATH"] = tmpMSBuildExePathForConfig;
+				// MSBuildSDKsPath only works via an env var
+				psi.EnvironmentVariables ["MSBuildSDKsPath"] = MSBuildSdksPath;
 
-			var psi = new ProcessStartInfo {
-				FileName = toolPath,
-				Arguments = combinedArgs,
-				UseShellExecute = false,
-			};
-			// Required so that msbuild can read the correct config file
-			psi.EnvironmentVariables ["MSBUILD_EXE_PATH"] = tmpMSBuildExePathForConfig;
-			// MSBuildSDKsPath only works via an env var
-			psi.EnvironmentVariables ["MSBuildSDKsPath"] = MSBuildSdksPath;
+				var p = Process.Start (psi);
 
-			var p = Process.Start (psi);
-
-			p.WaitForExit ();
-			return p.ExitCode;
+				p.WaitForExit ();
+				return p.ExitCode;
+			} finally {
+				File.Delete (tmpMSBuildExePathForConfig);
+				File.Delete (configFilePath);
+			}
 		}
 
 		static void GenerateAppConfig (string targetConfigFile, string baseConfigFile, out string MSBuildSdksPath)
