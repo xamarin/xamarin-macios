@@ -16,6 +16,7 @@
 !missing-selector! +MPSCNNGroupNormalizationGradientNode::nodeWithSourceGradient:sourceImage:gradientState: not bound
 !missing-selector! +MPSCNNGroupNormalizationNode::nodeWithSource:dataSource: not bound
 !missing-selector! +MPSCNNNeuronGeLUNode::nodeWithSource: not bound
+!missing-selector! +MPSNDArrayDescriptor::descriptorWithDataType:dimensionSizes: not bound
 !missing-selector! +MPSNNGramMatrixCalculationGradientNode::nodeWithSourceGradient:sourceImage:gradientState: not bound
 !missing-selector! +MPSNNGramMatrixCalculationGradientNode::nodeWithSourceGradient:sourceImage:gradientState:alpha: not bound
 !missing-selector! +MPSNNGramMatrixCalculationNode::nodeWithSource: not bound
