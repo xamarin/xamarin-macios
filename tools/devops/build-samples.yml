@@ -113,6 +113,7 @@ jobs:
 
   - bash: ./tools/devops/publish-performance-data.sh
     displayName: Publish performance data
+    condition: always()
 
   - bash: echo "##vso[task.setvariable variable=JobStatus;isOutput=true]$AGENT_JOBSTATUS"
     name: ExportedVariables
