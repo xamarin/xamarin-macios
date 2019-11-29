@@ -14,8 +14,7 @@ using Xamarin;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-public static class ProcessHelper
-{
+public static class ProcessHelper {
 	static int counter;
 
 	static string log_directory;
@@ -28,7 +27,12 @@ public static class ProcessHelper
 
 	}
 
-	public static void AssertRunProcess (string filename, string[] arguments, TimeSpan timeout, string workingDirectory, Dictionary<string, string> environment_variables, string message)
+	public static void AssertRunProcess (string filename, string [] arguments, TimeSpan timeout, string workingDirectory, Dictionary<string, string> environment_variables, string message)
+	{
+		AssertRunProcess (filename, arguments, timeout, workingDirectory, environment_variables, message, out _);
+	}
+
+	public static void AssertRunProcess (string filename, string [] arguments, TimeSpan timeout, string workingDirectory, Dictionary<string, string> environment_variables, string message, out string logfile)
 	{
 		var exitCode = 0;
 		var output = new List<string> ();
@@ -50,7 +54,7 @@ public static class ProcessHelper
 		output_callback ($"Exit code: {exitCode} Timed out: {timed_out} Total duration: {watch.Elapsed.ToString ()}");
 
 		// Write execution log to disk (and print the path)
-		var logfile = Path.Combine (LogDirectory, $"{filename}-{Interlocked.Increment (ref counter)}.log");
+		logfile = Path.Combine (LogDirectory, $"{filename}-{Interlocked.Increment (ref counter)}.log");
 		File.WriteAllLines (logfile, output);
 		TestContext.AddTestAttachment (logfile, $"Execution log for {filename}");
 		Console.WriteLine ("Execution log for {0}: {1}", filename, logfile);
@@ -110,8 +114,9 @@ public static class ProcessHelper
 
 		var watch = Stopwatch.StartNew ();
 		var failed = false;
+		string msbuild_logfile;
 		try {
-			AssertRunProcess ("msbuild", sb.ToArray (), TimeSpan.FromMinutes (5), Configuration.SampleRootDirectory, environment_variables, "build");
+			AssertRunProcess ("msbuild", sb.ToArray (), TimeSpan.FromMinutes (5), Configuration.SampleRootDirectory, environment_variables, "build", out msbuild_logfile);
 		} catch {
 			failed = true;
 			throw;
@@ -200,17 +205,56 @@ public static class ProcessHelper
 						xml.WriteAttributeString ("size", lengths [i].ToString ());
 						xml.WriteEndElement ();
 					}
+
+					if (File.Exists (msbuild_logfile)) {
+						var lines = File.ReadAllLines (msbuild_logfile);
+						var target_perf_summary = new List<string> ();
+						var task_perf_summary = new List<string> ();
+						for (var i = lines.Length - 1; i >= 0; i--) {
+							if (lines [i].EndsWith ("Target Performance Summary:", StringComparison.Ordinal)) {
+								for (var k = i + 1; k < lines.Length && lines [k].EndsWith ("calls", StringComparison.Ordinal); k++) {
+									target_perf_summary.Add (lines [k].Substring (18).Trim ());
+								}
+							} else if (lines [i].EndsWith ("Task Performance Summary:", StringComparison.Ordinal)) {
+								for (var k = i + 1; k < lines.Length && lines [k].EndsWith ("calls", StringComparison.Ordinal); k++) {
+									task_perf_summary.Add (lines [k].Substring (18).Trim ());
+								}
+							}
+							if (target_perf_summary.Count > 0 && task_perf_summary.Count > 0)
+								break;
+						}
+						if (target_perf_summary != null) {
+							foreach (var tps in target_perf_summary) {
+								var split = tps.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+								xml.WriteStartElement ("target");
+								xml.WriteAttributeString ("name", split [2]);
+								xml.WriteAttributeString ("ms", split [0]);
+								xml.WriteAttributeString ("calls", split [3]);
+								xml.WriteEndElement ();
+							}
+						}
+						if (task_perf_summary != null) {
+							foreach (var tps in task_perf_summary) {
+								var split = tps.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+								xml.WriteStartElement ("task");
+								xml.WriteAttributeString ("name", split [2]);
+								xml.WriteAttributeString ("ms", split [0]);
+								xml.WriteAttributeString ("calls", split [3]);
+								xml.WriteEndElement ();
+							}
+						}
+					}
+
+					xml.WriteEndElement ();
 				}
 
 				xml.WriteEndElement ();
+				xml.WriteEndDocument ();
+				xml.Dispose ();
+
+				TestContext.AddTestAttachment (logfile, $"Performance data");
+				Console.WriteLine ("Performance data: {0}:\n\t{1}", logfile, string.Join ("\n\t", File.ReadAllLines (logfile)));
 			}
-
-			xml.WriteEndElement ();
-			xml.WriteEndDocument ();
-			xml.Dispose ();
-
-			TestContext.AddTestAttachment (logfile, $"Performance data");
-			Console.WriteLine ("Performance data: {0}:\n\t{1}", logfile, string.Join ("\n\t", File.ReadAllLines (logfile)));
 		}
 	}
 }
