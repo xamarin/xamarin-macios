@@ -358,6 +358,13 @@ namespace Xamarin.Bundler {
 
 			AddSharedOptions (App, os);
 
+			var extra_args = Environment.GetEnvironmentVariable ("MMP_ENV_OPTIONS");
+			if (!string.IsNullOrEmpty (extra_args)) {
+				var l = new List<string> (args);
+				l.AddRange (extra_args.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+				args = l.ToArray ();
+			}
+
 			try {
 				App.RootAssemblies.AddRange (os.Parse (args));
 			}
