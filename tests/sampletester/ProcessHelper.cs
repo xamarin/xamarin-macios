@@ -104,6 +104,10 @@ public static class ProcessHelper
 		if (!string.IsNullOrEmpty (target))
 			sb.Add ($"/t:{target}");
 
+		sb.Add ($"/verbosity:diag");
+		environment_variables ["MTOUCH_ENV_OPTIONS"] = "--time --time --time --time -qqqq";
+		environment_variables ["MMP_ENV_OPTIONS"] = "--time --time --time --time -qqqq";
+
 		var watch = Stopwatch.StartNew ();
 		var failed = false;
 		try {
