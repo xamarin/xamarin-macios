@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 using NUnit.Framework;
 
@@ -79,8 +80,8 @@ public static class ProcessHelper
 		nuget_args.Add ("sln"); // replaced later
 		nuget_args.Add ("-Verbosity");
 		nuget_args.Add ("detailed");
+		var slndir = Path.GetDirectoryName (solution);
 		if (!solution.EndsWith (".sln", StringComparison.Ordinal)) {
-			var slndir = Path.GetDirectoryName (solution);
 			while ((solutions = Directory.GetFiles (slndir, "*.sln", SearchOption.TopDirectoryOnly)).Length == 0 && slndir.Length > 1)
 				slndir = Path.GetDirectoryName (slndir);
 			nuget_args.Add ("-SolutionDir");
@@ -102,6 +103,110 @@ public static class ProcessHelper
 		sb.Add (solution);
 		if (!string.IsNullOrEmpty (target))
 			sb.Add ($"/t:{target}");
-		AssertRunProcess ("msbuild", sb.ToArray (), TimeSpan.FromMinutes (5), Configuration.SampleRootDirectory, environment_variables, "build");
+
+		var watch = Stopwatch.StartNew ();
+		var failed = false;
+		try {
+			AssertRunProcess ("msbuild", sb.ToArray (), TimeSpan.FromMinutes (5), Configuration.SampleRootDirectory, environment_variables, "build");
+		} catch {
+			failed = true;
+			throw;
+		} finally {
+			watch.Stop ();
+		}
+
+		// Write performance data to disk
+		var subdirs = Directory.GetDirectories (slndir, "*", SearchOption.AllDirectories);
+		var apps = subdirs.Where ((v) => {
+			var names = v.Split (Path.DirectorySeparatorChar);
+			if (names.Length < 2)
+				return false;
+			var bin_idx = Array.IndexOf (names, "bin");
+			var conf_idx = Array.IndexOf (names, configuration);
+			if (bin_idx < 0 || conf_idx < 0)
+				return false;
+			if (bin_idx > conf_idx)
+				return false;
+			if (platform.Length > 0) {
+				var platform_idx = Array.IndexOf (names, platform);
+				if (platform_idx < 0)
+					return false;
+				if (bin_idx > platform_idx)
+					return false;
+			}
+			var app_idx = Array.FindIndex (names, (v2) => v2.EndsWith (".app", StringComparison.Ordinal));
+			if (!names [names.Length - 1].EndsWith (".app", StringComparison.Ordinal))
+				return false;
+			return true;
+		}).ToArray ();
+
+		if (apps.Length > 1) {
+			apps = apps.Where ((v) => {
+				// If one .app is a subdirectory of another .app, we don't care about the former.
+				if (apps.Any ((v2) => v2.Length < v.Length && v.StartsWith (v2, StringComparison.Ordinal)))
+					return false;
+
+				// If one .app is contained within another .app, we don't care about the former.
+				var vname = Path.GetFileName (v);
+				var otherApps = apps.Where ((v2) => v != v2);
+				if (otherApps.Any ((v2) => {
+					var otherSubdirs = subdirs.Where ((v3) => v3.StartsWith (v2, StringComparison.Ordinal));
+					return otherSubdirs.Any ((v3) => Path.GetFileName (v3) == vname);
+				}))
+					return false;
+
+				return true;
+			}).ToArray ();
+		}
+
+		if (apps.Length > 1) {
+			Assert.Fail ($"More than one app directory????\n\t{string.Join ("\n\t", apps)}");
+		} else if (apps.Length == 0) {
+			Assert.Fail ($"No app directory????\n\t{string.Join ("\n\t", subdirs)}");
+		} else {
+			var logfile = Path.Combine (LogDirectory, $"{Path.GetFileNameWithoutExtension (solution)}-perfdata-{Interlocked.Increment (ref counter)}.xml");
+
+			var xmlSettings = new XmlWriterSettings {
+				Indent = true,
+			};
+			var xml = XmlWriter.Create (logfile, xmlSettings);
+			xml.WriteStartDocument (true);
+			xml.WriteStartElement ("perf-data");
+
+			foreach (var app in apps) {
+				xml.WriteStartElement ("test");
+				xml.WriteAttributeString ("name", TestContext.CurrentContext.Test.FullName);
+				xml.WriteAttributeString ("result", failed ? "failed" : "success");
+				if (platform.Length > 0)
+					xml.WriteAttributeString ("platform", platform);
+				xml.WriteAttributeString ("configuration", configuration);
+				if (!failed) {
+					xml.WriteAttributeString ("duration", watch.ElapsedTicks.ToString ());
+					xml.WriteAttributeString ("duration-formatted", watch.Elapsed.ToString ());
+
+					var files = Directory.GetFiles (app, "*", SearchOption.AllDirectories).OrderBy ((v) => v).ToArray ();
+					var lengths = files.Select ((v) => new FileInfo (v).Length).ToArray ();
+					var total_size = lengths.Sum ();
+
+					xml.WriteAttributeString ("total-size", total_size.ToString ());
+					var appstart = Path.GetDirectoryName (app).Length;
+					for (var i = 0; i < files.Length; i++) {
+						xml.WriteStartElement ("file");
+						xml.WriteAttributeString ("name", files [i].Substring (appstart + 1));
+						xml.WriteAttributeString ("size", lengths [i].ToString ());
+						xml.WriteEndElement ();
+					}
+				}
+
+				xml.WriteEndElement ();
+			}
+
+			xml.WriteEndElement ();
+			xml.WriteEndDocument ();
+			xml.Dispose ();
+
+			TestContext.AddTestAttachment (logfile, $"Performance data");
+			Console.WriteLine ("Performance data: {0}:\n\t{1}", logfile, string.Join ("\n\t", File.ReadAllLines (logfile)));
+		}
 	}
 }
