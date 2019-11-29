@@ -111,6 +111,9 @@ jobs:
       publishRunAttachments: true
       mergeTestResults: true
 
+  - bash: ./tools/devops/publish-performance-data.sh
+    displayName: Publish performance data
+
   - bash: echo "##vso[task.setvariable variable=JobStatus;isOutput=true]$AGENT_JOBSTATUS"
     name: ExportedVariables
     displayName: Export status
