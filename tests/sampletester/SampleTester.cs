@@ -240,24 +240,19 @@ namespace Samples {
 					}
 				}
 			}
-
-			var baseline_test = new SampleTest ();
-			baseline_test.BuildSolution = false;
-			baseline_test.Solution = Path.Combine (Configuration.SourceRoot, "tests", "sampletester", "sampletester.sln");
-			baseline_test.Project = new ProjectInfo {
-				FullPath = Path.Combine (Configuration.SourceRoot, "tests", "sampletester", "BaselineTest", "BaselineTest.csproj"),
-				IsExecutable = true,
-				RelativePath = "../../../../BaselineTest/BaselineTest.csproj",
-				Title = "BaselineTest",
-				Platform = TestPlatform.iOS,
-			};
-			GitHub.CleanRepository (Path.GetDirectoryName (baseline_test.Project.FullPath), false);
-			yield return new SampleTestData { SampleTest = baseline_test, Configuration = "Debug", Platform = "iPhone" };
 		}
 
 		string CloneRepo ()
 		{
 			return GitHub.CloneRepository (Org, Repository, Hash);
+		}
+
+		[Test]
+		public void BuildBaselineTest ()
+		{
+			var csproj = Path.Combine (Configuration.SourceRoot, "tests", "sampletester", "BaselineTest", "BaselineTest.csproj");
+			GitHub.CleanRepository (Path.GetDirectoryName (csproj));
+			ProcessHelper.BuildSolution (csproj, "iPhone", "Debug", new Dictionary<string, string> ());
 		}
 	}
 }
