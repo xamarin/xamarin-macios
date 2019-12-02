@@ -246,13 +246,17 @@ namespace Samples {
 		{
 			return GitHub.CloneRepository (Org, Repository, Hash);
 		}
+	}
 
+	[TestFixture]
+	public class BaselineTester {
 		[Test]
-		public void BuildBaselineTest ()
+		public void DeviceDebug ()
 		{
-			var csproj = Path.Combine (Configuration.SourceRoot, "tests", "sampletester", "BaselineTest", "BaselineTest.csproj");
-			GitHub.CleanRepository (Path.GetDirectoryName (csproj));
-			ProcessHelper.BuildSolution (csproj, "iPhone", "Debug", new Dictionary<string, string> ());
+			var sln = Path.Combine (Configuration.SourceRoot, "tests", "sampletester", "BaselineTest", "BaselineTest.sln");
+			GitHub.CleanRepository (Path.GetDirectoryName (sln));
+			ProcessHelper.BuildSolution (sln, "iPhone", "Debug", new Dictionary<string, string> ());
 		}
+
 	}
 }
