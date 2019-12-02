@@ -837,44 +837,46 @@ namespace xharness
 				};
 				logdev.StartCapture ();
 
-				await crash_reports.StartCaptureAsync ();
+				try {
+					await crash_reports.StartCaptureAsync ();
 
-				main_log.WriteLine ("Starting test run");
+					main_log.WriteLine ("Starting test run");
 
-				bool waitedForExit = true;
-				// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
-				var callbackLog = new CallbackLog ((line) => {
-					// MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver
-					waitedForExit &= line?.Contains ("MT1111: ") != true;
-					if (line?.Contains ("error MT1007") == true)
-						launch_failure = true;
-				});
-				var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
-				var timeoutWatch = Stopwatch.StartNew ();
-				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), runLog, timeout, cancellation_token: cancellation_source.Token);
+					bool waitedForExit = true;
+					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).
+					var callbackLog = new CallbackLog ((line) => {
+						// MT1111: Application launched successfully, but it's not possible to wait for the app to exit as requested because it's not possible to detect app termination when launching using gdbserver
+						waitedForExit &= line?.Contains ("MT1111: ") != true;
+						if (line?.Contains ("error MT1007") == true)
+							launch_failure = true;
+					});
+					var runLog = Log.CreateAggregatedLog (callbackLog, main_log);
+					var timeoutWatch = Stopwatch.StartNew ();
+					var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), runLog, timeout, cancellation_token: cancellation_source.Token);
 
-				if (!waitedForExit && !result.TimedOut) {
-					// mlaunch couldn't wait for exit for some reason. Let's assume the app exits when the test listener completes.
-					main_log.WriteLine ("Waiting for listener to complete, since mlaunch won't tell.");
-					if (!await listener.CompletionTask.TimeoutAfter (timeout - timeoutWatch.Elapsed)) {
-						result.TimedOut = true;
+					if (!waitedForExit && !result.TimedOut) {
+						// mlaunch couldn't wait for exit for some reason. Let's assume the app exits when the test listener completes.
+						main_log.WriteLine ("Waiting for listener to complete, since mlaunch won't tell.");
+						if (!await listener.CompletionTask.TimeoutAfter (timeout - timeoutWatch.Elapsed)) {
+							result.TimedOut = true;
+						}
 					}
-				}
 
-				if (result.TimedOut) {
-					timed_out = true;
-					success = false;
-					main_log.WriteLine ("Test run timed out after {0} minute(s).", timeout.TotalMinutes);
-				} else if (result.Succeeded) {
-					main_log.WriteLine ("Test run completed");
-					success = true;
-				} else {
-					main_log.WriteLine ("Test run failed");
-					success = false;
+					if (result.TimedOut) {
+						timed_out = true;
+						success = false;
+						main_log.WriteLine ("Test run timed out after {0} minute(s).", timeout.TotalMinutes);
+					} else if (result.Succeeded) {
+						main_log.WriteLine ("Test run completed");
+						success = true;
+					} else {
+						main_log.WriteLine ("Test run failed");
+						success = false;
+					}
+				} finally {
+					logdev.StopCapture ();
+					device_system_log.Dispose ();
 				}
-
-				logdev.StopCapture ();
-				device_system_log.Dispose ();
 
 				// Upload the system log
 				if (File.Exists (device_system_log.FullPath)) {
