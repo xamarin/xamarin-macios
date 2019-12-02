@@ -201,26 +201,31 @@ namespace CoreServices
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr FSEventStreamCreateRelativeToDevice (IntPtr allocator, FSEventStreamCallback callback, 
-		IntPtr context, ulong deviceToWatch, IntPtr pathsToWatchRelativeToDevice, 
-		ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
+			IntPtr context, ulong deviceToWatch, IntPtr pathsToWatchRelativeToDevice, 
+			ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
 
 		public FSEventStream (CFAllocator allocator, ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
 			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags)
 		{
 			if (pathsToWatchRelativeToDevice == null) {
-				throw new ArgumentNullException ("pathsToWatchRelativeToDevice");
+				throw new ArgumentNullException (nameof (pathsToWatchRelativeToDevice));
 			}
 
 			eventsCallback = new FSEventStreamCallback (EventsCallback);
 
-			handle =  FSEventStreamCreateRelativeToDevice (
-				allocator ==  null ? IntPtr.Zero : allocator.Handle,
+			handle = FSEventStreamCreateRelativeToDevice (
+				allocator.GetHandle (),
 				eventsCallback, IntPtr.Zero, deviceToWatch, pathsToWatchRelativeToDevice.Handle,
 				sinceWhen, latency.TotalSeconds, flags);
 			
 			if (handle == IntPtr.Zero) {
-				throw new Exception ("Unable to create FSEventStream");
+				throw new InvalidOperationException ("Unable to create FSEventStream");
 			}
+		}
+
+		public FSEventStream (ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
+			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags) : this (null, deviceToWatch, pathsToWatchRelativeToDevice, sinceWhen, latency, flags)
+		{
 		}
 
 		void EventsCallback (IntPtr handle, IntPtr userData, nint numEvents,
@@ -335,25 +340,28 @@ namespace CoreServices
 		static extern void FSEventStreamUnscheduleFromRunLoop (IntPtr handle,
 			IntPtr runLoop, IntPtr runLoopMode);
 
-		public void UnscheduleWithRunLoop (CFRunLoop runLoop, NSString runLoopMode)
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop, NSString runLoopMode)
 		{
 			CheckDisposed ();
-			FSEventStreamUnscheduleFromRunLoop (handle, runLoop.Handle, runLoopMode.Handle);
+			if (runLoopMode == null) {
+				throw new ArgumentNullException (nameof (runLoopMode));
+			}
+			FSEventStreamUnscheduleFromRunLoop (handle, runLoop.GetHandle (), runLoopMode.GetHandle ());
 		}
 
-		public void UnscheduleWithRunLoop (CFRunLoop runLoop)
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop)
 		{
-			UnscheduleWithRunLoop (runLoop, CFRunLoop.ModeDefault);
+			UnscheduleFromRunLoop (runLoop, CFRunLoop.ModeDefault);
 		}
 
-		public void UnscheduleWithRunLoop (NSRunLoop runLoop, NSString runLoopMode)
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop, NSString runLoopMode)
 		{
-			UnscheduleWithRunLoop (runLoop.GetCFRunLoop (), runLoopMode);
+			UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), runLoopMode);
 		}
 
-		public void UnscheduleWithRunLoop (NSRunLoop runLoop)
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop)
 		{
-			UnscheduleWithRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
+			UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -419,28 +427,29 @@ namespace CoreServices
 			return FSEventStreamGetDeviceBeingWatched (handle);
 		}
 
+		[Mac (10, 9)]
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern bool FSEventStreamSetExclusionPaths (IntPtr handle, IntPtr pathsToExclude);
 
 		public bool SetExclusionPaths (NSArray pathsToExclude)
 		{
 			if (pathsToExclude == null) {
-				throw new ArgumentNullException ("pathsToExclude");
+				throw new ArgumentNullException (nameof (pathsToExclude));
 			}
 			CheckDisposed ();
 			return FSEventStreamSetExclusionPaths (handle, pathsToExclude.Handle);
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
-		static extern bool FSEventStreamSetDispatchQueue (IntPtr handle, DispatchQueue queue);
+		static extern void FSEventStreamSetDispatchQueue (IntPtr handle, DispatchQueue queue);
 
-		public bool SetDispatchQueue (DispatchQueue queue)
+		public void SetDispatchQueue (DispatchQueue queue)
 		{
 			if (queue == null) {
-				throw new ArgumentNullException ("queue");
+				throw new ArgumentNullException (nameof (queue));
 			}
 			CheckDisposed ();
-			return FSEventStreamSetDispatchQueue (handle, queue);
+			FSEventStreamSetDispatchQueue (handle, queue);
 		}
 	}
 }
