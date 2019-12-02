@@ -153,7 +153,7 @@ get_mono_env_options (int *count)
 	inptr = (unsigned char *) env;
 
 	while (*inptr) {
-		while (isblank ((int) *inptr))
+		while (isblank ((int) *inptr & 0xff))
 			inptr++;
 
 		if (*inptr == '\0')
@@ -166,7 +166,7 @@ get_mono_env_options (int *count)
 			value = decode_qstring (&inptr, *start);
 			break;
 		default:
-			while (*inptr && !isblank ((int) *inptr))
+			while (*inptr && !isblank ((int) *inptr & 0xff))
 				inptr++;
 
 			// Note: Mac OS X <= 10.6.8 do not have strndup()

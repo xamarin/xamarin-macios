@@ -1649,7 +1649,7 @@ public partial class Generator : IMemberGatherer {
 				if (IsProtocolInterface (pi.ParameterType)) {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)", pi.Name.GetSafeParamName (), pi.ParameterType);
 				} else if (isForced) {
-					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, {2})", pi.Name.GetSafeParamName (), RenderType (pi.ParameterType), isForcedOwns);
+					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, true, {2})", pi.Name.GetSafeParamName (), RenderType (pi.ParameterType), isForcedOwns);
 				} else {
 					invoke.AppendFormat (" Runtime.GetNSObject<{1}> ({0})", pi.Name.GetSafeParamName (), RenderType (pi.ParameterType));
 				}
@@ -3612,7 +3612,7 @@ public partial class Generator : IMemberGatherer {
 				cast_b = ", false)";
 			} else if (minfo != null && minfo.is_forced) {
 				cast_a = " Runtime.GetINativeObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
-				cast_b = $", {minfo.is_forced_owns})";
+				cast_b = $", true, {minfo.is_forced_owns})";
 			} else if (minfo != null && minfo.is_bindAs) {
 				var bindAs = GetBindAsAttribute (minfo.mi);
 				var nullableBindAsType = TypeManager.GetUnderlyingNullableType (bindAs.Type);
@@ -4139,7 +4139,7 @@ public partial class Generator : IMemberGatherer {
 				} else if (isINativeObjectSubclass) {
 					if (!pi.IsOut)
 						by_ref_processing.AppendFormat ("if ({0}Value != ({0} == null ? IntPtr.Zero : {0}.Handle))\n\t", pi.Name.GetSafeParamName ());
-					by_ref_processing.AppendFormat ("{0} = Runtime.GetINativeObject<{1}> ({0}Value, {2});\n", pi.Name.GetSafeParamName (), RenderType (elementType), isForcedType ? isForcedOwns : "false");
+					by_ref_processing.AppendFormat ("{0} = Runtime.GetINativeObject<{1}> ({0}Value, {2}, {3});\n", pi.Name.GetSafeParamName (), RenderType (elementType), isForcedType ? "true" : "false", isForcedType ? isForcedOwns : "false");
 				} else {
 					throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out (output) code for {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 				}
@@ -5191,10 +5191,9 @@ public partial class Generator : IMemberGatherer {
 			PrintPlatformAttributes (minfo.method.DeclaringType);
 		}
 
-		foreach (var di in AttributeManager.GetCustomAttributes<DesignatedInitializerAttribute> (mi)) {
+		// in theory we could check for `minfo.is_ctor` but some manual bindings are using methods for `init*`
+		if (AttributeManager.HasAttribute<DesignatedInitializerAttribute> (mi))
 			print ("[DesignatedInitializer]");
-			break;
-		}
 	}
 
 
@@ -6409,10 +6408,8 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					if (external) {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
-							foreach (var ta in AttributeManager.GetCustomAttributes<DesignatedDefaultCtorAttribute> (type)) {
+							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
 								sw.WriteLine ("\n\n[DesignatedInitializer]");
-								break;
-							}
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
@@ -6435,10 +6432,8 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					} else {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
-							foreach (var ta in AttributeManager.GetCustomAttributes<DesignatedDefaultCtorAttribute> (type)) {
+							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
 								sw.WriteLine ("\t\t[DesignatedInitializer]");
-								break;
-							}
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);

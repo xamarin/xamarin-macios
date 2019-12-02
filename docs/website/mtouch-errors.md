@@ -676,7 +676,7 @@ For further information see bug #[51634](https://bugzilla.xamarin.com/show_bug.c
 
 ### MT0112: Native code sharing has been disabled because *
 
-There are multiple reasons code sharing can be disabled:
+There are multiple reasons [native code sharing](https://github.com/xamarin/xamarin-macios/blob/master/docs/code-sharing-with-user-frameworks.md) can be disabled:
 
 * because the container app's deployment target is earlier than iOS 8.0 (it's *)).
 
@@ -693,6 +693,8 @@ Native code sharing requires is not supported for projects that use custom xml d
 <a name="MT0113" />
 
 ### MT0113: Native code sharing has been disabled for the extension '*' because *.
+
+There are multiple reasons [native code sharing](https://github.com/xamarin/xamarin-macios/blob/master/docs/code-sharing-with-user-frameworks.md) can be disabled:
 
 * because the bitcode options differ between the container app (\*) and the extension (\*).
 

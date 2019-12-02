@@ -755,3 +755,17 @@ disabling the managed linker.
 
 The default behavior can be overridden by passing
 `--optimize=[+|-]custom-attributes-removal` to `mtouch` or `mmp`.
+
+## Experimental Xamarin.Forms.Platform.iOS ProductType inclusion
+
+This optimization requires the linker to be enabled and is only applied
+on `Xamarin.Forms.Platform.iOS.dll`.
+
+This is **experimental** and might be removed or replaced in future 
+versions of Xamarin.iOS.
+
+This optimization consider the assembly `Xamarin.Forms.Platform.iOS` as
+a product assembly and does not automagically mark all `NSObject` 
+subclasses. This allows additional removes and optimizations to be 
+applied to the assembly, including the ability to remove `UIWebView` if
+nothing else in the application requires it.

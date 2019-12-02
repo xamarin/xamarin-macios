@@ -42,11 +42,11 @@ void *xamarin_marshal_return_value (SEL sel, MonoType *mtype, const char *type, 
  */
 @interface XamarinGCHandle : NSObject {
 @public
-	int handle;
+	uint32_t handle;
 }
-+(XamarinGCHandle *) createWithHandle: (int) handle;
++(XamarinGCHandle *) createWithHandle: (uint32_t) handle;
 -(void) dealloc;
--(int) getHandle;
+-(uint32_t) getHandle;
 @end
 
 #endif /* __RUNTIME_INTERNAL_H__ */

@@ -21,6 +21,7 @@ using MonoTouch.Foundation;
 using MonoTouch.AVFoundation;
 #endif
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
 
 namespace monotouchtest {
 	[TestFixture]
@@ -52,8 +53,8 @@ namespace monotouchtest {
 			}
 		}
 
-		// FIXME: Disabling this test from now, will reenable once apple releases docs on what is ecpected to have this entitlement key
-		// Reason: Creating an AVAssetDownloadURLSession requires the com.apple.developer.media-asset-download entitlement
+// FIXME: Disabling this test from now, will reenable once apple releases docs on what is ecpected to have this entitlement key
+// Reason: Creating an AVAssetDownloadURLSession requires the com.apple.developer.media-asset-download entitlement
 //		[Test]
 //		public void AVAssetDownloadUrlSessionNotSupported ()
 //		{
@@ -63,19 +64,19 @@ namespace monotouchtest {
 //			var session = AVAssetDownloadUrlSession.CreateSession (NSUrlSessionConfiguration.BackgroundSessionConfiguration ("XamFoo"), null, null);
 //
 //			Assert.Throws <NotSupportedException> (() => session.CreateDataTask (new NSUrlRequest ()), "CreateDataTask should throw NotSupportedException");
-//			Assert.Throws <NotSupportedException> (() => session.CreateDataTask (new NSUrl ("http://google.com")), "CreateDataTask should throw NotSupportedException");
-//			Assert.Throws <NotSupportedException> (() => session.CreateUploadTask (new NSUrlRequest (), new NSUrl ("http://google.com")), "CreateUploadTask should throw NotSupportedException");
+//			Assert.Throws <NotSupportedException> (() => session.CreateDataTask (new NSUrl (NetworkResources.MicrosoftUrl)), "CreateDataTask should throw NotSupportedException");
+//			Assert.Throws <NotSupportedException> (() => session.CreateUploadTask (new NSUrlRequest (), new NSUrl (NetworkResources.MicrosoftUrl)), "CreateUploadTask should throw NotSupportedException");
 //			Assert.Throws <NotSupportedException> (() => session.CreateUploadTask (new NSUrlRequest (), new NSData ()), "CreateUploadTask should throw NotSupportedException");
 //			Assert.Throws <NotSupportedException> (() => session.CreateUploadTask (new NSUrlRequest ()), "CreateUploadTask should throw NotSupportedException");
 //			Assert.Throws <NotSupportedException> (() => session.CreateDownloadTask (new NSUrlRequest ()), "CreateDownloadTask should throw NotSupportedException");
-//			Assert.Throws <NotSupportedException> (() => session.CreateDownloadTask (new NSUrl ("http://google.com")), "CreateDownloadTask should throw NotSupportedException");
+//			Assert.Throws <NotSupportedException> (() => session.CreateDownloadTask (new NSUrl (NetworkResources.MicrosoftUrl)), "CreateDownloadTask should throw NotSupportedException");
 //			Assert.Throws <NotSupportedException> (() => session.CreateDownloadTask (new NSData ()), "CreateDownloadTask should throw NotSupportedException");
 //			Assert.Throws <NotSupportedException> (() => session.CreateDataTask (new NSUrlRequest (), (data, response, error) => {}), "CreateDataTask should throw NotSupportedException");
-//			Assert.Throws <NotSupportedException> (() => session.CreateDataTask (new NSUrl ("http://google.com"), (data, response, error) => {}), "CreateDataTask should throw NotSupportedException");
-//			Assert.Throws <NotSupportedException> (() => session.CreateUploadTask (new NSUrlRequest (), new NSUrl ("http://google.com"), (data, response, error) => {}), "CreateUploadTask should throw NotSupportedException");
+//			Assert.Throws <NotSupportedException> (() => session.CreateDataTask (new NSUrl (NetworkResources.MicrosoftUrl), (data, response, error) => {}), "CreateDataTask should throw NotSupportedException");
+//			Assert.Throws <NotSupportedException> (() => session.CreateUploadTask (new NSUrlRequest (), new NSUrl (NetworkResources.MicrosoftUrl), (data, response, error) => {}), "CreateUploadTask should throw NotSupportedException");
 //			Assert.Throws <NotSupportedException> (() => session.CreateUploadTask (new NSUrlRequest (), new NSData (), (data, response, error) => {}), "CreateUploadTask should throw NotSupportedException");
 //			Assert.Throws <NotSupportedException> (() => session.CreateDownloadTask (new NSUrlRequest (), (NSUrl location, NSUrlResponse response, NSError error) => {}), "CreateDownloadTask should throw NotSupportedException");
-//			Assert.Throws <NotSupportedException> (() => session.CreateDownloadTask (new NSUrl ("http://google.com"), (NSUrl location, NSUrlResponse response, NSError error) => {}), "CreateDownloadTask should throw NotSupportedException");
+//			Assert.Throws <NotSupportedException> (() => session.CreateDownloadTask (new NSUrl (NetworkResources.MicrosoftUrl), (NSUrl location, NSUrlResponse response, NSError error) => {}), "CreateDownloadTask should throw NotSupportedException");
 //			Assert.Throws <NotSupportedException> (() => session.CreateDownloadTaskFromResumeData (new NSData (), (NSUrl location, NSUrlResponse response, NSError error) => {}), "CreateDownloadTask should throw NotSupportedException");
 //
 //		}

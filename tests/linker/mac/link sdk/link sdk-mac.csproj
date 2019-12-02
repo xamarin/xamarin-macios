@@ -86,6 +86,9 @@
     <Compile Include="..\..\CommonLinkAnyTest.cs">
       <Link>CommonLinkAnyTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\monotouch-test\System.Net.Http\NetworkResources.cs">
+      <Link>NetworkResources.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">

@@ -585,65 +585,6 @@ namespace AVFoundation {
 		PhaseDetection
 	}
 
-	// Convience enum
-	[Flags]
-	public enum AVMetadataObjectType : ulong {
-		None = 0,
-
-		Face = 1 << 0,
-
-		[iOS(7,0)]
-		AztecCode = 1 << 1,
-
-		[iOS(7,0)]
-		Code128Code = 1 << 2,
-
-		[iOS(7,0)]
-		Code39Code = 1 << 3,
-
-		[iOS(7,0)]
-		Code39Mod43Code = 1 << 4,
-
-		[iOS(7,0)]
-		Code93Code = 1 << 5,
-
-		[iOS(7,0)]
-		EAN13Code = 1 << 6,
-
-		[iOS(7,0)]
-		EAN8Code = 1 << 7,
-
-		[iOS(7,0)]
-		PDF417Code = 1 << 8,
-
-		[iOS(7,0)]
-		QRCode = 1 << 9,
-
-		[iOS(7,0)]
-		UPCECode = 1 << 10,
-
-		[iOS (8,0)]
-		Interleaved2of5Code = 1 << 11,
-
-		[iOS (8,0)]
-		ITF14Code = 1 << 12,
-
-		[iOS (8,0)]
-		DataMatrixCode = 1 << 13,
-
-		[iOS (13,0)]
-		CatBody = 1 << 14,
-
-		[iOS (13,0)]
-		DogBody = 1 << 15,
-
-		[iOS (13,0)]
-		HumanBody = 1 << 16,
-
-		[iOS (13,0)]
-		SalientObject = 1 << 17,
-	}
-
 #if !MONOMAC
 	[NoTV, NoWatch]
 	[iOS (9,0)]

@@ -15,6 +15,7 @@ using Foundation;
 using MediaAccessibility;
 using ObjCRuntime;
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
 
 namespace MonoTouchFixtures.MediaAccessibility {
 
@@ -28,7 +29,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
 			Assert.Throws<ArgumentNullException> (() => MAImageCaptioning.GetCaption (null, out _));
-			using (NSUrl url = new NSUrl ("https://microsoft.com")) {
+			using (NSUrl url = new NSUrl (NetworkResources.MicrosoftUrl)) {
 				var s = MAImageCaptioning.GetCaption (url, out var e);
 				Assert.Null (s, "remote / return value");
 				Assert.Null (e, "remote / no error"); // weird should be an "image on disk"

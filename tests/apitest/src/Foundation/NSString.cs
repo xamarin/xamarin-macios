@@ -54,6 +54,23 @@ namespace Xamarin.Mac.Tests
 			Assert.IsTrue (rect.Width > 0);
 			Assert.IsTrue (rect.Height > 0);
 		}
+
+		[Test]
+		public void NSString_CompareTo ()
+		{
+			using (var a = new NSString ("a"))
+			using (var b = new NSString ("b"))
+			using (var c = new NSString ("c"))
+			{
+				var tests = new NSString[] { c, a, b };
+
+				Array.Sort (tests);
+
+				Assert.AreSame (a, tests[0], "0");
+				Assert.AreSame (b, tests[1], "1");
+				Assert.AreSame (c, tests[2], "2");
+			}
+		}
 	}
 
 	[TestFixture]

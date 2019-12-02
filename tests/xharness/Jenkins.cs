@@ -1120,14 +1120,13 @@ namespace xharness
 
 		async Task ExecutePeriodicCommandAsync (Log periodic_loc)
 		{
-			//await Task.Delay (Harness.UploadInterval);
 			periodic_loc.WriteLine ($"Starting periodic task with interval {Harness.PeriodicCommandInterval.TotalMinutes} minutes.");
 			while (true) {
 				var watch = Stopwatch.StartNew ();
 				using (var process = new Process ()) {
 					process.StartInfo.FileName = Harness.PeriodicCommand;
 					process.StartInfo.Arguments = Harness.PeriodicCommandArguments;
-					var rv = await process.RunAsync (periodic_loc, null);
+					var rv = await process.RunAsync (periodic_loc, timeout: Harness.PeriodicCommandInterval);
 					if (!rv.Succeeded)
 						periodic_loc.WriteLine ($"Periodic command failed with exit code {rv.ExitCode} (Timed out: {rv.TimedOut})");
 				}

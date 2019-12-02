@@ -652,7 +652,7 @@ timestamps {
                                 // Since pull requests don't create branches in the xamarin org (that VSTS sees at least),
                                 // I've created a 'pull-request' branch which we'll use for pull requests.
                                 def vsts_branch = isPr ? "pull-request" : branchName;
-                                if (isPr) {
+                                if (isPr && !githubGetPullRequestLabels ().contains ("trigger-device-tests")) {
                                     echo "Currently not launching external tests for pull requests"
                                 } else {
                                     def outputFile = "${workspace}/xamarin-macios/wrench-launch-external.output.tmp"

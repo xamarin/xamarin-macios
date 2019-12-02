@@ -40,6 +40,14 @@ void xamarin_setup_impl ()
 int
 main (int argc, char** argv)
 {
+	// There's a potentially uncaught exception here, which:
+	// 1. only happens when/if `xamarin_initialize / ObjCRuntime.Initialize` throws a native exception.
+	//    This should not happen (nor be ignored) since the runtime would not be fully initialized;
+	// 2. only happens when (non default) `MarshalManagedExceptionModeThrowObjectiveCException` is used,
+	//    specifically asking for the native exception to be thrown; and
+	// 3. only happens on simulator builds (hint: filename), i.e. not on code that ships to customers;
+	// 4. catching the exception creates an empty/white app, which hides the issue or confuses developers.
+	// A crash (report) is much more useful to them (and us).
 	@autoreleasepool { return xamarin_main (argc, argv, XamarinLaunchModeApp); }
 }
 

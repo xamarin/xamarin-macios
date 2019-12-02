@@ -6617,6 +6617,7 @@ namespace AVFoundation {
 		[Export ("time")]
 		CMTime Time{ get;}
 
+#if !XAMCORE_4_0
 		[Field ("AVMetadataObjectTypeFace"), Mac (10,10)]
 		NSString TypeFace { get; }
 
@@ -6687,6 +6688,107 @@ namespace AVFoundation {
 		[NoWatch, NoTV, iOS (13, 0), Mac (10, 15)]
 		[Field ("AVMetadataObjectTypeSalientObject")]
 		NSString TypeSalientObject { get; }
+#endif
+	}
+
+#if XAMCORE_4_0
+	[NoWatch]
+	[NoTV]
+#endif
+	[Mac (10,10)]
+	[Flags]
+	enum AVMetadataObjectType : ulong {
+		[Field (null)]
+		None = 0,
+
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeFace")]
+		Face = 1 << 0,
+
+		[iOS (7,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeAztecCode")]
+		AztecCode = 1 << 1,
+
+		[iOS (7,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeCode128Code")]
+		Code128Code = 1 << 2,
+
+		[iOS (7,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeCode39Code")]
+		Code39Code = 1 << 3,
+
+		[iOS (7,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeCode39Mod43Code")]
+		Code39Mod43Code = 1 << 4,
+
+		[iOS (7,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeCode93Code")]
+		Code93Code = 1 << 5,
+
+		[iOS (7,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeEAN13Code")]
+		EAN13Code = 1 << 6,
+
+		[iOS (7,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeEAN8Code")]
+		EAN8Code = 1 << 7,
+
+		[iOS (7,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypePDF417Code")]
+		PDF417Code = 1 << 8,
+
+		[iOS (7,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeQRCode")]
+		QRCode = 1 << 9,
+
+		[iOS (7,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeUPCECode")]
+		UPCECode = 1 << 10,
+
+		[iOS (8,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeInterleaved2of5Code")]
+		Interleaved2of5Code = 1 << 11,
+
+		[iOS (8,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeITF14Code")]
+		ITF14Code = 1 << 12,
+
+		[iOS (8,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeDataMatrixCode")]
+		DataMatrixCode = 1 << 13,
+
+		[iOS (13,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeCatBody")]
+		CatBody = 1 << 14,
+
+		[iOS (13,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeDogBody")]
+		DogBody = 1 << 15,
+
+		[iOS (13,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeHumanBody")]
+		HumanBody = 1 << 16,
+
+		[iOS (13,0), Mac (10,15)]
+		[NoTV][NoWatch]
+		[Field ("AVMetadataObjectTypeSalientObject")]
+		SalientObject = 1 << 17,
 	}
 
 	[NoWatch]

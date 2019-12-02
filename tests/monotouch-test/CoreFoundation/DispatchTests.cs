@@ -248,6 +248,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void GetGlobalQueue_QualityOfService ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+
 			// values changes in OS versions (and even in arch) but we only want to make sure we get a valid string so the prefix is enough
 			Assert.True (DispatchQueue.GetGlobalQueue (DispatchQualityOfService.Default).Label.StartsWith ("com.apple.root."), "Default");
 			Assert.True (DispatchQueue.GetGlobalQueue (DispatchQualityOfService.Utility).Label.StartsWith ("com.apple.root."), "Low");

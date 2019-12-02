@@ -1,4 +1,3 @@
-
 #if defined(__x86_64__)
 
 #include <stdint.h>
@@ -122,13 +121,13 @@ param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *tar
 		unsigned long register_size = 48; // 48 == 6 registers * 8 bytes
 		if ((unsigned long)it->byte_count >= register_size) { 
 			read_register = false;
-		} else if (register_size - it->byte_count < total_size) {
+		} else if (register_size - (unsigned long)it->byte_count < total_size) {
 			read_register = false;
 			LOGZ (" total size (%i) is less that available register size (%i)", (int) total_size, register_size - it->byte_count);
 		}
 
 		if (read_register) {
-			if (it->byte_count / 8 != (it->byte_count + size - 1) / 8) {
+			if (it->byte_count / 8 != ((unsigned long) it->byte_count + size - 1) / 8) {
 				// align to next register if the one we're currently reading
 				// doesn't contain the entire value we need.
 				it->byte_count += 8 - it->byte_count % 8;

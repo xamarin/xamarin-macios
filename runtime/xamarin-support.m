@@ -39,7 +39,7 @@ void
 xamarin_log (const unsigned short *unicodeMessage)
 {
 	// COOP: no managed memory access: any mode.
-	int length = 0;
+	unsigned int length = 0;
 	const unsigned short *ptr = unicodeMessage;
 	while (*ptr++)
 		length += sizeof (unsigned short);
@@ -47,7 +47,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 
 #if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
 	const char *utf8 = [msg UTF8String];
-	int len = strlen (utf8);
+	size_t len = strlen (utf8);
 	fwrite (utf8, 1, len, stdout);
 	if (len == 0 || utf8 [len - 1] != '\n')
 		fwrite ("\n", 1, 1, stdout);

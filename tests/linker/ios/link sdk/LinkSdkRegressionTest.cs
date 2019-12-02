@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.Security.Principal;
 using System.Threading;
 using System.Xml;
 using Mono.Data.Sqlite;
@@ -54,6 +55,8 @@ using MonoTouch.OpenGLES;
 using MonoTouch.WebKit;
 #endif
 using NUnit.Framework;
+using MonoTests.System.Net.Http;
+
 
 namespace LinkSdk {
 
@@ -651,7 +654,7 @@ namespace LinkSdk {
 #endif
 			WebClient wc = new WebClient ();
 			// note: needs to be executed under Instrument to verify it does not leak
-			string s = wc.DownloadString ("https://developers.google.com");
+			string s = wc.DownloadString (NetworkResources.MicrosoftUrl);
 			Assert.NotNull (s);
 		}
 
@@ -1112,6 +1115,25 @@ namespace LinkSdk {
 		{
 			var list = new List<string> { "hello hello" };
 			Assert.NotNull (list.AsQueryable ().GroupBy (x => x).FirstOrDefault ()?.FirstOrDefault (), "Enumerable");
+		}
+
+		public class CustomIdentity : IIdentity {
+			public string AuthenticationType => "test";
+			public bool IsAuthenticated => true;
+			public string Name => "abc";
+		}
+
+		public class CustomPrincipal : IPrincipal {
+			public IIdentity Identity => new CustomIdentity ();
+			public bool IsInRole (string role) => true;
+		}
+
+		[Test]
+		// https://github.com/xamarin/xamarin-macios/issues/7321
+		public void Principal ()
+		{
+			Thread.CurrentPrincipal = new CustomPrincipal ();
+			Assert.That (Thread.CurrentPrincipal.Identity.Name, Is.EqualTo ("abc"), "Name");
 		}
 	}
 }
