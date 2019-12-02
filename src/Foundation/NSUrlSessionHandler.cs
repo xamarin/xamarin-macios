@@ -213,7 +213,7 @@ namespace Foundation {
 					sources.Add (r.CompletionSource);
 				}
 			}
-			sources?.ForEach (source => { source.TrySetCanceled (); });
+			sources.ForEach (source => { source.TrySetCanceled (); });
 		}
 #endif
 
