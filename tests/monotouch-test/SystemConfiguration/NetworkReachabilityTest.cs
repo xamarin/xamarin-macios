@@ -101,9 +101,10 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#1");
 				// using Loopback iOS 10 / tvOS 10 returns no flags (0) on devices
+				// but only sometimes... so check for Reachable as well (as a flag).
 #if !MONOMAC
 				if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (8, 0))
-					Assert.That ((int)flags, Is.EqualTo (0), "#1 Reachable");
+					Assert.That ((flags == (NetworkReachabilityFlags) 0) || ((flags & NetworkReachabilityFlags.Reachable) == NetworkReachabilityFlags.Reachable) , $"#1 Reachable: {flags.ToString ()}");
 				else
 #endif
 					Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#1 Reachable");
