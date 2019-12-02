@@ -130,27 +130,35 @@ public static class ProcessHelper {
 			var names = v.Split (Path.DirectorySeparatorChar);
 			if (names.Length < 2)
 				return false;
+
+			if (names.Any ((v2) => v2 == "copySceneKitAssets"))
+				return false;
+
 			var bin_idx = Array.IndexOf (names, "bin");
 			var conf_idx = Array.IndexOf (names, configuration);
 			if (bin_idx < 0 || conf_idx < 0)
 				return false;
+
 			if (bin_idx > conf_idx)
 				return false;
+
 			if (platform.Length > 0) {
 				var platform_idx = Array.IndexOf (names, platform);
 				if (platform_idx < 0)
 					return false;
+
 				if (bin_idx > platform_idx)
 					return false;
 			}
 			var app_idx = Array.FindIndex (names, (v2) => v2.EndsWith (".app", StringComparison.Ordinal));
 			if (!names [names.Length - 1].EndsWith (".app", StringComparison.Ordinal))
 				return false;
+
 			return true;
 		}).ToArray ();
 
 		if (apps.Length > 1) {
-			apps = apps.Where ((v) => {
+			var filtered_apps = apps.Where ((v) => {
 				// If one .app is a subdirectory of another .app, we don't care about the former.
 				if (apps.Any ((v2) => v2.Length < v.Length && v.StartsWith (v2, StringComparison.Ordinal)))
 					return false;
@@ -166,12 +174,15 @@ public static class ProcessHelper {
 
 				return true;
 			}).ToArray ();
+			if (apps.Length == 0)
+				Assert.Fail ($"Filtered away all the .apps, from:\n\t{string.Join ("\n\t", apps)}");
+			apps = filtered_apps;
 		}
 
 		if (apps.Length > 1) {
 			Assert.Fail ($"More than one app directory????\n\t{string.Join ("\n\t", apps)}");
 		} else if (apps.Length == 0) {
-			Assert.Fail ($"No app directory????\n\t{string.Join ("\n\t", subdirs)}");
+			Assert.Fail ($"No app directory???? platform: {platform} configuration: {configuration} target: {target} \n\t{string.Join ("\n\t", subdirs)}");
 		} else {
 			var logfile = Path.Combine (LogDirectory, $"{Path.GetFileNameWithoutExtension (solution)}-perfdata-{Interlocked.Increment (ref counter)}.xml");
 
@@ -181,7 +192,11 @@ public static class ProcessHelper {
 			var xml = XmlWriter.Create (logfile, xmlSettings);
 			xml.WriteStartDocument (true);
 			xml.WriteStartElement ("perf-data");
-
+			xml.WriteAttributeString ("mono-version", Configuration.MonoVersion);
+			xml.WriteAttributeString ("os-version", Configuration.OSVersion);
+			xml.WriteAttributeString ("xamarin-macios-hash", Configuration.TestedHash);
+			xml.WriteAttributeString ("sample-repository", Configuration.GetCurrentRemoteUrl (slndir));
+			xml.WriteAttributeString ("sample-hash", Configuration.GetCurrentHash (slndir));
 			foreach (var app in apps) {
 				xml.WriteStartElement ("test");
 				xml.WriteAttributeString ("name", TestContext.CurrentContext.Test.FullName);
@@ -210,6 +225,7 @@ public static class ProcessHelper {
 						var lines = File.ReadAllLines (msbuild_logfile);
 						var target_perf_summary = new List<string> ();
 						var task_perf_summary = new List<string> ();
+						var timestamps = new List<string> ();
 						for (var i = lines.Length - 1; i >= 0; i--) {
 							if (lines [i].EndsWith ("Target Performance Summary:", StringComparison.Ordinal)) {
 								for (var k = i + 1; k < lines.Length && lines [k].EndsWith ("calls", StringComparison.Ordinal); k++) {
@@ -219,29 +235,40 @@ public static class ProcessHelper {
 								for (var k = i + 1; k < lines.Length && lines [k].EndsWith ("calls", StringComparison.Ordinal); k++) {
 									task_perf_summary.Add (lines [k].Substring (18).Trim ());
 								}
-							}
-							if (target_perf_summary.Count > 0 && task_perf_summary.Count > 0)
-								break;
-						}
-						if (target_perf_summary != null) {
-							foreach (var tps in target_perf_summary) {
-								var split = tps.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-								xml.WriteStartElement ("target");
-								xml.WriteAttributeString ("name", split [2]);
-								xml.WriteAttributeString ("ms", split [0]);
-								xml.WriteAttributeString ("calls", split [3]);
-								xml.WriteEndElement ();
+							} else if (lines [i].Contains ("!Timestamp")) {
+								timestamps.Add (lines [i]);
 							}
 						}
-						if (task_perf_summary != null) {
-							foreach (var tps in task_perf_summary) {
-								var split = tps.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-								xml.WriteStartElement ("task");
-								xml.WriteAttributeString ("name", split [2]);
-								xml.WriteAttributeString ("ms", split [0]);
-								xml.WriteAttributeString ("calls", split [3]);
-								xml.WriteEndElement ();
-							}
+						foreach (var tps in target_perf_summary) {
+							var split = tps.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+							xml.WriteStartElement ("target");
+							xml.WriteAttributeString ("name", split [2]);
+							xml.WriteAttributeString ("ms", split [0]);
+							xml.WriteAttributeString ("calls", split [3]);
+							xml.WriteEndElement ();
+						}
+						foreach (var tps in task_perf_summary) {
+							var split = tps.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+							xml.WriteStartElement ("task");
+							xml.WriteAttributeString ("name", split [2]);
+							xml.WriteAttributeString ("ms", split [0]);
+							xml.WriteAttributeString ("calls", split [3]);
+							xml.WriteEndElement ();
+						}
+						foreach (var ts in timestamps) {
+							// Sample line:
+							// 15:04:50.4609520:   !Timestamp Setup: 28 ms (TaskId:137)
+							var splitFirst = ts.Split (new char [] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+							var splitSecondA = splitFirst [3].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+							var splitSecondB = splitFirst [4].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+							var name = string.Join (" ", splitSecondA.Skip (1));
+							var level = splitSecondA [0].Count ((v) => v == '!').ToString ();
+							var ms = splitSecondB [0];
+							xml.WriteStartElement ("timestamp");
+							xml.WriteAttributeString ("name", name);
+							xml.WriteAttributeString ("level", level);
+							xml.WriteAttributeString ("ms", ms);
+							xml.WriteEndElement ();
 						}
 					}
 

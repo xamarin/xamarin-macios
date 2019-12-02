@@ -52,5 +52,85 @@ namespace Xamarin.Tests {
 			}
 ");
 		}
+
+		static string tested_hash;
+		public static string TestedHash {
+			get {
+				lock (lock_obj) {
+					if (tested_hash != null)
+						return tested_hash;
+
+					tested_hash = GetCurrentHash (Environment.CurrentDirectory);
+					return tested_hash;
+				}
+			}
+		}
+
+		public static string GetCurrentHash (string directory)
+		{
+			using (var p = System.Diagnostics.Process.Start ("git", "log -1 --pretty=%H")) {
+				p.StartInfo.WorkingDirectory = directory;
+				p.StartInfo.RedirectStandardOutput = true;
+				p.StartInfo.UseShellExecute = false;
+				p.Start ();
+				var hash = p.StandardOutput.ReadToEnd ().Trim ();
+				p.WaitForExit ();
+				return hash;
+			}
+		}
+
+		public static string GetCurrentRemoteUrl (string directory)
+		{
+			using (var p = System.Diagnostics.Process.Start ("git", "remote get-url origin")) {
+				p.StartInfo.WorkingDirectory = directory;
+				p.StartInfo.RedirectStandardOutput = true;
+				p.StartInfo.UseShellExecute = false;
+				p.Start ();
+				var url = p.StandardOutput.ReadToEnd ().Trim ();
+				p.WaitForExit ();
+				return url;
+			}
+		}
+
+		static string mono_version;
+		public static string MonoVersion {
+			get {
+				lock (lock_obj) {
+					if (mono_version != null)
+						return mono_version;
+
+					using (var p = System.Diagnostics.Process.Start ("mono", "--version")) {
+						p.StartInfo.RedirectStandardOutput = true;
+						p.StartInfo.UseShellExecute = false;
+						p.Start ();
+						mono_version = p.StandardOutput.ReadLine ().Trim (); // We only care about the first line
+						p.StandardOutput.ReadToEnd ();
+						p.WaitForExit ();
+					}
+				}
+
+				return mono_version;
+			}
+		}
+
+		static string sw_version;
+		public static string OSVersion {
+			get {
+				lock (lock_obj) {
+					if (sw_version != null)
+						return sw_version;
+
+					using (var p = System.Diagnostics.Process.Start ("sw_vers")) {
+						p.StartInfo.RedirectStandardOutput = true;
+						p.StartInfo.UseShellExecute = false;
+						p.Start ();
+						sw_version = p.StandardOutput.ReadToEnd ().Replace ('\n', ';').Replace ((char) 9, ' ');
+						p.WaitForExit ();
+					}
+				}
+
+				return sw_version;
+			}
+		}
 	}
 }
