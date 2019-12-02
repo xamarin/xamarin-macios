@@ -127,8 +127,11 @@ public static class ProcessHelper {
 		// Write performance data to disk
 		var subdirs = Directory.GetDirectories (slndir, "*", SearchOption.AllDirectories);
 		var apps = subdirs.Where ((v) => {
-			var names = v.Split (Path.DirectorySeparatorChar);
+			var names = v.Substring (slndir.Length).Split (Path.DirectorySeparatorChar);
 			if (names.Length < 2)
+				return false;
+
+			if (!names [names.Length - 1].EndsWith (".app", StringComparison.Ordinal))
 				return false;
 
 			if (names.Any ((v2) => v2 == "copySceneKitAssets"))
@@ -150,9 +153,6 @@ public static class ProcessHelper {
 				if (bin_idx > platform_idx)
 					return false;
 			}
-			var app_idx = Array.FindIndex (names, (v2) => v2.EndsWith (".app", StringComparison.Ordinal));
-			if (!names [names.Length - 1].EndsWith (".app", StringComparison.Ordinal))
-				return false;
 
 			return true;
 		}).ToArray ();
