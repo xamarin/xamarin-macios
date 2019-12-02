@@ -133,8 +133,10 @@ namespace xibuild {
 				p.WaitForExit ();
 				return p.ExitCode;
 			} finally {
-				File.Delete (tmpMSBuildExePathForConfig);
-				File.Delete (configFilePath);
+				if (File.Exists (tmpMSBuildExePathForConfig))
+					File.Delete (tmpMSBuildExePathForConfig);
+				if (File.Exists (tmpMSBuildExePathForConfig))
+					File.Delete (configFilePath);
 			}
 		}
 
