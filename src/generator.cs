@@ -6407,10 +6407,8 @@ public partial class Generator : IMemberGatherer {
 					if (external) {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
-							foreach (var ta in AttributeManager.GetCustomAttributes<DesignatedDefaultCtorAttribute> (type)) {
+							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
 								sw.WriteLine ("\n\n[DesignatedInitializer]");
-								break;
-							}
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
@@ -6433,10 +6431,8 @@ public partial class Generator : IMemberGatherer {
 					} else {
 						if (!disable_default_ctor) {
 							GeneratedCode (sw, 2);
-							foreach (var ta in AttributeManager.GetCustomAttributes<DesignatedDefaultCtorAttribute> (type)) {
+							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
 								sw.WriteLine ("\t\t[DesignatedInitializer]");
-								break;
-							}
 							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 							sw.WriteLine ("\t\t[Export (\"init\")]");
 							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
