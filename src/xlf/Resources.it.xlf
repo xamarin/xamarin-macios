@@ -3,8 +3,8 @@
   <file datatype="xml" source-language="en" target-language="it" original="../Resources.resx">
     <body>
       <trans-unit id="BI0000">
-        <source>BI0000: Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</source>
-        <target state="new">BI0000: Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</target>
+        <source>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</source>
+        <target state="new">Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</target>
         <note>
 		</note>
       </trans-unit>
@@ -15,14 +15,18 @@
 		</note>
       </trans-unit>
       <trans-unit id="BI0002">
-        <source>Could not compile the API bindings.</source>
-        <target state="new">Could not compile the API bindings.</target>
+        <source> Could not compile the API bindings. 
+		{0}
+		</source>
+        <target state="new"> Could not compile the API bindings. 
+		{0}
+		</target>
         <note>
 		</note>
       </trans-unit>
       <trans-unit id="BI0026">
-        <source>Could not parse the command line argument '{0}': {1}</source>
-        <target state="new">Could not parse the command line argument '{0}': {1}</target>
+        <source>Could not parse the command line argument '--warnaserror': {0}</source>
+        <target state="new">Could not parse the command line argument '--warnaserror': {0}</target>
         <note>
 		</note>
       </trans-unit>
@@ -44,10 +48,10 @@
       </trans-unit>
       <trans-unit id="BI0086">
         <source>
-				A target framework (--target-framework) must be specified when building for {0}.
+				A target framework (--target-framework) must be specified.
 		</source>
         <target state="new">
-				A target framework (--target-framework) must be specified when building for {0}.
+				A target framework (--target-framework) must be specified.
 		</target>
         <note>
 		</note>
@@ -73,11 +77,11 @@
 		</note>
       </trans-unit>
       <trans-unit id="BI1000">
-        <source>
-				BI1000: Could not compile the generated API bindings.
+        <source>Could not compile the generated API bindings.	
+		{0}
 		</source>
-        <target state="new">
-				BI1000: Could not compile the generated API bindings.
+        <target state="new">Could not compile the generated API bindings.	
+		{0}
 		</target>
         <note>
 		</note>
@@ -214,10 +218,10 @@
       </trans-unit>
       <trans-unit id="BI1014">
         <source>
-			Unsupported type for Fields: {0} for '{1}'.
+				Unsupported type for Fields: {0} for '{1}'.
 		</source>
         <target state="new">
-			Unsupported type for Fields: {0} for '{1}'.
+				Unsupported type for Fields: {0} for '{1}'.
 		</target>
         <note>
 		</note>
@@ -811,10 +815,10 @@
       </trans-unit>
       <trans-unit id="BI1104">
         <source>
-				BI1104: Could not load the referenced library '{0}': {1}.
+				Could not load the referenced library '{0}': {1}.
 		</source>
         <target state="new">
-				BI1104: Could not load the referenced library '{0}': {1}.
+				Could not load the referenced library '{0}': {1}.
 		</target>
         <note>
 		</note>

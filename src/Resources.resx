@@ -117,7 +117,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
 	<data name="BI0000" xml:space="preserve">
-		<value>BI0000: Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<value>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
 		<comment>
 		</comment>
 	</data>
@@ -129,13 +129,15 @@
 	</data>
 
 	<data name="BI0002" xml:space="preserve">
-		<value>Could not compile the API bindings.</value>
+		<value> Could not compile the API bindings. 
+		{0}
+		</value>
 		<comment>
 		</comment>
 	</data>
 
 	<data name="BI0026" xml:space="preserve">
-		<value>Could not parse the command line argument '{0}': {1}</value>
+		<value>Could not parse the command line argument '--warnaserror': {0}</value>
 		<comment>
 		</comment>
 	</data>
@@ -156,7 +158,7 @@
 
 	<data name="BI0086" xml:space="preserve">
 		<value>
-				A target framework (--target-framework) must be specified when building for {0}.
+				A target framework (--target-framework) must be specified.
 		</value>
 		<comment>
 		</comment>
@@ -179,8 +181,8 @@
 	</data>
 
 	<data name="BI1000" xml:space="preserve">
-		<value>
-				BI1000: Could not compile the generated API bindings.
+		<value>Could not compile the generated API bindings.	
+		{0}
 		</value>
 		<comment>
 		</comment>
@@ -292,7 +294,7 @@
 
 	<data name="BI1014" xml:space="preserve">
 		<value>
-			Unsupported type for Fields: {0} for '{1}'.
+				Unsupported type for Fields: {0} for '{1}'.
 		</value>
 		<comment>
 		</comment>
@@ -769,7 +771,7 @@
 
 	<data name="BI1104" xml:space="preserve">
 		<value>
-				BI1104: Could not load the referenced library '{0}': {1}.
+				Could not load the referenced library '{0}': {1}.
 		</value>
 		<comment>
 		</comment>
