@@ -81,7 +81,7 @@ namespace CoreServices {
 			else if (version.Equals (HttpVersion.Version10))
 				return _HTTPVersion1_0.Handle;
 			else if (version.Major == 2 && version.Minor == 0) {
-				if (_HTTPVersion2_0?.Handle != IntPtr.Zero)
+				if (_HTTPVersion2_0 != null && _HTTPVersion2_0.Handle != IntPtr.Zero)
 					return _HTTPVersion2_0.Handle;
 				// HTTP 2.0 requires OS X 10.11 or later.
 				return _HTTPVersion1_1.Handle;
