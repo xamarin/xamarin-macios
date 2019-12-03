@@ -6,7 +6,7 @@ DATA_REPO_NAME=xamarin-macios-data
 mkdir $DATA_REPO_NAME
 ( cd $DATA_REPO_NAME && git init . )
 
-DIR=$DATA_REPO_NAME/$BUILD_SOURCEBRANCHNAME/$BUILD_SOURCEVERSION/$SYSTEM_JOBID
+DIR=$DATA_REPO_NAME/perf-data/samples/$BUILD_SOURCEBRANCHNAME/$BUILD_SOURCEVERSION/$SYSTEM_JOBID
 mkdir -p "$DIR"
 
 cp -c tests/sampletester/bin/Debug/tmp-test-dir/execution-logs/*.xml "$DIR/"
