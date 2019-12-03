@@ -1807,6 +1807,9 @@ public partial class Generator : IMemberGatherer {
 			return "ref " + pi.Name + "Value";
 		}
 
+		if (pi.ParameterType.IsArray && pi.ParameterType.GetElementType ().IsValueType) {
+			return string.Format ("nsa_{0}", pi.Name);
+		}
 		if (HasBindAsAttribute (pi))
 			return string.Format ("nsb_{0} == null ? IntPtr.Zero : nsb_{0}.Handle", pi.Name);
 		if (propInfo != null && HasBindAsAttribute (propInfo))
@@ -2640,6 +2643,7 @@ public partial class Generator : IMemberGatherer {
 			print ("{"); indent++;
 			string cast_a = "", cast_b = "";
 			bool use_temp_return;
+			bool try_finally;
 
 			GenerateArgumentChecks (mi, true);
 
@@ -2651,7 +2655,8 @@ public partial class Generator : IMemberGatherer {
 					      convs: out convs,
 					      disposes: out disposes,
 					      by_ref_processing: out by_ref_processing,
-					      by_ref_init: out by_ref_init);
+					      by_ref_init: out by_ref_init,
+					      needsTryFinally: out try_finally); ;
 
 			if (by_ref_init.Length > 0)
 				print (by_ref_init.ToString ());
@@ -3974,14 +3979,15 @@ public partial class Generator : IMemberGatherer {
 	// @convs: conversions to perform before the invocation
 	// @disposes: dispose operations to perform after the invocation
 	// @by_ref_processing
-	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, EnumMode enum_mode, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, PropertyInfo propInfo = null)
+	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, EnumMode enum_mode, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, out bool needsTryFinally, PropertyInfo propInfo = null)
 	{
 		args = new StringBuilder ();
 		convs = new StringBuilder ();
 		disposes = new StringBuilder ();
 		by_ref_processing = new StringBuilder();
 		by_ref_init = new StringBuilder ();
-		
+		needsTryFinally = false;
+
 		foreach (var pi in mi.GetParameters ()){
 			MarshalInfo mai = new MarshalInfo (this, mi, pi);
 
@@ -4028,7 +4034,13 @@ public partial class Generator : IMemberGatherer {
 				} else if (etype == TypeManager.Selector) {
 					exceptions.Add (ErrorHelper.CreateError (1065, "Unsupported parameter type '{0}' for the parameter '{1}' in {2}.{3}.", mai.Type.FullName, string.IsNullOrEmpty (pi.Name) ? $"#{pi.Position}" : pi.Name, mi.DeclaringType.FullName, mi.Name));
 				} else {
-					if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
+					if (etype.IsValueType) {
+						// pass the address of the pinned objects, make sure we do write a try/finally
+						needsTryFinally = true;
+						convs.AppendFormat ("var nsa_{0}Handle = GCHandle.Alloc ({1}, GCHandleType.Pinned);\n", pi.Name, pi.Name.GetSafeParamName ());
+						convs.AppendFormat ("IntPtr nsa_{0} = nsa_{0}Handle.AddrOfPinnedObject ();\n", pi.Name);
+						disposes.AppendFormat ("nsa_{0}Handle.Free ();\n", pi.Name);
+					} else if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
 						convs.AppendFormat ("var nsa_{0} = {1} == null ? null : NSArray.FromNSObjects ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} != null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
 					} else {
@@ -4261,8 +4273,9 @@ public partial class Generator : IMemberGatherer {
 		disposes2 = new StringBuilder[enum_modes.Length];
 		by_ref_processing2 = new StringBuilder[enum_modes.Length];
 		by_ref_init2 = new StringBuilder[enum_modes.Length];
+		bool try_finally = false;
 		for (int i = 0; i < enum_modes.Length; i++) {
-			GenerateTypeLowering (mi, null_allowed_override, enum_modes [i], out args2[i], out convs2[i], out disposes2[i], out by_ref_processing2[i], out by_ref_init2[i], propInfo);
+			GenerateTypeLowering (mi, null_allowed_override, enum_modes [i], out args2[i], out convs2[i], out disposes2[i], out by_ref_processing2[i], out by_ref_init2[i], out try_finally, propInfo);
 		}
 
 		// sanity check
@@ -4299,6 +4312,10 @@ public partial class Generator : IMemberGatherer {
 
 		if (convs.Length > 0)
 			print (sw, convs.ToString ());
+		if (try_finally) {
+			print ("try {");
+			indent++;
+		}
 
 		Inject<PreSnippetAttribute> (mi);
 		var align = AttributeManager.GetCustomAttribute<AlignAttribute> (mi);
@@ -4414,8 +4431,18 @@ public partial class Generator : IMemberGatherer {
 		
 		Inject<PostSnippetAttribute> (mi);
 
-		if (disposes.Length > 0)
+		if (disposes.Length > 0) {
+			if (try_finally) {
+				indent--;
+				print (sw, "} finally {");
+				indent++;
+			}
 			print (sw, disposes.ToString ());
+			if (try_finally) {
+				indent--;
+				print (sw, "}");
+			}
+		}
 		if ((body_options & BodyOption.StoreRet) == BodyOption.StoreRet) {
 			// nothing to do
 		} else if ((body_options & BodyOption.CondStoreRet) == BodyOption.CondStoreRet) {
