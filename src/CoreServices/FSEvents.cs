@@ -349,20 +349,11 @@ namespace CoreServices
 			FSEventStreamUnscheduleFromRunLoop (handle, runLoop.GetHandle (), runLoopMode.GetHandle ());
 		}
 
-		public void UnscheduleFromRunLoop (CFRunLoop runLoop)
-		{
-			UnscheduleFromRunLoop (runLoop, CFRunLoop.ModeDefault);
-		}
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop) => UnscheduleFromRunLoop (runLoop, CFRunLoop.ModeDefault);
 
-		public void UnscheduleFromRunLoop (NSRunLoop runLoop, NSString runLoopMode)
-		{
-			UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), runLoopMode);
-		}
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop, NSString runLoopMode) => UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), runLoopMode);
 
-		public void UnscheduleFromRunLoop (NSRunLoop runLoop)
-		{
-			UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
-		}
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop) => UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr FSEventStreamCopyPathsBeingWatched (IntPtr handle);
@@ -441,7 +432,7 @@ namespace CoreServices
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
-		static extern void FSEventStreamSetDispatchQueue (IntPtr handle, DispatchQueue queue);
+		static extern void FSEventStreamSetDispatchQueue (IntPtr handle, IntPtr queue);
 
 		public void SetDispatchQueue (DispatchQueue queue)
 		{
@@ -449,7 +440,7 @@ namespace CoreServices
 				throw new ArgumentNullException (nameof (queue));
 			}
 			CheckDisposed ();
-			FSEventStreamSetDispatchQueue (handle, queue);
+			FSEventStreamSetDispatchQueue (handle, queue.GetHandle ());
 		}
 	}
 }
