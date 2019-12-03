@@ -23,8 +23,12 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string FilePath { get; set; }
 
+		protected PlatformFramework FileType {
+			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
+		}
+
 		[Required]
-		public virtual PlatformName FileType { get ; set; }
+		public string TargetFrameworkIdentifier { get; set; }
 
 		protected override string ToolName {
 			get { return "altool"; }
@@ -89,10 +93,10 @@ namespace Xamarin.MacDev.Tasks
 
 		string GetFileTypeValue ()
 		{
-			switch(FileType) {
-				case PlatformName.MacOSX: return "osx";
-				case PlatformName.TvOS: return "appletvos";
-				case PlatformName.iOS: return "ios";
+			switch (FileType) {
+				case PlatformFramework.MacOS: return "osx";
+				case PlatformFramework.TVOS: return "appletvos";
+				case PlatformFramework.iOS: return "ios";
 				default: throw new NotSupportedException ($"Provided file type '{FileType}' is not supported by altool");
 			}
 		}
