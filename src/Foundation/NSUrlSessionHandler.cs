@@ -831,7 +831,7 @@ namespace Foundation {
 				base.Dispose (disposing);
 			}
 
-			protected internal override Task SerializeToStreamAsync (Stream stream, TransportContext context)
+			protected override Task SerializeToStreamAsync (Stream stream, TransportContext context)
 			{
 				if (contentCopied) {
 					if (!content.CanSeek) {

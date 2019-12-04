@@ -58,9 +58,11 @@ namespace MonoTouchFixtures.Network {
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-			connection.Dispose ();
-			foreach (var i in interfaces)
-				i.Dispose ();
+			connection?.Dispose ();
+			if (interfaces != null) {
+				foreach (var i in interfaces)
+					i.Dispose ();
+			}
 		}
 
 		[SetUp]
