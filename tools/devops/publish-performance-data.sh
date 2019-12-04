@@ -2,6 +2,10 @@
 
 DATA_REPO_NAME=xamarin-macios-data
 
+# grab Azure Devop's authorization token from the current repo, and add it to the global git configuration
+AUTH=$(git config -l | grep AUTHORIZATION | sed 's/.*AUTHORIZATION: //')
+git config --global http.extraheader "AUTHORIZATION: $AUTH"
+
 git clone https://github.com/xamarin/$DATA_REPO_NAME
 
 DIR=$DATA_REPO_NAME/perf-data/samples/$BUILD_SOURCEBRANCHNAME/$BUILD_SOURCEVERSION/$SYSTEM_JOBID

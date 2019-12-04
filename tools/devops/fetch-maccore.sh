@@ -3,7 +3,7 @@
 # Make sure we've enabled our xamarin bits
 ./configure --enable-xamarin
 
-# grab Azure Devop's authorization token from the current repo, and use add it to the global git configuration
+# grab Azure Devop's authorization token from the current repo, and add it to the global git configuration
 AUTH=$(git config -l | grep AUTHORIZATION | sed 's/.*AUTHORIZATION: //')
 git config --global http.extraheader "AUTHORIZATION: $AUTH"
 
