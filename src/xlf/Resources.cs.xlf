@@ -66,6 +66,26 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="BI0088">
+        <source>
+				Internal error: don't know how to create ref/out (input) code for {0} in {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">
+				Internal error: don't know how to create ref/out (input) code for {0} in {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="BI0089">
+        <source>
+				Internal error: property {0} doesn't have neither a getter nor a setter..
+		</source>
+        <target state="new">
+				Internal error: property {0} doesn't have neither a getter nor a setter..
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="BI0099">
         <source>
 				Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
@@ -396,6 +416,26 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="BI1032">
+        <source>
+				No support for setters in StrongDictionary classes for type {0} in {1}.{2}
+		</source>
+        <target state="new">
+				No support for setters in StrongDictionary classes for type {0} in {1}.{2}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="BI1033">
+        <source>
+				Limitation: can not automatically create strongly typed dictionary for ({0}) the value type of the {1}.{2} property
+		</source>
+        <target state="new">
+				Limitation: can not automatically create strongly typed dictionary for ({0}) the value type of the {1}.{2} property
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="BI1034">
         <source>
 				The [Protocolize] attribute is set on the member {0}.{1}, but the member's type ({2}) is not a protocol.
@@ -616,20 +656,20 @@
       </trans-unit>
       <trans-unit id="BI1056">
         <source>
-				Internal error: failed to instantiate mock attribute '{0}' (could not convert type constructor argument #*). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+				Internal error: failed to instantiate mock attribute '{0}' (could not convert type constructor argument #{1}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		</source>
         <target state="new">
-				Internal error: failed to instantiate mock attribute '{0}' (could not convert type constructor argument #*). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+				Internal error: failed to instantiate mock attribute '{0}' (could not convert type constructor argument #{1}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		</target>
         <note>
 		</note>
       </trans-unit>
       <trans-unit id="BI1057">
         <source>
-				Internal error: failed to instantiate mock attribute '{0}' (could not convert constructor type #* (*)). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+				Internal error: failed to instantiate mock attribute '{0}' (could not convert constructor type #{1} ({2})). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		</source>
         <target state="new">
-				Internal error: failed to instantiate mock attribute '{0}' (could not convert constructor type #* (*)). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+				Internal error: failed to instantiate mock attribute '{0}' (could not convert constructor type #{1} ({2})). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		</target>
         <note>
 		</note>
@@ -665,10 +705,10 @@
       </trans-unit>
       <trans-unit id="BI1061">
         <source>
-				The attribute '{attribute}' found on '{member}' is not a valid binding attribute. Please remove this attribute.
+				The attribute '{0}' found on '{1}' is not a valid binding attribute. Please remove this attribute.
 		</source>
         <target state="new">
-				The attribute '{attribute}' found on '{member}' is not a valid binding attribute. Please remove this attribute.
+				The attribute '{0}' found on '{1}' is not a valid binding attribute. Please remove this attribute.
 		</target>
         <note>
 		</note>
@@ -779,6 +819,56 @@
 		</source>
         <target state="new">
 				The BindAs type for the parameter \"{0}\" in the method \"{1}.{2}\" must be an array when the parameter's type is an array.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="BI1073">
+        <source>
+				Internal error: failed to instantiate mock attribute '{0}' (unknown type for the named argument #{1} ({2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+		</source>
+        <target state="new">
+				Internal error: failed to instantiate mock attribute '{0}' (unknown type for the named argument #{1} ({2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="BI1074">
+        <source>
+				 Missing [CoreImageFilterProperty] attribute on {0} property {1}
+		</source>
+        <target state="new">
+				 Missing [CoreImageFilterProperty] attribute on {0} property {1}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="BI1075">
+        <source>
+				Unimplemented CoreImage property type {0}
+		</source>
+        <target state="new">
+				Unimplemented CoreImage property type {0}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="BI1076">
+        <source>
+				Unable to find selector for {0} on {1} on self or base class
+		</source>
+        <target state="new">
+				Unable to find selector for {0} on {1} on self or base class
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="BI1077">
+        <source>
+				Async method {0} with more than one result parameter in the callback by neither ResultTypeName or ResultType
+		</source>
+        <target state="new">
+				Async method {0} with more than one result parameter in the callback by neither ResultTypeName or ResultType
 		</target>
         <note>
 		</note>
@@ -955,10 +1045,10 @@
       </trans-unit>
       <trans-unit id="BI1118">
         <source>
-				[NullAllowed] should not be used on methods, like '{setter}', but only on properties, parameters and return values.
+				[NullAllowed] should not be used on methods, like '{0}', but only on properties, parameters and return values.
 		</source>
         <target state="new">
-				[NullAllowed] should not be used on methods, like '{setter}', but only on properties, parameters and return values.
+				[NullAllowed] should not be used on methods, like '{0}', but only on properties, parameters and return values.
 		</target>
         <note>
 		</note>

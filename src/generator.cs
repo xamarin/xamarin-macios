@@ -890,7 +890,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "NSApplication";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 			}
 		}
 	}
@@ -991,7 +991,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "Quartz";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 			}
 		}
 	}
@@ -1006,7 +1006,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "CoreServices";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 			}
 		}
 	}
@@ -1019,7 +1019,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "Quartz";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 			}
 		}
 	}
@@ -1412,10 +1412,10 @@ public partial class Generator : IMemberGatherer {
 				}
 				valueConverter = $"NSValue.From{typeStr} (o{denullify}), {parameterName});";
 			} else
-				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", isNullable ? arrRetType.Name + "?[]" : retType.Name);
+				throw new BindingException (1048, true, isNullable ? arrRetType.Name + "?[]" : retType.Name);
 			temp = $"NSArray.FromNSObjects (o => {valueConverter}";
 		} else
-			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+			throw new BindingException (1048, true, retType.Name);
 
 		return temp;
 	}
@@ -1551,9 +1551,9 @@ public partial class Generator : IMemberGatherer {
 
 				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
 			} else
-				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", arrIsNullable ? arrRetType.Name + "?[]" : retType.Name);
+				throw new BindingException (1048, true, arrIsNullable ? arrRetType.Name + "?[]" : retType.Name);
 		} else
-			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+			throw new BindingException (1048, true, retType.Name);
 		return append;
 	}
 
@@ -1975,6 +1975,7 @@ public partial class Generator : IMemberGatherer {
 		try {
 			sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi) { IsAligned = aligned, EnumMode = enum_mode } ));
 		} catch (BindingException ex) {
+			//TODO: fix this
 			throw new BindingException (ex.Code, ex.Error, ex,  "{0} in method `{1}'", ex.Message, mi.Name);
 		}
 
@@ -1990,6 +1991,7 @@ public partial class Generator : IMemberGatherer {
 			try {
 				sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }).Replace (' ', '_'));
 			} catch (BindingException ex) {
+				//TODO: fix this
 				throw new BindingException (ex.Code, ex.Error, ex, "{0} in parameter `{1}' from {2}.{3}", ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
 		}
@@ -2023,6 +2025,7 @@ public partial class Generator : IMemberGatherer {
 			try {
 				b.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }, true));
 			} catch (BindingException ex) {
+				//TODO: fix this
 				throw new BindingException (ex.Code, ex.Error, ex, "{0} in parameter {1} of {2}.{3}", ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
 			b.Append (" ");
@@ -2063,7 +2066,7 @@ public partial class Generator : IMemberGatherer {
 		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
 			return "nuint";
 		} else {
-			throw new BindingException (1029, "Internal error: invalid enum type '{0}'", type);
+			throw new BindingException (1029, type);
 		}
 	}
 
@@ -2826,9 +2829,7 @@ public partial class Generator : IMemberGatherer {
 							getter = "{1} (ulong?) GetNUIntValue ({0})";
 							setter = "SetNumberValue ({0}, {1}value)";
 						} else {
-							throw new BindingException (1031, true,
-										    "Limitation: can not automatically create strongly typed dictionary for " +
-										    "({0}) the value type of the {1}.{2} property", pi.PropertyType, dictType, pi.Name);
+							throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
 						}
 					} else {
 						if (pi.PropertyType.IsArray){
@@ -2847,9 +2848,7 @@ public partial class Generator : IMemberGatherer {
 								getter = "GetArray<string> ({0}, (ptr)=>NSString.FromHandle (ptr))";
 								setter = "SetArrayValue ({0}, value)";
 							} else {
-								throw new BindingException (1033, true,
-											    "Limitation: can not automatically create strongly typed dictionary for arrays of " +
-											    "({0}) the type of the {1}.{2} property", pi.PropertyType, dictType, pi.Name);
+								throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
 							}
 						} else if (pi.PropertyType ==  TypeManager.NSString){
 							getter = "GetNSStringValue ({0})";
@@ -2880,9 +2879,7 @@ public partial class Generator : IMemberGatherer {
 							getter = "GetNativeValue<" + pi.PropertyType +"> ({0})";
 							setter = "SetNativeValue ({0}, value)";
 						} else {
-							throw new BindingException (1031, true,
-										    "Limitation: can not automatically create strongly typed dictionary for " +
-										    "({0}) the type of the {1}.{2} property", pi.PropertyType, dictType, pi.Name);
+							throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
 						}
 					}
 
@@ -2903,7 +2900,7 @@ public partial class Generator : IMemberGatherer {
 					}
 					if (pi.CanWrite){
 						if (setter == null)
-							throw new BindingException (1032, true, "No support for setters in StrongDictionary classes for type {0} in {1}.{2}", pi.PropertyType, dictType, pi.Name);
+							throw new BindingException (1032, true, pi.PropertyType, dictType, pi.Name);
 						indent++;
 						print ("set {"); indent++;
 						print ("{0};", setter);
@@ -4109,7 +4106,7 @@ public partial class Generator : IMemberGatherer {
 					} else if (isNSObject || isINativeObjectSubclass) {
 						by_ref_init.AppendFormat ("{0} == null ? IntPtr.Zero : {0}.Handle;\n", pi.Name.GetSafeParamName ());
 					} else {
-						throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out (input) code for {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+						throw ErrorHelper.CreateError (88, mai.Type, mi);
 					}
 				}
 
@@ -4126,7 +4123,7 @@ public partial class Generator : IMemberGatherer {
 					} else if (isArrayOfString) {
 						by_ref_processing.AppendFormat ("{0} = NSArray.StringArrayFromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
 					} else {
-						throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out code for array {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+						throw ErrorHelper.CreateError (88, mai.Type, mi);
 					}
 
 					if (!pi.IsOut)
@@ -4138,7 +4135,7 @@ public partial class Generator : IMemberGatherer {
 						by_ref_processing.AppendFormat ("if ({0}Value != ({0} == null ? IntPtr.Zero : {0}.Handle))\n\t", pi.Name.GetSafeParamName ());
 					by_ref_processing.AppendFormat ("{0} = Runtime.GetINativeObject<{1}> ({0}Value, {2}, {3});\n", pi.Name.GetSafeParamName (), RenderType (elementType), isForcedType ? "true" : "false", isForcedType ? isForcedOwns : "false");
 				} else {
-					throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out (output) code for {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+					throw ErrorHelper.CreateError (88, mai.Type, mi);
 				}
 			}
 		}
@@ -4150,7 +4147,7 @@ public partial class Generator : IMemberGatherer {
 			return;
 
 		if (AttributeManager.HasAttribute<NullAllowedAttribute> (mi))
-			ErrorHelper.Show (new BindingException (1118, false, $"[NullAllowed] should not be used on methods, like '{mi}', but only on properties, parameters and return values."));
+			ErrorHelper.Show (new BindingException (1118, false, mi));
 
 		foreach (var pi in mi.GetParameters ()) {
 			var needs_null_check = ParameterNeedsNullCheck (pi, mi, propInfo);
@@ -4196,7 +4193,7 @@ public partial class Generator : IMemberGatherer {
 				print ("global::{0}.NSApplication.EnsureUIThread ();", ns.Get ("AppKit"));
 				break;
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 		}
 	}
 
@@ -5009,7 +5006,7 @@ public partial class Generator : IMemberGatherer {
 			return FormatType (minfo.type, attr.ResultType);
 
 		Console.WriteLine ("{0}", minfo.MethodInfo.GetParameters ().Last ().ParameterType);
-		throw new BindingException (1023, true, "Async method {0} with more than one result parameter in the callback by neither ResultTypeName or ResultType", minfo.mi);
+		throw new BindingException (1077, true, minfo.mi);
 	}
 
 	string GetInvokeParamList (ParameterInfo [] parameters, bool suffix = true)
@@ -5902,7 +5899,7 @@ public partial class Generator : IMemberGatherer {
 				} else if (writeonly != null) {
 					bestMatch = writeonly;
 				} else {
-					exceptions.Add (ErrorHelper.CreateError (99, $"Internal error: property {properties [0]} doesn't have neither a getter nor a setter."));
+					exceptions.Add (ErrorHelper.CreateError (89, properties [0]));
 					continue;
 				}
 				// Finally remove the properties we don't want to generate.
@@ -6719,7 +6716,7 @@ public partial class Generator : IMemberGatherer {
 							else if (btype == TypeManager.System_nuint || btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) (ulong) Dlfcn.GetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
-								throw new BindingException (1014, true, $"Unsupported type for Fields: {fieldTypeName} for '{field_pi}'.");
+								throw new BindingException (1014, true, fieldTypeName, field_pi);
 						} else {
 							if (btype == TypeManager.System_Int32)
 								print ($"return ({fieldTypeName}) Dlfcn.GetInt32 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
@@ -6730,7 +6727,7 @@ public partial class Generator : IMemberGatherer {
 							else if (btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) Dlfcn.GetUInt64 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
-								throw new BindingException (1014, true, $"Unsupported type for Fields: {fieldTypeName} for '{field_pi}'.");
+								throw new BindingException (1014, true, fieldTypeName, field_pi);
 						}
 					} else {
 						if (field_pi.PropertyType == TypeManager.System_String)
@@ -7474,7 +7471,7 @@ public partial class Generator : IMemberGatherer {
 			currentType = bta.BaseType;
 		}
 		while (currentType != null);
-		throw new BindingException (1035, true, "Unable to find selector for {0} on {1} on self or base class", mi, type);
+		throw new BindingException (1076, true, mi, type);
 	}
 
 	string GenerateInterfaceTypeName (BaseTypeAttribute bta, string delName, string currentTypeName)

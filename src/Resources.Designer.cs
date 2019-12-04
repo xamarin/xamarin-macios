@@ -95,6 +95,18 @@ namespace bgen {
             }
         }
         
+        internal static string BI0088 {
+            get {
+                return ResourceManager.GetString("BI0088", resourceCulture);
+            }
+        }
+        
+        internal static string BI0089 {
+            get {
+                return ResourceManager.GetString("BI0089", resourceCulture);
+            }
+        }
+        
         internal static string BI0099 {
             get {
                 return ResourceManager.GetString("BI0099", resourceCulture);
@@ -290,6 +302,18 @@ namespace bgen {
         internal static string BI1031 {
             get {
                 return ResourceManager.GetString("BI1031", resourceCulture);
+            }
+        }
+        
+        internal static string BI1032 {
+            get {
+                return ResourceManager.GetString("BI1032", resourceCulture);
+            }
+        }
+        
+        internal static string BI1033 {
+            get {
+                return ResourceManager.GetString("BI1033", resourceCulture);
             }
         }
         
@@ -524,6 +548,36 @@ namespace bgen {
         internal static string BI1072 {
             get {
                 return ResourceManager.GetString("BI1072", resourceCulture);
+            }
+        }
+        
+        internal static string BI1073 {
+            get {
+                return ResourceManager.GetString("BI1073", resourceCulture);
+            }
+        }
+        
+        internal static string BI1074 {
+            get {
+                return ResourceManager.GetString("BI1074", resourceCulture);
+            }
+        }
+        
+        internal static string BI1075 {
+            get {
+                return ResourceManager.GetString("BI1075", resourceCulture);
+            }
+        }
+        
+        internal static string BI1076 {
+            get {
+                return ResourceManager.GetString("BI1076", resourceCulture);
+            }
+        }
+        
+        internal static string BI1077 {
+            get {
+                return ResourceManager.GetString("BI1077", resourceCulture);
             }
         }
         

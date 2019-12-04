@@ -106,7 +106,7 @@ public class BindingTouch {
 				throw ErrorHelper.CreateError (1053, target_framework);
 			}
 		default:
-			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+			throw new BindingException (1047, CurrentPlatform);
 		}
 	}
 
@@ -136,7 +136,7 @@ public class BindingTouch {
 			}
 			break;
 		default:
-			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+			throw new BindingException (1047, CurrentPlatform);
 		}
 		foreach (var lib in libs)
 			yield return lib;
@@ -177,7 +177,7 @@ public class BindingTouch {
 				macSdkRoot = "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current";
 			return macSdkRoot;
 		default:
-			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+			throw new BindingException (1047, CurrentPlatform);
 		}
 	}
 
