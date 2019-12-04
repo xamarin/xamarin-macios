@@ -6,6 +6,11 @@ DATA_REPO_NAME=xamarin-macios-data
 AUTH=$(git config -l | grep AUTHORIZATION | sed 's/.*AUTHORIZATION: //')
 git config --global http.extraheader "AUTHORIZATION: $AUTH"
 
+# Debug spew, checking if the authorization token is correct
+git ls-remote https://github.com/xamarin/maccore || true
+git ls-remote https://github.com/xamarin/xamarin-macios-data || true
+
+
 git clone https://github.com/xamarin/$DATA_REPO_NAME
 
 DIR=$DATA_REPO_NAME/perf-data/samples/$BUILD_SOURCEBRANCHNAME/$BUILD_SOURCEVERSION/$SYSTEM_JOBID
