@@ -83,7 +83,8 @@ namespace Xamarin.Bundler {
 				return;
 
 			// 2nd chance, nuke `target` then copy everything
-			Log (1, "Could not update `{0}` content, trying to overwrite everything...", target);
+			var err = Marshal.GetLastWin32Error (); // might not be very useful since the callback signaled an error (CopyFileResult.Quit)
+			Log (1, "Could not update `{0}` content (error #{1} : {2}), trying to overwrite everything...", target, err, strerror (err));
 			Directory.Delete (target, true);
 			if (TryUpdateDirectory (source, target) != 0)
 				throw CreateError (1022, "Could not copy the directory '{0}' to '{1}': {2}", source, target, strerror (Marshal.GetLastWin32Error ()));
@@ -105,6 +106,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		// do not call `Marshal.GetLastWin32Error` inside this method since it's called while the p/invoke is executing and will return `260`
 		static CopyFileResult CopyFileCallback (CopyFileWhat what, CopyFileStep stage, IntPtr state, string source, string target, IntPtr ctx)
 		{
 //			Console.WriteLine ("CopyFileCallback ({0}, {1}, 0x{2}, {3}, {4}, 0x{5})", what, stage, state.ToString ("x"), source, target, ctx.ToString ("x"));
@@ -114,9 +116,7 @@ namespace Xamarin.Bundler {
 					if (stage == CopyFileStep.Finish)
 						Log (1, "Copied {0} to {1}", source, target);
 					else if (stage == CopyFileStep.Err) {
-						// don't call `strerror` because the most common `260` returns `Unknown error : 260`
-						// which `msbuild` will parse as an error and fail the build :(
-						Log (1, "Could not copy the file '{0}' to '{1}': {2}", source, target, Marshal.GetLastWin32Error ());
+						Log (1, "Could not copy the file '{0}' to '{1}'", source, target);
 						return CopyFileResult.Quit;
 					}
 					return CopyFileResult.Continue;
@@ -130,7 +130,7 @@ namespace Xamarin.Bundler {
 			case CopyFileWhat.CopyXattr:
 				return CopyFileResult.Continue;
 			case CopyFileWhat.Error:
-				Log (1, "Could not copy the file '{0}' to '{1}': {2}", source, target, Marshal.GetLastWin32Error ());
+				Log (1, "Could not copy the file '{0}' to '{1}'", source, target);
 				return CopyFileResult.Quit;
 			default:
 				return CopyFileResult.Continue;
