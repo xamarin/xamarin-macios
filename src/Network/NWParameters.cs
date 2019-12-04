@@ -183,6 +183,7 @@ namespace Network {
 		unsafe static extern IntPtr nw_parameters_create_custom_ip (byte custom_ip_protocol_number, BlockLiteral *configure_ip);
 
 		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions> configureCustomIP = null)
 		{
 			var ipHandler = new BlockLiteral ();
