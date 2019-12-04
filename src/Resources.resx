@@ -817,6 +817,22 @@
 		</comment>
 	</data>
 	
+	<data name="BI1078" xml:space="preserve">
+		<value>
+				{0} in method `{1}'
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="BI1079" xml:space="preserve">
+		<value>
+				{0} in parameter `{1}' from {2}.{3}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="BI1101" xml:space="preserve">
 		<value>
 				Trying to use a string as a [Target]

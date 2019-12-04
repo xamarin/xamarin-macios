@@ -873,6 +873,26 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="BI1078">
+        <source>
+				{0} in method `{1}'
+		</source>
+        <target state="new">
+				{0} in method `{1}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="BI1079">
+        <source>
+				{0} in parameter `{1}' from {2}.{3}
+		</source>
+        <target state="new">
+				{0} in parameter `{1}' from {2}.{3}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="BI1101">
         <source>
 				Trying to use a string as a [Target]

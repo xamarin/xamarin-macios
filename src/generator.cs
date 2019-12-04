@@ -1975,8 +1975,7 @@ public partial class Generator : IMemberGatherer {
 		try {
 			sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi) { IsAligned = aligned, EnumMode = enum_mode } ));
 		} catch (BindingException ex) {
-			//TODO: fix this
-			throw new BindingException (ex.Code, ex.Error, ex,  "{0} in method `{1}'", ex.Message, mi.Name);
+			throw new BindingException (1078, ex.Error, ex, ex.Message, mi.Name);
 		}
 
 		sb.Append ("_");
@@ -1991,8 +1990,7 @@ public partial class Generator : IMemberGatherer {
 			try {
 				sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }).Replace (' ', '_'));
 			} catch (BindingException ex) {
-				//TODO: fix this
-				throw new BindingException (ex.Code, ex.Error, ex, "{0} in parameter `{1}' from {2}.{3}", ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
+				throw new BindingException (1079, ex.Error, ex, ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
 		}
 
@@ -2025,8 +2023,7 @@ public partial class Generator : IMemberGatherer {
 			try {
 				b.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }, true));
 			} catch (BindingException ex) {
-				//TODO: fix this
-				throw new BindingException (ex.Code, ex.Error, ex, "{0} in parameter {1} of {2}.{3}", ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
+				throw new BindingException (1079, ex.Error, ex, ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
 			b.Append (" ");
 			b.Append ("arg" + (++n));
