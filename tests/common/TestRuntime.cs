@@ -680,7 +680,7 @@ partial class TestRuntime
 		NUnit.Framework.Assert.Ignore ($"This test requires watchOS {major}.{minor}");
 	}
 
-	static bool CheckMacSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
+	public static bool CheckMacSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
 #if MONOMAC
 		return OSXVersion >= new Version (major, minor, build);
