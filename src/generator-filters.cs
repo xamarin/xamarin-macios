@@ -17,7 +17,7 @@ public partial class Generator {
 		if ((attributes & MethodAttributes.FamORAssem) == MethodAttributes.FamORAssem)
 			return "protected internal ";
 		if ((attributes & MethodAttributes.Public) == MethodAttributes.Public)
-			return "pubblic ";
+			return "public ";
 		if ((attributes & MethodAttributes.Family) == MethodAttributes.Family)
 			return "protected ";
 		return String.Empty;
