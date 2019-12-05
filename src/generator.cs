@@ -53,6 +53,7 @@ using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
+using System.Globalization;
 
 public static class GeneratorExtensions
 {
@@ -1264,7 +1265,7 @@ public partial class Generator : IMemberGatherer {
 	}
 
 	static bool IsSetter (MethodInfo mi) => mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal);
-	static string GetBindAsExceptionString (string box, string retType, string containerType, string container, params ICustomAttributeProvider [] providers)
+	static BindingException GetBindAsException (string box, string retType, string containerType, string container, params ICustomAttributeProvider [] providers)
 	{
 		Type declaringType = null;
 		string memberName = null;
@@ -1282,7 +1283,7 @@ public partial class Generator : IMemberGatherer {
 		if (declaringType != null && memberName != null)
 			memberName = declaringType.FullName + "." + memberName;
 
-		return string.Format (bgen.Resources.BI1049, box, retType, containerType, container, memberName);
+		return new BindingException (1049, true, box, retType, containerType, container, memberName);
 	}
 	bool IsMemberInsideProtocol (Type type) => IsProtocol (type) || IsModel (type);
 
@@ -1381,7 +1382,7 @@ public partial class Generator : IMemberGatherer {
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					typeStr = retType.Name;
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi, pi));
+					throw GetBindAsException ("box", retType.Name, originalType.Name, "container", minfo?.mi, pi);
 			}
 			temp = string.Format ("{3}NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName, nullCheck);
 		} else if (originalType == TypeManager.NSString && IsSmartEnum (retType)) {
@@ -1408,7 +1409,7 @@ public partial class Generator : IMemberGatherer {
 					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 						typeStr = retType.Name;
 					else
-						throw new BindingException (1049, true, GetBindAsExceptionString ("box", arrRetType.Name, originalType.Name, "array", minfo?.mi, pi));
+						throw GetBindAsException ("box", arrRetType.Name, originalType.Name, "array", minfo?.mi, pi);
 				}
 				valueConverter = $"NSValue.From{typeStr} (o{denullify}), {parameterName});";
 			} else
@@ -1508,10 +1509,10 @@ public partial class Generator : IMemberGatherer {
 				if (retType.IsEnum) {
 					var enumType = TypeManager.GetUnderlyingEnumType (retType);
 					if (!NSNumberReturnMap.TryGetValue (enumType, out append))
-						throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
+						throw GetBindAsException ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi);
 				}
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
+					throw GetBindAsException ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi);
 			}
 			if (isNullable)
 				append = $"?{append}";
@@ -1521,7 +1522,7 @@ public partial class Generator : IMemberGatherer {
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					append = $".{retType.Name}Value";
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
+					throw GetBindAsException ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi);
 			}
 			if (isNullable)
 				append = $"?{append}";
@@ -1542,12 +1543,12 @@ public partial class Generator : IMemberGatherer {
 					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", getterStr, FormatType (arrRetType.DeclaringType, arrRetType));
 				}
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi));
+					throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
 			} else if (arrType == TypeManager.NSValue && !arrIsNullable) {
 				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 					valueFetcher = $"{(arrIsNullable ? "?" : string.Empty)}.{arrRetType.Name}Value";
 				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi));
+					throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
 
 				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
 			} else
