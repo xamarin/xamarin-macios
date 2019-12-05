@@ -5,7 +5,9 @@
 
 # grab Azure Devop's authorization token from the current repo, and add it to the global git configuration
 AUTH=$(git config -l | grep AUTHORIZATION | sed 's/.*AUTHORIZATION: //')
+AUTH_MD5=$(echo "$AUTH" | md5)
 git config --global http.extraheader "AUTHORIZATION: $AUTH"
+echo "AUTH_MD5=$AUTH_MD5"
 
 # Debug spew, checking if the authorization token is correct
 git ls-remote https://github.com/xamarin/maccore || true
