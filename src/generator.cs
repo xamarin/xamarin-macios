@@ -53,7 +53,6 @@ using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
-using System.Globalization;
 
 public static class GeneratorExtensions
 {
