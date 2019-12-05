@@ -47,6 +47,12 @@ namespace bgen {
             }
         }
         
+        internal static string _default {
+            get {
+                return ResourceManager.GetString("default", resourceCulture);
+            }
+        }
+        
         internal static string BI0000 {
             get {
                 return ResourceManager.GetString("BI0000", resourceCulture);
@@ -590,12 +596,6 @@ namespace bgen {
         internal static string BI1079 {
             get {
                 return ResourceManager.GetString("BI1079", resourceCulture);
-            }
-        }
-        
-        internal static string BI1080 {
-            get {
-                return ResourceManager.GetString("BI1080", resourceCulture);
             }
         }
         

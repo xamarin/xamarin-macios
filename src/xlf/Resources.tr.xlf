@@ -727,15 +727,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="BI1080">
-        <source>{0}
-		</source>
-        <target state="new">{0}
-		</target>
-        <note>
-			Used for dynamically generated strings.
-		</note>
-      </trans-unit>
       <trans-unit id="BI1101">
         <source>Trying to use a string as a [Target]
 		</source>
@@ -878,6 +869,13 @@
         <target state="new">[NullAllowed] should not be used on methods, like '{0}', but only on properties, parameters and return values.
 		</target>
         <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="default">
+        <source>The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</source>
+        <target state="new">The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</target>
+        <note>
+			This is the default message when an error code can not be found.
 		</note>
       </trans-unit>
     </body>

@@ -116,11 +116,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+	
+	<data name="default" xml:space="preserve">
+		<value>The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<comment>
+			This is the default message when an error code can not be found.
+		</comment>
+	</data>
+	
 	<data name="BI0000" xml:space="preserve">
 		<value>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
 		<comment>
 		</comment>
 	</data>
+	
 
 	<data name="BI0001" xml:space="preserve">
 		<value>The .NET runtime could not load the {0} type. Message: {1}</value>
@@ -747,14 +756,6 @@
 		<value>{0} in parameter `{1}' from {2}.{3}
 		</value>
 		<comment>
-		</comment>
-	</data>
-	
-	<data name="BI1080" xml:space="preserve">
-		<value>{0}
-		</value>
-		<comment>
-			Used for dynamically generated strings.
 		</comment>
 	</data>
 	

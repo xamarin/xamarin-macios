@@ -48,9 +48,11 @@ public class BindingException : Exception {
 		Type resourceType = Type.GetType ("bgen.Resources");
 		string errorCode = string.Format ("BI{0:0000}", code);
 		PropertyInfo prop = resourceType.GetProperty (errorCode, BindingFlags.NonPublic |
-		    BindingFlags.Static |
-		    BindingFlags.GetProperty);
-		var errorMessage = (String) prop.GetValue (null);
+				BindingFlags.Static |
+				BindingFlags.GetProperty);
+
+		var errorMessage = prop == null ? String.Format (bgen.Resources._default, errorCode) :
+					(String) prop.GetValue (null);
 		return errorMessage;
 	}
 
