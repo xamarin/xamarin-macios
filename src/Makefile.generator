@@ -36,17 +36,15 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-native                 \
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen: | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe) \"\$$@\"\n" > $@
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen: bgen | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q) $(CP) $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch: Makefile.generator | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q_GEN) printf "#!/bin/sh -e\n\necho \"error BI0088: btouch: MonoTouch binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.iOS (Unified) binding project.\"\nexit 1\n" > $@
 	$(Q) chmod +x $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch: | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe) --target-framework=MonoTouch,v1.0 \"\$$@\" \n" > $@
-	$(Q) chmod +x $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-native: | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe) --target-framework=Xamarin.iOS,v1.0 \"\$$@\"\n" > $@
-	$(Q) chmod +x $@
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-native: btouch-native | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(IOS_BUILD_DIR)/native/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
@@ -73,9 +71,8 @@ WATCH_TARGETS +=                                                        \
 WATCH_TARGETS +=                                                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch                        \
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch: Makefile.generator | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe) --target-framework=Xamarin.WatchOS,v1.0 \"\$$@\"\n" > $@
-	$(Q) chmod +x $@
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch: bwatch | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(WATCH_BUILD_DIR)/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
@@ -98,9 +95,8 @@ TVOS_TARGETS +=                                                  \
 TVOS_TARGETS +=                                                  \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv                    \
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv: Makefile.generator | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe) --target-framework=Xamarin.TVOS,v1.0 \"\$$@\"\n" > $@
-	$(Q) chmod +x $@
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv: btv | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(TVOS_BUILD_DIR)/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
@@ -128,11 +124,10 @@ MAC_TARGETS += \
 MAC_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac                     \
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen.exe) \"\$$@\"\n" > $@
-	$(Q) chmod +x $@
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen: bgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+	$(Q) $(CP) $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen-classic: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen-classic: Makefile.generator | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q_GEN) printf "#!/bin/sh -e\n\necho \"error BI0087: bgen-classic: Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.\"\nexit 1\n" > $@
 	$(Q) chmod +x $@
 
@@ -156,7 +151,7 @@ $(MAC_BUILD_DIR)/Xamarin.Mac-%.BindingAttributes.dll: generator-attributes.cs Ma
 	$(Q) mkdir -p $(dir $@)
 	$(Q_GEN) $(SYSTEM_CSC) -nologo -debug -out:$@ -debug generator-attributes.cs -target:library -deterministic
 
-bgen:	\
+install-bgen:	\
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen                     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen.exe            \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/Xamarin.Mac-full.BindingAttributes.dll     \

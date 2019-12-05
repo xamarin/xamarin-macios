@@ -49,6 +49,12 @@ Xamarin.Mac does not support the Classic API anymore, because the Classic API is
 
 The project must be [migrated to a Unified project](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/unified/updating-mac-apps) in order to support 64-bit.
 
+### <a name='BI0088'/>BI0088: MonoTouch binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.iOS (Unified) binding project.
+
+MonoTouch is not supported anymore, because it only supports 32-bit.
+
+The project must be [migrated to a Xamarin.iOS (Unified) project](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/unified/updating-ios-apps) in order to support 64-bit.
+
 ### <a name='BI0099'/>BI0099: Internal error *. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 
 This error message is reported when an internal consistency check fails.
