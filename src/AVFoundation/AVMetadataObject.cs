@@ -36,7 +36,7 @@ namespace AVFoundation {
 	public partial class AVMetadataObject {
 		public AVMetadataObjectType Type {
 			get {
-				return ObjectToEnum (WeakType);
+				return AVMetadataObjectTypeExtensions.GetValue (WeakType);
 			}
 		}
 
@@ -48,7 +48,7 @@ namespace AVFoundation {
 				return rv;
 
 			foreach (var str in arr) {
-				rv |= ObjectToEnum (str);
+				rv |= AVMetadataObjectTypeExtensions.GetValue (str);
 			}
 
 			return rv;
@@ -65,102 +65,12 @@ namespace AVFoundation {
 
 			while (val != 0) {
 				if ((val & 0x1) == 0x1)
-					rv.Add (EnumToObject ((AVMetadataObjectType) (0x1UL << shifts)));
+					rv.Add (((AVMetadataObjectType) (0x1UL << shifts)).GetConstant ());
 				val >>= 1;
 				shifts++;
 			}
 
 			return rv.ToArray ();
-		}
-
-		internal static AVMetadataObjectType ObjectToEnum (NSString obj)
-		{
-			if (obj == null)
-				return AVMetadataObjectType.None;
-			else if (obj == AVMetadataObject.TypeFace)
-				return AVMetadataObjectType.Face;
-			else if (obj == AVMetadataObject.TypeAztecCode)
-				return AVMetadataObjectType.AztecCode;
-			else if (obj == AVMetadataObject.TypeCode128Code)
-				return AVMetadataObjectType.Code128Code;
-			else if (obj == AVMetadataObject.TypeCode39Code)
-				return AVMetadataObjectType.Code39Code;
-			else if (obj == AVMetadataObject.TypeCode39Mod43Code)
-				return AVMetadataObjectType.Code39Mod43Code;
-			else if (obj == AVMetadataObject.TypeCode93Code)
-				return AVMetadataObjectType.Code93Code;
-			else if (obj == AVMetadataObject.TypeEAN13Code)
-				return AVMetadataObjectType.EAN13Code;
-			else if (obj == AVMetadataObject.TypeEAN8Code)
-				return AVMetadataObjectType.EAN8Code;
-			else if (obj == AVMetadataObject.TypePDF417Code)
-				return AVMetadataObjectType.PDF417Code;
-			else if (obj == AVMetadataObject.TypeQRCode)
-				return AVMetadataObjectType.QRCode;
-			else if (obj == AVMetadataObject.TypeUPCECode)
-				return AVMetadataObjectType.UPCECode;
-			else if (obj == AVMetadataObject.TypeInterleaved2of5Code)
-				return AVMetadataObjectType.Interleaved2of5Code;
-			else if (obj == AVMetadataObject.TypeITF14Code)
-				return AVMetadataObjectType.ITF14Code;
-			else if (obj == AVMetadataObject.TypeDataMatrixCode)
-				return AVMetadataObjectType.DataMatrixCode;
-			else if (obj == AVMetadataObject.TypeCatBody)
-				return AVMetadataObjectType.CatBody;
-			else if (obj == AVMetadataObject.TypeDogBody)
-				return AVMetadataObjectType.DogBody;
-			else if (obj == AVMetadataObject.TypeHumanBody)
-				return AVMetadataObjectType.HumanBody;
-			else if (obj == AVMetadataObject.TypeSalientObject)
-				return AVMetadataObjectType.SalientObject;
-			else
-				throw new ArgumentOutOfRangeException (string.Format ("Unexpected AVMetadataObjectType: {0}", obj));
-		}
-
-		internal static NSString EnumToObject (AVMetadataObjectType val)
-		{
-			switch (val) {
-			case AVMetadataObjectType.None:
-				return null;
-			case AVMetadataObjectType.Face:
-				return AVMetadataObject.TypeFace;
-			case AVMetadataObjectType.AztecCode:
-				return AVMetadataObject.TypeAztecCode;
-			case AVMetadataObjectType.Code128Code:
-				return AVMetadataObject.TypeCode128Code;
-			case AVMetadataObjectType.Code39Code:
-				return AVMetadataObject.TypeCode39Code;
-			case AVMetadataObjectType.Code39Mod43Code:
-				return AVMetadataObject.TypeCode39Mod43Code;
-			case AVMetadataObjectType.Code93Code:
-				return AVMetadataObject.TypeCode93Code;
-			case AVMetadataObjectType.EAN13Code:
-				return AVMetadataObject.TypeEAN13Code;
-			case AVMetadataObjectType.EAN8Code:
-				return AVMetadataObject.TypeEAN8Code;
-			case AVMetadataObjectType.PDF417Code:
-				return AVMetadataObject.TypePDF417Code;
-			case AVMetadataObjectType.QRCode:
-				return AVMetadataObject.TypeQRCode;
-			case AVMetadataObjectType.UPCECode:
-				return AVMetadataObject.TypeUPCECode;
-			case AVMetadataObjectType.Interleaved2of5Code:
-				return AVMetadataObject.TypeInterleaved2of5Code;
-			case AVMetadataObjectType.ITF14Code:
-				return AVMetadataObject.TypeITF14Code;
-			case AVMetadataObjectType.DataMatrixCode:
-				return AVMetadataObject.TypeDataMatrixCode;
-			case AVMetadataObjectType.CatBody:
-				return AVMetadataObject.TypeCatBody;
-			case AVMetadataObjectType.DogBody:
-				return AVMetadataObject.TypeDogBody;
-			case AVMetadataObjectType.HumanBody:
-				return AVMetadataObject.TypeHumanBody;
-			case AVMetadataObjectType.SalientObject:
-				return AVMetadataObject.TypeSalientObject;
-			default:
-				throw new ArgumentOutOfRangeException (string.Format ("Unexpected AVMetadataObjectType: {0}", val));
-			}
 		}
 	}
 }

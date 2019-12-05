@@ -190,10 +190,8 @@ public class Cache {
 		var args = new List<string> (arguments);
 
 		sb.Append ("# Version: ").Append (Constants.Version).Append ('.').Append (Constants.Revision).AppendLine ();
-		if (args.Count > 0)
-			sb.Append ("# [first argument, ignore] # ").AppendLine (args [0]);
 		sb.Append (Driver.GetFullPath ()).AppendLine (" \\");
-		CollectArgumentsForCache (args, 1, sb);
+		CollectArgumentsForCache (args, 0, sb);
 		return sb.ToString ();
 	}
 
