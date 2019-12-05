@@ -12,6 +12,11 @@ echo "AUTH_MD5=$AUTH_MD5"
 git ls-remote https://github.com/xamarin/maccore || true
 git ls-remote https://github.com/xamarin/xamarin-macios-data || true
 
+pushd .
+cd ../maccore
+git fetch
+popd
+
 
 git clone https://github.com/xamarin/$DATA_REPO_NAME
 
