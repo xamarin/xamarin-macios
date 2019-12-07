@@ -36,7 +36,6 @@ namespace ObjCRuntime {
 		static Dictionary<Type, ConstructorInfo> intptr_ctor_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_bool_ctor_cache;
 
-		static List <object> delegates;
 		static List <Assembly> assemblies;
 		static Dictionary <IntPtr, WeakReference> object_map;
 		static object lock_obj;
@@ -241,7 +240,6 @@ namespace ObjCRuntime {
 			TypeEqualityComparer = new TypeEqualityComparer ();
 
 			Runtime.options = options;
-			delegates = new List<object> ();
 			object_map = new Dictionary <IntPtr, WeakReference> (IntPtrEqualityComparer);
 			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
@@ -348,7 +346,9 @@ namespace ObjCRuntime {
 
 		static IntPtr GetFunctionPointer (Delegate d)
 		{
-			delegates.Add (d);
+			// Allocate a lifetime GCHandle for the delegate so it never gets collected.
+			_ = GCHandle.Alloc (d);
+
 			return Marshal.GetFunctionPointerForDelegate (d);
 		}
 
