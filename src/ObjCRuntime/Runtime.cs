@@ -722,7 +722,7 @@ namespace ObjCRuntime {
 				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
 			var parameters = minfo.GetParameters ();
-			if (parameters == null || parameters.Length <= parameter)
+			if (parameters.Length <= parameter)
 				return false;
 			return parameters [parameter].IsDefined (typeof(TransientAttribute), false);
 		}
@@ -734,7 +734,7 @@ namespace ObjCRuntime {
 				return false; // might be a ConstructorInfo (bug #15583), but we don't care about that (yet at least).
 			minfo = minfo.GetBaseDefinition ();
 			var parameters = minfo.GetParameters ();
-			if (parameters == null || parameters.Length <= parameter)
+			if (parameters.Length <= parameter)
 				return false;
 			return parameters [parameter].IsOut;
 		}
