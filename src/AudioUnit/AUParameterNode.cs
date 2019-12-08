@@ -11,7 +11,9 @@ namespace AudioUnit
 			if (observer == null)
 				throw new ArgumentNullException ("observer");
 
+#pragma warning disable CS0618
 			IntPtr observerToken = TokenByAddingParameterObserver (observer);
+#pragma warning restore CS0618
 
 			return new AUParameterObserverToken {
 				ObserverToken = observerToken
@@ -23,7 +25,9 @@ namespace AudioUnit
 			if (observer == null)
 				throw new ArgumentNullException ("observer");
 
+#pragma warning disable CS0618
 			IntPtr observerToken = TokenByAddingParameterRecordingObserver (observer);
+#pragma warning restore CS0618
 
 			return new AUParameterObserverToken {
 				ObserverToken = observerToken
@@ -32,7 +36,9 @@ namespace AudioUnit
 
 		public void RemoveParameterObserver (AUParameterObserverToken token)
 		{
+#pragma warning disable CS0618
 			RemoveParameterObserver (token.ObserverToken);
+#pragma warning restore CS0618
 		}
 	}
 }

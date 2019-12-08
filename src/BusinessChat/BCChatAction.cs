@@ -14,7 +14,7 @@ namespace BusinessChat {
 				values [index] = new NSString (intentParameters [k]);
 				index++; 
 			}
-			using (var dict = NSDictionary<NSString, NSString>.FromObjectsAndKeys (values, keys))
+			using (var dict = NSDictionary<NSString, NSString>.FromObjectsAndKeys (values, keys, keys.Length))
 				OpenTranscript (businessIdentifier, dict);
 		}
 	}

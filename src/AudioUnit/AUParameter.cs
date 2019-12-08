@@ -23,12 +23,16 @@ namespace AudioUnit
 
 		public void SetValue (float value, AUParameterObserverToken originator)
 		{
+#pragma warning disable CS0618
 			SetValue (value, originator.ObserverToken);
+#pragma warning restore CS0618
 		}
 
 		public void SetValue (float value, AUParameterObserverToken originator, ulong hostTime)
 		{
+#pragma warning disable CS0618
 			SetValue (value, originator.ObserverToken, hostTime);
+#pragma warning restore CS0618
 		}
 	}
 #endif
