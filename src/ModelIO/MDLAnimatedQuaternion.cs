@@ -62,9 +62,9 @@ namespace ModelIO {
 		public virtual Quaternion [] GetQuaternionValues (nuint maxCount)
 		{
 			var timesArr = new Quaternion [(int) maxCount];
-			int typeSize = Marshal.SizeOf (typeof (Quaternion));
 
 			unsafe {
+				int typeSize = sizeof (Quaternion);
 				fixed (Quaternion* arrptr = timesArr) {
 					var rv = MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, maxCount, _GetFloatQuaternionArray);
 					Array.Resize (ref timesArr, (int) rv);
@@ -77,9 +77,9 @@ namespace ModelIO {
 		public virtual Quaterniond [] GetQuaterniondValues (nuint maxCount)
 		{
 			var timesArr = new Quaterniond [(int) maxCount];
-			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
 
 			unsafe {
+				int typeSize = sizeof (Quaterniond);
 				fixed (Quaterniond* arrptr = timesArr) {
 					var rv = MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, maxCount, _GetDoubleQuaternionArray);
 					Array.Resize (ref timesArr, (int) rv);
