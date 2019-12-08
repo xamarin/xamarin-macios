@@ -650,7 +650,7 @@ namespace AudioToolbox
 			return GetArray<AudioValueRange> (prop, sizeof (AudioValueRange));
 		}
 
-		unsafe T[] GetArray<T> (AudioConverterPropertyID prop, int elementSize)
+		unsafe T[] GetArray<T> (AudioConverterPropertyID prop, int elementSize) where T:unmanaged
 		{
 			int size;
 			bool writable;
@@ -658,18 +658,14 @@ namespace AudioToolbox
 				return null;
 
 			var data = new T [size / elementSize];
-			var array_handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
 
-			try {
-				var ptr = array_handle.AddrOfPinnedObject ();
-				var res = AudioConverterGetProperty (handle, prop, ref size, ptr);
+			fixed (T* ptr = data) {
+				var res = AudioConverterGetProperty (handle, prop, ref size, (IntPtr)ptr);
 				if (res != 0)
 					return null;
 
 				Array.Resize (ref data, size / elementSize);
 				return data;
-			} finally {
-				array_handle.Free ();
 			}
 		}		
 

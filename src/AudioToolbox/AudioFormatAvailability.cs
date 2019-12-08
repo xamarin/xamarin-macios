@@ -57,25 +57,21 @@ namespace AudioToolbox {
 			return GetAvailable<AudioClassDescription> (AudioFormatProperty.Encoders, format);
 		}
 
-		unsafe static T[] GetAvailable<T> (AudioFormatProperty prop, AudioFormatType format)
+		unsafe static T[] GetAvailable<T> (AudioFormatProperty prop, AudioFormatType format) where T:unmanaged
 		{		
 			uint size;
 			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (prop, sizeof (AudioFormatType), ref format, out size) != 0)
 				return null;
 
-			var data = new T[size / Marshal.SizeOf (typeof (T))];
-			var array_handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
+			var data = new T[size / sizeof (T)];
 
-			try {
-				var ptr = array_handle.AddrOfPinnedObject ();
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, sizeof (AudioFormatType), ref format, ref size, ptr);
+			fixed (T* ptr = data) {
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, sizeof (AudioFormatType), ref format, ref size, (IntPtr)ptr);
 				if (res != 0)
 					return null;
 
-				Array.Resize (ref data, (int) size / Marshal.SizeOf (typeof (T)));
+				Array.Resize (ref data, (int) size / sizeof (T));
 				return data;
-			} finally {
-				array_handle.Free ();
 			}
 		}
 	}
