@@ -147,11 +147,12 @@ namespace Security {
 					if (max == 1)
 						return new NSData [] { new NSData (ptr, false) };
 
-					var array = new NSArray (ptr);
-					var records = new NSData [array.Count];
-					for (uint i = 0; i < records.Length; i++)
-						records [i] = new NSData (array.ValueAt (i), false);
-					return records;
+					using (var array = new NSArray (ptr)) {
+						var records = new NSData [array.Count];
+						for (uint i = 0; i < records.Length; i++)
+							records [i] = new NSData (array.ValueAt (i), false);
+						return records;
+					}
 				}
 				return null;
 			}
@@ -200,11 +201,12 @@ namespace Security {
 				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
 				n = null;
 				if (result == SecStatusCode.Success){
-					var array = new NSArray (ptr);
-					var records = new SecRecord [array.Count];
-					for (uint i = 0; i < records.Length; i++)
-						records [i] = new SecRecord (new NSMutableDictionary (array.ValueAt (i), false));
-					return records;
+					using (var array = new NSArray (ptr)) {
+						var records = new SecRecord [array.Count];
+						for (uint i = 0; i < records.Length; i++)
+							records [i] = new SecRecord (new NSMutableDictionary (array.ValueAt (i), false));
+						return records;
+					}
 				}
 				return null;
 			}
