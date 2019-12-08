@@ -40,11 +40,12 @@ namespace Foundation {
 		public byte [] GetBytes ()
 		{
 			byte [] ret = new byte [16];
-			
-			IntPtr buf = Marshal.AllocHGlobal (16);
-			GetUuidBytes (buf);
-			Marshal.Copy (buf, ret, 0, 16);
-			Marshal.FreeHGlobal (buf);
+
+			unsafe {
+				fixed (byte* buf = ret) {
+					GetUuidBytes ((IntPtr)buf);
+				}
+			}
 
 			return ret;
 		}
