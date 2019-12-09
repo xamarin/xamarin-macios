@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
-  <Import Project="..\packages\XliffTasks.1.0.0-beta.19252.1\build\XliffTasks.props" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19252.1\build\XliffTasks.props')" />
+  <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.props" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -397,5 +397,5 @@
   <Target Name="AfterBuild">
     <Exec Command="make bgen" />
   </Target>
-  <Import Project="..\packages\XliffTasks.1.0.0-beta.19252.1\build\XliffTasks.targets" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19252.1\build\XliffTasks.targets')" />
+  <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets')" />
 </Project>
