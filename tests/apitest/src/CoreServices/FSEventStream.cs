@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Runtime.InteropServices;
 using CoreServices;
 using CoreFoundation;
@@ -30,8 +31,8 @@ namespace Xamarin.Mac.Tests {
 		public void Init ()
 		{
 			dir = Directory.CreateDirectory ("FSEventStreamTests");
-			fileToWatch = File.Create ("TempFileToWatch.txt");
-			fileToExclude = File.Create ("TempFileToExclude.txt");
+			fileToWatch = File.Create ("FSEventStreamTests/TempFileToWatch.txt");
+			fileToExclude = File.Create ("FSEventStreamTests/TempFileToExclude.txt");
 			var process = new Process () {
 				StartInfo = new ProcessStartInfo {
 					FileName = "/usr/bin/stat",
@@ -46,6 +47,8 @@ namespace Xamarin.Mac.Tests {
 			process.WaitForExit ();
 			st_dev = UInt64.Parse (result);
 			pathsToWatchRelativeToDevice = NSArray.FromStrings (new [] { "FSEventStreamTests" });
+			fileToWatch.Close ();
+			fileToExclude.Close ();
 		}
 
 		[TestFixtureTearDown]
@@ -74,7 +77,7 @@ namespace Xamarin.Mac.Tests {
 		{
 			Console.WriteLine ("FsEventStream_WatchEvents");
 			watchedFileChanged = true;
-			watchEventCalled.Set ();
+			//watchEventCalled.Set ();
 		}
 
 		[TearDown]
@@ -89,11 +92,22 @@ namespace Xamarin.Mac.Tests {
 		public void GetDeviceBeingWatchedTest ()
 		{
 			var deviceId = fsEventStream.GetDevice ();
-			Console.WriteLine ($"GetDeviceBeingWatchedTest - {st_dev} : {deviceId}");
 			Assert.AreEqual (st_dev, deviceId, "Device ID"); //Check if device id is the same
 		}
 
 		[Test]
+		public void FSEventFileChangedTest ()
+		{
+			string path = "FSEventStreamTests/TempFileToWatch.txt";
+			Assert.IsTrue (File.Exists (path));;
+
+			File.AppendAllText (path, "Hello World!");
+			//watchEventCalled.WaitOne (Int32.MaxValue);
+			//waitHandle.WaitOne ();
+			Assert.IsTrue (watchedFileChanged);
+		}
+
+		//[Test]
 		public void UnscheduleFromRunLoopTest ()
 		{
 			fsEventStream.UnscheduleFromRunLoop (CFRunLoop.Current);
@@ -104,7 +118,7 @@ namespace Xamarin.Mac.Tests {
 			Assert.IsFalse (watchedFileChanged); //This shouldn't have changed as we unscheduled from loop?
 		}
 
-		[Test]
+		//[Test]
 		public void SetExclusionPathsTest ()
 		{
 			using (var fsEventStreamForExclusion = new FSEventStream (st_dev, pathsToWatchRelativeToDevice, ulong.MaxValue, TimeSpan.MinValue, FSEventStreamCreateFlags.None)) {
@@ -116,8 +130,8 @@ namespace Xamarin.Mac.Tests {
 					fsEventStreamForExclusion.Start ();
 
 					File.AppendAllText ("FSEventStreamTests/TempFileToWatch.txt", "Hello World!");
-					watchEventCalled.WaitOne (Int32.MaxValue);
-					excludeEventCalled.WaitOne (Int32.MaxValue);
+					//watchEventCalled.WaitOne (Int32.MaxValue);
+					//excludeEventCalled.WaitOne (Int32.MaxValue);
 
 					Assert.IsTrue (watchedFileChanged); //fsEventStream callback should've changed this to true?
 					Assert.IsFalse (exludedFileChanged);  //fsEventStreamForExclusion callback shouldn't have changed this?
@@ -131,6 +145,25 @@ namespace Xamarin.Mac.Tests {
 			Console.WriteLine ("FsEventStream_ExcludeWatchEvents");
 			exludedFileChanged = true;
 			excludeEventCalled.Set ();
+		}
+
+		//[Test]
+		public void SetDispatchQueueTest ()
+		{
+			using (var fsEventStreamDispatchQueue = new FSEventStream (st_dev, pathsToWatchRelativeToDevice, ulong.MaxValue, TimeSpan.MinValue, FSEventStreamCreateFlags.None)) {
+				fsEventStreamDispatchQueue.Events += FsEventStream_ExcludeWatchEvents;
+				fsEventStreamDispatchQueue.ScheduleWithRunLoop (CFRunLoop.Main);
+
+				fsEventStreamDispatchQueue.SetDispatchQueue (null); // shouldn't recieve events after this
+
+				fsEventStreamDispatchQueue.Start ();
+
+				File.AppendAllText ("FSEventStreamTests/TempFileToWatch.txt", "Hello World!");
+
+				Assert.IsTrue (watchedFileChanged); //fsEventStream callback should've changed this to true?
+				Assert.IsFalse (exludedFileChanged);  //fsEventStreamForExclusion callback shouldn't have changed this?
+
+			}
 		}
 	}
 }
