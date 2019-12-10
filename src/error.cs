@@ -37,7 +37,7 @@ public class BindingException : Exception {
 	}
 
 	public BindingException (int code, bool error, Exception innerException, params object[] args) : 
-		base (String.Format (GetMessage(code), args), innerException)
+		base (String.Format (GetMessage (code), args), innerException)
 	{
 		Code = code;
 		Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
