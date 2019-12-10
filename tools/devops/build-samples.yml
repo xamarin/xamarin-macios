@@ -81,8 +81,7 @@ jobs:
 
   steps:
   - checkout: self
-    checkout: xamarin-macios-data
-    persistCredentials: true
+  - checkout: xamarin-macios-data
 
   - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info
