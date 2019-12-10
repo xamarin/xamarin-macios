@@ -20,7 +20,7 @@ using ProductException=BindingException;
 public class BindingException : Exception {
 	
 	public BindingException (int code, bool error) :
-		base (GetMessage(code))
+		base (GetMessage (code))
 	{
 		Code = code;
 		Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
