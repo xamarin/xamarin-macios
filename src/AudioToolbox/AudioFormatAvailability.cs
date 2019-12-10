@@ -66,7 +66,7 @@ namespace AudioToolbox {
 			var data = new T[size / sizeof (T)];
 
 			fixed (T* ptr = data) {
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, sizeof (AudioFormatType), ref format, ref size, (IntPtr)ptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, sizeof (AudioFormatType), ref format, ref size, (IntPtr) ptr);
 				if (res != 0)
 					return null;
 

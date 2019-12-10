@@ -660,7 +660,7 @@ namespace AudioToolbox
 			var data = new T [size / elementSize];
 
 			fixed (T* ptr = data) {
-				var res = AudioConverterGetProperty (handle, prop, ref size, (IntPtr)ptr);
+				var res = AudioConverterGetProperty (handle, prop, ref size, (IntPtr) ptr);
 				if (res != 0)
 					return null;
 
