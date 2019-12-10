@@ -5182,10 +5182,9 @@ public partial class Generator : IMemberGatherer {
 			PrintPlatformAttributes (minfo.method.DeclaringType);
 		}
 
-		foreach (var di in AttributeManager.GetCustomAttributes<DesignatedInitializerAttribute> (mi)) {
+		// in theory we could check for `minfo.is_ctor` but some manual bindings are using methods for `init*`
+		if (AttributeManager.HasAttribute<DesignatedInitializerAttribute> (mi))
 			print ("[DesignatedInitializer]");
-			break;
-		}
 	}
 
 
