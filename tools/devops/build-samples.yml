@@ -13,13 +13,21 @@ variables:
   name_filter_gr: '^[G-Rg-r].*$'
   name_filter_rest: '^[^A-Ra-r].*$'
 
+resources:
+  repositories:
+  - repository: xamarin-macios-data
+    type: github
+    name: xamarin/xamarin-macios-data
+    ref: refs/heads/master
+    endpoint: xamarin
+
 jobs:
 - job: ReportStartToGitHub
   displayName: Set pending GitHub status
   pool:
     name: '$(macOSVersion)'
   steps:
-  - bash: ./jenkins/add-commit-status.sh "--token=$(github-pat)" "--hash=$BUILD_SOURCEVERSION" "--state=pending" --target-url="$AZURE_BUILD_URL" --description="$BUILD_DEFINITIONNAME" --context="$BUILD_DEFINITIONNAME"
+  - bash: ./xamarin-macios/jenkins/add-commit-status.sh "--token=$(github-pat)" "--hash=$BUILD_SOURCEVERSION" "--state=pending" --target-url="$AZURE_BUILD_URL" --description="$BUILD_DEFINITIONNAME" --context="$BUILD_DEFINITIONNAME"
     displayName: Set pending GitHub status
 
 - job: macOS
@@ -73,32 +81,33 @@ jobs:
 
   steps:
   - checkout: self
+    checkout: xamarin-macios-data
     persistCredentials: true
 
-  - bash: ./tools/devops/system-info.sh
+  - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info
 
-  - bash: ./tools/devops/fetch-maccore.sh
-    displayName: Fetch maccore
+  # - bash: ./xamarin-macios/tools/devops/fetch-maccore.sh
+  #   displayName: Fetch maccore
 
   - task: provisionator@2
     displayName: Xcode
     inputs:
       provisionator_uri: '$(provisionator-uri)'
       github_token: '$(github-pat)'
-      provisioning_script: $(System.DefaultWorkingDirectory)/tools/devops/provision-xcode.csx
+      provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/provision-xcode.csx
 
   - task: provisionator@2
     displayName: Provision XI/XM/Mono/Objective-Sharpie
     inputs:
       provisionator_uri: '$(provisionator-uri)'
       github_token: '$(github-pat)'
-      provisioning_script: $(System.DefaultWorkingDirectory)/tools/devops/build-samples.csx
+      provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/build-samples.csx
 
-  - bash: ./tools/devops/system-info.sh
+  - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info post provisioning
 
-  - bash: ./tools/devops/build-samples.sh
+  - bash: ./xamarin-macios/tools/devops/build-samples.sh
     displayName: Run tests
 
   - task: PublishTestResults@2
@@ -111,7 +120,7 @@ jobs:
       publishRunAttachments: true
       mergeTestResults: true
 
-  - bash: ./tools/devops/publish-performance-data.sh
+  - bash: ./xamarin-macios/tools/devops/publish-performance-data.sh
     displayName: Publish performance data
     condition: always()
 
@@ -139,7 +148,7 @@ jobs:
     jobResultReleaseMac: $[ dependencies.macOS.outputs['Release_Mac.ExportedVariables.JobStatus'] ]
   steps:
   - bash: |
-      ./tools/devops/build-samples-report-to-github.sh "$(github-pat)" \
+      ./xamarin-macios/tools/devops/build-samples-report-to-github.sh "$(github-pat)" \
         "Debug_iPhone_AF" "Debug_iPhone_GR" "Debug_iPhone_SZ" \
         "Debug_iPhoneSimulator" \
         "Release_iPhone_AF" "Release_iPhone_GR" "Release_iPhone_SZ" \
