@@ -1,13 +1,9 @@
 using System.Text;
 
-using Xamarin.MacDev;
-
 namespace Xamarin.Mac.Tasks
 {
 	public class ALToolValidateTaskBase : MacDev.Tasks.ALToolTaskBase
 	{
-		public override PlatformName FileType => PlatformName.MacOSX;
-
 		protected override string GenerateCommandLineCommands ()
 		{
 			var sb = new StringBuilder ();

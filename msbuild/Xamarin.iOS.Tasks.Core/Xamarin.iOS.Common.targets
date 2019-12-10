@@ -422,6 +422,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Username="$(Username)"
 			Password="$(Password)"
 			FilePath="$(FilePath)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			SdkDevPath="$(_SdkDevPath)"
 		/>
 	</Target>
@@ -432,6 +433,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Username="$(Username)"
 			Password="$(Password)"
 			FilePath="$(FilePath)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			SdkDevPath="$(_SdkDevPath)"
 		/>
 	</Target>
