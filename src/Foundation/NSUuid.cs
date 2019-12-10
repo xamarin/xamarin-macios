@@ -43,7 +43,7 @@ namespace Foundation {
 
 			unsafe {
 				fixed (byte* buf = ret) {
-					GetUuidBytes ((IntPtr)buf);
+					GetUuidBytes ((IntPtr) buf);
 				}
 			}
 
