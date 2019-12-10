@@ -135,7 +135,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			if (has_address) {
 				shouldBeReachable = true;
 			} else {
-				shouldBeReachable = !TestRuntime.CheckMacSystemVersion (10, 12);
+				shouldBeReachable = !TestRuntime.CheckMacSystemVersion (10, 12) || TestRuntime.CheckMacSystemVersion (10, 15, 2);
 			}
 #elif __IOS__
 			if (Runtime.Arch == Arch.DEVICE) {
@@ -154,8 +154,8 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				has_local_address = false;
 				has_isdirect = has_local_address;
 			} else {
-				has_local_address = !TestRuntime.CheckMacSystemVersion (10, 11);
-				has_isdirect = false;
+				has_local_address = !TestRuntime.CheckMacSystemVersion (10, 11) || TestRuntime.CheckMacSystemVersion (10, 15, 2);
+				has_isdirect = TestRuntime.CheckMacSystemVersion (10, 12);
 			}
 #elif __IOS__
 			if (Runtime.Arch == Arch.DEVICE) {
