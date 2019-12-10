@@ -3541,9 +3541,12 @@ public partial class Generator : IMemberGatherer {
 			if (bindAsAtt != null) {
 				PrintBindAsAttribute (pi, sb);
 				sb.Append (FormatType (bindAsAtt.Type.DeclaringType, bindAsAtt.Type, protocolized));
-			}
-			else
+			} else {
 				sb.Append (FormatType (declaringType, parType, protocolized));
+				// some `IntPtr` are decorated with `[NullAttribute]`
+				if (!parType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
+					sb.Append ('?');
+			}
 
 			sb.Append (" ");
 			sb.Append (pi.Name.GetSafeParamName ());
@@ -3556,6 +3559,8 @@ public partial class Generator : IMemberGatherer {
 		print (w, "// We keep references to objects, so warning 414 is expected\n");
 		print (w, "#pragma warning disable 414\n");
 		print (w, ns.ImplicitNamespaces.OrderByDescending (n => n.StartsWith ("System", StringComparison.Ordinal)).ThenBy (n => n.Length).Select (n => "using " + n + ";"));
+		print (w, "");
+		print (w, "#nullable enable");
 		print (w, "");
 	}
 
@@ -4483,7 +4488,10 @@ public partial class Generator : IMemberGatherer {
 					print ("return ret == IntPtr.Zero ? null : new global::{0} (ret);", mi.ReturnType.FullName);
 				}
 			} else {
-				print ("return ret;");
+				// we can't be 100% confident that the ObjC API annotations are correct so we always null check inside generated code
+//				print ("#pragma warning disable 8603");
+				print ("return ret!;");
+//				print ("#pragma warning restore 8603");
 			}
 		}
 		if (minfo.is_ctor)
@@ -4684,7 +4692,7 @@ public partial class Generator : IMemberGatherer {
 					else if (pi.PropertyType.IsValueType)
 						print ("return ({0}) ({1});", FormatType (pi.DeclaringType, pi.PropertyType), wrap);
 					else
-						print ("return {0} as {1}{2};", wrap, minfo.protocolize ? "I" : String.Empty, FormatType (pi.DeclaringType, pi.PropertyType));
+						print ("return ({0} as {1}{2})!;", wrap, minfo.protocolize ? "I" : String.Empty, FormatType (pi.DeclaringType, pi.PropertyType));
 				}
 				indent--;
 				print ("}");
@@ -4731,7 +4739,7 @@ public partial class Generator : IMemberGatherer {
 
 				if (minfo.is_thread_static)
 					print ("[ThreadStatic]");
-				print ("{1}object {0};", var_name, minfo.is_static ? "static " : "");
+				print ("{1}object? {0};", var_name, minfo.is_static ? "static " : "");
 
 				if (!minfo.is_static && !is_interface_impl){
 					instance_fields_to_clear_on_dispose.Add (var_name);
@@ -4749,19 +4757,23 @@ public partial class Generator : IMemberGatherer {
 		PrintAttributes (pi, preserve:true, advice:true, bindAs:true);
 
 		string propertyTypeName;
+		var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 		if (minfo.protocolize) {
 			propertyTypeName = FindProtocolInterface (pi.PropertyType, pi);
 		} else if (minfo.is_bindAs) {
 			var bindAsAttrib = GetBindAsAttribute (minfo.mi);
 			propertyTypeName = FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type));
+			// it remains nullable only if the BindAs type can be null (i.e. a reference type)
+			nullable = !bindAsAttrib.Type.IsValueType;
 		} else {
 			propertyTypeName = FormatType (pi.DeclaringType, GetCorrectGenericType (pi.PropertyType));
 		}
 
-		print ("{0} {1}{2} {3}{4} {{",
+		print ("{0} {1}{2}{3} {4}{5} {{",
 		       mod,
 		       minfo.GetModifiers (),
 			   propertyTypeName,
+				nullable ? "?" : "",
 				pi.Name.GetSafeParamName (),
 		       use_underscore ? "_" : "");
 		indent++;
@@ -5410,6 +5422,7 @@ public partial class Generator : IMemberGatherer {
 				print ("namespace {0} {{", group.Namespace);
 				indent++;
 			}
+			print ("#nullable enable");
 
 			foreach (var deltype in group.Fullname.OrderBy (v => v, StringComparer.Ordinal)) {
 				int p = deltype.LastIndexOf ('.');
@@ -6636,11 +6649,13 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					} else
 						fieldTypeName = FormatType (field_pi.DeclaringType, field_pi.PropertyType);
 
+					bool nullable = false;
 					// Value types we dont cache for now, to avoid Nullable<T>
 					if (!field_pi.PropertyType.IsValueType || smartEnumTypeName != null) {
 						print_generated_code ();
 						PrintPreserveAttribute (field_pi);
-						print ("static {0} _{1};", fieldTypeName, field_pi.Name);
+						print ("static {0}? _{1};", fieldTypeName, field_pi.Name);
+						//nullable = true;
 					}
 
 					PrintAttributes (field_pi, preserve:true, advice:true);
@@ -6653,8 +6668,9 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					if (AttributeManager.HasAttribute<NotificationAttribute> (field_pi))
 						print ($"[Advice (\"Use {type.Name}.Notifications.Observe{GetNotificationName (field_pi)} helper method instead.\")]");
 
-					print ("{0} static {1} {2}{3} {{", field_pi.IsInternal (this) ? "internal" : "public",
+					print ("{0} static {1}{2} {3}{4} {{", field_pi.IsInternal (this) ? "internal" : "public",
 						smartEnumTypeName ?? fieldTypeName,
+						nullable ? "?" : "",
 						field_pi.Name,
 						is_unified_internal ? "_" : "");
 					indent++;
@@ -6890,7 +6906,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched (Weak{1}, {2});", ApplicationClassName, delName, delegateTypePropertyName);
 						}
 
-						print ("_{0} del = {1} as _{0};", dtype.Name, delName);
+						print ("var del = {1} as _{0};", dtype.Name, delName);
 
 						print ("if (del == null){");
 						indent++;
@@ -6968,11 +6984,11 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 
 						if (mi.ReturnType == TypeManager.System_Void){
 							if (bta.Singleton || mi.GetParameters ().Length == 1)
-								print ("internal EventHandler {0};", miname);
+								print ("internal EventHandler? {0};", miname);
 							else
-								print ("internal EventHandler<{0}> {1};", GetEventArgName (mi), miname);
+								print ("internal EventHandler<{0}>? {1};", GetEventArgName (mi), miname);
 						} else
-							print ("internal {0} {1};", GetDelegateName (mi), miname);
+							print ("internal {0}? {1};", GetDelegateName (mi), miname);
 
 						print ("[Preserve (Conditional = true)]");
 						if (isProtocolizedEventBacked)
@@ -6998,10 +7014,11 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 							} else
 								eaname = "<NOTREACHED>";
 							
-							if (bta.Singleton || mi.GetParameters ().Length == 1)
-								print ("EventHandler handler = {0};", PascalCase (miname));
-							else
-								print ("EventHandler<{0}> handler = {1};", GetEventArgName (mi), miname);
+							print ("var handler = {0};", PascalCase (miname));
+							// if (bta.Singleton || mi.GetParameters ().Length == 1)
+							// 	print ("EventHandler? handler = {0};", PascalCase (miname));
+							// else
+							// 	print ("EventHandler<{0}>? handler = {1};", GetEventArgName (mi), miname);
 
 							print ("if (handler != null){");
 							indent++;
@@ -7039,7 +7056,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 							if (debug)
 								print ("Console.WriteLine (\"Method {0}.{1} invoked\");", dtype.Name, mi.Name);
 
-							print ("{0} handler = {1};", delname, PascalCase (miname));
+							print ("var handler = {0};", PascalCase (miname));
 							print ("if (handler != null)");
 							print ("	return handler ({0}{1});",
 							       sender,
@@ -7146,13 +7163,13 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 								print ("public event EventHandler {0} {{", CamelCase (GetEventName (mi)));
 							else 
 								print ("public event EventHandler<{0}> {1} {{", GetEventArgName (mi), CamelCase (GetEventName (mi)));
-							print ("\tadd {{ Ensure{0} ({1}).{2} += value; }}", dtype.Name, ensureArg, miname);
-							print ("\tremove {{ Ensure{0} ({1}).{2} -= value; }}", dtype.Name, ensureArg, miname);
+							print ("\tadd {{ Ensure{0} ({1})!.{2} += value; }}", dtype.Name, ensureArg, miname);
+							print ("\tremove {{ Ensure{0} ({1})!.{2} -= value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
 						} else {
-							print ("public {0} {1} {{", GetDelegateName (mi), CamelCase (GetDelegateApiName (mi)));
-							print ("\tget {{ return Ensure{0} ({1}).{2}; }}", dtype.Name, ensureArg, miname);
-							print ("\tset {{ Ensure{0} ({1}).{2} = value; }}", dtype.Name, ensureArg, miname);
+							print ("public {0}? {1} {{", GetDelegateName (mi), CamelCase (GetDelegateApiName (mi)));
+							print ("\tget {{ return Ensure{0} ({1})!.{2}; }}", dtype.Name, ensureArg, miname);
+							print ("\tset {{ Ensure{0} ({1})!.{2} = value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
 						}
 					}
@@ -7343,9 +7360,11 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 				
 				// Now print the properties
 				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name, StringComparer.Ordinal)) {
-					var bareType = p.ParameterType.IsByRef ? p.ParameterType.GetElementType () : p.ParameterType;
+					var pt = p.ParameterType;
+					var bareType = pt.IsByRef ? pt.GetElementType () : pt;
+					var nullable = !pt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (p);
 
-					print ("public {0} {1} {{ get; set; }}", RenderType (bareType), GetPublicParameterName (p));
+					print ("public {0}{1} {2} {{ get; set; }}", RenderType (bareType), nullable ? "?" : "", GetPublicParameterName (p));
 				}
 				indent--; print ("}\n");
 			}
@@ -7606,9 +7625,12 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 
 		if (p.ParameterType.IsByRef)
 			return (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + prefix + RenderType (p.ParameterType.GetElementType ());
-		else
-			return prefix + RenderType (p.ParameterType);
-						     
+		else {
+			var name = prefix + RenderType (p.ParameterType);
+			if (AttributeManager.HasAttribute<NullAllowedAttribute>	(p))
+				name += "?";
+			return name;
+		}
 	}
 
 	string GetPublicParameterName (ParameterInfo pi)

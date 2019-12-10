@@ -2323,7 +2323,7 @@ namespace Foundation
 		[Export ("attributedStringForObjectValue:withDefaultAttributes:")]
 		NSAttributedString GetAttributedString (NSObject obj, NSDictionary<NSString, NSObject> defaultAttributes);
 
-		[Wrap ("GetAttributedString (obj, defaultAttributes == null ? null : defaultAttributes.Dictionary)")]
+		[Wrap ("GetAttributedString (obj, defaultAttributes == null ? null! : defaultAttributes.Dictionary)")]
 #if MONOMAC
 		NSAttributedString GetAttributedString (NSObject obj, NSStringAttributes defaultAttributes);
 #else
@@ -2598,6 +2598,7 @@ namespace Foundation
 		void SetClass (Class kls, string codedName);
 
 		[Export ("classForClassName:")]
+		[return: NullAllowed]
 		Class GetClass (string codedName);
 
 		[Export ("setRequiresSecureCoding:")]
@@ -3690,7 +3691,7 @@ namespace Foundation
 		[Export ("readFromData:options:documentAttributes:error:")]
 		bool ReadFromData (NSData data, NSDictionary options, ref NSDictionary returnOptions, ref NSError error);
 		
-		[Wrap ("ReadFromData (data, options == null ? null : options.Dictionary, ref returnOptions, ref error)")]
+		[Wrap ("ReadFromData (data, options == null ? null! : options.Dictionary, ref returnOptions, ref error)")]
 		bool ReadFromData (NSData data, NSAttributedStringDocumentAttributes options, ref NSDictionary returnOptions, ref NSError error);
 
 #endif
@@ -4886,19 +4887,19 @@ namespace Foundation
 		[Export ("addTimer:forMode:")]
 		void AddTimer (NSTimer timer, NSString forMode);
 
-		[Wrap ("AddTimer (timer, forMode.GetConstant ())")]
+		[Wrap ("AddTimer (timer, forMode.GetConstant ()!)")]
 		void AddTimer (NSTimer timer, NSRunLoopMode forMode);
 
 		[Export ("limitDateForMode:")]
 		NSDate LimitDateForMode (NSString mode);
 
-		[Wrap ("LimitDateForMode (mode.GetConstant ())")]
+		[Wrap ("LimitDateForMode (mode.GetConstant ()!)")]
 		NSDate LimitDateForMode (NSRunLoopMode mode);
 
 		[Export ("acceptInputForMode:beforeDate:")]
 		void AcceptInputForMode (NSString mode, NSDate limitDate);
 
-		[Wrap ("AcceptInputForMode (mode.GetConstant (), limitDate)")]
+		[Wrap ("AcceptInputForMode (mode.GetConstant ()!, limitDate)")]
 		void AcceptInputForMode (NSRunLoopMode mode, NSDate limitDate);
 
 		[Export ("run")]
@@ -4910,7 +4911,7 @@ namespace Foundation
 		[Export ("runMode:beforeDate:")]
 		bool RunUntil (NSString runLoopMode, NSDate limitdate);
 
-		[Wrap ("RunUntil (runLoopMode.GetConstant (), limitDate)")]
+		[Wrap ("RunUntil (runLoopMode.GetConstant ()!, limitDate)")]
 		bool RunUntil (NSRunLoopMode runLoopMode, NSDate limitDate);
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -4922,7 +4923,7 @@ namespace Foundation
 		void Perform (NSString[] modes, Action block);
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
-		[Wrap ("Perform (modes.GetConstants (), block)")]
+		[Wrap ("Perform (modes.GetConstants ()!, block)")]
 		void Perform (NSRunLoopMode[] modes, Action block);
 
 #if !XAMCORE_4_0
@@ -8434,7 +8435,7 @@ namespace Foundation
 		nuint DetectStringEncoding (NSData rawData, NSDictionary options, out string convertedString, out bool usedLossyConversion);
 
 		[iOS (8,0), Mac(10,10)]
-		[Static, Wrap ("DetectStringEncoding(rawData,options == null ? null : options.Dictionary, out convertedString, out usedLossyConversion)")]
+		[Static, Wrap ("DetectStringEncoding(rawData,options == null ? null! : options.Dictionary, out convertedString, out usedLossyConversion)")]
 		nuint DetectStringEncoding (NSData rawData, EncodingDetectionOptions options, out string convertedString, out bool usedLossyConversion);
 
 		[iOS (8,0),Mac(10,10)]
@@ -8594,7 +8595,7 @@ namespace Foundation
 		bool ApplyTransform (NSString transform, bool reverse, NSRange range, out NSRange resultingRange);
 
 		[iOS (9,0)][Mac (10,11)]
-		[Wrap ("ApplyTransform (transform.GetConstant (), reverse, range, out resultingRange)")]
+		[Wrap ("ApplyTransform (transform.GetConstant ()!, reverse, range, out resultingRange)")]
 		bool ApplyTransform (NSStringTransform transform, bool reverse, NSRange range, out NSRange resultingRange);
 
 		[Export ("replaceCharactersInRange:withString:")]
@@ -12478,6 +12479,7 @@ namespace Foundation
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
+		[NullAllowed]
 		NSFileManagerDelegate Delegate { get; set; }
 
 		[Export ("setAttributes:ofItemAtPath:error:")]
