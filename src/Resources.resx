@@ -266,14 +266,14 @@
 	</data>
 
 	<data name="BI1009" xml:space="preserve">
-		<value>=No selector specified for method `{0}.{1}'
+		<value>No selector specified for method `{0}.{1}'
 		</value>
 		<comment>
 		</comment>
 	</data>
 
 	<data name="BI1010" xml:space="preserve">
-		<value>BI1010: No Export attribute on {0}.{1} property
+		<value>No Export attribute on {0}.{1} property
 		</value>
 		<comment>
 		</comment>

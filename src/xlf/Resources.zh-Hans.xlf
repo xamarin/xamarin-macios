@@ -163,17 +163,17 @@
 		</note>
       </trans-unit>
       <trans-unit id="BI1009">
-        <source>=No selector specified for method `{0}.{1}'
+        <source>No selector specified for method `{0}.{1}'
 		</source>
-        <target state="new">=No selector specified for method `{0}.{1}'
+        <target state="new">No selector specified for method `{0}.{1}'
 		</target>
         <note>
 		</note>
       </trans-unit>
       <trans-unit id="BI1010">
-        <source>BI1010: No Export attribute on {0}.{1} property
+        <source>No Export attribute on {0}.{1} property
 		</source>
-        <target state="new">BI1010: No Export attribute on {0}.{1} property
+        <target state="new">No Export attribute on {0}.{1} property
 		</target>
         <note>
 		</note>
