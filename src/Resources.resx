@@ -676,7 +676,7 @@
 	</data>
 
 	<data name="BI1068" xml:space="preserve">
-		<value>The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', and the inlined properties use different selectors ({4}.{5} uses '{7}', and {8}.{9} uses '{10}'.
+		<value>The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', and the inlined properties use different selectors ({4}.{5} uses '{6}', and {7}.{8} uses '{9}'.
 		</value>
 		<comment>
 		</comment>
@@ -758,6 +758,14 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="BI1080" xml:space="preserve">
+		<value>Unsupported type 'ref/out {0}' decorated with [BindAs]
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	
 	<data name="BI1101" xml:space="preserve">
 		<value>Trying to use a string as a [Target]

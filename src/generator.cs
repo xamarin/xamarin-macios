@@ -1357,7 +1357,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (originalType.IsByRef)
-			throw new BindingException (1048, true, originalType.Name);
+			throw new BindingException (1080, true, originalType.Name.Replace ("&", string.Empty));
 
 		var retType = TypeManager.GetUnderlyingNullableType (attrib.Type) ?? attrib.Type;
 		var isNullable = attrib.IsNullable (this);
@@ -4863,7 +4863,7 @@ public partial class Generator : IMemberGatherer {
 			var ba = GetBindAttribute (setter);
 			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
 			if (null_allowed)
-				ErrorHelper.Show (new BindingException (1118, false));
+				ErrorHelper.Show (new BindingException (1118, false, setter));
 			null_allowed |= AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 			var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 			string sel;

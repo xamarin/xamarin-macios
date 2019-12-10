@@ -632,9 +632,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="BI1068">
-        <source>The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', and the inlined properties use different selectors ({4}.{5} uses '{7}', and {8}.{9} uses '{10}'.
+        <source>The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', and the inlined properties use different selectors ({4}.{5} uses '{6}', and {7}.{8} uses '{9}'.
 		</source>
-        <target state="new">The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', and the inlined properties use different selectors ({4}.{5} uses '{7}', and {8}.{9} uses '{10}'.
+        <target state="new">The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', and the inlined properties use different selectors ({4}.{5} uses '{6}', and {7}.{8} uses '{9}'.
 		</target>
         <note>
 		</note>
@@ -723,6 +723,14 @@
         <source>{0} in parameter `{1}' from {2}.{3}
 		</source>
         <target state="new">{0} in parameter `{1}' from {2}.{3}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="BI1080">
+        <source>Unsupported type 'ref/out {0}' decorated with [BindAs]
+		</source>
+        <target state="new">Unsupported type 'ref/out {0}' decorated with [BindAs]
 		</target>
         <note>
 		</note>
