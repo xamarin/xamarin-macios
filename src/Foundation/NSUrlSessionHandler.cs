@@ -206,9 +206,12 @@ namespace Foundation {
 			// iteration. We split the operation in two, get all the diff cancelation sources, then try to cancel each of them
 			// which will do the correct lock dance. Note that we could be tempted to do a RemoveAll, that will yield the same
 			// runtime issue, this is dull but safe. 
-			var sources = new List <TaskCompletionSource<HttpResponseMessage>> (inflightRequests.Count);
-			foreach (var r in inflightRequests.Values) {
-				sources.Add (r.CompletionSource);
+			List <TaskCompletionSource<HttpResponseMessage>> sources = null; 
+			lock (inflightRequestsLock) { // just lock when we iterate
+				sources = new List <TaskCompletionSource<HttpResponseMessage>> (inflightRequests.Count);
+				foreach (var r in inflightRequests.Values) {
+					sources.Add (r.CompletionSource);
+				}
 			}
 			sources.ForEach (source => { source.TrySetCanceled (); });
 		}
@@ -831,7 +834,7 @@ namespace Foundation {
 				base.Dispose (disposing);
 			}
 
-			protected internal override Task SerializeToStreamAsync (Stream stream, TransportContext context)
+			protected override Task SerializeToStreamAsync (Stream stream, TransportContext context)
 			{
 				if (contentCopied) {
 					if (!content.CanSeek) {

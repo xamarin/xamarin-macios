@@ -332,9 +332,8 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe: $(MTOUCH_DIR)/mtouch.ex
 	$(Q) $(CP) $(dir $<)/*.dll $(dir $@)
 	$(Q) $(CP) $(dir $<)/*.pdb $(dir $@)
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch: mtouch.in | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) sed 's!@MONOTOUCH_PREFIX@!$(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX))!g' $< > $@
-	$(Q) chmod +x $@
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch: mtouch | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
 	$(Q) $(CP) $< $@
@@ -365,7 +364,7 @@ install-local:: $(TARGETS)
 all-local:: $(TARGETS)
 endif
 
-mtouch: \
+install-mtouch: \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
 

@@ -14,6 +14,7 @@ using System.IO;
 
 using NUnit.Framework;
 using System.Net.Http.Headers;
+using System.Security.Authentication;
 using System.Text;
 using Foundation;
 #if MONOMAC
@@ -75,41 +76,49 @@ namespace MonoTests.System.Net.Http
 		}
 
 #if !__WATCHOS__
-		// ensure that we do get the same number of cookies as the managed handler
-		[TestCase]
+		// ensure that we do get the same cookies as the managed handler
+		[Test]
 		public void TestNSUrlSessionHandlerCookies ()
 		{
-			bool areEqual = false;
-			var manageCount = 0;
-			var nativeCount = 0;
+			var managedCookieResult = false;
+			var nativeCookieResult = false;
 			Exception ex = null;
+			var completed = false;
+			IEnumerable<string> nativeCookies = null;
+			IEnumerable<string> managedCookies = null;
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
 			{
+				var url = NetworkResources.Httpbin.GetSetCookieUrl ("cookie", "chocolate-chip");
 				try {
-					var managedClient = new HttpClient (new HttpClientHandler ());
-					var managedResponse = await managedClient.GetAsync (NetworkResources.MicrosoftUrl);
-					if (managedResponse.Headers.TryGetValues ("Set-Cookie", out var managedCookies)) {
-						var nativeClient = new HttpClient (new NSUrlSessionHandler ());
-						var nativeResponse = await nativeClient.GetAsync (NetworkResources.MicrosoftUrl);
-						if (managedResponse.Headers.TryGetValues ("Set-Cookie", out var nativeCookies)) {
-							manageCount = managedCookies.Count ();
-							nativeCount = nativeCookies.Count ();
-							areEqual = manageCount == nativeCount;
-						} else {
-							manageCount = -1;
-							nativeCount = -1;
-							areEqual = false;
-						}
-					}
-					
+					var managedHandler = new HttpClientHandler () {
+						AllowAutoRedirect = false,
+					};
+					var managedClient = new HttpClient (managedHandler);
+					var managedResponse = await managedClient.GetAsync (url);
+					managedCookieResult = managedResponse.Headers.TryGetValues ("Set-Cookie", out managedCookies);
+
+					var nativeHandler = new NSUrlSessionHandler () {
+						AllowAutoRedirect = false,
+					};
+					nativeHandler.AllowAutoRedirect = true;
+					var nativeClient = new HttpClient (nativeHandler);					
+					var nativeResponse = await nativeClient.GetAsync (url);
+					nativeCookieResult = nativeResponse.Headers.TryGetValues ("Set-Cookie", out nativeCookies);
 				} catch (Exception e) {
 					ex = e;
-				} 
-			}, () => areEqual);
+				} finally {
+					completed = true;
+				}
+			}, () => completed);
 
-			Assert.IsTrue (areEqual, $"Cookies are different - Managed {manageCount} vs Native {nativeCount}");
 			Assert.IsNull (ex, "Exception");
+			Assert.IsTrue (managedCookieResult, $"Failed to get managed cookies");
+			Assert.IsTrue (nativeCookieResult, $"Failed to get native cookies");
+			Assert.AreEqual (1, managedCookies.Count (), $"Managed Cookie Count");
+			Assert.AreEqual (1, nativeCookies.Count (), $"Native Cookie Count");
+			Assert.That (nativeCookies.First (), Is.StringStarting ("cookie=chocolate-chip;"), $"Native Cookie Value");
+			Assert.That (managedCookies.First (), Is.StringStarting ("cookie=chocolate-chip;"), $"Managed Cookie Value");
 		}
 #endif
 
@@ -174,24 +183,35 @@ namespace MonoTests.System.Net.Http
 				Assert.Ignore ("Fails on macOS 10.10: https://github.com/xamarin/maccore/issues/1645");
 #endif
 
-			bool servicePointManagerCbWasExcuted = false;
+			bool validationCbWasExecuted = false;
+			bool customValidationCbWasExecuted = false;
+			bool invalidServicePointManagerCbWasExcuted = false;
 			bool done = false;
 			Exception ex = null;
+			Type expectedExceptionType = null;
 			HttpResponseMessage result = null;
 
 			var handler = GetHandler (handlerType);
-			if (handler is NSUrlSessionHandler ns) {
+			if (handler is HttpClientHandler ch) {
+				expectedExceptionType = typeof (AuthenticationException);
+				ch.ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => {
+					validationCbWasExecuted = true;
+					// return false, since we want to test that the exception is raised
+					return false;
+				};
+				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
+					invalidServicePointManagerCbWasExcuted = true;
+					return false;
+				};
+			} else if (handler is NSUrlSessionHandler ns) {
+				expectedExceptionType = typeof (WebException);
 				ns.TrustOverride += (a,b) => {
-					servicePointManagerCbWasExcuted = true;
+					validationCbWasExecuted = true;
 					// return false, since we want to test that the exception is raised
 					return false;
 				};
 			} else {
-				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
-					servicePointManagerCbWasExcuted = true;
-					// return false, since we want to test that the exception is raised
-					return false;
-				};
+				Assert.Fail ($"Invalid HttpMessageHandler: '{handler.GetType ()}'.");
 			}
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
@@ -213,11 +233,14 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
+				// the ServicePointManager.ServerCertificateValidationCallback will never be executed.
+				Assert.False(invalidServicePointManagerCbWasExcuted);
+				Assert.True(validationCbWasExecuted);
 				// assert the exception type
 				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
 				Assert.IsInstanceOfType (typeof (HttpRequestException), ex);
 				Assert.IsNotNull (ex.InnerException);
-				Assert.IsInstanceOfType (typeof (WebException), ex.InnerException);
+				Assert.IsInstanceOfType (expectedExceptionType, ex.InnerException);
 			}
 		}
 

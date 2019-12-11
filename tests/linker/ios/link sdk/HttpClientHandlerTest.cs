@@ -30,7 +30,6 @@ namespace LinkSdk.Net.Http {
 				Assert.That (handler.AutomaticDecompression, Is.EqualTo (DecompressionMethods.None), "AutomaticDecompression");
 				Assert.That (handler.ClientCertificateOptions, Is.EqualTo (ClientCertificateOption.Manual), "ClientCertificateOptions");
 				Assert.That (handler.MaxAutomaticRedirections, Is.EqualTo (50), "MaxAutomaticRedirections");
-				Assert.That (handler.MaxRequestContentBufferSize, Is.EqualTo (Int32.MaxValue), "MaxRequestContentBufferSize");
 				Assert.Null (handler.Proxy, "Proxy");
 				Assert.True (handler.SupportsAutomaticDecompression, "SupportsAutomaticDecompression");
 				Assert.True (handler.SupportsProxy, "SupportsProxy");

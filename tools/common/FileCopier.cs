@@ -77,8 +77,22 @@ namespace Xamarin.Bundler {
 
 		public static void UpdateDirectory (string source, string target)
 		{
-			if (!Directory.Exists (target))
-				Directory.CreateDirectory (target);
+			// first chance, try to update existing content inside `target`
+			int rv = TryUpdateDirectory (source, target);
+			if (rv == 0)
+				return;
+
+			// 2nd chance, nuke `target` then copy everything
+			var err = Marshal.GetLastWin32Error (); // might not be very useful since the callback signaled an error (CopyFileResult.Quit)
+			Log (1, "Could not update `{0}` content (error #{1} : {2}), trying to overwrite everything...", target, err, strerror (err));
+			Directory.Delete (target, true);
+			if (TryUpdateDirectory (source, target) != 0)
+				throw CreateError (1022, "Could not copy the directory '{0}' to '{1}': {2}", source, target, strerror (Marshal.GetLastWin32Error ()));
+		}
+
+		static int TryUpdateDirectory (string source, string target)
+		{
+			Directory.CreateDirectory (target);
 
 			// Mono's File.Copy can't handle symlinks (the symlinks are followed instead of copied),
 			// so we need to use native functions directly. Luckily OSX provides exactly what we need.
@@ -86,14 +100,13 @@ namespace Xamarin.Bundler {
 			try {
 				CopyFileCallbackDelegate del = CopyFileCallback;
 				copyfile_state_set (state, CopyFileState.StatusCB, Marshal.GetFunctionPointerForDelegate (del));
-				int rv = copyfile (source, target, state, CopyFileFlags.Data | CopyFileFlags.Recursive | CopyFileFlags.Nofollow | CopyFileFlags.Clone);
-				if (rv != 0)
-					throw CreateError (1022, "Could not copy the directory '{0}' to '{1}': {2}", source, target, strerror (Marshal.GetLastWin32Error ()));
+				return copyfile (source, target, state, CopyFileFlags.Data | CopyFileFlags.Recursive | CopyFileFlags.Nofollow | CopyFileFlags.Clone);
 			} finally {
 				copyfile_state_free (state);
 			}
 		}
 
+		// do not call `Marshal.GetLastWin32Error` inside this method since it's called while the p/invoke is executing and will return `260`
 		static CopyFileResult CopyFileCallback (CopyFileWhat what, CopyFileStep stage, IntPtr state, string source, string target, IntPtr ctx)
 		{
 //			Console.WriteLine ("CopyFileCallback ({0}, {1}, 0x{2}, {3}, {4}, 0x{5})", what, stage, state.ToString ("x"), source, target, ctx.ToString ("x"));
@@ -102,6 +115,10 @@ namespace Xamarin.Bundler {
 				if (!IsUptodate (source, target)) {
 					if (stage == CopyFileStep.Finish)
 						Log (1, "Copied {0} to {1}", source, target);
+					else if (stage == CopyFileStep.Err) {
+						Log (1, "Could not copy the file '{0}' to '{1}'", source, target);
+						return CopyFileResult.Quit;
+					}
 					return CopyFileResult.Continue;
 				} else {
 					Log (3, "Target '{0}' is up-to-date", target);
@@ -113,7 +130,8 @@ namespace Xamarin.Bundler {
 			case CopyFileWhat.CopyXattr:
 				return CopyFileResult.Continue;
 			case CopyFileWhat.Error:
-				throw CreateError (1021, "Could not copy the file '{0}' to '{1}': {2}", source, target, strerror (Marshal.GetLastWin32Error ()));
+				Log (1, "Could not copy the file '{0}' to '{1}'", source, target);
+				return CopyFileResult.Quit;
 			default:
 				return CopyFileResult.Continue;
 			}

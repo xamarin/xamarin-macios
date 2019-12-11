@@ -438,6 +438,12 @@ xamarin_collapse_struct_name (const char *type, char struct_name[], int max_char
 		type++;
 	}
 
+	if (c == max_char) {
+		LOGZ ("    xamarin_collapse_struct_name (%s, %i) => failed (too long)!\n", input, max_char);
+		struct_name [0] = 0; // return an empty string
+		return false;
+	}
+
 	struct_name [c] = 0; // Zero-terminate.
 	LOGZ ("    xamarin_collapse_struct_name (%s, %i) => %s (succeeded)\n", input, max_char, struct_name);
 	return true;
