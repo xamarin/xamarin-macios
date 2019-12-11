@@ -122,66 +122,13 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 		void CheckLoopbackFlags (NetworkReachabilityFlags flags, string number, bool has_address)
 		{
-			// Varios OS versions do different things.
-			// It seems Apple throws a dice before every OS release to see what they'll do that year...
 			var noFlags = (NetworkReachabilityFlags) 0;
-
-			var isReachable = (flags & NetworkReachabilityFlags.Reachable) == NetworkReachabilityFlags.Reachable;
-			var isLocalAddress = (flags & NetworkReachabilityFlags.IsLocalAddress) == NetworkReachabilityFlags.IsLocalAddress;
-			var isDirect = (flags & NetworkReachabilityFlags.IsDirect) == NetworkReachabilityFlags.IsDirect;
 			var otherFlags = (flags & ~(NetworkReachabilityFlags.Reachable | NetworkReachabilityFlags.IsLocalAddress | NetworkReachabilityFlags.IsDirect));
-			var shouldBeReachable = true;
-#if MONOMAC
-			if (has_address) {
-				shouldBeReachable = true;
-			} else {
-				shouldBeReachable = !TestRuntime.CheckMacSystemVersion (10, 12) || TestRuntime.CheckMacSystemVersion (10, 15, 2);
-			}
-#elif __IOS__
-			if (Runtime.Arch == Arch.DEVICE) {
-				shouldBeReachable = !TestRuntime.CheckXcodeVersion (8, 0) || TestRuntime.CheckXcodeVersion (11, 2);
-			} else {
-				shouldBeReachable = true;
-			}
-#endif
 
-			Assert.AreEqual (shouldBeReachable, isReachable, $"#{number} Reachable: {flags.ToString ()}");
-
-			bool has_local_address;
-			bool has_isdirect;
-#if MONOMAC
-			if (has_address) {
-				has_local_address = false;
-				has_isdirect = has_local_address;
-			} else {
-				has_local_address = !TestRuntime.CheckMacSystemVersion (10, 11) || TestRuntime.CheckMacSystemVersion (10, 15, 2);
-				has_isdirect = TestRuntime.CheckMacSystemVersion (10, 12);
-			}
-#elif __IOS__
-			if (Runtime.Arch == Arch.DEVICE) {
-				if (has_address) {
-					has_local_address = !TestRuntime.CheckXcodeVersion (6, 0) || TestRuntime.CheckXcodeVersion (11, 2);
-					has_isdirect = TestRuntime.CheckXcodeVersion (11, 2);
-				} else {
-					has_local_address = !TestRuntime.CheckXcodeVersion (7, 0) || TestRuntime.CheckXcodeVersion (11, 2);
-					has_isdirect = TestRuntime.CheckXcodeVersion (11, 2);
-				}
-			} else {
-				has_local_address = !TestRuntime.CheckXcodeVersion (7, 0);
-				has_isdirect = false;
-			}
-#else
-			if (Runtime.Arch == Arch.DEVICE) {
-				has_local_address = true;
-				has_isdirect = true;
-			} else {
-				has_local_address = !TestRuntime.CheckXcodeVersion (7, 0);
-				has_isdirect = false;
-			}
-#endif
-
-			Assert.AreEqual (has_local_address, isLocalAddress, $"#{number} IsLocalAddress: {flags.ToString ()}");
-			Assert.AreEqual (has_isdirect, isDirect, $"#{number} IsDirect: {flags.ToString ()}");
+			// Different versions of OSes report different flags. Trying to
+			// figure out which OS versions have which flags set turned out to
+			// be a never-ending game of whack-a-mole, so just don't assert
+			// that any specific flags are set.
 			Assert.AreEqual (noFlags, otherFlags, $"#{number} No other flags: {flags.ToString ()}");
 		}
 
