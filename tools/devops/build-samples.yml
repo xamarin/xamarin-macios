@@ -27,7 +27,11 @@ jobs:
   pool:
     name: '$(macOSVersion)'
   steps:
-  - bash: ./xamarin-macios/jenkins/add-commit-status.sh "--token=$(github-pat)" "--hash=$BUILD_SOURCEVERSION" "--state=pending" --target-url="$AZURE_BUILD_URL" --description="$BUILD_DEFINITIONNAME" --context="$BUILD_DEFINITIONNAME"
+
+  - bash: pwd && ls -la
+    displayName: Where am I
+
+  - bash: ./jenkins/add-commit-status.sh "--token=$(github-pat)" "--hash=$BUILD_SOURCEVERSION" "--state=pending" --target-url="$AZURE_BUILD_URL" --description="$BUILD_DEFINITIONNAME" --context="$BUILD_DEFINITIONNAME"
     displayName: Set pending GitHub status
 
 - job: macOS
@@ -147,7 +151,7 @@ jobs:
     jobResultReleaseMac: $[ dependencies.macOS.outputs['Release_Mac.ExportedVariables.JobStatus'] ]
   steps:
   - bash: |
-      ./xamarin-macios/tools/devops/build-samples-report-to-github.sh "$(github-pat)" \
+      ./tools/devops/build-samples-report-to-github.sh "$(github-pat)" \
         "Debug_iPhone_AF" "Debug_iPhone_GR" "Debug_iPhone_SZ" \
         "Debug_iPhoneSimulator" \
         "Release_iPhone_AF" "Release_iPhone_GR" "Release_iPhone_SZ" \
