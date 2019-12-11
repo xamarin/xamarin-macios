@@ -20,6 +20,11 @@ resources:
     name: xamarin/xamarin-macios-data
     ref: refs/heads/master
     endpoint: xamarin
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/master
+    endpoint: xamarin
 
 jobs:
 - job: ReportStartToGitHub
@@ -86,6 +91,7 @@ jobs:
   steps:
   - checkout: self
   - checkout: xamarin-macios-data
+  - checkout: maccore
 
   - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info
