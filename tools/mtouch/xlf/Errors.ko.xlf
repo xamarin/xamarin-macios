@@ -1,0 +1,975 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="ko" original="../Errors.resx">
+    <body>
+      <trans-unit id="MT0000">
+        <source>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0001">
+        <source>'-devname' was provided without any device-specific action
+		</source>
+        <target state="new">'-devname' was provided without any device-specific action
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0002">
+        <source>Could not parse the environment variable *.
+		</source>
+        <target state="new">Could not parse the environment variable *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0003">
+        <source>Application name '*.exe' conflicts with an SDK or product assembly (.dll) name.
+		</source>
+        <target state="new">Application name '*.exe' conflicts with an SDK or product assembly (.dll) name.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0004">
+        <source>New refcounting logic requires SGen to be enabled too.
+		</source>
+        <target state="new">New refcounting logic requires SGen to be enabled too.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0005">
+        <source>The output directory * does not exist.
+		</source>
+        <target state="new">The output directory * does not exist.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0006">
+        <source>There is no devel platform at *, use --platform=PLAT to specify the SDK.
+		</source>
+        <target state="new">There is no devel platform at *, use --platform=PLAT to specify the SDK.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0007">
+        <source>The root assembly * does not exist.
+		</source>
+        <target state="new">The root assembly * does not exist.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0008">
+        <source>You should provide one root assembly only, found # assemblies: *.
+		</source>
+        <target state="new">You should provide one root assembly only, found # assemblies: *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0009">
+        <source>Error while loading assemblies: *.
+		</source>
+        <target state="new">Error while loading assemblies: *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0010">
+        <source>Could not parse the command line arguments: *.
+		</source>
+        <target state="new">Could not parse the command line arguments: *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0011">
+        <source>* was built against a more recent runtime (*) than MonoTouch supports.
+		</source>
+        <target state="new">* was built against a more recent runtime (*) than MonoTouch supports.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0012">
+        <source>Incomplete data is provided to complete *.
+		</source>
+        <target state="new">Incomplete data is provided to complete *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0013">
+        <source>Profiling support requires sgen to be enabled too.
+		</source>
+        <target state="new">Profiling support requires sgen to be enabled too.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0014">
+        <source>The iOS * SDK does not support building applications targeting *.
+		</source>
+        <target state="new">The iOS * SDK does not support building applications targeting *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0015">
+        <source>Invalid ABI: *. Supported ABIs are: i386, x86_64,  armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64 and arm64+llvm.
+		</source>
+        <target state="new">Invalid ABI: *. Supported ABIs are: i386, x86_64,  armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64 and arm64+llvm.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0016">
+        <source>The option * has been deprecated.
+		</source>
+        <target state="new">The option * has been deprecated.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0017">
+        <source>You should provide a root assembly.
+		</source>
+        <target state="new">You should provide a root assembly.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0018">
+        <source>Unknown command line argument: *.
+		</source>
+        <target state="new">Unknown command line argument: *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0019">
+        <source>Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
+		</source>
+        <target state="new">Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0020">
+        <source>The valid options for '\*' are '\*'.
+		</source>
+        <target state="new">The valid options for '\*' are '\*'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0021">
+        <source>Cannot compile using gcc/g++ (--use-gcc) when using the static registrar (this is the default when compiling for device). Either remove the --use-gcc flag or use the dynamic registrar (--registrar:dynamic).
+		</source>
+        <target state="new">Cannot compile using gcc/g++ (--use-gcc) when using the static registrar (this is the default when compiling for device). Either remove the --use-gcc flag or use the dynamic registrar (--registrar:dynamic).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0022">
+        <source>The options '--unsupported--enable-generics-in-registrar' and '--registrar' are not compatible.
+		</source>
+        <target state="new">The options '--unsupported--enable-generics-in-registrar' and '--registrar' are not compatible.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0023">
+        <source>Application name '*.exe' conflicts with another user assembly.
+		</source>
+        <target state="new">Application name '*.exe' conflicts with another user assembly.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0024">
+        <source>Could not find required file '*'.
+		</source>
+        <target state="new">Could not find required file '*'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0025">
+        <source>No SDK version was provided. Please add `--sdk=X.Y` to specify which iOS SDK should be used to build your application.
+		</source>
+        <target state="new">No SDK version was provided. Please add `--sdk=X.Y` to specify which iOS SDK should be used to build your application.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0026">
+        <source>Could not parse the command line argument '*': *
+		</source>
+        <target state="new">Could not parse the command line argument '*': *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0027">
+        <source>The options '\*' and '\*' are not compatible.
+		</source>
+        <target state="new">The options '\*' and '\*' are not compatible.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0028">
+        <source>Cannot enable PIE (-pie) when targeting iOS 4.1 or earlier. Please disable PIE (-pie:false) or set the deployment target to at least iOS 4.2
+		</source>
+        <target state="new">Cannot enable PIE (-pie) when targeting iOS 4.1 or earlier. Please disable PIE (-pie:false) or set the deployment target to at least iOS 4.2
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0029">
+        <source>REPL (--enable-repl) is only supported in the simulator (--sim).
+		</source>
+        <target state="new">REPL (--enable-repl) is only supported in the simulator (--sim).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0030">
+        <source>The executable name (\*) and the app name (\*) are different, this may prevent crash logs from getting symbolicated properly.
+		</source>
+        <target state="new">The executable name (\*) and the app name (\*) are different, this may prevent crash logs from getting symbolicated properly.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0031">
+        <source>The command line arguments '--enable-background-fetch' and '--launch-for-background-fetch' require '--launchsim' too.
+		</source>
+        <target state="new">The command line arguments '--enable-background-fetch' and '--launch-for-background-fetch' require '--launchsim' too.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0032">
+        <source>The option '--debugtrack' is ignored unless '--debug' is also specified.
+		</source>
+        <target state="new">The option '--debugtrack' is ignored unless '--debug' is also specified.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0033">
+        <source>A Xamarin.iOS project must reference either monotouch.dll or Xamarin.iOS.dll
+		</source>
+        <target state="new">A Xamarin.iOS project must reference either monotouch.dll or Xamarin.iOS.dll
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0034">
+        <source>Cannot include both 'monotouch.dll' and 'Xamarin.iOS.dll' in the same Xamarin.iOS project - '\*' is referenced explicitly, while '\*' is referenced by '*'.
+		</source>
+        <target state="new">Cannot include both 'monotouch.dll' and 'Xamarin.iOS.dll' in the same Xamarin.iOS project - '\*' is referenced explicitly, while '\*' is referenced by '*'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0036">
+        <source>Cannot launch a * simulator for a * app. Please enable the correct architecture(s) in your project's iOS Build options (Advanced page).
+		</source>
+        <target state="new">Cannot launch a * simulator for a * app. Please enable the correct architecture(s) in your project's iOS Build options (Advanced page).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0037">
+        <source>monotouch.dll is not 64-bit compatible. Either reference Xamarin.iOS.dll, or do not build for a 64-bit architecture (ARM64 and/or x86_64).
+		</source>
+        <target state="new">monotouch.dll is not 64-bit compatible. Either reference Xamarin.iOS.dll, or do not build for a 64-bit architecture (ARM64 and/or x86_64).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0038">
+        <source>The old registrars (--registrar:oldstatic|olddynamic) are not supported when referencing Xamarin.iOS.dll.
+		</source>
+        <target state="new">The old registrars (--registrar:oldstatic|olddynamic) are not supported when referencing Xamarin.iOS.dll.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0039">
+        <source>Applications targeting ARMv6 cannot reference Xamarin.iOS.dll.
+		</source>
+        <target state="new">Applications targeting ARMv6 cannot reference Xamarin.iOS.dll.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0040">
+        <source>Could not find the assembly '\*', referenced by '\*'.
+		</source>
+        <target state="new">Could not find the assembly '\*', referenced by '\*'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0041">
+        <source>Cannot reference both 'monotouch.dll' and 'Xamarin.iOS.dll'.
+		</source>
+        <target state="new">Cannot reference both 'monotouch.dll' and 'Xamarin.iOS.dll'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0042">
+        <source>No reference to either monotouch.dll or Xamarin.iOS.dll was found. A reference to monotouch.dll will be added.
+		</source>
+        <target state="new">No reference to either monotouch.dll or Xamarin.iOS.dll was found. A reference to monotouch.dll will be added.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0043">
+        <source>The Boehm garbage collector is currently not supported when referencing 'Xamarin.iOS.dll'. The SGen garbage collector has been selected instead.
+		</source>
+        <target state="new">The Boehm garbage collector is currently not supported when referencing 'Xamarin.iOS.dll'. The SGen garbage collector has been selected instead.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0044">
+        <source>--listsim is only supported with Xcode 6.0 or later.
+		</source>
+        <target state="new">--listsim is only supported with Xcode 6.0 or later.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0045">
+        <source>--extension is only supported when using the iOS 8.0 (or later) SDK.
+		</source>
+        <target state="new">--extension is only supported when using the iOS 8.0 (or later) SDK.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0047">
+        <source>The minimum deployment target for Unified applications is 5.1.1, the current deployment target is '*'. Please select a newer deployment target in your project's iOS Application options.
+		</source>
+        <target state="new">The minimum deployment target for Unified applications is 5.1.1, the current deployment target is '*'. Please select a newer deployment target in your project's iOS Application options.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0049">
+        <source>*.framework is supported only if deployment target is 8.0 or later. * features might not work correctly.
+		</source>
+        <target state="new">*.framework is supported only if deployment target is 8.0 or later. * features might not work correctly.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0051">
+        <source>Xamarin.iOS * requires Xcode 5.0 or later. The current Xcode version (found in *) is *.
+		</source>
+        <target state="new">Xamarin.iOS * requires Xcode 5.0 or later. The current Xcode version (found in *) is *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0052">
+        <source>No command specified.
+		</source>
+        <target state="new">No command specified.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0054">
+        <source>Unable to canonicalize the path '*': *
+		</source>
+        <target state="new">Unable to canonicalize the path '*': *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0055">
+        <source>The Xcode path '*' does not exist.
+		</source>
+        <target state="new">The Xcode path '*' does not exist.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0056">
+        <source>Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot &lt;path&gt;.
+		</source>
+        <target state="new">Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot &lt;path&gt;.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0057">
+        <source>Cannot determine the path to Xcode.app from the sdk root '*'. Please specify the full path to the Xcode.app bundle.
+		</source>
+        <target state="new">Cannot determine the path to Xcode.app from the sdk root '*'. Please specify the full path to the Xcode.app bundle.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0058">
+        <source>The Xcode.app '\*' is invalid (the file '\*' does not exist).
+		</source>
+        <target state="new">The Xcode.app '\*' is invalid (the file '\*' does not exist).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0059">
+        <source>Could not find the currently selected Xcode on the system: *
+		</source>
+        <target state="new">Could not find the currently selected Xcode on the system: *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0060">
+        <source>Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '*', but that directory does not exist.
+		</source>
+        <target state="new">Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '*', but that directory does not exist.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0061">
+        <source>No Xcode.app specified (using --sdkroot), using the system Xcode as reported by 'xcode-select --print-path': *
+		</source>
+        <target state="new">No Xcode.app specified (using --sdkroot), using the system Xcode as reported by 'xcode-select --print-path': *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0062">
+        <source>No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: *
+		</source>
+        <target state="new">No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0063">
+        <source>Cannot find the executable in the extension * (no CFBundleExecutable entry in its Info.plist)
+		</source>
+        <target state="new">Cannot find the executable in the extension * (no CFBundleExecutable entry in its Info.plist)
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0064">
+        <source>Xamarin.iOS only supports embedded frameworks with Unified projects.
+		</source>
+        <target state="new">Xamarin.iOS only supports embedded frameworks with Unified projects.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0065">
+        <source>Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: * embedded frameworks: *)
+		</source>
+        <target state="new">Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: * embedded frameworks: *)
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0066">
+        <source>Invalid build registrar assembly: *
+		</source>
+        <target state="new">Invalid build registrar assembly: *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0067">
+        <source>Invalid registrar: *
+		</source>
+        <target state="new">Invalid registrar: *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0068">
+        <source>Invalid value for target framework: *.
+		</source>
+        <target state="new">Invalid value for target framework: *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0070">
+        <source>Invalid target framework: *. Valid target frameworks are: *.
+		</source>
+        <target state="new">Invalid target framework: *. Valid target frameworks are: *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0071">
+        <source>Unknown platform: *. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</source>
+        <target state="new">Unknown platform: *. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0072">
+        <source>Extensions are not supported for the platform '*'.
+		</source>
+        <target state="new">Extensions are not supported for the platform '*'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0073">
+        <source>Xamarin.iOS * does not support a deployment target of * (the minimum is *). Please select a newer deployment target in your project's Info.plist.
+		</source>
+        <target state="new">Xamarin.iOS * does not support a deployment target of * (the minimum is *). Please select a newer deployment target in your project's Info.plist.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0074">
+        <source>Xamarin.iOS * does not support a minimum deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.
+		</source>
+        <target state="new">Xamarin.iOS * does not support a minimum deployment target of * (the maximum is *). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0075">
+        <source>Invalid architecture '*' for * projects. Valid architectures are: *
+		</source>
+        <target state="new">Invalid architecture '*' for * projects. Valid architectures are: *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0076">
+        <source>No architecture specified (using the --abi argument). An architecture is required for * projects.
+		</source>
+        <target state="new">No architecture specified (using the --abi argument). An architecture is required for * projects.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0077">
+        <source>WatchOS projects must be extensions.
+		</source>
+        <target state="new">WatchOS projects must be extensions.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0078">
+        <source>Incremental builds are enabled with a deployment target &lt; 8.0 (currently *). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 8.0.
+		</source>
+        <target state="new">Incremental builds are enabled with a deployment target &lt; 8.0 (currently *). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 8.0.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0079">
+        <source>The recommended Xcode version for Xamarin.iOS * is Xcode * or later. The current Xcode version (found in *) is *.
+		</source>
+        <target state="new">The recommended Xcode version for Xamarin.iOS * is Xcode * or later. The current Xcode version (found in *) is *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0080">
+        <source>Disabling NewRefCount, --new-refcount:false, is deprecated.
+		</source>
+        <target state="new">Disabling NewRefCount, --new-refcount:false, is deprecated.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0081">
+        <source>The command line argument --download-crash-report also requires --download-crash-report-to.
+		</source>
+        <target state="new">The command line argument --download-crash-report also requires --download-crash-report-to.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0082">
+        <source>REPL (--enable-repl) is only supported when linking is not used (--nolink).
+		</source>
+        <target state="new">REPL (--enable-repl) is only supported when linking is not used (--nolink).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0083">
+        <source>Asm-only bitcode is not supported on watchOS. Use either --bitcode:marker or --bitcode:full.
+		</source>
+        <target state="new">Asm-only bitcode is not supported on watchOS. Use either --bitcode:marker or --bitcode:full.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0084">
+        <source>Bitcode is not supported in the simulator. Do not pass --bitcode when building for the simulator.
+		</source>
+        <target state="new">Bitcode is not supported in the simulator. Do not pass --bitcode when building for the simulator.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0085">
+        <source>No reference to '*' was found. It will be added automatically.
+		</source>
+        <target state="new">No reference to '*' was found. It will be added automatically.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0086">
+        <source>A target framework (--target-framework) must be specified when building for TVOS or WatchOS.
+		</source>
+        <target state="new">A target framework (--target-framework) must be specified when building for TVOS or WatchOS.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0087">
+        <source>Incremental builds (--fastdev) is not supported with the Boehm GC. Incremental builds will be disabled.
+		</source>
+        <target state="new">Incremental builds (--fastdev) is not supported with the Boehm GC. Incremental builds will be disabled.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0088">
+        <source>The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.
+		</source>
+        <target state="new">The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0089">
+        <source>The option '\*' cannot take the value '\*' when cooperative mode is enabled for the GC.
+		</source>
+        <target state="new">The option '\*' cannot take the value '\*' when cooperative mode is enabled for the GC.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0091">
+        <source>This version of Xamarin.iOS requires the * SDK (shipped with Xcode *). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).
+		</source>
+        <target state="new">This version of Xamarin.iOS requires the * SDK (shipped with Xcode *). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only (to try to avoid the new APIs).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0093">
+        <source>Could not find 'mlaunch'.
+		</source>
+        <target state="new">Could not find 'mlaunch'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0095">
+        <source>Aot files could not be copied to the destination directory {dest}: {error}
+		</source>
+        <target state="new">Aot files could not be copied to the destination directory {dest}: {error}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0096">
+        <source>No reference to Xamarin.iOS.dll was found.
+		</source>
+        <target state="new">No reference to Xamarin.iOS.dll was found.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099">
+        <source>Internal error *. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error *. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0100">
+        <source>Invalid assembly build target: '*'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Invalid assembly build target: '*'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0101">
+        <source>The assembly '*' is specified multiple times in --assembly-build-target arguments.
+		</source>
+        <target state="new">The assembly '*' is specified multiple times in --assembly-build-target arguments.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0102">
+        <source>The assemblies '\*' and '\*' have the same target name ('\*'), but different targets ('\*' and '*').
+		</source>
+        <target state="new">The assemblies '\*' and '\*' have the same target name ('\*'), but different targets ('\*' and '*').
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0103">
+        <source>The static object '\*' contains more than one assembly ('\*'), but each static object must correspond with exactly one assembly.
+		</source>
+        <target state="new">The static object '\*' contains more than one assembly ('\*'), but each static object must correspond with exactly one assembly.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0105">
+        <source>No assembly build target was specified for '*'.
+		</source>
+        <target state="new">No assembly build target was specified for '*'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0106">
+        <source>The assembly build target name '\*' is invalid: the character '\*' is not allowed.
+		</source>
+        <target state="new">The assembly build target name '\*' is invalid: the character '\*' is not allowed.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0107">
+        <source>The assemblies '\*' have different custom LLVM optimizations (\*), which is not allowed when they are all compiled to a single binary.
+		</source>
+        <target state="new">The assemblies '\*' have different custom LLVM optimizations (\*), which is not allowed when they are all compiled to a single binary.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0108">
+        <source>The assembly build target '*' did not match any assemblies.
+		</source>
+        <target state="new">The assembly build target '*' did not match any assemblies.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0109">
+        <source>The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).
+		</source>
+        <target state="new">The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0110">
+        <source>Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
+		</source>
+        <target state="new">Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0111">
+        <source>Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
+		</source>
+        <target state="new">Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0112">
+        <source>Native code sharing has been disabled because *
+		</source>
+        <target state="new">Native code sharing has been disabled because *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113">
+        <source>Native code sharing has been disabled for the extension '*' because *.
+		</source>
+        <target state="new">Native code sharing has been disabled for the extension '*' because *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0115">
+        <source>It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.
+		</source>
+        <target state="new">It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0116">
+        <source>Invalid architecture: {arch}. 32-bit architectures are not supported when deployment target is 11 or later. Make sure the project does not build for a 32-bit architecture.
+		</source>
+        <target state="new">Invalid architecture: {arch}. 32-bit architectures are not supported when deployment target is 11 or later. Make sure the project does not build for a 32-bit architecture.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0117">
+        <source>Can't launch a 32-bit app on a simulator that only supports 64-bit.
+		</source>
+        <target state="new">Can't launch a 32-bit app on a simulator that only supports 64-bit.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0118">
+        <source>Aot files could not be found at the expected directory '{msymdir}'.
+		</source>
+        <target state="new">Aot files could not be found at the expected directory '{msymdir}'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0123">
+        <source>The executable assembly * does not reference *.
+		</source>
+        <target state="new">The executable assembly * does not reference *.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0124">
+        <source>Could not set the current language to '{lang}' (according to LANG={LANG}): {exception}
+		</source>
+        <target state="new">Could not set the current language to '{lang}' (according to LANG={LANG}): {exception}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0125">
+        <source>The --assembly-build-target command-line argument is ignored in the simulator.
+		</source>
+        <target state="new">The --assembly-build-target command-line argument is ignored in the simulator.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0126">
+        <source>Incremental builds have been disabled because incremental builds are not supported in the simulator.
+		</source>
+        <target state="new">Incremental builds have been disabled because incremental builds are not supported in the simulator.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0127">
+        <source>Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.
+		</source>
+        <target state="new">Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0128">
+        <source>Could not touch the file '*': *
+		</source>
+        <target state="new">Could not touch the file '*': *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0129">
+        <source>Debugging symbol file for '*' does not match the assembly and is ignored.
+		</source>
+        <target state="new">Debugging symbol file for '*' does not match the assembly and is ignored.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0130">
+        <source>No root assemblies found. You should provide at least one root assembly.
+		</source>
+        <target state="new">No root assemblies found. You should provide at least one root assembly.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0131">
+        <source>Product assembly '{0}' not found in assembly list: '{1}'
+		</source>
+        <target state="new">Product assembly '{0}' not found in assembly list: '{1}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0132">
+        <source>Unknown optimization: *. Valid values are: *
+		</source>
+        <target state="new">Unknown optimization: *. Valid values are: *
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0133">
+        <source>Found more than 1 assembly matching '{0}' choosing first: '{1}'
+		</source>
+        <target state="new">Found more than 1 assembly matching '{0}' choosing first: '{1}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0135">
+        <source>Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
+		</source>
+        <target state="new">Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0136">
+        <source>Cannot find the assembly {assembly} referenced from {assembly}.
+		</source>
+        <target state="new">Cannot find the assembly {assembly} referenced from {assembly}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0137">
+        <source>Cannot find the assembly {assembly}, referenced by an attribute in {assembly}.
+		</source>
+        <target state="new">Cannot find the assembly {assembly}, referenced by an attribute in {assembly}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0140">
+        <source>File '{framework_filename}' is not a valid framework.
+		</source>
+        <target state="new">File '{framework_filename}' is not a valid framework.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
