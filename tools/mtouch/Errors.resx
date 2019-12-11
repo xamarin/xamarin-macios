@@ -859,4 +859,32 @@
 		<comment>
 		</comment>
 	</data>
+
+	<data name="MT0141" xml:space="preserve">
+		<value>The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0142" xml:space="preserve">
+		<value>Cannot find the assembly '{assembly}', passed as an argument to --interpreter.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT0145" xml:space="preserve">
+		<value>Please use device specific builds on WatchOS when building for Debug.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT0146" xml:space="preserve">
+		<value>ARM64_32 Debug mode requires --interpreter[=all], forcing it.
+		</value>
+		<comment>
+		</comment>
+	</data>
 </root>

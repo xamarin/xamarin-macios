@@ -32,6 +32,9 @@
     <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+       <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Application.cs" />

@@ -970,6 +970,38 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT0141">
+        <source>The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator.
+		</source>
+        <target state="new">The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0142">
+        <source>Cannot find the assembly '{assembly}', passed as an argument to --interpreter.
+		</source>
+        <target state="new">Cannot find the assembly '{assembly}', passed as an argument to --interpreter.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0145">
+        <source>Please use device specific builds on WatchOS when building for Debug.
+		</source>
+        <target state="new">Please use device specific builds on WatchOS when building for Debug.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0146">
+        <source>ARM64_32 Debug mode requires --interpreter[=all], forcing it.
+		</source>
+        <target state="new">ARM64_32 Debug mode requires --interpreter[=all], forcing it.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>
