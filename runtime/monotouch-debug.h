@@ -23,7 +23,7 @@ void monotouch_start_debugging ();
 void monotouch_start_profiling ();
 
 void monotouch_set_connection_mode (const char *mode);
-void monotouch_set_monodevelop_port (long port);
+void monotouch_set_monodevelop_port (int port);
 
 
 typedef struct {

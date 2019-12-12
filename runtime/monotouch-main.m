@@ -340,7 +340,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 				if (!value && argc > i + 1)
 					value = argv [++i];
 				if (value) {
-					monotouch_set_monodevelop_port (strtol (value, NULL, 10));
+					monotouch_set_monodevelop_port ((int) strtol (value, NULL, 10));
 				} else {
 					PRINT ("MonoTouch: --%s requires an argument.", name);
 				}
