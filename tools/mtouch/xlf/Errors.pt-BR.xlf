@@ -523,9 +523,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT0071">
-        <source>Unknown platform: *. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+        <source>Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</source>
-        <target state="new">Unknown platform: *. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+        <target state="new">Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</target>
         <note>
 		</note>

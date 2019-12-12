@@ -12,7 +12,14 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-
+	
+	<data name="default" xml:space="preserve">
+		<value>The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<comment>
+			This is the default message when an error code can not be found.
+		</comment>
+	</data>
+	
 	<data name="MT0000" xml:space="preserve">
 		<value>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
@@ -28,7 +35,7 @@
 	</data>
 
 	<data name="MT0002" xml:space="preserve">
-		<value>Could not parse the environment variable *.
+		<value>Could not parse the environment variable '{0}'
 		</value>
 		<comment>
 		</comment>
@@ -56,7 +63,7 @@
 	</data>
 
 	<data name="MT0006" xml:space="preserve">
-		<value>There is no devel platform at *, use --platform=PLAT to specify the SDK.
+		<value>There is no devel platform at {0}, use --platform=PLAT to specify the SDK.
 		</value>
 		<comment>
 		</comment>
@@ -84,7 +91,7 @@
 	</data>
 
 	<data name="MT0010" xml:space="preserve">
-		<value>Could not parse the command line arguments: *.
+		<value>Could not parse the command line arguments: {0}.
 		</value>
 		<comment>
 		</comment>
@@ -112,7 +119,7 @@
 	</data>
 
 	<data name="MT0014" xml:space="preserve">
-		<value>The iOS * SDK does not support building applications targeting *.
+		<value>The iOS {0} SDK does not support building applications targeting {1}.
 		</value>
 		<comment>
 		</comment>
@@ -154,7 +161,7 @@
 	</data>
 
 	<data name="MT0020" xml:space="preserve">
-		<value>The valid options for '\*' are '\*'.
+		<value>The valid options for '{0}' are '{1}'.
 		</value>
 		<comment>
 		</comment>
@@ -189,14 +196,14 @@
 	</data>
 
 	<data name="MT0025" xml:space="preserve">
-		<value>No SDK version was provided. Please add `--sdk=X.Y` to specify which iOS SDK should be used to build your application.
+		<value>No SDK version was provided. Please add `--sdk=X.Y` to specify which {0} SDK should be used to build your application.
 		</value>
 		<comment>
 		</comment>
 	</data>
 
 	<data name="MT0026" xml:space="preserve">
-		<value>Could not parse the command line argument '*': *
+		<value>Could not parse the command line argument '-{0}: {1}'
 		</value>
 		<comment>
 		</comment>
@@ -308,7 +315,7 @@
 	</data>
 
 	<data name="MT0043" xml:space="preserve">
-		<value>The Boehm garbage collector is currently not supported when referencing 'Xamarin.iOS.dll'. The SGen garbage collector has been selected instead.
+		<value>The Boehm garbage collector is currently not supported. The SGen garbage collector has been selected instead.
 		</value>
 		<comment>
 		</comment>
@@ -469,7 +476,7 @@
 	</data>
 
 	<data name="MT0071" xml:space="preserve">
-		<value>Unknown platform: *. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		<value>Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</value>
 		<comment>
 		</comment>
@@ -532,7 +539,7 @@
 	</data>
 
 	<data name="MT0080" xml:space="preserve">
-		<value>Disabling NewRefCount, --new-refcount:false, is deprecated.
+		<value>	Disabling the new refcount logic is deprecated.
 		</value>
 		<comment>
 		</comment>
@@ -630,7 +637,7 @@
 	</data>
 
 	<data name="MT0099" xml:space="preserve">
-		<value>Internal error *. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		<value>Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {0}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>
 		<comment>
 		</comment>
@@ -883,6 +890,90 @@
 
 	<data name="MT0146" xml:space="preserve">
 		<value>ARM64_32 Debug mode requires --interpreter[=all], forcing it.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT0150" xml:space="preserve">
+		<value>Internal error: The interpreter is currently only available for 64 bits.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT0151" xml:space="preserve">
+		<value>Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT0152" xml:space="preserve">
+		<value>Internal error: Invalid action: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT4001" xml:space="preserve">
+		<value>The main template could not be expanded to `{0}`.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT5101" xml:space="preserve">
+		<value>Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT5103" xml:space="preserve">
+		<value>Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT5301" xml:space="preserve">
+		<value>Missing 'strip' tool. Please install Xcode 'Command-Line Tools' component
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT5302" xml:space="preserve">
+		<value>Missing 'dsymutil' tool. Please install Xcode 'Command-Line Tools' component
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT5303" xml:space="preserve">
+		<value>Failed to generate the debug symbols (dSYM directory). Please review the build log.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT5304" xml:space="preserve">
+		<value>Failed to strip the final binary. Please review the build log.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT5305" xml:space="preserve">
+		<value>Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT5306" xml:space="preserve">
+		<value>Failed to create the a fat library. Please review the build log.
 		</value>
 		<comment>
 		</comment>
