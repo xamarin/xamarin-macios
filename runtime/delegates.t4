@@ -52,7 +52,7 @@
 
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_block_wrapper_creator",
 			"MonoObject *", "IntPtr", "method",
-			"unsigned long", "uint", "parameter"
+			"int", "int", "parameter"
 		) {
 			WrappedManagedFunction = "GetBlockWrapperCreator",
 			OnlyDynamicUsage = true,
@@ -203,7 +203,7 @@
 
 		new XDelegate ("bool", "bool", "xamarin_is_parameter_out",
 			"MonoReflectionMethod *", "IntPtr", "method",
-			"unsigned long", "uint", "parameter"
+			"int", "int", "parameter"
 		) {
 			WrappedManagedFunction = "IsParameterOut",
 			OnlyDynamicUsage = true,

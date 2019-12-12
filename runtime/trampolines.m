@@ -449,7 +449,7 @@ xamarin_collapse_struct_name (const char *type, char struct_name[], int max_char
 	return true;
 }
 
-unsigned long
+int 
 xamarin_get_frame_length (id self, SEL sel)
 {
 	if (self == NULL)
@@ -516,7 +516,7 @@ xamarin_get_frame_length (id self, SEL sel)
 	// we can't detect varargs, so just add 16 more pointer sized arguments to be on the safe-ish side.
 	length += sizeof (void *) * 16;
 
-	return length;
+	return (int) length;
 }
 
 static inline void
