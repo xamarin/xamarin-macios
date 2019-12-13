@@ -2066,7 +2066,7 @@ xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
 
 typedef struct {
 	MonoMethod *method;
-	unsigned long par;
+	int par;
 } MethodAndPar;
 
 static gboolean
@@ -2094,7 +2094,7 @@ static MonoReferenceQueue *block_wrapper_queue;
  * create the method
  */
 static MonoObject *
-get_method_block_wrapper_creator (MonoMethod *method, unsigned long par, guint32 *exception_gchandle)
+get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -2120,7 +2120,7 @@ get_method_block_wrapper_creator (MonoMethod *method, unsigned long par, guint32
 		return res;
 	}
 
-	res = xamarin_get_block_wrapper_creator ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), par, exception_gchandle);
+	res = xamarin_get_block_wrapper_creator ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), (int) par, exception_gchandle);
 	if (*exception_gchandle != 0)
 		return NULL;
 	// PRINT ("New value: %x", (int) res);
@@ -2162,7 +2162,7 @@ xamarin_release_block_on_main_thread (void *obj)
  * Returns: the instantiated delegate.
  */
 int *
-xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, unsigned long par, void *nativeBlock, guint32 *exception_gchandle)
+xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;

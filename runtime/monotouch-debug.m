@@ -381,9 +381,9 @@ monotouch_set_connection_mode (const char *mode)
 }
 
 void
-monotouch_set_monodevelop_port (long port)
+monotouch_set_monodevelop_port (int port)
 {
-	monodevelop_port = port;
+	monodevelop_port = (long) port;
 }
 
 void

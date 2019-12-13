@@ -73,12 +73,12 @@ namespace LinkAll.InernalCalls {
 		}
 
 		[DllImport ("__Internal")]
-		extern static IntPtr xamarin_timezone_get_data (string name, ref int size);
+		extern static IntPtr xamarin_timezone_get_data (string name, ref uint size);
 
 		[Test]
 		public void TimeZone_Data ()
 		{
-			int size = 0;
+			uint size = 0;
 			IntPtr data = xamarin_timezone_get_data (null, ref size);
 			Assert.That (data, Is.Not.EqualTo (IntPtr.Zero), "default");
 			Assert.That (size, Is.GreaterThan (0), "default size");

@@ -9,6 +9,7 @@
     <RootNamespace>monotouch</RootNamespace>
     <AssemblyName>monotouch</AssemblyName>
     <UseMSBuildEngine>True</UseMSBuildEngine>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

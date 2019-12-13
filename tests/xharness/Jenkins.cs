@@ -23,6 +23,7 @@ namespace xharness
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
 		public bool IncludeiOS = true;
+		public bool IncludeiOS64 = true;
 		public bool IncludeiOS32 = true;
 		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
@@ -481,9 +482,9 @@ namespace xharness
 
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
 				if (!project.SkipiOSVariation)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS));
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_Unified, ignored || !IncludeiOS64));
 				if (project.MonoNativeInfo != null)
-					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored || !IncludeiOS));
+					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project, TestPlatform.iOS_TodayExtension64, ignored || !IncludeiOS64));
 				if (!project.SkiptvOSVariation)
 					ps.Add (new Tuple<TestProject, TestPlatform, bool> (project.AsTvOSProject (), TestPlatform.tvOS, ignored || !IncludetvOS));
 				if (!project.SkipwatchOSVariation)
@@ -555,7 +556,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build64.CloneTestProject (project);
-					projectTasks.Add (new RunDeviceTask (build64, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS });
+					projectTasks.Add (new RunDeviceTask (build64, Devices.Connected64BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS64 });
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
@@ -565,7 +566,7 @@ namespace xharness
 						TestName = project.Name,
 					};
 					build32.CloneTestProject (project);
-					projectTasks.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS || !IncludeiOS32 });
+					projectTasks.Add (new RunDeviceTask (build32, Devices.Connected32BitIOS.Where (d => d.IsSupported (project))) { Ignored = !IncludeiOS32 });
 
 					var todayProject = project.AsTodayExtensionProject ();
 					var buildToday = new XBuildTask {
@@ -653,8 +654,10 @@ namespace xharness
 			DisableKnownFailingDeviceTests ();
 
 			if (!Harness.INCLUDE_IOS) {
-				MainLog.WriteLine ("The iOS build is diabled, so any iOS tests will be disabled as well.");
+				MainLog.WriteLine ("The iOS build is disabled, so any iOS tests will be disabled as well.");
 				IncludeiOS = false;
+				IncludeiOS64 = false;
+				IncludeiOS32 = false;
 			}
 
 			if (!Harness.INCLUDE_WATCH) {
@@ -796,9 +799,10 @@ namespace xharness
 			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
-			SetEnabled (labels, "ios", ref IncludeiOS);
-			SetEnabled (labels, "tvos", ref IncludetvOS);
 			SetEnabled (labels, "ios-32", ref IncludeiOS32);
+			SetEnabled (labels, "ios-64", ref IncludeiOS64);
+			SetEnabled (labels, "ios", ref IncludeiOS); // Needs to be set after `ios-32` and `ios-64` (because it can reset them)
+			SetEnabled (labels, "tvos", ref IncludetvOS);
 			SetEnabled (labels, "watchos", ref IncludewatchOS);
 			SetEnabled (labels, "mac", ref IncludeMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
@@ -845,10 +849,14 @@ namespace xharness
 		{
 			if (labels.Contains ("skip-" + testname + "-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
+				if (testname == "ios")
+					IncludeiOS32 = IncludeiOS64 = false;
 				value = false;
 				return true;
 			} else if (labels.Contains ("run-" + testname + "-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
+				if (testname == "ios")
+					IncludeiOS32 = IncludeiOS64 = true;
 				value = true;
 				return true;
 			} else if (labels.Contains ("skip-all-tests")) {
@@ -2105,6 +2113,7 @@ namespace xharness
 							if (logs.Count () > 0) {
 								foreach (var log in logs) {
 									log.Flush ();
+									var exists = File.Exists (log.FullPath);
 									string log_type = System.Web.MimeMapping.GetMimeMapping (log.FullPath);
 									string log_target;
 									switch (log_type) {
@@ -2115,7 +2124,9 @@ namespace xharness
 										log_target = "_self";
 										break;
 									}
-									if (log.Description == "Build log") {
+									if (!exists) {
+										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									} else if (log.Description == "Build log") {
 										var binlog = log.FullPath.Replace (".txt", ".binlog");
 										if (File.Exists (binlog)) {
 											var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
@@ -2127,7 +2138,9 @@ namespace xharness
 									} else {
 										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									}
-									if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
+									if (!exists) {
+										// Don't try to parse files that don't exist
+									} else if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
 										string summary;
 										List<string> fails;
 										try {
