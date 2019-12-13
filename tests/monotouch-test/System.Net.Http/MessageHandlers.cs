@@ -76,41 +76,49 @@ namespace MonoTests.System.Net.Http
 		}
 
 #if !__WATCHOS__
-		// ensure that we do get the same number of cookies as the managed handler
-		[TestCase]
+		// ensure that we do get the same cookies as the managed handler
+		[Test]
 		public void TestNSUrlSessionHandlerCookies ()
 		{
-			bool areEqual = false;
-			var manageCount = 0;
-			var nativeCount = 0;
+			var managedCookieResult = false;
+			var nativeCookieResult = false;
 			Exception ex = null;
+			var completed = false;
+			IEnumerable<string> nativeCookies = null;
+			IEnumerable<string> managedCookies = null;
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
 			{
+				var url = NetworkResources.Httpbin.GetSetCookieUrl ("cookie", "chocolate-chip");
 				try {
-					var managedClient = new HttpClient (new HttpClientHandler ());
-					var managedResponse = await managedClient.GetAsync (NetworkResources.MicrosoftUrl);
-					if (managedResponse.Headers.TryGetValues ("Set-Cookie", out var managedCookies)) {
-						var nativeClient = new HttpClient (new NSUrlSessionHandler ());
-						var nativeResponse = await nativeClient.GetAsync (NetworkResources.MicrosoftUrl);
-						if (managedResponse.Headers.TryGetValues ("Set-Cookie", out var nativeCookies)) {
-							manageCount = managedCookies.Count ();
-							nativeCount = nativeCookies.Count ();
-							areEqual = manageCount == nativeCount;
-						} else {
-							manageCount = -1;
-							nativeCount = -1;
-							areEqual = false;
-						}
-					}
-					
+					var managedHandler = new HttpClientHandler () {
+						AllowAutoRedirect = false,
+					};
+					var managedClient = new HttpClient (managedHandler);
+					var managedResponse = await managedClient.GetAsync (url);
+					managedCookieResult = managedResponse.Headers.TryGetValues ("Set-Cookie", out managedCookies);
+
+					var nativeHandler = new NSUrlSessionHandler () {
+						AllowAutoRedirect = false,
+					};
+					nativeHandler.AllowAutoRedirect = true;
+					var nativeClient = new HttpClient (nativeHandler);					
+					var nativeResponse = await nativeClient.GetAsync (url);
+					nativeCookieResult = nativeResponse.Headers.TryGetValues ("Set-Cookie", out nativeCookies);
 				} catch (Exception e) {
 					ex = e;
-				} 
-			}, () => areEqual);
+				} finally {
+					completed = true;
+				}
+			}, () => completed);
 
-			Assert.IsTrue (areEqual, $"Cookies are different - Managed {manageCount} vs Native {nativeCount}");
 			Assert.IsNull (ex, "Exception");
+			Assert.IsTrue (managedCookieResult, $"Failed to get managed cookies");
+			Assert.IsTrue (nativeCookieResult, $"Failed to get native cookies");
+			Assert.AreEqual (1, managedCookies.Count (), $"Managed Cookie Count");
+			Assert.AreEqual (1, nativeCookies.Count (), $"Native Cookie Count");
+			Assert.That (nativeCookies.First (), Is.StringStarting ("cookie=chocolate-chip;"), $"Native Cookie Value");
+			Assert.That (managedCookies.First (), Is.StringStarting ("cookie=chocolate-chip;"), $"Managed Cookie Value");
 		}
 #endif
 

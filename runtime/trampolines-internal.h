@@ -48,7 +48,7 @@ typedef void (*marshal_return_value_func) (void *context, const char *type, size
 
 void xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_func iterator, marshal_return_value_func marshal_return_value, void *context);
 
-unsigned long xamarin_get_frame_length (id self, SEL sel);
+int xamarin_get_frame_length (id self, SEL sel);
 const char * xamarin_skip_type_name (const char *ptr);
 
 #ifdef __cplusplus
