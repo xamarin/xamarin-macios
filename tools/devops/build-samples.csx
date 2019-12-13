@@ -59,6 +59,11 @@ InstallPackage ("Objective-Sharpie", FindVariable ("MIN_SHARPIE_URL"));
 
 // Provisioning profiles
 Console.WriteLine ("Provisioning provisioning profiles...");
+Exec ("pwd");
+Exec ("ls", "-la");
+Exec ("ls", "-la", "..");
+Exec ("ls", "-la", "..", "..");
+Exec ("ls", "-la", "..", "..", "..");
 Exec ($"../../../maccore/tools/install-qa-provisioning-profiles.sh", "-v");
 
 // .NET core
