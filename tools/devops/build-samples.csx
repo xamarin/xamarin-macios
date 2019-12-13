@@ -59,7 +59,7 @@ InstallPackage ("Objective-Sharpie", FindVariable ("MIN_SHARPIE_URL"));
 
 // Provisioning profiles
 Console.WriteLine ("Provisioning provisioning profiles...");
-Exec ($"../../../maccore/tools/install-qa-provisioning-profiles.sh");
+Exec ($"../../../maccore/tools/install-qa-provisioning-profiles.sh", "-v");
 
 // .NET core
 // The version number here must match the one in Xamarin.Tests.Configuration:CreateGlobalConfig (tests/sampletester/Configuration.cs).
