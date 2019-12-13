@@ -96,8 +96,8 @@ jobs:
   - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info
 
-  # - bash: ./xamarin-macios/tools/devops/fetch-maccore.sh
-  #   displayName: Fetch maccore
+  - bash: make reset-maccore
+    displayName: Fetch correct maccore hash
 
   - task: provisionator@2
     displayName: Xcode
