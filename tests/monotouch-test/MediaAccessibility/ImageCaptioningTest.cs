@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 				var s = MAImageCaptioning.GetCaption (url, out var e);
 				Assert.Null (s, "remote / return value");
 				if (e != null && e.Description.Contains ("Invalid url:")) {
-					Assert.Null (e, "remote / no internet connection"); // could not connect to the network, fail and add a nice reason
+					Assert.Fail (e, "Ignore this failure when network is down"); // could not connect to the network, fail and add a nice reason
 				} else {
 					Assert.Null (e, "remote / no error"); // weird should be an "image on disk"
 
