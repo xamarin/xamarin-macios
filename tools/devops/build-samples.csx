@@ -71,10 +71,7 @@ void Execute (string cmd, params string[] args)
 }
 
 Execute ("pwd");
-Execute ("ls", "-la");
-Execute ("ls", "-la", "..");
-Execute ("ls", "-la", "..", "..");
-Execute ("ls", "-la", "..", "..", "..");
+Execute ($"../../../maccore/tools/provisioning-profiles/fetch-updated-certificates-and-profiles.sh");
 Execute ($"../../../maccore/tools/install-qa-provisioning-profiles.sh", "-v");
 
 // .NET core
