@@ -136,12 +136,12 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		[Test]
-		[ExpectedException (typeof(InvalidOperationException), ExpectedMessage = "Bitcode is currently not supported on iOS.")]
 		public void StandardCommandline_WithBitcodeEnabled_iOS ()
 		{
 			MTouchEnableBitcode("Xamarin.iOS");
 
-			Task.GenerateCommandLineCommands ();
+			var ex = Assert.Throws<InvalidOperationException> (() => Task.GenerateCommandLineCommands (), "Exception");
+			Assert.AreEqual ("Bitcode is currently not supported on iOS.", ex.Message, "Message");
 		}
 
 		[Test]
