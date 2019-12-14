@@ -204,7 +204,7 @@ namespace CoreServices
 			IntPtr context, ulong deviceToWatch, IntPtr pathsToWatchRelativeToDevice, 
 			ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
 
-		public FSEventStream (CFAllocator allocator, ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
+		private void FSEventStreamInit (CFAllocator allocator, ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
 			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags)
 		{
 			if (pathsToWatchRelativeToDevice == null) {
@@ -216,16 +216,25 @@ namespace CoreServices
 			handle = FSEventStreamCreateRelativeToDevice (
 				allocator.GetHandle (),
 				eventsCallback, IntPtr.Zero, deviceToWatch, pathsToWatchRelativeToDevice.Handle,
-				sinceWhen, latency.TotalSeconds, flags);
+				sinceWhen, latency.TotalSeconds, flags | (FSEventStreamCreateFlags)0x1);
 			
 			if (handle == IntPtr.Zero) {
 				throw new InvalidOperationException ("Unable to create FSEventStream");
 			}
 		}
 
+		public FSEventStream (CFAllocator allocator, ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
+			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags) => FSEventStreamInit (allocator, deviceToWatch, pathsToWatchRelativeToDevice, sinceWhen, latency, flags);
+
 		public FSEventStream (ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
-			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags) : this (null, deviceToWatch, pathsToWatchRelativeToDevice, sinceWhen, latency, flags)
+			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags) => FSEventStreamInit (null, deviceToWatch, pathsToWatchRelativeToDevice, sinceWhen, latency, flags);
+		
+		public FSEventStream (ulong deviceToWatch, string [] pathsToWatchRelativeToDevice, 
+			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags)
 		{
+			NSArray nsArrayPathsToWatchRelativeToDevice = NSArray.FromStrings (pathsToWatchRelativeToDevice);
+			FSEventStreamInit (null, deviceToWatch, nsArrayPathsToWatchRelativeToDevice, sinceWhen, latency, flags);
+			nsArrayPathsToWatchRelativeToDevice.Dispose ();
 		}
 
 		void EventsCallback (IntPtr handle, IntPtr userData, nint numEvents,
@@ -236,8 +245,8 @@ namespace CoreServices
 			}
 
 			var events = new FSEvent[numEvents];
-			var pathArray = new CFArray (eventPaths);
-
+			using var pathArray = new CFArray (eventPaths);
+			var eventsSize = numEvents;
 			for (int i = 0; i < events.Length; i++) {
 				events[i].Flags = (FSEventStreamEventFlags)(uint)Marshal.ReadInt32 (eventFlags, i * 4);
 				events[i].Id = (uint)Marshal.ReadInt64 (eventIds, i * 8);
@@ -428,7 +437,19 @@ namespace CoreServices
 				throw new ArgumentNullException (nameof (pathsToExclude));
 			}
 			CheckDisposed ();
-			return FSEventStreamSetExclusionPaths (handle, pathsToExclude.Handle);
+			return FSEventStreamSetExclusionPaths (handle, pathsToExclude.GetHandle());
+		}
+
+		public bool SetExclusionPaths (string [] pathsToExclude)
+		{
+			if (pathsToExclude == null) {
+				throw new ArgumentNullException (nameof (pathsToExclude));
+			}
+			CheckDisposed ();
+			NSArray nsPathsToExclude = NSArray.FromStrings (pathsToExclude);
+			bool done = FSEventStreamSetExclusionPaths (handle, nsPathsToExclude.GetHandle());
+			nsPathsToExclude.Dispose ();
+			return done;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -436,11 +457,8 @@ namespace CoreServices
 
 		public void SetDispatchQueue (DispatchQueue queue)
 		{
-			if (queue == null) {
-				throw new ArgumentNullException (nameof (queue));
-			}
 			CheckDisposed ();
-			FSEventStreamSetDispatchQueue (handle, queue.GetHandle ());
+			FSEventStreamSetDispatchQueue (handle, queue == null ? queue.GetHandle () : IntPtr.Zero);
 		}
 	}
 }
