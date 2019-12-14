@@ -139,8 +139,12 @@
     </ItemGroup>
     <PropertyGroup>
       <ILRepackArgs Condition="'$(AssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AssemblyOriginatorKeyFile)"</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) @(LibDir -&gt; '/lib:&quot;%(Identity).&quot;', ' ')</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) /out:&quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot;</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) &quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot;</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) @(MergedAssemblies -&gt; '&quot;%(FullPath)&quot;', ' ')</ILRepackArgs>
     </PropertyGroup>
-    <Exec Command="&quot;$(ILRepack)&quot; @(LibDir -&gt; '/lib:&quot;%(Identity).&quot;', ' ') $(ILRepackArgs) /out:&quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot; &quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot; @(MergedAssemblies -&gt; '&quot;%(FullPath)&quot;', ' ')" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
+    <Exec Command="&quot;$(ILRepack)&quot; $(ILRepackArgs)" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
     </Exec>
