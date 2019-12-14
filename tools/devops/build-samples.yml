@@ -96,7 +96,7 @@ jobs:
   - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info
 
-  - bash: ./configure --enable-xamarin && make reset-maccore
+  - bash: cd xamarin-macios && ./configure --enable-xamarin && make reset-maccore
     displayName: Fetch correct maccore hash
 
   - task: provisionator@2
