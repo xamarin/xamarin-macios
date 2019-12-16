@@ -12,6 +12,13 @@ if ! test -f "${XMLS[0]}"; then
 fi
 cp -c xamarin-macios/tests/sampletester/bin/Debug/tmp-test-dir/execution-logs/*.xml "$DIR/"
 cd "$DIR"
+
+git branch || true
+pwd
+git status || true
+git log || true
+git checkout master || true
+
 git add .
 git commit -m "Add performance data for $BUILD_SOURCEBRANCHNAME/$BUILD_SOURCEVERSION from the $SYSTEM_JOBNAME job."
 
