@@ -18,17 +18,11 @@ namespace Xamarin.Mac.Tests {
 
 		string dirPath;
 		DirectoryInfo dir;
-		FileStream fileToWatch;
-		FileStream fileToExclude;
 		bool watchedFileChanged;
 		bool exludedFileChanged;
 		ulong st_dev;
 		FSEventStream fsEventStream;
 		string [] pathsToWatchRelativeToDevice;
-		NSArray nsPathsToWatchRelativeToDevice;
-		EventWaitHandle waitHandle;
-		AutoResetEvent watchEventCalled;
-		AutoResetEvent excludeEventCalled;
 
 		ulong GetDeviceId ()
 		{
@@ -53,8 +47,10 @@ namespace Xamarin.Mac.Tests {
 			dirPath = Path.Combine (Path.GetTempPath (), "FSEventStreamTests");
 			st_dev = GetDeviceId ();
 
-			pathsToWatchRelativeToDevice = new [] { dirPath };
-			nsPathsToWatchRelativeToDevice = NSArray.FromStrings (pathsToWatchRelativeToDevice);
+			// The reason why we take from substring from index 1 is because in this particular API, the paths should be relative to
+			// the root of the device. So instead of "/Pictures/July", we need to provide "Pictures/July".
+			// Refer to https://developer.apple.com/documentation/coreservices/1447341-fseventstreamcreaterelativetodev?language=objc
+			pathsToWatchRelativeToDevice = new [] { dirPath.Substring (1) };
 			dir = Directory.CreateDirectory (dirPath);
 
 			using (FileStream fileToWatch = File.Create (Path.Combine (dirPath, "TempFileToWatch.txt")))
@@ -64,8 +60,7 @@ namespace Xamarin.Mac.Tests {
 		[TestFixtureTearDown]
 		public void Destroy ()
 		{
-			Directory.Delete ("FSEventStreamTests");
-			nsPathsToWatchRelativeToDevice.Dispose ();
+			Directory.Delete ("FSEventStreamTests", true);
 		}
 
 		[SetUp]
@@ -86,19 +81,18 @@ namespace Xamarin.Mac.Tests {
 			fsEventStream.Dispose ();
 		}
 
-		//[Test]
+		[Test]
 		public void GetDeviceBeingWatchedTest ()
 			=> Assert.AreEqual (st_dev, fsEventStream.GetDevice (), "Device ID");
 
-		//[Test]
+		[Test]
 		public void FSEventFileChangedTest ()
 		{
-			Console.WriteLine ("FSEventFileChangedTest");
 			string path = Path.Combine (dirPath, "TempFileToWatch.txt");
 			var taskCompletionSource = new TaskCompletionSource<FSEventStreamEventsArgs> ();
 			FSEventStreamEventsArgs args = null;
 
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (10), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				fsEventStream.Events += (sender, eventArgs) => {
 					taskCompletionSource.SetResult (eventArgs);
 					watchedFileChanged = true;
@@ -114,15 +108,14 @@ namespace Xamarin.Mac.Tests {
 			Assert.IsNotNull (args, "Null args");
 		}
 
-		//[Test]
+		[Test]
 		public void UnscheduleFromRunLoopTest ()
 		{
-			Console.WriteLine ("UnscheduleFromRunLoopTest");
 			string path = Path.Combine (dirPath, "TempFileToWatch.txt");
 			var taskCompletionSource = new TaskCompletionSource<FSEventStreamEventsArgs> ();
 			FSEventStreamEventsArgs args = null;
 
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (10), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				fsEventStream.Events += (sender, eventArgs) => {
 					taskCompletionSource.SetResult (eventArgs);
 					watchedFileChanged = true;
@@ -141,24 +134,18 @@ namespace Xamarin.Mac.Tests {
 		[Test]
 		public void SetExclusionPathsTest ()
 		{
-			Console.WriteLine ("SetExclusionPathsTest");
+			var watchDirPath = Path.Combine (dirPath, "WatchDir");
+			var watchDir = Directory.CreateDirectory (watchDirPath);
+			var unWatchDirPath = Path.Combine (dirPath, "UnwatchDir");
+			var unWatchDir = Directory.CreateDirectory (unWatchDirPath);
 
-			//var watchDir = Directory.CreateDirectory (Path.Combine (dirPath, "WatchDir"));
-			var unWatchDir = Directory.CreateDirectory (Path.Combine (dirPath, "UnwatchDir"));
-			//var fsEventStream2 = new FSEventStream (st_dev, pathsToWatchRelativeToDevice, FSEvent.SinceNowId, TimeSpan.FromSeconds (1), FSEventStreamCreateFlags.WatchRoot | FSEventStreamCreateFlags.FileEvents | FSEventStreamCreateFlags.NoDefer);
-			//var succ = fsEventStream2.SetExclusionPaths (NSArray.FromStrings (new [] { unWatchDir.FullName })); // excluding the unwatch dir so changing the file there won't trigger events
-			//var succ = fsEventStream2.SetExclusionPaths (new [] { unWatchDir.FullName, Path.Combine (unWatchDir.FullName, "TempFileToExclude.txt") });
-			var succ = fsEventStream.SetExclusionPaths (new [] { unWatchDir.FullName });
-			Console.WriteLine ($"unWatchDir.FullName - {unWatchDir.FullName}");
+			// Excluding the unWatchDirPath from the watcher so any event inside it doesn't get triggered
+			Assert.IsTrue (fsEventStream.SetExclusionPaths (new [] { Path.Combine ("private", unWatchDirPath.Substring (1)) }), "SetExclusionPaths failed");
 
-
-			//using (FileStream fileToWatch1 = File.Create (Path.Combine (watchDir.FullName, "TempFileToWatch.txt")))
-			using (FileStream fileToWatch1 = File.Create (Path.Combine (dir.FullName, "TempFileToWatch.txt")))
-			using (FileStream fileToExclude1 = File.Create (Path.Combine (unWatchDir.FullName, "TempFileToExclude.txt"))) {
-				fileToWatch1.Close ();
-				fileToExclude1.Close ();
-
-				//Console.WriteLine ($"Files made - {Path.Combine (watchDir.FullName, "TempFileToWatch.txt")} and {Path.Combine (unWatchDir.FullName, "TempFileToExclude.txt")}");
+			using (FileStream fileToWatch = File.Create (Path.Combine (watchDirPath, "TempFileToWatch.txt")))
+			using (FileStream fileToExclude = File.Create (Path.Combine (unWatchDirPath, "TempFileToExclude.txt"))) {
+				fileToWatch.Close ();
+				fileToExclude.Close ();
 
 				var taskCompletionSource = new TaskCompletionSource<FSEventStreamEventsArgs> ();
 				FSEventStreamEventsArgs args = null;
@@ -170,9 +157,8 @@ namespace Xamarin.Mac.Tests {
 
 					fsEventStream.ScheduleWithRunLoop (CFRunLoop.Current);
 					fsEventStream.Start ();
-					File.AppendAllText (Path.Combine (unWatchDir.FullName, "TempFileToExclude.txt"), "Adding to excluded file!");
-					File.AppendAllText (Path.Combine (dir.FullName, "TempFileToWatch.txt"), "Adding to included file!");
-					//File.AppendAllText (Path.Combine (watchDir.FullName, "TempFileToWatch.txt"), "Adding to included file!");
+					File.AppendAllText (Path.Combine (unWatchDirPath, "TempFileToExclude.txt"), "Adding to excluded file!");
+					File.AppendAllText (Path.Combine (watchDirPath, "TempFileToWatch.txt"), "Adding to included file!");
 
 					args = await taskCompletionSource.Task.ConfigureAwait (false);
 
@@ -181,48 +167,11 @@ namespace Xamarin.Mac.Tests {
 				fsEventStream.Show ();
 
 				Assert.IsNotNull (args, "Null args");
-				Console.WriteLine ($"args.Events.Length - {args.Events.Length}");
-				Assert.AreEqual (args.Events.Length, 1, "more events triggered"); // Should only trigger the watched file event
-				Console.WriteLine ($"args.Events [0].Path - {args.Events [0].Path}");
-				//Assert.AreEqual (args.Events [0].Path, Path.Combine (watchDir.FullName, "TempFileToWatch.txt"), "event triggered path not the same"); // the triggered event should be from the watched dir
-				Assert.AreEqual (args.Events [0].Path, Path.Combine (dir.FullName, "TempFileToWatch.txt"), "event triggered path not the same"); // the triggered event should be from the watched dir
+				// Assert that only one event is triggered and that the path is that of the watched file
+				Assert.AreEqual (args.Events.Length, 1, "More events triggered");
+				Assert.AreEqual (Path.Combine ("private", watchDirPath.Substring (1), "TempFileToWatch.txt"), args.Events [0].Path, "Watched file not triggered");
 
-				//fsEventStream2.Stop ();
-				//fsEventStream2.Invalidate ();
-				//fsEventStream2.Dispose ();
 			}
-		}
-
-		//private void FsEventStream_ExcludeWatchEvents (object sender, FSEventStreamEventsArgs args)
-		//{
-		//	Console.WriteLine ("FsEventStream_ExcludeWatchEvents");
-		//	exludedFileChanged = true;
-		//	excludeEventCalled.Set ();
-		//}
-
-		//[Test] // Null is not working - binding incorrect?
-		public void SetDispatchQueueTest ()
-		{
-			Console.WriteLine ("SetDispatchQueueTest");
-			string path = Path.Combine (dirPath, "TempFileToWatch.txt");
-			var taskCompletionSource = new TaskCompletionSource<FSEventStreamEventsArgs> ();
-			FSEventStreamEventsArgs args = null;
-
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (10), async () => {
-				fsEventStream.Events += (sender, eventArgs) => {
-					taskCompletionSource.SetResult (eventArgs);
-					watchedFileChanged = true;
-				};
-				fsEventStream.ScheduleWithRunLoop (CFRunLoop.Current);
-				fsEventStream.SetDispatchQueue (null); // shouldn't recieve events after this
-				fsEventStream.Start ();
-				File.AppendAllText (path, "Hello World!");
-				Assert.IsTrue (File.Exists (path));
-				args = await taskCompletionSource.Task.ConfigureAwait (false);
-
-			}, () => watchedFileChanged);
-
-			Assert.IsNull (args, "Null args");
 		}
 	}
 }

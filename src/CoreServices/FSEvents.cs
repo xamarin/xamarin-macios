@@ -446,9 +446,9 @@ namespace CoreServices
 				throw new ArgumentNullException (nameof (pathsToExclude));
 			}
 			CheckDisposed ();
-			NSArray nsPathsToExclude = NSArray.FromStrings (pathsToExclude);
+			
+			using NSArray nsPathsToExclude = NSArray.FromStrings (pathsToExclude);
 			bool done = FSEventStreamSetExclusionPaths (handle, nsPathsToExclude.GetHandle());
-			nsPathsToExclude.Dispose ();
 			return done;
 		}
 
