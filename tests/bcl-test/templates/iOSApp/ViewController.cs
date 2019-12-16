@@ -17,6 +17,7 @@ using NUnit.Framework.Internal.Filters;
 
 namespace BCLTests {
 	public partial class ViewController : UIViewController {
+
 		internal static IEnumerable<TestAssemblyInfo> GetTestAssemblies ()
  		{
 			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
