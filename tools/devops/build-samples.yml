@@ -97,12 +97,13 @@ jobs:
     displayName: System Info
 
   - bash: |
+      set -x
       cd maccore
       git remote add 'xamarin' 'https://github.com/xamarin/maccore.git'
       cd ..
       cd xamarin-macios
       ./configure --enable-xamarin
-      make reset-maccore
+      V=1 make reset-maccore V=1
     displayName: Fetch correct maccore hash
 
   - task: provisionator@2
