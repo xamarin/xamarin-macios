@@ -87,7 +87,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 // See in Mono sdks/ios/runtime/runtime.m
 
 void*
-xamarin_timezone_get_data (const char *name, unsigned long *size)
+xamarin_timezone_get_data (const char *name, uint32_t *size)
 {
 	// COOP: no managed memory access: any mode.
 	NSTimeZone *tz = nil;
@@ -99,18 +99,18 @@ xamarin_timezone_get_data (const char *name, unsigned long *size)
 		tz = [NSTimeZone localTimeZone];
 	}
 	NSData *data = [tz data];
-	*size = [data length];
+	*size = (uint32_t) [data length];
 	void* result = malloc (*size);
 	memcpy (result, data.bytes, *size);
 	return result;
 }
 
 char**
-xamarin_timezone_get_names (unsigned long *count)
+xamarin_timezone_get_names (uint32_t *count)
 {
 	// COOP: no managed memory access: any mode.
 	NSArray *array = [NSTimeZone knownTimeZoneNames];
-	*count = array.count;
+	*count = (uint32_t) array.count;
 	char** result = (char**) malloc (sizeof (char*) * (*count));
 	for (unsigned long i = 0; i < *count; i++) {
 		NSString *s = [array objectAtIndex: i];
