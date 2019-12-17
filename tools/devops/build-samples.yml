@@ -157,10 +157,10 @@ jobs:
     displayName: Compress execution logs
     condition: always()
 
-  - publish: logs-$(System.JobId)
+  - publish: logs
     displayName: 'Upload perf data'
     condition: always()
-    artifact: logs
+    artifact: logs-$(System.JobId)
 
   - bash: echo "##vso[task.setvariable variable=JobStatus;isOutput=true]$AGENT_JOBSTATUS"
     name: ExportedVariables
