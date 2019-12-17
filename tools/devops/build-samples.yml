@@ -157,7 +157,7 @@ jobs:
     displayName: Compress execution logs
     condition: always()
 
-  - publish: logs
+  - publish: logs-$(System.JobId)
     displayName: 'Upload perf data'
     condition: always()
     artifact: logs
@@ -166,6 +166,8 @@ jobs:
     name: ExportedVariables
     displayName: Export status
     condition: always()
+
+### Upload performance data to xamarin-macios-data
 
 - job: PublishPerformanceData
   condition: always()
@@ -177,8 +179,10 @@ jobs:
   - checkout: xamarin-macios-data
     persistCredentials: true
 
-  - download: current
-    artifact: logs
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      source: current
+      path: logs
 
   - bash: |
       set -x
@@ -193,6 +197,8 @@ jobs:
         (( COUNTER-- ))
       done
     displayName: Publish perf data
+
+### Report final results to GitHub
 
 - job: ReportResultsToGitHub
   displayName: Report status/results to GitHub
