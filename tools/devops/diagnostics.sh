@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-cd "$(dirname "${BASH_SOURCE[0]}")/../.." || exit
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 cd ../../../maccore
 git remote -v
