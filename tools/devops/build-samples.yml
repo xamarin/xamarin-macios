@@ -138,14 +138,60 @@ jobs:
       publishRunAttachments: true
       mergeTestResults: true
 
-  - bash: ./xamarin-macios/tools/devops/publish-performance-data.sh
-    displayName: Publish performance data
+  # - bash: ./xamarin-macios/tools/devops/publish-performance-data.sh
+  #   displayName: Publish performance data
+  #   condition: always()
+
+  - bash: |
+      set -e
+      set -x
+      mkdir -p logs
+      zip -9r logs/execution-logs-$SYSTEM_JOBID.zip xamarin-macios/tests/sampletester/bin/Debug/tmp-test-dir/execution-logs
+    displayName: Compress execution logs
     condition: always()
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload perf data'
+    condition: always()
+    inputs:
+      PathtoPublish: 'logs'
+      ArtifactName: 'logs'
+      publishLocation: 'Container'
 
   - bash: echo "##vso[task.setvariable variable=JobStatus;isOutput=true]$AGENT_JOBSTATUS"
     name: ExportedVariables
     displayName: Export status
     condition: always()
+
+- job: PublishPerformanceData
+  condition: always()
+  dependsOn: macOS
+  pool:
+    name: '$(macOSVersion)'
+  steps:
+  - checkout: self
+  - checkout: xamarin-macios-data
+    persistCredentials: true
+
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      source: current
+      artifact: logs
+      path: logs
+
+  - bash: |
+      set -x
+      set -e
+      cp -cr logs/ xamarin-macios-data/
+      cd xamarin-macios-data && git add . && git commit -m "Add performance data for $BUILD_SOURCEBRANCHNAME/$BUILD_SOURCEVERSION."
+      # Try to push 5 times, just in case someone else pushed first.
+      COUNTER=5
+      while [[ $COUNTER -gt 0 ]]; do
+        if git push; then break; fi
+        git pull
+        (( COUNTER-- ))
+      done
+    displayName: Publish perf data
 
 - job: ReportResultsToGitHub
   displayName: Report status/results to GitHub
