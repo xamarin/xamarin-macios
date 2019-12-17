@@ -62,26 +62,22 @@ Console.WriteLine ("Provisioning provisioning profiles...");
 
 void Execute (string cmd, params string[] args)
 {
-	new Exec (
-		ProcessArguments.FromCommandAndArguments (cmd, args),
-		ExecFlags.None, (ConsoleRedirection) null)
-		.RunAsync ()
-		.GetAwaiter ()
-		.GetResult ();
+	try {
+		new Exec (
+			ProcessArguments.FromCommandAndArguments (cmd, args),
+			ExecFlags.None, (ConsoleRedirection) null)
+			.RunAsync ()
+			.GetAwaiter ()
+			.GetResult ();
+	} catch (Exception e) {
+		Console.WriteLine ("Failed to execute {1}: {0}", e, cmd);
+	}
 }
 
 Execute ("pwd");
 Environment.SetEnvironmentVariable ("PROVISION_DONT_FETCH_UPDATED_CERTS", "1");
-try {
-	Execute ($"../../../maccore/tools/provisioning-profiles/fetch-updated-certificates-and-profiles.sh", "-v");
-} catch (Exception e) {
-	Console.WriteLine ("Failed to fetch provisioning profiles: {0}", e);
-}
-try {
-	Execute ($"../../../maccore/tools/install-qa-provisioning-profiles.sh", "-v");
-} catch (Exception e) {
-	Console.WriteLine ("Failed to provision provisioning profiles: {0}", e);
-}
+Execute ($"./diagnostics.sh", "-v");
+Execute ($"../../../maccore/tools/install-qa-provisioning-profiles.sh", "-v");
 
 // .NET core
 // The version number here must match the one in Xamarin.Tests.Configuration:CreateGlobalConfig (tests/sampletester/Configuration.cs).
