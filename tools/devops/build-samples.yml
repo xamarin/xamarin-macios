@@ -125,8 +125,15 @@ jobs:
   - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info post provisioning
 
-  - bash: ./xamarin-macios/tools/devops/build-samples.sh
-    displayName: Run tests
+  # - bash: ./xamarin-macios/tools/devops/build-samples.sh
+  #   displayName: Run tests
+
+  - bash: |
+      set -e
+      set -x
+      mkdir -p xamarin-macios/tests/sampletester/bin/Debug/tmp-test-dir/execution-logs
+      echo "Test results" > xamarin-macios/tests/sampletester/bin/Debug/tmp-test-dir/execution-logs/results.xml
+    displayName: Fake test run
 
   - task: PublishTestResults@2
     displayName: Publish test results
@@ -150,13 +157,10 @@ jobs:
     displayName: Compress execution logs
     condition: always()
 
-  - task: PublishBuildArtifacts@1
+  - publish: logs
     displayName: 'Upload perf data'
     condition: always()
-    inputs:
-      PathtoPublish: 'logs'
-      ArtifactName: 'logs'
-      publishLocation: 'Container'
+    artifact: logs
 
   - bash: echo "##vso[task.setvariable variable=JobStatus;isOutput=true]$AGENT_JOBSTATUS"
     name: ExportedVariables
@@ -173,11 +177,8 @@ jobs:
   - checkout: xamarin-macios-data
     persistCredentials: true
 
-  - task: DownloadPipelineArtifact@2
-    inputs:
-      source: current
-      artifact: logs
-      path: logs
+  - download: current
+    artifact: logs
 
   - bash: |
       set -x
