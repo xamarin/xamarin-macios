@@ -2105,6 +2105,7 @@ namespace xharness
 							if (logs.Count () > 0) {
 								foreach (var log in logs) {
 									log.Flush ();
+									var exists = File.Exists (log.FullPath);
 									string log_type = System.Web.MimeMapping.GetMimeMapping (log.FullPath);
 									string log_target;
 									switch (log_type) {
@@ -2115,7 +2116,9 @@ namespace xharness
 										log_target = "_self";
 										break;
 									}
-									if (log.Description == "Build log") {
+									if (!exists) {
+										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									} else if (log.Description == "Build log") {
 										var binlog = log.FullPath.Replace (".txt", ".binlog");
 										if (File.Exists (binlog)) {
 											var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
@@ -2127,7 +2130,9 @@ namespace xharness
 									} else {
 										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									}
-									if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
+									if (!exists) {
+										// Don't try to parse files that don't exist
+									} else if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
 										string summary;
 										List<string> fails;
 										try {
