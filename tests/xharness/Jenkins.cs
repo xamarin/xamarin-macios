@@ -3055,11 +3055,21 @@ namespace xharness
 				
 			var packages_conf = Path.Combine (Path.GetDirectoryName (TestProject.Path), "packages.config");
 			var nunit_version = string.Empty;
+			var is_packageref = false;
 			const string default_nunit_version = "3.9.0";
 
 			if (!File.Exists (packages_conf)) {
-				nunit_version = default_nunit_version;
-				log.WriteLine ("No packages.config found for {0}: assuming nunit version is {1}", TestProject, nunit_version);
+				var xml = new XmlDocument ();
+				xml.LoadWithoutNetworkAccess (TestProject.Path);
+				var packageref = xml.SelectSingleNode ("//*[local-name()='PackageReference' and @Include = 'NUnit.ConsoleRunner']");
+				if (packageref != null) {
+					is_packageref = true;
+					nunit_version = packageref.Attributes ["Version"].InnerText;
+					log.WriteLine ("Found PackageReference in {0} for NUnit.ConsoleRunner {1}", TestProject, nunit_version);
+				} else {
+					nunit_version = default_nunit_version;
+					log.WriteLine ("No packages.config found for {0}: assuming nunit version is {1}", TestProject, nunit_version);
+				}
 			} else {
 				using (var str = new StreamReader (packages_conf)) {
 					using (var reader = System.Xml.XmlReader.Create (str)) {
@@ -3083,8 +3093,13 @@ namespace xharness
 					log.WriteLine ("Found the NUnit.ConsoleRunner/NUnit.Runners element in {0} for {2}, version is: {1}", packages_conf, nunit_version, TestProject.Path);
 				}
 			}
-				
-			if (nunit_version [0] == '2') {
+
+			if (is_packageref) {
+				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "tools", $"nunit3-console-{nunit_version}");
+				if (!File.Exists (TestExecutable))
+					throw new FileNotFoundException ($"The helper script to execute the unit tests does not exist: {TestExecutable}");
+				WorkingDirectory = Path.GetDirectoryName (TestProject.Path);
+			} else if (nunit_version [0] == '2') {
 				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners." + nunit_version, "tools", "nunit-console.exe");
 				WorkingDirectory = Path.Combine (Path.GetDirectoryName (TestExecutable), "lib");
 			} else {
@@ -3099,7 +3114,7 @@ namespace xharness
 
 		public bool IsNUnit3 {
 			get {
-				return Path.GetFileName (TestExecutable) == "nunit3-console.exe";
+				return Path.GetFileName (TestExecutable).Contains ("unit3-console");
 			}
 		}
 		public override IEnumerable<Log> AggregatedLogs {

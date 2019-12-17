@@ -575,7 +575,7 @@ namespace Xamarin.iOS.Tasks
 			MonoTouchProjectInstance = MonoTouchProject.CreateProjectInstance ();
 
 			RunTarget_WithErrors (MonoTouchProjectInstance, TargetName.DetectAppManifest);
-			Assert.IsNullOrEmpty (MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
+			Assert.That (MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), Is.Null.Or.Empty, "#1");
 		}
 
 		[Test]
@@ -625,7 +625,7 @@ namespace Xamarin.iOS.Tasks
 		public void DetectAppManifest_LibraryProject ()
 		{
 			RunTargetOnInstance (LibraryProjectInstance, TargetName.DetectAppManifest);
-			Assert.IsNullOrEmpty (LibraryProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
+			Assert.That (LibraryProjectInstance.GetPropertyValue ("_AppManifest"), Is.Not.Null.Or.Empty, "#1");
 		}
 	}
 }
