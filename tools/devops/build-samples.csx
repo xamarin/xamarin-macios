@@ -73,6 +73,11 @@ void Execute (string cmd, params string[] args)
 Execute ("pwd");
 Environment.SetEnvironmentVariable ("PROVISION_DONT_FETCH_UPDATED_CERTS", "1");
 try {
+	Execute ($"../../../maccore/tools/provisioning-profiles/fetch-updated-certificates-and-profiles.sh", "-v");
+} catch (Exception e) {
+	Console.WriteLine ("Failed to fetch provisioning profiles: {0}", e);
+}
+try {
 	Execute ($"../../../maccore/tools/install-qa-provisioning-profiles.sh", "-v");
 } catch (Exception e) {
 	Console.WriteLine ("Failed to provision provisioning profiles: {0}", e);
