@@ -106,9 +106,6 @@ SDK_CONFIG = $(MONO_PATH)/sdks/Make.config
 SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
 
 $(SDK_CONFIG):
-	echo "DISABLE_ANDROID=1" > $@
-	echo "DISABLE_DESKTOP=1" >> $@
-	echo "DISABLE_WASM=1" >> $@
 	echo "ENABLE_IOS=1" >> $@
 	echo "ENABLE_MAC=1" >> $@
 

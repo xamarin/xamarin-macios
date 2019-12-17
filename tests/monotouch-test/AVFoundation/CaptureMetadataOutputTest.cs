@@ -144,6 +144,16 @@ namespace MonoTouchFixtures.AVFoundation {
 
 							AVMetadataObjectType all = AVMetadataObjectType.None;
 							foreach (AVMetadataObjectType val in Enum.GetValues (typeof (AVMetadataObjectType))) {
+								switch (val) {
+								case AVMetadataObjectType.CatBody:
+								case AVMetadataObjectType.DogBody:
+								case AVMetadataObjectType.HumanBody:
+								case AVMetadataObjectType.SalientObject:
+									// fail *and crash* on iOS 8 (at least on 32bits devices)
+									if (!TestRuntime.CheckXcodeVersion (11, 0))
+										continue;
+									break;
+								}
 								metadataOutput.MetadataObjectTypes = val;
 								all |= val;
 								Assert.AreEqual (val, metadataOutput.MetadataObjectTypes, val.ToString ());
