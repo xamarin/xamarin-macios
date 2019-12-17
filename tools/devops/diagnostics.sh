@@ -9,7 +9,9 @@ git branch
 git status
 git config -l
 
+#git remote rename xamarin origin
+
 ./tools/provisioning-profiles/fetch-updated-certificates-and-profiles.sh -v
-../../../maccore/tools/install-qa-provisioning-profiles.sh -v
+./tools/install-qa-provisioning-profiles.sh -v
 
 exit 0

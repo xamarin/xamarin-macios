@@ -101,7 +101,7 @@ jobs:
   - bash: |
       set -x
       cd maccore
-      git remote rename origin xamarin
+      #git remote rename origin xamarin
       cd ..
       cd xamarin-macios
       ./configure --enable-xamarin
