@@ -18,6 +18,7 @@ jobs:
   steps:
   - checkout: self
   - checkout: maccore
+    persistCredentials: true
 
   - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System info
