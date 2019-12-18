@@ -438,7 +438,7 @@ namespace BCLTestImporter {
 			}
 			// do we have ignores per files and not the project name? Add them
 			foreach (var (assembly, hintPath) in assemblies) {
-				// we could be looking at a splitted assembly, if that is the case, less pass the name of the dll without the 'part{number}.dll
+				// we could be looking at a splitted assembly, if that is the case, lets pass the name of the dll without the 'part{number}.dll
 				// so that we have all the ignores in a single file
 				var assemblyName = assembly;
 				if (assembly.Contains (splitPattern)) {
