@@ -64,8 +64,10 @@ Global
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
 		$0.TextStylePolicy = $1
-		$1.inheritsSet = null
 		$1.scope = text/x-csharp
+		$1.FileWidth = 80
+		$1.TabWidth = 8
+		$1.IndentWidth = 8
 		$0.CSharpFormattingPolicy = $2
 		$2.IndentSwitchSection = False
 		$2.NewLinesForBracesInProperties = False
@@ -78,13 +80,14 @@ Global
 		$2.NewLineForElse = False
 		$2.NewLineForCatch = False
 		$2.NewLineForFinally = False
-		$2.NewLineForMembersInObjectInit = True
-		$2.NewLineForMembersInAnonymousTypes = True
-		$2.NewLineForClausesInQuery = True
+		$2.NewLineForMembersInObjectInit = False
+		$2.NewLineForMembersInAnonymousTypes = False
+		$2.NewLineForClausesInQuery = False
 		$2.SpacingAfterMethodDeclarationName = True
 		$2.SpaceAfterMethodCallName = True
 		$2.SpaceAfterCast = True
-		$2.SpaceBeforeOpenSquareBracket = False
+		$2.SpaceBeforeOpenSquareBracket = True
 		$2.scope = text/x-csharp
+		$2.NewLinesForBracesInTypes = False
 	EndGlobalSection
 EndGlobal
