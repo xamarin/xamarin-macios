@@ -56,7 +56,6 @@ namespace FileProvider {
 		NSUrl DocumentStorageUrl { get; }
 
 		[NoMac]
-		[Deprecated (PlatformName.iOS, 13, 0)] // Undocumented replacement
 		[Export ("URLForItemWithPersistentIdentifier:")]
 		NSUrl GetUrlForItem (string persistentIdentifier);
 

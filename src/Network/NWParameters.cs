@@ -177,6 +177,32 @@ namespace Network {
 			return new NWParameters (ptr, owns: true);
 		}
 
+#if MONOMAC
+		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+		[DllImport (Constants.NetworkLibrary)]
+		unsafe static extern IntPtr nw_parameters_create_custom_ip (byte custom_ip_protocol_number, BlockLiteral *configure_ip);
+
+		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions> configureCustomIP = null)
+		{
+			var ipHandler = new BlockLiteral ();
+
+			var ipPtr = &ipHandler;
+			if (configureCustomIP == null)
+				ipPtr = DEFAULT_CONFIGURATION ();
+			else
+				ipHandler.SetupBlockUnsafe (static_ConfigureHandler, configureCustomIP);
+
+			var ptr = nw_parameters_create_custom_ip (protocolNumber, ipPtr);
+
+			if (configureCustomIP != null)
+				ipPtr->CleanupBlock ();
+
+			return new NWParameters (ptr, owns: true);
+		}
+#endif
+
 		[DllImport (Constants.NetworkLibrary)]
 		static extern nw_parameters_t nw_parameters_create ();
 

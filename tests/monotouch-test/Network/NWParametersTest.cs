@@ -202,6 +202,21 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
+#if MONOMAC
+		[Test]
+		public void CreateCustomIP ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			byte ipVersion = 10;
+			var setUpProtocol = CreateConfigureProtocolHandler ();
+			using (var parameters = NWParameters.CreateCustomIP (ipVersion, setUpProtocol))
+			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80")) {
+				configureEvent.WaitOne ();
+				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
+			}
+		}
+#endif
+
 		[Test]
 		public void MultiPathServicePropertyTest ()
 		{
