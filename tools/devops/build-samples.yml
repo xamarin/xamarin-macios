@@ -27,7 +27,7 @@ resources:
     endpoint: xamarin
 
 ###
-### Tell GitHub we're starting on this commit
+### Tell GitHub we're starting working on this commit
 ###
 
 jobs:
@@ -126,15 +126,8 @@ jobs:
   - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info post provisioning
 
-  # - bash: ./xamarin-macios/tools/devops/build-samples.sh
-  #   displayName: Run tests
-
-  - bash: |
-      set -e
-      set -x
-      mkdir -p xamarin-macios/tests/sampletester/bin/Debug/tmp-test-dir/execution-logs
-      echo "Test results" > xamarin-macios/tests/sampletester/bin/Debug/tmp-test-dir/execution-logs/results.xml
-    displayName: Fake test run
+  - bash: ./xamarin-macios/tools/devops/build-samples.sh
+    displayName: Run tests
 
   - task: PublishTestResults@2
     displayName: Publish test results
