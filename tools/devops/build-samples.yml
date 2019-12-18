@@ -195,7 +195,9 @@ jobs:
 
 - job: ReportResultsToGitHub
   displayName: Report status/results to GitHub
-  dependsOn: PublishPerformanceData
+  dependsOn:
+  - PublishPerformanceData
+  - macOS
   condition: always()
   pool:
     name: '$(macOSVersion)'
