@@ -150,8 +150,7 @@ jobs:
   #   condition: always()
 
   - bash: |
-      set -e
-      set -x
+      set -ex
       mkdir -p logs
       zip -9r logs/execution-logs-$SYSTEM_JOBID.zip xamarin-macios/tests/sampletester/bin/Debug/tmp-test-dir/execution-logs
     displayName: Compress execution logs
@@ -185,10 +184,12 @@ jobs:
       path: logs
 
   - bash: |
-      set -x
-      set -e
-      cp -cr logs/ xamarin-macios-data/
-      cd xamarin-macios-data && git add . && git commit -m "Add performance data for $BUILD_SOURCEBRANCHNAME/$BUILD_SOURCEVERSION."
+      set -ex
+      cd xamarin-macios-data
+      git checkout master
+      cp -cr ../logs/ ./
+      git add .
+      git commit -m "Add performance data for $BUILD_SOURCEBRANCHNAME/$BUILD_SOURCEVERSION."
       # Try to push 5 times, just in case someone else pushed first.
       COUNTER=5
       while [[ $COUNTER -gt 0 ]]; do
@@ -196,6 +197,7 @@ jobs:
         git pull
         (( COUNTER-- ))
       done
+      for i in *.zip; do unzip -l $i; done || true
     displayName: Publish perf data
 
 ### Report final results to GitHub
