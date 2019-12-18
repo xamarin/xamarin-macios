@@ -5,7 +5,9 @@ git checkout master
 cp -cr ../logs/ ./
 
 mv ./*/*.zip .
-unzip ./*.zip
+for zip in ./*.zip; do
+	unzip "$zip"
+done
 rm -f ./*.zip
 
 git add .
