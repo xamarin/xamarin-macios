@@ -15,7 +15,7 @@ namespace BCLTestImporter {
 
 		static string NUnitPattern = "monotouch_*_test.dll"; 
 		static string xUnitPattern = "monotouch_*_xunit-test.dll";
-		internal static string splitPattern = ".part";
+		internal static readonly string splitPattern = ".part";
 		internal static readonly string ProjectGuidKey = "%PROJECT GUID%";
 		internal static readonly string NameKey = "%NAME%";
 		internal static readonly string ReferencesKey = "%REFERENCES%";
@@ -441,8 +441,9 @@ namespace BCLTestImporter {
 				// we could be looking at a splitted assembly, if that is the case, lets pass the name of the dll without the 'part{number}.dll
 				// so that we have all the ignores in a single file
 				var assemblyName = assembly;
-				if (assembly.Contains (splitPattern)) {
-					var index = assembly.IndexOf (splitPattern, StringComparison.Ordinal);
+				var index = assembly.IndexOf (splitPattern, StringComparison.Ordinal);
+
+				if (index != -1) {
 					assemblyName = assembly.Substring (0, index) + ".dll";
 				}
 				foreach (var platformFile in GetIgnoreFileNames (assemblyName, platform)) {
