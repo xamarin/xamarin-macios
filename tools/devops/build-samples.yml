@@ -26,6 +26,10 @@ resources:
     ref: refs/heads/master
     endpoint: xamarin
 
+###
+### Tell GitHub we're starting on this commit
+###
+
 jobs:
 - job: ReportStartToGitHub
   displayName: Set pending GitHub status
@@ -38,6 +42,13 @@ jobs:
 
   - bash: ./jenkins/add-commit-status.sh "--token=$(github-pat)" "--hash=$BUILD_SOURCEVERSION" "--state=pending" --target-url="$AZURE_BUILD_URL" --description="$BUILD_DEFINITIONNAME" --context="$BUILD_DEFINITIONNAME"
     displayName: Set pending GitHub status
+
+###
+### Run the sample tests.
+###
+### They're split over multiple bots to make them run faster (and not hit the
+### max job time duration for a single job).
+###
 
 - job: macOS
   dependsOn: ReportStartToGitHub
@@ -98,14 +109,7 @@ jobs:
   - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info
 
-  - bash: |
-      set -x
-      cd maccore
-      git remote add -f xamarin https://github.com/xamarin/maccore
-      cd ..
-      cd xamarin-macios
-      ./configure --enable-xamarin
-      V=1 make reset-maccore V=1
+  - bash: ./xamarin-macios/tools/devops/fetch-maccore.sh
     displayName: Fetch correct maccore hash
 
   - task: provisionator@2
@@ -145,15 +149,8 @@ jobs:
       publishRunAttachments: true
       mergeTestResults: true
 
-  # - bash: ./xamarin-macios/tools/devops/publish-performance-data.sh
-  #   displayName: Publish performance data
-  #   condition: always()
-
-  - bash: |
-      set -ex
-      mkdir -p logs
-      zip -9r logs/execution-logs-$SYSTEM_JOBID.zip xamarin-macios/tests/sampletester/bin/Debug/tmp-test-dir/execution-logs
-    displayName: Compress execution logs
+  - bash: ./xamarin-macios/tools/devops/prepare-performance-data.sh
+    displayName: Prepare performance data
     condition: always()
 
   - publish: logs
@@ -166,9 +163,12 @@ jobs:
     displayName: Export status
     condition: always()
 
-### Upload performance data to xamarin-macios-data
+###
+### Push performance data to the xamarin-macios-data repository
+###
 
 - job: PublishPerformanceData
+  displayName: Publish Performance Data
   condition: always()
   dependsOn: macOS
   pool:
@@ -179,28 +179,17 @@ jobs:
     persistCredentials: true
 
   - task: DownloadPipelineArtifact@2
+    displayName: Download performance data
     inputs:
       source: current
       path: logs
 
-  - bash: |
-      set -ex
-      cd xamarin-macios-data
-      git checkout master
-      cp -cr ../logs/ ./
-      git add .
-      git commit -m "Add performance data for $BUILD_SOURCEBRANCHNAME/$BUILD_SOURCEVERSION."
-      # Try to push 5 times, just in case someone else pushed first.
-      COUNTER=5
-      while [[ $COUNTER -gt 0 ]]; do
-        if git push; then break; fi
-        git pull
-        (( COUNTER-- ))
-      done
-      for i in *.zip; do unzip -l $i; done || true
+  - bash: ./xamarin-macios/tools/devops/push-performance-data.sh
     displayName: Publish perf data
 
+###
 ### Report final results to GitHub
+###
 
 - job: ReportResultsToGitHub
   displayName: Report status/results to GitHub
