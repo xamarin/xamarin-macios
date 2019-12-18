@@ -442,7 +442,7 @@ namespace BCLTestImporter {
 				// so that we have all the ignores in a single file
 				var assemblyName = assembly;
 				if (assembly.Contains (splitPattern)) {
-					var index = assembly.IndexOf(splitPattern, StringComparison.Ordinal);
+					var index = assembly.IndexOf (splitPattern, StringComparison.Ordinal);
 					assemblyName = assembly.Substring (0, index) + ".dll";
 				}
 				foreach (var platformFile in GetIgnoreFileNames (assemblyName, platform)) {
