@@ -59,25 +59,7 @@ InstallPackage ("Objective-Sharpie", FindVariable ("MIN_SHARPIE_URL"));
 
 // Provisioning profiles
 Console.WriteLine ("Provisioning provisioning profiles...");
-
-void Execute (string cmd, params string[] args)
-{
-	try {
-		new Exec (
-			ProcessArguments.FromCommandAndArguments (cmd, args),
-			ExecFlags.None, (ConsoleRedirection) null)
-			.RunAsync ()
-			.GetAwaiter ()
-			.GetResult ();
-	} catch (Exception e) {
-		Console.WriteLine ("Failed to execute {1}: {0}", e, cmd);
-	}
-}
-
-Execute ("pwd");
-Environment.SetEnvironmentVariable ("PROVISION_DONT_FETCH_UPDATED_CERTS", "1");
-Execute ($"./diagnostics.sh", "-v");
-Execute ($"../../../maccore/tools/install-qa-provisioning-profiles.sh", "-v");
+Exec ($"../../../maccore/tools/install-qa-provisioning-profiles.sh");
 
 // .NET core
 // The version number here must match the one in Xamarin.Tests.Configuration:CreateGlobalConfig (tests/sampletester/Configuration.cs).
