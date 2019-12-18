@@ -36,7 +36,6 @@ jobs:
   pool:
     name: '$(macOSVersion)'
   steps:
-
   - bash: ./jenkins/add-commit-status.sh "--token=$(github-pat)" "--hash=$BUILD_SOURCEVERSION" "--state=pending" --target-url="$AZURE_BUILD_URL" --description="$BUILD_DEFINITIONNAME" --context="$BUILD_DEFINITIONNAME"
     displayName: Set pending GitHub status
 

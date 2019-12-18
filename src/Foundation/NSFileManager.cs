@@ -486,7 +486,8 @@ namespace Foundation {
 
 		public NSUrl[] GetMountedVolumes (NSString [] properties, NSVolumeEnumerationOptions options)
 		{
-			return GetMountedVolumes (NSArray.FromNSObjects (properties), options);
+			using var array = NSArray.FromNSObjects (properties);
+			return GetMountedVolumes (array, options);
 		}
 
 		public string CurrentDirectory {

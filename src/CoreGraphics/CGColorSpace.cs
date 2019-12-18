@@ -361,13 +361,11 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGColorSpaceGetColorTable (/* CGColorSpaceRef */ IntPtr space, /* uint8_t* */ byte[] table);
 		
-		static byte[] Empty = new byte [0];
-		
 		public byte[] GetColorTable ()
 		{
 			nint n = CGColorSpaceGetColorTableCount (handle);
 			if (n == 0)
-				return Empty;
+				return Array.Empty<byte> ();
 			
 			byte[] table = new byte [n * GetBaseColorSpace ().Components];
 			CGColorSpaceGetColorTable (handle, table);
