@@ -1,4 +1,5 @@
 #!/bin/bash -ex
+exit 1
 
 cd xamarin-macios-data
 git checkout master

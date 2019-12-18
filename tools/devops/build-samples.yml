@@ -184,13 +184,18 @@ jobs:
   - bash: ./xamarin-macios/tools/devops/push-performance-data.sh
     displayName: Publish perf data
 
+  - bash: echo "##vso[task.setvariable variable=JobStatus;isOutput=true]$AGENT_JOBSTATUS"
+    name: ExportedVariables
+    displayName: Export status
+    condition: always()
+
 ###
 ### Report final results to GitHub
 ###
 
 - job: ReportResultsToGitHub
   displayName: Report status/results to GitHub
-  dependsOn: macOS
+  dependsOn: PublishPerformanceData
   condition: always()
   pool:
     name: '$(macOSVersion)'
@@ -205,6 +210,7 @@ jobs:
     jobResultReleaseiPhoneSimulator: $[ dependencies.macOS.outputs['Release_iPhoneSimulator.ExportedVariables.JobStatus'] ]
     jobResultDebugMac: $[ dependencies.macOS.outputs['Debug_Mac.ExportedVariables.JobStatus'] ]
     jobResultReleaseMac: $[ dependencies.macOS.outputs['Release_Mac.ExportedVariables.JobStatus'] ]
+    jobResultPublishPerformanceData: $[ dependencies.PublishPerformanceData.outputs['ExportedVariables.JobStatus'] ]
   steps:
   - bash: |
       ./tools/devops/build-samples-report-to-github.sh "$(github-pat)" \
@@ -213,6 +219,7 @@ jobs:
         "Release_iPhone_AF" "Release_iPhone_GR" "Release_iPhone_SZ" \
         "Release_iPhoneSimulator" \
         "Debug_Mac" \
-        "Release_Mac"
+        "Release_Mac" \
+        "PublishPerformanceData"
     displayName: Report results to GitHub as comment / status
     condition: always()
