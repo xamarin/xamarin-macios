@@ -127,6 +127,8 @@ public static class ProcessHelper
 
 		// Write performance data to disk
 		var subdirs = Directory.GetDirectories (slndir, "*", SearchOption.AllDirectories);
+
+		// First figure out which .app subdirectory is the actual .app. This is a bit more complicated than it would seem...
 		var apps = subdirs.Where ((v) => {
 			var names = v.Substring (slndir.Length).Split (Path.DirectorySeparatorChar);
 			if (names.Length < 2)
@@ -159,6 +161,7 @@ public static class ProcessHelper
 		}).ToArray ();
 
 		if (apps.Length > 1) {
+			// Found more than one .app subdirectory, use additional logic to choose between them.
 			var filtered_apps = apps.Where ((v) => {
 				// If one .app is a subdirectory of another .app, we don't care about the former.
 				if (apps.Any ((v2) => v2.Length < v.Length && v.StartsWith (v2, StringComparison.Ordinal)))
@@ -181,108 +184,122 @@ public static class ProcessHelper
 		}
 
 		if (apps.Length > 1) {
-			Assert.Fail ($"More than one app directory????\n\t{string.Join ("\n\t", apps)}");
+			Assert.Fail ($"Found more than one .app directory:\n\t{string.Join ("\n\t", apps)}");
 		} else if (apps.Length == 0) {
-			Assert.Fail ($"No app directory???? platform: {platform} configuration: {configuration} target: {target} \n\t{string.Join ("\n\t", subdirs)}");
-		} else {
-			var logfile = Path.Combine (LogDirectory, $"{Path.GetFileNameWithoutExtension (solution)}-perfdata-{Interlocked.Increment (ref counter)}.xml");
+			Assert.Fail ($"Found no .app directories for  platform: {platform} configuration: {configuration} target: {target}. All directories:\n\t{string.Join ("\n\t", subdirs)}");
+		}
 
-			var xmlSettings = new XmlWriterSettings {
-				Indent = true,
-			};
-			var xml = XmlWriter.Create (logfile, xmlSettings);
-			xml.WriteStartDocument (true);
-			xml.WriteStartElement ("perf-data");
-			xml.WriteAttributeString ("mono-version", Configuration.MonoVersion);
-			xml.WriteAttributeString ("os-version", Configuration.OSVersion);
-			xml.WriteAttributeString ("xamarin-macios-hash", Configuration.TestedHash);
-			xml.WriteAttributeString ("sample-repository", Configuration.GetCurrentRemoteUrl (slndir));
-			xml.WriteAttributeString ("sample-hash", Configuration.GetCurrentHash (slndir));
-			foreach (var app in apps) {
-				xml.WriteStartElement ("test");
-				xml.WriteAttributeString ("name", TestContext.CurrentContext.Test.FullName);
-				xml.WriteAttributeString ("result", failed ? "failed" : "success");
-				if (platform.Length > 0)
-					xml.WriteAttributeString ("platform", platform);
-				xml.WriteAttributeString ("configuration", configuration);
-				if (!failed) {
-					xml.WriteAttributeString ("duration", watch.ElapsedTicks.ToString ());
-					xml.WriteAttributeString ("duration-formatted", watch.Elapsed.ToString ());
+		var logfile = Path.Combine (LogDirectory, $"{Path.GetFileNameWithoutExtension (solution)}-perfdata-{Interlocked.Increment (ref counter)}.xml");
 
-					var files = Directory.GetFiles (app, "*", SearchOption.AllDirectories).OrderBy ((v) => v).ToArray ();
-					var lengths = files.Select ((v) => new FileInfo (v).Length).ToArray ();
-					var total_size = lengths.Sum ();
+		var xmlSettings = new XmlWriterSettings {
+			Indent = true,
+		};
+		var xml = XmlWriter.Create (logfile, xmlSettings);
+		xml.WriteStartDocument (true);
+		xml.WriteStartElement ("performance");
+		xml.WriteStartElement ("sample-build");
+		xml.WriteAttributeString ("mono-version", Configuration.MonoVersion);
+		xml.WriteAttributeString ("os-version", Configuration.OSVersion);
+		xml.WriteAttributeString ("xamarin-macios-hash", Configuration.TestedHash);
+		xml.WriteAttributeString ("sample-repository", Configuration.GetCurrentRemoteUrl (slndir));
+		xml.WriteAttributeString ("sample-hash", Configuration.GetCurrentHash (slndir));
+		foreach (var app in apps) {
+			xml.WriteStartElement ("test");
+			xml.WriteAttributeString ("name", TestContext.CurrentContext.Test.FullName);
+			xml.WriteAttributeString ("result", failed ? "failed" : "success");
+			if (platform.Length > 0)
+				xml.WriteAttributeString ("platform", platform);
+			xml.WriteAttributeString ("configuration", configuration);
+			if (!failed) {
+				xml.WriteAttributeString ("duration", watch.ElapsedTicks.ToString ());
+				xml.WriteAttributeString ("duration-formatted", watch.Elapsed.ToString ());
 
-					xml.WriteAttributeString ("total-size", total_size.ToString ());
-					var appstart = Path.GetDirectoryName (app).Length;
-					for (var i = 0; i < files.Length; i++) {
-						xml.WriteStartElement ("file");
-						xml.WriteAttributeString ("name", files [i].Substring (appstart + 1));
-						xml.WriteAttributeString ("size", lengths [i].ToString ());
-						xml.WriteEndElement ();
-					}
+				var files = Directory.GetFiles (app, "*", SearchOption.AllDirectories).OrderBy ((v) => v).ToArray ();
+				var lengths = files.Select ((v) => new FileInfo (v).Length).ToArray ();
+				var total_size = lengths.Sum ();
 
-					if (File.Exists (msbuild_logfile)) {
-						var lines = File.ReadAllLines (msbuild_logfile);
-						var target_perf_summary = new List<string> ();
-						var task_perf_summary = new List<string> ();
-						var timestamps = new List<string> ();
-						for (var i = lines.Length - 1; i >= 0; i--) {
-							if (lines [i].EndsWith ("Target Performance Summary:", StringComparison.Ordinal)) {
-								for (var k = i + 1; k < lines.Length && lines [k].EndsWith ("calls", StringComparison.Ordinal); k++) {
-									target_perf_summary.Add (lines [k].Substring (18).Trim ());
-								}
-							} else if (lines [i].EndsWith ("Task Performance Summary:", StringComparison.Ordinal)) {
-								for (var k = i + 1; k < lines.Length && lines [k].EndsWith ("calls", StringComparison.Ordinal); k++) {
-									task_perf_summary.Add (lines [k].Substring (18).Trim ());
-								}
-							} else if (lines [i].Contains ("!Timestamp")) {
-								timestamps.Add (lines [i]);
-							}
-						}
-						foreach (var tps in target_perf_summary) {
-							var split = tps.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-							xml.WriteStartElement ("target");
-							xml.WriteAttributeString ("name", split [2]);
-							xml.WriteAttributeString ("ms", split [0]);
-							xml.WriteAttributeString ("calls", split [3]);
-							xml.WriteEndElement ();
-						}
-						foreach (var tps in task_perf_summary) {
-							var split = tps.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-							xml.WriteStartElement ("task");
-							xml.WriteAttributeString ("name", split [2]);
-							xml.WriteAttributeString ("ms", split [0]);
-							xml.WriteAttributeString ("calls", split [3]);
-							xml.WriteEndElement ();
-						}
-						foreach (var ts in timestamps) {
-							// Sample line:
-							// 15:04:50.4609520:   !Timestamp Setup: 28 ms (TaskId:137)
-							var splitFirst = ts.Split (new char [] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-							var splitSecondA = splitFirst [3].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-							var splitSecondB = splitFirst [4].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-							var name = string.Join (" ", splitSecondA.Skip (1));
-							var level = splitSecondA [0].Count ((v) => v == '!').ToString ();
-							var ms = splitSecondB [0];
-							xml.WriteStartElement ("timestamp");
-							xml.WriteAttributeString ("name", name);
-							xml.WriteAttributeString ("level", level);
-							xml.WriteAttributeString ("ms", ms);
-							xml.WriteEndElement ();
-						}
-					}
-
+				xml.WriteAttributeString ("total-size", total_size.ToString ());
+				var appstart = Path.GetDirectoryName (app).Length;
+				for (var i = 0; i < files.Length; i++) {
+					xml.WriteStartElement ("file");
+					xml.WriteAttributeString ("name", files [i].Substring (appstart + 1));
+					xml.WriteAttributeString ("size", lengths [i].ToString ());
 					xml.WriteEndElement ();
 				}
 
-				xml.WriteEndElement ();
-				xml.WriteEndDocument ();
-				xml.Dispose ();
+				if (File.Exists (msbuild_logfile)) {
+					var lines = File.ReadAllLines (msbuild_logfile);
+					var target_perf_summary = new List<string> ();
+					var task_perf_summary = new List<string> ();
+					var timestamps = new List<string> ();
+					for (var i = lines.Length - 1; i >= 0; i--) {
+						if (lines [i].EndsWith ("Target Performance Summary:", StringComparison.Ordinal)) {
+							for (var k = i + 1; k < lines.Length && lines [k].EndsWith ("calls", StringComparison.Ordinal); k++) {
+								target_perf_summary.Add (lines [k].Substring (18).Trim ());
+							}
+						} else if (lines [i].EndsWith ("Task Performance Summary:", StringComparison.Ordinal)) {
+							for (var k = i + 1; k < lines.Length && lines [k].EndsWith ("calls", StringComparison.Ordinal); k++) {
+								task_perf_summary.Add (lines [k].Substring (18).Trim ());
+							}
+						} else if (lines [i].Contains ("!Timestamp")) {
+							timestamps.Add (lines [i]);
+						}
+					}
+					foreach (var tps in target_perf_summary) {
+						var split = tps.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+						xml.WriteStartElement ("target");
+						xml.WriteAttributeString ("name", split [2]);
+						xml.WriteAttributeString ("ms", split [0]);
+						xml.WriteAttributeString ("calls", split [3]);
+						xml.WriteEndElement ();
+					}
+					foreach (var tps in task_perf_summary) {
+						var split = tps.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+						xml.WriteStartElement ("task");
+						xml.WriteAttributeString ("name", split [2]);
+						xml.WriteAttributeString ("ms", split [0]);
+						xml.WriteAttributeString ("calls", split [3]);
+						xml.WriteEndElement ();
+					}
+					foreach (var ts in timestamps) {
+						// Sample line:
+						// 15:04:50.4609520:   !Timestamp Setup: 28 ms (TaskId:137)
+						var splitFirst = ts.Split (new char [] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+						var splitSecondA = splitFirst [3].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+						var splitSecondB = splitFirst [4].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+						var name = string.Join (" ", splitSecondA.Skip (1));
+						var level = splitSecondA [0].Count ((v) => v == '!').ToString ();
+						var ms = splitSecondB [0];
+						xml.WriteStartElement ("timestamp");
+						xml.WriteAttributeString ("name", name);
+						xml.WriteAttributeString ("level", level);
+						xml.WriteAttributeString ("ms", ms);
+						xml.WriteEndElement ();
+					}
+				}
 
-				TestContext.AddTestAttachment (logfile, $"Performance data");
-				Console.WriteLine ("Performance data: {0}:\n\t{1}", logfile, string.Join ("\n\t", File.ReadAllLines (logfile)));
+				xml.WriteEndElement ();
 			}
+
+			xml.WriteEndElement (); // sample-build
+			xml.WriteEndElement (); // performance
+			xml.WriteEndDocument ();
+			xml.Dispose ();
+
+			TestContext.AddTestAttachment (logfile, $"Performance data");
+			// Console.WriteLine ("Performance data: {0}:\n\t{1}", logfile, string.Join ("\n\t", File.ReadAllLines (logfile)));
+		}
+	}
+
+	internal static string RunProcess (string filename, string arguments = "")
+	{
+		using (var p = Process.Start (filename, arguments)) {
+			p.StartInfo.RedirectStandardOutput = true;
+			p.StartInfo.UseShellExecute = false;
+			p.Start ();
+			var output = p.StandardOutput.ReadToEnd ();
+			p.WaitForExit ();
+			return output;
 		}
 	}
 }
