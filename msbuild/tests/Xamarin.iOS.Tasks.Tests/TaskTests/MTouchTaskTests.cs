@@ -189,7 +189,7 @@ namespace Xamarin.iOS.Tasks
 				var args = Task.GenerateCommandLineCommands ();
 				Assert.IsFalse (args.Contains ("$"), "#1");
 				Assert.IsTrue (args.Contains ("xyz-path/to-xyz"), "#ProjectDir");
-				Assert.IsTrue (args.Contains ("xxx-../MySingleView/bin/iPhoneSimulator/Debug/MySingleView.app-xxx"), "#AppBundleDir");
+				Assert.That (args, Does.Match ("xxx-.*/MySingleView/bin/iPhoneSimulator/Debug/MySingleView.app-xxx"), "#AppBundleDir");
 				Assert.IsTrue (args.Contains ("yyy-Main.exe-yyy"), "#TargetPath");
 				Assert.IsTrue (args.Contains ("yzy--yzy"), "#TargetDir");
 				Assert.IsTrue (args.Contains ("zzz-Main.exe-zzz"), "#TargetName");
@@ -203,8 +203,8 @@ namespace Xamarin.iOS.Tasks
 		public void BuildEntitlementFlagsTest ()
 		{
 			var args = Task.GenerateCommandLineCommands ();
-			Assert.IsTrue (args.Contains ("\"--gcc_flags=-Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker"), "#1");
-			Assert.IsTrue (args.Contains ("Entitlements.plist"), "#2");
+			Assert.That (args, Does.Contain ("\"--gcc_flags=-Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker"), "#1");
+			Assert.That (args, Does.Contain ("Entitlements.plist"), "#2");
 		}
 
 		[Test]

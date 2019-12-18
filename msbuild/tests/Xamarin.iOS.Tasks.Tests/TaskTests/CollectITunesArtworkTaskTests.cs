@@ -58,7 +58,7 @@ namespace Xamarin.iOS.Tasks {
 
 			Assert.IsFalse (task.Execute (), "Execute failure");
 			Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
-			Assert.That (Engine.Logger.ErrorEvents [0].Message, Does.Match ($"Multiple iTunesArtwork files with the same dimensions detected [(]{dimension}[)] for '.*/msbuild/tests/bin/Resources/iTunesArtwork{size}.png'."), "ErrorMessage");
+			Assert.That (Engine.Logger.ErrorEvents [0].Message, Does.Match ($"Multiple iTunesArtwork files with the same dimensions detected [(]{dimension}[)] for '.*/Resources/iTunesArtwork{size}.png'."), "ErrorMessage");
 		}
 
 		[Test]
