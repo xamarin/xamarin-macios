@@ -10,11 +10,6 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Bundler;
 
-
-using Mono.Cecil;
-using Mono.Cecil.Cil;
-
-
 #if MONOTOUCH
 using PlatformException = Xamarin.Bundler.MonoTouchException;
 #else
@@ -29,18 +24,15 @@ namespace MonoMac.Tuner {
 	static partial class Linker {
 		static void HandlePipelineProcessException (Exception e)
 		{
-			if (e is FileNotFoundException fnfe) {
-				// Cecil throw this if the assembly is not found
-				throw new PlatformException (2002, true, fnfe, fnfe.Message);
-			} 
-			else if (e is AssemblyResolutionException are) {
+			switch (e) {
+			case AssemblyResolutionException are:
 				throw new PlatformException (2002, true, are, are.Message);
-			}
-			else if (e is AggregateException) {
-				throw e;
-			} else if (e is PlatformException) {
-				throw e;
-			} else if (e is MarkException me) {
+			case AggregateException ae:
+				throw ae;
+			case PlatformException pe:
+				throw pe;
+			case MarkException me:
+			{
 				var re = me.InnerException as ResolutionException;
 				if (re == null) {
 					if (me.InnerException != null) {
@@ -53,13 +45,16 @@ namespace MonoMac.Tuner {
 					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
 					throw ErrorHelper.CreateError (2101, me, "Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.", re.Member, me.Method.FullName, scope);
 				}
-			} else if (e is ResolutionException re) {
+			}
+			case ResolutionException re:
+			{
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
 				throw new PlatformException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
-			} else if (e is XmlResolutionException ex) {
+			}
+			case XmlResolutionException ex:
 				throw new PlatformException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
-			} else {
+			default:
 				if (e.InnerException != null) {
 					HandlePipelineProcessException (e.InnerException);
 					return;
@@ -80,6 +75,7 @@ namespace MonoMac.Tuner {
 				}
 				message.Append ($"Reason: {e.Message}");
 				throw new PlatformException (2001, true, e, "Could not link assemblies. {0}", message);
+
 			}
 		}
 	}
