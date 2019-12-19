@@ -15,6 +15,7 @@ namespace BCLTestImporter {
 
 		static string NUnitPattern = "monotouch_*_test.dll"; 
 		static string xUnitPattern = "monotouch_*_xunit-test.dll";
+		static readonly string splitPattern = ".part";
 		internal static readonly string ProjectGuidKey = "%PROJECT GUID%";
 		internal static readonly string NameKey = "%NAME%";
 		internal static readonly string ReferencesKey = "%REFERENCES%";
@@ -437,8 +438,15 @@ namespace BCLTestImporter {
 			}
 			// do we have ignores per files and not the project name? Add them
 			foreach (var (assembly, hintPath) in assemblies) {
-				foreach (var platformFile in GetIgnoreFileNames (assembly, platform)) {
-					var commonAssemblyIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (assembly, platform));
+				// we could be looking at a splitted assembly, if that is the case, lets pass the name of the dll without the 'part{number}.dll
+				// so that we have all the ignores in a single file
+				var assemblyName = assembly;
+				var index = assembly.IndexOf (splitPattern, StringComparison.Ordinal);
+
+				if (index != -1)
+					assemblyName = assembly.Substring (0, index) + ".dll";
+				foreach (var platformFile in GetIgnoreFileNames (assemblyName, platform)) {
+					var commonAssemblyIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (assemblyName, platform));
 					if (File.Exists (commonAssemblyIgnore))
 						yield return commonAssemblyIgnore;
 					var platformAssemblyIgnore = Path.Combine (templateDir, platformFile);
