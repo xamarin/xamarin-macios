@@ -95,7 +95,7 @@ public static class ProcessHelper
 
 		foreach (var sln in solutions) {
 			nuget_args [1] = sln; // replacing here
-			AssertRunProcess ("nuget", nuget_args.ToArray (), TimeSpan.FromMinutes (2), Configuration.SampleRootDirectory, environment_variables, "nuget restore");
+			AssertRunProcess ("nuget", nuget_args.ToArray (), TimeSpan.FromMinutes (5), Configuration.SampleRootDirectory, environment_variables, "nuget restore");
 		}
 
 		// msbuild
