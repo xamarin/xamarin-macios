@@ -60,7 +60,7 @@ namespace Xamarin.iOS.Tasks
 
 			Task.AppBundleDir = AppBundlePath;
 			Task.AppManifest = new TaskItem (Path.Combine (MonoTouchProjectPath, "Info.plist"));
-			Task.CompiledEntitlements = Path.Combine ("..", "bin", "Resources", "Entitlements.plist");
+			Task.CompiledEntitlements = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "Entitlements.plist");
 			Task.IntermediateOutputPath = Path.Combine ("obj", "mtouch-cache");
 			Task.MainAssembly = new TaskItem ("Main.exe");
 			Task.References = new [] { new TaskItem ("a.dll"), new TaskItem ("b with spaces.dll"), new TaskItem ("c\"quoted\".dll") };

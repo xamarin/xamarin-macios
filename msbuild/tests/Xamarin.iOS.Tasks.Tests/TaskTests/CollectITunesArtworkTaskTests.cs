@@ -8,6 +8,8 @@ using NUnit.Framework;
 namespace Xamarin.iOS.Tasks {
 	[TestFixture]
 	public class CollectITunesArtworkTaskTests : TestBase {
+		string AppPath => Path.GetDirectoryName (GetType ().Assembly.Location);
+
 		[Test]
 		public void UnknownImageFormat ()
 		{
@@ -36,7 +38,7 @@ namespace Xamarin.iOS.Tasks {
 		public void InvalidSize (string extension)
 		{
 			var task = CreateTask<CollectITunesArtwork> ();
-			task.ITunesArtwork = new TaskItem [] { new TaskItem (Path.Combine ("..", "bin", "Resources", "iTunesArtwork-invalid-size." + extension)) };
+			task.ITunesArtwork = new TaskItem [] { new TaskItem (Path.Combine (AppPath, "Resources", "iTunesArtwork-invalid-size." + extension)) };
 
 			Assert.IsFalse (task.Execute (), "Execute failure");
 			Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
@@ -50,8 +52,8 @@ namespace Xamarin.iOS.Tasks {
 		{
 			var task = CreateTask<CollectITunesArtwork> ();
 			task.ITunesArtwork = new TaskItem [] {
-				new TaskItem (Path.Combine ("..", "bin", "Resources", $"iTunesArtwork{size}.jpg")),
-				new TaskItem (Path.Combine ("..", "bin", "Resources", $"iTunesArtwork{size}.png")),
+				new TaskItem (Path.Combine (AppPath, "Resources", $"iTunesArtwork{size}.jpg")),
+				new TaskItem (Path.Combine (AppPath, "Resources", $"iTunesArtwork{size}.png")),
 			};
 
 			Assert.IsFalse (task.Execute (), "Execute failure");
@@ -66,8 +68,8 @@ namespace Xamarin.iOS.Tasks {
 		{
 			var task = CreateTask<CollectITunesArtwork> ();
 			task.ITunesArtwork = new TaskItem [] {
-				new TaskItem (Path.Combine ("..", "bin", "Resources", $"iTunesArtwork.{extension}")),
-				new TaskItem (Path.Combine ("..", "bin", "Resources", $"iTunesArtwork@2x.{extension}")),
+				new TaskItem (Path.Combine (AppPath, "Resources", $"iTunesArtwork.{extension}")),
+				new TaskItem (Path.Combine (AppPath, "Resources", $"iTunesArtwork@2x.{extension}")),
 			};
 
 			Assert.IsTrue (task.Execute (), "Execute");
