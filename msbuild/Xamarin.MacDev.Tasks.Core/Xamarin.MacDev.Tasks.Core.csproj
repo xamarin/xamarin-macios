@@ -40,8 +40,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="Mono.Posix" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Json" />
     <Reference Include="System.Runtime.Serialization" />
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
@@ -50,9 +50,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <!-- Mono has a different implementation of the Move task, so when building on a Mac we need to include XBuildMoveTaskBase.cs -->
-    <Compile Include="MsBuildTasks\MoveTaskBase.cs" Condition="'$(OS)' == 'Windows_NT'" />
-    <Compile Include="MsBuildTasks\XBuildMoveTaskBase.cs" Condition="'$(OS)' != 'Windows_NT'" />
     <Compile Include="PlatformUtils.cs" />
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
@@ -64,6 +61,7 @@
     <Compile Include="MsBuildTasks\DeleteBase.cs" />
     <Compile Include="MsBuildTasks\ExecBase.cs" />
     <Compile Include="MsBuildTasks\MakeDirBase.cs" />
+    <Compile Include="MsBuildTasks\MoveTaskBase.cs" />
     <Compile Include="MsBuildTasks\RemoveDirBase.cs" />
     <Compile Include="MsBuildTasks\TouchBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

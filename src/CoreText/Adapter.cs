@@ -96,7 +96,7 @@ namespace CoreText {
 		{
 			var value = dictionary [key];
 			if (value == null)
-				return new string [0];
+				return Array.Empty<string> ();
 			return NSArray.StringArrayFromHandle (value.Handle);
 		}
 

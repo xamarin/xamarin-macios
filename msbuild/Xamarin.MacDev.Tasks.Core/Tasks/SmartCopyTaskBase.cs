@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Mono.Unix.Native;
+
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class SmartCopyTaskBase : Task
@@ -64,6 +66,12 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogMessage (MessageImportance.Normal, "Copying file from '{0}' to '{1}'", source, target);
 
 			File.Copy (source, target, true);
+			if (Environment.OSVersion.Platform == PlatformID.Unix) {
+				if (Syscall.stat (target, out var stat) == 0) {
+					// ensure it's world read-able or this might trigger an appstore rejection
+					Syscall.chmod (target, stat.st_mode | FilePermissions.S_IROTH);
+				}
+			}
 
 			copied.Add (new TaskItem (targetItemSpec));
 		}

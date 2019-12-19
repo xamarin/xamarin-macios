@@ -613,9 +613,21 @@ namespace Xamarin.Bundler {
 
 		public void ComputeSatellites ()
 		{
-			var path = Path.GetDirectoryName (FullPath);
 			var satellite_name = Path.GetFileNameWithoutExtension (FullPath) + ".resources.dll";
+			var path = Path.GetDirectoryName (FullPath);
+			// first look if satellites are located in subdirectories of the current location of the assembly
+			ComputeSatellites (satellite_name, path);
+			if (Satellites == null) {
+				// 2nd chance: satellite assemblies can come from different nugets (as dependencies)
+				// they will be copied (at build time) into the destination directory (making them work at runtime)
+				// but they won't be side-by-side the original assembly (which breaks our build time assumptions)
+				path = Path.GetDirectoryName (App.RootAssemblies [0]);
+				ComputeSatellites (satellite_name, path);
+			}
+		}
 
+		void ComputeSatellites (string satellite_name, string path)
+		{
 			foreach (var subdir in Directory.GetDirectories (path)) {
 				var culture_name = Path.GetFileName (subdir);
 				CultureInfo ci;
@@ -623,9 +635,12 @@ namespace Xamarin.Bundler {
 				if (culture_name.IndexOf ('.') >= 0)
 					continue; // cultures can't have dots. This way we don't check every *.app directory
 
+				// well-known subdirectories (that are not cultures) to avoid (slow) exceptions handling
 				switch (culture_name) {
 				case "Facades":
 				case "repl":
+				case "device-builds":
+				case "Design": // XF
 					continue;
 				}
 

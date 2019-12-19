@@ -59,9 +59,11 @@ namespace MonoTouchFixtures.Network {
 		[TestFixtureTearDown]
 		public void Dispose()
 		{
-			connection.Dispose ();
-			foreach (var i in interfaces)
-				i.Dispose ();
+			connection?.Dispose ();
+			if (interfaces != null) {
+				foreach (var i in interfaces)
+					i.Dispose ();
+			}
 		}
 
 		[SetUp]
@@ -199,6 +201,21 @@ namespace MonoTouchFixtures.Network {
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
 			}
 		}
+
+#if MONOMAC
+		[Test]
+		public void CreateCustomIP ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			byte ipVersion = 10;
+			var setUpProtocol = CreateConfigureProtocolHandler ();
+			using (var parameters = NWParameters.CreateCustomIP (ipVersion, setUpProtocol))
+			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80")) {
+				configureEvent.WaitOne ();
+				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
+			}
+		}
+#endif
 
 		[Test]
 		public void MultiPathServicePropertyTest ()

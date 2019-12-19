@@ -340,7 +340,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 				if (!value && argc > i + 1)
 					value = argv [++i];
 				if (value) {
-					monotouch_set_monodevelop_port (strtol (value, NULL, 10));
+					monotouch_set_monodevelop_port ((int) strtol (value, NULL, 10));
 				} else {
 					PRINT ("MonoTouch: --%s requires an argument.", name);
 				}
@@ -373,6 +373,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 						*v = 0;
 						v++;
 						LOG ("MonoTouch: Setting %s=%s", k, v);
+						// arguments comes from mtouch (and developer), i.e. a trusted source
 						setenv (k, v, 1);
 					}
 					free (k);
@@ -476,9 +477,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 		mono_domain_set_config (mono_domain_get (), base_dir, config_file_name);
 
-		MONO_ENTER_GC_SAFE;
 		rv = xamarin_extension_main (argc, argv);
-		MONO_EXIT_GC_SAFE;
 		break;
 	case XamarinLaunchModeApp:
 		rv = mono_jit_exec (mono_domain_get (), assembly, managed_argc, managed_argv);
