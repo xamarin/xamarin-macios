@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Xamarin.Utils;
 using Xamarin.Tests;
@@ -27,13 +28,15 @@ namespace Xamarin
 		public MLaunchAction Action = MLaunchAction.Sim;
 		public Profile Profile = Profile.iOS;
 
-		string GetVerbosity ()
+		void AddVerbosity (IList<string> args)
 		{
-			if (Verbosity == 0)
-				return string.Empty;
-			if (Verbosity > 0)
-				return new string ('-', Verbosity).Replace ("-", "-v ");
-			return new string ('-', -Verbosity).Replace ("-", "-q ");
+			if (Verbosity == 0) {
+				// do nothing
+			} else if (Verbosity > 0) {
+				args.Add ("-" + new string ('v', Verbosity));
+			} else {
+				args.Add ("-" + new string ('q', -Verbosity));
+			}
 		}
 
 		public int Execute ()
@@ -41,9 +44,9 @@ namespace Xamarin
 			return Execute (Configuration.MlaunchPath, BuildArguments ());
 		}
 
-		string BuildArguments ()
+		IList<string> BuildArguments ()
 		{
-			var sb = new StringBuilder ();
+			var sb = new List<string> ();
 
 			switch (Action) {
 			case MLaunchAction.None:
@@ -51,7 +54,8 @@ namespace Xamarin
 			case MLaunchAction.Sim:
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --launchsim ").Append (StringUtils.Quote (AppPath));
+				sb.Add ("--launchsim");
+				sb.Add (AppPath);
 				break;
 			default:
 				throw new Exception ("MLaunchAction not specified.");
@@ -60,19 +64,23 @@ namespace Xamarin
 			if (SdkRoot == None) {
 				// do nothing
 			} else if (!string.IsNullOrEmpty (SdkRoot)) {
-				sb.Append (" --sdkroot ").Append (StringUtils.Quote (SdkRoot));
+				sb.Add ("--sdkroot");
+				sb.Add (SdkRoot);
 			} else {
-				sb.Append (" --sdkroot ").Append (StringUtils.Quote (Configuration.xcode_root));
+				sb.Add ("--sdkroot");
+				sb.Add (Configuration.xcode_root);
 			}
 
-			sb.Append (" ").Append (GetVerbosity ());
+			AddVerbosity (sb);
 
 			if (Sdk == None) {
 				// do nothing
 			} else if (!string.IsNullOrEmpty (Sdk)) {
-				sb.Append (" --sdk ").Append (Sdk);
+				sb.Add ("--sdk");
+				sb.Add (Sdk);
 			} else {
-				sb.Append (" --sdk ").Append (MTouch.GetSdkVersion (Profile));
+				sb.Add ("--sdk");
+				sb.Add (Profile.ToString ());
 			}
 
 			string platformName = null;
@@ -93,10 +101,10 @@ namespace Xamarin
 
 			if (!string.IsNullOrEmpty (platformName) && !string.IsNullOrEmpty (simType)) {
 				var device = string.Format (":v2:runtime=com.apple.CoreSimulator.SimRuntime.{0}-{1},devicetype=com.apple.CoreSimulator.SimDeviceType.{2}", platformName, Configuration.sdk_version.Replace ('.', '-'), simType);
-				sb.Append (" --device:").Append (StringUtils.Quote (device));
+				sb.Add ($"--device:{device}");
 			}
 
-			return sb.ToString ();
+			return sb;
 		}
 
 		protected override string ToolPath {

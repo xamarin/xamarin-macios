@@ -24,15 +24,7 @@ namespace MonoTouch.Tuner {
 
 		public static bool IsPlatformType (this TypeReference type, string @namespace, string name)
 		{
-#if MONOMAC
-			if (Xamarin.Bundler.Driver.IsUnified) {
-				return type.Is (@namespace, name);
-			} else {
-				return type.Is ("MonoMac." + @namespace, name);
-			}
-#else
 			return type.Is (@namespace, name);
-#endif
 		}
 	}
 }

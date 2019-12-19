@@ -1271,12 +1271,6 @@
 !missing-pinvoke! SecEncryptTransformCreate is not bound
 !missing-pinvoke! SecEncryptTransformGetTypeID is not bound
 !missing-pinvoke! SecGroupTransformGetTypeID is not bound
-!missing-pinvoke! SecHostCreateGuest is not bound
-!missing-pinvoke! SecHostRemoveGuest is not bound
-!missing-pinvoke! SecHostSelectedGuest is not bound
-!missing-pinvoke! SecHostSelectGuest is not bound
-!missing-pinvoke! SecHostSetGuestStatus is not bound
-!missing-pinvoke! SecHostSetHostingPort is not bound
 !missing-pinvoke! SecIdentityCopyPreference is not bound
 !missing-pinvoke! SecIdentityCopyPreferred is not bound
 !missing-pinvoke! SecIdentityCopySystemIdentity is not bound
@@ -1402,10 +1396,7 @@
 !missing-pinvoke! SecTransformSetDataAction is not bound
 !missing-pinvoke! SecTransformSetTransformAction is not bound
 !missing-pinvoke! SecTrustCopyAnchorCertificates is not bound
-!missing-pinvoke! SecTrustedApplicationCopyData is not bound
-!missing-pinvoke! SecTrustedApplicationCreateFromPath is not bound
 !missing-pinvoke! SecTrustedApplicationGetTypeID is not bound
-!missing-pinvoke! SecTrustedApplicationSetData is not bound
 !missing-pinvoke! SecTrustGetCssmResult is not bound
 !missing-pinvoke! SecTrustGetCssmResultCode is not bound
 !missing-pinvoke! SecTrustGetResult is not bound
@@ -1455,3 +1446,12 @@
 !missing-pinvoke! SSLSetProtocolVersionEnabled is not bound
 !missing-pinvoke! SSLSetRsaBlinding is not bound
 !missing-pinvoke! SSLSetTrustedRoots is not bound
+
+## new in xcode11
+!missing-field! kSecPropertyTypeArray not bound
+!missing-field! kSecPropertyTypeNumber not bound
+
+## deprecated in Xcode 11 (but never bound because they were, previously, marked as unavailable on macOS)
+!missing-pinvoke! SecTrustedApplicationCopyData is not bound
+!missing-pinvoke! SecTrustedApplicationCreateFromPath is not bound
+!missing-pinvoke! SecTrustedApplicationSetData is not bound

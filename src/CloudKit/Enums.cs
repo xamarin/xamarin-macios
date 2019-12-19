@@ -141,7 +141,7 @@ namespace CloudKit
 	}
 
 	// NSInteger -> CKSubscription.h
-	[NoWatch]
+	[Watch (6,0)]
 	[iOS (8,0)]
 	[Mac (10, 10)]
 	[Native]
@@ -210,7 +210,7 @@ namespace CloudKit
 		PublicUser = 4,
 	}
 
-	[NoWatch]
+	[Watch (6,0)]
 	[iOS (10,0), Mac(10,12)]
 	[Native]
 	public enum CKQuerySubscriptionOptions : ulong
@@ -235,7 +235,7 @@ namespace CloudKit
 		HundredsOfGigabytes,
 	}
 
-	[Watch (5,0), TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[Native]
 	public enum CKShareParticipantRole : long {
 		Unknown = 0,

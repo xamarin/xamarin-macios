@@ -21,8 +21,5 @@
 !missing-field! kCFStreamSSLAllowsAnyRoot not bound
 !missing-field! kCFStreamSSLAllowsExpiredCertificates not bound
 !missing-field! kCFStreamSSLAllowsExpiredRoots not bound
-!missing-pinvoke! CFHTTPReadStreamSetRedirectsAutomatically is not bound
-!missing-pinvoke! CFNetServiceGetProtocolSpecificInformation is not bound
 !missing-pinvoke! CFNetServiceRegister is not bound
 !missing-pinvoke! CFNetServiceResolve is not bound
-!missing-pinvoke! CFNetServiceSetProtocolSpecificInformation is not bound

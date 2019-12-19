@@ -36,7 +36,7 @@
         <Import Condition="!$(MSBuildAllProjects.Contains('Microsoft.FSharp.Targets')) and Exists('$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets')"
                 Project="$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets" />
 
-        <Import Condition="!$(MSBuildAllProjects.Contains('Microsoft.FSharp.Targets'))"
+        <Import Condition="!$(MSBuildAllProjects.Contains('Microsoft.FSharp.Targets')) and Exists('$(MSBuildBinPath)\Microsoft.FSharp.Targets')"
                 Project="$(MSBuildBinPath)\Microsoft.FSharp.Targets" />
 
 	<Import Project="Xamarin.Mac.Common.targets" />

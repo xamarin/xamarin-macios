@@ -57,7 +57,7 @@ namespace LinkSdk {
 					return true;
 				};
 				WebClient wc = new WebClient ();
-				Assert.IsNotNull (wc.DownloadString ("https://wrench.internalx.com/Wrench/Login.aspx"));
+				Assert.IsNotNull (wc.DownloadString ("https://xamarin.com"));
 				// caching means it will be called at least for the first run, but it might not
 				// be called again in subsequent requests (unless it expires)
 				Assert.That (trust_validation_callback, Is.GreaterThan (0), "validation done");

@@ -15,6 +15,7 @@ using System.IO;
 using NUnit.Framework;
 using System.Net.Http.Headers;
 using System.Text;
+using Foundation;
 #if MONOMAC
 using Foundation;
 #endif
@@ -70,8 +71,7 @@ namespace MonoTests.System.Net.Http
 
 			Assert.IsTrue (done, "Did not time out");
 			Assert.IsNull (response, $"Response is not null {response}");
-			Assert.IsNotNull (ex, "Exception");
-			// The handlers throw different types of exceptions, so we can't assert much more than that something went wrong.			
+			Assert.IsInstanceOfType (typeof (HttpRequestException), ex, "Exception");
 		}
 
 #if !__WATCHOS__
@@ -150,7 +150,7 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => done);
 
-			if (!done) { // timeouts happen in the bost due to dns issues, connection issues etc.. we do not want to fail
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else if (!containsHeaders) {
 				Assert.Inconclusive ("Response from httpbin does not contain headers, therefore we cannot ensure that if the authoriation is present.");
@@ -270,6 +270,21 @@ namespace MonoTests.System.Net.Http
 				if (ex != null && ex.InnerException != null) {
 					// we could get here.. if we have a diff issue, in that case, lets get the exception message and assert is not the trust issue
 					Assert.AreNotEqual (ex.InnerException.Message, "Error: TrustFailure");
+				}
+			}
+		}
+
+		[Test]
+		public void AssertDefaultValuesNSUrlSessionHandler ()
+		{
+			using (var handler = new NSUrlSessionHandler ()) {
+				Assert.True (handler.AllowAutoRedirect, "Default redirects value");
+				Assert.True (handler.AllowsCellularAccess, "Default cellular data value.");
+			}
+			using (var config = NSUrlSessionConfiguration.DefaultSessionConfiguration) {
+				config.AllowsCellularAccess = false;
+				using (var handler = new NSUrlSessionHandler (config)) {
+					Assert.False (handler.AllowsCellularAccess, "Configuration cellular data value.");
 				}
 			}
 		}

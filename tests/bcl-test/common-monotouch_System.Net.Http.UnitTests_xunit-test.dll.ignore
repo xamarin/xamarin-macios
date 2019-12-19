@@ -1,4 +1,0 @@
-## Uses RemoteExecutor
-System.Net.Http.Tests.HttpEnvironmentProxyTest.HttpProxy_CredentialParsing_Basic
-System.Net.Http.Tests.HttpEnvironmentProxyTest.HttpProxy_Exceptions_Match
-System.Net.Http.Tests.HttpEnvironmentProxyTest.HttpProxy_EnvironmentProxy_Loaded

@@ -28,9 +28,6 @@ using Mono.Cecil;
 
 namespace Xamarin.Bundler {
 	public partial class MonoMacResolver : CoreResolver {
-		public static bool IsClassic { get { return Driver.IsClassic; } }
-		public static bool IsUnified { get { return Driver.IsUnified; } }
-
 		public List <string> CommandLineAssemblies { get; set; }
 		public List<Exception> Exceptions = new List<Exception> ();
 

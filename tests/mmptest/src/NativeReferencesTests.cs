@@ -101,7 +101,7 @@ namespace Xamarin.MMP.Tests
 				Assert.True (Directory.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/Frameworks/iTunesLibrary.framework")));
 
 				string binaryPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample");
-				string otoolText = TI.RunAndAssert ("/usr/bin/otool", new StringBuilder ("-l " + binaryPath), "Unified_WithNativeReferences_InMainProjectWorks - rpath");
+				string otoolText = TI.RunAndAssert ("/usr/bin/otool", new [] { "-l", binaryPath }, "Unified_WithNativeReferences_InMainProjectWorks - rpath");
 				Assert.True (otoolText.Contains ("path @loader_path/../Frameworks"));
 			});
 		}
@@ -115,21 +115,6 @@ namespace Xamarin.MMP.Tests
 					string clangLine = s.Split ('\n').First (x => x.Contains ("xcrun -sdk macosx clang"));
 					return clangLine.Contains ("SimpleClassStatic.a");
 				});
-			});
-		}
-
-		[Test]
-		public void Unified_WithStaticNativeRef_32bit ()
-		{
-			Configuration.AssertXcodeSupports32Bit ();
-
-			MMPTests.RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<XamMacArch>i386</XamMacArch>",
-					References = $"<Reference Include=\"SimpleBinding_static\"><HintPath>{MobileStaticBindingPath}</HintPath></Reference>",
-					TestCode = "System.Console.WriteLine (new Simple.SimpleClass ().DoIt ());"
-				};
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithStaticNativeRef_32bit", null, true, false);
 			});
 		}
 

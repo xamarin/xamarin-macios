@@ -68,22 +68,6 @@ namespace Xamarin.MMP.Tests
 
 		[TestCase (false)]
 		[TestCase (true)]
-		public void AOT_32Bit_SmokeTest (bool useProjectTags)
-		{
-			Configuration.AssertXcodeSupports32Bit ();
-
-			MMPTests.RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<XamMacArch>i386</XamMacArch>" + GetTestConfig (TestType.Base, useProjectTags)
-				};
-				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-
-				ValidateAOTStatus (tmpDir, f => ShouldBaseFilesBeAOT (f), buildResults);
-			});
-		}
-
-		[TestCase (false)]
-		[TestCase (true)]
 		public void HybridAOT_WithManualStrippingOfAllLibs_SmokeTest (bool useProjectTags)
 		{
 			MMPTests.RunMMPTest (tmpDir => {
@@ -94,7 +78,7 @@ namespace Xamarin.MMP.Tests
 
 				foreach (var file in GetOutputDirInfo (tmpDir).EnumerateFiles ()) {
 					if (IsFileManagedCode (file))
-						TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", file.ToString (), "Manually strip IL");
+						TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", new [] { file.ToString () }, "Manually strip IL");
 
 				}
 
@@ -114,7 +98,7 @@ namespace Xamarin.MMP.Tests
 				};
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 
-				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", Path.Combine (GetOutputBundlePath (tmpDir), "UnifiedExample.exe"), "Manually strip IL");
+				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono-cil-strip", new [] { Path.Combine (GetOutputBundlePath (tmpDir), "UnifiedExample.exe") }, "Manually strip IL");
 
 				ValidateAOTStatus (tmpDir, IsFileManagedCode, buildResults);
 

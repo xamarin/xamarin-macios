@@ -16,13 +16,13 @@ using ObjCRuntime;
 namespace CoreVideo {
 	public partial class CVPixelBuffer : CVImageBuffer {
 
-		[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static IntPtr /* IOSurfaceRef */ CVPixelBufferGetIOSurface (
 			/* CVPixelBufferRef CV_NULLABLE */ IntPtr pixelBuffer
 		);
 
-		[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 		public IOSurface.IOSurface GetIOSurface ()
 		{
 			if (Handle == IntPtr.Zero)
@@ -35,7 +35,7 @@ namespace CoreVideo {
 			return Runtime.GetINativeObject <IOSurface.IOSurface> (ret, false);
 		}
 
-		[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn /* IOSurfaceRef */ CVPixelBufferCreateWithIOSurface (
 			/* CFAllocatorRef CV_NULLABLE */ IntPtr allocator,
@@ -44,7 +44,7 @@ namespace CoreVideo {
 			/* CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ out IntPtr pixelBufferOut
 		);
 
-		[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 		public static CVPixelBuffer Create (IOSurface.IOSurface surface, out CVReturn result, CVPixelBufferAttributes pixelBufferAttributes = null)
 		{
 			if (surface == null)
@@ -64,7 +64,7 @@ namespace CoreVideo {
 			return new CVPixelBuffer (pixelBufferPtr, true);
 		}
 
-		[iOS (11,0), Mac (10,13, onlyOn64:true), TV (11,0), NoWatch]
+		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
 		public static CVPixelBuffer Create (IOSurface.IOSurface surface, CVPixelBufferAttributes pixelBufferAttributes = null)
 		{
 			CVReturn result;

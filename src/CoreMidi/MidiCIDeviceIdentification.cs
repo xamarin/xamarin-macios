@@ -7,7 +7,7 @@ using Foundation;
 
 namespace CoreMidi {
 
-	[NoWatch, NoTV, Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[NoWatch, NoTV, Mac (10,14), iOS (12,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiCIDeviceIdentification {
 		[MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]

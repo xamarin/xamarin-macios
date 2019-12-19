@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 
 namespace Xamarin.iOS.UnitTests
@@ -30,7 +31,7 @@ namespace Xamarin.iOS.UnitTests
 			Logger = logger ?? throw new ArgumentNullException (nameof (logger));
 		}
 
-		public abstract void Run (IEnumerable<TestAssemblyInfo> testAssemblies);
+		public abstract Task Run (IEnumerable<TestAssemblyInfo> testAssemblies);
 		public abstract string WriteResultsToFile ();
 		public abstract void WriteResultsToFile (TextWriter writer);
 		public abstract void SkipTests (IEnumerable<string> tests);

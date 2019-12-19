@@ -41,12 +41,7 @@ public class AttributeManager
 				throw ErrorHelper.CreateError (1061, $"The attribute '{type.FullName}' found on '{Generator.FormatProvider (provider)}' is not a valid binding attribute. Please remove this attribute.");
 			}
 
-			var prefix = BindingTouch.NamespacePlatformPrefix;
-			var n = type.FullName;
-			if (!string.IsNullOrEmpty (prefix) && type.Namespace.StartsWith (prefix, System.StringComparison.Ordinal)) {
-				n = n.Substring (prefix.Length + 1);
-			}
-			rv = typeof (TypeManager).Assembly.GetType (n);
+			rv = typeof (TypeManager).Assembly.GetType (type.FullName);
 		} else {
 			throw ErrorHelper.CreateError (1054, "Internal error: can't convert type '{0}' (unknown assembly). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", type.AssemblyQualifiedName);
 		}
@@ -72,12 +67,7 @@ public class AttributeManager
 				string fullname;
 				// HACK ??
 				if (type.Namespace?.StartsWith ("XamCore.", System.StringComparison.Ordinal) == true) {
-					var prefix = BindingTouch.NamespacePlatformPrefix;
-					if (!string.IsNullOrEmpty (prefix)) {
-						fullname = prefix + "." + type.FullName.Substring (8);
-					} else {
-						fullname = type.FullName.Substring (8);
-					}
+					fullname = type.FullName.Substring (8);
 				} else {
 					fullname = type.FullName;
 				}

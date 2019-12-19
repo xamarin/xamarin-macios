@@ -1,9 +1,12 @@
-#if XAMCORE_2_0 || !MONOMAC
-
+using System;
 using ObjCRuntime;
 
 namespace Metal {
 
-}
+	public partial class MTLSharedTextureHandle {
 
-#endif
+		[Obsolete ("Type is not meant to be created by user code.")]
+		public MTLSharedTextureHandle () {}
+	}
+
+}

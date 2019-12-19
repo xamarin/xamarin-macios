@@ -1,7 +1,6 @@
 ## Removed in XAMCORE_4_0
 !unknown-field! NEFilterProviderRemediationMapRemediationButtonTexts bound
 !unknown-field! NEFilterProviderRemediationMapRemediationURLs bound
-!unknown-type! NEFilterProvider bound
 
 ## Native code has NWPathStatus in NetworkExtension and nw_path_status_t in Network (with the same elements).
 ## NetworkExtension.NWPathStatus is the oldest, but NetworkExtension isn't present on all the platforms Network

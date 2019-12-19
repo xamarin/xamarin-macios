@@ -43,6 +43,7 @@
 !missing-field! kMIDIPropertyTransmitsNotes not bound
 !missing-field! kMIDIPropertyTransmitsProgramChanges not bound
 !missing-field! kMIDIPropertyUniqueID not bound
+!missing-field! kMIDIPropertyNameConfigurationDictionary not bound
 
 # no known use
 !missing-pinvoke! MIDIEndpointGetRefCons is not bound

@@ -8,7 +8,7 @@ only be available after running `make` once.
 * tests.sln: This is the base test solution for Xamarin.iOS, which targets iOS using the Unified API. _Not_ generated.
 * tests-tvos.sln: All the TVOS test projects. Generated.
 * tests-watchos.sln: All the WatchOS test projects. Generated.
-* tests-mac.sln: This is the base test solution for Xamairn.Mac. _Not_ generated.
+* tests-mac.sln: This is the base test solution for Xamarin.Mac. _Not_ generated.
 
 ### Test solution/project generation
 

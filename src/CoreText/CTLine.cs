@@ -179,11 +179,9 @@ namespace CoreText {
 			return CTLineGetImageBounds (handle, context.GetHandle ());
 		}
 
-		[iOS (6,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CGRect CTLineGetBoundsWithOptions (IntPtr line, nuint options);
 
-		[iOS (6,0)]
 		public CGRect GetBounds (CTLineBoundsOptions options)
 		{
 			return CTLineGetBoundsWithOptions (handle, (nuint) (ulong) options);

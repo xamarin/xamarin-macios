@@ -21,7 +21,7 @@ mmp.exe: ../mmp.exe
 	$(Q) $(CP) ../mmp.exe mmp.exe
  
 nunit.framework.dll nunit-console.exe Mono.Cecil.dll:
-	/Library/Frameworks/Mono.framework/Commands/nuget restore packages.config
+	$(SYSTEM_XIBUILD) -t -- /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore packages.config
 	$(CP) $(NUGET_LIB) nunit.framework.dll
 	$(CP) $(CECIL_LIB) Mono.Cecil.dll
 

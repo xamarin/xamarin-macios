@@ -21,7 +21,7 @@
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
     <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_SYMLINK;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>True</MtouchDebug>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
@@ -33,7 +33,7 @@
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs>-v -v -gcc_flags="-weak_framework GameController"</MtouchExtraArgs>
     <MtouchArch>i386, x86_64</MtouchArch>
@@ -46,7 +46,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchLink>None</MtouchLink>
@@ -61,7 +61,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchLink>None</MtouchLink>
@@ -76,7 +76,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchLink>None</MtouchLink>
@@ -89,7 +89,7 @@
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
@@ -103,7 +103,7 @@
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
@@ -117,7 +117,7 @@
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
@@ -131,7 +131,7 @@
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v --bitcode:full</MtouchExtraArgs>
     <MtouchUseLlvm>true</MtouchUseLlvm>
@@ -247,6 +247,9 @@
   <ItemGroup>
     <BundleResource Include="..\xamarin1.png">
       <Link>xamarin1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\..\tools\mtouch\simlauncher64-sgen.frameworks">
+      <Link>simlauncher64-sgen.frameworks</Link>
     </BundleResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

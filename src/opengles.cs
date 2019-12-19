@@ -24,7 +24,6 @@ namespace OpenGLES {
 	[DisableDefaultCtor]
 	interface EAGLSharegroup {
 
-		[iOS (6,0)]
 		[Export ("debugLabel")]
 		[NullAllowed]
 		string DebugLabel { get; set; }
@@ -55,7 +54,6 @@ namespace OpenGLES {
 		[Export("sharegroup")]
 		EAGLSharegroup ShareGroup { get; }
 
-		[iOS (6,0)]
 		[Export ("debugLabel")]
 		[NullAllowed]
 		string DebugLabel { get; set; }

@@ -20,7 +20,7 @@ using UIKit;
 namespace MultipeerConnectivity {
 
 	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCPeerID init]: unrecognized selector sent to instance 0x7d721090
 	partial interface MCPeerID : NSCopying, NSSecureCoding {
@@ -36,7 +36,7 @@ namespace MultipeerConnectivity {
 	delegate void MCSessionNearbyConnectionDataForPeerCompletionHandler (NSData connectionData, NSError error);
 
 	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling `description` selector
 	partial interface MCSession {
@@ -105,7 +105,7 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -135,7 +135,7 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceAdvertiser init]: unrecognized selector sent to instance 0x19195e50
 	partial interface MCNearbyServiceAdvertiser {
@@ -170,7 +170,7 @@ namespace MultipeerConnectivity {
 	delegate void MCNearbyServiceAdvertiserInvitationHandler (bool accept, [NullAllowed] MCSession session);
 
 	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -187,7 +187,7 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceBrowser init]: unrecognized selector sent to instance 0x15519a70
 	partial interface MCNearbyServiceBrowser {
@@ -220,7 +220,7 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -248,7 +248,7 @@ namespace MultipeerConnectivity {
 	interface IMCNearbyServiceBrowserDelegate {}
 
 #if MONOMAC
-	[Mac (10,10, onlyOn64 : true)]
+	[Mac (10,10)]
 	[BaseType (typeof (NSViewController))]
 #else
 	[TV (10,0)]
@@ -289,7 +289,7 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -314,7 +314,7 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCAdvertiserAssistant init]: unrecognized selector sent to instance 0x7ea7fa40
 	interface MCAdvertiserAssistant {
@@ -347,7 +347,7 @@ namespace MultipeerConnectivity {
 	}
 
 	[TV (10,0)]
-	[iOS (7,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

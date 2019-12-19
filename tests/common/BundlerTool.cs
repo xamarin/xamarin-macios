@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -86,22 +87,22 @@ namespace Xamarin.Tests
 			}
 		}
 
-		protected string GetVerbosity ()
+		protected void AddVerbosity (IList<string> args)
 		{
 			if (Verbosity == 0) {
-				return string.Empty;
+				// do nothing
 			} else if (Verbosity > 0) {
-				return new string ('-', Verbosity).Replace ("-", "-v ");
+				args.Add ("-" + new string ('v', Verbosity));
 			} else {
-				return new string ('-', -Verbosity).Replace ("-", "-q ");
+				args.Add ("-" + new string ('q', -Verbosity));
 			}
 		}
 
-		protected string ToolArguments {
+		protected IList<string> ToolArguments {
 			get {
-				var sb = new StringBuilder ();
+				var sb = new List<string> ();
 				BuildArguments (sb);
-				return sb.ToString ();
+				return sb;
 			}
 		}
 
@@ -110,56 +111,62 @@ namespace Xamarin.Tests
 			return null;
 		}
 
-		protected virtual void BuildArguments (StringBuilder sb)
+		protected virtual void BuildArguments (IList<string> sb)
 		{
 			// Options are processed alphabetically
 
 			if (Abi == None) {
 				// add nothing
 			} else if (!string.IsNullOrEmpty (Abi)) {
-				sb.Append (IsMtouchTool ? " --abi " : " --arch ").Append (Abi);
+				sb.Add (IsMtouchTool ? "--abi" : "--arch");
+				sb.Add (Abi);
 			} else {
 				var a = GetDefaultAbi ();
 				if (!string.IsNullOrEmpty (a)) {
-					sb.Append (IsMtouchTool ? " --abi " : " --arch ");
-					sb.Append (a);
+					sb.Add (IsMtouchTool ? "--abi" : "--arch");
+					sb.Add (a);
 				}
 			}
 
-			if (!string.IsNullOrEmpty (Cache))
-				sb.Append (" --cache ").Append (StringUtils.Quote (Cache));
+			if (!string.IsNullOrEmpty (Cache)) {
+				sb.Add ("--cache");
+				sb.Add (Cache);
+			}
 
 			if (CustomArguments != null) {
 				foreach (var arg in CustomArguments) {
-					sb.Append (" ").Append (arg);
+					sb.Add (arg);
 				}
 			}
 
 			if (Debug.HasValue && Debug.Value)
-				sb.Append (" --debug");
+				sb.Add ("--debug");
 
 			if (Extension == true)
-				sb.Append (" --extension");
+				sb.Add ("--extension");
 
-			if (!string.IsNullOrEmpty (GccFlags))
-				sb.Append (IsMtouchTool ? " --gcc_flags " : " --link_flags ").Append (StringUtils.Quote (GccFlags));
+			if (!string.IsNullOrEmpty (GccFlags)) {
+				sb.Add (IsMtouchTool ? "--gcc_flags" : "--link_flags");
+				sb.Add (GccFlags);
+			}
 
 			if (!string.IsNullOrEmpty (HttpMessageHandler))
-				sb.Append (" --http-message-handler=").Append (StringUtils.Quote (HttpMessageHandler));
+				sb.Add ($"--http-message-handler={HttpMessageHandler}");
 
 			if (I18N != I18N.None) {
-				sb.Append (" --i18n ");
-				int count = 0;
+				sb.Add ("--i18n");
+				var i18n = new List<string> ();
 				if ((I18N & I18N.CJK) == I18N.CJK)
-					sb.Append (count++ == 0 ? string.Empty : ",").Append ("cjk");
+					i18n.Add ("cjk");
 				if ((I18N & I18N.MidEast) == I18N.MidEast)
-					sb.Append (count++ == 0 ? string.Empty : ",").Append ("mideast");
+					i18n.Add ("mideast");
 				if ((I18N & I18N.Other) == I18N.Other)
-					sb.Append (count++ == 0 ? string.Empty : ",").Append ("other");
+					i18n.Add ("other");
 				if ((I18N & I18N.Rare) == I18N.Rare)
-					sb.Append (count++ == 0 ? string.Empty : ",").Append ("rare");
+					i18n.Add ("rare");
 				if ((I18N & I18N.West) == I18N.West)
-					sb.Append (count++ == 0 ? string.Empty : ",").Append ("west");
+					i18n.Add ("west");
+				sb.Add (string.Join (",", i18n));
 			}
 
 			switch (Linker) {
@@ -167,13 +174,13 @@ namespace Xamarin.Tests
 			case LinkerOption.Unspecified:
 				break;
 			case LinkerOption.DontLink:
-				sb.Append (" --nolink");
+				sb.Add ("--nolink");
 				break;
 			case LinkerOption.LinkSdk:
-				sb.Append (" --linksdkonly");
+				sb.Add ("--linksdkonly");
 				break;
 			case LinkerOption.LinkPlatform:
-				sb.Append (" --linkplatform");
+				sb.Add ("--linkplatform");
 				break;
 			default:
 				throw new NotImplementedException ();
@@ -181,87 +188,91 @@ namespace Xamarin.Tests
 
 			if (LinkSkip?.Length > 0) {
 				foreach (var ls in LinkSkip)
-					sb.Append (" --linkskip:").Append (StringUtils.Quote (ls));
+					sb.Add ($"--linkskip:{ls}");
 			}
 
 			if (NoWarn != null) {
 				if (NoWarn.Length > 0) {
-					sb.Append (" --nowarn:");
-					foreach (var code in NoWarn)
-						sb.Append (code).Append (',');
-					sb.Length--;
+					sb.Add ($"--nowarn:{string.Join (",", NoWarn.Select ((v) => v.ToString ()))}");
 				} else {
-					sb.Append (" --nowarn");
+					sb.Add ("--nowarn");
 				}
 			}
 
 			if (Optimize != null) {
 				foreach (var opt in Optimize)
-					sb.Append (" --optimize:").Append (opt);
+					sb.Add ($"--optimize:{opt}");
 			}
 
 			if (Profiling.HasValue)
-				sb.Append (" --profiling:").Append (Profiling.Value ? "true" : "false");
+				sb.Add ($"--profiling:{(Profiling.Value ? "true" : "false")}");
 
 			if (References != null) {
 				foreach (var r in References)
-					sb.Append (IsMtouchTool ? " -r:" : " -a:").Append (StringUtils.Quote (r));
+					sb.Add ((IsMtouchTool ? "-r:" : "-a:") + r);
 			}
 
 			switch (Registrar) {
 			case RegistrarOption.Unspecified:
 				break;
 			case RegistrarOption.Dynamic:
-				sb.Append (" --registrar:dynamic");
+				sb.Add ("--registrar:dynamic");
 				break;
 			case RegistrarOption.Static:
-				sb.Append (" --registrar:static");
+				sb.Add ("--registrar:static");
 				break;
 			default:
 				throw new NotImplementedException ();
 			}
 
 			if (!string.IsNullOrEmpty (ResponseFile))
-				sb.Append (" @").Append (StringUtils.Quote (ResponseFile));
+				sb.Add ("@" + ResponseFile);
 
 			if (!string.IsNullOrEmpty (RootAssembly))
-				sb.Append (" ").Append (StringUtils.Quote (RootAssembly));
+				sb.Add (RootAssembly);
 
 			if (Sdk == None) {
 				// do nothing	
 			} else if (!string.IsNullOrEmpty (Sdk)) {
-				sb.Append (" --sdk ").Append (Sdk);
+				sb.Add ("--sdk");
+				sb.Add (Sdk);
 			} else {
-				sb.Append (" --sdk ").Append (Configuration.GetSdkVersion (Profile));
+				sb.Add ("--sdk");
+				sb.Add (Configuration.GetSdkVersion (Profile));
 			}
 
 			if (SdkRoot == None) {
 				// do nothing
 			} else if (!string.IsNullOrEmpty (SdkRoot)) {
-				sb.Append (" --sdkroot ").Append (StringUtils.Quote (SdkRoot));
+				sb.Add ("--sdkroot");
+				sb.Add (SdkRoot);
 			} else {
-				sb.Append (" --sdkroot ").Append (StringUtils.Quote (Configuration.xcode_root));
+				sb.Add ("--sdkroot");
+				sb.Add (Configuration.xcode_root);
 			}
 
 			if (TargetFramework == None) {
 				// do nothing
 			} else if (!string.IsNullOrEmpty (TargetFramework)) {
-				sb.Append (" --target-framework ").Append (TargetFramework);
+				sb.Add ("--target-framework");
+				sb.Add (TargetFramework);
 			} else if (!NoPlatformAssemblyReference) {
 				// make the implicit default the way tests have been running until now, and at the same time the very minimum to make apps build.
 				switch (Profile) {
 				case Profile.iOS:
-					sb.Append (" -r:").Append (StringUtils.Quote (Configuration.XamarinIOSDll));
+					sb.Add ($"-r:" + Configuration.XamarinIOSDll);
 					break;
 				case Profile.tvOS:
 				case Profile.watchOS:
-					sb.Append (" --target-framework ").Append (Configuration.GetTargetFramework (Profile));
-					sb.Append (" -r:").Append (StringUtils.Quote (Configuration.GetBaseLibrary (Profile)));
+					sb.Add ("--target-framework");
+					sb.Add (Configuration.GetTargetFramework (Profile));
+					sb.Add ("-r:" + Configuration.GetBaseLibrary (Profile));
 					break;
 				case Profile.macOSFull:
 				case Profile.macOSMobile:
 				case Profile.macOSSystem:
-					sb.Append (" --target-framework ").Append (Configuration.GetTargetFramework (Profile));
+					sb.Add ("--target-framework");
+					sb.Add (Configuration.GetTargetFramework (Profile));
 					break;
 				default:
 					throw new NotImplementedException ();
@@ -271,32 +282,30 @@ namespace Xamarin.Tests
 			if (TargetVer == None) {
 				// do nothing
 			} else if (!string.IsNullOrEmpty (TargetVer)) {
-				sb.Append (IsMtouchTool ? " --targetver " : " --minos ").Append (TargetVer);
+				sb.Add (IsMtouchTool ? "--targetver" : "--minos");
+				sb.Add (TargetVer);
 			}
 
-			sb.Append (" ").Append (GetVerbosity ());
+			AddVerbosity (sb);
 
 			if (WarnAsError != null) {
 				if (WarnAsError.Length > 0) {
-					sb.Append (" --warnaserror:");
-					foreach (var code in WarnAsError)
-						sb.Append (code).Append (',');
-					sb.Length--;
+					sb.Add ($"--warnaserror:{string.Join (",", WarnAsError.Select ((v) => v.ToString ()))}");
 				} else {
-					sb.Append (" --warnaserror");
+					sb.Add ("--warnaserror");
 				}
 			}
 
 			if (XmlDefinitions?.Length > 0) {
 				foreach (var xd in XmlDefinitions)
-					sb.Append (" --xml:").Append (StringUtils.Quote (xd));
+					sb.Add ($"--xml:{xd}");
 			}
 
 			if (Interpreter != null) {
 				if (Interpreter.Length == 0)
-					sb.Append (" --interpreter");
+					sb.Add ("--interpreter");
 				else
-					sb.Append (" --interpreter=").Append (Interpreter);
+					sb.Add ("--interpreter=" + Interpreter);
 			}
 		}
 
@@ -331,9 +340,9 @@ namespace Xamarin.Tests
 			Assert.AreEqual (1, Execute (), message);
 		}
 
-		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = true);
+		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true);
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = true)
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = true)
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
@@ -342,15 +351,15 @@ namespace Xamarin.Tests
 			if (extraCode != null)
 				code += extraCode;
 
-			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile, appName, use_csc);
+			return CompileTestAppCode ("exe", targetDirectory, code, extraArgs, profile, appName, use_csc);
 		}
 
-		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.iOS, string appName = "testApp")
+		public static string CompileTestAppLibrary (string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp")
 		{
-			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile, appName);
+			return CompileTestAppCode ("library", targetDirectory, code, extraArgs, profile, appName);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = true)
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = true)
 		{
 			var ext = target == "exe" ? "exe" : "dll";
 			var cs = Path.Combine (targetDirectory, "testApp.cs");
@@ -360,10 +369,17 @@ namespace Xamarin.Tests
 			File.WriteAllText (cs, code);
 
 			string output;
-			StringBuilder args = new StringBuilder ();
+			var args = new List<string> ();
 			string fileName = Configuration.GetCompiler (profile, args, use_csc);
-			args.AppendFormat ($" /noconfig /t:{target} /nologo /out:{StringUtils.Quote (assembly)} /r:{StringUtils.Quote (root_library)} {StringUtils.Quote (cs)} {extraArg}");
-			if (ExecutionHelper.Execute (fileName, args.ToString (), out output) != 0) {
+			args.Add ("/noconfig");
+			args.Add ($"/t:{target}");
+			args.Add ("/nologo");
+			args.Add ($"/out:{assembly}");
+			args.Add ($"/r:{root_library}");
+			args.Add (cs);
+			if (extraArgs != null)
+				args.AddRange (extraArgs);
+			if (ExecutionHelper.Execute (fileName, args, out output) != 0) {
 				Console.WriteLine ("{0} {1}", fileName, args);
 				Console.WriteLine (output);
 				throw new Exception (output);

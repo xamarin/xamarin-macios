@@ -16,7 +16,8 @@ using CoreFoundation;
 using nw_parameters_t=System.IntPtr;
 
 namespace Network {
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public enum NWMultiPathService {
 		Disabled = 0,
 		Handover = 1,
@@ -24,7 +25,8 @@ namespace Network {
 		Aggregate = 3, 
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public class NWParameters : NativeObject {
 		public NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -40,9 +42,25 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
 			if (del != null) {
-				var x = new NWProtocolOptions (iface, owns: false);
-				del (x);
-				x.Dispose ();
+				using (var tempOptions = new NWProtocolOptions (iface, owns: false)) 
+				using (var definition = tempOptions.ProtocolDefinition) {
+					NWProtocolOptions castedOptions = null;
+
+					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+						castedOptions = new NWProtocolTcpOptions (iface, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+						castedOptions = new NWProtocolUdpOptions (iface, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.TlsDefinition)) {
+						castedOptions = new NWProtocolTlsOptions (iface, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.IPDefinition)) {
+						castedOptions = new NWProtocolIPOptions (iface, owns: false);
+					} else if (definition.Equals (NWProtocolDefinition.WebSocketDefinition)) {
+						castedOptions = new NWWebSocketOptions (iface, owns: false);
+					} 
+
+					del (castedOptions ?? tempOptions);
+					castedOptions?.Dispose ();
+				}
 			}
 		}
 
@@ -433,9 +451,25 @@ namespace Network {
 			get => nw_parameters_get_include_peer_to_peer (GetCheckedHandle ());
 			set => nw_parameters_set_include_peer_to_peer (GetCheckedHandle (), value);
 		}
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_parameters_get_prohibit_constrained (IntPtr parameters);
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_prohibit_constrained (IntPtr parameters, bool prohibit_constrained);
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		public bool ProhibitConstrained {
+			get => nw_parameters_get_prohibit_constrained (GetCheckedHandle ());
+			set => nw_parameters_set_prohibit_constrained (GetCheckedHandle (), value);
+		}
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public enum NWParametersExpiredDnsBehavior {
 		Default = 0,
 		Allow = 1,

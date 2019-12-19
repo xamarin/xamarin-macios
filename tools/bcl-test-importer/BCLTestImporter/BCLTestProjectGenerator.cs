@@ -106,6 +106,7 @@ namespace BCLTestImporter {
 			// BCL tests group 2
 			new BclTestProjectInfo { Name = "SystemTests", assemblies = new[] {"monotouch_System_test.dll" }, Group = "BCL tests group 2" },
 			new BclTestProjectInfo { Name = "SystemDataTests", assemblies = new [] { "monotouch_System.Data_test.dll" }, Group = "BCL tests group 2" },
+			new BclTestProjectInfo { Name = "SystemDataDataSetExtensionsTests", assemblies = new [] { "monotouch_System.Data.DataSetExtensions_test.dll" }, Group = "BCL tests group 2" },
 			new BclTestProjectInfo { Name = "SystemNetHttpTests", assemblies = new [] { "monotouch_System.Net.Http_test.dll" }, Group = "BCL tests group 2" },
 			new BclTestProjectInfo { Name = "MonoDataTdsTests", assemblies = new [] { "monotouch_Mono.Data.Tds_test.dll" }, Group = "BCL tests group 2" },
 			new BclTestProjectInfo { Name = "SystemServiceModelTests", assemblies = new [] { "monotouch_System.ServiceModel_test.dll" }, Group = "BCL tests group 2" },
@@ -193,7 +194,8 @@ namespace BCLTestImporter {
 			new BclTestProjectInfo { Name = "SystemTransactionsTests", assemblies = new [] { "xammac_net_4_5_System.Transactions_test.dll" }, Group = "Mac OS X BCL tests group 1" },
 			new BclTestProjectInfo { Name = "SystemWebServicesTests", assemblies = new [] { "xammac_net_4_5_System.Web.Services_test.dll" }, Group = "Mac OS X BCL tests group 1" },
 			new BclTestProjectInfo { Name = "SystemXmlLinqTests", assemblies = new [] { "xammac_net_4_5_System.Xml.Linq_test.dll" }, Group = "Mac OS X BCL tests group 1" },
-		
+			new BclTestProjectInfo { Name = "SystemDataDataSetExtensionsTests", assemblies = new [] { "xammac_net_4_5_System.Data.DataSetExtensions_test.dll" }, Group = "Mac OS X BCL tests group 1" },
+
 			new BclTestProjectInfo { Name = "SystemNetHttpTests", assemblies = new [] { "xammac_net_4_5_System.Net.Http_test.dll" }, Group = "Mac OS X BCL tests group 2" }, // do not mix with SystemNetHttpWebRequestTests since there is a type collision
 			new BclTestProjectInfo { Name = "SystemComponentModelDataAnnotationsTests", assemblies = new [] { "xammac_net_4_5_System.ComponentModel.DataAnnotations_test.dll" }, Group = "Mac OS X BCL tests group 2" },
 			new BclTestProjectInfo { Name = "SystemCoreTests", assemblies = new [] { "xammac_net_4_5_System.Core_test.dll" }, Group = "Mac OS X BCL tests group 2" },
@@ -443,6 +445,45 @@ namespace BCLTestImporter {
 						yield return platformAssemblyIgnore;
 				}
 			}
+		}
+		
+		internal IEnumerable<string> GetTraitsFiles (Platform platform)
+		{
+			var rootPath = GetReleaseDownload (platform);
+			switch (platform) {
+			case Platform.iOS:
+				rootPath = Path.Combine (rootPath, "ios-bcl", "monotouch", "tests");
+				break;
+			case Platform.TvOS:
+				rootPath = Path.Combine (rootPath, "ios-bcl", "monotouch_tv", "tests");
+				break;
+			case Platform.WatchOS:
+				rootPath = Path.Combine (rootPath, "ios-bcl", "monotouch_watch", "tests");
+				break;
+			case Platform.MacOSFull:
+				rootPath = Path.Combine (rootPath, "mac-bcl", "xammac_net_4_5", "tests");
+				break;
+			case Platform.MacOSModern:
+				rootPath = Path.Combine (rootPath, "mac-bcl", "xammac", "tests");
+				break;
+			}
+			return new [] {
+ 				Path.Combine (rootPath, "nunit-excludes.txt"),
+				Path.Combine (rootPath, "xunit-excludes.txt")
+			};
+		}
+		
+		string GenerateIncludeFilesNode (string projectName, (string FailureMessage, List<(string assembly, string hintPath)> Assemblies) info, string templatePath, Platform platform)
+		{
+			var contentFiles = new StringBuilder ();
+			foreach (var path in GetIgnoreFiles (templatePath, projectName, info.Assemblies, platform)) {
+				contentFiles.Append (GetContentNode (path));
+			}
+			// add the files that contain the traits/categoiries info
+			foreach (var path in GetTraitsFiles (platform)) {
+				contentFiles.Append (GetContentNode (path));
+			}
+			return contentFiles.ToString ();
 		}
 
 		/// <summary>
@@ -854,11 +895,7 @@ namespace BCLTestImporter {
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 				}
 			}
-			
-			var contentFiles = new StringBuilder ();
-			foreach (var path in GetIgnoreFiles (templatePath, projectName, info.Assemblies, platform)) {
-				contentFiles.Append (GetContentNode (path));
-			}
+
 			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
@@ -868,7 +905,7 @@ namespace BCLTestImporter {
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
-				result = result.Replace (ContentKey, contentFiles.ToString ());
+				result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, templatePath, platform));
 				return result;
 			}
 		}
@@ -887,10 +924,6 @@ namespace BCLTestImporter {
 				}
 			}
 
-			var contentFiles = new StringBuilder ();
-			foreach (var path in GetIgnoreFiles (templatePath, projectName, info.Assemblies, platform)) {
-				contentFiles.Append (GetContentNode (path));
-			}
 			var projectGuid = GuidGenerator?.Invoke (projectName) ?? Guid.NewGuid ();
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
@@ -900,7 +933,7 @@ namespace BCLTestImporter {
 				result = result.Replace (ReferencesKey, sb.ToString ());
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (PlistKey, infoPlistPath);
-				result = result.Replace (ContentKey, contentFiles.ToString ());
+				result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, templatePath, platform));
 				switch (platform){
 				case Platform.MacOSFull:
 					result = result.Replace (TargetFrameworkVersionKey, "v4.5.2");
@@ -960,11 +993,6 @@ namespace BCLTestImporter {
 				}
 			}
 			
-			var contentFiles = new StringBuilder ();
-			foreach (var path in GetIgnoreFiles (templatePath, projectName, info.Assemblies, Platform.WatchOS)) {
-				contentFiles.Append (GetContentNode (path));
-			}
-			
 			using (var reader = new StreamReader(templatePath)) {
 				var result = await reader.ReadToEndAsync ();
 				result = result.Replace (DownloadPathKey, downloadPath);
@@ -973,7 +1001,7 @@ namespace BCLTestImporter {
 				result = result.Replace (PlistKey, infoPlistPath);
 				result = result.Replace (RegisterTypeKey, GetRegisterTypeNode (registerPath));
 				result = result.Replace (ReferencesKey, sb.ToString ());
-				result = result.Replace (ContentKey, contentFiles.ToString ());
+				result = result.Replace (ContentKey, GenerateIncludeFilesNode (projectName, info, templatePath, Platform.WatchOS));
 				return result;
 			}
 		}

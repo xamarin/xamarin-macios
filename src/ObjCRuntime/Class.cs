@@ -544,7 +544,7 @@ namespace ObjCRuntime {
 		{
 			var map = Runtime.options->RegistrationMap;
 			for (int i = 0; i < map->full_token_reference_count; i++) {
-				var ptr = map->full_token_references + (i * IntPtr.Size + 8);
+				var ptr = map->full_token_references + (i * (IntPtr.Size + 8));
 				var asm_ptr = Marshal.ReadIntPtr (ptr);
 				var token = Marshal.ReadInt32 (ptr + IntPtr.Size + 4);
 				if (token != metadata_token)
@@ -555,7 +555,7 @@ namespace ObjCRuntime {
 				if (!Runtime.StringEquals (asm_ptr, assembly_name))
 					continue;
 
-				return (uint) i;
+				return ((uint) i << 1) + 1;
 			}
 
 			return uint.MaxValue;

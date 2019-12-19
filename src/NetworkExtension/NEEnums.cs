@@ -44,6 +44,8 @@ namespace NetworkExtension {
 		AES128GCM = 5,
 		[iOS (8,3)][Mac (10,11)]
 		AES256GCM = 6,
+		[Mac (10,15)][iOS (13,0)]
+		ChaCha20Poly1305 = 7,
 	}
 
 	[iOS (8,0)][Mac (10,10)]
@@ -81,6 +83,8 @@ namespace NetworkExtension {
 		Group19 = 19,
 		Group20 = 20,
 		Group21 = 21,
+		[Mac (10,15)][iOS (13,0)]
+		Group31 = 31,
 	}
 
 	[iOS (8,0)][Mac (10,10)]
@@ -92,9 +96,8 @@ namespace NetworkExtension {
 		Ignore = 4
 	}
 
-	[iOS (8,0)][Mac (10,10)]
+	[iOS (8,0)][Mac (10,11)]
 	[Native]
-		[iOS (9,0)][Mac (10,11)]
 	public enum NEOnDemandRuleInterfaceType : long {
 		Any = 0,
 		Ethernet = 1,
@@ -116,6 +119,8 @@ namespace NetworkExtension {
 		ECDSA256 = 2,
 		ECDSA384 = 3,
 		ECDSA521 = 4,
+		[Mac (10,15)][iOS (13,0)]
+		Ed25519 = 5,
 	}
 
 	// in Xcode7 SDK but marked as 8.0
@@ -127,7 +132,9 @@ namespace NetworkExtension {
 		Invalid = 1,
 		Disabled = 2,
 		Stale = 3,
-		CannotBeRemoved = 4
+		CannotBeRemoved = 4,
+		ConfigurationPermissionDenied = 5,
+		ConfigurationInternalError = 6,
 	}
 
 	[iOS (9,0)]
@@ -218,6 +225,8 @@ namespace NetworkExtension {
 	public enum NETunnelProviderRoutingMethod : long {
 		DestinationIP = 1,
 		SourceApplication = 2,
+		[Mac (10,15)][NoiOS]
+		NetworkRule = 3,
 	}
 
 #if !MONOMAC

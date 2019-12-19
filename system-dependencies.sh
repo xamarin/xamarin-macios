@@ -56,6 +56,12 @@ while ! test -z $1; do
 			unset IGNORE_AUTOTOOLS
 			shift
 			;;
+		--provision-python3)
+			# building mono from source requires having python3 installed
+			PROVISION_PYTHON3=1
+			unset IGNORE_PYTHON3
+			shift
+			;;
 		--provision-sharpie)
 			PROVISION_SHARPIE=1
 			unset OPTIONAL_SHARPIE
@@ -87,6 +93,8 @@ while ! test -z $1; do
 			unset IGNORE_SHARPIE
 			PROVISION_SIMULATORS=1
 			unset IGNORE_SIMULATORS
+			PROVISION_PYTHON3=1
+			unset IGNORE_PYTHON3
 			shift
 			;;
 		--ignore-all)
@@ -100,6 +108,7 @@ while ! test -z $1; do
 			IGNORE_HOMEBREW=1
 			IGNORE_SHARPIE=1
 			IGNORE_SIMULATORS=1
+			IGNORE_PYTHON3=1
 			shift
 			;;
 		--ignore-osx)
@@ -120,6 +129,10 @@ while ! test -z $1; do
 			;;
 		--ignore-autotools)
 			IGNORE_AUTOTOOLS=1
+			shift
+			;;
+		--ignore-python3)
+			IGNORE_PYTHON3=1
 			shift
 			;;
 		--ignore-cmake)
@@ -148,6 +161,10 @@ while ! test -z $1; do
 			unset OPTIONAL_SIMULATORS
 			shift
 			;;
+		-v | --verbose)
+			set -x
+			shift
+			;;
 		*)
 			echo "Unknown argument: $1"
 			exit 1
@@ -159,22 +176,24 @@ done
 COLOR_RED=$(tput setaf 1 2>/dev/null || true)
 COLOR_ORANGE=$(tput setaf 3 2>/dev/null || true)
 COLOR_MAGENTA=$(tput setaf 5 2>/dev/null || true)
+COLOR_BLUE=$(tput setaf 6 2>/dev/null || true)
 COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
+COLOR_RESET=uniquesearchablestring
 function fail () {
-	echo "    ${COLOR_RED}$1${COLOR_CLEAR}"
+	echo "    ${COLOR_RED}${1//${COLOR_RESET}/${COLOR_RED}}${COLOR_CLEAR}"
 	FAIL=1
 }
 
 function warn () {
-	echo "    ${COLOR_ORANGE}$1${COLOR_CLEAR}"
+	echo "    ${COLOR_ORANGE}${1//${COLOR_RESET}/${COLOR_ORANGE}}${COLOR_CLEAR}"
 }
 
 function ok () {
-	echo "    $1"
+	echo "    ${1//${COLOR_RESET}/${COLOR_CLEAR}}"
 }
 
 function log () {
-	echo "        $1"
+	echo "        ${1//${COLOR_RESET}/${COLOR_CLEAR}}"
 }
 
 # $1: the version to check
@@ -335,7 +354,7 @@ function install_specific_xcode () {
 	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
 	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
 	if test -f "$HOME/Downloads/$XCODE_NAME"; then
-		log "Found Xcode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
+		log "Found $XCODE_NAME in your ~/Downloads folder, copying that version to $XCODE_DMG instead of re-downloading it."
 		cp "$HOME/Downloads/$XCODE_NAME" "$XCODE_DMG"
 	else
 		curl -L $XCODE_URL > $XCODE_DMG
@@ -359,7 +378,7 @@ function install_specific_xcode () {
 		rm -Rf *.app
 		rm -Rf $XCODE_ROOT
 		# extract
-		/System/Library/CoreServices/Applications/Archive\ Utility.app/Contents/MacOS/Archive\ Utility "$XCODE_DMG"
+		xip --expand "$XCODE_DMG"
 		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
 		mv *.app $XCODE_ROOT
 		popd > /dev/null
@@ -369,7 +388,7 @@ function install_specific_xcode () {
 	rm -f $XCODE_DMG
 
 	log "Removing any com.apple.quarantine attributes from the installed Xcode"
-	$SUDO xattr -d -r com.apple.quarantine $XCODE_ROOT
+	$SUDO xattr -s -d -r com.apple.quarantine $XCODE_ROOT
 
 	if is_at_least_version $XCODE_VERSION 5.0; then
 		log "Accepting Xcode license"
@@ -397,6 +416,73 @@ function install_specific_xcode () {
 	xcrun -k
 
 	ok "Xcode $XCODE_VERSION provisioned"
+}
+
+function install_coresimulator ()
+{
+	local XCODE_DEVELOPER_ROOT
+	local CORESIMULATOR_PKG
+	local CORESIMULATOR_PKG_DIR
+	local XCODE_ROOT
+	local TARGET_CORESIMULATOR_VERSION
+	local CURRENT_CORESIMULATOR_VERSION
+
+	XCODE_DEVELOPER_ROOT=$(grep XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//')
+	XCODE_ROOT=$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")
+	CORESIMULATOR_PKG=$XCODE_ROOT/Contents/Resources/Packages/XcodeSystemResources.pkg
+
+	if ! test -f "$CORESIMULATOR_PKG"; then
+		warn "Could not find XcodeSystemResources.pkg (which contains CoreSimulator.framework) in $XCODE_DEVELOPER_ROOT ($CORESIMULATOR_PKG doesn't exist)."
+		return
+	fi
+
+	# Get the CoreSimulator.framework version from our Xcode
+	# Extract the .pkg to get the pkg's PackageInfo file, which contains the CoreSimulator.framework version.
+	CORESIMULATOR_PKG_DIR=$(mktemp -d)
+	pkgutil --expand "$CORESIMULATOR_PKG" "$CORESIMULATOR_PKG_DIR/extracted"
+
+	if ! TARGET_CORESIMULATOR_VERSION=$(xmllint --xpath 'string(/pkg-info/bundle-version/bundle[@id="com.apple.CoreSimulator"]/@CFBundleShortVersionString)' "$CORESIMULATOR_PKG_DIR/extracted/PackageInfo"); then
+		rm -rf "$CORESIMULATOR_PKG_DIR"
+		warn "Failed to look up the CoreSimulator version of $XCODE_DEVELOPER_ROOT"
+		return
+	fi
+	rm -rf "$CORESIMULATOR_PKG_DIR"
+
+	# Get the CoreSimulator.framework currently installed
+	local CURRENT_CORESIMULATOR_PATH=/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/CoreSimulator
+	local CURRENT_CORESIMULATOR_VERSION=0.0
+	if test -f "$CURRENT_CORESIMULATOR_PATH"; then
+		CURRENT_CORESIMULATOR_VERSION=$(otool -L $CURRENT_CORESIMULATOR_PATH | grep "$CURRENT_CORESIMULATOR_PATH.*current version" | sed -e 's/.*current version//' -e 's/)//' -e 's/[[:space:]]//g')
+	fi
+
+	# Either version may be composed of either 2 or 3 numbers.
+	# We only care about the first two, so strip off the 3rd number if it exists.
+	# shellcheck disable=SC2001
+	CURRENT_CORESIMULATOR_VERSION=$(echo "$CURRENT_CORESIMULATOR_VERSION" | sed 's/\([0-9]*[.][0-9]*\).*/\1/')
+	# shellcheck disable=SC2001
+	TARGET_CORESIMULATOR_VERSION=$(echo "$TARGET_CORESIMULATOR_VERSION" | sed 's/\([0-9]*[.][0-9]*\).*/\1/')
+
+	# Compare versions to see if we got what we need
+	if [[ x"$TARGET_CORESIMULATOR_VERSION" == x"$CURRENT_CORESIMULATOR_VERSION" ]]; then
+		log "Found CoreSimulator.framework $CURRENT_CORESIMULATOR_VERSION (exactly $TARGET_CORESIMULATOR_VERSION is recommended)"
+		return
+	fi
+
+	if test -z $PROVISION_XCODE; then
+		# This is not a failure for now, until this logic has been tested thoroughly
+		warn "You should have exactly CoreSimulator.framework version $TARGET_CORESIMULATOR_VERSION (found $CURRENT_CORESIMULATOR_VERSION). Execute './system-dependencies.sh --provision-xcode' to install the expected version."
+		return
+	fi
+
+	# Just installing the package won't work, because there's a version check somewhere
+	# that prevents the macOS installer from downgrading, so remove the existing
+	# CoreSimulator.framework manually first.
+	log "Installing CoreSimulator.framework $CURRENT_CORESIMULATOR_VERSION..."
+	$SUDO rm -Rf /Library/Developer/PrivateFrameworks/CoreSimulator.framework
+	$SUDO installer -pkg "$CORESIMULATOR_PKG" -target /
+
+	CURRENT_CORESIMULATOR_VERSION=$(otool -L $CURRENT_CORESIMULATOR_PATH | grep "$CURRENT_CORESIMULATOR_PATH.*current version" | sed -e 's/.*current version//' -e 's/)//' -e 's/[[:space:]]//g')
+	log "Installed CoreSimulator.framework $CURRENT_CORESIMULATOR_VERSION successfully."
 }
 
 function check_specific_xcode () {
@@ -461,7 +547,7 @@ function check_xcode () {
 
 	# must have latest Xcode in /Applications/Xcode<version>.app
 	check_specific_xcode
-	check_specific_xcode "94"
+	install_coresimulator
 
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
 	local IOS_SDK_VERSION=`grep ^IOS_SDK_VERSION= Make.config | sed 's/.*=//'`
@@ -556,6 +642,16 @@ function install_autoconf () {
 	brew install autoconf
 }
 
+function install_python3 () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install python3, but brew is not installed."
+		return
+	fi
+
+	ok "Installing ${COLOR_BLUE}python3${COLOR_RESET}..."
+	brew install python3
+}
+
 function install_libtool () {
 	if ! brew --version >& /dev/null; then
 		fail "Asked to install libtool, but brew is not installed."
@@ -611,6 +707,22 @@ IFS='
 IFS=$IFS_tmp
 }
 
+function check_python3 () {
+	if ! test -z $IGNORE_PYTHON3; then return; fi
+
+IFStmp=$IFS
+IFS='
+'
+	if PYTHON3_VERSION=$(python3 --version 2>/dev/null); then
+		ok "Found $PYTHON3_VERSION (no specific version is required)"
+	elif ! test -z $PROVISION_PYTHON3; then
+		install_python3
+	else
+		fail "You must install python3. The easiest way is to use homebrew, and execute ${COLOR_MAGENTA}brew install python3${COLOR_RESET}."
+	fi
+
+IFS=$IFS_tmp
+}
 function check_visual_studio () {
 	if ! test -z $IGNORE_VISUAL_STUDIO; then return; fi
 
@@ -858,14 +970,21 @@ function check_simulators ()
 	done
 
 	if ! FAILED_SIMULATORS=$(mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" --only-check "${SIMS[@]}"); then
-		if ! test -z $PROVISION_SIMULATORS; then
-			mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"
-			ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
+		local action=warn
+		if test -z $OPTIONAL_SIMULATORS; then
+			action=fail
+		fi
+		if [[ "$FAILED_SIMULATORS" =~ "Unknown simulators:" ]]; then
+			$action "${FAILED_SIMULATORS}"
+			$action "    If you just updated the Xcode version, it's likely Apple stopped shipping these simulators with the new version of Xcode."
+			$action "    If that's the case, you can list the available simulators with ${COLOR_MAGENTA}make -C tools/siminstaller print-simulators${COLOR_RESET},"
+			$action "    and then update the ${COLOR_MAGENTA}MIN_<OS>_SIMULATOR_VERSION${COLOR_RESET} and ${COLOR_MAGENTA}EXTRA_SIMULATORS${COLOR_RESET} variables in Make.config to the earliest available simulators."
 		else
-			if test -z $OPTIONAL_SIMULATORS; then
-				fail "The simulators '${FAILED_SIMULATORS//$'\n'/', '}' are not installed or need to be upgraded."
+			if ! test -z $PROVISION_SIMULATORS; then
+				mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"
+				ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
 			else
-				warn "The simulators '${FAILED_SIMULATORS//$'\n'/', '}' are not installed or should be upgraded."
+				$action "The simulators '${FAILED_SIMULATORS//$'\n'/', '}' are not installed or need to be upgraded."
 			fi
 		fi
 	else
@@ -879,6 +998,7 @@ check_osx_version
 check_xcode
 check_homebrew
 check_autotools
+check_python3
 check_mono
 check_visual_studio
 check_cmake

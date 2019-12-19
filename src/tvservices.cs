@@ -1,12 +1,15 @@
 // Copyright 2015 Xamarin Inc.
+// Copyright 2019 Microsoft Corporation
 
 using System;
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
 namespace TVServices {
 
 	[TV (9,0)]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TVTopShelfContentProvider' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVContentIdentifier : NSCopying, NSSecureCoding {
@@ -23,6 +26,7 @@ namespace TVServices {
 
 	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
+	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TVTopShelfItem' instead.")]
 	[DisableDefaultCtor]
 	interface TVContentItem : NSCopying, NSSecureCoding {
 		[Export ("contentIdentifier", ArgumentSemantic.Copy)]
@@ -100,5 +104,275 @@ namespace TVServices {
 		[Notification]
 		[Field ("TVTopShelfItemsDidChangeNotification")]
 		NSString DidChangeNotification { get; }
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // Name property can't be null
+	interface TVAppProfileDescriptor : NSCopying, NSSecureCoding {
+
+		[Export("initWithName:")]
+		IntPtr Constructor (string name);
+
+		[Export("name")]
+		string Name { get; set; }
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVTopShelfAction {
+		[Export ("URL", ArgumentSemantic.Copy)]
+		NSUrl Url { get; }
+
+		[Export ("initWithURL:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUrl url);
+	}
+
+	[TV (13,0)]
+	[Native]
+	enum TVTopShelfCarouselContentStyle : long {
+		Actions,
+		Details,
+	}
+
+	interface ITVTopShelfContent {}
+
+	[TV (13,0)]
+	[Protocol]
+	interface TVTopShelfContent { }
+
+	[TV (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVTopShelfCarouselContent : TVTopShelfContent {
+		[Export ("style")]
+		TVTopShelfCarouselContentStyle Style { get; }
+
+		[Export ("items", ArgumentSemantic.Copy)]
+		TVTopShelfCarouselItem[] Items { get; }
+
+		[Export ("initWithStyle:items:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (TVTopShelfCarouselContentStyle style, TVTopShelfCarouselItem[] items);
+	}
+
+	[TV (13,0)]
+	[Flags]
+	[Native]
+	public enum TVTopShelfCarouselItemMediaOptions : ulong {
+		VideoResolutionHD = 1uL << 0,
+		VideoResolution4K = 2uL << 0,
+		VideoColorSpaceHdr = 1uL << 6,
+		VideoColorSpaceDolbyVision = 2uL << 6,
+		AudioDolbyAtmos = 1uL << 12,
+		AudioTranscriptionClosedCaptioning = 1uL << 13,
+		AudioTranscriptionSdh = 1uL << 14,
+		AudioDescription = 1uL << 15,
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (TVTopShelfItem))]
+	[DisableDefaultCtor] // -[TVTopShelfCarouselItem init]: unrecognized selector sent to instance 0x600000eb18c0
+	interface TVTopShelfCarouselItem {
+
+		// inlined from base class
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[NullAllowed, Export ("contextTitle")]
+		string ContextTitle { get; set; }
+
+		[NullAllowed, Export ("summary")]
+		string Summary { get; set; }
+
+		[NullAllowed, Export("genre")]
+		string Genre { get; set; }
+
+		[Export("duration")]
+		double /* NSTimeInterval */ Duration { get; set; }
+
+		[NullAllowed, Export("creationDate", ArgumentSemantic.Copy)]
+		NSDate CreationDate { get; set; }
+
+		[Export("mediaOptions", ArgumentSemantic.Assign)]
+		TVTopShelfCarouselItemMediaOptions MediaOptions { get; set; }
+
+		[NullAllowed, Export("previewVideoURL", ArgumentSemantic.Copy)]
+		NSUrl PreviewVideoUrl { get; set; }
+
+		[NullAllowed, Export("cinemagraphURL", ArgumentSemantic.Copy)]
+		NSUrl CinemagraphUrl { get; set; }
+
+		[Export("namedAttributes", ArgumentSemantic.Copy)]
+		TVTopShelfNamedAttribute[] NamedAttributes { get; set; }
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface TVTopShelfContentProvider {
+		[Async]
+		[Export ("loadTopShelfContentWithCompletionHandler:")]
+		void LoadTopShelfContent (Action<ITVTopShelfContent> completionHandler);
+
+		[Static]
+		[Export ("topShelfContentDidChange")]
+		void DidChange ();
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVTopShelfInsetContent : TVTopShelfContent {
+		[Export ("items", ArgumentSemantic.Copy)]
+		TVTopShelfItem[] Items { get; }
+
+		[Static]
+		[Export ("imageSize")]
+		CGSize ImageSize { get; }
+
+		[Export ("initWithItems:")]
+		IntPtr Constructor (TVTopShelfItem[] items);
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (TVTopShelfObject))]
+	[DisableDefaultCtor] // identifier can't be null and we have a designated initializer
+	interface TVTopShelfItem {
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[NullAllowed, Export ("playAction", ArgumentSemantic.Strong)]
+		TVTopShelfAction PlayAction { get; set; }
+
+		[NullAllowed, Export ("displayAction", ArgumentSemantic.Strong)]
+		TVTopShelfAction DisplayAction { get; set; }
+
+		[NullAllowed, Export ("expirationDate", ArgumentSemantic.Copy)]
+		NSDate ExpirationDate { get; set; }
+
+		[Export ("setImageURL:forTraits:")]
+		void SetImageUrl ([NullAllowed] NSUrl imageUrl, TVTopShelfItemImageTraits traits);
+
+		[Export ("imageURLForTraits:")]
+		[return: NullAllowed]
+		NSUrl GetImageUrl (TVTopShelfItemImageTraits traits);
+
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVTopShelfNamedAttribute {
+
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("values", ArgumentSemantic.Copy)]
+		string[] Values { get; }
+
+		[Export ("initWithName:values:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string name, string[] values);
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (NSObject))]
+	[Abstract]
+	[DisableDefaultCtor]
+	interface TVTopShelfObject {
+		[NullAllowed, Export ("title")]
+		string Title { get; set; }
+	}
+
+	[TV (13,0)]
+	[Flags]
+	[Native]
+	enum TVTopShelfItemImageTraits : ulong {
+		Scale1x = 1,
+		Scale2x = 2,
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface TVUserManager {
+
+		[NullAllowed, Export ("currentUserIdentifier")]
+		string CurrentUserIdentifier { get; }
+
+		[Export ("userIdentifiersForCurrentProfile", ArgumentSemantic.Copy)]
+		string[] UserIdentifiersForCurrentProfile { get; set; }
+
+		[Async]
+		[Export ("presentProfilePreferencePanelWithCurrentSettings:availableProfiles:completion:")]
+		void PresentProfilePreferencePanel (NSDictionary<NSString, TVAppProfileDescriptor> currentSettings, TVAppProfileDescriptor[] availableProfiles, Action<NSDictionary<NSString, TVAppProfileDescriptor>> completion);
+
+		[Async]
+		[Export ("shouldStorePreferenceForCurrentUserToProfile:completion:")]
+		void ShouldStorePreferenceForCurrentUser (TVAppProfileDescriptor profile, Action<bool> completion);
+
+		[Notification]
+		[Field ("TVUserManagerCurrentUserIdentifierDidChangeNotification")]
+		NSString CurrentUserIdentifierDidChangeNotification { get; }
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (TVTopShelfObject))]
+	[DisableDefaultCtor] // null is not allowed for items
+	interface TVTopShelfItemCollection {
+
+		[Export ("items", ArgumentSemantic.Copy)]
+		TVTopShelfItem[] Items { get; }
+
+		[Export ("initWithItems:")]
+		IntPtr Constructor (TVTopShelfItem[] items);
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVTopShelfSectionedContent : TVTopShelfContent {
+
+		[Export ("sections", ArgumentSemantic.Copy)]
+		TVTopShelfItemCollection[] Sections { get; }
+
+		[Export("initWithSections:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (TVTopShelfItemCollection[] sections);
+
+		[Static]
+		[Export("imageSizeForImageShape:")]
+		CGSize GetImageSize (TVTopShelfSectionedItemImageShape shape);
+	}
+
+	[TV (13,0)]
+	[Native]
+	public enum TVTopShelfSectionedItemImageShape : long {
+		Square,
+		Poster,
+		Hdtv,
+	}
+
+	[TV (13,0)]
+	[BaseType (typeof (TVTopShelfItem))]
+	[DisableDefaultCtor] // -[TVTopShelfSectionedItem init]: unrecognized selector sent to instance 0x600001f251a0
+	interface TVTopShelfSectionedItem {
+
+		// inlined from base type
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Export ("imageShape", ArgumentSemantic.Assign)]
+		TVTopShelfSectionedItemImageShape ImageShape { get; set; }
+
+		[Export ("playbackProgress")]
+		double PlaybackProgress { get; set; }
 	}
 }

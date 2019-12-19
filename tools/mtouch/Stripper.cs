@@ -24,8 +24,7 @@ namespace MonoTouch.Tuner {
 				Driver.Log (1, "Stripping assembly {0} to {1}", assembly_file, output_file);
 
 				string tool = "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/mono-cil-strip.exe";
-				string cmd = tool + " " + StringUtils.Quote (assembly_file) + " " + StringUtils.Quote (output_file);
-				if (Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/bin/mono", cmd) != 0)
+				if (Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/bin/mono", tool, assembly_file, output_file) != 0)
 					throw new MonoTouchException (6002, true, "Could not strip assembly `{0}`.", assembly_file);
 			} catch (NotSupportedException e) {
 				throw new MonoTouchException (6001, true, e.Message);

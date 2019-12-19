@@ -10,8 +10,9 @@
     <AssemblyName>mononativetests</AssemblyName>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <DefineConstants>MOBILE;XAMMAC;XAMCORE_2_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Optimize>false</Optimize>
@@ -21,18 +22,20 @@
     <CreatePackage>false</CreatePackage>
     <EnablePackageSigning>false</EnablePackageSigning>
     <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
     <HttpClientHandler>HttpClientHandler</HttpClientHandler>
     <LinkMode>None</LinkMode>
-    <AOTMode>None</AOTMode>
+    <DefineConstants>$(DefineConstants);</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="Mono.Security" />
     <Reference Include="Xamarin.Mac" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Info.plist" />
+    <None Include="Info-mac.plist" >
+      <LogicalName>Info.plist</LogicalName>
+    </None>
     <None Include="Entitlements-mac.plist" />
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +60,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
-      <Project>{D12F0F7B-8DE3-43EC-BA49-41052D065A9B}</Project>
-      <Name>GuiUnit_NET_4_5</Name>
+    <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
+      <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
+      <Name>GuiUnit_xammac_mobile</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />

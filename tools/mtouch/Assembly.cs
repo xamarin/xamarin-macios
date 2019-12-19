@@ -281,7 +281,7 @@ namespace Xamarin.Bundler {
 				aotInfo.AsmFiles.Add (asm_output);
 			aotInfo.AotDataFiles.Add (data);
 
-			var aotCompiler = Driver.GetAotCompiler (App, Target.Is64Build);
+			var aotCompiler = Driver.GetAotCompiler (App, abi, Target.Is64Build);
 			var aotArgs = Driver.GetAotArguments (App, assembly_path, abi, build_dir, asm_output ?? other_output, llvm_aot_ofile, data);
 			var task = new AOTTask
 			{

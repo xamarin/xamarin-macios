@@ -21,8 +21,9 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string DSymDir { get; set; }
 
+		[Output]
 		[Required]
-		public string Executable { get; set; }
+		public ITaskItem Executable { get; set; }
 
 		#endregion
 
@@ -67,7 +68,7 @@ namespace Xamarin.MacDev.Tasks
 			args.AppendSwitch ("-z");
 			args.AppendSwitch ("-o");
 			args.AppendFileNameIfNotNull (DSymDir);
-			args.AppendFileNameIfNotNull (Executable);
+			args.AppendFileNameIfNotNull (Executable.ItemSpec);
 
 			return args.ToString ();
 		}

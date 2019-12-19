@@ -43,6 +43,10 @@ namespace ClockKit {
 		[Export ("getTimelineAnimationBehaviorForComplication:withHandler:")]
 		void GetTimelineAnimationBehavior (CLKComplication complication, Action<CLKComplicationTimelineAnimationBehavior> handler);
 
+		[Watch (6,0)]
+		[Export ("getAlwaysOnTemplateForComplication:withHandler:")]
+		void GetAlwaysOnTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
+
 		[Abstract]
 		[Export ("getCurrentTimelineEntryForComplication:withHandler:")]
 		void GetCurrentTimelineEntry (CLKComplication complication, Action<CLKComplicationTimelineEntry> handler);
@@ -577,6 +581,10 @@ namespace ClockKit {
 		[Static]
 		[Export ("localizableTextProviderWithStringsFileFormatKey:textProviders:")]
 		CLKTextProvider CreateLocalizable (string formatKey, CLKTextProvider[] textProviders);
+
+		[NullAllowed]
+		[Export ("accessibilityLabel")]
+		string AccessibilityLabel { get; set; }
 	}
 
 	[BaseType (typeof (CLKTextProvider))]
@@ -600,10 +608,6 @@ namespace ClockKit {
 		[NullAllowed]
 		[Export ("shortText")]
 		string ShortText { get; set; }
-
-		[NullAllowed]
-		[Export ("accessibilityLabel")]
-		string AccessibilityLabel { get; set; }
 	}
 
 	[BaseType (typeof (CLKTextProvider))]
@@ -626,6 +630,10 @@ namespace ClockKit {
 		[NullAllowed]
 		[Export ("timeZone", ArgumentSemantic.Retain)]
 		NSTimeZone TimeZone { get; set; }
+
+		[Watch (6,0)]
+		[Export ("uppercase")]
+		bool Uppercase { get; set; }
 	}
 
 	[BaseType (typeof (CLKTextProvider))]
@@ -888,8 +896,17 @@ namespace ClockKit {
 		[Export ("providerWithFullColorImage:")]
 		CLKFullColorImageProvider Create (UIImage image);
 
+		[Watch (6,0)]
+		[Static]
+		[Export ("providerWithFullColorImage:tintedImageProvider:")]
+		CLKFullColorImageProvider Create (UIImage image, [NullAllowed] CLKImageProvider tintedImageProvider);
+
 		[Export ("image", ArgumentSemantic.Retain)]
 		UIImage Image { get; set; }
+
+		[Watch (6,0)]
+		[NullAllowed, Export ("tintedImageProvider", ArgumentSemantic.Retain)]
+		CLKImageProvider TintedImageProvider { get; set; }
 
 		[NullAllowed, Export ("accessibilityLabel", ArgumentSemantic.Retain)]
 		string AccessibilityLabel { get; set; }
@@ -957,6 +974,28 @@ namespace ClockKit {
 
 		[Export ("endFillFraction")]
 		float EndFillFraction { get; }
+	}
+
+	[Watch (6,0)]
+	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
+	interface CLKComplicationTemplateGraphicCircularStackText {
+
+		[Export ("line1TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Line1TextProvider { get; set; }
+
+		[Export ("line2TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Line2TextProvider { get; set; }
+	}
+
+	[Watch (6,0)]
+	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
+	interface CLKComplicationTemplateGraphicCircularStackImage {
+
+		[Export ("line1ImageProvider", ArgumentSemantic.Copy)]
+		CLKFullColorImageProvider Line1ImageProvider { get; set; }
+
+		[Export ("line2TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Line2TextProvider { get; set; }
 	}
 }
 

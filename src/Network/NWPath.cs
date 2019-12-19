@@ -16,7 +16,8 @@ using CoreFoundation;
 namespace Network {
 
 	// this maps to `nw_path_status_t` in Network/Headers/path.h (and not the enum from NetworkExtension)
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public enum NWPathStatus {
 		Invalid = 0,
 		Satisfied = 1,
@@ -24,7 +25,8 @@ namespace Network {
 		Satisfiable = 3,
 	}
 
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public class NWPath : NativeObject {
 		public NWPath (IntPtr handle, bool owns) : base (handle, owns) {}
 
@@ -124,6 +126,47 @@ namespace Network {
 
 			try {
 				nw_path_enumerate_interfaces (GetCheckedHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
+		}
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern bool nw_path_is_constrained (IntPtr path);
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		public bool IsConstrained => nw_path_is_constrained (GetCheckedHandle ());
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_path_enumerate_gateways (IntPtr path, ref BlockLiteral enumerate_block);
+
+		delegate void nw_path_enumerate_gateways_t (IntPtr block, IntPtr endpoint);
+		static nw_path_enumerate_gateways_t static_EnumerateGatewaysHandler = TrampolineGatewaysHandler;
+
+		[MonoPInvokeCallback (typeof (nw_path_enumerate_gateways_t))]
+		static void TrampolineGatewaysHandler (IntPtr block, IntPtr endpoint)
+		{
+			var del = BlockLiteral.GetTarget<Action<NWEndpoint>> (block);
+			if (del != null) {
+				var nwEndpoint = new NWEndpoint (endpoint, owns: false);
+				del (nwEndpoint);
+			}
+		}
+
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void EnumerateGateways (Action<NWEndpoint> callback)
+		{
+			if (callback == null)
+				throw new ArgumentNullException (nameof (callback));
+
+			BlockLiteral block_handler = new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_Enumerator, callback);
+
+			try {
+				nw_path_enumerate_gateways (GetCheckedHandle (), ref block_handler);
 			} finally {
 				block_handler.CleanupBlock ();
 			}

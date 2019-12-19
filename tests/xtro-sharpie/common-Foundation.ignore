@@ -181,9 +181,16 @@
 !unknown-type! InternalNSNotificationHandler bound
 
 # Apple internals (we do not expose them)
-!missing-field! _NSConstantStringClassReference not bound
 !missing-type! NSConstantString not bound
 !missing-type! NSSimpleCString not bound
+
+# now (xcode11) marked as deprecated - but never exposed by us
+!missing-selector! NSURLSessionConfiguration::init not bound
+!missing-selector! NSURLSession::init not bound
+!missing-selector! NSURLSessionStreamTask::init not bound
+
+# this is a better named version of `date` which we already bound as `Now` in C#
+!missing-selector! +NSDate::now not bound
 
 
 ## unsorted
@@ -196,7 +203,6 @@
 !missing-enum! NSSearchPathDomainMask not bound
 !missing-enum! NSStringEncodingConversionOptions not bound
 !missing-enum! NSStringEnumerationOptions not bound
-!missing-enum! NSXPCConnectionOptions not bound
 !missing-field! NSAverageKeyValueOperator not bound
 !missing-field! NSBuddhistCalendar not bound
 !missing-field! NSBundleDidLoadNotification not bound
@@ -219,6 +225,7 @@
 !missing-field! NSGregorianCalendar not bound
 !missing-field! NSHebrewCalendar not bound
 !missing-field! NSIndianCalendar not bound
+!missing-field! NSInconsistentArchiveException not bound
 !missing-field! NSInternalInconsistencyException not bound
 !missing-field! NSInvalidArchiveOperationException not bound
 !missing-field! NSInvalidArgumentException not bound
@@ -260,6 +267,7 @@
 !missing-field! NSURLErrorFailingURLErrorKey not bound
 !missing-field! NSURLErrorFailingURLPeerTrustErrorKey not bound
 !missing-field! NSURLErrorFailingURLStringErrorKey not bound
+!missing-field! NSURLErrorNetworkUnavailableReasonKey not bound
 !missing-field! NSURLFileScheme not bound
 !missing-field! NSWillBecomeMultiThreadedNotification not bound
 !missing-field! NSXMLParserErrorDomain not bound
@@ -309,7 +317,6 @@
 !missing-pinvoke! NSZoneMalloc is not bound
 !missing-pinvoke! NSZoneRealloc is not bound
 !missing-protocol! NSDecimalNumberBehaviors not bound
-!missing-protocol! NSXPCListenerDelegate not bound
 !missing-protocol! NSXPCProxyCreating not bound
 !missing-selector! +NSArray::arrayWithArray: not bound
 !missing-selector! +NSArray::arrayWithContentsOfURL: not bound
@@ -408,8 +415,6 @@
 !missing-selector! +NSURLRequest::requestWithURL:cachePolicy:timeoutInterval: not bound
 !missing-selector! +NSURLRequest::supportsSecureCoding not bound
 !missing-selector! +NSValue::value:withObjCType: not bound
-!missing-selector! +NSValue::valueWithBytes:objCType: not bound
-!missing-selector! +NSXPCInterface::interfaceWithProtocol: not bound
 !missing-selector! NSArray::addObserver:forKeyPath:options:context: not bound
 !missing-selector! NSArray::arrayByAddingObject: not bound
 !missing-selector! NSArray::arrayByAddingObjectsFromArray: not bound
@@ -501,9 +506,6 @@
 !missing-selector! NSDate::initWithTimeIntervalSince1970: not bound
 !missing-selector! NSDate::initWithTimeIntervalSinceNow: not bound
 !missing-selector! NSDate::initWithTimeIntervalSinceReferenceDate: not bound
-!missing-selector! NSDate::timeIntervalSince1970 not bound
-!missing-selector! NSDate::timeIntervalSinceDate: not bound
-!missing-selector! NSDate::timeIntervalSinceNow not bound
 !missing-selector! NSDateFormatter::getObjectValue:forString:range:error: not bound
 !missing-selector! NSDecimalNumber::objCType not bound
 !missing-selector! NSDecimalNumberHandler::initWithRoundingMode:scale:raiseOnExactness:raiseOnOverflow:raiseOnUnderflow:raiseOnDivideByZero: not bound
@@ -828,43 +830,10 @@
 !missing-selector! NSURLProtocol::task not bound
 !missing-selector! NSURLRequest::HTTPShouldUsePipelining not bound
 !missing-selector! NSUUID::initWithUUIDBytes: not bound
-!missing-selector! NSValue::getValue:size: not bound
 !missing-selector! NSValue::initWithBytes:objCType: not bound
-!missing-selector! NSXPCConnection::auditSessionIdentifier not bound
-!missing-selector! NSXPCConnection::effectiveGroupIdentifier not bound
-!missing-selector! NSXPCConnection::effectiveUserIdentifier not bound
-!missing-selector! NSXPCConnection::endpoint not bound
-!missing-selector! NSXPCConnection::exportedInterface not bound
-!missing-selector! NSXPCConnection::exportedObject not bound
-!missing-selector! NSXPCConnection::initWithListenerEndpoint: not bound
-!missing-selector! NSXPCConnection::interruptionHandler not bound
-!missing-selector! NSXPCConnection::invalidationHandler not bound
-!missing-selector! NSXPCConnection::processIdentifier not bound
-!missing-selector! NSXPCConnection::remoteObjectInterface not bound
-!missing-selector! NSXPCConnection::remoteObjectProxy not bound
-!missing-selector! NSXPCConnection::remoteObjectProxyWithErrorHandler: not bound
-!missing-selector! NSXPCConnection::serviceName not bound
-!missing-selector! NSXPCConnection::setExportedInterface: not bound
-!missing-selector! NSXPCConnection::setExportedObject: not bound
-!missing-selector! NSXPCConnection::setInterruptionHandler: not bound
-!missing-selector! NSXPCConnection::setInvalidationHandler: not bound
-!missing-selector! NSXPCConnection::setRemoteObjectInterface: not bound
-!missing-selector! NSXPCConnection::synchronousRemoteObjectProxyWithErrorHandler: not bound
-!missing-selector! NSXPCInterface::classesForSelector:argumentIndex:ofReply: not bound
-!missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
-!missing-selector! NSXPCInterface::protocol not bound
-!missing-selector! NSXPCInterface::setClasses:forSelector:argumentIndex:ofReply: not bound
-!missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
-!missing-selector! NSXPCInterface::setProtocol: not bound
-!missing-selector! NSXPCListener::delegate not bound
-!missing-selector! NSXPCListener::endpoint not bound
-!missing-selector! NSXPCListener::setDelegate: not bound
 !missing-type! NSDecimalNumberHandler not bound
 !missing-type! NSFileSecurity not bound
 !missing-type! NSInvocationOperation not bound
-!missing-type! NSXPCConnection not bound
-!missing-type! NSXPCInterface not bound
-!missing-type! NSXPCListener not bound
 !unknown-native-enum! NSLigatureType bound
 !unknown-native-enum! NSMachPortRights bound
 !unknown-native-enum! NSNetServicesStatus bound
@@ -953,8 +922,6 @@
 !missing-selector! +NSProxy::class not bound
 !missing-selector! +NSString::string not bound
 !missing-selector! +NSUUID::UUID not bound
-!missing-selector! +NSXPCListener::anonymousListener not bound
-!missing-selector! +NSXPCListener::serviceListener not bound
 !missing-selector! NSArray::objectEnumerator not bound
 !missing-selector! NSArray::reverseObjectEnumerator not bound
 !missing-selector! NSAutoreleasePool::drain not bound
@@ -999,9 +966,9 @@
 !missing-selector! NSUserActivity::init not bound
 !missing-selector! NSXMLParser::abortParsing not bound
 !missing-selector! NSXMLParser::parse not bound
-!missing-selector! NSXPCConnection::invalidate not bound
-!missing-selector! NSXPCConnection::resume not bound
-!missing-selector! NSXPCConnection::suspend not bound
-!missing-selector! NSXPCListener::invalidate not bound
-!missing-selector! NSXPCListener::resume not bound
-!missing-selector! NSXPCListener::suspend not bound
+
+### NSXPCCoder
+!missing-type! NSXPCCoder not bound
+!missing-selector! NSXPCCoder::connection not bound
+!missing-selector! NSXPCCoder::setUserInfo: not bound
+!missing-selector! NSXPCCoder::userInfo not bound

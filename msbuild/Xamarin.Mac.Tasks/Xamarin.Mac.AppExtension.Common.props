@@ -24,6 +24,13 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<_XamarinAppExtensionCommonPropsHasBeenImported>true</_XamarinAppExtensionCommonPropsHasBeenImported>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<IsXPCService Condition="'$(IsXPCService)' == ''">false</IsXPCService>
+
+		<_AppBundleDirExt Condition="'$(IsXPCService)' == 'true'">.xpc</_AppBundleDirExt>
+		<_AppBundleDirExt Condition="'$(_AppBundleDirExt)' == ''">.appex</_AppBundleDirExt>
+	</PropertyGroup>
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
 

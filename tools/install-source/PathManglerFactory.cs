@@ -28,7 +28,8 @@ namespace InstallSources
 					monoMangler = new MonoPathMangler {
 						InstallDir = InstallDir,
 						DestinationDir = DestinationDir,
-						MonoSourcePath = MonoSourcePath
+						MonoSourcePath = MonoSourcePath,
+						XamarinSourcePath = XamarinSourcePath,
 					};
 				return monoMangler;
 			}
@@ -82,6 +83,10 @@ namespace InstallSources
 					Console.WriteLine($"Mono path is {monoPath}");
 				return File.Exists(monoPath);
 			}
+			// check if the path is the xamarin source path + the mono external submodule
+			var monoSubmodule = Path.Combine (XamarinSourcePath.Replace ("src/", ""), "external", "mono");
+			if (path.StartsWith (monoSubmodule, StringComparison.Ordinal))
+				return true;
 			if (path.StartsWith (XamarinSourcePath, StringComparison.Ordinal))
 				return false;
 			var xamarinRuntimePath = XamarinSourcePath.Replace($"/{srcSubPath}/", $"/{runtimeSubPath}/");

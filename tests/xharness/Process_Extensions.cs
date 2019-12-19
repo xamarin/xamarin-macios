@@ -21,11 +21,11 @@ namespace xharness
 
 	public static class ProcessHelper
 	{
-		public static async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, string args, Log log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public static async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, IList<string> args, Log log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
 		{
 			using (var p = new Process ()) {
 				p.StartInfo.FileName = filename;
-				p.StartInfo.Arguments = args;
+				p.StartInfo.Arguments = StringUtils.FormatArguments (args);
 				return await p.RunAsync (log, true, timeout, environment_variables, cancellation_token);
 			}
 		}
@@ -224,7 +224,7 @@ namespace xharness
 							commands.AppendLine ("detach");
 							commands.AppendLine ("quit");
 							dbg.StartInfo.FileName = "/usr/bin/lldb";
-							dbg.StartInfo.Arguments = $"--source {StringUtils.Quote (template)}";
+							dbg.StartInfo.Arguments = StringUtils.FormatArguments ("--source", template);
 							File.WriteAllText (template, commands.ToString ());
 
 							log.WriteLine ($"Printing backtrace for pid={pid}");

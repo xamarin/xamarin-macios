@@ -11,7 +11,7 @@ fi
 #git clean -xfdq
 
 DIR=$(pwd)/mac-test-package/mac-test-package
-ZIP=$DIR.zip
+ZIP=$DIR.7z
 rm -Rf $DIR
 mkdir -p $DIR
 
@@ -45,6 +45,6 @@ $CP -p ../Make.config $DIR
 $CP -p ../mk/subdirs.mk $DIR/mk
 $CP -p ../mk/rules.mk $DIR/mk
 $CP -p ../mk/quiet.mk $DIR/mk
+$CP -p ../mk/mono.mk "$DIR/mk"
 
-# 7za compresses better, because there are many duplicated files
-cd mac-test-package && zip -r ../mac-test-package.zip *
+cd mac-test-package && 7z a ../mac-test-package.7z *

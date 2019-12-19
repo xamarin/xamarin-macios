@@ -1,10 +1,12 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright Microsoft Corp.
 using System;
 using System.Collections.Generic;
 using IKVM.Reflection;
 using Type = IKVM.Reflection.Type;
 
 using Foundation;
+using ObjCRuntime;
 
 public partial class Generator {
 
@@ -33,10 +35,16 @@ public partial class Generator {
 		// internal static CIFilter FromName (string filterName, IntPtr handle)
 		filters.Add (type_name);
 
+		// filters are now exposed as protocols so we need to conform to them
+		var interfaces = String.Empty;
+		foreach (var i in type.GetInterfaces ()) {
+			interfaces += $", I{i.Name}";
+		}
+
 		// type declaration
-		print ("public{0} partial class {1} : {2} {{", 
+		print ("public{0} partial class {1} : {2}{3} {{",
 			is_abstract ? " abstract" : String.Empty,
-			type_name, base_name);
+			type_name, base_name, interfaces);
 		print ("");
 		indent++;
 
@@ -105,12 +113,54 @@ public partial class Generator {
 		}
 
 		// properties
+		GenerateProperties (type);
+
+		// protocols
+		GenerateProtocolProperties (type, new HashSet<string> ());
+
+		indent--;
+		print ("}");
+
+		// namespace closing (it's optional to use namespaces even if it's a bad practice, ref #35283)
+		if (indent > 0) {
+			indent--;
+			print ("}");
+		}
+	}
+
+	void GenerateProtocolProperties (Type type, HashSet<string> processed)
+	{
+		foreach (var i in type.GetInterfaces ()) {
+			if (!IsProtocolInterface (i, false, out var protocol))
+				continue;
+
+			// the same protocol can be included more than once (interfaces) - but we must generate only once
+			var pname = i.Name;
+			if (processed.Contains (pname))
+				continue;
+			processed.Add (pname);
+
+			print ("");
+			print ($"// {pname} protocol members ");
+			GenerateProperties (i);
+
+			// also include base interfaces/protocols
+			GenerateProtocolProperties (i, processed);
+		}
+	}
+
+	void GenerateProperties (Type type)
+	{
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
 			if (p.IsUnavailable (this))
 				continue;
+			if (AttributeManager.HasAttribute<StaticAttribute> (p))
+				continue;
 			
 			print ("");
+			PrintPropertyAttributes (p);
 			print_generated_code ();
+
 			var ptype = p.PropertyType.Name;
 			// keep C# names as they are reserved keywords (e.g. Boolean also exists in OpenGL for Mac)
 			switch (ptype) {
@@ -126,28 +176,57 @@ public partial class Generator {
 			case "String":
 				ptype = "string";
 				break;
+			// adding `using ImageIO;` would lead to `error CS0104: 'CGImageProperties' is an ambiguous reference between 'CoreGraphics.CGImageProperties' and 'ImageIO.CGImageProperties'`
+			case "CGImageMetadata":
+				ptype = "ImageIO.CGImageMetadata";
+				break;
 			}
 			print ("public {0} {1} {{", ptype, p.Name);
 			indent++;
 
+			// an export will be present (only) if it's defined in a protocol
+			var export = AttributeManager.GetCustomAttribute<ExportAttribute> (p);
+
 			var name = AttributeManager.GetCustomAttribute<CoreImageFilterPropertyAttribute> (p)?.Name;
-			if (p.GetGetMethod () != null)
+			// we can skip the name when it's identical to a protocol selector
+			if (name == null) {
+				if (export == null)
+					throw new BindingException (1072, true, $"Missing [CoreImageFilterProperty] attribute on {0} property {1}", type.Name, p.Name);
+
+				var sel = export.Selector;
+				if (sel.StartsWith ("input", StringComparison.Ordinal))
+					name = sel;
+				else
+					name = "input" + Capitalize (sel);
+			}
+
+			if (p.GetGetMethod () != null) {
+				PrintFilterExport (p, export, setter: false);
 				GenerateFilterGetter (ptype, name);
-			if (p.GetSetMethod () != null)
+			}
+			if (p.GetSetMethod () != null) {
+				PrintFilterExport (p, export, setter: true);
 				GenerateFilterSetter (ptype, name);
+			}
 			
 			indent--;
 			print ("}");
 		}
+	}
 
-		indent--;
-		print ("}");
+	void PrintFilterExport (PropertyInfo p, ExportAttribute export, bool setter)
+	{
+		if (export == null)
+			return;
 
-		// namespace closing (it's optional to use namespaces even if it's a bad practice, ref #35283)
-		if (indent > 0) {
-			indent--;
-			print ("}");
-		}
+		var selector = export.Selector;
+		if (setter)
+			selector = "set" + Capitalize (selector) + ":";
+
+		if (export.ArgumentSemantic != ArgumentSemantic.None && !p.PropertyType.IsPrimitive)
+			print ($"[Export (\"{selector}\", ArgumentSemantic.{export.ArgumentSemantic})]");
+		else
+			print ($"[Export (\"{selector}\")]");
 	}
 
 	void GenerateFilterGetter (string propertyType, string propertyName)
@@ -166,22 +245,30 @@ public partial class Generator {
 			indent++;
 			print ("return nsv.CGAffineTransformValue;");
 			indent--;
-			print ("return new CGAffineTransform (1, 0, 0, 1, 0, 0);");
+			print ("return CGAffineTransform.MakeIdentity ();");
 			break;
 		// NSObject should not be added
+		// NSNumber should not be added - it should be bound as a float (common), int32 or bool
 		case "AVCameraCalibrationData":
 		case "CGColorSpace":
+		case "CGImage":
+		case "ImageIO.CGImageMetadata":
 		case "CIBarcodeDescriptor":
+		case "MLModel":
+		case "NSAttributedString":
+		case "NSData":
 			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
 			break;
 		case "CIColor":
-			print ("return GetColor (\"{0}\");", propertyName);
-			break;
 		case "CIImage":
-			print ("return GetImage (\"{0}\");", propertyName);
-			break;
 		case "CIVector":
-			print ("return GetVector (\"{0}\");", propertyName);
+			print ($"return ValueForKey (\"{propertyName}\") as {propertyType};");
+			break;
+		case "CGPoint":
+			print ("return GetPoint (\"{0}\");", propertyName);
+			break;
+		case "CGRect":
+			print ("return GetRect (\"{0}\");", propertyName);
 			break;
 		case "float":
 			print ("return GetFloat (\"{0}\");", propertyName);
@@ -189,11 +276,8 @@ public partial class Generator {
 		case "int":
 			print ("return GetInt (\"{0}\");", propertyName);
 			break;
-		case "MLModel":
-		case "NSAttributedString":
-		case "NSData":
-			// NSNumber should not be added - it should be bound as a float (common), int32 or bool
-			print ("return ValueForKey (\"{0}\") as {1};", propertyName, propertyType);
+		case "nint":
+			print ("return GetNInt (\"{0}\");", propertyName);
 			break;
 		case "string":
 			// NSString should not be added - it should be bound as a string
@@ -229,12 +313,19 @@ public partial class Generator {
 		case "int":
 			print ("SetInt (\"{0}\", value);", propertyName);
 			break;
+		case "nint":
+			print ("SetNInt (\"{0}\", value);", propertyName);
+			break;
 		// NSObject should not be added
 		case "AVCameraCalibrationData":
 		case "CGColorSpace":
 		case "CIBarcodeDescriptor":
-			print ("SetHandle (\"{0}\", value == null ? IntPtr.Zero : value.Handle);", propertyName);
+		case "CGImage":
+		case "ImageIO.CGImageMetadata":
+			print ($"SetHandle (\"{propertyName}\", value.GetHandle ());");
 			break;
+		case "CGPoint":
+		case "CGRect":
 		case "CIColor":
 		case "CIImage":
 		case "CIVector":

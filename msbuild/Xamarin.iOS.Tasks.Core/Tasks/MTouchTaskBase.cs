@@ -211,17 +211,6 @@ namespace Xamarin.iOS.Tasks
 			return base.ExecuteTool (pathToTool, responseFileCommands, commandLineCommands);
 		}
 
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
-		{
-			//There is a bug (Bug30038) in the Microsoft.Build.Utilities.ToolTask implementation of Mono
-			//that fails to parse the tool output if the line lenght is just one char.
-			//This code is just a workaround and should be removed once the bug is fixed.
-			if (!string.IsNullOrEmpty (singleLine) && singleLine.TrimStart ().Length == 1)
-				singleLine = singleLine + " ";
-			
-			base.LogEventsFromTextOutput (singleLine, messageImportance);
-		}
-
 		void BuildNativeReferenceFlags (GccOptions gcc)
 		{
 			if (NativeReferences == null)
@@ -602,9 +591,9 @@ namespace Xamarin.iOS.Tasks
 
 			args.AddQuotedLine ($"--root-assembly={Path.GetFullPath (MainAssembly.ItemSpec)}");
 
-			// We give the priority to the ExtraArgs to set the mtouch verbosity.
-			if (string.IsNullOrEmpty (ExtraArgs) || (!string.IsNullOrEmpty (ExtraArgs) && !ExtraArgs.Contains ("-q") && !ExtraArgs.Contains ("-v")))
-				args.AddLine (GetVerbosityLevel (Verbosity));
+			var v = VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity);
+			if (v.Length > 0)
+				args.AddLine (v);
 
 			if (!string.IsNullOrWhiteSpace (License))
 				args.AddLine ($"--license={License}");
@@ -745,30 +734,6 @@ namespace Xamarin.iOS.Tasks
 				return frameworkFile;
 
 			return null;
-		}
-
-		static string GetVerbosityLevel (int v) {
-			string result = "";
-			// The values here come from: https://github.com/mono/monodevelop/blob/143f9b6617123a0841a5cc5a2a4e13b309535792/main/src/core/MonoDevelop.Projects.Formats.MSBuild/MonoDevelop.Projects.MSBuild.Shared/RemoteBuildEngineMessages.cs#L186
-			// Assume 'Normal (2)' is the default verbosity (no change), and the other values follow from there.
-			switch (v) {
-			case 0:
-				result = "-q -q -q -q";
-				break;
-			case 1:
-				result = "-q -q";
-				break;
-			case 2:
-				result = "";
-				break;
-			case 3:
-				result = "-v -v";
-				break;
-			case 4:
-				result = "-v -v -v -v";
-				break;
-			}
-			return result;
 		}
 	}
 }

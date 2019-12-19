@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using Xamarin.Bundler;
@@ -16,7 +17,8 @@ namespace Xamarin.Utils
 		public HashSet<string> WeakFrameworks;
 		public HashSet<string> LinkWithLibraries; // X, added to Inputs
 		public HashSet<string> ForceLoadLibraries; // -force_load X, added to Inputs
-		public HashSet<string> OtherFlags; // X
+		public HashSet<string[]> OtherFlags; // X
+		public List<string> InitialOtherFlags; // same as OtherFlags, only that they're the first argument(s) to clang (because order matters!). This is a list to preserve order (fifo).
 		public HashSet<string> Defines; // -DX
 		public HashSet<string> UnresolvedSymbols; // -u X
 		public HashSet<string> SourceFiles; // X, added to Inputs
@@ -99,23 +101,27 @@ namespace Xamarin.Utils
 			AddOtherFlag ("-stdlib=libc++");
 		}
 
-		public void AddOtherFlag (string flag)
+		public void AddOtherInitialFlag (string flag)
 		{
-			if (string.IsNullOrEmpty (flag))
-				return;
-			if (OtherFlags == null)
-				OtherFlags = new HashSet<string> ();
-			OtherFlags.Add (flag);
+			if (InitialOtherFlags == null)
+				InitialOtherFlags = new List<string> ();
+			InitialOtherFlags.Add (flag);
 		}
-
-		public void AddOtherFlags (IEnumerable<string> flags)
+		
+		public void AddOtherFlag (IList<string> flags)
 		{
 			if (flags == null)
 				return;
+			AddOtherFlag ((string []) flags.ToArray ());
+		}
 
+		public void AddOtherFlag (params string [] flags)
+		{
+			if (flags == null || flags.Length == 0)
+				return;
 			if (OtherFlags == null)
-				OtherFlags = new HashSet<string> ();
-			OtherFlags.UnionWith (flags);
+				OtherFlags = new HashSet<string[]> ();
+			OtherFlags.Add (flags);
 		}
 
 		public void LinkWithMono ()
@@ -219,50 +225,65 @@ namespace Xamarin.Utils
 			Inputs.Add (file);
 		}
 
-		public void WriteArguments (StringBuilder args)
+		public void WriteArguments (IList<string> args)
 		{
 			Prepare ();
+
+			if (InitialOtherFlags != null) {
+				var idx = 0;
+				foreach (var flag in InitialOtherFlags) {
+					args.Insert (idx, flag);
+					idx++;
+				}
+			}
 
 			ProcessFrameworksForArguments (args);
 
 			if (LinkWithLibraries != null) {
 				foreach (var lib in LinkWithLibraries) {
-					args.Append (' ').Append (StringUtils.Quote (lib));
+					args.Add (lib);
 					AddInput (lib);
 				}
 			}
 
 			if (ForceLoadLibraries != null) {
 				foreach (var lib in ForceLoadLibraries) {
-					args.Append (" -force_load ").Append (StringUtils.Quote (lib));
+					args.Add ("-force_load");
+					args.Add (lib);
 					AddInput (lib);
 				}
 			}
 
 			if (OtherFlags != null) {
-				foreach (var flag in OtherFlags)
-					args.Append (' ').Append (flag);
+				foreach (var flags in OtherFlags) {
+					foreach (var flag in flags)
+						args.Add (flag);
+				}
 			}
 
 			if (Defines != null) {
-				foreach (var define in Defines)
-					args.Append (" -D").Append (define);
+				foreach (var define in Defines) {
+					args.Add ("-D");
+					args.Add (define);
+				}
 			}
 
 			if (UnresolvedSymbols != null) {
-				foreach (var symbol in UnresolvedSymbols)
-					args.Append (" -u ").Append (StringUtils.Quote (symbol));
+				foreach (var symbol in UnresolvedSymbols) {
+					args.Add ("-u");
+					args.Add (symbol);
+				}
 			}
 
 			if (SourceFiles != null) {
 				foreach (var src in SourceFiles) {
-					args.Append (' ').Append (StringUtils.Quote (src));
+					args.Add (src);
 					AddInput (src);
 				}
 			}
 		}
 
-		void ProcessFrameworksForArguments (StringBuilder args)
+		void ProcessFrameworksForArguments (IList<string> args)
 		{
 			bool any_user_framework = false;
 
@@ -277,40 +298,61 @@ namespace Xamarin.Utils
 			}
 
 			if (any_user_framework) {
-				args.Append (" -Xlinker -rpath -Xlinker @executable_path/Frameworks");
-				if (Application.IsExtension)
-					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../../Frameworks");
+				args.Add ("-Xlinker");
+				args.Add ("-rpath");
+				args.Add ("-Xlinker");
+				args.Add ("@executable_path/Frameworks");
+				if (Application.IsExtension) {
+					args.Add ("-Xlinker");
+					args.Add ("-rpath");
+					args.Add ("-Xlinker");
+					args.Add ("@executable_path/../../Frameworks");
+				}
 			}
 
 			if (Application.HasAnyDynamicLibraries) {
-				args.Append (" -Xlinker -rpath -Xlinker @executable_path");
-				if (Application.IsExtension)
-					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../..");
+				args.Add ("-Xlinker");
+				args.Add ("-rpath");
+				args.Add ("-Xlinker");
+				args.Add ("@executable_path/");
+				if (Application.IsExtension) {
+					args.Add ("-Xlinker");
+					args.Add ("-rpath");
+					args.Add ("-Xlinker");
+					args.Add ("@executable_path/../..");
+				}
 			}
 		}
 
-		void ProcessFrameworkForArguments (StringBuilder args, string fw, bool is_weak, ref bool any_user_framework)
+		void ProcessFrameworkForArguments (IList<string> args, string fw, bool is_weak, ref bool any_user_framework)
 		{
 			var name = Path.GetFileNameWithoutExtension (fw);
 			if (fw.EndsWith (".framework", StringComparison.Ordinal)) {
 				// user framework, we need to pass -F to the linker so that the linker finds the user framework.
 				any_user_framework = true;
 				AddInput (Path.Combine (fw, name));
-				args.Append (" -F ").Append (StringUtils.Quote (Path.GetDirectoryName (fw)));
+				args.Add ("-F");
+				args.Add (Path.GetDirectoryName (fw));
 			}
-			args.Append (is_weak ? " -weak_framework " : " -framework ").Append (name);
+			args.Add (is_weak ? "-weak_framework" : "-framework");
+			args.Add (name);
+		}
+
+		public string[] ToArray ()
+		{
+			var args = new List<string> ();
+			WriteArguments (args);
+			return args.ToArray ();
 		}
 
 		public override string ToString ()
 		{
-			var args = new StringBuilder ();
-			WriteArguments (args);
-			return args.ToString ();
+			return string.Join (" ", ToArray ());
 		}
 
 		public void PopulateInputs ()
 		{
-			var args = new StringBuilder ();
+			var args = new List<string> ();
 			Inputs = new List<string> ();
 			WriteArguments (args);
 		}

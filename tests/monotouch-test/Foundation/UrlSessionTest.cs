@@ -42,7 +42,7 @@ namespace MonoTouchFixtures.Foundation {
 			TestRuntime.AssertXcodeVersion (5, 0);
 			
 			NSUrlSession session = NSUrlSession.SharedSession;
-			var url = new NSUrl ("https://www.xamarin.com");
+			var url = new NSUrl ("https://www.microsoft.com");
 			var tmpfile = Path.GetTempFileName ();
 			File.WriteAllText (tmpfile, "TMPFILE");
 			var file_url = NSUrl.FromFilename (tmpfile);

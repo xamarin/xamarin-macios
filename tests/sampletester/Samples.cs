@@ -8,7 +8,7 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "ios-samples"; // monotouch-samples redirects to ios-samples
 		const string CATEGORY = "iossamples"; // categories can't contain dashes
-		const string HASH = "1d0f3270c394e9c15c014813e804972b17ce3e48";
+		const string HASH = "bffa511ecb8f74b2d4a42418a130d0c83c9723cf";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj
@@ -124,7 +124,7 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "prebuilt-apps";
 		const string CATEGORY = "prebuiltapps"; // categories can't contain dashes
-		const string HASH = "40da1283722df96e81efb5c62364d05e5bd3dd76";
+		const string HASH = "f111672bc6915ceb402abb47dedfe3480e111720";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Known failures
@@ -142,7 +142,7 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "xamarin-forms-samples";
 		const string CATEGORY = "xamarinformssamples"; // categories can't contain dashes
-		const string HASH = "206f4c3a2be1e988eda2ad9130a37019c60f1c7e";
+		const string HASH = "d196d3f7ba418d06ef799074eb4f6120e26a9cf4";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj.
@@ -160,7 +160,7 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "xamarin-forms-book-samples";
 		const string CATEGORY = "xamarinformsbookssamples"; // categories can't contain dashes
-		const string HASH = "dc2bf3a47a46068cfc22b4163c06e218821adb81";
+		const string HASH = "c215bab3324d77e13bd80a0c20e60786d2bd344b";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj,
@@ -171,10 +171,6 @@ namespace Samples {
 				{ "Chapter27/StepSliderDemo/StepSliderDemo/StepSliderDemo.iOS/StepSliderDemo.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Chapter27/StepSliderDemo/StepSliderDemo.sln" } },
 				{ "Chapter28/MapDemos/MapDemos/MapDemos.iOS/MapDemos.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Chapter28/MapDemos/MapDemos.sln" } },
 				{ "Chapter28/WhereAmI/WhereAmI/WhereAmI.iOS/WhereAmI.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Chapter28/WhereAmI/WhereAmI.sln" } },
-
-				// Known failures
-				{ "Chapter02/FS/Greetings/Greetings.iOS/Greetings.iOS.fsproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/57" } },
-				{ "Chapter02/FS/Hello/Hello.iOS/Hello.iOS.fsproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/57" } },
 		};
 
 		static IEnumerable<SampleTestData> GetSampleData ()

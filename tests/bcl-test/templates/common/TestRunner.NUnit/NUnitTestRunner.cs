@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 using Foundation;
 
@@ -35,7 +36,9 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			builderSettings = new Dictionary<string, object> (StringComparer.OrdinalIgnoreCase);
 		}
 
-		public override void Run (IEnumerable<TestAssemblyInfo> testAssemblies)
+#pragma warning disable 1998
+		public override async Task Run (IEnumerable<TestAssemblyInfo> testAssemblies)
+#pragma warning restore 1998
 		{
 			if (testAssemblies == null)
 				throw new ArgumentNullException (nameof (testAssemblies));

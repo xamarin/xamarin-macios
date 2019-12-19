@@ -1108,8 +1108,7 @@ namespace Xamarin.Bundler
 								OutputFile = bc + ".o",
 								Abi = abi,
 							};
-							if (!string.IsNullOrEmpty (App.UserGccFlags))
-								compile_task.CompilerFlags.AddOtherFlag (App.UserGccFlags);
+							compile_task.CompilerFlags.AddOtherFlag (App.UserGccFlags);
 							compile_task.AddDependency (info.Task);
 							link_dependencies.Add (compile_task);
 						}
@@ -1149,7 +1148,7 @@ namespace Xamarin.Bundler
 					foreach (var a in assemblies) {
 						compiler_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
 						compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
-						compiler_flags.AddOtherFlags (a.LinkerFlags);
+						compiler_flags.AddOtherFlag (a.LinkerFlags.ToArray ());
 						if (a.HasLinkWithAttributes) {
 							var symbols = GetRequiredSymbols (a);
 							switch (App.SymbolMode) {
@@ -1458,7 +1457,7 @@ namespace Xamarin.Bundler
 
 		public NativeLinkTask NativeLink (BuildTasks build_tasks, Abi abi, string output_file)
 		{
-			if (!string.IsNullOrEmpty (App.UserGccFlags))
+			if (App.UserGccFlags?.Count > 0)
 				App.DeadStrip = false;
 			if (App.EnableLLVMOnlyBitCode)
 				App.DeadStrip = false;
@@ -1474,7 +1473,7 @@ namespace Xamarin.Bundler
 				linker_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
 				if (a.BuildTarget == AssemblyBuildTarget.StaticObject)
 					linker_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
-				linker_flags.AddOtherFlags (a.LinkerFlags);
+				linker_flags.AddOtherFlag (a.LinkerFlags.ToArray ());
 
 				if (a.BuildTarget == AssemblyBuildTarget.StaticObject) {
 					AotInfo info;
@@ -1502,7 +1501,7 @@ namespace Xamarin.Bundler
 			CompileTask.GetArchFlags (linker_flags, abi);
 			if (App.IsDeviceBuild) {
 				linker_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
-				linker_flags.AddOtherFlag ($"-isysroot {StringUtils.Quote (Driver.GetFrameworkDirectory (App))}");
+				linker_flags.AddOtherFlag ($"-isysroot", Driver.GetFrameworkDirectory (App));
 			} else {
 				CompileTask.GetSimulatorCompilerFlags (linker_flags, false, App);
 			}
@@ -1513,7 +1512,7 @@ namespace Xamarin.Bundler
 			if (App.LibXamarinLinkMode != AssemblyBuildTarget.StaticObject)
 				AddToBundle (App.GetLibXamarin (App.LibXamarinLinkMode));
 
-			linker_flags.AddOtherFlag ($"-o {StringUtils.Quote (output_file)}");
+			linker_flags.AddOtherFlag ("-o", output_file);
 
 			bool need_libcpp = false;
 			if (App.EnableBitCode)
@@ -1543,12 +1542,18 @@ namespace Xamarin.Bundler
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
 			if (App.Embeddinator) {
 				linker_flags.AddOtherFlag ("-shared");
-				linker_flags.AddOtherFlag ($"-install_name {StringUtils.Quote ($"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}")}");
+				linker_flags.AddOtherFlag ("-install_name", $"@rpath/{App.ExecutableName}.framework/{App.ExecutableName}");
 			} else {
 				string mainlib;
 				if (App.IsWatchExtension) {
 					mainlib = "libwatchextension.a";
-					linker_flags.AddOtherFlag (" -e _xamarin_watchextension_main");
+					linker_flags.AddOtherFlag ("-e", "_xamarin_watchextension_main");
+					if (App.SdkVersion.Major >= 6) {
+						// watchOS 6.0's WatchKit contains a WKExtensionMain function, and that's the entry point for Xcode-compiled watch extensions.
+						// To make watch extensions work on earlier watchOS versions, there's a libWKExtensionMainLegacy.a library with a
+						// a WKExtensionMain function that does what's needed (Xcode links with this library when deployment target < 6.0).
+						linker_flags.AddOtherInitialFlag ("-lWKExtensionMainLegacy");
+					}
 				} else if (App.IsTVExtension) {
 					mainlib = "libtvextension.a";
 				} else if (App.IsExtension) {
@@ -1596,7 +1601,7 @@ namespace Xamarin.Bundler
 			if (App.IsExtension) {
 				if (App.Platform == ApplePlatform.iOS && Driver.XcodeVersion.Major < 7) {
 					linker_flags.AddOtherFlag ("-lpkstart");
-					linker_flags.AddOtherFlag ($"-F {StringUtils.Quote (Path.Combine (Driver.GetFrameworkDirectory (App), "System/Library/PrivateFrameworks"))} -framework PlugInKit");
+					linker_flags.AddOtherFlag ("-F", Path.Combine (Driver.GetFrameworkDirectory (App), "System/Library/PrivateFrameworks"), "-framework", "PlugInKit");
 				}
 				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
@@ -1701,17 +1706,18 @@ namespace Xamarin.Bundler
 
 		public static void AdjustDylibs (string output)
 		{
-			var sb = new StringBuilder ();
+			var sb = new List<string> ();
 			foreach (var dependency in Xamarin.MachO.GetNativeDependencies (output)) {
 				if (!dependency.StartsWith ("/System/Library/PrivateFrameworks/", StringComparison.Ordinal))
 					continue;
 				var fixed_dep = dependency.Replace ("/PrivateFrameworks/", "/Frameworks/");
-				sb.Append (" -change ").Append (dependency).Append (' ').Append (fixed_dep);
+				sb.Add ("-change");
+				sb.Add (dependency);
+				sb.Add (fixed_dep);
 			}
-			if (sb.Length > 0) {
-				var quoted_name = StringUtils.Quote (output);
-				sb.Append (' ').Append (quoted_name);
-				Driver.XcodeRun ("install_name_tool", sb.ToString ());
+			if (sb.Count > 0) {
+				sb.Add (output);
+				Driver.XcodeRun ("install_name_tool", sb);
 				sb.Clear ();
 			}
 		}

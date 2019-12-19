@@ -88,6 +88,10 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.AreSame (v2, arr [1], "[1]");
 				Assert.AreSame (v3, arr [2], "[2]");
 			}
+
+			using (var arr = new NSMutableArray<NSString>()) {
+				Assert.DoesNotThrow (() => arr.Insert (v1, 0), "Insert into empty array");
+			}
 		}
 
 		[Test]

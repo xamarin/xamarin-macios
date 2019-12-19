@@ -140,7 +140,11 @@ namespace CoreGraphics {
 		EventSourceUserID = 43,
 		EventSourceGroupID = 44,
 		EventSourceStateID = 45,
-		ScrollWheelEventIsContinuous = 88
+		ScrollWheelEventIsContinuous = 88,
+		EventWindowUnderMousePointer = 91,
+		EventWindowUnderMousePointerThatCanHandleThisEvent = 92,
+		EventUnacceleratedPointerMovementX = 170,
+		EventUnacceleratedPointerMovementY = 171,
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventType;

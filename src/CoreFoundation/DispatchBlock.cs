@@ -16,7 +16,6 @@ using Foundation;
 namespace CoreFoundation {
 #if !COREBUILD
 
-	[StructLayout (LayoutKind.Sequential)]
 	[iOS (8, 0)]
 	[Mac (10, 10)]
 	public sealed class DispatchBlock : NativeObject {

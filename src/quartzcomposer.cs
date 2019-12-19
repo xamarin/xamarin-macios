@@ -34,6 +34,7 @@ using CoreVideo;
 
 namespace QuartzComposer {
 
+	[Deprecated (PlatformName.MacOSX, 10,15)]
 	[BaseType (typeof (NSObject))]
 	interface QCComposition : NSCopying {
 		[Static]
@@ -193,6 +194,7 @@ namespace QuartzComposer {
 
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10,15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when used (e.g. description) meant to be used thru sharedCompositionRepository
 	interface QCCompositionRepository {

@@ -121,8 +121,6 @@ namespace Registrar {
 		TMethod conforms_to_protocol;
 		TMethod invoke_conforms_to_protocol;
 
-		public static bool IsDualBuild { get; private set; }
-
 		public IEnumerable<TAssembly> GetAssemblies ()
 		{
 			return assemblies.Keys;
@@ -135,6 +133,7 @@ namespace Registrar {
 			public CategoryAttribute CategoryAttribute;
 			public TType Type;
 			public ObjCType BaseType;
+			// This only contains the leaf protocols implemented by this type.
 			public ObjCType [] Protocols;
 			public string [] AdoptedProtocols;
 			public bool IsModel;
@@ -158,6 +157,44 @@ namespace Registrar {
 			ObjCType superType;
 
 			public bool IsCategory { get { return CategoryAttribute != null; } }
+
+#if MTOUCH || MMP
+			HashSet<ObjCType> all_protocols;
+			// This contains all protocols in the type hierarchy.
+			// Given a type T that implements a protocol with super protocols:
+			// class T : NSObject, IProtocol2 {}
+			// [Protocol]
+			// interface IP1 {}
+			// [Protocol]
+			// interface IP2 : IP1 {}
+			// This property will contain both IP1 and IP2. The Protocols property only contains IP2.
+			public IEnumerable<ObjCType> AllProtocols {
+				get {
+					if (Protocols == null || Protocols.Length == 0)
+						return null;
+
+					if (all_protocols == null) {
+						var queue = new Queue<ObjCType> (Protocols);
+						var rv = new HashSet<ObjCType> ();
+						while (queue.Count > 0) {
+							var type = queue.Dequeue ();
+							if (rv.Add (type)) {
+								foreach (var iface in type.Type.Resolve ().Interfaces) {
+									if (!Registrar.Types.TryGetValue (iface.InterfaceType, out var superIface)) {
+										// This is not an interface that corresponds to a protocol.
+										continue;
+									}
+									queue.Enqueue (superIface);
+								}
+							}
+						}
+						all_protocols = rv;
+					}
+
+					return all_protocols;
+				}
+			}
+#endif
 
 			public void VerifyRegisterAttribute (ref List<Exception> exceptions)
 			{
@@ -559,7 +596,7 @@ namespace Registrar {
 					return is_ctor.Value;
 				}
 				set {
-					is_ctor = false;
+					is_ctor = value;
 				}
 			}
 
@@ -698,12 +735,6 @@ namespace Registrar {
 						return Registrar.IsEnum (underlyingOutputType);
 					}
 				} else if (Registrar.Is (underlyingInputType, Foundation, "NSValue")) {
-#if MMP || MONOMAC
-					// Remove 'MonoMac.' namespace prefix to make switch smaller
-					if (!Registrar.IsDualBuild && outputTypeName.StartsWith ("MonoMac.", StringComparison.Ordinal))
-						outputTypeName = outputTypeName.Substring ("MonoMac.".Length);
-#endif
-
 					switch (outputTypeName) {
 					case "CoreAnimation.CATransform3D":
 					case "CoreGraphics.CGAffineTransform":
@@ -1071,6 +1102,7 @@ namespace Registrar {
 		protected abstract bool IsGenericType (TType type);
 		protected abstract bool IsGenericMethod (TMethod method);
 		protected abstract bool IsInterface (TType type);
+		protected abstract bool IsAbstract (TType type);
 		protected abstract TType GetGenericTypeDefinition (TType type);
 		protected abstract bool VerifyIsConstrainedToNSObject (TType type, out TType constrained_type);
 		protected abstract TType GetEnumUnderlyingType (TType type);
@@ -1080,9 +1112,8 @@ namespace Registrar {
 		protected abstract bool IsCorlibType (TType type);
 		protected abstract bool IsSimulatorOrDesktop { get; }
 		protected abstract bool Is64Bits { get; }
-		protected abstract bool IsDualBuildImpl { get; }
-		protected abstract Exception CreateException (int code, Exception innerException, TMethod method, string message, params object[] args);
-		protected abstract Exception CreateException (int code, Exception innerException, TType type, string message, params object [] args);
+		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TMethod method, string message, params object[] args);
+		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TType type, string message, params object [] args);
 		protected abstract string PlatformName { get; }
 		public abstract TType FindType (TType relative, string @namespace, string name);
 		protected abstract IEnumerable<TMethod> FindMethods (TType type, string name); // will return null if nothing was found
@@ -1103,7 +1134,6 @@ namespace Registrar {
 
 		public Registrar ()
 		{
-			IsDualBuild = IsDualBuildImpl;
 		}
 
 		protected bool IsArray (TType type)
@@ -1218,39 +1248,35 @@ namespace Registrar {
 
 		internal static string Foundation {
 			get {
-				return IsDualBuild ? "Foundation" : CompatNamespace + ".Foundation";
+				return "Foundation";
 			}
 		}
 
 		internal static string ObjCRuntime {
 			get {
-				return IsDualBuild ? "ObjCRuntime" : CompatNamespace + ".ObjCRuntime";
+				return "ObjCRuntime";
 			}
 		}
 
 		internal static string CoreAnimation {
 			get {
-				return IsDualBuild ? "CoreAnimation" : CompatNamespace + ".CoreAnimation";
+				return "CoreAnimation";
 			}
 		}
 
 #if MONOMAC
 		internal static string AppKit {
 			get {
-				return IsDualBuild ? "AppKit" : CompatNamespace + ".AppKit";
+				return "AppKit";
 			}
 		}
 #endif
 
 #if MONOMAC
-		internal const string CompatNamespace = "MonoMac";
-		internal const string CompatAssemblyName = "XamMac";
-		internal const string DualAssemblyName = "Xamarin.Mac";
+		internal const string AssemblyName = "Xamarin.Mac";
 #else
-		internal const string CompatNamespace = "MonoTouch";
-		internal const string CompatAssemblyName = "monotouch";
 #if MTOUCH
-		internal string DualAssemblyName
+		internal string AssemblyName
 		{
 			get {
 				switch (App.Platform) {
@@ -1266,11 +1292,11 @@ namespace Registrar {
 			}
 		}
 #elif WATCH
-		internal const string DualAssemblyName = "Xamarin.WatchOS";
+		internal const string AssemblyName = "Xamarin.WatchOS";
 #elif TVOS
-		internal const string DualAssemblyName = "Xamarin.TVOS";
+		internal const string AssemblyName = "Xamarin.TVOS";
 #elif IOS
-		internal const string DualAssemblyName = "Xamarin.iOS";
+		internal const string AssemblyName = "Xamarin.iOS";
 #else
 #error Unknown platform
 #endif
@@ -1291,7 +1317,7 @@ namespace Registrar {
 
 		public string PlatformAssembly {
 			get {
-				return IsDualBuild ? DualAssemblyName : CompatAssemblyName;
+				return AssemblyName;
 			}
 		}
 
@@ -1304,43 +1330,78 @@ namespace Registrar {
 
 		protected Exception CreateException (int code, string message, params object[] args)
 		{
-			return CreateException (code, (TMethod)null, message, args);
+			return CreateExceptionImpl (code, true, message, args);
 		}
 
 		protected Exception CreateException (int code, TMethod method, string message, params object[] args)
 		{
-			return CreateException (code, null, method, message, args);
+			return CreateExceptionImpl (code, true, method, message, args);
 		}
 
 		protected Exception CreateException (int code, TProperty property, string message, params object[] args)
 		{
-			return CreateException (code, null, property, message, args);
+			return CreateExceptionImpl (code, true, property, message, args);
 		}
 
 		protected Exception CreateException (int code, TType type, string message, params object [] args)
 		{
-			return CreateException (code, null, type, message, args);
+			return CreateExceptionImpl (code, true, type, message, args);
 		}
 
 		protected Exception CreateException (int code, Exception innerException, TProperty property, string message, params object[] args)
 		{
-			if (property == null)
-				return CreateException (code, innerException, (TMethod) null, message, args);
-			var getter = GetGetMethod (property);
-			if (getter != null)
-				return CreateException (code, innerException, getter, message, args);
-			return CreateException (code, innerException, GetSetMethod (property), message, args);
+			return CreateExceptionImpl (code, true, innerException, property, message, args);
 		}
 
-		Exception CreateException (int code, ObjCMember member, string message, params object[] args)
+		Exception CreateExceptionImpl (int code, bool error, string message, params object [] args)
+		{
+			return CreateExceptionImpl (code, error, (TMethod) null, message, args);
+		}
+
+		Exception CreateExceptionImpl (int code, bool error, TMethod method, string message, params object [] args)
+		{
+			return CreateExceptionImpl (code, error, null, method, message, args);
+		}
+
+		Exception CreateExceptionImpl (int code, bool error, TProperty property, string message, params object [] args)
+		{
+			return CreateExceptionImpl (code, error, null, property, message, args);
+		}
+
+		Exception CreateExceptionImpl (int code, bool error, TType type, string message, params object [] args)
+		{
+			return CreateExceptionImpl (code, error, null, type, message, args);
+		}
+
+		Exception CreateExceptionImpl (int code, bool error, Exception innerException, TProperty property, string message, params object [] args)
+		{
+			if (property == null)
+				return CreateExceptionImpl (code, error, innerException, (TMethod) null, message, args);
+			var getter = GetGetMethod (property);
+			if (getter != null)
+				return CreateExceptionImpl (code, error, innerException, getter, message, args);
+			return CreateExceptionImpl (code, error, innerException, GetSetMethod (property), message, args);
+		}
+
+		Exception CreateException (int code, ObjCMember member, string message, params object [] args)
+		{
+			return CreateExceptionImpl (code, true, member, message, args);
+		}
+
+		Exception CreateExceptionImpl (int code, bool error, ObjCMember member, string message, params object[] args)
 		{
 			var method = member as ObjCMethod;
 			if (method != null)
-				return CreateException (code, method.Method, message, args);
+				return CreateExceptionImpl (code, error, method.Method, message, args);
 			var property = member as ObjCProperty;
 			if (property != null)
-				return CreateException (code, property.Property, message, args);
-			return CreateException (code, message, args);
+				return CreateExceptionImpl (code, error, property.Property, message, args);
+			return CreateExceptionImpl (code, error, message, args);
+		}
+
+		Exception CreateWarning (int code, ObjCMember member, string message, params object [] args)
+		{
+			return CreateExceptionImpl (code, false, member, message, args);
 		}
 
 		protected string GetDescriptiveMethodName (TMethod method)
@@ -2565,7 +2626,7 @@ namespace Registrar {
 			case "System.nfloat":
 				return Is64Bits ? "d" : "f";
 			case "System.DateTime":
-				throw CreateException (4102, member, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", IsDualBuild ? "Foundation.NSDate" : CompatNamespace + ".Foundation.NSDate", member.FullName);
+				throw CreateException (4102, member, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", "Foundation.NSDate", member.FullName);
 			}
 
 			if (Is (type, ObjCRuntime, "Selector"))
@@ -2575,6 +2636,8 @@ namespace Registrar {
 				return "#";
 
 			if (IsINativeObject (type)) {
+				if (!IsGenericType (type) && !IsInterface (type) && !IsNSObject (type) && IsAbstract (type))
+					ErrorHelper.Show (CreateWarning (4179, member, $"The registrar found the abstract type '{type.FullName}' in the signature for '{member.FullName}'. Abstract types should not be used in the signature for a member exported to Objective-C."));
 				if (IsNSObject (type) && forProperty) {
 					return "@\"" + GetExportedTypeName (type) + "\"";
 				} else {

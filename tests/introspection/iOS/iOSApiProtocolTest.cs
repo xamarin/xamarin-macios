@@ -93,6 +93,23 @@ namespace Introspection {
 				// These were bound by mistake, and they're gone in XAMCORE_4_0.
 				return true;
 #endif
+			case "SNClassificationResult": // Class is not being created properly
+				return true;
+			case "SNClassifySoundRequest": // Class is not being created properly
+				return true;
+#if __IOS__
+			// new types - but marked as iOS 8/9 since they are new base types and
+			// we need 32bits bindings to work (generator would not produce them for iOS 13)
+			case "CNFetchRequest":
+			case "PHChangeRequest":
+			case "PHAssetChangeRequest": // subclass of PHChangeRequest
+			case "PHAssetCollectionChangeRequest": // subclass of PHChangeRequest
+			case "PHAssetCreationRequest": // subclass of PHAssetChangeRequest
+			case "PHCollectionListChangeRequest": // subclass of PHChangeRequest
+				if (!TestRuntime.CheckXcodeVersion (11,0))
+					return true;
+				break;
+#endif
 			}
 
 			return base.Skip (type);
@@ -138,6 +155,17 @@ namespace Introspection {
 			case "UIImagePickerControllerDelegate":
 			case "UIVideoEditorControllerDelegate":
 				if (protocolName == "UINavigationControllerDelegate")
+					return true;
+				break;
+#if __IOS__
+			case "ARSCNView":
+			case "ARSKView":
+				if (protocolName == "ARSessionProviding")
+					return true;
+				break;
+#endif
+			case "UIAccessibilityElement":
+				if (protocolName == "UIUserActivityRestoring")
 					return true;
 				break;
 			}
@@ -258,6 +286,36 @@ namespace Introspection {
 				case "PKDisbursementRequest":
 				case "PKDisbursementVoucher":
 					return true;
+				// iOS 13 beta 1 (to be reviewed)
+				case "LAContext":
+				case "VNFaceLandmarkRegion2D":
+				case "VNFaceLandmarkRegion":
+				case "VNFaceLandmarks":
+				case "VNFaceLandmarks2D":
+				case "MKPolygon":
+				case "HMAction":
+				case "NSUrlSessionTaskMetrics":
+				case "NSUrlSessionTaskTransactionMetrics":
+				case "MLMultiArrayConstraint":
+				case "MLDictionaryConstraint":
+				case "MLFeatureDescription":
+				case "MLImageConstraint":
+				case "MLImageSize":
+				case "MLImageSizeConstraint":
+				case "MLModelConfiguration":
+				case "MLModelDescription":
+				case "MLMultiArrayShapeConstraint":
+				case "MLPredictionOptions":
+				case "MLSequenceConstraint":
+				case "ARSkeleton3D": // Conformance not in headers
+				case "ARSkeleton2D": // Conformance not in headers
+				case "ARCollaborationData":  // Conformance not in headers
+				case "UIFontPickerViewControllerConfiguration": // Conformance not in headers
+				case "HKAudiogramSample": // Conformance not in headers
+				case "HKAudiogramSensitivityPoint": // Conformance not in headers
+				case "HMAccessoryOwnershipToken": // Conformance not in headers
+				case "HMAddAccessoryRequest": // Conformance not in headers
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -321,6 +379,21 @@ namespace Introspection {
 				case "CLKGaugeProvider":
 				case "CLKSimpleGaugeProvider":
 				case "CLKTimeIntervalGaugeProvider":
+				// watchOS 6 / Xcode 11
+				case "CLKComplicationTemplateGraphicCircularStackImage":
+				case "CLKComplicationTemplateGraphicCircularStackText":
+					return true;
+#elif __TVOS__
+				case "TVTopShelfAction":
+				case "TVTopShelfCarouselContent":
+				case "TVTopShelfCarouselItem":
+				case "TVTopShelfInsetContent":
+				case "TVTopShelfItem":
+				case "TVTopShelfItemCollection":
+				case "TVTopShelfNamedAttribute":
+				case "TVTopShelfObject":
+				case "TVTopShelfSectionedContent":
+				case "TVTopShelfSectionedItem":
 					return true;
 #endif
 				}
@@ -438,6 +511,39 @@ namespace Introspection {
 				case "PKDisbursementRequest":
 				case "PKDisbursementVoucher":
 					return true;
+				// iOS 13 beta 1 (to be reviewed)
+				case "LAContext":
+				case "VNFaceLandmarkRegion2D":
+				case "VNFaceLandmarkRegion":
+				case "VNFaceLandmarks":
+				case "VNFaceLandmarks2D":
+				case "MKPolygon":
+				case "HMAction":
+				case "NSLayoutManager":
+				case "NSTextContainer":
+				case "UISpringTimingParameters":
+				case "NSException":
+				case "NSUrlSessionTaskMetrics":
+				case "NSUrlSessionTaskTransactionMetrics":
+				case "MLMultiArrayConstraint":
+				case "MLDictionaryConstraint":
+				case "MLFeatureDescription":
+				case "MLImageConstraint":
+				case "MLImageSize":
+				case "MLImageSizeConstraint":
+				case "MLModelConfiguration":
+				case "MLModelDescription":
+				case "MLMultiArrayShapeConstraint":
+				case "MLPredictionOptions":
+				case "MLSequenceConstraint":
+				case "ARSkeleton3D": // Conformance not in headers
+				case "ARSkeleton2D": // Conformance not in headers
+				case "ARCollaborationData":  // Conformance not in headers
+				case "UIFontPickerViewControllerConfiguration":  // Conformance not in headers
+				case "HKAudiogramSensitivityPoint":  // Conformance not in headers
+				case "HMAccessoryOwnershipToken":  // Conformance not in headers
+				case "HMAddAccessoryRequest":  // Conformance not in headers
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -501,6 +607,21 @@ namespace Introspection {
 				case "CLKGaugeProvider":
 				case "CLKSimpleGaugeProvider":
 				case "CLKTimeIntervalGaugeProvider":
+				// watchOS 6 / Xcode 11
+				case "CLKComplicationTemplateGraphicCircularStackImage":
+				case "CLKComplicationTemplateGraphicCircularStackText":
+					return true;
+#elif __TVOS__
+				case "TVTopShelfAction":
+				case "TVTopShelfCarouselContent":
+				case "TVTopShelfCarouselItem":
+				case "TVTopShelfInsetContent":
+				case "TVTopShelfItem":
+				case "TVTopShelfItemCollection":
+				case "TVTopShelfNamedAttribute":
+				case "TVTopShelfObject":
+				case "TVTopShelfSectionedContent":
+				case "TVTopShelfSectionedItem":
 					return true;
 #endif
 				}
@@ -561,6 +682,19 @@ namespace Introspection {
 				// iOS 12.2
 				case "PKDisbursementVoucher":
 					return true;
+				// iOS 13 beta 1 (to be reviewed)
+				case "VNFaceLandmarkRegion2D":
+				case "VNFaceLandmarkRegion":
+				case "VNFaceLandmarks":
+				case "VNFaceLandmarks2D":
+				case "HMAction":
+				case "HMCharacteristicWriteAction":
+				case "MLPredictionOptions":
+				case "HKCumulativeQuantitySample": // Conformance not in headers
+				case "HKDiscreteQuantitySample": // Conformance not in headers
+				case "HKAudiogramSample": // Conformance not in headers
+				case "UIImage": // only complains on tvOS beta 6
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -573,6 +707,8 @@ namespace Introspection {
 				case "INRestaurantGuest":
 				case "INPerson":
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
+				// iOS 13 beta 1 (to be reviewed)
+				case "UIKeyCommand":
 					return true;
 				}
 				break;
@@ -774,6 +910,7 @@ namespace Introspection {
 				case "UISegmentedControl":
 				case "UITableView":
 				case "UITabBar":
+				case "UITabBarItem": // As https://github.com/xamarin/xamarin-macios/commit/e1873169f2d3b2b034d36f844909b6eb4e8abcca points out works as expected on both sim and device
 				case "UIAlertController":
 				case "PKPaymentButton":
 				case "PKAddPassButton":

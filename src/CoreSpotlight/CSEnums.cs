@@ -15,7 +15,7 @@ namespace CoreSpotlight {
 	// NSInteger -> CNContact.h
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0), Mac (10,11)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[Native]
 	[ErrorDomain ("CSIndexErrorDomain")]
 	public enum CSIndexErrorCode : long {
@@ -29,7 +29,7 @@ namespace CoreSpotlight {
 	}
 
 	[NoTV][iOS (10,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[ErrorDomain ("CSSearchQueryErrorDomain")]
 	[Native]
 	public enum CSSearchQueryErrorCode : long {

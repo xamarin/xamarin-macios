@@ -87,12 +87,35 @@ namespace Xamarin
 
 		public int LaunchOnDevice (DeviceInfo device, string appPath, bool waitForUnlock, bool waitForExit)
 		{
-			return Execute ("--devname \"{0}\" --launchdev \"{1}\" --sdkroot \"{2}\" --wait-for-unlock:{3} --wait-for-exit:{4} {5}", device.Name, appPath, Configuration.xcode_root, waitForUnlock ? "yes" : "no", waitForExit ? "yes" : "no", GetVerbosity ());
+			var args = new List<string> ();
+			args.AddRange (
+				new [] {
+					"--devname", device.Name,
+					"--launchdev", AppPath,
+					"--sdkroot", Configuration.xcode_root,
+					$"--wait-for-unlock:{(waitForUnlock ? "yes" : "no")}",
+					$"--wait-for-exit:{(waitForExit ? "yes" : "no")}",
+				}
+			);
+			AddVerbosity (args);
+			return Execute (args);
 		}
 
 		public int InstallOnDevice (DeviceInfo device, string appPath, string devicetype = null)
 		{
-			return Execute ("--devname \"{0}\" --installdev \"{1}\" --sdkroot \"{2}\" {3} {4}", device.Name, appPath, Configuration.xcode_root, GetVerbosity (), devicetype == null ? string.Empty : "--device " + devicetype);
+			var args = new List<string> ();
+			args.AddRange (
+				new [] {
+					"--devname", device.Name,
+					"--installdev", AppPath,
+					"--sdkroot", Configuration.xcode_root,
+			});
+			AddVerbosity (args);
+			if (devicetype != null) {
+				args.Add ("--device");
+				args.Add (devicetype);
+			}
+			return Execute (args);
 		}
 
 		// The default is to build for the simulator
@@ -224,7 +247,7 @@ namespace Xamarin
 			}
 		}
 
-		protected override void BuildArguments (StringBuilder sb)
+		protected override void BuildArguments (IList<string> sb)
 		{
 			base.BuildArguments (sb);
 
@@ -235,75 +258,84 @@ namespace Xamarin
 				MTouch.AssertDeviceAvailable ();
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --dev ").Append (StringUtils.Quote (AppPath));
+				sb.Add ("--dev");
+				sb.Add (AppPath);
 				break;
 			case MTouchAction.BuildSim:
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --sim ").Append (StringUtils.Quote (AppPath));
+				sb.Add ("--sim");
+				sb.Add (AppPath);
 				break;
 			case MTouchAction.LaunchSim:
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
-				sb.Append (" --launchsim ").Append (StringUtils.Quote (AppPath));
+				sb.Add ("--launchsim");
+				sb.Add (AppPath);
 				break;
 			default:
 				throw new NotImplementedException ();
 			}
 
 			if (FastDev.HasValue && FastDev.Value)
-				sb.Append (" --fastdev");
+				sb.Add ("--fastdev");
 
 			if (PackageMdb.HasValue)
-				sb.Append (" --package-mdb:").Append (PackageMdb.Value ? "true" : "false");
+				sb.Add ($"--package-mdb:{(PackageMdb.Value ? "true" : "false")}");
 
 			if (NoStrip.HasValue && NoStrip.Value)
-				sb.Append (" --nostrip");
+				sb.Add ("--nostrip");
 
 			if (NoSymbolStrip != null) {
 				if (NoSymbolStrip.Length == 0) {
-					sb.Append (" --nosymbolstrip");
+					sb.Add ("--nosymbolstrip");
 				} else {
-					sb.Append (" --nosymbolstrip:").Append (NoSymbolStrip);
+					sb.Add ($"--nosymbolstrip:{NoSymbolStrip}");
 				}
 			}
 
 			if (!string.IsNullOrEmpty (SymbolList))
-				sb.Append (" --symbollist=").Append (StringUtils.Quote (SymbolList));
+				sb.Add ($"--symbollist={SymbolList}");
 
 			if (MSym.HasValue)
-				sb.Append (" --msym:").Append (MSym.Value ? "true" : "false");
+				sb.Add ($"--msym:{(MSym.Value ? "true" : "false")}");
 
 			if (DSym.HasValue)
-				sb.Append (" --dsym:").Append (DSym.Value ? "true" : "false");
+				sb.Add ($"--dsym:{(DSym.Value ? "true" : "false")}");
 
-			foreach (var appext in AppExtensions)
-				sb.Append (" --app-extension ").Append (StringUtils.Quote (appext.AppPath));
+			foreach (var appext in AppExtensions) {
+				sb.Add ($"--app-extension");
+				sb.Add (appext.AppPath);
+			}
 
-			foreach (var framework in Frameworks)
-				sb.Append (" --framework ").Append (StringUtils.Quote (framework));
+			foreach (var framework in Frameworks) {
+				sb.Add ($"--framework");
+				sb.Add (framework);
+			}
 
 			if (!string.IsNullOrEmpty (Mono))
-				sb.Append (" --mono:").Append (StringUtils.Quote (Mono));
+				sb.Add ($"--mono:{Mono}");
 			
 			if (Dlsym.HasValue)
-				sb.Append (" --dlsym:").Append (Dlsym.Value ? "true" : "false");
-			
-			if (!string.IsNullOrEmpty (Executable))
-				sb.Append (" --executable ").Append (StringUtils.Quote (Executable));
+				sb.Add ($"--dlsym:{(Dlsym.Value ? "true" : "false")}");
+
+			if (!string.IsNullOrEmpty (Executable)) {
+				sb.Add ("--executable");
+				sb.Add (Executable);
+			}
 
 			switch (SymbolMode) {
 			case MTouchSymbolMode.Ignore:
-				sb.Append (" --dynamic-symbol-mode=ignore");
+				sb.Add ("--dynamic-symbol-mode=ignore");
 				break;
 			case MTouchSymbolMode.Code:
-				sb.Append (" --dynamic-symbol-mode=code");
+				sb.Add ("--dynamic-symbol-mode=code");
 				break;
 			case MTouchSymbolMode.Default:
-				sb.Append (" --dynamic-symbol-mode=default");
+				sb.Add ("--dynamic-symbol-mode=default");
 				break;
 			case MTouchSymbolMode.Linker:
-				sb.Append (" --dynamic-symbol-mode=linker");
+				sb.Add ("--dynamic-symbol-mode=linker");
 				break;
 			case MTouchSymbolMode.Unspecified:
 				break;
@@ -312,25 +344,25 @@ namespace Xamarin
 			}
 
 			if (NoFastSim.HasValue && NoFastSim.Value)
-				sb.Append (" --nofastsim");
+				sb.Add ("--nofastsim");
 
 			if (!string.IsNullOrEmpty (Device))
-				sb.Append (" --device:").Append (StringUtils.Quote (Device));
+				sb.Add ($"--device:{Device}");
 
 			if (!string.IsNullOrEmpty (LLVMOptimizations))
-				sb.Append (" --llvm-opt=").Append (StringUtils.Quote (LLVMOptimizations));
+				sb.Add ($"--llvm-opt={LLVMOptimizations}");
 			
 			if (Bitcode != MTouchBitcode.Unspecified)
-				sb.Append (" --bitcode:").Append (Bitcode.ToString ().ToLower ());
+				sb.Add ($"--bitcode:{Bitcode.ToString ().ToLower ()}");
 
 			foreach (var abt in AssemblyBuildTargets)
-				sb.Append (" --assembly-build-target=").Append (StringUtils.Quote (abt));
+				sb.Add ($"--assembly-build-target={abt}");
 
 			if (!string.IsNullOrEmpty (AotArguments))
-				sb.Append (" --aot:").Append (StringUtils.Quote (AotArguments));
+				sb.Add ($"--aot:{AotArguments}");
 
 			if (!string.IsNullOrEmpty (AotOtherArguments))
-				sb.Append (" --aot-options:").Append (StringUtils.Quote (AotOtherArguments));
+				sb.Add ($"--aot-options:{AotOtherArguments}");
 		}
 
 		XmlDocument FetchDeviceList (bool allowCache = true)
@@ -338,7 +370,7 @@ namespace Xamarin
 			if (device_list_cache == null || !allowCache) {
 				var output_file = Path.GetTempFileName ();
 				try {
-					if (Execute ("--listdev:{1} --sdkroot {0} --output-format xml", Configuration.xcode_root, output_file) != 0)
+					if (Execute (new [] { "--listdev", output_file, "--sdkroot", Configuration.xcode_root }) != 0)
 						throw new Exception ("Failed to list devices.");
 					device_list_cache = new XmlDocument ();
 					device_list_cache.Load (output_file);
@@ -455,13 +487,18 @@ namespace Xamarin
 			return MTouch.CompileTestAppLibrary (asm_dir, "class X {}", appName: Path.GetFileNameWithoutExtension (asm_name));
 		}
 
-		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = true)
+		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true)
 		{
 			Profile = profile;
-			CreateTemporaryApp (appName: appName, code: code, extraArg: extraArg, extraCode: extraCode, usings: usings, use_csc: use_csc);
+			CreateTemporaryApp (appName: appName, code: code, extraArgs: extraArgs, extraCode: extraCode, usings: usings, use_csc: use_csc);
 		}
 
-		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null, string usings = null, bool use_csc = true)
+		public void CreateTemporaryApp ()
+		{
+			CreateTemporaryApp (false, "testApp", null, (IList<string>) null);
+		}
+
+		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true)
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -473,13 +510,13 @@ namespace Xamarin
 			var app = AppPath ?? Path.Combine (testDir, appName + ".app");
 			Directory.CreateDirectory (app);
 			AppPath = app;
-			RootAssembly = CompileTestAppExecutable (testDir, code, extraArg, Profile, appName, extraCode, usings, use_csc);
+			RootAssembly = CompileTestAppExecutable (testDir, code, extraArgs, Profile, appName, extraCode, usings, use_csc);
 
 			if (hasPlist)
 				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
 		}
 
-		public void CreateTemporaryServiceExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testServiceExtension")
+		public void CreateTemporaryServiceExtension (string code = null, string extraCode = null, IList<string> extraArgs = null, string appName = "testServiceExtension")
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -504,7 +541,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 			AppPath = app;
 			Extension = true;
-			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg, appName: appName);
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArgs: extraArgs, appName: appName);
 
 			var info_plist = 
 @"<?xml version=""1.0"" encoding=""UTF-8""?>
@@ -520,7 +557,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
+	<string>7.0</string>
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
@@ -544,7 +581,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				File.WriteAllText (plist_path, info_plist);
 		}
 
-		public void CreateTemporaryTodayExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testTodayExtension")
+		public void CreateTemporaryTodayExtension (string code = null, string extraCode = null, IList<string> extraArgs = null, string appName = "testTodayExtension")
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -581,7 +618,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 
 			AppPath = app;
 			Extension = true;
-			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg, appName: appName);
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArgs: extraArgs, appName: appName);
 
 			var info_plist = // FIXME: this includes a NSExtensionMainStoryboard key which points to a non-existent storyboard. This won't matter as long as we're only building, and not running the extension.
 @"<?xml version=""1.0"" encoding=""UTF-8""?>
@@ -621,7 +658,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 				File.WriteAllText (plist_path, info_plist);
 		}
 
-		public void CreateTemporaryWatchKitExtension (string code = null, string extraCode = null, string extraArg = "")
+		public void CreateTemporaryWatchKitExtension (string code = null, string extraCode = null, IList<string> extraArgs = null)
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -646,7 +683,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 
 			AppPath = app;
 			Extension = true;
-			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, extraArg: extraArg, profile: Profile);
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, extraArgs: extraArgs, profile: Profile);
 
 			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
@@ -805,13 +842,23 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 
 		public static IEnumerable<string> GetNativeSymbolsInExecutable (string executable, string arch = null)
 		{
-			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", $"{(arch == null ? string.Empty : $"-arch {arch} ")}-gUj {StringUtils.Quote (executable)}", hide_output: true).Split ('\n');
+			var args = new List<string> ();
+			if (arch != null) {
+				args.Add ("-arch");
+				args.Add (arch);
+			}
+			args.Add ("-gUj");
+			args.Add (executable);
+			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", args, hide_output: true).Split ('\n');
 			
 			rv = rv.Where ((v) => {
 				if (string.IsNullOrEmpty (v))
 					return false;
 
 				if (v.StartsWith (executable, StringComparison.Ordinal) && v.EndsWith (":", StringComparison.Ordinal))
+					return false;
+
+				if (v == "no symbols")
 					return false;
 
 				return true;

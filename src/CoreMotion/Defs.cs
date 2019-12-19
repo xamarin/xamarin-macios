@@ -75,48 +75,8 @@ namespace CoreMotion {
 		}
 	}
 
-	// untyped enum -> CMError.h
-	public enum CMError {
-		Null = 100,
-		DeviceRequiresMovement, 
-		TrueNorthNotAvailable,
-		Unknown,
-		MotionActivityNotAvailable,
-		MotionActivityNotAuthorized,
-		MotionActivityNotEntitled,
-		InvalidParameter,
-		[iOS (8,2)]
-		InvalidAction,
-		[iOS (8,2)]
-		NotAvailable,
-		[iOS (8,2)]
-		NotEntitled,
-		[iOS (8,2)]
-		NotAuthorized,
-	}
-
 	// untyped enum -> CMDeviceMotion.h
 	public enum CMMagneticFieldCalibrationAccuracy {
 		Uncalibrated = -1, Low, Medium, High
 	}
-
-	// untyped enum -> CMAttitude.h
-	// in Xcode 6.3 SDK is became an NSUInteger
-	[Flags]
-	[Native]
-	public enum CMAttitudeReferenceFrame : ulong {
-		XArbitraryZVertical = 1 << 0,
-		XArbitraryCorrectedZVertical = 1 << 1,
-		XMagneticNorthZVertical = 1 << 2,
-		XTrueNorthZVertical = 1 << 3
-	}
-
-	// NSInteger -> CMMotionActivity.h
-	[Native]
-	public enum CMMotionActivityConfidence : long {
-		Low = 0,
-		Medium,
-		High
-	}
-
 }

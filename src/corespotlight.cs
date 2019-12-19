@@ -16,7 +16,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface CSIndexExtensionRequestHandler : NSExtensionRequestHandling, CSSearchableIndexDelegate {
 
@@ -24,7 +24,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface CSPerson : NSSecureCoding, NSCopying {
 
@@ -48,7 +48,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableIndex {
 
@@ -92,7 +92,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[Category]
 	[BaseType (typeof (CSSearchableIndex))]
 	interface CSSearchableIndex_CSOptionalBatchingExtension {
@@ -111,7 +111,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableIndexDelegate {
@@ -143,7 +143,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableItem : NSSecureCoding, NSCopying {
 
@@ -181,7 +181,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSString))]
 	// hack: it seems that generator.cs can't track NSCoding correctly ? maybe because the type is named NSString2 at that time
 	interface CSLocalizedString : NSCoding {
@@ -195,7 +195,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CSCustomAttributeKey initWithKeyName...]
 	interface CSCustomAttributeKey : NSCopying, NSSecureCoding {
@@ -227,7 +227,7 @@ namespace CoreSpotlight {
 	[NoTV]
 #endif
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
 	[Static]
 	interface CSMailboxKey {
@@ -253,7 +253,7 @@ namespace CoreSpotlight {
 
 	[NoTV]
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableItemAttributeSet : NSCopying, NSSecureCoding {
 
@@ -1040,7 +1040,7 @@ namespace CoreSpotlight {
 	}
 
 	[NoTV][iOS (10,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CSSearchQuery {

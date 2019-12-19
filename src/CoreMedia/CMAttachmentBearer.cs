@@ -7,11 +7,13 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
+	[Watch (6,0)]
 	public enum CMAttachmentMode : uint {
 		ShouldNotPropagate    = 0,
 		ShouldPropagate       = 1
 	};
 
+	[Watch (6,0)]
 	public static class CMAttachmentBearer {
 
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -61,11 +63,12 @@ namespace CoreMedia {
 				return Runtime.GetINativeObject<T> (attchm, false);
 			return default (T);
 		}
-
+#if !WATCH
 		public static T GetAttachment<T> (this ICMAttachmentBearer target, CMSampleBufferAttachmentKey key, out CMAttachmentMode attachmentModeOut) where T: class, INativeObject
 		{
 			return GetAttachment<T> (target, key.GetConstant (), out attachmentModeOut);
 		}
+#endif
 
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static void CMPropagateAttachments (/* CMAttachmentBearerRef */ IntPtr source, /* CMAttachmentBearerRef */ IntPtr destination);

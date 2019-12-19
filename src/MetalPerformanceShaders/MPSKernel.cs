@@ -42,17 +42,17 @@ namespace MetalPerformanceShaders {
 		}
 
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		static extern void MPSHintTemporaryMemoryHighWaterMark (IntPtr commandBuffer, nuint bytes);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public static void HintTemporaryMemoryHighWaterMark (IMTLCommandBuffer commandBuffer, nuint sizeInBytes) => MPSHintTemporaryMemoryHighWaterMark (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, sizeInBytes);
 
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		static extern void MPSSetHeapCacheDuration (IntPtr commandBuffer, double seconds);
 
-		[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0)]
 		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, seconds);
 #endif
 	}
@@ -315,7 +315,7 @@ namespace MetalPerformanceShaders {
 	}
 
 	public partial class MPSCnnBinaryConvolutionNode {
-		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		public static MPSCnnBinaryConvolutionNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 		{
 			unsafe {
@@ -327,7 +327,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		public MPSCnnBinaryConvolutionNode (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags) : base (NSObjectFlag.Empty)
 		{
 			unsafe {
@@ -341,7 +341,7 @@ namespace MetalPerformanceShaders {
 	}
 
 	public partial class MPSCnnBinaryFullyConnectedNode {
-		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		public static MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 		{
 			unsafe {
@@ -353,7 +353,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		[TV (11,3), Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		public MPSCnnBinaryFullyConnectedNode (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags) : base (NSObjectFlag.Empty)
 		{
 			unsafe {

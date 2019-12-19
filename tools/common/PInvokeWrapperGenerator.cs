@@ -42,15 +42,7 @@ namespace Xamarin.Bundler
 				hdr.WriteLine ("#define DEBUG 1");
 
 			hdr.WriteLine ("#include <stdarg.h>");
-#if MMP
-			if (Driver.IsClassic) {
-				hdr.WriteLine ("#include <xamarin-classic/xamarin.h>");
-			} else {
-				hdr.WriteLine ("#include <xamarin/xamarin.h>");
-			}
-#else
 			hdr.WriteLine ("#include <xamarin/xamarin.h>");
-#endif
 			hdr.WriteLine ("#include <objc/objc.h>");
 			hdr.WriteLine ("#include <objc/runtime.h>");
 			hdr.WriteLine ("#include <objc/message.h>");

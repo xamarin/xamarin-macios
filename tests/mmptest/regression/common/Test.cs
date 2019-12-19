@@ -3,13 +3,9 @@
 using System;
 using System.IO;
 using System.Reflection;
-#if __UNIFIED__
-using Foundation;
+
 using AppKit;
-#else
-using MonoMac.Foundation;
-using MonoMac.AppKit;
-#endif
+using Foundation;
 
 namespace Xamarin.Mac.Linker.Test {
 	
@@ -31,7 +27,7 @@ namespace Xamarin.Mac.Linker.Test {
 			}
 		}
 		
-		static string linker_removed_type = "MonoMac.CoreImage.CIColor, XamMac";
+		static string linker_removed_type = "CoreImage.CIColor, Xamarin.Mac";
 
 		public static void EnsureLinker (bool enabled)
 		{

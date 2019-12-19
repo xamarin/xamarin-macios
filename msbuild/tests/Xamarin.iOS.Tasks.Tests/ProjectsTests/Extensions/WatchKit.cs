@@ -11,7 +11,7 @@ namespace Xamarin.iOS.Tasks {
 	[TestFixture ("iPhoneSimulator")]
 	public class WatchKit : ExtensionTestBase {
 
-		bool isXcode10OrLater = Version.Parse (Configuration.XcodeVersion).Major >= 10;
+		bool isXcode10OrLater = Configuration.XcodeVersion.Major >= 10;
 
 		public WatchKit (string platform) : base(platform)
 		{

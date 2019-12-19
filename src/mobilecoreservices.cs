@@ -489,27 +489,27 @@ namespace MobileCoreServices {
 // exclude from MonoMac classic
 #if (XAMCORE_2_0 || !MONOMAC)
 		[NoWatch]
-		[iOS (9,0)][Mac(10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac(10,11)]
 		[Field ("kUTTypeAlembic", "ModelIO")]
 		NSString Alembic { get; }
 
 		[NoWatch]
-		[iOS (9,0)][Mac(10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac(10,11)]
 		[Field ("kUTType3dObject", "ModelIO")]
 		NSString k3dObject { get; }
 
 		[NoWatch]
-		[iOS (9,0)][Mac(10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac(10,11)]
 		[Field ("kUTTypePolygon", "ModelIO")]
 		NSString Polygon { get; }
 
 		[NoWatch]
-		[iOS (9,0)][Mac(10,11, onlyOn64 : true)]
+		[iOS (9,0)][Mac(10,11)]
 		[Field ("kUTTypeStereolithography", "ModelIO")]
 		NSString Stereolithography { get; }
 
 		[NoWatch]
-		[iOS (10,0)][Mac(10,12, onlyOn64 : true)]
+		[iOS (10,0)][Mac(10,12)]
 		[TV (10,0)]
 		[Field ("kUTTypeUniversalSceneDescription", "ModelIO")]
 		NSString UniversalSceneDescription { get; }

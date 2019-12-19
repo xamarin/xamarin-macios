@@ -20,7 +20,7 @@ namespace Xamarin.iOS.Tasks {
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
 			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-			var nr = proj.AddItem ("NativeReference", Path.Combine (".", "..", "..", "..", "tests", "test-libraries", ".libs", "ios", "XTest.framework")).First ();
+			var nr = proj.AddItem ("NativeReference", Path.Combine (".", "..", "..", "..", "tests", "test-libraries", ".libs", "ios-fat", "XTest.framework")).First ();
 			nr.SetMetadataValue ("IsCxx", "False");
 			nr.SetMetadataValue ("Kind", "Framework");
 

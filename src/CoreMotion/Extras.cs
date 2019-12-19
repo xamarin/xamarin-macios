@@ -6,7 +6,7 @@ using System;
 
 namespace CoreMotion {
 
-#if !XAMCORE_2_0
+#if !XAMCORE_2_0 && !MONOMAC
 	public partial class CMAttitude {
 
 		[Obsolete ("This type is not meant to be created by application code")]

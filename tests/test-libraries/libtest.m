@@ -478,6 +478,23 @@ static UltimateMachine *shared;
 		return self.INSCodingArrayProperty;
 	}
 
+	-(void) methodEncodings:
+			      (inout NSObject **) obj1P
+			obj2: (in NSObject **) obj2P
+			obj3: (out NSObject **) obj3P
+			obj4: (const NSObject **) obj4P
+			obj5: (bycopy NSObject **) obj5P
+			obj6: (byref NSObject **) obj6P
+			obj7: (oneway NSObject **) obj7P
+	{
+		obj1P = NULL;
+		obj2P = NULL;
+		obj3P = NULL;
+		obj4P = NULL;
+		obj5P = NULL;
+		obj6P = NULL;
+		obj7P = NULL;
+	}
 @end
 
 @implementation ProtocolAssigner
@@ -553,6 +570,17 @@ static UltimateMachine *shared;
 
 @implementation ObjCProtocolClassTest
 -(void) idAsIntPtr: (id)p1
+{
+	// Do nothing
+}
+-(void) methodEncodings:
+	(inout NSObject **) obj1P
+	obj2: (in NSObject **) obj2P
+	obj3: (out NSObject **) obj3P
+	obj4: (const NSObject **) obj4P
+	obj5: (bycopy NSObject **) obj5P
+	obj6: (byref NSObject **) obj6P
+	obj7: (oneway NSObject **) obj7P
 {
 	// Do nothing
 }
@@ -649,12 +677,46 @@ static Class _TestClass = NULL;
     [obj release];
 }
 
++(void) callAssertMainThreadBlockReleaseQOS: (outerBlock) completionHandler
+{
+	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
+	__block bool success = false;
+
+	dispatch_sync (dispatch_get_global_queue (QOS_CLASS_DEFAULT, 0ul), ^{
+		completionHandler (^(int magic_number)
+		{
+			assert (magic_number == 42);
+			assert ([NSThread isMainThread]); // This may crash way after the failed test has finished executing.
+			success = obj != NULL; // this captures the 'obj', and it's only freed when the block is freed.
+		});
+    });
+	assert (success);
+    [obj release];
+}
+
 -(void) callAssertMainThreadBlockReleaseCallback
 {
 	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
 	__block bool success = false;
 
 	dispatch_sync (dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
+		[self assertMainThreadBlockReleaseCallback: ^(int magic_number)
+		{
+			assert (magic_number == 42);
+			assert ([NSThread isMainThread]); // This may crash way after the failed test has finished executing.
+			success = obj != NULL; // this captures the 'obj', and it's only freed when the block is freed.
+		}];
+    });
+	assert (success);
+    [obj release];
+}
+
+-(void) callAssertMainThreadBlockReleaseCallbackQOS
+{
+	MainThreadDeallocator *obj = [[MainThreadDeallocator alloc] init];
+	__block bool success = false;
+
+	dispatch_sync (dispatch_get_global_queue (QOS_CLASS_DEFAULT, 0ul), ^{
 		[self assertMainThreadBlockReleaseCallback: ^(int magic_number)
 		{
 			assert (magic_number == 42);

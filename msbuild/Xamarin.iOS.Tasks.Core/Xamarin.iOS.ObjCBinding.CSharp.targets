@@ -81,7 +81,9 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 			References="@(ReferencePath)"
 			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			BTouchToolPath="$(BTouchToolPath)"
-			BTouchToolExe="$(BTouchToolExe)">
+			BTouchToolExe="$(BTouchToolExe)"
+			StandardOutputImportance="High"
+			>
 		</BTouch>
 	</Target>
 

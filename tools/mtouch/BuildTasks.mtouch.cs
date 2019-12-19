@@ -37,6 +37,15 @@ namespace Xamarin.Bundler
 			return Task.Run (() => Start ());
 		}
 
+		// both stdout and stderr will be sent to this function.
+		// null will be sent when there's no more output
+		// calls to this function will be synchronized (no need to lock in here).
+		protected virtual void OutputReceived (string line)
+		{
+			if (line != null)
+				Output.AppendLine (line);
+		}
+
 		protected int Start ()
 		{
 			if (Driver.Verbosity > 0)
@@ -45,6 +54,7 @@ namespace Xamarin.Bundler
 			var info = ProcessStartInfo;
 			var stdout_completed = new ManualResetEvent (false);
 			var stderr_completed = new ManualResetEvent (false);
+			var lockobj = new object ();
 
 			Output = new StringBuilder ();
 
@@ -52,8 +62,8 @@ namespace Xamarin.Bundler
 				p.OutputDataReceived += (sender, e) =>
 				{
 					if (e.Data != null) {
-						lock (Output)
-							Output.AppendLine (e.Data);
+						lock (lockobj)
+							OutputReceived (e.Data);
 					} else {
 						stdout_completed.Set ();
 					}
@@ -62,8 +72,8 @@ namespace Xamarin.Bundler
 				p.ErrorDataReceived += (sender, e) =>
 				{
 					if (e.Data != null) {
-						lock (Output)
-							Output.AppendLine (e.Data);
+						lock (lockobj)
+							OutputReceived (e.Data);
 					} else {
 						stderr_completed.Set ();
 					}
@@ -76,6 +86,8 @@ namespace Xamarin.Bundler
 
 				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
 				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
+
+				OutputReceived (null);
 
 				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
 
@@ -181,6 +193,8 @@ namespace Xamarin.Bundler
 		public string AssemblyPath; // path to the .s file.
 		List<string> inputs;
 		public AotInfo AotInfo;
+		List<Exception> exceptions = new List<Exception> ();
+		List<string> output_lines = new List<string> ();
 
 		public override IEnumerable<string> Outputs {
 			get {
@@ -204,7 +218,8 @@ namespace Xamarin.Bundler
 					if (Assembly.HasDependencyMap)
 						inputs.AddRange (Assembly.DependencyMap);
 					inputs.Add (AssemblyName);
-					inputs.Add (Driver.GetAotCompiler (Assembly.App, Assembly.Target.Is64Build));
+					foreach (var abi in Assembly.Target.Abis)
+						inputs.Add (Driver.GetAotCompiler (Assembly.App, abi, Assembly.Target.Is64Build));
 					var mdb = Assembly.FullPath + ".mdb";
 					if (File.Exists (mdb))
 						inputs.Add (mdb);
@@ -226,6 +241,19 @@ namespace Xamarin.Bundler
 			}
 		}
 
+		protected override void OutputReceived (string line)
+		{
+			if (line == null)
+				return;
+
+			if (line.StartsWith ("AOT restriction: Method '", StringComparison.Ordinal) && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
+				exceptions.Add (ErrorHelper.CreateError (3002, line));
+			} else {
+				CheckFor5107 (AssemblyName, line, exceptions);
+			}
+			output_lines.Add (line);
+		}
+
 		protected async override Task ExecuteAsync ()
 		{
 			var exit_code = await StartAsync ();
@@ -241,19 +269,11 @@ namespace Xamarin.Bundler
 				return;
 			}
 
-			Console.Error.WriteLine ("AOT Compilation exited with code {0}, command:\n{1}{2}", exit_code, Command, Output.Length > 0 ? ("\n" + Output.ToString ()) : string.Empty);
-			if (Output.Length > 0) {
-				List<Exception> exceptions = new List<Exception> ();
-				foreach (var line in Output.ToString ().Split ('\n')) {
-					if (line.StartsWith ("AOT restriction: Method '", StringComparison.Ordinal) && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
-						exceptions.Add (new MonoTouchException (3002, true, line));
-					}
-				}
-				if (exceptions.Count > 0)
-					throw new AggregateException (exceptions.ToArray ());
-			}
+			WriteLimitedOutput ($"AOT Compilation exited with code {exit_code}, command:\n{Command}", output_lines, exceptions);
 
-			throw new MonoTouchException (3001, true, "Could not AOT the assembly '{0}'", AssemblyName);
+			exceptions.Add (ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", AssemblyName));
+
+			throw new AggregateException (exceptions);
 		}
 
 		public override string ToString ()
@@ -287,11 +307,12 @@ namespace Xamarin.Bundler
 			// and very hard to diagnose otherwise when hidden from the build output. Ref: bug #2430
 			var linker_errors = new List<Exception> ();
 			var output = new StringBuilder ();
-			var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToString (), null, output);
+			var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToArray (), null, output, suppressPrintOnErrors: true);
 
 			Application.ProcessNativeLinkerOutput (Target, output.ToString (), CompilerFlags.AllLibraries, linker_errors, code != 0);
 
 			if (code != 0) {
+				Console.WriteLine ($"Process exited with code {code}, command:\n{Target.App.CompilerPath} {CompilerFlags.ToString ()}\n{output} ");
 				// if the build failed - it could be because of missing frameworks / libraries we identified earlier
 				foreach (var assembly in Target.Assemblies) {
 					if (assembly.UnresolvedModuleReferences == null)
@@ -304,15 +325,16 @@ namespace Xamarin.Bundler
 					}
 				}
 				// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
-				if (!String.IsNullOrEmpty (Target.App.UserGccFlags))
-					linker_errors.Add (new MonoTouchException (5201, true, "Native linking failed. Please review the build log and the user flags provided to gcc: {0}", Target.App.UserGccFlags));
-				linker_errors.Add (new MonoTouchException (5202, true, "Native linking failed. Please review the build log.", Target.App.UserGccFlags));
+				if (Target.App.UserGccFlags?.Count > 0)
+					linker_errors.Add (new MonoTouchException (5201, true, "Native linking failed. Please review the build log and the user flags provided to gcc: {0}", StringUtils.FormatArguments (Target.App.UserGccFlags)));
+				else
+					linker_errors.Add (new MonoTouchException (5202, true, "Native linking failed. Please review the build log."));
 
 				if (code == 255) {
 					// check command length
 					// getconf ARG_MAX
 					StringBuilder getconf_output = new StringBuilder ();
-					if (Driver.RunCommand ("getconf", "ARG_MAX", output: getconf_output, suppressPrintOnErrors: true) == 0) {
+					if (Driver.RunCommand ("getconf", new [] { "ARG_MAX" }, output: getconf_output, suppressPrintOnErrors: true) == 0) {
 						int arg_max;
 						if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
 							var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;
@@ -417,7 +439,7 @@ namespace Xamarin.Bundler
 
 			foreach (var abi in abis) {
 				var arch = abi.AsArchString ();
-				flags.AddOtherFlag ($"-arch {arch}");
+				flags.AddOtherFlag ($"-arch", arch);
 
 				enable_thumb |= (abi & Abi.Thumb) != 0;
 			}
@@ -432,13 +454,14 @@ namespace Xamarin.Bundler
 				flags.AddOtherFlag ("-gdwarf-2");
 
 			if (!is_assembler) {
-				if (string.IsNullOrEmpty (language) || !language.Contains ("++")) {
-					// error: invalid argument '-std=c99' not allowed with 'C++/ObjC++'
-					flags.AddOtherFlag ("-std=c99");
+				if (language != "objective-c") {
+					// error: invalid argument '-std=c++14' not allowed with 'Objective-C'
+					flags.AddOtherFlag ("-std=c++14");
 				}
-				flags.AddOtherFlag ($"-I{StringUtils.Quote (Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include"))}");
+
+				flags.AddOtherFlag ($"-I{Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include")}");
 			}
-			flags.AddOtherFlag ($"-isysroot {StringUtils.Quote (Driver.GetFrameworkDirectory (app))}");
+			flags.AddOtherFlag ($"-isysroot", Driver.GetFrameworkDirectory (app));
 			flags.AddOtherFlag ("-Qunused-arguments"); // don't complain about unused arguments (clang reports -std=c99 and -Isomething as unused).
 		}
 
@@ -487,11 +510,11 @@ namespace Xamarin.Bundler
 
 			flags.AddOtherFlag ("-shared");
 			if (!App.EnableBitCode && !Target.Is64Build)
-				flags.AddOtherFlag ("-read_only_relocs suppress");
+				flags.AddOtherFlag ("-read_only_relocs", "suppress");
 			if (App.EnableBitCode)
 				flags.AddOtherFlag ("-lc++");
 			flags.LinkWithMono ();
-			flags.AddOtherFlag ("-install_name " + StringUtils.Quote (install_name));
+			flags.AddOtherFlag ("-install_name", install_name);
 			flags.AddOtherFlag ("-fapplication-extension"); // fixes this: warning MT5203: Native linking warning: warning: linking against dylib not safe for use in application extensions: [..]/actionextension.dll.arm64.dylib
 		}
 
@@ -538,14 +561,28 @@ namespace Xamarin.Bundler
 			if (App.EnableDebug)
 				CompilerFlags.AddDefine ("DEBUG");
 
-			CompilerFlags.AddOtherFlag ($"-o {StringUtils.Quote (OutputFile)}");
+			CompilerFlags.AddOtherFlag ("-o", OutputFile);
 
 			if (!string.IsNullOrEmpty (Language))
-				CompilerFlags.AddOtherFlag ($"-x {Language}");
+				CompilerFlags.AddOtherFlag ("-x", Language);
 
 			Directory.CreateDirectory (Path.GetDirectoryName (OutputFile));
 
-			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToString (), null, null);
+			var exceptions = new List<Exception> ();
+			var output = new List<string> ();
+			var assembly_name = Path.GetFileNameWithoutExtension (OutputFile);
+			var output_received = new Action<string> ((string line) => {
+				if (line == null)
+					return;
+				output.Add (line);
+				CheckFor5107 (assembly_name, line, exceptions);
+			});
+
+			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToArray (), null, output_received, suppressPrintOnErrors: true);
+
+			WriteLimitedOutput (rv != 0 ? $"Compilation failed with code {rv}, command:\n{App.CompilerPath} {CompilerFlags.ToString ()}" : null, output, exceptions);
+
+			ErrorHelper.Show (exceptions);
 
 			return rv;
 		}

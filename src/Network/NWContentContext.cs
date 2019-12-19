@@ -18,7 +18,8 @@ namespace Network {
 	// The content context, there are a few pre-configured content contexts for sending
 	// available as static properties on this class
 	//
-	[TV (12,0), Mac (10,14, onlyOn64: true), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[Watch (6,0)]
 	public class NWContentContext : NativeObject {
 		bool global;
 		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
@@ -123,6 +124,14 @@ namespace Network {
 			if (x == IntPtr.Zero)
 				return null;
 			return new NWProtocolMetadata (x, owns: true);
+		}
+
+		public T GetProtocolMetadata<T> (NWProtocolDefinition protocolDefinition) where T : NWProtocolMetadata
+		{
+			if (protocolDefinition == null)
+				throw new ArgumentNullException (nameof (protocolDefinition));
+			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
+			return Runtime.GetINativeObject<T> (x, owns: true);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]

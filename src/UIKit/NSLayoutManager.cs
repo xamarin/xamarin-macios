@@ -79,14 +79,41 @@ namespace UIKit {
 			}
 		}
 
-#if XAMCORE_4_0 || MONOMAC
+#if !XAMCORE_4_0
+#if MONOMAC
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		public unsafe void ShowGlyphs (
 #else
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.")]
 		public unsafe void ShowCGGlyphs (
-#endif
+#endif // MONOMAC
 			short[] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
 			CGPoint[] /* const CGPoint* */ positions,
 			nuint /* NSUInteger */ glyphCount,
+			UIFont font,
+			CGAffineTransform textMatrix,
+			NSDictionary attributes,
+			CGContext graphicsContext)
+		{
+			fixed (short* gl = glyphs) {
+				fixed (CGPoint* pos = positions) {
+					ShowGlyphs ((IntPtr) gl, (IntPtr) pos, glyphCount, font, textMatrix, attributes, graphicsContext);
+				}
+			}
+		}
+#endif // !XAMCORE_4_0
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		public unsafe void ShowGlyphs (
+			short [] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
+			CGPoint [] /* const CGPoint* */ positions,
+			nint /* NSInteger */ glyphCount,
 			UIFont font,
 			CGAffineTransform textMatrix,
 			NSDictionary attributes,

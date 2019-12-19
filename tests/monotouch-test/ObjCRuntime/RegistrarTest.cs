@@ -35,6 +35,7 @@ using CoreLocation;
 #if !__TVOS__
 using Contacts;
 #endif
+using WebKit;
 #else
 using MonoTouch;
 using MonoTouch.AddressBook;
@@ -4863,6 +4864,50 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+		[Test]
+		public void MethodEncodings ()
+		{
+			using (var met = new MethodEncodingsTests ()) {
+				IntPtr obj1 = IntPtr.Zero, obj2 = IntPtr.Zero, obj3 = IntPtr.Zero, obj4 = IntPtr.Zero, obj5 = IntPtr.Zero, obj6 = IntPtr.Zero, obj7 = IntPtr.Zero;
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (met.Handle, Selector.GetHandle ("methodEncodings:obj2:obj3:obj4:obj5:obj6:obj7:"), ref obj1, ref obj2, ref obj3, ref obj4, ref obj5, ref obj6, ref obj7);
+				NSObject o1 = Runtime.GetNSObject (obj1);
+				NSObject o2 = Runtime.GetNSObject (obj2);
+				NSObject o3 = Runtime.GetNSObject (obj3);
+				NSObject o4 = Runtime.GetNSObject (obj4);
+				NSObject o5 = Runtime.GetNSObject (obj5);
+				NSObject o6 = Runtime.GetNSObject (obj6);
+				NSObject o7 = Runtime.GetNSObject (obj7);
+				Assert.IsNotNull (o1, "O1");
+				Assert.IsNotNull (o2, "O2");
+				Assert.IsNotNull (o3, "O3");
+				Assert.IsNotNull (o4, "O4");
+				Assert.IsNotNull (o5, "O5");
+				Assert.IsNotNull (o6, "O6");
+				Assert.IsNotNull (o7, "O7");
+			}
+		}
+		
+		class MethodEncodingsTests : NSObject, IObjCProtocolTest {
+			[Export ("methodEncodings:obj2:obj3:obj4:obj5:obj6:obj7:")]
+			public void GetMethodEncodings (ref NSObject obj1, ref NSObject obj2, ref NSObject obj3, ref NSObject obj4, ref NSObject obj5, ref NSObject obj6, ref NSObject obj7)
+			{
+				Assert.IsNull (obj1, "obj1");
+				Assert.IsNull (obj2, "obj2");
+				Assert.IsNull (obj3, "obj3");
+				Assert.IsNull (obj4, "obj4");
+				Assert.IsNull (obj5, "obj5");
+				Assert.IsNull (obj6, "obj6");
+				Assert.IsNull (obj7, "obj7");
+				obj1 = new NSObject ();
+				obj2 = new NSObject ();
+				obj3 = new NSObject ();
+				obj4 = new NSObject ();
+				obj5 = new NSObject ();
+				obj6 = new NSObject ();
+				obj7 = new NSObject ();
+			}
+		}
+		
 		class RefOutParametersSubclass : BI1064.RefOutParameters
 		{
 			public override void TestCFBundle (int action, ref CFBundle refValue, out CFBundle outValue)
@@ -5246,6 +5291,44 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 
 		}
+
+#if !__WATCHOS__ && !__TVOS__ // No WebKit on watchOS/tvOS
+		[Test]
+		public void GenericClassWithUnrelatedGenericDelegate ()
+		{
+			using (var obj = new GenericWebNavigationThingie<NSObject> ()) {
+				var handler_called = false;
+				Action<WKNavigationActionPolicy> handler = new Action<WKNavigationActionPolicy> ((v) => {
+					handler_called = true;
+				});
+				var block = new BlockLiteral ();
+				var tramp = new DActionArity1V3 (SDActionArity1V3.Invoke);
+				if (Runtime.DynamicRegistrationSupported) {
+					block.SetupBlock (tramp, handler);
+					Messaging.void_objc_msgSend_IntPtr_IntPtr_BlockLiteral (obj.Handle, Selector.GetHandle ("webView:decidePolicyForNavigationAction:decisionHandler:"), IntPtr.Zero, IntPtr.Zero, ref block);
+					block.CleanupBlock ();
+					Assert.IsTrue (handler_called, "Handler called");
+				} else {
+					Assert.Throws<RuntimeException> (() => block.SetupBlock (tramp, handler));
+				}
+			}
+		}
+
+		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
+		internal delegate void DActionArity1V3 (IntPtr block, nint value);
+		static internal class SDActionArity1V3 {
+			static internal readonly DActionArity1V3 Handler = Invoke;
+
+			[MonoPInvokeCallback (typeof (DActionArity1V3))]
+			public static unsafe void Invoke (IntPtr block, nint value)
+			{
+				var del = BlockLiteral.GetTarget<Action<WKNavigationActionPolicy>> (block);
+				if (del != null)
+					del ((WKNavigationActionPolicy) (long) value);
+			}
+		}
+#endif // !__WATCHOS__ && !__TVOS__
+
 	}
 
 #if !__WATCHOS__
@@ -5382,6 +5465,18 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	public class SomeConsumer : NSObject, ISomeDelegate
 	{
 	}
+
+#if !__WATCHOS__ && !__TVOS__ // No WebKit on watchOS/tvOS
+	[Preserve]
+	public class GenericWebNavigationThingie<WebViewModel> : NSObject, IWKNavigationDelegate {
+		[Export ("webView:decidePolicyForNavigationAction:decisionHandler:")]
+		public void DecidePolicy (WKWebView webView, WKNavigationAction navigationAction, Action<WKNavigationActionPolicy> decisionHandler)
+		{
+			decisionHandler (WKNavigationActionPolicy.Allow);
+		}
+	}
+#endif
+
 #if !__WATCHOS__ // no MetalKit on watchOS
 	// These classes implement Metal* protocols, so that the generated registrar code includes the corresponding Metal* headers.
 	// https://github.com/xamarin/xamarin-macios/issues/4422

@@ -4,7 +4,7 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -22,6 +22,9 @@ namespace Xamarin.MacDev.Tasks
 
 		[Required]
 		public string SdkDevPath { get; set; }
+
+		[Required]
+		public string SdkRoot { get; set; }
 
 		#endregion
 
@@ -68,6 +71,9 @@ namespace Xamarin.MacDev.Tasks
 
 			if (!Directory.Exists (dir))
 				Directory.CreateDirectory (dir);
+
+			if (AppleSdkSettings.XcodeVersion.Major >= 11)
+				EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"SDKROOT={SdkRoot}");
 
 			return base.Execute ();
 		}

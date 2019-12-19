@@ -56,7 +56,7 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (9,0)][Mac (10,11)]
 	[Static]
 	interface GLKModelError {
 
@@ -70,7 +70,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface GLKBaseEffect : GLKNamedEffect {
 		[Export ("colorMaterialEnabled", ArgumentSemantic.Assign)]
@@ -128,7 +127,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface GLKEffectProperty {
 	}
@@ -136,7 +134,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyFog {
 		[Export ("mode", ArgumentSemantic.Assign)]
@@ -161,7 +158,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyLight {
 		[Export ("position", ArgumentSemantic.Assign)]
@@ -206,7 +202,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyMaterial {
 		[Export ("diffuseColor", ArgumentSemantic.Assign)]
@@ -228,7 +223,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyTexture {
 		[Export ("target", ArgumentSemantic.Assign)]
@@ -248,7 +242,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyTransform {
 		[Export ("normalMatrix")]
@@ -264,7 +257,7 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)][Mac (10,11, onlyOn64: true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // - (nullable instancetype)init NS_UNAVAILABLE;
 	interface GLKMesh
@@ -298,7 +291,7 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)][Mac (10,11, onlyOn64: true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface GLKMeshBuffer : MDLMeshBuffer
@@ -335,7 +328,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (GLKBaseEffect))]
 	interface GLKReflectionMapEffect : GLKNamedEffect {
 		[Export ("textureCubeMap")]
@@ -348,7 +340,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface GLKSkyboxEffect : GLKNamedEffect {
 		[Export ("center", ArgumentSemantic.Assign)]
@@ -381,7 +372,7 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)][Mac (10,11, onlyOn64: true)]
+	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // (nullable instancetype)init NS_UNAVAILABLE;
 	interface GLKSubmesh
@@ -416,7 +407,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10,8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface GLKTextureInfo : NSCopying {
 		[Export ("width")]
@@ -440,17 +430,17 @@ namespace GLKit {
 		[Export ("target")]
 		GLKTextureTarget Target { get; }
 
-		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("mimapLevelCount")]
 		uint MimapLevelCount { get; }
 
-		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("arrayLength")]
 		uint ArrayLength { get; }
 
-		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("depth")]
 		uint Depth { get; }
@@ -461,7 +451,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[Mac (10, 8, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface GLKTextureLoader {
 		[Static]
@@ -492,7 +481,7 @@ namespace GLKit {
 		[Export ("cubeMapWithContentsOfURL:options:error:")]
 		GLKTextureInfo CubeMapFromUrl (NSUrl url, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Static]
 		[Export ("textureWithName:scaleFactor:bundle:options:error:")]
@@ -535,7 +524,7 @@ namespace GLKit {
 		[Async]
 		void BeginLoadCubeMap (NSUrl filePath, [NullAllowed] NSDictionary textureOperations, [NullAllowed] DispatchQueue queue, GLKTextureLoaderCallback onComplete);
 
-		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("textureWithName:scaleFactor:bundle:options:queue:completionHandler:")]
 		[Async]

@@ -28,8 +28,3 @@
 
 ## deprecated in iOS 7
 !missing-pinvoke! AudioSessionRemovePropertyListenerWithUserData is not bound
-
-
-## unsorted
-
-!missing-pinvoke! MusicTrackGetDestMIDIEndpoint is not bound

@@ -79,17 +79,17 @@ namespace CoreGraphics {
 			/* CGFloat */ nfloat xStep, /* CGFloat */ nfloat yStep, CGPatternTiling tiling, bool isColored,
 			/* const CGPatternCallbacks* */ ref CGPatternCallbacks callbacks);
 
-		CGPatternCallbacks callbacks;
+		static CGPatternCallbacks callbacks = new CGPatternCallbacks () {
+			version = 0,
+			draw = DrawCallback,
+			release = ReleaseCallback,
+		};
 		GCHandle gch;
 		
 		public CGPattern (CGRect bounds, CGAffineTransform matrix, nfloat xStep, nfloat yStep, CGPatternTiling tiling, bool isColored, DrawPattern drawPattern)
 		{
 			if (drawPattern == null)
 				throw new ArgumentNullException (nameof (drawPattern));
-
-			callbacks.draw = DrawCallback;
-			callbacks.release = ReleaseCallback;
-			callbacks.version = 0;
 
 			gch = GCHandle.Alloc (drawPattern);
 			Handle = CGPatternCreate (GCHandle.ToIntPtr (gch), bounds, matrix, xStep, yStep, tiling, isColored, ref callbacks);

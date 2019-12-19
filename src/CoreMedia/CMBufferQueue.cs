@@ -26,7 +26,7 @@ namespace CoreMedia {
 	public delegate bool   CMBufferGetBool (INativeObject buffer);
 	public delegate int    CMBufferCompare (INativeObject first, INativeObject second);
 
-	[iOS (7,1)]
+	[iOS (7,1), Watch (6,0)]
 	public delegate nint   CMBufferGetSize (INativeObject buffer);
 
 	public class CMBufferQueue : INativeObject
@@ -366,6 +366,7 @@ namespace CoreMedia {
 		}
 #endif // !COREBUILD
 
+		[Watch (6,0)]
 		public enum TriggerCondition {
 			WhenDurationBecomesLessThan = 1,
 			WhenDurationBecomesLessThanOrEqualTo = 2,

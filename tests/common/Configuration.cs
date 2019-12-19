@@ -26,10 +26,7 @@ namespace Xamarin.Tests
 		public static string tvos_sdk_version;
 		public static string macos_sdk_version;
 		public static string xcode_root;
-		public static string XcodeVersion;
-		public static string xcode5_root;
-		public static string xcode6_root;
-		public static string xcode72_root;
+		public static string XcodeVersionString;
 		public static string xcode83_root;
 		public static string xcode94_root;
 #if MONOMAC
@@ -42,6 +39,15 @@ namespace Xamarin.Tests
 		public static bool include_tvos;
 		public static bool include_watchos;
 		public static bool include_device;
+
+		static Version xcode_version;
+		public static Version XcodeVersion {
+			get {
+				if (xcode_version == null)
+					xcode_version = Version.Parse (XcodeVersionString);
+				return xcode_version;
+			}
+		}
 
 		static bool? use_system; // if the system-installed XI/XM should be used instead of the local one.
 		public static bool UseSystem {
@@ -75,11 +81,16 @@ namespace Xamarin.Tests
 			var xcodes = Directory.GetDirectories ("/Applications", "Xcode*.app", SearchOption.TopDirectoryOnly);
 			var with_versions = new List<Tuple<Version, string>> ();
 
-			var max_version = Version.Parse (XcodeVersion);
+			var max_version = Version.Parse (XcodeVersionString);
 			foreach (var xcode in xcodes) {
 				var path = Path.Combine (xcode, "Contents", "Developer");
-				var version = Version.Parse (GetXcodeVersion (path));
+				var xcode_version = GetXcodeVersion (path);
+				if (xcode_version == null)
+					continue;
+				var version = Version.Parse (xcode_version);
 				if (version >= max_version)
+					continue;
+				if (version.Major == max_version.Major)
 					continue;
 				if (min_version != null && version < min_version)
 					continue;
@@ -143,7 +154,7 @@ namespace Xamarin.Tests
 				if (tests_dir == null)
 					throw new Exception ($"Could not find the directory 'tests'. Please run 'make' in the tests/ directory.");
 				// Run make
-				ExecutionHelper.Execute ("make", $"-C {StringUtils.Quote (tests_dir)} test.config");
+				ExecutionHelper.Execute ("make", new string[] { "-C", tests_dir }, "test.config");
 				test_config = FindConfigFiles ("test.config");
 			}
 			ParseConfigFiles (test_config);
@@ -212,7 +223,7 @@ namespace Xamarin.Tests
 				File.Copy (path, tmpfile, true);
 				using (var process = new System.Diagnostics.Process ()) {
 					process.StartInfo.FileName = "plutil";
-					process.StartInfo.Arguments = $"-convert xml1 {Xamarin.Utils.StringUtils.Quote (tmpfile)}";
+					process.StartInfo.Arguments = StringUtils.FormatArguments ("-convert", "xml1", tmpfile);
 					process.Start ();
 					process.WaitForExit ();
 					return File.ReadAllText (tmpfile);
@@ -235,9 +246,6 @@ namespace Xamarin.Tests
 			tvos_sdk_version = GetVariable ("TVOS_SDK_VERSION", "9.0");
 			macos_sdk_version = GetVariable ("OSX_SDK_VERSION", "10.12");
 			xcode_root = GetVariable ("XCODE_DEVELOPER_ROOT", "/Applications/Xcode.app/Contents/Developer");
-			xcode5_root = GetVariable ("XCODE5_DEVELOPER_ROOT", "/Applications/Xcode511.app/Contents/Developer");
-			xcode6_root = GetVariable ("XCODE6_DEVELOPER_ROOT", "/Applications/Xcode601.app/Contents/Developer");
-			xcode72_root = GetVariable ("XCODE72_DEVELOPER_ROOT", "/Applications/Xcode72.app/Contents/Developer");
 			xcode83_root = GetVariable ("XCODE83_DEVELOPER_ROOT", "/Applications/Xcode83.app/Contents/Developer");
 			xcode94_root = GetVariable ("XCODE94_DEVELOPER_ROOT", "/Applications/Xcode94.app/Contents/Developer");
 			include_ios = !string.IsNullOrEmpty (GetVariable ("INCLUDE_IOS", ""));
@@ -246,7 +254,7 @@ namespace Xamarin.Tests
 			include_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_WATCH", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 
-			XcodeVersion = GetXcodeVersion (xcode_root);
+			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
 			mac_xcode_root = xcode_root;
 #endif
@@ -266,8 +274,6 @@ namespace Xamarin.Tests
 			Console.WriteLine ("  MAC_DESTDIR={0}", mac_destdir);
 			Console.WriteLine ("  SDK_VERSION={0}", sdk_version);
 			Console.WriteLine ("  XCODE_ROOT={0}", xcode_root);
-			Console.WriteLine ("  XCODE5_ROOT={0}", xcode5_root);
-			Console.WriteLine ("  XCODE6_ROOT={0} Exists={1}", xcode6_root, Directory.Exists (xcode6_root));
 #if MONOMAC
 			Console.WriteLine ("  MAC_XCODE_ROOT={0}", mac_xcode_root);
 #endif
@@ -303,7 +309,7 @@ namespace Xamarin.Tests
 				// might need tweaking.
 				if (mt_src_root == null)
 #if MONOMAC
-					mt_src_root = Path.GetFullPath (Path.Combine (TestAssemblyDirectory, "../../.."));
+					mt_src_root = RootPath;
 #else
 					mt_src_root = Path.GetFullPath (Path.Combine (TestAssemblyDirectory, "../../../.."));
 #endif
@@ -523,9 +529,9 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static string GetCompiler (Profile profile, StringBuilder args, bool use_csc = true)
+		public static string GetCompiler (Profile profile, IList<string> args, bool use_csc = true)
 		{
-			args.Append (" -lib:").Append (Path.GetDirectoryName (GetBaseLibrary (profile))).Append (' ');
+			args.Add ($"-lib:{Path.GetDirectoryName (GetBaseLibrary (profile))}");
 			if (use_csc) {
 				return "/Library/Frameworks/Mono.framework/Commands/csc";
 			} else {
@@ -533,20 +539,7 @@ namespace Xamarin.Tests
 			}
 		}
 #endif // !XAMMAC_TESTS
-
-		public static void AssertXcodeSupports32Bit ()
-		{
-			if (XcodeSupports32Bit)
-				return;
-			Assert.Ignore ("The current version of Xcode does not support compiling 32-bit macOS applications.");
-		}
-
-		public static bool XcodeSupports32Bit {
-			get {
-				return Version.Parse (XcodeVersion).Major < 10;
-			}
-		}
-
+		
 		public static string NuGetPackagesDirectory {
 			get {
 				return Path.Combine (RootPath, "packages");

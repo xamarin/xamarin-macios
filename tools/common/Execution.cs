@@ -8,20 +8,28 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Xamarin.Utils;
+
 namespace Xamarin.Bundler {
 	public partial class Driver {
-		public static int RunCommand (string path, string args, string [] env, out StringBuilder output, bool suppressPrintOnErrors, int verbose)
+		public static int RunCommand (string path, IList<string> args, string [] env, out StringBuilder output, bool suppressPrintOnErrors, int verbose)
 		{
 			output = new StringBuilder ();
-			return RunCommand (path, args, env, output, suppressPrintOnErrors, verbose);
+			return RunCommand (path, StringUtils.FormatArguments (args), env, output, suppressPrintOnErrors, verbose);
+		}
+		
+		public static int RunCommand (string path, IList<string> args, string [] env, StringBuilder output, bool suppressPrintOnErrors, int verbose)
+		{
+			return RunCommand (path, StringUtils.FormatArguments (args), env, output, suppressPrintOnErrors, verbose);
 		}
 
-		public static int RunCommand (string path, string args, string[] env, StringBuilder output, bool suppressPrintOnErrors, int verbose)
+		static int RunCommand (string path, string args, string[] env, StringBuilder output, bool suppressPrintOnErrors, int verbose)
 		{
 			var info = new ProcessStartInfo (path, args);
 			info.UseShellExecute = false;

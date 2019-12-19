@@ -54,6 +54,14 @@ namespace Xamarin.iOS.Tasks
 		public LoggerVerbosity Verbosity {
 			get; set;
 		}
+
+		public void Clear ()
+		{
+			CustomEvents.Clear ();
+			ErrorEvents.Clear ();
+			MessageEvents.Clear ();
+			WarningsEvents.Clear ();
+		}
 	}
 
 	// Stolen from xbuild.

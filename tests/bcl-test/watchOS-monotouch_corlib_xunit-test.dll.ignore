@@ -1,7 +1,3 @@
-# makes application crash
-System.Text.Tests.StringBuilderTests.Append_CharPointer_Null_ThrowsNullReferenceException
-
-
 # blocks watch test app
 System.IO.Tests.FileInfo_CopyTo_str_b
 System.IO.Tests.File_Copy_str_str_b

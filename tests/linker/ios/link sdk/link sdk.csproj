@@ -192,6 +192,9 @@
     <Compile Include="..\..\CommonLinkSdkTest.cs">
       <Link>CommonLinkSdkTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonLinkAnyTest.cs">
+      <Link>CommonLinkAnyTest.cs</Link>
+    </Compile>
     <Compile Include="BitcodeTest.cs" />
   </ItemGroup>
   <ItemGroup>

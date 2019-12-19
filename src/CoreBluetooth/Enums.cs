@@ -40,7 +40,6 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
-	[iOS (6, 0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[NoWatch]
 	[Native]
@@ -171,5 +170,27 @@ namespace CoreBluetooth {
 		Low = 0,
 		Medium,
 		High
+	}
+
+	[iOS (13,0), TV (13,0), Watch (6,0), Mac (10,15)]
+	[Native]
+	public enum CBConnectionEvent : long {
+		Disconnected = 0,
+		Connected = 1,
+	}
+
+	[Flags, iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+	[Native]
+	public enum CBCentralManagerFeature : ulong {
+		ExtendedScanAndConnect = 1uL << 0,
+	}
+
+	[iOS (13,0), TV (13,0), Watch (6,0), Mac (10,15)]
+	[Native]
+	public enum CBManagerAuthorization : long {
+		NotDetermined = 0,
+		Restricted,
+		Denied,
+		AllowedAlways,
 	}
 }

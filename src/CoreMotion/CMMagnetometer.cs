@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 namespace CoreMotion {
 
 	// CMMagnetometer.h
+	[Mac (10,15)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMMagneticField {
 		public double X, Y, Z;

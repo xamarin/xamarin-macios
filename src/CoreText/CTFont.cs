@@ -1712,6 +1712,31 @@ namespace CoreText {
 				return CreateFont (CTFontCreateForString (handle, v.Handle, range));
 		}
 
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[DllImport (Constants.CoreTextLibrary)]
+		static extern /* CTFontRef */ IntPtr CTFontCreateForStringWithLanguage (
+			/* CTFontRef */ IntPtr currentFont,
+			/* CFStringRef */ IntPtr @string,
+			NSRange range,
+			/* CFStringRef _Nullable */ IntPtr language);
+
+		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		public CTFont ForString (string value, NSRange range, string language)
+		{
+			if (value == null)
+				throw new ArgumentNullException (nameof (value));
+
+			var v = NSString.CreateNative (value);
+			var l = NSString.CreateNative (language);
+			try {
+				return CreateFont (CTFontCreateForStringWithLanguage (handle, v, range, l));
+			}
+			finally {
+				NSString.ReleaseNative (l);
+				NSString.ReleaseNative (v);
+			}
+		}
+
 #endregion
 
 #region Font Accessors
@@ -1993,11 +2018,9 @@ namespace CoreText {
 			return CTFontGetBoundingRectsForGlyphs (handle, orientation, glyphs, boundingRects, count);
 		}
 
-		[iOS (6,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CGRect CTFontGetOpticalBoundsForGlyphs (IntPtr font, [In] CGGlyph[] glyphs, [Out] CGRect[] boundingRects, nint count, nuint options);
 
-		[iOS (6,0)]
 		public CGRect GetOpticalBounds (CGGlyph[] glyphs, CGRect[] boundingRects, nint count, CTFontOptions options = 0)
 		{
 			AssertCount (count);
@@ -2199,12 +2222,10 @@ namespace CoreText {
 #endregion
 
 #region
-		[iOS (6,0)]
 		[DllImport (Constants.CoreTextLibrary)]
 		extern static /* CFArrayRef __nullable */ IntPtr CTFontCopyDefaultCascadeListForLanguages (
 			/* CTFontRef __nonnull */ IntPtr font, /* CFArrayRef __nullable */ IntPtr languagePrefList);
 
-		[iOS (6,0)]
 		public CTFontDescriptor [] GetDefaultCascadeList (string [] languages)
 		{
 			using (var arr = languages == null ? null : NSArray.FromStrings (languages)) {

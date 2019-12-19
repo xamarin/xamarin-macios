@@ -1,4 +1,5 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
+// Copyright 2019 Microsoft Corporation
 
 using Foundation;
 using CoreFoundation;
@@ -7,6 +8,7 @@ using System;
 
 namespace CoreWlan {
 	[Native]
+	[ErrorDomain ("CWErrorDomain")] // enum named `CWErr` in headers
 	public enum CWStatus : long {
 		Ok = 0,
 		EAPOL = 1,
@@ -75,6 +77,12 @@ namespace CoreWlan {
 		WPAEnterpriseMixed = 8,
 		WPA2Enterprise = 9,
 		Enterprise = 10,
+		[Mac (10,15)]
+		Wpa3Personal = 11,
+		[Mac (10,15)]
+		Wpa3Enterprise = 12,
+		[Mac (10,15)]
+		Wpa3Transition = 13,
 		Unknown = int.MaxValue,
 	}
 

@@ -31,7 +31,6 @@ namespace iAd {
 
 	// NSInteger -> ADBannerView.h
 	[Deprecated (PlatformName.iOS, 10, 0)]
-	[iOS (6,0)] 
 	[Native]
 	public enum ADAdType : long {
 		Banner, MediumRectangle

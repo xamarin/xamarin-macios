@@ -12,6 +12,7 @@
 #define __SHARED_H__
 
 #include <stdbool.h>
+#include <stdatomic.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,7 +37,7 @@ struct Xamarin_block_descriptor {
     void (*dispose_helper)(void *src);             // IFF (1<<25)
     // required ABI.2010.3.16
     const char *signature;                         // IFF (1<<30)
-    volatile int ref_count;
+    int _Atomic ref_count;
     // variable-length string
 };
 

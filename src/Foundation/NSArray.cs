@@ -63,7 +63,43 @@ namespace Foundation {
 		{
 			return FromNativeObjects (items);
 		}
+		public static NSArray FromNSObjects<T> (params T [][] items) where T: class, INativeObject
+		{
+			if (items == null)
+				return null;
+			
+			var ret = new NSMutableArray ((nuint)items.Length);
+			for (var i = 0; i < items.Length; i++) {
+				var row = items [i];
+				if (row == null)
+					throw new ArgumentNullException (nameof (items), $"Element [{i}] is null");
+				for (var j = 0; j < row.Length; j++) {
+					var element = row [j];
+					if (element == null)
+						throw new ArgumentNullException (nameof (items), $"Element [{i}][{j}] is null");
+				}
+				ret.Add (NSArray.FromNSObjects (row));
+			}
 
+			return ret;
+		}
+		public static NSArray FromNSObjects<T> (T [,] items) where T: class, INativeObject
+		{
+			if (items == null)
+				return null;
+			
+			var width = items.GetLength (0);
+			var height = items.GetLength (1);
+			var ret = new T [height][];
+			for (var y = 0; y < height; y++) {
+				var row = new T [width];
+				for (var x = 0; x < width; x++) {
+					row [x] = items [x, y];
+				}
+				ret [y] = row;
+			}
+			return FromNSObjects (ret);
+		}
 		public static NSArray FromNSObjects<T> (int count, params T [] items) where T: class, INativeObject
 		{
 			return FromNativeObjects (items, count);

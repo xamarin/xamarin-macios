@@ -8,12 +8,30 @@
 #include "runtime-internal.h"
 #include "monotouch-support.h"
 
+void
+xamarin_os_log (os_log_t logger, os_log_type_t type, const char *message)
+{
+	// Logging a dynamic string as-is using %{public}s is, strictly speaking,
+	// an antipattern. However, there is no way to call os_log directly from
+	// C#. It can only be called from Objective-C, and even then it requires
+	// that the format string be compiled into the binary. This really is
+	// our only option to pass a string from C# into os_log.
+	if (logger == NULL)
+		logger = OS_LOG_DEFAULT;
+
+	os_log_with_type (logger, type, "%{public}s", message);
+}
+
 const char *
 xamarin_get_locale_country_code ()
 {
 	// COOP: no managed memory access: any mode.
 	NSLocale *locale = [NSLocale currentLocale];
 	NSString *cc = [locale objectForKey: NSLocaleCountryCode];
+	if (cc == NULL) {
+		// Assume the US if the country isn't available.
+		return strdup ("US");
+	}
 	return strdup ([cc UTF8String]);
 }
 
@@ -21,7 +39,7 @@ void
 xamarin_log (const unsigned short *unicodeMessage)
 {
 	// COOP: no managed memory access: any mode.
-	int length = 0;
+	unsigned int length = 0;
 	const unsigned short *ptr = unicodeMessage;
 	while (*ptr++)
 		length += sizeof (unsigned short);
@@ -29,7 +47,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 
 #if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
 	const char *utf8 = [msg UTF8String];
-	int len = strlen (utf8);
+	size_t len = strlen (utf8);
 	fwrite (utf8, 1, len, stdout);
 	if (len == 0 || utf8 [len - 1] != '\n')
 		fwrite ("\n", 1, 1, stdout);
@@ -39,10 +57,10 @@ xamarin_log (const unsigned short *unicodeMessage)
 		// Write in chunks of max 4096 characters; older versions of iOS seems to have a bug where NSLog may hang with long strings (!).
 		// https://github.com/xamarin/maccore/issues/1014
 		const char *utf8 = [msg UTF8String];
-		int len = strlen (utf8);
-		const int max_size = 4096;
+		size_t len = strlen (utf8);
+		const size_t max_size = 4096;
 		while (len > 0) {
-			int chunk_size = len > max_size ? max_size : len;
+			size_t chunk_size = len > max_size ? max_size : len;
 
 			// Try to not break in the middle of a line, by looking backwards for a newline
 			while (chunk_size > 0 && utf8 [chunk_size] != 0 && utf8 [chunk_size] != '\n')
@@ -51,7 +69,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 				// No newline found, break in the middle.
 				chunk_size = len > max_size ? max_size : len;
 			}
-			NSLog (@"%.*s", chunk_size, utf8);
+			NSLog (@"%.*s", (int) chunk_size, utf8);
 
 			len -= chunk_size;
 			utf8 += chunk_size;
@@ -63,8 +81,13 @@ xamarin_log (const unsigned short *unicodeMessage)
 	[msg release];
 }
 
+// NOTE: The timezone functions are duplicated in mono, so if you're going to modify here, it would be nice
+// if we modify there.
+//
+// See in Mono sdks/ios/runtime/runtime.m
+
 void*
-xamarin_timezone_get_data (const char *name, int *size)
+xamarin_timezone_get_data (const char *name, unsigned long *size)
 {
 	// COOP: no managed memory access: any mode.
 	NSTimeZone *tz = nil;
@@ -83,17 +106,29 @@ xamarin_timezone_get_data (const char *name, int *size)
 }
 
 char**
-xamarin_timezone_get_names (int *count)
+xamarin_timezone_get_names (unsigned long *count)
 {
 	// COOP: no managed memory access: any mode.
 	NSArray *array = [NSTimeZone knownTimeZoneNames];
 	*count = array.count;
 	char** result = (char**) malloc (sizeof (char*) * (*count));
-	for (int i = 0; i < *count; i++) {
+	for (unsigned long i = 0; i < *count; i++) {
 		NSString *s = [array objectAtIndex: i];
 		result [i] = strdup (s.UTF8String);
 	}
 	return result;
+}
+
+//
+// Returns the geopolitical region ID of the local timezone.
+
+char *
+xamarin_timezone_get_local_name ()
+{
+	NSTimeZone *tz = nil;
+	tz = [NSTimeZone localTimeZone];
+	NSString *name = [tz name];
+	return (name != nil) ? strdup ([name UTF8String]) : strdup ("Local");
 }
 
 #if !TARGET_OS_WATCH && !TARGET_OS_TV
@@ -154,17 +189,27 @@ xamarin_GetFolderPath (int folder)
 // it impossible to disable dlsym and, for example, run dontlink on devices
 // https://bugzilla.xamarin.com/show_bug.cgi?id=36569#c4
 
-void objc_msgSend_stret (id self, SEL op, ...)
+void objc_msgSend_stret (void)
 {
-	PRINT ("Unimplemented objc_msgSend_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSend_stret");
 	abort ();
 }
 
-void objc_msgSendSuper_stret (struct objc_super *super, SEL op, ...)
+void objc_msgSendSuper_stret (void)
 {
-	PRINT ("Unimplemented objc_msgSendSuper_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSendSuper_stret");
 	abort ();
 }
 
 #endif
 
+#ifdef MONOMAC
+// <quote>Do not hard-code this parameter as a C string.</quote>
+// works on iOS (where we don't need it) and crash on macOS
+const char *
+xamarin_encode_CGAffineTransform ()
+{
+    // COOP: no managed memory access: any mode.
+    return @encode (CGAffineTransform);
+}
+#endif

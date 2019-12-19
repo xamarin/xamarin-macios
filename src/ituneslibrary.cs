@@ -1,4 +1,4 @@
-// Copyright 2018, Microsoft, Corp.
+// Copyright 2018-2019, Microsoft, Corp.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,7 +28,7 @@ using ObjCRuntime;
 
 namespace iTunesLibrary {
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof(NSObject))]
 	interface ITLibAlbum {
 		[NullAllowed, Export ("title")]
@@ -71,7 +71,7 @@ namespace iTunesLibrary {
 		NSNumber PersistentId { get; }
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof(NSObject))]
 	interface ITLibArtist
 	{
@@ -85,7 +85,7 @@ namespace iTunesLibrary {
 		NSNumber PersistentId { get; }
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof(NSObject))]
 	interface ITLibArtwork
 	{
@@ -101,7 +101,7 @@ namespace iTunesLibrary {
 
 	delegate void ITLibMediaEntityEnumerateValuesHandler (NSString property, NSObject value, out bool stop);
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof(NSObject))]
 	interface ITLibMediaEntity
 	{
@@ -119,7 +119,7 @@ namespace iTunesLibrary {
 		void EnumerateValuesExcept ([NullAllowed] NSSet<NSString> properties, ITLibMediaEntityEnumerateValuesHandler handler);
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof(ITLibMediaEntity))]
 	interface ITLibMediaItem
 	{
@@ -271,7 +271,7 @@ namespace iTunesLibrary {
 		ITLibMediaItemLocationType LocationType { get; }
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof(NSObject))]
 	interface ITLibMediaItemVideoInfo
 	{
@@ -300,7 +300,7 @@ namespace iTunesLibrary {
 		nuint VideoHeight { get; }
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof(ITLibMediaEntity))]
 	interface ITLibPlaylist
 	{
@@ -329,8 +329,9 @@ namespace iTunesLibrary {
 		ITLibPlaylistKind Kind { get; }
 	}
 
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface ITLibrary
 	{
 		[Export ("applicationVersion")]
@@ -373,6 +374,7 @@ namespace iTunesLibrary {
 		[Export ("initWithAPIVersion:error:")]
 		IntPtr Constructor (string requestedAPIVersion, [NullAllowed] out NSError error);
 
+		[DesignatedInitializer]
 		[Export ("initWithAPIVersion:options:error:")]
 		IntPtr Constructor (string requestedAPIVersion, ITLibInitOptions options, [NullAllowed] out NSError error);
 

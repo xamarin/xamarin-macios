@@ -30,6 +30,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 #if MONOMAC
 using AppKit;
@@ -38,6 +39,7 @@ using OpenGL;
 #else
 using OpenGLES;
 using UIKit;
+using CAEdrMetadata = Foundation.NSObject;
 #endif
 using Foundation;
 using CoreImage;
@@ -564,7 +566,6 @@ namespace CoreAnimation {
 		[Export ("rasterizationScale")]
 		nfloat RasterizationScale { get; set; }
 
-		[iOS (6,0)]
 		[Export ("drawsAsynchronously")]
 		bool DrawsAsynchronously { get; set; }
 
@@ -584,13 +585,35 @@ namespace CoreAnimation {
 		[TV (11,0)][Mac (10,13)][iOS (11,0)]
 		[Export ("maskedCorners", ArgumentSemantic.Assign)]
 		CACornerMask MaskedCorners { get; set; }
+
+		[BindAs (typeof (CACornerCurve))]
+		[NoWatch] // headers not updated
+		[TV (13,0)][Mac (10, 15)][iOS (13, 0)]
+		[Export ("cornerCurve")]
+		NSString CornerCurve { get; set; }
+
+		[NoWatch] // headers not updated
+		[TV (13,0)][Mac (10, 15)][iOS (13, 0)]
+		[Static]
+		[Export ("cornerCurveExpansionFactor:")]
+		nfloat GetCornerCurveExpansionFactor ([BindAs (typeof (CACornerCurve))] NSString curve);
+	}
+
+	[NoWatch] // headers not updated
+	[TV (13,0)][Mac (10, 15)][iOS (13, 0)]
+	enum CACornerCurve {
+		[DefaultEnumValue]
+		[Field ("kCACornerCurveCircular")]
+		Circular,
+		[Field ("kCACornerCurveContinuous")]
+		Continuous,
 	}
 
 #if XAMCORE_2_0 || !MONOMAC
 	interface ICAMetalDrawable {}
 
 	[Protocol]
-	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (8,0)][Mac (10,11)]
 	interface CAMetalDrawable : MTLDrawable {
 		[Abstract]
 		[Export ("texture")]
@@ -601,7 +624,7 @@ namespace CoreAnimation {
 		CAMetalLayer Layer { get; }
 	}
 
-	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
+	[iOS (8,0)][Mac (10,11)]
 	[BaseType (typeof (CALayer))]
 	interface CAMetalLayer {
 		[NullAllowed] // by default this property is null
@@ -640,6 +663,21 @@ namespace CoreAnimation {
 		[TV (11,2)][Mac (10,13,2)][iOS (11,2)]
 		[Export ("maximumDrawableCount")]
 		nuint MaximumDrawableCount { get; set; }
+
+		[NoWatch] // headers not updated
+		[TV (13,0)][Mac (10, 15)][iOS (13, 0)]
+		[NullAllowed, Export ("colorspace", ArgumentSemantic.Assign)]
+		CGColorSpace ColorSpace { get; set; }
+
+		[NoWatch] // headers not updated
+		[TV (13,0)][Mac (10, 15)][iOS (13, 0)]
+		[NullAllowed, Export ("preferredDevice")]
+		IMTLDevice PreferredDevice { get; }
+
+		[NoWatch][NoiOS][NoTV]
+		[Mac (10,15)]
+		[NullAllowed, Export ("EDRMetadata", ArgumentSemantic.Strong)]
+		CAEdrMetadata EdrMetadata { get; set; }
 	}
 #endif
 
@@ -1068,24 +1106,24 @@ namespace CoreAnimation {
 
 		#region SceneKitAdditions
 
-		[TV (11,0), Mac (10,13, onlyOn64: true), iOS (11,0, onlyOn64: true), NoWatch]
+		[TV (11,0), Mac (10,13), iOS (11,0), NoWatch]
 		[Static]
 		[Export ("animationWithSCNAnimation:")]
 		CAAnimation FromSCNAnimation (SCNAnimation animation);
 
-		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
+		[iOS (8,0)][Mac (10,9)]
 		[Export ("usesSceneTimeBase")]
 		bool UsesSceneTimeBase { get; set; }
 
-		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
+		[iOS (8,0)][Mac (10,9)]
 		[Export ("fadeInDuration")]
 		nfloat FadeInDuration { get; set; }
 
-		[iOS (8,0)][Mac (10,9, onlyOn64 : true)]
+		[iOS (8,0)][Mac (10,9)]
 		[Export ("fadeOutDuration")]
 		nfloat FadeOutDuration { get; set; }
 
-		[Mac (10,9, onlyOn64 : true), iOS (8, 0)]
+		[Mac (10,9), iOS (8, 0)]
 		[NullAllowed] // by default this property is null
 		[Export ("animationEvents", ArgumentSemantic.Retain)]
 		SCNAnimationEvent [] AnimationEvents { get; set; }
@@ -1414,12 +1452,12 @@ namespace CoreAnimation {
 		[Field ("kCAGradientLayerAxial")]
 		Axial,
 
-		[iOS (12,0)][TV (12,0)][Mac (10,14, onlyOn64: true)]
+		[iOS (12,0)][TV (12,0)][Mac (10,14)]
 		[NoWatch]
 		[Field ("kCAGradientLayerRadial")]
 		Radial,
 
-		[iOS (12,0)][TV (12,0)][Mac (10,14, onlyOn64: true)]
+		[iOS (12,0)][TV (12,0)][Mac (10,14)]
 		[NoWatch]
 		[Field ("kCAGradientLayerConic")]
 		Conic,
@@ -1823,7 +1861,7 @@ namespace CoreAnimation {
 		[Field ("kCARendererColorSpace")]
 		NSString ColorSpace { get; }
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Field ("kCARendererMetalCommandQueue")]
 		NSString MetalCommandQueue { get; }
 	}
@@ -1834,7 +1872,7 @@ namespace CoreAnimation {
 		[Export ("ColorSpace")]
 		CGColorSpace ColorSpace { get; set; }
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("MetalCommandQueue")]
 		IMTLCommandQueue MetalCommandQueue { get; set; }
 	}
@@ -1843,12 +1881,12 @@ namespace CoreAnimation {
 	[NoiOS][NoTV][NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface CARenderer {
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		[Static]
 		[Export ("rendererWithMTLTexture:options:")]
 		CARenderer Create (IMTLTexture tex, [NullAllowed] NSDictionary dict);
 
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		[Static]
 		[Wrap ("Create (tex, options?.Dictionary)")]
 		CARenderer Create (IMTLTexture tex, [NullAllowed] CARendererOptions options);
@@ -1884,9 +1922,28 @@ namespace CoreAnimation {
 		[Export ("endFrame")]
 		void EndFrame ();
 
-		[Mac (10,14, onlyOn64: true)]
+		[Mac (10,14)]
 		[Export ("setDestination:")]
 		void SetDestination (IMTLTexture tex);
+	}
+
+	[NoWatch][NoiOS][NoTV]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject), Name = "CAEDRMetadata")]
+	[DisableDefaultCtor]
+	interface CAEdrMetadata {
+
+		[Static]
+		[Export ("HDR10MetadataWithDisplayInfo:contentInfo:opticalOutputScale:")]
+		CAEdrMetadata GetHdr10Metadata ([NullAllowed] NSData displayData, [NullAllowed] NSData contentData, float scale);
+
+		[Static]
+		[Export ("HDR10MetadataWithMinLuminance:maxLuminance:opticalOutputScale:")]
+		CAEdrMetadata GetHdr10Metadata (float minNits, float maxNits, float scale);
+
+		[Static]
+		[Export ("HLGMetadata", ArgumentSemantic.Retain)]
+		CAEdrMetadata HlgMetadata { get; }
 	}
 #endif
 }

@@ -27,6 +27,12 @@ namespace apitest
 			Assert.AreEqual (textView.Value, "This is a new string", "NSTextInputClientSetup - Failed to set value");
 		}
 
+		[TearDown]
+		public void TearDown ()
+		{
+			textView.Dispose ();
+		}
+
 		[Test]
 		public void NSTextInputClient_ShouldInsertText ()
 		{
@@ -42,6 +48,8 @@ namespace apitest
 
 			Assert.IsTrue (textView.HasMarkedText, "NSTextInputClient_ShouldMarkText - Failed to mark text");
 			Assert.AreEqual (textView.MarkedRange, new NSRange (5, 7));
+
+			textView.UnmarkText ();
 		}
 
 		[Test]

@@ -5,7 +5,7 @@
 //	Alex Soto  <alex.soto@xamarin.com>
 //
 // Copyright 2016 Xamarin Inc. All rights reserved.
-// Copyright 2018 Microsoft Corporation.
+// Copyright 2018-2019 Microsoft Corporation.
 //
 
 using System;
@@ -22,8 +22,9 @@ namespace VideoSubscriberAccount {
 	[Native]
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[ErrorDomain ("VSErrorDomain")]
 	public enum VSErrorCode : long {
 		AccessNotGranted = 0,
@@ -31,14 +32,16 @@ namespace VideoSubscriberAccount {
 		UserCancelled = 2,
 		ServiceTemporarilyUnavailable = 3,
 		ProviderRejected = 4,
-		InvalidVerificationToken = 5
+		InvalidVerificationToken = 5,
+		Rejected = 6,
 	}
 
 	[Native]
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	public enum VSAccountAccessStatus : long {
 		NotDetermined = 0,
 		Restricted = 1,
@@ -48,8 +51,9 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[Static]
 	[Internal]
 	interface VSErrorInfoKeys {
@@ -70,7 +74,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[StrongDictionary ("VSErrorInfoKeys")]
 	interface VSErrorInfo {
@@ -90,8 +94,9 @@ namespace VideoSubscriberAccount {
 	[Protocol, Model]
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountManagerDelegate {
 
@@ -110,31 +115,41 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountManager {
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IVSAccountManagerDelegate Delegate { get; set; }
 
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoMac]
 		[Async]
 		[Export ("checkAccessStatusWithOptions:completionHandler:")]
 		void CheckAccessStatus (NSDictionary options, Action<VSAccountAccessStatus, NSError> completionHandler);
 
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
 		[NoMac]
 		[Async]
 		[Export ("enqueueAccountMetadataRequest:completionHandler:")]
 		VSAccountManagerResult Enqueue (VSAccountMetadataRequest accountMetadataRequest, Action<VSAccountMetadata, NSError> completionHandler);
+
+		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMac]
+		[TV (13,0)][iOS (13,0)]
+		[Field ("VSOpenTVProviderSettingsURLString")]
+		NSString OpenTVProviderSettingsUrl { get; }
 	}
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Static]
 	[Internal]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	interface VSCheckAccessOptionKeys {
 
 		[Field ("VSCheckAccessOptionPrompt")]
@@ -143,7 +158,7 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
 	[StrongDictionary ("VSCheckAccessOptionKeys")]
 	interface VSAccountManagerAccessOptions {
@@ -154,8 +169,9 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VSAccountManagerResult {
@@ -166,8 +182,9 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10, 0)]
 	[TV (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountMetadata {
 
@@ -189,9 +206,10 @@ namespace VideoSubscriberAccount {
 	}
 
 	[iOS (10, 0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[TV (10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountMetadataRequest {
 
@@ -230,11 +248,16 @@ namespace VideoSubscriberAccount {
 		[TV (10,1)][iOS (10,2)]
 		[Export ("supportedAuthenticationSchemes", ArgumentSemantic.Copy)]
 		NSString[] SupportedAuthenticationSchemesString { get; set; }
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		[NullAllowed, Export ("accountProviderAuthenticationToken")]
+		string AccountProviderAuthenticationToken { get; set; }
 	}
 
 	[iOS (10,2)]
 	[TV (10,1)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	interface VSAccountProviderResponse {
 
@@ -254,14 +277,19 @@ namespace VideoSubscriberAccount {
 
 	[iOS (10,2)]
 	[TV (10,1)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	enum VSAccountProviderAuthenticationScheme {
 		[Field ("VSAccountProviderAuthenticationSchemeSAML")]
 		Saml,
+
+		[iOS (13,0)][TV (13,0)][Mac (10,15)]
+		[Field ("VSAccountProviderAuthenticationSchemeAPI")]
+		Api,
 	}
 
 	[TV (11,0)][iOS (11,0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[Native]
 	public enum VSSubscriptionAccessLevel : long {
 		Unknown,
@@ -270,7 +298,7 @@ namespace VideoSubscriberAccount {
 	}
 
 	[TV (11,0)][iOS (11,0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	[BaseType (typeof (NSObject))]
 	interface VSSubscription {
 		[Export ("expirationDate", ArgumentSemantic.Copy)]
@@ -288,7 +316,8 @@ namespace VideoSubscriberAccount {
 	}
 
 	[TV (11,0)][iOS (11,0)]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VSSubscriptionRegistrationCenter {

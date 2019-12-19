@@ -1,8 +1,9 @@
 using System;
 using System.Reflection;
-using MonoMac.Foundation;
-using MonoMac.AppKit;
-using MonoMac.ObjCRuntime;
+
+using AppKit;
+using Foundation;
+using ObjCRuntime;
 
 // Test
 // * application .exe is decorated with [Preserve]

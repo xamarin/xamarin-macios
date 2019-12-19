@@ -391,6 +391,9 @@ namespace Security {
 		TimestampWaiting                    = -67896,	/* A timestamp transaction is waiting. */
 		TimestampRevocationWarning          = -67897,	/* A timestamp authority revocation warning was issued. */
 		TimestampRevocationNotification     = -67898,	/* A timestamp authority revocation notification was issued. */
+		CertificatePolicyNotAllowed         = -67899,
+		CertificateNameNotAllowed           = -67900,
+		CertificateValidityPeriodTooLong    = -67901,
 	}
 
 	// typedef uint32_t SecPadding;
