@@ -89,21 +89,21 @@ namespace MonoTouch.Tuner {
 				var re = me.InnerException as ResolutionException;
 				if (re == null) {
 					if (me.InnerException != null) {
-						throw ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}': {2}", me.Method.FullName, me.Method.Module, me.InnerException.Message);
+						throw ErrorHelper.CreateError (2102, me, me.Method.FullName, me.Method.Module, me.InnerException.Message);
 					} else {
-						throw ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}'", me.Method.FullName, me.Method.Module);
+						throw ErrorHelper.CreateError (2106, me, me.Method.FullName, me.Method.Module);
 					}
 				} else {
 					TypeReference tr = (re.Member as TypeReference);
 					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-					throw ErrorHelper.CreateError (2101, me, "Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.", re.Member, me.Method.FullName, scope);
+					throw ErrorHelper.CreateError (2101, me, re.Member, me.Method.FullName, scope);
 				}
 			} catch (ResolutionException re) {
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-				throw new MonoTouchException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
+				throw new MonoTouchException (2007, true, re, re.Member, scope);
 			} catch (XmlResolutionException ex) {
-				throw new MonoTouchException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
+				throw new MonoTouchException (2017, true, ex, ex?.InnerException?.Message ?? ex.Message);
 			} catch (Exception e) {
 				var message = new StringBuilder ();
 				if (e.Data.Count > 0) {
@@ -119,7 +119,7 @@ namespace MonoTouch.Tuner {
 						message.AppendLine ($"\tAssembly: `{a}`");
 				}
 				message.Append ($"Reason: {e.Message}");
-				throw new MonoTouchException (2001, true, e, "Could not link assemblies. {0}", message);
+				throw new MonoTouchException (2001, true, e, message);
 			}
 
 			assemblies = ListAssemblies (context);
@@ -264,7 +264,7 @@ namespace MonoTouch.Tuner {
 			filename = Path.GetFullPath (filename);
 
 			if (!File.Exists (filename))
-				throw new MonoTouchException (2004, true, "Extra linker definitions file '{0}' could not be located.", filename);
+				throw new MonoTouchException (2004, true, filename);
 
 			try {
 				using (StreamReader sr = new StreamReader (filename)) {
@@ -272,7 +272,7 @@ namespace MonoTouch.Tuner {
 				}
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2005, true, e, "Definitions from '{0}' could not be parsed.", filename);
+				throw new MonoTouchException (2005, true, e, filename);
 			}
 		}
 	}
@@ -327,7 +327,7 @@ namespace MonoTouch.Tuner {
 				base.ProcessAssembly (assembly);
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2103, true, e, $"Error processing assembly '{assembly.FullName}': {e}");
+				throw new MonoTouchException (2103, true, e, assembly.FullName, e);
 			}
 		}
 	}

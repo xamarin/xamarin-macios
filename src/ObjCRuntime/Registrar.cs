@@ -223,7 +223,7 @@ namespace Registrar {
 							break;
 						}
 					}
-					AddException (ref exceptions, new ProductException (4146, showError, "The Name parameter of the Registrar attribute on the class '{0}' ('{3}') contains an invalid character: '{1}' (0x{2}).", Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"), name));
+					AddException (ref exceptions, new ProductException (4146, showError, Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"), name));
 					break;
 				}
 			}
@@ -293,7 +293,8 @@ namespace Registrar {
 							str = "}}";
 							ap = ap.Insert (idx, "}");
 						}
-						AddException (ref exceptions, new ProductException (4177, true, $"The 'ProtocolType' parameter of the 'Adopts' attribute used in class '{Registrar.GetTypeFullName (Type)}' contains an invalid character. Value used: '{ap}' Invalid Char: '{str}'"));
+
+						AddException (ref exceptions, new ProductException (4177, true, Registrar.GetTypeFullName (Type), ap, str));
 					}
 				}
 			}
@@ -1803,23 +1804,23 @@ namespace Registrar {
 		ObjCType RegisterCategory (TType type, CategoryAttribute attrib, ref List<Exception> exceptions)
 		{
 			if (IsINativeObject (type)) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4152, "Cannot register the type '{0}' as a category because it implements INativeObject or subclasses NSObject.", GetTypeFullName (type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4152, GetTypeFullName (type)));
 				return null;
 			}
 
 			if (IsGenericType (type)) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4153, "Cannot register the type '{0}' as a category because it's generic.", GetTypeFullName (type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4153, GetTypeFullName (type)));
 				return null;
 			}
 
 			if (attrib.Type == null) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4151, "Cannot register the type '{0}' because the Type property in its Category attribute isn't set.", GetTypeFullName (type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4151, GetTypeFullName (type)));
 				return null;
 			}
 
 			var declaringType = RegisterType (attrib.Type, ref exceptions);
 			if (declaringType == null) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4150, "Cannot register the type '{0}' because the category type '{1}' in its Category attribute does not inherit from NSObject.", GetTypeFullName (type), GetTypeFullName (attrib.Type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4150, GetTypeFullName (type), GetTypeFullName (attrib.Type)));
 				return null;
 			}
 
@@ -1833,7 +1834,7 @@ namespace Registrar {
 			lock (categories_map) {
 				TType previous_type;
 				if (categories_map.TryGetValue (objcType.CategoryName, out previous_type)) {
-					AddException (ref exceptions, ErrorHelper.CreateError (4156, "Cannot register two categories ('{0}' and '{1}') with the same native name ('{2}')",
+					AddException (ref exceptions, ErrorHelper.CreateError (4156,
 						GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.CategoryName));
 					return null;
 				}
@@ -1944,7 +1945,7 @@ namespace Registrar {
 					return null;
 
 				if (isGenericType) {
-					exceptions.Add (ErrorHelper.CreateError (4148, "The registrar found a generic protocol: '{0}'. Exporting generic protocols is not supported.", GetTypeFullName (type)));
+					exceptions.Add (ErrorHelper.CreateError (4148, GetTypeFullName (type)));
 					return null;
 				}
 
@@ -1996,7 +1997,7 @@ namespace Registrar {
 				VerifyTypeInSDK (ref exceptions, objcType.BaseType.Type, baseTypeOf: objcType.Type);
 
 			if (ObjCType.IsObjectiveCKeyword (objcType.ExportedName))
-				AddException (ref exceptions, ErrorHelper.CreateError (4168, $"Cannot register the type '{GetTypeFullName (type)}' because its Objective-C name '{objcType.ExportedName}' is an Objective-C keyword. Please use a different name."));
+				AddException (ref exceptions, ErrorHelper.CreateError (4168, GetTypeFullName (type), objcType.ExportedName));
 
 			// make sure all the protocols this type implements are registered
 			if (objcType.Protocols != null) {
@@ -2010,14 +2011,14 @@ namespace Registrar {
 			if (objcType.IsProtocol) {
 				lock (protocol_map) {
 					if (protocol_map.TryGetValue (objcType.ExportedName, out previous_type))
-						throw ErrorHelper.CreateError (4126, "Cannot register two managed protocols ('{0}' and '{1}') with the same native name ('{2}').",
+						throw ErrorHelper.CreateError (4126,
 							GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.ExportedName);
 					protocol_map.Add (objcType.ExportedName, type);
 				}
 			} else {
 				lock (type_map) {
 					if (type_map.TryGetValue (objcType.ExportedName, out previous_type))
-						throw ErrorHelper.CreateError (4118, "Cannot register two managed types ('{0}' and '{1}') with the same native name ('{2}').",
+						throw ErrorHelper.CreateError (4118,
 							GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.ExportedName);
 					type_map.Add (objcType.ExportedName, type);
 				}
@@ -2567,9 +2568,9 @@ namespace Registrar {
 
 			var objcMethod = member as ObjCMethod;
 			if (objcMethod != null)
-				throw ErrorHelper.CreateError (4111, "The registrar cannot build a signature for type `{0}' in method `{1}`.", GetTypeFullName (type), GetTypeFullName (objcMethod.DeclaringType.Type) + "." + objcMethod.MethodName);
+				throw ErrorHelper.CreateError (4111, GetTypeFullName (type), GetTypeFullName (objcMethod.DeclaringType.Type) + "." + objcMethod.MethodName);
 
-			throw ErrorHelper.CreateError (4101, "The registrar cannot build a signature for type `{0}`.", GetTypeFullName (type));
+			throw ErrorHelper.CreateError (4101, GetTypeFullName (type));
 		}
 
 		public string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
@@ -2729,6 +2730,8 @@ namespace Registrar {
 			// we'll end up crashing/infinite recursion since Console.WriteLine is redirected
 			// to NSLog and is using NSString (and we haven't necessarily finished registering
 			// everything yet).
+
+			//todo: fix this somehow
 			R.NSLog (ErrorHelper.CreateWarning (code, message, args).ToString ());
 		}
 

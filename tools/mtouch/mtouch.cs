@@ -1335,10 +1335,10 @@ namespace Xamarin.Bundler
 				Directory.CreateDirectory (app.AppDirectory);
 
 			if (app.EnableRepl && app.BuildTarget != BuildTarget.Simulator)
-				throw new MonoTouchException (29, true, "REPL (--enable-repl) is only supported in the simulator (--sim)");
+				throw new MonoTouchException (29, true);
 
 			if (app.EnableRepl && app.LinkMode != LinkMode.None)
-				throw new MonoTouchException (82, true, "REPL (--enable-repl) is only supported when linking is not used (--nolink).");
+				throw new MonoTouchException (82, true);
 
 			if (app.UseInterpreter) {
 				// it's confusing to use different options to get a feature to work (e.g. dynamic, SRE...) on both simulator and device

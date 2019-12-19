@@ -117,18 +117,16 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public string GetLibNativeName()
+		public string GetLibNativeName ()
 		{
-			switch (MonoNativeMode)
-			{
-				case MonoNativeMode.Unified:
-					return "libmono-native-unified";
-				case MonoNativeMode.Compat:
-					return "libmono-native-compat";
-				default:
-					throw ErrorHelper.CreateError(172, MonoNativeMode);
+			switch (MonoNativeMode) {
+			case MonoNativeMode.Unified:
+				return "libmono-native-unified";
+			case MonoNativeMode.Compat:
+				return "libmono-native-compat";
+			default:
+				throw ErrorHelper.CreateError (172, MonoNativeMode);
 			}
-		}
 
 		List<Abi> GetArchitectures (AssemblyBuildTarget build_target)
 		{
@@ -454,13 +452,13 @@ namespace Xamarin.Bundler
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
 					if (reference.Name != Driver.GetProductAssembly (App))
-						exceptions.Add (ErrorHelper.CreateError (34, reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
+						exceptions.Add (ErrorHelper.CreateError (34, "Cannot reference '{0}.dll' in a {1} project - it is implicitly referenced by '{2}'.", reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
 					break;
 				}
 
 				var reference_assembly = ManifestResolver.Resolve (reference);
 				if (reference_assembly == null) {
-					ErrorHelper.Warning (136, reference.FullName, main.FileName);
+					ErrorHelper.Warning (136, "Cannot find the assembly '{0}' referenced from '{1}'.", reference.FullName, main.FileName);
 					continue;
 				}
 				ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
@@ -510,7 +508,7 @@ namespace Xamarin.Bundler
 				return;
 			var reference_assembly = ManifestResolver.Resolve (ar);
 			if (reference_assembly == null) {
-				ErrorHelper.Warning (137, ar.FullName, main.Name, ca.AttributeType.FullName);
+				ErrorHelper.Warning (137, "Cannot find the assembly '{0}', referenced by a {2} attribute in '{1}'.", ar.FullName, main.Name, ca.AttributeType.FullName);
 				return;
 			}
 			ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
@@ -740,8 +738,7 @@ namespace Xamarin.Bundler
 			// Verify that we don't get multiple identical assemblies from the linker.
 			foreach (var group in output_assemblies.GroupBy ((v) => v.Name.Name)) {
 				if (group.Count () != 1)
-					//todo: the param in not localizaed, fix this
-					throw ErrorHelper.CreateError (175,
+					throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", 
 					                               $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join ("\n\t", group.Select ((v) => v.MainModule.FileName).ToArray ())}");
 			}
 
@@ -773,8 +770,7 @@ namespace Xamarin.Bundler
 
 						var ad = output_assemblies.SingleOrDefault ((AssemblyDefinition v) => v.Name.Name == next);
 						if (ad == null)
-							//todo: the param in not localizaed, fix this
-							throw ErrorHelper.CreateError (174, $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker.");
+							throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker.");
 						if (ad.MainModule.HasAssemblyReferences) {
 							foreach (var ar in ad.MainModule.AssemblyReferences) {
 								if (!collectedNames.Contains (ar.Name) && !queue.Contains (ar.Name))
@@ -982,7 +978,7 @@ namespace Xamarin.Bundler
 					App.CreateFrameworkInfoPList (plist_path, fw_name, App.BundleId + ".frameworks." + fw_name, fw_name);
 					break;
 				default:
-					throw ErrorHelper.CreateError (100, mode);
+					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", mode);
 				}
 
 				var pinvoke_task = new PinvokesTask
@@ -1054,11 +1050,9 @@ namespace Xamarin.Bundler
 					var existingLinkTask = infos.Where ((v) => v.LinkTask != null).Select ((v) => v.LinkTask).ToList ();
 					if (existingLinkTask.Count > 0) {
 						if (existingLinkTask.Count != infos.Count)
-							//todo: param not localizaed fix this
-							throw ErrorHelper.CreateError (175, $"Not all assemblies for {name} have link tasks");
+							throw ErrorHelper.CreateError (99, "Internal error: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", $"Not all assemblies for {name} have link tasks");
 						if (!existingLinkTask.All ((v) => v == existingLinkTask [0]))
-							//todo: param not localizaed fix this
-							throw ErrorHelper.CreateError (175, $"Link tasks for {name} aren't all the same");
+							throw ErrorHelper.CreateError (99, "Internal error: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", $"Link tasks for {name} aren't all the same");
 
 						LinkWithBuildTarget (build_target, name, existingLinkTask [0], assemblies);
 						continue;
@@ -1135,7 +1129,7 @@ namespace Xamarin.Bundler
 						compiler_output = Path.Combine (App.Cache.Location, arch, name);
 						break;
 					default:
-						throw ErrorHelper.CreateError (100, build_target);
+						throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
 					}
 
 					CompileTask pinvoke_task;
@@ -1168,7 +1162,7 @@ namespace Xamarin.Bundler
 								compiler_flags.ReferenceSymbols (symbols);
 								break;
 							default:
-								throw ErrorHelper.CreateError (99, App.SymbolMode);
+								throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 							}
 						}
 					}
@@ -1188,7 +1182,7 @@ namespace Xamarin.Bundler
 						} else if (optimizations.Count == 1) {
 							compiler_flags.AddOtherFlag (optimizations [0]);
 						} else {
-							throw ErrorHelper.CreateError (107, string.Join (", ", assemblies.Select ((v) => v.Identity)), string.Join ("', '", optimizations));
+							throw ErrorHelper.CreateError (107, "The assemblies '{0}' have different custom LLVM optimizations ('{1}'), which is not allowed when they are all compiled to a single binary.", string.Join (", ", assemblies.Select ((v) => v.Identity)), string.Join ("', '", optimizations));
 						}
 					}
 
@@ -1330,7 +1324,7 @@ namespace Xamarin.Bundler
 				a.ComputeDependencyMap (exceptions);
 			if (exceptions.Count > 0) {
 				ErrorHelper.Show (exceptions);
-				ErrorHelper.Warning (3006);
+				ErrorHelper.Warning (3006, "Could not compute a complete dependency map for the project. This will result in slower build times because Xamarin.iOS can't properly detect what needs to be rebuilt (and what does not need to be rebuilt). Please review previous warnings for more details.");
 			}
 
 			List<string> registration_methods = new List<string> ();
@@ -1400,7 +1394,7 @@ namespace Xamarin.Bundler
 					library = "Xamarin.TVOS.registrar.a";
 					break;
 				default:
-					throw ErrorHelper.CreateError (71, App.Platform);
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
 				}
 
 				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
@@ -1540,7 +1534,7 @@ namespace Xamarin.Bundler
 				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
 				break;
 			default:
-				throw ErrorHelper.CreateError (176, App.SymbolMode);
+				throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
@@ -1584,7 +1578,7 @@ namespace Xamarin.Bundler
 					break;
 				case AssemblyBuildTarget.Framework: // We don't ship the profiler as a framework, so this should be impossible.
 				default:
-					throw ErrorHelper.CreateError (100, App.LibProfilerLinkMode);
+					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", App.LibProfilerLinkMode);
 				}
 			}
 
@@ -1644,7 +1638,7 @@ namespace Xamarin.Bundler
 								RequireMonoNative = value;
 								break;
 							default:
-								throw ErrorHelper.CreateError (177, typestr);
+								throw ErrorHelper.CreateError (99, $"Internal error: invalid type string while loading cached Mono.Native info: {typestr}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 						}
 					}
 				}
@@ -1704,7 +1698,7 @@ namespace Xamarin.Bundler
 				}
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, app.LibMonoLinkMode);
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new.", app.LibMonoLinkMode);
 			}
 		}
 
