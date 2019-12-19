@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Json;
+using System.Text.Json;
 using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -380,53 +380,40 @@ namespace Xamarin.MacDev.Tasks
 					if (string.IsNullOrEmpty (text))
 						continue;
 
-					JsonObject json;
-					JsonValue value;
+					JsonDocument json;
+					JsonElement value;
 
 					try {
-						json = (JsonObject) JsonValue.Parse (text);
-					} catch (ArgumentException ex) {
-						// ... At line ###, column ###
-						int line = 0, column = 0;
-						int index, endIndex;
-
-						var message = ex.Message;
-						if (message.EndsWith (".", StringComparison.Ordinal))
-							message = message.Substring (0, message.Length - 1);
-						if ((index = message.IndexOf ("At line ", StringComparison.Ordinal)) != -1) {
-							index += "At line ".Length;
-
-							if ((endIndex = message.IndexOf (", column ", index, StringComparison.Ordinal)) != -1) {
-								var columnBuf = message.Substring (endIndex + ", column ".Length);
-								var lineBuf = message.Substring (index, endIndex - index);
-
-								int.TryParse (columnBuf, out column);
-								int.TryParse (lineBuf, out line);
-							}
-						}
-
-						Log.LogError (null, null, null, items[i].ItemSpec, line, column, line, column, "{0}", ex.Message);
+						var options = new JsonDocumentOptions () {
+							AllowTrailingCommas = true,
+						};
+						json = JsonDocument.Parse (text, options);
+					} catch (JsonException je) {
+						var line = (int) (je.LineNumber + 1 ?? 0);
+						var col = (int) (je.BytePositionInLine + 1 ?? 0);
+						Log.LogError (null, null, null, items [i].ItemSpec, line, col, line, col, "{0}", je.Message);
 						return false;
-					} catch (InvalidCastException) {
-						Log.LogError (null, null, null, items[i].ItemSpec, 0, 0, 0, 0, "Invalid json.");
+					} catch (Exception e) {
+						Log.LogError (null, null, null, items[i].ItemSpec, 0, 0, 0, 0, "Invalid json: {0}", e.Message);
 						return false;
+
 					}
 
-					if (!json.TryGetValue ("properties", out value) || value.JsonType != JsonType.Object)
+					if (!json.RootElement.TryGetProperty ("properties", out value) || value.ValueKind != JsonValueKind.Object)
 						continue;
 
-					var properties = (JsonObject) value;
+					var properties = value;
 
-					if (!properties.TryGetValue ("on-demand-resource-tags", out value) || value.JsonType != JsonType.Array)
+					if (!properties.TryGetProperty ("on-demand-resource-tags", out value) || value.ValueKind != JsonValueKind.Array)
 						continue;
 
-					var resourceTags = (JsonArray) value;
+					var resourceTags = value;
 					var tags = new HashSet<string> ();
 					string hash;
 
-					foreach (var tag in resourceTags) {
-						if (tag.JsonType == JsonType.String)
-							tags.Add ((string) tag);
+					foreach (var tag in resourceTags.EnumerateArray ()) {
+						if (tag.ValueKind == JsonValueKind.String)
+							tags.Add (tag.GetString ());
 					}
 
 					var tagList = tags.ToList ();

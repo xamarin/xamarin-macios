@@ -116,16 +116,25 @@
       <Output TaskParameter="FullFrameworkReferenceAssemblyPaths" PropertyName="FullFrameworkReferenceAssemblyPaths" />
     </GetReferenceAssemblyPaths>
     <ItemGroup>
-      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::new('%(FileName)').StartsWith('Xamarin')) And '%(Extension)' == '.dll'" />
-      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::new('%(FileName)').StartsWith('Mono')) And '%(Extension)' == '.dll'" />
+      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="
+        '%(Extension)' == '.dll'
+        And !$([System.String]::new('%(FileName)').EndsWith('.resources', StringComparison.OrdinalIgnoreCase))
+        And !$([System.String]::new('%(FileName)').StartsWith('Microsoft.Build.', StringComparison.OrdinalIgnoreCase))
+        And !$([System.String]::new('%(FullPath)').StartsWith('/Library/Frameworks/Mono.framework', StringComparison.OrdinalIgnoreCase))"
+      />
       <ReferenceCopyLocalDirs Include="@(ReferenceCopyLocalPaths -&gt; '%(RootDir)%(Directory)')" />
       <ReferenceCopyLocalPaths Remove="@(MergedAssemblies)" />
       <LibDir Include="@(ReferenceCopyLocalDirs -&gt; Distinct())" />
     </ItemGroup>
     <PropertyGroup>
       <ILRepackArgs Condition="'$(AssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AssemblyOriginatorKeyFile)"</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) @(LibDir -&gt; '/lib:&quot;%(Identity).&quot;', ' ')</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) /out:&quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot;</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) &quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot;</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) @(MergedAssemblies -&gt; '&quot;%(FullPath)&quot;', ' ')</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) &quot;/lib:$(FrameworkPathOverride)/Facades&quot;</ILRepackArgs> <!-- This is needed for ilrepack to find netstandard.dll, which is referenced by the System.Text.Json assembly -->
     </PropertyGroup>
-    <Exec Command="&quot;$(ILRepack)&quot; @(LibDir -&gt; '/lib:&quot;%(Identity).&quot;', ' ') $(ILRepackArgs) /out:&quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot; &quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot; @(MergedAssemblies -&gt; '&quot;%(FullPath)&quot;', ' ')" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
+    <Exec Command="&quot;$(ILRepack)&quot; $(ILRepackArgs)" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
     </Exec>

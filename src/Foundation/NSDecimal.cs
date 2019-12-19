@@ -176,42 +176,50 @@ namespace Foundation {
 			
 		public static implicit operator NSDecimal (int value)
 		{
-			return new NSNumber (value).NSDecimalValue;
+			using var number = new NSNumber (value);
+			return number.NSDecimalValue;
 		}
 
 		public static explicit operator int (NSDecimal value)
 		{
-			return new NSDecimalNumber (value).Int32Value;
+			using var number = new NSDecimalNumber (value);
+			return number.Int32Value;
 		}
 
 		public static implicit operator NSDecimal (float value)
 		{
-			return new NSNumber (value).NSDecimalValue;
+			using var number = new NSNumber (value);
+			return number.NSDecimalValue;
 		}
 
 		public static explicit operator float (NSDecimal value)
 		{
-			return new NSDecimalNumber (value).FloatValue;
+			using var number = new NSDecimalNumber (value);
+			return number.FloatValue;
 		}
 
 		public static implicit operator NSDecimal (double value)
 		{
-			return new NSNumber (value).NSDecimalValue;
+			using var number = new NSNumber (value);
+			return number.NSDecimalValue;
 		}
 
 		public static explicit operator double (NSDecimal value)
 		{
-			return new NSDecimalNumber (value).DoubleValue;
+			using var number = new NSDecimalNumber (value);
+			return number.DoubleValue;
 		}
 
 		public static implicit operator NSDecimal (decimal value)
 		{
-			return new NSDecimalNumber (value.ToString (CultureInfo.InvariantCulture)).NSDecimalValue;
+			using var number = new NSDecimalNumber (value.ToString (CultureInfo.InvariantCulture));
+			return number.NSDecimalValue;
 		}
 
 		public static explicit operator decimal (NSDecimal value)
 		{
-			return Decimal.Parse (new NSDecimalNumber (value).ToString (), CultureInfo.InvariantCulture);
+			using var number = new NSDecimalNumber (value);
+			return Decimal.Parse (number.ToString (), CultureInfo.InvariantCulture);
 		}
 
 		public bool Equals (NSDecimal other)
@@ -221,10 +229,7 @@ namespace Foundation {
 
 		public override bool Equals (object obj)
 		{
-			if (!(obj is NSDecimal))
-				return false;
-			
-			return this == (NSDecimal) obj;
+			return obj is NSDecimal other && this == other;
 		}
 		
 		public override int GetHashCode ()

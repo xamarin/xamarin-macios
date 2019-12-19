@@ -988,11 +988,10 @@ namespace AudioToolbox {
 				int size;
 				var h = GetProperty (AudioQueueProperty.MagicCookie, out size);
 				if (h == IntPtr.Zero)
-					return new byte [0];
+					return Array.Empty<byte> ();
 				
 				byte [] cookie = new byte [size];
-				for (int i = 0; i < cookie.Length; i++)
-					cookie [i] = Marshal.ReadByte (h, i);
+				Marshal.Copy (h, cookie, 0, size);
 				Marshal.FreeHGlobal (h);
 
 				return cookie;

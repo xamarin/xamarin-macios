@@ -49,8 +49,7 @@ namespace Xamarin.iOS.Tasks
 				}
 
 				if (Directory.Exists (binDir)) {
-					// Note: the .dSYM/Contents string match is a work-around for xbuild which is broken (wrongly interprets %(Directory))
-					var path = Directory.EnumerateFiles (binDir, "*.*", SearchOption.AllDirectories).FirstOrDefault (x => x.IndexOf (".dSYM/Contents/", StringComparison.Ordinal) == -1);
+					var path = Directory.EnumerateFiles (binDir, "*.*", SearchOption.AllDirectories).FirstOrDefault ();
 					Assert.IsNull (path, "File not cleaned: {0}", path);
 				}
 			}
@@ -69,10 +68,10 @@ namespace Xamarin.iOS.Tasks
 			var expectedFile = Path.Combine ("obj", platform, config, "actool", "cloned-assets", "Assets.xcassets", "AppIcon.appiconset", "Contents.json");
 			Assert.AreEqual (expectedFile, Engine.Logger.ErrorEvents[0].File, "File");
 			Assert.AreEqual (197, Engine.Logger.ErrorEvents[0].LineNumber, "LineNumber");
-			Assert.AreEqual (2, Engine.Logger.ErrorEvents[0].ColumnNumber, "ColumnNumber");
+			Assert.AreEqual (4, Engine.Logger.ErrorEvents[0].ColumnNumber, "ColumnNumber");
 			Assert.AreEqual (197, Engine.Logger.ErrorEvents[0].EndLineNumber, "EndLineNumber");
-			Assert.AreEqual (2, Engine.Logger.ErrorEvents[0].EndColumnNumber, "EndColumnNumber");
-			Assert.AreEqual ("Unexpected character ']'. At line 197, column 2.", Engine.Logger.ErrorEvents[0].Message, "Message");
+			Assert.AreEqual (4, Engine.Logger.ErrorEvents[0].EndColumnNumber, "EndColumnNumber");
+			Assert.AreEqual ("']' is invalid without a matching open. LineNumber: 196 | BytePositionInLine: 3.", Engine.Logger.ErrorEvents[0].Message, "Message");
 		}
 	}
 }
