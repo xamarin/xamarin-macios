@@ -203,6 +203,8 @@ public static class ProcessHelper
 		xml.WriteAttributeString ("xamarin-macios-hash", Configuration.TestedHash);
 		xml.WriteAttributeString ("sample-repository", Configuration.GetCurrentRemoteUrl (slndir));
 		xml.WriteAttributeString ("sample-hash", Configuration.GetCurrentHash (slndir));
+		xml.WriteAttributeString ("agent-machinename", Environment.GetEnvironmentVariable ("AGENT_MACHINENAME"));
+		xml.WriteAttributeString ("agent-name", Environment.GetEnvironmentVariable ("AGENT_NAME"));
 		foreach (var app in apps) {
 			xml.WriteStartElement ("test");
 			xml.WriteAttributeString ("name", TestContext.CurrentContext.Test.FullName);
@@ -287,7 +289,6 @@ public static class ProcessHelper
 			xml.Dispose ();
 
 			TestContext.AddTestAttachment (logfile, $"Performance data");
-			// Console.WriteLine ("Performance data: {0}:\n\t{1}", logfile, string.Join ("\n\t", File.ReadAllLines (logfile)));
 		}
 	}
 
