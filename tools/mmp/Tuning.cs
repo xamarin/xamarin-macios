@@ -86,8 +86,7 @@ namespace MonoMac.Tuner {
 
 			try {
 				pipeline.Process (context);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				HandlePipelineProcessException (e);
 			}
 
