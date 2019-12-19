@@ -71,7 +71,7 @@ namespace MonoMac.Tuner {
 		}
 	}
 
-	class Linker {
+	static partial class Linker {
 
 		public static void Process (LinkerOptions options, out MonoMacLinkContext context, out List<string> assemblies)
 		{
@@ -91,44 +91,6 @@ namespace MonoMac.Tuner {
 			}
 
 			assemblies = ListAssemblies (context);
-		}
-
-		static void HandlePipelineProcessException (Exception e)
-		{
-			if (e is AssemblyResolutionException fnfe) {
-				throw new MonoMacException (2002, true, fnfe, fnfe.Message);
-			} else if (e is AggregateException) {
-				throw e;
-			} else if (e is MonoMacException) {
-				throw e;
-			} else if (e is ResolutionException re) {
-				TypeReference tr = (re.Member as TypeReference);
-				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-				throw new MonoMacException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
-			} else if (e is XmlResolutionException ex) {
-				throw new MonoMacException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
-			} else {
-				if (e.InnerException != null) {
-					HandlePipelineProcessException (e.InnerException);
-					return;
-				}
-
-				var message = new StringBuilder ();
-				if (e.Data.Count > 0) {
-					message.AppendLine ();
-					var m = e.Data ["MethodDefinition"] as string;
-					if (m != null)
-						message.AppendLine ($"\tMethod: `{m}`");
-					var t = e.Data ["TypeReference"] as string;
-					if (t != null)
-						message.AppendLine ($"\tType: `{t}`");
-					var a = e.Data ["AssemblyDefinition"] as string;
-					if (a != null)
-						message.AppendLine ($"\tAssembly: `{a}`");
-				}
-				message.Append ($"Reason: {e.Message}");
-				throw new MonoMacException (2001, true, e, "Could not link assemblies. {0}", message);
-			}
 		}
 
 		static MonoMacLinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)

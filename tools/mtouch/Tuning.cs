@@ -58,7 +58,7 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	static class Linker {
+	static partial class Linker {
 
 		public static void Process (LinkerOptions options, out MonoTouchLinkContext context, out List<AssemblyDefinition> assemblies)
 		{
@@ -83,58 +83,6 @@ namespace MonoTouch.Tuner {
 			}
 
 			assemblies = ListAssemblies (context);
-		}
-
-		static void HandlePipelineProcessException (Exception e)
-		{
-			if (e is FileNotFoundException fnfe) {
-				// Cecil throw this if the assembly is not found
-				throw new MonoTouchException (2002, true, fnfe, fnfe.Message);
-			} else if (e is AggregateException) {
-				throw e;
-			} else if (e is MonoTouchException) {
-				throw e;
-			} else if (e is MarkException me) {
-				var re = me.InnerException as ResolutionException;
-				if (re == null) {
-					if (me.InnerException != null) {
-						throw ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}': {2}", me.Method.FullName, me.Method.Module, me.InnerException.Message);
-					} else {
-						throw ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}'", me.Method.FullName, me.Method.Module);
-					}
-				} else {
-					TypeReference tr = (re.Member as TypeReference);
-					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-					throw ErrorHelper.CreateError (2101, me, "Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.", re.Member, me.Method.FullName, scope);
-				}
-			} else if (e is ResolutionException re) {
-				TypeReference tr = (re.Member as TypeReference);
-				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-				throw new MonoTouchException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
-			} else if (e is XmlResolutionException ex) {
-				throw new MonoTouchException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
-			} else {
-				if (e.InnerException != null) {
-					HandlePipelineProcessException (e.InnerException);
-					return;
-				}
-
-				var message = new StringBuilder ();
-				if (e.Data.Count > 0) {
-					message.AppendLine ();
-					var m = e.Data ["MethodDefinition"] as string;
-					if (m != null)
-						message.AppendLine ($"\tMethod: `{m}`");
-					var t = e.Data ["TypeReference"] as string;
-					if (t != null)
-						message.AppendLine ($"\tType: `{t}`");
-					var a = e.Data ["AssemblyDefinition"] as string;
-					if (a != null)
-						message.AppendLine ($"\tAssembly: `{a}`");
-				}
-				message.Append ($"Reason: {e.Message}");
-				throw new MonoTouchException (2001, true, e, "Could not link assemblies. {0}", message);
-			}
 		}
 
 		static MonoTouchLinkContext CreateLinkContext (LinkerOptions options, Pipeline pipeline)
