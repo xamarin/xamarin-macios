@@ -1,9 +1,6 @@
-#!/bin/bash -e
-
-set +x
+#!/bin/bash -ex
 
 X="#vso"
-echo help
 
 FILE=$PWD/xamarin-macios/tests/TestSummary.md
 if ! test -f $FILE; then

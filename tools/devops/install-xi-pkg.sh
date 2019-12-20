@@ -1,10 +1,5 @@
 #!/bin/bash -ex
 
-set -e
-set -x
-
-# Install XI
-
 XI_PKG=$XI_PACKAGE
 
 XI_NAME=$(basename $XI_PKG)
