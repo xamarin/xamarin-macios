@@ -76,11 +76,7 @@ namespace MonoTouch.Tuner {
 					prepareDependenciesDump.Invoke (context.Annotations, new object[1] { string.Format ("{0}{1}linker-dependencies.xml.gz", options.OutputDirectory, Path.DirectorySeparatorChar) });
 			}
 
-			try {
-				pipeline.Process (context);
-			} catch (Exception e) {
-				HandlePipelineProcessException (e);
-			}
+			Process (pipeline, context);
 
 			assemblies = ListAssemblies (context);
 		}

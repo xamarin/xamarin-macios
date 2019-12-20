@@ -84,11 +84,7 @@ namespace MonoMac.Tuner {
 			context.KeepTypeForwarderOnlyAssemblies = (Profile.Current is XamarinMacProfile);
 			options.Target.LinkContext = (context as MonoMacLinkContext);
 
-			try {
-				pipeline.Process (context);
-			} catch (Exception e) {
-				HandlePipelineProcessException (e);
-			}
+			Process (pipeline, context);
 
 			assemblies = ListAssemblies (context);
 		}
