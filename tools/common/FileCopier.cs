@@ -78,19 +78,17 @@ namespace Xamarin.Bundler {
 		public static void UpdateDirectory (string source, string target)
 		{
 			// first chance, try to update existing content inside `target`
-			int rv = TryUpdateDirectory (source, target);
-			if (rv == 0)
+			if (TryUpdateDirectory (source, target, out var err))
 				return;
 
 			// 2nd chance, nuke `target` then copy everything
-			var err = Marshal.GetLastWin32Error (); // might not be very useful since the callback signaled an error (CopyFileResult.Quit)
 			Log (1, "Could not update `{0}` content (error #{1} : {2}), trying to overwrite everything...", target, err, strerror (err));
 			Directory.Delete (target, true);
-			if (TryUpdateDirectory (source, target) != 0)
-				throw CreateError (1022, "Could not copy the directory '{0}' to '{1}': {2}", source, target, strerror (Marshal.GetLastWin32Error ()));
+			if (!TryUpdateDirectory (source, target, out err))
+				throw CreateError (1022, "Could not copy the directory '{0}' to '{1}': (error #{2} : {3})", source, target, err, strerror (err));
 		}
 
-		static int TryUpdateDirectory (string source, string target)
+		static bool TryUpdateDirectory (string source, string target, out int errno)
 		{
 			Directory.CreateDirectory (target);
 
@@ -100,7 +98,14 @@ namespace Xamarin.Bundler {
 			try {
 				CopyFileCallbackDelegate del = CopyFileCallback;
 				copyfile_state_set (state, CopyFileState.StatusCB, Marshal.GetFunctionPointerForDelegate (del));
-				return copyfile (source, target, state, CopyFileFlags.Data | CopyFileFlags.Recursive | CopyFileFlags.Nofollow | CopyFileFlags.Clone);
+				int rv = copyfile (source, target, state, CopyFileFlags.Data | CopyFileFlags.Recursive | CopyFileFlags.Nofollow | CopyFileFlags.Clone);
+				if (rv == 0) {
+					errno = 0; // satisfy compiler and make sure not to pick up some older error code
+					return true;
+				} else {
+					errno = Marshal.GetLastWin32Error (); // might not be very useful since the callback signaled an error (CopyFileResult.Quit)
+					return false;
+				}
 			} finally {
 				copyfile_state_free (state);
 			}
