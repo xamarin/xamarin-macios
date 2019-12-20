@@ -292,11 +292,13 @@ public static class ProcessHelper
 		}
 	}
 
-	internal static string RunProcess (string filename, string arguments = "")
+	internal static string RunProcess (string filename, string arguments = "", string working_directory = null)
 	{
 		using (var p = Process.Start (filename, arguments)) {
 			p.StartInfo.RedirectStandardOutput = true;
 			p.StartInfo.UseShellExecute = false;
+			if (!string.IsNullOrEmpty (working_directory))
+				p.StartInfo.WorkingDirectory = working_directory;
 			p.Start ();
 			var output = p.StandardOutput.ReadToEnd ();
 			p.WaitForExit ();

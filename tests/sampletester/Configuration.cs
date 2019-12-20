@@ -68,12 +68,12 @@ namespace Xamarin.Tests {
 
 		public static string GetCurrentHash (string directory)
 		{
-			return ProcessHelper.RunProcess ("git", "log -1 --pretty=%H").Trim ();
+			return ProcessHelper.RunProcess ("git", "log -1 --pretty=%H", directory).Trim ();
 		}
 
 		public static string GetCurrentRemoteUrl (string directory)
 		{
-			return ProcessHelper.RunProcess ("git", "remote get-url origin").Trim ();
+			return ProcessHelper.RunProcess ("git", "remote get-url origin", directory).Trim ();
 		}
 
 		static string mono_version;
