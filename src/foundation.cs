@@ -7381,7 +7381,7 @@ namespace Foundation
 	[Internal]
 	[Static]
 	[NoWatch]
-	partial interface ProxyConfigurationDictionaryKeys {
+	interface ProxyConfigurationDictionaryKeys {
 		[Field ("kCFNetworkProxiesHTTPEnable")]
 		NSString HttpEnableKey { get; }
 
