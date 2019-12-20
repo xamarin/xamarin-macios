@@ -24,6 +24,7 @@ jobs:
   steps:
   - bash: ./jenkins/vsts-device-tests-set-status.sh --start "--token=$(GitHub.Token)" "--device=iOS-DDFun"
     displayName: Set pending GitHub status
+    continueOnError: true
 
 ###
 ### Run the device tests

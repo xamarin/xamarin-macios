@@ -5,7 +5,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 TOKEN=
 START=
 DEVICE_TYPE=
-while ! test -z "$1"; do
+while ! test -z "${1:-}"; do
 	case "$1" in
 		--token=*)
 			TOKEN="${1:8}"
