@@ -90,9 +90,11 @@ jobs:
       exit 0
     displayName: 'Process cleanup'
 
-  - bash: security set-key-partition-list -S apple-tool:,apple: -s -k $(OSX_KEYCHAIN_PASS) login.keychain
+  - bash: security set-key-partition-list -S apple-tool:,apple: -s -k $LOGIN_KEYCHAIN_PASSWORD login.keychain
     displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
     condition: succeededOrFailed()
+    env:
+      LOGIN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
 
   - bash: |
       set -e
