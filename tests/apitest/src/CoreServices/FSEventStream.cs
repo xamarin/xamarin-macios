@@ -151,8 +151,10 @@ namespace Xamarin.Mac.Tests {
 			Assert.IsFalse (fsEventStream.SetExclusionPaths (new string [] { }), "SetExclusionPaths empty array failed");
 
 			// Excluding the unWatchDirPath from the watcher so any event inside it doesn't get
-			Assert.IsTrue (fsEventStream.SetExclusionPaths (new [] { Path.Combine (fsEventStream.PathsBeingWatched [0], "UnwatchDir") }), "SetExclusionPaths failed");
+			var exclusionPaths = new string [] { Path.Combine (fsEventStream.PathsBeingWatched [0], "UnwatchDir"), Path.Combine (fsEventStream.PathsBeingWatched [0], "UnwatchDir") };
+			Assert.IsTrue (fsEventStream.SetExclusionPaths (exclusionPaths), "SetExclusionPaths failed");
 
+			Assert.True (true);
 			FileStream fileToWatch = File.Create (Path.Combine (watchDirPath, "TempFileToWatch.txt"));
 			FileStream fileToExclude = File.Create (Path.Combine (unWatchDirPath, "TempFileToExclude.txt"));
 			fileToWatch.Close ();
@@ -163,7 +165,7 @@ namespace Xamarin.Mac.Tests {
 
 			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				fsEventStream.Events += (sender, eventArgs) => {
-				taskCompletionSource.SetResult (eventArgs);
+					taskCompletionSource.SetResult (eventArgs);
 				};
 
 				fsEventStream.ScheduleWithRunLoop (CFRunLoop.Current);

@@ -154,9 +154,11 @@ namespace CoreServices
 
 		protected virtual void Dispose (bool disposing)
 		{
-			if (handle != IntPtr.Zero) {
-				FSEventStreamRelease (handle);
-				handle = IntPtr.Zero;
+			if (disposing) {
+				if (handle != IntPtr.Zero) {
+					FSEventStreamRelease (handle);
+					handle = IntPtr.Zero;
+				}
 			}
 		}
 
@@ -215,7 +217,7 @@ namespace CoreServices
 
 			handle = FSEventStreamCreateRelativeToDevice (
 				allocator.GetHandle (),
-				eventsCallback, IntPtr.Zero, deviceToWatch, pathsToWatchRelativeToDevice.Handle,
+				eventsCallback, IntPtr.Zero, deviceToWatch, pathsToWatchRelativeToDevice.GetHandle (),
 				sinceWhen, latency.TotalSeconds, flags | (FSEventStreamCreateFlags)0x1);
 			
 			if (handle == IntPtr.Zero) {
@@ -232,9 +234,8 @@ namespace CoreServices
 		public FSEventStream (ulong deviceToWatch, string [] pathsToWatchRelativeToDevice, 
 			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags)
 		{
-			NSArray nsArrayPathsToWatchRelativeToDevice = NSArray.FromStrings (pathsToWatchRelativeToDevice);
+			using NSArray nsArrayPathsToWatchRelativeToDevice = NSArray.FromStrings (pathsToWatchRelativeToDevice);
 			FSEventStreamInit (null, deviceToWatch, nsArrayPathsToWatchRelativeToDevice, sinceWhen, latency, flags);
-			nsArrayPathsToWatchRelativeToDevice.Dispose ();
 		}
 
 		void EventsCallback (IntPtr handle, IntPtr userData, nint numEvents,
@@ -370,10 +371,10 @@ namespace CoreServices
 		public string [] PathsBeingWatched {
 			get {
 				CheckDisposed ();
-				var cfarray = new CFArray (FSEventStreamCopyPathsBeingWatched (handle), true);
+				using var cfarray = new CFArray (FSEventStreamCopyPathsBeingWatched (handle));
 				var paths = new string[cfarray.Count];
 				for (int i = 0; i < paths.Length; i++) {
-					using (var cfstr = new CFString (cfarray.GetValue (i), true)) {
+					using (var cfstr = new CFString (cfarray.GetValue (i))) {
 						paths[i] = cfstr.ToString ();
 					}
 				}
@@ -446,10 +447,8 @@ namespace CoreServices
 				throw new ArgumentNullException (nameof (pathsToExclude));
 			}
 			CheckDisposed ();
-			
 			using NSArray nsPathsToExclude = NSArray.FromStrings (pathsToExclude);
-			bool done = FSEventStreamSetExclusionPaths (handle, nsPathsToExclude.GetHandle());
-			return done;
+			return FSEventStreamSetExclusionPaths (handle, nsPathsToExclude.GetHandle());
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
