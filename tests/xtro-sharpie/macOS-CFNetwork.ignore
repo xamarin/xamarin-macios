@@ -7,7 +7,6 @@
 !missing-field! kCFNetworkProxiesGopherEnable not bound
 !missing-field! kCFNetworkProxiesGopherPort not bound
 !missing-field! kCFNetworkProxiesGopherProxy not bound
-!missing-field! kCFNetworkProxiesHTTPSEnable not bound
 !missing-field! kCFNetworkProxiesHTTPSPort not bound
 !missing-field! kCFNetworkProxiesHTTPSProxy not bound
 !missing-field! kCFNetworkProxiesProxyAutoDiscoveryEnable not bound
