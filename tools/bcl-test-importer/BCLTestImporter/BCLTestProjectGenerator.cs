@@ -718,8 +718,8 @@ namespace BCLTestImporter {
 					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
 						await file.WriteAsync (generatedProject);
 					}
-					failure ??= info.FailureMessage;
-					failure ??= typesPerAssembly.FailureMessage;
+					failure = failure ?? info.FailureMessage;
+					failure = failure ?? typesPerAssembly.FailureMessage;
 				} catch (Exception e) {
 					failure = e.Message;
 				}
