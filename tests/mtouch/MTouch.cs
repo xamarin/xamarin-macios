@@ -2605,7 +2605,8 @@ public class TestApp {
 		[TestCase (Target.Dev, Profile.iOS, "link all", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "link sdk", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "monotouch-test", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "mscorlib", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "mscorlib Part 1", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "mscorlib Part 2", "Release64")]
 		[TestCase (Target.Dev, Profile.iOS, "BCL tests group 1", "Release64")]
 		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
 		{
