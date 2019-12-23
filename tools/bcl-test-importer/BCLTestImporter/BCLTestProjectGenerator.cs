@@ -710,24 +710,30 @@ namespace BCLTestImporter {
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
 				}
-				
-				var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches[platform]);
-				var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
-				var infoPlistPath = GetPListPath (generatedCodeDir, platform);
-				using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
-					await file.WriteAsync (plist);
-				}
-
-				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[platform]);
-				var info = projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true);
-				var generatedProject = await GenerateMacAsync (projectDefinition.Name, registerTypePath,
-					info, projectTemplatePath, infoPlistPath, platform);
-					
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
-				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = projectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = null, TimeoutMultiplier = def.TimeoutMultiplier });
-				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
-					await file.WriteAsync (generatedProject);
+				string failure = null;
+				try {
+					var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches [platform]);
+					var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
+					var infoPlistPath = GetPListPath (generatedCodeDir, platform);
+					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
+						await file.WriteAsync (plist);
+					}
+
+					var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches [platform]);
+					var info = projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true);
+					var generatedProject = await GenerateMacAsync (projectDefinition.Name, registerTypePath,
+						info, projectTemplatePath, infoPlistPath, platform);
+					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
+						await file.WriteAsync (generatedProject);
+					}
+					failure = failure ?? info.FailureMessage;
+					failure = failure ?? typesPerAssembly.FailureMessage;
+				} catch (Exception e) {
+					failure = e.Message;
 				}
+				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = projectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = failure, TimeoutMultiplier = def.TimeoutMultiplier });
+				
 			}
 			return projectPaths;
 		}
