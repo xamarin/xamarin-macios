@@ -115,6 +115,7 @@ jobs:
   - bash: ./xamarin-macios/tools/devops/add-summaries.sh
     displayName: 'Add summaries'
     continueOnError: true
+    condition: succeededOrFailed()
 
   - task: ArchiveFiles@1
     displayName: 'Archive HtmlReport'
