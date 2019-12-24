@@ -79,6 +79,7 @@ if test -z "$START"; then
 	trap cleanup ERR
 	trap cleanup EXIT
 
+	HTML_REPORT=""
 	if [ $DEVICE_TYPE == "iOS-DDFun" ]; then
 		printf "### :construction: Experimental DDFun pipeline\\n" > "$MESSAGE_FILE"
 	else
