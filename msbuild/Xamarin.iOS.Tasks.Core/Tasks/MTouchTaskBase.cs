@@ -592,8 +592,10 @@ namespace Xamarin.iOS.Tasks
 			args.AddQuotedLine ($"--root-assembly={Path.GetFullPath (MainAssembly.ItemSpec)}");
 
 			var v = VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity);
-			if (v.Length > 0)
-				args.AddLine (v);
+			if (v.Length > 0) {
+				foreach (var arg in v)
+					args.AddLine (arg);
+			}
 
 			if (!string.IsNullOrWhiteSpace (License))
 				args.AddLine ($"--license={License}");
