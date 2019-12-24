@@ -12,26 +12,8 @@ resources:
     ref: refs/heads/device-tests-yaml
     endpoint: xamarin
 
-###
-### Tell GitHub we're starting working on this commit
-###
-
 jobs:
-- job: ReportStartToGitHub
-  displayName: Set pending GitHub status
-  pool:
-    name: '$(poolName)'
-  steps:
-  - bash: ./jenkins/vsts-device-tests-set-status.sh --start "--token=$(GitHub.Token)" "--device=iOS-DDFun"
-    displayName: Set pending GitHub status
-    continueOnError: true
-
-###
-### Run the device tests
-###
-
 - job: macOS
-  dependsOn: ReportStartToGitHub
   displayName: Run Device Tests
   timeoutInMinutes: 1000
 
@@ -108,9 +90,31 @@ jobs:
       sudo launchctl stop com.apple.usbmuxd
     displayName: 'Fix device discovery (reset launchctl)'
 
+###
+### Tell GitHub we're starting working on this commit
+###
+
+  - bash: ./xamarin-macios/jenkins/vsts-device-tests-set-status.sh --start "--token=$(GitHub.Token)" "--device=iOS-DDFun"
+    displayName: Set pending GitHub status
+    continueOnError: true
+    condition: succeededOrFailed()
+
+###
+### Run the device tests
+###
+
   - bash: ./xamarin-macios/tools/devops/run-tests.sh
     displayName: 'Run tests'
     timeoutInMinutes: 600
+
+###
+### Report final results to GitHub
+###
+
+  - bash: ./xamarin-macios/jenkins/vsts-device-tests-set-status.sh "--token=$(GitHub.Token)" "--device=iOS-DDFun"
+    displayName: Report results to GitHub as comment / status
+    continueOnError: true
+    condition: succeededOrFailed()
 
   - bash: ./xamarin-macios/tools/devops/add-summaries.sh
     displayName: 'Add summaries'
@@ -137,19 +141,3 @@ jobs:
       artifactName: HtmlReport
     continueOnError: true
     condition: succeededOrFailed()
-
-###
-### Report final results to GitHub
-###
-
-- job: ReportResultsToGitHub
-  displayName: Report status/results to GitHub
-  dependsOn:
-  - macOS
-  condition: always()
-  pool:
-    name: '$(poolName)'
-  steps:
-  - bash: ./jenkins/vsts-device-tests-set-status.sh "--token=$(GitHub.Token)" "--device=iOS-DDFun"
-    displayName: Report results to GitHub as comment / status
-    condition: always()
