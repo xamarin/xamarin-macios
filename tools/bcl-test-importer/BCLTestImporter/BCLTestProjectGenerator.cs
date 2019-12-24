@@ -135,10 +135,11 @@ namespace BCLTestImporter {
 			new BclTestProjectInfo { Name = "SystemNetHttpFunctionalTestsXunit", assemblies = new [] { "monotouch_System.Net.Http.FunctionalTests_xunit-test.dll" }, Group = "BCL tests group 5" },
 
 			// Special assemblies that are in a single application due to their size being to large for the iOS 32b.
-			new BclTestProjectInfo { Name = "mscorlib", assemblies = new [] { "monotouch_corlib_xunit-test.dll" }, Group = "mscorlib" }, // special testcase for the corlib which is later used in xHarness for diff config options
-			new BclTestProjectInfo { Name = "SystemCoreXunit", assemblies = new [] { "monotouch_System.Core_xunit-test.dll" }, Group = "SystemCoreXunit" }, // special test case, this dll is to large for the iOS 32b
+			new BclTestProjectInfo { Name = "mscorlib Part 1", assemblies = new [] { "monotouch_corlib_xunit-test.part1.dll" }, Group = "mscorlib Part 1" }, // special testcase for the corlib which is later used in xHarness for diff config options
+			new BclTestProjectInfo { Name = "mscorlib Part 2", assemblies = new [] { "monotouch_corlib_xunit-test.part2.dll" }, Group = "mscorlib Part 2" },
+			new BclTestProjectInfo { Name = "SystemCoreXunit Part 1", assemblies = new [] { "monotouch_System.Core_xunit-test.part1.dll" }, Group = "SystemCoreXunit Part 1" },
+			new BclTestProjectInfo { Name = "SystemCoreXunit Part 2", assemblies = new [] { "monotouch_System.Core_xunit-test.part2.dll" }, Group = "SystemCoreXunit Part 2" },
 			new BclTestProjectInfo { Name = "SystemXunit", assemblies = new [] { "monotouch_System_xunit-test.dll" }, ExtraArgs = $"--xml={Path.Combine (Harness.RootDirectory, "bcl-test", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", Group = "SystemXunit" }, // special case due to the need of the extra args
-
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
