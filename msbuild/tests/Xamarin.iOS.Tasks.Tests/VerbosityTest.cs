@@ -51,7 +51,8 @@ namespace Xamarin.MacDev.Tasks {
 		[TestCase ((LoggerVerbosity) (-1), "")]
 		public void FromLoggerVerbosity (LoggerVerbosity v, string expectedResult)
 		{
-			Assert.That (VerbosityUtils.GetVerbosityLevel (v), Is.EqualTo (expectedResult), v.ToString ());
+			var s = String.Join (" ", VerbosityUtils.GetVerbosityLevel (v));
+			Assert.That (s, Is.EqualTo (expectedResult), v.ToString ());
 		}
 	}
 }
