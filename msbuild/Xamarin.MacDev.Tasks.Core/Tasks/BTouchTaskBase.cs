@@ -224,8 +224,10 @@ namespace Xamarin.MacDev.Tasks {
 
 			var v = VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity);
 			if (v.Length > 0) {
-				cmd.AppendTextUnquoted (" ");
-				cmd.AppendTextUnquoted (v);
+				foreach (var arg in v) {
+					cmd.AppendTextUnquoted (" ");
+					cmd.AppendTextUnquoted (arg);
+				}
 			}
 
 			return cmd.ToString ();
