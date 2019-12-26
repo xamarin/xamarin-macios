@@ -154,11 +154,9 @@ namespace CoreServices
 
 		protected virtual void Dispose (bool disposing)
 		{
-			if (disposing) {
-				if (handle != IntPtr.Zero) {
-					FSEventStreamRelease (handle);
-					handle = IntPtr.Zero;
-				}
+			if (handle != IntPtr.Zero) {
+				FSEventStreamRelease (handle);
+				handle = IntPtr.Zero;
 			}
 		}
 
