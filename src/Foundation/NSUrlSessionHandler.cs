@@ -118,6 +118,8 @@ namespace Foundation {
 	public partial class NSUrlSessionHandler : HttpMessageHandler
 	{
 		private const string SetCookie = "Set-Cookie";
+		private const string Cookie = "Cookie";
+		private CookieContainer cookieContainer;
 		readonly Dictionary<string, string> headerSeparators = new Dictionary<string, string> {
 			["User-Agent"] = " ",
 			["Server"] = " "
@@ -335,6 +337,16 @@ namespace Foundation {
 			}
 		}
 
+		public CookieContainer CookieContainer {
+			get {
+				return cookieContainer;
+			}
+			set {
+				EnsureModifiability ();
+				cookieContainer = value;
+			}
+		}
+
 		bool sentRequest;
 
 		internal void EnsureModifiability ()
@@ -384,6 +396,14 @@ namespace Foundation {
 		async Task<NSUrlRequest> CreateRequest (HttpRequestMessage request)
 		{
 			var stream = Stream.Null;
+			// set header cookies if needed from the managed cookie container
+			CookieCollection cookies = cookieContainer?.GetCookies (request.RequestUri);
+			if (cookies != null && cookies.Count > 0) {
+				foreach (var cookie in cookies) {
+					Console.WriteLine ($"Adding cookie: {cookie.ToString ()} ");
+					request.Headers.TryAddWithoutValidation (Cookie, cookie.ToString ()); // as per docs: Returns a string representation of this Cookie object that is suitable for including in a HTTP Cookie: request header.
+				}
+			}
 			var headers = request.Headers as IEnumerable<KeyValuePair<string, IEnumerable<string>>>;
 
 			if (request.Content != null) {
@@ -401,6 +421,11 @@ namespace Foundation {
 					return acc;
 				})
 			};
+			Console.WriteLine ("Native headers are ");
+			foreach (var key in nsrequest.Headers.Keys)
+			{
+				Console.WriteLine ($"Header {key} with value {nsrequest.Headers[key].ToString ()}");
+			}
 			if (stream != Stream.Null) {
 				// HttpContent.TryComputeLength is `protected internal` :-( but it's indirectly called by headers
 				var length = request.Content.Headers.ContentLength;
@@ -488,6 +513,18 @@ namespace Foundation {
 				return null;
 			}
 
+			void UpdateManagedCookieContainer (NSUrl url, NSHttpCookie[] cookies)
+			{
+				var uri = new Uri (url.AbsoluteString);
+				if (sessionHandler.cookieContainer != null && cookies.Length > 0)
+					lock (sessionHandler.inflightRequestsLock) { // esure we lock when writing to the collection
+						var cookiesContents = new string [cookies.Length];
+						for (var index = 0; index < cookies.Length; index++)
+							cookiesContents [index] = cookies [index].GetHeaderValue ();
+						sessionHandler.cookieContainer.SetCookies (uri, string.Join (',', cookiesContents)); //  as per docs: The contents of an HTTP set-cookie header as returned by a HTTP server, with Cookie instances delimited by commas.
+					}
+			}
+
 			[Preserve (Conditional = true)]
 			public override void DidReceiveResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler)
 			{
@@ -528,7 +565,11 @@ namespace Foundation {
 						httpResponse.Content.Headers.TryAddWithoutValidation (v.Key.ToString (), v.Value.ToString ());
 					}
 
+					// it might be confusing that we are not using the managed CookieStore here, this is ONLY for those cookies that have been retrieved from
+					// the server via a Set-Cookie header, the managed container does not know a thing about this and apple is storing them in the native
+					// cookie container. Once we have the cookies from the response, we need to update the managed cookie container
 					var cookies = session.Configuration.HttpCookieStorage.CookiesForUrl (response.Url);
+					UpdateManagedCookieContainer (response.Url, cookies);
 					for (var index = 0; index < cookies.Length; index++) {
 						httpResponse.Headers.TryAddWithoutValidation (SetCookie, cookies [index].GetHeaderValue ());
 					}
