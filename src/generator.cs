@@ -6371,7 +6371,9 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					if (is32BitNotSupported) {
 						// potentially avoid a .cctor and extra, unusable code
 						print ("#if ARCH_32");
+						print ("#pragma warning disable {0}", is_static_class ? "169" : "649");
 						print ("static readonly IntPtr class_ptr;");
+						print ("#pragma warning restore {0}", is_static_class ? "169" : "649");
 						print ("#else");
 					}
 					print ("static readonly IntPtr class_ptr = Class.GetHandle (\"{0}\");", objc_type_name);
