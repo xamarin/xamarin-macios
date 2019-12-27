@@ -6367,7 +6367,17 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 				
 				if (!is_model) {
 					print_generated_code ();
-					print ("static readonly IntPtr class_ptr = Class.GetHandle (\"{0}\");\n", objc_type_name);
+					var is32BitNotSupported = Is64BitiOSOnly (type);
+					if (is32BitNotSupported) {
+						// potentially avoid a .cctor and extra, unusable code
+						print ("#if ARCH_32");
+						print ("static readonly IntPtr class_ptr;");
+						print ("#else");
+					}
+					print ("static readonly IntPtr class_ptr = Class.GetHandle (\"{0}\");", objc_type_name);
+					if (is32BitNotSupported)
+						print ("#endif");
+					print ("");
 				}
 			}
 			
