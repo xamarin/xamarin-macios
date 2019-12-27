@@ -398,7 +398,7 @@ namespace Foundation {
 			var stream = Stream.Null;
 			// set header cookies if needed from the managed cookie container
 			var cookies = cookieContainer?.GetCookieHeader (request.RequestUri); // as per docs: An HTTP cookie header, with strings representing Cookie instances delimited by semicolons.
-			if (! string.IsNullOrEmpty (cookies))
+			if (!string.IsNullOrEmpty (cookies))
 				request.Headers.TryAddWithoutValidation (Cookie, cookies); 
 
 			var headers = request.Headers as IEnumerable<KeyValuePair<string, IEnumerable<string>>>;
