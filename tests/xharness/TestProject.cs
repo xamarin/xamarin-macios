@@ -169,6 +169,7 @@ namespace xharness
 		public iOSTestProject (string path, bool isExecutableProject = true)
 			: base (path, isExecutableProject)
 		{
+			Name = System.IO.Path.GetFileNameWithoutExtension (path);
 		}
 	}
 
