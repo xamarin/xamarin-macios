@@ -397,13 +397,10 @@ namespace Foundation {
 		{
 			var stream = Stream.Null;
 			// set header cookies if needed from the managed cookie container
-			CookieCollection cookies = cookieContainer?.GetCookies (request.RequestUri);
-			if (cookies != null && cookies.Count > 0) {
-				foreach (var cookie in cookies) {
-					Console.WriteLine ($"Adding cookie: {cookie.ToString ()} ");
-					request.Headers.TryAddWithoutValidation (Cookie, cookie.ToString ()); // as per docs: Returns a string representation of this Cookie object that is suitable for including in a HTTP Cookie: request header.
-				}
-			}
+			var cookies = cookieContainer?.GetCookieHeader (request.RequestUri); // as per docs: An HTTP cookie header, with strings representing Cookie instances delimited by semicolons.
+			if (! string.IsNullOrEmpty (cookies))
+				request.Headers.TryAddWithoutValidation (Cookie, cookies); 
+
 			var headers = request.Headers as IEnumerable<KeyValuePair<string, IEnumerable<string>>>;
 
 			if (request.Content != null) {
@@ -421,11 +418,7 @@ namespace Foundation {
 					return acc;
 				})
 			};
-			Console.WriteLine ("Native headers are ");
-			foreach (var key in nsrequest.Headers.Keys)
-			{
-				Console.WriteLine ($"Header {key} with value {nsrequest.Headers[key].ToString ()}");
-			}
+
 			if (stream != Stream.Null) {
 				// HttpContent.TryComputeLength is `protected internal` :-( but it's indirectly called by headers
 				var length = request.Content.Headers.ContentLength;
@@ -517,7 +510,7 @@ namespace Foundation {
 			{
 				var uri = new Uri (url.AbsoluteString);
 				if (sessionHandler.cookieContainer != null && cookies.Length > 0)
-					lock (sessionHandler.inflightRequestsLock) { // esure we lock when writing to the collection
+					lock (sessionHandler.inflightRequestsLock) { // ensure we lock when writing to the collection
 						var cookiesContents = new string [cookies.Length];
 						for (var index = 0; index < cookies.Length; index++)
 							cookiesContents [index] = cookies [index].GetHeaderValue ();

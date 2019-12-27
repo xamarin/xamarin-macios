@@ -126,7 +126,7 @@ namespace MonoTests.System.Net.Http
 		public void TestNSUrlSessionHandlerCookieContainer ()
 		{
 			var url = NetworkResources.Httpbin.CookiesUrl;
-			var cookie = new Cookie ("cookie", "chocolte-chip");
+			var cookie = new Cookie ("cookie", "chocolate-chip");
 			var cookieContainer = new CookieContainer ();
 			cookieContainer.Add (new Uri (url), cookie);
 
