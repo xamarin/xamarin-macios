@@ -267,11 +267,13 @@ namespace xharness
 			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
 			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
 			var supports_dynamic_registrar_on_device = test.Platform == TestPlatform.iOS_Unified64 || test.Platform == TestPlatform.tvOS;
-			// arm64_32 is only supported for Release builds for now.
-			var supports_debug = test.Platform != TestPlatform.watchOS_64_32;
 
 			switch (test.ProjectPlatform) {
 			case "iPhone":
+				// arm64_32 is only supported for Release builds for now.
+				// arm32 bits too big for debug builds - https://github.com/xamarin/maccore/issues/2080
+				var supports_debug = test.Platform != TestPlatform.watchOS_64_32 && !(test.TestName == "dont link" && test.Platform == TestPlatform.iOS_Unified32);
+
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
 				if (supports_debug) {
 					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
@@ -560,7 +562,7 @@ namespace xharness
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
-						ProjectConfiguration = "Debug32",
+						ProjectConfiguration = project.Name != "dont link" ? "Debug32" : "Release32",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified32,
 						TestName = project.Name,
