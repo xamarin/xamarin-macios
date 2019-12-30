@@ -2096,7 +2096,7 @@ namespace xharness
 									writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
 								}
 								if (test.Duration.Ticks > 0)
-									writer.WriteLine ($"Time Elapsed: {test.Duration + test.WaitingDuration} <br />"); 									
+									writer.WriteLine ($"Time Elapsed:  {test.TestName} - (waiting time : {test.WaitingDuration} , running time : {test.Duration}) <br />");
 								var runDeviceTest = runTest as RunDeviceTask;
 								if (runDeviceTest?.Device != null) {
 									if (runDeviceTest.CompanionDevice != null) {
@@ -2419,11 +2419,7 @@ namespace xharness
 		}
 
 		protected Stopwatch waitingDuration = new Stopwatch ();
-		public TimeSpan WaitingDuration {
-			get {
-				return waitingDuration.Elapsed;
-			}
-		}
+		public TimeSpan WaitingDuration => waitingDuration.Elapsed;
 
 		TestExecutingResult execution_result;
 		public virtual TestExecutingResult ExecutionResult {
