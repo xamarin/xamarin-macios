@@ -18,17 +18,10 @@ namespace Xamarin.iOS.Tasks
 		static IPhoneSdks ()
 		{
 			Reload ();
-
-			AppleSdkSettings.Changed += delegate {
-				Native = new AppleIPhoneSdk (AppleSdkSettings.DeveloperRoot, AppleSdkSettings.DeveloperRootVersionPlist);
-				Watch = new AppleWatchSdk (AppleSdkSettings.DeveloperRoot, AppleSdkSettings.DeveloperRootVersionPlist);
-				TVOS = new AppleTVOSSdk (AppleSdkSettings.DeveloperRoot, AppleSdkSettings.DeveloperRootVersionPlist);
-			};
 		}
 
 		public static void CheckInfoCaches ()
 		{
-			AppleSdkSettings.CheckChanged ();
 			MonoTouch.CheckCaches ();
 		}
 
