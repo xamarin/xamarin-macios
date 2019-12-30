@@ -379,6 +379,11 @@ namespace Xamarin.Bundler {
 			if (!targetFramework.HasValue)
 				targetFramework = TargetFramework.Default;
 
+			if (App.EnableDebug && App.MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Default) {
+				Log (1, $"Selecting ThrowManagedException for marshal-objectivec-exceptions as Application is in debug");
+				App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+			}
+
 			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
 
 			ErrorHelper.Verbosity = verbose;
