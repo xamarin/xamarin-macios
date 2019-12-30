@@ -465,7 +465,7 @@ namespace Foundation {
 				throw new ArgumentNullException (nameof (userName));
 
 			using (var nsstring = new NSString (userName))
-			using (var homeDir = ObjCRuntime.Runtime.GetNSObject<NSString> (NSHomeDirectoryForUser (nsstring.Handle)))
+			using (var homeDir = ObjCRuntime.Runtime.GetNSObject<NSString> (NSHomeDirectoryForUser (nsstring.GetHandle ())))
 				return homeDir.ToString ();
 		}
 
