@@ -42,6 +42,8 @@ namespace MonoTests.System.Net.Http
 			public static readonly string PatchUrl = "https://httpbin.org/patch";
 			public static readonly string PostUrl = "https://httpbin.org/post";
 			public static readonly string PutUrl = "https://httpbin.org/put";
+			public static readonly string CookiesUrl = $"https://httpbin.org/cookies";
+
 
 			public static string GetAbsoluteRedirectUrl (int count) => $"https://httpbin.org/absolute-redirect/{count}";
 			public static string GetRedirectUrl (int count) => $"https://httpbin.org/redirect/{count}";

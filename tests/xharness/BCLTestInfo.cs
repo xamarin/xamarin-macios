@@ -122,7 +122,7 @@ namespace xharness
 
 		public virtual void Convert ()
 		{
-			var testName = TestName == "mscorlib" ? "corlib" : TestName;
+			var testName = TestName.StartsWith ("mscorlib", StringComparison.Ordinal) ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
 			if (!File.Exists (main_test_sources)) // TODO: revert this
 				return;
@@ -202,7 +202,7 @@ namespace xharness
 
 		string GetFileList ()
 		{
-			var testName = TestName == "mscorlib" ? "corlib" : TestName;
+			var testName = TestName.StartsWith("mscorlib", StringComparison.Ordinal) ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
 			if (!File.Exists (main_test_sources))  // TODO: revert this
 				return "";

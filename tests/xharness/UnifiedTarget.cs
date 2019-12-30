@@ -70,8 +70,8 @@ namespace xharness
 		protected override void CalculateName ()
 		{
 			if (TargetDirectory.Contains ("bcl-test")) {
-				if (TestProject.Name == "mscorlib")
-					Name = "mscorlib";
+				if (TestProject.Name.StartsWith ("mscorlib", StringComparison.Ordinal))
+					Name = TestProject.Name;
 				else {
 					var bclIndex = TestProject.Name.IndexOf ("BCL", StringComparison.Ordinal);
 					// most of the BCL test are grouped, but there are a number that are not, in those cases remove the "{testype} Mono " prefix

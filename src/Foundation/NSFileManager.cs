@@ -407,8 +407,6 @@ namespace Foundation {
 			if (dict == null)
 				return null;
 			var ret = new NSFileSystemAttributes (dict);
-			ulong l = 0;
-			uint i = 0;
 			ret.Size      = NSFileAttributes.fetch_ulong (dict, NSFileManager.SystemSize) ?? 0;
 			ret.FreeSize  = NSFileAttributes.fetch_ulong (dict, NSFileManager.SystemFreeSize) ?? 0;
 			ret.Nodes     = NSFileAttributes.fetch_long (dict, NSFileManager.SystemNodes) ?? 0;
