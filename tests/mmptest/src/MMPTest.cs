@@ -752,7 +752,7 @@ namespace Xamarin.MMP.Tests
 
 		// some users add ',' in their assembly names :( 
 		[Test]
-		public void FunnyAssemblyNameShouldNotFail ()
+		public void AssemblyNameWithCommaShouldNotFail ()
 		{
 			RunMMPTest (tmpDir => {
 				Action<string, bool> testCore = (assemblyName, XM45) => {
