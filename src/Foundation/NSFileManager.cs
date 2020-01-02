@@ -28,6 +28,7 @@
 //
 using ObjCRuntime;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Foundation {
 
@@ -425,6 +426,59 @@ namespace Foundation {
 	}		
 	
 	public partial class NSFileManager {
+
+		[DllImport (Constants.FoundationLibrary)]
+		static extern IntPtr NSUserName ();
+
+		public static string UserName {
+			get {
+				using (var nsstring = ObjCRuntime.Runtime.GetNSObject<NSString> (NSUserName ()))
+					return nsstring.ToString ();
+			}
+		}
+
+		[DllImport (Constants.FoundationLibrary)]
+		static extern IntPtr NSFullUserName ();
+
+		public static string FullUserName {
+			get {
+				using (var nsstring = ObjCRuntime.Runtime.GetNSObject<NSString> (NSFullUserName ()))
+					return nsstring.ToString ();
+			}
+		}
+
+		[DllImport (Constants.FoundationLibrary)]
+		static extern IntPtr NSHomeDirectory ();
+
+		public static string HomeDirectory {
+			get {
+				using (var nsstring = ObjCRuntime.Runtime.GetNSObject<NSString> (NSHomeDirectory ()))
+					return nsstring.ToString ();
+			}
+		}
+
+		[DllImport (Constants.FoundationLibrary)]
+		static extern IntPtr NSHomeDirectoryForUser (/* NSString */IntPtr userName);
+
+		public static string GetHomeDirectory (string userName) {
+			if (userName == null) 
+				throw new ArgumentNullException (nameof (userName));
+
+			using (var nsstring = new NSString (userName))
+			using (var homeDir = ObjCRuntime.Runtime.GetNSObject<NSString> (NSHomeDirectoryForUser (nsstring.GetHandle ())))
+				return homeDir.ToString ();
+		}
+
+		[DllImport (Constants.FoundationLibrary)]
+		static extern IntPtr NSTemporaryDirectory ();
+
+		public static string TemporaryDirectory {
+			get {
+				using (var nsstring = ObjCRuntime.Runtime.GetNSObject<NSString> (NSTemporaryDirectory ()))
+					return nsstring.ToString ();
+			}
+		}
+
 		public bool SetAttributes (NSFileAttributes attributes, string path, out NSError error)
 		{
 			if (attributes == null)
