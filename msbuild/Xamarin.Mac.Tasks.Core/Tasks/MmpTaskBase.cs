@@ -249,8 +249,14 @@ namespace Xamarin.Mac.Tasks
 
 			actualArgs.Add (" ");
 			var verbosity = VerbosityUtils.Merge (ExtraArguments, (LoggerVerbosity) Verbosity);
-			// for compatibility with earlier versions nothing means one /v
-			actualArgs.AddLine (verbosity.Length > 0 ? verbosity : "/verbose");
+			if (verbosity.Length > 0) {
+				foreach (var arg in verbosity) {
+					actualArgs.AddLine (arg);
+				}
+			} else {
+				// for compatibility with earlier versions nothing means one /v
+				actualArgs.AddLine ("/verbose");
+			}
 
 			return actualArgs.ToString ();
 		}
