@@ -127,6 +127,9 @@
     <None Include="Xamarin.iOS.ObjCBinding.Common.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Xamarin.iOS.NativeReference.Stubs.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Xamarin.iOS.ObjCBinding.CSharp.props">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

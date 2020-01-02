@@ -85,11 +85,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		</CreateEmbeddedResources>
 	</Target>
 
-	<!-- This "stub" target is declared to prevent other Windows specific targets 
-	     from firing, and doing the wrong thing since we overload @(NativeReference)
-		 Example: https://github.com/xamarin/xamarin-macios/issues/3876
-	-->
-	<Target Name="GenerateManifests" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.NativeReference.Stubs.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
