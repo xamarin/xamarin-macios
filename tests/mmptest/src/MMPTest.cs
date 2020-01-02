@@ -752,16 +752,10 @@ namespace Xamarin.MMP.Tests
 
 		// some users add ',' in their assembly names :( 
 		[Test]
-		public void AssemblyNameWithCommaShouldNotFail ()
-		{
-			RunMMPTest (tmpDir => {
-				Action<string, bool> testCore = (assemblyName, XM45) => {
-					// Build a library with the conflicting name
-					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = XM45, AssemblyName = assemblyName,  ProjectName = assemblyName };
-					TI.TestUnifiedExecutable (test, shouldFail: false);
-				};
-				testCore ("UserLikes,ToEnumerate.Mac", true);
-			});
-		}
+		public void AssemblyNameWithCommaShouldNotFail () => RunMMPTest (tmpDir => {
+			// Build a library with the conflicting name
+			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true, AssemblyName = "UserLikes,ToEnumerate.Mac",  ProjectName = "UserLikes,ToEnumerate.Mac" };
+			TI.TestUnifiedExecutable (test, shouldFail: false);
+		});
 	}
 }
