@@ -198,6 +198,106 @@ namespace MonoTests.System.Net.Http
 			var cookiesFromServer = cookieContainer.GetCookies (new Uri (url));
 			Assert.AreEqual (1, cookiesFromServer.Count, "Cookies received from server.");
 		}
+
+		[Test]
+		public void TestNSUrlSessionDefaultDisabledCookies ()
+		{
+			// simple test. send a request with a set-cookie url, get the data
+			// and ensure that the second request does not send any cookies.
+			var url = NetworkResources.Httpbin.GetSetCookieUrl ("cookie", "chocolate-chip");
+
+			string nativeSetCookieResult = null;
+			string nativeCookieResult = null;
+
+
+			Exception ex = null;
+			var completed = false;
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+
+					var nativeHandler = new NSUrlSessionHandler () {
+						AllowAutoRedirect = true,
+						UseCookies = false,
+					};
+					var nativeClient = new HttpClient (nativeHandler);
+					var nativeResponse = await nativeClient.GetAsync (url);
+					nativeSetCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+
+					// got the response, perofm a second queries to the cookies endpoint to get
+					// the actual cookies sent from the storage
+					nativeResponse = await nativeClient.GetAsync (NetworkResources.Httpbin.CookiesUrl);
+					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
+			}, () => completed);
+
+			Assert.IsNull (ex, "Exception");
+			Assert.IsNotNull (nativeSetCookieResult, "Native set-cookies result");
+			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
+			Assert.IsFalse (nativeCookieResult.Contains ("chocolate-chip"));
+		}
+
+		[Test]
+		public void TestNSUrlSessionDefaultDisableCookiesWithManagedContainer ()
+		{
+			// simple test. send a request with a set-cookie url, get the data
+			// and ensure that the second request does not send any cookies.
+			var url = NetworkResources.Httpbin.GetSetCookieUrl ("cookie", "chocolate-chip");
+
+			string nativeSetCookieResult = null;
+			string nativeCookieResult = null;
+			var cookieContainer = new CookieContainer ();
+
+
+			Exception ex = null;
+			var completed = false;
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+				try {
+
+					var nativeHandler = new NSUrlSessionHandler () {
+						AllowAutoRedirect = true,
+						UseCookies = false,
+					};
+					var nativeClient = new HttpClient (nativeHandler);
+					var nativeResponse = await nativeClient.GetAsync (url);
+					nativeSetCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+
+					// got the response, perofm a second queries to the cookies endpoint to get
+					// the actual cookies sent from the storage
+					nativeResponse = await nativeClient.GetAsync (NetworkResources.Httpbin.CookiesUrl);
+					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
+				}
+			}, () => completed);
+
+			Assert.IsNull (ex, "Exception");
+			Assert.IsNotNull (nativeSetCookieResult, "Native set-cookies result");
+			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
+			Assert.IsFalse (nativeCookieResult.Contains ("chocolate-chip"));
+			var cookiesFromServer = cookieContainer.GetCookies (new Uri (url));
+			Assert.AreEqual (0, cookiesFromServer.Count, "Cookies received from server.");
+		}
+
+		[Test]
+		public void TestNSUrlSessionEphemeralDisabledCookies ()
+		{
+			// assert we do throw an exception with ephmeral configs.
+			var config = NSUrlSessionConfiguration.EphemeralSessionConfiguration;
+			Assert.True (config.SessiontType == NSUrlSessionConfiguration.SessionConfigurationType.Ephemeral, "Session type.");
+			var nativeHandler = new NSUrlSessionHandler (config);
+			Assert.Throws<InvalidOperationException> (() => {
+				nativeHandler.UseCookies = false;
+			});
+		}
+
 #endif
 
 		// ensure that if we have a redirect, we do not have the auth headers in the following requests
@@ -389,5 +489,6 @@ namespace MonoTests.System.Net.Http
 				}
 			}
 		}
+
 	}
 }
