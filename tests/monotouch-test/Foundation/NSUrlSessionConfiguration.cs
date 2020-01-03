@@ -16,7 +16,7 @@ namespace MonoTouchFixtures.Foundation {
 	public class NSUrlSessionConfigurationTest {
 
 		[Test]
-		public void TestSessionTypeDefatul ()
+		public void TestSessionTypeDefault ()
 		{
 			using (var config = NSUrlSessionConfiguration.DefaultSessionConfiguration)
 				Assert.AreEqual (NSUrlSessionConfiguration.SessionConfigurationType.Default, config.SessiontType);
