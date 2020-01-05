@@ -4,6 +4,7 @@
 // Authors:
 //     Manuel de la Pena <mandel@microsoft.com>
 using System;
+using ObjCRuntime;
 
 #if XAMCORE_2_0
 using Foundation;
@@ -46,6 +47,15 @@ namespace Foundation {
 				config.SessionType = SessionConfigurationType.Ephemeral;
 				return config;
 			}
+		}
+
+		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
+		public static NSUrlSessionConfiguration BackgroundSessionConfiguration (string identifier)
+		{
+			var config = NSUrlSessionConfiguration._BackgroundSessionConfiguration (identifier);
+			config.SessionType = SessionConfigurationType.Background;
+			return config;
 		}
 
 		public static NSUrlSessionConfiguration CreateBackgroundSessionConfiguration (string identifier)
