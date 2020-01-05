@@ -27,7 +27,7 @@ namespace Foundation {
 
 		SessionConfigurationType configurationType = SessionConfigurationType.Default; 
 
-		public SessionConfigurationType SessiontType {
+		public SessionConfigurationType SessionType {
 			get => configurationType;
 			private set => configurationType = value;
 		}
@@ -35,7 +35,7 @@ namespace Foundation {
 		public static NSUrlSessionConfiguration DefaultSessionConfiguration {
 			get {
 				var config = NSUrlSessionConfiguration._DefaultSessionConfiguration;
-				config.SessiontType = SessionConfigurationType.Default;
+				config.SessionType = SessionConfigurationType.Default;
 				return config;
 			}
 		}
@@ -43,7 +43,7 @@ namespace Foundation {
 		public static NSUrlSessionConfiguration EphemeralSessionConfiguration {
 			get {
 				var config = NSUrlSessionConfiguration._EphemeralSessionConfiguration;
-				config.SessiontType = SessionConfigurationType.Ephemeral;
+				config.SessionType = SessionConfigurationType.Ephemeral;
 				return config;
 			}
 		}
@@ -51,7 +51,7 @@ namespace Foundation {
 		public static NSUrlSessionConfiguration CreateBackgroundSessionConfiguration (string identifier)
 		{
 			var config = NSUrlSessionConfiguration._CreateBackgroundSessionConfiguration (identifier);
-			config.SessiontType = SessionConfigurationType.Background;
+			config.SessionType = SessionConfigurationType.Background;
 			return config;
 		}
 	}

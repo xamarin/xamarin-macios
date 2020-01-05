@@ -156,7 +156,7 @@ namespace Foundation {
 				throw new ArgumentNullException (nameof (configuration));
 
 			// HACK: we need to store the following because session.Configuration gets a copy of the object and the value gets lost
-			sessionType = configuration.SessiontType;
+			sessionType = configuration.SessionType;
 			allowsCellularAccess = configuration.AllowsCellularAccess;
 			AllowAutoRedirect = true;
 
