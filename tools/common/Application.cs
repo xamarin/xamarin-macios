@@ -335,7 +335,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
-				throw ErrorHelper.CreateError (88);
+				throw ErrorHelper.CreateError (88, "The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.");
 
 			if (!EnableCoopGC.HasValue)
 				EnableCoopGC = Platform == ApplePlatform.WatchOS;
@@ -401,11 +401,10 @@ namespace Xamarin.Bundler {
 		{
 			// The static registrar.
 			if (Registrar != RegistrarMode.Static)
-				throw new PlatformException (67, Registrar); // this is only called during our own build
+				throw new PlatformException (67, Registrar.ToString()); // this is only called during our own build
 
 			if (RootAssemblies.Count < 1)
-				throw ErrorHelper.CreateError (130);
-
+				throw ErrorHelper.CreateError(130, "No root assemblies found. You should provide at least one root assembly.");
 			var registrar_m = RegistrarOutputLibrary;
 			var RootAssembly = RootAssemblies [0];
 			var resolvedAssemblies = new Dictionary<string, AssemblyDefinition> ();

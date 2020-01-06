@@ -40,7 +40,7 @@ namespace Xamarin.Bundler
 					return name;
 				if (ObjectiveCName != null)
 					return ObjectiveCPrefix + ObjectiveCName;
-				throw ErrorHelper.CreateError (161, Type);
+				throw ErrorHelper.CreateError (161, Type.ToString());
 			}
 			set {
 				name = value;

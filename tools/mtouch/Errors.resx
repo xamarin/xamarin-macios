@@ -1211,7 +1211,7 @@
 	</data>
 
 	<data name="MT1601" xml:space="preserve">
-		<value>Not a Mach-O static library (unknown header '{0}', expected '!<arch>').
+		<value>Not a Mach-O static library (unknown header '{0}', expected '!&#60;arch&#62;').
 		</value>
 		<comment>
 		</comment>

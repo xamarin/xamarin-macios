@@ -91,7 +91,7 @@ namespace MonoTouch.Tuner {
 					if (me.InnerException != null) {
 						throw ErrorHelper.CreateError (2102, me, me.Method.FullName, me.Method.Module, me.InnerException.Message);
 					} else {
-						throw ErrorHelper.CreateError (2106, me, me.Method.FullName, me.Method.Module);
+						throw ErrorHelper.CreateError (2107, me, me.Method.FullName, me.Method.Module);
 					}
 				} else {
 					TypeReference tr = (re.Member as TypeReference);

@@ -1023,7 +1023,7 @@ namespace Registrar {
 					return system_void = type;
 			}
 
-			throw ErrorHelper.CreateError (4165);
+			throw ErrorHelper.CreateError (4165, "The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.");
 		}
 
 		protected override bool IsVirtual (MethodDefinition method)
@@ -3602,7 +3602,7 @@ namespace Registrar {
 							} else if (isINativeObject) {
 								copyback.AppendLine ("*p{0} = xamarin_managed_inativeobject_array_to_nsarray (marr{0}, &exception_gchandle);", i);
 							} else {
-								throw ErrorHelper.CreateError (99);
+								throw ErrorHelper.CreateError (99, "Internal error: byref array is neither string, NSObject or INativeObject.");
 							}
 							copyback.AppendLine ("}");
 						}
@@ -4598,7 +4598,7 @@ namespace Registrar {
 			case TokenType.Method:
 				break; // OK
 			default:
-				throw ErrorHelper.CreateError (159, member.MetadataToken.TokenType, member.FullName);
+				throw ErrorHelper.CreateError (159, $"Internal error: unsupported tokentype ({member.MetadataToken.TokenType}) for {member.FullName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 			full_token_references.AppendFormat ("\t\t{{ /* #{3} = 0x{4:X} */ \"{0}\", 0x{1:X}, 0x{2:X} }},\n", GetAssemblyName (member.Module.Assembly), member.Module.MetadataToken.ToUInt32 (), member.MetadataToken.ToUInt32 (), full_token_reference_count, rv);
 			return rv;

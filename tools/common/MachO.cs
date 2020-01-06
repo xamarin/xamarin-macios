@@ -925,7 +925,7 @@ namespace Xamarin
 				static_library = new StaticLibrary ();
 				static_library.Read (parent?.Filename, reader, size);
 			} else {
-				throw ErrorHelper.CreateError (1603, offset, parent.Filename);
+				throw ErrorHelper.CreateError (1603, "Unknown format for fat entry at position {0} in {1}.", offset, parent.Filename);
 			}
 		}
 	}

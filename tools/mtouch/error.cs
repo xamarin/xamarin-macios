@@ -6,17 +6,17 @@ using System.Reflection;
 namespace Xamarin.Bundler {
 
 	public class MonoTouchException : Exception {
-		[Obsolete("localize this")]
+		//[Obsolete("localize this")]
 		public MonoTouchException (int code, params object[] args) : 
 			this (code, false, args)
 		{
 		}
-		[Obsolete("localize this")]
+	//	[Obsolete("localize this")]
 		public MonoTouchException (int code, bool error, params object[] args) : 
 			this (code, error, null, args)
 		{
 		}
-		[Obsolete("localize this")]
+	//	[Obsolete("localize this")]
 		public MonoTouchException (int code, bool error, Exception innerException, params object[] args) : 
 			base (String.Format (GetMessage(code), args), innerException)
 		{
