@@ -88,6 +88,18 @@ namespace CoreFoundation {
 			return new DispatchData (dd, owns: true);
 		}
 
+		// create a dd using the data of the span 
+		public static DispatchData FromReadOnlySpan (ReadOnlySpan<byte> content)
+		{
+			unsafe {
+				fixed (byte* ptr = content) {
+					// set the block that will be used to clean the data once we are done with it
+					var dd = dispatch_data_create ((IntPtr)ptr, (nuint) content.Length, IntPtr.Zero, destructor: IntPtr.Zero);
+					return new DispatchData (dd, owns: true);
+				}
+			}
+		}
+
 		[DllImport (Constants.libcLibrary)]
 		extern static nuint dispatch_data_get_size (IntPtr handle);
 
@@ -122,6 +134,19 @@ namespace CoreFoundation {
 		{
 			return new DispatchData (dispatch_data_create_subrange (Handle, offset, size), owns: true);
 		}
+
+		// copies the dispatch data to a managed array
+		public byte [] ToArray ()
+		{
+			IntPtr bufferAddress = IntPtr.Zero;
+			nuint bufferSize = 0;
+			using DispatchData dataCopy = CreateMap (out bufferAddress, out bufferSize);
+
+			byte[] managedArray = new byte[(int) bufferSize];
+			Marshal.Copy (bufferAddress, managedArray, 0, (int) bufferSize);
+			return managedArray;
+		}
+
 #endif
 	}
 }
