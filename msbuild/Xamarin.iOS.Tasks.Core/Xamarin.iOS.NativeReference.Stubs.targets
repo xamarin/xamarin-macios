@@ -19,18 +19,15 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<!-- These "stub" targets are declared to prevent other (Windows specific) external targets from firing.
 	     They are required as we share use of @(NativeReference) with ClickOnce, and if we don't stub then it can do the wrong thing.
 	     Example: https://github.com/xamarin/xamarin-macios/issues/3876
-	     We copy the Condition/DependsOnTargets so our stub don't break on user targets that hook into them for ordering
 	-->
 	<Target Name="GenerateManifests"
 	      Condition="'$(GenerateClickOnceManifests)'=='true' or '@(NativeReference)'!='' or '@(ResolvedIsolatedComModules)'!='' or '$(GenerateAppxManifest)' == 'true'"
-	      DependsOnTargets="$(GenerateManifestsDependsOn)"/>
+	/>
 
 	<Target Name="GenerateApplicationManifest" 
-		DependsOnTargets="_DeploymentComputeNativeManifestInfo;_DeploymentComputeClickOnceManifestInfo;ResolveComReferences;ResolveNativeReferences;_GenerateResolvedDeploymentManifestEntryPoint"
 		Inputs="$(MSBuildAllProjects);@(AppConfigWithTargetPath);$(_DeploymentBaseManifest);@(ResolvedIsolatedComModules);@(_DeploymentManifestDependencies);@(_DeploymentResolvedManifestEntryPoint);@(_DeploymentManifestFiles)"
 		Outputs="@(ApplicationManifest)" />
 
 	<Target Name="ResolveNativeReferences"
-		Condition="'@(NativeReference)'!=''" 
-		DependsOnTargets="ResolveProjectReferences" />
+		Condition="'@(NativeReference)'!=''" />
 </Project>
