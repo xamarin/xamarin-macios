@@ -25,12 +25,7 @@ namespace Foundation {
 			Ephemeral,
 		}
 
-		SessionConfigurationType configurationType = SessionConfigurationType.Default; 
-
-		public SessionConfigurationType SessiontType {
-			get => configurationType;
-			private set => configurationType = value;
-		}
+		public SessionConfigurationType SessiontType { get; private set; } = SessionConfigurationType.Default; 
 
 		public static NSUrlSessionConfiguration DefaultSessionConfiguration {
 			get {
@@ -54,5 +49,6 @@ namespace Foundation {
 			config.SessiontType = SessionConfigurationType.Background;
 			return config;
 		}
+
 	}
 }
