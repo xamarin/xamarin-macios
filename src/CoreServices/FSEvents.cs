@@ -204,7 +204,7 @@ namespace CoreServices
 			IntPtr context, ulong deviceToWatch, IntPtr pathsToWatchRelativeToDevice, 
 			ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
 
-		private void FSEventStreamInit (CFAllocator allocator, ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
+		void FSEventStreamInit (CFAllocator allocator, ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
 			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags)
 		{
 			if (pathsToWatchRelativeToDevice == null) {
@@ -369,7 +369,7 @@ namespace CoreServices
 		public string [] PathsBeingWatched {
 			get {
 				CheckDisposed ();
-				using var cfarray = new CFArray (FSEventStreamCopyPathsBeingWatched (handle));
+				using var cfarray = new CFArray (FSEventStreamCopyPathsBeingWatched (handle), true);
 				var paths = new string[cfarray.Count];
 				for (int i = 0; i < paths.Length; i++) {
 					using (var cfstr = new CFString (cfarray.GetValue (i))) {
@@ -436,7 +436,7 @@ namespace CoreServices
 				throw new ArgumentNullException (nameof (pathsToExclude));
 			}
 			CheckDisposed ();
-			return FSEventStreamSetExclusionPaths (handle, pathsToExclude.GetHandle());
+			return FSEventStreamSetExclusionPaths (handle, pathsToExclude.GetHandle ());
 		}
 
 		public bool SetExclusionPaths (string [] pathsToExclude)
@@ -446,7 +446,7 @@ namespace CoreServices
 			}
 			CheckDisposed ();
 			using NSArray nsPathsToExclude = NSArray.FromStrings (pathsToExclude);
-			return FSEventStreamSetExclusionPaths (handle, nsPathsToExclude.GetHandle());
+			return FSEventStreamSetExclusionPaths (handle, nsPathsToExclude.GetHandle ());
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
