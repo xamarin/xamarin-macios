@@ -44,6 +44,8 @@ if test -z "$DEVICE_TYPE"; then
 	DEVICE_TYPE="iOS/tvOS"
 fi
 
+P=$(cat tmp.p)
+
 VSTS_BUILD_URL="${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${SYSTEM_TEAMPROJECT}/_build/index?buildId=${BUILD_BUILDID}"
 
 # Add a GitHub status to the commit we're testing

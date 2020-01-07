@@ -97,6 +97,7 @@ namespace Introspection {
 
 			// Metal is not available on the simulator
 			case "CAMetalLayer":
+				return (Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (11, 0);
 			case "SKRenderer":
 				return (Runtime.Arch == Arch.SIMULATOR);
 

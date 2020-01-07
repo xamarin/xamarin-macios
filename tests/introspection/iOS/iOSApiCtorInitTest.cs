@@ -157,7 +157,7 @@ namespace Introspection {
 
 			// Metal is not available on the (iOS8) simulator
 			case "CAMetalLayer":
-				return (Runtime.Arch == Arch.SIMULATOR);
+				return (Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (11, 0);
 
 #if !XAMCORE_2_0
 			// from iOS8 (beta4) they do not return a valid handle

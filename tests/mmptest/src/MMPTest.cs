@@ -749,5 +749,13 @@ namespace Xamarin.MMP.Tests
 			});
 
 		}
+
+		// some users add ',' in their assembly names :( 
+		[Test]
+		public void AssemblyNameWithCommaShouldNotFail () => RunMMPTest (tmpDir => {
+			// Build a library with the conflicting name
+			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true, AssemblyName = "UserLikes,ToEnumerate.Mac",  ProjectName = "UserLikes,ToEnumerate.Mac" };
+			TI.TestUnifiedExecutable (test, shouldFail: false);
+		});
 	}
 }

@@ -267,11 +267,13 @@ namespace xharness
 			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
 			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
 			var supports_dynamic_registrar_on_device = test.Platform == TestPlatform.iOS_Unified64 || test.Platform == TestPlatform.tvOS;
-			// arm64_32 is only supported for Release builds for now.
-			var supports_debug = test.Platform != TestPlatform.watchOS_64_32;
 
 			switch (test.ProjectPlatform) {
 			case "iPhone":
+				// arm64_32 is only supported for Release builds for now.
+				// arm32 bits too big for debug builds - https://github.com/xamarin/maccore/issues/2080
+				var supports_debug = test.Platform != TestPlatform.watchOS_64_32 && !(test.TestName == "dont link" && test.Platform == TestPlatform.iOS_Unified32);
+
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
 				if (supports_debug) {
 					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
@@ -560,7 +562,7 @@ namespace xharness
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
-						ProjectConfiguration = "Debug32",
+						ProjectConfiguration = project.Name != "dont link" ? "Debug32" : "Release32",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified32,
 						TestName = project.Name,
@@ -2096,7 +2098,7 @@ namespace xharness
 									writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
 								}
 								if (test.Duration.Ticks > 0)
-									writer.WriteLine ($"Run duration: {test.Duration} <br />");
+									writer.WriteLine ($"Time Elapsed:  {test.TestName} - (waiting time : {test.WaitingDuration} , running time : {test.Duration}) <br />");
 								var runDeviceTest = runTest as RunDeviceTask;
 								if (runDeviceTest?.Device != null) {
 									if (runDeviceTest.CompanionDevice != null) {
@@ -2417,6 +2419,9 @@ namespace xharness
 				return duration.Elapsed;
 			}
 		}
+
+		protected Stopwatch waitingDuration = new Stopwatch ();
+		public TimeSpan WaitingDuration => waitingDuration.Elapsed;
 
 		TestExecutingResult execution_result;
 		public virtual TestExecutingResult ExecutionResult {
@@ -2757,9 +2762,11 @@ namespace xharness
 
 			// Stop the timer while we're waiting for a resource
 			duration.Stop ();
+			waitingDuration.Start ();
 			ExecutionResult = ExecutionResult | TestExecutingResult.Waiting;
 			rv.Wrapped = await task;
 			ExecutionResult = ExecutionResult & ~TestExecutingResult.Waiting;
+			waitingDuration.Stop ();
 			duration.Start ();
 			rv.OnDispose = duration.Stop;
 			return rv;
