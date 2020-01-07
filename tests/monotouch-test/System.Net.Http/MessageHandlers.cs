@@ -291,7 +291,7 @@ namespace MonoTests.System.Net.Http
 		{
 			// assert we do throw an exception with ephmeral configs.
 			using (var config = NSUrlSessionConfiguration.EphemeralSessionConfiguration) {
-				Assert.True (config.SessiontType == NSUrlSessionConfiguration.SessionConfigurationType.Ephemeral, "Session type.");
+				Assert.True (config.SessionType == NSUrlSessionConfiguration.SessionConfigurationType.Ephemeral, "Session type.");
 				var nativeHandler = new NSUrlSessionHandler (config);
 				Assert.Throws<InvalidOperationException> (() => {
 					nativeHandler.UseCookies = false;

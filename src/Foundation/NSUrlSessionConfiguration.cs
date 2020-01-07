@@ -6,11 +6,7 @@
 using System;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 namespace Foundation {
 
