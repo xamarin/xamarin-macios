@@ -7422,16 +7422,17 @@ namespace Foundation
 #endif
 	partial interface NSUrlSessionConfiguration : NSCopying {
 	
+		[Internal]
 		[Static, Export ("defaultSessionConfiguration", ArgumentSemantic.Strong)]
-		NSUrlSessionConfiguration DefaultSessionConfiguration { get; }
-	
+		NSUrlSessionConfiguration _DefaultSessionConfiguration { get; }
+
+		[Internal]
 		[Static, Export ("ephemeralSessionConfiguration", ArgumentSemantic.Strong)]
-		NSUrlSessionConfiguration EphemeralSessionConfiguration { get; }
+		NSUrlSessionConfiguration _EphemeralSessionConfiguration { get; }
 	
+		[Internal]
 		[Static, Export ("backgroundSessionConfiguration:")]
-		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
-		NSUrlSessionConfiguration BackgroundSessionConfiguration (string identifier);
+		NSUrlSessionConfiguration _BackgroundSessionConfiguration (string identifier);
 	
 		[Export ("identifier", ArgumentSemantic.Copy), NullAllowed]
 		string Identifier { get; }
@@ -7528,9 +7529,10 @@ namespace Foundation
 		[Export ("sharedContainerIdentifier")]
 		string SharedContainerIdentifier { get; set; }
 
+		[Internal]
 		[iOS (8,0)]
 		[Static, Export ("backgroundSessionConfigurationWithIdentifier:")]
-		NSUrlSessionConfiguration CreateBackgroundSessionConfiguration (string identifier);
+		NSUrlSessionConfiguration _CreateBackgroundSessionConfiguration (string identifier);
 
 		[iOS (9,0), Mac(10,11)]
 		[Export ("shouldUseExtendedBackgroundIdleMode")]
