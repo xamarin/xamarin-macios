@@ -2098,7 +2098,7 @@ namespace xharness
 									writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
 								}
 								if (test.Duration.Ticks > 0)
-									writer.WriteLine ($"Run duration: {test.Duration} <br />");
+									writer.WriteLine ($"Time Elapsed:  {test.TestName} - (waiting time : {test.WaitingDuration} , running time : {test.Duration}) <br />");
 								var runDeviceTest = runTest as RunDeviceTask;
 								if (runDeviceTest?.Device != null) {
 									if (runDeviceTest.CompanionDevice != null) {
@@ -2419,6 +2419,9 @@ namespace xharness
 				return duration.Elapsed;
 			}
 		}
+
+		protected Stopwatch waitingDuration = new Stopwatch ();
+		public TimeSpan WaitingDuration => waitingDuration.Elapsed;
 
 		TestExecutingResult execution_result;
 		public virtual TestExecutingResult ExecutionResult {
@@ -2759,9 +2762,11 @@ namespace xharness
 
 			// Stop the timer while we're waiting for a resource
 			duration.Stop ();
+			waitingDuration.Start ();
 			ExecutionResult = ExecutionResult | TestExecutingResult.Waiting;
 			rv.Wrapped = await task;
 			ExecutionResult = ExecutionResult & ~TestExecutingResult.Waiting;
+			waitingDuration.Stop ();
 			duration.Start ();
 			rv.OnDispose = duration.Stop;
 			return rv;
