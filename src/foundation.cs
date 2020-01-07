@@ -7430,11 +7430,9 @@ namespace Foundation
 		[Static, Export ("ephemeralSessionConfiguration", ArgumentSemantic.Strong)]
 		NSUrlSessionConfiguration _EphemeralSessionConfiguration { get; }
 	
-		[Static]
-		[Wrap ("CreateBackgroundSessionConfiguration (identifier)")]
-		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'CreateBackgroundSessionConfiguration' instead.")]
-		NSUrlSessionConfiguration BackgroundSessionConfiguration (string identifier);
+		[Internal]
+		[Static, Export ("backgroundSessionConfiguration:")]
+		NSUrlSessionConfiguration _BackgroundSessionConfiguration (string identifier);
 	
 		[Export ("identifier", ArgumentSemantic.Copy), NullAllowed]
 		string Identifier { get; }

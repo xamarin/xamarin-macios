@@ -267,7 +267,7 @@ namespace MonoTests.System.Net.Http
 					var nativeResponse = await nativeClient.GetAsync (url);
 					nativeSetCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
 
-					// got the response, perofm a second queries to the cookies endpoint to get
+					// got the response, preform a second queries to the cookies endpoint to get
 					// the actual cookies sent from the storage
 					nativeResponse = await nativeClient.GetAsync (NetworkResources.Httpbin.CookiesUrl);
 					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
