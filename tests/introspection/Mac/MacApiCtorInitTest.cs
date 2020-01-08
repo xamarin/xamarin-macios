@@ -206,6 +206,9 @@ namespace Introspection {
 				due to a privacy violation (even if the required entry is present in the Info.plist).
 		     */
 				return true;
+			case "AVFoundation.AVAudioRecorder": // Stopped working in macOS 10.15.2
+				return TestRuntime.CheckXcodeVersion (11, 2);
+
 			}
 
 			switch (type.Namespace) {

@@ -179,8 +179,11 @@ COLOR_MAGENTA=$(tput setaf 5 2>/dev/null || true)
 COLOR_BLUE=$(tput setaf 6 2>/dev/null || true)
 COLOR_CLEAR=$(tput sgr0 2>/dev/null || true)
 COLOR_RESET=uniquesearchablestring
+FAILURE_PREFIX=
+if test -z "$COLOR_RED"; then FAILURE_PREFIX="** failure ** "; fi
+
 function fail () {
-	echo "    ${COLOR_RED}${1//${COLOR_RESET}/${COLOR_RED}}${COLOR_CLEAR}"
+	echo "    $FAILURE_PREFIX${COLOR_RED}${1//${COLOR_RESET}/${COLOR_RED}}${COLOR_CLEAR}"
 	FAIL=1
 }
 
@@ -950,7 +953,7 @@ function check_simulators ()
 	local XCODE
 
 	EXTRA_SIMULATORS=$(grep ^EXTRA_SIMULATORS= Make.config | sed 's/.*=//')
-	XCODE=$(grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//')/../..
+	XCODE=$(dirname "$(dirname "$(grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//')")")
 
 	if ! make -C tools/siminstaller >/dev/null; then
 		warn "Can't check if simulators are available, because siminstaller failed to build."
@@ -976,13 +979,17 @@ function check_simulators ()
 		fi
 		if [[ "$FAILED_SIMULATORS" =~ "Unknown simulators:" ]]; then
 			$action "${FAILED_SIMULATORS}"
-			$action "    If you just updated the Xcode version, it's likely Apple stopped shipping these simulators with the new version of Xcode."
-			$action "    If that's the case, you can list the available simulators with ${COLOR_MAGENTA}make -C tools/siminstaller print-simulators${COLOR_RESET},"
+			$action "    If you just updated the Xcode version, it's possible Apple stopped shipping these simulators with the new version of Xcode."
+			$action "    If that's the case, you can list the available simulators with ${COLOR_MAGENTA}make -C tools/siminstaller print-simulators --xcode $XCODE${COLOR_RESET},"
 			$action "    and then update the ${COLOR_MAGENTA}MIN_<OS>_SIMULATOR_VERSION${COLOR_RESET} and ${COLOR_MAGENTA}EXTRA_SIMULATORS${COLOR_RESET} variables in Make.config to the earliest available simulators."
+			$action "    Another possibility is that Apple is not shipping any simulators (yet?) for the new version of Xcode (if the previous list shows no simulators)."
 		else
 			if ! test -z $PROVISION_SIMULATORS; then
-				mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"
-				ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
+				if ! mono --debug tools/siminstaller/bin/Debug/siminstaller.exe -q --xcode "$XCODE" "${SIMS[@]}"; then
+					$action "Failed to install extra simulators."
+				else
+					ok "Extra simulators installed successfully: '${FAILED_SIMULATORS//$'\n'/', '}'"
+				fi
 			else
 				$action "The simulators '${FAILED_SIMULATORS//$'\n'/', '}' are not installed or need to be upgraded."
 			fi

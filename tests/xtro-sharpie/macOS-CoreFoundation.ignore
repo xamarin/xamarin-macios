@@ -74,3 +74,5 @@
 !missing-pinvoke! CFXMLTreeCreateXMLData is not bound
 !missing-pinvoke! CFXMLTreeGetNode is not bound
 !unknown-pinvoke! _NSGetExecutablePath bound
+!missing-field! kCFUserNotificationAlertTopMostKey not bound
+!missing-field! kCFUserNotificationKeyboardTypesKey not bound

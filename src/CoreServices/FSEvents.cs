@@ -199,6 +199,43 @@ namespace CoreServices
 		{
 		}
 
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern IntPtr FSEventStreamCreateRelativeToDevice (IntPtr allocator, FSEventStreamCallback callback, 
+			IntPtr context, ulong deviceToWatch, IntPtr pathsToWatchRelativeToDevice, 
+			ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
+
+		void FSEventStreamInit (CFAllocator allocator, ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
+			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags)
+		{
+			if (pathsToWatchRelativeToDevice == null) {
+				throw new ArgumentNullException (nameof (pathsToWatchRelativeToDevice));
+			}
+
+			eventsCallback = new FSEventStreamCallback (EventsCallback);
+
+			handle = FSEventStreamCreateRelativeToDevice (
+				allocator.GetHandle (),
+				eventsCallback, IntPtr.Zero, deviceToWatch, pathsToWatchRelativeToDevice.GetHandle (),
+				sinceWhen, latency.TotalSeconds, flags | (FSEventStreamCreateFlags)0x1);
+			
+			if (handle == IntPtr.Zero) {
+				throw new InvalidOperationException ("Unable to create FSEventStream");
+			}
+		}
+
+		public FSEventStream (CFAllocator allocator, ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
+			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags) => FSEventStreamInit (allocator, deviceToWatch, pathsToWatchRelativeToDevice, sinceWhen, latency, flags);
+
+		public FSEventStream (ulong deviceToWatch, NSArray pathsToWatchRelativeToDevice, 
+			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags) => FSEventStreamInit (null, deviceToWatch, pathsToWatchRelativeToDevice, sinceWhen, latency, flags);
+		
+		public FSEventStream (ulong deviceToWatch, string [] pathsToWatchRelativeToDevice, 
+			ulong sinceWhen, TimeSpan latency, FSEventStreamCreateFlags flags)
+		{
+			using NSArray nsArrayPathsToWatchRelativeToDevice = NSArray.FromStrings (pathsToWatchRelativeToDevice);
+			FSEventStreamInit (null, deviceToWatch, nsArrayPathsToWatchRelativeToDevice, sinceWhen, latency, flags);
+		}
+
 		void EventsCallback (IntPtr handle, IntPtr userData, nint numEvents,
 			IntPtr eventPaths, IntPtr eventFlags, IntPtr eventIds)
 		{
@@ -207,8 +244,8 @@ namespace CoreServices
 			}
 
 			var events = new FSEvent[numEvents];
-			var pathArray = new CFArray (eventPaths);
-
+			using var pathArray = new CFArray (eventPaths);
+			var eventsSize = numEvents;
 			for (int i = 0; i < events.Length; i++) {
 				events[i].Flags = (FSEventStreamEventFlags)(uint)Marshal.ReadInt32 (eventFlags, i * 4);
 				events[i].Id = (uint)Marshal.ReadInt64 (eventIds, i * 8);
@@ -308,15 +345,34 @@ namespace CoreServices
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
+		static extern void FSEventStreamUnscheduleFromRunLoop (IntPtr handle,
+			IntPtr runLoop, IntPtr runLoopMode);
+
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop, NSString runLoopMode)
+		{
+			CheckDisposed ();
+			if (runLoopMode == null) {
+				throw new ArgumentNullException (nameof (runLoopMode));
+			}
+			FSEventStreamUnscheduleFromRunLoop (handle, runLoop.GetHandle (), runLoopMode.GetHandle ());
+		}
+
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop) => UnscheduleFromRunLoop (runLoop, CFRunLoop.ModeDefault);
+
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop, NSString runLoopMode) => UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), runLoopMode);
+
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop) => UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
+
+		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr FSEventStreamCopyPathsBeingWatched (IntPtr handle);
 
 		public string [] PathsBeingWatched {
 			get {
 				CheckDisposed ();
-				var cfarray = new CFArray (FSEventStreamCopyPathsBeingWatched (handle), true);
+				using var cfarray = new CFArray (FSEventStreamCopyPathsBeingWatched (handle), true);
 				var paths = new string[cfarray.Count];
 				for (int i = 0; i < paths.Length; i++) {
-					using (var cfstr = new CFString (cfarray.GetValue (i), true)) {
+					using (var cfstr = new CFString (cfarray.GetValue (i))) {
 						paths[i] = cfstr.ToString ();
 					}
 				}
@@ -359,6 +415,47 @@ namespace CoreServices
 				CheckDisposed ();
 				return FSEventStreamGetLatestEventId (handle);
 			}
+		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern ulong FSEventStreamGetDeviceBeingWatched (IntPtr handle);
+
+		public ulong GetDevice ()
+		{
+			CheckDisposed ();
+			return FSEventStreamGetDeviceBeingWatched (handle);
+		}
+
+		[Mac (10, 9)]
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern bool FSEventStreamSetExclusionPaths (IntPtr handle, IntPtr pathsToExclude);
+
+		public bool SetExclusionPaths (NSArray pathsToExclude)
+		{
+			if (pathsToExclude == null) {
+				throw new ArgumentNullException (nameof (pathsToExclude));
+			}
+			CheckDisposed ();
+			return FSEventStreamSetExclusionPaths (handle, pathsToExclude.GetHandle ());
+		}
+
+		public bool SetExclusionPaths (string [] pathsToExclude)
+		{
+			if (pathsToExclude == null) {
+				throw new ArgumentNullException (nameof (pathsToExclude));
+			}
+			CheckDisposed ();
+			using NSArray nsPathsToExclude = NSArray.FromStrings (pathsToExclude);
+			return FSEventStreamSetExclusionPaths (handle, nsPathsToExclude.GetHandle ());
+		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern void FSEventStreamSetDispatchQueue (IntPtr handle, IntPtr queue);
+
+		public void SetDispatchQueue (DispatchQueue queue)
+		{
+			CheckDisposed ();
+			FSEventStreamSetDispatchQueue (handle, queue == null ? queue.GetHandle () : IntPtr.Zero);
 		}
 	}
 }

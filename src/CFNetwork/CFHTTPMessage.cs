@@ -80,9 +80,12 @@ namespace CoreServices {
 				return _HTTPVersion1_1.Handle;
 			else if (version.Equals (HttpVersion.Version10))
 				return _HTTPVersion1_0.Handle;
-			else if (version.Major == 2 && version.Minor == 0)
-				return _HTTPVersion2_0.Handle;
-			else
+			else if (version.Major == 2 && version.Minor == 0) {
+				if (_HTTPVersion2_0 != null && _HTTPVersion2_0.Handle != IntPtr.Zero)
+					return _HTTPVersion2_0.Handle;
+				// HTTP 2.0 requires OS X 10.11 or later.
+				return _HTTPVersion1_1.Handle;
+			} else
 				throw new ArgumentException ();
 		}
 
@@ -336,7 +339,7 @@ namespace CoreServices {
 			case AuthenticationScheme.Digest:
 				return _AuthenticationSchemeDigest;
 			case AuthenticationScheme.OAuth1:
-				if (_AuthenticationSchemeOAuth1 == null)
+				if (_AuthenticationSchemeOAuth1 == IntPtr.Zero)
 					throw new NotSupportedException ("Requires iOS 7.0 or macOS 10.9 and lower than iOS 12 or macOS 10.14");
 				return _AuthenticationSchemeOAuth1;
 			default:

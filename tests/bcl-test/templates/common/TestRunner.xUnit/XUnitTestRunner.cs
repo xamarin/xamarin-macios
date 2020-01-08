@@ -934,6 +934,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					ITestFrameworkExecutionOptions executionOptions = GetFrameworkOptionsForExecution (configuration);
 					executionOptions.SetDisableParallelization (!RunInParallel);
 					executionOptions.SetSynchronousMessageReporting (true);
+					executionOptions.SetMaxParallelThreads (Environment.ProcessorCount / 2); // lets not be greedy and let the UI breath.
 
 					// set the wait for event cb first, then execute the tests
 					var resultTask = WaitForEvent (resultsSink.Finished, TimeSpan.FromDays (10)).ConfigureAwait (false);

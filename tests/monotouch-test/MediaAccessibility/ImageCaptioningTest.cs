@@ -32,7 +32,12 @@ namespace MonoTouchFixtures.MediaAccessibility {
 			using (NSUrl url = new NSUrl (NetworkResources.MicrosoftUrl)) {
 				var s = MAImageCaptioning.GetCaption (url, out var e);
 				Assert.Null (s, "remote / return value");
-				Assert.Null (e, "remote / no error"); // weird should be an "image on disk"
+				if (e != null && e.Description.Contains ("Invalid url:")) {
+					Assert.Fail ("Ignore this failure when network is down"); // could not connect to the network, fail and add a nice reason
+				} else {
+					Assert.Null (e, "remote / no error"); // weird should be an "image on disk"
+
+				}
 			}
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			file = file.Replace (" ", "%20");

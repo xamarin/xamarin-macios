@@ -360,7 +360,7 @@ namespace Xamarin.Bundler {
 #endif
 
 			if (MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Default) {
-				if (EnableCoopGC.Value) {
+				if (EnableCoopGC.Value || (Platform == ApplePlatform.MacOSX && EnableDebug)) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
 				} else {
 					MarshalObjectiveCExceptions = isSimulatorOrDesktopDebug ? MarshalObjectiveCExceptionMode.UnwindManagedCode : MarshalObjectiveCExceptionMode.Disable;

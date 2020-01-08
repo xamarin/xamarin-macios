@@ -814,6 +814,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSUrlProtocol.cs \
 	Foundation/NSUrlProtocolClient.cs \
 	Foundation/NSUrlSession.cs \
+	Foundation/NSUrlSessionConfiguration.cs \
 	Foundation/NSUserDefaults.cs \
 	Foundation/NSUuid.cs \
 	Foundation/NSXpcConnection.cs \
@@ -1177,6 +1178,7 @@ NETWORK_SOURCES = \
 	Network/NWConnection.cs			\
 	Network/NWContentContext.cs		\
 	Network/NWDataTransferReport.cs 	\
+	Network/NWEthernetChannel.cs 	\
 	Network/NWEstablishmentReport.cs	\
 	Network/NWEndpoint.cs			\
 	Network/NWError.cs			\
