@@ -191,7 +191,7 @@ public partial class Generator {
 			// we can skip the name when it's identical to a protocol selector
 			if (name == null) {
 				if (export == null)
-					throw new BindingException (1072, true, $"Missing [CoreImageFilterProperty] attribute on {0} property {1}", type.Name, p.Name);
+					throw new BindingException (1074, true, type.Name, p.Name);
 
 				var sel = export.Selector;
 				if (sel.StartsWith ("input", StringComparison.Ordinal))
@@ -288,7 +288,7 @@ public partial class Generator {
 			print ("return NSArray.ArrayFromHandle<CIVector> (handle);");
 			break;
 		default:
-			throw new BindingException (1018, true, "Unimplemented CoreImage property type {0}", propertyType);
+			throw new BindingException (1075, true, propertyType);
 		}
 		indent--;
 		print ("}");
@@ -357,7 +357,7 @@ public partial class Generator {
 			print ("}");
 			break;
 		default:
-			throw new BindingException (1018, true, "Unimplemented CoreImage property type {0}", propertyType);
+			throw new BindingException (1075, true, propertyType);
 		}
 		indent--;
 		print ("}");
