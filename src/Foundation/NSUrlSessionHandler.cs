@@ -62,6 +62,7 @@ namespace Foundation {
 #endif
 
 	public delegate bool NSUrlSessionHandlerTrustOverrideCallback (NSUrlSessionHandler sender, SecTrust trust);
+	public delegate bool NSUrlSessionHandlerTrustOverrideForUrlCallback (NSUrlSessionHandler sender, string url, SecTrust trust);
 
 	// useful extensions for the class in order to set it in a header
 	static class NSHttpCookieExtensions
@@ -307,6 +308,7 @@ namespace Foundation {
 
 		NSUrlSessionHandlerTrustOverrideCallback trustOverride;
 
+		[Obsolete ("Use the 'TrustOverrideForUrl' property instead.")]
 		public NSUrlSessionHandlerTrustOverrideCallback TrustOverride {
 			get {
 				return trustOverride;
@@ -317,6 +319,17 @@ namespace Foundation {
 			}
 		}
 
+		NSUrlSessionHandlerTrustOverrideForUrlCallback trustOverrideForUrl;
+
+		public NSUrlSessionHandlerTrustOverrideForUrlCallback TrustOverrideForUrl {
+			get {
+				return trustOverrideForUrl;
+			}
+			set {
+				EnsureModifiability ();
+				trustOverrideForUrl = value;
+			}
+		}
 		// we do check if a user does a request and the application goes to the background, but
 		// in certain cases the user does that on purpose (BeingBackgroundTask) and wants to be able
 		// to use the network. In those cases, which are few, we want the developer to explicitly 
@@ -700,8 +713,15 @@ namespace Foundation {
 
 				// ToCToU for the callback
 				var trustCallback = sessionHandler.TrustOverride;
-				if (trustCallback != null && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
-					if (trustCallback (sessionHandler, challenge.ProtectionSpace.ServerSecTrust)) {
+				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
+				var hasCallBack = trustCallback != null || trustCallbackForUrl != null; 
+				if (hasCallBack && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
+					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
+					// more general one. Since we are using nullables, if the delegate is not present, by default is false
+					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) || 
+						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false);
+
+					if (trustSec) {
 						var credential = new NSUrlCredential (challenge.ProtectionSpace.ServerSecTrust);
 						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
 					} else {
