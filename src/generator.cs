@@ -5833,7 +5833,7 @@ public partial class Generator : IMemberGatherer {
 				var distinctMethodsBySignature = gr.GroupBy ((v) => v.Signature).Select ((v) => v.First ()).ToArray ();
 				if (distinctMethodsBySignature.Length > 1) {
 					exceptions.Add (ErrorHelper.CreateError (1069, type.FullName, gr.Key, distinctMethodsBySignature [0].Method.DeclaringType.FullName, distinctMethodsBySignature [1].Method.DeclaringType.FullName,
-	distinctMethodsBySignature [0].Method.ToString (), distinctMethodsBySignature [1].Method.ToString ()));
+						distinctMethodsBySignature [0].Method.ToString (), distinctMethodsBySignature [1].Method.ToString ()));
 					continue;
 				}
 
@@ -5865,7 +5865,7 @@ public partial class Generator : IMemberGatherer {
 					if (i > 0 && exportAttributes [i].Selector != exportAttributes [0].Selector) {
 						ErrorHelper.Warning (1068, type.FullName, gr.Key, properties [0].DeclaringType.FullName, properties [i].DeclaringType.FullName,
 							properties [0].DeclaringType.Name, properties [0].Name, exportAttributes [0].Selector, properties [i].DeclaringType.Name, properties [i].Name, exportAttributes [i].Selector);
-				}
+					}
 					if (properties [i].CanRead && properties [i].CanWrite) {
 						readwrite = properties [i];
 					} else if (!properties [i].CanRead) {
