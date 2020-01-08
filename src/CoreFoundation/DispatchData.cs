@@ -94,7 +94,7 @@ namespace CoreFoundation {
 			unsafe {
 				fixed (byte* ptr = content) {
 					// set the block that will be used to clean the data once we are done with it
-					var dd = dispatch_data_create ((IntPtr)ptr, (nuint) content.Length, IntPtr.Zero, destructor: IntPtr.Zero);
+					var dd = dispatch_data_create ((IntPtr) ptr, (nuint) content.Length, IntPtr.Zero, destructor: IntPtr.Zero);
 					return new DispatchData (dd, owns: true);
 				}
 			}
