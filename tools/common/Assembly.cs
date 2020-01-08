@@ -273,7 +273,7 @@ namespace Xamarin.Bundler {
 		{
 #if MONOTOUCH
 			if (App.Platform == Xamarin.Utils.ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
-				throw ErrorHelper.CreateError (1305,
+				throw ErrorHelper.CreateError (1305, mtouch.Errors.MT1305,
 					FileName, Path.GetFileName (path), App.DeploymentTarget);
 			}
 #endif
@@ -293,7 +293,7 @@ namespace Xamarin.Bundler {
 				if (LinkerFlags == null)
 					LinkerFlags = new List<string> ();
 				if (!StringUtils.TryParseArguments (metadata.LinkerFlags, out string [] args, out var ex))
-					throw ErrorHelper.CreateError (148, ex, metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
+					throw ErrorHelper.CreateError (148, ex, mtouch.Errors.MT0148, metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
 				LinkerFlags.AddRange (args);
 			}
 
@@ -338,7 +338,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!File.Exists (path))
-				ErrorHelper.Warning (1302,
+				ErrorHelper.Warning (1302, mtouch.Errors.MT1302,
 					metadata.LibraryName, path);
 
 			return path;
@@ -358,14 +358,14 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!File.Exists (zipPath)) {
-				ErrorHelper.Warning (1302,
+				ErrorHelper.Warning (1302, mtouch.Errors.MT1302,
 					metadata.LibraryName, zipPath);
 			} else {
 				if (!Directory.Exists (path))
 					Directory.CreateDirectory (path);
 
 				if (Driver.RunCommand ("/usr/bin/unzip", "-u", "-o", "-d", path, zipPath) != 0)
-					throw ErrorHelper.CreateError (1303, metadata.LibraryName, zipPath);
+					throw ErrorHelper.CreateError (1303, mtouch.Errors.MT1303, metadata.LibraryName, zipPath);
 			}
 
 			return path;
@@ -446,7 +446,7 @@ namespace Xamarin.Bundler {
 		void AddFramework (string file)
 		{
 			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework) && framework.Version > App.SdkVersion)
-				ErrorHelper.Warning (135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
+				ErrorHelper.Warning (135, mtouch.Errors.MT0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
 			else {
 #if MTOUCH
 				var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
@@ -478,7 +478,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return "-lcompression";
 			default:
-				throw ErrorHelper.CreateError (71, App.Platform, App.SdkVersion);
+				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, App.Platform, App.SdkVersion);
 			}
 		}
 
@@ -697,7 +697,7 @@ namespace Xamarin.Bundler {
 		{
 			Assembly other;
 			if (HashedAssemblies.TryGetValue (assembly.Identity, out other))
-				throw ErrorHelper.CreateError (2018, assembly.Identity, other.FullPath, assembly.FullPath);
+				throw ErrorHelper.CreateError (2018, mtouch.Errors.MT2018, assembly.Identity, other.FullPath, assembly.FullPath);
 			HashedAssemblies.Add (assembly.Identity, assembly);
 		}
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 #if MONOTOUCH
 #if MTOUCH
-using ProductException=Xamarin.Bundler.MonoTouchException;
+using ProductException = Xamarin.Bundler.MonoTouchException;
 #else
 #if XAMCORE_2_0
 using ProductException=ObjCRuntime.RuntimeException;
@@ -37,11 +37,13 @@ using Mono.Cecil.Cil;
 #endif
 
 #if MMP || MMP_TEST || MTOUCH || MTOUCH_TESTS
-namespace Xamarin.Bundler {
+namespace Xamarin.Bundler
+{
 #else
 namespace ObjCRuntime {
 #endif
-	static class ErrorHelper {
+	static class ErrorHelper
+	{
 		public enum WarningLevel
 		{
 			Error = -1,
@@ -63,7 +65,7 @@ namespace ObjCRuntime {
 #pragma warning restore 649
 #endif
 
-		public static WarningLevel GetWarningLevel (int code)
+		public static WarningLevel GetWarningLevel(int code)
 		{
 			WarningLevel level;
 
@@ -71,41 +73,36 @@ namespace ObjCRuntime {
 				return WarningLevel.Warning;
 
 			// code -1: all codes
-			if (warning_levels.TryGetValue (-1, out level))
+			if (warning_levels.TryGetValue(-1, out level))
 				return level;
 
-			if (warning_levels.TryGetValue (code, out level))
+			if (warning_levels.TryGetValue(code, out level))
 				return level;
-			
-			return WarningLevel.Warning;
+
+			return WarningLevel.Warning; ;
 		}
 
-		public static void SetWarningLevel (WarningLevel level, int? code = null /* if null, apply to all warnings */)
+		public static void SetWarningLevel(WarningLevel level, int? code = null /* if null, apply to all warnings */)
 		{
 			if (warning_levels == null)
-				warning_levels = new Dictionary<int, WarningLevel> ();
-			if (code.HasValue) {
-				warning_levels [code.Value] = level;
-			} else {
-				warning_levels [-1] = level; // code -1: all codes.
+				warning_levels = new Dictionary<int, WarningLevel>();
+			if (code.HasValue)
+			{
+				warning_levels[code.Value] = level;
+			}
+			else
+			{
+				warning_levels[-1] = level; // code -1: all codes.
 			}
 		}
-
-#if MTOUCH
-		//[Obsolete("localize this")]
-		public static ProductException CreateError (int code, params object[] args)
-		{
-			return new ProductException (code, true, args);
-		}
-#else
+		[Obsolete("localize this")]
 		public static ProductException CreateError(int code, string message, params object[] args)
 		{
 			return new ProductException(code, true, message, args);
 		}
-#endif
 
 #if (MTOUCH || MMP) && !MMP_TEST && !WIN32
-		public static void SetLocation (Application app, ProductException ex, Mono.Cecil.MethodDefinition method, Instruction instruction = null)
+		public static void SetLocation(Application app, ProductException ex, Mono.Cecil.MethodDefinition method, Instruction instruction = null)
 		{
 			if (!method.HasBody)
 				return;
@@ -114,9 +111,9 @@ namespace ObjCRuntime {
 				return;
 
 			if (instruction == null)
-				instruction = method.Body.Instructions [0];
+				instruction = method.Body.Instructions[0];
 #if MTOUCH
-			app.LoadSymbols ();
+			app.LoadSymbols();
 #endif
 
 			if (!method.DebugInformation.HasSequencePoints)
@@ -124,7 +121,8 @@ namespace ObjCRuntime {
 
 			// Find the sequence point with the highest offset that is less than or equal to the instruction's offset
 			SequencePoint seq = null;
-			foreach (var pnt in method.DebugInformation.SequencePoints) {
+			foreach (var pnt in method.DebugInformation.SequencePoints)
+			{
 				if (pnt.Offset > instruction.Offset)
 					continue;
 
@@ -140,202 +138,145 @@ namespace ObjCRuntime {
 			ex.LineNumber = seq.StartLine;
 		}
 
-		//[Obsolete("localize this")]
-		public static ProductException CreateError (Application app, int code, Mono.Cecil.MemberReference member, params object[] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateError(Application app, int code, Mono.Cecil.MemberReference member, string message, params object[] args)
 		{
-			return Create (app, code, true, null, member, null, args);
+			return Create(app, code, true, null, member, null, message, args);
 		}
 
-		//[Obsolete("localize this")]
-		public static ProductException CreateError (Application app, int code, Mono.Cecil.MethodDefinition location, params object[] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateError(Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
-			return Create (app, code, true, null, location, null, args);
+			return Create(app, code, true, null, location, null, message, args);
 		}
 
-		//[Obsolete("localize this")]
-		public static ProductException CreateError (Application app, int code, Mono.Cecil.MethodDefinition location, Instruction instruction, params object [] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateError(Application app, int code, Mono.Cecil.MethodDefinition location, Instruction instruction, string message, params object[] args)
 		{
-			return Create (app, code, true, null, location, instruction, args);
+			return Create(app, code, true, null, location, instruction, message, args);
 		}
 
-		//[Obsolete("localize this")]
-		public static ProductException CreateError (Application app, int code, Mono.Cecil.ICustomAttributeProvider provider, params object [] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateError(Application app, int code, Mono.Cecil.ICustomAttributeProvider provider, string message, params object[] args)
 		{
-			return Create (app, code, true, null, provider, null, args);
+			return Create(app, code, true, null, provider, null, message, args);
 		}
 
-		//[Obsolete("localize this")]
-		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, params object[] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateError(Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
-			return Create (app, code, true, innerException, location, args);
+			return Create(app, code, true, innerException, location, message, args);
 		}
 
-		//[Obsolete("localize this")]
-		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, params object[] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateError(Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
 		{
-			return Create (app, code, true, innerException, location, args);
+			return Create(app, code, true, innerException, location, message, args);
 		}
-
-		//[Obsolete("localize this")]
-		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, params object [] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateError(Application app, int code, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, string message, params object[] args)
 		{
-			return Create (app, code, true, innerException, provider, args);
+			return Create(app, code, true, innerException, provider, message, args);
 		}
-
-		/*
-#if MTOCUCH
-		//[Obsolete("localize this")]
-		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MemberReference member, params object [] args)
-		{
-			return Create (app, code, false, null, member, null, args);
-		}
-#else
+		[Obsolete("localize this")]
 		public static ProductException CreateWarning(Application app, int code, Mono.Cecil.MemberReference member, string message, params object[] args)
 		{
 			return Create(app, code, false, null, member, null, message, args);
-		} 
-#endif
-		*/
-
-#if MTOUCH
-		//[Obsolete("localize this")]
-		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MemberReference member, Instruction instruction, params object [] args)
-		{
-			return Create (app, code, false, null, member, instruction, args);
 		}
-		public static ProductException CreateWarning(Application app, int code, Mono.Cecil.MethodDefinition location, params object[] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateWarning(Application app, int code, Mono.Cecil.MemberReference member, Instruction instruction, string message, params object[] args)
 		{
-			return Create(app, code, false, null, location, args);
+			return Create(app, code, false, null, member, instruction, message, args);
 		}
-#else
-		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MemberReference member, Instruction instruction, string message, params object [] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateWarning(Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
-			return Create (app, code, false, null, member, instruction, message, args);
+			return Create(app, code, false, null, location, message, args);
 		}
-		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateWarning(Application app, int code, Mono.Cecil.ICustomAttributeProvider provider, string message, params object[] args)
 		{
-			return Create (app, code, false, null, location, message, args);
+			return Create(app, code, false, null, provider, message, args);
 		}
-#endif
-		/*
-		//[Obsolete("localize this")]
-		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MethodDefinition location, params object[] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateWarning(Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
-			return Create (app, code, false, null, location, args);
+			return Create(app, code, false, innerException, location, message, args);
 		}
-
-	*/
-		//[Obsolete("localize this")]
-		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.ICustomAttributeProvider provider, params object [] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateWarning(Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, Instruction instruction, string message, params object[] args)
 		{
-			return Create (app, code, false, null, provider, args);
+			return Create(app, code, false, innerException, location, instruction, message, args);
 		}
-
-		//[Obsolete("localize this")]
-		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, params object[] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateWarning(Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
 		{
-			return Create (app, code, false, innerException, location, args);
+			return Create(app, code, false, innerException, location, message, args);
 		}
-
-		//[Obsolete("localize this")]
-		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, Instruction instruction, params object [] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateWarning(Application app, int code, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, string message, params object[] args)
 		{
-			return Create (app, code, false, innerException, location, instruction, args);
+			return Create(app, code, false, innerException, provider, message, args);
 		}
-
-		//[Obsolete("localize this")]
-		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, params object[] args)
+		[Obsolete("localize this")]
+		public static ProductException Create(Application app, int code, bool error, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, string message, params object[] args)
 		{
-			return Create (app, code, false, innerException, location, args);
+			return Create(app, code, error, innerException, provider, null, message, args);
 		}
-
-		//[Obsolete("localize this")]
-		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, params object [] args)
-		{
-			return Create (app, code, false, innerException, provider, args);
-		}
-
-		//[Obsolete("localize this")]
-		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, params object [] args)
-		{
-			return Create (app, code, error, innerException, provider, null, args);
-		}
-#if MTOUCH
-		//[Obsolete("localize this")]
-		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, Instruction instruction, params object [] args)
-		{
-			if (provider is Mono.Cecil.MemberReference member) {
-				if (instruction != null)
-					return Create (app, code, error, innerException, member, instruction, args);
-				return Create (app, code, error, innerException, member, null, args);
-			}
-
-			if (provider is Mono.Cecil.TypeReference type)
-				return Create (app, code, error, innerException, type, args);
-
-			return new ProductException (code, error, innerException, args);
-		}
-#else
+		[Obsolete("localize this")]
 		public static ProductException Create(Application app, int code, bool error, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, Instruction instruction, string message, params object[] args)
 		{
-			if (provider is Mono.Cecil.MemberReference member) {
+			if (provider is Mono.Cecil.MemberReference member)
+			{
 				if (instruction != null)
 					return Create(app, code, error, innerException, member, instruction, message, args);
 				return Create(app, code, error, innerException, member, null, message, args);
 			}
 
 			if (provider is Mono.Cecil.TypeReference type)
-			return Create(app, code, error, innerException, type, message, args);
+				return Create(app, code, error, innerException, type, message, args);
 
-				return new ProductException(code, error, innerException, message, args);
+			return new ProductException(code, error, innerException, message, args);
 		}
-#endif
-
-//[Obsolete("localize this")]
-public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MemberReference member, Instruction instruction, params object [] args)
+		[Obsolete("localize this")]
+		public static ProductException Create(Application app, int code, bool error, Exception innerException, Mono.Cecil.MemberReference member, Instruction instruction, string message, params object[] args)
 		{
 			Mono.Cecil.MethodReference method = member as Mono.Cecil.MethodReference;
-			if (method == null) {
+			if (method == null)
+			{
 				var property = member as Mono.Cecil.PropertyDefinition;
-				if (property != null) {
+				if (property != null)
+				{
 					method = property.GetMethod;
 					if (method == null)
 						method = property.SetMethod;
 				}
 			}
-			return Create (app, code, error, innerException, method == null ? null : method.Resolve (), instruction, args);
+			return Create(app, code, error, innerException, method == null ? null : method.Resolve(), instruction, message, args);
 		}
-
-#if MTOUCH
-		//[Obsolete("localize this")]
-		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MethodDefinition location, Instruction instruction, params object [] args)
+		[Obsolete("localize this")]
+		public static ProductException Create(Application app, int code, bool error, Exception innerException, Mono.Cecil.MethodDefinition location, Instruction instruction, string message, params object[] args)
 		{
-			var e = new ProductException (code, error, innerException, args);
+			var e = new ProductException(code, error, innerException, message, args);
 			if (location != null)
-				SetLocation (app, e, location, instruction);
+				SetLocation(app, e, location, instruction);
 			return e;
 		}
-#endif
-		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MethodDefinition location, Instruction instruction, string message, params object [] args)
+		[Obsolete("localize this")]
+		public static ProductException Create(Application app, int code, bool error, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
 		{
-			var e = new ProductException (code, error, innerException, message, args);
+			var e = new ProductException(code, error, innerException, message, args);
 			if (location != null)
-				SetLocation (app, e, location, instruction);
-			return e;
-		}
+			{
+				var td = location.Resolve();
 
-		//[Obsolete("localize this")]
-		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.TypeReference location, params object [] args)
-		{
-			var e = new ProductException (code, error, innerException, args);
-			if (location != null) {
-				var td = location.Resolve ();
-
-				if (td.HasMethods) {
-					foreach (var method in td.Methods) {
+				if (td.HasMethods)
+				{
+					foreach (var method in td.Methods)
+					{
 						if (!method.IsConstructor)
 							continue;
-						SetLocation (app, e, method);
+						SetLocation(app, e, method);
 						if (e.FileName != null)
 							break;
 					}
@@ -344,182 +285,128 @@ public static ProductException Create (Application app, int code, bool error, Ex
 			return e;
 		}
 #endif
-#if MTOUCH
-		//[Obsolete("localize this")]
-		public static ProductException CreateError (int code, Exception innerException, params object[] args)
+		[Obsolete("localize this")]
+		public static ProductException CreateError(int code, Exception innerException, string message, params object[] args)
 		{
-			return new ProductException (code, true, innerException, args);
-		}
-#else
-		 public static ProductException CreateError(int code, Exception innerException, string message, params object[] args)
-		 {
 			return new ProductException(code, true, innerException, message, args);
-		 }
-#endif
-
-#if MTOUCH
-		//[Obsolete("localize this")]
-		public static ProductException CreateWarning (int code, params object[] args)
-		{
-			return new ProductException (code, false, args);
 		}
-#else
+		[Obsolete("localize this")]
 		public static ProductException CreateWarning(int code, string message, params object[] args)
 		{
 			return new ProductException(code, false, message, args);
 		}
-#endif
-
-#if MTOUCH
-		//[Obsolete("localize this")]
-		public static ProductException CreateWarning (int code, Exception innerException, params object [] args)
-		{
-			//todo: if mtouch
-			return new ProductException (code, false, innerException, args);
-		}
-#else
+		[Obsolete("localize this")]
 		public static ProductException CreateWarning(int code, Exception innerException, string message, params object[] args)
 		{
 			return new ProductException(code, false, innerException, message, args);
 		}
-#endif
-
-#if MTOUCH
-		//[Obsolete("localize this")]
-		public static void Error (int code, Exception innerException, params object[] args)
+		[Obsolete("localize this")]
+		public static void Error(int code, Exception innerException, string message, params object[] args)
 		{
-			//todo: if mtouch
-			throw new ProductException (code, true, innerException, args);
+			throw new ProductException(code, true, innerException, message, args);
 		}
-#else
-		public static void Error (int code, Exception innerException, string message, params object[] args)
-		{
-			throw new ProductException (code, true, innerException, message, args);
-		}
-#endif
-
-#if MMP || MTOUCH
-		//[Obsolete("localize this")]
-		public static void Error (int code, params object[] args)
-		{
-			//todo: if mtouch
-			throw new ProductException (code, true, args);
-		}
-#else
+		[Obsolete("localize this")]
 		public static void Error(int code, string message, params object[] args)
 		{
 			throw new ProductException(code, true, message, args);
 		}
-#endif
-
-#if MTOUCH
-		//[Obsolete("localize this")]
-		public static void Warning (int code, params object[] args)
-		{	//todo: if mtouch
-			Show (new ProductException (code, false, args));
-		}
-#else
-		public static void Warning (int code, string message, params object[] args)
+		[Obsolete("localize this")]
+		public static void Warning(int code, string message, params object[] args)
 		{
-			Show (new ProductException (code, false, message, args));
+			Show(new ProductException(code, false, message, args));
 		}
-#endif
-
-#if MTOUCH
-		//[Obsolete("localize this")]
-		public static void Warning (int code, Exception innerException, params object[] args)
-		{
-			Show (new ProductException (code, false, innerException, args));
-		}
-#else
+		[Obsolete("localize this")]
 		public static void Warning(int code, Exception innerException, string message, params object[] args)
 		{
 			Show(new ProductException(code, false, innerException, message, args));
 		}
-#endif
 
 #if MMP || MTOUCH
-	// Shows any warnings, and if there are any errors, throws an AggregateException.
-	public static void ThrowIfErrors (IList<Exception> exceptions)
+		// Shows any warnings, and if there are any errors, throws an AggregateException.
+		public static void ThrowIfErrors(IList<Exception> exceptions)
 		{
-			if (exceptions?.Any () != true)
+			if (exceptions?.Any() != true)
 				return;
 
 			// Separate warnings from errors
-			var grouped = exceptions.GroupBy ((v) => (v as ProductException)?.Error == false);
+			var grouped = exceptions.GroupBy((v) => (v as ProductException)?.Error == false);
 
-			var warnings = grouped.SingleOrDefault ((v) => v.Key);
-			if (warnings?.Any () == true)
-				Show (warnings);
+			var warnings = grouped.SingleOrDefault((v) => v.Key);
+			if (warnings?.Any() == true)
+				Show(warnings);
 
-			var errors = grouped.SingleOrDefault ((v) => !v.Key);
-			if (errors?.Any () == true)
-				throw new AggregateException (errors);
+			var errors = grouped.SingleOrDefault((v) => !v.Key);
+			if (errors?.Any() == true)
+				throw new AggregateException(errors);
 		}
 #endif
 
-		public static void Show (IEnumerable<Exception> list)
+		public static void Show(IEnumerable<Exception> list)
 		{
-			List<Exception> exceptions = new List<Exception> ();
+			List<Exception> exceptions = new List<Exception>();
 			bool error = false;
 
 			foreach (var e in list)
-				CollectExceptions (e, exceptions);
+				CollectExceptions(e, exceptions);
 
 			foreach (var ex in exceptions)
-				error |= ShowInternal (ex);
+				error |= ShowInternal(ex);
 
 			if (error)
-				Exit (1);
+				Exit(1);
 		}
 
-		static public void Show (Exception e)
+		static public void Show(Exception e)
 		{
-			List<Exception> exceptions = new List<Exception> ();
+			List<Exception> exceptions = new List<Exception>();
 			bool error = false;
 
-			CollectExceptions (e, exceptions);
+			CollectExceptions(e, exceptions);
 
 			foreach (var ex in exceptions)
-				error |= ShowInternal (ex);
+				error |= ShowInternal(ex);
 
 			if (error)
-				Exit (1);
+				Exit(1);
 		}
 
-		static void Exit (int exitCode)
+		static void Exit(int exitCode)
 		{
 #if MTOUCH
 			if (ExitCallback != null)
-				ExitCallback (exitCode);
+				ExitCallback(exitCode);
 #endif
-			Environment.Exit (exitCode);
+			Environment.Exit(exitCode);
 		}
 
-		static void CollectExceptions (Exception ex, List<Exception> exceptions)
+		static void CollectExceptions(Exception ex, List<Exception> exceptions)
 		{
 			AggregateException ae = ex as AggregateException;
 
-			if (ae != null && ae.InnerExceptions.Count > 0) {
+			if (ae != null && ae.InnerExceptions.Count > 0)
+			{
 				foreach (var ie in ae.InnerExceptions)
-					CollectExceptions (ie, exceptions);
-			} else {
-				exceptions.Add (ex);
+					CollectExceptions(ie, exceptions);
+			}
+			else
+			{
+				exceptions.Add(ex);
 			}
 		}
 
-		static bool ShowInternal (Exception e)
+		static bool ShowInternal(Exception e)
 		{
 			ProductException mte = (e as ProductException);
 			bool error = true;
 
-			if (mte != null) {
+			if (mte != null)
+			{
 				error = mte.Error;
 
-				if (!error && GetWarningLevel (mte.Code) == WarningLevel.Disable)
+				if (!error && GetWarningLevel(mte.Code) == WarningLevel.Disable)
 					return false; // This is an ignored warning.
-				
-				Console.Error.WriteLine (mte.ToString ());
+
+				Console.Error.WriteLine(mte.ToString());
 
 				// Errors with code >= 9000 are activation/licensing errors.
 				// PROTIP: do not show a stack trace that points the exact method where the license checks are done
@@ -527,40 +414,47 @@ public static ProductException Create (Application app, int code, bool error, Ex
 					return error;
 
 				if (Verbosity > 1)
-					ShowInner (e);
+					ShowInner(e);
 
-				if (Verbosity > 2 && !string.IsNullOrEmpty (e.StackTrace))
-					Console.Error.WriteLine (e.StackTrace);
+				if (Verbosity > 2 && !string.IsNullOrEmpty(e.StackTrace))
+					Console.Error.WriteLine(e.StackTrace);
 #if MTOUCH || MMP
-			} else if (IsExpectedException == null || !IsExpectedException (e)) {
-				Console.Error.WriteLine ("error " + Prefix + "0000: Unexpected error - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
-				Console.Error.WriteLine (e.ToString ());
+			}
+			else if (IsExpectedException == null || !IsExpectedException(e))
+			{
+				Console.Error.WriteLine("error " + Prefix + "0000: Unexpected error - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
+				Console.Error.WriteLine(e.ToString());
 #endif
-			} else {
-				Console.Error.WriteLine (e.ToString ());
+			}
+			else
+			{
+				Console.Error.WriteLine(e.ToString());
 				if (Verbosity > 1)
-					ShowInner (e);
-				if (Verbosity > 2 && !string.IsNullOrEmpty (e.StackTrace))
-					Console.Error.WriteLine (e.StackTrace);
+					ShowInner(e);
+				if (Verbosity > 2 && !string.IsNullOrEmpty(e.StackTrace))
+					Console.Error.WriteLine(e.StackTrace);
 			}
 
 			return error;
 		}
 
-		static void ShowInner (Exception e)
+		static void ShowInner(Exception e)
 		{
 			Exception ie = e.InnerException;
 			if (ie == null)
 				return;
 
-			if (Verbosity > 3) {
-				Console.Error.WriteLine ("--- inner exception");
-				Console.Error.WriteLine (ie);
-				Console.Error.WriteLine ("---");
-			} else {
-				Console.Error.WriteLine ("\t{0}", ie.Message);
+			if (Verbosity > 3)
+			{
+				Console.Error.WriteLine("--- inner exception");
+				Console.Error.WriteLine(ie);
+				Console.Error.WriteLine("---");
 			}
-			ShowInner (ie);
+			else
+			{
+				Console.Error.WriteLine("\t{0}", ie.Message);
+			}
+			ShowInner(ie);
 		}
 	}
 }

@@ -522,7 +522,7 @@ namespace Registrar {
 				return "void *";
 			}
 
-			throw ErrorHelper.CreateError (4108, type.FullName);
+			throw ErrorHelper.CreateError (4108, mtouch.Errors.MT4108, type.FullName);
 		}
 
 		public static bool IsDelegate (TypeDefinition type)
@@ -719,13 +719,13 @@ namespace Registrar {
 
 		protected override void ReportError (int code, string message, params object[] args)
 		{
-			//todo: wtf fix this
+			//todo: fix this
 			throw ErrorHelper.CreateError (code, message, args);
 		}
 		
 		protected override void ReportWarning (int code, string message, params object[] args)
 		{
-			//todo: wtf fix this
+			//todo: fix this
 			ErrorHelper.Show (ErrorHelper.CreateWarning (code, message, args));
 		}
 
@@ -809,13 +809,12 @@ namespace Registrar {
 			}
 		}
 
-		[Obsolete("CreateExceptionImpl needs to be updated for reflection")]
+
 		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, MethodDefinition method, string message, params object[] args)
 		{
 			return ErrorHelper.Create (App, code, error, innerException, method, message, args);
 		}
 
-		[Obsolete("CreateExceptionImpl needs to be updated for reflection")]
 		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, TypeReference type, string message, params object [] args)
 		{
 			return ErrorHelper.Create (App, code, error, innerException, type, message, args);
@@ -1023,7 +1022,7 @@ namespace Registrar {
 					return system_void = type;
 			}
 
-			throw ErrorHelper.CreateError (4165, "The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.");
+			throw ErrorHelper.CreateError (4165, mtouch.Errors.MT4165);
 		}
 
 		protected override bool IsVirtual (MethodDefinition method)
@@ -1319,7 +1318,7 @@ namespace Registrar {
 					rv = new RegisterAttribute ((string) attrib.ConstructorArguments [0].Value, (bool) attrib.ConstructorArguments [1].Value);
 					break;
 				default:
-					throw ErrorHelper.CreateError (4124, "RegisterAttribute", type.FullName);
+					throw ErrorHelper.CreateError (4124, mtouch.Errors.MT4124, "RegisterAttribute", type.FullName);
 				}
 			}
 
@@ -1336,7 +1335,7 @@ namespace Registrar {
 						rv.SkipRegistration = (bool) prop.Argument.Value;
 						break;
 					default:
-						throw ErrorHelper.CreateError (4137, type.FullName, prop.Name);
+						throw ErrorHelper.CreateError (4137, mtouch.Errors.MT4137, type.FullName, prop.Name);
 					}
 				}
 			}
@@ -1352,7 +1351,7 @@ namespace Registrar {
 				return null;
 
 			if (!attrib.HasConstructorArguments)
-				throw ErrorHelper.CreateError (4124, "CategoryAttribute", type.FullName);
+				throw ErrorHelper.CreateError (4124, mtouch.Errors.MT4124, "CategoryAttribute", type.FullName);
 
 			if (attrib.HasProperties) {
 				foreach (var prop in attrib.Properties) {
@@ -1368,7 +1367,7 @@ namespace Registrar {
 				var t1 = (TypeReference) attrib.ConstructorArguments [0].Value;
 				return new CategoryAttribute (t1 != null ? t1.Resolve () : null) { Name = name };
 			default:
-				throw ErrorHelper.CreateError (4124, "CategoryAttribute", type.FullName);
+				throw ErrorHelper.CreateError (4124, mtouch.Errors.MT4124, "CategoryAttribute", type.FullName);
 			}
 		}
 
@@ -1405,11 +1404,11 @@ namespace Registrar {
 				case "FormalSince":
 					Version version;
 					if (!Version.TryParse ((string)prop.Argument.Value, out version))
-						throw ErrorHelper.CreateError (4147, "ProtocolAttribute", type.FullName);
+						throw ErrorHelper.CreateError (4147, mtouch.Errors.MT4147, "ProtocolAttribute", type.FullName);
 					rv.FormalSinceVersion = version;
 					break;
 				default:
-					throw ErrorHelper.CreateError (4147, "ProtocolAttribute", type.FullName);
+					throw ErrorHelper.CreateError (4147, mtouch.Errors.MT4147, "ProtocolAttribute", type.FullName);
 				}
 			}
 
@@ -1428,7 +1427,7 @@ namespace Registrar {
 				rv.Type = ((TypeReference) attrib.ConstructorArguments [0].Value).Resolve ();
 				break;
 			default:
-				throw ErrorHelper.CreateError (4124, "BlockProxyAttribute", ((MethodReference) parameter.Method)?.FullName);
+				throw ErrorHelper.CreateError (4124, mtouch.Errors.MT4124, "BlockProxyAttribute", ((MethodReference) parameter.Method)?.FullName);
 			}
 
 			return rv;
@@ -1446,7 +1445,7 @@ namespace Registrar {
 				rv.DelegateType = ((TypeReference) attrib.ConstructorArguments [0].Value).Resolve ();
 				break;
 			default:
-				throw ErrorHelper.CreateError (4124, "DelegateProxyAttribute", ((MethodReference) method)?.FullName);
+				throw ErrorHelper.CreateError (4124, mtouch.Errors.MT4124, "DelegateProxyAttribute", ((MethodReference) method)?.FullName);
 			}
 
 			return rv;
@@ -1589,7 +1588,7 @@ namespace Registrar {
 				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, App.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, App.Platform);
 			}
 #else
 			currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
@@ -1635,7 +1634,7 @@ namespace Registrar {
 				switch (ca.ConstructorArguments.Count) {
 				case 2:
 					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, mtouch.Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 					majorVersion = (byte) ca.ConstructorArguments [0].Value;
 					minorVersion = (byte) ca.ConstructorArguments [1].Value;
 					break;
@@ -1653,13 +1652,13 @@ namespace Registrar {
 						} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
 							minorVersion = (byte) ca.ConstructorArguments [2].Value;
 						} else {
-							throw ErrorHelper.CreateError (4163, caType.Name, ca.ConstructorArguments.Count);
+							throw ErrorHelper.CreateError (4163, mtouch.Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 						}
 					}
 					break;
 				case 4:
 					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, mtouch.Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 
 					majorVersion = (byte) ca.ConstructorArguments [0].Value;
 					minorVersion = (byte) ca.ConstructorArguments [1].Value;
@@ -1670,7 +1669,7 @@ namespace Registrar {
 					} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
 						architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
 					} else {
-						throw ErrorHelper.CreateError (4163, caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, mtouch.Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 					}
 					break;
 				case 5:
@@ -1689,7 +1688,7 @@ namespace Registrar {
 					message = (string) ca.ConstructorArguments [5].Value;
 					break;
 				default:
-					throw ErrorHelper.CreateError (4163, caType.Name, ca.ConstructorArguments.Count);
+					throw ErrorHelper.CreateError (4163, mtouch.Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 				}
 
 				if (platformName != currentPlatform)
@@ -1712,7 +1711,7 @@ namespace Registrar {
 							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
 							break;
 						default:
-							throw ErrorHelper.CreateError (4163, caType.Name, ca.ConstructorArguments.Count);
+							throw ErrorHelper.CreateError (4163, mtouch.Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 						}
 					}
 					break;
@@ -1728,7 +1727,7 @@ namespace Registrar {
 						rv = new DeprecatedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
 						break;
 					default:
-						throw ErrorHelper.CreateError (4163, caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, mtouch.Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 					}
 					break;
 				case AvailabilityKind.Obsoleted:
@@ -1743,14 +1742,14 @@ namespace Registrar {
 						rv = new ObsoletedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
 						break;
 					default:
-						throw ErrorHelper.CreateError (4163, caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, mtouch.Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 					}
 					break;
 				case AvailabilityKind.Unavailable:
 					rv = new UnavailableAttribute (platformName, architecture, message);
 					break;
 				default:
-					throw ErrorHelper.CreateError (4180, kind);
+					throw ErrorHelper.CreateError (4180, mtouch.Errors.MT4180, kind);
 				}
 
 				if (list == null)
@@ -1818,7 +1817,7 @@ namespace Registrar {
 					attrib.ProtocolType = (string) ca.ConstructorArguments [0].Value;
 					break;
 				default:
-					throw ErrorHelper.CreateError (4181, type.FullName, 1, ca.ConstructorArguments.Count);
+					throw ErrorHelper.CreateError (4181, mtouch.Errors.MT4181, type.FullName, 1, ca.ConstructorArguments.Count);
 				}
 				rv.Add (attrib);
 			}
@@ -1862,7 +1861,7 @@ namespace Registrar {
 						originalType = ((TypeReference) field.Argument.Value);
 						break;
 					default:
-						throw ErrorHelper.CreateError (4124, member.DeclaringType.FullName, member.Name, field.Name);
+						throw ErrorHelper.CreateError (4124, mtouch.Errors.MT4124, member.DeclaringType.FullName, member.Name, field.Name);
 					}
 				}
 			}
@@ -1872,7 +1871,7 @@ namespace Registrar {
 				var t1 = (TypeReference) attrib.ConstructorArguments [0].Value;
 				return new BindAsAttribute (t1) { OriginalType = originalType };
 			default:
-				throw ErrorHelper.CreateError (4183, "BindAsAttribute", member.DeclaringType.FullName, member.Name);
+				throw ErrorHelper.CreateError (4183, mtouch.Errors.MT4183, "BindAsAttribute", member.DeclaringType.FullName, member.Name);
 			}
 		}
 
@@ -1900,7 +1899,7 @@ namespace Registrar {
 			case 0: return new ConnectAttribute ();
 			case 1: return new ConnectAttribute (((string) attrib.ConstructorArguments [0].Value));
 			default:
-				throw ErrorHelper.CreateError (4183,"ConnectAttribute", property.DeclaringType.FullName, property.Name);
+				throw ErrorHelper.CreateError (4183, mtouch.Errors.MT4183, "ConnectAttribute", property.DeclaringType.FullName, property.Name);
 			}
 		}
 
@@ -1932,7 +1931,7 @@ namespace Registrar {
 			case 2:
 				return new ExportAttribute ((string) attribute.ConstructorArguments [0].Value, (ArgumentSemantic) attribute.ConstructorArguments [1].Value) { IsVariadic = is_variadic };
 			default:
-				throw ErrorHelper.CreateError (4183, "ExportAttribute", candidate.DeclaringType.FullName, candidate.Name);
+				throw ErrorHelper.CreateError (4183, mtouch.Errors.MT4183, "ExportAttribute", candidate.DeclaringType.FullName, candidate.Name);
 			}
 		}
 
@@ -2307,14 +2306,14 @@ namespace Registrar {
 						continue;
 					var fieldType = field.FieldType.Resolve ();
 					if (fieldType == null) 
-						throw ErrorHelper.CreateError (App, 4111, inMember, structure.FullName, descriptiveMethodName);
+						throw ErrorHelper.CreateError (App, 4111, inMember, mtouch.Errors.MT4111, structure.FullName, descriptiveMethodName);
 					if (!fieldType.IsValueType)
-						throw ErrorHelper.CreateError (App, 4161, inMember, root_structure.FullName, field.Name, fieldType.FullName);
+						throw ErrorHelper.CreateError (App, 4161, inMember, mtouch.Errors.MT4161, root_structure.FullName, field.Name, fieldType.FullName);
 					found = true;
 					ProcessStructure (name, body, fieldType, ref size, descriptiveMethodName, root_structure, inMember);
 				}
 				if (!found)
-					throw ErrorHelper.CreateError (App, 4111, inMember, structure.FullName, descriptiveMethodName);
+					throw ErrorHelper.CreateError (App, 4111, inMember, mtouch.Errors.MT4111, structure.FullName, descriptiveMethodName);
 				break;
 			}
 		}
@@ -2390,7 +2389,7 @@ namespace Registrar {
 
 				if (sb [sb.Length - 1] != '*') {
 					// I'm not sure if this is possible to hit (I couldn't come up with a test case), but better safe than sorry.
-					AddException (ref exceptions, CreateException (4166, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.", descriptiveMethodName, GetTypeFullName (elementType)));
+					AddException (ref exceptions, CreateException (4166, inMethod.Resolve () as MethodDefinition, mtouch.Errors.MT4166, descriptiveMethodName, GetTypeFullName (elementType)));
 					return "id";
 				}
 
@@ -2403,7 +2402,7 @@ namespace Registrar {
 					var argumentType = git.GenericArguments [i];
 					if (!IsINativeObject (argumentType)) {
 						// I believe the generic constraints we have should make this error impossible to hit, but better safe than sorry.
-						AddException (ref exceptions, CreateException (4167, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that doesn't implement INativeObject ({2}).", descriptiveMethodName, GetTypeFullName (type), GetTypeFullName (argumentType)));
+						AddException (ref exceptions, CreateException (4167, inMethod.Resolve () as MethodDefinition, mtouch.Errors.MT4167, descriptiveMethodName, GetTypeFullName (type), GetTypeFullName (argumentType)));
 						return "id";
 					}
 					sb.Append (ToObjCParameterType (argumentType, descriptiveMethodName, exceptions, inMethod));
@@ -2450,7 +2449,7 @@ namespace Registrar {
 				CheckNamespace ("CoreGraphics", exceptions);
 				return "CGFloat";
 			case "System.DateTime":
-				throw ErrorHelper.CreateError (4102, "System.DateTime", "Foundation.NSDate", descriptiveMethodName);
+				throw ErrorHelper.CreateError (4102, mtouch.Errors.MT4102, "System.DateTime", "Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector": return "SEL";
 			case "ObjCRuntime.Class": return "Class";
 			default:
@@ -2471,7 +2470,7 @@ namespace Registrar {
 						case "System.UInt64":
 							return "NSUInteger";
 						default:
-							exceptions.Add (ErrorHelper.CreateError (4145, td.FullName));
+							exceptions.Add (ErrorHelper.CreateError (4145, mtouch.Errors.MT4145, td.FullName));
 							return "NSInteger";
 						}
 					}
@@ -2725,7 +2724,7 @@ namespace Registrar {
 				
 				// Xcode 11 removed WatchKit for iOS!
 				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS) {
-					exceptions.Add (ErrorHelper.CreateWarning (4178, @class.Type.FullName));
+					exceptions.Add (ErrorHelper.CreateWarning (4178, mtouch.Errors.MT4170, @class.Type.FullName));
 					continue;
 				}
 
@@ -2901,7 +2900,7 @@ namespace Registrar {
 									fields.Write ("XamarinObject ");
 									break;
 								default:
-									throw ErrorHelper.CreateError (4120, 
+									throw ErrorHelper.CreateError (4120, mtouch.Errors.MT4120,
 										field.FieldType, field.DeclaringType.Type.FullName, field.Name);
 								}
 								fields.Write (field.Name);
@@ -2951,7 +2950,7 @@ namespace Registrar {
 							try {
 								iface.Write (ToObjCParameterType (property.PropertyType, property.DeclaringType.Type.FullName, exceptions, property.Property));
 							} catch (ProductException mte) {
-								exceptions.Add (CreateException (4138, mte, property.Property, "The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'.",
+								exceptions.Add (CreateException (4138, mte, property.Property, mtouch.Errors.MT4138,
 									GetTypeFullName (property.PropertyType), property.DeclaringType.Type.FullName, property.Name));
 							}
 							iface.Write (" ").Write (property.Selector);
@@ -2973,7 +2972,7 @@ namespace Registrar {
 							exceptions.Add (ex);
 						} catch (Exception ex) {
 							skip.Add (method);
-							exceptions.Add (ErrorHelper.CreateError (4114, ex, method.DeclaringType.Type.FullName, method.Method.Name));
+							exceptions.Add (ErrorHelper.CreateError (4114, mtouch.Errors.MT4114, ex, method.DeclaringType.Type.FullName, method.Method.Name));
 						}
 					}
 				}
@@ -3409,7 +3408,7 @@ namespace Registrar {
 				if (type != nativetype) {
 					GenerateConversionToManaged (nativetype, type, setup_call_stack, descriptiveMethodName, ref exceptions, method, $"p{i}", $"arg_ptrs [{i}]", $"mono_class_from_mono_type (xamarin_get_parameter_type (managed_method, {i}))");
 					if (isRef || isOut)
-						throw ErrorHelper.CreateError (4184, descriptiveMethodName);
+						throw ErrorHelper.CreateError (4184, mtouch.Errors.MT4184, descriptiveMethodName);
 					continue;
 				} else if (isRef) {
 					type = GetElementType (type);
@@ -3563,7 +3562,7 @@ namespace Registrar {
 							if (isNativeObjectInterface) {
 								var wrapper_type = GetProtocolAttributeWrapperType (nativeObjType);
 								if (wrapper_type == null)
-									throw ErrorHelper.CreateError (4125,
+									throw ErrorHelper.CreateError (4125, mtouch.Errors.MT4125,
 										td.FullName, descriptiveMethodName);
 
 								nativeObjType = wrapper_type.Resolve ();
@@ -3571,7 +3570,7 @@ namespace Registrar {
 
 							// verify that the type has a ctor with two parameters
 							if (!HasIntPtrBoolCtor (nativeObjType))
-								throw ErrorHelper.CreateError (4103, nativeObjType.FullName, descriptiveMethodName);
+								throw ErrorHelper.CreateError (4103, mtouch.Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
 							if (isNativeObjectInterface) {
 								var resolvedElementType = ResolveType (elementType);
@@ -3583,7 +3582,7 @@ namespace Registrar {
 							}
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 						} else {
-							throw ErrorHelper.CreateError (App, 4111, method.Method, type.FullName, descriptiveMethodName);
+							throw ErrorHelper.CreateError (App, 4111, method.Method, mtouch.Errors.MT4111, type.FullName, descriptiveMethodName);
 						}
 						if (isByRefArray) {
 							setup_call_stack.AppendLine ("}");
@@ -3602,7 +3601,7 @@ namespace Registrar {
 							} else if (isINativeObject) {
 								copyback.AppendLine ("*p{0} = xamarin_managed_inativeobject_array_to_nsarray (marr{0}, &exception_gchandle);", i);
 							} else {
-								throw ErrorHelper.CreateError (99, "Internal error: byref array is neither string, NSObject or INativeObject.");
+								throw ErrorHelper.CreateError (156, mtouch.Errors.MT0156);
 							}
 							copyback.AppendLine ("}");
 						}
@@ -3670,15 +3669,15 @@ namespace Registrar {
 						if (td.IsInterface) {
 							var wrapper_type = GetProtocolAttributeWrapperType (td);
 							if (wrapper_type == null)
-								throw ErrorHelper.CreateError (4125,
-								                              td.FullName, descriptiveMethodName);
+								throw ErrorHelper.CreateError (4125, mtouch.Errors.MT4125,
+														  td.FullName, descriptiveMethodName);
 
 							nativeObjType = wrapper_type.Resolve ();
 						}
 
 						// verify that the type has a ctor with two parameters
 						if (!HasIntPtrBoolCtor (nativeObjType))
-							throw ErrorHelper.CreateError (4103, nativeObjType.FullName, descriptiveMethodName);
+							throw ErrorHelper.CreateError (4103, mtouch.Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
 						if (!td.IsInterface) {
 							// find the MonoClass for this parameter
@@ -3721,8 +3720,8 @@ namespace Registrar {
 						}
 					} else if (td.BaseType.FullName == "System.MulticastDelegate") {
 						if (isRef) {
-							throw ErrorHelper.CreateError (4110,
-							                              type.FullName, descriptiveMethodName);
+							throw ErrorHelper.CreateError (4110, mtouch.Errors.MT4110,
+														  type.FullName, descriptiveMethodName);
 						} else {
 							// Bug #4858 (also related: #4718)
 							var token = "INVALID_TOKEN_REF";
@@ -3731,7 +3730,7 @@ namespace Registrar {
 								if (creatorMethod != null) {
 									token = $"0x{CreateTokenReference (creatorMethod, TokenType.Method):X} /* {creatorMethod.FullName} */ ";
 								} else {
-									exceptions.Add (ErrorHelper.CreateWarning (App, 4174, method.Method,
+									exceptions.Add (ErrorHelper.CreateWarning (App, 4174, method.Method, mtouch.Errors.MT4174,
 														     method.DescriptiveMethodName, i + 1));
 								}
 							}
@@ -3743,8 +3742,8 @@ namespace Registrar {
 							setup_call_stack.AppendLine ("}");
 						}
 					} else {
-						throw ErrorHelper.CreateError (App, 4105, method.Method,
-						                              type.FullName, descriptiveMethodName);
+						throw ErrorHelper.CreateError (App, 4105, method.Method, mtouch.Errors.MT4105,
+													  type.FullName, descriptiveMethodName);
 					}
 					break;
 				}
@@ -3808,7 +3807,7 @@ namespace Registrar {
 					} else if (IsINativeObject (elementType)) {
 						conversion_func = "xamarin_managed_inativeobject_array_to_nsarray";
 					} else {
-						throw ErrorHelper.CreateError (App, 4111, method.Method, method.NativeReturnType.FullName, descriptiveMethodName);
+						throw ErrorHelper.CreateError (App, 4111, method.Method, mtouch.Errors.MT4111, method.NativeReturnType.FullName, descriptiveMethodName);
 					}
 					setup_return.AppendLine ("res = {0} ((MonoArray *) retval, &exception_gchandle);", conversion_func);
 					if (retain)
@@ -3857,11 +3856,11 @@ namespace Registrar {
 						var token = "INVALID_TOKEN_REF";
 						if (App.Optimizations.OptimizeBlockLiteralSetupBlock == true) {
 							if (type.Is ("System", "Delegate") || type.Is ("System", "MulticastDelegate")) {
-								ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, type.FullName, descriptiveMethodName));
+								ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4173, method.Method, mtouch.Errors.MT4173, type.FullName, descriptiveMethodName));
 							} else {
 								var delegateMethod = type.Resolve ().GetMethods ().FirstOrDefault ((v) => v.Name == "Invoke");
 								if (delegateMethod == null) {
-									ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4185, method.Method, type.FullName, descriptiveMethodName));
+									ErrorHelper.Show (ErrorHelper.CreateWarning (App, 4185, method.Method, mtouch.Errors.MT4185, type.FullName, descriptiveMethodName));
 								} else {
 									signature = "\"" + ComputeSignature (method.DeclaringType.Type, null, method, isBlockSignature: true) + "\"";
 								}
@@ -3870,13 +3869,13 @@ namespace Registrar {
 							if (delegateProxyType != null) {
 								token = $"0x{CreateTokenReference (delegateProxyType, TokenType.TypeDef):X} /* {delegateProxyType.FullName} */ ";
 							} else {
-								exceptions.Add (ErrorHelper.CreateWarning (App, 4176, method.Method, method.DescriptiveMethodName));
+								exceptions.Add (ErrorHelper.CreateWarning (App, 4176, method.Method, mtouch.Errors.MT4176, method.DescriptiveMethodName));
 							}
 						}
 						setup_return.AppendLine ("res = xamarin_get_block_for_delegate (managed_method, retval, {0}, {1}, &exception_gchandle);", signature, token);
 						setup_return.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 					} else {
-						throw ErrorHelper.CreateError (4104,
+						throw ErrorHelper.CreateError (4104, mtouch.Errors.MT4104,
 							returntype.FullName, descriptiveMethodName);
 					}
 
@@ -4314,7 +4313,7 @@ namespace Registrar {
 			default:
 				if (IsEnum (managedType))
 					return GetManagedToNSNumberFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName);
-				throw ErrorHelper.CreateError (157, inputType.FullName,outputType.FullName, descriptiveMethodName);
+				throw ErrorHelper.CreateError (157, mtouch.Errors.MT0157, inputType.FullName,outputType.FullName, descriptiveMethodName);
 			}
 		}
 
@@ -4339,7 +4338,7 @@ namespace Registrar {
 			default:
 				if (IsEnum (managedType))
 					return GetNSNumberToManagedFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName, out nativeType);
-				throw ErrorHelper.CreateError(157, inputType.FullName, outputType.FullName, descriptiveMethodName);
+				throw ErrorHelper.CreateError(157, mtouch.Errors.MT0157, inputType.FullName, outputType.FullName, descriptiveMethodName);
 			}
 		}
 
@@ -4367,7 +4366,7 @@ namespace Registrar {
 			case "UIKit.UIOffset": nativeType = "UIOffset"; return "xamarin_nsvalue_to_uioffset";
 			case "UIKit.NSDirectionalEdgeInsets": nativeType = "NSDirectionalEdgeInsets"; return "xamarin_nsvalue_to_nsdirectionaledgeinsets";
 			default:
-				throw ErrorHelper.CreateError(157, inputType.FullName, outputType.FullName, descriptiveMethodName);
+				throw ErrorHelper.CreateError(157, mtouch.Errors.MT0157, inputType.FullName, outputType.FullName, descriptiveMethodName);
 			}
 		}
 
@@ -4395,7 +4394,7 @@ namespace Registrar {
 			case "UIKit.UIOffset": return "xamarin_uioffset_to_nsvalue";
 			case "UIKit.NSDirectionalEdgeInsets": return "xamarin_nsdirectionaledgeinsets_to_nsvalue";
 			default:
-					throw ErrorHelper.CreateError(157, inputType.FullName, outputType.FullName, descriptiveMethodName);
+					throw ErrorHelper.CreateError(157, mtouch.Errors.MT0157, inputType.FullName, outputType.FullName, descriptiveMethodName);
 			}
 		}
 
@@ -4426,13 +4425,13 @@ namespace Registrar {
 			var isNativeArray = IsArray (nativeType);
 
 			if (isManagedArray != isNativeArray)
-				throw ErrorHelper.CreateError(157, inputType.FullName, outputType.FullName, descriptiveMethodName);
+				throw ErrorHelper.CreateError(157, mtouch.Errors.MT0157, inputType.FullName, outputType.FullName, descriptiveMethodName);
 
 			var classVariableName = $"{inputName}_conv_class";
 			body_setup.AppendLine ($"MonoClass *{classVariableName} = NULL;");
 			if (isManagedArray) {
 				if (isManagedNullable)
-					throw ErrorHelper.CreateError(157, inputType.FullName, outputType.FullName, descriptiveMethodName);
+					throw ErrorHelper.CreateError(157, mtouch.Errors.MT0157, inputType.FullName, outputType.FullName, descriptiveMethodName);
 				underlyingNativeType = GetElementType (nativeType);
 				underlyingManagedType = GetElementType (managedType);
 				sb.AppendLine ($"{classVariableName} = mono_class_get_element_class ({managedClassExpression});");
@@ -4462,13 +4461,13 @@ namespace Registrar {
 				MethodDefinition getConstantMethod, getValueMethod;
 				if (!IsSmartEnum (underlyingManagedType, out getConstantMethod, out getValueMethod)) {
 					// method linked away!? this should already be verified
-					ErrorHelper.Show (ErrorHelper.CreateWarning (158, underlyingManagedType.FullName));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (158, mtouch.Errors.MT0158, underlyingManagedType.FullName));
 					token = "INVALID_TOKEN_REF";
 				} else {
 					token = $"0x{CreateTokenReference (getValueMethod, TokenType.Method):X} /* {getValueMethod.FullName} */";
 				}
 			} else {
-				throw ErrorHelper.CreateError(157, inputType.FullName, outputType.FullName, descriptiveMethodName);
+				throw ErrorHelper.CreateError(157, mtouch.Errors.MT0158, inputType.FullName, outputType.FullName, descriptiveMethodName);
 			}
 			if (isManagedArray) {
 				sb.AppendLine ($"xamarin_id_to_managed_func {inputName}_conv_func = (xamarin_id_to_managed_func) {func};");
@@ -4513,13 +4512,13 @@ namespace Registrar {
 			var isNativeArray = IsArray (nativeType);
 
 			if (isManagedArray != isNativeArray)
-				throw ErrorHelper.CreateError(157, inputType.FullName, outputType.FullName, descriptiveMethodName);
+				throw ErrorHelper.CreateError(157, mtouch.Errors.MT0157, inputType.FullName, outputType.FullName, descriptiveMethodName);
 
 			var classVariableName = $"{inputName}_conv_class";
 			body_setup.AppendLine ($"MonoClass *{classVariableName} = NULL;");
 			if (isManagedArray) {
 				if (isManagedNullable)
-					throw ErrorHelper.CreateError(157, inputType.FullName, outputType.FullName, descriptiveMethodName);
+					throw ErrorHelper.CreateError(157, mtouch.Errors.MT0157, inputType.FullName, outputType.FullName, descriptiveMethodName);
 				underlyingNativeType = GetElementType (nativeType);
 				underlyingManagedType = GetElementType (managedType);
 				sb.AppendLine ($"{classVariableName} = mono_class_get_element_class ({managedClassExpression});");
@@ -4548,13 +4547,13 @@ namespace Registrar {
 				MethodDefinition getConstantMethod, getValueMethod;
 				if (!IsSmartEnum (underlyingManagedType, out getConstantMethod, out getValueMethod)) {
 					// method linked away!? this should already be verified
-					ErrorHelper.Show (ErrorHelper.CreateWarning (158, underlyingManagedType.FullName));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (158, mtouch.Errors.MT0158, underlyingManagedType.FullName));
 					token = "INVALID_TOKEN_REF";
 				} else {
 					token = $"0x{CreateTokenReference (getConstantMethod, TokenType.Method):X} /* {getConstantMethod.FullName} */";
 				}
 			} else {
-				throw ErrorHelper.CreateError(157, inputType.FullName, outputType.FullName, descriptiveMethodName);
+				throw ErrorHelper.CreateError(157, mtouch.Errors.MT0157, inputType.FullName, outputType.FullName, descriptiveMethodName);
 			}
 
 			if (isManagedArray) {
@@ -4598,7 +4597,7 @@ namespace Registrar {
 			case TokenType.Method:
 				break; // OK
 			default:
-				throw ErrorHelper.CreateError (159, $"Internal error: unsupported tokentype ({member.MetadataToken.TokenType}) for {member.FullName}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+				throw ErrorHelper.CreateError (159, mtouch.Errors.MT0159, member.MetadataToken.TokenType,  member.FullName);
 			}
 			full_token_references.AppendFormat ("\t\t{{ /* #{3} = 0x{4:X} */ \"{0}\", 0x{1:X}, 0x{2:X} }},\n", GetAssemblyName (member.Module.Assembly), member.Module.MetadataToken.ToUInt32 (), member.MetadataToken.ToUInt32 (), full_token_reference_count, rv);
 			return rv;
@@ -4777,7 +4776,7 @@ namespace Registrar {
 			try {
 				wrapperName = TryGeneratePInvokeWrapper (state, method);
 			} catch (Exception e) {
-				throw ErrorHelper.CreateError (App, 4169, e, method, GetDescriptiveMethodName (method), e.Message);
+				throw ErrorHelper.CreateError (App, 4169, e, method, mtouch.Errors.MT4169, GetDescriptiveMethodName (method), e.Message);
 			}
 
 			// find the module reference to __Internal
@@ -4805,7 +4804,7 @@ namespace Registrar {
 		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
 		{
 			if (Target?.CachedLink == true)
-				throw ErrorHelper.CreateError (160,  Driver.NAME);
+				throw ErrorHelper.CreateError (160, mtouch.Errors.MT0160, Driver.NAME);
 
 			this.input_assemblies = assemblies;
 

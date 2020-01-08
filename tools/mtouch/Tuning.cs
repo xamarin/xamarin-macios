@@ -89,21 +89,21 @@ namespace MonoTouch.Tuner {
 				var re = me.InnerException as ResolutionException;
 				if (re == null) {
 					if (me.InnerException != null) {
-						throw ErrorHelper.CreateError (2102, me, me.Method.FullName, me.Method.Module, me.InnerException.Message);
+						throw ErrorHelper.CreateError (2102, me, mtouch.Errors.MT2102, me.Method.FullName, me.Method.Module, me.InnerException.Message);
 					} else {
-						throw ErrorHelper.CreateError (2107, me, me.Method.FullName, me.Method.Module);
+						throw ErrorHelper.CreateError (2106, me, mtouch.Errors.MT2106, me.Method.FullName, me.Method.Module);
 					}
 				} else {
 					TypeReference tr = (re.Member as TypeReference);
 					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-					throw ErrorHelper.CreateError (2101, me, re.Member, me.Method.FullName, scope);
+					throw ErrorHelper.CreateError (2101, me, mtouch.Errors.MT2101, re.Member, me.Method.FullName, scope);
 				}
 			} catch (ResolutionException re) {
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-				throw new MonoTouchException (2007, true, re, re.Member, scope);
+				throw new MonoTouchException (2007, true, re, mtouch.Errors.MT2007, re.Member, scope);
 			} catch (XmlResolutionException ex) {
-				throw new MonoTouchException (2017, true, ex, ex?.InnerException?.Message ?? ex.Message);
+				throw new MonoTouchException (2017, true, ex, mtouch.Errors.MT2017, ex?.InnerException?.Message ?? ex.Message);
 			} catch (Exception e) {
 				var message = new StringBuilder ();
 				if (e.Data.Count > 0) {
@@ -119,7 +119,7 @@ namespace MonoTouch.Tuner {
 						message.AppendLine ($"\tAssembly: `{a}`");
 				}
 				message.Append ($"Reason: {e.Message}");
-				throw new MonoTouchException (2001, true, e, message);
+				throw new MonoTouchException (2001, true, e, mtouch.Errors.MT2001, message);
 			}
 
 			assemblies = ListAssemblies (context);
@@ -264,7 +264,7 @@ namespace MonoTouch.Tuner {
 			filename = Path.GetFullPath (filename);
 
 			if (!File.Exists (filename))
-				throw new MonoTouchException (2004, true, filename);
+				throw new MonoTouchException (2004, true, mtouch.Errors.MT2004, filename);
 
 			try {
 				using (StreamReader sr = new StreamReader (filename)) {
@@ -272,7 +272,7 @@ namespace MonoTouch.Tuner {
 				}
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2005, true, e, filename);
+				throw new MonoTouchException (2005, true, e, mtouch.Errors.MT2005, filename);
 			}
 		}
 	}
@@ -327,7 +327,7 @@ namespace MonoTouch.Tuner {
 				base.ProcessAssembly (assembly);
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2103, true, e, assembly.FullName, e);
+				throw new MonoTouchException (2103, true, e, mtouch.Errors.MT2103, assembly.FullName, e);
 			}
 		}
 	}

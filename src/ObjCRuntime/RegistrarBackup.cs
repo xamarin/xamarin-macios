@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
+using mtouch;
 
 using Foundation;
 using ObjCRuntime;
@@ -223,7 +224,7 @@ namespace Registrar {
 							break;
 						}
 					}
-					AddException(ref exceptions, new ProductException(4146, showError, "The Name parameter of the Registrar attribute on the class '{0}' ('{3}') contains an invalid character: '{1}' (0x{2}).", Registrar.GetTypeFullName(Type), name[i], ((int)name[i]).ToString("x"), name));
+					AddException (ref exceptions, new ProductException (4146, showError, mtouch.Errors.MT4146, Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"), name));
 					break;
 				}
 			}
@@ -251,10 +252,10 @@ namespace Registrar {
 					Exception ex;
 
 					if (method.IsVariadic) {
-						ex = Registrar.CreateException(4140, method, "The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the variadic method takes {2} parameters, while the managed method has {3} parameters.",
+						ex = Registrar.CreateException (4140, method, mtouch.Errors.MT4140,
 							method.Method.DeclaringType.FullName, method.MethodName, nativeParamCount, paramCount, method.Selector);
 					} else {
-						ex = Registrar.CreateException(4117, method, "The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the method takes {2} parameters, while the managed method has {3} parameters.",
+						ex = Registrar.CreateException (4117, method, mtouch.Errors.MT4117,
 							method.Method.DeclaringType.FullName, method.MethodName, nativeParamCount, paramCount, method.Selector);
 					}
 
@@ -262,13 +263,13 @@ namespace Registrar {
 				}
 
 				if (method.IsVariadic && pars != null && Registrar.GetTypeFullName (pars [paramCount - 1]) != "System.IntPtr")
-					Registrar.AddException(ref exceptions, Registrar.CreateException(4123, method, "The type of the variadic parameter in the variadic function '{0}' must be System.IntPtr.", Registrar.GetDescriptiveMethodName(method.Method)));
-
+					Registrar.AddException (ref exceptions, Registrar.CreateException (4123, method, mtouch.Errors.MT4123, Registrar.GetDescriptiveMethodName (method.Method)));
+				
 				char ch;
 				var idx = method.Selector.IndexOfAny (invalidSelectorCharacters);
 				if (idx != -1) {
 					ch = method.Selector [idx];
-					Registrar.AddException(ref exceptions, Registrar.CreateException(4160, method, "Invalid character '{0}' (0x{1}) found in selector '{2}' for '{3}.{4}'",
+					Registrar.AddException (ref exceptions, Registrar.CreateException (4160, method, mtouch.Errors.MT4160,
 						ch, ((int) ch).ToString ("x"), method.Selector, Registrar.GetTypeFullName (Type), Registrar.GetDescriptiveMethodName (method.Method)));
 				}
 			}
@@ -294,7 +295,7 @@ namespace Registrar {
 							ap = ap.Insert (idx, "}");
 						}
 
-						AddException(ref exceptions, new ProductException(4177, true, $"The 'ProtocolType' parameter of the 'Adopts' attribute used in class '{Registrar.GetTypeFullName(Type)}' contains an invalid character. Value used: '{ap}' Invalid Char: '{str}'"));
+						AddException (ref exceptions, new ProductException (4177, true, mtouch.Errors.MT4117, Registrar.GetTypeFullName (Type), ap, str));
 					}
 				}
 			}
@@ -403,7 +404,7 @@ namespace Registrar {
 			void VerifyIsNotKeyword (ref List<Exception> exceptions, ObjCProperty property)
 			{
 				if (IsObjectiveCKeyword (property.Selector))
-					AddException(ref exceptions, CreateException(4164, property, "Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.", property.Name, property.Selector));
+					AddException (ref exceptions, CreateException (4164, property, mtouch.Errors.MT4164, property.Name, property.Selector));
 			}
 
 			public bool TryGetMember (string selector, bool is_static, out ObjCMember member)
@@ -421,10 +422,9 @@ namespace Registrar {
 				bool rv = true;
 				if (TryGetMember (member.Selector, member.IsNativeStatic, out existing)) {
 					if (existing.IsImplicit) {
-						AddException(ref exceptions, CreateException(4141, member, "Cannot register the selector '{0}' on the member '{1}.{2}' because Xamarin.iOS implicitly registers this selector.", member.Selector, Registrar.GetTypeFullName(Type), Registrar.GetMemberName(member)));
-					}
-					else {
-						AddException(ref exceptions, CreateException(4119, member, "Could not register the selector '{0}' of the member '{1}.{2}' because the selector is already registered on the member '{3}'.", member.Selector, Registrar.GetTypeFullName(Type), Registrar.GetMemberName(member), Registrar.GetMemberName(existing)));
+						AddException (ref exceptions, CreateException (4141, member, mtouch.Errors.MT4141, member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member)));
+					} else {
+						AddException (ref exceptions, CreateException (4119, member, mtouch.Errors.MT4119, member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member), Registrar.GetMemberName (existing)));
 					}
 					rv = false;
 				}
@@ -512,7 +512,7 @@ namespace Registrar {
 			public bool SetExportAttribute (ExportAttribute ea, ref List<Exception> exceptions)
 			{
 				if (string.IsNullOrEmpty (ea.Selector)) {
-					AddException(ref exceptions, Registrar.CreateException(4135, this, "The member '{0}' has an Export attribute without a selector. A selector is required.", FullName));
+					AddException (ref exceptions, Registrar.CreateException (4135, this, mtouch.Errors.MT4135, FullName));
 					return false;
 				}
 				Selector = ea.Selector;
@@ -536,7 +536,7 @@ namespace Registrar {
 				get { return selector; }
 				set {
 					if (string.IsNullOrEmpty (value))
-						throw Registrar.CreateException(4135, this, "The member '{0}' has an Export attribute without a selector. A selector is required.", FullName);
+						throw Registrar.CreateException (4135, this, mtouch.Errors.MT4135, FullName);
 					selector = value;
 				}
 			}
@@ -683,8 +683,8 @@ namespace Registrar {
 							var originalType = Registrar.GetBindAsAttribute (this, i)?.OriginalType;
 							if (originalType != null) {
 								if (!IsValidToManagedTypeConversion (originalType, parameters [i]))
-									throw Registrar.CreateException(4172, Method, $"The registrar can't convert from '{Registrar.GetTypeFullName(parameters[i])}' to '{originalType.FullName}' for the parameter '{Registrar.GetParameterName(Method, i)}' in the method {DescriptiveMethodName}.");
-								native_parameters[i] = originalType;
+									throw Registrar.CreateException (4172, Method, mtouch.Errors.MT4172, Registrar.GetTypeFullName (parameters [i]), originalType.FullName, Registrar.GetParameterName (Method, i), DescriptiveMethodName);
+								native_parameters [i] = originalType;
 							} else {
 								native_parameters [i] = parameters [i];
 							}
@@ -799,7 +799,7 @@ namespace Registrar {
 							var originalType = Registrar.GetBindAsAttribute (this, -1)?.OriginalType;
 							if (originalType != null) {
 								if (!IsValidToManagedTypeConversion (originalType, ReturnType))
-									throw Registrar.CreateException(4170, Method, $"The registrar can't convert from '{Registrar.GetTypeFullName(ReturnType)}' to '{originalType.FullName}' for the return value in the method {DescriptiveMethodName}.");
+									throw Registrar.CreateException (4170, Method, mtouch.Errors.MT4170, Registrar.GetTypeFullName (ReturnType), originalType.FullName, DescriptiveMethodName);
 								native_return_type = originalType;
 							} else {
 								native_return_type = ReturnType;
@@ -1158,13 +1158,13 @@ namespace Registrar {
 				if (parameter_index == -1) {
 					var returnType = GetReturnType (method.Method);
 					if (!AreEqual (returnType, attrib.Type))
-						throw CreateException (4171, method.Method, $"The BindAs attribute on the return value of the method {method.DescriptiveMethodName} is invalid: the BindAs type {GetTypeFullName(attrib.Type)} is different from the return type {GetTypeFullName(returnType)}.");
+						throw CreateException (4171, method.Method, mtouch.Errors.MT4171, method.DescriptiveMethodName, GetTypeFullName (attrib.Type), GetTypeFullName (returnType));
 				} else {
 					var parameterType = GetParameters (method.Method) [parameter_index];
 					if (IsByRef (parameterType))
 						parameterType = GetElementType (parameterType);
 					if (!AreEqual (parameterType, attrib.Type))
-						throw CreateException (4171, method.Method, $"The BindAs attribute on the parameter #{parameter_index + 1} is invalid: the BindAs type {GetTypeFullName(attrib.Type)} is different from the parameter type {GetTypeFullName(parameterType)}.");
+						throw CreateException (4186, method.Method, mtouch.Errors.MT4186, parameter_index + 1, GetTypeFullName (attrib.Type), GetTypeFullName (parameterType));
 				}
 
 				return attrib;
@@ -1177,8 +1177,8 @@ namespace Registrar {
 			attrib = GetBindAsAttribute (property);
 			if (attrib != null) {
 				var propertyType = GetPropertyType (property);
-				if (!AreEqual(propertyType, attrib.Type))
-					throw CreateException(4171, property, $"The BindAs attribute on the property {GetTypeFullName(method.DeclaringType.Type)}.{GetPropertyName(property)} is invalid: the BindAs type {GetTypeFullName(attrib.Type)} is different from the property type {GetTypeFullName(propertyType)}.");
+				if (!AreEqual (propertyType, attrib.Type))
+					throw CreateException (4187, property, mtouch.Errors.MT4187, GetTypeFullName (method.DeclaringType.Type), GetPropertyName (property), GetTypeFullName (attrib.Type));
 			}
 			return attrib;
 		}
@@ -1509,9 +1509,9 @@ namespace Registrar {
 			if (!IsGenericMethod (method))
 				return true;
 
-			AddException(ref exceptions, CreateException(4113, method,
-				"The registrar found a generic method: '{0}'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes",
-				GetDescriptiveMethodName(declaringType, method)));
+			AddException (ref exceptions, CreateException (4113, method, 
+				mtouch.Errors.MT4113, 
+				GetDescriptiveMethodName (declaringType, method)));
 			return false;
 		}
 
@@ -1617,9 +1617,8 @@ namespace Registrar {
 			TType constrained_type = null;
 
 			if (!VerifyIsConstrainedToNSObject (method.ReturnType, out constrained_type)) {
-				AddException(ref exceptions, CreateException(4129, method.Method, "The registrar found an invalid generic return type '{0}' in the method '{1}'. The generic return type must have an 'NSObject' constraint.", GetTypeFullName(method.ReturnType), GetDescriptiveMethodName(type, method.Method)));
+				AddException (ref exceptions, CreateException (4129, method.Method, mtouch.Errors.MT4129, GetTypeFullName (method.ReturnType), GetDescriptiveMethodName (type, method.Method)));
 				return false;
-
 			}
 			if (constrained_type != null)
 				method.ReturnType = constrained_type;
@@ -1632,7 +1631,7 @@ namespace Registrar {
 			for (int i = 0; i < pars.Length; i++) {
 				var p = pars [i];
 				if (!VerifyIsConstrainedToNSObject (p, out constrained_type)) {
-					AddException(ref exceptions, CreateException(4128, method.Method, "The registrar found an invalid generic parameter type '{0}' in the parameter {2} of the method '{1}'. The generic parameter must have an 'NSObject' constraint.", GetTypeFullName(p), GetDescriptiveMethodName(type, method.Method), GetParameterName(method.Method, i)));
+					AddException (ref exceptions, CreateException (4128, method.Method, mtouch.Errors.MT4128, GetTypeFullName (p), GetDescriptiveMethodName (type, method.Method), GetParameterName (method.Method, i)));
 					return false;
 				}
 				if (constrained_type != null) {
@@ -1806,24 +1805,24 @@ namespace Registrar {
 
 		ObjCType RegisterCategory (TType type, CategoryAttribute attrib, ref List<Exception> exceptions)
 		{
-			if (IsINativeObject(type)) {
-				AddException(ref exceptions, ErrorHelper.CreateError(4152, "Cannot register the type '{0}' as a category because it implements INativeObject or subclasses NSObject.", GetTypeFullName(type)));
+			if (IsINativeObject (type)) {
+				AddException (ref exceptions, ErrorHelper.CreateError (4152, mtouch.Errors.MT4152, GetTypeFullName (type)));
 				return null;
 			}
 
-			if (IsGenericType(type)) {
-				AddException(ref exceptions, ErrorHelper.CreateError(4153, "Cannot register the type '{0}' as a category because it's generic.", GetTypeFullName(type)));
+			if (IsGenericType (type)) {
+				AddException (ref exceptions, ErrorHelper.CreateError (4153, mtouch.Errors.MT4153, GetTypeFullName (type)));
 				return null;
 			}
 
 			if (attrib.Type == null) {
-				AddException(ref exceptions, ErrorHelper.CreateError(4151, "Cannot register the type '{0}' because the Type property in its Category attribute isn't set.", GetTypeFullName(type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4151, mtouch.Errors.MT4151, GetTypeFullName (type)));
 				return null;
 			}
 
-			var declaringType = RegisterType(attrib.Type, ref exceptions);
+			var declaringType = RegisterType (attrib.Type, ref exceptions);
 			if (declaringType == null) {
-				AddException(ref exceptions, ErrorHelper.CreateError(4150, "Cannot register the type '{0}' because the category type '{1}' in its Category attribute does not inherit from NSObject.", GetTypeFullName(type), GetTypeFullName(attrib.Type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4150, mtouch.Errors.MT4150, GetTypeFullName (type), GetTypeFullName (attrib.Type)));
 				return null;
 			}
 
@@ -1837,8 +1836,8 @@ namespace Registrar {
 			lock (categories_map) {
 				TType previous_type;
 				if (categories_map.TryGetValue (objcType.CategoryName, out previous_type)) {
-					AddException(ref exceptions, ErrorHelper.CreateError(4156, "Cannot register two categories ('{0}' and '{1}') with the same native name ('{2}')",
-						GetAssemblyQualifiedName(type), GetAssemblyQualifiedName(previous_type), objcType.CategoryName));
+					AddException (ref exceptions, ErrorHelper.CreateError (4156, mtouch.Errors.MT4156,
+						GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.CategoryName));
 					return null;
 				}
 				categories_map.Add (objcType.CategoryName, type);
@@ -1853,7 +1852,7 @@ namespace Registrar {
 				if (ea == null)
 					continue;
 
-				AddException(ref exceptions, CreateException(4158, ctor, "Cannot register the constructor {0}.{1} in the category {0} because constructors in categories are not supported.", GetTypeFullName(type), GetDescriptiveMethodName(ctor)));
+				AddException (ref exceptions, CreateException (4158, ctor, mtouch.Errors.MT4158, GetTypeFullName (type), GetDescriptiveMethodName (ctor)));
 			}
 
 			foreach (var method in CollectMethods (type)) {
@@ -1863,30 +1862,29 @@ namespace Registrar {
 					continue;
 					
 				if (!IsStatic (method)) {
-					AddException(ref exceptions, CreateException(4159, method, "Cannot register the method '{0}.{1}' as a category method because category methods must be static.", GetTypeFullName(type), GetMethodName(method)));
+					AddException (ref exceptions, CreateException (4159, method, mtouch.Errors.MT4159, GetTypeFullName (type), GetMethodName (method)));
 					return null;
 				}
 
 				if (HasThisAttribute (method)) {
 					var parameters = GetParameters (method);
 					if (parameters == null || parameters.Length == 0) {
-						AddException(ref exceptions, CreateException(4157, method, "Cannot register the category method '{0}.{1}' because at least one parameter is required for extension methods (and its type must match the category type '{2}').",
-							GetTypeFullName(type), GetMethodName(method), GetTypeFullName(declaringType.Type)));
+						AddException (ref exceptions, CreateException (4157, method, mtouch.Errors.MT4157,
+							GetTypeFullName (type), GetMethodName (method), GetTypeFullName (declaringType.Type)));
 						continue;
 					} else if (GetTypeFullName (parameters [0]) != GetTypeFullName (declaringType.Type)) {
-						AddException(ref exceptions, CreateException(4149, method, "Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').",
-							GetTypeFullName(type), GetMethodName(method), GetTypeFullName(parameters[0]), GetTypeFullName(declaringType.Type)));
+						AddException (ref exceptions, CreateException (4188, method, mtouch.Errors.MT4188,
+							GetTypeFullName (type), GetMethodName (method), GetTypeFullName (parameters [0]), GetTypeFullName (declaringType.Type)));
 						continue;
 					}
 				}
 
-				if (IsGenericMethod(method)) {
-					AddException(ref exceptions, CreateException(4154, method, "Cannot register the method '{0}.{1}' as a category method because it's generic.", GetTypeFullName(type), GetMethodName(method)));
+				if (IsGenericMethod (method)) {
+					AddException (ref exceptions, CreateException (4154, method, mtouch.Errors.MT4154, GetTypeFullName (type), GetMethodName (method)));
 					continue;
 				}
 
-
-				Trace("        [METHOD] {0} => {1}", method, ea.Selector);
+				Trace ("        [METHOD] {0} => {1}", method, ea.Selector);
 
 				var category_method = new ObjCMethod (this, declaringType, method)
 				{
@@ -1949,7 +1947,7 @@ namespace Registrar {
 					return null;
 
 				if (isGenericType) {
-					exceptions.Add(ErrorHelper.CreateError(4148, "The registrar found a generic protocol: '{0}'. Exporting generic protocols is not supported.", GetTypeFullName(type)));
+					exceptions.Add (ErrorHelper.CreateError (4148, mtouch.Errors.MT4148, GetTypeFullName (type)));
 					return null;
 				}
 
@@ -2001,7 +1999,7 @@ namespace Registrar {
 				VerifyTypeInSDK (ref exceptions, objcType.BaseType.Type, baseTypeOf: objcType.Type);
 
 			if (ObjCType.IsObjectiveCKeyword (objcType.ExportedName))
-				AddException(ref exceptions, ErrorHelper.CreateError(4168, $"Cannot register the type '{GetTypeFullName(type)}' because its Objective-C name '{objcType.ExportedName}' is an Objective-C keyword. Please use a different name."));
+				AddException (ref exceptions, ErrorHelper.CreateError (4168, mtouch.Errors.MT4168, GetTypeFullName (type), objcType.ExportedName));
 
 			// make sure all the protocols this type implements are registered
 			if (objcType.Protocols != null) {
@@ -2015,15 +2013,15 @@ namespace Registrar {
 			if (objcType.IsProtocol) {
 				lock (protocol_map) {
 					if (protocol_map.TryGetValue (objcType.ExportedName, out previous_type))
-						throw ErrorHelper.CreateError(4126, "Cannot register two managed protocols ('{0}' and '{1}') with the same native name ('{2}').",
-							GetAssemblyQualifiedName(type), GetAssemblyQualifiedName(previous_type), objcType.ExportedName);
+						throw ErrorHelper.CreateError (4126, mtouch.Errors.MT4126,
+							GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.ExportedName);
 					protocol_map.Add (objcType.ExportedName, type);
 				}
 			} else {
 				lock (type_map) {
 					if (type_map.TryGetValue (objcType.ExportedName, out previous_type))
-						throw ErrorHelper.CreateError(4118, "Cannot register two managed types ('{0}' and '{1}') with the same native name ('{2}').",
-							GetAssemblyQualifiedName(type), GetAssemblyQualifiedName(previous_type), objcType.ExportedName);
+						throw ErrorHelper.CreateError (4118, mtouch.Errors.MT4118,
+							GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.ExportedName);
 					type_map.Add (objcType.ExportedName, type);
 				}
 			}
@@ -2195,9 +2193,9 @@ namespace Registrar {
 					var ca = GetConnectAttribute (property);
 					if (ca != null) {
 						if (!IsINativeObject (GetPropertyType (property))) {
-							AddException(ref exceptions, CreateException(4139, property,
-								"The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'. Properties with the [Connect] attribute must have a property type of NSObject (or a subclass of NSObject).",
-								GetTypeFullName(GetPropertyType(property)), GetTypeFullName(type), GetPropertyName(property)));
+							AddException (ref exceptions, CreateException (4139, property,
+								mtouch.Errors.MT4139,
+								GetTypeFullName (GetPropertyType (property)), GetTypeFullName (type), GetPropertyName (property)));
 							continue;
 						}
 
@@ -2227,13 +2225,13 @@ namespace Registrar {
 				}
 
 				if (IsStatic (property) && isGenericType) {
-					AddException(ref exceptions, CreateException(4131, property, "The registrar cannot export static properties in generic classes ('{0}.{1}').", GetTypeFullName(type), GetPropertyName(property)));
+					AddException (ref exceptions, CreateException (4131, property, mtouch.Errors.MT4131, GetTypeFullName (type), GetPropertyName (property)));
 					continue;
 				}
 
 				TType property_type = null;
 				if (isGenericType && !VerifyIsConstrainedToNSObject (GetPropertyType (property), out property_type)) {
-					AddException(ref exceptions, CreateException(4132, property, "The registrar found an invalid generic return type '{0}' in the property '{1}.{2}'. The return type must have an 'NSObject' constraint.", GetTypeFullName(GetPropertyType(property)), GetTypeFullName(type), GetPropertyName(property)));
+					AddException (ref exceptions, CreateException (4132, property, mtouch.Errors.MT4132, GetTypeFullName (GetPropertyType (property)), GetTypeFullName (type), GetPropertyName (property)));
 					continue;
 				}
 				if (property_type == null)
@@ -2264,8 +2262,8 @@ namespace Registrar {
 
 					List<Exception> excs = null;
 					if (!method.ValidateSignature (ref excs)) {
-						exceptions.Add(CreateException(4138, excs[0], property, "The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'.",
-							GetTypeFullName(property.PropertyType), property.DeclaringType.FullName, property.Name));
+						exceptions.Add (CreateException (4138, excs [0], property, mtouch.Errors.MT4138,
+							GetTypeFullName (property.PropertyType), property.DeclaringType.FullName, property.Name));
 						continue;
 					}
 
@@ -2286,8 +2284,8 @@ namespace Registrar {
 
 					List<Exception> excs = null;
 					if (!method.ValidateSignature (ref excs)) {
-						exceptions.Add(CreateException(4138, excs[0], property, "The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'.",
-							GetTypeFullName(property.PropertyType), property.DeclaringType.FullName, property.Name));
+						exceptions.Add (CreateException (4138, excs [0], property, mtouch.Errors.MT4138,
+							GetTypeFullName (property.PropertyType), property.DeclaringType.FullName, property.Name));
 						continue;
 					}
 
@@ -2359,7 +2357,7 @@ namespace Registrar {
 #endif
 
 				if (IsStatic (method) && isGenericType) {
-					AddException(ref exceptions, CreateException(4130, method, "The registrar cannot export static methods in generic classes ('{0}').", GetDescriptiveMethodName(type, method)));
+					AddException (ref exceptions, CreateException (4130, method, mtouch.Errors.MT4130, GetDescriptiveMethodName (type, method)));
 					continue;
 				} else if (isGenericType && !VerifyIsConstrainedToNSObject (ref exceptions, type, objcMethod)) {
 					continue;
@@ -2527,7 +2525,7 @@ namespace Registrar {
 			} else {
 				signature.Append (ToSignature (return_type, member, ref success));
 				if (!success)
-					throw CreateException(4104, mi, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", GetTypeFullName(return_type), GetTypeFullName(declaring_type), GetDescriptiveMethodName(mi));
+					throw CreateException (4189, mi, mtouch.Errors.MT4189, GetTypeFullName (return_type), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
 			}
 
 			signature.Append (isBlockSignature ? "@?" : "@:");
@@ -2555,8 +2553,8 @@ namespace Registrar {
 							// to the source code.
 							parameters = GetParameters (mi);
 						}
-						throw CreateException(4136, mi, "The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'",
-							GetTypeFullName(parameters [i]), GetParameterName (mi, i), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
+						throw CreateException (4136, mi, mtouch.Errors.MT4136,
+							GetTypeFullName (parameters [i]), GetParameterName (mi, i), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
 					}
 				}
 			}
@@ -2572,9 +2570,9 @@ namespace Registrar {
 
 			var objcMethod = member as ObjCMethod;
 			if (objcMethod != null)
-				throw ErrorHelper.CreateError(4111, "The registrar cannot build a signature for type `{0}' in method `{1}`.", GetTypeFullName(type), GetTypeFullName(objcMethod.DeclaringType.Type) + "." + objcMethod.MethodName);
+				throw ErrorHelper.CreateError (4111, mtouch.Errors.MT4111, GetTypeFullName (type), GetTypeFullName (objcMethod.DeclaringType.Type) + "." + objcMethod.MethodName);
 
-			throw ErrorHelper.CreateError(4101, "The registrar cannot build a signature for type `{0}`.", GetTypeFullName(type));
+			throw ErrorHelper.CreateError (4101, mtouch.Errors.MT4101, GetTypeFullName (type));
 		}
 
 		public string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
@@ -2631,7 +2629,7 @@ namespace Registrar {
 			case "System.nfloat":
 				return Is64Bits ? "d" : "f";
 			case "System.DateTime":
-					throw CreateException(4102, member, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", "Foundation.NSDate", member.FullName);
+				throw CreateException (4102, member, mtouch.Errors.MT4102, "System.DateTime", "Foundation.NSDate", member.FullName);
 			}
 
 			if (Is (type, ObjCRuntime, "Selector"))
@@ -2642,7 +2640,7 @@ namespace Registrar {
 
 			if (IsINativeObject (type)) {
 				if (!IsGenericType (type) && !IsInterface (type) && !IsNSObject (type) && IsAbstract (type))
-					ErrorHelper.Show(CreateWarning(4179, member, $"The registrar found the abstract type '{type.FullName}' in the signature for '{member.FullName}'. Abstract types should not be used in the signature for a member exported to Objective-C."));
+					ErrorHelper.Show (CreateWarning (4179, member, mtouch.Errors.MT4179, type.FullName, member.FullName));
 				if (IsNSObject (type) && forProperty) {
 					return "@\"" + GetExportedTypeName (type) + "\"";
 				} else {
@@ -2661,7 +2659,7 @@ namespace Registrar {
 					case "System.UInt64":
 						return "I";
 					default:
-							throw CreateException(4145, "Invalid enum '{0}': enums with the [Native] attribute must have a underlying enum type of either 'long' or 'ulong'.", GetTypeFullName(type));
+						throw CreateException (4145, mtouch.Errors.MT4145, GetTypeFullName (type));
 					}
 				} else {
 					return ToSignature (GetEnumUnderlyingType (type), member, ref success);

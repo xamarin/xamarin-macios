@@ -97,7 +97,7 @@ namespace Xamarin.Bundler {
 
 #if MTOUCH
 			if (!App.OnlyStaticLibraries && Assemblies.Count ((v) => v.HasLinkWithAttributes) > 1) {
-				ErrorHelper.Warning (127);
+				ErrorHelper.Warning (127, mtouch.Errors.MT0127);
 				App.ClearAssemblyBuildTargets (); // the default is to compile to static libraries, so just revert to the default.
 			}
 #endif
@@ -113,7 +113,7 @@ namespace Xamarin.Bundler {
 				return rv;
 
 			var errno = Marshal.GetLastWin32Error ();
-			ErrorHelper.Warning (54, path, FileCopier.strerror (errno), errno);
+			ErrorHelper.Warning (54, mtouch.Errors.MT0054, path, FileCopier.strerror (errno), errno);
 			return path;
 		}
 
@@ -122,7 +122,7 @@ namespace Xamarin.Bundler {
 			if (App.LinkMode != LinkMode.None) {
 				foreach (Assembly assembly in Assemblies) {
 					if ((assembly.AssemblyDefinition.MainModule.Attributes & ModuleAttributes.ILOnly) == 0)
-						throw ErrorHelper.CreateError (2014, assembly.AssemblyDefinition.MainModule.FileName);
+						throw ErrorHelper.CreateError (2014, mtouch.Errors.MT2014, assembly.AssemblyDefinition.MainModule.FileName);
 				}
 			}
 		}
@@ -145,7 +145,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (asm == null)
-				throw ErrorHelper.CreateError (163, Driver.GetProductAssembly (App));
+				throw ErrorHelper.CreateError (163, mtouch.Errors.MT0163, Driver.GetProductAssembly (App));
 
 			AssemblyDefinition productAssembly = asm.AssemblyDefinition;
 
@@ -198,14 +198,14 @@ namespace Xamarin.Bundler {
 							// ld: embedded dylibs/frameworks are only supported on iOS 8.0 and later (@rpath/PushKit.framework/PushKit) for architecture armv7
 							// this was fixed in Xcode 6.2 (6.1 was still buggy) see #29786
 							if ((App.DeploymentTarget < v80) && (Driver.XcodeVersion < new Version (6, 2))) {
-								ErrorHelper.Warning (49, framework.Name);
+								ErrorHelper.Warning (49, mtouch.Errors.MT0049, framework.Name);
 								continue;
 							}
 							break;
 						case "WatchKit":
 							// Xcode 11 doesn't ship WatchKit for iOS
 							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
-								ErrorHelper.Warning (5219);
+								ErrorHelper.Warning (5219, mtouch.Errors.MT5219);
 								continue;
 							}
 							break;
@@ -297,7 +297,7 @@ namespace Xamarin.Bundler {
 			foreach (var name in App.IgnoredSymbols) {
 				var symbol = dynamic_symbols.Find (name);
 				if (symbol == null) {
-					ErrorHelper.Warning (5218, StringUtils.Quote (name));
+					ErrorHelper.Warning (5218, mtouch.Errors.MT5218, StringUtils.Quote (name));
 				} else {
 					symbol.Ignore = true;
 				}
@@ -360,7 +360,7 @@ namespace Xamarin.Bundler {
 					return true;
 				return App.Registrar != RegistrarMode.Static;
 			default:
-				throw ErrorHelper.CreateError (164, symbol.Type, symbol.Name);
+				throw ErrorHelper.CreateError (164, mtouch.Errors.MT0164, symbol.Type, symbol.Name);
 			}
 		}
 
@@ -404,7 +404,7 @@ namespace Xamarin.Bundler {
 					sb.AppendLine ($"@interface {symbol.ObjectiveCName} : NSObject @end");
 					break;
 				default:
-					throw ErrorHelper.CreateError(164, symbol.Type, symbol.Name);
+					throw ErrorHelper.CreateError(164, mtouch.Errors.MT0164, symbol.Type, symbol.Name);
 				}
 			}
 			sb.AppendLine ("static void __xamarin_symbol_referencer () __attribute__ ((used)) __attribute__ ((optnone));");
@@ -421,7 +421,7 @@ namespace Xamarin.Bundler {
 					sb.AppendLine ($"\tvalue = [{symbol.ObjectiveCName} class];");
 					break;
 				default:
-						throw ErrorHelper.CreateError(164, symbol.Type, symbol.Name);
+						throw ErrorHelper.CreateError(164, mtouch.Errors.MT0164, symbol.Type, symbol.Name);
 				}
 			}
 			sb.AppendLine ("}");

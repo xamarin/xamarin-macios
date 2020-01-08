@@ -171,7 +171,7 @@ namespace Xamarin.Bundler
 						var asm = line.Substring (1);
 						Assembly assembly;
 						if (!target.Assemblies.TryGetValue (Assembly.GetIdentity (asm), out assembly))
-							throw ErrorHelper.CreateError (162, asm, current.Name);
+							throw ErrorHelper.CreateError (162, mtouch.Errors.MT0162, asm, current.Name);
 						current.AddAssembly (assembly.AssemblyDefinition);
 					} else {
 						var eq = line.IndexOf ('=');

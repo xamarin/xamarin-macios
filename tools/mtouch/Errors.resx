@@ -1097,6 +1097,20 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT0178" xml:space="preserve">
+		<value>Internal error: unknown abi: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0179" xml:space="preserve">
+		<value>Internal error: could not find the method {0}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT1009" xml:space="preserve">
 		<value>Could not copy the assembly '{0}' to '{1}': {2}
@@ -1167,7 +1181,21 @@
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT1300" xml:space="preserve">
+		<value>Unsupported bitcode platform: {0}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT1301" xml:space="preserve">
+		<value>Unsupported TvOS ABI: {0}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT1302" xml:space="preserve">
 		<value>Could not extract the native library '{0}' from '{1}'. Please ensure the native library was properly embedded in the managed assembly (if the assembly was built using a binding project, the native library must be included in the project, and its Build Action must be 'ObjcBindingNativeLibrary').
 		</value>
@@ -1503,6 +1531,13 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT4113" xml:space="preserve">
+		<value>The registrar found a generic method: '{0}'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT4114" xml:space="preserve">
 		<value>Unexpected error in the registrar for the method '{0}.{1}' - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
@@ -1510,14 +1545,28 @@
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT4117" xml:space="preserve">
+		<value>The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the method takes {2} parameters, while the managed method has {3} parameters.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT4118" xml:space="preserve">
 		<value>Cannot register two managed types ('{0}' and '{1}') with the same native name ('{2}').
 		</value>
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT4119" xml:space="preserve">
+		<value>Could not register the selector '{0}' of the member '{1}.{2}' because the selector is already registered on the member '{3}'.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT4120" xml:space="preserve">
 		<value>The registrar found an unknown field type '{0}' in field '{1}.{2}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
@@ -1527,6 +1576,13 @@
 
 	<data name="MT4121" xml:space="preserve">
 		<value>Cannot use GCC/G++ to compile the generated code from the static registrar when using the Accounts framework (the header files provided by Apple used during the compilation require Clang). Either use Clang (--compiler:clang) or the dynamic registrar (--registrar:dynamic).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4123" xml:space="preserve">
+		<value>The type of the variadic parameter in the variadic function '{0}' must be System.IntPtr.
 		</value>
 		<comment>
 		</comment>
@@ -1552,9 +1608,86 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT4128" xml:space="preserve">
+		<value>The registrar found an invalid generic parameter type '{0}' in the parameter {2} of the method '{1}'. The generic parameter must have an 'NSObject' constraint.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4129" xml:space="preserve">
+		<value>The registrar found an invalid generic return type '{0}' in the method '{1}'. The generic return type must have an 'NSObject' constraint.
+		</value>
+		<comment>
+		</comment>
+	</data>
 
+	<data name="MT4130" xml:space="preserve">
+		<value>The registrar cannot export static methods in generic classes ('{0}').
+		</value>
+		<comment>
+		</comment>
+	</data>	
+	
+	<data name="MT4131" xml:space="preserve">
+		<value>The registrar cannot export static properties in generic classes ('{0}.{1}').
+		</value>
+		<comment>
+		</comment>
+	</data>	
+	
+	<data name="MT4132" xml:space="preserve">
+		<value>The registrar found an invalid generic return type '{0}' in the property '{1}.{2}'. The return type must have an 'NSObject' constraint.
+		</value>
+		<comment>
+		</comment>
+	</data>	
+	
+	<data name="MT4135" xml:space="preserve">
+		<value>The member '{0}' has an Export attribute without a selector. A selector is required.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4136" xml:space="preserve">
+		<value>The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT4137" xml:space="preserve">
 		<value>Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4138" xml:space="preserve">
+		<value>The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4139" xml:space="preserve">
+		<value>The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'. Properties with the [Connect] attribute must have a property type of NSObject (or a subclass of NSObject).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4140" xml:space="preserve">
+		<value>The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the variadic method takes {2} parameters, while the managed method has {3} parameters.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4141" xml:space="preserve">
+		<value>Cannot register the selector '{0}' on the member '{1}.{2}' because Xamarin.iOS implicitly registers this selector.
 		</value>
 		<comment>
 		</comment>
@@ -1615,14 +1748,49 @@
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT4154" xml:space="preserve">
+		<value>Cannot register the method '{0}.{1}' as a category method because it's generic.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT4156" xml:space="preserve">
 		<value>Cannot register two categories ('{0}' and '{1}') with the same native name ('{2}')
 		</value>
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT4157" xml:space="preserve">
+		<value>Cannot register the category method '{0}.{1}' because at least one parameter is required for extension methods (and its type must match the category type '{2}').
+		</value>
+		<comment>
+		</comment>
+	</data>	
+	
+	<data name="MT4158" xml:space="preserve">
+		<value>Cannot register the constructor {0}.{1} in the category {0} because constructors in categories are not supported.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4159" xml:space="preserve">
+		<value>Cannot register the method '{0}.{1}' as a category method because category methods must be static.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4160" xml:space="preserve">
+		<value>Invalid character '{0}' (0x{1}) found in selector '{2}' for '{3}.{4}'
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT4161" xml:space="preserve">
 		<value>The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).
 		</value>
@@ -1636,9 +1804,30 @@
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT4164" xml:space="preserve">
+		<value>Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT4165" xml:space="preserve">
 		<value>The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4166" xml:space="preserve">
+		<value>Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4167" xml:space="preserve">
+		<value>Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that doesn't implement INativeObject ({2}).
 		</value>
 		<comment>
 		</comment>
@@ -1657,7 +1846,28 @@
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT4170" xml:space="preserve">
+		<value>The registrar can't convert from '{0}' to '{1}' for the return value in the method {2}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4171" xml:space="preserve">
+		<value>The BindAs attribute on the return value of the method {0} is invalid: the BindAs type {1} is different from the return type {2}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4172" xml:space="preserve">
+		<value>The registrar can't convert from '{0}' to '{1}' for the parameter '{2}' in the method {3}.
+		</value>
+		<comment>
+		</comment>
+	</data>	
+	
 	<data name="MT4173" xml:space="preserve">
 		<value>The registrar can't compute the block signature for the delegate of type {0} in the method {1} because {0} doesn't have a specific signature.
 		</value>
@@ -1685,6 +1895,13 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT4177" xml:space="preserve">
+		<value>The 'ProtocolType' parameter of the 'Adopts' attribute used in class '{0}' contains an invalid character. Value used: '{1}' Invalid Char: '{2}'
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT4178" xml:space="preserve">
 		<value>The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.
@@ -1692,7 +1909,14 @@
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT4179" xml:space="preserve">
+		<value>The registrar found the abstract type '{0}' in the signature for '{1}'. Abstract types should not be used in the signature for a member exported to Objective-C.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT4180" xml:space="preserve">
 		<value>Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
@@ -1734,6 +1958,48 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT4186" xml:space="preserve">
+		<value>The BindAs attribute on the parameter #{0} is invalid: the BindAs type {1} is different from the parameter type {2}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4187" xml:space="preserve">
+		<value>The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT4188" xml:space="preserve">
+		<value>Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4189" xml:space="preserve">
+		<value>The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4190" xml:space="preserve">
+		<value>Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>	
+	
+	<data name="MT4191" xml:space="preserve">
+		<value>Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>		
 
 	<data name="MT5101" xml:space="preserve">
 		<value>Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
@@ -1919,6 +2185,13 @@
 
 	<data name="MT5306" xml:space="preserve">
 		<value>Failed to create the a fat library. Please review the build log.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT8018" xml:space="preserve">
+		<value>Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>
 		<comment>
 		</comment>
