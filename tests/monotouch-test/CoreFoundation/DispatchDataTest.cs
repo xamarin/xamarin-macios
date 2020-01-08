@@ -41,7 +41,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void FromReadOnlySpanTest ()
 		{
-			//var readOnlySpan = new ReadOnlyMemory <byte> (testData);
 			var readOnlySpan = new ReadOnlySpan<byte> (testData);
 			using (var dd = DispatchData.FromReadOnlySpan (readOnlySpan)) {
 				var data = dd.ToArray ();
