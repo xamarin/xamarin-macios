@@ -117,10 +117,8 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public string GetLibNativeName()
-		{
-			switch (MonoNativeMode)
-			{
+		public string GetLibNativeName () {
+			switch (MonoNativeMode) {
 				case MonoNativeMode.Unified:
 					return "libmono-native-unified";
 				case MonoNativeMode.Compat:
@@ -128,6 +126,7 @@ namespace Xamarin.Bundler
 				default:
 					throw ErrorHelper.CreateError(172, mtouch.Errors.MT0172, MonoNativeMode);
 			}
+
 		}
 
 		List<Abi> GetArchitectures (AssemblyBuildTarget build_target)
@@ -741,8 +740,7 @@ namespace Xamarin.Bundler
 			foreach (var group in output_assemblies.GroupBy ((v) => v.Name.Name)) {
 				if (group.Count () != 1)
 					//todo: the param in not localizaed, fix this
-					throw ErrorHelper.CreateError (175, mtouch.Errors.MT0175,
-												   $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join ("\n\t", group.Select ((v) => v.MainModule.FileName).ToArray ())}");
+					throw ErrorHelper.CreateError (175, mtouch.Errors.MT0175, String.Format(mtouch.Errors.MT0175_a, group.Key, string.Join("\n\t", group.Select((v) => v.MainModule.FileName).ToArray())));
 			}
 
 			// Update (add/remove) list of assemblies in each app, since the linker may have both added and removed assemblies.
@@ -773,8 +771,7 @@ namespace Xamarin.Bundler
 
 						var ad = output_assemblies.SingleOrDefault ((AssemblyDefinition v) => v.Name.Name == next);
 						if (ad == null)
-							//todo: the param in not localizaed, fix this
-							throw ErrorHelper.CreateError (174, mtouch.Errors.MT0174, $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker.");
+							throw ErrorHelper.CreateError(174, mtouch.Errors.MT0174, String.Format(mtouch.Errors.MT0174_a, next));
 						if (ad.MainModule.HasAssemblyReferences) {
 							foreach (var ar in ad.MainModule.AssemblyReferences) {
 								if (!collectedNames.Contains (ar.Name) && !queue.Contains (ar.Name))
@@ -1054,11 +1051,9 @@ namespace Xamarin.Bundler
 					var existingLinkTask = infos.Where ((v) => v.LinkTask != null).Select ((v) => v.LinkTask).ToList ();
 					if (existingLinkTask.Count > 0) {
 						if (existingLinkTask.Count != infos.Count)
-							//todo: param not localizaed fix this
-							throw ErrorHelper.CreateError (175, mtouch.Errors.MT0175, $"Not all assemblies for {name} have link tasks");
+							throw ErrorHelper.CreateError (175, mtouch.Errors.MT0175, String.Format(mtouch.Errors.MT0175_b, name));
 						if (!existingLinkTask.All ((v) => v == existingLinkTask [0]))
-							//todo: param not localizaed fix this
-							throw ErrorHelper.CreateError (175, mtouch.Errors.MT0175, $"Link tasks for {name} aren't all the same");
+							throw ErrorHelper.CreateError (175, mtouch.Errors.MT0175, String.Format(mtouch.Errors.MT0175_c, name));
 
 						LinkWithBuildTarget (build_target, name, existingLinkTask [0], assemblies);
 						continue;

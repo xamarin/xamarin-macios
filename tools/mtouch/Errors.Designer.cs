@@ -1061,9 +1061,33 @@ namespace mtouch {
             }
         }
         
+        internal static string MT0174_a {
+            get {
+                return ResourceManager.GetString("MT0174_a", resourceCulture);
+            }
+        }
+        
         internal static string MT0175 {
             get {
                 return ResourceManager.GetString("MT0175", resourceCulture);
+            }
+        }
+        
+        internal static string MT0175_a {
+            get {
+                return ResourceManager.GetString("MT0175_a", resourceCulture);
+            }
+        }
+        
+        internal static string MT0175_b {
+            get {
+                return ResourceManager.GetString("MT0175_b", resourceCulture);
+            }
+        }
+        
+        internal static string MT0175_c {
+            get {
+                return ResourceManager.GetString("MT0175_c", resourceCulture);
             }
         }
         

@@ -1195,14 +1195,42 @@
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT0174_a" xml:space="preserve">
+		<value>The assembly {0} was referenced by another assembly, but at the same time linked out by the linker.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT0175" xml:space="preserve">
 		<value>Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 		</value>
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT0175_a" xml:space="preserve">
+		<value>The linker output contains more than one assemblies named '{0}':\n\t{1}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0175_b" xml:space="preserve">
+		<value>Not all assemblies for {0} have link tasks
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0175_c" xml:space="preserve">
+		<value>Link tasks for {0} aren't all the same
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT0176" xml:space="preserve">
 		<value>Internal error: invalid symbol mode: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 		</value>

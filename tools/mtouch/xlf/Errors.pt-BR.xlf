@@ -1346,10 +1346,42 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT0174_a">
+        <source>The assembly {0} was referenced by another assembly, but at the same time linked out by the linker.
+		</source>
+        <target state="new">The assembly {0} was referenced by another assembly, but at the same time linked out by the linker.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT0175">
         <source>Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 		</source>
         <target state="new">Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0175_a">
+        <source>The linker output contains more than one assemblies named '{0}':\n\t{1}
+		</source>
+        <target state="new">The linker output contains more than one assemblies named '{0}':\n\t{1}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0175_b">
+        <source>Not all assemblies for {0} have link tasks
+		</source>
+        <target state="new">Not all assemblies for {0} have link tasks
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0175_c">
+        <source>Link tasks for {0} aren't all the same
+		</source>
+        <target state="new">Link tasks for {0} aren't all the same
 		</target>
         <note>
 		</note>
