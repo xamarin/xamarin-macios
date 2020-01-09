@@ -67,7 +67,6 @@ namespace Xamarin.Bundler {
 		// This code is shared between our packaging tools (mmp\mtouch) and msbuild tasks
 #if MMP || MTOUCH
 		public static void Log (int min_verbosity, string format, params object[] args) => Driver.Log (min_verbosity, format, args);
-		[Obsolete("localize this")]
 		public static Exception CreateError (int code, string message, params object[] args) => ErrorHelper.CreateError (code, message, args);
 #else
 		// LogMessage and LogError are instance objects on the tasks themselves and bubbling an event up is not ideal

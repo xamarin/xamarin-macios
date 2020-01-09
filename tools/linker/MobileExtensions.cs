@@ -62,7 +62,6 @@ namespace Xamarin.Linker {
 				if (!tr.Is (Namespaces.ObjCRuntime, "BindingImplAttribute"))
 					continue;
 
-				//todo: not sure if these are mmp or mtouch errors
 				if (ca.HasFields)
 					throw ErrorHelper.CreateError (2105, "The [BindingImpl] attribute on the member '{0}' is invalid: did not expect fields.", provider.AsString ());
 				if (ca.HasProperties)

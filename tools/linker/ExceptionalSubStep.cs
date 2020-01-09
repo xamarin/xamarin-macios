@@ -99,7 +99,6 @@ namespace Xamarin.Linker {
 
 		// failure overrides, with defaults
 
-		//todo: localize these errors?
 		protected virtual Exception Fail (AssemblyDefinition assembly, Exception e)
 		{
 			var message = $"{Name} failed processing `{assembly?.FullName}`.";

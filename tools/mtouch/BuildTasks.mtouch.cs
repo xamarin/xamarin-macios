@@ -182,7 +182,6 @@ namespace Xamarin.Bundler
 		protected override void CompilationFailed (int exitCode)
 		{
 			throw ErrorHelper.CreateError(4109, "Failed to compile the generated registrar code. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
-
 		}
 	}
 
@@ -248,7 +247,6 @@ namespace Xamarin.Bundler
 				return;
 
 			if (line.StartsWith ("AOT restriction: Method '", StringComparison.Ordinal) && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
-				//todo: fix this later (localize variable: line)
 				exceptions.Add (ErrorHelper.CreateError (3002, line));
 			} else {
 				CheckFor5107 (AssemblyName, line, exceptions);
