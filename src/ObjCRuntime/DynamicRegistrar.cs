@@ -506,7 +506,6 @@ namespace Registrar {
 			return true;
 		}
 
-		//[Obsolete("what is going on with CreateExceptionImpl")]
 		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, MethodBase method, string message, params object[] args)
 		{
 			// There doesn't seem to be a way to find the source code location
@@ -516,7 +515,6 @@ namespace Registrar {
 			return ErrorHelper.CreateWarning (code, innerException, message, args);
 		}
 
-		//[Obsolete("what is going on with CreateExceptionImpl")]
 		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, Type type, string message, params object [] args)
 		{
 			// There doesn't seem to be a way to find the source code location
