@@ -1054,14 +1054,14 @@ namespace Xamarin.Bundler {
 				foreach (var key in assembly_build_targets.Keys) {
 					Tuple<AssemblyBuildTarget, string> appex_value;
 					if (!appex.assembly_build_targets.TryGetValue (key, out appex_value)) {
-						ErrorHelper.Warning(113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
+						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
 						applicable = false;
 						break;
 					}
 
 					var value = assembly_build_targets [key];
 					if (value.Item1 != appex_value.Item1 || value.Item2 != appex_value.Item2) {
-						ErrorHelper.Warning(113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
+						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
 						applicable = false;
 						break;
 					}
