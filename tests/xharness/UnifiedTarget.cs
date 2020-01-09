@@ -8,6 +8,8 @@ namespace xharness
 {
 	public class UnifiedTarget : iOSTarget
 	{
+		// special cases for the BCL applications
+		
 		public override string Suffix {
 			get {
 				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix : "-ios";
@@ -67,9 +69,15 @@ namespace xharness
 
 		protected override void CalculateName ()
 		{
-			if (TargetDirectory.Contains ("bcl-test"))
-				Name = (TestProject.Name == "mscorlib")? "mscorlib" : TestProject.Name.Substring (TestProject.Name.IndexOf ("BCL", StringComparison.Ordinal)); 
-			else
+			if (TargetDirectory.Contains ("bcl-test")) {
+				if (TestProject.Name.StartsWith ("mscorlib", StringComparison.Ordinal))
+					Name = TestProject.Name;
+				else {
+					var bclIndex = TestProject.Name.IndexOf ("BCL", StringComparison.Ordinal);
+					// most of the BCL test are grouped, but there are a number that are not, in those cases remove the "{testype} Mono " prefix
+					Name = (bclIndex == -1) ? TestProject.Name.Substring (TestProject.Name.IndexOf ("Mono ", StringComparison.Ordinal) + "Mono ".Length) : TestProject.Name.Substring (bclIndex);
+				}
+			}  else
 				base.CalculateName ();
 			if (MonoNativeInfo != null)
 				Name = Name + MonoNativeInfo.FlavorSuffix;

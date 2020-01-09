@@ -27,6 +27,11 @@ namespace Xamarin {
 		public const string MinWatchOSCompanionSimulator = "@MIN_WATCHOS_COMPANION_SIMULATOR_VERSION@";
 		public const string MinTVOSSimulator = "@MIN_TVOS_SIMULATOR_VERSION@";
 
+		public const string MaxiOSSimulator = "@MAX_IOS_VERSION@";
+		public const string MaxWatchOSSimulator = "@MAX_WATCH_VERSION@";
+		public const string MaxWatchOSCompanionSimulator = "@MAX_IOS_VERSION@";
+		public const string MaxTVOSSimulator = "@MAX_TVOS_VERSION@";
+
 		public static Version OSXVersion { get { return new Version (OSX); }}
 		public static Version iOSVersion { get { return new Version (iOS); }}
 		public static Version WatchOSVersion { get { return new Version (WatchOS); }}
@@ -39,8 +44,13 @@ namespace Xamarin {
 
 		public static Version MiniOSSimulatorVersion { get { return new Version (MiniOSSimulator); }}
 		public static Version MinWatchOSSimulatorVersion { get { return new Version (MinWatchOSSimulator); }}
-		public static Version MinWatchOSCompanionSimulatorVersion { get { return new Version (MinWatchOSSimulator); }}
+		public static Version MinWatchOSCompanionSimulatorVersion { get { return new Version (MinWatchOSCompanionSimulator); }}
 		public static Version MinTVOSSimulatorVersion { get { return new Version (MinTVOSSimulator); }}
+
+		public static Version MaxiOSSimulatorVersion { get { return new Version (MaxiOSSimulator); }}
+		public static Version MaxWatchOSSimulatorVersion { get { return new Version (MaxWatchOSSimulator); }}
+		public static Version MaxWatchOSCompanionSimulatorVersion { get { return new Version (MaxWatchOSCompanionSimulator); }}
+		public static Version MaxTVOSSimulatorVersion { get { return new Version (MaxTVOSSimulator); }}
 
 		public static Version XcodeVersion { get { return new Version (Xcode); }}
 

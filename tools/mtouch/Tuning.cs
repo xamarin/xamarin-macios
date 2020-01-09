@@ -58,7 +58,7 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	static class Linker {
+	static partial class Linker {
 
 		public static void Process (LinkerOptions options, out MonoTouchLinkContext context, out List<AssemblyDefinition> assemblies)
 		{
@@ -76,51 +76,7 @@ namespace MonoTouch.Tuner {
 					prepareDependenciesDump.Invoke (context.Annotations, new object[1] { string.Format ("{0}{1}linker-dependencies.xml.gz", options.OutputDirectory, Path.DirectorySeparatorChar) });
 			}
 
-			try {
-				pipeline.Process (context);
-			} catch (FileNotFoundException fnfe) {
-				// Cecil throw this if the assembly is not found
-				throw new MonoTouchException (2002, true, fnfe, fnfe.Message);
-			} catch (AggregateException) {
-				throw;
-			} catch (MonoTouchException) {
-				throw;
-			} catch (MarkException me) {
-				var re = me.InnerException as ResolutionException;
-				if (re == null) {
-					if (me.InnerException != null) {
-						throw ErrorHelper.CreateError (2102, me, mtouch.Errors.MT2102, me.Method.FullName, me.Method.Module, me.InnerException.Message);
-					} else {
-						throw ErrorHelper.CreateError (2106, me, mtouch.Errors.MT2106, me.Method.FullName, me.Method.Module);
-					}
-				} else {
-					TypeReference tr = (re.Member as TypeReference);
-					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-					throw ErrorHelper.CreateError (2101, me, mtouch.Errors.MT2101, re.Member, me.Method.FullName, scope);
-				}
-			} catch (ResolutionException re) {
-				TypeReference tr = (re.Member as TypeReference);
-				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-				throw new MonoTouchException (2007, true, re, mtouch.Errors.MT2007, re.Member, scope);
-			} catch (XmlResolutionException ex) {
-				throw new MonoTouchException (2017, true, ex, mtouch.Errors.MT2017, ex?.InnerException?.Message ?? ex.Message);
-			} catch (Exception e) {
-				var message = new StringBuilder ();
-				if (e.Data.Count > 0) {
-					message.AppendLine ();
-					var m = e.Data ["MethodDefinition"] as string;
-					if (m != null)
-						message.AppendLine ($"\tMethod: `{m}`");
-					var t = e.Data ["TypeReference"] as string;
-					if (t != null)
-						message.AppendLine ($"\tType: `{t}`");
-					var a = e.Data ["AssemblyDefinition"] as string;
-					if (a != null)
-						message.AppendLine ($"\tAssembly: `{a}`");
-				}
-				message.Append ($"Reason: {e.Message}");
-				throw new MonoTouchException (2001, true, e, mtouch.Errors.MT2001, message);
-			}
+			Process (pipeline, context);
 
 			assemblies = ListAssemblies (context);
 		}
@@ -264,7 +220,7 @@ namespace MonoTouch.Tuner {
 			filename = Path.GetFullPath (filename);
 
 			if (!File.Exists (filename))
-				throw new MonoTouchException (2004, true, mtouch.Errors.MT2004, filename);
+				throw new MonoTouchException (2004, true, mtouch.mtouchErrors.MT2004, filename);
 
 			try {
 				using (StreamReader sr = new StreamReader (filename)) {
@@ -272,7 +228,7 @@ namespace MonoTouch.Tuner {
 				}
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2005, true, e, mtouch.Errors.MT2005, filename);
+				throw new MonoTouchException (2005, true, e, mtouch.mtouchErrors.MT2005, filename);
 			}
 		}
 	}
@@ -327,7 +283,7 @@ namespace MonoTouch.Tuner {
 				base.ProcessAssembly (assembly);
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2103, true, e, mtouch.Errors.MT2103, assembly.FullName, e);
+				throw new MonoTouchException (2103, true, e, mtouch.mtouchErrors.MT2103, assembly.FullName, e);
 			}
 		}
 	}

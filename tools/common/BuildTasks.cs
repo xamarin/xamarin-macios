@@ -178,7 +178,7 @@ namespace Xamarin.Bundler
 		public bool Rebuilt {
 			get {
 				if (!completed_task.Task.IsCompleted)
-					throw ErrorHelper.CreateError (153, mtouch.Errors.MT0153);
+					throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_A);
 				return completed_task.Task.Result;
 			}
 		}
@@ -287,7 +287,7 @@ namespace Xamarin.Bundler
 
 		protected virtual void Execute ()
 		{
-			throw ErrorHelper.CreateError (154, mtouch.Errors.MT0154);
+			throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_B);
 		}
 
 		public override string ToString ()
@@ -302,7 +302,7 @@ namespace Xamarin.Bundler
 				if (!reported_5107) {
 					// There can be thousands of these, but we only need one.
 					reported_5107 = true;
-					exceptions.Add (ErrorHelper.CreateError (5107, mtouch.Errors.MT5107, assembly_name));
+					exceptions.Add (ErrorHelper.CreateError (5107, mtouch.mtouchErrors.MT5107, assembly_name));
 				}
 			}
 		}
@@ -315,7 +315,7 @@ namespace Xamarin.Bundler
 
 			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
 				lines = lines.Take (1000); // Limit the output so that we don't overload VSfM.
-				exceptions.Add (ErrorHelper.CreateWarning (5108, mtouch.Errors.MT5108));
+				exceptions.Add (ErrorHelper.CreateWarning (5108, mtouch.mtouchErrors.MT5108));
 			}
 
 			// Construct the entire message before writing anything, so that there's a better chance the message isn't

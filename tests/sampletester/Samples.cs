@@ -8,7 +8,7 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "ios-samples"; // monotouch-samples redirects to ios-samples
 		const string CATEGORY = "iossamples"; // categories can't contain dashes
-		const string HASH = "bffa511ecb8f74b2d4a42418a130d0c83c9723cf";
+		const string HASH = "150f0e6167e2133182924114a3b36e8384f632f1";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj

@@ -15,6 +15,7 @@ namespace BCLTestImporter {
 
 		static string NUnitPattern = "monotouch_*_test.dll"; 
 		static string xUnitPattern = "monotouch_*_xunit-test.dll";
+		static readonly string splitPattern = ".part";
 		internal static readonly string ProjectGuidKey = "%PROJECT GUID%";
 		internal static readonly string NameKey = "%NAME%";
 		internal static readonly string ReferencesKey = "%REFERENCES%";
@@ -127,16 +128,18 @@ namespace BCLTestImporter {
 
 			// BCL tests group 4
 			new BclTestProjectInfo { Name = "SystemNumericsXunit", assemblies = new [] { "monotouch_System.Numerics_xunit-test.dll" }, Group = "BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemCoreXunit", assemblies = new [] { "monotouch_System.Core_xunit-test.dll" }, Group = "BCL tests group 4" },
-			new BclTestProjectInfo { Name = "SystemXunit", assemblies = new [] { "monotouch_System_xunit-test.dll" }, ExtraArgs = $"--xml={Path.Combine (Harness.RootDirectory, "bcl-test", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", Group = "BCL tests group 4" },
 			new BclTestProjectInfo { Name = "MicrosoftCSharpXunit", assemblies = new [] { "monotouch_Microsoft.CSharp_xunit-test.dll" }, Group = "BCL tests group 4" },
 
 			// BCL tests group 5
-			new BclTestProjectInfo { Name = "mscorlib", assemblies = new [] { "monotouch_corlib_xunit-test.dll" }, Group = "mscorlib" }, // special testcase for the corlib which is later used in xHarness for diff config options
+			new BclTestProjectInfo { Name = "SystemNetHttpUnitTestsXunit", assemblies = new [] { "monotouch_System.Net.Http.UnitTests_xunit-test.dll" }, Group = "BCL tests group 5" },
+			new BclTestProjectInfo { Name = "SystemNetHttpFunctionalTestsXunit", assemblies = new [] { "monotouch_System.Net.Http.FunctionalTests_xunit-test.dll" }, Group = "BCL tests group 5" },
 
-			// BCL tests group 6
-			new BclTestProjectInfo { Name = "SystemNetHttpUnitTestsXunit", assemblies = new [] { "monotouch_System.Net.Http.UnitTests_xunit-test.dll" }, Group = "BCL tests group 6" },
-			new BclTestProjectInfo { Name = "SystemNetHttpFunctionalTestsXunit", assemblies = new [] { "monotouch_System.Net.Http.FunctionalTests_xunit-test.dll" }, Group = "BCL tests group 6" },
+			// Special assemblies that are in a single application due to their size being to large for the iOS 32b.
+			new BclTestProjectInfo { Name = "mscorlib Part 1", assemblies = new [] { "monotouch_corlib_xunit-test.part1.dll" }, Group = "mscorlib Part 1" }, // special testcase for the corlib which is later used in xHarness for diff config options
+			new BclTestProjectInfo { Name = "mscorlib Part 2", assemblies = new [] { "monotouch_corlib_xunit-test.part2.dll" }, Group = "mscorlib Part 2" },
+			new BclTestProjectInfo { Name = "SystemCoreXunit Part 1", assemblies = new [] { "monotouch_System.Core_xunit-test.part1.dll" }, Group = "SystemCoreXunit Part 1" },
+			new BclTestProjectInfo { Name = "SystemCoreXunit Part 2", assemblies = new [] { "monotouch_System.Core_xunit-test.part2.dll" }, Group = "SystemCoreXunit Part 2" },
+			new BclTestProjectInfo { Name = "SystemXunit", assemblies = new [] { "monotouch_System_xunit-test.dll" }, ExtraArgs = $"--xml={Path.Combine (Harness.RootDirectory, "bcl-test", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", Group = "SystemXunit" }, // special case due to the need of the extra args
 		};
 			
 		static readonly List <string> CommonIgnoredAssemblies = new List <string> {
@@ -436,8 +439,15 @@ namespace BCLTestImporter {
 			}
 			// do we have ignores per files and not the project name? Add them
 			foreach (var (assembly, hintPath) in assemblies) {
-				foreach (var platformFile in GetIgnoreFileNames (assembly, platform)) {
-					var commonAssemblyIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (assembly, platform));
+				// we could be looking at a splitted assembly, if that is the case, lets pass the name of the dll without the 'part{number}.dll
+				// so that we have all the ignores in a single file
+				var assemblyName = assembly;
+				var index = assembly.IndexOf (splitPattern, StringComparison.Ordinal);
+
+				if (index != -1)
+					assemblyName = assembly.Substring (0, index) + ".dll";
+				foreach (var platformFile in GetIgnoreFileNames (assemblyName, platform)) {
+					var commonAssemblyIgnore = Path.Combine (templateDir, GetCommonIgnoreFileName (assemblyName, platform));
 					if (File.Exists (commonAssemblyIgnore))
 						yield return commonAssemblyIgnore;
 					var platformAssemblyIgnore = Path.Combine (templateDir, platformFile);
@@ -701,24 +711,30 @@ namespace BCLTestImporter {
 				using (var file = new StreamWriter (registerTypePath, false)) { // false is do not append
 					await file.WriteAsync (registerCode);
 				}
-				
-				var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches[platform]);
-				var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
-				var infoPlistPath = GetPListPath (generatedCodeDir, platform);
-				using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
-					await file.WriteAsync (plist);
-				}
-
-				var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches[platform]);
-				var info = projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true);
-				var generatedProject = await GenerateMacAsync (projectDefinition.Name, registerTypePath,
-					info, projectTemplatePath, infoPlistPath, platform);
-					
 				var projectPath = GetProjectPath (projectDefinition.Name, platform);
-				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = projectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = null, TimeoutMultiplier = def.TimeoutMultiplier });
-				using (var file = new StreamWriter (projectPath, false)) { // false is do not append
-					await file.WriteAsync (generatedProject);
+				string failure = null;
+				try {
+					var plistTemplate = Path.Combine (PlistTemplateRootPath, plistTemplateMatches [platform]);
+					var plist = await BCLTestInfoPlistGenerator.GenerateCodeAsync (plistTemplate, projectDefinition.Name);
+					var infoPlistPath = GetPListPath (generatedCodeDir, platform);
+					using (var file = new StreamWriter (infoPlistPath, false)) { // false is do not append
+						await file.WriteAsync (plist);
+					}
+
+					var projectTemplatePath = Path.Combine (ProjectTemplateRootPath, projectTemplateMatches [platform]);
+					var info = projectDefinition.GetAssemblyInclusionInformation (GetReleaseDownload (platform), platform, true);
+					var generatedProject = await GenerateMacAsync (projectDefinition.Name, registerTypePath,
+						info, projectTemplatePath, infoPlistPath, platform);
+					using (var file = new StreamWriter (projectPath, false)) { // false is do not append
+						await file.WriteAsync (generatedProject);
+					}
+					failure = failure ?? info.FailureMessage;
+					failure = failure ?? typesPerAssembly.FailureMessage;
+				} catch (Exception e) {
+					failure = e.Message;
 				}
+				projectPaths.Add (new BclTestProject { Name = projectDefinition.Name, Path = projectPath, XUnit = projectDefinition.IsXUnit, ExtraArgs = projectDefinition.ExtraArgs, Failure = failure, TimeoutMultiplier = def.TimeoutMultiplier });
+				
 			}
 			return projectPaths;
 		}

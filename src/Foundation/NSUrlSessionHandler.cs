@@ -62,6 +62,7 @@ namespace Foundation {
 #endif
 
 	public delegate bool NSUrlSessionHandlerTrustOverrideCallback (NSUrlSessionHandler sender, SecTrust trust);
+	public delegate bool NSUrlSessionHandlerTrustOverrideForUrlCallback (NSUrlSessionHandler sender, string url, SecTrust trust);
 
 	// useful extensions for the class in order to set it in a header
 	static class NSHttpCookieExtensions
@@ -118,16 +119,18 @@ namespace Foundation {
 	public partial class NSUrlSessionHandler : HttpMessageHandler
 	{
 		private const string SetCookie = "Set-Cookie";
+		private const string Cookie = "Cookie";
+		private CookieContainer cookieContainer;
 		readonly Dictionary<string, string> headerSeparators = new Dictionary<string, string> {
 			["User-Agent"] = " ",
 			["Server"] = " "
 		};
 
-		readonly NSUrlSession session;
+		NSUrlSession session;
 		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
 		readonly object inflightRequestsLock = new object ();
+		readonly NSUrlSessionConfiguration.SessionConfigurationType sessionType;
 #if !MONOMAC && !__WATCHOS__
-		readonly bool isBackgroundSession = false;
 		NSObject notificationToken;  // needed to make sure we do not hang if not using a background session
 		readonly object notificationTokenLock = new object (); // need to make sure that threads do no step on each other with a dispose and a remove  inflight data
 #endif
@@ -153,15 +156,11 @@ namespace Foundation {
 			if (configuration == null)
 				throw new ArgumentNullException (nameof (configuration));
 
-#if !MONOMAC  && !__WATCHOS__ 
-			// if the configuration has an identifier, we are dealing with a background session, 
-			// therefore, we do not have to listen to the notifications.
-			isBackgroundSession = !string.IsNullOrEmpty (configuration.Identifier);
-#endif
+			// HACK: we need to store the following because session.Configuration gets a copy of the object and the value gets lost
+			sessionType = configuration.SessionType;
 			allowsCellularAccess = configuration.AllowsCellularAccess;
 			AllowAutoRedirect = true;
 
-			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
 			var sp = ServicePointManager.SecurityProtocol;
 			if ((sp & SecurityProtocolType.Ssl3) != 0)
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Ssl_3_0;
@@ -173,7 +172,7 @@ namespace Foundation {
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;
 			else if ((sp & (SecurityProtocolType) 12288) != 0) // Tls13 value not yet in monno
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_3;
-				
+
 			session = NSUrlSession.FromConfiguration (configuration, (INSUrlSessionDelegate) new NSUrlSessionHandlerDelegate (this), null);
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
@@ -183,7 +182,7 @@ namespace Foundation {
 		void AddNotification ()
 		{
 			lock (notificationTokenLock) {
-				if (!bypassBackgroundCheck && !isBackgroundSession && notificationToken == null)
+				if (!bypassBackgroundCheck && sessionType != NSUrlSessionConfiguration.SessionConfigurationType.Background && notificationToken == null)
 					notificationToken = NSNotificationCenter.DefaultCenter.AddObserver (UIApplication.WillResignActiveNotification, BackgroundNotificationCb);
 			} // lock
 		}
@@ -309,6 +308,7 @@ namespace Foundation {
 
 		NSUrlSessionHandlerTrustOverrideCallback trustOverride;
 
+		[Obsolete ("Use the 'TrustOverrideForUrl' property instead.")]
 		public NSUrlSessionHandlerTrustOverrideCallback TrustOverride {
 			get {
 				return trustOverride;
@@ -319,6 +319,17 @@ namespace Foundation {
 			}
 		}
 
+		NSUrlSessionHandlerTrustOverrideForUrlCallback trustOverrideForUrl;
+
+		public NSUrlSessionHandlerTrustOverrideForUrlCallback TrustOverrideForUrl {
+			get {
+				return trustOverrideForUrl;
+			}
+			set {
+				EnsureModifiability ();
+				trustOverrideForUrl = value;
+			}
+		}
 		// we do check if a user does a request and the application goes to the background, but
 		// in certain cases the user does that on purpose (BeingBackgroundTask) and wants to be able
 		// to use the network. In those cases, which are few, we want the developer to explicitly 
@@ -332,6 +343,48 @@ namespace Foundation {
 			set {
 				EnsureModifiability ();
 				bypassBackgroundCheck = value;
+			}
+		}
+
+		public CookieContainer CookieContainer {
+			get {
+				return cookieContainer;
+			}
+			set {
+				EnsureModifiability ();
+				cookieContainer = value;
+			}
+		}
+
+		public bool UseCookies {
+			get {
+				return session.Configuration.HttpCookieStorage != null;
+			}
+			set {
+				EnsureModifiability ();
+				if (sessionType == NSUrlSessionConfiguration.SessionConfigurationType.Ephemeral)
+					throw new InvalidOperationException ("Cannot set the use of cookies in Ephemeral sessions.");
+				// we have to consider the following table of cases:
+				// 1. Value is set to true and cookie storage is not null -> we do nothing
+				// 2. Value is set to true and cookie storage is null -> we create/set the storage.
+				// 3. Value is false and cookie container is not null -> we clear the cookie storage
+				// 4. Value is false and cookie container is null -> we do nothing
+				var oldSession = session;
+				var configuration = session.Configuration;
+				if (value && configuration.HttpCookieStorage == null) {
+					// create storage because the user wants to use it. Things are not that easy, we have to 
+					// consider the following:
+					// 1. Default Session -> uses sharedHTTPCookieStorage
+					// 2. Background Session -> uses sharedHTTPCookieStorage
+					// 3. Ephemeral Session -> no allowed. apple does not provide a way to access to the private implementation of the storage class :/
+					configuration.HttpCookieStorage = NSHttpCookieStorage.SharedStorage;
+				}
+				if (!value && configuration.HttpCookieStorage != null) {
+					// remove storage so that it is not used in any of the requests
+					configuration.HttpCookieStorage = null;
+				}
+				session = NSUrlSession.FromConfiguration (configuration, (INSUrlSessionDelegate) new NSUrlSessionHandlerDelegate (this), null);
+				oldSession.Dispose ();
 			}
 		}
 
@@ -384,6 +437,13 @@ namespace Foundation {
 		async Task<NSUrlRequest> CreateRequest (HttpRequestMessage request)
 		{
 			var stream = Stream.Null;
+			// set header cookies if needed from the managed cookie container if we do use Cookies
+			if (session.Configuration.HttpCookieStorage != null) {
+				var cookies = cookieContainer?.GetCookieHeader (request.RequestUri); // as per docs: An HTTP cookie header, with strings representing Cookie instances delimited by semicolons.
+				if (!string.IsNullOrEmpty (cookies))
+					request.Headers.TryAddWithoutValidation (Cookie, cookies); 
+			}
+
 			var headers = request.Headers as IEnumerable<KeyValuePair<string, IEnumerable<string>>>;
 
 			if (request.Content != null) {
@@ -401,6 +461,7 @@ namespace Foundation {
 					return acc;
 				})
 			};
+
 			if (stream != Stream.Null) {
 				// HttpContent.TryComputeLength is `protected internal` :-( but it's indirectly called by headers
 				var length = request.Content.Headers.ContentLength;
@@ -488,6 +549,18 @@ namespace Foundation {
 				return null;
 			}
 
+			void UpdateManagedCookieContainer (NSUrl url, NSHttpCookie[] cookies)
+			{
+				var uri = new Uri (url.AbsoluteString);
+				if (sessionHandler.cookieContainer != null && cookies.Length > 0)
+					lock (sessionHandler.inflightRequestsLock) { // ensure we lock when writing to the collection
+						var cookiesContents = new string [cookies.Length];
+						for (var index = 0; index < cookies.Length; index++)
+							cookiesContents [index] = cookies [index].GetHeaderValue ();
+						sessionHandler.cookieContainer.SetCookies (uri, string.Join (',', cookiesContents)); //  as per docs: The contents of an HTTP set-cookie header as returned by a HTTP server, with Cookie instances delimited by commas.
+					}
+			}
+
 			[Preserve (Conditional = true)]
 			public override void DidReceiveResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler)
 			{
@@ -528,9 +601,15 @@ namespace Foundation {
 						httpResponse.Content.Headers.TryAddWithoutValidation (v.Key.ToString (), v.Value.ToString ());
 					}
 
-					var cookies = session.Configuration.HttpCookieStorage.CookiesForUrl (response.Url);
-					for (var index = 0; index < cookies.Length; index++) {
-						httpResponse.Headers.TryAddWithoutValidation (SetCookie, cookies [index].GetHeaderValue ());
+					// it might be confusing that we are not using the managed CookieStore here, this is ONLY for those cookies that have been retrieved from
+					// the server via a Set-Cookie header, the managed container does not know a thing about this and apple is storing them in the native
+					// cookie container. Once we have the cookies from the response, we need to update the managed cookie container
+					if (session.Configuration.HttpCookieStorage != null) {
+						var cookies = session.Configuration.HttpCookieStorage.CookiesForUrl (response.Url);
+						UpdateManagedCookieContainer (response.Url, cookies);
+						for (var index = 0; index < cookies.Length; index++) {
+							httpResponse.Headers.TryAddWithoutValidation (SetCookie, cookies [index].GetHeaderValue ());
+						}
 					}
 
 					inflight.Response = httpResponse;
@@ -634,8 +713,15 @@ namespace Foundation {
 
 				// ToCToU for the callback
 				var trustCallback = sessionHandler.TrustOverride;
-				if (trustCallback != null && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
-					if (trustCallback (sessionHandler, challenge.ProtectionSpace.ServerSecTrust)) {
+				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
+				var hasCallBack = trustCallback != null || trustCallbackForUrl != null; 
+				if (hasCallBack && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
+					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
+					// more general one. Since we are using nullables, if the delegate is not present, by default is false
+					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) || 
+						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false);
+
+					if (trustSec) {
 						var credential = new NSUrlCredential (challenge.ProtectionSpace.ServerSecTrust);
 						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
 					} else {

@@ -339,7 +339,7 @@ namespace CoreServices {
 			case AuthenticationScheme.Digest:
 				return _AuthenticationSchemeDigest;
 			case AuthenticationScheme.OAuth1:
-				if (_AuthenticationSchemeOAuth1 == null)
+				if (_AuthenticationSchemeOAuth1 == IntPtr.Zero)
 					throw new NotSupportedException ("Requires iOS 7.0 or macOS 10.9 and lower than iOS 12 or macOS 10.14");
 				return _AuthenticationSchemeOAuth1;
 			default:

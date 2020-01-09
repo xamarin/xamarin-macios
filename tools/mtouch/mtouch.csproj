@@ -336,6 +336,9 @@
     <Compile Include="..\common\CompilerFlags.cs">
       <Link>external\CompilerFlags.cs</Link>
     </Compile>
+    <Compile Include="..\common\Tuning.cs">
+      <Link>external\Tuning.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\RuntimeOptions.cs">
       <Link>external\RuntimeOptions.cs</Link>
     </Compile>
@@ -424,8 +427,11 @@
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
-    <Compile Include="Errors.Designer.cs">
-      <DependentUpon>Errors.resx</DependentUpon>
+    <Compile Include="mtouchErrors.Designer.cs">
+      <DependentUpon>mtouchErrors.resx</DependentUpon>
+    </Compile>
+    <Compile Include="..\mmp\mmpErrors.Designer.cs" Visible="false">
+      <Link>mmpErrors.Designer.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -448,6 +454,9 @@
       <Link>mtouch-errors.md</Link>
     </None>
     <None Include="packages.config" />
+    <None Include="..\mmp\mmpErrors.resx" Visible="false">
+      <Link>mmpErrors.resx</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Linker\" />
@@ -459,11 +468,11 @@
     <Folder Include="Xamarin.Linker\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Errors.resx">
+    <EmbeddedResource Include="mtouchErrors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <XlfSourceFormat>Resx</XlfSourceFormat>
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <LastGenOutput>mtouchErrors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="AfterBuild">

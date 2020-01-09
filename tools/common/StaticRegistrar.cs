@@ -522,7 +522,7 @@ namespace Registrar {
 				return "void *";
 			}
 
-			throw ErrorHelper.CreateError (4108, "The registrar cannot get the ObjectiveC type for managed type `{0}`.", type.FullName);
+			throw ErrorHelper.CreateError (4108, mtouch.mtouchErrors.MT4108, type.FullName);
 		}
 
 		public static bool IsDelegate (TypeDefinition type)
@@ -1019,7 +1019,7 @@ namespace Registrar {
 					return system_void = type;
 			}
 
-			throw ErrorHelper.CreateError (4165, "The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.");
+			throw ErrorHelper.CreateError (4165, mtouch.mtouchErrors.MT4165);
 		}
 
 		protected override bool IsVirtual (MethodDefinition method)
@@ -1315,7 +1315,7 @@ namespace Registrar {
 					rv = new RegisterAttribute ((string) attrib.ConstructorArguments [0].Value, (bool) attrib.ConstructorArguments [1].Value);
 					break;
 				default:
-					throw ErrorHelper.CreateError (4124, "Invalid RegisterAttribute found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", type.FullName);
+					throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124, "RegisterAttribute", type.FullName);
 				}
 			}
 
@@ -1332,7 +1332,7 @@ namespace Registrar {
 						rv.SkipRegistration = (bool) prop.Argument.Value;
 						break;
 					default:
-						throw ErrorHelper.CreateError (4124, "Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", type.FullName, prop.Name);
+						throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124_A, type.FullName, prop.Name);
 					}
 				}
 			}
@@ -1348,7 +1348,7 @@ namespace Registrar {
 				return null;
 
 			if (!attrib.HasConstructorArguments)
-				throw ErrorHelper.CreateError (4124, "Invalid CategoryAttribute found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", type.FullName);
+				throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124, "CategoryAttribute", type.FullName);
 
 			if (attrib.HasProperties) {
 				foreach (var prop in attrib.Properties) {
@@ -1364,7 +1364,7 @@ namespace Registrar {
 				var t1 = (TypeReference) attrib.ConstructorArguments [0].Value;
 				return new CategoryAttribute (t1 != null ? t1.Resolve () : null) { Name = name };
 			default:
-				throw ErrorHelper.CreateError (4124, "Invalid CategoryAttribute found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", type.FullName);
+				throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124, "CategoryAttribute", type.FullName);
 			}
 		}
 
@@ -1401,11 +1401,11 @@ namespace Registrar {
 				case "FormalSince":
 					Version version;
 					if (!Version.TryParse ((string)prop.Argument.Value, out version))
-						throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", "ProtocolAttribute", type.FullName);
+						throw ErrorHelper.CreateError (4147, mtouch.mtouchErrors.MT4147, "ProtocolAttribute", type.FullName);
 					rv.FormalSinceVersion = version;
 					break;
 				default:
-					throw ErrorHelper.CreateError (4147, "Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", "ProtocolAttribute", type.FullName);
+					throw ErrorHelper.CreateError (4147, mtouch.mtouchErrors.MT4147, "ProtocolAttribute", type.FullName);
 				}
 			}
 
@@ -1424,7 +1424,7 @@ namespace Registrar {
 				rv.Type = ((TypeReference) attrib.ConstructorArguments [0].Value).Resolve ();
 				break;
 			default:
-				throw ErrorHelper.CreateError (4124, "Invalid BlockProxyAttribute found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", ((MethodReference) parameter.Method)?.FullName);
+				throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124, "BlockProxyAttribute", ((MethodReference) parameter.Method)?.FullName);
 			}
 
 			return rv;
@@ -1442,7 +1442,7 @@ namespace Registrar {
 				rv.DelegateType = ((TypeReference) attrib.ConstructorArguments [0].Value).Resolve ();
 				break;
 			default:
-				throw ErrorHelper.CreateError (4124, "Invalid DelegateProxyAttribute found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", ((MethodReference) method)?.FullName);
+				throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124, "DelegateProxyAttribute", ((MethodReference) method)?.FullName);
 			}
 
 			return rv;
@@ -1585,7 +1585,7 @@ namespace Registrar {
 				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, App.Platform);
 			}
 #else
 			currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
@@ -1631,7 +1631,7 @@ namespace Registrar {
 				switch (ca.ConstructorArguments.Count) {
 				case 2:
 					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, mtouch.mtouchErrors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 					majorVersion = (byte) ca.ConstructorArguments [0].Value;
 					minorVersion = (byte) ca.ConstructorArguments [1].Value;
 					break;
@@ -1649,13 +1649,13 @@ namespace Registrar {
 						} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
 							minorVersion = (byte) ca.ConstructorArguments [2].Value;
 						} else {
-							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
+							throw ErrorHelper.CreateError (4163, mtouch.mtouchErrors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 						}
 					}
 					break;
 				case 4:
 					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, mtouch.mtouchErrors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 
 					majorVersion = (byte) ca.ConstructorArguments [0].Value;
 					minorVersion = (byte) ca.ConstructorArguments [1].Value;
@@ -1666,7 +1666,7 @@ namespace Registrar {
 					} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
 						architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
 					} else {
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, mtouch.mtouchErrors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 					}
 					break;
 				case 5:
@@ -1685,7 +1685,7 @@ namespace Registrar {
 					message = (string) ca.ConstructorArguments [5].Value;
 					break;
 				default:
-					throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
+					throw ErrorHelper.CreateError (4163, mtouch.mtouchErrors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 				}
 
 				if (platformName != currentPlatform)
@@ -1708,7 +1708,7 @@ namespace Registrar {
 							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
 							break;
 						default:
-							throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
+							throw ErrorHelper.CreateError (4163, mtouch.mtouchErrors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 						}
 					}
 					break;
@@ -1724,7 +1724,7 @@ namespace Registrar {
 						rv = new DeprecatedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
 						break;
 					default:
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, mtouch.mtouchErrors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 					}
 					break;
 				case AvailabilityKind.Obsoleted:
@@ -1739,14 +1739,14 @@ namespace Registrar {
 						rv = new ObsoletedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
 						break;
 					default:
-						throw ErrorHelper.CreateError (4163, "Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", caType.Name, ca.ConstructorArguments.Count);
+						throw ErrorHelper.CreateError (4163, mtouch.mtouchErrors.MT4163, caType.Name, ca.ConstructorArguments.Count);
 					}
 					break;
 				case AvailabilityKind.Unavailable:
 					rv = new UnavailableAttribute (platformName, architecture, message);
 					break;
 				default:
-					throw ErrorHelper.CreateError (4163, "Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", kind);
+					throw ErrorHelper.CreateError (4163, mtouch.mtouchErrors.MT4163_A, kind);
 				}
 
 				if (list == null)
@@ -1814,7 +1814,7 @@ namespace Registrar {
 					attrib.ProtocolType = (string) ca.ConstructorArguments [0].Value;
 					break;
 				default:
-					throw ErrorHelper.CreateError (4124, "Invalid AdoptsAttribute found on '{0}': expected 1 constructor arguments, got {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", type.FullName, 1, ca.ConstructorArguments.Count);
+					throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124_B, type.FullName, 1, ca.ConstructorArguments.Count);
 				}
 				rv.Add (attrib);
 			}
@@ -1858,7 +1858,7 @@ namespace Registrar {
 						originalType = ((TypeReference) field.Argument.Value);
 						break;
 					default:
-						throw ErrorHelper.CreateError (4124, "Invalid BindAsAttribute found on '{0}.{1}': unknown field {2}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", member.DeclaringType.FullName, member.Name, field.Name);
+						throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124_C, member.DeclaringType.FullName, member.Name, field.Name);
 					}
 				}
 			}
@@ -1868,7 +1868,7 @@ namespace Registrar {
 				var t1 = (TypeReference) attrib.ConstructorArguments [0].Value;
 				return new BindAsAttribute (t1) { OriginalType = originalType };
 			default:
-				throw ErrorHelper.CreateError (4124, "Invalid BindAsAttribute found on '{0}.{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", member.DeclaringType.FullName, member.Name);
+				throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124_D, "BindAsAttribute", member.DeclaringType.FullName, member.Name);
 			}
 		}
 
@@ -1896,7 +1896,7 @@ namespace Registrar {
 			case 0: return new ConnectAttribute ();
 			case 1: return new ConnectAttribute (((string) attrib.ConstructorArguments [0].Value));
 			default:
-				throw ErrorHelper.CreateError (4124, "Invalid ConnectAttribute found on '{0}.{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", property.DeclaringType.FullName, property.Name);
+				throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124_D, "ConnectAttribute", property.DeclaringType.FullName, property.Name);
 			}
 		}
 

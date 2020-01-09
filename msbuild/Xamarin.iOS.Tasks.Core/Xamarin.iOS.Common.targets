@@ -98,7 +98,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<!-- '$(OutputType)' == 'Exe' because we don't want to run Xamarin.Analysis on library projects, the XIA rules don't apply. -->
 		<XamarinAnalysisTargetsFile Condition="Exists ('$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets') And '$(OutputType)' == 'Exe'">$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets</XamarinAnalysisTargetsFile>
-		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Analysis.targets"
@@ -164,7 +163,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<UsingTask
 		TaskName="GetDependsOnNETStandard"
-		Condition="'$(IsXBuild)' != 'true'"
 		AssemblyFile="$(MicrosoftNETBuildExtensionsTasksAssembly)" />
 
 	<Target Name="ImplicitlyExpandDesignTimeFacades" Condition="'$(ImplicitlyExpandDesignTimeFacades)' == 'true'" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
@@ -199,7 +197,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
 		-->
 		<GetDependsOnNETStandard
-			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(XI_DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''"
+			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(XI_DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''"
 			References="@(XI_CandidateNETStandardReferences)">
 			<Output TaskParameter="DependsOnNETStandard" PropertyName="XI_DependsOnNETStandard" />
 		</GetDependsOnNETStandard>
@@ -422,6 +420,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Username="$(Username)"
 			Password="$(Password)"
 			FilePath="$(FilePath)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			SdkDevPath="$(_SdkDevPath)"
 		/>
 	</Target>
@@ -432,6 +431,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Username="$(Username)"
 			Password="$(Password)"
 			FilePath="$(FilePath)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			SdkDevPath="$(_SdkDevPath)"
 		/>
 	</Target>
@@ -1625,12 +1625,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
 		<PropertyGroup>
-			<!-- When building a .sln with xbuild or building from IDE, the referenced projects are already built.  -->
-			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' == 'true' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
-
 			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
 			     the referenced projects unless building from IDE. -->
-			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+			<_BuildReferencedExtensionProjects Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
 		</PropertyGroup>
 
 		<!-- If the referenced projects have already been built, then just get the target paths -->
@@ -1746,12 +1743,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_ResolveWatchAppReferences" DependsOnTargets="_SplitWatchAppReferencesByExistent">
 		<PropertyGroup>
-			<!-- When building a .sln with xbuild or building from IDE, the referenced projects are already built.  -->
-			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' == 'true' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
-
 			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
 			     the referenced projects unless building from IDE. -->
-			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+			<_BuildReferencedExtensionProjects Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
 		</PropertyGroup>
 
 		<!-- If the referenced projects have already been built, then just get the target paths -->
@@ -2309,6 +2303,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir"/>
 		</Archive>
 	</Target>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.NativeReference.Stubs.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>

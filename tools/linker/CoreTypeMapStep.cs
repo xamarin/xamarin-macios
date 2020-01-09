@@ -142,6 +142,7 @@ namespace MonoTouch.Tuner {
 
 		void Show2107 (AssemblyDefinition assembly, MemberReference mr)
 		{
+			//todo: localize mmp error 2107
 			ErrorHelper.Warning (2107, $"It's not safe to remove the dynamic registrar, because {assembly.Name.Name} references '{mr.DeclaringType.FullName}.{mr.Name} ({string.Join (", ", ((MethodReference) mr).Parameters.Select ((v) => v.ParameterType.FullName))})'.");
 		}
 

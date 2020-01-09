@@ -62,6 +62,7 @@ IOS_EXTRA_SOURCES = \
 	$(IOS_BUILD_DIR)/Constants.cs    \
 	$(IOS_BUILD_DIR)/AssemblyInfo.cs \
 	Compat.iOS.cs                    \
+	$(TOP)/tools/mtouch/mtouchErrors.Designer.cs \
 	$(SHARED_SYSTEM_DRAWING_SOURCES) \
 
 IOS_HTTP_SOURCES = \
@@ -321,6 +322,7 @@ MAC_SOURCES += \
 	Obsoletes.cs \
 	Darwin/KernelNotification.cs \
 	Darwin/SystemLog.cs \
+	$(TOP)/tools/mtouch/mtouchErrors.Designer.cs \
 
 # CFNetwork is shipped:
 # * In a separate library (XamMac.CFNetwork.dll) for Classic.
@@ -552,6 +554,7 @@ WATCHOS_CORE_SOURCES +=           \
 WATCHOS_SOURCES +=                \
     $(WATCHOS_EXTRA_CORE_SOURCES) \
     $(WATCHOS_HTTP_SOURCES)        \
+    $(TOP)/tools/mtouch/mtouchErrors.Designer.cs \
 
 $(WATCH_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.watch.cs.in Makefile $(TOP)/Make.config.inc | $(WATCH_BUILD_DIR)
 	$(call Q_PROF_GEN,watch) sed \
@@ -622,7 +625,7 @@ $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xa
 
 # MonoTouch.NUnitLite
 $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(WATCH_BUILD_DIR)/reference/MonoTouch.NUnitLite%pdb: $(WATCHOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
-	$(call Q_PROF_CSC,watch) $(SYSTEM_CSC) -nologo -out:$(basename $@).dll -target:library -debug:portable -optimize -publicsign -noconfig -nostdlib \
+	$(call Q_PROF_CSC,watch) $(SYSTEM_CSC) -features:strict -nologo -out:$(basename $@).dll -target:library -debug:portable -optimize -publicsign -noconfig -nostdlib \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/mscorlib.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/System.dll -r:$(MONOTOUCH_WATCH_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(WATCH_DEFINES) \
@@ -712,6 +715,7 @@ TVOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
+	$(TOP)/tools/mtouch/mtouchErrors.Designer.cs \
 
 TVOS_SOURCES +=                \
 	$(TVOS_EXTRA_CORE_SOURCES) \
@@ -787,7 +791,7 @@ $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.
 
 # MonoTouch.NUnitLite
 $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%dll $(TVOS_BUILD_DIR)/reference/MonoTouch.NUnitLite%pdb: $(TVOS_TOUCHUNIT_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll
-	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -nologo -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
+	$(call Q_PROF_CSC,tvos) $(SYSTEM_CSC) -features:strict -nologo -r:$(MONOTOUCH_TV_MONO_PATH)/mscorlib.dll -out:$(basename $@).dll -target:library -debug:portable -optimize -noconfig -nostdlib -publicsign \
 		-keyfile:$(PRODUCT_KEY_PATH) -r:$(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll -r:$(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.dll -r:$(MONOTOUCH_TV_MONO_PATH)/System.Xml.dll \
 		-nowarn:3006,612,649,414,1635 \
 		-define:NUNITLITE,CLR_4_0,NET_4_5,__MOBILE__ $(TVOS_DEFINES) \

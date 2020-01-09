@@ -229,7 +229,7 @@ namespace Xamarin.Bundler {
 			string max_s = null;
 
 			if (sources.Count () == 0 || targets.Count () == 0)
-				ErrorHelper.Error (1013, "Dependency tracking error: no files to compare. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.");
+				ErrorHelper.Error (1013, mtouch.mtouchErrors.MT1013);
 
 			foreach (var s in sources) {
 				var sfi = new FileInfo (s);
@@ -324,18 +324,18 @@ namespace Xamarin.Bundler {
 				target.SelectMonoNative ();
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (Platform)) {
-				throw ErrorHelper.CreateError (91, "This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).", ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
+				throw ErrorHelper.CreateError (91, mtouch.mtouchErrors.MT0091, ProductName, PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode, Error91LinkerSuggestion);
 			}
 
 			if (DeploymentTarget != null) {
 				if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (Platform))
-					throw new PlatformException (73, true, "{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName, ProductName);
+					throw new PlatformException (73, true, mtouch.mtouchErrors.MT0073, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName, ProductName);
 				if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (Platform))
-					throw new PlatformException (74, true, "{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName, ProductName);
+					throw new PlatformException (74, true, mtouch.mtouchErrors.MT0074, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName, ProductName);
 			}
 
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
-				throw ErrorHelper.CreateError (88, "The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.");
+				throw ErrorHelper.CreateError (88, mtouch.mtouchErrors.MT0088);
 
 			if (!EnableCoopGC.HasValue)
 				EnableCoopGC = Platform == ApplePlatform.WatchOS;
@@ -344,12 +344,12 @@ namespace Xamarin.Bundler {
 				switch (MarshalObjectiveCExceptions) {
 				case MarshalObjectiveCExceptionMode.UnwindManagedCode:
 				case MarshalObjectiveCExceptionMode.Disable:
-					throw ErrorHelper.CreateError (89, "The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.", "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
+					throw ErrorHelper.CreateError (89, mtouch.mtouchErrors.MT0089, "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
 				}
 				switch (MarshalManagedExceptions) {
 				case MarshalManagedExceptionMode.UnwindNativeCode:
 				case MarshalManagedExceptionMode.Disable:
-					throw ErrorHelper.CreateError (89, "The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.", "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
+					throw ErrorHelper.CreateError (89, mtouch.mtouchErrors.MT0089, "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
 				}
 			}
 
@@ -360,7 +360,7 @@ namespace Xamarin.Bundler {
 #endif
 
 			if (MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Default) {
-				if (EnableCoopGC.Value) {
+				if (EnableCoopGC.Value || (Platform == ApplePlatform.MacOSX && EnableDebug)) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
 				} else {
 					MarshalObjectiveCExceptions = isSimulatorOrDesktopDebug ? MarshalObjectiveCExceptionMode.UnwindManagedCode : MarshalObjectiveCExceptionMode.Disable;
@@ -390,7 +390,7 @@ namespace Xamarin.Bundler {
 				// * The user will get a linker error anyway if they do this.
 				// * I see it as quite unlikely that anybody will in fact try this (it must be manually set in the additional mtouch arguments).
 				// * I find it more probable that Apple will remove the -u restriction, in which case someone might actually want to try this, and if it's a warning, we won't prevent it.
-				ErrorHelper.Warning (115, "It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.");
+				ErrorHelper.Warning (115, mtouch.mtouchErrors.MT0115);
 			}
 #endif
 
@@ -401,10 +401,10 @@ namespace Xamarin.Bundler {
 		{
 			// The static registrar.
 			if (Registrar != RegistrarMode.Static)
-				throw new PlatformException (67, "Invalid registrar: {0}", Registrar); // this is only called during our own build
+				throw new PlatformException (67, mtouch.mtouchErrors.MT0067, Registrar); // this is only called during our own build
 
 			if (RootAssemblies.Count < 1)
-				throw ErrorHelper.CreateError (130, "No root assemblies found. You should provide at least one root assembly.");
+				throw ErrorHelper.CreateError (130, mtouch.mtouchErrors.MT0130);
 
 			var registrar_m = RegistrarOutputLibrary;
 			var RootAssembly = RootAssemblies [0];
@@ -439,7 +439,7 @@ namespace Xamarin.Bundler {
 				try {
 					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
 					if (lastAssembly == null) {
-						ErrorHelper.CreateWarning (7, "The root assembly '{0}' does not exist", rootName);
+						ErrorHelper.CreateWarning (7, mtouch.mtouchErrors.MT0007, rootName);
 						continue;
 					}
 					
@@ -453,13 +453,13 @@ namespace Xamarin.Bundler {
 					resolvedAssemblies.Add (rootName, lastAssembly);
 					Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
 				} catch (Exception ex) {
-					ErrorHelper.Warning (9, ex, "Error while loading assemblies: {0}: {1}", rootName, ex.Message);
+					//ErrorHelper.Warning(9, ex, mtouch.mtouchErrors.MT0009_A, rootName, ex.Message);
 					continue;
 				}
 			}
 
 			if (!foundProductAssembly)
-				throw ErrorHelper.CreateError (131, "Product assembly '{0}' not found in assembly list: '{1}'", productAssembly, string.Join ("', '", RootAssemblies.ToArray ()));
+				throw ErrorHelper.CreateError (131, mtouch.mtouchErrors.MT0131, productAssembly, string.Join ("', '", RootAssemblies.ToArray ()));
 
 #if MONOTOUCH
 			BuildTarget = BuildTarget.Simulator;

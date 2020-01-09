@@ -194,7 +194,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
 			default:
-					throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
 			}
 		}
 
@@ -242,7 +242,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.TVOS");
 			default:
-				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071,app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071,app.Platform);
 			}
 		}
 
@@ -252,7 +252,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "32bits");
 			default:
-				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
 			}
 		}
 
@@ -262,7 +262,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "64bits");
 			default:
-				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
 			}
 		}
 
@@ -276,7 +276,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk");
 			default:
-				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
 			}
 		}
 
@@ -296,7 +296,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "tvos" : "tvos-simulator";
 			default:
-				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
 			}
 		}
 
@@ -310,7 +310,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return "Xamarin.TVOS";
 			default:
-				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
 			}
 		}
 
@@ -325,7 +325,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.WatchOS:
 				return true;
 			default:
-				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
 			}
 		}
 
@@ -369,7 +369,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Path.Combine (cross_prefix, "bin", "arm64-darwin-mono-sgen");
 			default:
-				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
 			}
 		}
 
@@ -406,7 +406,7 @@ namespace Xamarin.Bundler
 				aot.Append ("llvmonly,");
 			else if (interp) {
 				if (fname != "mscorlib.dll")
-					throw ErrorHelper.CreateError(99, mtouch.Errors.MT0099, fname);
+					throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099, fname);
 				aot.Append ("interp,");
 			} else if (interp_full) {
 				aot.Append ("interp,full,");
@@ -681,7 +681,7 @@ namespace Xamarin.Bundler
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception e) {
-				throw new MonoTouchException (4001, true, e, mtouch.Errors.MT4001, main_source);
+				throw new MonoTouchException (4001, true, e, mtouch.mtouchErrors.MT4001, main_source);
 			}
 
 			return main_source;
@@ -870,7 +870,7 @@ namespace Xamarin.Bundler
 		{
 			bool result;
 			if (!TryParseBool (value, out result))
-				throw ErrorHelper.CreateError (26, mtouch.Errors.MT0026, name, value);
+				throw ErrorHelper.CreateError (26, mtouch.mtouchErrors.MT0026, name, value);
 			return result;
 		}
 
@@ -924,7 +924,7 @@ namespace Xamarin.Bundler
 					}
 					goto default;
 				default:
-					throw new MonoTouchException (19, true, mtouch.Errors.MT0019);
+					throw new MonoTouchException (19, true, mtouch.mtouchErrors.MT0019);
 				}
 			};
 
@@ -942,7 +942,7 @@ namespace Xamarin.Bundler
 					if (v.Contains ("--profile") || v.Contains ("--attach"))
 						throw new Exception ("Unsupported flag to -aot-options");
 					if (!StringUtils.TryParseArguments (v, out var aot_options, out var ex))
-						throw ErrorHelper.CreateError (26, ex, mtouch.Errors.MT0026, "-aot-options="+v, ex.Message);
+						throw ErrorHelper.CreateError (26, ex, mtouch.mtouchErrors.MT0026, "-aot-options="+v, ex.Message);
 					if (app.AotOtherArguments == null)
 						app.AotOtherArguments = new List<string> ();
 					app.AotOtherArguments.AddRange (aot_options);
@@ -980,7 +980,7 @@ namespace Xamarin.Bundler
 			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v =>
 				{
 					if (!StringUtils.TryParseArguments (v, out var gcc_flags, out var ex))
-						throw ErrorHelper.CreateError (26, ex, mtouch.Errors.MT0026, "-gcc-flags=" + v, ex.Message);
+						throw ErrorHelper.CreateError (26, ex, mtouch.mtouchErrors.MT0026, "-gcc-flags=" + v, ex.Message);
 					if (app.UserGccFlags == null)
 						app.UserGccFlags = new List<string> ();
 					app.UserGccFlags.AddRange (gcc_flags);
@@ -1009,7 +1009,7 @@ namespace Xamarin.Bundler
 					try {
 						app.SdkVersion = StringUtils.ParseVersion (v);
 					} catch (Exception ex) {
-						ErrorHelper.Error (26, ex, mtouch.Errors.MT0026, "sdk:" + v, ex.Message);
+						ErrorHelper.Error (26, ex, mtouch.mtouchErrors.MT0026, "sdk:" + v, ex.Message);
 					}
 				}
 			},
@@ -1018,7 +1018,7 @@ namespace Xamarin.Bundler
 					try {
 						app.DeploymentTarget = StringUtils.ParseVersion (v);
 					} catch (Exception ex) {
-						throw new MonoTouchException (26, true, ex, mtouch.Errors.MT0026, "targetver:" + v, ex.Message);
+						throw new MonoTouchException (26, true, ex, mtouch.mtouchErrors.MT0026, "targetver:" + v, ex.Message);
 					}
 				}
 			},
@@ -1057,7 +1057,7 @@ namespace Xamarin.Bundler
 				{
 					int eq = v.IndexOf ('=');
 					if (eq <= 0)
-						throw new MonoTouchException (2, true, mtouch.Errors.MT0002, v);
+						throw new MonoTouchException (2, true, mtouch.mtouchErrors.MT0002, v);
 					string name = v.Substring (0, eq);
 					string value = v.Substring (eq + 1);
 					app.EnvironmentVariables.Add (name, value);
@@ -1066,20 +1066,20 @@ namespace Xamarin.Bundler
 			{ "sgen:", "Enable the SGen garbage collector",
 					v => {
 						if (!ParseBool (v, "sgen")) 
-							ErrorHelper.Warning (43, mtouch.Errors.MT0043);
+							ErrorHelper.Warning (43, mtouch.mtouchErrors.MT0043);
 					},
 					true // do not show the option anymore
 				},
 			{ "boehm:", "Enable the Boehm garbage collector",
 					v => {
 						if (ParseBool (v, "boehm"))
-							ErrorHelper.Warning (43, mtouch.Errors.MT0043); }, 
+							ErrorHelper.Warning (43, mtouch.mtouchErrors.MT0043); }, 
 					true // do not show the option anymore
 				},
 			{ "new-refcount:", "Enable new refcounting logic",
 				v => {
 					if (!ParseBool (v, "new-refcount"))
-						ErrorHelper.Warning (80, mtouch.Errors.MT0080);
+						ErrorHelper.Warning (80, mtouch.mtouchErrors.MT0080);
 				},
 				true // do not show the option anymore
 			},
@@ -1127,7 +1127,7 @@ namespace Xamarin.Bundler
 						app.Registrar = RegistrarMode.Default;
 						break;
 					default:
-						throw new MonoTouchException (20, true, mtouch.Errors.MT0020, "--registrar", "static, dynamic or default");
+						throw new MonoTouchException (20, true, mtouch.mtouchErrors.MT0020, "--registrar", "static, dynamic or default");
 					}
 
 					switch (value) {
@@ -1139,7 +1139,7 @@ namespace Xamarin.Bundler
 						app.RegistrarOptions = RegistrarOptions.Default;
 						break;
 					default:
-						throw new MonoTouchException (20, true, mtouch.Errors.MT0020, "--registrar", "static, dynamic or default");
+						throw new MonoTouchException (20, true, mtouch.mtouchErrors.MT0020, "--registrar", "static, dynamic or default");
 					}
 				}
 			},
@@ -1170,7 +1170,7 @@ namespace Xamarin.Bundler
 							app.PackageMonoFramework = false;
 							break;
 						default:
-							throw new MonoTouchException (20, true, mtouch.Errors.MT0020, "--mono", "static, framework or [no-]package-framework");
+							throw new MonoTouchException (20, true, mtouch.mtouchErrors.MT0020, "--mono", "static, framework or [no-]package-framework");
 						}
 					}
 				}
@@ -1189,7 +1189,7 @@ namespace Xamarin.Bundler
 						app.BitCodeMode = BitCodeMode.MarkerOnly;
 						break;
 					default:
-						throw new MonoTouchException (20, true, mtouch.Errors.MT0020, "--bitcode", "asmonly, full or marker");
+						throw new MonoTouchException (20, true, mtouch.mtouchErrors.MT0020, "--bitcode", "asmonly, full or marker");
 					}
 				}
 			},
@@ -1198,7 +1198,7 @@ namespace Xamarin.Bundler
 				{
 						var equals = v.IndexOf ('=');
 						if (equals == -1)
-							throw ErrorHelper.CreateError (26, mtouch.Errors.MT0026, "-llvm-opt=" + v, "Both assembly and optimization must be specified (assembly=optimization)");
+							throw ErrorHelper.CreateError (26, mtouch.mtouchErrors.MT0026, "-llvm-opt=" + v, "Both assembly and optimization must be specified (assembly=optimization)");
 						var asm = v.Substring (0, equals);
 						var opt = v.Substring (equals + 1); // An empty string is valid here, meaning 'no optimizations'
 						app.LLVMOptimizations [asm] = opt;
@@ -1237,7 +1237,7 @@ namespace Xamarin.Bundler
 				throw;
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (10, true, e, mtouch.Errors.MT0010, e);
+				throw new MonoTouchException (10, true, e, mtouch.mtouchErrors.MT0010, e);
 			}
 
 			a = action;
@@ -1258,7 +1258,7 @@ namespace Xamarin.Bundler
 
 			if (action == Action.Build || action == Action.RunRegistrar) {
 				if (app.RootAssemblies.Count == 0)
-					throw new MonoTouchException (17, true, mtouch.Errors.MT0017);
+					throw new MonoTouchException (17, true, mtouch.mtouchErrors.MT0017);
 			}
 
 			return app;
@@ -1304,22 +1304,22 @@ namespace Xamarin.Bundler
 			}
 
 			if (app.SdkVersion == null)
-				throw new MonoTouchException (25, true, mtouch.Errors.MT0025, app.PlatformName);
+				throw new MonoTouchException (25, true, mtouch.mtouchErrors.MT0025, app.PlatformName);
 
 			var framework_dir = GetFrameworkDirectory (app);
 			Driver.Log ("Xamarin.iOS {0}.{1} using framework: {2}", Constants.Version, Constants.Revision, framework_dir);
 
 			if (action == Action.None)
-				throw new MonoTouchException (52, true, mtouch.Errors.MT0052);
+				throw new MonoTouchException (52, true, mtouch.mtouchErrors.MT0052);
 
 			if (app.SdkVersion < new Version (6, 0) && app.IsArchEnabled (Abi.ARMv7s))
-				throw new MonoTouchException (14, true, mtouch.Errors.MT0014, app.SdkVersion, "ARMv7s");
+				throw new MonoTouchException (14, true, mtouch.mtouchErrors.MT0014, app.SdkVersion, "ARMv7s");
 
 			if (app.SdkVersion < new Version (7, 0) && app.IsArchEnabled (Abi.ARM64))
-				throw new MonoTouchException (14, true, mtouch.Errors.MT0014, app.SdkVersion, "ARM64");
+				throw new MonoTouchException (14, true, mtouch.mtouchErrors.MT0014, app.SdkVersion, "ARM64");
 
 			if (app.SdkVersion < new Version (7, 0) && app.IsArchEnabled (Abi.x86_64))
-				throw new MonoTouchException (14, true, mtouch.Errors.MT0014, app.SdkVersion, "x86_64");
+				throw new MonoTouchException (14, true, mtouch.mtouchErrors.MT0014, app.SdkVersion, "x86_64");
 
 			if (!Directory.Exists (framework_dir)) {
 				Console.WriteLine ("Framework does not exist {0}", framework_dir);
@@ -1329,28 +1329,28 @@ namespace Xamarin.Bundler
 			}
 
 			if (!Directory.Exists (GetPlatformDirectory (app)))
-				throw new MonoTouchException (6, true, mtouch.Errors.MT0006, GetPlatformDirectory (app));
+				throw new MonoTouchException (6, true, mtouch.mtouchErrors.MT0006, GetPlatformDirectory (app));
 
 			if (!Directory.Exists (app.AppDirectory))
 				Directory.CreateDirectory (app.AppDirectory);
 
 			if (app.EnableRepl && app.BuildTarget != BuildTarget.Simulator)
-				throw new MonoTouchException (29, true, mtouch.Errors.MT0029);
+				throw new MonoTouchException (29, true, mtouch.mtouchErrors.MT0029);
 
 			if (app.EnableRepl && app.LinkMode != LinkMode.None)
-				throw new MonoTouchException (82, true, mtouch.Errors.MT0082);
+				throw new MonoTouchException (82, true, mtouch.mtouchErrors.MT0082);
 
 			if (app.UseInterpreter) {
 				// it's confusing to use different options to get a feature to work (e.g. dynamic, SRE...) on both simulator and device
 				if (app.IsSimulatorBuild) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (141, mtouch.Errors.MT0141));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (141, mtouch.mtouchErrors.MT0141));
 					app.UseInterpreter = false;
 				}
 
 				// FIXME: the interpreter only supports ARM64{,_32} right now
 				// temporary - without a check here the error happens when deploying
 				if (!app.IsSimulatorBuild && (!app.IsArchEnabled (Abi.ARM64) && !app.IsArchEnabled (Abi.ARM64_32)))
-					throw ErrorHelper.CreateError (150, mtouch.Errors.MT0150);
+					throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_Q);
 
 				// needs to be set after the argument validations
 				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
@@ -1358,9 +1358,9 @@ namespace Xamarin.Bundler
 			} else {
 				if (app.Platform == ApplePlatform.WatchOS && app.IsArchEnabled (Abi.ARM64_32) && app.BitCodeMode != BitCodeMode.LLVMOnly) {
 					if (app.IsArchEnabled (Abi.ARMv7k)) {
-						throw ErrorHelper.CreateError (145, mtouch.Errors.MT0145);
+						throw ErrorHelper.CreateError (145, mtouch.mtouchErrors.MT0145);
 					} else {
-						ErrorHelper.Warning (146, mtouch.Errors.MT0146);
+						ErrorHelper.Warning (146, mtouch.mtouchErrors.MT0146);
 						app.UseInterpreter = true;
 						app.InterpretedAssemblies.Clear ();
 					}
@@ -1390,13 +1390,13 @@ namespace Xamarin.Bundler
 						ext.ContainerApp = app;
 						app.AppExtensions.Add (ext);
 						if (app_action != Action.Build)
-							throw ErrorHelper.CreateError (151, mtouch.Errors.MT0151, app_action);
+							throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_R, app_action);
 					}
 
 					app.BuildAll ();
 				}
 			} else {
-				throw ErrorHelper.CreateError (152, mtouch.Errors.MT0152, action);
+				throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_S, action);
 			}
 
 			return 0;
@@ -1427,7 +1427,7 @@ namespace Xamarin.Bundler
 				if (File.Exists (path))
 					return path;
 
-				throw ErrorHelper.CreateError (93, mtouch.Errors.MT0093);
+				throw ErrorHelper.CreateError (93, mtouch.mtouchErrors.MT0093);
 			}
 		}
 
@@ -1523,9 +1523,9 @@ namespace Xamarin.Bundler
 					goto tryagain;
 				}
 				if (string.IsNullOrEmpty (original_compiler)) {
-					throw new MonoTouchException (5101, true, mtouch.Errors.MT5101, app.Compiler);
+					throw new MonoTouchException (5101, true, mtouch.mtouchErrors.MT5101, app.Compiler);
 				} else {
-					throw new MonoTouchException (5103, true, mtouch.Errors.MT5103, app.Compiler, original_compiler);
+					throw new MonoTouchException (5103, true, mtouch.mtouchErrors.MT5103, app.Compiler, original_compiler);
 				}
 			}
 		}
@@ -1538,10 +1538,10 @@ namespace Xamarin.Bundler
 			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
 			string strip = FindTool ("strip");
 			if (strip == null)
-				throw new MonoTouchException (5301, mtouch.Errors.MT5301);
+				throw new MonoTouchException (5301, mtouch.mtouchErrors.MT5301);
 
 			if (RunCommand (strip, options) != 0)
-				throw new MonoTouchException (5304, true, mtouch.Errors.MT5304);
+				throw new MonoTouchException (5304, true, mtouch.mtouchErrors.MT5304);
 		}
 
 		static string FindTool (string tool)
@@ -1584,9 +1584,9 @@ namespace Xamarin.Bundler
 		{
 			string lipo = FindTool ("lipo");
 			if (lipo == null)
-				throw new MonoTouchException (5305, true, mtouch.Errors.MT5305);
+				throw new MonoTouchException (5305, true, mtouch.mtouchErrors.MT5305);
 			if (RunCommand (lipo, options) != 0)
-				throw new MonoTouchException (5306, true, mtouch.Errors.MT5305);
+				throw new MonoTouchException (5306, true, mtouch.mtouchErrors.MT5305);
 		}
 
 		static void RunDsymUtil (params string[] options)
@@ -1594,11 +1594,11 @@ namespace Xamarin.Bundler
 			// either /Developer (Xcode 4.2 and earlier), /Applications/Xcode.app/Contents/Developer (Xcode 4.3) or user override
 			string dsymutil = FindTool ("dsymutil");
 			if (dsymutil == null) {
-				ErrorHelper.Warning (5302, mtouch.Errors.MT5302);
+				ErrorHelper.Warning (5302, mtouch.mtouchErrors.MT5302);
 				return;
 			}
 			if (RunCommand (dsymutil, options) != 0)
-				throw new MonoTouchException (5303, true, mtouch.Errors.MT5303);
+				throw new MonoTouchException (5303, true, mtouch.mtouchErrors.MT5303);
 		}
 
 		static string GetFrameworkDir (string platform, Version iphone_sdk)
@@ -1672,7 +1672,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Frameworks.TVOSFrameworks;
 			default:
-				throw ErrorHelper.CreateError (71, mtouch.Errors.MT0071, app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
 			}
 		}
 

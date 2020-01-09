@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.props" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -30,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+       <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -358,6 +362,9 @@
     <Compile Include="..\common\Optimizations.cs">
       <Link>external\Optimizations.cs</Link>
     </Compile>
+    <Compile Include="..\common\Tuning.cs">
+      <Link>external\Tuning.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Registrar.core.cs">
       <Link>external\Registrar.core.cs</Link>
     </Compile>
@@ -416,6 +423,12 @@
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
     <Compile Include="Target.mmp.cs" />
+    <Compile Include="mmpErrors.Designer.cs">
+      <DependentUpon>mmpErrors.resx</DependentUpon>
+    </Compile>
+    <Compile Include="..\mtouch\mtouchErrors.Designer.cs" Visible="false">
+      <Link>mtouchErrors.Designer.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -434,6 +447,12 @@
     <EmbeddedResource Include="Info.plist.tmpl">
       <LogicalName>Info.plist.tmpl</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="mmpErrors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <XlfSourceFormat>Resx</XlfSourceFormat>
+      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -442,5 +461,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
+    <None Include="packages.config" />
+    <None Include="..\mtouch\mtouchErrors.resx" Visible="false">
+      <Link>mtouchErrors.resx</Link>
+    </None>
   </ItemGroup>
+  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.targets')" />
 </Project>

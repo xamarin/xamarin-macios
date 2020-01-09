@@ -166,7 +166,7 @@ namespace Xamarin.Bundler
 				switch ((Opt) i) {
 				case Opt.StaticBlockToDelegateLookup:
 					if (app.Registrar != RegistrarMode.Static) {
-						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since the static registrar is not enabled");
+						ErrorHelper.Warning (2003, mtouch.mtouchErrors.MT2003,  (values [i].Value ? "" : "-"), opt_names [i]);
 						values [i] = false;
 						continue;
 					}
@@ -176,7 +176,7 @@ namespace Xamarin.Bundler
 				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
 					if (app.Registrar != RegistrarMode.Static) {
-						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since the static registrar is not enabled");
+						ErrorHelper.Warning (2003, mtouch.mtouchErrors.MT2003, (values[i].Value ? "" : "-"), opt_names[i]);
 						values [i] = false;
 						continue;
 					}
@@ -185,14 +185,14 @@ namespace Xamarin.Bundler
 				case Opt.RemoveUnsupportedILForBitcode:
 					if (app.Platform != Utils.ApplePlatform.WatchOS) {
 						if (!all.HasValue) // Don't show this warning if it was enabled with --optimize=all
-							ErrorHelper.Warning (2003, $"Option '--optimize={opt_names [(int) Opt.RemoveUnsupportedILForBitcode]}' will be ignored since it's only applicable to watchOS.");
+							ErrorHelper.Warning (2020, mtouch.mtouchErrors.MT2020, opt_names [(int) Opt.RemoveUnsupportedILForBitcode]);
 						values [i] = false;
 					}
 					break;
 #endif
 				default:
 					if (app.LinkMode == LinkMode.None) {
-						ErrorHelper.Warning (2003, $"Option '--optimize={(values [i].Value ? "" : "-")}{opt_names [i]}' will be ignored since linking is disabled");
+						ErrorHelper.Warning (2021, mtouch.mtouchErrors.MT2021, (values [i].Value ? "" : "-"), opt_names [i]);
 						values [i] = false;
 					}
 					break;
@@ -315,7 +315,7 @@ namespace Xamarin.Bundler
 		{
 			foreach (var option in options.Split (',')) {
 				if (option == null || option.Length < 2)
-					throw ErrorHelper.CreateError (10, $"Could not parse the command line argument '--optimize={options}'");
+					throw ErrorHelper.CreateError (10, mtouch.mtouchErrors.MT0010, options);
 
 				ParseOption (option);
 			}
@@ -355,7 +355,7 @@ namespace Xamarin.Bundler
 					values [i] = enabled;
 				}
 				if (!found)
-					ErrorHelper.Warning (132, $"Unknown optimization: '{opt}'. Valid optimizations are: {string.Join (", ", opt_names.Where ((v) => !string.IsNullOrEmpty (v)))}.");
+					ErrorHelper.Warning (132, mtouch.mtouchErrors.MT0132, opt, string.Join (", ", opt_names.Where ((v) => !string.IsNullOrEmpty (v))));
 			}
 		}
 	}

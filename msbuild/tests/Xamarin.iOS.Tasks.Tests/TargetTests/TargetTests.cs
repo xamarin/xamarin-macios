@@ -504,20 +504,24 @@ namespace Xamarin.iOS.Tasks
 			plist.SetMinimumOSVersion ("7.0");
 			plist.Save (path, true);
 
-			var projectInstance = project.CreateProjectInstance ();
-			RunTargetOnInstance (projectInstance, TargetName.CompileImageAssets, 0);
+			ProjectInstance projectInstance = null;
+			try {
+				projectInstance = project.CreateProjectInstance ();
+				RunTargetOnInstance (projectInstance, TargetName.CompileImageAssets, 0);
 
-			var bundleItemsNoAppIcon = projectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
-			Assert.IsFalse (bundleItemsNoAppIcon.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons60x60@2x.png") && i.GetMetadataValue ("LogicalName") == "AppIcons60x60@2x.png"), "#1");
+				var bundleItemsNoAppIcon = projectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
+				Assert.IsFalse (bundleItemsNoAppIcon.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons60x60@2x.png") && i.GetMetadataValue ("LogicalName") == "AppIcons60x60@2x.png"), "#1");
 
-			project = SetupProject (Engine, MonoTouchProjectCSProjPath);
-			projectInstance = project.CreateProjectInstance ();
+				project = SetupProject (Engine, MonoTouchProjectCSProjPath);
+				projectInstance = project.CreateProjectInstance ();
 
-			// Put a thread.sleep so that we get noticeable timestamps.
-			EnsureFilestampChange ();
+				// Put a thread.sleep so that we get noticeable timestamps.
+				EnsureFilestampChange ();
 
-			// Re-save the original plist (adding app icon).
-			plistCopy.Save (path, true);
+			} finally {
+				// Re-save the original plist (adding app icon).
+				plistCopy.Save (path, true);
+			}
 
 			// Re-run the task with app icon set this time and no clean.
 			// The task should be aware the app icon is now being used.
@@ -575,7 +579,7 @@ namespace Xamarin.iOS.Tasks
 			MonoTouchProjectInstance = MonoTouchProject.CreateProjectInstance ();
 
 			RunTarget_WithErrors (MonoTouchProjectInstance, TargetName.DetectAppManifest);
-			Assert.IsNullOrEmpty (MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
+			Assert.That (MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), Is.Null.Or.Empty, "#1");
 		}
 
 		[Test]
@@ -625,7 +629,7 @@ namespace Xamarin.iOS.Tasks
 		public void DetectAppManifest_LibraryProject ()
 		{
 			RunTargetOnInstance (LibraryProjectInstance, TargetName.DetectAppManifest);
-			Assert.IsNullOrEmpty (LibraryProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
+			Assert.That (LibraryProjectInstance.GetPropertyValue ("_AppManifest"), Is.Not.Null.Or.Empty, "#1");
 		}
 	}
 }

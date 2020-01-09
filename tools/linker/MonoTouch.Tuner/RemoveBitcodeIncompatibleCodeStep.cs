@@ -61,6 +61,7 @@ namespace MonoTouch.Tuner {
 					} else {
 						msg = $"The method {method.DeclaringType.FullName}.{method.Name} contains a '{eh.HandlerType}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.";
 					}
+					//todo: localize this error
 					DerivedLinkContext.Exceptions.Add (ErrorHelper.CreateWarning (Options.Application, 2105, method, msg));
 					break;
 				}

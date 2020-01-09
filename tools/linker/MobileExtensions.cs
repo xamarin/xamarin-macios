@@ -63,18 +63,18 @@ namespace Xamarin.Linker {
 					continue;
 
 				if (ca.HasFields)
-					throw ErrorHelper.CreateError (2105, "The [BindingImpl] attribute on the member '{0}' is invalid: did not expect fields.", provider.AsString ());
+					throw ErrorHelper.CreateError (2105, mtouch.mtouchErrors.MT2105_A, provider.AsString ());
 				if (ca.HasProperties)
-					throw ErrorHelper.CreateError (2105, "The [BindingImpl] attribute on the member '{0}' is invalid: did not expect properties.", provider.AsString ());
+					throw ErrorHelper.CreateError (2105, mtouch.mtouchErrors.MT2105_B, provider.AsString ());
 
 				switch (ca.ConstructorArguments.Count) {
 				case 1:
 					var arg = ca.ConstructorArguments [0];
 					if (!arg.Type.Is (Namespaces.ObjCRuntime, "BindingImplOptions"))
-						throw ErrorHelper.CreateError (2105, "The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a '{1}' parameter type (expected 'ObjCRuntime.BindingImplOptions).", provider.AsString (), arg.Type.FullName);
+						throw ErrorHelper.CreateError (2105, mtouch.mtouchErrors.MT2105_C, provider.AsString (), arg.Type.FullName);
 					return (BindingImplOptions) (int) arg.Value;
 				default:
-					throw ErrorHelper.CreateError (2105, "The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a {1} parameters (expected 1 parameters).", provider.AsString (), ca.ConstructorArguments.Count);
+					throw ErrorHelper.CreateError (2105, mtouch.mtouchErrors.MT2105_D, provider.AsString (), ca.ConstructorArguments.Count);
 				}
 			}
 

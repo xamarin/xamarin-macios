@@ -27,7 +27,7 @@ namespace Xamarin.iOS.Tasks
 			var scenePath = Path.GetFullPath (Path.Combine (appPath, "art.scnassets", "scene.scn"));
 
 			var xml = Configuration.ReadPListAsXml (scenePath);
-			Assert.That (xml, Is.StringContaining ("<string>art.scnassets/texture.png</string>"), "asset with path");
+			Assert.That (xml, Does.Contain ("<string>art.scnassets/texture.png</string>"), "asset with path");
 		}
 
 		[Test]

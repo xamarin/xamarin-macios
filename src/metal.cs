@@ -597,7 +597,12 @@ namespace Metal {
 #endif
 		[NoiOS, NoTV, Mac (10,15)]
 		[Export ("sampleCountersInBuffer:atSampleIndex:withBarrier:")]
+#if XAMCORE_4_0
+		void SampleCounters (IMTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
+#else
+		[Obsolete ("Use the overload that takes an IMTLCounterSampleBuffer instead.")]
 		void SampleCounters (MTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
+#endif
 	}
 
 	[iOS (8,0)][Mac (10,11)]
@@ -1363,7 +1368,12 @@ namespace Metal {
 #endif
 		[NoiOS, NoTV, Mac (10, 15)]
 		[NullAllowed, Export ("counterSets")]
+#if XAMCORE_4_0
+		IMTLCounterSet[] CounterSets { get; }
+#else
+		[Obsolete ("Use 'GetIMTLCounterSets' instead.")]
 		MTLCounterSet[] CounterSets { get; }
+#endif
 
 #if XAMCORE_4_0
 		[Abstract]
@@ -1371,7 +1381,12 @@ namespace Metal {
 		[NoiOS, NoTV, Mac (10,15)]
 		[Export ("newCounterSampleBufferWithDescriptor:error:")]
 		[return: NullAllowed]
+#if XAMCORE_4_0
+		IMTLCounterSampleBuffer CreateCounterSampleBuffer (MTLCounterSampleBufferDescriptor descriptor, [NullAllowed] out NSError error);
+#else
+		[Obsolete ("Use 'CreateIMTLCounterSampleBuffer' instead.")]
 		MTLCounterSampleBuffer CreateCounterSampleBuffer (MTLCounterSampleBufferDescriptor descriptor, [NullAllowed] out NSError error);
+#endif
 
 #if XAMCORE_4_0
 		[Abstract]
@@ -4148,7 +4163,9 @@ namespace Metal {
 
 	[NoiOS, NoTV, Mac (10,15)]
 	[Protocol]
+#if !XAMCORE_4_0
 	[BaseType (typeof(NSObject))]
+#endif
 	interface MTLCounter {
 		[Abstract]
 		[Export ("name")]
@@ -4159,7 +4176,9 @@ namespace Metal {
 
 	[NoiOS, NoTV, Mac (10,15)]
 	[Protocol]
+#if !XAMCORE_4_0
 	[BaseType (typeof(NSObject))]
+#endif
 	interface MTLCounterSet {
 		[Abstract]
 		[Export ("name")]
@@ -4174,7 +4193,9 @@ namespace Metal {
 
 	[NoiOS, NoTV, Mac (10,15)]
 	[Protocol]
+#if !XAMCORE_4_0
 	[BaseType (typeof(NSObject))]
+#endif
 	interface MTLCounterSampleBuffer {
 		[Abstract]
 		[Export ("device")]

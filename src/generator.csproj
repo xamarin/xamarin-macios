@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
+  <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.props" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -75,6 +76,9 @@
     <EnvironmentVariables>
       <Variable name="XamarinMacFrameworkRoot" value="../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
     </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup>
+       <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\docs\website\generator-errors.md">
@@ -382,8 +386,19 @@
     <Compile Include="..\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Target Name="AfterBuild">
     <Exec Command="make bgen" />
   </Target>
+  <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets')" />
 </Project>

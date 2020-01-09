@@ -244,7 +244,7 @@ namespace Xamarin
 					yield break;
 				}
 				
-				throw ErrorHelper.CreateError (1604, "File of type {0} is not a MachO file ({1}).", file.GetType ().Name, filename);
+				throw ErrorHelper.CreateError (1604, mtouch.mtouchErrors.MT1604, file.GetType ().Name, filename);
 			}
 		}
 
@@ -530,7 +530,7 @@ namespace Xamarin
 				var fileSize = ReadDecimal (reader, 10);
 				bytes = reader.ReadBytes (2); // ending characters
 				if (bytes [0] != 0x60 && bytes [1] != 0x0A)
-					throw ErrorHelper.CreateError (1605, $"Invalid entry '{fileIdentifier}' in the static library '{filename}', entry header doesn't end with 0x60 0x0A (found '0x{bytes [0].ToString ("x")} 0x{bytes [1].ToString ("x")}')");
+					throw ErrorHelper.CreateError (1605, mtouch.mtouchErrors.MT1605, fileIdentifier, filename, bytes[0].ToString("x"), bytes[1].ToString("x"));
 
 				if (fileIdentifier.StartsWith ("#1/", StringComparison.Ordinal)) {
 					var nameLength = int.Parse (fileIdentifier.Substring (3).TrimEnd (' '));
@@ -561,7 +561,7 @@ namespace Xamarin
 			reader.BaseStream.Position = pos;
 
 			if (throw_if_error && !rv)
-				throw ErrorHelper.CreateError (1601, "Not a Mach-O static library (unknown header '{0}', expected '!<arch>').", System.Text.Encoding.ASCII.GetString (bytes, 0, 7));
+				throw ErrorHelper.CreateError (1601, mtouch.mtouchErrors.MT1601, System.Text.Encoding.ASCII.GetString (bytes, 0, 7));
 
 			return rv;
 		}
@@ -646,7 +646,7 @@ namespace Xamarin
 			reader.BaseStream.Position = pos;
 
 			if (throw_if_error && !rv)
-				throw ErrorHelper.CreateError (1600, "Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.", magic.ToString ("x"), fat_entry.Parent.Filename);
+				throw ErrorHelper.CreateError (1600, mtouch.mtouchErrors.MT1600, magic.ToString ("x"), fat_entry.Parent.Filename);
 
 			return rv;
 		}
@@ -694,7 +694,7 @@ namespace Xamarin
 				is64bitheader = true;
 				break;
 			default:
-				throw ErrorHelper.CreateError (1602, "Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.", magic.ToString ("x"), fat_parent != null ? fat_parent.Parent.Filename : filename);
+				throw ErrorHelper.CreateError (1602, mtouch.mtouchErrors.MT1602, magic.ToString ("x"), fat_parent != null ? fat_parent.Parent.Filename : filename);
 			}
 			_cputype = reader.ReadInt32 ();
 			_cpusubtype = reader.ReadInt32 ();
@@ -925,7 +925,7 @@ namespace Xamarin
 				static_library = new StaticLibrary ();
 				static_library.Read (parent?.Filename, reader, size);
 			} else {
-				throw ErrorHelper.CreateError (1603, "Unknown format for fat entry at position {0} in {1}.", offset, parent.Filename);
+				throw ErrorHelper.CreateError (1603, mtouch.mtouchErrors.MT1603, offset, parent.Filename);
 			}
 		}
 	}

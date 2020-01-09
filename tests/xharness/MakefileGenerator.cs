@@ -453,7 +453,7 @@ namespace xharness
 					}
 					var chunks = new List<string> ();
 					if (target is WatchOSTarget && target.IsBCLProject) {
-						if (target.Name == "mscorlib") {
+						if (target.Name.StartsWith ("mscorlib", StringComparison.Ordinal)) {
 							for (int i = (int) 'A'; i <= (int) 'Z'; i++) {
 								chunks.Add (((char) i).ToString () + ((char) i).ToString ());
 							}
