@@ -25,17 +25,13 @@ namespace MonoTouch.Tuner {
 
 				string tool = "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/mono-cil-strip.exe";
 				if (Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/bin/mono", tool, assembly_file, output_file) != 0)
-					//todo: fix this
 					throw new MonoTouchException (6002, true, "Could not strip assembly `{0}`.", assembly_file);
 			} catch (NotSupportedException e) {
-				//todo: fix this
 				throw new MonoTouchException (6001, true, e.Message);
 			} catch (UnauthorizedAccessException e) {
 				// access denied, e.g. non-writable (by SCM) assembly - see assistly #10923 
-				//todo: fix this
 				throw new MonoTouchException (6003, true, e.Message);
 			} catch (Exception e) {
-				//todo: fix this
 				throw new MonoTouchException (6002, true, e, "Could not strip assembly `{0}`.", assembly_file);
 			}
 		}
