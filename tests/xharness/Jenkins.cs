@@ -899,7 +899,7 @@ namespace xharness
 			};
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (buildiOSMSBuild)
 			{
-				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "bin", "Xamarin.iOS.Tasks.Tests.dll"),
+				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
 				TestProject = new TestProject (Path.Combine (Path.GetDirectoryName (buildiOSMSBuild.TestProject.Path), "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")),
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
