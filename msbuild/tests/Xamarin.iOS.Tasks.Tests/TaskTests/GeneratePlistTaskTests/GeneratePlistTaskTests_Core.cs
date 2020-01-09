@@ -55,6 +55,13 @@ namespace Xamarin.iOS.Tasks
 			CompiledPlist = PDictionary.FromFile (Task.CompiledAppManifest.ItemSpec);
 		}
 
+		public override void Teardown ()
+		{
+			base.Teardown ();
+
+			Directory.Delete ("AppBundlePath", true);
+		}
+
 		#region General tests
 		[Test]
 		public void PlistMissing ()
@@ -91,7 +98,7 @@ namespace Xamarin.iOS.Tasks
 		public virtual void XamarinVersion ()
 		{
 			Assert.That (CompiledPlist.ContainsKey ("com.xamarin.ios"), "#1");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PDictionary> ("com.xamarin.ios").GetString ("Version").Value, "#2");
+			Assert.That (CompiledPlist.Get<PDictionary> ("com.xamarin.ios").GetString ("Version").Value, Is.Not.Null.Or.Empty, "#2");
 		}
 		#endregion
 
@@ -100,7 +107,7 @@ namespace Xamarin.iOS.Tasks
 		public void BuildMachineOSBuild ()
 		{
 			Assert.That (CompiledPlist.ContainsKey (ManifestKeys.BuildMachineOSBuild), "#1");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (ManifestKeys.BuildMachineOSBuild).Value, "#2");
+			Assert.That (CompiledPlist.Get<PString> (ManifestKeys.BuildMachineOSBuild).Value, Is.Not.Null.Or.Empty, "#2");
 		}
 
 		[Test]
@@ -134,7 +141,7 @@ namespace Xamarin.iOS.Tasks
 		public virtual void BundleInfoDictionaryVersion ()
 		{
 			Assert.That (CompiledPlist.ContainsKey (ManifestKeys.CFBundleInfoDictionaryVersion), "#1");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (ManifestKeys.CFBundleInfoDictionaryVersion).Value, "#2");
+			Assert.That (CompiledPlist.Get<PString> (ManifestKeys.CFBundleInfoDictionaryVersion).Value, Is.Not.Null.Or.Empty, "#2");
 		}
 
 		[Test]
@@ -162,7 +169,7 @@ namespace Xamarin.iOS.Tasks
 		public virtual void BundleVersion ()
 		{
 			Assert.That (CompiledPlist.ContainsKey (ManifestKeys.CFBundleVersion), "#1");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (ManifestKeys.CFBundleVersion).Value, "#2");
+			Assert.That (CompiledPlist.Get<PString> (ManifestKeys.CFBundleVersion).Value, Is.Not.Null.Or.Empty, "#2");
 		}
 
 		[Test]
@@ -184,14 +191,14 @@ namespace Xamarin.iOS.Tasks
 			Assert.That (CompiledPlist.ContainsKey (dtSDKName), "#5");
 			Assert.That (CompiledPlist.ContainsKey (dtXcode), "#6");
 			Assert.That (CompiledPlist.ContainsKey (dtXcodeBuild), "#7");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (dtCompiler).Value, "#8");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (dtPlatformBuild).Value, "#9");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (dtSDKBuild).Value, "#10");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (dtPlatformName).Value, "#11");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (dtPlatformVersion).Value, "#12");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (dtSDKName).Value, "#13");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (dtXcode).Value, "#14");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (dtXcodeBuild).Value, "#15");
+			Assert.That (CompiledPlist.Get<PString> (dtCompiler).Value, Is.Not.Null.Or.Empty, "#8");
+			Assert.That (CompiledPlist.Get<PString> (dtPlatformBuild).Value, Is.Not.Null.Or.Empty, "#9");
+			Assert.That (CompiledPlist.Get<PString> (dtSDKBuild).Value, Is.Not.Null.Or.Empty, "#10");
+			Assert.That (CompiledPlist.Get<PString> (dtPlatformName).Value, Is.Not.Null.Or.Empty, "#11");
+			Assert.That (CompiledPlist.Get<PString> (dtPlatformVersion).Value, Is.Not.Null.Or.Empty, "#12");
+			Assert.That (CompiledPlist.Get<PString> (dtSDKName).Value, Is.Not.Null.Or.Empty, "#13");
+			Assert.That (CompiledPlist.Get<PString> (dtXcode).Value, Is.Not.Null.Or.Empty, "#14");
+			Assert.That (CompiledPlist.Get<PString> (dtXcodeBuild).Value, Is.Not.Null.Or.Empty, "#15");
 		}
 
 		[Test]
@@ -205,7 +212,7 @@ namespace Xamarin.iOS.Tasks
 		public virtual void MinimumOSVersion ()
 		{
 			Assert.That (CompiledPlist.ContainsKey (ManifestKeys.MinimumOSVersion), "#1");
-			Assert.IsNotNullOrEmpty (CompiledPlist.Get<PString> (ManifestKeys.MinimumOSVersion).Value, "#2");
+			Assert.That (CompiledPlist.Get<PString> (ManifestKeys.MinimumOSVersion).Value, Is.Not.Null.Or.Empty, "#2");
 		}
 		#endregion
 	}

@@ -96,9 +96,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_ACTool_BundleResourceCache>$(IntermediateOutputPath)actool\_BundleResourceWithLogicalName.items</_ACTool_BundleResourceCache>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.xbuild.targets"
-		Condition="'$(IsXBuild)' == 'true' "/>
-
 	<PropertyGroup>
 		<BuildDependsOn>
 			BuildOnlySettings;
@@ -755,11 +752,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.xbuild.targets"
-		Condition="'$(IsXBuild)' == 'true' "/>
-
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
-		Condition="'$(IsXBuild)' != 'true' "/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets" />
 
 	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration" Condition="'$(IsAppExtension)' != 'true'">
 		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
@@ -808,12 +801,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
 		<PropertyGroup>
-			<!-- When building a .sln with xbuild or building from IDE, the referenced projects are already built.  -->
-			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' == 'true' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
-
 			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
 			     the referenced projects unless building from IDE. -->
-			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+			<_BuildReferencedExtensionProjects Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
 		</PropertyGroup>
 
 		<!-- If the referenced projects have already been built, then just get the target paths -->

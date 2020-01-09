@@ -424,3 +424,8 @@ Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeMe
 # random OOMs
 Platform32:System.Collections.Tests.HashtableTests.Ctor_Int_Int_GenerateNewPrime
 Platform32:System.Tests.BitConverterTests.ToString_ByteArrayTooLong_Throws
+# device failures, reported at: https://github.com/mono/mono/issues/17375
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeMethod
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeField
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeEvent
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeProperty

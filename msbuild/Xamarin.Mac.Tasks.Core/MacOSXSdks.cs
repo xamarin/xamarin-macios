@@ -14,15 +14,10 @@ namespace Xamarin.Mac.Tasks
 		{
 			Native = new MacOSXSdk (AppleSdkSettings.DeveloperRoot, AppleSdkSettings.DeveloperRootVersionPlist);
 			XamMac = new XamMacSdk (null);
-
-			AppleSdkSettings.Changed += delegate {
-				Native = new MacOSXSdk (AppleSdkSettings.DeveloperRoot, AppleSdkSettings.DeveloperRootVersionPlist);
-			};
 		}
 
 		public static void CheckInfoCaches ()
 		{
-			AppleSdkSettings.CheckChanged ();
 			XamMac.CheckCaches ();
 		}
 	}

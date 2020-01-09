@@ -267,11 +267,13 @@ namespace xharness
 			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
 			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
 			var supports_dynamic_registrar_on_device = test.Platform == TestPlatform.iOS_Unified64 || test.Platform == TestPlatform.tvOS;
-			// arm64_32 is only supported for Release builds for now.
-			var supports_debug = test.Platform != TestPlatform.watchOS_64_32;
 
 			switch (test.ProjectPlatform) {
 			case "iPhone":
+				// arm64_32 is only supported for Release builds for now.
+				// arm32 bits too big for debug builds - https://github.com/xamarin/maccore/issues/2080
+				var supports_debug = test.Platform != TestPlatform.watchOS_64_32 && !(test.TestName == "dont link" && test.Platform == TestPlatform.iOS_Unified32);
+
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
 				if (supports_debug) {
 					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
@@ -303,7 +305,7 @@ namespace xharness
 						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
 					}
 					break;
-				case "mscorlib":
+				case  string name when name.StartsWith ("mscorlib", StringComparison.Ordinal):
 					if (supports_debug)
 						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
 					if (supports_interpreter) {
@@ -560,7 +562,7 @@ namespace xharness
 
 					var build32 = new XBuildTask {
 						Jenkins = this,
-						ProjectConfiguration = "Debug32",
+						ProjectConfiguration = project.Name != "dont link" ? "Debug32" : "Release32",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified32,
 						TestName = project.Name,
@@ -2096,7 +2098,7 @@ namespace xharness
 									writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
 								}
 								if (test.Duration.Ticks > 0)
-									writer.WriteLine ($"Run duration: {test.Duration} <br />");
+									writer.WriteLine ($"Time Elapsed:  {test.TestName} - (waiting time : {test.WaitingDuration} , running time : {test.Duration}) <br />");
 								var runDeviceTest = runTest as RunDeviceTask;
 								if (runDeviceTest?.Device != null) {
 									if (runDeviceTest.CompanionDevice != null) {
@@ -2113,6 +2115,7 @@ namespace xharness
 							if (logs.Count () > 0) {
 								foreach (var log in logs) {
 									log.Flush ();
+									var exists = File.Exists (log.FullPath);
 									string log_type = System.Web.MimeMapping.GetMimeMapping (log.FullPath);
 									string log_target;
 									switch (log_type) {
@@ -2123,7 +2126,9 @@ namespace xharness
 										log_target = "_self";
 										break;
 									}
-									if (log.Description == "Build log") {
+									if (!exists) {
+										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									} else if (log.Description == "Build log") {
 										var binlog = log.FullPath.Replace (".txt", ".binlog");
 										if (File.Exists (binlog)) {
 											var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
@@ -2135,7 +2140,9 @@ namespace xharness
 									} else {
 										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									}
-									if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
+									if (!exists) {
+										// Don't try to parse files that don't exist
+									} else if (log.Description == "Test log" || log.Description == "Extension test log" || log.Description == "Execution log") {
 										string summary;
 										List<string> fails;
 										try {
@@ -2412,6 +2419,9 @@ namespace xharness
 				return duration.Elapsed;
 			}
 		}
+
+		protected Stopwatch waitingDuration = new Stopwatch ();
+		public TimeSpan WaitingDuration => waitingDuration.Elapsed;
 
 		TestExecutingResult execution_result;
 		public virtual TestExecutingResult ExecutionResult {
@@ -2752,9 +2762,11 @@ namespace xharness
 
 			// Stop the timer while we're waiting for a resource
 			duration.Stop ();
+			waitingDuration.Start ();
 			ExecutionResult = ExecutionResult | TestExecutingResult.Waiting;
 			rv.Wrapped = await task;
 			ExecutionResult = ExecutionResult & ~TestExecutingResult.Waiting;
+			waitingDuration.Stop ();
 			duration.Start ();
 			rv.OnDispose = duration.Stop;
 			return rv;
@@ -3050,11 +3062,21 @@ namespace xharness
 				
 			var packages_conf = Path.Combine (Path.GetDirectoryName (TestProject.Path), "packages.config");
 			var nunit_version = string.Empty;
+			var is_packageref = false;
 			const string default_nunit_version = "3.9.0";
 
 			if (!File.Exists (packages_conf)) {
-				nunit_version = default_nunit_version;
-				log.WriteLine ("No packages.config found for {0}: assuming nunit version is {1}", TestProject, nunit_version);
+				var xml = new XmlDocument ();
+				xml.LoadWithoutNetworkAccess (TestProject.Path);
+				var packageref = xml.SelectSingleNode ("//*[local-name()='PackageReference' and @Include = 'NUnit.ConsoleRunner']");
+				if (packageref != null) {
+					is_packageref = true;
+					nunit_version = packageref.Attributes ["Version"].InnerText;
+					log.WriteLine ("Found PackageReference in {0} for NUnit.ConsoleRunner {1}", TestProject, nunit_version);
+				} else {
+					nunit_version = default_nunit_version;
+					log.WriteLine ("No packages.config found for {0}: assuming nunit version is {1}", TestProject, nunit_version);
+				}
 			} else {
 				using (var str = new StreamReader (packages_conf)) {
 					using (var reader = System.Xml.XmlReader.Create (str)) {
@@ -3078,8 +3100,13 @@ namespace xharness
 					log.WriteLine ("Found the NUnit.ConsoleRunner/NUnit.Runners element in {0} for {2}, version is: {1}", packages_conf, nunit_version, TestProject.Path);
 				}
 			}
-				
-			if (nunit_version [0] == '2') {
+
+			if (is_packageref) {
+				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "tools", $"nunit3-console-{nunit_version}");
+				if (!File.Exists (TestExecutable))
+					throw new FileNotFoundException ($"The helper script to execute the unit tests does not exist: {TestExecutable}");
+				WorkingDirectory = Path.GetDirectoryName (TestProject.Path);
+			} else if (nunit_version [0] == '2') {
 				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners." + nunit_version, "tools", "nunit-console.exe");
 				WorkingDirectory = Path.Combine (Path.GetDirectoryName (TestExecutable), "lib");
 			} else {
@@ -3094,7 +3121,7 @@ namespace xharness
 
 		public bool IsNUnit3 {
 			get {
-				return Path.GetFileName (TestExecutable) == "nunit3-console.exe";
+				return Path.GetFileName (TestExecutable).Contains ("unit3-console");
 			}
 		}
 		public override IEnumerable<Log> AggregatedLogs {

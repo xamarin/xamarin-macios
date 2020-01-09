@@ -41,9 +41,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
-		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' != ''">false</IsXBuild>
-
 		<!-- Opt-in to filter out assemblies denied loading by mono, to avoid bundling them.
 		     This should only be for non-Modern profiles, since people who are recompiling for
 		     Modern aren't shipping windows bits.

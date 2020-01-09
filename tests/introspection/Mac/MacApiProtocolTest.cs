@@ -86,6 +86,10 @@ namespace Introspection {
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
 					return true;
+				// macOS 10.15.2
+				case "NSPrintInfo": // Conformance not in headers
+				case "NSPrinter": // Conformance not in headers
+					return true;
 #if !UNIFIED
 				// existing classic/old binary is not updated
 				case "NSAppearance":

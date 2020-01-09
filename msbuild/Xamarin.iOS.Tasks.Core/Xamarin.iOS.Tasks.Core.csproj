@@ -39,8 +39,6 @@
     <Reference Include="Microsoft.Build.Utilities.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Utilities.Core.dll" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
@@ -127,6 +125,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Xamarin.iOS.ObjCBinding.Common.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.iOS.NativeReference.Stubs.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Xamarin.iOS.ObjCBinding.CSharp.props">

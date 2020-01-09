@@ -139,10 +139,7 @@ namespace Introspection {
 
 			switch (type.Name) {
 			case "CAMetalLayer":
-				// that one still does not work with iOS9 beta 4
-				if (Runtime.Arch == Arch.SIMULATOR)
-					return true;
-				break;
+				return (Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (11, 0);
 #if !XAMCORE_3_0
 				// mistake (base type) fixed by a breaking change
 			case "MFMailComposeViewControllerDelegate":

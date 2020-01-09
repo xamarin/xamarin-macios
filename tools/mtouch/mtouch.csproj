@@ -336,6 +336,9 @@
     <Compile Include="..\common\CompilerFlags.cs">
       <Link>external\CompilerFlags.cs</Link>
     </Compile>
+    <Compile Include="..\common\Tuning.cs">
+      <Link>external\Tuning.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\RuntimeOptions.cs">
       <Link>external\RuntimeOptions.cs</Link>
     </Compile>

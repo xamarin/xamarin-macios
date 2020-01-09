@@ -34,7 +34,7 @@ namespace Xamarin.Bundler {
 
 		public AssemblyDefinition GetAssembly (string fileName)
 		{
-			return Resolve (Path.GetFileNameWithoutExtension (fileName));
+			return Resolve (new AssemblyNameReference (Path.GetFileNameWithoutExtension (fileName), null), new ReaderParameters { AssemblyResolver = this });
 		}
 
 		public AssemblyDefinition Resolve (string fullName)

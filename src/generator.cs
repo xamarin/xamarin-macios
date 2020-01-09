@@ -378,7 +378,7 @@ public class GeneratedType {
 			// protected against a StackOverflowException - bug #19751
 			// it does not protect against large cycles (but good against copy/paste errors)
 			if (Parent == Type)
-				throw new BindingException (1030, true, "{0} cannot have [BaseType(typeof({1}))] as it creates a circular dependency", Type, Parent);
+				throw new BindingException (1030, true, Type, Parent);
 			ParentGenerated = Root.Lookup (Parent);
 
 			// If our parent had UIAppearance, we flag this class as well
@@ -549,7 +549,7 @@ public class MemberInformation
 				if (attr.Length != 1) {
 					attr = AttributeManager.GetCustomAttributes<WrapAttribute> (mi);
 					if (attr.Length != 1)
-						throw new BindingException (1012, true, "No Export or Bind attribute defined on {0}.{1}", type, mi.Name);
+						throw new BindingException (1012, true, type, mi.Name);
 
 					var wrapAtt = (WrapAttribute) attr [0];
 					wrap_method = wrapAtt.MethodName;
@@ -608,7 +608,7 @@ public class MemberInformation
 
 			// Wrap can only be used either at property level or getter/setter level at a given time.
 			if (wrap_method != null && has_inner_wrap_attribute)
-				throw new BindingException (1063, true, $"The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '{pi.DeclaringType}.{pi.Name}'");
+				throw new BindingException (1063, true, pi.DeclaringType, pi.Name);
 		}
 	}
 
@@ -838,7 +838,7 @@ public partial class Frameworks {
 				frameworks = macosframeworks;
 				break;
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 			}
 		}
 
@@ -890,7 +890,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "NSApplication";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 			}
 		}
 	}
@@ -991,7 +991,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "Quartz";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 			}
 		}
 	}
@@ -1006,7 +1006,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "CoreServices";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 			}
 		}
 	}
@@ -1019,7 +1019,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.MacOSX:
 				return "Quartz";
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 			}
 		}
 	}
@@ -1093,7 +1093,6 @@ public partial class Generator : IMemberGatherer {
 			if (AttributeManager.HasAttribute<NativeAttribute> (enumType)) {
 				if (t != TypeManager.System_Int64 && t != TypeManager.System_UInt64)
 					throw new BindingException (1026, true,
-						"`{0}`: Enums attributed with [{1}] must have an underlying type of `long` or `ulong`",
 					    enumType.FullName, "NativeAttribute");
 
 				if (enum_mode == EnumMode.Bit32) {
@@ -1105,7 +1104,7 @@ public partial class Generator : IMemberGatherer {
 				} else if (enum_mode == EnumMode.Bit64) {
 					// Nothing to do
 				} else {
-					throw new BindingException (1029, "Internal error: invalid enum mode for type '{0}'", t.FullName);
+					throw new BindingException (1029, t.FullName);
 				}
 			}
 		}
@@ -1209,7 +1208,7 @@ public partial class Generator : IMemberGatherer {
 		if (mai.Type.IsGenericParameter)
 			return "IntPtr";
 
-		throw new BindingException (1017, true, "Do not know how to make a signature for {0}", mai.Type);
+		throw new BindingException (1017, true, mai.Type);
 	}
 
 	bool IsProtocolInterface (Type type, bool checkPrefix = true)
@@ -1241,7 +1240,7 @@ public partial class Generator : IMemberGatherer {
 		var declType = isArray ? type.GetElementType () : type;
 
 		if (!AttributeManager.HasAttribute<ProtocolAttribute> (declType))
-			throw new BindingException (1034, true, "The [Protocolize] attribute is set on the member {0}.{1}, but the member's type ({2}) is not a protocol.",
+			throw new BindingException (1034, true,
 				pi.DeclaringType, pi.Name, declType);
 
 		return "I" + type.Name;
@@ -1265,7 +1264,7 @@ public partial class Generator : IMemberGatherer {
 	}
 
 	static bool IsSetter (MethodInfo mi) => mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal);
-	static string GetBindAsExceptionString (string box, string retType, string containerType, string container, params ICustomAttributeProvider [] providers)
+	static BindingException GetBindAsException (string box, string retType, string containerType, string container, params ICustomAttributeProvider [] providers)
 	{
 		Type declaringType = null;
 		string memberName = null;
@@ -1283,7 +1282,7 @@ public partial class Generator : IMemberGatherer {
 		if (declaringType != null && memberName != null)
 			memberName = declaringType.FullName + "." + memberName;
 
-		return $"Could not {box} type {retType} from {containerType} {container} used on member {memberName} decorated with [BindAs].";
+		return new BindingException (1049, true, box, retType, containerType, container, memberName);
 	}
 	bool IsMemberInsideProtocol (Type type) => IsProtocol (type) || IsModel (type);
 
@@ -1345,7 +1344,7 @@ public partial class Generator : IMemberGatherer {
 		var declaringType = minfo?.mi?.DeclaringType ?? pi?.Member?.DeclaringType;
 
 		if (IsMemberInsideProtocol (declaringType))
-			throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", declaringType.Name);
+			throw new BindingException (1050, true, declaringType.Name);
 
 		if (pi == null) {
 			attrib = GetBindAsAttribute (minfo.mi);
@@ -1358,7 +1357,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (originalType.IsByRef)
-			throw new BindingException (1048, true, $"Unsupported type 'ref/out {originalType.Name.Replace ("&", string.Empty)}' decorated with [BindAs]");
+			throw new BindingException (1080, true, originalType.Name.Replace ("&", string.Empty));
 
 		var retType = TypeManager.GetUnderlyingNullableType (attrib.Type) ?? attrib.Type;
 		var isNullable = attrib.IsNullable (this);
@@ -1382,7 +1381,7 @@ public partial class Generator : IMemberGatherer {
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					typeStr = retType.Name;
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi, pi));
+					throw GetBindAsException ("box", retType.Name, originalType.Name, "container", minfo?.mi, pi);
 			}
 			temp = string.Format ("{3}NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName, nullCheck);
 		} else if (originalType == TypeManager.NSString && IsSmartEnum (retType)) {
@@ -1390,7 +1389,7 @@ public partial class Generator : IMemberGatherer {
 			temp += $"{FormatType (retType.DeclaringType, retType)}Extensions.GetConstant ({parameterName}{denullify});";
 		} else if (originalType.IsArray && originalType.GetArrayRank () == 1) {
 			if (!retType.IsArray) {
-				throw new BindingException (1072, true, "The BindAs type for the parameter \"{0}\" in the method \"{1}.{2}\" must be an array when the parameter's type is an array.",
+				throw new BindingException (1072, true,
 					parameterName,mi.DeclaringType.FullName, mi.Name);
 			}
 			var arrType = originalType.GetElementType ();
@@ -1409,14 +1408,14 @@ public partial class Generator : IMemberGatherer {
 					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 						typeStr = retType.Name;
 					else
-						throw new BindingException (1049, true, GetBindAsExceptionString ("box", arrRetType.Name, originalType.Name, "array", minfo?.mi, pi));
+						throw GetBindAsException ("box", arrRetType.Name, originalType.Name, "array", minfo?.mi, pi);
 				}
 				valueConverter = $"NSValue.From{typeStr} (o{denullify}), {parameterName});";
 			} else
-				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", isNullable ? arrRetType.Name + "?[]" : retType.Name);
+				throw new BindingException (1048, true, isNullable ? arrRetType.Name + "?[]" : retType.Name);
 			temp = $"NSArray.FromNSObjects (o => {valueConverter}";
 		} else
-			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+			throw new BindingException (1048, true, retType.Name);
 
 		return temp;
 	}
@@ -1490,7 +1489,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		var declaringType = minfo.mi.DeclaringType;
 		if (IsMemberInsideProtocol (declaringType))
-			throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", declaringType.Name);
+			throw new BindingException (1050, true, declaringType.Name);
 
 		suffix = string.Empty;
 
@@ -1509,10 +1508,10 @@ public partial class Generator : IMemberGatherer {
 				if (retType.IsEnum) {
 					var enumType = TypeManager.GetUnderlyingEnumType (retType);
 					if (!NSNumberReturnMap.TryGetValue (enumType, out append))
-						throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
+						throw GetBindAsException ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi);
 				}
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
+					throw GetBindAsException ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi);
 			}
 			if (isNullable)
 				append = $"?{append}";
@@ -1522,7 +1521,7 @@ public partial class Generator : IMemberGatherer {
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					append = $".{retType.Name}Value";
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi));
+					throw GetBindAsException ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi);
 			}
 			if (isNullable)
 				append = $"?{append}";
@@ -1543,18 +1542,18 @@ public partial class Generator : IMemberGatherer {
 					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", getterStr, FormatType (arrRetType.DeclaringType, arrRetType));
 				}
 				else
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi));
+					throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
 			} else if (arrType == TypeManager.NSValue && !arrIsNullable) {
 				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 					valueFetcher = $"{(arrIsNullable ? "?" : string.Empty)}.{arrRetType.Name}Value";
 				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
-					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi));
+					throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
 
 				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
 			} else
-				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", arrIsNullable ? arrRetType.Name + "?[]" : retType.Name);
+				throw new BindingException (1048, true, arrIsNullable ? arrRetType.Name + "?[]" : retType.Name);
 		} else
-			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+			throw new BindingException (1048, true, retType.Name);
 		return append;
 	}
 
@@ -1760,9 +1759,9 @@ public partial class Generator : IMemberGatherer {
 				} else {
 					if (!AttributeManager.HasAttribute<CCallbackAttribute> (pi)) {
 						if (t.FullName.StartsWith ("System.Action`", StringComparison.Ordinal) || t.FullName.StartsWith ("System.Func`", StringComparison.Ordinal)) {
-							ErrorHelper.Warning (1116, "The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.", pi.Name.GetSafeParamName (), t.FullName);
+							ErrorHelper.Warning (1116, pi.Name.GetSafeParamName (), t.FullName);
 						} else {
-							ErrorHelper.Warning (1115, "The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].", pi.Name.GetSafeParamName (), t.FullName);
+							ErrorHelper.Warning (1115, pi.Name.GetSafeParamName (), t.FullName);
 						}
 					}
 					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
@@ -1771,7 +1770,7 @@ public partial class Generator : IMemberGatherer {
 				continue;
 			}
 			
-			throw new BindingException (1001, true, $"Do not know how to make a trampoline for {pi.ParameterType.FullName}");
+			throw new BindingException (1001, true, pi.ParameterType.FullName);
 		}
 
 		var rt = mi.ReturnType;
@@ -1893,7 +1892,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		// This means you need to add a new MarshalType in the method "Go"
-		throw new BindingException (1002, true, "Unknown kind {0} in method '{1}.{2}'", pi.ParameterType.FullName, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());
+		throw new BindingException (1002, true, pi.ParameterType.FullName, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());
 	}
 
 	public bool ParameterNeedsNullCheck (ParameterInfo pi, MethodInfo mi, PropertyInfo propInfo = null)
@@ -1958,8 +1957,6 @@ public partial class Generator : IMemberGatherer {
 		var is_target = AttributeManager.HasAttribute<TargetAttribute> (pi);
 		if (is_target) {
 			throw new BindingException (1031, true,
-				"The [Target] attribute is not supported for the Unified API (found on the member '{0}.{1}'). " +
-				"For Objective-C categories, create an api definition interface with the [Category] attribute instead.",
 				pi.Member.DeclaringType.FullName, pi.Member.Name.GetSafeParamName ());
 		}
 		return is_target;
@@ -1978,7 +1975,7 @@ public partial class Generator : IMemberGatherer {
 		try {
 			sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi) { IsAligned = aligned, EnumMode = enum_mode } ));
 		} catch (BindingException ex) {
-			throw new BindingException (ex.Code, ex.Error, ex,  "{0} in method `{1}'", ex.Message, mi.Name);
+			throw new BindingException (1078, ex.Error, ex, ex.Message, mi.Name);
 		}
 
 		sb.Append ("_");
@@ -1993,7 +1990,7 @@ public partial class Generator : IMemberGatherer {
 			try {
 				sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }).Replace (' ', '_'));
 			} catch (BindingException ex) {
-				throw new BindingException (ex.Code, ex.Error, ex, "{0} in parameter `{1}' from {2}.{3}", ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
+				throw new BindingException (1079, ex.Error, ex, ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
 		}
 
@@ -2026,7 +2023,7 @@ public partial class Generator : IMemberGatherer {
 			try {
 				b.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }, true));
 			} catch (BindingException ex) {
-				throw new BindingException (ex.Code, ex.Error, ex, "{0} in parameter {1} of {2}.{3}", ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
+				throw new BindingException (1079, ex.Error, ex, ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
 			b.Append (" ");
 			b.Append ("arg" + (++n));
@@ -2066,7 +2063,7 @@ public partial class Generator : IMemberGatherer {
 		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
 			return "nuint";
 		} else {
-			throw new BindingException (1029, "Internal error: invalid enum type '{0}'", type);
+			throw new BindingException (1029, type);
 		}
 	}
 
@@ -2146,7 +2143,7 @@ public partial class Generator : IMemberGatherer {
 		var export = (ExportAttribute) attrs [0];
 
 		if (string.IsNullOrEmpty (export.Selector))
-			throw new BindingException (1024, true, "No selector specified for member '{0}.{1}'", mo.DeclaringType.FullName, mo.Name);
+			throw new BindingException (1024, true, mo.DeclaringType.FullName, mo.Name);
 
 		if (export.Selector.IndexOfAny (invalid_selector_chars) != -1){
 			Console.Error.WriteLine ("Export attribute contains invalid selector name: {0}", export.Selector);
@@ -2320,7 +2317,7 @@ public partial class Generator : IMemberGatherer {
 					continue;
 
 				if (AttributeManager.HasAttribute<IsThreadStaticAttribute> (pi) && !AttributeManager.HasAttribute<StaticAttribute> (pi))
-					throw new BindingException (1008, true, "[IsThreadStatic] is only valid on properties that are also [Static]");
+					throw new BindingException (1008, true);
 
 				string wrapname;
 				var export = GetExportAttribute (pi, out wrapname);
@@ -2344,7 +2341,7 @@ public partial class Generator : IMemberGatherer {
 					if (hasWrapGet || hasWrapSet)
 						continue;
 
-					throw new BindingException (1018, true, "No [Export] attribute on property {0}.{1}", t.FullName, pi.Name);
+					throw new BindingException (1018, true, t.FullName, pi.Name);
 				}
 				if (AttributeManager.HasAttribute<StaticAttribute> (pi))
 					need_static [t] = true;
@@ -2439,12 +2436,12 @@ public partial class Generator : IMemberGatherer {
 						case "XpcInterfaceAttribute":
 							continue;
 						default:
-							throw new BindingException (1007, true, "Unknown attribute {0} on {1}.{2}", attr.GetType (), mi.DeclaringType, mi.Name);
+							throw new BindingException (1007, true, attr.GetType (), mi.DeclaringType, mi.Name);
 						}
 					}
 
 					if (selector == null)
-						throw new BindingException (1009, true, "No selector specified for method `{0}.{1}'", mi.DeclaringType, mi.Name);
+						throw new BindingException (1009, true, mi.DeclaringType, mi.Name);
 					
 					tselectors.Add (selector);
 					if (selector_use.ContainsKey (selector)){
@@ -2454,9 +2451,9 @@ public partial class Generator : IMemberGatherer {
 				}
 
 				if (seenNoDefaultValue && seenAbstract)
-					throw new BindingException (1019, true, "Cannot use [NoDefaultValue] on abstract method `{0}.{1}'", mi.DeclaringType, mi.Name);
+					throw new BindingException (1019, true, mi.DeclaringType, mi.Name);
 				else if (seenNoDefaultValue && seenDefaultValue)
-					throw new BindingException (1019, true, "Cannot use both [NoDefaultValue] and [DefaultValue] on method `{0}.{1}'", mi.DeclaringType, mi.Name);
+					throw new BindingException (1019, true, mi.DeclaringType, mi.Name);
 
 				DeclareInvoker (mi);
 			}
@@ -2829,9 +2826,7 @@ public partial class Generator : IMemberGatherer {
 							getter = "{1} (ulong?) GetNUIntValue ({0})";
 							setter = "SetNumberValue ({0}, {1}value)";
 						} else {
-							throw new BindingException (1031, true,
-										    "Limitation: can not automatically create strongly typed dictionary for " +
-										    "({0}) the value type of the {1}.{2} property", pi.PropertyType, dictType, pi.Name);
+							throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
 						}
 					} else {
 						if (pi.PropertyType.IsArray){
@@ -2850,9 +2845,7 @@ public partial class Generator : IMemberGatherer {
 								getter = "GetArray<string> ({0}, (ptr)=>NSString.FromHandle (ptr))";
 								setter = "SetArrayValue ({0}, value)";
 							} else {
-								throw new BindingException (1033, true,
-											    "Limitation: can not automatically create strongly typed dictionary for arrays of " +
-											    "({0}) the type of the {1}.{2} property", pi.PropertyType, dictType, pi.Name);
+								throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
 							}
 						} else if (pi.PropertyType ==  TypeManager.NSString){
 							getter = "GetNSStringValue ({0})";
@@ -2883,9 +2876,7 @@ public partial class Generator : IMemberGatherer {
 							getter = "GetNativeValue<" + pi.PropertyType +"> ({0})";
 							setter = "SetNativeValue ({0}, value)";
 						} else {
-							throw new BindingException (1031, true,
-										    "Limitation: can not automatically create strongly typed dictionary for " +
-										    "({0}) the type of the {1}.{2} property", pi.PropertyType, dictType, pi.Name);
+							throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
 						}
 					}
 
@@ -2906,7 +2897,7 @@ public partial class Generator : IMemberGatherer {
 					}
 					if (pi.CanWrite){
 						if (setter == null)
-							throw new BindingException (1032, true, "No support for setters in StrongDictionary classes for type {0} in {1}.{2}", pi.PropertyType, dictType, pi.Name);
+							throw new BindingException (1032, true, pi.PropertyType, dictType, pi.Name);
 						indent++;
 						print ("set {"); indent++;
 						print ("{0};", setter);
@@ -2948,7 +2939,7 @@ public partial class Generator : IMemberGatherer {
 					continue;
 				var attrs = AttributeManager.GetCustomAttributes<ExportAttribute> (prop);
 				if (attrs.Length == 0)
-					throw new BindingException (1010, true, "No Export attribute on {0}.{1} property", eventType, prop.Name);
+					throw new BindingException (1010, true, eventType, prop.Name);
 
 				var is_internal = prop.IsInternal (this);
 				var export = attrs [0];
@@ -3071,7 +3062,7 @@ public partial class Generator : IMemberGatherer {
 						else if (underlying == TypeManager.System_nuint)
 							print (GenerateNSNumber (cast, "NUIntValue"));
 						else
-							throw new BindingException (1011, true, "Do not know how to extract type {0}/{1} from an NSDictionary", propertyType, underlying);
+							throw new BindingException (1011, true, propertyType, underlying);
 					}
 				}
 				indent -= 2;
@@ -3440,7 +3431,7 @@ public partial class Generator : IMemberGatherer {
 				var hasReturnTypeProtocolize = Protocolize (AttributeManager.GetReturnTypeCustomAttributes (minfo.method));
 				if (hasReturnTypeProtocolize) {
 					if (!IsProtocol (minfo.method.ReturnType)) {
-						ErrorHelper.Warning (1108, "The [Protocolize] attribute is applied to the return type of the method {0}.{1}, but the return type ({2}) isn't a model and can thus not be protocolized. Please remove the [Protocolize] attribute.", minfo.method.DeclaringType, minfo.method, minfo.method.ReturnType.FullName);
+						ErrorHelper.Warning (1108, minfo.method.DeclaringType, minfo.method, minfo.method.ReturnType.FullName);
 					} else {
 						prefix = "I";
 					}
@@ -3448,15 +3439,15 @@ public partial class Generator : IMemberGatherer {
 				if (minfo.method.ReturnType.IsArray) {
 					var et = minfo.method.ReturnType.GetElementType ();
 					if (IsModel (et))
-						ErrorHelper.Warning (1109, "The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).", minfo.method.DeclaringType, minfo.method.Name, et, et.Namespace, et.Name);
+						ErrorHelper.Warning (1109, minfo.method.DeclaringType, minfo.method.Name, et, et.Namespace, et.Name);
 				}
 				if (IsModel (minfo.method.ReturnType) && !hasReturnTypeProtocolize)
-					ErrorHelper.Warning (1107, "The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).", minfo.method.DeclaringType, minfo.method.Name, minfo.method.ReturnType, minfo.method.ReturnType.Namespace, minfo.method.ReturnType.Name);
+					ErrorHelper.Warning (1107, minfo.method.DeclaringType, minfo.method.Name, minfo.method.ReturnType, minfo.method.ReturnType.Namespace, minfo.method.ReturnType.Name);
 			}
 
 			if (minfo.is_bindAs) {
 				if (IsMemberInsideProtocol (minfo.mi.DeclaringType))
-					throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", minfo.mi.DeclaringType.Name);
+					throw new BindingException (1050, true, minfo.mi.DeclaringType.Name);
 
 				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
 				sb.Append (prefix + FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type)));
@@ -3655,7 +3646,7 @@ public partial class Generator : IMemberGatherer {
 			if (minfo != null && minfo.is_bindAs) {
 				var bindAttrType = GetBindAsAttribute (minfo.mi).Type;
 				if (!bindAttrType.IsArray) {
-					throw new BindingException (1071, true, "The BindAs type for the member \"{0}.{1}\" must be an array when the member's type is an array.", minfo.mi.DeclaringType.FullName, minfo.mi.Name);
+					throw new BindingException (1071, true, minfo.mi.DeclaringType.FullName, minfo.mi.Name);
 				}
 				var bindAsT = bindAttrType.GetElementType ();
 				var suffix = string.Empty;
@@ -3671,7 +3662,7 @@ public partial class Generator : IMemberGatherer {
 				cast_a = "NSArray.ArrayFromHandle<global::" + etype.Namespace + ".I" + etype.Name + ">(";
 				cast_b = ")";
 			} else if (etype == TypeManager.Selector) {
-				exceptions.Add (ErrorHelper.CreateError (1066, "Unsupported return type '{0}' in {1}.{2}.", mai.Type.FullName, mi.DeclaringType.FullName, mi.Name));
+				exceptions.Add (ErrorHelper.CreateError (1066, mai.Type.FullName, mi.DeclaringType.FullName, mi.Name));
 			} else {
 				if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (NamespaceManager.Get(etype.Namespace)))
 					cast_a = "NSArray.ArrayFromHandle<global::" + etype + ">(";
@@ -3695,7 +3686,7 @@ public partial class Generator : IMemberGatherer {
 						var mai = new MarshalInfo (this, mi, pi);
 						
 						if (mai.PlainString)
-							ErrorHelper.Warning (1101, "Trying to use a string as a [Target]");
+							ErrorHelper.Warning (1101);
 
 						if (mai.ZeroCopyStringMarshal){
 							target_name = "(IntPtr)(&_s" + pi.Name + ")";
@@ -4026,7 +4017,7 @@ public partial class Generator : IMemberGatherer {
 						disposes.AppendFormat ("nsa_{0}.Dispose ();\n", pi.Name);
 					}
 				} else if (etype == TypeManager.Selector) {
-					exceptions.Add (ErrorHelper.CreateError (1065, "Unsupported parameter type '{0}' for the parameter '{1}' in {2}.{3}.", mai.Type.FullName, string.IsNullOrEmpty (pi.Name) ? $"#{pi.Position}" : pi.Name, mi.DeclaringType.FullName, mi.Name));
+					exceptions.Add (ErrorHelper.CreateError (1065, mai.Type.FullName, string.IsNullOrEmpty (pi.Name) ? $"#{pi.Position}" : pi.Name, mi.DeclaringType.FullName, mi.Name));
 				} else {
 					if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
 						convs.AppendFormat ("var nsa_{0} = {1} == null ? null : NSArray.FromNSObjects ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
@@ -4066,7 +4057,7 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				if (mai.Type.IsClass && !mai.Type.IsByRef && 
 					(mai.Type != TypeManager.Selector && mai.Type != TypeManager.Class && mai.Type != TypeManager.System_String && !TypeManager.INativeObject.IsAssignableFrom (mai.Type)))
-					throw new BindingException (1020, true, "Unsupported type {0} used on exported method {1}.{2} -> {3}'", mai.Type, mi.DeclaringType, mi.Name, mai.Type.IsByRef);
+					throw new BindingException (1020, true, mai.Type, mi.DeclaringType, mi.Name, mai.Type.IsByRef);
 			}
 
 			// Handle ByRef
@@ -4092,7 +4083,7 @@ public partial class Generator : IMemberGatherer {
 				var isArrayOfSelector = isArray && elementType.GetElementType () == TypeManager.Selector;
 
 				if (!isString && !isArrayOfNSObject && !isNSObject && !isArrayOfString && !isINativeObjectSubclass && !isArrayOfINativeObjectSubclass || isINativeObject || isArrayOfSelector || isArrayOfINativeObject) {
-					exceptions.Add (ErrorHelper.CreateError (1064, "Unsupported ref/out parameter type '{0}' for the parameter '{1}' in {2}.{3}.", elementType.FullName, string.IsNullOrEmpty (pi.Name) ? $"#{pi.Position}" : pi.Name, mi.DeclaringType.FullName, mi.Name));
+					exceptions.Add (ErrorHelper.CreateError (1064, elementType.FullName, string.IsNullOrEmpty (pi.Name) ? $"#{pi.Position}" : pi.Name, mi.DeclaringType.FullName, mi.Name));
 					continue;
 				}
 
@@ -4112,7 +4103,7 @@ public partial class Generator : IMemberGatherer {
 					} else if (isNSObject || isINativeObjectSubclass) {
 						by_ref_init.AppendFormat ("{0} == null ? IntPtr.Zero : {0}.Handle;\n", pi.Name.GetSafeParamName ());
 					} else {
-						throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out (input) code for {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+						throw ErrorHelper.CreateError (88, mai.Type, mi);
 					}
 				}
 
@@ -4129,7 +4120,7 @@ public partial class Generator : IMemberGatherer {
 					} else if (isArrayOfString) {
 						by_ref_processing.AppendFormat ("{0} = NSArray.StringArrayFromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
 					} else {
-						throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out code for array {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+						throw ErrorHelper.CreateError (88, mai.Type, mi);
 					}
 
 					if (!pi.IsOut)
@@ -4141,7 +4132,7 @@ public partial class Generator : IMemberGatherer {
 						by_ref_processing.AppendFormat ("if ({0}Value != ({0} == null ? IntPtr.Zero : {0}.Handle))\n\t", pi.Name.GetSafeParamName ());
 					by_ref_processing.AppendFormat ("{0} = Runtime.GetINativeObject<{1}> ({0}Value, {2}, {3});\n", pi.Name.GetSafeParamName (), RenderType (elementType), isForcedType ? "true" : "false", isForcedType ? isForcedOwns : "false");
 				} else {
-					throw ErrorHelper.CreateError (99, $"Internal error: don't know how to create ref/out (output) code for {mai.Type} in {mi}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+					throw ErrorHelper.CreateError (88, mai.Type, mi);
 				}
 			}
 		}
@@ -4153,7 +4144,7 @@ public partial class Generator : IMemberGatherer {
 			return;
 
 		if (AttributeManager.HasAttribute<NullAllowedAttribute> (mi))
-			ErrorHelper.Show (new BindingException (1118, false, $"[NullAllowed] should not be used on methods, like '{mi}', but only on properties, parameters and return values."));
+			ErrorHelper.Show (new BindingException (1118, false, mi));
 
 		foreach (var pi in mi.GetParameters ()) {
 			var needs_null_check = ParameterNeedsNullCheck (pi, mi, propInfo);
@@ -4162,7 +4153,7 @@ public partial class Generator : IMemberGatherer {
 
 			if (!BindThirdPartyLibrary) {
 				if (!mi.IsSpecialName && IsModel (pi.ParameterType) && !Protocolize (pi))
-					ErrorHelper.Warning (1106, "The parameter {2} in the method {0}.{1} exposes a model ({3}). Please expose the corresponding protocol type instead ({4}.I{5}).",
+					ErrorHelper.Warning (1106,
 						mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
 			}
 			
@@ -4199,7 +4190,7 @@ public partial class Generator : IMemberGatherer {
 				print ("global::{0}.NSApplication.EnsureUIThread ();", ns.Get ("AppKit"));
 				break;
 			default:
-				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", CurrentPlatform);
+				throw new BindingException (1047, CurrentPlatform);
 		}
 	}
 
@@ -4211,7 +4202,7 @@ public partial class Generator : IMemberGatherer {
 			return Stret.NeedStret (mi.ReturnType, this);
 		}
 		catch (TypeLoadException ex) {
-			throw new BindingException (0001, true, $"The .NET runtime could not load the {mi.ReturnType.Name} type. Message: {ex.Message}");
+			throw new BindingException (0001, true, mi.ReturnType.Name, ex.Message);
 		}
 	}
 
@@ -4239,7 +4230,7 @@ public partial class Generator : IMemberGatherer {
 		var hasStaticAtt = AttributeManager.HasAttribute<StaticAttribute> (mi);
 		if (category_type != null && hasStaticAtt && !minfo.ignore_category_static_warnings) {
 			var baseTypeAtt = AttributeManager.GetCustomAttribute<BaseTypeAttribute> (minfo.type);
-			ErrorHelper.Warning (1117, "The member '{0}' is decorated with [Static] and its container class {1} is decorated with [Category] this leads to hard to use code. Please inline {0} into {2} class.", mi.Name, type.FullName, baseTypeAtt?.BaseType.FullName);
+			ErrorHelper.Warning (1117, mi.Name, type.FullName, baseTypeAtt?.BaseType.FullName);
 		}
 
 		indent++;
@@ -4273,7 +4264,7 @@ public partial class Generator : IMemberGatherer {
 			sane &= by_ref_processing2 [0].ToString () == by_ref_processing2 [1].ToString ();
 			sane &= by_ref_init2 [0].ToString () == by_ref_init2 [1].ToString ();
 			if (!sane)
-				throw new BindingException (1028, "Internal sanity check failed, please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.");
+				throw new BindingException (1028);
 		}
 
 		var convs = convs2 [0];
@@ -4644,7 +4635,7 @@ public partial class Generator : IMemberGatherer {
 			if (wrap == null &&
 				((pi.CanRead && (GetGetterExportAttribute (pi).Selector != GetGetterExportAttribute (parentBaseType).Selector)) ||
 					pi.CanWrite && (GetSetterExportAttribute (pi).Selector != GetSetterExportAttribute (parentBaseType).Selector))) {
-				throw new BindingException (1035, true, "The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.", pi.Name, type, parentBaseType.DeclaringType);
+				throw new BindingException (1035, true, pi.Name, type, parentBaseType.DeclaringType);
 			}
 			// Then let's not write out our copy, since we'll reduce visibility
 			return;
@@ -4654,7 +4645,7 @@ public partial class Generator : IMemberGatherer {
 			var elType = pi.PropertyType.IsArray ? pi.PropertyType.GetElementType () : pi.PropertyType;
 
 			if (IsModel (elType) && !minfo.protocolize) {
-				ErrorHelper.Warning (1110, "The property {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).", pi.DeclaringType, pi.Name, pi.PropertyType, pi.PropertyType.Namespace, pi.PropertyType.Name);
+				ErrorHelper.Warning (1110, pi.DeclaringType, pi.Name, pi.PropertyType, pi.PropertyType.Namespace, pi.PropertyType.Name);
 			}
 		}
 
@@ -4872,7 +4863,7 @@ public partial class Generator : IMemberGatherer {
 			var ba = GetBindAttribute (setter);
 			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
 			if (null_allowed)
-				ErrorHelper.Show (new BindingException (1118, false, $"[NullAllowed] should not be used on methods, like '{setter}', but only on properties, parameters and return values."));
+				ErrorHelper.Show (new BindingException (1118, false, setter));
 			null_allowed |= AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 			var not_implemented_attr = AttributeManager.GetCustomAttribute<NotImplementedAttribute> (setter);
 			string sel;
@@ -4947,7 +4938,7 @@ public partial class Generator : IMemberGatherer {
 
 			var lastType = mi.GetParameters ().Last ().ParameterType;
 			if (!lastType.IsSubclassOf (generator.TypeManager.System_Delegate))
-				throw new BindingException (1036, true, "The last parameter in the method '{0}.{1}' must be a delegate (it's '{2}').", mi.DeclaringType.FullName, mi.Name, lastType.FullName);
+				throw new BindingException (1036, true, mi.DeclaringType.FullName, mi.Name, lastType.FullName);
 			var cbParams = lastType.GetMethod ("Invoke").GetParameters ();
 			async_completion_params = cbParams;
 
@@ -5012,7 +5003,7 @@ public partial class Generator : IMemberGatherer {
 			return FormatType (minfo.type, attr.ResultType);
 
 		Console.WriteLine ("{0}", minfo.MethodInfo.GetParameters ().Last ().ParameterType);
-		throw new BindingException (1023, true, "Async method {0} with more than one result parameter in the callback by neither ResultTypeName or ResultType", minfo.mi);
+		throw new BindingException (1077, true, minfo.mi);
 	}
 
 	string GetInvokeParamList (ParameterInfo [] parameters, bool suffix = true)
@@ -5078,13 +5069,13 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.async_initial_params != null) {
 			foreach (var param in minfo.async_initial_params) {
 				if (param.ParameterType.IsByRef) {
-					throw new BindingException (1062, true, $"The member '{original_minfo.type.Name}.{mi.Name}' contains ref/out parameters and must not be decorated with [Async].");
+					throw new BindingException (1062, true, original_minfo.type.Name, mi.Name);
 				}
 			}
 		}
 		foreach (var param in minfo.async_completion_params) {
 			if (param.ParameterType.IsByRef) {
-				throw new BindingException (1062, true, $"The member '{original_minfo.type.Name}.{mi.Name}' contains ref/out parameters and must not be decorated with [Async].");
+				throw new BindingException (1062, true, original_minfo.type.Name, mi.Name);
 			}
 		}
 
@@ -5273,7 +5264,7 @@ public partial class Generator : IMemberGatherer {
 					argCount++;
 			}
 			if (minfo.method.GetParameters ().Length != argCount) {
-				ErrorHelper.Warning (1105, "Potential selector/argument mismatch [Export (\"{0}\")] has {1} arguments and {2} has {3} arguments",
+				ErrorHelper.Warning (1105,
 					minfo.selector, argCount, minfo.method, minfo.method.GetParameters ().Length);
 			}
 		}
@@ -5841,8 +5832,8 @@ public partial class Generator : IMemberGatherer {
 			foreach (var gr in duplicateMethodsGroupedBySelector) {
 				var distinctMethodsBySignature = gr.GroupBy ((v) => v.Signature).Select ((v) => v.First ()).ToArray ();
 				if (distinctMethodsBySignature.Length > 1) {
-					exceptions.Add (ErrorHelper.CreateError (1069, $"The type '{type.FullName}' is trying to inline the methods binding the selector '{gr.Key}' from the protocols '{distinctMethodsBySignature [0].Method.DeclaringType.FullName}' and '{distinctMethodsBySignature [1].Method.DeclaringType.FullName}'," +
-$" using methods with different signatures ('{distinctMethodsBySignature [0].Method.ToString ()}' vs '{distinctMethodsBySignature [1].Method.ToString ()}')."));
+					exceptions.Add (ErrorHelper.CreateError (1069, type.FullName, gr.Key, distinctMethodsBySignature [0].Method.DeclaringType.FullName, distinctMethodsBySignature [1].Method.DeclaringType.FullName,
+						distinctMethodsBySignature [0].Method.ToString (), distinctMethodsBySignature [1].Method.ToString ()));
 					continue;
 				}
 
@@ -5872,8 +5863,8 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					// Check that all the duplicates use the same selector, and if not show a warning.
 					exportAttributes [i] = GetExportAttribute (properties [i]);
 					if (i > 0 && exportAttributes [i].Selector != exportAttributes [0].Selector) {
-						ErrorHelper.Warning (1068, $"The type '{type.FullName}' is trying to inline the property '{gr.Key}' from the protocols '{properties [0].DeclaringType.FullName}' and '{properties [i].DeclaringType.FullName}'," +
-							$" and the inlined properties use different selectors ({properties [0].DeclaringType.Name}.{properties [0].Name} uses '{exportAttributes [0].Selector}', and {properties [i].DeclaringType.Name}.{properties [i].Name} uses '{exportAttributes [i].Selector}'.");
+						ErrorHelper.Warning (1068, type.FullName, gr.Key, properties [0].DeclaringType.FullName, properties [i].DeclaringType.FullName,
+							properties [0].DeclaringType.Name, properties [0].Name, exportAttributes [0].Selector, properties [i].DeclaringType.Name, properties [i].Name, exportAttributes [i].Selector);
 					}
 					if (properties [i].CanRead && properties [i].CanWrite) {
 						readwrite = properties [i];
@@ -5887,8 +5878,8 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 				// Check that all the duplicates have the same property type
 				var propertyTypes = properties.GroupBy ((v) => v.PropertyType.FullName).Select ((v) => v.First ()).ToArray ();
 				if (propertyTypes.Length > 1) {
-					exceptions.Add (ErrorHelper.CreateError (1070, $"The type '{type.FullName}' is trying to inline the property '{gr.Key}' from the protocols '{propertyTypes [0].DeclaringType.FullName}' and '{propertyTypes [1].DeclaringType.FullName}'," +
-						$" but the inlined properties are of different types ('{propertyTypes [0]}' is {FormatType (type, propertyTypes [0].PropertyType)}, while '{propertyTypes [1]}' is {FormatType (type, propertyTypes [0].PropertyType)})."));
+					exceptions.Add (ErrorHelper.CreateError (1070, type.FullName, gr.Key, propertyTypes [0].DeclaringType.FullName, propertyTypes [1].DeclaringType.FullName,
+						propertyTypes [0], FormatType (type, propertyTypes [0].PropertyType), propertyTypes [1], FormatType (type, propertyTypes [0].PropertyType)));
 				}
 
 				// Select the best match of the properties: prefer a read/write property if it exists, otherwise a readonly or writeonly property.
@@ -5896,15 +5887,15 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 				if (readwrite != null) {
 					bestMatch = readwrite;
 				} else if (@readonly != null && writeonly != null) {
-					exceptions.Add (ErrorHelper.CreateError (1067, $"The type '{type.FullName}' is trying to inline the property '{gr.Key}' from the protocols '{@readonly.DeclaringType.FullName}' and '{writeonly.DeclaringType.FullName}'," +
-						$" but the inlined properties don't share the same accessors ('{@readonly}' is read-only, while '${writeonly}' is write-only)."));
+					exceptions.Add (ErrorHelper.CreateError (1067, type.FullName, gr.Key, @readonly.DeclaringType.FullName, writeonly.DeclaringType.FullName,
+						@readonly, writeonly));
 					continue;
 				} else if (@readonly != null) {
 					bestMatch = @readonly;
 				} else if (writeonly != null) {
 					bestMatch = writeonly;
 				} else {
-					exceptions.Add (ErrorHelper.CreateError (99, $"Internal error: property {properties [0]} doesn't have neither a getter nor a setter."));
+					exceptions.Add (ErrorHelper.CreateError (89, properties [0]));
 					continue;
 				}
 				// Finally remove the properties we don't want to generate.
@@ -5965,7 +5956,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 	StreamWriter GetOutputStreamForType (Type type)
 	{
 		if (type.Namespace == null)
-			ErrorHelper.Warning (1103, "'{0}' does not live under a namespace; namespaces are a highly recommended .NET best practice", type.FullName);
+			ErrorHelper.Warning (1103, type.FullName);
 
 		var tn = GetGeneratedTypeName (type);
 		if (type.IsGenericType)
@@ -6107,7 +6098,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 			}
 		} else if (BindThirdPartyLibrary) {
 			// User should provide a LibraryName
-			throw new BindingException (1042, true, $"Missing '[Field (LibraryName=value)]' for {propertyName} (e.g.\"__Internal\")");
+			throw new BindingException (1042, true);
 		} else {
 			library_name = type.Namespace;
 		}
@@ -6144,7 +6135,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 	public void Generate (Type type)
 	{
 		if (ZeroCopyStrings) {
-			ErrorHelper.Warning (1027, "Support for ZeroCopy strings is not implemented. Strings will be marshalled as NSStrings.");
+			ErrorHelper.Warning (1027);
 			ZeroCopyStrings = false;
 		}
 
@@ -6197,9 +6188,9 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 			
 			if (is_protocol) {
 				if (is_static_class)
-					throw new BindingException (1025, true, "[Static] and [Protocol] are mutually exclusive ({0})", type.FullName);
+					throw new BindingException (1025, true, type.FullName);
 				if (is_model && base_type == TypeManager.System_Object)
-					ErrorHelper.Warning (1060, "The {0} protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].", type.FullName);
+					ErrorHelper.Warning (1060, type.FullName);
 
 				GenerateProtocolTypes (type, class_visibility, TypeName, protocol.Name ?? objc_type_name, protocol);
 			}
@@ -6249,7 +6240,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 				
 			if (is_model){
 				if (is_category_class)
-					ErrorHelper.Show (new BindingException (1022, true, "Category classes can not use the [Model] attribute"));
+					ErrorHelper.Show (new BindingException (1022, true));
 				print ("[Model]");
 			}
 
@@ -6275,7 +6266,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					string nonInterfaceName = protocolType.Name.Substring (1);
 					if (protocolType.Name[0] == 'I' && types.Any (x => x.Name.Contains(nonInterfaceName)))
 						if (protocolType.Name.Contains ("MKUserLocation"))	// We can not fix MKUserLocation without breaking API, and we don't want warning forever in build until then...
-							ErrorHelper.Warning (1111, "Interface '{0}' on '{1}' is being ignored as it is not a protocol. Did you mean '{2}' instead?", protocolType, type, nonInterfaceName);
+							ErrorHelper.Warning (1111, protocolType, type, nonInterfaceName);
 					continue;
 				}
 
@@ -6367,7 +6358,19 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 				
 				if (!is_model) {
 					print_generated_code ();
-					print ("static readonly IntPtr class_ptr = Class.GetHandle (\"{0}\");\n", objc_type_name);
+					var is32BitNotSupported = Is64BitiOSOnly (type);
+					if (is32BitNotSupported) {
+						// potentially avoid a .cctor and extra, unusable code
+						print ("#if ARCH_32");
+						print ("#pragma warning disable {0}", is_static_class ? "169" : "649");
+						print ("static readonly IntPtr class_ptr;");
+						print ("#pragma warning restore {0}", is_static_class ? "169" : "649");
+						print ("#else");
+					}
+					print ("static readonly IntPtr class_ptr = Class.GetHandle (\"{0}\");", objc_type_name);
+					if (is32BitNotSupported)
+						print ("#endif");
+					print ("");
 				}
 			}
 			
@@ -6542,10 +6545,10 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 						var methodParams = mi.GetParameters ();
 						foreach (var duplicateMethod in protocolsThatHaveThisMethod) {
 							if (mi.ReturnType != duplicateMethod.ReturnType)
-								throw new BindingException (1038, true, "The selector {0} on type {1} is found multiple times with different return types.", mi.Name, type.Name);
+								throw new BindingException (1038, true, mi.Name, type.Name);
 
 							if (methodParams.Length != duplicateMethod.GetParameters().Length)
-								throw new BindingException (1039, true, "The selector {0} on type {1} is found multiple times with different argument length {2} : {3}.", minfo.selector, type.Name, mi.GetParameters ().Length, duplicateMethod.GetParameters ().Length);
+								throw new BindingException (1039, true, minfo.selector, type.Name, mi.GetParameters ().Length, duplicateMethod.GetParameters ().Length);
 						}
 
 						int i = 0;
@@ -6553,9 +6556,9 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 							foreach (var duplicateMethod in protocolsThatHaveThisMethod) {
 								var duplicateParam = duplicateMethod.GetParameters ()[i];
 								if (param.IsOut != duplicateParam.IsOut)
-									throw new BindingException (1040, true, "The selector {0} on type {1} is found multiple times with different argument out states on argument {2}.", minfo.selector, type.Name, i);
+									throw new BindingException (1040, true, minfo.selector, type.Name, i);
 								if (param.ParameterType != duplicateParam.ParameterType)
-									throw new BindingException (1041, true, "The selector {0} on type {1} is found multiple times with different argument types on argument {2} - {3} : {4}.", minfo.selector, type.Name, i, param.ParameterType, duplicateParam.ParameterType);
+									throw new BindingException (1041, true, minfo.selector, type.Name, i, param.ParameterType, duplicateParam.ParameterType);
 							}
 							i++;
 						}
@@ -6612,7 +6615,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 							// Verify all of the versions have the same get/set abilities since there is no universal get/set version
 							// And just generate the first one (us)
 							if (!protocolsThatHaveThisProp.All (x => x.CanRead == pi.CanRead && x.CanWrite == pi.CanWrite))
-								throw new BindingException (1037, true, "The selector {0} on type {1} is found multiple times with both read only and write only versions, with no read/write version.", pi.Name, type.Name);
+								throw new BindingException (1037, true, pi.Name, type.Name);
 						}
 					}
 				}
@@ -6721,7 +6724,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 							else if (btype == TypeManager.System_nuint || btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) (ulong) Dlfcn.GetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
-								throw new BindingException (1014, true, $"Unsupported type for Fields: {fieldTypeName} for '{field_pi}'.");
+								throw new BindingException (1014, true, fieldTypeName, field_pi);
 						} else {
 							if (btype == TypeManager.System_Int32)
 								print ($"return ({fieldTypeName}) Dlfcn.GetInt32 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
@@ -6732,13 +6735,13 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 							else if (btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) Dlfcn.GetUInt64 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
-								throw new BindingException (1014, true, $"Unsupported type for Fields: {fieldTypeName} for '{field_pi}'.");
+								throw new BindingException (1014, true, fieldTypeName, field_pi);
 						}
 					} else {
 						if (field_pi.PropertyType == TypeManager.System_String)
-							throw new BindingException (1013, true, "Unsupported type for Fields (string), you probably meant NSString");
+							throw new BindingException (1013, true);
 						else
-							throw new BindingException (1014, true, $"Unsupported type for Fields: {fieldTypeName} for '{field_pi}'.");
+							throw new BindingException (1014, true, fieldTypeName, field_pi);
 					}
 					
 					indent--;
@@ -6787,7 +6790,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 								else if (btype == TypeManager.System_nuint || (BindThirdPartyLibrary && btype == TypeManager.System_UInt64))
 									print ($"Dlfcn.SetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", (nuint) (ulong) value);");
 								else
-									throw new BindingException (1021, true, "Unsupported type for read/write Fields: {0} for {1}.{2}", fieldTypeName, field_pi.DeclaringType.FullName, field_pi.Name);
+									throw new BindingException (1021, true, fieldTypeName, field_pi.DeclaringType.FullName, field_pi.Name);
 							} else {
 								if (btype == TypeManager.System_Int32)
 									print ($"Dlfcn.SetInt32 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", (int) value);");
@@ -6798,10 +6801,10 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 								else if (btype == TypeManager.System_UInt64)
 									print ($"Dlfcn.SetUInt64 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", (ulong) value);");
 								else
-									throw new BindingException (1021, true, "Unsupported type for read/write Fields: {0} for {1}.{2}", fieldTypeName, field_pi.DeclaringType.FullName, field_pi.Name);
+									throw new BindingException (1021, true, fieldTypeName, field_pi.DeclaringType.FullName, field_pi.Name);
 							}
 						} else
-							throw new BindingException (1021, true, "Unsupported type for read/write Fields: {0} for {1}.{2}", fieldTypeName, field_pi.DeclaringType.FullName, field_pi.Name);
+							throw new BindingException (1021, true, fieldTypeName, field_pi.DeclaringType.FullName, field_pi.Name);
 						indent--;
 						print ("}");
 					}
@@ -6814,14 +6817,14 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 
 			if (bta != null && bta.Events != null){
 				if (bta.Delegates == null)
-					throw new BindingException (1015, true, "In class {0} You specified the Events property, but did not bind those to names with Delegates", type.FullName);
+					throw new BindingException (1015, true, type.FullName);
 				
 				print ("//");
 				print ("// Events and properties from the delegate");
 				print ("//\n");
 
 				if (bta.Events.Length != bta.Delegates.Length)
-					throw new BindingException (1023, true, "The number of events and delegates must match for `{0}`", type.FullName);
+					throw new BindingException (1023, true, type.FullName);
 
 				int delidx = 0;
 				foreach (var dtype in bta.Events) {
@@ -6954,7 +6957,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 							noDefaultValue.Add (mi);
 
 						if (pars.Length < minPars)
-							throw new BindingException (1003, true, "The delegate method {0}.{1} needs to take at least one parameter", dtype.FullName, mi.Name);
+							throw new BindingException (1003, true, dtype.FullName, mi.Name);
 						
 						var sender = pars.Length == 0 ? "this" : pars [0].Name;
 
@@ -7440,16 +7443,14 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 					}
 					if (props.Count () == 1)
 						throw new BindingException (1112, true,
-							"Property {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.", props[0], false);
+							 props[0], false);
 					else if (props.Count () > 1)
 						throw new BindingException (1112, true,
-							"Properties {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.",
 							String.Join (", ", props.ToArray ()), false);
 					else
-						throw new BindingException (1113, true,
-							"BaseType.Delegates were set but no properties could be found. Do ensure that the WrapAttribute is used on the right properties.", false);
+						throw new BindingException (1113, true, false);
 				} else
-					throw new BindingException (1114, "Binding error: test unable to find property: {0} on {1}", propertyName, type, false);
+					throw new BindingException (1114, propertyName, type, false);
 			} else
 				return false;
 		}
@@ -7478,7 +7479,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 			currentType = bta.BaseType;
 		}
 		while (currentType != null);
-		throw new BindingException (1035, true, "Unable to find selector for {0} on {1} on self or base class", mi, type);
+		throw new BindingException (1076, true, mi, type);
 	}
 
 	string GenerateInterfaceTypeName (BaseTypeAttribute bta, string delName, string currentTypeName)
@@ -7663,7 +7664,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 		var a = AttributeManager.GetCustomAttribute<DelegateApiNameAttribute> (mi);
 
 		if (repeatedDelegateApiNames.Contains (mi.Name) && a == null)
-			throw new BindingException (1043, true, $"Repeated overload {mi.Name} and no [DelegateApiNameAttribute] provided to generate property name on host class.");
+			throw new BindingException (1043, true, mi.Name);
 		if (a == null) {
 			repeatedDelegateApiNames.Add (mi.Name);
 			return mi.Name;
@@ -7671,7 +7672,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 
 		var apiName = (DelegateApiNameAttribute) a;
 		if (repeatedDelegateApiNames.Contains (apiName.Name))
-			throw new BindingException (1044, true, $"Repeated name '{apiName.Name}' provided in [DelegateApiNameAttribute]");
+			throw new BindingException (1044, true, apiName.Name);
 
 		return apiName.Name;
 	}
@@ -7683,11 +7684,11 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 		
 		var a = AttributeManager.GetCustomAttribute<EventArgsAttribute> (mi);
 		if (a == null)
-			throw new BindingException (1004, true, "The delegate method {0}.{1} is missing the [EventArgs] attribute (has {2} parameters)", mi.DeclaringType.FullName, mi.Name, mi.GetParameters ().Length);
+			throw new BindingException (1004, true, mi.DeclaringType.FullName, mi.Name, mi.GetParameters ().Length);
 
 		var ea = (EventArgsAttribute) a;
 		if (ea.ArgName.EndsWith ("EventArgs", StringComparison.Ordinal))
-			throw new BindingException (1005, true, "EventArgs in {0}.{1} attribute should not include the text `EventArgs' at the end", mi.DeclaringType.FullName, mi.Name);
+			throw new BindingException (1005, true, mi.DeclaringType.FullName, mi.Name);
 		
 		if (ea.SkipGeneration){
 			skipGeneration [ea.FullName ? ea.ArgName : ea.ArgName + "EventArgs"] = true;
@@ -7707,9 +7708,9 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 
 		a = AttributeManager.GetCustomAttribute<EventArgsAttribute> (mi);
 		if (a == null)
-			throw new BindingException (1006, true, "The delegate method {0}.{1} is missing the [DelegateName] attribute (or EventArgs)", mi.DeclaringType.FullName, mi.Name);
+			throw new BindingException (1006, true, mi.DeclaringType.FullName, mi.Name);
 
-		ErrorHelper.Warning (1102, "Using the deprecated 'EventArgs' for a delegate signature in {0}.{1}, please use 'DelegateName' instead.", mi.DeclaringType.FullName, mi.Name);
+		ErrorHelper.Warning (1102, mi.DeclaringType.FullName, mi.Name);
 		return ((EventArgsAttribute) a).ArgName;
 	}
 	
@@ -7723,7 +7724,7 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 				return fvfa.Argument;
 			}
 			
-			throw new BindingException (1016, true, "The delegate method {0}.{1} is missing the [DefaultValue] attribute", mi.DeclaringType.FullName, mi.Name);
+			throw new BindingException (1016, true, mi.DeclaringType.FullName, mi.Name);
 		}
 		var def = ((DefaultValueAttribute) a).Default;
 		if (def == null)
@@ -7830,3 +7831,4 @@ $" using methods with different signatures ('{distinctMethodsBySignature [0].Met
 		}
 	}
 }
+

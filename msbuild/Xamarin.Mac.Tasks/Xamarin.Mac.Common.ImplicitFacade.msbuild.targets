@@ -38,7 +38,7 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 
 	<UsingTask
 		TaskName="GetDependsOnNETStandard"
-		Condition="'$(IsXBuild)' != 'true' and Exists('$(_NETBuildExtensionsTaskAssembly)')"
+		Condition="Exists('$(_NETBuildExtensionsTaskAssembly)')"
 		AssemblyFile="$(_NETBuildExtensionsTaskAssembly)" />
 
 	<Target Name="ImplicitlyExpandDesignTimeFacades" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
@@ -73,7 +73,7 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
 		-->
 		<GetDependsOnNETStandard
-			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(IsXBuild)' != 'true' and '$(XM_DependsOnNETStandard)' == '' and '@(XM_CandidateNETStandardReferences)' != ''
+			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(XM_DependsOnNETStandard)' == '' and '@(XM_CandidateNETStandardReferences)' != ''
 				and Exists('$(_NETBuildExtensionsTaskAssembly)')"
 			References="@(XM_CandidateNETStandardReferences)">
 			<Output TaskParameter="DependsOnNETStandard" PropertyName="XM_DependsOnNETStandard" />

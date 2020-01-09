@@ -283,11 +283,8 @@
 !missing-pinvoke! NSDecimalCopy is not bound
 !missing-pinvoke! NSDecrementExtraRefCountWasZero is not bound
 !missing-pinvoke! NSExtraRefCount is not bound
-!missing-pinvoke! NSFullUserName is not bound
 !missing-pinvoke! NSGetSizeAndAlignment is not bound
 !missing-pinvoke! NSGetUncaughtExceptionHandler is not bound
-!missing-pinvoke! NSHomeDirectory is not bound
-!missing-pinvoke! NSHomeDirectoryForUser is not bound
 !missing-pinvoke! NSIncrementExtraRefCount is not bound
 !missing-pinvoke! NSIntersectionRange is not bound
 !missing-pinvoke! NSLog is not bound
@@ -308,9 +305,7 @@
 !missing-pinvoke! NSStringFromProtocol is not bound
 !missing-pinvoke! NSStringFromRange is not bound
 !missing-pinvoke! NSStringFromSelector is not bound
-!missing-pinvoke! NSTemporaryDirectory is not bound
 !missing-pinvoke! NSUnionRange is not bound
-!missing-pinvoke! NSUserName is not bound
 !missing-pinvoke! NSZoneCalloc is not bound
 !missing-pinvoke! NSZoneFree is not bound
 !missing-pinvoke! NSZoneFromPointer is not bound
