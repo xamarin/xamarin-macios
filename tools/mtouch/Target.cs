@@ -739,7 +739,6 @@ namespace Xamarin.Bundler
 			// Verify that we don't get multiple identical assemblies from the linker.
 			foreach (var group in output_assemblies.GroupBy ((v) => v.Name.Name)) {
 				if (group.Count () != 1)
-					//todo: the param in not localizaed, fix this
 					throw ErrorHelper.CreateError (175, mtouch.Errors.MT0175, String.Format(mtouch.Errors.MT0175_a, group.Key, string.Join("\n\t", group.Select((v) => v.MainModule.FileName).ToArray())));
 			}
 
