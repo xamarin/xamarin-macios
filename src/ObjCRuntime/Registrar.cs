@@ -850,7 +850,7 @@ namespace Registrar {
 						return trampoline;
 
 #if MTOUCH || MMP
-					throw ErrorHelper.CreateError (8018, mtouch.Errors.MT8018);
+					throw ErrorHelper.CreateError (8018, "Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 #else
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;

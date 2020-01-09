@@ -181,7 +181,8 @@ namespace Xamarin.Bundler
 
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (4109);
+			throw ErrorHelper.CreateError(4109, "Failed to compile the generated registrar code. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
+
 		}
 	}
 

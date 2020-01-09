@@ -1234,6 +1234,22 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT0178">
+        <source>Internal error: unknown abi: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: unknown abi: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0179">
+        <source>Internal error: could not find the method {0}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+		</source>
+        <target state="new">Internal error: could not find the method {0}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT1009">
         <source>Could not copy the assembly '{0}' to '{1}': {2}
 		</source>
@@ -1310,6 +1326,22 @@
         <source>Framework '{0}' included from: {1} (Related to previous error)
 		</source>
         <target state="new">Framework '{0}' included from: {1} (Related to previous error)
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT1300">
+        <source>Unsupported bitcode platform: {0}.
+		</source>
+        <target state="new">Unsupported bitcode platform: {0}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT1301">
+        <source>Unsupported TvOS ABI: {0}.
+		</source>
+        <target state="new">Unsupported TvOS ABI: {0}.
 		</target>
         <note>
 		</note>
@@ -1698,6 +1730,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4113">
+        <source>The registrar found a generic method: '{0}'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes
+		</source>
+        <target state="new">The registrar found a generic method: '{0}'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4114">
         <source>Unexpected error in the registrar for the method '{0}.{1}' - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</source>
@@ -1706,10 +1746,26 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4117">
+        <source>The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the method takes {2} parameters, while the managed method has {3} parameters.
+		</source>
+        <target state="new">The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the method takes {2} parameters, while the managed method has {3} parameters.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4118">
         <source>Cannot register two managed types ('{0}' and '{1}') with the same native name ('{2}').
 		</source>
         <target state="new">Cannot register two managed types ('{0}' and '{1}') with the same native name ('{2}').
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4119">
+        <source>Could not register the selector '{0}' of the member '{1}.{2}' because the selector is already registered on the member '{3}'.
+		</source>
+        <target state="new">Could not register the selector '{0}' of the member '{1}.{2}' because the selector is already registered on the member '{3}'.
 		</target>
         <note>
 		</note>
@@ -1726,6 +1782,14 @@
         <source>Cannot use GCC/G++ to compile the generated code from the static registrar when using the Accounts framework (the header files provided by Apple used during the compilation require Clang). Either use Clang (--compiler:clang) or the dynamic registrar (--registrar:dynamic).
 		</source>
         <target state="new">Cannot use GCC/G++ to compile the generated code from the static registrar when using the Accounts framework (the header files provided by Apple used during the compilation require Clang). Either use Clang (--compiler:clang) or the dynamic registrar (--registrar:dynamic).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4123">
+        <source>The type of the variadic parameter in the variadic function '{0}' must be System.IntPtr.
+		</source>
+        <target state="new">The type of the variadic parameter in the variadic function '{0}' must be System.IntPtr.
 		</target>
         <note>
 		</note>
@@ -1754,10 +1818,98 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4128">
+        <source>The registrar found an invalid generic parameter type '{0}' in the parameter {2} of the method '{1}'. The generic parameter must have an 'NSObject' constraint.
+		</source>
+        <target state="new">The registrar found an invalid generic parameter type '{0}' in the parameter {2} of the method '{1}'. The generic parameter must have an 'NSObject' constraint.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4129">
+        <source>The registrar found an invalid generic return type '{0}' in the method '{1}'. The generic return type must have an 'NSObject' constraint.
+		</source>
+        <target state="new">The registrar found an invalid generic return type '{0}' in the method '{1}'. The generic return type must have an 'NSObject' constraint.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4130">
+        <source>The registrar cannot export static methods in generic classes ('{0}').
+		</source>
+        <target state="new">The registrar cannot export static methods in generic classes ('{0}').
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4131">
+        <source>The registrar cannot export static properties in generic classes ('{0}.{1}').
+		</source>
+        <target state="new">The registrar cannot export static properties in generic classes ('{0}.{1}').
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4132">
+        <source>The registrar found an invalid generic return type '{0}' in the property '{1}.{2}'. The return type must have an 'NSObject' constraint.
+		</source>
+        <target state="new">The registrar found an invalid generic return type '{0}' in the property '{1}.{2}'. The return type must have an 'NSObject' constraint.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4135">
+        <source>The member '{0}' has an Export attribute without a selector. A selector is required.
+		</source>
+        <target state="new">The member '{0}' has an Export attribute without a selector. A selector is required.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4136">
+        <source>The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
+		</source>
+        <target state="new">The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4137">
         <source>Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</source>
         <target state="new">Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4138">
+        <source>The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'.
+		</source>
+        <target state="new">The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4139">
+        <source>The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'. Properties with the [Connect] attribute must have a property type of NSObject (or a subclass of NSObject).
+		</source>
+        <target state="new">The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'. Properties with the [Connect] attribute must have a property type of NSObject (or a subclass of NSObject).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4140">
+        <source>The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the variadic method takes {2} parameters, while the managed method has {3} parameters.
+		</source>
+        <target state="new">The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the variadic method takes {2} parameters, while the managed method has {3} parameters.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4141">
+        <source>Cannot register the selector '{0}' on the member '{1}.{2}' because Xamarin.iOS implicitly registers this selector.
+		</source>
+        <target state="new">Cannot register the selector '{0}' on the member '{1}.{2}' because Xamarin.iOS implicitly registers this selector.
 		</target>
         <note>
 		</note>
@@ -1826,10 +1978,50 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4154">
+        <source>Cannot register the method '{0}.{1}' as a category method because it's generic.
+		</source>
+        <target state="new">Cannot register the method '{0}.{1}' as a category method because it's generic.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4156">
         <source>Cannot register two categories ('{0}' and '{1}') with the same native name ('{2}')
 		</source>
         <target state="new">Cannot register two categories ('{0}' and '{1}') with the same native name ('{2}')
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4157">
+        <source>Cannot register the category method '{0}.{1}' because at least one parameter is required for extension methods (and its type must match the category type '{2}').
+		</source>
+        <target state="new">Cannot register the category method '{0}.{1}' because at least one parameter is required for extension methods (and its type must match the category type '{2}').
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4158">
+        <source>Cannot register the constructor {0}.{1} in the category {0} because constructors in categories are not supported.
+		</source>
+        <target state="new">Cannot register the constructor {0}.{1} in the category {0} because constructors in categories are not supported.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4159">
+        <source>Cannot register the method '{0}.{1}' as a category method because category methods must be static.
+		</source>
+        <target state="new">Cannot register the method '{0}.{1}' as a category method because category methods must be static.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4160">
+        <source>Invalid character '{0}' (0x{1}) found in selector '{2}' for '{3}.{4}'
+		</source>
+        <target state="new">Invalid character '{0}' (0x{1}) found in selector '{2}' for '{3}.{4}'
 		</target>
         <note>
 		</note>
@@ -1850,10 +2042,34 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4164">
+        <source>Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.
+		</source>
+        <target state="new">Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4165">
         <source>The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.
 		</source>
         <target state="new">The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4166">
+        <source>Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.
+		</source>
+        <target state="new">Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4167">
+        <source>Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that doesn't implement INativeObject ({2}).
+		</source>
+        <target state="new">Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that doesn't implement INativeObject ({2}).
 		</target>
         <note>
 		</note>
@@ -1870,6 +2086,30 @@
         <source>Failed to generate a P/Invoke wrapper for {0}: {1}
 		</source>
         <target state="new">Failed to generate a P/Invoke wrapper for {0}: {1}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4170">
+        <source>The registrar can't convert from '{0}' to '{1}' for the return value in the method {2}.
+		</source>
+        <target state="new">The registrar can't convert from '{0}' to '{1}' for the return value in the method {2}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4171">
+        <source>The BindAs attribute on the return value of the method {0} is invalid: the BindAs type {1} is different from the return type {2}.
+		</source>
+        <target state="new">The BindAs attribute on the return value of the method {0} is invalid: the BindAs type {1} is different from the return type {2}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4172">
+        <source>The registrar can't convert from '{0}' to '{1}' for the parameter '{2}' in the method {3}.
+		</source>
+        <target state="new">The registrar can't convert from '{0}' to '{1}' for the parameter '{2}' in the method {3}.
 		</target>
         <note>
 		</note>
@@ -1906,10 +2146,26 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4177">
+        <source>The 'ProtocolType' parameter of the 'Adopts' attribute used in class '{0}' contains an invalid character. Value used: '{1}' Invalid Char: '{2}'
+		</source>
+        <target state="new">The 'ProtocolType' parameter of the 'Adopts' attribute used in class '{0}' contains an invalid character. Value used: '{1}' Invalid Char: '{2}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4178">
         <source>The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.
 		</source>
         <target state="new">The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4179">
+        <source>The registrar found the abstract type '{0}' in the signature for '{1}'. Abstract types should not be used in the signature for a member exported to Objective-C.
+		</source>
+        <target state="new">The registrar found the abstract type '{0}' in the signature for '{1}'. Abstract types should not be used in the signature for a member exported to Objective-C.
 		</target>
         <note>
 		</note>
@@ -1958,6 +2214,54 @@
         <source>The registrar can't compute the block signature for the delegate of type {0} in the method {1} because it couldn't find the Invoke method of the delegate type.
 		</source>
         <target state="new">The registrar can't compute the block signature for the delegate of type {0} in the method {1} because it couldn't find the Invoke method of the delegate type.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4186">
+        <source>The BindAs attribute on the parameter #{0} is invalid: the BindAs type {1} is different from the parameter type {2}.
+		</source>
+        <target state="new">The BindAs attribute on the parameter #{0} is invalid: the BindAs type {1} is different from the parameter type {2}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4187">
+        <source>The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
+		</source>
+        <target state="new">The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4188">
+        <source>Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
+		</source>
+        <target state="new">Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4189">
+        <source>The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.
+		</source>
+        <target state="new">The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4190">
+        <source>Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4191">
+        <source>Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</target>
         <note>
 		</note>
@@ -2174,6 +2478,14 @@
         <source>Failed to create the a fat library. Please review the build log.
 		</source>
         <target state="new">Failed to create the a fat library. Please review the build log.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT8018">
+        <source>Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+		</source>
+        <target state="new">Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 		</target>
         <note>
 		</note>

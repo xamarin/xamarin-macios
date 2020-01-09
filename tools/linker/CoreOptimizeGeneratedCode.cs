@@ -70,7 +70,7 @@ namespace Xamarin.Linker {
 						// ARMv7k binaries can run on ARM64_32, so this can't be inlined :/
 						break;
 					default:
-							options.LinkContext.Exceptions.Add (ErrorHelper.CreateWarning(178, mtouch.Errors.MT0178, options.Target.Abis[0]));
+						options.LinkContext.Exceptions.Add (ErrorHelper.CreateWarning (99, $"Internal error: unknown abi: {options.Target.Abis [0]}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new)."));
 						break;
 					}
 				} else if (options.Target.Abis.Count == 2 && options.Target.Is32Build && options.Target.Abis.Contains (Abi.ARMv7) && options.Target.Abis.Contains (Abi.ARMv7s)) {
@@ -828,7 +828,6 @@ namespace Xamarin.Linker {
 				while (prev.OpCode.Code == Code.Nop)
 					prev = prev.Previous; // Skip any nops.
 				if (prev.OpCode.StackBehaviourPush != StackBehaviour.Push1) {
-					//todo: 2106 is an mmp error, fix this with a new errors.resx in mmp sln
 					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, "Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3})", caller, ins.Offset, mr.Name, prev));
 					return 0;
 				} else if (prev.OpCode.StackBehaviourPop != StackBehaviour.Pop0) {
@@ -1021,7 +1020,7 @@ namespace Xamarin.Linker {
 					break;
 				}
 				if (setupblock_def == null)
-					throw ErrorHelper.CreateError (Options.Application, 179, caller, ins, mtouch.Errors.MT0179, Namespaces.ObjCRuntime);
+					throw ErrorHelper.CreateError (Options.Application, 99, caller, ins, $"Internal error: could not find the method {Namespaces.ObjCRuntime}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 			}
 			return caller.Module.ImportReference (setupblock_def);
 		}
