@@ -359,7 +359,7 @@ namespace Xamarin.Bundler {
 					if (assembly_build_targets.Count == 1 && first.Key == "@all" && first.Value.Item1 == AssemblyBuildTarget.DynamicLibrary && first.Value.Item2 == string.Empty) {
 						ErrorHelper.Warning (126, mtouch.Errors.MT0126);
 					} else {
-						ErrorHelper.Warning(125, mtouch.Errors.MT0125);
+						ErrorHelper.Warning (125, mtouch.Errors.MT0125);
 					}
 					assembly_build_targets.Clear ();
 				}
@@ -1013,14 +1013,14 @@ namespace Xamarin.Bundler {
 			if (Platform == ApplePlatform.iOS && DeploymentTarget.Major < 8) {
 				// This is a limitation it's technically possible to fix (we can build all extensions into frameworks, and the main app to static objects).
 				// It would make our code a bit more complicated though, and would only be valuable for apps that target iOS 6 or iOS 7 and has more than one extension.
-				ErrorHelper.Warning (112, mtouch.Errors.MT0112, $"the container app's deployment target is earlier than iOS 8.0 (it's {DeploymentTarget}).");
+				ErrorHelper.Warning (112, mtouch.Errors.MT0112, String.Format (mtouch.Errors.MT0112_a, DeploymentTarget));
 				return;
 			}
 
 			// No I18N assemblies can be included
 			if (I18n != Mono.Linker.I18nAssemblies.None) {
 				// This is a limitation it's technically possible to fix.
-				ErrorHelper.Warning (112, mtouch.Errors.MT0112, $"the container app includes I18N assemblies ({I18n}).");
+				ErrorHelper.Warning (112, mtouch.Errors.MT0112, String.Format(mtouch.Errors.MT0112_b, I18n));
 				return;
 			}
 
@@ -1038,7 +1038,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (BitCodeMode != appex.BitCodeMode) {
-					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the bitcode options differ between the container app ({appex.BitCodeMode}) and the extension ({BitCodeMode}).");
+					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_a, appex.BitCodeMode, BitCodeMode));
 					continue;
 				}
 
@@ -1047,21 +1047,21 @@ namespace Xamarin.Bundler {
 				// We can probably lift this requirement (at least partially) at some point,
 				// but for now it makes our code simpler.
 				if (assembly_build_targets.Count != appex.assembly_build_targets.Count) {
-					ErrorHelper.Warning (113, mtouch.Errors.MT0113,appex.Name, $"the --assembly-build-target options are different between the container app ({FormatAssemblyBuildTargets ()}) and the extension ({appex.FormatAssemblyBuildTargets ()}).");
+					ErrorHelper.Warning (113, mtouch.Errors.MT0113,appex.Name, String.Format(mtouch.Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
 					continue;
 				}
 
 				foreach (var key in assembly_build_targets.Keys) {
 					Tuple<AssemblyBuildTarget, string> appex_value;
 					if (!appex.assembly_build_targets.TryGetValue (key, out appex_value)) {
-						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the --assembly-build-target options are different between the container app ({FormatAssemblyBuildTargets ()}) and the extension ({appex.FormatAssemblyBuildTargets ()}).");
+						ErrorHelper.Warning(113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
 						applicable = false;
 						break;
 					}
 
 					var value = assembly_build_targets [key];
 					if (value.Item1 != appex_value.Item1 || value.Item2 != appex_value.Item2) {
-						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the --assembly-build-target options are different between the container app ({FormatAssemblyBuildTargets ()}) and the extension ({appex.FormatAssemblyBuildTargets ()}).");
+						ErrorHelper.Warning(113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
 						applicable = false;
 						break;
 					}
@@ -1072,57 +1072,56 @@ namespace Xamarin.Bundler {
 				
 				// No I18N assemblies can be included
 				if (appex.I18n != Mono.Linker.I18nAssemblies.None) {
-					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the I18N assemblies are different between the container app ({I18n}) and the extension ({appex.I18n}).");
+					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_c, I18n, appex.I18n));
 					continue;
 				}
 
 				// All arguments to the AOT compiler must be identical
 				if (AotArguments != appex.AotArguments) {
-					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the arguments to the AOT compiler are different between the container app ({AotArguments}) and the extension ({appex.AotArguments}).");
+					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_d, AotArguments, appex.AotArguments));
 					continue;
 				}
 
 				if (!CompareLists (AotOtherArguments, appex.AotOtherArguments)) {
-					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the other arguments to the AOT compiler are different between the container app ({StringUtils.FormatArguments (AotOtherArguments)}) and the extension ({StringUtils.FormatArguments (appex.AotOtherArguments)}).");
+					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_e, StringUtils.FormatArguments(AotOtherArguments), StringUtils.FormatArguments(appex.AotOtherArguments)));
 					continue;
 				}
 
 				if (IsLLVM != appex.IsLLVM) {
-					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"LLVM is not enabled or disabled in both the container app ({IsLLVM}) and the extension ({appex.IsLLVM}).");
-					continue;
+					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_f, IsLLVM, appex.IsLLVM));
 				}
 
 				if (LinkMode != appex.LinkMode) {
-					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the managed linker settings are different between the container app ({LinkMode}) and the extension ({appex.LinkMode}).");
+					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_g, LinkMode, appex.LinkMode));
 					continue;
 				}
 
 				if (LinkMode != LinkMode.None) {
 					var linkskipped_same = !LinkSkipped.Except (appex.LinkSkipped).Any () && !appex.LinkSkipped.Except (LinkSkipped).Any ();
 					if (!linkskipped_same) {
-						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the skipped assemblies for the managed linker are different between the container app ({string.Join (", ", LinkSkipped)}) and the extension ({string.Join (", ", appex.LinkSkipped)}).");
+						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_h, string.Join(", ", LinkSkipped), string.Join(", ", appex.LinkSkipped)));
 						continue;
 					}
 
 					if (Definitions.Count > 0) {
-						ErrorHelper.Warning (112, mtouch.Errors.MT0112, $"the container app has custom xml definitions for the managed linker ({string.Join (", ", Definitions)}).");
+						ErrorHelper.Warning (112, mtouch.Errors.MT0112, String.Format(mtouch.Errors.MT0112_c, string.Join(", ", Definitions)));
 						continue;
 					}
 
 					if (appex.Definitions.Count > 0) {
-						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the extension has custom xml definitions for the managed linker ({string.Join (", ", appex.Definitions)}).");
+						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_i, string.Join(", ", appex.Definitions)));
 						continue;
 					}
 				}
 
 				if (UseInterpreter != appex.UseInterpreter) {
-					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the interpreter settings are different between the container app ({(UseInterpreter ? "Enabled" : "Disabled")}) and the extension ({(appex.UseInterpreter ? "Enabled" : "Disabled")}).");
+					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_j, (UseInterpreter ? "Enabled" : "Disabled"), (appex.UseInterpreter ? "Enabled" : "Disabled")));
 					continue;
 				} else if (UseInterpreter) {
 					var appAssemblies = new HashSet<string> (InterpretedAssemblies);
 					var appexAssemblies = new HashSet<string> (appex.InterpretedAssemblies);
 					if (!appAssemblies.SetEquals (appexAssemblies)) {
-						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the interpreted assemblies are different between the container app ({(InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join (", ", InterpretedAssemblies))}) and the extension ({(appex.InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join (", ", appex.InterpretedAssemblies))}).");
+						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_k, (InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join(", ", InterpretedAssemblies)), (appex.InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join(", ", appex.InterpretedAssemblies))));
 						continue;
 					}
 				}
@@ -1132,12 +1131,12 @@ namespace Xamarin.Bundler {
 					var matching = abis.FirstOrDefault ((v) => (v & Abi.ArchMask) == (abi & Abi.ArchMask));
 					if (matching == Abi.None) {
 						// Example: extension has arm64+armv7, while the main app has only arm64.
-						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the container app does not build for the ABI {abi} (while the extension is building for this ABI).");
+						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_l, abi));
 						applicable = false;
 						break;
 					} else if (matching != abi) {
 						// Example: extension has arm64+llvm, while the main app has only arm64.
-						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the container app is building for the ABI {matching}, which is not compatible with the extension's ABI ({abi}).");
+						ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_m, matching, abi));
 						applicable = false;
 						break;
 					}
@@ -1150,7 +1149,7 @@ namespace Xamarin.Bundler {
 							return "default";
 						return v.Value ? "true" : "false";
 					};
-					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the remove-dynamic-registrar optimization differ between the container app ({bool_tostr (appex.Optimizations.RemoveDynamicRegistrar)}) and the extension ({bool_tostr (Optimizations.RemoveDynamicRegistrar)}).");
+					ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_n, bool_tostr(appex.Optimizations.RemoveDynamicRegistrar), bool_tostr(Optimizations.RemoveDynamicRegistrar)));
 					continue;
 				}
 
@@ -1165,7 +1164,7 @@ namespace Xamarin.Bundler {
 							continue; // appex references an assembly the main app doesn't. This is fine.
 						if (asm.FullPath != kvp.Value.FullPath && !Cache.CompareFiles (asm.FullPath, kvp.Value.FullPath, true)) {
 							applicable = false; // app references an assembly with the same name as the main app, but from a different location and not identical. This is not fine.
-							ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, $"the container app is referencing the assembly '{asm.Identity}' from '{asm.FullPath}', while the extension references a different version from '{kvp.Value.FullPath}'.");
+							ErrorHelper.Warning (113, mtouch.Errors.MT0113, appex.Name, String.Format(mtouch.Errors.MT0113_n, asm.Identity, asm.FullPath));
 							break;
 						}
 					}

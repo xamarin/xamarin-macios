@@ -726,6 +726,27 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT0112_a" xml:space="preserve">
+		<value>the container app's deployment target is earlier than iOS 8.0 (it's {0}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0112_b" xml:space="preserve">
+		<value>the container app includes I18N assemblies ({0}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0112_c" xml:space="preserve">
+		<value>the container app has custom xml definitions for the managed linker ({0}).
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT0113" xml:space="preserve">
 		<value>Native code sharing has been disabled for the extension '{0}' because {1}
@@ -733,13 +754,111 @@
 		<comment>
 		</comment>
 	</data>
-
-	<data name="MT0115" xml:space="preserve">
-		<value>It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.
+	
+	<data name="MT0113_a" xml:space="preserve">
+		<value>the bitcode options differ between the container app ({0}) and the extension ({1}).
 		</value>
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT0113_b" xml:space="preserve">
+		<value>the --assembly-build-target options are different between the container app ({0}) and the extension ({1}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_c" xml:space="preserve">
+		<value>the I18N assemblies are different between the container app ({0}) and the extension ({1}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_d" xml:space="preserve">
+		<value>the arguments to the AOT compiler are different between the container app ({0}) and the extension ({1})
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_e" xml:space="preserve">
+		<value>the other arguments to the AOT compiler are different between the container app ({0}) and the extension ({1}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_f" xml:space="preserve">
+		<value>LLVM is not enabled or disabled in both the container app ({0}) and the extension ({1})
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_g" xml:space="preserve">
+		<value>the managed linker settings are different between the container app ({0}) and the extension ({1}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_h" xml:space="preserve">
+		<value>the skipped assemblies for the managed linker are different between the container app ({0}) and the extension ({1}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_i" xml:space="preserve">
+		<value>the extension has custom xml definitions for the managed linker ({0}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_j" xml:space="preserve">
+		<value>the interpreter settings are different between the container app ({0}) and the extension ({1}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_k" xml:space="preserve">
+		<value>the interpreted assemblies are different between the container app ({0}) and the extension ({1}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_l" xml:space="preserve">
+		<value>the container app does not build for the ABI {0} (while the extension is building for this ABI).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_m" xml:space="preserve">
+		<value>the container app is building for the ABI {0}, which is not compatible with the extension's ABI ({1}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_n" xml:space="preserve">
+		<value>the remove-dynamic-registrar optimization differ between the container app ({0}) and the extension ({1}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0113_o" xml:space="preserve">
+		<value>the container app is referencing the assembly '{0}' from '{1}', while the extension references a different version from '{2}'.
+		</value>
+		<comment>
+		</comment>
+	</data>		
 
 	<data name="MT0116" xml:space="preserve">
 		<value>Invalid architecture: {0}. 32-bit architectures are not supported when deployment target is 11 or later.

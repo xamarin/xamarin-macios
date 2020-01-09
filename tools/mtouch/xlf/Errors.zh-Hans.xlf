@@ -810,6 +810,30 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT0112_a">
+        <source>the container app's deployment target is earlier than iOS 8.0 (it's {0}).
+		</source>
+        <target state="new">the container app's deployment target is earlier than iOS 8.0 (it's {0}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0112_b">
+        <source>the container app includes I18N assemblies ({0}).
+		</source>
+        <target state="new">the container app includes I18N assemblies ({0}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0112_c">
+        <source>the container app has custom xml definitions for the managed linker ({0}).
+		</source>
+        <target state="new">the container app has custom xml definitions for the managed linker ({0}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT0113">
         <source>Native code sharing has been disabled for the extension '{0}' because {1}
 		</source>
@@ -818,10 +842,122 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0115">
-        <source>It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.
+      <trans-unit id="MT0113_a">
+        <source>the bitcode options differ between the container app ({0}) and the extension ({1}).
 		</source>
-        <target state="new">It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.
+        <target state="new">the bitcode options differ between the container app ({0}) and the extension ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_b">
+        <source>the --assembly-build-target options are different between the container app ({0}) and the extension ({1}).
+		</source>
+        <target state="new">the --assembly-build-target options are different between the container app ({0}) and the extension ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_c">
+        <source>the I18N assemblies are different between the container app ({0}) and the extension ({1}).
+		</source>
+        <target state="new">the I18N assemblies are different between the container app ({0}) and the extension ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_d">
+        <source>the arguments to the AOT compiler are different between the container app ({0}) and the extension ({1})
+		</source>
+        <target state="new">the arguments to the AOT compiler are different between the container app ({0}) and the extension ({1})
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_e">
+        <source>the other arguments to the AOT compiler are different between the container app ({0}) and the extension ({1}).
+		</source>
+        <target state="new">the other arguments to the AOT compiler are different between the container app ({0}) and the extension ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_f">
+        <source>LLVM is not enabled or disabled in both the container app ({0}) and the extension ({1})
+		</source>
+        <target state="new">LLVM is not enabled or disabled in both the container app ({0}) and the extension ({1})
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_g">
+        <source>the managed linker settings are different between the container app ({0}) and the extension ({1}).
+		</source>
+        <target state="new">the managed linker settings are different between the container app ({0}) and the extension ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_h">
+        <source>the skipped assemblies for the managed linker are different between the container app ({0}) and the extension ({1}).
+		</source>
+        <target state="new">the skipped assemblies for the managed linker are different between the container app ({0}) and the extension ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_i">
+        <source>the extension has custom xml definitions for the managed linker ({0}).
+		</source>
+        <target state="new">the extension has custom xml definitions for the managed linker ({0}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_j">
+        <source>the interpreter settings are different between the container app ({0}) and the extension ({1}).
+		</source>
+        <target state="new">the interpreter settings are different between the container app ({0}) and the extension ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_k">
+        <source>the interpreted assemblies are different between the container app ({0}) and the extension ({1}).
+		</source>
+        <target state="new">the interpreted assemblies are different between the container app ({0}) and the extension ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_l">
+        <source>the container app does not build for the ABI {0} (while the extension is building for this ABI).
+		</source>
+        <target state="new">the container app does not build for the ABI {0} (while the extension is building for this ABI).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_m">
+        <source>the container app is building for the ABI {0}, which is not compatible with the extension's ABI ({1}).
+		</source>
+        <target state="new">the container app is building for the ABI {0}, which is not compatible with the extension's ABI ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_n">
+        <source>the remove-dynamic-registrar optimization differ between the container app ({0}) and the extension ({1}).
+		</source>
+        <target state="new">the remove-dynamic-registrar optimization differ between the container app ({0}) and the extension ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0113_o">
+        <source>the container app is referencing the assembly '{0}' from '{1}', while the extension references a different version from '{2}'.
+		</source>
+        <target state="new">the container app is referencing the assembly '{0}' from '{1}', while the extension references a different version from '{2}'.
 		</target>
         <note>
 		</note>
