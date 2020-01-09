@@ -87,7 +87,7 @@ namespace Xamarin.Bundler {
 			Log (1, "Could not update `{0}` content (error #{1} : {2}), trying to overwrite everything...", target, err, strerror (err));
 			Directory.Delete (target, true);
 			if (TryUpdateDirectory (source, target) != 0)
-				throw CreateError (1022, source, target, strerror (Marshal.GetLastWin32Error ()));
+				throw CreateError (1022, "Could not copy the directory '{0}' to '{1}': {2}", source, target, strerror (Marshal.GetLastWin32Error ()));
 		}
 
 		static int TryUpdateDirectory (string source, string target)
