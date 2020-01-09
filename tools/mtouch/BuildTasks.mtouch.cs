@@ -181,7 +181,7 @@ namespace Xamarin.Bundler
 
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError(4109, "Failed to compile the generated registrar code. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
+			throw ErrorHelper.CreateError (4109, "Failed to compile the generated registrar code. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
 		}
 	}
 
@@ -321,14 +321,14 @@ namespace Xamarin.Bundler
 					foreach (var mr in assembly.UnresolvedModuleReferences) {
 						// TODO: add more diagnose information on the warnings
 						var name = Path.GetFileNameWithoutExtension (mr.Name);
-						linker_errors.Add (new MonoTouchException (5215, mtouch.Errors.MT5215, false, name));
+						linker_errors.Add (new MonoTouchException (5215, false, mtouch.Errors.MT5215, name));
 					}
 				}
 				// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
 				if (Target.App.UserGccFlags?.Count > 0)
-					linker_errors.Add (new MonoTouchException (5201, mtouch.Errors.MT5201, true, StringUtils.FormatArguments (Target.App.UserGccFlags)));
+					linker_errors.Add (new MonoTouchException (5201, true, mtouch.Errors.MT5201, StringUtils.FormatArguments (Target.App.UserGccFlags)));
 				else
-					linker_errors.Add (new MonoTouchException (5202, mtouch.Errors.MT5202, true));
+					linker_errors.Add (new MonoTouchException (5202, true, mtouch.Errors.MT5202));
 
 				if (code == 255) {
 					// check command length
