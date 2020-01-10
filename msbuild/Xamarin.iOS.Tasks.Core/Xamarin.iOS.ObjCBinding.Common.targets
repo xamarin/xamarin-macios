@@ -85,6 +85,8 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		</CreateEmbeddedResources>
 	</Target>
 
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.NativeReference.Stubs.targets" />
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>

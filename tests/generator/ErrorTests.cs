@@ -421,7 +421,7 @@ namespace Bug57804TestsRef {
 	}
 }");
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1048, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
+			bgen.AssertError (1080, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
 		}
 
 		[Test]
@@ -445,7 +445,7 @@ namespace Bug57804TestsRef {
 	}
 }");
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1048, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
+			bgen.AssertError (1080, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
 		}
 
 		[Test]

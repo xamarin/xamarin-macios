@@ -814,6 +814,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSUrlProtocol.cs \
 	Foundation/NSUrlProtocolClient.cs \
 	Foundation/NSUrlSession.cs \
+	Foundation/NSUrlSessionConfiguration.cs \
 	Foundation/NSUserDefaults.cs \
 	Foundation/NSUuid.cs \
 	Foundation/NSXpcConnection.cs \

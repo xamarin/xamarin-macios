@@ -38,15 +38,15 @@ public class AttributeManager
 			case "ObjCRuntime.SinceAttribute":
 			case "ObjCRuntime.MountainLionAttribute":
 			case "ObjCRuntime.MavericksAttribute":
-				throw ErrorHelper.CreateError (1061, $"The attribute '{type.FullName}' found on '{Generator.FormatProvider (provider)}' is not a valid binding attribute. Please remove this attribute.");
+				throw ErrorHelper.CreateError (1061,type.FullName, Generator.FormatProvider (provider));
 			}
 
 			rv = typeof (TypeManager).Assembly.GetType (type.FullName);
 		} else {
-			throw ErrorHelper.CreateError (1054, "Internal error: can't convert type '{0}' (unknown assembly). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", type.AssemblyQualifiedName);
+			throw ErrorHelper.CreateError (1054, type.AssemblyQualifiedName);
 		}
 		if (rv == null)
-			throw ErrorHelper.CreateError (1055, "Internal error: failed to convert type '{0}'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", type.AssemblyQualifiedName);
+			throw ErrorHelper.CreateError (1055, type.AssemblyQualifiedName);
 		return rv;
 	}
 
@@ -74,10 +74,10 @@ public class AttributeManager
 				rv = TypeManager.PlatformAssembly.GetType (fullname);
 			}
 		} else {
-			throw ErrorHelper.CreateError (1054, "Internal error: can't convert type '{0}' (unknown assembly). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", type.AssemblyQualifiedName);
+			throw ErrorHelper.CreateError (1054, type.AssemblyQualifiedName);
 		}
 		if (rv == null)
-			throw ErrorHelper.CreateError (1055, "Internal error: failed to convert type '{0}'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", type.AssemblyQualifiedName);
+			throw ErrorHelper.CreateError (1055, type.AssemblyQualifiedName);
 		return rv;
 	}
 
@@ -149,7 +149,7 @@ public class AttributeManager
 						constructorArguments [i] = System.Type.GetType (((Type) value).FullName);
 					}
 					if (constructorArguments [i] == null)
-						throw ErrorHelper.CreateError (1056, "Internal error: failed to instantiate mock attribute '{0}' (could not convert type constructor argument #{1}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", attribType.FullName, i + 1);
+						throw ErrorHelper.CreateError (1056, attribType.FullName, i + 1);
 				}
 				break;
 			default:
@@ -175,11 +175,11 @@ public class AttributeManager
 				break;
 			}
 			if (ctorTypes [i] == null)
-				throw ErrorHelper.CreateError (1057, "Internal error: failed to instantiate mock attribute '{0}' (could not convert constructor type #{1} ({2})). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", attribType.FullName, i, paramType.FullName);
+				throw ErrorHelper.CreateError (1057, attribType.FullName, i, paramType.FullName);
 		}
 		var ctor = attribType.GetConstructor (ctorTypes);
 		if (ctor == null)
-			throw ErrorHelper.CreateError (1058, "Internal error: could not find a constructor for the mock attribute '{0}'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", attribType.FullName);
+			throw ErrorHelper.CreateError (1058, attribType.FullName);
 		var instance = ctor.Invoke (constructorArguments);
 
 		for (int i = 0; i < attribute.NamedArguments.Count; i++) {
@@ -198,7 +198,7 @@ public class AttributeManager
 					arr [a] = (Type) typed_values [a].Value;
 				value = arr;
 			} else if (arg.TypedValue.ArgumentType.IsArray) {
-				throw ErrorHelper.CreateError (1059, "Internal error: failed to instantiate mock attribute '{0}' (unknown type for the named argument #{1} ({2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", attribType.FullName, i + 1, arg.MemberName);
+				throw ErrorHelper.CreateError (1073, attribType.FullName, i + 1, arg.MemberName);
 			}
 			if (arg.IsField) {
 				attribType.GetField (arg.MemberName).SetValue (instance, value);
@@ -249,7 +249,7 @@ public class AttributeManager
 		var module = provider as Module;
 		if (module != null)
 			return CustomAttributeData.GetCustomAttributes (module);
-		throw new BindingException (1051, true, "Internal error: Don't know how to get attributes for {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", provider.GetType ().FullName);
+		throw new BindingException (1051, true, provider.GetType ().FullName);
 	}
 
 	public static bool HasAttribute (ICustomAttributeProvider provider, string type_name)
@@ -304,7 +304,7 @@ public class AttributeManager
 		} else {
 			name = $"the member {provider.ToString ()}";
 		}
-		throw ErrorHelper.CreateError (1059, "Found {0} {1} attributes on {1}. At most one was expected.", rv.Length, typeof (T).FullName, name);
+		throw ErrorHelper.CreateError (1059, rv.Length, typeof (T).FullName, name);
 	}
 
 	public static ICustomAttributeProvider GetReturnTypeCustomAttributes (MethodInfo method)
@@ -518,7 +518,7 @@ static class AttributeFactory
 	{
 		var ctor = attribType.GetConstructor (ctorTypes);
 		if (ctor == null)
-			throw ErrorHelper.CreateError (1058, "Internal error: could not find a constructor for the mock attribute '{0}'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", attribType.FullName);
+			throw ErrorHelper.CreateError (1058, attribType.FullName);
 
 		return (System.Attribute) ctor.Invoke (ctorValues);
 	}
