@@ -104,7 +104,7 @@ namespace ObjCRuntime {
 #else
 			case HttpClientHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
-					ErrorHelper.Warning (2015, mtouch.Errors.MT2015, handler);
+					ErrorHelper.Warning (2015, mtouch.mtouchErrors.MT2015, handler);
 					type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
 					type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
@@ -112,7 +112,7 @@ namespace ObjCRuntime {
 				break;
 			case CFNetworkHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
-					ErrorHelper.Warning (2015, mtouch.Errors.MT2015, handler);
+					ErrorHelper.Warning (2015, mtouch.mtouchErrors.MT2015, handler);
 					type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
 					type = platformModule.GetType ("System.Net.Http", "CFNetworkHandler");

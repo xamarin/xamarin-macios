@@ -136,7 +136,7 @@ namespace Xamarin.Utils
 				AddFramework (Application.GetLibMono (mode));
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, mtouch.Errors.MT0100, mode);
+				throw ErrorHelper.CreateError (100, mtouch.mtouchErrors.MT0100, mode);
 			}
 			AddOtherFlag ("-lz");
 			AddOtherFlag ("-liconv");
@@ -154,7 +154,7 @@ namespace Xamarin.Utils
 				AddFramework (Application.GetLibXamarin (mode));
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, mtouch.Errors.MT0100, mode);
+				throw ErrorHelper.CreateError (100, mtouch.mtouchErrors.MT0100, mode);
 			}
 			AddFramework ("Foundation");
 			AddOtherFlag ("-lz");
