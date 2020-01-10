@@ -216,7 +216,6 @@
 !missing-field! NSArgumentBinding not bound
 !missing-field! NSAttributedStringBinding not bound
 !missing-field! NSAuthorDocumentAttribute not bound
-!missing-field! NSBackgroundColorDocumentAttribute not bound
 !missing-field! NSBadBitmapParametersException not bound
 !missing-field! NSBadComparisonException not bound
 !missing-field! NSBadRTFColorTableException not bound

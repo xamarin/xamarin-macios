@@ -12,21 +12,15 @@
 using System;
 
 using ObjCRuntime;
-using Foundation;
+
 using AppKit;
+using Foundation;
+using CoreGraphics;
 
 namespace InputMethodKit {
 
-	partial interface IMKGlobal {
-		[Field ("kIMKCommandMenuItemName")]
-		NSString CommandMenuItemName { get; }
-
-		[Field ("kIMKCommandClientName")]
-		NSString CommandClientName { get; }
-	}
-
-	[Model]
-	partial interface IMKServerProxy {
+	[Protocol]
+	interface IMKServerProxy {
 		[Field ("IMKModeDictionary")]
 		NSString ModeDictionary { get; }
 
@@ -36,10 +30,12 @@ namespace InputMethodKit {
 		[Field ("IMKDelegateClass")]
 		NSString DelegateClass { get; }
 	}
+	
+	interface IIMKServerProxy {}
 
-	[BaseType (typeof (NSObject))]
-	partial interface IMKServer : IMKServerProxy {
-
+	[BaseType (typeof(NSObject))]
+	interface IMKServer : IIMKServerProxy
+	{
 		[Export ("initWithName:bundleIdentifier:")]
 		IntPtr Constructor (string name, string bundleIdentifier);
 
@@ -49,43 +45,46 @@ namespace InputMethodKit {
 		[Export ("bundle")]
 		NSBundle Bundle { get; }
 
+		[Mac (10, 9)]
 		[Export ("paletteWillTerminate")]
 		bool PaletteWillTerminate { get; }
 
+		[Mac (10, 9)]
 		[Export ("lastKeyEventWasDeadKey")]
 		bool LastKeyEventWasDeadKey { get; }
 	}
 
-	[Category, BaseType (typeof (NSObject))]
-	partial interface IMKServerInput_NSObject {
-
+	[Protocol (IsInformal = true)]
+	interface IMKServerInput
+	{
 		[Export ("inputText:key:modifiers:client:")]
-		bool InputText (string str, nint keyCode, nuint flags, NSObject sender);
+		bool GetInputText (string data, nint keyCode, nuint flags, NSObject sender);
 
 		[Export ("inputText:client:")]
-		bool InputText (string str, NSObject sender);
+		bool GetInputText (string data, NSObject sender);
 
 		[Export ("handleEvent:client:")]
-		bool HandleEvent (NSEvent evnt, NSObject sender);
+		bool OnEvent (NSEvent mouseEvent, NSObject sender);
 
 		[Export ("didCommandBySelector:client:")]
 		bool DidCommandBySelector (Selector aSelector, NSObject sender);
 
 		[Export ("composedString:")]
-		NSObject ComposedString (NSObject sender);
+		NSObject GetComposedString (NSObject sender);
 
 		[Export ("originalString:")]
-		NSAttributedString OriginalString (NSObject sender);
+		NSAttributedString GetOriginalString (NSObject sender);
 
 		[Export ("commitComposition:")]
 		void CommitComposition (NSObject sender);
 
 		[Export ("candidates:")]
-		NSObject [] Candidates (NSObject sender);
+		NSObject[] GetCandidates (NSObject sender);
 	}
 
 	[Protocol]
-	partial interface IMKStateSetting {
+	interface IMKStateSetting
+	{
 		[Abstract]
 		[Export ("activateServer:")]
 		void ActivateServer (NSObject sender);
@@ -115,24 +114,36 @@ namespace InputMethodKit {
 		void ShowPreferences (NSObject sender);
 	}
 
-	[Model]
-	partial interface IMKMouseHandling {
+	interface IIMKMouseHandling {}
 
+	[Protocol]
+	interface IMKMouseHandling
+	{
+		[Abstract]
 		[Export ("mouseDownOnCharacterIndex:coordinate:withModifier:continueTracking:client:")]
-		bool MouseDown (nuint index, NSPoint point, nuint flags, out bool keepTracking, NSObject sender);
+		bool OnMouseDownOn (nuint index, CGPoint point, nuint flags, out bool keepTracking, NSObject sender);
 
+		[Abstract]
 		[Export ("mouseUpOnCharacterIndex:coordinate:withModifier:client:")]
-		bool MouseUp (nuint index, NSPoint point, nuint flags, NSObject sender);
+		bool OnMouseUpOn (nuint index, CGPoint point, nuint flags, NSObject sender);
 
+		[Abstract]
 		[Export ("mouseMovedOnCharacterIndex:coordinate:withModifier:client:")]
-		bool MouseMoved (nuint index, NSPoint point, nuint flags, NSObject sender);
+		bool OnMouseMoved (nuint index, CGPoint point, nuint flags, NSObject sender);
 	}
 
-	[BaseType (typeof (NSObject))]
-	partial interface IMKInputController : IMKStateSetting, IMKMouseHandling {
+	interface IIMKStateSetting {}
+	interface IIMKTextInput {}
 
+	// empty because header is not public
+	[Protocol]
+	interface IMKTextInput {}
+
+	[BaseType (typeof(NSObject))]
+	interface IMKInputController : IIMKStateSetting, IIMKMouseHandling
+	{
 		[Export ("initWithServer:delegate:client:")]
-		IntPtr Constructor (IMKServer server, NSObject delegateObject, NSObject inputClient);
+		IntPtr Constructor (IMKServer server, NSObject @delegate, NSObject inputClient);
 
 		[Export ("updateComposition")]
 		void UpdateComposition ();
@@ -141,7 +152,7 @@ namespace InputMethodKit {
 		void CancelComposition ();
 
 		[Export ("compositionAttributesAtRange:")]
-		NSMutableDictionary CompositionAttributesAtRange (NSRange range);
+		NSMutableDictionary GetCompositionAttributes (NSRange range);
 
 		[Export ("selectionRange")]
 		NSRange SelectionRange { get; }
@@ -150,7 +161,7 @@ namespace InputMethodKit {
 		NSRange ReplacementRange { get; }
 
 		[Export ("markForStyle:atRange:")]
-		NSDictionary Mark (nint style, NSRange range);
+		NSDictionary GetMarkForStyle (nint style, NSRange range);
 
 		[Export ("doCommandBySelector:commandDictionary:")]
 		void DoCommand (Selector aSelector, NSDictionary infoDictionary);
@@ -165,27 +176,78 @@ namespace InputMethodKit {
 		NSObject Delegate { get; set; }
 
 		[Export ("server")]
-		IMKServer Server { get; }
+		IMKServer Server ();
 
 		[Export ("client")]
-		NSObject Client { get; }
+		IIMKTextInput Client ();
 
+		[Mac (10,9)]
 		[Export ("inputControllerWillClose")]
-		void InputControllerWillClose ();
+		void OnInputControllerWillClose ();
 
 		[Export ("annotationSelected:forCandidate:")]
-		void AnnotationSelected (NSAttributedString annotationString, NSAttributedString candidateString);
+		void OnAnnotationSelected (NSAttributedString annotationString, NSAttributedString candidateString);
 
 		[Export ("candidateSelectionChanged:")]
-		void CandidateSelectionChanged (NSAttributedString candidateString);
+		void OnCandidateSelectionChanged (NSAttributedString candidateString);
 
 		[Export ("candidateSelected:")]
-		void CandidateSelected (NSAttributedString candidateString);
+		void OnCandidateSelected (NSAttributedString candidateString);
 	}
 
-	[BaseType (typeof (NSResponder))]
-	partial interface IMKCandidates {
+	public enum IMKCandidatePanelType : uint {
+ 		SingleColumnScrolling = 1,
+ 		ScrollingGrid = 2,
+ 		SingleRowStepping = 3,
+ 	}
 
+	public enum IMKStyleType : uint {
+		Main = 0,
+		Annotation = 1,
+		SubList = 2,
+	}
+
+	public enum IMKLocateCandidates : uint {
+		AboveHint = 1,
+		BelowHint = 2,
+		LeftHint = 3,
+		RightHint = 4,
+	}
+
+	public enum IMKCommandName {
+		[Field ("kIMKCommandMenuItemName")]
+		MenuItem,
+
+		[Field ("kIMKCommandClientName")]
+		Client,
+	}
+
+	[Static]
+	[Internal]
+	interface IMKCandidatesAttributesKeys {
+		[Field ("NSFontAttributeName")]
+		NSString FontKey { get; }
+		[Field ("IMKCandidatesOpacityAttributeName")]
+		NSString OpacityKey { get; }
+		[Field ("NSForegroundColorAttributeName")]
+		NSString ColorKey { get; }
+		[Field ("NSBackgroundColorDocumentAttribute")]
+		NSString DocumentBackgroundColorKey { get; }
+		[Field ("IMKCandidatesSendServerKeyEventFirst")]
+		NSString SendServerKeyEventFirstKey { get; }
+	}
+
+	[StrongDictionary ("IMKCandidatesAttributesKeys")]
+	interface IMKCandidatesAttributes {
+		NSFont Font { get; set;}
+		float Opacity { get; set; }
+		NSColor Color { get; set; }
+		NSColor DocumentBackgroundColor { get; set; }
+		bool SendServerKeyEventFirst { get; set; }
+	}
+
+	[BaseType (typeof(NSResponder))]
+	interface IMKCandidates {
 		[Export ("initWithServer:panelType:")]
 		IntPtr Constructor (IMKServer server, IMKCandidatePanelType panelType);
 
@@ -196,13 +258,13 @@ namespace InputMethodKit {
 		IMKCandidatePanelType PanelType { get; set; }
 
 		[Export ("show:")]
-		void Show (IMKCandidatesLocationHint locationHint);
+		void Show (IMKLocateCandidates locationHint);
 
 		[Export ("hide")]
 		void Hide ();
 
 		[Export ("isVisible")]
-		bool IsVisible { get; }
+		bool IsVisible ();
 
 		[Export ("updateCandidates")]
 		void UpdateCandidates ();
@@ -211,66 +273,97 @@ namespace InputMethodKit {
 		void ShowAnnotation (NSAttributedString annotationString);
 
 		[Export ("showSublist:subListDelegate:")]
-		void ShowSublist (NSObject [] candidates, NSObject delegateObject);
-
-		[Export ("selectedCandidateString")]
-		NSAttributedString SelectedCandidateString { get; }
-
-		[Export ("candidateFrameTopLeft")]
-		NSPoint CandidateFrameTopLeft { set; }
+		void ShowSublist (NSObject[] candidates, NSObject @delegate);
 
 		[Export ("candidateFrame")]
-		NSRect CandidateFrame { get; }
+		CGRect CandidateFrame { get; }
 
+		// from Events.h
+		// enum {
+		// kVK_ANSI_A                    = 0x00,
+		// kVK_ANSI_S                    = 0x01,
+		// kVK_ANSI_D                    = 0x02,
+		// kVK_ANSI_F             
+		// So the array can be bound as ints 
+		[BindAs (typeof (nint []))]
 		[Export ("selectionKeys")]
-		NSObject [] SelectionKeys { get; set; }
+		NSNumber[] SelectionKeys { get;  [Export ("setSelectionKeys:")] set; } 
 
-		/* TISInputSourceRef comes from Carbon
-		[Export ("selectionKeysKeylayout")]
-		TISInputSourceRef SelectionKeysKeylayout { get; set; }*/
+// this are opacque pointers from CF, need to think about them
+//		[Export ("setSelectionKeysKeylayout:")]
+//		void SetSelectionKeys(TISInputSource layout);
+
+		// -(TISInputSourceRef)selectionKeysKeylayout;
+//		[Export ("selectionKeysKeylayout")]
+//		unsafe TISInputSourceRef* SelectionKeysKeylayout ();
+
+		IMKCandidatesAttributes StrongAttributes {
+			[Wrap ("new IMKCandidatesAttributes (Attributes)")]
+			get;
+			[Wrap ("Attributes = value?.Dictionary")]
+			set;
+		} 
 
 		[Export ("attributes")]
-		NSDictionary Attributes { get; set; }
+		NSDictionary Attributes { get; [Export ("setAttributes:")] set; }
 
 		[Export ("dismissesAutomatically")]
-		bool DismissesAutomatically { get; set; }
+		bool DismissesAutomatically { get; [Export ("setDismissesAutomatically:")] set; }
 
+		[Mac (10,9)]
 		[Export ("selectedCandidate")]
-		nint SelectedCandidate { get; }
+		nint GetSelectedCandidate ();
 
+		[Mac (10,9)]
+		[Export ("setCandidateFrameTopLeft:")]
+		void SetCandidateFrameTopLeft (CGPoint point);
+
+		[Mac (10,9)]
 		[Export ("showChild")]
 		void ShowChild ();
 
+		[Mac (10,9)]
 		[Export ("hideChild")]
 		void HideChild ();
 
+		[Mac (10,9)]
 		[Export ("attachChild:toCandidate:type:")]
 		void AttachChild (IMKCandidates child, nint candidateIdentifier, IMKStyleType theType);
 
+		[Mac (10,9)]
 		[Export ("detachChild:")]
 		void DetachChild (nint candidateIdentifier);
 
-		[Export ("candidateData")]
-		NSObject [] CandidateData { set; }
+		// the candidates data can be strings or attributed strings.
+		[Mac (10,9)]
+		[Export ("setCandidateData:")]
+		void SetCandidateData (NSString[] candidatesData);
 
+		[Mac (10,9)]
 		[Export ("selectCandidateWithIdentifier:")]
-		bool SelectCandidateWithIdentifier (nint candidateIdentifier);
+		bool SelectCandidate (nint candidateIdentifier);
 
-		[Export ("selectCandidate:")]
-		void SelectCandidate (nint candidateIdentifier);
-
+		[Mac (10,9)]
 		[Export ("showCandidates")]
 		void ShowCandidates ();
 
+		[Mac (10,9)]
 		[Export ("candidateStringIdentifier:")]
-		nint GetCandidateIdentifier (NSObject candidateString);
+		nint MapCandidateStringIdentifier (NSObject candidateString);
 
+		[Mac (10,9)]
+		[Export ("selectedCandidateString")]
+		NSAttributedString GetSelectedCandidateString ();
+
+		[Mac (10,9)]
 		[Export ("candidateIdentifierAtLineNumber:")]
 		nint GetCandidateIdentifier (nint lineNumber);
 
+		[Mac (10,9)]
 		[Export ("lineNumberForCandidateWithIdentifier:")]
 		nint GetLineNumberForCandidate (nint candidateIdentifier);
 
+		[Mac (10,9)]
 		[Export ("clearSelection")]
 		void ClearSelection ();
 	}

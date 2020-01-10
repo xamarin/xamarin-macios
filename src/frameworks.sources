@@ -1864,6 +1864,7 @@ MAC_FRAMEWORKS =            \
 	Intents                 \
 	IOSurface 		\
 	iTunesLibrary           \
+	InputMethodKit           \
 	JavaScriptCore          \
 	LinkPresentation        \
 	LocalAuthentication     \
