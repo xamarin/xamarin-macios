@@ -93,7 +93,9 @@ namespace CoreFoundation {
 		{
 			unsafe {
 				fixed (byte* ptr = content) {
-					// set the block that will be used to clean the data once we are done with it
+					// As per the documentation for dispatch_data_create, seems the data the pointer points to is copied 
+					// internally when specifying DISPATCH_DATA_DESTRUCTOR_DEFAULT as the destructor,
+					// and DISPATCH_DATA_DESTRUCTOR_DEFAULT=NULL, which is what you're passing, which means the code is OK. 
 					var dd = dispatch_data_create ((IntPtr) ptr, (nuint) content.Length, IntPtr.Zero, destructor: IntPtr.Zero);
 					return new DispatchData (dd, owns: true);
 				}
