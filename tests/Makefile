@@ -207,7 +207,7 @@ killall:
 	@killall Touch.Server >/dev/null 2>&1 || true
 
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
-test-ios-tasks:
+test-ios-tasks: verify-system-vsmac-xcode-match
 	$(SYSTEM_XIBUILD) -- $(TOP)/msbuild/Xamarin.MacDev.Tasks.sln
 	cd $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.10.0) $(abspath $(TOP)/msbuild/tests/bin/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=All $(TEST_FIXTURE) || touch .failed-stamp
 	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
@@ -395,3 +395,8 @@ else
 wrench-launch-external wrench-report-external:
 	@echo "External tests have been disabled"
 endif
+
+verify-system-vsmac-xcode-match:
+	@SYSTEM_XCODE=$$(dirname $$(dirname $$(xcode-select -p))); \
+	VSMAC_XCODE=$$(/usr/libexec/PlistBuddy -c 'print :AppleSdkRoot' ~/Library/Preferences/Xamarin/Settings.plist); \
+	if [[ "$$SYSTEM_XCODE" != "$$VSMAC_XCODE" ]]; then echo "Error: the system's Xcode ($$SYSTEM_XCODE) does not match the Xcode selected in Visual Studio for Mac ($$VSMAC_XCODE). This will make tests fail in non-trivial ways, so please make sure both match the expected Xcode ($(shell dirname $(shell dirname $(XCODE_DEVELOPER_ROOT))))."; exit 1; fi
