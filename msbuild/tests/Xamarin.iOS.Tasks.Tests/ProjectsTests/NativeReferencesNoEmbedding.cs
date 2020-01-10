@@ -126,16 +126,17 @@ namespace Xamarin.iOS.Tasks
 
 			var appProject = SetupProjectPaths ("MyiOSAppWithBinding", "../", true, "");
 
-			string BuildString = Configuration.MtouchPath;
+			// Look for partial match of the '/path/to/mtouch @responsefile' command
+			string BuildString = "mtouch @";
 
 			// First build should create run mtouch
 			BuildProjectNoEmbedding (appProject);
-			Assert.True (GetMessages ().Contains (BuildString), "First build did not run mtouch?");
+			Assert.That (GetMessages (), Does.Contain (BuildString), "First build did not run mtouch?");
 			ClearMessages ();
 
 			// But not a rebuild
 			BuildProjectNoEmbedding (appProject, clean: false);
-			Assert.False (GetMessages ().Contains (BuildString), "Rebuild build did run mtouch?");
+			Assert.That (GetMessages (), Does.Not.Contain (BuildString), "Rebuild build did run mtouch?");
 			ClearMessages ();
 
 			if (!useProjectReference) {
