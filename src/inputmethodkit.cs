@@ -67,7 +67,7 @@ namespace InputMethodKit {
 		bool OnEvent (NSEvent mouseEvent, NSObject sender);
 
 		[Export ("didCommandBySelector:client:")]
-		bool DidCommandBySelector (Selector aSelector, NSObject sender);
+		bool DidCommand (Selector aSelector, NSObject sender);
 
 		[Export ("composedString:")]
 		NSObject GetComposedString (NSObject sender);
@@ -121,11 +121,11 @@ namespace InputMethodKit {
 	{
 		[Abstract]
 		[Export ("mouseDownOnCharacterIndex:coordinate:withModifier:continueTracking:client:")]
-		bool OnMouseDownOn (nuint index, CGPoint point, nuint flags, out bool keepTracking, NSObject sender);
+		bool OnMouseDown (nuint index, CGPoint point, nuint flags, out bool keepTracking, NSObject sender);
 
 		[Abstract]
 		[Export ("mouseUpOnCharacterIndex:coordinate:withModifier:client:")]
-		bool OnMouseUpOn (nuint index, CGPoint point, nuint flags, NSObject sender);
+		bool OnMouseUp (nuint index, CGPoint point, nuint flags, NSObject sender);
 
 		[Abstract]
 		[Export ("mouseMovedOnCharacterIndex:coordinate:withModifier:client:")]
