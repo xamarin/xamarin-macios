@@ -629,9 +629,7 @@ namespace xharness
 				rv.AddRange (projectTasks);
 			}
 
-			var tcs = new TaskCompletionSource<IEnumerable<TestTask>> ();
-			tcs.SetResult (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates)));
-			return tcs.Task;
+			return Task.FromResult<IEnumerable<TestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates)));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)
