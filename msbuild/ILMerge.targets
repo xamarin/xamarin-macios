@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PackageReference Include="ILRepack" Version="2.0.18" />
+  </ItemGroup>
+
+  <Target Name="ILRepack" AfterTargets="CoreCompile" DependsOnTargets="CoreCompile" Inputs="@(IntermediateAssembly -&gt; '%(FullPath)')" Outputs="$(IntermediateOutputPath)ilrepack.txt" Returns="@(MergedAssemblies)" Condition="Exists(@(IntermediateAssembly -&gt; '%(FullPath)')) And '$(ILRepack)' != 'false'">
+    <ItemGroup>
+      <NetstandardPath Include="@(ReferencePath -&gt; '%(RootDir)%(Directory)')" Condition="'%(FileName)%(Extension)' == 'netstandard.dll'" />
+    </ItemGroup>
+    <PropertyGroup>
+      <NetstandardDirectory>@(NetstandardPath)</NetstandardDirectory>
+    </PropertyGroup>
+    <!-- The assemblies are in a very different place when building for netstandard2.0, which means we need different logic to find them too -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+      <!-- I don't like to have a hard-coded list of assemblies to merge, but I couldn't find a way to calculate it -->
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev.Tasks.Core'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev.Tasks'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == '$(AssemblyName).Core'" /> <!-- Use AssemblyName so that the exact same logic works for both Xamarin.iOS.Tasks.dll and Xamarin.Mac.Tasks.dll -->
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Json'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encodings.Web'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Microsoft.Bcl.AsyncInterfaces'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Mono.Posix.NETStandard'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([System.String]::new('%(FileName)').StartsWith('Mono.Cecil', StringComparison.OrdinalIgnoreCase))" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'
+        And !$([System.String]::new('%(FileName)').EndsWith('.resources', StringComparison.OrdinalIgnoreCase))
+        And !$([System.String]::new('%(FileName)').StartsWith('Microsoft.Build.', StringComparison.OrdinalIgnoreCase))
+        And !$([System.String]::new('%(FullPath)').StartsWith('/Library/Frameworks/Mono.framework', StringComparison.OrdinalIgnoreCase))"
+      />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([System.String]::new('%(FileName)').StartsWith('Mono.Cecil', StringComparison.OrdinalIgnoreCase))" />
+    </ItemGroup>
+    <ItemGroup>
+      <ReferenceCopyLocalDirs Include="@(ReferenceCopyLocalPaths -&gt; '%(RootDir)%(Directory)')" />
+      <ReferenceCopyLocalPaths Remove="@(MergedAssemblies)" />
+      <LibDir Include="@(ReferenceCopyLocalDirs -&gt; Distinct())" />
+    </ItemGroup>
+    <PropertyGroup>
+      <ILRepackArgs Condition="'$(AssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AssemblyOriginatorKeyFile)"</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) @(LibDir -&gt; '/lib:"%(Identity)."', ' ')</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) /out:"@(IntermediateAssembly -&gt; '%(FullPath)')"</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) "@(IntermediateAssembly -&gt; '%(FullPath)')"</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) @(MergedAssemblies -&gt; '"%(FullPath)"', ' ')</ILRepackArgs>
+      <ILRepackArgs>$(ILRepackArgs) "/lib:$(NetstandardDirectory)"</ILRepackArgs> <!-- This is needed for ilrepack to find netstandard.dll, which is referenced by the System.Text.Json assembly -->
+    </PropertyGroup>
+    <Exec Command="&quot;$(ILRepack)&quot; $(ILRepackArgs)" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />
+      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+    </Exec>
+    <Message Importance="high" Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0'" />
+    <Delete Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' != '0'" />
+    <Touch AlwaysCreate="true" Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' == '0'" />
+    <Error Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0' And '$(ContinueOnError)' != 'true'" />
+    <Delete Files="@(MergedAssemblies -&gt; '$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" Condition="Exists('$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" />
+  </Target>
+</Project>
