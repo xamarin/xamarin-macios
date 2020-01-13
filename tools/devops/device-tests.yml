@@ -141,3 +141,12 @@ jobs:
       artifactName: HtmlReport
     continueOnError: true
     condition: succeededOrFailed()
+
+###
+### Cleanup after us, not having that can lead to VSMac install issues
+###
+
+  - bash: ./xamarin-macios/tools/devops/cleanup.sh
+    displayName: 'Cleanup'
+    continueOnError: true
+    condition: succeededOrFailed()
