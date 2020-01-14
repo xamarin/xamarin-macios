@@ -91,7 +91,6 @@ namespace ObjCRuntime {
 			}
 		}
 
-		[Obsolete ("update error")]
 		public static ProductException CreateError (int code, string message, params object[] args)
 		{
 			return new ProductException (code, true, message, args);
@@ -133,39 +132,36 @@ namespace ObjCRuntime {
 			ex.LineNumber = seq.StartLine;
 		}
 
-		[Obsolete("update error")]
 		public static ProductException CreateError (Application app, int code, Mono.Cecil.MemberReference member, string message, params object[] args)
 		{
 			return Create (app, code, true, null, member, null, message, args);
 		}
 
-		[Obsolete("update error")]
 		public static ProductException CreateError (Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
 			return Create (app, code, true, null, location, null, message, args);
 		}
 
-		[Obsolete("update error")]
 		public static ProductException CreateError (Application app, int code, Mono.Cecil.MethodDefinition location, Instruction instruction, string message, params object [] args)
 		{
 			return Create (app, code, true, null, location, instruction, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateError (Application app, int code, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
 		{
 			return Create (app, code, true, null, provider, null, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
 			return Create (app, code, true, innerException, location, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
 		{
 			return Create (app, code, true, innerException, location, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
 		{
 			return Create (app, code, true, innerException, provider, message, args);
