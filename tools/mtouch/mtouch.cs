@@ -194,7 +194,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
 			default:
-					throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
+				throw ErrorHelper.CreateError (71, mtouch.mtouchErrors.MT0071, app.Platform);
 			}
 		}
 
