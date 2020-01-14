@@ -430,7 +430,7 @@
     <Compile Include="mtouchErrors.Designer.cs">
       <DependentUpon>mtouchErrors.resx</DependentUpon>
     </Compile>
-    <Compile Include="..\mmp\mmpErrors.Designer.cs" Visible="false" >
+    <Compile Include="..\mmp\mmpErrors.Designer.cs" Visible="false">
       <Link>mmpErrors.Designer.cs</Link>
     </Compile>
   </ItemGroup>
@@ -454,7 +454,7 @@
       <Link>mtouch-errors.md</Link>
     </None>
     <None Include="packages.config" />
-    <None Include="..\mmp\mmpErrors.resx" Visible="false" >
+    <None Include="..\mmp\mmpErrors.resx" Visible="false">
       <Link>mmpErrors.resx</Link>
     </None>
   </ItemGroup>

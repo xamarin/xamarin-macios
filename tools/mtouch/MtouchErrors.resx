@@ -595,14 +595,14 @@
 	</data>
 
 	<data name="MT0088" xml:space="preserve">
-		<value>The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.
+		<value>The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.
 		</value>
 		<comment>
 		</comment>
 	</data>
 
 	<data name="MT0089" xml:space="preserve">
-		<value>The option '\*' cannot take the value '\*' when cooperative mode is enabled for the GC.
+		<value>The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.
 		</value>
 		<comment>
 		</comment>
@@ -858,7 +858,14 @@
 		</value>
 		<comment>
 		</comment>
-	</data>		
+	</data>
+
+	<data name="MT0115" xml:space="preserve">
+		<value>It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT0116" xml:space="preserve">
 		<value>Invalid architecture: {0}. 32-bit architectures are not supported when deployment target is 11 or later.
@@ -1545,6 +1552,34 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT2105_A" xml:space="preserve">
+		<value>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect fields.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT2105_B" xml:space="preserve">
+		<value>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect properties.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT2105_C" xml:space="preserve">
+		<value>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a '{1}' parameter type (expected 'ObjCRuntime.BindingImplOptions).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT2105_D" xml:space="preserve">
+		<value>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a {1} parameters (expected 1 parameters).
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT2106" xml:space="preserve">
 		<value>Error processing the method '{0}' in the assembly '{1}'
@@ -1693,6 +1728,13 @@
 		</comment>
 	</data>
 	
+	<data name="MT4116" xml:space="preserve">
+		<value>Could not register the assembly '{0}': {1}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT4117" xml:space="preserve">
 		<value>The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the method takes {2} parameters, while the managed method has {3} parameters.
 		</value>
@@ -1751,6 +1793,20 @@
 
 	<data name="MT4126" xml:space="preserve">
 		<value>Cannot register two managed protocols ('{0}' and '{1}') with the same native name ('{2}').
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4127_a" xml:space="preserve">
+		<value>Cannot register more than one interface method for the method '
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4127_b" xml:space="preserve">
+		<value>' (which is implementing '
 		</value>
 		<comment>
 		</comment>
@@ -1863,6 +1919,13 @@
 
 	<data name="MT4148" xml:space="preserve">
 		<value>The registrar found a generic protocol: '{0}'. Exporting generic protocols is not supported.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT4149" xml:space="preserve">
+		<value>Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
 		</value>
 		<comment>
 		</comment>
@@ -2120,13 +2183,6 @@
 		</comment>
 	</data>
 
-	<data name="MT4188" xml:space="preserve">
-		<value>Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
 	<data name="MT4189" xml:space="preserve">
 		<value>The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.
 		</value>

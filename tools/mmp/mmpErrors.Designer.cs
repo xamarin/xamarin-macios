@@ -30,7 +30,7 @@ namespace mmp {
         internal static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("mmp.Errors", typeof(Errors).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("mmp.mmpErrors", typeof(Errors).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

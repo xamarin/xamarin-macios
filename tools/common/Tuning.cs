@@ -51,14 +51,14 @@ namespace MonoMac.Tuner {
 				var re = me.InnerException as ResolutionException;
 				if (re == null) {
 					if (me.InnerException != null) {
-						return ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}': {2}", me.Method.FullName, me.Method.Module, me.InnerException.Message);
+						return ErrorHelper.CreateError (2102, me, mtouch.mtouchErrors.MT2102, me.Method.FullName, me.Method.Module, me.InnerException.Message);
 					} else {
-						return ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}'", me.Method.FullName, me.Method.Module);
+						return ErrorHelper.CreateError (2106, me, mtouch.mtouchErrors.MT2106, me.Method.FullName, me.Method.Module);
 					}
 				} else {
 					TypeReference tr = (re.Member as TypeReference);
 					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-					return ErrorHelper.CreateError (2101, me, "Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.", re.Member, me.Method.FullName, scope);
+					return ErrorHelper.CreateError (2101, me, mtouch.mtouchErrors.MT2101, re.Member, me.Method.FullName, scope);
 				}
 			}
 			case ResolutionException re:

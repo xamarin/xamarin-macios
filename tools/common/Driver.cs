@@ -73,7 +73,7 @@ namespace Xamarin.Bundler {
 					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-objective-exceptions", $"Invalid value: {v}. Valid values are: default, unwindmanagedcode, throwmanagedexception, abort and disable.");
+					throw ErrorHelper.CreateError (26, mtouch.mtouchErrors.MT0026, "--marshal-objective-exceptions", $"Invalid value: {v}. Valid values are: default, unwindmanagedcode, throwmanagedexception, abort and disable.");
 				}
 			});
 			options.Add ("marshal-managed-exceptions:", "Specify how managed exceptions should be marshalled. Valid values: default, unwindnativecode, throwobjectivecexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwobjectivecexception', while on all other platform it's 'disable').", v => {
@@ -96,7 +96,7 @@ namespace Xamarin.Bundler {
 					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
+					throw ErrorHelper.CreateError (26, mtouch.mtouchErrors.MT0026, "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
 				}
 			});
 			options.Add ("j|jobs=", "The level of concurrency. Default is the number of processors.", v => {
@@ -120,7 +120,7 @@ namespace Xamarin.Bundler {
 					app.SymbolMode = SymbolMode.Ignore;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--dynamic-symbol-mode", $"Invalid value: {v}. Valid values are: default, linker, code and ignore.");
+					throw ErrorHelper.CreateError (26, mtouch.mtouchErrors.MT0026, "--dynamic-symbol-mode", $"Invalid value: {v}. Valid values are: default, linker, code and ignore.");
 				}
 			});
 			options.Add ("ignore-dynamic-symbol:", "Specify that Xamarin.iOS/Xamarin.Mac should not try to prevent the linker from removing the specified symbol.", (v) => {
@@ -205,7 +205,7 @@ namespace Xamarin.Bundler {
 			default:
 				TargetFramework parsedFramework;
 				if (!Xamarin.Utils.TargetFramework.TryParse (fx, out parsedFramework))
-					throw ErrorHelper.CreateError (68, "Invalid value for target framework: {0}.", fx);
+					throw ErrorHelper.CreateError (68, mtouch.mtouchErrors.MT0068, fx);
 #if MONOMAC
 				if (parsedFramework == TargetFramework.Net_3_0 || parsedFramework == TargetFramework.Net_3_5)
 					parsedFramework = TargetFramework.Net_2_0;
@@ -218,7 +218,7 @@ namespace Xamarin.Bundler {
 
 #if MTOUCH
 			if (Array.IndexOf (TargetFramework.ValidFrameworks, targetFramework.Value) == -1)
-				throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", targetFramework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
+				throw ErrorHelper.CreateError (70, mtouch.mtouchErrors.MT0070, targetFramework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 #endif
 		}
 
@@ -396,7 +396,7 @@ namespace Xamarin.Bundler {
 				MoveIfDifferent (path, tmp, use_stamp);
 			} catch (Exception e) {
 				File.WriteAllText (path, contents);
-				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
+				ErrorHelper.Warning (1014, e, mtouch.mtouchErrors.MT1014, path, e.Message);
 			} finally {
 				Application.TryDelete (tmp);
 			}
@@ -417,7 +417,7 @@ namespace Xamarin.Bundler {
 				MoveIfDifferent (path, tmp, use_stamp);
 			} catch (Exception e) {
 				File.WriteAllBytes (path, contents);
-				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
+				ErrorHelper.Warning (1014, e, mtouch.mtouchErrors.MT1014, path, e.Message);
 			} finally {
 				Application.TryDelete (tmp);
 			}
@@ -472,7 +472,7 @@ namespace Xamarin.Bundler {
 					Log (2, $"The current language was set to '{culture.DisplayName}' according to the LANG environment variable (LANG={lang_variable}).");
 				}
 			} catch (Exception e) {
-				ErrorHelper.Warning (124, e, $"Could not set the current language to '{lang}' (according to LANG={lang_variable}): {e.Message}");
+				ErrorHelper.Warning (124, e, mtouch.mtouchErrors.MT0124, lang, lang_variable, e.Message);
 			}
 		}
 
@@ -512,7 +512,7 @@ namespace Xamarin.Bundler {
 					}
 					fi.LastWriteTime = timestamp.Value;
 				} catch (Exception e) {
-					ErrorHelper.Warning (128, "Could not touch the file '{0}': {1}", filename, e.Message);
+					ErrorHelper.Warning (128, mtouch.mtouchErrors.MT0128, filename, e.Message);
 				}
 			}
 		}
@@ -548,7 +548,7 @@ namespace Xamarin.Bundler {
 		internal static PDictionary FromPList (string name)
 		{
 			if (!File.Exists (name))
-				throw ErrorHelper.CreateError (24, "Could not find required file '{0}'.", name);
+				throw ErrorHelper.CreateError (24, mtouch.mtouchErrors.MT0024, name);
 			return PDictionary.FromFile (name);
 		}
 
@@ -558,7 +558,7 @@ namespace Xamarin.Bundler {
 		{
 			var output = new StringBuilder ();
 			if (Driver.RunCommand ("xcode-select", new [] { "-p" }, output: output) != 0) {
-				ErrorHelper.Warning (59, "Could not find the currently selected Xcode on the system: {0}", output.ToString ());
+				ErrorHelper.Warning (59, mtouch.mtouchErrors.MT0059, output.ToString ());
 				return null;
 			}
 			return output.ToString ().Trim ();
@@ -583,27 +583,27 @@ namespace Xamarin.Bundler {
 					// succeeds, but returns nothing.
 					sdk_root = null;
 				} else if (!Directory.Exists (sdk_root)) {
-					ErrorHelper.Warning (60, "Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.", sdk_root);
+					ErrorHelper.Warning (60, mtouch.mtouchErrors.MT0060, sdk_root);
 					sdk_root = null;
 				} else {
 					if (!accept_any_xcode_version)
-						ErrorHelper.Warning (61, "No Xcode.app specified (using --sdkroot), using the system Xcode as reported by 'xcode-select --print-path': {0}", sdk_root);
+						ErrorHelper.Warning (61, mtouch.mtouchErrors.MT0061, sdk_root);
 				}
 				if (sdk_root == null) {
 					sdk_root = XcodeDefault;
 					if (!Directory.Exists (sdk_root)) {
 						if (warn_if_not_found) {
 							// mmp: and now we give up, but don't throw like mtouch, because we don't want to change behavior (this sometimes worked it appears)
-							ErrorHelper.Warning (56, "Cannot find Xcode in any of our default locations. Please install Xcode, or pass a custom path using --sdkroot=<path>.");
+							ErrorHelper.Warning (56, mtouch.mtouchErrors.MT0056);
 							return; // Can't validate the version below if we can't even find Xcode...
 						}
 
-						throw ErrorHelper.CreateError (56, "Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot <path>.");
+						throw ErrorHelper.CreateError (56, mtouch.mtouchErrors.MT0056);
 					}
-					ErrorHelper.Warning (62, "No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: {0}", sdk_root);
+					ErrorHelper.Warning (62, mtouch.mtouchErrors.MT0062, sdk_root);
 				}
 			} else if (!Directory.Exists (sdk_root)) {
-				throw ErrorHelper.CreateError (55, "The Xcode path '{0}' does not exist.", sdk_root);
+				throw ErrorHelper.CreateError (55, mtouch.mtouchErrors.MT0055, sdk_root);
 			}
 
 			// Check what kind of path we got
@@ -614,7 +614,7 @@ namespace Xamarin.Bundler {
 				// path to Contents/Developer
 				developer_directory = Path.GetFullPath (Path.Combine (sdk_root, "..", "..", "Contents", "Developer"));
 			} else {
-				throw ErrorHelper.CreateError (57, "Cannot determine the path to Xcode.app from the sdk root '{0}'. Please specify the full path to the Xcode.app bundle.", sdk_root);
+				throw ErrorHelper.CreateError (57, mtouch.mtouchErrors.MT0057, sdk_root);
 			}
 			
 			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
@@ -625,15 +625,15 @@ namespace Xamarin.Bundler {
 				xcode_version = new Version (version);
 				xcode_product_version = plist.GetString ("ProductBuildVersion");
 			} else {
-				throw ErrorHelper.CreateError (58, "The Xcode.app '{0}' is invalid (the file '{1}' does not exist).", Path.GetDirectoryName (Path.GetDirectoryName (DeveloperDirectory)), plist_path);
+				throw ErrorHelper.CreateError (58, mtouch.mtouchErrors.MT0058, Path.GetDirectoryName (Path.GetDirectoryName (DeveloperDirectory)), plist_path);
 			}
 
 			if (!accept_any_xcode_version) {
 				if (min_xcode_version != null && XcodeVersion < min_xcode_version)
-					throw ErrorHelper.CreateError (51, "{3} {0} requires Xcode {4} or later. The current Xcode version (found in {2}) is {1}.", Constants.Version, XcodeVersion.ToString (), sdk_root, PRODUCT, min_xcode_version);
+					throw ErrorHelper.CreateError (51, mtouch.mtouchErrors.MT0051, Constants.Version, XcodeVersion.ToString (), sdk_root, PRODUCT, min_xcode_version);
 
 				if (XcodeVersion < SdkVersions.XcodeVersion)
-					ErrorHelper.Warning (79, "The recommended Xcode version for {4} {0} is Xcode {3} or later. The current Xcode version (found in {2}) is {1}.", Constants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, PRODUCT);
+					ErrorHelper.Warning (79, mtouch.mtouchErrors.MT0079, Constants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, PRODUCT);
 			}
 
 			Driver.Log (1, "Using Xcode {0} ({2}) found in {1}", XcodeVersion, sdk_root, XcodeProductVersion);

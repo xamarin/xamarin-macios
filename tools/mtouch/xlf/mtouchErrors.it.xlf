@@ -659,17 +659,17 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT0088">
-        <source>The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.
+        <source>The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.
 		</source>
-        <target state="new">The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.
+        <target state="new">The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.
 		</target>
         <note>
 		</note>
       </trans-unit>
       <trans-unit id="MT0089">
-        <source>The option '\*' cannot take the value '\*' when cooperative mode is enabled for the GC.
+        <source>The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.
 		</source>
-        <target state="new">The option '\*' cannot take the value '\*' when cooperative mode is enabled for the GC.
+        <target state="new">The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.
 		</target>
         <note>
 		</note>
@@ -958,6 +958,14 @@
         <source>the container app is referencing the assembly '{0}' from '{1}', while the extension references a different version from '{2}'.
 		</source>
         <target state="new">the container app is referencing the assembly '{0}' from '{1}', while the extension references a different version from '{2}'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0115">
+        <source>It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.
+		</source>
+        <target state="new">It is recommended to reference dynamic symbols using code (--dynamic-symbol-mode=code) when bitcode is enabled.
 		</target>
         <note>
 		</note>
@@ -1746,6 +1754,38 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT2105_A">
+        <source>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect fields.
+		</source>
+        <target state="new">The [BindingImpl] attribute on the member '{0}' is invalid: did not expect fields.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT2105_B">
+        <source>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect properties.
+		</source>
+        <target state="new">The [BindingImpl] attribute on the member '{0}' is invalid: did not expect properties.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT2105_C">
+        <source>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a '{1}' parameter type (expected 'ObjCRuntime.BindingImplOptions).
+		</source>
+        <target state="new">The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a '{1}' parameter type (expected 'ObjCRuntime.BindingImplOptions).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT2105_D">
+        <source>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a {1} parameters (expected 1 parameters).
+		</source>
+        <target state="new">The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a {1} parameters (expected 1 parameters).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT2106">
         <source>Error processing the method '{0}' in the assembly '{1}'
 		</source>
@@ -1914,6 +1954,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4116">
+        <source>Could not register the assembly '{0}': {1}
+		</source>
+        <target state="new">Could not register the assembly '{0}': {1}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4117">
         <source>The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the method takes {2} parameters, while the managed method has {3} parameters.
 		</source>
@@ -1982,6 +2030,22 @@
         <source>Cannot register two managed protocols ('{0}' and '{1}') with the same native name ('{2}').
 		</source>
         <target state="new">Cannot register two managed protocols ('{0}' and '{1}') with the same native name ('{2}').
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4127_a">
+        <source>Cannot register more than one interface method for the method '
+		</source>
+        <target state="new">Cannot register more than one interface method for the method '
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4127_b">
+        <source>' (which is implementing '
+		</source>
+        <target state="new">' (which is implementing '
 		</target>
         <note>
 		</note>
@@ -2110,6 +2174,14 @@
         <source>The registrar found a generic protocol: '{0}'. Exporting generic protocols is not supported.
 		</source>
         <target state="new">The registrar found a generic protocol: '{0}'. Exporting generic protocols is not supported.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4149">
+        <source>Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
+		</source>
+        <target state="new">Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
 		</target>
         <note>
 		</note>
@@ -2398,14 +2470,6 @@
         <source>The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
 		</source>
         <target state="new">The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4188">
-        <source>Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
-		</source>
-        <target state="new">Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
 		</target>
         <note>
 		</note>
