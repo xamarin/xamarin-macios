@@ -124,7 +124,7 @@ namespace Xamarin.Bundler
 				case MonoNativeMode.Compat:
 					return "libmono-native-compat";
 				default:
-					throw ErrorHelper.CreateError(172, mtouch.mtouchErrors.MT0172, MonoNativeMode);
+					throw ErrorHelper.CreateError(99, mtouch.mtouchErrors.MT0099_K, MonoNativeMode);
 			}
 
 		}
@@ -159,7 +159,7 @@ namespace Xamarin.Bundler
 				BundleFiles [bundle_path] = info = new BundleFileInfo () { DylibToFramework = dylib_to_framework_conversion };
 
 			if (info.DylibToFramework != dylib_to_framework_conversion)
-				throw ErrorHelper.CreateError (173, mtouch.mtouchErrors.MT0173);
+				throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_L);
 			
 			info.Sources.Add (source);
 		}
@@ -250,7 +250,7 @@ namespace Xamarin.Bundler
 						// When using simlauncher, we copy the executable directly to the target directory.
 						// When not using the simlauncher, but still building for the simulator, we write the executable to a arch-specific app directory (if building for both 32-bit and 64-bit), or just the app directory (if building for a single architecture)
 						if (Abis.Count != 1)
-							throw ErrorHelper.CreateError (174, mtouch.mtouchErrors.MT0174, string.Join (", ", Abis.Select ((v) => v.ToString ())));
+							throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_L, string.Join (", ", Abis.Select ((v) => v.ToString ())));
 						executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
 					} else {
 						foreach (var abi in Abis)
@@ -739,7 +739,7 @@ namespace Xamarin.Bundler
 			// Verify that we don't get multiple identical assemblies from the linker.
 			foreach (var group in output_assemblies.GroupBy ((v) => v.Name.Name)) {
 				if (group.Count () != 1)
-					throw ErrorHelper.CreateError (175, mtouch.mtouchErrors.MT0175, String.Format(mtouch.mtouchErrors.MT0175_a, group.Key, string.Join("\n\t", group.Select((v) => v.MainModule.FileName).ToArray())));
+					throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_N, String.Format(mtouch.mtouchErrors.MT0175_a, group.Key, string.Join("\n\t", group.Select((v) => v.MainModule.FileName).ToArray())));
 			}
 
 			// Update (add/remove) list of assemblies in each app, since the linker may have both added and removed assemblies.
@@ -770,7 +770,7 @@ namespace Xamarin.Bundler
 
 						var ad = output_assemblies.SingleOrDefault ((AssemblyDefinition v) => v.Name.Name == next);
 						if (ad == null)
-							throw ErrorHelper.CreateError(174, mtouch.mtouchErrors.MT0174, String.Format(mtouch.mtouchErrors.MT0174_a, next));
+							throw ErrorHelper.CreateError(99, mtouch.mtouchErrors.MT0099_N, String.Format(mtouch.mtouchErrors.MT0174_a, next));
 						if (ad.MainModule.HasAssemblyReferences) {
 							foreach (var ar in ad.MainModule.AssemblyReferences) {
 								if (!collectedNames.Contains (ar.Name) && !queue.Contains (ar.Name))
@@ -1050,9 +1050,9 @@ namespace Xamarin.Bundler
 					var existingLinkTask = infos.Where ((v) => v.LinkTask != null).Select ((v) => v.LinkTask).ToList ();
 					if (existingLinkTask.Count > 0) {
 						if (existingLinkTask.Count != infos.Count)
-							throw ErrorHelper.CreateError (175, mtouch.mtouchErrors.MT0175, String.Format(mtouch.mtouchErrors.MT0175_b, name));
+							throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_N, String.Format(mtouch.mtouchErrors.MT0175_b, name));
 						if (!existingLinkTask.All ((v) => v == existingLinkTask [0]))
-							throw ErrorHelper.CreateError (175, mtouch.mtouchErrors.MT0175, String.Format(mtouch.mtouchErrors.MT0175_c, name));
+							throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_N, String.Format(mtouch.mtouchErrors.MT0175_c, name));
 
 						LinkWithBuildTarget (build_target, name, existingLinkTask [0], assemblies);
 						continue;
@@ -1534,7 +1534,7 @@ namespace Xamarin.Bundler
 				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
 				break;
 			default:
-				throw ErrorHelper.CreateError (176, mtouch.mtouchErrors.MT0176, App.SymbolMode);
+				throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_O, App.SymbolMode);
 			}
 
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
@@ -1638,7 +1638,7 @@ namespace Xamarin.Bundler
 								RequireMonoNative = value;
 								break;
 							default:
-								throw ErrorHelper.CreateError (177, mtouch.mtouchErrors.MT0177, typestr);
+								throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_P, typestr);
 						}
 					}
 				}
@@ -1738,7 +1738,7 @@ namespace Xamarin.Bundler
 				a.Symlink ();
 
 			if (Abis.Count != 1)
-				throw ErrorHelper.CreateError (174, mtouch.mtouchErrors.MT0174, string.Join (", ", Abis.Select ((v) => v.ToString ())));
+				throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_M, string.Join (", ", Abis.Select ((v) => v.ToString ())));
 
 			var targetExecutable = Executables.Values.First ();
 

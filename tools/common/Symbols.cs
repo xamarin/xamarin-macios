@@ -40,7 +40,7 @@ namespace Xamarin.Bundler
 					return name;
 				if (ObjectiveCName != null)
 					return ObjectiveCPrefix + ObjectiveCName;
-				throw ErrorHelper.CreateError (161, mtouch.mtouchErrors.MT0161, Type);
+				throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_C, Type);
 			}
 			set {
 				name = value;
@@ -171,7 +171,7 @@ namespace Xamarin.Bundler
 						var asm = line.Substring (1);
 						Assembly assembly;
 						if (!target.Assemblies.TryGetValue (Assembly.GetIdentity (asm), out assembly))
-							throw ErrorHelper.CreateError (162, mtouch.mtouchErrors.MT0162, asm, current.Name);
+							throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_D, asm, current.Name);
 						current.AddAssembly (assembly.AssemblyDefinition);
 					} else {
 						var eq = line.IndexOf ('=');

@@ -53,7 +53,7 @@ namespace MonoMac.Tuner {
 					if (me.InnerException != null) {
 						return ErrorHelper.CreateError (2102, me, mtouch.mtouchErrors.MT2102, me.Method.FullName, me.Method.Module, me.InnerException.Message);
 					} else {
-						return ErrorHelper.CreateError (2106, me, mtouch.mtouchErrors.MT2106, me.Method.FullName, me.Method.Module);
+						return ErrorHelper.CreateError (2102, me, mtouch.mtouchErrors.MT2102_A, me.Method.FullName, me.Method.Module);
 					}
 				} else {
 					TypeReference tr = (re.Member as TypeReference);

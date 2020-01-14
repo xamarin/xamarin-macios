@@ -406,7 +406,7 @@ namespace Xamarin.Bundler
 				aot.Append ("llvmonly,");
 			else if (interp) {
 				if (fname != "mscorlib.dll")
-					throw ErrorHelper.CreateError(99, mtouch.mtouchErrors.MT0099, fname);
+					throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099, fname);
 				aot.Append ("interp,");
 			} else if (interp_full) {
 				aot.Append ("interp,full,");
@@ -1350,7 +1350,7 @@ namespace Xamarin.Bundler
 				// FIXME: the interpreter only supports ARM64{,_32} right now
 				// temporary - without a check here the error happens when deploying
 				if (!app.IsSimulatorBuild && (!app.IsArchEnabled (Abi.ARM64) && !app.IsArchEnabled (Abi.ARM64_32)))
-					throw ErrorHelper.CreateError (150, mtouch.mtouchErrors.MT0150);
+					throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_Q);
 
 				// needs to be set after the argument validations
 				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
@@ -1390,13 +1390,13 @@ namespace Xamarin.Bundler
 						ext.ContainerApp = app;
 						app.AppExtensions.Add (ext);
 						if (app_action != Action.Build)
-							throw ErrorHelper.CreateError (151, mtouch.mtouchErrors.MT0151, app_action);
+							throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_R, app_action);
 					}
 
 					app.BuildAll ();
 				}
 			} else {
-				throw ErrorHelper.CreateError (152, mtouch.mtouchErrors.MT0152, action);
+				throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_S, action);
 			}
 
 			return 0;

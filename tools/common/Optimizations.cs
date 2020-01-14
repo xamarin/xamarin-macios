@@ -176,7 +176,7 @@ namespace Xamarin.Bundler
 				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
 					if (app.Registrar != RegistrarMode.Static) {
-						ErrorHelper.Warning(2003, mtouch.mtouchErrors.MT2003, (values[i].Value ? "" : "-"), opt_names[i]);
+						ErrorHelper.Warning (2003, mtouch.mtouchErrors.MT2003, (values[i].Value ? "" : "-"), opt_names[i]);
 						values [i] = false;
 						continue;
 					}

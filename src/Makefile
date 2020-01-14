@@ -18,8 +18,6 @@ IOS_BUILD_DIR=$(BUILD_DIR)/ios
 WATCH_BUILD_DIR=$(BUILD_DIR)/watch
 TVOS_BUILD_DIR=$(BUILD_DIR)/tvos
 
-MTOUCH_LOCALIZATION_FILE=$(TOP)/tools/mtouch/mtouchErrors.Designer.cs
-
 include $(TOP)/opentk/Makefile.include
 
 #
@@ -556,7 +554,7 @@ WATCHOS_CORE_SOURCES +=           \
 WATCHOS_SOURCES +=                \
     $(WATCHOS_EXTRA_CORE_SOURCES) \
     $(WATCHOS_HTTP_SOURCES)        \
-    $(top)/tools/mtouch/mtoucherrors.designer.cs \
+    $(TOP)/tools/mtouch/mtouchErrors.Designer.cs \
 
 $(WATCH_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.watch.cs.in Makefile $(TOP)/Make.config.inc | $(WATCH_BUILD_DIR)
 	$(call Q_PROF_GEN,watch) sed \

@@ -63,14 +63,14 @@ namespace Xamarin.Linker.Steps
 					continue;
 
 				if (ca.ConstructorArguments.Count != 1) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4190, provider, mtouch.mtouchErrors.MT4190, provider.AsString (), ca.ConstructorArguments.Count));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, mtouch.mtouchErrors.MT4124_E, provider.AsString (), ca.ConstructorArguments.Count));
 					continue;
 				}
 
 				var managedType = ca.ConstructorArguments [0].Value as TypeReference;
 				var managedEnumType = managedType?.GetElementType ().Resolve ();
 				if (managedEnumType == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4191, provider, mtouch.mtouchErrors.MT4191, provider.AsString (), managedType?.FullName));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (LinkContext.Target.App, 4124, provider, mtouch.mtouchErrors.MT4124_H, provider.AsString (), managedType?.FullName));
 					continue;
 				}
 

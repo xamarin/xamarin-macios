@@ -178,7 +178,7 @@ namespace Xamarin.Bundler
 		public bool Rebuilt {
 			get {
 				if (!completed_task.Task.IsCompleted)
-					throw ErrorHelper.CreateError (153, mtouch.mtouchErrors.MT0153);
+					throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_A);
 				return completed_task.Task.Result;
 			}
 		}
@@ -287,7 +287,7 @@ namespace Xamarin.Bundler
 
 		protected virtual void Execute ()
 		{
-			throw ErrorHelper.CreateError (154, mtouch.mtouchErrors.MT0154);
+			throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_B);
 		}
 
 		public override string ToString ()

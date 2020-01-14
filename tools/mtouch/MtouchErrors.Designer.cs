@@ -113,6 +113,12 @@ namespace mtouch {
             }
         }
         
+        internal static string MT0009_A {
+            get {
+                return ResourceManager.GetString("MT0009_A", resourceCulture);
+            }
+        }
+        
         internal static string MT0010 {
             get {
                 return ResourceManager.GetString("MT0010", resourceCulture);
@@ -419,6 +425,12 @@ namespace mtouch {
             }
         }
         
+        internal static string MT0065_A {
+            get {
+                return ResourceManager.GetString("MT0065_A", resourceCulture);
+            }
+        }
+        
         internal static string MT0066 {
             get {
                 return ResourceManager.GetString("MT0066", resourceCulture);
@@ -446,6 +458,12 @@ namespace mtouch {
         internal static string MT0071 {
             get {
                 return ResourceManager.GetString("MT0071", resourceCulture);
+            }
+        }
+        
+        internal static string MT0071_A {
+            get {
+                return ResourceManager.GetString("MT0071_A", resourceCulture);
             }
         }
         
@@ -575,6 +593,18 @@ namespace mtouch {
             }
         }
         
+        internal static string MT0095_A {
+            get {
+                return ResourceManager.GetString("MT0095_A", resourceCulture);
+            }
+        }
+        
+        internal static string MT0095_B {
+            get {
+                return ResourceManager.GetString("MT0095_B", resourceCulture);
+            }
+        }
+        
         internal static string MT0096 {
             get {
                 return ResourceManager.GetString("MT0096", resourceCulture);
@@ -584,6 +614,126 @@ namespace mtouch {
         internal static string MT0099 {
             get {
                 return ResourceManager.GetString("MT0099", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_A {
+            get {
+                return ResourceManager.GetString("MT0099_A", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_B {
+            get {
+                return ResourceManager.GetString("MT0099_B", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_C {
+            get {
+                return ResourceManager.GetString("MT0099_C", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_D {
+            get {
+                return ResourceManager.GetString("MT0099_D", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_E {
+            get {
+                return ResourceManager.GetString("MT0099_E", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_F {
+            get {
+                return ResourceManager.GetString("MT0099_F", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_G {
+            get {
+                return ResourceManager.GetString("MT0099_G", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_H {
+            get {
+                return ResourceManager.GetString("MT0099_H", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_I {
+            get {
+                return ResourceManager.GetString("MT0099_I", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_J {
+            get {
+                return ResourceManager.GetString("MT0099_J", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_K {
+            get {
+                return ResourceManager.GetString("MT0099_K", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_L {
+            get {
+                return ResourceManager.GetString("MT0099_L", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_M {
+            get {
+                return ResourceManager.GetString("MT0099_M", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_N {
+            get {
+                return ResourceManager.GetString("MT0099_N", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_O {
+            get {
+                return ResourceManager.GetString("MT0099_O", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_P {
+            get {
+                return ResourceManager.GetString("MT0099_P", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_Q {
+            get {
+                return ResourceManager.GetString("MT0099_Q", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_R {
+            get {
+                return ResourceManager.GetString("MT0099_R", resourceCulture);
+            }
+        }
+        
+        internal static string MT0099_S {
+            get {
+                return ResourceManager.GetString("MT0099_S", resourceCulture);
+            }
+        }
+        
+        internal static string MT0150 {
+            get {
+                return ResourceManager.GetString("MT0150", resourceCulture);
             }
         }
         
@@ -917,42 +1067,6 @@ namespace mtouch {
             }
         }
         
-        internal static string MT0150 {
-            get {
-                return ResourceManager.GetString("MT0150", resourceCulture);
-            }
-        }
-        
-        internal static string MT0151 {
-            get {
-                return ResourceManager.GetString("MT0151", resourceCulture);
-            }
-        }
-        
-        internal static string MT0152 {
-            get {
-                return ResourceManager.GetString("MT0152", resourceCulture);
-            }
-        }
-        
-        internal static string MT0153 {
-            get {
-                return ResourceManager.GetString("MT0153", resourceCulture);
-            }
-        }
-        
-        internal static string MT0154 {
-            get {
-                return ResourceManager.GetString("MT0154", resourceCulture);
-            }
-        }
-        
-        internal static string MT0155 {
-            get {
-                return ResourceManager.GetString("MT0155", resourceCulture);
-            }
-        }
-        
         internal static string MT0156 {
             get {
                 return ResourceManager.GetString("MT0156", resourceCulture);
@@ -989,93 +1103,15 @@ namespace mtouch {
             }
         }
         
-        internal static string MT0162 {
-            get {
-                return ResourceManager.GetString("MT0162", resourceCulture);
-            }
-        }
-        
-        internal static string MT0163 {
-            get {
-                return ResourceManager.GetString("MT0163", resourceCulture);
-            }
-        }
-        
-        internal static string MT0164 {
-            get {
-                return ResourceManager.GetString("MT0164", resourceCulture);
-            }
-        }
-        
-        internal static string MT0165 {
-            get {
-                return ResourceManager.GetString("MT0165", resourceCulture);
-            }
-        }
-        
-        internal static string MT0166 {
-            get {
-                return ResourceManager.GetString("MT0166", resourceCulture);
-            }
-        }
-        
-        internal static string MT0167 {
-            get {
-                return ResourceManager.GetString("MT0167", resourceCulture);
-            }
-        }
-        
         internal static string MT0168 {
             get {
                 return ResourceManager.GetString("MT0168", resourceCulture);
             }
         }
         
-        internal static string MT0169 {
-            get {
-                return ResourceManager.GetString("MT0169", resourceCulture);
-            }
-        }
-        
-        internal static string MT0170 {
-            get {
-                return ResourceManager.GetString("MT0170", resourceCulture);
-            }
-        }
-        
-        internal static string MT0171 {
-            get {
-                return ResourceManager.GetString("MT0171", resourceCulture);
-            }
-        }
-        
-        internal static string MT0172 {
-            get {
-                return ResourceManager.GetString("MT0172", resourceCulture);
-            }
-        }
-        
-        internal static string MT0173 {
-            get {
-                return ResourceManager.GetString("MT0173", resourceCulture);
-            }
-        }
-        
-        internal static string MT0174 {
-            get {
-                return ResourceManager.GetString("MT0174", resourceCulture);
-            }
-        }
-        
         internal static string MT0174_a {
             get {
                 return ResourceManager.GetString("MT0174_a", resourceCulture);
-            }
-        }
-        
-        internal static string MT0175 {
-            get {
-                return ResourceManager.GetString("MT0175", resourceCulture);
             }
         }
         
@@ -1094,30 +1130,6 @@ namespace mtouch {
         internal static string MT0175_c {
             get {
                 return ResourceManager.GetString("MT0175_c", resourceCulture);
-            }
-        }
-        
-        internal static string MT0176 {
-            get {
-                return ResourceManager.GetString("MT0176", resourceCulture);
-            }
-        }
-        
-        internal static string MT0177 {
-            get {
-                return ResourceManager.GetString("MT0177", resourceCulture);
-            }
-        }
-        
-        internal static string MT0178 {
-            get {
-                return ResourceManager.GetString("MT0178", resourceCulture);
-            }
-        }
-        
-        internal static string MT0179 {
-            get {
-                return ResourceManager.GetString("MT0179", resourceCulture);
             }
         }
         
@@ -1199,6 +1211,18 @@ namespace mtouch {
             }
         }
         
+        internal static string MT1302_A {
+            get {
+                return ResourceManager.GetString("MT1302_A", resourceCulture);
+            }
+        }
+        
+        internal static string MT1302_B {
+            get {
+                return ResourceManager.GetString("MT1302_B", resourceCulture);
+            }
+        }
+        
         internal static string MT1303 {
             get {
                 return ResourceManager.GetString("MT1303", resourceCulture);
@@ -1208,18 +1232,6 @@ namespace mtouch {
         internal static string MT1305 {
             get {
                 return ResourceManager.GetString("MT1305", resourceCulture);
-            }
-        }
-        
-        internal static string MT1306 {
-            get {
-                return ResourceManager.GetString("MT1306", resourceCulture);
-            }
-        }
-        
-        internal static string MT1307 {
-            get {
-                return ResourceManager.GetString("MT1307", resourceCulture);
             }
         }
         
@@ -1361,6 +1373,12 @@ namespace mtouch {
             }
         }
         
+        internal static string MT2102_A {
+            get {
+                return ResourceManager.GetString("MT2102_A", resourceCulture);
+            }
+        }
+        
         internal static string MT2103 {
             get {
                 return ResourceManager.GetString("MT2103", resourceCulture);
@@ -1388,12 +1406,6 @@ namespace mtouch {
         internal static string MT2105_D {
             get {
                 return ResourceManager.GetString("MT2105_D", resourceCulture);
-            }
-        }
-        
-        internal static string MT2106 {
-            get {
-                return ResourceManager.GetString("MT2106", resourceCulture);
             }
         }
         
@@ -1472,6 +1484,12 @@ namespace mtouch {
         internal static string MT4104 {
             get {
                 return ResourceManager.GetString("MT4104", resourceCulture);
+            }
+        }
+        
+        internal static string MT4104_A {
+            get {
+                return ResourceManager.GetString("MT4104_A", resourceCulture);
             }
         }
         
@@ -1565,6 +1583,42 @@ namespace mtouch {
             }
         }
         
+        internal static string MT4124_A {
+            get {
+                return ResourceManager.GetString("MT4124_A", resourceCulture);
+            }
+        }
+        
+        internal static string MT4124_B {
+            get {
+                return ResourceManager.GetString("MT4124_B", resourceCulture);
+            }
+        }
+        
+        internal static string MT4124_C {
+            get {
+                return ResourceManager.GetString("MT4124_C", resourceCulture);
+            }
+        }
+        
+        internal static string MT4124_D {
+            get {
+                return ResourceManager.GetString("MT4124_D", resourceCulture);
+            }
+        }
+        
+        internal static string MT4124_E {
+            get {
+                return ResourceManager.GetString("MT4124_E", resourceCulture);
+            }
+        }
+        
+        internal static string MT4124_H {
+            get {
+                return ResourceManager.GetString("MT4124_H", resourceCulture);
+            }
+        }
+        
         internal static string MT4125 {
             get {
                 return ResourceManager.GetString("MT4125", resourceCulture);
@@ -1628,12 +1682,6 @@ namespace mtouch {
         internal static string MT4136 {
             get {
                 return ResourceManager.GetString("MT4136", resourceCulture);
-            }
-        }
-        
-        internal static string MT4137 {
-            get {
-                return ResourceManager.GetString("MT4137", resourceCulture);
             }
         }
         
@@ -1751,15 +1799,15 @@ namespace mtouch {
             }
         }
         
-        internal static string MT4161 {
-            get {
-                return ResourceManager.GetString("MT4161", resourceCulture);
-            }
-        }
-        
         internal static string MT4163 {
             get {
                 return ResourceManager.GetString("MT4163", resourceCulture);
+            }
+        }
+        
+        internal static string MT4163_A {
+            get {
+                return ResourceManager.GetString("MT4163_A", resourceCulture);
             }
         }
         
@@ -1811,6 +1859,18 @@ namespace mtouch {
             }
         }
         
+        internal static string MT4171_A {
+            get {
+                return ResourceManager.GetString("MT4171_A", resourceCulture);
+            }
+        }
+        
+        internal static string MT4171_B {
+            get {
+                return ResourceManager.GetString("MT4171_B", resourceCulture);
+            }
+        }
+        
         internal static string MT4172 {
             get {
                 return ResourceManager.GetString("MT4172", resourceCulture);
@@ -1859,30 +1919,6 @@ namespace mtouch {
             }
         }
         
-        internal static string MT4180 {
-            get {
-                return ResourceManager.GetString("MT4180", resourceCulture);
-            }
-        }
-        
-        internal static string MT4181 {
-            get {
-                return ResourceManager.GetString("MT4181", resourceCulture);
-            }
-        }
-        
-        internal static string MT4182 {
-            get {
-                return ResourceManager.GetString("MT4182", resourceCulture);
-            }
-        }
-        
-        internal static string MT4183 {
-            get {
-                return ResourceManager.GetString("MT4183", resourceCulture);
-            }
-        }
-        
         internal static string MT4184 {
             get {
                 return ResourceManager.GetString("MT4184", resourceCulture);
@@ -1895,36 +1931,6 @@ namespace mtouch {
             }
         }
         
-        internal static string MT4186 {
-            get {
-                return ResourceManager.GetString("MT4186", resourceCulture);
-            }
-        }
-        
-        internal static string MT4187 {
-            get {
-                return ResourceManager.GetString("MT4187", resourceCulture);
-            }
-        }
-        
-        internal static string MT4189 {
-            get {
-                return ResourceManager.GetString("MT4189", resourceCulture);
-            }
-        }
-        
-        internal static string MT4190 {
-            get {
-                return ResourceManager.GetString("MT4190", resourceCulture);
-            }
-        }
-        
-        internal static string MT4191 {
-            get {
-                return ResourceManager.GetString("MT4191", resourceCulture);
-            }
-        }
-        
         internal static string MT5101 {
             get {
                 return ResourceManager.GetString("MT5101", resourceCulture);
@@ -1934,6 +1940,12 @@ namespace mtouch {
         internal static string MT5103 {
             get {
                 return ResourceManager.GetString("MT5103", resourceCulture);
+            }
+        }
+        
+        internal static string MT5103_A {
+            get {
+                return ResourceManager.GetString("MT5103_A", resourceCulture);
             }
         }
         
@@ -1952,12 +1964,6 @@ namespace mtouch {
         internal static string MT5108 {
             get {
                 return ResourceManager.GetString("MT5108", resourceCulture);
-            }
-        }
-        
-        internal static string MT5109 {
-            get {
-                return ResourceManager.GetString("MT5109", resourceCulture);
             }
         }
         

@@ -530,7 +530,7 @@ namespace Xamarin
 				var fileSize = ReadDecimal (reader, 10);
 				bytes = reader.ReadBytes (2); // ending characters
 				if (bytes [0] != 0x60 && bytes [1] != 0x0A)
-					throw ErrorHelper.CreateError(1605, mtouch.mtouchErrors.MT1605, fileIdentifier, filename, bytes[0].ToString("x"), bytes[1].ToString("x"));
+					throw ErrorHelper.CreateError (1605, mtouch.mtouchErrors.MT1605, fileIdentifier, filename, bytes[0].ToString("x"), bytes[1].ToString("x"));
 
 				if (fileIdentifier.StartsWith ("#1/", StringComparison.Ordinal)) {
 					var nameLength = int.Parse (fileIdentifier.Substring (3).TrimEnd (' '));

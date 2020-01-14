@@ -153,7 +153,7 @@ namespace Xamarin.Bundler {
 				if (utf8 [i] == '\\') {
 					++i;
 					if (i >= utf8.Length)
-						throw ErrorHelper.CreateError (1306, mtouch.mtouchErrors.MT1306, input, line);
+						throw ErrorHelper.CreateError (1302, mtouch.mtouchErrors.MT1302_A, input, line);
 					switch (utf8 [i]) {
 					case (byte) 'b':
 						to_append = 0x8;
@@ -178,14 +178,14 @@ namespace Xamarin.Bundler {
 					case (byte)'X':
 						++i;
 						if (!ParseHex (utf8, ref i, ref to_append))
-							throw ErrorHelper.CreateError (1306, mtouch.mtouchErrors.MT1306, input, line);
+							throw ErrorHelper.CreateError (1302, mtouch.mtouchErrors.MT1302_A, input, line);
 
 						break;
 					default:
 						if (IsDigit (utf8 [i])) {
 							string error_msg = null;
 							if (!ParseOctal (utf8, ref i, ref to_append, ref error_msg))
-								throw ErrorHelper.CreateError (1307, mtouch.mtouchErrors.MT1307, input, line, error_msg);
+								throw ErrorHelper.CreateError (1302, mtouch.mtouchErrors.MT1302_B, input, line, error_msg);
 						} else
 							to_append = utf8 [i]; // "\K" is the same as "K"
 						break;

@@ -1397,7 +1397,7 @@ namespace Xamarin.Bundler {
 					break;
 				case ApplePlatform.WatchOS:
 					if (DeploymentTarget < new Version (2, 0))
-						throw ErrorHelper.CreateError (165, mtouch.mtouchErrors.MT0165, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+						throw ErrorHelper.CreateError (65, mtouch.mtouchErrors.MT0065_A, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
 					break;
 				case ApplePlatform.TVOS:
 					// All versions of tvOS support extensions
@@ -1623,11 +1623,11 @@ namespace Xamarin.Bundler {
 					}
 				}
 
-				ErrorHelper.Warning (166, mtouch.mtouchErrors.MT0166, dest);
+				ErrorHelper.Warning (95, mtouch.mtouchErrors.MT0095_A, dest);
 				return;
 			}
 			catch (Exception e) {
-				ErrorHelper.Warning (166, e, mtouch.mtouchErrors.MT0166, dest);
+				ErrorHelper.Warning (95, e, mtouch.mtouchErrors.MT0095_A, dest);
 				return;
 			}
 		}
@@ -1722,7 +1722,7 @@ namespace Xamarin.Bundler {
 					continue; // Don't copy frameworks to app extensions (except watch extensions), they go into the container app.
 
 				if (!files.All ((v) => Directory.Exists (v) == isFramework))
-					throw ErrorHelper.CreateError (167, mtouch.mtouchErrors.MT0167, string.Join (", ", files));
+					throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_I, string.Join (", ", files));
 
 				if (isFramework) {
 					// This is a framework
@@ -2087,13 +2087,13 @@ namespace Xamarin.Bundler {
 		void CopyAotData (string src, string dest)
 		{
 			if (string.IsNullOrEmpty (src) || string.IsNullOrEmpty (dest)) {
-				ErrorHelper.Warning (169, mtouch.mtouchErrors.MT0169, dest);
+				ErrorHelper.Warning (95, mtouch.mtouchErrors.MT0095_B, dest);
 				return;
 			}
 				
 			var dir = new DirectoryInfo (src);
 			if (!dir.Exists) {
-				ErrorHelper.Warning (169, mtouch.mtouchErrors.MT0169, dest);
+				ErrorHelper.Warning (95, mtouch.mtouchErrors.MT0095_B, dest);
 				return;
 			}
 
@@ -2257,7 +2257,7 @@ namespace Xamarin.Bundler {
 					var codeShared = assemblies.Count ((v) => v.IsCodeShared || v.BundleInContainerApp);
 					if (codeShared > 0) {
 						if (codeShared != assemblies.Length)
-							throw ErrorHelper.CreateError (170, mtouch.mtouchErrors.MT0170, string.Join (", ", assemblies.Select ((v) => v.Identity + "=" + v.IsCodeShared)));
+							throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_J, string.Join (", ", assemblies.Select ((v) => v.Identity + "=" + v.IsCodeShared)));
 
 						continue; // These resources will be found in the main app.
 					}

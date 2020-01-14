@@ -89,7 +89,14 @@
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT0009_A" xml:space="preserve">
+		<value>Error while loading assemblies: {0}: {1}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT0010" xml:space="preserve">
 		<value>Could not parse the command line arguments: {0}.
 		</value>
@@ -446,6 +453,13 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT0065_A" xml:space="preserve">
+		<value>Xamarin.iOS only supports embedded frameworks when deployment target is at least 2.0 (current deployment target: '{0}'; embedded frameworks: '{1}')
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT0066" xml:space="preserve">
 		<value>Invalid build registrar assembly: *
@@ -477,6 +491,13 @@
 
 	<data name="MT0071" xml:space="preserve">
 		<value>Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0071_A" xml:space="preserve">
+		<value>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</value>
 		<comment>
 		</comment>
@@ -628,6 +649,20 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT0095_A" xml:space="preserve">
+		<value>Aot files could not be copied to the destination directory {0}: Could not start process.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0095_B" xml:space="preserve">
+		<value>Aot files could not be copied to the destination directory {0}
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT0096" xml:space="preserve">
 		<value>No reference to Xamarin.iOS.dll was found.
@@ -642,7 +677,147 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT0099_A" xml:space="preserve">
+		<value>Internal error: Can't rebuild a task that hasn't completed. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_B" xml:space="preserve">
+		<value>Internal error: 'Either Execute or ExecuteAsync must be overridden'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_C" xml:space="preserve">
+		<value>The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_D" xml:space="preserve">
+		<value>Internal error: serialized assembly {0} for symbol {1}, but no such assembly loaded. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_E" xml:space="preserve">
+		<value>Internal error: could not find the product assembly {0} in the list of assemblies referenced by the executable. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_F" xml:space="preserve">
+		<value>Internal error: invalid symbol type {0} for symbol {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_G" xml:space="preserve">
+		<value>Internal error: unknown abi: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_H" xml:space="preserve">
+		<value>Internal error: could not find the method {0}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_I" xml:space="preserve">
+		<value>Internal error: 'can't process a mix of dylibs and frameworks: {0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_J" xml:space="preserve">
+		<value>Internal error: all assemblies in a joined build target must have the same code sharing options ({0}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_K" xml:space="preserve">
+		<value>Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_L" xml:space="preserve">
+		<value>Internal error: 'invalid value for framework conversion'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_M" xml:space="preserve">
+		<value>Internal error: expected exactly one abi for a simulator architecture, found: {0}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_N" xml:space="preserve">
+		<value>Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_O" xml:space="preserve">
+		<value>Internal error: invalid symbol mode: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_P" xml:space="preserve">
+		<value>Internal error: invalid type string while loading cached Mono.Native info: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_Q" xml:space="preserve">
+		<value>Internal error: invalid type string while loading cached Mono.Native info: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0099_R" xml:space="preserve">
+		<value>Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
 
+	<data name="MT0099_S" xml:space="preserve">
+		<value>Internal error: Invalid action: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT0150" xml:space="preserve">
+		<value>Internal error: The interpreter is currently only available for 64 bits.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT0100" xml:space="preserve">
 		<value>Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 		</value>
@@ -1028,48 +1203,6 @@
 		</comment>
 	</data>
 
-	<data name="MT0150" xml:space="preserve">
-		<value>Internal error: The interpreter is currently only available for 64 bits.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0151" xml:space="preserve">
-		<value>Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0152" xml:space="preserve">
-		<value>Internal error: Invalid action: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT0153" xml:space="preserve">
-		<value>Internal error: Can't rebuild a task that hasn't completed. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT0154" xml:space="preserve">
-		<value>Internal error: 'Either Execute or ExecuteAsync must be overridden'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0155" xml:space="preserve">
-		<value>Error while loading assemblies: {0}: {1}
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT0156" xml:space="preserve">
 		<value>Internal error: byref array is neither string, NSObject or INativeObject.
 		</value>
@@ -1111,93 +1244,9 @@
 		<comment>
 		</comment>
 	</data>
-
-	<data name="MT0162" xml:space="preserve">
-		<value>Internal error: serialized assembly {0} for symbol {1}, but no such assembly loaded. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0163" xml:space="preserve">
-		<value>Internal error: could not find the product assembly {0} in the list of assemblies referenced by the executable. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0164" xml:space="preserve">
-		<value>Internal error: invalid symbol type {0} for symbol {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0165" xml:space="preserve">
-		<value>Xamarin.iOS only supports embedded frameworks when deployment target is at least 2.0 (current deployment target: '{0}'; embedded frameworks: '{1}')
-		</value>
-		<comment>
-		</comment>
-	</data>
-		
-	<data name="MT0166" xml:space="preserve">
-		<value>Aot files could not be copied to the destination directory {0}: Could not start process.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0167" xml:space="preserve">
-		<value>Internal error: 'can't process a mix of dylibs and frameworks: {0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
+	
 	<data name="MT0168" xml:space="preserve">
 		<value>Internal error: 'can't convert frameworks to frameworks: {0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0169" xml:space="preserve">
-		<value>Aot files could not be copied to the destination directory {0}
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0170" xml:space="preserve">
-		<value>Internal error: all assemblies in a joined build target must have the same code sharing options ({0}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0171" xml:space="preserve">
-		<value>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0172" xml:space="preserve">
-		<value>Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0173" xml:space="preserve">
-		<value>Internal error: 'invalid value for framework conversion'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0174" xml:space="preserve">
-		<value>Internal error: expected exactly one abi for a simulator architecture, found: {0}
 		</value>
 		<comment>
 		</comment>
@@ -1205,13 +1254,6 @@
 	
 	<data name="MT0174_a" xml:space="preserve">
 		<value>The assembly {0} was referenced by another assembly, but at the same time linked out by the linker.
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT0175" xml:space="preserve">
-		<value>Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 		</value>
 		<comment>
 		</comment>
@@ -1233,34 +1275,6 @@
 	
 	<data name="MT0175_c" xml:space="preserve">
 		<value>Link tasks for {0} aren't all the same
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT0176" xml:space="preserve">
-		<value>Internal error: invalid symbol mode: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0177" xml:space="preserve">
-		<value>Internal error: invalid type string while loading cached Mono.Native info: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT0178" xml:space="preserve">
-		<value>Internal error: unknown abi: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT0179" xml:space="preserve">
-		<value>Internal error: could not find the method {0}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 		</value>
 		<comment>
 		</comment>
@@ -1356,6 +1370,20 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT1302_A" xml:space="preserve">
+		<value>Invalid escape sequence when converting .s to .ll, \\ as the last characted in {0}:{1}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT1302_B" xml:space="preserve">
+		<value>Invalid escape sequence when converting .s to .ll, bad octal escape in {0}:{1} due to {2}.
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT1303" xml:space="preserve">
 		<value>Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.
@@ -1366,20 +1394,6 @@
 
 	<data name="MT1305" xml:space="preserve">
 		<value>The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT1306" xml:space="preserve">
-		<value>Invalid escape sequence when converting .s to .ll, \\ as the last characted in {0}:{1}.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT1307" xml:space="preserve">
-		<value>Invalid escape sequence when converting .s to .ll, bad octal escape in {0}:{1} due to {2}.
 		</value>
 		<comment>
 		</comment>
@@ -1545,7 +1559,14 @@
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT2102_A" xml:space="preserve">
+		<value>Error processing the method '{0}' in the assembly '{1}'
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT2103" xml:space="preserve">
 		<value>Error processing assembly '{0}': {1}
 		</value>
@@ -1576,13 +1597,6 @@
 	
 	<data name="MT2105_D" xml:space="preserve">
 		<value>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a {1} parameters (expected 1 parameters).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT2106" xml:space="preserve">
-		<value>Error processing the method '{0}' in the assembly '{1}'
 		</value>
 		<comment>
 		</comment>
@@ -1674,6 +1688,13 @@
 
 	<data name="MT4104" xml:space="preserve">
 		<value>The registrar cannot marshal the return value for type `{0}` in signature for method `{1}`.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4104_A" xml:space="preserve">
+		<value>The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.
 		</value>
 		<comment>
 		</comment>
@@ -1783,7 +1804,49 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT4124_A" xml:space="preserve">
+		<value>Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4124_B" xml:space="preserve">
+		<value>Invalid AdoptsAttribute found on '{0}': expected 1 constructor arguments, got {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4124_C" xml:space="preserve">
+		<value>Invalid BindAsAttribute found on '{0}.{1}': unknown field {2}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>
 
+	<data name="MT4124_D" xml:space="preserve">
+		<value>Invalid {0} found on '{1}.{2}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4124_E" xml:space="preserve">
+		<value>Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>	
+	
+	<data name="MT4124_H" xml:space="preserve">
+		<value>Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>		
+	
 	<data name="MT4125" xml:space="preserve">
 		<value>The registrar found an invalid type '{0}' in signature for method '{1}': The interface must have a Protocol attribute specifying its wrapper type.
 		</value>
@@ -1856,13 +1919,6 @@
 	
 	<data name="MT4136" xml:space="preserve">
 		<value>The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT4137" xml:space="preserve">
-		<value>Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 		<comment>
 		</comment>
@@ -2000,16 +2056,16 @@
 		<comment>
 		</comment>
 	</data>
-	
-	<data name="MT4161" xml:space="preserve">
-		<value>The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).
+
+	<data name="MT4163" xml:space="preserve">
+		<value>Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 		<comment>
 		</comment>
 	</data>
-
-	<data name="MT4163" xml:space="preserve">
-		<value>Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+	
+	<data name="MT4163_A" xml:space="preserve">
+		<value>Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 		<comment>
 		</comment>
@@ -2059,13 +2115,27 @@
 	
 	<data name="MT4170" xml:space="preserve">
 		<value>The registrar can't convert from '{0}' to '{1}' for the return value in the method {2}.
-		</value>
+		</value>4189
 		<comment>
 		</comment>
 	</data>
 	
 	<data name="MT4171" xml:space="preserve">
 		<value>The BindAs attribute on the return value of the method {0} is invalid: the BindAs type {1} is different from the return type {2}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4171_A" xml:space="preserve">
+		<value>The BindAs attribute on the parameter #{0} is invalid: the BindAs type {1} is different from the parameter type {2}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4171_B" xml:space="preserve">
+		<value>The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
 		</value>
 		<comment>
 		</comment>
@@ -2126,34 +2196,6 @@
 		<comment>
 		</comment>
 	</data>
-	
-	<data name="MT4180" xml:space="preserve">
-		<value>Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT4181" xml:space="preserve">
-		<value>Invalid AdoptsAttribute found on '{0}': expected 1 constructor arguments, got {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT4182" xml:space="preserve">
-		<value>Invalid BindAsAttribute found on '{0}.{1}': unknown field {2}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT4183" xml:space="preserve">
-		<value>Invalid {0} found on '{1}.{2}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</value>
-		<comment>
-		</comment>
-	</data>
 		
 	<data name="MT4184" xml:space="preserve">
 		<value>Internal error in the registrar (BindAs parameters can't be ref/out: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
@@ -2168,41 +2210,6 @@
 		<comment>
 		</comment>
 	</data>
-	
-	<data name="MT4186" xml:space="preserve">
-		<value>The BindAs attribute on the parameter #{0} is invalid: the BindAs type {1} is different from the parameter type {2}.
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT4187" xml:space="preserve">
-		<value>The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT4189" xml:space="preserve">
-		<value>The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT4190" xml:space="preserve">
-		<value>Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</value>
-		<comment>
-		</comment>
-	</data>	
-	
-	<data name="MT4191" xml:space="preserve">
-		<value>Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</value>
-		<comment>
-		</comment>
-	</data>		
 
 	<data name="MT5101" xml:space="preserve">
 		<value>Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
@@ -2213,6 +2220,13 @@
 
 	<data name="MT5103" xml:space="preserve">
 		<value>Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT5103_A" xml:space="preserve">
+		<value>Failed to compile the file(s) '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 		<comment>
 		</comment>
@@ -2234,13 +2248,6 @@
 	
 	<data name="MT5108" xml:space="preserve">
 		<value>The compiler output is too long, it's been limited to 1000 lines.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT5109" xml:space="preserve">
-		<value>Failed to compile the file(s) '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 		<comment>
 		</comment>

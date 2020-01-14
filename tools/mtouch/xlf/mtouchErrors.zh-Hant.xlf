@@ -82,6 +82,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT0009_A">
+        <source>Error while loading assemblies: {0}: {1}
+		</source>
+        <target state="new">Error while loading assemblies: {0}: {1}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT0010">
         <source>Could not parse the command line arguments: {0}.
 		</source>
@@ -490,6 +498,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT0065_A">
+        <source>Xamarin.iOS only supports embedded frameworks when deployment target is at least 2.0 (current deployment target: '{0}'; embedded frameworks: '{1}')
+		</source>
+        <target state="new">Xamarin.iOS only supports embedded frameworks when deployment target is at least 2.0 (current deployment target: '{0}'; embedded frameworks: '{1}')
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT0066">
         <source>Invalid build registrar assembly: *
 		</source>
@@ -526,6 +542,14 @@
         <source>Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</source>
         <target state="new">Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0071_A">
+        <source>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</source>
+        <target state="new">Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</target>
         <note>
 		</note>
@@ -698,6 +722,22 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT0095_A">
+        <source>Aot files could not be copied to the destination directory {0}: Could not start process.
+		</source>
+        <target state="new">Aot files could not be copied to the destination directory {0}: Could not start process.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0095_B">
+        <source>Aot files could not be copied to the destination directory {0}
+		</source>
+        <target state="new">Aot files could not be copied to the destination directory {0}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT0096">
         <source>No reference to Xamarin.iOS.dll was found.
 		</source>
@@ -710,6 +750,158 @@
         <source>Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {0}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.
 		</source>
         <target state="new">Internal error: can only enable the interpreter for mscorlib.dll when AOT-compiling assemblies (tried to interpret {0}). Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_A">
+        <source>Internal error: Can't rebuild a task that hasn't completed. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: Can't rebuild a task that hasn't completed. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_B">
+        <source>Internal error: 'Either Execute or ExecuteAsync must be overridden'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: 'Either Execute or ExecuteAsync must be overridden'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_C">
+        <source>The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).
+		</source>
+        <target state="new">The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_D">
+        <source>Internal error: serialized assembly {0} for symbol {1}, but no such assembly loaded. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: serialized assembly {0} for symbol {1}, but no such assembly loaded. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_E">
+        <source>Internal error: could not find the product assembly {0} in the list of assemblies referenced by the executable. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: could not find the product assembly {0} in the list of assemblies referenced by the executable. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_F">
+        <source>Internal error: invalid symbol type {0} for symbol {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: invalid symbol type {0} for symbol {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_G">
+        <source>Internal error: unknown abi: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: unknown abi: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_H">
+        <source>Internal error: could not find the method {0}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+		</source>
+        <target state="new">Internal error: could not find the method {0}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_I">
+        <source>Internal error: 'can't process a mix of dylibs and frameworks: {0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: 'can't process a mix of dylibs and frameworks: {0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_J">
+        <source>Internal error: all assemblies in a joined build target must have the same code sharing options ({0}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: all assemblies in a joined build target must have the same code sharing options ({0}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_K">
+        <source>Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_L">
+        <source>Internal error: 'invalid value for framework conversion'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: 'invalid value for framework conversion'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_M">
+        <source>Internal error: expected exactly one abi for a simulator architecture, found: {0}
+		</source>
+        <target state="new">Internal error: expected exactly one abi for a simulator architecture, found: {0}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_N">
+        <source>Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_O">
+        <source>Internal error: invalid symbol mode: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: invalid symbol mode: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_P">
+        <source>Internal error: invalid type string while loading cached Mono.Native info: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: invalid type string while loading cached Mono.Native info: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_Q">
+        <source>Internal error: invalid type string while loading cached Mono.Native info: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: invalid type string while loading cached Mono.Native info: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_R">
+        <source>Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT0099_S">
+        <source>Internal error: Invalid action: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
+		</source>
+        <target state="new">Internal error: Invalid action: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 		</target>
         <note>
 		</note>
@@ -1162,46 +1354,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0151">
-        <source>Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0152">
-        <source>Internal error: Invalid action: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: Invalid action: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0153">
-        <source>Internal error: Can't rebuild a task that hasn't completed. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: Can't rebuild a task that hasn't completed. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0154">
-        <source>Internal error: 'Either Execute or ExecuteAsync must be overridden'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: 'Either Execute or ExecuteAsync must be overridden'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0155">
-        <source>Error while loading assemblies: {0}: {1}
-		</source>
-        <target state="new">Error while loading assemblies: {0}: {1}
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0156">
         <source>Internal error: byref array is neither string, NSObject or INativeObject.
 		</source>
@@ -1250,54 +1402,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0162">
-        <source>Internal error: serialized assembly {0} for symbol {1}, but no such assembly loaded. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: serialized assembly {0} for symbol {1}, but no such assembly loaded. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0163">
-        <source>Internal error: could not find the product assembly {0} in the list of assemblies referenced by the executable. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: could not find the product assembly {0} in the list of assemblies referenced by the executable. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0164">
-        <source>Internal error: invalid symbol type {0} for symbol {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: invalid symbol type {0} for symbol {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0165">
-        <source>Xamarin.iOS only supports embedded frameworks when deployment target is at least 2.0 (current deployment target: '{0}'; embedded frameworks: '{1}')
-		</source>
-        <target state="new">Xamarin.iOS only supports embedded frameworks when deployment target is at least 2.0 (current deployment target: '{0}'; embedded frameworks: '{1}')
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0166">
-        <source>Aot files could not be copied to the destination directory {0}: Could not start process.
-		</source>
-        <target state="new">Aot files could not be copied to the destination directory {0}: Could not start process.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0167">
-        <source>Internal error: 'can't process a mix of dylibs and frameworks: {0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: 'can't process a mix of dylibs and frameworks: {0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0168">
         <source>Internal error: 'can't convert frameworks to frameworks: {0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 		</source>
@@ -1306,66 +1410,10 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0169">
-        <source>Aot files could not be copied to the destination directory {0}
-		</source>
-        <target state="new">Aot files could not be copied to the destination directory {0}
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0170">
-        <source>Internal error: all assemblies in a joined build target must have the same code sharing options ({0}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: all assemblies in a joined build target must have the same code sharing options ({0}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0171">
-        <source>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
-		</source>
-        <target state="new">Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0172">
-        <source>Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0173">
-        <source>Internal error: 'invalid value for framework conversion'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: 'invalid value for framework conversion'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0174">
-        <source>Internal error: expected exactly one abi for a simulator architecture, found: {0}
-		</source>
-        <target state="new">Internal error: expected exactly one abi for a simulator architecture, found: {0}
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0174_a">
         <source>The assembly {0} was referenced by another assembly, but at the same time linked out by the linker.
 		</source>
         <target state="new">The assembly {0} was referenced by another assembly, but at the same time linked out by the linker.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0175">
-        <source>Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 		</target>
         <note>
 		</note>
@@ -1390,38 +1438,6 @@
         <source>Link tasks for {0} aren't all the same
 		</source>
         <target state="new">Link tasks for {0} aren't all the same
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0176">
-        <source>Internal error: invalid symbol mode: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: invalid symbol mode: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0177">
-        <source>Internal error: invalid type string while loading cached Mono.Native info: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: invalid type string while loading cached Mono.Native info: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0178">
-        <source>Internal error: unknown abi: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</source>
-        <target state="new">Internal error: unknown abi: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0179">
-        <source>Internal error: could not find the method {0}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
-		</source>
-        <target state="new">Internal error: could not find the method {0}.BlockLiteral.SetupBlockImpl. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
 		</target>
         <note>
 		</note>
@@ -1530,6 +1546,22 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT1302_A">
+        <source>Invalid escape sequence when converting .s to .ll, \\ as the last characted in {0}:{1}.
+		</source>
+        <target state="new">Invalid escape sequence when converting .s to .ll, \\ as the last characted in {0}:{1}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT1302_B">
+        <source>Invalid escape sequence when converting .s to .ll, bad octal escape in {0}:{1} due to {2}.
+		</source>
+        <target state="new">Invalid escape sequence when converting .s to .ll, bad octal escape in {0}:{1} due to {2}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT1303">
         <source>Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.
 		</source>
@@ -1542,22 +1574,6 @@
         <source>The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.
 		</source>
         <target state="new">The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT1306">
-        <source>Invalid escape sequence when converting .s to .ll, \\ as the last characted in {0}:{1}.
-		</source>
-        <target state="new">Invalid escape sequence when converting .s to .ll, \\ as the last characted in {0}:{1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT1307">
-        <source>Invalid escape sequence when converting .s to .ll, bad octal escape in {0}:{1} due to {2}.
-		</source>
-        <target state="new">Invalid escape sequence when converting .s to .ll, bad octal escape in {0}:{1} due to {2}.
 		</target>
         <note>
 		</note>
@@ -1746,6 +1762,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT2102_A">
+        <source>Error processing the method '{0}' in the assembly '{1}'
+		</source>
+        <target state="new">Error processing the method '{0}' in the assembly '{1}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT2103">
         <source>Error processing assembly '{0}': {1}
 		</source>
@@ -1782,14 +1806,6 @@
         <source>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a {1} parameters (expected 1 parameters).
 		</source>
         <target state="new">The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a {1} parameters (expected 1 parameters).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT2106">
-        <source>Error processing the method '{0}' in the assembly '{1}'
-		</source>
-        <target state="new">Error processing the method '{0}' in the assembly '{1}'
 		</target>
         <note>
 		</note>
@@ -1894,6 +1910,14 @@
         <source>The registrar cannot marshal the return value for type `{0}` in signature for method `{1}`.
 		</source>
         <target state="new">The registrar cannot marshal the return value for type `{0}` in signature for method `{1}`.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4104_A">
+        <source>The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.
+		</source>
+        <target state="new">The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.
 		</target>
         <note>
 		</note>
@@ -2018,6 +2042,54 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4124_A">
+        <source>Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4124_B">
+        <source>Invalid AdoptsAttribute found on '{0}': expected 1 constructor arguments, got {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Invalid AdoptsAttribute found on '{0}': expected 1 constructor arguments, got {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4124_C">
+        <source>Invalid BindAsAttribute found on '{0}.{1}': unknown field {2}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Invalid BindAsAttribute found on '{0}.{1}': unknown field {2}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4124_D">
+        <source>Invalid {0} found on '{1}.{2}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Invalid {0} found on '{1}.{2}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4124_E">
+        <source>Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4124_H">
+        <source>Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4125">
         <source>The registrar found an invalid type '{0}' in signature for method '{1}': The interface must have a Protocol attribute specifying its wrapper type.
 		</source>
@@ -2102,14 +2174,6 @@
         <source>The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
 		</source>
         <target state="new">The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4137">
-        <source>Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</source>
-        <target state="new">Invalid RegisterAttribute property {1} found on '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</target>
         <note>
 		</note>
@@ -2266,18 +2330,18 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT4161">
-        <source>The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).
-		</source>
-        <target state="new">The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT4163">
         <source>Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</source>
         <target state="new">Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4163_A">
+        <source>Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</target>
         <note>
 		</note>
@@ -2346,6 +2410,22 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4171_A">
+        <source>The BindAs attribute on the parameter #{0} is invalid: the BindAs type {1} is different from the parameter type {2}.
+		</source>
+        <target state="new">The BindAs attribute on the parameter #{0} is invalid: the BindAs type {1} is different from the parameter type {2}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4171_B">
+        <source>The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
+		</source>
+        <target state="new">The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4172">
         <source>The registrar can't convert from '{0}' to '{1}' for the parameter '{2}' in the method {3}.
 		</source>
@@ -2410,38 +2490,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT4180">
-        <source>Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</source>
-        <target state="new">Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4181">
-        <source>Invalid AdoptsAttribute found on '{0}': expected 1 constructor arguments, got {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</source>
-        <target state="new">Invalid AdoptsAttribute found on '{0}': expected 1 constructor arguments, got {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4182">
-        <source>Invalid BindAsAttribute found on '{0}.{1}': unknown field {2}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</source>
-        <target state="new">Invalid BindAsAttribute found on '{0}.{1}': unknown field {2}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4183">
-        <source>Invalid {0} found on '{1}.{2}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</source>
-        <target state="new">Invalid {0} found on '{1}.{2}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT4184">
         <source>Internal error in the registrar (BindAs parameters can't be ref/out: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</source>
@@ -2458,46 +2506,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT4186">
-        <source>The BindAs attribute on the parameter #{0} is invalid: the BindAs type {1} is different from the parameter type {2}.
-		</source>
-        <target state="new">The BindAs attribute on the parameter #{0} is invalid: the BindAs type {1} is different from the parameter type {2}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4187">
-        <source>The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
-		</source>
-        <target state="new">The BindAs attribute on the property {0}.{1} is invalid: the BindAs type {2} is different from the property type {1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4189">
-        <source>The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.
-		</source>
-        <target state="new">The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4190">
-        <source>Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</source>
-        <target state="new">Invalid BindAsAttribute found on '{0}': should have 1 constructor arguments, found {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4191">
-        <source>Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</source>
-        <target state="new">Invalid BindAsAttribute found on '{0}': could not find the underlying enum type of {1}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT5101">
         <source>Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
 		</source>
@@ -2510,6 +2518,14 @@
         <source>Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component
 		</source>
         <target state="new">Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT5103_A">
+        <source>Failed to compile the file(s) '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Failed to compile the file(s) '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</target>
         <note>
 		</note>
@@ -2534,14 +2550,6 @@
         <source>The compiler output is too long, it's been limited to 1000 lines.
 		</source>
         <target state="new">The compiler output is too long, it's been limited to 1000 lines.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT5109">
-        <source>Failed to compile the file(s) '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
-		</source>
-        <target state="new">Failed to compile the file(s) '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</target>
         <note>
 		</note>

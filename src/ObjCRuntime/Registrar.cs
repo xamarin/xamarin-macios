@@ -1162,7 +1162,7 @@ namespace Registrar {
 					if (IsByRef (parameterType))
 						parameterType = GetElementType (parameterType);
 					if (!AreEqual (parameterType, attrib.Type))
-						throw CreateException(4186, method.Method, mtouch.mtouchErrors.MT4186, parameter_index + 1, GetTypeFullName(attrib.Type), GetTypeFullName(parameterType));
+						throw CreateException(4171, method.Method, mtouch.mtouchErrors.MT4171_A, parameter_index + 1, GetTypeFullName(attrib.Type), GetTypeFullName(parameterType));
 				}
 
 				return attrib;
@@ -1176,7 +1176,7 @@ namespace Registrar {
 			if (attrib != null) {
 				var propertyType = GetPropertyType (property);
 				if (!AreEqual (propertyType, attrib.Type))
-					throw CreateException (4187, property, mtouch.mtouchErrors.MT4187, GetTypeFullName (method.DeclaringType.Type), GetPropertyName (property),  GetTypeFullName (attrib.Type), GetTypeFullName (propertyType));
+					throw CreateException (4171, property, mtouch.mtouchErrors.MT4171_B, GetTypeFullName (method.DeclaringType.Type), GetPropertyName (property),  GetTypeFullName (attrib.Type), GetTypeFullName (propertyType));
 			}
 			return attrib;
 		}
@@ -2523,7 +2523,7 @@ namespace Registrar {
 			} else {
 				signature.Append (ToSignature (return_type, member, ref success));
 				if (!success)
-					throw CreateException (4189, mi, mtouch.mtouchErrors.MT4189, GetTypeFullName (return_type), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
+					throw CreateException (4104, mi, mtouch.mtouchErrors.MT4104_A, GetTypeFullName (return_type), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
 			}
 
 			signature.Append (isBlockSignature ? "@?" : "@:");

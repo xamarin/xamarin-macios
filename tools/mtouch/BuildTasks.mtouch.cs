@@ -129,7 +129,7 @@ namespace Xamarin.Bundler
 	{
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5109, mtouch.mtouchErrors.MT5109, string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
+			throw ErrorHelper.CreateError (5103, mtouch.mtouchErrors.MT5103_A, string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
 		}
 	}
 

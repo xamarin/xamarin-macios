@@ -1332,7 +1332,7 @@ namespace Registrar {
 						rv.SkipRegistration = (bool) prop.Argument.Value;
 						break;
 					default:
-						throw ErrorHelper.CreateError (4137, mtouch.mtouchErrors.MT4137, type.FullName, prop.Name);
+						throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124_A, type.FullName, prop.Name);
 					}
 				}
 			}
@@ -1746,7 +1746,7 @@ namespace Registrar {
 					rv = new UnavailableAttribute (platformName, architecture, message);
 					break;
 				default:
-					throw ErrorHelper.CreateError (4180, mtouch.mtouchErrors.MT4180, kind);
+					throw ErrorHelper.CreateError (4163, mtouch.mtouchErrors.MT4163_A, kind);
 				}
 
 				if (list == null)
@@ -1814,7 +1814,7 @@ namespace Registrar {
 					attrib.ProtocolType = (string) ca.ConstructorArguments [0].Value;
 					break;
 				default:
-					throw ErrorHelper.CreateError (4181, mtouch.mtouchErrors.MT4181, type.FullName, 1, ca.ConstructorArguments.Count);
+					throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124_B, type.FullName, 1, ca.ConstructorArguments.Count);
 				}
 				rv.Add (attrib);
 			}
@@ -1858,7 +1858,7 @@ namespace Registrar {
 						originalType = ((TypeReference) field.Argument.Value);
 						break;
 					default:
-						throw ErrorHelper.CreateError (4182, mtouch.mtouchErrors.MT4182, member.DeclaringType.FullName, member.Name, field.Name);
+						throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124_C, member.DeclaringType.FullName, member.Name, field.Name);
 					}
 				}
 			}
@@ -1868,7 +1868,7 @@ namespace Registrar {
 				var t1 = (TypeReference) attrib.ConstructorArguments [0].Value;
 				return new BindAsAttribute (t1) { OriginalType = originalType };
 			default:
-				throw ErrorHelper.CreateError (4183, mtouch.mtouchErrors.MT4183, "BindAsAttribute", member.DeclaringType.FullName, member.Name);
+				throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124_D, "BindAsAttribute", member.DeclaringType.FullName, member.Name);
 			}
 		}
 
@@ -1896,7 +1896,7 @@ namespace Registrar {
 			case 0: return new ConnectAttribute ();
 			case 1: return new ConnectAttribute (((string) attrib.ConstructorArguments [0].Value));
 			default:
-				throw ErrorHelper.CreateError (4183, mtouch.mtouchErrors.MT4183, "ConnectAttribute", property.DeclaringType.FullName, property.Name);
+				throw ErrorHelper.CreateError (4124, mtouch.mtouchErrors.MT4124_D, "ConnectAttribute", property.DeclaringType.FullName, property.Name);
 			}
 		}
 
