@@ -404,7 +404,7 @@ namespace Xamarin.Bundler {
 					sb.AppendLine ($"@interface {symbol.ObjectiveCName} : NSObject @end");
 					break;
 				default:
-					throw ErrorHelper.CreateError(99, mtouch.mtouchErrors.MT0099_F, symbol.Type, symbol.Name);
+					throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_F, symbol.Type, symbol.Name);
 				}
 			}
 			sb.AppendLine ("static void __xamarin_symbol_referencer () __attribute__ ((used)) __attribute__ ((optnone));");
@@ -421,7 +421,7 @@ namespace Xamarin.Bundler {
 					sb.AppendLine ($"\tvalue = [{symbol.ObjectiveCName} class];");
 					break;
 				default:
-					throw ErrorHelper.CreateError(99, mtouch.mtouchErrors.MT0099_F, symbol.Type, symbol.Name);
+					throw ErrorHelper.CreateError (99, mtouch.mtouchErrors.MT0099_F, symbol.Type, symbol.Name);
 				}
 			}
 			sb.AppendLine ("}");

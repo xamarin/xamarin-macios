@@ -1162,7 +1162,7 @@ namespace Registrar {
 					if (IsByRef (parameterType))
 						parameterType = GetElementType (parameterType);
 					if (!AreEqual (parameterType, attrib.Type))
-						throw CreateException(4171, method.Method, mtouch.mtouchErrors.MT4171_A, parameter_index + 1, GetTypeFullName(attrib.Type), GetTypeFullName(parameterType));
+						throw CreateException (4171, method.Method, mtouch.mtouchErrors.MT4171_A, parameter_index + 1, GetTypeFullName(attrib.Type), GetTypeFullName(parameterType));
 				}
 
 				return attrib;
