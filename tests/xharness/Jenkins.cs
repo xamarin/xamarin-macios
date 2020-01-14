@@ -535,7 +535,7 @@ namespace xharness
 			return rv;
 		}
 
-		async Task<IEnumerable<TestTask>> CreateRunDeviceTasksAsync ()
+		Task<IEnumerable<TestTask>> CreateRunDeviceTasksAsync ()
 		{
 			var rv = new List<RunDeviceTask> ();
 			var projectTasks = new List<RunDeviceTask> ();
@@ -629,7 +629,7 @@ namespace xharness
 				rv.AddRange (projectTasks);
 			}
 
-			return CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates));
+			return Task.FromResult<IEnumerable<TestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates)));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)
@@ -874,7 +874,7 @@ namespace xharness
 			return false;
 		}
 
-		async Task PopulateTasksAsync ()
+		Task PopulateTasksAsync ()
 		{
 			// Missing:
 			// api-diff
@@ -1125,7 +1125,7 @@ namespace xharness
 				Console.WriteLine ("Got device tasks completed");
 				Tasks.AddRange (v.Result);
 			});
-			Task.WaitAll (loadsim, loaddev);
+			return Task.WhenAll (loadsim, loaddev);
 		}
 
 		async Task ExecutePeriodicCommandAsync (Log periodic_loc)
