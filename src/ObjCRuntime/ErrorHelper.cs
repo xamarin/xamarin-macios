@@ -267,6 +267,7 @@ namespace ObjCRuntime {
 			return e;
 		}
 #endif
+
 		public static ProductException CreateError (int code, Exception innerException, string message, params object[] args)
 		{
 			return new ProductException (code, true, innerException, message, args);
