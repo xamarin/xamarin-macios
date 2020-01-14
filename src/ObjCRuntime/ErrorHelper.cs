@@ -166,52 +166,52 @@ namespace ObjCRuntime {
 		{
 			return Create (app, code, true, innerException, provider, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MemberReference member, string message, params object [] args)
 		{
 			return Create (app, code, false, null, member, null, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MemberReference member, Instruction instruction, string message, params object [] args)
 		{
 			return Create (app, code, false, null, member, instruction, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
 			return Create (app, code, false, null, location, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateWarning (Application app, int code, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
 		{
 			return Create (app, code, false, null, provider, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
 			return Create (app, code, false, innerException, location, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, Instruction instruction, string message, params object [] args)
 		{
 			return Create (app, code, false, innerException, location, instruction, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
 		{
 			return Create (app, code, false, innerException, location, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateWarning (Application app, int code, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
 		{
 			return Create (app, code, false, innerException, provider, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, string message, params object [] args)
 		{
 			return Create (app, code, error, innerException, provider, null, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.ICustomAttributeProvider provider, Instruction instruction, string message, params object [] args)
 		{
 			if (provider is Mono.Cecil.MemberReference member) {
@@ -225,7 +225,7 @@ namespace ObjCRuntime {
 
 			return new ProductException (code, error, innerException, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MemberReference member, Instruction instruction, string message, params object [] args)
 		{
 			Mono.Cecil.MethodReference method = member as Mono.Cecil.MethodReference;
@@ -239,7 +239,7 @@ namespace ObjCRuntime {
 			}
 			return Create (app, code, error, innerException, method == null ? null : method.Resolve (), instruction, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.MethodDefinition location, Instruction instruction, string message, params object [] args)
 		{
 			var e = new ProductException (code, error, innerException, message, args);
@@ -247,7 +247,7 @@ namespace ObjCRuntime {
 				SetLocation (app, e, location, instruction);
 			return e;
 		}
-		[Obsolete("update error")]
+
 		public static ProductException Create (Application app, int code, bool error, Exception innerException, Mono.Cecil.TypeReference location, string message, params object [] args)
 		{
 			var e = new ProductException (code, error, innerException, message, args);
@@ -267,37 +267,36 @@ namespace ObjCRuntime {
 			return e;
 		}
 #endif
-		[Obsolete("update error")]
 		public static ProductException CreateError (int code, Exception innerException, string message, params object[] args)
 		{
 			return new ProductException (code, true, innerException, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateWarning (int code, string message, params object[] args)
 		{
 			return new ProductException (code, false, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static ProductException CreateWarning (int code, Exception innerException, string message, params object [] args)
 		{
 			return new ProductException (code, false, innerException, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static void Error (int code, Exception innerException, string message, params object[] args)
 		{
 			throw new ProductException (code, true, innerException, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static void Error (int code, string message, params object[] args)
 		{
 			throw new ProductException (code, true, message, args);
 		}
-		[Obsolete("update error")]
+
 		public static void Warning (int code, string message, params object[] args)
 		{
 			Show (new ProductException (code, false, message, args));
 		}
-		[Obsolete("update error")]
+
 		public static void Warning (int code, Exception innerException, string message, params object[] args)
 		{
 			Show (new ProductException (code, false, innerException, message, args));
