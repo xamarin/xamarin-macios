@@ -108,7 +108,7 @@ namespace Xamarin.iOS.Tasks
 
 		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
 		{
-			var projectPath = Path.Combine(baseDir, projectName);
+			var projectPath = Path.Combine (Configuration.RootPath, "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", baseDir, projectName);
 
 			var binPath = includePlatform ? Path.Combine (projectPath, "bin", platform, config) : Path.Combine (projectPath, "bin", config);
 			var objPath = includePlatform ? Path.Combine (projectPath, "obj", platform, config) : Path.Combine (projectPath, "obj", config);
