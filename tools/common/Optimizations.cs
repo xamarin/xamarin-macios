@@ -185,14 +185,14 @@ namespace Xamarin.Bundler
 				case Opt.RemoveUnsupportedILForBitcode:
 					if (app.Platform != Utils.ApplePlatform.WatchOS) {
 						if (!all.HasValue) // Don't show this warning if it was enabled with --optimize=all
-							ErrorHelper.Warning (2020, mtouch.mtouchErrors.MT2020, opt_names [(int) Opt.RemoveUnsupportedILForBitcode]);
+							ErrorHelper.Warning (2003, mtouch.mtouchErrors.MT2003_A, opt_names [(int) Opt.RemoveUnsupportedILForBitcode]);
 						values [i] = false;
 					}
 					break;
 #endif
 				default:
 					if (app.LinkMode == LinkMode.None) {
-						ErrorHelper.Warning (2021, mtouch.mtouchErrors.MT2021, (values [i].Value ? "" : "-"), opt_names [i]);
+						ErrorHelper.Warning (2003, mtouch.mtouchErrors.MT2003_B, (values [i].Value ? "" : "-"), opt_names [i]);
 						values [i] = false;
 					}
 					break;
@@ -315,7 +315,7 @@ namespace Xamarin.Bundler
 		{
 			foreach (var option in options.Split (',')) {
 				if (option == null || option.Length < 2)
-					throw ErrorHelper.CreateError (10, mtouch.mtouchErrors.MT0010, options);
+					throw ErrorHelper.CreateError (10, mtouch.mtouchErrors.MT0010, $"'--optimize={options}'");
 
 				ParseOption (option);
 			}

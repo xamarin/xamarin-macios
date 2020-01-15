@@ -98,7 +98,7 @@
 	</data>
 	
 	<data name="MT0010" xml:space="preserve">
-		<value>Could not parse the command line arguments: {0}.
+		<value>Could not parse the command line arguments: {0}
 		</value>
 		<comment>
 		</comment>
@@ -210,7 +210,7 @@
 	</data>
 
 	<data name="MT0026" xml:space="preserve">
-		<value>Could not parse the command line argument '-{0}: {1}'
+		<value>Could not parse the command line argument '-{0}': {1}
 		</value>
 		<comment>
 		</comment>
@@ -1461,6 +1461,20 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT2003_A" xml:space="preserve">
+		<value>Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MT2003_B" xml:space="preserve">
+		<value>Option '--optimize={0}{1}' will be ignored since linking is disabled
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT2004" xml:space="preserve">
 		<value>Extra linker definitions file '{0}' could not be located.
@@ -1527,20 +1541,6 @@
 
 	<data name="MT2019" xml:space="preserve">
 		<value>Can not load the root assembly '{0}'.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT2020" xml:space="preserve">
-		<value>Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT2021" xml:space="preserve">
-		<value>Option '--optimize={0}{1}' will be ignored since linking is disabled
 		</value>
 		<comment>
 		</comment>
@@ -1861,20 +1861,6 @@
 		</comment>
 	</data>
 	
-	<data name="MT4127_a" xml:space="preserve">
-		<value>Cannot register more than one interface method for the method '
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT4127_b" xml:space="preserve">
-		<value>' (which is implementing '
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
 	<data name="MT4128" xml:space="preserve">
 		<value>The registrar found an invalid generic parameter type '{0}' in the parameter {2} of the method '{1}'. The generic parameter must have an 'NSObject' constraint.
 		</value>
@@ -2115,7 +2101,7 @@
 	
 	<data name="MT4170" xml:space="preserve">
 		<value>The registrar can't convert from '{0}' to '{1}' for the return value in the method {2}.
-		</value>4189
+		</value>
 		<comment>
 		</comment>
 	</data>

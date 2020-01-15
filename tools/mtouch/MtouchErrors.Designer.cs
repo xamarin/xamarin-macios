@@ -1289,6 +1289,18 @@ namespace mtouch {
             }
         }
         
+        internal static string MT2003_A {
+            get {
+                return ResourceManager.GetString("MT2003_A", resourceCulture);
+            }
+        }
+        
+        internal static string MT2003_B {
+            get {
+                return ResourceManager.GetString("MT2003_B", resourceCulture);
+            }
+        }
+        
         internal static string MT2004 {
             get {
                 return ResourceManager.GetString("MT2004", resourceCulture);
@@ -1346,18 +1358,6 @@ namespace mtouch {
         internal static string MT2019 {
             get {
                 return ResourceManager.GetString("MT2019", resourceCulture);
-            }
-        }
-        
-        internal static string MT2020 {
-            get {
-                return ResourceManager.GetString("MT2020", resourceCulture);
-            }
-        }
-        
-        internal static string MT2021 {
-            get {
-                return ResourceManager.GetString("MT2021", resourceCulture);
             }
         }
         

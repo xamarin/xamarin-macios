@@ -91,9 +91,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT0010">
-        <source>Could not parse the command line arguments: {0}.
+        <source>Could not parse the command line arguments: {0}
 		</source>
-        <target state="new">Could not parse the command line arguments: {0}.
+        <target state="new">Could not parse the command line arguments: {0}
 		</target>
         <note>
 		</note>
@@ -219,9 +219,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT0026">
-        <source>Could not parse the command line argument '-{0}: {1}'
+        <source>Could not parse the command line argument '-{0}': {1}
 		</source>
-        <target state="new">Could not parse the command line argument '-{0}: {1}'
+        <target state="new">Could not parse the command line argument '-{0}': {1}
 		</target>
         <note>
 		</note>
@@ -1650,6 +1650,22 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT2003_A">
+        <source>Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
+		</source>
+        <target state="new">Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT2003_B">
+        <source>Option '--optimize={0}{1}' will be ignored since linking is disabled
+		</source>
+        <target state="new">Option '--optimize={0}{1}' will be ignored since linking is disabled
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT2004">
         <source>Extra linker definitions file '{0}' could not be located.
 		</source>
@@ -1726,22 +1742,6 @@
         <source>Can not load the root assembly '{0}'.
 		</source>
         <target state="new">Can not load the root assembly '{0}'.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT2020">
-        <source>Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
-		</source>
-        <target state="new">Option '--optimize={0}' will be ignored since it's only applicable to watchOS.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT2021">
-        <source>Option '--optimize={0}{1}' will be ignored since linking is disabled
-		</source>
-        <target state="new">Option '--optimize={0}{1}' will be ignored since linking is disabled
 		</target>
         <note>
 		</note>
@@ -2102,22 +2102,6 @@
         <source>Cannot register two managed protocols ('{0}' and '{1}') with the same native name ('{2}').
 		</source>
         <target state="new">Cannot register two managed protocols ('{0}' and '{1}') with the same native name ('{2}').
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4127_a">
-        <source>Cannot register more than one interface method for the method '
-		</source>
-        <target state="new">Cannot register more than one interface method for the method '
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT4127_b">
-        <source>' (which is implementing '
-		</source>
-        <target state="new">' (which is implementing '
 		</target>
         <note>
 		</note>

@@ -665,7 +665,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.CustomArguments = new string [] { "--optimize:?" };
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (10, "Could not parse the command line argument '--optimize=?'");
+				mtouch.AssertError (10, "Could not parse the command line arguments: '--optimize=?'");
 			}
 		}
 
