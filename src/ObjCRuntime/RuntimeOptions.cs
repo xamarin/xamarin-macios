@@ -44,7 +44,7 @@ namespace ObjCRuntime {
 			case CFNetworkHandlerValue:
 			case HttpClientHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
-					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", value);
+					ErrorHelper.Warning (2015, mtouch.mtouchErrors.MT2015, value);
 					return NSUrlSessionHandlerValue;
 				}
 				return value;
@@ -52,8 +52,8 @@ namespace ObjCRuntime {
 				return value;
 			default:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) // This is value we don't know about at all, show as error instead of warning.
-					throw ErrorHelper.CreateError (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", value);
-				throw ErrorHelper.CreateError (2010, "Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler", value);
+					throw ErrorHelper.CreateError (2015, mtouch.mtouchErrors.MT2015, value);
+				throw ErrorHelper.CreateError (2010, mtouch.mtouchErrors.MT2010, value);
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace ObjCRuntime {
 #else
 			case HttpClientHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
-					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
+					ErrorHelper.Warning (2015, mtouch.mtouchErrors.MT2015, handler);
 					type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
 					type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
@@ -112,7 +112,7 @@ namespace ObjCRuntime {
 				break;
 			case CFNetworkHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
-					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
+					ErrorHelper.Warning (2015, mtouch.mtouchErrors.MT2015, handler);
 					type = platformModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
 					type = platformModule.GetType ("System.Net.Http", "CFNetworkHandler");
