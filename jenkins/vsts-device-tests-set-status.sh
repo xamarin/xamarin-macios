@@ -44,8 +44,6 @@ if test -z "$DEVICE_TYPE"; then
 	DEVICE_TYPE="iOS/tvOS"
 fi
 
-P=$(cat tmp.p)
-
 VSTS_BUILD_URL="${SYSTEM_TEAMFOUNDATIONCOLLECTIONURI}${SYSTEM_TEAMPROJECT}/_build/index?buildId=${BUILD_BUILDID}"
 
 # Add a GitHub status to the commit we're testing
@@ -85,6 +83,7 @@ if test -z "$START"; then
 	if [ $DEVICE_TYPE == "iOS-DDFun" ]; then
 		printf "### :construction: Experimental DDFun pipeline\\n" > "$MESSAGE_FILE"
 	else
+		P=$(cat tmp.p)
 		HTML_REPORT=": [Html Report](http://xamarin-storage/${P}/jenkins-results/tests/index.html)"
 	fi
 

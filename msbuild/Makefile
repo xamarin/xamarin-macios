@@ -22,6 +22,7 @@ MSBUILD_TASK_ASSEMBLIES      =
 
 ALL_SOURCES:= $(shell git ls-files | sed 's/ /\\ /g') $(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.cs) $(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.csproj)
 CONFIG      = Debug
+TARGETFRAMEWORK = net461
 
 ##
 ## XI definitions
@@ -306,13 +307,13 @@ all-local:: $(MSBUILD_PRODUCTS) .stamp-test-xml
 	$(Q) touch $@
 
 # make all the target assemblies build when any of the sources have changed
-$(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(dll).dll): .build-stamp
+$(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).dll): .build-stamp
 
 # Always remake the symlinks
 .PHONY: $(MSBUILD_SYMLINKS)
 
 define copyToBuild
-build/$(1).dll: $(1)/bin/$(CONFIG)/$(1).dll | build
+build/$(1).dll: $(1)/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(1).dll | build
 	$$(Q) $(CP) $$< $$@
 endef
 
@@ -331,6 +332,13 @@ install-local:: $(MSBUILD_PRODUCTS)
 	$(Q) xmllint --noout $^
 	@echo Targets files are valid XML
 	@touch $@
+
+test run-test:
+	$(MAKE) -C $(TOP)/tests test-ios-tasks
+
+clean-local::
+	git clean -xfdq
+	cd $(XAMARIN_MACDEV_PATH) && git clean -xfdq
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.

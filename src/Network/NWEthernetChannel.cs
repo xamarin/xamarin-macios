@@ -104,7 +104,7 @@ namespace Network {
 			if (callback == null)
 				throw new ArgumentNullException (nameof (callback));
 
-			using (var dispatchData = DispatchData.FromByteBuffer (content.ToArray (), 0, content.Length)) {
+			using (var dispatchData = DispatchData.FromReadOnlySpan (content)) {
 				BlockLiteral block_handler = new BlockLiteral ();
 				block_handler.SetupBlockUnsafe (static_SendCompletion, callback);
 
