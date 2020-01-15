@@ -90,8 +90,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (!found) {
-					warnings.Add (new MonoTouchException (3005, false, mtouch.mtouchErrors.MT3005,
-														  ar.FullName, AssemblyDefinition.FullName));
+					warnings.Add (new MonoTouchException (3005, false, mtouch.mtouchErrors.MT3005, ar.FullName, AssemblyDefinition.FullName));
 					has_dependency_map = false;
 				}
 			}
