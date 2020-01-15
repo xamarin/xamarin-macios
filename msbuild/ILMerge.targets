@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="ILRepack" Version="2.0.18" />
   </ItemGroup>
 
-  <Target Name="ILRepack" AfterTargets="CoreCompile" DependsOnTargets="CoreCompile" Inputs="@(IntermediateAssembly -&gt; '%(FullPath)')" Outputs="$(IntermediateOutputPath)ilrepack.txt" Returns="@(MergedAssemblies)" Condition="Exists(@(IntermediateAssembly -&gt; '%(FullPath)')) And '$(ILRepack)' != 'false'">
+  <Target Name="ILRepack" BeforeTargets="CopyFilesToOutputDirectory" Inputs="@(IntermediateAssembly -&gt; '%(FullPath)')" Outputs="$(IntermediateOutputPath)ilrepack.txt" Returns="@(MergedAssemblies)" Condition="Exists(@(IntermediateAssembly -&gt; '%(FullPath)')) And '$(ILRepack)' != 'false'">
     <ItemGroup>
       <NetstandardPath Include="@(ReferencePath -&gt; '%(RootDir)%(Directory)')" Condition="'%(FileName)%(Extension)' == 'netstandard.dll'" />
     </ItemGroup>
@@ -18,9 +22,15 @@
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev.Tasks'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == '$(AssemblyName).Core'" /> <!-- Use AssemblyName so that the exact same logic works for both Xamarin.iOS.Tasks.dll and Xamarin.Mac.Tasks.dll -->
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev'" />
-      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Json'" />
-      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encodings.Web'" />
-      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Microsoft.Bcl.AsyncInterfaces'" />
+
+      <MergedAssemblies Include="$(OutputPath)/Microsoft.Bcl.AsyncInterfaces.dll" />
+      <MergedAssemblies Include="$(OutputPath)/System.Buffers.dll" />
+      <MergedAssemblies Include="$(OutputPath)/System.Memory.dll" />
+      <MergedAssemblies Include="$(OutputPath)/System.Numerics.Vectors.dll" />
+      <MergedAssemblies Include="$(OutputPath)/System.Runtime.CompilerServices.Unsafe.dll" />
+      <MergedAssemblies Include="$(OutputPath)/System.Text.Json.dll" />
+      <MergedAssemblies Include="$(OutputPath)/System.Threading.Tasks.Extensions.dll" />
+
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Mono.Posix.NETStandard'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([System.String]::new('%(FileName)').StartsWith('Mono.Cecil', StringComparison.OrdinalIgnoreCase))" />
     </ItemGroup>
