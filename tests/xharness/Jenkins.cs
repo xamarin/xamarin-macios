@@ -888,20 +888,22 @@ namespace xharness
 			
 			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
-			var buildiOSMSBuild = new XBuildTask ()
+			var buildiOSMSBuild_net461 = new XBuildTask ()
 			{
 				Jenkins = this,
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
 				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
+				SpecifyConfiguration = true,
+				ProjectConfiguration = "Debug-net461",
 				Platform = TestPlatform.iOS,
 				UseMSBuild = true,
+				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
+				SupportsParallelExecution = false,
 			};
-			buildiOSMSBuild.SolutionPath = buildiOSMSBuild.TestProject.Path;
-			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (buildiOSMSBuild)
+			var nunitExecutioniOSMSBuild_net461 = new NUnitExecuteTask (buildiOSMSBuild_net461)
 			{
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-net461", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
-				TestProject = new TestProject (Path.Combine (Path.GetDirectoryName (buildiOSMSBuild.TestProject.Path), "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")),
+				TestProject = buildiOSMSBuild_net461.TestProject,
 				ProjectConfiguration = "Debug-net461",
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
@@ -910,10 +912,22 @@ namespace xharness
 				Ignored = !IncludeiOSMSBuild,
 				SupportsParallelExecution = false,
 			};
-			Tasks.Add (nunitExecutioniOSMSBuild);
-			var nunitExecutioniOSMSBuild_netstandard2 = new NUnitExecuteTask (buildiOSMSBuild) {
+			Tasks.Add (nunitExecutioniOSMSBuild_net461);
+
+			var buildiOSMSBuild_netstandard2 = new XBuildTask () {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
+				SpecifyPlatform = false,
+				SpecifyConfiguration = true,
+				ProjectConfiguration = "Debug-netstandard2.0",
+				Platform = TestPlatform.iOS,
+				UseMSBuild = true,
+				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
+				SupportsParallelExecution = false,
+			};
+			var nunitExecutioniOSMSBuild_netstandard2 = new NUnitExecuteTask (buildiOSMSBuild_netstandard2) {
 				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-netstandard2.0", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
-				TestProject = new TestProject (Path.Combine (Path.GetDirectoryName (buildiOSMSBuild.TestProject.Path), "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")),
+				TestProject = buildiOSMSBuild_netstandard2.TestProject,
 				ProjectConfiguration = "Debug-netstandard2.0",
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
