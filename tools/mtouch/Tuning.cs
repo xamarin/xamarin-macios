@@ -220,7 +220,7 @@ namespace MonoTouch.Tuner {
 			filename = Path.GetFullPath (filename);
 
 			if (!File.Exists (filename))
-				throw new MonoTouchException (2004, true, mtouch.mtouchErrors.MT2004, filename);
+				throw new MonoTouchException (2004, true, Errors.mtouch.MT2004, filename);
 
 			try {
 				using (StreamReader sr = new StreamReader (filename)) {
@@ -228,7 +228,7 @@ namespace MonoTouch.Tuner {
 				}
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2005, true, e, mtouch.mtouchErrors.MT2005, filename);
+				throw new MonoTouchException (2005, true, e, Errors.mtouch.MT2005, filename);
 			}
 		}
 	}
@@ -283,7 +283,7 @@ namespace MonoTouch.Tuner {
 				base.ProcessAssembly (assembly);
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2103, true, e, mtouch.mtouchErrors.MT2103, assembly.FullName, e);
+				throw new MonoTouchException (2103, true, e, Errors.mtouch.MT2103, assembly.FullName, e);
 			}
 		}
 	}

@@ -62,7 +62,7 @@ IOS_EXTRA_SOURCES = \
 	$(IOS_BUILD_DIR)/Constants.cs    \
 	$(IOS_BUILD_DIR)/AssemblyInfo.cs \
 	Compat.iOS.cs                    \
-	$(TOP)/tools/mtouch/mtouchErrors.Designer.cs \
+	$(TOP)/tools/mtouch/mtouch.Designer.cs \
 	$(SHARED_SYSTEM_DRAWING_SOURCES) \
 
 IOS_HTTP_SOURCES = \
@@ -322,7 +322,7 @@ MAC_SOURCES += \
 	Obsoletes.cs \
 	Darwin/KernelNotification.cs \
 	Darwin/SystemLog.cs \
-	$(TOP)/tools/mtouch/mtouchErrors.Designer.cs \
+	$(TOP)/tools/mtouch/mtouch.Designer.cs \
 
 # CFNetwork is shipped:
 # * In a separate library (XamMac.CFNetwork.dll) for Classic.
@@ -554,7 +554,7 @@ WATCHOS_CORE_SOURCES +=           \
 WATCHOS_SOURCES +=                \
     $(WATCHOS_EXTRA_CORE_SOURCES) \
     $(WATCHOS_HTTP_SOURCES)        \
-    $(TOP)/tools/mtouch/mtouchErrors.Designer.cs \
+    $(TOP)/tools/mtouch/mtouch.Designer.cs \
 
 $(WATCH_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.watch.cs.in Makefile $(TOP)/Make.config.inc | $(WATCH_BUILD_DIR)
 	$(call Q_PROF_GEN,watch) sed \
@@ -715,7 +715,7 @@ TVOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
-	$(TOP)/tools/mtouch/mtouchErrors.Designer.cs \
+	$(TOP)/tools/mtouch/mtouch.Designer.cs \
 
 TVOS_SOURCES +=                \
 	$(TVOS_EXTRA_CORE_SOURCES) \

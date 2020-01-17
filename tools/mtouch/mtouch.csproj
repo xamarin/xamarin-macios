@@ -427,11 +427,8 @@
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
-    <Compile Include="mtouchErrors.Designer.cs">
-      <DependentUpon>mtouchErrors.resx</DependentUpon>
-    </Compile>
-    <Compile Include="..\mmp\mmpErrors.Designer.cs" Visible="false">
-      <Link>mmpErrors.Designer.cs</Link>
+    <Compile Include="mtouch.Designer.cs">
+      <DependentUpon>mtouch.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -454,9 +451,6 @@
       <Link>mtouch-errors.md</Link>
     </None>
     <None Include="packages.config" />
-    <None Include="..\mmp\mmpErrors.resx" Visible="false">
-      <Link>mmpErrors.resx</Link>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Linker\" />
@@ -468,11 +462,13 @@
     <Folder Include="Xamarin.Linker\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="mtouchErrors.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+    <EmbeddedResource Include="mtouch.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <XlfSourceFormat>Resx</XlfSourceFormat>
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
-      <LastGenOutput>mtouchErrors.Designer.cs</LastGenOutput>
+      <LastGenOutput>mtouch.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Errors</CustomToolNamespace>
+      <LogicalName>Errors.mtouch.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="AfterBuild">

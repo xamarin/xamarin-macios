@@ -63,18 +63,18 @@ namespace Xamarin.Linker {
 					continue;
 
 				if (ca.HasFields)
-					throw ErrorHelper.CreateError (2105, mtouch.mtouchErrors.MT2105_A, provider.AsString ());
+					throw ErrorHelper.CreateError (2105, Errors.mtouch.MT2105_A, provider.AsString ());
 				if (ca.HasProperties)
-					throw ErrorHelper.CreateError (2105, mtouch.mtouchErrors.MT2105_B, provider.AsString ());
+					throw ErrorHelper.CreateError (2105, Errors.mtouch.MT2105_B, provider.AsString ());
 
 				switch (ca.ConstructorArguments.Count) {
 				case 1:
 					var arg = ca.ConstructorArguments [0];
 					if (!arg.Type.Is (Namespaces.ObjCRuntime, "BindingImplOptions"))
-						throw ErrorHelper.CreateError (2105, mtouch.mtouchErrors.MT2105_C, provider.AsString (), arg.Type.FullName);
+						throw ErrorHelper.CreateError (2105, Errors.mtouch.MT2105_C, provider.AsString (), arg.Type.FullName);
 					return (BindingImplOptions) (int) arg.Value;
 				default:
-					throw ErrorHelper.CreateError (2105, mtouch.mtouchErrors.MT2105_D, provider.AsString (), ca.ConstructorArguments.Count);
+					throw ErrorHelper.CreateError (2105, Errors.mtouch.MT2105_D, provider.AsString (), ca.ConstructorArguments.Count);
 				}
 			}
 

@@ -423,11 +423,9 @@
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
     <Compile Include="Target.mmp.cs" />
-    <Compile Include="mmpErrors.Designer.cs">
-      <DependentUpon>mmpErrors.resx</DependentUpon>
-    </Compile>
-    <Compile Include="..\mtouch\mtouchErrors.Designer.cs" Visible="false">
-      <Link>mtouchErrors.Designer.cs</Link>
+    <Compile Include="..\mtouch\mtouch.Designer.cs">
+      <Link>mtouch.Designer.cs</Link>
+      <DependentUpon>mtouch.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -447,11 +445,14 @@
     <EmbeddedResource Include="Info.plist.tmpl">
       <LogicalName>Info.plist.tmpl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="mmpErrors.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="..\mtouch\mtouch.resx">
+      <Link>mtouch.resx</Link>
       <XlfSourceFormat>Resx</XlfSourceFormat>
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>mtouch.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Errors</CustomToolNamespace>
+      <LogicalName>Errors.mtouch.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -462,9 +463,6 @@
   <ItemGroup>
     <None Include="Makefile" />
     <None Include="packages.config" />
-    <None Include="..\mtouch\mtouchErrors.resx" Visible="false">
-      <Link>mtouchErrors.resx</Link>
-    </None>
   </ItemGroup>
   <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20060.1\build\XliffTasks.targets')" />
 </Project>
