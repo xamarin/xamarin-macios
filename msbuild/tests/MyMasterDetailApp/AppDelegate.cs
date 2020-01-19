@@ -56,7 +56,7 @@ namespace MyMasterDetailApp
 		{
 		}
 
-		// This method is called as part of the transiton from background to active state.
+		// This method is called as part of the transition from background to active state.
 		public override void WillEnterForeground (UIApplication application)
 		{
 		}
