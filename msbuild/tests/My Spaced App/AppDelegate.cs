@@ -23,7 +23,7 @@ namespace MySpacedApp
 		{
 		}
 		// This method should be used to release shared resources and it should store the application state.
-		// If your application supports background exection this method is called instead of WillTerminate
+		// If your application supports background execution this method is called instead of WillTerminate
 		// when the user quits.
 		public override void DidEnterBackground (UIApplication application)
 		{
