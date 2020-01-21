@@ -597,7 +597,7 @@ timestamps {
                                     try {
                                         sh "mono tools/BuildTasks/build-tasks.exe artifacts -s ${workspace}/xamarin-macios -a ${env.STORAGE_ACCOUNT} -c ${env.STORAGE_PASSWORD} -u wrench/${virtualPath}/package"
                                         artifactsFilename = "artifacts.json"
-                                    } catch {
+                                    } catch (err) {
                                         def msg = "Failed to generate/upload artifacts.json: " + err.getMessage ();
                                         echo ("⚠️ ${msg} ⚠️")
                                         manager.addWarningBadge (msg)
