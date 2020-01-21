@@ -29,13 +29,21 @@ namespace Xamarin {
 
 		public const string MaxiOSSimulator = "@MAX_IOS_SIMULATOR_VERSION@";
 		public const string MaxWatchOSSimulator = "@MAX_WATCH_SIMULATOR_VERSION@";
-		public const string MaxWatchOSCompanionSimulator = "@IOS_SDK_VERSION@";
+		public const string MaxWatchOSCompanionSimulator = "@MAX_IOS_SIMULATOR_VERSION@";
 		public const string MaxTVOSSimulator = "@MAX_TVOS_SIMULATOR_VERSION@";
+
+		public const string MaxiOSDeploymentTarget = "@MAX_IOS_DEPLOYMENT_TARGET@";
+		public const string MaxWatchDeploymentTarget = "@MAX_WATCH_DEPLOYMENT_TARGET@";
+		public const string MaxTVOSDeploymentTarget = "@MAX_TVOS_DEPLOYMENT_TARGET@";
 
 		public static Version OSXVersion { get { return new Version (OSX); }}
 		public static Version iOSVersion { get { return new Version (iOS); }}
 		public static Version WatchOSVersion { get { return new Version (WatchOS); }}
 		public static Version TVOSVersion { get { return new Version (TVOS); }}
+
+		public static Version iOSTargetVersion { get { return new Version (MaxiOSDeploymentTarget); }}
+		public static Version WatchOSTargetVersion { get { return new Version (MaxWatchDeploymentTarget); }}
+		public static Version TVOSTargetVersion { get { return new Version (MaxTVOSDeploymentTarget); }}
 
 		public static Version MinOSXVersion { get { return new Version (MinOSX); }}
 		public static Version MiniOSVersion { get { return new Version (MiniOS); }}
@@ -62,6 +70,18 @@ namespace Xamarin {
 			case ApplePlatform.iOS: return iOSVersion;
 			case ApplePlatform.WatchOS: return WatchOSVersion;
 			case ApplePlatform.TVOS: return TVOSVersion;
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", platform, Application.ProductName);
+			}
+		}
+
+		public static Version GetTargetVersion (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.MacOSX: return OSXVersion;
+			case ApplePlatform.iOS: return iOSTargetVersion;
+			case ApplePlatform.WatchOS: return WatchOSTargetVersion;
+			case ApplePlatform.TVOS: return TVOSTargetVersion;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", platform, Application.ProductName);
 			}
