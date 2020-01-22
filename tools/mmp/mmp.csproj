@@ -449,7 +449,7 @@
       <Link>mtouch.resx</Link>
       <XlfSourceFormat>Resx</XlfSourceFormat>
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>mtouch.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Errors</CustomToolNamespace>
       <LogicalName>Errors.mtouch.resources</LogicalName>

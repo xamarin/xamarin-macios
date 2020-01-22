@@ -370,6 +370,7 @@ namespace Introspection
 			"Mncs",
 			"Mobike", // acronym
 			"Morpher",
+			"mtouch",
 			"Mpe", // acronym
 			"Mps",
 			"Mtu", // acronym

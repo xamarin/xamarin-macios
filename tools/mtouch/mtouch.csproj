@@ -463,7 +463,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="mtouch.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
       <XlfSourceFormat>Resx</XlfSourceFormat>
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
       <LastGenOutput>mtouch.Designer.cs</LastGenOutput>
