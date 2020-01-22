@@ -2547,9 +2547,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT5202">
-        <source>Native linking failed. Please review the build log and the user flags provided to gcc: {0}
+        <source>Native linking failed. Please review the build log.
 		</source>
-        <target state="new">Native linking failed. Please review the build log and the user flags provided to gcc: {0}
+        <target state="new">Native linking failed. Please review the build log.
 		</target>
         <note>
 		</note>

@@ -2247,7 +2247,7 @@
 	</data>
 
 	<data name="MT5202" xml:space="preserve">
-		<value>Native linking failed. Please review the build log and the user flags provided to gcc: {0}
+		<value>Native linking failed. Please review the build log.
 		</value>
 		<comment>
 		</comment>
