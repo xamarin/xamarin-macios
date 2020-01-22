@@ -488,7 +488,7 @@ namespace Registrar {
 			case "System.Double": return "double";
 			case "System.Boolean": return "BOOL";
 			case "System.Void": return "void";
-			case "System.String": return "NSString";
+			case "System.String": return "NSString *";
 			case "ObjCRuntime.Selector": return "SEL";
 			case "ObjCRuntime.Class": return "Class";
 			}
