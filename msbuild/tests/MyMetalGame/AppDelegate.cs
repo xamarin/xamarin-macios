@@ -27,13 +27,13 @@ namespace MyMetalGame
 		}
 		
 		// This method should be used to release shared resources and it should store the application state.
-		// If your application supports background exection this method is called instead of WillTerminate
+		// If your application supports background execution this method is called instead of WillTerminate
 		// when the user quits.
 		public override void DidEnterBackground (UIApplication application)
 		{
 		}
 		
-		// This method is called as part of the transiton from background to active state.
+		// This method is called as part of the transition from background to active state.
 		public override void WillEnterForeground (UIApplication application)
 		{
 		}
