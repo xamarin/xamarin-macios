@@ -322,7 +322,7 @@
 	</data>
 
 	<data name="MT0043" xml:space="preserve">
-		<value>The Boehm garbage collector is currently not supported. The SGen garbage collector has been selected instead.
+		<value>The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
 		</value>
 		<comment>
 		</comment>

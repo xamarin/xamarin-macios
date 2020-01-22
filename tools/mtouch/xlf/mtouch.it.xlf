@@ -347,9 +347,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT0043">
-        <source>The Boehm garbage collector is currently not supported. The SGen garbage collector has been selected instead.
+        <source>The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
 		</source>
-        <target state="new">The Boehm garbage collector is currently not supported. The SGen garbage collector has been selected instead.
+        <target state="new">The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
 		</target>
         <note>
 		</note>
