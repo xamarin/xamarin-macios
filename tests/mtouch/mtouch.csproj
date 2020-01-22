@@ -92,15 +92,9 @@
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\mtouch\MtouchErrors.Designer.cs">
-      <Link>MtouchErrors.Designer.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="..\..\tools\mtouch\MtouchErrors.resx">
-      <Link>MtouchErrors.resx</Link>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

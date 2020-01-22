@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20059.1\build\XliffTasks.props" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20059.1\build\XliffTasks.props')" />
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.19606.1\build\XliffTasks.props" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.19606.1\build\XliffTasks.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -32,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
     <Deterministic>True</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup>
-       <UpdateXlfOnBuild>true</UpdateXlfOnBuild>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -427,12 +422,6 @@
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
-    <Compile Include="mtouchErrors.Designer.cs">
-      <DependentUpon>mtouchErrors.resx</DependentUpon>
-    </Compile>
-    <Compile Include="..\mmp\mmpErrors.Designer.cs" Visible="false">
-      <Link>mmpErrors.Designer.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
@@ -453,10 +442,6 @@
     <None Include="..\..\docs\website\mtouch-errors.md">
       <Link>mtouch-errors.md</Link>
     </None>
-    <None Include="packages.config" />
-    <None Include="..\mmp\mmpErrors.resx" Visible="false">
-      <Link>mmpErrors.resx</Link>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Linker\" />
@@ -467,18 +452,8 @@
     <Folder Include="external\maccore\" />
     <Folder Include="Xamarin.Linker\" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="mtouchErrors.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <XlfSourceFormat>Resx</XlfSourceFormat>
-      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
-      <LastGenOutput>mtouchErrors.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
   <Target Name="AfterBuild">
     <!-- This makes sure that just building the csproj will install the updated mtouch.exe, so that tests get it without having to 'make mtouch' manually -->
     <Exec Command="make mtouch" />
   </Target>
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.19606.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.19606.1\build\XliffTasks.targets')" />
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20059.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20059.1\build\XliffTasks.targets')" />
 </Project>

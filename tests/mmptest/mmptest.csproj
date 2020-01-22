@@ -117,9 +117,6 @@
     <Compile Include="..\..\tools\common\MachO.cs">
       <Link>MachO.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\mtouch\MtouchErrors.Designer.cs">
-      <Link>MtouchErrors.Designer.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -127,9 +124,6 @@
       <Link>MacTestMain.cs</Link>
     </None>
     <None Include="packages.config" />
-    <None Include="..\..\tools\mtouch\MtouchErrors.resx">
-      <Link>MtouchErrors.resx</Link>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\common\mac\remoting.config">
