@@ -119,12 +119,12 @@ namespace Xamarin.Bundler
 
 		public string GetLibNativeName () {
 			switch (MonoNativeMode) {
-				case MonoNativeMode.Unified:
-					return "libmono-native-unified";
-				case MonoNativeMode.Compat:
-					return "libmono-native-compat";
-				default:
-					throw ErrorHelper.CreateError(99, Errors.mtouch.MT0099_K, MonoNativeMode);
+			case MonoNativeMode.Unified:
+				return "libmono-native-unified";
+			case MonoNativeMode.Compat:
+				return "libmono-native-compat";
+			default:
+				throw ErrorHelper.CreateError(99, Errors.mtouch.MT0099_K, MonoNativeMode);
 			}
 
 		}
