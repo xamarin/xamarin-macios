@@ -293,7 +293,7 @@ namespace Registrar {
 							str = "}}";
 							ap = ap.Insert (idx, "}");
 						}
-						AddException (ref exceptions, new ProductException (4177, true, Errors.mtouch.MT4177, Registrar.GetTypeFullName (Type), ap, str));
+						AddException (ref exceptions, new ProductException (4177, true, $"The 'ProtocolType' parameter of the 'Adopts' attribute used in class '{Registrar.GetTypeFullName(Type)}' contains an invalid character. Value used: '{ap}' Invalid Char: '{str}'"));
 					}
 				}
 			}
