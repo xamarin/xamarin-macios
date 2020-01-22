@@ -1843,6 +1843,32 @@ class C : NSObject {
 				mtouch.AssertWarning (4179, $"The registrar found the abstract type 'SomeNativeObject' in the signature for 'C.M2'. Abstract types should not be used in the signature for a member exported to Objective-C.", "testApp.cs", 21);
 			}
 		}
+
+		// https://github.com/xamarin/xamarin-macios/issues/7733
+		[Test]
+		public void GHIssue7733 ()
+		{
+			var str1 = @"
+public delegate void ACompletionHandler (string strArg, NSError error);
+
+[Preserve]
+public class WidgetObject : NSObject {
+	[Export (""doSomeWork:completion:"")]
+	public virtual void DoWork (string who, ACompletionHandler completion)
+	{
+
+	}
+}
+";
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryApp (extraCode: str1, usings: "using Foundation; using System;", extraArgs: new [] { "/debug:full" });
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.AssertExecute ();
+			}
+		}
 	}
 }
 
