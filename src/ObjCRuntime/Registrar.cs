@@ -23,6 +23,7 @@ using System.Text;
 using Foundation;
 using ObjCRuntime;
 using Xamarin.Utils;
+using Xamarin.Bundler;
 
 #if MTOUCH || MMP
 using TAssembly=Mono.Cecil.AssemblyDefinition;
@@ -223,7 +224,7 @@ namespace Registrar {
 							break;
 						}
 					}
-					AddException (ref exceptions, new ProductException (4146, showError, Xamarin.Bundler.Errors.MT4146, Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"), name));
+					AddException (ref exceptions, new ProductException (4146, showError, Errors.MT4146, Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"), name));
 					break;
 				}
 			}
@@ -251,10 +252,10 @@ namespace Registrar {
 					Exception ex;
 
 					if (method.IsVariadic) {
-						ex = Registrar.CreateException (4140, method, Xamarin.Bundler.Errors.MT4140,
+						ex = Registrar.CreateException (4140, method, Errors.MT4140,
 							method.Method.DeclaringType.FullName, method.MethodName, nativeParamCount, paramCount, method.Selector);
 					} else {
-						ex = Registrar.CreateException (4117, method, Xamarin.Bundler.Errors.MT4117,
+						ex = Registrar.CreateException (4117, method, Errors.MT4117,
 							method.Method.DeclaringType.FullName, method.MethodName, nativeParamCount, paramCount, method.Selector);
 					}
 
@@ -262,13 +263,13 @@ namespace Registrar {
 				}
 
 				if (method.IsVariadic && pars != null && Registrar.GetTypeFullName (pars [paramCount - 1]) != "System.IntPtr")
-					Registrar.AddException (ref exceptions, Registrar.CreateException (4123, method, Xamarin.Bundler.Errors.MT4123, Registrar.GetDescriptiveMethodName (method.Method)));
+					Registrar.AddException (ref exceptions, Registrar.CreateException (4123, method, Errors.MT4123, Registrar.GetDescriptiveMethodName (method.Method)));
 				
 				char ch;
 				var idx = method.Selector.IndexOfAny (invalidSelectorCharacters);
 				if (idx != -1) {
 					ch = method.Selector [idx];
-					Registrar.AddException (ref exceptions, Registrar.CreateException (4160, method, Xamarin.Bundler.Errors.MT4160,
+					Registrar.AddException (ref exceptions, Registrar.CreateException (4160, method, Errors.MT4160,
 						ch, ((int) ch).ToString ("x"), method.Selector, Registrar.GetTypeFullName (Type), Registrar.GetDescriptiveMethodName (method.Method)));
 				}
 			}
@@ -402,7 +403,7 @@ namespace Registrar {
 			void VerifyIsNotKeyword (ref List<Exception> exceptions, ObjCProperty property)
 			{
 				if (IsObjectiveCKeyword (property.Selector))
-					AddException (ref exceptions, CreateException (4164, property, Xamarin.Bundler.Errors.MT4164, property.Name, property.Selector));
+					AddException (ref exceptions, CreateException (4164, property, Errors.MT4164, property.Name, property.Selector));
 			}
 
 			public bool TryGetMember (string selector, bool is_static, out ObjCMember member)
@@ -420,9 +421,9 @@ namespace Registrar {
 				bool rv = true;
 				if (TryGetMember (member.Selector, member.IsNativeStatic, out existing)) {
 					if (existing.IsImplicit) {
-						AddException (ref exceptions, CreateException (4141, member, Xamarin.Bundler.Errors.MT4141, member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member)));
+						AddException (ref exceptions, CreateException (4141, member, Errors.MT4141, member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member)));
 					} else {
-						AddException (ref exceptions, CreateException (4119, member, Xamarin.Bundler.Errors.MT4119, member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member), Registrar.GetMemberName (existing)));
+						AddException (ref exceptions, CreateException (4119, member, Errors.MT4119, member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member), Registrar.GetMemberName (existing)));
 					}
 					rv = false;
 				}
@@ -510,7 +511,7 @@ namespace Registrar {
 			public bool SetExportAttribute (ExportAttribute ea, ref List<Exception> exceptions)
 			{
 				if (string.IsNullOrEmpty (ea.Selector)) {
-					AddException (ref exceptions, Registrar.CreateException (4135, this, Xamarin.Bundler.Errors.MT4135, FullName));
+					AddException (ref exceptions, Registrar.CreateException (4135, this, Errors.MT4135, FullName));
 					return false;
 				}
 				Selector = ea.Selector;
@@ -534,7 +535,7 @@ namespace Registrar {
 				get { return selector; }
 				set {
 					if (string.IsNullOrEmpty (value))
-						throw Registrar.CreateException (4135, this, Xamarin.Bundler.Errors.MT4135, FullName);
+						throw Registrar.CreateException (4135, this, Errors.MT4135, FullName);
 					selector = value;
 				}
 			}
@@ -681,7 +682,7 @@ namespace Registrar {
 							var originalType = Registrar.GetBindAsAttribute (this, i)?.OriginalType;
 							if (originalType != null) {
 								if (!IsValidToManagedTypeConversion (originalType, parameters [i]))
-									throw Registrar.CreateException (4172, Method, Xamarin.Bundler.Errors.MT4172, Registrar.GetTypeFullName (parameters [i]),  originalType.FullName, Registrar.GetParameterName (Method, i), DescriptiveMethodName);
+									throw Registrar.CreateException (4172, Method, Errors.MT4172, Registrar.GetTypeFullName (parameters [i]),  originalType.FullName, Registrar.GetParameterName (Method, i), DescriptiveMethodName);
 								native_parameters [i] = originalType;
 							} else {
 								native_parameters [i] = parameters [i];
@@ -797,7 +798,7 @@ namespace Registrar {
 							var originalType = Registrar.GetBindAsAttribute (this, -1)?.OriginalType;
 							if (originalType != null) {
 								if (!IsValidToManagedTypeConversion (originalType, ReturnType))
-									throw Registrar.CreateException (4170, Method, Xamarin.Bundler.Errors.MT4170, Registrar.GetTypeFullName (ReturnType), originalType.FullName, DescriptiveMethodName);
+									throw Registrar.CreateException (4170, Method, Errors.MT4170, Registrar.GetTypeFullName (ReturnType), originalType.FullName, DescriptiveMethodName);
 								native_return_type = originalType;
 							} else {
 								native_return_type = ReturnType;
@@ -848,7 +849,7 @@ namespace Registrar {
 						return trampoline;
 
 #if MTOUCH || MMP
-					throw ErrorHelper.CreateError (8018, Xamarin.Bundler.Errors.MT8018);
+					throw ErrorHelper.CreateError (8018, Errors.MT8018);
 #else
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
@@ -1156,13 +1157,13 @@ namespace Registrar {
 				if (parameter_index == -1) {
 					var returnType = GetReturnType (method.Method);
 					if (!AreEqual (returnType, attrib.Type))
-						throw CreateException (4171, method.Method, Xamarin.Bundler.Errors.MT4171, method.DescriptiveMethodName, GetTypeFullName (attrib.Type), GetTypeFullName (returnType));
+						throw CreateException (4171, method.Method, Errors.MT4171, method.DescriptiveMethodName, GetTypeFullName (attrib.Type), GetTypeFullName (returnType));
 				} else {
 					var parameterType = GetParameters (method.Method) [parameter_index];
 					if (IsByRef (parameterType))
 						parameterType = GetElementType (parameterType);
 					if (!AreEqual (parameterType, attrib.Type))
-						throw CreateException (4171, method.Method, Xamarin.Bundler.Errors.MT4171_A, parameter_index + 1, GetTypeFullName(attrib.Type), GetTypeFullName(parameterType));
+						throw CreateException (4171, method.Method, Errors.MT4171_A, parameter_index + 1, GetTypeFullName(attrib.Type), GetTypeFullName(parameterType));
 				}
 
 				return attrib;
@@ -1176,7 +1177,7 @@ namespace Registrar {
 			if (attrib != null) {
 				var propertyType = GetPropertyType (property);
 				if (!AreEqual (propertyType, attrib.Type))
-					throw CreateException (4171, property, Xamarin.Bundler.Errors.MT4171_B, GetTypeFullName (method.DeclaringType.Type), GetPropertyName (property),  GetTypeFullName (attrib.Type), GetTypeFullName (propertyType));
+					throw CreateException (4171, property, Errors.MT4171_B, GetTypeFullName (method.DeclaringType.Type), GetPropertyName (property),  GetTypeFullName (attrib.Type), GetTypeFullName (propertyType));
 			}
 			return attrib;
 		}
@@ -1287,7 +1288,7 @@ namespace Registrar {
 				case Xamarin.Utils.ApplePlatform.TVOS:
 					return "Xamarin.TVOS";
 				default:
-					throw ErrorHelper.CreateError (71, Xamarin.Bundler.Errors.MT0071, App.Platform);
+					throw ErrorHelper.CreateError (71, Errors.MT0071, App.Platform);
 				}
 			}
 		}
@@ -1615,7 +1616,7 @@ namespace Registrar {
 			TType constrained_type = null;
 
 			if (!VerifyIsConstrainedToNSObject (method.ReturnType, out constrained_type)) {
-				AddException (ref exceptions, CreateException (4129, method.Method, Xamarin.Bundler.Errors.MT4129, GetTypeFullName (method.ReturnType), GetDescriptiveMethodName (type, method.Method)));
+				AddException (ref exceptions, CreateException (4129, method.Method, Errors.MT4129, GetTypeFullName (method.ReturnType), GetDescriptiveMethodName (type, method.Method)));
 				return false;
 			}
 			if (constrained_type != null)
@@ -1629,7 +1630,7 @@ namespace Registrar {
 			for (int i = 0; i < pars.Length; i++) {
 				var p = pars [i];
 				if (!VerifyIsConstrainedToNSObject (p, out constrained_type)) {
-					AddException (ref exceptions, CreateException (4128, method.Method, Xamarin.Bundler.Errors.MT4128, GetTypeFullName (p), GetDescriptiveMethodName (type, method.Method), GetParameterName (method.Method, i)));
+					AddException (ref exceptions, CreateException (4128, method.Method, Errors.MT4128, GetTypeFullName (p), GetDescriptiveMethodName (type, method.Method), GetParameterName (method.Method, i)));
 					return false;
 				}
 				if (constrained_type != null) {
@@ -1804,23 +1805,23 @@ namespace Registrar {
 		ObjCType RegisterCategory (TType type, CategoryAttribute attrib, ref List<Exception> exceptions)
 		{
 			if (IsINativeObject (type)) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4152, Xamarin.Bundler.Errors.MT4152, GetTypeFullName (type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4152, Errors.MT4152, GetTypeFullName (type)));
 				return null;
 			}
 
 			if (IsGenericType (type)) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4153, Xamarin.Bundler.Errors.MT4153, GetTypeFullName (type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4153, Errors.MT4153, GetTypeFullName (type)));
 				return null;
 			}
 
 			if (attrib.Type == null) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4151, Xamarin.Bundler.Errors.MT4151, GetTypeFullName (type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4151, Errors.MT4151, GetTypeFullName (type)));
 				return null;
 			}
 
 			var declaringType = RegisterType (attrib.Type, ref exceptions);
 			if (declaringType == null) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4150, Xamarin.Bundler.Errors.MT4150, GetTypeFullName (type), GetTypeFullName (attrib.Type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4150, Errors.MT4150, GetTypeFullName (type), GetTypeFullName (attrib.Type)));
 				return null;
 			}
 
@@ -1834,7 +1835,7 @@ namespace Registrar {
 			lock (categories_map) {
 				TType previous_type;
 				if (categories_map.TryGetValue (objcType.CategoryName, out previous_type)) {
-					AddException (ref exceptions, ErrorHelper.CreateError (4156, Xamarin.Bundler.Errors.MT4156,
+					AddException (ref exceptions, ErrorHelper.CreateError (4156, Errors.MT4156,
 						GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.CategoryName));
 					return null;
 				}
@@ -1850,7 +1851,7 @@ namespace Registrar {
 				if (ea == null)
 					continue;
 
-				AddException (ref exceptions, CreateException (4158, ctor, Xamarin.Bundler.Errors.MT4158, GetTypeFullName (type), GetDescriptiveMethodName (ctor)));
+				AddException (ref exceptions, CreateException (4158, ctor, Errors.MT4158, GetTypeFullName (type), GetDescriptiveMethodName (ctor)));
 			}
 
 			foreach (var method in CollectMethods (type)) {
@@ -1860,25 +1861,25 @@ namespace Registrar {
 					continue;
 					
 				if (!IsStatic (method)) {
-					AddException (ref exceptions, CreateException (4159, method, Xamarin.Bundler.Errors.MT4159, GetTypeFullName (type), GetMethodName (method)));
+					AddException (ref exceptions, CreateException (4159, method, Errors.MT4159, GetTypeFullName (type), GetMethodName (method)));
 					return null;
 				}
 
 				if (HasThisAttribute (method)) {
 					var parameters = GetParameters (method);
 					if (parameters == null || parameters.Length == 0) {
-						AddException (ref exceptions, CreateException (4157, method, Xamarin.Bundler.Errors.MT4157,
+						AddException (ref exceptions, CreateException (4157, method, Errors.MT4157,
 							GetTypeFullName (type), GetMethodName (method), GetTypeFullName (declaringType.Type)));
 						continue;
 					} else if (GetTypeFullName (parameters [0]) != GetTypeFullName (declaringType.Type)) {
-						AddException (ref exceptions, CreateException (4149, method, Xamarin.Bundler.Errors.MT4149,
+						AddException (ref exceptions, CreateException (4149, method, Errors.MT4149,
 							GetTypeFullName (type), GetMethodName (method), GetTypeFullName (parameters [0]), GetTypeFullName (declaringType.Type)));
 						continue;
 					}
 				}
 
 				if (IsGenericMethod (method)) {
-					AddException (ref exceptions, CreateException (4154, method, Xamarin.Bundler.Errors.MT4154, GetTypeFullName (type), GetMethodName (method)));
+					AddException (ref exceptions, CreateException (4154, method, Errors.MT4154, GetTypeFullName (type), GetMethodName (method)));
 					continue;
 				}
 
@@ -1945,7 +1946,7 @@ namespace Registrar {
 					return null;
 
 				if (isGenericType) {
-					exceptions.Add (ErrorHelper.CreateError (4148, Xamarin.Bundler.Errors.MT4148, GetTypeFullName (type)));
+					exceptions.Add (ErrorHelper.CreateError (4148, Errors.MT4148, GetTypeFullName (type)));
 					return null;
 				}
 
@@ -1997,7 +1998,7 @@ namespace Registrar {
 				VerifyTypeInSDK (ref exceptions, objcType.BaseType.Type, baseTypeOf: objcType.Type);
 
 			if (ObjCType.IsObjectiveCKeyword (objcType.ExportedName))
-				AddException (ref exceptions, ErrorHelper.CreateError (4168, Xamarin.Bundler.Errors.MT4168,  GetTypeFullName (type), objcType.ExportedName));
+				AddException (ref exceptions, ErrorHelper.CreateError (4168, Errors.MT4168,  GetTypeFullName (type), objcType.ExportedName));
 
 			// make sure all the protocols this type implements are registered
 			if (objcType.Protocols != null) {
@@ -2011,14 +2012,14 @@ namespace Registrar {
 			if (objcType.IsProtocol) {
 				lock (protocol_map) {
 					if (protocol_map.TryGetValue (objcType.ExportedName, out previous_type))
-						throw ErrorHelper.CreateError (4126, Xamarin.Bundler.Errors.MT4126,
+						throw ErrorHelper.CreateError (4126, Errors.MT4126,
 							GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.ExportedName);
 					protocol_map.Add (objcType.ExportedName, type);
 				}
 			} else {
 				lock (type_map) {
 					if (type_map.TryGetValue (objcType.ExportedName, out previous_type))
-						throw ErrorHelper.CreateError (4118, Xamarin.Bundler.Errors.MT4118,
+						throw ErrorHelper.CreateError (4118, Errors.MT4118,
 							GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.ExportedName);
 					type_map.Add (objcType.ExportedName, type);
 				}
@@ -2223,13 +2224,13 @@ namespace Registrar {
 				}
 
 				if (IsStatic (property) && isGenericType) {
-					AddException (ref exceptions, CreateException (4131, property, Xamarin.Bundler.Errors.MT4131, GetTypeFullName (type), GetPropertyName (property)));
+					AddException (ref exceptions, CreateException (4131, property, Errors.MT4131, GetTypeFullName (type), GetPropertyName (property)));
 					continue;
 				}
 
 				TType property_type = null;
 				if (isGenericType && !VerifyIsConstrainedToNSObject (GetPropertyType (property), out property_type)) {
-					AddException (ref exceptions, CreateException (4132, property, Xamarin.Bundler.Errors.MT4132, GetTypeFullName (GetPropertyType (property)), GetTypeFullName (type), GetPropertyName (property)));
+					AddException (ref exceptions, CreateException (4132, property, Errors.MT4132, GetTypeFullName (GetPropertyType (property)), GetTypeFullName (type), GetPropertyName (property)));
 					continue;
 				}
 				if (property_type == null)
@@ -2260,7 +2261,7 @@ namespace Registrar {
 
 					List<Exception> excs = null;
 					if (!method.ValidateSignature (ref excs)) {
-						exceptions.Add (CreateException (4138, excs [0], property, Xamarin.Bundler.Errors.MT4138,
+						exceptions.Add (CreateException (4138, excs [0], property, Errors.MT4138,
 							GetTypeFullName (property.PropertyType), property.DeclaringType.FullName, property.Name));
 						continue;
 					}
@@ -2282,7 +2283,7 @@ namespace Registrar {
 
 					List<Exception> excs = null;
 					if (!method.ValidateSignature (ref excs)) {
-						exceptions.Add (CreateException (4138, excs [0], property, Xamarin.Bundler.Errors.MT4138,
+						exceptions.Add (CreateException (4138, excs [0], property, Errors.MT4138,
 							GetTypeFullName (property.PropertyType), property.DeclaringType.FullName, property.Name));
 						continue;
 					}
@@ -2355,7 +2356,7 @@ namespace Registrar {
 #endif
 
 				if (IsStatic (method) && isGenericType) {
-					AddException (ref exceptions, CreateException (4130, method, Xamarin.Bundler.Errors.MT4130, GetDescriptiveMethodName (type, method)));
+					AddException (ref exceptions, CreateException (4130, method, Errors.MT4130, GetDescriptiveMethodName (type, method)));
 					continue;
 				} else if (isGenericType && !VerifyIsConstrainedToNSObject (ref exceptions, type, objcMethod)) {
 					continue;
@@ -2472,7 +2473,7 @@ namespace Registrar {
 
 				assemblies.Add (assembly, null);
 			} catch (Exception e) {
-				ReportError (4116, Xamarin.Bundler.Errors.MT4116, GetAssemblyName (assembly), e);
+				ReportError (4116, Errors.MT4116, GetAssemblyName (assembly), e);
 			}
 
 			FlushTrace ();
@@ -2523,7 +2524,7 @@ namespace Registrar {
 			} else {
 				signature.Append (ToSignature (return_type, member, ref success));
 				if (!success)
-					throw CreateException (4104, mi, Xamarin.Bundler.Errors.MT4104_A, GetTypeFullName (return_type), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
+					throw CreateException (4104, mi, Errors.MT4104_A, GetTypeFullName (return_type), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
 			}
 
 			signature.Append (isBlockSignature ? "@?" : "@:");
@@ -2551,7 +2552,7 @@ namespace Registrar {
 							// to the source code.
 							parameters = GetParameters (mi);
 						}
-						throw CreateException (4136, mi, Xamarin.Bundler.Errors.MT4136,
+						throw CreateException (4136, mi, Errors.MT4136,
 							GetTypeFullName (parameters [i]), GetParameterName (mi, i), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
 					}
 				}
@@ -2568,9 +2569,9 @@ namespace Registrar {
 
 			var objcMethod = member as ObjCMethod;
 			if (objcMethod != null)
-				throw ErrorHelper.CreateError (4111, Xamarin.Bundler.Errors.MT4111, GetTypeFullName (type), GetTypeFullName (objcMethod.DeclaringType.Type) + "." + objcMethod.MethodName);
+				throw ErrorHelper.CreateError (4111, Errors.MT4111, GetTypeFullName (type), GetTypeFullName (objcMethod.DeclaringType.Type) + "." + objcMethod.MethodName);
 
-			throw ErrorHelper.CreateError (4101, Xamarin.Bundler.Errors.MT4101, GetTypeFullName (type));
+			throw ErrorHelper.CreateError (4101, Errors.MT4101, GetTypeFullName (type));
 		}
 
 		public string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
@@ -2627,7 +2628,7 @@ namespace Registrar {
 			case "System.nfloat":
 				return Is64Bits ? "d" : "f";
 			case "System.DateTime":
-				throw CreateException (4102, member, Xamarin.Bundler.Errors.MT4102, "System.DateTime", "Foundation.NSDate", member.FullName);
+				throw CreateException (4102, member, Errors.MT4102, "System.DateTime", "Foundation.NSDate", member.FullName);
 			}
 
 			if (Is (type, ObjCRuntime, "Selector"))
@@ -2638,7 +2639,7 @@ namespace Registrar {
 
 			if (IsINativeObject (type)) {
 				if (!IsGenericType (type) && !IsInterface (type) && !IsNSObject (type) && IsAbstract (type))
-					ErrorHelper.Show (CreateWarning (4179, member, Xamarin.Bundler.Errors.MT4179, type.FullName, member.FullName));
+					ErrorHelper.Show (CreateWarning (4179, member, Errors.MT4179, type.FullName, member.FullName));
 				if (IsNSObject (type) && forProperty) {
 					return "@\"" + GetExportedTypeName (type) + "\"";
 				} else {
@@ -2657,7 +2658,7 @@ namespace Registrar {
 					case "System.UInt64":
 						return "I";
 					default:
-						throw CreateException (4145, Xamarin.Bundler.Errors.MT4145, GetTypeFullName (type));
+						throw CreateException (4145, Errors.MT4145, GetTypeFullName (type));
 					}
 				} else {
 					return ToSignature (GetEnumUnderlyingType (type), member, ref success);

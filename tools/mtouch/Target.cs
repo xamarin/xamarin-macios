@@ -113,7 +113,7 @@ namespace Xamarin.Bundler
 				}
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, Xamarin.Bundler.Errors.MT0071, App.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MT0071, App.Platform);
 			}
 		}
 
@@ -124,7 +124,7 @@ namespace Xamarin.Bundler
 			case MonoNativeMode.Compat:
 				return "libmono-native-compat";
 			default:
-				throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, $"Invalid mono native type: '{MonoNativeMode}'");
+				throw ErrorHelper.CreateError (99, Errors.MT0099, $"Invalid mono native type: '{MonoNativeMode}'");
 			}
 
 		}
@@ -138,7 +138,7 @@ namespace Xamarin.Bundler
 			case AssemblyBuildTarget.Framework:
 				return AllArchitectures;
 			default:
-				throw ErrorHelper.CreateError (100, Xamarin.Bundler.Errors.MT0100, build_target);
+				throw ErrorHelper.CreateError (100, Errors.MT0100, build_target);
 			}
 		}
 
@@ -159,7 +159,7 @@ namespace Xamarin.Bundler
 				BundleFiles [bundle_path] = info = new BundleFileInfo () { DylibToFramework = dylib_to_framework_conversion };
 
 			if (info.DylibToFramework != dylib_to_framework_conversion)
-				throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, "'invalid value for framework conversion'");
+				throw ErrorHelper.CreateError (99, Errors.MT0099, "'invalid value for framework conversion'");
 
 			info.Sources.Add (source);
 		}
@@ -181,7 +181,7 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (link_task);
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, Xamarin.Bundler.Errors.MT0100, build_target);
+				throw ErrorHelper.CreateError (100, Errors.MT0100, build_target);
 			}
 		}
 
@@ -250,7 +250,7 @@ namespace Xamarin.Bundler
 						// When using simlauncher, we copy the executable directly to the target directory.
 						// When not using the simlauncher, but still building for the simulator, we write the executable to a arch-specific app directory (if building for both 32-bit and 64-bit), or just the app directory (if building for a single architecture)
 						if (Abis.Count != 1)
-							throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, $"expected exactly one abi for a simulator architecture, found: {string.Join(", ", Abis.Select((v) => v.ToString()))}");
+							throw ErrorHelper.CreateError (99, Errors.MT0099, $"expected exactly one abi for a simulator architecture, found: {string.Join(", ", Abis.Select((v) => v.ToString()))}");
 							executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
 					} else {
 						foreach (var abi in Abis)
@@ -271,14 +271,14 @@ namespace Xamarin.Bundler
 			var corlib_path = Path.Combine (Resolver.FrameworkDirectory, "mscorlib.dll");
 			var corlib = ManifestResolver.Load (corlib_path);
 			if (corlib == null)
-				throw new MonoTouchException (2006, true, Xamarin.Bundler.Errors.MT2006, corlib_path);
+				throw new MonoTouchException (2006, true, Errors.MT2006, corlib_path);
 
 			var roots = new List<AssemblyDefinition> ();
 			foreach (var root_assembly in App.RootAssemblies) {
 				var root = ManifestResolver.Load (root_assembly);
 				if (root == null) {
 					// We check elsewhere that the path exists, so I'm not sure how we can get into this.
-					throw ErrorHelper.CreateError (2019, Xamarin.Bundler.Errors.MT2019, root_assembly);
+					throw ErrorHelper.CreateError (2019, Errors.MT2019, root_assembly);
 				}
 				roots.Add (root);
 			}
@@ -286,16 +286,16 @@ namespace Xamarin.Bundler
 			foreach (var reference in App.References) {
 				var ad = ManifestResolver.Load (reference);
 				if (ad == null)
-					throw new MonoTouchException (2002, true, Xamarin.Bundler.Errors.MT2002, reference);
+					throw new MonoTouchException (2002, true, Errors.MT2002, reference);
 
 				var root_assembly = roots.FirstOrDefault ((v) => v.MainModule.FileName == ad.MainModule.FileName);
 				if (root_assembly != null) {
 					// If we asked the manifest resolver for assembly X and got back a root assembly, it means the requested assembly has the same identity as the root assembly, which is not allowed.
-					throw ErrorHelper.CreateError (23, Xamarin.Bundler.Errors.MT0023, root_assembly.MainModule.FileName, reference);
+					throw ErrorHelper.CreateError (23, Errors.MT0023, root_assembly.MainModule.FileName, reference);
 				}
 				
 				if (ad.MainModule.Runtime > TargetRuntime.Net_4_0)
-					ErrorHelper.Show (new MonoTouchException (11, false, Xamarin.Bundler.Errors.MT0011, Path.GetFileName (reference), ad.MainModule.Runtime));
+					ErrorHelper.Show (new MonoTouchException (11, false, Errors.MT0011, Path.GetFileName (reference), ad.MainModule.Runtime));
 
 				// Figure out if we're referencing Xamarin.iOS or monotouch.dll
 				var filename = ad.MainModule.FileName;
@@ -310,7 +310,7 @@ namespace Xamarin.Bundler
 				}
 
 				if (ad != ProductAssembly && GetRealPath (filename) != GetRealPath (reference) && !filename.EndsWith (".resources.dll", StringComparison.Ordinal))
-					ErrorHelper.Show (ErrorHelper.CreateWarning (109, Xamarin.Bundler.Errors.MT0109, Path.GetFileName (reference), reference, filename));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (109, Errors.MT0109, Path.GetFileName (reference), reference, filename));
 			}
 
 			ComputeListOfAssemblies ();
@@ -320,7 +320,7 @@ namespace Xamarin.Bundler
 
 			if (!App.Embeddinator) {
 				if (!Assemblies.Any ((v) => v.AssemblyDefinition.Name.Name == Driver.GetProductAssembly (App)))
-					throw ErrorHelper.CreateError (123, Xamarin.Bundler.Errors.MT0123, App.RootAssemblies [0], Driver.GetProductAssembly (App));
+					throw ErrorHelper.CreateError (123, Errors.MT0123, App.RootAssemblies [0], Driver.GetProductAssembly (App));
 			}
 
 			foreach (var abi in Abis)
@@ -344,7 +344,7 @@ namespace Xamarin.Bundler
 					if (Assemblies.ContainsKey (assembly))
 						continue;
 
-					exceptions.Add (ErrorHelper.CreateWarning (142, Xamarin.Bundler.Errors.MT0142, assembly));
+					exceptions.Add (ErrorHelper.CreateWarning (142, Errors.MT0142, assembly));
 				}
 				ErrorHelper.ThrowIfErrors (exceptions);
 			}
@@ -414,7 +414,7 @@ namespace Xamarin.Bundler
 			} catch (MonoTouchException mte) {
 				exceptions.Add (mte);
 			} catch (Exception e) {
-				exceptions.Add (new MonoTouchException (9, true, e, Xamarin.Bundler.Errors.MT0009, e.Message));
+				exceptions.Add (new MonoTouchException (9, true, e, Errors.MT0009, e.Message));
 			}
 
 			if (App.LinkMode == LinkMode.None)
@@ -453,13 +453,13 @@ namespace Xamarin.Bundler
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
 					if (reference.Name != Driver.GetProductAssembly (App))
-						exceptions.Add (ErrorHelper.CreateError (34, Xamarin.Bundler.Errors.MT0034, reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
+						exceptions.Add (ErrorHelper.CreateError (34, Errors.MT0034, reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
 					break;
 				}
 
 				var reference_assembly = ManifestResolver.Resolve (reference);
 				if (reference_assembly == null) {
-					ErrorHelper.Warning (136, Xamarin.Bundler.Errors.MT0136, reference.FullName, main.FileName);
+					ErrorHelper.Warning (136, Errors.MT0136, reference.FullName, main.FileName);
 					continue;
 				}
 				ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
@@ -509,7 +509,7 @@ namespace Xamarin.Bundler
 				return;
 			var reference_assembly = ManifestResolver.Resolve (ar);
 			if (reference_assembly == null) {
-				ErrorHelper.Warning (137, Xamarin.Bundler.Errors.MT0137, ar.FullName, main.Name, ca.AttributeType.FullName);
+				ErrorHelper.Warning (137, Errors.MT0137, ar.FullName, main.Name, ca.AttributeType.FullName);
 				return;
 			}
 			ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
@@ -739,7 +739,7 @@ namespace Xamarin.Bundler
 			// Verify that we don't get multiple identical assemblies from the linker.
 			foreach (var group in output_assemblies.GroupBy ((v) => v.Name.Name)) {
 				if (group.Count () != 1)
-					throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join("\n\t", group.Select((v) => v.MainModule.FileName).ToArray())}");
+					throw ErrorHelper.CreateError (99, Errors.MT0099, $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join("\n\t", group.Select((v) => v.MainModule.FileName).ToArray())}");
 			}
 
 			// Update (add/remove) list of assemblies in each app, since the linker may have both added and removed assemblies.
@@ -770,7 +770,7 @@ namespace Xamarin.Bundler
 
 						var ad = output_assemblies.SingleOrDefault ((AssemblyDefinition v) => v.Name.Name == next);
 						if (ad == null)
-							throw ErrorHelper.CreateError(99, Xamarin.Bundler.Errors.MT0099, $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker");
+							throw ErrorHelper.CreateError(99, Errors.MT0099, $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker");
 						if (ad.MainModule.HasAssemblyReferences) {
 							foreach (var ar in ad.MainModule.AssemblyReferences) {
 								if (!collectedNames.Contains (ar.Name) && !queue.Contains (ar.Name))
@@ -978,7 +978,7 @@ namespace Xamarin.Bundler
 					App.CreateFrameworkInfoPList (plist_path, fw_name, App.BundleId + ".frameworks." + fw_name, fw_name);
 					break;
 				default:
-					throw ErrorHelper.CreateError (100, Xamarin.Bundler.Errors.MT0100, mode);
+					throw ErrorHelper.CreateError (100, Errors.MT0100, mode);
 				}
 
 				var pinvoke_task = new PinvokesTask
@@ -1050,9 +1050,9 @@ namespace Xamarin.Bundler
 					var existingLinkTask = infos.Where ((v) => v.LinkTask != null).Select ((v) => v.LinkTask).ToList ();
 					if (existingLinkTask.Count > 0) {
 						if (existingLinkTask.Count != infos.Count)
-							throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, $"Not all assemblies for {name} have link tasks");
+							throw ErrorHelper.CreateError (99, Errors.MT0099, $"Not all assemblies for {name} have link tasks");
 						if (!existingLinkTask.All ((v) => v == existingLinkTask [0]))
-							throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, $"Link tasks for {name} aren't all the same");
+							throw ErrorHelper.CreateError (99, Errors.MT0099, $"Link tasks for {name} aren't all the same");
 
 						LinkWithBuildTarget (build_target, name, existingLinkTask [0], assemblies);
 						continue;
@@ -1129,7 +1129,7 @@ namespace Xamarin.Bundler
 						compiler_output = Path.Combine (App.Cache.Location, arch, name);
 						break;
 					default:
-						throw ErrorHelper.CreateError (100, Xamarin.Bundler.Errors.MT0100, build_target);
+						throw ErrorHelper.CreateError (100, Errors.MT0100, build_target);
 					}
 
 					CompileTask pinvoke_task;
@@ -1162,7 +1162,7 @@ namespace Xamarin.Bundler
 								compiler_flags.ReferenceSymbols (symbols);
 								break;
 							default:
-								throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, $"invalid symbol mode: {App.SymbolMode}");
+								throw ErrorHelper.CreateError (99, Errors.MT0099, $"invalid symbol mode: {App.SymbolMode}");
 							}
 						}
 					}
@@ -1182,7 +1182,7 @@ namespace Xamarin.Bundler
 						} else if (optimizations.Count == 1) {
 							compiler_flags.AddOtherFlag (optimizations [0]);
 						} else {
-							throw ErrorHelper.CreateError (107, Xamarin.Bundler.Errors.MT0107, string.Join (", ", assemblies.Select ((v) => v.Identity)), string.Join ("', '", optimizations));
+							throw ErrorHelper.CreateError (107, Errors.MT0107, string.Join (", ", assemblies.Select ((v) => v.Identity)), string.Join ("', '", optimizations));
 						}
 					}
 
@@ -1324,7 +1324,7 @@ namespace Xamarin.Bundler
 				a.ComputeDependencyMap (exceptions);
 			if (exceptions.Count > 0) {
 				ErrorHelper.Show (exceptions);
-				ErrorHelper.Warning (3006, Xamarin.Bundler.Errors.MT3006);
+				ErrorHelper.Warning (3006, Errors.MT3006);
 			}
 
 			List<string> registration_methods = new List<string> ();
@@ -1394,7 +1394,7 @@ namespace Xamarin.Bundler
 					library = "Xamarin.TVOS.registrar.a";
 					break;
 				default:
-					throw ErrorHelper.CreateError (71, Xamarin.Bundler.Errors.MT0071, App.Platform);
+					throw ErrorHelper.CreateError (71, Errors.MT0071, App.Platform);
 				}
 
 				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
@@ -1534,7 +1534,7 @@ namespace Xamarin.Bundler
 				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
 				break;
 			default:
-				throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, $"invalid symbol mode: {App.SymbolMode}");
+				throw ErrorHelper.CreateError (99, Errors.MT0099, $"invalid symbol mode: {App.SymbolMode}");
 			}
 
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
@@ -1578,7 +1578,7 @@ namespace Xamarin.Bundler
 					break;
 				case AssemblyBuildTarget.Framework: // We don't ship the profiler as a framework, so this should be impossible.
 				default:
-					throw ErrorHelper.CreateError (100, Xamarin.Bundler.Errors.MT0100, App.LibProfilerLinkMode);
+					throw ErrorHelper.CreateError (100, Errors.MT0100, App.LibProfilerLinkMode);
 				}
 			}
 
@@ -1638,7 +1638,7 @@ namespace Xamarin.Bundler
 								RequireMonoNative = value;
 								break;
 							default:
-								throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, $"invalid type string while loading cached Mono.Native info: {typestr}");
+								throw ErrorHelper.CreateError (99, Errors.MT0099, $"invalid type string while loading cached Mono.Native info: {typestr}");
 						}
 					}
 				}
@@ -1698,7 +1698,7 @@ namespace Xamarin.Bundler
 				}
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, Xamarin.Bundler.Errors.MT0100, app.LibMonoLinkMode);
+				throw ErrorHelper.CreateError (100, Errors.MT0100, app.LibMonoLinkMode);
 			}
 		}
 
@@ -1738,7 +1738,7 @@ namespace Xamarin.Bundler
 				a.Symlink ();
 
 			if (Abis.Count != 1)
-				throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, $"expected exactly one abi for a simulator architecture, found: {string.Join(", ", Abis.Select((v) => v.ToString()))}");
+				throw ErrorHelper.CreateError (99, Errors.MT0099, $"expected exactly one abi for a simulator architecture, found: {string.Join(", ", Abis.Select((v) => v.ToString()))}");
 
 			var targetExecutable = Executables.Values.First ();
 
@@ -1759,7 +1759,7 @@ namespace Xamarin.Bundler
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception ex) {
-				throw new MonoTouchException (1015, true, ex, Xamarin.Bundler.Errors.MT1015, targetExecutable, ex.Message);
+				throw new MonoTouchException (1015, true, ex, Errors.MT1015, targetExecutable, ex.Message);
 			}
 
 			Symlinked = true;

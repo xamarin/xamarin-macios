@@ -73,7 +73,7 @@ namespace Xamarin.Bundler {
 					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, Xamarin.Bundler.Errors.MT0026, "--marshal-objective-exceptions", $"Invalid value: {v}. Valid values are: default, unwindmanagedcode, throwmanagedexception, abort and disable.");
+					throw ErrorHelper.CreateError (26, Errors.MT0026, "--marshal-objective-exceptions", $"Invalid value: {v}. Valid values are: default, unwindmanagedcode, throwmanagedexception, abort and disable.");
 				}
 			});
 			options.Add ("marshal-managed-exceptions:", "Specify how managed exceptions should be marshalled. Valid values: default, unwindnativecode, throwobjectivecexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwobjectivecexception', while on all other platform it's 'disable').", v => {
@@ -96,7 +96,7 @@ namespace Xamarin.Bundler {
 					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, Xamarin.Bundler.Errors.MT0026, "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
+					throw ErrorHelper.CreateError (26, Errors.MT0026, "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
 				}
 			});
 			options.Add ("j|jobs=", "The level of concurrency. Default is the number of processors.", v => {
@@ -120,7 +120,7 @@ namespace Xamarin.Bundler {
 					app.SymbolMode = SymbolMode.Ignore;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, Xamarin.Bundler.Errors.MT0026, "--dynamic-symbol-mode", $"Invalid value: {v}. Valid values are: default, linker, code and ignore.");
+					throw ErrorHelper.CreateError (26, Errors.MT0026, "--dynamic-symbol-mode", $"Invalid value: {v}. Valid values are: default, linker, code and ignore.");
 				}
 			});
 			options.Add ("ignore-dynamic-symbol:", "Specify that Xamarin.iOS/Xamarin.Mac should not try to prevent the linker from removing the specified symbol.", (v) => {
@@ -205,7 +205,7 @@ namespace Xamarin.Bundler {
 			default:
 				TargetFramework parsedFramework;
 				if (!Xamarin.Utils.TargetFramework.TryParse (fx, out parsedFramework))
-					throw ErrorHelper.CreateError (68, Xamarin.Bundler.Errors.MT0068, fx);
+					throw ErrorHelper.CreateError (68, Errors.MT0068, fx);
 #if MONOMAC
 				if (parsedFramework == TargetFramework.Net_3_0 || parsedFramework == TargetFramework.Net_3_5)
 					parsedFramework = TargetFramework.Net_2_0;
@@ -218,7 +218,7 @@ namespace Xamarin.Bundler {
 
 #if MTOUCH
 			if (Array.IndexOf (TargetFramework.ValidFrameworks, targetFramework.Value) == -1)
-				throw ErrorHelper.CreateError (70, Xamarin.Bundler.Errors.MT0070, targetFramework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
+				throw ErrorHelper.CreateError (70, Errors.MT0070, targetFramework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 #endif
 		}
 
@@ -396,7 +396,7 @@ namespace Xamarin.Bundler {
 				MoveIfDifferent (path, tmp, use_stamp);
 			} catch (Exception e) {
 				File.WriteAllText (path, contents);
-				ErrorHelper.Warning (1014, e, Xamarin.Bundler.Errors.MT1014, path, e.Message);
+				ErrorHelper.Warning (1014, e, Errors.MT1014, path, e.Message);
 			} finally {
 				Application.TryDelete (tmp);
 			}
@@ -417,7 +417,7 @@ namespace Xamarin.Bundler {
 				MoveIfDifferent (path, tmp, use_stamp);
 			} catch (Exception e) {
 				File.WriteAllBytes (path, contents);
-				ErrorHelper.Warning (1014, e, Xamarin.Bundler.Errors.MT1014, path, e.Message);
+				ErrorHelper.Warning (1014, e, Errors.MT1014, path, e.Message);
 			} finally {
 				Application.TryDelete (tmp);
 			}
@@ -472,7 +472,7 @@ namespace Xamarin.Bundler {
 					Log (2, $"The current language was set to '{culture.DisplayName}' according to the LANG environment variable (LANG={lang_variable}).");
 				}
 			} catch (Exception e) {
-				ErrorHelper.Warning (124, e, Xamarin.Bundler.Errors.MT0124, lang, lang_variable, e.Message);
+				ErrorHelper.Warning (124, e, Errors.MT0124, lang, lang_variable, e.Message);
 			}
 		}
 
@@ -512,7 +512,7 @@ namespace Xamarin.Bundler {
 					}
 					fi.LastWriteTime = timestamp.Value;
 				} catch (Exception e) {
-					ErrorHelper.Warning (128, Xamarin.Bundler.Errors.MT0128, filename, e.Message);
+					ErrorHelper.Warning (128, Errors.MT0128, filename, e.Message);
 				}
 			}
 		}
@@ -548,7 +548,7 @@ namespace Xamarin.Bundler {
 		internal static PDictionary FromPList (string name)
 		{
 			if (!File.Exists (name))
-				throw ErrorHelper.CreateError (24, Xamarin.Bundler.Errors.MT0024, name);
+				throw ErrorHelper.CreateError (24, Errors.MT0024, name);
 			return PDictionary.FromFile (name);
 		}
 
@@ -558,7 +558,7 @@ namespace Xamarin.Bundler {
 		{
 			var output = new StringBuilder ();
 			if (Driver.RunCommand ("xcode-select", new [] { "-p" }, output: output) != 0) {
-				ErrorHelper.Warning (59, Xamarin.Bundler.Errors.MT0059, output.ToString ());
+				ErrorHelper.Warning (59, Errors.MT0059, output.ToString ());
 				return null;
 			}
 			return output.ToString ().Trim ();
@@ -583,27 +583,27 @@ namespace Xamarin.Bundler {
 					// succeeds, but returns nothing.
 					sdk_root = null;
 				} else if (!Directory.Exists (sdk_root)) {
-					ErrorHelper.Warning (60, Xamarin.Bundler.Errors.MT0060, sdk_root);
+					ErrorHelper.Warning (60, Errors.MT0060, sdk_root);
 					sdk_root = null;
 				} else {
 					if (!accept_any_xcode_version)
-						ErrorHelper.Warning (61, Xamarin.Bundler.Errors.MT0061, sdk_root);
+						ErrorHelper.Warning (61, Errors.MT0061, sdk_root);
 				}
 				if (sdk_root == null) {
 					sdk_root = XcodeDefault;
 					if (!Directory.Exists (sdk_root)) {
 						if (warn_if_not_found) {
 							// mmp: and now we give up, but don't throw like mtouch, because we don't want to change behavior (this sometimes worked it appears)
-							ErrorHelper.Warning (56, Xamarin.Bundler.Errors.MT0056);
+							ErrorHelper.Warning (56, Errors.MT0056);
 							return; // Can't validate the version below if we can't even find Xcode...
 						}
 
-						throw ErrorHelper.CreateError (56, Xamarin.Bundler.Errors.MT0056);
+						throw ErrorHelper.CreateError (56, Errors.MT0056);
 					}
-					ErrorHelper.Warning (62, Xamarin.Bundler.Errors.MT0062, sdk_root);
+					ErrorHelper.Warning (62, Errors.MT0062, sdk_root);
 				}
 			} else if (!Directory.Exists (sdk_root)) {
-				throw ErrorHelper.CreateError (55, Xamarin.Bundler.Errors.MT0055, sdk_root);
+				throw ErrorHelper.CreateError (55, Errors.MT0055, sdk_root);
 			}
 
 			// Check what kind of path we got
@@ -614,7 +614,7 @@ namespace Xamarin.Bundler {
 				// path to Contents/Developer
 				developer_directory = Path.GetFullPath (Path.Combine (sdk_root, "..", "..", "Contents", "Developer"));
 			} else {
-				throw ErrorHelper.CreateError (57, Xamarin.Bundler.Errors.MT0057, sdk_root);
+				throw ErrorHelper.CreateError (57, Errors.MT0057, sdk_root);
 			}
 			
 			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
@@ -625,15 +625,15 @@ namespace Xamarin.Bundler {
 				xcode_version = new Version (version);
 				xcode_product_version = plist.GetString ("ProductBuildVersion");
 			} else {
-				throw ErrorHelper.CreateError (58, Xamarin.Bundler.Errors.MT0058, Path.GetDirectoryName (Path.GetDirectoryName (DeveloperDirectory)), plist_path);
+				throw ErrorHelper.CreateError (58, Errors.MT0058, Path.GetDirectoryName (Path.GetDirectoryName (DeveloperDirectory)), plist_path);
 			}
 
 			if (!accept_any_xcode_version) {
 				if (min_xcode_version != null && XcodeVersion < min_xcode_version)
-					throw ErrorHelper.CreateError (51, Xamarin.Bundler.Errors.MT0051, Constants.Version, XcodeVersion.ToString (), sdk_root, PRODUCT, min_xcode_version);
+					throw ErrorHelper.CreateError (51, Errors.MT0051, Constants.Version, XcodeVersion.ToString (), sdk_root, PRODUCT, min_xcode_version);
 
 				if (XcodeVersion < SdkVersions.XcodeVersion)
-					ErrorHelper.Warning (79, Xamarin.Bundler.Errors.MT0079, Constants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, PRODUCT);
+					ErrorHelper.Warning (79, Errors.MT0079, Constants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, PRODUCT);
 			}
 
 			Driver.Log (1, "Using Xcode {0} ({2}) found in {1}", XcodeVersion, sdk_root, XcodeProductVersion);

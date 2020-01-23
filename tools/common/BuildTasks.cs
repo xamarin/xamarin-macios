@@ -178,7 +178,7 @@ namespace Xamarin.Bundler
 		public bool Rebuilt {
 			get {
 				if (!completed_task.Task.IsCompleted)
-					throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, "Can't rebuild a task that hasn't completed");
+					throw ErrorHelper.CreateError (99, Errors.MT0099, "Can't rebuild a task that hasn't completed");
 				return completed_task.Task.Result;
 			}
 		}
@@ -287,7 +287,7 @@ namespace Xamarin.Bundler
 
 		protected virtual void Execute ()
 		{
-			throw ErrorHelper.CreateError (99, Xamarin.Bundler.Errors.MT0099, "'Either Execute or ExecuteAsync must be overridden'");
+			throw ErrorHelper.CreateError (99, Errors.MT0099, "'Either Execute or ExecuteAsync must be overridden'");
 		}
 
 		public override string ToString ()
@@ -302,7 +302,7 @@ namespace Xamarin.Bundler
 				if (!reported_5107) {
 					// There can be thousands of these, but we only need one.
 					reported_5107 = true;
-					exceptions.Add (ErrorHelper.CreateError (5107, Xamarin.Bundler.Errors.MT5107, assembly_name));
+					exceptions.Add (ErrorHelper.CreateError (5107, Errors.MT5107, assembly_name));
 				}
 			}
 		}
@@ -315,7 +315,7 @@ namespace Xamarin.Bundler
 
 			if (Driver.Verbosity < 6 && lines.Count () > 1000) {
 				lines = lines.Take (1000); // Limit the output so that we don't overload VSfM.
-				exceptions.Add (ErrorHelper.CreateWarning (5108, Xamarin.Bundler.Errors.MT5108));
+				exceptions.Add (ErrorHelper.CreateWarning (5108, Errors.MT5108));
 			}
 
 			// Construct the entire message before writing anything, so that there's a better chance the message isn't
