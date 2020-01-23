@@ -427,8 +427,8 @@
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
-    <Compile Include="mtouch.Designer.cs">
-      <DependentUpon>mtouch.resx</DependentUpon>
+    <Compile Include="Errors.Designer.cs">
+      <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -462,12 +462,12 @@
     <Folder Include="Xamarin.Linker\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="mtouch.resx">
+    <EmbeddedResource Include="Errors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <XlfSourceFormat>Resx</XlfSourceFormat>
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
-      <LastGenOutput>mtouch.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>Errors</CustomToolNamespace>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <LogicalName>Errors.mtouch.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>

@@ -117,8 +117,8 @@
     <Compile Include="..\..\tools\common\MachO.cs">
       <Link>MachO.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\mtouch\mtouch.Designer.cs">
-      <Link>mtouch.Designer.cs</Link>
+    <Compile Include="..\..\tools\mtouch\Errors.Designer.cs">
+      <Link>Errors.Designer.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -127,8 +127,8 @@
       <Link>MacTestMain.cs</Link>
     </None>
     <None Include="packages.config" />
-    <None Include="..\..\tools\mtouch\mtouch.resx">
-      <Link>mtouch.resx</Link>
+    <None Include="..\..\tools\mtouch\Errors.resx">
+      <Link>Errors.resx</Link>
     </None>
   </ItemGroup>
   <ItemGroup>

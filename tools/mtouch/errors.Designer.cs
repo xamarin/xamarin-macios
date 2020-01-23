@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Errors {
+namespace Xamarin.Bundler {
     using System;
     using System.Reflection;
     
@@ -16,21 +16,21 @@ namespace Errors {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class mtouch {
+    internal class Errors {
         
         private static System.Resources.ResourceManager resourceMan;
         
         private static System.Globalization.CultureInfo resourceCulture;
         
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal mtouch() {
+        internal Errors() {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Errors.mtouch", typeof(mtouch).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Errors.mtouch", typeof(Errors).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -614,120 +614,6 @@ namespace Errors {
         internal static string MT0099 {
             get {
                 return ResourceManager.GetString("MT0099", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_A {
-            get {
-                return ResourceManager.GetString("MT0099_A", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_B {
-            get {
-                return ResourceManager.GetString("MT0099_B", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_C {
-            get {
-                return ResourceManager.GetString("MT0099_C", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_D {
-            get {
-                return ResourceManager.GetString("MT0099_D", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_E {
-            get {
-                return ResourceManager.GetString("MT0099_E", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_F {
-            get {
-                return ResourceManager.GetString("MT0099_F", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_G {
-            get {
-                return ResourceManager.GetString("MT0099_G", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_H {
-            get {
-                return ResourceManager.GetString("MT0099_H", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_I {
-            get {
-                return ResourceManager.GetString("MT0099_I", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_J {
-            get {
-                return ResourceManager.GetString("MT0099_J", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_K {
-            get {
-                return ResourceManager.GetString("MT0099_K", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_L {
-            get {
-                return ResourceManager.GetString("MT0099_L", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_M {
-            get {
-                return ResourceManager.GetString("MT0099_M", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_N {
-            get {
-                return ResourceManager.GetString("MT0099_N", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_O {
-            get {
-                return ResourceManager.GetString("MT0099_O", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_P {
-            get {
-                return ResourceManager.GetString("MT0099_P", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_Q {
-            get {
-                return ResourceManager.GetString("MT0099_Q", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_R {
-            get {
-                return ResourceManager.GetString("MT0099_R", resourceCulture);
-            }
-        }
-        
-        internal static string MT0099_S {
-            get {
-                return ResourceManager.GetString("MT0099_S", resourceCulture);
             }
         }
         

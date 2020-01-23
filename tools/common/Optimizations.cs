@@ -166,7 +166,7 @@ namespace Xamarin.Bundler
 				switch ((Opt) i) {
 				case Opt.StaticBlockToDelegateLookup:
 					if (app.Registrar != RegistrarMode.Static) {
-						ErrorHelper.Warning (2003, Errors.mtouch.MT2003,  (values [i].Value ? "" : "-"), opt_names [i]);
+						ErrorHelper.Warning (2003, Xamarin.Bundler.Errors.MT2003,  (values [i].Value ? "" : "-"), opt_names [i]);
 						values [i] = false;
 						continue;
 					}
@@ -176,7 +176,7 @@ namespace Xamarin.Bundler
 				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
 					if (app.Registrar != RegistrarMode.Static) {
-						ErrorHelper.Warning(2003, Errors.mtouch.MT2003, (values[i].Value ? "" : "-"), opt_names[i]);
+						ErrorHelper.Warning(2003, Xamarin.Bundler.Errors.MT2003, (values[i].Value ? "" : "-"), opt_names[i]);
 						values [i] = false;
 						continue;
 					}
@@ -185,14 +185,14 @@ namespace Xamarin.Bundler
 				case Opt.RemoveUnsupportedILForBitcode:
 					if (app.Platform != Utils.ApplePlatform.WatchOS) {
 						if (!all.HasValue) // Don't show this warning if it was enabled with --optimize=all
-							ErrorHelper.Warning (2003, Errors.mtouch.MT2003_A, opt_names [(int) Opt.RemoveUnsupportedILForBitcode]);
+							ErrorHelper.Warning (2003, Xamarin.Bundler.Errors.MT2003_A, opt_names [(int) Opt.RemoveUnsupportedILForBitcode]);
 						values [i] = false;
 					}
 					break;
 #endif
 				default:
 					if (app.LinkMode == LinkMode.None) {
-						ErrorHelper.Warning (2003, Errors.mtouch.MT2003_B, (values [i].Value ? "" : "-"), opt_names [i]);
+						ErrorHelper.Warning (2003, Xamarin.Bundler.Errors.MT2003_B, (values [i].Value ? "" : "-"), opt_names [i]);
 						values [i] = false;
 					}
 					break;
@@ -315,7 +315,7 @@ namespace Xamarin.Bundler
 		{
 			foreach (var option in options.Split (',')) {
 				if (option == null || option.Length < 2)
-					throw ErrorHelper.CreateError (10, Errors.mtouch.MT0010, $"'--optimize={options}'");
+					throw ErrorHelper.CreateError (10, Xamarin.Bundler.Errors.MT0010, $"'--optimize={options}'");
 
 				ParseOption (option);
 			}
@@ -355,7 +355,7 @@ namespace Xamarin.Bundler
 					values [i] = enabled;
 				}
 				if (!found)
-					ErrorHelper.Warning (132, Errors.mtouch.MT0132, opt, string.Join (", ", opt_names.Where ((v) => !string.IsNullOrEmpty (v))));
+					ErrorHelper.Warning (132, Xamarin.Bundler.Errors.MT0132, opt, string.Join (", ", opt_names.Where ((v) => !string.IsNullOrEmpty (v))));
 			}
 		}
 	}

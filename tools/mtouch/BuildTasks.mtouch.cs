@@ -129,7 +129,7 @@ namespace Xamarin.Bundler
 	{
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5103, Errors.mtouch.MT5103_A, string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
+			throw ErrorHelper.CreateError (5103, Xamarin.Bundler.Errors.MT5103_A, string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
 		}
 	}
 
@@ -137,7 +137,7 @@ namespace Xamarin.Bundler
 	{
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (4002, Errors.mtouch.MT4002);
+			throw ErrorHelper.CreateError (4002, Xamarin.Bundler.Errors.MT4002);
 		}
 	}
 
@@ -271,7 +271,7 @@ namespace Xamarin.Bundler
 
 			WriteLimitedOutput ($"AOT Compilation exited with code {exit_code}, command:\n{Command}", output_lines, exceptions);
 
-			exceptions.Add (ErrorHelper.CreateError (3001, Errors.mtouch.MT3001, AssemblyName));
+			exceptions.Add (ErrorHelper.CreateError (3001, Xamarin.Bundler.Errors.MT3001, AssemblyName));
 
 			throw new AggregateException (exceptions);
 		}
@@ -321,14 +321,14 @@ namespace Xamarin.Bundler
 					foreach (var mr in assembly.UnresolvedModuleReferences) {
 						// TODO: add more diagnose information on the warnings
 						var name = Path.GetFileNameWithoutExtension (mr.Name);
-						linker_errors.Add (new MonoTouchException (5215, false, Errors.mtouch.MT5215, name));
+						linker_errors.Add (new MonoTouchException (5215, false, Xamarin.Bundler.Errors.MT5215, name));
 					}
 				}
 				// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
 				if (Target.App.UserGccFlags?.Count > 0)
-					linker_errors.Add (new MonoTouchException (5201, true, Errors.mtouch.MT5201, StringUtils.FormatArguments (Target.App.UserGccFlags)));
+					linker_errors.Add (new MonoTouchException (5201, true, Xamarin.Bundler.Errors.MT5201, StringUtils.FormatArguments (Target.App.UserGccFlags)));
 				else
-					linker_errors.Add (new MonoTouchException (5202, true, Errors.mtouch.MT5202));
+					linker_errors.Add (new MonoTouchException (5202, true, Xamarin.Bundler.Errors.MT5202));
 
 				if (code == 255) {
 					// check command length
@@ -339,7 +339,7 @@ namespace Xamarin.Bundler
 						if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
 							var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;
 							if (cmd_length > arg_max) {
-								linker_errors.Add (ErrorHelper.CreateWarning (5217, Errors.mtouch.MT5217, cmd_length));
+								linker_errors.Add (ErrorHelper.CreateWarning (5217, Xamarin.Bundler.Errors.MT5217, cmd_length));
 							} else {
 								Driver.Log (3, $"Linker failure is probably not due to command-line length (actual: {cmd_length} limit: {arg_max}");
 							}
@@ -381,7 +381,7 @@ namespace Xamarin.Bundler
 
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5216, Errors.mtouch.MT5216, OutputFile);
+			throw ErrorHelper.CreateError (5216, Xamarin.Bundler.Errors.MT5216, OutputFile);
 		}
 	}
 
@@ -537,7 +537,7 @@ namespace Xamarin.Bundler
 
 		protected virtual void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5106, Errors.mtouch.MT5106, string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
+			throw ErrorHelper.CreateError (5106, Xamarin.Bundler.Errors.MT5106, string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
 		}
 
 		protected async Task<int> CompileAsync ()

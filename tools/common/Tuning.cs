@@ -51,14 +51,14 @@ namespace MonoMac.Tuner {
 				var re = me.InnerException as ResolutionException;
 				if (re == null) {
 					if (me.InnerException != null) {
-						return ErrorHelper.CreateError (2102, me, Errors.mtouch.MT2102, me.Method.FullName, me.Method.Module, me.InnerException.Message);
+						return ErrorHelper.CreateError (2102, me, Xamarin.Bundler.Errors.MT2102, me.Method.FullName, me.Method.Module, me.InnerException.Message);
 					} else {
-						return ErrorHelper.CreateError (2102, me, Errors.mtouch.MT2102_A, me.Method.FullName, me.Method.Module);
+						return ErrorHelper.CreateError (2102, me, Xamarin.Bundler.Errors.MT2102_A, me.Method.FullName, me.Method.Module);
 					}
 				} else {
 					TypeReference tr = (re.Member as TypeReference);
 					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-					return ErrorHelper.CreateError (2101, me, Errors.mtouch.MT2101, re.Member, me.Method.FullName, scope);
+					return ErrorHelper.CreateError (2101, me, Xamarin.Bundler.Errors.MT2101, re.Member, me.Method.FullName, scope);
 				}
 			}
 			case ResolutionException re:

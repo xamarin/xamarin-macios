@@ -423,9 +423,9 @@
       <Link>Xamarin.Linker\CustomSymbolWriter.cs</Link>
     </Compile>
     <Compile Include="Target.mmp.cs" />
-    <Compile Include="..\mtouch\mtouch.Designer.cs">
-      <Link>mtouch.Designer.cs</Link>
-      <DependentUpon>mtouch.resx</DependentUpon>
+    <Compile Include="..\mtouch\Errors.Designer.cs">
+      <Link>Errors.Designer.cs</Link>
+      <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -445,12 +445,12 @@
     <EmbeddedResource Include="Info.plist.tmpl">
       <LogicalName>Info.plist.tmpl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\mtouch.resx">
-      <Link>mtouch.resx</Link>
+    <EmbeddedResource Include="..\mtouch\Errors.resx">
+      <Link>Errors.resx</Link>
       <XlfSourceFormat>Resx</XlfSourceFormat>
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>mtouch.Designer.cs</LastGenOutput>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Errors</CustomToolNamespace>
       <LogicalName>Errors.mtouch.resources</LogicalName>
     </EmbeddedResource>
