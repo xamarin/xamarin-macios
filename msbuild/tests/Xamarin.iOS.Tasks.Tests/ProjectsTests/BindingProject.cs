@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using System.IO;
+using Xamarin.Tests;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -17,7 +18,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BuildTest ()
 		{
-			var mtouchPaths = SetupProjectPaths ("bindings-test", "bindings-test", "../../../tests/", false, Platform, "Any CPU/Debug-unified");
+			var mtouchPaths = SetupProjectPaths ("bindings-test", "bindings-test", Path.Combine (Configuration.RootPath, "tests"), false, Platform, "Any CPU/Debug-unified");
 
 			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
 
@@ -37,7 +38,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void FrameworkTest ()
 		{
-			var mtouchPaths = SetupProjectPaths ("bindings-test", "bindings-test", "../../../tests/", false, Platform, "Any CPU/Debug-unified");
+			var mtouchPaths = SetupProjectPaths ("bindings-test", "bindings-test", Path.Combine (Configuration.RootPath, "tests"), false, Platform, "Any CPU/Debug-unified");
 
 			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
 			AppBundlePath = mtouchPaths.AppBundlePath;
