@@ -656,23 +656,6 @@ namespace xharness
 			Log (0, message, args);
 		}
 
-		public void LogWrench (string message, params object[] args)
-		{
-			// Disable this for now, since we're not uploading directly to wrench anymore, but instead using the Html Report.
-			//if (!InWrench)
-			//	return;
-
-			//Console.WriteLine (message, args);
-		}
-
-		public void LogWrench (string message)
-		{
-			if (!InWrench)
-				return;
-
-			Console.WriteLine (message);
-		}
-
 		public bool InWrench {
 			get {
 				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
@@ -949,7 +932,6 @@ namespace xharness
 						crash_reports = downloaded_crash_reports;
 					}
 					foreach (var cp in crash_reports) {
-						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", cp.Path);
 						Log.WriteLine ("    {0}", cp.Path);
 					}
 					crash_report_search_done = true;
