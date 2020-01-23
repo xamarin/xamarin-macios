@@ -251,7 +251,7 @@ namespace Xamarin.Bundler
 						// When not using the simlauncher, but still building for the simulator, we write the executable to a arch-specific app directory (if building for both 32-bit and 64-bit), or just the app directory (if building for a single architecture)
 						if (Abis.Count != 1)
 							throw ErrorHelper.CreateError (99, Errors.MT0099, $"expected exactly one abi for a simulator architecture, found: {string.Join(", ", Abis.Select((v) => v.ToString()))}");
-							executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
+						executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
 					} else {
 						foreach (var abi in Abis)
 							executables.Add (abi, Path.Combine (Path.Combine (App.Cache.Location, abi.AsArchString (), App.ExecutableName)));
