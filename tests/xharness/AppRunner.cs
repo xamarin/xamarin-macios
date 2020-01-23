@@ -457,7 +457,7 @@ namespace xharness
 			// wraps the NUnit xml output with additional information, which we need to unwrap so that Jenkins understands it.
 			// 
 			// On the other hand, the nunit and xunit do not have that data and have to be parsed.
-			if (Harness.InJenkins) {
+			if (Harness.InCI) {
 				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				// move the xml to a tmp path, that path will be use to read the xml
 				// in the reader, and the writer will use the stream from the logger to
@@ -614,7 +614,7 @@ namespace xharness
 			args.Add ("-argument=-app-arg:-enablenetwork");
 			args.Add ("-setenv=NUNIT_ENABLE_NETWORK=true");
 			// detect if we are using a jenkins bot.
-			var useXmlOutput = Harness.InJenkins;
+			var useXmlOutput = Harness.InCI;
 			if (useXmlOutput) {
 				args.Add ("-setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 				args.Add ("-setenv=NUNIT_ENABLE_XML_MODE=wrapped");
