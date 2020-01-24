@@ -334,6 +334,23 @@ namespace xharness
 			}
 		}
 
+		// test if the file is valid xml, or at least, that can be read. The reader will throw an 
+		// exception if it cannot read the file. This is not ideal :/
+		bool IsValidXml (string filePath)
+		{
+			if (!File.Exists (filePath))
+				return false;
+
+			try {
+				using (var stream = new StreamReader (filePath)) 
+				using (var reader = XmlReader.Create (stream)) {
+					return true;
+				}
+			} catch (Exception e) {
+				return false;
+			}
+		}
+
 		bool IsTouchUnitResult (StreamReader stream)
 		{
 			// TouchUnitTestRun is the very first node in the TouchUnit xml result
@@ -457,7 +474,12 @@ namespace xharness
 			// wraps the NUnit xml output with additional information, which we need to unwrap so that Jenkins understands it.
 			// 
 			// On the other hand, the nunit and xunit do not have that data and have to be parsed.
-			if (Harness.InCI) {
+			// 
+			// This if statement has a small trick, we found out that internet sharing in some of the bots (VSTS) does not work, in
+			// that case, we cannot do a TCP connection to xharness to get the log, this is a problem since if we did not get the xml
+			// from the TCP connection, we are going to fail when trying to read it and not parse it. Therefore, we are not only
+			// going to check if we are in CI, but also if the listener_log is valid.
+			if (Harness.InCI && IsValidXml (listener_log.FullPath)) {
 				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				// move the xml to a tmp path, that path will be use to read the xml
 				// in the reader, and the writer will use the stream from the logger to
