@@ -102,7 +102,7 @@ namespace Xamarin.iOS.Tasks
 			ClearMessages ();
 
 			// Touching the binding file should
-			Touch (Path.Combine (Path.GetDirectoryName (bindingLib.ProjectCSProjPath), @"../../../tests/bindings-framework-test/ApiDefinition.cs"));
+			Touch (Path.Combine (Configuration.RootPath, "tests", "bindings-framework-test", "ApiDefinition.cs"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
 			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding file build did not create package?");
 			ClearMessages ();
@@ -113,7 +113,7 @@ namespace Xamarin.iOS.Tasks
 			ClearMessages ();
 
 			// Touching native library should
-			Touch (Path.Combine (Path.GetDirectoryName (bindingLib.ProjectCSProjPath), @"../../../tests/test-libraries/.libs/ios-fat/XTest.framework/XTest"));
+			Touch (Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "ios-fat", "XTest.framework/XTest"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
 			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding build did not create package?");
 		}
