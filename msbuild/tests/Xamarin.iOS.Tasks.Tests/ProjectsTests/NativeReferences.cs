@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
+using Xamarin.Tests;
+
 namespace Xamarin.iOS.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
@@ -20,7 +22,7 @@ namespace Xamarin.iOS.Tasks {
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
 			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-			var nr = proj.AddItem ("NativeReference", Path.Combine (".", "..", "..", "..", "tests", "test-libraries", ".libs", "ios-fat", "XTest.framework")).First ();
+			var nr = proj.AddItem ("NativeReference", Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "ios-fat", "XTest.framework")).First ();
 			nr.SetMetadataValue ("IsCxx", "False");
 			nr.SetMetadataValue ("Kind", "Framework");
 
