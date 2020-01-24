@@ -1153,7 +1153,7 @@ namespace xharness
 			try {
 				Directory.CreateDirectory (LogDirectory);
 				Log log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
-				if (Harness.InWrench)
+				if (Harness.InCI)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
 
@@ -1161,7 +1161,7 @@ namespace xharness
 				if (IsServerMode)
 					tasks.Add (RunTestServer ());
 
-				if (Harness.InJenkins) {
+				if (Harness.InCI) {
 					Task.Factory.StartNew (async () => {
 						while (true) {
 							await Task.Delay (TimeSpan.FromMinutes (10));
@@ -3735,7 +3735,7 @@ namespace xharness
 					}
 
 					// Also clean up after us locally.
-					if (Harness.InJenkins || Harness.InWrench || (Jenkins.CleanSuccessfulTestRuns && Succeeded))
+					if (Harness.InCI || (Jenkins.CleanSuccessfulTestRuns && Succeeded))
 						await BuildTask.CleanAsync ();
 				}
 			}

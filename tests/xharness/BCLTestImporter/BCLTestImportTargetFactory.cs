@@ -26,7 +26,7 @@ namespace xharness.BCLTestImporter {
 				MacMonoSDKPath = Harness.MONO_MAC_SDK_DESTDIR,
 				Override = true,
 				GuidGenerator = Harness.NewStableGuid,
-				GroupTests = Harness.InJenkins || Harness.UseGroupedApps,
+				GroupTests = Harness.InCI || Harness.UseGroupedApps,
 			};
 		}
 		
