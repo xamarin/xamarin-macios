@@ -147,6 +147,7 @@ namespace Samples {
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj.
 				{ "WebServices/TodoWCF/iOS/TodoWCF.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "WebServices/TodoWCF/TodoWCF.sln" } },
+				{ "UserInterface/Xaminals/Xaminals.iOS/Xaminals.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "UserInterface/Xaminals/Xaminals.sln" } },
 			};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
@@ -189,6 +190,60 @@ namespace Samples {
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Known failures
 				{ "simpleapp-with-framework/simpleapp-with-framework/simpleapp-with-framework.csproj", new SampleTest { BuildSolution = true, Solution = "simpleapp-with-framework/simpleapp-with-framework.sln" } },
+			};
+
+		static IEnumerable<SampleTestData> GetSampleData ()
+		{
+			return GetSampleTestData (test_data, ORG, REPO, HASH);
+		}
+	}
+
+	[Category (CATEGORY)]
+	public class XappyTester : SampleTester {
+		const string ORG = "davidortinau";
+		const string REPO = "Xappy";
+		const string CATEGORY = "davidortinauxappy"; // categories can't contain dashes
+		const string HASH = "46e5897bac974e000fcc7e1d10d01ab8d3072eb2";
+
+		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+				// Build solution instead of csproj.
+				{ "Xappy/Xappy.iOS/Xappy.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln" } },
+			};
+
+		static IEnumerable<SampleTestData> GetSampleData ()
+		{
+			return GetSampleTestData (test_data, ORG, REPO, HASH);
+		}
+	}
+
+	[Category (CATEGORY)]
+	public class SmartHotelTester : SampleTester {
+		const string ORG = "microsoft";
+		const string REPO = "SmartHotel360-Mobile";
+		const string CATEGORY = "microsoftsmarthotel"; // categories can't contain dashes
+		const string HASH = "4004b32c955f8340a0306bad2b180ecf5adaf117";
+
+		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+				// Build solution instead of csproj.
+				{ "Source/SmartHotel.Clients/SmartHotel.Clients.iOS/SmartHotel.Clients.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Source/SmartHotel.Clients.iOS.sln" } },
+			};
+
+		static IEnumerable<SampleTestData> GetSampleData ()
+		{
+			return GetSampleTestData (test_data, ORG, REPO, HASH);
+		}
+	}
+
+	[Category (CATEGORY)]
+	public class ConferenceVisionTester : SampleTester {
+		const string ORG = "microsoft";
+		const string REPO = "ConferenceVision";
+		const string CATEGORY = "microsoftconferencevision"; // categories can't contain dashes
+		const string HASH = "b477f99c9e23097b31168697b2c168e90c34fd4d";
+
+		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+				// Build solution instead of csproj.
+				{ "ConferenceVision/ConferenceVision.iOS/ConferenceVision.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "ConferenceVision.sln" } },
 			};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
