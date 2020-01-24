@@ -103,7 +103,7 @@ namespace Xamarin.Bundler {
 				if (option.Contains ("|")) {
 					string [] optionTypeParts = option.Split ('|');
 					if (optionTypeParts.Length != 2)
-						throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+						throw new MonoMacException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 					switch (optionTypeParts [0]) {
 					case "none":
 					case "core":
@@ -113,14 +113,14 @@ namespace Xamarin.Bundler {
 						switch (optionTypeParts [1]) {
 						case "hybrid":
 							if (option != "all")
-								throw new MonoMacException (114, true, "Hybrid AOT compilation requires all assemblies to be AOT compiled");
+								throw new MonoMacException (114, true, Errors.MM0114);
 							kind = AOTKind.Hybrid;
 							break;
 						case "standard":
 							kind = AOTKind.Standard;
 							break;
 						default:
-							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+							throw new MonoMacException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 						}
 						break;
 					}
@@ -164,10 +164,10 @@ namespace Xamarin.Bundler {
 					ExcludedAssemblies.Add (option.Substring (1));
 					continue;
 				}
-				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+				throw new MonoMacException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 			}
 			if (CompilationType == AOTCompilationType.Default)
-				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+				throw new MonoMacException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 
 		}
 	}
@@ -200,7 +200,7 @@ namespace Xamarin.Bundler {
 		public void Compile (IFileEnumerator files)
 		{
 			if (!options.IsAOT)
-				throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", options.CompilationType);
+				throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"AOTBundle with aot: {options.CompilationType}\" ");
 
 			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
 
@@ -212,13 +212,13 @@ namespace Xamarin.Bundler {
 					cmd.Add ("--runtime=mobile");
 				cmd.Add (file);
 				if (RunCommand (MonoPath, cmd, monoEnv) != 0)
-					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
+					throw ErrorHelper.CreateError (3001, Errors.MX3001, "AOT", file);
 			});
 
 			if (IsRelease && options.IsHybridAOT) {
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
 					if (RunCommand (StripCommand, new [] { file }) != 0)
-						throw ErrorHelper.CreateError (3001, "Could not strip the assembly '{0}'", file);
+						throw ErrorHelper.CreateError (3001, Errors.MX3001, "strip", file);
 				});
 			}
 
@@ -227,7 +227,7 @@ namespace Xamarin.Bundler {
 				// There isn't an easy was to disable this behavior, so clean up under release
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
 					if (RunCommand (DeleteDebugSymbolCommand, new [] { "-r", file + ".dylib.dSYM/" }, monoEnv) != 0)
-						throw ErrorHelper.CreateError (3001, "Could not delete debug info from assembly '{0}'", file);
+						throw ErrorHelper.CreateError (3001, Errors.MX3001, "delete debug info from", file);
 				});
 			}
 		}
@@ -278,17 +278,17 @@ namespace Xamarin.Bundler {
 				case AOTCompilationType.Explicit:
 					break; // In explicit, only included includedAssemblies included
 				default:
-					throw ErrorHelper.CreateError (0099, "Internal error \"GetFilesToAOT with aot: {0}\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", options.CompilationType);
+					throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"GetFilesToAOT with aot: {options.CompilationType}\"" );
 				}
 			}
 
 			var unusedIncludes = includedAssemblies.Where (pair => !pair.Value).Select (pair => pair.Key).ToList ();
 			if (unusedIncludes.Count > 0)
-				throw ErrorHelper.CreateError (3009, "AOT of '{0}' was requested but was not found", String.Join (" ", unusedIncludes));
+				throw ErrorHelper.CreateError (3009, Errors.MM3009, String.Join (" ", unusedIncludes));
 
 			var unusedExcludes = excludedAssemblies.Where (pair => !pair.Value).Select (pair => pair.Key).ToList ();
 			if (unusedExcludes.Count > 0)
-				throw ErrorHelper.CreateError (3010, "Exclusion of AOT of '{0}' was requested but was not found", String.Join (" ", unusedExcludes));
+				throw ErrorHelper.CreateError (3010, Errors.MM3010, String.Join (" ", unusedExcludes));
 
 			return aotFiles;
 		}
@@ -305,7 +305,7 @@ namespace Xamarin.Bundler {
 				case AOTCompilerType.System64:
 					return "/Library/Frameworks/Mono.framework/Commands/mono64";
 				default:
-					throw ErrorHelper.CreateError (0099, "Internal error \"MonoPath with compilerType: {0}\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", compilerType);
+					throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"MonoPath with compilerType: {compilerType}\"");
 				}
 			}
 		}

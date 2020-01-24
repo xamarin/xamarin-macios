@@ -290,7 +290,7 @@ namespace Xamarin.Bundler {
 		{
 			var eq_index = value.IndexOf ('=');
 			if (eq_index == -1)
-				throw ErrorHelper.CreateError (10, Errors.MT0010, $"--assembly-build-target={value}");
+				throw ErrorHelper.CreateError (10, Errors.MX0010, $"--assembly-build-target={value}");
 
 			var assembly_name = value.Substring (0, eq_index);
 			string target, name;
@@ -331,7 +331,7 @@ namespace Xamarin.Bundler {
 
 				break;
 			default:
-				throw ErrorHelper.CreateError (10, Errors.MT0010, $"--assembly-build-target={value}");
+				throw ErrorHelper.CreateError (10, Errors.MX0010, $"--assembly-build-target={value}");
 			}
 
 			assembly_build_targets [assembly_name] = new Tuple<AssemblyBuildTarget, string> (build_target, name);
@@ -527,7 +527,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return false;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MT0071, Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
 			}
 		}
 
@@ -674,7 +674,7 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (76, Errors.MT0076, "Xamarin.TVOS");
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MT0071, Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
 			}
 		}
 
@@ -721,7 +721,7 @@ namespace Xamarin.Bundler {
 				}
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MT0071, Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
 			}
 
 			foreach (var abi in abis) {
@@ -1225,9 +1225,9 @@ namespace Xamarin.Bundler {
 					exceptions = new List<Exception> ();
 
 				if (root [0] == '-' || root [0] == '/') {
-					exceptions.Add (ErrorHelper.CreateError (18, Errors.MT0018, root));
+					exceptions.Add (ErrorHelper.CreateError (18, Errors.MX0018, root));
 				} else {
-					exceptions.Add (ErrorHelper.CreateError (7, Errors.MT0007, root));
+					exceptions.Add (ErrorHelper.CreateError (7, Errors.MX0007, root));
 				}
 			}
 			if (exceptions?.Count > 0)
@@ -1264,7 +1264,7 @@ namespace Xamarin.Bundler {
 			foreach (var root in RootAssemblies) {
 				string root_wo_ext = Path.GetFileNameWithoutExtension (root);
 				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
-					throw new MonoTouchException (3, true, Errors.MT0003, root_wo_ext);
+					throw new MonoTouchException (3, true, Errors.MX0003, root_wo_ext);
 			}
 
 			if (IsDualBuild) {
@@ -1403,7 +1403,7 @@ namespace Xamarin.Bundler {
 					// All versions of tvOS support extensions
 					break;
 				default:
-					throw ErrorHelper.CreateError (71, Errors.MT0071, Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
 				}
 			}
 
@@ -1722,7 +1722,7 @@ namespace Xamarin.Bundler {
 					continue; // Don't copy frameworks to app extensions (except watch extensions), they go into the container app.
 
 				if (!files.All ((v) => Directory.Exists (v) == isFramework))
-					throw ErrorHelper.CreateError (99, Errors.MT0099, $"'can't process a mix of dylibs and frameworks: {string.Join(", ", files)}'");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, $"'can't process a mix of dylibs and frameworks: {string.Join(", ", files)}'");
 
 				if (isFramework) {
 					// This is a framework
@@ -1746,7 +1746,7 @@ namespace Xamarin.Bundler {
 						throw new AggregateException (exceptions);
 					}
 					if (info.DylibToFramework)
-						throw ErrorHelper.CreateError (99, Errors.MT0099, $"'can't convert frameworks to frameworks: {files.First()}'");
+						throw ErrorHelper.CreateError (99, Errors.MX0099, $"'can't convert frameworks to frameworks: {files.First()}'");
 					var framework_src = files.First ();
 					var framework_filename = Path.Combine (framework_src, Path.GetFileNameWithoutExtension (framework_src));
 					var dynamic = false;
@@ -2257,7 +2257,7 @@ namespace Xamarin.Bundler {
 					var codeShared = assemblies.Count ((v) => v.IsCodeShared || v.BundleInContainerApp);
 					if (codeShared > 0) {
 						if (codeShared != assemblies.Length)
-							throw ErrorHelper.CreateError (99, Errors.MT0099, $"all assemblies in a joined build target must have the same code sharing options ({string.Join(", ", assemblies.Select((v) => v.Identity + "=" + v.IsCodeShared))})");
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"all assemblies in a joined build target must have the same code sharing options ({string.Join(", ", assemblies.Select((v) => v.Identity + "=" + v.IsCodeShared))})");
 
 						continue; // These resources will be found in the main app.
 					}
@@ -2381,7 +2381,7 @@ namespace Xamarin.Bundler {
 				sb.AppendLine ("                <integer>4</integer>");
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MT0071, Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
 			}
 			sb.AppendLine ("        </array>");
 

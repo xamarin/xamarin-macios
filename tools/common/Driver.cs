@@ -35,7 +35,7 @@ namespace Xamarin.Bundler {
 						ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error);
 					}
 				} catch (Exception ex) {
-					ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "--warnaserror", ex.Message);
+					ErrorHelper.Error (26, ex, Errors.MX0026, "--warnaserror", ex.Message);
 				}
 			});
 			options.Add ("nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v =>
@@ -48,7 +48,7 @@ namespace Xamarin.Bundler {
 						ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
 					}
 				} catch (Exception ex) {
-					ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "--nowarn", ex.Message);
+					ErrorHelper.Error (26, ex, Errors.MX0026, "--nowarn", ex.Message);
 				}
 			});
 			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { app.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
@@ -73,7 +73,7 @@ namespace Xamarin.Bundler {
 					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, Errors.MT0026, "--marshal-objective-exceptions", $"Invalid value: {v}. Valid values are: default, unwindmanagedcode, throwmanagedexception, abort and disable.");
+					throw ErrorHelper.CreateError (26, Errors.MX0026, "--marshal-objective-exceptions", $"Invalid value: {v}. Valid values are: default, unwindmanagedcode, throwmanagedexception, abort and disable.");
 				}
 			});
 			options.Add ("marshal-managed-exceptions:", "Specify how managed exceptions should be marshalled. Valid values: default, unwindnativecode, throwobjectivecexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwobjectivecexception', while on all other platform it's 'disable').", v => {
@@ -96,7 +96,7 @@ namespace Xamarin.Bundler {
 					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, Errors.MT0026, "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
+					throw ErrorHelper.CreateError (26, Errors.MX0026, "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
 				}
 			});
 			options.Add ("j|jobs=", "The level of concurrency. Default is the number of processors.", v => {
@@ -120,7 +120,7 @@ namespace Xamarin.Bundler {
 					app.SymbolMode = SymbolMode.Ignore;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, Errors.MT0026, "--dynamic-symbol-mode", $"Invalid value: {v}. Valid values are: default, linker, code and ignore.");
+					throw ErrorHelper.CreateError (26, Errors.MX0026, "--dynamic-symbol-mode", $"Invalid value: {v}. Valid values are: default, linker, code and ignore.");
 				}
 			});
 			options.Add ("ignore-dynamic-symbol:", "Specify that Xamarin.iOS/Xamarin.Mac should not try to prevent the linker from removing the specified symbol.", (v) => {
@@ -205,7 +205,7 @@ namespace Xamarin.Bundler {
 			default:
 				TargetFramework parsedFramework;
 				if (!Xamarin.Utils.TargetFramework.TryParse (fx, out parsedFramework))
-					throw ErrorHelper.CreateError (68, Errors.MT0068, fx);
+					throw ErrorHelper.CreateError (68, Errors.MX0068, fx);
 #if MONOMAC
 				if (parsedFramework == TargetFramework.Net_3_0 || parsedFramework == TargetFramework.Net_3_5)
 					parsedFramework = TargetFramework.Net_2_0;
@@ -558,7 +558,7 @@ namespace Xamarin.Bundler {
 		{
 			var output = new StringBuilder ();
 			if (Driver.RunCommand ("xcode-select", new [] { "-p" }, output: output) != 0) {
-				ErrorHelper.Warning (59, Errors.MT0059, output.ToString ());
+				ErrorHelper.Warning (59, Errors.MX0059, output.ToString ());
 				return null;
 			}
 			return output.ToString ().Trim ();
@@ -583,7 +583,7 @@ namespace Xamarin.Bundler {
 					// succeeds, but returns nothing.
 					sdk_root = null;
 				} else if (!Directory.Exists (sdk_root)) {
-					ErrorHelper.Warning (60, Errors.MT0060, sdk_root);
+					ErrorHelper.Warning (60, Errors.MX0060, sdk_root);
 					sdk_root = null;
 				} else {
 					if (!accept_any_xcode_version)
@@ -594,11 +594,11 @@ namespace Xamarin.Bundler {
 					if (!Directory.Exists (sdk_root)) {
 						if (warn_if_not_found) {
 							// mmp: and now we give up, but don't throw like mtouch, because we don't want to change behavior (this sometimes worked it appears)
-							ErrorHelper.Warning (56, Errors.MT0056);
+							ErrorHelper.Warning (56, Errors.MX0056);
 							return; // Can't validate the version below if we can't even find Xcode...
 						}
 
-						throw ErrorHelper.CreateError (56, Errors.MT0056);
+						throw ErrorHelper.CreateError (56, Errors.MX0056);
 					}
 					ErrorHelper.Warning (62, Errors.MT0062, sdk_root);
 				}

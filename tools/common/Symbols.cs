@@ -40,7 +40,7 @@ namespace Xamarin.Bundler
 					return name;
 				if (ObjectiveCName != null)
 					return ObjectiveCPrefix + ObjectiveCName;
-				throw ErrorHelper.CreateError (99, Errors.MT0099, $"symbol without a name (type: {Type})");
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"symbol without a name (type: {Type})");
 			}
 			set {
 				name = value;
@@ -171,7 +171,7 @@ namespace Xamarin.Bundler
 						var asm = line.Substring (1);
 						Assembly assembly;
 						if (!target.Assemblies.TryGetValue (Assembly.GetIdentity (asm), out assembly))
-							throw ErrorHelper.CreateError (99, Errors.MT0099, $"serialized assembly {asm} for symbol {current.Name}, but no such assembly loaded");
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"serialized assembly {asm} for symbol {current.Name}, but no such assembly loaded");
 						current.AddAssembly (assembly.AssemblyDefinition);
 					} else {
 						var eq = line.IndexOf ('=');

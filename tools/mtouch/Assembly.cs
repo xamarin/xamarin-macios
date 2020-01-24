@@ -137,7 +137,7 @@ namespace Xamarin.Bundler {
 
 				CopyConfigToDirectory (Path.GetDirectoryName (target));
 			} catch (Exception e) {
-				throw new MonoTouchException (1009, true, e, Errors.MT1009, source, target, e.Message);
+				throw new MonoTouchException (1009, true, e, Errors.MX1009, source, target, e.Message);
 			}
 
 			return copied;

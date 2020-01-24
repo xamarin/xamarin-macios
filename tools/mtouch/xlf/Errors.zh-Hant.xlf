@@ -2,6 +2,326 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en" target-language="zh-Hant" original="../Errors.resx">
     <body>
+      <trans-unit id="MM0001">
+        <source>This version of Xamarin.Mac requires Mono {0} (the current Mono version is {1}). Please update the Mono.framework from http://mono-project.com/Downloads
+		</source>
+        <target state="new">This version of Xamarin.Mac requires Mono {0} (the current Mono version is {1}). Please update the Mono.framework from http://mono-project.com/Downloads
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM0008">
+        <source>You should provide one root assembly only, found {0} assemblies: '{1}'
+		</source>
+        <target state="new">You should provide one root assembly only, found {0} assemblies: '{1}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM0023">
+        <source>Application name '{0}.exe' conflicts with another user assembly.
+		</source>
+        <target state="new">Application name '{0}.exe' conflicts with another user assembly.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM0050">
+        <source>You cannot provide a root assembly if --no-root-assembly is passed, found {0} assemblies: '{1}'
+		</source>
+        <target state="new">You cannot provide a root assembly if --no-root-assembly is passed, found {0} assemblies: '{1}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM0051">
+        <source>An output directory (--output) is required if --no-root-assembly is passed.
+		</source>
+        <target state="new">An output directory (--output) is required if --no-root-assembly is passed.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM0079">
+        <source>No executable was copied into the app bundle.  Please contact 'support@xamarin.com'
+		</source>
+        <target state="new">No executable was copied into the app bundle.  Please contact 'support@xamarin.com'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM0097">
+        <source>machine.config file '{0}' can not be found.
+		</source>
+        <target state="new">machine.config file '{0}' can not be found.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM0114">
+        <source>Hybrid AOT compilation requires all assemblies to be AOT compiled
+		</source>
+        <target state="new">Hybrid AOT compilation requires all assemblies to be AOT compiled
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM0143">
+        <source>Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.
+		</source>
+        <target state="new">Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM0144">
+        <source>Building 32-bit apps is not supported anymore. Please change the architecture in the project's Mac Build options to 'x86_64'.
+		</source>
+        <target state="new">Building 32-bit apps is not supported anymore. Please change the architecture in the project's Mac Build options to 'x86_64'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM0147">
+        <source>Unable to parse the cflags '{0} from pkg-config: {1}
+		</source>
+        <target state="new">Unable to parse the cflags '{0} from pkg-config: {1}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM1034">
+        <source>Could not create symlink '{0}' -&gt; '{1}': error {2}
+		</source>
+        <target state="new">Could not create symlink '{0}' -&gt; '{1}': error {2}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM1401">
+        <source>The required 'Xamarin.Mac.dll' assembly is missing from the references
+		</source>
+        <target state="new">The required 'Xamarin.Mac.dll' assembly is missing from the references
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM1402">
+        <source>The assembly '{0}' is not compatible with this tool or profile
+		</source>
+        <target state="new">The assembly '{0}' is not compatible with this tool or profile
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM1403">
+        <source>{0} {1} could not be found. Target framework '{2}' is unusable to package the application.
+		</source>
+        <target state="new">{0} {1} could not be found. Target framework '{2}' is unusable to package the application.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM1404">
+        <source>Target framework '{0}' is invalid.
+		</source>
+        <target state="new">Target framework '{0}' is invalid.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM1405">
+        <source>useFullXamMacFramework must always target framework .NET 4.5, not '{0}' which is invalid.
+		</source>
+        <target state="new">useFullXamMacFramework must always target framework .NET 4.5, not '{0}' which is invalid.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM1407">
+        <source>Mismatch between Xamarin.Mac reference '{0}' and target framework selected '{1}'.
+		</source>
+        <target state="new">Mismatch between Xamarin.Mac reference '{0}' and target framework selected '{1}'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM1501">
+        <source>Can not resolve reference: {0}
+		</source>
+        <target state="new">Can not resolve reference: {0}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2006">
+        <source>Native library '{0}' was referenced but could not be found.
+		</source>
+        <target state="new">Native library '{0}' was referenced but could not be found.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2007">
+        <source>Xamarin.Mac Unified API against a full .NET framework does not support linking SDK or All assemblies. Pass either the `-nolink` or `-linkplatform` flag.
+		</source>
+        <target state="new">Xamarin.Mac Unified API against a full .NET framework does not support linking SDK or All assemblies. Pass either the `-nolink` or `-linkplatform` flag.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2009">
+        <source>  Referenced by {0}.{1}
+		</source>
+        <target state="new">  Referenced by {0}.{1}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2012">
+        <source> Only first {0} of {1} \"Referenced by\" warnings shown.
+		</source>
+        <target state="new"> Only first {0} of {1} \"Referenced by\" warnings shown.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2013">
+        <source>Failed to resolve the reference to \"{0}\", referenced in \"{1}\". The app will not include the referenced assembly, and may fail at runtime.
+		</source>
+        <target state="new">Failed to resolve the reference to \"{0}\", referenced in \"{1}\". The app will not include the referenced assembly, and may fail at runtime.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2103">
+        <source>Error processing assembly '{0}': {1}
+		</source>
+        <target state="new">Error processing assembly '{0}': {1}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2108">
+        <source>{0} was stripped of architectures except {1} to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures
+		</source>
+        <target state="new">{0} was stripped of architectures except {1} to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2110">
+        <source>Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.
+		</source>
+        <target state="new">Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM3009">
+        <source>AOT of '{0}' was requested but was not found
+		</source>
+        <target state="new">AOT of '{0}' was requested but was not found
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM3010">
+        <source>Exclusion of AOT of '{0}' was requested but was not found
+		</source>
+        <target state="new">Exclusion of AOT of '{0}' was requested but was not found
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5103">
+        <source>Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5109">
+        <source>Native linking failed with error code 1.  Check build log for details.
+		</source>
+        <target state="new">Native linking failed with error code 1.  Check build log for details.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5202">
+        <source>Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from https://www.mono-project.com/download/
+		</source>
+        <target state="new">Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from https://www.mono-project.com/download/
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5203">
+        <source>Can't find {0}, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.
+		</source>
+        <target state="new">Can't find {0}, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5205">
+        <source>Invalid architecture '{0}'. The only valid architectures is x86_64.
+		</source>
+        <target state="new">Invalid architecture '{0}'. The only valid architectures is x86_64.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5220">
+        <source>Skipping framework '{0}'. It is prohibited (rejected) by the Mac App Store
+		</source>
+        <target state="new">Skipping framework '{0}'. It is prohibited (rejected) by the Mac App Store
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5221">
+        <source>Linking against framework '{0}'. It is prohibited (rejected) by the Mac App Store
+		</source>
+        <target state="new">Linking against framework '{0}'. It is prohibited (rejected) by the Mac App Store
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5301">
+        <source>pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads
+		</source>
+        <target state="new">pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5308">
+        <source>Xcode license agreement may not have been accepted.  Please launch Xcode.
+		</source>
+        <target state="new">Xcode license agreement may not have been accepted.  Please launch Xcode.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5310">
+        <source>install_name_tool failed with an error code '{0}'. Check build log for details.
+		</source>
+        <target state="new">install_name_tool failed with an error code '{0}'. Check build log for details.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM5311">
+        <source>lipo failed with an error code '{0}'. Check build log for details.
+		</source>
+        <target state="new">lipo failed with an error code '{0}'. Check build log for details.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT0000">
         <source>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</source>
@@ -22,14 +342,6 @@
         <source>Could not parse the environment variable '{0}'
 		</source>
         <target state="new">Could not parse the environment variable '{0}'
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0003">
-        <source>Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.
-		</source>
-        <target state="new">Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.
 		</target>
         <note>
 		</note>
@@ -58,42 +370,10 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0007">
-        <source>The root assembly '{0}' does not exist
-		</source>
-        <target state="new">The root assembly '{0}' does not exist
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0008">
-        <source>You should provide one root assembly only, found # assemblies: *.
-		</source>
-        <target state="new">You should provide one root assembly only, found # assemblies: *.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0009">
-        <source>Error while loading assemblies: {0}.
-		</source>
-        <target state="new">Error while loading assemblies: {0}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0009_A">
         <source>Error while loading assemblies: {0}: {1}
 		</source>
         <target state="new">Error while loading assemblies: {0}: {1}
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0010">
-        <source>Could not parse the command line arguments: {0}
-		</source>
-        <target state="new">Could not parse the command line arguments: {0}
 		</target>
         <note>
 		</note>
@@ -138,42 +418,10 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0016">
-        <source>The option * has been deprecated.
-		</source>
-        <target state="new">The option * has been deprecated.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0017">
-        <source>You should provide a root assembly.
-		</source>
-        <target state="new">You should provide a root assembly.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0018">
-        <source>Unknown command line argument: '{0}'
-		</source>
-        <target state="new">Unknown command line argument: '{0}'
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0019">
         <source>Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
 		</source>
         <target state="new">Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0020">
-        <source>The valid options for '{0}' are '{1}'.
-		</source>
-        <target state="new">The valid options for '{0}' are '{1}'.
 		</target>
         <note>
 		</note>
@@ -214,14 +462,6 @@
         <source>No SDK version was provided. Please add `--sdk=X.Y` to specify which {0} SDK should be used to build your application.
 		</source>
         <target state="new">No SDK version was provided. Please add `--sdk=X.Y` to specify which {0} SDK should be used to build your application.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0026">
-        <source>Could not parse the command line argument '-{0}': {1}
-		</source>
-        <target state="new">Could not parse the command line argument '-{0}': {1}
 		</target>
         <note>
 		</note>
@@ -346,14 +586,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0043">
-        <source>The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
-		</source>
-        <target state="new">The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0044">
         <source>--listsim is only supported with Xcode 6.0 or later.
 		</source>
@@ -418,14 +650,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0056">
-        <source>Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot &lt;path&gt;.
-		</source>
-        <target state="new">Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot &lt;path&gt;.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0057">
         <source>Cannot determine the path to Xcode.app from the sdk root '{0}'. Please specify the full path to the Xcode.app bundle.
 		</source>
@@ -438,22 +662,6 @@
         <source>The Xcode.app '{0}' is invalid (the file '{1}' does not exist).
 		</source>
         <target state="new">The Xcode.app '{0}' is invalid (the file '{1}' does not exist).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0059">
-        <source>Could not find the currently selected Xcode on the system: {0}
-		</source>
-        <target state="new">Could not find the currently selected Xcode on the system: {0}
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0060">
-        <source>Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.
-		</source>
-        <target state="new">Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.
 		</target>
         <note>
 		</note>
@@ -522,26 +730,10 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0068">
-        <source>Invalid value for target framework: {0}.
-		</source>
-        <target state="new">Invalid value for target framework: {0}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0070">
         <source>Invalid target framework: {0}. Valid target frameworks are: {1}.
 		</source>
         <target state="new">Invalid target framework: {0}. Valid target frameworks are: {1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0071">
-        <source>Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
-		</source>
-        <target state="new">Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</target>
         <note>
 		</note>
@@ -566,14 +758,6 @@
         <source>{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.
 		</source>
         <target state="new">{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0074">
-        <source>{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.
-		</source>
-        <target state="new">{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.
 		</target>
         <note>
 		</note>
@@ -614,14 +798,6 @@
         <source>The recommended Xcode version for {4} {0} is Xcode {3} or later. The current Xcode version (found in {2}) is {1}.
 		</source>
         <target state="new">The recommended Xcode version for {4} {0} is Xcode {3} or later. The current Xcode version (found in {2}) is {1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0080">
-        <source>	Disabling the new refcount logic is deprecated.
-		</source>
-        <target state="new">	Disabling the new refcount logic is deprecated.
 		</target>
         <note>
 		</note>
@@ -698,14 +874,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0091">
-        <source>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).
-		</source>
-        <target state="new">This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0093">
         <source>Could not find 'mlaunch'.
 		</source>
@@ -742,14 +910,6 @@
         <source>No reference to Xamarin.iOS.dll was found.
 		</source>
         <target state="new">No reference to Xamarin.iOS.dll was found.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0099">
-        <source>Internal error: {0}. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.
-		</source>
-        <target state="new">Internal error: {0}. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.
 		</target>
         <note>
 		</note>
@@ -1082,54 +1242,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT0129">
-        <source>Debugging symbol file for '{0}' does not match the assembly and is ignored.
-		</source>
-        <target state="new">Debugging symbol file for '{0}' does not match the assembly and is ignored.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0130">
-        <source>No root assemblies found. You should provide at least one root assembly.
-		</source>
-        <target state="new">No root assemblies found. You should provide at least one root assembly.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0131">
-        <source>Product assembly '{0}' not found in assembly list: '{1}'
-		</source>
-        <target state="new">Product assembly '{0}' not found in assembly list: '{1}'
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0132">
-        <source>Unknown optimization: '{0}'. Valid optimizations are: {1}.
-		</source>
-        <target state="new">Unknown optimization: '{0}'. Valid optimizations are: {1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0133">
-        <source>Found more than 1 assembly matching '{0}' choosing first:{1}{2}
-		</source>
-        <target state="new">Found more than 1 assembly matching '{0}' choosing first:{1}{2}
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0135">
-        <source>Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
-		</source>
-        <target state="new">Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT0136">
         <source>Cannot find the assembly '{0}' referenced from '{1}'.
 		</source>
@@ -1182,14 +1294,6 @@
         <source>ARM64_32 Debug mode requires --interpreter[=all], forcing it.
 		</source>
         <target state="new">ARM64_32 Debug mode requires --interpreter[=all], forcing it.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0148">
-        <source>Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}
-		</source>
-        <target state="new">Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}
 		</target>
         <note>
 		</note>
@@ -1286,14 +1390,6 @@
         <source>Link tasks for {0} aren't all the same
 		</source>
         <target state="new">Link tasks for {0} aren't all the same
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT1009">
-        <source>Could not copy the assembly '{0}' to '{1}': {2}
-		</source>
-        <target state="new">Could not copy the assembly '{0}' to '{1}': {2}
 		</target>
         <note>
 		</note>
@@ -1426,14 +1522,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT1600">
-        <source>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
-		</source>
-        <target state="new">Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT1601">
         <source>Not a Mach-O static library (unknown header '{0}', expected '!&lt;arch&gt;').
 		</source>
@@ -1442,42 +1530,10 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT1602">
-        <source>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
-		</source>
-        <target state="new">Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT1603">
-        <source>Unknown format for fat entry at position {0} in {1}.
-		</source>
-        <target state="new">Unknown format for fat entry at position {0} in {1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT1604">
-        <source>File of type {0} is not a MachO file ({1}).
-		</source>
-        <target state="new">File of type {0} is not a MachO file ({1}).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT1605">
         <source>Invalid entry '{0}' in the static library '{1}', entry header doesn't end with 0x60 0x0A (found '0x{2} 0x{3}')
 		</source>
         <target state="new">Invalid entry '{0}' in the static library '{1}', entry header doesn't end with 0x60 0x0A (found '0x{2} 0x{3}')
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT2001">
-        <source>Could not link assemblies. {0}
-		</source>
-        <target state="new">Could not link assemblies. {0}
 		</target>
         <note>
 		</note>
@@ -1510,22 +1566,6 @@
         <source>Option '--optimize={0}{1}' will be ignored since linking is disabled
 		</source>
         <target state="new">Option '--optimize={0}{1}' will be ignored since linking is disabled
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT2004">
-        <source>Extra linker definitions file '{0}' could not be located.
-		</source>
-        <target state="new">Extra linker definitions file '{0}' could not be located.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT2005">
-        <source>Definitions from '{0}' could not be parsed.
-		</source>
-        <target state="new">Definitions from '{0}' could not be parsed.
 		</target>
         <note>
 		</note>
@@ -1566,14 +1606,6 @@
         <source>Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
 		</source>
         <target state="new">Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT2017">
-        <source>Could not process XML description: {0}
-		</source>
-        <target state="new">Could not process XML description: {0}
 		</target>
         <note>
 		</note>
@@ -1654,14 +1686,6 @@
         <source>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a {1} parameters (expected 1 parameters).
 		</source>
         <target state="new">The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a {1} parameters (expected 1 parameters).
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT3001">
-        <source>Could not AOT the assembly '{0}'
-		</source>
-        <target state="new">Could not AOT the assembly '{0}'
 		</target>
         <note>
 		</note>
@@ -2558,6 +2582,302 @@
         <source>Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 		</source>
         <target state="new">Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0003">
+        <source>Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.
+		</source>
+        <target state="new">Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0007">
+        <source>The root assembly '{0}' does not exist
+		</source>
+        <target state="new">The root assembly '{0}' does not exist
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0009">
+        <source>Error while loading assemblies: {0}.
+		</source>
+        <target state="new">Error while loading assemblies: {0}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0010">
+        <source>Could not parse the command line arguments: {0}
+		</source>
+        <target state="new">Could not parse the command line arguments: {0}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0016">
+        <source>The option '{0}' has been deprecated.
+		</source>
+        <target state="new">The option '{0}' has been deprecated.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0017">
+        <source>You should provide a root assembly.
+		</source>
+        <target state="new">You should provide a root assembly.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0018">
+        <source>Unknown command line argument: '{0}'
+		</source>
+        <target state="new">Unknown command line argument: '{0}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0020">
+        <source>The valid options for '{0}' are '{1}'.
+		</source>
+        <target state="new">The valid options for '{0}' are '{1}'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0026">
+        <source>Could not parse the command line argument '-{0}': {1}
+		</source>
+        <target state="new">Could not parse the command line argument '-{0}': {1}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0043">
+        <source>The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
+		</source>
+        <target state="new">The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0056">
+        <source>Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot &lt;path&gt;.
+		</source>
+        <target state="new">Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot &lt;path&gt;.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0059">
+        <source>Could not find the currently selected Xcode on the system: {0}
+		</source>
+        <target state="new">Could not find the currently selected Xcode on the system: {0}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0060">
+        <source>Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.
+		</source>
+        <target state="new">Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0068">
+        <source>Invalid value for target framework: {0}.
+		</source>
+        <target state="new">Invalid value for target framework: {0}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0071">
+        <source>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</source>
+        <target state="new">Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0073">
+        <source>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</source>
+        <target state="new">Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0074">
+        <source>{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.
+		</source>
+        <target state="new">{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0080">
+        <source>Disabling the new refcount logic is deprecated.
+		</source>
+        <target state="new">Disabling the new refcount logic is deprecated.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0091">
+        <source>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).
+		</source>
+        <target state="new">This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0099">
+        <source>Internal error: {0}. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.
+		</source>
+        <target state="new">Internal error: {0}. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0129">
+        <source>Debugging symbol file for '{0}' does not match the assembly and is ignored.
+		</source>
+        <target state="new">Debugging symbol file for '{0}' does not match the assembly and is ignored.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0130">
+        <source>No root assemblies found. You should provide at least one root assembly.
+		</source>
+        <target state="new">No root assemblies found. You should provide at least one root assembly.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0131">
+        <source>Product assembly '{0}' not found in assembly list: '{1}'
+		</source>
+        <target state="new">Product assembly '{0}' not found in assembly list: '{1}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0132">
+        <source>Unknown optimization: '{0}'. Valid optimizations are: {1}.
+		</source>
+        <target state="new">Unknown optimization: '{0}'. Valid optimizations are: {1}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0133">
+        <source>Found more than 1 assembly matching '{0}' choosing first:{1}{2}
+		</source>
+        <target state="new">Found more than 1 assembly matching '{0}' choosing first:{1}{2}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0135">
+        <source>Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
+		</source>
+        <target state="new">Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX0148">
+        <source>Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}
+		</source>
+        <target state="new">Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX1009">
+        <source>Could not copy the assembly '{0}' to '{1}': {2}
+		</source>
+        <target state="new">Could not copy the assembly '{0}' to '{1}': {2}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX1600">
+        <source>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
+		</source>
+        <target state="new">Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX1602">
+        <source>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
+		</source>
+        <target state="new">Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX1603">
+        <source>Unknown format for fat entry at position {0} in {1}.
+		</source>
+        <target state="new">Unknown format for fat entry at position {0} in {1}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX1604">
+        <source>File of type {0} is not a MachO file ({1}).
+		</source>
+        <target state="new">File of type {0} is not a MachO file ({1}).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX2001">
+        <source>Could not link assemblies. {0}
+		</source>
+        <target state="new">Could not link assemblies. {0}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX2004">
+        <source>Extra linker definitions file '{0}' could not be located.
+		</source>
+        <target state="new">Extra linker definitions file '{0}' could not be located.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX2005">
+        <source>Definitions from '{0}' could not be parsed.
+		</source>
+        <target state="new">Definitions from '{0}' could not be parsed.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX2017">
+        <source>Could not process XML description: {0}
+		</source>
+        <target state="new">Could not process XML description: {0}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX3001">
+        <source>Could not {0} the assembly '{1}'
+		</source>
+        <target state="new">Could not {0} the assembly '{1}'
 		</target>
         <note>
 		</note>

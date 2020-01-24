@@ -271,7 +271,7 @@ namespace Xamarin.Bundler
 
 			WriteLimitedOutput ($"AOT Compilation exited with code {exit_code}, command:\n{Command}", output_lines, exceptions);
 
-			exceptions.Add (ErrorHelper.CreateError (3001, Errors.MT3001, AssemblyName));
+			exceptions.Add (ErrorHelper.CreateError (3001, Errors.MX3001, "AOT",  AssemblyName));
 
 			throw new AggregateException (exceptions);
 		}

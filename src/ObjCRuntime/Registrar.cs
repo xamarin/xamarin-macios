@@ -1288,7 +1288,7 @@ namespace Registrar {
 				case Xamarin.Utils.ApplePlatform.TVOS:
 					return "Xamarin.TVOS";
 				default:
-					throw ErrorHelper.CreateError (71, Errors.MT0071, App.Platform);
+					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
 				}
 			}
 		}

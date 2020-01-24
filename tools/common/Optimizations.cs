@@ -315,7 +315,7 @@ namespace Xamarin.Bundler
 		{
 			foreach (var option in options.Split (',')) {
 				if (option == null || option.Length < 2)
-					throw ErrorHelper.CreateError (10, Errors.MT0010, $"'--optimize={options}'");
+					throw ErrorHelper.CreateError (10, Errors.MX0010, $"'--optimize={options}'");
 
 				ParseOption (option);
 			}
@@ -355,7 +355,7 @@ namespace Xamarin.Bundler
 					values [i] = enabled;
 				}
 				if (!found)
-					ErrorHelper.Warning (132, Errors.MT0132, opt, string.Join (", ", opt_names.Where ((v) => !string.IsNullOrEmpty (v))));
+					ErrorHelper.Warning (132, Errors.MX0132, opt, string.Join (", ", opt_names.Where ((v) => !string.IsNullOrEmpty (v))));
 			}
 		}
 	}

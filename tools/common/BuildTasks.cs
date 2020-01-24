@@ -178,7 +178,7 @@ namespace Xamarin.Bundler
 		public bool Rebuilt {
 			get {
 				if (!completed_task.Task.IsCompleted)
-					throw ErrorHelper.CreateError (99, Errors.MT0099, "Can't rebuild a task that hasn't completed");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "Can't rebuild a task that hasn't completed");
 				return completed_task.Task.Result;
 			}
 		}
@@ -287,7 +287,7 @@ namespace Xamarin.Bundler
 
 		protected virtual void Execute ()
 		{
-			throw ErrorHelper.CreateError (99, Errors.MT0099, "'Either Execute or ExecuteAsync must be overridden'");
+			throw ErrorHelper.CreateError (99, Errors.MX0099, "'Either Execute or ExecuteAsync must be overridden'");
 		}
 
 		public override string ToString ()

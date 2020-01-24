@@ -228,31 +228,31 @@ namespace Xamarin.Bundler {
 				{ "s|sgen:", "Use the SGen Garbage Collector",
 					v => {
 						if (!ParseBool (v, "sgen")) 
-							ErrorHelper.Warning (43, "The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.");
+							ErrorHelper.Warning (43, Errors.MX0043);
 					},
 					true // do not show the option anymore
 				},
 				{ "boehm:", "Enable the Boehm garbage collector", 
 					v => {
 						if (ParseBool (v, "boehm"))
-							ErrorHelper.Warning (43, "The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead."); }, 
+							ErrorHelper.Warning (43, Errors.MX0043); }, 
 					true // do not show the option anymore
 				},
 				{ "new-refcount:", "Enable new refcounting logic",
 					v => {
 						if (!ParseBool (v, "new-refcount"))
-							ErrorHelper.Warning (80, "Disabling the new refcount logic is deprecated.");
+							ErrorHelper.Warning (80, Errors.MX0080);
 					},
 					true // do not show this option anymore
 				},
 				{ "nolink", "Do not link the assemblies", v => App.LinkMode = LinkMode.None },
-				{ "mapinject", "Inject a fast method map [deprecated]", v => { ErrorHelper.Show (new MonoMacException (16, false, "The option '{0}' has been deprecated.", "--mapinject")); } },
+				{ "mapinject", "Inject a fast method map [deprecated]", v => { ErrorHelper.Show (new MonoMacException (16, false, Errors.MX0016,  "--mapinject")); } },
 				{ "minos=", "Minimum supported version of Mac OS X", 
 					v => {
 						try {
 							App.DeploymentTarget = StringUtils.ParseVersion (v);
 						} catch (Exception ex) {
-							ErrorHelper.Error (26, ex, $"Could not parse the command line argument '-minos:{v}': {ex.Message}");
+							ErrorHelper.Error (26, ex, Errors.MX0026, $"minos:{v}", ex.Message);
 						}
 					}
 				},
@@ -291,7 +291,7 @@ namespace Xamarin.Bundler {
 							Registrar = RegistrarMode.Default;
 							break;
 						default:
-							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--registrar", "dynamic, static, partial, or default");
+							throw new MonoMacException (20, true, Errors.MX0020, "--registrar", "dynamic, static, partial, or default");
 						}
 					}
 				},
@@ -300,7 +300,7 @@ namespace Xamarin.Bundler {
 						try {
 							App.SdkVersion = StringUtils.ParseVersion (v);
 						} catch (Exception ex) {
-							ErrorHelper.Error (26, ex, $"Could not parse the command line argument '-sdk:{v}': {ex.Message}");
+							ErrorHelper.Error (26, ex, Errors.MX0026, $"sdk:{v}", ex.Message);
 						}
 					}
 				},
@@ -312,7 +312,7 @@ namespace Xamarin.Bundler {
 				{ "link_flags=", "Specifies additional arguments to the native linker.",
 					v => {
 						if (!StringUtils.TryParseArguments (v, out var lf, out var ex))
-							throw ErrorHelper.CreateError (26, ex, "Could not parse the command line argument '--link_flags={0}': {1}", v, ex.Message);
+							throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"-link_flags={v}", ex.Message);
 						if (link_flags == null)
 							link_flags = new List<string> ();
 						link_flags.AddRange (lf);
@@ -372,7 +372,7 @@ namespace Xamarin.Bundler {
 				throw;
 			}
 			catch (Exception e) {
-				throw new MonoMacException (10, true, "Could not parse the command line arguments: {0}", e.Message);
+				throw new MonoMacException (10, true, Errors.MX0010, e.Message);
 			}
 
 			Driver.LogArguments (args);
@@ -431,7 +431,7 @@ namespace Xamarin.Bundler {
 
 			if (IsUnifiedFullXamMacFramework) {
 				if (TargetFramework.Identifier != TargetFramework.Net_4_5.Identifier)
-					throw new MonoMacException (1405, true, "useFullXamMacFramework must always target framework .NET 4.5, not '{0}' which is invalid.", userTargetFramework);
+					throw new MonoMacException (1405, true, Errors.MM1405, userTargetFramework);
 			}
 			if (IsUnifiedFullSystemFramework)
 			{
@@ -453,13 +453,13 @@ namespace Xamarin.Bundler {
 			}
 
 			if (targetFramework == TargetFramework.Empty)
-				throw new MonoMacException (1404, true, "Target framework '{0}' is invalid.", userTargetFramework);
+				throw new MonoMacException (1404, true, Errors.MM1404, userTargetFramework);
 
 			if (Registrar == RegistrarMode.PartialStatic && App.LinkMode != LinkMode.None)
-				throw new MonoMacException (2110, true, "Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.");
+				throw new MonoMacException (2110, true, Errors.MM2110);
 
 			if (IsClassic)
-				throw ErrorHelper.CreateError (143, "Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.");
+				throw ErrorHelper.CreateError(143, Errors.MM0143);
 
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
@@ -474,7 +474,7 @@ namespace Xamarin.Bundler {
 			if (IsUnifiedFullXamMacFramework)
 				IsUnifiedCount++;
 			if (IsUnifiedCount != 1)
-				throw ErrorHelper.CreateError (99,"Internal error: IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
+				throw ErrorHelper.CreateError (99, Errors.MX0099 ,"IsClassic / IsUnified / IsUnifiedMobile / IsUnifiedFullSystemFramework / IsUnifiedFullXamMacFramework logic regression");
 
 			ValidateXamarinMacReference ();
 			if (!bypass_linking_checks && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {
@@ -483,8 +483,7 @@ namespace Xamarin.Bundler {
 				case LinkMode.Platform:
 					break;
 				default:
-					throw new MonoMacException (2007, true,
-						"Xamarin.Mac Unified API against a full .NET framework does not support linking SDK or All assemblies. Pass either the `-nolink` or `-linkplatform` flag.");
+					throw new MonoMacException (2007, true, Errors.MM2007);
 				}
 			}
 
@@ -496,7 +495,7 @@ namespace Xamarin.Bundler {
 			ValidateSDKVersion ();
 
 			if (!Is64Bit)
-				throw ErrorHelper.CreateError (144, "Building 32-bit apps is not supported anymore. Please change the architecture in the project's Mac Build options to 'x86_64'.");
+				throw ErrorHelper.CreateError (144, Errors.MM0144);
 
 			// InitializeCommon needs the current profile
 			if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
@@ -555,7 +554,7 @@ namespace Xamarin.Bundler {
 				else if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
 					valid = !reference.Contains ("mobile/") && !reference.Contains ("Xamarin.Mac/");
 				if (!valid)
-					throw ErrorHelper.CreateError (1407, "Mismatch between Xamarin.Mac reference '{0}' and target framework selected '{1}'.", reference, TargetFramework);
+					throw ErrorHelper.CreateError (1407, Errors.MM1407, reference, TargetFramework);
 			}
 		}
 
@@ -587,7 +586,7 @@ namespace Xamarin.Bundler {
 				try {
 					return bool.Parse (value);
 				} catch (Exception ex) {
-					throw ErrorHelper.CreateError (26, ex, "Could not parse the command line argument '-{0}:{1}': {2}", name, value, ex.Message);
+					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"{name}:{value}", ex.Message);
 				}
 			}
 		}
@@ -658,7 +657,7 @@ namespace Xamarin.Bundler {
 		{
 			for (int i = arguments.Count - 1; i >= 0; i--) {
 				if (arguments [i].StartsWith ("-", StringComparison.Ordinal)) {
-					exceptions.Add (ErrorHelper.CreateError (18, "Unknown command line argument: '{0}'", arguments [i]));
+					exceptions.Add (ErrorHelper.CreateError (18, Errors.MX0018, arguments [i]));
 					arguments.RemoveAt (i);
 				}
 			}
@@ -689,13 +688,13 @@ namespace Xamarin.Bundler {
 
 					CheckForUnknownCommandLineArguments (exceptions, unprocessed);
 
-					exceptions.Add (new MonoMacException (50, true, "You cannot provide a root assembly if --no-root-assembly is passed, found {0} assemblies: '{1}'", unprocessed.Count, string.Join ("', '", unprocessed.ToArray ())));
+					exceptions.Add (new MonoMacException (50, true, Errors.MM0050, unprocessed.Count, string.Join ("', '", unprocessed.ToArray ())));
 
 					throw new AggregateException (exceptions);
 				}
 
 				if (string.IsNullOrEmpty (output_dir))
-					throw new MonoMacException (51, true, "An output directory (--output) is required if --no-root-assembly is passed.");
+					throw new MonoMacException (51, true, Errors.MM0051);
 
 				if (string.IsNullOrEmpty (app_name))
 					app_name = Path.GetFileNameWithoutExtension (output_dir);
@@ -706,9 +705,9 @@ namespace Xamarin.Bundler {
 					CheckForUnknownCommandLineArguments (exceptions, unprocessed);
 
 					if (unprocessed.Count > 1) {
-						exceptions.Add (ErrorHelper.CreateError (8, "You should provide one root assembly only, found {0} assemblies: '{1}'", unprocessed.Count, string.Join ("', '", unprocessed.ToArray ())));
+						exceptions.Add (ErrorHelper.CreateError (8, Errors.MM0008, unprocessed.Count, string.Join ("', '", unprocessed.ToArray ())));
 					} else if (unprocessed.Count == 0) {
-						exceptions.Add (ErrorHelper.CreateError (17, "You should provide a root assembly."));
+						exceptions.Add (ErrorHelper.CreateError (17, Errors.MX0017));
 					}
 
 					throw new AggregateException (exceptions);
@@ -716,14 +715,14 @@ namespace Xamarin.Bundler {
 
 				root_assembly = unprocessed [0];
 				if (!File.Exists (root_assembly))
-					throw new MonoMacException (7, true, "The root assembly '{0}' does not exist", root_assembly);
+					throw new MonoMacException (7, true, Errors.MX0007, root_assembly);
 				
 				string root_wo_ext = Path.GetFileNameWithoutExtension (root_assembly);
 				if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
-					throw new MonoMacException (3, true, "Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.", root_wo_ext);
+					throw new MonoMacException (3, true, Errors.MX0003, root_wo_ext);
 
 				if (references.Exists (a => Path.GetFileNameWithoutExtension (a).Equals (root_wo_ext)))
-					throw new MonoMacException (23, true, "Application name '{0}.exe' conflicts with another user assembly.", root_wo_ext);
+					throw new MonoMacException (23, true, Errors.MM0023, root_wo_ext);
 
 				string monoFrameworkDirectory = TargetFramework.MonoFrameworkDirectory;
 				if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework)
@@ -732,7 +731,7 @@ namespace Xamarin.Bundler {
 				fx_dir = Path.Combine (MonoDirectory, "lib", "mono", monoFrameworkDirectory);
 
 				if (!Directory.Exists (fx_dir))
-					throw new MonoMacException (1403, true, "{0} {1} could not be found. Target framework '{2}' is unusable to package the application.", "Directory", fx_dir, userTargetFramework);
+					throw new MonoMacException (1403, true, Errors.MM1403, "Directory", fx_dir, userTargetFramework);
 
 				references.Add (root_assembly);
 				BuildTarget.Resolver.CommandLineAssemblies = references;
@@ -751,7 +750,7 @@ namespace Xamarin.Bundler {
 				BuildTarget.Abis = new List<Abi> { Abi.x86_64 };
 				break;
 			default:
-				throw new MonoMacException (5205, true, "Invalid architecture '{0}'. The only valid architectures is x86_64.", arch);
+				throw new MonoMacException (5205, true, Errors.MM5205, arch);
 			}
 
 			Watch ("Setup", 1);
@@ -763,7 +762,7 @@ namespace Xamarin.Bundler {
 				CheckReferences ();
 
 				if (!is_extension && !resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe") && !App.Embeddinator)
-					throw new MonoMacException (79, true, "No executable was copied into the app bundle.  Please contact 'support@xamarin.com'", "");
+					throw new MonoMacException (79, true, Errors.MM0079, "");
 
 				// i18n must be dealed outside linking too (e.g. bug 11448)
 				if (App.LinkMode == LinkMode.None)
@@ -821,11 +820,11 @@ namespace Xamarin.Bundler {
 			Watch ("Compile", 1);
 			if (ret != 0) {
 				if (ret == 1)
-					throw new MonoMacException (5109, true, "Native linking failed with error code 1.  Check build log for details.");
+					throw new MonoMacException (5109, true, Errors.MM5109);
 				if (ret == 69)
-					throw new MonoMacException (5308, true, "Xcode license agreement may not have been accepted.  Please launch Xcode.");
+					throw new MonoMacException (5308, true, Errors.MM5308);
 				// if not then the compilation really failed
-				throw new MonoMacException (5103, true, String.Format ("Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", ret));
+				throw new MonoMacException (5103, true, Errors.MM5103, ret);
 			}
 
 			if (generate_plist)
@@ -841,7 +840,7 @@ namespace Xamarin.Bundler {
 				else if (IsUnifiedFullSystemFramework)
 					compilerType = AOTCompilerType.System64;
 				else
-					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+					throw ErrorHelper.CreateError (0099, Errors.MX0099, "\"AOT with unexpected profile.\"");
 
 				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType, IsUnifiedMobile, !EnableDebug);
 				compiler.Compile (mmp_dir);
@@ -870,7 +869,7 @@ namespace Xamarin.Bundler {
 					name = "libmono-native-compat";
 					break;
 				default:
-					throw ErrorHelper.CreateError (99, $"Internal error: Invalid mono native type: '{BuildTarget.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{BuildTarget.MonoNativeMode}'");
 				}
 			}
 
@@ -1168,24 +1167,24 @@ namespace Xamarin.Bundler {
 					RunCommand (pkg_config, new [] { "--modversion", "mono-2" }, env, mono_version);
 				}
 			} catch (Win32Exception e) {
-				throw new MonoMacException (5301, true, e, "pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads");
+				throw new MonoMacException (5301, true, e, Errors.MM5301);
 			}
 
 			Version mono_ver;
 			if (Version.TryParse (mono_version.ToString ().TrimEnd (), out mono_ver) && mono_ver < MonoVersions.MinimumMonoVersion)
-				throw new MonoMacException (1, true, "This version of Xamarin.Mac requires Mono {0} (the current Mono version is {1}). Please update the Mono.framework from http://mono-project.com/Downloads", 
+				throw new MonoMacException (1, true, Errors.MM0001, 
 					MonoVersions.MinimumMonoVersion, mono_version.ToString ().TrimEnd ());
 
 			var str_cflags = cflagsb.ToString ().Replace (Environment.NewLine, String.Empty);
 			if (!StringUtils.TryParseArguments (str_cflags, out cflags, out var ex))
-				throw ErrorHelper.CreateError (147, ex, "Unable to parse the cflags '{0} from pkg-config: {1}", str_cflags, ex.Message);
+				throw ErrorHelper.CreateError (147, ex, Errors.MM0147, str_cflags, ex.Message);
 			libdir = libdirb.ToString ().Replace (Environment.NewLine, String.Empty);
 
 			var libmain = embed_mono ? "libxammac" : "libxammac-system";
 			var libxammac = Path.Combine (GetXamMacPrefix (), "lib", libmain + (App.EnableDebug ? "-debug" : "") + ".a");
 
 			if (!File.Exists (libxammac))
-				throw new MonoMacException (5203, true, "Can't find {0}, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.", libxammac);
+				throw new MonoMacException (5203, true, Errors.MM5203, libxammac);
 
 			try {
 				var args = new List<string> ();
@@ -1306,7 +1305,7 @@ namespace Xamarin.Bundler {
 					}
 					break;
 				default:
-					throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");
 				}
 
 				bool linkWithRequiresForceLoad = BuildTarget.Assemblies.Any (x => x.ForceLoad);
@@ -1320,7 +1319,7 @@ namespace Xamarin.Bundler {
 					string libmono = Path.Combine (libdir, "libmonosgen-2.0.a");
 
 					if (!File.Exists (libmono))
-						throw new MonoMacException (5202, true, "Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from https://www.mono-project.com/download/");
+						throw new MonoMacException (5202, true, Errors.MM5202);
 
 					args.Add (libmono);
 
@@ -1341,7 +1340,7 @@ namespace Xamarin.Bundler {
 							libmono_native_name = "libmono-native-compat";
 							break;
 						default:
-							throw ErrorHelper.CreateError (99, $"Invalid error: Invalid mono native type: '{BuildTarget.MonoNativeMode}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{BuildTarget.MonoNativeMode}'");
 						}
 
 						args.Add (Path.Combine (libdir, libmono_native_name + ".a"));
@@ -1399,7 +1398,7 @@ namespace Xamarin.Bundler {
 
 				ret = XcodeRun ("clang", args, null);
 			} catch (Win32Exception e) {
-				throw new MonoMacException (5103, true, e, "Failed to compile the file '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", "driver");
+				throw new MonoMacException (5103, true, e, Errors.MM5103, "driver");
 			}
 			
 			return ret;
@@ -1428,13 +1427,10 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!haveValidReference)
-				exceptions.Add (new MonoMacException (1401, true,
-					"The required 'Xamarin.Mac.dll' assembly is missing from the references"));
+				exceptions.Add (new MonoMacException (1401, true, Errors.MM1401));
 
 			foreach (var refName in incompatibleReferences)
-				exceptions.Add (new MonoMacException (1402, true,
-					"The assembly '{0}' is not compatible with this tool or profile",
-					refName + ".dll"));
+				exceptions.Add (new MonoMacException (1402, true, Errors.MM1402, refName + ".dll"));
 
 			if (exceptions.Count > 0)
 				throw new AggregateException (exceptions);
@@ -1532,7 +1528,7 @@ namespace Xamarin.Bundler {
 					Application.UpdateFile (linkWith, finalLibPath);
 					int ret = XcodeRun ("install_name_tool", new [] { "-id", "@executable_path/../" + BundleName + "/" + libName, finalLibPath });
 					if (ret != 0)
-						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+						throw new MonoMacException (5310, true, Errors.MM5310, ret);
 					native_libraries_copied_in.Add (libName);
 				}
 			}
@@ -1562,8 +1558,8 @@ namespace Xamarin.Bundler {
 				if (sb.Count > 0) {
 					sb.Add (library);
 					int ret = XcodeRun ("install_name_tool", sb);
-					if (ret != 0)
-						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+					if (ret != 0)	
+						throw new MonoMacException (5310, true, Errors.MM5310, ret);
 					sb.Clear ();
 				}
 			}
@@ -1668,15 +1664,15 @@ namespace Xamarin.Bundler {
 
 			// If we can't find it at this point, scream
 			if (src == null) {
-				ErrorHelper.Show (new MonoMacException (2006, false, "Native library '{0}' was referenced but could not be found.", name));
+				ErrorHelper.Show (new MonoMacException (2006, false, Errors.MM2006, name));
 				if (used_by_methods != null && used_by_methods.Count > 0) {
 					const int referencedByLimit = 25;
 					bool limitReferencedByWarnings = used_by_methods.Count > referencedByLimit && verbose < 4;
 					foreach (var m in limitReferencedByWarnings ? used_by_methods.Take (referencedByLimit) : used_by_methods) {
-						ErrorHelper.Warning (2009, "  Referenced by {0}.{1}", m.DeclaringType.FullName, m.Name);
+						ErrorHelper.Warning (2009, Errors.MM2009, m.DeclaringType.FullName, m.Name);
 					}
 					if (limitReferencedByWarnings)
-						ErrorHelper.Warning (2012, " Only first {0} of {1} \"Referenced by\" warnings shown.", referencedByLimit, used_by_methods.Count);
+						ErrorHelper.Warning (2012, Errors.MM2012, referencedByLimit, used_by_methods.Count);
 				}
 				return;
 			}
@@ -1704,7 +1700,7 @@ namespace Xamarin.Bundler {
 				if (!isStaticLib) {
 					int ret = XcodeRun ("install_name_tool", new [] { "-id", "@executable_path/../" + BundleName + "/" + name, dest });
 					if (ret != 0)
-						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+						throw new MonoMacException (5310, true, Errors.MM5310, ret);
 				}
 				native_libraries_copied_in.Add (name);
 			}
@@ -1739,9 +1735,9 @@ namespace Xamarin.Bundler {
 
 			int ret = XcodeRun ("lipo", new [] { dest, "-thin", arch, "-output", dest });
 			if (ret != 0)
-				throw new MonoMacException (5311, true, "lipo failed with an error code '{0}'. Check build log for details.", ret);
+				throw new MonoMacException (5311, true, Errors.MM5311, ret);
 			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
-				ErrorHelper.Warning (2108, $"{name} was stripped of architectures except {arch} to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
+				ErrorHelper.Warning (2108, Errors.MM2108, name, arch);
 		}
 
 		static void CreateSymLink (string directory, string real, string link)
@@ -1795,7 +1791,7 @@ namespace Xamarin.Bundler {
 			unlink (file); // Delete any existing symlinks.
 			var rv = symlink (target, file);
 			if (rv != 0)
-				throw ErrorHelper.CreateError (1034, $"Could not create symlink '{file}' -> '{target}': error {Marshal.GetLastWin32Error ()}");
+				throw ErrorHelper.CreateError (1034, Errors.MM1034, file, target, Marshal.GetLastWin32Error());
 		}
 
 		static void CreateDirectoryIfNeeded (string dir) {
@@ -1815,7 +1811,7 @@ namespace Xamarin.Bundler {
 					string machine_config = Path.Combine (MonoDirectory, "etc", "mono", "4.5", "machine.config");
 
 					if (!File.Exists (machine_config))
-						throw new MonoMacException (1403, true, "{0} '{1}' could not be found. Target framework {2} is unusable to package the application.", "File", machine_config, userTargetFramework);
+						throw new MonoMacException (1403, true, Errors.MM1403, "File", machine_config, userTargetFramework);
 
 					File.Copy (machine_config, Path.Combine (mmp_dir, "machine.config"), true);
 				}
@@ -1833,7 +1829,7 @@ namespace Xamarin.Bundler {
 				}
 				else {
 					if (!File.Exists (machine_config_path))
-						throw new MonoMacException (97, true, "machine.config file '{0}' can not be found.", machine_config_path);
+						throw new MonoMacException (97, true, Errors.MM0097, machine_config_path);
 					File.Copy (machine_config_path, machineConfigDestFile);
 				}
 			}
@@ -1949,7 +1945,7 @@ namespace Xamarin.Bundler {
 
 			var assembly = BuildTarget.Resolver.Load (path);
 			if (assembly == null)
-				ErrorHelper.Warning (1501, "Can not resolve reference: {0}", path);
+				ErrorHelper.Warning (1501, Errors.MM1501, path);
 			return assembly;
 		}
 
@@ -1990,8 +1986,7 @@ namespace Xamarin.Bundler {
 				case "x86_64":
 					return Path.Combine (Driver.GetXamMacPrefix (), "lib", Driver.Arch, flavor, name + ".dll");
 				default:
-					throw new MonoMacException (5205, true, "Invalid architecture '{0}'. " + 
-							"The only valid architectures is x86_64.", Driver.Arch);
+					throw new MonoMacException (5205, true, Errors.MM5205, Driver.Arch);
 			}
 		}
 	}

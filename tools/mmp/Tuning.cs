@@ -202,7 +202,7 @@ namespace MonoMac.Tuner {
 			filename = Path.GetFullPath (filename);
 			
 			if (!File.Exists (filename))
-				throw new MonoMacException (2004, true, "Extra linker definitions file '{0}' could not be located.", filename);
+				throw new MonoMacException (2004, true, Errors.MX2004, filename);
 			
 			try {
 				using (StreamReader sr = new StreamReader (filename)) {
@@ -210,7 +210,7 @@ namespace MonoMac.Tuner {
 				}
 			}
 			catch (Exception e) {
-				throw new MonoMacException (2005, true, e, "Definitions from '{0}' could not be parsed.", filename);
+				throw new MonoMacException (2005, true, e, Errors.MX2005, filename);
 			}
 		}
 	}
@@ -253,7 +253,7 @@ namespace MonoMac.Tuner {
 				base.ProcessAssembly (assembly);
 			}
 			catch (Exception e) {
-				throw new MonoMacException (2103, true, e, $"Error processing assembly '{assembly.FullName}': {e}");
+				throw new MonoMacException (2103, true, e, Errors.MM2103, assembly.FullName, e);
 			}
 		}
 	}
@@ -278,7 +278,7 @@ namespace MonoMac.Tuner {
 				try {
 					ProcessReferences (Context.Resolve (reference));
 				} catch (AssemblyResolutionException fnfe) {
-					ErrorHelper.Warning (2013, fnfe, "Failed to resolve the reference to \"{0}\", referenced in \"{1}\". The app will not include the referenced assembly, and may fail at runtime.", fnfe.AssemblyReference.FullName, assembly.Name.FullName);
+					ErrorHelper.Warning (2013, fnfe, Errors.MM2013, fnfe.AssemblyReference.FullName, assembly.Name.FullName);
 				}
 			}
 		}

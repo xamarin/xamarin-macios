@@ -451,7 +451,7 @@
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>Errors</CustomToolNamespace>
+      <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <LogicalName>Errors.mtouch.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>

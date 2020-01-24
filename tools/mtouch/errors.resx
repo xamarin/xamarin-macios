@@ -41,13 +41,6 @@
 		</comment>
 	</data>
 
-	<data name="MT0003" xml:space="preserve">
-		<value>Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT0004" xml:space="preserve">
 		<value>New refcounting logic requires SGen to be enabled too.
 		</value>
@@ -68,37 +61,9 @@
 		<comment>
 		</comment>
 	</data>
-
-	<data name="MT0007" xml:space="preserve">
-		<value>The root assembly '{0}' does not exist
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0008" xml:space="preserve">
-		<value>You should provide one root assembly only, found # assemblies: *.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0009" xml:space="preserve">
-		<value>Error while loading assemblies: {0}.
-		</value>
-		<comment>
-		</comment>
-	</data>
 	
 	<data name="MT0009_A" xml:space="preserve">
 		<value>Error while loading assemblies: {0}: {1}
-		</value>
-		<comment>
-		</comment>
-	</data>
-	
-	<data name="MT0010" xml:space="preserve">
-		<value>Could not parse the command line arguments: {0}
 		</value>
 		<comment>
 		</comment>
@@ -138,37 +103,9 @@
 		<comment>
 		</comment>
 	</data>
-
-	<data name="MT0016" xml:space="preserve">
-		<value>The option * has been deprecated.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0017" xml:space="preserve">
-		<value>You should provide a root assembly.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0018" xml:space="preserve">
-		<value>Unknown command line argument: '{0}'
-		</value>
-		<comment>
-		</comment>
-	</data>
-
+	
 	<data name="MT0019" xml:space="preserve">
 		<value>Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0020" xml:space="preserve">
-		<value>The valid options for '{0}' are '{1}'.
 		</value>
 		<comment>
 		</comment>
@@ -204,13 +141,6 @@
 
 	<data name="MT0025" xml:space="preserve">
 		<value>No SDK version was provided. Please add `--sdk=X.Y` to specify which {0} SDK should be used to build your application.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0026" xml:space="preserve">
-		<value>Could not parse the command line argument '-{0}': {1}
 		</value>
 		<comment>
 		</comment>
@@ -321,13 +251,6 @@
 		</comment>
 	</data>
 
-	<data name="MT0043" xml:space="preserve">
-		<value>The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT0044" xml:space="preserve">
 		<value>--listsim is only supported with Xcode 6.0 or later.
 		</value>
@@ -384,13 +307,6 @@
 		</comment>
 	</data>
 
-	<data name="MT0056" xml:space="preserve">
-		<value>Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot &#60;path&#62;.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT0057" xml:space="preserve">
 		<value>Cannot determine the path to Xcode.app from the sdk root '{0}'. Please specify the full path to the Xcode.app bundle.
 		</value>
@@ -400,20 +316,6 @@
 
 	<data name="MT0058" xml:space="preserve">
 		<value>The Xcode.app '{0}' is invalid (the file '{1}' does not exist).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0059" xml:space="preserve">
-		<value>Could not find the currently selected Xcode on the system: {0}
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0060" xml:space="preserve">
-		<value>Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.
 		</value>
 		<comment>
 		</comment>
@@ -475,22 +377,8 @@
 		</comment>
 	</data>
 
-	<data name="MT0068" xml:space="preserve">
-		<value>Invalid value for target framework: {0}.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT0070" xml:space="preserve">
 		<value>Invalid target framework: {0}. Valid target frameworks are: {1}.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0071" xml:space="preserve">
-		<value>Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</value>
 		<comment>
 		</comment>
@@ -512,13 +400,6 @@
 
 	<data name="MT0073" xml:space="preserve">
 		<value>{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0074" xml:space="preserve">
-		<value>{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.
 		</value>
 		<comment>
 		</comment>
@@ -554,13 +435,6 @@
 
 	<data name="MT0079" xml:space="preserve">
 		<value>The recommended Xcode version for {4} {0} is Xcode {3} or later. The current Xcode version (found in {2}) is {1}.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0080" xml:space="preserve">
-		<value>	Disabling the new refcount logic is deprecated.
 		</value>
 		<comment>
 		</comment>
@@ -629,13 +503,6 @@
 		</comment>
 	</data>
 
-	<data name="MT0091" xml:space="preserve">
-		<value>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT0093" xml:space="preserve">
 		<value>Could not find 'mlaunch'.
 		</value>
@@ -666,13 +533,6 @@
 
 	<data name="MT0096" xml:space="preserve">
 		<value>No reference to Xamarin.iOS.dll was found.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0099" xml:space="preserve">
-		<value>Internal error: {0}. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>
 		<comment>
 		</comment>
@@ -972,48 +832,6 @@
 		</comment>
 	</data>
 
-	<data name="MT0129" xml:space="preserve">
-		<value>Debugging symbol file for '{0}' does not match the assembly and is ignored.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0130" xml:space="preserve">
-		<value>No root assemblies found. You should provide at least one root assembly.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0131" xml:space="preserve">
-		<value>Product assembly '{0}' not found in assembly list: '{1}'
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0132" xml:space="preserve">
-		<value>Unknown optimization: '{0}'. Valid optimizations are: {1}.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0133" xml:space="preserve">
-		<value>Found more than 1 assembly matching '{0}' choosing first:{1}{2}
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0135" xml:space="preserve">
-		<value>Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT0136" xml:space="preserve">
 		<value>Cannot find the assembly '{0}' referenced from '{1}'.
 		</value>
@@ -1058,13 +876,6 @@
 
 	<data name="MT0146" xml:space="preserve">
 		<value>ARM64_32 Debug mode requires --interpreter[=all], forcing it.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT0148" xml:space="preserve">
-		<value>Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}
 		</value>
 		<comment>
 		</comment>
@@ -1142,13 +953,6 @@
 	
 	<data name="MT0175_c" xml:space="preserve">
 		<value>Link tasks for {0} aren't all the same
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT1009" xml:space="preserve">
-		<value>Could not copy the assembly '{0}' to '{1}': {2}
 		</value>
 		<comment>
 		</comment>
@@ -1266,13 +1070,6 @@
 		</comment>
 	</data>
 
-	<data name="MT1600" xml:space="preserve">
-		<value>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT1601" xml:space="preserve">
 		<value>Not a Mach-O static library (unknown header '{0}', expected '!&#60;arch&#62;').
 		</value>
@@ -1280,36 +1077,8 @@
 		</comment>
 	</data>
 
-	<data name="MT1602" xml:space="preserve">
-		<value>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT1603" xml:space="preserve">
-		<value>Unknown format for fat entry at position {0} in {1}.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT1604" xml:space="preserve">
-		<value>File of type {0} is not a MachO file ({1}).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT1605" xml:space="preserve">
 		<value>Invalid entry '{0}' in the static library '{1}', entry header doesn't end with 0x60 0x0A (found '0x{2} 0x{3}')
-		</value>
-		<comment>
-		</comment>
-	</data>
-		
-	<data name="MT2001" xml:space="preserve">
-		<value>Could not link assemblies. {0}
 		</value>
 		<comment>
 		</comment>
@@ -1338,20 +1107,6 @@
 
 	<data name="MT2003_B" xml:space="preserve">
 		<value>Option '--optimize={0}{1}' will be ignored since linking is disabled
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT2004" xml:space="preserve">
-		<value>Extra linker definitions file '{0}' could not be located.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT2005" xml:space="preserve">
-		<value>Definitions from '{0}' could not be parsed.
 		</value>
 		<comment>
 		</comment>
@@ -1387,13 +1142,6 @@
 
 	<data name="MT2015" xml:space="preserve">
 		<value>Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT2017" xml:space="preserve">
-		<value>Could not process XML description: {0}
 		</value>
 		<comment>
 		</comment>
@@ -1464,13 +1212,6 @@
 	
 	<data name="MT2105_D" xml:space="preserve">
 		<value>The [BindingImpl] attribute on the member '{0}' is invalid: did not expect a constructor with a {1} parameters (expected 1 parameters).
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MT3001" xml:space="preserve">
-		<value>Could not AOT the assembly '{0}'
 		</value>
 		<comment>
 		</comment>
@@ -2255,6 +1996,549 @@
 	
 	<data name="MT8018" xml:space="preserve">
 		<value>Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<!-- MM: mmp errors -->
+	
+	<data name="MM0001" xml:space="preserve">
+		<value>This version of Xamarin.Mac requires Mono {0} (the current Mono version is {1}). Please update the Mono.framework from http://mono-project.com/Downloads
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM0008" xml:space="preserve">
+		<value>You should provide one root assembly only, found {0} assemblies: '{1}'
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM0023" xml:space="preserve">
+		<value>Application name '{0}.exe' conflicts with another user assembly.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM0050" xml:space="preserve">
+		<value>You cannot provide a root assembly if --no-root-assembly is passed, found {0} assemblies: '{1}'
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM0051" xml:space="preserve">
+		<value>An output directory (--output) is required if --no-root-assembly is passed.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM0079" xml:space="preserve">
+		<value>No executable was copied into the app bundle.  Please contact 'support@xamarin.com'
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM0097" xml:space="preserve">
+		<value>machine.config file '{0}' can not be found.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM0114" xml:space="preserve">
+		<value>Hybrid AOT compilation requires all assemblies to be AOT compiled
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM0143" xml:space="preserve">
+		<value>Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM0144" xml:space="preserve">
+		<value>Building 32-bit apps is not supported anymore. Please change the architecture in the project's Mac Build options to 'x86_64'.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM0147" xml:space="preserve">
+		<value>Unable to parse the cflags '{0} from pkg-config: {1}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM1034" xml:space="preserve">
+		<value>Could not create symlink '{0}' -> '{1}': error {2}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM1401" xml:space="preserve">
+		<value>The required 'Xamarin.Mac.dll' assembly is missing from the references
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM1402" xml:space="preserve">
+		<value>The assembly '{0}' is not compatible with this tool or profile
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM1403" xml:space="preserve">
+		<value>{0} {1} could not be found. Target framework '{2}' is unusable to package the application.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM1404" xml:space="preserve">
+		<value>Target framework '{0}' is invalid.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM1405" xml:space="preserve">
+		<value>useFullXamMacFramework must always target framework .NET 4.5, not '{0}' which is invalid.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM1407" xml:space="preserve">
+		<value>Mismatch between Xamarin.Mac reference '{0}' and target framework selected '{1}'.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM1501" xml:space="preserve">
+		<value>Can not resolve reference: {0}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2006" xml:space="preserve">
+		<value>Native library '{0}' was referenced but could not be found.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2007" xml:space="preserve">
+		<value>Xamarin.Mac Unified API against a full .NET framework does not support linking SDK or All assemblies. Pass either the `-nolink` or `-linkplatform` flag.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2009" xml:space="preserve">
+		<value>  Referenced by {0}.{1}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2012" xml:space="preserve">
+		<value> Only first {0} of {1} \"Referenced by\" warnings shown.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2013" xml:space="preserve">
+		<value>Failed to resolve the reference to \"{0}\", referenced in \"{1}\". The app will not include the referenced assembly, and may fail at runtime.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2103" xml:space="preserve">
+		<value>Error processing assembly '{0}': {1}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2108" xml:space="preserve">
+		<value>{0} was stripped of architectures except {1} to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2110" xml:space="preserve">
+		<value>Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MM3009" xml:space="preserve">
+		<value>AOT of '{0}' was requested but was not found
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM3010" xml:space="preserve">
+		<value>Exclusion of AOT of '{0}' was requested but was not found
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM5103" xml:space="preserve">
+		<value>Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM5109" xml:space="preserve">
+		<value>Native linking failed with error code 1.  Check build log for details.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM5202" xml:space="preserve">
+		<value>Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from https://www.mono-project.com/download/
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM5203" xml:space="preserve">
+		<value>Can't find {0}, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM5205" xml:space="preserve">
+		<value>Invalid architecture '{0}'. The only valid architectures is x86_64.
+		</value>
+		<comment>
+		</comment>
+	</data>
+		
+	<data name="MM5220" xml:space="preserve">
+		<value>Skipping framework '{0}'. It is prohibited (rejected) by the Mac App Store
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM5221" xml:space="preserve">
+		<value>Linking against framework '{0}'. It is prohibited (rejected) by the Mac App Store
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM5301" xml:space="preserve">
+		<value>pkg-config could not be found. Please install the Mono.framework from http://mono-project.com/Downloads
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM5308" xml:space="preserve">
+		<value>Xcode license agreement may not have been accepted.  Please launch Xcode.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM5310" xml:space="preserve">
+		<value>install_name_tool failed with an error code '{0}'. Check build log for details.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM5311" xml:space="preserve">
+		<value>lipo failed with an error code '{0}'. Check build log for details.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<!-- MX: shared errors between mtouch and mmp -->
+	
+	<data name="MX0003" xml:space="preserve">
+		<value>Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0007" xml:space="preserve">
+		<value>The root assembly '{0}' does not exist
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0009" xml:space="preserve">
+		<value>Error while loading assemblies: {0}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0010" xml:space="preserve">
+		<value>Could not parse the command line arguments: {0}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0016" xml:space="preserve">
+		<value>The option '{0}' has been deprecated.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0017" xml:space="preserve">
+		<value>You should provide a root assembly.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0018" xml:space="preserve">
+		<value>Unknown command line argument: '{0}'
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0020" xml:space="preserve">
+		<value>The valid options for '{0}' are '{1}'.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0026" xml:space="preserve">
+		<value>Could not parse the command line argument '-{0}': {1}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0043" xml:space="preserve">
+		<value>The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0056" xml:space="preserve">
+		<value>Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot &#60;path&#62;.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0059" xml:space="preserve">
+		<value>Could not find the currently selected Xcode on the system: {0}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0060" xml:space="preserve">
+		<value>Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '{0}', but that directory does not exist.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0068" xml:space="preserve">
+		<value>Invalid value for target framework: {0}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0071" xml:space="preserve">
+		<value>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0073" xml:space="preserve">
+		<value>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0074" xml:space="preserve">
+		<value>{4} {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of {4}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0080" xml:space="preserve">
+		<value>Disabling the new refcount logic is deprecated.
+		</value>
+		<comment>
+		</comment>
+	</data>	
+	
+	<data name="MX0091" xml:space="preserve">
+		<value>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or {4} (to try to avoid the new APIs).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0099" xml:space="preserve">
+		<value>Internal error: {0}. Please file an issue at https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0129" xml:space="preserve">
+		<value>Debugging symbol file for '{0}' does not match the assembly and is ignored.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MX0130" xml:space="preserve">
+		<value>No root assemblies found. You should provide at least one root assembly.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0131" xml:space="preserve">
+		<value>Product assembly '{0}' not found in assembly list: '{1}'
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0132" xml:space="preserve">
+		<value>Unknown optimization: '{0}'. Valid optimizations are: {1}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0133" xml:space="preserve">
+		<value>Found more than 1 assembly matching '{0}' choosing first:{1}{2}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0135" xml:space="preserve">
+		<value>Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX0148" xml:space="preserve">
+		<value>Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX1009" xml:space="preserve">
+		<value>Could not copy the assembly '{0}' to '{1}': {2}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX1600" xml:space="preserve">
+		<value>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX1602" xml:space="preserve">
+		<value>Not a Mach-O dynamic library (unknown header '0x{0}'): {1}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX1603" xml:space="preserve">
+		<value>Unknown format for fat entry at position {0} in {1}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
+	<data name="MX1604" xml:space="preserve">
+		<value>File of type {0} is not a MachO file ({1}).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX2001" xml:space="preserve">
+		<value>Could not link assemblies. {0}
+		</value>
+		<comment>
+		</comment>
+	</data>	
+	
+	<data name="MX2004" xml:space="preserve">
+		<value>Extra linker definitions file '{0}' could not be located.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX2005" xml:space="preserve">
+		<value>Definitions from '{0}' could not be parsed.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX2017" xml:space="preserve">
+		<value>Could not process XML description: {0}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MX3001" xml:space="preserve">
+		<value>Could not {0} the assembly '{1}'
 		</value>
 		<comment>
 		</comment>

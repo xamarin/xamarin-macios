@@ -1585,7 +1585,7 @@ namespace Registrar {
 				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MT0071, App.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
 			}
 #else
 			currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;

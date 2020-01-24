@@ -68,7 +68,7 @@ namespace MonoMac.Tuner {
 				return new PlatformException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
 			}
 			case XmlResolutionException ex:
-				return new PlatformException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
+				return new PlatformException (2017, true, ex, Errors.MX2017, ex?.InnerException?.Message ?? ex.Message);
 			default:
 				if (e.InnerException != null)
 					return HandlePipelineProcessException (e.InnerException);
@@ -87,7 +87,7 @@ namespace MonoMac.Tuner {
 						message.AppendLine ($"\tAssembly: `{a}`");
 				}
 				message.Append ($"Reason: {e.Message}");
-				return new PlatformException (2001, true, e, "Could not link assemblies. {0}", message);
+				return new PlatformException (2001, true, e, Errors.MX2001, message);
 			}
 		}
 	}

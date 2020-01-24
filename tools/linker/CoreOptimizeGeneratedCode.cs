@@ -70,7 +70,7 @@ namespace Xamarin.Linker {
 						// ARMv7k binaries can run on ARM64_32, so this can't be inlined :/
 						break;
 					default:
-						options.LinkContext.Exceptions.Add (ErrorHelper.CreateWarning (99, Errors.MT0099, $"unknown abi: {options.Target.Abis[0]}"));
+						options.LinkContext.Exceptions.Add (ErrorHelper.CreateWarning (99, Errors.MX0099, $"unknown abi: {options.Target.Abis[0]}"));
 						break;
 					}
 				} else if (options.Target.Abis.Count == 2 && options.Target.Is32Build && options.Target.Abis.Contains (Abi.ARMv7) && options.Target.Abis.Contains (Abi.ARMv7s)) {
@@ -1021,7 +1021,7 @@ namespace Xamarin.Linker {
 					break;
 				}
 				if (setupblock_def == null)
-					throw ErrorHelper.CreateError (Options.Application, 99, caller, ins, Errors.MT0099, $"could not find the method {Namespaces.ObjCRuntime}.BlockLiteral.SetupBlockImpl");
+					throw ErrorHelper.CreateError (Options.Application, 99, caller, ins, Errors.MX0099, $"could not find the method {Namespaces.ObjCRuntime}.BlockLiteral.SetupBlockImpl");
 			}
 			return caller.Module.ImportReference (setupblock_def);
 		}

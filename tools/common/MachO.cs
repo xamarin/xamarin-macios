@@ -244,7 +244,7 @@ namespace Xamarin
 					yield break;
 				}
 				
-				throw ErrorHelper.CreateError (1604, Errors.MT1604, file.GetType ().Name, filename);
+				throw ErrorHelper.CreateError (1604, Errors.MX1604, file.GetType ().Name, filename);
 			}
 		}
 
@@ -646,7 +646,7 @@ namespace Xamarin
 			reader.BaseStream.Position = pos;
 
 			if (throw_if_error && !rv)
-				throw ErrorHelper.CreateError (1600, Errors.MT1600, magic.ToString ("x"), fat_entry.Parent.Filename);
+				throw ErrorHelper.CreateError (1600, Errors.MX1600, magic.ToString ("x"), fat_entry.Parent.Filename);
 
 			return rv;
 		}
@@ -694,7 +694,7 @@ namespace Xamarin
 				is64bitheader = true;
 				break;
 			default:
-				throw ErrorHelper.CreateError (1602, Errors.MT1602, magic.ToString ("x"), fat_parent != null ? fat_parent.Parent.Filename : filename);
+				throw ErrorHelper.CreateError (1602, Errors.MX1602, magic.ToString ("x"), fat_parent != null ? fat_parent.Parent.Filename : filename);
 			}
 			_cputype = reader.ReadInt32 ();
 			_cpusubtype = reader.ReadInt32 ();
@@ -925,7 +925,7 @@ namespace Xamarin
 				static_library = new StaticLibrary ();
 				static_library.Read (parent?.Filename, reader, size);
 			} else {
-				throw ErrorHelper.CreateError (1603, Errors.MT1603, offset, parent.Filename);
+				throw ErrorHelper.CreateError (1603, Errors.MX1603, offset, parent.Filename);
 			}
 		}
 	}

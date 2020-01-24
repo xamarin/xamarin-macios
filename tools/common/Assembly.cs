@@ -293,7 +293,7 @@ namespace Xamarin.Bundler {
 				if (LinkerFlags == null)
 					LinkerFlags = new List<string> ();
 				if (!StringUtils.TryParseArguments (metadata.LinkerFlags, out string [] args, out var ex))
-					throw ErrorHelper.CreateError (148, ex, Errors.MT0148, metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
+					throw ErrorHelper.CreateError (148, ex, Errors.MX0148, metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
 				LinkerFlags.AddRange (args);
 			}
 
@@ -446,7 +446,7 @@ namespace Xamarin.Bundler {
 		void AddFramework (string file)
 		{
 			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework) && framework.Version > App.SdkVersion)
-				ErrorHelper.Warning (135, Errors.MT0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
+				ErrorHelper.Warning (135, Errors.MX0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
 			else {
 #if MTOUCH
 				var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
