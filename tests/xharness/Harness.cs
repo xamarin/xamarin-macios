@@ -115,7 +115,7 @@ namespace xharness
 
 		public Harness ()
 		{
-			LaunchTimeout = InWrench ? 3 : 120;
+			LaunchTimeout = InCI ? 3 : 120;
 		}
 
 		public bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device)
@@ -667,24 +667,10 @@ namespace xharness
 
 		public void LogWrench (string message)
 		{
-			if (!InWrench)
+			if (!InCI)
 				return;
 
 			Console.WriteLine (message);
-		}
-
-		public bool InWrench {
-			get {
-				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
-				return !string.IsNullOrEmpty (buildRev) && buildRev != "jenkins";
-			}
-		}
-		
-		public bool InJenkins {
-			get {
-				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
-				return !string.IsNullOrEmpty (buildRev) && buildRev == "jenkins";
-			}
 		}
 		
 		public bool InCI {
