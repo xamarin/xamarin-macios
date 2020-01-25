@@ -208,6 +208,9 @@ namespace Samples {
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj.
 				{ "Xappy/Xappy.iOS/Xappy.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln" } },
+				
+				// Known failures
+				{ "Xappy/Xappy.UWP/Xappy.UWP.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln", KnownFailure = "The target '_IsProjectRestoreSupported' does not exist in the project." } },
 			};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
@@ -225,7 +228,8 @@ namespace Samples {
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj.
-				{ "Source/SmartHotel.Clients/SmartHotel.Clients.iOS/SmartHotel.Clients.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Source/SmartHotel.Clients.iOS.sln" } },
+				{ "Source/SmartHotel.Clients/SmartHotel.Clients.iOS/SmartHotel.Clients.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Source/SmartHotel.Clients.iOS.sln", KnownFailure = "Could not find any available provisioning profiles" } },
+				{ "Source/SmartHotel.Clients.Maintenance/SmartHotel.Clients.Maintenance.iOS/SmartHotel.Clients.Maintenance.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Source/SmartHotel.Clients.Maintenance.sln", KnownFailure = "Could not find any available provisioning profiles" } },
 			};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
