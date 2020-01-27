@@ -453,7 +453,7 @@ namespace Xamarin.Bundler {
 					resolvedAssemblies.Add (rootName, lastAssembly);
 					Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
 				} catch (Exception ex) {
-					ErrorHelper.Warning(9, ex, Errors.MT0009_A, rootName, ex.Message);
+					ErrorHelper.Warning (9, ex, Errors.MT0009_A, rootName, ex.Message);
 					continue;
 				}
 			}

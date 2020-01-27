@@ -294,7 +294,7 @@ namespace Registrar {
 							str = "}}";
 							ap = ap.Insert (idx, "}");
 						}
-						AddException (ref exceptions, new ProductException (4177, true, $"The 'ProtocolType' parameter of the 'Adopts' attribute used in class '{Registrar.GetTypeFullName(Type)}' contains an invalid character. Value used: '{ap}' Invalid Char: '{str}'"));
+						AddException (ref exceptions, new ProductException (4177, true, Errors.MT4177, Registrar.GetTypeFullName(Type), ap, str));
 					}
 				}
 			}
@@ -1508,8 +1508,7 @@ namespace Registrar {
 			if (!IsGenericMethod (method))
 				return true;
 
-			AddException (ref exceptions, CreateException (4113, method, 
-				Xamarin.Bundler.Errors.MT4113, 
+			AddException (ref exceptions, CreateException (4113, method, Xamarin.Bundler.Errors.MT4113,
 				GetDescriptiveMethodName (declaringType, method)));
 			return false;
 		}
@@ -2191,8 +2190,7 @@ namespace Registrar {
 					var ca = GetConnectAttribute (property);
 					if (ca != null) {
 						if (!IsINativeObject (GetPropertyType (property))) {
-							AddException (ref exceptions, CreateException (4139, property,
-								Xamarin.Bundler.Errors.MT4139,
+							AddException (ref exceptions, CreateException (4139, property, Xamarin.Bundler.Errors.MT4139,
 								GetTypeFullName (GetPropertyType (property)), GetTypeFullName (type), GetPropertyName (property)));
 							continue;
 						}

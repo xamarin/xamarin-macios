@@ -338,8 +338,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!File.Exists (path))
-				ErrorHelper.Warning (1302, Errors.MT1302,
-					metadata.LibraryName, path);
+				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, path);
 
 			return path;
 		}
@@ -358,8 +357,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!File.Exists (zipPath)) {
-				ErrorHelper.Warning (1302, Errors.MT1302,
-					metadata.LibraryName, zipPath);
+				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, zipPath);
 			} else {
 				if (!Directory.Exists (path))
 					Directory.CreateDirectory (path);

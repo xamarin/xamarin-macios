@@ -474,7 +474,7 @@ namespace Xamarin.Bundler {
 			if (IsUnifiedFullXamMacFramework)
 				IsUnifiedCount++;
 			if (IsUnifiedCount != 1)
-				throw ErrorHelper.CreateError (99, Errors.MX0099 ,"IsClassic / IsUnified / IsUnifiedMobile / IsUnifiedFullSystemFramework / IsUnifiedFullXamMacFramework logic regression");
+				throw ErrorHelper.CreateError (99, Errors.MX0099 ,"IsClassic/IsUnified/IsUnifiedMobile/IsUnifiedFullSystemFramework/IsUnifiedFullXamMacFramework logic regression");
 
 			ValidateXamarinMacReference ();
 			if (!bypass_linking_checks && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {
@@ -1558,7 +1558,7 @@ namespace Xamarin.Bundler {
 				if (sb.Count > 0) {
 					sb.Add (library);
 					int ret = XcodeRun ("install_name_tool", sb);
-					if (ret != 0)	
+					if (ret != 0)
 						throw new MonoMacException (5310, true, Errors.MM5310, ret);
 					sb.Clear ();
 				}

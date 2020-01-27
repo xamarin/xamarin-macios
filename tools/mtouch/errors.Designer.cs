@@ -1925,6 +1925,36 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MM2106 {
+            get {
+                return ResourceManager.GetString("MM2106", resourceCulture);
+            }
+        }
+        
+        internal static string MM2106_A {
+            get {
+                return ResourceManager.GetString("MM2106_A", resourceCulture);
+            }
+        }
+        
+        internal static string MM2106_B {
+            get {
+                return ResourceManager.GetString("MM2106_B", resourceCulture);
+            }
+        }
+        
+        internal static string MM2106_C {
+            get {
+                return ResourceManager.GetString("MM2106_C", resourceCulture);
+            }
+        }
+        
+        internal static string MM2106_D {
+            get {
+                return ResourceManager.GetString("MM2106_D", resourceCulture);
+            }
+        }
+        
         internal static string MM2107 {
             get {
                 return ResourceManager.GetString("MM2107", resourceCulture);

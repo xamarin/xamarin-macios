@@ -1656,7 +1656,6 @@ namespace Xamarin.Bundler
 			stat buf;
 			var rv = lstat (file, out buf);
 			if (rv != 0)
-				//todo: fix this
 				throw new Exception (string.Format ("Could not lstat '{0}': {1}", file, Marshal.GetLastWin32Error ()));
 			const int S_IFLNK = 40960;
 			return (buf.st_mode & S_IFLNK) == S_IFLNK;

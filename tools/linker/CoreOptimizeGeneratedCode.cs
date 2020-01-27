@@ -829,10 +829,10 @@ namespace Xamarin.Linker {
 					prev = prev.Previous; // Skip any nops.
 				if (prev.OpCode.StackBehaviourPush != StackBehaviour.Push1) {
 					//todo: localize mmp error 2106
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, "Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3})", caller, ins.Offset, mr.Name, prev));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, Errors.MM2106, caller, ins.Offset, mr.Name, prev));
 					return 0;
 				} else if (prev.OpCode.StackBehaviourPop != StackBehaviour.Pop0) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, "Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3})", caller, ins.Offset, mr.Name, prev));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, Errors.MM2106, caller, ins.Offset, mr.Name, prev));
 					return 0;
 				}
 
@@ -843,12 +843,12 @@ namespace Xamarin.Linker {
 				// Then find the type of the previous instruction (the first argument to SetupBlock[Unsafe])
 				var trampolineDelegateType = GetPushedType (caller, loadTrampolineInstruction);
 				if (trampolineDelegateType == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, "Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because could not determine the type of the delegate type of the first argument (instruction: {3})", caller, ins.Offset, mr.Name, loadTrampolineInstruction));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, Errors.MM2106_A, caller, ins.Offset, mr.Name, loadTrampolineInstruction));
 					return 0;
 				}
 
 				if (trampolineDelegateType.Is ("System", "Delegate") || trampolineDelegateType.Is ("System", "MulticastDelegate")) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, "Could not optimize the call to BlockLiteral.{2} in {0} because the type of the value passed as the first argument (the trampoline) is {1}, which makes it impossible to compute the block signature.", caller, trampolineDelegateType.FullName, mr.Name));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, Errors.MM2106_B, caller, trampolineDelegateType.FullName, mr.Name));
 					return 0;
 				}
 
@@ -871,7 +871,7 @@ namespace Xamarin.Linker {
 
 				// No luck finding the signature, so give up.
 				if (userMethod == null) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, "Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1} because no [UserDelegateType] attribute could be found on {2}.", caller, ins.Offset, trampolineDelegateType.FullName));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, caller, ins, Errors.MM2106_C, caller, ins.Offset, trampolineDelegateType.FullName));
 					return 0;
 				}
 
@@ -880,7 +880,7 @@ namespace Xamarin.Linker {
 					parameters [p] = userMethod.Parameters [p].ParameterType;
 				signature = LinkContext.Target.StaticRegistrar.ComputeSignature (userMethod.DeclaringType, false, userMethod.ReturnType, parameters, userMethod.Resolve (), isBlockSignature: blockSignature);
 			} catch (Exception e) {
-				ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, e, caller, ins, "Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1}: {2}.", caller, ins.Offset, e.Message));
+				ErrorHelper.Show (ErrorHelper.CreateWarning (Options.Application, 2106, e, caller, ins, Errors.MM2106_D, caller, ins.Offset, e.Message));
 				return 0;
 			}
 

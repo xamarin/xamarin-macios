@@ -202,6 +202,46 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MM2106">
+        <source>Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3})
+		</source>
+        <target state="new">Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3})
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2106_A">
+        <source>Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because could not determine the type of the delegate type of the first argument (instruction: {3})
+		</source>
+        <target state="new">Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because could not determine the type of the delegate type of the first argument (instruction: {3})
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2106_B">
+        <source>Could not optimize the call to BlockLiteral.{2} in {0} because the type of the value passed as the first argument (the trampoline) is {1}, which makes it impossible to compute the block signature.
+		</source>
+        <target state="new">Could not optimize the call to BlockLiteral.{2} in {0} because the type of the value passed as the first argument (the trampoline) is {1}, which makes it impossible to compute the block signature.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2106_C">
+        <source>Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1} because no [UserDelegateType] attribute could be found on {2}.
+		</source>
+        <target state="new">Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1} because no [UserDelegateType] attribute could be found on {2}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MM2106_D">
+        <source>Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1}: {2}.
+		</source>
+        <target state="new">Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1}: {2}.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MM2107">
         <source>It's not safe to remove the dynamic registrar, because {0} references '{1}.{2} ({3})'.
 		</source>

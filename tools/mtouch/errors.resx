@@ -2206,6 +2206,41 @@
 		</comment>
 	</data>
 	
+	<data name="MM2106" xml:space="preserve">
+		<value>Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3})
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2106_A" xml:space="preserve">
+		<value>Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because could not determine the type of the delegate type of the first argument (instruction: {3})
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2106_B" xml:space="preserve">
+		<value>Could not optimize the call to BlockLiteral.{2} in {0} because the type of the value passed as the first argument (the trampoline) is {1}, which makes it impossible to compute the block signature.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2106_C" xml:space="preserve">
+		<value>Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1} because no [UserDelegateType] attribute could be found on {2}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2106_D" xml:space="preserve">
+		<value>Could not optimize the call to BlockLiteral.SetupBlock in {0} at offset {1}: {2}.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MM2107" xml:space="preserve">
 		<value>It's not safe to remove the dynamic registrar, because {0} references '{1}.{2} ({3})'.
 		</value>

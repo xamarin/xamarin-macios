@@ -1089,6 +1089,7 @@ namespace Xamarin.Bundler {
 
 				if (IsLLVM != appex.IsLLVM) {
 					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_f, IsLLVM, appex.IsLLVM));
+					continue;
 				}
 
 				if (LinkMode != appex.LinkMode) {
@@ -1403,7 +1404,7 @@ namespace Xamarin.Bundler {
 					// All versions of tvOS support extensions
 					break;
 				default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
 				}
 			}
 
@@ -1950,8 +1951,7 @@ namespace Xamarin.Bundler {
 
 						var symbol = line.Replace (", referenced from:", "").Trim ('\"', ' ');
 						if (symbol.StartsWith ("_OBJC_CLASS_$_", StringComparison.Ordinal)) {
-							errors.Add (new MonoTouchException (5211, error, Errors.MT5211,
-																symbol.Replace ("_OBJC_CLASS_$_", ""), symbol));
+							errors.Add (new MonoTouchException (5211, error, Errors.MT5211, symbol.Replace ("_OBJC_CLASS_$_", ""), symbol));
 						} else {
 							var members = target.GetAllSymbols ().Find (symbol.Substring (1))?.Members;
 							if (members != null && members.Any ()) {
@@ -1960,8 +1960,7 @@ namespace Xamarin.Bundler {
 								errors.Add (new MonoTouchException (5214, error, Errors.MT5214,
 									symbol, member.DeclaringType.FullName, member.Name));
 							} else {
-								errors.Add (new MonoTouchException (5210, error, Errors.MT5210,
-																symbol));
+								errors.Add (new MonoTouchException (5210, error, Errors.MT5210, symbol));
 							}
 						}
 
