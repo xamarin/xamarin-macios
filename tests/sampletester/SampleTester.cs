@@ -23,6 +23,7 @@ namespace Samples {
 		public SampleTest SampleTest;
 		public string Configuration;
 		public string Platform;
+		public TimeSpan Timeout;
 
 		public override string ToString ()
 		{
@@ -66,6 +67,9 @@ namespace Samples {
 	}
 
 	public abstract class SampleTester : BaseTester {
+
+		public static TimeSpan DefaultTimeout { get; } = TimeSpan.FromMinutes (5);
+
 		protected SampleTester ()
 		{
 		}
@@ -142,7 +146,7 @@ namespace Samples {
 				}
 
 				file_to_build = Path.Combine (CloneRepo (), file_to_build);
-				ProcessHelper.BuildSolution (file_to_build, sampleTestData.Platform, sampleTestData.Configuration, environment_variables, target);
+				ProcessHelper.BuildSolution (file_to_build, sampleTestData.Platform, sampleTestData.Configuration, environment_variables, sampleTestData.Timeout, target);
 				Console.WriteLine ("✅ {0} succeeded.", TestContext.CurrentContext.Test.FullName);
 			} catch (Exception e) {
 				Console.WriteLine ("❌ {0} failed: {1}", TestContext.CurrentContext.Test.FullName, e.Message);
@@ -167,7 +171,7 @@ namespace Samples {
 			return rv;
 		}
 
-		protected static IEnumerable<SampleTestData> GetSampleTestData (Dictionary<string, SampleTest> samples, string org, string repo, string hash)
+		protected static IEnumerable<SampleTestData> GetSampleTestData (Dictionary<string, SampleTest> samples, string org, string repo, string hash, TimeSpan timeout)
 		{
 			var defaultDebugConfigurations = new string [] { "Debug" };
 			var defaultReleaseConfigurations = new string [] { "Release" };
@@ -236,7 +240,7 @@ namespace Samples {
 					configs.AddRange (sample.DebugConfigurations ?? defaultDebugConfigurations);
 					configs.AddRange (sample.ReleaseConfigurations ?? defaultReleaseConfigurations);
 					foreach (var config in filter ("config", proj.Title, configs, config_filter, (v) => v)) {
-						yield return new SampleTestData { SampleTest = sample, Configuration = config, Platform = platform };
+						yield return new SampleTestData { SampleTest = sample, Configuration = config, Platform = platform, Timeout = timeout };
 					}
 				}
 			}
@@ -255,7 +259,7 @@ namespace Samples {
 		{
 			var sln = Path.Combine (Configuration.SourceRoot, "tests", "sampletester", "BaselineTest", "BaselineTest.sln");
 			GitHub.CleanRepository (Path.GetDirectoryName (sln));
-			ProcessHelper.BuildSolution (sln, "iPhone", "Debug", new Dictionary<string, string> ());
+			ProcessHelper.BuildSolution (sln, "iPhone", "Debug", new Dictionary<string, string> (), SampleTester.DefaultTimeout);
 		}
 
 	}
