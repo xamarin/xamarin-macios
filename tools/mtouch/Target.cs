@@ -770,7 +770,7 @@ namespace Xamarin.Bundler
 
 						var ad = output_assemblies.SingleOrDefault ((AssemblyDefinition v) => v.Name.Name == next);
 						if (ad == null)
-							throw ErrorHelper.CreateError(99, Errors.MX0099, $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker");
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker");
 						if (ad.MainModule.HasAssemblyReferences) {
 							foreach (var ar in ad.MainModule.AssemblyReferences) {
 								if (!collectedNames.Contains (ar.Name) && !queue.Contains (ar.Name))
