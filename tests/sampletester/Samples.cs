@@ -105,7 +105,7 @@ namespace Samples {
 				{ "SpriteSheetDemo/iOS/SpriteSheetDemo.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "SpriteSheetDemo/SpriteSheetDemo.sln" } },
 				{ "TaskyPortable/TaskyiOS/TaskyiOS.csproj", new SampleTest { BuildSolution = true, Solution = "TaskyPortable/TaskyPortable.sln" } },
 				{ "TipCalc/TipCalc-UI-iOS/TipCalc-UI-iOS.csproj", new SampleTest { BuildSolution = true, Solution = "TipCalc/TipCalc.sln" } },
-
+				
 				// Known failures
 				{ "RazorTodo/RazorNativeTodo/RazorNativeTodo.iOS/RazorNativeTodo.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "RazorTodo/RazorNativeTodo/RazorNativeTodo.sln", KnownFailure = "There's a Xamarin.Android project in the solution, and I can't figure out how to build only the Xamarin.iOS project." } },
 				{ "RazorTodo/RazorTodo/RazorTodo.iOS/RazorTodo.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "RazorTodo/RazorTodo/RazorTodo.sln", KnownFailure = "There's a Xamarin.Android project in the solution, and I can't figure out how to build only the Xamarin.iOS project." } },
@@ -207,7 +207,7 @@ namespace Samples {
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 			// Known failures
-				{ "Xappy/Xappy.UWP/Xappy.UWP.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln", KnownFailure = "The target \"_IsProjectRestoreSupported\" does not exist in the project." } },
+			{ "Xappy/Xappy.UWP/Xappy.UWP.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln", KnownFailure = "The target \"_IsProjectRestoreSupported\" does not exist in the project." } },
 		};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
@@ -242,7 +242,7 @@ namespace Samples {
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 
-			};
+		};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
