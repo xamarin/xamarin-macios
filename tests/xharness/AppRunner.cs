@@ -336,18 +336,14 @@ namespace xharness
 
 		// test if the file is valid xml, or at least, that can be read. The reader will throw an 
 		// exception if it cannot read the file. This is not ideal :/
-		bool IsValidXml (string filePath)
+		bool IsXml (string filePath)
 		{
 			if (!File.Exists (filePath))
 				return false;
 
-			try {
-				using (var stream = new StreamReader (filePath)) 
-				using (var reader = XmlReader.Create (stream)) {
-					return true;
-				}
-			} catch (Exception e) {
-				return false;
+			using (var stream = File.OpenText (filePath)) {
+				var firstLine = stream.ReadLine ();
+				return firstLine.StartsWith("<", StringComparison.Ordinal);
 			}
 		}
 
@@ -479,7 +475,7 @@ namespace xharness
 			// that case, we cannot do a TCP connection to xharness to get the log, this is a problem since if we did not get the xml
 			// from the TCP connection, we are going to fail when trying to read it and not parse it. Therefore, we are not only
 			// going to check if we are in CI, but also if the listener_log is valid.
-			if (Harness.InCI && IsValidXml (listener_log.FullPath)) {
+			if (Harness.InCI && IsXml (listener_log.FullPath)) {
 				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				// move the xml to a tmp path, that path will be use to read the xml
 				// in the reader, and the writer will use the stream from the logger to
