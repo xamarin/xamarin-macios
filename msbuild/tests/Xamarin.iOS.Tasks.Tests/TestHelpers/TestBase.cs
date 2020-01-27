@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using Microsoft.Build.Evaluation;
@@ -30,6 +31,47 @@ namespace Xamarin.iOS.Tasks
 			public static string GenerateBundleName = "_GenerateBundleName";
 			public static string PackLibraryResources = "_PackLibraryResources";
 			public static string ResolveReferences = "ResolveReferences";
+		}
+
+		static Dictionary<string, string> tests_directories = new Dictionary<string, string> ();
+		protected static string GetTestDirectory ()
+		{
+			var mode = "unknown";
+			var assembly_path = Assembly.GetExecutingAssembly ().Location;
+			if (assembly_path.Contains ("netstandard2.0"))
+				mode = "netstandard2.0";
+			else if (assembly_path.Contains ("net461"))
+				mode = "net461";
+
+			// Copy the test projects to a temporary directory and run the tests there.
+			// Some tests may modify the test code / projects, and this way the working copy doesn't end up dirty.
+			lock (tests_directories) {
+				if (tests_directories.TryGetValue (mode, out var value))
+					return value;
+
+				var testSourceDirectory = Path.Combine (Configuration.RootPath, "msbuild", "tests");
+				var testsTemporaryDirectory = Path.Combine (Path.GetDirectoryName (assembly_path), "tests-tmp", mode);
+
+				// We want to start off clean every time the tests are launched
+				if (Directory.Exists (testsTemporaryDirectory))
+					Directory.Delete (testsTemporaryDirectory, true);
+
+				// Only copy files in git, we want a clean copy
+				var rv = ExecutionHelper.Execute ("git", new string [] { "ls-files" }, out var ls_files_output, working_directory: testSourceDirectory, timeout: TimeSpan.FromSeconds (15));
+				Assert.AreEqual (0, rv, "Failed to list test files");
+				var files = ls_files_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).ToArray ();
+
+				foreach (var file in files) {
+					var src = Path.Combine (testSourceDirectory, file);
+					var tgt = Path.Combine (testsTemporaryDirectory, file);
+					var tgtDir = Path.GetDirectoryName (tgt);
+					Directory.CreateDirectory (tgtDir);
+					File.Copy (src, tgt);
+				}
+
+				tests_directories [mode] = testsTemporaryDirectory;
+				return testsTemporaryDirectory;
+			}
 		}
 
 		public string [] ExpectedAppFiles = { };
@@ -108,7 +150,13 @@ namespace Xamarin.iOS.Tasks
 
 		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
 		{
-			var projectPath = Path.Combine (Configuration.RootPath, "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", baseDir, projectName);
+			var testsBase = GetTestDirectory ();
+			string projectPath;
+			if (Path.IsPathRooted (baseDir)) {
+				projectPath = Path.Combine (baseDir, projectName);
+			} else {
+				projectPath = Path.Combine (testsBase, "Xamarin.iOS.Tasks.Tests", baseDir, projectName);
+			}
 
 			var binPath = includePlatform ? Path.Combine (projectPath, "bin", platform, config) : Path.Combine (projectPath, "bin", config);
 			var objPath = includePlatform ? Path.Combine (projectPath, "obj", platform, config) : Path.Combine (projectPath, "obj", config);
@@ -185,7 +233,7 @@ namespace Xamarin.iOS.Tasks
 			var paths = SetupProjectPaths ("MySingleView");
 			MonoTouchProjectPath = paths ["project_path"];
 
-			TempDir = Path.GetFullPath ("ScratchDir");
+			TempDir = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), "ScratchDir");
 			SafeDelete (TempDir);
 			Directory.CreateDirectory (TempDir);
 

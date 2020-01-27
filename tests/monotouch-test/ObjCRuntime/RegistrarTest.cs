@@ -5466,6 +5466,18 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	{
 	}
 
+	public delegate void ACompletionHandler (string strArg, NSError error);
+
+	// https://github.com/xamarin/xamarin-macios/issues/7733
+	[Preserve]
+	public class GHIssue7733 : NSObject {
+		[Export ("doSomeWork:completion:")]
+		public virtual void DoWork (string who, ACompletionHandler completion)
+		{
+
+		}
+	}
+
 #if !__WATCHOS__ && !__TVOS__ // No WebKit on watchOS/tvOS
 	[Preserve]
 	public class GenericWebNavigationThingie<WebViewModel> : NSObject, IWKNavigationDelegate {

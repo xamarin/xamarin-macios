@@ -4309,6 +4309,7 @@ namespace AppKit {
 		CGSize MinContentSize { get; }
 	}
 
+	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	interface NSColorSpace : NSCoding, NSSecureCoding {
 		[Export ("initWithICCProfileData:")]

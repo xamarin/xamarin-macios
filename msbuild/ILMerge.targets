@@ -32,7 +32,6 @@
       <MergedAssemblies Include="$(OutputPath)/System.Threading.Tasks.Extensions.dll" />
       <MergedAssemblies Include="$(OutputPath)/System.Text.Encodings.Web.dll" />
 
-      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Mono.Posix.NETStandard'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([System.String]::new('%(FileName)').StartsWith('Mono.Cecil', StringComparison.OrdinalIgnoreCase))" />
     </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' == 'net461'">

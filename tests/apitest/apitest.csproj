@@ -57,7 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-    <Folder Include="src\CoreServices\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\AppKit\NSAppearance.cs" />
@@ -157,7 +156,6 @@
     <Compile Include="..\common\TestRuntime.cs">
       <Link>shared\TestRuntime.cs</Link>
     </Compile>
-    <Compile Include="src\CoreServices\FSEventStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">

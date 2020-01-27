@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="../Common.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
@@ -72,7 +73,7 @@
     <Folder Include="en.lproj\" />
   </ItemGroup>
   <ItemGroup>
-    <NativeReference Include="..\..\..\tests\test-libraries\.libs\ios-fat\libtest2.a">
+    <NativeReference Include="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\libtest2.a">
       <Kind>Static</Kind>
       <Link>libtest2.a</Link>
     </NativeReference>
