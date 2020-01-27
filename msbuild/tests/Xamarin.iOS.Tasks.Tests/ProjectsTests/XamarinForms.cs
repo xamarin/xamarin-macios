@@ -1,4 +1,4 @@
-﻿using System;
+using System.IO;
 using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks
@@ -14,8 +14,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void IncrementalBuilds ()
 		{
-			NugetRestore ("../MyXamarinFormsApp/MyXamarinFormsApp.csproj");
-			NugetRestore ("../MyXamarinFormsApp/MyXamarinFormsAppNS/MyXamarinFormsAppNS.csproj");
+			var testdir = GetTestDirectory ();
+			NugetRestore (Path.Combine (testdir, "MyXamarinFormsApp", "MyXamarinFormsApp.csproj"));
+			NugetRestore (Path.Combine (testdir, "MyXamarinFormsApp", "MyXamarinFormsAppNS", "MyXamarinFormsAppNS.csproj"));
 
 			// First build
 			BuildProject ("MyXamarinFormsApp", Platform, "Debug");
@@ -27,7 +28,7 @@ namespace Xamarin.iOS.Tasks
 			Assert.IsTrue (IsTargetSkipped ("_CompileToNative"), "_CompileToNative should be skipped on a build with no changes.");
 
 			// Build with XAML change
-			Touch ("../MyXamarinFormsApp/MyXamarinFormsAppNS/App.xaml");
+			Touch (Path.Combine (testdir, "MyXamarinFormsApp", "MyXamarinFormsAppNS", "App.xaml"));
 			Engine.Logger.Clear ();
 			BuildProject ("MyXamarinFormsApp", Platform, "Debug", clean: false);
 

@@ -1,147 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{44605724-8002-48E1-895F-7CB068099B6A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Xamarin.iOS.Tasks</RootNamespace>
-    <AssemblyName>Xamarin.iOS.Tasks</AssemblyName>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Tasks\ACTool.cs" />
-    <Compile Include="Tasks\Archive.cs" />
-    <Compile Include="Tasks\BTouch.cs" />
-    <Compile Include="Tasks\CodesignVerify.cs" />
-    <Compile Include="Tasks\CollectFrameworks.cs" />
-    <Compile Include="Tasks\CollectITunesArtwork.cs" />
-    <Compile Include="Tasks\CollectITunesSourceFiles.cs" />
-    <Compile Include="Tasks\CompileAppManifest.cs" />
-    <Compile Include="Tasks\CompileEntitlements.cs" />
-    <Compile Include="Tasks\CompileITunesMetadata.cs" />
-    <Compile Include="Tasks\CompileSceneKitAssets.cs" />
-    <Compile Include="Tasks\CreateDebugConfiguration.cs" />
-    <Compile Include="Tasks\CreateDebugSettings.cs" />
-    <Compile Include="Tasks\CreateEmbeddedResources.cs" />
-    <Compile Include="Tasks\DetectSdkLocations.cs" />
-    <Compile Include="Tasks\DetectSigningIdentity.cs" />
-    <Compile Include="Tasks\EmbedMobileProvision.cs" />
-    <Compile Include="Tasks\FindWatchOS1AppExtensionBundle.cs" />
-    <Compile Include="Tasks\GetDirectories.cs" />
-    <Compile Include="Tasks\GetFiles.cs" />
-    <Compile Include="Tasks\GetFullPath.cs" />
-    <Compile Include="Tasks\GetPropertyValue.cs" />
-    <Compile Include="Tasks\IBTool.cs" />
-    <Compile Include="Tasks\Metal.cs" />
-    <Compile Include="Tasks\MetalLib.cs" />
-    <Compile Include="Tasks\MTouch.cs" />
-    <Compile Include="Tasks\OptimizeImage.cs" />
-    <Compile Include="Tasks\OptimizePropertyList.cs" />
-    <Compile Include="Tasks\ParseDeviceSpecificBuildInformation.cs" />
-    <Compile Include="Tasks\ParseExtraMtouchArgs.cs" />
-    <Compile Include="Tasks\PrepareNativeReferences.cs" />
-    <Compile Include="Tasks\PrepareResourceRules.cs" />
-    <Compile Include="Tasks\ResolveNativeWatchApp.cs" />
-    <Compile Include="Tasks\ScnTool.cs" />
-    <Compile Include="Tasks\TextureAtlas.cs" />
-    <Compile Include="Tasks\ValidateAppBundleTask.cs" />
-    <Compile Include="Tasks\CollectAssetPacks.cs" />
-    <Compile Include="Tasks\CreateAssetPack.cs" />
-    <Compile Include="Tasks\WriteAssetPackManifest.cs" />
-    <Compile Include="Tasks\FindWatchOS2AppBundle.cs" />
-    <Compile Include="Tasks\DetectDebugNetworkConfiguration.cs" />
-    <Compile Include="Tasks\CodesignNativeLibraries.cs" />
-    <Compile Include="Tasks\CreateBindingResourcePackage.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\ALToolValidate.cs" />
-    <Compile Include="Tasks\ALToolUpload.cs" />
+    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
+    <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj" />
+    <ProjectReference Include="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj" />
+    <ProjectReference Include="..\Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj">
-      <Project>{93E12FA0-089C-4BC8-840F-43CFBC7927C7}</Project>
-      <Name>Xamarin.iOS.Tasks.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj">
-      <Project>{7B095849-6FDB-4BD2-9B59-569D81A1A809}</Project>
-      <Name>Xamarin.MacDev.Tasks.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj">
-      <Project>{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}</Project>
-      <Name>Xamarin.MacDev.Tasks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
-      <Project>{CC3D9353-20C4-467A-8522-A9DED6F0C753}</Project>
-      <Name>Xamarin.MacDev</Name>
-    </ProjectReference>
-    <PackageReference Include="ILRepack" Version="2.0.18" />
-  </ItemGroup>
-  <ItemGroup>
+    <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
+    <Reference Include="Microsoft.Build" HintPath="$(MSBuildBinPath)\Microsoft.Build.dll" />
     <Reference Include="Microsoft.Build.Framework" HintPath="$(MSBuildBinPath)\Microsoft.Build.Framework.dll" />
-    <Reference Include="Microsoft.Build.Utilities.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Utilities.Core.dll" />
     <Reference Include="Microsoft.Build.Tasks.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Tasks.Core.dll" />
+    <Reference Include="Microsoft.Build.Utilities.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Utilities.Core.dll" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <Target Name="ILRepack" AfterTargets="CoreCompile" DependsOnTargets="CoreCompile" Inputs="@(IntermediateAssembly -&gt; '%(FullPath)')" Outputs="$(IntermediateOutputPath)ilrepack.txt" Returns="@(MergedAssemblies)" Condition="Exists(@(IntermediateAssembly -&gt; '%(FullPath)')) And '$(ILRepack)' != 'false'">
-    <GetReferenceAssemblyPaths BypassFrameworkInstallChecks="False" TargetFrameworkMoniker="$(TargetFrameworkMoniker)">
-      <Output TaskParameter="FullFrameworkReferenceAssemblyPaths" PropertyName="FullFrameworkReferenceAssemblyPaths" />
-    </GetReferenceAssemblyPaths>
-    <ItemGroup>
-      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="
-        '%(Extension)' == '.dll'
-        And !$([System.String]::new('%(FileName)').EndsWith('.resources', StringComparison.OrdinalIgnoreCase))
-        And !$([System.String]::new('%(FileName)').StartsWith('Microsoft.Build.', StringComparison.OrdinalIgnoreCase))
-        And !$([System.String]::new('%(FullPath)').StartsWith('/Library/Frameworks/Mono.framework', StringComparison.OrdinalIgnoreCase))"
-      />
-      <ReferenceCopyLocalDirs Include="@(ReferenceCopyLocalPaths -&gt; '%(RootDir)%(Directory)')" />
-      <ReferenceCopyLocalPaths Remove="@(MergedAssemblies)" />
-      <LibDir Include="@(ReferenceCopyLocalDirs -&gt; Distinct())" />
-    </ItemGroup>
-    <PropertyGroup>
-      <ILRepackArgs Condition="'$(AssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AssemblyOriginatorKeyFile)"</ILRepackArgs>
-      <ILRepackArgs>$(ILRepackArgs) @(LibDir -&gt; '/lib:&quot;%(Identity).&quot;', ' ')</ILRepackArgs>
-      <ILRepackArgs>$(ILRepackArgs) /out:&quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot;</ILRepackArgs>
-      <ILRepackArgs>$(ILRepackArgs) &quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot;</ILRepackArgs>
-      <ILRepackArgs>$(ILRepackArgs) @(MergedAssemblies -&gt; '&quot;%(FullPath)&quot;', ' ')</ILRepackArgs>
-      <ILRepackArgs>$(ILRepackArgs) &quot;/lib:$(FrameworkPathOverride)/Facades&quot;</ILRepackArgs> <!-- This is needed for ilrepack to find netstandard.dll, which is referenced by the System.Text.Json assembly -->
-    </PropertyGroup>
-    <Exec Command="&quot;$(ILRepack)&quot; $(ILRepackArgs)" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />
-      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
-    </Exec>
-    <Message Importance="high" Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0'" />
-    <Delete Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' != '0'" />
-    <Touch AlwaysCreate="true" Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' == '0'" />
-    <Error Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0' And '$(ContinueOnError)' != 'true'" />
-    <Delete Files="@(MergedAssemblies -&gt; '$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" Condition="Exists('$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" />
-  </Target>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
 </Project>

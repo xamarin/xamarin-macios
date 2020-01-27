@@ -535,7 +535,7 @@ namespace xharness
 			return rv;
 		}
 
-		async Task<IEnumerable<TestTask>> CreateRunDeviceTasksAsync ()
+		Task<IEnumerable<TestTask>> CreateRunDeviceTasksAsync ()
 		{
 			var rv = new List<RunDeviceTask> ();
 			var projectTasks = new List<RunDeviceTask> ();
@@ -629,7 +629,7 @@ namespace xharness
 				rv.AddRange (projectTasks);
 			}
 
-			return CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates));
+			return Task.FromResult<IEnumerable<TestTask>> (CreateTestVariations (rv, (buildTask, test, candidates) => new RunDeviceTask (buildTask, candidates?.Cast<Device> () ?? test.Candidates)));
 		}
 
 		static string AddSuffixToPath (string path, string suffix)
@@ -874,7 +874,7 @@ namespace xharness
 			return false;
 		}
 
-		async Task PopulateTasksAsync ()
+		Task PopulateTasksAsync ()
 		{
 			// Missing:
 			// api-diff
@@ -888,27 +888,56 @@ namespace xharness
 			
 			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
-			var buildiOSMSBuild = new XBuildTask ()
+			var buildiOSMSBuild_net461 = new XBuildTask ()
 			{
 				Jenkins = this,
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
 				SpecifyPlatform = false,
-				SpecifyConfiguration = false,
+				SpecifyConfiguration = true,
+				ProjectConfiguration = "Debug-net461",
 				Platform = TestPlatform.iOS,
 				UseMSBuild = true,
+				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
+				SupportsParallelExecution = false,
 			};
-			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (buildiOSMSBuild)
+			var nunitExecutioniOSMSBuild_net461 = new NUnitExecuteTask (buildiOSMSBuild_net461)
 			{
-				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "bin", "Xamarin.iOS.Tasks.Tests.dll"),
-				TestProject = new TestProject (Path.Combine (Path.GetDirectoryName (buildiOSMSBuild.TestProject.Path), "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")),
+				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-net461", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
+				TestProject = buildiOSMSBuild_net461.TestProject,
+				ProjectConfiguration = "Debug-net461",
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
-				Mode = "iOS",
+				Mode = "iOS (net461)",
 				Timeout = TimeSpan.FromMinutes (60),
 				Ignored = !IncludeiOSMSBuild,
+				SupportsParallelExecution = false,
 			};
-			Tasks.Add (nunitExecutioniOSMSBuild);
-			
+			Tasks.Add (nunitExecutioniOSMSBuild_net461);
+
+			var buildiOSMSBuild_netstandard2 = new XBuildTask () {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj"))),
+				SpecifyPlatform = false,
+				SpecifyConfiguration = true,
+				ProjectConfiguration = "Debug-netstandard2.0",
+				Platform = TestPlatform.iOS,
+				UseMSBuild = true,
+				SolutionPath = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
+				SupportsParallelExecution = false,
+			};
+			var nunitExecutioniOSMSBuild_netstandard2 = new NUnitExecuteTask (buildiOSMSBuild_netstandard2) {
+				TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "Xamarin.iOS.Tasks.Tests", "bin", "Debug-netstandard2.0", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
+				TestProject = buildiOSMSBuild_netstandard2.TestProject,
+				ProjectConfiguration = "Debug-netstandard2.0",
+				Platform = TestPlatform.iOS,
+				TestName = "MSBuild tests",
+				Mode = "iOS (netstandard2.0)",
+				Timeout = TimeSpan.FromMinutes (60),
+				Ignored = !IncludeiOSMSBuild,
+				SupportsParallelExecution = false,
+			};
+			Tasks.Add (nunitExecutioniOSMSBuild_netstandard2);
+
 			var buildInstallSources = new XBuildTask ()
 			{
 				Jenkins = this,
@@ -1125,7 +1154,7 @@ namespace xharness
 				Console.WriteLine ("Got device tasks completed");
 				Tasks.AddRange (v.Result);
 			});
-			Task.WaitAll (loadsim, loaddev);
+			return Task.WhenAll (loadsim, loaddev);
 		}
 
 		async Task ExecutePeriodicCommandAsync (Log periodic_loc)
@@ -1153,7 +1182,7 @@ namespace xharness
 			try {
 				Directory.CreateDirectory (LogDirectory);
 				Log log = Logs.Create ($"Harness-{Harness.Timestamp}.log", "Harness log");
-				if (Harness.InWrench)
+				if (Harness.InCI)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
 
@@ -1161,7 +1190,7 @@ namespace xharness
 				if (IsServerMode)
 					tasks.Add (RunTestServer ());
 
-				if (Harness.InJenkins) {
+				if (Harness.InCI) {
 					Task.Factory.StartNew (async () => {
 						while (true) {
 							await Task.Delay (TimeSpan.FromMinutes (10));
@@ -3760,7 +3789,7 @@ namespace xharness
 					}
 
 					// Also clean up after us locally.
-					if (Harness.InJenkins || Harness.InWrench || (Jenkins.CleanSuccessfulTestRuns && Succeeded))
+					if (Harness.InCI || (Jenkins.CleanSuccessfulTestRuns && Succeeded))
 						await BuildTask.CleanAsync ();
 				}
 			}

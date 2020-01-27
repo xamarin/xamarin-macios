@@ -313,25 +313,15 @@ namespace Network {
 		{
 			var del = BlockLiteral.GetTarget<NWConnectionReceiveReadOnlySpanCompletion> (block);
 			if (del != null) {
-				DispatchData dispatchData = null, dataCopy = null;
-				IntPtr bufferAddress = IntPtr.Zero;
-				nuint bufferSize = 0;
+				var dispatchData = (dispatchDataPtr != IntPtr.Zero) ? new DispatchData (dispatchDataPtr, owns: false) : null;
 
-				if (dispatchDataPtr != IntPtr.Zero) {
-					dispatchData = new DispatchData (dispatchDataPtr, owns: false);
-					dataCopy = dispatchData.CreateMap (out bufferAddress, out bufferSize);
-				}
-
-				unsafe {
-					var spanData = new ReadOnlySpan<byte> ((void*)bufferAddress, (int)bufferSize);
-					del (spanData,
-						contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
-						isComplete,
-						error == IntPtr.Zero ? null : new NWError (error, owns: false));
-				}
+				var spanData = new ReadOnlySpan<byte> (dispatchData?.ToArray () ?? Array.Empty<byte>());
+				del (spanData,
+					contentContext == IntPtr.Zero ? null : new NWContentContext (contentContext, owns: false),
+					isComplete,
+					error == IntPtr.Zero ? null : new NWError (error, owns: false));
 
 				if (dispatchData != null) {
-					dataCopy.Dispose ();
 					dispatchData.Dispose ();
 				}
 			}

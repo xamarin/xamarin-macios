@@ -102,7 +102,7 @@ namespace Xamarin.iOS.Tasks
 			ClearMessages ();
 
 			// Touching the binding file should
-			Touch (Path.Combine (Path.GetDirectoryName (bindingLib.ProjectCSProjPath), @"../../../tests/bindings-framework-test/ApiDefinition.cs"));
+			Touch (Path.Combine (Configuration.RootPath, "tests", "bindings-framework-test", "ApiDefinition.cs"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
 			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding file build did not create package?");
 			ClearMessages ();
@@ -113,7 +113,7 @@ namespace Xamarin.iOS.Tasks
 			ClearMessages ();
 
 			// Touching native library should
-			Touch (Path.Combine (Path.GetDirectoryName (bindingLib.ProjectCSProjPath), @"../../../tests/test-libraries/.libs/ios-fat/XTest.framework/XTest"));
+			Touch (Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "ios-fat", "XTest.framework/XTest"));
 			BuildProjectNoEmbedding (bindingLib, clean: false);
 			Assert.True (GetMessages ().Contains (CreatePackageString), "Binding build did not create package?");
 		}
@@ -126,16 +126,17 @@ namespace Xamarin.iOS.Tasks
 
 			var appProject = SetupProjectPaths ("MyiOSAppWithBinding", "../", true, "");
 
-			string BuildString = Configuration.MtouchPath;
+			// Look for partial match of the '/path/to/mtouch @responsefile' command
+			string BuildString = "mtouch @";
 
 			// First build should create run mtouch
 			BuildProjectNoEmbedding (appProject);
-			Assert.True (GetMessages ().Contains (BuildString), "First build did not run mtouch?");
+			Assert.That (GetMessages (), Does.Contain (BuildString), "First build did not run mtouch?");
 			ClearMessages ();
 
 			// But not a rebuild
 			BuildProjectNoEmbedding (appProject, clean: false);
-			Assert.False (GetMessages ().Contains (BuildString), "Rebuild build did run mtouch?");
+			Assert.That (GetMessages (), Does.Not.Contain (BuildString), "Rebuild build did run mtouch?");
 			ClearMessages ();
 
 			if (!useProjectReference) {

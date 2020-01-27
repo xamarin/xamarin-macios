@@ -1,6 +1,6 @@
 *index.html
 *.log
-*TestResult.xml
+*TestResult*.xml
 build
 *-tvos.?sproj
 *-tvos.sln
