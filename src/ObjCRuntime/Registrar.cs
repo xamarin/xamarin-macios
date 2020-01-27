@@ -1544,8 +1544,7 @@ namespace Registrar {
 					if (attrib.Version <= sdk)
 						break;
 
-					//todo: localize msg
-					string msg = "The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).";
+					string msg = Errors.MT4162;
 					string zero = GetTypeFullName (type);
 					string one = string.Empty;
 					string two = string.Empty;
@@ -1566,7 +1565,7 @@ namespace Registrar {
 						one = "the property type of";
 						two = propertyTypeOf.FullName;
 					} else {
-						msg = "The type '{0}' is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).";
+						msg = Errors.MT4162_A;
 					}
 
 					msg = string.Format (msg, zero, one, two, three, four, five, six);

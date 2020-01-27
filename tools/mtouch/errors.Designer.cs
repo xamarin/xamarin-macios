@@ -1079,6 +1079,18 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MT2105_E {
+            get {
+                return ResourceManager.GetString("MT2105_E", resourceCulture);
+            }
+        }
+        
+        internal static string MT2105_F {
+            get {
+                return ResourceManager.GetString("MT2105_F", resourceCulture);
+            }
+        }
+        
         internal static string MT3003 {
             get {
                 return ResourceManager.GetString("MT3003", resourceCulture);
@@ -1448,6 +1460,18 @@ namespace Xamarin.Bundler {
         internal static string MT4160 {
             get {
                 return ResourceManager.GetString("MT4160", resourceCulture);
+            }
+        }
+        
+        internal static string MT4162 {
+            get {
+                return ResourceManager.GetString("MT4162", resourceCulture);
+            }
+        }
+        
+        internal static string MT4162_A {
+            get {
+                return ResourceManager.GetString("MT4162_A", resourceCulture);
             }
         }
         
@@ -1898,6 +1922,12 @@ namespace Xamarin.Bundler {
         internal static string MM2103 {
             get {
                 return ResourceManager.GetString("MM2103", resourceCulture);
+            }
+        }
+        
+        internal static string MM2107 {
+            get {
+                return ResourceManager.GetString("MM2107", resourceCulture);
             }
         }
         

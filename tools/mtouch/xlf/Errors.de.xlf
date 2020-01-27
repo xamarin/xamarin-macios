@@ -202,6 +202,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MM2107">
+        <source>It's not safe to remove the dynamic registrar, because {0} references '{1}.{2} ({3})'.
+		</source>
+        <target state="new">It's not safe to remove the dynamic registrar, because {0} references '{1}.{2} ({3})'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MM2108">
         <source>{0} was stripped of architectures except {1} to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures
 		</source>
@@ -1690,6 +1698,22 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT2105_E">
+        <source>The property {0}.{1} contains a '{2}' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.
+		</source>
+        <target state="new">The property {0}.{1} contains a '{2}' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT2105_F">
+        <source>The method {0}.{1} contains a '{2}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.
+		</source>
+        <target state="new">The method {0}.{1} contains a '{2}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT3003">
         <source>Debugging is not supported when building with LLVM. Debugging has been disabled.
 		</source>
@@ -2182,6 +2206,22 @@
         <source>Invalid character '{0}' (0x{1}) found in selector '{2}' for '{3}.{4}'
 		</source>
         <target state="new">Invalid character '{0}' (0x{1}) found in selector '{2}' for '{3}.{4}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4162">
+        <source>The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
+		</source>
+        <target state="new">The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4162_A">
+        <source>The type '{0}' is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
+		</source>
+        <target state="new">The type '{0}' is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
 		</target>
         <note>
 		</note>

@@ -1216,6 +1216,20 @@
 		<comment>
 		</comment>
 	</data>
+	
+	<data name="MT2105_E" xml:space="preserve">
+		<value>The property {0}.{1} contains a '{2}' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT2105_F" xml:space="preserve">
+		<value>The method {0}.{1} contains a '{2}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.
+		</value>
+		<comment>
+		</comment>
+	</data>
 
 	<data name="MT3003" xml:space="preserve">
 		<value>Debugging is not supported when building with LLVM. Debugging has been disabled.
@@ -1650,7 +1664,21 @@
 		<comment>
 		</comment>
 	</data>
-
+	
+	<data name="MT4162" xml:space="preserve">
+		<value>The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4162_A" xml:space="preserve">
+		<value>The type '{0}' is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT4163" xml:space="preserve">
 		<value>Internal error in the registrar ({0} ctor with {1} arguments). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
@@ -2173,6 +2201,13 @@
 	
 	<data name="MM2103" xml:space="preserve">
 		<value>Error processing assembly '{0}': {1}
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MM2107" xml:space="preserve">
+		<value>It's not safe to remove the dynamic registrar, because {0} references '{1}.{2} ({3})'.
 		</value>
 		<comment>
 		</comment>
