@@ -14,14 +14,17 @@ using Foundation;
 using ObjCRuntime;
 
 namespace EventKitUI {
+	[iOS (11,0)]
 	public static class EKUIBundle {
 
-		[iOS (11,0)]
 		[DllImport (Constants.EventKitUILibrary)]
 		static extern IntPtr EventKitUIBundle ();
 
-		[iOS (11,0)]
-		public static NSBundle UIBundle { get; } = Runtime.GetNSObject<NSBundle> (EventKitUIBundle ());
+		public static NSBundle UIBundle {
+			get {
+				return Runtime.GetNSObject<NSBundle> (EventKitUIBundle ());
+			}
+		}
 	}
 }
 #endif
