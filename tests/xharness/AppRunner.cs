@@ -343,7 +343,7 @@ namespace xharness
 
 			using (var stream = File.OpenText (filePath)) {
 				var firstLine = stream.ReadLine ();
-				return firstLine.StartsWith("<", StringComparison.Ordinal);
+				return firstLine.StartsWith ("<", StringComparison.Ordinal);
 			}
 		}
 
