@@ -459,7 +459,7 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (2110, true, Errors.MM2110);
 
 			if (IsClassic)
-				throw ErrorHelper.CreateError(143, Errors.MM0143);
+				throw ErrorHelper.CreateError (143, Errors.MM0143);
 
 			// sanity check as this should never happen: we start out by not setting any
 			// Unified/Classic properties, and only IsUnifiedMobile if we are are on the
