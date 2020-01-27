@@ -88,9 +88,7 @@ namespace Registrar {
 		public static ProductException GetMT4127 (TMethod impl, List<TMethod> ifaceMethods)
 		{
 			var msg = new System.Text.StringBuilder ();
-			msg.Append ("Cannot register more than one interface method for the method '");
-			msg.Append (impl.DeclaringType.FullName).Append ('.').Append (impl.Name);
-			msg.Append ("' (which is implementing '");
+			msg.Append (String.Format(Errors.MT4127, impl.DeclaringType.FullName, impl.Name));
 			for (int i = 0; i < ifaceMethods.Count; i++) {
 				if (i > 0)
 					msg.Append (i < ifaceMethods.Count - 1 ? "', '" : "' and '");

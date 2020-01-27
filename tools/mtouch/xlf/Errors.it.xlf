@@ -2042,6 +2042,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4127">
+        <source>Cannot register more than one interface method for the method '{0}.{1}' (which is implementing '
+		</source>
+        <target state="new">Cannot register more than one interface method for the method '{0}.{1}' (which is implementing '
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4128">
         <source>The registrar found an invalid generic parameter type '{0}' in the parameter {2} of the method '{1}'. The generic parameter must have an 'NSObject' constraint.
 		</source>
