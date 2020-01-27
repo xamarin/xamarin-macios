@@ -421,7 +421,7 @@ namespace Xamarin.Bundler {
 					sb.AppendLine ($"\tvalue = [{symbol.ObjectiveCName} class];");
 					break;
 				default:
-					throw ErrorHelper.CreateError(99, Errors.MX0099, $"invalid symbol type {symbol.Type} for symbol {symbol.Name}");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol type {symbol.Type} for symbol {symbol.Name}");
 				}
 			}
 			sb.AppendLine ("}");
