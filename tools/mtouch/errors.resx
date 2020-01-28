@@ -1974,13 +1974,6 @@
 		</comment>
 	</data>
 	
-	<data name="MT4127_A" xml:space="preserve">
-		<value>The method '{0}.{1}' is implementing '{2}.{3}'.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
 	<data name="MT4128" xml:space="preserve">
 		<value>The registrar found an invalid generic parameter type '{0}' in the parameter {2} of the method '{1}'. The generic parameter must have an 'NSObject' constraint.
 		</value>
@@ -2015,6 +2008,7 @@
 		<comment>
 		</comment>
 	</data>	
+
 	
 	<data name="MT4135" xml:space="preserve">
 		<value>The member '{0}' has an Export attribute without a selector. A selector is required.
@@ -2025,6 +2019,13 @@
 	
 	<data name="MT4136" xml:space="preserve">
 		<value>The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4137" xml:space="preserve">
+		<value>The method '{0}.{1}' is implementing '{2}.{3}'.
 		</value>
 		<comment>
 		</comment>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20059.1\build\XliffTasks.props" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20059.1\build\XliffTasks.props')" />
   <Import Project="..\..\packages\XliffTasks.1.0.0-beta.19606.1\build\XliffTasks.props" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.19606.1\build\XliffTasks.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -475,6 +474,5 @@
     <!-- This makes sure that just building the csproj will install the updated mtouch.exe, so that tests get it without having to 'make mtouch' manually -->
     <Exec Command="make mtouch" />
   </Target>
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.19606.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.19606.1\build\XliffTasks.targets')" />
   <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20059.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20059.1\build\XliffTasks.targets')" />
 </Project>

@@ -1727,12 +1727,6 @@ namespace Xamarin.Bundler {
             }
         }
         
-        internal static string MT4127_A {
-            get {
-                return ResourceManager.GetString("MT4127_A", resourceCulture);
-            }
-        }
-        
         internal static string MT4128 {
             get {
                 return ResourceManager.GetString("MT4128", resourceCulture);
@@ -1772,6 +1766,12 @@ namespace Xamarin.Bundler {
         internal static string MT4136 {
             get {
                 return ResourceManager.GetString("MT4136", resourceCulture);
+            }
+        }
+        
+        internal static string MT4137 {
+            get {
+                return ResourceManager.GetString("MT4137", resourceCulture);
             }
         }
         

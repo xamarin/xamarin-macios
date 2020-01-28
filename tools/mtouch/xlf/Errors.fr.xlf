@@ -2018,14 +2018,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MT4127_A">
-        <source>The method '{0}.{1}' is implementing '{2}.{3}'.
-		</source>
-        <target state="new">The method '{0}.{1}' is implementing '{2}.{3}'.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MT4128">
         <source>The registrar found an invalid generic parameter type '{0}' in the parameter {2} of the method '{1}'. The generic parameter must have an 'NSObject' constraint.
 		</source>
@@ -2078,6 +2070,14 @@
         <source>The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
 		</source>
         <target state="new">The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4137">
+        <source>The method '{0}.{1}' is implementing '{2}.{3}'.
+		</source>
+        <target state="new">The method '{0}.{1}' is implementing '{2}.{3}'.
 		</target>
         <note>
 		</note>

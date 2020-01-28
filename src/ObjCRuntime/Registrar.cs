@@ -91,7 +91,7 @@ namespace Registrar {
 			exceptions.Add (ErrorHelper.CreateError(4127, Errors.MT4127, impl.DeclaringType.FullName, impl.Name));
 			for (int i = 0; i < ifaceMethods.Count; i++) {
 				var ifaceM = ifaceMethods [i];
-				exceptions.Add (ErrorHelper.CreateError(4127, Errors.MT4127_A, impl.DeclaringType.FullName, impl.Name, ifaceM.DeclaringType.FullName, ifaceM.Name));
+				exceptions.Add (ErrorHelper.CreateError(4137, Errors.MT4137, impl.DeclaringType.FullName, impl.Name, ifaceM.DeclaringType.FullName, ifaceM.Name));
 			}
 			return exceptions;
 		}
