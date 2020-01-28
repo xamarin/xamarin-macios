@@ -476,6 +476,8 @@ namespace CoreGraphics {
 		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGImageByteOrderInfo CGImageGetByteOrderInfo (/* __nullable CGImageRef */ IntPtr handle);
+
+		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
 		public CGImageByteOrderInfo ByteOrderInfo => CGImageGetByteOrderInfo (handle);
 		
 #endif // !COREBUILD
