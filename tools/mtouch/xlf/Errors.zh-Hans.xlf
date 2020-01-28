@@ -194,14 +194,6 @@
         <note>
 		</note>
       </trans-unit>
-      <trans-unit id="MM2103">
-        <source>Error processing assembly '{0}': {1}
-		</source>
-        <target state="new">Error processing assembly '{0}': {1}
-		</target>
-        <note>
-		</note>
-      </trans-unit>
       <trans-unit id="MM2106">
         <source>Could not optimize the call to BlockLiteral.{2} in {0} at offset {1} because the previous instruction was unexpected ({3})
 		</source>
@@ -414,14 +406,6 @@
         <source>There is no devel platform at {0}, use --platform=PLAT to specify the SDK.
 		</source>
         <target state="new">There is no devel platform at {0}, use --platform=PLAT to specify the SDK.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0009_A">
-        <source>Error while loading assemblies: {0}: {1}
-		</source>
-        <target state="new">Error while loading assemblies: {0}: {1}
 		</target>
         <note>
 		</note>
@@ -782,14 +766,6 @@
         <source>Invalid target framework: {0}. Valid target frameworks are: {1}.
 		</source>
         <target state="new">Invalid target framework: {0}. Valid target frameworks are: {1}.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT0071_A">
-        <source>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
-		</source>
-        <target state="new">Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</target>
         <note>
 		</note>
@@ -1694,14 +1670,6 @@
         <source>Error processing the method '{0}' in the assembly '{1}'
 		</source>
         <target state="new">Error processing the method '{0}' in the assembly '{1}'
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MT2103">
-        <source>Error processing assembly '{0}': {1}
-		</source>
-        <target state="new">Error processing assembly '{0}': {1}
 		</target>
         <note>
 		</note>
@@ -2966,6 +2934,14 @@
         <source>Could not process XML description: {0}
 		</source>
         <target state="new">Could not process XML description: {0}
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MX2103">
+        <source>Error processing assembly '{0}': {1}
+		</source>
+        <target state="new">Error processing assembly '{0}': {1}
 		</target>
         <note>
 		</note>

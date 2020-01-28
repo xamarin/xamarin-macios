@@ -476,7 +476,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return "-lcompression";
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MT0071_A, App.Platform, App.SdkVersion);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.SdkVersion);
 			}
 		}
 

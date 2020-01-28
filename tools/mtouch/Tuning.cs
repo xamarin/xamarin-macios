@@ -283,7 +283,7 @@ namespace MonoTouch.Tuner {
 				base.ProcessAssembly (assembly);
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2103, true, e, Errors.MT2103, assembly.FullName, e);
+				throw new MonoTouchException (2103, true, e, Errors.MX2103, assembly.FullName, e);
 			}
 		}
 	}

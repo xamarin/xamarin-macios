@@ -253,7 +253,7 @@ namespace MonoMac.Tuner {
 				base.ProcessAssembly (assembly);
 			}
 			catch (Exception e) {
-				throw new MonoMacException (2103, true, e, Errors.MM2103, assembly.FullName, e);
+				throw new MonoMacException (2103, true, e, Errors.MX2103, assembly.FullName, e);
 			}
 		}
 	}
