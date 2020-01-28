@@ -18,6 +18,11 @@ namespace Samples {
 		public string[] DebugConfigurations;
 		public string[] ReleaseConfigurations;
 		public string[] Platforms;
+
+		// for various reasons (build'ability, compatibility, performance) it can be
+		// better to build a subset of a solution
+		// e.g. `nuget restore` requires removing the projects from the .sln
+		public string[] RemoveProjects;
 	}
 
 	public class SampleTestData {
@@ -146,7 +151,29 @@ namespace Samples {
 					target = Path.GetFileNameWithoutExtension (data.Project.RelativePath).Replace ('.', '_');
 				}
 
-				file_to_build = Path.Combine (CloneRepo (), file_to_build);
+				var repo = CloneRepo ();
+				file_to_build = Path.Combine (repo, file_to_build);
+
+				if (data.RemoveProjects != null) {
+					if (String.IsNullOrEmpty (data.Solution))
+						Assert.Fail ("'RemoveProjects' used without a 'Solution' path!");
+					var sln_path = Path.Combine (repo, data.Solution);
+					var filtered_sln = new List<string> (File.ReadAllLines (sln_path));
+					foreach (var p in data.RemoveProjects) {
+						for (int i = 0; i < filtered_sln.Count; i++) {
+							var line = filtered_sln [i];
+							if (line.StartsWith ("Project(", StringComparison.Ordinal)) {
+								if (line.Contains ($") = \"{p}\", \"")) {
+									filtered_sln.RemoveAt (i);
+									filtered_sln.RemoveAt (i); // EndProject (same `i` as things moved up)
+									break;
+								}
+							}
+						}
+					}
+					File.WriteAllLines (sln_path, filtered_sln);
+				}
+
 				ProcessHelper.BuildSolution (file_to_build, sampleTestData.Platform, sampleTestData.Configuration, environment_variables, sampleTestData.Timeout, target, data.CodesignKey);
 				Console.WriteLine ("✅ {0} succeeded.", TestContext.CurrentContext.Test.FullName);
 			} catch (Exception e) {
