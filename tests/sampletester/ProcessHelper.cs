@@ -75,7 +75,7 @@ public static class ProcessHelper
 		Assert.AreEqual (0, exitCode, $"{message} failed (unexpected exit code){errorMessage}");
 	}
 
-	public static void BuildSolution (string solution, string platform, string configuration, Dictionary<string, string> environment_variables, TimeSpan timeout, string target = "")
+	public static void BuildSolution (string solution, string platform, string configuration, Dictionary<string, string> environment_variables, TimeSpan timeout, string target = "", string codesignKey = null)
 	{
 		// nuget restore
 		var solution_dir = string.Empty;
@@ -108,6 +108,8 @@ public static class ProcessHelper
 		sb.Add (solution);
 		if (!string.IsNullOrEmpty (target))
 			sb.Add ($"/t:{target}");
+		if (!string.IsNullOrEmpty (codesignKey))
+			sb.Add($"/p:CodesignKey={codesignKey}");
 
 		sb.Add ($"/verbosity:diag");
 		environment_variables ["MTOUCH_ENV_OPTIONS"] = "--time --time --time --time -vvvv";

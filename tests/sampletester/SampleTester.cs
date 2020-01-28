@@ -14,6 +14,7 @@ namespace Samples {
 		public string Solution;
 		public bool BuildSolution;
 		public string KnownFailure;
+		public string CodesignKey;
 		public string[] DebugConfigurations;
 		public string[] ReleaseConfigurations;
 		public string[] Platforms;
@@ -146,7 +147,7 @@ namespace Samples {
 				}
 
 				file_to_build = Path.Combine (CloneRepo (), file_to_build);
-				ProcessHelper.BuildSolution (file_to_build, sampleTestData.Platform, sampleTestData.Configuration, environment_variables, sampleTestData.Timeout, target);
+				ProcessHelper.BuildSolution (file_to_build, sampleTestData.Platform, sampleTestData.Configuration, environment_variables, sampleTestData.Timeout, target, data.CodesignKey);
 				Console.WriteLine ("✅ {0} succeeded.", TestContext.CurrentContext.Test.FullName);
 			} catch (Exception e) {
 				Console.WriteLine ("❌ {0} failed: {1}", TestContext.CurrentContext.Test.FullName, e.Message);

@@ -198,23 +198,25 @@ namespace Samples {
 		}
 	}
 
-	[Category (CATEGORY)]
-	public class XappyTester : SampleTester {
-		const string ORG = "davidortinau";
-		const string REPO = "Xappy";
-		const string CATEGORY = "davidortinauxappy"; // categories can't contain dashes
-		const string HASH = "46e5897bac974e000fcc7e1d10d01ab8d3072eb2";
+	// TODO: Reenable once we can ignore specific projects
+	// Xappy.UWP.csproj : error MSB4057: The target "_IsProjectRestoreSupported" does not exist in the project.
+	//[Category (CATEGORY)]
+	//public class XappyTester : SampleTester {
+	//	const string ORG = "davidortinau";
+	//	const string REPO = "Xappy";
+	//	const string CATEGORY = "davidortinauxappy"; // categories can't contain dashes
+	//	const string HASH = "46e5897bac974e000fcc7e1d10d01ab8d3072eb2";
 
-		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
-			// Known failures
-			{ "Xappy/Xappy.UWP/Xappy.UWP.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln", KnownFailure = "The target \"_IsProjectRestoreSupported\" does not exist in the project." } },
-		};
+	//	static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+	//		// Known failures
+	//		{ "Xappy/Xappy.UWP/Xappy.UWP.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln", KnownFailure = "The target \"_IsProjectRestoreSupported\" does not exist in the project." } },
+	//	};
 
-		static IEnumerable<SampleTestData> GetSampleData ()
-		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
-		}
-	}
+	//	static IEnumerable<SampleTestData> GetSampleData ()
+	//	{
+	//		return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
+	//	}
+	//}
 
 	[Category (CATEGORY)]
 	public class SmartHotelTester : SampleTester {
@@ -224,7 +226,9 @@ namespace Samples {
 		const string HASH = "4004b32c955f8340a0306bad2b180ecf5adaf117";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
-
+			// Override CodesignKey key
+			{ "Source/SmartHotel.Clients/SmartHotel.Clients.iOS/SmartHotel.Clients.iOS.csproj", new SampleTest { CodesignKey = "iPhone Developer" } },
+			{ "Source/SmartHotel.Clients.Maintenance/SmartHotel.Clients.Maintenance.iOS/SmartHotel.Clients.Maintenance.iOS.csproj", new SampleTest { CodesignKey = "iPhone Developer" } },
 		};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
