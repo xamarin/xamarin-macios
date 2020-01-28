@@ -43,15 +43,16 @@ Copyright (C) 2014-2016 Xamarin. All rights reserved.
 		<PropertyGroup>
 			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
+			<_RelativeAppBundleDir>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '$(AppBundleDir)'))</_RelativeAppBundleDir>
 
 			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
-			<_AppExtensionBundlePath>$(MSBuildProjectDirectory)\$(AppBundleDir)</_AppExtensionBundlePath>
+			<_AppExtensionBundlePath>$(AppBundleDir)</_AppExtensionBundlePath>
 		</PropertyGroup>
 		<ItemGroup>
-			<_AppExtensionBundlePath Include="$(MSBuildProjectDirectory)\$(AppBundleDir)">
+			<_AppExtensionBundlePath Include="$(AppBundleDir)">
 				<!-- We need this metadata to fix the source in VS -->
 				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
-				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
+				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(_RelativeAppBundleDir)</BuildServerPath>
 			</_AppExtensionBundlePath>
 		</ItemGroup>
 	</Target>

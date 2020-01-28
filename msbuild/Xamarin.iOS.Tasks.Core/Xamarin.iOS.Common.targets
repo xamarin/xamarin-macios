@@ -134,7 +134,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
 
 		<DeviceSpecificIntermediateOutputPath>$(IntermediateOutputPath)</DeviceSpecificIntermediateOutputPath>
+		<!-- make sure DeviceSpecificOutputPath is an absolute path: when using dotnet it might be, and this way we ensure we have the same behavior when not running with dotnet as well -->
 		<DeviceSpecificOutputPath>$(OutputPath)</DeviceSpecificOutputPath>
+		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted ('$(DeviceSpecificOutputPath)')) != 'true'">$([MSBuild]::NormalizePath ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
 	</PropertyGroup>
 	
 	<PropertyGroup>
