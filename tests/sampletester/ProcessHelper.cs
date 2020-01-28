@@ -109,7 +109,7 @@ public static class ProcessHelper
 		if (!string.IsNullOrEmpty (target))
 			sb.Add ($"/t:{target}");
 		if (!string.IsNullOrEmpty (codesignKey))
-			sb.Add($"/p:CodesignKey={codesignKey}");
+			sb.Add ($"/p:CodesignKey={codesignKey}");
 
 		sb.Add ($"/verbosity:diag");
 		environment_variables ["MTOUCH_ENV_OPTIONS"] = "--time --time --time --time -vvvv";
