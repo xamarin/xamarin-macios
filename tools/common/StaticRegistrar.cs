@@ -4104,7 +4104,7 @@ namespace Registrar {
 			var map = PrepareMethodMapping (first.DeclaringType);
 			if (map != null && map.TryGetValue (first, out var list)) {
 				if (list.Count != 1)
-					throw Shared.GetMT4127 (first, list);
+					throw new AggregateException (Shared.GetMT4127 (first, list));
 				var delegateProxyType = GetDelegateProxyAttribute (list [0]);
 				if (delegateProxyType?.DelegateType != null)
 					return delegateProxyType.DelegateType;
@@ -4151,7 +4151,7 @@ namespace Registrar {
 			var map = PrepareMethodMapping (first.DeclaringType);
 			if (map != null && map.TryGetValue (first, out var list)) {
 				if (list.Count != 1)
-					throw Shared.GetMT4127 (first, list);
+					throw new AggregateException (Shared.GetMT4127 (first, list));
 				var createMethod = GetBlockProxyAttributeMethod (list [0], parameter);
 				if (createMethod != null)
 					return createMethod;

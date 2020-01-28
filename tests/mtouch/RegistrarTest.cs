@@ -276,8 +276,10 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.AssertExecuteFailure ();
-				mtouch.AssertError (4127, "Cannot register more than one interface method for the method 'MyObjectErr.GetFoo' (which is implementing 'IFoo1.GetFoo' and 'IFoo2.GetFoo').");
-				mtouch.AssertErrorCount (1);
+				mtouch.AssertError (4127, "Cannot register more than one interface method for the method 'MyObjectErr.GetFoo'.");
+				mtouch.AssertError (4127, "The method 'MyObjectErr.GetFoo' is implementing 'IFoo1.GetFoo'.");
+				mtouch.AssertError (4127, "The method 'MyObjectErr.GetFoo' is implementing 'IFoo2.GetFoo'.");
+				mtouch.AssertErrorCount (3);
 				mtouch.AssertNoWarnings ();
 			}
 		}

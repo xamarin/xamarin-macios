@@ -85,18 +85,15 @@ namespace ObjCRuntime
 namespace Registrar {
 	static class Shared {
 		
-		public static ProductException GetMT4127 (TMethod impl, List<TMethod> ifaceMethods)
+		public static List<ProductException> GetMT4127 (TMethod impl, List<TMethod> ifaceMethods)
 		{
-			var msg = new System.Text.StringBuilder ();
-			msg.Append (String.Format(Errors.MT4127, impl.DeclaringType.FullName, impl.Name));
+			var exceptions = new List <ProductException> ();
+			exceptions.Add (ErrorHelper.CreateError(4127, Errors.MT4127, impl.DeclaringType.FullName, impl.Name));
 			for (int i = 0; i < ifaceMethods.Count; i++) {
-				if (i > 0)
-					msg.Append (i < ifaceMethods.Count - 1 ? "', '" : "' and '");
 				var ifaceM = ifaceMethods [i];
-				msg.Append (ifaceM.DeclaringType.FullName).Append ('.').Append (ifaceM.Name);
+				exceptions.Add (ErrorHelper.CreateError(4127, Errors.MT4127_A, impl.DeclaringType.FullName, impl.Name, ifaceM.DeclaringType.FullName, ifaceM.Name));
 			}
-			msg.Append ("').");
-			return ErrorHelper.CreateError (4127, msg.ToString ());
+			return exceptions;
 		}
 	}
 
@@ -2313,7 +2310,8 @@ namespace Registrar {
 					List<TMethod> impls;
 					if (method_map != null && method_map.TryGetValue (method, out impls)) {
 						if (impls.Count != 1) {
-							AddException (ref exceptions, Shared.GetMT4127 (method, impls));
+							foreach (var err in Shared.GetMT4127(method, impls))
+								AddException (ref exceptions, err);
 							continue;
 						}
 

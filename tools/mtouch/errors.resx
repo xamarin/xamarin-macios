@@ -1484,12 +1484,19 @@
 	</data>
 	
 	<data name="MT4127" xml:space="preserve">
-		<value>Cannot register more than one interface method for the method '{0}.{1}' (which is implementing '
+		<value>Cannot register more than one interface method for the method '{0}.{1}'.
 		</value>
 		<comment>
 		</comment>
 	</data>
 	
+	<data name="MT4127_A" xml:space="preserve">
+		<value>The method '{0}.{1}' is implementing '{2}.{3}'.
+		</value>
+		<comment>
+		</comment>
+	</data>
+
 	<data name="MT4128" xml:space="preserve">
 		<value>The registrar found an invalid generic parameter type '{0}' in the parameter {2} of the method '{1}'. The generic parameter must have an 'NSObject' constraint.
 		</value>

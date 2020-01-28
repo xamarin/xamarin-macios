@@ -2043,9 +2043,17 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT4127">
-        <source>Cannot register more than one interface method for the method '{0}.{1}' (which is implementing '
+        <source>Cannot register more than one interface method for the method '{0}.{1}'.
 		</source>
-        <target state="new">Cannot register more than one interface method for the method '{0}.{1}' (which is implementing '
+        <target state="new">Cannot register more than one interface method for the method '{0}.{1}'.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4127_A">
+        <source>The method '{0}.{1}' is implementing '{2}.{3}'.
+		</source>
+        <target state="new">The method '{0}.{1}' is implementing '{2}.{3}'.
 		</target>
         <note>
 		</note>
