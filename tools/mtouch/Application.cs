@@ -1013,14 +1013,14 @@ namespace Xamarin.Bundler {
 			if (Platform == ApplePlatform.iOS && DeploymentTarget.Major < 8) {
 				// This is a limitation it's technically possible to fix (we can build all extensions into frameworks, and the main app to static objects).
 				// It would make our code a bit more complicated though, and would only be valuable for apps that target iOS 6 or iOS 7 and has more than one extension.
-				ErrorHelper.Warning (112, Errors.MT0112, String.Format (Xamarin.Bundler.Errors.MT0112_a, DeploymentTarget));
+				ErrorHelper.Warning (112, Errors.MT0112, String.Format (Errors.MT0112_a, DeploymentTarget));
 				return;
 			}
 
 			// No I18N assemblies can be included
 			if (I18n != Mono.Linker.I18nAssemblies.None) {
 				// This is a limitation it's technically possible to fix.
-				ErrorHelper.Warning (112, Errors.MT0112, String.Format(Xamarin.Bundler.Errors.MT0112_b, I18n));
+				ErrorHelper.Warning (112, Errors.MT0112, String.Format (Errors.MT0112_b, I18n));
 				return;
 			}
 
@@ -1038,7 +1038,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (BitCodeMode != appex.BitCodeMode) {
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_a, appex.BitCodeMode, BitCodeMode));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_a, appex.BitCodeMode, BitCodeMode));
 					continue;
 				}
 
@@ -1047,21 +1047,21 @@ namespace Xamarin.Bundler {
 				// We can probably lift this requirement (at least partially) at some point,
 				// but for now it makes our code simpler.
 				if (assembly_build_targets.Count != appex.assembly_build_targets.Count) {
-					ErrorHelper.Warning (113, Errors.MT0113,appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
+					ErrorHelper.Warning (113, Errors.MT0113,appex.Name, String.Format (Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
 					continue;
 				}
 
 				foreach (var key in assembly_build_targets.Keys) {
 					Tuple<AssemblyBuildTarget, string> appex_value;
 					if (!appex.assembly_build_targets.TryGetValue (key, out appex_value)) {
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
 						applicable = false;
 						break;
 					}
 
 					var value = assembly_build_targets [key];
 					if (value.Item1 != appex_value.Item1 || value.Item2 != appex_value.Item2) {
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
 						applicable = false;
 						break;
 					}
@@ -1072,57 +1072,57 @@ namespace Xamarin.Bundler {
 				
 				// No I18N assemblies can be included
 				if (appex.I18n != Mono.Linker.I18nAssemblies.None) {
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_c, I18n, appex.I18n));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_c, I18n, appex.I18n));
 					continue;
 				}
 
 				// All arguments to the AOT compiler must be identical
 				if (AotArguments != appex.AotArguments) {
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_d, AotArguments, appex.AotArguments));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_d, AotArguments, appex.AotArguments));
 					continue;
 				}
 
 				if (!CompareLists (AotOtherArguments, appex.AotOtherArguments)) {
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_e, StringUtils.FormatArguments(AotOtherArguments), StringUtils.FormatArguments(appex.AotOtherArguments)));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_e, StringUtils.FormatArguments(AotOtherArguments), StringUtils.FormatArguments(appex.AotOtherArguments)));
 					continue;
 				}
 
 				if (IsLLVM != appex.IsLLVM) {
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_f, IsLLVM, appex.IsLLVM));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_f, IsLLVM, appex.IsLLVM));
 					continue;
 				}
 
 				if (LinkMode != appex.LinkMode) {
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_g, LinkMode, appex.LinkMode));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_g, LinkMode, appex.LinkMode));
 					continue;
 				}
 
 				if (LinkMode != LinkMode.None) {
 					var linkskipped_same = !LinkSkipped.Except (appex.LinkSkipped).Any () && !appex.LinkSkipped.Except (LinkSkipped).Any ();
 					if (!linkskipped_same) {
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_h, string.Join(", ", LinkSkipped), string.Join(", ", appex.LinkSkipped)));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_h, string.Join(", ", LinkSkipped), string.Join(", ", appex.LinkSkipped)));
 						continue;
 					}
 
 					if (Definitions.Count > 0) {
-						ErrorHelper.Warning (112, Errors.MT0112, String.Format(Xamarin.Bundler.Errors.MT0112_c, string.Join(", ", Definitions)));
+						ErrorHelper.Warning (112, Errors.MT0112, String.Format (Errors.MT0112_c, string.Join(", ", Definitions)));
 						continue;
 					}
 
 					if (appex.Definitions.Count > 0) {
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_i, string.Join(", ", appex.Definitions)));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_i, string.Join(", ", appex.Definitions)));
 						continue;
 					}
 				}
 
 				if (UseInterpreter != appex.UseInterpreter) {
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_j, (UseInterpreter ? "Enabled" : "Disabled"), (appex.UseInterpreter ? "Enabled" : "Disabled")));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_j, (UseInterpreter ? "Enabled" : "Disabled"), (appex.UseInterpreter ? "Enabled" : "Disabled")));
 					continue;
 				} else if (UseInterpreter) {
 					var appAssemblies = new HashSet<string> (InterpretedAssemblies);
 					var appexAssemblies = new HashSet<string> (appex.InterpretedAssemblies);
 					if (!appAssemblies.SetEquals (appexAssemblies)) {
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_k, (InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join(", ", InterpretedAssemblies)), (appex.InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join(", ", appex.InterpretedAssemblies))));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_k, (InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join(", ", InterpretedAssemblies)), (appex.InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join(", ", appex.InterpretedAssemblies))));
 						continue;
 					}
 				}
@@ -1132,12 +1132,12 @@ namespace Xamarin.Bundler {
 					var matching = abis.FirstOrDefault ((v) => (v & Abi.ArchMask) == (abi & Abi.ArchMask));
 					if (matching == Abi.None) {
 						// Example: extension has arm64+armv7, while the main app has only arm64.
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_l, abi));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_l, abi));
 						applicable = false;
 						break;
 					} else if (matching != abi) {
 						// Example: extension has arm64+llvm, while the main app has only arm64.
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_m, matching, abi));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_m, matching, abi));
 						applicable = false;
 						break;
 					}
@@ -1150,7 +1150,7 @@ namespace Xamarin.Bundler {
 							return "default";
 						return v.Value ? "true" : "false";
 					};
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_n, bool_tostr(appex.Optimizations.RemoveDynamicRegistrar), bool_tostr(Optimizations.RemoveDynamicRegistrar)));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_n, bool_tostr(appex.Optimizations.RemoveDynamicRegistrar), bool_tostr(Optimizations.RemoveDynamicRegistrar)));
 					continue;
 				}
 
@@ -1165,7 +1165,7 @@ namespace Xamarin.Bundler {
 							continue; // appex references an assembly the main app doesn't. This is fine.
 						if (asm.FullPath != kvp.Value.FullPath && !Cache.CompareFiles (asm.FullPath, kvp.Value.FullPath, true)) {
 							applicable = false; // app references an assembly with the same name as the main app, but from a different location and not identical. This is not fine.
-							ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format(Xamarin.Bundler.Errors.MT0113_n, asm.Identity, asm.FullPath));
+							ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_n, asm.Identity, asm.FullPath));
 							break;
 						}
 					}

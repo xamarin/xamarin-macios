@@ -91,7 +91,7 @@ namespace Registrar {
 			exceptions.Add (ErrorHelper.CreateError(4127, Errors.MT4127, impl.DeclaringType.FullName, impl.Name));
 			for (int i = 0; i < ifaceMethods.Count; i++) {
 				var ifaceM = ifaceMethods [i];
-				exceptions.Add (ErrorHelper.CreateError(4137, Errors.MT4137, impl.DeclaringType.FullName, impl.Name, ifaceM.DeclaringType.FullName, ifaceM.Name));
+				exceptions.Add (ErrorHelper.CreateError (4137, Errors.MT4137, impl.DeclaringType.FullName, impl.Name, ifaceM.DeclaringType.FullName, ifaceM.Name));
 			}
 			return exceptions;
 		}
@@ -290,8 +290,8 @@ namespace Registrar {
 							ap = ap.Insert (idx, "}");
 						}
 
-						var m4177 = String.Format(Errors.MT4177, Registrar.GetTypeFullName(Type), ap, str);
-						AddException (ref exceptions, new ProductException (4177, true, m4177 ));
+						var m4177 = String.Format (Errors.MT4177, Registrar.GetTypeFullName(Type), ap, str);
+						AddException (ref exceptions, new ProductException (4177, true, m4177));
 
 					}
 				}
@@ -1506,7 +1506,7 @@ namespace Registrar {
 			if (!IsGenericMethod (method))
 				return true;
 
-			AddException (ref exceptions, CreateException (4113, method, Xamarin.Bundler.Errors.MT4113,
+			AddException (ref exceptions, CreateException (4113, method, Errors.MT4113,
 				GetDescriptiveMethodName (declaringType, method)));
 			return false;
 		}
@@ -2188,7 +2188,7 @@ namespace Registrar {
 					var ca = GetConnectAttribute (property);
 					if (ca != null) {
 						if (!IsINativeObject (GetPropertyType (property))) {
-							AddException (ref exceptions, CreateException (4139, property, Xamarin.Bundler.Errors.MT4139,
+							AddException (ref exceptions, CreateException (4139, property, Errors.MT4139,
 								GetTypeFullName (GetPropertyType (property)), GetTypeFullName (type), GetPropertyName (property)));
 							continue;
 						}
@@ -2313,7 +2313,7 @@ namespace Registrar {
 					List<TMethod> impls;
 					if (method_map != null && method_map.TryGetValue (method, out impls)) {
 						if (impls.Count != 1) {
-							foreach (var err in Shared.GetMT4127(method, impls))
+							foreach (var err in Shared.GetMT4127 (method, impls))
 								AddException (ref exceptions, err);
 							continue;
 						}
