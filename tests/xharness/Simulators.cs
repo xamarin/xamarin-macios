@@ -472,17 +472,17 @@ namespace xharness
 		{
 			// here we don't care if execution fails.
 			// erase the simulator (make sure the device isn't running first)
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "erase " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "erase", UDID }, log, TimeSpan.FromMinutes (1));
 
 			// boot & shutdown to make sure it actually works
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "boot " + UDID }, log, TimeSpan.FromMinutes (1));
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "boot", UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
 		public async Task ShutdownAsync (Log log)
 		{
-			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown " + UDID }, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", new [] { "shutdown", UDID }, log, TimeSpan.FromMinutes (1));
 		}
 
 		public static async Task KillEverythingAsync (Log log)
