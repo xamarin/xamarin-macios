@@ -356,9 +356,9 @@ namespace xharness
 		{
 			// more fun, the first like of the stream, is a ping from the application to the tcp server, and that will not be parsable as
 			// xml, advance the reader one line.
-			var pingLine = stream.ReadLine();
-			if (!pingLine.Contains("ping"))
-				throw new InvalidDataException("Ping line is missing, unexpected format.");
+			var pingLine = stream.ReadLine ();
+			if (!pingLine.Contains ("ping"))
+				throw new InvalidDataException ("Ping line is missing, unexpected format.");
 
 			// TouchUnitTestRun is the very first node in the TouchUnit xml result
 			// which is not preset in the xunit xml, therefore we know the runner
@@ -413,7 +413,7 @@ namespace xharness
 			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
 			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
 			// ignore the first line
-			stream.ReadLine();
+			stream.ReadLine ();
 			using (var reader = XmlReader.Create (stream)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
