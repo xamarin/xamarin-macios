@@ -148,6 +148,7 @@ namespace Samples {
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// avoid building unneeded projects since they require a lot of nuget packages (and cause a lot of unrelated/network build issues)
 				{ "WebServices/TodoREST/iOS/TodoREST.iOS.csproj", new SampleTest { Solution = "WebServices/TodoREST/TodoREST.sln", RemoveProjects = new [] { "TodoAPI", "TodoREST.Droid" } } },
+				{ "WorkingWithMaps/iOS/WorkingWithMaps.iOS.csproj", new SampleTest { Solution = "WorkingWithMaps/WorkingWithMaps.sln", RemoveProjects = new [] { "WorkingWithMaps.Android", "WorkingWithMaps.UWP" } } },
 				// Build solution instead of csproj.
 				{ "WebServices/TodoWCF/iOS/TodoWCF.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "WebServices/TodoWCF/TodoWCF.sln" } },
 			};
@@ -200,8 +201,6 @@ namespace Samples {
 		}
 	}
 
-	// TODO: Reenable once we can ignore specific projects
-	// Xappy.UWP.csproj : error MSB4057: The target "_IsProjectRestoreSupported" does not exist in the project.
 	[Category (CATEGORY)]
 	public class XappyTester : SampleTester {
 		const string ORG = "davidortinau";
@@ -210,7 +209,7 @@ namespace Samples {
 		const string HASH = "46e5897bac974e000fcc7e1d10d01ab8d3072eb2";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
-			{ "Xappy/Xappy.UWP/Xappy.UWP.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln", RemoveProjects = new [] { "Xappy.Android", "Xappy.UWP" } } },
+			{ "Xappy/Xappy.iOS/Xappy.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln", RemoveProjects = new [] { "Xappy.Android", "Xappy.UWP" } } },
 		};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
