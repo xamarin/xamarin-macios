@@ -342,13 +342,24 @@ namespace xharness
 				return false;
 
 			using (var stream = File.OpenText (filePath)) {
-				var firstLine = stream.ReadLine ();
-				return firstLine.StartsWith ("<", StringComparison.Ordinal);
+				string line;
+				while ((line = stream.ReadLine ()) != null) {
+					if (line.Contains ("ping"))
+						continue;
+					return line.StartsWith ("<", StringComparison.Ordinal);
+				}
 			}
+			return false;
 		}
 
 		bool IsTouchUnitResult (StreamReader stream)
 		{
+			// more fun, the first like of the stream, is a ping from the application to the tcp server, and that will not be parsable as
+			// xml, advance the reader one line.
+			var pingLine = stream.ReadLine();
+			if (!pingLine.Contains("ping"))
+				throw new InvalidDataException("Ping line is missing, unexpected format.");
+
 			// TouchUnitTestRun is the very first node in the TouchUnit xml result
 			// which is not preset in the xunit xml, therefore we know the runner
 			// quite quickly
@@ -371,6 +382,8 @@ namespace xharness
 		{
 			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
 			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
+			// ignore the first line
+			stream.ReadLine ();
 			using (var reader = XmlReader.Create (stream)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
@@ -399,6 +412,8 @@ namespace xharness
 		{
 			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
 			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
+			// ignore the first line
+			stream.ReadLine();
 			using (var reader = XmlReader.Create (stream)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
@@ -508,6 +523,8 @@ namespace xharness
 						using (var xmlWriter = new StreamWriter (path)) {
 							string line;
 							while ((line = streamReaderTmp.ReadLine ()) != null) {
+								if (line.Contains ("ping")) // ignore the ping, because VSTS is going to have issues too.
+									continue;
 								if (line.Contains ("<test-results")) {
 									if (line.Contains ("name=\"\"")) { // NUnit case
 										xmlWriter.WriteLine (line.Replace ("name=\"\"", $"name=\"{appName + " " + configuration}\""));
