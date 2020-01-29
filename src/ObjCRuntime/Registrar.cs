@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Security;
 
 using Foundation;
 using ObjCRuntime;
@@ -289,7 +290,10 @@ namespace Registrar {
 							str = "}}";
 							ap = ap.Insert (idx, "}");
 						}
-						AddException (ref exceptions, new ProductException (4177, true, Errors.MT4177, Registrar.GetTypeFullName(Type), ap, str));
+
+						var m4177 = String.Format(Errors.MT4177, Registrar.GetTypeFullName(Type), ap, str);
+						AddException (ref exceptions, new ProductException (4177, true, m4177 ));
+
 					}
 				}
 			}
