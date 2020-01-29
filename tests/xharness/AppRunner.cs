@@ -547,6 +547,18 @@ namespace xharness
 					return parseResult;
 				} catch (Exception e) {
 					main_log.WriteLine ("Could not parse xml result file: {0}", e);
+					// print file for better debugging
+					main_log.WriteLine ("File data is:");
+					main_log.WriteLine (new string ('#', 10));
+					using (var streamReaderTmp = new StreamReader (tmpFile)) {
+						string line;
+						while ((line = streamReaderTmp.ReadLine ()) != null) {
+							main_log.WriteLine (line);
+						}
+					}
+					main_log.WriteLine (new string ('#', 10));
+					main_log.WriteLine ("End of xml results.");
+
 
 					if (timed_out) {
 						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
