@@ -627,7 +627,7 @@ namespace xharness
 					simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
 			}
 
-			await ProcessHelper.ExecuteCommandAsync ("open", new [] { "-a ", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
+			await ProcessHelper.ExecuteCommandAsync ("open", new [] { "-a", simulator_app, "--args", "-CurrentDeviceUDID", UDID }, log, TimeSpan.FromSeconds (15));
 		}
 
 		public async Task PrepareSimulatorAsync (Log log, params string[] bundle_identifiers)
