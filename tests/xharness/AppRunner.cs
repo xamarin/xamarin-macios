@@ -364,13 +364,27 @@ namespace xharness
 			// which is not preset in the xunit xml, therefore we know the runner
 			// quite quickly
 			bool isTouchUnit = false;
-			using (var reader = XmlReader.Create (stream)) {
-				while (reader.Read ()) {
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "TouchUnitTestRun") {
-						isTouchUnit = true;
-						break;
+			try {
+				using (var reader = XmlReader.Create (stream)) {
+					while (reader.Read ()) {
+						if (reader.NodeType == XmlNodeType.Element && reader.Name == "TouchUnitTestRun") {
+							isTouchUnit = true;
+							break;
+						}
 					}
 				}
+			} catch (XmlException e) {
+				main_log.WriteLine ($"Could not determine if touch unit {e}");
+				// print file for better debugging
+				main_log.WriteLine ("File data is:");
+				main_log.WriteLine (new string ('#', 10));
+				stream.BaseStream.Position = 0;
+				string line;
+				while ((line = stream.ReadLine ()) != null) {
+					main_log.WriteLine (line);
+				}
+				main_log.WriteLine (new string ('#', 10));
+				main_log.WriteLine ("End of xml results.");
 			}
 			// we want to reuse the stream (and we are sync)
 			stream.BaseStream.Position = 0;
@@ -501,7 +515,8 @@ namespace xharness
 				// write the human readable log
 				var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ()); 
 
-				File.Move (listener_log.FullPath, tmpFile);
+				// copy do not move
+				File.Copy (listener_log.FullPath, tmpFile, true);
 				crashed = false;
 				try {
 					using (var streamReaderTmp = new StreamReader (tmpFile)) {
@@ -547,19 +562,6 @@ namespace xharness
 					return parseResult;
 				} catch (Exception e) {
 					main_log.WriteLine ("Could not parse xml result file: {0}", e);
-					// print file for better debugging
-					main_log.WriteLine ("File data is:");
-					main_log.WriteLine (new string ('#', 10));
-					using (var streamReaderTmp = new StreamReader (tmpFile)) {
-						string line;
-						while ((line = streamReaderTmp.ReadLine ()) != null) {
-							main_log.WriteLine (line);
-						}
-					}
-					main_log.WriteLine (new string ('#', 10));
-					main_log.WriteLine ("End of xml results.");
-
-
 					if (timed_out) {
 						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
 						return parseResult;
