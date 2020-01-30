@@ -2008,6 +2008,20 @@
 		<comment>
 		</comment>
 	</data>	
+	
+	<data name="MT4134" xml:space="preserve">
+		<value>Your application is using the '{0}' framework, which isn't included in the {3} SDK you're using to build your app (this framework was introduced in {3} {2}, while you're building with the {3} {1} SDK.) Please select a newer SDK in your app's {3} Build options.
+		</value>
+		<comment>
+		</comment>
+	</data>	
+	
+	<data name="MM4134" xml:space="preserve">
+		<value>Your application is using the '{0}' framework, which isn't included in the {3} SDK you're using to build your app (this framework was introduced in {3} {2}, while you're building with the {3} {1} SDK.) This configuration is not supported with the static registrar (pass --registrar:dynamic as an additional mmp argument in your project's Mac Build option to select). Alternatively select a newer SDK in your app's Mac Build options.	
+		</value>
+		<comment>
+		</comment>
+	</data>	
 
 	
 	<data name="MT4135" xml:space="preserve">
@@ -2164,6 +2178,13 @@
 		</comment>
 	</data>
 	
+	<data name="MT4161" xml:space="preserve">
+		<value>The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
 	<data name="MT4162" xml:space="preserve">
 		<value>The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
 		</value>
@@ -2187,6 +2208,13 @@
 	
 	<data name="MT4163_A" xml:space="preserve">
 		<value>Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4163_B" xml:space="preserve">
+		<value>Internal error in the registrar (BindAs parameters can't be ref/out: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 		<comment>
 		</comment>
@@ -2271,6 +2299,13 @@
 	
 	<data name="MT4173" xml:space="preserve">
 		<value>The registrar can't compute the block signature for the delegate of type {0} in the method {1} because {0} doesn't have a specific signature.
+		</value>
+		<comment>
+		</comment>
+	</data>
+	
+	<data name="MT4173_A" xml:space="preserve">
+		<value>The registrar can't compute the block signature for the delegate of type {0} in the method {1} because it couldn't find the Invoke method of the delegate type.
 		</value>
 		<comment>
 		</comment>
