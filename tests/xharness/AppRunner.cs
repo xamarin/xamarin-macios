@@ -542,9 +542,11 @@ namespace xharness
 						using (var xmlWriter = new StreamWriter (path)) {
 							string line;
 							while ((line = streamReaderTmp.ReadLine ()) != null) {
-								if (line.Contains ("ping")) // ignore the ping, because VSTS is going to have issues too.
+								if (line.Contains ("ping") || line.Contains ("<TouchUnitTestRun>") || line.Contains ("<NUnitOutput>")) // ignore the ping, because VSTS is going to have issues too or the Touch unit elements
 									continue;
-								if (line.Contains ("<test-results")) {
+								if (line.Contains ("</NUnitOutput>")) // get out of the loop we are not interested in the rest of the TouchUnit data.
+									break;
+ 								if (line.Contains ("<test-results")) {
 									if (line.Contains ("name=\"\"")) { // NUnit case
 										xmlWriter.WriteLine (line.Replace ("name=\"\"", $"name=\"{appName + " " + configuration}\""));
 										xmlWriter.WriteLine (line);
