@@ -551,6 +551,8 @@ namespace xharness
 										xmlWriter.WriteLine (line.Replace ("name=\"\"", $"name=\"{appName + " " + configuration}\""));
 									} else if (line.Contains ($"name=\"com.xamarin.bcltests.{appName}\"")) { // xunit case
 										xmlWriter.WriteLine (line.Replace ($"name=\"com.xamarin.bcltests.{appName}\"", $"name=\"{appName + " " + configuration}\""));
+									} else {
+										xmlWriter.WriteLine (line);
 									}
 								} else {
 									xmlWriter.WriteLine (line);
