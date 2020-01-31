@@ -273,7 +273,7 @@ namespace Xamarin.Bundler {
 		{
 #if MONOTOUCH
 			if (App.Platform == Xamarin.Utils.ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
-				throw ErrorHelper.CreateError (1305, "The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.",
+				throw ErrorHelper.CreateError (1305, Errors.MT1305,
 					FileName, Path.GetFileName (path), App.DeploymentTarget);
 			}
 #endif
@@ -293,7 +293,7 @@ namespace Xamarin.Bundler {
 				if (LinkerFlags == null)
 					LinkerFlags = new List<string> ();
 				if (!StringUtils.TryParseArguments (metadata.LinkerFlags, out string [] args, out var ex))
-					throw ErrorHelper.CreateError (148, ex, "Unable to parse the linker flags '{0}' from the LinkWith attribute for the library '{1}' in {2} : {3}", metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
+					throw ErrorHelper.CreateError (148, ex, Errors.MX0148, metadata.LinkerFlags, metadata.LibraryName, FileName, ex.Message);
 				LinkerFlags.AddRange (args);
 			}
 
@@ -338,10 +338,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!File.Exists (path))
-				ErrorHelper.Warning (1302, "Could not extract the native library '{0}' from '{1}'. " +
-				"Please ensure the native library was properly embedded in the managed assembly " +
-				"(if the assembly was built using a binding project, the native library must be included in the project, and its Build Action must be 'ObjcBindingNativeLibrary').",
-					metadata.LibraryName, path);
+				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, path);
 
 			return path;
 		}
@@ -360,16 +357,13 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!File.Exists (zipPath)) {
-				ErrorHelper.Warning (1302, "Could not extract the native framework '{0}' from '{1}'. " +
-					"Please ensure the native framework was properly embedded in the managed assembly " +
-					"(if the assembly was built using a binding project, the native framework must be included in the project, and its Build Action must be 'ObjcBindingNativeFramework').",
-					metadata.LibraryName, zipPath);
+				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, zipPath);
 			} else {
 				if (!Directory.Exists (path))
 					Directory.CreateDirectory (path);
 
 				if (Driver.RunCommand ("/usr/bin/unzip", "-u", "-o", "-d", path, zipPath) != 0)
-					throw ErrorHelper.CreateError (1303, "Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.", metadata.LibraryName, zipPath);
+					throw ErrorHelper.CreateError (1303, Errors.MT1303, metadata.LibraryName, zipPath);
 			}
 
 			return path;
@@ -450,7 +444,7 @@ namespace Xamarin.Bundler {
 		void AddFramework (string file)
 		{
 			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework) && framework.Version > App.SdkVersion)
-				ErrorHelper.Warning (135, "Did not link system framework '{0}' (referenced by assembly '{1}') because it was introduced in {2} {3}, and we're using the {2} {4} SDK.", file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
+				ErrorHelper.Warning (135, Errors.MX0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
 			else {
 #if MTOUCH
 				var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
@@ -482,7 +476,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return "-lcompression";
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform, App.SdkVersion);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.SdkVersion);
 			}
 		}
 
@@ -716,7 +710,7 @@ namespace Xamarin.Bundler {
 		{
 			Assembly other;
 			if (HashedAssemblies.TryGetValue (assembly.Identity, out other))
-				throw ErrorHelper.CreateError (2018, "The assembly '{0}' is referenced from two different locations: '{1}' and '{2}'.", assembly.Identity, other.FullPath, assembly.FullPath);
+				throw ErrorHelper.CreateError (2018, Errors.MT2018, assembly.Identity, other.FullPath, assembly.FullPath);
 			HashedAssemblies.Add (assembly.Identity, assembly);
 		}
 

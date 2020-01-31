@@ -113,11 +113,11 @@ namespace Xamarin.Bundler
 				}
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
+				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
 			}
 		}
 
-		public string GetLibNativeName ()
+		public string GetLibNativeName () 
 		{
 			switch (MonoNativeMode) {
 			case MonoNativeMode.Unified:
@@ -125,7 +125,7 @@ namespace Xamarin.Bundler
 			case MonoNativeMode.Compat:
 				return "libmono-native-compat";
 			default:
-				throw ErrorHelper.CreateError (99, "Internal error: Invalid mono native type: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", MonoNativeMode);
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{MonoNativeMode}'");
 			}
 
 		}
@@ -139,7 +139,7 @@ namespace Xamarin.Bundler
 			case AssemblyBuildTarget.Framework:
 				return AllArchitectures;
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
+				throw ErrorHelper.CreateError (100, Errors.MT0100, build_target);
 			}
 		}
 
@@ -160,8 +160,8 @@ namespace Xamarin.Bundler
 				BundleFiles [bundle_path] = info = new BundleFileInfo () { DylibToFramework = dylib_to_framework_conversion };
 
 			if (info.DylibToFramework != dylib_to_framework_conversion)
-				throw ErrorHelper.CreateError (99, "Internal error: 'invalid value for framework conversion'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
-			
+				throw ErrorHelper.CreateError (99, Errors.MX0099, "'invalid value for framework conversion'");
+
 			info.Sources.Add (source);
 		}
 
@@ -182,7 +182,7 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (link_task);
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
+				throw ErrorHelper.CreateError (100, Errors.MT0100, build_target);
 			}
 		}
 
@@ -251,8 +251,8 @@ namespace Xamarin.Bundler
 						// When using simlauncher, we copy the executable directly to the target directory.
 						// When not using the simlauncher, but still building for the simulator, we write the executable to a arch-specific app directory (if building for both 32-bit and 64-bit), or just the app directory (if building for a single architecture)
 						if (Abis.Count != 1)
-							throw ErrorHelper.CreateError (99, $"Internal error: expected exactly one abi for a simulator architecture, found: {string.Join (", ", Abis.Select ((v) => v.ToString ()))}");
-						executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"expected exactly one abi for a simulator architecture, found: {string.Join(", ", Abis.Select((v) => v.ToString()))}");
+							executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
 					} else {
 						foreach (var abi in Abis)
 							executables.Add (abi, Path.Combine (Path.Combine (App.Cache.Location, abi.AsArchString (), App.ExecutableName)));
@@ -272,14 +272,14 @@ namespace Xamarin.Bundler
 			var corlib_path = Path.Combine (Resolver.FrameworkDirectory, "mscorlib.dll");
 			var corlib = ManifestResolver.Load (corlib_path);
 			if (corlib == null)
-				throw new MonoTouchException (2006, true, "Can not load mscorlib.dll from: '{0}'. Please reinstall Xamarin.iOS.", corlib_path);
+				throw new MonoTouchException (2006, true, Errors.MT2006, corlib_path);
 
 			var roots = new List<AssemblyDefinition> ();
 			foreach (var root_assembly in App.RootAssemblies) {
 				var root = ManifestResolver.Load (root_assembly);
 				if (root == null) {
 					// We check elsewhere that the path exists, so I'm not sure how we can get into this.
-					throw ErrorHelper.CreateError (2019, "Can not load the root assembly '{0}'.", root_assembly);
+					throw ErrorHelper.CreateError (2019, Errors.MT2019, root_assembly);
 				}
 				roots.Add (root);
 			}
@@ -287,16 +287,16 @@ namespace Xamarin.Bundler
 			foreach (var reference in App.References) {
 				var ad = ManifestResolver.Load (reference);
 				if (ad == null)
-					throw new MonoTouchException (2002, true, "Can not resolve reference: {0}", reference);
+					throw new MonoTouchException (2002, true, Errors.MT2002, reference);
 
 				var root_assembly = roots.FirstOrDefault ((v) => v.MainModule.FileName == ad.MainModule.FileName);
 				if (root_assembly != null) {
 					// If we asked the manifest resolver for assembly X and got back a root assembly, it means the requested assembly has the same identity as the root assembly, which is not allowed.
-					throw ErrorHelper.CreateError (23, "The root assembly {0} conflicts with another assembly ({1}).", root_assembly.MainModule.FileName, reference);
+					throw ErrorHelper.CreateError (23, Errors.MT0023, root_assembly.MainModule.FileName, reference);
 				}
 				
 				if (ad.MainModule.Runtime > TargetRuntime.Net_4_0)
-					ErrorHelper.Show (new MonoTouchException (11, false, "{0} was built against a more recent runtime ({1}) than Xamarin.iOS supports.", Path.GetFileName (reference), ad.MainModule.Runtime));
+					ErrorHelper.Show (new MonoTouchException (11, false, Errors.MT0011, Path.GetFileName (reference), ad.MainModule.Runtime));
 
 				// Figure out if we're referencing Xamarin.iOS or monotouch.dll
 				var filename = ad.MainModule.FileName;
@@ -311,7 +311,7 @@ namespace Xamarin.Bundler
 				}
 
 				if (ad != ProductAssembly && GetRealPath (filename) != GetRealPath (reference) && !filename.EndsWith (".resources.dll", StringComparison.Ordinal))
-					ErrorHelper.Show (ErrorHelper.CreateWarning (109, "The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).", Path.GetFileName (reference), reference, filename));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (109, Errors.MT0109, Path.GetFileName (reference), reference, filename));
 			}
 
 			ComputeListOfAssemblies ();
@@ -321,7 +321,7 @@ namespace Xamarin.Bundler
 
 			if (!App.Embeddinator) {
 				if (!Assemblies.Any ((v) => v.AssemblyDefinition.Name.Name == Driver.GetProductAssembly (App)))
-					throw ErrorHelper.CreateError (123, $"The executable assembly {App.RootAssemblies [0]} does not reference {Driver.GetProductAssembly (App)}.dll.");
+					throw ErrorHelper.CreateError (123, Errors.MT0123, App.RootAssemblies [0], Driver.GetProductAssembly (App));
 			}
 
 			foreach (var abi in Abis)
@@ -345,7 +345,7 @@ namespace Xamarin.Bundler
 					if (Assemblies.ContainsKey (assembly))
 						continue;
 
-					exceptions.Add (ErrorHelper.CreateWarning (142, $"Cannot find the assembly '{assembly}', passed as an argument to --interpreter."));
+					exceptions.Add (ErrorHelper.CreateWarning (142, Errors.MT0142, assembly));
 				}
 				ErrorHelper.ThrowIfErrors (exceptions);
 			}
@@ -415,7 +415,7 @@ namespace Xamarin.Bundler
 			} catch (MonoTouchException mte) {
 				exceptions.Add (mte);
 			} catch (Exception e) {
-				exceptions.Add (new MonoTouchException (9, true, e, "Error while loading assemblies: {0}", e.Message));
+				exceptions.Add (new MonoTouchException (9, true, e, Errors.MX0009, e.Message));
 			}
 
 			if (App.LinkMode == LinkMode.None)
@@ -454,13 +454,13 @@ namespace Xamarin.Bundler
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
 					if (reference.Name != Driver.GetProductAssembly (App))
-						exceptions.Add (ErrorHelper.CreateError (34, "Cannot reference '{0}.dll' in a {1} project - it is implicitly referenced by '{2}'.", reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
+						exceptions.Add (ErrorHelper.CreateError (34, Errors.MT0034, reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
 					break;
 				}
 
 				var reference_assembly = ManifestResolver.Resolve (reference);
 				if (reference_assembly == null) {
-					ErrorHelper.Warning (136, "Cannot find the assembly '{0}' referenced from '{1}'.", reference.FullName, main.FileName);
+					ErrorHelper.Warning (136, Errors.MT0136, reference.FullName, main.FileName);
 					continue;
 				}
 				ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
@@ -510,7 +510,7 @@ namespace Xamarin.Bundler
 				return;
 			var reference_assembly = ManifestResolver.Resolve (ar);
 			if (reference_assembly == null) {
-				ErrorHelper.Warning (137, "Cannot find the assembly '{0}', referenced by a {2} attribute in '{1}'.", ar.FullName, main.Name, ca.AttributeType.FullName);
+				ErrorHelper.Warning (137, Errors.MT0137, ar.FullName, main.Name, ca.AttributeType.FullName);
 				return;
 			}
 			ComputeListOfAssemblies (assemblies, reference_assembly, exceptions);
@@ -740,8 +740,7 @@ namespace Xamarin.Bundler
 			// Verify that we don't get multiple identical assemblies from the linker.
 			foreach (var group in output_assemblies.GroupBy ((v) => v.Name.Name)) {
 				if (group.Count () != 1)
-					throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", 
-					                               $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join ("\n\t", group.Select ((v) => v.MainModule.FileName).ToArray ())}");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join("\n\t", group.Select((v) => v.MainModule.FileName).ToArray())}");
 			}
 
 			// Update (add/remove) list of assemblies in each app, since the linker may have both added and removed assemblies.
@@ -772,7 +771,7 @@ namespace Xamarin.Bundler
 
 						var ad = output_assemblies.SingleOrDefault ((AssemblyDefinition v) => v.Name.Name == next);
 						if (ad == null)
-							throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker.");
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker");
 						if (ad.MainModule.HasAssemblyReferences) {
 							foreach (var ar in ad.MainModule.AssemblyReferences) {
 								if (!collectedNames.Contains (ar.Name) && !queue.Contains (ar.Name))
@@ -980,7 +979,7 @@ namespace Xamarin.Bundler
 					App.CreateFrameworkInfoPList (plist_path, fw_name, App.BundleId + ".frameworks." + fw_name, fw_name);
 					break;
 				default:
-					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", mode);
+					throw ErrorHelper.CreateError (100, Errors.MT0100, mode);
 				}
 
 				var pinvoke_task = new PinvokesTask
@@ -1052,9 +1051,9 @@ namespace Xamarin.Bundler
 					var existingLinkTask = infos.Where ((v) => v.LinkTask != null).Select ((v) => v.LinkTask).ToList ();
 					if (existingLinkTask.Count > 0) {
 						if (existingLinkTask.Count != infos.Count)
-							throw ErrorHelper.CreateError (99, "Internal error: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", $"Not all assemblies for {name} have link tasks");
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"Not all assemblies for {name} have link tasks");
 						if (!existingLinkTask.All ((v) => v == existingLinkTask [0]))
-							throw ErrorHelper.CreateError (99, "Internal error: {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", $"Link tasks for {name} aren't all the same");
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"Link tasks for {name} aren't all the same");
 
 						LinkWithBuildTarget (build_target, name, existingLinkTask [0], assemblies);
 						continue;
@@ -1131,7 +1130,7 @@ namespace Xamarin.Bundler
 						compiler_output = Path.Combine (App.Cache.Location, arch, name);
 						break;
 					default:
-						throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", build_target);
+						throw ErrorHelper.CreateError (100, Errors.MT0100, build_target);
 					}
 
 					CompileTask pinvoke_task;
@@ -1164,7 +1163,7 @@ namespace Xamarin.Bundler
 								compiler_flags.ReferenceSymbols (symbols);
 								break;
 							default:
-								throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+								throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");
 							}
 						}
 					}
@@ -1184,7 +1183,7 @@ namespace Xamarin.Bundler
 						} else if (optimizations.Count == 1) {
 							compiler_flags.AddOtherFlag (optimizations [0]);
 						} else {
-							throw ErrorHelper.CreateError (107, "The assemblies '{0}' have different custom LLVM optimizations ('{1}'), which is not allowed when they are all compiled to a single binary.", string.Join (", ", assemblies.Select ((v) => v.Identity)), string.Join ("', '", optimizations));
+							throw ErrorHelper.CreateError (107, Errors.MT0107, string.Join (", ", assemblies.Select ((v) => v.Identity)), string.Join ("', '", optimizations));
 						}
 					}
 
@@ -1326,7 +1325,7 @@ namespace Xamarin.Bundler
 				a.ComputeDependencyMap (exceptions);
 			if (exceptions.Count > 0) {
 				ErrorHelper.Show (exceptions);
-				ErrorHelper.Warning (3006, "Could not compute a complete dependency map for the project. This will result in slower build times because Xamarin.iOS can't properly detect what needs to be rebuilt (and what does not need to be rebuilt). Please review previous warnings for more details.");
+				ErrorHelper.Warning (3006, Errors.MT3006);
 			}
 
 			List<string> registration_methods = new List<string> ();
@@ -1396,7 +1395,7 @@ namespace Xamarin.Bundler
 					library = "Xamarin.TVOS.registrar.a";
 					break;
 				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
+					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
 				}
 
 				var lib = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library);
@@ -1536,7 +1535,7 @@ namespace Xamarin.Bundler
 				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
 				break;
 			default:
-				throw ErrorHelper.CreateError (99, $"Internal error: invalid symbol mode: {App.SymbolMode}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");
 			}
 
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
@@ -1580,7 +1579,7 @@ namespace Xamarin.Bundler
 					break;
 				case AssemblyBuildTarget.Framework: // We don't ship the profiler as a framework, so this should be impossible.
 				default:
-					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", App.LibProfilerLinkMode);
+					throw ErrorHelper.CreateError (100, Errors.MT0100, App.LibProfilerLinkMode);
 				}
 			}
 
@@ -1640,7 +1639,7 @@ namespace Xamarin.Bundler
 								RequireMonoNative = value;
 								break;
 							default:
-								throw ErrorHelper.CreateError (99, $"Internal error: invalid type string while loading cached Mono.Native info: {typestr}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+								throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid type string while loading cached Mono.Native info: {typestr}");
 						}
 					}
 				}
@@ -1700,7 +1699,7 @@ namespace Xamarin.Bundler
 				}
 				break;
 			default:
-				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new.", app.LibMonoLinkMode);
+				throw ErrorHelper.CreateError (100, Errors.MT0100, app.LibMonoLinkMode);
 			}
 		}
 
@@ -1740,7 +1739,7 @@ namespace Xamarin.Bundler
 				a.Symlink ();
 
 			if (Abis.Count != 1)
-				throw ErrorHelper.CreateError (99, $"Internal error: expected exactly one abi for a simulator architecture, found: {string.Join (", ", Abis.Select ((v) => v.ToString ()))}");
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"expected exactly one abi for a simulator architecture, found: {string.Join(", ", Abis.Select((v) => v.ToString()))}");
 
 			var targetExecutable = Executables.Values.First ();
 
@@ -1761,7 +1760,7 @@ namespace Xamarin.Bundler
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception ex) {
-				throw new MonoTouchException (1015, true, ex, "Failed to create the executable '{0}': {1}", targetExecutable, ex.Message);
+				throw new MonoTouchException (1015, true, ex, Errors.MT1015, targetExecutable, ex.Message);
 			}
 
 			Symlinked = true;
