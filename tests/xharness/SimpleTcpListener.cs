@@ -14,6 +14,7 @@ namespace xharness
 
 		protected override void Stop ()
 		{
+			// TODO: should we close the accepted socket?
 			server.Stop ();
 		}
 
@@ -33,7 +34,7 @@ namespace xharness
 			try {
 				do {
 					Log.WriteLine ("Test log server listening on: {0}:{1}", Address, Port);
-					using (TcpClient client = server.AcceptTcpClient ()) {
+					using (var client = server.AcceptSocket ()) {
 						processed = Processing (client);
 					}
 				} while (!AutoExit || !processed);
@@ -50,18 +51,30 @@ namespace xharness
 			}
 		}
 
-		bool Processing (TcpClient client)
+		bool Processing (Socket client)
 		{
-			Connected (client.Client.RemoteEndPoint.ToString ());
-			// now simply copy what we receive
-			int i;
-			int total = 0;
-			NetworkStream stream = client.GetStream ();
+			Connected (client.RemoteEndPoint.ToString ());
 			var fs = OutputWriter;
-			while ((i = stream.Read (buffer, 0, buffer.Length)) != 0) {
-				fs.Write (buffer, 0, i);
-				fs.Flush ();
-				total += i;
+			int total = 0;
+			// now simply copy what we receive but using the socket, not the stream
+			// this is due to https://github.com/xamarin/maccore/issues/827
+			while (true) {
+				byte [] buffer = new byte [client.ReceiveBufferSize];
+				int read = 0;
+
+				try {
+					read = client.Receive (buffer);
+				} catch { // lost connection, bad :/
+					break;
+				}
+
+				if (read > 0) { //Handle data
+					fs.Write (buffer, 0, read);
+					fs.Flush ();
+					total += read;
+				} else { // read 0 means that client disconnected
+					break;
+				}
 			}
 
 			if (total < 16) {
