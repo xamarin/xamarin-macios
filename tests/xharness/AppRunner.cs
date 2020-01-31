@@ -540,11 +540,6 @@ namespace xharness
 						streamReaderTmp.DiscardBufferedData ();
 						var path = listener_log.FullPath;
 						path = Path.ChangeExtension (path, "xml");
-						var fileName = Path.GetFileName (path);
-						if (isTouchUnit)
-							path = path.Replace (fileName, "nunit-" + fileName);
-						else
-							path = path.Replace (fileName, "xunit-" + fileName);
 						// both the nunit and xunit runners are not
 						// setting the test results correctly, lets add them
 						using (var xmlWriter = new StreamWriter (path)) {
@@ -573,6 +568,7 @@ namespace xharness
 					return parseResult;
 				} catch (Exception e) {
 					main_log.WriteLine ("Could not parse xml result file: {0}", e);
+
 					if (timed_out) {
 						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
 						return parseResult;
