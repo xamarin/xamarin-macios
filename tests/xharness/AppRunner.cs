@@ -475,6 +475,9 @@ namespace xharness
 							}
 							writer.Write (reader ["name"]);
 							if (status == "Failure" || status == "Error") { //  we need to print the message
+								reader.ReadToDescendant ("message");
+								writer.Write ($" : {reader.ReadElementContentAsString ()}");
+								reader.ReadToNextSibling ("stack-trace");
 								writer.Write ($" : {reader.ReadElementContentAsString ()}");
 							}
 							// add a new line
