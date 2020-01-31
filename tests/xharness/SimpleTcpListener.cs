@@ -54,6 +54,7 @@ namespace xharness
 		{
 			Connected (client.Client.RemoteEndPoint.ToString ());
 			// now simply copy what we receive
+			int i;
 			int total = 0;
 			NetworkStream stream = client.GetStream ();
 			var fs = OutputWriter;
