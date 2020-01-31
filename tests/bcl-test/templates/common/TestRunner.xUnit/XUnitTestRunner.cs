@@ -23,7 +23,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		List<XUnitFilter> filters = new List<XUnitFilter> ();
 		bool runAssemblyByDefault;
 
-		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.NUnit;
+		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.XunitV2;
 		public AppDomainSupport AppDomainSupport { get; set; } = AppDomainSupport.Denied;
 		protected override string ResultsFileName { get; set; } = "TestResults.xUnit.xml";
 
