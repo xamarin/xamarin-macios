@@ -117,7 +117,8 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public string GetLibNativeName () {
+		public string GetLibNativeName () 
+		{
 			switch (MonoNativeMode) {
 			case MonoNativeMode.Unified:
 				return "libmono-native-unified";
