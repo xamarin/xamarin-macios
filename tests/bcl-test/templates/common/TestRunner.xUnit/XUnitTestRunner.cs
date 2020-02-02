@@ -818,6 +818,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		{
 			if (assembliesElement == null)
 				return;
+			writer.WriteLine ("<!--This file represents the results of running a test suite-->");
 			var settings = new XmlWriterSettings { Indent = true };
 			using (var xmlWriter = XmlWriter.Create (writer, settings)) {
 				switch (ResultFileFormat) {
@@ -836,8 +837,9 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
 				}
 			}
+			writer.WriteLine ("<!-- the end -->");
 		}
-		
+
 		void Transform_Results (string xsltResourceName, XElement element, XmlWriter writer)
 		{
 			var xmlTransform = new System.Xml.Xsl.XslCompiledTransform ();

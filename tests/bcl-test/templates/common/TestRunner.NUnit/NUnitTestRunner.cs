@@ -274,7 +274,9 @@ namespace Xamarin.iOS.UnitTests.NUnit
 			if (results == null)
 				return;
 			var resultsXml = new NUnit2XmlOutputWriter (DateTime.UtcNow);
+			writer.WriteLine ("<!--This file represents the results of running a test suite-->");
 			resultsXml.WriteResultFile (results, writer);
+			writer.WriteLine ("<!-- the end -->");
 		}
 		
 		void AppendFilter (ITestFilter filter)
