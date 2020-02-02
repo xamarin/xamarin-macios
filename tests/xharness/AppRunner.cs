@@ -364,53 +364,20 @@ namespace xharness
 			var resultType = XmlResultType.TouchUnit; // default
 			// more fun, the first like of the stream, is a ping from the application to the tcp server, and that will not be parsable as
 			// xml, advance the reader one line.
-			var pingLine = stream.ReadLine ();
-			if (!pingLine.Contains ("ping"))
-				stream.BaseStream.Position = 0;
-
-			// TouchUnitTestRun is the very first node in the TouchUnit xml result
-			// which is not preset in the xunit xml, therefore we know the runner
-			// quite quickly
-			try {
-				using (var reader = XmlReader.Create (stream)) {
-					while (reader.Read ()) {
-						if (reader.NodeType == XmlNodeType.Element && reader.Name == "TouchUnitTestRun") {
-							resultType = XmlResultType.TouchUnit;
-							break;
-						}
-						if (reader.NodeType == XmlNodeType.Element && reader.Name == "environment") {
-							// get the enviroment attr
-							if (reader.HasAttributes) {
-								var nunitAttr = reader.GetAttribute ("nunit-version");
-								if (nunitAttr == null) {
-									resultType = XmlResultType.NUnit;
-									break;
-								} 
-							}
-						}
-						if (reader.NodeType == XmlNodeType.Element && reader.Name == "assembly") {
-							if (reader.HasAttributes) {
-								var framework = reader.GetAttribute ("test-framework");
-								if (framework != null && framework.Contains ("xUnit")) {
-									resultType = XmlResultType.xUnit;
-								}
-							}
-						}
-					}
+			string line;
+			while ((line = stream.ReadLine ()) != null) {
+				if (line.Contains ("TouchUnitTestRun")) {
+					resultType = XmlResultType.TouchUnit;
+					break;
 				}
-			} catch (XmlException e) {
-				main_log.WriteLine ($"Could not determine if touch unit {e}");
-				// print file for better debugging
-				main_log.WriteLine ("File data is:");
-				main_log.WriteLine (new string ('#', 10));
-				stream.BaseStream.Position = 0;
-				string line;
-				while ((line = stream.ReadLine ()) != null) {
-					main_log.WriteLine (line);
+				if (line.Contains ("nunit-version"))
+					resultType = XmlResultType.NUnit;
+				if (line.Contains ("xUnit")) {
+					resultType = XmlResultType.xUnit;
+					break;
 				}
-				main_log.WriteLine (new string ('#', 10));
-				main_log.WriteLine ("End of xml results.");
 			}
+			
 			// we want to reuse the stream (and we are sync)
 			stream.BaseStream.Position = 0;
 			stream.DiscardBufferedData ();
@@ -421,10 +388,7 @@ namespace xharness
 		{
 			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
 			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
-			// ignore the first line
-			var ping = stream.ReadLine ();
-			if (!ping.Contains ("ping"))
-				stream.BaseStream.Position = 0;
+			
 			using (var reader = XmlReader.Create (stream)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
@@ -453,11 +417,9 @@ namespace xharness
 		{
 			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
 			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
-			// ignore the first line
-			var ping = stream.ReadLine ();
-			if (!ping.Contains ("ping"))
-				stream.BaseStream.Position = 0;
-			using (var reader = XmlReader.Create (stream)) {
+			XmlReaderSettings settings = new XmlReaderSettings ();
+			settings.ValidationType = ValidationType.None;
+			using (var reader = XmlReader.Create (stream, settings)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
 						total = long.Parse (reader ["total"]);
@@ -522,10 +484,6 @@ namespace xharness
 		(string resultLine, bool failed) ParsexUnitXml (StreamReader stream, StreamWriter writer) {
 			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
 			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
-			// ignore the first line
-			var ping = stream.ReadLine ();
-			if (!ping.Contains ("ping"))
-				stream.BaseStream.Position = 0;
 			using (var reader = XmlReader.Create (stream)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "assembly") {
@@ -604,35 +562,14 @@ namespace xharness
 				// write the human readable log
 				var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
 
-
 				// copy do not move
 				File.Copy (listener_log.FullPath, tmpFile, true);
 				crashed = false;
+				string path = listener_log.FullPath;
+				XmlResultType xmlType;
 				try {
 					using (var streamReaderTmp = new StreamReader (tmpFile)) {
-						var xmlType = GetXmlType (streamReaderTmp);
-						using (var writer = new StreamWriter (listener_log.FullPath, true)) { // write the human result to the log file
-							(string resultLine, bool failed) parseData;
-							switch (xmlType) {
-							case XmlResultType.TouchUnit:
-								parseData = ParseTouchUnitXml (streamReaderTmp, writer);
-								break;
-							case XmlResultType.NUnit:
-								parseData = ParseNUnitXml (streamReaderTmp, writer);
-								break;
-							case XmlResultType.xUnit:
-								parseData = ParsexUnitXml (streamReaderTmp, writer);
-								break;
-							default:
-								throw new Exception ("OMG");
-							}
-							parseResult.resultLine = parseData.resultLine;
-							parseResult.failed = parseData.failed;
-						}
-						// reset pos of the stream
-						streamReaderTmp.BaseStream.Position = 0;
-						streamReaderTmp.DiscardBufferedData ();
-						var path = listener_log.FullPath;
+						xmlType = GetXmlType (streamReaderTmp);
 						path = Path.ChangeExtension (path, "xml");
 						var fileName = Path.GetFileName (path);
 						switch (xmlType) {
@@ -644,16 +581,15 @@ namespace xharness
 							path = path.Replace (fileName, $"xunit-{fileName}");
 							break;
 						}
-						// both the nunit and xunit runners are not
-						// setting the test results correctly, lets add them
+						// clean any junk we have
 						using (var xmlWriter = new StreamWriter (path)) {
 							string line;
 							while ((line = streamReaderTmp.ReadLine ()) != null) {
-								if (line.Contains ("ping") || line.Contains ("<TouchUnitTestRun>") || line.Contains ("<NUnitOutput>")) // ignore the ping, because VSTS is going to have issues too or the Touch unit elements
+								if (line.Contains ("ping") || line.Contains ("<TouchUnitTestRun>") || line.Contains ("<NUnitOutput>") || line.StartsWith ("<!", StringComparison.Ordinal)) // ignore the ping, because VSTS is going to have issues too or the Touch unit elements
 									continue;
 								if (line.Contains ("</NUnitOutput>")) // get out of the loop we are not interested in the rest of the TouchUnit data.
 									break;
- 								if (line.Contains ("<test-results")) {
+								if (line.Contains ("<test-results")) {
 									if (line.Contains ("name=\"\"")) { // NUnit case
 										xmlWriter.WriteLine (line.Replace ("name=\"\"", $"name=\"{appName + " " + configuration}\""));
 									} else if (line.Contains ($"name=\"com.xamarin.bcltests.{appName}\"")) { // xunit case
@@ -666,13 +602,45 @@ namespace xharness
 								}
 							}
 						}
-						// we do not longer need the tmp file
-						Logs.AddFile (path, "Test xml");
 					}
+					using (var reader = new StreamReader (path)) {
+						var tmpFile2 = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
+						using (var writer = new StreamWriter (tmpFile2, true)) { // write the human result to the log file
+							(string resultLine, bool failed) parseData;
+							switch (xmlType) {
+							case XmlResultType.TouchUnit:
+								parseData = ParseTouchUnitXml (reader, writer);
+								break;
+							case XmlResultType.NUnit:
+								parseData = ParseNUnitXml (reader, writer);
+								break;
+							case XmlResultType.xUnit:
+								parseData = ParsexUnitXml (reader, writer);
+								break;
+							default:
+								throw new Exception ("OMG");
+							}
+							parseResult.resultLine = parseData.resultLine;
+							parseResult.failed = parseData.failed;
+						}
+						File.Copy (tmpFile2, listener_log.FullPath, true);
+					}
+					// we do not longer need the tmp file
+					Logs.AddFile (path, "Test xml");
 					return parseResult;
 				} catch (Exception e) {
 					main_log.WriteLine ("Could not parse xml result file: {0}", e);
-
+					// print file for better debugging
+					main_log.WriteLine ("File data is:");
+					main_log.WriteLine (new string ('#', 10));
+					using (var stream = new StreamReader (path)) {
+						string line;
+						while ((line = stream.ReadLine ()) != null) {
+							main_log.WriteLine (line);
+						}
+					}
+					main_log.WriteLine (new string ('#', 10));
+					main_log.WriteLine ("End of xml results.");
 					if (timed_out) {
 						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
 						return parseResult;
