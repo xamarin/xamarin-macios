@@ -638,10 +638,10 @@ namespace xharness
 						switch (xmlType) {
 						case XmlResultType.TouchUnit:
 						case XmlResultType.NUnit:
-							path.Replace (fileName, $"nunit-{fileName}");
+							path = path.Replace (fileName, $"nunit-{fileName}");
 							break;
 						case XmlResultType.xUnit:
-							path.Replace (fileName, $"xunit-{fileName}");
+							path = path.Replace (fileName, $"xunit-{fileName}");
 							break;
 						}
 						// both the nunit and xunit runners are not
