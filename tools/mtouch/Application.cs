@@ -1197,6 +1197,33 @@ namespace Xamarin.Bundler {
 
 		void Initialize ()
 		{
+			if (UseInterpreter) {
+				// it's confusing to use different options to get a feature to work (e.g. dynamic, SRE...) on both simulator and device
+				if (IsSimulatorBuild) {
+					ErrorHelper.Show (ErrorHelper.CreateWarning (141, Errors.MT0141));
+					UseInterpreter = false;
+				}
+
+				// FIXME: the interpreter only supports ARM64{,_32} right now
+				// temporary - without a check here the error happens when deploying
+				if (!IsSimulatorBuild && (!IsArchEnabled (Abi.ARM64) && !IsArchEnabled (Abi.ARM64_32)))
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "The interpreter is currently only available for 64 bits");
+
+				// needs to be set after the argument validations
+				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
+				EnableRepl = true;
+			} else {
+				if (Platform == ApplePlatform.WatchOS && IsArchEnabled (Abi.ARM64_32) && BitCodeMode != BitCodeMode.LLVMOnly) {
+					if (IsArchEnabled (Abi.ARMv7k)) {
+						throw ErrorHelper.CreateError (145, Errors.MT0145);
+					} else {
+						ErrorHelper.Warning (146, Errors.MT0146);
+						UseInterpreter = true;
+						InterpretedAssemblies.Clear ();
+					}
+				}
+			}
+
 			if (EnableDebug && IsLLVM)
 				ErrorHelper.Warning (3003, Errors.MT3003);
 
