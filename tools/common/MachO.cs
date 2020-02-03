@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using Xamarin.Bunder;
 
 #if MLAUNCH
 using Xamarin.Launcher;
 #elif XAMARIN_HOSTING
 using Xamarin.Hosting;
-#else
-using Xamarin.Bundler;
 #endif
 
 namespace Xamarin
