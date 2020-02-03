@@ -75,7 +75,7 @@ public static class ProcessHelper
 		Assert.AreEqual (0, exitCode, $"{message} failed (unexpected exit code){errorMessage}");
 	}
 
-	public static void BuildSolution (string solution, string platform, string configuration, Dictionary<string, string> environment_variables, string target = "")
+	public static void BuildSolution (string solution, string platform, string configuration, Dictionary<string, string> environment_variables, TimeSpan timeout, string target = "", string codesignKey = null)
 	{
 		// nuget restore
 		var solution_dir = string.Empty;
@@ -95,7 +95,7 @@ public static class ProcessHelper
 
 		foreach (var sln in solutions) {
 			nuget_args [1] = sln; // replacing here
-			AssertRunProcess ("nuget", nuget_args.ToArray (), TimeSpan.FromMinutes (5), Configuration.SampleRootDirectory, environment_variables, "nuget restore");
+			AssertRunProcess ("nuget", nuget_args.ToArray (), timeout, Configuration.SampleRootDirectory, environment_variables, "nuget restore");
 		}
 
 		// msbuild
@@ -108,8 +108,9 @@ public static class ProcessHelper
 		sb.Add (solution);
 		if (!string.IsNullOrEmpty (target))
 			sb.Add ($"/t:{target}");
+		if (!string.IsNullOrEmpty (codesignKey))
+			sb.Add ($"/p:CodesignKey={codesignKey}");
 
-		sb.Add ($"/verbosity:diag");
 		environment_variables ["MTOUCH_ENV_OPTIONS"] = "--time --time --time --time -vvvv";
 		environment_variables ["MMP_ENV_OPTIONS"] = "--time --time --time --time -vvvv";
 
@@ -117,7 +118,7 @@ public static class ProcessHelper
 		var failed = false;
 		string msbuild_logfile;
 		try {
-			AssertRunProcess ("msbuild", sb.ToArray (), TimeSpan.FromMinutes (5), Configuration.SampleRootDirectory, environment_variables, "build", out msbuild_logfile);
+			AssertRunProcess ("msbuild", sb.ToArray (), timeout, Configuration.SampleRootDirectory, environment_variables, "build", out msbuild_logfile);
 		} catch {
 			failed = true;
 			throw;

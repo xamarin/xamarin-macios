@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -44,7 +45,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
 		}
 	}
 
@@ -65,7 +66,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
 		}
 	}
 
@@ -81,7 +82,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
 		}
 	}
 
@@ -115,7 +116,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
 		}
 	}
 
@@ -133,7 +134,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
 		}
 	}
 
@@ -145,13 +146,16 @@ namespace Samples {
 		const string HASH = "d196d3f7ba418d06ef799074eb4f6120e26a9cf4";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+				// avoid building unneeded projects since they require a lot of nuget packages (and cause a lot of unrelated/network build issues)
+				{ "WebServices/TodoREST/iOS/TodoREST.iOS.csproj", new SampleTest { Solution = "WebServices/TodoREST/TodoREST.sln", RemoveProjects = new [] { "TodoAPI", "TodoREST.Droid" } } },
+				{ "WorkingWithMaps/iOS/WorkingWithMaps.iOS.csproj", new SampleTest { Solution = "WorkingWithMaps/WorkingWithMaps.sln", RemoveProjects = new [] { "WorkingWithMaps.Android", "WorkingWithMaps.UWP" } } },
 				// Build solution instead of csproj.
 				{ "WebServices/TodoWCF/iOS/TodoWCF.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "WebServices/TodoWCF/TodoWCF.sln" } },
 			};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
 		}
 	}
 
@@ -175,7 +179,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
 		}
 	}
 
@@ -193,7 +197,60 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
+		}
+	}
+
+	[Category (CATEGORY)]
+	public class XappyTester : SampleTester {
+		const string ORG = "davidortinau";
+		const string REPO = "Xappy";
+		const string CATEGORY = "davidortinauxappy"; // categories can't contain dashes
+		const string HASH = "46e5897bac974e000fcc7e1d10d01ab8d3072eb2";
+
+		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+			{ "Xappy/Xappy.iOS/Xappy.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln", RemoveProjects = new [] { "Xappy.Android", "Xappy.UWP" } } },
+		};
+
+		static IEnumerable<SampleTestData> GetSampleData ()
+		{
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
+		}
+	}
+
+	[Category (CATEGORY)]
+	public class SmartHotelTester : SampleTester {
+		const string ORG = "microsoft";
+		const string REPO = "SmartHotel360-Mobile";
+		const string CATEGORY = "microsoftsmarthotel"; // categories can't contain dashes
+		const string HASH = "4004b32c955f8340a0306bad2b180ecf5adaf117";
+
+		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+			// Override CodesignKey key
+			{ "Source/SmartHotel.Clients/SmartHotel.Clients.iOS/SmartHotel.Clients.iOS.csproj", new SampleTest { CodesignKey = "iPhone Developer" } },
+			{ "Source/SmartHotel.Clients.Maintenance/SmartHotel.Clients.Maintenance.iOS/SmartHotel.Clients.Maintenance.iOS.csproj", new SampleTest { CodesignKey = "iPhone Developer" } },
+		};
+
+		static IEnumerable<SampleTestData> GetSampleData ()
+		{
+			return GetSampleTestData (test_data, ORG, REPO, HASH, timeout: TimeSpan.FromMinutes (10));
+		}
+	}
+
+	[Category (CATEGORY)]
+	public class ConferenceVisionTester : SampleTester {
+		const string ORG = "microsoft";
+		const string REPO = "ConferenceVision";
+		const string CATEGORY = "microsoftconferencevision"; // categories can't contain dashes
+		const string HASH = "b477f99c9e23097b31168697b2c168e90c34fd4d";
+
+		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+
+		};
+
+		static IEnumerable<SampleTestData> GetSampleData ()
+		{
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DefaultTimeout);
 		}
 	}
 
