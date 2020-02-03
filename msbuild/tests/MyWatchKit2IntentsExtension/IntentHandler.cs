@@ -32,7 +32,7 @@ namespace MyWatchKit2IntentsExtension
 
 		// Implement resolution methods to provide additional information about your intent (optional).
 		[Export ("resolveRecipientsForSearchForMessages:withCompletion:")]
-		public void ResolveRecipients (INSendMessageIntent intent, Action<INPersonResolutionResult[]> completion)
+		public void ResolveRecipients (INSearchForMessagesIntent intent, Action<INPersonResolutionResult[]> completion)
 		{
 			var recipients = intent.Recipients;
 			// If no recipients were provided we'll need to prompt for a value.
