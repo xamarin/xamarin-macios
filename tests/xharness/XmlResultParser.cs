@@ -1,8 +1,12 @@
 ﻿using System;
 using System.IO;
+<<<<<<< HEAD
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+=======
+using System.Xml;
+>>>>>>> [Xharness] Refactor the xml code.
 
 namespace xharness {
 	public static class XmlResultParser {
