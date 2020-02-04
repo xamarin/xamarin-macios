@@ -52,5 +52,57 @@ namespace Xamarin.Tests {
 			}
 ");
 		}
+
+		static string tested_hash;
+		public static string TestedHash {
+			get {
+				lock (lock_obj) {
+					if (tested_hash != null)
+						return tested_hash;
+
+					tested_hash = GetCurrentHash (Environment.CurrentDirectory);
+					return tested_hash;
+				}
+			}
+		}
+
+		public static string GetCurrentHash (string directory)
+		{
+			return ProcessHelper.RunProcess ("git", "log -1 --pretty=%H", directory).Trim ();
+		}
+
+		public static string GetCurrentRemoteUrl (string directory)
+		{
+			return ProcessHelper.RunProcess ("git", "remote get-url origin", directory).Trim ();
+		}
+
+		static string mono_version;
+		public static string MonoVersion {
+			get {
+				lock (lock_obj) {
+					if (mono_version != null)
+						return mono_version;
+
+					// We only care about the first line
+					mono_version = ProcessHelper.RunProcess ("mono", "--version").Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries) [0].Trim ();
+				}
+
+				return mono_version;
+			}
+		}
+
+		static string sw_version;
+		public static string OSVersion {
+			get {
+				lock (lock_obj) {
+					if (sw_version != null)
+						return sw_version;
+
+					sw_version = ProcessHelper.RunProcess ("sw_vers").Replace ('\n', ';').Replace ((char) 9, ' ');
+				}
+
+				return sw_version;
+			}
+		}
 	}
 }

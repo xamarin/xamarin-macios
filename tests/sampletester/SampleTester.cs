@@ -14,15 +14,22 @@ namespace Samples {
 		public string Solution;
 		public bool BuildSolution;
 		public string KnownFailure;
+		public string CodesignKey;
 		public string[] DebugConfigurations;
 		public string[] ReleaseConfigurations;
 		public string[] Platforms;
+
+		// for various reasons (build'ability, compatibility, performance) it can be
+		// better to build a subset of a solution
+		// e.g. `nuget restore` requires removing the projects from the .sln
+		public string[] RemoveProjects;
 	}
 
 	public class SampleTestData {
 		public SampleTest SampleTest;
 		public string Configuration;
 		public string Platform;
+		public TimeSpan Timeout;
 
 		public override string ToString ()
 		{
@@ -66,6 +73,9 @@ namespace Samples {
 	}
 
 	public abstract class SampleTester : BaseTester {
+
+		public static TimeSpan DefaultTimeout { get; } = TimeSpan.FromMinutes (5);
+
 		protected SampleTester ()
 		{
 		}
@@ -141,8 +151,30 @@ namespace Samples {
 					target = Path.GetFileNameWithoutExtension (data.Project.RelativePath).Replace ('.', '_');
 				}
 
-				file_to_build = Path.Combine (CloneRepo (), file_to_build);
-				ProcessHelper.BuildSolution (file_to_build, sampleTestData.Platform, sampleTestData.Configuration, environment_variables, target);
+				var repo = CloneRepo ();
+				file_to_build = Path.Combine (repo, file_to_build);
+
+				if (data.RemoveProjects != null) {
+					if (String.IsNullOrEmpty (data.Solution))
+						Assert.Fail ("'RemoveProjects' used without a 'Solution' path!");
+					var sln_path = Path.Combine (repo, data.Solution);
+					var filtered_sln = new List<string> (File.ReadAllLines (sln_path));
+					foreach (var p in data.RemoveProjects) {
+						for (int i = 0; i < filtered_sln.Count; i++) {
+							var line = filtered_sln [i];
+							if (line.StartsWith ("Project(", StringComparison.Ordinal)) {
+								if (line.Contains ($") = \"{p}\", \"")) {
+									filtered_sln.RemoveAt (i);
+									filtered_sln.RemoveAt (i); // EndProject (same `i` as things moved up)
+									break;
+								}
+							}
+						}
+					}
+					File.WriteAllLines (sln_path, filtered_sln);
+				}
+
+				ProcessHelper.BuildSolution (file_to_build, sampleTestData.Platform, sampleTestData.Configuration, environment_variables, sampleTestData.Timeout, target, data.CodesignKey);
 				Console.WriteLine ("✅ {0} succeeded.", TestContext.CurrentContext.Test.FullName);
 			} catch (Exception e) {
 				Console.WriteLine ("❌ {0} failed: {1}", TestContext.CurrentContext.Test.FullName, e.Message);
@@ -167,7 +199,7 @@ namespace Samples {
 			return rv;
 		}
 
-		protected static IEnumerable<SampleTestData> GetSampleTestData (Dictionary<string, SampleTest> samples, string org, string repo, string hash)
+		protected static IEnumerable<SampleTestData> GetSampleTestData (Dictionary<string, SampleTest> samples, string org, string repo, string hash, TimeSpan timeout)
 		{
 			var defaultDebugConfigurations = new string [] { "Debug" };
 			var defaultReleaseConfigurations = new string [] { "Release" };
@@ -236,7 +268,7 @@ namespace Samples {
 					configs.AddRange (sample.DebugConfigurations ?? defaultDebugConfigurations);
 					configs.AddRange (sample.ReleaseConfigurations ?? defaultReleaseConfigurations);
 					foreach (var config in filter ("config", proj.Title, configs, config_filter, (v) => v)) {
-						yield return new SampleTestData { SampleTest = sample, Configuration = config, Platform = platform };
+						yield return new SampleTestData { SampleTest = sample, Configuration = config, Platform = platform, Timeout = timeout };
 					}
 				}
 			}
@@ -246,5 +278,17 @@ namespace Samples {
 		{
 			return GitHub.CloneRepository (Org, Repository, Hash);
 		}
+	}
+
+	[TestFixture]
+	public class BaselineTester {
+		[Test]
+		public void DeviceDebug ()
+		{
+			var sln = Path.Combine (Configuration.SourceRoot, "tests", "sampletester", "BaselineTest", "BaselineTest.sln");
+			GitHub.CleanRepository (Path.GetDirectoryName (sln));
+			ProcessHelper.BuildSolution (sln, "iPhone", "Debug", new Dictionary<string, string> (), SampleTester.DefaultTimeout);
+		}
+
 	}
 }
