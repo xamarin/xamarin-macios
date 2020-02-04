@@ -367,7 +367,7 @@ namespace xharness
 						XmlResultParser.AddAttachments (path, newFilename, logs);
 					} else {
 						// rename the path to the correct value
-						File.Copy (path, newFilename);
+						File.Copy (path, newFilename, true);
 					}
 					path = newFilename;
 

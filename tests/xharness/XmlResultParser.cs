@@ -48,8 +48,8 @@ namespace xharness {
 					}
 					if (line.Contains ("nunit-version"))
 						resultType = XmlResultType.NUnit;
-					if (line.Contains ("xUnit")) {
-						resultType = XmlResultType.xUnit;
+					if (line.Contains ("nunit-version=\"xUnit.net") || line.Contains ("test-framework=\"xUnit.net")) { // either nunit OR xunit converted to nunit
+						resultType = XmlResultType.NUnit;
 						break;
 					}
 				}
