@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 
 using Foundation;
 
-using NUnitLite.Runner;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.WorkItems;
 using NUnit.Framework.Internal.Filters;
 
 using NUnitTest = NUnit.Framework.Internal.Test;
