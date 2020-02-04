@@ -23,7 +23,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		List<XUnitFilter> filters = new List<XUnitFilter> ();
 		bool runAssemblyByDefault;
 
-		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.NUnit;
+		public XUnitResultFileFormat ResultFileFormat { get; set; } = XUnitResultFileFormat.XunitV2;
 		public AppDomainSupport AppDomainSupport { get; set; } = AppDomainSupport.Denied;
 		protected override string ResultsFileName { get; set; } = "TestResults.xUnit.xml";
 
@@ -795,9 +795,10 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		{
 			if (assembliesElement == null)
 				return String.Empty;
-
+			// remove all the empty nodes
+			assembliesElement.Descendants ().Where (e => e.Name == "collection" && !e.Descendants ().Any ()).Remove ();
 			string outputFilePath = GetResultsFilePath ();
-			var settings = new XmlWriterSettings { Indent = true };
+			var settings = new XmlWriterSettings { Indent = true};
 			using (var xmlWriter = XmlWriter.Create (outputFilePath, settings)) {
 				switch (ResultFileFormat) {
 				case XUnitResultFileFormat.XunitV2:
@@ -818,6 +819,8 @@ namespace Xamarin.iOS.UnitTests.XUnit
 		{
 			if (assembliesElement == null)
 				return;
+			// remove all the empty nodes
+			assembliesElement.Descendants ().Where (e => e.Name == "collection" && !e.Descendants ().Any ()).Remove ();
 			var settings = new XmlWriterSettings { Indent = true };
 			using (var xmlWriter = XmlWriter.Create (writer, settings)) {
 				switch (ResultFileFormat) {
@@ -837,7 +840,7 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				}
 			}
 		}
-		
+
 		void Transform_Results (string xsltResourceName, XElement element, XmlWriter writer)
 		{
 			var xmlTransform = new System.Xml.Xsl.XslCompiledTransform ();
