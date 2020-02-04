@@ -34,13 +34,6 @@ namespace xharness
 		TodayExtension,
 	}
 
-	public enum XmlResultType
-	{
-		TouchUnit,
-		NUnit,
-		xUnit,
-	}
-
 	public class AppRunner
 	{
 		public Harness Harness;
@@ -364,7 +357,6 @@ namespace xharness
 			if (Harness.InCI && XmlResultParser.IsXml (path)) {
 				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				crashed = false;
-				XmlResultType xmlType;
 				try {
 					XmlResultParser.XmlResultType xmlType = XmlResultParser.GetXmlType (path);
 					var newFilename = XmlResultParser.GetXmlFilePath (path, xmlType);
