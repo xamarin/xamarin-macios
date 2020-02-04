@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace xharness {
 	public static class XmlResultParser {
@@ -262,6 +264,26 @@ namespace xharness {
 				}
 			}
 			return parseData;
+		}
+
+		// get the file, parse it and add the attachments to the first node found
+		public static bool AddAttachments (string source, string destination, params (string path, string description) [] attachments)
+		{
+			// we could do this with a XmlReader and a Writer, but might be to complicated to get right, we pay with performance what we
+			// cannot pay with brain cells.
+			var doc = XDocument.Load (source);
+			var testSuiteElement = doc.Descendants ("test-suite").FirstOrDefault ();
+			if (testSuiteElement == null)
+				return false;
+			var attachmentsElement = new XElement ("attachments");
+			foreach (var (path, description) in attachments) {
+				attachmentsElement.Add (new XElement ("attachment",
+					new XElement ("filePath", path),
+					new XElement ("description", new XCData(description))));
+			}
+			testSuiteElement.Add (attachmentsElement);
+			doc.Save (destination);
+			return true;
 		}
 	}
 }

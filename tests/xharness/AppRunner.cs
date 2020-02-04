@@ -361,13 +361,20 @@ namespace xharness
 					XmlResultParser.XmlResultType xmlType = XmlResultParser.GetXmlType (path);
 					var newFilename = XmlResultParser.GetXmlFilePath (path, xmlType);
 
-					// rename the path to the correct value
-					File.Move (path, newFilename);
+					if (xmlType != XmlResultParser.XmlResultType.xUnit) {
+						(string path, string descrition) [] logs = Logs.Select (e => (e.FullPath, e.Description)).ToArray ();
+						// add the attachments and write in the new filename
+						XmlResultParser.AddAttachments (path, newFilename, logs);
+					} else {
+						// rename the path to the correct value
+						File.Move (path, newFilename);
+					}
 					path = newFilename;
 
 					// write the human readable results in a tmp file, which we later use to step on the logs
 					var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
 					(parseResult.resultLine, parseResult.failed) = XmlResultParser.GenerateHumanReadableResults (path, tmpFile, xmlType);
+
 					File.Copy (tmpFile, test_log_path, true);
 
 					// we do not longer need the tmp file
