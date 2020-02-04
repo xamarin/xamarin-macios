@@ -544,9 +544,11 @@ namespace xharness
 			using (var writer = new StreamWriter (destination)) {
 				string line;
 				while ((line = reader.ReadLine ()) != null) {
-					if (line.StartsWith ("ping", StringComparison.InvariantCulture)) {
+					if (line.StartsWith ("ping", StringComparison.InvariantCulture) || line.Contains ("TouchUnitTestRun") || line.Contains ("NUnitOutput") || line.Contains ("<!--")) {
 						continue;
 					}
+					if (line.Contains ("TouchUnitExtraData")) // always last node in TouchUnit
+						break;
 					writer.WriteLine (line);
 				}
 			}
