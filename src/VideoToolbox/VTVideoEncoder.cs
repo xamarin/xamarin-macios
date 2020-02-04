@@ -69,6 +69,7 @@ namespace VideoToolbox {
 			/* CFDictionaryRef */ out IntPtr outSupportedProperties
 		);
 
+		[Mac (10,13), iOS (11,0), TV (11,0)]
 		public static VTSupportedEncoderProperties GetSupportedEncoderProperties (int width, int height, CMVideoCodecType codecType, NSDictionary encoderSpecification = null)
 		{
 			IntPtr encoderIdPtr = IntPtr.Zero;

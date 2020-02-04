@@ -66,7 +66,7 @@ namespace Xamarin.iOS.Tasks {
 
 			const string hostAppName = "MyWatchApp";
 //			string extensionName = "MyWatchKitExtension";
-			const string configuration = "AppStore";
+			const string configuration = "Release";
 
 			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, Platform, configuration);
 			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);

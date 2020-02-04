@@ -51,14 +51,14 @@ namespace MonoMac.Tuner {
 				var re = me.InnerException as ResolutionException;
 				if (re == null) {
 					if (me.InnerException != null) {
-						return ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}': {2}", me.Method.FullName, me.Method.Module, me.InnerException.Message);
+						return ErrorHelper.CreateError (2102, me, Errors.MT2102, me.Method.FullName, me.Method.Module, me.InnerException.Message);
 					} else {
-						return ErrorHelper.CreateError (2102, me, "Error processing the method '{0}' in the assembly '{1}'", me.Method.FullName, me.Method.Module);
+						return ErrorHelper.CreateError (2102, me, Errors.MT2102_A, me.Method.FullName, me.Method.Module);
 					}
 				} else {
 					TypeReference tr = (re.Member as TypeReference);
 					IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
-					return ErrorHelper.CreateError (2101, me, "Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.", re.Member, me.Method.FullName, scope);
+					return ErrorHelper.CreateError (2101, me, Errors.MT2101, re.Member, me.Method.FullName, scope);
 				}
 			}
 			case ResolutionException re:
@@ -68,7 +68,7 @@ namespace MonoMac.Tuner {
 				return new PlatformException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
 			}
 			case XmlResolutionException ex:
-				return new PlatformException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
+				return new PlatformException (2017, true, ex, Errors.MX2017, ex?.InnerException?.Message ?? ex.Message);
 			default:
 				if (e.InnerException != null)
 					return HandlePipelineProcessException (e.InnerException);
@@ -87,7 +87,7 @@ namespace MonoMac.Tuner {
 						message.AppendLine ($"\tAssembly: `{a}`");
 				}
 				message.Append ($"Reason: {e.Message}");
-				return new PlatformException (2001, true, e, "Could not link assemblies. {0}", message);
+				return new PlatformException (2001, true, e, Errors.MX2001, message);
 			}
 		}
 	}

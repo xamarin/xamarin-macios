@@ -220,7 +220,7 @@ namespace MonoTouch.Tuner {
 			filename = Path.GetFullPath (filename);
 
 			if (!File.Exists (filename))
-				throw new MonoTouchException (2004, true, "Extra linker definitions file '{0}' could not be located.", filename);
+				throw new MonoTouchException (2004, true, Errors.MX2004, filename);
 
 			try {
 				using (StreamReader sr = new StreamReader (filename)) {
@@ -228,7 +228,7 @@ namespace MonoTouch.Tuner {
 				}
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2005, true, e, "Definitions from '{0}' could not be parsed.", filename);
+				throw new MonoTouchException (2005, true, e, Errors.MX2005, filename);
 			}
 		}
 	}
@@ -283,7 +283,7 @@ namespace MonoTouch.Tuner {
 				base.ProcessAssembly (assembly);
 			}
 			catch (Exception e) {
-				throw new MonoTouchException (2103, true, e, $"Error processing assembly '{assembly.FullName}': {e}");
+				throw new MonoTouchException (2103, true, e, Errors.MX2103, assembly.FullName, e);
 			}
 		}
 	}

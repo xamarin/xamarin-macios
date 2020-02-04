@@ -665,7 +665,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.CustomArguments = new string [] { "--optimize:?" };
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (10, "Could not parse the command line argument '--optimize=?'");
+				mtouch.AssertError (10, "Could not parse the command line arguments: '--optimize=?'");
 			}
 		}
 
@@ -1619,6 +1619,7 @@ public class B : A {}
 		[TestCase ("", "System.dll", "the interpreted assemblies are different between the container app (all assemblies) and the extension (System.dll).")]
 		[TestCase ("mscorlib.dll", "System.dll", "the interpreted assemblies are different between the container app (mscorlib.dll) and the extension (System.dll).")]
 		[TestCase ("mscorlib.dll", "mscorlib.dll,System.dll", "the interpreted assemblies are different between the container app (mscorlib.dll) and the extension (mscorlib.dll, System.dll).")]
+		[TestCase ("-all", "-all", null)]
 		public void MT0113_interpreter (string app_interpreter, string appex_interpreter, string msg)
 		{
 			using (var extension = new MTouchTool ()) {
@@ -1633,8 +1634,13 @@ public class B : A {}
 					app.CreateTemporaryCacheDirectory ();
 					app.Interpreter = app_interpreter;
 					app.WarnAsError = new int [] { 113 };
-					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because " + msg); 
+					if (!string.IsNullOrEmpty (msg)) {
+						app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
+						app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because " + msg);
+					} else {
+						app.AssertExecute (MTouchAction.BuildDev, "build app");
+						app.AssertWarningCount (0);
+					}
 				}
 			}
 		}
