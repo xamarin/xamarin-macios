@@ -538,6 +538,20 @@ namespace xharness
 			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
 
+		void CleanXml (string source, string destination)
+		{
+			using (var reader = new StreamReader (source))
+			using (var writer = new StreamWriter (destination)) {
+				string line;
+				while ((line = reader.ReadLine ()) != null) {
+					if (line.StartsWith ("ping", StringComparison.InvariantCulture)) {
+						continue;
+					}
+					writer.WriteLine (line);
+				}
+			}
+		}
+
 		(string resultLine, bool failed, bool crashed) ParseResult (string test_log_path, bool timed_out, bool crashed)
 		{
 			if (!File.Exists (test_log_path))
@@ -556,7 +570,7 @@ namespace xharness
 			// from the TCP connection, we are going to fail when trying to read it and not parse it. Therefore, we are not only
 			// going to check if we are in CI, but also if the listener_log is valid.
 			var path = Path.ChangeExtension (test_log_path, "xml");
-			File.Copy (test_log_path, path);
+			CleanXml (test_log_path, path);
 
 			if (Harness.InCI && IsXml (test_log_path)) {
 				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
