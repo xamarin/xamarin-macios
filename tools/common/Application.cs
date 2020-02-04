@@ -329,7 +329,7 @@ namespace Xamarin.Bundler {
 
 			if (DeploymentTarget != null) {
 				if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (Platform))
-					throw new PlatformException (73, true, Errors.MX0073, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName, ProductName);
+					throw new PlatformException (73, true, Errors.MT0073, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName, ProductName);
 				if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (Platform))
 					throw new PlatformException (74, true, Errors.MX0074, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName, ProductName);
 			}
