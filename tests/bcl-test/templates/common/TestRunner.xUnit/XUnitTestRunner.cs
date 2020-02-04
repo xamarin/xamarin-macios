@@ -821,7 +821,6 @@ namespace Xamarin.iOS.UnitTests.XUnit
 				return;
 			// remove all the empty nodes
 			assembliesElement.Descendants ().Where (e => e.Name == "collection" && !e.Descendants ().Any ()).Remove ();
-			writer.WriteLine ("<!--This file represents the results of running a test suite-->");
 			var settings = new XmlWriterSettings { Indent = true };
 			using (var xmlWriter = XmlWriter.Create (writer, settings)) {
 				switch (ResultFileFormat) {
@@ -840,7 +839,6 @@ namespace Xamarin.iOS.UnitTests.XUnit
 					throw new InvalidOperationException ($"Result output format '{ResultFileFormat}' is not currently supported");
 				}
 			}
-			writer.WriteLine ("<!-- the end -->");
 		}
 
 		void Transform_Results (string xsltResourceName, XElement element, XmlWriter writer)

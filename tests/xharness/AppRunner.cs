@@ -537,10 +537,10 @@ namespace xharness
 
 			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
-		
-		(string resultLine, bool failed, bool crashed) ParseResult (Log listener_log, bool timed_out, bool crashed)
+
+		(string resultLine, bool failed, bool crashed) ParseResult (string test_log_path, bool timed_out, bool crashed)
 		{
-			if (!File.Exists (listener_log.FullPath))
+			if (!File.Exists (test_log_path))
 				return (null, false, true); // if we do not have a log file, the test crashes
 
 			// parsing the result is different if we are in jenkins or not.
@@ -555,61 +555,35 @@ namespace xharness
 			// that case, we cannot do a TCP connection to xharness to get the log, this is a problem since if we did not get the xml
 			// from the TCP connection, we are going to fail when trying to read it and not parse it. Therefore, we are not only
 			// going to check if we are in CI, but also if the listener_log is valid.
-			if (Harness.InCI && IsXml (listener_log.FullPath)) {
-				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
-				// move the xml to a tmp path, that path will be use to read the xml
-				// in the reader, and the writer will use the stream from the logger to
-				// write the human readable log
-				var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
+			var path = Path.ChangeExtension (test_log_path, "xml");
+			File.Copy (test_log_path, path);
 
-				// copy do not move
-				File.Copy (listener_log.FullPath, tmpFile, true);
+			if (Harness.InCI && IsXml (test_log_path)) {
+				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				crashed = false;
-				string path = listener_log.FullPath;
 				XmlResultType xmlType;
 				try {
-					using (var streamReaderTmp = new StreamReader (tmpFile)) {
+					using (var streamReaderTmp = new StreamReader (path)) {
 						xmlType = GetXmlType (streamReaderTmp);
-						path = Path.ChangeExtension (path, "xml");
 						var fileName = Path.GetFileName (path);
+						var newFilename = "";
 						switch (xmlType) {
 						case XmlResultType.TouchUnit:
 						case XmlResultType.NUnit:
-							path = path.Replace (fileName, $"nunit-{fileName}");
+							newFilename = path.Replace (fileName, $"nunit-{fileName}");
 							break;
 						case XmlResultType.xUnit:
-							path = path.Replace (fileName, $"xunit-{fileName}");
+							newFilename = path.Replace (fileName, $"xunit-{fileName}");
 							break;
 						}
-						// clean any junk we have
-						using (var xmlWriter = new StreamWriter (path)) {
-							string line;
-							string previous = null;
-							while ((line = streamReaderTmp.ReadLine ()) != null) {
-								if (line.Contains ("ping") || line.Contains ("<TouchUnitTestRun>") || line.Contains ("<NUnitOutput>") || line.StartsWith ("<!", StringComparison.Ordinal)) // ignore the ping, because VSTS is going to have issues too or the Touch unit elements
-									continue;
-								if (line.Contains ("</NUnitOutput>")) // get out of the loop we are not interested in the rest of the TouchUnit data.
-									break;
-								if (previous != null && previous.Contains ("</collection>") && line.Contains (" </collection>")) // something funny happens with the xunit results and collections that is priting twice </collection></collection>
-									continue;
-								if (line.Contains ("<test-results")) {
-									if (line.Contains ("name=\"\"")) { // NUnit case
-										xmlWriter.WriteLine (line.Replace ("name=\"\"", $"name=\"{appName + " " + configuration}\""));
-									} else if (line.Contains ($"name=\"com.xamarin.bcltests.{appName}\"")) { // xunit case
-										xmlWriter.WriteLine (line.Replace ($"name=\"com.xamarin.bcltests.{appName}\"", $"name=\"{appName + " " + configuration}\""));
-									} else {
-										xmlWriter.WriteLine (line);
-									}
-								} else {
-									xmlWriter.WriteLine (line);
-								}
-								previous = line;
-							}
-						}
+						// rename the path to the correct value
+						File.Move (path, newFilename);
+						path = newFilename;
+						
 					}
 					using (var reader = new StreamReader (path)) {
-						var tmpFile2 = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
-						using (var writer = new StreamWriter (tmpFile2, true)) { // write the human result to the log file
+						var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
+						using (var writer = new StreamWriter (tmpFile, true)) { // write the human result to the log file
 							(string resultLine, bool failed) parseData;
 							switch (xmlType) {
 							case XmlResultType.TouchUnit:
@@ -622,12 +596,13 @@ namespace xharness
 								parseData = ParsexUnitXml (reader, writer);
 								break;
 							default:
-								throw new Exception ("OMG");
+								parseData = ("", true);
+								break;
 							}
 							parseResult.resultLine = parseData.resultLine;
 							parseResult.failed = parseData.failed;
 						}
-						File.Copy (tmpFile2, listener_log.FullPath, true);
+						File.Copy (tmpFile, test_log_path, true);
 					}
 					// we do not longer need the tmp file
 					Logs.AddFile (path, "Test xml");
@@ -655,17 +630,16 @@ namespace xharness
 						parseResult.crashed = true;
 						return parseResult;
 					}
-				} finally {
-					if (File.Exists (tmpFile))
-						File.Delete (tmpFile);
 				}
 				
 			} else {
+				// delete not needed copy
+				File.Delete (path);
 				// not the most efficient way but this just happens when we run
 				// the tests locally and we usually do not run all tests, we are
 				// more interested to be efficent on the bots
 				string resultLine = null;
-				using (var reader = new StreamReader (listener_log.FullPath)) {
+				using (var reader = new StreamReader (test_log_path)) {
 					string line = null;
 					bool failed = false;
 					while ((line = reader.ReadLine ()) != null)
@@ -684,9 +658,9 @@ namespace xharness
 			}
 		}
 
-		public bool TestsSucceeded (Log listener_log, bool timed_out, bool crashed)
+		public bool TestsSucceeded (string test_log_path, bool timed_out, bool crashed)
 		{
-			var (resultLine, failed, crashed_out) = ParseResult (listener_log, timed_out, crashed);
+			var (resultLine, failed, crashed_out) = ParseResult (test_log_path, timed_out, crashed);
 			// read the parsed logs in a human readable way
 			if (resultLine != null) {
 				var tests_run = resultLine.Replace ("Tests run: ", "");
@@ -1035,7 +1009,7 @@ namespace xharness
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
-				success = TestsSucceeded (listener_log, timed_out, crashed);
+				success = TestsSucceeded (listener_log.FullPath, timed_out, crashed);
 			} else if (timed_out) {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				main_log.WriteLine ("Test run never launched");
