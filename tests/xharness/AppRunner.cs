@@ -353,12 +353,12 @@ namespace xharness
 			// going to check if we are in CI, but also if the listener_log is valid.
 			var path = Path.ChangeExtension (test_log_path, "xml");
 			XmlResultParser.CleanXml (test_log_path, path);
+			XmlResultParser.Jargon xmlType;
 
-			if (Harness.InCI && XmlResultParser.IsXml (path)) {
+			if (Harness.InCI && XmlResultParser.IsValidXml (path, out xmlType)) {
 				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				crashed = false;
 				try {
-					XmlResultParser.XmlResultType xmlType = XmlResultParser.GetXmlType (path);
 					var newFilename = XmlResultParser.GetXmlFilePath (path, xmlType);
 
 					// rename the path to the correct value

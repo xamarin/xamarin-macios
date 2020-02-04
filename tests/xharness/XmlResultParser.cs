@@ -5,50 +5,43 @@ using System.Xml;
 namespace xharness {
 	public static class XmlResultParser {
 
-		public enum XmlResultType {
+		public enum Jargon {
 			TouchUnit,
 			NUnit,
 			xUnit,
+			Text,
 		}
 
 		// test if the file is valid xml, or at least, that can be read it.
-		public static bool IsXml (string filePath)
+		public static bool IsValidXml (string path, out Jargon type)
 		{
-			if (!File.Exists (filePath))
+			type = Jargon.Text;
+			if (!File.Exists (path))
 				return false;
 
-			using (var stream = File.OpenText (filePath)) {
+			bool isXml = false;
+			using (var stream = File.OpenText (path)) {
 				string line;
 				while ((line = stream.ReadLine ()) != null) { // special case when get got the tcp connection
 					if (line.Contains ("ping"))
 						continue;
-					return line.StartsWith ("<", StringComparison.Ordinal);
-				}
-			}
-			return false;
-		}
-
-		public static XmlResultType GetXmlType (string filePath)
-		{
-			using (var stream = new StreamReader (filePath)) {
-				var resultType = XmlResultType.TouchUnit; // default
-									  // more fun, the first like of the stream, is a ping from the application to the tcp server, and that will not be parsable as
-									  // xml, advance the reader one line.
-				string line;
-				while ((line = stream.ReadLine ()) != null) {
 					if (line.Contains ("TouchUnitTestRun")) {
-						resultType = XmlResultType.TouchUnit;
+						type = Jargon.TouchUnit;
+						isXml = true;
 						break;
 					}
-					if (line.Contains ("nunit-version"))
-						resultType = XmlResultType.NUnit;
+					if (line.Contains ("nunit-version")) {
+						type = Jargon.NUnit;
+						isXml = true;
+					}
 					if (line.Contains ("xUnit")) {
-						resultType = XmlResultType.xUnit;
+						type = Jargon.xUnit;
+						isXml = true;
 						break;
 					}
 				}
-				return resultType;
 			}
+			return isXml;
 		}
 
 		static (string resultLine, bool failed) ParseTouchUnitXml (StreamReader stream, StreamWriter writer)
@@ -206,22 +199,17 @@ namespace xharness {
 			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
 
-		public static string GetXmlFilePath (string path, XmlResultType xmlType)
+		public static string GetXmlFilePath (string path, Jargon xmlType)
 		{
-
-			using (var streamReaderTmp = new StreamReader (path)) {
-				var fileName = Path.GetFileName (path);
-				var newFilename = "";
-				switch (xmlType) {
-				case XmlResultType.TouchUnit:
-				case XmlResultType.NUnit:
-					newFilename = path.Replace (fileName, $"nunit-{fileName}");
-					break;
-				case XmlResultType.xUnit:
-					newFilename = path.Replace (fileName, $"xunit-{fileName}");
-					break;
-				}
-				return newFilename;
+			var fileName = Path.GetFileName (path);
+			switch (xmlType) {
+			case Jargon.TouchUnit:
+			case Jargon.NUnit:
+				return path.Replace (fileName, $"nunit-{fileName}");
+			case Jargon.xUnit:
+				return path.Replace (fileName, $"xunit-{fileName}");
+			default:
+				return path;
 			}
 		}
 
@@ -234,6 +222,8 @@ namespace xharness {
 					if (line.StartsWith ("ping", StringComparison.InvariantCulture) || line.Contains ("TouchUnitTestRun") || line.Contains ("NUnitOutput") || line.Contains ("<!--")) {
 						continue;
 					}
+					if (line == "") // remove white lines, some files have them
+						continue;
 					if (line.Contains ("TouchUnitExtraData")) // always last node in TouchUnit
 						break;
 					writer.WriteLine (line);
@@ -241,19 +231,19 @@ namespace xharness {
 			}
 		}
 
-		public static (string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, XmlResultType xmlType)
+		public static (string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, Jargon xmlType)
 		{
 			(string resultLine, bool failed) parseData;
 			using (var reader = new StreamReader (source)) 
 			using (var writer = new StreamWriter (destination, true)) {
 				switch (xmlType) {
-				case XmlResultType.TouchUnit:
+				case Jargon.TouchUnit:
 					parseData = ParseTouchUnitXml (reader, writer);
 					break;
-				case XmlResultType.NUnit:
+				case Jargon.NUnit:
 					parseData = ParseNUnitXml (reader, writer);
 					break;
-				case XmlResultType.xUnit:
+				case Jargon.xUnit:
 					parseData = ParsexUnitXml (reader, writer);
 					break;
 				default:
