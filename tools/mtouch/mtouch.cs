@@ -1340,33 +1340,6 @@ namespace Xamarin.Bundler
 			if (app.EnableRepl && app.LinkMode != LinkMode.None)
 				throw new MonoTouchException (82, true, "REPL (--enable-repl) is only supported when linking is not used (--nolink).");
 
-			if (app.UseInterpreter) {
-				// it's confusing to use different options to get a feature to work (e.g. dynamic, SRE...) on both simulator and device
-				if (app.IsSimulatorBuild) {
-					ErrorHelper.Show (ErrorHelper.CreateWarning (141, "The interpreter is not supported in the simulator. Switching to REPL which provide the same extra features on the simulator."));
-					app.UseInterpreter = false;
-				}
-
-				// FIXME: the interpreter only supports ARM64{,_32} right now
-				// temporary - without a check here the error happens when deploying
-				if (!app.IsSimulatorBuild && (!app.IsArchEnabled (Abi.ARM64) && !app.IsArchEnabled (Abi.ARM64_32)))
-					throw ErrorHelper.CreateError (99, "Internal error: The interpreter is currently only available for 64 bits.");
-
-				// needs to be set after the argument validations
-				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
-				app.EnableRepl = true;
-			} else {
-				if (app.Platform == ApplePlatform.WatchOS && app.IsArchEnabled (Abi.ARM64_32) && app.BitCodeMode != BitCodeMode.LLVMOnly) {
-					if (app.IsArchEnabled (Abi.ARMv7k)) {
-						throw ErrorHelper.CreateError (145, "Please use device specific builds on WatchOS when building for Debug.");
-					} else {
-						ErrorHelper.Warning (146, "ARM64_32 Debug mode requires --interpreter[=all], forcing it.");
-						app.UseInterpreter = true;
-						app.InterpretedAssemblies.Clear ();
-					}
-				}
-			}
-
 			if (cross_prefix == null)
 				cross_prefix = MonoTouchDirectory;
 
