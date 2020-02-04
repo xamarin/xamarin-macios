@@ -274,6 +274,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MM4134">
+        <source>Your application is using the '{0}' framework, which isn't included in the {3} SDK you're using to build your app (this framework was introduced in {3} {2}, while you're building with the {3} {1} SDK.) This configuration is not supported with the static registrar (pass --registrar:dynamic as an additional mmp argument in your project's Mac Build option to select). Alternatively select a newer SDK in your app's Mac Build options.	
+		</source>
+        <target state="new">Your application is using the '{0}' framework, which isn't included in the {3} SDK you're using to build your app (this framework was introduced in {3} {2}, while you're building with the {3} {1} SDK.) This configuration is not supported with the static registrar (pass --registrar:dynamic as an additional mmp argument in your project's Mac Build option to select). Alternatively select a newer SDK in your app's Mac Build options.	
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MM5103">
         <source>Failed to compile. Error code - {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</source>
@@ -491,9 +499,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT0025">
-        <source>No SDK version was provided. Please add `--sdk=X.Y` to specify which {0} SDK should be used to build your application.
+        <source>No SDK version was provided. Please add --sdk=X.Y to specify which {0} SDK should be used to build your application.
 		</source>
-        <target state="new">No SDK version was provided. Please add `--sdk=X.Y` to specify which {0} SDK should be used to build your application.
+        <target state="new">No SDK version was provided. Please add --sdk=X.Y to specify which {0} SDK should be used to build your application.
 		</target>
         <note>
 		</note>
@@ -1091,9 +1099,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT0113_d">
-        <source>the arguments to the AOT compiler are different between the container app ({0}) and the extension ({1})
+        <source>the arguments to the AOT compiler are different between the container app ({0}) and the extension ({1}).
 		</source>
-        <target state="new">the arguments to the AOT compiler are different between the container app ({0}) and the extension ({1})
+        <target state="new">the arguments to the AOT compiler are different between the container app ({0}) and the extension ({1}).
 		</target>
         <note>
 		</note>
@@ -1107,9 +1115,9 @@
 		</note>
       </trans-unit>
       <trans-unit id="MT0113_f">
-        <source>LLVM is not enabled or disabled in both the container app ({0}) and the extension ({1})
+        <source>LLVM is not enabled or disabled in both the container app ({0}) and the extension ({1}).
 		</source>
-        <target state="new">LLVM is not enabled or disabled in both the container app ({0}) and the extension ({1})
+        <target state="new">LLVM is not enabled or disabled in both the container app ({0}) and the extension ({1}).
 		</target>
         <note>
 		</note>
@@ -2058,6 +2066,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4134">
+        <source>Your application is using the '{0}' framework, which isn't included in the {3} SDK you're using to build your app (this framework was introduced in {3} {2}, while you're building with the {3} {1} SDK.) Please select a newer SDK in your app's {3} Build options.
+		</source>
+        <target state="new">Your application is using the '{0}' framework, which isn't included in the {3} SDK you're using to build your app (this framework was introduced in {3} {2}, while you're building with the {3} {1} SDK.) Please select a newer SDK in your app's {3} Build options.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4135">
         <source>The member '{0}' has an Export attribute without a selector. A selector is required.
 		</source>
@@ -2234,6 +2250,14 @@
         <note>
 		</note>
       </trans-unit>
+      <trans-unit id="MT4161">
+        <source>The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).
+		</source>
+        <target state="new">The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).
+		</target>
+        <note>
+		</note>
+      </trans-unit>
       <trans-unit id="MT4162">
         <source>The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).
 		</source>
@@ -2262,6 +2286,14 @@
         <source>Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</source>
         <target state="new">Internal error in the registrar (Unknown availability kind: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4163_B">
+        <source>Internal error in the registrar (BindAs parameters can't be ref/out: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
+		</source>
+        <target state="new">Internal error in the registrar (BindAs parameters can't be ref/out: {0}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
 		</target>
         <note>
 		</note>
@@ -2358,6 +2390,14 @@
         <source>The registrar can't compute the block signature for the delegate of type {0} in the method {1} because {0} doesn't have a specific signature.
 		</source>
         <target state="new">The registrar can't compute the block signature for the delegate of type {0} in the method {1} because {0} doesn't have a specific signature.
+		</target>
+        <note>
+		</note>
+      </trans-unit>
+      <trans-unit id="MT4173_A">
+        <source>The registrar can't compute the block signature for the delegate of type {0} in the method {1} because it couldn't find the Invoke method of the delegate type.
+		</source>
+        <target state="new">The registrar can't compute the block signature for the delegate of type {0} in the method {1} because it couldn't find the Invoke method of the delegate type.
 		</target>
         <note>
 		</note>
@@ -2763,14 +2803,6 @@
 		</note>
       </trans-unit>
       <trans-unit id="MX0071">
-        <source>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
-		</source>
-        <target state="new">Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
-		</target>
-        <note>
-		</note>
-      </trans-unit>
-      <trans-unit id="MX0073">
         <source>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</source>
         <target state="new">Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
