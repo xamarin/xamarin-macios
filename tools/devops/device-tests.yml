@@ -131,6 +131,28 @@ jobs:
     condition: succeededOrFailed()
 
 ###
+### Upload the xml results to vsts. We have two types, nunit and xunit. We want both
+###
+
+  - task: PublishTestResults@2
+    displayName: 'Publish NUnit Device Test Results'
+    inputs:
+      testResultsFormat: NUnit
+      testResultsFiles: '**/nunit-test-*.xml'
+      failTaskOnFailedTests: true
+    continueOnError: true
+    condition: succeededOrFailed()
+
+  - task: PublishTestResults@2
+    displayName: 'Publish xUnit Device Test Results'
+    inputs:
+      testResultsFormat: XUnit
+      testResultsFiles: '**/xunit-test-*.xml'
+      failTaskOnFailedTests: true
+    continueOnError: true
+    condition: succeededOrFailed()
+
+###
 ### Push the HTML report to Azure DevOps (shows up in Summary tab as Build Artifact)
 ###
 
