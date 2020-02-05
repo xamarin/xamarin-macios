@@ -145,8 +145,8 @@ namespace xharness {
 			using (var reader = XmlReader.Create (stream)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "assembly") {
-						long.TryParse (reader ["total"], out var asseblyCount);
-						total += asseblyCount;
+						long.TryParse (reader ["total"], out var assemblyCount);
+						total += assemblyCount;
 						long.TryParse (reader ["errors"], out var assemblyErrors);
 						errors += assemblyErrors;
 						long.TryParse (reader ["failed"], out var assemblyFailures);
