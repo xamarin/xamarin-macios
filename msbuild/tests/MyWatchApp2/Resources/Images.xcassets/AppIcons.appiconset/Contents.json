@@ -140,14 +140,6 @@
       "subtype" : "38mm"
     },
     {
-      "size" : "44x44",
-      "idiom" : "watch",
-      "scale" : "2x",
-      "filename" : "Icon-44x44@2x.png",
-      "role" : "longLook",
-      "subtype" : "42mm"
-    },
-    {
       "size" : "86x86",
       "idiom" : "watch",
       "scale" : "2x",

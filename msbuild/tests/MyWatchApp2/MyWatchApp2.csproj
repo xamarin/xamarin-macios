@@ -77,7 +77,6 @@
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-29x29@2x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-29x29@3x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-40x40@2x.png" />
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-44x44@2x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-86x86@2x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-98x98@2x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon1024x1024.png" />
