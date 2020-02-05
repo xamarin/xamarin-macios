@@ -494,8 +494,7 @@ namespace xharness
 			var useXmlOutput = Harness.InCI;
 			if (useXmlOutput) {
 				args.Add ("-setenv=NUNIT_ENABLE_XML_OUTPUT=true");
-				// DO NOT wrapp the nunit oupt, that way we can use a single parsing method
-				args.Add ("-setenv=NUNIT_ENABLE_XML_MODE=default");
+				args.Add ("-setenv=NUNIT_ENABLE_XML_MODE=wrapped");
 				args.Add ("-setenv=NUNIT_XML_VERSION=NUnitV3");
 			}
 
