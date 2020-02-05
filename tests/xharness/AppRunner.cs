@@ -353,9 +353,8 @@ namespace xharness
 			// going to check if we are in CI, but also if the listener_log is valid.
 			var path = Path.ChangeExtension (test_log_path, "xml");
 			XmlResultParser.CleanXml (test_log_path, path);
-			XmlResultParser.Jargon xmlType;
 
-			if (Harness.InCI && XmlResultParser.IsValidXml (path, out xmlType)) {
+			if (Harness.InCI && XmlResultParser.IsValidXml (path, out var xmlType)) {
 				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				crashed = false;
 				try {
@@ -369,6 +368,7 @@ namespace xharness
 					var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
 					(parseResult.resultLine, parseResult.failed) = XmlResultParser.GenerateHumanReadableResults (path, tmpFile, xmlType);
 					File.Copy (tmpFile, test_log_path, true);
+					File.Delete (tmpFile);
 
 					// we do not longer need the tmp file
 					Logs.AddFile (path, "Test xml");

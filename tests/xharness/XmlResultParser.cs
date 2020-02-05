@@ -9,13 +9,13 @@ namespace xharness {
 			TouchUnit,
 			NUnit,
 			xUnit,
-			Text,
+			Missing,
 		}
 
 		// test if the file is valid xml, or at least, that can be read it.
 		public static bool IsValidXml (string path, out Jargon type)
 		{
-			type = Jargon.Text;
+			type = Jargon.Missing;
 			if (!File.Exists (path))
 				return false;
 
@@ -52,14 +52,14 @@ namespace xharness {
 			using (var reader = XmlReader.Create (stream)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
-						total = long.Parse (reader ["total"]);
-						errors = long.Parse (reader ["errors"]);
-						failed = long.Parse (reader ["failures"]);
-						notRun = long.Parse (reader ["not-run"]);
-						inconclusive = long.Parse (reader ["inconclusive"]);
-						ignored = long.Parse (reader ["ignored"]);
-						skipped = long.Parse (reader ["skipped"]);
-						invalid = long.Parse (reader ["invalid"]);
+						long.TryParse (reader ["total"], out total);
+						long.TryParse (reader ["errors"], out errors);
+						long.TryParse (reader ["failures"], out failed);
+						long.TryParse (reader ["not-run"], out notRun);
+						long.TryParse (reader ["inconclusive"], out inconclusive);
+						long.TryParse (reader ["ignored"], out ignored);
+						long.TryParse (reader ["skipped"], out skipped );
+						long.TryParse (reader ["invalid"], out invalid);
 					}
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "TouchUnitExtraData") {
 						// move fwd to get to the CData
@@ -82,14 +82,14 @@ namespace xharness {
 			using (var reader = XmlReader.Create (stream, settings)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
-						total = long.Parse (reader ["total"]);
-						errors = long.Parse (reader ["errors"]);
-						failed = long.Parse (reader ["failures"]);
-						notRun = long.Parse (reader ["not-run"]);
-						inconclusive = long.Parse (reader ["inconclusive"]);
-						ignored = long.Parse (reader ["ignored"]);
-						skipped = long.Parse (reader ["skipped"]);
-						invalid = long.Parse (reader ["invalid"]);
+						long.TryParse (reader ["total"], out total);
+						long.TryParse (reader ["errors"], out errors);
+						long.TryParse (reader ["failures"], out failed);
+						long.TryParse (reader ["not-run"], out notRun);
+						long.TryParse (reader ["inconclusive"], out inconclusive);
+						long.TryParse (reader ["ignored"], out ignored);
+						long.TryParse (reader ["skipped"], out skipped);
+						long.TryParse (reader ["invalid"], out invalid);
 					}
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader ["type"] == "TestFixture" || reader ["type"] == "TestCollection")) {
 						var testCaseName = reader ["name"];
@@ -148,10 +148,14 @@ namespace xharness {
 			using (var reader = XmlReader.Create (stream)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "assembly") {
-						total += long.Parse (reader ["total"]);
-						errors += long.Parse (reader ["errors"]);
-						failed += long.Parse (reader ["failed"]);
-						skipped += long.Parse (reader ["skipped"]);
+						long.TryParse (reader ["total"], out var asseblyCount);
+						total += asseblyCount;
+						long.TryParse (reader ["errors"], out var assemblyErrors);
+						errors += assemblyErrors;
+						long.TryParse (reader ["failed"], out var assemblyFailures);
+						failed += assemblyFailures;
+						long.TryParse (reader ["skipped"], out var assemblySkipped);
+						skipped += assemblySkipped;
 					}
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "collection") {
 						var testCaseName = reader ["name"].Replace ("Test collection for ", "");
@@ -219,7 +223,7 @@ namespace xharness {
 			using (var writer = new StreamWriter (destination)) {
 				string line;
 				while ((line = reader.ReadLine ()) != null) {
-					if (line.StartsWith ("ping", StringComparison.InvariantCulture) || line.Contains ("TouchUnitTestRun") || line.Contains ("NUnitOutput") || line.Contains ("<!--")) {
+					if (line.StartsWith ("ping", StringComparison.Ordinal) || line.Contains ("TouchUnitTestRun") || line.Contains ("NUnitOutput") || line.Contains ("<!--")) {
 						continue;
 					}
 					if (line == "") // remove white lines, some files have them
