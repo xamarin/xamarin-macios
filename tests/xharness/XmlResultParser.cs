@@ -19,7 +19,6 @@ namespace xharness {
 			if (!File.Exists (path))
 				return false;
 
-			bool isXml = false;
 			using (var stream = File.OpenText (path)) {
 				string line;
 				while ((line = stream.ReadLine ()) != null) { // special case when get got the tcp connection
@@ -27,21 +26,19 @@ namespace xharness {
 						continue;
 					if (line.Contains ("TouchUnitTestRun")) {
 						type = Jargon.TouchUnit;
-						isXml = true;
-						break;
+						return true;
 					}
 					if (line.Contains ("nunit-version")) {
 						type = Jargon.NUnit;
-						isXml = true;
+						return true;
 					}
 					if (line.Contains ("xUnit")) {
 						type = Jargon.xUnit;
-						isXml = true;
-						break;
+						return true;
 					}
 				}
 			}
-			return isXml;
+			return false;
 		}
 
 		static (string resultLine, bool failed) ParseTouchUnitXml (StreamReader stream, StreamWriter writer)
