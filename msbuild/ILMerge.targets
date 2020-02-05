@@ -16,7 +16,7 @@
       <NetstandardDirectory>@(NetstandardPath)</NetstandardDirectory>
     </PropertyGroup>
     <!-- The assemblies are in a very different place when building for netstandard2.0, which means we need different logic to find them too -->
-    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <ItemGroup Condition="$(TargetFramework.StartsWith ('netstandard'))">
       <!-- I don't like to have a hard-coded list of assemblies to merge, but I couldn't find a way to calculate it -->
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev.Tasks.Core'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev.Tasks'" />
@@ -32,15 +32,15 @@
       <MergedAssemblies Include="$(OutputPath)/System.Threading.Tasks.Extensions.dll" />
       <MergedAssemblies Include="$(OutputPath)/System.Text.Encodings.Web.dll" />
 
-      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([System.String]::new('%(FileName)').StartsWith('Mono.Cecil', StringComparison.OrdinalIgnoreCase))" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([MSBuild]::ValueOrDefault('%(FileName)', '').StartsWith('Mono.Cecil', StringComparison.OrdinalIgnoreCase))" />
     </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <ItemGroup Condition="$(TargetFramework.StartsWith ('net4'))">
       <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'
-        And !$([System.String]::new('%(FileName)').EndsWith('.resources', StringComparison.OrdinalIgnoreCase))
-        And !$([System.String]::new('%(FileName)').StartsWith('Microsoft.Build.', StringComparison.OrdinalIgnoreCase))
-        And !$([System.String]::new('%(FullPath)').StartsWith('/Library/Frameworks/Mono.framework', StringComparison.OrdinalIgnoreCase))"
+        And !$([MSBuild]::ValueOrDefault('%(FileName)', '').EndsWith('.resources', StringComparison.OrdinalIgnoreCase))
+        And !$([MSBuild]::ValueOrDefault('%(FileName)', '').StartsWith('Microsoft.Build.', StringComparison.OrdinalIgnoreCase))
+        And !$([MSBuild]::ValueOrDefault('%(FullPath)', '').StartsWith('/Library/Frameworks/Mono.framework', StringComparison.OrdinalIgnoreCase))"
       />
-      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([System.String]::new('%(FileName)').StartsWith('Mono.Cecil', StringComparison.OrdinalIgnoreCase))" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([MSBuild]::ValueOrDefault('%(FileName)', '').StartsWith('Mono.Cecil', StringComparison.OrdinalIgnoreCase))" />
     </ItemGroup>
     <ItemGroup>
       <ReferenceCopyLocalDirs Include="@(ReferenceCopyLocalPaths -&gt; '%(RootDir)%(Directory)')" />
