@@ -1165,7 +1165,7 @@ namespace Xamarin.Bundler {
 							continue; // appex references an assembly the main app doesn't. This is fine.
 						if (asm.FullPath != kvp.Value.FullPath && !Cache.CompareFiles (asm.FullPath, kvp.Value.FullPath, true)) {
 							applicable = false; // app references an assembly with the same name as the main app, but from a different location and not identical. This is not fine.
-							ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_n, asm.Identity, asm.FullPath));
+							ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_o, asm.Identity, asm.FullPath, kvp.Value.FullPath));
 							break;
 						}
 					}

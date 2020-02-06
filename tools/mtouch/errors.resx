@@ -210,7 +210,7 @@
 	</data>
 
 	<data name="MT0025" xml:space="preserve">
-		<value>No SDK version was provided. Please add `--sdk=X.Y` to specify which {0} SDK should be used to build your application.
+		<value>No SDK version was provided. Please add --sdk=X.Y to specify which {0} SDK should be used to build your application.
 		</value>
 		<comment>
 		</comment>
@@ -527,13 +527,6 @@
 
 	<data name="MT0073" xml:space="preserve">
 		<value>{4} {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.
-		</value>
-		<comment>
-		</comment>
-	</data>
-
-	<data name="MX0073" xml:space="preserve">
-		<value>Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.
 		</value>
 		<comment>
 		</comment>
@@ -904,7 +897,7 @@
 	</data>
 	
 	<data name="MT0113_d" xml:space="preserve">
-		<value>the arguments to the AOT compiler are different between the container app ({0}) and the extension ({1})
+		<value>the arguments to the AOT compiler are different between the container app ({0}) and the extension ({1}).
 		</value>
 		<comment>
 		</comment>
@@ -918,7 +911,7 @@
 	</data>
 	
 	<data name="MT0113_f" xml:space="preserve">
-		<value>LLVM is not enabled or disabled in both the container app ({0}) and the extension ({1})
+		<value>LLVM is not enabled or disabled in both the container app ({0}) and the extension ({1}).
 		</value>
 		<comment>
 		</comment>
