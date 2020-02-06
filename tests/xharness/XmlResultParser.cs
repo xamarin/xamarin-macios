@@ -357,7 +357,7 @@ namespace xharness {
 
 			// add the first test-suit and add the attachments
 			var rooTestSuite = doc.Descendants ().Where (e => e.Name == "test-suite").FirstOrDefault ();
-			rooTestSuite.Add (attachmentsElement);
+			rooTestSuite?.Add (attachmentsElement);
 
 			// get the test suites and make them all use the same app name for better parsing in VSTS
 			var testSuitsElements = doc.Descendants ().Where (e => e.Name == "test-suite" && e.Attribute ("type")?.Value == "Assembly");
