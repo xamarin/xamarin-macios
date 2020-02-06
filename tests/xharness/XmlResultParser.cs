@@ -35,11 +35,11 @@ namespace xharness {
 						type = Jargon.TouchUnit;
 						return true;
 					}
-					if (line.Contains ("nunit-version")) {
+					if (line.Contains ("test-results")) { // first element of the NUnitV3 test collection
 						type = Jargon.NUnitV2;
 						return true;
 					}
-					if (line.Contains ("xUnit")) {
+					if (line.Contains ("<assemblies>")) { // first element of the xUnit test collection
 						type = Jargon.xUnit;
 						return true;
 					}
