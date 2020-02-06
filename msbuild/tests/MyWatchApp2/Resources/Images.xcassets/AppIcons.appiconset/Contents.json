@@ -96,6 +96,12 @@
       "scale" : "2x"
     },
     {
+      "filename": "Icon1024x1024.png",
+      "size": "1024x1024",
+      "scale": "1x",
+      "idiom": "watch-marketing"
+    },
+    {
       "size" : "24x24",
       "idiom" : "watch",
       "scale" : "2x",
@@ -132,14 +138,6 @@
       "filename" : "Icon-40x40@2x.png",
       "role" : "appLauncher",
       "subtype" : "38mm"
-    },
-    {
-      "size" : "44x44",
-      "idiom" : "watch",
-      "scale" : "2x",
-      "filename" : "Icon-44x44@2x.png",
-      "role" : "longLook",
-      "subtype" : "42mm"
     },
     {
       "size" : "86x86",
