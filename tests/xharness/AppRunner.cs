@@ -360,8 +360,17 @@ namespace xharness
 				try {
 					var newFilename = XmlResultParser.GetXmlFilePath (path, xmlType);
 
-					// rename the path to the correct value
-					File.Move (path, newFilename);
+					// at this point, we have the test results, but we want to be able to have attachments in vsts, so if the format is
+					// the right one (NUnitV3) add the nodes. ATM only TouchUnit uses V3.
+					var testRunName = $"{appName} ({configuration})";
+					if (xmlType != XmlResultParser.Jargon.TouchUnit) {
+						(string path, string descrition) [] logs = Logs.Select (e => (e.FullPath, e.Description)).ToArray ();
+						// add the attachments and write in the new filename
+						XmlResultParser.UpdateMissingData (path, newFilename, testRunName, logs);
+					} else {
+						// rename the path to the correct value
+						File.Move (path, newFilename);
+					}
 					path = newFilename;
 
 					// write the human readable results in a tmp file, which we later use to step on the logs
@@ -495,7 +504,7 @@ namespace xharness
 			if (useXmlOutput) {
 				args.Add ("-setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 				args.Add ("-setenv=NUNIT_ENABLE_XML_MODE=wrapped");
-				args.Add ("-setenv=NUNIT_XML_VERSION=NUnitV3");
+				args.Add ("-setenv=NUNIT_XML_VERSION=nunitv3");
 			}
 
 			if (Harness.InCI) {
