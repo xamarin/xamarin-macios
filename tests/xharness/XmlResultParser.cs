@@ -9,7 +9,8 @@ namespace xharness {
 
 		public enum Jargon {
 			TouchUnit,
-			NUnit,
+			NUnitV2,
+			NUnitV3,
 			xUnit,
 			Missing,
 		}
@@ -26,12 +27,16 @@ namespace xharness {
 				while ((line = stream.ReadLine ()) != null) { // special case when get got the tcp connection
 					if (line.Contains ("ping"))
 						continue;
+					if (line.Contains ("test-run")) { // first element of the NUnitV3 test collection
+						type = Jargon.NUnitV3;
+						return true;
+					}
 					if (line.Contains ("TouchUnitTestRun")) {
 						type = Jargon.TouchUnit;
 						return true;
 					}
 					if (line.Contains ("nunit-version")) {
-						type = Jargon.NUnit;
+						type = Jargon.NUnitV2;
 						return true;
 					}
 					if (line.Contains ("xUnit")) {
@@ -41,6 +46,82 @@ namespace xharness {
 				}
 			}
 			return false;
+		}
+
+		static (string resultLine, bool failed) ParseNUnitV3 (StreamReader stream, StreamWriter writer)
+		{
+			long testcasecount, passed, failed, inconclusive, skipped;
+			bool failedTestRun = false; // result = "Failed"
+			testcasecount = passed = failed = inconclusive = skipped = 0L;
+
+			using (var reader = XmlReader.Create (stream)) {
+				while (reader.Read ()) {
+					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-run") {
+						long.TryParse (reader ["testcasecount"], out testcasecount);
+						long.TryParse (reader ["passed"], out passed);
+						long.TryParse (reader ["failed"], out failed);
+						long.TryParse (reader ["inconclusive"], out inconclusive);
+						long.TryParse (reader ["skipped"], out skipped);
+						switch (reader["result"]) {
+						case "Failed":
+							failedTestRun = true;
+							break;
+						default:
+							failedTestRun = false;
+							break;
+						}
+					}
+					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader ["type"] == "TestFixture" || reader ["type"] == "ParameterizedFixture")) {
+						var testCaseName = reader ["fullname"];
+						writer.WriteLine (testCaseName);
+						var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
+												// get the first node and then move in the siblings of the same type
+						reader.ReadToDescendant ("test-case");
+						do {
+							if (reader.Name != "test-case")
+								break;
+							// read the test cases in the current node
+							var status = reader ["result"];
+							switch (status) {
+							case "Passed":
+								writer.Write ("\t[PASS] ");
+								break;
+							case "Skipped":
+								writer.Write ("\t[IGNORED] ");
+								break;
+							case "Error":
+							case "Failed":
+								writer.Write ("\t[FAIL] ");
+								break;
+							case "Inconclusive":
+								writer.Write ("\t[INCONCLUSIVE] ");
+								break;
+							default:
+								writer.Write ("\t[INFO] ");
+								break;
+							}
+							writer.Write (reader ["name"]);
+							if (status == "Failed") { //  we need to print the message
+								reader.ReadToDescendant ("failure");
+								reader.ReadToDescendant ("message");
+								writer.Write ($" : {reader.ReadElementContentAsString ()}");
+								reader.ReadToNextSibling ("stack-trace");
+								writer.Write ($" : {reader.ReadElementContentAsString ()}");
+							}
+							if (status == "Skipped") { // nice to have the skip reason
+								reader.ReadToDescendant ("reason");
+								reader.ReadToDescendant ("message");
+								writer.Write ($" : {reader.ReadElementContentAsString ()}");
+							}
+							// add a new line
+							writer.WriteLine ();
+						} while (reader.ReadToNextSibling ("test-case"));
+						writer.WriteLine ($"{testCaseName} {time} ms");
+					}
+				}
+			}
+			var resultLine = $"Tests run: {testcasecount} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed} Ignored: {skipped + inconclusive}";
+			return (resultLine, failedTestRun);
 		}
 
 		static (string resultLine, bool failed) ParseTouchUnitXml (StreamReader stream, StreamWriter writer)
@@ -57,9 +138,10 @@ namespace xharness {
 						long.TryParse (reader ["not-run"], out notRun);
 						long.TryParse (reader ["inconclusive"], out inconclusive);
 						long.TryParse (reader ["ignored"], out ignored);
-						long.TryParse (reader ["skipped"], out skipped );
+						long.TryParse (reader ["skipped"], out skipped);
 						long.TryParse (reader ["invalid"], out invalid);
 					}
+
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "TouchUnitExtraData") {
 						// move fwd to get to the CData
 						if (reader.Read ())
@@ -207,7 +289,7 @@ namespace xharness {
 			var fileName = Path.GetFileName (path);
 			switch (xmlType) {
 			case Jargon.TouchUnit:
-			case Jargon.NUnit:
+			case Jargon.NUnitV2:
 				return path.Replace (fileName, $"nunit-{fileName}");
 			case Jargon.xUnit:
 				return path.Replace (fileName, $"xunit-{fileName}");
@@ -243,8 +325,11 @@ namespace xharness {
 				case Jargon.TouchUnit:
 					parseData = ParseTouchUnitXml (reader, writer);
 					break;
-				case Jargon.NUnit:
+				case Jargon.NUnitV2:
 					parseData = ParseNUnitXml (reader, writer);
+					break;
+				case Jargon.NUnitV3:
+					parseData = ParseNUnitV3 (reader, writer);
 					break;
 				case Jargon.xUnit:
 					parseData = ParsexUnitXml (reader, writer);
