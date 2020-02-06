@@ -34,13 +34,6 @@ namespace xharness
 		TodayExtension,
 	}
 
-	public enum XmlResultType
-	{
-		TouchUnit,
-		NUnit,
-		xUnit,
-	}
-
 	public class AppRunner
 	{
 		public Harness Harness;
@@ -335,219 +328,6 @@ namespace xharness
 			}
 		}
 
-		// test if the file is valid xml, or at least, that can be read. The reader will throw an 
-		// exception if it cannot read the file. This is not ideal :/
-		bool IsXml (string filePath)
-		{
-			if (!File.Exists (filePath))
-				return false;
-
-			using (var stream = File.OpenText (filePath)) {
-				string line;
-				while ((line = stream.ReadLine ()) != null) {
-					if (line.Contains ("ping"))
-						continue;
-					return line.StartsWith ("<", StringComparison.Ordinal);
-				}
-			}
-			return false;
-		}
-
-		XmlResultType GetXmlType (StreamReader stream)
-		{
-			var resultType = XmlResultType.TouchUnit; // default
-			// more fun, the first like of the stream, is a ping from the application to the tcp server, and that will not be parsable as
-			// xml, advance the reader one line.
-			string line;
-			while ((line = stream.ReadLine ()) != null) {
-				if (line.Contains ("TouchUnitTestRun")) {
-					resultType = XmlResultType.TouchUnit;
-					break;
-				}
-				if (line.Contains ("nunit-version"))
-					resultType = XmlResultType.NUnit;
-				if (line.Contains ("xUnit")) {
-					resultType = XmlResultType.xUnit;
-					break;
-				}
-			}
-			
-			// we want to reuse the stream (and we are sync)
-			stream.BaseStream.Position = 0;
-			stream.DiscardBufferedData ();
-			return resultType;
-		}
-
-		(string resultLine, bool failed) ParseTouchUnitXml (StreamReader stream, StreamWriter writer)
-		{
-			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
-			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
-			
-			using (var reader = XmlReader.Create (stream)) {
-				while (reader.Read ()) {
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
-						total = long.Parse (reader ["total"]);
-						errors = long.Parse (reader ["errors"]);
-						failed = long.Parse (reader ["failures"]);
-						notRun = long.Parse (reader ["not-run"]);
-						inconclusive = long.Parse (reader ["inconclusive"]);
-						ignored = long.Parse (reader ["ignored"]);
-						skipped = long.Parse (reader ["skipped"]);
-						invalid = long.Parse (reader ["invalid"]);
-					}
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "TouchUnitExtraData") {
-						// move fwd to get to the CData
-						if (reader.Read ())
-							writer.Write (reader.Value);
-					}
-				}
-			}
-			var passed = total - errors - failed - notRun - inconclusive - ignored - skipped - invalid;
-			var resultLine = $"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}";
-			return (resultLine, total == 0 || errors != 0 || failed != 0);
-		}
-
-		(string resultLine, bool failed) ParseNUnitXml (StreamReader stream, StreamWriter writer)
-		{
-			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
-			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
-			XmlReaderSettings settings = new XmlReaderSettings ();
-			settings.ValidationType = ValidationType.None;
-			using (var reader = XmlReader.Create (stream, settings)) {
-				while (reader.Read ()) {
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-results") {
-						total = long.Parse (reader ["total"]);
-						errors = long.Parse (reader ["errors"]);
-						failed = long.Parse (reader ["failures"]);
-						notRun = long.Parse (reader ["not-run"]);
-						inconclusive = long.Parse (reader ["inconclusive"]);
-						ignored = long.Parse (reader ["ignored"]);
-						skipped = long.Parse (reader ["skipped"]);
-						invalid = long.Parse (reader ["invalid"]);
-					}
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader["type"] == "TestFixture" || reader["type"] == "TestCollection")) {
-						var testCaseName = reader ["name"];
-						writer.WriteLine (testCaseName);
-						var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
-						// get the first node and then move in the siblings of the same type
-						reader.ReadToDescendant ("test-case");
-						do {
-							if (reader.Name != "test-case")
-								break;
-							// read the test cases in the current node
-							var status = reader ["result"];
-							switch (status) {
-							case "Success":
-								writer.Write ("\t[PASS] ");
-								break;
-							case "Ignored":
-								writer.Write ("\t[IGNORED] ");
-								break;
-							case "Error":
-							case "Failure":
-								writer.Write ("\t[FAIL] ");
-								break;
-							case "Inconclusive":
-								writer.Write ("\t[INCONCLUSIVE] ");
-								break;
-							default:
-								writer.Write ("\t[INFO] ");
-								break;
-							}
-							writer.Write (reader ["name"]);
-							if (status == "Failure" || status == "Error") { //  we need to print the message
-								reader.ReadToDescendant ("message");
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-								reader.ReadToNextSibling ("stack-trace");
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-							}
-							// add a new line
-							writer.WriteLine ();
-						} while (reader.ReadToNextSibling ("test-case"));
-						writer.WriteLine ($"{testCaseName} {time} ms");
-					}
-				}
-			}
-			var passed = total - errors - failed - notRun - inconclusive - ignored - skipped - invalid;
-			string resultLine = $"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}";
-			writer.WriteLine (resultLine);
-			
-			return (resultLine, total == 0 | errors != 0 || failed != 0);
-		}
-
-		(string resultLine, bool failed) ParsexUnitXml (StreamReader stream, StreamWriter writer) {
-			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
-			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
-			using (var reader = XmlReader.Create (stream)) {
-				while (reader.Read ()) {
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "assembly") {
-						total += long.Parse (reader ["total"]);
-						errors += long.Parse (reader ["errors"]);
-						failed += long.Parse (reader ["failed"]);
-						skipped += long.Parse (reader ["skipped"]);
-					}
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "collection") {
-						var testCaseName = reader ["name"].Replace ("Test collection for ", "");
-						writer.WriteLine (testCaseName);
-						var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
-												// get the first node and then move in the siblings of the same type
-						reader.ReadToDescendant ("test");
-						do {
-							if (reader.Name != "test")
-								break;
-							// read the test cases in the current node
-							var status = reader ["result"];
-							switch (status) {
-							case "Pass":
-								writer.Write ("\t[PASS] ");
-								break;
-							case "Skip":
-								writer.Write ("\t[IGNORED] ");
-								break;
-							case "Fail":
-								writer.Write ("\t[FAIL] ");
-								break;
-							default:
-								writer.Write ("\t[FAIL] ");
-								break;
-							}
-							writer.Write (reader ["name"]);
-							if (status == "Fail") { //  we need to print the message
-								reader.ReadToDescendant ("message"); 
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-								reader.ReadToNextSibling ("stack-trace");
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-							}
-							// add a new line
-							writer.WriteLine ();
-						} while (reader.ReadToNextSibling ("test"));
-						writer.WriteLine ($"{testCaseName} {time} ms");
-					}
-				}
-			}
-			var passed = total - errors - failed - notRun - inconclusive - ignored - skipped - invalid;
-			string resultLine = $"Tests run: {total} Passed: {passed} Inconclusive: {inconclusive} Failed: {failed + errors} Ignored: {ignored + skipped + invalid}";
-			writer.WriteLine (resultLine);
-
-			return (resultLine, total == 0 | errors != 0 || failed != 0);
-		}
-
-		void CleanXml (string source, string destination)
-		{
-			using (var reader = new StreamReader (source))
-			using (var writer = new StreamWriter (destination)) {
-				string line;
-				while ((line = reader.ReadLine ()) != null) {
-					if (line.StartsWith ("ping", StringComparison.InvariantCulture) || line.Contains ("TouchUnitTestRun") || line.Contains ("NUnitOutput") || line.Contains ("<!--")) {
-						continue;
-					}
-					if (line.Contains ("TouchUnitExtraData")) // always last node in TouchUnit
-						break;
-					writer.WriteLine (line);
-				}
-			}
-		}
-
 		(string resultLine, bool failed, bool crashed) ParseResult (string test_log_path, bool timed_out, bool crashed)
 		{
 			if (!File.Exists (test_log_path))
@@ -566,57 +346,28 @@ namespace xharness
 			// from the TCP connection, we are going to fail when trying to read it and not parse it. Therefore, we are not only
 			// going to check if we are in CI, but also if the listener_log is valid.
 			var path = Path.ChangeExtension (test_log_path, "xml");
-			CleanXml (test_log_path, path);
+			XmlResultParser.CleanXml (test_log_path, path);
 
-			if (Harness.InCI && IsXml (test_log_path)) {
+			if (Harness.InCI && XmlResultParser.IsValidXml (path, out var xmlType)) {
 				(string resultLine, bool failed, bool crashed) parseResult = (null, false, false);
 				crashed = false;
-				XmlResultType xmlType;
 				try {
-					using (var streamReaderTmp = new StreamReader (path)) {
-						xmlType = GetXmlType (streamReaderTmp);
-						var fileName = Path.GetFileName (path);
-						var newFilename = "";
-						switch (xmlType) {
-						case XmlResultType.TouchUnit:
-						case XmlResultType.NUnit:
-							newFilename = path.Replace (fileName, $"nunit-{fileName}");
-							break;
-						case XmlResultType.xUnit:
-							newFilename = path.Replace (fileName, $"xunit-{fileName}");
-							break;
-						}
-						// rename the path to the correct value
-						File.Move (path, newFilename);
-						path = newFilename;
-						
-					}
-					using (var reader = new StreamReader (path)) {
-						var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
-						using (var writer = new StreamWriter (tmpFile, true)) { // write the human result to the log file
-							(string resultLine, bool failed) parseData;
-							switch (xmlType) {
-							case XmlResultType.TouchUnit:
-								parseData = ParseTouchUnitXml (reader, writer);
-								break;
-							case XmlResultType.NUnit:
-								parseData = ParseNUnitXml (reader, writer);
-								break;
-							case XmlResultType.xUnit:
-								parseData = ParsexUnitXml (reader, writer);
-								break;
-							default:
-								parseData = ("", true);
-								break;
-							}
-							parseResult.resultLine = parseData.resultLine;
-							parseResult.failed = parseData.failed;
-						}
-						File.Copy (tmpFile, test_log_path, true);
-					}
+					var newFilename = XmlResultParser.GetXmlFilePath (path, xmlType);
+
+					// rename the path to the correct value
+					File.Move (path, newFilename);
+					path = newFilename;
+
+					// write the human readable results in a tmp file, which we later use to step on the logs
+					var tmpFile = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
+					(parseResult.resultLine, parseResult.failed) = XmlResultParser.GenerateHumanReadableResults (path, tmpFile, xmlType);
+					File.Copy (tmpFile, test_log_path, true);
+					File.Delete (tmpFile);
+
 					// we do not longer need the tmp file
 					Logs.AddFile (path, "Test xml");
 					return parseResult;
+
 				} catch (Exception e) {
 					main_log.WriteLine ("Could not parse xml result file: {0}", e);
 					// print file for better debugging
