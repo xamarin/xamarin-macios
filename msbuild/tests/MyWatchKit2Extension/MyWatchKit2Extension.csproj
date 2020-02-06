@@ -62,6 +62,7 @@
     <DeviceSpecificBuild>true</DeviceSpecificBuild>
     <MtouchDebug>true</MtouchDebug>
     <MtouchProfiling>true</MtouchProfiling>
+    <MtouchFastDev>true</MtouchFastDev>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
