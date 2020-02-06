@@ -1,0 +1,7 @@
+!missing-selector! CLSContext::customTypeName not bound
+!missing-selector! CLSContext::identifierPath not bound
+!missing-selector! CLSContext::setCustomTypeName: not bound
+!missing-selector! CLSContext::setSummary: not bound
+!missing-selector! CLSContext::setThumbnail: not bound
+!missing-selector! CLSContext::summary not bound
+!missing-selector! CLSContext::thumbnail not bound

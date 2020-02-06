@@ -1,0 +1,3 @@
+!missing-selector! CLLocation::courseAccuracy not bound
+!missing-selector! CLLocation::initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:courseAccuracy:speed:speedAccuracy:timestamp: not bound
+!missing-selector! CLLocation::speedAccuracy not bound
