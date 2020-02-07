@@ -38,6 +38,7 @@ namespace xharness
 		public bool IncludeOldSimulatorTests;
 		public bool IncludeDevice;
 		public bool IncludeXtro;
+		public bool IncludeCecil;
 		public bool IncludeDocs;
 
 		public bool CleanSuccessfulTestRuns = true;
@@ -738,6 +739,11 @@ namespace xharness
 				"src",
 				"Make.config",
 			};
+			var cecil_prefixes = new string [] {
+				"tests/cecil-tests",
+				"src",
+				"Make.config",
+			};
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
 			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
@@ -745,6 +751,7 @@ namespace xharness
 			SetEnabled (files, btouch_prefixes, "btouch", ref IncludeBtouch);
 			SetEnabled (files, mac_binding_project, "mac-binding-project", ref IncludeMacBindingProject);
 			SetEnabled (files, xtro_prefixes, "xtro", ref IncludeXtro);
+			SetEnabled (files, cecil_prefixes, "cecil", ref IncludeCecil);
 		}
 
 		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
@@ -797,6 +804,7 @@ namespace xharness
 			SetEnabled (labels, "ios-extensions", ref IncludeiOSExtensions);
 			SetEnabled (labels, "device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
+			SetEnabled (labels, "cecil", ref IncludeCecil);
 			SetEnabled (labels, "old-simulator", ref IncludeOldSimulatorTests);
 			SetEnabled (labels, "all", ref IncludeAll);
 
@@ -1120,6 +1128,26 @@ namespace xharness
 				WorkingDirectory = buildXtroTests.WorkingDirectory,
 			};
 			Tasks.Add (runXtroReporter);
+
+			var buildCecilTests = new MakeTask {
+				Jenkins = this,
+				Platform = TestPlatform.All,
+				TestName = "Cecil",
+				Target = "build",
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "cecil-tests"),
+				Ignored = !IncludeCecil,
+				Timeout = TimeSpan.FromMinutes (5),
+			};
+			var runCecilTests = new NUnitExecuteTask (buildCecilTests) {
+				TestLibrary = Path.Combine (buildCecilTests.WorkingDirectory, "bin", "Debug", "cecil-tests.dll"),
+				TestProject = new TestProject (Path.Combine (buildCecilTests.WorkingDirectory, "cecil-tests.csproj")),
+				Platform = TestPlatform.iOS,
+				TestName = "Cecil-based tests",
+				Timeout = TimeSpan.FromMinutes (5),
+				Ignored = !IncludeCecil,
+				InProcess = true,
+			};
+			Tasks.Add (runCecilTests);
 
 			var runDocsTests = new MakeTask {
 				Jenkins = this,
